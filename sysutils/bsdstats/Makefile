@@ -21,11 +21,5 @@ SUB_FILES=	300.statistics pkg-message
 do-install:
 	${MKDIR} ${PREFIX}/etc/periodic/monthly
 	${INSTALL_SCRIPT} ${WRKDIR}/300.statistics ${PREFIX}/etc/periodic/monthly
-post-install:
-.if defined(BATCH) || defined(PACKAGE_BUILDING)
-	@${CAT} ${PKGMESSAGE}
-.else
-	@PKG_PREFIX="${PREFIX}" ${SH} ${PKGINSTALL} ${PKGNAME} POST-INSTALL
-.endif
 
 .include <bsd.port.mk>
