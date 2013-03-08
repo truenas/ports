@@ -16,6 +16,7 @@ GNU_CONFIGURE=	yes
 USE_OPENLDAP=	yes
 USES=		perl5 gmake
 USE_PERL5=	build
+WANT_OPENLDAP_SASL=	yes
 WRKSRC=	${WRKDIR}/${PORTNAME}-${PORTVERSION:S/.//g}
 PAM_LDAP_CONF?=	ldap.conf
 CONFIGURE_ARGS=	--with-ldap-lib=openldap \
