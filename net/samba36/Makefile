@@ -319,6 +319,7 @@ PLIST_SUB+=		SMBTORTURE="@comment "
 
 .if ${PORT_OPTIONS:MADS}
 SAMBA_WANT_LDAP=	yes
+WANT_OPENLDAP_SASL=	yes
 SAMBA_WANT_KRB5=	yes
 CONFIGURE_ARGS+=	--with-ads
 .else
@@ -342,6 +343,7 @@ CONFIGURE_ARGS+=	--without-krb5
 
 .if defined(SAMBA_WANT_LDAP)
 USE_OPENLDAP=		yes
+WANT_OPENLDAP_SASL=	yes
 CONFIGURE_ARGS+=	--with-ldap
 .else
 CONFIGURE_ARGS+=	--without-ldap
