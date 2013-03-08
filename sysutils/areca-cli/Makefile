@@ -7,7 +7,6 @@ PORTEPOCH=	1
 CATEGORIES=	sysutils
 MASTER_SITES=	ftp://ftp.areca.com.tw/RaidCards/AP_Drivers/FreeBSD/CLI/ \
 		LOCAL/ehaupt
-PKGNAMESUFFIX=	-${ARCH}
 DISTNAME=	v${CLI_VER}_${CLI_REV}
 
 MAINTAINER=	ehaupt@FreeBSD.org
