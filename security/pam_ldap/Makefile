@@ -19,6 +19,7 @@ COMMENT=	A pam module for authenticating with LDAP
 USE_GMAKE=	yes
 GNU_CONFIGURE=	yes
 USE_OPENLDAP=	yes
+WANT_OPENLDAP_SASL=	yes
 USE_PERL5_BUILD=yes
 WRKSRC=	${WRKDIR}/${PORTNAME}-${PORTVERSION:S/.//g}
 PAM_LDAP_CONF?=	ldap.conf
