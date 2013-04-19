@@ -1313,7 +1313,7 @@ WITH_DEBUG=	yes
 .endif
 
 # Reset value from bsd.own.mk.
-.if defined(WITH_DEBUG) && !defined(WITHOUT_DEBUG)
+.if defined(WITH_DEBUG) && !defined(WITHOUT_DEBUG) && !defined(INSTALL_STRIPPED)
 STRIP=	#none
 .endif
 
@@ -1608,7 +1608,9 @@ CFLAGS:=	${CFLAGS:C/${_CPUCFLAGS}//}
 .endif
 
 .if defined(WITH_DEBUG) && !defined(WITHOUT_DEBUG)
+.if !defined(INSTALL_STRIPPED)
 STRIP_CMD=	${TRUE}
+.endif
 DEBUG_FLAGS?=	-g
 CFLAGS:=		${CFLAGS:N-O*:N-fno-strict*} ${DEBUG_FLAGS}
 .endif
