@@ -508,6 +508,7 @@
     SUBDIR += pear-Doctrine12
     SUBDIR += pear-DoctrineCommon
     SUBDIR += pear-DoctrineDBAL
+    SUBDIR += pear-DoctrineORM
     SUBDIR += pear-Horde_Db
     SUBDIR += pear-Horde_Imsp
     SUBDIR += pear-Horde_Memcache
