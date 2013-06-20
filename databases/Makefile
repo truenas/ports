@@ -507,6 +507,7 @@
     SUBDIR += pear-DB_ldap2
     SUBDIR += pear-Doctrine12
     SUBDIR += pear-DoctrineCommon
+    SUBDIR += pear-DoctrineDBAL
     SUBDIR += pear-Horde_Db
     SUBDIR += pear-Horde_Imsp
     SUBDIR += pear-Horde_Memcache
