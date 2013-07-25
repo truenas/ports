@@ -1,9 +1,9 @@
 # Created by: Matt Peterson <matt@peterson.org>
-# $FreeBSD$
+# $FreeBSD: head/net-mgmt/collectd5/Makefile 322783 2013-07-11 16:26:26Z sunpoet $
 
 PORTNAME=	collectd
 PORTVERSION=	5.3.0
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	net-mgmt
 MASTER_SITES=	http://collectd.org/files/
 
@@ -17,7 +17,7 @@ USE_AUTOTOOLS=	autoconf autoheader automake libltdl
 
 LATEST_LINK=	collectd5
 
-OPTIONS_DEFINE=		CGI CURL DEBUG DBI GCRYPT JSON MEMCACHEC MODBUS MYSQL NUTUPS PGSQL PING PYTHON REDIS ROUTEROS RRDTOOL SNMP STATGRAB TOKYOTYRANT VIRT XML XMMS
+OPTIONS_DEFINE=		CGI CURL DEBUG DBI GCRYPT JSON MEMCACHEC MODBUS MYSQL NOTIFYEMAIL NUTUPS PGSQL PING PYTHON REDIS ROUTEROS RRDTOOL SNMP STATGRAB TOKYOTYRANT VIRT XML XMMS
 
 CGI_DESC=		Install collection.cgi (requires rrdtool)
 CURL_DESC=		Enable curl-based plugins (apache, nginx, etc)
@@ -99,7 +99,6 @@ CONFIGURE_ARGS=	--localstatedir=/var \
 		--without-libyajl \
 		--without-oracle \
 		--without-perl-bindings \
-		--without-python
 
 # NOTE: Plugins without external dependencies
 CONFIGURE_ARGS+=	\
@@ -275,9 +274,10 @@ PLIST_SUB+=	PING="@comment "
 
 .if ${PORT_OPTIONS:MPYTHON}
 USE_PYTHON=	yes
-CONFIGURE_ARGS+=--with-python=${LOCALBASE} --enable-python
+CONFIGURE_ARGS+=--with-python=${PYTHON_CMD} --enable-python
 PLIST_SUB+=	PYTHON=""
 .else
+CONFIGURE_ARGS+=--without-python
 PLIST_SUB+=	PYTHON="@comment "
 .endif
 
