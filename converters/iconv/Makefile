@@ -1,5 +1,5 @@
 # Created by: Konstantin Chuguev <Konstantin.Chuguev@dante.org.uk>
-# $FreeBSD$
+# $FreeBSD: head/converters/iconv/Makefile 317605 2013-05-07 13:12:31Z bapt $
 
 PORTNAME=	iconv
 PORTVERSION=	2.0
@@ -31,7 +31,7 @@ NO_STAGE=	yes
 .include <bsd.port.options.mk>
 
 .if ${PORT_OPTIONS:MCCSUTIL}
-USE_PERL5+=	run
+USE_PERL5_RUN=	yes
 .else
 EXTRA_PATCHES=	${FILESDIR}/extra-patch-ccs_Makefile
 .endif
