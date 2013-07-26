@@ -28,6 +28,7 @@ USE_LDCONFIG=	yes
 # (wchar_t is used by glibmm, rawtherapee triggered this)
 USES+=		gettext gmake iconv:wchar_t pathfix pkgconfig shebangfix perl5
 USE_GNOME=	ltverhack
+USE_PERL5=	build
 USE_PYTHON=	yes
 PYTHON_PY3K_PLIST_HACK=	yes
 CONFIGURE_ARGS=	--enable-static \
