@@ -27,6 +27,7 @@ USE_LDCONFIG=	yes
 USES=		gettext gmake iconv pathfix pkgconfig shebangfix perl5
 USE_GNOME=	ltverhack
 USE_PYTHON=	yes
+USE_PERL5=	build
 CONFIGURE_ARGS=	--enable-static \
 		--disable-gtk-doc --with-html-dir=${PREFIX}/share/doc \
 		--disable-man --without-xml-catalog \
