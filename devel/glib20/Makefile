@@ -31,7 +31,7 @@ USE_GNOME=	gnomehack ltverhack
 USE_GMAKE=	yes
 MAKE_JOBS_SAFE=	yes
 USE_PYTHON=	2.5+
-USE_PERL5=	yes
+USE_PERL5_BUILD=	yes
 CONFIGURE_ARGS=	--enable-static --with-libiconv=gnu \
 		--disable-gtk-doc --with-html-dir=${PREFIX}/share/doc \
 		--disable-man --without-xml-catalog \
