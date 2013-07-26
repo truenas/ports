@@ -19,7 +19,7 @@ USE_BZIP2=	yes
 USES=		iconv
 GNU_CONFIGURE=	yes
 USE_GMAKE=	yes
-USE_PERL5=	yes
+USE_PERL5_BUILD=	yes
 WANT_GNOME=	yes
 USE_RC_SUBR=	netatalk
 
