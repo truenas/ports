@@ -118,6 +118,12 @@ PLIST_SUB+=	ATFUNCS="@comment "
 PLIST_SUB+=	ATFUNCS=""
 .endif
 
+.include <bsd.port.pre.mk>
+
+.if !empty(ICONV_LIB)
+CONFIGURE_ARGS=	--with-libiconv=${LOCALBASE}
+.endif
+
 post-patch:
 	@${REINPLACE_CMD} -e 's|%%DB_NAME%%|${BDB_INCLUDE_DIR:T}| ; \
 	    	s|%%DB_LIB%%|-l${BDB_LIB_NAME}|g ; \
