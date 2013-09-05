@@ -97,7 +97,8 @@ PLIST_SUB+=		SCANNERS="@comment "
 .endif
 
 .if ${PORT_OPTIONS:MNTLM}
-CONFIGURE_ARGS+=	--enable-ntlm
+CONFIGURE_ARGS+=	--enable-ntlm ${ICONV_CONFIGURE_BASE}
+USES+=			iconv
 PLIST_SUB+=		NTLMCONF=""
 .else
 PLIST_SUB+=		NTLMCONF="@comment "
