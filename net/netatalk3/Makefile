@@ -19,7 +19,7 @@ LIB_DEPENDS=	libgcrypt.so:${PORTSDIR}/security/libgcrypt \
     		libevent.so:${PORTSDIR}/devel/libevent2
 
 USE_BDB=	5+
-USES=		iconv gmake pkgconfig perl5 libtool tar:bzip2
+USES=		iconv gmake pkgconfig libtool tar:bzip2
 GNU_CONFIGURE=	yes
 USE_LDCONFIG=	yes
 USE_RC_SUBR=	netatalk
