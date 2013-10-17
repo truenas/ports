@@ -43,7 +43,7 @@ CFLAGS+=	-L${LOCALBASE}/lib -fstack-protector-all
 PLIST_SUB=	PYTHON_VER=${PYTHON_VER}
 #DEBUG_FLAGS=	-g
 
-USE_AUTOTOOLS=	autoconf automake
+USE_AUTOTOOLS=	autoconf
 AUTOMAKE_ARGS=	--add-missing
 USE_LDCONFIG=	yes
 USE_PYTHON=	yes
