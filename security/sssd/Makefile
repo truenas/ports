@@ -26,6 +26,8 @@ LIB_DEPENDS=	popt.0:${PORTSDIR}/devel/popt \
 		nss3.1:${PORTSDIR}/security/nss \
 		sasl2:${PORTSDIR}/security/cyrus-sasl2 \
 		xml2:${PORTSDIR}/textproc/libxml2
+PATCH_DEPENDS=	${LOCALBASE}/bin/autoconf:${PORTSDIR}/devel/autoconf \
+		${LOCALBASE}/bin/automake:${PORTSDIR}/devel/automake
 BUILD_DEPENDS=	xmlcatalog:${PORTSDIR}/textproc/libxml2 \
 		docbook-xsl>=0:${PORTSDIR}/textproc/docbook-xsl
 RUN_DEPENDS=	xmlcatmgr:${PORTSDIR}/textproc/xmlcatmgr
@@ -77,6 +79,7 @@ BROKEN=		Does not link on ia64, powerpc, or sparc64
 AUTOTOOLSFILES=	aclocal.m4
 
 post-patch:
+	( cd ${WRKSRC} ; aclocal ; automake -ca )
 	@${REINPLACE_CMD} -e 's|1.11.1|%%AUTOMAKE_APIVER%%|g' ${WRKSRC}/aclocal.m4
 	@${REINPLACE_CMD} -e 's|SIGCLD|SIGCHLD|g' ${WRKSRC}/src/util/signal.c
 	@${REINPLACE_CMD} -e '/#define SIZE_T_MAX ((size_t) -1)/d' ${WRKSRC}/src/util/util.h
