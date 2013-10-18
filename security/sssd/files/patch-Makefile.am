@@ -1,5 +1,5 @@
---- ./Makefile.am.orig	2011-08-29 11:39:05.000000000 -0400
-+++ ./Makefile.am	2011-10-13 12:13:42.000000000 -0400
+--- ./Makefile.am	2011-08-29 08:39:05.000000000 -0700
++++ ./Makefile.am	2013-10-17 19:55:49.000000000 -0700
 @@ -33,7 +33,7 @@
  systemdunitdir = @systemdunitdir@
  logpath = @logpath@
@@ -9,7 +9,19 @@
  
  AM_CFLAGS =
  if WANT_AUX_INFO
-@@ -753,21 +753,22 @@
+@@ -93,11 +93,6 @@
+ 
+ PYTHON_TESTS =
+ 
+-if BUILD_PYTHON_BINDINGS
+-PYTHON_TESTS += $(srcdir)/src/config/SSSDConfigTest.py \
+-                $(srcdir)/src/tests/pyhbac-test.py
+-endif
+-
+ TESTS = \
+     $(PYTHON_TESTS) \
+     $(non_interactive_check_based_tests)
+@@ -753,21 +748,22 @@
  
  noinst_PROGRAMS = pam_test_client
  pam_test_client_SOURCES = src/sss_client/pam_test_client.c
@@ -36,7 +48,7 @@
      -module \
      -version-info 2:0:0 \
      -Wl,--version-script,$(srcdir)/src/sss_client/sss_nss.exports
-@@ -780,6 +781,7 @@
+@@ -780,6 +776,7 @@
      src/sss_client/sss_pam_macros.h
  
  pam_sss_la_LDFLAGS = \
@@ -44,7 +56,7 @@
      -lpam \
      -module \
      -avoid-version \
-@@ -1122,10 +1124,10 @@
+@@ -1122,10 +1119,10 @@
  	mkdir -p $(DESTDIR)$(initdir)
  endif
  
