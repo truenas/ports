@@ -16,6 +16,10 @@ LIB_DEPENDS=	freetype:${PORTSDIR}/print/freetype2 \
 USE_BZIP2=	yes
 USE_LDCONFIG=	yes
 USES=		gmake pathfix pkgconfig
+
+USES+=		perl5
+USE_PERL5=	build
+
 USE_GNOME=	cairo glib20 ltverhack
 USE_AUTOTOOLS=	libtool
 CONFIGURE_ARGS=	--with-graphite2
