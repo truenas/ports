@@ -16,6 +16,10 @@ LIB_DEPENDS=	libfreetype.so:${PORTSDIR}/print/freetype2 \
 USE_LDCONFIG=	yes
 USES=		gmake libtool pathfix pkgconfig tar:bzip2
 USE_GNOME=	cairo glib20
+
+USES+=		perl5
+USE_PERL5=	build
+
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--with-graphite2
 INSTALL_TARGET=	install-strip
