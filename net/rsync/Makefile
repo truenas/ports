@@ -53,6 +53,7 @@ RENFL_DESC=	Renamed and flags options combined
 # define default options
 OPTIONS_DEFAULT=SSH ZLIB_BASE
 
+NO_STAGE=	yes
 .include <bsd.port.options.mk>
 
 .if ${PORT_OPTIONS:MZLIB_BASE}
