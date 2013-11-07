@@ -109,6 +109,8 @@ SAMBA4_BUNDLED_LIBS+=	!tdb
 BUILD_DEPENDS+=		ldb>=1.1.15:${PORTSDIR}/databases/ldb
 RUN_DEPENDS+=		ldb>=1.1.15:${PORTSDIR}/databases/ldb
 SAMBA4_BUNDLED_LIBS+=	!ldb
+# dns python library
+BUILD_DEPENDS+=		${PYTHON_PKGNAMEPREFIX}dnspython>0:${PORTSDIR}/devel/py-dnspython
 ##############################################################################
 # Options
 OPTIONS_DEFINE=		ACL_SUPPORT ADS AIO_SUPPORT AVAHI CUPS DEBUG \
