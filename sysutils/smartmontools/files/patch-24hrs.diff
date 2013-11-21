@@ -1,0 +1,20 @@
+--- ./ataprint.cpp.orig	2014-07-23 11:57:55.000000000 -0700
++++ ./ataprint.cpp	2014-08-11 21:52:25.578724281 -0700
+@@ -2923,7 +2923,7 @@
+       // The case where the disk health is NOT OK
+       print_on();
+       pout("SMART overall-health self-assessment test result: FAILED!\n"
+-           "Drive failure expected in less than 24 hours. SAVE ALL DATA.\n");
++           );
+       print_off();
+       if (smart_thres_ok && find_failed_attr(&smartval, &smartthres, attribute_defs, 1)) {
+         returnval|=FAILATTR;
+@@ -2960,7 +2960,7 @@
+       else if (find_failed_attr(&smartval, &smartthres, attribute_defs, 1)) {
+         print_on();
+         pout("SMART overall-health self-assessment test result: FAILED!\n"
+-             "Drive failure expected in less than 24 hours. SAVE ALL DATA.\n");
++             );
+         pout("Warning: This result is based on an Attribute check.\n");
+         print_off();
+         returnval|=FAILATTR;
