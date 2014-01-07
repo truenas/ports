@@ -109,6 +109,9 @@ RUN_DEPENDS+=		ldb>=1.1.15:${PORTSDIR}/databases/ldb
 SAMBA4_BUNDLED_LIBS+=	!ldb
 # Don't use external libcom_err
 SAMBA4_BUNDLED_LIBS+=	com_err
+
+# dns python library
+BUILD_DEPENDS+=		${PYTHON_PKGNAMEPREFIX}dnspython>0:${PORTSDIR}/devel/py-dnspython
 ##############################################################################
 # Options
 OPTIONS_DEFINE=		ACL_SUPPORT ADS AIO_SUPPORT CUPS DEBUG \
