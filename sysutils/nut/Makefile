@@ -1,9 +1,8 @@
 # Created by: Boris Popov <bp@FreeBSD.org>
-# $FreeBSD$
+# $FreeBSD: head/sysutils/nut/Makefile 327772 2013-09-20 23:05:58Z bapt $
 
 PORTNAME=	nut
-PORTVERSION=	2.6.5
-PORTREVISION=	1
+PORTVERSION=	2.7.1
 CATEGORIES=	sysutils
 MASTER_SITES=	http://www.networkupstools.org/source/${PORTVERSION:R}/
 DISTFILES=	${DISTNAME}${EXTRACT_SUFX} ${DISTNAME}${EXTRACT_SUFX}.sig
@@ -46,7 +45,30 @@ MAN3=		nutscan.3 nutscan_add_device_to_device.3 \
 		upscli_get.3 upscli_list_next.3 upscli_list_start.3 \
 		upscli_readline.3 upscli_sendline.3 upscli_splitaddr.3 \
 		upscli_splitname.3 upscli_ssl.3 upscli_strerror.3 \
-		upscli_upserror.3 upsclient.3
+		upscli_upserror.3 upsclient.3 \
+		libnutclient.3 libnutclient_commands.3 libnutclient_devices.3 \
+		libnutclient_general.3 libnutclient_misc.3 libnutclient_tcp.3 \
+		libnutclient_variables.3 nutclient_authenticate.3 \
+		nutclient_destroy.3 nutclient_device_forced_shutdown.3 \
+		nutclient_device_login.3 nutclient_device_master.3 \
+		nutclient_execute_device_command.3 \
+		nutclient_get_device_command_description.3 \
+		nutclient_get_device_commands.3 \
+		nutclient_get_device_description.3 \
+		nutclient_get_device_num_logins.3 \
+		nutclient_get_device_rw_variables.3 \
+		nutclient_get_device_variable_description.3 \
+		nutclient_get_device_variable_values.3 \
+		nutclient_get_device_variables.3 nutclient_get_devices.3 \
+		nutclient_has_device.3 nutclient_has_device_command.3 \
+		nutclient_has_device_variable.3 nutclient_logout.3 \
+		nutclient_set_device_variable_value.3 \
+		nutclient_set_device_variable_values.3 \
+		nutclient_tcp_create_client.3 nutclient_tcp_disconnect.3 \
+		nutclient_tcp_get_timeout.3 nutclient_tcp_is_connected.3 \
+		nutclient_tcp_reconnect.3 nutclient_tcp_set_timeout.3 \
+		nutscan_get_serial_ports_list.3 nutscan_scan_eaton_serial.3 \
+		upscli_add_host_cert.3 upscli_cleanup.3 upscli_init.3
 
 MAN5=		nut.conf.5 ups.conf.5 upsd.conf.5 upsd.users.5 upsmon.conf.5 \
 		upssched.conf.5
@@ -93,12 +115,13 @@ PLIST_SUB+=	NUT_CGI="@comment "
 .if ${PORT_OPTIONS:MSERIAL}
 CONFIGURE_ARGS+=	--with-serial
 MAN8+=		apcsmart.8 apcsmart-old.8 bestfortress.8 bcmxcp.8 belkin.8 \
-		belkinunv.8 bestuferrups.8 bestups.8 bestfcom.8 blazer.8 \
+		belkinunv.8 bestuferrups.8 bestups.8 bestfcom.8 \
 		clone.8 dummy-ups.8 etapro.8 everups.8 gamatronic.8 \
 		genericups.8 isbmex.8 ivtscd.8 liebert.8 liebert-esp2.8 \
 		masterguard.8 metasys.8 mge-shut.8 mge-utalk.8 microdowell.8 \
 		oneac.8 optiups.8 powercom.8 powerpanel.8 rhino.8 safenet.8 \
-		solis.8 tripplite.8 tripplitesu.8 upscode2.8 victronups.8
+		solis.8 tripplite.8 tripplitesu.8 upscode2.8 victronups.8 \
+		blazer_ser.8 riello_ser.8 al175.8 apcupsd-ups.8 nutdrv_qx.8
 PLIST_SUB+=	NUT_SERIAL=""
 .else
 CONFIGURE_ARGS+=	--without-serial
@@ -108,7 +131,8 @@ PLIST_SUB+=	NUT_SERIAL="@comment "
 .if ${PORT_OPTIONS:MUSB}
 #EXTRA_PATCHES=	${FILESDIR}/extra-patch-m4_nut_check_libusb.m4
 CONFIGURE_ARGS+=	--with-usb=auto
-MAN8+=		bcmxcp_usb.8 richcomm_usb.8 tripplite_usb.8 usbhid-ups.8
+MAN8+=		bcmxcp_usb.8 richcomm_usb.8 tripplite_usb.8 usbhid-ups.8 \
+		blazer_usb.8 riello_usb.8
 PLIST_SUB+=	NUT_USB=""
 .else
 CONFIGURE_ARGS+=	--without-usb
