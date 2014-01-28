@@ -1,0 +1,63 @@
+#!/bin/sh
+#
+# make install or pkg_add script
+# Checks labels/gptids for roots and swap partitions
+# adds hyperv labels in loader.conf 
+#
+
+if [ "$2" = "PRE-INSTALL" ]; then
+echo "===> Pre-install Check"
+# KVP - Directories Check
+
+echo "===> Checking KVP directories" 
+kvp_dir="/usr/local/hyperv/"
+kvp_dir_scripts="/usr/local/hyperv/scripts"
+
+if [ -d $kvp_dir ]; then
+   if [ -d $kvp_dir_scripts ]; then
+      echo " ### KVP Directories present " 
+   else 
+      echo " ### Creating $kvp_dir_scripts directory "
+      mkdir /usr/local/hyperv/scripts
+   fi
+else 
+   echo " xxx KVP directories not found"
+   echo " ### Creating KVP  directories "
+   mkdir /usr/local/hyperv
+   mkdir /usr/local/hyperv/scripts
+fi
+
+else if [ "$2" = "POST-INSTALL" ]; then
+   test="/boot/loader.conf"
+
+   if [ -f $test ]; then
+      echo "===> File $test exists"
+      echo "Adding for Hyper-v drivers"
+
+      # Deleting kvp label
+      sed -i".bak" '/Loader label for Hyper-V KVP drivers/d' /etc/rc.conf
+      sed -i".bak" '/hv_kvp_load/d' /etc/rc.conf
+
+
+      #hyperv driver names
+      echo  "# Loader label for Hyper-V KVP drivers -do not modify" >> /boot/loader.conf
+      echo  "hv_kvp_load=\"YES\"" >> /boot/loader.conf
+
+   else
+      echo "===> File $test does not exists"
+      echo " Adding File $test and Hyper-V KVP driver labels"
+      #hyperv kvp driver names
+      echo  "# Loader labels for Hyper-V KVP drivers -do not modify" >> /boot/loader.conf
+      echo  "hv_kvp_load=\"YES\"" >> /boot/loader.conf
+   fi
+
+# KVP - daemon label
+echo "===> Adding kvp daemon label" 
+sed -i".bak" '/Label for KVP daemon/d' /etc/rc.conf
+sed -i".bak" '/hv_kvp_daemon_enable/d' /etc/rc.conf
+echo  "# Label for KVP daemon -do not modify" >> /etc/rc.conf
+echo  "hv_kvp_daemon_enable=\"YES\"" >> /etc/rc.conf
+
+fi
+fi
+exit 0

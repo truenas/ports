@@ -1,0 +1,25 @@
+#!/bin/sh
+#
+# make deinstall or pkd_delete script 
+# cleans the hyperv labels
+#
+
+if [ "$2" = "DEINSTALL" ]; then
+   test="/boot/loader.conf"
+
+   if [ -f $test ]; then
+   echo "===> File $test exists"
+   echo  "Removing Hyper-v drivers labels "
+   # Deleting hyperv driver names
+   sed -i".bak" '/Loader label for Hyper-V KVP driver/d' /boot/loader.conf
+   sed -i".bak" '/hv_kvp_load/d' /boot/loader.conf
+   else 
+   echo "===> File $test not found"
+   fi
+
+echo "===> Removing kvp daemon label"
+sed -i".bak" '/Label for KVP daemon/d' /etc/rc.conf
+sed -i".bak" '/hv_kvp_daemon_enable/d' /etc/rc.conf
+
+fi
+exit 0

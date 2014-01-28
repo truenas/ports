@@ -1,0 +1,45 @@
+NAME
+     hv-kvp -- Hyper-V KVP Integration Components
+
+SYNOPSIS
+     The hv-kvp provision a collection of kernel mode drivers and services
+     that enhance FreeBSD guest experience on Hyper-V.
+
+
+DESCRIPTION
+     The Hyper-V Integration Components include drivers and services that
+     improve functionality and performance of a FreeBSD guest operating system
+     running on Hyper-V. As of this writing, the hv-kvp ports package
+     installs the following binaries:
+
+     a) hv_utils.ko - This is a loadable kernel module that provides FreeBSD
+     guests with timekeeping, heartbeat, console shutdown and key-value pair
+     functionality. This module is located under /boot/kernel/.
+
+     b) hv_kvp_daemon - This is a user mode daemon that communicates with the
+     hv_utils driver to manage user configurable metadata in the form of key
+     value pairs.  This daemon also allows the system administrator to read
+     and set IP addresses assigned to a FreeBSD guest. The daemon utilizes the
+     following collection of scripts stored under /usr/local/hyperv/scripts:
+     hv_get_dhcp_info
+     hv_get_dns_info
+     hv_set_ifconfig
+
+     The daemon is located under /usr/sbin/. The corresponding daemon script
+     named hv_kvpd is present under /etc/rc.d/.
+
+PRE-REQUISITE
+     Before you install hv-kvp ports, please ensure that you have added
+     disk labels or UUIDs to all devices listed in fstab.
+
+SEE ALSO
+     hv_kvp(4), hv_kvp_daemon(8)
+
+HISTORY
+     Support for hv-kvp ports was first released in September 2013. The
+     ports were developed through a joint effort between Citrix Inc.,
+     Microsoft Corp. and Network Appliance Inc..
+
+AUTHORS
+     FreeBSD support for hv-kvp was first added by Microsoft BSD
+     Integration Services Team <bsdic@microsoft.com>.

@@ -1,0 +1,14 @@
+@cwd /boot/kernel
+hv_kvp.ko
+@cwd /usr/local/hyperv/scripts
+hv_get_dhcp_info
+hv_get_dns_info
+hv_set_ifconfig
+@cwd /etc/rc.d
+hv_kvpd
+@cwd /usr/sbin
+hv_kvp_daemon
+@cwd /usr/share/man/man4
+hv_kvp.4.gz
+@cwd /usr/share/man/man8
+hv_kvp_daemon.8.gz
