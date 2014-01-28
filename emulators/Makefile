@@ -56,6 +56,7 @@
     SUBDIR += hfs
     SUBDIR += higan
     SUBDIR += hugo
+    SUBDIR += hv-kvp
     SUBDIR += i386-wine
     SUBDIR += i386-wine-devel
     SUBDIR += ia64sim
