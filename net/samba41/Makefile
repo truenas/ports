@@ -60,6 +60,7 @@ CONFIGURE_ARGS+=	--prefix="${PREFIX}" \
 			--with-statedir="${SAMBA4_LOCKDIR}" \
 			--with-cachedir="${SAMBA4_LOCKDIR}" \
 			--with-privatedir="${SAMBA4_PRIVATEDIR}" \
+			--disable-fault-handling \
 			--with-logfilebase="${SAMBA4_LOGDIR}"
 # Support staging
 DESTDIRNAME=		--destdir
