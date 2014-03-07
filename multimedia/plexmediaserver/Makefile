@@ -1,8 +1,11 @@
 # Created by: KalleDK <plexmaintainer@k-moeller.dk>
-# $FreeBSD$
+# $FreeBSD: Makefile 346010 2014-02-25 14:39:29Z feld $
+
+#http://downloads.plexapp.com/plex-media-server/0.9.9.5.411-da1d892/PlexMediaServer-0.9.9.5.411-da1d892-freebsd-amd64.tar.bz2
 
 PORTNAME=	plexmediaserver
-PORTVERSION=	0.9.8.18.290
+PORTVERSION=	0.9.9.5.411
+PORTREVISION=	1
 CATEGORIES=	multimedia
 MASTER_SITES=	http://plex.r.worldssl.net/plex-media-server/${PORTVERSION}-${PLEX_BUILD}/
 DISTNAME=	PlexMediaServer-${PORTVERSION}-${PLEX_BUILD}-freebsd-amd64
@@ -11,7 +14,7 @@ MAINTAINER=	feld@FreeBSD.org
 COMMENT=	The Plex Media Server component
 
 USE_BZIP2=	yes
-PLEX_BUILD=	11b7fdd
+PLEX_BUILD=	da1d892
 NO_BUILD=	yes
 WRKSRC=	${WRKDIR}/PlexMediaServer-${PORTVERSION}-${PLEX_BUILD}
 
@@ -29,13 +32,19 @@ ONLY_FOR_ARCHS=	amd64
 
 .include <bsd.port.pre.mk>
 
+.if ${OPSYS} == FreeBSD
 .if ${OSVERSION} < 900000
-IGNORE= supplied binaries compiled for FreeBSD 9
+IGNORE=	supplied binaries compiled for FreeBSD 9
 .endif
 
 .if ${OSVERSION} >= 1000054
 RUN_DEPENDS+=	${LOCALBASE}/lib/compat/libstdc++.so.6:${PORTSDIR}/misc/compat9x
 .endif
+.endif
+
+post-patch:
+	# binaries don't come pre-stripped
+	${FIND} ${WRKSRC} -name '*.so' -exec ${STRIP_CMD} {} \;
 
 do-install:
 	@(cd ${WRKSRC} && ${COPYTREE_SHARE} Resources ${STAGEDIR}/${SCRIPT_PATH})

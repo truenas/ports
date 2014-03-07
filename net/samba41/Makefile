@@ -3,7 +3,6 @@
 
 PORTNAME?=		${SAMBA4_BASENAME}41
 PORTVERSION?=		${SAMBA4_VERSION}
-PORTREVISION?=		1
 CATEGORIES?=		net
 MASTER_SITES=		${MASTER_SITE_SAMBA}
 MASTER_SITE_SUBDIR=	samba/stable samba/rc
@@ -18,7 +17,7 @@ CONFLICTS?=		*samba3[2-6]-3.* samba4-4.0.*
 
 SAMBA4_BASENAME=	samba
 SAMBA4_PORTNAME=	${SAMBA4_BASENAME}4
-SAMBA4_VERSION=		4.1.3
+SAMBA4_VERSION=		4.1.5
 SAMBA4_DISTNAME=	${SAMBA4_BASENAME}-${SAMBA4_VERSION:S|.p|pre|:S|.r|rc|:S|.t|tp|:S|.a|alpha|}
 
 WRKSRC?=		${WRKDIR}/${DISTNAME}
@@ -35,6 +34,9 @@ SAMBA4_MODULEDIR=	${SAMBA4_LIBDIR}/shared-modules
 SAMBA4_INCLUDEDIR=	${PREFIX}/include/${SAMBA4_PORTNAME}
 SAMBA4_CONFDIR=		${PREFIX}/etc
 SAMBA4_CONFIG=		smb4.conf
+
+USE_GCC=		4.7+
+CFLAGS=			-g3 -ggdb -O0
 
 CONFIGURE_ARGS+=	--prefix="${PREFIX}" \
 			--exec-prefix="${PREFIX}" \
@@ -55,6 +57,7 @@ CONFIGURE_ARGS+=	--prefix="${PREFIX}" \
 			--with-statedir="${SAMBA4_LOCKDIR}" \
 			--with-cachedir="${SAMBA4_LOCKDIR}" \
 			--with-privatedir="${SAMBA4_PRIVATEDIR}" \
+			--disable-fault-handling \
 			--with-logfilebase="${SAMBA4_LOGDIR}"
 # Support staging
 DESTDIRNAME=		--destdir
@@ -111,7 +114,7 @@ SAMBA4_BUNDLED_LIBS+=	!ldb
 SAMBA4_BUNDLED_LIBS+=	com_err
 
 # dns python library
-BUILD_DEPENDS+=		${PYTHON_PKGNAMEPREFIX}dnspython>0:${PORTSDIR}/devel/py-dnspython
+BUILD_DEPENDS+=		${PYTHON_PKGNAMEPREFIX}dnspython>0:${PORTSDIR}/dns/py-dnspython
 ##############################################################################
 # Options
 OPTIONS_DEFINE=		ACL_SUPPORT ADS AIO_SUPPORT CUPS DEBUG \
