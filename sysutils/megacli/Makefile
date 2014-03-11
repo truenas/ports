@@ -4,7 +4,7 @@
 PORTNAME=	megacli
 PORTVERSION=	8.07.07
 CATEGORIES=	sysutils
-MASTER_SITES=	http://www.lsi.com/downloads/Public/RAID%20Controllers/RAID%20Controllers%20Common%20Files/
+MASTER_SITES=	http://download.freenas.org/distfiles/
 DISTNAME=	${PORTVERSION}_MegaCLI
 EXTRACT_SUFX=	.zip
 
