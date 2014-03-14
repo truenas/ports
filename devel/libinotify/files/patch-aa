@@ -1,0 +1,23 @@
+diff --git worker-thread.c worker-thread.c
+index 2c64c57..dc7e261 100644
+--- worker-thread.c
++++ worker-thread.c
+@@ -583,6 +583,18 @@ worker_thread (void *arg)
+                           1,
+                           NULL);
+         if (ret == -1) {
++            if (errno == EBADF) {
++                wrk->closed = 1;
++                wrk->io[INOTIFY_FD] = -1;
++                worker_erase (wrk);
++
++                if (pthread_mutex_trylock (&wrk->mutex) == 0) {
++                    worker_free (wrk);
++                    pthread_mutex_unlock (&wrk->mutex);
++                    free (wrk);
++                }
++                return NULL;
++            }
+             perror_msg ("kevent failed");
+             continue;
+         }
