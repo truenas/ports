@@ -1,11 +1,8 @@
 # Created by: KalleDK <plexmaintainer@k-moeller.dk>
-# $FreeBSD: Makefile 346010 2014-02-25 14:39:29Z feld $
-
-#http://downloads.plexapp.com/plex-media-server/0.9.9.5.411-da1d892/PlexMediaServer-0.9.9.5.411-da1d892-freebsd-amd64.tar.bz2
+# $FreeBSD: Makefile 348136 2014-03-13 22:36:21Z feld $
 
 PORTNAME=	plexmediaserver
-PORTVERSION=	0.9.9.5.411
-PORTREVISION=	1
+PORTVERSION=	0.9.9.7.429
 CATEGORIES=	multimedia
 MASTER_SITES=	http://plex.r.worldssl.net/plex-media-server/${PORTVERSION}-${PLEX_BUILD}/
 DISTNAME=	PlexMediaServer-${PORTVERSION}-${PLEX_BUILD}-freebsd-amd64
@@ -14,7 +11,7 @@ MAINTAINER=	feld@FreeBSD.org
 COMMENT=	The Plex Media Server component
 
 USE_BZIP2=	yes
-PLEX_BUILD=	da1d892
+PLEX_BUILD=	f80a8d6
 NO_BUILD=	yes
 WRKSRC=	${WRKDIR}/PlexMediaServer-${PORTVERSION}-${PLEX_BUILD}
 
