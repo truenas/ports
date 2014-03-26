@@ -1,0 +1,107 @@
+--- src/istgt_iscsi.c.orig	2012-10-27 15:26:36.000000000 -0700
++++ src/istgt_iscsi.c	2014-03-26 16:30:12.000000000 -0700
+@@ -6661,7 +6661,7 @@
+ 
+ 	ISTGT_TRACELOG(ISTGT_TRACE_DEBUG, "istgt_iscsi_drop_all_conns\n");
+ 
+-	printf("drop all connections %s by %s\n",
++	ISTGT_WARNLOG("drop all connections %s by %s\n",
+ 	    conn->target_name, conn->initiator_name);
+ 
+ 	MTX_LOCK(&conn->istgt->mutex);
+@@ -6680,12 +6680,12 @@
+ 		}
+ 		if (strcasecmp(conn->target_name, xconn->target_name) == 0) {
+ 			if (xconn->sess != NULL) {
+-				printf("exiting conn by %s(%s), TSIH=%u, CID=%u\n",
++				ISTGT_WARNLOG("exiting conn by %s(%s), TSIH=%u, CID=%u\n",
+ 				    xconn->initiator_name,
+ 				    xconn->initiator_addr,
+ 				    xconn->sess->tsih, xconn->cid);
+ 			} else {
+-				printf("exiting conn by %s(%s), TSIH=xx, CID=%u\n",
++				ISTGT_WARNLOG("exiting conn by %s(%s), TSIH=xx, CID=%u\n",
+ 				    xconn->initiator_name,
+ 				    xconn->initiator_addr,
+ 				    xconn->cid);
+@@ -6697,7 +6697,7 @@
+ 	istgt_yield();
+ 	sleep(1);
+ 	if (num > max_conns + 1) {
+-		printf("try pthread_cancel\n");
++		ISTGT_TRACELOG(ISTGT_TRACE_DEBUG, "try pthread_cancel\n");
+ 		for (i = 0; i < g_nconns; i++) {
+ 			xconn = g_conns[i];
+ 			if (xconn == NULL)
+@@ -6709,12 +6709,12 @@
+ 			}
+ 			if (strcasecmp(conn->target_name, xconn->target_name) == 0) {
+ 				if (xconn->sess != NULL) {
+-					printf("exiting conn by %s(%s), TSIH=%u, CID=%u\n",
++					ISTGT_WARNLOG("exiting conn by %s(%s), TSIH=%u, CID=%u\n",
+ 					    xconn->initiator_port,
+ 					    xconn->initiator_addr,
+ 					    xconn->sess->tsih, xconn->cid);
+ 				} else {
+-					printf("exiting conn by %s(%s), TSIH=xx, CID=%u\n",
++					ISTGT_WARNLOG("exiting conn by %s(%s), TSIH=xx, CID=%u\n",
+ 					    xconn->initiator_port,
+ 					    xconn->initiator_addr,
+ 					    xconn->cid);
+@@ -6745,7 +6745,7 @@
+ 
+ 	ISTGT_TRACELOG(ISTGT_TRACE_DEBUG, "istgt_iscsi_drop_old_conns\n");
+ 
+-	printf("drop old connections %s by %s\n",
++	ISTGT_WARNLOG("drop old connections %s by %s\n",
+ 	    conn->target_name, conn->initiator_port);
+ 
+ 	MTX_LOCK(&conn->istgt->mutex);
+@@ -6764,12 +6764,12 @@
+ 		}
+ 		if (strcasecmp(conn->target_name, xconn->target_name) == 0) {
+ 			if (xconn->sess != NULL) {
+-				printf("exiting conn by %s(%s), TSIH=%u, CID=%u\n",
++				ISTGT_WARNLOG("exiting conn by %s(%s), TSIH=%u, CID=%u\n",
+ 				    xconn->initiator_port,
+ 				    xconn->initiator_addr,
+ 				    xconn->sess->tsih, xconn->cid);
+ 			} else {
+-				printf("exiting conn by %s(%s), TSIH=xx, CID=%u\n",
++				ISTGT_WARNLOG("exiting conn by %s(%s), TSIH=xx, CID=%u\n",
+ 				    xconn->initiator_port,
+ 				    xconn->initiator_addr,
+ 				    xconn->cid);
+@@ -6781,7 +6781,7 @@
+ 	istgt_yield();
+ 	sleep(1);
+ 	if (num > max_conns + 1) {
+-		printf("try pthread_cancel\n");
++		ISTGT_TRACELOG(ISTGT_TRACE_DEBUG, "try pthread_cancel\n");
+ 		for (i = 0; i < g_nconns; i++) {
+ 			xconn = g_conns[i];
+ 			if (xconn == NULL)
+@@ -6793,12 +6793,12 @@
+ 			}
+ 			if (strcasecmp(conn->target_name, xconn->target_name) == 0) {
+ 				if (xconn->sess != NULL) {
+-					printf("exiting conn by %s(%s), TSIH=%u, CID=%u\n",
++					ISTGT_WARNLOG("exiting conn by %s(%s), TSIH=%u, CID=%u\n",
+ 					    xconn->initiator_port,
+ 					    xconn->initiator_addr,
+ 					    xconn->sess->tsih, xconn->cid);
+ 				} else {
+-					printf("exiting conn by %s(%s), TSIH=xx, CID=%u\n",
++					ISTGT_WARNLOG("exiting conn by %s(%s), TSIH=xx, CID=%u\n",
+ 					    xconn->initiator_port,
+ 					    xconn->initiator_addr,
+ 					    xconn->cid);
+@@ -6813,7 +6813,7 @@
+ 	MTX_UNLOCK(&g_conns_mutex);
+ 
+ 	if (num != 0) {
+-		printf("exiting %d conns\n", num);
++		ISTGT_WARNLOG("exiting %d conns\n", num);
+ 	}
+ 	return 0;
+ }
