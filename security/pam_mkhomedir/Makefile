@@ -16,6 +16,8 @@ SUB_FILES=	pkg-message
 PLIST_FILES=	lib/pam_mkhomedir.so \
 		lib/pam_mkhomedir.so.2
 
+LDFLAGS+=	-lpam
+
 .if defined(WITH_PROFILE)
 PLIST_FILES+=	lib/libpam_mkhomedir_p.a
 MAKE_ARGS+=	PROFILE=yes
