@@ -1,9 +1,12 @@
---- ./Makefile.orig	2013-03-10 10:38:22.000000000 -0700
-+++ ./Makefile	2013-11-26 13:32:03.000000000 -0800
-@@ -1,5 +1,4 @@
+--- Makefile.orig	2013-03-10 10:38:22.000000000 -0700
++++ Makefile	2014-04-16 15:05:40.000000000 -0700
+@@ -1,6 +1,7 @@
 -CC=cc
 -CFLAGS=-O3 -Wall -Wextra
 +all: dev
  
++.c.o:
++	$(CC) -c $(CFLAGS) $(CPPFLAGS) -o $@ $<
  
  pigz: pigz.o yarn.o zopfli/deflate.o zopfli/blocksplitter.o zopfli/tree.o zopfli/lz77.o zopfli/cache.o zopfli/hash.o zopfli/util.o zopfli/squeeze.o zopfli/katajainen.o
+ 	$(CC) $(LDFLAGS) -o pigz $^ -lpthread -lz -lm
