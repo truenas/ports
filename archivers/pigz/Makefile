@@ -3,6 +3,7 @@
 
 PORTNAME=	pigz
 PORTVERSION=	2.3.1
+PORTREVISION=	1
 CATEGORIES=	archivers
 MASTER_SITES=	http://www.zlib.net/pigz/ \
 		http://freebsd.unixfreunde.de/sources/
