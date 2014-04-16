@@ -16,7 +16,7 @@ USE_PYTHON=	yes
 USE_PYDISTUTILS=	yes
 PYDISTUTILS_PKGNAME=	pybonjour
 
-BUILD_DEPENDS += ${LOCALBASE}/lib/lib/libdns_sd.so:${PORTSDIR}/net/mDNSResponder
+BUILD_DEPENDS += ${LOCALBASE}/lib/libdns_sd.so:${PORTSDIR}/net/mDNSResponder
 RUN_DEPENDS += ${BUILD_DEPENDS}
 
 EXAMPLESDIR=	${PREFIX}/share/examples/py-${PORTNAME}
