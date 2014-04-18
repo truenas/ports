@@ -58,7 +58,9 @@ PLIST_SUB+=	EFIEMU=${EFIEMU}
 LIB_DEPENDS+=	freetype.9:${PORTSDIR}/print/freetype2
 BUILD_DEPENDS+=	${LOCALBASE}/lib/X11/fonts/dejavu/DejaVuSans.ttf:${PORTSDIR}/x11-fonts/dejavu
 MAN1+=		grub-mkfont.1
+CONFIGURE_ARGS+=	--enable-grub-mkfont
 .else
+CONFIGURE_ARGS+=	--disable-grub-mkfont
 MKFONT=		"@comment "
 .endif
 
