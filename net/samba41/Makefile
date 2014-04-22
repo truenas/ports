@@ -153,13 +153,6 @@ OPTIONS_DEFAULT+=	AVAHI
 
 .include <bsd.port.options.mk>
 
-# !SAMBA4_SUBPORT
-.endif
-
-.include <bsd.port.pre.mk>
-
-.if !defined(SAMBA4_SUBPORT)
-
 CONFIGURE_ARGS+=	\
 			--with-pam \
 			--with-iconv \
@@ -368,6 +361,13 @@ BUILD_DEPENDS+=		${LOCALBASE}/share/xsl/docbook/manpages/docbook.xsl:${PORTSDIR}
 			xsltproc:${PORTSDIR}/textproc/libxslt
 .endif
 
+# !SAMBA4_SUBPORT
+.endif
+
+.include <bsd.port.pre.mk>
+
+.if !defined(SAMBA4_SUBPORT)
+
 SAMBA4_SUB=		SAMBA4_LOGDIR="${SAMBA4_LOGDIR}" \
 			SAMBA4_RUNDIR="${SAMBA4_RUNDIR}" \
 			SAMBA4_LOCKDIR="${SAMBA4_LOCKDIR}" \
@@ -538,7 +538,6 @@ post-install:
 .for dir in auth bind9 gensec gpext idmap ldb nss_info pdb perfcount process_model service vfs
 			@${MKDIR} "${STAGEDIR}${SAMBA4_MODULEDIR}/${dir}"
 .endfor
-
 
 .if ${PORT_OPTIONS:MDEVELOPER}
 test: build
