@@ -33,7 +33,7 @@ MAKE_JOBS_UNSAFE=	yes
 CPE_PRODUCT=	grub
 CPE_VENDOR=	gnu
 
-CONFIGURE_ARGS=	--with-platform=efi --disable-werror --localedir=${PREFIX}/share/locale
+CONFIGURE_ARGS=	--with-platform=efi --disable-werror --localedir=${PREFIX}/share/locale --disable-grub-mkfont
 CONFIGURE_ENV=	CPP="${CC} -E" \
 		LEX=${LOCALBASE}/bin/flex
 
