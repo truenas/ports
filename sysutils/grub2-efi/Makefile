@@ -31,7 +31,7 @@ USES=		bison gettext gmake tar:xz
 ONLY_FOR_ARCHS=	amd64
 MAKE_JOBS_UNSAFE=	yes
 
-CONFIGURE_ARGS=	--with-platform=efi --disable-werror --localedir=${PREFIX}/share/locale
+CONFIGURE_ARGS=	--with-platform=efi --disable-werror --localedir=${PREFIX}/share/locale --disable-grub-mkfont
 CONFIGURE_ENV=	CPP="${CC} -E" \
 		LEX=${LOCALBASE}/bin/flex
 
