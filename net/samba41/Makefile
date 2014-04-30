@@ -17,7 +17,7 @@ CONFLICTS?=		*samba3[2-6]-3.* samba4-4.0.*
 
 SAMBA4_BASENAME=	samba
 SAMBA4_PORTNAME=	${SAMBA4_BASENAME}4
-SAMBA4_VERSION=		4.1.6
+SAMBA4_VERSION=		4.1.7
 SAMBA4_DISTNAME=	${SAMBA4_BASENAME}-${SAMBA4_VERSION:S|.p|pre|:S|.r|rc|:S|.t|tp|:S|.a|alpha|}
 
 WRKSRC?=		${WRKDIR}/${DISTNAME}
@@ -152,13 +152,6 @@ OPTIONS_RADIO_ZEROCONF=	AVAHI MDNSRESPONDER
 OPTIONS_DEFAULT+=	AVAHI
 
 .include <bsd.port.options.mk>
-
-# !SAMBA4_SUBPORT
-.endif
-
-.include <bsd.port.pre.mk>
-
-.if !defined(SAMBA4_SUBPORT)
 
 CONFIGURE_ARGS+=	\
 			--with-pam \
@@ -368,6 +361,13 @@ BUILD_DEPENDS+=		${LOCALBASE}/share/xsl/docbook/manpages/docbook.xsl:${PORTSDIR}
 			xsltproc:${PORTSDIR}/textproc/libxslt
 .endif
 
+# !SAMBA4_SUBPORT
+.endif
+
+.include <bsd.port.pre.mk>
+
+.if !defined(SAMBA4_SUBPORT)
+
 SAMBA4_SUB=		SAMBA4_LOGDIR="${SAMBA4_LOGDIR}" \
 			SAMBA4_RUNDIR="${SAMBA4_RUNDIR}" \
 			SAMBA4_LOCKDIR="${SAMBA4_LOCKDIR}" \
@@ -538,7 +538,6 @@ post-install:
 .for dir in auth bind9 gensec gpext idmap ldb nss_info pdb perfcount process_model service vfs
 			@${MKDIR} "${STAGEDIR}${SAMBA4_MODULEDIR}/${dir}"
 .endfor
-
 
 .if ${PORT_OPTIONS:MDEVELOPER}
 test: build

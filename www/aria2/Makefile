@@ -1,8 +1,8 @@
 # Created by: Andrew Pantyukhin <infofarmer@FreeBSD.org>
-# $FreeBSD$
+# $FreeBSD: head/www/aria2/Makefile 349746 2014-03-31 14:05:20Z sunpoet $
 
 PORTNAME=	aria2
-PORTVERSION=	1.18.2
+PORTVERSION=	1.18.5
 CATEGORIES=	www
 MASTER_SITES=	SF/${PORTNAME}/stable/${PORTNAME}-${PORTVERSION}
 
@@ -22,16 +22,17 @@ CONFIGURE_ARGS=	--disable-epoll --enable-bittorrent --enable-libaria2 \
 		--with-libxml2 --with-libz --with-openssl --without-gnutls \
 		--without-libcares --without-libexpat --without-libgcrypt \
 		--without-libgmp --without-libnettle
-CONFIGURE_ENV=	OPENSSL_CFLAGS=-I${OPENSSLINC} OPENSSL_LIBS="-L${OPENSSLLIB} -lcrypto -lssl" \
-		ZLIB_CFLAGS=-I${INCLUDEDIR} ZLIB_LIBS="-L${LIBDIR} -lz" \
+CONFIGURE_ENV=	OPENSSL_CFLAGS=-I${OPENSSLINC} \
+		OPENSSL_LIBS="-L${OPENSSLLIB} -lcrypto -lssl" \
+		ZLIB_CFLAGS=-I${INCLUDEDIR} \
+		ZLIB_LIBS="-L${LIBDIR} -lz" \
 		ac_cv_path_RST2HTML=no
 GNU_CONFIGURE=	yes
 USE_CXXSTD=	c++11
 USE_GNOME=	libxml2
 USE_LDCONFIG=	yes
 USE_OPENSSL=	yes
-USE_XZ=		yes
-USES=		compiler:c++11-lib pathfix pkgconfig
+USES=		compiler:c++11-lib pathfix pkgconfig tar:xz
 
 CA_BUNDLE_CONFIGURE_OFF=--without-ca-bundle
 CA_BUNDLE_CONFIGURE_ON=	--with-ca-bundle=${LOCALBASE}/share/certs/ca-root-nss.crt
