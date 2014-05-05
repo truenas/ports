@@ -738,10 +738,6 @@ libdata/pkgconfig/wbclient.pc
 @dirrm %%PYTHON_SITELIBDIR%%/samba/external/testtools
 @dirrm %%PYTHON_SITELIBDIR%%/samba/external/subunit/tests
 @dirrm %%PYTHON_SITELIBDIR%%/samba/external/subunit
-@dirrm %%PYTHON_SITELIBDIR%%/samba/external/dns/rdtypes/IN
-@dirrm %%PYTHON_SITELIBDIR%%/samba/external/dns/rdtypes/ANY
-@dirrm %%PYTHON_SITELIBDIR%%/samba/external/dns/rdtypes
-@dirrm %%PYTHON_SITELIBDIR%%/samba/external/dns
 @dirrm %%PYTHON_SITELIBDIR%%/samba/external
 @dirrm %%PYTHON_SITELIBDIR%%/samba/dcerpc
 @dirrm %%PYTHON_SITELIBDIR%%/samba
