@@ -1,0 +1,15 @@
+--- etc/istgt.sh.in.orig	2014-05-06 08:25:47.266166426 -0700
++++ etc/istgt.sh.in	2014-05-06 08:26:09.226170371 -0700
+@@ -15,10 +15,11 @@
+ 
+ : ${istgt_enable:="NO"}
+ : ${istgt_config:="%%CONFIGDIR%%/${name}.conf"}
++: ${istgt_args:=""}
+ 
+ required_files="${istgt_config}"
+ pidfile=${istgt_pidfile:-"/var/run/${name}.pid"}
+ command="%%BINDIR%%/${name}"
+-command_args="-c ${istgt_config}"
++command_args="${istgt_args} -c ${istgt_config}"
+ 
+ run_rc_command "$1"
