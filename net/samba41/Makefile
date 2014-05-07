@@ -35,9 +35,6 @@ SAMBA4_INCLUDEDIR=	${PREFIX}/include/${SAMBA4_PORTNAME}
 SAMBA4_CONFDIR=		${PREFIX}/etc
 SAMBA4_CONFIG=		smb4.conf
 
-USE_GCC=		4.7+
-CFLAGS=			-g3 -ggdb -O0
-
 CONFIGURE_ARGS+=	--prefix="${PREFIX}" \
 			--exec-prefix="${PREFIX}" \
 			--mandir="${MANPREFIX}/man" \
@@ -365,6 +362,13 @@ BUILD_DEPENDS+=		${LOCALBASE}/share/xsl/docbook/manpages/docbook.xsl:${PORTSDIR}
 .endif
 
 .include <bsd.port.pre.mk>
+
+# FREENAS MODIFICATION -  Begin
+.if ${OSVERSION} < 1000000
+USE_GCC=		4.7+
+CFLAGS=			-g3 -ggdb -O0
+.endif
+# FREENAS MODIFICATION -  End
 
 .if !defined(SAMBA4_SUBPORT)
 
