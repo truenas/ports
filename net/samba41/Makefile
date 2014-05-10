@@ -370,13 +370,6 @@ PLIST_REINPLACE_${m:tu}=	s|^@comment ${m} ||g
 
 .include <bsd.port.pre.mk>
 
-# FREENAS MODIFICATION -  Begin
-.if ${OSVERSION} < 1000000
-USE_GCC=		4.7+
-CFLAGS=			-g3 -ggdb -O0
-.endif
-# FREENAS MODIFICATION -  End
-
 .if !defined(SAMBA4_SUBPORT)
 
 SAMBA4_SUB=		SAMBA4_LOGDIR="${SAMBA4_LOGDIR}" \
