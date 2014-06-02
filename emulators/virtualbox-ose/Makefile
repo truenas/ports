@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	virtualbox-ose
-DISTVERSION=	4.3.10
+DISTVERSION=	4.3.12
+PORTREVISION=	1
 CATEGORIES=	emulators
 MASTER_SITES=	http://download.virtualbox.org/virtualbox/${DISTVERSION}/ \
 		http://tmp.chruetertee.ch/ \
@@ -35,10 +36,14 @@ USE_GNOME=	libidl
 USE_PYTHON_BUILD=	yes
 
 HAS_CONFIGURE=	yes
-CONFIGURE_ARGS+=--with-gcc="${CC}" --with-g++="${CXX}" --passive-mesa
+CONFIGURE_ARGS+=	--disable-java --passive-mesa
+CONFIGURE_ARGS+=	--with-gcc="${CC}" --with-g++="${CXX}"
 USE_LDCONFIG=	${PREFIX}/lib/virtualbox
 
-CONFLICTS_INSTALL=	virtualbox-ose-devel-4* virtualbox-ose-legacy-4* virtualbox-ose-additions-4* virtualbox-ose-additions-devel-4*
+CONFLICTS_INSTALL=	virtualbox-ose-additions-4* \
+			virtualbox-ose-additions-devel-4* \
+			virtualbox-ose-devel-4* \
+			virtualbox-ose-legacy-4*
 
 VBOXUSER?=	vboxusers
 VBOXWSUSER?=	vboxusers
@@ -48,32 +53,38 @@ GROUPS=		${VBOXGROUP}
 VBOX_FRONTENDS=	VBoxAutostart VBoxHeadless
 VBOX_GUEST_VER=	${PORTVERSION}
 
-OPTIONS_DEFINE=	QT4 DEBUG GUESTADDITIONS DBUS PULSEAUDIO UDPTUNNEL VDE VNC WEBSERVICE NLS X11 VPX PYTHON
-OPTIONS_DEFAULT=	QT4 DBUS X11 UDPTUNNEL VNC WEBSERVICE PYTHON
+OPTIONS_DEFINE=	DBUS DEBUG GUESTADDITIONS MANUAL NLS PULSEAUDIO PYTHON \
+		QT4 UDPTUNNEL VDE VNC VPX WEBSERVICE X11
+OPTIONS_DEFAULT=	DBUS PYTHON QT4 UDPTUNNEL VNC WEBSERVICE X11
 OPTIONS_SUB=	yes
+
 DEBUG_DESC=	Debug symbols, additional logs and assertions
-QT4_DESC=	Build with QT4 Frontend
 GUESTADDITIONS_DESC=	Build with Guest Additions
+MANUAL_DESC=	Build with user manual
+QT4_DESC=	Build with QT4 Frontend
 UDPTUNNEL_DESC=	Build with UDP tunnel support
 VDE_DESC=	Build with VDE support
 VNC_DESC=	Build with VNC support
-WEBSERVICE_DESC=	Build Webservice
 VPX_DESC=	Use vpx for video capturing
-
-PULSEAUDIO_LIB_DEPENDS=	libpulse.so:${PORTSDIR}/audio/pulseaudio
-PULSEAUDIO_CONFIGURE_OFF=	--disable-pulse
+WEBSERVICE_DESC=	Build Webservice
 
 DBUS_LIB_DEPENDS=	libdbus-1.so:${PORTSDIR}/devel/dbus
-DBUS_CONFIGURE_OFF=	--disable-dbus
-
+PULSEAUDIO_LIB_DEPENDS=	libpulse.so:${PORTSDIR}/audio/pulseaudio
 VNC_LIB_DEPENDS=	libvncserver.so:${PORTSDIR}/net/libvncserver
-VNC_CONFIGURE_ON=	--enable-vnc
-
 VPX_LIB_DEPENDS=	libvpx.so:${PORTSDIR}/multimedia/libvpx
-VPX_CONFIGURE_OFF=	--disable-libvpx
 
 VDE_RUN_DEPENDS=	vde_switch:${PORTSDIR}/net/vde2
+
+DBUS_CONFIGURE_OFF=	--disable-dbus
+DEBUG_CONFIGURE_ON=	--build-debug
+MANUAL_CONFIGURE_OFF=	--disable-docs
+PULSEAUDIO_CONFIGURE_OFF=	--disable-pulse
+PYTHON_CONFIGURE_OFF=	--disable-python
+QT4_CONFIGURE_OFF=	--disable-qt4
 VDE_CONFIGURE_ON=	--enable-vde
+VNC_CONFIGURE_ON=	--enable-vnc
+VPX_CONFIGURE_OFF=	--disable-libvpx
+X11_CONFIGURE_OFF=	--build-headless
 
 # bmake doesn't know about unsetenv=true
 .if defined(.PARSEDIR)
@@ -82,8 +93,6 @@ ENV=
 .else
 .SHELL:		path="/bin/sh" unsetenv=true
 .endif
-
-.include <bsd.port.options.mk>
 
 PLIST_SUB+=	GUEST_VER=${VBOX_GUEST_VER} \
 		PYTHON_VER=${PYTHON_VER} \
@@ -94,9 +103,7 @@ SUB_LIST+=	VBOXUSER=${VBOXUSER} \
 		VBOXWSUSER=${VBOXWSUSER}
 USE_RC_SUBR+=	vboxheadless vboxwatchdog
 
-KMK_BUILDTYPE=	release
-KMK_CONFIG=	VBOX_LIBPATH_X11=${LOCALBASE} VBOX_FREEBSD_SRC=${SRC_BASE}/sys
-KMK_FLAGS=	-j${MAKE_JOBS_NUMBER}
+.include <bsd.port.options.mk>
 
 .if empty(PORT_OPTIONS:MQT4) && !empty(PORT_OPTIONS:MNLS)
 BROKEN=		NLS support requires QT4 frontend. Run 'make config' again!
@@ -106,31 +113,10 @@ BROKEN=		NLS support requires QT4 frontend. Run 'make config' again!
 BROKEN=		QT4 frontend requires X11 support. Run 'make config' again!
 .endif
 
-.if ${PORT_OPTIONS:MX11}
-USE_SDL=	sdl
-USE_XORG=	xcursor xmu inputproto xinerama
-VBOX_FRONTENDS+=VBoxSDL
+.if ${PORT_OPTIONS:MDEBUG}
+KMK_BUILDTYPE=	debug
 .else
-CONFIGURE_ARGS+=--build-headless
-.endif
-
-.if ${PORT_OPTIONS:MQT4}
-QT_NONSTANDARD=	yes
-USE_QT4=	gui network moc_build opengl uic_build rcc_build linguist
-INSTALLS_ICONS=	yes
-VBOX_FRONTENDS+=VirtualBox VBoxTestOGL
-.else
-CONFIGURE_ARGS+=--disable-qt4
-.endif
-
-.if ${PORT_OPTIONS:MPYTHON}
-USE_PYTHON=	2
-USE_PYDISTUTILS=	yes
-PYDISTUTILS_PKGNAME=	vboxapi
-PYDISTUTILS_PKGVERSION=	1.0
-PYDISTUTILS_NOEGGINFO=	yes
-.else
-CONFIGURE_ARGS+=--disable-python
+KMK_BUILDTYPE=	release
 .endif
 
 .if ${PORT_OPTIONS:MGUESTADDITIONS}
@@ -140,15 +126,42 @@ RESTRICTED=	for personal use only
 RESTRICTED_FILES=	${GUESTADDITIONS}
 .endif
 
-.if ${PORT_OPTIONS:MDEBUG}
-KMK_BUILDTYPE=	debug
-KMK_FLAGS+=	BUILD_TYPE=debug
+.if ${PORT_OPTIONS:MMANUAL}
+USE_TEX=	dvipsk:build formats:build texlive
+.endif
+
+.if ${PORT_OPTIONS:MPYTHON}
+USE_PYTHON=	2
+USE_PYDISTUTILS=	yes
+PYDISTUTILS_PKGNAME=	vboxapi
+PYDISTUTILS_PKGVERSION=	1.0
+PYDISTUTILS_NOEGGINFO=	yes
+.endif
+
+.if ${PORT_OPTIONS:MQT4}
+QT_NONSTANDARD=	yes
+USE_QT4=	linguist_build moc_build rcc_build uic_build
+USE_QT4+=	gui network opengl
+INSTALLS_ICONS=	yes
+VBOX_FRONTENDS+=VirtualBox VBoxTestOGL
 .endif
 
 .if ${PORT_OPTIONS:MWEBSERVICE}
 BUILD_DEPENDS+=	soapcpp2:${PORTSDIR}/devel/gsoap
 VBOX_WEB=	vboxwebsrv webtest
 USE_RC_SUBR+=	vboxwebsrv
+.endif
+
+.if ${PORT_OPTIONS:MX11}
+USE_SDL=	sdl
+USE_XORG=	xcursor xmu inputproto xinerama
+VBOX_FRONTENDS+=VBoxSDL
+.endif
+
+.if ${PORT_OPTIONS:MPYTHON} || ${PORT_OPTIONS:MWEBSERVICE}
+PLIST_SUB+=	SDK=""
+.else
+PLIST_SUB+=	SDK="@comment "
 .endif
 
 .if ${ARCH} == i386
@@ -160,6 +173,10 @@ PLIST_SUB+=	I386="@comment "
 .endif
 
 PLIST_SUB+=	ARCH="${KMK_ARCH}"
+
+KMK_BUILDDIR=	${WRKSRC}/out/${KMK_ARCH}/${KMK_BUILDTYPE}
+KMK_CONFIG=	VBOX_LIBPATH_X11=${LOCALBASE} VBOX_FREEBSD_SRC=${SRC_BASE}/sys
+KMK_FLAGS=	-j${MAKE_JOBS_NUMBER}
 
 .include <bsd.port.pre.mk>
 
@@ -211,11 +228,6 @@ post-patch:
 	@${ECHO} 'VBOX_PATH_GSOAP_IMPORT = ${PREFIX}/share/gsoap/import' >> ${WRKSRC}/LocalConfig.kmk
 	@${ECHO} 'VBOX_GCC_PEDANTIC_CXX = -Wshadow $(VBOX_GCC_WARN) -Wno-long-long' >> ${WRKSRC}/LocalConfig.kmk
 .endif
-.if empty(PORT_OPTIONS:MX11)
-	@${ECHO} 'VBOX_WITH_VDMA =' >> ${WRKSRC}/LocalConfig.kmk
-	@${ECHO} 'VBOX_WITH_WDDM =' >> ${WRKSRC}/LocalConfig.kmk
-	@${ECHO} 'VBOX_WITH_WDDM_W8 =' >> ${WRKSRC}/LocalConfig.kmk
-.endif
 .if ${COMPILER_TYPE} == clang
 	@${REINPLACE_CMD} -e 's| -finline-limit=8000||' \
 	    -e 's| -mpreferred-stack-boundary=2||' ${WRKSRC}/Config.kmk
@@ -235,44 +247,28 @@ post-patch:
 	@${ECHO} 'VBOX_ICONV_DEFS = LIBICONV_PLUG' >> ${WRKSRC}/LocalConfig.kmk
 .endif
 
-pre-build:
-	@${REINPLACE_CMD} -e 's|/bin/bash|/bin/sh|' ${WRKSRC}/env.sh
-
 do-build:
-	cd ${WRKSRC} && ${SH} env.sh && \
-	    ${KMK_CONFIG} ${LOCALBASE}/bin/kmk ${KMK_FLAGS}
+	cd ${WRKSRC} && \
+	    ${SH} -c '. env.sh && ${KMK_CONFIG} ${LOCALBASE}/bin/kmk ${KMK_FLAGS}'
+.if ${PORT_OPTIONS:MPYTHON}
+	${PYTHON_CMD} -mcompileall ${KMK_BUILDDIR}/bin/sdk/bindings/xpcom/python/xpcom
+.endif
 
 do-install:
 	${MKDIR} ${STAGEDIR}${DATADIR}
-	cd ${WRKSRC}/out/${KMK_ARCH}/${KMK_BUILDTYPE}/bin/sdk/bindings/xpcom && ${COPYTREE_SHARE} "idl samples" ${STAGEDIR}${DATADIR}
+	cd ${KMK_BUILDDIR}/bin/sdk/bindings/xpcom && ${COPYTREE_SHARE} "idl samples" ${STAGEDIR}${DATADIR}
 
 	${MKDIR} ${STAGEDIR}${PREFIX}/include/virtualbox
-	cd ${WRKSRC}/out/${KMK_ARCH}/${KMK_BUILDTYPE}/bin/sdk/bindings/xpcom/include && ${COPYTREE_SHARE} "*" ${STAGEDIR}${PREFIX}/include/virtualbox
+	cd ${KMK_BUILDDIR}/bin/sdk/bindings/xpcom/include && ${COPYTREE_SHARE} "*" ${STAGEDIR}${PREFIX}/include/virtualbox
 
 	${MKDIR} ${STAGEDIR}${PREFIX}/lib/virtualbox
-	cd ${WRKSRC}/out/${KMK_ARCH}/${KMK_BUILDTYPE}/bin && ${COPYTREE_SHARE} "*.so *.gc *.r0 *.fd components VBoxExtPackHelperApp" ${STAGEDIR}${PREFIX}/lib/virtualbox
-
-.if ${PORT_OPTIONS:MNLS}
-	cd ${WRKSRC}/out/${KMK_ARCH}/${KMK_BUILDTYPE}/obj/VirtualBox/qtnls && ${COPYTREE_SHARE} "*.qm" ${STAGEDIR}${DATADIR}/nls
-.endif
+	cd ${KMK_BUILDDIR}/bin && ${COPYTREE_SHARE} "*.so *.gc *.r0 *.fd components VBoxExtPackHelperApp" ${STAGEDIR}${PREFIX}/lib/virtualbox
+	${LN} -sf ${DATADIR}/sdk ${STAGEDIR}${PREFIX}/lib/virtualbox
 
 .for f in VBoxManage VBoxNetAdpCtl VBoxNetDHCP VBoxSVC VBoxXPCOMIPCD VBoxBalloonCtrl ${VBOX_FRONTENDS} ${VBOX_WEB}
-	${INSTALL_PROGRAM} ${WRKSRC}/out/${KMK_ARCH}/${KMK_BUILDTYPE}/bin/${f} ${STAGEDIR}${PREFIX}/lib/virtualbox/
+	${INSTALL_PROGRAM} ${KMK_BUILDDIR}/bin/${f} ${STAGEDIR}${PREFIX}/lib/virtualbox/
 	${LN} -sf ${PREFIX}/lib/virtualbox/${f} ${STAGEDIR}${PREFIX}/bin/
 .endfor
-
-.if ${PORT_OPTIONS:MVNC}
-	${MKDIR} ${STAGEDIR}${PREFIX}/lib/virtualbox/ExtensionPacks/VNC/${KMK_ARCH}
-	${INSTALL_DATA} ${WRKSRC}/out/${KMK_ARCH}/${KMK_BUILDTYPE}/bin/ExtensionPacks/VNC/ExtPack* ${STAGEDIR}${PREFIX}/lib/virtualbox/ExtensionPacks/VNC/
-	${INSTALL_LIB} ${WRKSRC}/out/${KMK_ARCH}/${KMK_BUILDTYPE}/bin/ExtensionPacks/VNC/${KMK_ARCH}/* ${STAGEDIR}${PREFIX}/lib/virtualbox/ExtensionPacks/VNC/${KMK_ARCH}/
-.endif
-
-.if ${PORT_OPTIONS:MWEBSERVICE}
-	${MKDIR} ${STAGEDIR}${DATADIR}/sdk/bindings/webservice
-.for f in vboxweb.wsdl
-	${INSTALL_DATA} ${WRKSRC}/out/${KMK_ARCH}/${KMK_BUILDTYPE}/obj/webservice/${f} ${STAGEDIR}${DATADIR}/sdk/bindings/webservice/
-.endfor
-.endif
 
 .if ${PORT_OPTIONS:MGUESTADDITIONS}
 	${MKDIR} ${STAGEDIR}${PREFIX}/lib/virtualbox/additions
@@ -280,19 +276,44 @@ do-install:
 	${LN} -sf ${PREFIX}/lib/virtualbox/additions/${GUESTADDITIONS} ${STAGEDIR}${PREFIX}/lib/virtualbox/additions/VBoxGuestAdditions.iso
 .endif
 
+.if ${PORT_OPTIONS:MMANUAL}
+	${MKDIR} ${STAGEDIR}${DOCSDIR}
+	${INSTALL_DATA} ${KMK_BUILDDIR}/bin/UserManual*.pdf ${STAGEDIR}${DOCSDIR}
+.endif
+
+.if ${PORT_OPTIONS:MNLS}
+	cd ${KMK_BUILDDIR}/obj/VirtualBox/qtnls && ${COPYTREE_SHARE} "*.qm" ${STAGEDIR}${DATADIR}/nls
+.endif
+
 .if ${PORT_OPTIONS:MPYTHON}
-	cd ${WRKSRC}/out/${KMK_ARCH}/${KMK_BUILDTYPE}/bin/sdk/installer && \
+	cd ${KMK_BUILDDIR}/bin/sdk/installer && \
 	    ${SETENV} VBOX_INSTALL_PATH="${PREFIX}/lib/virtualbox" \
 	    ${PYTHON_CMD} vboxapisetup.py install --root=${STAGEDIR}
 
-	@${MKDIR} ${STAGEDIR}${PYTHON_SITELIBDIR}
-	cd ${WRKSRC}/out/${KMK_ARCH}/${KMK_BUILDTYPE}/bin/sdk/bindings/xpcom/python && ${COPYTREE_SHARE} "*" ${STAGEDIR}${PYTHON_SITELIBDIR}
-	${PYTHON_CMD} -mcompileall ${STAGEDIR}${PYTHON_SITELIBDIR}/xpcom/
+	@${MKDIR} ${STAGEDIR}${PYTHON_SITELIBDIR}/xpcom
+	cd ${KMK_BUILDDIR}/bin/sdk/bindings/xpcom/python/xpcom && \
+	    ${COPYTREE_SHARE} "*" ${STAGEDIR}${PYTHON_SITELIBDIR}/xpcom
+	@${MKDIR} ${STAGEDIR}${DATADIR}/sdk/bindings/xpcom/python
+	${LN} -sf ${PYTHON_SITELIBDIR}/xpcom \
+	    ${STAGEDIR}${DATADIR}/sdk/bindings/xpcom/python
 .endif
 
 .if ${PORT_OPTIONS:MQT4}
 	${INSTALL_DATA} ${WRKSRC}/src/VBox/Frontends/VirtualBox/images/OSE/VirtualBox_48px.png ${STAGEDIR}${PREFIX}/share/pixmaps/VBox.png
 	${INSTALL_DATA} ${WRKSRC}/src/VBox/Installer/freebsd/virtualbox.desktop ${STAGEDIR}${PREFIX}/share/applications/virtualbox.desktop
+.endif
+
+.if ${PORT_OPTIONS:MVNC}
+	${MKDIR} ${STAGEDIR}${PREFIX}/lib/virtualbox/ExtensionPacks/VNC/${KMK_ARCH}
+	${INSTALL_DATA} ${KMK_BUILDDIR}/bin/ExtensionPacks/VNC/ExtPack* ${STAGEDIR}${PREFIX}/lib/virtualbox/ExtensionPacks/VNC/
+	${INSTALL_LIB} ${KMK_BUILDDIR}/bin/ExtensionPacks/VNC/${KMK_ARCH}/* ${STAGEDIR}${PREFIX}/lib/virtualbox/ExtensionPacks/VNC/${KMK_ARCH}/
+.endif
+
+.if ${PORT_OPTIONS:MWEBSERVICE}
+	${MKDIR} ${STAGEDIR}${DATADIR}/sdk/bindings/webservice
+.for f in vboxweb.wsdl
+	${INSTALL_DATA} ${KMK_BUILDDIR}/obj/webservice/${f} ${STAGEDIR}${DATADIR}/sdk/bindings/webservice/
+.endfor
 .endif
 
 .include <bsd.port.post.mk>
