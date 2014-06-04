@@ -8,7 +8,6 @@ bin/cnid2_create
 bin/dbd
 bin/macusers
 bin/netatalk-config
-bin/uniconv
 @unexec if cmp -s %D/etc/afp.conf %D/etc/afp.conf.dist; then rm -f %D/etc/afp.conf; fi
 etc/afp.conf.dist
 @exec [ -f %B/afp.conf ] || cp %B/%f %B/afp.conf
@@ -72,7 +71,7 @@ include/atalk/volume.h
 lib/libatalk.a
 lib/libatalk.la
 lib/libatalk.so
-lib/libatalk.so.13
+lib/libatalk.so.14
 man/man1/ad.1.gz
 man/man1/afpldaptest.1.gz
 man/man1/afppasswd.1.gz
