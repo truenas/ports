@@ -1,6 +1,6 @@
---- ./libatalk/adouble/ad_open.c
-+++ /tmp/ad_open.c
-@@ -586,7 +586,7 @@ static int ad_convert_osx(const char *path, struct adouble *ad)
+--- libatalk/adouble/ad_open.c.orig	2014-05-27 12:33:15.000000000 -0400
++++ libatalk/adouble/ad_open.c	2014-05-27 12:34:00.000000000 -0400
+@@ -586,7 +586,7 @@ static int ad_convert_osx(const char *pa
  
      origlen = ad_getentryoff(ad, ADEID_RFORK) + ad_getentrylen(ad, ADEID_RFORK);
  
