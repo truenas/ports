@@ -154,11 +154,7 @@ display_loaderopts()
       echo "$line" | grep -q "vfs.root.mountfrom"
       if [ $? -eq 0 ] ; then continue ; fi
 
-      line="`echo $line | sed 's|"||g'`"
-      key="`echo $line | cut -d '=' -f 1`"
-      val="`echo $line | cut -d '=' -f 2`"
-      if [ -z "$key" -o -z "$val" ] ; then continue ; fi
-      echo "    set kFreeBSD.${key}=\"${val}\""
+      echo "    set kFreeBSD.${line}"
     done < /tmp/.lSysCtls.$$
   fi
 
