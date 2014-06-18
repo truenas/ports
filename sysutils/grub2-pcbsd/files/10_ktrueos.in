@@ -203,6 +203,8 @@ detect_beadm()
 
    if [ -e "/etc/defaults/pcbsd" ] ; then
       NICK="PC-BSD"
+   elif [ -s "/etc/version" ]; then
+      NICK=`cut -f1 -d- /etc/version`
    else
       NICK="TrueOS"
    fi
