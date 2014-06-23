@@ -334,6 +334,7 @@
     SUBDIR += gkrellm2
     SUBDIR += gkrelltop
     SUBDIR += gksu
+    SUBDIR += glusterfs
     SUBDIR += gnome-control-center
     SUBDIR += gnome-device-manager
     SUBDIR += gnome-mount
