@@ -34,7 +34,6 @@ USES+=		fuse
 # autogen.sh
 USES+=		libtool
 USES+=		bison:build
-BUILD_DEPENDS+=	${LIBTOOL}:${PORTSDIR}/devel/libtool
 USE_AUTOTOOLS=	aclocal:env autoconf:env automake:env autoheader:env libtoolize:env
 GNU_CONFIGURE=	yes
 
