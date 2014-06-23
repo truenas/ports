@@ -22,7 +22,7 @@ lib/glusterfs/xlator/cluster/switch.so
 lib/glusterfs/xlator/debug/error-gen.so
 lib/glusterfs/xlator/debug/io-stats.so
 lib/glusterfs/xlator/debug/trace.so
-lib/glusterfs/xlator/encryption/crypt.so
+@comment lib/glusterfs/xlator/encryption/crypt.so
 lib/glusterfs/xlator/encryption/rot-13.so
 lib/glusterfs/xlator/features/access-control.so
 lib/glusterfs/xlator/features/barrier.so
@@ -76,19 +76,14 @@ lib/glusterfs/xlator/testing/features/template.so
 lib/glusterfs/xlator/testing/performance/symlink-cache.so
 lib/libgfapi.so
 lib/libgfapi.so.7
-lib/libgfapi.so.7.0.0
 lib/libgfchangelog.so
 lib/libgfchangelog.so.0
-lib/libgfchangelog.so.0.0.1
 lib/libgfrpc.so
 lib/libgfrpc.so.0
-lib/libgfrpc.so.0.0.1
 lib/libgfxdr.so
 lib/libgfxdr.so.0
-lib/libgfxdr.so.0.0.1
 lib/libglusterfs.so
 lib/libglusterfs.so.0
-lib/libglusterfs.so.0.0.1
 lib/ocf/resource.d/glusterfs/glusterd
 lib/ocf/resource.d/glusterfs/volume
 %%PYTHON_SITELIBDIR%%/gluster/__init__.py
