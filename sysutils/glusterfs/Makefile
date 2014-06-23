@@ -32,7 +32,7 @@ USES+=		fuse
 # This is tricky enough that I gave up trying to USE_AUTOTOOLS natively;
 # this just makes sure they're all in place and uses the upstream
 # autogen.sh
-USES+=		libtool bison:build
+USES+=		libtool bison:build pkgconfig
 USE_AUTOTOOLS=	aclocal:env autoconf:env automake:env autoheader:env libtoolize:env
 GNU_CONFIGURE=	yes
 
