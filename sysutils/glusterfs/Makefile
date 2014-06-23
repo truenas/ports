@@ -16,6 +16,7 @@ USE_LDCONFIG=	yes
 
 # Links against libpython, installs gluster package
 USE_PYTHON=	yes
+USE_PYTHON_BUILD=	yes
 
 # And libintl
 USES+=		gettext:lib
@@ -35,6 +36,9 @@ USES+=		fuse
 USES+=		libtool bison:build pkgconfig
 USE_AUTOTOOLS=	aclocal:env autoconf:env automake:env autoheader:env libtoolize:env
 GNU_CONFIGURE=	yes
+
+CFLAGS+=        -I${LOCALBASE}/include
+CPPFLAGS+=        -I${LOCALBASE}/include
 
 pre-configure:
 	(cd ${CONFIGURE_WRKSRC} && ${SETENV} ${AUTOTOOLS_ENV} ./autogen.sh) 
