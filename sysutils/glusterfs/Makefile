@@ -33,7 +33,10 @@ USES+=		fuse
 # this just makes sure they're all in place and uses the upstream
 # autogen.sh
 USES+=		libtool
-BUILD_DEPENDS+=	${LIBTOOL}:${PORTSDIR}/devel/libtool
+BUILD_DEPENDS+=	${LIBTOOL}:${PORTSDIR}/devel/libtool \
+		${ACLOCAL}:${PORTSDIR}/devel/automake \
+		${AUTOCONF}:${PORTSDIR}/devel/autoconf
+
 USE_AUTOTOOLS=	aclocal:env autoconf:env automake:env autoheader:env
 GNU_CONFIGURE=	yes
 
