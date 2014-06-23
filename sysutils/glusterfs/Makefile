@@ -38,6 +38,6 @@ USE_AUTOTOOLS=	aclocal:env autoconf:env automake:env autoheader:env
 GNU_CONFIGURE=	yes
 
 pre-configure:
-	( cd ${BUILD_WRKSRC} ; ./autogen.sh )
+	(cd ${CONFIGURE_WRKSRC} && ${SETENV} ${AUTOTOOLS_ENV} ./autogen.sh) 
 
 .include <bsd.port.mk>
