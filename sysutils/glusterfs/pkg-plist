@@ -1,0 +1,169 @@
+%%ETCDIR%%/gluster-rsyslog-5.8.conf
+%%ETCDIR%%/gluster-rsyslog-7.2.conf
+%%ETCDIR%%/glusterd.vol
+%%ETCDIR%%/glusterfs-georep-logrotate
+%%ETCDIR%%/glusterfs-logrotate
+%%ETCDIR%%/group-virt.example
+%%ETCDIR%%/logger.conf.example
+include/glusterfs/api/glfs-handles.h
+include/glusterfs/api/glfs.h
+include/glusterfs/gfchangelog/changelog.h
+lib/glusterfs/auth/addr.so
+lib/glusterfs/auth/login.so
+lib/glusterfs/rpc-transport/socket.so
+lib/glusterfs/xlator/cluster/afr.so
+lib/glusterfs/xlator/cluster/dht.so
+lib/glusterfs/xlator/cluster/distribute.so
+lib/glusterfs/xlator/cluster/nufa.so
+lib/glusterfs/xlator/cluster/pump.so
+lib/glusterfs/xlator/cluster/replicate.so
+lib/glusterfs/xlator/cluster/stripe.so
+lib/glusterfs/xlator/cluster/switch.so
+lib/glusterfs/xlator/debug/error-gen.so
+lib/glusterfs/xlator/debug/io-stats.so
+lib/glusterfs/xlator/debug/trace.so
+lib/glusterfs/xlator/encryption/crypt.so
+lib/glusterfs/xlator/encryption/rot-13.so
+lib/glusterfs/xlator/features/access-control.so
+lib/glusterfs/xlator/features/barrier.so
+lib/glusterfs/xlator/features/cdc.so
+lib/glusterfs/xlator/features/changelog.so
+lib/glusterfs/xlator/features/gfid-access.so
+lib/glusterfs/xlator/features/glupy.so
+lib/glusterfs/xlator/features/glupy/debug-trace.py
+lib/glusterfs/xlator/features/glupy/debug-trace.pyc
+lib/glusterfs/xlator/features/glupy/debug-trace.pyo
+lib/glusterfs/xlator/features/glupy/helloworld.py
+lib/glusterfs/xlator/features/glupy/helloworld.pyc
+lib/glusterfs/xlator/features/glupy/helloworld.pyo
+lib/glusterfs/xlator/features/glupy/negative.py
+lib/glusterfs/xlator/features/glupy/negative.pyc
+lib/glusterfs/xlator/features/glupy/negative.pyo
+lib/glusterfs/xlator/features/index.so
+lib/glusterfs/xlator/features/locks.so
+lib/glusterfs/xlator/features/mac-compat.so
+lib/glusterfs/xlator/features/marker.so
+lib/glusterfs/xlator/features/posix-locks.so
+lib/glusterfs/xlator/features/prot_client.so
+lib/glusterfs/xlator/features/prot_dht.so
+lib/glusterfs/xlator/features/prot_server.so
+lib/glusterfs/xlator/features/quiesce.so
+lib/glusterfs/xlator/features/quota.so
+lib/glusterfs/xlator/features/quotad.so
+lib/glusterfs/xlator/features/read-only.so
+lib/glusterfs/xlator/features/snapview-client.so
+lib/glusterfs/xlator/features/snapview-server.so
+lib/glusterfs/xlator/features/worm.so
+lib/glusterfs/xlator/meta.so
+lib/glusterfs/xlator/mgmt/glusterd.so
+lib/glusterfs/xlator/mount/api.so
+lib/glusterfs/xlator/mount/fuse.so
+lib/glusterfs/xlator/nfs/server.so
+lib/glusterfs/xlator/performance/io-cache.so
+lib/glusterfs/xlator/performance/io-threads.so
+lib/glusterfs/xlator/performance/md-cache.so
+lib/glusterfs/xlator/performance/open-behind.so
+lib/glusterfs/xlator/performance/quick-read.so
+lib/glusterfs/xlator/performance/read-ahead.so
+lib/glusterfs/xlator/performance/readdir-ahead.so
+lib/glusterfs/xlator/performance/stat-prefetch.so
+lib/glusterfs/xlator/performance/write-behind.so
+lib/glusterfs/xlator/protocol/client.so
+lib/glusterfs/xlator/protocol/server.so
+lib/glusterfs/xlator/storage/posix.so
+lib/glusterfs/xlator/system/posix-acl.so
+lib/glusterfs/xlator/testing/features/template.so
+lib/glusterfs/xlator/testing/performance/symlink-cache.so
+lib/libgfapi.so
+lib/libgfapi.so.7
+lib/libgfapi.so.7.0.0
+lib/libgfchangelog.so
+lib/libgfchangelog.so.0
+lib/libgfchangelog.so.0.0.1
+lib/libgfrpc.so
+lib/libgfrpc.so.0
+lib/libgfrpc.so.0.0.1
+lib/libgfxdr.so
+lib/libgfxdr.so.0
+lib/libgfxdr.so.0.0.1
+lib/libglusterfs.so
+lib/libglusterfs.so.0
+lib/libglusterfs.so.0.0.1
+lib/ocf/resource.d/glusterfs/glusterd
+lib/ocf/resource.d/glusterfs/volume
+%%PYTHON_SITELIBDIR%%/gluster/__init__.py
+%%PYTHON_SITELIBDIR%%/gluster/__init__.pyc
+%%PYTHON_SITELIBDIR%%/gluster/__init__.pyo
+%%PYTHON_SITELIBDIR%%/gluster/gfapi.py
+%%PYTHON_SITELIBDIR%%/gluster/gfapi.pyc
+%%PYTHON_SITELIBDIR%%/gluster/gfapi.pyo
+%%PYTHON_SITELIBDIR%%/gluster/glupy.py
+%%PYTHON_SITELIBDIR%%/gluster/glupy.pyc
+%%PYTHON_SITELIBDIR%%/gluster/glupy.pyo
+libdata/pkgconfig/glusterfs-api.pc
+libdata/pkgconfig/libgfchangelog.pc
+man/man8/gluster.8.gz
+man/man8/glusterd.8.gz
+man/man8/glusterfs.8.gz
+man/man8/glusterfsd.8.gz
+man/man8/mount.glusterfs.8.gz
+sbin/gluster
+sbin/glusterd
+sbin/glusterfs
+sbin/glusterfsd
+%%PORTDOCS%%%%DOCSDIR%%/benchmarking/README
+%%PORTDOCS%%%%DOCSDIR%%/benchmarking/glfs-bm.c
+%%PORTDOCS%%%%DOCSDIR%%/benchmarking/launch-script.sh
+%%PORTDOCS%%%%DOCSDIR%%/benchmarking/local-script.sh
+%%PORTDOCS%%%%DOCSDIR%%/benchmarking/rdd.c
+%%PORTDOCS%%%%DOCSDIR%%/glusterfs-mode.el
+%%PORTDOCS%%%%DOCSDIR%%/glusterfs.vim
+%%DATADIR%%/scripts/generate-gfid-file.sh
+%%DATADIR%%/scripts/get-gfid.sh
+%%DATADIR%%/scripts/gsync-sync-gfid
+%%DATADIR%%/scripts/gsync-upgrade.sh
+%%DATADIR%%/scripts/post-upgrade-script-for-quota.sh
+%%DATADIR%%/scripts/pre-upgrade-script-for-quota.sh
+%%DATADIR%%/scripts/slave-upgrade.sh
+var/lib/glusterd/groups/virt
+@dirrmtry %%ETCDIR%%
+@dirrmtry include/glusterfs/api
+@dirrmtry include/glusterfs/gfchangelog
+@dirrmtry include/glusterfs
+@dirrmtry lib/glusterfs/auth
+@dirrmtry lib/glusterfs/rpc-transport
+@dirrmtry lib/glusterfs/xlator/cluster
+@dirrmtry lib/glusterfs/xlator/debug
+@dirrmtry lib/glusterfs/xlator/encryption
+@dirrmtry lib/glusterfs/xlator/features/glupy
+@dirrmtry lib/glusterfs/xlator/features
+@dirrmtry lib/glusterfs/xlator/mgmt
+@dirrmtry lib/glusterfs/xlator/mount
+@dirrmtry lib/glusterfs/xlator/nfs
+@dirrmtry lib/glusterfs/xlator/performance
+@dirrmtry lib/glusterfs/xlator/protocol
+@dirrmtry lib/glusterfs/xlator/storage
+@dirrmtry lib/glusterfs/xlator/system
+@dirrmtry lib/glusterfs/xlator/testing/features
+@dirrmtry lib/glusterfs/xlator/testing/performance
+@dirrmtry lib/glusterfs/xlator/testing
+@dirrmtry lib/glusterfs/xlator
+@dirrmtry lib/glusterfs
+@dirrmtry lib/ocf/resource.d/glusterfs
+@dirrmtry lib/ocf/resource.d
+@dirrmtry lib/ocf
+@dirrmtry %%PYTHON_SITELIBDIR%%/gluster
+%%PORTDOCS%%@dirrmtry %%DOCSDIR%%/benchmarking
+%%PORTDOCS%%@dirrmtry %%DOCSDIR%%
+@dirrmtry %%DATADIR%%/scripts
+@dirrmtry %%DATADIR%%
+@dirrmtry var/lib/glusterd/groups
+@dirrmtry var/lib/glusterd
+@dirrmtry var/lib
+@dirrmtry var/log/glusterfs
+@dirrmtry var/log
+@dirrmtry var/run/gluster
+@dirrmtry var/run
+@dirrmtry var
+@cwd /
+sbin/mount.glusterfs
