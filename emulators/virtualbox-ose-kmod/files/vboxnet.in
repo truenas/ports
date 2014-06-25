@@ -4,7 +4,6 @@
 #
 
 # PROVIDE:	vboxnet
-# BEFORE:	NETWORKING
 # REQUIRE:	FILESYSTEMS
 # KEYWORD:	nojail
 
