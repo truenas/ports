@@ -1,0 +1,22 @@
+--- ./extras/Makefile.am.orig	2014-06-23 07:24:25.000000000 +0200
++++ ./extras/Makefile.am	2014-06-28 00:16:58.427986777 +0200
+@@ -21,6 +21,6 @@
+         command-completion/Makefile command-completion/README
+ 
+ install-data-local:
+-	$(mkdir_p) $(DESTDIR)$(localstatedir)/lib/glusterd/groups
++	$(mkdir_p) $(DESTDIR)$(localstatedir)/db/glusterd/groups
+ 	$(INSTALL_DATA) $(top_srcdir)/extras/group-virt.example \
+-		$(DESTDIR)$(localstatedir)/lib/glusterd/groups/virt
++		$(DESTDIR)$(localstatedir)/db/glusterd/groups/virt
+--- ./extras/Makefile.am.orig	2014-06-23 07:24:25.000000000 +0200
++++ ./extras/Makefile.am	2014-06-28 00:16:58.427986777 +0200
+@@ -21,6 +21,6 @@
+         command-completion/Makefile command-completion/README
+ 
+ install-data-local:
+-	$(mkdir_p) $(DESTDIR)$(localstatedir)/lib/glusterd/groups
++	$(mkdir_p) $(DESTDIR)$(localstatedir)/db/glusterd/groups
+ 	$(INSTALL_DATA) $(top_srcdir)/extras/group-virt.example \
+-		$(DESTDIR)$(localstatedir)/lib/glusterd/groups/virt
++		$(DESTDIR)$(localstatedir)/db/glusterd/groups/virt
