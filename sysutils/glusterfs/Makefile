@@ -6,33 +6,41 @@ DISTVERSION=	20140623
 CATEGORIES=	sysutils
 MASTER_SITES=	https://download.gluster.org/pub/gluster/experimental/
 
-MAINTAINER=	bapt@FreeBSD.org
-COMMENT=	GlusterFS distributed file system
-
-LIB_DEPENDS=	libargp.so:${PORTSDIR}/devel/argp-standalone
+MAINTAINER=	root@localhost
+COMMENT=	GlusterFS
 
 WRKSRC=		${WRKDIR}/glusterfs
 
-USES=		gettext libtool fuse tar:bzip2
+USES+=		tar:bzip2
 USE_LDCONFIG=	yes
+
+# Links against libpython, installs gluster package
 USE_PYTHON=	yes
+USE_PYTHON_BUILD=	yes
+
+# And libintl
+USES+=		gettext:lib
+
+# Links libxml2
 USE_GNOME=	libxml2
-USE_AUTOTOOLS=	aclocal autoconf automake autoheader libtoolize
 
-PLIST_SUB+=	RESETPREFIX=${PREFIX}
+# Need to fix up paths for pkgconfig files
+CONFIGURE_ARGS+=	--with-pkgconfigdir=${PREFIX}/libdata/pkgconfig
 
-INSTALL_TARGET=	install-strip
+# Uses fuse
+USES+=		fuse
+
+# This is tricky enough that I gave up trying to USE_AUTOTOOLS natively;
+# this just makes sure they're all in place and uses the upstream
+# autogen.sh
+USES+=		libtool bison:build pkgconfig
+USE_AUTOTOOLS=	aclocal:env autoconf:env automake:env autoheader:env libtoolize:env
 GNU_CONFIGURE=	yes
-CONFIGURE_ARGS=	--with-pkgconfigdir=${PREFIX}/libdata/pkgconfig \
-		--with-mountutildir=${PREFIX}/sbin \
-		--localstatedir=/var
-CPPFLAGS+=	-I/usr/local/include
-LDFLAGS+=	-L/usr/local/lib -largp
-ACLOCAL_ARGS=	-I ./contrib/aclocal
-AUTOMAKE_ARGS=	--add-missing --copy --foreign
 
-post-install:
-	@${MV} ${STAGEDIR}/var/db/glusterd/groups/virt \
-		${STAGEDIR}/var/db/glusterd/groups/virt.sample
+CFLAGS+=        -I${LOCALBASE}/include
+CPPFLAGS+=        -I${LOCALBASE}/include
+
+pre-configure:
+	(cd ${CONFIGURE_WRKSRC} && ${SETENV} ${AUTOTOOLS_ENV} ./autogen.sh) 
 
 .include <bsd.port.mk>
