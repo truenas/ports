@@ -2,7 +2,7 @@
 
 PORTNAME=	glusterfs
 DISTVERSIONPREFIX=	freebsd_
-DISTVERSION=	20140623
+DISTVERSION=	20140629
 CATEGORIES=	sysutils
 MASTER_SITES=	https://download.gluster.org/pub/gluster/experimental/
 
