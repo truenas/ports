@@ -120,7 +120,6 @@ sbin/glusterfsd
 %%DATADIR%%/scripts/post-upgrade-script-for-quota.sh
 %%DATADIR%%/scripts/pre-upgrade-script-for-quota.sh
 %%DATADIR%%/scripts/slave-upgrade.sh
-var/lib/glusterd/groups/virt
 @dirrmtry %%ETCDIR%%
 @dirrmtry include/glusterfs/api
 @dirrmtry include/glusterfs/gfchangelog
@@ -152,13 +151,13 @@ var/lib/glusterd/groups/virt
 %%PORTDOCS%%@dirrmtry %%DOCSDIR%%
 @dirrmtry %%DATADIR%%/scripts
 @dirrmtry %%DATADIR%%
-@dirrmtry var/lib/glusterd/groups
-@dirrmtry var/lib/glusterd
-@dirrmtry var/lib
 @dirrmtry var/log/glusterfs
 @dirrmtry var/log
 @dirrmtry var/run/gluster
 @dirrmtry var/run
 @dirrmtry var
 @cwd /
-sbin/mount.glusterfs
+sbin/mount_glusterfs
+var/db/glusterd/groups/virt
+@dirrmtry var/db/glusterd/groups
+@dirrmtry var/db/glusterd
