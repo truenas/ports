@@ -43,4 +43,10 @@ CPPFLAGS+=        -I${LOCALBASE}/include
 pre-configure:
 	(cd ${CONFIGURE_WRKSRC} && ${SETENV} ${AUTOTOOLS_ENV} ./autogen.sh) 
 
-.include <bsd.port.mk>
+.include <bsd.port.pre.mk>
+
+.if ${OSVERSION} >= 1000000
+LDFLAGS+=	-lexecinfo
+.endif
+
+.include <bsd.port.post.mk>
