@@ -6,49 +6,40 @@ DISTVERSION=	20140629
 CATEGORIES=	sysutils
 MASTER_SITES=	https://download.gluster.org/pub/gluster/experimental/
 
-MAINTAINER=	root@localhost
-COMMENT=	GlusterFS
+MAINTAINER=	bapt@FreeBSD.org
+COMMENT=	GlusterFS distributed file system
+
+LICENSE=	GPLv2 LGPL3
+LICENSE_COMB=	dual
+
+BUILD_DEPENDS=	git:${PORTSDIR}/devel/git # to please build-aux/pkg-version
+LIB_DEPENDS=	libargp.so:${PORTSDIR}/devel/argp-standalone
+.if !exists(/usr/lib/libexecinfo.so)
+LIB_DEPENDS+=	libexecinfo.so:${PORTSDIR}/devel/libexecinfo
+.endif
 
 WRKSRC=		${WRKDIR}/glusterfs
 
-USES+=		tar:bzip2
+USES=		bison gettext fuse libtool pkgconfig tar:bzip2
 USE_LDCONFIG=	yes
-
-# Links against libpython, installs gluster package
 USE_PYTHON=	yes
-USE_PYTHON_BUILD=	yes
-
-# And libintl
-USES+=		gettext:lib
-
-# Links libxml2
 USE_GNOME=	libxml2
+USE_AUTOTOOLS=	aclocal autoconf automake autoheader libtoolize
 
-# Need to fix up paths for pkgconfig files
-CONFIGURE_ARGS+=	--with-pkgconfigdir=${PREFIX}/libdata/pkgconfig
-# We need gluster to be a system service on FreeNAS - nothing can write to /usr/local
-CONFIGURE_ARGS+=	--prefix=/usr --sysconfdir=/etc --localstatedir=/var
+PLIST_SUB+=	RESETPREFIX=${PREFIX}
 
-# Uses fuse
-USES+=		fuse
-
-# This is tricky enough that I gave up trying to USE_AUTOTOOLS natively;
-# this just makes sure they're all in place and uses the upstream
-# autogen.sh
-USES+=		libtool bison:build pkgconfig
-USE_AUTOTOOLS=	aclocal:env autoconf:env automake:env autoheader:env libtoolize:env
+INSTALL_TARGET=	install-strip
 GNU_CONFIGURE=	yes
+CONFIGURE_ARGS=	--with-pkgconfigdir=${PREFIX}/libdata/pkgconfig \
+		--with-mountutildir=${PREFIX}/sbin \
+		--localstatedir=/var
+CPPFLAGS+=	-I/usr/local/include
+LDFLAGS+=	-L/usr/local/lib -largp -lexecinfo
+ACLOCAL_ARGS=	-I ./contrib/aclocal
+AUTOMAKE_ARGS=	--add-missing --copy --foreign
 
-CFLAGS+=        -I${LOCALBASE}/include
-CPPFLAGS+=        -I${LOCALBASE}/include
+post-install:
+	@${MV} ${STAGEDIR}/var/db/glusterd/groups/virt \
+		${STAGEDIR}/var/db/glusterd/groups/virt.sample
 
-pre-configure:
-	(cd ${CONFIGURE_WRKSRC} && ${SETENV} ${AUTOTOOLS_ENV} ./autogen.sh) 
-
-.include <bsd.port.pre.mk>
-
-.if ${OSVERSION} >= 1000000
-LDFLAGS+=	-lexecinfo
-.endif
-
-.include <bsd.port.post.mk>
+.include <bsd.port.mk>
