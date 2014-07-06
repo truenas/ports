@@ -26,6 +26,8 @@ USE_GNOME=	libxml2
 
 # Need to fix up paths for pkgconfig files
 CONFIGURE_ARGS+=	--with-pkgconfigdir=${PREFIX}/libdata/pkgconfig
+# We need gluster to be a system service on FreeNAS - nothing can write to /usr/local
+CONFIGURE_ARGS+=	--prefix=/usr --sysconfdir=/etc --localstatedir=/var
 
 # Uses fuse
 USES+=		fuse
