@@ -33,8 +33,8 @@ GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--with-pkgconfigdir=${PREFIX}/libdata/pkgconfig \
 		--with-mountutildir=${PREFIX}/sbin \
 		--localstatedir=/var
-CPPFLAGS+=	-I/usr/local/include
-LDFLAGS+=	-L/usr/local/lib -largp -lexecinfo
+CPPFLAGS+=	-I${PREFIX}/include
+LDFLAGS+=	-L${PREFIX}/lib -largp -lexecinfo
 ACLOCAL_ARGS=	-I ./contrib/aclocal
 AUTOMAKE_ARGS=	--add-missing --copy --foreign
 
