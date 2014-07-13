@@ -26,7 +26,7 @@
 # Where to put distfiles that don't have any other master site
 .if !defined(IGNORE_MASTER_SITE_LOCAL)
 MASTER_SITE_LOCAL+= \
-	http://ftp.FreeBSD.org/pub/FreeBSD/ports/local-distfiles/%SUBDIR%/ \
+	http://distcache.FreeBSD.org/local-distfiles/%SUBDIR%/ \
 	ftp://ftp.FreeBSD.org/pub/FreeBSD/ports/local-distfiles/%SUBDIR%/ \
 	ftp://ftp.se.FreeBSD.org/pub/FreeBSD/ports/local-distfiles/%SUBDIR%/ \
 	ftp://ftp.uk.FreeBSD.org/pub/FreeBSD/ports/local-distfiles/%SUBDIR%/ \
