@@ -42,7 +42,14 @@ vboxnet_start()
 	fi
 
 	# initialize configured host-only interfaces
-	LD_LIBRARY_PATH=%%PREFIX%%/lib %%PREFIX%%/bin/VBoxManage list hostonlyifs >/dev/null
+	# Only do this if running in a jail
+	# On FreeNAS the kernel modules need to be loaded
+	# from the host environment, but the host only
+	# interfaces are created in the vbox jail.
+	jail=$(sysctl -n security.jail.jailed)
+	if [ ${jail} -ne 0 ]; then
+		LD_LIBRARY_PATH=%%PREFIX%%/lib %%PREFIX%%/bin/VBoxManage list hostonlyifs >/dev/null
+	fi
 }
 
 vboxnet_stop()
