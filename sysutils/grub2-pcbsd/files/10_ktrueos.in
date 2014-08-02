@@ -273,6 +273,7 @@ EOF
   cat /tmp/.grubdataset.$$.1
   echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel ${out}"
   echo "    kfreebsd_loadenv ${shortdataset}@/boot/device.hints"
+  echo '    set kFreeBSD.kernelname="/boot/kernel/kernel"'
   cat /tmp/.grubdataset.$$.2
 
   # Set any options
@@ -289,6 +290,7 @@ EOF
   cat /tmp/.grubdataset.$$.1
   echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel ${out} -s"
   echo "    kfreebsd_loadenv ${shortdataset}@/boot/device.hints"
+  echo '    set kFreeBSD.kernelname="/boot/kernel/kernel"'
   cat /tmp/.grubdataset.$$.2
 
   # Set any options
@@ -305,6 +307,7 @@ EOF
   cat /tmp/.grubdataset.$$.1
   echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel ${out} -v"
   echo "    kfreebsd_loadenv ${shortdataset}@/boot/device.hints"
+  echo '    set kFreeBSD.kernelname="/boot/kernel/kernel"'
   cat /tmp/.grubdataset.$$.2
 
   # Set any options
@@ -322,6 +325,7 @@ EOF
     cat /tmp/.grubdataset.$$.1
     echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel"
     echo "    kfreebsd_loadenv ${shortdataset}@/boot/device.hints"
+    echo '    set kFreeBSD.kernelname="/boot/kernel/kernel"'
     cat /tmp/.grubdataset.$$.2
 
     # Set any options
@@ -338,6 +342,7 @@ EOF
     cat /tmp/.grubdataset.$$.1
     echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel"
     echo "    kfreebsd_loadenv ${shortdataset}@/boot/device.hints"
+    echo '    set kFreeBSD.kernelname="/boot/kernel/kernel"'
     cat /tmp/.grubdataset.$$.2
 
     # Set any options
