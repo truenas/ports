@@ -32,8 +32,11 @@ CONFIGURE_ARGS+=	--prefix=${PREFIX} \
 
 OPTIONS_DEFINE=		PYTHON
 OPTIONS_DEFAULT=	PYTHON
+OPTIONS_DEFINE=		MANPAGES
+MANPAGES_DESC=		Build and install manpages (requires textproc/docbook-xsl)
 
 NO_STAGE=	yes
+
 .include <bsd.port.options.mk>
 
 MAN8=			tdbbackup.8 \
