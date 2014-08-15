@@ -258,6 +258,12 @@ EOF
         display_loaderopts $cdataset >> /tmp/.grubdataset.$$.2
       fi
 
+      # Let's see if this is the default BE
+      canmount=$(zfs get -H canmount "$cdataset" | awk ' { print $3; }')
+      if [ "${canmount}" = "on" ]; then
+        DEFAULT_BE="${NICK} ($b) - ${cdatadate} ${cdatatime}"
+      fi
+
       # Lets start a submenu for each BE
 cat << EOF
 
@@ -376,6 +382,9 @@ EOF
 EOF
    done
 
+   if [ -n "${DEFAULT_BE}" ]; then
+     echo "set default=\"${DEFAULT_BE}\""
+   fi
    # Cleanup after ourselves
    if [ -e "/tmp/.grubdataset.$$.1" ] ; then
      rm /tmp/.grubdataset.$$.1
