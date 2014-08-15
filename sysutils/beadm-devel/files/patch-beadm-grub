@@ -32,6 +32,14 @@
  # use other prefix then the 'pool/ROOT/bename' default
  : ${BEDS="$( echo ${ROOTFS} | awk -F '/' '{print $2}' )"}
  
+@@ -526,6 +526,7 @@
+             zfs promote ${NAME}
+           done
+         done
++    __update_grub
+     echo "Activated successfully"
+     ;;
+ 
 @@ -655,11 +646,7 @@
                      done
                done
