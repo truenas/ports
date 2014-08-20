@@ -250,8 +250,8 @@ EOF
       
       # Now lets look for options in loader.conf to load
       loadPrefix="${shortdataset}"
-      # If this is the current mounted dataset, we can skip mounting it
-      mount | grep -q -e "$cdataset on / (" -e "$cdataset on /mnt ("
+      # If this dataset is currently mounted, we can skip mounting it
+      mount | grep -q -e "$cdataset on "
       if [ $? -eq 0 ] ; then
         display_loaderopts >>/tmp/.grubdataset.$$.2
       else
