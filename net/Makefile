@@ -662,6 +662,7 @@
     SUBDIR += p5-Net-SMS-Mollie
     SUBDIR += p5-Net-SMS-PChome
     SUBDIR += p5-Net-SNPP
+    SUBDIR += p5-Net-SPDY
     SUBDIR += p5-Net-SSH
     SUBDIR += p5-Net-SSH-Expect
     SUBDIR += p5-Net-SSH-Mechanize
@@ -999,7 +1000,6 @@
     SUBDIR += ris
     SUBDIR += rp-pppoe
     SUBDIR += rshell
-    SUBDIR += rsmb
     SUBDIR += rsplib
     SUBDIR += rsync
     SUBDIR += rsync-bpc
@@ -1150,6 +1150,9 @@
     SUBDIR += suckblow
     SUBDIR += sup
     SUBDIR += svnup
+    SUBDIR += syncthing
+    SUBDIR += syncthing-cli
+    SUBDIR += syncthing-discosrv
     SUBDIR += tableutil
     SUBDIR += tac_plus-libradius
     SUBDIR += tac_plus4
@@ -1268,7 +1271,6 @@
     SUBDIR += wmwifi
     SUBDIR += wmwlmon
     SUBDIR += wol
-    SUBDIR += wowzamediaserverpro
     SUBDIR += wpa_gui
     SUBDIR += wping
     SUBDIR += x11vnc

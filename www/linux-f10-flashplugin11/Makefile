@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	flashplugin
-PORTVERSION=	11.2r202.394
+PORTVERSION=	11.2r202.400
 CATEGORIES=	www multimedia linux
 MASTER_SITES=	http://fpdownload.macromedia.com/get/flashplayer/pdc/${PORTVERSION:C/r/\./}/:plugin \
 		LOCAL/nox:suplib
@@ -32,7 +32,6 @@ OPTIONS_DEFINE=	GNOME
 GNOME_DESC=	include gnome support for .desktop file
 
 OPTIONS_SUB=	yes
-PLIST_SUB+=RESETPREFIX=${PREFIX}
 
 .include <bsd.port.options.mk>
 

@@ -5,7 +5,6 @@
 
     SUBDIR += abclock
     SUBDIR += aclock
-    SUBDIR += alarm-clock
     SUBDIR += alltraxclock
     SUBDIR += amor
     SUBDIR += asclock
@@ -55,7 +54,6 @@
     SUBDIR += wmfuzzy
     SUBDIR += wmtime
     SUBDIR += wmtimer
-    SUBDIR += xalarm
     SUBDIR += xclock
     SUBDIR += xdaliclock
     SUBDIR += xfce4-datetime-plugin

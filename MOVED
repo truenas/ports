@@ -6192,7 +6192,6 @@ games/sumwars||2014-06-30|Has expired: Broken for more than 5 months
 audio/ruby-esound||2014-06-30|Has expired: Broken for more than 5 months
 x11-toolkits/py-pyqwt||2014-06-30|Has expired: Broken for more than 5 months
 net-im/ysm||2014-06-30|Has expired: Broken for more than 5 months
-net-mgmt/send||2014-06-30|Has expired: Broken for more than 5 months
 net/p5-Jifty-Plugin-Authentication-Ldap||2014-06-30|Has expired: Broken for more than 5 months
 net-p2p/bittyrant||2014-06-30|Has expired: Broken for more than 5 months
 sysutils/gkrellm||2014-06-30|Has expired: GKrellM 1.X is no longer being developed, consider using 2.X
@@ -6407,3 +6406,73 @@ devel/rubygem-foreman_api||2014-08-11|Removed: Deprecated by upstream
 security/termlog||2014-08-11|Has expired: Fails to build with new utmpx, unstaged, maintainer timeout
 games/linux-americasarmy||2014-08-13|Removed: Unsupported by upstream, distfile unavailable
 net/rsmb|net/mosquitto|2014-08-13|Superseded by net/mosquitto
+devel/kyua-atf-compat|devel/kyua|2014-08-14|Upstream merged all components into devel/kyua
+devel/kyua-cli|devel/kyua|2014-08-14|Upstream merged all components into devel/kyua
+devel/kyua-testers|devel/kyua|2014-08-14|Upstream merged all components into devel/kyua
+devel/glib-java||2014-08-14|Has expired: Unmaintained, outdated not depend on
+www/phpgedview|www/webtrees|2014-08-15|Has expired: Superceded by www/webtrees
+graphics/luxrays||2014-08-15|Has expired: No longer needed as luxrender bundles its own verion now
+net-mgmt/cflowd||2014-08-15|Has expired: Unmaintained 10 years, requires dozens of patches, unverifiable
+archivers/unzip-iconv|archivers/unzip|2014-08-15|Merged with archivers/unzip as a new non-default option
+chinese/unzip|archivers/unzip|2014-08-15|Merged with archivers/unzip as a new non-default option
+korean/unzip|archivers/unzip|2014-08-15|Merged with archivers/unzip as a new non-default option
+russian/unzip|archivers/unzip|2014-08-15|Merged with archivers/unzip as a new non-default option
+mail/sendmail-sasl|mail/sendmail|2014-08-15|Removed: Use mail/sendmail instead
+print/cups-samba||2014-08-15|Removed: defunct for long, disappeared upstream
+security/sguil-client|security/sguil|2014-08-16|Merged into new port security/sguil
+security/sguil-sensor|security/sguil|2014-08-16|Merged into new port security/sguil
+security/sguil-server|security/sguil|2014-08-16|Merged into new port security/sguil
+databases/jasperserver||2014-08-18|Has expired: Unstaged, depends on expiring devel/maven2
+devel/maven2|devel/maven3|2014-08-18|Has expired: No longer supported by the Apache Foundation. Use 3.x instead
+x11-clocks/alarm-clock||2014-08-18|Removed: disappeared upstream
+mail/rss2email|mail/rss2email2|2014-08-19|Renamed to avoid ambiguity with mail/rss2email3
+news/husky-base||2014-08-19|Obsolete due to husky-*-devel => husky-* migration
+news/husky-bsopack||2014-08-19|Obsolete due to husky-*-devel => husky-* migration
+news/husky-hptkill||2014-08-19|Obsolete due to husky-*-devel => husky-* migration
+news/husky-hptsqfix||2014-08-19|Obsolete due to husky-*-devel => husky-* migration
+news/husky-hpucode||2014-08-19|Obsolete due to husky-*-devel => husky-* migration
+news/husky-msged||2014-08-19|Obsolete due to husky-*-devel => husky-* migration
+news/husky-nltools||2014-08-19|Obsolete due to husky-*-devel => husky-* migration
+news/husky-sqpack||2014-08-19|Obsolete due to husky-*-devel => husky-* migration
+deskutils/horde3-hermes||2014-08-20|Has expired: EOL in April 2012
+deskutils/horde3-klutz||2014-08-20|Has expired: EOL in April 2012
+deskutils/horde3-kronolith||2014-08-20|Has expired: EOL in April 2012
+deskutils/horde3-mnemo||2014-08-20|Has expired: EOL in April 2012
+devel/horde3-chora||2014-08-20|Has expired: EOL in April 2012
+ftp/horde3-gollem||2014-08-20|Has expired: EOL in April 2012
+games/linux-steam||2014-08-20|Has expired: Unmaintained interactive port
+games/linux-ut2004-demo||2014-08-20|Has expired: Unmaintained restricted ancient demo
+mail/horde3-dimp||2014-08-20|Has expired: EOL in April 2012
+mail/horde3-forwards||2014-08-20|Has expired: EOL in April 2012
+mail/horde3-ingo||2014-08-20|Has expired: EOL in April 2012
+mail/horde3-mimp||2014-08-20|Has expired: EOL in April 2012
+mail/horde3-vacation||2014-08-20|Has expired: EOL in April 2012
+net-mgmt/horde3-nic||2014-08-20|Has expired: EOL in April 2012
+net-mgmt/nocol||2014-08-20|Has expired: Unmaintained interactive port
+net-mgmt/ourmon||2014-08-20|Has expired: Unmaintained interactive port
+net/wowzamediaserverpro||2014-08-20|Has expired: Unmaintained interactive port
+news/p5-NNML||2014-08-20|Has expired: Unmaintained interactive port
+print/dvips||2014-08-20|Has expired: Unmaintained interactive port
+print/xdvi||2014-08-20|Has expired: Unmaintained interactive port
+security/horde3-jeta||2014-08-20|Has expired: EOL in April 2012
+security/hunch||2014-08-20|Has expired: Likely unused interactive port
+www/horde3-ansel||2014-08-20|Has expired: EOL in April 2012
+www/horde3-meta||2014-08-20|Has expired: EOL in April 2012
+www/horde3-passwd||2014-08-20|Has expired: EOL in April 2012
+www/horde3-trean||2014-08-20|Has expired: EOL in April 2012
+www/wwwcount||2014-08-20|Has expired: Ancient interactive port
+x11-clocks/xalarm||2014-08-20|Has expired: Unmaintained interactive port
+mail/horde3-turba||2014-08-20|Has expired: EOL in April 2012
+deskutils/horde3-nag||2014-08-20|Has expired: EOL in April 2012
+devel/horde3-whups||2014-08-20|Has expired: EOL in April 2012
+mail/horde3-imp||2014-08-20|Has expired: EOL in April 2012
+www/horde3-base||2014-08-20|Has expired: EOL in April 2012
+databases/db4|databases/db48|2014-08-15|Superseded by databases/db48
+databases/db41|databases/db48|2014-08-15|Superseded by databases/db48
+databases/db41-nocrypto|databases/db48|2014-08-15|Superseded by databases/db48
+databases/db42|databases/db48|2014-08-15|Superseded by databases/db48
+databases/db42-nocrypto|databases/db48|2014-08-15|Superseded by databases/db48
+databases/db43|databases/db48|2014-08-15|Superseded by databases/db48
+databases/db44|databases/db48|2014-08-15|Superseded by databases/db48
+databases/db46|databases/db48|2014-08-15|Superseded by databases/db48
+databases/db47|databases/db48|2014-08-15|Superseded by databases/db48

@@ -3,6 +3,7 @@
 
 PORTNAME=	exim
 PORTVERSION?=	${EXIM_VERSION}
+PORTREVISION?=	1
 CATEGORIES=	mail ipv6
 MASTER_SITES=	${MASTER_SITE_EXIM:S/$/:exim/}
 MASTER_SITE_SUBDIR=	exim4/:exim
@@ -107,7 +108,6 @@ PKGMESSAGE=	${WRKDIR}/POST-INSTALL-NOTES
 .else # !EXIMON_ONLY
 PLIST_SUB+=	EXIM="@comment "
 PORT_OPTIONS+=	EXIMON
-NO_INSTALL_MANPAGES=	yes
 PKGMESSAGE=	${WRKDIR}/pkg-message
 EXIM_INSTALL_ARG+=	"eximon" "eximon.bin"
 .endif # !EXIMON_ONLY
@@ -484,7 +484,6 @@ SEDLIST+=	-e 's,^\# (TRUSTED_CONFIG_LIST=).*$$,\1${TRUSTED_CONFIG_LIST:S/,/\\,/g
 .endif
 
 MAKE_ENV+=	INSTALL_ARG="${EXIM_INSTALL_ARG}"
-PLIST_SUB+=	RESETPREFIX=${PREFIX}
 DUMMY_LDFLAGS!=	${ECHO_CMD} ${LDFLAGS} | ${SED} -e 's|-Wl,-rpath|-Wl,-DUMMYrpath|g; s|-rpath|-Wl,-rpath|g; s|-DUMMYrpath|-rpath|g'
 
 pre-everything::

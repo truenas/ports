@@ -177,13 +177,6 @@
     SUBDIR += horde-ingo
     SUBDIR += horde-turba
     SUBDIR += horde-webmail
-    SUBDIR += horde3-dimp
-    SUBDIR += horde3-forwards
-    SUBDIR += horde3-imp
-    SUBDIR += horde3-ingo
-    SUBDIR += horde3-mimp
-    SUBDIR += horde3-turba
-    SUBDIR += horde3-vacation
     SUBDIR += hs-email-validate
     SUBDIR += hs-mime
     SUBDIR += hs-mime-mail
@@ -343,6 +336,7 @@
     SUBDIR += p5-Email-Simple
     SUBDIR += p5-Email-Simple-FromHandle
     SUBDIR += p5-Email-Stuff
+    SUBDIR += p5-Email-Stuffer
     SUBDIR += p5-Email-Valid
     SUBDIR += p5-Email-Valid-Loose
     SUBDIR += p5-FuzzyOcr-devel
@@ -596,7 +590,7 @@
     SUBDIR += roundcube-umich
     SUBDIR += roundcube-veximaccountadmin
     SUBDIR += rspamd
-    SUBDIR += rss2email
+    SUBDIR += rss2email2
     SUBDIR += rss2email3
     SUBDIR += ruby-rfilter
     SUBDIR += ruby-rmail
@@ -615,7 +609,6 @@
     SUBDIR += scam-backscatter
     SUBDIR += sccmilter
     SUBDIR += sendmail
-    SUBDIR += sendmail-sasl
     SUBDIR += sendok
     SUBDIR += sentinel
     SUBDIR += serialmail

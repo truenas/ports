@@ -173,7 +173,6 @@
     SUBDIR += hlfl
     SUBDIR += hmap
     SUBDIR += honggfuzz
-    SUBDIR += horde3-jeta
     SUBDIR += hotssh
     SUBDIR += hs-Crypto
     SUBDIR += hs-DRBG
@@ -215,7 +214,6 @@
     SUBDIR += hs-x509-system
     SUBDIR += hs-x509-validation
     SUBDIR += httprint
-    SUBDIR += hunch
     SUBDIR += hydra
     SUBDIR += i2p
     SUBDIR += iaikpkcs11wrapper
@@ -754,6 +752,7 @@
     SUBDIR += py-cerealizer
     SUBDIR += py-certify
     SUBDIR += py-clamav
+    SUBDIR += py-cpe
     SUBDIR += py-cracklib
     SUBDIR += py-cryptkit
     SUBDIR += py-cryptography
@@ -909,9 +908,7 @@
     SUBDIR += secpanel
     SUBDIR += sectok
     SUBDIR += secure_delete
-    SUBDIR += sguil-client
-    SUBDIR += sguil-sensor
-    SUBDIR += sguil-server
+    SUBDIR += sguil
     SUBDIR += sha
     SUBDIR += shibboleth2-sp
     SUBDIR += shimmer

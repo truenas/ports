@@ -39,15 +39,6 @@
     SUBDIR += dalmp
     SUBDIR += datamodeler
     SUBDIR += db
-    SUBDIR += db4
-    SUBDIR += db41
-    SUBDIR += db41-nocrypto
-    SUBDIR += db42
-    SUBDIR += db42-nocrypto
-    SUBDIR += db43
-    SUBDIR += db44
-    SUBDIR += db46
-    SUBDIR += db47
     SUBDIR += db48
     SUBDIR += db4o-mono
     SUBDIR += db5
@@ -119,7 +110,6 @@
     SUBDIR += isql-viewer
     SUBDIR += jakarta-commons-dbutils
     SUBDIR += jasperreports
-    SUBDIR += jasperserver
     SUBDIR += java-mybatis
     SUBDIR += jdb
     SUBDIR += jdbc-oracle10g
@@ -714,6 +704,7 @@
     SUBDIR += py-MySQLdb
     SUBDIR += py-MySQLdb51
     SUBDIR += py-MySQLdb55
+    SUBDIR += py-MySQLdb56
     SUBDIR += py-PyGreSQL
     SUBDIR += py-Pyrseas
     SUBDIR += py-alembic

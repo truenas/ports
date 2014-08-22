@@ -60,6 +60,7 @@
     SUBDIR += hc
     SUBDIR += ibus-chewing
     SUBDIR += ibus-pinyin
+    SUBDIR += ibus-table-chinese
     SUBDIR += irssi
     SUBDIR += jis2gb
     SUBDIR += joe
@@ -127,7 +128,6 @@
     SUBDIR += ttf2pt1
     SUBDIR += ttfm
     SUBDIR += unrar
-    SUBDIR += unzip
     SUBDIR += ve
     SUBDIR += wenju
     SUBDIR += wordpress-zh_CN

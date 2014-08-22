@@ -38,14 +38,12 @@
     SUBDIR += cups-pdf
     SUBDIR += cups-pk-helper
     SUBDIR += cups-pstoraster
-    SUBDIR += cups-samba
     SUBDIR += cups-smb-backend
     SUBDIR += deforaos-pdfviewer
     SUBDIR += detex
     SUBDIR += dk-acroread8
     SUBDIR += dot2tex
     SUBDIR += dvi2tty
-    SUBDIR += dvips
     SUBDIR += dvips2ascii
     SUBDIR += dviselect
     SUBDIR += dvisvg
@@ -282,7 +280,6 @@
     SUBDIR += txtbdf2ps
     SUBDIR += typetools
     SUBDIR += utopia
-    SUBDIR += xdvi
     SUBDIR += xfce4-print
     SUBDIR += xmbibtex
     SUBDIR += xpp

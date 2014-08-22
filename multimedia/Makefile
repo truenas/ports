@@ -42,6 +42,7 @@
     SUBDIR += dirac
     SUBDIR += dragon
     SUBDIR += dtv
+    SUBDIR += dtv-scan-tables
     SUBDIR += dumpmpeg
     SUBDIR += dv2jpg
     SUBDIR += dv2sub
@@ -273,6 +274,7 @@
     SUBDIR += photofilmstrip
     SUBDIR += pitivi
     SUBDIR += playd
+    SUBDIR += plexhometheater
     SUBDIR += plexmediaserver
     SUBDIR += plexmediaserver-plexpass
     SUBDIR += podcastdl

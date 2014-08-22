@@ -40,9 +40,7 @@ GROUPS=		nobody
 
 OOPSVAR=	/var/run/oops
 OOPSLOG=	/var/log/oops
-.if !defined(NO_INSTALL_MANPAGES)
 MAN8=		oops.8 oopsctl.8
-.endif
 
 USE_RC_SUBR=	oops
 PKGMESSAGE=	${WRKDIR}/pkg-message
@@ -61,27 +59,27 @@ PGSQL_DESC=	PostgreSQL auth support
 .include <bsd.port.options.mk>
 
 .if ${PORT_OPTIONS:MGIGABASE}
-LIB_DEPENDS+=	libgigabase_r.so:${PORTSDIR}/databases/gigabase
+LIB_DEPENDS+=		libgigabase_r.so:${PORTSDIR}/databases/gigabase
 CONFIGURE_ARGS+=	--without-DB
 .endif
 
 .if ${PORT_OPTIONS:MDB4}
-LIB_DEPENDS+=	libdb4.so:${PORTSDIR}/databases/db4
+USE_BDB=		db48+
 CONFIGURE_ARGS+=	--without-GB
 .endif
 
 .if ${PORT_OPTIONS:MMYSQL}
-USE_MYSQL=	YES
+USE_MYSQL=		YES
 CONFIGURE_ARGS+=	--with-MYSQL=${PREFIX}
 .endif
 
 .if ${PORT_OPTIONS:MPGSQL}
-USE_PGSQL=	YES
+USE_PGSQL=		YES
 CONFIGURE_ARGS+=	--with-PGSQL=${PREFIX}/pgsql
 .endif
 
 .if ${PORT_OPTIONS:MPCRE}
-LIB_DEPENDS+=	libpcre.so:${PORTSDIR}/devel/pcre
+LIB_DEPENDS+=		libpcre.so:${PORTSDIR}/devel/pcre
 CONFIGURE_ARGS+=	--with-regexp=pcre
 .endif
 
@@ -89,10 +87,8 @@ pre-configure:
 	@cd ${WRKSRC} && ${AUTOHEADER}
 
 post-install:
-.if !defined(NO_INSTALL_MANPAGES)
 	@${INSTALL_MAN} ${WRKSRC}/doc/oops.8 ${PREFIX}/man/man8
 	@${INSTALL_MAN} ${WRKSRC}/doc/oopsctl.8 ${PREFIX}/man/man8
-.endif
 	@${MKDIR} -m 750 ${OOPSVAR}
 	@${CHOWN} oops ${OOPSVAR}
 	@${MKDIR} -m 750 ${OOPSLOG}

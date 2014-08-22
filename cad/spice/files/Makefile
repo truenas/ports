@@ -1,27 +1,34 @@
 #
 # $FreeBSD$
 #
+build:
+	${SH} util/build FreeBSD default
+	strip ${PROGRAMS:S,^,FreeBSD/obj/bin/,}
 
-.ifdef WITHOUT_X11
-CONFIG=	FreeBSD.without_x11
-.else
-CONFIG=	FreeBSD
-.endif
+PREFIX?=	/usr/local
 
-all:
-	util/build ${CONFIG} default
+BINDIR=		${PREFIX}/bin
+SHAREFILESDIR=	${PREFIX}/share/spice
+HELPFILESDIR=	${SHAREFILESDIR}/helpdir
+SCRIPTFILESDIR=	${SHAREFILESDIR}/scripts
 
-install:
-	util/build ${CONFIG} install 
-	chmod a+rx ${PREFIX}/bin/spice3 ${PREFIX}/bin/nutmeg \
-	  ${PREFIX}/bin/sconvert ${PREFIX}/bin/help	\
-	  ${PREFIX}/bin/proc2mod ${PREFIX}/bin/multidec
-	${STRIP_CMD} ${PREFIX}/bin/spice3 ${PREFIX}/bin/nutmeg	\
-	  ${PREFIX}/bin/sconvert ${PREFIX}/bin/help \
-	  ${PREFIX}/bin/proc2mod ${PREFIX}/bin/multidec
-	chmod -R a+rX ${PREFIX}/share/spice
-	install -c -m 644 -o bin -g bin man/man5/mfbcap.5 ${PREFIX}/man/man5/mfbcap.5
-	install -c -m 644 -o bin -g bin man/man1/sconvert.1 ${PREFIX}/man/man1/sconvert.1
-	install -c -m 644 -o bin -g bin man/man1/nutmeg.1 ${PREFIX}/man/man1/nutmeg.1
-	install -c -m 644 -o bin -g bin man/man1/spice.1 ${PREFIX}/man/man1/spice.1
-	install -c -m 644 -o bin -g bin man/man3/mfb.3 ${PREFIX}/man/man3/mfb.3
+FILESGROUPS=	PROGRAMS HELPFILES SCRIPTFILES SHAREFILES
+
+PROGRAMSMODE=	${BINMODE}
+PROGRAMSOWN=	${BINOWN}
+PROGRAMSGRP=	${BINGRP}
+
+PROGRAMS=	spice3 nutmeg sconvert help proc2mod multidec
+HELPFILES=	spice.txt
+SCRIPTFILES=	setplot spinit
+SHAREFILES=	mfbcap news
+
+MAN=	spice.1 nutmeg.1 sconvert.1 mfb.3 mfbcap.5
+MLINKS=	spice.1 spice3.1
+MANDIR=	${PREFIX}/man/man
+
+beforeinstall:
+	mkdir -p ${DESTDIR}${HELPFILESDIR} ${DESTDIR}${SCRIPTFILESDIR}
+
+.PATH: FreeBSD/obj/bin lib/helpdir lib/scripts lib man/man1 man/man3 man/man5
+.include <bsd.prog.mk>

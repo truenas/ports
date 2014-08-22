@@ -33,7 +33,6 @@
     SUBDIR += cdpd
     SUBDIR += cdpr
     SUBDIR += centreon-clib
-    SUBDIR += cflowd
     SUBDIR += check_logfiles
     SUBDIR += check_multi
     SUBDIR += check_mysql_health
@@ -81,7 +80,6 @@
     SUBDIR += guifi-snpservices
     SUBDIR += hastmon
     SUBDIR += hawk
-    SUBDIR += horde3-nic
     SUBDIR += icinga
     SUBDIR += icinga2
     SUBDIR += icli
@@ -184,7 +182,6 @@
     SUBDIR += nfsen
     SUBDIR += ng_ipacct
     SUBDIR += nitpicker
-    SUBDIR += nocol
     SUBDIR += nrpe
     SUBDIR += nrpe-ssl
     SUBDIR += nsca
@@ -198,7 +195,6 @@
     SUBDIR += omping
     SUBDIR += openlldp
     SUBDIR += openvmps
-    SUBDIR += ourmon
     SUBDIR += p0f
     SUBDIR += p0f2
     SUBDIR += p5-AnyEvent-SNMP
@@ -303,6 +299,7 @@
     SUBDIR += scdp
     SUBDIR += scli
     SUBDIR += sdig
+    SUBDIR += send
     SUBDIR += sendip
     SUBDIR += sing
     SUBDIR += sipcalc

@@ -36,6 +36,7 @@
     SUBDIR += clang32
     SUBDIR += clang33
     SUBDIR += clang34
+    SUBDIR += clang35
     SUBDIR += clay
     SUBDIR += clojure
     SUBDIR += clojure-mode.el
@@ -258,6 +259,7 @@
     SUBDIR += python-doc-pdf-letter
     SUBDIR += python-doc-text
     SUBDIR += python-mode.el
+    SUBDIR += python-tools
     SUBDIR += python2
     SUBDIR += python27
     SUBDIR += python3
@@ -334,6 +336,7 @@
     SUBDIR += ucc
     SUBDIR += urweb
     SUBDIR += v8
+    SUBDIR += v8-devel
     SUBDIR += vala
     SUBDIR += vala-vapigen
     SUBDIR += visualworks

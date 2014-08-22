@@ -3,7 +3,7 @@
 
 PORTNAME=	collectd
 PORTVERSION=	5.4.1
-PORTREVISION=	7
+PORTREVISION=	10
 CATEGORIES=	net-mgmt
 MASTER_SITES=	http://collectd.org/files/
 PKGNAMESUFFIX=	5
@@ -66,8 +66,6 @@ CONFLICTS=	collectd-4.[0-9]*
 
 CPPFLAGS+=	-I${LOCALBASE}/include
 LIBS+=		-L${LOCALBASE}/lib
-
-PLIST_SUB+=	RESETPREFIX=${PREFIX}
 
 .include <bsd.port.options.mk>
 

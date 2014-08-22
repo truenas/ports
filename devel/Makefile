@@ -105,6 +105,7 @@
     SUBDIR += avltree
     SUBDIR += avr-binutils
     SUBDIR += avr-gcc
+    SUBDIR += avr-gcc-devel
     SUBDIR += avr-gdb
     SUBDIR += avr-libc
     SUBDIR += avra
@@ -562,7 +563,6 @@
     SUBDIR += glade2
     SUBDIR += glade3
     SUBDIR += glademm
-    SUBDIR += glib-java
     SUBDIR += glib12
     SUBDIR += glib20
     SUBDIR += glib20-reference
@@ -651,8 +651,6 @@
     SUBDIR += horde-content
     SUBDIR += horde-timeobjects
     SUBDIR += horde-whups
-    SUBDIR += horde3-chora
-    SUBDIR += horde3-whups
     SUBDIR += hp48cc
     SUBDIR += hp48xgcc
     SUBDIR += hs-BNFC
@@ -945,9 +943,6 @@
     SUBDIR += kimwitu
     SUBDIR += kyra
     SUBDIR += kyua
-    SUBDIR += kyua-atf-compat
-    SUBDIR += kyua-cli
-    SUBDIR += kyua-testers
     SUBDIR += lasi
     SUBDIR += lcov
     SUBDIR += leaktracer
@@ -1152,6 +1147,7 @@
     SUBDIR += libslang2
     SUBDIR += libslave
     SUBDIR += libsmdev
+    SUBDIR += libsmpp34
     SUBDIR += libsmraw
     SUBDIR += libsoup
     SUBDIR += libsoup-gnome
@@ -1215,6 +1211,7 @@
     SUBDIR += llvm32
     SUBDIR += llvm33
     SUBDIR += llvm34
+    SUBDIR += llvm35
     SUBDIR += lm4tools
     SUBDIR += lmdbg
     SUBDIR += lndir
@@ -1265,7 +1262,6 @@
     SUBDIR += matreshka
     SUBDIR += maven-ant-tasks
     SUBDIR += maven-wrapper
-    SUBDIR += maven2
     SUBDIR += maven3
     SUBDIR += maven31
     SUBDIR += mcpp
@@ -1462,6 +1458,7 @@
     SUBDIR += p5-AnyEvent-RPC
     SUBDIR += p5-AnyEvent-Run
     SUBDIR += p5-AnyEvent-Subprocess
+    SUBDIR += p5-AnyEvent-Task
     SUBDIR += p5-AnyEvent-Worker
     SUBDIR += p5-AnyMQ
     SUBDIR += p5-App-Build
@@ -1557,6 +1554,7 @@
     SUBDIR += p5-Cache-Simple-TimedExpiry
     SUBDIR += p5-Cairo-GObject
     SUBDIR += p5-Calendar-Simple
+    SUBDIR += p5-Callback-Frame
     SUBDIR += p5-Capture-Tiny
     SUBDIR += p5-Carp
     SUBDIR += p5-Carp-Always
@@ -1701,6 +1699,7 @@
     SUBDIR += p5-Config-Simple
     SUBDIR += p5-Config-Std
     SUBDIR += p5-Config-Tiny
+    SUBDIR += p5-Config-Versioned
     SUBDIR += p5-Config-Wrest
     SUBDIR += p5-Config-YAML
     SUBDIR += p5-ConfigReader
@@ -2191,6 +2190,7 @@
     SUBDIR += p5-IO-Pager
     SUBDIR += p5-IO-Pipely
     SUBDIR += p5-IO-Prompt
+    SUBDIR += p5-IO-Prompter
     SUBDIR += p5-IO-Prompt-Tiny
     SUBDIR += p5-IO-Pty-Easy
     SUBDIR += p5-IO-SessionData
@@ -2291,6 +2291,7 @@
     SUBDIR += p5-Log-Any-Adapter-Syslog
     SUBDIR += p5-Log-Any-App
     SUBDIR += p5-Log-Contextual
+    SUBDIR += p5-Log-Defer
     SUBDIR += p5-Log-Dispatch
     SUBDIR += p5-Log-Dispatch-Array
     SUBDIR += p5-Log-Dispatch-Colorful
@@ -2992,6 +2993,7 @@
     SUBDIR += p5-Test-Without-Module
     SUBDIR += p5-Test-XML
     SUBDIR += p5-Test-XML-Valid
+    SUBDIR += p5-Test-YAML
     SUBDIR += p5-Test-YAML-Meta
     SUBDIR += p5-Test-YAML-Valid
     SUBDIR += p5-Test-use-ok
@@ -3182,6 +3184,7 @@
     SUBDIR += pcl
     SUBDIR += pcre
     SUBDIR += pcre++
+    SUBDIR += pcsc-ada
     SUBDIR += pcsc-lite
     SUBDIR += pdcurses
     SUBDIR += pdcurses-the
@@ -3478,6 +3481,7 @@
     SUBDIR += popt
     SUBDIR += poslib
     SUBDIR += poxml
+    SUBDIR += ppl
     SUBDIR += premake
     SUBDIR += premake4
     SUBDIR += preps-gui
@@ -3742,6 +3746,8 @@
     SUBDIR += py-json-py
     SUBDIR += py-jsonlib
     SUBDIR += py-jsonlib2
+    SUBDIR += py-jsonpatch
+    SUBDIR += py-jsonpointer
     SUBDIR += py-jsonrpclib
     SUBDIR += py-jsonschema
     SUBDIR += py-kazoo
@@ -4307,6 +4313,7 @@
     SUBDIR += rubygem-fastthread
     SUBDIR += rubygem-fattr
     SUBDIR += rubygem-ffi
+    SUBDIR += rubygem-ffi-yajl
     SUBDIR += rubygem-file-tail
     SUBDIR += rubygem-filemagic
     SUBDIR += rubygem-fluent-logger
@@ -4369,6 +4376,7 @@
     SUBDIR += rubygem-launchy
     SUBDIR += rubygem-launchy22
     SUBDIR += rubygem-librarian
+    SUBDIR += rubygem-libyajl2
     SUBDIR += rubygem-listen
     SUBDIR += rubygem-little_plugger
     SUBDIR += rubygem-locale
@@ -4380,6 +4388,7 @@
     SUBDIR += rubygem-map
     SUBDIR += rubygem-mash
     SUBDIR += rubygem-memoizable
+    SUBDIR += rubygem-memoize
     SUBDIR += rubygem-mercenary
     SUBDIR += rubygem-metaclass
     SUBDIR += rubygem-metaid
@@ -4440,6 +4449,7 @@
     SUBDIR += rubygem-rb-kqueue
     SUBDIR += rubygem-rcov
     SUBDIR += rubygem-rdoc
+    SUBDIR += rubygem-recaptcha
     SUBDIR += rubygem-redis-activesupport
     SUBDIR += rubygem-redis-store
     SUBDIR += rubygem-redmine_plugin_support
@@ -4532,6 +4542,7 @@
     SUBDIR += rubygem-warden
     SUBDIR += rubygem-wdm
     SUBDIR += rubygem-webby
+    SUBDIR += rubygem-wmi-lite
     SUBDIR += rubygem-xpath
     SUBDIR += rubygem-yajl-ruby
     SUBDIR += rubygem-yui-compressor

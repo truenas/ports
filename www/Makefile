@@ -272,11 +272,6 @@
     SUBDIR += horde-passwd
     SUBDIR += horde-trean
     SUBDIR += horde-wicked
-    SUBDIR += horde3-ansel
-    SUBDIR += horde3-base
-    SUBDIR += horde3-meta
-    SUBDIR += horde3-passwd
-    SUBDIR += horde3-trean
     SUBDIR += hotcrp
     SUBDIR += hs-DAV
     SUBDIR += hs-HTTP
@@ -381,6 +376,7 @@
     SUBDIR += libapreq2
     SUBDIR += libecap
     SUBDIR += libepc
+    SUBDIR += libevhtp
     SUBDIR += libgtkhtml
     SUBDIR += libhpack
     SUBDIR += libhtp-suricata
@@ -1028,6 +1024,7 @@
     SUBDIR += p5-HTTP-SimpleLinkChecker
     SUBDIR += p5-HTTP-Size
     SUBDIR += p5-HTTP-Tiny
+    SUBDIR += p5-HTTP-Tiny-SPDY
     SUBDIR += p5-HTTP-WebTest
     SUBDIR += p5-HTTPD-Log-Filter
     SUBDIR += p5-HTTPD-User-Manage
@@ -1045,6 +1042,7 @@
     SUBDIR += p5-LWP-MediaTypes
     SUBDIR += p5-LWP-Online
     SUBDIR += p5-LWP-Protocol-PSGI
+    SUBDIR += p5-LWP-Protocol-connect
     SUBDIR += p5-LWP-Protocol-http10
     SUBDIR += p5-LWP-Protocol-https
     SUBDIR += p5-LWP-UserAgent-Determined
@@ -1431,7 +1429,6 @@
     SUBDIR += php55-tidy
     SUBDIR += phpbb
     SUBDIR += phpbb3
-    SUBDIR += phpgedview
     SUBDIR += phpgroupware
     SUBDIR += phpmp
     SUBDIR += phpmustache
@@ -1684,6 +1681,7 @@
     SUBDIR += py-selector
     SUBDIR += py-selenium
     SUBDIR += py-slimmer
+    SUBDIR += py-slimit
     SUBDIR += py-slumber
     SUBDIR += py-splinter
     SUBDIR += py-surl
@@ -2149,7 +2147,6 @@
     SUBDIR += wsdlpull
     SUBDIR += wsmake
     SUBDIR += www6to4
-    SUBDIR += wwwcount
     SUBDIR += wwwoffle
     SUBDIR += wwwstat
     SUBDIR += xapian-omega

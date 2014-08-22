@@ -1570,7 +1570,8 @@ CONFIGURE_WRKSRC?=	${WRKSRC}
 BUILD_WRKSRC?=	${WRKSRC}
 INSTALL_WRKSRC?=${WRKSRC}
 
-PLIST_SUB+=	OSREL=${OSREL} PREFIX=%D LOCALBASE=${LOCALBASE}
+PLIST_SUB+=	OSREL=${OSREL} PREFIX=%D LOCALBASE=${LOCALBASE} \
+			RESETPREFIX=${PREFIX}
 SUB_LIST+=	PREFIX=${PREFIX} LOCALBASE=${LOCALBASE} \
 		DATADIR=${DATADIR} DOCSDIR=${DOCSDIR} EXAMPLESDIR=${EXAMPLESDIR} \
 		WWWDIR=${WWWDIR} ETCDIR=${ETCDIR}
@@ -1582,7 +1583,7 @@ SUB_LIST+=	PREFIX=${PREFIX} LOCALBASE=${LOCALBASE} \
 #  Remove quotes
 #  Replace . with \. for later sed(1) usage
 PLIST_SUB_SED_MIN?=	2
-PLIST_SUB_SED?= ${PLIST_SUB:C/.*=.{1,${PLIST_SUB_SED_MIN}}$//g:NEXTRACT_SUFX=*:NOSREL=*:NLIB32DIR=*:NPREFIX=*:NLOCALBASE=*:N*="":N*="@comment*:C/([^=]*)="?([^"]*)"?/s!\2!%%\1%%!g;/g:C/\./\\./g}
+PLIST_SUB_SED?= ${PLIST_SUB:C/.*=.{1,${PLIST_SUB_SED_MIN}}$//g:NEXTRACT_SUFX=*:NOSREL=*:NLIB32DIR=*:NPREFIX=*:NLOCALBASE=*:NRESETPREFIX=*:N*="":N*="@comment*:C/([^=]*)="?([^"]*)"?/s!\2!%%\1%%!g;/g:C/\./\\./g}
 
 PLIST_REINPLACE+=	stopdaemon rmtry
 PLIST_REINPLACE_RMTRY=s!^@rmtry \(.*\)!@unexec rm -f %D/\1 2>/dev/null || true!
@@ -3775,7 +3776,7 @@ do-package: ${TMPPLIST}
 			cd ${.CURDIR} && eval ${MAKE} package-links; \
 		fi; \
 	else \
-		cd ${.CURDIR} && eval ${MAKE} delete-package; \
+		cd ${.CURDIR} && eval ${MAKE} delete-package >/dev/null; \
 		exit 1; \
 	fi
 .else
@@ -3810,7 +3811,7 @@ do-package: ${TMPPLIST}
 		fi; \
 	else \
 		[ -n "$${made_prefix}" ] && ${RMDIR} ${PREFIX}; \
-		cd ${.CURDIR} && eval ${MAKE} delete-package; \
+		cd ${.CURDIR} && eval ${MAKE} delete-package >/dev/null; \
 		exit 1; \
 	fi
 .endif
@@ -3852,6 +3853,7 @@ delete-package-links:
 
 .if !target(delete-package)
 delete-package: delete-package-links
+	@${ECHO_MSG} "===>  Deleting package for ${PKGNAME}"
 .	if defined(NO_STAGE)
 	@${RM} -f ${PKGFILE}
 .	else
@@ -6417,7 +6419,7 @@ _STAGE_SUSEQ=	create-users-groups do-install \
 				kmod-post-install shared-mime-post-install \
 				webplugin-post-install post-install post-install-script \
 				desktop-file-post-install \
-				move-uniquefiles post-stage compress-man patch-lafiles \
+				move-uniquefiles patch-lafiles post-stage compress-man \
 				install-rc-script install-ldconfig-file install-license \
 				install-desktop-entries add-plist-info add-plist-docs \
 				add-plist-examples add-plist-data add-plist-post \
@@ -6430,7 +6432,7 @@ _STAGE_SEQ+=	create-users-groups do-install \
 				kmod-post-install shared-mime-post-install \
 				webplugin-post-install post-install post-install-script \
 				desktop-file-post-install \
-				move-uniquefiles post-stage compress-man patch-lafiles \
+				move-uniquefiles patch-lafiles post-stage compress-man \
 				install-rc-script install-ldconfig-file install-license \
 				install-desktop-entries add-plist-info add-plist-docs \
 				add-plist-examples add-plist-data add-plist-post \

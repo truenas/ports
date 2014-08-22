@@ -5,6 +5,7 @@
 
     SUBDIR += 0ad
     SUBDIR += 0verkill
+    SUBDIR += 2048
     SUBDIR += 3dc
     SUBDIR += 3dpong
     SUBDIR += 3omns
@@ -214,6 +215,7 @@
     SUBDIR += duckmaze
     SUBDIR += duel
     SUBDIR += duke3d-data
+    SUBDIR += dunelegacy
     SUBDIR += dungeon
     SUBDIR += dungeoncrawl
     SUBDIR += dustrac
@@ -543,12 +545,10 @@
     SUBDIR += linux-sof
     SUBDIR += linux-ssamtfe
     SUBDIR += linux-ssamtse
-    SUBDIR += linux-steam
     SUBDIR += linux-unrealgold
     SUBDIR += linux-uplink-demo
     SUBDIR += linux-ut
     SUBDIR += linux-ut2003-demo
-    SUBDIR += linux-ut2004-demo
     SUBDIR += linux-virtual-jay-peak
     SUBDIR += linux-worldofgoo-demo
     SUBDIR += linwarrior

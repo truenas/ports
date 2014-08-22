@@ -73,6 +73,7 @@
     SUBDIR += be_agent
     SUBDIR += beadm
     SUBDIR += beadm-devel
+    SUBDIR += bhyve-rc
     SUBDIR += biosfont
     SUBDIR += bkpupsd
     SUBDIR += bksh
@@ -505,6 +506,8 @@
     SUBDIR += mcollective
     SUBDIR += mcollective-nrpe-agent
     SUBDIR += mcollective-puppet-agent
+    SUBDIR += mcollective-shell-agent
+    SUBDIR += mcollective-shell-client
     SUBDIR += mcron
     SUBDIR += mcweject
     SUBDIR += mdcp
@@ -770,6 +773,7 @@
     SUBDIR += radeontool
     SUBDIR += radmind
     SUBDIR += raincoat
+    SUBDIR += rcadm
     SUBDIR += rclean
     SUBDIR += rdate
     SUBDIR += rdiff-backup
@@ -848,6 +852,7 @@
     SUBDIR += safecat
     SUBDIR += samefile
     SUBDIR += samesame
+    SUBDIR += sas2ircu
     SUBDIR += savelogs
     SUBDIR += sb16config
     SUBDIR += sbniconfig
