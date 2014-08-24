@@ -1141,6 +1141,7 @@
     SUBDIR += py-Chameleon
     SUBDIR += py-MarkupSafe
     SUBDIR += py-Tempita
+    SUBDIR += py-acora
     SUBDIR += py-asciinema
     SUBDIR += py-asv
     SUBDIR += py-bugzillatools
@@ -1244,7 +1245,6 @@
     SUBDIR += raptor2
     SUBDIR += rarian
     SUBDIR += rasqal
-    SUBDIR += rast
     SUBDIR += re_graph
     SUBDIR += redet
     SUBDIR += redland

@@ -343,6 +343,7 @@
     SUBDIR += nmapsi4
     SUBDIR += nss
     SUBDIR += oath-toolkit
+    SUBDIR += obfsclient
     SUBDIR += obfsproxy
     SUBDIR += ocaml-cryptgps
     SUBDIR += ocaml-cryptokit
@@ -494,6 +495,7 @@
     SUBDIR += p5-Crypt-RandPasswd
     SUBDIR += p5-Crypt-Random
     SUBDIR += p5-Crypt-Random-Source
+    SUBDIR += p5-Crypt-RHash
     SUBDIR += p5-Crypt-Rijndael
     SUBDIR += p5-Crypt-Rijndael_PP
     SUBDIR += p5-Crypt-SKey

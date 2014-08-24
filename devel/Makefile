@@ -953,6 +953,7 @@
     SUBDIR += libIDL
     SUBDIR += libPropList
     SUBDIR += libafterbase
+    SUBDIR += liballium
     SUBDIR += libantlr3c
     SUBDIR += libarena
     SUBDIR += libassa
@@ -3462,6 +3463,7 @@
     SUBDIR += phptags
     SUBDIR += physfs
     SUBDIR += physfs-devel
+    SUBDIR += picosat
     SUBDIR += picp
     SUBDIR += picprog
     SUBDIR += piklab
@@ -3829,6 +3831,7 @@
     SUBDIR += py-pycalendar
     SUBDIR += py-pycallgraph
     SUBDIR += py-pycerberus
+    SUBDIR += py-pycosat
     SUBDIR += py-pycparser
     SUBDIR += py-pydasm
     SUBDIR += py-pyechonest
@@ -4413,7 +4416,9 @@
     SUBDIR += rubygem-multi_test
     SUBDIR += rubygem-murmurhash3
     SUBDIR += rubygem-mutter
+    SUBDIR += rubygem-naught
     SUBDIR += rubygem-needle
+    SUBDIR += rubygem-nesty
     SUBDIR += rubygem-nice-ffi
     SUBDIR += rubygem-nio4r
     SUBDIR += rubygem-nori
@@ -4438,7 +4443,6 @@
     SUBDIR += rubygem-r18n-core
     SUBDIR += rubygem-racc
     SUBDIR += rubygem-rack-raw-upload
-    SUBDIR += rubygem-railsless-deploy
     SUBDIR += rubygem-rainbow
     SUBDIR += rubygem-rake
     SUBDIR += rubygem-rake-compiler
@@ -4455,6 +4459,7 @@
     SUBDIR += rubygem-redmine_plugin_support
     SUBDIR += rubygem-ref
     SUBDIR += rubygem-require_all
+    SUBDIR += rubygem-request_store
     SUBDIR += rubygem-rgl
     SUBDIR += rubygem-rr
     SUBDIR += rubygem-rrd-ffi
@@ -4473,6 +4478,7 @@
     SUBDIR += rubygem-ruby_parser
     SUBDIR += rubygem-rubyforge
     SUBDIR += rubygem-rubygame
+    SUBDIR += rubygem-rubygems-tasks
     SUBDIR += rubygem-rubyinlineaccel
     SUBDIR += rubygem-rubytree
     SUBDIR += rubygem-rufus-scheduler
@@ -4637,7 +4643,6 @@
     SUBDIR += svn_load_dirs
     SUBDIR += svndelta
     SUBDIR += svnkit
-    SUBDIR += svnmerge
     SUBDIR += svntrac
     SUBDIR += swank-clojure
     SUBDIR += swig13

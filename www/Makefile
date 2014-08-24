@@ -10,7 +10,6 @@
     SUBDIR += R-cran-scrapeR
     SUBDIR += R-cran-shiny
     SUBDIR += WebMagick
-    SUBDIR += abyssws
     SUBDIR += ach
     SUBDIR += adzap
     SUBDIR += amphetadesk
@@ -125,7 +124,6 @@
     SUBDIR += dhttpd
     SUBDIR += diamanda
     SUBDIR += dillo2
-    SUBDIR += docebo
     SUBDIR += dojo
     SUBDIR += dojo-shrinksafe
     SUBDIR += dokeos
@@ -234,6 +232,7 @@
     SUBDIR += gecko-mediaplayer
     SUBDIR += gecko-sharp20
     SUBDIR += geeklog
+    SUBDIR += geeknote
     SUBDIR += geneweb
     SUBDIR += geolizer
     SUBDIR += geronimo
@@ -1539,6 +1538,7 @@
     SUBDIR += py-dojango
     SUBDIR += py-dotcloud.cli
     SUBDIR += py-dtflickr
+    SUBDIR += py-evernote
     SUBDIR += py-falcon
     SUBDIR += py-fcgi
     SUBDIR += py-fedex
@@ -1729,7 +1729,6 @@
     SUBDIR += redmine-basecamp
     SUBDIR += redmine-http-auth
     SUBDIR += redmine-sidebar_hide
-    SUBDIR += rejik
     SUBDIR += rekonq
     SUBDIR += reportmagic
     SUBDIR += repos-style
@@ -1787,6 +1786,7 @@
     SUBDIR += rubygem-eventmachine_httpserver
     SUBDIR += rubygem-faraday
     SUBDIR += rubygem-faraday_middleware
+    SUBDIR += rubygem-fcgi
     SUBDIR += rubygem-feed-normalizer
     SUBDIR += rubygem-feedzirra
     SUBDIR += rubygem-flowdock
