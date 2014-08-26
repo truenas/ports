@@ -2,7 +2,7 @@
 
 PORTNAME=	glusterfs
 DISTVERSIONPREFIX=	freebsd_
-DISTVERSION=	20140811
+DISTVERSION=	20140629
 CATEGORIES=	sysutils
 MASTER_SITES=	https://download.gluster.org/pub/gluster/experimental/
 
@@ -14,7 +14,6 @@ LICENSE_COMB=	dual
 
 BUILD_DEPENDS=	git:${PORTSDIR}/devel/git # to please build-aux/pkg-version
 LIB_DEPENDS=	libargp.so:${PORTSDIR}/devel/argp-standalone
-LIB_DEPENDS+=	libcmockery.so:${PORTSDIR}/sysutils/cmockery2
 .if !exists(/usr/lib/libexecinfo.so)
 LIB_DEPENDS+=	libexecinfo.so:${PORTSDIR}/devel/libexecinfo
 .endif
