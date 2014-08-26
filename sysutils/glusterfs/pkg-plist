@@ -8,71 +8,71 @@
 include/glusterfs/api/glfs-handles.h
 include/glusterfs/api/glfs.h
 include/glusterfs/gfchangelog/changelog.h
-lib/glusterfs/3.5qa2/auth/addr.so
-lib/glusterfs/3.5qa2/auth/login.so
-lib/glusterfs/3.5qa2/rpc-transport/socket.so
-lib/glusterfs/3.5qa2/xlator/cluster/afr.so
-lib/glusterfs/3.5qa2/xlator/cluster/dht.so
-lib/glusterfs/3.5qa2/xlator/cluster/distribute.so
-lib/glusterfs/3.5qa2/xlator/cluster/nufa.so
-lib/glusterfs/3.5qa2/xlator/cluster/pump.so
-lib/glusterfs/3.5qa2/xlator/cluster/replicate.so
-lib/glusterfs/3.5qa2/xlator/cluster/stripe.so
-lib/glusterfs/3.5qa2/xlator/cluster/switch.so
-lib/glusterfs/3.5qa2/xlator/debug/error-gen.so
-lib/glusterfs/3.5qa2/xlator/debug/io-stats.so
-lib/glusterfs/3.5qa2/xlator/debug/trace.so
-lib/glusterfs/3.5qa2/xlator/encryption/rot-13.so
-lib/glusterfs/3.5qa2/xlator/features/access-control.so
-lib/glusterfs/3.5qa2/xlator/features/barrier.so
-lib/glusterfs/3.5qa2/xlator/features/cdc.so
-lib/glusterfs/3.5qa2/xlator/features/changelog.so
-lib/glusterfs/3.5qa2/xlator/features/gfid-access.so
-lib/glusterfs/3.5qa2/xlator/features/glupy.so
-lib/glusterfs/3.5qa2/xlator/features/glupy/debug-trace.py
-lib/glusterfs/3.5qa2/xlator/features/glupy/debug-trace.pyc
-lib/glusterfs/3.5qa2/xlator/features/glupy/debug-trace.pyo
-lib/glusterfs/3.5qa2/xlator/features/glupy/helloworld.py
-lib/glusterfs/3.5qa2/xlator/features/glupy/helloworld.pyc
-lib/glusterfs/3.5qa2/xlator/features/glupy/helloworld.pyo
-lib/glusterfs/3.5qa2/xlator/features/glupy/negative.py
-lib/glusterfs/3.5qa2/xlator/features/glupy/negative.pyc
-lib/glusterfs/3.5qa2/xlator/features/glupy/negative.pyo
-lib/glusterfs/3.5qa2/xlator/features/index.so
-lib/glusterfs/3.5qa2/xlator/features/locks.so
-lib/glusterfs/3.5qa2/xlator/features/mac-compat.so
-lib/glusterfs/3.5qa2/xlator/features/marker.so
-lib/glusterfs/3.5qa2/xlator/features/posix-locks.so
-lib/glusterfs/3.5qa2/xlator/features/prot_client.so
-lib/glusterfs/3.5qa2/xlator/features/prot_dht.so
-lib/glusterfs/3.5qa2/xlator/features/prot_server.so
-lib/glusterfs/3.5qa2/xlator/features/quiesce.so
-lib/glusterfs/3.5qa2/xlator/features/quota.so
-lib/glusterfs/3.5qa2/xlator/features/quotad.so
-lib/glusterfs/3.5qa2/xlator/features/read-only.so
-lib/glusterfs/3.5qa2/xlator/features/snapview-client.so
-lib/glusterfs/3.5qa2/xlator/features/snapview-server.so
-lib/glusterfs/3.5qa2/xlator/features/worm.so
-lib/glusterfs/3.5qa2/xlator/meta.so
-lib/glusterfs/3.5qa2/xlator/mgmt/glusterd.so
-lib/glusterfs/3.5qa2/xlator/mount/api.so
-lib/glusterfs/3.5qa2/xlator/mount/fuse.so
-lib/glusterfs/3.5qa2/xlator/nfs/server.so
-lib/glusterfs/3.5qa2/xlator/performance/io-cache.so
-lib/glusterfs/3.5qa2/xlator/performance/io-threads.so
-lib/glusterfs/3.5qa2/xlator/performance/md-cache.so
-lib/glusterfs/3.5qa2/xlator/performance/open-behind.so
-lib/glusterfs/3.5qa2/xlator/performance/quick-read.so
-lib/glusterfs/3.5qa2/xlator/performance/read-ahead.so
-lib/glusterfs/3.5qa2/xlator/performance/readdir-ahead.so
-lib/glusterfs/3.5qa2/xlator/performance/stat-prefetch.so
-lib/glusterfs/3.5qa2/xlator/performance/write-behind.so
-lib/glusterfs/3.5qa2/xlator/protocol/client.so
-lib/glusterfs/3.5qa2/xlator/protocol/server.so
-lib/glusterfs/3.5qa2/xlator/storage/posix.so
-lib/glusterfs/3.5qa2/xlator/system/posix-acl.so
-lib/glusterfs/3.5qa2/xlator/testing/features/template.so
-lib/glusterfs/3.5qa2/xlator/testing/performance/symlink-cache.so
+lib/glusterfs/3.7dev/auth/addr.so
+lib/glusterfs/3.7dev/auth/login.so
+lib/glusterfs/3.7dev/rpc-transport/socket.so
+lib/glusterfs/3.7dev/xlator/cluster/afr.so
+lib/glusterfs/3.7dev/xlator/cluster/dht.so
+lib/glusterfs/3.7dev/xlator/cluster/distribute.so
+lib/glusterfs/3.7dev/xlator/cluster/nufa.so
+lib/glusterfs/3.7dev/xlator/cluster/pump.so
+lib/glusterfs/3.7dev/xlator/cluster/replicate.so
+lib/glusterfs/3.7dev/xlator/cluster/stripe.so
+lib/glusterfs/3.7dev/xlator/cluster/switch.so
+lib/glusterfs/3.7dev/xlator/debug/error-gen.so
+lib/glusterfs/3.7dev/xlator/debug/io-stats.so
+lib/glusterfs/3.7dev/xlator/debug/trace.so
+lib/glusterfs/3.7dev/xlator/encryption/rot-13.so
+lib/glusterfs/3.7dev/xlator/features/access-control.so
+lib/glusterfs/3.7dev/xlator/features/barrier.so
+lib/glusterfs/3.7dev/xlator/features/cdc.so
+lib/glusterfs/3.7dev/xlator/features/changelog.so
+lib/glusterfs/3.7dev/xlator/features/gfid-access.so
+lib/glusterfs/3.7dev/xlator/features/glupy.so
+lib/glusterfs/3.7dev/xlator/features/glupy/debug-trace.py
+lib/glusterfs/3.7dev/xlator/features/glupy/debug-trace.pyc
+lib/glusterfs/3.7dev/xlator/features/glupy/debug-trace.pyo
+lib/glusterfs/3.7dev/xlator/features/glupy/helloworld.py
+lib/glusterfs/3.7dev/xlator/features/glupy/helloworld.pyc
+lib/glusterfs/3.7dev/xlator/features/glupy/helloworld.pyo
+lib/glusterfs/3.7dev/xlator/features/glupy/negative.py
+lib/glusterfs/3.7dev/xlator/features/glupy/negative.pyc
+lib/glusterfs/3.7dev/xlator/features/glupy/negative.pyo
+lib/glusterfs/3.7dev/xlator/features/index.so
+lib/glusterfs/3.7dev/xlator/features/locks.so
+lib/glusterfs/3.7dev/xlator/features/mac-compat.so
+lib/glusterfs/3.7dev/xlator/features/marker.so
+lib/glusterfs/3.7dev/xlator/features/posix-locks.so
+lib/glusterfs/3.7dev/xlator/features/prot_client.so
+lib/glusterfs/3.7dev/xlator/features/prot_dht.so
+lib/glusterfs/3.7dev/xlator/features/prot_server.so
+lib/glusterfs/3.7dev/xlator/features/quiesce.so
+lib/glusterfs/3.7dev/xlator/features/quota.so
+lib/glusterfs/3.7dev/xlator/features/quotad.so
+lib/glusterfs/3.7dev/xlator/features/read-only.so
+lib/glusterfs/3.7dev/xlator/features/snapview-client.so
+lib/glusterfs/3.7dev/xlator/features/snapview-server.so
+lib/glusterfs/3.7dev/xlator/features/worm.so
+lib/glusterfs/3.7dev/xlator/meta.so
+lib/glusterfs/3.7dev/xlator/mgmt/glusterd.so
+lib/glusterfs/3.7dev/xlator/mount/api.so
+lib/glusterfs/3.7dev/xlator/mount/fuse.so
+lib/glusterfs/3.7dev/xlator/nfs/server.so
+lib/glusterfs/3.7dev/xlator/performance/io-cache.so
+lib/glusterfs/3.7dev/xlator/performance/io-threads.so
+lib/glusterfs/3.7dev/xlator/performance/md-cache.so
+lib/glusterfs/3.7dev/xlator/performance/open-behind.so
+lib/glusterfs/3.7dev/xlator/performance/quick-read.so
+lib/glusterfs/3.7dev/xlator/performance/read-ahead.so
+lib/glusterfs/3.7dev/xlator/performance/readdir-ahead.so
+lib/glusterfs/3.7dev/xlator/performance/stat-prefetch.so
+lib/glusterfs/3.7dev/xlator/performance/write-behind.so
+lib/glusterfs/3.7dev/xlator/protocol/client.so
+lib/glusterfs/3.7dev/xlator/protocol/server.so
+lib/glusterfs/3.7dev/xlator/storage/posix.so
+lib/glusterfs/3.7dev/xlator/system/posix-acl.so
+lib/glusterfs/3.7dev/xlator/testing/features/template.so
+lib/glusterfs/3.7dev/xlator/testing/performance/symlink-cache.so
 lib/libgfapi.so
 lib/libgfapi.so.7
 lib/libgfchangelog.so
@@ -127,25 +127,25 @@ var/db/glusterd/groups/virt.sample
 @dirrm include/glusterfs/api
 @dirrm include/glusterfs/gfchangelog
 @dirrm include/glusterfs
-@dirrm lib/glusterfs/3.5qa2/auth
-@dirrm lib/glusterfs/3.5qa2/rpc-transport
-@dirrm lib/glusterfs/3.5qa2/xlator/cluster
-@dirrm lib/glusterfs/3.5qa2/xlator/debug
-@dirrm lib/glusterfs/3.5qa2/xlator/encryption
-@dirrm lib/glusterfs/3.5qa2/xlator/features/glupy
-@dirrm lib/glusterfs/3.5qa2/xlator/features
-@dirrm lib/glusterfs/3.5qa2/xlator/mgmt
-@dirrm lib/glusterfs/3.5qa2/xlator/mount
-@dirrm lib/glusterfs/3.5qa2/xlator/nfs
-@dirrm lib/glusterfs/3.5qa2/xlator/performance
-@dirrm lib/glusterfs/3.5qa2/xlator/protocol
-@dirrm lib/glusterfs/3.5qa2/xlator/storage
-@dirrm lib/glusterfs/3.5qa2/xlator/system
-@dirrm lib/glusterfs/3.5qa2/xlator/testing/features
-@dirrm lib/glusterfs/3.5qa2/xlator/testing/performance
-@dirrm lib/glusterfs/3.5qa2/xlator/testing
-@dirrm lib/glusterfs/3.5qa2/xlator
-@dirrm lib/glusterfs/3.5qa2
+@dirrm lib/glusterfs/3.7dev/auth
+@dirrm lib/glusterfs/3.7dev/rpc-transport
+@dirrm lib/glusterfs/3.7dev/xlator/cluster
+@dirrm lib/glusterfs/3.7dev/xlator/debug
+@dirrm lib/glusterfs/3.7dev/xlator/encryption
+@dirrm lib/glusterfs/3.7dev/xlator/features/glupy
+@dirrm lib/glusterfs/3.7dev/xlator/features
+@dirrm lib/glusterfs/3.7dev/xlator/mgmt
+@dirrm lib/glusterfs/3.7dev/xlator/mount
+@dirrm lib/glusterfs/3.7dev/xlator/nfs
+@dirrm lib/glusterfs/3.7dev/xlator/performance
+@dirrm lib/glusterfs/3.7dev/xlator/protocol
+@dirrm lib/glusterfs/3.7dev/xlator/storage
+@dirrm lib/glusterfs/3.7dev/xlator/system
+@dirrm lib/glusterfs/3.7dev/xlator/testing/features
+@dirrm lib/glusterfs/3.7dev/xlator/testing/performance
+@dirrm lib/glusterfs/3.7dev/xlator/testing
+@dirrm lib/glusterfs/3.7dev/xlator
+@dirrm lib/glusterfs/3.7dev
 @dirrm lib/glusterfs
 @dirrm lib/ocf/resource.d/glusterfs
 @dirrm lib/ocf/resource.d
