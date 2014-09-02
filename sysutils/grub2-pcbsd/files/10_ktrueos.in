@@ -244,7 +244,7 @@ EOF
 
       # Second part of loader to save
       cat > /tmp/.grubdataset.$$.2 << EOF
-    kfreebsd_module ${shortdataset}/@/boot/zfs/zpool.cache type=/boot/zfs/zpool.cache
+    kfreebsd_module ${shortdataset}/@/boot/zfs/rpool.cache type=/boot/zfs/zpool.cache
     set kFreeBSD.vfs.root.mountfrom=zfs:$cdataset
 EOF
       
