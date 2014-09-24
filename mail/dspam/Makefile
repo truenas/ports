@@ -7,13 +7,13 @@
 
 PORTNAME=	dspam
 PORTVERSION=	3.9.0
-PORTREVISION=	7
+PORTREVISION=	8
 CATEGORIES=	mail
 MASTER_SITES=	SF \
 		http://T32.TecNik93.com/FreeBSD/ports/${PORTNAME}/sources/
 MASTER_SITE_SUBDIR=${PORTNAME}/${PORTNAME}/${PORTNAME}-${PORTVERSION}
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	danny@dannywarren.com
 COMMENT=	Bayesian spam filter
 
 MIN_OPTIONS_VER=	${PORTNAME}-3.9.0
@@ -503,7 +503,7 @@ post-install:
 	cd ${WRKSRC}/src/tools.sqlite_drv && \
 		${INSTALL_DATA} *.sql ${STAGEDIR}${EXAMPLESDIR}/sqlite
 .endif
-.endif	# NOPORTEXAMPLES
+.endif	# PORT_OPTIONS:MEXAMPLES
 
 .if ${PORT_OPTIONS:MWEBUI}
 	${MV} ${WRKSRC}/webui/cgi-bin/configure.pl ${WRKSRC}/webui/cgi-bin/configure.pl.sample

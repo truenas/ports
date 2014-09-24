@@ -3,7 +3,7 @@
 
 PORTNAME=	rawtherapee
 PORTVERSION=	4.1
-PORTREVISION=	1
+PORTREVISION=	3
 CATEGORIES=	graphics
 MASTER_SITES=	http://rawtherapee.com/shared/source/
 
@@ -58,7 +58,7 @@ OPTIMIZED_CFLAGS_DESC=	Use extra compiler optimizations (requires SSE support)
 # that the base C++ standard library switched to libc++:
 # We also must pin 4.8+ because 4.6 and 4.7 segfault on 10.0-RELEASE amd64
 # wwhen compiling improcfun.cc:
-USE_GCC=	4.8+
+USE_GCC=	yes
 
 .if ${COMPILER_FEATURES:Mlibc++}
 LDFLAGS+=	-L/usr/local/lib/c++

@@ -3,7 +3,7 @@
 
 PORTNAME=	viruskiller
 PORTVERSION=	1.03
-PORTREVISION=	5
+PORTREVISION=	6
 CATEGORIES=	games
 MASTER_SITES=	FRUGALWARE/games-extra/${PORTNAME}
 DISTNAME=	${PORTNAME}-${PORTVERSION}-1
@@ -31,6 +31,7 @@ post-patch:
 		 /^DOCDIR/s|=.*|= $$(DESTDIR)$$(PREFIX)/${DOCSDIR_REL}/| ; \
 		 /^ICONDIR/s|=.*|= $$(DESTDIR)$$(PREFIX)/share/icons/hicolor/| ; \
 		 /^DESKTOPDIR/s|=.*|= $$(DESTDIR)$$(PREFIX)/share/applications/| ; \
+		 /^LIBS =/s|$$| -lz| ; \
 		 s|install .* 755|$${BSD_INSTALL_PROGRAM}| ; \
 		 s|install .* 644|$${BSD_INSTALL_DATA}| ; \
 		 /ICONS/s|cp|$${BSD_INSTALL_DATA}|' ${WRKSRC}/makefile

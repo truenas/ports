@@ -3,7 +3,7 @@
 
 PORTNAME=	amoebax
 PORTVERSION=	0.2.1
-PORTREVISION=	6
+PORTREVISION=	7
 CATEGORIES=	games
 MASTER_SITES=	http://www.emma-soft.com/games/amoebax/download/ \
 		http://mirror.amdmi3.ru/distfiles/
@@ -22,6 +22,11 @@ GNU_CONFIGURE=	yes
 USE_SDL=	sdl mixer image
 
 PORTDOCS=	*
+PORTDATA=	*
+PLIST_FILES=	bin/amoebax \
+		man/man6/amoebax.6.gz \
+		share/applications/amoebax.desktop \
+		share/pixmaps/amoebax.svg
 
 OPTIONS_DEFINE=	DOCS
 

@@ -35,7 +35,6 @@
     SUBDIR += belier
     SUBDIR += bfbtester
     SUBDIR += binwalk
-    SUBDIR += bioapi
     SUBDIR += blindelephant
     SUBDIR += botan110
     SUBDIR += bro
@@ -44,7 +43,6 @@
     SUBDIR += bruteforceblocker
     SUBDIR += bsdsfv
     SUBDIR += bsmtrace
-    SUBDIR += bsp_upektfmess
     SUBDIR += bugs
     SUBDIR += burpsuite
     SUBDIR += ca_root_nss
@@ -101,7 +99,6 @@
     SUBDIR += dirbuster
     SUBDIR += dirmngr
     SUBDIR += distcache
-    SUBDIR += distcache-devel
     SUBDIR += dmitry
     SUBDIR += doorman
     SUBDIR += doscan
@@ -129,6 +126,7 @@
     SUBDIR += fpc-openssl
     SUBDIR += fpm2
     SUBDIR += fprint_demo
+    SUBDIR += fprintd
     SUBDIR += fragroute
     SUBDIR += fragrouter
     SUBDIR += fsh
@@ -270,7 +268,6 @@
     SUBDIR += libident
     SUBDIR += libkpass
     SUBDIR += libksba
-    SUBDIR += libmatekeyring
     SUBDIR += libmcrypt
     SUBDIR += libntlm
     SUBDIR += libotr
@@ -292,6 +289,15 @@
     SUBDIR += libtomcrypt
     SUBDIR += libwhisker
     SUBDIR += libyubikey
+    SUBDIR += linux-c6-libgpg-error
+    SUBDIR += linux-c6-libssh2
+    SUBDIR += linux-c6-openssl
+    SUBDIR += linux-c6-libtasn1
+    SUBDIR += linux-c6-nss
+    SUBDIR += linux-c6-gnutls
+    SUBDIR += linux-c6-cyrus-sasl2
+    SUBDIR += linux-c6-openssl-compat
+    SUBDIR += linux-c6-libgcrypt
     SUBDIR += linux-f10-cyrus-sasl2
     SUBDIR += linux-f10-gnutls
     SUBDIR += linux-f10-libgcrypt
@@ -313,7 +319,6 @@
     SUBDIR += manipulate_data
     SUBDIR += masscan
     SUBDIR += massh
-    SUBDIR += mate-keyring
     SUBDIR += matrixssl
     SUBDIR += mcrypt
     SUBDIR += md4coll
@@ -326,7 +331,6 @@
     SUBDIR += mhash
     SUBDIR += mindterm-binary
     SUBDIR += monkeysphere
-    SUBDIR += mosref
     SUBDIR += munge
     SUBDIR += mussh
     SUBDIR += nacl
@@ -376,7 +380,6 @@
     SUBDIR += openvpn-admin
     SUBDIR += openvpn-auth-ldap
     SUBDIR += openvpn-auth-radius
-    SUBDIR += openvpn-beta
     SUBDIR += openvpn-devel
     SUBDIR += ophcrack
     SUBDIR += orthrus
@@ -509,6 +512,7 @@
     SUBDIR += p5-Crypt-SmbHash
     SUBDIR += p5-Crypt-Solitaire
     SUBDIR += p5-Crypt-TEA
+    SUBDIR += p5-Crypt-Tea_JS
     SUBDIR += p5-Crypt-T_e_a
     SUBDIR += p5-Crypt-TripleDES
     SUBDIR += p5-Crypt-Twofish
@@ -612,13 +616,10 @@
     SUBDIR += p5-Yahoo-BBAuth
     SUBDIR += p5-dicewaregen
     SUBDIR += p5-openxpki
-    SUBDIR += p5-openxpki-client-html-mason
     SUBDIR += p5-openxpki-i18n
     SUBDIR += pad
     SUBDIR += pam-mysql
     SUBDIR += pam-pgsql
-    SUBDIR += pam_abl
-    SUBDIR += pam_bsdbioapi
     SUBDIR += pam_fprint
     SUBDIR += pam_google_authenticator
     SUBDIR += pam_helper
@@ -687,9 +688,6 @@
     SUBDIR += pgpdump
     SUBDIR += pgpgpg
     SUBDIR += pgpin
-    SUBDIR += php-Auth_OpenID
-    SUBDIR += php-Auth_OpenID2
-    SUBDIR += php-openid-ldap
     SUBDIR += php-suhosin
     SUBDIR += php5-filter
     SUBDIR += php5-hash
@@ -703,6 +701,10 @@
     SUBDIR += php55-hash
     SUBDIR += php55-mcrypt
     SUBDIR += php55-openssl
+    SUBDIR += php56-filter
+    SUBDIR += php56-hash
+    SUBDIR += php56-mcrypt
+    SUBDIR += php56-openssl
     SUBDIR += phpdeadlock
     SUBDIR += phpsecinfo
     SUBDIR += pidentd
@@ -726,9 +728,6 @@
     SUBDIR += pond
     SUBDIR += portsentry
     SUBDIR += ppars
-    SUBDIR += prelude-lml
-    SUBDIR += prelude-manager
-    SUBDIR += prelude-pflogger
     SUBDIR += proftpd-mod_clamav
     SUBDIR += proxycheck
     SUBDIR += proxytunnel
@@ -830,6 +829,7 @@
     SUBDIR += quantis
     SUBDIR += quantis-kmod
     SUBDIR += racoon2
+    SUBDIR += radamsa
     SUBDIR += radiusniff
     SUBDIR += rainbowcrack
     SUBDIR += ranpwd
@@ -861,11 +861,10 @@
     SUBDIR += rkhunter
     SUBDIR += rndpassw
     SUBDIR += ruby-camellia
-    SUBDIR += ruby-crypt
-    SUBDIR += ruby-gpgme
     SUBDIR += ruby-hmac
     SUBDIR += ruby-password
     SUBDIR += ruby-tcpwrap
+    SUBDIR += rubygem-bcrypt
     SUBDIR += rubygem-bcrypt-ruby
     SUBDIR += rubygem-ezcrypto
     SUBDIR += rubygem-gpgr
@@ -893,15 +892,11 @@
     SUBDIR += rubygem-twitter_oauth
     SUBDIR += safesh
     SUBDIR += samba-virusfilter
-    SUBDIR += samhain
-    SUBDIR += samhain-client
-    SUBDIR += samhain-server
     SUBDIR += sancp
     SUBDIR += sasp
     SUBDIR += scamp
     SUBDIR += scanhill
     SUBDIR += scanlogd
-    SUBDIR += scannedonly
     SUBDIR += scanssh
     SUBDIR += scrypt
     SUBDIR += seahorse
@@ -981,7 +976,6 @@
     SUBDIR += tclsasl
     SUBDIR += tinc
     SUBDIR += tinyca
-    SUBDIR += tinysu
     SUBDIR += tlswrap
     SUBDIR += tor
     SUBDIR += tor-devel
@@ -1012,6 +1006,7 @@
     SUBDIR += wapiti
     SUBDIR += webfwlog
     SUBDIR += webscarab
+    SUBDIR += webshag
     SUBDIR += whatweb
     SUBDIR += wipe
     SUBDIR += xca

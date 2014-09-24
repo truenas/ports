@@ -39,6 +39,7 @@
     SUBDIR += jftp
     SUBDIR += jftpgw
     SUBDIR += lftp
+    SUBDIR += linux-c6-curl
     SUBDIR += linux-f10-curl
     SUBDIR += llnlxdir
     SUBDIR += llnlxftp
@@ -68,6 +69,8 @@
     SUBDIR += php53-ftp
     SUBDIR += php55-curl
     SUBDIR += php55-ftp
+    SUBDIR += php56-curl
+    SUBDIR += php56-ftp
     SUBDIR += phpwebftp
     SUBDIR += plasma-applet-ftpmonitor
     SUBDIR += proftpd
@@ -93,7 +96,6 @@
     SUBDIR += uftp
     SUBDIR += urlgfe
     SUBDIR += vsftpd
-    SUBDIR += vsftpd-ext
     SUBDIR += waiho
     SUBDIR += weex
     SUBDIR += wget

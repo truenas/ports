@@ -3,6 +3,7 @@
 
 PORTNAME=	qnetwalk
 PORTVERSION=	1.4
+PORTREVISION=	1
 CATEGORIES=	games
 MASTER_SITES=	http://qt.osdn.org.ua/ \
 		http://mirror.amdmi3.ru/distfiles/
@@ -16,7 +17,13 @@ USES=		qmake
 USE_QT4=	corelib gui moc_build rcc_build
 USE_SDL=	mixer
 
+PLIST_FILES=	bin/qnetwalk \
+		man/man6/qnetwalk.6.gz \
+		share/applications/qnetwalk.desktop \
+		share/pixmaps/qnetwalk.xpm
+
 PORTDOCS=	ChangeLog README
+PORTDATA=	*
 
 OPTIONS_DEFINE=	DOCS
 

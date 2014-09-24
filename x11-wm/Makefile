@@ -107,8 +107,8 @@
     SUBDIR += lwm
     SUBDIR += lxmed
     SUBDIR += lxsession
-    SUBDIR += mate-window-manager
     SUBDIR += matwm2
+    SUBDIR += marco
     SUBDIR += mcwm
     SUBDIR += metacity
     SUBDIR += musca
@@ -136,7 +136,6 @@
     SUBDIR += ratmen
     SUBDIR += ratmenu
     SUBDIR += ratpoison
-    SUBDIR += sapphire
     SUBDIR += sawfish
     SUBDIR += selectwm
     SUBDIR += simple-ccsm

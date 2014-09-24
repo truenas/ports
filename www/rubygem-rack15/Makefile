@@ -12,15 +12,18 @@ PORTVERSION=	1.5.2
 PORTEPOCH=	3
 CATEGORIES=	www rubygems
 MASTER_SITES=	RG
+PKGNAMESUFFIX=	15
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Rack, a Ruby Webserver Interface
 
-PKGNAMESUFFIX=	15
+LICENSE=	MIT
 
 USE_RUBY=	yes
 USE_RUBYGEMS=	yes
 RUBYGEM_AUTOPLIST=	yes
+
+PORTSCOUT=	limit:^1\.5
 
 # avoid duplicate file from www/rubygem-rack port
 post-install:

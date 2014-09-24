@@ -3,7 +3,7 @@
 
 PORTNAME=	glame
 PORTVERSION=	2.0.1
-PORTREVISION=	24
+PORTREVISION=	25
 CATEGORIES=	audio gnome
 MASTER_SITES=	SF
 
@@ -14,9 +14,9 @@ BUILD_DEPENDS=	${LOCALBASE}/include/ladspa.h:${PORTSDIR}/audio/ladspa
 LIB_DEPENDS=	libmp3lame.so:${PORTSDIR}/audio/lame \
 		libmad.so:${PORTSDIR}/audio/libmad \
 		libvorbis.so:${PORTSDIR}/audio/libvorbis \
+		libltdl.so:${PORTSDIR}/devel/libltdl \
 		libguile.so:${PORTSDIR}/lang/guile
 
-USE_AUTOTOOLS=	libltdl
 GNU_CONFIGURE=	yes
 CONFIGURE_ENV=	MAKEINFO="makeinfo --no-split"
 USES=		gettext gmake pathfix pkgconfig libtool makeinfo

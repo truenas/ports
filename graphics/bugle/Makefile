@@ -3,6 +3,7 @@
 
 PORTNAME=	bugle
 PORTVERSION=	0.0.20100508
+PORTREVISION=	1
 CATEGORIES=	graphics
 MASTER_SITES=	SF
 
@@ -11,10 +12,11 @@ COMMENT=	Debugging library for OpenGL
 
 LICENSE=	GPLv2
 
+LIB_DEPENDS=	libltdl.so:${PORTSDIR}/devel/libltdl
+
 USES=		libtool pathfix perl5
 USE_GL=		gl
 USE_GCC=	yes
-USE_AUTOTOOLS=	libltdl
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--enable-ltdl-install=no
 INSTALL_TARGET=	install-strip

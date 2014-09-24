@@ -33,7 +33,6 @@
     SUBDIR += cheese
     SUBDIR += clipgrab
     SUBDIR += clive
-    SUBDIR += clive1
     SUBDIR += clutter-gst
     SUBDIR += cuse4bsd-kmod
     SUBDIR += cx88
@@ -196,6 +195,8 @@
     SUBDIR += libxine
     SUBDIR += libxspf
     SUBDIR += libzen
+    SUBDIR += linux-c6-libtheora
+    SUBDIR += linux-c6-libv4l
     SUBDIR += linux-f10-libtheora
     SUBDIR += linux-f10-libv4l
     SUBDIR += linux-realplayer
@@ -238,7 +239,6 @@
     SUBDIR += mplayer-fonts
     SUBDIR += mplayer-skins
     SUBDIR += mplayer2
-    SUBDIR += mplayerxp
     SUBDIR += mplex
     SUBDIR += mps-youtube
     SUBDIR += mpv
@@ -278,13 +278,10 @@
     SUBDIR += plexmediaserver
     SUBDIR += plexmediaserver-plexpass
     SUBDIR += podcastdl
-    SUBDIR += podcatcher
     SUBDIR += poe
     SUBDIR += ppm2fli
     SUBDIR += projectx
     SUBDIR += ptx-kmod
-    SUBDIR += pvr250
-    SUBDIR += pvrxxx
     SUBDIR += pwcbsd
     SUBDIR += pwcview
     SUBDIR += py-enzyme
@@ -321,7 +318,6 @@
     SUBDIR += replex
     SUBDIR += rox-videothumbnail
     SUBDIR += rtmpdump
-    SUBDIR += ruby-flvtool2
     SUBDIR += rubygem-clutter-gstreamer
     SUBDIR += rubygem-flvtool2
     SUBDIR += rubygem-gstreamer
@@ -351,7 +347,6 @@
     SUBDIR += totem-pl-parser
     SUBDIR += transcode
     SUBDIR += tstools
-    SUBDIR += tunapie
     SUBDIR += tvheadend
     SUBDIR += umph
     SUBDIR += umplayer
@@ -390,14 +385,15 @@
     SUBDIR += vdr-plugin-xvdr
     SUBDIR += vdr-plugins
     SUBDIR += vic
+    SUBDIR += vid.stab
     SUBDIR += vlc
-    SUBDIR += vodcatcher
     SUBDIR += vstream-client
     SUBDIR += vtkmpeg2encode
     SUBDIR += w_scan
     SUBDIR += webcamd
     SUBDIR += win32-codecs
     SUBDIR += x264
+    SUBDIR += x265
     SUBDIR += xanim
     SUBDIR += xawtv
     SUBDIR += xbmc

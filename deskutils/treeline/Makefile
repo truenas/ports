@@ -3,7 +3,7 @@
 
 PORTNAME=	treeline
 PORTVERSION=	1.4.1
-PORTREVISION=	7
+PORTREVISION=	8
 CATEGORIES=	deskutils python
 MASTER_SITES=	SF/${PORTNAME}/${PORTVERSION}/:treeline \
 		http://treeline.bellz.org/plugins/:plugins \
@@ -24,7 +24,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}qt4-gui>=0:${PORTSDIR}/x11-toolkits/py-qt4-g
 
 WRKSRC=		${WRKDIR}/TreeLine
 USE_QT4=	# empty
-USE_PYTHON=	2
+USES=		python:2
 NO_BUILD=	yes
 
 DESKTOP_ENTRIES=	"TreeLine" "" "${DATADIR}/icons/tree/treeline.png" \

@@ -7,8 +7,10 @@ CATEGORIES=	sysutils
 MASTER_SITES=	http://devel.ringlet.net/misc/unquote/
 DISTNAME=	${PORTNAME}-${PORTVERSION:S/.b/pre/}
 
-MAINTAINER=	eadler@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Execute a command with safely quoted arguments
+
+USES=		uidfix
 
 PLIST_FILES=	bin/unquote man/man1/unquote.1.gz
 

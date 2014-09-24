@@ -3,7 +3,7 @@
 
 PORTNAME=	rsync
 PORTVERSION=	3.1.1
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	net ipv6
 MASTER_SITES=	http://rsync.samba.org/ftp/%SUBDIR%/ \
 		ftp://ftp.samba.org/pub/%SUBDIR%/ \
@@ -28,6 +28,8 @@ PATCH_STRIP=	-p1
 GNU_CONFIGURE=	yes
 USE_RC_SUBR=	rsyncd
 SUB_LIST=	NAME=rsyncd
+
+INSTALL_TARGET=	install-strip
 
 CONFIGURE_ARGS=	--disable-debug --enable-ipv6 \
 		--with-rsyncd-conf=${ETCDIR}/rsyncd.conf
@@ -95,7 +97,6 @@ post-patch:
 		${WRKSRC}/rsync.h ${WRKSRC}/rsync.1 ${WRKSRC}/rsyncd.conf.5
 
 post-install:
-	@${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/rsync
 	@${MKDIR} ${STAGEDIR}${ETCDIR}
 	${INSTALL_DATA} ${FILESDIR}/rsyncd.conf.sample ${STAGEDIR}${ETCDIR}/
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}

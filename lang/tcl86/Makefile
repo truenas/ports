@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	tcl
-PORTVERSION=	8.6.1
+PORTVERSION=	8.6.2
+PORTREVISION=	1
 CATEGORIES=	lang
 MASTER_SITES=	SF/tcl/Tcl/${PORTVERSION} \
 		${MASTER_SITE_TCLTK}
@@ -74,10 +75,6 @@ PLIST_SUB+=	MODULES="@comment "
 CONFIGURE_ARGS+=--enable-threads
 .else
 CONFIGURE_ARGS+=--disable-threads
-.endif
-
-.if ${ARCH} == "arm"
-BROKEN=		Does not build on arm
 .endif
 
 post-patch:

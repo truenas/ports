@@ -12,8 +12,6 @@
     SUBDIR += Wnn7-lib
     SUBDIR += a2ps
     SUBDIR += ack
-    SUBDIR += acroread8
-    SUBDIR += acroread9
     SUBDIR += ajaxzip2-core
     SUBDIR += ajaxzip2-data
     SUBDIR += alias-fonts
@@ -61,7 +59,6 @@
     SUBDIR += eterm
     SUBDIR += fcitx-anthy
     SUBDIR += fcitx-mozc
-    SUBDIR += flex-sdk
     SUBDIR += flower-fpw
     SUBDIR += foldoc-fpw
     SUBDIR += font-ipa
@@ -91,7 +88,6 @@
     SUBDIR += gedy
     SUBDIR += gimp-help
     SUBDIR += gjiten
-    SUBDIR += gqmpeg
     SUBDIR += groff
     SUBDIR += gskk
     SUBDIR += gsuica
@@ -103,7 +99,6 @@
     SUBDIR += icanna
     SUBDIR += im-ja
     SUBDIR += ipadic
-    SUBDIR += ja6
     SUBDIR += jacode.pl
     SUBDIR += japana
     SUBDIR += japaneseAFM
@@ -139,7 +134,7 @@
     SUBDIR += kon2-16dot
     SUBDIR += kpcal
     SUBDIR += kterm
-    SUBDIR += lambdamoo
+    SUBDIR += latex-jlisting
     SUBDIR += leafrogue
     SUBDIR += less
     SUBDIR += libreoffice
@@ -152,14 +147,11 @@
     SUBDIR += lynx
     SUBDIR += lynx-current
     SUBDIR += mailman
-    SUBDIR += makejvf
     SUBDIR += man
     SUBDIR += man-doc
     SUBDIR += marumoji-fonts
     SUBDIR += mecab
     SUBDIR += mecab-ipadic
-    SUBDIR += mell
-    SUBDIR += mendexk-euc
     SUBDIR += mg
     SUBDIR += mh
     SUBDIR += migemo
@@ -222,11 +214,6 @@
     SUBDIR += php_doc
     SUBDIR += plain2
     SUBDIR += plan
-    SUBDIR += platex-japanese
-    SUBDIR += postgresql82-man
-    SUBDIR += prime
-    SUBDIR += prime-dict
-    SUBDIR += prime-el
     SUBDIR += prn
     SUBDIR += py-mecab
     SUBDIR += py-tegaki
@@ -235,13 +222,10 @@
     SUBDIR += qkc
     SUBDIR += qt4-codecs-jp
     SUBDIR += quit
-    SUBDIR += rbnamazu
     SUBDIR += roget-fpw
     SUBDIR += rogue_s
-    SUBDIR += rskkserv
     SUBDIR += ruby-eb
     SUBDIR += ruby-mecab
-    SUBDIR += ruby-ming
     SUBDIR += ruby-romkan
     SUBDIR += ruby-uconv
     SUBDIR += ruby-usersguide
@@ -255,7 +239,6 @@
     SUBDIR += scim-honoka
     SUBDIR += scim-honoka-plugin-romkan
     SUBDIR += scim-honoka-plugin-wnn
-    SUBDIR += scim-prime
     SUBDIR += scim-skk
     SUBDIR += scim-tables
     SUBDIR += scim-tomoe
@@ -276,9 +259,7 @@
     SUBDIR += spamassassin
     SUBDIR += srd-fpw-package
     SUBDIR += suicavalue
-    SUBDIR += suikyo
     SUBDIR += t2ps
-    SUBDIR += tcl80
     SUBDIR += tdiary
     SUBDIR += tegaki-recognize
     SUBDIR += tegaki-zinnia-japanese
@@ -287,9 +268,6 @@
     SUBDIR += tgif
     SUBDIR += tiarra
     SUBDIR += timidity++-slang
-    SUBDIR += timidity++-tcltk
-    SUBDIR += tk80
-    SUBDIR += tkhonyaku
     SUBDIR += today
     SUBDIR += tomoe
     SUBDIR += uim-anthy

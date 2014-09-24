@@ -129,6 +129,7 @@
     SUBDIR += kde4-workspace
     SUBDIR += kdelibs4
     SUBDIR += keybinder
+    SUBDIR += keybinder-gtk3
     SUBDIR += keyboardcast
     SUBDIR += keylaunch
     SUBDIR += keynav
@@ -186,10 +187,12 @@
     SUBDIR += libxkbui
     SUBDIR += libxklavier
     SUBDIR += libxshmfence
+    SUBDIR += linux-c6-xorg-libs
     SUBDIR += linux-f10-xorg-libs
     SUBDIR += listres
     SUBDIR += lsw
     SUBDIR += luit
+    SUBDIR += lumina
     SUBDIR += lupe
     SUBDIR += lxde-meta
     SUBDIR += lxmenu-data
@@ -222,6 +225,7 @@
     SUBDIR += nvidia-driver-96
     SUBDIR += nvidia-settings
     SUBDIR += nvidia-xconfig
+    SUBDIR += nxcomp
     SUBDIR += ooxcb
     SUBDIR += p5-Clipboard
     SUBDIR += p5-X11-GUITest

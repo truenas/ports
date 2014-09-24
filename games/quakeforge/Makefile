@@ -1,34 +1,37 @@
-# Created by: darius@dons.net.au
+# Created by: Daniel J. O'Connor <darius@dons.net.au>
 # $FreeBSD$
 
 PORTNAME=	quakeforge
 PORTVERSION=	0.5.5
-PORTREVISION=	12
+PORTREVISION=	14
 CATEGORIES=	games
 MASTER_SITES=	SF/quake/quake/${PORTVERSION}:sf
 DISTFILES=	${DISTNAME}${EXTRACT_SUFX}:sf
 DIST_SUBDIR=	${PORTNAME}
 EXTRACT_ONLY=	${DISTNAME}${EXTRACT_SUFX}
 
-MAINTAINER=	danfe@FreeBSD.org
-COMMENT=	Cleaned up copy of the GPLd Quake 1 source code
+MAINTAINER=	ports@FreeBSD.org
+COMMENT=	Cleaned up copy of the GPL'ed Quake 1 source code
 
-NOT_FOR_ARCHS=	sparc64
-NOT_FOR_ARCHS_REASON=	generated Quake C compiler (qfcc) does not work
-USE_AUTOTOOLS=	libtool
-USES=		bison gmake tar:bzip2
-USE_LDCONFIG=	yes
+LICENSE=	GPLv2
+
+LIB_DEPENDS=	libpng15.so:${PORTSDIR}/graphics/png
+
 GNU_CONFIGURE=	yes
+INSTALL_TARGET=	install-strip
+USES=		bison compiler:nestedfct gmake libtool tar:bzip2
+USE_LDCONFIG=	yes
 WANT_SDL=	yes
 
 CONFIGURE_ARGS+=--with-global-cfg=${PREFIX}/etc/quakeforge.conf \
 		--with-sharepath=${DATADIR} \
+		--disable-debug \
 		--disable-optimize
 
 OPTIONS_DEFINE=		CLIENTS OPTIMIZED_CFLAGS SDL SERVERS SKYBOXES VORBIS \
 			XMMS DOCS
 
-OPTIONS_DEFAULT=	CLIENTS OPTIMIZED_CFLAGS SERVERS DOCS
+OPTIONS_DEFAULT=	CLIENTS SERVERS DOCS
 
 CLIENTS_DESC=		Clients
 SDL_DESC=		SDL client
@@ -37,14 +40,11 @@ SKYBOXES_DESC=		Install skyboxes pak
 VORBIS_DESC=		Ogg Vorbis support in clients
 XMMS_DESC=		XMMS support in clients
 
-MAN1=		pak.1 qfcc.1 qflight.1 qfvis.1 wad.1
 SUB_FILES=	pkg-message
 
 DATADIR=	${Q1DIR}
 
-NO_STAGE=	yes
 .include "${.CURDIR}/../quake-data/Makefile.include"
-
 .include <bsd.port.options.mk>
 
 .if ${PORT_OPTIONS:MCLIENTS}
@@ -86,10 +86,7 @@ PLIST_SUB+=	CLIENTS="@comment "
 
 .if ${PORT_OPTIONS:MOPTIMIZED_CFLAGS}
 CFLAGS+=	-O3 -funroll-loops -fomit-frame-pointer -fno-common \
-		-fexpensive-optimizations -fstrict-aliasing
-.   if ${ARCH} != "alpha"
-CFLAGS+=	-ffast-math
-.   endif
+		-fexpensive-optimizations -fstrict-aliasing -ffast-math
 .endif
 
 .if ${PORT_OPTIONS:MSERVERS}
@@ -107,19 +104,22 @@ PLIST_SUB+=	SKYBOXES=""
 PLIST_SUB+=	SKYBOXES="@comment "
 .endif
 
+post-patch:
+	@${REINPLACE_CMD} -e 's,\*gzfile,gzfile,' ${WRKSRC}/libs/util/quakeio.c
+	@${REINPLACE_CMD} -e 's,-no-undefined,& -L${LOCALBASE}/lib,' \
+		${WRKSRC}/libs/image/Makefile.in
+
 post-install:
 .if ${PORT_OPTIONS:MSKYBOXES}
-	${INSTALL_DATA} ${DISTDIR}/${DIST_SUBDIR}/skyboxes.pak ${DATADIR}/QF
+	${INSTALL_DATA} ${DISTDIR}/${DIST_SUBDIR}/skyboxes.pak \
+		${STAGEDIR}${DATADIR}/QF
 .endif
-.if ${PORT_OPTIONS:MDOCS}
-	${MKDIR} ${DOCSDIR}
-.   for f in *.txt *.q1 *.q2 *.ico *.gif *.fig *.h CodingStyle
-	${INSTALL_DATA} ${WRKSRC}/doc/${f} ${DOCSDIR}
-.   endfor
-.   for d in config data ideas
-	${CP} -R ${WRKSRC}/doc/${d} ${DOCSDIR}
-.   endfor
-.endif
-	@${ECHO_CMD}; ${CAT} ${PKGMESSAGE}; ${ECHO_CMD}
+	@${MKDIR} ${STAGEDIR}${DOCSDIR}
+.for f in *.txt *.q1 *.q2 *.ico *.gif *.fig *.h CodingStyle
+	${INSTALL_DATA} ${WRKSRC}/doc/${f} ${STAGEDIR}${DOCSDIR}
+.endfor
+.for d in config data ideas
+	${CP} -a ${WRKSRC}/doc/${d} ${STAGEDIR}${DOCSDIR}
+.endfor
 
 .include <bsd.port.mk>

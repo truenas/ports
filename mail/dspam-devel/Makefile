@@ -7,13 +7,13 @@
 
 PORTNAME=	dspam
 PORTVERSION=	${PORTVER_MAJ}${SNAP_DATE}
-PORTREVISION=	5
+PORTREVISION=	6
 PORTEPOCH=	1
 CATEGORIES=	mail
 MASTER_SITES=	# set later
 PKGNAMESUFFIX=	-devel
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	danny@dannywarren.com
 COMMENT=	Bayesian spam filter - development version
 
 PORTVER_MAJ=	3.10.1

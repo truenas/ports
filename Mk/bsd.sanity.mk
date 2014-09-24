@@ -66,19 +66,17 @@ DEV_ERROR+=	"USE_TCL and USE_TK are no longer supported, please use USES=tcl or 
 
 # print warning if no reason given for NO_STAGE
 .if defined(NO_STAGE)
-DEV_WARNING+=	"NO_STAGE is deprecated, convert port to stage directory:"
-DEV_WARNING+=	"https://wiki.freebsd.org/ports/StageDir"
+DEV_ERROR+=	"NO_STAGE is unsupported, convert port to stage directory:"
+DEV_ERROR+=	"https://wiki.freebsd.org/ports/StageDir"
 .endif
 
-.if !defined(NO_STAGE)
 .for a in 1 2 3 4 5 6 7 8 9 L N
 .if defined(MAN${a})
 DEV_WARNING+=	"MAN${a} macros are deprecated when using stage directory"
 .endif
 .endfor
-.endif
 
-.if !defined(NO_STAGE) && defined(MLINKS)
+.if defined(MLINKS)
 DEV_WARNING+=	"MLINKS macros are deprecated when using stage directory"
 .endif
 
@@ -106,16 +104,6 @@ DEV_ERROR+=	"USE_PYDISTUTILS=easy_install is no longer supported, please use USE
 
 .if defined(USE_PYDISTUTILS) && defined(PYDISTUTILS_AUTOPLIST) && defined(PYDISTUTILS_PKGNAME)
 DEV_WARNING+=	"PYDISTUTILS_PKGNAME has no effect for USE_PYDISTUTILS=yes and PYDISTUTILS_AUTOPLIST=yes"
-.endif
-
-.if defined(USE_AUTOTOOLS)
-.  if ${USE_AUTOTOOLS:Mlibtool} || ${USE_AUTOTOOLS:Mlibtool\:env}
-DEV_WARNING+=	"USE_AUTOTOOLS=libtool is deprecated, please use USES=libtool"
-.  endif
-.endif
-
-.if defined(USE_GNOME) && ${USE_GNOME:Mltverhack*}
-DEV_WARNING+=	"USE_GNOME=ltverhack is deprecated, please use USES=libtool"
 .endif
 
 .if defined(USE_PYTHON) && (${USE_PYTHON} == "yes" || ${USE_PYTHON:C/[-0-9.+]*//} == "")
@@ -152,10 +140,10 @@ DEV_WARNING+=	"INSTALLS_EGGINFO is deprecated, please add the entry directly to 
 SANITY_UNSUPPORTED=	USE_OPENAL USE_FAM USE_MAKESELF USE_ZIP USE_LHA USE_CMAKE \
 		USE_READLINE USE_ICONV PERL_CONFIGURE PERL_MODBUILD \
 		USE_PERL5_BUILD USE_PERL5_RUN USE_DISPLAY USE_FUSE \
-		USE_GETTEXT USE_GMAKE USE_SCONS USE_DRUPAL
+		USE_GETTEXT USE_GMAKE USE_SCONS USE_DRUPAL NO_INSTALL_MANPAGES
 SANITY_DEPRECATED=	USE_XZ USE_BZIP2 USE_PYDISTUTILS PYTHON_CONCURRENT_INSTALL \
 		PYDISTUTILS_AUTOPLIST PYTHON_PY3K_PLIST_HACK PYDISTUTILS_NOEGGINFO \
-		USE_PYTHON_PREFIX PYTHON_PKGNAMESUFFIX NO_INSTALL_MANPAGES
+		USE_PYTHON_PREFIX PYTHON_PKGNAMESUFFIX
 
 USE_OPENAL_ALT=		USES=openal
 USE_FAM_ALT=		USES=fam

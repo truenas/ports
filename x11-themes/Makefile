@@ -5,14 +5,12 @@
 
     SUBDIR += audacious-skins
     SUBDIR += beastie
-    SUBDIR += bluecurve-themes
     SUBDIR += claws-mail-themes
     SUBDIR += clearlooks
     SUBDIR += clearlooks-metacity
     SUBDIR += clearlooks-phenix-theme
     SUBDIR += clearlooks-themes
     SUBDIR += clearlooks-themes-extras
-    SUBDIR += cursor-bluecurve-theme
     SUBDIR += cursor-chameleon-anthracite
     SUBDIR += cursor-chameleon-darkskyblue
     SUBDIR += cursor-chameleon-pearl
@@ -32,7 +30,6 @@
     SUBDIR += fluxbox-tenr-styles-pack
     SUBDIR += fvwm-themes
     SUBDIR += gnome-backgrounds
-    SUBDIR += gnome-bluecurve-theme
     SUBDIR += gnome-icons
     SUBDIR += gnome-icons-aqua-fusion
     SUBDIR += gnome-icons-crystal
@@ -62,7 +59,6 @@
     SUBDIR += gtk-aquaextremesunken-theme
     SUBDIR += gtk-aqualightblue-theme
     SUBDIR += gtk-aurora-engine
-    SUBDIR += gtk-bluecurve-theme
     SUBDIR += gtk-blueprint-engine
     SUBDIR += gtk-cleanice-engine
     SUBDIR += gtk-digital-cream-theme
@@ -88,9 +84,7 @@
     SUBDIR += gtk-xfce-engine
     SUBDIR += gtk3-oxygen-engine
     SUBDIR += gtk3-unico-engine
-    SUBDIR += icon-bluecurve-theme
     SUBDIR += icon-naming-utils
-    SUBDIR += icons-buuf
     SUBDIR += icons-human-azul
     SUBDIR += icons-tango
     SUBDIR += icons-tango-extras
@@ -98,7 +92,6 @@
     SUBDIR += kde-gtk-config
     SUBDIR += kde-icons-black-and-white
     SUBDIR += kde-icons-cezanne
-    SUBDIR += kde-icons-crystal-project
     SUBDIR += kde-icons-dark-glass
     SUBDIR += kde-icons-gartoon-blue-svg
     SUBDIR += kde-icons-gartoon-svg
@@ -108,13 +101,10 @@
     SUBDIR += kde-icons-lime-rade8
     SUBDIR += kde-icons-lush
     SUBDIR += kde-icons-noia
-    SUBDIR += kde-icons-nuovext
     SUBDIR += kde-icons-nuovext2
     SUBDIR += kde-icons-nuvola
-    SUBDIR += kde-icons-os-k
     SUBDIR += kde-icons-sky
     SUBDIR += kde-icons-umicons
-    SUBDIR += kde-icons-vista-inspirate
     SUBDIR += kde4-base-artwork
     SUBDIR += kde4-icons-oxygen
     SUBDIR += kde4-style-bespin
@@ -127,6 +117,7 @@
     SUBDIR += kde4-windeco-crystal
     SUBDIR += kde4-windeco-dekorator
     SUBDIR += kdeartwork4
+    SUBDIR += linux-c6-hicolor-icon-theme
     SUBDIR += linux-f10-hicolor-icon-theme
     SUBDIR += linux-f10-qtcurve-gtk2
     SUBDIR += linux-hicolor-icon-theme
@@ -141,7 +132,6 @@
     SUBDIR += metacity-aluminumalloy-toxic-theme
     SUBDIR += metacity-aluminumalloy-volcanic-theme
     SUBDIR += metacity-aquaextremesunken-theme
-    SUBDIR += metacity-bluecurve-theme
     SUBDIR += metacity-digital-cream-theme
     SUBDIR += metacity-digital-harmony-theme
     SUBDIR += metacity-longhorninspirat-theme

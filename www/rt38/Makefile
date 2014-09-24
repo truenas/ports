@@ -17,6 +17,9 @@ MASTER_SITES=	http://download.bestpractical.com/pub/rt/release/ \
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	RT is an industrial-grade ticketing system written in Perl
 
+DEPRECATED=	Has expired: End of Life March 2014
+EXPIRATION_DATE=2014-10-31
+
 CONFLICTS=	rt40-4.0* rt42-4.2* brlcad-[0-9]*
 LATEST_LINK=	rt38
 
@@ -92,7 +95,7 @@ BUILD_DEPENDS+=	p5-DBD-mysql>=0:${PORTSDIR}/databases/p5-DBD-mysql
 RUN_DEPENDS+=	p5-DBD-mysql>=0:${PORTSDIR}/databases/p5-DBD-mysql
 .elif ${PORT_OPTIONS:MPGSQL}
 DB_TYPE=	Pg
-USE_PGSQL=	yes
+USES+=		pgsql
 BUILD_DEPENDS+=	p5-DBD-Pg>=0:${PORTSDIR}/databases/p5-DBD-Pg
 RUN_DEPENDS+=	p5-DBD-Pg>=0:${PORTSDIR}/databases/p5-DBD-Pg
 .elif ${PORT_OPTIONS:MQLITE}

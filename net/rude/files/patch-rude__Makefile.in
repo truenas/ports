@@ -1,11 +1,14 @@
---- rude/Makefile.in.orig	Thu Jun 13 14:15:21 2002
-+++ rude/Makefile.in	Tue Jun 24 11:26:06 2003
-@@ -19,7 +19,7 @@
- sbindir       = @sbindir@
- srcdir        = @srcdir@
+--- rude/Makefile.in.orig	2002-06-13 12:15:21 UTC
++++ rude/Makefile.in
+@@ -50,9 +50,9 @@
  
--INSTALL  = @INSTALL@ -o root -g root -m 0755
-+INSTALL  = @INSTALL@ -o root -g wheel -m 0755
- VPATH    = @srcdir@
+ install: rude
+ 	@if [ ! -d $(bindir) ]; then mkdir -m 0755 $(bindir); fi;
+-	$(INSTALL) rude $(bindir)
++	$(BSD_INSTALL_PROGRAM) rude $(DESTDIR)$(bindir)
+ 	@if [ ! -d $(mandir) ]; then mkdir -m 0755 $(mandir); fi;
+-	$(INSTALL) rude.8 $(mandir)
++	$(BSD_INSTALL_MAN) rude.8 $(DESTDIR)$(mandir)
+  
  
- CC       = @CC@
+ ##############################################################################

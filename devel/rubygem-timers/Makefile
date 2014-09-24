@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	timers
-PORTVERSION=	2.0.0
+PORTVERSION=	4.0.1
 CATEGORIES=	devel rubygems
 MASTER_SITES=	RG
 

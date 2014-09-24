@@ -6,7 +6,7 @@
 # See http://www.infracaninophile.co.uk/articles/sphinxse.html
 
 PORTNAME=	sphinxsearch
-PORTVERSION=	2.1.9
+PORTVERSION=	2.2.4
 CATEGORIES=	textproc databases
 MASTER_SITES=	http://sphinxsearch.com/files/ \
 		http://snowball.tartarus.org/dist/:libstemmer
@@ -24,7 +24,7 @@ LICENSE=	GPLv2
 LIB_DEPENDS=	libexpat.so:${PORTSDIR}/textproc/expat2
 
 OPTIONS_DEFINE=	ICONV ID64 LIBSTEMMER MYSQL OPTIMIZED_CFLAGS PGSQL \
-		SYSLOG UNIXODBC DOCS
+		RE2 SYSLOG UNIXODBC DOCS
 OPTIONS_DEFAULT=ICONV MYSQL SYSLOG
 
 ICONV_CONFIGURE_WITH=	iconv
@@ -72,7 +72,13 @@ OPTIMIZED_CFLAGS_CXXFLAGS=-O3 -fomit-frame-pointer
 PGSQL_CONFIGURE_WITH=	pgsql
 PGSQL_CONFIGURE_ON=	--with-pgsql-includes=${LOCALBASE}/include \
 			--with-pgsql-libs=${LOCALBASE}/lib
-PGSQL_USE=		pgsql
+PGSQL_USES=		pgsql
+
+# Why does this insist on linking against the libre2.a static library?
+
+RE2_DESC=		Enable re2 regular expression library
+RE2_CONFIGURE_WITH=	re2
+RE2_BUILD_DEPENDS=	${LOCALBASE}/lib/libre2.a:${PORTSDIR}/devel/re2
 
 SYSLOG_DESC=		Enable logging via syslog
 SYSLOG_CONFIGURE_WITH=	syslog
@@ -113,7 +119,7 @@ EXAMPLES=	example.sql api
 DOCS=		doc/sphinx.css doc/sphinx.html doc/sphinx.txt doc/sphinx.xml
 DOCSRC=		${WRKSRC}/doc
 
-MAN1SRC=	indexer.1 indextool.1 search.1 spelldump.1
+MAN1SRC=	indexer.1 indextool.1 spelldump.1
 MAN8SRC=	searchd.8
 
 post-extract:
@@ -140,7 +146,6 @@ do-install: install-bin install-docs install-man install-examples
 install-bin:
 	${INSTALL_PROGRAM} ${WRKSRC}/src/indexer   ${STAGEDIR}${PREFIX}/bin/indexer
 	${INSTALL_PROGRAM} ${WRKSRC}/src/indextool ${STAGEDIR}${PREFIX}/bin/indextool
-	${INSTALL_PROGRAM} ${WRKSRC}/src/search	   ${STAGEDIR}${PREFIX}/bin/search
 	${INSTALL_PROGRAM} ${WRKSRC}/src/spelldump ${STAGEDIR}${PREFIX}/bin/spelldump
 	${INSTALL_PROGRAM} ${WRKSRC}/src/searchd   ${STAGEDIR}${PREFIX}/sbin/searchd
 	${INSTALL_DATA}	   ${WRKSRC}/sphinx.conf.dist ${STAGEDIR}${CFGFILE}.sample

@@ -57,6 +57,347 @@ Notes:
 
 -->
 <vuxml xmlns="http://www.vuxml.org/apps/vuxml-1">
+  <vuln vid="e60d9e65-3f6b-11e4-ad16-001999f8d30b">
+    <topic>asterisk -- Remotely triggered crash</topic>
+    <affects>
+      <package>
+	<name>asterisk11</name>
+	<range><lt>11.12.1</lt></range>
+      </package>
+    </affects>
+    <description>
+      <body xmlns="http://www.w3.org/1999/xhtml">
+	<p>The Asterisk project reports:</p>
+	<blockquote cite="https://www.asterisk.org/security">
+	  <p>When an out of call message - delivered by either the
+	    SIP or PJSIP channel driver or the XMPP stack - is handled
+	    in Asterisk, a crash can occur if the channel servicing
+	    the message is sent into the ReceiveFax dialplan application
+	    while using the res_fax_spandsp module.</p>
+	  <p>Note that this crash does not occur when using the
+	    res_fax_digium module.  While this crash technically
+	    occurs due to a configuration issue, as attempting to
+	    receive a fax from a channel driver that only contains
+	    textual information will never succeed, the likelihood
+	    of having it occur is sufficiently high as to warrant
+	    this advisory.</p>
+	</blockquote>
+      </body>
+    </description>
+    <references>
+      <url>http://downloads.asterisk.org/pub/security/AST-2014-010.pdf</url>
+      <url>https://issues.asterisk.org/jira/browse/ASTERISK-24301</url>
+      <url>https://www.asterisk.org/security</url>
+    </references>
+    <dates>
+      <discovery>2014-09-05</discovery>
+      <entry>2014-09-18</entry>
+    </dates>
+  </vuln>
+
+  <vuln vid="d3324c55-3f11-11e4-ad16-001999f8d30b">
+    <topic>squid -- Buffer overflow in SNMP processing</topic>
+    <affects>
+      <package>
+	<name>squid</name>
+	<range><lt>3.4.8</lt></range>
+      </package>
+      <package>
+	<name>squid32</name>
+	<range><gt>0</gt></range>
+      </package>
+      <package>
+	<name>squid33</name>
+	<range><lt>3.3.13_2</lt></range>
+      </package>
+    </affects>
+    <description>
+      <body xmlns="http://www.w3.org/1999/xhtml">
+	<p>The squid-cache project reports:</p>
+	<blockquote cite="http://www.squid-cache.org/Advisories/SQUID-2014_3.txt">
+	  <p>Due to incorrect buffer management Squid can be caused
+	  by an attacker to write outside its allocated SNMP buffer.</p>
+	</blockquote>
+      </body>
+    </description>
+    <references>
+      <url>http://www.squid-cache.org/Advisories/SQUID-2014_3.txt</url>
+      <cvename>CVE-2014-6270</cvename>
+    </references>
+    <dates>
+      <discovery>2014-09-15</discovery>
+      <entry>2014-09-18</entry>
+    </dates>
+  </vuln>
+
+  <vuln vid="38242d51-3e58-11e4-ac2f-bcaec565249c">
+    <topic>dbus -- multiple vulnabilities</topic>
+    <affects>
+      <package>
+	<name>dbus</name>
+	<range><lt>1.8.8</lt></range>
+      </package>
+    </affects>
+    <description>
+      <body xmlns="http://www.w3.org/1999/xhtml">
+	<p>Simon McVittie reports:</p>
+	<blockquote cite="http://lists.freedesktop.org/archives/dbus/2014-September/016343.html">
+	  <p>Do not accept an extra fd in the padding of a cmsg message,
+	     which could lead to a 4-byte heap buffer overrun
+	     (CVE-2014-3635).</p>
+	  <p>Reduce default for maximum Unix file descriptors passed per
+	     message from 1024 to 16, preventing a uid with the default
+	     maximum number of connections from exhausting the system
+	     bus' file descriptors under Linux's default rlimit
+	     (CVE-2014-3636).</p>
+	  <p>Disconnect connections that still have a fd pending
+	     unmarshalling after a new configurable limit,
+	     pending_fd_timeout (defaulting to 150 seconds), removing
+	     the possibility of creating an abusive connection that
+	     cannot be disconnected by setting up a circular reference
+	     to a connection's file descriptor (CVE-2014-3637).</p>
+	  <p>Reduce default for maximum pending replies per connection
+	     from 8192 to 128, mitigating an algorithmic complexity
+	     denial-of-service attack (CVE-2014-3638).</p>
+	  <p>Reduce default for authentication timeout on the system
+	     bus from 30 seconds to 5 seconds, avoiding denial of service
+	     by using up all unauthenticated connection slots; and when
+	     all unauthenticated connection slots are used up, make new
+	     connection attempts block instead of disconnecting them
+	     (CVE-2014-3639).</p>
+	</blockquote>
+      </body>
+    </description>
+    <references>
+      <cvename>CVE-2014-3635</cvename>
+      <cvename>CVE-2014-3636</cvename>
+      <cvename>CVE-2014-3637</cvename>
+      <cvename>CVE-2014-3638</cvename>
+      <cvename>CVE-2014-3639</cvename>
+      <url>http://lists.freedesktop.org/archives/dbus/2014-September/016343.html</url>
+    </references>
+    <dates>
+      <discovery>2014-09-16</discovery>
+      <entry>2014-09-17</entry>
+    </dates>
+  </vuln>
+
+  <vuln vid="77b784bb-3dc6-11e4-b191-f0def16c5c1b">
+    <topic>nginx -- inject commands into SSL session vulnerability</topic>
+    <affects>
+      <package>
+	<name>nginx</name>
+	<range><ge>0.6.0</ge><lt>1.6.2,2</lt></range>
+      </package>
+      <package>
+	<name>nginx-devel</name>
+	<range><ge>0.5.6</ge><lt>1.7.5</lt></range>
+      </package>
+    </affects>
+    <description>
+      <body xmlns="http://www.w3.org/1999/xhtml">
+	<p>The nginx project reports:</p>
+	<blockquote cite="http://mailman.nginx.org/pipermail/nginx-announce/2014/000147.html">
+	  <p>Security: it was possible to reuse SSL sessions in unrelated contexts
+	     if a shared SSL session cache or the same TLS session ticket key was
+	     used for multiple "server" blocks (CVE-2014-3616).</p>
+	</blockquote>
+      </body>
+    </description>
+    <references>
+      <cvename>CVE-2014-3616</cvename>
+      <url>http://mailman.nginx.org/pipermail/nginx-announce/2014/000147.html</url>
+    </references>
+    <dates>
+      <discovery>2014-09-16</discovery>
+      <entry>2014-09-16</entry>
+    </dates>
+  </vuln>
+
+  <vuln vid="cc627e6c-3b89-11e4-b629-6805ca0b3d42">
+    <topic>phpMyAdmin -- XSRF/CSRF due to DOM based XSS in the micro history feature</topic>
+    <affects>
+      <package>
+	<name>phpMyAdmin</name>
+	<range><ge>4.2.0</ge><lt>4.2.8.1</lt></range>
+      </package>
+    </affects>
+    <description>
+      <body xmlns="http://www.w3.org/1999/xhtml">
+	<p>The phpMyAdmin development team reports:</p>
+	<blockquote cite="http://www.phpmyadmin.net/home_page/security/PMASA-2014-10.php">
+	  <p>XSRF/CSRF due to DOM based XSS in the micro history feature.</p>
+	  <p>By deceiving a logged-in user to click on a crafted URL,
+	    it is possible to perform remote code execution and in some
+	    cases, create a root account due to a DOM based XSS
+	    vulnerability in the micro history feature.</p>
+	</blockquote>
+      </body>
+    </description>
+    <references>
+      <url>http://www.phpmyadmin.net/home_page/security/PMASA-2014-10.php</url>
+      <cvename>CVE-2014-6300</cvename>
+    </references>
+    <dates>
+      <discovery>2014-09-13</discovery>
+      <entry>2014-09-13</entry>
+    </dates>
+  </vuln>
+
+  <vuln vid="36858e78-3963-11e4-ad84-000c29f6ae42">
+    <topic>security/ossec-hids-* -- root escalation via temp files</topic>
+    <affects>
+      <package>
+	<name>ossec-hids-server</name>
+	<name>ossec-hids-client</name>
+	<name>ossec-hids-local</name>
+	<range><lt>2.8.1</lt></range>
+      </package>
+    </affects>
+    <description>
+      <body xmlns="http://www.w3.org/1999/xhtml">
+	<p>OSSEC reports:</p>
+	<blockquote cite="http://www.ossec.net/?p=1135">
+	  <p>This correction will create the temp file for the hosts deny file
+	    in /var/ossec and will use mktemp where available to create
+	    NON-predictable temp file name. In cases where mktemp is not
+	    available we have written a BAD version of mktemp, but should be a
+	    little better then just process id.</p>
+	</blockquote>
+      </body>
+    </description>
+    <references>
+      <cvename>CVE-2014-5284</cvename>
+      <url>http://www.ossec.net/?p=1135</url>
+    </references>
+    <dates>
+      <discovery>2014-09-09</discovery>
+      <entry>2014-09-11</entry>
+    </dates>
+  </vuln>
+
+  <vuln vid="36a415c8-3867-11e4-b522-00262d5ed8ee">
+    <topic>www/chromium -- multiple vulnerabilities</topic>
+    <affects>
+      <package>
+	<name>chromium</name>
+	<range><lt>37.0.2062.120</lt></range>
+      </package>
+    </affects>
+    <description>
+      <body xmlns="http://www.w3.org/1999/xhtml">
+	<p>Google Chrome Releases reports:</p>
+	<blockquote cite="http://googlechromereleases.blogspot.nl/">
+	  <p>4 security fixes in this release, including:</p>
+	  <ul>
+	    <li>[401362] High CVE-2014-3178: Use-after-free in rendering.
+	      Credit to miaubiz.</li>
+	    <li>[411014] CVE-2014-3179: Various fixes from internal audits,
+	      fuzzing and other initiatives.</li>
+	  </ul>
+	</blockquote>
+      </body>
+    </description>
+    <references>
+      <cvename>CVE-2014-3178</cvename>
+      <cvename>CVE-2014-3179</cvename>
+      <url>http://googlechromereleases.blogspot.nl/</url>
+    </references>
+    <dates>
+      <discovery>2014-09-09</discovery>
+      <entry>2014-09-09</entry>
+    </dates>
+  </vuln>
+
+  <vuln vid="6318b303-3507-11e4-b76c-0011d823eebd">
+    <topic>trafficserver -- unspecified vulnerability</topic>
+    <affects>
+      <package>
+	<name>trafficserver</name>
+	<range><lt>5.0.1</lt></range>
+      </package>
+    </affects>
+    <description>
+      <body xmlns="http://www.w3.org/1999/xhtml">
+	<p>Bryan Call reports:</p>
+	<blockquote cite="http://mail-archives.apache.org/mod_mbox/trafficserver-users/201407.mbox/%3CBFCEC9C8-1BE9-4DCA-AF9C-B8FE798EEC07@yahoo-inc.com%3E">
+	  <p>Below is our announcement for the security issue reported to us
+	  from Yahoo! Japan.  All versions of Apache Traffic Server are
+	  vulnerable.  We urge users to upgrade to either 4.2.1.1 or 5.0.1
+	  immediately.</p>
+	  <p>This fixes CVE-2014-3525 and limits access to how the health
+	  checks are performed.</p>
+	</blockquote>
+      </body>
+    </description>
+    <references>
+      <cvename>CVE-2014-3525</cvename>
+      <url>http://mail-archives.apache.org/mod_mbox/trafficserver-users/201407.mbox/%3CBFCEC9C8-1BE9-4DCA-AF9C-B8FE798EEC07@yahoo-inc.com%3E</url>
+    </references>
+    <dates>
+      <discovery>2014-07-23</discovery>
+      <entry>2014-09-05</entry>
+    </dates>
+  </vuln>
+
+  <vuln vid="fd5f305d-2d3d-11e4-aa3d-00262d5ed8ee">
+    <topic>chromium -- multiple vulnerabilities</topic>
+    <affects>
+      <package>
+	<name>chromium</name>
+	<range><lt>37.0.2062.94</lt></range>
+      </package>
+    </affects>
+    <description>
+      <body xmlns="http://www.w3.org/1999/xhtml">
+	<p>Google Chrome Releases reports:</p>
+	<blockquote cite="http://googlechromereleases.blogspot.nl/">
+	  <p>50 security fixes in this release, including:</p>
+	  <ul>
+	    <li>[386988] Critical CVE-2014-3176, CVE-2014-3177: A special reward
+	      to lokihardt@asrt for a combination of bugs in V8, IPC, sync, and
+	      extensions that can lead to remote code execution outside of the
+	      sandbox.</li>
+	    <li>[369860] High CVE-2014-3168: Use-after-free in SVG. Credit to
+	      cloudfuzzer.</li>
+	    <li>[387389] High CVE-2014-3169: Use-after-free in DOM. Credit to
+	      Andrzej Dyjak.</li>
+	    <li>[390624] High CVE-2014-3170: Extension permission dialog spoofing.
+	      Credit to Rob Wu.</li>
+	    <li>[390928] High CVE-2014-3171: Use-after-free in bindings. Credit to
+	      cloudfuzzer.</li>
+	    <li>[367567] Medium CVE-2014-3172: Issue related to extension debugging.
+	      Credit to Eli Grey.</li>
+	    <li>[376951] Medium CVE-2014-3173: Uninitialized memory read in WebGL.
+	      Credit to jmuizelaar.</li>
+	    <li>[389219] Medium CVE-2014-3174: Uninitialized memory read in Web
+	      Audio. Credit to Atte Kettunen from OUSPG.</li>
+	    <li>[406143] CVE-2014-3175: Various fixes from internal audits, fuzzing
+	      and other initiatives (Chrome 37).</li>
+
+	  </ul>
+	</blockquote>
+      </body>
+    </description>
+    <references>
+      <cvename>CVE-2014-3168</cvename>
+      <cvename>CVE-2014-3169</cvename>
+      <cvename>CVE-2014-3170</cvename>
+      <cvename>CVE-2014-3171</cvename>
+      <cvename>CVE-2014-3172</cvename>
+      <cvename>CVE-2014-3173</cvename>
+      <cvename>CVE-2014-3174</cvename>
+      <cvename>CVE-2014-3175</cvename>
+      <cvename>CVE-2014-3176</cvename>
+      <cvename>CVE-2014-3177</cvename>
+      <url>http://googlechromereleases.blogspot.nl/</url>
+    </references>
+    <dates>
+      <discovery>2014-08-26</discovery>
+      <entry>2014-08-26</entry>
+    </dates>
+  </vuln>
+
   <vuln vid="84203724-296b-11e4-bebd-000c2980a9f3">
     <topic>file -- buffer overruns and missing buffer size tests</topic>
     <affects>
@@ -697,29 +1038,29 @@ Notes:
     <affects>
       <package>
 	<name>apache22</name>
-	<range><gt>2.2.0</gt><lt>2.2.27_6</lt></range>
+	<range><gt>2.2.0</gt><lt>2.2.29</lt></range>
       </package>
       <package>
 	<name>apache22-event-mpm</name>
-	<range><gt>2.2.0</gt><lt>2.2.27_6</lt></range>
+	<range><gt>2.2.0</gt><lt>2.2.29</lt></range>
       </package>
       <package>
 	<name>apache22-itk-mpm</name>
-	<range><gt>2.2.0</gt><lt>2.2.27_6</lt></range>
+	<range><gt>2.2.0</gt><lt>2.2.29</lt></range>
       </package>
       <package>
 	<name>apache22-peruser-mpm</name>
-	<range><gt>2.2.0</gt><lt>2.2.27_6</lt></range>
+	<range><gt>2.2.0</gt><lt>2.2.29</lt></range>
       </package>
       <package>
 	<name>apache22-worker-mpm</name>
-	<range><gt>2.2.0</gt><lt>2.2.27_6</lt></range>
+	<range><gt>2.2.0</gt><lt>2.2.29</lt></range>
       </package>
     </affects>
     <description>
       <body xmlns="http://www.w3.org/1999/xhtml">
 	<p>Apache HTTP SERVER PROJECT reports:</p>
-	<blockquote cite="http://svn.apache.org/viewvc/httpd/httpd/branches/2.2.x/CHANGES?revision=1611816&amp;view=markup">
+	  <blockquote cite="http://www.apache.org/dist/httpd/CHANGES_2.2.29">
 	  <p> mod_deflate: The DEFLATE input filter (inflates request bodies) now
 	    limits the length and compression ratio of inflated request bodies to
 	    avoid denial of service via highly compressed bodies.  See directives
@@ -733,6 +1074,10 @@ Notes:
 	    communication with scripts.</p>
 	  <p>Fix a race condition in scoreboard handling, which could lead to a heap
 	    buffer overflow.</p>
+	  <p>core: HTTP trailers could be used to replace HTTP headers late during
+	    request processing, potentially undoing or otherwise confusing modules
+	    that examined or modified request headers earlier.  Adds "MergeTrailers"
+	    directive to restore legacy behavior.</p>
 	</blockquote>
       </body>
     </description>
@@ -740,10 +1085,12 @@ Notes:
       <cvename>CVE-2014-0118</cvename>
       <cvename>CVE-2014-0231</cvename>
       <cvename>CVE-2014-0226</cvename>
+      <cvename>CVE-2013-5704</cvename>
     </references>
     <dates>
       <discovery>2014-07-19</discovery>
       <entry>2014-07-24</entry>
+      <modified>2014-09-03</modified>
     </dates>
   </vuln>
 

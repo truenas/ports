@@ -13,6 +13,7 @@ LICENSE=	GPLv2 GPLv3
 LICENSE_COMB=	multi
 
 RESTRICTED=	binaries licensed under GNU GPL without accompanying source
+BROKEN=		Fails to package
 
 USES=		tar:bzip2
 DIST_SUBDIR=		gentoo-linux

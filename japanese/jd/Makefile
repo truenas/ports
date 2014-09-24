@@ -3,7 +3,7 @@
 
 PORTNAME=	jd
 PORTVERSION=	2.8.8
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	japanese www
 MASTER_SITES=	SFJP
 MASTER_SITE_SUBDIR=	jd4linux/61281
@@ -18,12 +18,12 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 LIB_DEPENDS=	libgnutls.so:${PORTSDIR}/security/gnutls \
 		libgcrypt.so:${PORTSDIR}/security/libgcrypt
 
-USES=		iconv libtool tar:tgz
-USE_AUTOTOOLS=	autoconf automake libtoolize
+USES=		autoreconf iconv libtool tar:tgz
 USE_GNOME=	gtk20 gtkmm24 libgnomeui
 
+GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--with-sessionlib=gnomeui
-LDFLAGS+=	-L${LOCALBASE}/lib ${ICONV_LIB}
+LIBS+=		-L${LOCALBASE}/lib ${ICONV_LIB}
 
 OPTIONS_DEFINE=	ONIGURUMA PANGOLAYOUT
 ONIGURUMA_DESC=	Use oniguruma regular expressions library
@@ -37,8 +37,5 @@ PANGOLAYOUT_CONFIGURE_WITH=	pangolayout
 PLIST_FILES=	bin/jd \
 		share/applications/jd.desktop \
 		share/pixmaps/jd.png
-
-pre-configure:
-	@cd ${WRKSRC} && ${AUTORECONF} -i
 
 .include <bsd.port.mk>

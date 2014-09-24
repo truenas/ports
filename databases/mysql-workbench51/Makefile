@@ -3,7 +3,7 @@
 
 PORTNAME=	mysql-workbench-oss
 PORTVERSION=	5.1.16
-PORTREVISION=	10
+PORTREVISION=	11
 CATEGORIES=	databases
 MASTER_SITES=	${MASTER_SITE_MYSQL}
 MASTER_SITE_SUBDIR=	MySQLGUITools
@@ -24,7 +24,6 @@ OPTIONS_DEFINE=	PYTHON
 USE_AUTOTOOLS=	libtoolize aclocal autoconf autoheader automake
 ACLOCAL_ARGS=	-I m4
 AUTOMAKE_ARGS=	-a -c -f --foreign
-LIBTOOLIZE_ARGS=-i -c -f
 USE_LDCONFIG=	${PREFIX}/lib/mysql-workbench
 SUBDIRS=	ext/yassl/taocrypt ext/yassl ext/ctemplate/ctemplate-src .
 

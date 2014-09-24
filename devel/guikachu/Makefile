@@ -3,7 +3,7 @@
 
 PORTNAME=	guikachu
 PORTVERSION=	1.5.10
-PORTREVISION=	5
+PORTREVISION=	6
 PORTEPOCH=	3
 CATEGORIES=	devel palm gnome
 MASTER_SITES=	http://cactus.rulez.org/projects/guikachu/download/
@@ -14,9 +14,10 @@ COMMENT=	Resource editor for PalmOS(tm) systems
 LIB_DEPENDS=	libgnomeuimm-2.6.so:${PORTSDIR}/x11-toolkits/libgnomeuimm26 \
 		libgnomevfsmm-2.6.so:${PORTSDIR}/devel/gnome-vfsmm
 
-USES=		gmake pkgconfig shared-mime-info desktop-file-utils
-USE_GNOME=	gnomeprefix gnomehack intlhack libgnomeui
+USES=		gmake pathfix pkgconfig shared-mime-info desktop-file-utils
+USE_GNOME=	gnomeprefix intlhack libgnomeui
 GNU_CONFIGURE=	yes
+CONFIGURE_ENV=	ac_cv_path_UPDATE_MIME="no"
 CPPFLAGS+=	-I${LOCALBASE}/include
 LDFLAGS+=	-L${LOCALBASE}/lib
 

@@ -2,8 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	php5
-PORTVERSION=	5.4.31
-PORTREVISION?=	1
+PORTVERSION=	5.4.33
+PORTREVISION?=	0
 CATEGORIES?=	lang devel www
 MASTER_SITES=	${MASTER_SITE_PHP}
 MASTER_SITE_SUBDIR=	distributions
@@ -17,13 +17,12 @@ LICENSE=	PHP301
 LATEST_LINK=	${PKGNAMEPREFIX}${PORTNAME}${PKGNAMESUFFIX}
 
 USES=		tar:bzip2 cpe
+CPE_PRODUCT=	php
 NO_OPTIONS_SORT=yes
 .if !defined(PKGNAMESUFFIX)
 USE_AUTOTOOLS=	autoconf
 
 LIB_DEPENDS=	libpcre.so:${PORTSDIR}/devel/pcre
-
-CPE_PRODUCT=	php
 
 CONFIGURE_ARGS+=--with-layout=GNU \
 		--localstatedir=/var \
@@ -54,7 +53,7 @@ MAILHEAD_DESC=	Enable mail header patch
 LINKTHR_DESC=	Link thread lib (for threaded extensions)
 ZTS_DESC=	Force Zend Thread Safety (ZTS) build
 
-CONFLICTS=	php53-5* php55-5*
+CONFLICTS=	php53-5* php55-5* php56-5*
 
 DESTDIRNAME=	INSTALL_ROOT
 
@@ -143,6 +142,7 @@ CONFIGURE_ARGS+=--with-zend-vm=GOTO
 
 CONFIGURE_ENV+=	ac_cv_pthreads_lib="" \
 		ac_cv_pthreads_cflags="" \
+		ac_cv_decimal_fp_supported="no" \
 		pthreads_working="yes" \
 		lt_cv_path_SED="sed"
 

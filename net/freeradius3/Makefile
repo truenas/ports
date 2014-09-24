@@ -2,8 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	freeradius
-DISTVERSION=	3.0.3
-PORTREVISION=	4
+DISTVERSION=	3.0.4
 CATEGORIES=	net
 MASTER_SITES=	ftp://ftp.freeradius.org/pub/freeradius/%SUBDIR%/ \
 		ftp://ftp.ntua.gr/pub/net/radius/freeradius/%SUBDIR%/ \
@@ -222,7 +221,6 @@ EXPM=		yes
 .endif
 
 .if ${PORT_OPTIONS:MREST}
-IGNORE=		requires devel/json-c to be updated to 0.11 to build with RESTful support
 LIB_DEPENDS+=	libjson.so:${PORTSDIR}/devel/json-c \
     		libcurl.so:${PORTSDIR}/ftp/curl
 CONFIGURE_ARGS+=--with-rlm_rest \
@@ -241,7 +239,7 @@ EXPM=		yes
 .endif
 
 .if ${PORT_OPTIONS:MFREETDS}
-LIB_DEPENDS+=	libtds.so:${PORTSDIR}/databases/freetds
+LIB_DEPENDS+=	libct.so:${PORTSDIR}/databases/freetds
 CONFIGURE_ARGS+=--with-rlm_freetds
 PLIST_SUB+=	RLMFREETDS=""
 .else

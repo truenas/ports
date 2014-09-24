@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	asterisk
-PORTVERSION=	11.12.0
+PORTVERSION=	11.12.1
 CATEGORIES=	net
 MASTER_SITES=	http://downloads.asterisk.org/pub/telephony/asterisk/ \
 		http://downloads.asterisk.org/pub/telephony/asterisk/old-releases/
@@ -26,7 +26,8 @@ CPPFLAGS+=	-I${LOCALBASE}/include -I${LOCALBASE}/include/openh323
 CFLAGS+=	-I${LOCALBASE}/include
 USE_GCC=	yes
 USE_GNOME=	libxml2
-USES=		bison gmake
+USES=		bison cpe gmake
+CPE_VENDOR=	digium
 USE_RC_SUBR=	asterisk
 MAKE_ENV=	PTHREAD_CFLAGS="${PTHREAD_CFLAGS}" \
 		PTHREAD_LIBS="${PTHREAD_LIBS}" \
@@ -72,13 +73,13 @@ DAHDI_LIB_DEPENDS=	libpri.so:${PORTSDIR}/misc/libpri \
 			libopenr2.so:${PORTSDIR}/misc/openr2
 ODBC_CONFIGURE_WITH=	unixodbc
 ODBC_CONFIGURE_ON=	--with-ltdl
-ODBC_USE=		AUTOTOOLS=libltdl
-ODBC_LIB_DEPENDS=	libodbc.so:${PORTSDIR}/databases/unixODBC
+ODBC_LIB_DEPENDS=	libodbc.so:${PORTSDIR}/databases/unixODBC \
+			libltdl.so:${PORTSDIR}/devel/libltdl
 FREETDS_CONFIGURE_ON=	--with-tds=${LOCALBASE}
 FREETDS_CONFIGURE_OFF=	--without-tds
-FREETDS_LIB_DEPENDS=	libtds.so:${PORTSDIR}/databases/freetds
+FREETDS_LIB_DEPENDS=	libsybdb.so:${PORTSDIR}/databases/freetds
 PGSQL_CONFIGURE_WITH=	postgres
-PGSQL_USE=		PGSQL=yes
+PGSQL_USES=		pgsql
 MYSQL_CONFIGURE_WITH=	mysqlclient
 MYSQL_USE=		MYSQL=yes
 VORBIS_CONFIGURE_WITH=	ogg
@@ -97,7 +98,7 @@ CURL_CONFIGURE_ON=	--with-libcurl
 CURL_CONFIGURE_OFF=	--with-libcurl=no
 CURL_LIB_DEPENDS=	libcurl.so:${PORTSDIR}/ftp/curl
 SPANDSP_CONFIGURE_WITH=	spandsp
-SPANDSP_LIB_DEPENDS=	libspandsp.so:${PORTSDIR}/comms/spandsp-devel
+SPANDSP_LIB_DEPENDS=	libspandsp.so.2:${PORTSDIR}/comms/spandsp-devel
 EXCHANGE_CONFIGURE_OFF=	--without-neon --without-neon29
 EXCHANGE_LIB_DEPENDS=	libneon.so:${PORTSDIR}/www/neon29
 SRTP_CONFIGURE_WITH=	srtp

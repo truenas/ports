@@ -10,12 +10,13 @@ TEX_MAINTAINER=	hrs@FreeBSD.org
 # USE_TEX=	yes
 # imports variables only, and
 # USE_TEX=	full
-# means full TeXLive dependency.
+# means full TeXLive dependency except for documentation and source.
 #
 # The other valid keywords
 #
 #  base:	base part
-#  texmf:	texmf tree (except for documentation)
+#  texmf:	texmf tree (except for documentation and source)
+#  source:	source 
 #  docs:	documentation
 #
 #  web2c:	WEB2C toolchain and TeX engines
@@ -81,6 +82,9 @@ _USE_TEX_BASE_PKGNAME=	texlive-base
 _USE_TEX_GBKLATEX_DEP=	gbklatex
 _USE_TEX_GBKLATEX_PORT=	${_USE_TEX_BASE_PORT}
 _USE_TEX_GBKLATEX_PKGNAME=${_USE_TEX_BASE_PKGNAME}
+_USE_TEX_SOURCE_DEP=	${LOCALBASE}/${TEXMFDISTDIR}/source/.keep_me
+_USE_TEX_SOURCE_PORT=	print/${_USE_TEX_SOURCE_PKGNAME}
+_USE_TEX_SOURCE_PKGNAME=texlive-texmf-source
 _USE_TEX_DOCS_DEP=	${LOCALBASE}/${TEXMFDISTDIR}/doc/texlive/texlive-en/README
 _USE_TEX_DOCS_PORT=	print/${_USE_TEX_DOCS_PKGNAME}
 _USE_TEX_DOCS_PKGNAME=	texlive-docs
@@ -185,21 +189,13 @@ ${_C}_DEPENDS+=	${TEX_${_C}_DEPENDS:O:u}
 .PHONY:	do-texhash
 do-texhash:
 . if !empty(USE_TEX:Mtexhash-bootstrap)
-.if defined(NO_STAGE)
-	@${LOCALBASE}/bin/mktexlsr ${TEXHASHDIRS:S,^,${PREFIX}/,}
-.endif
 	@${ECHO_CMD} "@exec ${LOCALBASE}/bin/mktexlsr " \
 		"${TEXHASHDIRS:S,^,%D/,}" >> ${TMPPLIST}
 	@for D in ${TEXHASHDIRS}; do \
-		${ECHO_CMD} "@unexec ${RM} -f %D/$$D/ls-R"; \
-		${ECHO_CMD} "@unexec ${RMDIR} %D/$$D 2> /dev/null || ${TRUE}"; \
+		${ECHO_CMD} "@rmtry $$D/ls-R"; \
+		${ECHO_CMD} "@dirrmtry $$D"; \
 	done >> ${TMPPLIST}
 . else
-.if defined(NO_STAGE)
-	@for D in ${TEXHASHDIRS:S,^,${PREFIX}/,}; do \
-		if [ -r $$D/ls-R ]; then ${LOCALBASE}/bin/mktexlsr $$D; fi; \
-	done
-.endif
 	@${ECHO_CMD} "@exec for D in ${TEXHASHDIRS:S,^,${PREFIX}/,}; do " \
 		"if [ -r \$$D/ls-R ]; then " \
 			"${LOCALBASE}/bin/mktexlsr \$$D; " \
@@ -254,11 +250,6 @@ PLIST_DIRSTRY=	${_PLIST_DIRSTRY:O:u} ${TEXMFVARDIR}/web2c
 .if !empty(USE_TEX:Mupdmap)
 .PHONY:	do-updmap
 do-updmap:
-.if defined(NO_STAGE)
-	${SETENV} PATH=${PATH}:${LOCALBASE}/bin \
-		TEXMFMAIN=${LOCALBASE}/${TEXMFDIR} \
-		${LOCALBASE}/bin/updmap-sys
-.endif
 	@${ECHO_CMD} "@exec ${SETENV} PATH=${PATH}:${LOCALBASE}/bin " \
 		"TEXMFMAIN=${LOCALBASE}/${TEXMFDIR} " \
 		"${LOCALBASE}/bin/updmap-sys"  >> ${TMPPLIST}

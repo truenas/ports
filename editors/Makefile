@@ -42,7 +42,6 @@
     SUBDIR += calligra-l10n-tr
     SUBDIR += chexedit
     SUBDIR += codelite
-    SUBDIR += color-mate
     SUBDIR += conglomerate
     SUBDIR += cooledit
     SUBDIR += cream
@@ -71,7 +70,6 @@
     SUBDIR += gmanedit
     SUBDIR += gnome2-office
     SUBDIR += gnotepad+
-    SUBDIR += gnuserv
     SUBDIR += gobby
     SUBDIR += gwrite
     SUBDIR += heme
@@ -83,7 +81,6 @@
     SUBDIR += impress
     SUBDIR += jed
     SUBDIR += jedit
-    SUBDIR += jext
     SUBDIR += joe
     SUBDIR += joe2
     SUBDIR += jove
@@ -93,7 +90,6 @@
     SUBDIR += kile-kde4
     SUBDIR += klat4
     SUBDIR += komodo-edit
-    SUBDIR += komodo-ide
     SUBDIR += lazarus
     SUBDIR += lazarus-lcl-gtk
     SUBDIR += lazarus-lcl-gtk2
@@ -203,7 +199,6 @@
     SUBDIR += libreoffice-zu
     SUBDIR += madedit
     SUBDIR += manedit
-    SUBDIR += mate-text-editor
     SUBDIR += mg
     SUBDIR += mined
     SUBDIR += mlview
@@ -224,8 +219,8 @@
     SUBDIR += p5-Vimana
     SUBDIR += paredit-mode.el
     SUBDIR += pico-alpine
+    SUBDIR += pluma
     SUBDIR += poedit
-    SUBDIR += psgml
     SUBDIR += puff
     SUBDIR += py-room
     SUBDIR += rox-edit
@@ -233,11 +228,8 @@
     SUBDIR += scribes
     SUBDIR += se
     SUBDIR += semi
-    SUBDIR += setedit
     SUBDIR += slime
-    SUBDIR += softmaker-office
     SUBDIR += spe
-    SUBDIR += speedbar
     SUBDIR += ssam
     SUBDIR += ssed
     SUBDIR += sted
@@ -249,7 +241,6 @@
     SUBDIR += texmacs
     SUBDIR += texmaker
     SUBDIR += texmakerx
-    SUBDIR += textedit
     SUBDIR += textroom
     SUBDIR += texworks
     SUBDIR += thoteditor
@@ -276,5 +267,7 @@
     SUBDIR += zile
     SUBDIR += zim
     SUBDIR += zoinks
+    SUBDIR += sublime
+    SUBDIR += sublime3
 
 .include <bsd.port.subdir.mk>

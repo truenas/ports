@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	tins
-PORTVERSION=	0.8.3
+PORTVERSION=	0.13.2
 CATEGORIES=	devel rubygems
 MASTER_SITES=	RG
 PKGNAMESUFFIX=	0
@@ -13,5 +13,7 @@ COMMENT=	Useful tools library in Ruby
 USE_RUBY=	yes
 USE_RUBYGEMS=	yes
 RUBYGEM_AUTOPLIST=	yes
+
+PORTSCOUT=	limit:^0\.
 
 .include <bsd.port.mk>

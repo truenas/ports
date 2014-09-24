@@ -113,7 +113,6 @@
     SUBDIR += eawplus
     SUBDIR += ecasound
     SUBDIR += emms
-    SUBDIR += emu10kx
     SUBDIR += enscribe
     SUBDIR += epos-devel
     SUBDIR += esound
@@ -149,9 +148,6 @@
     SUBDIR += festvox-rab16
     SUBDIR += festvox-rab8
     SUBDIR += festvox-russian
-    SUBDIR += festvox-us1-mbrola
-    SUBDIR += festvox-us2-mbrola
-    SUBDIR += festvox-us3-mbrola
     SUBDIR += firefly
     SUBDIR += flac
     SUBDIR += flac123
@@ -170,8 +166,6 @@
     SUBDIR += freealut
     SUBDIR += freedesktop-sound-theme
     SUBDIR += freepats
-    SUBDIR += freeswitch-music
-    SUBDIR += freeswitch-sounds
     SUBDIR += funktrackergold
     SUBDIR += gbemol
     SUBDIR += gbsplay
@@ -306,7 +300,6 @@
     SUBDIR += id3v2
     SUBDIR += idjc
     SUBDIR += ifp-line
-    SUBDIR += ipod-sharp
     SUBDIR += jack
     SUBDIR += jack-keyboard
     SUBDIR += jack-rack
@@ -399,6 +392,23 @@
     SUBDIR += libworkman
     SUBDIR += libxmp
     SUBDIR += lingot
+    SUBDIR += linux-c6-alsa-lib
+    SUBDIR += linux-c6-alsa-plugins-oss
+    SUBDIR += linux-c6-alsa-plugins-pulseaudio
+    SUBDIR += linux-c6-alsa-utils
+    SUBDIR += linux-c6-arts
+    SUBDIR += linux-c6-esound
+    SUBDIR += linux-c6-flac
+    SUBDIR += linux-c6-libaudiofile
+    SUBDIR += linux-c6-libogg
+    SUBDIR += linux-c6-libsndfile
+    SUBDIR += linux-c6-libvorbis
+    SUBDIR += linux-c6-mikmod
+    SUBDIR += linux-c6-nas-libs
+    SUBDIR += linux-c6-openal-soft
+    SUBDIR += linux-c6-pulseaudio-libs
+    SUBDIR += linux-c6-pulseaudio-utils
+    SUBDIR += linux-c6-sdl_mixer
     SUBDIR += linux-f10-alsa-lib
     SUBDIR += linux-f10-alsa-plugins-oss
     SUBDIR += linux-f10-arts
@@ -417,10 +427,8 @@
     SUBDIR += linux-genpuid
     SUBDIR += linux-laudio
     SUBDIR += linux-mbrola
-    SUBDIR += linux-musicipserver
     SUBDIR += linux-neroaaccodec
     SUBDIR += linuxsampler
-    SUBDIR += liquidsoap
     SUBDIR += listener
     SUBDIR += lmms
     SUBDIR += lpac
@@ -639,8 +647,6 @@
     SUBDIR += rsynth
     SUBDIR += rubberband
     SUBDIR += ruby-audiofile
-    SUBDIR += ruby-freedb
-    SUBDIR += ruby-mp3info
     SUBDIR += ruby-mp3tag
     SUBDIR += ruby-smf
     SUBDIR += ruby-taglib
@@ -669,6 +675,7 @@
     SUBDIR += sidplay2
     SUBDIR += sidplayer
     SUBDIR += simplemod
+    SUBDIR += siren
     SUBDIR += slv2
     SUBDIR += smasher
     SUBDIR += snack

@@ -3,6 +3,7 @@
 
 PORTNAME=	spandsp
 PORTVERSION=	0.0.5
+PORTREVISION=	1
 CATEGORIES=	comms
 MASTER_SITES=	http://www.soft-switch.org/downloads/spandsp/ \
 		http://www.soft-switch.org/downloads/spandsp/old/
@@ -13,11 +14,11 @@ COMMENT=	DSP library and software FAX machine
 LIB_DEPENDS=	libtiff.so:${PORTSDIR}/graphics/tiff
 
 GNU_CONFIGURE=	yes
-USE_AUTOTOOLS=	libtool autoconf
-USES=		gmake tar:tgz
+INSTALL_TARGET=	install-strip
+USES=		autoreconf gmake libtool tar:tgz
 
 CPPFLAGS+=	-I${LOCALBASE}/include
-LDFLAGS+=	-L${LOCALBASE}/lib
+LIBS+=		-L${LOCALBASE}/lib
 
 USE_LDCONFIG=	yes
 

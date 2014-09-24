@@ -3,7 +3,7 @@
 
 PORTNAME=	xbmc-pvr-addons
 PORTVERSION=	12.0
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	multimedia
 MASTER_SITES=	http://people.freebsd.org/~decke/distfiles/
 DISTNAME=	${PORTNAME}-${PORTVERSION}-20140104
@@ -19,9 +19,9 @@ GH_ACCOUNT=	opdenkamp
 GH_COMMIT=	9021115
 GH_TAGNAME=	9021115
 
-USES=		pkgconfig
+USES=		libtool pkgconfig
 USE_GL=		gl
-USE_AUTOTOOLS=	libtoolize aclocal libtool automake autoconf
+USE_AUTOTOOLS=	libtoolize aclocal automake autoconf
 MAKE_JOBS_SAFE=	yes
 AUTOMAKE_ARGS=	--add-missing
 GNU_CONFIGURE=	yes

@@ -3,7 +3,7 @@
 
 PORTNAME=	prosody
 PORTVERSION=	0.9.4
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	net-im
 MASTER_SITES=	http://prosody.im/downloads/source/ \
 				http://redundancy.redundancy.org/mirror/
@@ -24,7 +24,6 @@ USERS=		prosody
 GROUPS=		${USERS}
 
 USE_RC_SUBR=	prosody
-MANCOMPRESSED=	no
 
 OPTIONS_DEFINE= LUAJIT
 LUAJIT_DESC=    Run prosody using luajit

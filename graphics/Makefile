@@ -4,7 +4,6 @@
     COMMENT = Graphics tools and libraries
 
     SUBDIR += 4va
-    SUBDIR += Cgraph
     SUBDIR += Coin
     SUBDIR += EZWGL
     SUBDIR += GraphicsMagick
@@ -46,6 +45,7 @@
     SUBDIR += apvlv
     SUBDIR += aqsis
     SUBDIR += asciio
+    SUBDIR += atril
     SUBDIR += autopano-sift-c
     SUBDIR += autoq3d
     SUBDIR += autotrace
@@ -140,6 +140,7 @@
     SUBDIR += eog
     SUBDIR += eog-plugins
     SUBDIR += eos-movrec
+    SUBDIR += eom
     SUBDIR += epdfview
     SUBDIR += epeg
     SUBDIR += epix
@@ -198,7 +199,6 @@
     SUBDIR += founts
     SUBDIR += fpc-cairo
     SUBDIR += fpc-fpgtk
-    SUBDIR += fpc-ggi
     SUBDIR += fpc-graph
     SUBDIR += fpc-hermes
     SUBDIR += fpc-imagemagick
@@ -234,7 +234,6 @@
     SUBDIR += gdchart
     SUBDIR += gdk-pixbuf
     SUBDIR += gdk-pixbuf2
-    SUBDIR += gdtclft
     SUBDIR += geeqie
     SUBDIR += gegl
     SUBDIR += generic_image_decoder
@@ -280,7 +279,6 @@
     SUBDIR += glexcess
     SUBDIR += glfw
     SUBDIR += glfw2
-    SUBDIR += glide3
     SUBDIR += glitz
     SUBDIR += gliv
     SUBDIR += glosm
@@ -347,6 +345,7 @@
     SUBDIR += hobbes-icons-xpm
     SUBDIR += hppsmtools
     SUBDIR += hs-HGL
+    SUBDIR += hs-JuicyPixels
     SUBDIR += hs-cairo
     SUBDIR += hs-dia-base
     SUBDIR += hs-dia-functions
@@ -385,7 +384,6 @@
     SUBDIR += inventor
     SUBDIR += ipe
     SUBDIR += iulib
-    SUBDIR += ivtools
     SUBDIR += jalbum
     SUBDIR += jasper
     SUBDIR += jave6
@@ -501,7 +499,6 @@
     SUBDIR += libgaiagraphics
     SUBDIR += libgeotiff
     SUBDIR += libgfx
-    SUBDIR += libggi
     SUBDIR += libglapi
     SUBDIR += libglesv2
     SUBDIR += libgltext
@@ -549,6 +546,14 @@
     SUBDIR += linplasma
     SUBDIR += linux-XnViewMP
     SUBDIR += linux-adobesvg
+    SUBDIR += linux-c6-sdl_image
+    SUBDIR += linux-c6-sdl_ttf
+    SUBDIR += linux-c6-dri
+    SUBDIR += linux-c6-dri-compat
+    SUBDIR += linux-c6-jpeg
+    SUBDIR += linux-c6-tiff
+    SUBDIR += linux-c6-cairo
+    SUBDIR += linux-c6-png
     SUBDIR += linux-f10-cairo
     SUBDIR += linux-f10-dri
     SUBDIR += linux-f10-gdk-pixbuf
@@ -559,10 +564,9 @@
     SUBDIR += linux-f10-libmng
     SUBDIR += linux-f10-png
     SUBDIR += linux-f10-sdl_image
+    SUBDIR += linux-f10-sdl_ttf
     SUBDIR += linux-f10-tiff
     SUBDIR += linux-f10-ungif
-    SUBDIR += linux-sdl_ttf
-    SUBDIR += linux_glide
     SUBDIR += lprof-devel
     SUBDIR += lua-gd
     SUBDIR += luminance
@@ -574,8 +578,6 @@
     SUBDIR += mapnik
     SUBDIR += mapserver
     SUBDIR += mapyrus
-    SUBDIR += mate-document-viewer
-    SUBDIR += mate-image-viewer
     SUBDIR += megapov
     SUBDIR += mesa-demos
     SUBDIR += meshviewer
@@ -583,7 +585,6 @@
     SUBDIR += metapixel
     SUBDIR += mhgui
     SUBDIR += ming
-    SUBDIR += mingplot
     SUBDIR += mirage
     SUBDIR += mmrecover
     SUBDIR += mozjpeg
@@ -627,7 +628,6 @@
     SUBDIR += openshadinglanguage
     SUBDIR += optar
     SUBDIR += optipng
-    SUBDIR += orca
     SUBDIR += osg
     SUBDIR += osg-devel
     SUBDIR += osgearth
@@ -666,6 +666,7 @@
     SUBDIR += p5-Geo-Point
     SUBDIR += p5-Geo-Proj4
     SUBDIR += p5-Geometry-Primitive
+    SUBDIR += p5-Gimp
     SUBDIR += p5-Google-Chart
     SUBDIR += p5-Graph-Easy
     SUBDIR += p5-Graph-ReadWrite
@@ -728,7 +729,6 @@
     SUBDIR += panoglview
     SUBDIR += panomatic
     SUBDIR += partio
-    SUBDIR += passepartout
     SUBDIR += pdf2svg
     SUBDIR += pear-Horde_Image
     SUBDIR += pear-IO_SWF
@@ -757,7 +757,6 @@
     SUBDIR += php-gdal
     SUBDIR += php-libpuzzle
     SUBDIR += php-magickwand
-    SUBDIR += php5-chartdirector
     SUBDIR += php5-exif
     SUBDIR += php5-ffmpeg
     SUBDIR += php5-gd
@@ -766,13 +765,14 @@
     SUBDIR += php53-gd
     SUBDIR += php55-exif
     SUBDIR += php55-gd
+    SUBDIR += php56-exif
+    SUBDIR += php56-gd
     SUBDIR += phplot
     SUBDIR += picpuz
     SUBDIR += picturebook
     SUBDIR += picviz
     SUBDIR += piddle
     SUBDIR += pinpoint
-    SUBDIR += pinta
     SUBDIR += pixelize
     SUBDIR += pixen
     SUBDIR += pixie
@@ -797,7 +797,6 @@
     SUBDIR += pornview
     SUBDIR += potrace
     SUBDIR += povray-meta
-    SUBDIR += povray31
     SUBDIR += povray36
     SUBDIR += povray37
     SUBDIR += ppmcaption
@@ -813,7 +812,6 @@
     SUBDIR += pstoedit
     SUBDIR += pstoepsi
     SUBDIR += pure-gl
-    SUBDIR += pvmpov
     SUBDIR += py-PyX
     SUBDIR += py-PyX12
     SUBDIR += py-aafigure
@@ -910,8 +908,6 @@
     SUBDIR += ruby-gdal
     SUBDIR += ruby-image_size
     SUBDIR += ruby-imlib2
-    SUBDIR += ruby-ming
-    SUBDIR += ruby-rmagick
     SUBDIR += ruby-svg
     SUBDIR += ruby-tgif
     SUBDIR += rubygem-cairo
@@ -945,7 +941,6 @@
     SUBDIR += sam2p
     SUBDIR += sampleicc
     SUBDIR += sane-backends
-    SUBDIR += sane-epkowa
     SUBDIR += sane-frontends
     SUBDIR += scale2x
     SUBDIR += scantailor
@@ -1009,7 +1004,6 @@
     SUBDIR += ttygif
     SUBDIR += tulip
     SUBDIR += tumble
-    SUBDIR += uDrawGraph
     SUBDIR += ufraw
     SUBDIR += uniconvertor
     SUBDIR += uniconvw
@@ -1019,7 +1013,6 @@
     SUBDIR += viewnior
     SUBDIR += vigra
     SUBDIR += vips
-    SUBDIR += visionworkbench
     SUBDIR += visprint
     SUBDIR += volpack
     SUBDIR += vp
@@ -1031,6 +1024,7 @@
     SUBDIR += wxsvg
     SUBDIR += xaos
     SUBDIR += xbmbrowser
+    SUBDIR += xcftools
     SUBDIR += xd3d
     SUBDIR += xdgagrab
     SUBDIR += xface.el
@@ -1062,6 +1056,7 @@
     SUBDIR += yed
     SUBDIR += zathura
     SUBDIR += zathura-djvu
+    SUBDIR += zathura-pdf-mupdf
     SUBDIR += zathura-pdf-poppler
     SUBDIR += zbar
     SUBDIR += zgv

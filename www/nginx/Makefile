@@ -2,8 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	nginx
-PORTVERSION=	1.6.1
-PORTREVISION=	1
+PORTVERSION=	1.6.2
 PORTEPOCH=	2
 CATEGORIES=	www
 MASTER_SITES=	http://nginx.org/download/
@@ -109,8 +108,8 @@ OPTIONS_DEFINE=	\
 	XSS \
 	VIDEO
 
-OPTIONS_SINGLE=		VIDEO
-OPTIONS_SINGLE_VIDEO=	HTTP_MP4 HTTP_MP4_H264
+OPTIONS_RADIO=		VIDEO
+OPTIONS_RADIO_VIDEO=	HTTP_MP4 HTTP_MP4_H264
 OPTIONS_DEFAULT=	IPV6 HTTP HTTP_CACHE HTTP_REWRITE HTTP_SSL HTTP_STATUS WWW
 
 DEBUGLOG_DESC=			Enable debug log (--with-debug)
@@ -654,7 +653,7 @@ CONFIGURE_ARGS+=--without-http_rewrite_module \
 .endif
 
 .if ${PORT_OPTIONS:MPASSENGER}
-PASSENGER_VERSION=	4.0.49
+PASSENGER_VERSION=	4.0.50
 MASTER_SITES+=	http://s3.amazonaws.com/phusion-passenger/releases/:passenger
 DISTFILES+=	passenger-${PASSENGER_VERSION}.tar.gz:passenger
 CONFIGURE_ARGS+=--add-module=${WRKDIR}/passenger-${PASSENGER_VERSION}/ext/nginx
@@ -667,7 +666,7 @@ CFLAGS+=	-DNDEBUG
 
 .if ${PORT_OPTIONS:MPOSTGRES}
 IGNORE=	POSTGRES: update require
-USE_PGSQL=	yes
+USES+=	pgsql
 NGINX_POSTGRES_VERSION=	0.9
 MASTER_SITES+=	http://labs.frickle.com/files/:postgres
 DISTFILES+=	ngx_postgres-${NGINX_POSTGRES_VERSION}.tar.gz:postgres
@@ -700,10 +699,11 @@ CONFIGURE_ARGS+=--add-module=${WRKDIR}/openresty-redis2-nginx-module-${GIT_REDIS
 .endif
 
 .if ${PORT_OPTIONS:MRTMP}
-NGINX_RTMP_VERSION=	1.1.4
+NGINX_RTMP_VERSION=	1.1.5
 MASTER_SITES+=	https://github.com/arut/nginx-rtmp-module/archive/v${NGINX_RTMP_VERSION}/:rtmp
 DISTFILES+=	rtmp-nginx-module-v${NGINX_RTMP_VERSION}.tar.gz:rtmp
 CONFIGURE_ARGS+=--add-module=${WRKDIR}/nginx-rtmp-module-${NGINX_RTMP_VERSION}
+EXTRA_PATCHES+=	${PATCHDIR}/extra-patch-arut-rtmp-module
 .endif
 
 .if ${PORT_OPTIONS:MSET_MISC}

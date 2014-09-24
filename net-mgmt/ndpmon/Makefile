@@ -3,11 +3,11 @@
 
 PORTNAME=	ndpmon
 PORTVERSION=	1.4.0
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	net-mgmt ipv6
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/${PORTNAME}-1.4/
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	pi@FreeBSD.org
 COMMENT=	On-link icmpv6 message monitoring and reporting daemon
 
 LICENSE=	LGPL21
@@ -19,7 +19,6 @@ OPTIONS_DEFAULT=
 PY4SUITE_DESC=		Depend on py-4suite-xml (for generating HTML)
 MACRESOLV_DESC=		Enable MAC Manufacturer Resolution (use p5-libwww)
 
-NO_STAGE=	yes
 .include <bsd.port.options.mk>
 
 .if ${PORT_OPTIONS:MPY4SUITE}
@@ -40,7 +39,6 @@ CONFIGURE_ENV=	OSTYPE=FreeBSD
 CONFIGURE_ARGS=	--with-var-datadir=${PREFIX}/var --with-confdir=${ETCDIR} \
 		--with-libxml2=${LOCALBASE} --cache-file=/dev/null
 
-MAN8=		ndpmon.8
 PORTDOCS=	INSTALL README
 
 .if ${PORT_OPTIONS:MMACRESOLV}
@@ -63,32 +61,31 @@ post-patch:
 	(cd ${WRKSRC}; ${MAKE} clean)
 
 do-install:
-	${INSTALL_MAN} ${WRKSRC}/ndpmon.8 ${PREFIX}/man/man8
-	${INSTALL_PROGRAM} ${WRKSRC}/ndpmon ${PREFIX}/sbin
+	${INSTALL_MAN} ${WRKSRC}/ndpmon.8 ${STAGEDIR}${PREFIX}/man/man8
+	${INSTALL_PROGRAM} ${WRKSRC}/ndpmon ${STAGEDIR}${PREFIX}/sbin
 
-	${MKDIR} ${DATADIR}
-	${INSTALL_DATA} ${WRKSRC}/*.dtd ${DATADIR}
-	${INSTALL_SCRIPT} ${WRKSRC}/demopipeprogram.pl.sample ${DATADIR}
+	${MKDIR} ${STAGEDIR}${DATADIR}
+	${INSTALL_DATA} ${WRKSRC}/*.dtd ${STAGEDIR}${DATADIR}
+	${INSTALL_SCRIPT} ${WRKSRC}/demopipeprogram.pl.sample ${STAGEDIR}${DATADIR}
 .if ${PORT_OPTIONS:MPY4SUITE}
-	${INSTALL_SCRIPT} ${WRKSRC}/create_html_table.py ${DATADIR}
+	${INSTALL_SCRIPT} ${WRKSRC}/create_html_table.py ${STAGEDIR}${DATADIR}
 .endif
 .if ${PORT_OPTIONS:MMACRESOLV}
-	${MKDIR} ${DATADIR}/plugins/mac_resolv
-	${INSTALL_SCRIPT} ${WRKSRC}/plugins/mac_resolv/make-manuf ${DATADIR}/plugins/mac_resolv
-	${INSTALL_DATA} ${WRKSRC}/plugins/mac_resolv/*.tmpl ${DATADIR}/plugins/mac_resolv
-	${INSTALL_DATA} ${WRKSRC}/plugins/mac_resolv/manuf ${DATADIR}/plugins/mac_resolv
+	${MKDIR} ${STAGEDIR}${DATADIR}/plugins/mac_resolv
+	${INSTALL_SCRIPT} ${WRKSRC}/plugins/mac_resolv/make-manuf ${STAGEDIR}${DATADIR}/plugins/mac_resolv
+	${INSTALL_DATA} ${WRKSRC}/plugins/mac_resolv/*.tmpl ${STAGEDIR}${DATADIR}/plugins/mac_resolv
+	${INSTALL_DATA} ${WRKSRC}/plugins/mac_resolv/manuf ${STAGEDIR}${DATADIR}/plugins/mac_resolv
 .endif
 
-	${MKDIR} ${ETCDIR}
-	${INSTALL_DATA} ${WRKSRC}/config_ndpmon.xml ${ETCDIR}/config_ndpmon.xml-dist
+	${MKDIR} ${STAGEDIR}${ETCDIR}
+	${INSTALL_DATA} ${WRKSRC}/config_ndpmon.xml ${STAGEDIR}${ETCDIR}/config_ndpmon.xml-dist
 
-	${MKDIR} ${PREFIX}/var/ndpmon
-	${INSTALL_DATA} ${WRKSRC}/neighbor_list.xml ${PREFIX}/var/ndpmon/neighbor_list.xml
+	${MKDIR} ${STAGEDIR}${PREFIX}/var/ndpmon
+	${INSTALL_DATA} ${WRKSRC}/neighbor_list.xml ${STAGEDIR}${PREFIX}/var/ndpmon/neighbor_list.xml
 
 .if ${PORT_OPTIONS:MDOCS}
-post-install:
-	${MKDIR} ${DOCSDIR}
-	cd ${WRKSRC} && ${INSTALL_DATA} ${PORTDOCS} ${DOCSDIR}
+	${MKDIR} ${STAGEDIR}${DOCSDIR}
+	cd ${WRKSRC} && ${INSTALL_DATA} ${PORTDOCS} ${STAGEDIR}${DOCSDIR}
 .endif
 .if ${PORT_OPTIONS:MMACRESOLV}
 	@${CAT} ${PKGMESSAGE}.MACRESOLV

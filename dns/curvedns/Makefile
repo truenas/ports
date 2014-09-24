@@ -3,7 +3,7 @@
 
 PORTNAME=	curvedns
 PORTVERSION=	0.88.b
-PORTREVISION=	5
+PORTREVISION=	7
 CATEGORIES=	dns
 DISTNAME=	curvedns-0.88-unstable
 
@@ -11,8 +11,7 @@ MAINTAINER=	vsevolod@FreeBSD.org
 COMMENT=	Forwarder adding DNSCurve to an authoritative nameserver
 
 LIB_DEPENDS=	libev.so:${PORTSDIR}/devel/libev \
-		libsodium.so:${PORTSDIR}/security/libsodium \
-		libexecinfo.so:${PORTSDIR}/devel/libexecinfo
+		libsodium.so:${PORTSDIR}/security/libsodium
 RUN_DEPENDS=	setuidgid:${PORTSDIR}/sysutils/daemontools
 BUILD_DEPENDS=	bash:${PORTSDIR}/shells/bash
 
@@ -31,6 +30,7 @@ GROUPS=		bind
 CURVE_UID=	53
 CURVE_GID=	53
 
+PLIST_SUB=	CURVE_UID="${USERS}" CURVE_GID="${GROUPS}"
 SUB_FILES=	pkg-message
 
 do-install:

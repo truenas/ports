@@ -3,10 +3,11 @@
 
 PORTNAME=	xbindkeys
 PORTVERSION=	1.8.6
+PORTREVISION=	1
 CATEGORIES=	x11
 MASTER_SITES=	http://www.nongnu.org/xbindkeys/
 
-MAINTAINER=	eadler@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Allows you to launch shell commands under X with your keyboard
 
 LICENSE=	GPLv2

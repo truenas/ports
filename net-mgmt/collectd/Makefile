@@ -3,7 +3,7 @@
 
 PORTNAME=	collectd
 PORTVERSION=	4.10.9
-PORTREVISION=	12
+PORTREVISION=	14
 CATEGORIES=	net-mgmt
 MASTER_SITES=	http://collectd.org/files/
 
@@ -12,9 +12,11 @@ COMMENT=	Systems & network statistics collection daemon
 
 LICENSE=	GPLv2
 
+LIB_DEPENDS=	libltdl.so:${PORTSDIR}/devel/libltdl
+
 USES=		gmake libtool
 GNU_CONFIGURE=	yes
-USE_AUTOTOOLS=	autoconf autoheader automake libltdl
+USE_AUTOTOOLS=	autoconf autoheader automake
 WANT_GNOME=	yes
 
 OPTIONS_DEFINE=		CGI BIND DEBUG GCRYPT LIBVIRT

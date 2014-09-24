@@ -15,12 +15,11 @@ MASTERDIR=	${.CURDIR}/../mupen64plus-core
 
 OPTIONS_DEFINE=	#
 
-CFLAGS+=	-I${LOCALBASE}/include -I${LOCALBASE}/include/${PORTNAME}
+CFLAGS+=	-I${LOCALBASE}/include -I${LOCALBASE}/include/GL -I${LOCALBASE}/include/${PORTNAME}
 LDFLAGS+=	-L${LOCALBASE}/lib
 
 EXTRACT_AFTER_ARGS=	#
 BUILD_WRKSRC=		${WRKSRC}/${PORTNAME}${PKGNAMESUFFIX}/projects/unix
 WRKSRC=			${WRKDIR}
 
-NO_STAGE=	yes
 .include "${MASTERDIR}/Makefile"

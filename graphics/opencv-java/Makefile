@@ -11,4 +11,6 @@ OCV_JAVA=	yes
 MASTERDIR=	${.CURDIR:H}/opencv
 PLIST=		${.CURDIR}/pkg-plist
 
+PLIST_SUB+=	OCV_VER=${PORTVERSION:S|.||g}
+
 .include "${MASTERDIR}/Makefile"

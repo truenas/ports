@@ -3,18 +3,17 @@
 
 PORTNAME=	prboom-plus
 PORTVERSION=	2.5.1.3
+PORTREVISION=	1
 CATEGORIES=	games
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/${PORTVERSION}
 
 MAINTAINER=	thiagohero501@gmail.com
-COMMENT=	A fork of the doom game engine prboom
+COMMENT=	Fork of the prboom Doom game engine
 
 LICENSE=	GPLv2
 
 LIB_DEPENDS=	libsmpeg.so:${PORTSDIR}/multimedia/smpeg \
 		libpng.so:${PORTSDIR}/graphics/png
-
-CONFLICTS=	prboom-[2]*
 
 USES=		gmake
 USE_SDL=	mixer net sdl

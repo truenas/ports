@@ -63,11 +63,5 @@ sbin/auditdistd
 sbin/auditfilterd
 sbin/auditreduce
 sbin/praudit
-@dirrm include/bsm
-@cwd /
-@exec mkdir -m 0770 var/audit/dist
-@exec mkdir -m 0700 var/audit/remote
-@exec chown %%USERS%%:%%GROUPS%% var/audit/dist
-@exec chown %%USERS%%:wheel var/audit/remote
-@dirrmtry var/audit/dist
-@dirrmtry var/audit/remote
+%%NEEDVARDIRS%%@dir(%%USERS%%:%%GROUPS%%,770) /var/audit/dist
+%%NEEDVARDIRS%%@dir(%%USERS%%:%%GROUPS%%,700) /var/audit/remote

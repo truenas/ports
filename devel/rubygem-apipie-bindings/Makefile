@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	apipie-bindings
-PORTVERSION=	0.0.8
+PORTVERSION=	0.0.9
 CATEGORIES=	devel rubygems
 MASTER_SITES=	RG
 
@@ -13,7 +13,7 @@ LICENSE=	GPLv3
 
 RUN_DEPENDS=	rubygem-awesome_print>=1.1.0:${PORTSDIR}/devel/rubygem-awesome_print \
 		rubygem-json>=1.8.1:${PORTSDIR}/devel/rubygem-json \
-		rubygem-mime-types=1.25.1:${PORTSDIR}/misc/rubygem-mime-types \
+		rubygem-mime-types>=2.0:${PORTSDIR}/misc/rubygem-mime-types \
 		rubygem-oauth>=0.4.7:${PORTSDIR}/net/rubygem-oauth \
 		rubygem-rest-client>=1.6.7:${PORTSDIR}/www/rubygem-rest-client
 

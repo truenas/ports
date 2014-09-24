@@ -178,11 +178,10 @@ PHP_HEADER_DIRS=libmbfl libmbfl/filters libmbfl/mbfl libmbfl/nls
 .endif
 
 .if ${PHP_MODNAME} == "mcrypt"
-LIB_DEPENDS+=	libmcrypt.so:${PORTSDIR}/security/libmcrypt
+LIB_DEPENDS+=	libltdl.so:${PORTSDIR}/devel/libltdl \
+		libmcrypt.so:${PORTSDIR}/security/libmcrypt
 
 CONFIGURE_ARGS+=--with-mcrypt=${LOCALBASE}
-
-USE_AUTOTOOLS=	libltdl
 .endif
 
 .if ${PHP_MODNAME} == "mssql"
@@ -393,7 +392,7 @@ CONFIGURE_ARGS+=--enable-sysvshm
 .if ${PHP_MODNAME} == "tidy"
 CONFIGURE_ARGS+=--with-tidy=${LOCALBASE}
 
-LIB_DEPENDS+=	libtidy-0.99.so:${PORTSDIR}/www/tidy-lib
+LIB_DEPENDS+=	libtidy.so:${PORTSDIR}/www/tidy-lib
 .endif
 
 .if ${PHP_MODNAME} == "tokenizer"

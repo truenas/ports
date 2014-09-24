@@ -3,6 +3,7 @@
 
 PORTNAME=	mosquitto
 PORTVERSION=	1.3.2
+PORTREVISION=	1
 CATEGORIES=	net
 MASTER_SITES=	http://mosquitto.org/files/source/
 
@@ -23,8 +24,6 @@ USES=		cmake
 USE_PYTHON=	2
 NOCONFIGURE=	yes
 USE_RC_SUBR=	mosquitto
-MANCOMPRESSED=	no
-NO_MANCOMPRESS=	yes
 USE_LDCONFIG=	yes
 
 USERS=		nobody

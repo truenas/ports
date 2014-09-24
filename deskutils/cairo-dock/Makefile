@@ -2,7 +2,7 @@
 
 PORTNAME=	cairo-dock
 DISTVERSION=	3.2.1
-PORTREVISION=	4
+PORTREVISION=	5
 CATEGORIES=	deskutils
 MASTER_SITES=	https://launchpadlibrarian.net/137290048/ \
 		http://pazzle.otdux.com.ua/
@@ -27,8 +27,6 @@ USES=		cmake gettext pathfix pkgconfig
 LDFLAGS+=	-L${LOCALBASE}/lib
 CMAKE_ARGS+=	-Dinstall-pc-path:STRING="${LOCALBASE}/libdata/pkgconfig"
 CMAKE_ARGS+=	-DROOT_PREFIX:PATH=${STAGEDIR}
-
-MANCOMPRESSED=	yes
 
 post-patch:
 	@${FIND} ${WRKSRC} -type f -name "*" | ${XARGS} ${REINPLACE_CMD} -e \

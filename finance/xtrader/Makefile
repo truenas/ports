@@ -3,7 +3,7 @@
 
 PORTNAME=	xtrader
 PORTVERSION=	0.99.9
-PORTREVISION=	8
+PORTREVISION=	9
 CATEGORIES=	finance
 MASTER_SITES=	SF/${PORTNAME}/OldFiles
 
@@ -13,7 +13,6 @@ COMMENT=	Technical analysis program for financial instruments
 LIB_DEPENDS=	libptypes.so:${PORTSDIR}/devel/ptypes \
 		libfltk.so.1:${PORTSDIR}/x11-toolkits/fltk
 
-MAKE_ENV=	PTHREAD_LIBS="${PTHREAD_LIBS}"
 MAKEFILE=	Makefile.linux
 USE_XORG=	x11 xpm
 BUILD_WRKSRC=	${WRKSRC}/${PORTNAME}

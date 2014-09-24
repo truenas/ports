@@ -3,7 +3,6 @@
 
     COMMENT = Things that used to be on the desktop before computers were invented
 
-    SUBDIR += adesklets
     SUBDIR += affiche
     SUBDIR += akamaru
     SUBDIR += alacarte
@@ -16,6 +15,7 @@
     SUBDIR += bitcollider
     SUBDIR += cairo-dock
     SUBDIR += cairo-dock-plugins
+    SUBDIR += caja-extensions
     SUBDIR += cal
     SUBDIR += calcurse
     SUBDIR += calibre
@@ -121,9 +121,6 @@
     SUBDIR += ljclive
     SUBDIR += ljit
     SUBDIR += logjam
-    SUBDIR += mate-character-map
-    SUBDIR += mate-file-manager-open-terminal
-    SUBDIR += mate-menu-editor
     SUBDIR += mate-notification-daemon
     SUBDIR += mate-utils
     SUBDIR += mdh
@@ -131,6 +128,7 @@
     SUBDIR += menumaker
     SUBDIR += mirall
     SUBDIR += moregroupware
+    SUBDIR += mozo
     SUBDIR += mrundlg
     SUBDIR += msynctool
     SUBDIR += multisync
@@ -145,7 +143,6 @@
     SUBDIR += ontv
     SUBDIR += openproj
     SUBDIR += orage
-    SUBDIR += org-mode.el
     SUBDIR += osmo
     SUBDIR += osynctool
     SUBDIR += p5-Data-ICal
@@ -160,7 +157,6 @@
     SUBDIR += pinot
     SUBDIR += plan
     SUBDIR += planner
-    SUBDIR += planner.el
     SUBDIR += plans
     SUBDIR += plasma-applet-cwp
     SUBDIR += plasma-applet-daisy
@@ -186,7 +182,6 @@
     SUBDIR += qtm
     SUBDIR += recoll
     SUBDIR += rednotebook
-    SUBDIR += remember.el
     SUBDIR += remind
     SUBDIR += rolo
     SUBDIR += rox-memo

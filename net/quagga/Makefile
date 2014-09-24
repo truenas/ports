@@ -3,7 +3,7 @@
 
 PORTNAME=	quagga
 PORTVERSION=	0.99.22.4
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	net ipv6
 MASTER_SITES=	SAVANNAH
 MASTER_SITE_SUBDIR=	quagga
@@ -15,12 +15,14 @@ COMMENT=	Free RIPv1, RIPv2, OSPFv2, BGP4, IS-IS route software
 
 LICENSE=	GPLv2
 
+BUILD_DEPENDS=	gawk:${PORTSDIR}/lang/gawk
+
 CONFLICTS=	openbgpd-[0-9]* openospfd-[0-9]* zebra-0* quagga-re-[0-9]*
 
+GNU_CONFIGURE=	yes
+CONFIGURE_ARGS=	--enable-exampledir=${PREFIX}/share/examples/quagga
+INSTALL_TARGET=	install-strip
 USES=		gmake libtool makeinfo perl5 readline
-USE_AUTOTOOLS=	autoheader aclocal
-ACLOCAL_ARGS=	-I${LOCALBASE}/share/aclocal
-BUILD_DEPENDS+=	gawk:${PORTSDIR}/lang/gawk
 USE_LDCONFIG=	yes
 USE_PERL5=	build
 
@@ -37,16 +39,6 @@ TCPSOCKETS_DESC=	Use TCP/IP sockets for protocol daemons
 DLMALLOC_DESC=		Use dlmalloc (makes bgpd much faster)
 NO_BGP_ANNOUNCE_DESC=	Turn off BGP route announcement
 OSPF_NEXTHOP_DESC=	Set ip next-hop in OSPF route maps
-
-.include <bsd.port.pre.mk>
-
-.if ${OSVERSION} >= 800000
-LDFLAGS+=	-fstack-protector
-.endif
-CONFIGURE_ARGS+=--includedir=${PREFIX}/include --enable-exampledir=${PREFIX}/share/examples/quagga
-CONFIGURE_ENV+=	LIBTOOL=${LIBTOOL} LIBTOOLIZE=${LIBTOOLIZE} \
-		LIBTOOL_VERSION=${LIBTOOL_VERSION}
-LDFLAGS+=	-L${LOCALBASE}/lib
 
 ENABLE_USER?=	quagga
 ENABLE_GROUP?=	quagga
@@ -69,9 +61,7 @@ CONFIGURE_ARGS+=--enable-vty-group=${ENABLE_VTY_GROUP}
 
 CONFIGURE_ARGS+=--enable-vtysh
 
-SCRIPTS_ENV=	PREFIX=${PREFIX} PKG_PREFIX=${PREFIX} \
-		SYSCONF_DIR=${SYSCONF_DIR} SYSSTATE_DIR=${SYSSTATE_DIR} \
-		ENABLE_USER=${ENABLE_USER} ENABLE_GROUP=${ENABLE_GROUP}
+.include <bsd.port.options.mk>
 
 .if ${PORT_OPTIONS:MISISD}
 CONFIGURE_ARGS+=--enable-isisd
@@ -109,7 +99,7 @@ CONFIGURE_ARGS+=--enable-tcp-zebra
 
 .if ${PORT_OPTIONS:MDLMALLOC}
 LIB_DEPENDS+=	libdlmalloc.so:${PORTSDIR}/devel/libdlmalloc
-LDFLAGS+=	-ldlmalloc
+LIBS+=		-L${LOCALBASE}/lib -ldlmalloc
 SUB_LIST=	RCLDCONFIG=ldconfig
 .else
 SUB_LIST=	RCLDCONFIG=
@@ -145,12 +135,7 @@ pre-everything::
 	@${ECHO} "SYSCONF_DIR       Specify directory for Quagga configuration files"
 	@${ECHO} "LOCALSTATE_DIR    Specify directory for Quagga runtime files"
 
-post-stage:
-	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/libospf.so.0.0.0
-	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/libzebra.so.0.0.0
-.if ${PORT_OPTIONS:MOSPF_OPAQUE_LSA}
-	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/libospfapiclient.so.0.0.0
-.endif
+post-install:
 	${MKDIR} ${STAGEDIR}${LOCALSTATE_DIR}
 	${MKDIR} ${STAGEDIR}${SYSCONF_DIR}
 
@@ -159,4 +144,4 @@ post-clean:
 	@${RM} -f ${WRKDIRPREFIX}${.CURDIR}/Makefile.inc
 .endif
 
-.include <bsd.port.post.mk>
+.include <bsd.port.mk>

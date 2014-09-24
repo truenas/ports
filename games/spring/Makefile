@@ -3,7 +3,7 @@
 
 PORTNAME=	spring
 PORTVERSION=	94.1
-PORTREVISION=	5
+PORTREVISION=	6
 CATEGORIES=	games
 MASTER_SITES=	SF/springrts/springrts/${PORTNAME}-${PORTVERSION} \
 		http://springrts.com/dl/
@@ -22,6 +22,7 @@ LIB_DEPENDS=	libfreetype.so:${PORTSDIR}/print/freetype2 \
 		libexecinfo.so:${PORTSDIR}/devel/libexecinfo
 BUILD_DEPENDS=	7z:${PORTSDIR}/archivers/p7zip
 
+BROKEN=		Fails to build
 # XXX: it should be possible to build it on i386, investigate
 # (currently link fails on undefined reference to __sync_fetch_and_add_8)
 ONLY_FOR_ARCHS=	amd64

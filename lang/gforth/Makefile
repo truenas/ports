@@ -11,18 +11,17 @@ MASTER_SITES=	http://www.complang.tuwien.ac.at/forth/gforth/ \
 MAINTAINER=	johans@FreeBSD.org
 COMMENT=	Fast and portable Forth system
 
-LIB_DEPENDS=	libffi.so.6:${PORTSDIR}/devel/libffi
+LIB_DEPENDS=	libffi.so.6:${PORTSDIR}/devel/libffi \
+		libltdl.so:${PORTSDIR}/devel/libltdl
 BUILD_DEPENDS=	${LOCALBASE}/include/avcall.h:${PORTSDIR}/devel/ffcall
 
 GNU_CONFIGURE=	yes
 CPPFLAGS+=	-I${LOCALBASE}/include
-LDFLAGS+=	-L${LOCALBASE}/lib
-CFLAGS+=	-fno-reorder-blocks -fno-inline
+LIBS+=		-L${LOCALBASE}/lib
 CONFIGURE_ENV+=	GFORTHHIST=${WRKSRC}
 MAKE_ENV+=	GFORTHHIST=${WRKSRC}
-USES=		gmake libtool makeinfo
+USES=		gmake libtool:build makeinfo
 USE_GCC=	any
-USE_AUTOTOOLS=	libtool libltdl
 USE_LDCONFIG=	${PREFIX}/lib/gforth/${PORTVERSION}/libcc-named
 ALL_TARGET=	kernel/version.fs more info
 MAKE_JOBS_UNSAFE=yes

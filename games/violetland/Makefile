@@ -3,7 +3,7 @@
 
 PORTNAME=	violetland
 PORTVERSION=	0.4.3
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	games
 MASTER_SITES=	GOOGLE_CODE \
 		http://mirror.amdmi3.ru/distfiles/
@@ -22,7 +22,10 @@ CMAKE_ARGS=	-DDATA_INSTALL_DIR="${DATADIR}"
 
 WRKSRC=		${WRKDIR}/${PORTNAME}-v${PORTVERSION}
 
+PLIST_FILES=	bin/violetland \
+		share/applications/violetland.desktop
 PORTDOCS=	*
+PORTDATA=	*
 
 OPTIONS_DEFINE=	DOCS
 

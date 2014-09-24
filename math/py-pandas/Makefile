@@ -2,6 +2,7 @@
 
 PORTNAME=	pandas
 PORTVERSION=	0.14.1
+PORTREVISION=	1
 CATEGORIES=	math devel python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -77,13 +78,12 @@ RUN_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}beautifulsoup>0:${PORTSDIR}/www/py-beautifu
 
 SUB_FILES=	pkg-message
 
-USE_PYTHON=		yes
-USE_PYDISTUTILS=	yes
-PYDISTUTILS_AUTOPLIST=	yes
+USES=		python
+USE_PYTHON=	autoplist distutils
 
 # Uncomment the following line to enable regression-test
 # on a headless (X11-less) host (eg: RedPorts)
-#USES=		display:regression-test
+#USES+=		display:regression-test
 
 XUNITFILE=	${WRKDIR}/nosetests.xml
 NOSE_ENV=	http_proxy=${HTTP_PROXY}

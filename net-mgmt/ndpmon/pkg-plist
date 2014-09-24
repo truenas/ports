@@ -1,5 +1,6 @@
 %%ETCDIR%%/config_ndpmon.xml-dist
 sbin/ndpmon
+man/man8/ndpmon.8.gz
 %%DATADIR%%/config_ndpmon.dtd
 %%DATADIR%%/demopipeprogram.pl.sample
 %%DATADIR%%/neighbor_list.dtd
@@ -11,7 +12,7 @@ sbin/ndpmon
 var/ndpmon/neighbor_list.xml
 @dirrmtry var/ndpmon
 @dirrmtry var
-@dirrmtry %%DATADIR%%/plugins/mac_resolv
-@dirrmtry %%DATADIR%%/plugins
+%%MACRESOLV%%@dirrmtry %%DATADIR%%/plugins/mac_resolv
+%%MACRESOLV%%@dirrmtry %%DATADIR%%/plugins
 @dirrmtry %%DATADIR%%
 @dirrmtry %%ETCDIR%%

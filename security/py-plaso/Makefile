@@ -3,6 +3,7 @@
 
 PORTNAME=	plaso
 PORTVERSION=	1.1.0
+PORTREVISION=	1
 CATEGORIES=	security python
 MASTER_SITES=	https://googledrive.com/host/0B30H7z4S52FleW5vUHBnblJfcjg/${PORTVERSION}/release/ \
 		LOCAL/antoine
@@ -39,9 +40,8 @@ RUN_DEPENDS=	hachoir-core>=0:${PORTSDIR}/devel/hachoir-core \
 		${PYTHON_PKGNAMEPREFIX}sqlite3>=0:${PORTSDIR}/databases/py-sqlite3 \
 		${PYTHON_PKGNAMEPREFIX}yaml>=0:${PORTSDIR}/devel/py-yaml
 
-USE_PYTHON=	2
-USE_PYDISTUTILS=	yes
-PYDISTUTILS_AUTOPLIST=	yes
+USES=		python:2
+USE_PYTHON=	distutils autoplist
 
 PORTDOCS=	ACKNOWLEDGEMENTS AUTHORS
 PORTEXAMPLES=	*

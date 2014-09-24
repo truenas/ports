@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	libgphoto2
-PORTVERSION=	2.5.4
+PORTVERSION=	2.5.5.1
 CATEGORIES=	graphics
 MASTER_SITES=	SF/gphoto/libgphoto/${PORTVERSION}
 
@@ -11,8 +11,10 @@ COMMENT=	Universal digital camera control library
 
 LICENSE=	LGPL21
 
-USES=		gmake iconv libtool:keepla pkgconfig tar:bzip2
-USE_AUTOTOOLS=	libltdl
+LIB_DEPENDS=	libltdl.so:${PORTSDIR}/devel/libltdl
+
+USES=		gmake iconv libtool pkgconfig tar:bzip2
+USE_CSTD=	gnu89
 GNU_CONFIGURE=	yes
 CONFIGURE_ENV=	LTDLINCL="-I${LOCALBASE}/include" \
 		LIBLTDL="-L${LOCALBASE}/lib -lltdl" \
@@ -61,8 +63,8 @@ post-patch:
 		'/^doc_DATA/s|COPYING||' \
 		${WRKSRC}/Makefile.in
 	@${REINPLACE_CMD} -e \
-		's|ENODATA|ENOATTR|g' \
-		${WRKSRC}/libgphoto2_port/libusb1/libusb1.c
+		's|-lusb-1.0|-lusb|' \
+		${WRKSRC}/libgphoto2_port/configure
 	@${REINPLACE_CMD} -e \
 		'/^SUBDIRS/s|linux-hotplug||' \
 		${WRKSRC}/packaging/Makefile.in

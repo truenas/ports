@@ -2,8 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	mpich2
-DISTVERSION=	1.3.2p1
-PORTREVISION=	4
+DISTVERSION=	1.5
+PORTREVISION=	2
 PORTEPOCH=	5
 CATEGORIES=	net java parallel
 MASTER_SITES=	http://www.mcs.anl.gov/research/projects/mpich2/downloads/tarballs/${DISTVERSION}/
@@ -26,6 +26,7 @@ USES=		libtool:keepla fortran perl5 pkgconfig python
 USE_GCC=	yes
 USE_LDCONFIG=	yes
 USE_PERL5=	build
+INSTALL_TARGET=	install-strip
 
 OPTIONS_DEFINE_i386=	JAVA
 OPTIONS_DEFINE_amd64=	JAVA
@@ -41,9 +42,11 @@ CONFIGURE_ARGS=	--enable-romio --enable-shared	\
 		--docdir="${DOCSDIR}" \
 		--with-python="${PYTHON_CMD}"
 CONFIGURE_ENV=	FCFLAGS="${FFLAGS}" \
+		MPI_CFLAGS="${LOCALBASE}/include" \
 		PACKAGE=${PORTNAME} \
 		PTHREAD_LIBS="${PTHREAD_LIBS}"
 
+CFLAGS+=	-I${LOCALBASE}/include
 CPPFLAGS+=	-I${LOCALBASE}/include
 .if ${FFLAGS} == "-O"
 FFLAGS=		-O2
@@ -56,8 +59,8 @@ NOCCACHE=	yes
 CONFLICTS=	lam-7.* mpd-[0-9]* mpiexec-0.*
 MAKE_JOBS_UNSAFE=	yes
 
-VERSO=		2.2
-VERSOM=		${VERSO:R}
+VERSO=		8.0.1
+VERSOM=		${VERSO:R:R}
 PLIST_SUB=	VER=${VERSO} VERM=${VERSOM}
 SUB_FILES=	pkg-message
 
@@ -69,6 +72,9 @@ THREAD2FIX=	configure test/mpi/threads/comm/Makefile.in	\
 LOCALBASE2FIX=	src/mpe2/src/slog2sdk/trace_rlog/configure	\
 		src/mpe2/src/slog2sdk/trace_sample/configure	\
 		src/mpe2/src/graphics/configure
+STAGE2FIX=	bin/mpicc bin/mpicxx bin/mpif77 bin/mpif90	\
+		etc/mpicc.conf etc/mpicxx.conf etc/mpif77.conf	\
+		etc/mpif90.conf sbin/mpeuninstall
 DOC2PATCH=	Makefile.in src/mpe2/sbin/mpeinstall.in		\
 		src/openpa/Makefile.in src/mpi/romio/util/romioinstall.in
 CONFPFX2FIX1=	src/pm/mpd/mpd.py
@@ -155,25 +161,24 @@ pre-configure:
 		${WRKSRC}/${cnf}
 .endfor
 
-pre-install:
-	@${PYTHON_CMD} ${PYTHON_LIBDIR}/compileall.py ${WRKSRC}/bin
-	@${PYTHON_CMD} -O ${PYTHON_LIBDIR}/compileall.py  ${WRKSRC}/bin
-
 post-install:
-	(cd ${STAGEDIR}${PREFIX}/bin && ${PYTHON_CMD} ${PYTHON_LIBDIR}/compileall.py	\
+	(cd ${STAGEDIR}${PREFIX} && ${PYTHON_CMD} ${PYTHON_LIBDIR}/compileall.py	\
 		-d ${PREFIX} -f bin)
-	(cd ${STAGEDIR}${PREFIX}/bin && ${PYTHON_CMD} -O ${PYTHON_LIBDIR}/compileall.py	\
+	(cd ${STAGEDIR}${PREFIX} && ${PYTHON_CMD} -O ${PYTHON_LIBDIR}/compileall.py	\
 		-d ${PREFIX} -f bin)
-	${INSTALL_SCRIPT} ${WRKSRC}/bin/*.pyc ${STAGEDIR}${PREFIX}/bin
-	${INSTALL_SCRIPT} ${WRKSRC}/bin/*.pyo ${STAGEDIR}${PREFIX}/bin
 	@${ECHO_CMD} "MPD_SECRETWORD=change_on_install" > ${WRKDIR}/mpd.conf.dist
 	${INSTALL_DATA} ${WRKDIR}/mpd.conf.dist ${STAGEDIR}${PREFIX}/etc/
+.for pg in ${STAGE2FIX}
 	${REINPLACE_CMD} -e '/${STAGEDIR:C|/|\/|g}/s|${STAGEDIR}||'	\
-		${STAGEDIR}${PREFIX}/sbin/mpeuninstall
-	${RM} ${STAGEDIR}${PREFIX}/sbin/mpeuninstall.bak
+		${STAGEDIR}${PREFIX}/${pg}
+	${RM} ${STAGEDIR}${PREFIX}/${pg}.bak
+.endfor
 .for pg in ${BIN2STRIP}
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/${pg}
 .endfor
+.if ${PORT_OPTIONS:MJAVA}
+	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/trace_rlog/libTraceInput.so
+.endif
 
 .if defined(MAINTAINER_MODE)
 regression-test:	install

@@ -9,7 +9,7 @@ MASTER_SITES=	http://openwebmail.acatysmoof.com/download/%SUBDIR%/ \
 		http://openwebmail.org/openwebmail/download/%SUBDIR%/
 MASTER_SITE_SUBDIR?=	release
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	crees@FreeBSD.org
 COMMENT=	Webmail system designed to manage big mail folder files efficiently
 
 RUN_DEPENDS=	p5-Text-Iconv>=0:${PORTSDIR}/converters/p5-Text-Iconv
@@ -23,6 +23,7 @@ OWDATADIR=	${PREFIX}/www/data/openwebmail
 PATCH_WRKSRC=	${WRKSRC}/cgi-bin/openwebmail
 PATCH_STRIP=	-p1
 PLIST=		${WRKDIR}/.PLIST.${PKGNAME}
+SUB_FILES=	pkg-install
 
 OPTIONS_DEFINE=	ANTIWORD MAGICK ISPELL LEARNSPAM LSOF PAM POP3_OVER_SSL QUOTA \
 		SPAMCHECK SPAMCHECK_ALL SPEEDYCGI TNEF VIRUSCHECK VIRUSCHECK_ALL \
@@ -44,7 +45,6 @@ VIRUSCHECK_ALL_DESC=	Virus check for all (default: pop3)
 WGET_DESC=	wget
 ZLIB_DESC=	ZLib
 
-NO_STAGE=	yes
 .include <bsd.port.pre.mk>
 
 # WITH_SPEEDYCGI needs suidperl enabled under perl 5.8.4 or above,
@@ -106,11 +106,14 @@ RUN_DEPENDS+=	spamassassin>=0:${PORTSDIR}/mail/spamassassin
 
 .if ${PORT_OPTIONS:MSPEEDYCGI}
 RUN_DEPENDS+=	speedy_suidperl:${PORTSDIR}/www/p5-CGI-SpeedyCGI
+SUB_LIST+=	WITHOUT_SPEEDYCGI="@comment "
 .if ${PERL_LEVEL} < 500804
 EXTRA_PATCHES+=	${PATCH_WRKSRC}/misc/patches/suidperl2speedy_suidperl.patch
 .else
 EXTRA_PATCHES+=	${PATCH_WRKSRC}/misc/patches/suidperl2speedy_suidperl.notmp.patch
 .endif
+.else
+SUB_LIST+=	WITHOUT_SPEEDYCGI=""
 .endif
 
 .if ${PORT_OPTIONS:MVIRUSCHECK}
@@ -144,72 +147,64 @@ post-patch:
 	@${ECHO_MSG} "and reinstall ${PORTNAME}."
 	@${ECHO_MSG} ""
 .endif
-	@${MV} ${PATCH_WRKSRC}/etc/openwebmail.conf ${PATCH_WRKSRC}/etc/openwebmail.conf-dist
-	@${PERL} -pi.bak -e 's,${LOCALBASE}/www/cgi-bin/openwebmail,${OWCGIDIR},g' ${PATCH_WRKSRC}/etc/openwebmail.conf-dist
-	@${PERL} -pi.bak -e 's,${LOCALBASE}/www/data/openwebmail,${OWDATADIR},g' ${PATCH_WRKSRC}/etc/openwebmail.conf-dist
+	@${MV} ${PATCH_WRKSRC}/etc/openwebmail.conf ${PATCH_WRKSRC}/etc/openwebmail.conf.sample
+	@${PERL} -pi.bak -e 's,${LOCALBASE}/www/cgi-bin/openwebmail,${OWCGIDIR},g' ${PATCH_WRKSRC}/etc/openwebmail.conf.sample
+	@${PERL} -pi.bak -e 's,${LOCALBASE}/www/data/openwebmail,${OWDATADIR},g' ${PATCH_WRKSRC}/etc/openwebmail.conf.sample
 .if ${PORT_OPTIONS:MLEARNSPAM}
-	@${PERL} -pi.bak -e 's,enable_learnspam	no,enable_learnspam	yes,g' ${PATCH_WRKSRC}/etc/openwebmail.conf-dist
+	@${PERL} -pi.bak -e 's,enable_learnspam	no,enable_learnspam	yes,g' ${PATCH_WRKSRC}/etc/openwebmail.conf.sample
 .endif
 .if ${PORT_OPTIONS:MSPAMCHECK}
-	@${PERL} -pi.bak -e 's,enable_spamcheck	no,enable_spamcheck	yes,g' ${PATCH_WRKSRC}/etc/openwebmail.conf-dist
-	@${ECHO} "enable_saprefs	yes" >> ${PATCH_WRKSRC}/etc/openwebmail.conf-dist
+	@${PERL} -pi.bak -e 's,enable_spamcheck	no,enable_spamcheck	yes,g' ${PATCH_WRKSRC}/etc/openwebmail.conf.sample
+	@${ECHO} "enable_saprefs	yes" >> ${PATCH_WRKSRC}/etc/openwebmail.conf.sample
 .endif
 .if ${PORT_OPTIONS:MSPAMCHECK_ALL}
-	@${ECHO} "spamcheck_source_allowed	all" >> ${PATCH_WRKSRC}/etc/openwebmail.conf-dist
+	@${ECHO} "spamcheck_source_allowed	all" >> ${PATCH_WRKSRC}/etc/openwebmail.conf.sample
 .endif
 .if ${PORT_OPTIONS:MVIRUSCHECK}
-	@${PERL} -pi.bak -e 's,enable_viruscheck	no,enable_viruscheck	yes,g' ${PATCH_WRKSRC}/etc/openwebmail.conf-dist
+	@${PERL} -pi.bak -e 's,enable_viruscheck	no,enable_viruscheck	yes,g' ${PATCH_WRKSRC}/etc/openwebmail.conf.sample
 .endif
 .if ${PORT_OPTIONS:MVIRUSCHECK_ALL}
-	@${ECHO} "viruscheck_source_allowed	all" >> ${PATCH_WRKSRC}/etc/openwebmail.conf-dist
+	@${ECHO} "viruscheck_source_allowed	all" >> ${PATCH_WRKSRC}/etc/openwebmail.conf.sample
 .endif
 .if ${PORT_OPTIONS:MSPEEDYCGI}
-	@${ECHO} "has_savedsuid_support	no" >> ${PATCH_WRKSRC}/etc/openwebmail.conf-dist
+	@${ECHO} "has_savedsuid_support	no" >> ${PATCH_WRKSRC}/etc/openwebmail.conf.sample
 .else
 	@${PERL} -pi.bak -e 's,/usr/bin/suidperl,${PERL},g' ${PATCH_WRKSRC}/openwebmail*pl
 .endif
 
 pre-install:
+	@: > ${PLIST}
 	@${FIND} ${WRKSRC}/*/openwebmail \( -name "*.bak" -or -name "*.orig" \) -delete
-.if !exists(${PLIST})
-	@${ECHO} "@unexec if cmp -s %D/www/cgi-bin/openwebmail/etc/openwebmail.conf %D/www/cgi-bin/openwebmail/etc/openwebmail.conf-dist; then ${RM} -f %D/www/cgi-bin/openwebmail/etc/openwebmail.conf; fi" > ${PLIST}
-	@${FIND} ${WRKSRC}/*/openwebmail -type f -o -type l | \
-		${GREP} -v UTF-8 | \
-		${SED} -e 's,${WRKSRC},www,g' | ${SORT} -u >> ${PLIST}
+	@${PRINTF} "%s\n%s\n" "@owner ${BINOWN}" "@group mail" >> ${PLIST}
+	@${ECHO} "@sample www/cgi-bin/openwebmail/etc/openwebmail.conf.sample" >> ${PLIST}
+	@${FIND} ${WRKSRC}/cgi-bin/openwebmail \( -type f -o -type l \) -and -not -name openwebmail.conf.sample | \
+		${SED} -e 's,^${WRKSRC},www,' | ${SORT} -u >> ${PLIST}
 	@${ECHO} "www/cgi-bin/openwebmail/etc/dbm.conf" >> ${PLIST}
-.for f in b2g g2b lunar
-	@${ECHO} "www/cgi-bin/openwebmail/etc/maps/${f}.db" >> ${PLIST}
-.endfor
+	@${PRINTF} "%s\n%s\n" "@owner" "@group" >> ${PLIST}
+	@${FIND} ${WRKSRC}/data/openwebmail \( -type f -o -type l \) -and -not -name openwebmail.conf.sample | \
+		${SED} -e 's,^${WRKSRC},www,' | ${SORT} -u >> ${PLIST}
 .if empty(PORT_OPTIONS:MSPEEDYCGI)
 	@${FIND} ${WRKSRC}/*/openwebmail -name "openwebmail*pl" | \
-		${SED} -e 's,${WRKSRC},www,g' \
+		${SED} -e 's,^${WRKSRC},www,' \
 		-e 's,openwebmail/openwebmail,openwebmail/.openwebmail,g' \
-		>> ${PLIST}
+		>> ${TMPPLIST}
 .endif
-	@${ECHO_CMD} "@unexec ${FIND} %D/www/*/openwebmail -name "*.UTF-8" | ${XARGS} ${RM} -fr" >> ${PLIST}
 	@${FIND} ${WRKSRC}/*/openwebmail -type d | ${SORT} -ur | \
 		${GREP} -v UTF-8 | \
-		${SED} -e 's,${WRKSRC},@dirrm www,g' >> ${PLIST}
+		${SED} -e 's,^${WRKSRC},@dirrm www,' >> ${PLIST}
+	@${FIND} ${WRKSRC}/*/openwebmail -type d | ${SORT} -ur | \
+		${GREP} UTF-8 | \
+		${SED} -e 's,^${WRKSRC},@dirrmtry www,' >> ${PLIST}
 	@${ECHO_CMD} "@dirrmtry www/cgi-bin" >> ${PLIST}
 	@${ECHO_CMD} "@dirrmtry www/data" >> ${PLIST}
-.endif
 
 do-install:
-	@${MKDIR} ${OWCGIDIR} ${OWDATADIR}
-	@cd ${WRKSRC}/cgi-bin/openwebmail && ${FIND} . \
-		| ${CPIO} -dpum --quiet -R ${BINOWN}:mail ${OWCGIDIR}
-	@cd ${WRKSRC}/data/openwebmail && ${FIND} . \
-		| ${CPIO} -dpum --quiet -R ${SHAREOWN}:${SHAREGRP} ${OWDATADIR}
-.if !exists(${OWCGIDIR}/etc/openwebmail.conf)
-	@${CP} ${OWCGIDIR}/etc/openwebmail.conf-dist ${OWCGIDIR}/etc/openwebmail.conf
-.endif
-	@${PERL} ${OWCGIDIR}/misc/test/dbmtest.pl | ${GREP} "^dbm" > ${OWCGIDIR}/etc/dbm.conf
-	@${CHMOD} 4755 ${OWCGIDIR}/openwebmail*pl
-.if empty(PORT_OPTIONS:MSPEEDYCGI)
-	@${PERL} ${OWCGIDIR}/misc/tools/wrapsuid/wrapsuid.pl ${OWCGIDIR} 2>/dev/null
-.endif
-
-post-install:
-	@${SETENV} PKG_PREFIX=${PREFIX} ${SH} ${PKGINSTALL} ${PKGNAME} POST-INSTALL
+	@${MKDIR} ${STAGEDIR}${OWCGIDIR} ${STAGEDIR}${OWDATADIR}
+	@(cd ${WRKSRC}/cgi-bin/openwebmail && \
+		${COPYTREE_SHARE} . ${STAGEDIR}${OWCGIDIR})
+	@(cd ${WRKSRC}/data/openwebmail && \
+		${COPYTREE_SHARE} . ${STAGEDIR}${OWDATADIR})
+	@${PERL} ${OWCGIDIR}/misc/test/dbmtest.pl | ${GREP} "^dbm" > ${STAGEDIR}${OWCGIDIR}/etc/dbm.conf
+	@${CHMOD} 4755 ${STAGEDIR}${OWCGIDIR}/openwebmail*pl
 
 .include <bsd.port.post.mk>

@@ -3,7 +3,7 @@
 
 PORTNAME=	gnash
 PORTVERSION=	0.8.10
-PORTREVISION=	13
+PORTREVISION=	14
 CATEGORIES=	graphics
 MASTER_SITES=	GNU/${PORTNAME}/${PORTVERSION}/
 
@@ -11,6 +11,7 @@ MAINTAINER=	ports@FreeBSD.org
 COMMENT=	GNU Flash movie player
 
 LIB_DEPENDS=	libboost_thread.so:${PORTSDIR}/devel/boost-libs \
+		libltdl.so:${PORTSDIR}/devel/libltdl \
 		libjpeg.so:${PORTSDIR}/graphics/jpeg \
 		libcurl.so:${PORTSDIR}/ftp/curl \
 		libgif.so:${PORTSDIR}/graphics/giflib \
@@ -20,7 +21,6 @@ LIB_DEPENDS=	libboost_thread.so:${PORTSDIR}/devel/boost-libs \
 CONFLICTS=	gnash-devel-[0-9]*
 
 USES=		tar:bzip2 pkgconfig gmake libtool
-USE_AUTOTOOLS=	libltdl
 GNU_CONFIGURE=	yes
 WANT_SDL=	yes
 USE_GCC=	any

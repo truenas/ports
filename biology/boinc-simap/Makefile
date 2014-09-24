@@ -3,7 +3,7 @@
 
 PORTNAME=	boinc-simap
 PORTVERSION=	${SIMAP_VERSION}.${HMMER_VERSION}
-PORTREVISION=	6
+PORTREVISION=	7
 CATEGORIES=	biology
 MASTER_SITES=	http://boincsimap.org/boincsimap/download/
 DISTNAME=	${SIMAP_BINARY} ${HMMER_BINARY}
@@ -11,6 +11,9 @@ EXTRACT_ONLY=	${HMMER_BINARY}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Similarity Matrix of Proteins project for BOINC
+
+DEPRECATED=	Project shutting down, see http://boincsimap.org/boincsimap/forum_thread.php?id=88
+EXPIRATION_DATE=2015-01-01
 
 LIB_DEPENDS=	libc.so.6:${PORTSDIR}/misc/compat6x
 RUN_DEPENDS=	boinc_client:${PORTSDIR}/net/boinc-client

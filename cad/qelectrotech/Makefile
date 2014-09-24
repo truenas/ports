@@ -3,6 +3,7 @@
 
 PORTNAME=	qelectrotech
 PORTVERSION=	0.3
+PORTREVISION=	1
 PORTEPOCH=	1
 CATEGORIES=	cad
 MASTER_SITES=	http://download.tuxfamily.org/qet/tags/20130928/
@@ -25,7 +26,6 @@ QMAKE_ARGS+=	QMAKE_RPATHDIR="${_GCC_RUNTIME}"
 
 MAN1=		qelectrotech.1
 MANLANG=	"" cs el es fr.ISO8859-1 fr.UTF-8 fr it pl pt_PT
-MANCOMPRESSED=	yes
 
 pre-configure:
 	${MV} ${WRKSRC}/man/files/pt ${WRKSRC}/man/files/pt_PT

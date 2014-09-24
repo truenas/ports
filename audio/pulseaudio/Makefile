@@ -9,7 +9,7 @@
 
 PORTNAME=	pulseaudio
 PORTVERSION=	0.9.23
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	audio
 MASTER_SITES=	http://freedesktop.org/software/pulseaudio/releases/
 
@@ -20,15 +20,15 @@ LIB_DEPENDS=	libsamplerate.so:${PORTSDIR}/audio/libsamplerate \
 		libsndfile.so:${PORTSDIR}/audio/libsndfile \
 		libspeexdsp.so:${PORTSDIR}/audio/speex \
 		libdbus-1.so:${PORTSDIR}/devel/dbus \
+		libltdl.so:${PORTSDIR}/devel/libltdl \
 		libgdbm.so:${PORTSDIR}/databases/gdbm \
 		libck-connector.so:${PORTSDIR}/sysutils/consolekit
 
-USE_GNOME=	gnomehack glib20 intltool ltverhack
+USE_GNOME=	glib20 intltool
 USE_XORG=	x11 sm xtst ice
 USE_LDCONFIG=	yes
-USES=		gettext gmake pkgconfig execinfo
+USES=		execinfo gettext gmake libtool pathfix pkgconfig
 GNU_CONFIGURE=	yes
-USE_AUTOTOOLS=	libltdl libtool
 MAKE_JOBS_UNSAFE=yes
 CONFIGURE_ENV=	PTHREAD_CFLAGS="${PTHREAD_CFLAGS}" \
 		PTHREAD_LIBS="${PTHREAD_LIBS}" \
@@ -37,6 +37,7 @@ CONFIGURE_ENV=	PTHREAD_CFLAGS="${PTHREAD_CFLAGS}" \
 		ac_cv_header_linux_input_h=
 CPPFLAGS+=	-I${LOCALBASE}/include
 LIBS+=		-L${LOCALBASE}/lib -lm -lintl
+INSTALL_TARGET=	install-strip
 
 .if ${CC} == clang
 CFLAGS+=	-fheinous-gnu-extensions

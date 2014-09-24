@@ -21,7 +21,7 @@ USE_PHP=	dom filter ftp json pcre pdo pdo_sqlite posix \
 		xsl zlib odbc
 USE_SQLITE=	yes
 
-DEFAULT_VERSIONS=php=5
+DEFAULT_VERSIONS+=php=5
 
 VARBASE=	/var
 
@@ -33,12 +33,10 @@ OPTIONS_DEFINE=	PDOPGSQL PDOMYSQL
 PDOPGSQL_DESC=	Install POSTGRESQL PDO Connector
 PDOMYSQL_DESC=	Install MySQL PDO Connector
 
-.include <bsd.port.options.mk>
+PDOPGSQL_USES=	pgsql
+PDOPGSQL_USE=	PHP=pgsql,pdo_pgsql
 
-.if ${PORT_OPTIONS:MPDOPGSQL}
-USE_PGSQL=	yes
-USE_PHP+=	pgsql pdo_pgsql
-.endif
+.include <bsd.port.options.mk>
 
 .if ${PORT_OPTIONS:MPDOMYSQL}
 USE_MYSQL=	client
@@ -47,12 +45,7 @@ USE_PHP+=	mysql pdo_mysql
 
 do-install:
 	@${MKDIR} ${STAGEDIR}${WWWDIR}
-	@${FIND} ${WRKSRC} -name '*.php' -exec ${CHMOD} 644 {} +
-	@cd ${WRKSRC}; ${FIND} . \
-		| ${CPIO} -pdm -R ${WWWOWN}:${WWWGRP} ${STAGEDIR}${WWWDIR}
-	@${CHOWN} -R www:www ${STAGEDIR}${WWWDIR}
+	@(cd ${WRKSRC} && ${COPYTREE_SHARE} . ${STAGEDIR}${WWWDIR})
 	@${MKDIR} ${STAGEDIR}${VARBASE}/db/fusionpbx
-	@${CHMOD} -R 0744 ${STAGEDIR}${VARBASE}/db/fusionpbx
-	@${CHOWN} www:www ${STAGEDIR}${VARBASE}/db/fusionpbx
 
 .include <bsd.port.mk>

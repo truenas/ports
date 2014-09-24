@@ -3,7 +3,7 @@
 
 PORTNAME=	taglib
 PORTVERSION=	1.9.1
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	audio
 MASTER_SITES=	http://taglib.github.io/releases/
 
@@ -12,16 +12,19 @@ COMMENT=	Library for manipulating ID3 tags and Ogg comments
 
 LICENSE=	LGPL21 MPL
 LICENSE_COMB=	dual
+LICENSE_FILE_LGPL21=	${WRKSRC}/COPYING.LGPL
 LICENSE_FILE_MPL=	${WRKSRC}/COPYING.MPL
 
-USES=		cmake
+USES=		cmake cpe
 CMAKE_ARGS=	-DWITH_ASF:BOOL=ON \
 		-DWITH_MP4:BOOL=ON
 USE_LDCONFIG=	yes
 
 # clang will generate code that just doesn't work with clementine-player
 # if this isn't compiled as though it were C99.
-CFLAGS+=	-std=c99
+USE_CSTD=	c99
+
+CPE_VENDOR=	scott_wheeler
 
 OPTIONS_DEFINE=	RCC
 OPTIONS_SUB=	yes

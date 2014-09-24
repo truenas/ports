@@ -9,7 +9,6 @@
     SUBDIR += bitchx
     SUBDIR += bitlbee
     SUBDIR += bnc
-    SUBDIR += bobot++
     SUBDIR += bopm
     SUBDIR += cgiirc
     SUBDIR += charybdis
@@ -110,6 +109,7 @@
     SUBDIR += ruby-rica
     SUBDIR += ruby-rice
     SUBDIR += rubygem-cinch
+    SUBDIR += rubygem-lita-irc
     SUBDIR += rubygem-net-irc
     SUBDIR += scrollz
     SUBDIR += sic

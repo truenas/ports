@@ -2,14 +2,17 @@
 # $FreeBSD$
 
 PORTNAME=	http_load
-PORTVERSION=	20060312
+PORTVERSION=	20140814
 CATEGORIES=	www
 MASTER_SITES=	http://www.acme.com/software/http_load/
-DISTNAME=	${PORTNAME}-12mar2006
+DISTNAME=	${PORTNAME}-14aug2014
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Multiprocessing http performance test client
 
+LICENSE=	BSD2CLAUSE
+
+USES=		uidfix
 MAKEFILE=	${FILESDIR}/Makefile.bsd
 
 PLIST_FILES=	bin/http_load \

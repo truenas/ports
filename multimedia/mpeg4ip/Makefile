@@ -3,7 +3,7 @@
 
 PORTNAME=	mpeg4ip
 PORTVERSION=	1.6.1
-PORTREVISION=	29
+PORTREVISION=	30
 CATEGORIES=	multimedia audio ipv6 net
 MASTER_SITES=	LOCAL/ahze
 # http://sourceforge.net/forum/forum.php?thread_id=1839453&forum_id=59136
@@ -132,9 +132,7 @@ pre-configure:
 		-e 's|api.mpt||' \
 		-e 's|^(install-man.*)install-manm|\1|' \
 		${WRKSRC}/doc/mp4v2/Makefile.in
-# objformat
-	@${FIND} ${WRKSRC} -name configure | ${XARGS} ${REINPLACE_CMD} -e 's|echo aout|echo elf|'
-	@${REINPLACE_CMD} -e 's|$${enable_ffmpeg}/lib/libavcodec.a|-lavcodec0 -lswscale0|g' \
+	@${REINPLACE_CMD} -e 's|$${enable_ffmpeg}/lib/libavcodec.a|-lavcodec0 -lavutil0 -lswscale0|g' \
 		${WRKSRC}/configure
 
 # replace bundled mp4v2 with placeholder

@@ -99,7 +99,6 @@
     SUBDIR += libgnomeui-reference
     SUBDIR += libgnomeuimm26
     SUBDIR += libgtksourceviewmm
-    SUBDIR += libmatewnck
     SUBDIR += libpanelappletmm
     SUBDIR += libsexy
     SUBDIR += libsexymm
@@ -110,6 +109,11 @@
     SUBDIR += libxaw3dxft
     SUBDIR += libxfce4gui
     SUBDIR += libzvt
+    SUBDIR += linux-c6-pango
+    SUBDIR += linux-c6-tk85
+    SUBDIR += linux-c6-gtk2
+    SUBDIR += linux-c6-qt47-x11
+    SUBDIR += linux-c6-openmotif
     SUBDIR += linux-f10-blt
     SUBDIR += linux-f10-gtk2
     SUBDIR += linux-f10-openmotif
@@ -167,6 +171,7 @@
     SUBDIR += p5-Tk-Sugar
     SUBDIR += p5-Tk-TableMatrix
     SUBDIR += p5-Tk-ToolBar
+    SUBDIR += p5-Tk-WaitBox
     SUBDIR += p5-Wx
     SUBDIR += p5-Wx-Perl-ProcessStream
     SUBDIR += pango
@@ -174,7 +179,6 @@
     SUBDIR += pangomm
     SUBDIR += pangox-compat
     SUBDIR += pangoxsl
-    SUBDIR += paragui-devel
     SUBDIR += phat
     SUBDIR += plib
     SUBDIR += pure-gtk
@@ -219,7 +223,6 @@
     SUBDIR += qwt6
     SUBDIR += qwt6-designerplugin
     SUBDIR += rep-gtk2
-    SUBDIR += ruby-fox16
     SUBDIR += rubygem-gdk3
     SUBDIR += rubygem-gtk2
     SUBDIR += rubygem-gtk3

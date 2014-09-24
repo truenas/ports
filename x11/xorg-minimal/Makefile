@@ -2,13 +2,14 @@
 
 PORTNAME=	xorg
 PORTVERSION=	7.5.2
+PORTREVISION=	1
 CATEGORIES=	x11 x11-servers
 MASTER_SITES=	# none
 PKGNAMESUFFIX=	-minimal
 DISTFILES=	# none
 EXTRACT_ONLY=	# none
 
-MAINTAINER=	eadler@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	X.Org minimal distribution metaport
 
 NO_BUILD=	yes

@@ -3,6 +3,7 @@
 
 PORTNAME=	rails
 PORTVERSION=	3.2.19
+PORTREVISION=	3
 CATEGORIES=	www rubygems
 MASTER_SITES=	RG
 
@@ -30,9 +31,8 @@ RUN_DEPENDS=	rubygem-actionmailer>=${PORTVERSION}:${PORTSDIR}/mail/rubygem-actio
 		rubygem-sqlite3>=1.3.9:${PORTSDIR}/databases/rubygem-sqlite3 \
 		rubygem-treetop>=1.4.15:${PORTSDIR}/devel/rubygem-treetop \
 		rubygem-turn>=0.8.3:${PORTSDIR}/devel/rubygem-turn \
-		rubygem-tzinfo>=0.3.39:${PORTSDIR}/devel/rubygem-tzinfo \
-		rubygem-uglifier>=2.5.0:${PORTSDIR}/www/rubygem-uglifier \
-		node:${PORTSDIR}/www/node
+		rubygem-tzinfo03>=0.3.39:${PORTSDIR}/devel/rubygem-tzinfo03 \
+		rubygem-uglifier>=2.5.0:${PORTSDIR}/www/rubygem-uglifier
 
 # XXX: rails3 gem no longer has a lib/ dir
 # XXX: which breaks devel/ruby-gems specification.
@@ -49,14 +49,12 @@ USES=		cpe
 CPE_VENDOR=	rubyonrails
 CPE_PRODUCT=	ruby_on_rails
 
-OPTIONS_DEFINE=	FCGI PASSENGER MEMCACHE_CLIENT
-FCGI_DESC=	FastCGI backend
+OPTIONS_DEFINE=	PASSENGER MEMCACHE_CLIENT
 MONGRELCLUSTER_DESC=	Mongrel Cluster backend
 PASSENGER_DESC=	Passenger backend
 MEMCACHE_CLIENT_DESC=	MemCache-Client support
 OPTIONSFILE=	${PORT_DBDIR}/rubygem-${PORTNAME}/options
 
-FCGI_RUN_DEPENDS=	${RUBY_SITEARCHLIBDIR}/fcgi.so:${PORTSDIR}/www/ruby-fcgi
 MEMCACHE_CLIENT_RUN_DEPENDS=	rubygem-memcache-client>=1.2.0:${PORTSDIR}/databases/rubygem-memcache-client
 PASSENGER_RUN_DEPENDS=	rubygem-passenger>=2.2.15:${PORTSDIR}/www/rubygem-passenger
 

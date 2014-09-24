@@ -23,10 +23,6 @@ PATCHDIR=	${CYRUS_SASL2_DIR}/files
 INSTALL_WRKSRC=	${WRKSRC}/saslauthd
 DOCSDIR=	${PREFIX}/share/doc/cyrus-sasl2
 
-# This doesn't work due to absence of .al support in our libtool
-#USE_AUTOTOOLS=	libtool
-#LIBTOOLFILES=	${CONFIGURE_SCRIPT} saslauthd/configure
-
 USE_RC_SUBR=	saslauthd
 USE_OPENSSL=	yes
 GNU_CONFIGURE=	yes
@@ -119,6 +115,8 @@ post-install:
 	@${ECHO_MSG} "SASLAUTHD_RUNPATH was specified."
 	@${ECHO_MSG} "Make sure you create ${SASLAUTHD_RUNPATH}."
 	@${ECHO_MSG} ""
+.else
+	@${MKDIR} ${STAGEDIR}/var/run/saslauthd
 .endif
 .if ${PORT_OPTIONS:MDOCS}
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}/saslauthd

@@ -3,7 +3,7 @@
 
 PORTNAME=	qct
 PORTVERSION=	1.7
-PORTREVISION=	8
+PORTREVISION=	9
 CATEGORIES=	devel python
 MASTER_SITES=	http://qct.sourceforge.net/
 
@@ -15,8 +15,8 @@ LICENSE=	GPLv2
 BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}qt4-gui>=0:${PORTSDIR}/x11-toolkits/py-qt4-gui
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}qt4-gui>=0:${PORTSDIR}/x11-toolkits/py-qt4-gui
 
-USE_PYTHON=	yes
-USE_PYDISTUTILS=	yes
+USES=		python
+USE_PYTHON=	distutils
 WRKSRC=		${WRKDIR}/qct
 OPTIONS_DEFINE=	DOCS
 

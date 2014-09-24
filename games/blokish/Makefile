@@ -3,7 +3,7 @@
 
 PORTNAME=	blokish
 PORTVERSION=	0.9.4
-PORTREVISION=	5
+PORTREVISION=	6
 CATEGORIES=	games
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/v${PORTVERSION}
 DISTNAME=	${PORTNAME}_v${PORTVERSION}
@@ -29,5 +29,6 @@ PLIST_FILES=	bin/blokish
 post-patch:
 	@${REINPLACE_CMD} -e 's|wx-config|${WX_CONFIG}|' \
 		${WRKSRC}/makefile.in ${WRKSRC}/configure
+	@${REINPLACE_CMD} '/^LIBS =/s/$$/ -lGL/' ${WRKSRC}/makefile.in
 
 .include <bsd.port.mk>

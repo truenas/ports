@@ -121,12 +121,14 @@ paths() {
 			*/lib/ruby/gems/*/Makefile) continue ;;
 			*/lib/ruby/gems/*/Makefile.html) continue ;;
 			*/lib/ruby/gems/*/mkmf.log) continue ;;
+			*/share/texmf-var/web2c/*/*.fmt) continue ;;
+			*/share/texmf-var/web2c/*/*.log) continue ;;
 		esac
 		err "'${f#${STAGEDIR}${PREFIX}/}' is referring to ${STAGEDIR}"
 		rc=1
 	# Use heredoc to avoid losing rc from find|while subshell
 	done <<-EOF
-	$(find ${STAGEDIR} -type f -exec grep -l "${STAGEDIR}" {} +)
+	$(find ${TMPPLIST} ${STAGEDIR} -type f -exec grep -l "${STAGEDIR}" {} +)
 	EOF
 
 	return ${rc}
@@ -194,10 +196,10 @@ suidfiles() {
 
 libtool() {
 	if [ -z "${USESLIBTOOL}" ]; then
-		find ${STAGEDIR} -type f -name '*.la' | while read f; do
+		find ${STAGEDIR} -name '*.la' | while read f; do
 			grep -q 'libtool library' "${f}" &&
-				warn ".la libraries found, port needs USES=libtool" &&
-				return 0 || true
+				err ".la libraries found, port needs USES=libtool" &&
+				return 1 || true
 		done
 		# The return above continues here.
 	fi

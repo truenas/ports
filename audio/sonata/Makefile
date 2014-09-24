@@ -3,7 +3,7 @@
 
 PORTNAME=	sonata
 PORTVERSION=	1.6.2.1
-PORTREVISION=	9
+PORTREVISION=	10
 CATEGORIES=	audio python
 MASTER_SITES=	http://codingteam.net/project/sonata/upload/releases/
 
@@ -29,7 +29,7 @@ TAGLIB_DESC=	Install support for editing metadata
 ZSI_DESC=	Install support for automatic lyrics fetching
 OPTIONS_SUB=	yes
 
-MANPAGES_MAKE_ENV_OFF=	NO_INSTALL_MANPAGES=${NO_INSTALL_MANPAGES}
+MANPAGES_MAKE_ENV_OFF=	NO_INSTALL_MANPAGES=yes
 DOCS_MAKE_ENV=	NOPORTDOCS=${NOPORTDOCS}
 MPD_RUN_DEPENDS+=	musicpd:${PORTSDIR}/audio/musicpd
 MMKEYS_RUN_DEPENDS=${PYTHON_PKGNAMEPREFIX}dbus>=0.82.4:${PORTSDIR}/devel/py-dbus

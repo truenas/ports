@@ -3,7 +3,7 @@
 
 PORTNAME=	inventor
 PORTVERSION=	2.1.5.p10
-PORTREVISION=	9
+PORTREVISION=	10
 CATEGORIES=	graphics
 MASTER_SITES=	ftp://oss.sgi.com/projects/inventor/download/
 DISTNAME=	${PORTNAME}-${PORTVERSION:S/.p/-/}
@@ -37,6 +37,12 @@ SUB_FILES=	pkg-message
 OPTIONS_DEFINE=	DEBUG
 
 DEBUG_MAKE_ENV=	LIBTYPE=debug
+
+.include <bsd.port.options.mk>
+
+.if !(${OPSYS} == FreeBSD && ${OSVERSION} < 900033)
+MAKE_ENV+=	VLDOPTS=-Wl,--add-needed
+.endif
 
 post-patch:
 	@${REINPLACE_CMD} -e 's|%%CC%%|${CC}|g ;\

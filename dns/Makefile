@@ -75,6 +75,7 @@
     SUBDIR += libbind
     SUBDIR += libdjbdns
     SUBDIR += libidn
+    SUBDIR += linux-c6-libasyncns
     SUBDIR += linux-f10-libasyncns
     SUBDIR += mDNSResponder_nss
     SUBDIR += maradns
@@ -141,8 +142,6 @@
     SUBDIR += pear-File_DNS
     SUBDIR += pear-Net_DNS
     SUBDIR += pear-Net_DNS2
-    SUBDIR += posadis
-    SUBDIR += poweradmin
     SUBDIR += powerdns
     SUBDIR += powerdns-devel
     SUBDIR += powerdns-recursor
