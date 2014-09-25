@@ -4,6 +4,7 @@
 PORTNAME=		bash
 PATCHLEVEL=		48
 PORTVERSION=		4.2.${PATCHLEVEL:S/^0//g}
+PORTREVISION?=		1
 CATEGORIES=		shells
 MASTER_SITES=		${MASTER_SITE_GNU:S/$/:bash/} \
 			ftp://ftp.cwru.edu/pub/%SUBDIR%/:faq
@@ -94,6 +95,9 @@ CONFIGURE_ENV=		YACC="bison -y" \
 			bash_cv_dev_fd=absent
 
 post-patch:
+# Ensure y.tab.c is regenerated
+	${TOUCH} ${WRKSRC}/parse.y
+	${RM} ${WRKSRC}/y.tab.c
 	@${REINPLACE_CMD} -e "s|%%PREFIX%%|${PREFIX}|g" ${WRKSRC}/doc/bash.1
 .if ${PORT_OPTIONS:MSYSLOG}
 	@${REINPLACE_CMD} \
