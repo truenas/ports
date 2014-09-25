@@ -57,19 +57,162 @@ Notes:
 
 -->
 <vuxml xmlns="http://www.vuxml.org/apps/vuxml-1">
+  <vuln vid="ca44b64c-4453-11e4-9ea1-c485083ca99c">
+    <topic>Flash player -- Multiple security vulnerabilities in www/linux-*-flashplugin11</topic>
+    <affects>
+      <package>
+	<name>flashplugin11</name>
+	<range><lt>11.2r202.400</lt></range>
+      </package>
+      <package>
+	<name>linux-c6-flashplugin11</name>
+	<range><lt>11.2r202.400</lt></range>
+      </package>
+    </affects>
+    <description>
+      <body xmlns="http://www.w3.org/1999/xhtml">
+	<p>Adobe reports:</p>
+	<blockquote cite="https://helpx.adobe.com/security/products/flash-player/apsb14-21.html">
+	  <p>These updates address vulnerabilities that could cause a crash
+	    and potentially allow an attacker to take control of the affected system.</p>
+	</blockquote>
+      </body>
+    </description>
+    <references>
+      <cvename>CVE-2014-0547</cvename>
+      <cvename>CVE-2014-0548</cvename>
+      <cvename>CVE-2014-0549</cvename>
+      <cvename>CVE-2014-0550</cvename>
+      <cvename>CVE-2014-0551</cvename>
+      <cvename>CVE-2014-0552</cvename>
+      <cvename>CVE-2014-0553</cvename>
+      <cvename>CVE-2014-0554</cvename>
+      <cvename>CVE-2014-0555</cvename>
+      <cvename>CVE-2014-0556</cvename>
+      <cvename>CVE-2014-0557</cvename>
+      <cvename>CVE-2014-0559</cvename>
+      <url>http://helpx.adobe.com/security/products/flash-player/apsb14-21.html</url>
+    </references>
+    <dates>
+      <discovery>2014-09-09</discovery>
+      <entry>2014-09-25</entry>
+    </dates>
+  </vuln>
+
+  <vuln vid="48108fb0-751c-4cbb-8f33-09239ead4b55">
+    <topic>NSS -- RSA Signature Forgery</topic>
+    <affects>
+      <package>
+	<name>linux-firefox</name>
+	<range><lt>32.0.3,1</lt></range>
+      </package>
+      <package>
+	<name>linux-thunderbird</name>
+	<range><lt>31.1.2</lt></range>
+      </package>
+      <package>
+	<name>linux-seamonkey</name>
+	<range><lt>2.29.1</lt></range>
+      </package>
+      <package>
+	<name>nss</name>
+	<range><lt>3.17.1</lt></range>
+      </package>
+    </affects>
+    <description>
+      <body xmlns="http://www.w3.org/1999/xhtml">
+	<p>The Mozilla Project reports:</p>
+	<blockquote cite="https://www.mozilla.org/security/announce/2014/mfsa2014-73.html">
+	  <p>Antoine Delignat-Lavaud discovered that NSS is vulnerable
+	  to a variant of a signature forgery attack previously
+	  published by Daniel Bleichenbacher.  This is due to lenient
+	  parsing of ASN.1 values involved in a signature and could
+	  lead to the forging of RSA certificates.</p>
+	</blockquote>
+      </body>
+    </description>
+    <references>
+      <cvename>CVE-2014-1568</cvename>
+      <url>https://www.mozilla.org/security/announce/2014/mfsa2014-73.html</url>
+    </references>
+    <dates>
+      <discovery>2014-09-23</discovery>
+      <entry>2014-09-25</entry>
+    </dates>
+  </vuln>
+
+  <vuln vid="bd2ef267-4485-11e4-b0b7-00262d5ed8ee">
+    <topic>chromium -- RSA signature malleability in NSS</topic>
+    <affects>
+      <package>
+	<name>chromium</name>
+	<range><lt>37.0.2062.124</lt></range>
+      </package>
+    </affects>
+    <description>
+      <body xmlns="http://www.w3.org/1999/xhtml">
+	<p>Google Chrome Releases reports:</p>
+	<blockquote cite="http://googlechromereleases.blogspot.nl/">
+	  <p>[414124] RSA signature malleability in NSS (CVE-2014-1568).
+	    Thanks to Antoine Delignat-Lavaud of Prosecco/INRIA, Brian Smith
+	    and Advanced Threat Research team at Intel Security</p>
+	</blockquote>
+      </body>
+    </description>
+    <references>
+      <cvename>CVE-2014-1568</cvename>
+      <url>http://googlechromereleases.blogspot.nl/</url>
+    </references>
+    <dates>
+      <discovery>2014-09-24</discovery>
+      <entry>2014-09-25</entry>
+    </dates>
+  </vuln>
+
+  <vuln vid="fb25333d-442f-11e4-98f3-5453ed2e2b49">
+    <topic>krfb -- Multiple security issues in bundled libvncserver</topic>
+    <affects>
+      <package>
+	<name>krfb</name>
+	<range><lt>4.12.5_4</lt></range>
+      </package>
+    </affects>
+    <description>
+      <body xmlns="http://www.w3.org/1999/xhtml">
+	<p>Martin Sandsmark reports:</p>
+	<blockquote cite="http://lists.kde.org/?l=kde-announce&amp;m=141153917319769&amp;w=2">
+	  <p>krfb 4.14 [and earlier] embeds libvncserver which has had
+	    several security issues.</p>
+	  <p>Several remotely exploitable security issues have been
+	    uncovered in libvncserver, some of which might allow a
+	    remote authenticated user code execution or application
+	    crashes.</p>
+	</blockquote>
+      </body>
+    </description>
+    <references>
+      <cvename>CVE-2014-6055</cvename>
+      <mlist>http://lists.kde.org/?l=kde-announce&amp;m=141153917319769&amp;w=2</mlist>
+    </references>
+    <dates>
+      <discovery>2014-09-23</discovery>
+      <entry>2014-09-25</entry>
+    </dates>
+  </vuln>
+
   <vuln vid="71ad81da-4414-11e4-a33e-3c970e169bc2">
     <topic>bash -- remote code execution vulnerability</topic>
     <affects>
       <package>
 	<name>bash</name>
 	<name>bash-static</name>
-	<range><gt>3.0</gt><lt>3.0.17</lt></range>
-	<range><gt>3.1</gt><lt>3.1.18</lt></range>
-	<range><gt>3.2</gt><lt>3.2.52</lt></range>
-	<range><gt>4.0</gt><lt>4.0.39</lt></range>
-	<range><gt>4.1</gt><lt>4.1.12</lt></range>
-	<range><gt>4.2</gt><lt>4.2.48</lt></range>
-	<range><gt>4.3</gt><lt>4.3.25</lt></range>
+	<range><gt>3.0</gt><le>3.0.17</le></range>
+	<range><gt>3.1</gt><le>3.1.18</le></range>
+	<range><gt>3.2</gt><le>3.2.52</le></range>
+	<range><gt>4.0</gt><le>4.0.39</le></range>
+	<range><gt>4.1</gt><le>4.1.12</le></range>
+	<range><gt>4.2</gt><le>4.2.48</le></range>
+	<range><gt>4.3</gt><lt>4.3.25_1</lt></range>
       </package>
     </affects>
     <description>
@@ -80,16 +223,21 @@ Notes:
 	    while processing the environment for exported function
 	    definitions.</p>
 	</blockquote>
+	<p>The original fix released for CVE-2014-6271 was not adequate. A
+	  similar vulnerability was discovered and tagged as CVE-2014-7169.</p>
       </body>
     </description>
     <references>
       <cvename>CVE-2014-6271</cvename>
+      <cvename>CVE-2014-7169</cvename>
       <url>https://securityblog.redhat.com/2014/09/24/bash-specially-crafted-environment-variables-code-injection-attack/</url>
       <url>https://lists.gnu.org/archive/html/bug-bash/2014-09/msg00081.html</url>
+      <url>http://seclists.org/oss-sec/2014/q3/690</url>
     </references>
     <dates>
       <discovery>2014-09-24</discovery>
       <entry>2014-09-24</entry>
+      <modified>2014-09-25</modified>
     </dates>
   </vuln>
 

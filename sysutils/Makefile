@@ -787,9 +787,6 @@
     SUBDIR += rubygem-capistrano
     SUBDIR += rubygem-capistrano-ext
     SUBDIR += rubygem-chef
-    SUBDIR += rubygem-chef-expander
-    SUBDIR += rubygem-chef-server
-    SUBDIR += rubygem-chef-solr
     SUBDIR += rubygem-chef-zero
     SUBDIR += rubygem-facter
     SUBDIR += rubygem-fluent-mixin-plaintextformatter
