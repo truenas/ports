@@ -254,6 +254,7 @@ lib/samba/libdcerpc-samba.so
 lib/samba/libdcerpc-samba4.so
 lib/samba/libdfs_server_ad.so
 lib/samba/libdlz_bind9_for_torture.so
+lib/samba/libdnsserver_common.so
 lib/samba/libdsdb-module.so
 lib/samba/liberrors.so
 lib/samba/libevents.so
