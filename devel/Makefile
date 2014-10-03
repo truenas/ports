@@ -1746,6 +1746,7 @@
     SUBDIR += p5-Data-MessagePack-Stream
     SUBDIR += p5-Data-Miscellany
     SUBDIR += p5-Data-Model
+    SUBDIR += p5-Data-Munge
     SUBDIR += p5-Data-ObjectDriver
     SUBDIR += p5-Data-OptList
     SUBDIR += p5-Data-Page-NoTotalEntries
@@ -4465,6 +4466,7 @@
     SUBDIR += rubygem-rb-fsevent
     SUBDIR += rubygem-rb-inotify
     SUBDIR += rubygem-rb-kqueue
+    SUBDIR += rubygem-rbtrace
     SUBDIR += rubygem-rcov
     SUBDIR += rubygem-rdoc
     SUBDIR += rubygem-recaptcha
@@ -4680,6 +4682,7 @@
     SUBDIR += tclap
     SUBDIR += tclcheck
     SUBDIR += tclgetopts
+    SUBDIR += tcllauncher
     SUBDIR += tcllib
     SUBDIR += tclmore
     SUBDIR += tcloo
