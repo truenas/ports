@@ -203,7 +203,7 @@ PLIST_SUB+=		DEVELOPER="@comment "
 ##############################################################################
 # XXX: That will blow up your installation
 # https://bugzilla.samba.org/show_bug.cgi?id=9302
-.if defined(CRAZY)
+#.if defined(CRAZY)
 WANT_EXP_MODULES=	auth_samba4 auth_script auth_skel auth_unix auth_wbc \
 			gpext_registry gpext_scripts gpext_security idmap_ad \
 			idmap_autorid idmap_hash idmap_ldap idmap_passdb \
@@ -221,7 +221,7 @@ WANT_EXP_MODULES=	auth_samba4 auth_script auth_skel auth_unix auth_wbc \
 			vfs_skel_transparent vfs_smb_traffic_analyzer vfs_streams_depot \
 			vfs_streams_xattr vfs_syncops vfs_time_audit \
 			vfs_xattr_tdb vfs_zfsacl
-.endif
+#.endif
 
 .if ${PORT_OPTIONS:MEXP_MODULES}
 .	if !defined(WANT_EXP_MODULES) || empty(WANT_EXP_MODULES)
