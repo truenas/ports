@@ -326,7 +326,7 @@ lib/samba/libxattr_tdb.so
 %%DEVELOPER%%lib/samba/libuid_wrapper.so
 %%DEVELOPER%%lib/samba/libsocket_wrapper.so
 lib/shared-modules/auth/script.so
-@comment auth_skel lib/shared-modules/auth/skel.so
+lib/shared-modules/auth/skel.so
 lib/shared-modules/bind9/dlz_bind9.so
 lib/shared-modules/bind9/dlz_bind9_9.so
 lib/shared-modules/gensec/krb5.so
@@ -375,8 +375,8 @@ lib/shared-modules/ldb/subtree_rename.so
 lib/shared-modules/ldb/update_keytab.so
 lib/shared-modules/ldb/wins_ldb.so
 lib/shared-modules/nss_info/hash.so
-@comment perfcount_test lib/shared-modules/perfcount/test.so
-@comment pdb_test lib/shared-modules/pdb/test.so
+lib/shared-modules/perfcount/test.so
+lib/shared-modules/pdb/test.so
 lib/shared-modules/process_model/onefork.so
 lib/shared-modules/process_model/prefork.so
 lib/shared-modules/process_model/standard.so
@@ -398,8 +398,8 @@ lib/shared-modules/service/wrepl.so
 lib/shared-modules/vfs/acl_tdb.so
 lib/shared-modules/vfs/acl_xattr.so
 lib/shared-modules/vfs/aio_fork.so
-@comment vfs_aio_posix lib/shared-modules/vfs/aio_posix.so
-@comment vfs_aio_pthread lib/shared-modules/vfs/aio_pthread.so
+lib/shared-modules/vfs/aio_posix.so
+lib/shared-modules/vfs/aio_pthread.so
 lib/shared-modules/vfs/audit.so
 lib/shared-modules/vfs/cap.so
 lib/shared-modules/vfs/catia.so
@@ -414,7 +414,7 @@ lib/shared-modules/vfs/full_audit.so
 lib/shared-modules/vfs/linux_xfs_sgid.so
 lib/shared-modules/vfs/media_harmony.so
 lib/shared-modules/vfs/netatalk.so
-@comment vfs_notify_fam lib/shared-modules/vfs/notify_fam.so
+lib/shared-modules/vfs/notify_fam.so
 lib/shared-modules/vfs/posix_eadb.so
 lib/shared-modules/vfs/preopen.so
 lib/shared-modules/vfs/readahead.so
@@ -432,32 +432,32 @@ lib/shared-modules/vfs/xattr_tdb.so
 %%DEVELOPER%%lib/shared-modules/vfs/nfs4acl_xattr.so
 lib/shared-modules/vfs/zfsacl.so
 %%LDAP%%lib/shared-modules/idmap/rfc2307.so
-@comment auth_samba4 lib/shared-modules/auth/samba4.so
-@comment auth_unix lib/shared-modules/auth/unix.so
-@comment auth_wbc lib/shared-modules/auth/wbc.so
-@comment gpext_registry lib/shared-modules/gpext/registry.so
-@comment gpext_scripts lib/shared-modules/gpext/scripts.so
-@comment gpext_security lib/shared-modules/gpext/security.so
-@comment idmap_ad lib/shared-modules/idmap/ad.so
-@comment idmap_ad lib/shared-modules/nss_info/rfc2307.so
-@comment idmap_ad lib/shared-modules/nss_info/sfu.so
-@comment idmap_ad lib/shared-modules/nss_info/sfu20.so
-@comment idmap_ldap lib/shared-modules/idmap/ldap.so
-@comment idmap_nss lib/shared-modules/idmap/nss.so
-@comment idmap_passdb lib/shared-modules/idmap/passdb.so
-@comment idmap_tdb lib/shared-modules/idmap/tdb.so
-@comment nss_info_template lib/shared-modules/nss_info/template.so
-@comment pdb_ldap lib/shared-modules/pdb/ldap.so
-@comment pdb_samba_dsdb lib/shared-modules/pdb/samba_dsdb.so
-@comment pdb_smbpasswd lib/shared-modules/pdb/smbpasswd.so
-@comment pdb_tdbsam lib/shared-modules/pdb/tdbsam.so
-@comment pdb_wbc_sam lib/shared-modules/pdb/wbc_sam.so
-@comment vfs_cacheprime lib/shared-modules/vfs/cacheprime.so
-@comment vfs_dfs_samba4 lib/shared-modules/vfs/dfs_samba4.so
-@comment vfs_fake_acls lib/shared-modules/vfs/fake_acls.so
-@comment vfs_shadow_copy_test lib/shared-modules/vfs/shadow_copy_test.so
-@comment vfs_skel_opaque lib/shared-modules/vfs/skel_opaque.so
-@comment vfs_skel_transparent lib/shared-modules/vfs/skel_transparent.so
+lib/shared-modules/auth/samba4.so
+lib/shared-modules/auth/unix.so
+lib/shared-modules/auth/wbc.so
+lib/shared-modules/gpext/registry.so
+lib/shared-modules/gpext/scripts.so
+lib/shared-modules/gpext/security.so
+lib/shared-modules/idmap/ad.so
+lib/shared-modules/nss_info/rfc2307.so
+lib/shared-modules/nss_info/sfu.so
+lib/shared-modules/nss_info/sfu20.so
+lib/shared-modules/idmap/ldap.so
+lib/shared-modules/idmap/nss.so
+lib/shared-modules/idmap/passdb.so
+lib/shared-modules/idmap/tdb.so
+lib/shared-modules/nss_info/template.so
+lib/shared-modules/pdb/ldapsam.so
+lib/shared-modules/pdb/samba_dsdb.so
+lib/shared-modules/pdb/smbpasswd.so
+lib/shared-modules/pdb/tdbsam.so
+lib/shared-modules/pdb/wbc_sam.so
+lib/shared-modules/vfs/cacheprime.so
+lib/shared-modules/vfs/dfs_samba4.so
+lib/shared-modules/vfs/fake_acls.so
+lib/shared-modules/vfs/shadow_copy_test.so
+lib/shared-modules/vfs/skel_opaque.so
+lib/shared-modules/vfs/skel_transparent.so
 @dirrmtry lib/shared-modules/vfs
 @dirrmtry lib/shared-modules/service
 @dirrmtry lib/shared-modules/process_model
