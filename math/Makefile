@@ -59,6 +59,7 @@
     SUBDIR += arpack
     SUBDIR += arpack++
     SUBDIR += arpack-ng
+    SUBDIR += arpack-ng-mpich
     SUBDIR += asir2000
     SUBDIR += aspcud
     SUBDIR += asymptote
@@ -346,6 +347,7 @@
     SUBDIR += octave-forge-spline-gcvspl
     SUBDIR += octave-forge-splines
     SUBDIR += octave-forge-statistics
+    SUBDIR += octave-forge-stk
     SUBDIR += octave-forge-strings
     SUBDIR += octave-forge-struct
     SUBDIR += octave-forge-symband

@@ -1088,6 +1088,7 @@
     SUBDIR += libopensync022
     SUBDIR += libopkele
     SUBDIR += liborcus
+    SUBDIR += liborcus07
     SUBDIR += libosinfo
     SUBDIR += libosmo-abis
     SUBDIR += libosmo-sccp
@@ -1316,6 +1317,7 @@
     SUBDIR += netscape-java40
     SUBDIR += newfile
     SUBDIR += newt
+    SUBDIR += newtonsoft-json
     SUBDIR += nglogc
     SUBDIR += nini
     SUBDIR += ninja
@@ -3483,6 +3485,7 @@
     SUBDIR += poco-ssl
     SUBDIR += popt
     SUBDIR += poslib
+    SUBDIR += powerpc64-binutils
     SUBDIR += poxml
     SUBDIR += ppl
     SUBDIR += premake
@@ -3493,6 +3496,7 @@
     SUBDIR += projectcenter
     SUBDIR += protobuf
     SUBDIR += protobuf-c
+    SUBDIR += protobuf25
     SUBDIR += psptoolchain
     SUBDIR += psptoolchain-binutils
     SUBDIR += psptoolchain-gcc-stage1
@@ -3634,6 +3638,7 @@
     SUBDIR += py-clint
     SUBDIR += py-clonedigger
     SUBDIR += py-cmdln
+    SUBDIR += py-codegen
     SUBDIR += py-cog
     SUBDIR += py-coil
     SUBDIR += py-collective.monkeypatcher
@@ -4220,6 +4225,7 @@
     SUBDIR += ruby-tzfile
     SUBDIR += ruby-wirble
     SUBDIR += rubygem-abstract
+    SUBDIR += rubygem-actionpack-action_caching
     SUBDIR += rubygem-actionview
     SUBDIR += rubygem-active_scaffold
     SUBDIR += rubygem-activemessaging
@@ -4317,6 +4323,8 @@
     SUBDIR += rubygem-facets
     SUBDIR += rubygem-fast-stemmer
     SUBDIR += rubygem-fast_gettext
+    SUBDIR += rubygem-fast_stack
+    SUBDIR += rubygem-fast_xor
     SUBDIR += rubygem-fastercsv
     SUBDIR += rubygem-fastri
     SUBDIR += rubygem-fastthread
@@ -4358,6 +4366,7 @@
     SUBDIR += rubygem-grape-entity
     SUBDIR += rubygem-grape-swagger
     SUBDIR += rubygem-grit
+    SUBDIR += rubygem-guess_html_encoding
     SUBDIR += rubygem-gyoku
     SUBDIR += rubygem-hashery
     SUBDIR += rubygem-hashie
@@ -4396,7 +4405,9 @@
     SUBDIR += rubygem-locale
     SUBDIR += rubygem-lockfile
     SUBDIR += rubygem-logging
+    SUBDIR += rubygem-logster
     SUBDIR += rubygem-loquacious
+    SUBDIR += rubygem-lru_redux
     SUBDIR += rubygem-lumberjack
     SUBDIR += rubygem-main
     SUBDIR += rubygem-map
@@ -4404,6 +4415,7 @@
     SUBDIR += rubygem-memoizable
     SUBDIR += rubygem-memoize
     SUBDIR += rubygem-mercenary
+    SUBDIR += rubygem-message_bus
     SUBDIR += rubygem-metaclass
     SUBDIR += rubygem-metaid
     SUBDIR += rubygem-method_source
@@ -4426,6 +4438,7 @@
     SUBDIR += rubygem-multi_json
     SUBDIR += rubygem-multi_test
     SUBDIR += rubygem-murmurhash3
+    SUBDIR += rubygem-mustache
     SUBDIR += rubygem-mutter
     SUBDIR += rubygem-naught
     SUBDIR += rubygem-needle
@@ -4451,11 +4464,13 @@
     SUBDIR += rubygem-power_assert
     SUBDIR += rubygem-prototype-rails
     SUBDIR += rubygem-pry
+    SUBDIR += rubygem-pry-rails
     SUBDIR += rubygem-pry-remote-em
     SUBDIR += rubygem-ptreloaded
     SUBDIR += rubygem-pygments.rb
     SUBDIR += rubygem-r18n-core
     SUBDIR += rubygem-racc
+    SUBDIR += rubygem-rack-mini-profiler
     SUBDIR += rubygem-rack-raw-upload
     SUBDIR += rubygem-rails-observers
     SUBDIR += rubygem-rainbow
@@ -4680,6 +4695,7 @@
     SUBDIR += tcl-signal
     SUBDIR += tcl-trf
     SUBDIR += tclap
+    SUBDIR += tclbsd
     SUBDIR += tclcheck
     SUBDIR += tclgetopts
     SUBDIR += tcllauncher
@@ -4742,6 +4758,7 @@
     SUBDIR += valgrind
     SUBDIR += valgrind-devel
     SUBDIR += varconf
+    SUBDIR += vasm
     SUBDIR += vera++
     SUBDIR += viewvc
     SUBDIR += violet

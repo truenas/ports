@@ -137,6 +137,7 @@
     SUBDIR += fastforward
     SUBDIR += fdm
     SUBDIR += fetchmail
+    SUBDIR += filtermail
     SUBDIR += findmaildirs
     SUBDIR += gbuffy
     SUBDIR += gensig
@@ -569,6 +570,7 @@
     SUBDIR += ruby-rmail
     SUBDIR += rubygem-actionmailer
     SUBDIR += rubygem-actionmailer4
+    SUBDIR += rubygem-email_reply_parser-discourse
     SUBDIR += rubygem-exception_notification
     SUBDIR += rubygem-larch
     SUBDIR += rubygem-mail

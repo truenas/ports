@@ -326,6 +326,7 @@
     SUBDIR += linc-reference
     SUBDIR += linknx
     SUBDIR += linphone
+    SUBDIR += linux-c6-avahi-libs
     SUBDIR += linux-c6-openldap
     SUBDIR += linux-c6-tcp_wrappers-libs
     SUBDIR += linux-f10-nss_ldap
@@ -1008,9 +1009,11 @@
     SUBDIR += rubygem-oauth2
     SUBDIR += rubygem-octokit
     SUBDIR += rubygem-omniauth-github
+    SUBDIR += rubygem-omniauth-github-discourse
     SUBDIR += rubygem-omniauth-google-oauth2
     SUBDIR += rubygem-omniauth-oauth
     SUBDIR += rubygem-omniauth-oauth2
+    SUBDIR += rubygem-omniauth-openid
     SUBDIR += rubygem-omniauth-twitter
     SUBDIR += rubygem-open-uri-cached
     SUBDIR += rubygem-openid

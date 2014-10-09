@@ -71,7 +71,10 @@ parse_plist() {
 		@info\ *|@shell\ *)
 			set -- $line
 			shift
-			echo "${comment}${cwd}/$@"
+			case "$@" in
+			/*) echo "${comment}$@" ;;
+			*) echo "${comment}${cwd}/$@" ;;
+			esac
 		;;
 		@sample\ *)
 			set -- $line
@@ -88,11 +91,18 @@ parse_plist() {
 			;;
 			esac
 		;;
-		# Handle [dirrmtry] Keywords
+		# Handle [dir] Keywords
 		@fc\ *|@fcfontsdir\ *|@fontsdir\ *)
 			set -- $line
 			shift
+			case "$@" in
+			/*)
+			echo >&3 "${comment}$@"
+			;;
+			*)
 			echo >&3 "${comment}${cwd}/$@"
+			;;
+			esac
 		;;
 
 		# order matters here - we must check @cwd first because
@@ -220,14 +230,14 @@ setup_plist_seds() {
 	# Used for generate_plist
 	sed_files_gen="s!${PREFIX}/!!g; ${sed_plist_sub} \
 	    ${sed_portdocsexamples} /^share\/licenses/d;"
-	sed_dirs_gen="s!${PREFIX}/!!g; ${sed_plist_sub} s,^,@dirrmtry ,; \
+	sed_dirs_gen="s!${PREFIX}/!!g; ${sed_plist_sub} s,^,@dir ,; \
 	    ${sed_portdocsexamples} \
-	    /^@dirrmtry share\/licenses/d;"
+	    /^@dir share\/licenses/d;"
 
 	# These prevent ignoring DOCS/EXAMPLES dirs with sed_portdocsexamples
 	sed_files="s!${PREFIX}/!!g; ${sed_plist_sub} /^share\/licenses/d;"
-	sed_dirs="s!${PREFIX}/!!g; ${sed_plist_sub} s,^,@dirrmtry ,; \
-	    /^@dirrmtry share\/licenses/d;"
+	sed_dirs="s!${PREFIX}/!!g; ${sed_plist_sub} s,^,@dir ,; \
+	    /^@dir share\/licenses/d;"
 
 }
 
@@ -264,16 +274,16 @@ check_orphans_from_plist() {
 	# Handle whitelisting
 	while read path; do
 		case "${path}" in
-		*'@dirrmtry '[^/]*) ;;
+		*'@dir '[^/]*) ;;
 		*.bak) ;;
 		*.orig) ;;
 		*/.DS_Store) ;;
 		*/.cvsignore) ;;
-		*/.git/*|'@dirrmtry '*/.git) ;;
+		*/.git/*|'@dir '*/.git) ;;
 		*/.gitattributes|*/.gitignore|*/.gitmodules) ;;
-		*/.svn/*|'@dirrmtry '*/.svn) ;;
+		*/.svn/*|'@dir '*/.svn) ;;
 		*/.svnignore) ;;
-		*/CVS/*|'@dirrmtry '*/CVS) ;;
+		*/CVS/*|'@dir '*/CVS) ;;
 		*/info/dir|info/dir) ;;
 		lib/X11/fonts/*/fonts.dir) ;;
 		lib/X11/fonts/*/fonts.scale) ;;

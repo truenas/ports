@@ -1,29 +1,31 @@
 # $FreeBSD$
 
 PORTNAME=	rainloop
-PORTVERSION=	1.6.9
+PORTVERSION=	1.6.10
 CATEGORIES?=	mail www
 MASTER_SITES=	SF/${PORTNAME}-webmail/
 
 MAINTAINER=	loic.blot@unix-experience.fr
 COMMENT=	Modern and interactive webmail
 
+LICENSE=	CCbyNCSA3
+LICENSE_NAME=	Attribution-NonCommercial-ShareAlike 3.0 Unported
+LICENSE_TEXT=	License can be found at: https://github.com/RainLoop/rainloop-webmail/blob/master/LICENSE
+LICENSE_PERMS=	dist-mirror pkg-mirror auto-accept
+
 USES=		zip
 NO_BUILD=	yes
-WRKSRC=		${WRKDIR}/${PORTNAME}
+NO_WRKSUBDIR=	yes
 WANT_PHP_WEB=	yes
 USE_PHP=	curl iconv json xml dom openssl pcre spl zlib
-RVER=		${PORTVERSION}.164
+RVER=		1.6.10.182
 PLIST_SUB=	VER="${RVER}" WWWOWN="${WWWOWN}" WWWGRP="${WWWGRP}"
 # @TODO: PDO also for different backends
 
-do-extract:
-	@${RM} -rf ${WRKDIR}
-	@${MKDIR} ${WRKSRC}
-	@${EXTRACT_CMD} -d ${WRKSRC} ${DISTDIR}/${PORTNAME}-${PORTVERSION}${EXTRACT_SUFX} > /dev/null
-
 do-install:
-	@${MKDIR} -m 0755 ${STAGEDIR}${WWWDIR}
-	@cd ${WRKSRC} && ${COPYTREE_SHARE} . ${STAGEDIR}${WWWDIR}
+	@${MKDIR} ${STAGEDIR}${WWWDIR}/data
+	${INSTALL_DATA} ${WRKSRC}/data/* ${STAGEDIR}${WWWDIR}/data
+	${INSTALL_DATA} ${WRKSRC}/index.php ${STAGEDIR}${WWWDIR}
+	(cd ${WRKSRC} && ${COPYTREE_SHARE} rainloop ${STAGEDIR}${WWWDIR})
 
 .include <bsd.port.mk>
