@@ -1542,6 +1542,7 @@
     SUBDIR += py-grequests
     SUBDIR += py-gunicorn
     SUBDIR += py-html5lib
+    SUBDIR += py-http-parser
     SUBDIR += py-httplib2
     SUBDIR += py-imdbpy
     SUBDIR += py-jonpy
@@ -1785,6 +1786,7 @@
     SUBDIR += rubygem-haml-contrib
     SUBDIR += rubygem-haml-rails
     SUBDIR += rubygem-haml-rails-rails4
+    SUBDIR += rubygem-hashicorp-checkpoint
     SUBDIR += rubygem-heroku
     SUBDIR += rubygem-heroku-api
     SUBDIR += rubygem-heroku-nav
@@ -1870,6 +1872,7 @@
     SUBDIR += rubygem-robotex
     SUBDIR += rubygem-robots
     SUBDIR += rubygem-rtlit
+    SUBDIR += rubygem-ruby-readability
     SUBDIR += rubygem-savon
     SUBDIR += rubygem-sawyer
     SUBDIR += rubygem-scrapi

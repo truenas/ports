@@ -146,6 +146,7 @@
     SUBDIR += cpulimit
     SUBDIR += cramfs
     SUBDIR += crashme
+    SUBDIR += createrepo
     SUBDIR += cronolog
     SUBDIR += cronolog-devel
     SUBDIR += curly
@@ -164,6 +165,7 @@
     SUBDIR += ddrescue
     SUBDIR += debhelper
     SUBDIR += debootstrap
+    SUBDIR += deltarpm
     SUBDIR += deltup
     SUBDIR += desktop-installer
     SUBDIR += detach
