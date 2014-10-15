@@ -202,6 +202,9 @@ CONFIGURE_LIBS+=	-lldap
 EMPTYDIR=		/var/empty
 
 .if ${PORT_OPTIONS:MOVERWRITE_BASE}
+# XXX: Mark this BROKEN rather than remove the option to force people to notice for POLA.
+DEPRECATED=		Overwrite-base option/port/pkg will be removed. There is no real need for foot-shooting.
+EXPIRATION_DATE=	2015-01-01
 WITH_OPENSSL_BASE=	yes
 CONFIGURE_ARGS+=	--localstatedir=/var
 PREFIX=			/usr
