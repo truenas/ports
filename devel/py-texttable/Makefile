@@ -9,7 +9,7 @@ PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 MAINTAINER=	dev@ixsystems.com
 COMMENT=	ASCII tables generator module
 
-LICENSE=	MIT
+LICENSE=	LGPL
 
 USES=		python
 USE_PYTHON=	autoplist distutils
