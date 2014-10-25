@@ -1,17 +1,17 @@
 # Created by: KalleDK <plexmaintainer@k-moeller.dk>
-# $FreeBSD: Makefile 348136 2014-03-13 22:36:21Z feld $
+# $FreeBSD: head/multimedia/plexmediaserver/Makefile 370964 2014-10-15 23:18:32Z feld $
 
 PORTNAME=	plexmediaserver
-PORTVERSION=	0.9.9.7.429
+PORTVERSION=	0.9.11.1.678
 CATEGORIES=	multimedia
-MASTER_SITES=	http://plex.r.worldssl.net/plex-media-server/${PORTVERSION}-${PLEX_BUILD}/
+MASTER_SITES=	http://downloads.plexapp.com/plex-media-server/${PORTVERSION}-${PLEX_BUILD}/
 DISTNAME=	PlexMediaServer-${PORTVERSION}-${PLEX_BUILD}-freebsd-amd64
 
 MAINTAINER=	feld@FreeBSD.org
 COMMENT=	The Plex Media Server component
 
-USE_BZIP2=	yes
-PLEX_BUILD=	f80a8d6
+USES=	tar:bzip2
+PLEX_BUILD=	c48ffd2
 NO_BUILD=	yes
 WRKSRC=	${WRKDIR}/PlexMediaServer-${PORTVERSION}-${PLEX_BUILD}
 
@@ -24,6 +24,7 @@ USERS=	plex
 GROUPS=	plex
 SUPPORT_PATH?=	${PREFIX}/plexdata
 SCRIPT_PATH?=	${DATADIR}
+BUNDLE_LIBS=	yes
 
 ONLY_FOR_ARCHS=	amd64
 
@@ -42,13 +43,13 @@ RUN_DEPENDS+=	${LOCALBASE}/lib/compat/libstdc++.so.6:${PORTSDIR}/misc/compat9x
 post-patch:
 	# binaries don't come pre-stripped
 	${FIND} ${WRKSRC} -name '*.so' -exec ${STRIP_CMD} {} \;
+	${STRIP_CMD} ${WRKSRC}/Resources/rsync ${WRKSRC}/Resources/Python/bin/python
 
 do-install:
 	@(cd ${WRKSRC} && ${COPYTREE_SHARE} Resources ${STAGEDIR}/${SCRIPT_PATH})
 	${INSTALL_PROGRAM} ${WRKSRC}/Plex\ DLNA\ Server ${STAGEDIR}/${SCRIPT_PATH}
 	${INSTALL_PROGRAM} ${WRKSRC}/Plex\ Media\ Scanner ${STAGEDIR}/${SCRIPT_PATH}
 	${INSTALL_PROGRAM} ${WRKSRC}/Plex\ Media\ Server ${STAGEDIR}/${SCRIPT_PATH}
-	${INSTALL_SCRIPT} ${WRKSRC}/start.sh ${STAGEDIR}/${SCRIPT_PATH}
 	${INSTALL_LIB} ${WRKSRC}/lib* ${STAGEDIR}/${SCRIPT_PATH}
 	# Fix permissions to programs and db
 	@${CHMOD} a+x ${STAGEDIR}/${SCRIPT_PATH}/Resources/rsync

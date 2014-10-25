@@ -1,7 +1,7 @@
 #!/bin/sh
 # Created by: KalleDK <plexmaintainer@k-moeller.dk>
 #
-# $FreeBSD: files/plexmediaserver.in 347409 2014-03-07 17:29:28Z feld $
+# $FreeBSD: head/multimedia/plexmediaserver/files/plexmediaserver.in 369936 2014-10-03 20:26:45Z feld $
 #
 # PROVIDE: plexmediaserver
 # REQUIRE: LOGIN
@@ -13,7 +13,7 @@
 #
 # plexmediaserver_support_path="%%SUPPORT_PATH%%" # Plex data: logs, media metadata, settings, etc
 #
-# plexmediaserver_tmp="/tmp" # tmp directory used for the transcoding process
+# plexmediaserver_tmp="/var/tmp/plex" # configure tmp directory used for the transcoding process if desired
 #
 # plexmediaserver_maxplugins="6" # Maximum number of background plugin procs. May have to raise in rare cases.
 #
