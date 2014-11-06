@@ -264,6 +264,12 @@ EOF
         display_loaderopts $cdataset >> /tmp/.grubdataset.$$.2
       fi
 
+      # Let's see if this is the default BE
+      bootfs=$(zpool list -Ho bootfs ${cdataset%%/*})
+      if [ "${bootfs}" = "${cdataset}" ]; then
+        DEFAULT_BE="${NICK} ($b) - ${cdatadate} ${cdatatime}"
+      fi
+
       # Lets start a submenu for each BE
 cat << EOF
 
