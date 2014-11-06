@@ -259,8 +259,8 @@ EOF
       fi
 
       # Let's see if this is the default BE
-      canmount=$(zfs get -H canmount "$cdataset" | awk ' { print $3; }')
-      if [ "${canmount}" = "on" ]; then
+      bootfs=$(zpool list -Ho bootfs ${cdataset%%/*})
+      if [ "${bootfs}" = "${cdataset}" ]; then
         DEFAULT_BE="${NICK} ($b) - ${cdatadate} ${cdatatime}"
       fi
 
