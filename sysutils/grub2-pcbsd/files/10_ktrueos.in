@@ -47,7 +47,7 @@ done
 if [ -f /data/freenas-v1.db ]; then
     # FreeNAS install
     ser=$(/usr/local/bin/sqlite3 /data/freenas-v1.db "SELECT adv_serialconsole FROM system_advanced")
-    if [ ${ser} -eq 1 ]; then
+    if [ "${ser}" -eq 1 ]; then
         out="-Dh"
     else
         out=""
