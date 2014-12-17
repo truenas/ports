@@ -916,6 +916,7 @@
     SUBDIR += tentakel
     SUBDIR += testdisk
     SUBDIR += thefish
+    SUBDIR += throttle
     SUBDIR += timelimit
     SUBDIR += timemon
     SUBDIR += titlefix
