@@ -79,6 +79,7 @@
     SUBDIR += gmerlin
     SUBDIR += gmerlin-avdecoder
     SUBDIR += gmimms
+    SUBDIR += gmp-api
     SUBDIR += gmtk
     SUBDIR += gnome-mplayer
     SUBDIR += gnome-subtitles
@@ -254,6 +255,7 @@
     SUBDIR += ogmrip
     SUBDIR += ogmtools
     SUBDIR += opencinematools
+    SUBDIR += openh264
     SUBDIR += openquicktime
     SUBDIR += openshot
     SUBDIR += oqtencoder
