@@ -638,9 +638,13 @@
     SUBDIR += password-store
     SUBDIR += patchelf
     SUBDIR += pax-utils
+    SUBDIR += pbi-manager
     SUBDIR += pbimaker
+    SUBDIR += pcbsd-appweb
+    SUBDIR += pcbsd-libsh
     SUBDIR += pcbsd-utils
     SUBDIR += pcbsd-utils-qt4
+    SUBDIR += pcbsd-syscache
     SUBDIR += pcfclock
     SUBDIR += pciutils
     SUBDIR += pcpustat
@@ -993,6 +997,7 @@
     SUBDIR += watchdog
     SUBDIR += watchfolder
     SUBDIR += watchmen
+    SUBDIR += warden
     SUBDIR += webjob
     SUBDIR += webmin
     SUBDIR += weedit
