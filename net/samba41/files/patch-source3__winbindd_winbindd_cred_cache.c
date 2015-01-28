@@ -1,5 +1,5 @@
---- source3/winbindd/winbindd_cred_cache.c.orig	2013-12-05 01:16:48.000000000 -0800
-+++ source3/winbindd/winbindd_cred_cache.c	2014-01-15 13:07:57.000000000 -0800
+--- ./source3/winbindd/winbindd_cred_cache.c.orig	2015-01-28 00:19:27.870438534 -0800
++++ ./source3/winbindd/winbindd_cred_cache.c	2015-01-28 00:22:09.013421232 -0800
 @@ -802,62 +802,7 @@
  static NTSTATUS store_memory_creds(struct WINBINDD_MEMORY_CREDS *memcredp,
  				   const char *pass)

@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FreeBSD$
+# $FreeBSD: head/net/samba41/files/samba_server.in 358993 2014-06-23 18:47:48Z timur $
 #
 
 # PROVIDE: samba_server
