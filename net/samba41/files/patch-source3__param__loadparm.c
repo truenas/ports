@@ -1,15 +1,14 @@
---- ./source3/param/loadparm.c
-+++ ./source3/param/loadparm.c
-@@ -3174,10 +3174,12 @@ bool lp_do_parameter(int snum, const char *pszParmName, const char *pszParmValue
- 		return true;
- 	}
+--- ./source3/param/loadparm.c.orig	2015-01-28 00:32:27.759378400 -0800
++++ ./source3/param/loadparm.c	2015-01-28 00:54:41.125286268 -0800
+@@ -3170,9 +3170,11 @@
  
+ 	/* if it's already been set by the command line, then we don't
+ 	   override here */
 +	/*
- 	if (parm_table[parmnum].flags & FLAG_DEPRECATED) {
- 		DEBUG(1, ("WARNING: The \"%s\" option is deprecated\n",
- 			  pszParmName));
+ 	if (parm_table[parmnum].flags & FLAG_CMDLINE) {
+ 		return true;
  	}
 +	*/
  
- 	/* we might point at a service, the default service or a global */
- 	if (snum < 0) {
+ 	if (parm_table[parmnum].flags & FLAG_DEPRECATED) {
+ 		DEBUG(1, ("WARNING: The \"%s\" option is deprecated\n",
