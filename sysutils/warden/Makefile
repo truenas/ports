@@ -1,8 +1,8 @@
 # Created by: Kris Moore <kmoore@FreeBSD.org>
-# $FreeBSD$
+# $FreeBSD: head/sysutils/warden/Makefile 378356 2015-02-03 15:05:14Z kmoore $
 
 PORTNAME=	warden
-PORTVERSION=	1418412015
+PORTVERSION=	1422974289
 CATEGORIES=	sysutils
 MASTER_SITES=	http://www.pcbsd.org/~kris/software/ \
 		ftp://ftp.pcbsd.org/pub/software/

@@ -1,4 +1,4 @@
-# $FreeBSD$
+# $FreeBSD: head/sysutils/Makefile 378356 2015-02-03 15:05:14Z kmoore $
 #
 
     COMMENT = System utilities
@@ -12,6 +12,7 @@
     SUBDIR += abck
     SUBDIR += abgx360
     SUBDIR += abgx360gui
+    SUBDIR += accountsservice
     SUBDIR += acpi_call
     SUBDIR += acpica-tools
     SUBDIR += adtool
@@ -47,8 +48,10 @@
     SUBDIR += automount
     SUBDIR += automounter
     SUBDIR += autopsy
+    SUBDIR += azure-agent
     SUBDIR += b43-fwcutter
     SUBDIR += backuppc
+    SUBDIR += backuppc-devel
     SUBDIR += bacula-bat
     SUBDIR += bacula-client
     SUBDIR += bacula-client-static
@@ -59,6 +62,8 @@
     SUBDIR += bacula5-client-static
     SUBDIR += bacula5-docs
     SUBDIR += bacula5-server
+    SUBDIR += baloo
+    SUBDIR += baloo-widgets
     SUBDIR += bamf
     SUBDIR += bashburn
     SUBDIR += batmon
@@ -75,6 +80,8 @@
     SUBDIR += bkpupsd
     SUBDIR += bksh
     SUBDIR += bontmia
+    SUBDIR += boxbackup
+    SUBDIR += boxbackup-devel
     SUBDIR += brasero
     SUBDIR += brebis
     SUBDIR += bsd-splash-changer
@@ -113,9 +120,11 @@
     SUBDIR += cfengine34
     SUBDIR += cfengine35
     SUBDIR += cfengine36
-    SUBDIR += cfengine36-rc
     SUBDIR += chgrep
+    SUBDIR += cinnamon-control-center
+    SUBDIR += cinnamon-settings-daemon
     SUBDIR += ciso
+    SUBDIR += ciso-maker
     SUBDIR += ck4up
     SUBDIR += clean
     SUBDIR += clockspeed
@@ -143,12 +152,15 @@
     SUBDIR += cpdup
     SUBDIR += cpu
     SUBDIR += cpuburn
+    SUBDIR += cpuid
     SUBDIR += cpulimit
     SUBDIR += cramfs
     SUBDIR += crashme
+    SUBDIR += createrepo
     SUBDIR += cronolog
     SUBDIR += cronolog-devel
     SUBDIR += curly
+    SUBDIR += currtime
     SUBDIR += cw
     SUBDIR += daa2iso
     SUBDIR += dae
@@ -164,6 +176,7 @@
     SUBDIR += ddrescue
     SUBDIR += debhelper
     SUBDIR += debootstrap
+    SUBDIR += deltarpm
     SUBDIR += deltup
     SUBDIR += desktop-installer
     SUBDIR += detach
@@ -237,6 +250,7 @@
     SUBDIR += filewatcherd
     SUBDIR += finfo
     SUBDIR += firstboot-freebsd-update
+    SUBDIR += firstboot-growfs
     SUBDIR += firstboot-pkgs
     SUBDIR += flasher
     SUBDIR += flashrom
@@ -318,7 +332,6 @@
     SUBDIR += gkrellm2
     SUBDIR += gkrelltop
     SUBDIR += gksu
-    SUBDIR += glusterfs
     SUBDIR += gnome-control-center
     SUBDIR += gnome-device-manager
     SUBDIR += gnome-mount
@@ -327,7 +340,6 @@
     SUBDIR += gnome-schedule
     SUBDIR += gnome-settings-daemon
     SUBDIR += gnome-system-monitor
-    SUBDIR += gnome-system-tools
     SUBDIR += gnome_subr
     SUBDIR += goaccess
     SUBDIR += gosa
@@ -419,6 +431,7 @@
     SUBDIR += kdf
     SUBDIR += kdirstat
     SUBDIR += keyboard-daemon
+    SUBDIR += kfilemetadata
     SUBDIR += kfloppy
     SUBDIR += kiconvtool
     SUBDIR += kldfind
@@ -449,6 +462,7 @@
     SUBDIR += liburcu
     SUBDIR += libutempter
     SUBDIR += libzeitgeist
+    SUBDIR += life-preserver
     SUBDIR += lineak-defaultplugin
     SUBDIR += lineak-xosdplugin
     SUBDIR += lineakd
@@ -465,6 +479,7 @@
     SUBDIR += logrotate
     SUBDIR += logstalgia
     SUBDIR += logstash
+    SUBDIR += logstash-contrib
     SUBDIR += logstash-forwarder
     SUBDIR += logtool
     SUBDIR += logwatch
@@ -556,6 +571,7 @@
     SUBDIR += nvramtool
     SUBDIR += oak
     SUBDIR += obliterate
+    SUBDIR += odo
     SUBDIR += ods2
     SUBDIR += open
     SUBDIR += openipmi
@@ -642,9 +658,9 @@
     SUBDIR += pbimaker
     SUBDIR += pcbsd-appweb
     SUBDIR += pcbsd-libsh
-    SUBDIR += pcbsd-utils
-    SUBDIR += pcbsd-utils-qt4
     SUBDIR += pcbsd-syscache
+    SUBDIR += pcbsd-utils
+    SUBDIR += pcbsd-utils-qt5
     SUBDIR += pcfclock
     SUBDIR += pciutils
     SUBDIR += pcpustat
@@ -666,7 +682,7 @@
     SUBDIR += pecl-proctitle
     SUBDIR += pefs-kmod
     SUBDIR += personality
-    SUBDIR += pessulus
+    SUBDIR += pesign
     SUBDIR += pflogx
     SUBDIR += pfstat
     SUBDIR += pftables
@@ -751,6 +767,7 @@
     SUBDIR += qlogtools
     SUBDIR += qpxtool
     SUBDIR += qsynergy
+    SUBDIR += qt5-qtpaths
     SUBDIR += quicksynergy
     SUBDIR += qzeitgeist
     SUBDIR += racktables
@@ -759,6 +776,7 @@
     SUBDIR += raincoat
     SUBDIR += rcadm
     SUBDIR += rclean
+    SUBDIR += rcm
     SUBDIR += rdate
     SUBDIR += rdiff-backup
     SUBDIR += rdiff-backup-devel
@@ -769,10 +787,13 @@
     SUBDIR += rej
     SUBDIR += relaxconf
     SUBDIR += rename
+    SUBDIR += renameutils
     SUBDIR += reoback
     SUBDIR += respond
     SUBDIR += retail
     SUBDIR += rfstool
+    SUBDIR += rhc
+    SUBDIR += rinse
     SUBDIR += rmonitor
     SUBDIR += roottail
     SUBDIR += rsnapshot
@@ -792,6 +813,7 @@
     SUBDIR += rubygem-capistrano
     SUBDIR += rubygem-capistrano-ext
     SUBDIR += rubygem-chef
+    SUBDIR += rubygem-chef-api
     SUBDIR += rubygem-chef-zero
     SUBDIR += rubygem-facter
     SUBDIR += rubygem-fluent-mixin-plaintextformatter
@@ -802,22 +824,24 @@
     SUBDIR += rubygem-fssm
     SUBDIR += rubygem-god
     SUBDIR += rubygem-guard
+    SUBDIR += rubygem-guard-compat
     SUBDIR += rubygem-guard-livereload
     SUBDIR += rubygem-guard-minitest
     SUBDIR += rubygem-guard-rspec
     SUBDIR += rubygem-hammer_cli
     SUBDIR += rubygem-hammer_cli_foreman
     SUBDIR += rubygem-hammer_cli_foreman_bootdisk
+    SUBDIR += rubygem-hammer_cli_foreman_ssh
     SUBDIR += rubygem-hiera
-    SUBDIR += rubygem-hiera-json
-    SUBDIR += rubygem-hiera-puppet
     SUBDIR += rubygem-librarian-puppet
     SUBDIR += rubygem-log4r
+    SUBDIR += rubygem-logify
     SUBDIR += rubygem-mogilefs-client
     SUBDIR += rubygem-murder
     SUBDIR += rubygem-ohai
     SUBDIR += rubygem-parallel
     SUBDIR += rubygem-rubyipmi
+    SUBDIR += rubygem-shellany
     SUBDIR += rubygem-smart_proxy_salt
     SUBDIR += rubygem-sys-admin
     SUBDIR += rubygem-sys-cpu
@@ -839,6 +863,7 @@
     SUBDIR += sas2ircu
     SUBDIR += savelogs
     SUBDIR += sb16config
+    SUBDIR += sbsigntool
     SUBDIR += scalpel
     SUBDIR += scan_ffs
     SUBDIR += scanbuttond
@@ -850,16 +875,17 @@
     SUBDIR += screenfetch
     SUBDIR += screenie
     SUBDIR += scterc
+    SUBDIR += sd-agent
     SUBDIR += sdd
     SUBDIR += sdparm
     SUBDIR += searchmonkey
     SUBDIR += seatools
     SUBDIR += sec
-    SUBDIR += serpentine
     SUBDIR += setcdboot
     SUBDIR += setquota
     SUBDIR += sformat
     SUBDIR += sg3_utils
+    SUBDIR += shim
     SUBDIR += shlock
     SUBDIR += shmcat
     SUBDIR += sievelog
@@ -903,8 +929,10 @@
     SUBDIR += syslog-ng
     SUBDIR += syslog-ng-devel
     SUBDIR += syslog-ng-incubator
+    SUBDIR += syslog-ng-incubator03
     SUBDIR += syslog-ng33
     SUBDIR += syslog-ng34
+    SUBDIR += syslog-ng35
     SUBDIR += syslogger
     SUBDIR += sysrc
     SUBDIR += system-tools-backends
@@ -920,7 +948,6 @@
     SUBDIR += tentakel
     SUBDIR += testdisk
     SUBDIR += thefish
-    SUBDIR += throttle
     SUBDIR += timelimit
     SUBDIR += timemon
     SUBDIR += titlefix
@@ -935,9 +962,6 @@
     SUBDIR += torsmo
     SUBDIR += toshctl
     SUBDIR += tracker
-    SUBDIR += tracker-client
-    SUBDIR += tracker-gnome
-    SUBDIR += tracker-libtrackergtk
     SUBDIR += tree
     SUBDIR += tren
     SUBDIR += ts
@@ -946,6 +970,9 @@
     SUBDIR += ttyload
     SUBDIR += tw_cli
     SUBDIR += tzdialog
+    SUBDIR += u-boot-beaglebone
+    SUBDIR += u-boot-rpi
+    SUBDIR += u-boot-wandboard
     SUBDIR += ua
     SUBDIR += ucspi-ipc
     SUBDIR += ucspi-proxy
@@ -993,11 +1020,11 @@
     SUBDIR += vpnc-scripts
     SUBDIR += vstrip
     SUBDIR += vttest
+    SUBDIR += warden
     SUBDIR += wait_on
     SUBDIR += watchdog
     SUBDIR += watchfolder
     SUBDIR += watchmen
-    SUBDIR += warden
     SUBDIR += webjob
     SUBDIR += webmin
     SUBDIR += weedit
@@ -1055,6 +1082,7 @@
     SUBDIR += xsysstats
     SUBDIR += xvidcap
     SUBDIR += yum
+    SUBDIR += zbackup
     SUBDIR += zeitgeist
     SUBDIR += zeroer
     SUBDIR += zetaback
@@ -1063,6 +1091,7 @@
     SUBDIR += zfs-snapshot-clean
     SUBDIR += zfs-snapshot-mgmt
     SUBDIR += zfs-stats
+    SUBDIR += zfs-stats-lite
     SUBDIR += zfsnap
     SUBDIR += zfstools
     SUBDIR += zidrav

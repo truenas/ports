@@ -1,14 +1,16 @@
 # Created by: Kris Moore <kmoore@FreeBSD.org>
-# $FreeBSD$
+# $FreeBSD: head/sysutils/pcbsd-appweb/Makefile 378356 2015-02-03 15:05:14Z kmoore $
 
 PORTNAME=	pcbsd-appweb
-PORTVERSION=	1421423077
+PORTVERSION=	1422974666
 CATEGORIES=	sysutils
 MASTER_SITES=	http://www.pcbsd.org/~kris/software/ \
 		ftp://ftp.pcbsd.org/pub/software/
 
 MAINTAINER=	kmoore@FreeBSD.org
 COMMENT=	PC-BSD Web Interface
+
+LICENSE=	BSD
 
 RUN_DEPENDS=	syscache:${PORTSDIR}/sysutils/pcbsd-syscache \
 		pbi:${PORTSDIR}/sysutils/pbi-manager \

@@ -1,5 +1,5 @@
 # Created by: Kris Moore <kmoore@FreeBSD.org>
-# $FreeBSD$
+# $FreeBSD: head/sysutils/pcbsd-syscache/Makefile 378356 2015-02-03 15:05:14Z kmoore $
 
 PORTNAME=	pcbsd-syscache
 PORTVERSION=	1421343297

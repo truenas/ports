@@ -1,20 +1,20 @@
 # Created by: Kris Moore <kmoore@FreeBSD.org>
-# $FreeBSD: head/sysutils/pbi-manager/Makefile 378356 2015-02-03 15:05:14Z kmoore $
+# $FreeBSD: head/sysutils/life-preserver/Makefile 378356 2015-02-03 15:05:14Z kmoore $
 
-PORTNAME=	pbi-manager
-PORTVERSION=	1422042374
+PORTNAME=	life-preserver
+PORTVERSION=	1422974289
 CATEGORIES=	sysutils
 MASTER_SITES=	http://www.pcbsd.org/~kris/software/ \
 		ftp://ftp.pcbsd.org/pub/software/
 
 MAINTAINER=	kmoore@FreeBSD.org
-COMMENT=	PBI management utilities
+COMMENT=	PC-BSD Life Preserver Utility
 
 LICENSE=	BSD
 
 RUN_DEPENDS=	${LOCALBASE}/share/pcbsd/scripts/functions.sh:${PORTSDIR}/sysutils/pcbsd-libsh
 
-WRKSRC=		${WRKDIR}/pbi-manager
+WRKSRC=		${WRKDIR}/lpreserver
 USES=		pkgconfig tar:xz
 NO_BUILD=	yes
 

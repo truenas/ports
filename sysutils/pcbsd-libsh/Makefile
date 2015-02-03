@@ -1,5 +1,5 @@
 # Created by: Kris Moore <kmoore@FreeBSD.org>
-# $FreeBSD$
+# $FreeBSD: head/sysutils/pcbsd-libsh/Makefile 378356 2015-02-03 15:05:14Z kmoore $
 
 PORTNAME=	pcbsd-libsh
 PORTVERSION=	1420064498
