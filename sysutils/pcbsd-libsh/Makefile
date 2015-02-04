@@ -1,8 +1,8 @@
 # Created by: Kris Moore <kmoore@FreeBSD.org>
-# $FreeBSD: head/sysutils/pcbsd-libsh/Makefile 378356 2015-02-03 15:05:14Z kmoore $
+# $FreeBSD$
 
 PORTNAME=	pcbsd-libsh
-PORTVERSION=	1420064498
+PORTVERSION=	1423062079
 CATEGORIES=	sysutils
 MASTER_SITES=	http://www.pcbsd.org/~kris/software/ \
 		ftp://ftp.pcbsd.org/pub/software/
