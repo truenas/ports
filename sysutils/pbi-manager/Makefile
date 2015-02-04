@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	pbi-manager
-PORTVERSION=	1422042374
+PORTVERSION=	1423071920
 CATEGORIES=	sysutils
 MASTER_SITES=	http://www.pcbsd.org/~kris/software/ \
 		ftp://ftp.pcbsd.org/pub/software/

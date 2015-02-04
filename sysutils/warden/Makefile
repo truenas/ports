@@ -2,8 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	warden
-PORTVERSION=	1422974289
-PORTREVISION=	1
+PORTVERSION=	1423072448
 CATEGORIES=	sysutils
 MASTER_SITES=	http://www.pcbsd.org/~kris/software/ \
 		ftp://ftp.pcbsd.org/pub/software/
