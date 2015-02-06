@@ -31,13 +31,24 @@ ROOTFS=`mount | awk '/ \/ / {print $1}'`
 BEDS="$( echo ${ROOTFS} | awk -F '/' '{print $2}' )"
 if [ "$BEDS" = "dev" ] ; then BEDS="ROOT"; fi
 
-if [ -f /data/freenas-v1.db ]; then
-    # FreeNAS install
-    ser=$(/usr/local/bin/sqlite3 /data/freenas-v1.db "SELECT adv_serialconsole FROM system_advanced")
-    if [ "${ser}" -eq 1 ]; then
+serial=0;
+console=0;
+for x in ${GRUB_TERMINAL_OUTPUT}; do
+    if [ xserial = "x$x" ]; then
+        serial=1;
+    fi
+    if [ xgfxterm = "x$x" ]; then
+        console=1;
+    fi
+    if [ xconsole = "x$x" ]; then
+        console=1;
+    fi
+done
+if [ "x$serial" = "x1" ]; then
+    if [ "x$console" = "x1" ]; then
         out="-Dh"
     else
-        out=""
+        out="-h"
     fi
 fi
 
@@ -143,7 +154,11 @@ display_loaderopts()
       echo "$line" | grep -q "vfs.root.mountfrom"
       if [ $? -eq 0 ] ; then continue ; fi
 
-      echo "    set kFreeBSD.${line}"
+      line="`echo $line | sed 's|"||g'`"
+      key="`echo $line | cut -d '=' -f 1`"
+      val="`echo $line | cut -d '=' -f 2`"
+      if [ -z "$key" -o -z "$val" ] ; then continue ; fi
+      echo "    set kFreeBSD.${key}=\"${val}\""
     done < /tmp/.lSysCtls.$$
   fi
 
@@ -188,14 +203,31 @@ detect_beadm()
 
    if [ -e "/etc/defaults/pcbsd" ] ; then
       NICK="PC-BSD"
-   elif [ -s "/etc/version" ]; then
-      NICK=`cut -f1 -d- /etc/version`
    else
       NICK="TrueOS"
    fi
 
+   # Now we will list all the non-default BEs
+   $BEADM list -H >/tmp/.grub-beadm.$$ 2>/dev/null
+   while read line
+   do
+     be=`echo $line | awk '{print $1}'`
+     flags=`echo $line | awk '{print $2}'`
+
+     # Skip the active BE
+     if [ "$flags" = "NR" -o "$flags" = "R" ] ; then
+	continue
+     fi
+     BE_LIST="${be} ${BE_LIST}"
+   done < /tmp/.grub-beadm.$$
+   rm /tmp/.grub-beadm.$$
+
+   if [  -z "$BE_LIST" ] ; then return; fi
+
+   echo "submenu \"Boot Environment Menu\" {"
+
    # Get list of beadm datasets
-   for b in `${BEADM} list -H 2>/dev/null | awk '{print $1}'`
+   for b in $BE_LIST
    do 
       # Got a beadm snapshot, lets get the complete dataset name
       beLine=`${BEADM} list -a | grep "/$BEDS/${b}"`
@@ -218,24 +250,18 @@ EOF
 
       # Second part of loader to save
       cat > /tmp/.grubdataset.$$.2 << EOF
-    kfreebsd_module ${shortdataset}/@/boot/zfs/rpool.cache type=/boot/zfs/zpool.cache
+    kfreebsd_module ${shortdataset}/@/boot/zfs/zpool.cache type=/boot/zfs/zpool.cache
     set kFreeBSD.vfs.root.mountfrom=zfs:$cdataset
 EOF
       
       # Now lets look for options in loader.conf to load
       loadPrefix="${shortdataset}"
-      # If this dataset is currently mounted, we can skip mounting it
-      mount | grep -q -e "$cdataset on "
+      # If this is the current mounted dataset, we can skip mounting it
+      mount | grep -q -e "$cdataset on / (" -e "$cdataset on /mnt ("
       if [ $? -eq 0 ] ; then
         display_loaderopts >>/tmp/.grubdataset.$$.2
       else
         display_loaderopts $cdataset >> /tmp/.grubdataset.$$.2
-      fi
-
-      # Let's see if this is the default BE
-      bootfs=$(zpool list -Ho bootfs ${cdataset%%/*})
-      if [ "${bootfs}" = "${cdataset}" ]; then
-        DEFAULT_BE="${NICK} ($b) - ${cdatadate} ${cdatatime}"
       fi
 
       # Lets start a submenu for each BE
@@ -253,7 +279,6 @@ EOF
   cat /tmp/.grubdataset.$$.1
   echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel ${out}"
   echo "    kfreebsd_loadenv ${shortdataset}@/boot/device.hints"
-  echo '    set kFreeBSD.kernelname="/boot/kernel/kernel"'
   cat /tmp/.grubdataset.$$.2
 
   # Set any options
@@ -270,7 +295,6 @@ EOF
   cat /tmp/.grubdataset.$$.1
   echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel ${out} -s"
   echo "    kfreebsd_loadenv ${shortdataset}@/boot/device.hints"
-  echo '    set kFreeBSD.kernelname="/boot/kernel/kernel"'
   cat /tmp/.grubdataset.$$.2
 
   # Set any options
@@ -287,7 +311,6 @@ EOF
   cat /tmp/.grubdataset.$$.1
   echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel ${out} -v"
   echo "    kfreebsd_loadenv ${shortdataset}@/boot/device.hints"
-  echo '    set kFreeBSD.kernelname="/boot/kernel/kernel"'
   cat /tmp/.grubdataset.$$.2
 
   # Set any options
@@ -305,7 +328,6 @@ EOF
     cat /tmp/.grubdataset.$$.1
     echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel"
     echo "    kfreebsd_loadenv ${shortdataset}@/boot/device.hints"
-    echo '    set kFreeBSD.kernelname="/boot/kernel/kernel"'
     cat /tmp/.grubdataset.$$.2
 
     # Set any options
@@ -322,7 +344,6 @@ EOF
     cat /tmp/.grubdataset.$$.1
     echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel"
     echo "    kfreebsd_loadenv ${shortdataset}@/boot/device.hints"
-    echo '    set kFreeBSD.kernelname="/boot/kernel/kernel"'
     cat /tmp/.grubdataset.$$.2
 
     # Set any options
@@ -356,9 +377,9 @@ EOF
 EOF
    done
 
-   if [ -n "${DEFAULT_BE}" ]; then
-     echo "set default=\"${DEFAULT_BE}\""
-   fi
+   echo "}"
+   echo ""
+
    # Cleanup after ourselves
    if [ -e "/tmp/.grubdataset.$$.1" ] ; then
      rm /tmp/.grubdataset.$$.1
