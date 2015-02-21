@@ -31,6 +31,15 @@ ROOTFS=`mount | awk '/ \/ / {print $1}'`
 BEDS="$( echo ${ROOTFS} | awk -F '/' '{print $2}' )"
 if [ "$BEDS" = "dev" ] ; then BEDS="ROOT"; fi
 
+if [ -f /data/freenas-v1.db ]; then
+    # FreeNAS install
+    ser=$(/usr/local/bin/sqlite3 /data/freenas-v1.db "SELECT adv_serialconsole FROM system_advanced")
+    if [ ${ser} -eq 1 ]; then
+        out="-Dh"
+    else
+        out=""
+    fi
+fi
 
 display_loaderopts()
 {
@@ -208,7 +217,7 @@ EOF
 EOF
   # Get the dataset guts
   cat /tmp/.grubdataset.$$.1
-  echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel"
+  echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel ${out}"
   echo "    kfreebsd_loadenv ${shortdataset}@/boot/device.hints"
   echo '    set kFreeBSD.kernelname="/boot/kernel/kernel"'
   cat /tmp/.grubdataset.$$.2
@@ -225,7 +234,7 @@ EOF
 EOF
   # Get the dataset guts
   cat /tmp/.grubdataset.$$.1
-  echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel -s"
+  echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel ${out} -s"
   echo "    kfreebsd_loadenv ${shortdataset}@/boot/device.hints"
   echo '    set kFreeBSD.kernelname="/boot/kernel/kernel"'
   cat /tmp/.grubdataset.$$.2
@@ -242,7 +251,7 @@ EOF
 EOF
   # Get the dataset guts
   cat /tmp/.grubdataset.$$.1
-  echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel -v"
+  echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel ${out} -v"
   echo "    kfreebsd_loadenv ${shortdataset}@/boot/device.hints"
   echo '    set kFreeBSD.kernelname="/boot/kernel/kernel"'
   cat /tmp/.grubdataset.$$.2
