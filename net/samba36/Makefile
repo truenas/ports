@@ -339,7 +339,6 @@ SAMBA_WANT_LDAP=	yes
 
 .if defined(SAMBA_WANT_LDAP)
 USE_OPENLDAP=		yes
-WANT_OPENLDAP_SASL=	yes
 CONFIGURE_ARGS+=	--with-ldap
 .else
 CONFIGURE_ARGS+=	--without-ldap
