@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# $FreeBSD$
+# $FreeBSD: head/security/sssd/files/sssd.in 354743 2014-05-21 11:46:16Z feld $
 #
 
 # PROVIDE: sssd
