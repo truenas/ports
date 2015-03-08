@@ -143,19 +143,6 @@ for x in ${GRUB_TERMINAL_INPUT} ${GRUB_TERMINAL_OUTPUT}; do
 done
 
 if [ "x$serial" = x1 ]; then
-    if [ -f /data/freenas-v1.db ]; then
-        # FreeNAS install
-       GRUB_SERIAL_COMMAND=serial
-        ser=$(/usr/local/bin/sqlite3 /data/freenas-v1.db "SELECT adv_serialconsole FROM system_advanced")
-        if [ ${ser} -eq 1 ]; then
-            port=$(/usr/local/bin/sqlite3 /data/freenas-v1.db "SELECT adv_serialport FROM system_advanced")
-            bps=$(/usr/local/bin/sqlite3 /data/freenas-v1.db "SELECT adv_serialspeed FROM system_advanced")
-            unit=$(/usr/sbin/devinfo -u | grep ${port} | awk '{print $2}' | sed -e 's/^(uart//' -e 's/)$//')
-            GRUB_SERIAL_COMMAND="serial --unit=${unit} --port=${port} --speed=${bps}"
-            echo "terminal_output serial console"
-            echo "terminal_input serial console"
-        fi
-    fi
     if [ "x${GRUB_SERIAL_COMMAND}" = "x" ] ; then
 	grub_warn "$(gettext "Requested serial terminal but GRUB_SERIAL_COMMAND is unspecified. Default parameters will be used.")"
 	GRUB_SERIAL_COMMAND=serial
@@ -239,7 +226,6 @@ fi
 EOF
 fi
 
-if ! [ -f /data/freenas-v1.db ]; then
 case x${GRUB_TERMINAL_INPUT} in
   x)
     # Just use the native terminal
@@ -261,7 +247,6 @@ terminal_output ${GRUB_TERMINAL_OUTPUT}
 EOF
   ;;
 esac
-fi
 
 if [ "x$gfxterm" = x1 ]; then
     if [ "x$GRUB_THEME" != x ] && [ -f "$GRUB_THEME" ] \
