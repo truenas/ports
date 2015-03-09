@@ -1,15 +1,16 @@
 # Created by: timur@FreeBSD.org
-# $FreeBSD$
+# $FreeBSD: head/net/samba41/Makefile 377151 2015-01-16 03:54:21Z timur $
 
 PORTNAME?=		${SAMBA4_BASENAME}41
 PORTVERSION?=		${SAMBA4_VERSION}
+PORTREVISION?=		0
 CATEGORIES?=		net
 MASTER_SITES=		${MASTER_SITE_SAMBA}
 MASTER_SITE_SUBDIR=	samba/stable samba/rc
 DISTNAME=		${SAMBA4_DISTNAME}
 
 MAINTAINER?=		timur@FreeBSD.org
-COMMENT?=		A free SMB/CIFS and AD/DC server and client for UNIX
+COMMENT?=		Free SMB/CIFS and AD/DC server and client for Unix
 
 LICENSE=		GPLv3
 
@@ -23,6 +24,8 @@ SAMBA4_DISTNAME=	${SAMBA4_BASENAME}-${SAMBA4_VERSION:S|.p|pre|:S|.r|rc|:S|.t|tp|
 WRKSRC?=		${WRKDIR}/${DISTNAME}
 
 .if !defined(SAMBA4_SUBPORT)
+CPE_VENDOR=		samba
+CPE_PRODUCT=		samba
 # Directories
 VARDIR=			${DESTDIR}/var
 SAMBA4_RUNDIR=		${VARDIR}/run/${SAMBA4_PORTNAME}
@@ -34,9 +37,6 @@ SAMBA4_MODULEDIR=	${SAMBA4_LIBDIR}/shared-modules
 SAMBA4_INCLUDEDIR=	${PREFIX}/include/${SAMBA4_PORTNAME}
 SAMBA4_CONFDIR=		${PREFIX}/etc
 SAMBA4_CONFIG=		smb4.conf
-
-USE_GCC=		4.7+
-CFLAGS=			-g3 -ggdb -O0
 
 CONFIGURE_ARGS+=	--prefix="${PREFIX}" \
 			--exec-prefix="${PREFIX}" \
@@ -57,7 +57,6 @@ CONFIGURE_ARGS+=	--prefix="${PREFIX}" \
 			--with-statedir="${SAMBA4_LOCKDIR}" \
 			--with-cachedir="${SAMBA4_LOCKDIR}" \
 			--with-privatedir="${SAMBA4_PRIVATEDIR}" \
-			--disable-fault-handling \
 			--with-logfilebase="${SAMBA4_LOGDIR}"
 # Support staging
 DESTDIRNAME=		--destdir
@@ -65,10 +64,8 @@ DESTDIRNAME=		--destdir
 CONFIGURE_ENV+=		PTHREAD_CFLAGS="${PTHREAD_CFLAGS}" \
 			PTHREAD_LDFLAGS="${PTHREAD_LIBS}"
 
-USE_PYTHON_BUILD=	-2.7
-
-USE_PYTHON=		yes
-USES=			compiler perl5 pkgconfig iconv
+USES=			compiler cpe execinfo iconv perl5 pkgconfig \
+			python:2 readline shebangfix
 USE_PERL5=		build
 USE_LDCONFIG=		${SAMBA4_LIBDIR}
 WAF_TOOL=		buildtools/bin/waf
@@ -76,12 +73,13 @@ CONFIGURE_LOG=		bin/config.log
 
 PKGCONFIGDIR?=		${PREFIX}/libdata/pkgconfig
 PLIST_SUB+=		PKGCONFIGDIR=${PKGCONFIGDIR:S;${PREFIX}/;;}
-# XXX: Unconditional dependencies which can't be switched off(if present in the system)
+# XXX: Unconditional dependencies which can't be switched off (if present
+# in the system)
 # popt
 LIB_DEPENDS+=		libpopt.so:${PORTSDIR}/devel/popt
-# XXX: We should try to switch to libunwind, libexecinfo is gcc specific(?)
+# XXX: We should try to switch to libunwind, libexecinfo is gcc specific(?)  
 # backtrace
-LIB_DEPENDS+=		libexecinfo.so:${PORTSDIR}/devel/libexecinfo
+LIB_DEPENDS+=           libexecinfo.so:${PORTSDIR}/devel/libexecinfo
 # inotify
 LIB_DEPENDS+=		libinotify.so:${PORTSDIR}/devel/libinotify
 # SASL
@@ -94,42 +92,50 @@ LIB_DEPENDS+=		libsunacl.so:${PORTSDIR}/sysutils/libsunacl
 # External Samba dependencies
 # IDL compiler
 BUILD_DEPENDS+=		p5-Parse-Pidl>=4.0.0:${PORTSDIR}/devel/p5-Parse-Pidl
+# 
+BUILD_DEPENDS+=		${PYTHON_PKGNAMEPREFIX}dnspython>=1.9.4:${PORTSDIR}/dns/py-dnspython
+RUN_DEPENDS+=		${PYTHON_PKGNAMEPREFIX}dnspython>=1.9.4:${PORTSDIR}/dns/py-dnspython
+PLIST_SUB+=		PY_DNSPYTHON="@comment "
 # talloc
-BUILD_DEPENDS+=		talloc>=2.0.8:${PORTSDIR}/devel/talloc
-RUN_DEPENDS+=		talloc>=2.0.8:${PORTSDIR}/devel/talloc
+BUILD_DEPENDS+=		talloc>=2.1.0:${PORTSDIR}/devel/talloc
+RUN_DEPENDS+=		talloc>=2.1.0:${PORTSDIR}/devel/talloc
 SAMBA4_BUNDLED_LIBS+=	!talloc
 # tevent
 BUILD_DEPENDS+=		tevent>=0.9.18:${PORTSDIR}/devel/tevent
 RUN_DEPENDS+=		tevent>=0.9.18:${PORTSDIR}/devel/tevent
 SAMBA4_BUNDLED_LIBS+=	!tevent
 # tdb
-BUILD_DEPENDS+=		tdb>=1.2.11:${PORTSDIR}/databases/tdb
-RUN_DEPENDS+=		tdb>=1.2.11:${PORTSDIR}/databases/tdb
+BUILD_DEPENDS+=		tdb>=1.2.12:${PORTSDIR}/databases/tdb
+RUN_DEPENDS+=		tdb>=1.2.12:${PORTSDIR}/databases/tdb
 SAMBA4_BUNDLED_LIBS+=	!tdb
+# ntdb
+BUILD_DEPENDS+=		ntdb>=1.0:${PORTSDIR}/databases/ntdb
+RUN_DEPENDS+=		ntdb>=1.0:${PORTSDIR}/databases/ntdb
+SAMBA4_BUNDLED_LIBS+=	!ntdb
 # ldb
-BUILD_DEPENDS+=		ldb>=1.1.15:${PORTSDIR}/databases/ldb
-RUN_DEPENDS+=		ldb>=1.1.15:${PORTSDIR}/databases/ldb
+BUILD_DEPENDS+=		ldb>=1.1.17:${PORTSDIR}/databases/ldb
+RUN_DEPENDS+=		ldb>=1.1.17:${PORTSDIR}/databases/ldb
 SAMBA4_BUNDLED_LIBS+=	!ldb
 # Don't use external libcom_err
 SAMBA4_BUNDLED_LIBS+=	com_err
-
-# dns python library
-BUILD_DEPENDS+=		${PYTHON_PKGNAMEPREFIX}dnspython>0:${PORTSDIR}/dns/py-dnspython
 ##############################################################################
 # Options
-OPTIONS_DEFINE=		ACL_SUPPORT ADS AIO_SUPPORT CUPS DEBUG \
-			DNSUPDATE FAM_SUPPORT LDAP PAM_SMBPASS \
+OPTIONS_DEFINE=		ACL_SUPPORT AD_DC ADS AIO_SUPPORT CUPS DEBUG \
+			DNSUPDATE DOCS FAM LDAP PAM_SMBPASS \
 			PTHREADPOOL QUOTAS SYSLOG UTMP
 
-OPTIONS_DEFAULT:=	${OPTIONS_DEFINE}
+OPTIONS_DEFAULT=	ACL_SUPPORT AD_DC ADS AIO_SUPPORT DEBUG \
+			DNSUPDATE DOCS FAM LDAP \
+			PTHREADPOOL QUOTAS SYSLOG UTMP
 
 ACL_SUPPORT_DESC=	File system ACL support
-ADS_DESC=		Active Directory support
-AIO_SUPPORT_DESC=	Asyncronous IO support
-DNSUPDATE_DESC=		Dynamic DNS update(require ADS)
+AD_DC_DESC=		Active Directory Domain Controller support
+ADS_DESC=		Active Directory client support
+AIO_SUPPORT_DESC=	Asynchronous IO support
+DNSUPDATE_DESC=		Dynamic DNS update (requires ADS)
 EXP_MODULES_DESC=	Experimental modules
-FAM_SUPPORT_DESC=	File Alteration Monitor support
 DEBUG_DESC=		With debug information in the binaries
+LDAP_DESC=		LDAP client support
 PAM_SMBPASS_DESC=	PAM authentication via passdb backends
 PTHREADPOOL_DESC=	Pthread pool
 QUOTAS_DESC=		Disk quota support
@@ -138,18 +144,15 @@ UTMP_DESC=		UTMP accounting support
 OPTIONS_DEFINE+=	DEVELOPER MANPAGES EXP_MODULES
 
 DEVELOPER_DESC=		With development support
+MANPAGES_DESC=		Build manpages from DOCBOOK templates
 
-OPTIONS_SINGLE=		DNS
-OPTIONS_SINGLE_DNS=	NSUPDATE BIND98 BIND99
-
-BIND98_DESC=		Use bind98 as a DNS server frontend
-BIND99_DESC=		Use bind99 as a DNS server frontend
-NSUPDATE_DESC=		Use internal DNS with NSUPDATE utility
-OPTIONS_DEFAULT+=	NSUPDATE
-
-OPTIONS_RADIO=		ZEROCONF
+OPTIONS_RADIO=		DNS ZEROCONF
+OPTIONS_RADIO_DNS=	NSUPDATE BIND99 BIND910
 OPTIONS_RADIO_ZEROCONF=	AVAHI MDNSRESPONDER
-OPTIONS_DEFAULT+=	AVAHI
+
+BIND99_DESC=		Use bind99 as AD DC DNS server frontend
+BIND910_DESC=		Use bind910 as AD DC DNS server frontend
+NSUPDATE_DESC=		Use samba NSUPDATE utility for AD DC
 
 .include <bsd.port.options.mk>
 
@@ -167,11 +170,11 @@ CONFIGURE_ARGS+=	\
 CFLAGS+=		-fno-omit-frame-pointer
 .endif
 
-.if ${PORT_OPTIONS:MBIND98}
-RUN_DEPENDS+=		bind98>=9.8.0.0:${PORTSDIR}/dns/bind98
-SUB_LIST+=		NSUPDATE="@comment "
-.elif ${PORT_OPTIONS:MBIND99}
+.if ${PORT_OPTIONS:MBIND99}
 RUN_DEPENDS+=		bind99>=9.9.0.0:${PORTSDIR}/dns/bind99
+SUB_LIST+=		NSUPDATE="@comment "
+.elif ${PORT_OPTIONS:MBIND910}
+RUN_DEPENDS+=		bind910>=9.10.0.0:${PORTSDIR}/dns/bind910
 SUB_LIST+=		NSUPDATE="@comment "
 .elif ${PORT_OPTIONS:MNSUPDATE}
 RUN_DEPENDS+=		samba-nsupdate:${PORTSDIR}/dns/samba-nsupdate
@@ -187,7 +190,7 @@ CONFIGURE_ARGS+=	--enable-debug
 
 # https://bugzilla.samba.org/show_bug.cgi?id=8969
 .if ${PORT_OPTIONS:MDEVELOPER}
-GDB_CMD?=		gdb761
+GDB_CMD?=		gdb78
 BUILD_DEPENDS+=		${GDB_CMD}:${PORTSDIR}/devel/gdb
 RUN_DEPENDS+=		${GDB_CMD}:${PORTSDIR}/devel/gdb
 SAMBA4_MODULES+=	auth_skel perfcount_test pdb_test vfs_shadow_copy_test vfs_skel_opaque vfs_skel_transparent vfs_fake_acls
@@ -200,7 +203,7 @@ PLIST_SUB+=		DEVELOPER="@comment "
 ##############################################################################
 # XXX: That will blow up your installation
 # https://bugzilla.samba.org/show_bug.cgi?id=9302
-#.if defined(CRAZY)
+.if defined(CRAZY)
 WANT_EXP_MODULES=	auth_samba4 auth_script auth_skel auth_unix auth_wbc \
 			gpext_registry gpext_scripts gpext_security idmap_ad \
 			idmap_autorid idmap_hash idmap_ldap idmap_passdb \
@@ -218,7 +221,7 @@ WANT_EXP_MODULES=	auth_samba4 auth_script auth_skel auth_unix auth_wbc \
 			vfs_skel_transparent vfs_smb_traffic_analyzer vfs_streams_depot \
 			vfs_streams_xattr vfs_syncops vfs_time_audit \
 			vfs_xattr_tdb vfs_zfsacl
-#.endif
+.endif
 
 .if ${PORT_OPTIONS:MEXP_MODULES}
 .	if !defined(WANT_EXP_MODULES) || empty(WANT_EXP_MODULES)
@@ -235,6 +238,13 @@ SAMBA4_MODULES+=	vfs_zfsacl
 CONFIGURE_ARGS+=	--with-acl-support
 .else
 CONFIGURE_ARGS+=	--without-acl-support
+.endif
+
+.if ! ${PORT_OPTIONS:MAD_DC}
+CONFIGURE_ARGS+=	--without-ad-dc
+PLIST_SUB+=		AD_DC="@comment "
+.else
+PLIST_SUB+=		AD_DC=""
 .endif
 
 .if ${PORT_OPTIONS:MADS}
@@ -278,7 +288,7 @@ CONFIGURE_ARGS+=	--without-dnsupdate
 .endif
 
 # https://bugzilla.samba.org/show_bug.cgi?id=9545
-.if ${PORT_OPTIONS:MFAM_SUPPORT}
+.if ${PORT_OPTIONS:MFAM}
 USES+=			fam
 CONFIGURE_ARGS+=	--with-fam
 WANT_EXP_MODULES+=	vfs_notify_fam
@@ -332,6 +342,7 @@ CONFIGURE_ARGS+=	--without-ads
 
 .if defined(SAMBA4_WANT_LDAP)
 USE_OPENLDAP=		yes
+#WANT_OPENLDAP_SASL=	yes
 CONFIGURE_ARGS+=	--with-ldap
 PLIST_SUB+=		LDAP=""
 .else
@@ -339,21 +350,6 @@ CONFIGURE_ARGS+=	--without-ldap
 PLIST_SUB+=		LDAP="@comment "
 .endif
 
-.if defined(WANT_EXP_MODULES) && !empty(WANT_EXP_MODULES)
-SAMBA4_MODULES+=	${WANT_EXP_MODULES}
-CONFIGURE_ARGS+=	--with-shared-modules="${WANT_EXP_MODULES:Q:C|(\\\\ )+|,|g:S|\\||g}"
-.endif
-
-.if defined(SAMBA4_BUNDLED_LIBS) && !empty(SAMBA4_BUNDLED_LIBS)
-CONFIGURE_ARGS+=	--bundled-libraries="${SAMBA4_BUNDLED_LIBS:Q:C|(\\\\ )+|,|g:S|\\||g}"
-.endif
-
-# XXX
-.for m in ${SAMBA4_MODULES}
-PLIST_REINPLACE+=	${m}
-PLIST_REINPLACE_${m:U}=	s|^@comment ${m} ||g
-.endfor
-##############################################################################
 .if ! ${PORT_OPTIONS:MMANPAGES}
 CONFIGURE_ENV+=		XSLTPROC="true"
 .else
@@ -361,6 +357,29 @@ BUILD_DEPENDS+=		${LOCALBASE}/share/xsl/docbook/manpages/docbook.xsl:${PORTSDIR}
 			xsltproc:${PORTSDIR}/textproc/libxslt
 .endif
 
+.if defined(SAMBA4_BUNDLED_LIBS) && !empty(SAMBA4_BUNDLED_LIBS)
+CONFIGURE_ARGS+=	--bundled-libraries="${SAMBA4_BUNDLED_LIBS:Q:C|(\\\\ )+|,|g:S|\\||g}"
+.endif
+
+.if defined(WANT_EXP_MODULES) && !empty(WANT_EXP_MODULES)
+SAMBA4_MODULES+=	${WANT_EXP_MODULES}
+CONFIGURE_ARGS+=	--with-shared-modules="${WANT_EXP_MODULES:Q:C|(\\\\ )+|,|g:S|\\||g}"
+.endif
+
+# XXX: Dirty
+.for module in	auth_samba4 auth_skel auth_unix auth_wbc gpext_registry gpext_scripts \
+		gpext_security idmap_ad idmap_ldap idmap_nss idmap_passdb idmap_tdb \
+		nss_info_template pdb_ldap pdb_samba_dsdb pdb_smbpasswd pdb_tdbsam \
+		pdb_test pdb_wbc_sam perfcount_test vfs_aio_posix vfs_aio_pthread \
+		vfs_cacheprime vfs_dfs_samba4 vfs_fake_acls vfs_notify_fam \
+		vfs_shadow_copy_test vfs_skel_opaque vfs_skel_transparent
+.	if !empty(SAMBA4_MODULES) && ${SAMBA4_MODULES:M${module}}
+PLIST_SUB+=		MODULE_${module:tu}=""
+.	else
+PLIST_SUB+=		MODULE_${module:tu}="@comment "
+.	endif
+.endfor
+##############################################################################
 # !SAMBA4_SUBPORT
 .endif
 
@@ -381,7 +400,11 @@ SUB_LIST+=		${SAMBA4_SUB}
 
 USE_RC_SUBR=		samba_server
 SUB_FILES=		pkg-message README.FreeBSD
-
+# Make sure that the right version of Python is used by the tools
+# https://bugzilla.samba.org/show_bug.cgi?id=7305
+python_CMD=		${PYTHON_CMD}
+python_OLD_CMD=		${SETENV} python
+SHEBANG_FILES=		${PATCH_WRKSRC}/source4/scripting/bin/*
 # No fancy color error messages
 .if ${COMPILER_TYPE} == "clang"
 CFLAGS+=		-fno-color-diagnostics
@@ -402,8 +425,6 @@ SAMBA_MAN1+=		dbwrap_tool.1 findsmb.1 gentest.1 locktest.1 \
 			smbclient.1 smbcontrol.1 smbcquotas.1 smbget.1 \
 			smbstatus.1 smbtar.1 smbtorture.1 smbtree.1 \
 			testparm.1 vfstest.1 wbinfo.1
-
-SAMBA_MAN3+=		ntdb.3
 
 SAMBA_MAN5+=		lmhosts.5 smbgetrc.5 smbpasswd.5 pam_winbind.conf.5 \
 			smb.conf.5
@@ -426,14 +447,13 @@ SAMBA_MAN8+=		eventlogadm.8 idmap_ad.8 idmap_autorid.8 idmap_hash.8 \
 			vfs_shadow_copy2.8 vfs_smb_traffic_analyzer.8 \
 			vfs_streams_depot.8 vfs_streams_xattr.8 vfs_syncops.8 vfs_time_audit.8 \
 			vfs_tsmsm.8 vfs_xattr_tdb.8 winbindd.8 \
-			vfs_linux_xfs_sgid.8 vfs_btrfs.8 \
-			ntdbbackup.8 ntdbdump.8 ntdbrestore.8 ntdbtool.8
+			vfs_linux_xfs_sgid.8 vfs_btrfs.8
 
 PORTDOCS=		README.FreeBSD
 
+CONFIGURE_TARGET=	configure
 ALL_TARGET=		build
 INSTALL_TARGET=		install
-CONFIGURE_TARGET=	configure
 
 IGNORE_NONTHREAD_PYTHON=needs port lang/python${PYTHON_SUFFIX} to be build with THREADS support
 
@@ -450,11 +470,6 @@ post-patch:
 				${PATCH_WRKSRC}/buildtools/scripts/abi_gen.sh
 			@${REINPLACE_CMD} -e 's|%%SAMBA4_CONFIG%%|${SAMBA4_CONFIG}|g' \
 				${PATCH_WRKSRC}/dynconfig/wscript
-# Make sure that the right version of Python is used by the tools
-# https://bugzilla.samba.org/show_bug.cgi?id=7305
-			@for f in ${PATCH_WRKSRC}/source4/scripting/bin/*; do \
-				${REINPLACE_CMD} -e '1,1 s|.*python.*|#!${PYTHON_CMD}|' $${f}; \
-			done
 
 # Use threading (or multiprocessing) but not thread (renamed in python 3+).
 pre-configure:
@@ -482,6 +497,13 @@ do-configure:
 						${FALSE}; \
 				fi)
 
+# XXX: Gross hack to allow build newer Samba while old one is installed.
+# This implies that LINKFLAGS_PYEMBED contains flags which are already
+# used in other parts of LINKFLAGS, namely -L$(LOCALBASE)/lib and -pthread
+post-configure:
+	-${REINPLACE_CMD} -e 's|LINKFLAGS_PYEMBED.*|LINKFLAGS_PYEMBED = []|' \
+		${CONFIGURE_WRKSRC}/bin/c4che/default.cache.py
+
 pre-build:
 .if ! ${PORT_OPTIONS:MMANPAGES}
 .	for man in	libcli/nbt/man/nmblookup4.1 \
@@ -495,17 +517,12 @@ pre-build:
 			source4/torture/man/masktest.1 \
 			source4/torture/man/smbtorture.1 \
 			source4/utils/man/ntlm_auth4.1 \
-			source4/utils/man/oLschema2ldif.1 \
-			lib/ntdb/man/ntdb.3 \
-			lib/ntdb/man/ntdbbackup.8 \
-			lib/ntdb/man/ntdbdump.8 \
-			lib/ntdb/man/ntdbrestore.8 \
-			lib/ntdb/man/ntdbtool.8
+			source4/utils/man/oLschema2ldif.1
 			-@${MKDIR} `dirname ${BUILD_WRKSRC}/bin/default/${man}`
 			@${INSTALL_MAN} ${FILESDIR}/man/`basename ${man}` ${BUILD_WRKSRC}/bin/default/${man}
 .	endfor
 			-@${MKDIR} ${BUILD_WRKSRC}/bin/default/docs-xml/manpages
-.	for man in ${SAMBA_MAN1} ${SAMBA_MAN3} ${SAMBA_MAN5} ${SAMBA_MAN7} ${SAMBA_MAN8}
+.	for man in ${SAMBA_MAN1} ${SAMBA_MAN5} ${SAMBA_MAN7} ${SAMBA_MAN8}
 			-@${INSTALL_MAN} ${BUILD_WRKSRC}/docs/manpages/${man} ${BUILD_WRKSRC}/bin/default/docs-xml/manpages
 .	endfor
 .endif
@@ -524,15 +541,15 @@ do-install:
 			@(cd ${INSTALL_WRKSRC} && ${SETENV} ${MAKE_ENV} ${PYTHON_CMD} ${INSTALL_WRKSRC}/${WAF_TOOL} ${MAKE_ARGS} ${INSTALL_TARGET})
 
 post-install:
+			@${LN} -sf smb.conf.5.gz ${STAGEDIR}${PREFIX}/man/man5/smb4.conf.5.gz
 .if ${PORT_OPTIONS:MDOCS}
 			@${MKDIR} ${STAGEDIR}${DOCSDIR}
 .	for doc in ${PORTDOCS}
 			@${INSTALL_DATA} ${WRKDIR}/${doc} ${STAGEDIR}${DOCSDIR}
 .	endfor
-			@${LN} -sf smb.conf.5.gz ${STAGEDIR}${PREFIX}/man/man5/smb4.conf.5.gz
 .endif
 # Run post-install script
-.for dir in ${SAMBA4_LOGDIR} ${SAMBA4_RUNDIR} ${SAMBA4_LOCKDIR} ${STAGEDIR}${SAMBA4_MODULEDIR} ${SAMBA4_PRIVATEDIR}
+.for dir in ${SAMBA4_LOGDIR} ${SAMBA4_RUNDIR} ${SAMBA4_LOCKDIR} ${SAMBA4_MODULEDIR} ${SAMBA4_PRIVATEDIR}
 			@${MKDIR} "${STAGEDIR}${dir}"
 .endfor
 .for dir in auth bind9 gensec gpext idmap ldb nss_info pdb perfcount process_model service vfs
