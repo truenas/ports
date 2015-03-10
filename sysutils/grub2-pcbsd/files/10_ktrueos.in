@@ -266,7 +266,7 @@ EOF
       # Let's see if this is the default BE
       bootfs=$(zpool list -Ho bootfs ${cdataset%%/*})
       if [ "${bootfs}" = "${cdataset}" ]; then
-        DEFAULT_BE="${NICK} ($b) - ${cdatadate} ${cdatatime}"
+        DEFAULT_BE="${NICK} (${beNickName}) - ${cdatadate} ${cdatatime}"
       fi
 
       # Lets start a submenu for each BE
