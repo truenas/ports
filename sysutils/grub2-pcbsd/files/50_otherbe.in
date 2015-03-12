@@ -31,24 +31,13 @@ ROOTFS=`mount | awk '/ \/ / {print $1}'`
 BEDS="$( echo ${ROOTFS} | awk -F '/' '{print $2}' )"
 if [ "$BEDS" = "dev" ] ; then BEDS="ROOT"; fi
 
-serial=0;
-console=0;
-for x in ${GRUB_TERMINAL_OUTPUT}; do
-    if [ xserial = "x$x" ]; then
-        serial=1;
-    fi
-    if [ xgfxterm = "x$x" ]; then
-        console=1;
-    fi
-    if [ xconsole = "x$x" ]; then
-        console=1;
-    fi
-done
-if [ "x$serial" = "x1" ]; then
-    if [ "x$console" = "x1" ]; then
+if [ -f /data/freenas-v1.db ]; then
+    # FreeNAS install
+    ser=$(/usr/local/bin/sqlite3 /data/freenas-v1.db "SELECT adv_serialconsole FROM system_advanced")
+    if [ "${ser}" -eq 1 ]; then
         out="-Dh"
     else
-        out="-h"
+        out=""
     fi
 fi
 
@@ -154,11 +143,7 @@ display_loaderopts()
       echo "$line" | grep -q "vfs.root.mountfrom"
       if [ $? -eq 0 ] ; then continue ; fi
 
-      line="`echo $line | sed 's|"||g'`"
-      key="`echo $line | cut -d '=' -f 1`"
-      val="`echo $line | cut -d '=' -f 2`"
-      if [ -z "$key" -o -z "$val" ] ; then continue ; fi
-      echo "    set kFreeBSD.${key}=\"${val}\""
+      echo "    set kFreeBSD.${line}"
     done < /tmp/.lSysCtls.$$
   fi
 
@@ -250,14 +235,14 @@ EOF
 
       # Second part of loader to save
       cat > /tmp/.grubdataset.$$.2 << EOF
-    kfreebsd_module ${shortdataset}/@/boot/zfs/zpool.cache type=/boot/zfs/zpool.cache
+    kfreebsd_module ${shortdataset}/@/boot/zfs/rpool.cache type=/boot/zfs/zpool.cache
     set kFreeBSD.vfs.root.mountfrom=zfs:$cdataset
 EOF
       
       # Now lets look for options in loader.conf to load
       loadPrefix="${shortdataset}"
-      # If this is the current mounted dataset, we can skip mounting it
-      mount | grep -q -e "$cdataset on / (" -e "$cdataset on /mnt ("
+      # If this dataset is currently mounted, we can skip mounting it
+      mount | grep -q -e "$cdataset on "
       if [ $? -eq 0 ] ; then
         display_loaderopts >>/tmp/.grubdataset.$$.2
       else
@@ -279,6 +264,7 @@ EOF
   cat /tmp/.grubdataset.$$.1
   echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel ${out}"
   echo "    kfreebsd_loadenv ${shortdataset}@/boot/device.hints"
+  echo '    set kFreeBSD.kernelname="/boot/kernel/kernel"'
   cat /tmp/.grubdataset.$$.2
 
   # Set any options
@@ -295,6 +281,7 @@ EOF
   cat /tmp/.grubdataset.$$.1
   echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel ${out} -s"
   echo "    kfreebsd_loadenv ${shortdataset}@/boot/device.hints"
+  echo '    set kFreeBSD.kernelname="/boot/kernel/kernel"'
   cat /tmp/.grubdataset.$$.2
 
   # Set any options
@@ -311,6 +298,7 @@ EOF
   cat /tmp/.grubdataset.$$.1
   echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel ${out} -v"
   echo "    kfreebsd_loadenv ${shortdataset}@/boot/device.hints"
+  echo '    set kFreeBSD.kernelname="/boot/kernel/kernel"'
   cat /tmp/.grubdataset.$$.2
 
   # Set any options
@@ -328,6 +316,7 @@ EOF
     cat /tmp/.grubdataset.$$.1
     echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel"
     echo "    kfreebsd_loadenv ${shortdataset}@/boot/device.hints"
+    echo '    set kFreeBSD.kernelname="/boot/kernel/kernel"'
     cat /tmp/.grubdataset.$$.2
 
     # Set any options
@@ -344,6 +333,7 @@ EOF
     cat /tmp/.grubdataset.$$.1
     echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel"
     echo "    kfreebsd_loadenv ${shortdataset}@/boot/device.hints"
+    echo '    set kFreeBSD.kernelname="/boot/kernel/kernel"'
     cat /tmp/.grubdataset.$$.2
 
     # Set any options
