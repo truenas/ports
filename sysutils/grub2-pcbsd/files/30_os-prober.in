@@ -121,14 +121,5 @@ do
        rmdir $uefimnt
     fi
 
-  else
-    # Add BIOS chainloader
-    cat << EOF
-menuentry "Chainload Disk (hd${hdnum})" {
-   set root=(hd${hdnum})
-   chainloader +1
-}
-EOF
-  fi
   hdnum=`expr $hdnum + 1`
 done
