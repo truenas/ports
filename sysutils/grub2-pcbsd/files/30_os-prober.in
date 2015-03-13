@@ -120,6 +120,7 @@ do
        umount $uefimnt
        rmdir $uefimnt
     fi
+  fi
 
   hdnum=`expr $hdnum + 1`
 done
