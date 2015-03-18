@@ -2,13 +2,12 @@
 # $FreeBSD$
 
 PORTNAME=	sqlparse
-PORTVERSION=	0.1.2
-PORTREVISION=	1
+PORTVERSION=	0.1.14
 CATEGORIES=	databases python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	roland@micite.net
+MAINTAINER=	wg@FreeBSD.org
 COMMENT=	Non-validating SQL parser for Python
 
 LICENSE=	BSD3CLAUSE
@@ -16,7 +15,5 @@ LICENSE=	BSD3CLAUSE
 USES=		python
 USE_PYTHON=	distutils autoplist
 
-post-patch:
-	@${REINPLACE_CMD} -e 's|distutils.core|setuptools|g' ${WRKSRC}/setup.py
 
 .include <bsd.port.mk>
