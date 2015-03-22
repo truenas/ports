@@ -31,8 +31,8 @@ BUILD_DEPENDS=	nspr>=4.10.6:${PORTSDIR}/devel/nspr \
 
 LIB_DEPENDS=	libv4l2.so:${PORTSDIR}/multimedia/libv4l
 
-EM_VERSION=	1.7.2
-L_VERSION=	3.3.2
+EM_VERSION=	1.8
+L_VERSION=	3.3.5
 
 SSP_UNSAFE=	yes
 OBJDIR_BUILD=	# in-tree build broken after bug 789837
