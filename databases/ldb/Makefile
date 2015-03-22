@@ -29,15 +29,9 @@ PLIST_SUB+=		PKGCONFIGDIR=${PKGCONFIGDIR:S;${PREFIX}/;;}
 CONFIGURE_ARGS+=	--prefix=${PREFIX} \
 			--mandir=${MANPREFIX}/man \
 			--infodir=${PREFIX}/${INFO_PATH}/${INFO_SUBDIR}
-# Support staging
-DESTDIRNAME=		--destdir
 
-OPTIONS_DEFINE=		MANPAGES
-MANPAGES_DESC=		Build and install manpages (requires textproc/docbook-xsl)
-
+NO_STAGE=	yes
 .include <bsd.port.options.mk>
-
-.include <bsd.port.pre.mk>
 
 BUILD_DEPENDS+=		talloc>=2.0.8:${PORTSDIR}/devel/talloc \
 			tevent>=0.9.17:${PORTSDIR}/devel/tevent \
@@ -49,12 +43,14 @@ CONFIGURE_ARGS+=	--bundled-libraries=!talloc,!tevent,!tdb,!popt \
 			--with-modulesdir=${PREFIX}/lib/shared-modules \
 			--with-privatelibdir=${PREFIX}/lib/ldb
 
-.if ! ${PORT_OPTIONS:MMANPAGES}
-CONFIGURE_ENV+=		XSLTPROC="true"
-.else
-BUILD_DEPENDS+=		${LOCALBASE}/share/xsl/docbook/manpages/docbook.xsl:${PORTSDIR}/textproc/docbook-xsl \
-			xsltproc:${PORTSDIR}/textproc/libxslt
-.endif
+MAN1=			ldbadd.1 \
+			ldbdel.1 \
+			ldbedit.1 \
+			ldbmodify.1 \
+			ldbrename.1 \
+			ldbsearch.1
+
+MAN3=			ldb.3
 
 PLIST_DIRSTRY=		lib/ldb \
 			lib/shared-modules/ldb \
@@ -85,20 +81,16 @@ PLIST_FILES=		bin/ldbedit \
 			lib/shared-modules/ldb/tdb.so \
 			%%PKGCONFIGDIR%%/ldb.pc
 
-# No fancy color error messages
-.if ${COMPILER_TYPE} == "clang"
-CFLAGS+=		-fno-color-diagnostics
-.endif
+CONFIGURE_ENV+=		XSLTPROC="/usr/bin/true"
 CONFIGURE_ENV+=		NOCOLOR=yes
 MAKE_ENV+=		NOCOLOR=yes
 
 .if !defined(DISABLE_MAKE_JOBS) && !defined(MAKE_JOBS_UNSAFE)
 CONFIGURE_ARGS+=	--jobs=${MAKE_JOBS_NUMBER}
-_MAKE_JOBS+=		--jobs=${MAKE_JOBS_NUMBER}
+_MAKE_JOBS=		--jobs=${MAKE_JOBS_NUMBER}
 .endif
 
 USE_PYTHON_RUN=		yes
-
 PLIST_FILES+=		include/pyldb.h \
 			lib/libpyldb-util.so \
 			lib/libpyldb-util.so.1 \
@@ -106,17 +98,6 @@ PLIST_FILES+=		include/pyldb.h \
 			%%PKGCONFIGDIR%%/pyldb-util.pc
 PLIST_DIRSTRY+=		%%PYTHON_SITELIBDIR%% \
 			%%PYTHON_LIBDIR%%
-
-LDB_MAN1=		man/man1/ldbadd.1.gz \
-			man/man1/ldbdel.1.gz \
-			man/man1/ldbedit.1.gz \
-			man/man1/ldbmodify.1.gz \
-			man/man1/ldbrename.1.gz \
-			man/man1/ldbsearch.1.gz
-
-LDB_MAN3=		man/man3/ldb.3.gz
-
-PLIST_FILES+=		${LDB_MAN1} ${LDB_MAN3}
 
 CONFIGURE_TARGET=	configure
 ALL_TARGET=		build
@@ -157,12 +138,10 @@ do-configure:
 				fi)
 
 pre-build:
-.if ! ${PORT_OPTIONS:MMANPAGES}
 			-${MKDIR} ${BUILD_WRKSRC}/bin/default/man
-.	for man in ${LDB_MAN1} ${LDB_MAN3}
-			${INSTALL_MAN} ${FILESDIR}/`basename ${man} .gz` ${BUILD_WRKSRC}/bin/default/man
-.	endfor
-.endif
+.for man in ${MAN1} ${MAN3}
+			${INSTALL_MAN} ${FILESDIR}/${man} ${BUILD_WRKSRC}/bin/default/man
+.endfor
 
 do-build:
 			@(cd ${BUILD_WRKSRC}; \
