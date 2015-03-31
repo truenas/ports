@@ -38,6 +38,8 @@ SAMBA4_INCLUDEDIR=	${PREFIX}/include/${SAMBA4_PORTNAME}
 SAMBA4_CONFDIR=		${PREFIX}/etc
 SAMBA4_CONFIG=		smb4.conf
 
+CFLAGS=			-g3 -ggdb -O0
+
 CONFIGURE_ARGS+=	--prefix="${PREFIX}" \
 			--exec-prefix="${PREFIX}" \
 			--mandir="${MANPREFIX}/man" \
