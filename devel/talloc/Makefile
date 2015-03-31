@@ -1,7 +1,7 @@
-# $FreeBSD$
+# $FreeBSD: head/devel/talloc/Makefile 377150 2015-01-16 03:49:35Z timur $
 
 PORTNAME=		talloc
-PORTVERSION=		2.1.0
+PORTVERSION=		2.1.1
 PORTREVISION=		0
 PORTEPOCH=		0
 CATEGORIES=		devel
@@ -16,7 +16,6 @@ LICENSE=		LGPL3
 CONFLICTS=		samba33-3.*
 
 USES=			compiler pkgconfig
-USE_PYTHON_BUILD=	2
 USE_LDCONFIG=		yes
 WAF_TOOL=		buildtools/bin/waf
 CONFIGURE_LOG=		bin/config.log
@@ -38,8 +37,9 @@ MANPAGES_DESC=		Build and install manpages (requires textproc/docbook-xsl)
 
 .if defined(NO_PYTHON)
 CONFIGURE_ARGS+=	--disable-python
+USES+=			python:2,build
 .else
-USE_PYTHON_RUN=		yes
+USES+=			python:2
 PLIST_FILES+=		include/pytalloc.h \
 			lib/libpytalloc-util.so \
 			lib/libpytalloc-util.so.2 \

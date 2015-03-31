@@ -1,7 +1,7 @@
-# $FreeBSD$
+# $FreeBSD: head/databases/tdb/Makefile 377193 2015-01-16 17:10:41Z tijl $
 
 PORTNAME=		tdb
-PORTVERSION=		1.2.13
+PORTVERSION=		1.3.4
 PORTREVISION=		0
 PORTEPOCH=		1
 CATEGORIES=		databases
@@ -16,7 +16,6 @@ LICENSE=		GPLv3
 CONFLICTS=		*samba3[0-4]-3.*
 
 USES=			compiler pkgconfig
-USE_PYTHON_BUILD=	2
 USE_LDCONFIG=		yes
 WAF_TOOL=		buildtools/bin/waf
 CONFIGURE_LOG=		bin/config.log
@@ -37,13 +36,10 @@ MANPAGES_DESC=		Build and install manpages (requires textproc/docbook-xsl)
 
 .if defined(NO_PYTHON)
 CONFIGURE_ARGS+=	--disable-python
+USES+=			python:2,build
 .else
-USE_PYTHON_RUN=		yes
+USES+=			python:2
 PLIST_FILES+=		%%PYTHON_SITELIBDIR%%/tdb.so
-.endif
-
-.if defined(NO_PYTHON)
-
 .endif
 
 .include <bsd.port.pre.mk>
