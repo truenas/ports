@@ -1,4 +1,4 @@
-# $FreeBSD$
+# $FreeBSD: head/devel/talloc/Makefile 377150 2015-01-16 03:49:35Z timur $
 
 PORTNAME=		talloc
 PORTVERSION=		2.1.1
