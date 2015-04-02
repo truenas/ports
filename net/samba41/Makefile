@@ -39,7 +39,7 @@ SAMBA4_CONFDIR=		${PREFIX}/etc
 SAMBA4_CONFIG=		smb4.conf
 
 USE_GCC=		4.7+
-CFLAGS=			-g3 -ggdb -O0
+CFLAGS=			-g -ggdb -gdwarf-2 -gstrict-dwarf -O0
 
 CONFIGURE_ARGS+=	--prefix="${PREFIX}" \
 			--exec-prefix="${PREFIX}" \
