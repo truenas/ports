@@ -406,9 +406,9 @@ python_CMD=		${PYTHON_CMD}
 python_OLD_CMD=		${SETENV} python
 SHEBANG_FILES=		${PATCH_WRKSRC}/source4/scripting/bin/*
 # No fancy color error messages
-.if ${COMPILER_TYPE} == "clang"
-CFLAGS+=		-fno-color-diagnostics
-.endif
+#.if ${COMPILER_TYPE} == "clang"
+#CFLAGS+=		-fno-color-diagnostics
+#.endif
 CONFIGURE_ENV+=		NOCOLOR=yes
 MAKE_ENV+=		NOCOLOR=yes
 
