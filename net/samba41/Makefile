@@ -38,6 +38,9 @@ SAMBA4_INCLUDEDIR=	${PREFIX}/include/${SAMBA4_PORTNAME}
 SAMBA4_CONFDIR=		${PREFIX}/etc
 SAMBA4_CONFIG=		smb4.conf
 
+USE_GCC=		4.7+
+CFLAGS=			-g -ggdb -gdwarf-2 -gstrict-dwarf -O0
+
 CONFIGURE_ARGS+=	--prefix="${PREFIX}" \
 			--exec-prefix="${PREFIX}" \
 			--mandir="${MANPREFIX}/man" \
@@ -406,9 +409,9 @@ python_CMD=		${PYTHON_CMD}
 python_OLD_CMD=		${SETENV} python
 SHEBANG_FILES=		${PATCH_WRKSRC}/source4/scripting/bin/*
 # No fancy color error messages
-.if ${COMPILER_TYPE} == "clang"
-CFLAGS+=		-fno-color-diagnostics
-.endif
+#.if ${COMPILER_TYPE} == "clang"
+#CFLAGS+=		-fno-color-diagnostics
+#.endif
 CONFIGURE_ENV+=		NOCOLOR=yes
 MAKE_ENV+=		NOCOLOR=yes
 

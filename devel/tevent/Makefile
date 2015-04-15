@@ -1,7 +1,7 @@
-# $FreeBSD$
+# $FreeBSD: head/devel/tevent/Makefile 377194 2015-01-16 17:21:10Z timur $
 
 PORTNAME=		tevent
-PORTVERSION=		0.9.21
+PORTVERSION=		0.9.22
 PORTREVISION=		0
 PORTEPOCH=		0
 CATEGORIES=		devel
@@ -16,7 +16,6 @@ LICENSE=		LGPL3
 CONFLICTS=
 
 USES=			compiler pkgconfig
-USE_PYTHON_BUILD=	2
 USE_LDCONFIG=		yes
 WAF_TOOL=		buildtools/bin/waf
 CONFIGURE_LOG=		bin/config.log
@@ -34,12 +33,16 @@ DESTDIRNAME=		--destdir
 OPTIONS_DEFINE=		MANPAGES
 MANPAGES_DESC=		Build and install manpages (requires textproc/docbook-xsl)
 
+BUILD_DEPENDS+=		talloc>=2.1.1:${PORTSDIR}/devel/talloc
+RUN_DEPENDS:=		${BUILD_DEPENDS}
+
 .include <bsd.port.options.mk>
 
 .if defined(NO_PYTHON)
 CONFIGURE_ARGS+=	--disable-python
+USES+=			python:2,build
 .else
-USE_PYTHON_RUN=		yes
+USES+=			python:2
 PLIST_FILES+=		%%PYTHON_SITELIBDIR%%/_tevent.so \
 			%%PYTHON_SITELIBDIR%%/tevent.py  \
 			%%PYTHON_SITELIBDIR%%/tevent.pyc \
@@ -59,9 +62,6 @@ PLIST_FILES+=		include/tevent.h \
 			lib/libtevent.so \
 			lib/libtevent.so.0 \
 			%%PKGCONFIGDIR%%/tevent.pc
-
-BUILD_DEPENDS+=		talloc>=2.1.0:${PORTSDIR}/devel/talloc
-RUN_DEPENDS:=		${BUILD_DEPENDS}
 
 CONFIGURE_ARGS+=	--bundled-libraries=!talloc
 
