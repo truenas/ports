@@ -1,0 +1,55 @@
+--- Python/random.c.orig	2014-12-10 07:59:59.000000000 -0800
++++ Python/random.c	2015-04-30 00:34:02.350437693 -0700
+@@ -4,6 +4,9 @@
+ #else
+ #include <fcntl.h>
+ #endif
++#ifdef __FreeBSD__
++#include <sys/sysctl.h>
++#endif
+ 
+ #ifdef Py_DEBUG
+ int _Py_HashSecret_Initialized = 0;
+@@ -164,9 +167,34 @@ dev_urandom_python(char *buffer, Py_ssiz
+     Py_ssize_t n;
+     struct stat st;
+ 
++#ifdef __FreeBSD__
++    int mib[2];
++    size_t readsize, targetsize;
++
++    mib[0] = CTL_KERN;
++    mib[1] = KERN_ARND;
++    targetsize = size;
++#endif
++
+     if (size <= 0)
+         return 0;
+ 
++#ifdef __FreeBSD__
++    Py_BEGIN_ALLOW_THREADS
++    do {
++	readsize = targetsize;
++	if (readsize > 256)
++		readsize = 256;
++	if (sysctl(mib, 2, buffer, &readsize, NULL, 0) == -1)
++	    break;
++	buffer += readsize;
++	targetsize -= readsize;
++    } while (targetsize > 0);
++    Py_END_ALLOW_THREADS
++
++    if (targetsize > 0)
++	return (-1);
++#else	/* !__FreeBSD__ */
+     if (urandom_cache.fd >= 0) {
+         /* Does the fd point to the same thing as before? (issue #21207) */
+         if (fstat(urandom_cache.fd, &st)
+@@ -237,6 +265,7 @@ dev_urandom_python(char *buffer, Py_ssiz
+                          size);
+         return -1;
+     }
++#endif
+     return 0;
+ }
+ 
