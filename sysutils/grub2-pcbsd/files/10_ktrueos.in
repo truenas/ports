@@ -31,19 +31,6 @@ ROOTFS=`mount | awk '/ \/ / {print $1}'`
 BEDS="$( echo ${ROOTFS} | awk -F '/' '{print $2}' )"
 if [ "$BEDS" = "dev" ] ; then BEDS="ROOT"; fi
 
-serial=0;
-console=0;
-for x in ${GRUB_TERMINAL_OUTPUT}; do
-    if [ xserial = "x$x" ]; then
-        serial=1;
-    fi
-    if [ xgfxterm = "x$x" ]; then
-        console=1;
-    fi
-    if [ xconsole = "x$x" ]; then
-        console=1;
-    fi
-done
 if [ -f /data/freenas-v1.db ]; then
     # FreeNAS install
     ser=$(/usr/local/bin/sqlite3 /data/freenas-v1.db "SELECT adv_serialconsole FROM system_advanced")
@@ -207,23 +194,8 @@ detect_beadm()
       NICK="TrueOS"
    fi
 
-   # Only list the default BE here
-   $BEADM list -H >/tmp/.grub-beadm.$$ 2>/dev/null
-   while read line
-   do
-     be=`echo $line | awk '{print $1}'`
-     flags=`echo $line | awk '{print $2}'`
-
-     # Is this BE marked as wanting to be used for next boot? Make it the first one if so
-     if [ "$flags" = "NR" -o "$flags" = "R" ] ; then
-        BE_LIST="$be"
-        break
-     fi
-   done < /tmp/.grub-beadm.$$
-   rm /tmp/.grub-beadm.$$
-
    # Get list of beadm datasets
-   for b in $BE_LIST
+   for b in `${BEADM} list -H 2>/dev/null | awk '{print $1}'`
    do 
       # Got a beadm snapshot, lets get the complete dataset name
       beLine=`${BEADM} list -a | grep "/$BEDS/${b}"`
