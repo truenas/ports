@@ -31,7 +31,7 @@ BUILD_DEPENDS=	nspr>=4.10.6:${PORTSDIR}/devel/nspr \
 
 LIB_DEPENDS=	libv4l2.so:${PORTSDIR}/multimedia/libv4l
 
-EM_VERSION=	1.8
+EM_VERSION=	1.8.2
 L_VERSION=	3.8
 
 SSP_UNSAFE=	yes

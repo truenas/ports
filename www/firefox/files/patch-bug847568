@@ -180,14 +180,23 @@ index 1cacbd7..f5d72bb 100644
  
  include $(topsrcdir)/config/rules.mk
  
-+ifdef MOZ_NATIVE_HARFBUZZ
-+CXXFLAGS += $(MOZ_HARFBUZZ_CFLAGS)
-+endif
+ if CONFIG['ENABLE_INTL_API']:
+     CXXFLAGS += CONFIG['MOZ_ICU_CFLAGS']
 +
- # Generate the include file containing compact, static definitions
- # for effective TLD data.
- etld_data.inc: $(srcdir)/prepare_tlds.py $(srcdir)/effective_tld_names.dat
-diff --git toolkit/library/libxul.mk toolkit/library/libxul.mk
++if CONFIG['MOZ_NATIVE_HARFBUZZ']:
++    CXXFLAGS += CONFIG['MOZ_HARFBUZZ_CFLAGS']
+diff --git netwerk/dns/moz.build netwerk/dns/moz.build
+index 0b0717a..2e665c9 100644
+--- netwerk/dns/moz.build
++++ netwerk/dns/moz.build
+@@ -64,3 +64,6 @@ GENERATED_FILES = [
+ LOCAL_INCLUDES += [
+     '/netwerk/base',
+ ]
++
++if CONFIG['MOZ_NATIVE_HARFBUZZ']:
++    CXXFLAGS += CONFIG['MOZ_HARFBUZZ_CFLAGS']
+diff --git toolkit/library/moz.build toolkit/library/moz.build
 index 67f0db9..d42137a 100644
 --- toolkit/library/libxul.mk
 +++ toolkit/library/libxul.mk
