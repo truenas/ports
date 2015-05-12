@@ -1,0 +1,11 @@
+--- smartd.cpp.orig	2014-07-13 09:53:30.000000000 -0700
++++ smartd.cpp	2015-05-11 15:29:05.351896915 -0700
+@@ -4230,7 +4230,7 @@
+ static int ParseConfigFile(dev_config_vector & conf_entries)
+ {
+   // maximum line length in configuration file
+-  const int MAXLINELEN = 256;
++  const int MAXLINELEN = 512;
+   // maximum length of a continued line in configuration file
+   const int MAXCONTLINE = 1023;
+ 
