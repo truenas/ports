@@ -13,11 +13,7 @@ MAINTAINER=	gecko@FreeBSD.org
 COMMENT=	The open source, standards compliant web browser
 
 BUILD_DEPENDS=	nspr>=4.10.6:${PORTSDIR}/devel/nspr \
-<<<<<<< HEAD
-		nss>=3.17.2:${PORTSDIR}/security/nss \
-=======
 		nss>=3.17.4:${PORTSDIR}/security/nss \
->>>>>>> b23a271... - Update OpenH264 to 1.4.0
 		libevent2>=2.0.21_2:${PORTSDIR}/devel/libevent2 \
 		cairo>=1.12.16_1,2:${PORTSDIR}/graphics/cairo \
 		soundtouch>=1.8.0:${PORTSDIR}/audio/soundtouch \
@@ -34,13 +30,8 @@ BUILD_DEPENDS=	nspr>=4.10.6:${PORTSDIR}/devel/nspr \
 
 LIB_DEPENDS=	libv4l2.so:${PORTSDIR}/multimedia/libv4l
 
-<<<<<<< HEAD
-EM_VERSION=	1.7.2
-L_VERSION=	3.6
-=======
-EM_VERSION=	1.8
+EM_VERSION=	1.8.2
 L_VERSION=	3.8
->>>>>>> b23a271... - Update OpenH264 to 1.4.0
 
 SSP_UNSAFE=	yes
 USE_GECKO=	gecko
