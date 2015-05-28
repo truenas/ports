@@ -1,5 +1,5 @@
 # Created by: timur@FreeBSD.org
-# $FreeBSD$
+# $FreeBSD: head/net/samba41/Makefile 386869 2015-05-20 17:15:10Z timur $
 
 PORTNAME?=		${SAMBA4_BASENAME}41
 PORTVERSION?=		${SAMBA4_VERSION}
@@ -37,6 +37,9 @@ SAMBA4_INCLUDEDIR=	${PREFIX}/include/${SAMBA4_PORTNAME}
 SAMBA4_CONFDIR=		${PREFIX}/etc
 SAMBA4_CONFIG=		smb4.conf
 
+USE_GCC=		4.7+
+CFLAGS=			-g -ggdb -gdwarf-2 -gstrict-dwarf -O0
+
 CONFIGURE_ARGS+=	--exec-prefix="${PREFIX}" \
 			--mandir="${MANPREFIX}/man" \
 			--sysconfdir="${SAMBA4_CONFDIR}" \
@@ -59,7 +62,7 @@ CONFIGURE_ARGS+=	--exec-prefix="${PREFIX}" \
 # Flags
 CONFIGURE_ENV+=		PTHREAD_LDFLAGS="-lpthread"
 
-USES=			cpe compiler waf pkgconfig perl5 python:2 \
+USES=			cpe compiler waf fakeroot pkgconfig perl5 python:2 \
 			execinfo readline iconv shebangfix
 USE_PERL5=		build
 USE_LDCONFIG=		${SAMBA4_LIBDIR}
