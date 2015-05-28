@@ -1,6 +1,6 @@
---- ./source3/param/loadparm.c
-+++ ./source3/param/loadparm.c
-@@ -3174,10 +3174,12 @@ bool lp_do_parameter(int snum, const char *pszParmName, const char *pszParmValue
+--- source3/param/loadparm.c.orig	2015-01-28 00:32:27.759378400 -0800
++++ source3/param/loadparm.c	2015-01-31 15:04:49.919907614 -0800
+@@ -3174,10 +3174,12 @@
  		return true;
  	}
  
