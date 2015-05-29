@@ -2,18 +2,19 @@
 # $FreeBSD$
 
 PORTNAME=	firefox
-DISTVERSION=	31.6.0
+DISTVERSION=	31.7.0
 DISTVERSIONSUFFIX=esr.source
 PORTEPOCH=	1
 CATEGORIES=	www ipv6
-MASTER_SITES=	MOZILLA/${PORTNAME}/releases/${DISTVERSION}esr/source
+MASTER_SITES=	MOZILLA/${PORTNAME}/releases/${DISTVERSION}esr/source \
+		https://ftp.mozilla.org/pub/mozilla.org/${PORTNAME}/candidates/${DISTVERSION}esr-candidates/build2/source/
 PKGNAMESUFFIX=	-esr
 
 MAINTAINER=	gecko@FreeBSD.org
 COMMENT=	Web browser based on the browser portion of Mozilla
 
 BUILD_DEPENDS=	nspr>=4.10.6:${PORTSDIR}/devel/nspr \
-		nss>=3.16.2:${PORTSDIR}/security/nss \
+		nss>=3.16.2.3:${PORTSDIR}/security/nss \
 		libevent2>=2.0.21_2:${PORTSDIR}/devel/libevent2 \
 		cairo>=1.12.16_1,2:${PORTSDIR}/graphics/cairo \
 		soundtouch>=1.8.0:${PORTSDIR}/audio/soundtouch \
