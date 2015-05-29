@@ -121,6 +121,7 @@ CONFIGURE_ARGS+=	\
 		--enable-exec \
 		--enable-fhcount \
 		--enable-filecount \
+		--enable-geom-stat \
 		--enable-load \
 		--enable-logfile \
 		--enable-match_empty_counter \
@@ -158,6 +159,7 @@ CONFIGURE_ARGS+=	\
 		--enable-write_graphite \
 		--enable-write_log \
 		--enable-zfs_arc \
+		--enable-zfs_arc_v2
 
 .if ${PORT_OPTIONS:MCGI}
 RUN_DEPENDS+=	p5-URI>=0:${PORTSDIR}/net/p5-URI \
