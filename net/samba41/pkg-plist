@@ -440,7 +440,6 @@ lib/shared-modules/vfs/zfsacl.so
 %%MODULE_IDMAP_PASSDB%%lib/shared-modules/idmap/passdb.so
 %%MODULE_IDMAP_TDB%%lib/shared-modules/idmap/tdb.so
 %%MODULE_NSS_INFO_TEMPLATE%%lib/shared-modules/nss_info/template.so
-%%MODULE_PDB_LDAP%%lib/shared-modules/pdb/ldap.so
 %%MODULE_PDB_SAMBA_DSDB%%lib/shared-modules/pdb/samba_dsdb.so
 %%MODULE_PDB_SMBPASSWD%%lib/shared-modules/pdb/smbpasswd.so
 %%MODULE_PDB_TDBSAM%%lib/shared-modules/pdb/tdbsam.so
