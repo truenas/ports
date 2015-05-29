@@ -440,7 +440,7 @@ lib/shared-modules/vfs/zfsacl.so
 %%MODULE_IDMAP_PASSDB%%lib/shared-modules/idmap/passdb.so
 %%MODULE_IDMAP_TDB%%lib/shared-modules/idmap/tdb.so
 %%MODULE_NSS_INFO_TEMPLATE%%lib/shared-modules/nss_info/template.so
-%%MODULE_PDB_LDAP%%lib/shared-modules/pdb/ldapsam.so
+%%MODULE_PDB_LDAP%%lib/shared-modules/pdb/ldap.so
 %%MODULE_PDB_SAMBA_DSDB%%lib/shared-modules/pdb/samba_dsdb.so
 %%MODULE_PDB_SMBPASSWD%%lib/shared-modules/pdb/smbpasswd.so
 %%MODULE_PDB_TDBSAM%%lib/shared-modules/pdb/tdbsam.so
@@ -1002,7 +1002,6 @@ man/man8/vfs_extd_audit.8.gz
 man/man8/vfs_fake_perms.8.gz
 man/man8/vfs_fileid.8.gz
 man/man8/vfs_full_audit.8.gz
-man/man8/vfs_glusterfs.8.gz
 man/man8/vfs_gpfs.8.gz
 man/man8/vfs_linux_xfs_sgid.8.gz
 man/man8/vfs_media_harmony.8.gz
