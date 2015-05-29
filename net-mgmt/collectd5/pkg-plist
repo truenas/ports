@@ -91,6 +91,8 @@ lib/collectd/write_graphite.so
 %%RIEMANN%%lib/collectd/write_riemann.so
 %%XMMS%%lib/collectd/xmms.so
 lib/collectd/zfs_arc.so
+lib/collectd/zfs_arc_v2.so
+lib/collectd/geom_stat.so
 lib/libcollectdclient.so
 lib/libcollectdclient.so.1
 lib/libcollectdclient.so.1.0.0
