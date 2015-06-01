@@ -1,7 +1,7 @@
 # $FreeBSD: head/devel/tevent/Makefile 377194 2015-01-16 17:21:10Z timur $
 
 PORTNAME=		tevent
-PORTVERSION=		0.9.22
+PORTVERSION=		0.9.24
 PORTREVISION=		0
 PORTEPOCH=		0
 CATEGORIES=		devel
