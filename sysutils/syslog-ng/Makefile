@@ -3,6 +3,7 @@
 
 PORTNAME=	syslog-ng
 PORTVERSION=	3.6.4
+PORTREVERSION=	1
 CATEGORIES=	sysutils
 DISTVERSION=	$(PORTVERSION:S/a/alpha/:S/b/beta/:S/r/rc/)
 DISTFILES=	syslog-ng-${DISTVERSION}.tar.gz
@@ -48,6 +49,8 @@ CONFIGURE_ARGS=	--sysconfdir=${LOCALBASE}/etc --localstatedir=/var/db \
 BROKEN_sparc64=	Does not compile on sparc64: gcc core dump
 
 .include <bsd.port.options.mk>
+
+LDFLAGS+=	-lutil
 
 .if ${PORT_OPTIONS:MOPENSSL}
 USE_OPENSSL=		yes
