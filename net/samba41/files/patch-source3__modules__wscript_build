@@ -1,0 +1,45 @@
+--- ./source3/modules/wscript_build	2013-12-05 01:16:48.000000000 -0800
++++ ./source3/modules/wscript_build	2015-07-10 19:57:57.000000000 -0700
+@@ -53,6 +53,7 @@
+ VFS_BTRFS_SRC = 'vfs_btrfs.c'
+ VFS_CEPH_SRC = 'vfs_ceph.c'
+ VFS_GLUSTERFS_SRC = 'vfs_glusterfs.c'
++VFS_ZFS_SPACE_SRC = 'vfs_zfs_space.c'
+ 
+ 
+ bld.SAMBA3_SUBSYSTEM('NFS4_ACLS',
+@@ -532,3 +533,34 @@
+                   internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_glusterfs'),
+                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_glusterfs'),
+                   allow_undefined_symbols=False)
++
++bld.SAMBA3_LIBRARY('zfs_disk_free',
++                   source='zfs_disk_free.c',
++                   includes=[
++                       '/usr/src/cddl/contrib/opensolaris/lib/libzpool/common',
++                       '/usr/src/cddl/compat/opensolaris/include',
++                       '/usr/src/cddl/compat/opensolaris/lib/libumem',
++                       '/usr/src/sys/cddl/compat/opensolaris',
++                       '/usr/src/cddl/contrib/opensolaris/head',
++                       '/usr/src/cddl/contrib/opensolaris/lib/libuutil/common',
++                       '/usr/src/cddl/contrib/opensolaris/lib/libzfs/common',
++                       '/usr/src/cddl/contrib/opensolaris/lib/libzfs_core/common',
++                       '/usr/src/cddl/contrib/opensolaris/lib/libumem/common',
++                       '/usr/src/cddl/contrib/opensolaris/lib/libnvpair',
++                       '/usr/src/sys/cddl/contrib/opensolaris/uts/common',
++                       '/usr/src/sys/cddl/contrib/opensolaris/uts/common/fs/zfs',
++                       '/usr/src/sys/cddl/contrib/opensolaris/uts/common/sys',
++                       '/usr/src/sys/cddl/contrib/opensolaris/common/zfs',
++                   ],
++                   ldflags='-lgeom -luutil -lzfs_core -lzfs',
++                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_zfs_space'),
++                   private_library=True)
++
++bld.SAMBA3_MODULE('vfs_zfs_space',
++                 subsystem='vfs',
++                 source=VFS_ZFS_SPACE_SRC,
++                 deps='zfs_disk_free',
++                 allow_undefined_symbols=True,
++                 init_function='',
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_zfs_space'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_zfs_space'))

@@ -313,6 +313,7 @@ lib/samba/libutil_tdb.so
 lib/samba/libwinbind-client.so
 lib/samba/libwind-samba4.so.0
 lib/samba/libxattr_tdb.so
+%%LIBZFS%%lib/samba/libzfs_disk_free.so
 %%LDAP%%lib/samba/libsmbldaphelper.so
 %%DEVELOPER%%lib/samba/libnss_wrapper.so
 %%DEVELOPER%%lib/samba/libuid_wrapper.so
@@ -424,6 +425,7 @@ lib/shared-modules/vfs/time_audit.so
 lib/shared-modules/vfs/xattr_tdb.so
 %%DEVELOPER%%lib/shared-modules/vfs/nfs4acl_xattr.so
 lib/shared-modules/vfs/zfsacl.so
+%%LIBZFS%%lib/shared-modules/vfs/zfs_space.so
 %%LDAP%%lib/shared-modules/idmap/rfc2307.so
 %%MODULE_AUTH_SAMBA4%%lib/shared-modules/auth/samba4.so
 %%MODULE_AUTH_UNIX%%lib/shared-modules/auth/unix.so
