@@ -120,7 +120,7 @@ SAMBA4_BUNDLED_LIBS+=	com_err
 ##############################################################################
 # Options
 OPTIONS_DEFINE=		ACL_SUPPORT AD_DC ADS AIO_SUPPORT CUPS DEBUG \
-			DNSUPDATE DOCS FAM LDAP PAM_SMBPASS \
+			DNSUPDATE DOCS FAM LDAP LIBZFS PAM_SMBPASS \
 			PTHREADPOOL QUOTAS SYSLOG UTMP
 
 OPTIONS_DEFAULT=	ACL_SUPPORT AD_DC ADS AIO_SUPPORT DEBUG \
@@ -135,6 +135,7 @@ DNSUPDATE_DESC=		Dynamic DNS update (requires ADS)
 EXP_MODULES_DESC=	Experimental modules
 DEBUG_DESC=		With debug information in the binaries
 LDAP_DESC=		LDAP client support
+LIBZFS_DESC=		LibZFS support
 PAM_SMBPASS_DESC=	PAM authentication via passdb backends
 PTHREADPOOL_DESC=	Pthread pool
 QUOTAS_DESC=		Disk quota support
@@ -222,7 +223,7 @@ WANT_EXP_MODULES=	auth_samba4 auth_script auth_skel auth_unix auth_wbc \
 			vfs_shadow_copy2 vfs_shadow_copy_test vfs_skel_opaque \
 			vfs_skel_transparent vfs_smb_traffic_analyzer vfs_streams_depot \
 			vfs_streams_xattr vfs_syncops vfs_time_audit \
-			vfs_xattr_tdb vfs_zfsacl
+			vfs_xattr_tdb vfs_zfsacl vfs_zfs_space
 .endif
 
 .if ${PORT_OPTIONS:MEXP_MODULES}
@@ -302,6 +303,16 @@ CONFIGURE_ARGS+=	--without-fam
 
 .if ${PORT_OPTIONS:MLDAP}
 SAMBA4_WANT_LDAP=	yes
+.endif
+
+.if ${PORT_OPTIONS:MLIBZFS}
+CONFIGURE_ARGS+=	--with-libzfs
+WANT_EXP_MODULES+=	vfs_zfs_space
+SAMBA4_MODULES+=	vfs_zfs_space
+PLIST_SUB+=		LIBZFS=""
+.else
+CONFIGURE_ARGS+=	--without-libzfs
+PLIST_SUB+=		LIBZFS="@comment "
 .endif
 
 .if ${PORT_OPTIONS:MPAM_SMBPASS}
