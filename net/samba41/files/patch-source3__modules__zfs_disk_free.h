@@ -1,5 +1,5 @@
 --- ./source3/modules/zfs_disk_free.h	1969-12-31 16:00:00.000000000 -0800
-+++ ./source3/modules/zfs_disk_free.h	2015-07-10 19:30:41.000000000 -0700
++++ ./source3/modules/zfs_disk_free.h	2015-07-13 14:41:59.000000000 -0700
 @@ -0,0 +1,33 @@
 +/*-
 + * Copyright 2015 iXsystems, Inc.
@@ -31,6 +31,6 @@
 +#ifndef	__ZFS_DISK_FREE_H
 +#define	__ZFS_DISK_FREE_H
 +
-+uint64_t zfs_disk_free(char *path, uint64_t *bsize, uint64_t *dfree, uint64_t *dsize);
++uint64_t smb_zfs_disk_free(char *path, uint64_t *bsize, uint64_t *dfree, uint64_t *dsize);
 +
 +#endif	/* !__ZFS_DISK_FREE_H */
