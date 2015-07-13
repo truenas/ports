@@ -1,6 +1,6 @@
 --- ./source3/modules/zfs_disk_free.c	1969-12-31 16:00:00.000000000 -0800
-+++ ./source3/modules/zfs_disk_free.c	2015-07-13 14:41:55.000000000 -0700
-@@ -0,0 +1,77 @@
++++ ./source3/modules/zfs_disk_free.c	2015-07-13 15:37:57.000000000 -0700
+@@ -0,0 +1,76 @@
 +/*-
 + * Copyright 2015 iXsystems, Inc.
 + * All rights reserved
@@ -43,7 +43,6 @@
 +	zfs_handle_t *zfsp;
 +	uint64_t available, usedbysnapshots, usedbydataset,
 +		usedbychildren, usedbyrefreservation, real_used, total;
-+	char buf[8192];
 +
 +	if (path == NULL)
 +		return (-1);
