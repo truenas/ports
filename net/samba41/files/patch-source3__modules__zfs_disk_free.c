@@ -1,6 +1,6 @@
 --- ./source3/modules/zfs_disk_free.c	1969-12-31 16:00:00.000000000 -0800
-+++ ./source3/modules/zfs_disk_free.c	2015-07-10 19:30:41.000000000 -0700
-@@ -0,0 +1,78 @@
++++ ./source3/modules/zfs_disk_free.c	2015-07-13 14:41:55.000000000 -0700
+@@ -0,0 +1,77 @@
 +/*-
 + * Copyright 2015 iXsystems, Inc.
 + * All rights reserved
@@ -32,30 +32,31 @@
 +
 +#include <libzfs.h>
 +
++#include "modules/zfs_disk_free.h"
++
++
 +uint64_t
-+zfs_disk_free(char *path, uint64_t *bsize, uint64_t *dfree, uint64_t *dsize)
++smb_zfs_disk_free(char *path, uint64_t *bsize, uint64_t *dfree, uint64_t *dsize)
 +{
 +	size_t blocksize = 1024;
 +	libzfs_handle_t *libzfsp;
 +	zfs_handle_t *zfsp;
 +	uint64_t available, usedbysnapshots, usedbydataset,
 +		usedbychildren, usedbyrefreservation, real_used, total;
++	char buf[8192];
 +
-+	if (path == NULL) {
++	if (path == NULL)
 +		return (-1);
-+	}
 +
-+	if ((libzfsp = libzfs_init()) == NULL) {
++	if ((libzfsp = libzfs_init()) == NULL)
 +		return (-1);
-+	}
 +
 +	libzfs_print_on_error(libzfsp, B_TRUE);
 +
 +	zfsp = zfs_path_to_zhandle(libzfsp, path,
 +		ZFS_TYPE_VOLUME|ZFS_TYPE_DATASET|ZFS_TYPE_FILESYSTEM);
-+	if (zfsp == NULL) {
++	if (zfsp == NULL)
 +		return (-1);
-+	}
 +
 +	available = zfs_prop_get_int(zfsp, ZFS_PROP_AVAILABLE);
 +	usedbysnapshots = zfs_prop_get_int(zfsp, ZFS_PROP_USEDSNAP);
@@ -67,8 +68,6 @@
 +	libzfs_fini(libzfsp);
 +
 +	real_used = usedbysnapshots + usedbydataset + usedbychildren;
-+	if (usedbyrefreservation > 0)
-+		real_used += usedbyrefreservation;
 +
 +	total = (real_used + available) / blocksize;
 +	available /= blocksize;

@@ -1,6 +1,6 @@
 --- ./source3/modules/vfs_zfs_space.c	1969-12-31 16:00:00.000000000 -0800
-+++ ./source3/modules/vfs_zfs_space.c	2015-07-10 19:30:41.000000000 -0700
-@@ -0,0 +1,50 @@
++++ ./source3/modules/vfs_zfs_space.c	2015-07-13 14:41:48.000000000 -0700
+@@ -0,0 +1,66 @@
 +/*-
 + * Copyright 2015 iXsystems, Inc.
 + * All rights reserved
@@ -38,7 +38,23 @@
 +static uint64_t vfs_zfs_space_disk_free(vfs_handle_struct *handle, const char *path,
 +	bool small_query, uint64_t *bsize, uint64_t *dfree, uint64_t *dsize)
 +{
-+	return (zfs_disk_free(getenv("PWD"), bsize, dfree, dsize));
++	uint64_t res;
++	char rp[PATH_MAX] = { 0 };
++
++	if (realpath(path, rp) == NULL)
++		return (-1);
++
++	DEBUG(9, ("realpath = %s\n", rp));
++
++	res = smb_zfs_disk_free(rp, bsize, dfree, dsize, debugfunc);
++	if (res == (uint64_t)-1)
++		return (res);
++
++	DEBUG(9, ("*bsize = %" PRIu64 "\n", *bsize));
++	DEBUG(9, ("*dfree = %" PRIu64 "\n", *dfree));
++	DEBUG(9, ("*dsize = %" PRIu64 "\n", *dsize));
++
++	return (res);
 +}
 +
 +static struct vfs_fn_pointers vfs_zfs_space_fns = {
