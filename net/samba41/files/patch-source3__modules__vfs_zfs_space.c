@@ -1,5 +1,5 @@
 --- ./source3/modules/vfs_zfs_space.c	1969-12-31 16:00:00.000000000 -0800
-+++ ./source3/modules/vfs_zfs_space.c	2015-07-13 14:41:48.000000000 -0700
++++ ./source3/modules/vfs_zfs_space.c	2015-07-13 14:56:51.000000000 -0700
 @@ -0,0 +1,66 @@
 +/*-
 + * Copyright 2015 iXsystems, Inc.
@@ -46,7 +46,7 @@
 +
 +	DEBUG(9, ("realpath = %s\n", rp));
 +
-+	res = smb_zfs_disk_free(rp, bsize, dfree, dsize, debugfunc);
++	res = smb_zfs_disk_free(rp, bsize, dfree, dsize);
 +	if (res == (uint64_t)-1)
 +		return (res);
 +
