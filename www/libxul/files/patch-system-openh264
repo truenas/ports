@@ -1,15 +1,15 @@
 # Revert bug 1045209 to allow using absolute path
 
-diff --git content/media/gmp/GMPChild.cpp content/media/gmp/GMPChild.cpp
-index 4165a75..81914d5 100644
---- content/media/gmp/GMPChild.cpp
-+++ content/media/gmp/GMPChild.cpp
-@@ -66,19 +66,11 @@
+diff --git dom/media/gmp/GMPChild.cpp dom/media/gmp/GMPChild.cpp
+index 1dde3ac..12c88cf 100644
+--- dom/media/gmp/GMPChild.cpp
++++ dom/media/gmp/GMPChild.cpp
+@@ -76,21 +76,14 @@ GetFileBase(const std::string& aPluginPa
    }
  #endif
  
 -  nsCOMPtr<nsIFile> parent;
--  rv = aLibFile->GetParent(getter_AddRefs(parent));
+-  rv = aFileBase->GetParent(getter_AddRefs(parent));
 -  if (NS_FAILED(rv)) {
 -    return false;
 -  }
@@ -18,20 +18,23 @@ index 4165a75..81914d5 100644
 -  rv = parent->GetLeafName(parentLeafName);
 -  if (NS_FAILED(rv)) {
 +  nsAutoString leafName;
-+  if (NS_FAILED(aLibFile->GetLeafName(leafName))) {
++  if (NS_FAILED(aFileBase->GetLeafName(leafName))) {
      return false;
    }
--
--  nsAutoString baseName(Substring(parentLeafName, 4, parentLeafName.Length() - 1));
-+  nsAutoString baseName(Substring(leafName, 4, leafName.Length() - 1));
  
- #if defined(XP_MACOSX)
-   nsAutoString binaryName = NS_LITERAL_STRING("lib") + baseName + NS_LITERAL_STRING(".dylib");
-diff --git content/media/gmp/GMPParent.cpp content/media/gmp/GMPParent.cpp
+-  aBaseName = Substring(parentLeafName,
++  aBaseName = Substring(leafName,
+                         4,
+-                        parentLeafName.Length() - 1);
++                        leafName.Length() - 1);
+   return true;
+ }
+ 
+diff --git dom/media/gmp/GMPParent.cpp dom/media/gmp/GMPParent.cpp
 index aa60acf..90878ca 100644
 --- dom/media/gmp/GMPParent.cpp
 +++ dom/media/gmp/GMPParent.cpp
-@@ -93,22 +93,15 @@
+@@ -90,23 +90,16 @@
    mService = aService;
    mDirectory = aPluginDir;
  
@@ -39,18 +42,19 @@ index aa60acf..90878ca 100644
 -  // where <gmp-plugin-id> should be gmp-gmpopenh264
 -  nsCOMPtr<nsIFile> parent;
 -  nsresult rv = aPluginDir->GetParent(getter_AddRefs(parent));
+-  if (NS_FAILED(rv)) {
+-    return rv;
+-  }
+-  nsAutoString parentLeafName;
+-  rv = parent->GetLeafName(parentLeafName);
 +  nsAutoString leafname;
 +  nsresult rv = aPluginDir->GetLeafName(leafname);
    if (NS_FAILED(rv)) {
      return rv;
    }
--  nsAutoString parentLeafName;
--  rv = parent->GetLeafName(parentLeafName);
--  if (NS_FAILED(rv)) {
--    return rv;
--  }
--  LOGD("%s: for %s", __FUNCTION__, NS_LossyConvertUTF16toASCII(parentLeafName).get());
-+  LOGD("%s: for %s", __FUNCTION__, NS_LossyConvertUTF16toASCII(leafname).get());
+   LOGD(("%s::%s: %p for %s", __CLASS__, __FUNCTION__, this,
+-       NS_LossyConvertUTF16toASCII(parentLeafName).get()));
++       NS_LossyConvertUTF16toASCII(leafname).get()));
  
 -  MOZ_ASSERT(parentLeafName.Length() > 4);
 -  mName = Substring(parentLeafName, 4);
@@ -121,7 +125,7 @@ index 1f3a0b1..93517be 100644
    if (this._plugin.isEME) {
      Preferences.observe(GMPPrefs.KEY_EME_ENABLED,
                          this.onPrefEMEGlobalEnabledChanged, this);
-@@ -134,17 +133,14 @@
+@@ -120,17 +119,14 @@
    optionsType: AddonManager.OPTIONS_TYPE_INLINE,
    get optionsURL() { return this._plugin.optionsURL; },
  
@@ -139,9 +143,9 @@ index 1f3a0b1..93517be 100644
      return this._gmpPath;
    },
 -
-   get missingKey() {
-     return this._plugin.missingKey;
-   },
+   get id() { return this._plugin.id; },
+   get type() { return "plugin"; },
+   get isGMPlugin() { return true; },
 @@ -141,8 +137,13 @@
    get description() { return this._plugin.description; },
    get fullDescription() { return this._plugin.fullDescription; },
@@ -153,7 +157,7 @@ index 1f3a0b1..93517be 100644
 +        return GMPPrefs.get(GMPPrefs.KEY_PLUGIN_VERSION, null,
 +                                    this._plugin.id);
 +    }
-+    return "";
++    return null;
 +  },
  
    get isActive() { return !this.appDisabled && !this.userDisabled; },
@@ -173,7 +177,7 @@ index 1f3a0b1..93517be 100644
    get pluginFullpath() {
 -    if (this.isInstalled) {
 -      let path = OS.Path.join(OS.Constants.Path.profileDir,
--                              OPENH264_PLUGIN_ID,
+-                              this._plugin.id,
 -                              this.version);
 -      return [path];
 -    }
@@ -187,7 +191,6 @@ index 1f3a0b1..93517be 100644
 +    let path = GMPPrefs.get(GMPPrefs.KEY_PLUGIN_PATH, null, this._plugin.id);
 +    return path && path.length > 0;
    },
- };
  
    _handleEnabledChanged: function() {
 @@ -362,10 +356,10 @@
@@ -196,13 +199,12 @@ index 1f3a0b1..93517be 100644
  
 -  onPrefVersionChanged: function() {
 +  onPrefPathChanged: function() {
-     let wrapper = OpenH264Wrapper;
- 
-     AddonManagerPrivate.callAddonListeners("onUninstalling", wrapper, false);
-     if (this.gmpPath) {
--      this._log.info("onPrefVersionChanged() - unregistering gmp directory " + this.gmpPath);
-+      this._log.info("onPrefPathChanged() - removing gmp directory " + this.gmpPath);
-       gmpService.removePluginDirectory(this.gmpPath);
+     AddonManagerPrivate.callAddonListeners("onUninstalling", this, false);
+     if (this._gmpPath) {
+-      this._log.info("onPrefVersionChanged() - unregistering gmp directory " +
++      this._log.info("onPrefPathChanged() - unregistering gmp directory " +
+                      this._gmpPath);
+       gmpService.removePluginDirectory(this._gmpPath);
      }
 @@ -374,15 +368,10 @@
      AddonManagerPrivate.callInstallListeners("onExternalInstall", null, this,
