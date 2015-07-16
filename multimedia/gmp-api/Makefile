@@ -1,7 +1,8 @@
 # $FreeBSD$
 
 PORTNAME=	gmp-api
-PORTVERSION=	35.0
+DISTVERSIONPREFIX=	Firefox
+DISTVERSION=	39 # tracking www/firefox
 CATEGORIES=	multimedia
 
 MAINTAINER=	gecko@FreeBSD.org
