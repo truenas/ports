@@ -3838,6 +3838,7 @@
     SUBDIR += py-collective.z3cform.datetimewidget
     SUBDIR += py-colorama
     SUBDIR += py-colorlog
+    SUBDIR += py-columnize
     SUBDIR += py-conditional
     SUBDIR += py-configargparse
     SUBDIR += py-configobj
