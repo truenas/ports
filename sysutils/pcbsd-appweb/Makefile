@@ -12,7 +12,7 @@ LICENSE=	BSD3CLAUSE
 
 RUN_DEPENDS=	syscache:${PORTSDIR}/sysutils/pcbsd-syscache \
 		pbi:${PORTSDIR}/sysutils/pbi-manager \
-		warden:${PORTSDIR}/sysutils/warden \
+		warden:${PORTSDIR}/sysutils/pcbsd-warden \
 		nginx:${PORTSDIR}/www/nginx
 
 IGNORE_WITH_PHP=54
