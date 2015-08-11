@@ -3,11 +3,11 @@
 
 PORTNAME=	iocage
 PORTVERSION=	1.7.1
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	sysutils
 PKGNAMESUFFIX=	-devel
 
-MAINTAINER=	kmoore@freebsd.org
+MAINTAINER=	brandon@ixsystems.com
 COMMENT=	Full featured, no dependency Jail container manager - devel build
 
 LICENSE=	BSD2CLAUSE
@@ -16,7 +16,7 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 USE_GITHUB=	yes
 GH_ACCOUNT=	iocage
 GH_PROJECT=	iocage
-GH_TAGNAME=	4dccc06
+GH_TAGNAME=	998eebc
 
 .include <bsd.port.pre.mk>
 
