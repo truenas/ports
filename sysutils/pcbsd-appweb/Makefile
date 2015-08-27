@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	pcbsd-appweb
-PORTVERSION=	1439492295
+PORTVERSION=	1440691343
 CATEGORIES=	sysutils
 
 MAINTAINER=	kmoore@FreeBSD.org
@@ -25,7 +25,7 @@ MAKE_ARGS=	PREFIX=${STAGEDIR}${PREFIX}
 USE_GITHUB=	yes
 GH_ACCOUNT=	pcbsd
 GH_PROJECT=	pcbsd
-GH_TAGNAME=	b262c7
+GH_TAGNAME=	b93dbb
 
 .include <bsd.port.pre.mk>
 
