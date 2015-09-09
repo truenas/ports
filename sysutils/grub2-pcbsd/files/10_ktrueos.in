@@ -198,7 +198,7 @@ detect_beadm()
    for b in `${BEADM} list -H 2>/dev/null | awk '{print $1}'`
    do 
       # Got a beadm snapshot, lets get the complete dataset name
-      beLine=`${BEADM} list -a | grep "/$BEDS/${b}"`
+      beLine=`${BEADM} list -a | grep "/$BEDS/${b}[[:space:]]"`
       cdataset=`echo $beLine | awk '{print $1}'`
       cdatadate=`echo $beLine | awk '{print $5}'`
       cdatatime=`echo $beLine | awk '{print $6}'`
