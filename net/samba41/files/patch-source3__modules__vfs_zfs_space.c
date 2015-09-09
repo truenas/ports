@@ -1,5 +1,5 @@
 --- ./source3/modules/vfs_zfs_space.c	1969-12-31 16:00:00.000000000 -0800
-+++ ./source3/modules/vfs_zfs_space.c	2015-09-09 02:34:17.000000000 -0700
++++ ./source3/modules/vfs_zfs_space.c	2015-09-09 12:57:49.000000000 -0700
 @@ -0,0 +1,68 @@
 +/*-
 + * Copyright 2015 iXsystems, Inc.
@@ -50,7 +50,7 @@
 +	if (res == (uint64_t)-1)
 +		res = SMB_VFS_NEXT_DISK_FREE(handle, path, small_query, bsize, dfree, dsize);
 +	if (res == (uint64_t)-1)
-+		return (res)
++		return (res);
 +
 +	DEBUG(9, ("*bsize = %" PRIu64 "\n", *bsize));
 +	DEBUG(9, ("*dfree = %" PRIu64 "\n", *dfree));
