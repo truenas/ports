@@ -17,7 +17,7 @@ CONFLICTS?=		*samba3[2-6]-3.* samba4-4.0.*
 
 SAMBA4_BASENAME=	samba
 SAMBA4_PORTNAME=	${SAMBA4_BASENAME}4
-SAMBA4_VERSION=		4.1.20
+SAMBA4_VERSION=		4.1.18
 SAMBA4_DISTNAME=	${SAMBA4_BASENAME}-${SAMBA4_VERSION:S|.p|pre|:S|.r|rc|:S|.t|tp|:S|.a|alpha|}
 
 WRKSRC?=		${WRKDIR}/${DISTNAME}
@@ -60,8 +60,7 @@ CONFIGURE_ARGS+=	--exec-prefix="${PREFIX}" \
 			--with-privatedir="${SAMBA4_PRIVATEDIR}" \
 			--with-logfilebase="${SAMBA4_LOGDIR}"
 # Flags
-CONFIGURE_ENV+=		PTHREAD_CFLAGS="${PTHREAD_CFLAGS}" \
-			PTHREAD_LDFLAGS="${PTHREAD_LIBS}"
+CONFIGURE_ENV+=		PTHREAD_LDFLAGS="-lpthread"
 
 USES=			cpe compiler waf fakeroot pkgconfig perl5 python:2 \
 			execinfo readline iconv shebangfix
@@ -76,9 +75,6 @@ PLIST_SUB+=		PKGCONFIGDIR=${PKGCONFIGDIR:S;${PREFIX}/;;}
 # in the system)
 # popt
 LIB_DEPENDS+=		libpopt.so:${PORTSDIR}/devel/popt
-# XXX: We should try to switch to libunwind, libexecinfo is gcc specific(?)  
-# backtrace
-LIB_DEPENDS+=           libexecinfo.so:${PORTSDIR}/devel/libexecinfo
 # inotify
 LIB_DEPENDS+=		libinotify.so:${PORTSDIR}/devel/libinotify
 # SASL
@@ -422,9 +418,9 @@ python_CMD=		${PYTHON_CMD}
 python_OLD_CMD=		${SETENV} python
 SHEBANG_FILES=		${PATCH_WRKSRC}/source4/scripting/bin/*
 # No fancy color error messages
-.if ${COMPILER_TYPE} == "clang"
-CFLAGS+=		-fno-color-diagnostics
-.endif
+#.if ${COMPILER_TYPE} == "clang"
+#CFLAGS+=		-fno-color-diagnostics
+#.endif
 CONFIGURE_ENV+=		NOCOLOR=yes
 MAKE_ENV+=		NOCOLOR=yes
 
