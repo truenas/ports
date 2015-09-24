@@ -61,6 +61,7 @@
     SUBDIR += emacs-lisp-intro
     SUBDIR += erlang
     SUBDIR += erlang-java
+    SUBDIR += erlang-riak
     SUBDIR += erlang-runtime15
     SUBDIR += erlang-runtime16
     SUBDIR += erlang-runtime17
