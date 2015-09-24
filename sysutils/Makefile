@@ -803,6 +803,7 @@
     SUBDIR += renameutils
     SUBDIR += reoback
     SUBDIR += respond
+    SUBDIR += restic
     SUBDIR += retail
     SUBDIR += rfstool
     SUBDIR += rhc
