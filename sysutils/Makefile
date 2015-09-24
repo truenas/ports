@@ -407,6 +407,7 @@
     SUBDIR += ioping
     SUBDIR += ipa
     SUBDIR += ipad_charge
+    SUBDIR += ipfs-go
     SUBDIR += ipmitool
     SUBDIR += ipsc
     SUBDIR += isc-cron
