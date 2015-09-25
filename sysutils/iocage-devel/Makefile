@@ -14,7 +14,7 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	iocage
-GH_TAGNAME=	0099364
+GH_TAGNAME=	88bdb25
 
 .include <bsd.port.pre.mk>
 
