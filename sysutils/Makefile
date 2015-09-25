@@ -808,6 +808,7 @@
     SUBDIR += retail
     SUBDIR += rfstool
     SUBDIR += rhc
+    SUBDIR += riak-cs
     SUBDIR += rinse
     SUBDIR += rmonitor
     SUBDIR += roottail
