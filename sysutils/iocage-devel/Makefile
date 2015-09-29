@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	iocage
-PORTVERSION=	20150921
+PORTVERSION=	20150928
 CATEGORIES=	sysutils
 PKGNAMESUFFIX=	-devel
 
@@ -14,7 +14,7 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	iocage
-GH_TAGNAME=	88bdb25
+GH_TAGNAME=	cb1e5ac
 
 .include <bsd.port.pre.mk>
 
