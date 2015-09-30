@@ -3,7 +3,7 @@
 
 PORTNAME=	nut
 PORTVERSION=	2.7.3
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	sysutils
 MASTER_SITES=	http://www.networkupstools.org/source/${PORTVERSION:R}/
 DISTFILES=	${DISTNAME}${EXTRACT_SUFX} ${DISTNAME}${EXTRACT_SUFX}.sig
@@ -171,6 +171,7 @@ pre-install:
 
 post-install:
 	@${MKDIR} ${STAGEDIR}${STATEDIR}
+	${CP} ${STAGEDIR}${ETCDIR}/driver.list ${STAGEDIR}${PREFIX}/libexec/nut/
 .if ${PORT_OPTIONS:MDOCS}
 .if ${PORT_OPTIONS:MBASH}
 	@${MKDIR} ${STAGEDIR}${PREFIX}/etc/bash_completion.d/
