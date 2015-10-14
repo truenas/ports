@@ -1,4 +1,4 @@
-# $FreeBSD$
+# $FreeBSD: head/databases/ntdb/Makefile 393833 2015-08-09 22:52:17Z timur $
 
 PORTNAME=		ntdb
 PORTVERSION=		1.0
@@ -24,6 +24,7 @@ PLIST_SUB+=		PKGCONFIGDIR=${PKGCONFIGDIR:S;${PREFIX}/;;}
 
 CONFIGURE_ARGS+=	--mandir=${MANPREFIX}/man \
 			--infodir=${PREFIX}/${INFO_PATH}/${INFO_SUBDIR} \
+			--disable-rpath \
 			--without-gettext
 
 OPTIONS_DEFINE=		MANPAGES
