@@ -25,6 +25,7 @@ RUN_DEPENDS=	xdg-desktop-icon:${PORTSDIR}/devel/xdg-utils \
 PORTSCOUT=	limitw:1,even
 
 USES=		gettext gmake libtool pathfix pkgconfig tar:xz
+USE_GNOME=	intltool
 USE_LDCONFIG=	yes
 USE_SQLITE=	3
 GNU_CONFIGURE=	yes
