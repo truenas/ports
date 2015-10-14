@@ -57,6 +57,8 @@ TKAGGBACKEND_BUILD_DEPENDS+=	Xvfb:${PORTSDIR}/x11-servers/xorg-vfbserver
 WXAGGBACKEND_BUILD_DEPENDS=	Xvfb:${PORTSDIR}/x11-servers/xorg-vfbserver
 .endif
 
+.include <bsd.port.options.mk>
+
 post-extract:
 	${CHMOD} -R ga+r ${WRKDIR}
 
@@ -78,9 +80,15 @@ post-patch:
 post-install:
 	${STRIP_CMD} ${STAGEDIR}${PYTHON_SITELIBDIR}/matplotlib/_image.so
 	${STRIP_CMD} ${STAGEDIR}${PYTHON_SITELIBDIR}/matplotlib/backends/_backend_agg.so
+.if ${PORT_OPTIONS:MGTKAGGBACKEND}
 	${STRIP_CMD} ${STAGEDIR}${PYTHON_SITELIBDIR}/matplotlib/backends/_gtkagg.so
+.endif
+.if ${PORT_OPTIONS:MTKAGGBACKEND}
 	${STRIP_CMD} ${STAGEDIR}${PYTHON_SITELIBDIR}/matplotlib/backends/_tkagg.so
+.endif
+.if ${PORT_OPTIONS:MGTKBACKEND}
 	${STRIP_CMD} ${STAGEDIR}${PYTHON_SITELIBDIR}/matplotlib/backends/_backend_gdk.so
+.endif
 	${STRIP_CMD} ${STAGEDIR}${PYTHON_SITELIBDIR}/matplotlib/_qhull.so
 	${STRIP_CMD} ${STAGEDIR}${PYTHON_SITELIBDIR}/matplotlib/ttconv.so
 	${STRIP_CMD} ${STAGEDIR}${PYTHON_SITELIBDIR}/matplotlib/_delaunay.so
