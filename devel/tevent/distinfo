@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 SHA256 (tevent-0.9.24.tar.gz) = 4db94cc092611775340891bb138e1c45310638b27fb3c59fb11b5af345973f50
 SIZE (tevent-0.9.24.tar.gz) = 560585
+=======
+SHA256 (tevent-0.9.21.tar.gz) = f2be7463573dab2d8210cb57fe7e7e2aeb323274cbdc865a6e29ddcfb977f0f4
+SIZE (tevent-0.9.21.tar.gz) = 550606
+>>>>>>> freenas/9.2.1-BRANCH

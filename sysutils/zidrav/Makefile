@@ -19,6 +19,7 @@ PLIST_FILES=	bin/zidrav man/man1/zidrav.1.gz
 do-install:
 	${INSTALL_PROGRAM} ${WRKSRC}/zidrav ${STAGEDIR}${PREFIX}/bin/
 	${INSTALL_MAN} ${WRKSRC}/zidrav.1 ${STAGEDIR}${PREFIX}/man/man1/
+<<<<<<< HEAD
 
 .include <bsd.port.options.mk>
 
@@ -33,5 +34,7 @@ CFLAGS+=	-Dcrc32_type=int
 # mips*eb, powerpc, powerpc64 and sparc
 CFLAGS+=	-DCPU_BIGENDIAN
 .endif
+=======
+>>>>>>> freenas/9.2.1-BRANCH
 
 .include <bsd.port.mk>

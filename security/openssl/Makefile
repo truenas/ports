@@ -3,8 +3,13 @@
 
 PORTNAME=	openssl
 PORTVERSION=	1.0.1
+<<<<<<< HEAD
 DISTVERSIONSUFFIX=	k
 PORTREVISION=	17
+=======
+DISTVERSIONSUFFIX=	g
+PORTREVISION=	11
+>>>>>>> freenas/9.2.1-BRANCH
 CATEGORIES=	security devel
 MASTER_SITES=	http://www.openssl.org/%SUBDIR%/ \
 		ftp://ftp.openssl.org/%SUBDIR%/ \
@@ -60,8 +65,12 @@ USE_PERL5=	build
 MAKE_ARGS+=	WHOLE_ARCHIVE_FLAG=--whole-archive
 MAKE_ENV+=	LIBRPATH="${PREFIX}/lib" GREP_OPTIONS=
 SUB_FILES=	pkg-message
+<<<<<<< HEAD
 
 CPE_VERSION=	${PORTVERSION}${DISTVERSIONSUFFIX}
+=======
+OPENSSLDIR=	${PREFIX}/openssl
+>>>>>>> freenas/9.2.1-BRANCH
 
 FIX_POD=apps/cms.pod \
 	apps/smime.pod \
@@ -82,6 +91,7 @@ FIX_POD=apps/cms.pod \
 	ssl/SSL_set_session.pod \
 	ssl/SSL_shutdown.pod \
 	ssl/SSL_write.pod
+<<<<<<< HEAD
 
 .include <bsd.port.pre.mk>
 
@@ -91,6 +101,14 @@ IGNORE=	OpenSSL can not be installed over the base version
 
 OPENSSLDIR?=	${PREFIX}/openssl
 PLIST_SUB+=	OPENSSLDIR=${OPENSSLDIR:S=^${PREFIX}/==}
+=======
+
+.include <bsd.port.pre.mk>
+>>>>>>> freenas/9.2.1-BRANCH
+
+.if ${PREFIX} == /usr
+IGNORE=	OpenSSL can not be installed over the base version
+.endif
 
 OPENSSL_BASE_SONAME!=	readlink ${DESTDIR}/usr/lib/libcrypto.so || true
 OPENSSL_SHLIBVER_BASE=	${OPENSSL_BASE_SONAME:E}
@@ -164,7 +182,11 @@ EXTRACONFIGURE+=	no-rc5
 .endif
 
 .if ${PORT_OPTIONS:MPADLOCK}
+<<<<<<< HEAD
 BROKEN=		does not build with openssl-1.0.1k
+=======
+#BROKEN=		does not build with openssl-1.0.1f
+>>>>>>> freenas/9.2.1-BRANCH
 PATCH_DIST_STRIP=	-p1
 PATCH_SITES+=	http://git.alpinelinux.org/cgit/aports/plain/main/openssl/:padlock
 PATCHFILES+=	0001-crypto-hmac-support-EVP_MD_CTX_FLAG_ONESHOT-and-set-.patch:padlock \

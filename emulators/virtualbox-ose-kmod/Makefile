@@ -2,7 +2,11 @@
 # $FreeBSD$
 
 PORTNAME=	virtualbox-ose
+<<<<<<< HEAD
 DISTVERSION=	4.3.16
+=======
+DISTVERSION=	4.3.12
+>>>>>>> freenas/9.2.1-BRANCH
 CATEGORIES=	emulators
 MASTER_SITES=	http://download.virtualbox.org/virtualbox/${DISTVERSION}/ \
 		http://tmp.chruetertee.ch/ \
@@ -18,10 +22,14 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 
 BUILD_DEPENDS=	kmk:${PORTSDIR}/devel/kBuild
 
+<<<<<<< HEAD
 CPE_VENDOR=	oracle
 CPE_PRODUCT=	vm_virtualbox
 
 USES=		cpe kmod tar:bzip2
+=======
+USES=		kmod tar:bzip2
+>>>>>>> freenas/9.2.1-BRANCH
 UNIQUENAME=	${PORTNAME}${PKGNAMESUFFIX}
 PATCHDIR=	${.CURDIR}/../${PORTNAME}/files
 WRKSRC=		${WRKDIR}/VirtualBox-${PORTVERSION}

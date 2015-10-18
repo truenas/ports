@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 @shell bin/mksh
 man/man1/mksh.1.gz
+=======
+man/man1/mksh.1.gz
+bin/mksh
+@exec echo "updating /etc/shells"; cp /etc/shells /etc/shells.bak; (grep -v %D/%F /etc/shells.bak; echo %D/%F) >/etc/shells
+@unexec echo "updating /etc/shells"; cp /etc/shells /etc/shells.bak; (grep -v %D/%F /etc/shells.bak) >/etc/shells
+>>>>>>> freenas/9.2.1-BRANCH
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/dot.mkshrc
 %%PORTEXAMPLES%%@dirrm %%EXAMPLESDIR%%

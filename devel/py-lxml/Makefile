@@ -2,7 +2,12 @@
 # $FreeBSD$
 
 PORTNAME=	lxml
+<<<<<<< HEAD
 PORTVERSION=	3.4.0
+=======
+PORTVERSION=	3.2.5
+PORTREVISION=	1
+>>>>>>> freenas/9.2.1-BRANCH
 CATEGORIES=	devel python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -17,6 +22,8 @@ LIB_DEPENDS=	libxml2.so:${PORTSDIR}/textproc/libxml2 \
 
 USES=		python
 USE_PYTHON=	autoplist distutils
+
+LDFLAGS+=	-Wl,-rpath=${LOCALBASE}/lib
 
 LDFLAGS+=	-Wl,-rpath=${LOCALBASE}/lib
 

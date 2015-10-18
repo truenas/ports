@@ -1,31 +1,43 @@
 # Created by: KalleDK <plexmaintainer@k-moeller.dk>
-# $FreeBSD$
+# $FreeBSD: head/multimedia/plexmediaserver/Makefile 373635 2014-11-29 16:53:39Z feld $
 
 PORTNAME=	plexmediaserver
+<<<<<<< HEAD
 PORTVERSION=	0.9.9.13.525
 CATEGORIES=	multimedia
 MASTER_SITES=	http://downloads.plexapp.com/plex-media-server/${PORTVERSION}-${PLEX_BUILD}/
 DISTNAME=	PlexMediaServer-${PORTVERSION}-${PLEX_BUILD}-freebsd-amd64
+=======
+PORTVERSION?=	0.9.11.4.739
+PORTREVISION?=	1
+CATEGORIES=	multimedia
+MASTER_SITES=	http://downloads.plexapp.com/plex-media-server/${PORTVERSION}-${PLEX_BUILD}/
+DISTNAME=	PlexMediaServer-${PORTVERSION}-${PLEX_BUILD}-freebsd-${ARCH}
+>>>>>>> freenas/9.2.1-BRANCH
 
-MAINTAINER=	feld@FreeBSD.org
-COMMENT=	The Plex Media Server component
+MAINTAINER?=	feld@FreeBSD.org
+COMMENT=	Plex Media Server component
 
 USES=	tar:bzip2
+<<<<<<< HEAD
 PLEX_BUILD=	197d5ed
+=======
+PLEX_BUILD?=	a4e710f
+>>>>>>> freenas/9.2.1-BRANCH
 NO_BUILD=	yes
 WRKSRC=	${WRKDIR}/PlexMediaServer-${PORTVERSION}-${PLEX_BUILD}
 
-USE_RC_SUBR=	plexmediaserver
+USE_RC_SUBR?=	${PORTNAME}
 
-SUB_FILES=	plexmediaserver
-SUB_LIST=	SUPPORT_PATH=${SUPPORT_PATH} SCRIPT_PATH="${SCRIPT_PATH}" USERS=${USERS} GROUPS=${GROUPS}
+SUB_FILES=	pkg-message
+SUB_LIST?=	PORTNAME=${PORTNAME} DATADIR=${DATADIR} USERS=${USERS} GROUPS=${GROUPS}
 
 USERS=	plex
-GROUPS=	plex
-SUPPORT_PATH?=	${PREFIX}/plexdata
-SCRIPT_PATH?=	${DATADIR}
+GROUPS=	${USERS}
+BUNDLE_LIBS=	yes
 
 ONLY_FOR_ARCHS=	amd64
+ONLY_FOR_ARCHS_REASON=	binary-only program, source code not available
 
 .include <bsd.port.pre.mk>
 
@@ -41,6 +53,7 @@ RUN_DEPENDS+=	${LOCALBASE}/lib/compat/libstdc++.so.6:${PORTSDIR}/misc/compat9x
 
 post-patch:
 	# binaries don't come pre-stripped
+<<<<<<< HEAD
 	${FIND} ${WRKSRC} -name '*.so' -exec ${STRIP_CMD} {} \;
 	${STRIP_CMD} ${WRKSRC}/Resources/rsync ${WRKSRC}/Resources/Python/bin/python
 
@@ -50,13 +63,26 @@ do-install:
 	${INSTALL_PROGRAM} ${WRKSRC}/Plex\ Media\ Scanner ${STAGEDIR}/${SCRIPT_PATH}
 	${INSTALL_PROGRAM} ${WRKSRC}/Plex\ Media\ Server ${STAGEDIR}/${SCRIPT_PATH}
 	${INSTALL_LIB} ${WRKSRC}/lib* ${STAGEDIR}/${SCRIPT_PATH}
+=======
+	${FIND} ${WRKSRC}/Resources -name '*.so' -exec ${STRIP_CMD} {} \;
+	${STRIP_CMD} ${WRKSRC}/Resources/rsync ${WRKSRC}/Resources/Python/bin/python
+
+do-install:
+	@(cd ${WRKSRC} && ${COPYTREE_SHARE} Resources ${STAGEDIR}/${DATADIR})
+	${INSTALL_PROGRAM} ${WRKSRC}/Plex\ DLNA\ Server ${STAGEDIR}/${DATADIR}
+	${INSTALL_PROGRAM} ${WRKSRC}/Plex\ Media\ Scanner ${STAGEDIR}/${DATADIR}
+	${INSTALL_PROGRAM} ${WRKSRC}/Plex\ Media\ Server ${STAGEDIR}/${DATADIR}
+	${INSTALL_LIB} ${WRKSRC}/lib* ${STAGEDIR}/${DATADIR}
+>>>>>>> freenas/9.2.1-BRANCH
 	# Fix permissions to programs and db
-	@${CHMOD} a+x ${STAGEDIR}/${SCRIPT_PATH}/Resources/rsync
-	@${CHMOD} a+x ${STAGEDIR}/${SCRIPT_PATH}/Resources/Plex\ New\ Transcoder
-	@${CHMOD} a+x ${STAGEDIR}/${SCRIPT_PATH}/Resources/Plex\ Transcoder
-	@${CHMOD} a+x ${STAGEDIR}/${SCRIPT_PATH}/Resources/Python/bin/python
-	@${CHMOD} u+w ${STAGEDIR}/${SCRIPT_PATH}/Resources/com.plexapp.plugins.library.db
+	@${CHMOD} a+x ${STAGEDIR}/${DATADIR}/Resources/rsync
+	@${CHMOD} a+x ${STAGEDIR}/${DATADIR}/Resources/Plex\ New\ Transcoder
+	@${CHMOD} a+x ${STAGEDIR}/${DATADIR}/Resources/Plex\ Transcoder
+	@${CHMOD} a+x ${STAGEDIR}/${DATADIR}/Resources/Python/bin/python
+	@${CHMOD} u+w ${STAGEDIR}/${DATADIR}/Resources/com.plexapp.plugins.library.db
 	# Python fix
-	@${LN} -s ${SCRIPT_PATH}/libpython2.7.so.1 ${STAGEDIR}/${SCRIPT_PATH}/libpython2.7.so
+	@${LN} -s ${DATADIR}/libpython2.7.so.1 ${STAGEDIR}/${DATADIR}/libpython2.7.so
+	# Workaround for space in binary name
+	@${LN} -s ${DATADIR}/Plex\ Media\ Server ${STAGEDIR}${DATADIR}/Plex_Media_Server
 
 .include <bsd.port.post.mk>

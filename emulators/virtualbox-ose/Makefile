@@ -2,7 +2,12 @@
 # $FreeBSD$
 
 PORTNAME=	virtualbox-ose
+<<<<<<< HEAD
 DISTVERSION=	4.3.16
+=======
+DISTVERSION=	4.3.12
+PORTREVISION=	1
+>>>>>>> freenas/9.2.1-BRANCH
 CATEGORIES=	emulators
 MASTER_SITES=	http://download.virtualbox.org/virtualbox/${DISTVERSION}/ \
 		http://tmp.chruetertee.ch/ \
@@ -33,7 +38,11 @@ CPE_PRODUCT=	vm_virtualbox
 
 WRKSRC=		${WRKDIR}/VirtualBox-${PORTVERSION}
 ONLY_FOR_ARCHS=	i386 amd64
+<<<<<<< HEAD
 USES=		compiler cpe iconv pkgconfig tar:bzip2
+=======
+USES=		compiler iconv pkgconfig tar:bzip2
+>>>>>>> freenas/9.2.1-BRANCH
 USE_GNOME=	libidl
 USE_PYTHON_BUILD=	yes
 

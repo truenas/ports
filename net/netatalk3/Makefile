@@ -1,8 +1,13 @@
 # Created by: stb
-# $FreeBSD$
+# $FreeBSD: head/net/netatalk3/Makefile 355544 2014-05-27 16:47:31Z marcus $
 
 PORTNAME=	netatalk
+<<<<<<< HEAD
 PORTVERSION=	3.1.7
+=======
+PORTVERSION=	3.1.2
+PORTREVISION=	3
+>>>>>>> freenas/9.2.1-BRANCH
 PORTEPOCH=	1
 CATEGORIES=	net
 MASTER_SITES=	SF
@@ -15,10 +20,19 @@ COMMENT=	File server for Mac OS X
 LICENSE=	GPLv2
 
 LIB_DEPENDS=	libgcrypt.so:${PORTSDIR}/security/libgcrypt \
+<<<<<<< HEAD
     		libevent.so:${PORTSDIR}/devel/libevent2
 
 USE_BDB=	5+
 USES=		iconv gmake pkgconfig libtool tar:bzip2
+=======
+    		libevent-2.0.so:${PORTSDIR}/devel/libevent2
+
+USE_AUTOTOOLS=	libtool
+USE_BDB=	5+
+USE_BZIP2=	yes
+USES=		iconv gmake pkgconfig perl5
+>>>>>>> freenas/9.2.1-BRANCH
 GNU_CONFIGURE=	yes
 USE_LDCONFIG=	yes
 USE_RC_SUBR=	netatalk
@@ -33,7 +47,11 @@ CONFIGURE_ARGS+=	--with-pkgconfdir=${PREFIX}/etc \
 			--with-libevent-header=${LOCALBASE}/include \
 			--with-libevent-lib=${LOCALBASE}/lib
 
+<<<<<<< HEAD
 OPTIONS_DEFINE=PAM KRB5 LDAP SENDFILE KERBEROS DBUS MYSQL ACL TCPWRAP
+=======
+OPTIONS_DEFINE=PAM KRB5 LDAP SENDFILE KERBEROS DTRACE DBUS MYSQL ACL TCPWRAP
+>>>>>>> freenas/9.2.1-BRANCH
 OPTIONS_DEFAULT=KERBEROS DBUS TCPWRAP
 OPTIONS_RADIO=ZEROCONF
 OPTIONS_RADIO_ZEROCONF=AVAHI MDNSRESPONDER
@@ -41,7 +59,11 @@ OPTIONS_DEFAULT+=AVAHI
 
 NOZEROCONF_DESC=Disable Zeroconf(Bonjour) support
 KRB5_DESC=	Enable Kerberos V UAM
+<<<<<<< HEAD
 #DTRACE_DESC=	Enable DTrace support
+=======
+DTRACE_DESC=	Enable DTrace support
+>>>>>>> freenas/9.2.1-BRANCH
 MYSQL_DESC=	Enable MySQL CNID backend support
 SENDFILE_DESC=	Enable Sendfile support
 ACL_DESC=	Enable ACL support
@@ -113,7 +135,11 @@ CONFIGURE_ARGS+=	--disable-sendfile
 
 .if ${PORT_OPTIONS:MDBUS} || exists(${LOCALBASE}/libdata/pkgconfig/dbus-glib-1.pc)
 LIB_DEPENDS+=		libdbus-glib-1.so:${PORTSDIR}/devel/dbus-glib
+<<<<<<< HEAD
 RUN_DEPENDS+=		${LOCALBASE}/libdata/pkgconfig/dbus-python.pc:${PORTSDIR}/devel/pydbus-common
+=======
+RUN_DEPENDS+=		${LOCALBASE}/libdata/pkgconfig/dbus-python.pc:${PORTSDIR}/devel/py-dbus
+>>>>>>> freenas/9.2.1-BRANCH
 PLIST_SUB+=		DBUS=""
 .else
 PLIST_SUB+=		DBUS="@comment "

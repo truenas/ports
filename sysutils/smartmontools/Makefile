@@ -2,8 +2,13 @@
 # $FreeBSD$
 
 PORTNAME=	smartmontools
+<<<<<<< HEAD
 PORTVERSION=	6.3
 PORTREVISION=   1
+=======
+PORTVERSION=	6.2
+PORTREVISION=	1
+>>>>>>> freenas/9.2.1-BRANCH
 CATEGORIES=	sysutils
 MASTER_SITES=	SF
 

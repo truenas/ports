@@ -23,7 +23,11 @@ LIB_DEPENDS=	libfreetype.so:${PORTSDIR}/print/freetype2 \
 RUN_DEPENDS=	${FONTSCALE}:${PORTSDIR}/x11-fonts/xorg-fonts-truetype \
 		${FONTENCOD}:${PORTSDIR}/x11-fonts/encodings
 
+<<<<<<< HEAD
 USES+=		gettext gmake libtool:keepla pathfix pkgconfig perl5
+=======
+USES=		gettext gmake pathfix pkgconfig perl5
+>>>>>>> freenas/9.2.1-BRANCH
 USE_PERL5=	build
 USE_LDCONFIG=	yes
 GNU_CONFIGURE=	yes

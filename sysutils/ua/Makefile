@@ -26,7 +26,14 @@ OPTIONS_DEFINE=	DOCS
 .include <bsd.port.options.mk>
 
 post-install:
+<<<<<<< HEAD
 	${INSTALL_MAN} ${WRKSRC}/*.1 ${STAGEDIR}${PREFIX}/man/man1/
+=======
+.for i in ${MAN1}
+	${INSTALL_MAN} ${WRKSRC}/${i} ${STAGEDIR}${PREFIX}/man/man1/
+.endfor
+.if ${PORT_OPTIONS:MDOCS}
+>>>>>>> freenas/9.2.1-BRANCH
 	${MKDIR} ${STAGEDIR}${DOCSDIR}
 	${INSTALL_DATA} ${WRKSRC}/README ${STAGEDIR}${DOCSDIR}/
 

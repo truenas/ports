@@ -1,7 +1,11 @@
 %%DATADIR%%/Plex DLNA Server
 %%DATADIR%%/Plex Media Scanner
 %%DATADIR%%/Plex Media Server
+<<<<<<< HEAD
 %%DATADIR%%/Resources/DejaVuUniversal.ttf
+=======
+%%DATADIR%%/Plex_Media_Server
+>>>>>>> freenas/9.2.1-BRANCH
 %%DATADIR%%/Resources/Graphics/DefaultAlbumCover.png
 %%DATADIR%%/Resources/Graphics/actor-icon.png
 %%DATADIR%%/Resources/Graphics/album-fanart.jpg
@@ -26,6 +30,14 @@
 %%DATADIR%%/Resources/LICENSE
 %%DATADIR%%/Resources/Plex New Transcoder
 %%DATADIR%%/Resources/Plex Transcoder
+%%DATADIR%%/Resources/PlexFont-Regular.ttf
+%%DATADIR%%/Resources/Plug-ins/Fanart-tv.bundle/Contents/Code/__init__.py
+%%DATADIR%%/Resources/Plug-ins/Fanart-tv.bundle/Contents/DefaultPrefs.json
+%%DATADIR%%/Resources/Plug-ins/Fanart-tv.bundle/Contents/Info.plist
+%%DATADIR%%/Resources/Plug-ins/Fanart-tv.bundle/Contents/Resources/attribution.png
+%%DATADIR%%/Resources/Plug-ins/Fanart-tv.bundle/Contents/Resources/icon-default.png
+%%DATADIR%%/Resources/Plug-ins/Fanart-tv.bundle/Contents/VERSION
+%%DATADIR%%/Resources/Plug-ins/Fanart-tv.bundle/README.md
 %%DATADIR%%/Resources/Plug-ins/Framework.bundle/Contents/Info.plist
 %%DATADIR%%/Resources/Plug-ins/Framework.bundle/Contents/Resources/Platforms/FreeBSD/i386/Frameworks/README
 %%DATADIR%%/Resources/Plug-ins/Framework.bundle/Contents/Resources/Platforms/FreeBSD/i386/Libraries/README
@@ -396,6 +408,7 @@
 %%DATADIR%%/Resources/Plug-ins/LastFM.bundle/Contents/Info.plist
 %%DATADIR%%/Resources/Plug-ins/LastFM.bundle/Contents/Resources/icon-default.png
 %%DATADIR%%/Resources/Plug-ins/LastFM.bundle/Contents/VERSION
+%%DATADIR%%/Resources/Plug-ins/LastFM.bundle/README.md
 %%DATADIR%%/Resources/Plug-ins/LocalMedia.bundle/Contents/Code/__init__.py
 %%DATADIR%%/Resources/Plug-ins/LocalMedia.bundle/Contents/Code/audiohelpers.py
 %%DATADIR%%/Resources/Plug-ins/LocalMedia.bundle/Contents/Code/config.py
@@ -414,9 +427,14 @@
 %%DATADIR%%/Resources/Plug-ins/LocalMedia.bundle/Contents/Libraries/Shared/mp4file/atomsearch_test.py
 %%DATADIR%%/Resources/Plug-ins/LocalMedia.bundle/Contents/Libraries/Shared/mp4file/mp4file.py
 %%DATADIR%%/Resources/Plug-ins/LocalMedia.bundle/Contents/Libraries/Shared/mutagen/__init__.py
+%%DATADIR%%/Resources/Plug-ins/LocalMedia.bundle/Contents/Libraries/Shared/mutagen/_compat.py
 %%DATADIR%%/Resources/Plug-ins/LocalMedia.bundle/Contents/Libraries/Shared/mutagen/_constants.py
+%%DATADIR%%/Resources/Plug-ins/LocalMedia.bundle/Contents/Libraries/Shared/mutagen/_id3frames.py
+%%DATADIR%%/Resources/Plug-ins/LocalMedia.bundle/Contents/Libraries/Shared/mutagen/_id3specs.py
+%%DATADIR%%/Resources/Plug-ins/LocalMedia.bundle/Contents/Libraries/Shared/mutagen/_id3util.py
 %%DATADIR%%/Resources/Plug-ins/LocalMedia.bundle/Contents/Libraries/Shared/mutagen/_util.py
 %%DATADIR%%/Resources/Plug-ins/LocalMedia.bundle/Contents/Libraries/Shared/mutagen/_vorbis.py
+%%DATADIR%%/Resources/Plug-ins/LocalMedia.bundle/Contents/Libraries/Shared/mutagen/aiff.py
 %%DATADIR%%/Resources/Plug-ins/LocalMedia.bundle/Contents/Libraries/Shared/mutagen/apev2.py
 %%DATADIR%%/Resources/Plug-ins/LocalMedia.bundle/Contents/Libraries/Shared/mutagen/asf.py
 %%DATADIR%%/Resources/Plug-ins/LocalMedia.bundle/Contents/Libraries/Shared/mutagen/easyid3.py
@@ -430,6 +448,7 @@
 %%DATADIR%%/Resources/Plug-ins/LocalMedia.bundle/Contents/Libraries/Shared/mutagen/musepack.py
 %%DATADIR%%/Resources/Plug-ins/LocalMedia.bundle/Contents/Libraries/Shared/mutagen/ogg.py
 %%DATADIR%%/Resources/Plug-ins/LocalMedia.bundle/Contents/Libraries/Shared/mutagen/oggflac.py
+%%DATADIR%%/Resources/Plug-ins/LocalMedia.bundle/Contents/Libraries/Shared/mutagen/oggopus.py
 %%DATADIR%%/Resources/Plug-ins/LocalMedia.bundle/Contents/Libraries/Shared/mutagen/oggspeex.py
 %%DATADIR%%/Resources/Plug-ins/LocalMedia.bundle/Contents/Libraries/Shared/mutagen/oggtheora.py
 %%DATADIR%%/Resources/Plug-ins/LocalMedia.bundle/Contents/Libraries/Shared/mutagen/oggvorbis.py
@@ -647,7 +666,7 @@
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Record Label/Sub Pop.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Record Label/TVT.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Record Label/Too Pure.png
-%%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Record Label/Tooth  Nail.png
+%%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Record Label/Tooth Nail.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Record Label/Touch and Go.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Record Label/Universal Records.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Record Label/Universal Republic.png
@@ -756,6 +775,7 @@
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Studio/Criterion.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Studio/DC_Comics.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Studio/DMAX.png
+%%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Studio/DNA.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Studio/Damselfly.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Studio/Danjaq.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Studio/Dark_Castle_Entertainment.png
@@ -917,6 +937,7 @@
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Studio/Nat Geo Wild.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Studio/National_General_Pictures.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Studio/Nelvana.png
+%%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Studio/Netflix.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Studio/Network Ten.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Studio/New_Deal_Entertainment.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Studio/New_Line_Cinema.png
@@ -1176,6 +1197,7 @@
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Studio/syndicated.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Studio/syrena.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Studio/telos.png
+%%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Studio/the_hub.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Studio/thecw.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Studio/thewb.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Studio/tnt.png
@@ -1214,6 +1236,7 @@
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Video Codec/mpeg4.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Video Codec/quicktime.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Video Codec/sdtv.png
+%%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Video Codec/vc1.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Video Codec/wmv.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Video Codec/wmvhd.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Video Codec/xvid.png
@@ -1230,11 +1253,13 @@
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Video Resolution/432.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Video Resolution/480.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Video Resolution/480i.png
+%%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Video Resolution/4k.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Video Resolution/540.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Video Resolution/544.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Video Resolution/576.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Video Resolution/576i.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Video Resolution/720.png
+%%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Video Resolution/8k.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Video Resolution/dolbydigital.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Video Resolution/hdtv.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/Video Resolution/sd.png
@@ -1242,6 +1267,7 @@
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/icon-default.png
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/Resources/substitutions.xml
 %%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/Contents/VERSION
+%%DATADIR%%/Resources/Plug-ins/Media-Flags.bundle/README.md
 %%DATADIR%%/Resources/Plug-ins/MoviePosterDB.bundle/Contents/Code/__init__.py
 %%DATADIR%%/Resources/Plug-ins/MoviePosterDB.bundle/Contents/Info.plist
 %%DATADIR%%/Resources/Plug-ins/MoviePosterDB.bundle/Contents/Resources/attribution.png
@@ -1369,6 +1395,11 @@
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.college_humor/URL/CollegeHumor/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.comedycentral/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.comedycentral/URL/Comedy Central/ServiceCode.pys
+<<<<<<< HEAD
+=======
+%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.crackle/ServiceInfo.plist
+%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.crackle/URL/Crackle/ServiceCode.pys
+>>>>>>> freenas/9.2.1-BRANCH
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.dailymotion/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.dailymotion/URL/Dailymotion/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.discovery/ServiceInfo.plist
@@ -1377,26 +1408,34 @@
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.disney/URL/Disney/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.dolectures/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.dolectures/URL/DoLectures/ServiceCode.pys
+<<<<<<< HEAD
+=======
+%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.drdk/ServiceInfo.plist
+%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.drdk/URL/drdk/ServiceCode.pys
+>>>>>>> freenas/9.2.1-BRANCH
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.dumpert/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.dumpert/URL/Dumpert/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.einthusan/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.einthusan/URL/Einthusan/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.eurogamer/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.eurogamer/URL/Eurogamer/ServiceCode.pys
+<<<<<<< HEAD
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.euronews/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.euronews/URL/Euronews/ServiceCode.pys
+=======
+>>>>>>> freenas/9.2.1-BRANCH
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.extreme/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.extreme/URL/extreme/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.facebook/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.facebook/URL/Facebook/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.fallback/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.fallback/URL/Fallback/ServiceCode.pys
+%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.finkammat/ServiceInfo.plist
+%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.finkammat/URL/Finkammat/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.floridafishingreport/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.floridafishingreport/URL/Florida Fishing Report/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.foodnetwork/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.foodnetwork/URL/Food Network/ServiceCode.pys
-%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.foodnetworkcanada/ServiceInfo.plist
-%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.foodnetworkcanada/URL/Food Network Canada/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.foratv/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.foratv/URL/ForaTV/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.foxnews/ServiceInfo.plist
@@ -1423,7 +1462,10 @@
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.gametrailers/URL/GameTrailers/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.giantbomb/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.giantbomb/URL/GiantBomb/ServiceCode.pys
+<<<<<<< HEAD
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.giantbomb/URL/GiantBomb/ServicePrefs.json
+=======
+>>>>>>> freenas/9.2.1-BRANCH
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.goal/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.goal/URL/Goal/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.golfchannel/ServiceInfo.plist
@@ -1452,8 +1494,6 @@
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.iplayer/URL/BBC iPlayer/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.jamieoliver/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.jamieoliver/URL/JamieOliver/ServiceCode.pys
-%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.justintv/ServiceInfo.plist
-%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.justintv/URL/Justin.tv/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.kanal5play/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.kanal5play/URL/Kanal 5 Play/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.kelbytv/ServiceInfo.plist
@@ -1503,10 +1543,17 @@
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.nme/URL/NME/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.nos/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.nos/URL/NOS/ServiceCode.pys
+<<<<<<< HEAD
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.npo/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.npo/URL/NPO/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.nytimes.lens/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.nytimes.lens/URL/Lens/ServiceCode.pys
+=======
+%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.nowthisnews/ServiceInfo.plist
+%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.nowthisnews/URL/NowThis News/ServiceCode.pys
+%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.npo/ServiceInfo.plist
+%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.npo/URL/NPO/ServiceCode.pys
+>>>>>>> freenas/9.2.1-BRANCH
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.orftvthek/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.orftvthek/URL/ORF TVThek Live/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.orftvthek/URL/ORF TVThek VOD/ServiceCode.pys
@@ -1515,6 +1562,13 @@
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.pbs/Shared Code/PBS_API.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.pbs/Shared Code/SortThumbs.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.pbs/URL/PBS/ServiceCode.pys
+%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.pftv/ServiceInfo.plist
+%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.pftv/URL/faststream.in/ServiceCode.pys
+%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.pftv/URL/gorillavid.in/ServiceCode.pys
+%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.pftv/URL/nosvideo.com/ServiceCode.pys
+%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.pftv/URL/royalvids.eu/ServiceCode.pys
+%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.pftv/URL/vidzi.tv/ServiceCode.pys
+%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.pftv/URL/vodlocker.com/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.pinkbike/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.pinkbike/URL/Pinkbike/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.pitchforktv/ServiceInfo.plist
@@ -1523,10 +1577,6 @@
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.pitchforktv/URL/Pitchfork TV/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.pixelcorps/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.pixelcorps/URL/PixelCorps TV/ServiceCode.pys
-%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.pokernews/ServiceInfo.plist
-%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.pokernews/URL/Poker News/ServiceCode.pys
-%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.pokerstarstv/ServiceInfo.plist
-%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.pokerstarstv/URL/PokerstarsTV/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.pokertube/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.pokertube/URL/PokerTube/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.redbulltv/ServiceInfo.plist
@@ -1551,12 +1601,8 @@
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.sapo/URL/Sapo/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.schweizerfernsehen/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.schweizerfernsehen/URL/Schweizer Fernsehen/ServiceCode.pys
-%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.showcase/ServiceInfo.plist
-%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.showcase/URL/Showcase/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.showmedo/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.showmedo/URL/ShowMeDo/ServiceCode.pys
-%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.skyplayer/ServiceInfo.plist
-%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.skyplayer/URL/SkyGo/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.skysports/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.skysports/URL/SkySports/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.slice/ServiceInfo.plist
@@ -1573,8 +1619,6 @@
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.springboard/URL/Springboard/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.stubru/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.stubru/URL/Studio Brussel/ServiceCode.pys
-%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.studio100/ServiceInfo.plist
-%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.studio100/URL/Studio100/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.stumbleupon/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.stumbleupon/URL/StumbleUpon/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.svtplay/ServiceInfo.plist
@@ -1615,14 +1659,17 @@
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.traileraddict/URL/Trailer Addict/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.triplem/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.triplem/URL/TripleM/ServiceCode.pys
-%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.tv3playdk/ServiceInfo.plist
-%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.tv3playdk/URL/tv3playdk/ServiceCode.pys
+%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.tubitv/ServiceInfo.plist
+%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.tubitv/URL/Tubi TV/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.tv4play/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.tv4play/Shared Code/tv4play.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.tv4play/URL/TV4 Play/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.tv4play/URL/TV4 Play/ServicePrefs.json
+<<<<<<< HEAD
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.tvigle/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.tvigle/URL/Tvigle/ServiceCode.pys
+=======
+>>>>>>> freenas/9.2.1-BRANCH
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.tvkultura/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.tvkultura/URL/TVKultura/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.tvland/ServiceInfo.plist
@@ -1647,12 +1694,15 @@
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.urplay/URL/URPlay/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.ustream/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.ustream/URL/Ustream/ServiceCode.pys
+<<<<<<< HEAD
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.vesti/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.vesti/URL/Vesti/ServiceCode.pys
+=======
+>>>>>>> freenas/9.2.1-BRANCH
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.vevo/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.vevo/URL/Vevo/ServiceCode.pys
-%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.vgtv/ServiceInfo.plist
-%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.vgtv/URL/VGTV/ServiceCode.pys
+%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.viasat/ServiceInfo.plist
+%%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.viasat/URL/Viasat Play/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.vice/ServiceInfo.plist
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.vice/URL/Vice/ServiceCode.pys
 %%DATADIR%%/Resources/Plug-ins/Services.bundle/Contents/Service Sets/com.plexapp.plugins.viddler/ServiceInfo.plist
@@ -1790,6 +1840,13 @@
 %%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/img/devices/ie@2x.png
 %%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/img/devices/ios.png
 %%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/img/devices/ios@2x.png
+<<<<<<< HEAD
+=======
+%%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/img/devices/linux.png
+%%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/img/devices/linux@2x.png
+%%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/img/devices/nas.png
+%%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/img/devices/nas@2x.png
+>>>>>>> freenas/9.2.1-BRANCH
 %%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/img/devices/opera.png
 %%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/img/devices/opera@2x.png
 %%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/img/devices/osx.png
@@ -1810,6 +1867,11 @@
 %%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/img/devices/win8@2x.png
 %%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/img/devices/wp.png
 %%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/img/devices/wp@2x.png
+<<<<<<< HEAD
+=======
+%%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/img/devices/xbox.png
+%%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/img/devices/xbox@2x.png
+>>>>>>> freenas/9.2.1-BRANCH
 %%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/img/ios/icon-ipad.png
 %%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/img/ios/icon-ipad@2x.png
 %%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/img/ios/icon-iphone.png
@@ -1821,6 +1883,10 @@
 %%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/img/ios/startup-iphone-portrait.png
 %%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/img/ios/startup-iphone-portrait@2x.png
 %%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/img/ios/startup-iphone5-portrait@2x.png
+<<<<<<< HEAD
+=======
+%%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/img/plex-icon-server.svg
+>>>>>>> freenas/9.2.1-BRANCH
 %%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/img/plex-logo.svg
 %%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/img/plex-pass.png
 %%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/img/plex-pass@2x.png
@@ -1879,6 +1945,10 @@
 %%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/translations/th.json
 %%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/translations/tr.json
 %%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/translations/uk.json
+<<<<<<< HEAD
+=======
+%%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/translations/vi.json
+>>>>>>> freenas/9.2.1-BRANCH
 %%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/translations/zh-TW.json
 %%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/Resources/translations/zh.json
 %%DATADIR%%/Resources/Plug-ins/WebClient.bundle/Contents/VERSION
@@ -2059,7 +2129,11 @@
 %%DATADIR%%/Resources/Plug-ins/Wikipedia.bundle/Contents/Resources/attribution.png
 %%DATADIR%%/Resources/Plug-ins/Wikipedia.bundle/Contents/Resources/icon-default.png
 %%DATADIR%%/Resources/Plug-ins/Wikipedia.bundle/Contents/VERSION
+<<<<<<< HEAD
 %%DATADIR%%/Resources/Profiles/Android-AFTB.xml
+=======
+%%DATADIR%%/Resources/Plug-ins/Wikipedia.bundle/README.md
+>>>>>>> freenas/9.2.1-BRANCH
 %%DATADIR%%/Resources/Profiles/Android.xml
 %%DATADIR%%/Resources/Profiles/Asus Transformer Prime TF201.xml
 %%DATADIR%%/Resources/Profiles/Chrome.xml
@@ -2069,6 +2143,10 @@
 %%DATADIR%%/Resources/Profiles/Internet Explorer.xml
 %%DATADIR%%/Resources/Profiles/Mystery 3.xml
 %%DATADIR%%/Resources/Profiles/Mystery 4.xml
+<<<<<<< HEAD
+=======
+%%DATADIR%%/Resources/Profiles/Mystery 5.xml
+>>>>>>> freenas/9.2.1-BRANCH
 %%DATADIR%%/Resources/Profiles/Mystery.xml
 %%DATADIR%%/Resources/Profiles/Opera.xml
 %%DATADIR%%/Resources/Profiles/Panasonic Viera 3D TV.xml
@@ -2077,6 +2155,7 @@
 %%DATADIR%%/Resources/Profiles/Plex Home Theater.xml
 %%DATADIR%%/Resources/Profiles/Popcorn Hour.xml
 %%DATADIR%%/Resources/Profiles/Roku-3.1.xml
+%%DATADIR%%/Resources/Profiles/Roku-5000X-6.0.xml
 %%DATADIR%%/Resources/Profiles/Roku.xml
 %%DATADIR%%/Resources/Profiles/RokuDLNA-3.1.xml
 %%DATADIR%%/Resources/Profiles/RokuDLNA-5.1.xml
@@ -2098,6 +2177,7 @@
 %%DATADIR%%/Resources/Profiles/Windows Phone.xml
 %%DATADIR%%/Resources/Profiles/Windows.xml
 %%DATADIR%%/Resources/Profiles/Xbox 360.xml
+%%DATADIR%%/Resources/Profiles/Xbox One.xml
 %%DATADIR%%/Resources/Profiles/cloudsync.xml
 %%DATADIR%%/Resources/Profiles/iOS-AppleTV.xml
 %%DATADIR%%/Resources/Profiles/iOS-iPad-1,1.xml
@@ -2951,6 +3031,7 @@
 %%DATADIR%%/Resources/com.plexapp.plugins.library.db
 %%DATADIR%%/Resources/crossdomain.xml
 %%DATADIR%%/Resources/dh512.pem
+%%DATADIR%%/Resources/distribution.txt
 %%DATADIR%%/Resources/empty.ts
 %%DATADIR%%/Resources/imdb-combiner-movies.xml
 %%DATADIR%%/Resources/lastfm-combiner-albums.xml
@@ -2963,44 +3044,42 @@
 %%DATADIR%%/Resources/none-combiner-artists.xml
 %%DATADIR%%/Resources/none-combiner-movies.xml
 %%DATADIR%%/Resources/none-combiner-shows.xml
+<<<<<<< HEAD
 %%DATADIR%%/Resources/rickroll.ts
+=======
+>>>>>>> freenas/9.2.1-BRANCH
 %%DATADIR%%/Resources/rootCA.pem
 %%DATADIR%%/Resources/rsync
 %%DATADIR%%/Resources/server.crt
 %%DATADIR%%/Resources/server.key
 %%DATADIR%%/Resources/themoviedb-combiner-movies.xml
 %%DATADIR%%/Resources/thetvdb-combiner-shows.xml
-%%DATADIR%%/libass.so.5
-%%DATADIR%%/libavcodec.so.54
-%%DATADIR%%/libavformat.so.54
+%%DATADIR%%/libavcodec.so.55
+%%DATADIR%%/libavformat.so.55
 %%DATADIR%%/libavutil.so.52
-%%DATADIR%%/libboost_chrono.so.1.50.0
-%%DATADIR%%/libboost_filesystem.so.1.50.0
-%%DATADIR%%/libboost_iostreams.so.1.50.0
-%%DATADIR%%/libboost_program_options.so.1.50.0
-%%DATADIR%%/libboost_regex.so.1.50.0
-%%DATADIR%%/libboost_signals.so.1.50.0
-%%DATADIR%%/libboost_system.so.1.50.0
-%%DATADIR%%/libboost_thread.so.1.50.0
+%%DATADIR%%/libboost_chrono.so.1.56.0
+%%DATADIR%%/libboost_filesystem.so.1.56.0
+%%DATADIR%%/libboost_iostreams.so.1.56.0
+%%DATADIR%%/libboost_locale.so.1.56.0
+%%DATADIR%%/libboost_program_options.so.1.56.0
+%%DATADIR%%/libboost_regex.so.1.56.0
+%%DATADIR%%/libboost_signals.so.1.56.0
+%%DATADIR%%/libboost_system.so.1.56.0
+%%DATADIR%%/libboost_thread.so.1.56.0
 %%DATADIR%%/libcrypto.so.1.0.0
 %%DATADIR%%/libcurl.so.7
 %%DATADIR%%/libexpat.so.6
 %%DATADIR%%/libexslt.so.8
-%%DATADIR%%/libfontconfig.so.5
-%%DATADIR%%/libfreeimage.so.3
-%%DATADIR%%/libfreetype.so.12
-%%DATADIR%%/libfribidi.so.3
+%%DATADIR%%/libfreeimage.so
 %%DATADIR%%/libiconv.so.7
 %%DATADIR%%/libidn.so.17
 %%DATADIR%%/libmediainfo.so.0
-%%DATADIR%%/libminiupnpc.so.8
-%%DATADIR%%/libmp3lame.so.0
+%%DATADIR%%/libminiupnpc.so.10
 %%DATADIR%%/libnatpmp.so.1
 %%DATADIR%%/libopencv_core.so.2.4
 %%DATADIR%%/libopencv_imgproc.so.2.4
 %%DATADIR%%/libpython2.7.so
 %%DATADIR%%/libpython2.7.so.1
-%%DATADIR%%/librtmp.so.0
 %%DATADIR%%/libsoci_core-gcc-3_0.so.3.0.0
 %%DATADIR%%/libsoci_sqlite3-gcc-3_0.so.3.0.0
 %%DATADIR%%/libsqlite3.so.8
@@ -3011,6 +3090,7 @@
 %%DATADIR%%/libxslt.so.2
 %%DATADIR%%/libz.so.1
 %%DATADIR%%/libzen.so.0
+<<<<<<< HEAD
 @dirrmtry %%DATADIR%%/Resources/English.lproj
 @dirrmtry %%DATADIR%%/Resources/Graphics
 @dirrmtry %%DATADIR%%/Resources/Plug-ins/Framework.bundle/Contents/Resources/Platforms/FreeBSD/i386/Frameworks
@@ -3835,3 +3915,26 @@
 @dirrmtry %%DATADIR%%/Resources/Python
 @dirrmtry %%DATADIR%%/Resources
 @dirrmtry %%DATADIR%%
+=======
+%%DATADIR%%/Resources/English.lproj
+%%DATADIR%%/Resources/Python/lib/python2.7/bsddb
+%%DATADIR%%/Resources/Python/lib/python2.7/distutils
+%%DATADIR%%/Resources/Python/lib/python2.7/email/test
+%%DATADIR%%/Resources/Python/lib/python2.7/idlelib
+%%DATADIR%%/Resources/Python/lib/python2.7/lib-tk
+%%DATADIR%%/Resources/Python/lib/python2.7/test
+%%DATADIR%%/Resources/locale/ar/LC_MESSAGES
+%%DATADIR%%/Resources/locale/cs-CZ/LC_MESSAGES
+%%DATADIR%%/Resources/locale/da/LC_MESSAGES
+%%DATADIR%%/Resources/locale/de/LC_MESSAGES
+%%DATADIR%%/Resources/locale/en/LC_MESSAGES
+%%DATADIR%%/Resources/locale/es/LC_MESSAGES
+%%DATADIR%%/Resources/locale/fr/LC_MESSAGES
+%%DATADIR%%/Resources/locale/he/LC_MESSAGES
+%%DATADIR%%/Resources/locale/it/LC_MESSAGES
+%%DATADIR%%/Resources/locale/lt/LC_MESSAGES
+%%DATADIR%%/Resources/locale/nl/LC_MESSAGES
+%%DATADIR%%/Resources/locale/nl-BE/LC_MESSAGES
+%%DATADIR%%/Resources/locale/no/LC_MESSAGES
+%%DATADIR%%/Resources/locale/pt-BR/LC_MESSAGES
+>>>>>>> freenas/9.2.1-BRANCH

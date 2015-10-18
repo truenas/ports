@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 SHA256 (lxml-3.4.0.tar.gz) = 714a68bf567fdec2bb7959560dc8376c0bfc688cfceb135f43b9bd87af7a956a
 SIZE (lxml-3.4.0.tar.gz) = 3522134
+=======
+SHA256 (lxml-3.2.5.tar.gz) = 2bf072808a6546d0e56bf1ad3b98a43cca828724360d7419fad135141bd31f7e
+SIZE (lxml-3.2.5.tar.gz) = 3349462
+>>>>>>> freenas/9.2.1-BRANCH

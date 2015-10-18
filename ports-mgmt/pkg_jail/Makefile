@@ -23,7 +23,11 @@ OPTIONS_DEFINE=	DOCS
 do-install:
 	${INSTALL_SCRIPT} ${FILESDIR}/pkg_jail ${FILESDIR}/pkg_update \
 		${STAGEDIR}${PREFIX}/bin/
+<<<<<<< HEAD
 .for i in ${LMAN1}
+=======
+.for i in ${MAN1}
+>>>>>>> freenas/9.2.1-BRANCH
 	${INSTALL_MAN} ${FILESDIR}/${i} ${STAGEDIR}${PREFIX}/man/man1/
 .endfor
 .if ${PORT_OPTIONS:MDOCS}

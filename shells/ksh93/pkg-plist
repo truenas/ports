@@ -1,5 +1,12 @@
+<<<<<<< HEAD
 @shell bin/ksh93
 man/man1/ksh93.1.gz
+=======
+man/man1/ksh93.1.gz
+bin/ksh93
+@exec echo "Updating /etc/shells"; sed -i "" "\|%D/%F|d" /etc/shells; echo %D/%F >> /etc/shells
+@unexec echo "Updating /etc/shells"; sed -i "" "\|%D/%F|d" /etc/shells
+>>>>>>> freenas/9.2.1-BRANCH
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/dirs
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/popd
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/pushd

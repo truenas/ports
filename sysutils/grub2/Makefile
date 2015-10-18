@@ -40,8 +40,29 @@ MKFONT_CONFIGURE_ENABLE=	grub-mkfont
 MKFONT_LIB_DEPENDS=		libfreetype.so:${PORTSDIR}/print/freetype2
 MKFONT_BUILD_DEPENDS=		${LOCALBASE}/lib/X11/fonts/dejavu/DejaVuSans.ttf:${PORTSDIR}/x11-fonts/dejavu
 
+<<<<<<< HEAD
 FUSE_CONFIGURE_ENABLE=		grub-mount
 FUSE_LIB_DEPENDS=		libfuse.so:${PORTSDIR}/sysutils/fusefs-libs
+=======
+NO_STAGE=	yes
+.include <bsd.port.pre.mk>
+
+.if ${ARCH} != "amd64"
+EFIEMU=		"@comment "
+.endif
+
+PLIST_SUB+=	EFIEMU=${EFIEMU}
+
+.if ${PORT_OPTIONS:MMKFONT}
+LIB_DEPENDS+=	freetype.9:${PORTSDIR}/print/freetype2
+BUILD_DEPENDS+=	${LOCALBASE}/lib/X11/fonts/dejavu/DejaVuSans.ttf:${PORTSDIR}/x11-fonts/dejavu
+MAN1+=		grub-mkfont.1
+CONFIGURE_ARGS+=	--enable-grub-mkfont
+.else
+CONFIGURE_ARGS+=	--disable-grub-mkfont
+MKFONT=		"@comment "
+.endif
+>>>>>>> freenas/9.2.1-BRANCH
 
 .include <bsd.port.pre.mk>
 

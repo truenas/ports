@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 --- libatalk/vfs/extattr.c.orig	2014-06-03 01:40:44.000000000 -0400
 +++ libatalk/vfs/extattr.c	2014-06-07 14:09:11.000000000 -0400
+=======
+--- libatalk/vfs/extattr.c.orig	2013-10-18 07:57:33.000000000 -0400
++++ libatalk/vfs/extattr.c	2014-05-27 12:31:57.000000000 -0400
+>>>>>>> freenas/9.2.1-BRANCH
 @@ -193,6 +193,8 @@ ssize_t sys_fgetxattr (int filedes, cons
      const char *attrname = ((s=strchr(name, '.')) == NULL) ? name : s + 1;
  

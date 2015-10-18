@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 SHA256 (aria2-1.18.8.tar.xz) = ed08fb94dbf4713251a7a9f9eab3b63d480061cb94048720d8fe372f73d83863
 SIZE (aria2-1.18.8.tar.xz) = 1363500
+=======
+SHA256 (aria2-1.18.5.tar.xz) = 90a15959498673ebe6a964f8f9fe840f4adbb0a1904a9810cd7da6743c0b619b
+SIZE (aria2-1.18.5.tar.xz) = 1343468
+>>>>>>> freenas/9.2.1-BRANCH

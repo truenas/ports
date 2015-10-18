@@ -24,6 +24,11 @@ AUTOMAKE_ARGS=	--add-missing
 USE_LDCONFIG=	yes
 USE_OPENLDAP=	yes
 WANT_OPENLDAP_SASL=	yes
+<<<<<<< HEAD
+=======
+
+CONFLICTS+=	openldap2[34]-client-2.*
+>>>>>>> freenas/9.2.1-BRANCH
 
 CONFLICTS+=	openldap2[34]-client-2.*
 

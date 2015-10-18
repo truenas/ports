@@ -101,7 +101,10 @@ libdata/pkgconfig/openssl.pc
 %%SHARED%%@dirrm lib/engines
 man/man1/CA.pl.1.gz
 man/man1/asn1parse.1.gz
+<<<<<<< HEAD
 man/man1/c_rehash.1.gz
+=======
+>>>>>>> freenas/9.2.1-BRANCH
 man/man1/ca.1.gz
 man/man1/ciphers.1.gz
 man/man1/cms.1.gz
@@ -111,7 +114,10 @@ man/man1/dgst.1.gz
 man/man1/dhparam.1.gz
 man/man1/dsa.1.gz
 man/man1/dsaparam.1.gz
+<<<<<<< HEAD
 man/man1/dss1.1.gz
+=======
+>>>>>>> freenas/9.2.1-BRANCH
 man/man1/ec.1.gz
 man/man1/ecparam.1.gz
 man/man1/enc.1.gz
@@ -144,10 +150,13 @@ man/man1/s_time.1.gz
 man/man1/sess_id.1.gz
 man/man1/sha.1.gz
 man/man1/sha1.1.gz
+<<<<<<< HEAD
 man/man1/sha224.1.gz
 man/man1/sha256.1.gz
 man/man1/sha384.1.gz
 man/man1/sha512.1.gz
+=======
+>>>>>>> freenas/9.2.1-BRANCH
 man/man1/smime.1.gz
 man/man1/speed.1.gz
 man/man1/spkac.1.gz
@@ -419,7 +428,10 @@ man/man3/CMS_add0_recipient_key.3.gz
 man/man3/CMS_add1_ReceiptRequest.3.gz
 man/man3/CMS_add1_cert.3.gz
 man/man3/CMS_add1_recipient_cert.3.gz
+<<<<<<< HEAD
 man/man3/CMS_add1_signer.3.gz
+=======
+>>>>>>> freenas/9.2.1-BRANCH
 man/man3/CMS_compress.3.gz
 man/man3/CMS_decrypt.3.gz
 man/man3/CMS_encrypt.3.gz
@@ -434,6 +446,10 @@ man/man3/CMS_get1_crls.3.gz
 man/man3/CMS_set1_eContentType.3.gz
 man/man3/CMS_set1_signer_certs.3.gz
 man/man3/CMS_sign.3.gz
+<<<<<<< HEAD
+=======
+man/man3/CMS_sign_add1_signer.3.gz
+>>>>>>> freenas/9.2.1-BRANCH
 man/man3/CMS_sign_receipt.3.gz
 man/man3/CMS_uncompress.3.gz
 man/man3/CMS_verify.3.gz
@@ -977,7 +993,10 @@ man/man3/SSL_CTX_set_session_cache_mode.3.gz
 man/man3/SSL_CTX_set_session_id_context.3.gz
 man/man3/SSL_CTX_set_ssl_version.3.gz
 man/man3/SSL_CTX_set_timeout.3.gz
+<<<<<<< HEAD
 man/man3/SSL_CTX_set_tlsext_ticket_key_cb.3.gz
+=======
+>>>>>>> freenas/9.2.1-BRANCH
 man/man3/SSL_CTX_set_tmp_dh.3.gz
 man/man3/SSL_CTX_set_tmp_dh_callback.3.gz
 man/man3/SSL_CTX_set_tmp_rsa.3.gz
@@ -1330,6 +1349,7 @@ man/man3/x509.3.gz
 man/man5/config.5.gz
 man/man5/x509v3_config.5.gz
 man/man7/des_modes.7.gz
+<<<<<<< HEAD
 %%OPENSSLDIR%%/misc/CA.pl
 %%OPENSSLDIR%%/misc/CA.sh
 %%OPENSSLDIR%%/misc/c_hash
@@ -1338,6 +1358,16 @@ man/man7/des_modes.7.gz
 %%OPENSSLDIR%%/misc/c_name
 %%OPENSSLDIR%%/misc/tsget
 %%OPENSSLDIR%%/openssl.cnf.sample
+=======
+openssl/misc/CA.pl
+openssl/misc/CA.sh
+openssl/misc/c_hash
+openssl/misc/c_info
+openssl/misc/c_issuer
+openssl/misc/c_name
+openssl/misc/tsget
+openssl/openssl.cnf.sample
+>>>>>>> freenas/9.2.1-BRANCH
 %%PORTDOCS%%%%DOCSDIR%%/openssl.txt
 @dirrm include/openssl
 @dirrmtry %%OPENSSLDIR%%/certs

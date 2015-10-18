@@ -1,5 +1,10 @@
 # $FreeBSD$
 #
+<<<<<<< HEAD
+=======
+# Handle dependency on File Alteration Monitor
+#
+>>>>>>> freenas/9.2.1-BRANCH
 # MAINTAINER: portmgr@FreeBSD.org
 #
 # Feature:	fam
@@ -10,8 +15,12 @@
 # Usage:	WITH_FAM_SYSTEM=ARG
 # Valid ARG:	gamin (default), fam
 #
+<<<<<<< HEAD
 # Handle dependency on File Alteration Monitor
 
+=======
+#
+>>>>>>> freenas/9.2.1-BRANCH
 .if !defined(_INCLUDE_USES_FAM_MK)
 _INCLUDE_USES_FAM_MK=	yes
 
@@ -32,7 +41,11 @@ _HAVE_FAM=	fam
 IGNORE=	FAM mismatch: ${_HAVE_FAM} is installed, but ${WITH_FAM_SYSTEM} desired
 .endif
 
+<<<<<<< HEAD
 .if !empty(fam_ARGS)
+=======
+.if defined(fam_ARGS)
+>>>>>>> freenas/9.2.1-BRANCH
 .for _fam_ARGS in ${fam_ARGS}
 .  if ! ${_FAM_SYSTEMS:M${_fam_ARGS}}
 IGNORE=	Incorrect 'USES+= fam:${fam_ARGS}' usage: argument [${_fam_ARGS}] is not recognized
@@ -47,7 +60,11 @@ IGNORE=	FAM mismatch: port wants to use ${fam_ARGS} while you wish to use ${WITH
 .endif
 
 # Proceed
+<<<<<<< HEAD
 .if !empty(fam_ARGS)
+=======
+.if defined(fam_ARGS)
+>>>>>>> freenas/9.2.1-BRANCH
 _USE_FAM=	${fam_ARGS}
 .elif defined(_HAVE_FAM)
 _USE_FAM=	${_HAVE_FAM}

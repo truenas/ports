@@ -94,7 +94,13 @@
     SUBDIR += html2latex
     SUBDIR += html2ps
     SUBDIR += hyperlatex
+<<<<<<< HEAD
     SUBDIR += indexinfo
+=======
+    SUBDIR += ifxetex
+    SUBDIR += indexinfo
+    SUBDIR += it-acroread8
+>>>>>>> freenas/9.2.1-BRANCH
     SUBDIR += jabref
     SUBDIR += kde4-print-manager
     SUBDIR += kde_poster

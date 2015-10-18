@@ -3,7 +3,11 @@
 
 PORTNAME=		open-vm-tools
 PORTVERSION=		${BUILD_VER}
+<<<<<<< HEAD
 PORTREVISION=	7
+=======
+PORTREVISION=		2
+>>>>>>> freenas/9.2.1-BRANCH
 PORTEPOCH=		1
 CATEGORIES=		emulators
 MASTER_SITES=		SF/${PORTNAME}/${PORTNAME}/stable-9.4.x

@@ -16,8 +16,12 @@ LIB_DEPENDS=	libgcrypt.so:${PORTSDIR}/security/libgcrypt
 USES=		gmake iconv libtool perl5 tar:bzip2
 USE_BDB=	46+
 GNU_CONFIGURE=	yes
+<<<<<<< HEAD
 CPPFLAGS+=	-D_IPP_PRIVATE_STRUCTURES
 INSTALL_TARGET=	install-strip
+=======
+USE_PERL5=	build
+>>>>>>> freenas/9.2.1-BRANCH
 USE_RC_SUBR=	netatalk
 
 CONFIGURE_ARGS+=	--with-tcp-wrappers \

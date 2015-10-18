@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 SHA256 (rsync-3.1.1.tar.gz) = 7de4364fcf5fe42f3bdb514417f1c40d10bbca896abe7e7f2c581c6ea08a2621
 SIZE (rsync-3.1.1.tar.gz) = 890124
 SHA256 (rsync-patches-3.1.1.tar.gz) = 547ea4a37eb497050b37bda029dee4927436781e7b0e4eb207c2fad54d4a3246
 SIZE (rsync-patches-3.1.1.tar.gz) = 167954
+=======
+SHA256 (rsync-3.0.9.tar.gz) = 30f10f8dd5490d28240d4271bb652b1da7a60b22ed2b9ae28090668de9247c05
+SIZE (rsync-3.0.9.tar.gz) = 792725
+SHA256 (rsync-patches-3.0.9.tar.gz) = 0c1e9b56e99667dfc47641124460bac61a04c5d2ee89f575c6bc78c7a69005a9
+SIZE (rsync-patches-3.0.9.tar.gz) = 172417
+>>>>>>> freenas/9.2.1-BRANCH

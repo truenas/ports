@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 SHA256 (samba-4.0.25.tar.gz) = e6a07940a658b81d368fc7ed8e5068bd27188996d73dee1cea9755682cb9a485
 SIZE (samba-4.0.25.tar.gz) = 22150978
+=======
+SHA256 (samba-4.0.19.tar.gz) = 966ba09c99ba5ff679e444e56b1282c974630bade4a289a71f3327865bbedf85
+SIZE (samba-4.0.19.tar.gz) = 22131987
+>>>>>>> freenas/9.2.1-BRANCH

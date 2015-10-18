@@ -2,7 +2,12 @@
 # $FreeBSD$
 
 PORTNAME=	libinotify
+<<<<<<< HEAD
 PORTVERSION=	20140622
+=======
+PORTVERSION=	20120419
+PORTREVISION=	2
+>>>>>>> freenas/9.2.1-BRANCH
 CATEGORIES=	devel
 
 MAINTAINER=	delphij@FreeBSD.org
@@ -13,7 +18,11 @@ LICENSE=	MIT
 USE_GITHUB=	yes
 GH_ACCOUNT=	dmatveev
 GH_PROJECT=	libinotify-kqueue
+<<<<<<< HEAD
 GH_COMMIT=	d775062
+=======
+GH_COMMIT=	2a0d601
+>>>>>>> freenas/9.2.1-BRANCH
 GH_TAGNAME=	${GH_COMMIT}
 
 USE_LDCONFIG=	yes

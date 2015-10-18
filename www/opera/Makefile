@@ -98,6 +98,7 @@ do-configure:
 		${WRKSRC}/share/opera/defaults/pluginpath.ini
 
 do-install:
+<<<<<<< HEAD
 	${INSTALL_SCRIPT} ${WRKSRC}/opera ${STAGEDIR}${PREFIX}/bin/
 	${TAR} -C ${WRKSRC} -cf - lib man share | ${TAR} -C ${STAGEDIR}${PREFIX} -xf -
 .if ${OSVERSION} >= 1000054
@@ -108,3 +109,20 @@ do-install:
 		${STAGEDIR}${PREFIX}/etc/libmap.d/opera.conf
 
 .include <bsd.port.mk>
+=======
+	@${INSTALL_MAN} ${WRKSRC}/man/man1/${PORTNAME}.1.gz ${PREFIX}/man/man1/
+	@${REINPLACE_CMD} -e 's|/usr/local|${PREFIX}|g' ${WRKSRC}/install
+	@${REINPLACE_CMD} -e 's|share/man|man|g' ${WRKSRC}/install
+	@(cd ${WRKSRC} && ./install --text --system --unattended)
+	@${REINPLACE_CMD} -e 's|/usr/X11R6/lib/browser_plugins|${LOCALBASE}/lib/browser_plugins/symlinks/opera|g' \
+		${DATADIR}/defaults/pluginpath.ini
+	@${RM} ${DATADIR}/defaults/pluginpath.ini.bak
+	-${LOCALBASE}/bin/update-desktop-database
+	-${LOCALBASE}/bin/update-mime-database ${LOCALBASE}/share/mime
+
+# target to build distinfo for both arch
+makesum-all:
+	make makesum FETCH_ALL=yes
+
+.include <bsd.port.post.mk>
+>>>>>>> freenas/9.2.1-BRANCH

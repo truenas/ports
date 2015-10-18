@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 SHA256 (netatalk-3.1.7.tar.bz2) = e4049399e4e7d477f843a9ec4bd64f70eb7c7af946e890311140fd8fbd4bc071
 SIZE (netatalk-3.1.7.tar.bz2) = 1780078
+=======
+SHA256 (netatalk-3.1.2.tar.bz2) = 040b6e9add6ad9f2a0a9a58f5f1381ee5e6b9a60e7610f6722747c834f1de990
+SIZE (netatalk-3.1.2.tar.bz2) = 1785777
+>>>>>>> freenas/9.2.1-BRANCH

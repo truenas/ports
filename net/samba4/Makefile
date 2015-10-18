@@ -18,7 +18,11 @@ CONFLICTS?=		*samba3[2-6]-3.* samba41-4.1.*
 
 SAMBA4_BASENAME=	samba
 SAMBA4_PORTNAME=	${SAMBA4_BASENAME}4
+<<<<<<< HEAD
 SAMBA4_VERSION=		4.0.25
+=======
+SAMBA4_VERSION=		4.0.19
+>>>>>>> freenas/9.2.1-BRANCH
 SAMBA4_DISTNAME=	${SAMBA4_BASENAME}-${SAMBA4_VERSION:S|.p|pre|:S|.r|rc|:S|.t|tp|:S|.a|alpha|}
 
 WRKSRC?=		${WRKDIR}/${DISTNAME}
@@ -107,6 +111,9 @@ RUN_DEPENDS+=		ldb>=1.1.17:${PORTSDIR}/databases/ldb
 SAMBA4_BUNDLED_LIBS+=	!ldb
 # Don't use external libcom_err
 SAMBA4_BUNDLED_LIBS+=	com_err
+# dns python library
+BUILD_DEPENDS+=		${PYTHON_PKGNAMEPREFIX}dnspython>0:${PORTSDIR}/devel/py-dnspython
+
 ##############################################################################
 # Options
 OPTIONS_DEFINE=		ACL_SUPPORT AD_DC ADS AIO_SUPPORT CUPS DEBUG \

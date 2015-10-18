@@ -27,9 +27,21 @@
 
 name="samba_server"
 rcvar=${name}_enable
+<<<<<<< HEAD
 # Defaults
 samba_server_config_default="%%SAMBA4_CONFDIR%%/%%SAMBA4_CONFIG%%"
 smbcontrol_command="%%PREFIX%%/bin/smbcontrol"
+=======
+
+# Defaults
+samba_server_config_default="%%SAMBA4_CONFDIR%%/%%SAMBA4_CONFIG%%"
+samba_server_config=${samba_server_config=${samba_server_config_default}}
+samba_server_configfile_arg=${samba_server_config:+--configfile="${samba_server_config}"}			#"
+#testparm_command="%%PREFIX%%/bin/samba-tool testparm --suppress-prompt --verbose ${samba_server_configfile_arg}"
+testparm_command="%%PREFIX%%/bin/testparm --suppress-prompt --verbose ${samba_server_config}"
+smbcontrol_command="%%PREFIX%%/bin/smbcontrol"
+
+>>>>>>> freenas/9.2.1-BRANCH
 # Custom commands
 extra_commands="reload status"
 
@@ -42,6 +54,10 @@ status_cmd="samba_server_cmd"
 reload_cmd="samba_server_reload_cmd"
 rcvar_cmd="samba_server_rcvar_cmd"
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> freenas/9.2.1-BRANCH
 samba_server_checkconfig() {
     echo -n "Performing sanity check on Samba configuration: "
     if ${testparm_command} >/dev/null 2>&1; then
@@ -137,6 +153,7 @@ samba_server_cmd() {
 
 samba_server_config_init() {
     local name
+<<<<<<< HEAD
     # Load configuration
     load_rc_config "${name}"
     # Defaults
@@ -145,6 +162,8 @@ samba_server_config_init() {
     samba_server_configfile_arg=${samba_server_config:+--configfile="${samba_server_config}"}			#"
     #testparm_command="%%PREFIX%%/bin/samba-tool testparm --suppress-prompt --verbose ${samba_server_configfile_arg}"
     testparm_command="%%PREFIX%%/bin/testparm --suppress-prompt --verbose ${samba_server_config}"
+=======
+>>>>>>> freenas/9.2.1-BRANCH
     # Determine what daemons are necessary to run Samba in the current role
     samba_server_role=$(${testparm_command} --parameter-name='server role' 2>/dev/null)
     case "${samba_server_role}" in
@@ -155,6 +174,7 @@ samba_server_config_init() {
 	    samba_daemons="nmbd smbd winbindd"
 	    ;;
     esac
+<<<<<<< HEAD
     # Load daemons configuration
     for name in ${samba_daemons}; do
 	load_rc_config "${name}"
@@ -165,11 +185,26 @@ samba_server_config_init() {
 		eval ${name}_enable=\${${name}_enable-YES}
 	    else
 		# Winbindd
+=======
+    # Load configuration
+    load_rc_config "${name}"
+    for name in ${samba_daemons}; do
+	load_rc_config "${name}"
+    done
+    # Defaults
+    samba_server_enable=${samba_server_enable:=NO}
+    # Setup dependent variables
+    if [ -n "${rcvar}" ] && checkyesno "${rcvar}"; then
+	for name in ${samba_daemons}; do
+	    # Winbindd
+	    if [ "${name}" = "winbindd" ]; then
+>>>>>>> freenas/9.2.1-BRANCH
 		samba_server_idmap=$(${testparm_command} --parameter-name='idmap uid' 2>/dev/null)
 		if [ -n "${samba_server_idmap}" ]; then
 		    winbindd_enable="YES"
 		fi
 	    fi
+<<<<<<< HEAD
 	fi
 	# If variable is empty, set it to 'NO'
 	eval ${name}_enable=\${${name}_enable:-NO}
@@ -179,10 +214,26 @@ samba_server_config_init() {
     samba_server_lockdir=${samba_server_lockdir:=%%SAMBA4_LOCKDIR%%}
     samba_server_piddir="$(${testparm_command} --parameter-name='pid directory' 2>/dev/null)"
     samba_server_piddir=${samba_server_piddir:=%%SAMBA4_RUNDIR%%}
+=======
+	    # Set variable to 'YES' only if it is unset
+	    eval ${name}_enable=\${${name}_enable-YES}
+	    # If variable is empty set it to 'NO'
+	    eval ${name}_enable=\${${name}_enable:-NO}
+	done
+    fi
+>>>>>>> freenas/9.2.1-BRANCH
 }
 
 # Load configuration variables
 samba_server_config_init
+<<<<<<< HEAD
+=======
+# Fetch parameters from configuration file
+samba_server_lockdir=$(${testparm_command} --parameter-name='lock directory' 2>/dev/null)
+samba_server_lockdir=${samba_server_lockdir=%%SAMBA4_LOCKDIR%%}
+samba_server_piddir=$(${testparm_command} --parameter-name='pid directory' 2>/dev/null)
+samba_server_piddir=${samba_server_piddir=%%SAMBA4_RUNDIR%%}
+>>>>>>> freenas/9.2.1-BRANCH
 # Common flags
 command_args=${samba_server_configfile_arg}
 samba_flags=${samba_flags="--daemon"}

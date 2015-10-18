@@ -1,4 +1,4 @@
-# $FreeBSD$
+# $FreeBSD: head/www/owncloud/Makefile 366837 2014-09-01 04:24:03Z kevlo $
 
 PORTNAME=	owncloud
 PORTVERSION=	7.0.2

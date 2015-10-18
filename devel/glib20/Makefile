@@ -24,6 +24,7 @@ LIB_DEPENDS+=	libpcre.so:${PORTSDIR}/devel/pcre \
 
 GNU_CONFIGURE=	yes
 USE_LDCONFIG=	yes
+<<<<<<< HEAD
 # iconv:wchar_t - our iconv in base doesn't support utf-8 -> wchar_t (boooo)
 # (wchar_t is used by glibmm, rawtherapee triggered this)
 USES+=		gettext gmake iconv:wchar_t libtool pathfix perl5 \
@@ -31,6 +32,14 @@ USES+=		gettext gmake iconv:wchar_t libtool pathfix perl5 \
 USE_PERL5=	build
 USE_PYTHON=	py3kplist
 CONFIGURE_ARGS=	--disable-gtk-doc --with-html-dir=${PREFIX}/share/doc \
+=======
+USES=		gettext gmake iconv pathfix pkgconfig shebangfix perl5
+USE_GNOME=	ltverhack
+USE_PYTHON=	yes
+USE_PERL5=	build
+CONFIGURE_ARGS=	--enable-static \
+		--disable-gtk-doc --with-html-dir=${PREFIX}/share/doc \
+>>>>>>> freenas/9.2.1-BRANCH
 		--disable-man --without-xml-catalog \
 		--enable-static \
 		--with-pcre=system \

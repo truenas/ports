@@ -1,7 +1,11 @@
 # $FreeBSD$
 
 PORTNAME=		${SAMBA_BASENAME}36
+<<<<<<< HEAD
 PORTVERSION=		3.6.25
+=======
+PORTVERSION=		3.6.24
+>>>>>>> freenas/9.2.1-BRANCH
 PORTREVISION?=		0
 CATEGORIES?=		net
 MASTER_SITES=		${MASTER_SITE_SAMBA}
@@ -331,7 +335,17 @@ PLIST_SUB+=		SMBTORTURE="@comment "
 ###
 
 .if ${PORT_OPTIONS:MADS}
+<<<<<<< HEAD
 .	if ${PORT_OPTIONS:MGSSAPI_NONE}
+=======
+SAMBA_WANT_LDAP=	yes
+WANT_OPENLDAP_SASL=	yes
+SAMBA_WANT_KRB5=	yes
+CONFIGURE_ARGS+=	--with-ads
+.else
+CONFIGURE_ARGS+=	--without-ads
+.endif
+>>>>>>> freenas/9.2.1-BRANCH
 # Kerberos5 is necessary for ADS
 IGNORE=	ADS support requires GSSAPI_BASE, GSSAPI_HEIMDAL, or GSSAPI_MIT
 .	endif
@@ -340,6 +354,7 @@ SAMBA_WANT_LDAP=	yes
 
 .if defined(SAMBA_WANT_LDAP)
 USE_OPENLDAP=		yes
+WANT_OPENLDAP_SASL=	yes
 CONFIGURE_ARGS+=	--with-ldap
 .else
 CONFIGURE_ARGS+=	--without-ldap

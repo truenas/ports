@@ -1,5 +1,5 @@
 # Created by: John Hixson <john@ixsystems.com>
-# $FreeBSD$
+# $FreeBSD: www/py-django-json-rpc/Makefile 327776 2013-09-20 23:36:50Z bapt $
 
 PORTNAME=	django-json-rpc
 PORTVERSION=	0.6.2

@@ -1,7 +1,11 @@
 # $FreeBSD: head/devel/tevent/Makefile 377194 2015-01-16 17:21:10Z timur $
 
 PORTNAME=		tevent
+<<<<<<< HEAD
 PORTVERSION=		0.9.24
+=======
+PORTVERSION=		0.9.21
+>>>>>>> freenas/9.2.1-BRANCH
 PORTREVISION=		0
 PORTEPOCH=		0
 CATEGORIES=		devel
@@ -16,6 +20,10 @@ LICENSE=		LGPL3
 CONFLICTS=
 
 USES=			compiler pkgconfig
+<<<<<<< HEAD
+=======
+USE_PYTHON_BUILD=	2
+>>>>>>> freenas/9.2.1-BRANCH
 USE_LDCONFIG=		yes
 WAF_TOOL=		buildtools/bin/waf
 CONFIGURE_LOG=		bin/config.log
@@ -29,6 +37,7 @@ CONFIGURE_ARGS+=	--prefix=${PREFIX} \
 			--without-gettext
 # Support staging
 DESTDIRNAME=		--destdir
+<<<<<<< HEAD
 
 OPTIONS_DEFINE=		MANPAGES
 MANPAGES_DESC=		Build and install manpages (requires textproc/docbook-xsl)
@@ -49,6 +58,14 @@ PLIST_FILES+=		%%PYTHON_SITELIBDIR%%/_tevent.so \
 			%%PYTHON_SITELIBDIR%%/tevent.pyo
 .endif
 
+=======
+
+OPTIONS_DEFINE=		MANPAGES
+MANPAGES_DESC=		Build and install manpages (requires textproc/docbook-xsl)
+
+.include <bsd.port.options.mk>
+
+>>>>>>> freenas/9.2.1-BRANCH
 .include <bsd.port.pre.mk>
 
 .if ! ${PORT_OPTIONS:MMANPAGES}
@@ -58,11 +75,21 @@ BUILD_DEPENDS+=		${LOCALBASE}/share/xsl/docbook/manpages/docbook.xsl:${PORTSDIR}
 			xsltproc:${PORTSDIR}/textproc/libxslt
 .endif
 
+<<<<<<< HEAD
 PLIST_FILES+=		include/tevent.h \
+=======
+PLIST_FILES=		include/tevent.h \
+>>>>>>> freenas/9.2.1-BRANCH
 			lib/libtevent.so \
 			lib/libtevent.so.0 \
 			%%PKGCONFIGDIR%%/tevent.pc
 
+<<<<<<< HEAD
+=======
+BUILD_DEPENDS+=		talloc>=2.1.0:${PORTSDIR}/devel/talloc
+RUN_DEPENDS:=		${BUILD_DEPENDS}
+
+>>>>>>> freenas/9.2.1-BRANCH
 CONFIGURE_ARGS+=	--bundled-libraries=!talloc
 
 # No fancy color error messages
@@ -75,6 +102,21 @@ MAKE_ENV+=		NOCOLOR=yes
 .if !defined(DISABLE_MAKE_JOBS) && !defined(MAKE_JOBS_UNSAFE)
 CONFIGURE_ARGS+=	--jobs=${MAKE_JOBS_NUMBER}
 _MAKE_JOBS+=		--jobs=${MAKE_JOBS_NUMBER}
+<<<<<<< HEAD
+=======
+.endif
+
+.if defined(NO_PYTHON)
+CONFIGURE_ARGS+=	--disable-python
+.else
+USE_PYTHON_RUN=		yes
+PLIST_FILES+=		%%PYTHON_SITELIBDIR%%/_tevent.so \
+			%%PYTHON_SITELIBDIR%%/tevent.py  \
+			%%PYTHON_SITELIBDIR%%/tevent.pyc \
+			%%PYTHON_SITELIBDIR%%/tevent.pyo
+PLIST_DIRSTRY+=		%%PYTHON_SITELIBDIR%% \
+			%%PYTHON_LIBDIR%%
+>>>>>>> freenas/9.2.1-BRANCH
 .endif
 
 CONFIGURE_TARGET=	configure

@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 SHA256 (python/Django-1.6.10.tar.gz) = 54eb59ce785401c7d1fdeed245efce597e90f811d6a20f6b5c6931c0049d63a6
 SIZE (python/Django-1.6.10.tar.gz) = 6760152
+=======
+SHA256 (python/Django-1.6.4.tar.gz) = ceee0beea79b1926c767aaa837e1b9e621e5f6b7d27138d90474b3917ca5527b
+SIZE (python/Django-1.6.4.tar.gz) = 6630474
+>>>>>>> freenas/9.2.1-BRANCH

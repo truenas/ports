@@ -61,8 +61,12 @@ include/atalk/vfs.h
 include/atalk/volume.h
 lib/libatalk.a
 lib/libatalk.so
+<<<<<<< HEAD
 lib/libatalk.so.16
 lib/libatalk.so.16.0.0
+=======
+lib/libatalk.so.14
+>>>>>>> freenas/9.2.1-BRANCH
 man/man1/ad.1.gz
 man/man1/afpldaptest.1.gz
 man/man1/afppasswd.1.gz

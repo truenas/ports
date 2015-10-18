@@ -1,2 +1,7 @@
+<<<<<<< HEAD
 SHA256 (PlexMediaServer-0.9.9.13.525-197d5ed-freebsd-amd64.tar.bz2) = 601f393ffdb395d512d9efd18fdcc073cab6ebb0363d050514e7b1af150504d2
 SIZE (PlexMediaServer-0.9.9.13.525-197d5ed-freebsd-amd64.tar.bz2) = 62325342
+=======
+SHA256 (PlexMediaServer-0.9.11.4.739-a4e710f-freebsd-amd64.tar.bz2) = e94b8eb80ebb98bcea8cbb8f2cb2694433a9b86fdb3eecf89e376e4a3b0dd595
+SIZE (PlexMediaServer-0.9.11.4.739-a4e710f-freebsd-amd64.tar.bz2) = 69596275
+>>>>>>> freenas/9.2.1-BRANCH

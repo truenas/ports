@@ -2,7 +2,11 @@
 # $FreeBSD$
 
 PORTNAME=	django
+<<<<<<< HEAD
 PORTVERSION=	1.6.10
+=======
+PORTVERSION=	1.6.4
+>>>>>>> freenas/9.2.1-BRANCH
 CATEGORIES=	www python
 MASTER_SITES=	https://www.djangoproject.com/m/releases/${PORTVERSION}/ \
 		CHEESESHOP
@@ -16,10 +20,16 @@ COMMENT=	High-level Python Web framework
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
+<<<<<<< HEAD
 USES=		cpe python:2
 USE_PYTHON=	autoplist distutils
 
 CPE_VENDOR=	djangoproject
+=======
+USE_PYTHON=	yes
+USE_PYDISTUTILS=	yes
+PYDISTUTILS_AUTOPLIST=	yes
+>>>>>>> freenas/9.2.1-BRANCH
 
 CONFLICTS=	py[23][0-9]-django-devel-[0-9]* py[23][0-9]-django-1.[0-57-9].*
 

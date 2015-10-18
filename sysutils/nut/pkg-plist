@@ -35,11 +35,18 @@ include/nutscan-ip.h
 include/parseconf.h
 include/upsclient.h
 lib/libnutclient.a
+<<<<<<< HEAD
 lib/libnutclient.so
 lib/libnutclient.so.0
 lib/libnutclient.so.0.0.0
+=======
+lib/libnutclient.la
+lib/libnutclient.so
+lib/libnutclient.so.0
+>>>>>>> freenas/9.2.1-BRANCH
 lib/libupsclient.a
 lib/libupsclient.so
+<<<<<<< HEAD
 lib/libupsclient.so.4
 lib/libupsclient.so.4.0.0
 libdata/pkgconfig/libnutclient.pc
@@ -51,6 +58,18 @@ libdata/pkgconfig/libupsclient.pc
 %%NUT_USB%%libexec/nut/nutdrv_qx
 %%NUT_SERIAL%%libexec/nut/riello_ser
 %%NUT_USB%%libexec/nut/riello_usb
+=======
+lib/libupsclient.so.3
+libdata/pkgconfig/libnutclient.pc
+libdata/pkgconfig/libnutscan.pc
+libdata/pkgconfig/libupsclient.pc
+%%NUT_HAL%%libexec/hald-addon-bcmxcp_usb
+%%NUT_HAL%%libexec/hald-addon-blazer_usb
+%%NUT_HAL%%libexec/hald-addon-tripplite_usb
+%%NUT_HAL%%libexec/hald-addon-usbhid-ups
+libexec/nut/al175
+libexec/nut/apcupsd-ups
+>>>>>>> freenas/9.2.1-BRANCH
 %%NUT_SERIAL%%libexec/nut/apcsmart
 %%NUT_SERIAL%%libexec/nut/apcsmart-old
 %%NUT_SERIAL%%libexec/nut/bcmxcp
@@ -78,6 +97,11 @@ libdata/pkgconfig/libupsclient.pc
 %%NUT_SERIAL%%libexec/nut/metasys
 %%NUT_SERIAL%%libexec/nut/mge-utalk
 %%NUT_SERIAL%%libexec/nut/microdowell
+<<<<<<< HEAD
+=======
+%%NUT_NEON%%libexec/nut/netxml-ups
+libexec/nut/nutdrv_qx
+>>>>>>> freenas/9.2.1-BRANCH
 %%NUT_SERIAL%%libexec/nut/mge-shut
 %%NUT_SERIAL%%libexec/nut/oldmge-shut
 %%NUT_SERIAL%%libexec/nut/oneac
@@ -87,6 +111,8 @@ libdata/pkgconfig/libupsclient.pc
 %%NUT_PDU%%libexec/nut/powerman-pdu
 %%NUT_SERIAL%%libexec/nut/powerpanel
 %%NUT_SERIAL%%libexec/nut/rhino
+%%NUT_SERIAL%%libexec/nut/riello_ser
+%%NUT_USB%%libexec/nut/riello_usb
 %%NUT_USB%%libexec/nut/richcomm_usb
 %%NUT_SERIAL%%libexec/nut/safenet
 %%NUT_SERIAL%%libexec/nut/skel

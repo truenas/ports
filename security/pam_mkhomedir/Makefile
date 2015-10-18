@@ -18,6 +18,8 @@ PLIST_FILES=	lib/pam_mkhomedir.so \
 
 LDFLAGS+=	-lpam
 
+LDFLAGS+=	-lpam
+
 .if defined(WITH_PROFILE)
 PLIST_FILES+=	lib/libpam_mkhomedir_p.a
 MAKE_ARGS+=	PROFILE=yes

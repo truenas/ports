@@ -1,8 +1,13 @@
 # $FreeBSD: head/databases/ldb/Makefile 377761 2015-01-23 20:14:37Z tijl $
 
 PORTNAME=		ldb
+<<<<<<< HEAD
 PORTVERSION=		1.1.20
 PORTREVISION=		1
+=======
+PORTVERSION=		1.1.17
+PORTREVISION=		0
+>>>>>>> freenas/9.2.1-BRANCH
 PORTEPOCH=		0
 CATEGORIES=		databases
 MASTER_SITES=		${MASTER_SITE_SAMBA}

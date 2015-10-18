@@ -1,7 +1,11 @@
 # $FreeBSD: head/databases/tdb/Makefile 377193 2015-01-16 17:10:41Z tijl $
 
 PORTNAME=		tdb
+<<<<<<< HEAD
 PORTVERSION=		1.3.5
+=======
+PORTVERSION=		1.3.0
+>>>>>>> freenas/9.2.1-BRANCH
 PORTREVISION=		0
 PORTEPOCH=		1
 CATEGORIES=		databases
@@ -29,9 +33,19 @@ CONFIGURE_ARGS+=	--prefix=${PREFIX} \
 # Support staging
 DESTDIRNAME=		--destdir
 
+<<<<<<< HEAD
 OPTIONS_DEFINE=		MANPAGES
 MANPAGES_DESC=		Build and install manpages (requires textproc/docbook-xsl)
 
+=======
+OPTIONS_DEFINE=		PYTHON
+OPTIONS_DEFAULT=	PYTHON
+OPTIONS_DEFINE=		MANPAGES
+MANPAGES_DESC=		Build and install manpages (requires textproc/docbook-xsl)
+
+NO_STAGE=	yes
+
+>>>>>>> freenas/9.2.1-BRANCH
 .include <bsd.port.options.mk>
 
 .if defined(NO_PYTHON)

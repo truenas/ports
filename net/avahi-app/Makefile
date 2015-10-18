@@ -4,7 +4,11 @@
 
 PORTNAME=	avahi
 PORTVERSION=	0.6.31
+<<<<<<< HEAD
 PORTREVISION?=	3
+=======
+PORTREVISION?=	1
+>>>>>>> freenas/9.2.1-BRANCH
 CATEGORIES?=	net dns
 MASTER_SITES=	http://www.avahi.org/download/
 PKGNAMESUFFIX?=	-app

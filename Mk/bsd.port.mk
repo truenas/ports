@@ -1324,6 +1324,14 @@ WITH_DEBUG=	yes
 .endif
 .endif
 
+<<<<<<< HEAD
+=======
+# Reset value from bsd.own.mk.
+.if defined(WITH_DEBUG) && !defined(WITHOUT_DEBUG) && !defined(INSTALL_STRIPPED)
+STRIP=	#none
+.endif
+
+>>>>>>> freenas/9.2.1-BRANCH
 .include "${PORTSDIR}/Mk/bsd.options.mk"
 
 # Start of pre-makefile section.
@@ -1605,8 +1613,11 @@ CFLAGS:=	${CFLAGS:C/${_CPUCFLAGS}//}
 # Reset value from bsd.own.mk.
 .if defined(WITH_DEBUG) && !defined(WITHOUT_DEBUG)
 .if !defined(INSTALL_STRIPPED)
+<<<<<<< HEAD
 STRIP=	#none
 MAKE_ENV+=	DONTSTRIP=yes
+=======
+>>>>>>> freenas/9.2.1-BRANCH
 STRIP_CMD=	${TRUE}
 .endif
 DEBUG_FLAGS?=	-g

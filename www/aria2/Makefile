@@ -1,8 +1,12 @@
 # Created by: Andrew Pantyukhin <infofarmer@FreeBSD.org>
-# $FreeBSD$
+# $FreeBSD: head/www/aria2/Makefile 349746 2014-03-31 14:05:20Z sunpoet $
 
 PORTNAME=	aria2
+<<<<<<< HEAD
 PORTVERSION=	1.18.8
+=======
+PORTVERSION=	1.18.5
+>>>>>>> freenas/9.2.1-BRANCH
 CATEGORIES=	www
 MASTER_SITES=	SF/${PORTNAME}/stable/${PORTNAME}-${PORTVERSION}
 
@@ -33,9 +37,13 @@ USE_CXXSTD=	c++11
 USE_GNOME=	libxml2
 USE_LDCONFIG=	yes
 USE_OPENSSL=	yes
+<<<<<<< HEAD
 USES=		compiler:c++11-lib libtool pathfix pkgconfig tar:xz
 
 PORTDOCS=	*
+=======
+USES=		compiler:c++11-lib pathfix pkgconfig tar:xz
+>>>>>>> freenas/9.2.1-BRANCH
 
 CA_BUNDLE_CONFIGURE_OFF=--without-ca-bundle
 CA_BUNDLE_CONFIGURE_ON=	--with-ca-bundle=${LOCALBASE}/share/certs/ca-root-nss.crt

@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 --- ./wscript	2014-12-01 04:48:32.000000000 -0800
 +++ ./wscript	2015-07-13 03:38:04.000000000 -0700
+=======
+--- ./wscript.orig	2013-01-27 22:58:07.759866676 +0000
++++ ./wscript	2013-01-27 22:58:27.961081298 +0000
+>>>>>>> freenas/9.2.1-BRANCH
 @@ -43,7 +43,6 @@
      opt.RECURSE('lib/nss_wrapper')
      opt.RECURSE('lib/socket_wrapper')
@@ -8,6 +13,7 @@
      opt.RECURSE('source3')
      opt.RECURSE('lib/util')
  
+<<<<<<< HEAD
 @@ -52,6 +51,14 @@
                          'You may specify list of paths where Kerberos is installed (e.g. /usr/local /usr/kerberos) to search krb5-config',
                     action='callback', callback=system_mitkrb5_callback, dest='with_system_mitkrb5', default=False)
@@ -24,6 +30,9 @@
                     help='disable AD DC functionality (enables Samba 4 client and Samba 3 code base).',
                     action='store_true', dest='without_ad_dc', default=False)
 @@ -144,7 +151,6 @@
+=======
+@@ -140,7 +139,6 @@
+>>>>>>> freenas/9.2.1-BRANCH
      conf.RECURSE('lib/subunit/c')
      conf.RECURSE('libcli/smbreadline')
      conf.RECURSE('lib/crypto')
@@ -31,6 +40,7 @@
      conf.RECURSE('selftest')
      conf.RECURSE('source3')
  
+<<<<<<< HEAD
 @@ -188,6 +194,9 @@
          conf.CHECK_HEADERS('systemd/sd-daemon.h', lib='systemd-daemon')
          conf.CHECK_LIB('systemd-daemon', shlib=True)
@@ -41,3 +51,5 @@
      if conf.CONFIG_SET('HAVE_SYSTEMD_SD_DAEMON_H'):
          conf.DEFINE('HAVE_SYSTEMD', '1')
          conf.env['ENABLE_SYSTEMD'] = True
+=======
+>>>>>>> freenas/9.2.1-BRANCH
