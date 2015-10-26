@@ -19,6 +19,8 @@ TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}greenlet>=0.4.7:${PORTSDIR}/devel/py-greenl
 USE_PYTHON=	distutils
 USES=		python
 
+PLIST_SUB=	PYTHON_SUFFIX=${PYTHON_SUFFIX}
+
 post-build:
 	@${STRIP_CMD} ${WRKSRC}/gevent/_semaphore.so ${WRKSRC}/gevent/_util.so ${WRKSRC}/gevent/ares.so ${WRKSRC}/gevent/core.so
 
