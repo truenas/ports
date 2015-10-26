@@ -16,7 +16,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}greenlet>=0.4.7:${PORTSDIR}/devel/py-greenle
 TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}greenlet>=0.4.7:${PORTSDIR}/devel/py-greenlet \
 		${PYTHON_PKGNAMEPREFIX}sqlite3>=0:${PORTSDIR}/databases/py-sqlite3
 
-USE_PYTHON=	autoplist distutils
+USE_PYTHON=	distutils
 USES=		python
 
 post-build:
@@ -25,4 +25,12 @@ post-build:
 regression-test test: build
 	cd ${WRKSRC}/greentest/ && ${SETENV} PYTHONPATH=../ ${PYTHON_CMD} testrunner.py
 
-.include <bsd.port.mk>
+.include <bsd.port.pre.mk>
+
+.if ${PYTHON_VER} == "2.7"
+PLIST=	${PKGDIR}/pkg-plist-2x
+.else
+PLIST=	${PKGDIR}/pkg-plist-3x
+.endif
+
+.include <bsd.port.post.mk>
