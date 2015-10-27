@@ -21,7 +21,7 @@ RUN_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}futures>=2.1.3:${PORTSDIR}/devel/py-futures
 		${PYTHON_PKGNAMEPREFIX}six>=1.5.2:${PORTSDIR}/devel/py-six \
 		${PYTHON_PKGNAMEPREFIX}requests>=1.1:${PORTSDIR}/www/py-requests
 
-USES=		python:2
+USES=		python
 USE_PYTHON=	distutils autoplist
 
 post-install:
