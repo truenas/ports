@@ -71,7 +71,7 @@
          """
          if binary is None:
 -            binary = not isinstance(message, (str, unicode))
-+            binary = type(message) not in six.string_types
++            binary = not isinstance(message, six.string_types)
  
          opcode = self.OPCODE_BINARY if binary else self.OPCODE_TEXT
  
