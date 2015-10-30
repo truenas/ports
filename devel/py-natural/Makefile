@@ -2,7 +2,7 @@
 
 PORTNAME=	natural
 PORTVERSION=	0.1.5
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	devel python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
@@ -20,4 +20,11 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}six>0:${PORTSDIR}/devel/py-six
 USES=		python
 USE_PYTHON=	autoplist distutils
 
-.include <bsd.port.mk>
+.include <bsd.port.pre.mk>
+
+.if ${PYTHON_MAJOR_VER} == "3"
+post-stage:
+	${SED} -i '' 's,from . import locale,import locale,' ${STAGEDIR}/${PYTHONPREFIX_SITELIBDIR}/natural/language.py
+.endif
+
+.include <bsd.port.post.mk>
