@@ -2,7 +2,7 @@
 
 PORTNAME=	natural
 PORTVERSION=	0.1.5
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	devel python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
@@ -24,7 +24,7 @@ USE_PYTHON=	autoplist distutils
 
 .if ${PYTHON_MAJOR_VER} == "3"
 post-stage:
-	${SED} -i '' 's,from . import locale,import locale,' ${STAGEDIR}/${PYTHONPREFIX_SITELIBDIR}/natural/language.py
+	${SED} -i '' 's,from . import locale,import locale,' ${STAGEDIR}/${PYTHONPREFIX_SITELIBDIR}/natural/language.py ${STAGEDIR}/${PYTHONPREFIX_SITELIBDIR}/natural/number.py ${STAGEDIR}/${PYTHONPREFIX_SITELIBDIR}/natural/size.py
 .endif
 
 .include <bsd.port.post.mk>
