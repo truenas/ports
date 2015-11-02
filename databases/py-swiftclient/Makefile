@@ -13,14 +13,14 @@ COMMENT=	Python client library for OpenStack Object Storage (Swift)
 
 LICENSE=	APACHE20
 
-BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pbr>=0.5.21:${PORTSDIR}/devel/py-pbr
+BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pbr>=0.5.21:${PORTSDIR}/devel/py2-pbr
 
 RUN_DEPENDS:=	${BUILD_DEPENDS}
-RUN_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}simplejson>=2.0.9:${PORTSDIR}/devel/py-simplejson \
-		${PYTHON_PKGNAMEPREFIX}six>=1.5.2:${PORTSDIR}/devel/py-six \
-		${PYTHON_PKGNAMEPREFIX}requests>=1.1:${PORTSDIR}/www/py-requests
+RUN_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}simplejson>=2.0.9:${PORTSDIR}/devel/py2-simplejson \
+		${PYTHON_PKGNAMEPREFIX}six>=1.5.2:${PORTSDIR}/devel/py2-six \
+		${PYTHON_PKGNAMEPREFIX}requests>=1.1:${PORTSDIR}/www/py2-requests
 
-USES=		python
+USES=		python:2
 USE_PYTHON=	distutils autoplist
 
 post-install:
