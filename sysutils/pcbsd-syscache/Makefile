@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	pcbsd-syscache
-PORTVERSION=	1446144054
+PORTVERSION=	1446572602
 CATEGORIES=	sysutils
 
 MAINTAINER=	kmoore@FreeBSD.org
@@ -24,7 +24,7 @@ PLIST_FILES=	bin/syscache \
 USE_GITHUB=	yes
 GH_ACCOUNT=	pcbsd
 GH_PROJECT=	pcbsd
-GH_TAGNAME=	e114388285568f6e0fab18cf3fef1e91de140de3
+GH_TAGNAME=	368dc37dc6d18fd514245720c6448f294428c5b1
 
 .include <bsd.port.pre.mk>
 
