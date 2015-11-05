@@ -1,0 +1,61 @@
+# Fixes python issue #23003
+
+--- ./Lib/test/test_traceback.py.orig	2015-02-25 03:27:45.000000000 -0800
++++ ./Lib/test/test_traceback.py	2015-11-04 19:48:30.507723185 -0800
+@@ -4,7 +4,7 @@
+ import sys
+ import unittest
+ import re
+-from test.support import run_unittest, Error, captured_output
++from test.support import Error, captured_output, captured_stdout
+ from test.support import TESTFN, unlink, cpython_only
+ 
+ import traceback
+@@ -443,9 +443,19 @@
+         # Local variable dict should now be empty.
+         self.assertEqual(len(inner_frame.f_locals), 0)
+ 
+-
+-def test_main():
+-    run_unittest(__name__)
++    def test_constructors(self):
++        output = StringIO()
++        traceback.print_exc(file=output)
++        self.assertEqual(output.getvalue(), 'NoneType\n')
++        output = StringIO()
++        traceback.print_exception(None, None, None, file=output)
++        self.assertEqual(output.getvalue(), 'NoneType\n')
++        with captured_stdout() as output:
++            print(traceback.format_exc())
++        self.assertEqual(output.getvalue(), 'NoneType\n\n')
++        with captured_stdout() as output:
++            print(traceback.format_exception(None, None, None))
++        self.assertEqual(output.getvalue(), "['NoneType\\n']\n")
+ 
+ if __name__ == "__main__":
+-    test_main()
++    unittest.main()
+--- ./Lib/traceback.py.orig	2015-02-25 03:27:45.000000000 -0800
++++ ./Lib/traceback.py	2015-11-04 18:22:19.872062508 -0800
+@@ -122,17 +122,17 @@
+         seen = set()
+     seen.add(exc)
+     its = []
+-    context = exc.__context__
+-    cause = exc.__cause__
++    context = getattr(exc, '__context__', None)
++    cause = getattr(exc, '__cause__', None)
+     if cause is not None and cause not in seen:
+         its.append(_iter_chain(cause, False, seen))
+         its.append([(_cause_message, None)])
+     elif (context is not None and
+-          not exc.__suppress_context__ and
++          not getattr(exc, '__suppress_context__', None) and
+           context not in seen):
+         its.append(_iter_chain(context, None, seen))
+         its.append([(_context_message, None)])
+-    its.append([(exc, custom_tb or exc.__traceback__)])
++    its.append([(exc, custom_tb or getattr(exc, '__traceback__', None))])
+     # itertools.chain is in an extension module and may be unavailable
+     for it in its:
+         yield from it
