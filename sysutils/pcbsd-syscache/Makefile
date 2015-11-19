@@ -24,7 +24,7 @@ PLIST_FILES=	bin/syscache \
 USE_GITHUB=	yes
 GH_ACCOUNT=	pcbsd
 GH_PROJECT=	pcbsd
-GH_TAGNAME=	90406499a79ed33921607a439c041243409aa4ff
+GH_TAGNAME=	5b116b2218f718879bcbe0f1f48454db8e1e58eb
 
 .include <bsd.port.pre.mk>
 
