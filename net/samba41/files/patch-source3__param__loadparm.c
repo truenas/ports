@@ -1,6 +1,14 @@
---- source3/param/loadparm.c.orig	2015-01-28 00:32:27.759378400 -0800
-+++ source3/param/loadparm.c	2015-01-31 15:04:49.919907614 -0800
-@@ -3174,10 +3174,12 @@
+--- source3/param/loadparm.c	2015-08-31 23:45:32.000000000 -0700
++++ source3/param/loadparm.c	2015-11-23 22:24:03.000000000 -0800
+@@ -896,6 +896,7 @@
+ 	Globals.bLogWriteableFilesOnExit = false;
+ 	Globals.bCreateKrb5Conf = true;
+ 	Globals.winbindMaxDomainConnections = 1;
++	Globals.ads_dns_update = 1;
+ 
+ 	/* hostname lookups can be very expensive and are broken on
+ 	   a large number of sites (tridge) */
+@@ -3174,10 +3175,12 @@
  		return true;
  	}
  
