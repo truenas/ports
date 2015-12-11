@@ -231,6 +231,7 @@
     SUBDIR += googlebook_dl
     SUBDIR += goose
     SUBDIR += grafana
+    SUBDIR += grafana2
     SUBDIR += grails
     SUBDIR += gregarius
     SUBDIR += groupoffice

@@ -224,6 +224,13 @@ munin:*:842:
 dahdi:*:843:asterisk
 fossy:*:901:www
 scanlogd:*:902:
+_ocserv:*:903:
+grafana:*:904:
+artifactory:*:905:
+opentsdb:*:906:
+influxd:*:907:
+riemann:*:908:
+proxy65:*:909:
 bacula:*:910:
 iserv:*:911:
 _sj3:*:912:
