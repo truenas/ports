@@ -49,7 +49,11 @@ BROKEN_sparc64=	Does not compile on sparc64: gcc core dump
 
 .include <bsd.port.options.mk>
 
+<<<<<<< HEAD
 .if ${PORT_OPTIONS:MOPENSSL}
+=======
+.if ${PORT_OPTIONS:MSYS_SSL} || ${PORT_OPTIONS:MPORTS_SSL}
+>>>>>>> parent of cee4950... Use FreeBSD's pidfile(3) API instead of custom and racy implementation
 USE_OPENSSL=		yes
 WITH_OPENSSL_PORT=	yes
 CONFIGURE_ARGS+=	--enable-ssl
