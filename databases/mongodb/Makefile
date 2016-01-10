@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	mongodb
-PORTVERSION=	2.6.7
+PORTVERSION=	3.2.0
 CATEGORIES=	databases net
 MASTER_SITES=	http://downloads.mongodb.org/src/
 DISTNAME=	${PORTNAME}-src-r${PORTVERSION}
@@ -32,8 +32,8 @@ OPTIONS_DEFAULT=SSL
 TEST_DESC=	Add support for running regression test
 
 USES=		cpe execinfo scons
-MAKE_ARGS=	--prefix=${STAGEDIR}${PREFIX} --cc=${CC} --cxx=${CXX} \
-		--use-system-pcre --use-system-snappy --use-system-v8
+MAKE_ARGS=	--prefix=${STAGEDIR}${PREFIX} \
+		--use-system-pcre --use-system-snappy 
 
 USERS=	mongodb
 GROUPS=	mongodb

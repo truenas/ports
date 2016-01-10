@@ -1,11 +1,13 @@
---- SConstruct.orig	2014-05-05 02:29:43.000000000 +0000
-+++ SConstruct	2014-05-12 09:50:56.999470711 +0000
-@@ -843,7 +843,7 @@
-     env.Append( LIBS=[] )
+--- SConstruct.orig	2016-01-10 20:32:45.247306502 +0100
++++ SConstruct	2016-01-10 20:32:56.486305350 +0100
+@@ -840,10 +840,6 @@
+     print env_vars.GenerateHelpText(env)
+     Exit(0)
  
-     #make scons colorgcc friendly
--    for key in ('HOME', 'TERM'):
-+    for key in ('HOME', 'TERM', 'PATH', 'CCACHE_DIR'):
-         try:
-             env['ENV'][key] = os.environ[key]
-         except KeyError:
+-unknown_vars = env_vars.UnknownVariables()
+-if unknown_vars:
+-    env.FatalError("Unknown variables specified: {0}", ", ".join(unknown_vars.keys()))
+-
+ def set_config_header_define(env, varname, varval = 1):
+     env['CONFIG_HEADER_DEFINES'][varname] = varval
+ env.AddMethod(set_config_header_define, 'SetConfigHeaderDefine')
