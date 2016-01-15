@@ -61,7 +61,7 @@ do-install:
 
 post-install:
 .if ${PORT_OPTIONS:METCSYMLINK}
-	${MKDIR} ${STAGEDIR}${PREFIX}/etc/ssl
+	${MKDIR} ${STAGEDIR}/etc/ssl
 	${LN} -sf ${PREFIX}/${CERTDIR}/ca-root-nss.crt ${STAGEDIR}/etc/ssl/cert.pem
 .endif
 	${MKDIR} ${STAGEDIR}${PREFIX}/etc/ssl
