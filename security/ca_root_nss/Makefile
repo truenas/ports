@@ -62,11 +62,11 @@ do-install:
 post-install:
 .if ${PORT_OPTIONS:METCSYMLINK}
 	${MKDIR} ${STAGEDIR}${PREFIX}/etc/ssl
+	${LN} -sf ${PREFIX}/${CERTDIR}/ca-root-nss.crt ${STAGEDIR}/etc/ssl/cert.pem
+.endif
+	${MKDIR} ${STAGEDIR}${PREFIX}/etc/ssl
 	${LN} -sf ${PREFIX}/${CERTDIR}/ca-root-nss.crt ${STAGEDIR}${PREFIX}/etc/ssl/cert.pem.sample
 	${MKDIR} ${STAGEDIR}${PREFIX}/openssl
 	${LN} -sf ${PREFIX}/${CERTDIR}/ca-root-nss.crt ${STAGEDIR}${PREFIX}/openssl/cert.pem.sample
-.endif
-	${MKDIR} ${STAGEDIR}${PREFIX}/etc/ssl
-	${LN} -sf ${PREFIX}/${CERTDIR}/ca-root-nss.crt ${STAGEDIR}${PREFIX}/etc/ssl/cert.pem
 
 .include <bsd.port.mk>
