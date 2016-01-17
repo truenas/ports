@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	mongodb
-PORTVERSION=	3.2.0
+PORTVERSION=	3.2.1
 CATEGORIES=	databases net
 MASTER_SITES=	http://downloads.mongodb.org/src/
 DISTNAME=	${PORTNAME}-src-r${PORTVERSION}
@@ -32,7 +32,7 @@ OPTIONS_DEFAULT=SSL
 TEST_DESC=	Add support for running regression test
 
 USES=		cpe execinfo scons
-MAKE_ARGS=	--prefix=${STAGEDIR}${PREFIX} \
+MAKE_ARGS=	--prefix=${STAGEDIR}${PREFIX} --release \
 		--use-system-pcre --use-system-snappy 
 
 USERS=	mongodb
@@ -68,6 +68,13 @@ ALL_TARGET=	core tools
 post-patch:
 	@${REINPLACE_CMD} 's/\["-O3"\]/"${CXXFLAGS}"/' \
 		${WRKSRC}/SConstruct
+
+post-stage:
+	strip ${STAGEDIR}${PREFIX}/bin/mongo
+	strip ${STAGEDIR}${PREFIX}/bin/mongod
+	strip ${STAGEDIR}${PREFIX}/bin/mongos
+	strip ${STAGEDIR}${PREFIX}/bin/mongoperf
+	strip ${STAGEDIR}${PREFIX}/bin/mongosniff
 
 .if ${PORT_OPTIONS:MTEST}
 test: build-depends build
