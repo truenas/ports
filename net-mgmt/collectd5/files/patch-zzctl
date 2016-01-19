@@ -300,7 +300,7 @@ diff -ruNp src/ctl.c src/ctl.c
 +		if (!id) continue;
 +		pid = atoi(id);
 +		xmlFree (id);
-+		name = pp = vp = NULL;
++		name = pp = vp = type = NULL;
 +		child = portnode->xmlChildrenNode;
 +		while (child != NULL) {
 +			if ((!xmlStrcmp(child->name,
