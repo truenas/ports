@@ -101,6 +101,7 @@ CONFIGURE_ARGS+=	\
 		--enable-contextswitch \
 		--enable-cpu \
 		--enable-csv \
+		--enable-ctl \
 		--enable-df \
 		--enable-dns \
 		--enable-email \
