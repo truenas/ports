@@ -465,7 +465,7 @@ diff -ruNp src/Makefile.am src/Makefile.am
 +if BUILD_PLUGIN_CTL
 +pkglib_LTLIBRARIES += ctl.la
 +ctl_la_SOURCES = ctl.c
-+ctl_la_LDFLAGS = $(PLUGIN_LDFLAGS)
++ctl_la_LDFLAGS = -module -avoid-version
 +ctl_la_CFLAGS = $(AM_CFLAGS) $(BUILD_WITH_LIBXML2_CFLAGS)
 +ctl_la_LIBADD = $(BUILD_WITH_LIBXML2_LIBS)
 +collectd_LDADD += "-dlopen" ctl.la
