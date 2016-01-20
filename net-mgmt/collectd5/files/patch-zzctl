@@ -398,7 +398,7 @@ diff -ruNp src/ctl.c src/ctl.c
 +static void ps_submit(const char *name, const char *ppvp, struct portstat *ps)
 +{
 +	ctl_submit("disk_ops", name, ppvp, ps->rr, ps->wr);
-+	ctl_submit("disk_octets", name, ppvp, ps->rr, ps->wr);
++	ctl_submit("disk_octets", name, ppvp, ps->rb, ps->wb);
 +	ctl_submit("disk_time", name, ppvp,
 +	    (derive_t)ps->rt.sec*1000 + ((ps->rt.frac>>32)*1000>>32),
 +	    (derive_t)ps->wt.sec*1000 + ((ps->wt.frac>>32)*1000>>32));
