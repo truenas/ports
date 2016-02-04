@@ -33,6 +33,7 @@ if [ ! -e "/usr/local/sbin/beadm" ] ; then exit 0; fi
 ROOTFS=`mount | awk '/ \/ / {print $1}'`
 BEDS="$( echo ${ROOTFS} | awk -F '/' '{print $2}' )"
 if [ "$BEDS" = "dev" ] ; then BEDS="ROOT"; fi
+kernel="kernel"
 
 if [ -f /data/freenas-v1.db ]; then
     # FreeNAS install
@@ -94,6 +95,8 @@ display_loaderopts()
        grep -q "^${loadVal}" /tmp/.lSysCtls.$$
        if [ $? -eq 0 ];then continue; fi
 
+       if [ "${loadVal}" = "kernel" ]; then kernel=`echo $line | sed 's/kernel="\(.*\)"/\1/'`; fi
+
        # Save this value for later
        echo "$line" >> /tmp/.lSysCtls.$$
        haveSysCtls=1
@@ -113,8 +116,8 @@ display_loaderopts()
       if [ $? -ne 0 ] ; then continue ; fi
       module="`echo $line | cut -d '=' -f 1 | sed 's|_load||g'`"
       # Try to locate module now
-      if [ -e "${fMnt}/boot/kernel/${module}.ko" ] ; then
-        mPath="kernel"
+      if [ -e "${fMnt}/boot/${kernel}/${module}.ko" ] ; then
+        mPath="${kernel}"
       elif [ -e "${fMnt}/boot/modules/${module}.ko" ] ; then
         mPath="modules"
       else
@@ -133,10 +136,10 @@ display_loaderopts()
 
   # Add our compat kenv lines
   echo "    set kFreeBSD.bootfile=\"kernel\""
-  echo "    set kFreeBSD.kernel=\"kernel\""
+  echo "    set kFreeBSD.kernel=\"${kernel}\""
   echo "    set kFreeBSD.kernel_options=\"\""
-  echo "    set kFreeBSD.kernelname=\"/boot/kernel/kernel\""
-  echo "    set kFreeBSD.module_path=\"/boot/kernel;/boot/modules\""
+  echo "    set kFreeBSD.kernelname=\"/boot/${kernel}/kernel\""
+  echo "    set kFreeBSD.module_path=\"/boot/${kernel};/boot/modules\""
 
   # Any kenv to set?
   if [ "$haveSysCtls" = "1" ] ; then
@@ -273,7 +276,7 @@ EOF
 EOF
   # Get the dataset guts
   cat /tmp/.grubdataset.$$.1
-  echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel ${out}"
+  echo "    kfreebsd ${shortdataset}/@/boot/${kernel}/kernel ${out}"
   echo "    kfreebsd_loadenv ${shortdataset}@/boot/device.hints"
   cat /tmp/.grubdataset.$$.2
 
@@ -289,7 +292,7 @@ EOF
 EOF
   # Get the dataset guts
   cat /tmp/.grubdataset.$$.1
-  echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel ${out} -s"
+  echo "    kfreebsd ${shortdataset}/@/boot/${kernel}/kernel ${out} -s"
   echo "    kfreebsd_loadenv ${shortdataset}@/boot/device.hints"
   cat /tmp/.grubdataset.$$.2
 
@@ -305,7 +308,7 @@ EOF
 EOF
   # Get the dataset guts
   cat /tmp/.grubdataset.$$.1
-  echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel ${out} -v"
+  echo "    kfreebsd ${shortdataset}/@/boot/${kernel}/kernel ${out} -v"
   echo "    kfreebsd_loadenv ${shortdataset}@/boot/device.hints"
   cat /tmp/.grubdataset.$$.2
 
@@ -322,7 +325,7 @@ EOF
 EOF
     # Get the dataset guts
     cat /tmp/.grubdataset.$$.1
-    echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel ${out}"
+    echo "    kfreebsd ${shortdataset}/@/boot/${kernel}/kernel ${out}"
     echo "    kfreebsd_loadenv ${shortdataset}@/boot/device.hints"
     cat /tmp/.grubdataset.$$.2
 
@@ -338,7 +341,7 @@ EOF
 EOF
     # Get the dataset guts
     cat /tmp/.grubdataset.$$.1
-    echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel ${out}"
+    echo "    kfreebsd ${shortdataset}/@/boot/${kernel}/kernel ${out}"
     echo "    kfreebsd_loadenv ${shortdataset}@/boot/device.hints"
     cat /tmp/.grubdataset.$$.2
 
@@ -354,7 +357,7 @@ EOF
 EOF
     # Get the dataset guts
     cat /tmp/.grubdataset.$$.1
-    echo "    kfreebsd ${shortdataset}/@/boot/kernel/kernel ${out}"
+    echo "    kfreebsd ${shortdataset}/@/boot/${kernel}/kernel ${out}"
     echo "    kfreebsd_loadenv ${shortdataset}@/boot/device.hints"
     cat /tmp/.grubdataset.$$.2
 
