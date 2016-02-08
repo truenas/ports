@@ -159,7 +159,8 @@ CONFIGURE_ARGS+=	\
 		--enable-write_graphite \
 		--enable-write_log \
 		--enable-zfs_arc \
-		--enable-zfs_arc_v2
+		--enable-zfs_arc_v2 \
+		--enable-cputemp
 
 .if ${PORT_OPTIONS:MCGI}
 RUN_DEPENDS+=	p5-URI>=0:${PORTSDIR}/net/p5-URI \

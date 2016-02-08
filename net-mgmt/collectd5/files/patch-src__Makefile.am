@@ -1,6 +1,6 @@
---- src/Makefile.am.orig	2015-05-26 19:38:14 UTC
-+++ src/Makefile.am
-@@ -7,14 +7,14 @@ SUBDIRS += daemon
+--- src/Makefile.am.orig	2016-02-07 17:59:05.611217011 +0100
++++ src/Makefile.am	2016-02-07 18:01:14.773208616 +0100
+@@ -7,14 +7,14 @@
  PLUGIN_LDFLAGS = -module -avoid-version -export-symbols-regex '\<module_register\>'
  
  if COMPILER_IS_GCC
@@ -17,7 +17,20 @@
  if BUILD_FEATURE_DAEMON
  AM_CPPFLAGS += -DPIDFILE='"${localstatedir}/run/${PACKAGE_NAME}.pid"'
  endif
-@@ -218,7 +218,7 @@ cpu_la_CFLAGS = $(AM_CFLAGS)
+@@ -211,6 +211,12 @@
+ endif
+ endif
+ 
++if BUILD_PLUGIN_CPUTEMP
++pkglib_LTLIBRARIES += cputemp.la
++cputemp_la_SOURCES = cputemp.c
++cputemp_la_LDFLAGS = $(PLUGIN_LDFLAGS)
++endif
++
+ if BUILD_PLUGIN_CPU
+ pkglib_LTLIBRARIES += cpu.la
+ cpu_la_SOURCES = cpu.c
+@@ -218,7 +224,7 @@
  cpu_la_LDFLAGS = $(PLUGIN_LDFLAGS)
  cpu_la_LIBADD =
  if BUILD_WITH_LIBKSTAT
@@ -26,7 +39,7 @@
  endif
  if BUILD_WITH_LIBDEVINFO
  cpu_la_LIBADD += -ldevinfo
-@@ -303,7 +303,7 @@ disk_la_CFLAGS = $(AM_CFLAGS)
+@@ -303,7 +309,7 @@
  disk_la_LDFLAGS = $(PLUGIN_LDFLAGS)
  disk_la_LIBADD =
  if BUILD_WITH_LIBKSTAT
@@ -35,7 +48,7 @@
  endif
  if BUILD_WITH_LIBDEVINFO
  disk_la_LIBADD += -ldevinfo
-@@ -321,6 +321,9 @@ endif
+@@ -321,6 +327,9 @@
  if BUILD_WITH_PERFSTAT
  disk_la_LIBADD += -lperfstat
  endif
@@ -45,7 +58,7 @@
  endif
  
  if BUILD_PLUGIN_DNS
-@@ -408,7 +411,7 @@ interface_la_CFLAGS += $(BUILD_WITH_LIBS
+@@ -408,7 +417,7 @@
  interface_la_LIBADD += $(BUILD_WITH_LIBSTATGRAB_LDFLAGS)
  else
  if BUILD_WITH_LIBKSTAT
@@ -54,7 +67,7 @@
  endif
  if BUILD_WITH_LIBDEVINFO
  interface_la_LIBADD += -ldevinfo
-@@ -591,7 +594,7 @@ memory_la_CFLAGS = $(AM_CFLAGS)
+@@ -591,7 +600,7 @@
  memory_la_LDFLAGS = $(PLUGIN_LDFLAGS)
  memory_la_LIBADD =
  if BUILD_WITH_LIBKSTAT
@@ -63,7 +76,7 @@
  endif
  if BUILD_WITH_LIBDEVINFO
  memory_la_LIBADD += -ldevinfo
-@@ -964,7 +967,7 @@ swap_la_CFLAGS = $(AM_CFLAGS)
+@@ -964,7 +973,7 @@
  swap_la_LDFLAGS = $(PLUGIN_LDFLAGS)
  swap_la_LIBADD =
  if BUILD_WITH_LIBKSTAT
@@ -72,7 +85,7 @@
  endif
  if BUILD_WITH_LIBDEVINFO
  swap_la_LIBADD += -ldevinfo
-@@ -1010,7 +1013,7 @@ if BUILD_PLUGIN_TAPE
+@@ -1010,7 +1019,7 @@
  pkglib_LTLIBRARIES += tape.la
  tape_la_SOURCES = tape.c
  tape_la_LDFLAGS = $(PLUGIN_LDFLAGS)
@@ -81,7 +94,7 @@
  endif
  
  if BUILD_PLUGIN_TARGET_NOTIFICATION
-@@ -1116,7 +1119,7 @@ uptime_la_CFLAGS = $(AM_CFLAGS)
+@@ -1116,7 +1125,7 @@
  uptime_la_LDFLAGS = $(PLUGIN_LDFLAGS)
  uptime_la_LIBADD =
  if BUILD_WITH_LIBKSTAT
@@ -90,7 +103,7 @@
  endif
  if BUILD_WITH_PERFSTAT
  uptime_la_LIBADD += -lperfstat
-@@ -1275,7 +1278,7 @@ if BUILD_LINUX
+@@ -1275,7 +1284,7 @@
  # zfs_arc requires no library on linux
  else
  # solaris
@@ -99,7 +112,7 @@
  endif
  endif
  endif
-@@ -1364,12 +1367,7 @@ endif
+@@ -1364,12 +1373,7 @@
  
  install-exec-hook:
  	$(mkinstalldirs) $(DESTDIR)$(sysconfdir)

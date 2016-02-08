@@ -1,6 +1,6 @@
---- configure.ac.orig	2015-05-27 07:51:35 UTC
-+++ configure.ac
-@@ -120,7 +120,7 @@ then
+--- configure.ac.orig	2015-05-27 09:51:35.609705000 +0200
++++ configure.ac	2016-02-07 18:12:16.612161861 +0100
+@@ -120,7 +120,7 @@
  fi
  
  # Where to install .pc files.
@@ -9,7 +9,7 @@
  AC_SUBST(pkgconfigdir)
  
  # Check for standards compliance mode
-@@ -641,7 +641,7 @@ SAVE_CFLAGS="$CFLAGS"
+@@ -641,7 +641,7 @@
  # Emulate behavior of src/Makefile.am
  if test "x$GCC" = "xyes"
  then
@@ -18,7 +18,7 @@
  fi
  
  AC_CACHE_CHECK([for strtok_r],
-@@ -770,7 +770,7 @@ AC_CHECK_FUNCS(getutxent, [have_getutxen
+@@ -770,7 +770,7 @@
  if test "x$GCC" = "xyes"
  then
  	SAVE_CFLAGS="$CFLAGS"
@@ -27,7 +27,7 @@
  fi
  
  AC_CHECK_FUNCS(strptime, [have_strptime="yes"], [have_strptime="no"])
-@@ -1495,6 +1495,7 @@ if test "x$with_kstat" = "xyes"
+@@ -1495,6 +1495,7 @@
  then
  	AC_CHECK_LIB(kstat, kstat_open, [with_kstat="yes"], [with_kstat="no (libkstat not found)"], [])
  fi
@@ -35,7 +35,7 @@
  if test "x$with_kstat" = "xyes"
  then
  	AC_CHECK_LIB(devinfo, di_init, [with_devinfo="yes"], [with_devinfo="no (not found)"], [])
-@@ -1504,6 +1505,8 @@ if test "x$with_kstat" = "xyes"
+@@ -1504,6 +1505,8 @@
  then
  	AC_DEFINE(HAVE_LIBKSTAT, 1,
  		  [Define to 1 if you have the 'kstat' library (-lkstat)])
@@ -44,7 +44,7 @@
  fi
  AM_CONDITIONAL(BUILD_WITH_LIBKSTAT, test "x$with_kstat" = "xyes")
  AM_CONDITIONAL(BUILD_WITH_LIBDEVINFO, test "x$with_devinfo" = "xyes")
-@@ -3346,7 +3349,7 @@ then
+@@ -3346,7 +3349,7 @@
  	SAVE_LIBS="$LIBS"
  	# trigger an error if Perl_load_module*() uses __attribute__nonnull__(3)
  	# (see issues #41 and #42)
@@ -53,7 +53,7 @@
  	LIBS="$LIBS $PERL_LIBS"
  
  	AC_CACHE_CHECK([for broken Perl_load_module()],
-@@ -3576,7 +3579,7 @@ fi
+@@ -3576,7 +3579,7 @@
  if test "x$with_python" = "xyes"
  then
  	AC_MSG_CHECKING([for Python CPPFLAGS])
@@ -62,7 +62,7 @@
  	python_config_status=$?
  
  	if test "$python_config_status" -ne 0 || test "x$python_include_path" = "x"
-@@ -3599,7 +3602,7 @@ fi
+@@ -3599,7 +3602,7 @@
  if test "x$with_python" = "xyes"
  then
  	AC_MSG_CHECKING([for Python LDFLAGS])
@@ -71,7 +71,7 @@
  	python_config_status=$?
  
  	if test "$python_config_status" -ne 0 || test "x$python_library_path" = "x"
-@@ -3614,7 +3617,7 @@ fi
+@@ -3614,7 +3617,7 @@
  if test "x$with_python" = "xyes"
  then
  	AC_MSG_CHECKING([for Python LIBS])
@@ -80,7 +80,7 @@
  	python_config_status=$?
  
  	if test "$python_config_status" -ne 0 || test "x$python_library_flags" = "x"
-@@ -3629,7 +3632,7 @@ fi
+@@ -3629,7 +3632,7 @@
  if test "x$with_python" = "xyes"
  then
  	LDFLAGS="-L$python_library_path $LDFLAGS"
@@ -89,7 +89,7 @@
  
  	AC_CHECK_FUNC(PyObject_CallFunction,
  		      [with_python="yes"],
-@@ -4692,8 +4695,8 @@ AC_ARG_WITH(libvarnish, [AS_HELP_STRING(
+@@ -4692,8 +4695,8 @@
  	else if test -d "$with_libvarnish/lib"
  	then
  		AC_MSG_NOTICE([Not checking for libvarnish: Manually configured])
@@ -100,7 +100,7 @@
  		with_libvarnish="yes"
  	fi; fi; fi
  ],
-@@ -5263,6 +5266,7 @@ fi
+@@ -5263,6 +5266,7 @@
  
  if test "x$ac_system" = "xFreeBSD"
  then
@@ -108,3 +108,11 @@
          plugin_zfs_arc="yes"
  fi
  
+@@ -5535,6 +5539,7 @@
+ AC_PLUGIN([ceph],        [$plugin_ceph],       [Ceph daemon statistics])
+ AC_PLUGIN([conntrack],   [$plugin_conntrack],  [nf_conntrack statistics])
+ AC_PLUGIN([contextswitch], [$plugin_contextswitch], [context switch statistics])
++AC_PLUGIN([cputemp],     [yes],                [CPU temperature statistics])
+ AC_PLUGIN([cpufreq],     [$plugin_cpufreq],    [CPU frequency statistics])
+ AC_PLUGIN([cpu],         [$plugin_cpu],        [CPU usage statistics])
+ AC_PLUGIN([csv],         [yes],                [CSV output plugin])

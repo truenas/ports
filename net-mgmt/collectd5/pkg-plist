@@ -20,6 +20,7 @@ lib/collectd/apcups.so
 %%CURL_XML%%lib/collectd/bind.so
 lib/collectd/contextswitch.so
 lib/collectd/cpu.so
+lib/collectd/cputemp.so
 lib/collectd/csv.so
 %%CURL%%lib/collectd/curl.so
 %%CURL_JSON%%lib/collectd/curl_json.so
