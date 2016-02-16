@@ -1,5 +1,3 @@
-# $FreeBSD$
-
 PORTNAME=		Parse-Pidl
 PORTVERSION=		${SAMBA4_VERSION}
 PORTREVISION=		1
@@ -17,7 +15,7 @@ RUN_DEPENDS:=		${BUILD_DEPENDS}
 
 CONFLICTS=
 
-SAMBA4_PORT?=		samba41
+SAMBA4_PORT?=		samba43
 SAMBA4_SUBPORT=		yes
 
 MASTERDIR=		${.CURDIR}/../../net/${SAMBA4_PORT}
@@ -25,10 +23,18 @@ PKGDIR=			${.CURDIR}
 
 USES=			perl5
 USE_PERL5=		configure
+
 PATCH_WRKSRC=		${WRKDIR}/${DISTNAME}
 WRKSRC=			${WRKDIR}/${DISTNAME}/pidl
+CONFIGURE_WRKSRC=	${WRKDIR}/${DISTNAME}/pidl
+BUILD_WRKSRC=		${WRKDIR}/${DISTNAME}/pidl
+INSTALL_WRKSRC=		${WRKDIR}/${DISTNAME}/pidl
+
 
 post-extract:
 			@${RM} -rf ${WRKSRC}/lib/Parse/Yapp ${WRKSRC}/lib/wscript_build
 
 .include "${MASTERDIR}/Makefile"
+
+# Ugly hack
+DISTNAME=		${SAMBA4_BASENAME}-4-3-stable
