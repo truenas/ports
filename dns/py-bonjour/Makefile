@@ -12,7 +12,7 @@ COMMENT=	Python interface to bonjour
 LICENSE=	MIT
 
 USES=		python
-USE_PYTHON=	distutils autoplist
+USE_PYTHON=	autoplist distutils
 
 OPTIONS_SINGLE=			ZEROCONF
 OPTIONS_SINGLE_ZEROCONF=	AVAHI MDNSRESPONDER
