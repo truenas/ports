@@ -1,6 +1,11 @@
---- ./mDNSPosix/nss_mdns.c.orig	2012-04-15 08:07:19.000000000 +0200
-+++ ./mDNSPosix/nss_mdns.c	2013-11-05 11:00:14.000000000 +0100
-@@ -379,7 +379,18 @@
+--- mDNSPosix/nss_mdns.c.orig	2012-04-14 23:07:19.000000000 -0700
++++ mDNSPosix/nss_mdns.c	2016-02-19 20:55:21.000000000 -0800
+@@ -376,10 +376,23 @@
+ errcode_t
+ init_config ();
+ 
++static errcode_t __init_config ();
++
  #define ENTNAME  hostent
  #define DATABASE "hosts"
  
@@ -20,7 +25,7 @@
  // For nss_status
  #include <netdb.h>
  // For hostent
-@@ -1684,7 +1695,7 @@
+@@ -1684,7 +1697,7 @@
  //----------
  // Types and Constants
  
@@ -29,3 +34,25 @@
  #define CONF_LINE_SIZE 1024
  
  const char k_comment_char = '#';
+@@ -1792,6 +1805,12 @@
+ errcode_t
+ init_config ()
+ {
++    return __init_config();
++}
++
++static errcode_t
++__init_config ()
++{
+     if (g_config)
+     {
+         /*
+@@ -1865,7 +1884,7 @@
+ int
+ config_is_mdns_suffix (const char * name)
+ {
+-    int errcode = init_config ();
++    int errcode = __init_config ();
+     if (!errcode)
+     {
+         return contains_domain_suffix (g_config, name);

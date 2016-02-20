@@ -2,7 +2,7 @@
 
 PORTNAME=	mDNSResponder_nss
 PORTVERSION=	544
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	dns net
 MASTER_SITES=	http://opensource.apple.com/tarballs/mDNSResponder/
 DISTNAME=	${PORTNAME:S/_nss//}-${PORTVERSION}
