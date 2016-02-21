@@ -279,6 +279,7 @@ CONFIGURE_ARGS+=--enable-aggregation \
 		--enable-exec \
 		--enable-fhcount \
 		--enable-filecount \
+		--enable-geom-stat \
 		--enable-load \
 		--enable-logfile \
 		--enable-match_empty_counter \
@@ -317,6 +318,7 @@ CONFIGURE_ARGS+=--enable-aggregation \
 		--enable-write_graphite \
 		--enable-write_log \
 		--enable-zfs_arc \
+		--enable-zfs_arc_v2
 
 INSTALL_TARGET=	install-strip
 SHEBANG_FILES=	contrib/collection.cgi

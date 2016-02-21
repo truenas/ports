@@ -104,6 +104,11 @@ lib/collectd/write_log.so
 %%XMMS%%lib/collectd/xmms.so
 lib/collectd/zfs_arc.so
 %%ZOOKEEPER%%lib/collectd/zookeeper.so
+lib/collectd/zfs_arc_v2.so
+lib/collectd/geom_stat.so
+lib/libcollectdclient.so
+lib/libcollectdclient.so.1
+lib/libcollectdclient.so.1.0.0
 libdata/pkgconfig/libcollectdclient.pc
 %%DATADIR%%/postgresql_default.conf
 %%DATADIR%%/types.db
