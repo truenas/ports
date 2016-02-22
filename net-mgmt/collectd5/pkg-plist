@@ -10,9 +10,6 @@ include/collectd/client.h
 include/collectd/lcc_features.h
 include/collectd/network.h
 include/collectd/network_buffer.h
-lib/libcollectdclient.so
-lib/libcollectdclient.so.1
-lib/libcollectdclient.so.1.0.0
 lib/collectd/aggregation.so
 %%CURL%%lib/collectd/apache.so
 lib/collectd/apcups.so
@@ -109,7 +106,6 @@ lib/collectd/geom_stat.so
 lib/libcollectdclient.so
 lib/libcollectdclient.so.1
 lib/libcollectdclient.so.1.0.0
-libdata/pkgconfig/libcollectdclient.pc
 %%DATADIR%%/postgresql_default.conf
 %%DATADIR%%/types.db
 %%PERL%%%%PERL5_MAN3%%/Collectd::Unixsock.3.gz
