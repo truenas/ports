@@ -272,6 +272,7 @@ CONFIGURE_ARGS+=--enable-aggregation \
 		--enable-contextswitch \
 		--enable-cpu \
 		--enable-csv \
+		--enable-ctl \
 		--enable-df \
 		--enable-disk \
 		--enable-dns \
