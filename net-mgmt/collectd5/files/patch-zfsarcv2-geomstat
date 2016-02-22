@@ -1,49 +1,43 @@
-diff -Nur collectd-5.4.1.orig/src/Makefile.am collectd-5.4.1/src/Makefile.am
---- src/Makefile.am	2014-01-26 00:09:14.000000000 -0800
-+++ src/Makefile.am	2015-05-27 14:35:38.000000000 -0700
-@@ -138,6 +138,15 @@
- BUILT_SOURCES = 
+diff -ruNp src/Makefile.am src/Makefile.am
+--- src/Makefile.am	2016-02-22 16:29:53.000000000 +0200
++++ src/Makefile.am	2016-02-22 16:35:38.467423000 +0200
+@@ -87,6 +87,13 @@ pkglib_LTLIBRARIES =
+ BUILT_SOURCES =
  CLEANFILES =
  
 +if BUILD_PLUGIN_GEOM_STAT
 +pkglib_LTLIBRARIES += geom_stat.la
 +geom_stat_la_SOURCES = geom_stat.c
-+geom_stat_la_LDFLAGS = -module -avoid-version -ldevstat -lkvm -lgeom -lbsdxml -lsbuf
-+collectd_LDADD += "-dlopen" geom_stat.la
-+collectd_DEPENDENCIES += geom_stat.la
++geom_stat_la_LDFLAGS = $(PLUGIN_LDFLAGS)
++geom_stat_la_LIBADD = -ldevstat -lkvm -lgeom -lbsdxml -lsbuf
 +endif
-+
 +
  if BUILD_PLUGIN_AGGREGATION
  pkglib_LTLIBRARIES += aggregation.la
  aggregation_la_SOURCES = aggregation.c \
-@@ -1441,6 +1450,22 @@
- collectd_DEPENDENCIES += zfs_arc.la
+@@ -1289,6 +1298,18 @@ zookeeper_la_SOURCES = zookeeper.c
+ zookeeper_la_LDFLAGS = $(PLUGIN_LDFLAGS)
  endif
  
 +if BUILD_PLUGIN_ZFS_ARC_V2
 +pkglib_LTLIBRARIES += zfs_arc_v2.la
 +zfs_arc_v2_la_SOURCES = zfs_arc_v2.c
 +zfs_arc_v2_la_CFLAGS = $(AM_CFLAGS)
-+zfs_arc_v2_la_LDFLAGS = -module -avoid-version
++zfs_arc_v2_la_LDFLAGS = $(PLUGIN_LDFLAGS)
 +if BUILD_FREEBSD
 +zfs_arc_v2_la_LIBADD = -lm
 +else
 +zfs_arc_v2_la_LIBADD = -lkstat
 +endif
-+collectd_LDADD += "-dlopen" zfs_arc_v2.la
-+collectd_DEPENDENCIES += zfs_arc_v2.la
 +endif
-+
-+
 +
  BUILT_SOURCES += $(dist_man_MANS)
  
  dist_man_MANS = collectd.1 \
-diff -Nur collectd-5.4.1.orig/src/geom_stat.c collectd-5.4.1/src/geom_stat.c
---- src/geom_stat.c	1969-12-31 16:00:00.000000000 -0800
-+++ src/geom_stat.c	2015-05-28 14:59:08.000000000 -0700
-@@ -0,0 +1,334 @@
+diff -ruNp src/geom_stat.c src/geom_stat.c
+--- src/geom_stat.c	1970-01-01 03:00:00.000000000 +0300
++++ src/geom_stat.c	2016-02-22 16:35:38.468323000 +0200
+@@ -0,0 +1,329 @@
 +/**
 + * collectd - src/geom.c 
 + * 
@@ -112,7 +106,6 @@ diff -Nur collectd-5.4.1.orig/src/geom_stat.c collectd-5.4.1/src/geom_stat.c
 +#include <sys/sysctl.h>
 +
 +static regex_t f_re;
-+static char f_s[100];
 +static int fliterSet = 0;
 +static int initDone = 0;
 +
@@ -167,10 +160,6 @@ diff -Nur collectd-5.4.1.orig/src/geom_stat.c collectd-5.4.1/src/geom_stat.c
 +	
 +	if (0 == strcasecmp (key, "Filter")) {
 +
-+		if (strlen(value) > sizeof(f_s) - 1) {
-+			DEBUG("geom_stat: Filter string too long");
-+			return -1;
-+		} 
 +		if (regcomp(&f_re, value, REG_EXTENDED) != 0) {
 +			DEBUG( "geom_stat: Invalid filter - see re_format(7)");
 +			return -1;
@@ -378,10 +367,10 @@ diff -Nur collectd-5.4.1.orig/src/geom_stat.c collectd-5.4.1/src/geom_stat.c
 +} /* void module_register */
 +
 +/* vmi: set sw=8 noexpandtab fdm=marker : */
-diff -Nur collectd-5.4.1.orig/src/types.db collectd-5.4.1/src/types.db
---- src/types.db	2014-01-26 00:09:14.000000000 -0800
-+++ src/types.db	2015-05-21 16:47:43.000000000 -0700
-@@ -207,3 +207,44 @@
+diff -ruNp src/types.db src/types.db
+--- src/types.db	2015-05-20 15:05:42.000000000 +0300
++++ src/types.db	2016-02-22 16:35:38.468827000 +0200
+@@ -239,3 +239,44 @@ arc_ratio		value:GAUGE:0:U
  arc_size		current:GAUGE:0:U, target:GAUGE:0:U, minlimit:GAUGE:0:U, maxlimit:GAUGE:0:U
  mysql_qcache		hits:COUNTER:0:U, inserts:COUNTER:0:U, not_cached:COUNTER:0:U, lowmem_prunes:COUNTER:0:U, queries_in_cache:GAUGE:0:U
  mysql_threads		running:GAUGE:0:U, connected:GAUGE:0:U, cached:GAUGE:0:U, created:COUNTER:0:U
@@ -426,9 +415,9 @@ diff -Nur collectd-5.4.1.orig/src/types.db collectd-5.4.1/src/types.db
 +geom_bw				read:GAUGE:0:4294967295, write:GAUGE:0:4294967295, delete:GAUGE:0:4294967295
 +geom_busy_percent	value:GAUGE:0:150.1
 +
-diff -Nur collectd-5.4.1.orig/src/zfs_arc_v2.c collectd-5.4.1/src/zfs_arc_v2.c
---- src/zfs_arc_v2.c	1969-12-31 16:00:00.000000000 -0800
-+++ src/zfs_arc_v2.c	2015-05-28 15:08:07.000000000 -0700
+diff -ruNp src/zfs_arc_v2.c src/zfs_arc_v2.c
+--- src/zfs_arc_v2.c	1970-01-01 03:00:00.000000000 +0300
++++ src/zfs_arc_v2.c	2016-02-22 16:35:38.469843000 +0200
 @@ -0,0 +1,447 @@
 +/**
 + * collectd - src/zfs_arc_v2.c - forked from the orignal zfs_arc.c 
@@ -877,8 +866,9 @@ diff -Nur collectd-5.4.1.orig/src/zfs_arc_v2.c collectd-5.4.1/src/zfs_arc_v2.c
 +} /* void module_register */
 +
 +/* vmi: set sw=8 noexpandtab fdm=marker : */
---- src/collectd.conf.in.orig	2015-05-20 07:05:42.672060002 -0500
-+++ src/collectd.conf.in	2016-02-20 17:58:48.550590000 -0600
+diff -ruNp src/collectd.conf.in src/collectd.conf.in
+--- src/collectd.conf.in	2016-02-22 16:29:53.000000000 +0200
++++ src/collectd.conf.in	2016-02-22 16:35:38.470583000 +0200
 @@ -120,6 +120,7 @@
  #@BUILD_PLUGIN_FHCOUNT_TRUE@LoadPlugin fhcount
  #@BUILD_PLUGIN_FILECOUNT_TRUE@LoadPlugin filecount
