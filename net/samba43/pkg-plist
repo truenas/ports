@@ -477,6 +477,7 @@ lib/samba/libcli-spoolss-samba4.so
 lib/samba/libcliauth-samba4.so
 lib/samba/libcluster-samba4.so
 lib/samba/libcmdline-credentials-samba4.so
+lib/samba/libcom_err-samba4.so.0
 lib/samba/libdb-glue-samba4.so
 lib/samba/libdbwrap-samba4.so
 lib/samba/libdcerpc-samba-samba4.so

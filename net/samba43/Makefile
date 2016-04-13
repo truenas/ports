@@ -125,7 +125,7 @@ RUN_DEPENDS+=		ldb>=1.1.21_1:${PORTSDIR}/databases/ldb
 SAMBA4_BUNDLED_LIBS+=	!ldb
 
 # Don't use external libcom_err
-#SAMBA4_BUNDLED_LIBS+=	com_err
+SAMBA4_BUNDLED_LIBS+=	com_err
 
 PLIST_SUB+=		PY_DNSPYTHON="@comment "
 
