@@ -18,7 +18,7 @@ SAMBA4_DISTNAME=	${SAMBA4_BASENAME}-${SAMBA4_VERSION:S|.p|pre|:S|.r|rc|:S|.t|tp|
 NO_CHECKSUM=		yes
 EXTRACT_ONLY=
 
-WRKSRC=			/usr/samba_src
+WRKSRC=			/usr/nas_source/samba
 
 .if !defined(SAMBA4_SUBPORT)
 CPE_VENDOR=		samba
