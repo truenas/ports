@@ -69,7 +69,7 @@ OPTIONS_DEFAULT=	DOCS
 OPTIONS_SUB=	yes
 
 SMB_DESC=		Install IPA and AD providers (requires Samba4)
-SMB_BUILD_DEPENDS=	samba41>=4.1.0:${PORTSDIR}/net/samba41
+SMB_BUILD_DEPENDS=	samba43>=4.3.6:${PORTSDIR}/net/samba43
 SMB_CONFIGURE_WITH=	samba
 
 .include <bsd.port.options.mk>
