@@ -1,7 +1,7 @@
-# $FreeBSD: head/devel/talloc/Makefile 386312 2015-05-14 10:15:04Z mat $
+# $FreeBSD$
 
 PORTNAME=		talloc
-PORTVERSION=		2.1.2
+PORTVERSION=		2.1.5
 PORTREVISION=		0
 PORTEPOCH=		0
 CATEGORIES=		devel
@@ -24,6 +24,7 @@ PLIST_SUB+=		PKGCONFIGDIR=${PKGCONFIGDIR:S;${PREFIX}/;;}
 
 CONFIGURE_ARGS+=	--mandir=${MANPREFIX}/man \
 			--infodir=${PREFIX}/${INFO_PATH}/${INFO_SUBDIR} \
+			--disable-rpath \
 			--without-gettext
 
 OPTIONS_DEFINE=		MANPAGES

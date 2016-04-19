@@ -17,7 +17,7 @@ RUN_DEPENDS:=		${BUILD_DEPENDS}
 
 CONFLICTS=
 
-SAMBA4_PORT?=		samba41
+SAMBA4_PORT?=		samba43
 SAMBA4_SUBPORT=		yes
 
 MASTERDIR=		${.CURDIR}/../../net/${SAMBA4_PORT}
@@ -26,9 +26,12 @@ PKGDIR=			${.CURDIR}
 USES=			perl5
 USE_PERL5=		configure
 PATCH_WRKSRC=		${WRKDIR}/${DISTNAME}
-WRKSRC=			${WRKDIR}/${DISTNAME}/pidl
 
 post-extract:
 			@${RM} -rf ${WRKSRC}/lib/Parse/Yapp ${WRKSRC}/lib/wscript_build
 
 .include "${MASTERDIR}/Makefile"
+
+# Ugly hack
+WRKSRC=			/usr/nas_source/samba/pidl
+DISTNAME=		${SAMBA4_BASENAME}-4-3-stable
