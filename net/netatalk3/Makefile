@@ -2,11 +2,11 @@
 # $FreeBSD$
 
 PORTNAME=	netatalk
-PORTVERSION=	3.1.7
+PORTVERSION=	3.1.8
+PORTREVISION=	1
 PORTEPOCH=	1
 CATEGORIES=	net
 MASTER_SITES=	SF
-#MASTER_SITE_SUBDIR=${PORTNAME}/${PORTNAME}/3.1
 PKGNAMESUFFIX=	3
 
 MAINTAINER=	marcus@FreeBSD.org
@@ -18,7 +18,7 @@ LIB_DEPENDS=	libgcrypt.so:${PORTSDIR}/security/libgcrypt \
     		libevent.so:${PORTSDIR}/devel/libevent2
 
 USE_BDB=	5+
-USES=		iconv gmake pkgconfig libtool tar:bzip2
+USES=		iconv gmake pkgconfig perl5 libtool tar:bzip2
 GNU_CONFIGURE=	yes
 USE_LDCONFIG=	yes
 USE_RC_SUBR=	netatalk
@@ -112,8 +112,9 @@ CONFIGURE_ARGS+=	--disable-sendfile
 .endif
 
 .if ${PORT_OPTIONS:MDBUS} || exists(${LOCALBASE}/libdata/pkgconfig/dbus-glib-1.pc)
+USES+=			python:2
 LIB_DEPENDS+=		libdbus-glib-1.so:${PORTSDIR}/devel/dbus-glib
-RUN_DEPENDS+=		${LOCALBASE}/libdata/pkgconfig/dbus-python.pc:${PORTSDIR}/devel/pydbus-common
+RUN_DEPENDS+=		${PYTHON_SITELIBDIR}/dbus/_dbus.py:${PORTSDIR}/devel/py-dbus
 PLIST_SUB+=		DBUS=""
 .else
 PLIST_SUB+=		DBUS="@comment "
@@ -138,12 +139,6 @@ CONFIGURE_ARGS+=--enable-tcp-wrappers
 CONFIGURE_ARGS+=--disable-tcp-wrappers
 .endif
 
-.if ${OSVERSION} < 800031
-PLIST_SUB+=	ATFUNCS="@comment "
-.else
-PLIST_SUB+=	ATFUNCS=""
-.endif
-
 post-patch:
 	@${REINPLACE_CMD} -e 's|%%DB_NAME%%|${BDB_INCLUDE_DIR:T}| ; \
 	    	s|%%DB_LIB%%|-l${BDB_LIB_NAME}|g ; \
@@ -161,6 +156,5 @@ post-install:
 		${INSTALL_DATA} -c ${STAGEDIR}${PREFIX}/etc/afp.conf.dist ${STAGEDIR}${PREFIX}/etc/afp.conf
 	[ -f ${STAGEDIR}${PREFIX}/etc/extmap.conf ] || \
 		${INSTALL_DATA} -c ${STAGEDIR}${PREFIX}/etc/extmap.conf.dist ${STAGEDIR}${PREFIX}/etc/extmap.conf
-	@${CAT} ${PKGMESSAGE}
 
 .include <bsd.port.mk>
