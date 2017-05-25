@@ -210,6 +210,7 @@ lib/pam_winbind.so
 %%PYTHON_SITELIBDIR%%/samba/com.so
 %%PYTHON_SITELIBDIR%%/samba/common.py
 %%PYTHON_SITELIBDIR%%/samba/credentials.so
+%%PYTHON_SITELIBDIR%%/samba/crypto.so
 %%PYTHON_SITELIBDIR%%/samba/dbchecker.py
 %%PYTHON_SITELIBDIR%%/samba/dcerpc/__init__.py
 %%PYTHON_SITELIBDIR%%/samba/dcerpc/atsvc.so
@@ -699,6 +700,7 @@ libexec/ctdb/tests/run_proc_test
 libexec/ctdb/tests/sock_daemon_test
 libexec/ctdb/tests/sock_io_test
 libexec/ctdb/tests/srvid_test
+libexec/ctdb/tests/test_mutex_raw
 libexec/ctdb/tests/transaction_loop
 libexec/ctdb/tests/update_record
 libexec/ctdb/tests/update_record_persistent
