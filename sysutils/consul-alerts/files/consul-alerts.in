@@ -23,6 +23,8 @@ rcvar=consul_alerts_enable
 
 load_rc_config $name
 
+stop_cmd="consul_stop"
+
 : ${consul_alerts_enable:="NO"}
 : ${consul_alerts_env:=""}
 
@@ -30,5 +32,22 @@ pidfile=/var/run/consul-alerts.pid
 procname="%%PREFIX%%/bin/consul-alerts"
 command="/usr/sbin/daemon"
 command_args="-f -p ${pidfile} /usr/bin/env ${consul_alerts_env} ${procname} start ${consul_alerts_args}"
+
+consul_stop() {
+	if [ -f ${pidfile} ]; then
+		pid=$(cat "${pidfile}")
+		echo "Stopping child..."
+		child_pid=`ps ax | grep '[c]onsul watch' | awk '{print $1}'`
+		echo ${child_pid}
+		for cpid in ${child_pid}
+		do
+			kill ${cpid}
+		done
+		kill ${pid}
+		rm -f ${pidfile}
+		sleep 1
+		echo "Done..."
+	fi
+}
 
 run_rc_command "$1"
