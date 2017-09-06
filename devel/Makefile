@@ -4829,6 +4829,7 @@
     SUBDIR += py-nbconvert
     SUBDIR += py-nbformat
     SUBDIR += py-ncurses
+    SUBDIR += py-netsnmpagent
     SUBDIR += py-nose
     SUBDIR += py-nose-cov
     SUBDIR += py-nose-timer
