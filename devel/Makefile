@@ -4640,6 +4640,7 @@
     SUBDIR += py-nbconvert
     SUBDIR += py-nbdime
     SUBDIR += py-nbformat
+    SUBDIR += py-netsnmpagent
     SUBDIR += py-nodeenv
     SUBDIR += py-nose
     SUBDIR += py-nose-cov
