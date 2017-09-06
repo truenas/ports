@@ -4801,6 +4801,7 @@
     SUBDIR += py-nbdime
     SUBDIR += py-nbformat
     SUBDIR += py-nest-asyncio
+    SUBDIR += py-netsnmpagent
     SUBDIR += py-node-semver
     SUBDIR += py-nodeenv
     SUBDIR += py-nose
