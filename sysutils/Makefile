@@ -1196,6 +1196,7 @@
     SUBDIR += sdparm
     SUBDIR += seatools
     SUBDIR += sec
+    SUBDIR += sedutil
     SUBDIR += sensu-go
     SUBDIR += serf
     SUBDIR += setcdboot
@@ -1285,6 +1286,7 @@
     SUBDIR += terraform-provider-vultr
     SUBDIR += testdisk
     SUBDIR += thefish
+    SUBDIR += throttle
     SUBDIR += timelimit
     SUBDIR += timemon
     SUBDIR += titlefix
