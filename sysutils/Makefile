@@ -1245,6 +1245,7 @@
     SUBDIR += seatd
     SUBDIR += seatools
     SUBDIR += sec
+    SUBDIR += sedutil
     SUBDIR += sensu-go
     SUBDIR += serf
     SUBDIR += setcdboot
@@ -1329,6 +1330,7 @@
     SUBDIR += terragrunt
     SUBDIR += testdisk
     SUBDIR += thefish
+    SUBDIR += throttle
     SUBDIR += timelimit
     SUBDIR += timemon
     SUBDIR += tiramisu
