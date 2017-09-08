@@ -175,6 +175,7 @@
     SUBDIR += public_suffix_list
     SUBDIR += py-adns
     SUBDIR += py-aiodns
+    SUBDIR += py-bonjour
     SUBDIR += py-cloudflare
     SUBDIR += py-dns-lexicon
     SUBDIR += py-dnspython
