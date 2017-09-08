@@ -15,7 +15,7 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}dateutil>0:devel/py-dateutil@${PY_FLAVOR}
 
-USES=		python:2.7
+USES=		python:3
 USE_PYTHON=	autoplist distutils
 NO_ARCH=	yes
 
