@@ -4423,6 +4423,7 @@
     SUBDIR += py-bluelet
     SUBDIR += py-boolean.py
     SUBDIR += py-boto
+    SUBDIR += py-boto3
     SUBDIR += py-botocore
     SUBDIR += py-bsd
     SUBDIR += py-btest
