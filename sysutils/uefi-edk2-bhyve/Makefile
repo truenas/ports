@@ -15,12 +15,13 @@ LICENSE_PERMS=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
 ONLY_FOR_ARCHS=	amd64
 ONLY_FOR_ARCHS_REASON=	bhyve firmware has only been ported to X64
 
-BUILD_DEPENDS=	nasm:devel/nasm \
-		bash:shells/bash
+BUILD_DEPENDS=	bash:shells/bash \
+		nasm:devel/nasm \
+		${PYTHON_LIBDIR}/lib-dynload/_sqlite3.so:databases/py-sqlite3@${PY_FLAVOR} \
+		gcc48:lang/gcc48
 
 USES=		gmake \
-		python:3.7+,build
-USE_GCC=	yes:build
+		python:2.7,build
 USE_GITHUB=	yes
 GH_ACCOUNT=	tianocore
 GH_PROJECT=	edk2
