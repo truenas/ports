@@ -12,7 +12,7 @@ COMMENT=	Django application for building dojo
 
 LICENSE=	BSD3CLAUSE
 
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}django111>=1.6:www/py-django111@${PY_FLAVOR}
+RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}django110>=1.6:www/py-django110@${PY_FLAVOR}
 
 USES=		python
 USE_PYTHON=	distutils autoplist
