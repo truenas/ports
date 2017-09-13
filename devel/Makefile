@@ -1339,6 +1339,7 @@
     SUBDIR += libhid
     SUBDIR += libhoard
     SUBDIR += libhtp
+    SUBDIR += libhyve-remote
     SUBDIR += libical
     SUBDIR += libical-glib
     SUBDIR += libinotify
