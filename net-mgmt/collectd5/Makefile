@@ -1,11 +1,11 @@
 # Created by: Matt Peterson <matt@peterson.org>
-# $FreeBSD$
+# $FreeBSD: head/net-mgmt/collectd5/Makefile 436572 2017-03-21 08:26:58Z glebius $
 
 PORTNAME=	collectd
-PORTVERSION=	5.8.1
-PORTREVISION=	1
+PORTVERSION=	5.7.2
 CATEGORIES=	net-mgmt
-MASTER_SITES=	https://storage.googleapis.com/collectd-tarballs/
+MASTER_SITES=	https://collectd.org/files/ \
+		http://collectd.org/files/
 PKGNAMESUFFIX=	5
 
 MAINTAINER=	ports@bsdserwis.com
@@ -17,17 +17,15 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 USES=		autoreconf gmake libtool pkgconfig shebangfix tar:bzip2
 GNU_CONFIGURE=	yes
 
-OPTIONS_DEFINE=		CGI JAVA LOGGING GCRYPT LOGSTASH VIRT
+OPTIONS_DEFINE=		CGI DEBUG GCRYPT LIBDTRACE LIBZFS LOGSTASH VIRT
 OPTIONS_GROUP=		INPUT OUTPUT
-OPTIONS_GROUP_OUTPUT=	KAFKA MONGODB NOTIFYDESKTOP NOTIFYEMAIL PROMETHEUS RIEMANN \
-			RRDTOOL TSDB
+OPTIONS_GROUP_OUTPUT=	KAFKA MONGODB NOTIFYDESKTOP NOTIFYEMAIL RIEMANN RRDTOOL \
+			TSDB
 OPTIONS_GROUP_INPUT=	CHRONY CURL CURL_JSON CURL_XML DBI IPMI JSON \
 			MEMCACHEC MODBUS MQTT MYSQL NUTUPS OLSRD ONEWIRE OPENLDAP \
 			PERL PGSQL PINBA PING PYTHON RABBITMQ REDIS ROUTEROS \
 			SIGROK SNMP STATSD TOKYOTYRANT VARNISH XML \
 			XMMS ZOOKEEPER
-
-OPTIONS_DEFAULT=	LOGGING GCRYPT PING
 
 CGI_DESC=		Install collection.cgi (requires rrdtool)
 CHRONY_DESC=		Enable chronyd plugin
@@ -39,7 +37,8 @@ GCRYPT_DESC=		Build with libgcrypt
 IPMI_DESC=		Enable OpenIPMI plugin
 JSON_DESC=		Enable JSON plugins
 KAFKA_DESC=		Enable write_kafka plugin
-LOGGING_DESC=		Enable debug logging
+LIBDTRACE_DESC=	Build with LibDTrace
+LIBZFS_DESC=	Build with LibZFS
 LOGSTASH_DESC=		Enable log_logstash plugin (requires json)
 MEMCACHEC_DESC=		Enable memcachec plugin
 MODBUS_DESC=		Enable modbus plugin
@@ -56,7 +55,6 @@ PERL_DESC=		Enable libperl plugin and binding
 PGSQL_DESC=		Enable postgresql-based plugins
 PINBA_DESC=		Enable pinba plugin (via protobuf-c)
 PING_DESC=		Enable ping plugin
-PROMETHEUS_DESC=		Enable write prometheus plugin
 PYTHON_DESC=		Enable python-based plugins
 RABBITMQ_DESC=		Enable rabbitmq-based plugins
 REDIS_DESC=		Enable redis-based plugins
@@ -91,9 +89,11 @@ CONFIGURE_ARGS=	--localstatedir=/var \
 		--disable-ceph \
 		--disable-cgroups \
 		--disable-fhcount \
+		--without-java \
 		--without-libaquaero5 \
 		--without-libganglia \
 		--without-libiptc \
+		--without-libjvm \
 		--without-liblvm2app \
 		--without-libkstat \
 		--without-libldap \
@@ -126,9 +126,7 @@ CURL_JSON_CONFIGURE_ENABLE=	curl_json
 CURL_XML_IMPLIES=		CURL XML
 CURL_XML_CONFIGURE_ENABLE=	ascent bind curl_xml
 
-JAVA_USE=			java
-JAVA_CONFIGURE_ENABLE=		java
-JAVA_CONFIGURE_WITH=		java=${LOCALBASE} libjvm
+DEBUG_CONFIGURE_ENABLE=		debug
 
 DBI_LIB_DEPENDS=		libdbi.so:databases/libdbi
 DBI_CONFIGURE_WITH=		libdbi=${LOCALBASE}
@@ -148,8 +146,6 @@ JSON_CONFIGURE_WITH=		libyajl=${LOCALBASE}
 
 KAFKA_LIB_DEPENDS=		librdkafka.so:net/librdkafka
 KAFKA_CONFIGURE_ENABLE=		write_kafka
-
-LOGGING_CONFIGURE_ENABLE=	debug
 
 LOGSTASH_CONFIGURE_ENABLE=	log_logstash
 LOGSTASH_IMPLIES=		JSON
@@ -202,8 +198,7 @@ OPENLDAP_CONFIGURE_WITH=	libldap=${LOCALBASE}
 
 PERL_USES=			perl5
 PERL_CONFIGURE_ENABLE=		perl
-PERL_CONFIGURE_DISABLE=		perl
-PERL_CONFIGURE_WITH=		perl=${PERL} perl-bindings libperl
+PERL_CONFIGURE_WITH=		perl=${PERL} perl-bindings
 
 PGSQL_USES=			pgsql
 PGSQL_CONFIGURE_ENABLE=		postgresql
@@ -216,15 +211,9 @@ PING_LIB_DEPENDS=		liboping.so:net/liboping
 PING_CONFIGURE_ENABLE=		ping
 PING_CONFIGURE_WITH=		liboping=${LOCALBASE}
 
-PROMETHEUS_LIB_DEPENDS=	libprotobuf-c.so:devel/protobuf-c
-PROMETHEUS_LIB_DEPENDS+=	libprotoc.so:devel/protobuf
-PROMETHEUS_LIB_DEPENDS+=	libmicrohttpd.so:www/libmicrohttpd
-PROMETHEUS_CONFIGURE_ENABLE=	write_prometheus
-
-PYTHON_USES=			python
+PYTHON_USES=			python:2
 PYTHON_CONFIGURE_ENABLE=	python
 PYTHON_CONFIGURE_WITH=		python=${PYTHON_CMD}
-PYTHON_CONFIGURE_ENV=		PYTHON_CONFIG=${PYTHON_CMD}-config
 
 RABBITMQ_LIB_DEPENDS=		librabbitmq.so:net/rabbitmq-c
 RABBITMQ_CONFIGURE_ENABLE=	rabbitmq
@@ -270,6 +259,7 @@ TSDB_CONFIGURE_ENABLE=		write_tsdb
 
 VARNISH_LIB_DEPENDS=		libvarnishapi.so:www/varnish4
 VARNISH_CONFIGURE_ENABLE=	varnish
+VARNISH_CONFIGURE_WITH=		libvarnish=${LOCALBASE}
 
 VIRT_IMPLIES=			XML
 VIRT_LIB_DEPENDS=		libvirt.so:devel/libvirt \
@@ -296,12 +286,15 @@ CONFIGURE_ARGS+=--enable-aggregation \
 		--enable-apcups \
 		--enable-contextswitch \
 		--enable-cpu \
+		--enable-cputemp \
 		--enable-csv \
+		--enable-ctl \
 		--enable-df \
 		--enable-dns \
 		--enable-email \
 		--enable-exec \
 		--enable-filecount \
+		--enable-geom-stat \
 		--enable-interface \
 		--enable-load \
 		--enable-logfile \
@@ -314,6 +307,7 @@ CONFIGURE_ARGS+=--enable-aggregation \
 		--enable-memcached \
 		--enable-memory \
 		--enable-network \
+		--enable-nfsstat \
 		--enable-ntpd \
 		--enable-openvpn \
 		--enable-powerdns \
@@ -341,20 +335,24 @@ CONFIGURE_ARGS+=--enable-aggregation \
 		--enable-write_graphite \
 		--enable-write_log \
 		--enable-zfs_arc \
+		--enable-zfs_arc_v2 \
+
+INSTALL_TARGET=	install-strip
+SHEBANG_FILES=	contrib/collection.cgi
 
 INSTALL_TARGET=	install-strip
 SHEBANG_FILES=	contrib/collection.cgi
 
 post-patch:
 	@${REINPLACE_CMD} 's/-Werror//' \
-		${WRKSRC}/configure.ac 
+		${WRKSRC}/configure.ac ${WRKSRC}/src/Makefile.am \
+		${WRKSRC}/src/libcollectdclient/Makefile.am
 	@${REINPLACE_CMD} \
 		-e 's;@prefix@/var/;/var/;' \
 		-e 's;/var/lib/;/var/db/;' \
 		-e 's;@localstatedir@/lib/;/var/db/;' \
 		${WRKSRC}/src/collectd.conf.in \
-		${WRKSRC}/src/collectd.conf.5 \
-		${WRKSRC}/src/collectd.conf.pod
+		${WRKSRC}/src/collectd.conf.5
 	@${REINPLACE_CMD} \
 		-e 's;/etc/collection\.conf;${WWWDIR}/collection.conf;' \
 		${WRKSRC}/contrib/collection.cgi
