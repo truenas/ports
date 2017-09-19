@@ -10,12 +10,9 @@ include/collectd/client.h
 include/collectd/lcc_features.h
 include/collectd/network.h
 include/collectd/network_buffer.h
-include/collectd/network_parse.h
-include/collectd/server.h
-include/collectd/types.h
 lib/libcollectdclient.so
 lib/libcollectdclient.so.1
-lib/libcollectdclient.so.1.1.0
+lib/libcollectdclient.so.1.0.0
 lib/collectd/aggregation.so
 %%CURL%%lib/collectd/apache.so
 lib/collectd/apcups.so
@@ -24,7 +21,9 @@ lib/collectd/apcups.so
 %%CHRONY%%lib/collectd/chrony.so
 lib/collectd/contextswitch.so
 lib/collectd/cpu.so
+lib/collectd/cputemp.so
 lib/collectd/csv.so
+lib/collectd/ctl.so
 %%CURL%%lib/collectd/curl.so
 %%CURL_JSON%%lib/collectd/curl_json.so
 %%CURL_XML%%lib/collectd/curl_xml.so
@@ -35,9 +34,9 @@ lib/collectd/dns.so
 lib/collectd/email.so
 lib/collectd/exec.so
 lib/collectd/filecount.so
+lib/collectd/geom_stat.so
 lib/collectd/interface.so
 %%IPMI%%lib/collectd/ipmi.so
-%%JAVA%%lib/collectd/java.so
 lib/collectd/load.so
 %%LOGSTASH%%lib/collectd/log_logstash.so
 lib/collectd/logfile.so
@@ -57,6 +56,7 @@ lib/collectd/network.so
 %%CURL%%lib/collectd/nginx.so
 %%NOTIFYDESKTOP%%lib/collectd/notify_desktop.so
 %%NOTIFYEMAIL%%lib/collectd/notify_email.so
+lib/collectd/nfsstat.so
 lib/collectd/ntpd.so
 %%NUTUPS%%lib/collectd/nut.so
 %%OLSRD%%lib/collectd/olsrd.so
@@ -72,6 +72,7 @@ lib/collectd/powerdns.so
 lib/collectd/processes.so
 %%PYTHON%%lib/collectd/python.so
 %%REDIS%%lib/collectd/redis.so
+%%ROUTEROS%%lib/collectd/routeros.so
 %%RRDTOOL%%lib/collectd/rrdcached.so
 %%RRDTOOL%%lib/collectd/rrdtool.so
 %%SIGROK%%lib/collectd/sigrok.so
@@ -103,13 +104,12 @@ lib/collectd/write_graphite.so
 lib/collectd/write_log.so
 %%KAFKA%%lib/collectd/write_kafka.so
 %%MONGODB%%lib/collectd/write_mongodb.so
-%%PROMETHEUS%%lib/collectd/write_prometheus.so
 %%REDIS%%lib/collectd/write_redis.so
 %%RIEMANN%%lib/collectd/write_riemann.so
 %%TSDB%%lib/collectd/write_tsdb.so
+%%XMMS%%lib/collectd/xmms.so
 lib/collectd/zfs_arc.so
-%%JAVA%%%%DATADIR%%/java/collectd-api.jar
-%%JAVA%%%%DATADIR%%/java/generic-jmx.jar
+lib/collectd/zfs_arc_v2.so
 %%ZOOKEEPER%%lib/collectd/zookeeper.so
 libdata/pkgconfig/libcollectdclient.pc
 %%DATADIR%%/postgresql_default.conf
