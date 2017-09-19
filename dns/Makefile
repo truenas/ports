@@ -86,6 +86,7 @@
     SUBDIR += idnkit2
     SUBDIR += inadyn
     SUBDIR += inadyn-mt
+    SUBDIR += inadyn-troglobit
     SUBDIR += ipcheck
     SUBDIR += ironsides
     SUBDIR += kadnode
