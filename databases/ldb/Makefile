@@ -1,7 +1,7 @@
 # $FreeBSD: head/databases/ldb/Makefile 413162 2016-04-12 22:40:36Z timur $
 
 PORTNAME=		ldb
-PORTVERSION=		1.2.2
+PORTVERSION=		1.1.29
 PORTREVISION=		1
 PORTEPOCH=		0
 CATEGORIES=		databases
