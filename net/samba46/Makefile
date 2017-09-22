@@ -124,8 +124,8 @@ RUN_DEPENDS+=		ntdb>=1.0:databases/ntdb
 SAMBA4_BUNDLED_LIBS+=	!ntdb
 
 # ldb
-BUILD_DEPENDS+=		ldb>=1.1.29:databases/ldb
-RUN_DEPENDS+=		ldb>=1.1.29:databases/ldb
+BUILD_DEPENDS+=		ldb>=1.2.2:databases/ldb
+RUN_DEPENDS+=		ldb>=1.2.2:databases/ldb
 SAMBA4_BUNDLED_LIBS+=	!ldb
 
 # Don't use external libcom_err
