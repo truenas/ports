@@ -2,14 +2,13 @@
 # $FreeBSD$
 
 PORTNAME=	netatalk
-PORTVERSION=	3.1.12
-PORTREVISION=	2
+PORTVERSION=	3.1.11
+PORTREVISION=	1
 PORTEPOCH=	1
 CATEGORIES=	net
-MASTER_SITES=	SF
 PKGNAMESUFFIX=	3
 
-MAINTAINER=	marcus@FreeBSD.org
+MAINTAINER=	john@ixsystems.com
 COMMENT=	File server for Mac OS X
 
 LICENSE=	GPLv2
@@ -17,7 +16,11 @@ LICENSE=	GPLv2
 LIB_DEPENDS=	libgcrypt.so:security/libgcrypt \
 		libevent.so:devel/libevent
 
-USES=		bdb:5+ gettext gmake iconv libtool perl5 pkgconfig shebangfix ssl tar:bzip2
+NO_CHECKSUM=	yes
+
+WRKSRC=	/usr/netatalk_src
+
+USES=		bdb:5+ gettext gmake iconv pathfix autoreconf libtool perl5 pkgconfig shebangfix ssl tar:bzip2
 GNU_CONFIGURE=	yes
 USE_LDCONFIG=	yes
 USE_RC_SUBR=	netatalk
@@ -62,11 +65,11 @@ LDAP_CFLAGS=		-I${LOCALBASE}/include -L${LOCALBASE}/lib
 LDAP_USE=	OPENLDAP=yes
 LDAP_CONFIGURE_OFF=	--without-ldap
 SENDFILE_CONFIGURE_ENABLE=sendfile
-DBUS_USES=	python:2.7
+DBUS_USES=	python:2
 DBUS_USE=	GNOME=glib20
 DBUS_LIB_DEPENDS=	libdbus-glib-1.so:devel/dbus-glib \
 			libdbus-1.so:devel/dbus
-DBUS_RUN_DEPENDS=	${PYTHON_SITELIBDIR}/dbus/_dbus.py:devel/py-dbus@${PY_FLAVOR}
+DBUS_RUN_DEPENDS=	${PYTHON_SITELIBDIR}/dbus/_dbus.py:devel/py-dbus
 MYSQL_USE=	MYSQL=yes
 MYSQL_CONFIGURE_OFF=--with-mysql-config=/nonexistent
 ACL_LIB_DEPENDS=	libsunacl.so:sysutils/libsunacl
@@ -79,6 +82,9 @@ CONFLICTS=	bigloo-2.* cap-6.0.* tct-1.* netatalk-[12]* yudit-[0-9]*
 
 .include <bsd.port.pre.mk>
 
+checksum extract fetch:
+	${ECHO_CMD} ${.TARGET} not needed because building direct
+
 .if ${PORT_OPTIONS:MAVAHI}=="" && ${PORT_OPTIONS:MMDNSRESPONDER}==""
 SUB_LIST+=	ZEROCONF=""
 CONFIGURE_ARGS+=--disable-zeroconf
@@ -88,11 +94,9 @@ post-patch:
 	@${REINPLACE_CMD} -e 's|%%DB_NAME%%|${BDB_INCLUDE_DIR:T}| ; \
 		s|%%DB_LIB%%|-l${BDB_LIB_NAME}|g ; \
 		s|%%LOCALBASE%%|${LOCALBASE}|g' \
-		${WRKSRC}/configure
+		${WRKSRC}/macros/db3-check.m4
 	@${REINPLACE_CMD} -e 's|\.dist|\.sample|g' \
-		${WRKSRC}/config/Makefile.in
-#	@${REINPLACE_CMD} -e 's|%%PYTHONCMD%%|${PYTHONCMD}|' \
-#		${WRKSRC}/contrib/shell_utils/afpstats
+		${WRKSRC}/config/Makefile.am
 
 post-install:
 	${INSTALL_SCRIPT} ${WRKSRC}/contrib/macusers/macusers \
