@@ -40,7 +40,7 @@ EXTRA_SBIN=	dnsextd
 post-patch:
 	@${REINPLACE_CMD} -e '/^CFLAGS_DEBUG/ s|-Os|${CFLAGS}|' ${WRKSRC}/mDNSPosix/Makefile
 	@${REINPLACE_CMD} -e 's|\(#define IPV6_2292_PKTINFO \).*|\1IPV6_PKTINFO|; s|\(#define IPV6_2292_HOPLIMIT \).*|\1IPV6_HOPLIMIT|' ${WRKSRC}/mDNSPosix/mDNSUNP.h
-	@${MV} ${WRKSRC}/mDNSShared/mDNSResponder.8 ${WRKSRC}/mDNSShared/mDNSResponderPosix.8
+	@${CP} ${WRKSRC}/mDNSShared/mDNSResponder.8 ${WRKSRC}/mDNSShared/mDNSResponderPosix.8
 
 post-patch-IPV6-off:
 	@${REINPLACE_CMD} -e '/^CFLAGS_OS/ s|-DHAVE_IPV6|-UHAVE_IPV6|' ${WRKSRC}/mDNSPosix/Makefile
