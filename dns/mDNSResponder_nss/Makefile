@@ -1,12 +1,12 @@
 # $FreeBSD$
 
 PORTNAME=	mDNSResponder
-PORTVERSION=	765.50.9
+PORTVERSION=	878.1.1
 CATEGORIES=	dns net
 MASTER_SITES=	http://opensource.apple.com/tarballs/mDNSResponder/
 PKGNAMESUFFIX=	_nss
 
-MAINTAINER=	mazhe@alkumuna.eu
+MAINTAINER=	john@ixsystems.com
 COMMENT=	Apple mDNS responder - FreeBSD nsswitch module
 
 LICENSE=	APACHE20 BSD3CLAUSE
@@ -16,16 +16,15 @@ LIB_DEPENDS=	libdns_sd.so:net/mDNSResponder
 
 CONFLICTS_INSTALL=	nss_mdns-[0-9]*
 
-WRKSRC=		${WRKDIR}/${PORTNAME:S/_nss//}-${PORTVERSION}
+USE_GITHUB=	yes
+GH_ACCOUNT=	freenas
+GH_TAGNAME=	d628da5
 
 .include <bsd.port.pre.mk>
 
 .if ${ARCH:C/^(...).*/\1/} == "arm"
 LD=${CC}
 .endif
-
-post-extract:
-	@${CP} ${FILESDIR}/nss_mdns_freebsd.c ${WRKSRC}/mDNSPosix
 
 do-build:
 	(cd ${WRKSRC}/mDNSPosix && ${CC} ${CFLAGS} -c -std=c99 -Wall -fPIC \
