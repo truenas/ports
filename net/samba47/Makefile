@@ -12,11 +12,11 @@ COMMENT?=	Free SMB/CIFS and AD/DC server and client for Unix
 
 LICENSE=	GPLv3
 
-CONFLICTS?=	*samba3[2-6]-3.* samba4-4.0.* samba4[1-689]-4.*
+CONFLICTS?=	*samba3[2-6]-3.* samba4-4.0.* samba4[1-689]-4.* p5-Parse-Pidl-*
 
 SAMBA4_BASENAME=	samba
 SAMBA4_PORTNAME=	${SAMBA4_BASENAME}4
-SAMBA4_VERSION=		4.7.0
+SAMBA4_VERSION=		4.7.3
 SAMBA4_DISTNAME=	${SAMBA4_BASENAME}-${SAMBA4_VERSION:S|.p|pre|:S|.r|rc|:S|.t|tp|:S|.a|alpha|}
 
 NO_CHECKSUM=	yes
@@ -95,7 +95,7 @@ LIB_DEPENDS+=		libdbus-glib-1.so:devel/dbus-glib
 
 # External Samba dependencies
 # IDL compiler
-BUILD_DEPENDS+=		p5-Parse-Pidl>=4.7.0:devel/p5-Parse-Pidl
+BUILD_DEPENDS+=		p5-Parse-Yapp>=0:devel/p5-Parse-Yapp
 #
 BUILD_DEPENDS+=		${PYTHON_PKGNAMEPREFIX}dnspython2>=1.9.4:dns/py-dnspython2
 RUN_DEPENDS+=		${PYTHON_PKGNAMEPREFIX}dnspython2>=1.9.4:dns/py-dnspython2
@@ -493,14 +493,9 @@ PORTDOCS=		README.FreeBSD
 IGNORE_NONTHREAD_PYTHON=needs port lang/python${PYTHON_SUFFIX} to be build with THREADS support
 
 post-extract:
-			@${RM} -rf ${WRKSRC}/pidl
+			@${RM} -rf ${WRKSRC}/pidl/lib/Parse/Yapp
 
 post-patch:
-			@${REINPLACE_CMD} -e 's|$${PKGCONFIGDIR}|${PKGCONFIGDIR}|g' \
-				${PATCH_WRKSRC}/buildtools/wafsamba/pkgconfig.py
-			@${REINPLACE_CMD} -e 's|%%LOCALBASE%%|${LOCALBASE}|g' \
-				${PATCH_WRKSRC}/buildtools/wafsamba/samba_pidl.py \
-				${PATCH_WRKSRC}/buildtools/wafsamba/wafsamba.py
 			@${REINPLACE_CMD} -e 's|%%GDB_CMD%%|${GDB_CMD}|g' \
 				${PATCH_WRKSRC}/buildtools/scripts/abi_gen.sh
 			@${REINPLACE_CMD} -e 's|%%SAMBA4_CONFIG%%|${SAMBA4_CONFIG}|g' \
