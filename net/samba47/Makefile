@@ -3,7 +3,7 @@
 
 PORTNAME?=	${SAMBA4_BASENAME}47
 PORTVERSION?=	${SAMBA4_VERSION}
-PORTREVISION?=	6
+PORTREVISION?=	7
 CATEGORIES?=	net
 EXTRACT_ONLY=
 
@@ -81,8 +81,9 @@ LIB_DEPENDS+=		libsasl2.so:security/cyrus-sasl2
 # GNUTLS
 LIB_DEPENDS+=		libgcrypt.so:security/libgcrypt
 LIB_DEPENDS+=		libgnutls.so:security/gnutls
-# NFS4 ACL glue
-LIB_DEPENDS+=		libsunacl.so:sysutils/libsunacl
+# libsunacl
+BUILD_DEPENDS+=		libsunacl>=1.0.1:sysutils/libsunacl
+RUN_DEPENDS+=		libsunacl>=1.0.1:sysutils/libsunacl
 # Libarchive
 BUILD_DEPENDS+=		libarchive>=3.1.2:archivers/libarchive
 RUN_DEPENDS+=		libarchive>=3.1.2:archivers/libarchive
@@ -262,7 +263,6 @@ WANT_EXP_MODULES=	vfs_cacheprime gpext_scripts gpext_security gpext_registry
 .endif
 
 .if ${PORT_OPTIONS:MACL_SUPPORT}
-LIB_DEPENDS+=		libsunacl.so:sysutils/libsunacl
 WANT_EXP_MODULES+=	vfs_zfsacl
 SAMBA4_MODULES+=	vfs_zfsacl
 CONFIGURE_ARGS+=	--with-acl-support
