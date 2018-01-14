@@ -81,6 +81,9 @@ LIB_DEPENDS+=		libsasl2.so:security/cyrus-sasl2
 # GNUTLS
 LIB_DEPENDS+=		libgcrypt.so:security/libgcrypt
 LIB_DEPENDS+=		libgnutls.so:security/gnutls
+# libsunacl
+BUILD_DEPENDS+=		libsunacl>=1.0.1:sysutils/libsunacl
+RUN_DEPENDS+=		libsunacl>=1.0.1:sysutils/libsunacl
 # Libarchive
 BUILD_DEPENDS+=		libarchive>=3.1.2:archivers/libarchive
 RUN_DEPENDS+=		libarchive>=3.1.2:archivers/libarchive
@@ -119,10 +122,6 @@ SAMBA4_BUNDLED_LIBS+=	!tdb
 BUILD_DEPENDS+=		ldb>=1.2.2:databases/ldb
 RUN_DEPENDS+=		ldb>=1.2.2:databases/ldb
 SAMBA4_BUNDLED_LIBS+=	!ldb
-
-# libsunacl
-BUILD_DEPENDS+=		libsunacl>=1.0.1:sysutils/libsunacl
-RUN_DEPENDS+=		libsunacl>=1.0.1:sysutils/libsunacl
 
 # Don't use external libcom_err
 #SAMBA4_BUNDLED_LIBS+=	com_err
