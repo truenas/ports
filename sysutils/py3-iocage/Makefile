@@ -23,8 +23,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}click>=6.7:devel/py-click \
 	${PYTHON_PKGNAMEPREFIX}pytest-runner>=2.0.0:devel/py-pytest-runner \
 	${PYTHON_PKGNAMEPREFIX}requests>=2.11.1:www/py-requests \
 	${PYTHON_PKGNAMEPREFIX}libzfs>=1.0:devel/py-libzfs \
-	${PYTHON_PKGNAMEPREFIX}pygit2>=0.24.1:devel/py-pygit2 \
-	${PYTHON_PKGNAMEPREFIX}verboselogs>0:devel/py-verboselogs
+	${PYTHON_PKGNAMEPREFIX}dulwich>0:devel/dulwich
 
 CONFLICTS=  py-iocage-[0-9]* iocage-[0-9]* iocage-devel-[0-9]*
 
