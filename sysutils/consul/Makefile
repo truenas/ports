@@ -1,15 +1,14 @@
-# $FreeBSD: head/sysutils/consul/Makefile 449980 2017-09-17 01:43:06Z swills $
+# $FreeBSD: head/sysutils/consul/Makefile 459902 2018-01-25 02:28:03Z swills $
 
 PORTNAME=	consul
-PORTVERSION=	1.0.0
-PORTREVISION=	1
+PORTVERSION=	1.0.3
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 
 MAINTAINER=	swills@FreeBSD.org
 COMMENT=	Service discovery and configuration made easy
 
-LICENSE=	MPL
+LICENSE=	MPL20
 
 BUILD_DEPENDS=	${LOCALBASE}/bin/go:lang/go
 
