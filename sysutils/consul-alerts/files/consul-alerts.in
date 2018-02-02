@@ -2,7 +2,7 @@
 
 # $FreeBSD$
 #
-# PROVIDE: consul-alerts 
+# PROVIDE: consul-alerts
 # REQUIRE: LOGIN consul
 # KEYWORD: shutdown
 #
