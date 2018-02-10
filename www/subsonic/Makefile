@@ -2,6 +2,7 @@
 
 PORTNAME=	subsonic
 PORTVERSION=	6.0
+PORTREVISION=	2
 CATEGORIES=	www java
 MASTER_SITES=	SF
 DISTNAME=	${PORTNAME}-${PORTVERSION}-war
@@ -12,6 +13,9 @@ COMMENT=	Subsonic streaming media server
 # Subsonic 6 onwards has become proprietary.  License is unclear.
 # http://forum.subsonic.org/forum/viewtopic.php?f=4&t=16604#p71128
 LICENSE=	NONE
+
+EXPIRATION_DATE=	2018-03-07
+DEPRECATED=	Unmaintained, all www files wrongly belongs to www user.
 
 OPTIONS_SINGLE=	APPSERVER
 APPSERVER_DESC=	Java Application Server

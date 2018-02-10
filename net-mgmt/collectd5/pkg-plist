@@ -10,9 +10,12 @@ include/collectd/client.h
 include/collectd/lcc_features.h
 include/collectd/network.h
 include/collectd/network_buffer.h
+include/collectd/network_parse.h
+include/collectd/server.h
+include/collectd/types.h
 lib/libcollectdclient.so
 lib/libcollectdclient.so.1
-lib/libcollectdclient.so.1.0.0
+lib/libcollectdclient.so.1.1.0
 lib/collectd/aggregation.so
 %%CURL%%lib/collectd/apache.so
 lib/collectd/apcups.so
@@ -37,6 +40,7 @@ lib/collectd/filecount.so
 lib/collectd/geom_stat.so
 lib/collectd/interface.so
 %%IPMI%%lib/collectd/ipmi.so
+%%JAVA%%lib/collectd/java.so
 lib/collectd/load.so
 %%LOGSTASH%%lib/collectd/log_logstash.so
 lib/collectd/logfile.so

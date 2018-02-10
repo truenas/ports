@@ -1,8 +1,8 @@
 # $FreeBSD$
 
 PORTNAME=	poudriere
-DISTVERSION=	3.1.99.20170901
-PORTREVISION=	0
+DISTVERSION=	3.2.99.20180202
+PORTREVISION=	2
 CATEGORIES=	ports-mgmt
 MASTER_SITES=	LOCAL/bdrewery/${PORTNAME}/ \
 		http://mirror.shatow.net/freebsd/${PORTNAME}/ \
@@ -18,20 +18,24 @@ CONFLICTS_INSTALL=	poudriere-[0-9]*
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	freebsd
-GH_TAGNAME=	3.0-2513-gaf851838
+GH_TAGNAME=	3.2.4-149-g9c388299
 #DISTNAME=	${GH_ACCOUNT}-${GH_PROJECT}-${GH_TAGNAME}
 
 GNU_CONFIGURE=	yes
 ETCDIR=		${PREFIX}/etc/poudriere.d
 
-OPTIONS_DEFINE=	ZSH QEMU EXAMPLES
-OPTIONS_DEFAULT=ZSH
+OPTIONS_DEFINE=	CERTS DIALOG4PORTS EXAMPLES QEMU ZSH
+OPTIONS_DEFAULT=CERTS DIALOG4PORTS ZSH
 OPTIONS_SUB=	yes
 
-RUN_DEPENDS+=	ca_root_nss>=0:security/ca_root_nss
-RUN_DEPENDS+=	freebsd-release-manifests>0:misc/freebsd-release-manifests
+CERTS_DESC=		Install checksum and SSL certificates for jail creation
+CERTS_RUN_DEPENDS+=	ca_root_nss>=0:security/ca_root_nss
+CERTS_RUN_DEPENDS+=	freebsd-release-manifests>0:misc/freebsd-release-manifests
 
-QEMU_DESC=	Add qemu-user-static to compile ports for non-x86 architectures
+DIALOG4PORTS_DESC=	Install dialog4ports for options command
+DIALOG4PORTS_RUN_DEPENDS=	dialog4ports>0:ports-mgmt/dialog4ports
+
+QEMU_DESC=	Add qemu-user-static for non-x86 architectures
 QEMU_RUN_DEPENDS=	qemu-user-static>0:emulators/qemu-user-static
 
 .include <bsd.port.options.mk>
@@ -47,10 +51,12 @@ PLIST_SUB+=	RM=""
 PLIST_SUB+=	RM="@comment "
 .endif
 
-pre-install:
+post-patch:
+	${CP} -f ${WRKSRC}/src/bin/poudriere ${WRKSRC}/poudriere
 	${REINPLACE_CMD} \
 	    -e "s,^\(POUDRIERE_VERSION\)=.*,\1='${PKGVERSION}'," \
-	    ${WRKSRC}/src/bin/poudriere
+	    ${WRKSRC}/poudriere
+	${REINPLACE_CMD} '/.PHONY: poudriere/d' ${WRKSRC}/Makefile.*
 
 post-install:
 	@${MKDIR} ${STAGEDIR}${PREFIX}/share/zsh/site-functions/

@@ -4,8 +4,7 @@
 # With helpful hints from net/gpxe
 
 PORTNAME=	ipxe
-PORTVERSION=	20161208
-PORTREVISION=	2
+PORTVERSION=	20180117
 CATEGORIES=	net
 
 MAINTAINER=	tobik@FreeBSD.org
@@ -21,7 +20,6 @@ USES=		gmake perl5 shebangfix
 USE_BINUTILS=	yes
 USE_GCC=	yes
 USE_GITHUB=	yes
-GH_PROJECT=	ipxe
 # iPXE hasn't had a release since 2010.
 # See iPXE's FAQ at http://ipxe.org/faq
 #
@@ -30,7 +28,7 @@ GH_PROJECT=	ipxe
 #   A: iPXE uses a rolling release model, in which every commit is intended
 #      to be production-ready.  You should always use the latest code.
 #
-GH_TAGNAME=	26050fd4c87c50503d5bd573b2ec91703676e211
+GH_TAGNAME=	fbe8c52d0d9cdb3d6f5fe8be8edab54618becc1f
 USE_PERL5=	build
 
 MAKE_ARGS=	PERL=${PERL} \
@@ -99,3 +97,5 @@ do-install:
 	${INSTALL_DATA} ${WRKSRC}/bin/ipxe.lkrn ${STAGEDIR}${DATADIR}
 
 .include <bsd.port.mk>
+
+RUN_DEPENDS:=	${RUN_DEPENDS:Ngcc*}

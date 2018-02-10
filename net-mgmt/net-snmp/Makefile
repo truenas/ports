@@ -3,7 +3,7 @@
 
 PORTNAME=	snmp
 PORTVERSION=	5.7.3
-PORTREVISION=	17
+PORTREVISION=	18
 CATEGORIES=	net-mgmt ipv6
 MASTER_SITES=	SF/net-${PORTNAME}/net-${PORTNAME}/${PORTVERSION} \
 		ZI
@@ -18,17 +18,19 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 
 LIB_DEPENDS=	libpkg.so:ports-mgmt/pkg
 
+NOT_FOR_ARCHS=		mips mips64
+NOT_FOR_ARCHS_REASON=	SSP is currently broken on MIPS
+
 OPTIONS_DEFINE=	IPV6 MFD_REWRITES PERL PERL_EMBEDDED PYTHON DUMMY TKMIB \
 		MYSQL AX_SOCKONLY UNPRIVILEGED SMUX DOCS JAIL AX_DISABLE_TRAP \
 		TLS
 OPTIONS_DEFAULT=PERL PERL_EMBEDDED DUMMY SMUX
 OPTIONS_SUB=	yes
 
-MFD_REWRITES_DESC=	Build with 64-bit Interface Counters
+MFD_REWRITES_DESC=	Use new MFD rewrites of mib modules
 PERL_EMBEDDED_DESC=	Build embedded perl
 DUMMY_DESC=		Enable dummy values as placeholders
 TKMIB_DESC=		Install graphical MIB browser
-#DMALLOC_DESC=		Enable dmalloc debug memory allocator
 AX_SOCKONLY_DESC=	Disable UDP/TCP transports for agentx
 AX_DISABLE_TRAP_DESC=	Disable agentx subagent code in snmptrapd
 UNPRIVILEGED_DESC=	Allow unprivileged users to execute net-snmp
@@ -56,7 +58,7 @@ CONFIGURE_ARGS+=--enable-shared --enable-internal-md5 \
 		--with-sys-location="${NET_SNMP_SYS_LOCATION}" \
 		--with-logfile="${NET_SNMP_LOGFILE}" \
 		--with-persistent-directory="${NET_SNMP_PERSISTENTDIR}" \
-		--with-gnu-ld --with-libwrap \
+		--with-gnu-ld --without-libwrap \
 		--with-ldflags="-lm -lkvm -ldevstat -L${PKG_PREFIX}/lib -L${LOCALBASE}/lib ${LCRYPTO}"
 SUB_FILES=	pkg-message
 
@@ -75,9 +77,9 @@ TLS_CONFIGURE_ON=	--with-security-modules=tsm --with-transports=TLSTCP,DTLSUDP
 .if ${PORT_OPTIONS:MPYTHON}
 PYDISTUTILS_PKGNAME?=		netsnmp-python
 PYDISTUTILS_PKGVERSION?=	1.0a1
-USES+=		python
-RUN_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}setuptools>0:devel/${PYTHON_PKGNAMEPREFIX}setuptools
-BUILD_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}setuptools>0:devel/${PYTHON_PKGNAMEPREFIX}setuptools
+USES+=		python:2.7
+RUN_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}setuptools>0:devel/py-setuptools@${PY_FLAVOR}
+BUILD_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}setuptools>0:devel/py-setuptools@${PY_FLAVOR}
 CONFIGURE_ARGS+=--with-python-modules
 CONFIGURE_ENV+=	PYTHONPROG="${PYTHON_CMD}"
 MAKE_ENV+=	PYDISTUTILS_INSTALLARGS="${PYDISTUTILS_INSTALLARGS}" STAGEDIR="${STAGEDIR}"
@@ -117,13 +119,6 @@ CONFIGURE_ARGS+=--disable-embedded-perl --without-perl-modules
 PLIST_SUB+=	WITH_PERL_EMBEDDED="@comment "
 PLIST_SUB+=	WITH_PERL="@comment "
 .endif
-
-#.if ${PORT_OPTIONS:MDMALLOC}
-#LIB_DEPENDS+=	libdmalloc.so:devel/dmalloc
-#CONFIGURE_ARGS+=--with-dmalloc=${LOCALBASE}
-#.else
-#CONFIGURE_ARGS+=--without-dmalloc
-#.endif
 
 .if ${PORT_OPTIONS:MMYSQL}
 USE_MYSQL=	yes

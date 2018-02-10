@@ -2,20 +2,31 @@
 # $FreeBSD$
 
 PORTNAME=	File_Iterator
-PORTVERSION=	1.3.3
+DISTVERSION=	1.4.5
 CATEGORIES=	devel www pear
-MASTER_SITES=	http://pear.phpunit.de/get/
 PKGNAMEPREFIX=	pear-
 
 MAINTAINER=	joneum@FreeBSD.org
 COMMENT=	PEAR FileIterator implementation
 
-BUILD_DEPENDS=	${PEARDIR}/.channels/pear.phpunit.de.reg:devel/pear-channel-phpunit
-RUN_DEPENDS=	${PEARDIR}/.channels/pear.phpunit.de.reg:devel/pear-channel-phpunit
+LICENSE=	BSD3CLAUSE
+LICENSE_FILE=	${WRKSRC}/LICENSE
 
-BROKEN=		unfetchable, redirects to https://phpunit.de/
+BUILD_DEPENDS=	pear-channel-phpunit>=20110327:devel/pear-channel-phpunit
+RUN_DEPENDS=	pear-channel-phpunit>=20110327:devel/pear-channel-phpunit
 
-USES=	pear
-PEAR_CHANNEL=	phpunit
+USE_GITHUB=	yes
+GH_ACCOUNT=	sebastianbergmann
+GH_PROJECT=	php-file-iterator
+
+NO_ARCH=	yes
+
+NO_BUILD=	yes
+
+PLIST_FILES=	${DATADIR}/Iterator.php
+
+do-install:
+	${MKDIR} ${STAGEDIR}${DATADIR}
+	${INSTALL_DATA} ${WRKSRC}/src/Iterator.php ${STAGEDIR}${DATADIR}
 
 .include <bsd.port.mk>

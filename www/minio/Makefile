@@ -15,11 +15,9 @@ BUILD_DEPENDS=	go>=1.7:lang/go \
 USES=		compiler
 
 USE_GITHUB=	yes
-GH_TAGNAME=	RELEASE.2017-09-29T19-16-56Z
+GH_TAGNAME=	RELEASE.2018-01-18T20-33-21Z
 GH_SUBDIR=	src/github.com/${PORTNAME}/${PORTNAME}
-GH_TUPLE=	minio:mc:RELEASE.2017-06-15T03-38-43Z:mc/src/github.com/minio/mc \
-		hashicorp:go-version:03c5bf6:go_version/src/github.com/hashicorp/go-version
-MAKE_ENV=	GOPATH=${WRKSRC} GOROOT=${LOCALBASE}/go
+COMMIT_ID=	e2d5a87b2676e3e01f0f4fa7ebd01205364cfb16
 
 PLIST_FILES=	bin/minio
 
@@ -32,17 +30,11 @@ SUB_LIST=	USER="${USERS}" \
 		GROUP="${GROUPS}"
 
 do-build:
-	@cd ${WRKSRC}/src/github.com/minio/minio; \
-	${SETENV} ${BUILD_ENV} GOPATH=${WRKSRC} go build -v -x \
-		-ldflags "-X main.GitDescribe=${DISTVERSIONFULL}" -o bin/minio
+	@cd ${WRKSRC}/${GH_SUBDIR} ; \
+	${SETENV} GOPATH=${WRKSRC} CGO_ENABLED=0 go build \
+		--ldflags '-X github.com/minio/minio/cmd.Version=${GH_TAGNAME:C/RELEASE\.//:C|(..)-(..)-(..)Z|\1:\2:\3Z|} -X github.com/minio/minio/cmd.ReleaseTag=${GH_TAGNAME} -X github.com/minio/minio/cmd.CommitID=${COMMIT_ID} -X github.com/minio/minio/cmd.GOPATH=${WRKSRC} -s -w' -o ${WRKSRC}/bin/minio
 
 do-install:
 	${INSTALL_PROGRAM} ${WRKSRC}/bin/${PORTNAME} ${STAGEDIR}${PREFIX}/bin/${PORTNAME}
 
-.include <bsd.port.pre.mk>
-
-.if ${COMPILER_TYPE} == clang
-BUILD_ENV=  CC=clang
-.endif
-
-.include <bsd.port.post.mk>
+.include <bsd.port.mk>

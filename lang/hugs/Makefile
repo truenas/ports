@@ -3,7 +3,7 @@
 
 PORTNAME=	hugs98
 PORTVERSION=	200609
-PORTREVISION=	11
+PORTREVISION=	12
 CATEGORIES=	lang haskell
 MASTER_SITES=	http://cvs.haskell.org/Hugs/downloads/2006-09/
 DISTNAME=	${PORTNAME}-plus-${HUGS_DATE}
@@ -14,6 +14,7 @@ COMMENT=	Interpreter for the functional programming language Haskell 98
 BUILD_DEPENDS=	bash:shells/bash
 
 BROKEN_armv6=		fails to compile: cppinput.c: invalid preprocessing directive \#!
+BROKEN_armv7=		fails to compile: cppinput.c: invalid preprocessing directive \#!
 BROKEN_powerpc64=	fails to compile: cppinput.c: detected recursion whilst expanding macro "vector"
 
 WRKSRC=		${WRKDIR}/${DISTNAME}

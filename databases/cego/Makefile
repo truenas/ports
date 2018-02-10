@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	cego
-PORTVERSION=	2.35.4
+PORTVERSION=	2.38.18
 CATEGORIES=	databases
 MASTER_SITES=	http://www.lemke-it.com/
 

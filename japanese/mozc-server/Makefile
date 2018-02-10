@@ -4,7 +4,7 @@
 PORTNAME=	mozc
 PORTVERSION=	2.20.2677.102.02
 DISTVERSIONPREFIX=	v
-PORTREVISION=	5
+PORTREVISION=	8
 CATEGORIES=	japanese
 
 MAINTAINER=	hrs@FreeBSD.org
@@ -57,7 +57,7 @@ USE_GNOME=	cairo gdkpixbuf2 glib20 gtk20
 LIB_DEPENDS+=	libfontconfig.so:x11-fonts/fontconfig \
 		libfreetype.so:print/freetype2
 .elif ${BUILD_MOZC_LIST:Mmozc_el} == "mozc_el"
-USE_EMACS=	yes
+USES+=		emacs
 .elif ${BUILD_MOZC_LIST:Mfcitx_mozc}
 USES+=		gettext-tools
 .endif

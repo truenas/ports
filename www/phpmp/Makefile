@@ -7,12 +7,16 @@ PORTREVISION=	1
 CATEGORIES=	www
 MASTER_SITES=	http://www.bayofrum.net/dist/${PORTNAME}/
 
-MAINTAINER=	kevlo@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Web interface for music player daemon
+
+EXPIRATION_DATE=	2018-03-07
+DEPRECATED=	Unmaintained, all www files wrongly belongs to www user.
 
 LICENSE=	GPLv2
 
 NO_BUILD=	yes
+USES=		php
 USE_PHP=	pcre sockets
 
 PHPMP?=		${WWWDIR_REL}

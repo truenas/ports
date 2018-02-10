@@ -2,6 +2,7 @@
 
 PORTNAME=	mednafen
 PORTVERSION=	0.9.45.1
+PORTREVISION=	1
 PORTEPOCH=	1
 CATEGORIES=	emulators games
 MASTER_SITES=	https://mednafen.github.io/releases/files/
@@ -16,7 +17,6 @@ LIB_DEPENDS=	libcdio.so:sysutils/libcdio \
 		libsndfile.so:audio/libsndfile \
 		libvorbis.so:audio/libvorbis
 
-BROKEN_powerpc64=	fails to compile: mednafen.cpp: 'to_string' is not a member of 'std'
 BROKEN_sparc64=		fails to compile due to internal compiler error
 
 GNU_CONFIGURE=	yes

@@ -2,6 +2,7 @@
 
 PORTNAME=	mod_security-devel
 PORTVERSION=	3.0.0.g2017080200
+PORTREVISION=	1
 CATEGORIES=	www security
 
 MAINTAINER=	marius.halden@modirum.com
@@ -14,10 +15,14 @@ LIB_DEPENDS=	libcurl.so:ftp/curl \
 		libyajl.so:devel/yajl \
 		libGeoIP.so:net/GeoIP
 
+BROKEN_aarch64=		fails to compile: string.h:55:1: narrowing conversion of '-1' from 'int' to 'char' inside { }
+BROKEN_armv6=		fails to compile: string.h:55:1: narrowing conversion of '-1' from 'int' to 'char' inside { }
+BROKEN_armv7=		fails to compile: string.h:55:1: narrowing conversion of '-1' from 'int' to 'char' inside { }
+
 USES=		gmake autoreconf libtool pkgconfig:build
 USE_GNOME=	libxml2
 # GCC because of https://github.com/SpiderLabs/ModSecurity/issues/1411
-USE_GCC=	6+
+USE_GCC=	yes
 USE_LDCONFIG=	yes
 GNU_CONFIGURE=	yes
 

@@ -11,7 +11,8 @@ PKGNAMEPREFIX=		${PYTHON_PKGNAMEPREFIX}
 MAINTAINER=		koobs@FreeBSD.org
 COMMENT=		Python Cryptography Toolkit
 
-LICENSE=		PD
+USES=		python
+USE_PYTHON=	distutils autoplist
 
 CONFLICTS=		${PYTHON_PKGNAMEPREFIX}pycryptodome-*
 

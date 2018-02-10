@@ -9,11 +9,14 @@ MASTER_SITES=	SF/${PORTNAME}/Jamaica%20Core/Jamaica%20${DISTVERSION}
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Framework to create fully dynamic Content Management Solutions
 
+EXPIRATION_DATE=	2018-03-07
+DEPRECATED=	Unmaintained, all www files wrongly belongs to www user.
+
 LICENSE=	GPLv2
 
 OPTIONS_DEFINE=	PGSQL MYSQL
 
-USES=		cpe tar:bzip2
+USES=		cpe tar:bzip2 php
 CPE_VERSION=	${DISTVERSION:C/-.*//}
 CPE_UPDATE=	${DISTVERSION:C/[^-]*((-.*)?)/\1/:C/-//}
 USE_PHP=	pcre xml simplexml

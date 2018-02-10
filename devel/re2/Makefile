@@ -3,14 +3,13 @@
 
 PORTNAME=	re2
 PORTVERSION=	20170301
+PORTREVISION=	1
 CATEGORIES=	devel
 
 MAINTAINER=	jlaffaye@FreeBSD.org
 COMMENT=	Fast C++ regex library
 
 LICENSE=	BSD3CLAUSE
-
-BROKEN_powerpc64=	fails to compile: prefilter_tree.cc: 'to_string' is not a member of 'std'
 
 MAKE_ARGS=	CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" SED_INPLACE="${SED} -i ''" prefix=${PREFIX}
 USE_LDCONFIG=	yes

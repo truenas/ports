@@ -12,6 +12,7 @@
     SUBDIR += bind9-devel
     SUBDIR += bind910
     SUBDIR += bind911
+    SUBDIR += bind912
     SUBDIR += bind99
     SUBDIR += bindgraph
     SUBDIR += bundy
@@ -29,6 +30,7 @@
     SUBDIR += djbdns-tools
     SUBDIR += dlint
     SUBDIR += dnrd
+    SUBDIR += dns2blackhole
     SUBDIR += dns2tcp
     SUBDIR += dns_balance
     SUBDIR += dnscap
@@ -60,7 +62,7 @@
     SUBDIR += doc
     SUBDIR += dq
     SUBDIR += drool
-    SUBDIR += dualserver
+    SUBDIR += dynip
     SUBDIR += erlang-idna
     SUBDIR += ez-ipupdate
     SUBDIR += fastresolve
@@ -136,6 +138,7 @@
     SUBDIR += p5-Net-DNS-Lite
     SUBDIR += p5-Net-DNS-Match
     SUBDIR += p5-Net-DNS-RR-SRV-Helper
+    SUBDIR += p5-Net-DNS-Resolver-Mock
     SUBDIR += p5-Net-DNS-Resolver-Programmable
     SUBDIR += p5-Net-DNS-SEC
     SUBDIR += p5-Net-DNS-TestNS
@@ -148,6 +151,7 @@
     SUBDIR += p5-Net-Domain-ExpireDate
     SUBDIR += p5-Net-Domain-TLD
     SUBDIR += p5-Net-LibIDN
+    SUBDIR += p5-Net-LibIDN2
     SUBDIR += p5-Net-Nslookup
     SUBDIR += p5-Net-RBLClient
     SUBDIR += p5-Net-RNDC
@@ -168,6 +172,7 @@
     SUBDIR += pear-Net_DNS2
     SUBDIR += powerdns
     SUBDIR += powerdns-recursor
+    SUBDIR += powerdns-recursor40
     SUBDIR += public_suffix_list
     SUBDIR += py-bonjour
     SUBDIR += py-dns
@@ -185,10 +190,8 @@
     SUBDIR += py-pycares
     SUBDIR += py-pydnstable
     SUBDIR += py-pywdns
+    SUBDIR += py-tld
     SUBDIR += py-tldextract
-    SUBDIR += py-twistedNames
-    SUBDIR += py3-dnspython
-    SUBDIR += py3-idna
     SUBDIR += radns
     SUBDIR += rbldnsd
     SUBDIR += rbllookup
@@ -199,7 +202,6 @@
     SUBDIR += rubygem-idn-ruby
     SUBDIR += rubygem-net-dns
     SUBDIR += rubygem-public_suffix
-    SUBDIR += rubygem-public_suffix2
     SUBDIR += rubygem-public_suffix_service
     SUBDIR += rubygem-simpleidn
     SUBDIR += rubygem-validates_hostname

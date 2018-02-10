@@ -1,9 +1,8 @@
-# Created by: Jason Bacon <bacon4000@gmail.com>
 # $FreeBSD$
 
 PORTNAME=	x10
 PORTVERSION=	2.2.1
-PORTREVISION=	5
+PORTREVISION=	6
 CATEGORIES=	lang devel java
 MASTER_SITES=	http://dist.codehaus.org/x10/dependencies/ \
 		SF
@@ -20,7 +19,7 @@ DISTFILES=	${DISTNAME}${EXTRACT_SUFX} \
 		bdwgc-7.1.tar.gz
 EXTRACT_ONLY=	${DISTNAME}${EXTRACT_SUFX}
 
-MAINTAINER=	bacon4000@gmail.com
+MAINTAINER=	jwb@FreeBSD.org
 COMMENT=	Object-oriented parallel programming language
 
 LICENSE=	EPL

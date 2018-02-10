@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	SQL-Abstract
-PORTVERSION=	1.84
+PORTVERSION=	1.85
 CATEGORIES=	databases perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
@@ -10,7 +10,7 @@ PKGNAMEPREFIX=	p5-
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Perl extension to generate SQL from Perl data structures
 
-LICENSE=	ART10 GPLv1
+LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual
 
 BUILD_DEPENDS=	p5-Hash-Merge>=0.12:textproc/p5-Hash-Merge \

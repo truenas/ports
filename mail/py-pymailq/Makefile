@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	pymailq
-PORTVERSION=	0.5.4
+PORTVERSION=	0.8.0
 CATEGORIES=	mail python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -16,24 +16,17 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 RUN_DEPENDS=	postfix:mail/postfix
 
 NO_ARCH=	yes
-USES=		python:2.7+
+USES=		python
 USE_PYTHON=	autoplist distutils concurrent
 
-.include <bsd.port.pre.mk>
-
-PLIST_FILES+=	man/man1/pqshell-${PYTHON_VER}.1.gz
-.if ${PYTHON_VERSION} == ${PYTHON_DEFAULT_VERSION}
-PLIST_FILES+=	man/man1/pqshell.1.gz
-.endif
+PLIST_FILES=	man/man1/pqshell.1.gz
 
 post-patch:
-	@${REINPLACE_CMD} -e 's|/usr/sbin/postqueue|${LOCALBASE}/sbin/postqueue|' \
-		${WRKSRC}/pymailq/store.py
+	@${REINPLACE_CMD} -e \
+		's|%%DOCSDIR%%|${DOCSDIR}|g; s|%%EXAMPLESDIR%%|${EXAMPLESDIR}|g' \
+		${WRKSRC}/setup.py
 
 post-install:
-	${INSTALL_MAN} ${WRKSRC}/man/pqshell.1 ${STAGEDIR}${MANPREFIX}/man/man1/pqshell-${PYTHON_VER}.1
-.if ${PYTHON_VERSION} == ${PYTHON_DEFAULT_VERSION}
-	${LN} -sf pqshell-${PYTHON_VER}.1 ${STAGEDIR}${MANPREFIX}/man/man1/pqshell.1
-.endif
+	${INSTALL_MAN} ${WRKSRC}/man/pqshell.1 ${STAGEDIR}${MANPREFIX}/man/man1/pqshell.1
 
-.include <bsd.port.post.mk>
+.include <bsd.port.mk>

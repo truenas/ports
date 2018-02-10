@@ -1,8 +1,8 @@
-# Created by: tcberner
 # $FreeBSD$
 
 PORTNAME=	kactivities
-PORTVERSION=	${KDE_FRAMEWORKS_VERSION}
+DISTVERSION=	${KDE_FRAMEWORKS_VERSION}
+PORTREVISION=	1
 CATEGORIES=	x11 kde kde-frameworks
 
 MAINTAINER=	kde@FreeBSD.org

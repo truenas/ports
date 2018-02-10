@@ -30,7 +30,7 @@ BUILD_DEPENDS=  cython>0:lang/cython
 .endif
 
 .if ${PYTHON_REL} < 3400
-RUN_DEPENDS+=   ${PYTHON_PKGNAMEPREFIX}enum34>0:devel/py-enum34
+RUN_DEPENDS+=   ${PYTHON_PKGNAMEPREFIX}enum34>0:devel/py-enum34@${FLAVOR}
 .endif
 
 checksum fetch:

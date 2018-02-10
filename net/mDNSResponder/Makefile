@@ -2,8 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	mDNSResponder
-PORTVERSION=	878.1.1
-PORTREVISION=	0
+PORTVERSION=	878.30.4
 CATEGORIES=	net dns
 
 MAINTAINER=	john@ixsystems.com

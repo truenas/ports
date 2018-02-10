@@ -2,16 +2,17 @@
 # $FreeBSD$
 
 PORTNAME=	gcc
-PORTVERSION=	5.4.0
-PORTREVISION=	2
-CATEGORIES=	lang java
+PORTVERSION=	${GCC_DEFAULT}
+CATEGORIES=	lang
 MASTER_SITES=	# not applicable
 DISTFILES=	# not applicable
 
 MAINTAINER=	gerald@FreeBSD.org
 COMMENT=	Meta-port for the default version of the GNU Compiler Collection
 
-RUN_DEPENDS=	gcc${GCC_DEFAULT}:lang/gcc${GCC_DEFAULT}
+# Once GCC 4.9 and 4.8 aren't options any longer, we can simply use
+# GCC_DEFAULT again below (the expression rewrites 4.9 to 49).
+RUN_DEPENDS=	gcc${GCC_DEFAULT:S/.//}:lang/gcc${GCC_DEFAULT:S/.//}
 
 NO_ARCH=	yes
 NO_BUILD=	yes

@@ -5,7 +5,7 @@
      if conf.env.standalone_talloc:
          conf.env.TALLOC_COMPAT1 = Options.options.TALLOC_COMPAT1
 -        conf.env.PKGCONFIGDIR = '${LIBDIR}/pkgconfig'
-+        conf.env.PKGCONFIGDIR = '/usr/local/libdata/pkgconfig'
++        conf.env.PKGCONFIGDIR = '%%PKGCONFIGDIR%%'
          conf.env.TALLOC_VERSION = VERSION
  
      conf.CHECK_XSLTPROC_MANPAGES()

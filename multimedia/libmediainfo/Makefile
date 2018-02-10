@@ -2,9 +2,9 @@
 # $FreeBSD$
 
 PORTNAME=	libmediainfo
-PORTVERSION=	0.7.98
+PORTVERSION=	17.12
 CATEGORIES=	multimedia
-MASTER_SITES=	http://mediaarea.net/download/binary/mediainfo/${PORTVERSION}/ \
+MASTER_SITES=	https://mediaarea.net/download/binary/mediainfo/${PORTVERSION}/ \
 		LOCAL/sunpoet
 DISTNAME=	MediaInfo_CLI_${PORTVERSION}_GNU_FromSource
 
@@ -38,7 +38,6 @@ TINYXML2_CONFIGURE_ON=	--with-libtinyxml2=yes
 TINYXML2_LIB_DEPENDS=	libtinyxml2.so:textproc/tinyxml2
 
 post-patch:
-	@${TOUCH} ${WRKSRC}/aclocal.m4
 	@${REINPLACE_CMD} \
 		-e 's|lib/pkgconfig/|libdata/pkgconfig/|g' \
 		-e 's|-DMEDIAINFO_LIBMMS_FROMSOURCE||g' \

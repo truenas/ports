@@ -6,12 +6,12 @@
 
 PORTNAME=	condor
 PORTVERSION=	8.4.9
-PORTREVISION=	4
+PORTREVISION=	7
 CATEGORIES=	sysutils net
 MASTER_SITES=	http://www.acadix.biz/Ports/distfiles/
 DISTNAME=	condor_src-${PORTVERSION}-all-all
 
-MAINTAINER=	bacon4000@gmail.com
+MAINTAINER=	jwb@FreeBSD.org
 COMMENT=	High-throughput computing on distributively owned resources
 
 LICENSE=	APACHE20

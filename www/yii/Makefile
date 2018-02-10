@@ -8,16 +8,18 @@ CATEGORIES=	www
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	High-performance component-based PHP framework
 
+EXPIRATION_DATE=	2018-03-07
+DEPRECATED=	Unmaintained, all www files wrongly belongs to www user.
+
 LICENSE=	BSD3CLAUSE
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	yiisoft
 
 NO_BUILD=	yes
-USES=		cpe
+USES=		cpe php:web
 CPE_PRODUCT=	yiiframework
 USE_PHP=	pcre spl
-WANT_PHP_WEB=	yes
 
 SUB_FILES=	pkg-message
 

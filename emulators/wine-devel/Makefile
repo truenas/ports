@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	wine
-DISTVERSION=	2.16
+DISTVERSION=	3.1
 PORTEPOCH=	1
 CATEGORIES=	emulators
 MASTER_SITES=	SF/${PORTNAME}/Source \
@@ -18,6 +18,7 @@ LICENSE_COMB=	dual
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 ONLY_FOR_ARCHS=	amd64 i386
+STAGING_BROKEN=	Staging patchset still not available for this version
 
 BUILD_DEPENDS=	${LOCALBASE}/bin/flex:textproc/flex \
 		prelink:sysutils/prelink
@@ -33,11 +34,14 @@ CONFIGURE_ARGS+=--verbose --disable-tests \
 		--without-alsa --without-capi --without-dbus \
 		--without-gettext --without-gettextpo \
 		--without-gphoto --without-gsm --without-gstreamer \
+		--without-krb5 \
 		--without-opencl \
 		--without-osmesa \
 		--with-oss \
+		--without-pulse \
 		--without-sane \
-		--without-tiff
+		--without-tiff \
+		--without-udev
 CONFIGURE_ENV=	CPPBIN="${CPP}" FLEX="${LOCALBASE}/bin/flex"
 WINELIBDIR?=	${PREFIX}/lib
 USES=		bison compiler:c11 desktop-file-utils gmake shebangfix tar:xz
@@ -90,8 +94,6 @@ MPG123_LIB_DEPENDS=	libmpg123.so:audio/mpg123
 OPENAL_CONFIGURE_WITH=	openal
 OPENAL_USES=		openal
 
-STAGING_LIB_DEPENDS=	libtxc_dxtn.so:graphics/s2tc
-
 V4L_CONFIGURE_WITH=	v4l
 V4L_BUILD_DEPENDS=	${LOCALBASE}/include/linux/videodev2.h:multimedia/v4l_compat
 V4L_LIB_DEPENDS=	libv4l1.so:multimedia/libv4l
@@ -100,13 +102,18 @@ WINEMAKER_RUN_DEPENDS=	p5-XML-LibXML>0:textproc/p5-XML-LibXML
 
 X11_CONFIGURE_WITH=	x cms fontconfig freetype glu jpeg opengl png xinerama xinput2 xrandr xrender
 X11_USES=		jpeg
-X11_USE=		GL=glu XORG=xcomposite,xcursor,xi,xinerama,xrandr,xrender
+X11_USE=		GL=glu XORG=x11,xext,xcomposite,xcursor,xi,xinerama,xrandr,xrender
 X11_LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig \
 			libfreetype.so:print/freetype2 \
 			liblcms2.so:graphics/lcms2 \
 			libpng.so:graphics/png
 
 .include <bsd.port.pre.mk>
+
+# PR224863: clang 6.0.0 crashes
+.if ${OPSYS} == FreeBSD && ${OSVERSION} == 1200056 && ${ARCH} == amd64
+USE_GCC=	yes
+.endif
 
 .if ${ARCH} == amd64
 # Wine is composed of three parts:
@@ -145,14 +152,11 @@ DISTFILES+=	${COMP_DIST}:cho
 
 EXTRACT_DEPENDS=bash:shells/bash \
 		git:devel/git \
-		${AUTOCONF_DEPENDS}
-
-CONFIGURE_ARGS+=--without-pulse
-USE_AUTOTOOLS=	autoconf:env
+		autoreconf-2.69:devel/autoconf
+LIB_DEPENDS+=	libtxc_dxtn.so:graphics/s2tc
 
 post-extract: fix-shebang
 	cd ${WRKSRC} && ${TAR} xf ${DISTDIR}/${COMP_DIST} --strip-components 1
-	${REINPLACE_CMD} 's|autoreconf|${AUTORECONF}|g' ${WRKSRC}/patches/patchinstall.sh
 	cd ${WRKSRC} && bash ./patches/patchinstall.sh --backend=patch DESTDIR=${WRKSRC} --all
 .endif
 
@@ -169,5 +173,13 @@ post-install:
 .endfor
 	${INSTALL_DATA} ${WRKSRC}/programs/winedbg/README ${STAGEDIR}${DOCSDIR}/README.winedbg
 	${INSTALL_DATA} ${WRKSRC}/tools/winedump/README ${STAGEDIR}${DOCSDIR}/README.winedump
+
+check-wine-devel-vs-wine-staging:
+	@${GREP} %%STAGING%% pkg-plist | while read f; do \
+	  f=`echo $$f | ${SED} -e 's/%%STAGING%%//'`; \
+	  if [ -f "$$STAGEDIR/$$PREFIX/$$f" ]; then \
+	    ${PRINTF} "%s no longer contigent on %%STAGING%%?\n" "$$f"; \
+	  fi \
+	done
 
 .include <bsd.port.post.mk>

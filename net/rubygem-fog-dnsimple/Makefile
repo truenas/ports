@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	fog-dnsimple
-PORTVERSION=	1.0.0
+PORTVERSION=	2.0.0
 CATEGORIES=	net rubygems
 MASTER_SITES=	RG
 

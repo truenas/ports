@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	librdkafka
-PORTVERSION=	0.11.0
+PORTVERSION=	0.11.3
 DISTVERSIONPREFIX=	v
 CATEGORIES=	net
 
@@ -12,13 +12,12 @@ COMMENT=	Apache Kafka C/C++ library
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-BUILD_DEPENDS=	bash:shells/bash
-LIB_DEPENDS=	liblz4.so:archivers/liblz4
-
 BROKEN_mips=		fails to build: undefined reference to __sync_add_and_fetch_4
 BROKEN_mips64=		fails to build: undefined reference to __sync_add_and_fetch_4
 BROKEN_powerpc64=	fails to build: cc: Internal error: Segmentation fault (program ld)
-BROKEN_sparc64=		fails to build: internal compiler error
+
+BUILD_DEPENDS=	bash:shells/bash
+LIB_DEPENDS=	liblz4.so:archivers/liblz4
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	edenhill
@@ -30,6 +29,12 @@ MAKE_ARGS=	pkgconfigdir=${PREFIX}/libdata/pkgconfig
 CONFIGURE_ARGS+=	--disable-sasl --enable-ssl
 
 USE_LDCONFIG=	yes
+
+.include <bsd.port.options.mk>
+
+.if ${OPSYS} == FreeBSD && ${OSVERSION} >= 1200056 && ${ARCH} == i386
+BROKEN=	undefined reference to '__atomic_fetch_add_8'
+.endif
 
 post-patch:
 	${REINPLACE_CMD} -e \

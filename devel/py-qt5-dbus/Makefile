@@ -1,6 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	dbus
+PORTREVISION=	1
 CATEGORIES=	devel python
 
 MAINTAINER=	kde@FreeBSD.org
@@ -11,6 +12,7 @@ PYQT_DIST=	yes
 
 USES=		python pyqt:5
 USE_PYQT=	sip_build core_run
+USE_PYTHON=	flavors
 USE_QT5=	core dbus qmake_build
 
 OPTIONS_DEFINE=	API DEBUG

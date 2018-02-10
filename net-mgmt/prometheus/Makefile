@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	prometheus
-PORTVERSION=	1.7.1
+PORTVERSION=	1.8.2
+PORTREVISION=	1
 DISTVERSIONPREFIX=	v
 CATEGORIES=	net-mgmt
 
@@ -10,6 +11,7 @@ MAINTAINER=	ports@ecadlabs.com
 COMMENT=	Systems monitoring and alerting toolkit
 
 LICENSE=	APACHE20
+LICENSE_FILE=	${WRKSRC}/LICENSE
 
 USES=		go gmake
 USE_GITHUB=	yes
@@ -21,13 +23,20 @@ USE_RC_SUBR=	prometheus
 USERS=		prometheus
 GROUPS=		prometheus
 
-LD_FLAG_STRING=	${GO_PKGNAME}/vendor/github.com/prometheus/common/version.
-do-build:
-	(cd ${GO_WRKSRC}/cmd/prometheus ; ${SETENV} ${GO_ENV} go install -ldflags \
-	    "-s -X ${LD_FLAG_STRING}.Version=${PORTVERSION}")
+BUILD_USER?=	${USER}
+LD_FLAG_X_PREFIX=	-X ${GO_PKGNAME}/vendor/github.com/prometheus/common/version
+LD_FLAG_STRING=	-s \
+				${LD_FLAG_X_PREFIX}.Version=${PORTVERSION} \
+				${LD_FLAG_X_PREFIX}.Revision=${PORTREVISION} \
+				${LD_FLAG_X_PREFIX}.Branch=release-${PORTVERSION:R} \
+				${LD_FLAG_X_PREFIX}.BuildUser=${BUILD_USER}
 
-	(cd ${GO_WRKSRC}/cmd/promtool ; ${SETENV} ${GO_ENV} go install -ldflags \
-	    "-s -X ${LD_FLAG_STRING}.Version=${PORTVERSION}")
+do-build:
+	( cd ${GO_WRKSRC}/cmd/prometheus ; \
+		${SETENV} ${GO_ENV} go install -ldflags "${LD_FLAG_STRING}" )
+
+	( cd ${GO_WRKSRC}/cmd/promtool ; \
+		${SETENV} ${GO_ENV} go install -ldflags "${LD_FLAG_STRING}" )
 
 do-install:
 	${INSTALL_PROGRAM} ${GO_WRKDIR_BIN}/prometheus ${STAGEDIR}${PREFIX}/bin

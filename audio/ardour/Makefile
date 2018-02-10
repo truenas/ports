@@ -3,7 +3,7 @@
 
 PORTNAME=	ardour
 PORTVERSION=	2.8.16
-PORTREVISION=	6
+PORTREVISION=	9
 CATEGORIES=	audio
 MASTER_SITES=	http://freebsd.nsu.ru/distfiles/
 
@@ -12,8 +12,6 @@ COMMENT=	Multichannel digital audio workstation
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
-
-BROKEN=		fails to build
 
 LIB_DEPENDS=	liblo.so:audio/liblo \
 		liblrdf.so:textproc/liblrdf \
@@ -71,6 +69,17 @@ post-patch:
 	@${REINPLACE_CMD} -e 's|alsa_pcm|oss|g' ${WRKSRC}/templates/*.template
 	@${REINPLACE_CMD} -e 's|std::pair<double|std::pair<const double|' \
 		${WRKSRC}/gtk2_ardour/tempo_lines.h
+	@${REINPLACE_CMD} -e '/sigc++\/class_slot\.h/d' \
+		${WRKSRC}/libs/ardour/audioregion.cc \
+		${WRKSRC}/libs/ardour/region.cc
+	@${REINPLACE_CMD} -e 's|time_t|& *|' \
+		${WRKSRC}/libs/ardour/audiosource.cc
+	@${REINPLACE_CMD} -e '/sigc++\/retype\.h/d' \
+		${WRKSRC}/libs/ardour/audio_track.cc \
+		${WRKSRC}/gtk2_ardour/editor_markers.cc \
+		${WRKSRC}/libs/ardour/session.cc \
+		${WRKSRC}/libs/ardour/session_transport.cc \
+		${WRKSRC}/libs/ardour/track.cc
 
 post-install:
 	@${MKDIR} ${STAGEDIR}${PREFIX}/share/ardour2/templates

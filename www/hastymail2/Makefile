@@ -12,6 +12,9 @@ DISTNAME=	hastymail2_${WIKEDVERSION}
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Small, fast and secure yet powerful IMAP webmail
 
+EXPIRATION_DATE=	2018-03-07
+DEPRECATED=	Unmaintained, all www files wrongly belongs to www user.
+
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
 
@@ -20,7 +23,7 @@ SUB_FILES=	pkg-message
 
 CONFLICTS_INSTALL=	hastymail2-devel-[0-9]*
 
-WANT_PHP_WEB=	yes
+USES=		php:web
 USE_PHP=	ctype pcre session xml
 
 WIKEDVERSION=	1_1

@@ -144,7 +144,7 @@ CHOSEN_COMPILER_TYPE=	gcc
 .if ${_COMPILER_ARGS:Mc++14-lang}
 .if !${COMPILER_FEATURES:Mc++14}
 .if (defined(FAVORITE_COMPILER) && ${FAVORITE_COMPILER} == gcc) || (${ARCH} != amd64 && ${ARCH} != i386) # clang not always supported on Tier-2
-USE_GCC=	5+
+USE_GCC=	yes
 CHOSEN_COMPILER_TYPE=	gcc
 .elif (${COMPILER_TYPE} == clang && ${COMPILER_VERSION} < 35) || ${COMPILER_TYPE} == gcc
 .if ${ALT_COMPILER_TYPE} == clang && ${ALT_COMPILER_VERSION} >= 35
@@ -153,10 +153,10 @@ CC=	clang
 CXX=	clang++
 CHOSEN_COMPILER_TYPE=	clang
 .else
-BUILD_DEPENDS+=	${LOCALBASE}/bin/clang40:devel/llvm40
-CPP=	${LOCALBASE}/bin/clang-cpp40
-CC=	${LOCALBASE}/bin/clang40
-CXX=	${LOCALBASE}/bin/clang++40
+BUILD_DEPENDS+=	${LOCALBASE}/bin/clang50:devel/llvm50
+CPP=	${LOCALBASE}/bin/clang-cpp50
+CC=	${LOCALBASE}/bin/clang50
+CXX=	${LOCALBASE}/bin/clang++50
 CHOSEN_COMPILER_TYPE=	clang
 .endif
 .endif
@@ -175,10 +175,10 @@ CC=	clang
 CXX=	clang++
 CHOSEN_COMPILER_TYPE=	clang
 .else
-BUILD_DEPENDS+=	${LOCALBASE}/bin/clang34:lang/clang34
-CPP=	${LOCALBASE}/bin/clang-cpp34
-CC=	${LOCALBASE}/bin/clang34
-CXX=	${LOCALBASE}/bin/clang++34
+BUILD_DEPENDS+=	${LOCALBASE}/bin/clang50:devel/llvm50
+CPP=	${LOCALBASE}/bin/clang-cpp50
+CC=	${LOCALBASE}/bin/clang50
+CXX=	${LOCALBASE}/bin/clang++50
 CHOSEN_COMPILER_TYPE=	clang
 .endif
 .endif
@@ -197,11 +197,11 @@ CC=	clang
 CXX=	clang++
 CHOSEN_COMPILER_TYPE=	clang
 .else
-BUILD_DEPENDS+=	${LOCALBASE}/bin/clang34:lang/clang34
+BUILD_DEPENDS+=	${LOCALBASE}/bin/clang50:devel/llvm50
 CHOSEN_COMPILER_TYPE=	clang
-CPP=	${LOCALBASE}/bin/clang-cpp34
-CC=	${LOCALBASE}/bin/clang34
-CXX=	${LOCALBASE}/bin/clang++34
+CPP=	${LOCALBASE}/bin/clang-cpp50
+CC=	${LOCALBASE}/bin/clang50
+CXX=	${LOCALBASE}/bin/clang++50
 .endif
 .endif
 .endif
@@ -219,11 +219,11 @@ CC=	clang
 CXX=	clang++
 CHOSEN_COMPILER_TYPE=	clang
 .else
-BUILD_DEPENDS+=	${LOCALBASE}/bin/clang34:lang/clang34
+BUILD_DEPENDS+=	${LOCALBASE}/bin/clang50:devel/llvm50
 CHOSEN_COMPILER_TYPE=	clang
-CPP=	${LOCALBASE}/bin/clang-cpp34
-CC=	${LOCALBASE}/bin/clang34
-CXX=	${LOCALBASE}/bin/clang++34
+CPP=	${LOCALBASE}/bin/clang-cpp50
+CC=	${LOCALBASE}/bin/clang50
+CXX=	${LOCALBASE}/bin/clang++50
 .endif
 .endif
 .endif

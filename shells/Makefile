@@ -4,7 +4,6 @@
     COMMENT = Shells
 
     SUBDIR += 44bsd-csh
-    SUBDIR += ambit
     SUBDIR += bash
     SUBDIR += bash-completion
     SUBDIR += bash-static
@@ -25,6 +24,7 @@
     SUBDIR += lshell
     SUBDIR += mksh
     SUBDIR += nologinmsg
+    SUBDIR += oksh
     SUBDIR += osh
     SUBDIR += p5-Bash-Completion
     SUBDIR += p5-Shell-Perl
@@ -45,6 +45,7 @@
     SUBDIR += viewglob
     SUBDIR += vshnu
     SUBDIR += wcd
+    SUBDIR += xonsh
     SUBDIR += zsh
     SUBDIR += zsh-navigation-tools
 

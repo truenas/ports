@@ -10,11 +10,15 @@ MASTER_SITES=	MYSQL/eventum
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Eventum issue tracking system
 
-USES=		cpe
+EXPIRATION_DATE=	2018-03-07
+DEPRECATED=	Unmaintained, all www files wrongly belongs to www user.
+
+IGNORE_WITH_PHP=	70 71 72
+
+USES=		cpe php:web
 CPE_VENDOR=	mysql
 NO_BUILD=	yes
 USE_PHP=	pcre session mysql gd gettext
-WANT_PHP_WEB=	yes
 PLIST_SUB=	WWWOWN="${WWWOWN}" WWWGRP="${WWWGRP}"
 
 pre-install:

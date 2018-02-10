@@ -2,10 +2,11 @@
 # $FreeBSD$
 
 PORTNAME=	git-modes
-PORTVERSION=	1.2.4
+PORTVERSION=	1.2.6
+PORTREVISION=	2
 PORTEPOCH=	1
 CATEGORIES=	devel elisp
-PKGNAMESUFFIX=	-${EMACS_PORT_NAME}
+PKGNAMESUFFIX=	${EMACS_PKGNAMESUFFIX}
 
 MAINTAINER=	yasu@utahime.org
 COMMENT=	GNU Emacs modes for Git-related files
@@ -13,11 +14,10 @@ COMMENT=	GNU Emacs modes for Git-related files
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
 
+USES=		emacs gmake
 USE_GITHUB=	yes
 GH_ACCOUNT=	magit
 
-USES=		gmake
-USE_EMACS=	yes
 PORTDOCS=	README.md
 NO_ARCH=	yes
 
@@ -32,8 +32,12 @@ GIT_SUBVERSION_RUN_DEPENDS=	git-subversion>0:devel/git-subversion
 GIT_SUBVERSION_RUN_DEPENDS_OFF=	git>0:devel/git
 
 do-install:
-	${MKDIR} ${STAGEDIR}${PREFIX}/${ELISPDIR} ${STAGEDIR}${DOCSDIR}
-	${INSTALL_DATA} ${WRKSRC}/*.el ${WRKSRC}/*.elc ${STAGEDIR}${PREFIX}/${ELISPDIR}
-	${INSTALL_MAN} ${WRKSRC}/README.md ${STAGEDIR}${DOCSDIR}
+	@${MKDIR} ${STAGEDIR}${PREFIX}/${ELISPDIR}
+	${INSTALL_DATA} ${WRKSRC}/*.el ${WRKSRC}/*.elc \
+		${STAGEDIR}${PREFIX}/${ELISPDIR}
+
+do-install-DOCS-on:
+	@${MKDIR} ${STAGEDIR}${DOCSDIR}
+	${INSTALL_DATA} ${WRKSRC}/README.md ${STAGEDIR}${DOCSDIR}
 
 .include <bsd.port.mk>

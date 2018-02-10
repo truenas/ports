@@ -3,7 +3,7 @@
 
 PORTNAME=	opengrm-ngram
 PORTVERSION=	1.3.1
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	textproc
 MASTER_SITES=	http://openfst.cs.nyu.edu/twiki/pub/GRM/NGramDownload/
 
@@ -12,7 +12,7 @@ COMMENT=	Library for making n-gram language models encoded as weighted FSTs
 
 LICENSE=	APACHE20
 
-BROKEN_powerpc64=	fails to compile: ngram-count.cc: 'to_string' is not a member of 'std'
+BROKEN=		fails to build
 
 LIB_DEPENDS=	libfst.so:math/openfst
 

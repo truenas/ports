@@ -11,7 +11,12 @@ DISTNAME=	${PORTNAME}_${PORTVERSION:S,.,_,g}
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Advanced Open Source eCommerce Platform
 
-USES=		shebangfix
+EXPIRATION_DATE=	2018-03-07
+DEPRECATED=	Unmaintained upstream, all www files wrongly belongs to www user.
+
+IGNORE_WITH_PHP=	70 71 72
+
+USES=		shebangfix php
 SHEBANG_FILES=	admin/htmlarea/plugins/SpellChecker/spell-check-logic.cgi
 USE_PHP=	mysql
 WRKSRC=		${WRKDIR}/${PORTNAME}

@@ -3,10 +3,10 @@
 
 PORTNAME=	gottet
 PORTVERSION=	1.1.3
-PORTREVISION=	2
+PORTREVISION=	3
 DISTVERSIONSUFFIX=	-src
 CATEGORIES=	games
-MASTER_SITES=	http://gottcode.org/gottet/
+MASTER_SITES=	https://gottcode.org/gottet/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Tetris clone

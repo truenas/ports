@@ -2,8 +2,9 @@
 # $FreeBSD$
 
 PORTNAME=	openimageio
-PORTVERSION=	1.7.10
+PORTVERSION=	1.7.17
 DISTVERSIONPREFIX=	Release-
+PORTREVISION=	7
 CATEGORIES?=	graphics multimedia
 
 MAINTAINER?=	FreeBSD@Shaneware.biz
@@ -14,7 +15,7 @@ LICENSE=	BSD3CLAUSE
 LIB_DEPENDS=	libboost_thread.so:devel/boost-libs \
 		libImath.so:graphics/ilmbase \
 		libIlmImf.so:graphics/OpenEXR \
-		libpng16.so:graphics/png \
+		libpng.so:graphics/png \
 		libtiff.so:graphics/tiff \
 		libwebp.so:graphics/webp \
 		libhdf5.so:science/hdf5
@@ -107,9 +108,9 @@ post-patch:
 
 post-install:
 .if ${SLAVE_PORT} == no
-	${LN} -sf libOpenImageIO.so.1.6 \
+	${LN} -sf libOpenImageIO.so.1.7 \
 		${STAGEDIR}${PREFIX}/lib/libOpenImageIO.so.1
-	${LN} -sf libOpenImageIO_Util.so.1.6 \
+	${LN} -sf libOpenImageIO_Util.so.1.7 \
 		${STAGEDIR}${PREFIX}/lib/libOpenImageIO_Util.so.1
 .endif
 

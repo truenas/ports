@@ -2,34 +2,34 @@
 # $FreeBSD$
 
 PORTNAME=	davical
-PORTVERSION=	1.1.5
 DISTVERSIONPREFIX=	r
+DISTVERSION=	1.1.7
 CATEGORIES?=	www
 MASTER_SITES=	https://gitlab.com/${PORTNAME}-project/${PORTNAME}/repository/archive.tar.gz?ref=${DISTVERSIONPREFIX}${PORTVERSION}&dummy=/
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	lbdm@privacychain.ch
 COMMENT=	Simple CalDAV server using a postgres backend
 
 LICENSE=	GPLv2 LGPL21
 LICENSE_COMB=	multi
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-RUN_DEPENDS=	p5-DBI>=0:databases/p5-DBI \
+RUN_DEPENDS=	p5-DBD-Pg>=0:databases/p5-DBD-Pg \
+		p5-DBI>=0:databases/p5-DBI \
 		p5-YAML>=0:textproc/p5-YAML \
-		p5-DBD-Pg>=0:databases/p5-DBD-Pg \
-		${LOCALBASE}/bin/pwgen:sysutils/pwgen \
-		php-libawl>=0.54:devel/php-libawl
+		php-libawl>=0.54:devel/php-libawl \
+		${LOCALBASE}/bin/pwgen:sysutils/pwgen
 
-WRKSRC=		${WRKDIR}/${PORTNAME}-${DISTVERSIONPREFIX}${PORTVERSION}-7ccc7c449176475891ec50d5524928628df6f8d1
+WRKSRC=		${WRKDIR}/${PORTNAME}-${DISTVERSIONPREFIX}${PORTVERSION}-05397d635c3f218b850775223aa5dd705da9f91c
 
-NO_BUILD=	yes
-USES=		shebangfix pgsql php
-USE_PHP=	gettext iconv pcre pdo pdo_pgsql pgsql xml calendar
+USES=		pgsql php shebangfix
+USE_PHP=	calendar curl gettext iconv pcre pdo pdo_pgsql pgsql xml
 SHEBANG_FILES=	scripts/sync-remote-caldav.php
 SUB_FILES=	pkg-message httpd-davical.conf
-PORTDOCS=	README INSTALL davical_en_user_guide.odt translation.rst \
-		phpdoc.ini
+PORTDOCS=	README INSTALL davical_en_user_guide.odt phpdoc.ini \
+		translation.rst
 PORTEXAMPLES=	config
+NO_BUILD=	yes
 
 OPTIONS_DEFINE=	DOCS EXAMPLES
 
