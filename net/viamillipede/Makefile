@@ -2,7 +2,7 @@
 
 PORTNAME=	viamillipede
 PORTVERSION=	1.0
-CATEGORIES=	cad
+CATEGORIES=	net
 MASTER_SITES=	https://github.com/agokhale/viamillipede/
 
 MAINTAINER=	ash_ports@aeria.net
