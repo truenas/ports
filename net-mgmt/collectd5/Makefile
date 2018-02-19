@@ -3,7 +3,7 @@
 
 PORTNAME=	collectd
 PORTVERSION=	5.7.2
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	net-mgmt
 MASTER_SITES=	https://collectd.org/files/ \
 		http://collectd.org/files/
@@ -214,9 +214,10 @@ PING_LIB_DEPENDS=		liboping.so:net/liboping
 PING_CONFIGURE_ENABLE=		ping
 PING_CONFIGURE_WITH=		liboping=${LOCALBASE}
 
-PYTHON_USES=			python:2
+PYTHON_USES=			python:3.5+
 PYTHON_CONFIGURE_ENABLE=	python
 PYTHON_CONFIGURE_WITH=		python=${PYTHON_CMD}
+PYTHON_BUILD_DEPENDS=		python3>0:lang/python3
 
 RABBITMQ_LIB_DEPENDS=		librabbitmq.so:net/rabbitmq-c
 RABBITMQ_CONFIGURE_ENABLE=	rabbitmq
