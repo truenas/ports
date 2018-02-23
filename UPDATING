@@ -4199,7 +4199,7 @@ you update your ports collection, before attempting any port upgrades.
   "pkg del -f speex".
 
 20150101:
-  AFFECTS: users of net/unison and net/unison-nox11
+  AFFECTS: users of net/unison
   AUTHOR: madpilot@FreeBSD.org
 
   Unison has been upgraded to version 2.48, which uses a different wire
