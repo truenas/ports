@@ -12,7 +12,7 @@ LICENSE=	BSD
 
 USE_GITHUB= 	yes
 GH_ACCOUNT=	agokhale
-GH_TAGNAME=	v0.5
+GH_TAGNAME=	v0.6
 
 BINS=		viamillipede
 
