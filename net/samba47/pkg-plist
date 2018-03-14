@@ -861,6 +861,7 @@ man/man8/vfs_tsmsm.8.gz
 man/man8/vfs_unityed_media.8.gz
 man/man8/vfs_worm.8.gz
 man/man8/vfs_xattr_tdb.8.gz
+man/man8/vfs_zfsacl.8.gz
 man/man8/winbindd.8.gz
 sbin/ctdbd
 sbin/ctdbd_wrapper

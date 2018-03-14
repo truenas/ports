@@ -16,7 +16,7 @@ CONFLICTS?=	*samba3[2-6]-3.* samba4-4.0.* samba4[1-689]-4.* p5-Parse-Pidl-*
 
 SAMBA4_BASENAME=	samba
 SAMBA4_PORTNAME=	${SAMBA4_BASENAME}4
-SAMBA4_VERSION=		4.7.3
+SAMBA4_VERSION=		4.7.6
 SAMBA4_DISTNAME=	${SAMBA4_BASENAME}-${SAMBA4_VERSION:S|.p|pre|:S|.r|rc|:S|.t|tp|:S|.a|alpha|}
 
 NO_CHECKSUM=	yes
@@ -60,8 +60,10 @@ CONFIGURE_ARGS+=	--mandir="${MANPREFIX}/man" \
 # Flags
 CONFIGURE_ENV+=		PTHREAD_LDFLAGS="-lpthread"
 
+#USES=			cpe compiler waf pkgconfig perl5 python:2 \
+#			execinfo readline iconv shebangfix gettext zip
 USES=			cpe compiler waf pkgconfig perl5 python:2 \
-			execinfo readline iconv shebangfix gettext zip
+			readline iconv shebangfix gettext zip
 USE_PERL5=		build
 USE_LDCONFIG=		${SAMBA4_LIBDIR}
 WAF_CMD=		buildtools/bin/waf
@@ -103,13 +105,13 @@ RUN_DEPENDS+=		${PYTHON_PKGNAMEPREFIX}dnspython2>=1.9.4:dns/py-dnspython2
 # Using the bundled versions. Will make this conditional later.
 
 # talloc
-BUILD_DEPENDS+=		talloc>=2.1.10:devel/talloc
-RUN_DEPENDS+=		talloc>=2.1.10:devel/talloc
+BUILD_DEPENDS+=		talloc>=2.1.11:devel/talloc
+RUN_DEPENDS+=		talloc>=2.1.11:devel/talloc
 SAMBA4_BUNDLED_LIBS+=	!talloc
 
 # tevent
-BUILD_DEPENDS+=		tevent>=0.9.34:devel/tevent
-RUN_DEPENDS+=		tevent>=0.9.34:devel/tevent
+BUILD_DEPENDS+=		tevent>=0.9.36:devel/tevent
+RUN_DEPENDS+=		tevent>=0.9.36:devel/tevent
 SAMBA4_BUNDLED_LIBS+=	!tevent
 
 # tdb
@@ -118,8 +120,8 @@ RUN_DEPENDS+=		tdb>=1.3.15:databases/tdb
 SAMBA4_BUNDLED_LIBS+=	!tdb
 
 # ldb
-BUILD_DEPENDS+=		ldb>=1.2.2:databases/ldb
-RUN_DEPENDS+=		ldb>=1.2.2:databases/ldb
+BUILD_DEPENDS+=		ldb>=1.3.2:databases/ldb
+RUN_DEPENDS+=		ldb>=1.3.2:databases/ldb
 SAMBA4_BUNDLED_LIBS+=	!ldb
 
 # Don't use external libcom_err

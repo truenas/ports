@@ -1,8 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=		ldb
-PORTVERSION=		1.2.2
-PORTREVISION=		1
+PORTVERSION=		1.3.2
 PORTEPOCH=		0
 CATEGORIES=		databases
 MASTER_SITES=		SAMBA
@@ -32,9 +31,9 @@ CONFIGURE_ARGS+=	--mandir=${MANPREFIX}/man \
 OPTIONS_DEFINE=		MANPAGES
 MANPAGES_DESC=		Build and install manpages (requires textproc/docbook-xsl)
 
-BUILD_DEPENDS+=		talloc>=2.1.8:devel/talloc \
-			tevent>=0.9.31:devel/tevent \
-			tdb>=1.3.12,1:databases/tdb \
+BUILD_DEPENDS+=		talloc>=2.1.11:devel/talloc \
+			tevent>=0.9.36:devel/tevent \
+			tdb>=1.3.15:databases/tdb \
 			popt>=0:devel/popt
 RUN_DEPENDS:=		${BUILD_DEPENDS}
 
