@@ -11,6 +11,7 @@ MAINTAINER=	avg@icyb.net.ua
 COMMENT=	Stand-alone memory test for x86 architecture computers
 
 BUILD_DEPENDS=	gcc48:lang/gcc48
+CC=		gcc48
 
 LICENSE=	GPLv2
 
