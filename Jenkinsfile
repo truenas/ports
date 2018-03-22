@@ -18,4 +18,9 @@ node('FreeNAS-ISO') {
       junit 'results/**'
     }
   }
+  post { 
+    always { 
+        cleanWs()
+    }
+  }
 }
