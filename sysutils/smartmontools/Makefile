@@ -24,7 +24,8 @@ GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--disable-dependency-tracking \
 		--enable-sample \
 		--with-nvme-devicescan=yes \
-		--with-initscriptdir=${PREFIX}/etc/rc.d
+		--with-initscriptdir=${PREFIX}/etc/rc.d \
+		--with-scriptpath=/usr/local/bin:/usr/bin:/bin
 
 SUB_FILES=	pkg-message smart
 USE_RC_SUBR=	smartd
