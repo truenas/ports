@@ -22,7 +22,7 @@ CONFIGURE_ARGS=	--disable-dependency-tracking \
 		--with-gnupg=no \
 		--with-initscriptdir=${PREFIX}/etc/rc.d \
 		--with-nvme-devicescan=yes \
-		--with-update-smart-drivedb=no
+		--with-scriptpath=/usr/local/bin:/usr/bin:/bin
 
 SUB_FILES=	pkg-message smart
 
