@@ -7,7 +7,7 @@ CATEGORIES=	sysutils
 MASTER_SITES=	# none
 DISTFILES=	# none
 
-MAINTAINER=	tobik@FreeBSD.org
+MAINTAINER=	kevans@FreeBSD.org
 COMMENT=	Preview FreeBSD loader logos
 
 LICENSE=	BSD2CLAUSE
@@ -15,6 +15,7 @@ LICENSE=	BSD2CLAUSE
 BROKEN_armv6=		fails to link: testmain uses VFP register arguments, dict.o does not
 BROKEN_armv7=		fails to link: testmain uses VFP register arguments, dict.o does not
 BROKEN_mips64=		fails to link: relocation truncated to fit: R_MIPS_26 against `__assert@@FBSD_1.0'
+BROKEN_FreeBSD_12=	fails to build: ficl/Makefile line 13: Could not find bsd.stand.mk
 
 .if !exists(${SRC_BASE}/sys/Makefile)
 IGNORE=	requires kernel source files in ${SRC_BASE}
@@ -45,12 +46,14 @@ pre-patch:
 		-cf - . | ${TAR} -C ${WRKSRC}/.. -xf -
 
 post-patch:
-	${REINPLACE_CMD} 's|-I.*/\.\./common|-I${SRC_STAND}/common|g' \
+	@${REINPLACE_CMD} 's|-I.*/\.\./common|-I${SRC_STAND}/common|g' \
 		${WRKSRC}/Makefile
-
+	@if [ -f "${WRKSRC}/../defs.mk" ]; then \
+		${REINPLACE_CMD} '/jagged-little-pill/d' ${WRKSRC}/../defs.mk \
+	; fi
 # Make sure building on FreeBSD 11.0/i386 works. Calls to biospci_* are not
 # needed for this program.
-	${REINPLACE_CMD} 's|ifdef __i386__|if 0|g' ${WRKSRC}/loader.c
+	@${REINPLACE_CMD} 's|ifdef __i386__|if 0|g' ${WRKSRC}/loader.c
 
 do-install:
 	${INSTALL_PROGRAM} ${WRKSRC}/testmain ${STAGEDIR}${PREFIX}/bin/${PORTNAME}

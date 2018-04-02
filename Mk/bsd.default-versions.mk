@@ -38,12 +38,14 @@ BDB_DEFAULT?=		5
 FIREBIRD_DEFAULT?=	2.5
 # Possible values: flang (experimental), gfortran
 FORTRAN_DEFAULT?=	gfortran
-# Possible values: 3.0.0
+# Possible values: 3.0.4
 FPC_DEFAULT?=		3.0.4
 # Possible values: 4.9, 5, 6, 7
 GCC_DEFAULT?=		6
 # Possible values: 7, 8, 9, agpl
 GHOSTSCRIPT_DEFAULT?=	agpl
+# Possible values: 1.8.2
+LAZARUS_DEFAULT?=	1.8.2
 .if ${ARCH} == amd64
 # Possible values: c6, c6_64, c7
 LINUX_DEFAULT?=		c6_64
@@ -58,7 +60,7 @@ MYSQL_DEFAULT?=		5.6
 # Possible values: 5.22, 5.24, 5.26, devel
 .if !exists(${LOCALBASE}/bin/perl) || (!defined(_PORTS_ENV_CHECK) && \
     defined(PACKAGE_BUILDING))
-PERL5_DEFAULT?=		5.24
+PERL5_DEFAULT?=		5.26
 .elif !defined(PERL5_DEFAULT)
 # There's no need to replace development versions, like "5.23" with "devel"
 # because 1) nobody is supposed to use it outside of poudriere, and 2) it must

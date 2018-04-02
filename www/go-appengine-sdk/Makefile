@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	go-appengine-sdk
-DISTVERSION=	1.9.62
+DISTVERSION=	1.9.64
 CATEGORIES=	www devel
 MASTER_SITES=	https://storage.googleapis.com/appengine-sdks/featured/
 DISTNAME=	${PORTNAME:S,-,_,g}_linux_amd64-${PORTVERSION}
@@ -9,15 +9,11 @@ DISTNAME=	${PORTNAME:S,-,_,g}_linux_amd64-${PORTVERSION}
 MAINTAINER=	dg@syrec.org
 COMMENT=	App Engine SDK for Go
 
-LICENSE=	APACHE20 BSD3CLAUSE GPLv2 LGPL21 MIT MPL11 PSFL
+# The actual license for this port is "APACHE20 and BSD3CLAUSE and MIT and PSFL and (GPLv2+ or LGPL21+ or MPL11)".
+LICENSE=	APACHE20 BSD3CLAUSE GPLv2+ LGPL21+ MIT MPL11 PSFL
 LICENSE_COMB=	multi
-LICENSE_FILE_APACHE20=		${WRKSRC}/LICENSE
 LICENSE_FILE_BSD3CLAUSE=	${WRKSRC}/LICENSE
-LICENSE_FILE_GPLv2=		${WRKSRC}/LICENSE
-LICENSE_FILE_LGPL21=		${WRKSRC}/LICENSE
 LICENSE_FILE_MIT=		${WRKSRC}/LICENSE
-LICENSE_FILE_MPL11=		${WRKSRC}/LICENSE
-LICENSE_FILE_PSFL=		${WRKSRC}/LICENSE
 
 ONLY_FOR_ARCHS=	amd64 i386
 
@@ -54,6 +50,7 @@ PORTEXAMPLES=	*
 do-build:
 	@for R in ${GAEGOROOTS}; do \
 		(cd ${WRKSRC}/$${R}/src && \
+			${SETENV} ${MAKE_ENV} \
 			GOROOT_BOOTSTRAP=${LOCALBASE}/go \
 			GOOS=${OPSYS:tl} GOARCH=${GOARCH} \
 			GO386=${GO386} \
@@ -67,7 +64,7 @@ do-build:
 	@cd ${WRKSRC} && \
 		for S in ${GAESCRIPTS} goapp; do \
 			${ECHO} "#!/bin/sh" >> $${S%.py}-go; \
-			${ECHO} "${LOCALBASE}/bin/python2.7 ${DATADIR}/$${S} \$$*" >> $${S%.py}-go; \
+			${ECHO} "${PYTHON_CMD} ${DATADIR}/$${S} \$$*" >> $${S%.py}-go; \
 		done
 
 do-install:

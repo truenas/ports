@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	rust
-PORTVERSION?=	1.24.0
+PORTVERSION?=	1.24.1
+PORTREVISION?=
 CATEGORIES=	lang
 MASTER_SITES=	http://static.rust-lang.org/dist/:src \
 		LOCAL/dumbbell/rust:rust_bootstrap \
@@ -12,7 +13,7 @@ MASTER_SITES=	http://static.rust-lang.org/dist/:src \
 		https://s3.amazonaws.com/rust-lang-ci/cargo-builds/:cargo_bootstrap \
 		LOCAL/marino:bootstrap
 DISTNAME?=	${PORTNAME}c-${PORTVERSION}-src
-DISTFILES?=	${DISTNAME}${EXTRACT_SUFX}:src \
+DISTFILES?=	${NIGHTLY_SUBDIR}${DISTNAME}${EXTRACT_SUFX}:src \
 		${RUSTC_BOOTSTRAP}:rust_bootstrap \
 		${RUST_STD_BOOTSTRAP}:rust_bootstrap \
 		${CARGO_BOOTSTRAP}:cargo_bootstrap
@@ -42,6 +43,7 @@ ONLY_FOR_ARCHS_REASON=	requires prebuilt bootstrap compiler
 #CONFLICTS_BUILD+=	${PKGBASE}
 CONFLICTS_INSTALL?=	rust-nightly
 
+# See WRKSRC/src/stage0.txt for this date and version values.
 BOOTSTRAPS_DATE?=		2018-01-04
 
 RUST_BOOTSTRAP_VERSION?=	1.23.0
@@ -90,8 +92,13 @@ PLIST_FILES=		lib/rustlib/components \
 			lib/rustlib/rust-installer-version
 
 .include <bsd.port.pre.mk>
-.if ${OPSYS} == FreeBSD && ${OSVERSION} >= 1200031
-EXTRA_PATCHES+=		${PATCHDIR}/extra-patch-ino64
+# ABI patch needed to address ino64 before fixes upstreamed.
+# https://github.com/rust-lang/rust/issues/42681
+.if ${OPSYS} == FreeBSD && ${OSVERSION} >= 1200031 && !defined(NIGHTLY_DATE)
+NEED_ABI_PATCH=		1
+EXTRA_PATCHES+=		${PATCHDIR}/extra-patch-abi
+.else
+NEED_ABI_PATCH=		0
 .endif
 
 X_PY_ENV=	HOME="${WRKDIR}" \
@@ -133,24 +140,24 @@ post-extract:
 		${WRKSRC}/build/cache/${BOOTSTRAPS_DATE_${ARCH}:U${BOOTSTRAPS_DATE}}
 	${LN} -sf ${DISTDIR}/${DIST_SUBDIR}/${RUSTC_BOOTSTRAP} \
 		${WRKSRC}/build/cache/${BOOTSTRAPS_DATE_${ARCH}:U${BOOTSTRAPS_DATE}}
-.if ${OPSYS} != FreeBSD || ${OSVERSION} < 1200031
+.if ${NEED_ABI_PATCH} == 0
 	${LN} -sf ${DISTDIR}/${DIST_SUBDIR}/${RUST_STD_BOOTSTRAP} \
 		${WRKSRC}/build/cache/${BOOTSTRAPS_DATE_${ARCH}:U${BOOTSTRAPS_DATE}}
 .endif
 	${LN} -sf ${DISTDIR}/${DIST_SUBDIR}/${CARGO_BOOTSTRAP} \
 		${WRKSRC}/build/cache/${BOOTSTRAPS_DATE_${ARCH}:U${BOOTSTRAPS_DATE}}
-.if ${OPSYS} == FreeBSD && ${OSVERSION} >= 1200031
+.if ${NEED_ABI_PATCH} == 1
 	${TAR} -x -C ${WRKSRC} -f ${DISTDIR}/${DIST_SUBDIR}/${RUST_STD_BOOTSTRAP}
 	${CC} ${CFLAGS} -fPIC -c -o ${WRKSRC}/old_fstat.o ${FILESDIR}/old_fstat.c
 	(set -ex; cd ${WRKSRC}; \
 	 libstd="$$(echo "${RUST_STD_DIR}/rust-std-${RUST_TARGET}/lib/rustlib/${RUST_TARGET}/lib/"libstd-*.rlib)"; \
 	 hash="$$(basename "$$libstd" .rlib | ${SED} 's/^libstd-//')"; \
-	 std_o="$$(${AR} t "$$libstd" | ${GREP} -E "^std-$$hash.*\.o$$")"; \
+	 std_o="$$(${AR} t "$$libstd" | ${GREP} -E "^std-$$hash.*\.o$$" | ${HEAD} -n 1)"; \
 	 ${AR} x "$$libstd" "$$std_o"; \
 	 ${LD} -r -o std.xx.o "$$std_o" old_fstat.o; \
 	 ${MV} std.xx.o "$$std_o"; \
 	 ${AR} r "$$libstd" "$$std_o")
-	${TAR} -cz --format=ustar -C ${WRKSRC} -f ${WRKSRC}/rust-std.tar.gz ${RUST_STD_DIR}
+	${TAR} -c --format=ustar -C ${WRKSRC} -f ${WRKSRC}/rust-std.tar.gz ${RUST_STD_DIR}
 	${MV} ${WRKSRC}/rust-std.tar.gz ${WRKSRC}/build/cache/${RUST_STD_BOOTSTRAP}
 .endif
 
@@ -197,6 +204,12 @@ post-patch:
 		done; \
 	done
 
+.if defined(WITH_CCACHE_BUILD) && !defined(NO_CCACHE)
+CCACHE_VALUE=	"${CCACHE_WRAPPER_PATH:C,/libexec/ccache$,,}/bin/ccache"
+.else
+CCACHE_VALUE=	false
+.endif
+
 do-configure:
 	${SED} -E \
 		-e 's,%PREFIX%,${PREFIX},' \
@@ -205,6 +218,7 @@ do-configure:
 		-e 's,%PYTHON_CMD%,${PYTHON_CMD},' \
 		-e 's,%CHANNEL%,${RUST_CHANNEL},' \
 		-e 's,%TARGET%,${RUST_TARGET},' \
+		-e 's,%CCACHE%,${CCACHE_VALUE},' \
 		< ${FILESDIR}/config.toml \
 		> ${WRKSRC}/config.toml
 # The FreeBSD 10 autotools fix may modify some files just before
@@ -310,6 +324,7 @@ post-install:
 # but they contain non-object files which make strip(1) unhappy.
 	@${STRIP_CMD} \
 		${STAGEDIR}${PREFIX}/bin/cargo \
+		${STAGEDIR}${PREFIX}/bin/cargo-fmt \
 		${STAGEDIR}${PREFIX}/bin/rls \
 		${STAGEDIR}${PREFIX}/bin/rustc \
 		${STAGEDIR}${PREFIX}/bin/rustdoc \

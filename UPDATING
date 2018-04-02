@@ -5,6 +5,117 @@ they are unavoidable.
 You should get into the habit of checking this file for changes each time
 you update your ports collection, before attempting any port upgrades.
 
+20180401:
+  AFFECTS: users of mail/dovecot and mail/dovecot-pigeonhole
+  AUTHOR: adamw@FreeBSD.org
+
+  Dovecot has been upgraded to 2.3.1, and pigeonhole to 0.5.1. Most
+  existing dovecot installations MUST be modified for 2.3, but for
+  most users the modifications are simple.
+
+  Modify your Dovecot conf.d/ files before spinning up 2.3.1. The
+  upgrading instructions are detailed here:
+
+  	https://wiki2.dovecot.org/Upgrading/2.3
+
+20180330:
+  AFFECTS: users of lang/perl5*
+  AUTHOR: mat@FreeBSD.org
+
+  The default Perl version has been switched to Perl 5.26.  If you are using
+  binary packages to upgrade your system, you do not have anything to do, pkg
+  upgrade will do the right thing.  For the other people, follow the
+  instructions in entry 20161103, it should still be the same.
+
+20180325:
+  AFFECTS: users of net/samba48
+  AUTHOR: timur@FreeBSD.org
+
+  New Samba 4.8 upgrades the relevant database files in the way, that doesn't
+  allow easy fallback to the previous versions of Samba. So, before upgrading
+  to the new version make a backup of the /var/db/samba4/ directory.
+
+  Full list of changes, new features and upgrade procedure is available at:
+
+        https://www.samba.org/samba/history/samba-4.8.0.html
+
+  Please, read it carefully before upgrading!.
+
+20180320:
+  AFFECTS: users of x11/sterm
+  AUTHOR: pkubaj@anongoth.pl
+
+  The user-defined options in config.h have changed.  You should
+  compare your config.h file with the default one and change
+  appropriately.
+
+20180319:
+  AFFECTS: users of dns/dnsmasq
+  AUTHOR: mandree@FreeBSD.org
+
+  Note that with dnsmasq 2.79, some parts of the interface have changed in an
+  incompatible way versus previous versions. This comprises changed recursion
+  behaviour, signature support, a change for SIGINT (vs. SIGHUP) behaviour.
+
+  Note especially that dnsmasq will no longer answer non-recursive queries
+  unless it is marked authoritative!  Be sure to see the manual page for the
+  various --auth-* options, such as --auth-zone.
+
+  Please see the CHANGELOG that ships with dnsmasq for details.
+
+20180317:
+  AFFECTS: users of multimedia/plexpy
+  AUTHOR: feld@FreeBSD.org
+
+  Plexpy project has been renamed to Tautulli due to copyright
+  infringement. The software also has received a major update. Please
+  see the following upgrade instructions:
+
+  - Install multimedia/tautulli
+  - Create /var/db/tautulli, owned by the user you will run the daemon as
+    (default: nobody).
+  - Copy your config.ini and plexpy.db to /var/db/tautulli
+  - Enable the service and start the software
+
+   Tautulli should automatically find your database file, rename it to
+   tautulli.db, and perform the required updates.
+
+20180310:
+  AFFECTS: users of security/openssl
+  AUTHOR: brnrd@FreeBSD.org
+
+  The EXPCIPHERS option has been removed from the security/openssl port.
+  Use the security/openssl-unsafe port if you require this feature.
+
+20180309:
+  AFFECTS: users of net/unison
+  AUTHOR: madpilot@FreeBSD.org
+
+  Unison has been upgraded to version 2.51, which uses a different
+  wire protocol than 2.48 did.  In order to support synchronization
+  with other computers where Unison is still at version 2.48, a new
+  port net/unison248 has been created.  It provides unison248 and,
+  for the x11 flavor, also unison248-text.  This unison248 port can
+  be installed in parallel with the existing net/unison port.
+
+20180308:
+  AFFECTS: */php* */pecl* */pear*
+  AUTHOR: mat@FreeBSD.org
+
+  PHP extensions and modules have been flavored.
+
+  People using Poudriere 3.2+ and binary packages do not have to do anything.
+
+  PHP modules and extensions may have change their names from php5- or php7- to
+  fully versionned phpXY-.
+  PECL extensions and PEAR modules package names have changed from pecl- and
+  pear- to phpXX-pecl and phpXX-pear-.
+
+  For other people, to build the PHP 7.2 version of, for example,
+  databases/php-memcached, you need to run:
+
+    # make FLAVOR=php72 install
+
 20180220:
   AFFECTS: users of www/nextcloud
   AUTHOR: brnrd@FreeBSD.org
@@ -25,7 +136,7 @@ you update your ports collection, before attempting any port upgrades.
 
   to the CONFIG array before the updater will run.
 
-20180214
+20180214:
   AFFECTS: users of lang/ruby23
   AUTHOR: swills@FreeBSD.org
 
@@ -140,8 +251,16 @@ you update your ports collection, before attempting any port upgrades.
      # make FLAVOR=nox install
      # make FLAVOR=devel_full
 
+  An alternative to the default flavor, full, for editors/emacs and
+  editors/emacs-devel can be set in make.conf.  For example, to specify nox as
+  the default flavor for both ports, use
+
+     .if ${.CURDIR:M*/editors/emacs*}
+     FLAVOR?=nox
+     .endif
+
   For ports using Emacs, an alternative to the default flavor, full,
-  can be set in make.conf.  For example, to automatically depend on
+  can be also be set in make.conf.  For example, to automatically depend on
   emacs-nox, use
 
      DEFAULT_VERSIONS+=emacs=nox

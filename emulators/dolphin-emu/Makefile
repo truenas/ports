@@ -3,7 +3,7 @@
 
 PORTNAME=	dolphin-emu
 PORTVERSION=	5.0
-PORTREVISION=	14
+PORTREVISION=	17
 CATEGORIES=	emulators
 
 MAINTAINER=	martymac@FreeBSD.org
@@ -31,6 +31,7 @@ LIB_DEPENDS=	libpulse.so:audio/pulseaudio \
 		libcurl.so:ftp/curl \
 		libgtest.so:devel/googletest
 
+LLD_UNSAFE=	yes
 USES=		cmake compiler:c++11-lib iconv openal pkgconfig
 
 USE_GITHUB=	yes

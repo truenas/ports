@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	vault
-PORTVERSION=	0.9.3
+PORTVERSION=	0.9.6
 DISTVERSIONPREFIX=	v
 CATEGORIES=	security
 
@@ -16,7 +16,7 @@ BUILD_DEPENDS=	go>=1.9:lang/go
 USE_GITHUB=	yes
 GH_ACCOUNT=	hashicorp
 GH_SUBDIR=	src/github.com/${GH_ACCOUNT}/${PORTNAME}
-COMMIT_ID=	5acd6a21d5a69ab49d0f7c0bf540123a9b2c696d
+COMMIT_ID=	7e1fbde40afee241f81ef08700e7987d86fc7242
 
 USE_RC_SUBR=	vault
 
@@ -27,7 +27,7 @@ PLIST_FILES=	bin/${PORTNAME}
 
 do-build:
 	@cd ${WRKSRC}; \
-		${SETENV} ${BUILD_ENV} CGO_ENABLED=0 GOPATH=${WRKSRC} \
+		${SETENV} ${MAKE_ENV} ${BUILD_ENV} CGO_ENABLED=0 GOPATH=${WRKSRC} \
 		go build \
 		-ldflags "\
 		-X github.com/hashicorp/vault/version.Version=${PORTVERSION} \

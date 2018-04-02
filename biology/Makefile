@@ -7,6 +7,7 @@
     SUBDIR += artemis
     SUBDIR += avida
     SUBDIR += babel
+    SUBDIR += bamtools
     SUBDIR += bcftools
     SUBDIR += bedtools
     SUBDIR += biococoa
@@ -95,6 +96,7 @@
     SUBDIR += pycogent
     SUBDIR += pyfasta
     SUBDIR += python-nexus
+    SUBDIR += rainbow
     SUBDIR += recombine
     SUBDIR += ruby-bio
     SUBDIR += rubygem-bio
@@ -108,6 +110,7 @@
     SUBDIR += sim4
     SUBDIR += slclust
     SUBDIR += ssaha
+    SUBDIR += stacks
     SUBDIR += tRNAscan-SE
     SUBDIR += t_coffee
     SUBDIR += tinker

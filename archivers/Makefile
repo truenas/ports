@@ -8,7 +8,7 @@
     SUBDIR += amigadepacker
     SUBDIR += arc
     SUBDIR += arj
-    SUBDIR += ark
+    SUBDIR += ark-kde4
     SUBDIR += atool
     SUBDIR += bicom
     SUBDIR += brotli
@@ -196,7 +196,6 @@
     SUBDIR += py-zstd
     SUBDIR += qpress
     SUBDIR += quazip
-    SUBDIR += quazip-qt5
     SUBDIR += rar
     SUBDIR += rox-archive
     SUBDIR += rpm2cpio

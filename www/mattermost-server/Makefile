@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	mattermost-server
-PORTVERSION=	4.7.1
+PORTVERSION=	4.8.0
 DISTVERSIONPREFIX=	v
 CATEGORIES=	www
 
@@ -32,8 +32,6 @@ MATTERMOSTD_GROUP=	mattermost
 USERS=		${MATTERMOSTD_USER}
 GROUPS=		${MATTERMOSTD_GROUP}
 
-.include <bsd.port.pre.mk>
-
 pre-build:
 	@${MKDIR} ${WRKSRC}/src/github.com/${GH_ACCOUNT_DEFAULT}/${PORTNAME}
 	@cd ${WRKSRC} && \
@@ -43,15 +41,13 @@ pre-build:
 
 do-build:
 	@cd ${WRKSRC}/src/github.com/${GH_ACCOUNT_DEFAULT}/${GH_PROJECT} && \
-		${SETENV} GOPATH=${WRKSRC} go install -ldflags="${GO_LDFLAGS}" ./...
+		${SETENV} ${MAKE_ENV} GOPATH=${WRKSRC} go install -ldflags="${GO_LDFLAGS}" ./...
 
 do-install:
 	${INSTALL_PROGRAM} ${WRKSRC}/bin/platform ${STAGEDIR}${PREFIX}/bin/mattermostd
 	${MKDIR} ${STAGEDIR}${PREFIX}/etc/mattermost
-	${CP} ${WRKSRC}/config/default.json ${STAGEDIR}${PREFIX}/etc/mattermost/config.json.sample
+	${INSTALL_DATA} ${WRKSRC}/config/default.json ${STAGEDIR}${PREFIX}/etc/mattermost/config.json.sample
 	${MKDIR} ${STAGEDIR}${WWWDIR}
-	${CP} -R ${WRKSRC}/fonts ${STAGEDIR}${WWWDIR}
-	${CP} -R ${WRKSRC}/i18n ${STAGEDIR}${WWWDIR}
-	${CP} -R ${WRKSRC}/templates ${STAGEDIR}${WWWDIR}
+	cd ${WRKSRC} && ${COPYTREE_SHARE} 'fonts i18n templates' ${STAGEDIR}${WWWDIR}
 
-.include <bsd.port.post.mk>
+.include <bsd.port.mk>

@@ -2,10 +2,10 @@
 # $FreeBSD$
 
 PORTNAME=	go
-PORTVERSION=	1.10
+PORTVERSION=	1.10.1
 PORTEPOCH=	1
 CATEGORIES=	lang
-MASTER_SITES=	http://golang.org/dl/
+MASTER_SITES=	https://golang.org/dl/
 DISTNAME=	go${PORTVERSION}.src
 
 MAINTAINER=	jlaffaye@FreeBSD.org

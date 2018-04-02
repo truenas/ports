@@ -3,7 +3,7 @@
 PORTNAME=	bhyve-vm-goagent
 PORTVERSION=	1.0
 DISTVERSIONPREFIX=	v
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	devel sysutils
 
 MAINTAINER=	araujo@FreeBSD.org
@@ -11,7 +11,7 @@ COMMENT=	Agent developed in Go that runs inside guest vm
 
 LICENSE=	BSD2CLAUSE
 
-NO_PACKAGE=	should be recompiled for a particular FreeBSD arch
+BROKEN=		attempts to download dependencies during build
 
 ONLY_FOR_ARCHS=	amd64 i386
 
@@ -21,7 +21,7 @@ USES=		go
 GO_PKGNAME=	github.com/${GH_ACCOUNT}/${PORTNAME}
 
 USE_GITHUB=	yes
-GH_ACCOUNT=	araujobsd
+GH_ACCOUNT=	freenas
 GH_TAGNAME=	a640870c90752e01af30e394ce7c8157f4371a1b
 GH_TUPLE=	gorilla:websocket:v1.2.0:websocket/src/github.com/gorilla/websocket \
 		shirou:gopsutil:v2.17.12:gopsutil/src/github.com/shirou/gopsutil

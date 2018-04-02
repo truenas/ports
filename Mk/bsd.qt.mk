@@ -107,7 +107,8 @@ USES+=			pkgconfig
 # Other ports from other Qt modules will automatically build examples and
 # tests if the directories exist because of mkspecs/features/qt_parts.prf.
 EXTRACT_AFTER_ARGS?=	${DISTNAME:S,$,/examples,:S,^,--exclude ,} \
-				${DISTNAME:S,$,/tests,:S,^,--exclude ,}
+						${DISTNAME:S,$,/tests,:S,^,--exclude ,} \
+						--no-same-owner --no-same-permissions
 . endif # ! ${_QT_VERSION:M4*}
 
 CONFIGURE_ENV+=	MAKE="${MAKE:T}"
@@ -313,9 +314,12 @@ CONFIGURE_ARGS+=--with-qt-includes=${QT_INCDIR} \
 _USE_QT_ALL=	assistant dbus declarative designer doc gui help \
 				imageformats l10n linguist linguisttools multimedia \
 				network opengl pixeltool qdbusviewer qmake script \
-				scripttools sql sql-ibase sql-mysql sql-odbc sql-pgsql \
+				scripttools sql sql-mysql sql-odbc sql-pgsql \
 				sql-sqlite2 sql-sqlite3 svg testlib webkit webengine \
 				xml xmlpatterns
+.if ${ARCH} == amd64 || ${ARCH} == i386
+_USE_QT_ALL+=	sql-ibase
+.endif
 
 _USE_QT4_ONLY=	accessible assistant-adp assistantclient clucene codecs-cn codecs-jp \
 				codecs-kr codecs-tw corelib demo graphicssystems-opengl \

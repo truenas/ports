@@ -2,11 +2,11 @@
 # $FreeBSD$
 
 PORTNAME=	smtube
-PORTVERSION=	18.1.0
+PORTVERSION=	18.3.0
 CATEGORIES=	multimedia
 MASTER_SITES=	SF/smtube/SMTube/${PORTVERSION}/
 
-MAINTAINER=	pawel@FreeBSD.org
+MAINTAINER=	multimedia@FreeBSD.org
 COMMENT=	SMPlayer YouTube browser
 
 LICENSE=	GPLv2

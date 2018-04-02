@@ -3,6 +3,7 @@
 PORTNAME=		crystal
 DISTVERSIONPREFIX=	v
 DISTVERSION=		0.24.1
+PORTREVISION=		1
 CATEGORIES=		lang
 MASTER_SITES=		https://unrelentingtech.s3.dualstack.eu-west-1.amazonaws.com/crystal/:bootstrap
 DISTFILES=		${BOOTSTRAP_PATH}:bootstrap
@@ -31,7 +32,7 @@ GH_ACCOUNT=	crystal-lang
 
 MAKE_ARGS=	SHELL=sh \
 		LLVM_CONFIG="${LOCALBASE}/bin/llvm-config${LLVM_VERSION}" \
-		FLAGS="--release --no-debug" \
+		FLAGS="--release --no-debug --progress" \
 		EXPORTS='CRYSTAL_CONFIG_PATH="lib:${PREFIX}/lib/${PORTNAME}"' \
 		CRYSTAL_CACHE_DIR="${WRKDIR}/cache"
 
@@ -45,9 +46,9 @@ OPTIONS_SUB=		yes
 .include <bsd.port.options.mk>
 
 .if ${OSVERSION} >= 1200000
-BOOTSTRAP_PATH=	crystal-0.24.1-freebsd12.0-1
+BOOTSTRAP_PATH=	crystal-0.24.1-freebsd12.0-2
 .else
-BOOTSTRAP_PATH=	crystal-0.24.1-freebsd11.1
+BOOTSTRAP_PATH=	crystal-0.24.1-freebsd11.1-2
 .endif
 .if ${OSVERSION} < 1100000
 IGNORE=		not supported on 10.x or older

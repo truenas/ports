@@ -49,6 +49,7 @@
     SUBDIR += portell
     SUBDIR += portest
     SUBDIR += portfind
+    SUBDIR += portgraph
     SUBDIR += portless
     SUBDIR += portlint
     SUBDIR += portmaster

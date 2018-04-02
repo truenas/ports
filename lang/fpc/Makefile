@@ -23,6 +23,7 @@ COMMENT?=	Free Pascal compiler with Turbo and Delphi
 
 USES=		gmake iconv
 ONLY_FOR_ARCHS=	i386 amd64
+LLD_UNSAFE=	yes	# Links object with invalid section header alignment
 BOOTVER=	3.0.4
 MANVER=		3.0.4
 
@@ -36,12 +37,12 @@ FPCSRCDIR=	${PORTNAME}-${PORTVERSION}
 .if ${ARCH} == "i386"
 PPNAME=		ppc386
 FPC_ARCH=	i386
-PLIST_SUB=	FPC_I386="" \
+PLIST_SUB+=	FPC_I386="" \
 		FPC_AMD64="@comment "
 .elif ${ARCH} == "amd64"
 PPNAME=		ppcx64
 FPC_ARCH=	x86_64
-PLIST_SUB=	FPC_I386="@comment " \
+PLIST_SUB+=	FPC_I386="@comment " \
 		FPC_AMD64=""
 .endif
 

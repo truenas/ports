@@ -2,7 +2,7 @@
 
 PORTNAME=	llvm
 DISTVERSION=	3.8.1
-PORTREVISION=	9
+PORTREVISION=	10
 CATEGORIES=	devel lang
 MASTER_SITES=	http://llvm.org/${PRE_}releases/${LLVM_RELEASE}/${RCDIR}
 DISTNAME=	${PORTNAME}-${DISTVERSION}.src
@@ -272,10 +272,7 @@ COMMANDS+=	lld
 PORTDOCS+=	lld
 .endif
 
-.if ${PYTHON_REL} < 3400
-LLDB_BUILD_DEPENDS+= \
-	${PYTHON_PKGNAMEPREFIX}enum34>0:devel/py-enum34
-.endif
+LLDB_BUILD_DEPENDS+= ${PY_ENUM34}
 
 .if ${PORT_OPTIONS:MLLDB} && ${PYTHON_REL} >= 3000
 BROKEN=	LLDB does not build with Python 3
@@ -316,7 +313,7 @@ post-patch-COMPILER_RT-on:
 post-build-COMPILER_RT-on:
 	${MKDIR} ${WRKDIR}/compiler-rt-build
 	cd ${WRKDIR}/compiler-rt-build && \
-	${CMAKE_BIN} ${CMAKE_ARGS} \
+	${SETENV} ${CONFIGURE_ENV} ${CMAKE_BIN} ${CMAKE_ARGS} \
 	    -DLLVM_CONFIG_PATH=${CONFIGURE_WRKSRC}/bin/llvm-config \
 	    ${WRKSRC_compiler_rt} && \
 	${MAKE_ENV} ${MAKE_CMD}

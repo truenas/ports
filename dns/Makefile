@@ -37,6 +37,7 @@
     SUBDIR += dnscheck
     SUBDIR += dnscheckengine
     SUBDIR += dnscrypt-proxy
+    SUBDIR += dnscrypt-proxy2
     SUBDIR += dnscrypt-wrapper
     SUBDIR += dnsdbck
     SUBDIR += dnsdbq
@@ -63,6 +64,8 @@
     SUBDIR += doc
     SUBDIR += dq
     SUBDIR += drool
+    SUBDIR += dsc
+    SUBDIR += dsp
     SUBDIR += dynip
     SUBDIR += erlang-idna
     SUBDIR += ez-ipupdate
@@ -120,6 +123,7 @@
     SUBDIR += openresolv
     SUBDIR += p5-AnyEvent-CacheDNS
     SUBDIR += p5-AnyEvent-DNS-EtcHosts
+    SUBDIR += p5-App-DSC-DataTool
     SUBDIR += p5-BIND-Conf_Parser
     SUBDIR += p5-BIND-Config-Parser
     SUBDIR += p5-DNS-Config
@@ -127,6 +131,7 @@
     SUBDIR += p5-DNS-Ldns
     SUBDIR += p5-DNS-Zone
     SUBDIR += p5-DNS-ZoneParse
+    SUBDIR += p5-DSC
     SUBDIR += p5-Data-Validate-Domain
     SUBDIR += p5-IO-Async-Resolver-DNS
     SUBDIR += p5-Mozilla-PublicSuffix
@@ -184,6 +189,7 @@
     SUBDIR += py-dnspython2
     SUBDIR += py-easyzone
     SUBDIR += py-idna
+    SUBDIR += py-idna_ssl
     SUBDIR += py-idnkit2
     SUBDIR += py-ldns
     SUBDIR += py-namebench
