@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	PETSc
-DISTVERSION=	3.8.3
+DISTVERSION=	3.8.4
 CATEGORIES=	science devel
 MASTER_SITES=	http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/
 DISTNAME=	${PORTNAME:tl}-${DISTVERSION}

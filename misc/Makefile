@@ -11,7 +11,7 @@
     SUBDIR += amfm
     SUBDIR += ansiweather
     SUBDIR += apparix
-    SUBDIR += artikulate
+    SUBDIR += artikulate-kde4
     SUBDIR += asbutton
     SUBDIR += asr-manpages
     SUBDIR += astrolog
@@ -238,24 +238,25 @@
     SUBDIR += kdeutils-kde4
     SUBDIR += kenny
     SUBDIR += kf5-purpose
-    SUBDIR += kgeography
-    SUBDIR += klettres
+    SUBDIR += kgeography-kde4
+    SUBDIR += klettres-kde4
     SUBDIR += krecipes-kde4
-    SUBDIR += ktouch
-    SUBDIR += kwordquiz
+    SUBDIR += ktouch-kde4
+    SUBDIR += kwordquiz-kde4
     SUBDIR += latex-mk
     SUBDIR += lazyread
     SUBDIR += lc
     SUBDIR += lesspipe
     SUBDIR += libeatmydata
     SUBDIR += libisocodes
-    SUBDIR += libkdeedu
+    SUBDIR += libkdeedu-kde4
     SUBDIR += liblxi
     SUBDIR += libmetalink
     SUBDIR += libpostal
     SUBDIR += libpredict
     SUBDIR += libpri
     SUBDIR += libsupertone
+    SUBDIR += libsweep-lidar
     SUBDIR += libutf
     SUBDIR += lifelines
     SUBDIR += lingoteach
@@ -360,7 +361,7 @@
     SUBDIR += p5-Tie-DxHash
     SUBDIR += p5-Zen-Koans
     SUBDIR += pantry
-    SUBDIR += parley
+    SUBDIR += parley-kde4
     SUBDIR += pastebinit
     SUBDIR += patchutils
     SUBDIR += pauker
@@ -383,6 +384,8 @@
     SUBDIR += proxyper
     SUBDIR += pspresent
     SUBDIR += ptsort
+    SUBDIR += pubs
+    SUBDIR += py-YABT
     SUBDIR += py-cinder
     SUBDIR += py-colorbrewer
     SUBDIR += py-crudini
@@ -393,10 +396,12 @@
     SUBDIR += py-pexpect
     SUBDIR += py-powerline-status
     SUBDIR += py-progressbar
+    SUBDIR += py-progressbar2
     SUBDIR += py-progressbar231
     SUBDIR += py-pyfiglet
     SUBDIR += py-pyprind
     SUBDIR += py-python-geohash
+    SUBDIR += py-python-utils
     SUBDIR += py-qt4-demo
     SUBDIR += py-qt4-doc
     SUBDIR += py-qt5-demo
@@ -479,7 +484,6 @@
     SUBDIR += tkregexp
     SUBDIR += tkrunit
     SUBDIR += toilet
-    SUBDIR += tpp
     SUBDIR += translate
     SUBDIR += trueos-core
     SUBDIR += trueos-desktop
@@ -509,6 +513,11 @@
     SUBDIR += viz
     SUBDIR += whichman
     SUBDIR += window
+<<<<<<< HEAD
+=======
+    SUBDIR += with
+    SUBDIR += wmScoreBoard
+>>>>>>> dcb47a6ceacac1bdcf99d4f9eb42ab347e44ac8a
     SUBDIR += wmcalendar
     SUBDIR += wmjulia
     SUBDIR += wmpal

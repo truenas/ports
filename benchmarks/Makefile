@@ -3,6 +3,7 @@
 
     COMMENT = Benchmarking tools
 
+    SUBDIR += apib
     SUBDIR += autobench
     SUBDIR += blogbench
     SUBDIR += bombardier
@@ -14,7 +15,6 @@
     SUBDIR += dbs
     SUBDIR += dhrystone
     SUBDIR += dkftpbench
-    SUBDIR += expedite
     SUBDIR += fhourstones
     SUBDIR += filebench
     SUBDIR += fio
@@ -88,6 +88,7 @@
     SUBDIR += typometer
     SUBDIR += ubench
     SUBDIR += unixbench
+    SUBDIR += uperf
     SUBDIR += vegeta
     SUBDIR += webbench
     SUBDIR += wrk

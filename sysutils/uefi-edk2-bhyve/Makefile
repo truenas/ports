@@ -2,7 +2,6 @@
 
 PORTNAME=	uefi-edk2-bhyve
 PORTVERSION=	20180318
-PORTREVISION=	2
 CATEGORIES=	sysutils
 
 MAINTAINER=	fabian.freyer@physik.tu-berlin.de
@@ -81,3 +80,4 @@ do-install:
 		${STAGEDIR}${PREFIX}/share/uefi-firmware/BHYVE_UEFI${PLIST_SUFFIX}.fd
 
 .include <bsd.port.mk>
+RUN_DEPENDS:=	${RUN_DEPENDS:Ngcc*}

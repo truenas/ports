@@ -49,7 +49,6 @@
     SUBDIR += gngb
     SUBDIR += gngeo
     SUBDIR += gns3
-    SUBDIR += gnuboy
     SUBDIR += gxemul
     SUBDIR += hatari
     SUBDIR += hercules
@@ -57,7 +56,6 @@
     SUBDIR += hugo
     SUBDIR += i386-wine
     SUBDIR += i386-wine-devel
-    SUBDIR += i386-wine-staging
     SUBDIR += ia64sim
     SUBDIR += ines
     SUBDIR += javatari

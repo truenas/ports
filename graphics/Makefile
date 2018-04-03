@@ -102,7 +102,6 @@
     SUBDIR += clutter-gtk
     SUBDIR += clutter-gtk3
     SUBDIR += cluttermm
-    SUBDIR += code-eli
     SUBDIR += cogl
     SUBDIR += colmap
     SUBDIR += colord
@@ -151,6 +150,7 @@
     SUBDIR += drawpile
     SUBDIR += driconf
     SUBDIR += drm-next-kmod
+    SUBDIR += drm-stable-kmod
     SUBDIR += dspdfviewer
     SUBDIR += duhdraw
     SUBDIR += dynamechs
@@ -165,6 +165,7 @@
     SUBDIR += eom
     SUBDIR += eos-movrec
     SUBDIR += epdfview
+    SUBDIR += ephoto
     SUBDIR += epix
     SUBDIR += eps2png
     SUBDIR += epstool
@@ -405,7 +406,7 @@
     SUBDIR += jpgtn
     SUBDIR += jslice
     SUBDIR += kamera-kde4
-    SUBDIR += kcolorchooser
+    SUBDIR += kcolorchooser-kde4
     SUBDIR += kcoloredit
     SUBDIR += kdegraphics-kde4
     SUBDIR += kdegraphics-mobipocket-kde4
@@ -462,13 +463,13 @@
     SUBDIR += kix-kmod
     SUBDIR += klatexformula
     SUBDIR += kludge3d
-    SUBDIR += kolourpaint
+    SUBDIR += kolourpaint-kde4
     SUBDIR += kphotoalbum-kde4
     SUBDIR += kpovmodeler
-    SUBDIR += kqtquickcharts
+    SUBDIR += kqtquickcharts-kde4
     SUBDIR += krita
-    SUBDIR += ksaneplugin
-    SUBDIR += ksnapshot
+    SUBDIR += ksaneplugin-kde4
+    SUBDIR += ksnapshot-kde4
     SUBDIR += kudu
     SUBDIR += l2p
     SUBDIR += largetifftools
@@ -522,7 +523,7 @@
     SUBDIR += libkface
     SUBDIR += libkipi-kde4
     SUBDIR += libkipiplugins
-    SUBDIR += libksane
+    SUBDIR += libksane-kde4
     SUBDIR += libkscreen
     SUBDIR += liblqr-1
     SUBDIR += liblug
@@ -630,7 +631,7 @@
     SUBDIR += ocrad
     SUBDIR += ocre
     SUBDIR += ogre3d
-    SUBDIR += okular
+    SUBDIR += okular-kde4
     SUBDIR += opencollada
     SUBDIR += opencolorio
     SUBDIR += opencolorio-tools
@@ -780,8 +781,6 @@
     SUBDIR += pencil
     SUBDIR += peps
     SUBDIR += perceptualdiff
-    SUBDIR += pfscalibration
-    SUBDIR += pfstmo
     SUBDIR += pfstools
     SUBDIR += pgplot
     SUBDIR += pho
@@ -1025,7 +1024,7 @@
     SUBDIR += simage
     SUBDIR += simpleviewer
     SUBDIR += sk1libs
-    SUBDIR += skanlite
+    SUBDIR += skanlite-kde4
     SUBDIR += smillaenlarger
     SUBDIR += springgraph
     SUBDIR += squish
@@ -1081,6 +1080,7 @@
     SUBDIR += waffle
     SUBDIR += waifu2x-converter-cpp
     SUBDIR += wayland
+    SUBDIR += waylandpp
     SUBDIR += wayland-protocols
     SUBDIR += webp
     SUBDIR += wings

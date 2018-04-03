@@ -21,11 +21,11 @@
     SUBDIR += alienwah
     SUBDIR += alsa-lib
     SUBDIR += alsa-plugins
+    SUBDIR += alsa-sndio
     SUBDIR += alsa-utils
     SUBDIR += alure
     SUBDIR += amarok-kde4
     SUBDIR += amb-plugins
-    SUBDIR += amp
     SUBDIR += ample
     SUBDIR += amsynth
     SUBDIR += aqualung
@@ -223,6 +223,7 @@
     SUBDIR += gmpc-mserver
     SUBDIR += gmpc-shout
     SUBDIR += gmpc-wikipedia
+    SUBDIR += gmsynth-lv2
     SUBDIR += gmtp
     SUBDIR += gmusicbrowser
     SUBDIR += gnaural
@@ -354,7 +355,7 @@
     SUBDIR += jid3lib
     SUBDIR += jmusic
     SUBDIR += jokosher
-    SUBDIR += juk
+    SUBDIR += juk-kde4
     SUBDIR += juke
     SUBDIR += julius
     SUBDIR += jxm
@@ -363,9 +364,9 @@
     SUBDIR += kid3-kde4
     SUBDIR += kid3-qt4
     SUBDIR += kid3-qt5
-    SUBDIR += kio-audiocd
-    SUBDIR += kmix
-    SUBDIR += kscd
+    SUBDIR += kio-audiocd-kde4
+    SUBDIR += kmix-kde4
+    SUBDIR += kscd-kde4
     SUBDIR += ksmp3play
     SUBDIR += kstreamripper
     SUBDIR += ladspa
@@ -402,8 +403,8 @@
     SUBDIR += libgpod-sharp
     SUBDIR += libgroove
     SUBDIR += libid3tag
-    SUBDIR += libkcddb
-    SUBDIR += libkcompactdisc
+    SUBDIR += libkcddb-kde4
+    SUBDIR += libkcompactdisc-kde4
     SUBDIR += liblastfm
     SUBDIR += liblo
     SUBDIR += liblscp

@@ -2,8 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	passenger
-PORTVERSION=	5.1.12
-PORTREVISION=	2
+PORTVERSION=	5.2.1
 CATEGORIES=	www rubygems
 MASTER_SITES=	RG
 PKGNAMEPREFIX=	rubygem-
@@ -30,12 +29,12 @@ OPTIONS_EXCLUDE=DOCS
 SYMLINK_DESC=	Create passenger symlink
 
 .if ${FLAVOR} == apache
-USE_APACHE=	22+
+USES+=		apache:2.2+
 .endif
 
 USE_RUBY=	yes
 RAKE_BIN=	${LOCALBASE}/bin/rake
-USES=		cpe gem libtool python:env shebangfix ssl
+USES+=		cpe gem libtool python:env shebangfix ssl
 SHEBANG_FILES=	\
 	src/cxx_supportlib/vendor-copy/libuv/gyp_uv.py \
 	dev/vagrant/nginx_start \
@@ -88,7 +87,7 @@ pre-patch:
 		s!#{PlatformInfo.debugging_cflags}!${CFLAGS}!g; \
 		s!-O2!!g; \
 		s! -feliminate-unused-debug-symbols -feliminate-unused-debug-types!!g; \
-		155s!true!false!' \
+		170s!true!false!' \
 		${WRKSRC}/build/basics.rb
 	@${REINPLACE_CMD} '1s:python:python2:' \
 		${WRKSRC}/src/cxx_supportlib/vendor-copy/libuv/gyp_uv.py

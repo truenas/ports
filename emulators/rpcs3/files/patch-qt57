@@ -1,5 +1,22 @@
 Revert https://github.com/RPCS3/rpcs3/commit/cf1c45dfe86e for Qt 5.7 compatibility
 
+--- rpcs3/CMakeLists.txt.orig	2018-03-13 15:55:03 UTC
++++ rpcs3/CMakeLists.txt
+@@ -6,12 +6,12 @@ set(CMAKE_CXX_STANDARD 14)
+ include(CheckCXXCompilerFlag)
+ 
+ # Qt section
+-find_package(Qt5 5.10 COMPONENTS Widgets Network Qml)
++find_package(Qt5 5.7 COMPONENTS Widgets Network Qml)
+ if(WIN32)
+ 	find_package(Qt5 5.10 COMPONENTS WinExtras REQUIRED)
+ 	set(RPCS3_QT_LIBS Qt5::Widgets Qt5::WinExtras Qt5::Network Qt5::Qml)
+ else()
+-	find_package(Qt5 5.10 COMPONENTS DBus Gui)
++	find_package(Qt5 5.7 COMPONENTS DBus Gui)
+ 	if(Qt5DBus_FOUND)
+ 		set(RPCS3_QT_LIBS Qt5::Widgets Qt5::DBus Qt5::Network Qt5::Qml)
+ 		add_definitions(-DHAVE_QTDBUS)
 --- rpcs3/main.cpp.orig	2018-02-21 20:18:14 UTC
 +++ rpcs3/main.cpp
 @@ -86,7 +86,6 @@ int main(int argc, char** argv)
@@ -51,14 +68,14 @@ Revert https://github.com/RPCS3/rpcs3/commit/cf1c45dfe86e for Qt 5.7 compatibili
  
  	QVBoxLayout *dialog_layout = new QVBoxLayout();
  	QHBoxLayout *all_players = new QHBoxLayout();
---- rpcs3/rpcs3qt/gui_settings.cpp.orig	2018-02-21 20:18:14 UTC
+--- rpcs3/rpcs3qt/gui_settings.cpp.orig	2018-02-28 19:44:06 UTC
 +++ rpcs3/rpcs3qt/gui_settings.cpp
-@@ -260,6 +260,7 @@ void gui_settings::ShowInfoBox(const gui_save& entry, 
+@@ -259,6 +259,7 @@ void gui_settings::ShowInfoBox(const gui_save& entry, 
+ 	if (GetValue(entry).toBool())
  	{
- 		QCheckBox* cb = new QCheckBox(tr("Don't show again"));
  		QMessageBox* mb = new QMessageBox(QMessageBox::Information, title, text, QMessageBox::Ok, parent);
 +		mb->setWindowFlags(mb->windowFlags() & ~Qt::WindowContextHelpButtonHint);
- 		mb->setCheckBox(cb);
+ 		mb->setCheckBox(new QCheckBox(tr("Don't show again")));
  		mb->deleteLater();
  		mb->exec();
 --- rpcs3/rpcs3qt/instruction_editor_dialog.cpp.orig	2018-02-21 20:18:14 UTC

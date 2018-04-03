@@ -1,8 +1,8 @@
 # $FreeBSD$
 
 PORTNAME=	llvm
-DISTVERSION=	6.0.0rc2
-PORTREVISION=	0
+DISTVERSION=	6.0.0
+PORTREVISION=	1
 CATEGORIES=	devel lang
 MASTER_SITES=	http://${PRE_}releases.llvm.org/${LLVM_RELEASE}/${RCDIR}
 PKGNAMESUFFIX=	${LLVM_SUFFIX}
@@ -393,7 +393,7 @@ post-patch-CLANG-on:
 post-build-COMPILER_RT-on:
 	${MKDIR} ${WRKDIR}/compiler-rt-build
 	cd ${WRKDIR}/compiler-rt-build && \
-	${CMAKE_BIN} ${CMAKE_ARGS} \
+	${SETENV} ${CONFIGURE_ENV} ${CMAKE_BIN} ${CMAKE_ARGS} \
 	    -DLLVM_CONFIG_PATH=${CONFIGURE_WRKSRC}/bin/llvm-config \
 	    ${WRKSRC_compiler_rt} && \
 	    ${MAKE_ENV} ${MAKE_CMD}
@@ -544,7 +544,7 @@ svn-patch-llvm:
 .if !defined(PATCH_REV)
 .error svn-patch-clang requires that PATCH_REV be set
 .endif
-_PATCH_FILE=${FILESDIR}/clang-patch-svn-${PATCH_REV}
+_PATCH_FILE=${FILESDIR}/clang/patch-svn-${PATCH_REV}
 _LLVM_BASE=http://llvm.org/svn/llvm-project/cfe/trunk
 svn-patch-clang:
 	svn log -c ${PATCH_REV} ${_LLVM_BASE} >> ${_PATCH_FILE}
@@ -556,7 +556,7 @@ svn-patch-clang:
 .if !defined(PATCH_REV)
 .error svn-patch-compiler-rt requires that PATCH_REV be set
 .endif
-_PATCH_FILE=${FILESDIR}/compiler-rt-patch-svn-${PATCH_REV}
+_PATCH_FILE=${FILESDIR}/compiler-rt/patch-svn-${PATCH_REV}
 _LLVM_BASE=http://llvm.org/svn/llvm-project/compiler-rt/trunk
 svn-patch-compiler-rt:
 	svn log -c ${PATCH_REV} ${_LLVM_BASE} >> ${_PATCH_FILE}
@@ -568,7 +568,7 @@ svn-patch-compiler-rt:
 .if !defined(PATCH_REV)
 .error svn-patch-lldb requires that PATCH_REV be set
 .endif
-_PATCH_FILE=${FILESDIR}/lldb-patch-svn-${PATCH_REV}
+_PATCH_FILE=${FILESDIR}/lldb/patch-svn-${PATCH_REV}
 _LLVM_BASE=http://llvm.org/svn/llvm-project/lldb/trunk
 svn-patch-lldb:
 	svn log -c ${PATCH_REV} ${_LLVM_BASE} >> ${_PATCH_FILE}

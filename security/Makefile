@@ -310,6 +310,7 @@
     SUBDIR += knocker
     SUBDIR += kpcli
     SUBDIR += kqoauth
+    SUBDIR += kr
     SUBDIR += krb5
     SUBDIR += krb5-114
     SUBDIR += krb5-115
@@ -318,7 +319,7 @@
     SUBDIR += krb5-devel
     SUBDIR += kripp
     SUBDIR += kstart
-    SUBDIR += kwalletmanager
+    SUBDIR += kwalletmanager-kde4
     SUBDIR += l0pht-watch
     SUBDIR += l0phtcrack
     SUBDIR += l5
@@ -432,7 +433,6 @@
     SUBDIR += oath-toolkit
     SUBDIR += obfs4proxy-tor
     SUBDIR += obfsclient
-    SUBDIR += obfsproxy
     SUBDIR += ocaml-cryptgps
     SUBDIR += ocaml-cryptokit
     SUBDIR += ocaml-ssl
@@ -481,6 +481,7 @@
     SUBDIR += osslsigncode
     SUBDIR += otpw
     SUBDIR += outguess
+    SUBDIR += owasp-dependency-check
     SUBDIR += p11-kit
     SUBDIR += p5-Apache-Htpasswd
     SUBDIR += p5-App-Genpass
@@ -867,6 +868,7 @@
     SUBDIR += pulledpork
     SUBDIR += pure-sfv
     SUBDIR += putty
+    SUBDIR += putty-gtk2
     SUBDIR += putty-nogtk
     SUBDIR += pvk
     SUBDIR += pwauth
@@ -884,6 +886,7 @@
     SUBDIR += py-acme
     SUBDIR += py-acme-tiny
     SUBDIR += py-artifacts
+    SUBDIR += py-asyncssh
     SUBDIR += py-backports.ssl_match_hostname
     SUBDIR += py-bcrypt
     SUBDIR += py-borg.localrole
@@ -942,8 +945,10 @@
     SUBDIR += py-mhash
     SUBDIR += py-mixbox
     SUBDIR += py-mnemonic
+    SUBDIR += py-ntlm-auth
     SUBDIR += py-oauth2client
     SUBDIR += py-oauthlib
+    SUBDIR += py-obfsproxy-tor
     SUBDIR += py-onetime
     SUBDIR += py-openssl
     SUBDIR += py-paramiko
@@ -978,6 +983,7 @@
     SUBDIR += py-pyscard
     SUBDIR += py-pysha3
     SUBDIR += py-python-gnupg
+    SUBDIR += py-python-nss
     SUBDIR += py-python-openid
     SUBDIR += py-python-registry
     SUBDIR += py-python-social-auth
@@ -1008,6 +1014,7 @@
     SUBDIR += py-vulndb
     SUBDIR += py-yara
     SUBDIR += py-yubioath-desktop
+    SUBDIR += py-yubikey-manager
     SUBDIR += py-zope.app.authentication
     SUBDIR += py-zope.app.localpermission
     SUBDIR += py-zope.app.principalannotation
@@ -1023,8 +1030,7 @@
     SUBDIR += py-zope.securitypolicy
     SUBDIR += py-zope.session
     SUBDIR += py-zxcvbn-python
-    SUBDIR += qtkeychain-qt4
-    SUBDIR += qtkeychain-qt5
+    SUBDIR += qtkeychain
     SUBDIR += quantis
     SUBDIR += quantis-kmod
     SUBDIR += racoon2
@@ -1059,18 +1065,22 @@
     SUBDIR += rkhunter
     SUBDIR += rndpassw
     SUBDIR += ruby-camellia
+    SUBDIR += rubygem-aes_key_wrap
     SUBDIR += rubygem-airbrussh
     SUBDIR += rubygem-attr_encrypted
     SUBDIR += rubygem-attr_encrypted30
     SUBDIR += rubygem-bcrypt
     SUBDIR += rubygem-bcrypt-ruby
     SUBDIR += rubygem-bcrypt_pbkdf
+    SUBDIR += rubygem-devise_pam_authenticatable2
     SUBDIR += rubygem-devise-two-factor
     SUBDIR += rubygem-devise-two-factor-rails5
     SUBDIR += rubygem-devise-two-factor-rails50
     SUBDIR += rubygem-digest-crc
     SUBDIR += rubygem-doorkeeper
+    SUBDIR += rubygem-doorkeeper42
     SUBDIR += rubygem-doorkeeper-openid_connect
+    SUBDIR += rubygem-doorkeeper-openid_connect12
     SUBDIR += rubygem-doorkeeper-rails5
     SUBDIR += rubygem-doorkeeper-rails50
     SUBDIR += rubygem-encryptor
@@ -1102,6 +1112,7 @@
     SUBDIR += rubygem-omniauth
     SUBDIR += rubygem-omniauth14
     SUBDIR += rubygem-omniauth-bitbucket
+    SUBDIR += rubygem-omniauth-cas
     SUBDIR += rubygem-omniauth-cas3
     SUBDIR += rubygem-omniauth-gitlab
     SUBDIR += rubygem-omniauth-multipassword
@@ -1143,6 +1154,7 @@
     SUBDIR += rubygem-rex-text
     SUBDIR += rubygem-rex-zip
     SUBDIR += rubygem-roauth
+    SUBDIR += rubygem-rpam2
     SUBDIR += rubygem-ruby-hmac
     SUBDIR += rubygem-ruby-rc4
     SUBDIR += rubygem-ruby-saml
@@ -1173,6 +1185,7 @@
     SUBDIR += secpanel
     SUBDIR += sectok
     SUBDIR += secure_delete
+    SUBDIR += setaudit 
     SUBDIR += sguil
     SUBDIR += sha
     SUBDIR += sha1collisiondetection

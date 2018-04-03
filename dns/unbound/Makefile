@@ -2,10 +2,10 @@
 # $FreeBSD$
 
 PORTNAME=	unbound
-PORTVERSION=	1.6.8
-PORTREVISION=	2
+PORTVERSION=	1.7.0
 CATEGORIES=	dns
-MASTER_SITES=	http://unbound.net/downloads/
+MASTER_SITES=	https://unbound.net/downloads/ \
+		https://distfiles.crux.guru/
 
 MAINTAINER=	jaap@NLnetLabs.nl
 COMMENT=	Validating, recursive, and caching DNS resolver

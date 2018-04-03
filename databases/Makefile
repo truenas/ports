@@ -13,7 +13,7 @@
     SUBDIR += adminer
     SUBDIR += adodb
     SUBDIR += adodb5
-    SUBDIR += akonadi
+    SUBDIR += akonadi-kde4
     SUBDIR += animenfo-client
     SUBDIR += animenfo-client-gtk
     SUBDIR += apq
@@ -94,6 +94,7 @@
     SUBDIR += gigabase
     SUBDIR += gnats4
     SUBDIR += gnatsweb4
+    SUBDIR += go-carbon
     SUBDIR += gomdb
     SUBDIR += gosqlite3
     SUBDIR += gqlplus
@@ -578,7 +579,6 @@
     SUBDIR += pg_qualstats
     SUBDIR += pg_reorg
     SUBDIR += pg_repack
-    SUBDIR += pg_rman
     SUBDIR += pg_stat_kcache
     SUBDIR += pgaccess
     SUBDIR += pgadmin3
@@ -592,6 +592,7 @@
     SUBDIR += pgloader
     SUBDIR += pgloader3
     SUBDIR += pglogical
+    SUBDIR += pgmetrics
     SUBDIR += pgmodeler
     SUBDIR += pgpool
     SUBDIR += pgpool-II-33
@@ -600,6 +601,7 @@
     SUBDIR += pgreplay
     SUBDIR += pgroonga
     SUBDIR += pgrouting
+    SUBDIR += pgsanity
     SUBDIR += pgsphere
     SUBDIR += pgtcl
     SUBDIR += pgtop
@@ -607,6 +609,7 @@
     SUBDIR += pguri
     SUBDIR += pgworksheet
     SUBDIR += php-mdcached
+    SUBDIR += php-memcache
     SUBDIR += php-xapian
     SUBDIR += php5-pdo_cassandra
     SUBDIR += php5-tarantool
@@ -626,10 +629,9 @@
     SUBDIR += php56-pgsql
     SUBDIR += php56-sqlite3
     SUBDIR += php56-sybase_ct
+    SUBDIR += php7-tarantool
     SUBDIR += php70-dba
     SUBDIR += php70-interbase
-    SUBDIR += php70-memcache
-    SUBDIR += php70-memcached
     SUBDIR += php70-mysqli
     SUBDIR += php70-odbc
     SUBDIR += php70-pdo
@@ -643,7 +645,6 @@
     SUBDIR += php70-sqlite3
     SUBDIR += php71-dba
     SUBDIR += php71-interbase
-    SUBDIR += php71-memcache
     SUBDIR += php71-mysqli
     SUBDIR += php71-odbc
     SUBDIR += php71-pdo
@@ -657,7 +658,6 @@
     SUBDIR += php71-sqlite3
     SUBDIR += php72-dba
     SUBDIR += php72-interbase
-    SUBDIR += php72-memcache
     SUBDIR += php72-mysqli
     SUBDIR += php72-odbc
     SUBDIR += php72-pdo
@@ -786,9 +786,11 @@
     SUBDIR += py-htsql
     SUBDIR += py-htsql-mysql
     SUBDIR += py-htsql-pgsql
+    SUBDIR += py-influxdb
     SUBDIR += py-kyotocabinet
     SUBDIR += py-leveldb
     SUBDIR += py-lmdb
+    SUBDIR += py-marshmallow-sqlalchemy
     SUBDIR += py-motor
     SUBDIR += py-mycli
     SUBDIR += py-mysql-connector-python
@@ -810,6 +812,7 @@
     SUBDIR += py-psycogreen
     SUBDIR += py-psycopg2
     SUBDIR += py-psycopg2cffi
+    SUBDIR += py-pum
     SUBDIR += py-pyPgSQL
     SUBDIR += py-pyhs
     SUBDIR += py-pylibmc
@@ -952,7 +955,6 @@
     SUBDIR += rubygem-em-redis-unified
     SUBDIR += rubygem-familia
     SUBDIR += rubygem-flipper-active_record
-    SUBDIR += rubygem-flipper-active_record010
     SUBDIR += rubygem-flipper-active_record011
     SUBDIR += rubygem-globalid
     SUBDIR += rubygem-globalid-rails5
@@ -973,6 +975,7 @@
     SUBDIR += rubygem-pg
     SUBDIR += rubygem-pg_array_parser
     SUBDIR += rubygem-pg0
+    SUBDIR += rubygem-pg018
     SUBDIR += rubygem-pghero
     SUBDIR += rubygem-pghero-rails5
     SUBDIR += rubygem-pghero-rails50
@@ -1042,6 +1045,7 @@
     SUBDIR += twemproxy
     SUBDIR += unixODBC
     SUBDIR += useracc
+    SUBDIR += usql
     SUBDIR += vfront
     SUBDIR += virtualpg
     SUBDIR += virtuoso

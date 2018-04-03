@@ -2,7 +2,7 @@
 
 PORTNAME=		osrm-backend
 DISTVERSIONPREFIX=	v
-DISTVERSION=		5.15.2
+DISTVERSION=		5.16.4
 CATEGORIES=		www
 
 MAINTAINER=		a.andersson.thn@gmail.com
@@ -25,18 +25,19 @@ LIB_DEPENDS=		libtbb.so:devel/tbb \
 			libboost_regex.so:devel/boost-libs \
 			libexpat.so:textproc/expat2
 
-USES=			cmake:outsource lua:52 compiler:c++14-lang
-
+USES=			cmake:outsource lua:53 compiler:c++14-lang
+USE_GITHUB=		yes
+GH_ACCOUNT=		Project-OSRM
 USE_LDCONFIG=		yes
 OPTIONS_DEFINE=		DEBUG
-
 USE_RC_SUBR=		osrm
+
 USERS=			osrm
 GROUPS=			osrm
 
-USE_GITHUB=		yes
-GH_ACCOUNT=		Project-OSRM
+CMAKE_ON=		BUILD_SHARED_LIBS
 
 pre-install:
-	${MKDIR}	${STAGEDIR}/var/db/osrm-backend
+	@${MKDIR} ${STAGEDIR}/var/db/osrm-backend
+
 .include <bsd.port.mk>

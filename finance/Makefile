@@ -26,7 +26,6 @@
     SUBDIR += bitcoin-armory
     SUBDIR += cbb
     SUBDIR += electrum
-    SUBDIR += electrum2
     SUBDIR += expense
     SUBDIR += fixc
     SUBDIR += frontaccounting
@@ -100,6 +99,7 @@
     SUBDIR += py-vatnumber
     SUBDIR += py-ystockquote
     SUBDIR += qhacc
+    SUBDIR += quickfix
     SUBDIR += rubygem-money
     SUBDIR += sabernetdcs-client
     SUBDIR += skrooge

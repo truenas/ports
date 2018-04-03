@@ -274,6 +274,8 @@
     SUBDIR += nohtml
     SUBDIR += normalizemime
     SUBDIR += notmuch
+    SUBDIR += notmuch-emacs
+    SUBDIR += notmuch-mutt
     SUBDIR += nullmailer
     SUBDIR += nullpop
     SUBDIR += offlineimap
@@ -547,6 +549,7 @@
     SUBDIR += py-pyspf
     SUBDIR += py-pyzmail
     SUBDIR += py-spambayes
+    SUBDIR += py-validate_email
     SUBDIR += py-zope.sendmail
     SUBDIR += pymsgauth
     SUBDIR += pysieved
@@ -645,7 +648,6 @@
     SUBDIR += sieve-connect
     SUBDIR += sigrot
     SUBDIR += simscan
-    SUBDIR += sisyphus
     SUBDIR += slapd-cyrus
     SUBDIR += sma
     SUBDIR += smfsav
@@ -739,7 +741,6 @@
     SUBDIR += vqadmin
     SUBDIR += vrfy
     SUBDIR += wanderlust
-    SUBDIR += wanderlust-devel
     SUBDIR += websieve
     SUBDIR += whoson
     SUBDIR += wmbiff

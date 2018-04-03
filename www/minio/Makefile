@@ -14,9 +14,9 @@ BUILD_DEPENDS=	go>=1.7:lang/go
 USES=		compiler
 
 USE_GITHUB=	yes
-GH_TAGNAME=	RELEASE.2018-01-18T20-33-21Z
+GH_TAGNAME=	RELEASE.2018-03-19T19-22-06Z
 GH_SUBDIR=	src/github.com/${PORTNAME}/${PORTNAME}
-COMMIT_ID=	e2d5a87b2676e3e01f0f4fa7ebd01205364cfb16
+COMMIT_ID=	a4d2e2b4283b228c34ca2fe0aa007d792a726c3a
 
 PLIST_FILES=	bin/minio
 
@@ -30,7 +30,7 @@ SUB_LIST=	USER="${USERS}" \
 
 do-build:
 	@cd ${WRKSRC}/${GH_SUBDIR} ; \
-	${SETENV} GOPATH=${WRKSRC} CGO_ENABLED=0 go build \
+	${SETENV} ${MAKE_ENV} GOPATH=${WRKSRC} CGO_ENABLED=0 go build \
 		--ldflags '-X github.com/minio/minio/cmd.Version=${GH_TAGNAME:C/RELEASE\.//:C|(..)-(..)-(..)Z|\1:\2:\3Z|} -X github.com/minio/minio/cmd.ReleaseTag=${GH_TAGNAME} -X github.com/minio/minio/cmd.CommitID=${COMMIT_ID} -X github.com/minio/minio/cmd.GOPATH=${WRKSRC} -s -w' -o ${WRKSRC}/bin/minio
 
 do-install:
