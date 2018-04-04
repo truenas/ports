@@ -514,11 +514,8 @@
     SUBDIR += viz
     SUBDIR += whichman
     SUBDIR += window
-<<<<<<< HEAD
-=======
     SUBDIR += with
     SUBDIR += wmScoreBoard
->>>>>>> dcb47a6ceacac1bdcf99d4f9eb42ab347e44ac8a
     SUBDIR += wmcalendar
     SUBDIR += wmjulia
     SUBDIR += wmpal
