@@ -96,7 +96,7 @@ XML2ENC_USE=			GNOME=libxml2
 
 # Note: OpenSSL version (base/ports) depends how devel/apr1 was built
 #  apu-1-config --(includes|ldflags) and apr_rules.mk
-SSL_CFLAGS=			-I${OPENSSLINC}
+SSL_CFLAGS=			-I${OPENSSLINC} -DMODSSL_USE_OPENSSL_PRE_1_1_API
 SSL_CONFIGURE_ON=		--with-ssl=${OPENSSLBASE}
 SSL_LDFLAGS=			-L${OPENSSLLIB}
 SSL_USES=			ssl
