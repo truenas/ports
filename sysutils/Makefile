@@ -192,11 +192,8 @@
     SUBDIR += consolehm
     SUBDIR += consolekit2
     SUBDIR += consul
-<<<<<<< HEAD
-=======
     SUBDIR += consul-alerts
     SUBDIR += consul-replicate
->>>>>>> dcb47a6ceacac1bdcf99d4f9eb42ab347e44ac8a
     SUBDIR += consul_exporter
     SUBDIR += consul-alerts
     SUBDIR += container-diff
@@ -950,11 +947,8 @@
     SUBDIR += py-hared
     SUBDIR += py-honcho
     SUBDIR += py-iowait
-<<<<<<< HEAD
     SUBDIR += py-ixautomation
-=======
     SUBDIR += py-mqttwarn
->>>>>>> dcb47a6ceacac1bdcf99d4f9eb42ab347e44ac8a
     SUBDIR += py-nagiosplugin
     SUBDIR += py-nomad
     SUBDIR += py-pkginfo
@@ -1039,10 +1033,6 @@
     SUBDIR += rsyslog8
     SUBDIR += rtty
     SUBDIR += rubygem-backup
-<<<<<<< HEAD
-    SUBDIR += rubygem-bosh_cli
-=======
->>>>>>> dcb47a6ceacac1bdcf99d4f9eb42ab347e44ac8a
     SUBDIR += rubygem-bosh-gen
     SUBDIR += rubygem-bundler
     SUBDIR += rubygem-bundler_ext
