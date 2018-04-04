@@ -182,7 +182,7 @@ _sub_checkconfig_checkpath() {
 	local profile
 	local f
 	profile=$1
-	user="$( get_user ${profile} )
+	user="$( get_user ${profile} )"
 	for file in postgresql pg_hba pg_ident ; do
 		f="$( get_data_dir ${profile} )/${file}.conf"
 		if [ -f ${f} ] ; then
