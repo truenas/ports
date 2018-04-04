@@ -1,4 +1,4 @@
-# $FreeBSD$
+# $FreeBSD: head/www/apache24/Makefile 465983 2018-03-30 16:44:52Z brnrd $
 
 PORTNAME=	apache24
 PORTVERSION=	2.4.33
@@ -29,10 +29,6 @@ CPE_PRODUCT=	http_server
 
 PORTDOCS=	*
 SUB_FILES=	pkg-install pkg-deinstall
-
-# XXX: before running makepatch please run the command
-# `$SED -e 's/PATCH_PATH_SEPARATOR=/PATCH_PATH_SEPARATOR?=/' Mk/bsd.port.mk
-PATCH_PATH_SEPARATOR=	__
 
 # Fallback MPM after switching from static to modular MPM
 SUB_LIST+=	MPMF="000_mpm_prefork_fallback.conf"
@@ -96,7 +92,7 @@ XML2ENC_USE=			GNOME=libxml2
 
 # Note: OpenSSL version (base/ports) depends how devel/apr1 was built
 #  apu-1-config --(includes|ldflags) and apr_rules.mk
-SSL_CFLAGS=			-I${OPENSSLINC} -DMODSSL_USE_OPENSSL_PRE_1_1_API
+SSL_CFLAGS=			-I${OPENSSLINC}
 SSL_CONFIGURE_ON=		--with-ssl=${OPENSSLBASE}
 SSL_LDFLAGS=			-L${OPENSSLLIB}
 SSL_USES=			ssl
@@ -132,7 +128,7 @@ MAKE_ENV+=	EXPR_COMPAT=yes \
 
 .for module in ${ALL_MODULES}
 .if ${PORT_OPTIONS:M${module}}
-CONFIGURE_ARGS+=	--enable-${module:S/_/-/g:tl}
+CONFIGURE_ARGS+=	--enable-${module:S/_/-/g:tl}=shared
 .else
 CONFIGURE_ARGS+=	--disable-${module:S/_/-/g:tl}
 .endif
@@ -219,9 +215,6 @@ post-patch:
 	${INSTALL_DATA} ${WRKSRC}/NOTICE ${WRKSRC}/docs/manual
 
 pre-configure::
-	@${ECHO_MSG}	""
-	@${ECHO_MSG}	"  You can check your modules configuration by using make show-modules"
-	@${ECHO_MSG}	""
 # silence autotools
 	-@${MV} -v ${WRKSRC}/configure.in ${WRKSRC}/configure.ac 2>/dev/null
 
@@ -229,6 +222,7 @@ post-configure:
 	@FTPUSERS=`${EGREP} -v '^#' /etc/ftpusers| ${TR} -s "\n" " "` ;\
 		${REINPLACE_CMD} -e "s,%%FTPUSERS%%,$${FTPUSERS}," \
 			${WRKSRC}/docs/conf/extra/httpd-userdir.conf
+	${REINPLACE_CMD} -e "/EXTRA_LDFLAGS/s|-L/usr/lib||g" ${WRKSRC}/build/config_vars.mk
 	${REINPLACE_CMD} -e "s,%%WWWOWN%%,${WWWOWN}," -e "s,%%WWWGRP%%,${WWWGRP}," \
 		${WRKSRC}/docs/conf/httpd.conf
 	${REINPLACE_CMD} -e "s,%%PREFIX%%,${PREFIX}," ${WRKSRC}/support/envvars-std
