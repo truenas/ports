@@ -41,6 +41,9 @@ SMB_DESC=		SMB/CIFS support
 SMTP_DESC=		SMTP/SMTPS support
 THREADED_RESOLVER_DESC=	Threaded DNS resolver
 TLS_SRP_DESC=		TLS-SRP (Secure Remote Password) support
+ 
+# Workaround an issue with clang6
+CFLAGS+=	-Wno-incompatible-pointer-types
 
 CONFIGURE_ARGS=	--disable-werror \
 		--with-zsh-functions-dir=${LOCALBASE}/share/zsh/site-functions \
