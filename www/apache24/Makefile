@@ -92,7 +92,7 @@ XML2ENC_USE=			GNOME=libxml2
 
 # Note: OpenSSL version (base/ports) depends how devel/apr1 was built
 #  apu-1-config --(includes|ldflags) and apr_rules.mk
-SSL_CFLAGS=			-I${OPENSSLINC} -Wno-incompatible-pointer-types
+SSL_CFLAGS=			-I${OPENSSLINC}
 SSL_CONFIGURE_ON=		--with-ssl=${OPENSSLBASE}
 SSL_LDFLAGS=			-L${OPENSSLLIB}
 SSL_USES=			ssl
@@ -188,6 +188,8 @@ CONFIGURE_ARGS+=	--enable-exception-hook
 	${PORT_OPTIONS:MHTTP2} && ${OPENSSLBASE} == /usr
 SUB_FILES+=		pkg-message
 .endif
+
+CFLAGS+=	-Wno-incompatible-pointer-types
 
 pre-extract-SUEXEC-on:
 	@${ECHO_CMD} ""
