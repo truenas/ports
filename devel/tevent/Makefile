@@ -14,7 +14,8 @@ LICENSE=		LGPL3
 
 CONFLICTS=
 
-USES=			compiler pkgconfig waf
+USES=			compiler pkgconfig waf shebangfix
+SHEBANG_FILES=		buildtools/bin/waf
 USE_LDCONFIG=		yes
 WAF_CMD=		buildtools/bin/waf
 CONFIGURE_LOG=		bin/config.log
@@ -38,7 +39,7 @@ RUN_DEPENDS:=		${BUILD_DEPENDS}
 .if defined(NO_PYTHON)
 CONFIGURE_ARGS+=	--disable-python
 .else
-USES+=			python:2
+USES+=			python:2.7
 PLIST_FILES+=		%%PYTHON_SITELIBDIR%%/_tevent.so \
 			%%PYTHON_SITELIBDIR%%/tevent.py  \
 			%%PYTHON_SITELIBDIR%%/tevent.pyc \
