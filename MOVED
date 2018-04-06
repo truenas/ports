@@ -9819,7 +9819,6 @@ lang/ruby22|lang/ruby24|2018-01-31|Has expired: Upgrade to newer version (e.g. l
 net/tcptraceroute-devel|net/tcptraceroute|2018-01-31|Has expired: Use net/tcptraceroute instead
 security/rubygem-openssl20|security/rubygem-openssl|2018-01-31|Has expired: Use security/rubygem-openssl instead
 sysutils/rubygem-hiera1|sysutils/rubygem-hiera|2018-01-31|Has expired: Use sysutils/rubygem-hiera instead
-www/py-django110|www/py-django111|2018-01-31|Has expired: Use www/py-django111 or www/py-django20 instead
 www/rubygem-http2|www/rubygem-http|2018-01-31|Has expired: Use www/rubygem-http instead
 www/rubygem-jekyll-watch1|www/rubygem-jekyll-watch|2018-01-31|Has expired: Use www/rubygem-jekyll-watch instead
 www/rubygem-puma2|www/rubygem-puma|2018-01-31|Has expired: Use www/rubygem-puma instead
