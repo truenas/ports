@@ -14,7 +14,8 @@ LICENSE=		GPLv3
 
 CONFLICTS=		*samba3[0-4]-3.*
 
-USES=			compiler pkgconfig waf
+USES=			compiler pkgconfig waf shebangfix
+SHEBANG_FILES=		buildtools/bin/waf
 USE_LDCONFIG=		yes
 WAF_CMD=		buildtools/bin/waf
 CONFIGURE_LOG=		bin/config.log
@@ -35,7 +36,7 @@ MANPAGES_DESC=		Build and install manpages (requires textproc/docbook-xsl)
 .if defined(NO_PYTHON)
 CONFIGURE_ARGS+=	--disable-python
 .else
-USES+=			python:2
+USES+=			python:2.7
 PLIST_FILES+=		%%PYTHON_SITELIBDIR%%/tdb.so \
 			%%PYTHON_SITELIBDIR%%/_tdb_text.py
 .endif
