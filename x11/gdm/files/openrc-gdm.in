@@ -1,58 +1,42 @@
 #!/sbin/openrc-run
-. %%GNOME_SUBR%%
-
-gdm_preserve_base_pam_conf=${gdm_preserve_base_pam_conf-NO}
-gdm_lang=${gdm_lang-${LANG}}
-
-export PATH=/bin:/sbin:/usr/bin:/usr/sbin:%%LOCALBASE%%/bin:%%LOCALBASE%%/sbin
 
 name="gdm"
-command="%%PREFIX%%/sbin/${name}"
+command="/usr/local/sbin/${name}"
 pidfile="/var/run/${name}.pid"
+start_stop_daemon_args="-m --background"
 
-start()
-{
-    ebegin "Starting ${name}"
-
-    # we need to remove locking files under $gdm_home/.cache/gnome-shell/
-    # until XDG_RUNTIME_DIR can be set and used
-    rm -fr %%PREFIX%%/etc/gdm/home/.cache/gnome-shell/runtime-state*
-
-    # make sure there is no pam configuration for gdm service in base system
-    if ! yesno gdm_preserve_base_pam_conf && [ -f /etc/pam.d/gdm ]; then
-	cp -p /etc/pam.d/gdm /etc/pam.d/gdm_disabled
-    	rm -f /etc/pam.d/gdm
-    fi
-
-    ( iter=0
-    while ! ps -axoargs | grep "^/usr/libexec/getty " | grep -qv grep >/dev/null 2>&1; do
-	if [ ${iter} -eq 60 ]; then
-	    break
-	fi
-	sleep 1
-	iter=$(expr ${iter} + 1)
-    done
-    iter=0
-    while ! %%LOCALBASE%%/bin/lshal >/dev/null 2>&1 ; do
-	if [ ${iter} -eq 60 ]; then
-	    break
-	fi
-	sleep 1
-	iter=$(expr ${iter} + 1)
-    done
-    LANG=${gdm_lang} ${command} ${gdm_flags} ) &
+depend() {
+        provide gdb
+        use moused hald dbus syscons
 }
 
-stop()
+start_pre()
 {
-    ebegin "Stopping ${name}"
-    /bin/kill -9 $(/bin/cat "${pidfile}")
+    while ! ps -axoargs | grep "^/usr/libexec/getty " | grep -qv grep >/dev/null 2>&1; do
+        if [ ${iter} -eq 60 ]; then
+            break
+        fi
+        sleep 1
+        iter=$(expr ${iter} + 1)
+    done
+    iter=0
+    while ! /usr/local/bin/lshal >/dev/null 2>&1 ; do
+        if [ ${iter} -eq 60 ]; then
+            break
+        fi
+        sleep 1
+        iter=$(expr ${iter} + 1)
+    done
+}
+
+stop_pre()
+{
     pkill -9 -u gdm
     pkill -9 X
     pkill -9 gdm-session-worker
 }
 
-depend() {
-	provide gdb
-	use moused dbus syscons
+stop_post()
+{
+    killall Xorg
 }
