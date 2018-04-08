@@ -61,8 +61,7 @@ CONFIGURE_ARGS+=--enable-shared --enable-internal-md5 \
 		--with-logfile="${NET_SNMP_LOGFILE}" \
 		--with-persistent-directory="${NET_SNMP_PERSISTENTDIR}" \
 		--with-gnu-ld --without-libwrap \
-		--with-ldflags="-lm -lkvm -ldevstat -L${PKG_PREFIX}/lib -L${LOCALBASE}/lib ${LCRYPTO}" \
-		--without-pkg --without-libpkg
+		--with-ldflags="-lm -lkvm -ldevstat -L${PKG_PREFIX}/lib -L${LOCALBASE}/lib ${LCRYPTO}"
 SUB_FILES=	pkg-message
 
 .if !defined(WITHOUT_SSP)
