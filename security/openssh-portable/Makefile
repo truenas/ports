@@ -2,8 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	openssh
-DISTVERSION=	7.7p1
-PORTREVISION=	0
+DISTVERSION=	7.5p1
+PORTREVISION=	1
 PORTEPOCH=	1
 CATEGORIES=	security ipv6
 MASTER_SITES=	OPENBSD/OpenSSH/portable
@@ -17,22 +17,20 @@ COMMENT=	The portable version of OpenBSD's OpenSSH
 
 CONFLICTS?=		openssh-3.* ssh-1.* ssh2-3.* openssh-portable-devel-*
 
-USES=			alias autoreconf ncurses ssl
+USES=			alias autoreconf groff ncurses ssl
 GNU_CONFIGURE=		yes
 CONFIGURE_ENV=		ac_cv_func_strnvis=no
 CONFIGURE_ARGS=		--prefix=${PREFIX} --with-md5-passwords \
-			--without-zlib-version-check --with-ssl-engine \
-			--with-mantype=man
-
+			--without-zlib-version-check --with-ssl-engine
 ETCOLD=			${PREFIX}/etc
 
 BROKEN_SSL=	openssl-devel
-BROKEN_SSL_REASON_openssl-devel=	error: OpenSSL >= 1.1.0 is not yet supported
+BROKEN_SSL_REASON_openssl-devel=	incomplete definition of type struct rsa_st
 
 OPTIONS_DEFINE=		PAM TCP_WRAPPERS LIBEDIT BSM \
 			HPN X509 KERB_GSSAPI \
-			LDNS NONECIPHER
-OPTIONS_DEFAULT=	LIBEDIT PAM TCP_WRAPPERS LDNS
+			OVERWRITE_BASE SCTP LDNS NONECIPHER
+OPTIONS_DEFAULT=	LIBEDIT PAM TCP_WRAPPERS HPN LDNS
 OPTIONS_RADIO=		KERBEROS
 OPTIONS_RADIO_KERBEROS=	MIT HEIMDAL HEIMDAL_BASE
 TCP_WRAPPERS_DESC=	tcp_wrappers support
@@ -41,6 +39,8 @@ KERB_GSSAPI_DESC=	Kerberos/GSSAPI patch (req: GSSAPI)
 HPN_DESC=		HPN-SSH patch
 LDNS_DESC=		SSHFP/LDNS support
 X509_DESC=		x509 certificate patch
+SCTP_DESC=		SCTP support
+OVERWRITE_BASE_DESC=	EOL, No longer supported.
 HEIMDAL_DESC=		Heimdal Kerberos (security/heimdal)
 HEIMDAL_BASE_DESC=	Heimdal Kerberos (base)
 MIT_DESC=		MIT Kerberos (security/krb5)
@@ -50,7 +50,7 @@ OPTIONS_SUB=		yes
 
 TCP_WRAPPERS_EXTRA_PATCHES=${FILESDIR}/extra-patch-tcpwrappers
 
-LDNS_CONFIGURE_WITH=	ldns=${LOCALBASE}
+LDNS_CONFIGURE_WITH=	ldns
 LDNS_LIB_DEPENDS=	libldns.so:dns/ldns
 LDNS_EXTRA_PATCHES=	${FILESDIR}/extra-patch-ldns
 LDNS_CFLAGS=		-I${LOCALBASE}/include
@@ -61,10 +61,16 @@ HPN_CONFIGURE_WITH=		hpn
 NONECIPHER_CONFIGURE_WITH=	nonecipher
 
 # See http://www.roumenpetrov.info/openssh/
-X509_VERSION=		11.3
+X509_VERSION=		10.1
 X509_PATCH_SITES=	http://www.roumenpetrov.info/openssh/x509-${X509_VERSION}/:x509
 X509_EXTRA_PATCHES+=	${FILESDIR}/extra-patch-x509-glue
-X509_PATCHFILES=	${PORTNAME}-7.7p1+x509-${X509_VERSION}.diff.gz:-p1:x509
+X509_PATCHFILES=	${PORTNAME}-7.5p1+x509-${X509_VERSION}.diff.gz:-p1:x509
+
+# See https://bugzilla.mindrot.org/show_bug.cgi?id=2016
+# and https://bugzilla.mindrot.org/show_bug.cgi?id=1604
+#SCTP_PATCHFILES=	${PORTNAME}-7.2_p1-sctp.patch.gz:-p1
+SCTP_CONFIGURE_WITH=	sctp
+SCTP_EXTRA_PATCHES+=	${FILESDIR}/extra-patch-sctp:-p1
 
 MIT_LIB_DEPENDS=		libkrb5.so.3:security/krb5
 HEIMDAL_LIB_DEPENDS=		libkrb5.so.26:security/heimdal
@@ -89,7 +95,7 @@ EXTRA_PATCHES:=		${EXTRA_PATCHES:N${TCP_WRAPPERS_EXTRA_PATCHES}}
 
 # Must add this patch before HPN due to conflicts
 .if ${PORT_OPTIONS:MKERB_GSSAPI}
-BROKEN=	KERB_GSSAPI No patch for ${DISTVERSION} yet.
+BROKEN=	No patch for 7.5 yet.
 # Patch from:
 # http://sources.debian.net/data/main/o/openssh/1:7.4p1-5/debian/patches/gssapi.patch
 # which was originally based on 5.7 patch from
@@ -104,16 +110,12 @@ PATCHFILES+=	openssh-7.4p1-gsskex-all-20141021-debian-rh-20161228.patch.gz:-p1:g
 
 # http://www.psc.edu/index.php/hpn-ssh https://github.com/rapier1/hpn-ssh https://github.com/rapier1/openssh-portable
 .if ${PORT_OPTIONS:MHPN} || ${PORT_OPTIONS:MNONECIPHER}
-BROKEN=			HPN: Not yet updated for ${DISTVERSION} and disabled in base
 PORTDOCS+=		HPN-README
 HPN_VERSION=		14v5
 HPN_DISTVERSION=	6.7p1
 #PATCH_SITES+=		SOURCEFORGE/hpnssh/HPN-SSH%20${HPN_VERSION}%20${HPN_DISTVERSION}/:hpn
 #PATCHFILES+=		${PORTNAME}-${HPN_DISTVERSION}-hpnssh${HPN_VERSION}.diff.gz:-p1:hpn
 EXTRA_PATCHES+=		${FILESDIR}/extra-patch-hpn:-p2
-.elif !${PORT_OPTIONS:MHPN} && !${PORT_OPTIONS:MNONECIPHER}
-# Apply compatibility patch
-EXTRA_PATCHES+=		${FILESDIR}/extra-patch-hpn-compat
 .endif
 
 CONFIGURE_LIBS+=	-lutil
@@ -126,6 +128,10 @@ EXTRA_PATCHES+=		${FILESDIR}/extra-patch-version-addendum
 .if ${PORT_OPTIONS:MX509}
 .  if ${PORT_OPTIONS:MHPN} || ${PORT_OPTIONS:MNONECIPHER}
 BROKEN=		X509 patch and HPN patch do not apply cleanly together
+.  endif
+
+.  if ${PORT_OPTIONS:MSCTP}
+BROKEN=		X509 patch and SCTP patch do not apply cleanly together
 .  endif
 
 .  if ${PORT_OPTIONS:MKERB_GSSAPI}
@@ -164,6 +170,10 @@ CONFIGURE_ARGS+=	--with-ssl-dir=${OPENSSLBASE}
 .endif
 
 EMPTYDIR=		/var/empty
+
+.if ${PORT_OPTIONS:MOVERWRITE_BASE} || defined(OPENSSH_OVERWRITE_BASE)
+IGNORE=	Overwrite base option is no longer supported.
+.endif
 
 USE_RC_SUBR=		openssh
 
@@ -210,7 +220,6 @@ test: build
 		TEST_SHELL=${SH} \
 		SUDO="${SUDO}" \
 		LOGNAME="${LOGNAME}" \
-		TEST_SSH_TRACE=yes \
 		PATH=${WRKSRC}:${PREFIX}/bin:${PREFIX}/sbin:${PATH} \
 		${MAKE_CMD} ${MAKE_FLAGS} ${MAKEFILE} ${MAKE_ARGS} tests
 
