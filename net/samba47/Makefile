@@ -62,7 +62,7 @@ CONFIGURE_ENV+=		PTHREAD_LDFLAGS="-lpthread"
 
 #USES=			cpe compiler waf pkgconfig perl5 python:2 \
 #			execinfo readline iconv shebangfix gettext zip
-USES=			cpe compiler waf pkgconfig perl5 python:2 \
+USES=			cpe compiler waf pkgconfig perl5 python:2.7 \
 			readline iconv shebangfix gettext zip
 USE_PERL5=		build
 USE_LDCONFIG=		${SAMBA4_LIBDIR}
@@ -99,8 +99,8 @@ LIB_DEPENDS+=		libdbus-glib-1.so:devel/dbus-glib
 # IDL compiler
 BUILD_DEPENDS+=		p5-Parse-Yapp>=0:devel/p5-Parse-Yapp
 #
-BUILD_DEPENDS+=		${PYTHON_PKGNAMEPREFIX}dnspython2>=1.9.4:dns/py-dnspython2
-RUN_DEPENDS+=		${PYTHON_PKGNAMEPREFIX}dnspython2>=1.9.4:dns/py-dnspython2
+BUILD_DEPENDS+=		${PYTHON_PKGNAMEPREFIX}dnspython>=1.9.4:dns/py-dnspython@${PY_FLAVOR}
+RUN_DEPENDS+=		${PYTHON_PKGNAMEPREFIX}dnspython>=1.9.4:dns/py-dnspython@${PY_FLAVOR}
 
 # Using the bundled versions. Will make this conditional later.
 
@@ -450,7 +450,7 @@ SUB_FILES=		pkg-message README.FreeBSD
 # Make sure that the right version of Python is used by the tools
 # https://bugzilla.samba.org/show_bug.cgi?id=7305
 python_OLD_CMD=		/usr/bin/env python
-SHEBANG_FILES=		${PATCH_WRKSRC}/source4/scripting/bin/*
+SHEBANG_FILES=		${PATCH_WRKSRC}/source4/scripting/bin/* buildtools/bin/waf
 # No fancy color error messages
 .if ${COMPILER_TYPE} == "clang"
 CFLAGS+=		-fno-color-diagnostics
