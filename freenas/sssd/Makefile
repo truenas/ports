@@ -4,7 +4,7 @@
 PORTNAME=	sssd
 PORTVERSION=	1.11.7
 PORTREVISION=	11
-CATEGORIES=	freenas security
+CATEGORIES=	freenas
 MASTER_SITES=	https://releases.pagure.org/SSSD/${PORTNAME}/
 
 MAINTAINER=	lukas.slebodnik@intrak.sk

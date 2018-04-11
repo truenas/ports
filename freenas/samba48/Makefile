@@ -4,7 +4,7 @@
 PORTNAME?=	${SAMBA4_BASENAME}48
 PORTVERSION?=	${SAMBA4_VERSION}
 PORTREVISION?=	0
-CATEGORIES?=	freenas net
+CATEGORIES?=	freenas
 MASTER_SITES=	https://api.github.com/repos/freenas/samba/tarball/
 DISTNAME=	freenas/v4-8-stable
 
