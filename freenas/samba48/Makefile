@@ -306,7 +306,7 @@ CONFIGURE_ARGS+=	--disable-avahi
 .endif
 
 .if ${PORT_OPTIONS:MMDNSRESPONDER}
-LIB_DEPENDS+=		libdns_sd.so:net/mDNSResponder
+LIB_DEPENDS+=		libdns_sd.so:freenas/mDNSResponder
 CONFIGURE_ARGS+=	--enable-dnssd
 .else
 CONFIGURE_ARGS+=	--disable-dnssd
