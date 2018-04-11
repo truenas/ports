@@ -6,6 +6,7 @@ PORTVERSION?=	${SAMBA4_VERSION}
 PORTREVISION?=	0
 CATEGORIES?=	freenas
 MASTER_SITES=	https://api.github.com/repos/freenas/samba/tarball/
+PKGNAMEPREFIX=	freenas-
 DISTNAME=	freenas/v4-8-stable
 
 MAINTAINER?=	john@ixsystems.com

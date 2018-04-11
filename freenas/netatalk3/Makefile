@@ -8,6 +8,7 @@ PORTEPOCH=	1
 CATEGORIES=	freenas
 PKGNAMESUFFIX=	3
 MASTER_SITES=   https://api.github.com/repos/freenas/Netatalk/tarball/
+PKGNAMEPREFIX=	freenas-
 DISTNAME=       freenas/master
 
 MAINTAINER=	john@ixsystems.com

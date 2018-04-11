@@ -6,6 +6,7 @@ PORTVERSION=	878.1.1
 PORTREVISION=	0
 CATEGORIES=	freenas
 MASTER_SITES=   https://api.github.com/repos/freenas/mDNSResponder/tarball/
+PKGNAMEPREFIX=	freenas-
 DISTNAME=       freenas/master
 
 MAINTAINER=	john@ixsystems.com

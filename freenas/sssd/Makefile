@@ -6,6 +6,7 @@ PORTVERSION=	1.11.7
 PORTREVISION=	11
 CATEGORIES=	freenas
 MASTER_SITES=	https://releases.pagure.org/SSSD/${PORTNAME}/
+PKGNAMEPREFIX=	freenas-
 
 MAINTAINER=	lukas.slebodnik@intrak.sk
 COMMENT=	System Security Services Daemon
