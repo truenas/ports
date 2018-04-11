@@ -4,7 +4,7 @@
 PORTNAME=	mDNSResponder
 PORTVERSION=	878.1.1
 PORTREVISION=	0
-CATEGORIES=	freenas
+CATEGORIES=	freenas net dns
 MASTER_SITES=   https://api.github.com/repos/freenas/mDNSResponder/tarball/
 DISTNAME=       freenas/master
 
