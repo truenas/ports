@@ -37,7 +37,8 @@ SAMBA4_DIR=	${GH_BRANCH:S/freenas\///}
 
 WRKSRC?=	${WRKDIR}/${SAMBA4_DIR}
 
-PYTHON=	/usr/local/bin/python2.7
+CONFIGURE_ENV+=	PYTHON=/usr/local/bin/python2.7
+MAKE_ENV+=	PYTHON=/usr/local/bin/python2.7
 
 .if !defined(SAMBA4_SUBPORT)
 CPE_VENDOR=		samba
