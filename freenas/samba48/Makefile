@@ -528,7 +528,6 @@ pre-extract:
 	 ${MV} ${FREENAS_DISTDIR}/${GH_FILE} ${FREENAS_DISTDIR}/${GH_TARBALL}
 
 do-extract: ${EXTRACT_WRKDIR}
-	set -x; \
 	if ! (cd ${EXTRACT_WRKDIR} && tar -zxvf ${FREENAS_DISTDIR}/${GH_TARBALL} --no-same-owner --no-same-permissions);\
 	then \
 		exit 1; \
