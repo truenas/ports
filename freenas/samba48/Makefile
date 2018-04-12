@@ -37,8 +37,8 @@ SAMBA4_DIR=	${GH_BRANCH:S/freenas\///}
 
 WRKSRC?=	${WRKDIR}/${SAMBA4_DIR}
 
-CONFIGURE_ENV+=	PYTHON=/usr/local/bin/python2.7
-MAKE_ENV+=	PYTHON=/usr/local/bin/python2.7
+CONFIGURE_ENV=	PYTHON_VERSION="python2.7"
+MAKE_ENV=	PYTHON_VERSION="python2.7"
 
 .if !defined(SAMBA4_SUBPORT)
 CPE_VENDOR=		samba
@@ -77,7 +77,7 @@ CONFIGURE_ARGS+=	--mandir="${MANPREFIX}/man" \
 # Flags
 CONFIGURE_ENV+=		PTHREAD_LDFLAGS="-lpthread"
 
-USES=			cpe compiler waf pkgconfig perl5 python:2 \
+USES=			cpe compiler waf pkgconfig perl5 python:2.7 \
 			readline iconv shebangfix gettext zip
 USE_PERL5=		build
 USE_LDCONFIG=		${SAMBA4_LIBDIR}
@@ -114,8 +114,8 @@ LIB_DEPENDS+=		libdbus-glib-1.so:devel/dbus-glib
 # IDL compiler
 BUILD_DEPENDS+=		p5-Parse-Yapp>=0:devel/p5-Parse-Yapp
 #
-BUILD_DEPENDS+=		${PYTHON_PKGNAMEPREFIX}dnspython2>=1.9.4:dns/py-dnspython2
-RUN_DEPENDS+=		${PYTHON_PKGNAMEPREFIX}dnspython2>=1.9.4:dns/py-dnspython2
+BUILD_DEPENDS+=		${PYTHON_PKGNAMEPREFIX}dnspython2>=1.12.0:freenas/py-dnspython2
+RUN_DEPENDS+=		${PYTHON_PKGNAMEPREFIX}dnspython2>=1.12.0:freenas/py-dnspython2
 
 # Using the bundled versions. Will make this conditional later.
 
