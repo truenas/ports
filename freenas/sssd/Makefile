@@ -71,7 +71,7 @@ OPTIONS_SUB=	yes
 
 SMB_DESC=		Install IPA and AD providers (requires Samba4)
 #SMB_USES=		samba:lib # libndr-krb5pac libndr-nbt libndr libsamba-util
-SMB_BUILD_DEPENDS=	samba48>=4.8.0:${PORTSDIR}/freenas/samba48
+SMB_BUILD_DEPENDS=	freenas-samba48>=4.8.0:${PORTSDIR}/freenas/samba48
 SMB_CONFIGURE_WITH=	samba
 
 post-patch:
