@@ -7,7 +7,7 @@ PORTREVISION=	4
 CATEGORIES=	accessibility
 MASTER_SITES=	http://launchpad.net/redshift/trunk/${PORTVERSION}/+download/
 
-MAINTAINER=	feld@FreeBSD.org
+MAINTAINER=	swills@FreeBSD.org
 COMMENT=	Adjusts the color temperature of your screen
 
 LICENSE=	GPLv3
@@ -42,10 +42,10 @@ RANDR_CONFIGURE_ENABLE=	randr
 VIDMODE_USE=		XORG=xxf86vm
 VIDMODE_CONFIGURE_ENABLE=	vidmode
 
-GUI_USES=		python
+GUI_USES=		python:2.7
 GUI_CONFIGURE_ENABLE=	gui
-GUI_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}gtk2>0:x11-toolkits/py-gtk2 \
-			${PYTHON_PKGNAMEPREFIX}xdg>0:devel/py-xdg
+GUI_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}gtk2>0:x11-toolkits/py-gtk2@${PY_FLAVOR} \
+			${PYTHON_PKGNAMEPREFIX}xdg>0:devel/py-xdg@${PY_FLAVOR}
 
 GNOME_CONFIGURE_ENABLE=	gnome-clock
 GNOME_USE=		GNOME=glib20,gconf2

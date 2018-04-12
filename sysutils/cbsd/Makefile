@@ -1,13 +1,14 @@
 # $FreeBSD$
 
 PORTNAME=	cbsd
-PORTVERSION=	11.1.4
+DISTVERSION=	11.1.18
 CATEGORIES=	sysutils
 
 MAINTAINER=	olevole@olevole.ru
 COMMENT=	Yet another FreeBSD Jail and Bhyve Management Utility
 
 LICENSE=	BSD2CLAUSE
+LICENSE_FILE=	${WRKSRC}/LICENSE
 
 RUN_DEPENDS=	rsync:net/rsync \
 		sudo:security/sudo \
@@ -16,23 +17,28 @@ RUN_DEPENDS=	rsync:net/rsync \
 LIB_DEPENDS=	libssh2.so:security/libssh2 \
 		libsqlite3.so:databases/sqlite3
 
+USES=		libedit pkgconfig
 USE_GITHUB=	yes
-
-USES=	libedit
 USE_RC_SUBR=	cbsdd cbsdrsyncd
 
-SUB_FILES=	pkg-message
-PLIST_FILES+=	man/man8/cbsd.8.gz
+SUB_FILES=	pkg-message pkg-deinstall
 
 CBSD_HOME?=	${PREFIX}/cbsd
 
 USERS=	${PORTNAME}
 GROUPS=	${PORTNAME}
 
+BIN_FILES=	\
+		bin/cbsdsh/mknodes \
+		bin/cbsdsh/mksyntax
+
 do-install:
 	@${ECHO} "Installing in ${CBSD_HOME}"
 	${MKDIR} ${STAGEDIR}${CBSD_HOME}
 	${CP} -a ${WRKSRC}/ ${STAGEDIR}${CBSD_HOME}
+.for i in ${BIN_FILES}
+	${STRIP_CMD} ${STAGEDIR}${CBSD_HOME}/${i}
+.endfor
 	${INSTALL_MAN} ${WRKSRC}/man/cbsd.8 ${STAGEDIR}${PREFIX}/man/man8/cbsd.8
 	${INSTALL_PROGRAM} ${WRKSRC}/bin/cbsdsh/cbsd ${STAGEDIR}${PREFIX}/bin
 

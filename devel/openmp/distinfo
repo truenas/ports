@@ -1,3 +1,3 @@
-TIMESTAMP = 1501781996
-SHA256 (openmp-4.0.1.src.tar.xz) = ec693b170e0600daa7b372240a06e66341ace790d89eaf4a843e8d56d5f4ada4
-SIZE (openmp-4.0.1.src.tar.xz) = 2275240
+TIMESTAMP = 1519994704
+SHA256 (openmp-6.0.0.src.tar.xz) = 7c0e050d5f7da3b057579fb3ea79ed7dc657c765011b402eb5bbe5663a7c38fc
+SIZE (openmp-6.0.0.src.tar.xz) = 2272360

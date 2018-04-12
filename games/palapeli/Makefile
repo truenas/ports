@@ -1,22 +1,19 @@
 # $FreeBSD$
 
 PORTNAME=	palapeli
-PORTVERSION=	${KDE4_VERSION}
-PORTREVISION=	2
-CATEGORIES=	games kde kde-kde4
+DISTVERSION=	${KDE_APPLICATIONS_VERSION}
+CATEGORIES=	games kde kde-applications
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	${${PORTNAME}_DESC}
 
-USES=		cmake:outsource kde:4 shared-mime-info tar:xz
-USE_KDE=	kdelibs libkdegames automoc4
-USE_QT4=	corelib gui gui \
-		moc_build qmake_build rcc_build uic_build
+USES=		cmake:outsource kde:5 shared-mime-info tar:xz
+USE_KDE=	archive auth codecs completion config configwidgets coreaddons \
+		crash i18n itemviews jobwidgets kio libkdegames notifications service \
+		widgetsaddons xmlgui
+USE_QT5=	concurrent core dbus gui network svg widgets xml \
+		buildtools_build qmake_build
 USE_LDCONFIG=	yes
 
-post-patch:
-	${REINPLACE_CMD} -e '/^update_xdg_mimetypes/ d' \
-		${WRKSRC}/mime/CMakeLists.txt
-
-.include <${.CURDIR}/../kdegames4/Makefile.common>
+.include <${.CURDIR}/../kdegames/Makefile.common>
 .include <bsd.port.mk>

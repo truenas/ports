@@ -1,20 +1,22 @@
 # $FreeBSD$
 
 PORTNAME=	kig
-PORTVERSION=	${KDE4_VERSION}
-PORTREVISION=	5
-CATEGORIES=	math kde kde-kde4
+DISTVERSION=	${KDE_APPLICATIONS_VERSION}
+CATEGORIES=	math kde kde-applications
 
 MAINTAINER=	kde@FreeBSD.org
-COMMENT=	KDE 4 interactive geometry application
+COMMENT=	KDE interactive geometry application
 
-LIB_DEPENDS=	libboost_python.so:devel/boost-python-libs
+LIB_DEPENDS=	${PY_BOOST}
 
-USES=		cmake:outsource compiler:c++11-lib kde:4 python:run \
+USES=		cmake:outsource gettext compiler:c++11-lib kde:5 python:run \
 		shebangfix tar:xz
-USE_KDE=	kdelibs automoc4
-USE_QT4=	gui xml moc_build qmake_build rcc_build uic_build
-
+USE_KDE=	archive auth codecs completion config configwidgets coreaddons \
+		crash doctools ecm emoticons i18n iconthemes init itemmodels \
+		jobwidgets kdelibs4support kio parts service sonnet texteditor \
+		textwidgets widgetsaddons xmlgui
+USE_QT5=	core dbus gui network printsupport svg widgets xml xmlpatterns \
+		buildtools_build qmake_build
 SHEBANG_FILES=	pykig/pykig.py
 
 .include <bsd.port.mk>

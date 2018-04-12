@@ -11,10 +11,8 @@ COMMENT=	PHP-based looking glass for Cisco, Juniper and Quagga/Zebra routers
 
 LICENSE=	BSD3CLAUSE
 
-USES=		tar:txz
-USE_MYSQL=	yes
+USES=		mysql tar:txz php:web
 USE_PHP=	mysql pcre sockets xml
-WANT_PHP_WEB=	yes
 NO_ARCH=	yes
 NO_BUILD=	yes
 PKGMESSAGE=	${WRKDIR}/pkg-message
@@ -33,10 +31,14 @@ OPTIONS_DEFAULT=	SSH2
 
 SSH2_DESC=		SSH2 support for router access
 
-.include <bsd.port.options.mk>
+.include <bsd.port.pre.mk>
 
 .if ${PORT_OPTIONS:MSSH2}
-RUN_DEPENDS+=	${PHPBASE}/lib/php/${PHP_EXT_DIR}/ssh2.so:security/pecl-ssh2
+.  if ${PHP_VER} < 70
+RUN_DEPENDS+=	${PHPBASE}/lib/php/${PHP_EXT_DIR}/ssh2.so:security/pecl-ssh2-0@${PHP_FLAVOR}
+.  else
+RUN_DEPENDS+=	${PHPBASE}/lib/php/${PHP_EXT_DIR}/ssh2.so:security/pecl-ssh2@${PHP_FLAVOR}
+.  endif
 .endif
 
 do-install:
@@ -47,4 +49,4 @@ do-install:
 	${CP} ${WRKSRC}/klg_config.php ${STAGEDIR}/${WWWDIR}/klg_config.php.sample
 	${CP} ${WRKSRC}/klg_template.html ${STAGEDIR}/${WWWDIR}/klg_template.html.sample
 
-.include <bsd.port.mk>
+.include <bsd.port.post.mk>

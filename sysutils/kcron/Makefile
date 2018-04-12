@@ -1,15 +1,20 @@
 # $FreeBSD$
 
 PORTNAME=	kcron
-PORTVERSION=	${KDE4_VERSION}
-PORTREVISION=	1
-CATEGORIES=	sysutils kde kde-kde4
+DISTVERSION=	${KDE_APPLICATIONS_VERSION}
+CATEGORIES=	sysutils kde kde-applications
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	KDE task scheduler
 
-USES=		cmake:outsource kde:4 tar:xz
-USE_KDE=	kdelibs automoc4
-USE_QT4=	moc_build qmake_build rcc_build uic_build
+BUILD_DEPENDS=	${LOCALBASE}/share/xsl/docbook/html/docbook.xsl:textproc/docbook-xsl \
+		docbook-xml>0:textproc/docbook-xml
+
+USES=		cmake:outsource gettext kde:5 tar:xz
+USE_KDE=	auth codecs completion config configwidgets coreaddons ecm \
+		doctools i18n iconthemes jobwidgets kio service widgetsaddons \
+		xmlgui
+USE_QT5=	core gui network printsupport widgets xml \
+		buildtools_build qmake_build
 
 .include <bsd.port.mk>

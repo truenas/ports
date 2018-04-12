@@ -3,6 +3,7 @@
 
 PORTNAME=	qemu
 PORTVERSION=	2.9.0
+PORTREVISION=	1
 CATEGORIES=	emulators
 MASTER_SITES=	http://wiki.qemu.org/download/
 DIST_SUBDIR=	qemu/${PORTVERSION}
@@ -17,7 +18,7 @@ LIB_DEPENDS?=	libnettle.so:security/nettle \
 		libfreetype.so:print/freetype2
 
 HAS_CONFIGURE=	yes
-USES?=		cpe gmake pkgconfig bison perl5 python:2,build tar:bzip2
+USES?=		cpe gmake pkgconfig bison perl5 python:2.7,build tar:bzip2
 USE_PERL5=	build
 MAKE_ENV+=	BSD_MAKE="${MAKE}" V=1
 .if !defined(PKGNAMESUFFIX) || ${PKGNAMESUFFIX} != "-utils"
@@ -47,7 +48,7 @@ OPTIONS_DEFAULT=X11 GTK2 OPENGL GNUTLS SASL JPEG PNG CDROM_DMA CURL PCAP GNS3 NC
 OPTIONS_SUB=	yes
 X11_USE=	SDL=sdl XORG=x11,xext GNOME=gdkpixbuf2
 X11_CONFIGURE_ENABLE=	sdl
-GTK2_USE=	GNOME=gtk20,vte
+GTK2_USE=	GNOME=gtk20,vte,gdkpixbuf2 XORG=x11,xext
 GTK2_USES=	gettext
 GTK2_CONFIGURE_OFF=	--disable-gtk --disable-vte
 GNUTLS_LIB_DEPENDS=	libgnutls.so:security/gnutls

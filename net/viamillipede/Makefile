@@ -1,26 +1,25 @@
 # $FreeBSD$
 
 PORTNAME=	viamillipede
-PORTVERSION=	1.0
+PORTVERSION=	0.7
+DISTVERSIONPREFIX=	v
 CATEGORIES=	net
-MASTER_SITES=	https://github.com/agokhale/viamillipede/
 
 MAINTAINER=	ash_ports@aeria.net
-COMMENT=	parallel TCP for pipe transport
+COMMENT=	Parallel TCP for pipe transport
 
-LICENSE=	BSD
+LICENSE=	BSD3CLAUSE
 
-USE_GITHUB= 	yes
+USES=		uidfix
+USE_GITHUB=	yes
 GH_ACCOUNT=	agokhale
-GH_TAGNAME=	v0.6
 
-BINS=		viamillipede
+PLIST_FILES=	bin/viamillipede man/man1/viamillipede.1.gz
 
-.PHONY= bad_ideas
-bad_ideas: Makefile
-	rm distinfo
-	sudo make fetch 
-	make makesum
+.include <bsd.port.pre.mk>
 
-.include <bsd.port.mk>
+.if ${OPSYS} == FreeBSD && ${OSVERSION} < 1004000
+BROKEN=		Needs bsd.prog.mk features from at least 10.4, otherwise referenced /usr/share/mk/bsd.own.mk line 505: MK_DEBUG_FILES can't be set by a user.
+.endif
 
+.include <bsd.port.post.mk>

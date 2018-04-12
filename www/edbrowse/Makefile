@@ -2,12 +2,12 @@
 
 PORTNAME=	edbrowse
 PORTVERSION=	3.5.1
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	www editors
 MASTER_SITES=	http://the-brannons.com/edbrowse/ \
 		http://rithmomachia.org/edbrowse/
 
-MAINTAINER=	david.vionnet@vmailbox.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Line-oriented Web browser and text editor
 
 LICENSE=	GPLv2
@@ -34,9 +34,9 @@ do-install:
 
 post-install-DOCS-on:
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}
-	${INSTALL_MAN} ${WRKBASE}/CHANGES ${STAGEDIR}${DOCSDIR}
-	${INSTALL_MAN} ${WRKBASE}/COPYING ${STAGEDIR}${DOCSDIR}
-	${INSTALL_MAN} ${WRKBASE}/README ${STAGEDIR}${DOCSDIR}
+	${INSTALL_DATA} ${WRKBASE}/CHANGES ${STAGEDIR}${DOCSDIR}
+	${INSTALL_DATA} ${WRKBASE}/COPYING ${STAGEDIR}${DOCSDIR}
+	${INSTALL_DATA} ${WRKBASE}/README ${STAGEDIR}${DOCSDIR}
 	(cd ${WRKBASE}/doc && \
 		${FIND} . \( -name setup.ebrc -or -name "man-edbrowse*" \) -delete  && \
 		${COPYTREE_SHARE} . ${STAGEDIR}${DOCSDIR})

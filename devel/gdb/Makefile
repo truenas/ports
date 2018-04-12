@@ -2,8 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	gdb
-PORTVERSION=	8.0
-PORTREVISION=	2
+PORTVERSION=	8.1
+PORTREVISION=	1
 CATEGORIES=	devel
 MASTER_SITES=	GNU
 
@@ -11,6 +11,10 @@ MAINTAINER=	pizzamig@FreeBSD.org
 COMMENT=	GNU GDB of newer version than comes with the system
 
 LICENSE=	GPLv3
+LICENSE_FILE=	${WRKSRC}/COPYING3
+
+# untested on sparc64, might work
+ONLY_FOR_ARCHS=	aarch64 amd64 armv6 armv7 i386 mips powerpc powerpc64
 
 TEST_DEPENDS=	runtest:misc/dejagnu
 
@@ -33,29 +37,23 @@ CONFIGURE_ARGS=	--program-suffix=${PORTVERSION:S/.//g} \
 		--without-libunwind-ia64
 CFLAGS:=	${CFLAGS:C/ +$//}	# blanks at EOL creep in sometimes
 CFLAGS+=	-DRL_NO_COMPAT -Wno-unused-function -Wno-unused-variable
+CFLAGS+=	-Wno-unknown-warning-option
 EXCLUDE=	dejagnu expect sim texinfo intl
 EXTRACT_AFTER_ARGS=	${EXCLUDE:S/^/--exclude /}
-EXTRA_PATCHES=	${FILESDIR}/commit-45eba0ab7d \
-		${FILESDIR}/commit-3c3ae77e68 \
-		${FILESDIR}/commit-b5430a3ced \
-		${FILESDIR}/commit-762c974a09 \
-		${FILESDIR}/commit-929edea98d \
-		${FILESDIR}/commit-6e5eab33ab \
-		${FILESDIR}/commit-382b69bbb7 \
-		${FILESDIR}/commit-2af9fc4432 \
-		${FILESDIR}/commit-0b9305edf1 \
-		${FILESDIR}/commit-e6f3b9c319 \
-		${FILESDIR}/commit-4b654465bf \
-		${FILESDIR}/commit-b30ff123fb \
-		${FILESDIR}/commit-48aeef91c2 \
-		${FILESDIR}/commit-0aa37b654c
+EXTRA_PATCHES=	${FILESDIR}/commit-d2176225dc \
+		${FILESDIR}/commit-b999e2038d \
+		${FILESDIR}/commit-262f62f57d \
+		${FILESDIR}/commit-92fce24de2 \
+		${FILESDIR}/commit-2d97a5d9d3 \
+		${FILESDIR}/commit-906b4aac4c \
+		${FILESDIR}/commit-f169cfdc08 \
+		${FILESDIR}/commit-12279366d7 \
+		${FILESDIR}/commit-386a867618 \
+		${FILESDIR}/commit-7efba073e2
 LIB_DEPENDS+=	libexpat.so:textproc/expat2
 
 VER=		${PORTVERSION:S/.//g}
 PLIST_SUB=	VER=${VER}
-
-# untested elsewhere, might work
-ONLY_FOR_ARCHS=	aarch64 amd64 armv6 i386 mips powerpc powerpc64	
 
 OPTIONS_DEFINE=	DEBUG GDB_LINK GUILE KGDB PYTHON TUI
 

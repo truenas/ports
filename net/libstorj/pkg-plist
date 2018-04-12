@@ -1,7 +1,6 @@
 bin/storj
 include/storj.h
 lib/libstorj.a
-lib/libstorj.la
 lib/libstorj.so
 lib/libstorj.so.0
 lib/libstorj.so.0.0.0

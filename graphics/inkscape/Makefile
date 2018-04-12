@@ -2,20 +2,21 @@
 # $FreeBSD$
 
 PORTNAME=	inkscape
-PORTVERSION=	0.92.1
-PORTREVISION=	3
+PORTVERSION=	0.92.2
+PORTREVISION=	5
 CATEGORIES=	graphics gnome
-MASTER_SITES=	https://launchpadlibrarian.net/306309537/ \
+MASTER_SITES=	https://launchpadlibrarian.net/332184472/ \
+		https://inkscape.org/en/gallery/item/11254/ \
 		LOCAL/kwm
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Full featured open source SVG editor
 
-LICENSE=	GPLv2+ GPLv3+ LGPL21 MPL
+LICENSE=	GPLv2+ GPLv3+ LGPL21 MPL11
 LICENSE_COMB=	multi
 LICENSE_FILE_GPLv2=	${WRKSRC}/GPL2.txt
 LICENSE_FILE_GPLv3=	${WRKSRC}/GPL3.txt
-LICENSE_FILE_LGPL2=	${WRKRSC}/LGPL2.txt
+LICENSE_FILE_LGPL21=	${WRKSRC}/LGPL2.1.txt
 
 BUILD_DEPENDS=	${LOCALBASE}/include/boost/concept_check.hpp:devel/boost-libs
 LIB_DEPENDS=	libpopt.so:devel/popt \
@@ -32,13 +33,12 @@ LIB_DEPENDS=	libpopt.so:devel/popt \
 
 USE_GNOME=	gtkmm24 libxml2 libxslt
 USES=		compiler:c++11-lib cmake cpe desktop-file-utils gnome \
-		iconv:wchar_t jpeg pathfix pkgconfig python:2,build \
+		iconv:wchar_t jpeg pathfix pkgconfig python:2.7,build \
 		shebangfix tar:bzip2
 USE_XORG=	x11
 INSTALLS_ICONS=	yes
 CMAKE_ARGS+=	-DWITH_GNOME_VFS:BOOL=NO
 
-python_CMD?=	${LOCALBASE}/bin/python2
 SHEBANG_FILES=	cxxtest/cxxtestgen.pl share/extensions/*.p[lm] \
 		share/extensions/*.py share/extensions/genpofiles.sh \
 		fix-roff-punct
@@ -81,7 +81,7 @@ USES+=			gettext
 #NLS_USES=		gettext
 
 post-patch:
-	@${REINPLACE_CMD} -e 's|COMMAND python|COMMAND python2|g' \
+	@${REINPLACE_CMD} -e 's|COMMAND python|COMMAND ${PYTHON_VERSION}|g' \
 		${WRKSRC}/share/*/CMakeLists.txt
 
 .include <bsd.port.mk>

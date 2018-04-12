@@ -11,15 +11,14 @@ COMMENT=	Web based git repository browser written in PHP
 
 LICENSE=	GPLv2
 
-USES=		gettext tar:bzip2
+USES=		gettext php:web tar:bzip2
 USE_PHP=	bz2 fileinfo mbstring memcache posix simplexml spl zlib
-WANT_PHP_WEB=	yes
 NO_BUILD=	yes
 
 PLIST_SUB=	WWWOWN="${WWWOWN}" WWWGRP="${WWWGRP}"
 SUB_FILES=	pkg-message
 
-RUN_DEPENDS+=	${LOCALBASE}/lib/php/${PHP_EXT_DIR}/xdiff.so:textproc/pecl-xdiff
+RUN_DEPENDS+=	${LOCALBASE}/lib/php/${PHP_EXT_DIR}/xdiff.so:textproc/pecl-xdiff@${PHP_FLAVOR}
 
 do-install:
 	${MKDIR} ${STAGEDIR}${WWWDIR}

@@ -1,24 +1,19 @@
---- ui/gfx/mojo/buffer_types_struct_traits.cc.orig	2017-08-02 16:57:16.106307000 +0200
-+++ ui/gfx/mojo/buffer_types_struct_traits.cc	2017-08-02 16:58:22.487855000 +0200
-@@ -25,7 +25,7 @@
-     gfx::NativePixmapHandle>::fds(const gfx::NativePixmapHandle& pixmap_handle,
-                                   void* context) {
-   PixmapHandleFdList* handles = static_cast<PixmapHandleFdList*>(context);
+--- ui/gfx/mojo/buffer_types_struct_traits.cc.orig	2017-12-15 02:04:51.000000000 +0100
++++ ui/gfx/mojo/buffer_types_struct_traits.cc	2017-12-24 20:18:51.935594000 +0100
+@@ -12,10 +12,10 @@
+ StructTraits<gfx::mojom::NativePixmapHandleDataView, gfx::NativePixmapHandle>::
+     fds(const gfx::NativePixmapHandle& pixmap_handle) {
+   std::vector<mojo::ScopedHandle> handles;
 -#if defined(OS_LINUX)
 +#if defined(OS_LINUX) || defined(OS_BSD)
-   if (handles->empty()) {
-     // Generate the handles here, but do not send them yet.
-     for (const base::FileDescriptor& fd : pixmap_handle.fds) {
-@@ -34,7 +34,7 @@
-     }
-     return PixmapHandleFdList(handles->size());
-   }
+   for (const base::FileDescriptor& fd : pixmap_handle.fds)
+     handles.emplace_back(mojo::WrapPlatformFile(fd.fd));
 -#endif  // defined(OS_LINUX)
 +#endif  // defined(OS_LINUX) || defined(OS_BSD)
-   return std::move(*handles);
+   return handles;
  }
  
-@@ -42,7 +42,7 @@
+@@ -23,7 +23,7 @@
      gfx::mojom::NativePixmapHandleDataView,
      gfx::NativePixmapHandle>::Read(gfx::mojom::NativePixmapHandleDataView data,
                                     gfx::NativePixmapHandle* out) {
@@ -27,7 +22,7 @@
    mojo::ArrayDataView<mojo::ScopedHandle> handles_data_view;
    data.GetFdsDataView(&handles_data_view);
    for (size_t i = 0; i < handles_data_view.size(); ++i) {
-@@ -74,7 +74,7 @@
+@@ -55,7 +55,7 @@
  StructTraits<gfx::mojom::GpuMemoryBufferHandleDataView,
               gfx::GpuMemoryBufferHandle>::
      native_pixmap_handle(const gfx::GpuMemoryBufferHandle& handle) {
@@ -36,7 +31,7 @@
    return handle.native_pixmap_handle;
  #else
    static gfx::NativePixmapHandle pixmap_handle;
-@@ -113,7 +113,7 @@
+@@ -94,7 +94,7 @@
      out->offset = data.offset();
      out->stride = data.stride();
    }

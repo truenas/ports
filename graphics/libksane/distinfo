@@ -1,2 +1,3 @@
-SHA256 (KDE/4.14.3/libksane-4.14.3.tar.xz) = 3a8ae92b21bba11aa3ac2b8a8d4e4aff30de526e0f966b6ae52f57972148cda2
-SIZE (KDE/4.14.3/libksane-4.14.3.tar.xz) = 80324
+TIMESTAMP = 1520519284
+SHA256 (KDE/applications/17.12.3/libksane-17.12.3.tar.xz) = 62b646fb7c27c89c12061128c6e93eae5094be41a452d9cc728447492ff7dde6
+SIZE (KDE/applications/17.12.3/libksane-17.12.3.tar.xz) = 136860

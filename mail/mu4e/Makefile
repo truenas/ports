@@ -1,10 +1,10 @@
 # $FreeBSD$
 
 PORTNAME=	mu4e
-PORTVERSION=	0.9.16
+PORTVERSION=	1.0
 DISTVERSIONPREFIX=	v
 CATEGORIES=	mail
-PKGNAMESUFFIX=	-${EMACS_PORT_NAME}
+PKGNAMESUFFIX=	${EMACS_PKGNAMESUFFIX}
 
 MAINTAINER=	hrs@FreeBSD.org
 COMMENT=	Emacs frontend for Mu
@@ -13,11 +13,11 @@ LICENSE=	GPLv3
 
 RUN_DEPENDS=	mu:mail/mu
 
-USES=		autoreconf gmake makeinfo pkgconfig
+USES=		autoreconf emacs gmake makeinfo pkgconfig
 USE_GITHUB=	yes
 GH_PROJECT=	mu
 GH_ACCOUNT=	djcb
-USE_EMACS=	yes
+
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--disable-gtk \
 		--disable-webkit \

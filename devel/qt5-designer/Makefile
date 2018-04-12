@@ -2,6 +2,7 @@
 
 PORTNAME=	designer
 DISTVERSION=	${QT5_VERSION}
+PORTREVISION=	4
 CATEGORIES=	devel
 PKGNAMEPREFIX=	qt5-
 
@@ -9,7 +10,7 @@ MAINTAINER=	kde@FreeBSD.org
 COMMENT=	Qt 5 graphical user interface designer
 
 USE_QT5=	assistant_run core gui network printsupport quick uiplugin \
-		webkit widgets xml buildtools_build
+		widgets xml buildtools_build
 QT_DIST=	tools
 USES=		qmake
 USE_LDCONFIG=	${PREFIX}/${QT_LIBDIR_REL}
@@ -22,6 +23,12 @@ DESKTOP_ENTRIES="Qt 5 Designer" "" \
 BUILD_WRKSRC=	${WRKSRC}/src/${PORTNAME}
 INSTALL_WRKSRC=	${WRKSRC}/src/${PORTNAME}
 
+OPTIONS_DEFINE=	WEBKIT
+OPTIONS_SUB=	yes
+WEBKIT_DESC=	Build WebKit-based WebView widget
+WEBKIT_QMAKE_ON=	CONFIG+=use_webkit
+WEBKIT_USE=	QT5=webkit
+
 post-patch:
 # uiplugin is built in x11-toolkits/qt5-uiplugin.
 # uitools is built in devel/qt5-uitools.
@@ -31,5 +38,8 @@ post-patch:
 post-install:
 	${INSTALL_DATA} ${WRKSRC}/src/${PORTNAME}/src/designer/images/designer.png \
 		${STAGEDIR}${PREFIX}/share/pixmaps/designer-qt5.png
+	# The generated .pc file refers to a nonexistent other .pc file
+	${REINPLACE_CMD} -e '/^Requires/s/Qt5UiPlugin//' \
+		${STAGEDIR}${PREFIX}/libdata/pkgconfig/Qt5Designer.pc
 
 .include <bsd.port.mk>

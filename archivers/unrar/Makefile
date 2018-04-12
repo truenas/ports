@@ -2,12 +2,12 @@
 # $FreeBSD$
 
 PORTNAME=	unrar
-PORTVERSION=	5.50b4
-PORTEPOCH=	5
+DISTVERSION=	5.50
+PORTEPOCH=	6
 CATEGORIES+=	archivers
-MASTER_SITES=	http://www.rarlab.com/rar/ \
+MASTER_SITES=	https://www.rarlab.com/rar/ \
 		LOCAL/sunpoet
-DISTNAME=	unrarsrc-5.5.5
+DISTNAME=	unrarsrc-5.5.8
 
 MAINTAINER?=	sunpoet@FreeBSD.org
 COMMENT=	Extract, view & test RAR archives
@@ -26,7 +26,7 @@ OPENSSL_AES_DESC=	Use OpenSSL implementation of AES
 CONFLICTS_INSTALL?=	zh-unrar unrar-iconv
 
 LDFLAGS+=	-lpthread
-MAKE_ARGS=	CXX=${CXX} CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}" STRIP=${STRIP_CMD}
+MAKE_ARGS=	CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}" STRIP="${STRIP_CMD}"
 MAKEFILE=	makefile
 WRKSRC=		${WRKDIR}/${PORTNAME}
 

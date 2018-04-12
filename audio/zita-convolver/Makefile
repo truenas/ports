@@ -3,10 +3,11 @@
 
 PORTNAME=	zita-convolver
 PORTVERSION=	3.1.0
+PORTREVISION=	1
 CATEGORIES=	audio
 MASTER_SITES=	http://kokkinizita.linuxaudio.org/linuxaudio/downloads/
 
-MAINTAINER=	yuri@rawbw.com
+MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Fast, partitioned convolution engine library
 
 LICENSE=	GPLv3

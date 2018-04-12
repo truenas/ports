@@ -1,23 +1,26 @@
 # $FreeBSD$
 
 PORTNAME=	ktp-text-ui
-PORTVERSION=	${KTP_VERSION}
-PORTREVISION=	2
-CATEGORIES=	net-im kde
-MASTER_SITES=	KDE/${KTP_BRANCH}/kde-telepathy/${PORTVERSION}/src
+DISTVERSION=	${KDE_APPLICATIONS_VERSION}
+CATEGORIES=	net-im kde kde-applications
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	KDE chat window application
 
-LIB_DEPENDS=	libtelepathy-qt4.so:net-im/telepathy-qt4 \
-		libtelepathy-logger-qt4.so:net-im/telepathy-logger-qt4 \
-		libktpcommoninternalsprivate.so:net-im/ktp-common-internals
+LIB_DEPENDS=	libtelepathy-qt5.so:net-im/telepathy-qt5 \
+		libtelepathy-logger-qt.so:net-im/telepathy-logger-qt5 \
+		libKTpCommonInternals.so:net-im/ktp-common-internals
 RUN_DEPENDS=	${KDE_PREFIX}/bin/ktp-contactlist:net-im/ktp-contact-list
 
-USES=		cmake compiler:c++11-lang gettext kde:4 tar:bzip2
-USE_KDE=	automoc4
-USE_QT4=	corelib webkit xml \
-		moc_build qmake_build rcc_build uic_build
+USES=		cmake:outsource compiler:c++11-lang gettext kde:5 tar:xz
+USE_KDE=	archive auth codecs completion config configwidgets coreaddons \
+		dbusaddons ecm emoticons i18n iconthemes itemviews jobwidgets \
+		kcmutils kdewebkit kio notifications notifyconfig people \
+		service sonnet textwidgets wallet widgetsaddons windowsystem \
+		xmlgui
+USE_QT5=	core dbus gui location network qml quick speech webchannel \
+		webengine widgets xml \
+		buildtools_build qmake_build
 USE_LDCONFIG=	yes
 
 .include <bsd.port.mk>

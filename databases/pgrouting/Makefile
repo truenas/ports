@@ -2,14 +2,15 @@
 # $FreeBSD$
 
 PORTNAME=	pgrouting
-PORTVERSION=	2.4.2
 DISTVERSIONPREFIX=	v
+DISTVERSION=	2.6.0
 CATEGORIES=	databases geography
 
 MAINTAINER=	lbartoletti@tuxfamily.org
 COMMENT=	Extension to PostGIS to provide geospatial routing functionality
 
-LICENSE=	GPLv2
+LICENSE=	GPLv2+
+LICENSE_FILE=	${WRKSRC}/LICENSE
 
 LIB_DEPENDS=	libboost_system.so:devel/boost-libs\
 		libCGAL.so:math/cgal \

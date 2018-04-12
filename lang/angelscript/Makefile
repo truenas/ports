@@ -3,12 +3,12 @@
 
 PORTNAME=	angelscript
 PORTVERSION=	2.29.0
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	lang
 MASTER_SITES=	http://www.angelcode.com/angelscript/sdk/files/
 DISTNAME=	${PORTNAME}_${PORTVERSION}
 
-MAINTAINER=	vg@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	AngelCode Scripting Library
 
 LICENSE=	ZLIB

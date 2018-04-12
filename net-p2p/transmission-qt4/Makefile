@@ -1,6 +1,5 @@
 # $FreeBSD$
 
-PORTREVISION=	5
 PKGNAMESUFFIX=	-qt4
 
 MAINTAINER=	crees@FreeBSD.org

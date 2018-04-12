@@ -2112,8 +2112,8 @@ lib/python%%XYDOT%%/ensurepip/__pycache__/__main__.cpython-%%XY%%.pyc
 lib/python%%XYDOT%%/ensurepip/__pycache__/_uninstall.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/ensurepip/__pycache__/_uninstall.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/ensurepip/__pycache__/_uninstall.cpython-%%XY%%.pyc
-lib/python%%XYDOT%%/ensurepip/_bundled/pip-9.0.1-py2.py3-none-any.whl
-lib/python%%XYDOT%%/ensurepip/_bundled/setuptools-28.8.0-py2.py3-none-any.whl
+lib/python%%XYDOT%%/ensurepip/_bundled/pip-9.0.3-py2.py3-none-any.whl
+lib/python%%XYDOT%%/ensurepip/_bundled/setuptools-39.0.1-py2.py3-none-any.whl
 lib/python%%XYDOT%%/ensurepip/_uninstall.py
 lib/python%%XYDOT%%/enum.py
 lib/python%%XYDOT%%/filecmp.py
@@ -2193,6 +2193,9 @@ lib/python%%XYDOT%%/idlelib/__pycache__/__init__.cpython-%%XY%%.pyc
 lib/python%%XYDOT%%/idlelib/__pycache__/__main__.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/idlelib/__pycache__/__main__.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/idlelib/__pycache__/__main__.cpython-%%XY%%.pyc
+lib/python%%XYDOT%%/idlelib/__pycache__/_pyclbr.cpython-%%XY%%.opt-1.pyc
+lib/python%%XYDOT%%/idlelib/__pycache__/_pyclbr.cpython-%%XY%%.opt-2.pyc
+lib/python%%XYDOT%%/idlelib/__pycache__/_pyclbr.cpython-%%XY%%.pyc
 lib/python%%XYDOT%%/idlelib/__pycache__/autocomplete.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/idlelib/__pycache__/autocomplete.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/idlelib/__pycache__/autocomplete.cpython-%%XY%%.pyc
@@ -2340,9 +2343,6 @@ lib/python%%XYDOT%%/idlelib/__pycache__/stackviewer.cpython-%%XY%%.pyc
 lib/python%%XYDOT%%/idlelib/__pycache__/statusbar.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/idlelib/__pycache__/statusbar.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/idlelib/__pycache__/statusbar.cpython-%%XY%%.pyc
-lib/python%%XYDOT%%/idlelib/__pycache__/tabbedpages.cpython-%%XY%%.opt-1.pyc
-lib/python%%XYDOT%%/idlelib/__pycache__/tabbedpages.cpython-%%XY%%.opt-2.pyc
-lib/python%%XYDOT%%/idlelib/__pycache__/tabbedpages.cpython-%%XY%%.pyc
 lib/python%%XYDOT%%/idlelib/__pycache__/textview.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/idlelib/__pycache__/textview.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/idlelib/__pycache__/textview.cpython-%%XY%%.pyc
@@ -2364,6 +2364,7 @@ lib/python%%XYDOT%%/idlelib/__pycache__/zoomheight.cpython-%%XY%%.pyc
 lib/python%%XYDOT%%/idlelib/__pycache__/zzdummy.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/idlelib/__pycache__/zzdummy.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/idlelib/__pycache__/zzdummy.cpython-%%XY%%.pyc
+lib/python%%XYDOT%%/idlelib/_pyclbr.py
 lib/python%%XYDOT%%/idlelib/autocomplete.py
 lib/python%%XYDOT%%/idlelib/autocomplete_w.py
 lib/python%%XYDOT%%/idlelib/autoexpand.py
@@ -2417,6 +2418,9 @@ lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_autocomplete.cpython-%%XY
 lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_autoexpand.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_autoexpand.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_autoexpand.cpython-%%XY%%.pyc
+lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_browser.cpython-%%XY%%.opt-1.pyc
+lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_browser.cpython-%%XY%%.opt-2.pyc
+lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_browser.cpython-%%XY%%.pyc
 lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_calltips.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_calltips.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_calltips.cpython-%%XY%%.pyc
@@ -2480,6 +2484,9 @@ lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_pathbrowser.cpython-%%XY%
 lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_percolator.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_percolator.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_percolator.cpython-%%XY%%.pyc
+lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_pyparse.cpython-%%XY%%.opt-1.pyc
+lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_pyparse.cpython-%%XY%%.opt-2.pyc
+lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_pyparse.cpython-%%XY%%.pyc
 lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_query.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_query.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_query.cpython-%%XY%%.pyc
@@ -2492,6 +2499,9 @@ lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_replace.cpython-%%XY%%.py
 lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_rstrip.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_rstrip.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_rstrip.cpython-%%XY%%.pyc
+lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_run.cpython-%%XY%%.opt-1.pyc
+lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_run.cpython-%%XY%%.opt-2.pyc
+lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_run.cpython-%%XY%%.pyc
 lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_scrolledlist.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_scrolledlist.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/idlelib/idle_test/__pycache__/test_scrolledlist.cpython-%%XY%%.pyc
@@ -2524,6 +2534,7 @@ lib/python%%XYDOT%%/idlelib/idle_test/mock_idle.py
 lib/python%%XYDOT%%/idlelib/idle_test/mock_tk.py
 lib/python%%XYDOT%%/idlelib/idle_test/test_autocomplete.py
 lib/python%%XYDOT%%/idlelib/idle_test/test_autoexpand.py
+lib/python%%XYDOT%%/idlelib/idle_test/test_browser.py
 lib/python%%XYDOT%%/idlelib/idle_test/test_calltips.py
 lib/python%%XYDOT%%/idlelib/idle_test/test_colorizer.py
 lib/python%%XYDOT%%/idlelib/idle_test/test_config.py
@@ -2545,10 +2556,12 @@ lib/python%%XYDOT%%/idlelib/idle_test/test_paragraph.py
 lib/python%%XYDOT%%/idlelib/idle_test/test_parenmatch.py
 lib/python%%XYDOT%%/idlelib/idle_test/test_pathbrowser.py
 lib/python%%XYDOT%%/idlelib/idle_test/test_percolator.py
+lib/python%%XYDOT%%/idlelib/idle_test/test_pyparse.py
 lib/python%%XYDOT%%/idlelib/idle_test/test_query.py
 lib/python%%XYDOT%%/idlelib/idle_test/test_redirector.py
 lib/python%%XYDOT%%/idlelib/idle_test/test_replace.py
 lib/python%%XYDOT%%/idlelib/idle_test/test_rstrip.py
+lib/python%%XYDOT%%/idlelib/idle_test/test_run.py
 lib/python%%XYDOT%%/idlelib/idle_test/test_scrolledlist.py
 lib/python%%XYDOT%%/idlelib/idle_test/test_search.py
 lib/python%%XYDOT%%/idlelib/idle_test/test_searchbase.py
@@ -2582,7 +2595,6 @@ lib/python%%XYDOT%%/idlelib/searchbase.py
 lib/python%%XYDOT%%/idlelib/searchengine.py
 lib/python%%XYDOT%%/idlelib/stackviewer.py
 lib/python%%XYDOT%%/idlelib/statusbar.py
-lib/python%%XYDOT%%/idlelib/tabbedpages.py
 lib/python%%XYDOT%%/idlelib/textview.py
 lib/python%%XYDOT%%/idlelib/tooltip.py
 lib/python%%XYDOT%%/idlelib/tree.py
@@ -3388,15 +3400,15 @@ lib/python%%XYDOT%%/test/__pycache__/memory_watchdog.cpython-%%XY%%.pyc
 lib/python%%XYDOT%%/test/__pycache__/mock_socket.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/test/__pycache__/mock_socket.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/test/__pycache__/mock_socket.cpython-%%XY%%.pyc
-lib/python%%XYDOT%%/test/__pycache__/mod_generics_cache.cpython-36.opt-1.pyc
-lib/python%%XYDOT%%/test/__pycache__/mod_generics_cache.cpython-36.opt-2.pyc
-lib/python%%XYDOT%%/test/__pycache__/mod_generics_cache.cpython-36.pyc
+lib/python%%XYDOT%%/test/__pycache__/mod_generics_cache.cpython-%%XY%%.opt-1.pyc
+lib/python%%XYDOT%%/test/__pycache__/mod_generics_cache.cpython-%%XY%%.opt-2.pyc
+lib/python%%XYDOT%%/test/__pycache__/mod_generics_cache.cpython-%%XY%%.pyc
 lib/python%%XYDOT%%/test/__pycache__/mp_fork_bomb.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/test/__pycache__/mp_fork_bomb.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/test/__pycache__/mp_fork_bomb.cpython-%%XY%%.pyc
-lib/python%%XYDOT%%/test/__pycache__/mp_preload.cpython-36.opt-1.pyc
-lib/python%%XYDOT%%/test/__pycache__/mp_preload.cpython-36.opt-2.pyc
-lib/python%%XYDOT%%/test/__pycache__/mp_preload.cpython-36.pyc
+lib/python%%XYDOT%%/test/__pycache__/mp_preload.cpython-%%XY%%.opt-1.pyc
+lib/python%%XYDOT%%/test/__pycache__/mp_preload.cpython-%%XY%%.opt-2.pyc
+lib/python%%XYDOT%%/test/__pycache__/mp_preload.cpython-%%XY%%.pyc
 lib/python%%XYDOT%%/test/__pycache__/multibytecodec_support.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/test/__pycache__/multibytecodec_support.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/test/__pycache__/multibytecodec_support.cpython-%%XY%%.pyc
@@ -4255,6 +4267,9 @@ lib/python%%XYDOT%%/test/__pycache__/test_readline.cpython-%%XY%%.pyc
 lib/python%%XYDOT%%/test/__pycache__/test_regrtest.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/test/__pycache__/test_regrtest.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/test/__pycache__/test_regrtest.cpython-%%XY%%.pyc
+lib/python%%XYDOT%%/test/__pycache__/test_repl.cpython-%%XY%%.opt-1.pyc
+lib/python%%XYDOT%%/test/__pycache__/test_repl.cpython-%%XY%%.opt-2.pyc
+lib/python%%XYDOT%%/test/__pycache__/test_repl.cpython-%%XY%%.pyc
 lib/python%%XYDOT%%/test/__pycache__/test_reprlib.cpython-%%XY%%.opt-1.pyc
 lib/python%%XYDOT%%/test/__pycache__/test_reprlib.cpython-%%XY%%.opt-2.pyc
 lib/python%%XYDOT%%/test/__pycache__/test_reprlib.cpython-%%XY%%.pyc
@@ -5929,6 +5944,7 @@ lib/python%%XYDOT%%/test/test_range.py
 lib/python%%XYDOT%%/test/test_re.py
 lib/python%%XYDOT%%/test/test_readline.py
 lib/python%%XYDOT%%/test/test_regrtest.py
+lib/python%%XYDOT%%/test/test_repl.py
 lib/python%%XYDOT%%/test/test_reprlib.py
 lib/python%%XYDOT%%/test/test_resource.py
 lib/python%%XYDOT%%/test/test_richcmp.py
@@ -6143,6 +6159,7 @@ lib/python%%XYDOT%%/test/tracedmodules/__pycache__/testmod.cpython-%%XY%%.pyc
 lib/python%%XYDOT%%/test/tracedmodules/testmod.py
 lib/python%%XYDOT%%/test/win_console_handler.py
 lib/python%%XYDOT%%/test/wrongcert.pem
+lib/python%%XYDOT%%/test/xmltestdata/expat224_utf8_bug.xml
 lib/python%%XYDOT%%/test/xmltestdata/simple-ns.xml
 lib/python%%XYDOT%%/test/xmltestdata/simple.xml
 lib/python%%XYDOT%%/test/xmltestdata/test.xml

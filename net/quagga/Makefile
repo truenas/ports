@@ -2,8 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	quagga
-PORTVERSION=	1.2.1
-PORTREVISION=	2
+PORTVERSION=	1.2.4
 CATEGORIES=	net ipv6
 MASTER_SITES=	SAVANNAH
 
@@ -14,12 +13,13 @@ LICENSE=	GPLv2
 
 BUILD_DEPENDS=	gawk:lang/gawk
 
-CONFLICTS=	openbgpd-[0-9]* openospfd-[0-9]* zebra-0* quagga-re-[0-9]*
+CONFLICTS=	openbgpd openospfd zebra quagga-esr frr pimd
 
+USES=		compiler:c11 cpe gmake libtool makeinfo \
+		perl5 readline ssl
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--enable-exampledir=${PREFIX}/share/examples/quagga
 INSTALL_TARGET=	install-strip
-USES=		gmake libtool makeinfo perl5 readline compiler:c11 cpe
 USE_LDCONFIG=	yes
 USE_PERL5=	build
 

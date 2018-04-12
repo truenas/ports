@@ -4,10 +4,11 @@
 PORTNAME=	qmidiarp
 DISTVERSIONPREFIX=	qmidiarp-
 DISTVERSION=	0.6.4-26
+PORTREVISION=	1
 DISTVERSIONSUFFIX=	-g1a15c13
 CATEGORIES=	audio
 
-MAINTAINER=	yuri@rawbw.com
+MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	MIDI arpeggiator, sequencer and LFO for JACK
 
 LICENSE=	GPLv2

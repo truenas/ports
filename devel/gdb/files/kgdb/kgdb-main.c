@@ -203,7 +203,7 @@ verify_remote(void)
 }
 
 static void
-add_arg(struct captured_main_args *args, char *arg)
+add_arg(struct captured_main_args *args, char const *arg)
 {
 
 	args->argc++;
@@ -211,7 +211,7 @@ add_arg(struct captured_main_args *args, char *arg)
 	    sizeof(char *));
 	if (args->argv == NULL)
 		err(1, "Out of memory building argument list");
-	args->argv[args->argc] = arg;
+	args->argv[args->argc] = (char *)arg;
 }
 
 int
@@ -239,9 +239,9 @@ main(int argc, char *argv[])
 			if (s[0] == '-')
 				s++;
 			if (strcmp(s, "quiet") == 0)
-				argv[a] = "-q";
+				argv[a] = (char *)"-q";
 			else if (strcmp(s, "fullname") == 0)
-				argv[a] = "-f";
+				argv[a] = (char *)"-f";
 		}
 	}
 
@@ -378,6 +378,10 @@ main(int argc, char *argv[])
 	/* Set an alternate prompt. */
 	add_arg(&args, "-iex");
 	add_arg(&args, "set prompt (kgdb) ");
+
+	/* Change osabi to assume a FreeBSD kernel. */
+	add_arg(&args, "-iex");
+	add_arg(&args, "set osabi FreeBSD/kernel");
 
 	/* Open the vmcore if requested. */
 	if (vmcore != NULL) {

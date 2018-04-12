@@ -3,7 +3,7 @@
 
 PORTNAME=	grub2-efi
 PORTVERSION=	2.02
-PORTREVISION=	16
+PORTREVISION=	18
 CATEGORIES=	sysutils
 MASTER_SITES=	http://www.pcbsd.org/~kris/software/ \
 		ftp://ftp.pcbsd.org/pub/software/
@@ -22,9 +22,9 @@ BUILD_DEPENDS=	${LOCALBASE}/bin/flex:textproc/flex \
 
 WRKSRC=		${WRKDIR}/grub-${PORTVERSION}
 SSP_UNSAFE=	yes
-ACLOCAL_ARGS=	-Im4
+USE_GCC=	yes
 GNU_CONFIGURE=	yes
-USES=		autoreconf bison cpe gettext gmake python tar:xz
+USES=		autoreconf:build bison cpe gettext gmake python tar:xz
 ONLY_FOR_ARCHS=	amd64
 MAKE_JOBS_UNSAFE=	yes
 

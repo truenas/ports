@@ -3,6 +3,7 @@
 
 PORTNAME=	logcheck
 PORTVERSION=	1.3.18
+PORTREVISION=	2
 CATEGORIES=	security
 MASTER_SITES=	DEBIAN_POOL
 DISTNAME=	${PORTNAME}_${PORTVERSION}
@@ -10,12 +11,12 @@ DISTNAME=	${PORTNAME}_${PORTVERSION}
 MAINTAINER=	yasu@utahime.org
 COMMENT=	Auditing tool for system logs on Unix boxes
 
-LICENSE=	GPLv2
+LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 BUILD_DEPENDS=	docbook-to-man>0:textproc/docbook-to-man
 RUN_DEPENDS=	mime-construct:mail/mime-construct \
-		lockfile:mail/procmail \
+		lockfile-create:sysutils/lockfile-progs \
 		bash:shells/bash
 
 LOGCHECK_USER=	logcheck

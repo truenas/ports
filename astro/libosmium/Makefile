@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	libosmium
-PORTVERSION=	2.13.1
+PORTVERSION=	2.14.0
 DISTVERSIONPREFIX=	v
 CATEGORIES=	astro geography devel
 
@@ -10,17 +10,19 @@ MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Fast and flexible C++ library for working with OpenStreetMap data
 
 LICENSE=	BSL
-LICENSE_FILE=	${WRKSRC}/LICENSE.txt
+LICENSE_FILE=	${WRKSRC}/LICENSE
+
+BROKEN_powerpc64=	fails to compile: types_from_string.hpp: error: 'strtoll' is not a member of 'std'
 
 LIB_DEPENDS=	libgdal.so:graphics/gdal \
 		libboost_regex.so:devel/boost-libs \
 		libgeos.so:graphics/geos \
 		libexpat.so:textproc/expat2
 BUILD_DEPENDS=	sparsehash>=0:devel/sparsehash \
-		${LOCALBASE}/include/utf8.h:devel/utf8cpp
-RUN_DEPENDS=	${LOCALBASE}/include/utf8.h:devel/utf8cpp
-
-BROKEN_powerpc64=	fails to compile: types_from_string.hpp: error: 'strtoll' is not a member of 'std'
+		${LOCALBASE}/include/utf8.h:devel/utf8cpp \
+		${LOCALBASE}/include/protozero/version.hpp:devel/protozero
+RUN_DEPENDS=	${LOCALBASE}/include/utf8.h:devel/utf8cpp \
+		${LOCALBASE}/include/protozero/version.hpp:devel/protozero
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	osmcode
@@ -28,12 +30,11 @@ GH_ACCOUNT=	osmcode
 USES=		cmake compiler:c++11-lib
 CMAKE_ARGS=	-DBUILD_EXAMPLES:BOOL=OFF
 
-# if/when corresponding ports appear in the tree, these will need to
-# be turned from depends
-CMAKE_ARGS+=	-DINSTALL_GDALCPP:BOOL=ON \
-		-DINSTALL_PROTOZERO:BOOL=ON
+# if/when corresponding port appears in the tree, this will need to
+# be turned into dependency
+CMAKE_ARGS+=	-DINSTALL_GDALCPP:BOOL=ON
 
-# though it builds tests, the library itself is header-only
+# although it builds tests the library itself is header-only
 NO_ARCH=	yes
 
 PORTDOCS=	*

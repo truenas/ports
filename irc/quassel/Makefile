@@ -3,7 +3,7 @@
 
 PORTNAME=	quassel
 PORTVERSION=	0.12.4
-PORTREVISION=	4
+PORTREVISION=	6
 CATEGORIES=	irc
 MASTER_SITES=	http://www.quassel-irc.org/pub/
 
@@ -13,7 +13,7 @@ COMMENT?=	Qt 5 based distributed IRC client (client and monolithic binary)
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-USES=		cmake:outsource compiler:c++11-lib cpe execinfo pkgconfig tar:bzip2
+USES=		cmake:outsource compiler:c++11-lib cpe pkgconfig tar:bzip2
 
 CPE_VENDOR=	quassel-irc
 CPE_PRODUCT=	quassel_irc
@@ -34,7 +34,7 @@ OPTIONS_SUB=		yes
 CLIENT_DESC=		Quassel client (for use with core)
 CLIENT_CMAKE_BOOL=	WANT_QTCLIENT
 CLIENT_USE=		qt5=dbus,gui,phonon4,webkit,widgets
-CLIENT_LIB_DEPENDS=	libdbusmenu-qt5.so:devel/libdbusmenu-qt5
+CLIENT_LIB_DEPENDS=	libdbusmenu-qt5.so:devel/libdbusmenu-qt@qt5
 
 CORE_DESC=		Quassel core server (for use with client)
 CORE_CMAKE_BOOL=	WANT_CORE

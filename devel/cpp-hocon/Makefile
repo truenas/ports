@@ -1,8 +1,8 @@
 # $FreeBSD$
 
 PORTNAME=	cpp-hocon
-PORTVERSION=	0.1.5
-PORTREVISION=	1
+PORTVERSION=	0.1.6
+PORTREVISION=	4
 CATEGORIES=	devel
 
 MAINTAINER=	puppet@FreeBSD.org
@@ -21,7 +21,7 @@ PLIST_SUB+=	PORTVERSION="${PORTVERSION}"
 
 CMAKE_ARGS+=	-DBUILD_SHARED_LIBS=SHARED
 TEST_TARGET=	test
-USES=		cmake
+USES=		cmake:noninja
 USE_LDCONFIG=	yes
 
 .include <bsd.port.mk>

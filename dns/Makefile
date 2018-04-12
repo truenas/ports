@@ -12,6 +12,7 @@
     SUBDIR += bind9-devel
     SUBDIR += bind910
     SUBDIR += bind911
+    SUBDIR += bind912
     SUBDIR += bind99
     SUBDIR += bindgraph
     SUBDIR += bundy
@@ -29,14 +30,17 @@
     SUBDIR += djbdns-tools
     SUBDIR += dlint
     SUBDIR += dnrd
+    SUBDIR += dns2blackhole
     SUBDIR += dns2tcp
     SUBDIR += dns_balance
     SUBDIR += dnscap
     SUBDIR += dnscheck
     SUBDIR += dnscheckengine
     SUBDIR += dnscrypt-proxy
+    SUBDIR += dnscrypt-proxy2
     SUBDIR += dnscrypt-wrapper
     SUBDIR += dnsdbck
+    SUBDIR += dnsdbq
     SUBDIR += dnsdist
     SUBDIR += dnsenum
     SUBDIR += dnsflood
@@ -60,7 +64,9 @@
     SUBDIR += doc
     SUBDIR += dq
     SUBDIR += drool
-    SUBDIR += dualserver
+    SUBDIR += dsc
+    SUBDIR += dsp
+    SUBDIR += dynip
     SUBDIR += erlang-idna
     SUBDIR += ez-ipupdate
     SUBDIR += fastresolve
@@ -117,6 +123,7 @@
     SUBDIR += openresolv
     SUBDIR += p5-AnyEvent-CacheDNS
     SUBDIR += p5-AnyEvent-DNS-EtcHosts
+    SUBDIR += p5-App-DSC-DataTool
     SUBDIR += p5-BIND-Conf_Parser
     SUBDIR += p5-BIND-Config-Parser
     SUBDIR += p5-DNS-Config
@@ -124,6 +131,7 @@
     SUBDIR += p5-DNS-Ldns
     SUBDIR += p5-DNS-Zone
     SUBDIR += p5-DNS-ZoneParse
+    SUBDIR += p5-DSC
     SUBDIR += p5-Data-Validate-Domain
     SUBDIR += p5-IO-Async-Resolver-DNS
     SUBDIR += p5-Mozilla-PublicSuffix
@@ -136,6 +144,7 @@
     SUBDIR += p5-Net-DNS-Lite
     SUBDIR += p5-Net-DNS-Match
     SUBDIR += p5-Net-DNS-RR-SRV-Helper
+    SUBDIR += p5-Net-DNS-Resolver-Mock
     SUBDIR += p5-Net-DNS-Resolver-Programmable
     SUBDIR += p5-Net-DNS-SEC
     SUBDIR += p5-Net-DNS-TestNS
@@ -148,6 +157,7 @@
     SUBDIR += p5-Net-Domain-ExpireDate
     SUBDIR += p5-Net-Domain-TLD
     SUBDIR += p5-Net-LibIDN
+    SUBDIR += p5-Net-LibIDN2
     SUBDIR += p5-Net-Nslookup
     SUBDIR += p5-Net-RBLClient
     SUBDIR += p5-Net-RNDC
@@ -168,8 +178,10 @@
     SUBDIR += pear-Net_DNS2
     SUBDIR += powerdns
     SUBDIR += powerdns-recursor
+    SUBDIR += powerdns-recursor40
     SUBDIR += public_suffix_list
     SUBDIR += py-bonjour
+    SUBDIR += py-cloudflare
     SUBDIR += py-dns
     SUBDIR += py-dns-lexicon
     SUBDIR += py-dnschain
@@ -177,6 +189,7 @@
     SUBDIR += py-dnspython2
     SUBDIR += py-easyzone
     SUBDIR += py-idna
+    SUBDIR += py-idna_ssl
     SUBDIR += py-idnkit2
     SUBDIR += py-ldns
     SUBDIR += py-namebench
@@ -185,10 +198,8 @@
     SUBDIR += py-pycares
     SUBDIR += py-pydnstable
     SUBDIR += py-pywdns
+    SUBDIR += py-tld
     SUBDIR += py-tldextract
-    SUBDIR += py-twistedNames
-    SUBDIR += py3-dnspython
-    SUBDIR += py3-idna
     SUBDIR += radns
     SUBDIR += rbldnsd
     SUBDIR += rbllookup
@@ -199,7 +210,6 @@
     SUBDIR += rubygem-idn-ruby
     SUBDIR += rubygem-net-dns
     SUBDIR += rubygem-public_suffix
-    SUBDIR += rubygem-public_suffix2
     SUBDIR += rubygem-public_suffix_service
     SUBDIR += rubygem-simpleidn
     SUBDIR += rubygem-validates_hostname

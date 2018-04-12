@@ -3,6 +3,7 @@
 
 PORTNAME=	gnome-photos
 PORTVERSION=	3.24.2
+PORTREVISION=	1
 CATEGORIES=	deskutils gnome
 MASTER_SITES=	GNOME
 DIST_SUBDIR=	gnome3
@@ -29,7 +30,7 @@ LIB_DEPENDS=	libexempi.so:textproc/exempi \
 		libsoup-2.4.so:devel/libsoup \
 		libjson-glib-1.0.so:devel/json-glib \
 		libgoa-1.0.so:net/gnome-online-accounts \
-		libpng16.so:graphics/png \
+		libpng.so:graphics/png \
 		libgdata.so:devel/libgdata
 RUN_DEPENDS=	geoclue>=0:net/geoclue
 

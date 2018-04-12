@@ -3,10 +3,11 @@
 
 PORTNAME=	jalv
 PORTVERSION=	1.6.0
+PORTREVISION=	1
 CATEGORIES=	audio
 MASTER_SITES=	http://download.drobilla.net/
 
-MAINTAINER=	yuri@rawbw.com
+MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Simple but fully featured LV2 plugin host for Jack
 
 LICENSE=	PD

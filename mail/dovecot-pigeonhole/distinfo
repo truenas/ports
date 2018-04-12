@@ -1,3 +1,3 @@
-TIMESTAMP = 1503842938
-SHA256 (dovecot-2.2-pigeonhole-0.4.20.tar.gz) = 6fe17d0b8f25f2ad580e01ad81ce47a9e965255e383a1f80e455f9ca0f00be5b
-SIZE (dovecot-2.2-pigeonhole-0.4.20.tar.gz) = 1745121
+TIMESTAMP = 1522192447
+SHA256 (dovecot-2.3-pigeonhole-0.5.1.tar.gz) = e3b0aa59261881bcb0d33a6c398f3cb5f9f75e077e67bae175cf33c362577547
+SIZE (dovecot-2.3-pigeonhole-0.5.1.tar.gz) = 1792702

@@ -1,16 +1,17 @@
 # $FreeBSD$
 
 PORTNAME=	baloo-widgets
-PORTVERSION=	${KDE4_VERSION}
-PORTREVISION=	2
-CATEGORIES=	sysutils kde kde-kde4
+DISTVERSION=	${KDE_APPLICATIONS_VERSION}
+CATEGORIES=	sysutils kde kde-applications
 
 MAINTAINER=	kde@FreeBSD.org
-COMMENT=	The BalooWidgets library
+COMMENT=	BalooWidgets library
 
-USES=		cmake:outsource kde:4 tar:xz
-USE_KDE=	automoc4 baloo kfilemetadata
-USE_QT4=	corelib qmake_build moc_build rcc_build uic_build
+USES=		cmake:outsource compiler:c++11-lang gettext kde:5 tar:xz
+USE_KDE=	baloo config coreaddons ecm emoticons filemetadata i18n init \
+		itemmodels kdelibs4support kio service widgetsaddons
+USE_QT5=	core gui testlib widgets xml \
+		buildtools_build qmake_build
 USE_LDCONFIG=	yes
 
 .include <bsd.port.mk>

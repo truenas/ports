@@ -3,7 +3,7 @@
 
 PORTNAME=	mod_spdy
 PORTVERSION=	0.9.4.1
-PORTREVISION=	3
+PORTREVISION=	5
 CATEGORIES=	www
 MASTER_SITES=	http://www.club.kyutech.ac.jp/~masaki/ports/:mod_spdy \
 		APACHE_HTTPD:apache22
@@ -17,17 +17,16 @@ COMMENT=	SPDY module for the Apache HTTP server v2.2
 
 LICENSE=	APACHE20
 
-BUILD_DEPENDS=	python:lang/python \
-		greadlink:sysutils/coreutils \
+BUILD_DEPENDS=	greadlink:sysutils/coreutils \
 		flock:sysutils/flock \
 		svn:devel/subversion \
 		curl:ftp/curl \
 		bash:shells/bash
 
 ONLY_FOR_ARCHS=	amd64 i386
-USE_APACHE=	22
-USES=		compiler execinfo gmake python:2 ssl tar:xz
+USES=		apache:2.2 compiler gmake python:2.7 ssl tar:xz
 REINPLACE_ARGS=	-i ""
+BINARY_ALIAS=	python=${PYTHON_CMD}
 
 WRKSRC=		${WRKDIR}/${PORTNAME}_source_${PORTVERSION}/mod_spdy/src
 CFLAGS+=	-fno-stack-protector -Wno-unknown-warning-option -Wno-c++11-extensions -I${OPENSSLINC}
@@ -38,7 +37,7 @@ GYP_DEFINES+=	\
 		system_include_path_httpd=${LOCALBASE}/include/apache22 \
 		system_include_path_apr=${LOCALBASE}/include/apr-1 \
 		system_include_path_aprutil=${LOCALBASE}/include/apr-1 \
-		system_include_path_execinfo=${LOCALBASE}/include \
+		system_include_path_execinfo=/usr/include \
 		include_dirs=${LOCALBASE}/include
 
 SUB_FILES+=	mod_spdy.conf

@@ -14,10 +14,12 @@ man/man8/lynis.8.gz
 %%DATADIR%%/db/languages/es
 %%DATADIR%%/db/languages/fi
 %%DATADIR%%/db/languages/fr
+%%DATADIR%%/db/languages/gr
 %%DATADIR%%/db/languages/he
 %%DATADIR%%/db/languages/hu
 %%DATADIR%%/db/languages/it
 %%DATADIR%%/db/languages/ja
+%%DATADIR%%/db/languages/nb-NO
 %%DATADIR%%/db/languages/nl
 %%DATADIR%%/db/languages/nl-BE
 %%DATADIR%%/db/languages/nl-NL
@@ -82,6 +84,7 @@ man/man8/lynis.8.gz
 %%DATADIR%%/include/tests_system_integrity
 %%DATADIR%%/include/tests_time
 %%DATADIR%%/include/tests_tooling
+%%DATADIR%%/include/tests_usb
 %%DATADIR%%/include/tests_virtualization
 %%DATADIR%%/include/tests_webservers
 %%DATADIR%%/include/tool_tips

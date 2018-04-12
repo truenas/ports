@@ -1,47 +1,47 @@
---- third_party/WebKit/Source/platform/fonts/FontPlatformData.cpp.orig	2017-06-05 19:03:26 UTC
-+++ third_party/WebKit/Source/platform/fonts/FontPlatformData.cpp
-@@ -93,7 +93,7 @@ FontPlatformData::FontPlatformData(const FontPlatformD
-       synthetic_bold_(source.synthetic_bold_),
+--- third_party/WebKit/Source/platform/fonts/FontPlatformData.cpp.orig	2018-02-24 16:25:34.000000000 +0100
++++ third_party/WebKit/Source/platform/fonts/FontPlatformData.cpp	2018-03-04 03:59:33.369885000 +0100
+@@ -93,7 +93,7 @@
        synthetic_italic_(source.synthetic_italic_),
+       avoid_embedded_bitmaps_(source.avoid_embedded_bitmaps_),
        orientation_(source.orientation_),
--#if OS(LINUX) || OS(ANDROID)
-+#if OS(LINUX) || OS(ANDROID) || OS(BSD)
+-#if defined(OS_LINUX) || defined(OS_ANDROID)
++#if defined(OS_LINUX) || defined(OS_ANDROID) || defined(OS_BSD)
        style_(source.style_),
  #endif
        harf_buzz_face_(nullptr),
-@@ -114,7 +114,7 @@ FontPlatformData::FontPlatformData(const FontPlatformD
-       synthetic_bold_(src.synthetic_bold_),
+@@ -115,7 +115,7 @@
        synthetic_italic_(src.synthetic_italic_),
+       avoid_embedded_bitmaps_(false),
        orientation_(src.orientation_),
--#if OS(LINUX) || OS(ANDROID)
-+#if OS(LINUX) || OS(ANDROID) || OS(BSD)
-       style_(FontRenderStyle::QuerySystem(family_,
-                                           text_size_,
-                                           typeface_->fontStyle())),
-@@ -145,7 +145,7 @@ FontPlatformData::FontPlatformData(sk_sp<SkTypeface> t
-       synthetic_bold_(synthetic_bold),
+-#if defined(OS_LINUX) || defined(OS_ANDROID)
++#if defined(OS_LINUX) || defined(OS_ANDROID) || defined(OS_BSD)
+       style_(FontRenderStyle::QuerySystem(
+           family_,
+           text_size_,
+@@ -148,7 +148,7 @@
        synthetic_italic_(synthetic_italic),
+       avoid_embedded_bitmaps_(false),
        orientation_(orientation),
--#if OS(LINUX) || OS(ANDROID)
-+#if OS(LINUX) || OS(ANDROID) || OS(BSD)
-       style_(FontRenderStyle::QuerySystem(family_,
-                                           text_size_,
-                                           typeface_->fontStyle())),
-@@ -188,7 +188,7 @@ const FontPlatformData& FontPlatformData::operator=(
-   synthetic_italic_ = other.synthetic_italic_;
+-#if defined(OS_LINUX) || defined(OS_ANDROID)
++#if defined(OS_LINUX) || defined(OS_ANDROID) || defined(OS_BSD)
+       style_(FontRenderStyle::QuerySystem(
+           family_,
+           text_size_,
+@@ -195,7 +195,7 @@
+   avoid_embedded_bitmaps_ = other.avoid_embedded_bitmaps_;
    harf_buzz_face_ = nullptr;
    orientation_ = other.orientation_;
--#if OS(LINUX) || OS(ANDROID)
-+#if OS(LINUX) || OS(ANDROID) || OS(BSD)
+-#if defined(OS_LINUX) || defined(OS_ANDROID)
++#if defined(OS_LINUX) || defined(OS_ANDROID) || defined(OS_BSD)
    style_ = other.style_;
  #endif
  
-@@ -212,7 +212,7 @@ bool FontPlatformData::operator==(const FontPlatformDa
-          is_hash_table_deleted_value_ == a.is_hash_table_deleted_value_ &&
+@@ -220,7 +220,7 @@
           synthetic_bold_ == a.synthetic_bold_ &&
-          synthetic_italic_ == a.synthetic_italic_
--#if OS(LINUX) || OS(ANDROID)
-+#if OS(LINUX) || OS(ANDROID) || OS(BSD)
+          synthetic_italic_ == a.synthetic_italic_ &&
+          avoid_embedded_bitmaps_ == a.avoid_embedded_bitmaps_
+-#if defined(OS_LINUX) || defined(OS_ANDROID)
++#if defined(OS_LINUX) || defined(OS_ANDROID) || defined(OS_BSD)
           && style_ == a.style_
  #endif
           && orientation_ == a.orientation_;

@@ -3,7 +3,7 @@
 
 PORTNAME=	froxlor
 PORTVERSION=	0.9.38.7
-PORTREVIION=	2
+PORTREVISION=	2
 CATEGORIES=	sysutils www
 MASTER_SITES=	http://files.froxlor.org/releases/
 
@@ -15,12 +15,12 @@ LICENSE=	GPLv2
 WRKSRC=		${WRKDIR}
 
 SUB_FILES+=	pkg-message pkg-deinstall
-SUB_LIST+=	WWWOWN=${WWWOWN} WWWGRP=${WWWGRP}
+SUB_LIST+=	WWWOWN=${WWWOWN} WWWGRP=${WWWGRP} PORTNAME=${PORTNAME}
 PLIST_SUB+=	${SUB_LIST}
 
 USE_PHP=	bcmath curl filter ftp json pdo_mysql posix session xml zip
 
-WANT_PHP_CLI=	yes
+USES=		php:cli
 
 NO_ARCH=	yes
 NO_BUILD=	yes
@@ -96,20 +96,14 @@ LIGHTTPD_RUN_DEPENDS=	lighttpd:www/lighttpd
 
 NGINX_RUN_DEPENDS=	nginx:www/nginx
 
-APACHE_USE=	yes
+APACHE_USES=	apache php:mod
 
-MYSQLS_USE=	MYSQL=server
+MYSQL_USES=	mysql:server
 
 PCNTL_USE=	PHP=pcntl
 
 NLS_USES=	gettext-runtime:run
 NLS_USE=	PHP=gettext
-
-.include <bsd.port.options.mk>
-
-.if ${PORT_OPTIONS:MAPACHE}
-WANT_PHP_MOD=	yes
-.endif
 
 do-install:
 	cd ${WRKDIR}/${PORTNAME} && \
