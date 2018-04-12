@@ -3,6 +3,7 @@
 
 PORTNAME=	hicolor-icon-theme
 PORTVERSION=	0.15
+PORTREVISION= 1
 CATEGORIES=	misc gnome
 MASTER_SITES=	http://icon-theme.freedesktop.org/releases/
 
