@@ -123,7 +123,10 @@ SAMBA4_BUNDLED_LIBS+=	!tdb
 BUILD_DEPENDS+=		ldb12>=1.2.3:databases/ldb12
 RUN_DEPENDS+=		ldb12>=1.2.3:databases/ldb12
 SAMBA4_BUNDLED_LIBS+=	!ldb
-
+# cmocka
+BUILD_DEPENDS+=		cmocka>=1.1.1:sysutils/cmocka
+RUN_DEPENDS+=		cmocka>=1.1.1:sysutils/cmocka
+SAMBA4_BUNDLED_LIBS+=	!cmocka
 # Don't use external libcom_err
 #SAMBA4_BUNDLED_LIBS+=	com_err
 
