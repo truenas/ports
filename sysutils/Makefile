@@ -6,10 +6,6 @@
     SUBDIR += 3dm
     SUBDIR += 44bsd-more
     SUBDIR += 915resolution
-    SUBDIR += DTraceToolkit
-    SUBDIR += LPRng
-    SUBDIR += LPRngTool
-    SUBDIR += UEFITool
     SUBDIR += abck
     SUBDIR += abduco
     SUBDIR += abgx360
@@ -195,7 +191,6 @@
     SUBDIR += consul-alerts
     SUBDIR += consul-replicate
     SUBDIR += consul_exporter
-    SUBDIR += consul-alerts
     SUBDIR += container-diff
     SUBDIR += contractor
     SUBDIR += copytape
