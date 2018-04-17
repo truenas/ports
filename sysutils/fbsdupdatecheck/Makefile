@@ -18,7 +18,7 @@ LICENSE = BSD
 USE_GITHUB=	yes
 GH_ACCOUNT=	GhostBSD
 
-USES = python:2
+USES = python:2.7
 USE_PYTHON=	distutils
 USE_GNOME=	pygtk2
 
