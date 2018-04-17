@@ -20,7 +20,7 @@ BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}python-distutils-extra>=2.15:devel/py-pyth
 
 RUN_DEPENDS=	wmctrl:x11/wmctrl
 
-USES = python:2 gettext-tools
+USES = python:2.7 gettext-tools
 USE_PYTHON=	distutils
 USE_GNOME=	pygtk2 intltool
 
