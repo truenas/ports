@@ -9,7 +9,7 @@ COMMENT=	Amazon S3 compatible object storage server
 
 LICENSE=	APACHE20
 
-BUILD_DEPENDS=	go>=1.7:lang/go
+BUILD_DEPENDS=	go>=1.9.4:lang/go
 
 USES=		compiler
 
