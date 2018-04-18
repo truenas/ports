@@ -26,6 +26,7 @@
     SUBDIR += emboss
     SUBDIR += fasta
     SUBDIR += fasta3
+    SUBDIR += fastahack
     SUBDIR += fastdnaml
     SUBDIR += fastool
     SUBDIR += fastqc
@@ -78,6 +79,7 @@
     SUBDIR += p5-TrimGalore
     SUBDIR += p5-transdecoder
     SUBDIR += paml
+    SUBDIR += pear-merger
     SUBDIR += phrap
     SUBDIR += phred
     SUBDIR += phylip
@@ -110,16 +112,19 @@
     SUBDIR += seqtools
     SUBDIR += sim4
     SUBDIR += slclust
+    SUBDIR += smithwaterman
     SUBDIR += ssaha
     SUBDIR += stacks
     SUBDIR += tRNAscan-SE
     SUBDIR += t_coffee
+    SUBDIR += tabixpp
     SUBDIR += tinker
     SUBDIR += treepuzzle
     SUBDIR += trimadap
     SUBDIR += trimmomatic
     SUBDIR += ugene
     SUBDIR += vcftools
+    SUBDIR += vcflib
     SUBDIR += velvet
     SUBDIR += wise
     SUBDIR += xmolwt

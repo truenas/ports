@@ -24,6 +24,7 @@
     SUBDIR += R-cran-udunits2
     SUBDIR += afni
     SUBDIR += aircraft-datcom
+    SUBDIR += antioch
     SUBDIR += avogadro
     SUBDIR += bddsolve
     SUBDIR += bft
@@ -53,6 +54,7 @@
     SUBDIR += fastcap
     SUBDIR += fasthenry
     SUBDIR += fisicalab
+    SUBDIR += fsom
     SUBDIR += fvcom
     SUBDIR += fvcom-mpi
     SUBDIR += fvm
@@ -78,6 +80,7 @@
     SUBDIR += iboview
     SUBDIR += isaac-cfd
     SUBDIR += jstrack
+    SUBDIR += kalzium
     SUBDIR += kalzium-kde4
     SUBDIR += kst2
     SUBDIR += lamprop
@@ -105,6 +108,7 @@
     SUBDIR += meep
     SUBDIR += mei
     SUBDIR += metaf2xml
+    SUBDIR += metaphysicl
     SUBDIR += minc2
     SUBDIR += mol2ps
     SUBDIR += mpb
@@ -197,6 +201,10 @@
     SUBDIR += rdkit
     SUBDIR += rubygem-ai4r
     SUBDIR += rubygem-cdo
+    SUBDIR += rubygem-rgeo
+    SUBDIR += rubygem-rgeo-geojson
+    SUBDIR += rubygem-rgeo-proj4
+    SUBDIR += rubygem-rgeo-shapefile
     SUBDIR += rubygem-ruby-dcl
     SUBDIR += rubygem-ruby-netcdf
     SUBDIR += sigrok-cli
@@ -206,6 +214,7 @@
     SUBDIR += silo
     SUBDIR += simlib
     SUBDIR += simsmith
+    SUBDIR += step
     SUBDIR += step-kde4
     SUBDIR += svmlight
     SUBDIR += szip

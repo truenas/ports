@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	azure-common
-PORTVERSION=	1.1.8
+PORTVERSION=	1.1.9
 CATEGORIES=	www python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -12,6 +12,6 @@ COMMENT=	Microsoft Azure common code
 LICENSE=	APACHE20
 
 USES=		python zip
-USE_PYTHON=	distutils concurrent autoplist
+USE_PYTHON=	autoplist concurrent distutils
 
 .include <bsd.port.mk>

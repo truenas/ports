@@ -10,6 +10,8 @@ PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 MAINTAINER=	jpaetzel@FreeBSD.org
 COMMENT=	Django application for building dojo
 
+LICENSE=	BSD3CLAUSE
+
 USES=		python
 USE_PYTHON=	distutils autoplist
 

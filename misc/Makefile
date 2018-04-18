@@ -11,6 +11,7 @@
     SUBDIR += amfm
     SUBDIR += ansiweather
     SUBDIR += apparix
+    SUBDIR += artikulate
     SUBDIR += artikulate-kde4
     SUBDIR += asbutton
     SUBDIR += asr-manpages
@@ -234,14 +235,19 @@
     SUBDIR += kde4-l10n-ug
     SUBDIR += kde4-l10n-wa
     SUBDIR += kde4-xdg-env
+    SUBDIR += kdeedu-data
     SUBDIR += kdeedu-kde4
     SUBDIR += kdeutils-kde4
     SUBDIR += kenny
     SUBDIR += kf5-purpose
+    SUBDIR += kgeography
     SUBDIR += kgeography-kde4
+    SUBDIR += klettres
     SUBDIR += klettres-kde4
     SUBDIR += krecipes-kde4
+    SUBDIR += ktouch
     SUBDIR += ktouch-kde4
+    SUBDIR += kwordquiz
     SUBDIR += kwordquiz-kde4
     SUBDIR += latex-mk
     SUBDIR += lazyread
@@ -250,6 +256,7 @@
     SUBDIR += libeatmydata
     SUBDIR += libisocodes
     SUBDIR += libkdeedu-kde4
+    SUBDIR += libkeduvocdocument
     SUBDIR += liblxi
     SUBDIR += libmetalink
     SUBDIR += libpostal
@@ -291,6 +298,9 @@
     SUBDIR += nut
     SUBDIR += ondir
     SUBDIR += opencyc
+    SUBDIR += openhab2
+    SUBDIR += openhab2-addons
+    SUBDIR += openmvg
     SUBDIR += openr2
     SUBDIR += orville-write
     SUBDIR += osinfo-db
@@ -361,6 +371,7 @@
     SUBDIR += p5-Tie-DxHash
     SUBDIR += p5-Zen-Koans
     SUBDIR += pantry
+    SUBDIR += parley
     SUBDIR += parley-kde4
     SUBDIR += pastebinit
     SUBDIR += patchutils
