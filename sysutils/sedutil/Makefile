@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	sedutil
-PORTVERSION=	1.15
+PORTVERSION=	1.12
 CATEGORIES=	sysutils
 
 MAINTAINER=	mav@FreeBSD.org
