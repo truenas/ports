@@ -44,6 +44,7 @@ OPTIONS_DEFAULT=	PYTHON
 OPTIONS_SLAVE=	PYTHON
 .endif
 
+CFLAGS+=	-Wno-incompatible-pointer-types-discards-qualifiers
 ALL_TARGET=	${PORTNAME}-c
 BUILD_WRKSRC?=	${WRKDIR}/build/usession-release-pypy2.7-v${DISTVERSION}-0/testing_1
 MAKE_ENV+=	PYPY_LOCALBASE=${LOCALBASE} LDSHARED="${CC} -shared"
