@@ -22,6 +22,7 @@
     SUBDIR += clustalw
     SUBDIR += consed
     SUBDIR += crux
+    SUBDIR += ddocent
     SUBDIR += diamond
     SUBDIR += emboss
     SUBDIR += fasta
@@ -33,6 +34,7 @@
     SUBDIR += fasttree
     SUBDIR += fastx-toolkit
     SUBDIR += fluctuate
+    SUBDIR += freebayes
     SUBDIR += garlic
     SUBDIR += gff2ps
     SUBDIR += gmap
@@ -79,6 +81,9 @@
     SUBDIR += p5-TrimGalore
     SUBDIR += p5-transdecoder
     SUBDIR += paml
+    SUBDIR += pbbam
+    SUBDIR += pbcopper
+    SUBDIR += pbseqan
     SUBDIR += pear-merger
     SUBDIR += phrap
     SUBDIR += phred

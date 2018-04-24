@@ -887,6 +887,7 @@
     SUBDIR += p5-HTML-FormFu
     SUBDIR += p5-HTML-FormFu-Imager
     SUBDIR += p5-HTML-FormFu-Model-DBIC
+    SUBDIR += p5-HTML-FormFu-MultiForm
     SUBDIR += p5-HTML-FormHandler
     SUBDIR += p5-HTML-FromANSI
     SUBDIR += p5-HTML-FromText
@@ -2395,6 +2396,7 @@
     SUBDIR += ufdbguard
     SUBDIR += unit
     SUBDIR += unit-go
+    SUBDIR += unit-perl
     SUBDIR += unit-php
     SUBDIR += usermanager
     SUBDIR += uwsgi

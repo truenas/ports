@@ -5,7 +5,7 @@
 
 PORTNAME=	RStudio
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.1.445
+DISTVERSION=	1.1.447
 PORTREVISION=	1
 CATEGORIES=	devel math java
 MASTER_SITES=	https://s3.amazonaws.com/rstudio-dictionaries/:dictionaries \
@@ -74,8 +74,14 @@ pre-build:
 
 post-install:
 	@(echo "#!/bin/sh"; \
+	  echo ""; \
+	  echo "if ! [ -d /proc/curproc ]; then"; \
+	  echo "  echo \"${PORTNAME} needs /proc to be mounted as procfs\" >&2"; \
+	  echo "  exit 1"; \
+	  echo "fi"; \
+	  echo ""; \
 	  echo "# workaround for the problem that RStudio passes /lib with LD_LIBRARY_PATH that causes the /lib/libgcc_s.so.1 conflict with gcc"; \
-	  echo "LD_PRELOAD=${PREFIX}/lib/gcc6/libgcc_s.so ${PREFIX}/lib/rstudio/bin/rstudio \"$@\"" \
+	  echo "LD_PRELOAD=${PREFIX}/lib/gcc6/libgcc_s.so ${PREFIX}/lib/rstudio/bin/rstudio \"$$@\"" \
 	) > ${STAGEDIR}${PREFIX}/bin/rstudio
 	@${CHMOD} +x ${STAGEDIR}${PREFIX}/bin/rstudio
 	@${REINPLACE_CMD} -e 's|^Exec=.*/rstudio|Exec=${PREFIX}/bin/rstudio|' ${STAGEDIR}${PREFIX}/share/applications/rstudio.desktop
