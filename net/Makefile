@@ -214,6 +214,7 @@
     SUBDIR += grilo-plugins2
     SUBDIR += grilo2
     SUBDIR += grive2
+    SUBDIR += grpcurl
     SUBDIR += grsync
     SUBDIR += gsk
     SUBDIR += gspoof
@@ -1051,6 +1052,7 @@
     SUBDIR += py-ldaptor
     SUBDIR += py-libcloud
     SUBDIR += py-libdnet
+    SUBDIR += py-libfte
     SUBDIR += py-libnet
     SUBDIR += py-libstorj
     SUBDIR += py-magic-wormhole
@@ -1372,6 +1374,7 @@
     SUBDIR += smm++
     SUBDIR += sngrep
     SUBDIR += sniffit
+    SUBDIR += sniproxy
     SUBDIR += sntop
     SUBDIR += sobby
     SUBDIR += socat
