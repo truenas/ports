@@ -1,7 +1,7 @@
 --- openssl.c.orig	2018-03-27 13:10:48 UTC
 +++ openssl.c
 @@ -566,7 +566,7 @@ ZEND_GET_MODULE(openssl)
-#endif
+ #endif
  
  /* {{{ OpenSSL compatibility functions and macros */
 -#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined (LIBRESSL_VERSION_NUMBER)
