@@ -1,9 +1,5 @@
-bin/mjsgen
-bin/mujstest
 bin/mupdf
 bin/mupdf-gl
-bin/mupdf-x11-curl
-bin/muraster
 bin/mutool
 include/mupdf/fitz.h
 include/mupdf/fitz/annotation.h
