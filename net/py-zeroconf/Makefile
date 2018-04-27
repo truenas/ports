@@ -16,12 +16,13 @@ BUILD_DEPENDS?=	${PYTHON_PKGNAMEPREFIX}six>=1.4:devel/py-six \
 RUN_DEPENDS?=	${PYTHON_PKGNAMEPREFIX}six>=1.4:devel/py-six \
 		${PYTHON_PKGNAMEPREFIX}netifaces>=0.10.6:net/py-netifaces
 
+USES=		python
+USE_PYTHON=	autoplist concurrent distutils
+
 USE_GITHUB=	yes
 GH_ACCOUNT=	jstasiak
 GH_PROJECT=	python-zeroconf
 
-USES?=		python
-USE_PYTHON=	distutils autoplist
 NO_ARCH=	yes
 
 .include <bsd.port.mk>

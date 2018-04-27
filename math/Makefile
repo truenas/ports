@@ -17,6 +17,7 @@
     SUBDIR += R-cran-MCMCpack
     SUBDIR += R-cran-MSwM
     SUBDIR += R-cran-MatchIt
+    SUBDIR += R-cran-magic
     SUBDIR += R-cran-Matching
     SUBDIR += R-cran-MatrixModels
     SUBDIR += R-cran-NMF
@@ -28,6 +29,7 @@
     SUBDIR += R-cran-Rmpfr
     SUBDIR += R-cran-Rsolnp
     SUBDIR += R-cran-SparseM
+    SUBDIR += R-cran-uroot
     SUBDIR += R-cran-VGAM
     SUBDIR += R-cran-Zelig
     SUBDIR += R-cran-assertthat
@@ -46,6 +48,7 @@
     SUBDIR += R-cran-forecast
     SUBDIR += R-cran-fracdiff
     SUBDIR += R-cran-geepack
+    SUBDIR += R-cran-geometry
     SUBDIR += R-cran-gmp
     SUBDIR += R-cran-gower
     SUBDIR += R-cran-gpclib
@@ -86,6 +89,7 @@
     SUBDIR += R-cran-sp
     SUBDIR += R-cran-spData
     SUBDIR += R-cran-spdep
+    SUBDIR += R-cran-SQUAREM
     SUBDIR += R-cran-sspir
     SUBDIR += R-cran-stabledist
     SUBDIR += R-cran-survey
@@ -107,6 +111,7 @@
     SUBDIR += alt-ergo
     SUBDIR += amath
     SUBDIR += ambit
+    SUBDIR += analitza
     SUBDIR += analitza-kde4
     SUBDIR += ann
     SUBDIR += antic
@@ -132,11 +137,14 @@
     SUBDIR += calc
     SUBDIR += calcoo
     SUBDIR += calctool
+    SUBDIR += cantor
     SUBDIR += cantor-kde4
+    SUBDIR += cbc
     SUBDIR += cblas
     SUBDIR += ccmath
     SUBDIR += ceres-solver
     SUBDIR += cgal
+    SUBDIR += cgl
     SUBDIR += chaco
     SUBDIR += chryzodus
     SUBDIR += clasp
@@ -255,6 +263,7 @@
     SUBDIR += hs-statistics
     SUBDIR += hs-vector-space
     SUBDIR += igraph
+    SUBDIR += intervaltree
     SUBDIR += ipopt
     SUBDIR += ised
     SUBDIR += jacal
@@ -267,11 +276,16 @@
     SUBDIR += jsmath-fonts
     SUBDIR += jtransforms
     SUBDIR += jts
+    SUBDIR += kalgebra
     SUBDIR += kalgebra-kde4
+    SUBDIR += kbruch
     SUBDIR += kbruch-kde4
+    SUBDIR += kcalc
     SUBDIR += kcalc-kde4
+    SUBDIR += kig
     SUBDIR += kig-kde4
     SUBDIR += kktdirect
+    SUBDIR += kmplot
     SUBDIR += kmplot-kde4
     SUBDIR += labplot
     SUBDIR += lambda
@@ -329,6 +343,7 @@
     SUBDIR += msieve
     SUBDIR += mtl
     SUBDIR += mtrxmath
+    SUBDIR += multichoose
     SUBDIR += mumps
     SUBDIR += mumps-edf
     SUBDIR += mumps-mpich
@@ -361,6 +376,7 @@
     SUBDIR += octave-forge-data-smoothing
     SUBDIR += octave-forge-database
     SUBDIR += octave-forge-dataframe
+    SUBDIR += octave-forge-dicom
     SUBDIR += octave-forge-divand
     SUBDIR += octave-forge-doctest
     SUBDIR += octave-forge-econometrics
@@ -401,12 +417,10 @@
     SUBDIR += octave-forge-nlwing2
     SUBDIR += octave-forge-nnet
     SUBDIR += octave-forge-nurbs
-    SUBDIR += octave-forge-ocs
     SUBDIR += octave-forge-oct2mat
     SUBDIR += octave-forge-octclip
     SUBDIR += octave-forge-octproj
     SUBDIR += octave-forge-odebvp
-    SUBDIR += octave-forge-odepkg
     SUBDIR += octave-forge-optics
     SUBDIR += octave-forge-optim
     SUBDIR += octave-forge-optiminterp
@@ -614,6 +628,7 @@
     SUBDIR += php72-gmp
     SUBDIR += physcalc
     SUBDIR += picosat
+    SUBDIR += piranha
     SUBDIR += plman
     SUBDIR += ploticus
     SUBDIR += ploticus-nox11
@@ -626,8 +641,10 @@
     SUBDIR += pure-mpfr
     SUBDIR += pure-rational
     SUBDIR += py-Diofant
+    SUBDIR += py-PySCIPOpt
     SUBDIR += py-PyWavelets
     SUBDIR += py-Pyomo
+    SUBDIR += py-algopy
     SUBDIR += py-altgraph
     SUBDIR += py-apgl
     SUBDIR += py-basemap
@@ -667,6 +684,7 @@
     SUBDIR += py-pandas
     SUBDIR += py-pandas-datareader
     SUBDIR += py-patsy
+    SUBDIR += py-piranha
     SUBDIR += py-plastex
     SUBDIR += py-probstat
     SUBDIR += py-pyasp
@@ -674,6 +692,7 @@
     SUBDIR += py-pycosat
     SUBDIR += py-pygsl
     SUBDIR += py-pyhull
+    SUBDIR += py-pyipopt
     SUBDIR += py-pymc
     SUBDIR += py-pymc3
     SUBDIR += py-pyneqsys
@@ -711,8 +730,9 @@
     SUBDIR += reduce-psl
     SUBDIR += reed-solomon
     SUBDIR += rexx-regmath
-    SUBDIR += rkward-kde4
+    SUBDIR += rkward-kde
     SUBDIR += rngstreams
+    SUBDIR += rocs
     SUBDIR += rocs-kde4
     SUBDIR += rpcalc
     SUBDIR += rpy
@@ -720,6 +740,7 @@
     SUBDIR += rubygem-algebra
     SUBDIR += rubygem-expression_parser
     SUBDIR += rubygem-fftw3
+    SUBDIR += rubygem-mathn
     SUBDIR += rubygem-narray
     SUBDIR += rubygem-narray_miss
     SUBDIR += rubygem-numru-misc
@@ -746,6 +767,7 @@
     SUBDIR += sound-of-sorting
     SUBDIR += spar
     SUBDIR += spblas
+    SUBDIR += spectra
     SUBDIR += speedcrunch
     SUBDIR += spooles
     SUBDIR += spooles-mpich

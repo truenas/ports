@@ -3,6 +3,7 @@
 
 PORTNAME=	chromium
 PORTVERSION=	65.0.3325.181
+PORTREVISION=	2
 CATEGORIES?=	www
 MASTER_SITES=	https://commondatastorage.googleapis.com/chromium-browser-official/
 DISTFILES=	${DISTNAME}${EXTRACT_SUFX}
@@ -58,14 +59,12 @@ LIB_DEPENDS=	libatk-bridge-2.0.so:accessibility/at-spi2-atk \
 		libsecret-1.so:security/libsecret \
 		libnss3.so:security/nss \
 		libexpat.so:textproc/expat2 \
-		libxml2.so:textproc/libxml2 \
 		libfontconfig.so:x11-fonts/fontconfig
 
 RUN_DEPENDS=	xdg-open:devel/xdg-utils \
 		noto-lite>0:x11-fonts/noto-lite
 
 BROKEN_FreeBSD_11_aarch64=	components/safe_browsing_db/v4_rice.cc:120:18: use of overloaded operator '&' is ambiguous
-BROKEN_FreeBSD_12_aarch64=	third_party/skia/src/core/SkCpu.cpp:84:27: use of undeclared identifier 'getauxval'
 ONLY_FOR_ARCHS=			aarch64 amd64 i386
 
 .endif
@@ -129,7 +128,7 @@ GN_ARGS+=	clang_use_chrome_plugins=false \
 		extra_cxxflags="-I${LOCALBASE}/include" \
 		extra_ldflags="-L${LOCALBASE}/lib"
 # TODO: investigate building with these options:
-# use_system_icu use_system_minigbm
+# use_system_minigbm
 GN_BOOTSTRAP_FLAGS=	--no-clean --no-rebuild
 
 # FreeBSD Chromium Api Key

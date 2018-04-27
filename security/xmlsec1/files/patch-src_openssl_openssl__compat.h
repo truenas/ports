@@ -1,12 +1,22 @@
 --- src/openssl/openssl_compat.h.orig	2017-09-12 13:21:09 UTC
 +++ src/openssl/openssl_compat.h
-@@ -16,6 +16,9 @@
-  * OpenSSL 1.1.0 compatibility
-  *
-  *****************************************************************************/
-+#if defined(XMLSEC_OPENSSL_API_110) && defined(LIBRESSL_VERSION_NUMBER) 
-+#define EVP_CIPHER_CTX_encrypting(x)       ((x)->encrypt)
-+#endif
- #if !defined(XMLSEC_OPENSSL_API_110)
+@@ -49,4 +49,19 @@
  
- /* EVP_PKEY stuff */
+ #endif /* !defined(XMLSEC_OPENSSL_API_110) */
+ 
++/******************************************************************************
++ *
++ * LibreSSL 2.7+ compatibility (implements most of OpenSSL 1.1 API)
++ *
++ *****************************************************************************/
++#if defined(XMLSEC_OPENSSL_API_110) && defined(LIBRESSL_VERSION_NUMBER) 
++/* EVP_CIPHER_CTX stuff */
++#define EVP_CIPHER_CTX_encrypting(x)       ((x)->encrypt)
++
++/* X509 stuff */
++#define X509_STORE_CTX_get_by_subject      X509_STORE_get_by_subject
++#define X509_OBJECT_new()                  (calloc(1, sizeof(X509_OBJECT)))
++#define X509_OBJECT_free(x) { X509_OBJECT_free_contents(x); free(x); }
++#endif
++
+ #endif /* __XMLSEC_OPENSSL_OPENSSL_COMPAT_H__ */

@@ -5,6 +5,84 @@ they are unavoidable.
 You should get into the habit of checking this file for changes each time
 you update your ports collection, before attempting any port upgrades.
 
+20180427:
+  AFFECTS: users of sysutils/zrepl
+  AUTHOR: woodsb02@FreeBSD.org
+
+  The zrepl update to 0.0.3 includes the following breaking changes:
+  - Snapshots are automatically bookmarked and pruning of bookmarks must
+    be configured by adding the keep_bookmarks parameter to the prune
+    policy section of the zrepl configuration file (source side only).
+    Be sure to understand the meaning bookmarks have for maximum
+    allowable replication downtime.
+  - The ssh+stdinserver transport protocol has changed, requiring zrepl
+    to be updates on both the sending and receiving side, and the daemon
+    restarted on both sides.
+  - The first outlet in the global.logging section of the configuration
+    file is now used for logging meta-errors (e.g. problems encountered
+    when writing to other logging outlets).
+
+20180425:
+  AFFECTS: users of databases/pecl-redis
+  AUTHOR: daniel@blodan.se
+
+  pecl-redis 4.0.0 breaks backwards compatibility, users 
+  not aware if you are using the changed functionality or not
+  should swap to databases/pecl-redis3
+
+20180417:
+  AFFECTS: users of dns/dnscrypt-proxy2
+  AUTHOR: egypcio@googlemail.com
+
+  DNSCrypt-Proxy 2 has been updated to 2.0.10 and the configuration file
+  has changed from ${PREFIX}/etc/dnscrypt-proxy.toml to
+  ${PREFIX}/etc/dnscrypt-proxy/dnscrypt-proxy.toml.
+
+20180416:
+  AFFECTS: users of mail/postgrey
+  AUTHOR: ports.maintainer@evilphi.com
+
+  If you use any of the optional make.conf variables to specify the
+  postgrey user, group, db dir, or run dir when building the port, you will
+  need to change the prefix from PG_ to POSTGREY_*.  The variables were
+  renamed to solve a namespace collision with the PostgreSQL ports.
+
+20180412:
+  AFFECTS: users of devel/php-composer
+  AUTHOT: madpilot@FreeBSD.org
+
+  Flavors have been added to the composer port with the update to
+  1.6.3. Due to the change in PKGNAME pkg(and other tols) will not
+  notice the update. It is required to tell pkg about the name
+  change, for example:
+
+  # pkg set -n php-composer:php56-composer
+
+20180410:
+  AFFECTS: users of KDE SC4
+  AUTHOR: kde@FreeBSD.org
+
+  Most of KDE Applications 17.12.3 have now landed in the ports tree.
+  There are still some missing pieces, that will follow soon.
+
+  As mentioned in the commit messages, users of KDE SC4 should stick with the
+  <foo>-kde4 named package.
+
+  As the MOVED entries for ports like databases/akonadi-kde4 have been removed
+  in the process of updating (as there now is again a databases/akonad), there
+  might be issues for people that update from a too old installed package list
+  with portmaster.
+
+  These should be fixable by issuing a command à la
+  # pkg set --change-origin databases/akonadi:databases/akonadi-kde4 akonadi
+
+20180409:
+  AFFECTS: users of net-im/matterircd
+  AUTHOR: norrland@nullbyte.se
+
+  Matterircd has been updated to 0.17.0 and mattermost configuration settings
+  need to be migrated to [mattermost] section. See matterircd.toml.sample.
+
 20180404:
   AFFECTS: users of www/nextcloud
   AUTHOR: brnrd@FreeBSD.org
@@ -15,7 +93,7 @@ you update your ports collection, before attempting any port upgrades.
   a patch for the default installation can be applied with:
 
   # cd /usr/local/www/nextcloud
-  # su -m www -c "php ./occ config:import < /usr/local/share/nextcloud/fix-apps_paths.json
+  # su -m www -c "php ./occ config:import < /usr/local/share/nextcloud/fix-apps_paths.json"
 
 20180401:
   AFFECTS: users of mail/dovecot and mail/dovecot-pigeonhole
@@ -292,7 +370,7 @@ you update your ports collection, before attempting any port upgrades.
   of the packages. 
   It is recommended to first remove the package kf5-kirigami2.
 
-20180115
+20180115:
   AFFECTS: users of net-p2p/transmission-daemon
   AUTHOR: woodsb02@FreeBSD.org
 
@@ -316,7 +394,7 @@ you update your ports collection, before attempting any port upgrades.
       stopped). Note that this value is NOT a list of allowed CLIENTS,
       but instead a list of allowed SERVER hostnames.
 
-20180111
+20180111:
   AFFECTS: users of editors/vim-lite
   AUTHOR: adamw@FreeBSD.org
 
@@ -330,7 +408,7 @@ you update your ports collection, before attempting any port upgrades.
   If the switch doesn't happen automatically for you, just delete the
   vim-lite package and install vim-console.
 
-20180109
+20180109:
   AFFECTS: users of www/qt5-webengine
   AUTHOR: kde@FreeBSD.org
 
@@ -338,7 +416,7 @@ you update your ports collection, before attempting any port upgrades.
   of it is installed. It is recommended to either build the port in a
   builder like poudriere, or to deinstall and then doing an install.
 
-20180107
+20180107:
   AFFECTS: users of security/gnupg and mail/mutt and mail/neomutt
   AUTHOR: adamw@FreeBSD.org
 
@@ -630,7 +708,7 @@ you update your ports collection, before attempting any port upgrades.
   Portupgrade users:
       portupgrade -fr security/libressl
 
-20171105
+20171105:
   AFFECTS: users of www/mod_auth_cas
   AUTHOR: brnrd@FreeBSD.org
 
@@ -776,7 +854,7 @@ you update your ports collection, before attempting any port upgrades.
  
   All ports have been updated to depend only on CMake.
 
-20170904
+20170904:
   AFFECTS: users of net-mgmt/seafile-server
   AUTHOR: ultima@FreeBSD.org
 
@@ -784,7 +862,7 @@ you update your ports collection, before attempting any port upgrades.
   are utf8_unicode_ci. Upstream has set collation type to be implicit
   and will cause all libraries to disappear if set to incorrect collation.
 
-20170828
+20170828:
   AFFECTS: users of security/gnupg
   AUTHOR: adamw@FreeBSD.org
 
