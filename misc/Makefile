@@ -396,7 +396,6 @@
     SUBDIR += pspresent
     SUBDIR += ptsort
     SUBDIR += pubs
-    SUBDIR += py-YABT
     SUBDIR += py-cinder
     SUBDIR += py-colorbrewer
     SUBDIR += py-crudini
@@ -526,7 +525,6 @@
     SUBDIR += whichman
     SUBDIR += window
     SUBDIR += with
-    SUBDIR += wmScoreBoard
     SUBDIR += wmcalendar
     SUBDIR += wmjulia
     SUBDIR += wmpal

@@ -66,7 +66,8 @@ shebangonefile() {
 	/bin/sh) ;;
 	/bin/tcsh) ;;
 	/usr/bin/awk) ;;
-	/usr/bin/env)
+	/usr/bin/env) ;;
+	/sbin/openrc-run)
 		interparg=$(sed -n -e '1s/^#![[:space:]]*[^[:space:]]*[[:space:]]*\([^[:space:]]*\).*/\1/p;2q' "${f}")
 		case "${interparg}" in
 		python|python2|python3)
