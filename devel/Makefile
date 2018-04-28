@@ -1260,6 +1260,7 @@
     SUBDIR += kde-dev-utils
     SUBDIR += kde-dev-utils-kde4
     SUBDIR += kdebindings-kde4
+    SUBDIR += kdesdk
     SUBDIR += kdesdk-kde4
     SUBDIR += kdesdk-kioslaves-kde4
     SUBDIR += kdesdk-strigi-analyzers-kde4
@@ -4123,6 +4124,9 @@
     SUBDIR += pkg-info.el
     SUBDIR += pkgconf
     SUBDIR += plan9port
+    SUBDIR += plasma5-khotkeys
+    SUBDIR += plasma5-kwrited
+    SUBDIR += plasma5-plasma-sdk
     SUBDIR += pmccabe
     SUBDIR += pmd
     SUBDIR += poco

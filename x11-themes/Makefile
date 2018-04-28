@@ -37,10 +37,6 @@
     SUBDIR += emerald-themes
     SUBDIR += fluxbox-tenr-styles-pack
     SUBDIR += fvwm-themes
-    SUBDIR += ghostbsd-icons
-    SUBDIR += ghostbsd-mate-themes
-    SUBDIR += ghostbsd-wallpapers
-    SUBDIR += ghostbsd-wallpapers-new
     SUBDIR += gnome-backgrounds
     SUBDIR += gnome-icon-theme-symbolic
     SUBDIR += gnome-icons
@@ -66,6 +62,7 @@
     SUBDIR += gnome-themes-extras
     SUBDIR += gnome-themes-standard
     SUBDIR += greybird-theme
+    SUBDIR += gtk-E17-theme
     SUBDIR += gtk-aluminumalloy-cryogenic-theme
     SUBDIR += gtk-aluminumalloy-smog-theme
     SUBDIR += gtk-aluminumalloy-toxic-theme
@@ -77,7 +74,6 @@
     SUBDIR += gtk-cleanice-engine
     SUBDIR += gtk-digital-cream-theme
     SUBDIR += gtk-digital-harmony-theme
-    SUBDIR += gtk-E17-theme
     SUBDIR += gtk-engines2
     SUBDIR += gtk-envy-theme
     SUBDIR += gtk-equinox-engine
@@ -153,8 +149,14 @@
     SUBDIR += openbox-arc-theme
     SUBDIR += openbox-themes
     SUBDIR += plank-theme-moka
-    SUBDIR += qt4-style-float
+    SUBDIR += plasma5-breeze
+    SUBDIR += plasma5-breeze-gtk
+    SUBDIR += plasma5-breeze-kde4
+    SUBDIR += plasma5-kde-gtk-config
+    SUBDIR += plasma5-oxygen
+    SUBDIR += plasma5-plasma-workspace-wallpapers
     SUBDIR += qt4-style-Kvantum
+    SUBDIR += qt4-style-float
     SUBDIR += qt4-style-phase
     SUBDIR += qt4-style-quantumstyle
     SUBDIR += qt5-style-Kvantum
