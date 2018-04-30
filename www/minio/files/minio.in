@@ -61,6 +61,10 @@ minio_startprecmd()
                 install -o "${minio_user}" -g "${minio_group}" "/dev/null" "${minio_logfile}"
         fi
 
+	if [ -d "${minio_config}" -a "$(stat -f '%p' "${minio_config}")" != "40775" ]; then
+		chmod 775 "${minio_config}"
+	fi
+
 	for disk in "${minio_disks}"; do
 		if [ ! -d "${disk}" ]; then
 			install -d -o "${minio_user}" -g "${minio_group}" "${disk}"
