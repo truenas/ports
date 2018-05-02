@@ -476,6 +476,7 @@
     SUBDIR += kludge3d
     SUBDIR += kolourpaint
     SUBDIR += kolourpaint-kde4
+    SUBDIR += kphotoalbum
     SUBDIR += kphotoalbum-kde4
     SUBDIR += kpovmodeler
     SUBDIR += kqtquickcharts-kde4
@@ -635,6 +636,7 @@
     SUBDIR += mxp
     SUBDIR += mypaint
     SUBDIR += nathive
+    SUBDIR += natron
     SUBDIR += netpbm
     SUBDIR += nip2
     SUBDIR += nomacs
@@ -657,6 +659,9 @@
     SUBDIR += opencv-core
     SUBDIR += opencv-java
     SUBDIR += opendx
+    SUBDIR += openfx-arena
+    SUBDIR += openfx-io
+    SUBDIR += openfx-misc
     SUBDIR += opengl-man
     SUBDIR += openicc-config
     SUBDIR += openimageio
@@ -1051,7 +1056,6 @@
     SUBDIR += sswf
     SUBDIR += stamp
     SUBDIR += structuresynth
-    SUBDIR += sverchok-blender
     SUBDIR += svg2pdf
     SUBDIR += svg2png
     SUBDIR += svgalib

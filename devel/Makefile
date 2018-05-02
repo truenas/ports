@@ -1266,12 +1266,17 @@
     SUBDIR += kdesdk-strigi-analyzers-kde4
     SUBDIR += kdesdk-thumbnailers
     SUBDIR += kdesdk-thumbnailers-kde4
+    SUBDIR += kdesvn
     SUBDIR += kdesvn-kde4
+    SUBDIR += kdev-php
+    SUBDIR += kdev-python
+    SUBDIR += kdevelop
     SUBDIR += kdevelop-kde4
     SUBDIR += kdevelop-pg-qt
-    SUBDIR += kdevelop-php
-    SUBDIR += kdevelop-php-docs
-    SUBDIR += kdevplatform
+    SUBDIR += kdevelop-pg-qt-kde4
+    SUBDIR += kdevelop-php-kde4
+    SUBDIR += kdevelop-php-docs-kde4
+    SUBDIR += kdevplatform-kde4
     SUBDIR += kf5-extra-cmake-modules
     SUBDIR += kf5-kapidox
     SUBDIR += kf5-kauth
@@ -5495,6 +5500,7 @@
     SUBDIR += rubygem-fattr
     SUBDIR += rubygem-ffi
     SUBDIR += rubygem-ffi-compiler
+    SUBDIR += rubygem-ffi-win32-extensions
     SUBDIR += rubygem-ffi-yajl
     SUBDIR += rubygem-file-tail
     SUBDIR += rubygem-filesize
@@ -5999,6 +6005,7 @@
     SUBDIR += shapelib
     SUBDIR += shards
     SUBDIR += shedskin
+    SUBDIR += shell-toolbox
     SUBDIR += shflags
     SUBDIR += shiboken
     SUBDIR += shmap

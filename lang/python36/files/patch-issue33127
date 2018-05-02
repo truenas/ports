@@ -1,8 +1,33 @@
-diff --git Lib/test/test_ssl.py Lib/test/test_ssl.py
-index 8dd3b41450..9785a59a7e 100644
---- Lib/test/test_ssl.py
+From f5befbb0d1526f18eb2b24eabb48c3b761c624a2 Mon Sep 17 00:00:00 2001
+From: Christian Heimes <christian@python.org>
+Date: Sat, 24 Mar 2018 18:38:14 +0100
+Subject: [PATCH] [3.6] bpo-33127: Compatibility patch for LibreSSL 2.7.0
+ (GH-6210) (GH-6214)
+
+LibreSSL 2.7 introduced OpenSSL 1.1.0 API. The ssl module now detects
+LibreSSL 2.7 and only provides API shims for OpenSSL < 1.1.0 and
+LibreSSL < 2.7.
+
+Documentation updates and fixes for failing tests will be provided in
+another patch set.
+
+Signed-off-by: Christian Heimes <christian@python.org>.
+(cherry picked from commit 4ca0739c9d97ac7cd45499e0d31be68dc659d0e1)
+
+Co-authored-by: Christian Heimes <christian@python.org>
+---
+ Lib/test/test_ssl.py                               |  1 +
+ .../2018-03-24-15-08-24.bpo-33127.olJmHv.rst       |  1 +
+ Modules/_ssl.c                                     | 24 ++++++++++++++--------
+ Tools/ssl/multissltests.py                         |  3 ++-
+ 4 files changed, 20 insertions(+), 9 deletions(-)
+ create mode 100644 Misc/NEWS.d/next/Library/2018-03-24-15-08-24.bpo-33127.olJmHv.rst
+
+diff --git a/Lib/test/test_ssl.py b/Lib/test/test_ssl.py
+index 8dd3b4145078..9785a59a7e49 100644
+--- Lib/test/test_ssl.py.orig
 +++ Lib/test/test_ssl.py
-@@ -1687,6 +1687,7 @@ class SimpleBackgroundTests(unittest.TestCase):
+@@ -1687,6 +1687,7 @@ def test_get_ca_certs_capath(self):
          self.assertEqual(len(ctx.get_ca_certs()), 1)
  
      @needs_sni
@@ -10,16 +35,16 @@ index 8dd3b41450..9785a59a7e 100644
      def test_context_setget(self):
          # Check that the context of a connected socket can be replaced.
          ctx1 = ssl.SSLContext(ssl.PROTOCOL_TLSv1_2)
-diff --git Misc/NEWS.d/next/Library/2018-03-24-15-08-24.bpo-33127.olJmHv.rst Misc/NEWS.d/next/Library/2018-03-24-15-08-24.bpo-33127.olJmHv.rst
+diff --git a/Misc/NEWS.d/next/Library/2018-03-24-15-08-24.bpo-33127.olJmHv.rst b/Misc/NEWS.d/next/Library/2018-03-24-15-08-24.bpo-33127.olJmHv.rst
 new file mode 100644
-index 0000000000..635aabbde0
+index 000000000000..635aabbde031
 --- /dev/null
 +++ Misc/NEWS.d/next/Library/2018-03-24-15-08-24.bpo-33127.olJmHv.rst
 @@ -0,0 +1 @@
 +The ssl module now compiles with LibreSSL 2.7.1.
-diff --git Modules/_ssl.c Modules/_ssl.c
-index c54e43c2b4..5e007da858 100644
---- Modules/_ssl.c
+diff --git a/Modules/_ssl.c b/Modules/_ssl.c
+index c54e43c2b48a..5e007da858bd 100644
+--- Modules/_ssl.c.orig
 +++ Modules/_ssl.c
 @@ -106,6 +106,12 @@ struct py_ssl_library_code {
  
@@ -69,11 +94,11 @@ index c54e43c2b4..5e007da858 100644
  
  
  enum py_ssl_error {
-diff --git Tools/ssl/multissltests.py Tools/ssl/multissltests.py
-index ce5bbd8530..ba4529ae06 100755
---- Tools/ssl/multissltests.py
+diff --git a/Tools/ssl/multissltests.py b/Tools/ssl/multissltests.py
+index ce5bbd85308c..ba4529ae0611 100755
+--- Tools/ssl/multissltests.py.orig
 +++ Tools/ssl/multissltests.py
-@@ -57,8 +57,9 @@ LIBRESSL_OLD_VERSIONS = [
+@@ -57,8 +57,9 @@
  ]
  
  LIBRESSL_RECENT_VERSIONS = [
@@ -84,3 +109,4 @@ index ce5bbd8530..ba4529ae06 100755
  ]
  
  # store files in ../multissl
+

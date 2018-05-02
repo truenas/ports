@@ -540,6 +540,7 @@
     SUBDIR += k3b
     SUBDIR += k3b-kde4
     SUBDIR += k8temp
+    SUBDIR += kbackup
     SUBDIR += kcm-polkit-kde
     SUBDIR += kcron
     SUBDIR += kcron-kde4
@@ -1120,6 +1121,9 @@
     SUBDIR += rubygem-vagrant-mutate
     SUBDIR += rubygem-vagrant-vbguest
     SUBDIR += rubygem-vmstat
+    SUBDIR += rubygem-win32-file
+    SUBDIR += rubygem-win32-file-security
+    SUBDIR += rubygem-win32-file-stat
     SUBDIR += rubygem-winrm
     SUBDIR += rubygem-winrm-elevated
     SUBDIR += rubygem-winrm-fs
@@ -1169,6 +1173,7 @@
     SUBDIR += shlock
     SUBDIR += shmcat
     SUBDIR += showbeastie
+    SUBDIR += shuf
     SUBDIR += siegfried
     SUBDIR += signon-kwallet-extension
     SUBDIR += signon-plugin-oauth2
@@ -1210,6 +1215,7 @@
     SUBDIR += swapd
     SUBDIR += swapexd
     SUBDIR += swapmon
+    SUBDIR += sweeper
     SUBDIR += sweeper-kde4
     SUBDIR += symlinks
     SUBDIR += symon
