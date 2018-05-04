@@ -17,7 +17,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pip>0:devel/py-pip@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}selenium>=0:www/py-selenium@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}ws4py>=0:www/py-ws4py@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}unittest-xml-reporting>=0:devel/py-unittest-xml-reporting@${FLAVOR} \
-		${LOCALBASE}/sbin/vm:sysutils/ix-bhyve \
+		ix-bhyve>=0:sysutils/ix-bhyve \
 		${LOCALBASE}/bin/expect:lang/expect \
 		bhyve-firmware>=0:sysutils/bhyve-firmware
 
