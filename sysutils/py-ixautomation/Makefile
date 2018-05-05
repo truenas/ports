@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	ixautomation
-PORTVERSION=	18.04
+PORTVERSION=	18.05
 CATEGORIES=	sysutils
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
@@ -15,14 +15,10 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pip>0:devel/py-pip@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}pytest>=0:devel/py-pytest@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}requests>=0:www/py-requests@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}selenium>=0:www/py-selenium@${FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}pyvirtualdisplay>=0:x11/py-pyvirtualdisplay@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}ws4py>=0:www/py-ws4py@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}unittest-xml-reporting>=0:devel/py-unittest-xml-reporting@${FLAVOR} \
-		${LOCALBASE}/sbin/vm:sysutils/vm-bhyve \
+		ix-bhyve>=0:sysutils/ix-bhyve \
 		${LOCALBASE}/bin/expect:lang/expect \
-		${LOCALBASE}/bin/firefox:www/firefox-esr \
-		${LOCALBASE}/bin/geckodriver:www/geckodriver \
-		xorg-vfbserver>=0:x11-servers/xorg-vfbserver \
 		bhyve-firmware>=0:sysutils/bhyve-firmware
 
 WRKSRC_SUBDIR=  src
@@ -33,6 +29,6 @@ MAKE_ARGS=	PREFIX=${STAGEDIR}${PREFIX}
 USE_GITHUB=	yes
 GH_ACCOUNT=	ixsystems
 GH_PROJECT=	ixautomation
-GH_TAGNAME=	f47fa46cb4b38202ffb69ff2bc173856bbe0e43c
+GH_TAGNAME=	b2f9f54d754ea52616cdd16d5b8bcd630e772b55
 
 .include <bsd.port.mk>
