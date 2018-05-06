@@ -1327,6 +1327,7 @@
     SUBDIR += libafterbase
     SUBDIR += liballium
     SUBDIR += libantlr3c
+    SUBDIR += libappindicator
     SUBDIR += libaravis
     SUBDIR += libarea
     SUBDIR += libarena
@@ -1445,6 +1446,7 @@
     SUBDIR += libhtp
     SUBDIR += libhyve-remote
     SUBDIR += libical
+    SUBDIR += libindicator
     SUBDIR += libinotify
     SUBDIR += libiqxmlrpc
     SUBDIR += libisofs
@@ -6194,6 +6196,7 @@
     SUBDIR += xorg-macros
     SUBDIR += xparam
     SUBDIR += xsd
+    SUBDIR += xtensa-esp32-elf
     SUBDIR += xtl
     SUBDIR += xtoolchain-llvm-devel
     SUBDIR += xtoolchain-llvm40
