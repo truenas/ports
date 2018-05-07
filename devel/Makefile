@@ -6110,7 +6110,6 @@
     SUBDIR += tclxml
     SUBDIR += tdl
     SUBDIR += terminality
-    SUBDIR += tesla
     SUBDIR += tevent
     SUBDIR += tex-kpathsea
     SUBDIR += tex-libtexlua
