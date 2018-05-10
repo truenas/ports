@@ -5,14 +5,12 @@
 # Written May 9th, 2017
 
 name="lightdm"
-description="The Simple Login Manager (SLiM)"
 command=/usr/local/sbin/lightdm
-command_args=""
 start_stop_daemon_args="--background"
 pidfile="/var/run/lightdm.pid"
 
 depend(){
         provide xlogin
         keyword -login -shutdown
-        need localmount dbus hald
+        after localmount dbus moused
 }
