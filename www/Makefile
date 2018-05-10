@@ -1034,7 +1034,6 @@
     SUBDIR += p5-JSON-API
     SUBDIR += p5-Jemplate
     SUBDIR += p5-Jifty
-    SUBDIR += p5-Kwiki
     SUBDIR += p5-LWP-Authen-Negotiate
     SUBDIR += p5-LWP-Authen-OAuth
     SUBDIR += p5-LWP-Authen-Wsse
@@ -1374,7 +1373,6 @@
     SUBDIR += palemoon
     SUBDIR += paros
     SUBDIR += payara
-    SUBDIR += pc-webkitviewer
     SUBDIR += pear-HTML_AJAX
     SUBDIR += pear-HTML_TagCloud
     SUBDIR += pear-HTTP
@@ -1619,7 +1617,7 @@
     SUBDIR += py-django-tinymce
     SUBDIR += py-django-treebeard
     SUBDIR += py-django-voting
-    SUBDIR += py-django110
+    SUBDIR += py-django-widget-tweaks
     SUBDIR += py-django111
     SUBDIR += py-django18
     SUBDIR += py-django20
