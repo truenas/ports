@@ -12,5 +12,5 @@ pidfile="/var/run/lightdm.pid"
 depend(){
         provide xlogin
         keyword -login -shutdown
-        need localmount dbus
+        after localmount dbus
 }
