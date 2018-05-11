@@ -2044,6 +2044,7 @@
     SUBDIR += p5-Cache-Simple-TimedExpiry
     SUBDIR += p5-Cairo-GObject
     SUBDIR += p5-Calendar-Simple
+    SUBDIR += p5-Call-Context
     SUBDIR += p5-Callback-Frame
     SUBDIR += p5-Canary-Stability
     SUBDIR += p5-Capture-Tiny
@@ -3395,6 +3396,7 @@
     SUBDIR += p5-Sub-Signatures
     SUBDIR += p5-Sub-Uplevel
     SUBDIR += p5-Sub-WrapPackages
+    SUBDIR += p5-Symbol-Get
     SUBDIR += p5-Symbol-Global-Name
     SUBDIR += p5-Symbol-Util
     SUBDIR += p5-Syntax-Keyword-Gather
