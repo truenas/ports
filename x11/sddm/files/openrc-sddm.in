@@ -12,8 +12,8 @@ depend(){
 }
 
 stop_pre(){
-	pkill -u sddm | true
-	killall sddm | true
+	pkill -u sddm || true
+	killall sddm || true
 }
 
 stop(){
@@ -21,5 +21,5 @@ stop(){
 }
 
 stop_post(){
-	killall X | true
+	killall X || true
 }
