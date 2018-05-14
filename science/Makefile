@@ -169,10 +169,12 @@
     SUBDIR += py-cdo
     SUBDIR += py-coards
     SUBDIR += py-dlib
+    SUBDIR += py-gsd
     SUBDIR += py-h5py
     SUBDIR += py-hcluster
     SUBDIR += py-mdp
     SUBDIR += py-mlpy
+    SUBDIR += py-mmtf-python
     SUBDIR += py-netCDF4
     SUBDIR += py-obspy
     SUBDIR += py-openpiv
