@@ -1833,9 +1833,9 @@ PLIST_SUB+=	LIB32DIR=${LIB32DIR}
 PKG_ORIGIN=		ports-mgmt/pkg-devel
 .endif
 
-#.if !defined(PKG_DEPENDS) && !defined(CLEAN_FETCH_ENV)
-#PKG_DEPENDS+=	${LOCALBASE}/sbin/pkg:${PKG_ORIGIN}
-#.endif
+.if !defined(PKG_DEPENDS) && !defined(CLEAN_FETCH_ENV) && !exists(/usr/sbin/pkg-static)
+PKG_DEPENDS+=	${LOCALBASE}/sbin/pkg:${PKG_ORIGIN}
+.endif
 
 .if defined(USE_GCC)
 .include "${PORTSDIR}/Mk/bsd.gcc.mk"
