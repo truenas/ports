@@ -1268,6 +1268,7 @@
     SUBDIR += tree
     SUBDIR += tren
     SUBDIR += trueos-libqt5
+    SUBDIR += trueos-utils
     SUBDIR += ts
     SUBDIR += tss
     SUBDIR += tty-clock
