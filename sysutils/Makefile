@@ -846,6 +846,7 @@
     SUBDIR += pbi-manager
     SUBDIR += pbimaker
     SUBDIR += pc-networkmanager
+    SUBDIR += pc-sysinstall
     SUBDIR += pc-updatemanager
     SUBDIR += pcapfix
     SUBDIR += pcbsd-appweb
