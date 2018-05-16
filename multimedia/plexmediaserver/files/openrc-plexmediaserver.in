@@ -40,12 +40,12 @@ start_pre()
 	if [ ! -d ${pidfile%/*} ]; then
 		install -d -o ${%%PORTNAME%%_user} ${pidfile%/*};
 	fi
-	
+
 	if [ ! -d "${%%PORTNAME%%_support_path}/Plex Media Server" ]; then
 		install -d -g ${%%PORTNAME%%_group} -o ${%%PORTNAME%%_user} "${%%PORTNAME%%_support_path}/Plex Media Server";
 	fi
-	
-	if [ ${%%PORTNAME%%_tmp} ]; then 
+
+	if [ ${%%PORTNAME%%_tmp} ]; then
 		export TMPDIR=${%%PORTNAME%%_tmp};
 		install -d -g ${%%PORTNAME%%_group} -o ${%%PORTNAME%%_user} "${%%PORTNAME%%_tmp}";
 	fi
