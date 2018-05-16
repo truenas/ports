@@ -872,6 +872,7 @@
     SUBDIR += pecl-mogilefs
     SUBDIR += pecl-proctitle
     SUBDIR += pefs-kmod
+    SUBDIR += personacrypt
     SUBDIR += personality
     SUBDIR += pesign
     SUBDIR += pflogx
