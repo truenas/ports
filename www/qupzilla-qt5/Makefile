@@ -1,27 +1,27 @@
 # $FreeBSD$
 
 PORTNAME=	qupzilla
-PORTVERSION=	2.1.2
-PORTREVISION=	1
+PORTVERSION=	1.8.9
+PORTREVISION=	4
 CATEGORIES=	www
 MASTER_SITES=	https://github.com/QupZilla/${PORTNAME}/releases/download/v${PORTVERSION}/
 PKGNAMESUFFIX=	-qt5
 DISTNAME=	QupZilla-${PORTVERSION}
 
 MAINTAINER=	rezny@FreeBSD.org
-COMMENT=	Web browser based on Qt Webengine
+COMMENT=	Web browser based on WebKit engine and Qt Framework
 
 LICENSE=	GPLv3
 
 LIB_DEPENDS=	libhunspell-1.6.so:textproc/hunspell
 
-CONFLICTS_INSTALL=	${PORTNAME}-qt4* ${PORTNAME}-qt5-webkit
+CONFLICTS_INSTALL=	${PORTNAME}-qt4*
 
 USES=		desktop-file-utils pkgconfig qmake ssl tar:xz
-USE_QT5=	core concurrent gui network printsupport script sql webengine \
+USE_QT5=	core concurrent gui network printsupport script sql webkit \
 		widgets x11extras xml imageformats_run sql-sqlite3_run \
 		buildtools_build linguisttools_build
-USE_XORG=	x11 xcb
+USE_XORG=	x11
 USE_GL=		gl
 CONFIGURE_ENV=	QUPZILLA_PREFIX=${PREFIX}/
 USE_LDCONFIG=	yes
@@ -50,6 +50,9 @@ MAKE_JOBS_UNSAFE=	yes
 .endif
 
 post-patch:
+	@${REINPLACE_CMD} -e 's|/usr|${LOCALBASE}|g' \
+		${WRKSRC}/tests/autotests/qztoolstest.cpp \
+		${WRKSRC}/src/lib/plugins/qtwebkit/spellcheck/speller.cpp
 	@${REINPLACE_CMD} -e 's|/usr|${PREFIX}|g' \
 		${WRKSRC}/src/install.pri \
 		${WRKSRC}/src/defines.pri \
