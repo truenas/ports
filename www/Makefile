@@ -1374,6 +1374,7 @@
     SUBDIR += palemoon
     SUBDIR += paros
     SUBDIR += payara
+    SUBDIR += pc-webkitviewer
     SUBDIR += pear-HTML_AJAX
     SUBDIR += pear-HTML_TagCloud
     SUBDIR += pear-HTTP
