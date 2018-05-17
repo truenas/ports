@@ -174,6 +174,7 @@ NVTHREADS_LDFLAGS=	-lpthread
 # allow the use localized gd ports in Makefile.local or slave ports.
 GD_PORT?=	graphics/gd
 
+LDFLAGS+=	-lgd
 CONFIGURE_ARGS+=	--program-transform-name="s/x/x/" \
 		--enable-dependency-tracking \
 		--enable-r=no \
