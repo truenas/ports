@@ -42,7 +42,6 @@
     SUBDIR += axis2
     SUBDIR += bacula-web
     SUBDIR += baikal
-    SUBDIR += bareos16-webui
     SUBDIR += bareos-webui
     SUBDIR += bigbluebutton
     SUBDIR += bins
