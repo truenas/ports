@@ -1,13 +1,4 @@
 #!/sbin/openrc-run
-# Copyright (c) 2007-2015 The OpenRC Authors.
-# See the Authors file at the top-level directory of this distribution and
-# https://github.com/OpenRC/openrc/blob/master/AUTHORS
-#
-# This file is part of OpenRC. It is subject to the license terms in
-# the LICENSE file found in the top-level directory of this
-# distribution and at https://github.com/OpenRC/openrc/blob/master/LICENSE
-# This file may not be copied, modified, propagated, or distributed
-# except according to the terms contained in the LICENSE file.
 #
 # ================================================================
 # By default webcamd instances are invoked by the devd(8) system
@@ -78,27 +69,34 @@
 # webcamd_devd_starts_unspecified=<YES/NO>
 #
 
+depend()
+{
+	provide webcamd
+	need net
+	before devd
+	after dbus
+	keyword -shutdown
+}
+
+name=webcamd
+
 : ${webcamd_user:=webcamd}
 : ${webcamd_group:=webcamd}
 : ${webcamd_startup_delay=1}
 : ${webcamd_devd_starts_unspecified=YES}
+
 : ${hald_enable:=NO}
 
-name="webcamd"
-command=webcamd
-command_args="-B -U ${webcamd_user} -G ${webcamd_group}"
-extra_commands="startdevd"
-startdevd_description="Internal command to start a instance from devd"
-
-depend()
-{
-	need localmount network 
-	after bootmisc dbus
-}
+dname=$(echo ${RC_SVCNAME} | cut -d '.' -f 2-)
+if [ -n "$dname" -a "$dname" != "webcamd" ]; then
+        devd_device="$dname"
+fi
 
 # If invoked automatically by devd, we receive additional arguments
-#devd_device=${2}
-devd_interface=${devd_interface-0}
+devd_interface=${devd_args}
+
+command=webcamd
+command_args="-B -U ${webcamd_user} -G ${webcamd_group}"
 
 webcamd()
 {
@@ -119,20 +117,11 @@ webcamd_grep_instance_flags()
     exit 0
 }
 
-startdevd()
+webcamd_start_devd()
 {
-  # Check if we should attach to the "hald" service
-  if yesno hald_enable ; then
-    command_args="$command_args -H"
-  fi
-
-  if [ -z "$devd_device" ] ; then
-    eerror "Missing devd_device"
-    return 1
-  fi
-
-  # Start a single USB device, as this init.d script was invoked by devd
+  # Start a single USB device, as this rc.d script was invoked by devd
   # with extra arguments
+
   n=0
   while true
   do
@@ -163,10 +152,9 @@ startdevd()
   done
 
   if yesno webcamd_devd_starts_unspecified; then
-    # Try to start the connected USB device - But quietly, don't clutter up my pretty OpenRC messages
-    ${command} -i ${devd_interface} ${instance_flags} ${webcamd_flags} ${command_args} >/dev/null 2>/dev/null
+    # Try to start the connected USB device
+    ${command} -i ${devd_interface} ${instance_flags} ${webcamd_flags} ${command_args}
   fi
-  eend 0
 }
 
 start()
@@ -176,8 +164,14 @@ start()
     command_args="$command_args -H"
   fi
 
-  # Start specified instances
-  webcamd_start_instances
+  # If this rc.d script was invoked by devd
+  if [ "$devd_device" ]; then
+    # Then start the device ugenX.X, as provied in the argv $2, $3
+    webcamd_start_devd
+  else
+    # Start specified instances
+    webcamd_start_instances
+  fi
 }
 
 webcamd_start_instances()
@@ -228,7 +222,7 @@ stop()
     done
   else
     echo "${name} is not running."
-    return 0
+    return 1
   fi
 }
 
@@ -237,10 +231,9 @@ status()
   pids=$(webcamd_pids)
 
   if [ "${pids}" ]; then
-    einfo "status: started"
-    return 0
+    einfo "${name} is running as pid ${pids}."
   else
-    einfo "status: stopped"
-    return 3
+    einfo "${name} is not running."
+    return 1
   fi
 }
