@@ -88,6 +88,7 @@
     SUBDIR += inadyn-troglobit
     SUBDIR += ipcheck
     SUBDIR += ironsides
+    SUBDIR += kadnode
     SUBDIR += kf5-kdnssd
     SUBDIR += knot-resolver
     SUBDIR += knot1

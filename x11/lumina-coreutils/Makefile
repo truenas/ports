@@ -17,7 +17,13 @@ CONFLICTS_INSTALL=	lumina-1.2.*
 OPTIONS_DEFINE=	I18N
 OPTIONS_SUB=		yes
 OPTIONS_DEFAULT=	I18N
+<<<<<<< HEAD
 I18N_DESC= Install localization files
+=======
+OPTIONS_SUB=	yes
+
+I18N_DESC=	Install localization files
+>>>>>>> freebsd/master
 
 .include <bsd.port.options.mk>
 
