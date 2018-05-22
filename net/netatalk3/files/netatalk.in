@@ -3,7 +3,7 @@
 # $FreeBSD$
 #
 # PROVIDE: netatalk
-# REQUIRE: DAEMON %%ZEROCONF%%
+# REQUIRE: DAEMON %%ZEROCONF%% dbus
 # KEYWORD: shutdown
 #
 # AFP fileserver for Mac clients.  Add the following to /etc/rc.conf to
