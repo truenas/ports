@@ -12,7 +12,7 @@ COMMENT=	Automated music downloader for NZB and Torrent
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pytz>0:devel/py-pytz@${PY_FLAVOR}
+RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}tzlocal>0:devel/py-tzlocal@${PY_FLAVOR}
 
 USES=	python:2.7
 USE_PYTHON=	autoplist distutils
