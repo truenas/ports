@@ -2604,7 +2604,7 @@ VALID_CATEGORIES+= accessibility afterstep arabic archivers astro audio \
 	palm parallel pear perl5 plan9 polish portuguese ports-mgmt \
 	print python ruby rubygems russian \
 	scheme science security shells spanish sysutils \
-	tcl textproc tk \
+	tcl textproc tk trident \
 	ukrainian vietnamese windowmaker wayland www \
 	x11 x11-clocks x11-drivers x11-fm x11-fonts x11-servers x11-themes \
 	x11-toolkits x11-wm xfce zope base
