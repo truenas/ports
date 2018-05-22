@@ -3,6 +3,7 @@
 
 PORTNAME=	ixautomation
 PORTVERSION=	18.05
+PORTREVISION=	1
 CATEGORIES=	sysutils
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
@@ -19,6 +20,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pip>0:devel/py-pip@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}unittest-xml-reporting>=0:devel/py-unittest-xml-reporting@${FLAVOR} \
 		ix-bhyve>=0:sysutils/ix-bhyve \
 		${LOCALBASE}/bin/expect:lang/expect \
+		${LOCALBASE}/bin/sshpass:security/sshpass \
 		bhyve-firmware>=0:sysutils/bhyve-firmware
 
 WRKSRC_SUBDIR=  src
