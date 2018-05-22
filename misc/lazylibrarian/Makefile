@@ -1,8 +1,9 @@
-#	Created by: Zackary Welch <zwelch@ixsystems.org>
+#	Created by: Zackary Welch <zwelch@ixsystems.com>
 # $FreeBSD$
 
 PORTNAME=	lazylibrarian
 PORTVERSION=	20180522
+PORTREVISION=	1
 CATEGORIES=	misc
 
 MAINTAINER=	ports@FreeBSD.org
