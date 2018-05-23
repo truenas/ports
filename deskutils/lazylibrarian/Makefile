@@ -1,3 +1,4 @@
+# Created by: Zackary Welch <zwelch@ixsystems.com> and Joshua Ruehlig
 # $FreeBSD$
 
 PORTNAME=	lazylibrarian
@@ -21,7 +22,7 @@ GH_PROJECT= LazyLibrarian
 GH_TAGNAME= 8c6b66e6e5709614ccb4ea19fa022486c99c1e66
 
 NO_BUILD=	yes
-PLIST_SUB=	PORTNAME=${PORTNAME} USERS=${USERS} GROUPS=${GROUPS}
+PLIST_SUB=	PORTNAME=${PORTNAME}
 SUB_LIST=	PORTNAME=${PORTNAME} USERS=${USERS} GROUPS=${GROUPS} PYTHON_CMD=${PYTHON_CMD}
 SUB_FILES=	pkg-message
 USE_RC_SUBR=	${PORTNAME}
