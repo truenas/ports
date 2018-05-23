@@ -397,7 +397,7 @@ callweaver:*:444:444::0:0:Callweaver account:/var/lib/callweaver:/usr/sbin/nolog
 # free: 448
 # free: 449
 ecartis:*:450:450::0:0:Ecartis Listserver:/usr/local/ecartis:/usr/sbin/nologin
-# free: 451
+librarian:*:451:451::0:0:Lazy Librarian:/nonexistent:/usr/sbin/nologin
 # free: 452
 # free: 453
 # free: 454
