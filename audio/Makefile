@@ -320,6 +320,7 @@
     SUBDIR += gxmms2
     SUBDIR += gxplugins-lv2
     SUBDIR += harp
+    SUBDIR += headphone
     SUBDIR += herrie
     SUBDIR += hexter
     SUBDIR += hs-ALUT

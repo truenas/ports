@@ -335,6 +335,7 @@
     SUBDIR += ibus-qt
     SUBDIR += ibus-table
     SUBDIR += ibus-typing-booster
+    SUBDIR += ibus-uniemoji
     SUBDIR += icdiff
     SUBDIR += id-aspell
     SUBDIR += id-hyphen
@@ -1344,7 +1345,6 @@
     SUBDIR += py-pss
     SUBDIR += py-pyPEG2
     SUBDIR += py-pyctpp2
-    SUBDIR += py-pyelasticsearch
     SUBDIR += py-pyes
     SUBDIR += py-pygments
     SUBDIR += py-pygtail
