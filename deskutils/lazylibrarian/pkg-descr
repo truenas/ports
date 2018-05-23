@@ -11,4 +11,4 @@ Right now its capable of the following:
     AutoAdd feature for book management tools like Calibre which must have books in flattened directory structure
     Added Usenet Crawler configuration + 2 NZB configurations (alas NZBMatrix is gone and removed)
 
-WWW: https://github.com/lazylibrarian/LazyLibrarian
+WWW: https://github.com/DobyTang/LazyLibrarian
