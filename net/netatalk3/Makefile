@@ -3,7 +3,7 @@
 
 PORTNAME=	netatalk
 PORTVERSION=	3.1.11
-PORTREVISION=	1
+PORTREVISION=	3
 PORTEPOCH=	1
 CATEGORIES=	net
 PKGNAMESUFFIX=	3
@@ -15,6 +15,7 @@ LICENSE=	GPLv2
 
 LIB_DEPENDS=	libgcrypt.so:security/libgcrypt \
 		libevent.so:devel/libevent
+RUN_DEPENDS=	p5-IO-Socket-INET6>=0:net/p5-IO-Socket-INET6
 
 NO_CHECKSUM=	yes
 
