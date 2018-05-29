@@ -247,6 +247,7 @@
     SUBDIR += mate-session-manager
     SUBDIR += mate-terminal
     SUBDIR += menu-cache
+    SUBDIR += menulibre
     SUBDIR += metalock
     SUBDIR += metisse
     SUBDIR += mkcomposecache
