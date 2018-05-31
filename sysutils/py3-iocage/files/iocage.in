@@ -28,10 +28,45 @@ start_cmd="iocage_start"
 stop_cmd="iocage_stop"
 export LANG=$iocage_lang
 
+create_bridge()
+{
+    local default_iface="$(netstat -f inet -nrW | grep '^default' | \
+                         awk '{ print $6 }')"
+    local bridge_ifaces="$(netstat -iWn | egrep 'bridge0|bridge1' | \
+                         awk '{ print $1 }')"
+
+    # Check to see if any bridges exist, otherwise create them
+    # we add the default interface as a member so the jails can reach the
+    # world.
+    if [ ! -z "${bridge_ifaces}" ] ; then
+        for _b in ${bridge_ifaces} ; do
+            if [ "${_b}" != "bridge0" ] ; then
+                _bridge_exists="$(echo ${bridge_ifaces} | grep bridge0)"
+                if [ -z "${_bridge_exists}" ] ; then
+                    ifconfig bridge0 create addm "${default_iface}"
+                else
+                    continue
+                fi
+            elif [ "${_b}" != "bridge1" ] ; then
+                _bridge_exists="$(echo ${bridge_ifaces} | grep bridge1)"
+                if [ -z "${_bridge_exists}" ] ; then
+                    ifconfig bridge1 create
+                else
+                    continue
+                fi
+            fi
+        done
+    else
+        ifconfig bridge0 create addm "${default_iface}"
+        ifconfig bridge1 create
+    fi
+}
+
 iocage_start()
 {
     if checkyesno ${rcvar}; then
         echo "* [I|O|C] starting jails... "
+        create_bridge
         /usr/local/bin/iocage start --rc
     fi
 }
