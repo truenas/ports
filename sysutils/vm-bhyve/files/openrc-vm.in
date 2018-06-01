@@ -25,13 +25,13 @@ start()
 	ebegin "Starting $name"
 	sysrc -f /etc/rc.conf vm_enable=YES >/dev/null 2>/dev/null
 	env rc_force="1" ${BINARY} init
-	(env rc_force="1" ${BINARY} startall >/dev/null) &
+	env rc_force="1" ${BINARY} startall >/dev/null &
 	eend 0
 }
 
 stop()
 {
-	ebegin "Starting $name"
+	ebegin "Stopping $name"
 	env rc_force="1" ${BINARY} stopall >/dev/null
 	eend 0
 }
