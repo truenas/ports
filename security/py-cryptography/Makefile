@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	cryptography
-PORTVERSION=	2.1.4
+PORTVERSION=	2.2.2
 CATEGORIES=	security python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -21,8 +21,11 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}six>=1.4.1:devel/py-six@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}cffi>=1.7:devel/py-cffi@${FLAVOR} \
 		${PY_ENUM34} ${PY_IPADDRESS} \
 		${PYTHON_PKGNAMEPREFIX}idna>=2.1:dns/py-idna@${FLAVOR}
-TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pytest>=2.9.0:devel/py-pytest@${FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}iso8601>0:devel/py-iso8601@${FLAVOR}
+TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pytest>=3.2.1:devel/py-pytest@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}pretend>0:devel/py-pretend@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}iso8601>0:devel/py-iso8601@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}pytz>0:devel/py-pytz@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}hypothesis>=1.11.4:devel/py-hypothesis@${FLAVOR}
 
 # Python 2.7, 3.4-3.6
 USES=		compiler:env python ssl

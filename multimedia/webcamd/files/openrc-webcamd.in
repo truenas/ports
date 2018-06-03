@@ -71,7 +71,6 @@
 
 depend()
 {
-	provide webcamd
 	need net
 	before devd
 	after dbus

@@ -3,12 +3,13 @@
 
 PORTNAME=	libconfuse
 DISTVERSION=	3.2.1
+PORTREVISION=	1
 CATEGORIES=	devel
 
-USE_GITHUB=		yes
-GH_ACCOUNT=		martinh
-GH_PROJECT=		libconfuse
-GH_TAGNAME=		v3.2.1
+USE_GITHUB=	yes
+GH_ACCOUNT=	martinh
+GH_PROJECT=	libconfuse
+GH_TAGNAME=	v3.2.1
 
 MAINTAINER=	otis@freebsd.sk
 COMMENT=	Configuration file parsing library

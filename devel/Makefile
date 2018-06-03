@@ -665,6 +665,7 @@
     SUBDIR += fpp
     SUBDIR += frama-c
     SUBDIR += frink
+    SUBDIR += fsmtrie
     SUBDIR += fstrm
     SUBDIR += ftjam
     SUBDIR += ftnchek
@@ -5325,6 +5326,7 @@
     SUBDIR += renpy
     SUBDIR += renpy6
     SUBDIR += replay
+    SUBDIR += replxx
     SUBDIR += rhtvision
     SUBDIR += riscv64-binutils
     SUBDIR += riscv64-gcc
@@ -5954,6 +5956,7 @@
     SUBDIR += rubygem-tty
     SUBDIR += rubygem-tty-color
     SUBDIR += rubygem-tty-command
+    SUBDIR += rubygem-tty-config
     SUBDIR += rubygem-tty-cursor
     SUBDIR += rubygem-tty-editor
     SUBDIR += rubygem-tty-file

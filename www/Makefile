@@ -99,6 +99,7 @@
     SUBDIR += csso
     SUBDIR += csstidy
     SUBDIR += ctemplate
+    SUBDIR += cutelyst
     SUBDIR += cutycapt
     SUBDIR += davical
     SUBDIR += dddbl
