@@ -159,7 +159,6 @@
     SUBDIR += gxine
     SUBDIR += handbrake
     SUBDIR += harvid
-    SUBDIR += htpc-manager
     SUBDIR += imagination
     SUBDIR += iriverter
     SUBDIR += iso2mkv
