@@ -913,70 +913,9 @@ flavors()
 	return ${rc}
 }
 
-badlibmix() {
-	local file dep_file rc
-	local base_ssl_libs port_ssl_libs
-	local base_gcc_libs port_gcc_libs
- 
-	rc=0
-
-	# Check all dynamicaly linked ELF files
-	# Some .so are not executable, but we want to check them too.
-	while read file; do
-		# No results presents a blank line from heredoc.
-		[ -z "${file}" ] && continue
-
-		base_ssl_libs=""
-		port_ssl_libs=""
-		base_gcc_libs=""
-		port_gcc_libs=""
-
-		while read dep_file; do
-			case "${dep_file}" in
-			# openssl
-			/usr/lib/libssl.so*|/lib/libcrypto.so*)
-				base_ssl_libs="${base_ssl_libs:+${base_ssl_libs} }${dep_file}"
-				;;
-			${PREFIX}/lib/libssl.so*|${PREFIX}/lib/libcrypto.so*|${LOCALBASE}/lib/libssl.so*|${LOCALBASE}/lib/libcrypto.so*)
-				port_ssl_libs="${port_ssl_libs:+${port_ssl_libs} }${dep_file}"
-				;;
-			# libgcc_s.so
-			/usr/lib/libgcc_s.so*)
-				base_gcc_libs="${base_gcc_libs:+${base_gcc_libs} }${dep_file}"
-				;;
-			${PREFIX}/lib/*/libgcc_s.so*|${LOCALBASE}/lib/*/libgcc_s.so*)
-				port_gcc_libs="${port_gcc_libs:+${port_gcc_libs} }${dep_file}"
-				;;
-			/lib/libedit.so*
-			
-			esac
-		done <<-EOT
-		$(LD_LIBRARY_PATH=${STAGEDIR}${PREFIX}/lib ldd "${STAGEDIR}${file}" | \
-			awk '/=>/ {print $3}')
-		EOT
-
-		if [ -n "${base_ssl_libs}" -a -n "${port_ssl_libs}" ]; then
-			err "${file} is linked to both base and port SSL libraries: ${base_ssl_libs} and ${port_ssl_libs}"
-			rc=1
-		fi
-		if [ -n "${base_gcc_libs}" -a -n "${port_gcc_libs}" ]; then
-			err "${file} is linked to both base and port gcc_s libraries: ${base_gcc_libs} and ${port_gcc_libs}"
-			rc=1
-		fi
-	done <<-EOT
-	$(list_stagedir_elfs | \
-		file -F $'\1' -f - | \
-		grep -a 'ELF.*FreeBSD.*dynamically linked' | \
-		cut -f 1 -d $'\1'| \
-		sed -e 's/^\.//')
-	EOT
-
-	return ${rc}
-}
-
 checks="shebang symlinks paths stripped desktopfileutils sharedmimeinfo"
 checks="$checks suidfiles libtool libperl prefixvar baselibs terminfo"
-checks="$checks proxydeps sonames perlcore no_arch gemdeps gemfiledeps flavors badlibmix"
+checks="$checks proxydeps sonames perlcore no_arch gemdeps gemfiledeps flavors"
 
 ret=0
 cd ${STAGEDIR}
