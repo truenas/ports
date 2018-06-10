@@ -1,0 +1,32 @@
+pipeline {
+  agent { label 'PortsTest' }
+
+  environment {
+    GH_ORG = 'trueos'
+    GH_REPO = 'trueos-ports'
+	GH_BUILD_BRANCH = 'trueos-master'
+  }
+
+	stages {
+
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
+    }
+
+    stage('INDEX Test') {
+      steps {
+	      sh 'git pull /usr/ports'
+        sh 'make -j24 index'
+	    }
+	  post {
+		always {
+      			script {
+			      cleanWs notFailBuild: true
+					}
+    		}
+			}
+		}
+	}
+}
