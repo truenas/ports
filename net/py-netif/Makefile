@@ -2,7 +2,7 @@
 # $FreeBSD: head/net/py-netif/Makefile 430454 2017-01-03 11:01:05Z mat $
 
 PORTNAME=	netif
-PORTVERSION=	1.0.20171226
+PORTVERSION=	1.0.20180615
 CATEGORIES=	net python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
@@ -17,7 +17,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}bsd>0:devel/py-bsd@${FLAVOR} \
 USE_GITHUB=     yes
 GH_ACCOUNT=	freenas
 GH_PROJECT=	py-netif
-GH_TAGNAME=	52675e6
+GH_TAGNAME=	1c657fb
 
 USES=		python
 USE_PYTHON=	autoplist distutils cython
