@@ -1,19 +1,3 @@
-===>  License BSD3CLAUSE accepted by the user
-===>   trident-icons-201805211346 depends on file: /usr/local/sbin/pkg - found
-===> Fetching all distfiles required by trident-icons-201805211346 for building
-===>  Extracting for trident-icons-201805211346
-=> SHA256 Checksum OK for project-trident-trident-icons-201805211346-1dfefa0d6208a51b82b07d163a39458d631cd884_GH0.tar.gz.
-===>  Patching for trident-icons-201805211346
-===>  Configuring for trident-icons-201805211346
-===>  Staging for trident-icons-201805211346
-===>   Generating temporary packing list
-/bin/mkdir -p /usr/ports/trident/trident-icons/work/stage/share/icons
-cd /usr/ports/trident/trident-icons/work/trident-icons-1dfefa0d6208a51b82b07d163a39458d631cd884 && /usr/ports/trident/trident-icons/work/trident-icons-1dfefa0d6208a51b82b07d163a39458d631cd884/install-local.sh /usr/ports/trident/trident-icons/work/stage/usr/local/share/icons
-Installing Icon Themes to: /usr/ports/trident/trident-icons/work/stage/usr/local/share/icons
- - Install Theme: la-capitaine
- - Install Theme: la-capitaine-dark
-Done
-====> Compressing man pages (compress-man)
 share/icons/la-capitaine-dark/COPYING
 share/icons/la-capitaine-dark/Credits.md
 share/icons/la-capitaine-dark/LICENSE
@@ -13775,5 +13759,3 @@ share/icons/la-capitaine/status/symbolic/weather-showers-scattered-symbolic.svg
 share/icons/la-capitaine/status/symbolic/weather-showers-symbolic.svg
 share/icons/la-capitaine/status/symbolic/weather-snow-symbolic.svg
 share/icons/la-capitaine/status/symbolic/weather-storm-symbolic.svg
-@dir /share/icons
-@dir /share
