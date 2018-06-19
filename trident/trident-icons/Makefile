@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	trident-icons
-PORTVERSION=	201805211346
+PORTVERSION=	201806190820
 CATEGORIES=	trident
 
 MAINTAINER=	jt@ixsystems.com
@@ -12,12 +12,12 @@ LICENSE=	BSD3CLAUSE
 USE_GITHUB=	yes
 GH_ACCOUNT=	project-trident
 GH_PROJECT=	trident-icons
-GH_TAGNAME=	1dfefa0d6208a51b82b07d163a39458d631cd884
+GH_TAGNAME=	188e9867c56ebf7d75415a34ec7e98ebf348a66b
 
 NO_BUILD=	yes
 
 do-install:
-	${MKDIR} ${STAGEDIR}/share/icons
+	${MKDIR} ${STAGEDIR}/usr/local/share/icons
 	cd ${WRKSRC} && ${WRKSRC}/install-local.sh ${STAGEDIR}/usr/local/share/icons
 
 .include <bsd.port.mk>
