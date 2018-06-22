@@ -15,10 +15,13 @@ LICENSE=	GPLv3
 
 LIB_DEPENDS=	libcurl.so:ftp/curl
 
-USES=		cmake libarchive
+USES=		cmake libarchive ssl
 USE_SDL=	sdl ttf image mixer image gfx
+USE_GL=		gl glu
 
 WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}
+
+CXXFLAGS+=	-Wno-c++11-narrowing
 
 PLIST_FILES=	bin/${PORTNAME} \
 		share/pixmaps/${PORTNAME}.png
