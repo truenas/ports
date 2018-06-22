@@ -71,7 +71,6 @@
 
 depend()
 {
-	need net
 	before devd
 	after dbus
 	keyword -shutdown
@@ -221,7 +220,7 @@ stop()
     done
   else
     echo "${name} is not running."
-    return 1
+    return 0
   fi
 }
 
