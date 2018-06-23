@@ -33,7 +33,7 @@ BUNDLED_SSL_CONFIGURE_OFF=	--shared-openssl
 NLS_CONFIGURE_ON=	--with-intl=system-icu
 NLS_LIB_DEPENDS=	libicui18n.so:devel/icu
 
-USES=		compiler:c++11-lib gmake python:2.7 pkgconfig localbase
+USES=		compiler:c++11-lib gmake python:2.7 pkgconfig localbase portssl
 HAS_CONFIGURE=	yes
 
 CONFLICTS_INSTALL=	node[568]-[0-9]* node-[0-9]*

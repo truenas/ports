@@ -33,7 +33,7 @@ CONFLICTS_BUILD=	mongo-cxx-driver
 
 CHOSEN_COMPILER_TYPE=	clang
 
-USES=		compiler:c++14-lang cpe python:build scons
+USES=		compiler:c++14-lang cpe python:build scons portssl
 USE_RC_SUBR=	mongod
 
 MAKE_ARGS=	--prefix=${STAGEDIR}${PREFIX} \
