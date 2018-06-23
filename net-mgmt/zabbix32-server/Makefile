@@ -30,7 +30,7 @@ USE_RC_SUBR=	zabbix_${ZABBIX_BUILD}
 USE_RC_SUBR=	zabbix_${ZABBIX_BUILD}d
 .endif
 
-USES=		pkgconfig iconv
+USES=		pkgconfig iconv portssl
 
 USERS=		zabbix
 GROUPS=		zabbix
