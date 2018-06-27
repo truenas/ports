@@ -17,7 +17,7 @@ OPTIONS_DEFINE=	DOCS
 
 GNU_CONFIGURE=	yes
 TEST_TARGET=	test
-USES=		autoreconf libtool pkgconfig ssl
+USES=		autoreconf libtool pkgconfig portssl
 CFLAGS+=	-I${OPENSSLINC}
 LDFLAGS+=	-L${OPENSSLLIB}
 
