@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	pc-networkmanager
-PORTVERSION=	201806200817
+PORTVERSION=	201806271233
 CATEGORIES=	sysutils
 
 MAINTAINER=	kris@ixsystems.com
@@ -29,6 +29,6 @@ QMAKE_ARGS=     CONFIG+="configure"
 USE_GITHUB=	yes
 GH_ACCOUNT=	trueos
 GH_PROJECT=	pc-networkmanager
-GH_TAGNAME=	b812350afb5ada7c485d3c81be91a6bf2e78ea22
+GH_TAGNAME=	a94041aee30de01f99f697ac2062cce807dd1e42
 
 .include <bsd.port.mk>
