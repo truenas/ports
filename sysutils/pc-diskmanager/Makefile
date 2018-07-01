@@ -20,9 +20,9 @@ CONFLICTS=      pcbsd-utils-[0-9]*
 MAKE_JOBS_UNSAFE=yes
 ONLY_FOR_ARCHS= amd64
 USE_LDCONFIG=   yes
-USE_QT5=        core gui network svg linguist_build \
+USE_QT=        core gui network svg linguist_build \
 		buildtools_build widgets
-USES=           qmake shebangfix tar:xz
+USES=           qmake shebangfix tar:xz qt:5
 
 WRKSRC_SUBDIR=  src-qt5
 
