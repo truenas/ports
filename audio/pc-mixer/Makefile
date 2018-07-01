@@ -16,9 +16,10 @@ MAKE_ARGS=      PREFIX=${STAGEDIR}${PREFIX}
 MAKE_JOBS_UNSAFE=yes
 ONLY_FOR_ARCHS= amd64
 USE_LDCONFIG=   yes
-USE_QT5=        core gui network svg linguist \
-	buildtools x11extras widgets multimedia
-USES=           qmake shebangfix tar:xz
+USES=		qmake qt:5 shebangfix tar:xz
+USE_LDCONFIG=	yes
+USE_QT=		core gui network svg linguist \
+		buildtools x11extras widgets multimedia
 USE_GL+=	gl
 
 WRKSRC_SUBDIR=  src-qt5

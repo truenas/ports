@@ -153,7 +153,7 @@
     SUBDIR += ksshaskpass
     SUBDIR += latte-dock
     SUBDIR += launchy
-		SUBDIR += lazylibrarian
+	SUBDIR += lazylibrarian
     SUBDIR += libkdepim
     SUBDIR += libopensync-plugin-vformat-devel
     SUBDIR += libstreamanalyzer
@@ -170,6 +170,8 @@
     SUBDIR += lumina-pdf
     SUBDIR += lumina-screenshot
     SUBDIR += lumina-textedit
+    SUBDIR += lumina-xdg-entry
+    SUBDIR += mat
     SUBDIR += mate-notification-daemon
     SUBDIR += mate-utils
     SUBDIR += mbox-importer
@@ -261,6 +263,7 @@
     SUBDIR += sugarcrm
     SUBDIR += superkaramba-kde4
     SUBDIR += surrealtodo
+    SUBDIR += synapse
     SUBDIR += syncthing-gtk
     SUBDIR += systempreferences
     SUBDIR += tagutils

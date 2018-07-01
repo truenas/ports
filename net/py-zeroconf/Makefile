@@ -11,10 +11,15 @@ COMMENT=	Pure python implementation of multicast DNS service discovery
 
 LICENSE=	LGPL21+
 
+<<<<<<< HEAD
 BUILD_DEPENDS?=	${PYTHON_PKGNAMEPREFIX}six>=1.4:devel/py-six \
 		${PYTHON_PKGNAMEPREFIX}netifaces>=0.10.6:net/py-netifaces
 RUN_DEPENDS?=	${PYTHON_PKGNAMEPREFIX}six>=1.4:devel/py-six \
 		${PYTHON_PKGNAMEPREFIX}netifaces>=0.10.6:net/py-netifaces
+=======
+RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}six>=1.4:devel/py-six@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}netifaces>=0.10.6:net/py-netifaces@${PY_FLAVOR}
+>>>>>>> freebsd/master
 
 USES=		python
 USE_PYTHON=	autoplist concurrent distutils

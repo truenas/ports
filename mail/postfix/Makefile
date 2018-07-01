@@ -2,7 +2,7 @@
 # $FreeBSD: head/mail/postfix/Makefile 430486 2017-01-03 17:14:09Z ohauer $
 
 PORTNAME=	postfix
-PORTVERSION=	3.3.0
+DISTVERSION=	3.3.1
 PORTREVISION?=	1
 PORTEPOCH=	1
 CATEGORIES=	mail ipv6
@@ -106,7 +106,7 @@ PLIST_SUB+=	BMAN=""
 PLIST_SUB+=	PFETC=${ETCDIR}
 
 # check if mailwrapper supports $LOCALBASE
-.if ${OPSYS} == FreeBSD && (${OSVERSION} >= 1002506 || ${OSVERSION} >= 1100094)
+.if ${OPSYS} == FreeBSD
 SUB_LIST+=	USE_LOCALBASE_MAILER_CONF="yes" MC_PREFIX="${LOCALBASE}"
 .else
 SUB_LIST+=	USE_LOCALBASE_MAILER_CONF="no" MC_PREFIX=""

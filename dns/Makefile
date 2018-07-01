@@ -56,6 +56,7 @@
     SUBDIR += dnsrecon
     SUBDIR += dnsreflector
     SUBDIR += dnstable
+    SUBDIR += dnstable-convert
     SUBDIR += dnstop
     SUBDIR += dnstracer
     SUBDIR += dnsutl
@@ -78,6 +79,7 @@
     SUBDIR += gen6dns
     SUBDIR += getdns
     SUBDIR += ghtool
+    SUBDIR += go-geodns
     SUBDIR += hesiod
     SUBDIR += hostdb
     SUBDIR += hs-dns

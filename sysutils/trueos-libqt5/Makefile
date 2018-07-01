@@ -14,7 +14,12 @@ ONLY_FOR_ARCHS= amd64
 MAKE_JOBS_UNSAFE=yes
 MAKE_ARGS=      PREFIX=${STAGEDIR}${PREFIX}
 
-USES=           qmake shebangfix tar:xz
+MAKE_JOBS_UNSAFE=	yes
+
+USES=		qmake qt:5 shebangfix tar:xz
+USE_LDCONFIG=	yes
+USE_QT=		core gui network svg linguist \
+		buildtools x11extras widgets
 USE_GL+=	gl
 USE_QT5=        core gui network svg linguist \
 		buildtools x11extras widgets
