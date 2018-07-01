@@ -21,11 +21,6 @@ _GECKO_VERSION=	${gecko_ARGS:M[0-9][0-9]*}
 
 .if ${gecko_ARGS:Mfirefox}
 
-<<<<<<< HEAD
-.elif ${gecko_ARGS:Mfirefox}
-
-=======
->>>>>>> freebsd/master
 _GECKO_DEFAULT_VERSION=	60
 _GECKO_VERSIONS=		60 61
 _GECKO_TYPE=	firefox
