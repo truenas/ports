@@ -403,7 +403,6 @@
     SUBDIR += py-QSpectrumAnalyzer
     SUBDIR += py-SimpleSoapy
     SUBDIR += py-SoapySDR
-    SUBDIR += py-YABT
     SUBDIR += py-cinder
     SUBDIR += py-colorbrewer
     SUBDIR += py-crudini
