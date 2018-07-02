@@ -1,4 +1,3 @@
-etc/init.d/vm
 etc/rc.d/vm
 lib/vm-bhyve/vm-cmd
 lib/vm-bhyve/vm-config
