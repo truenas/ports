@@ -16,6 +16,7 @@ COMMENT=	C++ libraries with a network/internet focus (full version)
 LICENSE=	BSL
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
+BROKEN=		doesnt build on FreeBSD 12
 BROKEN_SSL=	openssl-devel
 BROKEN_SSL_REASON_openssl-devel=	field has incomplete type 'EVP_CIPHER_CTX' (aka 'evp_cipher_ctx_st')
 
