@@ -16,8 +16,8 @@ RUN_DEPENDS=    sipcalc:net-mgmt/sipcalc \
                 tree:sysutils/tree
 
 WRKSRC_SUBDIR=  src-sh/trueos-utils
-USE_QT5=        core network buildtools qmake
-USES=           pkgconfig python:3.2+ tar:xz
+USE_QT=        core network buildtools qmake
+USES=           pkgconfig python:3.2+ tar:xz qt:5
 MAKE_ARGS=      PREFIX=${STAGEDIR}${PREFIX}
 MAKE_JOBS_UNSAFE=yes
 
