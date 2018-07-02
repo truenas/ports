@@ -19,7 +19,7 @@ LIB_DEPENDS=	libsearpc.so:devel/libsearpc \
 		libevent.so:devel/libevent \
 		libuuid.so:misc/e2fsprogs-libuuid
 
-USES=		compiler:c++11-lang cmake pkgconfig qt:5 shebangfix ssl
+USES=		compiler:c++11-lang cmake pkgconfig qt:5 shebangfix portssl
 SHEBANG_FILES=	extensions/*.sh scripts/*.sh fsplugin/*.sh \
 		scripts/*.py
 
