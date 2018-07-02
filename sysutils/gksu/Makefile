@@ -1,37 +1,39 @@
 # Created by: Jesse van den Kieboom <troplosti@orcaweb.cjb.net>
-# Modified by: Michael Reim <kraileth@elderlinux.org>
 # $FreeBSD$
 
-PORTNAME=			gksu
-PORTVERSION=			2.0.2
-PORTREVISION=			7
-CATEGORIES=			sysutils
-MASTER_SITES=			http://people.debian.org/~kov/gksu/
+PORTNAME=	gksu
+PORTVERSION=	2.0.2
+PORTREVISION=	7
+CATEGORIES=	sysutils
+MASTER_SITES=	http://people.debian.org/~kov/gksu/
 
-MAINTAINER=			ports@FreeBSD.org
-COMMENT=			Graphical frontend to su
-LICENSE=        		GPLv2
+MAINTAINER=	ports@FreeBSD.org
+COMMENT=	Graphical frontend to su
 
-LIB_DEPENDS=			libgksu2.so:sysutils/libgksu \
-				libgnome-keyring.so:security/libgnome-keyring
+LICENSE=	GPLv2+
+LICENSE_FILE=	${WRKSRC}/COPYING
 
-OPTIONS_DEFINE=                 NAUT_EXT
-OPTIONS_DEFAULT=                NAUT_EXT
-OPTIONS_SUB=                    yes
+LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig \
+		libfreetype.so:print/freetype2 \
+		libgksu2.so:sysutils/libgksu \
+		libgnome-keyring.so:security/libgnome-keyring \
+		libstartup-notification-1.so:x11/startup-notification
 
-NAUT_EXT_DESC=                  Build extension for the Nautilus file manager
-NAUT_EXT_LIB_DEPENDS=           libnautilus-extension.so:x11-fm/nautilus
-NAUT_EXT_CONFIGURE_ENABLE=      nautilus-extension
-NAUT_EXT_PLIST_FILES+=          lib/nautilus/extensions-2.0/libnautilus-gksu.so \
-                                lib/nautilus/extensions-2.0/libnautilus-gksu.a
+USES=		gettext-tools gmake libtool pathfix pkgconfig
+USE_GNOME=	cairo gconf2 gdkpixbuf2 gnomeprefix gtk20 intlhack
+GNU_CONFIGURE=	yes
+USE_LDCONFIG=	yes
+CPPFLAGS+=	-I${LOCALBASE}/include
+LDFLAGS+=	-L${LOCALBASE}/lib
+INSTALL_TARGET=	install-strip
 
-USES=				gettext-tools gmake libtool pathfix pkgconfig
-USE_GNOME=			gconf2 gnomeprefix gtk20 intlhack
-GNU_CONFIGURE=			yes
-USE_LDCONFIG=			yes
-CPPFLAGS+=			-I${LOCALBASE}/include
-LDFLAGS+=			-L${LOCALBASE}/lib
-INSTALL_TARGET=			install-strip
+OPTIONS_DEFINE=	NAUTILUS
+OPTIONS_DEFAULT=NAUTILUS
+OPTIONS_SUB=	yes
+
+NAUTILUS_DESC=			Build extension for GNOME file manager
+NAUTILUS_CONFIGURE_ENABLE=	nautilus-extension
+NAUTILUS_LIB_DEPENDS=		libnautilus-extension.so:x11-fm/nautilus
 
 post-patch:
 	@${REINPLACE_CMD} -e 's|glib/gkeyfile.h|glib.h|g' \
