@@ -10,7 +10,7 @@ DISTFILES=
 MAINTAINER=	kmoore@FreeBSD.org
 COMMENT=	TrueOS Development Utilities
 
-USES=		python
+USES=		python qt:5
 
 RUN_DEPENDS=	sphinx-build:${PORTSDIR}/textproc/py-sphinx \
 		${PYTHON_PKGNAMEPREFIX}sphinx-intl>=0:${PORTSDIR}/textproc/py-sphinx-intl \
@@ -23,7 +23,7 @@ RUN_DEPENDS=	sphinx-build:${PORTSDIR}/textproc/py-sphinx \
 		tex-dvipsk>=0:${PORTSDIR}/print/tex-dvipsk \
 		jq>=0:${PORTSDIR}/textproc/jq
 
-USE_QT5=	buildtools concurrent core dbus designer graphicaleffects gui imageformats multimedia \
+USE_QT=	buildtools concurrent core dbus designer graphicaleffects gui imageformats multimedia \
 		network printsupport svg webkit widgets x11extras xml linguist qmake
 
 NO_BUILD=	yes
