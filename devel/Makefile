@@ -408,6 +408,7 @@
     SUBDIR += cvsweb3
     SUBDIR += cvswrap
     SUBDIR += cweb
+    SUBDIR += cwrap
     SUBDIR += cx_Freeze
     SUBDIR += cxmon
     SUBDIR += cxref
@@ -1827,6 +1828,7 @@
     SUBDIR += npth
     SUBDIR += nsgenbind
     SUBDIR += nspr
+    SUBDIR += nss_wrapper
     SUBDIR += nuitka
     SUBDIR += obby
     SUBDIR += objecthash
@@ -3742,6 +3744,7 @@
     SUBDIR += p5-UUID-Random
     SUBDIR += p5-UUID-Random-Patch-UseMRS
     SUBDIR += p5-UUID-Tiny
+    SUBDIR += p5-UUID-URandom
     SUBDIR += p5-Uniq
     SUBDIR += p5-Unix-Groups
     SUBDIR += p5-Unix-Groups-FFI
@@ -3838,6 +3841,7 @@
     SUBDIR += p65
     SUBDIR += p8-platform
     SUBDIR += paexec
+    SUBDIR += pam_wrapper
     SUBDIR += papi
     SUBDIR += papilio-loader
     SUBDIR += pas2dox
@@ -5360,6 +5364,7 @@
     SUBDIR += renpy6
     SUBDIR += replay
     SUBDIR += replxx
+    SUBDIR += resolv_wrapper
     SUBDIR += rhtvision
     SUBDIR += riscv64-binutils
     SUBDIR += riscv64-gcc
@@ -6093,6 +6098,7 @@
     SUBDIR += smokeqt-kde4
     SUBDIR += smv
     SUBDIR += soapui
+    SUBDIR += socket_wrapper
     SUBDIR += sonar-ant-task
     SUBDIR += sonar-scanner-cli
     SUBDIR += sonarqube
@@ -6208,6 +6214,7 @@
     SUBDIR += ucommon
     SUBDIR += ucpp
     SUBDIR += udis86
+    SUBDIR += uid_wrapper
     SUBDIR += ultragetopt
     SUBDIR += umbrello
     SUBDIR += umbrello-kde4
