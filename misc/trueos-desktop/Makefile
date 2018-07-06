@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	trueos-desktop
-PORTVERSION=	201803131015
+PORTVERSION=	201807060938
 CATEGORIES=	misc
 MASTER_SITES=
 DISTFILES=
@@ -49,7 +49,7 @@ MAKE_ARGS=	STAGEDIR=${STAGEDIR}  TYPE=desktop
 USE_GITHUB=     yes
 GH_ACCOUNT=     trueos
 GH_PROJECT=     trueos-core
-GH_TAGNAME=     f8b9f07940a9b460351f2dfe2c7d53fbe0e832f1
+GH_TAGNAME=     91f61348b8ee29fc4cc688eca4d56b669867ebf6
 
 post-install:
 	${MKDIR} ${STAGEDIR}${PREFIX}/share/icons/hicolor/pixmaps
