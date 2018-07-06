@@ -9,5 +9,6 @@ man/man8/pc-updatemanager.8.gz
 share/trueos/pc-updatemanager/conf/security.key
 share/trueos/pc-updatemanager/conf/sysupdate.conf
 share/trueos/pc-updatemanager/fbsd-dist.pub
+share/trueos/pc-updatemanager/doPkgUp.sh
 share/trueos/pc-updatemanager/rc-doupdate
 share/trueos/pc-updatemanager/rc-update
