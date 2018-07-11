@@ -621,7 +621,6 @@
     SUBDIR += log-courier
     SUBDIR += logrotate
     SUBDIR += logstalgia
-    SUBDIR += logstash
     SUBDIR += logstash-forwarder
     SUBDIR += logstash5
     SUBDIR += logstash6
@@ -1046,6 +1045,7 @@
     SUBDIR += realsync
     SUBDIR += recoverdm
     SUBDIR += reed
+    SUBDIR += reggae
     SUBDIR += rej
     SUBDIR += relaxconf
     SUBDIR += rename
