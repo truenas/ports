@@ -3,6 +3,7 @@
 
 PORTNAME=	ixautomation
 PORTVERSION=	18.07
+PORTREVISION=	1
 CATEGORIES=	sysutils
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
@@ -17,6 +18,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pip>0:devel/py-pip@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}selenium>=0:www/py-selenium@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}ws4py>=0:www/py-ws4py@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}unittest-xml-reporting>=0:devel/py-unittest-xml-reporting@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}virtualenv>=0:devel/py-virtualenv@${PY_FLAVOR} \
 		ix-bhyve>=0:sysutils/ix-bhyve \
 		${LOCALBASE}/bin/expect:lang/expect \
 		${LOCALBASE}/bin/sshpass:security/sshpass \
@@ -30,6 +32,6 @@ MAKE_ARGS=	PREFIX=${STAGEDIR}${PREFIX}
 USE_GITHUB=	yes
 GH_ACCOUNT=	ixsystems
 GH_PROJECT=	ixautomation
-GH_TAGNAME=	b2f9f54d754ea52616cdd16d5b8bcd630e772b55
+GH_TAGNAME=	67ae936c1a223a1a8c40fac4b35b660c1ade2c15
 
 .include <bsd.port.mk>
