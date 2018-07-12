@@ -1,18 +1,18 @@
 # Created by: Ilya Bakulin <webmaster@kibab.com>
 # $FreeBSD$
 
-PORTNAME=	wpa_gui
+PORTNAME=	wpa_supplicant_gui
 PORTVERSION=	2.6
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	net
 MASTER_SITES=	http://w1.fi/releases/ \
 		http://partmedia.users.sourceforge.net/dist/:icons \
-		LOCAL/jgh/net/${PORTNAME}/:icons
+		LOCAL/jgh/net/wpa_gui/:icons
 DISTNAME=	wpa_supplicant-${PORTVERSION}
 DISTFILES=	${DISTNAME}.tar.gz \
 		wpa-gui-icons.tar.gz:icons
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Qt-based frontend for wpa_supplicant
 
 LICENSE=	BSD3CLAUSE
@@ -21,8 +21,9 @@ LICENSE_FILE=	${WRKSRC}/../COPYING
 USES=		gmake qt:5
 USE_QT=		qmake_build buildtools_build linguisttools_build core gui \
 		widgets svg_run
-
+USE_GL=		gl
 ALL_TARGET=	wpa_gui-qt4
+
 INSTALL_WRKSRC=	${WRKSRC}/wpa_gui-qt4
 PATCH_WRKSRC=	${WRKDIR}/${DISTNAME}
 PLIST_FILES=	sbin/wpa_gui \
@@ -53,7 +54,7 @@ post-patch-DEBUG-on:
 		${INSTALL_WRKSRC}/wpa_gui.pro
 
 do-install:
-	${INSTALL_PROGRAM} ${INSTALL_WRKSRC}/${PORTNAME} \
+	${INSTALL_PROGRAM} ${INSTALL_WRKSRC}/wpa_gui \
 		${STAGEDIR}${PREFIX}/sbin
 	${INSTALL_DATA} ${INSTALL_WRKSRC}/wpa_gui.desktop \
 		${STAGEDIR}${PREFIX}/share/applications
