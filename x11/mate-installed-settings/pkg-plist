@@ -10,7 +10,6 @@ share/glib-2.0/schemas/92_org.mate.desktop.background.gschema.override
 share/glib-2.0/schemas/92_org.mate.desktop.interface.gschema.override
 share/glib-2.0/schemas/92_org.mate.font-rendering.gschema.override
 share/glib-2.0/schemas/92_org.mate.marco.gschema.override
-share/glib-2.0/schemas/92_org.mate.panel.menubar.gschema.override
 share/glib-2.0/schemas/92_org.mate.peripherals-keyboard-xkb.kbd.gschema.override
 share/glib-2.0/schemas/92_org.mate.peripherals-touchpad.gschema.override
 share/glib-2.0/schemas/92_org.mate.session.gschema.override

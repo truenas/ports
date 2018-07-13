@@ -6,17 +6,17 @@
 #
 
 PORTNAME=	ghostbsd-icons
-PORTVERSION=	1.3
+PORTVERSION=	1.4
 CATEGORIES=	x11-themes
 
-MAINTAINER=	angelescuo@yahoo.com
+MAINTAINER=	ericturgeon.bsd@gmail.com
 COMMENT=	GhostBSD icons for GTK DE
 
 LICENSE=	CCBYSA
 LICENSE_NAME=	CREATIVE COMMON
-LICENSE_PERMS=	dist-mirror pkg-mirror auto-accept
 LICENSE_FILE=	${FILESDIR}/LICENSE
-LICENSE_DISTFILES=	${DISTNAME}${EXTRACT_SUFX}
+LICENSE_PERMS=	dist-mirror pkg-mirror auto-accept
+LICENSE_DISTFILES= ${DISTNAME}${EXTRACT_SUFX}
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	GhostBSD

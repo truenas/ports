@@ -1,4 +1,3 @@
-share/icons/README-Manual.txt
 share/icons/Vivacious-Colors-Dark/actions/16/gnome-lockscreen.png
 share/icons/Vivacious-Colors-Dark/actions/16/gnome-log-out.png
 share/icons/Vivacious-Colors-Dark/actions/16/gnome-logout.png
@@ -17908,11 +17907,17 @@ share/icons/Vivacious-Colors/mimetypes/64/x-office-spreadsheet-template.svg
 share/icons/Vivacious-Colors/mimetypes/64/x-office-spreadsheet.svg
 share/icons/Vivacious-Colors/mimetypes/64/zip.svg
 share/icons/Vivacious-Colors/mimetypes/symbolic/text-html-symbolic.svg
+share/icons/Vivacious-Colors/places/16/start-here.png
+share/icons/Vivacious-Colors/places/22/start-here.png
+share/icons/Vivacious-Colors/places/24/start-here.png
+share/icons/Vivacious-Colors/places/32/start-here.png
+share/icons/Vivacious-Colors/places/48/start-here.png
+share/icons/Vivacious-Colors/places/64/start-here.png
+share/icons/Vivacious-Colors/places/96/start-here.png
 share/icons/Vivacious-Colors/places/scalable/application-x-gnome-saved-search.svg
 share/icons/Vivacious-Colors/places/scalable/bookmark-missing.svg
 share/icons/Vivacious-Colors/places/scalable/bookmarks.svg
 share/icons/Vivacious-Colors/places/scalable/desktop.svg
-share/icons/Vivacious-Colors/places/scalable/distributor-logo.svg
 share/icons/Vivacious-Colors/places/scalable/edittrash.svg
 share/icons/Vivacious-Colors/places/scalable/emptytrash.svg
 share/icons/Vivacious-Colors/places/scalable/favorites.svg
@@ -18103,6 +18108,7 @@ share/icons/Vivacious-Colors/places/scalable/mail-sent.svg
 share/icons/Vivacious-Colors/places/scalable/network-workgroup.svg
 share/icons/Vivacious-Colors/places/scalable/novell-button.svg
 share/icons/Vivacious-Colors/places/scalable/other-desktop.svg
+share/icons/Vivacious-Colors/places/scalable/start-here-symbolic.svg
 share/icons/Vivacious-Colors/places/scalable/start-here.svg
 share/icons/Vivacious-Colors/places/scalable/stock_folder.svg
 share/icons/Vivacious-Colors/places/scalable/stock_inbox.svg
@@ -20799,9 +20805,3 @@ share/icons/Vivacious-Colors/stock/io/22/stock_network-printer.png
 share/icons/Vivacious-Colors/stock/io/24/stock_network-printer.png
 share/icons/Vivacious-Colors/stock/io/32/stock_network-printer.png
 share/icons/Vivacious-Colors/stock/io/48/stock_network-printer.png
-share/icons/ghostbsd/16x16/places/ghostbsd.png
-share/icons/ghostbsd/22x22/places/ghostbsd.png
-share/icons/ghostbsd/24x24/places/ghostbsd.png
-share/icons/ghostbsd/32x32/places/ghostbsd.png
-share/icons/ghostbsd/48x48/places/ghostbsd.png
-

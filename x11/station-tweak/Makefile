@@ -3,7 +3,7 @@
 
 
 PORTNAME=	station-tweak
-PORTVERSION=	0.2
+PORTVERSION=	0.3
 PORTREVISION=	0
 CATEGORIES=	x11
 MASTER_SITES=	https://github.com/GhostBSD/${PORTNAME}/archive/
@@ -22,6 +22,6 @@ RUN_DEPENDS=	wmctrl:x11/wmctrl
 
 USES = python:2.7 gettext-tools
 USE_PYTHON=	distutils
-USE_GNOME=	pygtk2 intltool
+USE_GNOME=	pygobject3 intltool
 
 .include <bsd.port.mk>
