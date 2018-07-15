@@ -10,7 +10,7 @@ COMMENT=	QML based login manager
 
 RUN_DEPENDS=	dbus-run-session:devel/dbus
 
-USES=		cmake:outsource kde:5
+USES=		cmake:outsource kde:5 qt:5
 USE_KDE=	ecm
 USE_QT=		concurrent core dbus gui linguisttools multimedia network \
 		printsupport qml quick script sql webkit widgets \
