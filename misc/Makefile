@@ -452,6 +452,7 @@
     SUBDIR += qt5ct
     SUBDIR += qtchooser
     SUBDIR += R-cran-mime
+    SUBDIR += R-cran-xfun
     SUBDIR += raspberrypi-userland
     SUBDIR += raspbsd-led
     SUBDIR += ree
@@ -572,5 +573,7 @@
     SUBDIR += yaunc
     SUBDIR += ytree
     SUBDIR += zoneinfo
+    SUBDIR += zygrib
+    SUBDIR += zygrib-maps
 
 .include <bsd.port.subdir.mk>
