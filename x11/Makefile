@@ -235,6 +235,7 @@
     SUBDIR += lxmenu-data
     SUBDIR += lxpanel
     SUBDIR += lxqt-globalkeys
+    SUBDIR += lxqt-globalkeys-l10n
     SUBDIR += lxqt-l10n
     SUBDIR += lxrandr
     SUBDIR += mate
@@ -516,6 +517,7 @@
     SUBDIR += xpr
     SUBDIR += xpra
     SUBDIR += xprehashprinterlist
+    SUBDIR += xprintidle
     SUBDIR += xprompt
     SUBDIR += xprop
     SUBDIR += xproto

@@ -236,6 +236,7 @@
     SUBDIR += guile-www
     SUBDIR += gurlchecker
     SUBDIR += h2o
+    SUBDIR += h2o-devel
     SUBDIR += habari
     SUBDIR += hastymail2-devel
     SUBDIR += havp
