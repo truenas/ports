@@ -20,7 +20,7 @@ RUN_DEPENDS=	spice-protocol>=0.12.14:devel/spice-protocol
 USES=		autoreconf cpe gettext-tools gmake jpeg libtool pkgconfig tar:bzip2 \
 		python ssl localbase:ldflags
 USE_XORG=	x11 pixman
-USE_GNOME=	cairo gdkpixbuf2 gnomeprefix gtk30 intltool introspection:build
+USE_GNOME=	cairo gdkpixbuf2 gnomeprefix gtk30 intltool introspection:build portssl
 CPE_VENDOR=	redhat
 
 SPICE_SSL_CFLAGS=	-I${OPENSSLINC}
