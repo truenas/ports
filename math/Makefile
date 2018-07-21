@@ -306,6 +306,7 @@
     SUBDIR += libmissing
     SUBDIR += libocas
     SUBDIR += liborigin
+    SUBDIR += libpoly
     SUBDIR += libqalculate
     SUBDIR += libranlip
     SUBDIR += librsb
@@ -679,6 +680,7 @@
     SUBDIR += py-intspan
     SUBDIR += py-keras
     SUBDIR += py-levmar
+    SUBDIR += py-libpoly
     SUBDIR += py-luminol
     SUBDIR += py-mathdom
     SUBDIR += py-matplotlib
@@ -836,6 +838,7 @@
     SUBDIR += xspread
     SUBDIR += xtensor
     SUBDIR += yacas
+    SUBDIR += yices
     SUBDIR += z3
     SUBDIR += zimpl
 
