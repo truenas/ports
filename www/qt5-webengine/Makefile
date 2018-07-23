@@ -52,7 +52,7 @@ DISTINFO_FILE=	${.CURDIR}/distinfo
 QT5_VERSION=	5.9.5
 
 OPTIONS_SINGLE=		AUDIO
-OPTIONS_SINGLE_AUDIO=	ALSA PULSEAUDIO
+OPTIONS_SINGLE_AUDIO=	ALSA PULSEAUDIO SNDIO
 OPTIONS_DEFAULT=	ALSA
 
 AUDIO_DESC=		Audio backend
@@ -61,7 +61,11 @@ ALSA_LIB_DEPENDS=	libasound.so:audio/alsa-lib
 ALSA_RUN_DEPENDS=	alsa-plugins>=0:audio/alsa-plugins
 ALSA_QMAKE_ON=		QT_CONFIG+=alsa
 PULSEAUDIO_LIB_DEPENDS=	libpulse.so:audio/pulseaudio
-PULSEAUDIO_QMAKE_ON=	QT_CONFIG+=pulseaudio
+PULSEAUDIO_VARS=	QMAKE_CONFIGURE_ARGS+=-pulseaudio
+PULSEAUDIO_VARS_OFF=	QMAKE_CONFIGURE_ARGS+=-no-pulseaudio
+SNDIO_LIB_DEPENDS=	libsndio.so:audio/sndio
+SNDIO_VARS=		QMAKE_CONFIGURE_ARGS+=-sndio
+SNDIO_VARS_OFF=		QMAKE_CONFIGURE_ARGS+=-no-sndio
 
 # We pass `norecursive' to USES=qmake because src/plugins/plugins.pro checks
 # whether webenginewidgets is available, which fails when qmake processes all
@@ -121,6 +125,13 @@ MAKE_ENV+=	CC="${CC}" CXX="${CXX}"			\
 post-extract:
 # Install FreeBSD's freebsd.pri file.
 	${CP} ${FILESDIR}/freebsd.pri ${WRKSRC}/src/core/config/freebsd.pri
+
+post-extract-SNDIO-on:
+	@cd ${WRKSRC}/src/3rdparty/chromium/media/audio && ${MKDIR} sndio openbsd
+	@${CP} ${FILESDIR}/sndio_*put.* \
+		${WRKSRC}/src/3rdparty/chromium/media/audio/sndio
+	@${CP} ${FILESDIR}/audio_manager_openbsd.* \
+		${WRKSRC}/src/3rdparty/chromium/media/audio/openbsd
 
 pre-configure:
 # Link in ${PYTHON_CMD} to ${CONFIGURE_WRKSRC}/bin -- the scripts hardcode 'python'
