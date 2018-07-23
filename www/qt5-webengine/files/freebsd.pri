@@ -1,7 +1,7 @@
 include(desktop_linux.pri)
 
 gn_args +=   disable_nacl=true           \
-             enable_basic_printing=false \
+             enable_basic_printing=true \
              enable_webrtc=false         \
              enable_hidpi=true           \
              use_dbus=true
