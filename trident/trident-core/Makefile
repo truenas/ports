@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	trident-core
-PORTVERSION=	201806190905
+PORTVERSION=	201807260802
 CATEGORIES=	trident
 
 MAINTAINER=	jt@ixsystems.com
@@ -21,10 +21,8 @@ RUN_DEPENDS=	${LOCALBASE}/sbin/PCDMd:x11/pcdm \
 		foomatic-db>=0:print/foomatic-db \
 		fluxbox-tenr-styles-pack>=0:x11-themes/fluxbox-tenr-styles-pack \
 		xorg-minimal>=0:x11/xorg-minimal \
-		xorg-drivers>=0:x11-drivers/xorg-drivers \
 		cuse4bsd-kmod>=0:multimedia/cuse4bsd-kmod \
 		webcamd>=0:multimedia/webcamd \
-		git:devel/git \
 		/boot/modules/drm.ko:graphics/drm-next-kmod \
 		xdg-user-dirs>=0:devel/xdg-user-dirs \
 		trident-icons>=0:trident/trident-icons \
@@ -34,7 +32,7 @@ RUN_DEPENDS=	${LOCALBASE}/sbin/PCDMd:x11/pcdm \
 USE_GITHUB=	yes
 GH_ACCOUNT=	project-trident
 GH_PROJECT=	trident-core
-GH_TAGNAME=	670aab21315683cd68e66b7947fda914bc301f26
+GH_TAGNAME=	453708383509160408e5e34a672de40a3bc06adb
 
 NO_BUILD=	yes
 
