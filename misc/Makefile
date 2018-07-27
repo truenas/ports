@@ -302,6 +302,7 @@
     SUBDIR += opencyc
     SUBDIR += openhab2
     SUBDIR += openhab2-addons
+    SUBDIR += openhmd
     SUBDIR += openmvg
     SUBDIR += openr2
     SUBDIR += orange3
