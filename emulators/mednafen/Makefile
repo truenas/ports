@@ -1,8 +1,8 @@
 # $FreeBSD$
 
 PORTNAME=	mednafen
-PORTVERSION=	1.21.0
-PORTREVISION=	2
+PORTVERSION=	1.21.3
+PORTREVISION=	1
 PORTEPOCH=	1
 DISTNAME=	mednafen-${PORTVERSION}-UNSTABLE
 CATEGORIES=	emulators games
@@ -21,7 +21,11 @@ LIB_DEPENDS=	libcdio.so:sysutils/libcdio \
 BROKEN_sparc64=		fails to compile due to internal compiler error
 
 GNU_CONFIGURE=	yes
+<<<<<<< HEAD
 USE_SDL=	sdl2 net
+=======
+USE_SDL=	sdl2 net2
+>>>>>>> freebsd/master
 USE_GL=		gl glu
 CPPFLAGS+=	-I${LOCALBASE}/include
 LDFLAGS+=	-L${LOCALBASE}/lib
@@ -78,8 +82,11 @@ pre-configure:
 	@${REINPLACE_CMD} -e 's|/usr/local|${LOCALBASE}|g' \
 		-e 's|/usr/X11R6|${LOCALBASE}|g' \
 		${WRKSRC}/configure
+<<<<<<< HEAD
 	@${REINPLACE_CMD} -e 's|NetBSD|FreeBSD|' \
 		${WRKSRC}/src/trio/triodef.h
+=======
+>>>>>>> freebsd/master
 
 post-install:
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}
