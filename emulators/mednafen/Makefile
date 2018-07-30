@@ -78,11 +78,8 @@ pre-configure:
 	@${REINPLACE_CMD} -e 's|/usr/local|${LOCALBASE}|g' \
 		-e 's|/usr/X11R6|${LOCALBASE}|g' \
 		${WRKSRC}/configure
-<<<<<<< HEAD
 	@${REINPLACE_CMD} -e 's|NetBSD|FreeBSD|' \
 		${WRKSRC}/src/trio/triodef.h
-=======
->>>>>>> freebsd/master
 
 post-install:
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}
