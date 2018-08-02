@@ -23,7 +23,6 @@
     SUBDIR += beforelight
     SUBDIR += bgrot
     SUBDIR += bgs
-    SUBDIR += bigreqsproto
     SUBDIR += bitmap
     SUBDIR += blast
     SUBDIR += bmpanel2
@@ -39,10 +38,8 @@
     SUBDIR += cinnamon-session
     SUBDIR += cl-clx
     SUBDIR += cl-clx-sbcl
-    SUBDIR += compositeproto
     SUBDIR += controllermap
     SUBDIR += cool-retro-term
-    SUBDIR += damageproto
     SUBDIR += decurs
     SUBDIR += deforaos-desktop
     SUBDIR += deforaos-keyboard
@@ -54,10 +51,7 @@
     SUBDIR += dgs
     SUBDIR += dmenu
     SUBDIR += dmenu2
-    SUBDIR += dmxproto
     SUBDIR += docker-tray
-    SUBDIR += dri2proto
-    SUBDIR += dri3proto
     SUBDIR += dsbautostart
     SUBDIR += dxpc
     SUBDIR += dynamag
@@ -67,12 +61,10 @@
     SUBDIR += emprint
     SUBDIR += erun
     SUBDIR += eterm
-    SUBDIR += evieext
     SUBDIR += evilvte
     SUBDIR += fbdesk
     SUBDIR += fbpanel
     SUBDIR += fireflies
-    SUBDIR += fixesproto
     SUBDIR += florence
     SUBDIR += flruler
     SUBDIR += fluxbg
@@ -126,12 +118,10 @@
     SUBDIR += idesk
     SUBDIR += imwheel
     SUBDIR += innerspace
-    SUBDIR += inputproto
     SUBDIR += ipager
     SUBDIR += kactivities
     SUBDIR += kactivitymanagerd
     SUBDIR += kb2mb2
-    SUBDIR += kbproto
     SUBDIR += kde-baseapps
     SUBDIR += kde-baseapps-kde4
     SUBDIR += kde-runtime-kde4
@@ -293,8 +283,6 @@
     SUBDIR += plasma5-plasma-integration
     SUBDIR += plasma5-plasma-workspace
     SUBDIR += polybar
-    SUBDIR += presentproto
-    SUBDIR += printproto
     SUBDIR += printscreen
     SUBDIR += props
     SUBDIR += py-pyvirtualdisplay
@@ -311,11 +299,7 @@
     SUBDIR += qterminal-l10n
     SUBDIR += qxkb
     SUBDIR += radare-cutter
-    SUBDIR += randrproto
-    SUBDIR += recordproto
     SUBDIR += rendercheck
-    SUBDIR += renderproto
-    SUBDIR += resourceproto
     SUBDIR += rgb
     SUBDIR += rofi
     SUBDIR += rox-wallpaper
@@ -330,7 +314,6 @@
     SUBDIR += sbxkb
     SUBDIR += screen-message
     SUBDIR += scripts
-    SUBDIR += scrnsaverproto
     SUBDIR += sddm
     SUBDIR += sessreg
     SUBDIR += setlayout
@@ -361,13 +344,11 @@
     SUBDIR += tilda
     SUBDIR += tint
     SUBDIR += tint-devel
-    SUBDIR += trapproto
     SUBDIR += trayer
     SUBDIR += tycoon
     SUBDIR += urxvt-font-size
     SUBDIR += urxvt-perls
     SUBDIR += vdesk
-    SUBDIR += videoproto
     SUBDIR += viewres
     SUBDIR += virtualgl
     SUBDIR += wbar
@@ -419,7 +400,6 @@
     SUBDIR += xclipboard
     SUBDIR += xcm
     SUBDIR += xcmd
-    SUBDIR += xcmiscproto
     SUBDIR += xcmsdb
     SUBDIR += xcoloredit
     SUBDIR += xcolors
@@ -438,7 +418,6 @@
     SUBDIR += xdtm
     SUBDIR += xedit
     SUBDIR += xev
-    SUBDIR += xextproto
     SUBDIR += xeyes
     SUBDIR += xf86dga
     SUBDIR += xf86dgaproto
@@ -471,7 +450,6 @@
     SUBDIR += xgrab
     SUBDIR += xhost
     SUBDIR += xidle
-    SUBDIR += xineramaproto
     SUBDIR += xinit
     SUBDIR += xinput
     SUBDIR += xkb-switch
@@ -513,6 +491,7 @@
     SUBDIR += xorg-docs
     SUBDIR += xorg-libraries
     SUBDIR += xorg-minimal
+    SUBDIR += xorgproto
     SUBDIR += xplsprinters
     SUBDIR += xpr
     SUBDIR += xpra
@@ -520,8 +499,6 @@
     SUBDIR += xprintidle
     SUBDIR += xprompt
     SUBDIR += xprop
-    SUBDIR += xproto
-    SUBDIR += xproxymanagementprotocol
     SUBDIR += xpyb
     SUBDIR += xrandr
     SUBDIR += xrdb

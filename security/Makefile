@@ -1014,7 +1014,6 @@
     SUBDIR += py-python-nss
     SUBDIR += py-python-openid
     SUBDIR += py-python-registry
-    SUBDIR += py-python-social-auth
     SUBDIR += py-python3-openid
     SUBDIR += py-pywinrm
     SUBDIR += py-rekall
@@ -1161,7 +1160,6 @@
     SUBDIR += rubygem-razorback-scriptNugget
     SUBDIR += rubygem-rbnacl
     SUBDIR += rubygem-rbnacl-libsodium
-    SUBDIR += rubygem-rbnacl4
     SUBDIR += rubygem-recog
     SUBDIR += rubygem-rex-arch
     SUBDIR += rubygem-rex-bin_tools
@@ -1307,7 +1305,6 @@
     SUBDIR += trinokiller
     SUBDIR += tripwire
     SUBDIR += tripwire-131
-    SUBDIR += tripwire12
     SUBDIR += trousers
     SUBDIR += truecrypt
     SUBDIR += tsshbatch
