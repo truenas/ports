@@ -1,6 +1,6 @@
---- hw/xfree86/common/xf86AutoConfig.c.orig	2017-01-11 20:00:58 UTC
+--- hw/xfree86/common/xf86AutoConfig.c.orig	2016-07-19 17:07:29 UTC
 +++ hw/xfree86/common/xf86AutoConfig.c
-@@ -276,7 +276,7 @@ listPossibleVideoDrivers(char *matches[]
+@@ -267,7 +267,7 @@ listPossibleVideoDrivers(char *matches[], int nmatches
          i += xf86PciMatchDriver(&matches[i], nmatches - i);
  #endif
  
@@ -9,7 +9,7 @@
      matches[i++] = xnfstrdup("modesetting");
  #endif
  
-@@ -285,8 +285,10 @@ listPossibleVideoDrivers(char *matches[]
+@@ -276,8 +276,10 @@ listPossibleVideoDrivers(char *matches[], int nmatches
      if (i < (nmatches - 1)) {
  #if !defined(__linux__) && defined(__sparc__)
          matches[i++] = xnfstrdup("wsfb");
@@ -20,4 +20,4 @@
 +        matches[i++] = xnfstrdup("scfb");
  #endif
      }
- #endif                          /* !__sun */
+ #endif                          /* !sun */

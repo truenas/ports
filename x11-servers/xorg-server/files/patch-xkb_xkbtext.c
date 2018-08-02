@@ -1,29 +1,10 @@
-From 94f11ca5cf011ef123bd222cabeaef6f424d76ac Mon Sep 17 00:00:00 2001
-From: Keith Packard <keithp@keithp.com>
-Date: Thu, 27 Jul 2017 10:08:32 -0700
-Subject: xkb: Handle xkb formated string output safely (CVE-2017-13723)
-
-Generating strings for XKB data used a single shared static buffer,
-which offered several opportunities for errors. Use a ring of
-resizable buffers instead, to avoid problems when strings end up
-longer than anticipated.
-
-Reviewed-by: Michal Srb <msrb@suse.com>
-Signed-off-by: Keith Packard <keithp@keithp.com>
-Signed-off-by: Julien Cristau <jcristau@debian.org>
-
-diff --git a/xkb/xkbtext.c b/xkb/xkbtext.c
-index ead2b1a..d2a2567 100644
---- xkb/xkbtext.c
+--- xkb/xkbtext.c.orig	2016-07-15 16:18:11 UTC
 +++ xkb/xkbtext.c
 @@ -47,23 +47,27 @@
  
  /***====================================================================***/
  
 -#define	BUFFER_SIZE	512
--
--static char textBuffer[BUFFER_SIZE];
--static int tbNext = 0;
 +#define NUM_BUFFER      8
 +static struct textBuffer {
 +    int size;
@@ -31,6 +12,9 @@ index ead2b1a..d2a2567 100644
 +} textBuffer[NUM_BUFFER];
 +static int textBufferIndex;
  
+-static char textBuffer[BUFFER_SIZE];
+-static int tbNext = 0;
+-
  static char *
  tbGetBuffer(unsigned size)
  {
@@ -65,7 +49,7 @@ index ead2b1a..d2a2567 100644
          rtrn = tbGetBuffer(len);
          strlcpy(rtrn, atmstr, len);
      }
-@@ -128,8 +130,6 @@ XkbVModIndexText(XkbDescPtr xkb, unsigned ndx, unsigned format)
+@@ -128,8 +130,6 @@ XkbVModIndexText(XkbDescPtr xkb, unsigned ndx, unsigne
      len = strlen(tmp) + 1;
      if (format == XkbCFile)
          len += 4;
@@ -74,7 +58,7 @@ index ead2b1a..d2a2567 100644
      rtrn = tbGetBuffer(len);
      if (format == XkbCFile) {
          strcpy(rtrn, "vmod_");
-@@ -140,6 +140,8 @@ XkbVModIndexText(XkbDescPtr xkb, unsigned ndx, unsigned format)
+@@ -140,6 +140,8 @@ XkbVModIndexText(XkbDescPtr xkb, unsigned ndx, unsigne
      return rtrn;
  }
  
@@ -110,6 +94,3 @@ index ead2b1a..d2a2567 100644
      rtrn = tbGetBuffer(len + 1);
      rtrn[0] = '\0';
  
--- 
-cgit v0.10.2
-

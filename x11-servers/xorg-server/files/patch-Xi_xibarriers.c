@@ -1,27 +1,6 @@
-From c77cd08efcf386bcc5d8dfbd0427134b2b2d0888 Mon Sep 17 00:00:00 2001
-From: Nathan Kidd <nkidd@opentext.com>
-Date: Fri, 9 Jan 2015 10:04:41 -0500
-Subject: Xi: integer overflow and unvalidated length in
- (S)ProcXIBarrierReleasePointer
-
-[jcristau: originally this patch fixed the same issue as commit
- 211e05ac85 "Xi: Test exact size of XIBarrierReleasePointer", with the
- addition of these checks]
-
-This addresses CVE-2017-12179
-
-Reviewed-by: Alan Coopersmith <alan.coopersmith@oracle.com>
-Reviewed-by: Jeremy Huddleston Sequoia <jeremyhu@apple.com>
-Reviewed-by: Julien Cristau <jcristau@debian.org>
-Signed-off-by: Jeremy Huddleston Sequoia <jeremyhu@apple.com>
-Signed-off-by: Nathan Kidd <nkidd@opentext.com>
-Signed-off-by: Julien Cristau <jcristau@debian.org>
-(cherry picked from commit d088e3c1286b548a58e62afdc70bb40981cdb9e8)
-
-
---- Xi/xibarriers.c.orig	2016-07-15 18:17:45.000000000 +0200
-+++ Xi/xibarriers.c	2017-10-13 18:26:09.226006000 +0200
-@@ -830,10 +830,15 @@
+--- Xi/xibarriers.c.orig	2016-07-15 16:17:45 UTC
++++ Xi/xibarriers.c
+@@ -830,10 +830,15 @@ SProcXIBarrierReleasePointer(ClientPtr client)
      REQUEST(xXIBarrierReleasePointerReq);
      int i;
  
@@ -39,7 +18,7 @@ Signed-off-by: Julien Cristau <jcristau@debian.org>
      for (i = 0; i < stuff->num_barriers; i++, info++) {
          swaps(&info->deviceid);
          swapl(&info->barrier);
-@@ -854,6 +859,10 @@
+@@ -854,6 +859,10 @@ ProcXIBarrierReleasePointer(ClientPtr client)
  
      REQUEST(xXIBarrierReleasePointerReq);
      REQUEST_AT_LEAST_SIZE(xXIBarrierReleasePointerReq);
