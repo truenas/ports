@@ -874,8 +874,6 @@
     SUBDIR += pcbsd-appweb
     SUBDIR += pcbsd-libsh
     SUBDIR += pcbsd-syscache
-    SUBDIR += pcbsd-utils
-    SUBDIR += pcbsd-utils-qt5
     SUBDIR += pciutils
     SUBDIR += pcpustat
     SUBDIR += pdixtract
