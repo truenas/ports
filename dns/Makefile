@@ -203,6 +203,7 @@
     SUBDIR += py-pywdns
     SUBDIR += py-tld
     SUBDIR += py-tldextract
+    SUBDIR += qmdnsengine
     SUBDIR += radns
     SUBDIR += rbldnsd
     SUBDIR += rbllookup
