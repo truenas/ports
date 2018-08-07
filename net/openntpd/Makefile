@@ -2,11 +2,7 @@
 
 PORTNAME=	openntpd
 PORTVERSION=	6.2p3
-<<<<<<< HEAD
-PORTREVISION=	3
-=======
 PORTREVISION=	1
->>>>>>> freebsd/master
 PORTEPOCH=	2
 CATEGORIES=	net
 MASTER_SITES=	OPENBSD/OpenNTPD
