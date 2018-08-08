@@ -2,12 +2,10 @@
 # $FreeBSD$
 
 PORTNAME=	mDNSResponder
-PORTVERSION=	878.1.1
+PORTVERSION=	20171130165419
 PORTREVISION=	0
 CATEGORIES=	freenas
-MASTER_SITES=   https://api.github.com/repos/freenas/mDNSResponder/tarball/
 PKGNAMEPREFIX=	freenas-
-DISTNAME=       freenas/master
 
 MAINTAINER=	john@ixsystems.com
 COMMENT=	Bonjour (zero-configuration networking) by Apple
@@ -15,20 +13,14 @@ COMMENT=	Bonjour (zero-configuration networking) by Apple
 LICENSE=	APACHE20 BSD3CLAUSE
 LICENSE_COMB=	dual
 
-EXTRACT_SUFX=
-NO_CHECKSUM=	yes
-DISABLE_SIZE=	yes
-
 FREENAS_DISTDIR=	${DISTDIR}/freenas
 
-GH_BRANCH?=	${DISTNAME}
-GH_FILE=	${GH_BRANCH:S/freenas\///}
-GH_TARBALL=	${GH_FILE}.tar.gz
+USE_GITHUB=	yes
+GH_ACCOUNT=	freenas
+GH_PROJECT=	mDNSResponder
+GH_TAGNAME=	d628da57a99dd47cc584890e93c66f2f4221f925
 
 DISTFILES=	${DISTNAME}
-
-MDNS_DIR=	${GH_BRANCH:S/freenas\///}
-WRKSRC?=	${WRKDIR}/${MDNS_DIR}
 
 # lib/libdns_sd.so.1 sbin/mdnsd
 CONFLICTS_INSTALL=	avahi-libdns openmdns
@@ -51,28 +43,6 @@ EXTRA_BIN=	mDNSClientPosix mDNSIdentify mDNSNetMonitor mDNSProxyResponderPosix m
 EXTRA_MAN1=	dns-sd.1
 EXTRA_MAN8=	dnsextd.8 mDNSResponderPosix.8
 EXTRA_SBIN=	dnsextd
-
-# Ewww, but Yeesss
-pre-everything::
-	rm -rf ${FREENAS_DISTDIR}/${GH_FILE} ${FREENAS_DISTDIR}/${GH_TARBALL}
-
-pre-extract:
-	${MV} ${FREENAS_DISTDIR}/${GH_FILE} ${FREENAS_DISTDIR}/${GH_TARBALL}
-
-do-extract: ${EXTRACT_WRKDIR}
-	if ! (cd ${EXTRACT_WRKDIR} && tar -zxvf ${FREENAS_DISTDIR}/${GH_TARBALL} --no-same-owner --no-same-permissions);\
-	then \
-		exit 1; \
-	fi; \
-	if [ ${UID} = 0 ]; then \
-		${CHMOD} -R ug-s ${WRKDIR}; \
-		${CHOWN} -R 0:0 ${WRKDIR}; \
-	fi; \
-	if [ -d ${EXTRACT_WRKDIR}/${MDNS_DIR} ]; then \
-		${ECHO_CMD} "${EXTRACT_WRKDIR}/${MDNS_DIR} exists, please run 'make clean' first"; \
-		exit 1; \
-	fi; \
-	${MV} ${EXTRACT_WRKDIR}/freenas-mDNSResponder-* "${EXTRACT_WRKDIR}/${MDNS_DIR}"
 
 post-patch:
 	@${REINPLACE_CMD} -e '/^CFLAGS_DEBUG/ s|-Os|${CFLAGS}|' ${WRKSRC}/mDNSPosix/Makefile
