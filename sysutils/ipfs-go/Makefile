@@ -7,7 +7,7 @@ CATEGORIES=	sysutils
 MASTER_SITES=	https://dist.ipfs.io/go-ipfs/${DISTVERSIONPREFIX}${DISTVERSION}/
 DISTNAME=	go-ipfs_${DISTVERSIONPREFIX}${DISTVERSION}_freebsd-${ARCH}
 
-MAINTAINER=	jhixson@gmail.com
+MAINTAINER=	jhixson@FreeBSD.org
 COMMENT=	IPFS implementation in Go
 
 LICENSE=	MIT
