@@ -3,6 +3,8 @@
 
     COMMENT = Miscellaneous utilities
 
+    SUBDIR += R-cran-mime
+    SUBDIR += R-cran-xfun
     SUBDIR += achievo
     SUBDIR += aclgen
     SUBDIR += amanda-client
@@ -457,8 +459,11 @@
     SUBDIR += qt5-l10n
     SUBDIR += qt5ct
     SUBDIR += qtchooser
+<<<<<<< HEAD
     SUBDIR += R-cran-mime
     SUBDIR += R-cran-xfun
+=======
+>>>>>>> freebsd/master
     SUBDIR += raspberrypi-userland
     SUBDIR += raspbsd-led
     SUBDIR += ree
