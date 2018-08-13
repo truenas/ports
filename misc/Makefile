@@ -546,6 +546,7 @@
     SUBDIR += usbids
     SUBDIR += usbrh-libusb
     SUBDIR += utftools
+    SUBDIR += valentina
     SUBDIR += valspeak
     SUBDIR += vdmfec
     SUBDIR += vera

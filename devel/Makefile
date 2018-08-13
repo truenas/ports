@@ -4339,6 +4339,7 @@
     SUBDIR += py-apns2
     SUBDIR += py-appdirs
     SUBDIR += py-application
+    SUBDIR += py-applicationinsights
     SUBDIR += py-apptools
     SUBDIR += py-apscheduler
     SUBDIR += py-archetypes.querywidget
@@ -4682,6 +4683,7 @@
     SUBDIR += py-kid
     SUBDIR += py-kitchen
     SUBDIR += py-kjbuckets
+    SUBDIR += py-knack
     SUBDIR += py-kqueue
     SUBDIR += py-krosspython-kde4
     SUBDIR += py-lazr.config
@@ -6056,6 +6058,7 @@
     SUBDIR += rubygem-uber
     SUBDIR += rubygem-unicode
     SUBDIR += rubygem-unicode-display_width
+    SUBDIR += rubygem-unicode_utils
     SUBDIR += rubygem-useragent
     SUBDIR += rubygem-uuid
     SUBDIR += rubygem-uuidtools
@@ -6303,6 +6306,7 @@
     SUBDIR += xsd
     SUBDIR += xtensa-esp32-elf
     SUBDIR += xtl
+    SUBDIR += xtl-quant-stack
     SUBDIR += xtoolchain-llvm-devel
     SUBDIR += xtoolchain-llvm40
     SUBDIR += xtoolchain-llvm50
