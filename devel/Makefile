@@ -453,6 +453,7 @@
     SUBDIR += diffuse
     SUBDIR += ding-libs
     SUBDIR += directfb
+    SUBDIR += dispy
     SUBDIR += dissy
     SUBDIR += distcc
     SUBDIR += distel
@@ -1683,13 +1684,12 @@
     SUBDIR += llnextgen
     SUBDIR += llvm-cheri
     SUBDIR += llvm-devel
-    SUBDIR += llvm33
-    SUBDIR += llvm34
     SUBDIR += llvm35
     SUBDIR += llvm38
     SUBDIR += llvm40
     SUBDIR += llvm50
     SUBDIR += llvm60
+    SUBDIR += llvm70
     SUBDIR += lm4tools
     SUBDIR += lmdbg
     SUBDIR += lndir
@@ -5288,6 +5288,7 @@
     SUBDIR += pycanberra
     SUBDIR += pycharm-ce
     SUBDIR += pychecker
+    SUBDIR += pycos
     SUBDIR += pycount
     SUBDIR += pydbus-common
     SUBDIR += pygobject3-common
@@ -6297,6 +6298,7 @@
     SUBDIR += xdg-user-dirs
     SUBDIR += xdg-utils
     SUBDIR += xdgpaths
+    SUBDIR += xeus
     SUBDIR += xfce4-dev-tools
     SUBDIR += xfce4-vala
     SUBDIR += xmake
