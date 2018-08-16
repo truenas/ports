@@ -17,14 +17,13 @@ RUN_DEPENDS=	ca_root_nss>0:security/ca_root_nss \
 		icu>0:devel/icu \
 		indexinfo>0:print/indexinfo \
 		libxml2>0:textproc/libxml2 \
-		nss-pam-ldapd-sasl>0:net/nss-pam-ldapd-sasl \
 		openldap-sasl-client>2.4.0:net/openldap24-sasl-client \
+		nss-pam-ldapd-sasl>0:net/nss-pam-ldapd-sasl
+		nss-pam-ldapd-sasl>0:net/nss-pam-ldapd-sasl \
 		postgresql10-client>9.6.0:databases/postgresql10-client \
 		postgresql10-server>9.6.0:databases/postgresql10-server
 
 DISTFILE=	dssystem-14.0.0.1.txz
-
-NO_WRKSUBDIR=	yes
 
 NO_BUILD=	yes
 USES=		zip perl5
@@ -32,8 +31,7 @@ USES=		zip perl5
 USE_RC_SUBR=	dssystem
 
 do-install:
-	@${TAR} -zxvf ${WRKSRC}/${DISTNAME}/${DISTFILE} -C ${STAGEDIR}
-	@${RM} "${STAGEDIR}/+COMPACT_MANIFEST"
-	@${RM} "${STAGEDIR}/+MANIFEST"
+	${CP} ${FILESDIR}/dssystem_install.ini ${STAGEDIR}
+	cd ${STAGEDIR} && pkg -r ${STAGEDIR} add -f ${WRKSRC}/${DISTFILE}
 
 .include <bsd.port.mk>
