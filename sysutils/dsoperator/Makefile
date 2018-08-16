@@ -20,5 +20,6 @@ USES=		zip
 do-install:
 	${MKDIR} ${STAGEDIR}${LOCALBASE}/www/asigra
 	(cd ${WRKSRC} && ${COPYTREE_BIN} . ${STAGEDIR}${LOCALBASE}/www/asigra)
+	${CP} ${FILESDIR}/DSOP.jnlp ${STAGEDIR}${LOCALBASE}/www/asigra/DSOP.jnlp
 
 .include <bsd.port.mk>
