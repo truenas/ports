@@ -3,7 +3,7 @@
 
 
 PORTNAME=	gbi
-PORTVERSION=	5.7
+PORTVERSION=	5.8
 PORTREVISION=	0
 CATEGORIES=	sysutils
 MASTER_SITES=	https://github.com/GhostBSD/${PORTNAME}/archive/
@@ -16,8 +16,8 @@ LICENSE=	BSD
 USE_GITHUB=	yes
 GH_ACCOUNT=	GhostBSD
 
-USES = python:2.7
+USES =		python:3.6
 USE_PYTHON=	distutils
-USE_GNOME=	pygtk2
+USE_GNOME=	pygobject3
 
 .include <bsd.port.mk>
