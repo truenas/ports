@@ -3,6 +3,7 @@
 
 PORTNAME=	dssystem
 PORTVERSION=	14.0.0.1
+PORTREVISION=	2
 CATEGORIES=	sysutils
 MASTER_SITES=	http://www.asigra.com/updates/14.0/DS-System/14.0.0.1/
 DISTNAME=	DS-System_14_0_0_1_FreeBSD
