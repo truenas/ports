@@ -6,11 +6,11 @@
 #
 
 PORTNAME=	ghostbsd-wallpapers
-PORTVERSION=	11.0.3
+PORTVERSION=	18.08.0
 CATEGORIES=	x11-themes
 
 MAINTAINER=	angelescuo@yahoo.com
-COMMENT=	GhostBSD wallpaper art
+COMMENT=	GhostBSD 18 wallpaper colection
 
 LICENSE=	BSD
 
@@ -22,6 +22,7 @@ NO_BUILD=	yes
 do-install:
 	${MKDIR} ${STAGEDIR}${PREFIX}/share/backgrounds/ghostbsd
 	${CP} -PR ${WRKSRC}/*.jpg ${STAGEDIR}${PREFIX}/share/backgrounds/ghostbsd
+	${CP} -PR ${WRKSRC}/*.png ${STAGEDIR}${PREFIX}/share/backgrounds/ghostbsd
 	${MKDIR} ${STAGEDIR}${PREFIX}/share/mate-background-properties
 	${CP} -PR ${WRKSRC}/ghostbsd.xml ${STAGEDIR}${PREFIX}/share/mate-background-properties/ghostbsd.xml
 	${MKDIR} ${STAGEDIR}${PREFIX}/share/gnome-background-properties
