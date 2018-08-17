@@ -45,7 +45,6 @@
     SUBDIR += aptly
     SUBDIR += arcconf
     SUBDIR += archivemount
-    SUBDIR += areca-cli
     SUBDIR += ascpu
     SUBDIR += asfsm
     SUBDIR += asmctl
@@ -966,6 +965,7 @@
     SUBDIR += pwsafe
     SUBDIR += pxattr
     SUBDIR += py-analyzemft
+    SUBDIR += py-ansible-lint
     SUBDIR += py-bcfg2
     SUBDIR += py-cdmi
     SUBDIR += py-consul
