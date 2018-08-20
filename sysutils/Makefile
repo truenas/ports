@@ -297,6 +297,7 @@
     SUBDIR += ec2-scripts
     SUBDIR += edid-decode
     SUBDIR += eject
+    SUBDIR += eksctl
     SUBDIR += endian
     SUBDIR += enteruser
     SUBDIR += entr
@@ -481,6 +482,7 @@
     SUBDIR += healthd
     SUBDIR += heartbeat
     SUBDIR += heirloom
+    SUBDIR += helm
     SUBDIR += hextools
     SUBDIR += hfm
     SUBDIR += hfsexplorer
@@ -534,6 +536,7 @@
     SUBDIR += isomd5sum
     SUBDIR += istatserver
     SUBDIR += ix-bhyve
+    SUBDIR += istio
     SUBDIR += jadm
     SUBDIR += jail-primer
     SUBDIR += jailadmin
