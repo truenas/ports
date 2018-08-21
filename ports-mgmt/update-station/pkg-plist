@@ -8,4 +8,4 @@ etc/xdg/autostart/update-station.desktop
 lib/update-station/cleandesktop.sh
 lib/update-station/system-software-update.png
 lib/update-station/updateHandler.py
-share/applications/update-station.desktop
+share/applications/update-manager.desktop
