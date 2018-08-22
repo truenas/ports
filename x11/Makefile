@@ -268,6 +268,7 @@
     SUBDIR += pantheon-terminal
     SUBDIR += pcdm
     SUBDIR += picoserver
+    SUBDIR += perwindowlayoutd
     SUBDIR += pipeglade
     SUBDIR += pixman
     SUBDIR += plasma-scriptengine-python-kde4
