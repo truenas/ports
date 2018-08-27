@@ -105,6 +105,12 @@ X11_LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig \
 
 .include <bsd.port.pre.mk>
 
+# Using LLD with OPENAL fails due to preemption of symbols with protected visibility in a shared object
+# See PR 226980 
+.if  ${PORT_OPTIONS:MOPENAL}
+LLD_UNSAFE=     yes
+.endif
+
 .if ${ARCH} == amd64
 # Wine is composed of three parts:
 #  - wine (aka this port) is the 32-bit component and runs 32-bit programs (on FreeBSD/i386)
