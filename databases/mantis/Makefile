@@ -2,10 +2,11 @@
 # $FreeBSD$
 
 PORTNAME=	mantis
-PORTVERSION=	2.15.0
+PORTVERSION=	2.9.0
+PORTEPOCH=	1
 CATEGORIES=	databases www
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	tobik@FreeBSD.org
 COMMENT=	Bug tracking system written in PHP
 
 NO_BUILD=	yes

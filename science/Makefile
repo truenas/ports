@@ -66,6 +66,7 @@
     SUBDIR += fvcom
     SUBDIR += fvcom-mpi
     SUBDIR += fvm
+    SUBDIR += gabedit
     SUBDIR += gchemutils
     SUBDIR += gdma
     SUBDIR += getdp
@@ -125,11 +126,14 @@
     SUBDIR += mpb
     SUBDIR += mpqc
     SUBDIR += mpqc-mpich
+    SUBDIR += multiwfn
     SUBDIR += ncs
     SUBDIR += netcdf
     SUBDIR += netcdf-cxx
     SUBDIR += netcdf-fortran
     SUBDIR += nifticlib
+    SUBDIR += nwchem
+    SUBDIR += octopus
     SUBDIR += openbabel
     SUBDIR += openkim
     SUBDIR += openstructure
