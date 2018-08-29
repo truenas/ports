@@ -864,7 +864,6 @@
     SUBDIR += gperf
     SUBDIR += gpm
     SUBDIR += gprbuild
-    SUBDIR += gps
     SUBDIR += gpsim
     SUBDIR += gputils
     SUBDIR += gradle
@@ -6004,6 +6003,7 @@
     SUBDIR += rubygem-streetaddress
     SUBDIR += rubygem-stringex
     SUBDIR += rubygem-strings
+    SUBDIR += rubygem-strings-ansi
     SUBDIR += rubygem-strong_migrations
     SUBDIR += rubygem-structured_warnings
     SUBDIR += rubygem-stud
