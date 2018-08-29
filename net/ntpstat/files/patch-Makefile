@@ -1,0 +1,25 @@
+diff -Naur Makefile.orig Makefile
+--- Makefile.orig	2013-05-24 00:13:51.000000000 +0400
++++ Makefile	2018-08-26 14:32:54.169053969 +0300
+@@ -1,6 +1,8 @@
+-CC= gcc
++CC= cc
+ CFLAGS= -Wall -O2
+ 
++PREFIX = /usr/local
++
+ all:	ntpstat
+ 
+ ntpstat:	ntpstat.c
+@@ -8,3 +10,11 @@
+ clean:
+    rm ntpstat
+ 
++.PHONY: install
++install: ntpstat
++	mkdir -p $(DESTDIR)$(PREFIX)/bin
++	cp ntpstat $(DESTDIR)$(PREFIX)/bin/ntpstat
++
++.PHONY: uninstall
++uninstall:
++	rm -f $(DESTDIR)$(PREFIX)/bin/ntpstat

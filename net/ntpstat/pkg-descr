@@ -1,0 +1,7 @@
+ntpstat shows network time protocol (ntp) status.
+
+This program uses an NTP mode 6 control message, which is the same as that
+used by the ntpq command. The ntpdc command uses NTP mode 7, details of
+which are elusive.
+
+WWW: https://github.com/darkhelmet/ntpstat
