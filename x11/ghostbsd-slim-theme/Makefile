@@ -6,10 +6,10 @@
 #
 
 PORTNAME=	ghostbsd-slim-theme
-PORTVERSION=	1.2
+PORTVERSION=	1.3
 CATEGORIES=	x11
 
-MAINTAINER=	angelescuo@yahoo.com
+MAINTAINER=	ericbsd@FreeBSD.org
 COMMENT=	GhostBSD theme for slim and autologin too
 
 LICENSE=	BSD
@@ -24,6 +24,5 @@ NO_BUILD=	yes
 do-install:
 	${MKDIR} ${STAGEDIR}/${PREFIX}/share/slim/themes/ghostbsd
 	${CP} -R ${WRKSRC}/gbsd/* ${STAGEDIR}/${PREFIX}/share/slim/themes/ghostbsd/
-	${MKDIR} ${STAGEDIR}/${PREFIX}/share/ghostbsd/slim/etc
-	${CP} -R ${WRKSRC}/etc/* ${STAGEDIR}/${PREFIX}/share/ghostbsd/slim/etc/
+
 .include <bsd.port.mk>
