@@ -72,6 +72,7 @@
     SUBDIR += R-cran-tibble
     SUBDIR += R-cran-tidyr
     SUBDIR += R-cran-tidyselect
+    SUBDIR += R-cran-vcd
     SUBDIR += R-cran-withr
     SUBDIR += RStudio
     SUBDIR += SpecTcl
@@ -483,6 +484,7 @@
     SUBDIR += dyncall
     SUBDIR += e00compr
     SUBDIR += e2fsprogs-libss
+    SUBDIR += eastl
     SUBDIR += easygit
     SUBDIR += easyloggingpp
     SUBDIR += eblob
@@ -4701,6 +4703,7 @@
     SUBDIR += py-libvirt
     SUBDIR += py-libzfs
     SUBDIR += py-linecache2
+    SUBDIR += py-lineedit
     SUBDIR += py-llfuse
     SUBDIR += py-llvmcpy
     SUBDIR += py-llvmlite
@@ -4845,6 +4848,7 @@
     SUBDIR += py-ply
     SUBDIR += py-podcastparser
     SUBDIR += py-polib
+    SUBDIR += py-pooch
     SUBDIR += py-positional
     SUBDIR += py-posix_ipc
     SUBDIR += py-pp
@@ -4856,6 +4860,7 @@
     SUBDIR += py-protobuf
     SUBDIR += py-protocols
     SUBDIR += py-ptable
+    SUBDIR += py-ptpython
     SUBDIR += py-ptrace
     SUBDIR += py-ptvsd
     SUBDIR += py-pudb
@@ -5417,6 +5422,7 @@
     SUBDIR += rpm-spec-mode.el
     SUBDIR += rsvndump
     SUBDIR += rth
+    SUBDIR += rtichoke
     SUBDIR += ruby-bsearch
     SUBDIR += ruby-build
     SUBDIR += ruby-gems

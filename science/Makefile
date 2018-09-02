@@ -88,6 +88,7 @@
     SUBDIR += hypre
     SUBDIR += iboview
     SUBDIR += isaac-cfd
+    SUBDIR += jdftx
     SUBDIR += jstrack
     SUBDIR += kalzium
     SUBDIR += kalzium-kde4
@@ -185,9 +186,11 @@
     SUBDIR += py-ScientificPython
     SUBDIR += py-SimpleSpectral
     SUBDIR += py-abipy
+    SUBDIR += py-ase
     SUBDIR += py-cdo
     SUBDIR += py-coards
     SUBDIR += py-dlib
+    SUBDIR += py-gpaw
     SUBDIR += py-gsd
     SUBDIR += py-h5py
     SUBDIR += py-hcluster
@@ -223,6 +226,7 @@
     SUBDIR += pybrain
     SUBDIR += pycdf
     SUBDIR += pynn
+    SUBDIR += qbox
     SUBDIR += qcl
     SUBDIR += qmcpack
     SUBDIR += qtresistors
