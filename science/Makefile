@@ -49,6 +49,7 @@
     SUBDIR += colt
     SUBDIR += coot
     SUBDIR += crf++
+    SUBDIR += dalton
     SUBDIR += datawarrior
     SUBDIR += dcl
     SUBDIR += devisor
@@ -63,6 +64,7 @@
     SUBDIR += fastcap
     SUBDIR += fasthenry
     SUBDIR += fisicalab
+    SUBDIR += fleur
     SUBDIR += fsom
     SUBDIR += fvcom
     SUBDIR += fvcom-mpi
@@ -254,6 +256,7 @@
     SUBDIR += step-kde4
     SUBDIR += svmlight
     SUBDIR += szip
+    SUBDIR += teem
     SUBDIR += tfel
     SUBDIR += triqs
     SUBDIR += udunits
