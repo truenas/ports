@@ -801,6 +801,7 @@
     SUBDIR += global
     SUBDIR += glog
     SUBDIR += glrparser
+    SUBDIR += glslang
     SUBDIR += glui
     SUBDIR += gmake
     SUBDIR += gnatcoll
@@ -6164,6 +6165,7 @@
     SUBDIR += spdlog
     SUBDIR += spice-protocol
     SUBDIR += spin
+    SUBDIR += spirv-tools
     SUBDIR += splint
     SUBDIR += srecord
     SUBDIR += ssft
@@ -6288,6 +6290,9 @@
     SUBDIR += violet
     SUBDIR += visualparadigm
     SUBDIR += vstr
+    SUBDIR += vulkan-headers
+    SUBDIR += vulkan-tools
+    SUBDIR += vulkan-validation-layers
     SUBDIR += vxlog
     SUBDIR += wand-libconfig
     SUBDIR += wandio
