@@ -97,6 +97,7 @@
     SUBDIR += kalzium
     SUBDIR += kalzium-kde4
     SUBDIR += kst2
+    SUBDIR += lammps
     SUBDIR += lamprop
     SUBDIR += libaec
     SUBDIR += libccp4
@@ -124,6 +125,7 @@
     SUBDIR += mcstas-comps
     SUBDIR += mcxtrace
     SUBDIR += mcxtrace-comps
+    SUBDIR += mdynamix
     SUBDIR += medit
     SUBDIR += meep
     SUBDIR += mei
