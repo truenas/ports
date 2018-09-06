@@ -16,6 +16,7 @@ name="inadyn"
 rcvar=inadyn_enable
 
 command=%%PREFIX%%/sbin/inadyn
+flags=--continue-on-error
 
 load_rc_config $name
 
