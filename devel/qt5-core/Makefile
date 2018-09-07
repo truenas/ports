@@ -52,7 +52,6 @@ pre-build:
 
 post-install:
 # Cleanup qconfig.h and remove stray '#define QT_NO_FOO'
-	${REINPLACE_CMD} "/#define QT_NO_/d" ${WRKDIR}/qconfig.h
-	${MV} ${WRKDIR}/qconfig.h ${STAGEDIR}${PREFIX}/${QT_INCDIR_REL}/QtCore/qconfig.h
+	${REINPLACE_CMD} "/#define QT_NO_/d" ${STAGEDIR}${PREFIX}/${QT_INCDIR_REL}/QtCore/qconfig.h
 
 .include <bsd.port.post.mk>
