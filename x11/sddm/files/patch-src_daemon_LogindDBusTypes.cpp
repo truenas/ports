@@ -11,6 +11,3 @@ the same D-Bus interface as logind.
      if (QDBusConnection::systemBus().interface()->isServiceRegistered(QStringLiteral("org.freedesktop.ConsoleKit"))) {
          qDebug() << "Console kit interface found";
          available = true;
-Disable ConsoleKit seat management for now.  It is mistakenly assumed to have
-the same D-Bus interface as logind.
-

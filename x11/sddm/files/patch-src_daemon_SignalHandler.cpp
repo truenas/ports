@@ -43,14 +43,3 @@ index 5c536603..3054e635 100644
              qCritical() << "Failed to create socket pair for SIGUSR1 handling.";
  
          snusr1 = new QSocketNotifier(sigusr1Fd[1], QSocketNotifier::Read, this);
-From 62d776518594f517dc59de3c87e53afdda339079 Mon Sep 17 00:00:00 2001
-From: Romain Labolle <ravomavain@gmail.com>
-Date: Sat, 3 Mar 2018 22:09:30 +0100
-Subject: [PATCH] Add SOCK_CLOEXEC to signal handling sockets
-
-SDDM is currennty leaking 8 sockets file descriptors to the user session.
-Adding the CLOEXEC flag to the fd to avoid thoses leaks.
----
- src/daemon/SignalHandler.cpp | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-

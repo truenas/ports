@@ -20,6 +20,3 @@ start it from sddm.
  
          // create display manager
          m_displayManager = new DisplayManager(this);
-On FreeBSD console-kit-daemon isn't started by the init system, so try to
-start it from sddm.
-
