@@ -2040,7 +2040,6 @@
     SUBDIR += rubygem-hamlit-rails
     SUBDIR += rubygem-hamlit-rails-rails5
     SUBDIR += rubygem-hamlit-rails-rails50
-    SUBDIR += rubygem-hamlit26
     SUBDIR += rubygem-hashicorp-checkpoint
     SUBDIR += rubygem-heroku
     SUBDIR += rubygem-heroku-api

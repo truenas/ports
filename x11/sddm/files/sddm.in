@@ -18,6 +18,7 @@ load_rc_config ${name}
 
 : ${sddm_enable="NO"}
 : ${sddm_lang="en_US"} # .UTF-8 suffix will be added later to comply with locale format
+: ${sddm_enable="NO"}
 
 command="%%PREFIX%%/bin/sddm"
 start_cmd="sddm_start"

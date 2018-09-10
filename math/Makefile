@@ -312,6 +312,7 @@
     SUBDIR += libmissing
     SUBDIR += libocas
     SUBDIR += liborigin
+    SUBDIR += libpgmath
     SUBDIR += libpoly
     SUBDIR += libqalculate
     SUBDIR += libranlip
@@ -792,6 +793,7 @@
     SUBDIR += simd-viterbi
     SUBDIR += singular
     SUBDIR += slatec
+    SUBDIR += sleef
     SUBDIR += slepc
     SUBDIR += slgrace
     SUBDIR += snns

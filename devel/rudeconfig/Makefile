@@ -10,7 +10,8 @@ MASTER_SITES=	http://www.rudeserver.com/config/download/
 MAINTAINER=	lowmaster@web.de
 COMMENT=	Library for handling configuration files, written in C++
 
-USES=		libtool
+USES=		dos2unix libtool
+DOS2UNIX_GLOB=	*
 GNU_CONFIGURE=	yes
 USE_LDCONFIG=	yes
 
