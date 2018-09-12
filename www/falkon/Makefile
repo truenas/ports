@@ -2,7 +2,7 @@
 
 PORTNAME=	falkon
 DISTVERSION=	3.0.0
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	www
 MASTER_SITES=	KDE/stable/falkon/${DISTVERSION:R}/src/
 
@@ -12,10 +12,11 @@ COMMENT=	Web browser based on WebKit engine and Qt Framework
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-USES=		cmake:outsource desktop-file-utils qt:5 ssl tar:xz
+USES=		cmake:outsource desktop-file-utils qt:5 ssl tar:xz kde:5
 USE_QT=		core dbus gui location network printsupport qml quick \
 		sql webchannel webengine widgets x11extras \
 		buildtools_build qmake_build
+USE_KDE=	ecm_build
 USE_XORG=	xcb
 
 USE_LDCONFIG=	yes
@@ -23,8 +24,7 @@ USE_LDCONFIG=	yes
 OPTIONS_DEFINE=	GNOMEKEYRING KWALLET
 OPTIONS_SUB=	YES
 
-KWALLET_USES=			kde:5
-KWALLET_USE=			KDE=wallet
+KWALLET_USE=			KDE+=wallet
 
 GNOMEKEYRING_CMAKE_BOOL=	BUILD_KEYRING
 GNOMEKEYRING_USE=		GNOME=glib20
