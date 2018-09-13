@@ -40,6 +40,12 @@ post-install-DOCS-on:
 
 post-install-EXAMPLES-on:
 	@${MKDIR} ${STAGEDIR}${EXAMPLESDIR}
+
+post-install:
+	${MKDIR} ${STAGEDIR}${DOCSDIR}
+	(cd ${WRKSRC}/docs/source/docs && \
+	    ${COPYTREE_SHARE} . ${STAGEDIR}${DOCSDIR})
+	${MKDIR} ${STAGEDIR}${EXAMPLESDIR}
 	(cd ${WRKSRC}/examples && ${COPYTREE_SHARE} . ${STAGEDIR}${EXAMPLESDIR})
 
 .include <bsd.port.mk>
