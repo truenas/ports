@@ -6,7 +6,7 @@ lib/libFalkonPrivate.so.3.0.0
 %%GNOMEKEYRING%%%%QT_PLUGINDIR%%/falkon/GnomeKeyringPasswords.so
 %%QT_PLUGINDIR%%/falkon/GreaseMonkey.so
 %%QT_PLUGINDIR%%/falkon/ImageFinder.so
-%%QT_PLUGINDIR%%/falkon/KWalletPasswords.so
+%%KWALLET%%%%QT_PLUGINDIR%%/falkon/KWalletPasswords.so
 %%QT_PLUGINDIR%%/falkon/MouseGestures.so
 %%QT_PLUGINDIR%%/falkon/PIM.so
 %%QT_PLUGINDIR%%/falkon/StatusBarIcons.so

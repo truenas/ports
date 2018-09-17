@@ -2,7 +2,7 @@
 
 PORTNAME=	falkon
 DISTVERSION=	3.0.0
-PORTREVISION=	4
+PORTREVISION=	5
 CATEGORIES=	www
 MASTER_SITES=	KDE/stable/falkon/${DISTVERSION:R}/src/
 
@@ -14,7 +14,7 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 
 USES=		cmake:outsource desktop-file-utils qt:5 ssl tar:xz kde:5
 USE_QT=		core dbus gui location network printsupport qml quick \
-		sql webchannel webengine widgets x11extras \
+		sql webchannel webengine widgets x11extras linguist_build \
 		buildtools_build qmake_build
 USE_KDE=	ecm_build
 USE_XORG=	xcb
