@@ -1,5 +1,7 @@
 bin/ixautomation
+etc/dnsmasq.conf
 etc/init.d/ixautomation
+etc/init.d/ixautomation-nat
 %%ETCDIR%%.conf.dist
 etc/rc.d/ixautomation
 etc/sudoers.d/ixautomation

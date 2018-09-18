@@ -2,8 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	ixautomation
-PORTVERSION=	18.07
-PORTREVISION=	1
+PORTVERSION=	18.09
+PORTREVISION=	0
 CATEGORIES=	sysutils
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
@@ -22,7 +22,8 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pip>0:devel/py-pip@${PY_FLAVOR} \
 		ix-bhyve>=0:sysutils/ix-bhyve \
 		${LOCALBASE}/bin/expect:lang/expect \
 		${LOCALBASE}/bin/sshpass:security/sshpass \
-		bhyve-firmware>=0:sysutils/bhyve-firmware
+		bhyve-firmware>=0:sysutils/bhyve-firmware \
+		dnsmasq>=0:dns/dnsmasq
 
 WRKSRC_SUBDIR=  src
 USES=		python:3.6
@@ -32,6 +33,6 @@ MAKE_ARGS=	PREFIX=${STAGEDIR}${PREFIX}
 USE_GITHUB=	yes
 GH_ACCOUNT=	ixsystems
 GH_PROJECT=	ixautomation
-GH_TAGNAME=	67ae936c1a223a1a8c40fac4b35b660c1ade2c15
+GH_TAGNAME=	636a14aec8d39ae5376508366246009e0bf63554
 
 .include <bsd.port.mk>
