@@ -4581,13 +4581,13 @@ add-plist-post:
 .if !target(install-rc-script)
 .if defined(USE_RC_SUBR)
 install-rc-script:
-	@${ECHO_MSG} "===> Skipping rc.d startup script(s)"
-#	@for i in ${USE_RC_SUBR}; do \
-#		_prefix=${PREFIX}; \
-#		[ "${PREFIX}" = "/usr" ] && _prefix="" ; \
-#		${INSTALL_SCRIPT} ${WRKDIR}/$${i} ${STAGEDIR}$${_prefix}/etc/rc.d/$${i%.sh}; \
-#		${ECHO_CMD} "$${_prefix}/etc/rc.d/$${i%.sh}" >> ${TMPPLIST}; \
-#	done
+	@${ECHO_MSG} "===> Staging rc.d startup script(s)"
+	@for i in ${USE_RC_SUBR}; do \
+		_prefix=${PREFIX}; \
+		[ "${PREFIX}" = "/usr" ] && _prefix="" ; \
+		${INSTALL_SCRIPT} ${WRKDIR}/$${i} ${STAGEDIR}$${_prefix}/etc/rc.d/$${i%.sh}; \
+		${ECHO_CMD} "$${_prefix}/etc/rc.d/$${i%.sh}" >> ${TMPPLIST}; \
+	done
 .endif
 .endif
 
