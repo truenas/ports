@@ -3,6 +3,7 @@
 PORTNAME=	openal-soft
 PORTVERSION=	1.19.0
 CATEGORIES=	audio
+MASTER_SITES=	http://kcat.strangesoft.net/openal-releases/
 
 MAINTAINER=	tobik@FreeBSD.org
 COMMENT=	Software implementation of the OpenAL specification
@@ -54,11 +55,6 @@ SDL_USE=		SDL=sdl2
 SNDIO_CMAKE_BOOL=	ALSOFT_REQUIRE_SNDIO ALSOFT_BACKEND_SNDIO
 SNDIO_IMPLIES=		OSS # provide fallback for missing sndio capture support
 SNDIO_LIB_DEPENDS=	libsndio.so:audio/sndio
-
-USE_GITHUB=	yes
-GH_ACCOUNT=	kcat
-GH_PROJECT=	openal-soft
-GH_TAGNAME=	ce6076091bac3c00cd10803916e8911495580bd0
 
 post-patch:
 	@${REINPLACE_CMD} 's|/etc/openal|${ETCDIR}|' \
