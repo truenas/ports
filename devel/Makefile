@@ -4209,6 +4209,7 @@
     SUBDIR += py-behave
     SUBDIR += py-beniget
     SUBDIR += py-bidict
+    SUBDIR += py-bhyve
     SUBDIR += py-billiard
     SUBDIR += py-binaryornot
     SUBDIR += py-biplist
