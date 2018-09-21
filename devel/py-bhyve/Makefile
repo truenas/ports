@@ -5,7 +5,7 @@ PORTNAME=	bhyve
 PORTVERSION=	20180905
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-CATEGORIES=	devel	python
+CATEGORIES=	devel python
 
 MAINTAINER=	dev@ixsystems.com
 COMMENT=	Python libvmmapi bindings
