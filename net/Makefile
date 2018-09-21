@@ -328,6 +328,7 @@
     SUBDIR += kea
     SUBDIR += kf5-kholidays
     SUBDIR += kf5-kxmlrpcclient
+    SUBDIR += kf5-syndication
     SUBDIR += kget
     SUBDIR += kget-kde4
     SUBDIR += kidentitymanagement
@@ -1074,6 +1075,7 @@
     SUBDIR += py-matrix-synapse-ldap3
     SUBDIR += py-maxminddb
     SUBDIR += py-miniupnpc
+    SUBDIR += py-mpi4py
     SUBDIR += py-msrplib
     SUBDIR += py-ndg_httpsclient
     SUBDIR += py-netaddr
@@ -1422,7 +1424,6 @@
     SUBDIR += sup
     SUBDIR += svnup
     SUBDIR += syncthing
-    SUBDIR += syndication
     SUBDIR += tableutil
     SUBDIR += tac_plus4
     SUBDIR += tapidbus

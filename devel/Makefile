@@ -1856,6 +1856,7 @@
     SUBDIR += ocaml-lacaml
     SUBDIR += ocaml-lwt
     SUBDIR += ocaml-magic
+    SUBDIR += ocaml-ocamlbuild
     SUBDIR += ocaml-opam
     SUBDIR += ocaml-ounit
     SUBDIR += ocaml-parmap
@@ -4459,6 +4460,7 @@
     SUBDIR += py-construct
     SUBDIR += py-construct28
     SUBDIR += py-contextlib2
+    SUBDIR += py-cookiecutter
     SUBDIR += py-coreapi
     SUBDIR += py-coreschema
     SUBDIR += py-country
@@ -4588,6 +4590,7 @@
     SUBDIR += py-geotypes
     SUBDIR += py-gevent
     SUBDIR += py-git-up
+    SUBDIR += py-git-url-parse
     SUBDIR += py-git_semver
     SUBDIR += py-gitdb2
     SUBDIR += py-gitless
@@ -4654,6 +4657,7 @@
     SUBDIR += py-jellyfish
     SUBDIR += py-jenkins-job-builder
     SUBDIR += py-jep
+    SUBDIR += py-jinja2-time
     SUBDIR += py-jira
     SUBDIR += py-jmespath
     SUBDIR += py-joblib
@@ -4850,6 +4854,7 @@
     SUBDIR += py-pooch
     SUBDIR += py-positional
     SUBDIR += py-posix_ipc
+    SUBDIR += py-poyo
     SUBDIR += py-pp
     SUBDIR += py-pqueue
     SUBDIR += py-pretend
@@ -4875,7 +4880,9 @@
     SUBDIR += py-pycapsicum
     SUBDIR += py-pycerberus
     SUBDIR += py-pycmd
+    SUBDIR += py-pycodeexport
     SUBDIR += py-pycodestyle
+    SUBDIR += py-pycompilation
     SUBDIR += py-pycparser
     SUBDIR += py-pydenticon
     SUBDIR += py-pydevd
@@ -4934,6 +4941,7 @@
     SUBDIR += py-pytest-django
     SUBDIR += py-pytest-flake8
     SUBDIR += py-pytest-flakes
+    SUBDIR += py-pytest-helpers-namespace
     SUBDIR += py-pytest-localserver
     SUBDIR += py-pytest-mock
     SUBDIR += py-pytest-pycodestyle
@@ -4949,6 +4957,7 @@
     SUBDIR += py-python-editor
     SUBDIR += py-python-engineio
     SUBDIR += py-python-gflags
+    SUBDIR += py-python-gilt
     SUBDIR += py-python-gist
     SUBDIR += py-python-gitlab
     SUBDIR += py-python-jenkins
@@ -5045,6 +5054,7 @@
     SUBDIR += py-scripttest
     SUBDIR += py-sdl2
     SUBDIR += py-selection
+    SUBDIR += py-selectors2
     SUBDIR += py-selectors34
     SUBDIR += py-semantic_version
     SUBDIR += py-serpent
@@ -5131,6 +5141,7 @@
     SUBDIR += py-traitlets
     SUBDIR += py-traits
     SUBDIR += py-transaction
+    SUBDIR += py-tree-format
     SUBDIR += py-trollius
     SUBDIR += py-ttystatus
     SUBDIR += py-tvrage
@@ -5181,6 +5192,7 @@
     SUBDIR += py-weblib
     SUBDIR += py-websockify
     SUBDIR += py-wheel
+    SUBDIR += py-whichcraft
     SUBDIR += py-whistle
     SUBDIR += py-widgetsnbextension
     SUBDIR += py-wrapt
@@ -6329,6 +6341,7 @@
     SUBDIR += xtoolchain-llvm40
     SUBDIR += xtoolchain-llvm50
     SUBDIR += xtoolchain-llvm60
+    SUBDIR += xtoolchain-llvm70
     SUBDIR += xwpe
     SUBDIR += xxgdb
     SUBDIR += xxhash
