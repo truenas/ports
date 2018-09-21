@@ -4228,6 +4228,7 @@
     SUBDIR += py-bandit
     SUBDIR += py-bcdoc
     SUBDIR += py-bidict
+    SUBDIR += py-bhyve
     SUBDIR += py-billiard
     SUBDIR += py-binaryornot
     SUBDIR += py-biplist
