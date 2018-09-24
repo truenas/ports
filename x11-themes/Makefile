@@ -34,6 +34,8 @@
     SUBDIR += e16-themes
     SUBDIR += emerald-themes
     SUBDIR += fluxbox-tenr-styles-pack
+    SUBDIR += freebsd-8k-wallpapers
+    SUBDIR += freebsd-8k-wallpapers-kde
     SUBDIR += fvwm-themes
     SUBDIR += ghostbsd-icons
     SUBDIR += ghostbsd-mate-themes
