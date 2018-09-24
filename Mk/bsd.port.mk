@@ -1841,7 +1841,10 @@ PKG_DEPENDS+=	${LOCALBASE}/sbin/pkg:${PKG_ORIGIN}
 .include "${PORTSDIR}/Mk/bsd.gcc.mk"
 .endif
 
-.if defined(LLD_UNSAFE) && ${/usr/bin/ld:L:tA} == /usr/bin/ld.lld
+# KPM 9/24/2018 - When using clang from ports this sym-link check will
+# not function properly
+#.if defined(LLD_UNSAFE) && ${/usr/bin/ld:L:tA} == /usr/bin/ld.lld
+.if defined(LLD_UNSAFE)
 LDFLAGS+=	-fuse-ld=bfd
 BINARY_ALIAS+=	ld=${LD}
 .  if !defined(USE_BINUTILS)
