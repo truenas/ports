@@ -2,7 +2,7 @@
 
 PORTNAME=		ldb
 PORTVERSION=		1.1.29
-PORTREVISION=		2
+PORTREVISION=		1
 PORTEPOCH=		0
 CATEGORIES=		databases
 MASTER_SITES=		SAMBA
@@ -79,7 +79,7 @@ PLIST_FILES=		include/ldb_version.h \
 			include/ldb_module.h \
 			${LDB_BINS} \
 			${LDB_LIBS} \
-			${PKGCONFIGDIR}/ldb.pc
+			%%PKGCONFIGDIR%%/ldb.pc
 
 .if defined(NO_PYTHON)
 USES+=			python:2.7,build
@@ -90,9 +90,9 @@ USES+=			python:2.7
 PLIST_FILES+=		include/pyldb.h \
 			lib/libpyldb-util.so \
 			lib/libpyldb-util.so.1 \
-			${PYTHON_SITELIBDIR}/ldb.so \
-			${PYTHON_SITELIBDIR}/_ldb_text.py \
-			${PKGCONFIGDIR}/pyldb-util.pc
+			%%PYTHON_SITELIBDIR%%/ldb.so \
+			%%PYTHON_SITELIBDIR%%/_ldb_text.py \
+			%%PKGCONFIGDIR%%/pyldb-util.pc
 .endif
 
 .include <bsd.port.pre.mk>
@@ -152,7 +152,7 @@ post-install:
 			lib/libpyldb-util.so \
 			lib/libpyldb-util.so.1 \
 			lib/ldb/libpytalloc-util.so.2
-				${RM} ${STAGEDIR}${PREFIX}/${f}
+				${RM} ${STAGEDIR}${PREFIX}/${file}
 .endfor
 .for f in		${PYTHON_SITELIBDIR}/ldb.so \
 			${PYTHON_SITELIBDIR}/_ldb_text.py \
@@ -162,7 +162,7 @@ post-install:
 			${PYTHON_SITELIBDIR}/tdb.so \
 			${PYTHON_SITELIBDIR}/tevent.py \
 			${PKGCONFIGDIR}/pyldb-util.pc
-				${RM} ${STAGEDIR}/${f}
+				${RM} ${STAGEDIR}/${file}
 .endfor
 			${RMDIR} ${STAGEDIR}${PYTHON_SITELIBDIR}
 			${RMDIR} ${STAGEDIR}${PYTHON_LIBDIR}

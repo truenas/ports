@@ -4393,6 +4393,7 @@
     SUBDIR += py-bluelet
     SUBDIR += py-boolean.py
     SUBDIR += py-boto
+    SUBDIR += py-boto3
     SUBDIR += py-botocore
     SUBDIR += py-bsd
     SUBDIR += py-buildbot
@@ -4758,6 +4759,7 @@
     SUBDIR += py-nbconvert
     SUBDIR += py-nbformat
     SUBDIR += py-ncurses
+    SUBDIR += py-netsnmpagent
     SUBDIR += py-nose
     SUBDIR += py-nose-cov
     SUBDIR += py-nose2
