@@ -119,7 +119,7 @@ IGNORE=	qemu-user-static isn't able to build lang/ghc, but it builds fine on a r
 
 # Turn off for a while, see PR 228727
 CONFIGURE_ARGS+=	--enable-dtrace=0
-.if ${OSVERSION} < 1200000
+.if ${OSVERSION} < 1300000
 USE_GCC=	yes
 .else
 LD=		ld.bfd
