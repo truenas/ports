@@ -13,7 +13,6 @@ COMMENT=	Award cloud backup and restore server application
 ONLY_FOR_ARCHS=	amd64
 
 RUN_DEPENDS=	ca_root_nss>0:security/ca_root_nss \
-		gettext-runtime>0:devel/gettext-runtime \
 		icu>0:devel/icu \
 		indexinfo>0:print/indexinfo \
 		libxml2>0:textproc/libxml2 \
@@ -27,7 +26,7 @@ RUN_DEPENDS=	ca_root_nss>0:security/ca_root_nss \
 DISTFILE=	dssystem-14.0.0.1.txz
 
 NO_BUILD=	yes
-USES=		zip perl5
+USES=		gettext-runtime zip perl5
 
 USE_RC_SUBR=	dssystem
 
