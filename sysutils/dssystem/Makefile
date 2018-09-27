@@ -34,5 +34,9 @@ USE_RC_SUBR=	dssystem
 do-install:
 	${CP} ${FILESDIR}/dssystem_install.ini ${STAGEDIR}
 	cd ${STAGEDIR} && pkg -r ${STAGEDIR} add -f ${WRKSRC}/${DISTFILE}
+	(cd ${STAGEDIR}${PREFIX}/ds-system; ${FIND} . \( -type f -o -type l \) \
+		| ${SED} -e 's,^\./,,g' \
+		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
+		| ${AWK} '{print "ds-system/"$$2 }' >> ${TMPPLIST})
 
 .include <bsd.port.mk>
