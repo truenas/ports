@@ -2,12 +2,14 @@
 
 PORTNAME=	potnet
 DISTVERSION=	0.1.1
+PORTREVISION=	1
 CATEGORIES=	sysutils
 
 MAINTAINER=	pizzamig@FreeBSD.org
 COMMENT=	Utility to help sysutils/pot to manage the internal network
 
 LICENSE=	BSD3CLAUSE
+LICENSE_FILE=	${WRKSRC}/LICENSE
 
 USES=	cargo
 
