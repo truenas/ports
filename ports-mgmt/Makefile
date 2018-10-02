@@ -67,6 +67,7 @@
     SUBDIR += portupgrade-devel
     SUBDIR += poudriere
     SUBDIR += poudriere-devel
+    SUBDIR += poudriere-trueos
     SUBDIR += psearch
     SUBDIR += py-pytoport
     SUBDIR += py-skog
