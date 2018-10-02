@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	lftp
-PORTVERSION=	4.8.3
+PORTVERSION=	4.8.4
 CATEGORIES=	ftp ipv6
 MASTER_SITES=	http://lftp.tech/ftp/ \
 		http://lftp.tech/ftp/old/ \
@@ -55,6 +55,20 @@ post-install-DOCS-on:
 	${INSTALL_DATA} ${PORTDOCS:S|^|${WRKSRC}/|} ${STAGEDIR}${DOCSDIR}
 
 .include <bsd.port.pre.mk>
+
+# Only link to libthr if necessary
+.if ${PORT_OPTIONS:MGNUTLS}
+NEED_PTHREAD=	yes
+.else
+.if exists(${OPENSSLLIB}/libssl.so)
+NEED_PTHREAD!=	ldd ${OPENSSLLIB}/libssl.so | ${GREP} -w 'libthr\.so' || ${ECHO_CMD}
+.else
+NEED_PTHREAD=	# empty
+.endif
+.endif
+.if !empty(NEED_PTHREAD)
+LDFLAGS+=	-pthread
+.endif
 
 .if ${ARCH} == powerpc64
 USE_GCC=	yes

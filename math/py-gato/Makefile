@@ -15,12 +15,14 @@ COMMENT=	Python-based toolbox to visualise algorithms on graphs
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/LGPL.txt
 
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}tkinter>0:x11-toolkits/py-tkinter@${FLAVOR}
+RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}tkinter>0:x11-toolkits/py-tkinter@${PY_FLAVOR}
 
 NO_ARCH=	yes
 PORTEXAMPLES=	*
 USES=		python:2.7
 USE_PYTHON=	autoplist distutils
+
+OPTIONS_DEFINE=	EXAMPLES
 
 post-install:
 	@${MKDIR} ${STAGEDIR}${EXAMPLESDIR}

@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	unit
-PORTVERSION=	0.6
+PORTVERSION=	1.3
+PORTREVISION=	1
 CATEGORIES=	www
 MASTER_SITES=	https://unit.nginx.org/download/
 
@@ -11,6 +12,8 @@ COMMENT?=	Dynamic web application server
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
+
+BROKEN_powerpc64=	fails to build: nxt_conf_validation.c:275: undefined reference to __builtin_popcount
 
 USES+=		cpe
 
@@ -21,10 +24,9 @@ OPTIONS_DEFINE?=	\
 	DEBUG \
 	IPV6 \
 	UNIXSOCK
-OPTIONS_DEFAULT?=IPV6 UNIXSOCK
+OPTIONS_DEFAULT?=UNIXSOCK
 
 DEBUG_DESC=	Enable debug logging
-IPV6_DESC=	Enable IPv6
 UNIXSOCK_DESC=	Enable unix sockets
 
 .include <bsd.port.options.mk>

@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	openclonk
-DISTVERSION=	8.0
+DISTVERSION=	8.1
 DISTVERSIONSUFFIX=	-src
 CATEGORIES=	games
 MASTER_SITES=	http://www.openclonk.org/builds/release/${DISTVERSION}/
@@ -33,6 +33,7 @@ USE_SDL=	sdl2
 USE_XORG=	x11 xpm
 INSTALLS_ICONS=	yes
 CMAKE_ARGS=	-DAudio_TK:STRING="OpenAL"
+LLD_UNSAFE=	yes
 
 post-patch:
 	@${REINPLACE_CMD} -e 's|DESTINATION games|DESTINATION bin|' \

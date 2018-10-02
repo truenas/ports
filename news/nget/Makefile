@@ -4,7 +4,7 @@
 PORTNAME=	nget
 PORTVERSION=	0.27.1
 DISTVERSIONSUFFIX=	+uulib
-PORTREVISION=	4
+PORTREVISION=	5
 CATEGORIES=	news
 MASTER_SITES=	SF
 
@@ -14,7 +14,8 @@ COMMENT=	Auto-resuming command line nntp file grabber
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-USES=		gmake
+USES=		compiler:c++11-lang gmake
+USE_CXXSTD=	c++98
 GNU_CONFIGURE=	yes
 
 # Skip check if the C++ compiler supports exceptions.  We know both

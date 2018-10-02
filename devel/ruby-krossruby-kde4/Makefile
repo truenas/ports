@@ -10,9 +10,12 @@ DISTNAME=	kross-interpreters-${PORTVERSION}
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	Ruby bindings for Qt/KDE
 
-USES=		cmake:outsource kde:4 tar:xz
+DEPRECATED=	KDE4 is EOL upstream
+EXPIRATION_DATE=	2018-12-31
+
+USES=		cmake:outsource kde:4 qt:4 tar:xz
 USE_KDE=	kdelibs pimlibs automoc4
-USE_QT4=	corelib gui qmake_build moc_build uic_build rcc_build
+USE_QT=		corelib gui qmake_build moc_build uic_build rcc_build
 USE_RUBY=	yes
 CMAKE_ARGS+=	-DBUILD_python:BOOL=FALSE \
 		-DBUILD_falcon:BOOL=FALSE \

@@ -1,9 +1,9 @@
 # $FreeBSD$
 
 PORTNAME=	puppetdb
-PORTVERSION=	5.2.1
+PORTVERSION=	5.2.4
 CATEGORIES=	databases java
-MASTER_SITES=	http://downloads.puppetlabs.com/puppetdb/
+MASTER_SITES=	https://downloads.puppetlabs.com/puppetdb/
 PKGNAMESUFFIX=	5
 
 MAINTAINER=	puppet@FreeBSD.org
@@ -37,8 +37,6 @@ GROUPS=		puppetdb
 
 SUB_LIST=	JAVA_HOME=${JAVA_HOME}
 SUB_FILES=	pkg-message
-
-PKGMESSAGE=	${WRKDIR}/pkg-message
 
 post-patch:
 .for file in Makefile ext/bin/puppetdb ext/cli/ssl-setup \

@@ -11,6 +11,8 @@ PKGNAMEPREFIX=	linux-
 MAINTAINER=	lapo@lapo.it
 COMMENT=	Fast, secure, simple VPN software with NAT-traversal
 
+BROKEN=		fails to patch with upx 3.94
+
 PATCH_DEPENDS=	upx:archivers/upx
 
 ONLY_FOR_ARCHS=	i386 amd64
@@ -20,6 +22,8 @@ USE_RC_SUBR=	hamachi
 PLIST_FILES=	bin/hamachi bin/hamachi-init sbin/hamachi-tuncfg
 PORTDOCS=	README CHANGES
 MAKE_ENV=	HAMACHI_DST=${STAGEDIR}${PREFIX}/bin TUNCFG_DST=${STAGEDIR}${PREFIX}/sbin
+
+OPTIONS_DEFINE=	DOCS
 
 post-patch:
 	${RM} ${WRKSRC}/tuncfg/tuncfg

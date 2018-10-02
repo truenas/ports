@@ -63,6 +63,7 @@
     SUBDIR += gtksourceview2-reference
     SUBDIR += gtksourceview3
     SUBDIR += gtksourceview3-reference
+    SUBDIR += gtksourceview4
     SUBDIR += gtksourceviewmm3
     SUBDIR += hippo-canvas
     SUBDIR += hs-GLURaw
@@ -159,6 +160,7 @@
     SUBDIR += p5-Gtk2-TrayIcon
     SUBDIR += p5-Gtk2-Unique
     SUBDIR += p5-Gtk3
+    SUBDIR += p5-Gtk3-SimpleList
     SUBDIR += p5-Pango
     SUBDIR += p5-Prima
     SUBDIR += p5-Tk
@@ -186,6 +188,7 @@
     SUBDIR += p5-Tk-ToolBar
     SUBDIR += p5-Tk-WaitBox
     SUBDIR += p5-Wx
+    SUBDIR += p5-Wx-GLCanvas
     SUBDIR += p5-Wx-Perl-ProcessStream
     SUBDIR += pango
     SUBDIR += pango-reference
@@ -193,9 +196,11 @@
     SUBDIR += pangox-compat
     SUBDIR += pangoxsl
     SUBDIR += phat
+    SUBDIR += plasma5-kdeplasma-addons
     SUBDIR += plib
     SUBDIR += pure-gtk
     SUBDIR += pure-tk
+    SUBDIR += py-AnyQt
     SUBDIR += py-Pmw
     SUBDIR += py-SquareMap
     SUBDIR += py-fltk
@@ -209,6 +214,7 @@
     SUBDIR += py-qt4-gui
     SUBDIR += py-qt5-gui
     SUBDIR += py-qt5-quick
+    SUBDIR += py-qt5-quickwidgets
     SUBDIR += py-qt5-widgets
     SUBDIR += py-sexy
     SUBDIR += py-tkinter
@@ -221,6 +227,7 @@
     SUBDIR += py-wxPython30
     SUBDIR += py-xlib
     SUBDIR += pypy-tkinter
+    SUBDIR += qml-box2d
     SUBDIR += qt4-declarative
     SUBDIR += qt4-gui
     SUBDIR += qt4pas
@@ -242,7 +249,6 @@
     SUBDIR += qwt5
     SUBDIR += qwt5-designerplugin
     SUBDIR += qwt6
-    SUBDIR += qwt6-designerplugin
     SUBDIR += rep-gtk2
     SUBDIR += rubygem-gdk3
     SUBDIR += rubygem-gtk2
@@ -289,6 +295,7 @@
     SUBDIR += wxgtk28-contrib
     SUBDIR += wxgtk28-contrib-common
     SUBDIR += wxgtk30
+    SUBDIR += wxgtk31
     SUBDIR += xbae
     SUBDIR += xforms
     SUBDIR += xmhtml

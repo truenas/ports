@@ -2,11 +2,11 @@
 # $FreeBSD$
 
 PORTNAME=	serendipity
-PORTVERSION=	2.1.1
+PORTVERSION=	2.1.3
 CATEGORIES=	www
 MASTER_SITES=	SF/php-blog/${PORTNAME}/${PORTVERSION}
 
-MAINTAINER=	tz@FreeBSD.org
+MAINTAINER=	joneum@FreeBSD.org
 COMMENT=	PHP based weblog software
 
 LICENSE=	BSD3CLAUSE

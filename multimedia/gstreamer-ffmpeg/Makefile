@@ -4,7 +4,7 @@
 
 PORTNAME=	gstreamer
 PORTVERSION=	0.10.13
-PORTREVISION=	4
+PORTREVISION=	5
 CATEGORIES=	multimedia
 MASTER_SITES=	http://gstreamer.freedesktop.org/src/gst-ffmpeg/:ffmpeg \
 		http://libav.org/releases/:libav
@@ -15,9 +15,6 @@ MAINTAINER=	multimedia@FreeBSD.org
 COMMENT=	GStreamer plug-in for manipulating MPEG video streams
 
 LICENSE=	GPLv2
-
-NOT_FOR_ARCHS=		aarch64
-NOT_FOR_ARCHS_REASON=	invokes x86 asm
 
 LIB_DEPENDS=	liborc-0.4.so:devel/orc
 

@@ -13,9 +13,12 @@ LICENSE_COMB=	multi
 LICENSE_FILE_GFDL=	${WRKSRC}/COPYING.DOC
 LICENSE_FILE_GPLv2=	${WRKSRC}/COPYING
 
-USES=		cmake:outsource ncurses kde:4 readline tar:xz
+DEPRECATED=	KDE4 is EOL upstream
+EXPIRATION_DATE=	2018-12-31
+
+USES=		cmake:outsource ncurses kde:4 qt:4 readline tar:xz
 USE_KDE=	kdelibs automoc4
-USE_QT4=	corelib dbus gui opengl svg xml \
+USE_QT=		corelib dbus gui opengl svg xml \
 		moc_build qmake_build rcc_build uic_build
 USE_GL=		glu
 USE_LDCONFIG=	yes

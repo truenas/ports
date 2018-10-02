@@ -35,6 +35,8 @@ SHEBANG_FILES=	cvsweb.cgi
 NO_BUILD=	yes
 NO_ARCH=	yes
 
+OPTIONS_DEFINE=	DOCS EXAMPLES
+
 .include <bsd.port.pre.mk>
 
 # Specify where your repository belongs.
@@ -51,8 +53,6 @@ TITLE?=		My CVS Repository
 DIRPREFIX=	www
 .elif exists(${PREFIX}/www/apache24/cgi-bin)
 DIRPREFIX=	www/apache24
-.elif exists(${PREFIX}/www/apache22/cgi-bin)
-DIRPREFIX=	www/apache22
 .elif exists(${PREFIX}/apache/cgi-bin)
 DIRPREFIX=	apache
 .else

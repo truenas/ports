@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# $FreeBSD: head/sysutils/consul/files/consul.in 425857 2016-11-11 01:01:38Z swills $
+# $FreeBSD$
 #
 # PROVIDE: consul
 # REQUIRE: LOGIN
@@ -16,9 +16,7 @@
 # consul_group (group):      Set group to run consul.
 #                               Default is "consul".
 # consul_dir (dir):          Set dir to run consul in.
-#                               Default is "/var/tmp/consul".
-# consul_env (dir):          Set environment variables used with consul
-#                               Default is "".
+#                               Default is "/var/db/consul".
 
 . /etc/rc.subr
 
@@ -31,24 +29,20 @@ load_rc_config $name
 : ${consul_enable:="NO"}
 : ${consul_user:="consul"}
 : ${consul_group:="consul"}
-: ${consul_dir:="/var/tmp/consul"}
-: ${consul_env:=""}
+: ${consul_dir:="/var/db/consul"}
 
 pidfile=/var/run/consul.pid
 procname="%%PREFIX%%/bin/consul"
 command="/usr/sbin/daemon"
-command_args="-S -T consul -p ${pidfile} /usr/bin/env ${consul_env} ${procname} agent -data-dir=${consul_dir} -config-dir=%%PREFIX%%/etc/consul.d ${consul_args}"
+command_args="-f -p ${pidfile} /usr/bin/env ${consul_env} ${procname} agent -data-dir=${consul_dir} -config-dir=%%PREFIX%%/etc/consul.d ${consul_args}"
 
 start_precmd=consul_startprecmd
-restart_precmd=consul_checkconfig
-reload_precmd=consul_checkconfig
-configtest_cmd=consul_checkconfig
 
 consul_startprecmd()
 {
-	if [ ! -e ${pidfile} ]; then
-		install -o ${consul_user} -g ${consul_group} /dev/null ${pidfile};
-	fi
+        if [ ! -e ${pidfile} ]; then
+                install -o ${consul_user} -g ${consul_group} /dev/null ${pidfile};
+        fi
 
         if [ ! -d ${consul_dir} ]; then
                 install -d -o ${consul_user} -g ${consul_group} ${consul_dir}

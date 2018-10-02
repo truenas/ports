@@ -19,6 +19,7 @@ LIBS+=		-L${LOCALBASE}/lib
 USES=		autoreconf gmake gettext pkgconfig
 USE_GNOME=	gtk30 intltool cairo gdkpixbuf2
 USE_XORG=	x11
+USE_CSTD=	gnu99
 USE_GITHUB=	yes
 GH_ACCOUNT=	Maato
 

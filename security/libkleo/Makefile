@@ -15,19 +15,23 @@ LIB_DEPENDS=	libassuan.so:security/libassuan \
 RUN_DEPENDS=	${LOCALBASE}/bin/gmd5sum:sysutils/coreutils
 
 
-USES=		cmake:outsource gettext kde:5 tar:xz
+USES=		cmake:outsource gettext kde:5 qt:5 tar:xz
 USE_KDE=	codecs completion config coreaddons i18n itemmodels \
 		widgetsaddons windowsystem \
 		pimtextedit
-USE_QT5=	core gui widgets \
+USE_QT=		core gui widgets \
 		buildtools_build qmake_build
+
+_CORETOOLS=	md5sum sha1sum sha256sum sha512sum
+
+OPTIONS_DEFINE=	DOCS
 
 post-extract:
 # use the binaries of coreutils
-	${REINPLACE_CMD} -e '/create-command/ s#sha1sum#gsha1sum#' \
-			 -e '/create-command/ s#md5sum#gmd5sum#' \
-			 -e '/verify-command/ s#sha1sum#gsha1sum#' \
-			 -e '/verify-command/ s#md5sum#gmd5sum#' \
-		${PATCH_WRKSRC}/src/libkleopatrarc.desktop
+.  for ct in ${_CORETOOLS}
+	${REINPLACE_CMD} -e '/create-command/ s#${ct}#g${ct}#' \
+			 -e '/verify-command/ s#${ct}#g${ct}#' \
+			 ${PATCH_WRKSRC}/src/libkleopatrarc.desktop
+.  endfor
 
 .include <bsd.port.mk>

@@ -1,11 +1,14 @@
 # $FreeBSD$
 
 PORTNAME=	polyphone
-DISTVERSION=	1.8
+DISTVERSION=	1.9
 DISTVERSIONSUFFIX=	-src
 PORTREVISION=	1
 CATEGORIES=	audio
 MASTER_SITES=	http://polyphone-soundfonts.com/en/download/file/76-polyphone-1-8-src-zip/latest/download?ae95d968569b61bc77f7b8559a14db4d=1/
+
+PATCH_SITES=	https://github.com/davy7125/polyphone/commit/
+PATCHFILES=	7d3e26b46cb5.patch:-p2
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Graphical user interface for editing soundfont (sf2 and sfz) files
@@ -19,9 +22,9 @@ LIB_DEPENDS=	libjack.so:audio/jack \
 		libstk-4.6.0.so:audio/stk \
 		libvorbisfile.so:audio/libvorbis
 
-USES=		compiler:c++11-lang desktop-file-utils pkgconfig qmake:outsource shared-mime-info zip
+USES=		compiler:c++11-lang desktop-file-utils pkgconfig qmake:outsource qt:5 shared-mime-info zip
 USE_GL=		gl
-USE_QT5=	core concurrent gui network printsupport svg widgets buildtools_build qmake_build
+USE_QT=		core concurrent gui network printsupport svg widgets buildtools_build qmake_build
 USE_CXXSTD=	c++11
 QMAKE_ARGS=	DEFINES=USE_LOCAL_QCUSTOMPLOT
 CXXFLAGS+=	-D__UNIX_JACK__

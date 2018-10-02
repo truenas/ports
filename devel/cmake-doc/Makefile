@@ -1,8 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	cmake
-DISTVERSION=	3.10.2
-PORTREVISION=	1
+DISTVERSION=	3.12.1
 CATEGORIES=	devel
 MASTER_SITES=	https://www.cmake.org/files/v${PORTVERSION:R}/
 PKGNAMESUFFIX=	-doc
@@ -18,8 +17,8 @@ BUILD_DEPENDS=	sphinx-build:textproc/py-sphinx
 DISTINFO_FILE=	${.CURDIR}/../cmake/distinfo
 
 NO_ARCH=	yes
-USES=		cmake:outsource
-USE_QT5=	help_build
+USES=		cmake:outsource qt:5
+USE_QT=		help_build
 
 CMAKE_OFF=	SPHINX_MAN
 CMAKE_ON=	SPHINX_HTML SPHINX_QTHELP
@@ -30,6 +29,6 @@ CMAKE_SOURCE_PATH=	${WRKSRC}/Utilities/Sphinx
 ALL_TARGET=	documentation
 INSTALL_TARGET=	install
 
-PLIST_SUB=	CMAKEVERSION="${PORTVERSION:S/.//g}"
+PLIST_SUB=	CMAKEVERSION="${DISTVERSION:S/.//g:C/-.*//}"
 
 .include <bsd.port.mk>

@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	MetaCPAN-Client
-PORTVERSION=	2.023000
+PORTVERSION=	2.025000
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 MASTER_SITE_SUBDIR=	CPAN:MICKEY
@@ -32,14 +32,7 @@ NO_ARCH=	yes
 USE_PERL5=	configure
 USES=		perl5
 
-.include <bsd.port.pre.mk>
-
-.if ${PERL_LEVEL} < 502400
-BUILD_DEPENDS+=	p5-HTTP-Tiny>=0.56:www/p5-HTTP-Tiny
-RUN_DEPENDS+=	p5-HTTP-Tiny>=0.56:www/p5-HTTP-Tiny
-.endif
-
 post-patch:
 	@${REINPLACE_CMD} -e '/use ExtUtils::MakeMaker/ s| 7.1101||' ${WRKSRC}/Makefile.PL
 
-.include <bsd.port.post.mk>
+.include <bsd.port.mk>

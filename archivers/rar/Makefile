@@ -2,13 +2,13 @@
 # $FreeBSD$
 
 PORTNAME=	rar
-PORTVERSION=	5.5.0
+PORTVERSION=	5.6.0
 PORTEPOCH=	3
 CATEGORIES=	archivers
 MASTER_SITES=	http://www.rarlab.com/rar/
 DISTNAME=	rarbsd-${PORTVERSION}
 
-MAINTAINER=	gabor@FreeBSD.org
+MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	File archiver (binary port)
 
 LICENSE=	RAR

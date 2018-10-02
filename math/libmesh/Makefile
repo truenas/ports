@@ -4,6 +4,7 @@
 PORTNAME=	libmesh
 DISTVERSIONPREFIX=	v
 DISTVERSION=	1.3.0
+PORTREVISION=	3
 CATEGORIES=	math
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -11,6 +12,8 @@ COMMENT=	Numerical simulation of partial differential equations
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING
+
+BROKEN_powerpc64=	fails to link: libcontrib_opt.a: relocation truncated to fit: R_PPC64_GOT_TLSLD16 against .LANCHOR1
 
 LIB_DEPENDS=	libboost_system.so:devel/boost-libs
 

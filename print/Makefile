@@ -4,6 +4,7 @@
     COMMENT = Desktop publishing
 
     SUBDIR += R-cran-knitr
+    SUBDIR += R-cran-tinytex
     SUBDIR += a2pdf
     SUBDIR += a2ps
     SUBDIR += abcm2ps
@@ -20,11 +21,11 @@
     SUBDIR += c2ps
     SUBDIR += catdvi
     SUBDIR += cdlabelgen
+    SUBDIR += cloud-print-connector
     SUBDIR += cloudprint
     SUBDIR += cups
     SUBDIR += cups-bjnp
     SUBDIR += cups-cloud-print
-    SUBDIR += cups-connector
     SUBDIR += cups-filters
     SUBDIR += cups-fxlinuxprint
     SUBDIR += cups-pdf
@@ -97,8 +98,6 @@
     SUBDIR += hyperlatex
     SUBDIR += indexinfo
     SUBDIR += jabref
-    SUBDIR += print-manager
-    SUBDIR += print-manager-kde4
     SUBDIR += kde_poster
     SUBDIR += kover
     SUBDIR += kpdftool
@@ -158,6 +157,7 @@
     SUBDIR += papersize-default-letter
     SUBDIR += paps
     SUBDIR += pcal
+    SUBDIR += pdf-redact-tools
     SUBDIR += pdf-renderer
     SUBDIR += pdf-tools
     SUBDIR += pdf4tcl
@@ -185,6 +185,8 @@
     SUBDIR += pmw
     SUBDIR += pnm2ppa
     SUBDIR += poster
+    SUBDIR += print-manager
+    SUBDIR += print-manager-kde4
     SUBDIR += ps2eps
     SUBDIR += pscal
     SUBDIR += psdim
@@ -197,6 +199,7 @@
     SUBDIR += py-pdf2
     SUBDIR += py-pollyreports
     SUBDIR += py-preppy
+    SUBDIR += py-psautohint
     SUBDIR += py-pycups
     SUBDIR += py-pyscript
     SUBDIR += py-python-ly

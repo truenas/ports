@@ -34,9 +34,9 @@ CONFIGURE_ARGS=	--with-cdrtools-prefix=${LOCALBASE} \
 
 .if ${PORT_OPTIONS:MNLS}
 CONFIGURE_ARGS+=--disable-nls
-PLIST_SUB=	NLS="@comment "
+PLIST_SUB+=	NLS="@comment "
 .else
-PLIST_SUB=	NLS=""
+PLIST_SUB+=	NLS=""
 .endif
 
 .if ${PORT_OPTIONS:MGTK2}
@@ -67,7 +67,9 @@ pre-everything::
 	@${ECHO_MSG} "         wrapping utility which gets a SUID Bit after enabling"
 	@${ECHO_MSG} "         the non-root mode inside the application!"
 	@${ECHO_MSG}
+.  if !(defined(PACKAGE_BUILDING) || defined(BATCH))
 	sleep 5
+.  endif
 .endif
 
 .include <bsd.port.mk>

@@ -1,5 +1,5 @@
-TIMESTAMP = 1519562176
-SHA256 (qtumproject-qtum-mainnet-ignition-v0.14.15_GH0.tar.gz) = a98583eae1a4997fbd49a4e18e9f878136e662e644345d7d15df5a51f38a89df
-SIZE (qtumproject-qtum-mainnet-ignition-v0.14.15_GH0.tar.gz) = 12874930
-SHA256 (qtumproject-cpp-eth-qtum-6e3173715867f5de56d6aa_GH0.tar.gz) = 01dbb43979768fc9755594e234a5b431023ace8d197a940587a05c835b3cdefc
-SIZE (qtumproject-cpp-eth-qtum-6e3173715867f5de56d6aa_GH0.tar.gz) = 1113747
+TIMESTAMP = 1536992752
+SHA256 (qtumproject-qtum-mainnet-ignition-v0.16.0_GH0.tar.gz) = cd35b3aa8537a76d5fa188bd26011bea9084572c33e72a0e584ced75683808b5
+SIZE (qtumproject-qtum-mainnet-ignition-v0.16.0_GH0.tar.gz) = 12229638
+SHA256 (qtumproject-cpp-eth-qtum-d6081ecc98e3c5f4701363_GH0.tar.gz) = 62c858543510aaf656ce0a247e26fbce4a9b11d1fa424f40e9ff0fdc822b4b34
+SIZE (qtumproject-cpp-eth-qtum-d6081ecc98e3c5f4701363_GH0.tar.gz) = 1114149

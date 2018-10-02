@@ -2,7 +2,7 @@
 
 PORTNAME=	postgis
 PORTVERSION=	2.1.8
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	databases geography
 MASTER_SITES=	http://download.osgeo.org/postgis/source/
 PKGNAMESUFFIX=	21
@@ -22,6 +22,7 @@ CONFLICTS_INSTALL=	postgis20 postgis22 postgis23 postgis24 postgis
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	${ICONV_CONFIGURE_BASE}
 USES=		gmake iconv:wchar_t libtool:keepla perl5 pgsql pkgconfig shebangfix
+LLD_UNSAFE=	yes
 SHEBANG_FILES=	utils/postgis_restore.pl.in
 USE_GNOME=	libxml2
 USE_LDCONFIG=	yes

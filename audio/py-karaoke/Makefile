@@ -3,7 +3,7 @@
 
 PORTNAME=	karaoke
 PORTVERSION=	0.7.5
-PORTREVISION=	15
+PORTREVISION=	16
 CATEGORIES=	audio python
 MASTER_SITES=	SF/py${PORTNAME}/py${PORTNAME}/${PORTVERSION}
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -13,6 +13,8 @@ MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Python karaoke application (Plays CD+G, MP3+G, OGG+G files)
 
 LICENSE=	LGPL21+
+
+BROKEN_aarch64=		fails to build: Signal 11
 
 BUILD_DEPENDS=	${PYGAME} \
 		${LOCALBASE}/libdata/pkgconfig/pthread-stubs.pc:devel/libpthread-stubs
@@ -39,7 +41,7 @@ PLIST_FILES=	${BIN_SCRIPTS:S,^,bin/,} \
 OPTIONS_DEFINE=		MUTAGEN
 
 MUTAGEN_DESC=		Mutagen support
-MUTAGEN_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}mutagen>0:audio/py-mutagen@${FLAVOR}
+MUTAGEN_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}mutagen>0:audio/py-mutagen@${PY_FLAVOR}
 
 BIN_SCRIPTS=	cdg2mpg pycdg pykar pykaraoke pykaraoke_mini pympg
 DATA_FONTS=	DejaVuSans.ttf DejaVuSansCondensed.ttf \

@@ -14,10 +14,10 @@ LIB_DEPENDS=    libKF5Torrent.so:net-p2p/libktorrent  \
 		libgpg-error.so:security/libgpg-error \
 		libgpgme.so:security/gpgme \
 		libgpgmepp.so:security/gpgme-cpp \
-		libqca-qt5.so:devel/qca-qt5 \
+		libqca-qt5.so:devel/qca@qt5 \
 		libqgpgme.so:security/gpgme-qt5
 
-USES=		cmake:outsource kde:5 shebangfix sqlite tar:xz
+USES=		cmake:outsource kde:5 qt:5 shebangfix sqlite tar:xz
 
 USE_KDE=	archive auth bookmarks codecs completion config configwidgets \
 		coreaddons crash dbusaddons emoticons guiaddons i18n \
@@ -25,7 +25,7 @@ USE_KDE=	archive auth bookmarks codecs completion config configwidgets \
 		kdelibs4support kio notifications notifyconfig parts service \
 		solid sonnet textwidgets unitconversion wallet widgetsaddons \
 		windowsystem xmlgui
-USE_QT5=        core dbus gui network printsupport sql widgets xml \
+USE_QT=	        core dbus gui network printsupport sql widgets xml \
 		buildtools_build qmake_build
 
 USE_LDCONFIG=	yes
@@ -34,5 +34,7 @@ SHEBANG_FILES=	conf/*.pl
 
 MAKE_ENV=	XDG_CONFIG_HOME=/dev/null
 CONFIGURE_ENV=	XDG_CONFIG_HOME=/dev/null
+
+OPTIONS_DEFINE=	DOCS
 
 .include <bsd.port.mk>

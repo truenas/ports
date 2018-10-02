@@ -11,6 +11,9 @@ COMMENT=	File alteration monitoring service
 
 LICENSE=	APACHE20
 
+BROKEN_mips=		fails to build: watchman.h:169: undefined reference to '__sync_add_and_fetch_8'
+BROKEN_mips64=		fails to build: watchman.h:169: undefined reference to '__sync_add_and_fetch_8'
+
 USE_GITHUB=	yes
 GH_ACCOUNT=	facebook
 
@@ -24,7 +27,7 @@ PLIST_FILES=	bin/${PORTNAME} \
 		"@dir(,,2777) /var/run/${PORTNAME}"
 PORTDOCS=	README.markdown
 
-OPTIONS_DEFINE=	BACKTRACE PCRE
+OPTIONS_DEFINE=	BACKTRACE PCRE DOCS
 OPTIONS_DEFAULT=BACKTRACE PCRE
 
 BACKTRACE_DESC=		Stack backtrace support via (lib)execinfo

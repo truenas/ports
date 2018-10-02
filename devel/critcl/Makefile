@@ -24,12 +24,12 @@ GH_ACCOUNT=	andreas-kupries
 TEST_TARGET=	test
 
 PLIST_SUB+=	VER=${PORTVERSION} \
-		ARCH=${ARCH:C/arm.*/arm/:S/i386/ix86/:S/aarch64/arm/}
+		ARCH=${ARCH:C/arm.*/arm/:S/i386/ix86/:S/aarch64/arm/:S/mips64/mips/:S/powerpc64/powerpc/}
 PORTDOCS=	*
 
 NO_BUILD=	yes
 
-.include <bsd.port.options.mk>
+OPTIONS_DEFINE=	DOCS
 
 post-patch:
 	${REINPLACE_CMD} -e 's|dtplite|${LOCALBASE}/bin/dtplite|g' ${WRKSRC}/build.tcl

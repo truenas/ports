@@ -3,7 +3,7 @@
 
 PORTNAME=	opencascade
 PORTVERSION=	7.2.0
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	cad science
 MASTER_SITES=	LOCAL/thierry
 
@@ -74,6 +74,7 @@ VIS_LIB_DEPENDS=	libftgl.so:graphics/ftgl		\
 
 VIS_CMAKE_ON=	-D3RDPARTY_FREETYPE_DIR=${LOCALBASE}
 
+DOXYGEN_IMPLIES=	DOCS
 DOXYGEN_USE=	TEX=latex:build
 DOXYGEN_BUILD_DEPENDS=	bash:shells/bash		\
 			doxygen:devel/doxygen		\
@@ -82,11 +83,6 @@ DOXYGEN_BUILD_DEPENDS=	bash:shells/bash		\
 DOXYGEN_RUN_DEPENDS=	${LOCALBASE}/www/MathJax/MathJax.js:www/mathjax
 
 .include <bsd.port.options.mk>
-
-.if ${OPSYS} == FreeBSD && ${OSVERSION} < 1003506
-# undefined reference to `__cxa_thread_atexit' - see PR 192320
-BROKEN=	undefined reference to __cxa_thread_atexit
-.endif
 
 .if ${ARCH} == "i386"
 BITS=	32

@@ -2,8 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	geoalchemy2
-PORTVERSION=	0.4.2
-PORTREVISION=	1
+PORTVERSION=	0.5.0
 CATEGORIES=	databases geography python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -14,7 +13,7 @@ COMMENT=	Using SQLAlchemy with Spatial Databases
 
 LICENSE=	MIT
 
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}sqlalchemy12>=0.8:databases/py-sqlalchemy12@${FLAVOR}
+RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}sqlalchemy12>=0.8:databases/py-sqlalchemy12@${PY_FLAVOR}
 
 NO_ARCH=	yes
 USE_PYTHON=	autoplist concurrent distutils

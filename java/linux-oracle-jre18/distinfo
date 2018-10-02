@@ -1,5 +1,5 @@
-TIMESTAMP = 1519433018
-SHA256 (jre-8u162-linux-i586.tar.gz) = b0752798b28ce6e6bb133070f06fbdbd0a5bbbaf678f6c40a6def5c25e102289
-SIZE (jre-8u162-linux-i586.tar.gz) = 83185844
-SHA256 (jre-8u162-linux-x64.tar.gz) = dfa25ebd1f90bf74ad7ba2dacb0e08d884594e733c9a522b58256778031341a4
-SIZE (jre-8u162-linux-x64.tar.gz) = 80107578
+TIMESTAMP = 1537042129
+SHA256 (jre-8u181-linux-i586.tar.gz) = 5e2d3c0808480de058ad7b114113d029a76fa406f9402ae4d82555247473d3bb
+SIZE (jre-8u181-linux-i586.tar.gz) = 84309787
+SHA256 (jre-8u181-linux-x64.tar.gz) = 0b26c7fcfad20029e6e0989e678efcd4a81f0fe502a478b4972215533867de1b
+SIZE (jre-8u181-linux-x64.tar.gz) = 81191893

@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	SoPlex
-DISTVERSION=	3.1.1
+DISTVERSION=	4.0.0
 CATEGORIES=	math science
 MASTER_SITES=	http://soplex.zib.de/download/release/
 DISTNAME=	${PORTNAME:tl}-${DISTVERSION}
@@ -17,15 +17,8 @@ LICENSE_PERMS=	dist-mirror pkg-mirror auto-accept
 
 LIB_DEPENDS=	libgmp.so:math/gmp
 
-USES=		cmake:outsource,noninja tar:tgz
+USES=		cmake:outsource tar:tgz
 USE_LDCONFIG=	yes
 PLIST_SUB=	SHL4=${DISTVERSION}.0 SHL2=${DISTVERSION:R}
 
-.include <bsd.port.pre.mk>
-
-.if ${OPSYS} == FreeBSD && ${OSVERSION} < 1100000
-CMAKE_ARGS=	-DFREEBSD_NO_CXX_THREAD_LOCAL_BUG224581:BOOL=ON  # https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=224581
-# This also necessitates noninja above for some reason
-.endif
-
-.include <bsd.port.post.mk>
+.include <bsd.port.mk>

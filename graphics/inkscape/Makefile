@@ -2,12 +2,10 @@
 # $FreeBSD$
 
 PORTNAME=	inkscape
-PORTVERSION=	0.92.2
-PORTREVISION=	5
+PORTVERSION=	0.92.3
+PORTREVISION=	3
 CATEGORIES=	graphics gnome
-MASTER_SITES=	https://launchpadlibrarian.net/332184472/ \
-		https://inkscape.org/en/gallery/item/11254/ \
-		LOCAL/kwm
+MASTER_SITES=	https://inkscape.org/en/gallery/item/12187/
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Full featured open source SVG editor
@@ -18,18 +16,21 @@ LICENSE_FILE_GPLv2=	${WRKSRC}/GPL2.txt
 LICENSE_FILE_GPLv3=	${WRKSRC}/GPL3.txt
 LICENSE_FILE_LGPL21=	${WRKSRC}/LGPL2.1.txt
 
+BROKEN_powerpc64=	fails to build: lib/libinkscape_base.so: undefined reference to Magick::Image::read(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+
 BUILD_DEPENDS=	${LOCALBASE}/include/boost/concept_check.hpp:devel/boost-libs
 LIB_DEPENDS=	libpopt.so:devel/popt \
 		libgc.so:devel/boehm-gc \
 		libgsl.so:math/gsl \
 		libgtkspell.so:textproc/gtkspell \
 		liblcms2.so:graphics/lcms2 \
+		libfribidi.so:converters/fribidi \
+		libaspell.so:textproc/aspell \
 		libfontconfig.so:x11-fonts/fontconfig \
 		libfreetype.so:print/freetype2 \
 		libpotrace.so:graphics/libpotrace \
 		libpng.so:graphics/png \
 		libMagick++-6.so:graphics/ImageMagick
-#aspell?
 
 USE_GNOME=	gtkmm24 libxml2 libxslt
 USES=		compiler:c++11-lib cmake cpe desktop-file-utils gnome \

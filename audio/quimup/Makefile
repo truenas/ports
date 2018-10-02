@@ -3,6 +3,7 @@
 
 PORTNAME=	quimup
 PORTVERSION=	1.4.3
+PORTREVISION=	1
 CATEGORIES=	audio
 MASTER_SITES=	SF/${PORTNAME}
 DISTNAME=	${PORTNAME}_${PORTVERSION}_source
@@ -18,8 +19,8 @@ LIB_DEPENDS=	libmpdclient.so:audio/libmpdclient \
 
 WRKSRC=		${WRKDIR}/Quimup_${PORTVERSION}
 
-USES=		pkgconfig qmake compiler:c++11-lang
-USE_QT5=	core gui network widgets buildtools_build
+USES=		pkgconfig qmake compiler:c++11-lang qt:5
+USE_QT=		core gui network widgets buildtools_build
 USE_GL=		gl
 
 CXXFLAGS+=	-std=c++11

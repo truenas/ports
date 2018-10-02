@@ -3,7 +3,7 @@
 
 PORTNAME=	opencsg
 PORTVERSION=	1.4.2
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	graphics
 MASTER_SITES=	http://www.opencsg.org/
 DISTNAME=	OpenCSG-${PORTVERSION}
@@ -14,9 +14,9 @@ COMMENT=	Constructive Solid Geometry rendering library
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/../license.txt
 
-USES=		compiler:c++11-lang qmake
+USES=		compiler:c++11-lang qmake qt:4
 USE_GL=		gl glew
-USE_QT4=	qmake_build
+USE_QT=		qmake_build
 WRKSRC=		${WRKDIR}/${DISTNAME}/src
 PLIST_SUB=      PORTVERSION=${PORTVERSION}
 

@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	go
-PORTVERSION=	1.10.1
+PORTVERSION=	1.11
 PORTEPOCH=	1
 CATEGORIES=	lang
 MASTER_SITES=	https://golang.org/dl/
@@ -22,7 +22,9 @@ SHEBANG_FILES=	src/*.bash \
 		lib/time/*.bash \
 		misc/benchcmp \
 		misc/nacl/go_nacl_*_exec \
+		misc/wasm/go_js_wasm_exec \
 		src/cmd/go/*.sh \
+		src/cmd/vendor/github.com/google/pprof/internal/binutils/testdata/build_mac.sh \
 		src/net/http/cgi/testdata/*.cgi \
 		src/regexp/syntax/*.pl
 
@@ -32,7 +34,7 @@ sh_CMD=		${SH}
 WRKSRC=		${WRKDIR}/go
 ONLY_FOR_ARCHS=	i386 amd64 armv6 armv7
 
-OPTIONS_DEFINE=	GO387
+OPTIONS_DEFINE_i386=	GO387
 GO387_DESC=	Do not generate code with SSE2 (for old x86 CPU)
 
 .include <bsd.port.pre.mk>
@@ -62,7 +64,7 @@ do-build:
 		GOROOT_BOOTSTRAP=${LOCALBASE}/go14 \
 		GOBIN= GOARCH=${GOARCH} GOOS=${OPSYS:tl} \
 		GO386=${GO386} \
-		${SH} make.bash
+		${SH} make.bash -v
 	${RM} -r ${WRKSRC}/pkg/obj
 
 do-install:
@@ -71,7 +73,7 @@ do-install:
 	@${LN} -sf ../go/bin/${f} ${STAGEDIR}${PREFIX}/bin/${f}
 .endfor
 
-regression-test: build
+do-test:
 	cd ${WRKSRC}/src && GOROOT=${WRKSRC} PATH=${WRKSRC}/bin:${PATH} ${SH} run.bash --no-rebuild --banner
 
 pkg-plist: stage

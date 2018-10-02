@@ -6,7 +6,7 @@ DISTVERSIONPREFIX=	v
 CATEGORIES=	devel
 PKGNAMEPREFIX=	elixir-
 
-MAINTAINER=	olgeni@FreeBSD.org
+MAINTAINER=	erlang@FreeBSD.org
 COMMENT=	Composable modules for Elixir web applications
 
 LICENSE=	APACHE20
@@ -18,5 +18,7 @@ GH_ACCOUNT=	elixir-lang
 MIX_BUILD_DEPS=	misc/elixir-mime
 MIX_RUN_DEPS:=	${MIX_BUILD_DEPS}
 MIX_REWRITE=	yes
+
+OPTIONS_DEFINE=	DOCS
 
 .include <bsd.port.mk>

@@ -6,7 +6,7 @@ PORTVERSION=	3.2.11
 DISTVERSIONPREFIX=	r
 CATEGORIES=	databases net
 
-MAINTAINER=	brendan+freebsd@bbqsrc.net
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Tools for MongoDB
 
 LICENSE=	APACHE20
@@ -22,7 +22,7 @@ USE_GITHUB=	yes
 GH_ACCOUNT=	mongodb
 GH_PROJECT=	mongo-tools
 
-OPTIONS_DEFINE=	SSL SASL
+OPTIONS_DEFINE=	SSL SASL DOCS
 OPTIONS_DEFAULT=	SSL
 
 SASL_USE=	my_tags=sasl

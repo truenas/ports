@@ -1,21 +1,20 @@
 # $FreeBSD$
 
 PORTNAME=	kodi
-DISTVERSION=	18.0.g201803211302
-PORTREVISION=	3
 CATEGORIES=	multimedia
+DISTVERSION=	18.0.g201809092101
+PORTREVISION=	1
 PKGNAMESUFFIX?=	-devel
 
 MAINTAINER=	tobik@FreeBSD.org
 COMMENT=	Award winning media center application
 
-LICENSE=	GPLv2
-LICENSE_FILE=	${WRKSRC}/LICENSE.GPL
+LICENSE=	GPLv2+
 
-BROKEN_FreeBSD_10=	does not build
 ONLY_FOR_ARCHS=	amd64 armv6 armv7 i386
 
-BUILD_DEPENDS=	rapidjson>=0:devel/rapidjson \
+BUILD_DEPENDS=	flatbuffers>=0:devel/flatbuffers \
+		rapidjson>=0:devel/rapidjson \
 		swig3.0:devel/swig30
 LIB_DEPENDS=	libass.so:multimedia/libass \
 		libavcodec.so:multimedia/ffmpeg \
@@ -31,6 +30,7 @@ LIB_DEPENDS=	libass.so:multimedia/libass \
 		libfmt.so:devel/libfmt \
 		libfreetype.so:print/freetype2 \
 		libfribidi.so:converters/fribidi \
+		libfstrcmp.so:devel/fstrcmp \
 		libgif.so:graphics/giflib \
 		libgnutls.so:security/gnutls \
 		liblcms2.so:graphics/lcms2 \
@@ -43,24 +43,25 @@ LIB_DEPENDS=	libass.so:multimedia/libass \
 		libswscale.so:multimedia/ffmpeg \
 		libtag.so:audio/taglib \
 		libtinyxml.so:textproc/tinyxml \
+		libudev.so:devel/libudev-devd \
 		libuuid.so:misc/e2fsprogs-libuuid
 
 # Building libcpluff.a requires autoreconf and gmake.  Using ninja
 # leads to dependency problems where libcpluff.a is not yet finished
 # building when it's required.
 USES=		autoreconf:build cmake:outsource,noninja compiler:c++11-lib \
-		gettext gmake iconv:wchar_t jpeg libtool pkgconfig python:-2.7 \
-		ssl sqlite
+		gettext gmake gnome iconv:wchar_t jpeg libtool pkgconfig \
+		python:2.7 ssl sqlite
 USE_GITHUB=	yes
 GH_ACCOUNT=	xbmc
 GH_PROJECT=	xbmc
-GH_TAGNAME=	d571386e6f848db993ac7f855fc911abc23e308a
+GH_TAGNAME=	18.0b2-Leia
 USE_GNOME=	libxslt libxml2
 USE_JAVA=	yes
 JAVA_BUILD=	yes
 USE_LDCONFIG=	yes
 
-CONFLICTS_INSTALL=	kodi-[0-9]*
+CONFLICTS_INSTALL=	kodi
 
 CMAKE_ARGS=	-DLIBDVD_INCLUDE_DIRS="${LOCALBASE}/include" \
 		-DDVDREAD_LIBRARY="${LOCALBASE}/lib/libdvdread.so" \
@@ -69,27 +70,27 @@ CMAKE_OFF=	ENABLE_ALSA \
 		ENABLE_DVDCSS \
 		ENABLE_INTERNAL_FFMPEG \
 		ENABLE_INTERNAL_CROSSGUID
-CONFIGURE_ENV=	OPENSSL_LIBS="-L${OPENSSLLIB}" OPENSSL_CFLAGS="-I${OPENSSLINC}"
+CONFIGURE_ENV=	OPENSSL_LIBS="-L${OPENSSLLIB}" OPENSSL_CFLAGS="-I${OPENSSLINC}" \
+		CPU_FEATURES=" Features=0xdeadbeef<${CPU_FEATURES:ts,}>"
 
 KODIARCH_i386=	x86
 KODIARCH_amd64=	x86_64
 
 PLIST_SUB=	ARCH=${KODIARCH_${ARCH}:U${ARCH}} OPSYS=${OPSYS:tl}
 
-OPTIONS_DEFINE=	AVAHI CEC DBUS LIBBLURAY MYSQL NFS SMB SSH UPNP VAAPI	\
-		VDPAU WEBSERVER
-OPTIONS_DEFAULT=	LIBBLURAY SNDIO SSH UPNP VAAPI VDPAU WEBSERVER X11
+OPTIONS_DEFINE=	AVAHI CEC DBUS LIBBLURAY MYSQL NFS SMB UPNP VAAPI VDPAU WEBSERVER
+OPTIONS_DEFINE_amd64=	SSE
+OPTIONS_DEFINE_i386=	SSE
+OPTIONS_DEFAULT=	LIBBLURAY UPNP VAAPI VDPAU WEBSERVER X11
+OPTIONS_DEFAULT_amd64=	SSE
 OPTIONS_SINGLE=	PLATFORM
 OPTIONS_SINGLE_PLATFORM=	GBM RPI WAYLAND X11
 OPTIONS_EXCLUDE_amd64=	RPI
 OPTIONS_EXCLUDE_i386=	RPI
 OPTIONS_SUB=	yes
 
-# Choosing one of SNDIO or PULSEAUDIO is mandatory right now if you
-# want audio output.  The OSS backend is currently not hooked into
-# Kodi's audio sink factory due to recent refactorings.
-OPTIONS_MULTI=		SOUND
-OPTIONS_MULTI_SOUND=	PULSEAUDIO SNDIO
+OPTIONS_GROUP=		SOUND
+OPTIONS_GROUP_SOUND=	PULSEAUDIO SNDIO
 
 CEC_DESC=	CEC adapter support
 GBM_DESC=	GBM support (requires a kernel with evdev support)
@@ -105,7 +106,11 @@ CEC_CMAKE_BOOL=		ENABLE_CEC
 DBUS_LIB_DEPENDS=	libdbus-1.so:devel/dbus
 DBUS_CMAKE_BOOL=	ENABLE_DBUS
 
-GBM_CMAKE_ON=		-DCORE_PLATFORM_NAME:STRING="gbm"
+GBM_BUILD_DEPENDS=	v4l_compat>=0:multimedia/v4l_compat
+GBM_CMAKE_ON=		-DCORE_PLATFORM_NAME:STRING="gbm" \
+			-DGBM_RENDER_SYSTEM:STRING="gl"
+GBM_LIB_DEPENDS=	libinput.so:x11/libinput \
+			libxkbcommon.so:x11/libxkbcommon
 
 LIBBLURAY_LIB_DEPENDS=	libbluray.so:multimedia/libbluray
 LIBBLURAY_CMAKE_BOOL=	ENABLE_BLURAY
@@ -134,29 +139,34 @@ SMB_CMAKE_BOOL=		ENABLE_SMBCLIENT
 SNDIO_LIB_DEPENDS=	libsndio.so:audio/sndio
 SNDIO_CMAKE_BOOL=	ENABLE_SNDIO
 
-SSH_LIB_DEPENDS=	libssh.so:security/libssh
-SSH_CMAKE_BOOL=		ENABLE_SSH
+SSE_CPU_FEATURES=	SSE SSE2 SSE3 SSSE3 SSE4.1 SSE4.2
+SSE_CMAKE_BOOL=		${SSE_CPU_FEATURES:S/./_/g:S/^/ENABLE_/}
+SSE_VARS=		CPU_FEATURES+=${SSE_CPU_FEATURES:ts,}
 
 UPNP_CMAKE_BOOL=	ENABLE_UPNP
 # XXX: Upstream is https://github.com/plutinosoft/Neptune
 UPNP_CXXFLAGS=		-DNPT_CONFIG_HAVE_ARPA_INET_H \
 			-DNPT_CONFIG_HAVE_GETADDRINFO \
+			-DNPT_CONFIG_HAVE_GETIFADDRS \
 			-DNPT_CONFIG_HAVE_INET_NTOP \
 			-DNPT_CONFIG_HAVE_INET_PTON \
 			-DNPT_CONFIG_HAVE_NET_IF_DL_H \
 			-DNPT_CONFIG_HAVE_SOCKADDR_DL \
 			-DNPT_CONFIG_HAVE_SOCKADDR_IN_SIN_LEN
 
-VAAPI_LIB_DEPENDS=	libva.so:multimedia/libva
 VAAPI_CMAKE_BOOL=	ENABLE_VAAPI
+VAAPI_LIB_DEPENDS=	libva.so:multimedia/libva
 
-VDPAU_LIB_DEPENDS=	libvdpau.so:multimedia/libvdpau
 VDPAU_CMAKE_BOOL=	ENABLE_VDPAU
+VDPAU_LIB_DEPENDS=	libvdpau.so:multimedia/libvdpau
 
-WAYLAND_BUILD_DEPENDS=	wayland-protocols>=0:graphics/wayland-protocols
+WAYLAND_BUILD_DEPENDS=	v4l_compat>=0:multimedia/v4l_compat \
+			wayland-protocols>=0:graphics/wayland-protocols
 WAYLAND_CMAKE_ON=	-DCORE_PLATFORM_NAME:STRING="wayland" \
 			-DWAYLAND_RENDER_SYSTEM:STRING="gl"
-WAYLAND_LIB_DEPENDS=	libwayland-client++.so:graphics/waylandpp \
+WAYLAND_LIB_DEPENDS=	libinput.so:x11/libinput \
+			libwayland-client++.so:graphics/waylandpp \
+			libwayland-client.so:graphics/wayland \
 			libxkbcommon.so:x11/libxkbcommon
 
 WEBSERVER_LIB_DEPENDS=	libmicrohttpd.so:www/libmicrohttpd
@@ -177,9 +187,10 @@ post-patch:
 # (see CMAKE_ARGS).
 	@${REINPLACE_CMD} 's@KODI_DEPENDSBUILD@true@' \
 		${WRKSRC}/cmake/modules/FindLibDvd.cmake
-	@${CP} ${WRKSRC}/cmake/platform/linux/gbm.cmake \
-		${WRKSRC}/cmake/platform/linux/rbpi.cmake \
-		${WRKSRC}/cmake/platform/freebsd
+# Make sure freebsd.xml is in sync with linux.xml since the
+# upstream devs do not sync them
+	@${CP} ${WRKSRC}/system/settings/linux.xml \
+		${WRKSRC}/system/settings/freebsd.xml
 
 .if ${SLAVE_PORT} == no
 post-install:
@@ -188,7 +199,9 @@ post-install:
 	@${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/TexturePacker
 	@${FIND} ${STAGEDIR}${PREFIX}/lib/kodi -name '*.so' | ${XARGS} ${STRIP_CMD}
 # Nothing useful here...
-	@${RM} -rf ${STAGEDIR}${DOCSDIR}
+	@${RM} -r ${STAGEDIR}${DOCSDIR}
+# No firewalld on FreeBSD...
+	@${RM} -r ${STAGEDIR}${PREFIX}/lib/firewalld
 .endif
 
 .include <bsd.port.mk>

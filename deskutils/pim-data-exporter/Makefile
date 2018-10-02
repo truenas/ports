@@ -13,7 +13,7 @@ LIB_DEPENDS=	libassuan.so:security/libassuan \
 		libgpgmepp.so:security/gpgme-cpp \
 		libqgpgme.so:security/gpgme-qt5
 
-USES=		cmake:outsource compiler:c++11-lib gettext kde:5 tar:xz
+USES=		cmake:outsource compiler:c++11-lib gettext kde:5 qt:5 tar:xz
 USE_KDE=	archive auth bookmarks codecs completion config configwidgets \
 		coreaddons crash dbusaddons ecm i18n itemmodels itemviews \
 		jobwidgets kio notifications service solid wallet \
@@ -22,11 +22,13 @@ USE_KDE=	archive auth bookmarks codecs completion config configwidgets \
 USE_KDE+=	akonadi akonadicontacts akonadimime contacts \
 		identitymanagement libkdepim libkleo mailcommon mailtransport \
 		messagelib mime pimcommon pimtextedit
-USE_QT5=	core dbus gui network widgets xml \
+USE_QT=		core dbus gui network widgets xml \
 		buildtools_build qmake_build
 USE_LDCONFIG=	yes
 
 DESCR=		${.CURDIR:H:H}/deskutils/kdepim/pkg-descr
 
+
+OPTIONS_DEFINE=	DOCS
 
 .include <bsd.port.mk>

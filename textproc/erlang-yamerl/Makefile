@@ -6,7 +6,7 @@ DISTVERSIONPREFIX=	v
 CATEGORIES=	textproc
 PKGNAMEPREFIX=	erlang-
 
-MAINTAINER=	olgeni@FreeBSD.org
+MAINTAINER=	erlang@FreeBSD.org
 COMMENT=	YAML 1.2 parser in pure Erlang
 
 LICENSE=	BSD2CLAUSE
@@ -16,5 +16,7 @@ USE_GITHUB=	yes
 GH_ACCOUNT=	yakaz
 
 ERL_DOCS=	README.md doc
+
+OPTIONS_DEFINE=	DOCS
 
 .include <bsd.port.mk>

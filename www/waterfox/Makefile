@@ -1,15 +1,14 @@
 # $FreeBSD$
 
 PORTNAME=	waterfox
-DISTVERSION=	56.1.0
-PORTREVISION=	9
+DISTVERSION=	56.2.3
 CATEGORIES=	www ipv6
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Distilled fork of Firefox
 
 DEPRECATED=	Temporary experiment
-EXPIRATION_DATE=2018-05-16
+EXPIRATION_DATE=2018-09-27
 
 BUILD_DEPENDS=	nspr>=4.16:devel/nspr \
 		nss>=3.32.1:security/nss \
@@ -52,6 +51,9 @@ MOZ_OPTIONS=	--enable-application=browser \
 OPTIONS_DEFAULT=	BUNDLED_CAIRO
 
 .include "${.CURDIR}/../../www/firefox/Makefile.options"
+
+# Inconsistent fallback order (libcubeb vs. audio_device)
+SNDIO_PREVENTS=		${OPTIONS_MULTI_AUDIO:NSNDIO}
 
 post-patch:
 	@${REINPLACE_CMD} -e 's/%u/%U/' -e '/X-MultipleArgs/d' \

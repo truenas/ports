@@ -1,12 +1,11 @@
-# $FreeBSD: head/sysutils/consul-alerts/Makefile 451834 2017-10-12 09:06:17Z mat $
+# $FreeBSD$
 
 PORTNAME=	consul-alerts
 PORTVERSION=	0.5.0
-PORTREVISION=	1
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 
-MAINTAINER=	jhixson@gmail.com
+MAINTAINER=	jhixson@FreeBSD.org
 COMMENT=	Simple daemon to send notifications based on Consul health checks
 
 LICENSE=	GPLv2+
@@ -18,7 +17,7 @@ USES=		compiler go
 USE_GITHUB=	yes
 GH_ACCOUNT=	AcalephStorage
 GH_SUBDIR=	src/github.com/AcalephStorage/consul-alerts
-GH_TUPLE=	aws:aws-sdk-go:v1.12.45:aws_sdk_go/src/github.com/aws/aws-sdk-go \
+GH_TUPLE=	aws:aws-sdk-go:v1.8.30:aws_sdk_go/src/github.com/aws/aws-sdk-go \
 		imdario:mergo:0.2.2:mergo/src/github.com/imdario/mergo \
 		mitchellh:hashstructure:9204ce5:hashstructure/src/github.com/mitchellh/hashstructure
 

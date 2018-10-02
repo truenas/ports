@@ -3,12 +3,15 @@
 
 PORTNAME=	kdelibs
 PORTVERSION=	${KDE4_KDELIBS_VERSION}
-PORTREVISION=	2
+PORTREVISION=	5
 CATEGORIES=	x11 kde kde-applications
 PKGNAMESUFFIX=	-kde4
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	Base set of libraries needed by KDE programs
+
+DEPRECATED=	KDE4 is EOL upstream
+EXPIRATION_DATE=	2018-12-31
 
 LIB_DEPENDS=	libImath-2_2.so:graphics/ilmbase \
 		libjasper.so:graphics/jasper \
@@ -17,8 +20,8 @@ LIB_DEPENDS=	libImath-2_2.so:graphics/ilmbase \
 		libgif.so:graphics/giflib \
 		libpng.so:graphics/png \
 		libhal.so:sysutils/hal \
-		libqca.so:devel/qca \
-		libpolkit-qt-core-1.so:sysutils/polkit-qt \
+		libqca.so:devel/qca@qt4 \
+		libpolkit-qt-core-1.so:sysutils/polkit-qt@qt4 \
 		libdbusmenu-qt.so:devel/libdbusmenu-qt@qt4 \
 		libstreams.so:deskutils/libstreams
 
@@ -34,11 +37,11 @@ RUN_DEPENDS=	${LOCALBASE}/share/icons/hicolor/index.theme:misc/hicolor-icon-them
 KDE_APPLICATIONS_VERSION=	17.08.3
 
 USES=		cmake:outsource fam gettext grantlee:4 jpeg kde:4 perl5 \
-		shared-mime-info shebangfix tar:xz ssl
+		qt:4 shared-mime-info shebangfix tar:xz ssl
 USE_GNOME=	libxml2 libxslt
 USE_KDE=	oxygen-icons5 \
 		attica automoc4 ontologies soprano strigi
-USE_QT4=	corelib dbus declarative designer_build gui \
+USE_QT=		corelib dbus declarative designer_build gui \
 		network opengl phonon qt3support \
 		qtestlib script sql svg webkit xml \
 		moc_build qmake_build rcc_build uic_build \

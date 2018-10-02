@@ -23,6 +23,7 @@
     SUBDIR += bsh
     SUBDIR += bwbasic
     SUBDIR += c
+    SUBDIR += cbmbasic
     SUBDIR += ccl
     SUBDIR += cdent
     SUBDIR += ceylon
@@ -30,15 +31,13 @@
     SUBDIR += chez-scheme
     SUBDIR += chibi-scheme
     SUBDIR += chicken
+    SUBDIR += chicken5
     SUBDIR += cilkplus
     SUBDIR += cim
     SUBDIR += cint
     SUBDIR += cjs
     SUBDIR += clang-devel
-    SUBDIR += clang33
-    SUBDIR += clang34
     SUBDIR += clang35
-    SUBDIR += clang38
     SUBDIR += cling
     SUBDIR += clojure
     SUBDIR += clojure-mode.el
@@ -46,6 +45,7 @@
     SUBDIR += cmucl
     SUBDIR += cmucl-extra
     SUBDIR += cocor
+    SUBDIR += coffeescript
     SUBDIR += cparser
     SUBDIR += crystal
     SUBDIR += csharp-mode.el
@@ -56,6 +56,7 @@
     SUBDIR += dmd1
     SUBDIR += dmd2
     SUBDIR += duktape
+    SUBDIR += duktape-lib
     SUBDIR += ecl
     SUBDIR += elan
     SUBDIR += elixir
@@ -72,6 +73,7 @@
     SUBDIR += erlang-runtime18
     SUBDIR += erlang-runtime19
     SUBDIR += erlang-runtime20
+    SUBDIR += erlang-runtime21
     SUBDIR += erlang-wx
     SUBDIR += execline
     SUBDIR += expect
@@ -97,7 +99,6 @@
     SUBDIR += gawk
     SUBDIR += gcc
     SUBDIR += gcc-ecj45
-    SUBDIR += gcc47
     SUBDIR += gcc48
     SUBDIR += gcc49
     SUBDIR += gcc5
@@ -106,7 +107,9 @@
     SUBDIR += gcc6-devel
     SUBDIR += gcc7
     SUBDIR += gcc7-devel
+    SUBDIR += gcc8
     SUBDIR += gcc8-devel
+    SUBDIR += gcc9-devel
     SUBDIR += gforth
     SUBDIR += ghc
     SUBDIR += gjs
@@ -142,6 +145,7 @@
     SUBDIR += icon
     SUBDIR += intercal
     SUBDIR += io
+    SUBDIR += io-devel
     SUBDIR += itcl
     SUBDIR += itcl4
     SUBDIR += jakarta-commons-jelly
@@ -149,6 +153,8 @@
     SUBDIR += jruby
     SUBDIR += js_of_ocaml
     SUBDIR += julia
+    SUBDIR += julia06
+    SUBDIR += julia07
     SUBDIR += jython
     SUBDIR += kawa
     SUBDIR += kf5-kross
@@ -165,6 +171,12 @@
     SUBDIR += libstdc++_stldoc_4.2.2
     SUBDIR += linux-c6-tcl85
     SUBDIR += linux-c7-tcl85
+    SUBDIR += linux-dotnet-cli
+    SUBDIR += linux-dotnet-runtime
+    SUBDIR += linux-dotnet-sdk
+    SUBDIR += linux-dotnet10-runtime
+    SUBDIR += linux-dotnet11-runtime
+    SUBDIR += linux-dotnet11-sdk
     SUBDIR += linux-j
     SUBDIR += lua-ada
     SUBDIR += lua51
@@ -203,6 +215,7 @@
     SUBDIR += nqc
     SUBDIR += nwcc
     SUBDIR += nx
+    SUBDIR += nyan
     SUBDIR += ocaml
     SUBDIR += ocaml-autoconf
     SUBDIR += ocaml-nox11
@@ -211,6 +224,7 @@
     SUBDIR += oo2c
     SUBDIR += opencoarrays
     SUBDIR += opendylan
+    SUBDIR += ott
     SUBDIR += owl-lisp
     SUBDIR += p2c
     SUBDIR += p5-Data-JavaScript
@@ -248,9 +262,9 @@
     SUBDIR += pcc
     SUBDIR += pecl-perl
     SUBDIR += perl5-devel
-    SUBDIR += perl5.22
     SUBDIR += perl5.24
     SUBDIR += perl5.26
+    SUBDIR += perl5.28
     SUBDIR += petite-chez
     SUBDIR += pfe
     SUBDIR += phantomjs
@@ -272,7 +286,6 @@
     SUBDIR += ponyc
     SUBDIR += ptoc
     SUBDIR += pure
-    SUBDIR += py-clojure_py
     SUBDIR += py-hy
     SUBDIR += py-mx-base
     SUBDIR += py-prolog
@@ -292,6 +305,7 @@
     SUBDIR += python34
     SUBDIR += python35
     SUBDIR += python36
+    SUBDIR += python37
     SUBDIR += qore
     SUBDIR += qscheme
     SUBDIR += qt5-qml
@@ -322,7 +336,6 @@
     SUBDIR += scheme48
     SUBDIR += scm
     SUBDIR += sdcc
-    SUBDIR += sdcc-devel
     SUBDIR += see
     SUBDIR += seed7
     SUBDIR += siod
@@ -336,12 +349,12 @@
     SUBDIR += smlnj
     SUBDIR += snobol4
     SUBDIR += solidity
-    SUBDIR += spec.alpha
     SUBDIR += spidermonkey17
     SUBDIR += spidermonkey170
     SUBDIR += spidermonkey185
     SUBDIR += spidermonkey24
     SUBDIR += spidermonkey38
+    SUBDIR += spidermonkey52
     SUBDIR += spl
     SUBDIR += squeak
     SUBDIR += squirrel
@@ -365,7 +378,6 @@
     SUBDIR += ucc
     SUBDIR += urweb
     SUBDIR += v8
-    SUBDIR += v8-devel
     SUBDIR += vala
     SUBDIR += visualworks
     SUBDIR += yabasic

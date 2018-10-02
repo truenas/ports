@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	asterisk
-PORTVERSION=	13.20.0
+PORTVERSION=	13.23.0
 CATEGORIES=	net
 MASTER_SITES=	https://downloads.asterisk.org/pub/telephony/%SUBDIR%/:DEFAULT,g729
 MASTER_SITE_SUBDIR=	asterisk/ \
@@ -54,7 +54,7 @@ MAKE_ARGS+=	NOISY_BUILD=yes \
 
 CONFLICTS=		ossp-uuid-[0-9]*
 CONFLICTS_BUILD=	linuxthreads-*
-CONFLICTS_INSTALL=	asterisk*-1.8* asterisk*-11*
+CONFLICTS_INSTALL=	asterisk15
 
 OPTIONS_DEFINE=			ASTVERSION BACKTRACE CURL EXCHANGE FREETDS LDAP LUA \
 				MP3PLAYER OOH323 OPTIMIZED_CFLAGS PJSIP PORTAUDIO RADIUS SNMP \
@@ -91,9 +91,10 @@ MENU_DESC=			Menuselect Interface Backend
 NEWT_DESC=			Newt User Interface
 
 OPTIONS_GROUP+=			SOUNDS
-OPTIONS_GROUP_SOUNDS=		G729
-SOUNDS_DESC=			Core and Music-on-Hold (MoH) Sound Files
+OPTIONS_GROUP_SOUNDS=		G729 JAPANESE
+SOUNDS_DESC=			Core and/or Music-on-Hold (MoH) Sound Files
 G729_DESC=			Install G.729 format sounds
+JAPANESE_DESC=			Install Japanese voice prompts
 ASTERISK_CORE_G729_SOUNDS=	asterisk-core-sounds-en-g729-1.5.tar.gz
 ASTERISK_MOH_G729_SOUNDS=	asterisk-moh-opsound-g729-2.03.tar.gz
 G729_DISTFILES=			${ASTERISK_CORE_G729_SOUNDS}:g729 \
@@ -142,11 +143,13 @@ GCC_USE=		GCC=yes
 GSM_CONFIGURE_WITH=	gsm
 GSM_LIB_DEPENDS=	libgsm.so:audio/gsm
 
+JAPANESE_RUN_DEPENDS=	${LOCALBASE}/share/asterisk/sounds/ja/digits/0.gsm:japanese/asterisk-sounds
+
 LDAP_CONFIGURE_WITH=	ldap
 LDAP_USE=		OPENLDAP=yes
 
 LUA_CONFIGURE_WITH=	lua
-LUA_USES=		lua:51
+LUA_USES=		lua
 LUA_CFLAGS=		-I${LUA_INCDIR}
 LUA_LDFLAGS=		-L${LUA_LIBDIR}
 
@@ -193,7 +196,7 @@ SQLITE2_CONFIGURE_WITH=	sqlite
 SQLITE2_LIB_DEPENDS=	libsqlite.so:databases/sqlite2
 
 SRTP_CONFIGURE_WITH=	srtp
-SRTP_LIB_DEPENDS=	libsrtp.so:net/libsrtp
+SRTP_LIB_DEPENDS=	libsrtp2.so:net/libsrtp2
 
 SYSINFO_LIB_DEPENDS=	libsysinfo.so:devel/libsysinfo
 
@@ -216,8 +219,6 @@ GROUPS=	${ASTERISK_GROUP} dahdi
 LIB_DEPENDS+=	libpj.so:net/pjsip-extsrtp
 .elif ${PORT_OPTIONS:MPJSIP} && ! ${PORT_OPTIONS:MSRTP}
 LIB_DEPENDS+=   libpj.so:net/pjsip
-.elif ! ${PORT_OPTIONS:MPJSIP} && ${PORT_OPTIONS:MSRTP}
-LIB_DEPENDS+=   libsrtp.so:net/libsrtp
 .endif
 
 .include <bsd.port.pre.mk>

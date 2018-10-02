@@ -3,7 +3,7 @@
 
 PORTNAME=	qnapi
 PORTVERSION=	0.2.3
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	polish multimedia
 
 MAINTAINER=	ports@FreeBSD.org
@@ -20,9 +20,9 @@ RUN_DEPENDS=	7z:archivers/p7zip
 
 USE_GITHUB=	yes
 
-USES=		compiler:c++11-lib pkgconfig qmake
+USES=		compiler:c++11-lib pkgconfig qmake qt:5
 USE_GL=		gl
-USE_QT5=	buildtools_build core gui network widgets xml
+USE_QT=		buildtools_build core gui network widgets xml
 
 CXXFLAGS+=	-I${LOCALBASE}/include/maia
 

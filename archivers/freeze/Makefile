@@ -9,10 +9,13 @@ MASTER_SITES=	http://web.warwick.ac.uk/ftp/pub/compression/ \
 		http://www.rebootking.de/distfiles/ \
 		http://ngsoftwareltd.com/freebsd/distfiles/
 
-MAINTAINER=	gabor@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Compression program - often used in QNX
 
 LICENSE=	NONE
+
+DEPRECATED=	unknown license
+EXPIRATION_DATE=	2018-08-15
 
 CONFLICTS_INSTALL=	mlt-[0-9]*
 GNU_CONFIGURE=	yes

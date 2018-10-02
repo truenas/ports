@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	godot
-PORTVERSION=	3.0.2
+PORTVERSION=	3.0.6
 DISTVERSIONSUFFIX= -stable
 CATEGORIES=	devel games
 
@@ -14,6 +14,11 @@ LICENSE_COMB=		multi
 LICENSE_FILE_CC-BY-3.0=	${WRKSRC}/LOGO_LICENSE.md
 LICENSE_FILE_MIT=	${WRKSRC}/LICENSE.txt
 
+BROKEN_aarch64=		fails to build: KeyError: 'android_arch'
+BROKEN_armv6=		fails to build: KeyError: 'android_arch'
+BROKEN_armv7=		fails to build: KeyError: 'android_arch'
+BROKEN_powerpc64=	fails to compile: inv_txfm_sse2.h:14:32: emmintrin.h: No such file or directory
+
 BUILD_DEPENDS=	yasm:devel/yasm
 LIB_DEPENDS=	libfreetype.so:print/freetype2 \
 		libpng.so:graphics/png
@@ -21,14 +26,14 @@ RUN_DEPENDS=	xdg-user-dir:devel/xdg-user-dirs \
 		xdg-open:devel/xdg-utils \
 		xmessage:x11/xmessage
 
-USE_GITHUB=	yes
-GH_ACCOUNT=	godotengine
-
-# on 10.4 using clang34 fails - so we want to use clang50
-# gl already needs clang50 so this shouldn't add any overhead
+# on 10.4 using clang34 fails - so we want to use clang60
+# gl already needs clang60 so this shouldn't add any overhead
 USES=		compiler:c++14-lang pkgconfig scons ssl
 USE_XORG=	x11 xcursor xi xinerama xrandr
 USE_GL=		gl glew glu
+
+USE_GITHUB=	yes
+GH_ACCOUNT=	godotengine
 
 MAKE_ARGS+=		platform=x11 builtin_libpng=False builtin_openssl=False
 MAKE_ARGS+=		${MAKE_ARGS_${CHOSEN_COMPILER_TYPE}}

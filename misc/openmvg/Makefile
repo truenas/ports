@@ -2,8 +2,7 @@
 
 PORTNAME=	openmvg
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.3-76
-DISTVERSIONSUFFIX=	-gd9563130
+DISTVERSION=	1.4
 CATEGORIES=	misc science
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -16,17 +15,17 @@ ONLY_FOR_ARCHS=	amd64 i386
 ONLY_FOR_ARCHS_REASON=	need to figure out which TARGET_ARCHITECTURE values correspond to other architectures, plus "generic" is broken
 
 LIB_DEPENDS=	libflann_cpp.so:math/flann \
-		libpng16.so:graphics/png \
+		libpng.so:graphics/png \
 		libtiff.so:graphics/tiff
 
-USES=		cmake:outsource eigen:3 jpeg
+USES=		cmake:outsource eigen:3 jpeg qt:5
 USE_GITHUB=	yes
 GH_ACCOUNT=	openMVG
 GH_PROJECT=	openMVG
 GH_TUPLE=	openMVG-thirdparty:cereal:37fca60:cereal/dependencies/cereal \
 		openMVG-thirdparty:osi_clp:a25a980:osi/dependencies/osi_clp
 WRKSRC_SUBDIR=	src
-USE_QT5=	core gui opengl svg widgets buildtools_build qmake_build
+USE_QT=		core gui opengl svg widgets buildtools_build qmake_build
 USE_LDCONFIG=	yes
 
 CMAKE_ARGS=	-DEIGEN_INCLUDE_DIR_HINTS=${LOCALBASE}/include/eigen3 \
@@ -54,9 +53,5 @@ K8_CMAKE_ON=			-DTARGET_ARCHITECTURE=k8
 CORE_CMAKE_ON=			-DTARGET_ARCHITECTURE=core
 MEROM_CMAKE_ON=			-DTARGET_ARCHITECTURE=merom
 NEHALEM_CMAKE_ON=		-DTARGET_ARCHITECTURE=nehalem
-
-post-install:
-	@${FIND} ${STAGEDIR}${PREFIX}/lib -name "*.a" -delete # delete wrongly installed dependency libs https://github.com/openMVG/openMVG/issues/1282
-	${INSTALL_LIB} ${BUILD_WRKSRC}/*/libdomset.so ${STAGEDIR}${PREFIX}/lib # https://github.com/openMVG/openMVG/issues/1286
 
 .include <bsd.port.mk>

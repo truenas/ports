@@ -2,14 +2,13 @@
 # $FreeBSD$
 
 PORTNAME=	couchdb
-DISTVERSION=	1.7.1
-PORTREVISION=	2
+DISTVERSION=	1.7.2
 PORTEPOCH=	2
 CATEGORIES=	databases
 MASTER_SITES=	APACHE/couchdb/source/${DISTVERSION}
 DISTNAME=	apache-couchdb-${DISTVERSION}
 
-MAINTAINER=	olgeni@FreeBSD.org
+MAINTAINER=	erlang@FreeBSD.org
 COMMENT=	Document database server, accessible via a RESTful JSON API
 
 LICENSE=	APACHE20 BSD3CLAUSE ISCL WTFPL OFL11
@@ -46,6 +45,8 @@ GROUPS=		couchdb
 STRIP=	#empty
 
 INFO=		CouchDB
+
+OPTIONS_DEFINE=	DOCS
 
 .include <bsd.port.options.mk>
 

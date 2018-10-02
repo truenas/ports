@@ -9,8 +9,11 @@ PKGNAMESUFFIX=	-kde4
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	Thumbnailers for various graphics file formats
 
-USES=		cmake:outsource kde:4 pkgconfig tar:xz
+DEPRECATED=	KDE4 is EOL upstream
+EXPIRATION_DATE=	2018-12-31
+
+USES=		cmake:outsource kde:4 pkgconfig qt:4 tar:xz
 USE_KDE=	kdelibs libkdcraw libkexiv2 automoc4
-USE_QT4=	gui qmake_build moc_build uic_build rcc_build
+USE_QT=		gui qmake_build moc_build uic_build rcc_build
 
 .include <bsd.port.mk>

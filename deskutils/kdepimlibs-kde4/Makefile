@@ -3,7 +3,7 @@
 
 PORTNAME=	kdepimlibs
 PORTVERSION=	${KDE4_KDEPIM_VERSION}
-PORTREVISION=	18
+PORTREVISION=	21
 CATEGORIES=	deskutils kde
 MASTER_SITES=	KDE/${KDE4_APPLICATIONS_BRANCH}/applications/${KDE4_APPLICATIONS_VERSION}/src
 DIST_SUBDIR=	KDE/${PORTVERSION}
@@ -12,6 +12,9 @@ PKGNAMESUFFIX=	-kde4
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	KDE PIM Libraries
 
+DEPRECATED=	KDE4 is EOL upstream
+EXPIRATION_DATE=	2018-12-31
+
 BUILD_DEPENDS=	xsltproc:textproc/libxslt
 LIB_DEPENDS=	libgpgme.so:security/gpgme \
 		libsasl2.so:security/cyrus-sasl2 \
@@ -19,14 +22,14 @@ LIB_DEPENDS=	libgpgme.so:security/gpgme \
 		libical.so:devel/libical \
 		libuuid.so:misc/e2fsprogs-libuuid \
 		libprison.so:graphics/prison \
-		libqjson.so:devel/qjson
+		libqjson.so:devel/qjson@qt4
 
-USES=		cmake:outsource kde:4 shared-mime-info shebangfix tar:xz
+USES=		cmake:outsource kde:4 qt:4 shared-mime-info shebangfix tar:xz
 USE_KDE=	kdelibs akonadi \
 		automoc4 ontologies soprano
 SHEBANG_FILES=	mailtransport/kconf_update/migrate-transports.pl
 USE_OPENLDAP=	yes
-USE_QT4=	corelib dbus declarative designer_build gui network sql xml \
+USE_QT=		corelib dbus declarative designer_build gui network sql xml \
 		qmake_build moc_build rcc_build uic_build
 USE_LDCONFIG=	yes
 

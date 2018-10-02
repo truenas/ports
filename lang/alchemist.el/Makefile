@@ -3,11 +3,11 @@
 PORTNAME=	alchemist.el
 PORTVERSION=	1.8.2
 DISTVERSIONPREFIX=	v
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	lang
 PKGNAMESUFFIX=	${EMACS_PKGNAMESUFFIX}
 
-MAINTAINER=	olgeni@FreeBSD.org
+MAINTAINER=	erlang@FreeBSD.org
 COMMENT=	Elixir Tooling Integration Into Emacs
 
 LICENSE=	GPLv3
@@ -20,6 +20,8 @@ GH_ACCOUNT=	tonini
 
 NO_ARCH=	yes
 NO_BUILD=	yes
+
+OPTIONS_DEFINE=	DOCS
 
 do-install:
 	@${MKDIR} ${STAGEDIR}${PREFIX}/${EMACS_SITE_LISPDIR}/alchemist-server

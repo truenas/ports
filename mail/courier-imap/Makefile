@@ -3,6 +3,7 @@
 
 PORTNAME=	courier-imap
 PORTVERSION=	4.18.2
+PORTREVISION=	1
 PORTEPOCH=	2
 CATEGORIES=	mail ipv6
 MASTER_SITES=	SF/courier/imap/${PORTVERSION}
@@ -17,7 +18,7 @@ LIB_DEPENDS=	libcourier-unicode.so:devel/courier-unicode
 
 CONFLICTS=	courier-[0-9]* imap-uw-[0-9]* panda-imap-[0-9]*
 
-USES=		gmake localbase:ldflags perl5 ssl tar:bzip2
+USES=		compiler:c++11-lang gmake localbase:ldflags perl5 ssl tar:bzip2
 GNU_CONFIGURE=	yes
 USE_RC_SUBR=	courier-imap-imapd courier-imap-imapd-ssl \
 		courier-imap-pop3d courier-imap-pop3d-ssl

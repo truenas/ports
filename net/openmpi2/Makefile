@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	openmpi
-PORTVERSION=	2.1.3
+PORTVERSION=	2.1.5
 CATEGORIES=	net parallel
 MASTER_SITES=	http://www.open-mpi.org/software/ompi/v${PORTVERSION:R}/downloads/
 PKGNAMESUFFIX=	2
@@ -12,6 +12,7 @@ COMMENT=	High Performance Message Passing Library
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
+BROKEN_aarch64=		fails to package: pkg-static: mca_patcher_overwrite.la: No such file or directory
 BROKEN_armv6=		fails to package: pkg-static: mca_patcher_overwrite.la: No such file or directory
 BROKEN_armv7=		fails to package: pkg-static: mca_patcher_overwrite.la: No such file or directory
 BROKEN_sparc64=		fails to compile on sparc64
@@ -45,6 +46,8 @@ CONFIGURE_ARGS+=	--prefix=${PREFIX}/${MPIDIR} \
 			--enable-heterogeneous \
 			--enable-mpi-thread-multiple \
 			--with-libevent=external \
+			--enable-mca-no-build=verbs,btl_openib,oob_ud \
+			--without-verbs \
 			--with-wrapper-ldflags=-Wl,-rpath=-Wl,-rpath=${LOCALBASE}/lib/gcc${_GCC_VER} \
 			ompi_cv_fortran_ignore_tkr_data=0
 

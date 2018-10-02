@@ -3,7 +3,7 @@
 
 PORTNAME=	pysparse
 PORTVERSION=	1.3
-PORTREVISION=	4
+PORTREVISION=	5
 CATEGORIES=	math python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
@@ -13,8 +13,8 @@ COMMENT=	Fast sparse matrix library for Python
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}numpy>=1.2,1:math/py-numpy@${FLAVOR}
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}numpy>=1.2,1:math/py-numpy@${FLAVOR}
+BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}numpy>=1.2,1:math/py-numpy@${PY_FLAVOR}
+RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}numpy>=1.2,1:math/py-numpy@${PY_FLAVOR}
 LIB_DEPENDS=	liblapack.so:math/lapack \
 		libblas.so:math/blas \
 		libopenblas.so:math/openblas \

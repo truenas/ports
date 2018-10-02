@@ -6,7 +6,7 @@ DISTVERSIONPREFIX=	v
 CATEGORIES=	devel
 PKGNAMEPREFIX=	elixir-
 
-MAINTAINER=	olgeni@FreeBSD.org
+MAINTAINER=	erlang@FreeBSD.org
 COMMENT=	MessagePack implementation for Elixir
 
 LICENSE=	ISCL
@@ -16,5 +16,7 @@ USE_GITHUB=	yes
 GH_ACCOUNT=	lexmag
 
 MIX_REWRITE=	yes
+
+OPTIONS_DEFINE=	DOCS
 
 .include <bsd.port.mk>

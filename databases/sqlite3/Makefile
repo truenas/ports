@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	sqlite3
-DISTVERSION=	3.23.0
+DISTVERSION=	3.25.0
 CATEGORIES=	databases
 MASTER_SITES=	https://www.sqlite.org/2018/ http://www2.sqlite.org/2018/ http://www3.sqlite.org/2018/
 DISTNAME=	sqlite-autoconf-${PORTVERSION:C/\.([[:digit:]])[[:>:]]/0\1/g:S/.//g}00
@@ -23,7 +23,7 @@ MAKE_JOBS_UNSAFE=	yes
 OPTIONS_DEFINE=		FTS4 UPD_DEL_LIMIT URI URI_AUTHORITY METADATA \
 			DIRECT_READ MEMMAN SECURE_DELETE UNLOCK_NOTIFY THREADS \
 			EXTENSION ARMOR STMT DBPAGE DBSTAT FTS5 RBU NULL_TRIM \
-			LIKENOTBLOB STSHELL FTS3_TOKEN UNKNOWN_SQL
+			LIKENOTBLOB STSHELL FTS3_TOKEN UNKNOWN_SQL SORT_REF
 OPTIONS_SINGLE=		RAMT
 OPTIONS_RADIO=		STAT
 OPTIONS_GROUP=		OPT_EXT OPT_FUNC UNICODE RTREEG RL
@@ -86,6 +86,9 @@ RBU_DESC=		Enable the resumable bulk update
 # https://www.sqlite.org/c3ref/stmt_scanstatus.html
 STMT_DESC=		Prepared statement scan status
 
+# https://www.sqlite.org/compile.html#enable_sorter_references
+SORT_REF_DESC=		To use references in the sorter
+
 # https://www.sqlite.org/tempfiles.html#tempstore
 OPTIONS_SINGLE_RAMT=	TS0 TS1 TS2 TS3
 RAMT_DESC=		Where to store temporary file
@@ -112,10 +115,13 @@ UNICODE_DESC=		Unicode support
 UNICODE61_DESC=		Unicode Version 6.1 tokenizer
 
 # https://www.sqlite.org/rtree.html
-OPTIONS_GROUP_RTREEG=	RTREE RTREE_INT
+OPTIONS_GROUP_RTREEG=	RTREE RTREE_INT GEOPOLY
 RTREEG_DESC=		Index type for range queries
 RTREE_DESC=		Enable R*Tree module
 RTREE_INT_DESC=		Store 32-bit sig int (no float) coordinates
+# https://www.sqlite.org/geopoly.html
+GEOPOLY_DESC=		Uses the GeoJSON notation (RFC-7946)
+GEOPOLY_IMPLIES=	RTREE
 
 OPTIONS_GROUP_RL=	READLINES READLINEP EDITLINE
 RL_DESC=		Which command line editing library to use:
@@ -131,7 +137,7 @@ OPTIONS_DEFAULT=	FTS4 URI METADATA SECURE_DELETE UNLOCK_NOTIFY THREADS \
 			FTS3_TOKEN FTS5
 # SECURE_DELETE, UNLOCK_NOTIFY, DBSTAT (since 41.0) used by www/firefox et al.
 # RTREE used by graphics/mapnik, databases/spatialite
-# FTS3_TOKEN used by audio/clementine-player
+# FTS3_TOKEN used by audio/clementine-player, mail/thunderbird, www/seamonkey
 # FTS5 used by sysutils/tracker
 
 PLIST_FILES=	bin/sqlite3 include/sqlite3.h include/sqlite3ext.h \
@@ -154,6 +160,7 @@ TS3_CPPFLAGS=	-DSQLITE_TEMP_STORE=3
 
 RTREE_CPPFLAGS=	-DSQLITE_ENABLE_RTREE=1
 RTREE_INT_CPPFLAGS=	-DSQLITE_RTREE_INT_ONLY=1
+GEOPOLY_CPPFLAGS=	-DSQLITE_ENABLE_GEOPOLY=1
 
 FTS4_CPPFLAGS=	-DSQLITE_ENABLE_FTS3 -DSQLITE_ENABLE_FTS3_PARENTHESIS=1 -DSQLITE_ENABLE_FTS4=1
 FTS5_CONFIGURE_ENABLE=	fts5
@@ -215,6 +222,8 @@ NULL_TRIM_CPPFLAGS=	-DSQLITE_ENABLE_NULL_TRIM=1
 OFFSET_CPPFLAGS=	-DSQLITE_ENABLE_OFFSET_SQL_FUNC=1
 
 SER1_CPPFLAGS=	-DSQLITE_ENABLE_DESERIALIZE=1
+
+SORT_REF_CPPFLAGS=	-DSQLITE_ENABLE_SORTER_REFERENCES=1
 
 .include <bsd.port.options.mk>
 

@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	xapian
-PORTVERSION=	1.4.5
+PORTVERSION=	1.4.7
 DISTVERSIONPREFIX=	bindings-
 CATEGORIES=	databases python
 MASTER_SITES=	http://oligarchy.co.uk/xapian/${PORTVERSION}/ \
@@ -37,7 +37,7 @@ USE_PYTHON=	flavors
 
 PORTDOCS=	*
 
-DOCS_BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}sphinx>=1.4.8:textproc/py-sphinx@${FLAVOR}
+DOCS_BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}sphinx>=1.4.8:textproc/py-sphinx@${PY_FLAVOR}
 
 .include <bsd.port.pre.mk>
 

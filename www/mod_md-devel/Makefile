@@ -2,8 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	mod_md
-PORTVERSION=	1.1.10
-PORTREVISION=	3
+PORTVERSION=	1.1.16
 DISTVERSIONPREFIX=	v
 CATEGORIES=	www
 PKGNAMEPREFIX=	${APACHE_PKGNAMEPREFIX}
@@ -14,6 +13,10 @@ COMMENT=	Early experience LetsEncrypt module for Apache httpd
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
+
+BROKEN_mips=		fails to compile: md_json.c:29: expected [error|warning|ignored] after pragma GCC diagnostic
+BROKEN_mips64=		fails to compile: md_json.c:29: expected [error|warning|ignored] after pragma GCC diagnostic
+BROKEN_powerpc64=	fails to compile: md_json.c:29: expected [error|warning|ignored] after pragma GCC diagnostic
 
 LIB_DEPENDS=	libaprutil-1.so:devel/apr1 \
 		libcurl.so:ftp/curl \
@@ -36,6 +39,8 @@ SUB_FILES=	999_mod_md.conf pkg-message
 DOCSDIR=	share/doc/mod_md
 PORTDOCS=	README README.md
 
+OPTIONS_DEFINE=	DOCS
+
 .include <bsd.port.pre.mk>
 
 .if ${OPSYS} == FreeBSD && ${OSVERSION} < 1100085 && ${SSL_DEFAULT} == base
@@ -49,7 +54,8 @@ post-install:
 		${STAGEDIR}${PREFIX}/${APACHEETCDIR}/modules.d/999_mod_md.conf.sample
 	${MV} ${STAGEDIR}${PREFIX}/${APACHEMODDIR}/mod_md.so.0.0.0 \
 		${STAGEDIR}${PREFIX}/${APACHEMODDIR}/mod_manageddomain.so.0.0.0
-	${MV} ${STAGEDIR}${PREFIX}/${APACHEMODDIR}/mod_md.so \
-		${STAGEDIR}${PREFIX}/${APACHEMODDIR}/mod_manageddomain.so
+	${RM} ${STAGEDIR}${PREFIX}/${APACHEMODDIR}/mod_md.so
+	(cd ${STAGEDIR}${PREFIX}/${APACHEMODDIR} && \
+		${LN} mod_manageddomain.so.0.0.0 mod_manageddomain.so)
 
 .include <bsd.port.post.mk>

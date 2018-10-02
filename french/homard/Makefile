@@ -2,8 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	homard
-DISTVERSION=	11.7-1
-PORTREVISION=	2
+DISTVERSION=	11.10-1
 CATEGORIES=	french cad linux
 
 MAINTAINER=	thierry@FreeBSD.org
@@ -19,7 +18,7 @@ RESTRICTED=	The free downloading of HOMARD software is only allowed for coupling
 
 ONLY_FOR_ARCHS=	amd64 i386
 
-USES=		linux python shebangfix
+USES=		linux python:2.7 shebangfix
 SHEBANG_FILES=	${WRKSRC}/ASTER_HOMARD/homard	\
 		${WRKSRC}/homard_base ${WRKSRC}/setup_homard.py
 REINPLACE_ARGS=	-i ""

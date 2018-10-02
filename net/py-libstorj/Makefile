@@ -6,10 +6,12 @@ DISTVERSIONPREFIX=	v
 CATEGORIES=	net
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	jhixson@gmail.com
+MAINTAINER=	jhixson@FreeBSD.org
 COMMENT=	Python bindings for libstorj
 
 LICENSE=	LGPL21+
+
+BROKEN=		fails to build
 
 BUILD_DEPENDS=	swig3.0:devel/swig30
 LIB_DEPENDS=	libstorj.so:net/libstorj

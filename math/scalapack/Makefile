@@ -3,7 +3,7 @@
 
 PORTNAME=	scalapack
 PORTVERSION=	2.0.2
-PORTREVISION=	13
+PORTREVISION=	14
 CATEGORIES=	math
 MASTER_SITES=	NL
 DISTFILES=	scalapack-${PORTVERSION}.tgz manpages.tgz
@@ -29,9 +29,10 @@ ARCH2FIX=	PBLAS/SRC PBLAS/SRC/PBBLAS PBLAS/SRC/PTOOLS PBLAS/SRC/PTZBLAS \
 
 DATADIR=	${PREFIX}/share/${PORTNAME:tu}
 EXAMPLESDIR=	${PREFIX}/share/examples/${PORTNAME:tu}
-PKGMESSAGE=	${WRKDIR}/pkg-message
 SUB_FILES=	pkg-message
 PLIST_SUB=	SVERSION=${SVERSION} PORTVERSION=${PORTVERSION}
+
+OPTIONS_DEFINE=	DOCS EXAMPLES
 
 .include <bsd.port.pre.mk>
 
@@ -149,7 +150,7 @@ post-install:
 .endif
 
 .if defined(MAINTAINER_MODE)
-regression-test:	build
+do-test:
 . if !exists(${HOME}/.mpd.conf)
 	@${ECHO_CMD} "MPD_SECRETWORD=change_on_install" > ${HOME}/.mpd.conf
 	${CHMOD} go-r ${HOME}/.mpd.conf

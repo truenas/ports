@@ -3,25 +3,25 @@
 
 PORTNAME=	grub2-pcbsd
 PORTVERSION=	2.02q
-PORTREVISION=	12
+PORTREVISION=	13
 CATEGORIES=	sysutils
 MASTER_SITES=	http://www.pcbsd.org/~kris/software/ \
 		ftp://ftp.pcbsd.org/pub/software/
 DISTNAME=	grub-2.02_8
 
-MAINTAINER=	kmoore@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Multiboot boot loader
 
 LICENSE=	GPLv3
 
-BUILD_DEPENDS=	${LOCALBASE}/bin/flex:${PORTSDIR}/textproc/flex \
-		${LOCALBASE}/bin/bash:${PORTSDIR}/shells/bash \
-		help2man:${PORTSDIR}/misc/help2man
+BUILD_DEPENDS=	${LOCALBASE}/bin/flex:textproc/flex \
+		${LOCALBASE}/bin/bash:shells/bash \
+		help2man:misc/help2man
 
 WRKSRC=		${WRKDIR}/grub-2.02
 CONFLICTS=	grub-0* grub2-2*
 SSP_UNSAFE=	yes
-USE_GCC=	yes
+ACLOCAL_ARGS=	-Im4
 GNU_CONFIGURE=	yes
 USES=		autoreconf:build bison cpe gettext gmake makeinfo python tar:xz
 ONLY_FOR_ARCHS=	i386 amd64
@@ -63,7 +63,7 @@ MKFONT=		"@comment "
 PLIST_SUB+=	MKFONT=${MKFONT}
 
 .if ${PORT_OPTIONS:MFUSE}
-LIB_DEPENDS+=	libfuse.so:${PORTSDIR}/sysutils/fusefs-libs
+LIB_DEPENDS+=	libfuse.so:sysutils/fusefs-libs
 CONFIGURE_ARGS+=	--enable-grub-mount
 .else
 CONFIGURE_ARGS+=	--disable-grub-mount
@@ -90,5 +90,7 @@ post-install:
 	${INSTALL_SCRIPT} ${WRKDIR}/30_os-prober ${STAGEDIR}${PREFIX}/etc/grub.d/
 	${INSTALL_SCRIPT} ${WRKDIR}/50_otherbe ${STAGEDIR}${PREFIX}/etc/grub.d/
 	${MV} ${STAGEDIR}${PREFIX}/etc/grub.d/40_custom ${STAGEDIR}/${PREFIX}/etc/grub.d/40_custom.dist
+
+RUN_DEPENDS:=	${RUN_DEPENDS:Ngcc*}
 
 .include <bsd.port.post.mk>

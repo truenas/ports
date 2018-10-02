@@ -8,9 +8,12 @@ CATEGORIES=	games kde kde-kde4
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	${${PORTNAME}_DESC}
 
-USES=		cmake:outsource kde:4 shared-mime-info tar:xz
+DEPRECATED=	KDE4 is EOL upstream
+EXPIRATION_DATE=	2018-12-31
+
+USES=		cmake:outsource kde:4 qt:4 shared-mime-info tar:xz
 USE_KDE=	kdelibs libkdegames automoc4
-USE_QT4=	corelib gui gui \
+USE_QT=		corelib gui gui \
 		moc_build qmake_build rcc_build uic_build
 USE_LDCONFIG=	yes
 

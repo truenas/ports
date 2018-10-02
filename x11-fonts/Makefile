@@ -3,6 +3,7 @@
 
     COMMENT = X11 fonts and font utilities
 
+    SUBDIR += Hasklig
     SUBDIR += alef
     SUBDIR += alegreya
     SUBDIR += alegreya-sans
@@ -32,12 +33,12 @@
     SUBDIR += crosextrafonts-carlito-ttf
     SUBDIR += cyberbit-ttfonts
     SUBDIR += cyr-rfx
+    SUBDIR += datalegreya
     SUBDIR += dejavu
     SUBDIR += dina
     SUBDIR += doulos
     SUBDIR += doulos-compact
     SUBDIR += droid-fonts-ttf
-    SUBDIR += ecofont
     SUBDIR += emojione-color-font-ttf
     SUBDIR += encodings
     SUBDIR += exo
@@ -91,12 +92,10 @@
     SUBDIR += font-util
     SUBDIR += font-winitzki-cyrillic
     SUBDIR += font-xfree86-type1
-    SUBDIR += fontcacheproto
     SUBDIR += fontconfig
     SUBDIR += fontconfig-reference
     SUBDIR += fontmatrix
     SUBDIR += fonts-indic
-    SUBDIR += fontsproto
     SUBDIR += fonttosfnt
     SUBDIR += freefont-ttf
     SUBDIR += freefonts
@@ -108,11 +107,11 @@
     SUBDIR += gfe
     SUBDIR += gnu-unifont
     SUBDIR += gnu-unifont-ttf
+    SUBDIR += gofont-ttf
     SUBDIR += gohufont
     SUBDIR += google-fonts
     SUBDIR += hack-font
     SUBDIR += hanazono-fonts-ttf
-    SUBDIR += hasklig
     SUBDIR += inconsolata-lgc-ttf
     SUBDIR += inconsolata-ttf
     SUBDIR += indic-ttf
@@ -164,6 +163,7 @@
     SUBDIR += paratype
     SUBDIR += pcf2bdf
     SUBDIR += pingwi
+    SUBDIR += plex-ttf
     SUBDIR += powerline-fonts
     SUBDIR += profont
     SUBDIR += proggy_fonts
@@ -193,7 +193,6 @@
     SUBDIR += vollkorn-ttf
     SUBDIR += webfonts
     SUBDIR += wqy
-    SUBDIR += xf86bigfontproto
     SUBDIR += xfontsel
     SUBDIR += xfs
     SUBDIR += xfsinfo

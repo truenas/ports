@@ -41,6 +41,7 @@ bin/wsrep_sst_common
 bin/wsrep_sst_mariabackup
 bin/wsrep_sst_mysqldump
 bin/wsrep_sst_rsync
+bin/wsrep_sst_rsync_wan
 bin/wsrep_sst_xtrabackup
 bin/wsrep_sst_xtrabackup-v2
 include/mysql/private/atomic/gcc_builtins.h
@@ -72,8 +73,8 @@ include/mysql/private/my_md5.h
 include/mysql/private/my_nosys.h
 include/mysql/private/my_rdtsc.h
 include/mysql/private/my_rnd.h
+include/mysql/private/my_service_manager.h
 include/mysql/private/my_stacktrace.h
-include/mysql/private/my_systemd.h
 include/mysql/private/my_time.h
 include/mysql/private/my_tree.h
 include/mysql/private/my_uctype.h

@@ -10,9 +10,12 @@ PKGNAMESUFFIX=	-kde4
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	KDE Artworks Themes
 
-USES=		cmake:outsource kde:4 tar:xz
+DEPRECATED=	KDE4 is EOL upstream
+EXPIRATION_DATE=	2018-12-31
+
+USES=		cmake:outsource kde:4 qt:4 tar:xz
 USE_KDE=	kdelibs libkexiv2 workspace automoc4
-USE_QT4=	corelib gui opengl \
+USE_QT=		corelib gui opengl \
 		moc_build qmake_build rcc_build uic_build
 USE_XORG=	x11 xt
 

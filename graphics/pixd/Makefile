@@ -3,6 +3,7 @@
 PORTNAME=	pixd
 DISTVERSIONPREFIX=v
 DISTVERSION=	1.0.0
+PORTREVISION=	1
 CATEGORIES=	graphics
 
 MAINTAINER=	mail@dbalan.in
@@ -11,7 +12,7 @@ COMMENT=	Visualize binary data in terminal
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USES=		gmake
+USES=		compiler:c++11-lang gmake
 USE_GITHUB=	yes
 GH_ACCOUNT=	FireyFly
 

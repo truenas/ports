@@ -3,6 +3,7 @@
 
 PORTNAME=	reduce
 PORTVERSION=	20180117
+PORTREVISION=	2
 CATEGORIES=	math lang
 MASTER_SITES=	SF/${PORTNAME}-algebra/${SFSUBDIR}/
 DISTNAME=	Reduce-svn4372-src
@@ -12,6 +13,8 @@ COMMENT=	REDUCE Codemist Standard Lisp general-purpose computer system
 
 LICENSE=	BSD2CLAUSE
 
+BROKEN_aarch64=		fails to install: Reduce-svn4372-src/cslbuild/aarch64-unknown-freebsd11.1/csl/reduce.img: No such file or directory
+BROKEN_armv6=		fails to compile: redfront.h:118:12: conflicting types for '__wcwidth'
 BROKEN_powerpc64=	fails to compile: arith01.cpp: 'statuc' does not name a type
 
 RUN_DEPENDS=	gnuplot:math/gnuplot
@@ -33,7 +36,7 @@ CPPFLAGS+=	-I${NCURSESINC}
 HAS_CONFIGURE=	yes
 ALL_TARGET=
 
-USE_XORG=	x11 xext xproto xft
+USE_XORG=	x11 xext xorgproto xft
 USES+=		jpeg
 CONFIGURE_ARGS=	--with-csl
 CPPFLAGS+=	`freetype-config --cflags`
@@ -41,7 +44,7 @@ LDFLAGS+=	`freetype-config --libs`
 
 REDUCE_BINS=	${WRKSRC}/cslbuild/${TARGET_SDIR}
 
-.include <bsd.port.options.mk>
+OPTIONS_DEFINE=	DOCS
 
 do-install:
 	${MKDIR} ${STAGEDIR}${DATADIR}

@@ -3,7 +3,7 @@
 
 PORTNAME=	Clp
 PORTVERSION=	1.16.10
-PORTREVISION=	4
+PORTREVISION=	5
 CATEGORIES=	math
 MASTER_SITES=	http://www.coin-or.org/download/source/${PORTNAME}/ \
 		http://www.mavetju.org/download/adopted/
@@ -27,7 +27,7 @@ CONFIGURE_ARGS=	--with-lapack-lib="${LAPACKLIB} -L${LOCALBASE}/lib" \
 		--with-blas-lib="${BLASLIB} -L${LOCALBASE}/lib" \
 		--datadir=${DATADIR}
 
-OPTIONS_DEFINE=	DEBUG
+OPTIONS_DEFINE=	DEBUG DOCS
 PORTDOCS=	*
 
 DEBUG_CXXFLAGS=	-fomit-frame-pointer

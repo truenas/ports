@@ -1,7 +1,7 @@
-bin/restic
-%%BASH%%etc/bash_completion.d/%%PORTNAME%%.sh
-%%ZSH%%share/zsh/site-functions/_%%PORTNAME%%
+bin/%%PORTNAME%%
+etc/bash_completion.d/%%PORTNAME%%.sh
 man/man1/%%PORTNAME%%-backup.1.gz
+man/man1/%%PORTNAME%%-cache.1.gz
 man/man1/%%PORTNAME%%-cat.1.gz
 man/man1/%%PORTNAME%%-check.1.gz
 man/man1/%%PORTNAME%%-diff.1.gz
@@ -19,7 +19,9 @@ man/man1/%%PORTNAME%%-prune.1.gz
 man/man1/%%PORTNAME%%-rebuild-index.1.gz
 man/man1/%%PORTNAME%%-restore.1.gz
 man/man1/%%PORTNAME%%-snapshots.1.gz
+man/man1/%%PORTNAME%%-stats.1.gz
 man/man1/%%PORTNAME%%-tag.1.gz
 man/man1/%%PORTNAME%%-unlock.1.gz
 man/man1/%%PORTNAME%%-version.1.gz
 man/man1/%%PORTNAME%%.1.gz
+share/zsh/site-functions/_%%PORTNAME%%

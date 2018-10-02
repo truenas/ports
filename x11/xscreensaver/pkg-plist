@@ -42,6 +42,7 @@ bin/xscreensaver-hacks/companioncube
 bin/xscreensaver-hacks/compass
 bin/xscreensaver-hacks/coral
 bin/xscreensaver-hacks/crackberg
+bin/xscreensaver-hacks/crumbler
 bin/xscreensaver-hacks/crystal
 bin/xscreensaver-hacks/cube21
 bin/xscreensaver-hacks/cubenetic
@@ -71,6 +72,7 @@ bin/xscreensaver-hacks/euler2d
 bin/xscreensaver-hacks/extrusion
 bin/xscreensaver-hacks/fadeplot
 bin/xscreensaver-hacks/fiberlamp
+bin/xscreensaver-hacks/filmleader
 bin/xscreensaver-hacks/fireworkx
 bin/xscreensaver-hacks/flame
 bin/xscreensaver-hacks/flipflop
@@ -91,6 +93,7 @@ bin/xscreensaver-hacks/glblur
 bin/xscreensaver-hacks/glcells
 bin/xscreensaver-hacks/gleidescope
 bin/xscreensaver-hacks/glhanoi
+bin/xscreensaver-hacks/glitchpeg
 bin/xscreensaver-hacks/glknots
 bin/xscreensaver-hacks/glmatrix
 bin/xscreensaver-hacks/glplanet
@@ -132,6 +135,7 @@ bin/xscreensaver-hacks/lockward
 bin/xscreensaver-hacks/loop
 bin/xscreensaver-hacks/m6502
 bin/xscreensaver-hacks/maze
+bin/xscreensaver-hacks/maze3d
 bin/xscreensaver-hacks/memscroller
 bin/xscreensaver-hacks/menger
 bin/xscreensaver-hacks/metaballs
@@ -149,6 +153,7 @@ bin/xscreensaver-hacks/noof
 bin/xscreensaver-hacks/noseguy
 bin/xscreensaver-hacks/pacman
 bin/xscreensaver-hacks/pedal
+bin/xscreensaver-hacks/peepers
 bin/xscreensaver-hacks/penetrate
 bin/xscreensaver-hacks/penrose
 bin/xscreensaver-hacks/petri
@@ -170,6 +175,7 @@ bin/xscreensaver-hacks/qix
 bin/xscreensaver-hacks/quasicrystal
 bin/xscreensaver-hacks/queens
 bin/xscreensaver-hacks/raverhoop
+bin/xscreensaver-hacks/razzledazzle
 bin/xscreensaver-hacks/rd-bomb
 bin/xscreensaver-hacks/ripples
 bin/xscreensaver-hacks/rocks
@@ -216,6 +222,7 @@ bin/xscreensaver-hacks/twang
 bin/xscreensaver-hacks/unicrud
 bin/xscreensaver-hacks/unknownpleasures
 bin/xscreensaver-hacks/vermiculate
+bin/xscreensaver-hacks/vfeedback
 bin/xscreensaver-hacks/vidwhacker
 bin/xscreensaver-hacks/vigilance
 bin/xscreensaver-hacks/voronoi
@@ -280,6 +287,7 @@ man/man6/companioncube.6.gz
 man/man6/compass.6.gz
 man/man6/coral.6.gz
 man/man6/crackberg.6.gz
+man/man6/crumbler.6.gz
 man/man6/crystal.6.gz
 man/man6/cube21.6.gz
 man/man6/cubenetic.6.gz
@@ -309,6 +317,7 @@ man/man6/euler2d.6.gz
 man/man6/extrusion.6.gz
 man/man6/fadeplot.6.gz
 man/man6/fiberlamp.6.gz
+man/man6/filmleader.6.gz
 man/man6/fireworkx.6.gz
 man/man6/flame.6.gz
 man/man6/flipflop.6.gz
@@ -329,6 +338,7 @@ man/man6/glblur.6.gz
 man/man6/glcells.6.gz
 man/man6/gleidescope.6.gz
 man/man6/glhanoi.6.gz
+man/man6/glitchpeg.6.gz
 man/man6/glknots.6.gz
 man/man6/glmatrix.6.gz
 man/man6/glplanet.6.gz
@@ -369,6 +379,7 @@ man/man6/ljlatest.6.gz
 man/man6/lockward.6.gz
 man/man6/loop.6.gz
 man/man6/maze.6.gz
+man/man6/maze3d.6.gz
 man/man6/memscroller.6.gz
 man/man6/menger.6.gz
 man/man6/metaballs.6.gz
@@ -386,6 +397,7 @@ man/man6/noof.6.gz
 man/man6/noseguy.6.gz
 man/man6/pacman.6.gz
 man/man6/pedal.6.gz
+man/man6/peepers.6.gz
 man/man6/penetrate.6.gz
 man/man6/penrose.6.gz
 man/man6/petri.6.gz
@@ -406,6 +418,7 @@ man/man6/qix.6.gz
 man/man6/quasicrystal.6.gz
 man/man6/queens.6.gz
 man/man6/raverhoop.6.gz
+man/man6/razzledazzle.6.gz
 man/man6/rd-bomb.6.gz
 man/man6/ripples.6.gz
 man/man6/rocks.6.gz
@@ -450,6 +463,7 @@ man/man6/twang.6.gz
 man/man6/unicrud.6.gz
 man/man6/unknownpleasures.6.gz
 man/man6/vermiculate.6.gz
+man/man6/vfeedback.6.gz
 man/man6/vidwhacker.6.gz
 man/man6/vigilance.6.gz
 man/man6/voronoi.6.gz
@@ -533,6 +547,7 @@ share/pixmaps/xscreensaver.xpm
 %%DATADIR%%/config/compass.xml
 %%DATADIR%%/config/coral.xml
 %%DATADIR%%/config/crackberg.xml
+%%DATADIR%%/config/crumbler.xml
 %%DATADIR%%/config/crystal.xml
 %%DATADIR%%/config/cube21.xml
 %%DATADIR%%/config/cubenetic.xml
@@ -562,6 +577,7 @@ share/pixmaps/xscreensaver.xpm
 %%DATADIR%%/config/extrusion.xml
 %%DATADIR%%/config/fadeplot.xml
 %%DATADIR%%/config/fiberlamp.xml
+%%DATADIR%%/config/filmleader.xml
 %%DATADIR%%/config/fireworkx.xml
 %%DATADIR%%/config/flame.xml
 %%DATADIR%%/config/flipflop.xml
@@ -582,6 +598,7 @@ share/pixmaps/xscreensaver.xpm
 %%DATADIR%%/config/glcells.xml
 %%DATADIR%%/config/gleidescope.xml
 %%DATADIR%%/config/glhanoi.xml
+%%DATADIR%%/config/glitchpeg.xml
 %%DATADIR%%/config/glknots.xml
 %%DATADIR%%/config/glmatrix.xml
 %%DATADIR%%/config/glplanet.xml
@@ -622,6 +639,7 @@ share/pixmaps/xscreensaver.xpm
 %%DATADIR%%/config/loop.xml
 %%DATADIR%%/config/m6502.xml
 %%DATADIR%%/config/maze.xml
+%%DATADIR%%/config/maze3d.xml
 %%DATADIR%%/config/memscroller.xml
 %%DATADIR%%/config/menger.xml
 %%DATADIR%%/config/metaballs.xml
@@ -639,6 +657,7 @@ share/pixmaps/xscreensaver.xpm
 %%DATADIR%%/config/noseguy.xml
 %%DATADIR%%/config/pacman.xml
 %%DATADIR%%/config/pedal.xml
+%%DATADIR%%/config/peepers.xml
 %%DATADIR%%/config/penetrate.xml
 %%DATADIR%%/config/penrose.xml
 %%DATADIR%%/config/petri.xml
@@ -660,6 +679,7 @@ share/pixmaps/xscreensaver.xpm
 %%DATADIR%%/config/quasicrystal.xml
 %%DATADIR%%/config/queens.xml
 %%DATADIR%%/config/raverhoop.xml
+%%DATADIR%%/config/razzledazzle.xml
 %%DATADIR%%/config/rd-bomb.xml
 %%DATADIR%%/config/ripples.xml
 %%DATADIR%%/config/rocks.xml
@@ -704,6 +724,7 @@ share/pixmaps/xscreensaver.xpm
 %%DATADIR%%/config/unicrud.xml
 %%DATADIR%%/config/unknownpleasures.xml
 %%DATADIR%%/config/vermiculate.xml
+%%DATADIR%%/config/vfeedback.xml
 %%DATADIR%%/config/vidwhacker.xml
 %%DATADIR%%/config/vigilance.xml
 %%DATADIR%%/config/voronoi.xml

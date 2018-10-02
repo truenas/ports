@@ -3,6 +3,7 @@
 
 PORTNAME=	enchant
 PORTVERSION=	2.2.3
+PORTREVISION=	1
 CATEGORIES=	textproc gnome
 MASTER_SITES=	https://github.com/AbiWord/enchant/releases/download/v${PORTVERSION}/
 PKGNAMESUFFIX=	2
@@ -13,10 +14,10 @@ COMMENT=	Dictionary/spellchecking framework
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING.LIB
 
+USES=		compiler:c++11-lib gmake libtool localbase pathfix pkgconfig
+USE_GNOME=	glib20
 GNU_CONFIGURE=	yes
 USE_LDCONFIG=	yes
-USES=		gmake libtool localbase pathfix pkgconfig
-USE_GNOME=	glib20
 CONFIGURE_ARGS=	--without-applespell \
 		--without-voikko
 

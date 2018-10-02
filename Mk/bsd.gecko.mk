@@ -89,14 +89,10 @@ USE_XORG=	x11 xcomposite xdamage xext xfixes xrender xt
 HAS_CONFIGURE=	yes
 CONFIGURE_OUTSOURCE=	yes
 
-.if ${MOZILLA} != "libxul"
 BUNDLE_LIBS=	yes
-.endif
 
 .if ${MOZILLA_VER:R:R} >= 49
-USES+=		compiler:c++14-lang
-CPPFLAGS+=	-D_GLIBCXX_USE_C99 -D_GLIBCXX_USE_C99_MATH_TR1 \
-			-D_DECLARE_C99_LDBL_MATH # XXX ports/193528
+USES+=		compiler:c++17-lang
 .else
 USES+=		compiler:c++11-lang
 .endif
@@ -106,12 +102,17 @@ USE_XORG+=	xcb
 .endif
 
 .if ${MOZILLA_VER:R:R} >= 56
-MESA_LLVM_VER?=	50
+MESA_LLVM_VER?=	60
 BUILD_DEPENDS+=	llvm${MESA_LLVM_VER}>0:devel/llvm${MESA_LLVM_VER}
 MOZ_EXPORT+=	LLVM_CONFIG=llvm-config${MESA_LLVM_VER}
 .endif
 
-.if ${OPSYS} == FreeBSD && ${OSREL} == 11.1
+.if ${MOZILLA_VER:R:R} >= 61
+BUILD_DEPENDS+=	${LOCALBASE}/bin/python${PYTHON3_DEFAULT}:lang/python${PYTHON3_DEFAULT:S/.//g}
+MOZ_EXPORT+=	PYTHON3="${LOCALBASE}/bin/python${PYTHON3_DEFAULT}"
+.endif
+
+.if ${OPSYS} == FreeBSD && ${OSREL} == 11.1 && ${MOZILLA_VER:R:R} < 49
 LLD_UNSAFE=	yes
 .endif
 
@@ -262,8 +263,7 @@ MOZ_OPTIONS+=	\
 		--enable-default-toolkit=${MOZ_TOOLKIT} \
 		--enable-update-channel=${MOZ_CHANNEL} \
 		--disable-updater \
-		--enable-pie \
-		--with-pthreads
+		--enable-pie
 # others
 MOZ_OPTIONS+=	--with-system-zlib		\
 		--with-system-bz2
@@ -379,7 +379,7 @@ post-patch-SNDIO-on:
 .endif
 
 .if ${PORT_OPTIONS:MRUST} || ${MOZILLA_VER:R:R} >= 54
-BUILD_DEPENDS+=	${RUST_PORT:T}>=1.22.1:${RUST_PORT}
+BUILD_DEPENDS+=	${RUST_PORT:T}>=1.24:${RUST_PORT}
 RUST_PORT?=		lang/rust
 . if ${MOZILLA_VER:R:R} < 54
 MOZ_OPTIONS+=	--enable-rust

@@ -3,16 +3,19 @@
 
 PORTNAME=	dragon
 PORTVERSION=	${KDE4_VERSION}
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	multimedia kde kde-kde4
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	KDE multimedia player with a focus on simplicity
 
+DEPRECATED=	KDE4 is EOL upstream
+EXPIRATION_DATE=	2018-12-31
+
 LICENSE=	GPLv2
 
-USES=		cmake:outsource kde:4 tar:xz
+USES=		cmake:outsource kde:4 qt:4 tar:xz
 USE_KDE=	automoc4 kdelibs
-USE_QT4=	phonon moc_build qmake_build rcc_build uic_build
+USE_QT=		phonon moc_build qmake_build rcc_build uic_build
 
 .include <bsd.port.mk>

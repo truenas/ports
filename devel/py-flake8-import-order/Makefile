@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	flake8-import-order
-PORTVERSION=	0.17.1
+PORTVERSION=	0.18
 CATEGORIES=	devel
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -13,7 +13,7 @@ COMMENT=	Flake8 and pylama plugin that checks the ordering of import statements
 LICENSE=	LGPL3
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pycodestyle>=0:devel/py-pycodestyle@${FLAVOR}
+RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pycodestyle>=0:devel/py-pycodestyle@${PY_FLAVOR}
 
 USES=		python
 USE_PYTHON=	autoplist distutils

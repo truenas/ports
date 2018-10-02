@@ -1,17 +1,19 @@
 # $FreeBSD$
 
 PORTNAME=	J
-PORTVERSION=	${JVERSION:S/^j//:S/-release//}
+DISTVERSIONPREFIX=	j
+DISTVERSION=	808
+DISTVERSIONSUFFIX=	-release
 CATEGORIES=	lang math
 
 MAINTAINER=	sevenjp@gmail.com
 COMMENT=	J programming language
 
 LICENSE=	GPLv3
-LICENSE_FILE=	${WRKDIR}/jsource-j806-release/license.txt
+LICENSE_FILE=	${WRKSRC}/license.txt
 
 ONLY_FOR_ARCHS=	amd64
-ONLY_FOR_ARCHS_REASON_amd64=	Not built or tested for other archs. i386 needs hostdefs and netdefs files to be generated.
+ONLY_FOR_ARCHS_REASON_i386=	i386 needs hostdefs and netdefs files to be generated.
 
 BUILD_DEPENDS=	bash:shells/bash
 LIB_DEPENDS=	libpcreposix.so:devel/pcre \
@@ -25,13 +27,9 @@ SUB_FILES=	jconsole profile.ijs
 USE_GITHUB=	yes
 GH_ACCOUNT=	jsoftware
 GH_PROJECT=	jsource
-GH_TAGNAME=	${JVERSION}
-
-# J is released with ports-unfriendly versioning
-JVERSION=	j806-release
 
 BIN_FILES=	jconsole
-LIB_FILES=	libj.so libtsdll.so libjavx.so
+LIB_FILES=	libj.so libtsdll.so
 
 do-install:
 	${MKDIR} ${STAGEDIR}${PREFIX}/lib/j/bin

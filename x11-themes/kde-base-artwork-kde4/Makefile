@@ -11,9 +11,12 @@ COMMENT=	Base artwork for the KDE Plasma Desktop
 
 LICENSE=	GPLv2
 
-USES=		cmake:outsource kde:4 tar:xz
+DEPRECATED=	KDE4 is EOL upstream
+EXPIRATION_DATE=	2018-12-31
+
+USES=		cmake:outsource kde:4 qt:4 tar:xz
 USE_KDE=	automoc4 kdelibs
-USE_QT4=	moc_build qmake_build rcc_build uic_build
+USE_QT=		moc_build qmake_build rcc_build uic_build
 NO_BUILD=	yes
 
 .include <bsd.port.mk>

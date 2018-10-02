@@ -16,13 +16,13 @@
     SUBDIR += gprename
     SUBDIR += konqueror
     SUBDIR += krusader2
+    SUBDIR += krusader2-kde4
     SUBDIR += librfm
     SUBDIR += libtubo
     SUBDIR += mtoolsfm
     SUBDIR += mucommander
     SUBDIR += nautilus
     SUBDIR += nemo
-    SUBDIR += p5-PerlFM
     SUBDIR += pcmanfm
     SUBDIR += pcmanfm-qt
     SUBDIR += pcmanfmqt-l10n

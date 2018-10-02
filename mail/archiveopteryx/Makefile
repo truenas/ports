@@ -3,7 +3,7 @@
 
 PORTNAME=	archiveopteryx
 PORTVERSION=	3.2.0
-PORTREVISION=	7
+PORTREVISION=	8
 CATEGORIES=	mail
 MASTER_SITES=	http://archiveopteryx.org/download/
 
@@ -12,8 +12,8 @@ COMMENT=	Advanced PostgreSQL-based IMAP/POP server
 
 LICENSE=	MIT
 
-BROKEN_armv6=		fails to build: core/md5.cpp:55:5: 'register' storage class specifier is deprecated and incompatible with C++17
-BROKEN_armv7=		fails to build: core/md5.cpp:55:5: 'register' storage class specifier is deprecated and incompatible with C++17
+BROKEN_mips=		fails to build: /bin/sh: clang: not found
+BROKEN_mips64=		fails to build: /bin/sh: clang: not found
 BROKEN_powerpc64=	fails to build: /bin/sh: clang: not found
 
 BUILD_DEPENDS=	jam:devel/jam
@@ -35,6 +35,8 @@ PLIST_SUB+=	GROUPS="${GROUPS}"
 
 JAM?=		${LOCALBASE}/bin/jam
 JAMARG+=	-dx
+
+OPTIONS_DEFINE=	DOCS
 
 .include <bsd.port.pre.mk>
 

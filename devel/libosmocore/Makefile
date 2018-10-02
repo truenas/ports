@@ -1,8 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	libosmocore
-PORTVERSION=	0.10.2
-PORTREVISION=	1
+PORTVERSION=	0.12.1
 CATEGORIES=	devel
 MASTER_SITES=	http://git.osmocom.org/libosmocore/snapshot/ \
 		http://chaosophia.net/downloads/osmocom/${PORTNAME}/
@@ -13,7 +12,12 @@ COMMENT=	Common library for all Osmocom projects
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-LIB_DEPENDS=	libpcsclite.so:devel/pcsc-lite \
+BROKEN_powerpc64=	fails to compile: application.c:179: #pragma GCC diagnostic not allowed inside functions
+
+BUILD_DEPENDS=	python:lang/python
+
+LIB_DEPENDS=	libgnutls.so:security/gnutls \
+		libpcsclite.so:devel/pcsc-lite \
 		libtalloc.so:devel/talloc
 
 USES=		alias autoreconf gmake libtool pathfix pkgconfig python:2.7 shebangfix
@@ -25,7 +29,9 @@ PORTDOCS=	*
 SHEBANG_FILES=	utils/conv_codes_gsm.py utils/conv_gen.py
 python_OLD_CMD=	/usr/bin/python2
 
-OPTIONS_DEFINE=	DOXYGEN
+OPTIONS_DEFINE=	DOXYGEN DOCS
+
+DOXYGEN_IMPLIES=	DOCS
 DOXYGEN_BUILD_DEPENDS=	doxygen:devel/doxygen \
 			dot:graphics/graphviz
 DOXYGEN_CONFIGURE_ENV_OFF=ac_cv_path_DOXYGEN=false

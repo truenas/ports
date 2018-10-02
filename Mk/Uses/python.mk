@@ -244,7 +244,7 @@ _INCLUDE_USES_PYTHON_MK=	yes
 # What Python version and what Python interpreters are currently supported?
 # When adding a version, please keep the comment in
 # Mk/bsd.default-versions.mk in sync.
-_PYTHON_VERSIONS=		2.7 3.6 3.5 3.4	# preferred first
+_PYTHON_VERSIONS=		2.7 3.6 3.7 3.5 3.4	# preferred first
 _PYTHON_PORTBRANCH=		2.7		# ${_PYTHON_VERSIONS:[1]}
 _PYTHON_BASECMD=		${LOCALBASE}/bin/python
 _PYTHON_RELPORTDIR=		lang/python
@@ -663,11 +663,8 @@ PY_FUTURES=	${PYTHON_PKGNAMEPREFIX}futures>0:devel/py-futures@${PY_FLAVOR}
 PY_FUTURES=
 .endif
 
-.if ${PYTHON_REL} < 3000
-PY_BOOST_LIB=	boost_python
-.else
-PY_BOOST_LIB=	boost_python3
-.endif
+CMAKE_ARGS+=	-DBOOST_PYTHON_SUFFIX:STRING=${PYTHON_SUFFIX}
+PY_BOOST_LIB=	boost_python${PYTHON_SUFFIX}
 PY_BOOST=	lib${PY_BOOST_LIB}.so:devel/boost-python-libs@${PY_FLAVOR}
 
 # dependencies

@@ -3,9 +3,9 @@
 
 PORTNAME=	gcc
 PORTVERSION=	4.9.4
-PORTREVISION=	6
+PORTREVISION=	8
 CATEGORIES=	lang
-MASTER_SITES=	GCC/releases/gcc-${DISTVERSION}
+MASTER_SITES=	GCC
 PKGNAMESUFFIX=	${SUFFIX}
 
 MAINTAINER=	gerald@FreeBSD.org
@@ -61,7 +61,7 @@ CONFIGURE_ENV+=	UNAME_m="powerpc64"
 
 .if ${ARCH} == armv6
 # Override sys.mk including -O in CFLAGS which breaks libgomp building.
-CFLAGS:=	${CFLAGS:S/-O/-O2/g}
+CFLAGS:=	${CFLAGS:S/-O/-O2/}
 . if ${COMPILER_TYPE} == clang
 .  if empty(PORT_OPTIONS:MBOOTSTRAP)
 MAKE_ARGS+=CXXFLAGS+=-fbracket-depth=512
@@ -102,7 +102,7 @@ CONFIGURE_ARGS+=--disable-nls \
 		--enable-languages=${LANGUAGES}
 MAKE_ARGS+=	MAKEINFOFLAGS="--no-split"
 USE_LDCONFIG=	${TARGLIB}
-PLIST_SUB=	GCC_VERSION=${GCC_VERSION} \
+PLIST_SUB+=	GCC_VERSION=${GCC_VERSION} \
 		GNU_HOST=${CONFIGURE_TARGET} \
 		SUFFIX=${SUFFIX}
 INFO=		gcc${SUFFIX}/cpp \
