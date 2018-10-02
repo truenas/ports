@@ -11,8 +11,8 @@ PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 MAINTAINER=	hizel@vyborg.ru
 COMMENT=	System for controlling process state under UNIX
 
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}meld3>=0.6.5:www/py-meld3@${FLAVOR}
-TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}mock>=0.5.0:devel/py-mock@${FLAVOR}
+RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}meld3>=0.6.5:www/py-meld3@${PY_FLAVOR}
+TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}mock>=0.5.0:devel/py-mock@${PY_FLAVOR}
 
 PORTDOCS=	*.txt *.rst
 
@@ -30,6 +30,8 @@ USE_RC_SUBR=	supervisord
 SHEBANG_FILES=	supervisor/scripts/*.py supervisor/tests/fixtures/*.py
 python_OLD_CMD=	"/usr/bin/env python"
 python_OLD_CMD+=	"<<PYTHON>>"
+
+OPTIONS_DEFINE=	DOCS
 
 post-patch:
 	@${REINPLACE_CMD} -e 's!%%PREFIX%%!${PREFIX}!' ${WRKSRC}/supervisor/options.py

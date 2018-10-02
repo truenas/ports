@@ -2,8 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	recursor
-DISTVERSION=	4.1.2
-PORTREVISION=	1
+DISTVERSION=	4.1.4
 CATEGORIES=	dns ipv6
 MASTER_SITES=	http://downloads.powerdns.com/releases/
 PKGNAMEPREFIX=	powerdns-
@@ -29,7 +28,8 @@ USES=		compiler:c++11-lib cpe gmake localbase:ldflags pkgconfig ssl tar:bzip2
 GNU_CONFIGURE=	YES
 CXXFLAGS+=	-D_GLIBCXX_USE_C99
 CONFIGURE_ARGS=	--sysconfdir=${PREFIX}/etc/pdns \
-		--with-protobuf
+		--with-protobuf \
+		--without-net-snmp
 
 CPE_VENDOR=	powerdns
 
@@ -54,10 +54,4 @@ SETUID_VARS=		USERS=pdns_recursor GROUPS=pdns
 
 SUB_FILES=	pkg-message
 
-.include <bsd.port.pre.mk>
-
-.if ${OSVERSION} < 1003506
-IGNORE=		no _cxa_thread_atexit() support in FreeBSD libc < 10.4
-.endif
-
-.include <bsd.port.post.mk>
+.include <bsd.port.mk>

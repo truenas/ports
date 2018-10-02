@@ -3,7 +3,7 @@
 
 PORTNAME=	apache-openoffice
 PORTVERSION=	${AOOVERSION}
-PORTREVISION=	4
+PORTREVISION=	9
 CATEGORIES=	editors java
 MASTER_SITES=	APACHE/openoffice/${PORTVERSION}/sources \
 		http://tools.openoffice.org/unowinreg_prebuild/680/:unoreg \
@@ -121,7 +121,7 @@ EXECBASE?=		openoffice-${AOOSUFFIX}
 
 USES=		autoreconf bison compiler:c++11-lib cpe \
 		desktop-file-utils \
-		gettext-runtime gmake iconv jpeg perl5 pkgconfig python \
+		gettext-runtime gmake iconv jpeg perl5 pkgconfig python:2.7 \
 		shared-mime-info ssl tar:bzip2
 USE_GL=		gl glu
 USE_GNOME=	gtk20 libxslt libidl glib20
@@ -454,7 +454,6 @@ do-install:
 			${LN} -f ${EXECBASE} ${EXECBASE}-$${i} ; \
 	done
 	@${ECHO_CMD} "adding desktop support"
-	@${LN} -sf ${XDGREL} ${STAGEDIR}${DESKTOPDIR}/${EXECBASE}
 	@cd ${WRKSRC} ;						\
 	    . ${FREEBSD_ENV_SET} ;				\
 	    cd sysui/$${INPATH}/misc/openoffice ;		\
@@ -468,6 +467,10 @@ do-install:
 		${SH} ${CREATE_TREE} ;				\
 	    ${INSTALL_DATA} apacheopenoffice.xml		\
 		${STAGEDIR}/${PREFIX}/share/mime/packages
+	@cd ${STAGEDIR}${DESKTOPDIR}; for i in base calc draw impress \
+		javafilter math printeradmin qstart startcenter writer ; do \
+			${LN} -sf ${XDGREL}/$${i}.desktop ${EXECBASE}-$${i}.desktop ; \
+	done
 
 do-install-SDK-on:
 	${TAR} -s '|./[^/]*/||' -xz -C ${STAGEDIR}${PRINSTALLATION_BASEDIR} \

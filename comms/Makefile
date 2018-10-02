@@ -4,6 +4,7 @@
     COMMENT = Communication utilities
 
     SUBDIR += acfax
+    SUBDIR += airspy
     SUBDIR += aldo
     SUBDIR += amtterm
     SUBDIR += anyremote
@@ -70,16 +71,15 @@
     SUBDIR += hidapi
     SUBDIR += hylafax
     SUBDIR += ibp
-    SUBDIR += java-commapi
-    SUBDIR += java-commapi-freebsd
+    SUBDIR += inspectrum
     SUBDIR += java-simple-serial-connector
     SUBDIR += jerm
-    SUBDIR += jsdr
     SUBDIR += kb
     SUBDIR += kermit
     SUBDIR += klog
     SUBDIR += kremotecontrol-kde4
     SUBDIR += kvasd
+    SUBDIR += libbtbb
     SUBDIR += libconcord
     SUBDIR += libfap
     SUBDIR += libfec
@@ -94,6 +94,7 @@
     SUBDIR += libusbmuxd
     SUBDIR += linpsk
     SUBDIR += linrad
+    SUBDIR += liquid-dsp
     SUBDIR += lirc
     SUBDIR += locator
     SUBDIR += lrzsz
@@ -134,7 +135,9 @@
     SUBDIR += picocom
     SUBDIR += pr
     SUBDIR += predict
+    SUBDIR += py-adafruit-ampy
     SUBDIR += py-bulksms
+    SUBDIR += py-esptool
     SUBDIR += py-gammu
     SUBDIR += py-hidapi
     SUBDIR += py-libconcord
@@ -166,7 +169,6 @@
     SUBDIR += seyon
     SUBDIR += sms_client
     SUBDIR += smstools3
-    SUBDIR += soundmodem
     SUBDIR += spandsp
     SUBDIR += splat
     SUBDIR += sredird
@@ -186,11 +188,11 @@
     SUBDIR += twpsk
     SUBDIR += uarduno
     SUBDIR += uartlirc
+    SUBDIR += ubertooth
     SUBDIR += uhd
     SUBDIR += uird
     SUBDIR += unixcw
     SUBDIR += usbmuxd
-    SUBDIR += usrp
     SUBDIR += viewfax
     SUBDIR += vrflash
     SUBDIR += wsjt
@@ -205,7 +207,6 @@
     SUBDIR += xmorse
     SUBDIR += xnec2c
     SUBDIR += xnecview
-    SUBDIR += xwota
     SUBDIR += yaac
     SUBDIR += yagiuda
     SUBDIR += yaps

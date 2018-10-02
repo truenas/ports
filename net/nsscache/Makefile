@@ -2,19 +2,18 @@
 # $FreeBSD$
 
 PORTNAME=	nsscache
-PORTVERSION=	0.32
-PORTREVISION=	1
+PORTVERSION=	0.36
 DISTVERSIONPREFIX=	version/
 CATEGORIES=	net python
 
-MAINTAINER=	kbowling@freebsd.org
+MAINTAINER=	kbowling@FreeBSD.org
 COMMENT=	Python utility to create a local cache of directory services
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-RUN_DEPENDS=	${PYTHON_SITELIBDIR}/pycurl.so:ftp/py-pycurl@${FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}ldap>0:net/py-ldap@${FLAVOR}
+RUN_DEPENDS=	${PYTHON_SITELIBDIR}/pycurl.so:ftp/py-pycurl@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}ldap>0:net/py-ldap@${PY_FLAVOR}
 
 USES=		python:2.7
 USE_PYTHON=	autoplist distutils

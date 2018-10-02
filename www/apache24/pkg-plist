@@ -230,7 +230,7 @@ man/man8/rotatelogs.8.gz
 man/man8/suexec.8.gz
 sbin/apachectl
 sbin/apxs
-%%FORENSIC%%sbin/check_forensic
+%%LOG_FORENSIC%%sbin/check_forensic
 sbin/checkgid
 sbin/dbmmanage
 sbin/envvars
@@ -253,7 +253,7 @@ sbin/split-logfile
 %%DATADIR%%/misc/index.html
 @postexec [ -f %D/%%WWWDIR%%/data/index.html ] || cp %D/%%DATADIR%%/misc/index.html %D/%%WWWDIR%%/data/index.html
 @(,,0400) %%WWWDIR%%/cgi-bin/printenv
-@comment %%WWWDIR%%/cgi-bin/printenv.vbs 
+@comment %%WWWDIR%%/cgi-bin/printenv.vbs
 @comment %%WWWDIR%%/cgi-bin/printenv.wsf
 @(,,0400) %%WWWDIR%%/cgi-bin/test-cgi
 %%WWWDIR%%/error/HTTP_BAD_GATEWAY.html.var

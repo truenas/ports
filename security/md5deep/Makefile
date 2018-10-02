@@ -3,6 +3,7 @@
 
 PORTNAME=	md5deep
 PORTVERSION=	4.4
+PORTREVISION=	1
 CATEGORIES=	security
 
 MAINTAINER=	nobutaka@FreeBSD.org
@@ -15,8 +16,8 @@ GH_ACCOUNT=	jessek
 GH_PROJECT=	hashdeep
 GH_TAGNAME=	cd2ed74
 
+USES=		autoreconf compiler:c++11-lang gmake
 USE_GITHUB=	yes
-USES=		autoreconf gmake
 GNU_CONFIGURE=	yes
 
 .include <bsd.port.mk>

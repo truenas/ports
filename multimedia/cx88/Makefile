@@ -3,6 +3,7 @@
 
 PORTNAME=	cx88
 PORTVERSION=	1.5.2
+PORTREVISION=	1
 CATEGORIES=	multimedia
 MASTER_SITES=	ftp://corona.homeunix.net/ports/cx88/
 
@@ -45,10 +46,7 @@ MAKE_ARGS+=	-D WITH_HAL
 .endif
 .endif
 
-.if (${OSVERSION} >= 1003500)
 MAKE_ARGS+=	-D CX88_USE_IIC
-.endif
-
 MAKE_ARGS+=	DEFAULT_XML_CONFIG="${EXAMPLESDIR}/cx88.xml.sample"
 
 .include <bsd.port.mk>

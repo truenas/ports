@@ -1,8 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	zookeeper
-PORTVERSION=	3.4.10
-PORTREVISION=	2
+PORTVERSION=	3.4.12
 CATEGORIES=	devel java
 MASTER_SITES=	APACHE/${PORTNAME}/current
 
@@ -48,6 +47,8 @@ JAVA_RUN=	yes
 USE_RC_SUBR=	zookeeper
 
 PORTDOCS=	*
+
+OPTIONS_DEFINE=	DOCS
 
 post-extract:
 	@${REINPLACE_CMD} "/dataDir/s|=.*|=${ZOOKEEPER_DBDIR}|" ${WRKDIR}/${DISTNAME}/conf/zoo_sample.cfg

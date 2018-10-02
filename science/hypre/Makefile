@@ -3,7 +3,7 @@
 
 PORTNAME=	hypre
 DISTVERSION=	2.11.2
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	science
 MASTER_SITES=	https://computation.llnl.gov/projects/hypre-scalable-linear-solvers-multigrid-methods/download/
 
@@ -12,6 +12,8 @@ COMMENT=	Scalable Linear Solvers and Multigrid Methods
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKDIR}/${DISTNAME}/COPYING.LESSER
+
+BROKEN_powerpc64=	fails to compile: ./DistributedMatrixPilutSolver.h:97:20: expected ')' before '->' token
 
 USES=		blaslapack fortran localbase
 

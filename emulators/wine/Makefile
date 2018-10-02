@@ -2,8 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	wine
-DISTVERSION=	3.0
-PORTREVISION=	1
+DISTVERSION=	3.0.3
 PORTEPOCH=	1
 CATEGORIES=	emulators
 MASTER_SITES=	SF/${PORTNAME}/Source \
@@ -24,10 +23,10 @@ LIB_DEPENDS=	libxml2.so:textproc/libxml2
 CONFLICTS_INSTALL=	wine-staging-[0-9]* wine-devel-[0-9]* i386-wine-[0-9]* \
 			i386-wine-staging-[0-9]* i386-wine-devel-[0-9]*
 
-CPPFLAGS+=	-I${LOCALBASE}/include
-LDFLAGS+=	-L${LOCALBASE}/lib
 GNU_CONFIGURE=	yes
-CONFIGURE_ARGS+=--verbose --disable-tests \
+CONFIGURE_ARGS+=--verbose \
+		--disable-kerberos \
+		--disable-tests \
 		--without-alsa --without-capi --without-dbus \
 		--without-gettext --without-gettextpo \
 		--without-gphoto --without-gsm --without-gstreamer \
@@ -41,7 +40,7 @@ CONFIGURE_ARGS+=--verbose --disable-tests \
 		--without-udev
 CONFIGURE_ENV=	CPPBIN="${CPP}" FLEX="${LOCALBASE}/bin/flex"
 WINELIBDIR?=	${PREFIX}/lib
-USES=		bison compiler:c11 desktop-file-utils gmake shebangfix tar:xz
+USES=		bison compiler:c11 desktop-file-utils gmake localbase shebangfix tar:xz
 .if !defined(USE_LDCONFIG32)
 USE_LDCONFIG=	${WINELIBDIR} ${WINELIBDIR}/wine
 .endif
@@ -49,7 +48,6 @@ SHEBANG_FILES=	tools/make_requests tools/winemaker/winemaker \
 		tools/winedump/function_grep.pl
 
 SUB_FILES=	pkg-message
-PKGMESSAGE=	${WRKDIR}/pkg-message
 
 PORTDATA=	l_intl.nls wine.inf
 
@@ -130,9 +128,11 @@ CPPFLAGS+=		-D__builtin_ms_va_list=__builtin_va_list \
 			-D__builtin_ms_va_copy=__builtin_va_copy
 .endif
 
-# Wine assumes a WoW64 package is available however WoW64 is not yet available on FreeBSD.
+# Wine assumes a WoW64 package is available, however WoW64 is not yet
+# available on FreeBSD. Also fix the desktop file.
 post-patch:
 	${REINPLACE_CMD} 's|/wine|/wine64|g' ${WRKSRC}/tools/wineapploader.in
+	${REINPLACE_CMD} '/Exec/s|wine|wine64|g' ${WRKSRC}/loader/wine.desktop
 
 .else
 PLIST_SUB+=		WINE32="" WINE64="@comment "

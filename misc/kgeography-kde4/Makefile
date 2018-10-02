@@ -8,8 +8,11 @@ CATEGORIES=	misc kde kde-kde4
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	KDE 4 geography trainer
 
-USES=		cmake:outsource kde:4 tar:xz
+DEPRECATED=	KDE4 is EOL upstream
+EXPIRATION_DATE=	2018-12-31
+
+USES=		cmake:outsource kde:4 qt:4 tar:xz
 USE_KDE=	kdelibs automoc4
-USE_QT4=	xml moc_build qmake_build rcc_build uic_build
+USE_QT=		xml moc_build qmake_build rcc_build uic_build
 
 .include <bsd.port.mk>

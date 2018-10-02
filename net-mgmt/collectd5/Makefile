@@ -15,6 +15,8 @@ COMMENT=	Systems & network statistics collection daemon
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
+LIB_DEPENDS=	libltdl.so:devel/libltdl
+
 USES=		autoreconf gmake libtool pkgconfig shebangfix tar:bzip2
 GNU_CONFIGURE=	yes
 
@@ -212,10 +214,10 @@ PING_LIB_DEPENDS=		liboping.so:net/liboping
 PING_CONFIGURE_ENABLE=		ping
 PING_CONFIGURE_WITH=		liboping=${LOCALBASE}
 
-PYTHON_USES=			python:3
+PYTHON_USES=			python:3.5+
 PYTHON_CONFIGURE_ENABLE=	python
 PYTHON_CONFIGURE_WITH=		python=${PYTHON_CMD}
-PYTHON_CONFIGURE_ENV=		PYTHON_CONFIG=${PYTHON_CMD}-config
+PYTHON_BUILD_DEPENDS=		python3>0:lang/python3
 
 RABBITMQ_LIB_DEPENDS=		librabbitmq.so:net/rabbitmq-c
 RABBITMQ_CONFIGURE_ENABLE=	rabbitmq
@@ -225,8 +227,7 @@ REDIS_LIB_DEPENDS=		libhiredis.so:databases/hiredis
 REDIS_CONFIGURE_ENABLE=		redis write_redis
 REDIS_CONFIGURE_WITH=		libhiredis=${LOCALBASE}
 
-RIEMANN_LIB_DEPENDS=		libriemann-client.so:net-mgmt/riemann-c-client \
-				libltdl.so:devel/libltdl
+RIEMANN_LIB_DEPENDS=		libriemann-client.so:net-mgmt/riemann-c-client
 RIEMANN_CONFIGURE_ENABLE=	write_riemann
 
 ROUTEROS_LIB_DEPENDS=		librouteros.so:net/librouteros \

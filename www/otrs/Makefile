@@ -2,12 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	otrs
-PORTVERSION=	5.0.26
+PORTVERSION=	6.0.10
 CATEGORIES=	www
-MASTER_SITES=	http://ftp.otrs.org/pub/otrs/ \
-		ftp://ftp.samurai.com/pub/otrs/ \
-		http://ftp.gwdg.de/pub/misc/otrs/ \
-		http://mirror.xaranet.de/otrs/
 
 MAINTAINER=	m.tsatsenko@gmail.com
 COMMENT=	Open Ticket Request System
@@ -24,11 +20,10 @@ BUILD_DEPENDS=	p5-Archive-Zip>=0:archivers/p5-Archive-Zip \
 		p5-Net-DNS>=0.66:dns/p5-Net-DNS \
 		p5-CSS-Minifier-XS>=0:textproc/p5-CSS-Minifier-XS \
 		p5-JavaScript-Minifier-XS>=0:textproc/p5-JavaScript-Minifier-XS \
-		p5-TimeDate>=0:devel/p5-TimeDate \
+		p5-DateTime>=0:devel/p5-DateTime \
 		p5-Sys-Hostname-Long>=0:sysutils/p5-Sys-Hostname-Long \
 		p5-Proc-Daemon>=0:devel/p5-Proc-Daemon \
 		p5-JSON-XS>=0:converters/p5-JSON-XS \
-		p5-XML-Parser>=0:textproc/p5-XML-Parser \
 		p5-Text-CSV_XS>=0:textproc/p5-Text-CSV_XS \
 		p5-IO-Interactive>=0:devel/p5-IO-Interactive \
 		p5-Email-Valid>=0:mail/p5-Email-Valid \
@@ -47,15 +42,21 @@ BUILD_DEPENDS=	p5-Archive-Zip>=0:archivers/p5-Archive-Zip \
 		p5-CGI>=0:www/p5-CGI \
 		p5-Lingua-Translit>=0:devel/p5-Lingua-Translit \
 		p5-Pod-Strip>=0:textproc/p5-Pod-Strip \
-		p5-Template-Toolkit>=0:www/p5-Template-Toolkit
+		p5-Template-Toolkit>=0:www/p5-Template-Toolkit \
+		p5-Sisimai>=0:mail/p5-Sisimai
 RUN_DEPENDS:=	${BUILD_DEPENDS}
 
 USES=		cpe shebangfix perl5 tar:bzip2
+
+USE_GITHUB=	yes
+GH_ACCOUNT=	OTRS
+GH_TAGNAME=	51cbe50
+
 SHEBANG_FILES=	bin/cgi-bin/*.pl bin/cgi-bin/app.psgi bin/fcgi-bin/*.pl bin/*.pl \
 		scripts/tools/*.pl scripts/*.pl
 
 OPTIONS_DEFINE=		MYSQL PGSQL REPORTS SMTP POP3 IMAP LDAP PDF \
-			GNUPG APACHE SSL
+			GNUPG APACHE SSL XML
 OPTIONS_DEFAULT=	MYSQL REPORTS SMTP POP3 IMAP PDF ASPELL APACHE \
 			SSL
 OPTIONS_RADIO=		SPELL
@@ -73,7 +74,6 @@ GROUPS=		${USERS} www
 
 SUB_FILES=	pkg-message
 SUB_LIST=	OTRS_USER=${USERS} OTRS_GROUP=${USERS} WWWOWN=${WWWOWN}
-PKGMESSAGE=	${WRKDIR}/pkg-message
 NO_ARCH=	YES
 
 ROOT_DIRS_LIST=	Kernel bin scripts
@@ -84,13 +84,13 @@ PM_DIRS_LIST=	Kernel Kernel/Config Kernel/Config/Files Kernel/Language \
 		System/Crypt System/CustomerAuth System/CustomerUser \
 		System/CustomerUser/ System/
 
-SCRIPTS_DIRS_LIST=	"" database/update test tools
+SCRIPTS_DIRS_LIST=	"" database test tools DBUpdateTo6
 CRON_SCRIPTS=	${STAGEDIR}${OTRSDIR}/var/cron/
 CLEAN_FILES=	scripts/suse* scripts/redhat* \
 		var/httpd/htdocs/js/thirdparty/ckeditor-4.0/_source \
 		var/httpd/htdocs/skins/Agent/*/img/source
 
-PLIST_SUB=	VER_CKEDITOR="4.5.6" OTRS_USER=${USERS} WWWOWN=${WWWOWN}
+PLIST_SUB=	VER_CKEDITOR="4.7.0" OTRS_USER=${USERS} WWWOWN=${WWWOWN}
 
 PGSQL_RUN_DEPENDS=	p5-DBD-Pg>=0:databases/p5-DBD-Pg
 PGSQL_USES=		pgsql
@@ -126,6 +126,10 @@ ASPELL_RUN_DEPENDS=	aspell:textproc/aspell
 
 GNUPG_RUN_DEPENDS=	gpg:security/gnupg1
 
+XML_RUN_DEPENDS=	p5-XML-Parser>=0:textproc/p5-XML-Parser \
+			p5-XML-LibXML>=0:textproc/p5-XML-LibXML \
+			p5-XML-LibXSLT>=0:textproc/p5-XML-LibXSLT
+
 .include <bsd.port.pre.mk>
 
 post-patch:
@@ -158,28 +162,26 @@ do-install:
 .endfor
 	${INSTALL_DATA} ${WRKSRC}/.*.dist ${STAGEDIR}${OTRSDIR}/
 	${INSTALL_DATA} ${WRKSRC}/RELEASE ${STAGEDIR}${OTRSDIR}/
-	${INSTALL_DATA} ${WRKSRC}/ARCHIVE ${STAGEDIR}${OTRSDIR}/
+	${INSTALL_DATA} ${WRKSRC}/*.md ${STAGEDIR}${OTRSDIR}/
 .for D in ${BIN_DIRS_LIST}
 	${INSTALL_SCRIPT} ${WRKSRC}/bin/${D}/*.* ${STAGEDIR}${OTRSDIR}/bin/${D}/
 .endfor
 	(cd ${WRKSRC} && ${PAX} -r -w Kernel var ${STAGEDIR}${OTRSDIR})
 	${INSTALL_SCRIPT} ${WRKSRC}/scripts/*.[ps][lh] ${STAGEDIR}${OTRSDIR}/scripts/
 	${INSTALL_DATA} ${WRKSRC}/scripts/apache* \
-		${WRKSRC}/scripts/*.sql ${STAGEDIR}${OTRSDIR}/scripts/
-	${INSTALL_DATA} ${WRKSRC}/scripts/database/update/*.* ${STAGEDIR}${OTRSDIR}/scripts/database/update/
+		${WRKSRC}/scripts/*.[pl][pm] ${STAGEDIR}${OTRSDIR}/scripts/
 	${INSTALL_DATA} ${WRKSRC}/scripts/database/*.* ${STAGEDIR}${OTRSDIR}/scripts/database/
 	${INSTALL_SCRIPT} ${WRKSRC}/scripts/test/*.t ${STAGEDIR}${OTRSDIR}/scripts/test/
 	${INSTALL_SCRIPT} ${WRKSRC}/scripts/tools/*.pl ${STAGEDIR}${OTRSDIR}/scripts/tools/
+	(cd ${WRKSRC}/scripts && ${PAX} -r -w DBUpdateTo6 ${STAGEDIR}${OTRSDIR}/scripts)
 	${FIND} ${CRON_SCRIPTS} -type f -name *.dist | ${SED} -e "p;s/\.dist//" | ${XARGS} -n2 ${MV}
 	${MKDIR} ${STAGEDIR}${PREFIX}/${PORTNAME}/var/article
 	${MKDIR} ${STAGEDIR}${PREFIX}/${PORTNAME}/var/httpd/htdocs/js/js-cache/
 	${MKDIR} ${STAGEDIR}${PREFIX}/${PORTNAME}/var/tmp
-
-# otrs.SetPermissions.pl does not work in stage environment due to missing otrs user
-#post-install:
-#	cd ${STAGEDIR}/${OTRSDIR} && ${PERL} ./bin/otrs.SetPermissions.pl \
-#	--web-group=${WWWOWN} \
-#	--otrs-user=${PORTNAME} \
-#	--admin-group=wheel  ${STAGEDIR}${OTRSDIR}
+	# Attemt to set permissions for OTRS. It will fail if there is no pre-existing otrs user
+	cd ${STAGEDIR}/${OTRSDIR} && ${PERL} ./bin/otrs.SetPermissions.pl \
+	--web-group=${WWWOWN} \
+	--otrs-user=${PORTNAME} \
+	--admin-group=wheel  ${STAGEDIR}${OTRSDIR} || true
 
 .include <bsd.port.post.mk>

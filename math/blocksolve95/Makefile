@@ -3,7 +3,7 @@
 
 PORTNAME=	blocksolve95
 PORTVERSION=	3.0
-PORTREVISION=	20
+PORTREVISION=	21
 CATEGORIES=	math parallel
 MASTER_SITES=	ftp://ftp.mcs.anl.gov/pub/BlockSolve95/ \
 		http://ftp.mcs.anl.gov/pub/BlockSolve95/
@@ -23,6 +23,7 @@ LIB_DEPENDS=	libf2c.so:lang/f2c	\
 
 USES=		fortran gmake tar:Z
 
+OPTIONS_DEFINE=	DOCS EXAMPLES
 OPTIONS_RADIO=	BLAS
 OPTIONS_RADIO_BLAS=	REFERENCE ATLAS
 OPTIONS_DEFAULT=	REFERENCE

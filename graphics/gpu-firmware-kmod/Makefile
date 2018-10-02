@@ -2,8 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	gpu-firmware-kmod
-PORTVERSION=	g20180206
-PORTREVISION=	1
+PORTVERSION=	g20180825
 CATEGORIES=	graphics
 
 MAINTAINER=	jmd@FreeBSD.org
@@ -18,20 +17,17 @@ LICENSE_FILE_INTEL=	${WRKSRC}/LICENSE.i915
 LICENSE_PERMS_AMD=	dist-mirror no-dist-sell pkg-mirror no-pkg-sell auto-accept
 LICENSE_PERMS_INTEL=	dist-mirror no-dist-sell pkg-mirror no-pkg-sell auto-accept
 
-ONLY_FOR_ARCHS=	amd64
-ONLY_FOR_ARCHS_REASON=	the new KMS components are only supported on amd64
-
 USES=		kmod uidfix
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	FreeBSDDesktop
 GH_PROJECT=	kms-firmware
-GH_TAGNAME=	dc3c90e
+GH_TAGNAME=	da173cc
 
 .include <bsd.port.pre.mk>
 
 .if ${OPSYS} == FreeBSD && ${OSVERSION} < 1101510
-IGNORE=		not supported on 10.x or older, no kernel support
+IGNORE=		not supported on 11.1 or older, no kernel support
 .endif
 .if ${OPSYS} == FreeBSD && ${OSVERSION} >= 1200000 && ${OSVERSION} < 1200019
 IGNORE=		not supported on older CURRENT, no kernel support

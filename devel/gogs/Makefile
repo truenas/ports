@@ -2,8 +2,12 @@
 
 PORTNAME=	gogs
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.11.43
+DISTVERSION=	0.11.53
+PORTREVISION=	1
 CATEGORIES=	devel www
+
+PATCH_SITES=	https://github.com/${GH_ACCOUNT}/${GH_PROJECT}/commit/
+PATCHFILES=	1f247cf8139cb483276cd8dd06385a800ce9d4b2.patch:-p1
 
 MAINTAINER=	dg@syrec.org
 COMMENT=	Painless self-hosted Git service
@@ -12,10 +16,11 @@ LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 BUILD_DEPENDS=	go:lang/go
-RUN_DEPENDS=	git:devel/git
+RUN_DEPENDS=	git:devel/git \
+		bash:shells/bash
 
 USE_GITHUB=	yes
-GH_ACCOUNT=	gogits
+GH_ACCOUNT=	gogs
 GH_SUBDIR=	src/github.com/${GH_ACCOUNT}/${PORTNAME}
 
 OPTIONS_DEFINE=	DOCS

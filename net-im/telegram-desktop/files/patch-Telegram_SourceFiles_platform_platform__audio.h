@@ -1,6 +1,6 @@
---- Telegram/SourceFiles/platform/platform_audio.h.orig	2017-09-05 17:38:38 UTC
+--- Telegram/SourceFiles/platform/platform_audio.h.orig	2018-08-04 18:53:40 UTC
 +++ Telegram/SourceFiles/platform/platform_audio.h
-@@ -32,7 +32,7 @@ void DeInit();
+@@ -19,7 +19,7 @@ void DeInit();
  
  // Platform dependent implementations.
  
@@ -9,7 +9,7 @@
  namespace Platform {
  namespace Audio {
  
-@@ -44,6 +44,6 @@ inline void DeInit() {
+@@ -31,6 +31,6 @@ inline void DeInit() {
  
  } // namespace Audio
  } // namespace Platform

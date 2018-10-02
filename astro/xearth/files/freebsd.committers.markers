@@ -138,7 +138,7 @@
  45.27,		9.17,		"olgeni"			# Milano, Italy
  45.488328,	9.164711,	"ale"		align=left	# Milano, Italy
  48.53778,	9.04111,	"bz"				# Baden-Wuerttemberg
- 45.875896,	8.941637,	"gahr"				# Arzo, Switzerland
+ 45.95904,	8.9227105,	"gahr"				# Garaverio, Switzerland
  52.05,		8.9,		"lkoeller"			# Lemgo, Germany
  45.667,	8.867,		"nivit"		align=left	# Fagnano Olona, Italy
  53.0793,	8.8017,		"tobik"				# Bremen, Germany
@@ -272,6 +272,7 @@
  36.294167,	-82.4725,	"jsa"				# Jonesborough, TN, USA
  34.827667,	-82.553759,	"laszlof"			# Easley, SC, USA
  42.28,		-83.75,		"rees"				# Ann Arbor, MI, USA
+ 35.739974,	-83.993768,	"jhixson"			# Maryville, TN, USA
  33.817888,	-84.485421,	"ahze"				# Smyrna, GA, USA
  39.1361,	-84.5030,	"cokane"			# Cincinnati, OH, USA
  33.916601,	-84.641075,	"jhb"				# Marietta, GA, USA
@@ -303,6 +304,7 @@
  40.1,		-105.3,		"gibbs,ken"			# Boulder, CO, USA
  29.067,	-110.967,	"jcamou"			# Hermosillo, Sonora, Mexico
  40.298753,	-111.696486,	"jamie"				# Orem, UT, USA
+ 33.3437,	-111.9344	"kbowling"			# Tempe, Arizona, USA
  51.083,	-114.13,	"davidc"			# Calgary, Alberta, Canada
  51.083,	-114.167,	"aaron"				# Calgary, Alberta, Canada
  47.74075,	-116.83366,	"jasone"			# Coeur d'Alene, ID, USA
@@ -319,7 +321,7 @@
  37.4014,	-121.9265,	"weongyo"			# San Jose, CA, USA
  37.40,		-121.94,	"alfred"			# Santa Clara, CA, USA
  37.75573,	-121.947116,	"peter"				# (CORE) San Ramon, CA, USA
- 37.37781,	-121.951980,	"seanc"				# Santa Clara, CA, USA
+ 47.75596,	-122.345697,	"seanc"				# Seattle, WA, USA
  37.359394,	-121.992,	"cjc"				# Santa Clara, CA, USA
  37.4,		-122.0,		"asami"				# Santa Clara, CA, USA
  37.3583,	-122.0154,	"stas"				# Sunnyvale, CA, USA

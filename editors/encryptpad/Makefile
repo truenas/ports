@@ -4,7 +4,7 @@
 PORTNAME=	encryptpad
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.4.0.2
-PORTREVISION=	1
+PORTREVISION=	3
 CATEGORIES=	editors security
 
 PATCH_SITES=	https://github.com/${GH_ACCOUNT}/${GH_PROJECT}/commit/
@@ -19,11 +19,11 @@ LICENSE_FILE=	${WRKSRC}/license.txt
 BUILD_DEPENDS=	bash:shells/bash
 LIB_DEPENDS=	libbotan-2.so:security/botan2
 
-USES=		desktop-file-utils gmake pkgconfig shared-mime-info
+USES=		desktop-file-utils gmake pkgconfig qt:5 shared-mime-info
 USE_GITHUB=	yes
 GH_ACCOUNT=	evpo
 GH_PROJECT=	EncryptPad
-USE_QT5=	core gui widgets buildtools_build qmake_build
+USE_QT=		core gui widgets buildtools_build qmake_build
 USE_GL=		gl
 
 OPTIONS_DEFINE=	DOCS

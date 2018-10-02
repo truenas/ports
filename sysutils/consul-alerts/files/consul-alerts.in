@@ -3,7 +3,7 @@
 # $FreeBSD$
 #
 # PROVIDE: consul-alerts
-# REQUIRE: LOGIN consul
+# REQUIRE: LOGIN
 # KEYWORD: shutdown
 #
 # Add the following lines to /etc/rc.conf.local or /etc/rc.conf
@@ -17,8 +17,6 @@
 . /etc/rc.subr
 
 export PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
-export AWS_CONFIG_FILE=/root/.aws/config
-export AWS_SHARED_CREDENTIALS_FILE=/root/.aws/credentials
 
 name=consul_alerts
 rcvar=consul_alerts_enable

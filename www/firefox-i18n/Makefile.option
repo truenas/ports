@@ -17,6 +17,7 @@ OPTIONS_DEFINE=	LANG_ACH \
 		LANG_BS \
 		LANG_CA \
 		LANG_CAK \
+		LANG_CAN \
 		LANG_CS \
 		LANG_CY \
 		LANG_DA \
@@ -73,6 +74,7 @@ OPTIONS_DEFINE=	LANG_ACH \
 		LANG_NE \
 		LANG_NL \
 		LANG_NN \
+		LANG_OC \
 		LANG_OR \
 		LANG_PA \
 		LANG_PL \
@@ -109,6 +111,7 @@ LANG_AN_DESC?=	Aragonese language support
 LANG_AS_DESC?=	Assamese language support
 LANG_AZ_DESC?=	Azerbaijani language support
 LANG_CAK_DESC?=	Kaqchikel (Guatemala) language support
+LANG_CAN_DESC?=	English (Canada) language support
 LANG_CSB_DESC?=	Kashubian language support
 LANG_DSB_DESC?=	Lower Sorbian language support
 LANG_FF_DESC?=	Fulah language support
@@ -122,6 +125,7 @@ LANG_LIJ_DESC?=	Ligurian (Genoa) language support
 LANG_MS_DESC?=	Malay language support
 LANG_MY_DESC?=	Burmese language support
 LANG_NE_DESC?=	Nepali language support
+LANG_OC_DESC?=	Occitan (lengadocian) language support
 LANG_SW_DESC?=	Swahili language support
 LANG_UR_DESC?=	Urdu (Pakistan) language support
 LANG_UZ_DESC?=	Uzbek language support

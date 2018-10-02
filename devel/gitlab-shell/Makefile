@@ -2,13 +2,13 @@
 # $FreeBSD$
 
 PORTNAME=	gitlab-shell
-PORTVERSION=	6.0.3
+PORTVERSION=	8.1.1
 CATEGORIES=	devel
 
-LICENSE=	MIT
-
-MAINTAINER=	idefix@fechner.net
+MAINTAINER=	mfechner@FreeBSD.org
 COMMENT=	GitLab Shell handles git commands for GitLab
+
+LICENSE=	MIT
 
 BUILD_DEPENDS=	gem:devel/ruby-gems \
 		go>=1.5.3:lang/go
@@ -16,10 +16,12 @@ BUILD_DEPENDS=	gem:devel/ruby-gems \
 USE_GITLAB=	yes
 GL_ACCOUNT=	gitlab-org
 # Find the commit hash here: https://gitlab.com/gitlab-org/gitlab-shell/tags
-GL_COMMIT=	ec2806f1f2ad10b7ec68b1835c54c11915387a6a
+GL_COMMIT=	5287eee65e7f29e8d5296eb3ef24a06a9a60b3f1
 
 USERS=		git
 GROUPS=		git
+
+INSTALL_TARGET=install-strip
 
 post-patch:
 	${MV} ${WRKSRC}/config.yml.example ${WRKSRC}/config.yml.sample
@@ -37,5 +39,6 @@ do-install:
 	@${MKDIR} ${STAGEDIR}/var/log/gitlab-shell
 	${STRIP_CMD} ${STAGEDIR}${DATADIR}/bin/gitaly-upload-pack
 	${STRIP_CMD} ${STAGEDIR}${DATADIR}/bin/gitaly-receive-pack
+	${STRIP_CMD} ${STAGEDIR}${DATADIR}/bin/gitaly-upload-archive
 
 .include <bsd.port.mk>

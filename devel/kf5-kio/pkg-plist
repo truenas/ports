@@ -2,8 +2,8 @@ bin/kcookiejar5
 bin/ktelnetservice5
 bin/ktrash5
 bin/protocoltojson
-etc/dbus-1/system.d/org.kde.kio.file.conf
 etc/xdg/accept-languages.codes
+etc/xdg/kio.categories
 etc/xdg/kshorturifilterrc
 include/KF5/KIOCore/KACL
 include/KF5/KIOCore/KCoreDirLister
@@ -266,7 +266,6 @@ lib/libKF5KIONTLM.so.%%KDE_FRAMEWORKS_VERSION%%
 lib/libKF5KIOWidgets.so
 lib/libKF5KIOWidgets.so.5
 lib/libKF5KIOWidgets.so.%%KDE_FRAMEWORKS_VERSION%%
-lib/libexec/kauth/file_helper
 lib/libexec/kf5/kio_http_cache_cleaner
 lib/libexec/kf5/kiod5
 lib/libexec/kf5/kioexec
@@ -319,7 +318,6 @@ share/dbus-1/services/org.kde.kiod5.service
 share/dbus-1/services/org.kde.kioexecd.service
 share/dbus-1/services/org.kde.kpasswdserver.service
 share/dbus-1/services/org.kde.kssld5.service
-share/dbus-1/system-services/org.kde.kio.file.service
 share/doc/HTML/ca/kcontrol5/cache/index.cache.bz2
 share/doc/HTML/ca/kcontrol5/cache/index.docbook
 share/doc/HTML/ca/kcontrol5/cookies/index.cache.bz2
@@ -610,12 +608,16 @@ share/doc/HTML/pt_BR/kioslave5/telnet/index.cache.bz2
 share/doc/HTML/pt_BR/kioslave5/telnet/index.docbook
 share/doc/HTML/pt_BR/kioslave5/webdav/index.cache.bz2
 share/doc/HTML/pt_BR/kioslave5/webdav/index.docbook
+share/doc/HTML/ru/kcontrol5/proxy/index.cache.bz2
+share/doc/HTML/ru/kcontrol5/proxy/index.docbook
 share/doc/HTML/ru/kioslave5/data/index.cache.bz2
 share/doc/HTML/ru/kioslave5/data/index.docbook
 share/doc/HTML/ru/kioslave5/file/index.cache.bz2
 share/doc/HTML/ru/kioslave5/file/index.docbook
 share/doc/HTML/ru/kioslave5/ftp/index.cache.bz2
 share/doc/HTML/ru/kioslave5/ftp/index.docbook
+share/doc/HTML/ru/kioslave5/help/documentationnotfound/index.cache.bz2
+share/doc/HTML/ru/kioslave5/help/documentationnotfound/index.docbook
 share/doc/HTML/ru/kioslave5/help/index.cache.bz2
 share/doc/HTML/ru/kioslave5/help/index.docbook
 share/doc/HTML/ru/kioslave5/telnet/index.cache.bz2
@@ -755,6 +757,7 @@ share/doc/HTML/uk/kioslave5/telnet/index.docbook
 share/doc/HTML/uk/kioslave5/webdav/index.cache.bz2
 share/doc/HTML/uk/kioslave5/webdav/index.docbook
 share/kf5/kcookiejar/domain_info
+share/kconf_update/filepicker.upd
 share/knotifications5/proxyscout.notifyrc
 share/kservices5/cache.desktop
 share/kservices5/cookies.desktop
@@ -817,7 +820,7 @@ share/kservices5/searchproviders/freecode.desktop
 share/kservices5/searchproviders/freedb.desktop
 share/kservices5/searchproviders/fsd.desktop
 share/kservices5/searchproviders/github.desktop
-share/kservices5/searchproviders/gitorious.desktop
+share/kservices5/searchproviders/gitlab.desktop
 share/kservices5/searchproviders/google.desktop
 share/kservices5/searchproviders/google_advanced.desktop
 share/kservices5/searchproviders/google_code.desktop
@@ -843,7 +846,6 @@ share/kservices5/searchproviders/kde.desktop
 share/kservices5/searchproviders/kde_apps.desktop
 share/kservices5/searchproviders/kde_forums.desktop
 share/kservices5/searchproviders/kde_look.desktop
-share/kservices5/searchproviders/kde_projects.desktop
 share/kservices5/searchproviders/kde_techbase.desktop
 share/kservices5/searchproviders/kde_userbase.desktop
 share/kservices5/searchproviders/leo.desktop
@@ -1034,4 +1036,3 @@ share/locale/wa/LC_MESSAGES/kio5.mo
 share/locale/xh/LC_MESSAGES/kio5.mo
 share/locale/zh_CN/LC_MESSAGES/kio5.mo
 share/locale/zh_TW/LC_MESSAGES/kio5.mo
-share/polkit-1/actions/org.kde.kio.file.policy

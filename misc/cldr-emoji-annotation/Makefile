@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	cldr-emoji-annotation
-DISTVERSION=	32.90.0_1
+DISTVERSION=	33.1.0_0
 CATEGORIES=	misc
 
 MAINTAINER=	yuri@FreeBSD.org

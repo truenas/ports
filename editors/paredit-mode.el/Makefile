@@ -2,7 +2,7 @@
 
 PORTNAME=	paredit-mode.el
 PORTVERSION=	24
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	editors elisp
 MASTER_SITES=	http://mumble.net/~campbell/emacs/
 PKGNAMESUFFIX=	${EMACS_PKGNAMESUFFIX}
@@ -13,9 +13,12 @@ EXTRACT_ONLY=
 MAINTAINER=	olgeni@FreeBSD.org
 COMMENT=	Minor mode for performing editing of S-expression data
 
+LICENSE=	GPLv3+
+
 USES=		emacs
 
 NO_BUILD=	yes
+NO_ARCH=	yes
 
 PLIST_FILES=	${EMACS_SITE_LISPDIR}/paredit.el
 

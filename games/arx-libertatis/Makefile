@@ -3,7 +3,7 @@
 
 PORTNAME=	arx-libertatis
 PORTVERSION=	1.1.2
-PORTREVISION=	9
+PORTREVISION=	12
 CATEGORIES=	games
 MASTER_SITES=	http://downloads.sourceforge.net/arx/ \
 		http://arx-libertatis.org/files/
@@ -23,6 +23,7 @@ USE_GL=		gl glew
 LLD_UNSAFE=	yes
 CMAKE_ARGS=	-DDATA_DIR=arx \
 		-DSTRICT_USE=ON
+CFLAGS_powerpc64+=	-mminimal-toc
 
 SUB_FILES=	pkg-message
 
@@ -32,8 +33,9 @@ OPTIONS_DEFINE=	CRASHREPORTER DOCS
 OPTIONS_SUB=	yes
 
 CRASHREPORTER_DESC=	Build crash reporter (requires Qt4)
-CRASHREPORTER_USE=	QT4=corelib,gui,network \
-			QT4=rcc_build,moc_build,uic_build,qmake_build
+CRASHREPORTER_USES=	qt:4
+CRASHREPORTER_USE=	QT=corelib,gui,network \
+			QT=rcc_build,moc_build,uic_build,qmake_build
 CRASHREPORTER_CMAKE_ON=	-DBUILD_CRASHREPORTER=ON -DUSE_QT5=OFF
 CRASHREPORTER_CMAKE_OFF=-DBUILD_CRASHREPORTER=OFF
 

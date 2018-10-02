@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	pari
-DISTVERSION=	2.9.4
+DISTVERSION=	2.11.0
 PORTEPOCH=	2
 CATEGORIES=	math
 MASTER_SITES=	http://pari.math.u-bordeaux.fr/pub/pari/unix/ \
@@ -13,6 +13,9 @@ COMMENT=	Mathematics library and advanced calculator package
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
+
+BROKEN_mips64=		fails to link: mpker.c:(.text+0x33bc): relocation truncated to fit: R_MIPS_TLS_GD against 'PARI_SIGINT_block'
+BROKEN_powerpc64=	fails to link: intnum.o: relocation truncated to fit: R_PPC64_GOT_TLSGD16 against symbol 'avma' defined in .tbss section in init.o
 
 LIB_DEPENDS=	libgmp.so:math/gmp
 
@@ -26,7 +29,7 @@ CONFIGURE_ARGS=	--mandir=${MANPREFIX}/man/man1 \
 		--with-readline
 ALL_TARGET=	gp
 
-OPTIONS_DEFINE=		DOCS OPTIMIZED_CFLAGS X11
+OPTIONS_DEFINE=		DOCS EXAMPLES OPTIMIZED_CFLAGS X11
 OPTIONS_RADIO=		THREADS
 OPTIONS_RADIO_THREADS=	PTHREADS MPI
 OPTIONS_DEFAULT=	OPTIMIZED_CFLAGS X11 PTHREADS

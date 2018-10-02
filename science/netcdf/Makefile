@@ -3,6 +3,7 @@
 
 PORTNAME=	netcdf
 PORTVERSION=	4.6.1
+PORTREVISION=	1
 CATEGORIES=	science
 MASTER_SITES=	https://www.unidata.ucar.edu/downloads/netcdf/ftp/ \
 		ftp://ftp.unidata.ucar.edu/pub/netcdf/ \
@@ -22,6 +23,7 @@ CONFLICTS_INSTALL=	hdf-4.[0-9]* netcdf-3.[0-9]* netcdf3-3.[0-9]*
 
 OPTIONS_DEFINE=	DAP DOCS DOXYGEN SZIP
 OPTIONS_DEFAULT=DAP SZIP
+OPTIONS_SUB=	yes
 DAP_DESC=	Build DAP client and remote testing
 SZIP_DESC=	SZIP support (required if HDF5 was built with SZIP)
 

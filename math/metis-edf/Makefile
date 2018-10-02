@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	metis-edf
-DISTVERSION=	5.1.0-aster1
+DISTVERSION=	5.1.0-aster4
 PORTEPOCH=	1
 CATEGORIES=	math
 
@@ -49,7 +49,7 @@ post-install:
 	${MKDIR} ${STAGEDIR}${EXAMPLESDIR}
 	${INSTALL_DATA} ${WRKSRC}/graphs/* ${STAGEDIR}${EXAMPLESDIR}
 
-regression-test:
+do-test:
 	(cd ${WRKSRC}/graphs && ../programs/gpmetis test.mgraph 2 || ${TRUE})
 
 .include <bsd.port.post.mk>

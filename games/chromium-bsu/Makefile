@@ -25,6 +25,8 @@ CONFIGURE_ARGS=	--disable-sdl \
 		--disable-ftgl \
 		--disable-glut \
 		--disable-glpng
+LLD_UNSAFE=	yes
+MAKE_ARGS=	LDFLAGS="${LDFLAGS}"
 
 INSTALLS_ICONS=	yes
 

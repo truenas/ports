@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	cpupdate
-DISTVERSION=	g20180323
+DISTVERSION=	g20180513
 PORTREVISION=	1
 CATEGORIES=	sysutils
 
@@ -11,6 +11,13 @@ COMMENT=	CPU microcode update utility for x86
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
+#
+# The license of Intel's microcode binary files prohibits redistribution,
+# so they are no part of this port to not restrict packaging and redistribution
+# of the port itself. These binaries ought be downloaded and installed
+# separately from this package by default. There are non-default port options
+# and "make install-microcodes" command to download and install
+# the whole bunch of microcode binaries.
 
 USE_RC_SUBR=	${PORTNAME}
 
@@ -23,13 +30,14 @@ SUB_LIST=	CPM_DIR=${CPM_DIR} INTEL_DIR=${INTEL_DIR}
 USE_GITHUB=	yes
 GH_ACCOUNT=	kernschmelze
 GH_PROJECT=	${PORTNAME}
-GH_TAGNAME=	7633a43
+GH_TAGNAME=	48e42d5
 
 PLIST_FILES=	sbin/${PORTNAME} man/man8/${PORTNAME}.8.gz
 
+# MCE DB r79
 CPM_ACCOUNT=	platomav
 CPM_PROJECT=	CPUMicrocodes
-CPM_TAGNAME=	079248c
+CPM_TAGNAME=	34ee55e
 
 OPTIONS_DEFINE=		CPM INTEL
 CPM_DESC=		Download platomav/CPUMicrocodes collection
@@ -39,9 +47,9 @@ CPM_GH_TAGNAME=		${CPM_TAGNAME}:cpm
 CPM_DIR=		${WRKDIR}/${CPM_PROJECT}-${CPM_TAGNAME}
 CPM_DATADIR=		${DATADIR}/CPUMicrocodes/secondary/Intel
 
-INTEL_PACK=		microcode-20180312.tgz
+INTEL_PACK=		microcode-20180807.tgz
 INTEL_DESC=		Download Intel microcode pack ${INTEL_PACK}
-INTEL_MASTER_SITES=	https://downloadmirror.intel.com/27591/eng/:intel
+INTEL_MASTER_SITES=	https://downloadmirror.intel.com/28039/eng/:intel
 INTEL_DISTFILES=	${INTEL_PACK}:intel
 INTEL_DIR=		${WRKDIR}/intel-ucode
 INTEL_DATADIR=		${DATADIR}/CPUMicrocodes/primary/Intel
@@ -60,6 +68,7 @@ install-microcodes:
 	${RM} -rf ${INTEL_DATADIR}
 	${MKDIR} ${INTEL_DATADIR}
 	(cd ${INTEL_DIR} && ${COPYTREE_SHARE} . ${INTEL_DATADIR})
+	(cd ${INTEL_DIR}-with-caveats && ${COPYTREE_SHARE} . ${INTEL_DATADIR})
 .endif
 .if ${PORT_OPTIONS:MCPM}
 	${RM} -rf ${CPM_DATADIR}

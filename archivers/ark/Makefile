@@ -10,17 +10,17 @@ COMMENT=	Archiving tool for KDE
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-USES=		cmake:outsource gettext libarchive kde:5 tar:xz
+USES=		cmake:outsource gettext libarchive kde:5 qt:5 tar:xz
 USE_KDE=	archive auth bookmarks codecs completion config configwidgets \
 		coreaddons crash dbusaddons doctools ecm i18n iconthemes \
 		itemmodels itemviews jobwidgets khtml kio parts pty service \
 		solid sonnet textwidgets widgetsaddons xmlgui
-USE_QT5=	concurrent core dbus gui network widgets xml \
+USE_QT=		concurrent core dbus gui network widgets xml \
 		buildtools_build qmake_build
 
 USE_LDCONFIG=	yes
 
-OPTIONS_DEFINE=	7ZIP RAR ZIP
+OPTIONS_DEFINE=	7ZIP RAR ZIP DOCS
 OPTIONS_SUB=		YES
 
 7ZIP_DESC=	Support for 7-Zip archives

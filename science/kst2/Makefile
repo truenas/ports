@@ -3,7 +3,11 @@
 
 PORTNAME=	kst
 DISTVERSION=	${KST_VERSION}.${KST_DATE}
+PORTREVISION=	1
 CATEGORIES=	science kde
+
+PATCH_SITES=	https://github.com/KDE/kst-plot/commit/
+PATCHFILES=	de3110c59874.patch:-p1
 
 MAINTAINER=	makc@FreeBSD.org
 COMMENT=	Data viewing and plotting tool
@@ -50,8 +54,10 @@ NETCDF_LIB_DEPENDS=	libnetcdf.so:science/netcdf
 NETCDF_IGNORE=	does not support NetCDF 4
 
 TOOLKIT_DESC=	Qt toolkit
-QT4_USE=	${_USE_QT4:S/^/QT4=/}
-QT5_USE=	${_USE_QT5:S/^/QT5=/}
+QT4_USES=	qt:4
+QT4_USE=	${_USE_QT4:S/^/QT=/}
+QT5_USES=	qt:5
+QT5_USE=	${_USE_QT5:S/^/QT=/}
 QT5_CMAKE_ON=	-Dkst_qt5=on
 
 post-patch:

@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	tanglet
-PORTVERSION=	1.5.1
+PORTVERSION=	1.5.3
+PORTREVISION=	2
 DISTVERSIONSUFFIX=	-src
 CATEGORIES=	games
 MASTER_SITES=	http://gottcode.org/tanglet/
@@ -14,9 +15,9 @@ LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING
 
 USES=		compiler:c++11-lib desktop-file-utils pkgconfig qmake \
-		shared-mime-info tar:bzip2
+		qt:5 shared-mime-info tar:bzip2
 USE_GL=		gl
-USE_QT5=	buildtools_build linguisttools_build core gui widgets
+USE_QT=		buildtools_build linguisttools_build core gui widgets
 
 WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}
 
@@ -31,7 +32,7 @@ post-patch-NLS-off:
 
 post-install-DOCS-on:
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}
-	(cd ${WRKSRC} && ${INSTALL_DATA} CREDITS ChangeLog NEWS README \
+	(cd ${WRKSRC} && ${INSTALL_DATA} CREDITS ChangeLog README \
 		${STAGEDIR}${DOCSDIR})
 
 .include <bsd.port.mk>

@@ -1,8 +1,8 @@
 # $FreeBSD$
 
 PORTNAME?=	mariadb
-PORTVERSION=	10.2.14
-PORTREVISION?=	1
+PORTVERSION=	10.2.17
+PORTREVISION?=	0
 CATEGORIES=	databases ipv6
 MASTER_SITES=	http://mirrors.supportex.net/${SITESDIR}/ \
 		http://mirror2.hs-esslingen.de/pub/Mirrors/${SITESDIR}/ \
@@ -22,10 +22,7 @@ LICENSE_NAME_PerconaFT=	PerconaFT patents license
 LICENSE_FILE_PerconaFT=	${WRKSRC}/storage/tokudb/PerconaFT/PATENTS
 LICENSE_PERMS_PerconaFT=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
 
-BROKEN_aarch64=		fails to link: stacktrace.c: undefined reference to 'sbrk'
-
 SUB_FILES=	pkg-message
-PKGMESSAGE=	${WRKDIR}/pkg-message
 
 SLAVEDIRS=	databases/mariadb102-client
 USES=		bison:build cmake:noninja compiler:c++11-lib cpe iconv:translit libedit ncurses shebangfix ssl
@@ -42,7 +39,7 @@ OPTIONS_DEFAULT=	GSSAPI_BASE
 # MySQL-Server options
 OPTIONS_DEFAULT+=	CONNECT_EXTRA INNOBASE SPHINX SPIDER
 OPTIONS_GROUP=		COMPRESSION ENGINES GROONGA
-OPTIONS_DEFINE=		CONNECT_EXTRA
+OPTIONS_DEFINE=		CONNECT_EXTRA DOCS
 OPTIONS_GROUP_COMPRESSION=	LZ4 LZO SNAPPY ZSTD
 OPTIONS_GROUP_ENGINES=	INNOBASE MROONGA OQGRAPH ROCKSDB SPHINX SPIDER TOKUDB XTRADB
 OPTIONS_GROUP_GROONGA=	ZMQ MSGPACK
@@ -159,7 +156,7 @@ ROCKSDB_USES=		python
 SNAPPY_CMAKE_OFF=	-DWITH_INNODB_SNAPPY=OFF -DWITH_ROCKSDB_snappy=OFF
 SNAPPY_CMAKE_ON=	-DWITH_INNODB_SNAPPY=ON  -DWITH_ROCKSDB_snappy=ON
 SNAPPY_LIB_DEPENDS=	libsnappy.so:archivers/snappy
-TOKUDB_IMPLIES=		SNAPPY
+TOKUDB_IMPLIES=		SNAPPY DOCS
 TOKUDB_PORTDOCS=	README.md
 TOKUDB_VARS=		LICENSE+=PerconaFT LICENSE_COMB=multi
 ZMQ_LIB_DEPENDS=	libzmq.so:net/libzmq4
@@ -196,11 +193,10 @@ GSSAPI_BASE_IGNORE=	BASE_GSSAPI is not compatible with OpenSSL from ports. Use o
 
 .include <bsd.port.options.mk>
 
-.if ${OPSYS} != FreeBSD || ${OSVERSION} < 1101514 || \
-	${OSVERSION} >= 1200000 && ${OSVERSION} < 1200057
-SUB_LIST+=	LEGACY_LIMITS="" MODERN_LIMITS="@comment "
-.else
+.if ${OPSYS} == FreeBSD && ${OSVERSION} >= 1200057
 SUB_LIST+=	LEGACY_LIMITS="@comment " MODERN_LIMITS=""
+.else
+SUB_LIST+=	LEGACY_LIMITS="" MODERN_LIMITS="@comment "
 .endif
 
 .include <bsd.port.pre.mk>

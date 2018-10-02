@@ -3,6 +3,7 @@
 
 PORTNAME=	ayam
 PORTVERSION=	1.24
+PORTREVISION=	1
 CATEGORIES=	graphics
 MASTER_SITES=	SF/${PORTNAME}/Ayam/${PORTVERSION}
 DISTNAME=	${PORTNAME}${PORTVERSION}.src
@@ -21,7 +22,7 @@ RUN_DEPENDS=	xdg-open:devel/xdg-utils
 
 WRKSRC=		${WRKDIR}/${PORTNAME}/src
 
-USES=		gmake tk
+USES=		compiler:c++11-lang gmake tk
 USE_XORG=	x11 xext xmu
 USE_GL=		glu
 MAKE_ENV=	TCL_INCLUDEDIR="${TCL_INCLUDEDIR}" \

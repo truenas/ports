@@ -3,7 +3,7 @@
 
 PORTNAME=	ntp
 PORTVERSION=	4.3.93
-PORTREVISION=	7
+PORTREVISION=	10
 CATEGORIES=	net ipv6
 MASTER_SITES=	http://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/ntp-dev/ \
 		http://archive.ntp.org/ntp4/ntp-dev/
@@ -14,6 +14,8 @@ MAINTAINER=	cy@FreeBSD.org
 COMMENT=	The Network Time Protocol Distribution
 
 FORBIDDEN=	It appears the development branch of NTP is dead.
+DEPRECATED=	Use net/ntp instead
+EXPIRATION_DATE=	2018-09-29
 
 LIB_DEPENDS=	libevent.so:devel/libevent \
 		libmd5.so:www/libwww
@@ -32,6 +34,8 @@ SHEBANG_FILES=	scripts/ntptrace/ntptrace.in \
 		scripts/ntp-wait/ntp-wait.in \
 		scripts/update-leap/update-leap.in
 perl_OLD_CMD=	@PATH_PERL@
+
+SUB_FILES=	pkg-message
 
 .include "Makefile.inc"
 

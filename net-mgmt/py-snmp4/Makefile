@@ -3,7 +3,6 @@
 
 PORTNAME=	snmp4
 PORTVERSION=	4.4.4
-PORTREVISION=	0
 CATEGORIES=	net-mgmt python
 MASTER_SITES=	CHEESESHOP \
 		SF/pysnmp/pysnmp/${PORTVERSION}
@@ -15,9 +14,8 @@ COMMENT=	SNMP framework for Python
 
 LICENSE=	BSD2CLAUSE
 
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pyasn1>=0.2.3:devel/py-pyasn1@${FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}pycryptodome>=3.4.6:security/py-pycryptodome@${FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}pysmi>=0.0.7:net-mgmt/py-pysmi@${FLAVOR}
+RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pyasn1>=0.2.3:devel/py-pyasn1 \
+		${PYTHON_PKGNAMEPREFIX}pycryptodome>=3.4.6:security/py-pycryptodome \
 
 USES=		python
 USE_PYTHON=	distutils autoplist
@@ -30,7 +28,7 @@ DOCSDIR=	${PREFIX}/share/doc/${PYTHON_PKGNAMEPREFIX}${PORTNAME}
 PORTDOCS=	*
 PORTEXAMPLES=	*
 
-BASEDOCS=	CHANGES.txt README.md TODO.txt THANKS.txt
+BASEDOCS=	CHANGES.txt README.md TODO.txt
 
 post-install-DOCS-on:
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}

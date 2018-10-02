@@ -4,7 +4,7 @@
 PORTNAME=	BitcoinArmory
 PORTVERSION=	0.93.3
 DISTVERSIONPREFIX=	v
-PORTREVISION=	5
+PORTREVISION=	6
 CATEGORIES=	finance
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -12,6 +12,10 @@ COMMENT=	Desktop bitcoin management system
 
 LICENSE=	AGPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE
+
+BROKEN_aarch64=		fails to compile: c++: language not recognized: 'ar'
+BROKEN_armv6=		fails to compile: c++: language not recognized: 'ar'
+BROKEN_armv7=		fails to compile: c++: language not recognized: 'ar'
 
 BUILD_DEPENDS=	${LOCALBASE}/bin/swig3.0:devel/swig30 \
 		${LOCALBASE}/bin/pyrcc4:textproc/py-qt4-xml@${PY_FLAVOR} \

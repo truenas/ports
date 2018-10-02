@@ -1,15 +1,14 @@
 # $FreeBSD$
 
 PORTNAME=	cgit
-PORTVERSION=	1.1
-PORTREVISION=	17
+PORTVERSION=	1.2.1
 CATEGORIES=	devel www
 MASTER_SITES=	http://git.zx2c4.com/cgit/snapshot/:cgit \
 		https://www.kernel.org/pub/software/scm/git/:git
 DISTFILES=	cgit-${PORTVERSION}${EXTRACT_SUFX}:cgit \
 		git-${GIT_VERSION}${EXTRACT_SUFX}:git
 
-MAINTAINER=	adamw@FreeBSD.org
+MAINTAINER=	mt@markoturk.info
 COMMENT=	Fast, lightweight web frontend for Git repositories
 
 LICENSE=	GPLv2
@@ -17,7 +16,7 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 
 TEST_DEPENDS=	msgfmt:devel/gettext-tools
 
-GIT_VERSION=	2.16.3
+GIT_VERSION=	2.18.0
 USES=		cpe gmake iconv perl5 python:env shebangfix ssl tar:xz
 CPE_VENDOR=	lars_hjemli
 USE_PERL5=	test
@@ -35,7 +34,12 @@ SUB_FILES=	pkg-message
 
 PORTDOCS=	${PORTNAME}rc.5.txt
 
-OPTIONS_DEFINE=	DOCS
+OPTIONS_DEFINE=	DOCS ASCIIDOC
+OPTIONS_DEFAULT=	ASCIIDOC
+OPTIONS_SUB=	yes
+
+ASCIIDOC_DESC=	Use asciidoc to preprocess man page
+ASCIIDOC_BUILD_DEPENDS=	a2x:textproc/asciidoc
 
 post-extract:
 	@${RMDIR} ${WRKSRC}/git
@@ -56,5 +60,9 @@ post-install:
 post-install-DOCS-on:
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}
 	${INSTALL_DATA} ${PORTDOCS:S|^|${WRKSRC}/|} ${STAGEDIR}${DOCSDIR}
+
+post-install-ASCIIDOC-on:
+	a2x --doctype manpage --format manpage ${WRKSRC}/cgitrc.5.txt
+	${INSTALL_MAN} ${WRKSRC}/cgitrc.5 ${STAGEDIR}${PREFIX}/man/man5
 
 .include <bsd.port.mk>

@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	openssl
-PORTVERSION=	1.1.0h
+PORTVERSION=	1.1.0i
 CATEGORIES=	security devel
 MASTER_SITES=	https://www.openssl.org/source/ \
 		ftp://ftp.cert.dfn.de/pub/tools/net/openssl/source/
@@ -16,13 +16,17 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 
 CONFLICTS_INSTALL=	libressl-[0-9]* \
 			libressl-devel-[0-9]* \
-			openssl-[0-9]*
+			openssl-[0-9]* \
+			openssl111-[0-9]*
+
+DEPRECATED=		Upstream support ends 2019-09-11
+EXPIRATION_DATE=	2019-09-11
 
 HAS_CONFIGURE=	yes
 CONFIGURE_SCRIPT=	config
 CONFIGURE_ENV=	PERL="${PERL}"
 CONFIGURE_ARGS=	--openssldir=${OPENSSLDIR} \
-		--prefix=${PREFIX}
+		--prefix=${PREFIX} -v
 
 OPTIONS_GROUP=	CIPHERS HASHES OPTIMIZE PROTOCOLS
 OPTIONS_GROUP_CIPHERS=	IDEA JPAKE RC2 RC4 RC5
@@ -99,7 +103,7 @@ ZLIB_CONFIGURE_ON=	zlib-dynamic
 
 .include <bsd.port.pre.mk>
 .if ${PREFIX} == /usr
-IGNORE=	the OpenSSL port can not be installed over the base version
+IGNORE=	the OpenSSL port cannot be installed over the base version
 .endif
 
 OPENSSLDIR?=	${PREFIX}/openssl

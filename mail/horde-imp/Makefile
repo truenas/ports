@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	imp
-PORTVERSION=	6.2.21
+PORTVERSION=	6.2.22
 CATEGORIES=	mail www pear
 PKGNAMEPREFIX=	${PHP_PKGNAMEPREFIX}horde-
 
@@ -11,7 +11,7 @@ COMMENT=	Horde web based webmail system
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-USES=	horde cpe
+USES=		horde cpe
 USE_HORDE_BUILD=	Horde_Role
 USE_HORDE_RUN=	Horde_Role \
 		horde \

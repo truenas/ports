@@ -3,7 +3,7 @@
 
 PORTNAME=	kicad
 DISTVERSION=	r${GIT_SRC_DATE}
-#PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	cad
 PKGNAMESUFFIX=	-devel
 DIST_SUBDIR=		${PORTNAME}
@@ -35,7 +35,7 @@ USE_XORG+=	ice pixman x11 xext
 
 BROKEN_aarch64=		Fails to compile: use of undeclared identifier builtin_ia32_emms
 
-#OPTIONS_DEFINE=	DOCS
+OPTIONS_DEFINE=	DOCS
 
 PLIST_SUB=	OPSYS=${OPSYS}	\
 		DESKTOPDIR=${DESKTOPDIR:S|^${PREFIX}/||}
@@ -44,7 +44,7 @@ BINS=		cvpcb eeschema gerbview kicad pcbnew
 EXTRAS2RM=	linux-non_unicode linux wings3d LINUX.README	\
 		contrib_makefiles.txt running_kicad_under_W98.txt
 USES=		desktop-file-utils shared-mime-info compiler:c++11-lib tar:bzip2 cmake \
-		gettext python shebangfix ssl
+		gettext python:2.7 shebangfix ssl
 SHEBANG_FILES=	pcbnew/python/plugins/touch_slider_wizard.py
 
 CMAKE_ARGS=	-DLOCALBASE="${LOCALBASE}" \
@@ -58,7 +58,7 @@ CMAKE_ARGS=	-DLOCALBASE="${LOCALBASE}" \
 		-DwxWidgets_wxrc_EXECUTABLE=${WXRC_CMD} \
 		-DKICAD_SCRIPTING=ON \
 		-DKICAD_SCRIPTING_MODULES=ON \
-		-DKICAD_SCRIPTING_WXPYTHON=ON \
+		-DKICAD_SCRIPTING_WXPYTHON=OFF \
 		-DKICAD_SKIP_BOOST=YES \
 		-DKICAD_SPICE=OFF \
 		-DKICAD_USE_OCE=OFF

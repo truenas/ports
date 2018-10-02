@@ -7,7 +7,8 @@
 # [1] x11-wm/stumpwm
 
 PORTNAME=	sbcl
-DISTVERSION=	1.4.6
+DISTVERSION=	1.4.11
+PORTREVISION=	1
 DISTVERSIONSUFFIX=	-source
 PORTEPOCH=	1
 CATEGORIES=	lang lisp
@@ -52,11 +53,11 @@ MAKE_SH_ARGS?=	--prefix="${PREFIX}" \
 MAKE_SH_ARGS+=	--dynamic-space-size=${DYNAMIC_SPACE_SIZE}
 .endif
 
-SUB_FILES=	sbclrc
+SUB_FILES=	pkg-message sbclrc
 
 # All options explained into file: ${WRKSRC}/base-target-features.lisp-expr
 OPTIONS_DEFINE=	DOCS QSHOW RENAME SAFEPOINT THREADS UNICODE XREF ZLIB
-OPTIONS_DEFAULT=	RENAME SBCL UNICODE
+OPTIONS_DEFAULT=	RENAME SBCL THREADS UNICODE
 
 QSHOW_DESC=	C runtime with low-level debugging output
 RENAME_DESC=	Rename suffix .core to _core

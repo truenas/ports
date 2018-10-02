@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	varnish
-PORTVERSION=	6.0.0
+PORTVERSION=	6.0.1
 DISTVERSIONPREFIX=	varnish-
 PORTREVISION=	0
 CATEGORIES=	www
@@ -11,6 +11,7 @@ MAINTAINER=	feld@FreeBSD.org
 COMMENT=	High-performance HTTP accelerator
 
 LICENSE=	BSD2CLAUSE
+LICENSE_FILE=	${WRKSRC}/LICENSE
 
 BUILD_DEPENDS=	rst2man:textproc/py-docutils
 LIB_DEPENDS=	libpcre.so:devel/pcre
@@ -26,6 +27,8 @@ GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--localstatedir=${PREFIX} --without-dot
 USE_LDCONFIG=	yes
 INSTALL_TARGET=	install-strip
+TEST_TARGET=	check
+TEST_ARGS=	TESTS_PARALLELISM=1
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	varnishcache
@@ -40,12 +43,11 @@ BAD_TESTS+=	r00832
 EXTRA_PATCHES+=	${FILESDIR}/no-inet6.patch
 .endif
 
-post-patch:
+OPTIONS_DEFINE=	DOCS
+
 .if defined(BAD_TESTS)
+post-patch:
 	${RM} ${BAD_TESTS:C|.+|${WRKSRC}/bin/varnishtest/tests/\0.vtc|}
 .endif
-
-regression-test check test: build
-	${MAKE_CMD} TESTS_PARALLELISM=1 -C ${WRKSRC} check
 
 .include <bsd.port.mk>

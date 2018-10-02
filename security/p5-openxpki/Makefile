@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	openxpki
-PORTVERSION=	1.19.4
+PORTVERSION=	2.0.3
 DISTVERSIONPREFIX=	v
 CATEGORIES=	security perl5
 PKGNAMEPREFIX=	p5-
@@ -11,6 +11,9 @@ MAINTAINER=	svysh.fbsd@gmail.com
 COMMENT=	Perl based trustcenter for PKI: universal server building block
 
 LICENSE=	APACHE20
+LICENSE_FILE=	${WRKSRC}/LICENSE
+
+BROKEN_SSL=	openssl-devel
 
 BUILD_DEPENDS=	bash:shells/bash \
 		openca-tools-forked>=1.4.0:security/openca-tools-forked \
@@ -30,6 +33,7 @@ BUILD_DEPENDS=	bash:shells/bash \
 		p5-Crypt-SMIME>=0:security/p5-Crypt-SMIME \
 		p5-Crypt-SSLeay>=0:security/p5-Crypt-SSLeay \
 		p5-Crypt-X509>=0:security/p5-Crypt-X509 \
+		p5-Crypt-X509-CRL>=0.1:security/p5-Crypt-X509-CRL \
 		p5-DBD-Mock>=0:databases/p5-DBD-Mock \
 		p5-DBIx-Handler>=0:databases/p5-DBIx-Handler \
 		p5-Data-Password>=0:security/p5-Data-Password \
@@ -70,7 +74,7 @@ BUILD_DEPENDS=	bash:shells/bash \
 		p5-XML-Filter-XInclude>=0:textproc/p5-XML-Filter-XInclude \
 		p5-XML-SAX-Writer>=0:textproc/p5-XML-SAX-Writer \
 		p5-XML-Validator-Schema>=0:textproc/p5-XML-Validator-Schema \
-		p5-openxpki-i18n>=0.20.0.1:security/p5-openxpki-i18n \
+		p5-openxpki-i18n>=2.0.3:security/p5-openxpki-i18n \
 		p5-perl-ldap>=0:net/p5-perl-ldap
 RUN_DEPENDS:=	${BUILD_DEPENDS}
 

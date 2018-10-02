@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	zfec
-DISTVERSION=	1.5.2
+DISTVERSION=	1.5.3
 CATEGORIES=	converters python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -13,8 +13,8 @@ COMMENT=	Fast erasure codec for Python
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING.GPL
 
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}argparse>=0:devel/py-argparse@${FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}pyutil>=0:devel/py-pyutil@${FLAVOR}
+RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}argparse>=0:devel/py-argparse@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}pyutil>=0:devel/py-pyutil@${PY_FLAVOR}
 
 USES=		python:2.7
 USE_PYTHON=	distutils autoplist concurrent
@@ -23,7 +23,7 @@ DOCSDIR=	${PREFIX}/share/doc/${PKGNAMEPREFIX}${PORTNAME}
 
 OPTIONS_DEFINE=	DOCS
 
-PORTDOCS=	COPYING.TGPPL.rst README.rst TODO ChangeLog
+PORTDOCS=	COPYING.TGPPL.rst README.rst TODO
 
 post-install:
 	@${STRIP_CMD} ${STAGEDIR}${PYTHON_SITELIBDIR}/zfec/_fec.so

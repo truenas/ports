@@ -3,7 +3,7 @@
 PORTNAME=	deluge
 DISTVERSIONPREFIX=	${PORTNAME}-
 DISTVERSION=	1.3.15
-PORTREVISION=	3
+PORTREVISION=	5
 CATEGORIES=	net-p2p python
 PKGNAMESUFFIX=	-cli
 
@@ -14,13 +14,14 @@ LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 BUILD_DEPENDS=	intltool-merge:textproc/intltool
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}xdg>=0.18:devel/py-xdg@${FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}libtorrent-rasterbar>=0:net-p2p/libtorrent-rasterbar-python \
-		${PYTHON_PKGNAMEPREFIX}openssl>=0.8:security/py-openssl@${FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}chardet>=1.0.1:textproc/py-chardet@${FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}mako>=0.2.5:textproc/py-mako@${FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}service_identity>=0:security/py-service_identity@${FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}twisted>=0:devel/py-twisted@${FLAVOR}
+RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}xdg>=0.18:devel/py-xdg@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}libtorrent-rasterbar>=0:net-p2p/libtorrent-rasterbar-python@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}openssl>=0.8:security/py-openssl@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}chardet>=1.0.1:textproc/py-chardet@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}mako>=0.2.5:textproc/py-mako@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}service_identity>=0:security/py-service_identity@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}twisted>=0:devel/py-twisted@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}pillow>0:graphics/py-pillow@${PY_FLAVOR}
 
 USES=		gettext python:-2.7
 USE_PYTHON=	autoplist distutils

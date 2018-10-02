@@ -1,13 +1,13 @@
 # Created by: rooneg@electricjellyfish.net
 # $FreeBSD$
 
-PORTREVISION=	4
+PORTREVISION=	1
 
 MAINTAINER=	lev@FreeBSD.org
 COMMENT=	Version control system
 
-CONFLICTS_INSTALL=	subversion-1.[^9].[0-9]* \
-			subversion1[^9]-1.[^9].[0-9]*
+CONFLICTS_INSTALL=	subversion-1.[0-9].[0-9]* \
+			subversion1[0-9]-1.[0-9].[0-9]*
 
 USE_RC_SUBR=	svnserve
 
@@ -27,7 +27,7 @@ OPTIONS_DEFINE=	\
 		TEST		\
 		TOOLS
 
-OPTIONS_DEFAULT=FREEBSD_TEMPLATE \
+OPTIONS_DEFAULT=FREEBSD_TEMPLATE LZ4 \
 		SERF TOOLS
 
 FREEBSD_TEMPLATE_DESC=	FreeBSD Project log template
@@ -67,7 +67,7 @@ PLIST_SUB+=	NO_SVNSERVE_WRAPPER=""
 .endif
 
 .if ${PORT_OPTIONS:MTEST}
-TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}sqlite3>0:databases/py-sqlite3
+TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}sqlite3>0:databases/py-sqlite3@${PY_FLAVOR}
 .endif
 
 .if ${PORT_OPTIONS:MSTATIC}
@@ -80,12 +80,6 @@ BDB_BUILD_DEPENDS=	yes
 OLD_LIB_DEPENDS:=	${LIB_DEPENDS:S!^!${LOCALBASE}/lib/!:C!(\.so|\.[0-9]+)?:!.a:!}
 BUILD_DEPENDS+=		${OLD_LIB_DEPENDS}
 LIB_DEPENDS=
-.endif
-
-.if ${PORT_OPTIONS:MBDB}
-CONFIGURE_ARGS+=	--enable-bdb6
-.else
-CONFIGURE_ARGS+=	--without-berkeley-db
 .endif
 
 .if make(repository)
@@ -138,7 +132,7 @@ pre-configure:
 .if ${PORT_OPTIONS:MSTATIC}
 	@if ${GREP} -q ucol_close ${LOCALBASE}/lib/libsqlite3.a ; then \
 		${ECHO_MSG} "" ; \
-		${ECHO_MSG} "You can not build static subversion if your SQLite3 is built with ICU enabled."; \
+		${ECHO_MSG} "You cannot build static subversion if your SQLite3 is built with ICU enabled."; \
 		${ECHO_MSG} "Please, reinstall 'devel/sqlite3' port with disabled ICU support."; \
 		${ECHO_MSG} "" ; \
 		${FALSE} ; \

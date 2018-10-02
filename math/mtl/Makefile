@@ -8,12 +8,16 @@ CATEGORIES=	math devel
 MASTER_SITES=	http://www.osl.iu.edu/download/research/mtl/
 
 MAINTAINER=	ports@FreeBSD.org
-COMMENT=	The Matrix Template Library, Version 2
+COMMENT=	Matrix Template Library, Version 2
 
 LICENSE=	MTL
 LICENSE_NAME=	Matrix Template Library License
 LICENSE_FILE=	${WRKSRC}/license.mtl.txt
 LICENSE_PERMS=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
+
+BROKEN=		fails to fetch: mastersite times out
+DEPRECATED=	fails to fetch: mastersite times out
+EXPIRATION_DATE=	2018-09-25
 
 CONFIGURE_ENV=	CXXCPP="${CXXCPP}"
 CXXCPP?=	${CXX} -E
@@ -51,7 +55,7 @@ PORTEXAMPLES=	*
 
 post-install:
 	@${MKDIR} ${STAGEDIR}${EXAMPLESDIR}/doubledouble
-	@${INSTALL_DATA} ${WRKSRC}/contrib/examples/* ${STAGEDIR}${EXAMPLESDIR}
-	@${INSTALL_DATA} ${WRKSRC}/contrib/doubledouble/* ${STAGEDIR}${EXAMPLESDIR}/doubledouble
+	${INSTALL_DATA} ${WRKSRC}/contrib/examples/* ${STAGEDIR}${EXAMPLESDIR}
+	${INSTALL_DATA} ${WRKSRC}/contrib/doubledouble/* ${STAGEDIR}${EXAMPLESDIR}/doubledouble
 
 .include <bsd.port.post.mk>

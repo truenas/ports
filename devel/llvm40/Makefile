@@ -2,7 +2,7 @@
 
 PORTNAME=	llvm
 DISTVERSION=	4.0.1
-PORTREVISION=	7
+PORTREVISION=	9
 CATEGORIES=	devel lang
 MASTER_SITES=	http://llvm.org/${PRE_}releases/${LLVM_RELEASE}/${RCDIR}
 PKGNAMESUFFIX=	${LLVM_SUFFIX}
@@ -47,13 +47,14 @@ CMAKE_ARGS+=	-DLLVM_HOST_TRIPLE=${CONFIGURE_TARGET}
 # we need to either change the whole man-shuffle below, or simply
 # redefine CMAKE_INSTALL_MANDIR
 CMAKE_ARGS+=	-DCMAKE_INSTALL_MANDIR:PATH="share/man"
+CMAKE_ARGS+=	-DLLVM_PARALLEL_LINK_JOBS=1
 
 OPTIONS_DEFINE=	CLANG DOCS EXTRAS LIT LLD LLDB
 OPTIONS_DEFINE_amd64=	COMPILER_RT GOLD OPENMP
-OPTIONS_DEFINE_i386=	COMPILER_RT
+OPTIONS_DEFINE_i386=	COMPILER_RT OPENMP
 OPTIONS_DEFAULT=	CLANG EXTRAS LIT LLD LLDB
 OPTIONS_DEFAULT_amd64=	COMPILER_RT GOLD OPENMP
-OPTIONS_DEFAULT_i386=	COMPILER_RT
+OPTIONS_DEFAULT_i386=	COMPILER_RT OPENMP
 OPTIONS_SUB=	yes
 
 CLANG_DESC=	Build clang
@@ -89,6 +90,7 @@ LIT_DESC=		Install lit and FileCheck test tools
 LIT_VARS=		_USES_PYTHON=python:2.7
 LLD_DESC=		Install lld, the LLVM linker
 LLD_DISTFILES=		lld-${DISTVERSION}.src${EXTRACT_SUFX}
+LLD_EXTRA_PATCHES=	${PATCHDIR}/lld
 LLDB_BUILD_DEPENDS=	swig3.0:devel/swig30
 LLDB_DESC=		Install lldb, the LLVM debugger
 LLDB_DISTFILES=		lldb-${DISTVERSION}.src${EXTRACT_SUFX}
@@ -98,6 +100,7 @@ LLDB_VARS=		_USES_PYTHON=python:2.7
 OPENMP_DESC=		Install libomp, the LLVM OpenMP runtime library
 OPENMP_DISTFILES=	openmp-${DISTVERSION}.src${EXTRACT_SUFX}
 OPENMP_EXTRA_PATCHES=	${PATCHDIR}/openmp-patch-bug32279
+OPENMP_EXTRA_PATCHES+=	${PATCHDIR}/openmp-patch-i386
 
 .if defined(WITH_DEBUG)
 CMAKE_BUILD_TYPE=	RelWithDebInfo
@@ -367,8 +370,8 @@ post-patch-CLANG-on:
 	    ${PATCH_WRKSRC}/tools/clang/tools/clang-format/git-clang-format
 
 post-patch-COMPILER_RT-on:
-	cd ${WRKSRC_compiler_rt} && patch < ${PATCHDIR}/compiler-rt-patch-canonical-syscalls
-	cd ${WRKSRC_compiler_rt} && patch < ${PATCHDIR}/compiler-rt-patch-ino64
+	cd ${WRKSRC_compiler_rt} && patch < ${PATCHDIR}/compiler-rt/patch-lib_sanitizer__common_sanitizer__linux.cc
+	cd ${WRKSRC_compiler_rt} && patch < ${PATCHDIR}/compiler-rt/patch-lib_sanitizer__common_sanitizer__platfrom__limit__posix.h
 
 post-build-COMPILER_RT-on:
 	${MKDIR} ${WRKDIR}/compiler-rt-build
@@ -449,7 +452,7 @@ post-install-LIT-on:
 	    ${STAGEDIR}${PREFIX}/bin/FileCheck${LLVM_SUFFIX}
 
 TEST_CMD=	'(cd ${WRKSRC}/test; ${SETENV} ${MAKE_ENV} LD_LIBRARY_PATH=${WRKSRC}/Release/lib ${MAKE_CMD} check-local-lit)'
-regression-test: ${BUILD_COOKIE}
+do-test:
 	if [ `${ID} -u` = 0 ]; then \
 		${CHOWN} -R nobody ${WRKSRC}/test; \
 		su -m nobody -c ${TEST_CMD}; \

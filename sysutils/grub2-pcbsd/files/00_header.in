@@ -30,7 +30,12 @@ export TEXTDOMAINDIR="/usr/local/share/locale"
 . "${datarootdir}/grub/grub-mkconfig_lib"
 
 # Check if serial mode is enabled
-if [ -f /data/freenas-v1.db ]; then
+if [ -d /data/freenas.db ]; then
+  ser=$(/usr/local/sbin/dsutil config-get system.serial.console)
+  if [ "${ser}" = "true" ]; then
+    GRUB_KERNVTY="unset"
+  fi
+elif [ -f /data/freenas-v1.db ]; then
   # FreeNAS install
   ser=$(/usr/local/bin/sqlite3 /data/freenas-v1.db "SELECT adv_serialconsole FROM system_advanced")
   if [ ${ser} -eq 1 ]; then
@@ -93,8 +98,13 @@ fi
 if [ "x$GRUB_KERNVTY" = "x" ]; then
     cat << EOF
 
-set kernvt="vt"
-export kernvt
+if [ x"\${grub_platform}" = xpc ] ; then
+  set kernvt="sc"
+  export kernvt
+else
+  set kernvt="vt"
+  export kernvt
+fi
 EOF
 elif [ "$GRUB_KERNVTY" != "unset" ] ; then
     cat << EOF

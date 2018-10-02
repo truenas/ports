@@ -2,7 +2,7 @@
 
 PORTNAME=	llvm
 DISTVERSION=	3.5.2
-PORTREVISION=	7
+PORTREVISION=	8
 CATEGORIES=	devel lang
 MASTER_SITES=	http://llvm.org/releases/3.5.2/
 DISTNAME=	${PORTNAME}-${DISTVERSION}.src
@@ -237,7 +237,7 @@ post-install:
 .endif
 
 TEST_CMD=	'(cd ${WRKSRC}/test; ${SETENV} ${MAKE_ENV} LD_LIBRARY_PATH=${WRKSRC}/Release/lib ${MAKE_CMD} check-local-lit)'
-regression-test: ${BUILD_COOKIE}
+do-test:
 	if [ `${ID} -u` = 0 ]; then \
 		${CHOWN} -R nobody ${WRKSRC}/test; \
 		su -m nobody -c ${TEST_CMD}; \

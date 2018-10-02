@@ -2,8 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	gpgme
-PORTVERSION=	1.10.0
-PORTREVISION?=	1
+PORTVERSION=	1.11.1
+PORTREVISION?=	0
 CATEGORIES?=	security
 MASTER_SITES=	GNUPG/gpgme
 
@@ -16,11 +16,8 @@ LICENSE_FILE?=	${WRKSRC}/COPYING.LESSER
 LIB_DEPENDS=	libassuan.so:security/libassuan \
 		libgpg-error.so:security/libgpg-error
 
-USES=		cpe gmake libtool localbase:ldflags shebangfix tar:bzip2
+USES=		cpe gmake libtool localbase:ldflags tar:bzip2
 USE_LDCONFIG=	yes
-
-SHEBANG_FILES=	tests/gpg/pinentry
-bash_CMD=	/bin/sh
 
 GNU_CONFIGURE=	yes
 INSTALL_TARGET=	install-strip
@@ -71,21 +68,21 @@ NO_TEST=	yes
 
 .  if ${SLAVEPORT} == "qt5"
 LIB_DEPENDS+=	libgpgmepp.so:security/gpgme-cpp
-USES+=		compiler:c++11-lib pkgconfig
-USE_QT5=	buildtools_build core
+USES+=		compiler:c++11-lib pkgconfig qt:5
+USE_QT=	buildtools_build core
 CONFIGURE_ARGS+=--enable-languages="cpp qt"
 DOCSDIR=	${PORTNAME}${PKGNAMESUFFIX}
 
 OPTIONS_DEFINE+=	DOXYGEN
 DOXYGEN_BUILD_DEPENDS=	doxygen:devel/doxygen \
 			dot:graphics/graphviz
-TEST_USE=		QT5=testlib_build
+TEST_USE=		QT=testlib_build
 .  endif
 
 .  if ${SLAVEPORT} == "python"
 BUILD_DEPENDS+=	swig3.0:devel/swig30 \
-		${PYTHON_PKGNAMEPREFIX}setuptools>0:devel/py-setuptools@${FLAVOR}
-RUN_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}setuptools>0:devel/py-setuptools@${FLAVOR}
+		${PYTHON_PKGNAMEPREFIX}setuptools>0:devel/py-setuptools@${PY_FLAVOR}
+RUN_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}setuptools>0:devel/py-setuptools@${PY_FLAVOR}
 USES+=		python
 USE_PYTHON=	py3kplist flavors
 CONFIGURE_ENV+=	SWIG=${LOCALBASE}/bin/swig3.0

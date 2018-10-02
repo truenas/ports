@@ -35,7 +35,6 @@
     SUBDIR += hs-aeson
     SUBDIR += hs-aeson-compat
     SUBDIR += hs-aeson-pretty
-    SUBDIR += hs-dataenc
     SUBDIR += hs-json
     SUBDIR += hs-sandi
     SUBDIR += htx
@@ -49,9 +48,9 @@
     SUBDIR += libiconv
     SUBDIR += libticonv
     SUBDIR += libutf-8
-    SUBDIR += lua51-iconv
     SUBDIR += lua-iconv
     SUBDIR += lua-json
+    SUBDIR += lua51-iconv
     SUBDIR += mimelib
     SUBDIR += mmencode
     SUBDIR += mpack
@@ -85,6 +84,9 @@
     SUBDIR += p5-Cstools
     SUBDIR += p5-Data-AMF
     SUBDIR += p5-Encode
+    SUBDIR += p5-Encode-Base32-Crockford
+    SUBDIR += p5-Encode-Base32-GMP
+    SUBDIR += p5-Encode-Base58-GMP
     SUBDIR += p5-Encode-Detect
     SUBDIR += p5-Encode-Detect-CJK
     SUBDIR += p5-Encode-DoubleEncodedUTF8
@@ -134,7 +136,6 @@
     SUBDIR += p5-XML-WBXML
     SUBDIR += p5-bsdconv
     SUBDIR += p5-plutil
-    SUBDIR += pdf2djvu
     SUBDIR += pear-Services_JSON
     SUBDIR += pecl-fribidi
     SUBDIR += pecl-igbinary
@@ -158,7 +159,9 @@
     SUBDIR += py-better-bencode
     SUBDIR += py-bsdconv
     SUBDIR += py-iconv
+    SUBDIR += py-pint
     SUBDIR += py-rencode
+    SUBDIR += py-text-unidecode
     SUBDIR += py-unidecode
     SUBDIR += py-webencodings
     SUBDIR += py-zfec
@@ -179,7 +182,6 @@
     SUBDIR += tuc
     SUBDIR += unix2dos
     SUBDIR += uudeview
-    SUBDIR += uudx
     SUBDIR += uulib
     SUBDIR += vda2fbd
     SUBDIR += wkhtmltopdf

@@ -3,7 +3,7 @@
 
 PORTNAME=	gimmage
 PORTVERSION=	0.2.3
-PORTREVISION=	13
+PORTREVISION=	14
 CATEGORIES=	graphics
 MASTER_SITES=	BERLIOS
 
@@ -12,6 +12,8 @@ COMMENT=	Simple image viewer
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
+
+BROKEN_powerpc64=	fails to configure: C++ compiler cannot create executables
 
 LIB_DEPENDS=	libcurl.so:ftp/curl \
 		libfontconfig.so:x11-fonts/fontconfig \

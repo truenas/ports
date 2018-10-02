@@ -2,8 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	highlight
-PORTVERSION=	3.36
-PORTREVISION=	4
+PORTVERSION=	3.43
+PORTREVISION=	2
 PORTEPOCH=	3
 CATEGORIES=	textproc
 MASTER_SITES=	http://www.andre-simon.de/zip/
@@ -24,6 +24,8 @@ MAKE_ARGS=	CXX="${CXX}" \
 		LDFLAGS="${LDFLAGS}"
 
 PORTDOCS=	*
+
+OPTIONS_DEFINE=	DOCS
 
 post-patch:
 	@${REINPLACE_CMD} \

@@ -2,7 +2,7 @@
 
 PORTNAME=	postgis
 PORTVERSION=	2.0.7
-PORTREVISION=	4
+PORTREVISION=	5
 CATEGORIES=	databases geography
 MASTER_SITES=	http://download.osgeo.org/postgis/source/
 PKGNAMESUFFIX=	20
@@ -36,6 +36,7 @@ CONFIGURE_ARGS=	--with-geosconfig=${LOCALBASE}/bin/geos-config \
 		${ICONV_CONFIGURE_ARG} ${ICONV_CONFIGURE_BASE}
 GNU_CONFIGURE=	yes
 USES=		gmake gnome iconv:wchar_t libtool perl5 pgsql pkgconfig shebangfix
+LLD_UNSAFE=	yes
 USE_GNOME=	libxml2
 USE_LDCONFIG=	yes
 USE_PERL5=	build

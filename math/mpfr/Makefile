@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	mpfr
-PORTVERSION=	3.1.6
+PORTVERSION=	4.0.1
 CATEGORIES=	math devel
 MASTER_SITES=	http://www.mpfr.org/mpfr-current/ \
 		GNU
@@ -34,5 +34,7 @@ USE_LDCONFIG=	yes
 INFO=		mpfr
 
 PORTDOCS=	*
+
+OPTIONS_DEFINE=	DOCS
 
 .include <bsd.port.mk>

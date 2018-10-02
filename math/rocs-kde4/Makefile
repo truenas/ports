@@ -2,17 +2,20 @@
 
 PORTNAME=	rocs
 PORTVERSION=	${KDE4_VERSION}
-PORTREVISION=	10
+PORTREVISION=	12
 CATEGORIES=	math kde kde-kde4
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	KDE Graph theory IDE
 
+DEPRECATED=	KDE4 is EOL upstream
+EXPIRATION_DATE=	2018-12-31
+
 LIB_DEPENDS=	libboost_thread.so:devel/boost-libs
 
-USES=		cmake:outsource grantlee:4 kde:4 tar:xz
+USES=		cmake:outsource grantlee:4 kde:4 qt:4 tar:xz
 USE_KDE=	kdelibs automoc4
-USE_QT4=	gui qtestlib script scripttools webkit xml \
+USE_QT=		gui qtestlib script scripttools webkit xml \
 		moc_build qmake_build rcc_build uic_build
 USE_LDCONFIG=	yes
 

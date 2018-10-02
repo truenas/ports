@@ -1,7 +1,8 @@
 # $FreeBSD$
 
 PORTNAME=	black
-DISTVERSION=	18.4a0
+DISTVERSION=	18.6b4
+PORTREVISION=	1
 CATEGORIES=	devel
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -12,9 +13,8 @@ COMMENT=	Python code formatter
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}attrs>0:devel/py-attrs@${FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}click>0:devel/py-click@${FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}pypandoc>0:textproc/py-pypandoc@${FLAVOR} # pypandoc is optional, but recommended
+RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}attrs>0:devel/py-attrs@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}click>0:devel/py-click@${PY_FLAVOR}
 
 USES=		python:3.6+
 USE_PYTHON=	distutils autoplist concurrent

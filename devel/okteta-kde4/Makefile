@@ -2,17 +2,20 @@
 
 PORTNAME=	okteta
 PORTVERSION=	${KDE4_VERSION}
-PORTREVISION=	4
+PORTREVISION=	5
 CATEGORIES=	devel kde kde-kde4
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	KDE hex editor
 
-LIB_DEPENDS=	libqca.so:devel/qca
+DEPRECATED=	KDE4 is EOL upstream
+EXPIRATION_DATE=	2018-12-31
 
-USES=		cmake:outsource kde:4 shared-mime-info tar:xz
+LIB_DEPENDS=	libqca.so:devel/qca@qt4
+
+USES=		cmake:outsource kde:4 qt:4 shared-mime-info tar:xz
 USE_KDE=	kdelibs automoc4
-USE_QT4=	moc_build qmake_build rcc_build uic_build \
+USE_QT=		moc_build qmake_build rcc_build uic_build \
 		corelib designer gui script scripttools xml
 USE_LDCONFIG=	yes
 

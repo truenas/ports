@@ -2,10 +2,14 @@
 # $FreeBSD$
 
 PORTNAME=	bitcoin
-PORTVERSION=	0.16.0
-DISTVERSIONPREFIX=	v
-PORTREVISION?=	1
+PORTVERSION=	0.16.2
+PORTREVISION?=	0
 CATEGORIES=	net-p2p finance
+MASTER_SITES=	https://bitcoincore.org/bin/bitcoin-core-${PORTVERSION}/:DEFAULT \
+		LOCAL/swills:icon
+DISTFILES=	${DISTNAME}${EXTRACT_SUFX} bitcoin128.png:icon
+DIST_SUBDIR=	${PORTNAME}
+EXTRACT_ONLY=	${_DISTFILES:N*.png}
 
 MAINTAINER=	kbowling@FreeBSD.org
 COMMENT?=	Virtual Peer-to-Peer Currency Client (QT)
@@ -15,23 +19,21 @@ LICENSE=	MIT
 LIB_DEPENDS=	libboost_date_time.so:devel/boost-libs \
 		libevent.so:devel/libevent
 
-BROKEN_powerpc64=	fails to compile: util.cpp: undefined reference to boost::program_options::to_internal
-
-USES=		autoreconf compiler:c++11-lib gmake libtool pkgconfig shebangfix ssl
-USE_GITHUB=	yes
+USES=		autoreconf compiler:c++11-lib gmake libtool pkgconfig qt:5 shebangfix ssl
 GNU_CONFIGURE=	yes
 
 SLAVE_PORT?=	no
 
 .if defined(SLAVE_PORT) && ${SLAVE_PORT} == "no"
 USES+=		desktop-file-utils
-USE_QT5=	core gui network widgets \
+USE_QT=		core gui network widgets \
 		buildtools_build linguisttools_build qmake_build
 
 BUILD_DEPENDS+=	protoc:devel/protobuf
 LIB_DEPENDS+=	libprotobuf.so:devel/protobuf
 
-TESTS_USE=		QT5=testlib
+TESTS_USES=	qt:5
+TESTS_USE=		QT=testlib
 TESTS_PLIST_FILES=	bin/test_bitcoin-qt \
 			bin/test_bitcoin
 .endif
@@ -51,7 +53,8 @@ WALLET_BDBMODERN_DESC=	Wallet using modern BDB 5.x or 6.x
 ZMQ_DESC=	Block and transaction broadcasting with ZeroMQ
 
 DBUS_CONFIGURE_WITH=	dbus
-DBUS_USE=		QT5=dbus
+DBUS_USES=	qt:5
+DBUS_USE=		QT=dbus
 
 DEBUG_CONFIGURE_ENABLE=		debug
 DEBUG_INSTALL_TARGET_OFF=	install-strip
@@ -117,11 +120,9 @@ CONFIGURE_ARGS+=--disable-asm
 .if defined(SLAVE_PORT) && ${SLAVE_PORT} == "no"
 
 post-install:
-	${REINPLACE_CMD} -e 's,=/usr,=${PREFIX},' \
-		${WRKSRC}/contrib/debian/bitcoin-qt.desktop
-	${INSTALL} ${WRKSRC}/contrib/debian/bitcoin-qt.desktop \
+	${INSTALL} ${FILESDIR}/bitcoin-qt.desktop \
 		${STAGEDIR}${PREFIX}/share/applications
-	${INSTALL} ${WRKSRC}/share/pixmaps/bitcoin128.png \
+	${INSTALL} ${DISTDIR}/${DIST_SUBDIR}/bitcoin128.png \
 		${STAGEDIR}${PREFIX}/share/pixmaps/
 
 .endif

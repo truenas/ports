@@ -3,10 +3,14 @@
 
 PORTNAME=	pianobar
 PORTVERSION=	2017.08.30
+PORTREVISION=	2
 CATEGORIES=	audio
 MASTER_SITES=	https://6xq.net/${PORTNAME}/
 
-MAINTAINER=	jhixson@gmail.com
+PATCH_SITES=	https://github.com/PromyLOPh/${PORTNAME}/commit/
+PATCHFILES=	38b16f9957a7.patch:-p1
+
+MAINTAINER=	jhixson@FreeBSD.org
 COMMENT=	Command-line Pandora online radio player
 
 LICENSE=	MIT

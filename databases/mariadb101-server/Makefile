@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME?=	mariadb
-PORTVERSION=	10.1.32
+PORTVERSION=	10.1.35
 PORTREVISION?=	1
 CATEGORIES=	databases ipv6
 MASTER_SITES=	http://ftp.osuosl.org/pub/${SITESDIR}/ \
@@ -22,12 +22,10 @@ LICENSE_NAME_PerconaFT=	PerconaFT patents license
 LICENSE_FILE_PerconaFT=	${WRKSRC}/storage/tokudb/PerconaFT/PATENTS
 LICENSE_PERMS_PerconaFT=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
 
-BROKEN_aarch64=		Fails to link: missing sbrk
 BROKEN_SSL=		openssl-devel
 BROKEN_SSL_REASON_openssl-devel=	incomplete definition of type 'struct dh_st'
 
 SUB_FILES=	pkg-message
-PKGMESSAGE=	${WRKDIR}/pkg-message
 
 SLAVEDIRS=	databases/mariadb101-client
 USES=		bison:build cmake:noninja compiler:c++11-lib cpe libedit ncurses \
@@ -46,7 +44,7 @@ FASTMTX_DESC=		Replace mutexes with spinlocks
 
 .if !defined(CLIENT_ONLY)
 # MySQL-Server options
-OPTIONS_DEFINE+=	CONNECT_EXTRA MAXKEY
+OPTIONS_DEFINE+=	CONNECT_EXTRA MAXKEY DOCS
 OPTIONS_DEFAULT+=	MAXKEY SPHINX SPIDER
 OPTIONS_GROUP=		COMPRESSION ENGINES GROONGA
 OPTIONS_GROUP_COMPRESSION=	LZ4 LZO SNAPPY
@@ -151,7 +149,7 @@ OQGRAPH_LIB_DEPENDS=	libboost_system.so:devel/boost-libs \
 SNAPPY_CMAKE_OFF=	-DWITH_INNODB_SNAPPY=OFF
 SNAPPY_CMAKE_ON=	-DWITH_INNODB_SNAPPY=${LOCALBASE}/lib
 SNAPPY_LIB_DEPENDS=	libsnappy.so:archivers/snappy
-TOKUDB_IMPLIES=		SNAPPY
+TOKUDB_IMPLIES=		SNAPPY DOCS
 TOKUDB_PORTDOCS=	README.md
 TOKUDB_VARS=		LICENSE+=PerconaFT LICENSE_COMB=multi
 ZMQ_LIB_DEPENDS=	libzmq.so:net/libzmq4
@@ -185,11 +183,10 @@ post-install-MROONGA-on:
 
 .include <bsd.port.options.mk>
 
-.if ${OPSYS} != FreeBSD || ${OSVERSION} < 1101514 || \
-	${OSVERSION} >= 1200000 && ${OSVERSION} < 1200057
-SUB_LIST+=	LEGACY_LIMITS="" MODERN_LIMITS="@comment "
-.else
+.if ${OPSYS} == FreeBSD && ${OSVERSION} >= 1200057
 SUB_LIST+=	LEGACY_LIMITS="@comment " MODERN_LIMITS=""
+.else
+SUB_LIST+=	LEGACY_LIMITS="" MODERN_LIMITS="@comment "
 .endif
 
 .include <bsd.port.pre.mk>

@@ -3,6 +3,7 @@
 PORTNAME=	hexd
 DISTVERSIONPREFIX=v
 DISTVERSION=	1.0.0
+PORTREVISION=	1
 CATEGORIES=	devel
 
 MAINTAINER=	mail@dbalan.in
@@ -11,7 +12,7 @@ COMMENT=	Colourful, human-friendly hexdump tool
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USES=		gmake
+USES=		compiler:c++11-lang gmake
 USE_GITHUB=	yes
 GH_ACCOUNT=	FireyFly
 

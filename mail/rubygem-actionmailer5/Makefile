@@ -19,8 +19,10 @@ RUN_DEPENDS=	rubygem-actionpack5>=${PORTVERSION}:www/rubygem-actionpack5 \
 		rubygem-mail>=2.5.4:mail/rubygem-mail \
 		rubygem-rails-dom-testing-rails5>=2.0:textproc/rubygem-rails-dom-testing-rails5
 
+PORTSCOUT=	limit:^5\.1\.
+
+USES=		gem
 NO_ARCH=	yes
 USE_RUBY=	yes
-USES=		gem
 
 .include <bsd.port.mk>

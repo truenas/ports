@@ -4,16 +4,15 @@
     COMMENT = Miscellaneous utilities
 
     SUBDIR += R-cran-mime
+    SUBDIR += R-cran-xfun
     SUBDIR += achievo
     SUBDIR += aclgen
     SUBDIR += amanda-client
     SUBDIR += amanda-perl-wrapper
     SUBDIR += amanda-server
-    SUBDIR += amfm
     SUBDIR += ansiweather
     SUBDIR += apparix
     SUBDIR += artikulate
-    SUBDIR += artikulate-kde4
     SUBDIR += asbutton
     SUBDIR += asr-manpages
     SUBDIR += astrolog
@@ -106,6 +105,7 @@
     SUBDIR += fortuneit
     SUBDIR += fpc-chm
     SUBDIR += free42
+    SUBDIR += free42-skins
     SUBDIR += freebsd-doc-all
     SUBDIR += freebsd-doc-bn
     SUBDIR += freebsd-doc-da
@@ -123,7 +123,6 @@
     SUBDIR += freebsd-doc-pl
     SUBDIR += freebsd-doc-pt
     SUBDIR += freebsd-doc-ru
-    SUBDIR += freebsd-doc-sr
     SUBDIR += freebsd-doc-tr
     SUBDIR += freebsd-doc-zh_cn
     SUBDIR += freebsd-doc-zh_tw
@@ -186,6 +185,7 @@
     SUBDIR += inplace
     SUBDIR += ipa_conv
     SUBDIR += ipbt
+    SUBDIR += ironscanner
     SUBDIR += iselect
     SUBDIR += iso-codes
     SUBDIR += jargon
@@ -236,8 +236,10 @@
     SUBDIR += kde4-l10n-ug
     SUBDIR += kde4-l10n-wa
     SUBDIR += kde4-xdg-env
+    SUBDIR += kdeedu
     SUBDIR += kdeedu-data
     SUBDIR += kdeedu-kde4
+    SUBDIR += kdeutils
     SUBDIR += kdeutils-kde4
     SUBDIR += kenny
     SUBDIR += kf5-purpose
@@ -288,6 +290,7 @@
     SUBDIR += mime-support
     SUBDIR += mirmon
     SUBDIR += mmv
+    SUBDIR += morse
     SUBDIR += mtail
     SUBDIR += mtx
     SUBDIR += najitool
@@ -297,10 +300,15 @@
     SUBDIR += nsf
     SUBDIR += numchar
     SUBDIR += nut
+    SUBDIR += ompl
     SUBDIR += ondir
     SUBDIR += opencyc
+    SUBDIR += openhab2
+    SUBDIR += openhab2-addons
+    SUBDIR += openhmd
     SUBDIR += openmvg
     SUBDIR += openr2
+    SUBDIR += orange3
     SUBDIR += orville-write
     SUBDIR += osinfo-db
     SUBDIR += ossp-uuid
@@ -395,6 +403,10 @@
     SUBDIR += pspresent
     SUBDIR += ptsort
     SUBDIR += pubs
+    SUBDIR += py-PyUserInput
+    SUBDIR += py-QSpectrumAnalyzer
+    SUBDIR += py-SimpleSoapy
+    SUBDIR += py-SoapySDR
     SUBDIR += py-YABT
     SUBDIR += py-cinder
     SUBDIR += py-colorbrewer
@@ -402,6 +414,12 @@
     SUBDIR += py-emoji
     SUBDIR += py-fuzzy
     SUBDIR += py-glance
+    SUBDIR += py-kartograph
+    SUBDIR += py-orange3-associate
+    SUBDIR += py-orange3-datafusion
+    SUBDIR += py-orange3-educational
+    SUBDIR += py-orange3-network
+    SUBDIR += py-orange3-timeseries
     SUBDIR += py-osd
     SUBDIR += py-palettable
     SUBDIR += py-pexpect
@@ -410,15 +428,20 @@
     SUBDIR += py-progressbar2
     SUBDIR += py-progressbar231
     SUBDIR += py-pyfiglet
+    SUBDIR += py-pykml
     SUBDIR += py-pyprind
     SUBDIR += py-python-geohash
     SUBDIR += py-python-utils
     SUBDIR += py-qt4-demo
     SUBDIR += py-qt4-doc
     SUBDIR += py-qt5-demo
+    SUBDIR += py-scikit-fusion
+    SUBDIR += py-serverfiles
+    SUBDIR += py-soapy_power
     SUBDIR += py-socli
     SUBDIR += py-spdx
     SUBDIR += py-spdx-lookup
+    SUBDIR += py-spdx-tools
     SUBDIR += py-tqdm
     SUBDIR += py-yolk
     SUBDIR += pylize
@@ -434,6 +457,7 @@
     SUBDIR += qt5-l10n
     SUBDIR += qt5ct
     SUBDIR += qtchooser
+    SUBDIR += raspberrypi-gpioshutdown
     SUBDIR += raspberrypi-userland
     SUBDIR += raspbsd-led
     SUBDIR += ree
@@ -446,6 +470,7 @@
     SUBDIR += rubygem-dotenv-rails-rails4
     SUBDIR += rubygem-dotenv-rails-rails5
     SUBDIR += rubygem-dotenv-rails-rails50
+    SUBDIR += rubygem-haversine_distance
     SUBDIR += rubygem-iesd
     SUBDIR += rubygem-mime-types
     SUBDIR += rubygem-mime-types-data
@@ -469,10 +494,12 @@
     SUBDIR += sloccount
     SUBDIR += sls
     SUBDIR += smssend
+    SUBDIR += soapysdr
     SUBDIR += solarized
     SUBDIR += spamcalc
     SUBDIR += sshbuddy
     SUBDIR += sssnips
+    SUBDIR += survex
     SUBDIR += susv2
     SUBDIR += susv3
     SUBDIR += susv4
@@ -480,6 +507,7 @@
     SUBDIR += table.el
     SUBDIR += talkfilters
     SUBDIR += tcb
+    SUBDIR += tdfiglet
     SUBDIR += team
     SUBDIR += telbook
     SUBDIR += tellico-kde4
@@ -487,7 +515,6 @@
     SUBDIR += termatrix
     SUBDIR += teseq
     SUBDIR += thefuck
-    SUBDIR += timediff
     SUBDIR += tkcron
     SUBDIR += tkinfo
     SUBDIR += tkregexp
@@ -498,6 +525,7 @@
     SUBDIR += tudu
     SUBDIR += tvbrowser
     SUBDIR += typetrainer
+    SUBDIR += tzdiff
     SUBDIR += uk-phone
     SUBDIR += uk-postcodes
     SUBDIR += umodunpack
@@ -505,14 +533,18 @@
     SUBDIR += unclutter-xfixes
     SUBDIR += unicode-emoji
     SUBDIR += upclient
+    SUBDIR += urbit
+    SUBDIR += urh
     SUBDIR += us-zipcodes
     SUBDIR += usbids
     SUBDIR += usbrh-libusb
     SUBDIR += utftools
+    SUBDIR += valentina
     SUBDIR += valspeak
     SUBDIR += vdmfec
     SUBDIR += vera
     SUBDIR += vifm
+    SUBDIR += visp
     SUBDIR += viz
     SUBDIR += whichman
     SUBDIR += window
@@ -536,12 +568,13 @@
     SUBDIR += xiphos
     SUBDIR += xless
     SUBDIR += xosd
-    SUBDIR += xpns
     SUBDIR += xtail
     SUBDIR += xtar
     SUBDIR += xtypo
     SUBDIR += yaunc
     SUBDIR += ytree
     SUBDIR += zoneinfo
+    SUBDIR += zygrib
+    SUBDIR += zygrib-maps
 
 .include <bsd.port.subdir.mk>

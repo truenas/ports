@@ -10,6 +10,7 @@ share/ECM/find-modules/ECMFindModuleHelpersStub.cmake
 share/ECM/find-modules/FindEGL.cmake
 share/ECM/find-modules/FindGLIB2.cmake
 share/ECM/find-modules/FindGperf.cmake
+share/ECM/find-modules/FindIcoTool.cmake
 share/ECM/find-modules/FindInotify.cmake
 share/ECM/find-modules/FindKF5.cmake
 share/ECM/find-modules/FindLibGit2.cmake
@@ -66,6 +67,7 @@ share/ECM/modules/ECMQtDeclareLoggingCategory.cpp.in
 share/ECM/modules/ECMQtDeclareLoggingCategory.h.in
 share/ECM/modules/ECMQueryQmake.cmake
 share/ECM/modules/ECMQueryQmake.cmake.orig
+share/ECM/modules/ECMSetupQtPluginMacroNames.cmake
 share/ECM/modules/ECMSetupVersion.cmake
 share/ECM/modules/ECMUninstallTarget.cmake
 share/ECM/modules/ECMUseFindModules.cmake
@@ -74,11 +76,14 @@ share/ECM/modules/ECMWinResolveSymlinks.cmake
 share/ECM/modules/ecm_uninstall.cmake.in
 share/ECM/test-modules/test_execute_and_compare.cmake
 share/ECM/toolchain/Android.cmake
+share/ECM/toolchain/ECMAndroidDeployQt.cmake
 share/ECM/toolchain/deployment-file.json.in
+share/ECM/toolchain/hasMainSymbol.cmake
 share/ECM/toolchain/specifydependencies.cmake
 %%HELP%%%%DOCSDIR%%/ExtraCMakeModules.qch
 %%PORTDOCS%%%%DOCSDIR%%/html/_sources/find-module/FindEGL.rst.txt
 %%PORTDOCS%%%%DOCSDIR%%/html/_sources/find-module/FindGLIB2.rst.txt
+%%PORTDOCS%%%%DOCSDIR%%/html/_sources/find-module/FindIcoTool.rst.txt
 %%PORTDOCS%%%%DOCSDIR%%/html/_sources/find-module/FindKF5.rst.txt
 %%PORTDOCS%%%%DOCSDIR%%/html/_sources/find-module/FindLibGit2.rst.txt
 %%PORTDOCS%%%%DOCSDIR%%/html/_sources/find-module/FindOpenEXR.rst.txt
@@ -121,6 +126,7 @@ share/ECM/toolchain/specifydependencies.cmake
 %%PORTDOCS%%%%DOCSDIR%%/html/_sources/module/ECMPackageConfigHelpers.rst.txt
 %%PORTDOCS%%%%DOCSDIR%%/html/_sources/module/ECMPoQmTools.rst.txt
 %%PORTDOCS%%%%DOCSDIR%%/html/_sources/module/ECMQtDeclareLoggingCategory.rst.txt
+%%PORTDOCS%%%%DOCSDIR%%/html/_sources/module/ECMSetupQtPluginMacroNames.rst.txt
 %%PORTDOCS%%%%DOCSDIR%%/html/_sources/module/ECMSetupVersion.rst.txt
 %%PORTDOCS%%%%DOCSDIR%%/html/_sources/module/ECMUninstallTarget.rst.txt
 %%PORTDOCS%%%%DOCSDIR%%/html/_sources/module/ECMUseFindModules.rst.txt
@@ -151,6 +157,7 @@ share/ECM/toolchain/specifydependencies.cmake
 %%PORTDOCS%%%%DOCSDIR%%/html/_static/websupport.js
 %%PORTDOCS%%%%DOCSDIR%%/html/find-module/FindEGL.html
 %%PORTDOCS%%%%DOCSDIR%%/html/find-module/FindGLIB2.html
+%%PORTDOCS%%%%DOCSDIR%%/html/find-module/FindIcoTool.html
 %%PORTDOCS%%%%DOCSDIR%%/html/find-module/FindKF5.html
 %%PORTDOCS%%%%DOCSDIR%%/html/find-module/FindLibGit2.html
 %%PORTDOCS%%%%DOCSDIR%%/html/find-module/FindOpenEXR.html
@@ -194,6 +201,7 @@ share/ECM/toolchain/specifydependencies.cmake
 %%PORTDOCS%%%%DOCSDIR%%/html/module/ECMPackageConfigHelpers.html
 %%PORTDOCS%%%%DOCSDIR%%/html/module/ECMPoQmTools.html
 %%PORTDOCS%%%%DOCSDIR%%/html/module/ECMQtDeclareLoggingCategory.html
+%%PORTDOCS%%%%DOCSDIR%%/html/module/ECMSetupQtPluginMacroNames.html
 %%PORTDOCS%%%%DOCSDIR%%/html/module/ECMSetupVersion.html
 %%PORTDOCS%%%%DOCSDIR%%/html/module/ECMUninstallTarget.html
 %%PORTDOCS%%%%DOCSDIR%%/html/module/ECMUseFindModules.html

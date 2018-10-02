@@ -3,6 +3,7 @@
 
 PORTNAME=	faust
 DISTVERSION=	2.5.23
+PORTREVISION=	2
 CATEGORIES=	audio devel
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -13,21 +14,22 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 
 LIB_DEPENDS=	libLLVM-${LLVM_VERSION:C/([1-9])([0-9])/\1.\2/}.so:devel/llvm${LLVM_VERSION}
 
-USES=		gmake ncurses python pkgconfig shebangfix
+USES=		compiler:c++11-lang gmake ncurses python pkgconfig shebangfix
 USE_GITHUB=	yes
 GH_ACCOUNT=	grame-cncm
 GH_TUPLE=	grame-cncm:faustlibraries:f889fe1:libs/libraries \
 		ThatOtherPerson:xxd:cd8ecce:xxd/xxd-replacement
 USE_CXXSTD=	c++11
 SHEBANG_FILES=	tools/faust2appls/* tools/benchmark/faustbench
-LLVM_VERSION=	50
+LLVM_VERSION=	60
 MAKE_ENV=	LLVM_CONFIG=${LOCALBASE}/bin/llvm-config${LLVM_VERSION}
 
-OPTIONS_DEFINE=	HIGHLIGHT HTTPD_LIB
+OPTIONS_DEFINE=		HIGHLIGHT HTTPD_LIB
 OPTIONS_DEFAULT=	HIGHLIGHT HTTPD_LIB
-HIGHLIGHT_DESC=	Syntax highlighting in Kate, gedit, Highlight, vim
-HTTPD_LIB_DESC=	Build httpd support library
-OPTIONS_SUB=	yes
+OPTIONS_SUB=		yes
+
+HIGHLIGHT_DESC=		Syntax highlighting in Kate, gedit, Highlight, vim
+HTTPD_LIB_DESC=		Build httpd support library
 
 HTTPD_LIB_ALL_TARGET=	all httpd
 HTTPD_LIB_LIB_DEPENDS=	libmicrohttpd.so:www/libmicrohttpd

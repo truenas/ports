@@ -2,9 +2,9 @@
 # $FreeBSD$
 
 PORTNAME=	kibana
-PORTVERSION=	6.2.3
+PORTVERSION=	6.3.2
 DISTVERSIONSUFFIX=	-linux-x86_64
-PORTREVISION=	2
+PORTREVISION=	0
 CATEGORIES=	textproc www
 MASTER_SITES=	https://artifacts.elastic.co/downloads/kibana/ \
 		http://artifacts.elastic.co/downloads/kibana/
@@ -15,7 +15,7 @@ COMMENT=	Browser based analytics and search interface to ElasticSearch
 
 LICENSE=	APACHE20
 
-RUN_DEPENDS=	node6>=6.12.2:www/node6
+RUN_DEPENDS=	node8>=8.11.3:www/node8
 
 CONFLICTS=	kibana[3-5]*
 
@@ -39,6 +39,7 @@ post-install:
 	${FIND} -s ${STAGEDIR}${WWWDIR} -not -type d | ${SORT} | \
 		${SED} -e 's#^${STAGEDIR}${PREFIX}/##' >> ${TMPPLIST}
 	${ECHO} "@dir(www,www) ${WWWDIR}/data" >> ${TMPPLIST}
+	${ECHO} "@dir ${WWWDIR}/node_modules/@elastic/numeral/src" >> ${TMPPLIST}
 	${ECHO} "@dir ${WWWDIR}/plugins" >> ${TMPPLIST}
 	${ECHO} "@dir ${WWWDIR}/src/ui/public/factories" >> ${TMPPLIST}
 

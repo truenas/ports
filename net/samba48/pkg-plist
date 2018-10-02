@@ -34,6 +34,7 @@ bin/smbtar
 %%SAMBA4_PYTHON2%%bin/smbtorture
 bin/smbtree
 bin/testparm
+bin/vfstest
 bin/wbinfo
 sbin/nmbd
 sbin/smbd
@@ -177,7 +178,6 @@ lib/samba4/libtevent-util.so
 lib/samba4/libtevent-util.so.0
 lib/samba4/libwbclient.so
 lib/samba4/libwbclient.so.0
-lib/samba4/winbind_krb5_locator.so
 lib/nss_winbind.so.1
 lib/nss_wins.so.1
 lib/pam_winbind.so
@@ -187,13 +187,13 @@ lib/pam_winbind.so
 %%AD_DC%%lib/samba4/private/libprocess-model-samba4.so
 %%AD_DC%%lib/samba4/private/libservice-samba4.so
 lib/samba4/private/libCHARSET3-samba4.so
-%%AD_DC%%lib/samba4/private/libHDB-SAMBA4-samba4.so
+%%AD_DC%%%%GSSAPI_BUILTIN%%lib/samba4/private/libHDB-SAMBA4-samba4.so
 lib/samba4/private/libLIBWBCLIENT-OLD-samba4.so
 lib/samba4/private/libMESSAGING-samba4.so
 lib/samba4/private/libMESSAGING-SEND-samba4.so
 lib/samba4/private/libaddns-samba4.so
 lib/samba4/private/libads-samba4.so
-lib/samba4/private/libasn1-samba4.so.8
+%%GSSAPI_BUILTIN%%lib/samba4/private/libasn1-samba4.so.8
 lib/samba4/private/libasn1util-samba4.so
 lib/samba4/private/libauth-samba4.so
 lib/samba4/private/libauth-unix-token-samba4.so
@@ -208,7 +208,7 @@ lib/samba4/private/libcli-spoolss-samba4.so
 lib/samba4/private/libcliauth-samba4.so
 lib/samba4/private/libcluster-samba4.so
 lib/samba4/private/libcmdline-credentials-samba4.so
-lib/samba4/private/libcom_err-samba4.so.0
+%%GSSAPI_BUILTIN%%lib/samba4/private/libcom_err-samba4.so.0
 lib/samba4/private/libcommon-auth-samba4.so
 %%AD_DC%%lib/samba4/private/libdb-glue-samba4.so
 lib/samba4/private/libdbwrap-samba4.so
@@ -224,18 +224,18 @@ lib/samba4/private/libgenrand-samba4.so
 lib/samba4/private/libgensec-samba4.so
 lib/samba4/private/libgpext-samba4.so
 lib/samba4/private/libgse-samba4.so
-lib/samba4/private/libgssapi-samba4.so.2
-lib/samba4/private/libhcrypto-samba4.so.5
-lib/samba4/private/libhdb-samba4.so.11
-lib/samba4/private/libheimbase-samba4.so.1
-lib/samba4/private/libheimntlm-samba4.so.1
+%%GSSAPI_BUILTIN%%lib/samba4/private/libgssapi-samba4.so.2
+%%GSSAPI_BUILTIN%%lib/samba4/private/libhcrypto-samba4.so.5
+%%GSSAPI_BUILTIN%%lib/samba4/private/libhdb-samba4.so.11
+%%GSSAPI_BUILTIN%%lib/samba4/private/libheimbase-samba4.so.1
+%%GSSAPI_BUILTIN%%lib/samba4/private/libheimntlm-samba4.so.1
 lib/samba4/private/libhttp-samba4.so
-lib/samba4/private/libhx509-samba4.so.5
+%%GSSAPI_BUILTIN%%lib/samba4/private/libhx509-samba4.so.5
 lib/samba4/private/libidmap-samba4.so
 lib/samba4/private/libinterfaces-samba4.so
 lib/samba4/private/libiov-buf-samba4.so
-lib/samba4/private/libkdc-samba4.so.2
-lib/samba4/private/libkrb5-samba4.so.26
+%%GSSAPI_BUILTIN%%lib/samba4/private/libkdc-samba4.so.2
+%%GSSAPI_BUILTIN%%lib/samba4/private/libkrb5-samba4.so.26
 lib/samba4/private/libkrb5samba-samba4.so
 lib/samba4/private/libldbsamba-samba4.so
 lib/samba4/private/liblibcli-lsa3-samba4.so
@@ -257,7 +257,7 @@ lib/samba4/private/libpopt-samba3-samba4.so
 lib/samba4/private/libprinting-migrate-samba4.so
 lib/samba4/private/libregistry-samba4.so
 lib/samba4/private/libreplace-samba4.so
-lib/samba4/private/libroken-samba4.so.19
+%%GSSAPI_BUILTIN%%lib/samba4/private/libroken-samba4.so.19
 lib/samba4/private/libsamba-cluster-support-samba4.so
 lib/samba4/private/libsamba-debug-samba4.so
 lib/samba4/private/libsamba-modules-samba4.so
@@ -290,13 +290,14 @@ lib/samba4/private/libutil-reg-samba4.so
 lib/samba4/private/libutil-setid-samba4.so
 lib/samba4/private/libutil-tdb-samba4.so
 lib/samba4/private/libwinbind-client-samba4.so
-lib/samba4/private/libwind-samba4.so.0
+%%GSSAPI_BUILTIN%%lib/samba4/private/libwind-samba4.so.0
 lib/samba4/private/libxattr-tdb-samba4.so
 %%AD_DC%%lib/shared-modules/bind9/dlz_bind9_10.so
 %%AD_DC%%lib/shared-modules/bind9/dlz_bind9_11.so
 %%AD_DC%%lib/shared-modules/bind9/dlz_bind9_9.so
 %%AD_DC%%lib/shared-modules/bind9/dlz_bind9.so
 %%AD_DC%%lib/shared-modules/gensec/krb5.so
+%%AD_DC%%lib/shared-modules/krb5/winbind_krb5_locator.so
 %%AD_DC%%lib/shared-modules/ldb/acl.so
 %%AD_DC%%lib/shared-modules/ldb/aclread.so
 %%AD_DC%%lib/shared-modules/ldb/anr.so
@@ -597,6 +598,7 @@ lib/shared-modules/vfs/zfsacl.so
 %%SAMBA4_PYTHON2%%%%PYTHON_SITELIBDIR%%/samba/tests/dns_base.py
 %%SAMBA4_PYTHON2%%%%PYTHON_SITELIBDIR%%/samba/tests/dns_forwarder_helpers/server.py
 %%SAMBA4_PYTHON2%%%%PYTHON_SITELIBDIR%%/samba/tests/dns_forwarder.py
+%%SAMBA4_PYTHON2%%%%PYTHON_SITELIBDIR%%/samba/tests/dns_invalid.py
 %%SAMBA4_PYTHON2%%%%PYTHON_SITELIBDIR%%/samba/tests/dns_tkey.py
 %%SAMBA4_PYTHON2%%%%PYTHON_SITELIBDIR%%/samba/tests/dns_wildcard.py
 %%SAMBA4_PYTHON2%%%%PYTHON_SITELIBDIR%%/samba/tests/dns.py
@@ -850,6 +852,7 @@ lib/shared-modules/vfs/zfsacl.so
 %%SAMBA4_PYTHON3%%%%SAMBA4_PYTHON3_SITELIBDIR%%/samba/tests/dns_base.py
 %%SAMBA4_PYTHON3%%%%SAMBA4_PYTHON3_SITELIBDIR%%/samba/tests/dns_forwarder_helpers/server.py
 %%SAMBA4_PYTHON3%%%%SAMBA4_PYTHON3_SITELIBDIR%%/samba/tests/dns_forwarder.py
+%%SAMBA4_PYTHON3%%%%SAMBA4_PYTHON3_SITELIBDIR%%/samba/tests/dns_invalid.py
 %%SAMBA4_PYTHON3%%%%SAMBA4_PYTHON3_SITELIBDIR%%/samba/tests/dns_tkey.py
 %%SAMBA4_PYTHON3%%%%SAMBA4_PYTHON3_SITELIBDIR%%/samba/tests/dns_wildcard.py
 %%SAMBA4_PYTHON3%%%%SAMBA4_PYTHON3_SITELIBDIR%%/samba/tests/dns.py
@@ -1137,7 +1140,6 @@ man/man7/libsmbclient.7.gz
 man/man7/samba.7.gz
 man/man7/traffic_learner.7.gz
 man/man7/traffic_replay.7.gz
-man/man7/winbind_krb5_locator.7.gz
 man/man8/cifsdd.8.gz
 man/man8/eventlogadm.8.gz
 man/man8/idmap_ad.8.gz
@@ -1204,6 +1206,7 @@ man/man8/vfs_virusfilter.8.gz
 man/man8/vfs_worm.8.gz
 man/man8/vfs_xattr_tdb.8.gz
 man/man8/vfs_zfsacl.8.gz
+man/man8/winbind_krb5_locator.8.gz
 man/man8/winbindd.8.gz
 @dir %%SAMBA4_RUNDIR%%
 @dir %%SAMBA4_LOGDIR%%

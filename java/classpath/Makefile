@@ -3,7 +3,7 @@
 
 PORTNAME=	classpath
 PORTVERSION=	0.99
-PORTREVISION=	5
+PORTREVISION=	8
 CATEGORIES=	java devel
 MASTER_SITES=	GNU \
 		SAVANNAH
@@ -24,7 +24,7 @@ GNU_CONFIGURE=	yes
 USES=		gmake iconv libtool perl5 pkgconfig
 USE_LDCONFIG=	yes
 USE_PERL5=	build
-USE_XORG=	x11 ice xtst xaw xproto xext
+USE_XORG=	x11 ice xtst xaw xorgproto xext
 
 CPPFLAGS+=	-I${LOCALBASE}/include
 LDFLAGS+=	-L${LOCALBASE}/lib
@@ -115,7 +115,8 @@ CONFIGURE_ARGS+=	--enable-qt-peer
 CONFIGURE_ARGS+=	--enable-default-toolkit=gnu.java.awt.peer.qt.QtToolkit
 .endif
 CONFIGURE_ENV+=		MOC="${LOCALBASE}/bin/moc-qt4"
-USE_QT4=		moc_build corelib gui
+USES+=			qt:4
+USE_QT=			moc_build corelib gui
 PLIST_SUB+=		QT4=""
 .else
 PLIST_SUB+=		QT4="@comment "

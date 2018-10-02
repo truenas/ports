@@ -1,15 +1,15 @@
 # Created by: kmoore@FreeBSD.org
-# $FreeBSD: head/sysutils/grub2-efi/Makefile 331644 2013-10-26 00:52:33Z gerald $
+# $FreeBSD$
 
 PORTNAME=	grub2-efi
 PORTVERSION=	2.02
-PORTREVISION=	18
+PORTREVISION=	19
 CATEGORIES=	sysutils
 MASTER_SITES=	http://www.pcbsd.org/~kris/software/ \
 		ftp://ftp.pcbsd.org/pub/software/
-DISTNAME=	grub-${PORTVERSION}_8
+DISTNAME=	grub-${PORTVERSION}_7
 
-MAINTAINER=	kmoore@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Multiboot EFI boot loader
 
 LICENSE=	GPLv3
@@ -50,5 +50,7 @@ post-configure:
 
 do-install:
 	@cd ${WRKSRC}/grub-core && ${GMAKE} install DESTDIR=${STAGEDIR}
+
+RUN_DEPENDS:=	${RUN_DEPENDS:Ngcc*}
 
 .include <bsd.port.post.mk>

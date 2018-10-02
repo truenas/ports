@@ -8,8 +8,8 @@ CATEGORIES=	security python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=		koobs@FreeBSD.org
-COMMENT=		Python Cryptography Toolkit
+MAINTAINER=	koobs@FreeBSD.org
+COMMENT=	Python Cryptography Toolkit
 
 LICENSE=	PD
 LICENSE_FILE=	${WRKSRC}/COPYRIGHT
@@ -19,12 +19,7 @@ CONFLICTS_INSTALL=	${PYTHON_PKGNAMEPREFIX}pycryptodome-*
 USES=		python
 USE_PYTHON=	distutils autoplist
 
-CONFLICTS=		${PYTHON_PKGNAMEPREFIX}pycryptodome-*
-
-USES?=			python
-USE_PYTHON=		distutils autoplist
-
-GNU_CONFIGURE=		yes
+GNU_CONFIGURE=	yes
 
 OPTIONS_DEFINE=		GMP
 OPTIONS_DEFAULT=	GMP

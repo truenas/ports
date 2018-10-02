@@ -11,14 +11,16 @@ LIB_DEPENDS=	libxcb-cursor.so:x11/xcb-util-cursor \
 		libxcb-image.so:x11/xcb-util-image \
 		libxcb-util.so:x11/xcb-util
 
-USES=		cmake:outsource gettext kde:5 pkgconfig tar:xz
-USE_KDE=	auth codecs completion config configwidgets coreaddons \
+USES=		cmake:outsource gettext kde:5 pkgconfig qt:5 tar:xz
+USE_KDE=	attica auth codecs completion config configwidgets coreaddons \
 		dbusaddons doctools ecm i18n jobwidgets kdeclarative kio \
-		libkipi notifications package service widgetsaddons \
+		libkipi newstuff notifications package service widgetsaddons \
 		windowsystem xmlgui
-USE_QT5=	core concurrent dbus gui network printsupport qml quick \
+USE_QT=		core concurrent dbus gui network printsupport qml quick \
 		widgets x11extras xml \
 		buildtools_build qmake_build
 USE_XORG=	x11 xcb xext xfixes
+
+OPTIONS_DEFINE=	DOCS
 
 .include <bsd.port.mk>

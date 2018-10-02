@@ -1,6 +1,6 @@
---- Telegram/SourceFiles/qt_static_plugins.cpp.orig	2017-09-05 17:38:38 UTC
+--- Telegram/SourceFiles/qt_static_plugins.cpp.orig	2018-08-04 18:53:40 UTC
 +++ Telegram/SourceFiles/qt_static_plugins.cpp
-@@ -27,14 +27,5 @@ Q_IMPORT_PLUGIN(QWindowsIntegrationPlugi
+@@ -14,14 +14,5 @@ Q_IMPORT_PLUGIN(QWindowsIntegrationPlugi
  Q_IMPORT_PLUGIN(QWebpPlugin)
  Q_IMPORT_PLUGIN(QCocoaIntegrationPlugin)
  Q_IMPORT_PLUGIN(QGenericEnginePlugin)
