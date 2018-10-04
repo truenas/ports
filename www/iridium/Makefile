@@ -164,7 +164,8 @@ SNDIO_VARS_OFF=		GN_ARGS+=use_sndio=false
 
 .include <bsd.port.options.mk>
 
-.if ${OPSYS} == FreeBSD && ${OSVERSION} < 1101513
+#.if ${OPSYS} == FreeBSD && ${OSVERSION} < 1101513
+.if ${OPSYS} == FreeBSD
 BUILD_DEPENDS+=	clang60:devel/llvm60
 CC=		clang60
 CXX=		clang++60
