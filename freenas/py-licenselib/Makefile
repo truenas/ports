@@ -1,0 +1,22 @@
+# $FreeBSD$
+
+PORTNAME=	licenselib
+PORTVERSION=	20170706171128
+PORTREVISION=	0
+PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
+CATEGORIES=	freenas
+VALID_CATEGORIES+=freenas
+
+MAINTAINER=	wg@FreeBSD.org
+COMMENT=	License library for FreeNAS/TrueNAS
+
+USES=		python
+USE_PYTHON=	autoplist distutils
+
+USE_GITHUB=	yes
+GH_ACCOUNT=	freenas
+GH_PROJECT=	licenselib
+GH_TAGNAME=	6b80435ca767c3e3c0520f43cb6d2bf133721085
+
+
+.include <bsd.port.mk>

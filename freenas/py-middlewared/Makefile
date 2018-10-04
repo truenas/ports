@@ -1,0 +1,47 @@
+PORTNAME=	middlewared
+PORTVERSION=	20180824163005
+PORTREVISION=	0
+PKGNAMEPREFIX=  ${PYTHON_PKGNAMEPREFIX}
+
+CATEGORIES=     freenas
+VALID_CATEGORIES+= freenas
+
+MAINTAINER=     dev@ixsystems.com
+COMMENT=        FreeNAS Middleware Daemon
+
+USES=		python
+USE_PYTHON=	autoplist distutils
+
+BUILD_DEPENDS= ${PYTHON_PKGNAMEPREFIX}fastentrypoints>0:devel/py-fastentrypoints@${FLAVOR}
+RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}ws4py>0:www/py-ws4py@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}aiohttp>0:www/py-aiohttp@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}aiohttp-wsgi>0:www/py-aiohttp-wsgi@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}Flask>0:www/py-flask@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}boto3>0:www/py-boto3@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}netif>0:net/py-netif@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}bsd>0:freenas/py-bsd@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}raven>0:devel/py-raven@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}markdown>0:textproc/py-markdown@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}mako>0:textproc/py-mako@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}psutil>0:sysutils/py-psutil@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}libzfs>0:devel/py-libzfs@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}netsnmpagent>0:net/py-netsnmpagent@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}pydevd>0:devel/py-pydevd@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}zeroconf>0:net/py-zeroconf@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}influxdb>0:databases/py-influxdb@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}asyncssh>0:security/py-asyncssh@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}croniter>0:sysutils/py-croniter@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}bidict>0:devel/py-bidict@${FLAVOR} \
+		rclone>0:net/rclone \
+		swagger-ui>0:freenas/swagger-ui
+
+USE_RC_SUBR=	middlewared
+
+WRKSRC_SUBDIR=	src/middlewared
+
+USE_GITHUB=	yes
+GH_ACCOUNT=	freenas
+GH_PROJECT=	freenas
+GH_TAGNAME=	a138758b707256e75f064dcbd68522f053579820
+
+.include <bsd.port.mk>

@@ -1,3 +1,0 @@
-[submodule "freenas"]
-	path = freenas
-	url = https://github.com/trueos/trueos-freenas-ports.git
