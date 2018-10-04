@@ -14,10 +14,16 @@ PRODUCT?=
 USE_XZ=		yes
 NO_BUILD=	yes
 
+.if exists(/usr/local_source/${PORTNAME})
+PORTVERSION!=   git -C /usr/local_source/${PORTNAME} log -1 --pretty=format:%ct
+EXTRACT_ONLY=
+WRKSRC=         /usr/local_source/${PORTNAME}
+.else
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
 GH_PROJECT=	freenas
 GH_TAGNAME=	a138758b707256e75f064dcbd68522f053579820
+.endif
 
 PREFIX=/
 
@@ -37,6 +43,11 @@ MAKE_JOBS_UNSAFE=yes
 PLIST_SUB+=	TRUENAS=""
 .else
 PLIST_SUB+=	TRUENAS="@comment "
+.endif
+
+.if exists(/usr/local_source/${PORTNAME})
+checksum fetch:
+	echo ${.TARGET} not needed because building direct
 .endif
 
 do-build:

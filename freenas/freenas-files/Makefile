@@ -16,10 +16,16 @@ PREFIX=/
 USES= 	python
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}snmp_passpersist>=1.3.0:net-mgmt/py-snmp_passpersist
 
+.if exists(/usr/local_source/${PORTNAME})
+PORTVERSION!=   git -C /usr/local_source/${PORTNAME} log -1 --pretty=format:%ct
+EXTRACT_ONLY=
+WRKSRC=         /usr/local_source/${PORTNAME}
+.else
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
 GH_PROJECT=	freenas
 GH_TAGNAME=	a138758b707256e75f064dcbd68522f053579820
+.endif
 
 # explicitly set this for the port build
 FREEBSD_SRCTOP=/usr/src
@@ -30,6 +36,11 @@ ALL_TARGET=obj all
 MAKE_JOBS_UNSAFE=yes
 
 .include <bsd.port.pre.mk>
+
+.if exists(/usr/local_source/${PORTNAME})
+checksum fetch:
+	echo ${.TARGET} not needed because building direct
+.endif
 
 do-build:
 	${MAKE} -C ${WRKSRC}/src/extract-tarball   obj
