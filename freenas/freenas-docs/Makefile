@@ -17,10 +17,17 @@ BUILD_DEPENDS=	sphinx-build:textproc/py-sphinx@${PY_FLAVOR} \
 
 USES=	perl5 python:build
 
+.if exists(/usr/local_source/${PORTNAME})
+PORTVERSION!=	git -C /usr/local_source/${PORTNAME} log -1 --pretty=format:%ct
+EXTRACT_ONLY=
+WRKSRC=		/usr/local_source/${PORTNAME}
+
+.else
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
 GH_PROJECT=	freenas-docs
 GH_TAGNAME=	e5c140e9117df1a6832d5c8fb9571d06e4fc3406
+.endif
 
 .include <bsd.port.pre.mk>
 
@@ -33,6 +40,10 @@ BUILD_DEPENDS+=	gmake>0:devel/gmake \
 		tex-dvipsk>0:print/tex-dvipsk
 .endif
 
+.if exists(/usr/local_source/${PORTNAME})
+checksum fetch:
+	echo ${.TARGET} not needed because building direct
+.endif
 
 do-build:
 .if ${PRODUCT} == "TrueNAS"
