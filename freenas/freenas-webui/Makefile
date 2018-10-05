@@ -34,14 +34,14 @@ GH_TAGNAME=	a6ee4fa1333ee775bdef3dac7ce03793b7406947
 .if exists(/usr/local_source/${PORTNAME})
 checksum:
 	${ECHO_CMD} ${.TARGET} not needed because building direct
-.endif
-
-fetch:
-	${MKDIR} ${WRKDIR}
-	(cd ${WRKSRC} && ${LOCALBASE}/bin/npm install && ${LOCALBASE}/bin/npm run build:prod:aot)
 
 extract:
 	:
+.endif
+
+patch:
+	${MKDIR} ${WRKDIR} 2>/dev/null || true
+	(cd ${WRKSRC} && ${LOCALBASE}/bin/npm install && ${LOCALBASE}/bin/npm run build:prod:aot)
 
 do-install:
 	mkdir -p ${STAGEDIR}${PREFIX}/www/webui/
