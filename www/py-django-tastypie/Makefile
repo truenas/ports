@@ -14,7 +14,7 @@ LICENSE=	BSD3CLAUSE
 
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}mimeparse>=0.1.4:devel/py-mimeparse@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}dateutil>=2.1:devel/py-dateutil@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}django111>0:www/py-django111@${PY_FLAVOR}
+		${PYTHON_PKGNAMEPREFIX}django110>0:www/py-django110@${PY_FLAVOR}
 
 USES=		python
 USE_PYTHON=	distutils autoplist
