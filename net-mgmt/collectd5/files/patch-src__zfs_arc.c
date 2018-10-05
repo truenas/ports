@@ -12,7 +12,16 @@ index 730d30483b..3ef3e562c7 100644
  static int za_read(void) {
    gauge_t arc_hits, arc_misses, l2_hits, l2_misses;
    kstat_t *ksp = NULL;
-@@ -313,14 +316,25 @@ static int za_read(void) {
+@@ -258,7 +261,7 @@ static int za_read(void) {
+    * Stop trying if we ever fail to read it, so we don't spam the log.
+    */
+   static int l2_size_avail = 1;
+-  if (l2_size_avail && za_read_gauge(ksp, "l2_size", "cache_size", "L2") != 0)
++  if (l2_size_avail && za_read_gauge(ksp, "l2_asize", "cache_size", "L2") != 0)
+     l2_size_avail = 0;
+ 
+   /* Operations */
+@@ -297,14 +300,25 @@ static int za_read(void) {
    za_read_derive(ksp, "mru_hits", "cache_result", "mru-hit");
    za_read_derive(ksp, "mru_ghost_hits", "cache_result", "mru_ghost-hit");
  
@@ -44,7 +53,7 @@ index 730d30483b..3ef3e562c7 100644
  
    /* I/O */
    value_t l2_io[] = {
-@@ -347,6 +361,11 @@ static int za_init(void) /* {{{ */
+@@ -331,6 +345,11 @@ static int za_init(void) /* {{{ */
    }
  #endif
  
