@@ -14,6 +14,7 @@ FETCH_DEPENDS=	git>0:devel/git \
 		python2>0:lang/python2
 BUILD_DEPENDS=	rsync>0:net/rsync \
 		python2>0:lang/python2 \
+		npm>=0:www/npm \
 		yarn>=0:www/yarn
 
 NO_BUILD=	yes
