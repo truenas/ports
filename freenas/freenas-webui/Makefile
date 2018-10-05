@@ -39,11 +39,9 @@ extract:
 	:
 .endif
 
-patch:
+do-install:
 	${MKDIR} ${WRKDIR} 2>/dev/null || true
 	(cd ${WRKSRC} && ${LOCALBASE}/bin/npm install && ${LOCALBASE}/bin/npm run build:prod:aot)
-
-do-install:
 	mkdir -p ${STAGEDIR}${PREFIX}/www/webui/
 	rsync -avl --exclude '.git' --exclude 'nas_ports' --exclude 'etc' --exclude 'sbin' ${WRKSRC}/dist/ ${STAGEDIR}${PREFIX}/www/webui/
 	(cd ${STAGEDIR}${PREFIX}/www/webui; ${FIND} . -type f \
