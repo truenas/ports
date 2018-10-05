@@ -10,12 +10,11 @@ VALID_CATEGORIES+=	freenas
 MAINTAINER=	dev@ixsystems.com
 COMMENT=	Angular 5 Web User Interface for FreeNAS
 
-FETCH_DEPENDS=	npm:freenas/npm5 \
-		git>0:devel/git \
+FETCH_DEPENDS=	git>0:devel/git \
 		python2>0:lang/python2
 BUILD_DEPENDS=	rsync>0:net/rsync \
-		npm:freenas/npm5 \
-		python2>0:lang/python2
+		python2>0:lang/python2 \
+		yarn>=0:www/yarn
 
 NO_BUILD=	yes
 
@@ -38,6 +37,13 @@ checksum:
 extract:
 	:
 .endif
+
+configure:
+	:
+
+build:
+	(cd ${WRKSRC} && ${LOCALBASE}/bin/yarn install \
+		&& ${LOCALBASE}/bin/yarn run build:prod:aot)
 
 do-install:
 	${MKDIR} ${WRKDIR} 2>/dev/null || true

@@ -23,7 +23,7 @@ NODE6_DESC=	Use www/node6 as backend
 
 OPTIONS_SUB=	yes
 
-NODE_RUN_DEPENDS=	node>=0.8.0:www/node
+NODE_RUN_DEPENDS=	node>=0.8.0:freenas/node9
 NODE8_RUN_DEPENDS=	node8>=0.8.0:www/node8
 NODE6_RUN_DEPENDS=	node6>=0.8.0:www/node6
 
