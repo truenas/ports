@@ -48,7 +48,7 @@ build:
 
 do-install:
 	${MKDIR} ${WRKDIR} 2>/dev/null || true
-	(cd ${WRKSRC} && ${LOCALBASE}/bin/npm install && ${LOCALBASE}/bin/npm run build:prod:aot)
+	(cd ${WRKSRC} && ${LOCALBASE}/bin/yarn install && ${LOCALBASE}/bin/yarn run build:prod:aot)
 	mkdir -p ${STAGEDIR}${PREFIX}/www/webui/
 	rsync -avl --exclude '.git' --exclude 'nas_ports' --exclude 'etc' --exclude 'sbin' ${WRKSRC}/dist/ ${STAGEDIR}${PREFIX}/www/webui/
 	(cd ${STAGEDIR}${PREFIX}/www/webui; ${FIND} . -type f \
