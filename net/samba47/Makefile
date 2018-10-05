@@ -5,7 +5,6 @@ PORTNAME?=	${SAMBA4_BASENAME}47
 PORTVERSION?=	${SAMBA4_VERSION}
 PORTREVISION?=	5
 CATEGORIES?=	net
-EXTRACT_ONLY=
 
 MAINTAINER?=	john@ixsystems.com
 COMMENT?=	Free SMB/CIFS and AD/DC server and client for Unix
@@ -67,9 +66,9 @@ CONFIGURE_ARGS+=	--mandir="${MANPREFIX}/man" \
 CONFIGURE_ENV+=		PTHREAD_LDFLAGS="-lpthread"
 
 #USES=			cpe compiler waf pkgconfig perl5 python:2 \
-#			execinfo readline iconv shebangfix gettext zip
+#			execinfo readline iconv shebangfix gettext
 USES=			cpe compiler waf pkgconfig perl5 python:2.7 \
-			readline iconv shebangfix gettext zip
+			readline iconv shebangfix gettex
 USE_PERL5=		build
 USE_LDCONFIG=		${SAMBA4_LIBDIR}
 WAF_CMD=		buildtools/bin/waf
