@@ -10,8 +10,6 @@ VALID_CATEGORIES+=	freenas
 MAINTAINER=	dev@ixsystems.com
 COMMENT=	Angular 5 Web User Interface for FreeNAS
 
-EXTRACT_ONLY=
-
 FETCH_DEPENDS=	npm:freenas/npm5 \
 		git>0:devel/git \
 		python2>0:lang/python2
@@ -24,6 +22,7 @@ NO_BUILD=	yes
 .if exists(/usr/local_source/${PORTNAME})
 PORTVERSION!=	git -C /usr/local_source/${PORTNAME} log -1 --pretty=format:%ct
 WRKSRC=		/usr/local_source/${PORTNAME}
+EXTRACT_ONLY=
 .else
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
