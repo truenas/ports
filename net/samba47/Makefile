@@ -68,7 +68,7 @@ CONFIGURE_ENV+=		PTHREAD_LDFLAGS="-lpthread"
 #USES=			cpe compiler waf pkgconfig perl5 python:2 \
 #			execinfo readline iconv shebangfix gettext
 USES=			cpe compiler waf pkgconfig perl5 python:2.7 \
-			readline iconv shebangfix gettex
+			readline iconv shebangfix gettext
 USE_PERL5=		build
 USE_LDCONFIG=		${SAMBA4_LIBDIR}
 WAF_CMD=		buildtools/bin/waf
