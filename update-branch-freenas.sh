@@ -4,16 +4,17 @@
 #
 
 # List of ports to update
-# Usage: <portname>::<project>::<repo>
-PLIST="mDNSResponder::freenas::mDNSResponder"
-PLIST="${PLIST} freenas-docs::freenas::freenas-docs"
-PLIST="${PLIST} freenas-files::freenas::freenas"
-PLIST="${PLIST} freenas-installer::freenas::freenas"
-PLIST="${PLIST} freenas-ui::freenas::freenas"
-PLIST="${PLIST} pipewatcher::freenas::freenas"
-PLIST="${PLIST} py-bsd::freenas::py-bsd"
-PLIST="${PLIST} py-licenselib::freenas::licenselib"
-PLIST="${PLIST} py-middlewared::freenas::freenas"
+# Usage: <portname>::<project>::<repo>::<defaultbranch>
+PLIST="freenas/mDNSResponder::freenas::mDNSResponder::master"
+PLIST="${PLIST} freenas/freenas-docs::freenas::freenas-docs:master"
+PLIST="${PLIST} freenas/freenas-files::freenas::freenas::master"
+PLIST="${PLIST} freenas/freenas-installer::freenas::freenas::master"
+PLIST="${PLIST} freenas/freenas-ui::freenas::freenas::master"
+PLIST="${PLIST} freenas/pipewatcher::freenas::freenas::master"
+PLIST="${PLIST} freenas/py-bsd::freenas::py-bsd::master"
+PLIST="${PLIST} freenas/py-licenselib::freenas::licenselib::master"
+PLIST="${PLIST} freenas/py-middlewared::freenas::freenas::master"
+PLIST="${PLIST} net/samba47::freenas::samba::freenas/master"
 
 usage()
 {
@@ -21,7 +22,7 @@ usage()
 	echo ""
 	echo "Usage: $0 port branch"
 	echo ""
-	echo "Example: $0 mDNSResponder master"
+	echo "Example: $0 freenas/mDNSResponder master"
 	echo "Example: $0 all master"
 	exit 1
 }
@@ -31,8 +32,14 @@ update_port()
 	local port="$(echo $1 | awk -F"::" '{print $1}')"
 	local project="$(echo $1 | awk -F"::" '{print $2}')"
 	local repo="$(echo $1 | awk -F"::" '{print $3}')"
+	local dbranch="$(echo $1 | awk -F"::" '{print $4}')"
 
-	GH_HASH=$(fetch -o - https://api.github.com/repos/$project/$repo/git/refs/heads/$BRANCH 2>/dev/null | jq -r '."object"."sha"')
+	# If no branch specified, use default
+	if [ -n "$BRANCH" ] ; then
+		dbranch="$BRANCH"
+	fi
+
+	GH_HASH=$(fetch -o - https://api.github.com/repos/$project/$repo/git/refs/heads/$dbranch 2>/dev/null | jq -r '."object"."sha"')
 	GH_DATE=$(fetch -o - https://api.github.com/repos/$project/$repo/commits/$GH_HASH 2>/dev/null | jq -r '."commit"."author"."date"')
 
 	#echo "$GH_HASH"
@@ -54,7 +61,7 @@ update_port()
 	make -C ${port} makesum
 }
 
-if [ -z "$1" -o -z "$2" ] ; then
+if [ -z "$1" ] ; then
 	usage
 fi
 
