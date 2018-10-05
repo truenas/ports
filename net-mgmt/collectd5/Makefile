@@ -3,7 +3,7 @@
 
 PORTNAME=	collectd
 PORTVERSION=	5.7.2
-PORTREVISION=	3
+PORTREVISION=	2
 CATEGORIES=	net-mgmt
 MASTER_SITES=	https://collectd.org/files/ \
 		http://collectd.org/files/
@@ -15,13 +15,15 @@ COMMENT=	Systems & network statistics collection daemon
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
+LIB_DEPENDS=	libltdl.so:devel/libltdl
+
 USES=		autoreconf gmake libtool pkgconfig shebangfix tar:bzip2
 GNU_CONFIGURE=	yes
 
 OPTIONS_DEFINE=		CGI DEBUG GCRYPT LIBDTRACE LIBZFS LOGSTASH VIRT
 OPTIONS_GROUP=		INPUT OUTPUT
-OPTIONS_GROUP_OUTPUT=	KAFKA MONGODB NOTIFYDESKTOP NOTIFYEMAIL PROMETHEUS RIEMANN \
-			RRDTOOL TSDB
+OPTIONS_GROUP_OUTPUT=	KAFKA MONGODB NOTIFYDESKTOP NOTIFYEMAIL RIEMANN RRDTOOL \
+			TSDB
 OPTIONS_GROUP_INPUT=	CHRONY CURL CURL_JSON CURL_XML DBI IPMI JSON \
 			MEMCACHEC MODBUS MQTT MYSQL NUTUPS OLSRD ONEWIRE OPENLDAP \
 			PERL PGSQL PINBA PING PYTHON RABBITMQ REDIS ROUTEROS \
@@ -56,7 +58,6 @@ PERL_DESC=		Enable libperl plugin and binding
 PGSQL_DESC=		Enable postgresql-based plugins
 PINBA_DESC=		Enable pinba plugin (via protobuf-c)
 PING_DESC=		Enable ping plugin
-PROMETHEUS_DESC=		Enable write prometheus plugin
 PYTHON_DESC=		Enable python-based plugins
 RABBITMQ_DESC=		Enable rabbitmq-based plugins
 REDIS_DESC=		Enable redis-based plugins
@@ -213,15 +214,10 @@ PING_LIB_DEPENDS=		liboping.so:net/liboping
 PING_CONFIGURE_ENABLE=		ping
 PING_CONFIGURE_WITH=		liboping=${LOCALBASE}
 
-PROMETHEUS_LIB_DEPENDS=	libprotobuf-c.so:devel/protobuf-c
-PROMETHEUS_LIB_DEPENDS+=	libprotoc.so:devel/protobuf
-PROMETHEUS_LIB_DEPENDS+=	libmicrohttpd.so:www/libmicrohttpd
-PROMETHEUS_CONFIGURE_ENABLE=	write_prometheus
-
-PYTHON_USES=			python:3.6
+PYTHON_USES=			python:3.5+
 PYTHON_CONFIGURE_ENABLE=	python
 PYTHON_CONFIGURE_WITH=		python=${PYTHON_CMD}
-PYTHON_BUILD_DEPENDS=		python3:lang/python3
+PYTHON_BUILD_DEPENDS=		python3>0:lang/python3
 
 RABBITMQ_LIB_DEPENDS=		librabbitmq.so:net/rabbitmq-c
 RABBITMQ_CONFIGURE_ENABLE=	rabbitmq
@@ -231,8 +227,7 @@ REDIS_LIB_DEPENDS=		libhiredis.so:databases/hiredis
 REDIS_CONFIGURE_ENABLE=		redis write_redis
 REDIS_CONFIGURE_WITH=		libhiredis=${LOCALBASE}
 
-RIEMANN_LIB_DEPENDS=		libriemann-client.so:net-mgmt/riemann-c-client \
-				libltdl.so:devel/libltdl
+RIEMANN_LIB_DEPENDS=		libriemann-client.so:net-mgmt/riemann-c-client
 RIEMANN_CONFIGURE_ENABLE=	write_riemann
 
 ROUTEROS_LIB_DEPENDS=		librouteros.so:net/librouteros \
