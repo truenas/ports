@@ -83,17 +83,17 @@ do-install:
 	${ECHO_CMD} "@group www"  >> ${TMPPLIST}
 	${ECHO_CMD} "@comment files" >> ${TMPPLIST}
 	${FIND} ${WRKSRC}/gui -type f | \
-		${SED} -e 's|^/usr/|/www/|' -e 's|^/||' \
+		${SED} -e 's|^${WRKSRC}|/www/freenasUI|' -e 's|^/||' \
 		| ${SORT} >> ${TMPPLIST}
 	${ECHO_CMD} www/freenasUI/local_settings.py >> ${TMPPLIST}
 	${ECHO_CMD} "@comment directories" >> ${TMPPLIST}
 	${FIND} ${WRKSRC}/gui -type d \
-		| ${SED} -e 's|^/usr/|/www/|' -e 's|^/||' -e 's|^|@dirrm |' \
+		| ${SED} -e 's|^${WRKSRC}|/www/freenasUI|' -e 's|^/||' -e 's|^|@dir |' \
 		| ${SORT} -r >> ${TMPPLIST}
 
 	${RM} -fr ${STAGEDIR}${PREFIX}/www/freenasUI
 	${MKDIR} ${STAGEDIR}${PREFIX}/www/freenasUI
-	${CP} -a ${WRKSRC}/gui/ ${STAGEDIR}${PREFIX}/www/freenasUI
+	${CP} -a ${WRKSRC}/gui ${STAGEDIR}${PREFIX}/www/freenasUI/
 	${LN} -s -f /etc/local_settings.py ${STAGEDIR}${PREFIX}/www/freenasUI/local_settings.py
 
 .include <bsd.port.post.mk>
