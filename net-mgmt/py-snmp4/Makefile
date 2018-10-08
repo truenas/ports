@@ -16,7 +16,7 @@ COMMENT=	SNMP framework for Python
 LICENSE=	BSD2CLAUSE
 
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pyasn1>=0.1.2:devel/py-pyasn1@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}pycrypto>=2.4.1:security/py-pycrypto@${PY_FLAVOR}
+		${PYTHON_PKGNAMEPREFIX}pycryptodome>=3.4.6:security/py-pycryptodome@${PY_FLAVOR}
 
 OPTIONS_DEFINE=	DOCS EXAMPLES
 
