@@ -46,14 +46,18 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}django110>0:www/py-django110@${PY_FLAVOR} \
 	freenas-migrate93>0:freenas/freenas-migrate93 \
 	${PYTHON_PKGNAMEPREFIX}libzfs>0:devel/py-libzfs@${PY_FLAVOR}
 
+.if exists(/usr/local_source/${PORTNAME})
+PORTVERSION!=	git -C /usr/local_source/${PORTNAME} log -1 --pretty=format:%ct
+EXTRACT_ONLY=
+WRKSRC=		/usr/local_source/${PORTNAME}
+.else
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
 GH_PROJECT=	freenas
 GH_TAGNAME=	a138758b707256e75f064dcbd68522f053579820
+.endif
 
 NO_BUILD=yes
-
-WRKSRC=		${WRKDIR}/${DISTNAME}/gui
 
 MAKE_JOBS_UNSAFE=yes
 
@@ -68,23 +72,28 @@ SUB_LIST+=	PYTHON_CMD=${PYTHON_CMD}
 RUN_DEPENDS+=	truenas-files>0:${PORTSDIR}/truenas/truenas-files
 .endif
 
+.if exists(/usr/local_source/${PORTNAME})
+checksum fetch:
+	echo ${.TARGET} not needed because building direct
+.endif
+
 do-install:
-	${PYTHON_CMD} -m compileall ${WRKSRC}/
+	${PYTHON_CMD} -m compileall ${WRKSRC}/gui/
 	${ECHO_CMD} "@owner www"  >> ${TMPPLIST}
 	${ECHO_CMD} "@group www"  >> ${TMPPLIST}
 	${ECHO_CMD} "@comment files" >> ${TMPPLIST}
-	${FIND} ${WRKSRC} -type f | \
+	${FIND} ${WRKSRC}/gui -type f | \
 		${SED} -e 's|^/usr/|/www/|' -e 's|^/||' \
 		| ${SORT} >> ${TMPPLIST}
 	${ECHO_CMD} www/freenasUI/local_settings.py >> ${TMPPLIST}
 	${ECHO_CMD} "@comment directories" >> ${TMPPLIST}
-	${FIND} ${WRKSRC} -type d \
+	${FIND} ${WRKSRC}/gui -type d \
 		| ${SED} -e 's|^/usr/|/www/|' -e 's|^/||' -e 's|^|@dirrm |' \
 		| ${SORT} -r >> ${TMPPLIST}
 
 	${RM} -fr ${STAGEDIR}${PREFIX}/www/freenasUI
 	${MKDIR} ${STAGEDIR}${PREFIX}/www/freenasUI
-	${CP} -a ${WRKSRC}/ ${STAGEDIR}${PREFIX}/www/freenasUI
+	${CP} -a ${WRKSRC}/gui/ ${STAGEDIR}${PREFIX}/www/freenasUI
 	${LN} -s -f /etc/local_settings.py ${STAGEDIR}${PREFIX}/www/freenasUI/local_settings.py
 
 .include <bsd.port.post.mk>
