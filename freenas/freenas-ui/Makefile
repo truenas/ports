@@ -2,7 +2,7 @@
 
 PORTNAME=       freenas-ui
 PORTVERSION=	20180921133426
-PORTREVISION=	1
+PORTREVISION=	2
 
 CATEGORIES=     freenas
 VALID_CATEGORIES+=	freenas
@@ -93,7 +93,7 @@ do-install:
 
 	${RM} -fr ${STAGEDIR}${PREFIX}/www/freenasUI
 	${MKDIR} ${STAGEDIR}${PREFIX}/www/freenasUI
-	${CP} -a ${WRKSRC}/gui ${STAGEDIR}${PREFIX}/www/freenasUI/
+	${CP} -a ${WRKSRC}/gui/* ${STAGEDIR}${PREFIX}/www/freenasUI/
 	${LN} -s -f /etc/local_settings.py ${STAGEDIR}${PREFIX}/www/freenasUI/local_settings.py
 
 .include <bsd.port.post.mk>
