@@ -8,42 +8,46 @@ pre-install()
 
 post-install()
 {
+        if [ -z "${PKG_ROOTDIR}" ] ; then
+                PKG_ROOTDIR=/
+        fi
+
         set -x
         local dstCR
         dstCR=/usr/local/www/freenasUI
 	echo "Adding freenas web gui"
 	echo "Making freenas initial database"
-        if [ ! -d /data ]; then
-		rm -fr /data
-		mkdir -p /data
+        if [ ! -d ${PKG_ROOTDIR}/data ]; then
+		rm -fr ${PKG_ROOTDIR}/data
+		mkdir -p ${PKG_ROOTDIR}/data
 	fi
-        cd ${dstCR}
+        cd ${PKG_ROOTDIR}/${dstCR}
 
 	# XXXXX Bogus set of version for now
 	# FIXME later with something better
 	# Needed for migrate script to finish
-	echo "FreeNAS 12.0-PRERELEASE ()" > /etc/version
+	echo "FreeNAS 12.0-PRERELEASE ()" > ${PKG_ROOTDIR}/etc/version
 
-	%%PYTHON_CMD%% manage.py collectstatic --noinput
-	%%PYTHON_CMD%% tools/compilemsgs.py
+	chroot ${PKG_ROOTDIR} %%PYTHON_CMD%% ${dstCR}/manage.py collectstatic --noinput
+	chroot ${PKG_ROOTDIR} %PYTHON_CMD%% ${dstCR}/tools/compilemsgs.py
 
-	env FREENAS_INSTALL=yes /usr/local/sbin/migrate93 -f /data/freenas-v1.db
+	chroot ${PKG_ROOTDIR} env FREENAS_INSTALL=yes /usr/local/sbin/migrate93 -f /data/freenas-v1.db
 	# Lets be evil here and kill pkg(8) if this fails
 	# because pkg does not check return code of POST-INSTALL script
 	if [ $? -ne 0 ]; then
 		/usr/bin/procstat -h $$|awk '{print $2}'|xargs kill -9
 	fi
 
-	env FREENAS_INSTALL=yes %%PYTHON_CMD%% manage.py migrate --fake-initial --noinput --traceback
+	chroot ${PKG_ROOTDIR} env FREENAS_INSTALL=yes %%PYTHON_CMD%% ${dstCR}/manage.py migrate --fake-initial --noinput --traceback
 
 	# Same as before
 	if [ $? -ne 0 ]; then
 		/usr/bin/procstat -h $$|awk '{print $2}'|xargs kill -9
 	fi
 
-        cd /data
+        cd ${PKG_ROOTDIR}/data
 	cp freenas-v1.db factory-v1.db
-	chown -R www:www /data
+	chown -R www:www ${PKG_ROOTDIR}/data
 }
 
 backupwarning()
