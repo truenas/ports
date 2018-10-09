@@ -29,7 +29,7 @@ post-install()
 	echo "FreeNAS 12.0-PRERELEASE ()" > ${PKG_ROOTDIR}/etc/version
 
 	chroot ${PKG_ROOTDIR} %%PYTHON_CMD%% ${dstCR}/manage.py collectstatic --noinput
-	chroot ${PKG_ROOTDIR} %PYTHON_CMD%% ${dstCR}/tools/compilemsgs.py
+	chroot ${PKG_ROOTDIR} %%PYTHON_CMD%% ${dstCR}/tools/compilemsgs.py
 
 	chroot ${PKG_ROOTDIR} env FREENAS_INSTALL=yes /usr/local/sbin/migrate93 -f /data/freenas-v1.db
 	# Lets be evil here and kill pkg(8) if this fails
