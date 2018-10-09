@@ -19,6 +19,11 @@ post-install()
 	fi
         cd ${dstCR}
 
+	# XXXXX Bogus set of version for now
+	# FIXME later with something better
+	# Needed for migrate script to finish
+	echo "FreeNAS 12.0-PRERELEASE ()" > /etc/version
+
 	%%PYTHON_CMD%% manage.py collectstatic --noinput
 	%%PYTHON_CMD%% tools/compilemsgs.py
 
