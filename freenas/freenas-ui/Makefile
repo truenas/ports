@@ -83,12 +83,12 @@ do-install:
 	${ECHO_CMD} "@group www"  >> ${TMPPLIST}
 	${ECHO_CMD} "@comment files" >> ${TMPPLIST}
 	${FIND} ${WRKSRC}/gui -type f | \
-		${SED} -e 's|^${WRKSRC}|/www/freenasUI|' -e 's|^/||' \
+		${SED} -e 's|^${WRKSRC}/gui|/www/freenasUI|' -e 's|^/||' \
 		| ${SORT} >> ${TMPPLIST}
 	${ECHO_CMD} www/freenasUI/local_settings.py >> ${TMPPLIST}
 	${ECHO_CMD} "@comment directories" >> ${TMPPLIST}
 	${FIND} ${WRKSRC}/gui -type d \
-		| ${SED} -e 's|^${WRKSRC}|/www/freenasUI|' -e 's|^/||' -e 's|^|@dir |' \
+		| ${SED} -e 's|^${WRKSRC}/gui|/www/freenasUI|' -e 's|^/||' -e 's|^|@dir |' \
 		| ${SORT} -r >> ${TMPPLIST}
 
 	${RM} -fr ${STAGEDIR}${PREFIX}/www/freenasUI
