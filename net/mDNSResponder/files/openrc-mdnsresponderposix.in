@@ -10,4 +10,6 @@ command_args="-b -P ${mdnsresponderposix_pidfile} -n ${hostname}"
 
 depend() {
 	keyword -shutdown
+	after network
+	need mdnsd
 }
