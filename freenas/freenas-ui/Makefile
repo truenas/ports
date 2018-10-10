@@ -45,6 +45,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}django110>0:www/py-django110@${PY_FLAVOR} \
 	pyvmomi>0:net/py-pyvmomi \
 	dmidecode>0:sysutils/dmidecode \
 	freenas-migrate93>0:freenas/freenas-migrate93 \
+	freenas-pkgtools>0:freenas/freenas-pkgtools \
 	${PYTHON_PKGNAMEPREFIX}libzfs>0:devel/py-libzfs@${PY_FLAVOR}
 
 .if exists(/usr/local_source/${PORTNAME})
