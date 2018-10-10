@@ -3,6 +3,7 @@
 
 PORTNAME=	netdata
 PORTVERSION=	1.10.0
+PORTREVISION=	1
 DISTVERSIONPREFIX=v
 CATEGORIES=	net-mgmt
 
@@ -62,12 +63,12 @@ post-patch:
 	    ${PATCH_WRKSRC}/configure.ac
 
 post-install:
-	${MKDIR} ${STAGEDIR}${ETCDIR}
-	${INSTALL_DATA} ${WRKDIR}/netdata.conf.sample ${STAGEDIR}${ETCDIR}/netdata.conf.sample
-	${MKDIR} ${STAGEDIR}${NETDATA_CACHE}
-	${MKDIR} ${STAGEDIR}${NETDATA_LOG}
-	${MKDIR} ${STAGEDIR}${NETDATA_PERST}
-	(for file in ${STAGEDIR}${ETCDIR}/*.conf ${STAGEDIR}${ETCDIR}/*/*.conf; do \
+	chroot $${PKG_ROOTDIR} ${MKDIR} ${STAGEDIR}${ETCDIR}
+	chroot $${PKG_ROOTDIR} ${INSTALL_DATA} ${WRKDIR}/netdata.conf.sample ${STAGEDIR}${ETCDIR}/netdata.conf.sample
+	chroot $${PKG_ROOTDIR} ${MKDIR} ${STAGEDIR}${NETDATA_CACHE}
+	chroot $${PKG_ROOTDIR} ${MKDIR} ${STAGEDIR}${NETDATA_LOG}
+	chroot $${PKG_ROOTDIR} ${MKDIR} ${STAGEDIR}${NETDATA_PERST}
+	(for file in $${PKG_ROOTDIR}/${STAGEDIR}${ETCDIR}/*.conf $${PKG_ROOTDIR}/${STAGEDIR}${ETCDIR}/*/*.conf; do \
 		${MV} $$file $$file".sample"; \
 	done)
 
