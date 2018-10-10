@@ -47,31 +47,31 @@ OPTIONS_SUB=		YES
 
 FSMONITOR_LIB_DEPENDS=	libinotify.so:devel/libinotify
 
-.if ${FLAVOR} == nox11
+#.if ${FLAVOR} == nox11
 MAKE_ARGS=		UISTYLE=text
 PKGMESSAGE=		${PKGDIR}/pkg-message.nox11
 PLIST_SUB+=		X11="@comment "
-.else
-MAKE_ARGS=		UISTYLE=gtk2
-SUB_FILES=		${PORTNAME}.desktop
-USE_GNOME+=		atk cairo gdkpixbuf2 glib20 gtk20 pango
-USES+=			gettext-runtime
-PLIST_SUB+=		X11=""
-.endif
+#.else
+#MAKE_ARGS=		UISTYLE=gtk2
+#SUB_FILES=		${PORTNAME}.desktop
+#USE_GNOME+=		atk cairo gdkpixbuf2 glib20 gtk20 pango
+#USES+=			gettext-runtime
+#PLIST_SUB+=		X11=""
+#.endif
 
 post-patch-FSMONITOR-off:
 	@${REINPLACE_CMD} -e 's/-include fsmonitor/#&/' \
 		${WRKSRC}/Makefile.OCaml
 
 post-patch:
-.if ${FLAVOR} == nox11
+#.if ${FLAVOR} == nox11
 	@${REINPLACE_CMD} -e 's/CFLAGS/COFLAGS/g' \
 		${WRKSRC}/Makefile.OCaml ${WRKSRC}/fsmonitor/linux/Makefile
-.else
-	@${REINPLACE_CMD} -Ee 's@(\+|/)(lablgtk2)@\1site-lib/\2@' \
-		-e 's/CFLAGS/COFLAGS/g' \
-		${WRKSRC}/Makefile.OCaml ${WRKSRC}/fsmonitor/linux/Makefile
-.endif
+#.else
+#	@${REINPLACE_CMD} -Ee 's@(\+|/)(lablgtk2)@\1site-lib/\2@' \
+#		-e 's/CFLAGS/COFLAGS/g' \
+#		${WRKSRC}/Makefile.OCaml ${WRKSRC}/fsmonitor/linux/Makefile
+#.endif
 
 .if ${FLAVOR} == x11
 post-build:
