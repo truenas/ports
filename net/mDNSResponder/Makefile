@@ -3,6 +3,7 @@
 
 PORTNAME=	mDNSResponder
 PORTVERSION=	878.70.2
+PORTREVISION=	1
 CATEGORIES=	net dns
 MASTER_SITES=	https://opensource.apple.com/tarballs/mDNSResponder/
 
