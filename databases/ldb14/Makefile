@@ -6,9 +6,9 @@ PORTREVISION=		0
 PORTEPOCH=		0
 CATEGORIES=		databases
 MASTER_SITES=		SAMBA
-PKGNAMESUFFIX=		13
+PKGNAMESUFFIX=		14
 
-MAINTAINER=		awalker@ixsystems.com	
+MAINTAINER=		timur@FreeBSD.org
 COMMENT=		LDAP-like embedded database
 
 LICENSE=		GPLv3
@@ -67,15 +67,19 @@ LDB_BINS=		bin/ldbedit \
 LDB_LIBS=		lib/libldb.so \
 			lib/libldb.so.1 \
 			lib/ldb/libldb-cmdline.so \
+			lib/ldb/libldb-key-value.so \
+			lib/ldb/libldb-mdb-int.so \
 			lib/shared-modules/ldb/asq.so \
 			lib/shared-modules/ldb/ldap.so \
+			lib/shared-modules/ldb/mdb.so \
 			lib/shared-modules/ldb/paged_results.so \
 			lib/shared-modules/ldb/paged_searches.so \
 			lib/shared-modules/ldb/rdn_name.so \
 			lib/shared-modules/ldb/sample.so \
 			lib/shared-modules/ldb/server_sort.so \
 			lib/shared-modules/ldb/skel.so \
-			lib/shared-modules/ldb/tdb.so
+			lib/shared-modules/ldb/tdb.so \
+			lib/shared-modules/ldb/ldb.so
 
 PLIST_FILES=		include/ldb_version.h \
 			include/ldb_handlers.h \
