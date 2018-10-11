@@ -9,4 +9,5 @@ pidfile="${mdnsd_pidfile}"
 
 depend() {
 	keyword -shutdown
+	after network
 }
