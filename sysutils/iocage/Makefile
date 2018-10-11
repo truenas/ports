@@ -5,7 +5,6 @@ PORTNAME=	iocage
 PORTVERSION=	20181004212649
 CATEGORIES=	sysutils python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
-EXTRACT_ONLY=
 
 MAINTAINER=	brandon@ixsystems.com
 COMMENT=	FreeBSD jail manager written in Python
