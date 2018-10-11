@@ -18,6 +18,7 @@ PLIST="${PLIST} freenas/py-licenselib::freenas::licenselib::master"
 PLIST="${PLIST} freenas/py-middlewared::freenas::freenas::master"
 PLIST="${PLIST} net/py-netif::freenas::py-netif::master"
 PLIST="${PLIST} net/samba47::freenas::samba::freenas/master"
+PLIST="${PLIST} sysutils/iocage::freenas::iocage::master"
 
 usage()
 {
