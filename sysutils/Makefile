@@ -918,6 +918,8 @@
     SUBDIR += php71-posix
     SUBDIR += php72-fileinfo
     SUBDIR += php72-posix
+    SUBDIR += php73-fileinfo
+    SUBDIR += php73-posix
     SUBDIR += phpfpm_exporter
     SUBDIR += phybs
     SUBDIR += pick
@@ -1017,6 +1019,7 @@
     SUBDIR += py-ptyprocess
     SUBDIR += py-pytsk
     SUBDIR += py-pywatchman
+    SUBDIR += py-pyznap
     SUBDIR += py-queuelib
     SUBDIR += py-ranger
     SUBDIR += py-salt

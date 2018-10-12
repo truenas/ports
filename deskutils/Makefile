@@ -230,6 +230,7 @@
     SUBDIR += puush
     SUBDIR += py-bugwarrior
     SUBDIR += py-khal
+    SUBDIR += py-khard
     SUBDIR += py-pystash
     SUBDIR += py-send2trash
     SUBDIR += py-taskw
@@ -238,6 +239,7 @@
     SUBDIR += pybookreader
     SUBDIR += pypanel
     SUBDIR += qorganizer
+    SUBDIR += qownnotes
     SUBDIR += qrfcview
     SUBDIR += qtm
     SUBDIR += recoll

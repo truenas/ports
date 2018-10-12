@@ -14,11 +14,12 @@
 @@ -356,7 +356,11 @@
  	$(LCMS2_OBJ)
  
- $(MUPDF_LIB) : $(MUPDF_OBJ)
-+	$(CC) $(LDFLAGS) -fPIC -shared -Wl,-soname=$@ -o $@ $^ $(LIBS)
+-$(MUPDF_LIB) : $(MUPDF_OBJ)
++$(MUPDF_LIB) : $(MUPDF_OBJ) $(THIRD_LIB)
++	$(CC) $(LDFLAGS) -fPIC -shared -Wl,-soname=$@ -Wl,--no-undefined -o $@ $^ $(LIBS)
 +
  $(THIRD_LIB) : $(THIRD_OBJ)
-+	$(CC) $(LDFLAGS) -fPIC -shared -Wl,-soname=$@ -o $@ $^ $(LIBS)
++	$(CC) $(LDFLAGS) -fPIC -shared -Wl,-soname=$@ -Wl,--no-undefined -o $@ $^ $(LIBS)
 +
  $(THREAD_LIB) : $(THREAD_OBJ)
  $(PKCS7_LIB) : $(PKCS7_OBJ)

@@ -4094,7 +4094,8 @@
     SUBDIR += pecl-weakref
     SUBDIR += pecl-weakref2
     SUBDIR += pecl-xdebug
-    SUBDIR += pecl-xdebug26
+    SUBDIR += pecl-xdebug-devel
+    SUBDIR += pecl-xdebug25
     SUBDIR += pecl-xhprof
     SUBDIR += pecl-yac
     SUBDIR += pecl-yaconf
@@ -4158,6 +4159,16 @@
     SUBDIR += php72-sysvsem
     SUBDIR += php72-sysvshm
     SUBDIR += php72-tokenizer
+    SUBDIR += php73-gettext
+    SUBDIR += php73-intl
+    SUBDIR += php73-json
+    SUBDIR += php73-pcntl
+    SUBDIR += php73-readline
+    SUBDIR += php73-shmop
+    SUBDIR += php73-sysvmsg
+    SUBDIR += php73-sysvsem
+    SUBDIR += php73-sysvshm
+    SUBDIR += php73-tokenizer
     SUBDIR += phpbt
     SUBDIR += phpsh
     SUBDIR += phpunit6
@@ -4324,6 +4335,8 @@
     SUBDIR += py-XStatic-tv4
     SUBDIR += py-ZopeUndo
     SUBDIR += py-adb
+    SUBDIR += py-aioice
+    SUBDIR += py-aiortc
     SUBDIR += py-akismet
     SUBDIR += py-amalgamate
     SUBDIR += py-aniso8601
@@ -4914,6 +4927,7 @@
     SUBDIR += py-pykde4-kde4
     SUBDIR += py-pykdeuic4-kde4
     SUBDIR += py-pyke
+    SUBDIR += py-pylibsrtp
     SUBDIR += py-pylru
     SUBDIR += py-pylru-cache
     SUBDIR += py-pymarc
@@ -5782,6 +5796,7 @@
     SUBDIR += rubygem-method_source
     SUBDIR += rubygem-micromachine
     SUBDIR += rubygem-micromachine2
+    SUBDIR += rubygem-mini_portile2
     SUBDIR += rubygem-minitest
     SUBDIR += rubygem-mixlib-archive
     SUBDIR += rubygem-mixlib-authentication
