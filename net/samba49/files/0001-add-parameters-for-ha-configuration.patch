@@ -1,0 +1,88 @@
+---
+ docs-xml/smbdotconf/domain/adsdnsupdate.xml            | 10 ++++++++++
+ docs-xml/smbdotconf/winbind/winbindnetbiosaliasspn.xml | 12 ++++++++++++
+ source3/libnet/libnet_join.c                           |  2 +-
+ source3/param/loadparm.c                               |  2 ++
+ source3/utils/net_ads.c                                |  4 ++++
+ 5 files changed, 29 insertions(+), 1 deletion(-)
+ create mode 100644 docs-xml/smbdotconf/domain/adsdnsupdate.xml
+ create mode 100644 docs-xml/smbdotconf/winbind/winbindnetbiosaliasspn.xml
+
+diff --git a/docs-xml/smbdotconf/domain/adsdnsupdate.xml b/docs-xml/smbdotconf/domain/adsdnsupdate.xml
+new file mode 100644
+index 0000000..ee113b1
+--- /dev/null
++++ b/docs-xml/smbdotconf/domain/adsdnsupdate.xml
+@@ -0,0 +1,10 @@
++<samba:parameter name="ads dns update"
++                 context="G"
++                 type="boolean"
++                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
++<description>
++	<para>This option sets whether Samba should do AD DNS updates.</para>
++</description>
++<value type="default">yes</value>
++<value type="example">no</value>
++</samba:parameter>
+diff --git a/docs-xml/smbdotconf/winbind/winbindnetbiosaliasspn.xml b/docs-xml/smbdotconf/winbind/winbindnetbiosaliasspn.xml
+new file mode 100644
+index 0000000..66755f5
+--- /dev/null
++++ b/docs-xml/smbdotconf/winbind/winbindnetbiosaliasspn.xml
+@@ -0,0 +1,12 @@
++<samba:parameter name="winbind netbios alias spn"
++		context="G"
++		type="boolean"
++		xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
++<description>
++	<para>This parameter is designed to control whether netbios alias should
++	be added to the spn during domain join.                                                  
++	</para>
++</description>
++<value type="default">yes</value>
++<value type="example">no</value>
++</samba:parameter>
+diff --git a/source3/libnet/libnet_join.c b/source3/libnet/libnet_join.c
+index a9405e8..95c1c8a 100644
+--- a/source3/libnet/libnet_join.c
++++ b/source3/libnet/libnet_join.c
+@@ -533,7 +533,7 @@ static ADS_STATUS libnet_join_set_machine_spn(TALLOC_CTX *mem_ctx,
+ 	}
+ 
+ 	netbios_aliases = lp_netbios_aliases();
+-	if (netbios_aliases != NULL) {
++	if (netbios_aliases != NULL && lp_winbind_netbios_alias_spn()) {
+ 		for (; *netbios_aliases != NULL; netbios_aliases++) {
+ 			/*
+ 			 * Add HOST/NETBIOSNAME
+diff --git a/source3/param/loadparm.c b/source3/param/loadparm.c
+index 291ba57..372ac9f 100644
+--- a/source3/param/loadparm.c
++++ b/source3/param/loadparm.c
+@@ -723,6 +723,8 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
+ 	Globals.log_writeable_files_on_exit = false;
+ 	Globals.create_krb5_conf = true;
+ 	Globals.include_system_krb5_conf = true;
++	Globals.winbind_netbios_alias_spn = true;
++	Globals.ads_dns_update = 1;
+ 	Globals._winbind_max_domain_connections = 1;
+ 
+ 	/* hostname lookups can be very expensive and are broken on
+diff --git a/source3/utils/net_ads.c b/source3/utils/net_ads.c
+index ffa67d8..ad24e0d 100644
+--- a/source3/utils/net_ads.c
++++ b/source3/utils/net_ads.c
+@@ -1391,6 +1391,10 @@ static void _net_ads_join_dns_updates(struct net_context *c, TALLOC_CTX *ctx, st
+ 		return;
+ 	}
+ 
++	if (!lp_ads_dns_update()) {
++		return;
++	}
++
+ 	if (!r->out.domain_is_ad) {
+ 		return;
+ 	}
+-- 
+1.8.3.1
+

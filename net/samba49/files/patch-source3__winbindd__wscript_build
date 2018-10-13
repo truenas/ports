@@ -1,0 +1,18 @@
+--- source3/winbindd/wscript_build.orig	2018-07-12 08:23:36 UTC
++++ source3/winbindd/wscript_build
+@@ -33,6 +33,15 @@ bld.SAMBA3_MODULE('idmap_ad',
+                  internal_module=bld.SAMBA3_IS_STATIC_MODULE('idmap_ad'),
+                  enabled=bld.SAMBA3_IS_ENABLED_MODULE('idmap_ad'))
+ 
++bld.SAMBA3_MODULE('idmap_fruit',
++                 subsystem='idmap',
++                 allow_undefined_symbols=True,
++                 source='idmap_fruit.c',
++                 init_function='',
++                 deps='ads',
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('idmap_fruit'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('idmap_fruit') and bld.CONFIG_SET("HAVE_LDAP"))
++
+ bld.SAMBA3_MODULE('idmap_rfc2307',
+                  subsystem='idmap',
+                  allow_undefined_symbols=True,
