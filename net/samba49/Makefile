@@ -261,10 +261,8 @@ CONFIGURE_ARGS+=		\
 				--enable-gnutls \
 				--with-libarchive \
 				--with-acl-support \
-#				--with-system-mitkrb5 \
 				--with-sendfile-support \
 				--without-ldb-lmdb \
-#				--disable-ctdb-tests \
 				${ICONV_CONFIGURE_BASE}
 
 ##############################################################################
