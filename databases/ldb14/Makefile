@@ -21,6 +21,7 @@ RUN_DEPENDS=		${LDB_DEPENDS}
 LDB_DEPENDS=		talloc>=2.1.14:devel/talloc \
 			tevent>=0.9.37:devel/tevent \
 			tdb>=1.3.16:databases/tdb \
+			lmdb>=0:databases/lmdb \
 			cmocka>=1.1.1:sysutils/cmocka \
 			popt>=0:devel/popt
 
