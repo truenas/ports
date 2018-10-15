@@ -162,6 +162,7 @@
     SUBDIR += py-xmpppy
     SUBDIR += py-xmpppy-irc
     SUBDIR += py-xmpppy-yahoo
+    SUBDIR += qmlryver
     SUBDIR += qTox
     SUBDIR += qq
     SUBDIR += qxmpp
