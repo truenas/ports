@@ -1,5 +1,5 @@
---- source3/modules/vfs_zfsacl.c.orig	2018-07-12 04:23:36.000000000 -0400
-+++ source3/modules/vfs_zfsacl.c	2018-10-11 15:35:59.168593000 -0400
+--- source3/modules/vfs_zfsacl.c.orig	2018-07-12 08:23:36 UTC
++++ source3/modules/vfs_zfsacl.c
 @@ -51,6 +51,7 @@ static NTSTATUS zfs_get_nt_acl_common(st
  	SMB_STRUCT_STAT sbuf;
  	const SMB_STRUCT_STAT *psbuf = NULL;

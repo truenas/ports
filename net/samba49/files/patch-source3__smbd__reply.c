@@ -1,5 +1,5 @@
---- source3/smbd/reply.c.orig	2018-10-12 17:56:03.495873000 -0400
-+++ source3/smbd/reply.c	2018-10-12 17:56:48.854154000 -0400
+--- source3/smbd/reply.c.orig	2018-07-12 08:23:36 UTC
++++ source3/smbd/reply.c
 @@ -6643,10 +6643,17 @@ NTSTATUS rename_internals_fsp(connection
  		return status;
  	}

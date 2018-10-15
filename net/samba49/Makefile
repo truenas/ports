@@ -1,4 +1,4 @@
-# Created by: awalker@ixsystems.com 
+# Created by: awalker@ixsystems.com
 # $FreeBSD$
 
 PORTNAME=			${SAMBA4_BASENAME}49
@@ -66,7 +66,7 @@ CONFIGURE_ARGS+=		--mandir="${MANPREFIX}/man" \
 				--with-cachedir="${SAMBA4_LOCKDIR}" \
 				--with-bind-dns-dir=${SAMBA4_BINDDNSDIR} \
 				--with-privatedir="${SAMBA4_PRIVATEDIR}" \
-				--with-logfilebase="${SAMBA4_LOGDIR}" 
+				--with-logfilebase="${SAMBA4_LOGDIR}"
 # XXX: Flags
 CONFIGURE_ENV+=			PTHREAD_LDFLAGS="-lpthread"
 CPPFLAGS+=			-I${LOCALBASE}/include
@@ -150,7 +150,7 @@ BUILD_DEPENDS+=			libarchive>=3.1.2:archivers/libarchive
 RUN_DEPENDS+=			libarchive>=3.1.2:archivers/libarchive
 ### Bundled libraries
 #SAMBA4_BUNDLED_CMOCKA=		yes
-#SAMBA4_BUNDLED_TALLOC=		yes	
+#SAMBA4_BUNDLED_TALLOC=		yes
 #SAMBA4_BUNDLED_TEVENT=		yes
 #SAMBA4_BUNDLED_TDB=		yes
 #SAMBA4_BUNDLED_LDB=		yes
@@ -382,7 +382,6 @@ PLIST_SUB+=             LIBZFS=""
 CONFIGURE_ARGS+=        --without-libzfs
 PLIST_SUB+=             LIBZFS="@comment "
 .endif
-
 
 .if defined(WANT_EXP_MODULES) && !empty(WANT_EXP_MODULES)
 SAMBA4_MODULES+=		${WANT_EXP_MODULES}
