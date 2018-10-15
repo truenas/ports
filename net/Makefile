@@ -1352,6 +1352,7 @@
     SUBDIR += samba46
     SUBDIR += samba47
     SUBDIR += samba48
+    SUBDIR += samba49
     SUBDIR += samplicator
     SUBDIR += sbd
     SUBDIR += sbm
