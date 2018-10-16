@@ -25,8 +25,11 @@ usage()
 	echo ""
 	echo "Usage: $0 port branch"
 	echo ""
-	echo "Example: $0 freenas/mDNSResponder master"
-	echo "Example: $0 all master"
+	echo "Example: $0 all"
+	echo "This will update *all* the ports to their latest versions"
+	echo ""
+	echo "Example: $0 freenas/freenas-files FN-12.0-U1"
+	echo "This will update the freenas/freenas-files to the version in GitHub tagged FN.12.0-U1"
 	exit 1
 }
 
