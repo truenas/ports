@@ -1690,8 +1690,10 @@
     SUBDIR += py-google-api-core
     SUBDIR += py-google-api-python-client
     SUBDIR += py-google-cloud-core
+    SUBDIR += py-google-cloud-dlp
     SUBDIR += py-google-cloud-storage
     SUBDIR += py-google-cloud-translate
+    SUBDIR += py-google-cloud-vision
     SUBDIR += py-google-resumable-media
     SUBDIR += py-graphite-api
     SUBDIR += py-graphite-web
@@ -2230,6 +2232,7 @@
     SUBDIR += rubygem-websocket-driver
     SUBDIR += rubygem-websocket-extensions
     SUBDIR += rubygem-yapra
+    SUBDIR += s
     SUBDIR += sabredav
     SUBDIR += sahi
     SUBDIR += sakai
@@ -2284,7 +2287,6 @@
     SUBDIR += surfraw
     SUBDIR += swfdec-plugin
     SUBDIR += swiggle
-    SUBDIR += swish++
     SUBDIR += swish-e
     SUBDIR += sws
     SUBDIR += syndigator

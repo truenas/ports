@@ -268,7 +268,6 @@
     SUBDIR += synapse
     SUBDIR += syncthing-gtk
     SUBDIR += systempreferences
-    SUBDIR += tagutils
     SUBDIR += taskcoach
     SUBDIR += taskd
     SUBDIR += tasksh
