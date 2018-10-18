@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	qmlryver
-PORTVERSION=	1
+PORTVERSION=	1.0
 CATEGORIES=	net-im
 
 MAINTAINER=	jt@ixsystems.com
@@ -9,12 +9,10 @@ COMMENT=	QML wraper for Ryver
 
 LICENSE=	MIT
 
-# .include <bsd.port.options.mk>
-
 MAKE_JOBS_UNSAFE=yes
 
 USES=		qmake qt:5
-USE_QT=		core gui widgets network webengine svg multimedia
+USE_QT=		core gui widgets network webengine svg multimedia buildtools
 USE_GITHUB=	yes
 GH_ACCOUNT=	q5sys
 GH_PROJECT=	qmlryver
