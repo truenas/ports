@@ -79,7 +79,6 @@
     SUBDIR += gmrun
     SUBDIR += gnome-clipboard-daemon
     SUBDIR += gnome-desktop
-    SUBDIR += gnome-desktop-reference
     SUBDIR += gnome-installed-settings
     SUBDIR += gnome-live-settings
     SUBDIR += gnome-menus

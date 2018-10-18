@@ -58,8 +58,6 @@ CONFIGURE_ARGS?=--with-html-dir=${PREFIX}/share/doc/gimp \
 		--without-appdata-test \
 		--with-desktop-dir=${PREFIX}/share \
 		--docdir=${PREFIX}/share/doc/gimp \
-		--enable-default-binary \
-		--without-gvfs
 		--with-icc-directory=${LOCALBASE}/share/color/icc \
 		--enable-default-binary
 CONFIGURE_ENV=	GIMP_THREAD_LIBS=-lpthread
