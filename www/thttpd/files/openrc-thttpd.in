@@ -4,7 +4,7 @@ name=thttpd
 
 command=%%PREFIX%%/sbin/thttpd
 
-thttpd_flags=${thttpd_flags:-"-C %%PREFIX%%/etc/thttpd.conf"}
+command_args=${thttpd_flags:-" -C %%PREFIX%%/etc/thttpd.conf "}
 
 depend(){
 	keyword -shutdown
