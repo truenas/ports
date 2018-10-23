@@ -239,6 +239,7 @@
     SUBDIR += py-vobject
     SUBDIR += pybookreader
     SUBDIR += pypanel
+    SUBDIR += qlipper
     SUBDIR += qorganizer
     SUBDIR += qownnotes
     SUBDIR += qrfcview
