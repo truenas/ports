@@ -427,37 +427,6 @@ BUILD_DEPENDS+=			${PYTHON_PKGNAMEPREFIX}dnspython>=1.15.0:dns/py-dnspython@${PY
 RUN_DEPENDS+=			${PYTHON_PKGNAMEPREFIX}dnspython>=1.15.0:dns/py-dnspython@${PY_FLAVOR}
 
 BUILD_DEPENDS+=			${PYTHON_PKGNAMEPREFIX}iso8601>=0.1.11:devel/py-iso8601@${PY_FLAVOR}
-RUN_DEPENDS+=			${PYTHON_PKGNAMEPREFIX}iso8601>=0.1.11:devel/py-iso8601@${PY_FLAVOR}
-# XXX: This is a gross hack to make port use both Python 2.7+ and 3.3+
-# This is not officially supported, use at your own risk
-.if defined(WITH_SAMBA4_PYTHON3) && ${WITH_SAMBA4_PYTHON3:Mpython3\.[0-9]}
-SAMBA4_PYTHON3=			${WITH_SAMBA4_PYTHON3}
-SAMBA4_PYTHON3_VERSION:=	${SAMBA4_PYTHON3:S/^python//}
-SAMBA4_PYTHON3_VER:=		${SAMBA4_PYTHON3_VERSION:C/\.//}
-.if !exists(${PORTSDIR}/lang/python${SAMBA4_PYTHON3_VER})
-.error				unsupported or unknown Python version ${SAMBA4_PYTHON3_VERSION}
-.endif
-BUILD_DEPENDS+=			${SAMBA4_PYTHON3}:lang/python${SAMBA4_PYTHON3_VER}
-RUN_DEPENDS+=			${SAMBA4_PYTHON3}:lang/python${SAMBA4_PYTHON3_VER}
-# External Python modules
-BUILD_DEPENDS+=			py${SAMBA4_PYTHON3_VER}-dnspython>=1.15.0:dns/py-dnspython@py${SAMBA4_PYTHON3_VER}
-RUN_DEPENDS+=			py${SAMBA4_PYTHON3_VER}-dnspython>=1.15.0:dns/py-dnspython@py${SAMBA4_PYTHON3_VER}
-
-BUILD_DEPENDS+=			py${SAMBA4_PYTHON3_VER}-iso8601>=0.1.11:devel/py-iso8601@py${SAMBA4_PYTHON3_VER}
-RUN_DEPENDS+=			py${SAMBA4_PYTHON3_VER}-iso8601>=0.1.11:devel/py-iso8601@py${SAMBA4_PYTHON3_VER}
-# cpython-36m
-SAMBA4_PYTHON3_SO_ABI!=		[ ! -f "${LOCALBASE}/bin/${SAMBA4_PYTHON3}" ] || ${LOCALBASE}/bin/${SAMBA4_PYTHON3} -c 'import sysconfig; print(sysconfig.get_config_var("SOABI") or "")' 2>/dev/null
-SAMBA4_PYTHON3_SITELIBDIR=	lib/python${SAMBA4_PYTHON3_VERSION}/site-packages
-
-CONFIGURE_ENV+=			PYTHON3_SO_ABI_FLAG=.${SAMBA4_PYTHON3_SO_ABI}
-CONFIGURE_ARGS+=		--extra-python=${LOCALBASE}/bin/${SAMBA4_PYTHON3}
-
-PLIST_SUB+=			SAMBA4_PYTHON3="" SAMBA4_PYTHON3_SITELIBDIR="${SAMBA4_PYTHON3_SITELIBDIR}"
-SUB_LIST+=			SAMBA4_PYTHON3="" SAMBA4_PYTHON3_SITELIBDIR="${SAMBA4_PYTHON3_SITELIBDIR}"
-.else
-PLIST_SUB+=			SAMBA4_PYTHON3="@comment "
-SUB_LIST+=			SAMBA4_PYTHON3="@comment "
-.endif
 .endif
 # !SAMBA4_SUBPORT
 .endif
