@@ -14,9 +14,7 @@ do
 	grep -q " $strip" ${PLIST}
 	if [ $? -ne 0 ] ; then continue ; fi
 
-	TMPPLIST=$(mktemp -t tmp-plist)
-	cat ${PLIST} | grep -v " $strip" > ${TMPPLIST}
-	cp ${TMPPLIST} ${PLIST}
-	rm ${TMPPLIST}
+	cat ${PLIST} | grep -v " $strip" > ${PLIST}.new
+	mv ${PLIST}.new ${PLIST}
 done < /etc/strip-plist-ports
 
