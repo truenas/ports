@@ -3416,7 +3416,7 @@ ${PKGLATESTFILE}: ${PKGFILE} ${PKGLATESTREPOSITORY}
 ${WRKDIR_PKGFILE}: ${TMPPLIST} create-manifest ${WRKDIR}/pkg
 # Check if we have packages to "strip" plist items from
 	@if [ -e "/etc/strip-plist-ports" ] ; then \
-			${SCRIPTSDIR}/strip-plist.sh ${TMPPLIST} ; \
+			sh ${SCRIPTSDIR}/strip-plist.sh ${TMPPLIST} ; \
 	fi
 	@if ! ${SETENV} ${PKG_ENV} FORCE_POST="${_FORCE_POST_PATTERNS}" ${PKG_CREATE} ${PKG_CREATE_ARGS} -m ${METADIR} -p ${TMPPLIST} -f ${PKG_SUFX:S/.//} -o ${WRKDIR}/pkg ${PKGNAME}; then \
 		cd ${.CURDIR} && eval ${MAKE} delete-package >/dev/null; \
