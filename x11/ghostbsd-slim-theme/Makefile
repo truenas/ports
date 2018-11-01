@@ -6,7 +6,7 @@
 #
 
 PORTNAME=	ghostbsd-slim-theme
-PORTVERSION=	1.3
+PORTVERSION=	1.4
 CATEGORIES=	x11
 
 MAINTAINER=	ericbsd@FreeBSD.org
@@ -24,5 +24,8 @@ NO_BUILD=	yes
 do-install:
 	${MKDIR} ${STAGEDIR}/${PREFIX}/share/slim/themes/ghostbsd
 	${CP} -R ${WRKSRC}/gbsd/* ${STAGEDIR}/${PREFIX}/share/slim/themes/ghostbsd/
+	${CP} -R ${WRKSRC}/winter ${STAGEDIR}/${PREFIX}/share/slim/themes/
+	${CP} -R ${WRKSRC}/wood ${STAGEDIR}/${PREFIX}/share/slim/themes/
+	${CP} -R ${WRKSRC}/forest ${STAGEDIR}/${PREFIX}/share/slim/themes/
 
 .include <bsd.port.mk>
