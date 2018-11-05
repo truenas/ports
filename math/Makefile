@@ -56,6 +56,7 @@
     SUBDIR += R-cran-gpclib
     SUBDIR += R-cran-gss
     SUBDIR += R-cran-gtable
+    SUBDIR += R-cran-haven
     SUBDIR += R-cran-igraph
     SUBDIR += R-cran-influenceR
     SUBDIR += R-cran-inline
@@ -112,6 +113,7 @@
     SUBDIR += acalc
     SUBDIR += add
     SUBDIR += adept
+    SUBDIR += adol-c
     SUBDIR += algae
     SUBDIR += alglib
     SUBDIR += algotutor
@@ -126,10 +128,8 @@
     SUBDIR += arb
     SUBDIR += aribas
     SUBDIR += armadillo
-    SUBDIR += arpack
     SUBDIR += arpack++
     SUBDIR += arpack-ng
-    SUBDIR += arpack-ng-mpich
     SUBDIR += aspcud
     SUBDIR += asymptote
     SUBDIR += atlas
@@ -151,6 +151,7 @@
     SUBDIR += cbc
     SUBDIR += cblas
     SUBDIR += ccmath
+    SUBDIR += cddlib
     SUBDIR += ceres-solver
     SUBDIR += cgal
     SUBDIR += cgl
@@ -174,10 +175,13 @@
     SUBDIR += cryptominisat
     SUBDIR += cvc3
     SUBDIR += cvc4
+    SUBDIR += dbcsr
+    SUBDIR += deal.ii
     SUBDIR += diehard
     SUBDIR += dieharder
     SUBDIR += djbfft
     SUBDIR += drgeo
+    SUBDIR += dsdp
     SUBDIR += dynare
     SUBDIR += e
     SUBDIR += ecos
@@ -215,6 +219,7 @@
     SUBDIR += galculator
     SUBDIR += gambit
     SUBDIR += gap
+    SUBDIR += gau2grid
     SUBDIR += gdcalc
     SUBDIR += geg
     SUBDIR += geogebra
@@ -342,6 +347,7 @@
     SUBDIR += metis
     SUBDIR += metis-edf
     SUBDIR += metis4
+    SUBDIR += mfem
     SUBDIR += mingw32-libgmp
     SUBDIR += minisat
     SUBDIR += miracl
@@ -362,6 +368,7 @@
     SUBDIR += mumps-edf
     SUBDIR += mumps-mpich
     SUBDIR += muparser
+    SUBDIR += nanoflann
     SUBDIR += naturalmath
     SUBDIR += nauty
     SUBDIR += ndiff
@@ -470,6 +477,7 @@
     SUBDIR += openblas
     SUBDIR += openfst
     SUBDIR += openlibm
+    SUBDIR += openmesh
     SUBDIR += opensolaris-libm
     SUBDIR += orpie
     SUBDIR += p5-AI-DecisionTree
@@ -644,6 +652,8 @@
     SUBDIR += php71-gmp
     SUBDIR += php72-bcmath
     SUBDIR += php72-gmp
+    SUBDIR += php73-bcmath
+    SUBDIR += php73-gmp
     SUBDIR += physcalc
     SUBDIR += picosat
     SUBDIR += piranha
@@ -653,6 +663,7 @@
     SUBDIR += plplot
     SUBDIR += plplot-ada
     SUBDIR += primegen
+    SUBDIR += primme
     SUBDIR += prng
     SUBDIR += proofgeneral
     SUBDIR += pspp
@@ -686,12 +697,12 @@
     SUBDIR += py-fiat
     SUBDIR += py-fpconst
     SUBDIR += py-gato
+    SUBDIR += py-gau2grid
     SUBDIR += py-gimmik
     SUBDIR += py-gmpy
     SUBDIR += py-gmpy2
     SUBDIR += py-gnuplot
     SUBDIR += py-graphillion
-    SUBDIR += py-pygslodeiv2
     SUBDIR += py-igakit
     SUBDIR += py-igraph
     SUBDIR += py-intspan
@@ -716,12 +727,14 @@
     SUBDIR += py-petsc4py
     SUBDIR += py-piranha
     SUBDIR += py-plastex
+    SUBDIR += py-primme
     SUBDIR += py-probstat
     SUBDIR += py-pyFFTW
     SUBDIR += py-pyasp
     SUBDIR += py-pybloom
     SUBDIR += py-pycosat
     SUBDIR += py-pygsl
+    SUBDIR += py-pygslodeiv2
     SUBDIR += py-pyhull
     SUBDIR += py-pyipopt
     SUBDIR += py-pymc
@@ -732,6 +745,7 @@
     SUBDIR += py-pyodesys
     SUBDIR += py-pysparse
     SUBDIR += py-pysym
+    SUBDIR += py-python-louvain
     SUBDIR += py-pyvtk
     SUBDIR += py-random2
     SUBDIR += py-rapi

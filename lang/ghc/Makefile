@@ -6,8 +6,12 @@ PORTVERSION=	${GHC_VERSION}
 PORTREVISION=	1
 CATEGORIES=	lang haskell
 MASTER_SITES=	http://www.haskell.org/ghc/dist/${PORTVERSION}/:source \
-		LOCAL/arrowd/:boot
-DISTFILES=	ghc-${PORTVERSION}-src${EXTRACT_SUFX}:source
+		LOCAL/arrowd/:boot \
+		${HACKAGE_SITE}hscolour-${HSCOLOUR_VERSION}/:docs
+
+EXTRACT_ONLY=	${_DISTFILES:C/hscolour.*$//g}
+DISTFILES=	ghc-${PORTVERSION}-src${EXTRACT_SUFX}:source \
+		hscolour-${HSCOLOUR_VERSION}.tar.gz:docs
 
 MAINTAINER=	haskell@FreeBSD.org
 COMMENT=	Compiler for the functional language Haskell
@@ -38,8 +42,6 @@ NO_CCACHE=	ccache: error: Failed to create directory /nonexistent/.ccache/tmp: P
 # This is better fixed in files/build.mk.in
 GNU_CONFIGURE=	yes
 
-# disable xelatex: PR 231438
-CONFIGURE_ENV+=		ac_cv_path_XELATEX=
 CONFIGURE_ARGS=		--with-gmp-includes=${LOCALBASE}/include \
 			--with-gmp-libraries=${LOCALBASE}/lib \
 			--with-iconv-includes=${LOCALBASE}/include \
@@ -53,7 +55,7 @@ SUB_LIST=		GHC_VERSION=${GHC_VERSION} \
 
 OPTIONS_GROUP=		BOOTSTRAP
 BOOTSTRAP_DESC=		Bootsrap using installed ghc
-OPTIONS_GROUP_BOOTSTRAP=BOOT BOOTH
+OPTIONS_GROUP_BOOTSTRAP=BOOT
 OPTIONS_DEFINE=		DYNAMIC PROFILE DOCS
 OPTIONS_SUB=		yes
 
@@ -64,7 +66,6 @@ OPTIONS_EXCLUDE_armv7=	DYNAMIC
 OPTIONS_EXCLUDE_aarch64=	DYNAMIC
 
 BOOT_DESC=		Use installed GHC for bootstrapping
-BOOTH_DESC=		Use installed HsColour for bootstrapping
 PROFILE_DESC=		Add support for performance profiling
 DYNAMIC_DESC=		Add support for dynamic linking
 DOCS_DESC=		Install HTML documentation
@@ -75,17 +76,17 @@ DYNAMIC_CONFIGURE_ARGS=	--with-system-libffi \
 # The version number is needed as lang/gcc installs a different version
 DYNAMIC_LIB_DEPENDS=	libffi.so.6:devel/libffi
 
-# Append substitutions for build.mk -- the files uses '#' as comments
+# Append substitutions for build.mk
 BOOT_SUB_LIST=		HSC2HS=${LOCALBASE}/bin/hsc2hs
 BOOT_SUB_LIST_OFF=	HSC2HS=${BOOT_HSC2HS}
 
 DOCS_BUILD_DEPENDS+=	sphinx-build:textproc/py-sphinx
 
-DYNAMIC_SUB_LIST=	WITH_DYNAMIC=""
-DYNAMIC_SUB_LIST_OFF=	WITH_DYNAMIC="\#"
+DYNAMIC_SUB_LIST=	WITH_DYNAMIC="YES"
+DYNAMIC_SUB_LIST_OFF=	WITH_DYNAMIC="NO"
 
-PROFILE_SUB_LIST=	WITH_PROFILE=""
-PROFILE_SUB_LIST_OFF=	WITH_PROFILE="\#"
+PROFILE_SUB_LIST=	WITH_PROFILE="YES"
+PROFILE_SUB_LIST_OFF=	WITH_PROFILE="NO"
 
 DOCS_SUB_LIST=		WITH_DOCS="YES"
 DOCS_SUB_LIST_OFF=	WITH_DOCS="NO"
@@ -161,28 +162,11 @@ TMPDIR=		${WRKSRC}/tmp
 # the build tree, without needing to install it. At the end
 # you could view the output of: ${BOOT_GHC} describe hscolour
 
-.if ${PORT_OPTIONS:MDOCS}
-
-.  if empty(PORT_OPTIONS:MBOOTH)
-
-MASTER_SITES+=	${HACKAGE_SITE}hscolour-${HSCOLOUR_VERSION}/:docs
-DISTFILES+=	hscolour-${HSCOLOUR_VERSION}.tar.gz:docs
-
-EXTRACT_ONLY=	${_DISTFILES:C/hscolour.*$//g}
-
-.  endif # MBOOTH
-
-.  if empty(PORT_OPTIONS:MBOOTH)
-
 SLAVES_PREFIX=		${WRKDIR}/slaves_prefix
 SLAVES_WRKDIRPREFIX=	${WRKDIR}/slaves_wrkdirprefix
 
 MAKE_ENV+=	PATH=${SLAVES_PREFIX}/bin:${PATH}
 CONFIGURE_ENV+=	PATH=${SLAVES_PREFIX}/bin:${PATH}
-
-.  endif # MBOOTH
-
-.endif # MDOCS
 
 post-extract:
 # don't use the "wrap" trick on arches that use post-ino64 bootstrap binaries (arm*)
@@ -252,7 +236,7 @@ pre-configure: apply-slist
 	@(cd ${BOOT_DIR} && PACKAGES='' ${MAKE_CMD} install)
 .endif
 
-.if ${PORT_OPTIONS:MDOCS} && empty(PORT_OPTIONS:MBOOTH)
+.if ${PORT_OPTIONS:MDOCS}
 	@${ECHO_MSG} -e "\a"
 	@${ECHO_MSG} "======================================================================"
 	@${ECHO_MSG} "  WARNING: Now HsColour will be built, the respective port will not   "

@@ -11,6 +11,9 @@ DISTNAME=	php-${PORTVERSION}
 MAINTAINER=	tz@FreeBSD.org
 COMMENT=	PHP Scripting Language
 
+DEPRECATED=	Security Support ends on 3 Dec 2018
+EXPIRATION_DATE=	2018-12-04
+
 LICENSE=	PHP301
 
 USES+=		tar:xz cpe
@@ -57,7 +60,7 @@ MAILHEAD_DESC=	Enable mail header patch
 LINKTHR_DESC=	Link thread lib (for threaded extensions)
 ZTS_DESC=	Force Zend Thread Safety (ZTS) build
 
-CONFLICTS=	php56-* php71-* php72-*
+CONFLICTS=	php56-* php71-* php72-* php73-*
 
 DESTDIRNAME=	INSTALL_ROOT
 

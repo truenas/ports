@@ -3,7 +3,7 @@
 
 PORTNAME=	snmp
 PORTVERSION=	5.7.3
-PORTREVISION=	18
+PORTREVISION=	19
 CATEGORIES=	net-mgmt ipv6
 MASTER_SITES=	SF/net-${PORTNAME}/net-${PORTNAME}/${PORTVERSION} \
 		ZI
@@ -76,6 +76,10 @@ CONFIGURE_ARGS+=--with-defaults
 TLS_CONFIGURE_ON=	--with-security-modules=tsm --with-transports=TLSTCP,DTLSUDP
 
 .include <bsd.port.options.mk>
+
+.if ${OSVERSION} >= 1200085
+EXTRA_PATCHES=	${PATCHDIR}/extra-patch-openssl11
+.endif
 
 .if ${PORT_OPTIONS:MPYTHON}
 PYDISTUTILS_PKGNAME?=		netsnmp-python
@@ -252,6 +256,8 @@ post-patch:
 	    ${WRKSRC}/agent/mibgroup/host/hr_system.c
 	@${REINPLACE_CMD} -E -e 's|return pci_lookup_name|disabled broken|g' \
 		${WRKSRC}/configure
+	@${CP} ${WRKSRC}/include/net-snmp/system/freebsd12.h \
+		${WRKSRC}/include/net-snmp/system/freebsd13.h
 
 post-configure:
 	@${FIND} ${WRKSRC} -name Makefile | \

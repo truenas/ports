@@ -16,10 +16,10 @@ portssl_ARGS=	build
 .endif
 
 .if ${portssl_ARGS:Mbuild}
-BUILD_DEPENDS+=	${LOCALBASE}/lib/libcrypto.so:security/openssl
+BUILD_DEPENDS+=	${LOCALBASE}/lib/libcrypto.so:security/openssl111
 .endif
 .if ${portssl_ARGS:Mrun}
-RUN_DEPENDS+=	${LOCALBASE}/lib/libcrypto.so:security/openssl
+RUN_DEPENDS+=	${LOCALBASE}/lib/libcrypto.so:security/openssl111
 .endif
 
 OPENSSLBASE=            ${LOCALBASE}

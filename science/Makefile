@@ -29,6 +29,8 @@
     SUBDIR += atom
     SUBDIR += atompaw
     SUBDIR += avogadro
+    SUBDIR += avogadro2
+    SUBDIR += avogadrolibs
     SUBDIR += bagel
     SUBDIR += bddsolve
     SUBDIR += bft
@@ -49,6 +51,7 @@
     SUBDIR += clhep
     SUBDIR += clipper
     SUBDIR += colt
+    SUBDIR += coordgenlibs
     SUBDIR += coot
     SUBDIR += cp2k
     SUBDIR += crf++
@@ -66,6 +69,7 @@
     SUBDIR += elk
     SUBDIR += epte
     SUBDIR += erd
+    SUBDIR += erkale
     SUBDIR += fastcap
     SUBDIR += fasthenry
     SUBDIR += fisicalab
@@ -75,12 +79,14 @@
     SUBDIR += fvcom-mpi
     SUBDIR += fvm
     SUBDIR += gabedit
+    SUBDIR += gamess-us
     SUBDIR += gchemutils
     SUBDIR += gdma
     SUBDIR += getdp
     SUBDIR += ghemical
     SUBDIR += ghmm
     SUBDIR += gnudatalanguage
+    SUBDIR += gpaw-setups
     SUBDIR += gramps
     SUBDIR += grib_api
     SUBDIR += gromacs
@@ -102,6 +108,7 @@
     SUBDIR += kst2
     SUBDIR += lammps
     SUBDIR += lamprop
+    SUBDIR += latte
     SUBDIR += libaec
     SUBDIR += libccp4
     SUBDIR += libcint
@@ -114,6 +121,7 @@
     SUBDIR += libint2
     SUBDIR += libkml
     SUBDIR += liblinear
+    SUBDIR += libmsym
     SUBDIR += liboglappth
     SUBDIR += libquantum
     SUBDIR += libssm
@@ -124,6 +132,7 @@
     SUBDIR += lm
     SUBDIR += luscus
     SUBDIR += madness
+    SUBDIR += maeparser
     SUBDIR += massxpert
     SUBDIR += mbdyn
     SUBDIR += mcstas
@@ -138,7 +147,10 @@
     SUBDIR += metaphysicl
     SUBDIR += minc2
     SUBDIR += mmdb2
+    SUBDIR += mmtf
     SUBDIR += mol2ps
+    SUBDIR += molgif
+    SUBDIR += molsketch
     SUBDIR += mpb
     SUBDIR += mpqc
     SUBDIR += msms
@@ -202,6 +214,7 @@
     SUBDIR += py-SimpleSpectral
     SUBDIR += py-abipy
     SUBDIR += py-ase
+    SUBDIR += py-avogadrolibs
     SUBDIR += py-cdo
     SUBDIR += py-chempy
     SUBDIR += py-coards
@@ -267,6 +280,7 @@
     SUBDIR += sigrok-firmware-fx2lafw
     SUBDIR += sigrok-firmware-utils
     SUBDIR += silo
+    SUBDIR += simint
     SUBDIR += simlib
     SUBDIR += simsmith
     SUBDIR += spglib
@@ -276,12 +290,14 @@
     SUBDIR += szip
     SUBDIR += teem
     SUBDIR += tfel
+    SUBDIR += tinker
     SUBDIR += triqs
     SUBDIR += udunits
     SUBDIR += v_sim
     SUBDIR += vmd
     SUBDIR += voro++
     SUBDIR += wannier90
+    SUBDIR += wxmacmolplt
     SUBDIR += xcrysden
     SUBDIR += xdrawchem
     SUBDIR += xfce4-equake-plugin

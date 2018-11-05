@@ -13,6 +13,9 @@ COMMENT=	PHP Scripting Language
 
 LICENSE=	PHP301
 
+DEPRECATED=	Security Support ends on 31 Dec 2018
+EXPIRATION_DATE=2019-01-01
+
 USES+=		tar:xz cpe
 CPE_PRODUCT=	php
 NO_OPTIONS_SORT=yes
@@ -52,7 +55,7 @@ MAILHEAD_DESC=	Enable mail header patch
 LINKTHR_DESC=	Link thread lib (for threaded extensions)
 ZTS_DESC=	Force Zend Thread Safety (ZTS) build
 
-CONFLICTS=	php55-5* php70-*
+CONFLICTS=	php55-5* php70-* php71-* php72-* php73-*
 
 DESTDIRNAME=	INSTALL_ROOT
 

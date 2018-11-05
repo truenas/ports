@@ -29,6 +29,8 @@ USE_PYTHON=	autoplist distutils cython
 SRC_BASE?=	/usr/src
 MAKE_ENV=	FREEBSD_SRC=${SRC_BASE}
 
+.include <bsd.port.options.mk>
+
 .if !exists(${SRC_BASE}/sys/Makefile)
 IGNORE=	requires kernel source files in ${SRC_BASE}
 .endif

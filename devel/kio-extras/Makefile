@@ -2,7 +2,6 @@
 
 PORTNAME=	kio-extras
 DISTVERSION=	${KDE_APPLICATIONS_VERSION}
-PORTREVISION=	1
 CATEGORIES=	devel kde kde-applications # kde kde-applications-plasma
 
 MAINTAINER=	kde@FreeBSD.org
@@ -63,4 +62,3 @@ WEBENGINE_USES=	qt:5
 WEBENGINE_USE=		QT=webengine
 
 .include <bsd.port.mk>
-
