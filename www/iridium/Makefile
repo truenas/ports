@@ -3,7 +3,7 @@
 
 PORTNAME=	iridium
 PORTVERSION=	2018.5.67
-PORTREVISION=	5
+PORTREVISION=	6
 CATEGORIES=	www
 MASTER_SITES=	https://downloads.iridiumbrowser.de/source/
 PKGNAMESUFFIX=	-browser
@@ -173,7 +173,6 @@ EXTRA_PATCHES+=	${FILESDIR}/extra-patch-llvm-port
 .else
 BUILD_DEPENDS+=	${LOCALBASE}/bin/ar:devel/binutils
 EXTRA_PATCHES+=	${FILESDIR}/extra-patch-llvm-base
-.endif
 
 # TODO: -isystem, would be just as ugly as this approach, but more reliably
 # build would fail without C_INCLUDE_PATH/CPLUS_INCLUDE_PATH env var set.
