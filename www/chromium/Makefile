@@ -1,5 +1,5 @@
 # Created by: Florent Thoumie <flz@FreeBSD.org>
-# $FreeBSD$
+# $FreeBSD: head/www/chromium/Makefile 484273 2018-11-06 01:50:26Z jbeich $
 
 PORTNAME=	chromium
 PORTVERSION=	68.0.3440.106
@@ -204,13 +204,6 @@ TEST_DISTFILES=		${PORTNAME}-${DISTVERSION}-testdata${EXTRACT_SUFX} \
 
 .include <bsd.port.options.mk>
 
-#.if ${OPSYS} == FreeBSD && ${OSVERSION} < 1101513
-.if ${OPSYS} == FreeBSD
-BUILD_DEPENDS+=	clang60:devel/llvm60
-CC=             clang60
-CXX=            clang++60
-EXTRA_PATCHES+=	${FILESDIR}/extra-patch-llvm-port
-.else
 BUILD_DEPENDS+=	${LOCALBASE}/bin/ar:devel/binutils
 EXTRA_PATCHES+=	${FILESDIR}/extra-patch-llvm-base
 
