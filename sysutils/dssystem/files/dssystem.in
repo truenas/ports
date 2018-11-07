@@ -1,0 +1,39 @@
+#!/bin/sh
+#
+# : /usr/local/etc/rc.d/dssystem
+#
+
+# PROVIDE: ds-system
+# REQUIRE: NETWORKING LOGIN
+# KEYWORD: shutdown
+
+dssystem_stop()
+{
+	pids="`pgrep -j none dssystem_dc`"
+	if [ -n "$pids" ];then
+		for i in $pids;do
+			kill -s TERM "$i"
+		done
+	fi
+
+	pwait -t 15s $pids 2> /dev/null
+	if [ $? -eq 124 ]; then
+		pids="`pgrep -j none dssystem_dc`"
+		if [ -n "$pids" ];then
+			for i in $pids;do
+				kill -9 "$i"
+			done
+		fi
+	fi
+}
+
+. /etc/rc.subr
+name="dssystem"
+rcvar="dssystem_enable"
+command=/usr/local/ds-system/dssystem_dc
+dssystem_flags="--daemon --lang en"
+sig_stop="TERM"
+load_rc_config $name
+stop_cmd=dssystem_stop
+run_rc_command "$1"
+
