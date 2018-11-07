@@ -522,6 +522,7 @@
     SUBDIR += intel-qcu
     SUBDIR += inxi
     SUBDIR += iocage
+    SUBDIR += iocage-devel
     SUBDIR += iocell
     SUBDIR += iogen
     SUBDIR += iograph
@@ -553,6 +554,7 @@
     SUBDIR += jkill
     SUBDIR += jobd
     SUBDIR += jps
+    SUBDIR += jstest-gtk
     SUBDIR += jtop
     SUBDIR += jtopen
     SUBDIR += jvmtop
@@ -979,6 +981,7 @@
     SUBDIR += pxattr
     SUBDIR += py-analyzemft
     SUBDIR += py-ansible-lint
+    SUBDIR += py-ansible-runner
     SUBDIR += py-bcfg2
     SUBDIR += py-cdmi
     SUBDIR += py-consul
