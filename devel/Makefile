@@ -875,6 +875,7 @@
     SUBDIR += gradle
     SUBDIR += grantlee
     SUBDIR += grantlee5
+    SUBDIR += graphql.el
     SUBDIR += grpc
     SUBDIR += grumpy
     SUBDIR += grv
@@ -6300,6 +6301,7 @@
     SUBDIR += tortoisehg
     SUBDIR += tpasm
     SUBDIR += trac-bitten
+    SUBDIR += treepy.el
     SUBDIR += tradcpp
     SUBDIR += trio
     SUBDIR += truc
