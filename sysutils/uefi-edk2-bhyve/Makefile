@@ -1,11 +1,12 @@
-# $FreeBSD$
+# $FreeBSD: head/sysutils/uefi-edk2-bhyve/Makefile 484389 2018-11-07 06:39:56Z araujo $
 
 PORTNAME=	uefi-edk2-bhyve
-PORTVERSION=	20160704
-PORTREVISION=	2
+DISTVERSIONPREFIX=	v
+DISTVERSION=	0.2
+PORTEPOCH=	1
 CATEGORIES=	sysutils
 
-MAINTAINER=	fabian.freyer@physik.tu-berlin.de
+MAINTAINER=	araujo@FreeBSD.org
 COMMENT?=	UEFI-EDK2 firmware for bhyve
 
 LICENSE=	BSD2CLAUSE
@@ -20,7 +21,6 @@ USE_GCC=	4.8
 USE_GITHUB=	yes
 GH_ACCOUNT=	freebsd
 GH_PROJECT=	uefi-edk2
-GH_TAGNAME=	a36132939e259df79b16699c03c6f1d63c7454b9
 
 PLIST_FILES=	${PREFIX}/share/uefi-firmware/BHYVE_UEFI${PLIST_SUFFIX}.fd
 
@@ -81,3 +81,4 @@ do-install:
 		${STAGEDIR}${PREFIX}/share/uefi-firmware/BHYVE_UEFI${PLIST_SUFFIX}.fd
 
 .include <bsd.port.mk>
+RUN_DEPENDS:=	${RUN_DEPENDS:Ngcc*}
