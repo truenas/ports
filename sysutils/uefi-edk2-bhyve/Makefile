@@ -1,12 +1,12 @@
-# $FreeBSD: head/sysutils/uefi-edk2-bhyve/Makefile 468517 2018-04-28 06:09:22Z woodsb02 $
+# $FreeBSD: head/sysutils/uefi-edk2-bhyve/Makefile 484389 2018-11-07 06:39:56Z araujo $
 
 PORTNAME=	uefi-edk2-bhyve
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.1
+DISTVERSION=	0.2
 PORTEPOCH=	1
 CATEGORIES=	sysutils
 
-MAINTAINER=	fabian.freyer@physik.tu-berlin.de
+MAINTAINER=	araujo@FreeBSD.org
 COMMENT?=	UEFI-EDK2 firmware for bhyve
 
 LICENSE=	BSD2CLAUSE
