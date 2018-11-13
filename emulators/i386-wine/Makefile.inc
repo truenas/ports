@@ -57,7 +57,7 @@ PLIST_SUB+=	OSREL${osrel}="@comment "
 .endif
 .endfor
 
-.if ${OPSYS} != FreeBSD || (!(${OSVERSION} < 1000000) && !(${OSVERSION} >= 1003000 && ${OSVERSION} < 1100000) && !(${OSVERSION} >= 1101000 && ${OSVERSION} < 1200000) && !(${OSVERSION} >= 1200056 && ${OSVERSION} < 1300000))
+.if ${OPSYS} != FreeBSD || (!(${OSVERSION} < 1000000) && !(${OSVERSION} >= 1003000 && ${OSVERSION} < 1100000) && !(${OSVERSION} >= 1101000 && ${OSVERSION} < 1200000) && !(${OSVERSION} >= 1200056 && ${OSVERSION} < 1400000))
 IGNORE=		binaries compiled for FreeBSD 11.2+ only
 DISTFILES=
 .endif
