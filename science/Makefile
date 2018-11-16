@@ -204,6 +204,7 @@
     SUBDIR += pulseview
     SUBDIR += py-DendroPy
     SUBDIR += py-PyFR
+    SUBDIR += py-lifelines
     SUBDIR += py-MDAnalysis
     SUBDIR += py-MDAnalysisTests
     SUBDIR += py-OpenFermion
@@ -278,9 +279,11 @@
     SUBDIR += sigrok-firmware-fx2lafw
     SUBDIR += sigrok-firmware-utils
     SUBDIR += silo
+    SUBDIR += simbody
     SUBDIR += simint
     SUBDIR += simlib
     SUBDIR += simsmith
+    SUBDIR += sparta
     SUBDIR += spglib
     SUBDIR += step
     SUBDIR += step-kde4

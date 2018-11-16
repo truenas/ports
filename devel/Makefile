@@ -468,6 +468,7 @@
     SUBDIR += dmake
     SUBDIR += dmalloc
     SUBDIR += dmucs
+    SUBDIR += docopt.cpp
     SUBDIR += doctorj
     SUBDIR += dolphin-plugins
     SUBDIR += dolphin-plugins-kde4
@@ -2780,6 +2781,7 @@
     SUBDIR += p5-IPC-ShellCmd
     SUBDIR += p5-IPC-Signal
     SUBDIR += p5-IPC-System-Simple
+    SUBDIR += p5-IRI
     SUBDIR += p5-Import-Base
     SUBDIR += p5-Import-Into
     SUBDIR += p5-Importer
@@ -5033,6 +5035,7 @@
     SUBDIR += py-rauth
     SUBDIR += py-raven
     SUBDIR += py-rcsparse
+    SUBDIR += py-readme_renderer
     SUBDIR += py-rebulk
     SUBDIR += py-rednose
     SUBDIR += py-rekall-efilter
@@ -5209,6 +5212,7 @@
     SUBDIR += py-virtualenv
     SUBDIR += py-virtualenv-clone
     SUBDIR += py-virtualenvwrapper
+    SUBDIR += py-visitor
     SUBDIR += py-voluptuous
     SUBDIR += py-warlock
     SUBDIR += py-watchdog
@@ -6214,6 +6218,7 @@
     SUBDIR += spin
     SUBDIR += spirv-tools
     SUBDIR += splint
+    SUBDIR += spread-sheet-widget
     SUBDIR += srecord
     SUBDIR += ssft
     SUBDIR += st

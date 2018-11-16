@@ -4,7 +4,7 @@ PORTNAME=	telegram-desktop
 PORTREVISION=	2
 DISTVERSIONPREFIX=	v
 DISTVERSION=	1.4.2
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	net-im
 
 
@@ -84,6 +84,7 @@ post-patch:
 		${FILESDIR}/gyp-patches | \
 		${PATCH} -z .bak -s)
 	@${ECHO} "#define FREEBSD_QT_PLUGINDIR \"${QT_PLUGINDIR}\"" > ${WRKSRC}/Telegram/SourceFiles/FREEBSD_QT_PLUGINDIR.h
+	${SED} -i -e "/Icon=/s|telegram|${PORTNAME}|" ${WRKSRC}/lib/xdg/telegramdesktop.desktop
 
 pre-configure:
 	@cd ${WRKSRC} && gyp \
