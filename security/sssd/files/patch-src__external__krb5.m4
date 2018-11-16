@@ -1,7 +1,5 @@
-diff --git src/external/krb5.m4 src/external/krb5.m4
-index 861c8c9..978ec03 100644
---- src/external/krb5.m4
-+++ src/external/krb5.m4
+--- src/external/krb5.m4.orig	2016-04-13 10:48:41.000000000 -0400
++++ src/external/krb5.m4	2018-10-01 05:14:12.770416000 -0400
 @@ -9,7 +9,7 @@ if test x$KRB5_CFLAGS != x; then
      KRB5_PASSED_CFLAGS=$KRB5_CFLAGS
  fi

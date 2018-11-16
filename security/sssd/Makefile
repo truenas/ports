@@ -1,9 +1,9 @@
 # Created by: Lukas Slebodnik <lukas.slebodnik@intrak.sk>
-# $FreeBSD$
+# $FreeBSD: head/security/sssd/Makefile 478711 2018-09-01 17:05:47Z antoine $
 
 PORTNAME=	sssd
-PORTVERSION=	1.11.7
-PORTREVISION=	13
+PORTVERSION=	1.13.4
+PORTREVISION=	1
 CATEGORIES=	security
 MASTER_SITES=	https://releases.pagure.org/SSSD/${PORTNAME}/
 
@@ -32,7 +32,7 @@ BUILD_DEPENDS=	xmlcatalog:textproc/libxml2 \
 		xsltproc:textproc/libxslt \
 		xmlcatmgr:textproc/xmlcatmgr \
 		krb5>=1.10:security/krb5 \
-		nsupdate:dns/bind99
+		nsupdate:dns/bind911
 
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--with-selinux=no --with-semanage=no \
@@ -45,6 +45,7 @@ CONFIGURE_ARGS=	--with-selinux=no --with-semanage=no \
 		--with-pubconf-path=/var/run/sss --with-mcache-path=/var/db/sss_mc \
 		--with-unicode-lib=libunistring --with-autofs=no \
 		--disable-cifs-idmap-plugin --disable-config-lib \
+		--without-nfsv4-idmapd-plugin\
 		--with-krb5-conf=/etc/krb5.conf
 CFLAGS+=	-fstack-protector-all
 PLIST_SUB=	PYTHON_VER=${PYTHON_VER}
