@@ -29,6 +29,7 @@
     SUBDIR += bricons
     SUBDIR += brightside
     SUBDIR += brisk-menu
+    SUBDIR += cde
     SUBDIR += cinnamon
     SUBDIR += cinnamon-desktop
     SUBDIR += cinnamon-installed-settings
@@ -38,6 +39,7 @@
     SUBDIR += cinnamon-session
     SUBDIR += cl-clx
     SUBDIR += cl-clx-sbcl
+    SUBDIR += compton-conf
     SUBDIR += controllermap
     SUBDIR += cool-retro-term
     SUBDIR += decurs

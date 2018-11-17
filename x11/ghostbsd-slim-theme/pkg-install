@@ -1,10 +1,18 @@
 #!/bin/sh
 
 case "$2" in
-    POST-INSTALL)
+  POST-INSTALL)
     if [ -f /usr/local/etc/slim.conf ] ; then
-        sed -i '' -e "s/current_theme       default/current_theme       ghostbsd/g" \
-            /usr/local/etc/slim.conf
+      cat /usr/local/etc/slim.conf | grep -q 'current_theme       default'
+      if [ "$?" -eq 0 ] ; then
+        sed -i '' -e "s/current_theme       default/current_theme       forest/g" \
+          /usr/local/etc/slim.conf
+      fi
+      cat /usr/local/etc/slim.conf | grep -q 'current_theme       ghostbsd'
+      if [ "$?" -eq 0 ] ; then
+        sed -i '' -e "s/current_theme       ghostbsd/current_theme       forest/g" \
+          /usr/local/etc/slim.conf
+      fi
     fi
     ;;
 esac

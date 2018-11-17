@@ -131,6 +131,7 @@
     SUBDIR += eawpats
     SUBDIR += eawplus
     SUBDIR += ecasound
+    SUBDIR += elisa
     SUBDIR += emms
     SUBDIR += enscribe
     SUBDIR += epos-devel
@@ -303,6 +304,7 @@
     SUBDIR += gstreamer1-plugins-mpg123
     SUBDIR += gstreamer1-plugins-musepack
     SUBDIR += gstreamer1-plugins-ogg
+    SUBDIR += gstreamer1-plugins-openmpt
     SUBDIR += gstreamer1-plugins-opus
     SUBDIR += gstreamer1-plugins-pulse
     SUBDIR += gstreamer1-plugins-shout2
@@ -335,8 +337,8 @@
     SUBDIR += hs-OpenAL
     SUBDIR += hts_engine-API
     SUBDIR += hydrogen
+    SUBDIR += icecast
     SUBDIR += icecast-kh
-    SUBDIR += icecast2
     SUBDIR += icegenerator
     SUBDIR += ices
     SUBDIR += id3ed
@@ -498,6 +500,7 @@
     SUBDIR += logitechmediaserver-trackstat
     SUBDIR += lollypop
     SUBDIR += lpac
+    SUBDIR += lsp-plugins-lv2
     SUBDIR += lua51-mpd
     SUBDIR += luppp
     SUBDIR += lv2
@@ -686,6 +689,7 @@
     SUBDIR += py-karaoke
     SUBDIR += py-mpd
     SUBDIR += py-mpd2
+    SUBDIR += py-music21
     SUBDIR += py-musicbrainzngs
     SUBDIR += py-mutagen
     SUBDIR += py-ogg

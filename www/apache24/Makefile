@@ -1,4 +1,4 @@
-# $FreeBSD: head/www/apache24/Makefile 465983 2018-03-30 16:44:52Z brnrd $
+# $FreeBSD: head/www/apache24/Makefile 483807 2018-11-02 13:32:34Z rene $
 
 PORTNAME=	apache24
 PORTVERSION=	2.4.37
@@ -174,13 +174,6 @@ EXTRA_PATCHES+=	${FILESDIR}/extra-patch-server_buildmark.c
 .if defined(WITH_EXCEPTION_HOOK)
 CONFIGURE_ARGS+=	--enable-exception-hook
 .endif
-
-.if ${OPSYS} == FreeBSD && ${OSVERSION} < 1100085 &&\
-	${PORT_OPTIONS:MHTTP2} && ${OPENSSLBASE} == /usr
-SUB_FILES+=		pkg-message
-.endif
-
-CFLAGS+=	-Wno-incompatible-pointer-types
 
 pre-extract-SUEXEC-on:
 	@${ECHO_CMD} ""

@@ -118,7 +118,6 @@
     SUBDIR += bsdhwmon
     SUBDIR += bsdinfo
     SUBDIR += bsdisks
-    SUBDIR += bsdmoted
     SUBDIR += bsdploy
     SUBDIR += bsdstats
     SUBDIR += bstack
@@ -411,6 +410,7 @@
     SUBDIR += fusefs-wikipediafs
     SUBDIR += fusefs-zip
     SUBDIR += fvcool
+    SUBDIR += fwup
     SUBDIR += gaffitter
     SUBDIR += gai-leds
     SUBDIR += ganglia-monitor-core
@@ -523,6 +523,7 @@
     SUBDIR += intel-qcu
     SUBDIR += inxi
     SUBDIR += iocage
+    SUBDIR += iocage-devel
     SUBDIR += iocell
     SUBDIR += iogen
     SUBDIR += iograph
@@ -554,6 +555,7 @@
     SUBDIR += jkill
     SUBDIR += jobd
     SUBDIR += jps
+    SUBDIR += jstest-gtk
     SUBDIR += jtop
     SUBDIR += jtopen
     SUBDIR += jvmtop
@@ -980,6 +982,7 @@
     SUBDIR += pxattr
     SUBDIR += py-analyzemft
     SUBDIR += py-ansible-lint
+    SUBDIR += py-ansible-runner
     SUBDIR += py-bcfg2
     SUBDIR += py-cdmi
     SUBDIR += py-consul
@@ -1040,7 +1043,6 @@
     SUBDIR += qchroot
     SUBDIR += qdirstat
     SUBDIR += qjail
-    SUBDIR += qjail4
     SUBDIR += qlogtools
     SUBDIR += qpxtool
     SUBDIR += qsudo
@@ -1199,7 +1201,6 @@
     SUBDIR += scanbuttond
     SUBDIR += scct
     SUBDIR += schedutils
-    SUBDIR += scprotect
     SUBDIR += screen
     SUBDIR += screenfetch
     SUBDIR += screenie
@@ -1269,6 +1270,7 @@
     SUBDIR += symlinks
     SUBDIR += symon
     SUBDIR += synergy
+    SUBDIR += synergy-1
     SUBDIR += sysadm
     SUBDIR += sysadm-client
     SUBDIR += sysgather

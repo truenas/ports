@@ -3,6 +3,7 @@
 
 PORTNAME=	drm-legacy-kmod
 PORTVERSION=	g20181031
+PORTREVISION=	1
 CATEGORIES=	graphics
 
 MAINTAINER=	jmd@FreeBSD.org
@@ -22,7 +23,7 @@ CONFLICTS_INSTALL=	drm-devel-kmod drm-stable-kmod drm-next-kmod
 USE_GITHUB=	yes
 GH_ACCOUNT=	FreeBSDDesktop
 GH_PROJECT=	drm-legacy
-GH_TAGNAME=	ed220ea
+GH_TAGNAME=	a6fcc19
 
 .include <bsd.port.options.mk>
 

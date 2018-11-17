@@ -1304,6 +1304,7 @@
     SUBDIR += py-diff-match-patch
     SUBDIR += py-docutils
     SUBDIR += py-docx2txt
+    SUBDIR += py-dominate
     SUBDIR += py-dsv
     SUBDIR += py-duecredit
     SUBDIR += py-elasticsearch
@@ -1566,7 +1567,6 @@
     SUBDIR += rubygem-github-linguist
     SUBDIR += rubygem-github-linguist53
     SUBDIR += rubygem-github-markup
-    SUBDIR += rubygem-github-markup16
     SUBDIR += rubygem-github-markup17
     SUBDIR += rubygem-gitlab-grit
     SUBDIR += rubygem-gitlab-linguist

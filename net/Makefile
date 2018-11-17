@@ -345,7 +345,6 @@
     SUBDIR += kmbox
     SUBDIR += kmime
     SUBDIR += knc
-    SUBDIR += knemo-kde4
     SUBDIR += kontactinterface
     SUBDIR += kpimtextedit
     SUBDIR += krdc
@@ -374,6 +373,7 @@
     SUBDIR += libdmapsharing
     SUBDIR += libdnet
     SUBDIR += libexosip2
+    SUBDIR += libfabric
     SUBDIR += libfb
     SUBDIR += libfixbuf
     SUBDIR += libgnetwork
@@ -1025,7 +1025,6 @@
     SUBDIR += pktanon
     SUBDIR += pload
     SUBDIR += plugdaemon
-    SUBDIR += pmf
     SUBDIR += polyorb
     SUBDIR += poptop
     SUBDIR += portfwd
@@ -1428,7 +1427,6 @@
     SUBDIR += ssmping
     SUBDIR += ssspl
     SUBDIR += ssvnc
-    SUBDIR += stf-6rd-kmod
     SUBDIR += stone
     SUBDIR += stund
     SUBDIR += subnetcalc
@@ -1512,7 +1510,6 @@
     SUBDIR += uriparser
     SUBDIR += urlendec
     SUBDIR += usbredir
-    SUBDIR += userfw
     SUBDIR += utftpd
     SUBDIR += vblade
     SUBDIR += vde

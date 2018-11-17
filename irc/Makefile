@@ -68,7 +68,6 @@
     SUBDIR += minbif
     SUBDIR += muh
     SUBDIR += nethirc
-    SUBDIR += netwalker-ircc
     SUBDIR += ngircd
     SUBDIR += ninja
     SUBDIR += onis
@@ -127,5 +126,6 @@
     SUBDIR += weechat-otr
     SUBDIR += xaric
     SUBDIR += znc
+    SUBDIR += znc-push
 
 .include <bsd.port.subdir.mk>

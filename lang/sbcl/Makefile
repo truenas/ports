@@ -7,7 +7,7 @@
 # [1] x11-wm/stumpwm
 
 PORTNAME=	sbcl
-DISTVERSION=	1.4.12
+DISTVERSION=	1.4.13
 DISTVERSIONSUFFIX=	-source
 PORTEPOCH=	1
 CATEGORIES=	lang lisp
@@ -18,10 +18,9 @@ DISTFILES=	${DISTNAME}${EXTRACT_SUFX}
 MAINTAINER=	krion@FreeBSD.org
 COMMENT=	Common Lisp development system derived from the CMU CL system
 
-LICENSE=	${PORTNAME}
-LICENSE_NAME=	public domain | FreeBSD
+LICENSE=	PD BSD2CLAUSE
+LICENSE_COMB=	dual
 LICENSE_FILE=	${WRKSRC}/COPYING
-LICENSE_PERMS=	dist-mirror pkg-mirror auto-accept dist-sell pkg-sell
 
 ONLY_FOR_ARCHS=	amd64 i386
 

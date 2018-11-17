@@ -2,6 +2,7 @@
 
 PORTNAME=	sysadm-client
 PORTVERSION=	201802091522
+DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 
 MAINTAINER=	jt@ixsystems.com
