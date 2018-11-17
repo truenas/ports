@@ -5,9 +5,7 @@
 
 # List of ports to update
 # Usage: <portname>::<project>::<repo>::<defaultbranch>
-PLIST="freenas/mDNSResponder::freenas::mDNSResponder::master"
-PLIST="${PLIST} freenas/freenas-docs::freenas::freenas-docs:master"
-PLIST="${PLIST} freenas/freenas-files::freenas::freenas::master"
+PLIST="freenas/freenas-files::freenas::freenas::master"
 PLIST="${PLIST} freenas/freenas-installer::freenas::freenas::master"
 PLIST="${PLIST} freenas/freenas-pkgtools::freenas::freenas-pkgtools::master"
 PLIST="${PLIST} freenas/freenas-ui::freenas::freenas::master"
