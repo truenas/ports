@@ -27,19 +27,6 @@
  fi
  
  AC_CHECK_FUNCS(strptime, [have_strptime="yes"], [have_strptime="no"])
-@@ -1070,10 +1070,10 @@ fi
- 
- # Check for timegm {{{
- 
--# These checks need -Werror because implicit function declarations are only a
-+# These checks need  because implicit function declarations are only a
- # warning ...
- SAVE_CFLAGS="$CFLAGS"
--CFLAGS="$CFLAGS -Werror"
-+CFLAGS="$CFLAGS "
- 
- AC_CACHE_CHECK([for timegm],
-   [c_cv_have_timegm],
 @@ -1923,6 +1923,7 @@ if test "x$with_kstat" = "xyes"
  then
  	AC_CHECK_LIB(kstat, kstat_open, [with_kstat="yes"], [with_kstat="no (libkstat not found)"], [])
