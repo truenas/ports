@@ -1,4 +1,4 @@
---- sys/fs/pefs/pefs_vnops.c.orig	2018-11-16 01:55:22 UTC
+--- sys/fs/pefs/pefs_vnops.c.orig	2018-11-16 12:26:20 UTC
 +++ sys/fs/pefs/pefs_vnops.c
 @@ -1920,7 +1920,7 @@ pefs_symlink(struct vop_symlink_args *ap)
  	struct pefs_node *dpn;
