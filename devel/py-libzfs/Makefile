@@ -24,6 +24,7 @@ GH_TAGNAME=	9fc4b5f
 
 USES=		python
 USE_PYTHON=	autoplist distutils cython
+GNU_CONFIGURE=	yes
 
 MAKE_ENV+=	FREEBSD_SRC=${SRC_BASE} TRUEOS=yes EXPERIMENTAL=yes
 
