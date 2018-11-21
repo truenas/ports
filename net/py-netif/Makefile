@@ -21,5 +21,6 @@ GH_TAGNAME=	ecbb4ae
 
 USES=		python
 USE_PYTHON=	autoplist distutils cython
+GNU_CONFIGURE=	yes
 
 .include <bsd.port.mk>
