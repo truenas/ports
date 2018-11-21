@@ -22,5 +22,6 @@ GH_TAGNAME=	be23674
 HAS_CONFIGURE=	yes
 USES=		python
 USE_PYTHON=	autoplist distutils cython
+GNU_CONFIGURE=	yes
 
 .include <bsd.port.mk>
