@@ -3,7 +3,7 @@
 
 PORTNAME=	webcamd
 PORTVERSION=	4.17.0.3
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	multimedia
 MASTER_SITES=	http://www.selasky.org/hans_petter/distfiles/ \
 		http://home.selasky.org:8192/distfiles/
