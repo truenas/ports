@@ -1,6 +1,4 @@
 %%ETCDIR%%.conf.sample
-etc/init.d/dhcpcd
-lib/dhcpcd/dev/udev.so
 libexec/dhcpcd-hooks/01-test
 libexec/dhcpcd-hooks/02-dump
 libexec/dhcpcd-hooks/20-resolv.conf
