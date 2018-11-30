@@ -322,7 +322,6 @@
     SUBDIR += fanout
     SUBDIR += farbot
     SUBDIR += fatback
-    SUBDIR += fbsdupdatecheck
     SUBDIR += fcode-utils
     SUBDIR += fconfig
     SUBDIR += fcron
