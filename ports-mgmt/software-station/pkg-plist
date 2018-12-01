@@ -1,0 +1,9 @@
+bin/software-station
+etc/sudoers.d/software-station
+%%PYTHON_SITELIBDIR%%/__pycache__/software_station.cpython-36.%%PYTHON_PYOEXTENSION%%
+%%PYTHON_SITELIBDIR%%/__pycache__/software_station.cpython-36.pyc
+%%PYTHON_SITELIBDIR%%/__pycache__/software_station_xpm.cpython-36.%%PYTHON_PYOEXTENSION%%
+%%PYTHON_SITELIBDIR%%/__pycache__/software_station_xpm.cpython-36.pyc
+%%PYTHON_SITELIBDIR%%/software_station.py
+%%PYTHON_SITELIBDIR%%/software_station_xpm.py
+share/applications/software-station.desktop
