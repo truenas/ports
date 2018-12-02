@@ -778,6 +778,7 @@
     SUBDIR += py-theano
     SUBDIR += py-ufl
     SUBDIR += py-uncertainties
+    SUBDIR += py-vincenty
     SUBDIR += py-viper
     SUBDIR += py-yt
     SUBDIR += py-z3-solver
@@ -789,6 +790,7 @@
     SUBDIR += qtiplot
     SUBDIR += qtiplot-doc
     SUBDIR += qtoctave
+    SUBDIR += qwtplot3d
     SUBDIR += qwtplot3d-qt4
     SUBDIR += randlib
     SUBDIR += rapid
