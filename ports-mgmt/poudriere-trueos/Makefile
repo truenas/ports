@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	poudriere
-DISTVERSION=	20181007
+DISTVERSION=	20181202
 PORTREVISION=	0
 CATEGORIES=	ports-mgmt
 PKGNAMESUFFIX=	-trueos
@@ -16,7 +16,7 @@ CONFLICTS_INSTALL=	poudriere-[0-9]*
 USE_GITHUB=	yes
 GH_ACCOUNT=	miwi-fbsd
 GH_PROJECT=	poudriere-trueos
-GH_TAGNAME=	0ea3060
+GH_TAGNAME=	bf180f5
 
 GNU_CONFIGURE=	yes
 ETCDIR=		${PREFIX}/etc/poudriere.d

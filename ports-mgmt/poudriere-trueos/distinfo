@@ -1,3 +1,3 @@
-TIMESTAMP = 1538900054
-SHA256 (miwi-fbsd-poudriere-trueos-20181007-0ea3060_GH0.tar.gz) = 8078185d17a3aa919d42566a62a5e32f752d3ce7af5b66599720652968d4955a
-SIZE (miwi-fbsd-poudriere-trueos-20181007-0ea3060_GH0.tar.gz) = 4377305
+TIMESTAMP = 1543755877
+SHA256 (miwi-fbsd-poudriere-trueos-20181202-bf180f5_GH0.tar.gz) = be76e1d53bc7c0e642d511c00bbf02c1cca10868041997e6150a86a9eafac7f6
+SIZE (miwi-fbsd-poudriere-trueos-20181202-bf180f5_GH0.tar.gz) = 4377469
