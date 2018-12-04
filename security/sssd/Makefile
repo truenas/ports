@@ -46,6 +46,7 @@ CONFIGURE_ARGS=	--with-selinux=no --with-semanage=no \
 		--with-unicode-lib=libunistring --with-autofs=no \
 		--disable-cifs-idmap-plugin --disable-config-lib \
 		--without-nfsv4-idmapd-plugin\
+		--with-libsmbclient=/usr/local\
 		--with-krb5-conf=/etc/krb5.conf
 CFLAGS+=	-fstack-protector-all
 PLIST_SUB=	PYTHON_VER=${PYTHON_VER}
