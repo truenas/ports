@@ -134,6 +134,7 @@
     SUBDIR += aspcud
     SUBDIR += asymptote
     SUBDIR += atlas
+    SUBDIR += barvinok
     SUBDIR += biggles
     SUBDIR += blacs
     SUBDIR += blas
@@ -671,6 +672,7 @@
     SUBDIR += ploticus-nox11
     SUBDIR += plplot
     SUBDIR += plplot-ada
+    SUBDIR += polylib
     SUBDIR += primegen
     SUBDIR += primme
     SUBDIR += prng
@@ -701,6 +703,7 @@
     SUBDIR += py-cvxopt
     SUBDIR += py-cvxpy
     SUBDIR += py-cyipopt
+    SUBDIR += py-deap
     SUBDIR += py-ecos
     SUBDIR += py-fastcluster
     SUBDIR += py-fastdtw
@@ -870,6 +873,7 @@
     SUBDIR += units
     SUBDIR += unuran
     SUBDIR += viennacl
+    SUBDIR += visualpolylib
     SUBDIR += vowpal_wabbit
     SUBDIR += vtk6
     SUBDIR += vtk8
