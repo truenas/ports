@@ -16,6 +16,7 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 
 USES=		gettext iconv:translit perl5
 USE_PERL5=	configure
+CONFIGURE_ENV+=	LOCALBASE=${LOCALBASE}
 
 post-install:
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/${SITE_ARCH_REL}/auto/Locale/gettext_xs/gettext_xs.so
