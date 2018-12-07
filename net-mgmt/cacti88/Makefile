@@ -6,7 +6,7 @@ CATEGORIES=	net-mgmt www
 MASTER_SITES=	http://www.cacti.net/downloads/
 PKGNAMESUFFIX=	88
 
-MAINTAINER=	egypcio@googlemail.com
+MAINTAINER=	egypcio@FreeBSD.org
 COMMENT=	Web-driven graphing interface for RRDTool
 
 DEPRECATED=	Works only with EOL php 5.6
@@ -23,7 +23,7 @@ USE_PHP=	mysqli pcre session sockets snmp xml
 NO_ARCH=	yes
 NO_BUILD=	yes
 
-IGNORE_WITH_PHP=	70 71 72 73
+IGNORE_WITH_PHP=	71 72 73
 
 SUB_FILES=	pkg-message
 
