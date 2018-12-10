@@ -1058,6 +1058,7 @@
     SUBDIR += py-upt-rubygems
     SUBDIR += py-uptime
     SUBDIR += py-zdaemon
+    SUBDIR += py-zettarepl
     SUBDIR += py-zfs-autobackup
     SUBDIR += pydf
     SUBDIR += qchroot
