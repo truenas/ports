@@ -16,7 +16,6 @@ RUN_DEPENDS=	update-station:ports-mgmt/update-station \
 		xmodmap:x11/xmodmap \
 		xdg-user-dirs-update:devel/xdg-user-dirs \
 		networkmgr:net-mgmt/networkmgr \
-		update-station:ports-mgmt/update-station \
 		software-station:ports-mgmt/software-station \
 		fish:shells/fish \
 		bash:shells/bash \
