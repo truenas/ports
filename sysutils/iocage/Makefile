@@ -26,7 +26,7 @@ USE_GITHUB=	yes
 GH_TAGNAME=	19d8eb7f4272dac7e206b4f827732f46177439c8
 
 NO_ARCH=	yes
-USES=		python:3.6
+USES=		python:3.4+
 USE_PYTHON=	autoplist distutils
 
 CONFLICTS=	py27-iocage-[0-9]*

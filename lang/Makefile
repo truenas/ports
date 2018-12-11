@@ -113,6 +113,7 @@
     SUBDIR += gforth
     SUBDIR += ghc
     SUBDIR += ghc843
+    SUBDIR += ghc862
     SUBDIR += gjs
     SUBDIR += gnat_util
     SUBDIR += gnatcross-aarch64
@@ -129,6 +130,7 @@
     SUBDIR += go
     SUBDIR += go14
     SUBDIR += gprolog
+    SUBDIR += gravity
     SUBDIR += groovy
     SUBDIR += gscheme
     SUBDIR += guile

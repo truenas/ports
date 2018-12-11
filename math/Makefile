@@ -169,7 +169,11 @@
     SUBDIR += clrng
     SUBDIR += cminpack
     SUBDIR += cmlib
+    SUBDIR += coin-or-data-netlib
+    SUBDIR += coin-or-data-sample
+    SUBDIR += coin-or-data-stochastic
     SUBDIR += coinmp
+    SUBDIR += coinutils
     SUBDIR += concorde
     SUBDIR += convertall
     SUBDIR += coq
@@ -217,6 +221,7 @@
     SUBDIR += fpc-fftw
     SUBDIR += fpc-gmp
     SUBDIR += fpc-numlib
+    SUBDIR += fplll
     SUBDIR += fricas
     SUBDIR += fxt
     SUBDIR += g2o
@@ -227,6 +232,7 @@
     SUBDIR += gdcalc
     SUBDIR += geg
     SUBDIR += geogebra
+    SUBDIR += geogram
     SUBDIR += geonext
     SUBDIR += gexpr
     SUBDIR += ggobi
@@ -316,6 +322,7 @@
     SUBDIR += laspack
     SUBDIR += ldouble
     SUBDIR += lean
+    SUBDIR += lemon
     SUBDIR += levmar
     SUBDIR += libRmath
     SUBDIR += libccd
@@ -491,6 +498,7 @@
     SUBDIR += openmesh
     SUBDIR += opensolaris-libm
     SUBDIR += orpie
+    SUBDIR += osi
     SUBDIR += osqp
     SUBDIR += p5-AI-DecisionTree
     SUBDIR += p5-AI-Genetic
@@ -792,6 +800,7 @@
     SUBDIR += qd
     SUBDIR += qhull
     SUBDIR += qhull5
+    SUBDIR += qposases
     SUBDIR += qrupdate
     SUBDIR += qtiplot
     SUBDIR += qtiplot-doc

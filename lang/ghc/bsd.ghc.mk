@@ -74,6 +74,7 @@ PROFILE_SUB_LIST=	WITH_PROFILE="YES"
 PROFILE_SUB_LIST_OFF=	WITH_PROFILE="NO"
 
 LOCALBASE?=	/usr/local
+PLIST?=		${.CURDIR}/../../lang/ghc/pkg-plist
 
 GHC_ARCH=		${ARCH:S/amd64/x86_64/:C/armv.*/arm/}
 
@@ -85,6 +86,19 @@ BOOT_GHC_VERSION=	8.4.2
 .  else
 BOOT_GHC_VERSION=	8.4.3
 .  endif
+
+# When GHC being compiled and GHC used for bootstrapping support different
+# LLVM versions, we have to pull in both. Luckily, this is relatively rare.
+.  if ${ARCH} == aarch64 || ${ARCH} == armv6 || ${ARCH} == armv7
+# LLVM version that bootstrap compiler uses
+BOOT_LLVM_VERSION=	50
+
+.    if ${BOOT_LLVM_VERSION} != ${LLVM_VERSION}
+BUILD_DEPENDS+=		llc${BOOT_LLVM_VERSION}:devel/llvm${BOOT_LLVM_VERSION}
+RUN_DEPENDS+=		llc${BOOT_LLVM_VERSION}:devel/llvm${BOOT_LLVM_VERSION}
+.    endif
+.  endif
+
 DISTFILES+=		ghc-${BOOT_GHC_VERSION}-boot-${ARCH}-freebsd${EXTRACT_SUFX}:boot
 .endif # MBOOT
 
