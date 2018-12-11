@@ -3,7 +3,7 @@
 
 PORTNAME=	collectd
 PORTVERSION=	5.7.2
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	net-mgmt
 MASTER_SITES=	https://storage.googleapis.com/collectd-tarballs/
 PKGNAMESUFFIX=	5
@@ -13,6 +13,8 @@ COMMENT=	Systems & network statistics collection daemon
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
+
+LIB_DEPENDS=	libltdl.so:devel/libltdl
 
 USES=		autoreconf gmake libtool pkgconfig shebangfix tar:bzip2
 GNU_CONFIGURE=	yes
@@ -223,8 +225,7 @@ REDIS_LIB_DEPENDS=		libhiredis.so:databases/hiredis
 REDIS_CONFIGURE_ENABLE=		redis write_redis
 REDIS_CONFIGURE_WITH=		libhiredis=${LOCALBASE}
 
-RIEMANN_LIB_DEPENDS=		libriemann-client.so:net-mgmt/riemann-c-client \
-				libltdl.so:devel/libltdl
+RIEMANN_LIB_DEPENDS=		libriemann-client.so:net-mgmt/riemann-c-client
 RIEMANN_CONFIGURE_ENABLE=	write_riemann
 
 ROUTEROS_LIB_DEPENDS=		librouteros.so:net/librouteros \
