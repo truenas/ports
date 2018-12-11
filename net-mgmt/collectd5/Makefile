@@ -1,12 +1,11 @@
 # Created by: Matt Peterson <matt@peterson.org>
-# $FreeBSD: head/net-mgmt/collectd5/Makefile 436572 2017-03-21 08:26:58Z glebius $
+# $FreeBSD$
 
 PORTNAME=	collectd
 PORTVERSION=	5.7.2
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	net-mgmt
-MASTER_SITES=	https://collectd.org/files/ \
-		http://collectd.org/files/
+MASTER_SITES=	https://storage.googleapis.com/collectd-tarballs/
 PKGNAMESUFFIX=	5
 
 MAINTAINER=	ports@bsdserwis.com
@@ -341,19 +340,16 @@ CONFIGURE_ARGS+=--enable-aggregation \
 INSTALL_TARGET=	install-strip
 SHEBANG_FILES=	contrib/collection.cgi
 
-INSTALL_TARGET=	install-strip
-SHEBANG_FILES=	contrib/collection.cgi
-
 post-patch:
 	@${REINPLACE_CMD} 's/-Werror//' \
-		${WRKSRC}/configure.ac ${WRKSRC}/src/Makefile.am \
-		${WRKSRC}/src/libcollectdclient/Makefile.am
+		${WRKSRC}/configure.ac 
 	@${REINPLACE_CMD} \
 		-e 's;@prefix@/var/;/var/;' \
 		-e 's;/var/lib/;/var/db/;' \
 		-e 's;@localstatedir@/lib/;/var/db/;' \
 		${WRKSRC}/src/collectd.conf.in \
-		${WRKSRC}/src/collectd.conf.5
+		${WRKSRC}/src/collectd.conf.5 \
+		${WRKSRC}/src/collectd.conf.pod
 	@${REINPLACE_CMD} \
 		-e 's;/etc/collection\.conf;${WWWDIR}/collection.conf;' \
 		${WRKSRC}/contrib/collection.cgi
