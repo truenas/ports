@@ -1,13 +1,7 @@
 # Created by: William Grzybowski <wg@FreeBSD.org>
 # $FreeBSD$
 
-PORTNAME=	netif
-<<<<<<< HEAD
-PORTVERSION=	1.0.20181003
-PORTREVISION=	1
-=======
 PORTVERSION=	1.0.20181207
->>>>>>> freebsd/master
 CATEGORIES=	net python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
@@ -22,11 +16,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}bsd>0:devel/py-bsd@${PY_FLAVOR} \
 USE_GITHUB=     yes
 GH_ACCOUNT=	freenas
 GH_PROJECT=	py-netif
-<<<<<<< HEAD
-GH_TAGNAME=	b44159b
-=======
 GH_TAGNAME=	5dce20c
->>>>>>> freebsd/master
 
 HAS_CONFIGURE=	yes
 USES=		python
