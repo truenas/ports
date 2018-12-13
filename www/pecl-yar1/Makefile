@@ -6,14 +6,17 @@ PORTVERSION=	1.2.5
 PORTREVISION=	1
 CATEGORIES=	www
 
-MAINTAINER=	johnpupu@gmail.com
+MAINTAINER=	joneum@FreeBSD.org
 COMMENT=	Yar (Yet another RPC framework) is a light, concurrent RPC framework
+
+DEPRECATED=	Works only with EOL php 5.6
+EXPIRATION_DATE=	2018-12-30
 
 LICENSE=	PHP301
 
 USES=		localbase php:pecl
 USE_PHP=	json:build curl:build
-IGNORE_WITH_PHP=70 71 72 73
+IGNORE_WITH_PHP=71 72 73
 
 OPTIONS_DEFINE=	MSGPACK
 MSGPACK_DESC=	Enable MSGPACK module

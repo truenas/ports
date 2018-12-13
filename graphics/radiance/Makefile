@@ -1,9 +1,10 @@
 # $FreeBSD$
 
 PORTNAME=	radiance
-PORTVERSION=	g20181029
+DISTVERSION=	0.6.0
 PORTREVISION=	1
 CATEGORIES=	graphics
+PKGNAMESUFFIX=	-video
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Video art software for VJs

@@ -2,10 +2,10 @@
 # $FreeBSD$
 
 PORTNAME=	yaf
-DISTVERSION=	3.0.6
+DISTVERSION=	3.0.7
 CATEGORIES=	www
 
-MAINTAINER=	johnpupu@gmail.com
+MAINTAINER=	joneum@freeBSD.org
 COMMENT=	MVC framework written as a C PHP extension
 
 LICENSE=	PHP301

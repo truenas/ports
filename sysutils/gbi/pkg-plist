@@ -29,7 +29,7 @@ lib/gbi/end.py
 lib/gbi/error.py
 lib/gbi/gbiWindow.py
 lib/gbi/ghostbsd-style.css
-lib/gbi/install.png
+lib/gbi/install-gbsd.png
 lib/gbi/install.py
 lib/gbi/installType.py
 lib/gbi/keyboard.py
@@ -38,18 +38,6 @@ lib/gbi/logo.png
 lib/gbi/partition.py
 lib/gbi/partition_handler.py
 lib/gbi/root.py
-lib/gbi/slide-images/desktopbsd/D-logo.png
-lib/gbi/slide-images/desktopbsd/browser.png
-lib/gbi/slide-images/desktopbsd/customize.png
-lib/gbi/slide-images/desktopbsd/email.png
-lib/gbi/slide-images/desktopbsd/help.png
-lib/gbi/slide-images/desktopbsd/music.png
-lib/gbi/slide-images/desktopbsd/office.png
-lib/gbi/slide-images/desktopbsd/photo.png
-lib/gbi/slide-images/desktopbsd/social.png
-lib/gbi/slide-images/desktopbsd/software.png
-lib/gbi/slide-images/desktopbsd/videos.png
-lib/gbi/slide-images/desktopbsd/welcome.png
 lib/gbi/slide-images/ghostbsd/G-logo.png
 lib/gbi/slide-images/ghostbsd/browser.png
 lib/gbi/slide-images/ghostbsd/customize.png
@@ -66,8 +54,4 @@ lib/gbi/sys_handler.py
 lib/gbi/timezone.py
 lib/gbi/use_ufs.py
 lib/gbi/use_zfs.py
-%%PYTHON_SITELIBDIR%%/gbi-5.9-py%%PYTHON_VER%%.egg-info/PKG-INFO
-%%PYTHON_SITELIBDIR%%/gbi-5.9-py%%PYTHON_VER%%.egg-info/SOURCES.txt
-%%PYTHON_SITELIBDIR%%/gbi-5.9-py%%PYTHON_VER%%.egg-info/dependency_links.txt
-%%PYTHON_SITELIBDIR%%/gbi-5.9-py%%PYTHON_VER%%.egg-info/top_level.txt
 share/applications/gbi.desktop

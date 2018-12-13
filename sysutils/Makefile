@@ -150,6 +150,7 @@
     SUBDIR += cfengine-masterfiles310
     SUBDIR += cfengine-masterfiles311
     SUBDIR += cfengine-masterfiles312
+    SUBDIR += cfengine-masterfiles313
     SUBDIR += cfengine-masterfiles36
     SUBDIR += cfengine-masterfiles37
     SUBDIR += cfengine-masterfiles38
@@ -158,6 +159,7 @@
     SUBDIR += cfengine310
     SUBDIR += cfengine311
     SUBDIR += cfengine312
+    SUBDIR += cfengine313
     SUBDIR += cfengine32
     SUBDIR += cfengine33
     SUBDIR += cfengine34
@@ -245,6 +247,7 @@
     SUBDIR += devstat
     SUBDIR += dfc
     SUBDIR += di
+    SUBDIR += digdag
     SUBDIR += dim
     SUBDIR += dirdiff
     SUBDIR += direnv
@@ -319,7 +322,6 @@
     SUBDIR += fanout
     SUBDIR += farbot
     SUBDIR += fatback
-    SUBDIR += fbsdupdatecheck
     SUBDIR += fcode-utils
     SUBDIR += fconfig
     SUBDIR += fcron
@@ -915,8 +917,6 @@
     SUBDIR += phantom
     SUBDIR += php56-fileinfo
     SUBDIR += php56-posix
-    SUBDIR += php70-fileinfo
-    SUBDIR += php70-posix
     SUBDIR += php71-fileinfo
     SUBDIR += php71-posix
     SUBDIR += php72-fileinfo
@@ -1034,6 +1034,7 @@
     SUBDIR += py-stdiff
     SUBDIR += py-superlance
     SUBDIR += py-supervisor
+    SUBDIR += py-tarsnapper
     SUBDIR += py-tmuxp
     SUBDIR += py-uptime
     SUBDIR += py-XenAPI
@@ -1086,6 +1087,8 @@
     SUBDIR += riak-cs
     SUBDIR += rinse
     SUBDIR += rmonitor
+    SUBDIR += rocr
+    SUBDIR += roct
     SUBDIR += roottail
     SUBDIR += rovclock
     SUBDIR += rpi-firmware

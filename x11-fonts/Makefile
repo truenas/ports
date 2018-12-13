@@ -39,7 +39,6 @@
     SUBDIR += doulos
     SUBDIR += doulos-compact
     SUBDIR += droid-fonts-ttf
-    SUBDIR += emojione-color-font-ttf
     SUBDIR += encodings
     SUBDIR += exo
     SUBDIR += fantasque-sans-mono
@@ -184,6 +183,7 @@
     SUBDIR += stix-fonts
     SUBDIR += suxus
     SUBDIR += symbola
+    SUBDIR += tamsyn
     SUBDIR += terminus-font
     SUBDIR += terminus-ttf
     SUBDIR += tkfont

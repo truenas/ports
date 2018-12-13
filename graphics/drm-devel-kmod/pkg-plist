@@ -1,8 +1,0 @@
-%%AMD64%%/%%KMODDIR%%/amdgpu.ko
-%%AMD64%%/%%KMODDIR%%/amdkfd.ko
-/%%KMODDIR%%/debugfs.ko
-/%%KMODDIR%%/drm.ko
-/%%KMODDIR%%/i915kms.ko
-/%%KMODDIR%%/linuxkpi_gplv2.ko
-/%%KMODDIR%%/radeonkms.ko
-/%%KMODDIR%%/vmwgfx.ko

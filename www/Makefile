@@ -87,6 +87,7 @@
     SUBDIR += claroline
     SUBDIR += clearsilver
     SUBDIR += clearsilver-python
+    SUBDIR += cliqz
     SUBDIR += closure-compiler
     SUBDIR += cmsmadesimple
     SUBDIR += cntlm
@@ -245,6 +246,7 @@
     SUBDIR += havp
     SUBDIR += helma
     SUBDIR += hiawatha
+    SUBDIR += hiawatha-monitor
     SUBDIR += horde-ansel
     SUBDIR += horde-base
     SUBDIR += horde-passwd
@@ -461,7 +463,6 @@
     SUBDIR += mod_pagespeed
     SUBDIR += mod_perl2
     SUBDIR += mod_php56
-    SUBDIR += mod_php70
     SUBDIR += mod_php71
     SUBDIR += mod_php72
     SUBDIR += mod_php73
@@ -475,7 +476,6 @@
     SUBDIR += mod_rpaf2
     SUBDIR += mod_scgi
     SUBDIR += mod_security
-    SUBDIR += mod_security3
     SUBDIR += mod_setenvifplus
     SUBDIR += mod_tidy
     SUBDIR += mod_tsa
@@ -496,6 +496,7 @@
     SUBDIR += moodle33
     SUBDIR += moodle34
     SUBDIR += moodle35
+    SUBDIR += moodle36
     SUBDIR += mozplugger
     SUBDIR += multisort
     SUBDIR += multiwatch
@@ -1457,9 +1458,6 @@
     SUBDIR += php56-opcache
     SUBDIR += php56-session
     SUBDIR += php56-tidy
-    SUBDIR += php70-opcache
-    SUBDIR += php70-session
-    SUBDIR += php70-tidy
     SUBDIR += php71-opcache
     SUBDIR += php71-session
     SUBDIR += php71-tidy
@@ -2054,7 +2052,6 @@
     SUBDIR += rubygem-http
     SUBDIR += rubygem-http-cookie
     SUBDIR += rubygem-http-form_data
-    SUBDIR += rubygem-http-form_data1
     SUBDIR += rubygem-http_router
     SUBDIR += rubygem-httparty
     SUBDIR += rubygem-httpclient
@@ -2121,6 +2118,7 @@
     SUBDIR += rubygem-pagerduty
     SUBDIR += rubygem-passenger
     SUBDIR += rubygem-puma
+    SUBDIR += rubygem-puma_worker_killer
     SUBDIR += rubygem-pusher-client
     SUBDIR += rubygem-rabbirack
     SUBDIR += rubygem-rack
@@ -2204,7 +2202,6 @@
     SUBDIR += rubygem-tinyatom
     SUBDIR += rubygem-tinymce-rails
     SUBDIR += rubygem-toml-rb
-    SUBDIR += rubygem-toml-rb03
     SUBDIR += rubygem-toml-rb10
     SUBDIR += rubygem-totoridipjp
     SUBDIR += rubygem-tumblr_client

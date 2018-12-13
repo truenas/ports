@@ -51,7 +51,6 @@ SUBDIR += security
 SUBDIR += shells
 SUBDIR += sysutils
 SUBDIR += textproc
-SUBDIR += trident
 SUBDIR += ukrainian
 SUBDIR += vietnamese
 SUBDIR += www

@@ -93,7 +93,8 @@
     SUBDIR += cpp-xmms2
     SUBDIR += creox
     SUBDIR += crip
-    SUBDIR += csound6
+    SUBDIR += csound
+    SUBDIR += csoundqt
     SUBDIR += ctronome
     SUBDIR += cue2toc
     SUBDIR += cueplayer
@@ -416,6 +417,7 @@
     SUBDIR += libgpod-sharp
     SUBDIR += libgroove
     SUBDIR += libid3tag
+    SUBDIR += libinstpatch
     SUBDIR += libkcddb
     SUBDIR += libkcddb-kde4
     SUBDIR += libkcompactdisc

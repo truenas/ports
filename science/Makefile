@@ -32,6 +32,7 @@
     SUBDIR += avogadro2
     SUBDIR += avogadrolibs
     SUBDIR += bagel
+    SUBDIR += berkeleygw
     SUBDIR += bddsolve
     SUBDIR += bodr
     SUBDIR += brian
@@ -237,6 +238,7 @@
     SUBDIR += py-pupynere
     SUBDIR += py-pyaixi
     SUBDIR += py-pydicom
+    SUBDIR += py-pygeodesy
     SUBDIR += py-pymatgen
     SUBDIR += py-pymol
     SUBDIR += py-pyosf
@@ -263,6 +265,7 @@
     SUBDIR += qmcpack
     SUBDIR += qtresistors
     SUBDIR += quantum-espresso
+    SUBDIR += quantum-espresso-pseudopotentials
     SUBDIR += qwalk
     SUBDIR += rdkit
     SUBDIR += rmf
@@ -304,5 +307,6 @@
     SUBDIR += xdrawchem
     SUBDIR += xfce4-equake-plugin
     SUBDIR += xmakemol
+    SUBDIR += yoda
 
 .include <bsd.port.subdir.mk>
