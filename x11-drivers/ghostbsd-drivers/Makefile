@@ -3,7 +3,7 @@
 
 PORTNAME=	ghostbsd-drivers
 PORTVERSION=	18.12
-CATEGORIES=	misc
+CATEGORIES=	x11-drivers
 
 MAINTAINER=	eturgeon@ixsystems.com
 COMMENT=	GhostBSD default pkg
