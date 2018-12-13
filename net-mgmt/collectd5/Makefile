@@ -1,12 +1,11 @@
 # Created by: Matt Peterson <matt@peterson.org>
-# $FreeBSD: head/net-mgmt/collectd5/Makefile 436572 2017-03-21 08:26:58Z glebius $
+# $FreeBSD$
 
 PORTNAME=	collectd
 PORTVERSION=	5.7.2
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	net-mgmt
-MASTER_SITES=	https://collectd.org/files/ \
-		http://collectd.org/files/
+MASTER_SITES=	https://storage.googleapis.com/collectd-tarballs/
 PKGNAMESUFFIX=	5
 
 MAINTAINER=	ports@bsdserwis.com
@@ -15,10 +14,12 @@ COMMENT=	Systems & network statistics collection daemon
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
+LIB_DEPENDS=	libltdl.so:devel/libltdl
+
 USES=		autoreconf gmake libtool pkgconfig shebangfix tar:bzip2
 GNU_CONFIGURE=	yes
 
-OPTIONS_DEFINE=		CGI DEBUG GCRYPT LIBDTRACE LIBZFS LOGSTASH VIRT
+OPTIONS_DEFINE=		CGI DEBUG GCRYPT LIBDTRACE LOGSTASH VIRT
 OPTIONS_GROUP=		INPUT OUTPUT
 OPTIONS_GROUP_OUTPUT=	KAFKA MONGODB NOTIFYDESKTOP NOTIFYEMAIL RIEMANN RRDTOOL \
 			TSDB
@@ -39,7 +40,6 @@ IPMI_DESC=		Enable OpenIPMI plugin
 JSON_DESC=		Enable JSON plugins
 KAFKA_DESC=		Enable write_kafka plugin
 LIBDTRACE_DESC=	Build with LibDTrace
-LIBZFS_DESC=	Build with LibZFS
 LOGSTASH_DESC=		Enable log_logstash plugin (requires json)
 MEMCACHEC_DESC=		Enable memcachec plugin
 MODBUS_DESC=		Enable modbus plugin
@@ -212,10 +212,10 @@ PING_LIB_DEPENDS=		liboping.so:net/liboping
 PING_CONFIGURE_ENABLE=		ping
 PING_CONFIGURE_WITH=		liboping=${LOCALBASE}
 
-PYTHON_USES=			python:3
+PYTHON_USES=			python:3.5+
 PYTHON_CONFIGURE_ENABLE=	python
 PYTHON_CONFIGURE_WITH=		python=${PYTHON_CMD}
-PYTHON_CONFIGURE_ENV=		PYTHON_CONFIG=${PYTHON_CMD}-config
+PYTHON_BUILD_DEPENDS=		python3>0:lang/python3
 
 RABBITMQ_LIB_DEPENDS=		librabbitmq.so:net/rabbitmq-c
 RABBITMQ_CONFIGURE_ENABLE=	rabbitmq
@@ -225,8 +225,7 @@ REDIS_LIB_DEPENDS=		libhiredis.so:databases/hiredis
 REDIS_CONFIGURE_ENABLE=		redis write_redis
 REDIS_CONFIGURE_WITH=		libhiredis=${LOCALBASE}
 
-RIEMANN_LIB_DEPENDS=		libriemann-client.so:net-mgmt/riemann-c-client \
-				libltdl.so:devel/libltdl
+RIEMANN_LIB_DEPENDS=		libriemann-client.so:net-mgmt/riemann-c-client
 RIEMANN_CONFIGURE_ENABLE=	write_riemann
 
 ROUTEROS_LIB_DEPENDS=		librouteros.so:net/librouteros \
@@ -342,19 +341,16 @@ CONFIGURE_ARGS+=--enable-aggregation \
 INSTALL_TARGET=	install-strip
 SHEBANG_FILES=	contrib/collection.cgi
 
-INSTALL_TARGET=	install-strip
-SHEBANG_FILES=	contrib/collection.cgi
-
 post-patch:
 	@${REINPLACE_CMD} 's/-Werror//' \
-		${WRKSRC}/configure.ac ${WRKSRC}/src/Makefile.am \
-		${WRKSRC}/src/libcollectdclient/Makefile.am
+		${WRKSRC}/configure.ac 
 	@${REINPLACE_CMD} \
 		-e 's;@prefix@/var/;/var/;' \
 		-e 's;/var/lib/;/var/db/;' \
 		-e 's;@localstatedir@/lib/;/var/db/;' \
 		${WRKSRC}/src/collectd.conf.in \
-		${WRKSRC}/src/collectd.conf.5
+		${WRKSRC}/src/collectd.conf.5 \
+		${WRKSRC}/src/collectd.conf.pod
 	@${REINPLACE_CMD} \
 		-e 's;/etc/collection\.conf;${WWWDIR}/collection.conf;' \
 		${WRKSRC}/contrib/collection.cgi
