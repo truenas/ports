@@ -1,42 +1,19 @@
---- src/df.c.orig	2017-01-23 07:53:57 UTC
+--- src/df.c.orig	2017-06-06 18:13:54 UTC
 +++ src/df.c
-@@ -46,19 +46,55 @@
- #error "No applicable input method."
- #endif
+@@ -28,6 +28,11 @@
+ #include "utils_ignorelist.h"
+ #include "utils_mount.h"
  
-+#if HAVE_LIBZFS
-+# if HAVE_LIBZFS_H
-+#  include <libzfs.h>
-+# endif
-+# undef STATANYFS
-+# undef STATANYFS_STR
-+# define STATANYFS statzfs
-+# define STATANYFS_STR "statzfs"
-+# undef BLOCKSIZE
-+# define BLOCKSIZE(s) (s).f_bsize
-+struct statzfs {
-+   /* Hacky. This is a copy of struct statvfs */
-+   fsblkcnt_t  f_bavail;   /* Number of blocks */
-+   fsblkcnt_t  f_bfree;
-+   fsblkcnt_t  f_blocks;
-+   fsfilcnt_t  f_favail;   /* Number of files (e.g., inodes) */
-+   fsfilcnt_t  f_ffree;
-+   fsfilcnt_t  f_files;
-+   unsigned long   f_bsize;    /* Size of blocks counted above */
-+   unsigned long   f_flag;
-+   unsigned long   f_frsize;   /* Size of fragments */
-+   unsigned long   f_fsid;     /* Not meaningful */
-+   unsigned long   f_namemax;  /* Same as pathconf(_PC_NAME_MAX) */
-+
-+   /* ZFS specific data */
-+   uint64_t    f_available;
-+   uint64_t    f_usedbysnapshots;
-+   uint64_t    f_usedbydataset;
-+   uint64_t    f_usedbychildren;
-+   uint64_t    f_usedbyrefreservation;
-+};
++#ifdef __FreeBSD__
++/* We want to use statfs on FreeBSD, for the mount flags. */
++#undef HAVE_STATVFS
 +#endif
 +
+ #if HAVE_STATVFS
+ #if HAVE_SYS_STATVFS_H
+ #include <sys/statvfs.h>
+@@ -48,17 +53,20 @@
+ 
  static const char *config_keys[] = {
      "Device",         "MountPoint",   "FSType",         "IgnoreSelected",
 -    "ReportByDevice", "ReportInodes", "ValuesAbsolute", "ValuesPercentage"};
@@ -57,7 +34,7 @@
  
  static int df_init(void) {
    if (il_device == NULL)
-@@ -67,6 +103,8 @@
+@@ -67,6 +75,8 @@ static int df_init(void) {
      il_mountpoint = ignorelist_create(1);
    if (il_fstype == NULL)
      il_fstype = ignorelist_create(1);
@@ -66,7 +43,7 @@
  
    return (0);
  }
-@@ -123,11 +161,68 @@
+@@ -123,6 +133,13 @@ static int df_config(const char *key, co
        values_percentage = 0;
  
      return (0);
@@ -80,73 +57,7 @@
    }
  
    return (-1);
- }
- 
-+#if HAVE_LIBZFS
-+int
-+statzfs(const char *restrict path, struct statzfs *restrict buf)
-+{
-+   size_t blocksize = 1024;
-+   libzfs_handle_t *libzfsp;
-+   zfs_handle_t *zfsp;
-+   uint64_t available, real_used, total;
-+
-+   if (path == NULL)
-+       return (-1);
-+
-+   if (statvfs(path, (struct statvfs *)buf) < 0)
-+       return (-1);
-+
-+   if ((libzfsp = libzfs_init()) == NULL)
-+       return (-1);
-+
-+   libzfs_print_on_error(libzfsp, B_TRUE);
-+
-+   zfsp = zfs_path_to_zhandle(libzfsp, (char *)path,
-+       ZFS_TYPE_VOLUME|ZFS_TYPE_DATASET|ZFS_TYPE_FILESYSTEM);
-+   if (zfsp == NULL)
-+       return (-1);
-+
-+   buf->f_available = zfs_prop_get_int(zfsp, ZFS_PROP_AVAILABLE);
-+   buf->f_usedbysnapshots = zfs_prop_get_int(zfsp, ZFS_PROP_USEDSNAP);
-+   buf->f_usedbydataset = zfs_prop_get_int(zfsp, ZFS_PROP_USEDDS);
-+   buf->f_usedbychildren = zfs_prop_get_int(zfsp, ZFS_PROP_USEDCHILD);
-+   buf->f_usedbyrefreservation = zfs_prop_get_int(zfsp, ZFS_PROP_USEDREFRESERV);
-+
-+   zfs_close(zfsp);
-+   libzfs_fini(libzfsp);
-+
-+   real_used = buf->f_usedbysnapshots + buf->f_usedbydataset + buf->f_usedbychildren;
-+   total = (real_used + buf->f_available);
-+   available = buf->f_available;
-+
-+   buf->f_bsize = blocksize;
-+   buf->f_blocks = total / blocksize;
-+   buf->f_bfree = available / blocksize;
-+   buf->f_bavail = available / blocksize;
-+
-+   /* Don't support this option when using ZFS */
-+   report_inodes = 0;
-+
-+   return (0);
-+}
-+#endif
-+
- __attribute__((nonnull(2))) static void df_submit_one(char *plugin_instance,
-                                                       const char *type,
-                                                       const char *type_instance,
-@@ -147,7 +242,9 @@
- } /* void df_submit_one */
- 
- static int df_read(void) {
--#if HAVE_STATVFS
-+#if HAVE_LIBZFS
-+  struct statzfs statbuf;
-+#elif HAVE_STATVFS
-   struct statvfs statbuf;
- #elif HAVE_STATFS
-   struct statfs statbuf;
-@@ -202,10 +299,22 @@
+@@ -202,13 +219,29 @@ static int df_read(void) {
        continue;
  
      if (STATANYFS(mnt_ptr->dir, &statbuf) < 0) {
@@ -171,18 +82,34 @@
 +      }
      }
  
-     if (!statbuf.f_blocks)
-@@ -263,7 +372,13 @@
-       statbuf.f_blocks = statbuf.f_bfree;
- 
-     blk_free = (uint64_t)statbuf.f_bavail;
-+#if HAVE_LIBZFS
-+    blk_reserved = 0;
-+    if (statbuf.f_usedbyrefreservation > 0)
-+      blk_reserved = (uint64_t) statbuf.f_usedbyrefreservation / blocksize;
++#ifdef __FreeBSD__
++    if ((statbuf.f_flags & MNT_IGNORE) || (statbuf.f_blocks == 0))
 +#else
-     blk_reserved = (uint64_t)(statbuf.f_bfree - statbuf.f_bavail);
+     if (!statbuf.f_blocks)
 +#endif
-     blk_used = (uint64_t)(statbuf.f_blocks - statbuf.f_bfree);
+       continue;
  
-     if (values_absolute) {
+     if (by_device) {
+@@ -295,14 +328,22 @@ static int df_read(void) {
+       uint64_t inode_used;
+ 
+       /* Sanity-check for the values in the struct */
++#ifndef __FreeBSD__ 
+       if (statbuf.f_ffree < statbuf.f_favail)
+         statbuf.f_ffree = statbuf.f_favail;
++#endif
+       if (statbuf.f_files < statbuf.f_ffree)
+         statbuf.f_files = statbuf.f_ffree;
+ 
++#ifdef __FreeBSD__
++      inode_free = (uint64_t)statbuf.f_ffree;
++      inode_reserved = 0;
++      inode_used = (uint64_t)(statbuf.f_files - inode_free);
++#else
+       inode_free = (uint64_t)statbuf.f_favail;
+       inode_reserved = (uint64_t)(statbuf.f_ffree - statbuf.f_favail);
+       inode_used = (uint64_t)(statbuf.f_files - statbuf.f_ffree);
++#endif
+ 
+       if (values_percentage) {
+         if (statbuf.f_files > 0) {
