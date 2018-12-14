@@ -3,7 +3,7 @@
 
 PORTNAME=			${SAMBA4_BASENAME}49
 PORTVERSION=			${SAMBA4_VERSION}
-PORTREVISION=			2	
+PORTREVISION=			3	
 CATEGORIES?=			net
 MASTER_SITES=			SAMBA/samba/stable SAMBA/samba/rc
 DISTNAME=			${SAMBA4_DISTNAME}
@@ -39,9 +39,10 @@ CPE_PRODUCT=			samba
 VARDIR=				${DESTDIR}/var
 SAMBA4_RUNDIR=			${VARDIR}/run/${SAMBA4_PORTNAME}
 SAMBA4_LOGDIR=			${VARDIR}/log/${SAMBA4_PORTNAME}
-SAMBA4_LOCKDIR=			${VARDIR}/db/${SAMBA4_PORTNAME}
+SAMBA4_LOCKDIR=			${VARDIR}/run/${SAMBA4_PORTNAME}
+SAMBA4_STATEDIR=		${VARDIR}/db/${SAMBA4_PORTNAME}
 SAMBA4_BINDDNSDIR=		${SAMBA4_LOCKDIR}/bind-dns
-SAMBA4_PRIVATEDIR=		${SAMBA4_LOCKDIR}/private
+SAMBA4_PRIVATEDIR=		${SAMBA4_STATEDIR}/private
 SAMBA4_PAMDIR=			${PREFIX}/lib
 SAMBA4_LIBDIR=			${PREFIX}/lib/${SAMBA4_PORTNAME}
 SAMBA4_MODULEDIR=		${PREFIX}/lib/shared-modules
@@ -63,7 +64,7 @@ CONFIGURE_ARGS+=		--mandir="${MANPREFIX}/man" \
 				--with-sockets-dir="${SAMBA4_RUNDIR}" \
 				--with-privileged-socket-dir="${SAMBA4_RUNDIR}" \
 				--with-lockdir="${SAMBA4_LOCKDIR}" \
-				--with-statedir="${SAMBA4_LOCKDIR}" \
+				--with-statedir="${SAMBA4_STATEDIR}" \
 				--with-cachedir="${SAMBA4_LOCKDIR}" \
 				--with-bind-dns-dir=${SAMBA4_BINDDNSDIR} \
 				--with-privatedir="${SAMBA4_PRIVATEDIR}" \
@@ -89,7 +90,7 @@ SUB_LIST+=			PKGCONFIGDIR=${PKGCONFIGDIR_REL}
 OPTIONS_SUB=			yes
 
 OPTIONS_DEFINE=			AD_DC ADS DEBUG DOCS FAM LDAP LIBZFS\
-				QUOTAS SYSLOG UTMP PROFILE
+				QUOTAS SYSLOG UTMP
 # Make those default options
 OPTIONS_DEFAULT:=		${OPTIONS_DEFINE}
 # This shouldn't be default in the release
@@ -273,8 +274,8 @@ NSUPDATE_RUN_DEPENDS=		samba-nsupdate:dns/samba-nsupdate
 AVAHI_CONFIGURE_ENABLE=		avahi
 AVAHI_LIB_DEPENDS=		libavahi-client.so:net/avahi-app
 
-#MDNSRESPONDER_CONFIGURE_ENABLE=	dnssd
-#MDNSRESPONDER_LIB_DEPENDS=	libdns_sd.so:net/mDNSResponder
+MDNSRESPONDER_CONFIGURE_ENABLE=	dnssd
+MDNSRESPONDER_LIB_DEPENDS=	libdns_sd.so:net/mDNSResponder
 ##############################################################################
 DEBUG_CONFIGURE_ON=		--verbose --enable-debug
 DEBUG_MAKE_ARGS=		--verbose
