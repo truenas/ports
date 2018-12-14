@@ -11,7 +11,6 @@ depend()
 	use logger
 	after bootmisc
 	keyword -jail -prefix
-	provide powerd
 }
 
 start_pre()
