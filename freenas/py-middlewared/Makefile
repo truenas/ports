@@ -42,9 +42,20 @@ USE_RC_SUBR=	middlewared
 
 WRKSRC_SUBDIR=	src/middlewared
 
+if exists(/usr/local_source/${PORTNAME})
+PORTVERSION!=	git -C /usr/local_source/${PORTNAME} log -1 --pretty=format:%ct
+EXTRACT_ONLY=
+WRKSRC=		/usr/local_source/${PORTNAME}
+.else
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
 GH_PROJECT=	freenas
 GH_TAGNAME=	81f00e1cf38def4af85915d4d9c45a163b3a042c
+.endif
+
+.if exists(/usr/local_source/${PORTNAME})
+checksum fetch:
+	echo ${.TARGET} not needed because building direct
+.endif
 
 .include <bsd.port.mk>
