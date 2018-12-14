@@ -43,7 +43,7 @@ USE_RC_SUBR=	middlewared
 WRKSRC_SUBDIR=	src/middlewared
 
 .if exists(/usr/local_source/${PORTNAME})
-PORTVERSION!=	git -C /usr/local_source/${PORTNAME} log -1 --pretty=format:%ct
+PORTVERSION=	%Y%m%d%H%M%S
 EXTRACT_ONLY=
 WRKSRC=		/usr/local_source/${PORTNAME}
 .else

@@ -20,7 +20,7 @@ BUILD_DEPENDS=	rsync>0:net/rsync \
 NO_BUILD=	yes
 
 .if exists(/usr/local_source/${PORTNAME})
-PORTVERSION!=	git -C /usr/local_source/${PORTNAME} log -1 --pretty=format:%ct
+PORTVERSION=	%Y%m%d%H%M%S
 WRKSRC=		/usr/local_source/${PORTNAME}
 EXTRACT_ONLY=
 .else
