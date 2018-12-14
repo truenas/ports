@@ -20,7 +20,8 @@ BUILD_DEPENDS=	rsync>0:net/rsync \
 NO_BUILD=	yes
 
 .if exists(/usr/local_source/${PORTNAME})
-PORTVERSION=	%Y%m%d%H%M%S
+TIMENOW=	%Y%m%d%H%M%S
+PORTVERSION=	${TIMENOW:gmtime}
 WRKSRC=		/usr/local_source/${PORTNAME}
 EXTRACT_ONLY=
 .else
