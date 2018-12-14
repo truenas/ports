@@ -49,8 +49,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}django110>0:www/py-django110@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}libzfs>0:devel/py-libzfs@${PY_FLAVOR}
 
 .if exists(/usr/local_source/${PORTNAME})
-TIMENOW=	%Y%m%d%H%M%S
-PORTVERSION=	${TIMENOW:gmtime}
+PORTVERSION!=	stat -f %m /usr/local_source/${PORTNAME}
 EXTRACT_ONLY=
 WRKSRC=		/usr/local_source/${PORTNAME}
 .else

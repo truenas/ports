@@ -17,8 +17,7 @@ USES= 	python
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}snmp_passpersist>=1.3.0:net-mgmt/py-snmp_passpersist
 
 .if exists(/usr/local_source/${PORTNAME})
-TIMENOW=	%Y%m%d%H%M%S
-PORTVERSION=	${TIMENOW:gmtime}
+PORTVERSION!=	stat -f %m /usr/local_source/${PORTNAME}
 EXTRACT_ONLY=
 WRKSRC=         /usr/local_source/${PORTNAME}
 .else
