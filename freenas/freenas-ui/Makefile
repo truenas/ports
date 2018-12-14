@@ -41,7 +41,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}django110>0:www/py-django110@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}middlewared>0:freenas/py-middlewared@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}ntplib>0:net/py-ntplib@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}snmp4>0:net-mgmt/py-snmp4@${PY_FLAVOR} \
-	openssl>0:security/openssl \
+	openssl111>0:security/openssl111 \
 	pyvmomi>0:net/py-pyvmomi \
 	dmidecode>0:sysutils/dmidecode \
 	freenas-migrate93>0:freenas/freenas-migrate93 \
