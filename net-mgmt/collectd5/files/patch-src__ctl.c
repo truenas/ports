@@ -1,10 +1,10 @@
---- src/ctl.c.orig	2016-05-22 07:58:08 UTC
-+++ src/ctl.c
-@@ -0,0 +1,407 @@
+--- src/ctl.c.orig	2018-12-13 16:13:25.188294000 -0500
++++ src/ctl.c	2018-12-14 10:42:43.953776000 -0500
+@@ -0,0 +1,400 @@
 +/**
-+ * collectd - src/ctl.c 
-+ * 
-+ * Copyright (c) 2016 Alexander Motin <mav@ixsystems.com> 
++ * collectd - src/ctl.c
++ *
++ * Copyright (c) 2016,2018 Alexander Motin <mav@ixsystems.com>
 + * All rights reserved.
 + *
 + * Redistribution and use in source and binary forms, with or without
@@ -46,7 +46,6 @@
 +#include <libxml/tree.h>
 +#include <libxml/xpath.h>
 +
-+#define	CTL_MAX_LUNS		1024
 +#define	CTL_MAX_PORTS		256
 +#define	CTL_BE_NAME_LEN		32
 +#define	CTL_ERROR_STR_LEN	160
@@ -59,27 +58,6 @@
 +#define	CTL_STATS_NUM_TYPES	3
 +
 +typedef enum {
-+	CTL_LUN_STATS_NO_BLOCKSIZE	= 0x01
-+} ctl_lun_stats_flags;
-+
-+struct ctl_lun_io_port_stats {
-+	uint32_t			targ_port;
-+	uint64_t			bytes[CTL_STATS_NUM_TYPES];
-+	uint64_t			operations[CTL_STATS_NUM_TYPES];
-+	struct bintime			time[CTL_STATS_NUM_TYPES];
-+	uint64_t			num_dmas[CTL_STATS_NUM_TYPES];
-+	struct bintime			dma_time[CTL_STATS_NUM_TYPES];
-+};
-+
-+struct ctl_lun_io_stats {
-+	uint8_t				device_type;
-+	uint64_t			lun_number;
-+	uint32_t			blocksize;
-+	ctl_lun_stats_flags		flags;
-+	struct ctl_lun_io_port_stats	ports[CTL_MAX_PORTS];
-+};
-+
-+typedef enum {
 +	CTL_SS_OK,
 +	CTL_SS_NEED_MORE_SPACE,
 +	CTL_SS_ERROR
@@ -90,11 +68,21 @@
 +	CTL_STATS_FLAG_TIME_VALID	= 0x01
 +} ctl_stats_flags;
 +
-+struct ctl_stats {
-+	int			alloc_len;	/* passed to kernel */
-+	struct ctl_lun_io_stats	*lun_stats;	/* passed to/from kernel */
-+	int			fill_len;	/* passed to userland */
-+	int			num_luns;	/* passed to userland */
++struct ctl_io_stats {
++	uint32_t			item;
++	uint64_t			bytes[CTL_STATS_NUM_TYPES];
++	uint64_t			operations[CTL_STATS_NUM_TYPES];
++	uint64_t			dmas[CTL_STATS_NUM_TYPES];
++	struct bintime			time[CTL_STATS_NUM_TYPES];
++	struct bintime			dma_time[CTL_STATS_NUM_TYPES];
++};
++
++struct ctl_get_io_stats {
++	struct ctl_io_stats	*stats;		/* passed to/from kernel */
++	size_t			alloc_len;	/* passed to kernel */
++	size_t			fill_len;	/* passed to userland */
++	int			first_item;	/* passed to kernel */
++	int			num_items;	/* passed to userland */
 +	ctl_stats_status	status;		/* passed to userland */
 +	ctl_stats_flags		flags;		/* passed to userland */
 +	struct timespec		timestamp;	/* passed to userland */
@@ -119,8 +107,8 @@
 +
 +#define	CTL_DEFAULT_DEV		"/dev/cam/ctl"
 +#define	CTL_MINOR	225
-+#define	CTL_GETSTATS		_IOWR(CTL_MINOR, 0x15, struct ctl_stats)
 +#define	CTL_PORT_LIST		_IOWR(CTL_MINOR, 0x27, struct ctl_lun_list)
++#define	CTL_GET_PORT_STATS	_IOWR(CTL_MINOR, 0x2a, struct ctl_get_io_stats)
 +
 +struct portstat {
 +	derive_t rr, rb, wr, wb;
@@ -129,7 +117,7 @@
 +
 +static void *portbuf;
 +static int portbuflen = 16384;
-+static void *statbuf;
++static struct ctl_io_stats *statbuf;
 +static int ctlfd;
 +
 +static struct {
@@ -152,7 +140,7 @@
 +		ERROR("cannot CTL open device %s", CTL_DEFAULT_DEV);
 +		return (-1);
 +	}
-+	statbuf = malloc(sizeof(struct ctl_lun_io_stats) * CTL_MAX_LUNS);
++	statbuf = calloc(CTL_MAX_PORTS, sizeof(struct ctl_io_stats));
 +	return (0);
 +}
 +
@@ -312,23 +300,24 @@
 +static int
 +ctl_getstats(void)
 +{
-+	struct ctl_lun_io_stats *lun_stats;
-+	struct ctl_stats stats;
++	struct ctl_get_io_stats get_stats;
 +
-+	memset(&stats, 0, sizeof(stats));
-+	stats.alloc_len = sizeof(*lun_stats) * CTL_MAX_LUNS;
-+	stats.lun_stats = statbuf;
++	memset(&get_stats, 0, sizeof(get_stats));
++	get_stats.alloc_len = sizeof(struct ctl_io_stats) * CTL_MAX_PORTS;
++	get_stats.first_item = 0;
++	memset(statbuf, 0, get_stats.alloc_len);
++	get_stats.stats = statbuf;
 +
-+	if (ioctl(ctlfd, CTL_GETSTATS, &stats) == -1) {
-+		ERROR("error returned from CTL_GETSTATS ioctl");
++	if (ioctl(ctlfd, CTL_GET_PORT_STATS, &get_stats) == -1) {
++		ERROR("error returned from CTL_GET_PORT_STATS ioctl");
 +		return (-1);
 +	}
-+	if (stats.status != 0) {
-+		ERROR("bad status %d returned from CTL_GETSTATS ioctl",
-+		     stats.status);
++	if (get_stats.status != 0) {
++		ERROR("bad status %d returned from CTL_GET_PORT_STATS ioctl",
++		     get_stats.status);
 +		return (-1);
 +	}
-+	return (stats.num_luns);
++	return (get_stats.fill_len / sizeof(struct ctl_io_stats));
 +}
 +
 +static void ps_clear(struct portstat *ps)
@@ -361,14 +350,14 @@
 +{
 +	struct portstat ps;
 +	struct portstat haps;
-+	struct ctl_lun_io_stats *ls;
-+	int nports, nluns, port, lun, haveha;
++	struct ctl_io_stats *ls;
++	int nports, nstats, port, haveha, s;
 +
 +	nports = ctl_getports();
 +	if (nports < 0)
 +		return (-1);
-+	nluns = ctl_getstats();
-+	if (nluns < 0)
++	nstats = ctl_getstats();
++	if (nstats < 0)
 +		return (-1);
 +	for (port = 0; port < nagrs; port++)
 +		ps_clear(&agrs[port].ps);
@@ -377,17 +366,21 @@
 +	for (port = 0; port < CTL_MAX_PORTS; port++) {
 +		if (ports[port].name == NULL)
 +			continue;
-+		ps_clear(&ps);
-+		for (lun = 0, ls = statbuf; lun < nluns; lun++, ls++) {
-+			ps.rr += ls->ports[port].operations[CTL_STATS_NO_IO];
-+			bintime_add(&ps.rt, &ls->ports[port].time[CTL_STATS_NO_IO]);
-+			ps.rr += ls->ports[port].operations[CTL_STATS_READ];
-+			bintime_add(&ps.rt, &ls->ports[port].time[CTL_STATS_READ]);
-+			ps.rb += ls->ports[port].bytes[CTL_STATS_READ];
-+			ps.wr += ls->ports[port].operations[CTL_STATS_WRITE];
-+			ps.wb += ls->ports[port].bytes[CTL_STATS_WRITE];
-+			bintime_add(&ps.wt, &ls->ports[port].time[CTL_STATS_WRITE]);
++		for (s = 0, ls = statbuf; s < nstats; s++, ls++) {
++			if (ls->item == port)
++				break;
 +		}
++		if (s >= nstats)
++			continue;
++		ps_clear(&ps);
++		ps.rr += ls->operations[CTL_STATS_NO_IO];
++		bintime_add(&ps.rt, &ls->time[CTL_STATS_NO_IO]);
++		ps.rr += ls->operations[CTL_STATS_READ];
++		bintime_add(&ps.rt, &ls->time[CTL_STATS_READ]);
++		ps.rb += ls->bytes[CTL_STATS_READ];
++		ps.wr += ls->operations[CTL_STATS_WRITE];
++		ps.wb += ls->bytes[CTL_STATS_WRITE];
++		bintime_add(&ps.wt, &ls->time[CTL_STATS_WRITE]);
 +		ps_submit(ports[port].name, ports[port].ppvp, &ps);
 +		ps_add(&agrs[ports[port].agr].ps, &ps);
 +		if (ports[port].ha) {
