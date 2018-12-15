@@ -1,0 +1,12 @@
+#!/sbin/openrc-run
+
+name="Quassel-core IRC Service Daemon"
+command="/usr/local/bin/quasselcore"
+command_args=$quasselcore_args
+pidfile="/var/run/quasselcore.pid"
+
+depend()
+{
+        need localmount
+        use net logger
+}
