@@ -7,10 +7,13 @@ CATEGORIES=	security kde
 MAINTAINER=	lev@FreeBSD.org
 COMMENT=	KDE KWallet integration for Version control system
 
+DEPRECATED=	KDE4 is end-of-life
+EXPIRATION_DATE=2018-12-31
+
 USE_KDE=	kdelibs runtime
 USES+=		kde:4
 
-PORTREVISION_110=	6
+PORTREVISION_111=	0
 PORTREVISION_19=	0
 
 .include "${.CURDIR}/../../devel/subversion/Makefile.addons"

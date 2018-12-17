@@ -10,7 +10,10 @@ DISTNAME=	SimpleGroupware_${PORTVERSION}
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Simple Groupware is an open source enterprise application
 
-IGNORE_WITH_PHP=	70 71 72
+DEPRECATED=	Works only with EOL php 5.6
+EXPIRATION_DATE=	2018-12-30
+
+IGNORE_WITH_PHP=	71 72 73
 
 NO_BUILD=	yes
 USES=		apache:run,2.2+
@@ -26,13 +29,4 @@ do-install:
 	${MKDIR} ${STAGEDIR}${WWWDIR}
 	(cd ${WRKSRC} && ${COPYTREE_SHARE} . ${STAGEDIR}${WWWDIR})
 
-.include <bsd.port.pre.mk>
-
-.if ${OPSYS} == FreeBSD && ${OSVERSION} < 1100077
-# chmod -R bug.
-# Do not use "-exec ... +", because of the same bug, it will not work.
-post-extract:
-	@${FIND} ${WRKSRC} -type d -exec ${CHMOD} 755 {} \;
-.endif
-
-.include <bsd.port.post.mk>
+.include <bsd.port.mk>

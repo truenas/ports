@@ -3,7 +3,7 @@
 
 PORTNAME=	clhep
 PORTVERSION=	2.4.0.4
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	science
 MASTER_SITES=	http://proj-clhep.web.cern.ch/proj-clhep/DISTRIBUTION/tarFiles/
 
@@ -12,8 +12,6 @@ COMMENT=	Object-oriented toolkit for particle physics applications by CERN
 
 LICENSE=	GPLv3 LGPL3
 LICENSE_COMB=	multi
-
-BROKEN_FreeBSD_10=	does not compile on clang3.4, requires 3.5+
 
 WRKSRC=		${WRKDIR}/${PORTVERSION}/${PORTNAME:tu}
 

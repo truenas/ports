@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	unbound
-PORTVERSION=	1.8.0
+PORTVERSION=	1.8.2
+PORTREVISION=	1
 CATEGORIES=	dns
 MASTER_SITES=	https://www.nlnetlabs.nl/downloads/unbound/ \
 		https://distfiles.crux.guru/
@@ -17,6 +18,7 @@ LIB_DEPENDS=	libexpat.so:textproc/expat2 \
 		libldns.so:dns/ldns
 
 USES=		autoreconf cpe libtool pkgconfig ssl
+
 CPE_VENDOR=	nlnetlabs
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--with-ssl=${OPENSSLBASE} --with-libexpat=${LOCALBASE}
@@ -71,7 +73,6 @@ LIBEVENT_CONFIGURE_WITH=libevent
 LIBEVENT_CPPFLAGS+=	$$(pkg-config libevent --cflags-only-I)
 LIBEVENT_LIB_DEPENDS=	libevent.so:devel/libevent
 LIBEVENT_LDFLAGS+=	$$(pkg-config libevent --libs-only-L)
-LIBEVENT_USES=		pkgconfig
 MUNIN_PLUGIN_SUB_FILES=	pkg-message
 PYTHON_BUILD_DEPENDS=	swig3.0:devel/swig30
 PYTHON_CONFIGURE_ON=	--with-pyunbound=yes --with-pythonmodule=yes \

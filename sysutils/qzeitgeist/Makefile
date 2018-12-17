@@ -11,11 +11,14 @@ DISTFILES=	${DISTNAME}${EXTRACT_SUFX}:kde \
 		zeitgeist-${ZEITGEIST_VERSION}.tar.xz
 EXTRACT_ONLY=	${DISTNAME}${EXTRACT_SUFX}
 
-MAINTAINER=	avilla@FreeBSD.org
+MAINTAINER=	kde@FreeBSD.org
 COMMENT=	Qt 4 wrapper library around the Zeitgeist D-Bus API
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING
+
+DEPRECATED=		Qt4 has been EOL since december 2015
+EXPIRATION_DATE=	2019-03-15
 
 BUILD_DEPENDS=	rapper:textproc/raptor2 \
 		${PYTHON_PKGNAMEPREFIX}rdflib>=0:textproc/py-rdflib@${PY_FLAVOR}

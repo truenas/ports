@@ -611,7 +611,7 @@ proxydeps_suggest_uses() {
 	elif [ ${pkg} = "devel/readline" ]; then
 		warn "you need USES+=readline"
 	# ssl
-	elif [ ${pkg} = "security/openssl" -o ${pkg} = "security/openssl-devel" \
+	elif [ ${pkg} = "security/openssl" -o ${pkg} = "security/openssl111" \
 	  -o ${pkg} = "security/libressl" -o ${pkg} = "security/libressl-devel" \
 	  ]; then
 		warn "you need USES=ssl"
@@ -905,7 +905,7 @@ flavors()
 		pkgnames=$(make -C "${CURDIR}" flavors-package-names|sort)
 		uniques=$(echo "${pkgnames}"|uniq)
 		if [ "$pkgnames" != "${uniques}" ]; then
-			err "Package names are not uniques with flavors:"
+			err "Package names are not unique with flavors:"
 			make -C "${CURDIR}" pretty-flavors-package-names >&2
 			err "maybe use <flavor>_PKGNAMEPREFIX/SUFFIX".
 			rc=1

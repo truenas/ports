@@ -2,7 +2,7 @@
 
 PORTNAME=	zanshin
 DISTVERSION=	0.5.0
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	deskutils kde
 MASTER_SITES=	KDE/stable/${PORTNAME}/
 
@@ -22,7 +22,7 @@ USE_KDE+=	akonadicalendar akonadicontacts akonadinotes akonadisearch \
 		calendarcore contacts identitymanagement kontactinterface ldap \
 		mime pimtextedit \
 		kdepim-runtime5_run
-USE_QT=		concurrent core dbus gui network printsupport qml testlib \
+USE_QT=		concurrent core dbus declarative gui network printsupport testlib \
 		widgets xml \
 		buildtools_build qmake_build
 

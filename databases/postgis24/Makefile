@@ -3,8 +3,9 @@
 
 PORTNAME=	postgis
 PORTVERSION=	2.4.5
+PORTREVISION=	1
 CATEGORIES=	databases geography
-MASTER_SITES=	http://download.osgeo.org/postgis/source/
+MASTER_SITES=	https://download.osgeo.org/postgis/source/
 PKGNAMESUFFIX=	24
 
 MAINTAINER=	lbartoletti@tuxfamily.org
@@ -19,7 +20,8 @@ LIB_DEPENDS=	libproj.so:graphics/proj \
 
 CONFLICTS_INSTALL=	postgis20  postgis21 postgis22 postgis23 postgis
 
-USES=		gettext gmake gnome iconv:wchar_t libtool:keepla perl5 pgsql pkgconfig shebangfix
+USES=		compiler:c++11-lang gettext gmake iconv:wchar_t libtool:keepla \
+		perl5 pgsql pkgconfig shebangfix
 LLD_UNSAFE=	yes
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	${ICONV_CONFIGURE_BASE}

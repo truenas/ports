@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	virtualbox-ose
-PORTVERSION=	5.2.18
+PORTVERSION=	5.2.22
+PORTREVISION=	1
 CATEGORIES=	emulators
 MASTER_SITES=	http://download.virtualbox.org/virtualbox/${PORTVERSION}/
 PKGNAMESUFFIX=	-kmod
@@ -75,11 +76,7 @@ KMK_ARCH=	freebsd.${ARCH}
 
 .include <bsd.port.pre.mk>
 
-.if ${OSREL:R} >= 11
 SYMBOLSUFFIX=	debug
-.else
-SYMBOLSUFFIX=	symbols
-.endif
 PLIST_SUB+=	SYMBOLSUFFIX=${SYMBOLSUFFIX}
 
 post-patch:

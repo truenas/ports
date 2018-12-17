@@ -9,12 +9,11 @@
     SUBDIR += GraphicsMagick
     SUBDIR += Hermes
     SUBDIR += IPA
-    SUBDIR += ImageMagick
-    SUBDIR += ImageMagick-nox11
+    SUBDIR += ImageMagick6
+    SUBDIR += ImageMagick6-nox11
     SUBDIR += ImageMagick7
     SUBDIR += ImageMagick7-nox11
     SUBDIR += O2-tools
-    SUBDIR += OpenEXR
     SUBDIR += R-cran-DiagrammeR
     SUBDIR += R-cran-GDD
     SUBDIR += R-cran-RColorBrewer
@@ -46,7 +45,6 @@
     SUBDIR += agg
     SUBDIR += alembic
     SUBDIR += alpng
-    SUBDIR += amide
     SUBDIR += ampasACES-container
     SUBDIR += ampasCTL
     SUBDIR += animorph
@@ -84,12 +82,10 @@
     SUBDIR += cadubi
     SUBDIR += caffe
     SUBDIR += cairo
-    SUBDIR += cairo-reference
     SUBDIR += cairomm
     SUBDIR += cal3d
     SUBDIR += camera
     SUBDIR += camerakit
-    SUBDIR += cbrpager
     SUBDIR += cbview
     SUBDIR += cbviewer
     SUBDIR += cegui
@@ -125,6 +121,7 @@
     SUBDIR += darktable
     SUBDIR += dataplot
     SUBDIR += dc20pack
+    SUBDIR += dcmtk
     SUBDIR += dcp2icc
     SUBDIR += dcraw
     SUBDIR += dcraw-m
@@ -154,10 +151,11 @@
     SUBDIR += dmtx-utils
     SUBDIR += drawpile
     SUBDIR += driconf
-    SUBDIR += drm-devel-kmod
+    SUBDIR += drm-current-kmod
+    SUBDIR += drm-fbsd11.2-kmod
+    SUBDIR += drm-fbsd12.0-kmod
+    SUBDIR += drm-kmod
     SUBDIR += drm-legacy-kmod
-    SUBDIR += drm-next-kmod
-    SUBDIR += drm-stable-kmod
     SUBDIR += dspdfviewer
     SUBDIR += duhdraw
     SUBDIR += dynamechs
@@ -240,7 +238,6 @@
     SUBDIR += gdtclft
     SUBDIR += geeqie
     SUBDIR += gegl
-    SUBDIR += gegl3
     SUBDIR += generic_image_decoder
     SUBDIR += geoapi
     SUBDIR += geomorph
@@ -274,7 +271,6 @@
     SUBDIR += gimp-wavelet-decompose-plugin
     SUBDIR += gimp-wavelet-denoise-plugin
     SUBDIR += gimp-wavelet-sharpen-plugin
-    SUBDIR += gimpfx-foundry
     SUBDIR += giram
     SUBDIR += gkrellkam2
     SUBDIR += gle
@@ -291,12 +287,13 @@
     SUBDIR += gmic
     SUBDIR += gmic-qt
     SUBDIR += gmt
+    SUBDIR += gmt5
+    SUBDIR += gmt5-dcw
+    SUBDIR += gmt5-gshhg
     SUBDIR += gnash
     SUBDIR += gnofract4d
     SUBDIR += gnome-color-manager
     SUBDIR += gnome-video-effects
-    SUBDIR += gnustep-slideshow
-    SUBDIR += gnustep-slideshowkit
     SUBDIR += gocr
     SUBDIR += goocanvas
     SUBDIR += goocanvas2
@@ -343,6 +340,7 @@
     SUBDIR += gstreamer1-plugins-openjpeg
     SUBDIR += gstreamer1-plugins-png
     SUBDIR += gstreamer1-plugins-rsvg
+    SUBDIR += gstreamer1-plugins-vulkan
     SUBDIR += gstreamer1-plugins-webp
     SUBDIR += gstreamer1-plugins-zbar
     SUBDIR += gthumb
@@ -354,7 +352,6 @@
     SUBDIR += guilib
     SUBDIR += gwenview
     SUBDIR += gwenview-kde4
-    SUBDIR += gx
     SUBDIR += hdr_tools
     SUBDIR += hiptext
     SUBDIR += hobbes-icons-xpm
@@ -387,6 +384,7 @@
     SUBDIR += imgv
     SUBDIR += imlib2
     SUBDIR += imlib2_loaders
+    SUBDIR += imlib2-webp
     SUBDIR += impressive
     SUBDIR += imv
     SUBDIR += inkscape
@@ -671,10 +669,12 @@
     SUBDIR += opencv-core
     SUBDIR += opencv-java
     SUBDIR += opendx
+    SUBDIR += openexr
     SUBDIR += openfx-arena
     SUBDIR += openfx-io
     SUBDIR += openfx-misc
     SUBDIR += opengl-man
+    SUBDIR += opengv
     SUBDIR += openicc-config
     SUBDIR += openimageio
     SUBDIR += openjpeg
@@ -814,6 +814,7 @@
     SUBDIR += pecl-qrencode
     SUBDIR += pecomato
     SUBDIR += pencil
+    SUBDIR += pencil2d
     SUBDIR += peps
     SUBDIR += perceptualdiff
     SUBDIR += pfstools
@@ -831,12 +832,12 @@
     SUBDIR += php5-ffmpeg
     SUBDIR += php56-exif
     SUBDIR += php56-gd
-    SUBDIR += php70-exif
-    SUBDIR += php70-gd
     SUBDIR += php71-exif
     SUBDIR += php71-gd
     SUBDIR += php72-exif
     SUBDIR += php72-gd
+    SUBDIR += php73-exif
+    SUBDIR += php73-gd
     SUBDIR += phplot
     SUBDIR += picpuz
     SUBDIR += piddle
@@ -991,6 +992,7 @@
     SUBDIR += quesa
     SUBDIR += quesoglc
     SUBDIR += qxv
+    SUBDIR += radiance
     SUBDIR += radius-engine
     SUBDIR += raster3d
     SUBDIR += rawstudio
@@ -1107,7 +1109,6 @@
     SUBDIR += tinyows
     SUBDIR += tkpng
     SUBDIR += togl
-    SUBDIR += truevision
     SUBDIR += ttygif
     SUBDIR += tulip
     SUBDIR += tumble
@@ -1124,6 +1125,7 @@
     SUBDIR += vigra
     SUBDIR += vips
     SUBDIR += visprint
+    SUBDIR += vkd3d
     SUBDIR += volpack
     SUBDIR += vp
     SUBDIR += vulkan-loader
@@ -1134,6 +1136,7 @@
     SUBDIR += wayland-protocols
     SUBDIR += waylandpp
     SUBDIR += webp
+    SUBDIR += webp-pixbuf-loader
     SUBDIR += wings
     SUBDIR += wmicons
     SUBDIR += wxsvg

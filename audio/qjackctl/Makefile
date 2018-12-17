@@ -3,7 +3,7 @@
 
 PORTNAME=	qjackctl
 DISTVERSIONPREFIX=	qjackctl_
-DISTVERSION=	0_5_3
+DISTVERSION=	0_5_5
 PORTREVISION=	1
 CATEGORIES=	audio
 
@@ -15,7 +15,7 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 
 LIB_DEPENDS=	libjack.so:audio/jack
 
-USES=		autoreconf compiler:c++11-lib gmake localbase pkgconfig qt:5
+USES=		autoreconf compiler:c++11-lib gl gmake localbase pkgconfig qt:5
 GNU_CONFIGURE=	yes
 USE_GITHUB=	yes
 GH_ACCOUNT=	rncbc

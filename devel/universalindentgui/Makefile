@@ -3,7 +3,7 @@
 
 PORTNAME=	universalindentgui
 PORTVERSION=	1.2.0
-PORTREVISION=	8
+PORTREVISION=	9
 CATEGORIES=	devel
 MASTER_SITES=	SF/universalindent/uigui/UniversalIndentGUI_${PORTVERSION}
 
@@ -13,9 +13,12 @@ COMMENT=	Graphical UI for multiple source code indent/format/beautify tools
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE.GPL
 
+DEPRECATED=		Qt4 has been EOL since december 2015
+EXPIRATION_DATE=	2019-03-15
+
 LIB_DEPENDS=	libqscintilla2_qt4.so:devel/qscintilla2
 
-USES=		dos2unix qmake python:run qt:4 shebangfix
+USES=		compiler:c++11-lang dos2unix qmake python:run qt:4 shebangfix
 SHEBANG_FILES=	indenters/*.py indenters/*.rb
 USE_QT=		corelib moc_build uic_build rcc_build \
 		linguist_build network script gui

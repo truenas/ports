@@ -9,14 +9,17 @@ DISTNAME=	cpg${PORTVERSION}
 MAINTAINER=	danilo@FreeBSD.org
 COMMENT=	Web picture gallery script
 
+DEPRECATED=	Works only with EOL php 5.6
+EXPIRATION_DATE=	2018-12-30
+
 LICENSE=	GPLv3
 
-IGNORE_WITH_PHP=	70 71 72
+IGNORE_WITH_PHP=	71 72 73
 
 OPTIONS_DEFINE=	DOCS IMAGEMAGICK
 IMAGEMAGICK_DESC=	Use ImageMagick instead of PHP GD extension
 
-IMAGEMAGICK_RUN_DEPENDS+=	convert:graphics/ImageMagick
+IMAGEMAGICK_RUN_DEPENDS+=	convert:graphics/ImageMagick6
 
 USE_PHP=	mysql pcre ctype
 USES=		php zip

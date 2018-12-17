@@ -3,7 +3,7 @@
 
 PORTNAME=	osg
 PORTVERSION=	3.5.1
-PORTREVISION=	5
+PORTREVISION=	7
 CATEGORIES=	graphics
 MASTER_SITES=	http://trac.openscenegraph.org/downloads/developer_releases/ \
 		http://mirror.amdmi3.ru/distfiles/
@@ -91,7 +91,7 @@ LUA_VARS_OFF=		FORCE_IGNORE+="Lua51 Lua52"
 NVTT_LIB_DEPENDS=	libnvtt.so:graphics/nvidia-texture-tools
 NVTT_VARS=		FORCE_REQUIRE+=NVTT
 NVTT_VARS_OFF=		FORCE_IGNORE+=NVTT
-OPENEXR_LIB_DEPENDS=	libIlmImf.so:graphics/OpenEXR
+OPENEXR_LIB_DEPENDS=	libIlmImf.so:graphics/openexr
 OPENEXR_VARS=		FORCE_REQUIRE+=OpenEXR
 OPENEXR_VARS_OFF=	FORCE_IGNORE+=OpenEXR
 PDF_LIB_DEPENDS=	libpoppler-glib.so:graphics/poppler-glib
@@ -140,6 +140,11 @@ PLIST_SUB+=		QT=""
 .else
 CMAKE_ARGS+=		-DOSG_USE_QT:BOOL=OFF
 PLIST_SUB+=		QT="@comment "
+.endif
+
+.if ${PORT_OPTIONS:MQT4}
+DEPRECATED=		Qt4 has been EOL since december 2015
+EXPIRATION_DATE=	2019-03-15
 .endif
 
 post-patch:

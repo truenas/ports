@@ -2,8 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	librelp
-PORTVERSION=	1.2.17
-PORTREVISION=	2
+PORTVERSION=	1.3.0
 CATEGORIES=	devel
 MASTER_SITES=	http://download.rsyslog.com/librelp/
 

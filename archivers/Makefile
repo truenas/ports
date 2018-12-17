@@ -4,6 +4,7 @@
     COMMENT = Archivers
 
     SUBDIR += 9e
+    SUBDIR += R-cran-zip
     SUBDIR += advancecomp
     SUBDIR += amigadepacker
     SUBDIR += arc
@@ -31,7 +32,6 @@
     SUBDIR += fpc-bzip2
     SUBDIR += fpc-unzip
     SUBDIR += freetar
-    SUBDIR += freeze
     SUBDIR += gcab
     SUBDIR += gcpio
     SUBDIR += gnome-autoar
@@ -48,7 +48,6 @@
     SUBDIR += hs-zip-archive
     SUBDIR += hs-zlib
     SUBDIR += hs-zlib-bindings
-    SUBDIR += hs-zlib-enum
     SUBDIR += innoextract
     SUBDIR += javatar
     SUBDIR += jzlib
@@ -89,6 +88,7 @@
     SUBDIR += lzop
     SUBDIR += makeself
     SUBDIR += mar
+    SUBDIR += maxcso
     SUBDIR += minizip
     SUBDIR += mscompress
     SUBDIR += mtf
@@ -156,10 +156,6 @@
     SUBDIR += php56-phar
     SUBDIR += php56-zip
     SUBDIR += php56-zlib
-    SUBDIR += php70-bz2
-    SUBDIR += php70-phar
-    SUBDIR += php70-zip
-    SUBDIR += php70-zlib
     SUBDIR += php71-bz2
     SUBDIR += php71-phar
     SUBDIR += php71-zip
@@ -168,6 +164,10 @@
     SUBDIR += php72-phar
     SUBDIR += php72-zip
     SUBDIR += php72-zlib
+    SUBDIR += php73-bz2
+    SUBDIR += php73-phar
+    SUBDIR += php73-zip
+    SUBDIR += php73-zlib
     SUBDIR += pigz
     SUBDIR += pixz
     SUBDIR += plzip

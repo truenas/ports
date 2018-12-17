@@ -2,7 +2,7 @@
 
 PORTNAME=	gcc
 PORTVERSION=	6.4.0
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	devel
 MASTER_SITES=	GCC/releases/gcc-${DISTVERSION}
 PKGNAMEPREFIX?=	powerpc64-
@@ -19,7 +19,7 @@ LIB_DEPENDS=	libgmp.so:math/gmp \
 BUILD_DEPENDS=	${BU_PREFIX}-as:devel/${PKGNAMEPREFIX}binutils
 RUN_DEPENDS=	${BU_PREFIX}-as:devel/${PKGNAMEPREFIX}binutils
 
-USES=	gmake iconv libtool tar:xz makeinfo compiler
+USES=	gmake iconv libtool tar:xz makeinfo compiler:c++11-lang
 PLIST_SUB=	TARGETARCH=${PKGNAMEPREFIX:C/-//g} \
 		OPSYS=${OPSYS:tl} \
 		GCC_TARGET=${GCC_TARGET} \
@@ -107,7 +107,7 @@ post-install:
 	@${RM} ${STAGEDIR}${PREFIX}/man/man1/$f.1
 	@${RM} ${STAGEDIR}${PREFIX}/man/man1/$f.1.gz
 .endfor
-	@${RM} ${STAGEDIR}${PREFIX}/info/*
+	@${RM} ${STAGEDIR}${PREFIX}/share/info/*
 	@${RM} ${STAGEDIR}${PREFIX}/man/man7/*
 .if empty(PKGNAMEPREFIX:M*-*-)
 	@${RM} -r ${STAGEDIR}${PREFIX}/lib/gcc/${GCC_TARGET}/${PORTVERSION}/include-fixed

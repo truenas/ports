@@ -3,7 +3,7 @@
 
 PORTNAME=	ptlib
 PORTVERSION=	2.10.11
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	devel
 MASTER_SITES=	GNOME
 
@@ -11,9 +11,6 @@ MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Cross platform C++ library, used by OPAL
 
 LICENSE=	MPL10
-
-BROKEN_SSL=	openssl-devel
-BROKEN_SSL_REASON_openssl-devel=	use of undeclared identifier 'BIO_s_file_internal'
 
 LIB_DEPENDS=	libexpat.so:textproc/expat2
 
@@ -45,6 +42,12 @@ BSDVIDEO_DESC=	BSD video support
 DEBUG_DESC=	Install debug library
 
 .include <bsd.port.options.mk>
+
+.if (${OPSYS} == FreeBSD && ${OSVERSION} > 1200085 && ${SSL_DEFAULT} == base) || ${SSL_DEFAULT} == openssl111
+EXTRA_PATCHES+= ${FILESDIR}/extra-patch-src_ptclib_pssl.cxx-openssl111
+.else
+EXTRA_PATCHES+= ${FILESDIR}/extra-patch-src_ptclib_pssl.cxx
+.endif
 
 PLIST_SUB+=	PORTVERSION=${PORTVERSION} \
 		PVERSION_MAJOR=${PVERSION_MAJOR} \

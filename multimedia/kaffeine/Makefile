@@ -3,7 +3,7 @@
 
 PORTNAME=	kaffeine
 PORTVERSION=	1.3.1
-PORTREVISION=	6
+PORTREVISION=	7
 CATEGORIES=	multimedia kde
 MASTER_SITES=	SF/kaffeine/current
 
@@ -12,6 +12,9 @@ COMMENT=	Multimedia player based on KDE and VLC
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
+
+DEPRECATED=		Qt4 has been EOL since december 2015
+EXPIRATION_DATE=	2018-12-31
 
 BUILD_DEPENDS=	v4l_compat>0:multimedia/v4l_compat
 LIB_DEPENDS=	libvlc.so:multimedia/vlc-qt4

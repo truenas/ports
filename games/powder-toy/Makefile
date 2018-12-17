@@ -3,6 +3,7 @@
 
 PORTNAME=	powder-toy
 PORTVERSION=	93.3
+PORTREVISION=	1
 DISTVERSIONPREFIX=	v
 CATEGORIES=	games
 
@@ -19,7 +20,7 @@ USE_GITHUB=	yes
 GH_ACCOUNT=	ThePowderToy
 GH_PROJECT=	The-Powder-Toy
 
-USES=		scons localbase:ldflags lua:51 pkgconfig
+USES=		compiler:c++11-lang scons localbase:ldflags lua:51 pkgconfig
 USE_SDL=	sdl
 USE_XORG=	x11
 

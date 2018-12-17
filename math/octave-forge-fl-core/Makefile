@@ -3,7 +3,7 @@
 
 PORTNAME=	octave-forge-fl-core
 PORTVERSION=	1.0.0
-PORTREVISION=	15
+PORTREVISION=	16
 CATEGORIES=	math
 
 MAINTAINER=	stephen@FreeBSD.org
@@ -13,6 +13,8 @@ LICENSE=	GPLv3
 LICENSE_FILE=	${WRKDIR}/${OCTSRC}/COPYING
 
 BROKEN=		does not build with octave >= 4.4.0
+DEPRECATED=	Broken for more than 6 months
+EXPIRATION_DATE=	2018-12-19
 
 # OCTSRC is the name of the directory of the package.
 # It is usually ${OCTAVE_PKGNAME} or ${DISTNAME}.

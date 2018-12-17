@@ -2,10 +2,11 @@
 # $FreeBSD$
 
 PORTNAME=	xapian
-PORTVERSION=	1.4.7
+PORTVERSION=	1.4.9
+PORTREVISION=	1
 DISTVERSIONPREFIX=	bindings-
 CATEGORIES=	databases ruby
-MASTER_SITES=	http://oligarchy.co.uk/xapian/${PORTVERSION}/ \
+MASTER_SITES=	https://oligarchy.co.uk/xapian/${PORTVERSION}/ \
 		LOCAL/sunpoet
 PKGNAMEPREFIX=	${RUBY_PKGNAMEPREFIX}
 
@@ -24,14 +25,16 @@ OPTIONS_DEFINE=	DOCS
 
 PORTSCOUT=	limitw:1,even
 
+USES=		compiler:c++11-lang libtool tar:xz
+USE_RUBY=	yes
+
 CONFIGURE_ARGS=	--datarootdir=${DATADIR} --docdir=${DOCSDIR} \
 		--enable-static --with-ruby \
 		--without-csharp --without-java --without-lua --without-perl \
 		--without-php --without-python --without-python3 --without-tcl
 GNU_CONFIGURE=	yes
 INSTALL_TARGET=	install-strip
-USE_RUBY=	yes
-USES=		libtool tar:xz
+USE_CXXSTD=	c++11
 
 PORTDOCS=	*
 

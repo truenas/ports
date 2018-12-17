@@ -2,7 +2,7 @@
 
 PORTNAME=	supertux
 PORTVERSION=	0.4.0
-PORTREVISION=	14
+PORTREVISION=	16
 CATEGORIES=	games
 MASTER_SITES=	https://github.com/SuperTux/supertux/releases/download/v${PORTVERSION}/
 PKGNAMESUFFIX=	2
@@ -14,8 +14,6 @@ BUILD_DEPENDS=	${LOCALBASE}/include/boost/smart_ptr.hpp:devel/boost-libs
 LIB_DEPENDS=	libphysfs.so:devel/physfs \
 		libcurl.so:ftp/curl \
 		libvorbis.so:audio/libvorbis
-
-BROKEN_FreeBSD_10=	does not build on 10.x
 
 LLD_UNSAFE=	yes
 USE_SDL=	sdl2 image2

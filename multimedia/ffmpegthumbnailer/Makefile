@@ -3,7 +3,7 @@
 
 PORTNAME=	ffmpegthumbnailer
 PORTVERSION=	2.2.0
-PORTREVISION=	6
+PORTREVISION=	8
 CATEGORIES=	multimedia graphics
 
 MAINTAINER=	clutton@zoho.com

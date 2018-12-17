@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	girara
-PORTVERSION=	0.3.0
+PORTVERSION=	0.3.1
 PORTREVISION=	1
 CATEGORIES=	x11-toolkits graphics
 MASTER_SITES=	https://pwmt.org/projects/girara/download/ \

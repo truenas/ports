@@ -2,6 +2,7 @@
 
 PORTNAME=	libkgeomap
 DISTVERSION=	${KDE_APPLICATIONS_VERSION}
+PORTREVISION=	2
 CATEGORIES=	astro kde kde-applications
 
 MAINTAINER=	kde@FreeBSD.org
@@ -13,7 +14,8 @@ LICENSE_COMB=	multi
 BUILD_DEPENDS=	${LOCALBASE}/include/boost/graph/buffer_concepts.hpp:devel/boost-libs
 LIB_DEPENDS=	libopencv_video.so:graphics/opencv
 
-USES=		cmake:outsource gettext kde:5 pkgconfig qt:5 tar:xz
+USES=		cmake:outsource compiler:c++11-lang gettext kde:5 pkgconfig \
+		qt:5 tar:xz
 USE_KDE=	config coreaddons ecm i18n kio marble service textwidgets
 USE_QT=		concurrent core gui network webkit widgets xml \
 		buildtools_build qmake_build

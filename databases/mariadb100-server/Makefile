@@ -1,8 +1,8 @@
 # $FreeBSD$
 
 PORTNAME?=	mariadb
-PORTVERSION=	10.0.36
-PORTREVISION?=	1
+PORTVERSION=	10.0.37
+PORTREVISION?=	2
 CATEGORIES=	databases ipv6
 MASTER_SITES=	http://ftp.osuosl.org/pub/${SITESDIR}/ \
 		http://mirrors.supportex.net/${SITESDIR}/ \
@@ -17,13 +17,16 @@ PKGNAMESUFFIX?=	100-server
 MAINTAINER=	brnrd@FreeBSD.org
 COMMENT?=	Multithreaded SQL database (server)
 
+DEPRECATED=	Upstream End-of-Life March 2019 (https://mariadb.org/about/maintenance-policy/)
+EXPIRATION_DATE=	2019-04-01
+
 LICENSE=	GPLv2
 LICENSE_NAME_PerconaFT=	PerconaFT patents license
 LICENSE_FILE_PerconaFT=	${WRKSRC}/storage/tokudb/PerconaFT/PATENTS
 LICENSE_PERMS_PerconaFT=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
 
-BROKEN_SSL=		openssl-devel
-BROKEN_SSL_REASON_openssl-devel=	incomplete definition of type 'struct dh_st'
+BROKEN_SSL=		openssl111
+BROKEN_SSL_REASON_openssl111=	Does not support OpenSSL 1.1, use MariaDB 10.2 or 10.3
 
 SUB_FILES=	pkg-message
 
@@ -123,7 +126,6 @@ OQGRAPH_LIB_DEPENDS=	libboost_system.so:devel/boost-libs \
 TOKUDB_LIB_DEPENDS=	libsnappy.so:archivers/snappy
 TOKUDB_PORTDOCS=	PATENTS README.md
 TOKUDB_VARS=		LICENSE+=PerconaFT LICENSE_COMB=multi
-TOKUDB_IMPLIES=		DOCS
 
 post-install:
 	# Remove programs to avoid conflict with mariadb100-client
@@ -143,6 +145,9 @@ post-install-TOKUDB-on:
 .include <bsd.port.pre.mk>
 
 .if ${OPSYS} == FreeBSD
+.  if ${OSVERSION} >= 1200085 && ${SSL_DEFAULT} == base
+BROKEN=	${BROKEN_SSL_REASON_openssl111}
+.  endif
 CMAKE_ARGS+=	-DWITH_JEMALLOC="system"
 .else
 CMAKE_ARGS+=	-DWITH_JEMALLOC="no"
@@ -176,6 +181,11 @@ post-patch:
 		${WRKSRC}/cmake/os/DragonFly.cmake
 	${MV} ${WRKSRC}/storage/tokudb ${WRKSRC}/skip-tokudb
 .endif
+
+# This file is being generated incorrectly for unknown reasons.
+# See https://bugs.freebsd.org/230839 for details.
+post-configure:
+	${REINPLACE_CMD} -e 's|-l-pthread|-pthread|g' ${WRKSRC}/scripts/mysql_config
 
 post-configure-MROONGA-on:
 	${REINPLACE_CMD} 's|-llz4|-L${LOCALBASE}/lib -llz4|' \

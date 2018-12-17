@@ -3,7 +3,7 @@
 
 PORTNAME=	opendkim
 PORTVERSION=	2.10.3
-PORTREVISION=	9
+PORTREVISION=	11
 CATEGORIES=	mail security
 MASTER_SITES=	SF/${PORTNAME} \
 		SF/${PORTNAME}/Previous%20Releases \
@@ -20,12 +20,9 @@ LICENSE_GROUPS_SENDMAIL=FSF OSI
 LICENSE_NAME_SENDMAIL=	Sendmail Open Source License
 LICENSE_PERMS_SENDMAIL=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
 
-BROKEN_SSL=	openssl-devel
-BROKEN_SSL_REASON_openssl-devel=	checking for library containing SSL_library_init... no
-
 GNU_CONFIGURE=	yes
 NO_OPTIONS_SORT=yes
-USES=		libtool perl5 pkgconfig shebangfix ssl
+USES=		autoreconf libtool perl5 pkgconfig shebangfix ssl
 USE_PERL5=	run
 SHEBANG_FILES=	opendkim/opendkim-genkey* reputation/opendkim-* stats/opendkim-* \
 		reprrd/opendkim-reprrdimport*
@@ -157,11 +154,16 @@ USES+=		bdb
 LDFLAGS+=		-lpthread
 .endif
 
+.include <bsd.port.pre.mk>
+
+.if ${PORT_OPTIONS:MLUA} && ${LUA_VER_STR} >= 53
+BROKEN=		Does not build with Lua 5.3: miltertest.c:4171:54: error: too few arguments to function call, expected 5, have 4
+.endif
+
 pre-configure:
-	${REINPLACE_CMD} -e '/LIBLUA_LIBS/s/lua5\.[0-9]/lua-${LUA_VER}/' \
-	    -e '/PKG_CONFIG/s/lua5\.[0-9]/lua-${LUA_VER}/'		 \
+	${REINPLACE_CMD} -e '/PKG_CHECK_MODULES/s/lua5\.[0-9]/lua-${LUA_VER}/' \
 	    -e '/PKG_CONFIG/s/cyrussasl/libsasl2/'			 \
-	    ${WRKSRC}/configure
+	    ${WRKSRC}/configure.ac
 
 post-patch-LCOV-on:
 	${CP} ${FILESDIR}/lcov-helper.sh ${WRKSRC}/libopendkim/tests/
@@ -173,4 +175,4 @@ post-install:
 	${INSTALL_DATA} ${WRKSRC}/opendkim/opendkim.conf.sample \
 	    ${STAGEDIR}${PREFIX}/etc/mail/
 
-.include <bsd.port.mk>
+.include <bsd.port.post.mk>

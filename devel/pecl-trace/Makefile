@@ -8,12 +8,15 @@ CATEGORIES=	devel
 MAINTAINER=	gasol.wu@gmail.com
 COMMENT=	Low-overhead tracing tool for PHP
 
+DEPRECATED=	Works only with EOL php 5.6
+EXPIRATION_DATE=	2018-12-30
+
 LICENSE=	APACHE20
 
 WRKSRC_SUBDIR=	extension
 
 USES=		gmake php:pecl
-IGNORE_WITH_PHP=	71 72
+IGNORE_WITH_PHP=	71 72 73
 PLIST_FILES=	bin/phptrace
 
 pre-install:

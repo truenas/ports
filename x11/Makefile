@@ -27,8 +27,8 @@
     SUBDIR += blast
     SUBDIR += bmpanel2
     SUBDIR += bricons
-    SUBDIR += brightside
     SUBDIR += brisk-menu
+    SUBDIR += cde
     SUBDIR += cinnamon
     SUBDIR += cinnamon-desktop
     SUBDIR += cinnamon-menus
@@ -36,6 +36,7 @@
     SUBDIR += cinnamon-session
     SUBDIR += cl-clx
     SUBDIR += cl-clx-sbcl
+    SUBDIR += compton-conf
     SUBDIR += controllermap
     SUBDIR += cool-retro-term
     SUBDIR += decurs
@@ -74,7 +75,6 @@
     SUBDIR += gmrun
     SUBDIR += gnome-clipboard-daemon
     SUBDIR += gnome-desktop
-    SUBDIR += gnome-desktop-reference
     SUBDIR += gnome-menus
     SUBDIR += gnome-pie
     SUBDIR += gnome-session
@@ -280,6 +280,7 @@
     SUBDIR += py-pyvirtualdisplay
     SUBDIR += py-qt4-opengl
     SUBDIR += py-qt5-opengl
+    SUBDIR += py-xcffib
     SUBDIR += py-xdot
     SUBDIR += py-xdot06
     SUBDIR += qimageblitz
@@ -334,7 +335,6 @@
     SUBDIR += thingylaunch
     SUBDIR += tilda
     SUBDIR += tint
-    SUBDIR += tint-devel
     SUBDIR += trayer
     SUBDIR += tycoon
     SUBDIR += urxvt-font-size
@@ -417,6 +417,7 @@
     SUBDIR += xfce4-embed-plugin
     SUBDIR += xfce4-goodies
     SUBDIR += xfce4-quicklauncher-plugin
+    SUBDIR += xfce4-screensaver
     SUBDIR += xfce4-screenshooter-plugin
     SUBDIR += xfce4-taskmanager
     SUBDIR += xfce4-terminal

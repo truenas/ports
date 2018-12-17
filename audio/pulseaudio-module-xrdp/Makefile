@@ -2,7 +2,8 @@
 
 PORTNAME=	pulseaudio-module-xrdp
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.1
+DISTVERSION=	0.2
+PORTREVISION=	1
 CATEGORIES=	audio
 
 MAINTAINER=	meta@FreeBSD.org
@@ -10,13 +11,13 @@ COMMENT=	PulseAudio module which enables xrdp to use audio redirection
 
 LICENSE=	APACHE20
 
-BUILD_DEPENDS=	${NONEXISTENT}:audio/pulseaudio:configure \
-		${LOCALBASE}/include/xrdp_constants.h:net/xrdp
+BUILD_DEPENDS=	${NONEXISTENT}:audio/pulseaudio:configure
 LIB_DEPENDS=	libpulse.so:audio/pulseaudio
 
-USES=		autoreconf:build libtool pkgconfig
-GNU_CONFIGURE=	yes
+USES=		autoreconf:build libtool localbase pkgconfig
 USE_GITHUB=	yes
+
+GNU_CONFIGURE=	yes
 GH_ACCOUNT=	neutrinolabs
 GH_PROJECT=	pulseaudio-module-xrdp
 

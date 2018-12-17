@@ -3,7 +3,7 @@
 
 PORTNAME=	gallery3
 PORTVERSION=	3.0.9
-PORTREVISION=	5
+PORTREVISION=	7
 CATEGORIES=	www
 MASTER_SITES=	SF/gallery/${PORTNAME}/${PORTVERSION}
 DISTNAME=	gallery-${PORTVERSION}
@@ -11,7 +11,10 @@ DISTNAME=	gallery-${PORTVERSION}
 MAINTAINER=	appleboy.tw@gmail.com
 COMMENT=	Web based photo album organizer written in PHP
 
-IGNORE_WITH_PHP=	70 71 72
+DEPRECATED=	Works only with EOL php 5.6
+EXPIRATION_DATE=	2018-12-30
+
+IGNORE_WITH_PHP=	71 72 73
 
 USES=		zip php:web
 
@@ -54,9 +57,9 @@ RUN_DEPENDS+=	gm:graphics/GraphicsMagick
 
 .if ${PORT_OPTIONS:MIMAGEMAGICK}
 .if ${PORT_OPTIONS:MX11}
-RUN_DEPENDS+=	convert:graphics/ImageMagick
+RUN_DEPENDS+=	convert:graphics/ImageMagick6
 .else
-RUN_DEPENDS+=	convert:graphics/ImageMagick-nox11
+RUN_DEPENDS+=	convert:graphics/ImageMagick6-nox11
 .endif
 .endif
 

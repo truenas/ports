@@ -3,7 +3,7 @@
 
 PORTNAME=	xpra
 PORTVERSION=	2.0.3
-PORTREVISION=	12
+PORTREVISION=	14
 CATEGORIES=	x11
 MASTER_SITES=	http://xpra.org/src/
 
@@ -13,6 +13,8 @@ COMMENT=	Xpra gives you persistent remote applications for X
 LICENSE=	GPLv2
 
 BROKEN=		fails to build with cython 0.28
+DEPRECATED=	Broken for more than 6 months
+EXPIRATION_DATE=	2018-12-19
 
 BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}gtk2>2:x11-toolkits/py-gtk2@${PY_FLAVOR} \
 		${PYNUMPY}

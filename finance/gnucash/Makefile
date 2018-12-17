@@ -2,8 +2,8 @@
 #   $MCom: ports/finance/gnucash/Makefile,v 1.26 2008/12/31 03:25:18 mezz Exp $
 
 PORTNAME=	gnucash
-PORTVERSION=	3.2
-PORTREVISION=	5
+PORTVERSION=	3.3
+PORTREVISION=	3
 CATEGORIES=	finance gnome
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}%20%28stable%29/${PORTVERSION}
 
@@ -101,7 +101,11 @@ post-patch-TEST-off:
 
 post-install:
 	@(cd ${STAGEDIR}${DATADIR}/icons/hicolor && \
-		${RMDIR} 22x22 32x32 48x48 64x64 96x96 128x128 256x256 scalable)
+		${RMDIR} 16x16/apps 22x22/apps 22x22 24x24/apps 32x32/apps 32x32\
+		48x48/apps 48x48 64x64/apps 64x64 96x96/apps 96x96 \
+		128x128/apps 128x128 256x256/apps 256x256 scalable/apps scalable)
+	@(cd ${STAGEDIR}${PREFIX}/share/icons/hicolor && \
+		${RMDIR} 24x24/actions 16x16/actions)
 
 post-install-PYTHON-on:
 	@(cd ${STAGEDIR}${PREFIX} \

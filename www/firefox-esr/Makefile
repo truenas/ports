@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	firefox
-DISTVERSION=	60.2.0
+DISTVERSION=	60.4.0
 PORTREVISION=	1
 PORTEPOCH=	1
 CATEGORIES=	www ipv6
@@ -29,15 +29,13 @@ BUILD_DEPENDS=	nspr>=4.19:devel/nspr \
 		autoconf-2.13:devel/autoconf213 \
 		yasm:devel/yasm \
 		zip:archivers/zip
-#		soundtouch>=1.9.0:audio/soundtouch \
 
 USE_GECKO=	gecko
 CPE_PRODUCT=	${PORTNAME}_esr
 CONFLICTS_INSTALL=	firefox
 MOZ_PKGCONFIG_FILES=	# empty
-USE_MOZILLA=	-cairo -soundtouch
+USE_MOZILLA=	# empty
 
-USE_GL=		gl
 USES=		tar:xz
 
 FIREFOX_ICON=		${MOZILLA}.png
@@ -45,8 +43,6 @@ FIREFOX_ICON_SRC=	${PREFIX}/lib/${MOZILLA}/browser/chrome/icons/default/default4
 FIREFOX_DESKTOP=	${MOZSRC}/taskcluster/docker/${MOZILLA}-snap/${MOZILLA}.desktop
 MOZ_OPTIONS=	--enable-application=browser \
 		--enable-official-branding
-
-OPTIONS_EXCLUDE=	BUNDLED_CAIRO
 
 .include "${.CURDIR}/../../www/firefox/Makefile.options"
 

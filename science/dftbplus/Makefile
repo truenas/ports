@@ -2,7 +2,7 @@
 
 PORTNAME=	dftbplus
 DISTVERSION=	18.2
-PORTREVISION=	1
+PORTREVISION=	4
 CATEGORIES=	science
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -42,9 +42,9 @@ DFTD3_MAKE_ARGS_OFF=	WITH_DFTD3=0
 
 MPI_MAKE_ARGS=		WITH_MPI=1
 MPI_MAKE_ARGS_OFF=	WITH_MPI=0
-MPI_LIB_DEPENDS=	libmpich.so:net/mpich2 \
+MPI_LIB_DEPENDS=	libmpich.so:net/mpich \
 			libscalapack.so:math/scalapack
-MPI_LDFLAGS=		${LOCALBASE}/lib/libmpich.so
+MPI_LDFLAGS=		${LOCALBASE}/lib/libmpich.so ${LOCALBASE}/lib/libmpifort.so ${LOCALBASE}/lib/libmpi.so
 
 SOCKETS_DESC=		Build with sockets library
 SOCKETS_MAKE_ARGS=	WITH_SOCKETS=1
@@ -54,7 +54,7 @@ SOCKETS_BINARY_ALIAS=	gcc=${CC}
 ARPACK_DESC=		Build with ARPACK for large eigenvalue problems
 ARPACK_MAKE_ARGS=	WITH_ARPACK=1
 ARPACK_MAKE_ARGS_OFF=	WITH_ARPACK=0
-ARPACK_LIB_DEPENDS=	libarpack.so:math/arpack
+ARPACK_LIB_DEPENDS=	libarpack.so:math/arpack-ng
 ARPACK_PREVENTS=	MPI # ARPACK is only used in a single-core application
 
 MAKE_JOBS_UNSAFE=	yes # race conditions when some options are ON

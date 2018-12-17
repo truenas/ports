@@ -2,8 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	rust
-PORTVERSION?=	1.29.0
-PORTREVISION?=
+PORTVERSION?=	1.31.0
+PORTREVISION?=	0
 CATEGORIES=	lang
 MASTER_SITES=	http://static.rust-lang.org/dist/:src \
 		LOCAL/dumbbell/rust:rust_bootstrap \
@@ -26,11 +26,12 @@ COMMENT=	Language with a focus on memory safety and concurrency
 LICENSE=	APACHE20 \
 		MIT
 LICENSE_COMB=	dual
-# APACHE20 license is standard, see Templates/Licenses/APACHE20
+LICENSE_FILE_APACHE=	${WRKSRC}/LICENSE-APACHE
 LICENSE_FILE_MIT=	${WRKSRC}/LICENSE-MIT
 
 BUILD_DEPENDS=		cmake:devel/cmake
 LIB_DEPENDS=		libcurl.so:ftp/curl \
+			libgit2.so:devel/libgit2 \
 			libssh2.so:security/libssh2
 
 ONLY_FOR_ARCHS?=	aarch64 amd64 i386
@@ -46,13 +47,13 @@ BROKEN_aarch64=		fails to build: bootstrap compiler crashes
 CONFLICTS_INSTALL?=	rust-nightly
 
 # See WRKSRC/src/stage0.txt for this date and version values.
-BOOTSTRAPS_DATE?=		2018-08-02
+BOOTSTRAPS_DATE?=		2018-10-25
 
-RUST_BOOTSTRAP_VERSION?=	1.28.0
+RUST_BOOTSTRAP_VERSION?=	1.30.0
 RUSTC_BOOTSTRAP=		${BOOTSTRAPS_DATE_${ARCH}:U${BOOTSTRAPS_DATE}}/rustc-${RUST_BOOTSTRAP_VERSION_${ARCH}:U${RUST_BOOTSTRAP_VERSION}}-${RUST_TARGET}.tar.gz
 RUST_STD_BOOTSTRAP=		${BOOTSTRAPS_DATE_${ARCH}:U${BOOTSTRAPS_DATE}}/rust-std-${RUST_BOOTSTRAP_VERSION_${ARCH}:U${RUST_BOOTSTRAP_VERSION}}-${RUST_TARGET}.tar.gz
 
-CARGO_BOOTSTRAP_VERSION?=	0.29.0
+CARGO_BOOTSTRAP_VERSION?=	0.31.0
 CARGO_BOOTSTRAP=		${BOOTSTRAPS_DATE_${ARCH}:U${BOOTSTRAPS_DATE}}/cargo-${CARGO_BOOTSTRAP_VERSION_${ARCH}:U${CARGO_BOOTSTRAP_VERSION}}-${RUST_TARGET}.tar.gz
 
 RUST_CHANNEL=	${PKGNAMESUFFIX:Ustable:S/^-//}
@@ -97,6 +98,8 @@ PLIST_FILES=		lib/rustlib/components \
 .include <bsd.port.pre.mk>
 
 X_PY_ENV=	HOME="${WRKDIR}" \
+		LIBGIT2_SYS_USE_PKG_CONFIG=1 \
+		LIBSSH2_SYS_USE_PKG_CONFIG=1 \
 		OPENSSL_DIR="${OPENSSLBASE}"
 X_PY_CMD=	${PYTHON_CMD} ${WRKSRC}/x.py
 
@@ -159,8 +162,7 @@ post-patch:
 # `.cargo-checksum.json` to reflect the new checksums verified by Cargo.
 	@for dir in "${WRKSRC}/src/vendor/libc" \
 	"${WRKSRC}/src/vendor/libgit2-sys" \
-	"${WRKSRC}/src/vendor/openssl" \
-	"${WRKSRC}/src/vendor/openssl-sys"; do \
+	"${WRKSRC}/src/vendor/openssl"; do \
 		if ! test -d "$$dir"; then \
 			continue; \
 		fi; \

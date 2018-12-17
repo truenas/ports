@@ -2,7 +2,7 @@
 
 PORTNAME=	diffpdf
 PORTVERSION=	2.1.3
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	graphics
 MASTER_SITES=	http://www.qtrac.eu/
 
@@ -10,6 +10,9 @@ MAINTAINER=	dinoex@FreeBSD.org
 COMMENT=	Compare two PDF files-textually or visually
 
 LICENSE=	GPLv2+
+
+DEPRECATED=		Qt4 has been EOL since december 2015
+EXPIRATION_DATE=	2019-03-15
 
 LIB_DEPENDS=	libpoppler-qt4.so:graphics/poppler-qt4
 

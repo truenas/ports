@@ -1,4 +1,4 @@
-# $FreeBSD: head/sysutils/uefi-edk2-bhyve/Makefile 484389 2018-11-07 06:39:56Z araujo $
+# $FreeBSD$
 
 PORTNAME=	uefi-edk2-bhyve
 DISTVERSIONPREFIX=	v

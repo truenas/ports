@@ -3,6 +3,7 @@
 PORTNAME=	instant-meshes
 DISTVERSION=	0.0-42
 DISTVERSIONSUFFIX=	-g4a083f4
+PORTREVISION=	3
 CATEGORIES=	graphics
 
 MAINTAINER=	greg@unrelenting.technology
@@ -11,7 +12,7 @@ COMMENT=	Interactive field-aligned mesh generator
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
-BUILD_DEPENDS=	convert:graphics/ImageMagick
+BUILD_DEPENDS=	convert:graphics/ImageMagick6
 LIB_DEPENDS=	libglfw.so:graphics/glfw \
 		libtbb.so:devel/tbb
 RUN_DEPENDS=	zenity:x11/zenity

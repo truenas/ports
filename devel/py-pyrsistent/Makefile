@@ -1,4 +1,4 @@
-# $FreeBSD: head/devel/py-pyrsistent/Makefile 487268 2018-12-12 00:19:52Z wg $
+# $FreeBSD$
 
 PORTNAME=	pyrsistent
 PORTVERSION=	0.14.7

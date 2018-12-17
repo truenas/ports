@@ -3,7 +3,7 @@
 
 PORTNAME=	Clp
 PORTVERSION=	1.16.10
-PORTREVISION=	5
+PORTREVISION=	6
 CATEGORIES=	math
 MASTER_SITES=	http://www.coin-or.org/download/source/${PORTNAME}/ \
 		http://www.mavetju.org/download/adopted/
@@ -13,9 +13,7 @@ COMMENT=	Linear Programming Solver
 
 LICENSE=	EPL
 
-BROKEN_powerpc64=	fails to compile: CoinSignal.hpp: ISO C++ forbids declaration of '__decltype' with no type
-
-USES=		blaslapack fortran libtool tar:tgz pathfix
+USES=		blaslapack compiler:c++11-lang fortran libtool pathfix tar:tgz
 CXXFLAGS+=	-ffast-math
 
 GNU_CONFIGURE=	yes

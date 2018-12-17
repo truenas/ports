@@ -3,7 +3,7 @@
 
 PORTNAME=	luminance-hdr
 DISTVERSION=	2.3.1
-PORTREVISION=	21
+PORTREVISION=	23
 CATEGORIES=	graphics
 MASTER_SITES=	SF/qtpfsgui/luminance/${DISTVERSION}
 
@@ -12,10 +12,13 @@ COMMENT=	Complete open source solution for HDR photography
 
 LICENSE=	GPLv2
 
+DEPRECATED=		Qt4 has been EOL since december 2015
+EXPIRATION_DATE=	2019-03-15
+
 BUILD_DEPENDS=	${LOCALBASE}/include/fftw3.h:math/fftw3
 LIB_DEPENDS=	libfftw3f.so:math/fftw3-float \
 		libexiv2.so:graphics/exiv2 \
-		libIlmImf.so:graphics/OpenEXR \
+		libIlmImf.so:graphics/openexr \
 		libtiff.so:graphics/tiff \
 		libgsl.so:math/gsl \
 		libraw_r.so:graphics/libraw \

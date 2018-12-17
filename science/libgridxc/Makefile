@@ -1,7 +1,8 @@
 # $FreeBSD$
 
 PORTNAME=	libgridxc
-DISTVERSION=	0.8.0
+DISTVERSION=	0.8.4
+PORTREVISION=	1
 CATEGORIES=	science
 MASTER_SITES=	https://launchpad.net/${PORTNAME}/trunk/${DISTVERSION:R}/+download/
 
@@ -21,7 +22,7 @@ WRKSRC_SUBDIR=	src
 
 BUILD_WRKSRC=	${WRKSRC}/../build
 TMP_STAGEDIR=	${WRKDIR}/tmp_stage
-MAKE_ENV=	INSTALL_DIR=${TMP_STAGEDIR}${PREFIX} FREEBSD_LOCALBASE=${LOCALBASE}
+MAKE_ENV=	INSTALL_DIR=${TMP_STAGEDIR}${PREFIX} FREEBSD_LOCALBASE=${LOCALBASE} LIBXC_ROOT=${LOCALBASE}
 
 BINARY_ALIAS=	make=${GMAKE}
 
@@ -29,7 +30,7 @@ OPTIONS_DEFINE=		MPI LIBXC
 OPTIONS_DEFAULT=	MPI LIBXC
 
 MPI_MAKE_ENV=		WITH_MPI=1
-MPI_LIB_DEPENDS=	libmpich.so:net/mpich2
+MPI_LIB_DEPENDS=	libmpich.so:net/mpich
 
 LIBXC_DESC=		Use libxc for exchange-correlation functionals for DFT
 LIBXC_MAKE_ENV=		WITH_LIBXC=1
@@ -40,7 +41,6 @@ post-patch:
 	@${CAT} ${WRKSRC}/../extra/fortran.mk \
 		| ${SED} '\
 			s|FC_SERIAL=gfortran|&${GCC_DEFAULT}|; \
-			s|LIBXC_ROOT=/usr/local|LIBXC_ROOT=${LOCALBASE}|; \
 			s|FFLAGS= -O2|& -fPIC|' \
 		> ${BUILD_WRKSRC}/fortran.mk
 

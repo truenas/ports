@@ -11,11 +11,14 @@ COMMENT=	Qt binding for Telepathy Logger
 
 LICENSE=	LGPL21
 
+DEPRECATED=		Qt4 has been EOL since december 2015
+EXPIRATION_DATE=	2019-03-15
+
 LIB_DEPENDS=	libdbus-1.so:devel/dbus \
 		libdbus-glib-1.so:devel/dbus-glib \
 		libtelepathy-glib.so:net-im/telepathy-glib \
 		libtelepathy-logger.so:net-im/telepathy-logger \
-		libtelepathy-qt4.so:net-im/telepathy-qt4
+		libtelepathy-qt4.so:net-im/telepathy-qt@qt4
 
 USES=		bison:build cmake kde:4 pkgconfig python:2.7,build qt:4 tar:bzip2
 USE_GNOME=	glib20 libxml2

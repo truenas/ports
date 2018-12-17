@@ -3,7 +3,7 @@
 PORTNAME=	dspdfviewer
 PORTVERSION=	1.15.1
 DISTVERSIONPREFIX=v
-PORTREVISION=	8
+PORTREVISION=	10
 CATEGORIES=	graphics
 
 MAINTAINER=	santhosh.raju@gmail.com
@@ -35,16 +35,12 @@ PLIST_FILES=	bin/dspdfviewer \
 
 # Build fails with LLVM 4.0.  Reported upstream as #191:
 # https://github.com/dannyedel/dspdfviewer/issues/191
-.if ${OPSYS} == FreeBSD && ${OSVERSION} >= 1100511
 CFLAGS+=	-Wno-error=undefined-func-template
-.endif
 
 .if ${OPSYS} == FreeBSD && ${OSVERSION} >= 1200039
 CFLAGS+=	-Wno-error=zero-as-null-pointer-constant
 .endif
 
-.if ${OPSYS} == FreeBSD && ${OSVERSION} >= 1200056
 CFLAGS+=	-Wno-error=redundant-parens
-.endif
 
 .include <bsd.port.post.mk>

@@ -12,9 +12,12 @@ COMMENT=	Graphical interface for an OCR program (cuneiform and tesseract)
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-LIB_DEPENDS=	libaspell.so:textproc/aspell
+DEPRECATED=		Qt4 has been EOL since december 2015
+EXPIRATION_DATE=	2019-03-15
 
-ONLY_FOR_ARCHS=	i386 amd64
+ONLY_FOR_ARCHS=	amd64 i386
+
+LIB_DEPENDS=	libaspell.so:textproc/aspell
 
 OPTIONS_MULTI=		OCRENGINE
 OPTIONS_MULTI_OCRENGINE=CUNEIFORM TESSERACT

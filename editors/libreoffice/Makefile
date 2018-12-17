@@ -2,7 +2,7 @@
 
 .include "${.CURDIR}/Makefile.common"
 
-PORTREVISION=	5
+PORTREVISION=	3
 MASTER_SITES=	https://download.documentfoundation.org/libreoffice/src/${PORTVERSION}/ \
 		https://dev-www.libreoffice.org/src/:src \
 		https://dev-www.libreoffice.org/extern/:ext
@@ -85,7 +85,7 @@ RUN_DEPENDS=	xdg-open:devel/xdg-utils \
 		${LOCALBASE}/share/fonts/Caladea/Caladea-Bold.ttf:x11-fonts/crosextrafonts-caladea-ttf \
 		${LOCALBASE}/share/fonts/Carlito/Carlito-Bold.ttf:x11-fonts/crosextrafonts-carlito-ttf \
 		${LOCALBASE}/share/fonts/dejavu/DejaVuSans.ttf:x11-fonts/dejavu \
-		${LOCALBASE}/share/fonts/emojione-color-font-ttf/EmojiOneColor-SVGinOT.ttf:x11-fonts/emojione-color-font-ttf \
+		${LOCALBASE}/share/fonts/twemoji-color-font-ttf/TwitterColorEmoji-SVGinOT.ttf:x11-fonts/twemoji-color-font-ttf \
 		${LOCALBASE}/share/fonts/GentiumBasic/GenBasI.ttf:x11-fonts/gentium-basic \
 		${LOCALBASE}/share/fonts/Liberation/LiberationMono-Bold.ttf:x11-fonts/liberation-fonts-ttf \
 		${LOCALBASE}/share/fonts/LinLibertineG/LinLibertine_DR_G.ttf:x11-fonts/linuxlibertine-g
@@ -277,13 +277,17 @@ MAKE_ENV+=	GNUSED=${LOCALBASE}/bin/gsed
 MAKE_ENV+=	DISPLAY=
 MAKE_ENV+=	verbose=1
 
+.include <bsd.port.options.mk>
+
+.if ${PORT_OPTIONS:MKDE4}
+DEPRECATED=		Qt4 has been EOL since december 2015
+EXPIRATION_DATE=	2018-12-31
+.endif
+
 .include <bsd.port.pre.mk>
 
-.if ${COMPILER_TYPE} == "clang"
-CXXFLAGS_WARN=	-Woverloaded-virtual -Wno-unused-parameter
-.if ${COMPILER_VERSION} >= 36
-CXXFLAGS_WARN+=	-Wno-unused-local-typedefs
-.endif
+.if ${CHOSEN_COMPILER_TYPE} == clang
+CXXFLAGS_WARN=	-Woverloaded-virtual -Wno-unused-parameter -Wno-unused-local-typedefs
 .else
 CXXFLAGS_WARN=	-Wshadow -Woverloaded-virtual
 .endif

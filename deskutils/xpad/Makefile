@@ -3,6 +3,7 @@
 
 PORTNAME=	xpad
 PORTVERSION=	5.0.0
+PORTREVISION=	1
 CATEGORIES=	deskutils
 MASTER_SITES=	https://launchpad.net/${PORTNAME}/trunk/${PORTVERSION}/+download/
 
@@ -17,7 +18,7 @@ OPTIONS_DEFINE=	NLS DOCS
 OPTIONS_SUB=	yes
 
 CONFLICTS_INSTALL=	xpad3-[0-9]*
-USES=	pkgconfig gmake tar:bzip2 autoreconf
+USES=		autoreconf compiler:c++11-lang gmake pkgconfig tar:bzip2
 USE_XORG=	x11 sm ice
 USE_GNOME=	gtk30 intltool gtksourceview3 cairo
 INSTALLS_ICONS=	yes

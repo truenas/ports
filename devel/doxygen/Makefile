@@ -3,6 +3,7 @@
 
 PORTNAME=	doxygen
 PORTVERSION=	1.8.14
+PORTREVISION=	1
 PORTEPOCH=	2
 CATEGORIES=	devel
 MASTER_SITES=	ftp://ftp.stack.nl/pub/users/dimitri/ \
@@ -15,9 +16,7 @@ COMMENT=	Documentation system for C, C++, and other languages
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-BROKEN_powerpc64=	fails to link: ../lib/lib_doxygen.a(language.cpp.o)(.text+0xb6c): sibling call optimization to `_ZN12ConfigValuesD1Ev' does not allow automatic multiple TOCs
-
-USES=		bison cmake:outsource,noninja iconv python shebangfix
+USES=		bison cmake:outsource,noninja compiler:c++11-lang iconv python shebangfix
 ALL_TARGET=	all
 CMAKE_ARGS+=	-DDOC_INSTALL_DIR:PATH=${DOCSDIR_REL}
 # Parallel jobs breaks when the DOCS option is on
@@ -64,6 +63,13 @@ SEARCH_CMAKE_BOOL=	build_search
 SEARCH_LIB_DEPENDS=	libxapian.so:databases/xapian-core
 SEARCH_PLIST_FILES=	bin/doxyindexer \
 			bin/doxysearch.cgi
+
+.include <bsd.port.options.mk>
+
+.if ${PORT_OPTIONS:MQT4}
+DEPRECATED=		Qt4 has been EOL since december 2015
+EXPIRATION_DATE=	2019-03-15
+.endif
 
 post-patch:
 	@${REINPLACE_CMD} -e '/PERL_PATH/ s|/usr/bin/perl|${perl_CMD}|' \

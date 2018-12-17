@@ -8,6 +8,7 @@
     SUBDIR += aldo
     SUBDIR += amtterm
     SUBDIR += anyremote
+    SUBDIR += apitran
     SUBDIR += aprsd
     SUBDIR += atslog
     SUBDIR += bfhist
@@ -38,7 +39,6 @@
     SUBDIR += ebook2cwgui
     SUBDIR += echolinux
     SUBDIR += efax
-    SUBDIR += efax-gtk
     SUBDIR += ems-flasher
     SUBDIR += fl_moxgen
     SUBDIR += flcluster
@@ -48,10 +48,8 @@
     SUBDIR += flwrap
     SUBDIR += freedv
     SUBDIR += gammu
-    SUBDIR += ge-x2212
     SUBDIR += geoid
     SUBDIR += gkermit
-    SUBDIR += gmfsk
     SUBDIR += gnocky
     SUBDIR += gnokii
     SUBDIR += gnuradio
@@ -78,7 +76,6 @@
     SUBDIR += kermit
     SUBDIR += klog
     SUBDIR += kremotecontrol-kde4
-    SUBDIR += kvasd
     SUBDIR += libbtbb
     SUBDIR += libconcord
     SUBDIR += libfap
@@ -195,9 +192,7 @@
     SUBDIR += usbmuxd
     SUBDIR += viewfax
     SUBDIR += vrflash
-    SUBDIR += wsjt
     SUBDIR += wsjtx
-    SUBDIR += wspr
     SUBDIR += wwl
     SUBDIR += wy60
     SUBDIR += xastir

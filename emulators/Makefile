@@ -68,6 +68,7 @@
     SUBDIR += libspectrum
     SUBDIR += linux-c6
     SUBDIR += linux-c7
+    SUBDIR += linux-power9-functional-sim
     SUBDIR += linux_base-c6
     SUBDIR += linux_base-c7
     SUBDIR += lisaem
@@ -116,7 +117,7 @@
     SUBDIR += qemu
     SUBDIR += qemu-cheri
     SUBDIR += qemu-devel
-    SUBDIR += qemu-ppcnv
+    SUBDIR += qemu-powernv
     SUBDIR += qemu-riscv
     SUBDIR += qemu-sbruno
     SUBDIR += qemu-user-static
@@ -149,7 +150,6 @@
     SUBDIR += vgb-bin
     SUBDIR += vgba-bin
     SUBDIR += vice
-    SUBDIR += virtio-kmod
     SUBDIR += virtualbox-ose
     SUBDIR += virtualbox-ose-additions
     SUBDIR += virtualbox-ose-additions-nox11

@@ -3,7 +3,7 @@
 
 PORTNAME=	k9copy
 PORTVERSION=	2.3.4
-PORTREVISION=	20
+PORTREVISION=	21
 CATEGORIES=	multimedia kde
 MASTER_SITES=	LOCAL/rakuco
 DISTNAME=	${PORTNAME}-${PORTVERSION}-Source
@@ -12,6 +12,9 @@ MAINTAINER=	egoliveira@gmail.com
 COMMENT=	DVD-9 to DVD-5 shrinking application for KDE
 
 LICENSE=	GPLv2
+
+DEPRECATED=		Qt4 has been EOL since december 2015
+EXPIRATION_DATE=	2018-12-31
 
 LIB_DEPENDS=	libxine.so:multimedia/libxine \
 		libmpeg2.so:multimedia/libmpeg2 \

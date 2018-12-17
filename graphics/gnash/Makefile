@@ -3,7 +3,7 @@
 
 PORTNAME=	gnash
 PORTVERSION=	0.8.10
-PORTREVISION=	37
+PORTREVISION=	40
 CATEGORIES=	graphics
 MASTER_SITES=	http://git.savannah.gnu.org/cgit/gnash.git/snapshot/
 DISTNAME=	gnash-2b3bdede0305c4fc3ad21a0a4197330606c9b880
@@ -26,7 +26,7 @@ LIB_DEPENDS=	libltdl.so:devel/libltdl \
 
 CONFLICTS=	gnash-devel-[0-9]*
 
-USES=		cpe tar:bzip2 compiler:features autoreconf pkgconfig gmake libtool jpeg desktop-file-utils
+USES=		autoreconf compiler:c++11-lang cpe desktop-file-utils gmake jpeg libtool pkgconfig tar:bzip2
 CPE_VENDOR=	gnu
 GNU_CONFIGURE=	yes
 WANT_GSTREAMER=	yes
@@ -107,6 +107,8 @@ GNASH_GUIS+=	gtk
 .endif
 
 .if ${PORT_OPTIONS:MKDE4}
+DEPRECATED=	KDE4 is end-of-life
+EXPIRATION_DATE=2018-12-31
 GNASH_GUIS+=	kde4
 USE_QT=		moc_build
 USE_KDE=	kdelibs

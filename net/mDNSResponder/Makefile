@@ -27,7 +27,7 @@ MAKE_ARGS=	LDCONFIG=${TRUE} LOCALBASE=${PREFIX} MAN_PATH=${MANPREFIX}/man STRIP=
 MAKE_JOBS_UNSAFE=	yes
 USE_LDCONFIG=	yes
 USE_RC_SUBR=	mdnsd mdnsresponderposix
-USES=		cpe gmake
+USES=		bison cpe gmake
 
 CPE_VENDOR=	apple
 CPE_PRODUCT=	${PORTNAME:tl}

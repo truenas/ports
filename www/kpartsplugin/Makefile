@@ -7,8 +7,11 @@ CATEGORIES=	www kde
 MASTER_SITES=	http://www.unix-ag.uni-kl.de/~fischer/${PORTNAME}/
 DISTNAME=	${PORTNAME}-${PORTDATE}
 
-MAINTAINER=	avilla@FreeBSD.org
+MAINTAINER=	kde@FreeBSD.org
 COMMENT=	Browser file viewer using KDE technology
+
+DEPRECATED=		Qt4 has been EOL since december 2015
+EXPIRATION_DATE=	2018-12-31
 
 USES=		cmake kde:4 qt:4 webplugin:native tar:bzip2
 USE_KDE=	kdelibs automoc4

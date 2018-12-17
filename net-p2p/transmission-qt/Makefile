@@ -1,16 +1,19 @@
 # $FreeBSD$
 
-PORTREVISION=	1
+PORTREVISION=	3
 PKGNAMESUFFIX=	-${FLAVOR}
 
 LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig \
 		libfreetype.so:print/freetype2
 
-FLAVORS=	qt4 qt5
+FLAVORS=	qt5 qt4
 FLAVOR?=	${FLAVORS:[1]}
 
 qt4_CONFLICTS_INSTALL=	transmission-qt5
 qt5_CONFLICTS_INSTALL=	transmission-qt4
+
+qt4_DEPRECATED=		Qt4 has been EOL since december 2015
+qt4_EXPIRATION_DATE=	2019-03-15
 
 .if ${FLAVOR} == qt4
 USES=		qt:4
@@ -27,6 +30,8 @@ USE_QT=		buildtools_build linguisttools_build qmake_build \
 		core dbus gui network widgets
 CMAKE_ON=	USE_QT5
 .endif
+
+USES+=		compiler:c++11-lang
 
 MASTERDIR=	${.CURDIR}/../transmission-cli
 DESCR=		${.CURDIR}/pkg-descr

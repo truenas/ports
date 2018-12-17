@@ -12,7 +12,6 @@
     SUBDIR += afm
     SUBDIR += alignmargins
     SUBDIR += ansiprint
-    SUBDIR += apsfilter
     SUBDIR += asprint
     SUBDIR += auctex
     SUBDIR += bibcursed
@@ -63,7 +62,6 @@
     SUBDIR += freetype2
     SUBDIR += frescobaldi
     SUBDIR += ft2demos
-    SUBDIR += ggv
     SUBDIR += ghostscript7-base
     SUBDIR += ghostscript7-commfont
     SUBDIR += ghostscript7-jpnfont
@@ -77,9 +75,6 @@
     SUBDIR += ghostscript9-x11
     SUBDIR += gimp-gutenprint
     SUBDIR += gl2ps
-    SUBDIR += gnome-cups-manager
-    SUBDIR += gnomephotoprinter
-    SUBDIR += gribouy
     SUBDIR += gsfonts
     SUBDIR += gspdf
     SUBDIR += gsview
@@ -89,7 +84,6 @@
     SUBDIR += harfbuzz
     SUBDIR += harfbuzz-icu
     SUBDIR += hp2xx
-    SUBDIR += hpijs
     SUBDIR += hplip
     SUBDIR += hplip-plugin
     SUBDIR += hs-hscolour
@@ -236,6 +230,7 @@
     SUBDIR += rubygem-rbpdf-font
     SUBDIR += rubygem-ttfunk
     SUBDIR += scribus
+    SUBDIR += scribus-devel
     SUBDIR += sgf2tex
     SUBDIR += splix
     SUBDIR += system-config-printer

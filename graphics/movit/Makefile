@@ -1,12 +1,11 @@
 # $FreeBSD$
 
 PORTNAME=	movit
-PORTVERSION=	1.4.0
-PORTREVISION=	2
+PORTVERSION=	1.6.2
 CATEGORIES=	graphics
 MASTER_SITES=	http://${PORTNAME}.sesse.net/
 
-MAINTAINER=	avilla@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	High-performance video filters for the GPU
 
 LICENSE=	GPLv2+

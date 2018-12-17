@@ -3,7 +3,7 @@
 
 PORTNAME=	tora
 PORTVERSION=	2.1.3
-PORTREVISION=	14
+PORTREVISION=	15
 PORTEPOCH=	1
 CATEGORIES=	databases
 MASTER_SITES=	SF
@@ -13,6 +13,9 @@ COMMENT=	Toolkit for Oracle
 
 LICENSE=	GPLv2
 
+DEPRECATED=		Qt4 has been EOL since december 2015
+EXPIRATION_DATE=	2019-03-15
+
 BUILD_DEPENDS=	cppunit-config:devel/cppunit
 LIB_DEPENDS=	libqscintilla2_qt4.so:devel/qscintilla2 \
 		libpcre.so:devel/pcre
@@ -20,8 +23,9 @@ LIB_DEPENDS=	libqscintilla2_qt4.so:devel/qscintilla2 \
 OPTIONS_DEFINE=	PGSQL MYSQL DOCS
 OPTIONS_DEFAULT=	PGSQL MYSQL
 
+USES=		autoreconf compiler:c++11-lang gmake libtool localbase:ldflags \
+		makeinfo qmake:no_env qt:4
 USE_QT=		corelib gui sql xml network moc_build qmake_build rcc_build uic_build
-USES=		autoreconf gmake libtool localbase:ldflags makeinfo qmake:no_env qt:4
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--with-pcre=${LOCALBASE} \
 		--with-qt-includes=${QT_INCDIR} \

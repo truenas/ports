@@ -3,7 +3,7 @@
 
 PORTNAME=	flatbuffers
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.9.0
+DISTVERSION=	1.10.0
 PORTREVISION=	1
 CATEGORIES=	devel
 
@@ -12,8 +12,6 @@ COMMENT=	Memory efficient serialization library
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
-
-BROKEN_powerpc64=	fails to compile: base.h:189:32: use of deleted function flatbuffers::EndianSwap(T)
 
 USES=		cmake:outsource compiler:c++11-lib
 USE_LDCONFIG=	yes

@@ -12,10 +12,13 @@ COMMENT=	Qt4 based configuration manager for DOSBox
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/LICENSE.GPL
 
+DEPRECATED=		Qt4 has been EOL since december 2015
+EXPIRATION_DATE=	2019-03-15
+
 RUN_DEPENDS=	dosbox:emulators/dosbox
 
-USE_QT=		corelib gui network xml uic_build moc_build qmake_build rcc_build
 USES=		qmake qt:4 tar:bzip2
+USE_QT=		corelib gui network xml uic_build moc_build qmake_build rcc_build
 
 PLIST_FILES=	bin/dboxfe \
 		bin/dboxfetray \

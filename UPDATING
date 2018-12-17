@@ -5,6 +5,292 @@ they are unavoidable.
 You should get into the habit of checking this file for changes each time
 you update your ports collection, before attempting any port upgrades.
 
+20181212:
+  AFFECTS: users of net-im/ejabberd
+  AUTHOR: ashish@FreeBSD.org
+
+  There are some new features added in ejabberd 18.12, esp. related to 
+  bookmarks, and XML compression in message archive storage. Please
+  refer to: https://blog.process-one.net/ejabberd-18-12/ 
+
+20181209:
+  AFFECTS: users of DRM ports other than graphics/drm-kmod
+  AUTHOR: jmd@FreeBSD.org
+
+  In order to facilitate future porting efforts and help in supporting multiple
+  FreeBSD versions, the DRM ports other than drm-kmod (graphics/drm-stable-kmod,
+  graphics/drm-next-kmod, graphics/drm-devel-kmod) have been renamed to
+  include the FreeBSD version they are designed for.
+
+  drm-stable-kmod is drm-fbsd11.2-kmod
+  drm-next-kmod is drm-fbsd12.0-kmod
+  drm-devel-kmod is drm-current-kmod
+
+20181209
+  AFFECTS: users of devel/geany and devel/geany-plugins
+  AUTHOR: madpilot@FreeBSD.org
+
+  Geany and its plugins port have been moved to gtk3 and a new gtk2
+  flavor has been added. The gtk2 flavor has a -gtk2 suffix added to the
+  package name.
+
+  If you want to stay with the gtk2 version you need to use "pkg install"
+  to install the new gtk2 flavor, pkg will automatically deinstall the
+  gtk3 flavors.
+ 
+  If using port, to maintain the gtk2 version, you will need to deinstall
+  geany and its plugins and reinstall specifying the gtk2 flavor.
+
+  Note that the following plugins are not available if using the new
+  gtk3 flavor:
+
+  * geany-plugin-debugger
+  * geany-plugin-devhelp
+  * geany-plugin-geanypy
+  * geany-plugin-multiterm
+  * geany-plugin-scope
+
+20181208:
+  AFFECTS: users of misc/openhab2
+  AUTHOR: netchild@FreeBSD.org
+
+  If you upgrade from a pevious version, make a backup of
+       /var/db/openhab2
+  and run
+       %%PREFIX%%/libexec/openhab2/runtime/bin/update.freebsd
+
+  Config specific info:
+  Nest Binding: The 'camera' Thing Type now has channel groups.
+                Add 'camera#' before the channel ID in the channel UID of
+                existing camera channels. The 'time_to_target_mins' channel
+                of the 'thermostat' Thing Type is renamed to 'time_to_target'
+  Oceanic Binding: The 'softener' Thing Type no longer exists and is replaced
+                   by the 'serial' and 'ethernet' Thing Types
+  Yamaha Receiver Binding: The configuration parameter names now use lower
+                           camel case convention. Change 'HOST' to 'host',
+                           'PORT' to 'port' etc
+
+20181124:
+  AFFECTS: users of sysutils/munin-master, sysutils/munin-node, www/owncloud, mail/mailman, net/ntpa
+  AUTHOR: woodsb02@FreeBSD.org
+
+  The newsyslog.conf(5) filename installed by the port has been changed:
+  OLD: ${PREFIX}/etc/newsyslog.conf.d/${PORTNAME}
+  NEW: ${PREFIX}/etc/newsyslog.conf.d/${PORTNAME}.conf
+
+  Any file found at the old location will be automatically moved to the new
+  location. This will ensure log rotation will continue to work after change
+  r340318 to FreeBSD base, where the default newsyslog configuration now only
+  includes filenames that end with '.conf' and do not begin with '.'.
+
+  If you use provisioning/configuration management tools to create or edit this
+  file, you will need to change their configuration to use the new filename.
+
+20181111
+  AFFECTS: users of graphics/mesa-libs
+  AUTHOR: jbeich@FreeBSD.org
+
+  Wayland support has been enabled in ports where it doesn't exclude
+  X11 support in order to make the binary packages usable with Wayland
+  compositors. If you get strange build failures re-run "make config"
+  to pick up the new defaults. If the extra dependencies are not
+  desired add the following to make.conf:
+
+    OPTIONS_UNSET += WAYLAND
+
+20181109
+  AFFECTS: users of security/ossec-hids-server
+  AUTHOR: dominik.lisiak@bemsoft.pl
+
+  The "ossechids_enable" rc variable has been renamed to "ossec_hids_enable".
+
+  If using database output, you need to recreate database using new schema
+  provided in /usr/local/share/doc/ossec-hids.
+
+20181109
+  AFFECTS: users of security/ossec-hids-local
+  AUTHOR: dominik.lisiak@bemsoft.pl
+
+  The "ossechids_enable" rc variable has been renamed to "ossec_hids_enable".
+
+  If using database output, you need to recreate database using new schema
+  provided in /usr/local/share/doc/ossec-hids.
+
+20181109
+  AFFECTS: users of security/ossec-hids-client
+  AUTHOR: dominik.lisiak@bemsoft.pl
+
+  The ossec-hids-client port has been renamed to ossec-hids-agent.
+  Portmaster users will need to run this command:
+
+  portmaster -o security/ossec-hids-agent security/ossec-hids-client
+
+  If the switch doesn't happen automatically for you, just delete the
+  ossec-hids-client package and install ossec-hids-agent.
+
+  The "ossechids_enable" rc variable has been renamed to "ossec_hids_enable".
+
+20181104:
+  AFFECTS: users of sysutils/ansible*
+  AUTHOR: lifanov@FreeBSD.org
+
+  Default Ansible configuration location changed to LOCALBASE/etc/ansible
+  instead of a per-flavor directory. If you use system-wide Ansible
+  configuration, please migrate from a flavored directory to a common
+  one:
+
+  # mv /usr/local/etc/py27-ansible /usr/local/etc/ansible
+
+20181031:
+  AFFECTS: users of www/node
+  AUTHOR: bhughes@FreeBSD.org
+
+  The www/node port has been updated to Node.js v11.0.0, the latest
+  upstream release. A new port, www/node10, has been created for the
+  v10.x LTS branch. Users wanting to stay on v10.x can replace www/node
+  with www/node8 with one of the following commands:
+
+  # pkg install www/node10
+    or
+  # portmaster -o www/node10 www/node
+    or
+  # portupgrade -o www/node10 www/node
+
+20181022:
+  AFFECTS: users of lang/php71
+  AUTHOR: joneum@FreeBSD.org
+
+  The default version of PHP has been switched from 7.1 to 7.2.
+
+  If you use binary packages you should make a list of php packages
+  before running 'pkg upgrade':
+
+  # pkg info php7\* > ~/installed-php-ports-list
+
+  After the upgrade, check with such list if all your php extensions
+  are still installed, and reinstall them if needed.
+
+  If you use mod_php71 you need to deinstall it and install mod_php72.
+
+20181020:
+  AFFECTS: users of security/libressl
+  AUTHOR: brnrd@FreeBSD.org
+
+  The port has been updated to the latest stable version 2.8 of LibreSSL.
+  The shared library versions of the libraries have been bumped.
+
+  After upgrading, manually update all packages that depend on any of the
+  libraries provided by LibreSSL (libssl, libcrypto and libtls) since the
+  versions of these libraries have changed. Normally, you can obtain the
+  list of dependent software by running the following command:
+
+  # pkg info -r libressl
+
+  Then you should rebuild all ports depending on libressl to avoid dangling
+  shared library dependencies. Poudriere and pkg handle this correctly,
+  portmaster and portupgrade users can use the following to rebuild all
+  dependent ports.
+
+  Portmaster users:
+      portmaster -r libressl
+  Portupgrade users:
+      portupgrade -fr security/libressl
+
+20181018:
+  AFFECTS: users of security/hitch
+  AUTHOR: zi@FreeBSD.org
+
+  Hitch has been updated to run as the hitch user/group, instead of the
+  previous default of nobody/nobody.  You should review your hitch
+  configuration to ensure that everything has been updated to reflect
+  this change.
+
+20181014:
+  AFFECTS: users of sysutils/ansible
+  AUTHOR: lifanov@FreeBSD.org
+
+  Ansible has been updated to 2.7.0. Please follow the porting guide
+  to update the rulesets:
+
+  https://docs.ansible.com/ansible/devel/porting_guides/porting_guide_2.7.html
+
+  If you wish to stay with 2.6 version, you can switch
+  to new sysutils/ansible2.6 port, which tracks stable 2.6 branch:
+
+  # pkg set -n ansible:ansible26
+
+20181010:
+  AFFECTS: users of mail/courier-imap and other courier ports
+  AUTHOR: madpilot@FreeBSD.org
+
+  Courier-IMAP 5.0.0 added IMAP UTF8 support, and converted maildir
+  folders' names to Unicode.
+
+  Updating an existing system to Courier-IMAP 5.0, and later,
+  requires a manual one-time conversion of all existing maildirs
+  using the maildirmake command. See the maildirmake(1) manual page
+  for more information.
+
+  All other courier ports accessing maildirs also need to be updated
+  at the same time.
+
+20181009:
+  AFFECTS: users of devel/pecl-xdebug*
+  AUTHOR: pizzamig@FreeBSD.org
+
+  xdebug 2.6.1 (devel/pecl-xdebug) is the new default version and it supports
+  PHP from 7.0 to 7.2 included.
+  If you're using PHP 5.6, the previous compatible xdebug version is still
+  available in devel/pecl-xdebug25
+  If you're using PHP 7.3, the only compatible xdebug version is available
+  in devel/pecl-xdebug-devel
+
+20180930:
+  AFFECTS: users of DRM components
+  AUTHOR: jmd@FreeBSD.org
+
+  A metaport, graphics/drm-kmod, was introduced for users of both the LinuxKPI-
+  based DRM components as well as the legacy ones. It is recommended to use the
+  metaport from now on, which will select a recommended DRM version based on
+  the FreeBSD version.
+
+20180924:
+  AFFECTS: www/libresonic-standalone
+  AUTHOR: jlh@FreeBSD.org
+
+  HTTPS support has been removed from the port, as it will be removed upstream:
+    https://github.com/Libresonic/libresonic/issues/125#issuecomment-256227104
+
+  In order to avoid strange behavior for users who are using this feature, the
+  rc.d script will fail fast if libresonic_ssl="YES". You should remove the
+  following variables from rc.conf(5): libresonic_ssl libresonic_ssl_keystore
+  libresonic_ssl_password.
+
+  # sed -i '' /libresonic_ssl/d /etc/rc.conf
+
+  Users needing SSL are encouraged to use an HTTP reverse-proxy. Example
+  configurations can be found here:
+    https://github.com/Libresonic/libresonic/issues/119
+
+20180922:
+  AFFECTS: users of graphics/ilmbase, graphics/OpenEXR
+  AUTHOR: mandree@FreeBSD.org
+
+  The IlmBase package has been updated to 2.3.0.
+  The OpenEXR package has been renamed to openexr and updated to 2.3.0.
+
+  The PORTREVISION of all ports requiring either has been bumped to
+  ease the reubuilds, and where there were versions in the file names,
+  these have been removed from the *_DEPENDS lines for easier maintenance.
+
+  A full ports or package upgrade should just work.
+
+  If you are doing partial updates, be sure to rebuild and reinstall
+  all packages that require either of OpenEXR or ilmbase.
+  Normally, these can be listed by running:
+
+  # pkg info -q -r OpenEXR ilmbase  | sort -u | xargs pkg info -q -o
+
 20180905:
   AFFECTS: users of lang/php56
   AUTHOR: tz@FreeBSD.org
@@ -18,6 +304,8 @@ you update your ports collection, before attempting any port upgrades.
 
   After the upgrade, check with such list if all your php extensions
   are still installed, and reinstall them if needed.
+
+  If you use mod_php56 you need to deinstall it and install mod_php71.
 
 20180901:
   AFFECTS: net/samba48
@@ -3110,7 +3398,7 @@ you update your ports collection, before attempting any port upgrades.
 
 20160525:
   AFFECTS: users of devel/qtcreator
-  AUTHOR: nolden@kde.org
+  AUTHOR: loise@kde.org
 
   QBS (Qt Build System) was previously shipped as part of qtcreator, now
   it is independently available as devel/qbs. However, on upgrading

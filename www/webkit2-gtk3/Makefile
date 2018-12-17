@@ -2,10 +2,10 @@
 # $FreeBSD$
 
 PORTNAME=	webkit
-PORTVERSION=	2.20.3
-PORTREVISION=	2
+PORTVERSION=	2.22.4
+PORTREVISION=	1
 CATEGORIES=	www
-MASTER_SITES=	http://webkitgtk.org/releases/
+MASTER_SITES=	https://webkitgtk.org/releases/
 PKGNAMESUFFIX=	2-gtk3
 DISTNAME=	${PORTNAME}gtk-${PORTVERSION}
 
@@ -34,7 +34,7 @@ LIB_DEPENDS=	libenchant-2.so:textproc/enchant2 \
 
 PORTSCOUT=	limitw:1,even
 
-USES=		bison cmake:outsource compiler:c++14-lang gettext gnome gperf \
+USES=		bison cmake:outsource compiler:c++14-lang gettext gl gnome gperf \
 		jpeg localbase:ldflags perl5 pkgconfig python:2.7,build \
 		sqlite tar:xz
 USE_GNOME=	cairo gdkpixbuf2 gtk30 introspection:build libxml2 libxslt
@@ -64,7 +64,7 @@ INSTALL_TARGET=		install
 BROWSER_PLUGINS_DIR?=	${LOCALBASE}/lib/browser_plugins/symlinks/webkit-gtk3
 
 OPTIONS_DEFINE=		DEBUG GEOIP NPAPI WAYLAND
-OPTIONS_DEFAULT=	GEOIP
+OPTIONS_DEFAULT=	GEOIP WAYLAND
 OPTIONS_DEFAULT_i386=	NPAPI
 OPTIONS_DEFAULT_amd64=	NPAPI
 OPTIONS_SUB=		yes
@@ -94,8 +94,7 @@ NPAPI_CMAKE_BOOL=	ENABLE_PLUGIN_PROCESS_GTK2
 NPAPI_USE=		GNOME=gtk20
 
 WAYLAND_CMAKE_BOOL=	ENABLE_WAYLAND_TARGET
-WAYLAND_LIB_DEPENDS=	libwayland-client.so:graphics/wayland \
-			libwayland-egl.so:graphics/mesa-libs
+WAYLAND_LIB_DEPENDS=	libwayland-egl.so:graphics/wayland
 
 post-patch:
 	@${REINPLACE_CMD} -e 's|/usr/lib/browser/plugins|${BROWSER_PLUGINS_DIR}|' \

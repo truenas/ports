@@ -2,11 +2,11 @@
 
 PORTNAME=	webvfx
 DISTVERSION=	0.4.4-20160823
-PORTREVISION=	4
+PORTREVISION=	6
 CATEGORIES=	multimedia
 PKGNAMESUFFIX=	-qt5
 
-MAINTAINER=	avilla@FreeBSD.org
+MAINTAINER=	multimedia@FreeBSD.org
 COMMENT=	Video effects library based on HTML/QML
 
 LICENSE=	BSD3CLAUSE
@@ -19,7 +19,7 @@ GH_ACCOUNT=	mltframework
 GH_TAGNAME=	e918ce4
 
 USES=		pkgconfig qmake qt:5
-USE_QT=		3d buildtools_build opengl qml quick webkit
+USE_QT=		3d buildtools_build declarative opengl webkit
 USE_LDCONFIG=	yes
 
 PORTEXAMPLES=	*

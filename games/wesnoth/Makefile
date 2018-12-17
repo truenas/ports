@@ -1,8 +1,8 @@
 # $FreeBSD$
 
 PORTNAME=	wesnoth
-PORTVERSION=	1.14.3
-PORTREVISION=	1
+PORTVERSION=	1.14.5
+PORTREVISION=	2
 PORTEPOCH=	1
 CATEGORIES=	games
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}-${PORTVERSION:R}/${PORTNAME}-${PORTVERSION} \
@@ -22,14 +22,12 @@ LIB_DEPENDS=	libfreetype.so:print/freetype2 \
 		libpng.so:graphics/png \
 		libfontconfig.so:x11-fonts/fontconfig
 
-BROKEN_FreeBSD_10=	fails to build with boost 1.66, see bug 224130
-BROKEN_powerpc64=	fails to link: schema_validator.cpp: undefined reference to boost::match_results
-
 LDFLAGS+=	-L${LOCALBASE}/lib -lboost_system
 
 PORTSCOUT=	limitw:1,even
 
-USES=		cmake:outsource cpe pkgconfig python:2.7,run readline:port shebangfix ssl tar:bzip2
+USES=		cmake:outsource compiler:c++11-lang cpe pkgconfig \
+		python:2.7,run readline:port shebangfix ssl tar:bzip2
 USE_SDL=	image2 mixer2 ttf2
 USE_LDCONFIG=	yes
 USE_GNOME=	cairo pango
@@ -53,10 +51,12 @@ SHEBANG_FILES=	data/tools/about_cfg_to_wiki \
 		data/tools/wesnoth/wmlparser3.py \
 		data/tools/wesnoth_addon_manager data/tools/wmlflip \
 		data/tools/wmlindent data/tools/wmllint \
+		data/tools/steam-changelog \
 		data/tools/wmllint-1.4 \
 		data/tools/wmlunits \
 		data/tools/wmlscope \
 		data/tools/wmlvalidator \
+		data/tools/wmlxgettext \
 		data/tools/GUI.pyw
 
 CPE_VENDOR=	${PORTNAME}
@@ -86,7 +86,6 @@ NOTIFY_CMAKE_OFF=-DENABLE_NOTIFICATIONS=off
 SERVER_DESC=	Server
 SERVER_CMAKE_OFF=-DENABLE_SERVER=off
 TEST_CMAKE_ON=	-DENABLE_TESTS=on
-
 
 post-install:
 	${FIND} ${STAGEDIR}${PREFIX}/man -type d -empty -delete

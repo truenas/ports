@@ -4,7 +4,7 @@
 PORTNAME=	osg
 PORTVERSION=	3.4.1
 DISTVERSIONPREFIX=	OpenSceneGraph-
-PORTREVISION=	2
+PORTREVISION=	5
 CATEGORIES=	graphics
 
 MAINTAINER=	amdmi3@FreeBSD.org
@@ -24,10 +24,12 @@ GH_PROJECT=	OpenSceneGraph
 
 CONFLICTS=	osg-devel-[0-9]*
 
-USES=		alias cmake:outsource jpeg pkgconfig
+USES=		alias cmake:outsource compiler:c++11-lang jpeg pkgconfig
 USE_GL=		gl glu
 USE_XORG=	x11
 USE_LDCONFIG=	yes
+# needed to ensure build on gcc-based archs; harmless otherwise
+CXXFLAGS+=	-Wno-narrowing
 
 PLIST_SUB=	OSG_VERSION=${PORTVERSION} \
 		OSG_SHLIBVER=131 \
@@ -92,7 +94,7 @@ LUA_VARS_OFF=		FORCE_IGNORE+="Lua51 Lua52"
 NVTT_LIB_DEPENDS=	libnvtt.so:graphics/nvidia-texture-tools
 NVTT_VARS=		FORCE_REQUIRE+=NVTT
 NVTT_VARS_OFF=		FORCE_IGNORE+=NVTT
-OPENEXR_LIB_DEPENDS=	libIlmImf.so:graphics/OpenEXR
+OPENEXR_LIB_DEPENDS=	libIlmImf.so:graphics/openexr
 OPENEXR_VARS=		FORCE_REQUIRE+=OpenEXR
 OPENEXR_VARS_OFF=	FORCE_IGNORE+=OpenEXR
 PDF_LIB_DEPENDS=	libpoppler-glib.so:graphics/poppler-glib
@@ -141,6 +143,11 @@ PLIST_SUB+=		QT=""
 .else
 CMAKE_ARGS+=		-DOSG_USE_QT:BOOL=OFF
 PLIST_SUB+=		QT="@comment "
+.endif
+
+.if ${PORT_OPTIONS:MQT4}
+DEPRECATED=		Qt4 has been EOL since december 2015
+EXPIRATION_DATE=	2019-03-15
 .endif
 
 post-patch:

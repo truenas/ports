@@ -3,7 +3,7 @@
 
 PORTNAME=	qca
 PORTVERSION=	2.1.3
-PORTREVISION=	1
+PORTREVISION=	4
 CATEGORIES=	devel
 MASTER_SITES=	KDE/stable/qca/${PORTVERSION}/src
 PKGNAMESUFFIX=	-${FLAVOR}
@@ -11,11 +11,17 @@ PKGNAMESUFFIX=	-${FLAVOR}
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	Cross-platform crypto API for Qt ${FLAVOR:C/qt//}
 
+LICENSE=	LGPL21
+LICENSE_FILE=	${WRKSRC}/COPYING
+
 BUILD_DEPENDS=	${LOCALBASE}/share/certs/ca-root-nss.crt:security/ca_root_nss
 RUN_DEPENDS=	${LOCALBASE}/share/certs/ca-root-nss.crt:security/ca_root_nss
 
-FLAVORS=	qt4 qt5
+FLAVORS=	qt5 qt4
 FLAVOR?=	${FLAVORS:[1]}
+
+qt4_DEPRECATED=		Qt4 has been EOL since december 2015
+qt4_EXPIRATION_DATE=	2019-03-15
 
 USES=		cmake:outsource tar:xz
 CMAKE_ARGS=	-DBUILD_PLUGINS=none -DBUILD_TESTS=no \
@@ -31,7 +37,7 @@ USES+=		qt:4
 USE_QT=		corelib moc_build qmake_build rcc_build
 .  else
 CMAKE_ARGS+=	-DQCA_SUFFIX=qt5
-USES+=		qt:5
+USES+=		compiler:c++11-lang qt:5
 USE_QT=	core buildtools_build qmake_build
 .  endif
 qt4_PLIST=	${.CURDIR}/pkg-plist.qt4

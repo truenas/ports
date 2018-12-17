@@ -1,8 +1,8 @@
 # $FreeBSD$
 
 PORTNAME=	krita
-DISTVERSION=	4.1.1
-PORTREVISION=	2
+DISTVERSION=	4.1.5
+PORTREVISION=	3
 CATEGORIES=	graphics kde
 MASTER_SITES=	KDE/stable/${PORTNAME}/${DISTVERSION}
 DIST_SUBDIR=	KDE/${PORTNAME}
@@ -36,8 +36,8 @@ USES=		cmake:outsource compiler:c++11-lib desktop-file-utils \
 		shared-mime-info
 USE_KDE=	archive completion config coreaddons crash guiaddons i18n \
 		itemmodels itemviews kio service widgetsaddons windowsystem
-USE_QT=		concurrent core dbus gui multimedia network printsupport \
-		qml quick svg testlib widgets x11extras xml \
+USE_QT=		concurrent core dbus declarative gui multimedia network printsupport \
+		svg testlib widgets x11extras xml \
 		buildtools_build qmake_build
 USE_XORG=	ice sm xcb xext xi
 
@@ -48,7 +48,7 @@ OPTIONS_SUB=		yes
 GMIC_DESC=		Depend on the G'Mic plugin #'
 GMIC_RUN_DEPENDS=	gmic_krita_qt:graphics/gmic-qt
 
-OPENEXR_LIB_DEPENDS=	libIlmImf.so:graphics/OpenEXR
+OPENEXR_LIB_DEPENDS=	libIlmImf.so:graphics/openexr
 OPENEXR_CMAKE_BOOL_OFF=	CMAKE_DISABLE_FIND_PACKAGE_OpenEXR
 
 CONFLICTS_INSTALL=	calligra-2*

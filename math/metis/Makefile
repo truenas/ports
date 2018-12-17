@@ -3,7 +3,7 @@
 
 PORTNAME=	metis
 PORTVERSION=	5.1.0
-PORTREVISION=	5
+PORTREVISION=	6
 CATEGORIES=	math
 MASTER_SITES=	http://glaros.dtc.umn.edu/gkhome/fetch/sw/metis/
 
@@ -12,11 +12,9 @@ COMMENT=	Package for unstructured graph partitioning
 
 LICENSE=	APACHE20
 
-BROKEN_powerpc64=	fails to build: cc: Internal error: Segmentation fault (program ld)
-
 CONFLICTS=	metis4-4* metis-edf-[0-9]*
 
-USES=		cmake:noninja
+USES=		cmake:noninja compiler:c11
 
 OPTIONS_DEFINE=	OPENMP SHARED STATIC DOCS
 

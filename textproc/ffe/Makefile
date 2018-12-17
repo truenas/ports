@@ -3,6 +3,7 @@
 
 PORTNAME=	ffe
 DISTVERSION=	0.3.8
+PORTREVISION=	1
 CATEGORIES=	textproc
 MASTER_SITES=	SF/ff-extractor/ff-extractor/${DISTVERSION}
 
@@ -11,8 +12,6 @@ COMMENT=	Flat file extractor
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
-
-BROKEN_powerpc64=	fails to compile: unrecognized command line option "-Wmaybe-uninitialized"
 
 USES=		makeinfo localbase
 GNU_CONFIGURE=	yes

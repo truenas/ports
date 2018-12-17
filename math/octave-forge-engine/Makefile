@@ -3,7 +3,7 @@
 
 PORTNAME=	octave-forge-engine
 PORTVERSION=	1.0.9
-PORTREVISION=	18
+PORTREVISION=	19
 CATEGORIES=	math
 
 MAINTAINER=	stephen@FreeBSD.org
@@ -13,6 +13,8 @@ LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
 BROKEN=		does not build with octave version >= 4.4.0
+DEPRECATED=	Broken for more than 6 months
+EXPIRATION_DATE=	2018-12-19
 
 GNU_CONFIGURE=	yes
 CONFIGURE_ENV+=	HOME=${WRKSRC}

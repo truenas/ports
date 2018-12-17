@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	radare-cutter
-PORTVERSION=	1.7.1
+PORTVERSION=	1.7.2
 DISTVERSIONPREFIX=	v
 CATEGORIES=	x11
 
@@ -19,8 +19,8 @@ USE_GITHUB=	yes
 GH_ACCOUNT=	radareorg
 GH_PROJECT=	cutter
 
-USE_QT=		buildtools_build core gui location network printsupport qml \
-		quick svg webchannel webengine widgets
+USE_QT=		buildtools_build core declarative gui location network printsupport \
+		svg webchannel webengine widgets
 USE_GL=		gl
 
 WRKSRC_SUBDIR=	src

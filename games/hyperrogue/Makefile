@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	hyperrogue
-PORTVERSION=	10.4j
+PORTVERSION=	10.5a
 DISTVERSIONPREFIX=	v
 CATEGORIES=	games
 
@@ -19,7 +19,7 @@ LIB_DEPENDS=	libpng.so:graphics/png
 USE_GITHUB=	yes
 GH_ACCOUNT=	zenorogue
 
-USES=		autoreconf localbase
+USES=		autoreconf gl localbase
 GNU_CONFIGURE=	yes
 USE_SDL=	sdl mixer gfx ttf
 USE_GL=		gl glew
@@ -38,6 +38,9 @@ DESKTOP_ENTRIES="HyperRogue" \
 		""
 
 OPTIONS_DEFINE=	DOCS
+
+post-patch:
+	@${REINPLACE_CMD} -e 's|isnumber|is_number|' ${WRKSRC}/archimedean.cpp
 
 post-install:
 	${INSTALL_DATA} ${WRKSRC}/hr-icon.ico ${STAGEDIR}${PREFIX}/share/pixmaps/${PORTNAME}.ico

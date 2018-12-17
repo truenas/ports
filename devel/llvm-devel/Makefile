@@ -3,30 +3,14 @@
 
 PORTNAME=	llvm
 PORTVERSION=	${LLVM_MAJOR}.0.d${SNAPDATE}
-PORTREVISION=	0
+PORTREVISION=	1
 CATEGORIES=	devel lang
 PKGNAMESUFFIX=	-devel
 
 MAINTAINER=	brooks@FreeBSD.org
 COMMENT=	LLVM and Clang
 
-# License are listed in the order they appear in LICENSE.TXT
-LICENSE=	LLVM GTEST REGEX MIT ARM PD
-LICENSE_COMB=	multi
-LICENSE_NAME_LLVM=	LLVM Release License
-LICENSE_PERMS_LLVM=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
-LICENSE_FILE_LLVM=	${WRKSRC}/LICENSE.TXT
-LICENSE_NAME_GTEST=	Google test license
-LICENSE_PERMS_GTEST=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
-LICENSE_FILE_GTEST=	${WRKSRC}/utils/unittest/googletest/LICENSE.TXT
-LICENSE_NAME_REGEX=	OpenBSD Regex License
-LICENSE_PERMS_REGEX=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
-LICENSE_FILE_REGEX=	${WRKSRC}/lib/Support/COPYRIGHT.regex
-# pyyaml tests are under the MIT license
-LICENSE_NAME_ARM=	ARM Limited license
-LICENSE_PERMS_ARM=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
-LICENSE_FILE_ARM=	${WRKSRC}/lib/Target/ARM/LICENSE.TXT
-# md5 is in the public domain
+.include "Makefile.LICENSE"
 
 LLVM_SUFFIX=	-devel
 LLVM_PREFIX=	${PREFIX}/llvm${LLVM_SUFFIX}
@@ -48,8 +32,6 @@ SHEBANG_FILES=	utils/lit/lit.py utils/llvm-lit/llvm-lit.in \
 		tools/clang/tools/extra/clang-tidy/tool/clang-tidy-diff.py \
 		tools/clang/tools/extra/clang-tidy/tool/run-clang-tidy.py \
 		tools/clang/tools/extra/include-fixer/find-all-symbols/tool/run-find-all-symbols.py
-
-BROKEN_FreeBSD_10=	error: anonymous union can only contain non-static data members
 
 SUB_FILES=	llvm-wrapper.sh
 SUB_LIST=	LLVM_PREFIX="${LLVM_PREFIX}" LLVM_SUFFIX="${LLVM_SUFFIX}"
@@ -78,7 +60,6 @@ OPTIONS_DEFINE_i386=	COMPILER_RT OPENMP
 OPTIONS_DEFAULT=	CLANG EXTRAS LIT LLD LLDB
 OPTIONS_DEFAULT_amd64=	COMPILER_RT GOLD OPENMP
 OPTIONS_DEFAULT_i386=	COMPILER_RT OPENMP
-OPTIONS_EXCLUDE_FreeBSD_10=	LLDB OPENMP
 OPTIONS_SUB=	yes
 
 PLIST_FILES=
@@ -150,6 +131,7 @@ COMMANDS=	bugpoint \
 		llvm-config \
 		llvm-cov \
 		llvm-cvtres \
+		llvm-cxxmap \
 		llvm-diff \
 		llvm-dis \
 		llvm-dlltool \
@@ -196,6 +178,7 @@ MAN1SRCS+=	bugpoint.1 \
 		llvm-build.1 \
 		llvm-config.1 \
 		llvm-cov.1 \
+		llvm-cxxmap.1 \
 		llvm-diff.1 \
 		llvm-dis.1 \
 		llvm-dwarfdump.1 \
@@ -282,6 +265,7 @@ MAN1SRCS+=	clang.1 \
 		diagtool.1 \
 		scan-build.1
 CLANG_PATTERN=	(c-index-test|clang|scan-|Reporter.py|ScanView.py|scanview.css|sorttable.js|startfile.py|-analyzer)
+USES+=	gnome
 .endif
 
 .if ${PORT_OPTIONS:MCOMPILER_RT}
@@ -347,8 +331,12 @@ _COMPILER_RT_LIBS= \
 	libclang_rt.asan_cxx-x86_64.a \
 	libclang_rt.asan_cxx-x86_64.a.syms \
 	libclang_rt.builtins-x86_64.a \
+	libclang_rt.cfi-x86_64.a \
+	libclang_rt.cfi_diag-x86_64.a \
 	libclang_rt.dd-x86_64.a \
 	libclang_rt.dyndd-x86_64.so \
+	libclang_rt.esan-x86_64.a \
+	libclang_rt.esan-x86_64.a.syms \
 	libclang_rt.fuzzer-x86_64.a \
 	libclang_rt.fuzzer_no_main-x86_64.a \
 	libclang_rt.lsan-x86_64.a \
@@ -385,6 +373,8 @@ _COMPILER_RT_LIBS+= \
 	libclang_rt.asan-preinit-i386.a \
 	libclang_rt.asan_cxx-i386.a \
 	libclang_rt.builtins-i386.a \
+	libclang_rt.cfi-i386.a \
+	libclang_rt.cfi_diag-i386.a \
 	libclang_rt.lsan-i386.a \
 	libclang_rt.profile-i386.a \
 	libclang_rt.safestack-i386.a \

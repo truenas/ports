@@ -254,7 +254,10 @@ post-install:
 	${MKDIR} ${STAGEDIR}${SITE_MAN1} ${STAGEDIR}${SITE_MAN3}
 	${MKDIR} ${STAGEDIR}${SITE_ARCH}/auto
 	${MKDIR} ${STAGEDIR}${SITE_PERL}/auto
-	${LN} ${STAGEDIR}${PREFIX}/bin/perl${PERL_VERSION} ${STAGEDIR}${PREFIX}/bin/perl5
+.if defined(IAMDEFAULTPERL)
+	${LN} -sf perl ${STAGEDIR}${PREFIX}/bin/perl5
+	${LN} -sf perl ${STAGEDIR}${PREFIX}/bin/perl${PERL_VERSION}
+.endif
 	${LN} -sf libperl.so.${PERL_VERSION} ${STAGEDIR}${PREFIX}/${_ARCH_LIB}/CORE/libperl.so
 	${LN} -sf libperl.so.${PERL_VERSION} ${STAGEDIR}${PREFIX}/${_ARCH_LIB}/CORE/libperl.so.${PERL_VER}
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/perl${PERL_VERSION}

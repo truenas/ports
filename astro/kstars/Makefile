@@ -1,8 +1,8 @@
 # $FreeBSD$
 
 PORTNAME=	kstars
-DISTVERSION=	2.9.7
-PORTREVISION=	1
+DISTVERSION=	2.9.8
+PORTREVISION=	3
 PORTEPOCH=	1
 CATEGORIES=	astro kde
 MASTER_SITES=	KDE/stable/${PORTNAME}
@@ -26,8 +26,8 @@ USE_KDE=	attica auth bookmarks codecs completion config configwidgets\
 		iconthemes init itemviews jobwidgets kio newstuff notifications \
 		notifyconfig parts plotting service solid texteditor \
 		widgetsaddons xmlgui
-USE_QT=		concurrent core dbus gui multimedia network opengl printsupport \
-		qml quick sql svg testlib websockets widgets xml \
+USE_QT=		concurrent core dbus declarative gui multimedia network opengl printsupport \
+		sql svg testlib websockets widgets xml \
 		buildtools_build qmake_build
 
 post-patch:

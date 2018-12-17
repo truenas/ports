@@ -3,6 +3,7 @@
 
 PORTNAME=	lumina-archiver
 PORTVERSION=	1.4.1
+PORTREVISION=	1
 CATEGORIES=	deskutils
 
 MAINTAINER=	jt@ixsystems.com
@@ -22,7 +23,7 @@ I18N_DESC=	Install localization files
 
 MAKE_JOBS_UNSAFE=yes
 
-USES=		qmake qt:5
+USES=		compiler:c++11-lang qmake qt:5
 USE_QT=		core gui widgets network svg \
 		buildtools_build x11extras concurrent multimedia
 USE_GITHUB=	yes

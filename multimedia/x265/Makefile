@@ -3,7 +3,7 @@
 
 PORTNAME=	x265
 PORTVERSION=	2.8
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	multimedia
 MASTER_SITES=	https://downloads.videolan.org/pub/videolan/x265/ \
 		https://mirror.leaseweb.com/videolan/x265/ \
@@ -44,6 +44,7 @@ USE_LDCONFIG=	yes
 CMAKE_ARGS=	-DENABLE_PIC=on -DPLATFORM_LIBS=md -DENABLE_TESTS=on
 CFLAGS_mips=	-DNO_ATOMICS # cannot use lang/gcc
 CFLAGS_mips64=	-DNO_ATOMICS # cannot use lang/gcc
+LDFLAGS_i386=	-Wl,-znotext
 EXTRACT_AFTER_ARGS+=	--exclude "md5*" --exclude compat
 WRKSRC=		${WRKDIR}/${PORTNAME}_${PORTVERSION}/source
 

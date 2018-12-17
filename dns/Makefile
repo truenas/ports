@@ -35,9 +35,7 @@
     SUBDIR += dns_balance
     SUBDIR += dnsblast
     SUBDIR += dnscap
-    SUBDIR += dnscheck
     SUBDIR += dnscheckengine
-    SUBDIR += dnscrypt-proxy
     SUBDIR += dnscrypt-proxy2
     SUBDIR += dnscrypt-wrapper
     SUBDIR += dnsdbck
@@ -96,6 +94,7 @@
     SUBDIR += knot-resolver
     SUBDIR += knot1
     SUBDIR += knot2
+    SUBDIR += knot2-lib
     SUBDIR += ldapdns
     SUBDIR += ldns
     SUBDIR += libasr
@@ -198,6 +197,7 @@
     SUBDIR += py-idna_ssl
     SUBDIR += py-idnkit2
     SUBDIR += py-ldns
+    SUBDIR += py-localzone
     SUBDIR += py-namebench
     SUBDIR += py-publicsuffix
     SUBDIR += py-publicsuffixlist

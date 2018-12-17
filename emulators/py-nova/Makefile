@@ -14,6 +14,8 @@ COMMENT=	OpenStack compute service
 LICENSE=	APACHE20
 
 BROKEN=		depends on conflicting dependencies
+DEPRECATED=	Broken for more than 6 months
+EXPIRATION_DATE=	2018-12-19
 
 BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pbr>=1.6:devel/py-pbr@${PY_FLAVOR}
 
@@ -112,10 +114,6 @@ GROUPS=		nova
 
 .if ${OPSYS} != FreeBSD
 IGNORE=		only supported on FreeBSD
-.endif
-
-.if ${OSVERSION} < 1100055
-IGNORE=		only supported on recent FreeBSD 11
 .endif
 
 post-extract:

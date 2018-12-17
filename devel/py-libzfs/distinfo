@@ -1,3 +1,3 @@
-TIMESTAMP = 1542692582
-SHA256 (freenas-py-libzfs-1.0.20181120-9fc4b5f_GH0.tar.gz) = e7c042af5a6222f9df317b9767b45247a7c81fc4212be0333eee62d518c64253
-SIZE (freenas-py-libzfs-1.0.20181120-9fc4b5f_GH0.tar.gz) = 69480
+TIMESTAMP = 1544685306
+SHA256 (freenas-py-libzfs-1.0.20181212-e291ba2_GH0.tar.gz) = aebc3e62e29c711c6157868f23d16d3a3768c4062b9fff68fdae76dd35edbaef
+SIZE (freenas-py-libzfs-1.0.20181212-e291ba2_GH0.tar.gz) = 69518

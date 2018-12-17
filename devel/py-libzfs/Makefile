@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	libzfs
-PORTVERSION=	1.0.20181120
+PORTVERSION=	1.0.20181212
 CATEGORIES=	devel python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
@@ -20,13 +20,15 @@ RUN_DEPENDS=	${PY_ENUM34}
 USE_GITHUB=     yes
 GH_ACCOUNT=	freenas
 GH_PROJECT=	py-libzfs
-GH_TAGNAME=	9fc4b5f
+GH_TAGNAME=	e291ba2
 
+HAS_CONFIGURE=	yes
 USES=		python
 USE_PYTHON=	autoplist distutils cython
-GNU_CONFIGURE=	yes
 
-MAKE_ENV+=	FREEBSD_SRC=${SRC_BASE} TRUEOS=yes EXPERIMENTAL=yes
+MAKE_ENV=	FREEBSD_SRC=${SRC_BASE}
+
+.include <bsd.port.options.mk>
 
 .if !exists(${SRC_BASE}/sys/Makefile)
 IGNORE=	requires kernel source files in ${SRC_BASE}

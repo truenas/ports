@@ -11,6 +11,7 @@
     SUBDIR += blt
     SUBDIR += bwidget
     SUBDIR += c++-gtk-utils
+    SUBDIR += ctk
     SUBDIR += diorite
     SUBDIR += flowcanvas
     SUBDIR += fltk
@@ -41,7 +42,6 @@
     SUBDIR += gtk20
     SUBDIR += gtk20-reference
     SUBDIR += gtk30
-    SUBDIR += gtk30-reference
     SUBDIR += gtkada
     SUBDIR += gtkada3
     SUBDIR += gtkdatabox
@@ -75,9 +75,6 @@
     SUBDIR += hs-gtksourceview2
     SUBDIR += hs-pango
     SUBDIR += hs-vte
-    SUBDIR += hs-wx
-    SUBDIR += hs-wxc
-    SUBDIR += hs-wxcore
     SUBDIR += hs-wxdirect
     SUBDIR += irrlicht
     SUBDIR += itk
@@ -100,6 +97,7 @@
     SUBDIR += libXt
     SUBDIR += libbonoboui
     SUBDIR += libbonoboui-reference
+    SUBDIR += libdazzle
     SUBDIR += libgdiplus
     SUBDIR += libgnomeprintui
     SUBDIR += libgnomeprintuimm
@@ -191,7 +189,6 @@
     SUBDIR += p5-Wx-GLCanvas
     SUBDIR += p5-Wx-Perl-ProcessStream
     SUBDIR += pango
-    SUBDIR += pango-reference
     SUBDIR += pangomm
     SUBDIR += pangox-compat
     SUBDIR += pangoxsl
@@ -234,10 +231,10 @@
     SUBDIR += qt5-canvas3d
     SUBDIR += qt5-charts
     SUBDIR += qt5-datavis3d
+    SUBDIR += qt5-declarative
     SUBDIR += qt5-gamepad
     SUBDIR += qt5-gtkplatform
     SUBDIR += qt5-gui
-    SUBDIR += qt5-quick
     SUBDIR += qt5-quickcontrols
     SUBDIR += qt5-quickcontrols2
     SUBDIR += qt5-uiplugin
@@ -248,6 +245,7 @@
     SUBDIR += qtermwidget-l10n
     SUBDIR += qwt5
     SUBDIR += qwt5-designerplugin
+    SUBDIR += qwt5-qt5
     SUBDIR += qwt6
     SUBDIR += rep-gtk2
     SUBDIR += rubygem-gdk3
@@ -257,6 +255,7 @@
     SUBDIR += rubygem-gtksourceview3
     SUBDIR += rubygem-pango
     SUBDIR += rubygem-poppler
+    SUBDIR += rubygem-tk
     SUBDIR += rubygem-uh
     SUBDIR += rubygem-vte
     SUBDIR += rubygem-vte3
@@ -268,6 +267,7 @@
     SUBDIR += soqt
     SUBDIR += swt
     SUBDIR += swt-devel
+    SUBDIR += tepl
     SUBDIR += termit
     SUBDIR += tile
     SUBDIR += tix
@@ -287,7 +287,6 @@
     SUBDIR += vte
     SUBDIR += vte-reference
     SUBDIR += vte3
-    SUBDIR += vtkfox
     SUBDIR += wlc
     SUBDIR += wmapp
     SUBDIR += wxgtk28
