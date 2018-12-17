@@ -354,13 +354,11 @@
     SUBDIR += invada-studio-plugins-lv2
     SUBDIR += ir-lv2
     SUBDIR += jack
-    SUBDIR += jack-keyboard
     SUBDIR += jack-smf-utils
     SUBDIR += jack_ghero
     SUBDIR += jack_mixer
     SUBDIR += jack_umidi
     SUBDIR += jack-keyboard
-    SUBDIR += jack-rack
     SUBDIR += jack-smf-utils
     SUBDIR += jalv
     SUBDIR += jalv-select
