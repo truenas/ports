@@ -1,12 +1,8 @@
 # Created by: William Grzybowski <wg@FreeBSD.org>
 # $FreeBSD$
 
-<<<<<<< HEAD
-PORTVERSION=	1.0.20181207
-=======
 PORTNAME=	netif
 PORTVERSION=	1.0.20181212
->>>>>>> freebsd/master
 CATEGORIES=	net python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 

@@ -354,11 +354,8 @@
     SUBDIR += invada-studio-plugins-lv2
     SUBDIR += ir-lv2
     SUBDIR += jack
-<<<<<<< HEAD
-=======
     SUBDIR += jack-keyboard
     SUBDIR += jack-smf-utils
->>>>>>> freebsd/master
     SUBDIR += jack_ghero
     SUBDIR += jack_mixer
     SUBDIR += jack_umidi
