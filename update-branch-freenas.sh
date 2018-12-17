@@ -62,7 +62,7 @@ update_port()
 	sed -i '' "s/.*PORTVERSION=.*/PORTVERSION=	$TSTAMP/" ${port}/Makefile
 	sed -i '' "s/.*GH_TAGNAME=.*/GH_TAGNAME=	$GH_HASH/" ${port}/Makefile
 
-	make -C ${port} makesum
+	make -C ${port} OSVERSION=1200000 makesum
 }
 
 if [ -z "$1" ] ; then
