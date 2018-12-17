@@ -45,7 +45,6 @@
     SUBDIR += agg
     SUBDIR += alembic
     SUBDIR += alpng
-    SUBDIR += amide
     SUBDIR += ampasACES-container
     SUBDIR += ampasCTL
     SUBDIR += animorph
@@ -87,7 +86,6 @@
     SUBDIR += cal3d
     SUBDIR += camera
     SUBDIR += camerakit
-    SUBDIR += cbrpager
     SUBDIR += cbview
     SUBDIR += cbviewer
     SUBDIR += cegui
@@ -115,7 +113,6 @@
     SUBDIR += cptutils
     SUBDIR += crw
     SUBDIR += cthumb
-    SUBDIR += cuneiform
     SUBDIR += curator
     SUBDIR += cuttlefish
     SUBDIR += danpei
@@ -123,6 +120,7 @@
     SUBDIR += darktable
     SUBDIR += dataplot
     SUBDIR += dc20pack
+    SUBDIR += dcmtk
     SUBDIR += dcp2icc
     SUBDIR += dcraw
     SUBDIR += dcraw-m
@@ -353,7 +351,6 @@
     SUBDIR += guilib
     SUBDIR += gwenview
     SUBDIR += gwenview-kde4
-    SUBDIR += gx
     SUBDIR += hdr_tools
     SUBDIR += hiptext
     SUBDIR += hobbes-icons-xpm
@@ -386,6 +383,7 @@
     SUBDIR += imgv
     SUBDIR += imlib2
     SUBDIR += imlib2_loaders
+    SUBDIR += imlib2-webp
     SUBDIR += impressive
     SUBDIR += imv
     SUBDIR += inkscape
@@ -867,7 +865,6 @@
     SUBDIR += poppler
     SUBDIR += poppler-data
     SUBDIR += poppler-glib
-    SUBDIR += poppler-qt4
     SUBDIR += poppler-qt5
     SUBDIR += poppler-utils
     SUBDIR += potrace
@@ -938,7 +935,6 @@
     SUBDIR += py-plotly
     SUBDIR += py-png
     SUBDIR += py-poppler
-    SUBDIR += py-poppler-qt4
     SUBDIR += py-pycha
     SUBDIR += py-pycollada
     SUBDIR += py-pydot
@@ -989,6 +985,7 @@
     SUBDIR += qt5-svg
     SUBDIR += qt5-wayland
     SUBDIR += qtawesome
+    SUBDIR += qtpbfimageplugin
     SUBDIR += quat
     SUBDIR += quat-gui
     SUBDIR += quesa
@@ -1111,7 +1108,6 @@
     SUBDIR += tinyows
     SUBDIR += tkpng
     SUBDIR += togl
-    SUBDIR += truevision
     SUBDIR += ttygif
     SUBDIR += tulip
     SUBDIR += tumble
@@ -1139,6 +1135,7 @@
     SUBDIR += wayland-protocols
     SUBDIR += waylandpp
     SUBDIR += webp
+    SUBDIR += webp-pixbuf-loader
     SUBDIR += wings
     SUBDIR += wmicons
     SUBDIR += wxsvg

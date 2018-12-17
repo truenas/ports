@@ -2,7 +2,12 @@
 # $FreeBSD$
 
 PORTNAME=	pc-mixer
+<<<<<<< HEAD
 PORTVERSION=	20180328
+=======
+PORTVERSION=	20171212
+PORTREVISION=	1
+>>>>>>> freebsd/master
 CATEGORIES=	audio
 
 MAINTAINER=	jmaloney@ixsystems.com

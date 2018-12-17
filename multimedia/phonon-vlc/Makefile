@@ -2,7 +2,7 @@
 
 PORTNAME=	phonon
 DISTVERSION=	0.10.1
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	multimedia kde
 MASTER_SITES=	KDE/stable/${PORTNAME}/${PORTNAME}-backend-${PHONON_PLUGIN}/${DISTVERSION}
 PKGNAMESUFFIX=	-${PHONON_PLUGIN}-${FLAVOR}
@@ -19,14 +19,13 @@ FLAVORS=	qt5 qt4
 FLAVOR?=	${FLAVORS:[1]}
 
 qt4_LIB_DEPENDS=	libvlc.so:multimedia/vlc-qt4
-qt5_LIB_DEPENDS=	libvlc.so:multimedia/vlc
-
-qt4_DEPRECATED=		Qt4 has been EOL since december 2015
-qt4_EXPIRATION_DATE=	2019-03-15
+qt5_LIB_DEPENDS=	libvlc.so:multimedia/vlc3
 
 USES=		cmake:outsource pkgconfig tar:xz
 
 .  if ${FLAVOR} == qt4
+DEPRECATED=	Qt4 has been EOL since december 2015
+EXPIRATION_DATE=2019-03-15
 USES+=		kde:4 qt:4
 USE_KDE=	automoc4
 USE_QT=		corelib gui phonon \

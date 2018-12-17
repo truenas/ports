@@ -94,7 +94,6 @@
     SUBDIR += bareos16-server
     SUBDIR += bareos16-traymonitor
     SUBDIR += batmon
-    SUBDIR += battfink
     SUBDIR += battmond
     SUBDIR += battray
     SUBDIR += bbapm
@@ -189,7 +188,6 @@
     SUBDIR += cmockery2
     SUBDIR += cmogstored
     SUBDIR += cmospwd
-    SUBDIR += cog
     SUBDIR += colorize
     SUBDIR += condor
     SUBDIR += confctl
@@ -383,7 +381,6 @@
     SUBDIR += fusefs-fusepak
     SUBDIR += fusefs-fusexmp_fh
     SUBDIR += fusefs-gitfs
-    SUBDIR += fusefs-gnome-vfs
     SUBDIR += fusefs-gstfs
     SUBDIR += fusefs-gunzip
     SUBDIR += fusefs-hfsfuse
@@ -413,14 +410,16 @@
     SUBDIR += fvcool
     SUBDIR += fwup
     SUBDIR += gaffitter
-    SUBDIR += gai-leds
     SUBDIR += ganglia-monitor-core
     SUBDIR += ganglia-webfrontend
     SUBDIR += gapcmon
     SUBDIR += garcon
     SUBDIR += gather
+<<<<<<< HEAD
     SUBDIR += gbi
     SUBDIR += gcdmaster
+=======
+>>>>>>> freebsd/master
     SUBDIR += gcombust
     SUBDIR += gconf-editor
     SUBDIR += gdisk
@@ -444,17 +443,17 @@
     SUBDIR += glogg
     SUBDIR += gnome_subr
     SUBDIR += gnome-control-center
-    SUBDIR += gnome-device-manager
     SUBDIR += gnome-mount
-    SUBDIR += gnome-pkgview
     SUBDIR += gnome-power-manager
     SUBDIR += gnome-schedule
     SUBDIR += gnome-settings-daemon
     SUBDIR += gnome-system-monitor
     SUBDIR += goaccess
+    SUBDIR += goawk
     SUBDIR += gomplate
     SUBDIR += google-compute-engine-oslogin
     SUBDIR += goss
+    SUBDIR += gotop
     SUBDIR += gpart
     SUBDIR += gpte
     SUBDIR += graffer
@@ -928,6 +927,7 @@
     SUBDIR += pick
     SUBDIR += pidof
     SUBDIR += pipemeter
+    SUBDIR += plasma-pass
     SUBDIR += plasma5-discover
     SUBDIR += plasma5-drkonqi
     SUBDIR += plasma5-kde-cli-tools

@@ -185,6 +185,9 @@
     SUBDIR += avro-c
     SUBDIR += avro-cpp
     SUBDIR += awless
+    SUBDIR += aws-c-commons
+    SUBDIR += aws-c-event-stream
+    SUBDIR += aws-checksums
     SUBDIR += aws-sdk-cpp
     SUBDIR += aws-sdk-php
     SUBDIR += awscli
@@ -434,7 +437,6 @@
     SUBDIR += dbus-tcl
     SUBDIR += dcd-client
     SUBDIR += dcd-server
-    SUBDIR += dcmtk
     SUBDIR += dconf
     SUBDIR += dconf-editor
     SUBDIR += ddd
@@ -815,7 +817,6 @@
     SUBDIR += gnome-common
     SUBDIR += gnome-js-common
     SUBDIR += gnome-vfs
-    SUBDIR += gnome-vfs-monikers
     SUBDIR += gnome-vfs-reference
     SUBDIR += gnome-vfsmm
     SUBDIR += gnu-efi
@@ -1234,6 +1235,7 @@
     SUBDIR += ignition-plugin
     SUBDIR += ignition-tools
     SUBDIR += ignition-transport
+    SUBDIR += ikos
     SUBDIR += imake
     SUBDIR += inastemp
     SUBDIR += include-what-you-use
@@ -4965,6 +4967,7 @@
     SUBDIR += py-pyrepl
     SUBDIR += py-pyrfc3339
     SUBDIR += py-pyro
+    SUBDIR += py-pyrsistent
     SUBDIR += py-pyshapelib
     SUBDIR += py-pyshp
     SUBDIR += py-pysparklines
@@ -5107,6 +5110,7 @@
     SUBDIR += py-setuptools_darcs
     SUBDIR += py-setuptools_hg
     SUBDIR += py-setuptools_scm
+    SUBDIR += py-setuptools_scm_git_archive
     SUBDIR += py-sh
     SUBDIR += py-shapely
     SUBDIR += py-shellingham
@@ -5785,6 +5789,7 @@
     SUBDIR += rubygem-json1
     SUBDIR += rubygem-json_pure
     SUBDIR += rubygem-json_pure1
+    SUBDIR += rubygem-json-schema
     SUBDIR += rubygem-jsonapi-renderer
     SUBDIR += rubygem-kafo
     SUBDIR += rubygem-kafo_parsers
