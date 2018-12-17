@@ -3,6 +3,7 @@
 name="Quassel-core IRC Service Daemon"
 command="/usr/local/bin/quasselcore"
 command_args=$quasselcore_args
+command_background="yes"
 pidfile="/var/run/quasselcore.pid"
 
 depend()
