@@ -32,10 +32,17 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}ws4py>0:www/py-ws4py@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}asyncssh>0:security/py-asyncssh@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}croniter>0:sysutils/py-croniter@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}bidict>0:devel/py-bidict@${FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}humanfriendly>0:textproc/py-humanfriendly@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}markdown2>0:textproc/py-markdown2@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}acme>0:security/py-acme@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}josepy>0:security/py-josepy@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}certbot-dns-cloudflare>0:security/py-certbot-dns-cloudflare@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}certbot-dns-digitalocean>0:security/py-certbot-dns-digitalocean@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}certbot-dns-google>0:security/py-certbot-dns-google@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}certbot-dns-ovh>0:security/py-certbot-dns-ovh@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}zettarepl>0:sysutils/py-zettarepl@${FLAVOR} \
 		rclone>0:net/rclone \
 		sysup>0:sysutils/sysup \
+		ifstat>0:net/ifstat \
 		swagger-ui>0:freenas/swagger-ui
 
 USE_RC_SUBR=	middlewared
