@@ -415,11 +415,7 @@
     SUBDIR += gapcmon
     SUBDIR += garcon
     SUBDIR += gather
-<<<<<<< HEAD
     SUBDIR += gbi
-    SUBDIR += gcdmaster
-=======
->>>>>>> freebsd/master
     SUBDIR += gcombust
     SUBDIR += gconf-editor
     SUBDIR += gdisk
