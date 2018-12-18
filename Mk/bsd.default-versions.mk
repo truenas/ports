@@ -85,7 +85,7 @@ PYTHON_DEFAULT?=	2.7
 # Possible values: 2.7
 PYTHON2_DEFAULT?=	2.7
 # Possible values: 3.4, 3.5, 3.6, 3.7
-PYTHON3_DEFAULT?=	3.6
+PYTHON3_DEFAULT?=	3.7
 # Possible values: 2.3, 2.4, 2.5
 RUBY_DEFAULT?=		2.4
 # Possible values: 4.6, 4.7, 4.8
