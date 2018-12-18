@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	zol
-PORTVERSION=	2018121200
+PORTVERSION=	2018121700
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 
@@ -10,18 +10,17 @@ COMMENT=	ZFS
 
 LICENSE=	CDDL
 
-USES=		kmod
+RUN_DEPENDS=	zol>=0:sysutils/zol-kmod
+
+GNU_CONFIGURE=  yes
+CONFIGURE_ARGS=	--prefix=${PREFIX} --with-config="user"
+USES=		autoreconf:build libtool gmake
 USE_GITHUB=	yes
 GH_ACCOUNT=	zfsonfreebsd
 GH_PROJECT=	ZoF
-GH_TAGNAME=	f92b728
+GH_TAGNAME=	10f2d4b
 
-PLIST_FILES=	${KMODDIR}/zfs.ko
-
-do-build:
-	(cd ${WRKSRC}/module/ && make -f Makefile.bsd)
-
-do-install:
-	${INSTALL} ${WRKSRC}/module/zfs.ko ${STAGEDIR}${KMODDIR}
+pre-configure:
+	cd ${WRKSRC} && ./autogen.sh
 
 .include <bsd.port.mk>

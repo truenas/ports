@@ -1524,6 +1524,7 @@
     SUBDIR += znapzend
     SUBDIR += zogftw
     SUBDIR += zol
+    SUBDIR += zol-kmod
     SUBDIR += zrep
     SUBDIR += zrepl
     SUBDIR += zsd
