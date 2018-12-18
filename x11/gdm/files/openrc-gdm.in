@@ -12,12 +12,10 @@ depend() {
 
 stop_pre()
 {
-    pkill -9 -u gdm
-    pkill -9 X
-    pkill -9 gdm-session-worker
+    pkill -9 -f gdm >/dev/null 2>/dev/null || true
 }
 
-stop_post()
+stop()
 {
-    killall Xorg
+    return 0
 }
