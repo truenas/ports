@@ -10,7 +10,7 @@ COMMENT=	ZFS
 
 LICENSE=	CDDL
 
-RUN_DEPENDS=	zol>=0:sysutils/zol-kmod
+RUN_DEPENDS=	zol-kmod>=0:sysutils/zol-kmod
 
 GNU_CONFIGURE=  yes
 CONFIGURE_ARGS=	--prefix=${PREFIX} --with-config="user"
