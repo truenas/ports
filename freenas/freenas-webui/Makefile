@@ -16,7 +16,7 @@ BUILD_DEPENDS=	rsync>0:net/rsync \
 		python2>0:lang/python2 \
 		npm>=0:www/npm \
 		yarn>=0:www/yarn
-
+USES=	gmake
 NO_BUILD=	yes
 
 .if exists(/usr/local_source/${PORTNAME})
