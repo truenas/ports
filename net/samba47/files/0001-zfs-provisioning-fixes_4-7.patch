@@ -1,0 +1,398 @@
+diff --git a/python/samba/ntacls.py b/python/samba/ntacls.py
+index 0eeb497..c27a96a 100644
+--- a/python/samba/ntacls.py
++++ b/python/samba/ntacls.py
+@@ -64,7 +64,14 @@ def getdosinfo(lp, file):
+     return ndr_unpack(xattr.DOSATTRIB, attribute)
+ 
+ def getntacl(lp, file, backend=None, eadbfile=None, direct_db_access=True, service=None):
+-    if direct_db_access:
++    """
++    _PC_ACL_NFS4 is defined as 64 in unistd.h on FreeBSD.
++    In order for this to function properly, appropriate vfs objects need to be loaded
++    for the service in question.
++    """
++    PC_ACL_NFS4 = 64
++    has_nfs4_acls = os.pathconf(file, PC_ACL_NFS4)
++    if not has_nfs4_acls and direct_db_access:
+         (backend_obj, dbname) = checkset_backend(lp, backend, eadbfile)
+         if dbname is not None:
+             try:
+@@ -217,7 +224,7 @@ def ldapmask2filemask(ldm):
+     return filemask
+ 
+ 
+-def dsacl2fsacl(dssddl, sid, as_sddl=True):
++def dsacl2fsacl(dssddl, sid, as_sddl=True, is_dir=True):
+     """
+ 
+     This function takes an the SDDL representation of a DS
+@@ -235,12 +242,15 @@ def dsacl2fsacl(dssddl, sid, as_sddl=True):
+         ace = aces[i]
+         if not ace.type & security.SEC_ACE_TYPE_ACCESS_ALLOWED_OBJECT and str(ace.trustee) != security.SID_BUILTIN_PREW2K:
+        #    if fdescr.type & security.SEC_DESC_DACL_AUTO_INHERITED:
+-            ace.flags = ace.flags | security.SEC_ACE_FLAG_OBJECT_INHERIT | security.SEC_ACE_FLAG_CONTAINER_INHERIT
+-            if str(ace.trustee) == security.SID_CREATOR_OWNER:
+-                # For Creator/Owner the IO flag is set as this ACE has only a sense for child objects
+-                ace.flags = ace.flags | security.SEC_ACE_FLAG_INHERIT_ONLY
+-            ace.access_mask =  ldapmask2filemask(ace.access_mask)
+-            fdescr.dacl_add(ace)
++            if is_dir:
++                ace.flags = ace.flags | security.SEC_ACE_FLAG_OBJECT_INHERIT | security.SEC_ACE_FLAG_CONTAINER_INHERIT
++                if str(ace.trustee) == security.SID_CREATOR_OWNER:
++                    # For Creator/Owner the IO flag is set as this ACE has only a sense for child objects
++                    ace.flags = ace.flags | security.SEC_ACE_FLAG_INHERIT_ONLY
++            else:
++                if str(ace.trustee) == security.SID_CREATOR_OWNER:
++                    continue 
++                ace.flags = 0
+ 
+     if not as_sddl:
+         return fdescr
+diff --git a/python/samba/provision/__init__.py b/python/samba/provision/__init__.py
+index 2387931..1e567ab 100644
+--- a/python/samba/provision/__init__.py
++++ b/python/samba/provision/__init__.py
+@@ -1533,19 +1533,24 @@ def setsysvolacl(samdb, netlogon, sysvol, uid, gid, domainsid, dnsdomain,
+         s3conf = s3param.get_context()
+         s3conf.load(lp.configfile)
+ 
+-        file = tempfile.NamedTemporaryFile(dir=os.path.abspath(sysvol))
++        sysvol_dir = os.path.abspath(sysvol)
++
++        set_simple_acl = smbd.set_simple_acl
++        if smbd.has_nfsv4_acls(sysvol_dir):
++            set_simple_acl = smbd.set_simple_nfsv4_acl
++
++        file = tempfile.NamedTemporaryFile(dir=sysvol_dir)
+         try:
+             try:
+-                smbd.set_simple_acl(file.name, 0755, gid)
++                logger.info("Skipping sysvol ACL type check")
+             except OSError:
+-                if not smbd.have_posix_acls():
++                if not smbd.have_posix_acls() and not smbd.have_nfsv4_acls():
+                     # This clue is only strictly correct for RPM and
+                     # Debian-like Linux systems, but hopefully other users
+                     # will get enough clue from it.
+-                    raise ProvisioningError("Samba was compiled without the posix ACL support that s3fs requires.  "
++                    raise ProvisioningError("Samba was compiled without the ACL support that s3fs requires.  "
+                                             "Try installing libacl1-dev or libacl-devel, then re-run configure and make.")
+-
+-                raise ProvisioningError("Your filesystem or build does not support posix ACLs, which s3fs requires.  "
++                raise ProvisioningError("Your filesystem or build does not support ACLs, which s3fs requires.  "
+                                         "Try the mounting the filesystem with the 'acl' option.")
+             try:
+                 smbd.chown(file.name, uid, gid)
+@@ -1614,10 +1619,10 @@ def acl_type(direct_db_access):
+     else:
+         return "VFS"
+ 
+-def check_dir_acl(path, acl, lp, domainsid, direct_db_access):
++def check_dir_acl(path, dacl, facl, lp, domainsid, direct_db_access):
+     fsacl = getntacl(lp, path, direct_db_access=direct_db_access, service=SYSVOL_SERVICE)
+     fsacl_sddl = fsacl.as_sddl(domainsid)
+-    if fsacl_sddl != acl:
++    if fsacl_sddl != dacl:
+         raise ProvisioningError('%s ACL on GPO directory %s %s does not match expected value %s from GPO object' % (acl_type(direct_db_access), path, fsacl_sddl, acl))
+ 
+     for root, dirs, files in os.walk(path, topdown=False):
+@@ -1627,8 +1632,8 @@ def check_dir_acl(path, acl, lp, domainsid, direct_db_access):
+             if fsacl is None:
+                 raise ProvisioningError('%s ACL on GPO file %s %s not found!' % (acl_type(direct_db_access), os.path.join(root, name)))
+             fsacl_sddl = fsacl.as_sddl(domainsid)
+-            if fsacl_sddl != acl:
+-                raise ProvisioningError('%s ACL on GPO file %s %s does not match expected value %s from GPO object' % (acl_type(direct_db_access), os.path.join(root, name), fsacl_sddl, acl))
++            if fsacl_sddl != facl:
++                raise ProvisioningError('%s ACL on GPO file %s %s does not match expected value %s from GPO object' % (acl_type(direct_db_access), os.path.join(root, name), fsacl_sddl, facl))
+ 
+         for name in dirs:
+             fsacl = getntacl(lp, os.path.join(root, name),
+@@ -1636,8 +1641,8 @@ def check_dir_acl(path, acl, lp, domainsid, direct_db_access):
+             if fsacl is None:
+                 raise ProvisioningError('%s ACL on GPO directory %s %s not found!' % (acl_type(direct_db_access), os.path.join(root, name)))
+             fsacl_sddl = fsacl.as_sddl(domainsid)
+-            if fsacl_sddl != acl:
+-                raise ProvisioningError('%s ACL on GPO directory %s %s does not match expected value %s from GPO object' % (acl_type(direct_db_access), os.path.join(root, name), fsacl_sddl, acl))
++            if fsacl_sddl != dacl:
++                raise ProvisioningError('%s ACL on GPO directory %s %s does not match expected value %s from GPO object' % (acl_type(direct_db_access), os.path.join(root, name), fsacl_sddl, dacl))
+ 
+ 
+ def check_gpos_acl(sysvol, dnsdomain, domainsid, domaindn, samdb, lp,
+@@ -1661,7 +1666,7 @@ def check_gpos_acl(sysvol, dnsdomain, domainsid, domaindn, samdb, lp,
+         raise ProvisioningError('DB ACL on policy root %s %s not found!' % (acl_type(direct_db_access), root_policy_path))
+     fsacl_sddl = fsacl.as_sddl(domainsid)
+     if fsacl_sddl != POLICIES_ACL:
+-        raise ProvisioningError('%s ACL on policy root %s %s does not match expected value %s from provision' % (acl_type(direct_db_access), root_policy_path, fsacl_sddl, fsacl))
++        raise ProvisioningError('%s ACL on policy root %s %s does not match expected value %s from provision' % (acl_type(direct_db_access), root_policy_path, fsacl_sddl, POLICIES_ACL))
+     res = samdb.search(base="CN=Policies,CN=System,%s"%(domaindn),
+                         attrs=["cn", "nTSecurityDescriptor"],
+                         expression="", scope=ldb.SCOPE_ONELEVEL)
+@@ -1670,7 +1675,7 @@ def check_gpos_acl(sysvol, dnsdomain, domainsid, domaindn, samdb, lp,
+         acl = ndr_unpack(security.descriptor,
+                          str(policy["nTSecurityDescriptor"])).as_sddl()
+         policy_path = getpolicypath(sysvol, dnsdomain, str(policy["cn"]))
+-        check_dir_acl(policy_path, dsacl2fsacl(acl, domainsid), lp,
++        check_dir_acl(policy_path, dsacl2fsacl(acl, domainsid, is_dir=False), lp,
+                       domainsid, direct_db_access)
+ 
+ 
+@@ -1798,6 +1803,9 @@ def provision_fill(samdb, secrets_ldb, logger, names, paths,
+         samdb.transaction_commit()
+ 
+     if serverrole == "active directory domain controller":
++        if targetdir and smbd.have_nfsv4_acls() and smbd.has_nfsv4_acls(targetdir):
++            smbd.set_nfsv4_defaults()
++
+         # Continue setting up sysvol for GPO. This appears to require being
+         # outside a transaction.
+         if not skip_sysvolacl:
+@@ -2153,6 +2161,9 @@ def provision(logger, session_info, smbconf=None,
+             if not os.path.isdir(paths.netlogon):
+                 os.makedirs(paths.netlogon, 0755)
+ 
++            if smbd.have_nfsv4_acls() and smbd.has_nfsv4_acls(paths.sysvol):
++                smbd.set_nfsv4_defaults()
++
+         if adminpass is None:
+             adminpass = samba.generate_random_password(12, 32)
+             adminpass_generated = True
+diff --git a/source3/lib/sysacls.c b/source3/lib/sysacls.c
+index 0bf3c37..786cd39 100644
+--- a/source3/lib/sysacls.c
++++ b/source3/lib/sysacls.c
+@@ -38,6 +38,16 @@
+ #include "modules/vfs_hpuxacl.h"
+ #endif
+ 
++/*
++ * NFSv4 ACL's should be understood and a first class citizen. Work
++ * needs to be done in librpc/idl/smb_acl.idl for this to occur.
++ */
++#if defined(HAVE_LIBSUNACL) && defined(FREEBSD)
++#if 0
++#include "modules/nfs4_acls.h"
++#endif
++#endif
++
+ #undef  DBGC_CLASS
+ #define DBGC_CLASS DBGC_ACLS
+ 
+diff --git a/source3/param/loadparm.c b/source3/param/loadparm.c
+index ba19d46..74d3a2e 100644
+--- a/source3/param/loadparm.c
++++ b/source3/param/loadparm.c
+@@ -2733,6 +2733,13 @@ static void init_locals(void)
+ 			} else if (lp_parm_const_string(-1, "posix", "eadb", NULL)) {
+ 				lp_do_parameter(-1, "vfs objects", "dfs_samba4 acl_xattr posix_eadb");
+ 			} else {
++				/*
++				 * This should only set dfs_samba4 and leave acl_xattr
++				 * to be set later (or zfsacl). The only reason the decision
++				 * can't be made here to load acl_xattr or zfsacl is
++				 * that we don't have access to what the target
++				 * directory is.
++				 */
+ 				lp_do_parameter(-1, "vfs objects", "dfs_samba4 acl_xattr");
+ 			}
+ 		}
+diff --git a/source3/smbd/pysmbd.c b/source3/smbd/pysmbd.c
+index f1b46be..c1a0eee 100644
+--- a/source3/smbd/pysmbd.c
++++ b/source3/smbd/pysmbd.c
+@@ -368,6 +368,20 @@ static SMB_ACL_T make_simple_acl(TALLOC_CTX *mem_ctx,
+ 	return acl;
+ }
+ 
++static SMB_ACL_T make_simple_nfsv4_acl(TALLOC_CTX *mem_ctx,
++					gid_t gid,
++					mode_t chmod_mode)
++{
++	/*
++	 * This function needs to create an NFSv4 ACL. Currently, the only way
++	 * to do so is to use the operating system interface, or to use the
++	 * functions in source3/modules/nfs4_acls.c. These seems ugly and
++	 * hacky. NFSv4 ACL's should be a first class citizen and
++	 * librpc/idl/smb_acl.idl should be modified accordingly.
++	 */
++	return NULL;
++}
++
+ /*
+   set a simple ACL on a file, as a test
+  */
+@@ -414,6 +428,53 @@ static PyObject *py_smbd_set_simple_acl(PyObject *self, PyObject *args, PyObject
+ }
+ 
+ /*
++  set a simple NFSv4 ACL on a file, as a test
++ */
++static PyObject *py_smbd_set_simple_nfsv4_acl(PyObject *self, PyObject *args, PyObject *kwargs)
++{
++	const char * const kwnames[] = { "fname", "mode", "gid", "service", NULL };
++	char *fname, *service = NULL;
++	int ret;
++	int mode, gid = -1;
++	SMB_ACL_T acl;
++	TALLOC_CTX *frame;
++	connection_struct *conn;
++
++	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "si|iz",
++					 discard_const_p(char *, kwnames),
++					 &fname, &mode, &gid, &service))
++		return NULL;
++
++	frame = talloc_stackframe();
++
++	acl = make_simple_nfsv4_acl(frame, gid, mode);
++	if (acl == NULL) {
++		TALLOC_FREE(frame);
++		return NULL;
++	}
++
++	conn = get_conn(frame, service);
++	if (!conn) {
++		return NULL;
++	}
++
++	/*
++	 * SMB_ACL_TYPE_ACCESS -> ACL_TYPE_ACCESS -> Not valid for NFSv4 ACL
++	 */
++	ret = 0;
++
++	if (ret != 0) {
++		TALLOC_FREE(frame);
++		errno = ret;
++		return PyErr_SetFromErrno(PyExc_OSError);
++	}
++
++	TALLOC_FREE(frame);
++
++	Py_RETURN_NONE;
++}
++
++/*
+   chown a file
+  */
+ static PyObject *py_smbd_chown(PyObject *self, PyObject *args, PyObject *kwargs)
+@@ -520,7 +581,7 @@ static PyObject *py_smbd_unlink(PyObject *self, PyObject *args, PyObject *kwargs
+ }
+ 
+ /*
+-  check if we have ACL support
++  check if we have POSIX.1e ACL support
+  */
+ static PyObject *py_smbd_have_posix_acls(PyObject *self)
+ {
+@@ -531,6 +592,86 @@ static PyObject *py_smbd_have_posix_acls(PyObject *self)
+ #endif
+ }
+ 
++static PyObject *py_smbd_has_posix_acls(PyObject *self, PyObject *args, PyObject *kwargs)
++{
++	const char * const kwnames[] = { "path", NULL };
++	char *path = NULL;
++	TALLOC_CTX *frame;
++	struct statfs fs;
++	int ret = false;
++
++	frame = talloc_stackframe();
++
++	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|z",
++					 discard_const_p(char *, kwnames), &path)) {
++		TALLOC_FREE(frame);
++		return NULL;
++	}
++
++	if (statfs(path, &fs) != 0) {
++		TALLOC_FREE(frame);
++		return NULL;
++	}
++
++	if (fs.f_flags & MNT_ACLS)
++		ret = true;
++
++	TALLOC_FREE(frame);
++	return PyBool_FromLong(ret);
++}
++
++/*
++  check if we have NFSv4 ACL support
++ */
++static PyObject *py_smbd_have_nfsv4_acls(PyObject *self)
++{
++#ifdef HAVE_LIBSUNACL
++	return PyBool_FromLong(true);
++#else
++	return PyBool_FromLong(false);
++#endif
++}
++
++static PyObject *py_smbd_has_nfsv4_acls(PyObject *self, PyObject *args, PyObject *kwargs)
++{
++	const char * const kwnames[] = { "path", NULL };
++	char *path = NULL;
++	TALLOC_CTX *frame;
++	struct statfs fs;
++	int ret = false;
++
++	frame = talloc_stackframe();
++
++	if (!PyArg_ParseTupleAndKeywords(args, kwargs, "s|z",
++					 discard_const_p(char *, kwnames), &path)) {
++		TALLOC_FREE(frame);
++		return NULL;
++	}
++
++	if (statfs(path, &fs) != 0) {
++		TALLOC_FREE(frame);
++		return NULL;
++	}
++
++	if (fs.f_flags & MNT_NFS4ACLS)
++		ret = true;
++
++	TALLOC_FREE(frame);
++	return PyBool_FromLong(ret);
++}
++
++
++static PyObject *py_smbd_set_nfsv4_defaults(PyObject *self)
++{
++	/*
++	 * This should really be done in source3/param/loadparm.c
++	 */
++#if defined(HAVE_LIBSUNACL) && defined(FREEBSD)
++	lp_do_parameter(-1, "vfs objects", "dfs_samba4 zfsacl");
++#endif
++	Py_RETURN_NONE;
++}
++
+ /*
+   set the NT ACL on a file
+  */
+@@ -718,9 +859,24 @@ static PyMethodDef py_smbd_methods[] = {
+ 	{ "have_posix_acls",
+ 		(PyCFunction)py_smbd_have_posix_acls, METH_NOARGS,
+ 		NULL },
++	{ "has_posix_acls",
++		(PyCFunction)py_smbd_has_posix_acls, METH_VARARGS|METH_KEYWORDS,
++		NULL },
++	{ "have_nfsv4_acls",
++		(PyCFunction)py_smbd_have_nfsv4_acls, METH_NOARGS,
++		NULL },
++	{ "has_nfsv4_acls",
++		(PyCFunction)py_smbd_has_nfsv4_acls, METH_VARARGS|METH_KEYWORDS,
++		NULL },
++	{ "set_nfsv4_defaults",
++		(PyCFunction)py_smbd_set_nfsv4_defaults, METH_NOARGS,
++		NULL },
+ 	{ "set_simple_acl",
+ 		(PyCFunction)py_smbd_set_simple_acl, METH_VARARGS|METH_KEYWORDS,
+ 		NULL },
++	{ "set_simple_nfsv4_acl",
++		(PyCFunction)py_smbd_set_simple_nfsv4_acl, METH_VARARGS|METH_KEYWORDS,
++		NULL },
+ 	{ "set_nt_acl",
+ 		(PyCFunction)py_smbd_set_nt_acl, METH_VARARGS|METH_KEYWORDS,
+ 		NULL },
