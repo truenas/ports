@@ -2,6 +2,7 @@
 
 PORTNAME=	zol
 PORTVERSION=	2018121700
+PORTREVISION=	1
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 PKGNAMESUFFIX=	-kmod
@@ -17,7 +18,7 @@ GH_ACCOUNT=	zfsonfreebsd
 GH_PROJECT=	ZoF
 GH_TAGNAME=	10f2d4b
 
-PLIST_FILE=	${KMODDIR}/zfs.ko
+PLIST_FILES=	${KMODDIR}/zfs.ko
 
 post-patch:
 	${CP} ${FILESDIR}/zfs_gitrev.h ${WRKSRC}/include
