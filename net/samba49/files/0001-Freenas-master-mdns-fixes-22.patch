@@ -1,8 +1,3 @@
----
- source3/client/dnsbrowse.c |  19 ++-
- source3/smbd/dnsregister.c | 354 ++++++++++++++++++++++++++++++++++++---------
- 2 files changed, 299 insertions(+), 74 deletions(-)
-
 diff --git a/source3/client/dnsbrowse.c b/source3/client/dnsbrowse.c
 index be6eb88..83aef96 100644
 --- a/source3/client/dnsbrowse.c
@@ -73,7 +68,7 @@ index be6eb88..83aef96 100644
  			do_smb_browse_reply, &bstate);
  
 diff --git a/source3/smbd/dnsregister.c b/source3/smbd/dnsregister.c
-index df18900..c6e9da9 100644
+index df18900..ad81825 100644
 --- a/source3/smbd/dnsregister.c
 +++ b/source3/smbd/dnsregister.c
 @@ -29,6 +29,29 @@
@@ -91,7 +86,7 @@ index df18900..c6e9da9 100644
 + * Speculation in Samba-Technical indicates that this stands for "Wireless AirDisk Mac Address".
 + *
 + * adVU -- AirDisk Volume UUID. Mac OS servers generate a UUID. Time machine over SMB works without one
-+ * set. Netatalk generates a UUID and stores it persistently in afp_voluuid.conf. This can be 
++ * set. Netatalk generates a UUID and stores it persistently in afp_voluuid.conf. This can be
 + * set by adding the share parameter "fruit:volume_uuid = "
 + *
 + * dk(n)=adVF=
@@ -106,7 +101,7 @@ index df18900..c6e9da9 100644
  #define DNS_REG_RETRY_INTERVAL (5*60)  /* in seconds */
  
  #ifdef WITH_DNSSD_SUPPORT
-@@ -36,85 +59,177 @@
+@@ -36,85 +59,178 @@
  #include <dns_sd.h>
  
  struct dns_reg_state {
@@ -283,6 +278,7 @@ index df18900..c6e9da9 100644
 +	TXTRecordRef txt_adisk;
 +	TXTRecordRef txt_devinfo;
 +	char *servname;
++	char *zeroconf_name = lp_zeroconf_name();
 +	char *v_uuid;
 +	int num_services = lp_numservices();
  
@@ -314,7 +310,7 @@ index df18900..c6e9da9 100644
 +	err = DNSServiceRegister(&state->srv_ref,
 +			0		/* flags */,
 +			state->if_index /* interface index */,
-+			NULL 		/* service name */,
++			zeroconf_name	/* service name */,
 +			"_smb._tcp"	/* service type */,
 +			NULL		/* domain */,
 +			""		/* SRV target host name */,
@@ -327,16 +323,16 @@ index df18900..c6e9da9 100644
  
  	if (err != kDNSServiceErr_NoError) {
  		/* Failed to register service. Schedule a re-try attempt.
-@@ -123,24 +238,96 @@ static void dns_register_smbd_retry(struct tevent_context *ctx,
+@@ -123,24 +239,96 @@ static void dns_register_smbd_retry(struct tevent_context *ctx,
  		goto retry;
  	}
  
 -	dns_state->fd = DNSServiceRefSockFD(dns_state->srv_ref);
 -	if (dns_state->fd == -1) {
 +	/*
-+ 	 * Check for services that are configured as Time Machine targets
-+ 	 *
-+ 	 */
++	 * Check for services that are configured as Time Machine targets
++	 *
++	 */
 +	for (snum = 0; snum < num_services; snum++) {
 +		if (lp_snum_ok(snum) && lp_parm_bool(snum, "fruit", "time machine", false))
 +		{
@@ -379,7 +375,7 @@ index df18900..c6e9da9 100644
 +		err = DNSServiceRegister(&state->srv_ref,
 +				0		/* flags */,
 +				state->if_index /* interface index */,
-+				NULL 		/* service name */,
++				zeroconf_name	/* service name */,
 +				"_adisk._tcp"	/* service type */,
 +				NULL		/* domain */,
 +				""		/* SRV target host name */,
@@ -390,7 +386,7 @@ index df18900..c6e9da9 100644
 +				 *    clients cannot register with the same name as the placeholder service."
 +				 * We therefor use port 9 which is used by the adisk service type.
 +				 */
-+                                htons(9)	/* port */,
++				htons(9)	/* port */,
 +				TXTRecordGetLength(&txt_adisk)		/* TXT record len */,
 +				TXTRecordGetBytesPtr(&txt_adisk)	/* TXT record data */,
 +				dns_register_smbd_callback /* callback func */,
@@ -434,7 +430,7 @@ index df18900..c6e9da9 100644
  		timeval_current_ofs(DNS_REG_RETRY_INTERVAL, 0));
  }
  
-@@ -150,44 +337,77 @@ static void dns_register_smbd_fde_handler(struct tevent_context *ev,
+@@ -150,44 +338,83 @@ static void dns_register_smbd_fde_handler(struct tevent_context *ev,
  					  uint16_t flags,
  					  void *private_data)
  {
@@ -459,16 +455,16 @@ index df18900..c6e9da9 100644
 -	dns_register_smbd_schedule(dns_state,
 -		timeval_current_ofs(DNS_REG_RETRY_INTERVAL, 0));
 +	dns_register_smbd_schedule(state, timeval_zero());
- }
- 
++}
++
 +static int dns_reg_state_destructor(struct dns_reg_state *state)
 +{
 +	if (state != NULL) {
 +		talloc_free(state);
 +	}
 +	return 0;
-+}
-+
+ }
+ 
 +
  bool smbd_setup_mdns_registration(struct tevent_context *ev,
  				  TALLOC_CTX *mem_ctx,
@@ -477,6 +473,12 @@ index df18900..c6e9da9 100644
  	struct dns_reg_state *dns_state;
 +	bool bind_all = true;
 +	int i;
++
++	if (lp_truenas_passive_controller()) {
++		DEBUG(3, ("Bypassing mDNS registration for passive storage controller\n"));
++		return true;
++	}
++
  
  	dns_state = talloc_zero(mem_ctx, struct dns_reg_state);
 -	if (dns_state == NULL) {
@@ -526,6 +528,3 @@ index df18900..c6e9da9 100644
  #else /* WITH_DNSSD_SUPPORT */
  
  bool smbd_setup_mdns_registration(struct tevent_context *ev,
--- 
-1.8.3.1
-
