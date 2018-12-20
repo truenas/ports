@@ -26,7 +26,7 @@ index 0000000..66755f5
 +		xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 +<description>
 +	<para>This parameter is designed to control whether netbios alias should
-+	be added to the spn during domain join.                                                  
++	be added as a computer object spn entry during domain join.                                                  
 +	</para>
 +</description>
 +<value type="default">yes</value>

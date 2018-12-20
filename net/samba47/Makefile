@@ -22,7 +22,7 @@ EXTRA_PATCHES+=			${PATCHDIR}/0001-add-custom-vfs_4-7.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-Freenas-master-mdns-fixes-22.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-add-idmap_fruit_4-7.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-add-large-xattr-support_4-7.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/0001-add-parameters_for_ha_4-7.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/0001-add-parameters-for-ha_4-7.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-audit.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-zfs-provisioning-fixes_4-7.patch:-p1
 
