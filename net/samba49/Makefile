@@ -3,7 +3,7 @@
 
 PORTNAME=			${SAMBA4_BASENAME}49
 PORTVERSION=			${SAMBA4_VERSION}
-PORTREVISION=			3	
+PORTREVISION=			4
 CATEGORIES?=			net
 MASTER_SITES=			SAMBA/samba/stable SAMBA/samba/rc
 DISTNAME=			${SAMBA4_DISTNAME}
@@ -338,7 +338,7 @@ LDAP_VARS=			SAMBA4_MODULES+=idmap_ldap
 
 LIBZFS_CONFIGURE_WITH=		libzfs
 LIBZFS_CONFIGURE_OFF=		--without-libzfs
-LIBZFS_VARS=			SAMBA4_MODULES+=vfs_zfs_space
+LIBZFS_VARS=			SAMBA4_MODULES+=vfs_zfs_space vfs_ixnas
 
 MANDOC_BUILD_DEPENDS=		${LOCALBASE}/share/xsl/docbook/manpages/docbook.xsl:textproc/docbook-xsl \
 				xsltproc:textproc/libxslt
@@ -377,8 +377,8 @@ SAMBA4_MODULES+=		auth_skel pdb_test gpext_security gpext_registry gpext_scripts
 
 .if ${PORT_OPTIONS:MLIBZFS}
 CONFIGURE_ARGS+=        --with-libzfs
-WANT_EXP_MODULES+=      vfs_zfs_space
-SAMBA4_MODULES+=        vfs_zfs_space
+WANT_EXP_MODULES+=      vfs_zfs_space vfs_ixnas
+SAMBA4_MODULES+=        vfs_zfs_space vfs_ixnas
 PLIST_SUB+=             LIBZFS=""
 .else
 CONFIGURE_ARGS+=        --without-libzfs
