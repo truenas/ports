@@ -11,7 +11,8 @@ MAINTAINER=	dev@ixsystems.com
 COMMENT=	Angular 5 Web User Interface for FreeNAS
 
 FETCH_DEPENDS=	git>0:devel/git \
-		python2>0:lang/python2
+		python2>0:lang/python2 \
+		gmake>0:devel/gmake
 BUILD_DEPENDS=	rsync>0:net/rsync \
 		python2>0:lang/python2 \
 		npm>=0:www/npm \
