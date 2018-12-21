@@ -612,6 +612,7 @@
     SUBDIR += etcd33
     SUBDIR += etl
     SUBDIR += euca2ools
+    SUBDIR += evdev-proto
     SUBDIR += evemu
     SUBDIR += eventxx
     SUBDIR += evolution-gconf-tools
@@ -700,7 +701,6 @@
     SUBDIR += gconf2
     SUBDIR += gconf2-reference
     SUBDIR += gconfmm26
-    SUBDIR += gcvs
     SUBDIR += gdb
     SUBDIR += gdcm
     SUBDIR += geany
@@ -744,6 +744,7 @@
     SUBDIR += geany-plugin-treebrowser
     SUBDIR += geany-plugin-updatechecker
     SUBDIR += geany-plugin-utilslib
+    SUBDIR += geany-plugin-vimode
     SUBDIR += geany-plugin-vc
     SUBDIR += geany-plugin-webhelper
     SUBDIR += geany-plugin-workbench
@@ -1454,6 +1455,7 @@
     SUBDIR += libfmt
     SUBDIR += libfortuna
     SUBDIR += libfreefare
+    SUBDIR += libfsapfs
     SUBDIR += libfsntfs
     SUBDIR += libftdi
     SUBDIR += libftdi1
@@ -1533,7 +1535,6 @@
     SUBDIR += libol
     SUBDIR += libolecf
     SUBDIR += liboobs
-    SUBDIR += liboop
     SUBDIR += libopenbsd
     SUBDIR += libopencm3
     SUBDIR += libopensync
@@ -5016,6 +5017,7 @@
     SUBDIR += py-pytrie
     SUBDIR += py-pytvmaze
     SUBDIR += py-pytz
+    SUBDIR += py-pyudev
     SUBDIR += py-pyutil
     SUBDIR += py-pyvalid
     SUBDIR += py-pyvisa
@@ -6427,6 +6429,7 @@
     SUBDIR += zanata-cli
     SUBDIR += zapcc
     SUBDIR += zeal
+    SUBDIR += zfp
     SUBDIR += zookeeper
     SUBDIR += zpu-binutils
     SUBDIR += zpu-gcc
