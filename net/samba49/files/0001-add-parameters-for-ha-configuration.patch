@@ -1,13 +1,43 @@
----
- docs-xml/smbdotconf/domain/adsdnsupdate.xml            | 10 ++++++++++
- docs-xml/smbdotconf/winbind/winbindnetbiosaliasspn.xml | 12 ++++++++++++
- source3/libnet/libnet_join.c                           |  2 +-
- source3/param/loadparm.c                               |  2 ++
- source3/utils/net_ads.c                                |  4 ++++
- 5 files changed, 29 insertions(+), 1 deletion(-)
- create mode 100644 docs-xml/smbdotconf/domain/adsdnsupdate.xml
- create mode 100644 docs-xml/smbdotconf/winbind/winbindnetbiosaliasspn.xml
-
+diff --git a/docs-xml/smbdotconf/base/truenaspassivecontroller.xml b/docs-xml/smbdotconf/base/truenaspassivecontroller.xml
+new file mode 100644
+index 0000000..ad7499b
+--- /dev/null
++++ b/docs-xml/smbdotconf/base/truenaspassivecontroller.xml
+@@ -0,0 +1,11 @@
++<samba:parameter name="truenas passive controller"
++                 type="boolean"
++                 context="G"
++                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
++<description>
++        <para>Boolean flag indicating that the server is the passive
++	storage controller on an HA server.</para>
++
++</description>
++<value type="default">no</value>
++</samba:parameter>
+diff --git a/docs-xml/smbdotconf/base/zeroconfname.xml b/docs-xml/smbdotconf/base/zeroconfname.xml
+new file mode 100644
+index 0000000..78b054d
+--- /dev/null
++++ b/docs-xml/smbdotconf/base/zeroconfname.xml
+@@ -0,0 +1,17 @@
++<samba:parameter name="zeroconf name"
++                 context="G"
++                 type="ustring"
++                 constant="1"
++                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
++<description>
++        <para>
++		This sets the name used for mdns registration. If it is not set,
++		then the server hostname will be used.	
++	</para>
++
++</description>
++
++<related>netbios aliases</related>
++<value type="default"><comment>empty string</comment></value>
++<value type="example">MYNAME</value>
++</samba:parameter>
 diff --git a/docs-xml/smbdotconf/domain/adsdnsupdate.xml b/docs-xml/smbdotconf/domain/adsdnsupdate.xml
 new file mode 100644
 index 0000000..ee113b1
@@ -56,15 +86,17 @@ index a9405e8..95c1c8a 100644
  			/*
  			 * Add HOST/NETBIOSNAME
 diff --git a/source3/param/loadparm.c b/source3/param/loadparm.c
-index 291ba57..372ac9f 100644
+index 322934c..eefae67 100644
 --- a/source3/param/loadparm.c
 +++ b/source3/param/loadparm.c
-@@ -723,6 +723,8 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
+@@ -723,6 +723,10 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
  	Globals.log_writeable_files_on_exit = false;
  	Globals.create_krb5_conf = true;
  	Globals.include_system_krb5_conf = true;
 +	Globals.winbind_netbios_alias_spn = true;
 +	Globals.ads_dns_update = 1;
++	Globals.truenas_passive_controller = false;
++	lpcfg_string_set(Globals.ctx, &Globals.zeroconf_name, "");
  	Globals._winbind_max_domain_connections = 1;
  
  	/* hostname lookups can be very expensive and are broken on
@@ -83,6 +115,3 @@ index ffa67d8..ad24e0d 100644
  	if (!r->out.domain_is_ad) {
  		return;
  	}
--- 
-1.8.3.1
-
