@@ -9,7 +9,7 @@ COMMENT=	PECL classes for MongoDB
 
 LICENSE=	APACHE20
 
-USES=		php:pecl portssl
+USES=		php:pecl ssl
 USE_PHP=	spl:build
 CFLAGS+=	-I${LOCALBASE}/include
 

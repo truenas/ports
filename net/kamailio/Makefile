@@ -50,7 +50,7 @@ PGSQL_USES=	pgsql
 JITSI_RUN_DEPENDS=	jitsi:net-im/jitsi
 UNIXODBC_LIB_DEPENDS=	libodbc.so:databases/unixODBC
 RADIUS_LIB_DEPENDS=	libradiusclient-ng.so:net/radiusclient
-TLS_USES=	portssl
+TLS_USES=	ssl
 
 .include <bsd.port.options.mk>
 

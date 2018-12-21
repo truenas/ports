@@ -7,7 +7,7 @@ CATEGORIES=	x11-toolkits python
 MAINTAINER=	python@FreeBSD.org
 COMMENT=	PyPy bindings to the Tk widget set
 
-USES=		tk portssl
+USES=		tk ssl
 
 CFFI_MODULE=	_tkinter/tklib
 CFFI_NAME=	tkffi

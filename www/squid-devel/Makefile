@@ -111,7 +111,7 @@ PCRE_LIB_DEPENDS=		libpcre.so:devel/pcre
 PCRE_CPPFLAGS=			-I${LOCALBASE}/include
 PCRE_LDFLAGS=			-L${LOCALBASE}/lib -lpcreposix -lpcre
 SNMP_CONFIGURE_ENABLE=		snmp
-SSL_CONFIGURE_ENABLE=		portssl
+SSL_CONFIGURE_ENABLE=		ssl
 SSL_CONFIGURE_ON=		--with-openssl=${OPENSSLBASE} \
 				--enable-security-cert-generators="file" \
 				LIBOPENSSL_CFLAGS=-I${OPENSSLINC} \

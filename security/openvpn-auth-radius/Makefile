@@ -17,7 +17,7 @@ LICENSE=	GPLv2
 RUN_DEPENDS=	${LOCALBASE}/sbin/openvpn:security/openvpn
 LIB_DEPENDS=	libgcrypt.so:security/libgcrypt
 
-USES=		gmake portssl
+USES=		gmake ssl
 MAKEFILE=	Makefile.bsd
 WRKSRC=		${WRKDIR}/radiusplugin
 

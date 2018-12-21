@@ -11,7 +11,7 @@ CONFLICTS=	bareos16-client-*
 
 WITH_CLIENT_ONLY=yes
 USE_RC_SUBR=	bareos-fd
-USES=	portssl
+USES=	ssl
 
 PLIST=		${PKGDIR}/pkg-plist.client
 MASTERDIR=	${.CURDIR}/../../sysutils/bareos-server

@@ -16,7 +16,7 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 RUN_DEPENDS=	${LOCALBASE}/sbin/tcsd:security/trousers
 LIB_DEPENDS=	libtspi.so:security/trousers
 
-USES=		autoreconf gmake libtool portssl
+USES=		autoreconf gmake libtool ssl
 USE_LDCONFIG=	yes
 GNU_CONFIGURE=	yes
 LDFLAGS+=	-L${OPENSSLLIB} -lcrypto -L${LOCALBASE}/lib

@@ -19,7 +19,7 @@ USE_GITHUB=	yes
 GH_ACCOUNT=	OpenSC
 
 GNU_CONFIGURE=	yes
-USES=		autoreconf libtool pkgconfig portssl
+USES=		autoreconf libtool pkgconfig ssl
 USE_LDCONFIG=	yes
 
 MAKE_JOBS_UNSAFE=	yes

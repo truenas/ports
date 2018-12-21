@@ -22,7 +22,7 @@ TEST_DEPENDS=	p5-Taint-Util>=0:devel/p5-Taint-Util \
 
 CONFIGURE_ENV=	LIBCRYPTO_CFLAGS="-I${OPENSSLINC}" LIBCRYPTO_LIBS="-L${OPENSSLLIB} -lcrypto"
 USE_PERL5=	configure
-USES=		perl5 portssl
+USES=		perl5 ssl
 
 post-install:
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/${SITE_ARCH_REL}/auto/Crypt/SMIME/SMIME.so

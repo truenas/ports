@@ -21,7 +21,7 @@ CONFIGURE_ARGS=	--disable-nls --with-vpnc-script=${LOCALBASE}/sbin/vpnc-script \
 		--with-pkgconfigdir=${PREFIX}/libdata/pkgconfig \
 		--without-openssl-version-check --without-libpcsclite \
 		--without-libpskc
-USES=		cpe gmake iconv libtool pkgconfig python:build portssl
+USES=		cpe gmake iconv libtool pkgconfig python:build ssl
 CPE_VENDOR=	infradead
 INSTALL_TARGET=	install-strip
 USE_LDCONFIG=	yes

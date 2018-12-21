@@ -62,7 +62,7 @@ NDMP_CONFIGURE_OFF=	--enable-ndmp=no
 GNUTLS_CONFIGURE_WITH=	gnutls=${LOCALBASE}
 GNUTLS_LIB_DEPENDS=	libgnutls.so:security/gnutls
 
-OPENSSL_USES=		portssl
+OPENSSL_USES=		ssl
 OPENSSL_CONFIGURE_ON=	--with-openssl=${OPENSSLBASE}
 OPENSSL_CONFIGURE_OFF=	--with-openssl="no"
 

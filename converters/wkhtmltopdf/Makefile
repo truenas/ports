@@ -24,7 +24,7 @@ LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig \
 		libfreetype.so:print/freetype2 \
 		libpng.so:graphics/png
 
-USES=		compiler:c++11-lang gmake iconv jpeg perl5 pkgconfig portssl
+USES=		compiler:c++11-lang gmake iconv jpeg perl5 pkgconfig ssl
 USE_XORG=	x11 xext xrender
 USE_PERL5=	build
 USE_LDCONFIG=	yes

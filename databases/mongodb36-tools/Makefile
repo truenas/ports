@@ -33,7 +33,7 @@ OPTIONS_DEFAULT=	SSL SASL
 SASL_USE=	my_tags=sasl
 SASL_LIB_DEPENDS=	libsasl2.so:security/cyrus-sasl2
 
-SSL_USES=	portssl
+SSL_USES=	ssl
 SSL_USE=	my_tags=ssl
 
 # Go is not our friend. Without below, ignores user-supplied flags.

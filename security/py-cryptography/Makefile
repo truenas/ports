@@ -28,7 +28,7 @@ TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pytest>=3.2.1:devel/py-pytest@${PY_FLAVOR} 
 		${PYTHON_PKGNAMEPREFIX}hypothesis>=1.11.4:devel/py-hypothesis@${PY_FLAVOR}
 
 # Python 2.7, 3.4-3.6
-USES=		compiler:env python portssl
+USES=		compiler:env python ssl
 USE_PYTHON=	autoplist concurrent distutils
 
 CFLAGS+=	-I${OPENSSLINC}

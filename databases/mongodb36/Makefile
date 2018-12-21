@@ -53,7 +53,7 @@ OPTIONS_DEFAULT=	SASL SSL
 SASL_LIB_DEPENDS=	libsasl2.so:security/cyrus-sasl2
 SASL_MAKE_ARGS=		--use-sasl-client
 
-SSL_USES=	portssl
+SSL_USES=	ssl
 SSL_MAKE_ARGS=	--ssl
 
 .include <bsd.port.options.mk>

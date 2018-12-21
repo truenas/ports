@@ -66,7 +66,7 @@ U_OPTION_DESC=	include support for user .qpopper-options
 OPTIONS_DEFAULT=	APOP OPENSSL U_OPTION
 OPTIONS_SUB=	yes
 
-OPENSSL_USES=	portssl
+OPENSSL_USES=	ssl
 
 .include <bsd.port.pre.mk>
 

@@ -19,7 +19,7 @@ RUN_DEPENDS?=	fpcres:lang/fpc-utils
 
 ONLY_FOR_ARCHS=	i386 amd64
 
-USES=		fpc gettext gmake iconv portssl
+USES=		fpc gettext gmake iconv ssl
 USE_FPC?=	chm cairo dblib fcl-base fcl-db fcl-fpcunit fcl-image fcl-json fcl-net \
 		fcl-registry fcl-res fcl-web fcl-xml gtk2 ibase iconvenc mysql \
 		numlib odbc openssl oracle pasjpeg postgres regexpr rtl-extra \

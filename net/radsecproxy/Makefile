@@ -12,7 +12,7 @@ COMMENT=	Radsecproxy is a generic RADIUS proxy
 LICENSE=	GPLv2 BSD3CLAUSE
 LICENSE_COMB=	dual
 
-USES=		cpe tar:xz portssl
+USES=		cpe tar:xz ssl
 CPE_VENDOR=	nordunet
 
 GNU_CONFIGURE=	yes

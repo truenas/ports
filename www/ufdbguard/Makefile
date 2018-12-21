@@ -15,7 +15,7 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 BROKEN_aarch64=		fails to compile: error: regparm is not valid on this platform
 BROKEN_SSL=	openssl111 libressl libressl-devel
 
-USES=		perl5 shebangfix portssl
+USES=		perl5 shebangfix ssl
 SHEBANG_FILES=	samples/URLblocked.cgi
 GNU_CONFIGURE=	yes
 USE_RC_SUBR=	ufdbguardd

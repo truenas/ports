@@ -17,7 +17,7 @@ CONFIGURE_ARGS=	--with-pam=${PREFIX}/lib/security --sysconfdir=${PREFIX}/etc \
 		--docdir=${DOCSDIR} --includedir=${PREFIX}/include/${PORTNAME}
 
 GNU_CONFIGURE=	yes
-USES=		libtool pathfix portssl
+USES=		libtool pathfix ssl
 USE_LDCONFIG=	yes
 
 SUB_FILES=	pkg-message
