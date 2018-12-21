@@ -25,10 +25,7 @@ CTAPI_DESC=	Use CT-API backend
 SM_DESC=	Enable secure messaging support
 NOTIFY_DESC=	Enable notification support
 
-<<<<<<< HEAD
 USES=		libtool pkgconfig gmake portssl
-=======
->>>>>>> freebsd/master
 GNU_CONFIGURE=	yes
 USE_LDCONFIG=	yes
 INSTALL_TARGET=	install-strip
