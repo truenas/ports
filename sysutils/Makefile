@@ -415,7 +415,6 @@
     SUBDIR += garcon
     SUBDIR += gather
     SUBDIR += gbi
-    SUBDIR += gcombust
     SUBDIR += gconf-editor
     SUBDIR += gdisk
     SUBDIR += gdmap

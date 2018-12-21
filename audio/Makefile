@@ -751,8 +751,6 @@
     SUBDIR += sc3-plugins
     SUBDIR += schismtracker
     SUBDIR += screcord-lv2
-    SUBDIR += scrobbler
-    SUBDIR += sdl2_mixer
     SUBDIR += sdl_mixer
     SUBDIR += sdl_sound
     SUBDIR += sdl2_mixer
