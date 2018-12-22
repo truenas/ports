@@ -15,6 +15,7 @@ PLIST="${PLIST} freenas/py-bsd::freenas::py-bsd::master"
 PLIST="${PLIST} freenas/py-licenselib::freenas::licenselib::master"
 PLIST="${PLIST} freenas/py-middlewared::freenas::freenas::master"
 PLIST="${PLIST} net/py-netif::freenas::py-netif::master"
+PLIST="${PLIST} sysutils/py-zettarepl::freenas::zettarepl::master"
 PLIST="${PLIST} sysutils/iocage::freenas::iocage::master"
 
 usage()
