@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	zol
-PORTVERSION=	2018121700
+PORTVERSION=	2018122200
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 
@@ -13,12 +13,12 @@ LICENSE=	CDDL
 RUN_DEPENDS=	zol-kmod>=0:sysutils/zol-kmod
 
 GNU_CONFIGURE=  yes
-CONFIGURE_ARGS=	--prefix=${PREFIX} --with-config="user"
+CONFIGURE_ARGS=	--prefix=${PREFIX} --enable-debug --enable-debuginfo --with-config="user"
 USES=		autoreconf:build libtool gmake
 USE_GITHUB=	yes
 GH_ACCOUNT=	zfsonfreebsd
 GH_PROJECT=	ZoF
-GH_TAGNAME=	10f2d4b
+GH_TAGNAME=	b917de909921062f226a9bc7d40172ef0d3963e5
 
 pre-configure:
 	cd ${WRKSRC} && ./autogen.sh
