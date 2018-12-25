@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-TIMESTAMP = 1522439592
-SHA256 (iocage-iocage-20180329-19d8eb7f4272dac7e206b4f827732f46177439c8_GH0.tar.gz) = 9aa255f508a1b75b0e18796707879ffaa25c3c164b748a9455e63291be328bca
-SIZE (iocage-iocage-20180329-19d8eb7f4272dac7e206b4f827732f46177439c8_GH0.tar.gz) = 346615
-=======
 TIMESTAMP = 1545623712
 SHA256 (iocage-iocage-1.0_GH0.tar.gz) = 5a19149156230afd94bdb78da6eca0fdfdb02ea4b6fcfa39b014938040450adb
 SIZE (iocage-iocage-1.0_GH0.tar.gz) = 335140
->>>>>>> freebsd/master

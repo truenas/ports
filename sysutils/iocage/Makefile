@@ -1,11 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	iocage
-<<<<<<< HEAD
-PORTVERSION=	20180329
-=======
 PORTVERSION=	1.0
->>>>>>> freebsd/master
 CATEGORIES=	sysutils python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
@@ -25,15 +21,12 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}netifaces>0:net/py-netifaces@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}pytest-runner>=2.0.0:devel/py-pytest-runner@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}requests>=2.11.1:www/py-requests@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}libzfs>=1.0.2:devel/py-libzfs@${PY_FLAVOR} \
-<<<<<<< HEAD
 		${PYTHON_PKGNAMEPREFIX}dulwich>0:devel/dulwich@${PY_FLAVOR}
 
 USE_GITHUB=	yes
 GH_TAGNAME=	19d8eb7f4272dac7e206b4f827732f46177439c8
-=======
 		${PYTHON_PKGNAMEPREFIX}dulwich>0:devel/dulwich@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}dnspython>0:dns/py-dnspython@${PY_FLAVOR}
->>>>>>> freebsd/master
 
 NO_ARCH=	yes
 USES=		python:3.6+
