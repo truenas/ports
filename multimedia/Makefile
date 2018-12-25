@@ -103,7 +103,6 @@
     SUBDIR += gstreamer-plugins-all
     SUBDIR += gstreamer-plugins-annodex
     SUBDIR += gstreamer-plugins-bad
-    SUBDIR += gstreamer-plugins-buzztard
     SUBDIR += gstreamer-plugins-bz2
     SUBDIR += gstreamer-plugins-core
     SUBDIR += gstreamer-plugins-dts
@@ -473,7 +472,6 @@
     SUBDIR += xawtv
     SUBDIR += xfce4-parole
     SUBDIR += xine
-    SUBDIR += xmms
     SUBDIR += xporthdmv
     SUBDIR += xvid
     SUBDIR += yamdi
