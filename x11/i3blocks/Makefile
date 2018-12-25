@@ -10,6 +10,9 @@ COMMENT=	Define blocks for your i3bar status line
 
 LICENSE=	GPLv3
 
+RUN_DEPENDS=	wget:ftp/wget \
+		freecolor:sysutils/freecolor
+
 USES=		gmake
 USE_GITHUB=	yes
 GH_ACCOUNT=	Minbar1
