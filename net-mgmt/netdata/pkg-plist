@@ -424,6 +424,8 @@ sbin/netdata
 %%DATADIR%%/web/lib/perfect-scrollbar-0.6.15.min.js
 %%DATADIR%%/web/lib/raphael-2.2.4-min.js
 %%DATADIR%%/web/lib/tableExport-1.6.0.min.js
+%%DATADIR%%/web/main.js
+%%DATADIR%%/web/main.css
 %%DATADIR%%/web/netdata-swagger.json
 %%DATADIR%%/web/netdata-swagger.yaml
 %%DATADIR%%/web/refresh-badges.js
