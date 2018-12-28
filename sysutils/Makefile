@@ -581,7 +581,7 @@
     SUBDIR += knutclient-kde4
     SUBDIR += kops
     SUBDIR += krename
-    SUBDIR += kshutdown-kde4
+    SUBDIR += kshutdown
     SUBDIR += ksysguardd-kde4
     SUBDIR += ksystemlog
     SUBDIR += ksystemlog-kde4

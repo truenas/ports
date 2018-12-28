@@ -1137,6 +1137,7 @@
     SUBDIR += py-socketio-client
     SUBDIR += py-softlayer
     SUBDIR += py-speedtest-cli
+    SUBDIR += py-sshtunnel
     SUBDIR += py-sshuttle
     SUBDIR += py-stomp.py
     SUBDIR += py-suds
@@ -1168,6 +1169,7 @@
     SUBDIR += qoauth-qt5
     SUBDIR += qt4-network
     SUBDIR += qt5-network
+    SUBDIR += qt5-networkauth
     SUBDIR += qtweetlib
     SUBDIR += quagga
     SUBDIR += queso

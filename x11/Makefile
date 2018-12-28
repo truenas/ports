@@ -489,6 +489,7 @@
     SUBDIR += xorgproto
     SUBDIR += xplsprinters
     SUBDIR += xpr
+    SUBDIR += xpra
     SUBDIR += xprehashprinterlist
     SUBDIR += xprintidle
     SUBDIR += xprompt
