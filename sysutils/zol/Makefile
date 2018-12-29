@@ -18,7 +18,7 @@ USES=		autoreconf:build libtool gmake
 USE_GITHUB=	yes
 GH_ACCOUNT=	zfsonfreebsd
 GH_PROJECT=	ZoF
-GH_TAGNAME=	b917de909921062f226a9bc7d40172ef0d3963e5
+GH_TAGNAME=	4b0b4a2806ed305245edf8375b168d977e95d701
 
 pre-configure:
 	cd ${WRKSRC} && ./autogen.sh
