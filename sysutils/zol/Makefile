@@ -2,6 +2,7 @@
 
 PORTNAME=	zol
 PORTVERSION=	2018123000
+PORTREVISION=	1
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 
@@ -18,7 +19,7 @@ USES=		autoreconf:build libtool gmake gettext-runtime:run
 USE_GITHUB=	yes
 GH_ACCOUNT=	zfsonfreebsd
 GH_PROJECT=	ZoF
-GH_TAGNAME=	9f7c4bcaad40b730c266535ceea02c9c652b5e46
+GH_TAGNAME=	8c2c4e23dde31e204fd6ca4cf2bb76ff5dcb735b
 
 pre-configure:
 	cd ${WRKSRC} && ./autogen.sh
