@@ -1,5 +1,5 @@
 --- source3/modules/wscript_build.orig	2018-09-06 03:59:20.000000000 -0400
-+++ source3/modules/wscript_build	2018-12-07 11:18:05.740639000 -0500
++++ source3/modules/wscript_build	2018-12-28 16:24:34.386822000 -0500
 @@ -219,6 +219,23 @@ bld.SAMBA3_MODULE('vfs_solarisacl',
                   internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_solarisacl'),
                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_solarisacl'))
@@ -16,7 +16,7 @@
 +bld.SAMBA3_MODULE('vfs_ixnas',
 +                 subsystem='vfs',
 +                 source='vfs_ixnas.c',
-+                 deps='NFS4_ACLS sunacl zfs_disk_free',
++                 deps='NFS4_ACLS sunacl smb_libzfs',
 +                 init_function='',
 +                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_ixnas'),
 +                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_ixnas'))
@@ -24,12 +24,15 @@
  bld.SAMBA3_MODULE('vfs_zfsacl',
                   subsystem='vfs',
                   source='vfs_zfsacl.c',
-@@ -555,10 +572,33 @@ bld.SAMBA3_MODULE('vfs_error_inject',
-                  init_function='',
+@@ -556,9 +573,35 @@ bld.SAMBA3_MODULE('vfs_error_inject',
                   internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_error_inject'),
                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_error_inject'))
-+bld.SAMBA3_LIBRARY('zfs_disk_free',
-+                   source='zfs_disk_free.c',
+ 
+-bld.SAMBA3_MODULE('vfs_delay_inject',
++bld.SAMBA3_LIBRARY('smb_libzfs',
++                   source='smb_libzfs.c',
++                   cflags='-DNEED_SOLARIS_BOOLEAN',
++                   deps='samba-util',
 +                   includes=[
 +                       '/usr/src/cddl/contrib/opensolaris/lib/libzpool/common',
 +                       '/usr/src/cddl/compat/opensolaris/include',
@@ -47,15 +50,14 @@
 +                       '/usr/src/sys/cddl/contrib/opensolaris/common/zfs',
 +                   ],
 +                   ldflags='-lgeom -luutil -lzfs_core -lzfs',
-+                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_zfs_space'),
++                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_ixnas'),
 +                   private_library=True)
- 
--bld.SAMBA3_MODULE('vfs_delay_inject',
++
 +bld.SAMBA3_MODULE('vfs_zfs_space',
                   subsystem='vfs',
 -                 source='vfs_delay_inject.c',
 +                 source='vfs_zfs_space.c',
-+                 deps='zfs_disk_free',
++                 deps='smb_libzfs',
 +                 allow_undefined_symbols=True,
                   init_function='',
 -                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_delay_inject'),
