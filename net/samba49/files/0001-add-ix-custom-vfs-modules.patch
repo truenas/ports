@@ -1801,7 +1801,7 @@ index 0000000..8387a64
 +}
 diff --git a/source3/modules/vfs_zfs_space.c b/source3/modules/vfs_zfs_space.c
 new file mode 100644
-index 0000000..16d5b07
+index 0000000..28f4b36
 --- /dev/null
 +++ b/source3/modules/vfs_zfs_space.c
 @@ -0,0 +1,68 @@
@@ -1856,9 +1856,9 @@ index 0000000..16d5b07
 +	if (res == (uint64_t)-1)
 +		return (res);
 +
-+	DEBUG(0, ("*bsize = %" PRIu64 "\n", *bsize));
-+	DEBUG(0, ("*dfree = %" PRIu64 "\n", *dfree));
-+	DEBUG(0, ("*dsize = %" PRIu64 "\n", *dsize));
++	DEBUG(9, ("*bsize = %" PRIu64 "\n", *bsize));
++	DEBUG(9, ("*dfree = %" PRIu64 "\n", *dfree));
++	DEBUG(9, ("*dsize = %" PRIu64 "\n", *dsize));
 +
 +	return (res);
 +}
