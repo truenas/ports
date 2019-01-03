@@ -51,7 +51,6 @@
     SUBDIR += din
     SUBDIR += dirac
     SUBDIR += dragon
-    SUBDIR += dragon-kde4
     SUBDIR += dtv-scan-tables
     SUBDIR += dumpmpeg
     SUBDIR += dv2sub
@@ -171,25 +170,19 @@
     SUBDIR += iriverter
     SUBDIR += iso2mkv
     SUBDIR += jmref
-    SUBDIR += k9copy-kde4
     SUBDIR += kaffeine
     SUBDIR += kamoso
     SUBDIR += kdemultimedia
     SUBDIR += kdemultimedia-ffmpegthumbs
-    SUBDIR += kdemultimedia-ffmpegthumbs-kde4
-    SUBDIR += kdemultimedia-kde4
-    SUBDIR += kdemultimedia-mplayerthumbs-kde4
     SUBDIR += kdenlive
-    SUBDIR += kdenlive-kde4
     SUBDIR += kf5-kmediaplayer
     SUBDIR += kissdx
-    SUBDIR += kmplayer-kde4
+    SUBDIR += kmplayer
     SUBDIR += kodi
     SUBDIR += kodi-addon-peripheral-joystick
     SUBDIR += kodi-addon-pvr-hts
     SUBDIR += kodi-addon-pvr-iptvsimple
     SUBDIR += kodi-devel
-    SUBDIR += kplayer-kde4
     SUBDIR += kvazaar
     SUBDIR += l-smash
     SUBDIR += libaacs
@@ -402,7 +395,6 @@
     SUBDIR += spigot
     SUBDIR += spook
     SUBDIR += subtitlecomposer
-    SUBDIR += subtitlecomposer-kde4
     SUBDIR += subtitleeditor
     SUBDIR += subtitleoffsetmodifier
     SUBDIR += subtitleripper
@@ -458,7 +450,6 @@
     SUBDIR += vdr-plugins
     SUBDIR += vid.stab
     SUBDIR += vlc
-    SUBDIR += vlc-qt4
     SUBDIR += vlc3
     SUBDIR += vtkmpeg2encode
     SUBDIR += w_scan
@@ -477,6 +468,5 @@
     SUBDIR += xvid
     SUBDIR += yamdi
     SUBDIR += zoneminder
-    SUBDIR += zoneminder-h264
 
 .include <bsd.port.subdir.mk>

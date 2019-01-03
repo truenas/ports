@@ -74,8 +74,11 @@
     SUBDIR += software-station
     SUBDIR += symports
     SUBDIR += synth
+<<<<<<< HEAD
     SUBDIR += tinderbox
     SUBDIR += update-station
+=======
+>>>>>>> freebsd/master
     SUBDIR += wanted-ports
 
 .include <bsd.port.subdir.mk>

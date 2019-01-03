@@ -180,7 +180,6 @@
     SUBDIR += pear-Net_DNS2
     SUBDIR += powerdns
     SUBDIR += powerdns-recursor
-    SUBDIR += powerdns-recursor40
     SUBDIR += public_suffix_list
     SUBDIR += py-adns
     SUBDIR += py-aiodns
