@@ -27,7 +27,7 @@ DATADIR=	${PREFIX}/share/${PORTNAME}${LLVM_SUFFIX}
 
 USES=		cmake compiler:c++11-lib libedit perl5 tar:xz \
 		shebangfix
-_USES_PYTHON?=	python:2.7,build
+_USES_PYTHON?=	python:3.6,build
 USES+=		${_USES_PYTHON}
 USE_LDCONFIG=	${LLVM_PREFIX}/lib
 SHEBANG_FILES=	utils/lit/lit.py utils/llvm-lit/llvm-lit.in
