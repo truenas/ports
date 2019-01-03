@@ -15,7 +15,6 @@ RUN_DEPENDS=    ${LOCALBASE}/share/trueos/scripts/functions.sh:sysutils/trueos-l
 		${LOCALBASE}/bin/rsync:net/rsync \
 		${LOCALBASE}/bin/zfs-stats:sysutils/zfs-stats \
 		${LOCALBASE}/sbin/anacron:sysutils/anacron \
-		ataidle>=0:sysutils/ataidle \
 		openntpd>=0:net/openntpd \
 		pciutils>=0:sysutils/pciutils \
 		pam_mkhomedir>=0:security/pam_mkhomedir \
