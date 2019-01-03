@@ -60,12 +60,8 @@ AUDIO_DESC=		Audio backend
 # that the pcm_oss plugin can't be opened.
 ALSA_LIB_DEPENDS=	libasound.so:audio/alsa-lib
 ALSA_RUN_DEPENDS=	alsa-plugins>=0:audio/alsa-plugins
-<<<<<<< HEAD
-ALSA_QMAKE_ON=		QT_CONFIG+=alsa
-=======
 ALSA_VARS=		QMAKE_CONFIGURE_ARGS+=-alsa
 ALSA_VARS_OFF=		QMAKE_CONFIGURE_ARGS+=-no-alsa
->>>>>>> freebsd/master
 PULSEAUDIO_LIB_DEPENDS=	libpulse.so:audio/pulseaudio
 PULSEAUDIO_VARS=	QMAKE_CONFIGURE_ARGS+=-pulseaudio
 PULSEAUDIO_VARS_OFF=	QMAKE_CONFIGURE_ARGS+=-no-pulseaudio
