@@ -74,7 +74,6 @@
     SUBDIR += software-station
     SUBDIR += symports
     SUBDIR += synth
-    SUBDIR += tinderbox
     SUBDIR += update-station
     SUBDIR += wanted-ports
 
