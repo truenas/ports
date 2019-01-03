@@ -1,12 +1,25 @@
----
- python/samba/ntacls.py             |   9 ++-
- python/samba/provision/__init__.py |  28 +++++---
- source3/lib/sysacls.c              |  10 +++
- source3/smbd/pysmbd.c              | 136 ++++++++++++++++++++++++++++++++++++-
- 4 files changed, 172 insertions(+), 11 deletions(-)
-
+diff --git a/python/samba/netcmd/gpo.py b/python/samba/netcmd/gpo.py
+index 4256272..156f28d 100644
+--- a/python/samba/netcmd/gpo.py
++++ b/python/samba/netcmd/gpo.py
+@@ -1151,8 +1151,13 @@ class cmd_aclcheck(Command):
+ 
+             fs_sd = conn.get_acl(sharepath, security.SECINFO_OWNER | security.SECINFO_GROUP | security.SECINFO_DACL, security.SEC_FLAG_MAXIMUM_ALLOWED)
+ 
+-            ds_sd_ndr = m['nTSecurityDescriptor'][0]
+-            ds_sd = ndr_unpack(security.descriptor, ds_sd_ndr).as_sddl()
++            try:
++                ds_sd_ndr = m['nTSecurityDescriptor'][0]
++                ds_sd = ndr_unpack(security.descriptor, ds_sd_ndr).as_sddl()
++            except Exception:
++                # It appears that GPO entries will not always have an ACL stored in the
++                # db. This shouldn't be a fatal error.
++                continue
+ 
+             # Create a file system security descriptor
+             domain_sid = security.dom_sid(self.samdb.get_domain_sid())
 diff --git a/python/samba/ntacls.py b/python/samba/ntacls.py
-index 32ceb54..0e1bbe4 100644
+index 32ceb54..d2aeb57 100644
 --- a/python/samba/ntacls.py
 +++ b/python/samba/ntacls.py
 @@ -90,7 +90,14 @@ def getdosinfo(lp, file):
@@ -25,11 +38,40 @@ index 32ceb54..0e1bbe4 100644
          (backend_obj, dbname) = checkset_backend(lp, backend, eadbfile)
          if dbname is not None:
              try:
+@@ -273,7 +280,7 @@ def ldapmask2filemask(ldm):
+     return filemask
+ 
+ 
+-def dsacl2fsacl(dssddl, sid, as_sddl=True):
++def dsacl2fsacl(dssddl, sid, as_sddl=True, is_dir=True):
+     """
+ 
+     This function takes an the SDDL representation of a DS
+@@ -292,9 +299,16 @@ def dsacl2fsacl(dssddl, sid, as_sddl=True):
+         if not ace.type & security.SEC_ACE_TYPE_ACCESS_ALLOWED_OBJECT and str(ace.trustee) != security.SID_BUILTIN_PREW2K:
+        #    if fdescr.type & security.SEC_DESC_DACL_AUTO_INHERITED:
+             ace.flags = ace.flags | security.SEC_ACE_FLAG_OBJECT_INHERIT | security.SEC_ACE_FLAG_CONTAINER_INHERIT
+-            if str(ace.trustee) == security.SID_CREATOR_OWNER:
+-                # For Creator/Owner the IO flag is set as this ACE has only a sense for child objects
+-                ace.flags = ace.flags | security.SEC_ACE_FLAG_INHERIT_ONLY
++            if is_dir:
++                ace.flags = ace.flags | security.SEC_ACE_FLAG_OBJECT_INHERIT | security.SEC_ACE_FLAG_CONTAINER_INHERIT
++                if str(ace.trustee) == security.SID_CREATOR_OWNER:
++                    # For Creator/Owner the IO flag is set as this ACE has only a sense for child objects
++                    ace.flags = ace.flags | security.SEC_ACE_FLAG_INHERIT_ONLY
++            else:
++                if str(ace.trustee) == security.SID_CREATOR_OWNER:
++                    continue
++                ace.flags = 0
++
+             ace.access_mask =  ldapmask2filemask(ace.access_mask)
+             fdescr.dacl_add(ace)
+ 
 diff --git a/python/samba/provision/__init__.py b/python/samba/provision/__init__.py
-index 066411a..7c99556 100644
+index 066411a..e716729 100644
 --- a/python/samba/provision/__init__.py
 +++ b/python/samba/provision/__init__.py
-@@ -1634,19 +1634,23 @@ def setsysvolacl(samdb, netlogon, sysvol, uid, gid, domainsid, dnsdomain,
+@@ -1634,21 +1634,14 @@ def setsysvolacl(samdb, netlogon, sysvol, uid, gid, domainsid, dnsdomain,
          s3conf = s3param.get_context()
          s3conf.load(lp.configfile)
  
@@ -43,25 +85,52 @@ index 066411a..7c99556 100644
          try:
              try:
 -                smbd.set_simple_acl(file.name, 0o755, gid)
-+                print "bypassing test for ACL type"
-+                #smbd.set_simple_acl(file.name, 0o755, gid)
-             except OSError:
+-            except OSError:
 -                if not smbd.have_posix_acls():
 -                    # This clue is only strictly correct for RPM and
 -                    # Debian-like Linux systems, but hopefully other users
 -                    # will get enough clue from it.
 -                    raise ProvisioningError("Samba was compiled without the posix ACL support that s3fs requires.  "
-+                print "OSERROR OCCURED AFTER SETTING ACL"
-+                if not smbd.have_posix_acls() and not smbd.have_nfsv4_acls():
-+                    raise ProvisioningError("Samba was compiled without the ACL support that s3fs requires.  "
-                                             "Try installing libacl1-dev or libacl-devel, then re-run configure and make.")
- 
+-                                            "Try installing libacl1-dev or libacl-devel, then re-run configure and make.")
+-
 -                raise ProvisioningError("Your filesystem or build does not support posix ACLs, which s3fs requires.  "
-+                raise ProvisioningError("Your filesystem or build does not support ACLs, which s3fs requires. " 
-                                         "Try the mounting the filesystem with the 'acl' option.")
-             try:
+-                                        "Try the mounting the filesystem with the 'acl' option.")
+-            try:
                  smbd.chown(file.name, uid, gid)
-@@ -1774,7 +1778,7 @@ def check_gpos_acl(sysvol, dnsdomain, domainsid, domaindn, samdb, lp,
+             except OSError:
+                 raise ProvisioningError("Unable to chown a file on your filesystem.  "
+@@ -1727,10 +1720,10 @@ def acl_type(direct_db_access):
+     else:
+         return "VFS"
+ 
+-def check_dir_acl(path, acl, lp, domainsid, direct_db_access):
++def check_dir_acl(path, dacl, facl, lp, domainsid, direct_db_access):
+     fsacl = getntacl(lp, path, direct_db_access=direct_db_access, service=SYSVOL_SERVICE)
+     fsacl_sddl = fsacl.as_sddl(domainsid)
+-    if fsacl_sddl != acl:
++    if fsacl_sddl != dacl:
+         raise ProvisioningError('%s ACL on GPO directory %s %s does not match expected value %s from GPO object' % (acl_type(direct_db_access), path, fsacl_sddl, acl))
+ 
+     for root, dirs, files in os.walk(path, topdown=False):
+@@ -1740,7 +1733,7 @@ def check_dir_acl(path, acl, lp, domainsid, direct_db_access):
+             if fsacl is None:
+                 raise ProvisioningError('%s ACL on GPO file %s %s not found!' % (acl_type(direct_db_access), os.path.join(root, name)))
+             fsacl_sddl = fsacl.as_sddl(domainsid)
+-            if fsacl_sddl != acl:
++            if fsacl_sddl != facl:
+                 raise ProvisioningError('%s ACL on GPO file %s %s does not match expected value %s from GPO object' % (acl_type(direct_db_access), os.path.join(root, name), fsacl_sddl, acl))
+ 
+         for name in dirs:
+@@ -1749,7 +1742,7 @@ def check_dir_acl(path, acl, lp, domainsid, direct_db_access):
+             if fsacl is None:
+                 raise ProvisioningError('%s ACL on GPO directory %s %s not found!' % (acl_type(direct_db_access), os.path.join(root, name)))
+             fsacl_sddl = fsacl.as_sddl(domainsid)
+-            if fsacl_sddl != acl:
++            if fsacl_sddl != dacl:
+                 raise ProvisioningError('%s ACL on GPO directory %s %s does not match expected value %s from GPO object' % (acl_type(direct_db_access), os.path.join(root, name), fsacl_sddl, acl))
+ 
+ 
+@@ -1774,7 +1767,7 @@ def check_gpos_acl(sysvol, dnsdomain, domainsid, domaindn, samdb, lp,
          raise ProvisioningError('DB ACL on policy root %s %s not found!' % (acl_type(direct_db_access), root_policy_path))
      fsacl_sddl = fsacl.as_sddl(domainsid)
      if fsacl_sddl != POLICIES_ACL:
@@ -70,7 +139,16 @@ index 066411a..7c99556 100644
      res = samdb.search(base="CN=Policies,CN=System,%s"%(domaindn),
                          attrs=["cn", "nTSecurityDescriptor"],
                          expression="", scope=ldb.SCOPE_ONELEVEL)
-@@ -1913,6 +1917,9 @@ def provision_fill(samdb, secrets_ldb, logger, names, paths,
+@@ -1783,7 +1776,7 @@ def check_gpos_acl(sysvol, dnsdomain, domainsid, domaindn, samdb, lp,
+         acl = ndr_unpack(security.descriptor,
+                          str(policy["nTSecurityDescriptor"])).as_sddl()
+         policy_path = getpolicypath(sysvol, dnsdomain, str(policy["cn"]))
+-        check_dir_acl(policy_path, dsacl2fsacl(acl, domainsid), lp,
++        check_dir_acl(policy_path, dsacl2fsacl(acl, domainsid, is_dir=True), dsacl2fsacl(acl, domainsid, is_dir=False), lp,
+                       domainsid, direct_db_access)
+ 
+ 
+@@ -1913,6 +1906,9 @@ def provision_fill(samdb, secrets_ldb, logger, names, paths,
          samdb.transaction_commit()
  
      if serverrole == "active directory domain controller":
@@ -80,7 +158,7 @@ index 066411a..7c99556 100644
          # Continue setting up sysvol for GPO. This appears to require being
          # outside a transaction.
          if not skip_sysvolacl:
-@@ -2293,6 +2300,9 @@ def provision(logger, session_info, smbconf=None,
+@@ -2293,6 +2289,9 @@ def provision(logger, session_info, smbconf=None,
              if not os.path.isdir(paths.netlogon):
                  os.makedirs(paths.netlogon, 0o755)
  
@@ -282,6 +360,3 @@ index 1431925..5d565e7 100644
  	{ "set_nt_acl",
  		(PyCFunction)py_smbd_set_nt_acl, METH_VARARGS|METH_KEYWORDS,
  		NULL },
--- 
-1.8.3.1
-
