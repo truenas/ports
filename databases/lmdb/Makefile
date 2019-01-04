@@ -4,6 +4,10 @@
 PORTNAME=	lmdb
 PORTVERSION=	0.9.22
 DISTVERSIONPREFIX=	${PORTNAME:tu}_
+<<<<<<< HEAD
+=======
+PORTREVISION=	2
+>>>>>>> 1c796b5b45a5... databases/lmdb: back out r478269 due to cyrus-imapd30 instability
 PORTEPOCH=	1
 CATEGORIES=	databases
 
