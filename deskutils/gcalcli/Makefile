@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	gcalcli
-PORTVERSION=	3.4.0
+DISTVERSION=	4.0.0a4
 DISTVERSIONPREFIX=	v
 CATEGORIES=	deskutils python
 
@@ -12,13 +12,12 @@ COMMENT=	Google Calendar Command Line Interface
 LICENSE=	MIT
 
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}dateutil>=0:devel/py-dateutil@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}gdata>=0:devel/py-gdata@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}google-api-python-client>=0:www/py-google-api-python-client@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}httplib2>=0:www/py-httplib2@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}python-gflags>=0:devel/py-python-gflags@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}oauth2client>0:security/py-oauth2client@${PY_FLAVOR}
+				${PYTHON_PKGNAMEPREFIX}google-api-python-client>=0:www/py-google-api-python-client@${PY_FLAVOR} \
+				${PYTHON_PKGNAMEPREFIX}httplib2>=0:www/py-httplib2@${PY_FLAVOR} \
+				${PYTHON_PKGNAMEPREFIX}python-gflags>=0:devel/py-python-gflags@${PY_FLAVOR} \
+				${PYTHON_PKGNAMEPREFIX}oauth2client>0:security/py-oauth2client@${PY_FLAVOR}
 
-USES=		python:-2.7 shebangfix
+USES=		python:3.6+ shebangfix
 USE_GITHUB=	yes
 SHEBANG_FILES=	gcalcli
 
