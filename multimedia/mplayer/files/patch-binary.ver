@@ -1,0 +1,14 @@
+--- binary.ver	2019-01-05 17:27:14.744317000 -0500
++++ binary.ver	2019-01-05 17:27:43.727355000 -0500
+@@ -1,5 +1,9 @@
+ MPLAYER_1 {
+-  # to support glibcs abhorrent backwards-compatibility hack
+-  global: _IO_stdin_used;
+   local: *;
++  # to support glibcs abhorrent backwards-compatibility hack
++  global: 
++	_IO_stdin_used;
++	#FreeBSD specific variables
++	__progname;
++	environ;
+ };
