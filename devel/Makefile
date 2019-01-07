@@ -95,6 +95,7 @@
     SUBDIR += adacurses
     SUBDIR += adaid
     SUBDIR += aegis
+    SUBDIR += agar
     SUBDIR += ahven
     SUBDIR += aifad
     SUBDIR += ald
@@ -214,6 +215,7 @@
     SUBDIR += binutils
     SUBDIR += bison
     SUBDIR += blame
+    SUBDIR += bloaty
     SUBDIR += blitz
     SUBDIR += bmake
     SUBDIR += bmkdep
@@ -972,6 +974,7 @@
     SUBDIR += hs-basement
     SUBDIR += hs-basic-prelude
     SUBDIR += hs-bifunctors
+    SUBDIR += hs-bitarray
     SUBDIR += hs-bits-atomic
     SUBDIR += hs-blaze-builder
     SUBDIR += hs-blaze-textual
@@ -1269,6 +1272,7 @@
     SUBDIR += jenkins-lts
     SUBDIR += jfrog-cli
     SUBDIR += jiic
+    SUBDIR += jiri
     SUBDIR += jline
     SUBDIR += jna
     SUBDIR += jrtplib
@@ -2989,6 +2993,7 @@
     SUBDIR += p5-MooX-ConfigFromFile
     SUBDIR += p5-MooX-File-ConfigDir
     SUBDIR += p5-MooX-HandlesVia
+    SUBDIR += p5-MooX-Locale-Passthrough
     SUBDIR += p5-MooX-Options
     SUBDIR += p5-MooX-StrictConstructor
     SUBDIR += p5-MooX-Thunking
@@ -3704,6 +3709,7 @@
     SUBDIR += p5-Time-Local
     SUBDIR += p5-Time-Mock
     SUBDIR += p5-Time-Moment
+    SUBDIR += p5-Time-Moment-Role-TimeZone
     SUBDIR += p5-Time-Object
     SUBDIR += p5-Time-Out
     SUBDIR += p5-Time-ParseDate
@@ -4748,6 +4754,7 @@
     SUBDIR += py-orbit
     SUBDIR += py-ordered-set
     SUBDIR += py-ordereddict
+    SUBDIR += py-orderedmultidict
     SUBDIR += py-os-brick
     SUBDIR += py-os-client-config
     SUBDIR += py-os-service-types
@@ -5280,6 +5287,7 @@
     SUBDIR += py-zope.testing
     SUBDIR += py-zope.traversing
     SUBDIR += py-zope.viewlet
+    SUBDIR += py-zsm-lib
     SUBDIR += py_static_check
     SUBDIR += pybind11
     SUBDIR += pybugz
