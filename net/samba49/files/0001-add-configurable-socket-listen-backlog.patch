@@ -1,0 +1,167 @@
+diff --git a/docs-xml/smbdotconf/misc/socketlistenbacklog.xml b/docs-xml/smbdotconf/misc/socketlistenbacklog.xml
+new file mode 100644
+index 0000000..9042e72
+--- /dev/null
++++ b/docs-xml/smbdotconf/misc/socketlistenbacklog.xml
+@@ -0,0 +1,15 @@
++<samba:parameter name="socket listen backlog"
++                 context="G"
++                 type="integer"
++                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
++<description>
++       <para>This parameter specifies the default size of the internal
++       socket listen backlog (max number of queued TCP connections).
++       The parameter is not a hard limit and most operating systems
++       enforces a (much) smaller internal limit.
++       </para>
++</description>
++
++<value type="default">1000</value>
++</samba:parameter>
++
+diff --git a/source3/include/local.h b/source3/include/local.h
+index c2be1ff..a08a078 100644
+--- a/source3/include/local.h
++++ b/source3/include/local.h
+@@ -173,7 +173,7 @@
+ #define WINBIND_SERVER_MUTEX_WAIT_TIME (( ((NUM_CLI_AUTH_CONNECT_RETRIES) * ((CLI_AUTH_TIMEOUT)/1000)) + 5)*2)
+ 
+ /* size of listen() backlog in smbd */
+-#define SMBD_LISTEN_BACKLOG 50
++#define SMBD_LISTEN_BACKLOG 100 
+ 
+ /* Number of microseconds to wait before a sharing violation. */
+ #define SHARING_VIOLATION_USEC_WAIT 950000
+diff --git a/source3/libsmb/unexpected.c b/source3/libsmb/unexpected.c
+index ced4696..c06d193 100644
+--- a/source3/libsmb/unexpected.c
++++ b/source3/libsmb/unexpected.c
+@@ -95,7 +95,7 @@ NTSTATUS nb_packet_server_create(TALLOC_CTX *mem_ctx,
+ 		status = map_nt_error_from_unix(errno);
+ 		goto fail;
+ 	}
+-	rc = listen(result->listen_sock, 5);
++	rc = listen(result->listen_sock, lp_socket_listen_backlog());
+ 	if (rc < 0) {
+ 		status = map_nt_error_from_unix(errno);
+ 		goto fail;
+diff --git a/source3/param/loadparm.c b/source3/param/loadparm.c
+index 322934c..f1ffcbd 100644
+--- a/source3/param/loadparm.c
++++ b/source3/param/loadparm.c
+@@ -779,6 +779,7 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
+ 
+ 	Globals.show_add_printer_wizard = true;
+ 	Globals.os_level = 20;
++	Globals.socket_listen_backlog = 1000;
+ 	Globals.local_master = true;
+ 	Globals._domain_master = Auto;	/* depending on _domain_logons */
+ 	Globals._domain_logons = false;
+diff --git a/source3/rpc_server/rpc_server.c b/source3/rpc_server/rpc_server.c
+index 36dff11..5d345e0 100644
+--- a/source3/rpc_server/rpc_server.c
++++ b/source3/rpc_server/rpc_server.c
+@@ -158,7 +158,7 @@ bool setup_named_pipe_socket(const char *pipe_name,
+ 		goto out;
+ 	}
+ 
+-	rc = listen(state->fd, 5);
++	rc = listen(state->fd, lp_socket_listen_backlog());
+ 	if (rc < 0) {
+ 		DEBUG(0, ("Failed to listen on pipe socket %s: %s\n",
+ 			  pipe_name, strerror(errno)));
+@@ -668,7 +668,7 @@ uint16_t setup_dcerpc_ncacn_tcpip_socket(struct tevent_context *ev_ctx,
+ 	/* Set server socket to non-blocking for the accept. */
+ 	set_blocking(state->fd, false);
+ 
+-	rc = listen(state->fd, SMBD_LISTEN_BACKLOG);
++	rc = listen(state->fd, lp_socket_listen_backlog());
+ 	if (rc == -1) {
+ 		DEBUG(0,("setup_tcpip_socket: listen - %s\n", strerror(errno)));
+ 		goto out;
+@@ -830,7 +830,7 @@ bool setup_dcerpc_ncalrpc_socket(struct tevent_context *ev_ctx,
+ 		goto out;
+ 	}
+ 
+-	rc = listen(state->fd, 5);
++	rc = listen(state->fd, lp_socket_listen_backlog());
+ 	if (rc < 0) {
+ 		DEBUG(0, ("Failed to listen on ncalrpc socket %s: %s\n",
+ 			  name, strerror(errno)));
+diff --git a/source3/smbd/server.c b/source3/smbd/server.c
+index b73ac2b..3d9de28 100644
+--- a/source3/smbd/server.c
++++ b/source3/smbd/server.c
+@@ -985,6 +985,7 @@ static void smbd_accept_connection(struct tevent_context *ev,
+ 	}
+ 
+ 	if (!allowable_number_of_smbd_processes(s->parent)) {
++		DBG_ERR("smbd process limit reached");
+ 		close(fd);
+ 		return;
+ 	}
+@@ -1107,7 +1108,7 @@ static bool smbd_open_one_socket(struct smbd_parent_context *parent,
+ 	 * non-blocking for the accept. */
+ 	set_blocking(s->fd, False);
+ 
+-	if (listen(s->fd, SMBD_LISTEN_BACKLOG) == -1) {
++	if (listen(s->fd, lp_socket_listen_backlog()) == -1) {
+ 		DEBUG(0,("smbd_open_one_socket: listen: "
+ 			"%s\n", strerror(errno)));
+ 			close(s->fd);
+diff --git a/source3/utils/smbfilter.c b/source3/utils/smbfilter.c
+index 35fb752..503b046 100644
+--- a/source3/utils/smbfilter.c
++++ b/source3/utils/smbfilter.c
+@@ -291,7 +291,7 @@ static void start_filter(char *desthost)
+ 		exit(1);
+ 	}
+ 
+-	if (listen(s, 5) == -1) {
++	if (listen(s, lp_socket_listen_backlog()) == -1) {
+ 		d_printf("listen failed\n");
+ 	}
+ 
+diff --git a/source3/winbindd/winbindd.c b/source3/winbindd/winbindd.c
+index 600bce3..9a76efa 100644
+--- a/source3/winbindd/winbindd.c
++++ b/source3/winbindd/winbindd.c
+@@ -1295,10 +1295,20 @@ static bool winbindd_setup_listeners(void)
+ 	struct winbindd_listen_state *priv_state = NULL;
+ 	struct tevent_fd *fde;
+ 	int rc;
++	int listen_backlog = lp_winbind_max_clients();
+ 	char *socket_path;
+ 
+ 	pub_state = talloc(server_event_context(),
+ 			   struct winbindd_listen_state);
++
++	if (listen_backlog < lp_socket_listen_backlog()) {
++		listen_backlog = lp_socket_listen_backlog();
++	}
++
++	if (listen_backlog < 10) {
++		listen_backlog = 10;
++	}
++
+ 	if (!pub_state) {
+ 		goto failed;
+ 	}
+@@ -1309,7 +1319,7 @@ static bool winbindd_setup_listeners(void)
+ 	if (pub_state->fd == -1) {
+ 		goto failed;
+ 	}
+-	rc = listen(pub_state->fd, 5);
++	rc = listen(pub_state->fd, listen_backlog);
+ 	if (rc < 0) {
+ 		goto failed;
+ 	}
+@@ -1341,7 +1351,7 @@ static bool winbindd_setup_listeners(void)
+ 	if (priv_state->fd == -1) {
+ 		goto failed;
+ 	}
+-	rc = listen(priv_state->fd, 5);
++	rc = listen(priv_state->fd, listen_backlog);
+ 	if (rc < 0) {
+ 		goto failed;
+ 	}
