@@ -540,7 +540,6 @@ lib/samba/libutil-tdb-samba4.so
 lib/samba/libwinbind-client-samba4.so
 lib/samba/libwind-samba4.so.0
 lib/samba/libxattr-tdb-samba4.so
-lib/samba/libzfs-disk-free-samba4.so
 lib/shared-modules/auth/samba4.so
 lib/shared-modules/auth/script.so
 lib/shared-modules/auth/skel.so

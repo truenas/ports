@@ -3,7 +3,7 @@
 
 PORTNAME?=	${SAMBA4_BASENAME}47
 PORTVERSION?=	${SAMBA4_VERSION}
-PORTREVISION?=	13
+PORTREVISION?=	14
 CATEGORIES?=	net
 EXTRACT_ONLY=
 
@@ -253,7 +253,7 @@ WANT_EXP_MODULES=	auth_samba4 auth_script auth_skel auth_unix auth_wbc \
 			vfs_shadow_copy_test vfs_shell_snap vfs_skel_opaque \
 			vfs_skel_transparent vfs_streams_depot vfs_streams_xattr \
 			vfs_syncops vfs_time_audit vfs_unityed_media vfs_xattr_tdb \
-			vfs_winmsa vfs_zfsacl vfs_zfs_space
+			vfs_winmsa vfs_zfsacl vfs_zfs_space vfs_ixnas
 .endif
 
 .if ${PORT_OPTIONS:MEXP_MODULES}
@@ -333,8 +333,8 @@ SAMBA4_WANT_LDAP=	yes
 
 .if ${PORT_OPTIONS:MLIBZFS}
 CONFIGURE_ARGS+=	--with-libzfs
-WANT_EXP_MODULES+=	vfs_zfs_space
-SAMBA4_MODULES+=	vfs_zfs_space
+WANT_EXP_MODULES+=	vfs_zfs_space vfs_ixnas
+SAMBA4_MODULES+=	vfs_zfs_space vfs_ixnas
 PLIST_SUB+=		LIBZFS=""
 .else
 CONFIGURE_ARGS+=	--without-libzfs
