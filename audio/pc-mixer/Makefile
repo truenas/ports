@@ -11,12 +11,7 @@ COMMENT=	QT5 based audio mixer for FreeBSD
 
 LICENSE=	BSD2CLAUSE
 
-<<<<<<< HEAD
-WRKSRC_SUBDIR=  src-qt5
 MAKE_ARGS=      PREFIX=${STAGEDIR}${PREFIX}
-=======
-MAKE_ARGS=	PREFIX=${STAGEDIR}${PREFIX}
->>>>>>> freebsd/master
 
 MAKE_JOBS_UNSAFE=yes
 ONLY_FOR_ARCHS= amd64
