@@ -10,9 +10,9 @@ Reviewed by:    ache
 Sponsored by:   DARPA, NAI Labs
 
 
---- session.c	2013-03-14 19:22:37 UTC
-+++ session.c
-@@ -985,6 +985,9 @@ do_setup_env(Session *s, const char *she
+--- session.c.orig	2018-10-16 17:01:20.000000000 -0700
++++ session.c	2018-11-10 11:45:14.645263000 -0800
+@@ -1020,6 +1020,9 @@ do_setup_env(struct ssh *ssh, Session *s, const char *
  	struct passwd *pw = s->pw;
  #if !defined (HAVE_LOGIN_CAP) && !defined (HAVE_CYGWIN)
  	char *path = NULL;
@@ -22,7 +22,7 @@ Sponsored by:   DARPA, NAI Labs
  #endif
  
  	/* Initialize the environment. */
-@@ -1006,6 +1009,9 @@ do_setup_env(Session *s, const char *she
+@@ -1041,6 +1044,9 @@ do_setup_env(struct ssh *ssh, Session *s, const char *
  	}
  #endif
  
@@ -32,7 +32,7 @@ Sponsored by:   DARPA, NAI Labs
  #ifdef GSSAPI
  	/* Allow any GSSAPI methods that we've used to alter
  	 * the childs environment as they see fit
-@@ -1023,11 +1029,21 @@ do_setup_env(Session *s, const char *she
+@@ -1058,11 +1064,21 @@ do_setup_env(struct ssh *ssh, Session *s, const char *
  	child_set_env(&env, &envsize, "LOGIN", pw->pw_name);
  #endif
  	child_set_env(&env, &envsize, "HOME", pw->pw_dir);
@@ -50,7 +50,7 @@ Sponsored by:   DARPA, NAI Labs
 +	*environ = NULL;
 +	(void) setusercontext(lc, pw, pw->pw_uid,
 +	    LOGIN_SETENV|LOGIN_SETPATH);
-+	copy_environment(environ, &env, &envsize);
++	copy_environment_blacklist(environ, &env, &envsize, NULL);
 +	for (var = environ; *var != NULL; ++var)
 +		free(*var);
 +	free(environ);
@@ -58,7 +58,7 @@ Sponsored by:   DARPA, NAI Labs
  #else /* HAVE_LOGIN_CAP */
  # ifndef HAVE_CYGWIN
  	/*
-@@ -1047,15 +1063,9 @@ do_setup_env(Session *s, const char *she
+@@ -1082,11 +1098,6 @@ do_setup_env(struct ssh *ssh, Session *s, const char *
  # endif /* HAVE_CYGWIN */
  #endif /* HAVE_LOGIN_CAP */
  
@@ -70,11 +70,7 @@ Sponsored by:   DARPA, NAI Labs
  
 -	if (getenv("TZ"))
 -		child_set_env(&env, &envsize, "TZ", getenv("TZ"));
--
- 	/* Set custom environment options from RSA authentication. */
- 	while (custom_environment) {
- 		struct envstring *ce = custom_environment;
-@@ -1334,7 +1344,7 @@ do_setusercontext(struct passwd *pw)
+@@ -1389,7 +1400,7 @@ do_setusercontext(struct passwd *pw)
  	if (platform_privileged_uidswap()) {
  #ifdef HAVE_LOGIN_CAP
  		if (setusercontext(lc, pw, pw->pw_uid,
