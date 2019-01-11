@@ -2,7 +2,7 @@
 #
 
     COMMENT = X11 drivers
-
+    SUBDIR += ghostbsd-drivers
     SUBDIR += xf86-input-acecad
     SUBDIR += xf86-input-egalax
     SUBDIR += xf86-input-elographics
