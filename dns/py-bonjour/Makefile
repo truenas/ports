@@ -7,10 +7,14 @@ PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 LIB_DEPENDS=	libdns_sd.so.1:net/mDNSResponder
 
-MAINTAINER=	dev@ixsystems.com
-COMMENT=	pybonjour 1.1.1 for Python 3
+MAINTAINER=	jhixson@freebsd.org
+COMMENT=	Pure-Python interface to Apple Bonjour
 
-USES=		python
+LICENSE=	MIT
+
+LIB_DEPENDS=	libdns_sd.so.1:net/mDNSResponder
+
+USES=		python:3.6+
 USE_PYTHON=	autoplist distutils
 USE_GITHUB=	yes
 GH_ACCOUNT=	depl0y

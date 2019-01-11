@@ -14,8 +14,6 @@ ONLY_FOR_ARCHS= amd64
 MAKE_JOBS_UNSAFE=yes
 MAKE_ARGS=      PREFIX=${STAGEDIR}${PREFIX}
 
-MAKE_JOBS_UNSAFE=	yes
-
 USES=		qmake qt:5 shebangfix tar:xz
 USE_LDCONFIG=	yes
 USE_GL+=	gl
