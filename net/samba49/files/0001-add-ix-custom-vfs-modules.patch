@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 0000000..77da87b
+index 0000000..8b16452
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,316 @@
+@@ -0,0 +1,314 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -104,7 +104,6 @@ index 0000000..77da87b
 +		return (-1);
 +	}
 +	
-+	DBG_DEBUG("userused string: (%s), userquota string: (%s)\n", u_req, q_req);
 +	zfs_prop_get_userquota_int(zfsp, q_req, &quota);
 +	zfs_prop_get_userquota_int(zfsp, u_req, &used);
 +
@@ -170,7 +169,6 @@ index 0000000..77da87b
 +		return (-1);
 +	}
 +
-+	DBG_INFO("PREPARING: smb_zfs_set_quota: Set (%s = %s)\n", q_req, quota);
 +	if (zfs_prop_set(zfsp, q_req, quota) != 0) {
 +		DBG_ERR("Failed to set (%s = %s)\n", q_req, quota);
 +		zfs_close(zfsp);
@@ -181,7 +179,7 @@ index 0000000..77da87b
 +	zfs_close(zfsp);
 +	libzfs_fini(libzfsp);
 +
-+	DBG_ERR("smb_zfs_set_quota: Set (%s = %s)\n", q_req, quota);
++	DBG_INFO("smb_zfs_set_quota: Set (%s = %s)\n", q_req, quota);
 +
 +	return 0;
 +}
@@ -313,7 +311,7 @@ index 0000000..77da87b
 +		}
 +	}
 +
-+	DBG_DEBUG("Created ZFS dataset (%s) with quota (%s)\n", nd, quota);
++	DBG_INFO("Created ZFS dataset (%s) with quota (%s)\n", nd, quota);
 +
 +	zfs_close(new_zfsp);
 +	libzfs_fini(libzfsp);
@@ -367,10 +365,10 @@ index 0000000..27f8977
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 0000000..d3a1048
+index 0000000..0489fe4
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,1093 @@
+@@ -0,0 +1,1089 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -1065,7 +1063,7 @@ index 0000000..d3a1048
 +				return -1);
 +
 +	if (!config->zfs_quota_enabled) {
-+		DBG_ERR("Quotas disabled in ixnas configuration.\n");
++		DBG_DEBUG("Quotas disabled in ixnas configuration.\n");
 +		errno = ENOSYS;
 +		return -1;
 +	}
@@ -1077,7 +1075,6 @@ index 0000000..d3a1048
 +	switch (qtype) {
 +	case SMB_USER_QUOTA_TYPE:
 +	case SMB_USER_FS_QUOTA_TYPE:
-+		DBG_ERR("qtype: (%d), id: (%d)\n", qtype, id.uid);
 +		//passing -1 to quotactl means that the current UID should be used. Do the same.
 +		if (id.uid == -1) {
 +			become_root();
@@ -1092,7 +1089,6 @@ index 0000000..d3a1048
 +		break;
 +	case SMB_GROUP_QUOTA_TYPE:
 +	case SMB_GROUP_FS_QUOTA_TYPE:
-+		DBG_ERR("qtype: (%d), id: (%d)\n", qtype, id.gid);
 +		become_root();
 +        	ret = smb_zfs_get_quota(rp, id.gid, qtype, &hardlimit, &usedspace);
 +		unbecome_root();
@@ -1132,7 +1128,7 @@ index 0000000..d3a1048
 +				return -1);
 +
 +	if (!config->zfs_quota_enabled) {
-+		DBG_ERR("Quotas disabled in ixnas configuration.\n");
++		DBG_DEBUG("Quotas disabled in ixnas configuration.\n");
 +		errno = ENOSYS;
 +		return -1;
 +	}
@@ -1244,7 +1240,7 @@ index 0000000..d3a1048
 +		}		
 +		if (chown(handle->conn->connectpath, current_user->pw_uid, current_user->pw_gid) < 0) {
 +			DBG_ERR("Failed to chown (%s) to (%u:%u)\n",
-+				handle->conn->connectpath, current_user, getegid() );
++				handle->conn->connectpath, current_user->pw_uid, getegid() );
 +			ret = -1;
 +		}	
 +	} 
@@ -1278,7 +1274,7 @@ index 0000000..d3a1048
 +				SMB_USER_QUOTA_TYPE,
 +				&existing_quota,
 +				&usedspace) < 0 ) {
-+		DBG_ERR("Failed to get base quota uid: (%lu), path (%s)\n",
++		DBG_ERR("Failed to get base quota uid: (%u), path (%s)\n",
 +			current_user, handle->conn->connectpath );
 +		return -1;
 +	}
@@ -1330,8 +1326,6 @@ index 0000000..d3a1048
 +
 +	if (base_quota_str != NULL) {
 +		config->base_user_quota = conv_str_size(base_quota_str); 
-+		DBG_ERR("Quota string (%s) converted to (%lu)\n", 
-+			base_quota_str, config->base_user_quota);
 +        }
 +
 +	if (config->base_user_quota) {
