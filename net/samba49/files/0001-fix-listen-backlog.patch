@@ -1,5 +1,5 @@
 diff --git a/lib/tevent/echo_server.c b/lib/tevent/echo_server.c
-index f93d8bc..49354db 100644
+index f93d8bc..099ea04 100644
 --- a/lib/tevent/echo_server.c
 +++ b/lib/tevent/echo_server.c
 @@ -633,7 +633,7 @@ int main(int argc, const char **argv)
@@ -7,7 +7,7 @@ index f93d8bc..49354db 100644
  	}
  
 -	ret = listen(listen_sock, 5);
-+	ret = listen(listen_sock, DEFAULT_LISTEN_BACKLOG);
++	ret = listen(listen_sock, -1);
  	if (ret == -1) {
  		perror("listen() failed");
  		exit(1);
@@ -69,6 +69,19 @@ index 36dff11..b8d3cd5 100644
  	if (rc < 0) {
  		DEBUG(0, ("Failed to listen on ncalrpc socket %s: %s\n",
  			  name, strerror(errno)));
+diff --git a/source3/utils/smbfilter.c b/source3/utils/smbfilter.c
+index 35fb752..c07cb04 100644
+--- a/source3/utils/smbfilter.c
++++ b/source3/utils/smbfilter.c
+@@ -291,7 +291,7 @@ static void start_filter(char *desthost)
+ 		exit(1);
+ 	}
+ 
+-	if (listen(s, 5) == -1) {
++	if (listen(s, DEFAULT_LISTEN_BACKLOG) == -1) {
+ 		d_printf("listen failed\n");
+ 	}
+ 
 diff --git a/source3/winbindd/winbindd.c b/source3/winbindd/winbindd.c
 index 600bce3..13a8852 100644
 --- a/source3/winbindd/winbindd.c
