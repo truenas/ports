@@ -1,8 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	zol
-PORTVERSION=	2018123000
-PORTREVISION=	1
+PORTVERSION=	2019011100
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 
@@ -19,7 +18,7 @@ USES=		autoreconf:build libtool gmake gettext-runtime:run
 USE_GITHUB=	yes
 GH_ACCOUNT=	zfsonfreebsd
 GH_PROJECT=	ZoF
-GH_TAGNAME=	8c2c4e23dde31e204fd6ca4cf2bb76ff5dcb735b
+GH_TAGNAME=	9c790d2668e23575dca6a7376e5e8179c4e62846
 
 pre-configure:
 	cd ${WRKSRC} && ./autogen.sh
