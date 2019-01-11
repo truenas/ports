@@ -1,0 +1,106 @@
+diff --git a/lib/tevent/echo_server.c b/lib/tevent/echo_server.c
+index f93d8bc..099ea04 100644
+--- a/lib/tevent/echo_server.c
++++ b/lib/tevent/echo_server.c
+@@ -633,7 +633,7 @@ int main(int argc, const char **argv)
+ 		exit(1);
+ 	}
+ 
+-	ret = listen(listen_sock, 5);
++	ret = listen(listen_sock, -1);
+ 	if (ret == -1) {
+ 		perror("listen() failed");
+ 		exit(1);
+diff --git a/source3/include/local.h b/source3/include/local.h
+index c2be1ff..544f2a7 100644
+--- a/source3/include/local.h
++++ b/source3/include/local.h
+@@ -173,7 +173,18 @@
+ #define WINBIND_SERVER_MUTEX_WAIT_TIME (( ((NUM_CLI_AUTH_CONNECT_RETRIES) * ((CLI_AUTH_TIMEOUT)/1000)) + 5)*2)
+ 
+ /* size of listen() backlog in smbd */
++#if defined (FREEBSD)
++#define SMBD_LISTEN_BACKLOG -1
++#else 
+ #define SMBD_LISTEN_BACKLOG 50
++#endif
++
++/* size of listen() default backlog */
++#if defined (FREEBSD)
++#define DEFAULT_LISTEN_BACKLOG -1
++#else
++#define DEFAULT_LISTEN_BACKLOG 5
++#endif
+ 
+ /* Number of microseconds to wait before a sharing violation. */
+ #define SHARING_VIOLATION_USEC_WAIT 950000
+diff --git a/source3/libsmb/unexpected.c b/source3/libsmb/unexpected.c
+index ced4696..317d6b1 100644
+--- a/source3/libsmb/unexpected.c
++++ b/source3/libsmb/unexpected.c
+@@ -95,7 +95,7 @@ NTSTATUS nb_packet_server_create(TALLOC_CTX *mem_ctx,
+ 		status = map_nt_error_from_unix(errno);
+ 		goto fail;
+ 	}
+-	rc = listen(result->listen_sock, 5);
++	rc = listen(result->listen_sock, DEFAULT_LISTEN_BACKLOG);
+ 	if (rc < 0) {
+ 		status = map_nt_error_from_unix(errno);
+ 		goto fail;
+diff --git a/source3/rpc_server/rpc_server.c b/source3/rpc_server/rpc_server.c
+index 36dff11..b8d3cd5 100644
+--- a/source3/rpc_server/rpc_server.c
++++ b/source3/rpc_server/rpc_server.c
+@@ -158,7 +158,7 @@ bool setup_named_pipe_socket(const char *pipe_name,
+ 		goto out;
+ 	}
+ 
+-	rc = listen(state->fd, 5);
++	rc = listen(state->fd, DEFAULT_LISTEN_BACKLOG);
+ 	if (rc < 0) {
+ 		DEBUG(0, ("Failed to listen on pipe socket %s: %s\n",
+ 			  pipe_name, strerror(errno)));
+@@ -830,7 +830,7 @@ bool setup_dcerpc_ncalrpc_socket(struct tevent_context *ev_ctx,
+ 		goto out;
+ 	}
+ 
+-	rc = listen(state->fd, 5);
++	rc = listen(state->fd, DEFAULT_LISTEN_BACKLOG);
+ 	if (rc < 0) {
+ 		DEBUG(0, ("Failed to listen on ncalrpc socket %s: %s\n",
+ 			  name, strerror(errno)));
+diff --git a/source3/utils/smbfilter.c b/source3/utils/smbfilter.c
+index 35fb752..c07cb04 100644
+--- a/source3/utils/smbfilter.c
++++ b/source3/utils/smbfilter.c
+@@ -291,7 +291,7 @@ static void start_filter(char *desthost)
+ 		exit(1);
+ 	}
+ 
+-	if (listen(s, 5) == -1) {
++	if (listen(s, DEFAULT_LISTEN_BACKLOG) == -1) {
+ 		d_printf("listen failed\n");
+ 	}
+ 
+diff --git a/source3/winbindd/winbindd.c b/source3/winbindd/winbindd.c
+index 600bce3..13a8852 100644
+--- a/source3/winbindd/winbindd.c
++++ b/source3/winbindd/winbindd.c
+@@ -1309,7 +1309,7 @@ static bool winbindd_setup_listeners(void)
+ 	if (pub_state->fd == -1) {
+ 		goto failed;
+ 	}
+-	rc = listen(pub_state->fd, 5);
++	rc = listen(pub_state->fd, DEFAULT_LISTEN_BACKLOG);
+ 	if (rc < 0) {
+ 		goto failed;
+ 	}
+@@ -1341,7 +1341,7 @@ static bool winbindd_setup_listeners(void)
+ 	if (priv_state->fd == -1) {
+ 		goto failed;
+ 	}
+-	rc = listen(priv_state->fd, 5);
++	rc = listen(priv_state->fd, DEFAULT_LISTEN_BACKLOG);
+ 	if (rc < 0) {
+ 		goto failed;
+ 	}
