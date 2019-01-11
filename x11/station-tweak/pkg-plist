@@ -1,9 +1,4 @@
 bin/station-tweak
-%%PYTHON_SITELIBDIR%%/station_tweak-0.3-py%%PYTHON_VER%%.egg-info/PKG-INFO
-%%PYTHON_SITELIBDIR%%/station_tweak-0.3-py%%PYTHON_VER%%.egg-info/SOURCES.txt
-%%PYTHON_SITELIBDIR%%/station_tweak-0.3-py%%PYTHON_VER%%.egg-info/dependency_links.txt
-%%PYTHON_SITELIBDIR%%/station_tweak-0.3-py%%PYTHON_VER%%.egg-info/requires.txt
-%%PYTHON_SITELIBDIR%%/station_tweak-0.3-py%%PYTHON_VER%%.egg-info/top_level.txt
 lib/station-tweak/mate-panel-backup
 lib/station-tweak/station-tweak.ui
 share/applications/station-tweak.desktop
