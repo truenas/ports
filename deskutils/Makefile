@@ -201,6 +201,7 @@
     SUBDIR += py-bugwarrior
     SUBDIR += py-khal
     SUBDIR += py-khard
+    SUBDIR += py-py3status
     SUBDIR += py-pystash
     SUBDIR += py-send2trash
     SUBDIR += py-taskw
