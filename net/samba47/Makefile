@@ -109,8 +109,8 @@ RUN_DEPENDS+=		talloc>=2.1.10:devel/talloc
 SAMBA4_BUNDLED_LIBS+=	!talloc
 
 # tevent
-BUILD_DEPENDS+=		tevent>=0.9.34:devel/tevent
-RUN_DEPENDS+=		tevent>=0.9.34:devel/tevent
+BUILD_DEPENDS+=		tevent>=0.9.36:devel/tevent
+RUN_DEPENDS+=		tevent>=0.9.36:devel/tevent
 SAMBA4_BUNDLED_LIBS+=	!tevent
 
 # tdb
