@@ -519,6 +519,7 @@ lib/samba/libserver-id-db-samba4.so
 lib/samba/libserver-role-samba4.so
 lib/samba/libservice-samba4.so
 lib/samba/libshares-samba4.so
+lib/samba/libsmb-libzfs-samba4.so
 lib/samba/libsmb-transport-samba4.so
 lib/samba/libsmbclient-raw-samba4.so
 lib/samba/libsmbd-base-samba4.so
@@ -653,6 +654,7 @@ lib/shared-modules/vfs/fake_acls.so
 lib/shared-modules/vfs/fake_perms.so
 lib/shared-modules/vfs/fruit.so
 lib/shared-modules/vfs/full_audit.so
+lib/shared-modules/vfs/ixnas.so
 lib/shared-modules/vfs/linux_xfs_sgid.so
 lib/shared-modules/vfs/media_harmony.so
 lib/shared-modules/vfs/netatalk.so
