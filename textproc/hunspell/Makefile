@@ -2,9 +2,9 @@
 # $FreeBSD$
 
 PORTNAME=	hunspell
-PORTVERSION=	1.7.0
+PORTVERSION=	1.6.2
+PORTREVISION=	2
 DISTVERSIONPREFIX=	v
-PORTREVISION=	0
 CATEGORIES=	textproc
 DIST_SUBDIR=	${PORTNAME}
 
@@ -36,7 +36,7 @@ post-patch:
 makepatch-clean:
 	@${RM} ${WRKSRC}/tests/suggestiontest/Makefile.orig
 
+.include <bsd.port.mk>
+
 # XXX Don't override definition in Mk/bsd.port.mk
 makepatch:	makepatch-clean
-
-.include <bsd.port.mk>
