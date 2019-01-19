@@ -137,6 +137,8 @@
     SUBDIR += gctpc
     SUBDIR += geekcode
     SUBDIR += getopt
+    SUBDIR += ghostbsd-pkg-conf
+    SUBDIR += gxconfig
     SUBDIR += gimp-help-ca
     SUBDIR += gimp-help-da
     SUBDIR += gimp-help-el
