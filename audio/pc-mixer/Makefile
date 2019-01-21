@@ -1,9 +1,8 @@
 # Created by: Joe Maloney <jmaloney@ixsystems.com>
 # $FreeBSD$
 
-PORTNAME=	pc-mixer
 PORTVERSION=	20180328
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	audio
 
 MAINTAINER=	jmaloney@ixsystems.com

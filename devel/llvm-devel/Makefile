@@ -52,6 +52,11 @@ CMAKE_ARGS+=	-DLLVM_HOST_TRIPLE=${CONFIGURE_TARGET}
 CMAKE_ARGS+=	-DCMAKE_INSTALL_MANDIR:PATH="share/man"
 CMAKE_ARGS+=	-DLLVM_PARALLEL_LINK_JOBS=1
 
+# Disable assertions.  They should be disabled by cmake, but USES=cmake
+# overrides -DCMAKE_*_FLAGS_RELEASE.
+CFLAGS+=	-DNDEBUG
+CXXFLAGS+=	-DNDEBUG
+
 USE_GITHUB=	yes
 GH_ACCOUNT=	llvm-mirror
 GH_TAGNAME=	${LLVM_COMMIT}
@@ -255,8 +260,8 @@ COMMANDS+=	c-index-test \
 		clang++ \
 		clang-check \
 		clang-cpp \
+		clang-extdef-mapping \
 		clang-format \
-		clang-func-mapping \
 		clang-import-test \
 		clang-offload-bundler \
 		clangd \
@@ -415,6 +420,10 @@ post-patch-CLANG-on:
 	    ${PATCH_WRKSRC}/tools/clang/tools/clang-format/clang-format.py \
 	    ${PATCH_WRKSRC}/tools/clang/tools/clang-format/clang-format-sublime.py \
 	    ${PATCH_WRKSRC}/tools/clang/tools/clang-format/git-clang-format
+
+post-patch-COMPILER_RT-on:
+	cd ${WRKSRC_compiler_rt} && \
+	${PATCH} -p0 < ${PATCHDIR}/compiler-rt-safestack_platform.h
 
 post-build-COMPILER_RT-on:
 	${MKDIR} ${WRKDIR}/compiler-rt-build

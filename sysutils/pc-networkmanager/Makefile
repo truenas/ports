@@ -2,7 +2,12 @@
 # $FreeBSD$
 
 PORTNAME=	pc-networkmanager
+<<<<<<< HEAD
 PORTVERSION=	201806271233
+=======
+PORTVERSION=	201710031301
+PORTREVISION=	2
+>>>>>>> freebsd/master
 CATEGORIES=	sysutils
 
 MAINTAINER=	kris@ixsystems.com

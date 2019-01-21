@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	rust
-PORTVERSION?=	1.31.1
+PORTVERSION?=	1.32.0
 PORTREVISION?=	0
 CATEGORIES=	lang
 MASTER_SITES=	http://static.rust-lang.org/dist/:src \
@@ -42,16 +42,16 @@ BROKEN_aarch64=		fails to build: bootstrap compiler crashes
 CONFLICTS_INSTALL?=	rust-nightly
 
 # See WRKSRC/src/stage0.txt for this date and version values.
-BOOTSTRAPS_DATE?=		2018-10-25
+BOOTSTRAPS_DATE?=		2018-12-20
 
-RUST_BOOTSTRAP_VERSION?=	1.30.0
+RUST_BOOTSTRAP_VERSION?=	1.31.1
 RUSTC_BOOTSTRAP=		${BOOTSTRAPS_DATE_${ARCH}:U${BOOTSTRAPS_DATE}}/rustc-${RUST_BOOTSTRAP_VERSION_${ARCH}:U${RUST_BOOTSTRAP_VERSION}}-${RUST_TARGET}.tar.gz
 RUST_STD_BOOTSTRAP=		${BOOTSTRAPS_DATE_${ARCH}:U${BOOTSTRAPS_DATE}}/rust-std-${RUST_BOOTSTRAP_VERSION_${ARCH}:U${RUST_BOOTSTRAP_VERSION}}-${RUST_TARGET}.tar.gz
 
-CARGO_BOOTSTRAP_VERSION?=	0.31.0
+CARGO_BOOTSTRAP_VERSION?=	0.32.0
 CARGO_BOOTSTRAP=		${BOOTSTRAPS_DATE_${ARCH}:U${BOOTSTRAPS_DATE}}/cargo-${CARGO_BOOTSTRAP_VERSION_${ARCH}:U${CARGO_BOOTSTRAP_VERSION}}-${RUST_TARGET}.tar.gz
 
-CARGO_VENDOR_DIR?=		${WRKSRC}/src/vendor
+CARGO_VENDOR_DIR?=		${WRKSRC}/vendor
 
 RUST_CHANNEL=	${PKGNAMESUFFIX:Ustable:S/^-//}
 
@@ -77,18 +77,7 @@ LLNEXTGEN_BUILD_DEPENDS=	LLnextgen:devel/llnextgen
 # We use them in:
 #     - pre-install to cleanup the ${STAGEDIR}
 #     - post-install to populate the ${TMPPLIST}
-RUST_MANIFESTS=		lib/rustlib/manifest-cargo \
-			lib/rustlib/manifest-clippy-preview \
-			lib/rustlib/manifest-rls-preview \
-			lib/rustlib/manifest-rustc \
-			lib/rustlib/manifest-rustfmt-preview \
-			lib/rustlib/manifest-rust-analysis-${RUST_TARGET} \
-			lib/rustlib/manifest-rust-std-${RUST_TARGET}
-RUST_DOCS_MANIFEST=	lib/rustlib/manifest-rust-docs
-RUST_SRC_MANIFEST=	lib/rustlib/manifest-rust-src
-DOCS_VARS=		rust_manifests+=${RUST_DOCS_MANIFEST}
-SOURCES_VARS=		rust_manifests+=${RUST_SRC_MANIFEST}
-
+RUST_MANIFESTS=		lib/rustlib/manifest-*
 PLIST_FILES=		lib/rustlib/components \
 			lib/rustlib/rust-installer-version
 
@@ -132,6 +121,11 @@ post-patch:
 	@${REINPLACE_CMD} -e \
 		's/"files":{[^}]*}/"files":{}/' \
 		${CARGO_VENDOR_DIR}/*/.cargo-checksum.json
+
+post-patch-SOURCES-off:
+# Mimic tools in config.toml with just src excluded
+	@${REINPLACE_CMD} -e 's/config.tools.*"src".*/false;/' \
+		${WRKSRC}/src/bootstrap/install.rs
 
 .if defined(WITH_CCACHE_BUILD) && !defined(NO_CCACHE)
 CCACHE_VALUE=	"${CCACHE_WRAPPER_PATH:C,/libexec/ccache$,,}/bin/ccache"
@@ -184,16 +178,16 @@ do-build:
 # new ones. Otherwise, the staging directory is polluted with unneeded
 # files.
 pre-install:
-	@for f in ${RUST_MANIFESTS} ${RUST_DOCS_MANIFEST} ${RUST_SRC_MANIFEST}; do \
-	    if test -f "${STAGEDIR}${PREFIX}/$$f"; then \
+	@for f in ${RUST_MANIFESTS:S,^,${STAGEDIR}${PREFIX}/,}; do \
+	    if test -f "$$f"; then \
 	        ${SED} -E -e 's,^(file|dir):,${STAGEDIR},' \
-	            < "${STAGEDIR}${PREFIX}/$$f" \
+	            < "$$f" \
 	            | ${XARGS} ${RM} -r; \
-	        ${RM} "${STAGEDIR}${PREFIX}/$$f"; \
+	        ${RM} "$$f"; \
 	    fi; \
 	done
-	@for f in ${PLIST_FILES}; do \
-	    ${RM} "${STAGEDIR}${PREFIX}/$$f"; \
+	@for f in ${PLIST_FILES:S,^,${STAGEDIR}${PREFIX}/,}; do \
+	    ${RM} "$$f"; \
 	done
 
 do-install:
@@ -220,13 +214,12 @@ do-install:
 # We fix manpage entries in the generated manifests because Rust
 # installs them uncompressed but the Ports framework compresses them.
 post-install:
-	for f in ${RUST_MANIFESTS}; do \
-	    ${REINPLACE_CMD} -E \
+	for f in ${RUST_MANIFESTS:S,^,${STAGEDIR}${PREFIX}/,}; do \
+	    ${REINPLACE_CMD} -i '' -E \
 	        -e 's|:${STAGEDIR}|:|' \
 	        -e 's|(man/man[1-9]/.*\.[0-9])|\1.gz|' \
-	        ${STAGEDIR}${PREFIX}/$$f; \
-	    ${RM} ${STAGEDIR}${PREFIX}/$$f.bak; \
-	    ${ECHO} "${PREFIX}/$$f" >> ${TMPPLIST}; \
+	        "$$f"; \
+	    ${ECHO_CMD} "$${f#${STAGEDIR}}" >> ${TMPPLIST}; \
 	    ${AWK} '\
 	        /^file:/ { \
 	            file=$$0; \
@@ -238,7 +231,7 @@ post-install:
 	            sub(/^dir:/, "", dir); \
 	            system("find ${STAGEDIR}" dir " -type f | ${SED} -E -e \"s|${STAGEDIR}||\""); \
 	        }' \
-	        ${STAGEDIR}${PREFIX}/$$f >> ${TMPPLIST}; \
+	        "$$f" >> ${TMPPLIST}; \
 	done
 	${RM} ${STAGEDIR}${PREFIX}/share/doc/rust/*.old
 	${SORT} -u < ${TMPPLIST} > ${TMPPLIST}.uniq
@@ -248,32 +241,8 @@ post-install:
 	    ${STAGEDIR}${PREFIX}/lib/rustlib/uninstall.sh
 # FIXME: Static libraries in lib/rustlib/*/lib/*.rlib are not stripped,
 # but they contain non-object files which make strip(1) unhappy.
-	@${STRIP_CMD} \
-		${STAGEDIR}${PREFIX}/bin/cargo \
-		${STAGEDIR}${PREFIX}/bin/cargo-clippy \
-		${STAGEDIR}${PREFIX}/bin/cargo-fmt \
-		${STAGEDIR}${PREFIX}/bin/clippy-driver \
-		${STAGEDIR}${PREFIX}/bin/rls \
-		${STAGEDIR}${PREFIX}/bin/rustc \
-		${STAGEDIR}${PREFIX}/bin/rustdoc \
-		${STAGEDIR}${PREFIX}/bin/rustfmt \
-		${STAGEDIR}${PREFIX}/lib/*.so \
-		${STAGEDIR}${PREFIX}/lib/rustlib/*/lib/*.so \
-		${STAGEDIR}${PREFIX}/lib/rustlib/*/codegen-backends/*.so
-
-# We set `extended = true` in config.toml because we want to build
-# Cargo at the same time. However, this installs the rust-src component
-# as well. If the user doesn't want that, I don't know how to prevent
-# its install. So for now, use the rust-src manifest to remove it from
-# ${STAGEDIR}.
-post-install-SOURCES-off:
-	if test -f "${STAGEDIR}${PREFIX}/${RUST_SRC_MANIFEST}"; then \
-	    ${SED} -E -e 's,^(file|dir):,,' \
-	        < "${STAGEDIR}${PREFIX}/${RUST_SRC_MANIFEST}" \
-	        | ${XARGS} ${RM} -r; \
-	    ${RM} "${STAGEDIR}${PREFIX}/${RUST_SRC_MANIFEST}"; \
-	    ${RM} -r "${STAGEDIR}${PREFIX}/lib/rustlib/src"; \
-	fi
+	@${FIND} ${STAGEDIR}${PREFIX}/bin -exec ${FILE} -i {} + | ${AWK} -F: \
+		'/executable|sharedlib/ { print $$1 }' | ${XARGS} ${STRIP_CMD}
 
 # Note that make test does not work when rust is already installed.
 do-test:

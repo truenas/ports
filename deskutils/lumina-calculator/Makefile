@@ -2,8 +2,13 @@
 # $FreeBSD$
 
 PORTNAME=	lumina-calculator
+<<<<<<< HEAD
 PORTVERSION=	1.4.2
 PORTREVISION=	201803131031
+=======
+PORTVERSION=	1.4.1
+PORTREVISION=	2
+>>>>>>> freebsd/master
 CATEGORIES=	deskutils
 
 MAINTAINER=	jt@ixsystems.com

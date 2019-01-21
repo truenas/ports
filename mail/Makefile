@@ -99,7 +99,6 @@
     SUBDIR += dovecot-pigeonhole
     SUBDIR += dovecot-pigeonhole04
     SUBDIR += dovecot22
-    SUBDIR += drac
     SUBDIR += dspam
     SUBDIR += ecartis
     SUBDIR += elm
@@ -132,6 +131,7 @@
     SUBDIR += fastforward
     SUBDIR += fdm
     SUBDIR += fetchmail
+    SUBDIR += fetchmailconf
     SUBDIR += filtermail
     SUBDIR += findmaildirs
     SUBDIR += geary

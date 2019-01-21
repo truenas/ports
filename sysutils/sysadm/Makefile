@@ -1,7 +1,13 @@
 # $FreeBSD$
 
 PORTNAME=	sysadm
+<<<<<<< HEAD
 PORTVERSION=	201806120928
+=======
+PORTVERSION=	1.1
+DISTVERSIONPREFIX=	v
+PORTREVISION=	1
+>>>>>>> freebsd/master
 CATEGORIES=	sysutils
 
 MAINTAINER=	jt@ixsystems.com
