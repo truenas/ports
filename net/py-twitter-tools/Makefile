@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	twitter
-PORTVERSION=	1.17.1
+PORTVERSION=	1.18.0
 DISTVERSIONPREFIX=	${PORTNAME}-
 CATEGORIES=	net python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -13,10 +13,12 @@ COMMENT=	Python API and command-line toolset for Twitter
 
 TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}nose>0:devel/py-nose@${PY_FLAVOR}
 
+BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pypandoc>0:textproc/py-pypandoc@${PY_FLAVOR}
+
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USES=		python:2.7
+USES=		python:2.7-3.6
 USE_PYTHON=	distutils concurrent autoplist
 USE_GITHUB=	yes
 
