@@ -1,0 +1,41 @@
+# $FreeBSD$
+
+PORTNAME=	src
+PORTVERSION=	20190012500
+CATEGORIES=	os
+
+MAINTAINER=	kris@ixsystems.com
+COMMENT=	Port for the OS base sources
+
+.if exists(/usr/local_source/${PORTNAME})
+PORTVERSION!=	stat -f %m /usr/local_source/${PORTNAME}
+EXTRACT_ONLY=
+WRKSRC=         /usr/local_source/${PORTNAME}
+.else
+USE_GITHUB=	yes
+GH_ACCOUNT=	trueos
+GH_PROJECT=	trueos
+GH_TAGNAME=	9a29f81c41d41d1f91c7f40e6f610c115e51aa35
+.endif
+
+PREFIX=/
+SRCDIR=/usr/src
+NO_BUILD=	yes
+WITHOUT_FBSD10_FIX=	yes
+
+.include <bsd.port.pre.mk>
+
+.if exists(/usr/local_source/${PORTNAME})
+checksum fetch:
+	${ECHO_MGS} ${.TARGET} not needed because building direct
+.endif
+
+do-install:
+	${MKDIR} -p ${STAGEDIR}${SRCDIR}
+	${TAR} cf - -C ${WRKSRC} --exclude .git --exclude .svn . | ${TAR} xpf - -C ${STAGEDIR}${SRCDIR}
+	(cd ${STAGEDIR}; ${FIND} . \( -type f -o -type l \) \
+		| ${SED} -e 's,^\./,,g' \
+		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
+		| ${AWK} '{print $$2 }' >> ${TMPPLIST})
+
+.include <bsd.port.post.mk>
