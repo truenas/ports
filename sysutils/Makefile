@@ -68,6 +68,7 @@
     SUBDIR += backuppc
     SUBDIR += backuppc-devel
     SUBDIR += backuppc4
+    SUBDIR += backupuser
     SUBDIR += bacula-bat
     SUBDIR += bacula-client
     SUBDIR += bacula-client-static
@@ -513,6 +514,7 @@
     SUBDIR += intel-pcm-devel
     SUBDIR += intel-qcu
     SUBDIR += inxi
+    SUBDIR += intel-undervolt
     SUBDIR += iocage
     SUBDIR += iocage-devel
     SUBDIR += iocell
