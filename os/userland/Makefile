@@ -7,7 +7,7 @@ CATEGORIES=	os
 MAINTAINER=	kris@ixsystems.com
 COMMENT=	Port for the OS userland binaries
 
-BUILD_DEPENDS=	/usr/src/Makefile:os/src
+BUILD_DEPENDS=  os/src>=0:os/src
 
 PREFIX=/
 EXTRACT_ONLY=
