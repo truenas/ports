@@ -37,5 +37,9 @@ do-install:
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
 		| ${AWK} '{print $$2 }' >> ${TMPPLIST})
+	(cd ${STAGEDIR}; ${FIND} . \( -type d \) \
+		| ${SED} -e 's,^\./,,g' \
+		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
+		| ${AWK} '{print @dir(root,wheel,0755,) $$2 }' >> ${TMPPLIST})
 
 .include <bsd.port.post.mk>
