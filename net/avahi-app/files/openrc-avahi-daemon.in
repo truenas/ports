@@ -10,14 +10,49 @@
 # This file may not be copied, modified, propagated, or distributed
 # except according to the terms contained in the LICENSE file.
 
-pidfile=/var/run/avahi-daemon/pid
 name="avahi daemon"
-command=%%PREFIX%%/sbin/avahi-daemon
+description="Avahi's mDNSResponder, a Zeroconf (Bonjour) service advertisement daemon"
+directory_prefix=/usr/local/sbin
+binary_name=avahi-daemon
+command="${directory_prefix}/${binary_name}"
 command_args="-D ${avahi_daemon_flags}"
+command_background="yes"
+start_command_args="${command_args}"
+stop_command_args="-k"
+extra_started_commands="reload"
+supervisor=supervise-daemon
+pidfile="/var/run/{$binary_name}/pid"
+output_log="/var/log/${binary_name}.log"
+error_log="${output_log}"
 
 depend()
 {
-	provide avahi_daemon
-	need localmount
-	after dbus
+   provide avahi_daemon
+   need localmount
+   before netmount nfsmount
+   after dbus
+}
+
+start()
+{
+   ebegin "Starting ${name}"
+   ${command} ${start_command_args}
+   eend $?
+   exit 0
+}
+
+stop()
+{
+   ebegin "Stopping ${name}"
+   ${command} ${stop_command_args}
+   eend $?
+   exit 0
+}
+
+reload()
+{
+   ebegin "Reloading ${name}"
+   ${command} -r
+   eend $?
+   exit 0
 }

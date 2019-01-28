@@ -16,12 +16,48 @@
 # DNS servers in a DHCP-like fashion with mDNS.
 #
 name="avahi dnsconfd"
-command=%%PREFIX%%/sbin/avahi-dnsconfd
+description="Unicast DNS server from mDNS/DNS-SD configuration daemon"
+directory_prefix=/usr/local/sbin
+binary_name=avahi-dnsconfd
+command=${directory_prefix}/${binary_name}
 command_args="-D ${avahi_dnsconfd_flags}"
-pidfile=/var/run/avahi-dnsconfd.pid
+start_command_args="${command_args}"
+stop_command_args="-k"
+extra_started_commands="reload"
+supervisor=supervise-daemon
+pidfile="/var/run/avahi-dnsconfd.pid"
+output_log="/var/log/${binary_name}.log"
+error_log="${output_log}"
 
 depend()
 {
-	need localmount avahi-daemon
-	after dbus
+    provide avahi_dnsconfd
+    need localmount avahi-daemon
+    after dbus
+    use net	
 }
+
+start()
+{
+    ebegin "Starting ${name}"
+    ${command} ${start_command_args}
+    eend $?
+    exit 0
+}
+
+stop()
+{
+    ebegin "Stopping ${name}"
+    ${command} ${stop_command_args}
+    eend $?
+    exit 0
+}
+
+reload()
+{
+    ebegin "Reloading ${name}"
+    ${command} -r
+    eend $?
+    exit 0
+}
+
