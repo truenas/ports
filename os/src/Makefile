@@ -37,9 +37,10 @@ do-install:
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
 		| ${AWK} '{print $$2 }' >> ${TMPPLIST})
-	(cd ${STAGEDIR}; ${FIND} . \( -type d \) \
+	(cd ${STAGEDIR}; ${FIND} ./usr/src \( -type d \) \
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
-		| ${AWK} '{print @dir(root,wheel,0755,) $$2 }' >> ${TMPPLIST})
+		| ${AWK} '{print $$2 }' \
+		| ${XARGS} -I '{}' echo "@dir {}" >> ${TMPPLIST})
 
 .include <bsd.port.post.mk>
