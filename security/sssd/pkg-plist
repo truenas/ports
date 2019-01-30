@@ -18,17 +18,6 @@ lib/libsss_nss_idmap.so.0.1.0
 lib/libsss_sudo.so
 lib/nss_sss.so.1
 lib/pam_sss.so
-%%PYTHON_SITELIBDIR%%/SSSDConfig-1.13.4-py%%PYTHON_VER%%.egg-info
-%%PYTHON_SITELIBDIR%%/SSSDConfig/__init__.py
-%%PYTHON_SITELIBDIR%%/SSSDConfig/__init__.pyc
-%%PYTHON_SITELIBDIR%%/SSSDConfig/ipachangeconf.py
-%%PYTHON_SITELIBDIR%%/SSSDConfig/ipachangeconf.pyc
-%%PYTHON_SITELIBDIR%%/SSSDConfig/sssd_upgrade_config.py
-%%PYTHON_SITELIBDIR%%/SSSDConfig/sssd_upgrade_config.pyc
-%%PYTHON_SITELIBDIR%%/pyhbac.so
-%%PYTHON_SITELIBDIR%%/pysss.so
-%%PYTHON_SITELIBDIR%%/pysss_murmur.so
-%%PYTHON_SITELIBDIR%%/pysss_nss_idmap.so
 lib/shared-modules/ldb/memberof.so
 %%SMB%%lib/sssd/libsss_ad.so
 lib/sssd/libsss_cert.so
