@@ -154,7 +154,6 @@ sbin/sss_groupadd
 sbin/sss_groupdel
 sbin/sss_groupmod
 sbin/sss_groupshow
-sbin/sss_obfuscate
 sbin/sss_seed
 sbin/sss_useradd
 sbin/sss_userdel
