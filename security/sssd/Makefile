@@ -47,6 +47,7 @@ CONFIGURE_ARGS=	--with-selinux=no --with-semanage=no \
 		--disable-cifs-idmap-plugin --disable-config-lib \
 		--without-nfsv4-idmapd-plugin \
 		--without-python2-bindings \
+		--without-python3-bindings \
 		--with-krb5-conf=/etc/krb5.conf
 CFLAGS+=	-fstack-protector-all
 PLIST_SUB=	PYTHON_VER=${PYTHON_VER}
