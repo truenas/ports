@@ -45,7 +45,8 @@ CONFIGURE_ARGS=	--with-selinux=no --with-semanage=no \
 		--with-pubconf-path=/var/run/sss --with-mcache-path=/var/db/sss_mc \
 		--with-unicode-lib=libunistring --with-autofs=no \
 		--disable-cifs-idmap-plugin --disable-config-lib \
-		--without-nfsv4-idmapd-plugin\
+		--without-nfsv4-idmapd-plugin \
+		--without-python2-bindings \
 		--with-krb5-conf=/etc/krb5.conf
 CFLAGS+=	-fstack-protector-all
 PLIST_SUB=	PYTHON_VER=${PYTHON_VER}
