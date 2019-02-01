@@ -211,6 +211,7 @@
     SUBDIR += bicyclerepair
     SUBDIR += bin86
     SUBDIR += binaryen
+    SUBDIR += bingo
     SUBDIR += bingrep
     SUBDIR += binutils
     SUBDIR += bison
@@ -1247,6 +1248,7 @@
     SUBDIR += iniparser
     SUBDIR += initutil
     SUBDIR += injeqt
+    SUBDIR += interactive_rebase_tool
     SUBDIR += ioncube
     SUBDIR += ipython
     SUBDIR += ipython5
@@ -4338,6 +4340,7 @@
     SUBDIR += py-azure-graphrbac
     SUBDIR += py-azure-keyvault
     SUBDIR += py-azure-mgmt-advisor
+    SUBDIR += py-azure-mgmt-applicationinsights
     SUBDIR += py-azure-mgmt-authorization
     SUBDIR += py-azure-mgmt-batch
     SUBDIR += py-azure-mgmt-batchai

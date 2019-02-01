@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	bc
-PORTVERSION=	1.1.0
+PORTVERSION=	1.1.1
 CATEGORIES=	math
 PKGNAMEPREFIX=	gh-
 
@@ -18,7 +18,7 @@ HAS_CONFIGURE=	yes
 CONFIGURE_SCRIPT=	configure.sh
 CONFIGURE_ARGS=	-G
 
-CONFLICTS_INSTALL=	bc-[0-9]*
+CONFLICTS_INSTALL=	gnubc-[0-9]*
 
 PLIST_FILES=	bin/bc bin/dc man/man1/bc.1.gz man/man1/dc.1.gz
 

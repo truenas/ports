@@ -1216,7 +1216,6 @@
     SUBDIR += peco
     SUBDIR += perl2html
     SUBDIR += permute
-    SUBDIR += pict
     SUBDIR += php-mecab
     SUBDIR += php71-ctype
     SUBDIR += php71-dom
@@ -1248,6 +1247,7 @@
     SUBDIR += php73-xmlreader
     SUBDIR += php73-xmlwriter
     SUBDIR += php73-xsl
+    SUBDIR += pict
     SUBDIR += plover
     SUBDIR += po4a
     SUBDIR += pocketreader
@@ -1263,6 +1263,7 @@
     SUBDIR += py-Chameleon
     SUBDIR += py-CommonMark
     SUBDIR += py-MarkupSafe
+    SUBDIR += py-QDarkStyle
     SUBDIR += py-Tempita
     SUBDIR += py-acora
     SUBDIR += py-agate
