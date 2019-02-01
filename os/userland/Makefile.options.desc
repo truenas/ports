@@ -1,0 +1,3 @@
+# $FreeBSD$
+
+ZFS_DESC=			Build base system ZFS

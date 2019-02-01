@@ -14,6 +14,10 @@ EXTRACT_ONLY=
 WRKSRC=/usr/src
 WITHOUT_FBSD10_FIX=	yes
 
+.if !exists(${WRKSRC}/Makefile)
+IGNORE=	requires source files in ${WRKSRC}
+.endif
+
 .include <bsd.port.pre.mk>
 
 .if exists(/usr/local_source/${PORTNAME})
@@ -36,5 +40,10 @@ do-install:
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
 		| ${AWK} '{print $$2 }' >> ${TMPPLIST})
+	(cd ${STAGEDIR}; ${FIND} ./boot/kernel \( -type d \) \
+		| ${SED} -e 's,^\./,,g' \
+		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
+		| ${AWK} '{print $$2 }' \
+		| ${XARGS} -I '{}' echo "@dir {}" >> ${TMPPLIST})
 
 .include <bsd.port.post.mk>
