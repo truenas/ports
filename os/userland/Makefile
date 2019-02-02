@@ -13,24 +13,23 @@ BUILD_DEPENDS=  buildworld>=0:os/buildworld
 
 PREFIX=/
 EXTRACT_ONLY=
-WRKSRC=/usr/src
 
 .include <bsd.port.pre.mk>
 
 build:
-	${MKDIR} -p ${STAGEDIR}
-	${ECHO_MSG} "==> Extracting world.txz..."
-	${TAR} xpf /usr/dist/world.txz -C ${STAGEDIR}
+	@${MKDIR} -p ${STAGEDIR}
+	@${ECHO_MSG} "==> Extracting world.txz..."
+	@${TAR} xpf /usr/dist/world.txz -C ${STAGEDIR}
 
 do-install:
-	${ECHO_MSG} "==> Generating plist..."
-	(cd ${STAGEDIR}; ${FIND} . \( -type f -o -type l \) \
+	@${ECHO_MSG} "==> Generating plist..."
+	@(cd ${STAGEDIR}; ${FIND} . \( -type f -o -type l \) \
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
 		| ${AWK} '{print $$2 }' \
 		| ${GREP} -v -e 'usr/lib/debug' -e 'usr/tests' -e 'usr/lib32' \
 		>> ${TMPPLIST})
-	(cd ${STAGEDIR}; ${FIND} ./ \( -type d \) \
+	@(cd ${STAGEDIR}; ${FIND} ./ \( -type d \) \
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
 		| ${AWK} '{print $$2 }' \
