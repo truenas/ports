@@ -1,66 +1,44 @@
 # $FreeBSD$
 
+.include "../Makefile.common"
+
 PORTNAME=	userland
-PORTVERSION=	20190012500
+PORTVERSION=	${OS_PORTVERSION}
 CATEGORIES=	os
 
 MAINTAINER=	kris@ixsystems.com
 COMMENT=	Port for the OS userland binaries
 
-BUILD_DEPENDS=  src>=0:os/src
+BUILD_DEPENDS=  buildworld>=0:os/buildworld
 
 PREFIX=/
 EXTRACT_ONLY=
 WRKSRC=/usr/src
-WITHOUT_FBSD10_FIX=	yes
-
-.if !exists(${WRKSRC}/Makefile)
-IGNORE=	requires source files in ${WRKSRC}
-.endif
-
-.include "Makefile.options"
-.include "Makefile.options.desc"
 
 .include <bsd.port.pre.mk>
 
-.if !${PORT_OPTIONS:MZFS}
-MFLAGS+=	WITHOUT_ZFS=YES
-.else
-MFLAGS+=	WITH_ZFS=YES
-.endif
-
-
-.if exists(/usr/local_source/${PORTNAME})
-checksum fetch:
-	${ECHO_MGS} ${.TARGET} not needed because building direct
-.endif
-
-MFLAGS+=	MAKEOBJDIRPREFIX=${WRKDIR}/obj
-
-
 build:
-	cd ${WRKSRC} && env -i make -j ${_MAKE_JOBS_NUMBER} ${MFLAGS} buildworld
+	${MKDIR} -p ${STAGEDIR}
+	${ECHO_MSG} "==> Extracting world.txz..."
+	${TAR} xpf /usr/dist/world.txz -C ${STAGEDIR}
 
 do-install:
-	${MKDIR} -p ${STAGEDIR}
-	cd ${WRKSRC} && env -i make -j ${_MAKE_JOBS_NUMBER} \
-		${MFLAGS} \
-	       	DESTDIR=${STAGEDIR} \
-		installworld
-	cd ${WRKSRC} && env -i make -j ${_MAKE_JOBS_NUMBER} \
-		${MFLAGS} \
-		DESTDIR=${STAGEDIR} \
-		distribution
+	${ECHO_MSG} "==> Generating plist..."
 	(cd ${STAGEDIR}; ${FIND} . \( -type f -o -type l \) \
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
-		| ${AWK} '{print $$2 }' >> ${TMPPLIST})
+		| ${AWK} '{print $$2 }' \
+		| ${GREP} -v -e 'usr/lib/debug' -e 'usr/tests' -e 'usr/lib32' \
+		>> ${TMPPLIST})
 	(cd ${STAGEDIR}; ${FIND} ./ \( -type d \) \
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
 		| ${AWK} '{print $$2 }' \
 		| ${GREP} -v -e '/' \
-		| ${XARGS} -I '{}' echo "@dir {}" >> ${TMPPLIST})
+		| ${GREP} -v -e 'usr/lib/debug' -e 'usr/tests' -e 'usr/lib32' \
+		| ${XARGS} -I '{}' echo "@dir {}" \
+		| ${GREP} -v -w '@dir ' \
+		| ${CAT} >> ${TMPPLIST})
 
 clean:
 	@if [ -d ${WRKDIR} ]; then \
