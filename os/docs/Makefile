@@ -2,12 +2,12 @@
 
 .include "../Makefile.common"
 
-PORTNAME=	userland
+PORTNAME=	docs
 PORTVERSION=	${OS_PORTVERSION}
 CATEGORIES=	os
 
 MAINTAINER=	kris@ixsystems.com
-COMMENT=	Port for the OS userland binaries
+COMMENT=	Docs for the BSD system
 
 BUILD_DEPENDS=  buildworld>=0:os/buildworld
 
@@ -23,18 +23,16 @@ build:
 
 do-install:
 	@${ECHO_MSG} "==> Generating plist..."
-	@(cd ${STAGEDIR}; ${FIND} . \( -type f -o -type l \) \
+	@(cd ${STAGEDIR}; ${FIND} ./usr/share/doc ./usr/share/man \( -type f -o -type l \) \
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
 		| ${AWK} '{print $$2 }' \
-		| ${GREP} -v -e 'usr/lib/debug' -e 'usr/tests' -e 'usr/lib32' -e 'usr/share/doc' -e 'usr/share/man' \
 		>> ${TMPPLIST})
-	@(cd ${STAGEDIR}; ${FIND} ./ \( -type d \) \
+	@(cd ${STAGEDIR}; ${FIND} ./usr/share/doc ./usr/share/man \( -type d \) \
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
 		| ${AWK} '{print $$2 }' \
 		| ${GREP} -v -e '/' \
-		| ${GREP} -v -e 'usr/lib/debug' -e 'usr/tests' -e 'usr/lib32' -e 'usr/share/doc' -e 'usr/share/man' \
 		| ${XARGS} -I '{}' echo "@dir {}" \
 		| ${GREP} -v -w '@dir ' \
 		| ${CAT} >> ${TMPPLIST})
