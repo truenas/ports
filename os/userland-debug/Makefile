@@ -9,14 +9,15 @@ CATEGORIES=	os
 MAINTAINER=	kris@ixsystems.com
 COMMENT=	Userland debuging symbols
 
-BUILD_DEPENDS=  buildworld>=0:os/buildworld
+BUILD_DEPENDS=  /usr/dist/world.txz:os/buildworld
 
 PREFIX=/
 EXTRACT_ONLY=
+DISTFILES=
 
 .include <bsd.port.pre.mk>
 
-build:
+do-build:
 	@${MKDIR} -p ${STAGEDIR}
 	@${ECHO_MSG} "==> Extracting world.txz..."
 	@${TAR} xpf /usr/dist/world.txz -C ${STAGEDIR}

@@ -9,15 +9,16 @@ CATEGORIES=	os
 MAINTAINER=	kris@ixsystems.com
 COMMENT=	Port for the kernel debug files
 
-BUILD_DEPENDS=	buildkernel>=0:os/buildkernel
+BUILD_DEPENDS=	/usr/dist/kernel.txz:os/buildkernel
 
 PREFIX=/
 EXTRACT_ONLY=
+DISTFILES=
 WRKSRC=/usr/src
 
 .include <bsd.port.pre.mk>
 
-build:
+do-build:
 	@${MKDIR} -p ${STAGEDIR}
 	@${ECHO_MSG} "==> Extracting kernel.txz..."
 	@${TAR} xpf /usr/dist/kernel.txz -C ${STAGEDIR}
