@@ -7,19 +7,13 @@ CATEGORIES=	os
 MAINTAINER=	kris@ixsystems.com
 COMMENT=	Port for the OS base sources
 
-.if exists(/usr/local_source/${PORTNAME})
-PORTVERSION!=	stat -f %m /usr/local_source/${PORTNAME}
-EXTRACT_ONLY=
-WRKSRC=         /usr/local_source/${PORTNAME}
-.else
 USE_GITHUB=	yes
 GH_ACCOUNT=	trueos
 GH_PROJECT=	trueos
 GH_TAGNAME=	afb9da498a1e6bfb3908a15c1efbba873422f80d
-.endif
 
 PREFIX=/
-SRCDIR=/usr/src
+SRCDIR?=/usr/src
 NO_BUILD=	yes
 WITHOUT_FBSD10_FIX=	yes
 

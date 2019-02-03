@@ -9,15 +9,14 @@ CATEGORIES=	os
 MAINTAINER=	kris@ixsystems.com
 COMMENT=	Port for the buildworld phase of OS
 
-BUILD_DEPENDS=  src>=0:os/src
-
 PREFIX=/
 EXTRACT_ONLY=
-WRKSRC=/usr/src
+SRCDIR?=/usr/src
+WRKSRC=${SRCDIR}
 WITHOUT_FBSD10_FIX=	yes
 
 .if !exists(${WRKSRC}/Makefile)
-IGNORE=	requires source files in ${WRKSRC}
+IGNORE= Missing world sources in ${WRKSRC}
 .endif
 
 .include "Makefile.options"
