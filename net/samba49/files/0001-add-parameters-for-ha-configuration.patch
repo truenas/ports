@@ -1,3 +1,20 @@
+diff --git a/docs-xml/smbdotconf/base/enablewebservicediscovery.xml b/docs-xml/smbdotconf/base/enablewebservicediscovery.xml
+new file mode 100644
+index 0000000..9495393
+--- /dev/null
++++ b/docs-xml/smbdotconf/base/enablewebservicediscovery.xml
+@@ -0,0 +1,11 @@
++<samba:parameter name="enable web service discovery"
++                 type="boolean"
++                 context="G"
++                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
++<description>
++        <para>Enable Web Services Dynamic Discovery (WS-Discovery) to
++        make samba_server appear in Network Neighborhood on Windows
++        clients.</para>
++</description>
++<value type="default">no</value>
++</samba:parameter>
 diff --git a/docs-xml/smbdotconf/base/truenaspassivecontroller.xml b/docs-xml/smbdotconf/base/truenaspassivecontroller.xml
 new file mode 100644
 index 0000000..ad7499b
@@ -86,10 +103,18 @@ index a9405e8..95c1c8a 100644
  			/*
  			 * Add HOST/NETBIOSNAME
 diff --git a/source3/param/loadparm.c b/source3/param/loadparm.c
-index 322934c..eefae67 100644
+index 322934c..91a55de 100644
 --- a/source3/param/loadparm.c
 +++ b/source3/param/loadparm.c
-@@ -723,6 +723,10 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
+@@ -688,6 +688,7 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
+ #endif
+ 	Globals.time_server = false;
+ 	Globals.bind_interfaces_only = false;
++	Globals.enable_web_service_discovery = false;
+ 	Globals.unix_password_sync = false;
+ 	Globals.pam_password_change = false;
+ 	Globals.passwd_chat_debug = false;
+@@ -723,6 +724,10 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
  	Globals.log_writeable_files_on_exit = false;
  	Globals.create_krb5_conf = true;
  	Globals.include_system_krb5_conf = true;
