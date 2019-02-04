@@ -89,7 +89,7 @@ SUB_LIST+=			PKGCONFIGDIR=${PKGCONFIGDIR_REL}
 # Options
 OPTIONS_SUB=			yes
 
-OPTIONS_DEFINE=			AD_DC ADS DEBUG DOCS FAM LDAP LIBZFS\
+OPTIONS_DEFINE=			AD_DC ADS DEBUG DOCS FAM LDAP LIBZFS WSDD\
 				QUOTAS SYSLOG UTMP
 # Make those default options
 OPTIONS_DEFAULT:=		${OPTIONS_DEFINE}
@@ -115,6 +115,7 @@ GPGME_DESC=			GpgME
 GLUSTERFS_DESC=			GlusterFS
 LDAP_DESC=			LDAP client
 LIBZFS_DESC=			LibZFS
+WSDD_DESC=			Web Service Discovery Daemon
 SPOTLIGHT_DESC=			Spotlight
 MANDOC_DESC=			Build manpages from DOCBOOK templates
 NTVFS_DESC=			Build *DEPRECATED* NTVFS file server
@@ -311,6 +312,8 @@ GLUSTERFS_VARS=			SAMBA4_MODULES+=vfs_glusterfs
 
 GPGME_CONFIGURE_WITH=		gpgme
 GPGME_LIB_DEPENDS=		libgpgme.so:security/gpgme
+
+WSDD_RUN_DEPENDS=		py${PYTHON3_DEFAULT:S/.//}-wsdd>=1.0.0:sysutils/py-wsdd
 
 PROFILE_CONFIGURE_WITH=		profiling-data
 
