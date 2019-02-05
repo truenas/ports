@@ -20,7 +20,7 @@
 # You need to enable winbindd separately, by adding:
 #winbindd_enable="YES"
 # Configuration file can be set with:
-#samba_server_config="/usr/local/etc/smb4.conf"
+#samba_server_config="%%SAMBA4_CONFDIR%%/%%SAMBA4_CONFIG%%"
 #
 
 . /etc/rc.subr
@@ -44,7 +44,7 @@ reload_cmd="samba_server_reload_cmd"
 rcvar_cmd="samba_server_rcvar_cmd"
 
 wsdd_cmd="%%PREFIX%%/bin/wsdd.py"
-python3_cmd="/usr/local/bin/python3"
+python3_cmd="%%PYTHON_CMD%%"
 
 samba_server_checkconfig() {
     echo -n "Performing sanity check on Samba configuration: "
@@ -79,11 +79,11 @@ samba_server_wsdd_cmd() {
     pidfile="${samba_server_piddir}/wsdd.pid"
     workgroup="$(${testparm_command} --parameter-name='workgroup' 2>/dev/null)"
     interfaces="$(${testparm_command} --parameter-name='interfaces' 2>/dev/null)"
-    wsdd_opts="-w ${workgroup}"
-    if [ ${interfaces} ]; then
-	wsdd_opts="${wsdd_opts} -i ${interfaces}"
+    if [ ! -z "${interfaces}" ]; then
+	wsdd_opts="-w ${workgroup} -i ${interfaces}"
+    else
+	wsdd_opts="-w ${workgroup}"
     fi
-    bind_interfaces="$(${testparm_command} --parameter-name='interfaces' 2>/dev/null)"
     case ${rc_arg} in
 	start)
 	    if [ ! -f ${pidfile} ]; then
@@ -114,7 +114,7 @@ samba_server_wsdd_cmd() {
 	        echo "wsdd: stopped"
 	    fi
 	;;
-	auto|*)
+	*)
 	;;
     esac
 }
@@ -211,7 +211,7 @@ samba_server_config_init() {
 	active\ directory\ domain\ controller)
 	    samba_daemons="samba"
 	    ;;
-	auto|*)
+	*)
 	    samba_daemons="nmbd smbd winbindd"
 	    ;;
     esac
@@ -227,7 +227,7 @@ samba_server_config_init() {
 		        eval ${name}_enable=\${${name}_enable-YES}
                     fi
 	            ;;
-	        auto|*)
+	        *)
 		    eval ${name}_enable=\${${name}_enable-YES}
 	    esac
 
