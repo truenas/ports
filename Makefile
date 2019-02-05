@@ -40,6 +40,7 @@ SUBDIR += net-im
 SUBDIR += net-mgmt
 SUBDIR += net-p2p
 SUBDIR += news
+SUBDIR += os
 SUBDIR += palm
 SUBDIR += polish
 SUBDIR += ports-mgmt
