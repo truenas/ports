@@ -14,9 +14,9 @@ LICENSE=	BSD2CLAUSE
 CONFLICTS_INSTALL=	poudriere-[0-9]*
 
 USE_GITHUB=	yes
-GH_ACCOUNT=	miwi-fbsd
-GH_PROJECT=	poudriere-trueos
-GH_TAGNAME=	bf180f5
+GH_ACCOUNT=	trueos
+GH_PROJECT=	poudriere
+GH_TAGNAME=	8234a51534c8869aebcf3071e00203dfea3726a9
 
 GNU_CONFIGURE=	yes
 ETCDIR=		${PREFIX}/etc/poudriere.d
