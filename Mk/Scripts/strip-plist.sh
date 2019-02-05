@@ -1,9 +1,10 @@
 #!/bin/sh
 
 PLIST="$1"
+STRIPLIST="$2"
 
-if [ ! -e "/etc/strip-plist-ports" ] ; then
-	echo "ERROR: Missing /etc/strip-plist-ports" >&2
+if [ ! -e "$STRIPLIST" ] ; then
+	echo "ERROR: Missing $STRIPLIST" >&2
 	exit 1
 fi
 
@@ -16,5 +17,5 @@ do
 
 	cat ${PLIST} | grep -v " $strip" > ${PLIST}.new
 	mv ${PLIST}.new ${PLIST}
-done < /etc/strip-plist-ports
+done < ${STRIPLIST}
 
