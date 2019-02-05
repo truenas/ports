@@ -9,15 +9,15 @@ CATEGORIES=	os
 MAINTAINER=	kris@ixsystems.com
 COMMENT=	Port for the buildworld phase of OS
 
+SRCDIR?=	/usr/src
+BUILD_DEPENDS=	${SRCDIR}/Makefile:os/src
+
 PREFIX=/
 EXTRACT_ONLY=
+DISTFILES=
 SRCDIR?=/usr/src
 WRKSRC=${SRCDIR}
 WITHOUT_FBSD10_FIX=	yes
-
-.if !exists(${WRKSRC}/Makefile)
-IGNORE= Missing world sources in ${WRKSRC}
-.endif
 
 .include "Makefile.options"
 .include "Makefile.options.desc"
@@ -38,7 +38,7 @@ PLIST_FILES+=	usr/dist/world.txz
 #MFLAGS+=	MAKEOBJDIRPREFIX=${WRKDIR}/obj
 
 
-build:
+do-build:
 	cd ${WRKSRC} && env -i make -j ${_MAKE_JOBS_NUMBER} ${MFLAGS} buildworld
 
 do-install:

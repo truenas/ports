@@ -9,16 +9,15 @@ CATEGORIES=	os
 MAINTAINER=	kris@ixsystems.com
 COMMENT=	Buildkernel portition of os packages
 
+SRCDIR?=/usr/src
+BUILD_DEPENDS=	${SRCDIR}/Makefile:os/src
+
 PREFIX=/
 EXTRACT_ONLY=
+DISTFILES=
 WITHOUT_FBSD10_FIX=	yes
-SRCDIR?=/usr/src
 WRKSRC=${SRCDIR}
 PLIST_FILES+=	/usr/dist/kernel.txz
-
-.if !exists(${WRKSRC}/Makefile)
-IGNORE= Missing kernel sources in ${WRKSRC}
-.endif
 
 .include "Makefile.options"
 .include "Makefile.options.desc"
@@ -33,7 +32,7 @@ MFLAGS+=	WITH_${var}=YES
 .endif
 .endfor
 
-build:
+do-build:
 	cd ${WRKSRC} && make -j ${_MAKE_JOBS_NUMBER} \
 		MAKEOBJDIRPREFIX=${WRKDIR}/obj \
 		buildkernel
