@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	poudriere
-DISTVERSION=	20190205
+DISTVERSION=	2019020501
 PORTREVISION=	0
 CATEGORIES=	ports-mgmt
 PKGNAMESUFFIX=	-trueos
@@ -16,7 +16,7 @@ CONFLICTS_INSTALL=	poudriere-[0-9]*
 USE_GITHUB=	yes
 GH_ACCOUNT=	trueos
 GH_PROJECT=	poudriere
-GH_TAGNAME=	e99aace9
+GH_TAGNAME=	fbfc5b9f
 
 GNU_CONFIGURE=	yes
 ETCDIR=		${PREFIX}/etc/poudriere.d
