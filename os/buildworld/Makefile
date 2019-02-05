@@ -44,16 +44,18 @@ PLIST_FILES+=	usr/dist/world.txz
 
 
 do-build:
-	cd ${WRKSRC} && env -i make -j ${_MAKE_JOBS_NUMBER} ${MFLAGS} buildworld
+	cd ${WRKSRC} && env -i make -j ${_MAKE_JOBS_NUMBER} ${WORLD_MAKE_FLAGS} \
+		${MFLAGS} \
+		buildworld
 
 do-install:
 	${MKDIR} -p ${STAGEDIR}/world
 	${MKDIR} -p ${STAGEDIR}/usr/dist
-	cd ${WRKSRC} && env -i make -j ${_MAKE_JOBS_NUMBER} \
+	cd ${WRKSRC} && env -i make -j ${_MAKE_JOBS_NUMBER} ${WORLD_MAKE_FLAGS} \
 		${MFLAGS} \
 	       	DESTDIR=${STAGEDIR}/world \
 		installworld
-	cd ${WRKSRC} && env -i make -j ${_MAKE_JOBS_NUMBER} \
+	cd ${WRKSRC} && env -i make -j ${_MAKE_JOBS_NUMBER} ${WORLD_MAKE_FLAGS} \
 		${MFLAGS} \
 		DESTDIR=${STAGEDIR}/world \
 		distribution
