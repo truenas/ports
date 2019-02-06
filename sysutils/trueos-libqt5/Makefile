@@ -1,8 +1,13 @@
 # $FreeBSD$
 
 PORTNAME=	trueos-libqt5
+<<<<<<< HEAD
 PORTVERSION=	20180529
 PORTREVISION=	1
+=======
+PORTVERSION=	20171003
+PORTREVISION=	2
+>>>>>>> freebsd/master
 CATEGORIES=	sysutils
 
 MAINTAINER=	jt@ixsystems.com
@@ -12,10 +17,17 @@ LICENSE=	BSD2CLAUSE
 
 ONLY_FOR_ARCHS= amd64
 
+<<<<<<< HEAD
 MAKE_JOBS_UNSAFE=yes
 MAKE_ARGS=      PREFIX=${STAGEDIR}${PREFIX}
+=======
+USES=		gl qmake qt:5 shebangfix tar:xz
 
-USES=		qmake qt:5 shebangfix tar:xz
+MAKE_ARGS=	PREFIX=${STAGEDIR}${PREFIX}
+
+MAKE_JOBS_UNSAFE=	yes
+>>>>>>> freebsd/master
+
 USE_LDCONFIG=	yes
 USE_GL+=	gl
 USE_QT=        core gui network svg linguist \
