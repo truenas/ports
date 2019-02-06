@@ -16,6 +16,7 @@ PREFIX=/
 SRCDIR?=/usr/src
 NO_BUILD=	yes
 WITHOUT_FBSD10_FIX=	yes
+PKG_ABISTRING=	FreeBSD:13:${ARCH}
 
 .include <bsd.port.pre.mk>
 
