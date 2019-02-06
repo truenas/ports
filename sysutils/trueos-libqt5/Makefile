@@ -1,13 +1,8 @@
 # $FreeBSD$
 
 PORTNAME=	trueos-libqt5
-<<<<<<< HEAD
 PORTVERSION=	20180529
-PORTREVISION=	1
-=======
-PORTVERSION=	20171003
 PORTREVISION=	2
->>>>>>> freebsd/master
 CATEGORIES=	sysutils
 
 MAINTAINER=	jt@ixsystems.com
