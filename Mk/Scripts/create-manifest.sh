@@ -7,7 +7,7 @@ set -e
 
 . "${dp_SCRIPTSDIR}/functions.sh"
 
-validate_env dp_ABIFILE dp_ACTUAL_PACKAGE_DEPENDS dp_CATEGORIES dp_COMMENT \
+validate_env dp_ACTUAL_PACKAGE_DEPENDS dp_CATEGORIES dp_COMMENT \
 	dp_COMPLETE_OPTIONS_LIST dp_DEPRECATED dp_DESCR dp_EXPIRATION_DATE \
 	dp_GROUPS dp_LICENSE dp_LICENSE_COMB dp_MAINTAINER dp_METADIR \
 	dp_NO_ARCH dp_PKGBASE dp_PKGDEINSTALL dp_PKGINSTALL dp_PKGMESSAGES \
@@ -57,10 +57,8 @@ EOT
 [ -z "${dp_LICENSE}" ] || echo "licenses: [ ${dp_LICENSE} ]"
 [ -z "${dp_USERS}" ] || echo "users: [ ${dp_USERS} ]"
 [ -z "${dp_GROUPS}" ] || echo "groups: [ ${dp_GROUPS} ]"
-[ -n "${dp_NO_ARCH}" -a -z "${dp_ABIFILE}" ] && echo "arch : $(${dp_PKG_BIN} config abi | tr '[:upper:]' '[:lower:]' | cut -d: -f1,2):*"
-[ -n "${dp_NO_ARCH}" -a -z "${dp_ABIFILE}" ] && echo "abi : $(${dp_PKG_BIN} config abi | cut -d: -f1,2):*"
-[ -n "${dp_ABIFILE}" ] && echo "arch : $(${dp_PKG_BIN} -o ${dp_ABIFILE} config abi | tr '[:upper:]' '[:lower:]' | cut -d: -f1,2):*"
-[ -n "${dp_ABIFILE}" ] && echo "abi : $(${dp_PKG_BIN} -o ${dp_ABIFILE} config abi | cut -d: -f1,2):*"
+[ -n "${dp_NO_ARCH}" ] && echo "arch : $(${dp_PKG_BIN} config abi | tr '[:upper:]' '[:lower:]' | cut -d: -f1,2):*"
+[ -n "${dp_NO_ARCH}" ] && echo "abi : $(${dp_PKG_BIN} config abi | cut -d: -f1,2):*"
 
 # Then the key/values sections
 echo "deps: { "
