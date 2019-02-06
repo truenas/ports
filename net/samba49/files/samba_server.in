@@ -44,7 +44,7 @@ reload_cmd="samba_server_reload_cmd"
 rcvar_cmd="samba_server_rcvar_cmd"
 
 wsdd_cmd="%%PREFIX%%/bin/wsdd.py"
-python3_cmd="%%PYTHON_CMD%%"
+python3_cmd="%%SAMBA4_PYTHON3_CMD%%"
 
 samba_server_checkconfig() {
     echo -n "Performing sanity check on Samba configuration: "
@@ -87,10 +87,10 @@ samba_server_wsdd_cmd() {
     case ${rc_arg} in
 	start)
 	    if [ ! -f ${pidfile} ]; then
-	        /usr/sbin/daemon -p ${pidfile} -S ${python3_cmd} ${wsdd_cmd} ${wsdd_opts} 
+	        /usr/sbin/daemon -p ${pidfile} -S ${python3_cmd} ${wsdd_cmd} ${wsdd_opts}
 		debug "Starting wsdd"
 	        echo "Starting wsdd"
-            else
+	    else
 	        wsdd_pid=$(cat "${pidfile}")
 	        debug "wsdd already running?  (pid=${wsdd_pid})"
 	        echo "wsdd already running?  (pid=${wsdd_pid})"
@@ -99,7 +99,7 @@ samba_server_wsdd_cmd() {
 	stop)
 	    if [ -f ${pidfile} ]; then
 	        wsdd_pid=$(cat "${pidfile}")
-		debug "Stopping wsdd: ${wsdd_pid}"
+	        debug "Stopping wsdd: ${wsdd_pid}"
 	        echo "Stopping wsdd: ${wsdd_pid}"
 	        kill -9 ${wsdd_pid}
 	    fi
