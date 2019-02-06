@@ -1,12 +1,10 @@
 # $FreeBSD$
 
 PORTNAME=	telegram-desktop
-PORTREVISION=	2
-DISTVERSIONPREFIX=	v
-DISTVERSION=	1.5.4
+DISTVERSION=>···1.5.4
 PORTREVISION=	1
+DISTVERSIONPREFIX=	v
 CATEGORIES=	net-im
-
 
 MAINTAINER=	henry.hu.sh@gmail.com
 COMMENT=	Telegram Desktop messaging app
