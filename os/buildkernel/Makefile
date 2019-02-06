@@ -18,7 +18,7 @@ DISTFILES=
 WITHOUT_FBSD10_FIX=	yes
 WRKSRC=${SRCDIR}
 PLIST_FILES+=	/usr/dist/kernel.txz
-PKG_ABISTRING=	FreeBSD:13:${ARCH}
+PKG_ABISTRING=	FreeBSD:12:${ARCH}
 
 .include "Makefile.options"
 .include "Makefile.options.desc"
