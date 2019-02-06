@@ -17,16 +17,9 @@ LICENSE=	BSD2CLAUSE
 
 ONLY_FOR_ARCHS= amd64
 
-<<<<<<< HEAD
 MAKE_JOBS_UNSAFE=yes
 MAKE_ARGS=      PREFIX=${STAGEDIR}${PREFIX}
-=======
 USES=		gl qmake qt:5 shebangfix tar:xz
-
-MAKE_ARGS=	PREFIX=${STAGEDIR}${PREFIX}
-
-MAKE_JOBS_UNSAFE=	yes
->>>>>>> freebsd/master
 
 USE_LDCONFIG=	yes
 USE_GL+=	gl
