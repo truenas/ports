@@ -199,7 +199,7 @@ OPENLDAP_CONFIGURE_WITH=	libldap=${LOCALBASE}
 
 PERL_USES=			perl5
 PERL_CONFIGURE_ENABLE=		perl
-PERL_CONFIGURE_WITH=		perl=${PERL} perl-bindings
+PERL_CONFIGURE_WITH=		perl=${PERL} perl-bindings libperl
 
 PGSQL_USES=			pgsql
 PGSQL_CONFIGURE_ENABLE=		postgresql

@@ -78,6 +78,7 @@
     SUBDIR += calendarsupport
     SUBDIR += ccxstream
     SUBDIR += ceph
+    SUBDIR += ceph13
     SUBDIR += cf
     SUBDIR += charm
     SUBDIR += chrony
@@ -911,7 +912,6 @@
     SUBDIR += passlogd
     SUBDIR += pathneck
     SUBDIR += pbnc
-    SUBDIR += pdb
     SUBDIR += pear-Auth_RADIUS
     SUBDIR += pear-File_Bittorrent2
     SUBDIR += pear-Horde_Kolab_Server
@@ -1075,7 +1075,6 @@
     SUBDIR += py-pamqp
     SUBDIR += py-pcap
     SUBDIR += py-pcapy
-    SUBDIR += py-pcs
     SUBDIR += py-port-for
     SUBDIR += py-portend
     SUBDIR += py-pygeoip
