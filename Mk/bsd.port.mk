@@ -4277,7 +4277,6 @@ PKG_NOTES_ENV+=	dp_PKG_NOTE_${note}=${PKG_NOTE_${note}:Q}
 create-manifest:
 	@${SETENV} \
 			dp_SCRIPTSDIR='${SCRIPTSDIR}'                         \
-			dp_ABIFILE='${PKG_ABIFILE}'                           \
 			dp_ACTUAL_PACKAGE_DEPENDS='${ACTUAL-PACKAGE-DEPENDS}' \
 			dp_CATEGORIES='${CATEGORIES:u:S/$/,/}'                \
 			dp_COMMENT=${COMMENT:Q}                               \
