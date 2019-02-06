@@ -18,7 +18,7 @@ DISTFILES=
 SRCDIR?=/usr/src
 WRKSRC=${SRCDIR}
 WITHOUT_FBSD10_FIX=	yes
-PKG_ABISTRING=	FreeBSD:13:${ARCH}
+PKG_ABISTRING=	FreeBSD:12:${ARCH}
 
 .include "Makefile.options"
 .include "Makefile.options.desc"
