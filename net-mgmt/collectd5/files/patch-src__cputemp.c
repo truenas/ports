@@ -67,7 +67,7 @@
 +        value_list_t vl = VALUE_LIST_INIT;
 +        char name_buf[50];
 +
-+        ssnprintf (name_buf, sizeof (name_buf), "dev.cpu.%d.temperature", i);
++        snprintf (name_buf, sizeof (name_buf), "dev.cpu.%d.temperature", i);
 +
 +        if (sysctlbyname(name_buf, &temp, &temp_len, NULL, 0) < 0) {
 +            char errbuf[1024];
@@ -84,7 +84,7 @@
 +        sstrncpy (vl.host, hostname_g, sizeof(vl.host));
 +        sstrncpy (vl.plugin, "cputemp", sizeof(vl.plugin));
 +        sstrncpy (vl.type, "temperature", sizeof(vl.type));
-+        ssnprintf (vl.plugin_instance, sizeof (vl.plugin_instance), "%i", i);
++        snprintf (vl.plugin_instance, sizeof (vl.plugin_instance), "%i", i);
 +
 +        plugin_dispatch_values(&vl);
 +    }
