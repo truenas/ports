@@ -1,10 +1,107 @@
---- Makefile.am.orig	2016-09-11 08:10:25 UTC
+--- Makefile.am.orig   2016-09-11 08:10:25 UTC
 +++ Makefile.am
-@@ -14,7 +14,6 @@ EXTRA_DIST = contrib version-gen.sh test
+@@ -165,7 +165,7 @@ AM_CPPFLAGS = \
+ 	-DPREFIX='"${prefix}"' \
+ 	-DCONFIGFILE='"${sysconfdir}/${PACKAGE_NAME}.conf"' \
+ 	-DLOCALSTATEDIR='"${localstatedir}"' \
+-	-DPKGLOCALSTATEDIR='"${localstatedir}/lib/${PACKAGE_NAME}"' \
++	-DPKGLOCALSTATEDIR='"/var/db/${PACKAGE_NAME}"' \
+ 	-DPLUGINDIR='"${pkglibdir}"' \
+ 	-DPKGDATADIR='"${pkgdatadir}"'
+ 
+@@ -693,12 +693,26 @@ cpusleep_la_SOURCES = src/cpusleep.c
+ cpusleep_la_LDFLAGS = $(PLUGIN_LDFLAGS)
+ endif
+ 
++if BUILD_PLUGIN_CPUTEMP
++pkglib_LTLIBRARIES += cputemp.la
++cputemp_la_SOURCES = src/cputemp.c
++cputemp_la_LDFLAGS = $(PLUGIN_LDFLAGS)
++endif
++
+ if BUILD_PLUGIN_CSV
+ pkglib_LTLIBRARIES += csv.la
+ csv_la_SOURCES = src/csv.c
+ csv_la_LDFLAGS = $(PLUGIN_LDFLAGS)
+ endif
+ 
++if BUILD_PLUGIN_CTL
++pkglib_LTLIBRARIES += ctl.la
++ctl_la_SOURCES = src/ctl.c
++ctl_la_LDFLAGS = $(PLUGIN_LDFLAGS)
++ctl_la_CFLAGS = $(AM_CFLAGS) $(BUILD_WITH_LIBXML2_CFLAGS)
++ctl_la_LIBADD = $(BUILD_WITH_LIBXML2_LIBS)
++endif
++
+ if BUILD_PLUGIN_CURL
+ pkglib_LTLIBRARIES += curl.la
+ curl_la_SOURCES = \
+@@ -874,6 +888,13 @@ fscache_la_SOURCES = src/fscache.c
+ fscache_la_LDFLAGS = $(PLUGIN_LDFLAGS)
+ endif
+ 
++if BUILD_PLUGIN_GEOM_STAT
++pkglib_LTLIBRARIES += geom_stat.la
++geom_stat_la_SOURCES = src/geom_stat.c
++geom_stat_la_LDFLAGS = -module -avoid-version -ldevstat -lkvm -lgeom lbsdxml -lsbuf
++geom_stat_la_LIBADD =
++endif
++
+ if BUILD_PLUGIN_GMOND
+ pkglib_LTLIBRARIES += gmond.la
+ gmond_la_SOURCES = src/gmond.c
+@@ -1245,6 +1266,17 @@ nfs_la_SOURCES = src/nfs.c
+ nfs_la_LDFLAGS = $(PLUGIN_LDFLAGS)
+ endif
+ 
++if BUILD_PLUGIN_NFSSTAT
++pkglib_LTLIBRARIES += nfsstat.la
++nfsstat_la_SOURCES = src/nfsstat.c
++nfsstat_la_LDFLAGS = $(PLUGIN_LDFLAGS)
++nfsstat_la_CPPFLAGS = $(AM_CPPFLAGS)
++if BUILD_WITH_LIBDTRACE
++nfsstat_la_CPPFLAGS += $(BUILD_WITH_LIBDTRACE_CPPFLAGS)
++nfsstat_la_LDFLAGS += $(BUILD_WITH_LIBDTRACE_LDFLAGS)
++endif
++endif
++
+ if BUILD_PLUGIN_NGINX
+ pkglib_LTLIBRARIES += nginx.la
+ nginx_la_SOURCES = src/nginx.c
+@@ -1902,6 +1934,18 @@ zfs_arc_la_LIBADD = -lkstat
+ endif
+ endif
+ 
++if BUILD_PLUGIN_ZFS_ARC_V2
++pkglib_LTLIBRARIES += zfs_arc_v2.la
++zfs_arc_v2_la_SOURCES = src/zfs_arc_v2.c
++zfs_arc_v2_la_CFLAGS = $(AM_CFLAGS)
++zfs_arc_v2_la_LDFLAGS = -module -avoid-version
++if BUILD_FREEBSD
++zfs_arc_v2_la_LIBADD = -lm
++else
++zfs_arc_v2_la_LIBADD = -lkstat
++endif
++endif
++
+ if BUILD_PLUGIN_ZOOKEEPER
+ pkglib_LTLIBRARIES += zookeeper.la
+ zookeeper_la_SOURCES = src/zookeeper.c
+@@ -1964,15 +1964,10 @@ endif
  
  install-exec-hook:
  	$(mkinstalldirs) $(DESTDIR)$(localstatedir)/run
 -	$(mkinstalldirs) $(DESTDIR)$(localstatedir)/lib/$(PACKAGE_NAME)
++	$(mkinstalldirs) $(DESTDIR)/var/db/$(PACKAGE_NAME)
  	$(mkinstalldirs) $(DESTDIR)$(localstatedir)/log
- 
- maintainer-clean-local:
+ 	$(mkinstalldirs) $(DESTDIR)$(sysconfdir)
+-	if test -e $(DESTDIR)$(sysconfdir)/collectd.conf; \
+-	then \
+-		$(INSTALL) -m 0640 $(srcdir)/src/collectd.conf $(DESTDIR)$(sysconfdir)/collectd.conf.pkg-orig; \
+-	else \
+-		$(INSTALL) -m 0640 $(srcdir)/src/collectd.conf $(DESTDIR)$(sysconfdir)/collectd.conf; \
+-	fi; \
++	$(INSTALL) -m 0640 src/collectd.conf $(DESTDIR)$(sysconfdir)/collectd.conf.sample
+ 	$(mkinstalldirs) $(DESTDIR)$(pkgdatadir)
+ 	$(INSTALL) -m 0644 $(srcdir)/src/types.db $(DESTDIR)$(pkgdatadir)/types.db;
+ 	$(INSTALL) -m 0644 $(srcdir)/src/postgresql_default.conf \
