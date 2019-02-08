@@ -19,6 +19,11 @@ SRCDIR?=/usr/src
 WRKSRC=${SRCDIR}
 WITHOUT_FBSD10_FIX=	yes
 PKG_ABISTRING=	FreeBSD:13:${ARCH}
+LOCAL_SDIR?=	/usr/local_source
+.if exists(${LOCAL_SDIR}/${PORTNAME})
+WRKSRC=	${LOCAL_SDIR}/${PORTNAME}
+.endif
+
 
 .include "Makefile.options"
 .include "Makefile.options.desc"

@@ -17,10 +17,14 @@ SRCDIR?=/usr/src
 NO_BUILD=	yes
 WITHOUT_FBSD10_FIX=	yes
 PKG_ABISTRING=	FreeBSD:13:${ARCH}
+LOCAL_SDIR?=	/usr/local_source
+.if exists(${LOCAL_SDIR}/${PORTNAME})
+WRKSRC=	${LOCAL_SDIR}/${PORTNAME}
+.endif
 
 .include <bsd.port.pre.mk>
 
-.if exists(/usr/local_source/${PORTNAME})
+.if exists(${LOCAL_SDIR}/${PORTNAME})
 checksum fetch:
 	${ECHO_MGS} ${.TARGET} not needed because building direct
 .endif
