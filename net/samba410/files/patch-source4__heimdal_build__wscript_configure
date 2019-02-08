@@ -1,0 +1,11 @@
+--- source4/heimdal_build/wscript_configure.orig	2019-02-08 03:56:32.479767963 -0800
++++ source4/heimdal_build/wscript_configure	2019-02-08 03:57:44.814493484 -0800
+@@ -171,7 +171,7 @@ if not krb5_config:
+     krb5_config = conf.find_program("krb5-config", var="HEIMDAL_KRB5_CONFIG")
+ if krb5_config:
+     # Not ideal, but seems like the best way to get at these paths:
+-    f = open(krb5_config[0], 'r')
++    f = open(krb5_config[0], 'r', errors='surrogateescape')
+     try:
+         for l in f:
+             if l.startswith("libdir="):
