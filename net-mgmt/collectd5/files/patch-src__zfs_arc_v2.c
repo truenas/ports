@@ -217,7 +217,7 @@
 +	size_t valuelen = sizeof(value);
 +	int rv;
 +
-+	ssnprintf (buffer, sizeof (buffer), "%s%s", zfs_arcstat, name);
++	snprintf (buffer, sizeof (buffer), "%s%s", zfs_arcstat, name);
 +	rv = sysctlbyname (buffer, (void *) &value, &valuelen,
 +			/* new value = */ NULL, /* new length = */ (size_t) 0);
 +	if (rv == 0)
