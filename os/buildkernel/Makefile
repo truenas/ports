@@ -19,7 +19,7 @@ WITHOUT_FBSD10_FIX=	yes
 WRKSRC=${SRCDIR}
 PLIST_FILES+=	/usr/dist/kernel.txz
 PKG_ABISTRING=	FreeBSD:12:${ARCH}
-LOCAL_SDIR?=	/usr/local_source
+LOCAL_SDIR?=	/usr/ports/local_source
 .if exists(${LOCAL_SDIR}/${PORTNAME})
 WRKSRC=	${LOCAL_SDIR}/${PORTNAME}
 .endif
