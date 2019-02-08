@@ -1,7 +1,9 @@
 # $FreeBSD$
+#
+.include "../Makefile.common"
 
 PORTNAME=	src
-PORTVERSION=	2019020720
+PORTVERSION=	${OS_PORTVERSION}
 CATEGORIES=	os
 
 MAINTAINER=	kris@ixsystems.com
@@ -10,7 +12,7 @@ COMMENT=	Port for the OS base sources
 USE_GITHUB=	yes
 GH_ACCOUNT=	trueos
 GH_PROJECT=	trueos
-GH_TAGNAME=	323faccb6fea87c7207ca8e4a1f8968e35e5cf53
+GH_TAGNAME=	fce94c27645
 
 PREFIX=/
 SRCDIR?=/usr/src
