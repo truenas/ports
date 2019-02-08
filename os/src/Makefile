@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	src
-PORTVERSION=	20190012520
+PORTVERSION=	2019020720
 CATEGORIES=	os
 
 MAINTAINER=	kris@ixsystems.com
@@ -10,17 +10,21 @@ COMMENT=	Port for the OS base sources
 USE_GITHUB=	yes
 GH_ACCOUNT=	trueos
 GH_PROJECT=	trueos
-GH_TAGNAME=	e9096c8019f229c6d61ea42853f67ada9105413e
+GH_TAGNAME=	323faccb6fea87c7207ca8e4a1f8968e35e5cf53
 
 PREFIX=/
 SRCDIR?=/usr/src
 NO_BUILD=	yes
 WITHOUT_FBSD10_FIX=	yes
 PKG_ABISTRING=	FreeBSD:12:${ARCH}
+LOCAL_SDIR?=	/usr/local_source
+.if exists(${LOCAL_SDIR}/${PORTNAME})
+WRKSRC=	${LOCAL_SDIR}/${PORTNAME}
+.endif
 
 .include <bsd.port.pre.mk>
 
-.if exists(/usr/local_source/${PORTNAME})
+.if exists(${LOCAL_SDIR}/${PORTNAME})
 checksum fetch:
 	${ECHO_MSG} ${.TARGET} not needed because building direct
 .endif
