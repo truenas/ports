@@ -1,89 +1,52 @@
 --- configure.ac.orig	2017-06-06 18:13:54 UTC
 +++ configure.ac
-@@ -185,7 +185,7 @@ then
+@@ -140,7 +140,7 @@ if test "x$ac_system" = "xAIX"; then
  fi
  
  # Where to install .pc files.
 -pkgconfigdir="${libdir}/pkgconfig"
 +pkgconfigdir="${prefix}/libdata/pkgconfig"
- AC_SUBST(pkgconfigdir)
+ AC_SUBST([pkgconfigdir])
  
- # Check for standards compliance mode
-@@ -882,7 +882,7 @@ SAVE_CFLAGS="$CFLAGS"
+ #
+@@ -768,7 +768,7 @@ AC_FUNC_STRERROR_R
+ SAVE_CFLAGS="$CFLAGS"
  # Emulate behavior of src/Makefile.am
- if test "x$GCC" = "xyes"
- then
--	CFLAGS="$CFLAGS -Wall -Werror"
-+	CFLAGS="$CFLAGS -Wall "
+ if test "x$GCC" = "xyes"; then
+-  CFLAGS="$CFLAGS -Wall -Werror"
++  CFLAGS="$CFLAGS -Wall "
  fi
  
  AC_CACHE_CHECK([for strtok_r],
-@@ -1009,7 +1009,7 @@ AC_CHECK_FUNCS(getutxent, [have_getutxen
- if test "x$GCC" = "xyes"
- then
- 	SAVE_CFLAGS="$CFLAGS"
--	CFLAGS="$CFLAGS -Wall -Wextra -Werror"
-+	CFLAGS="$CFLAGS -Wall -Wextra "
+@@ -916,7 +916,7 @@ AC_CHECK_FUNCS([thread_info], [have_thread_info="yes"], [have_thread_info="no"])
+ # Check for strptime {{{
+ if test "x$GCC" = "xyes"; then
+   SAVE_CFLAGS="$CFLAGS"
+-  CFLAGS="$CFLAGS -Wall -Wextra -Werror"
++  CFLAGS="$CFLAGS -Wall -Wextra "
  fi
  
- AC_CHECK_FUNCS(strptime, [have_strptime="yes"], [have_strptime="no"])
-@@ -1923,6 +1923,7 @@ if test "x$with_kstat" = "xyes"
- then
- 	AC_CHECK_LIB(kstat, kstat_open, [with_kstat="yes"], [with_kstat="no (libkstat not found)"], [])
- fi
-+
- if test "x$with_kstat" = "xyes"
- then
- 	AC_CHECK_LIB(devinfo, di_init, [with_devinfo="yes"], [with_devinfo="no (not found)"], [])
-@@ -1932,6 +1933,8 @@ if test "x$with_kstat" = "xyes"
- then
- 	AC_DEFINE(HAVE_LIBKSTAT, 1,
- 		  [Define to 1 if you have the 'kstat' library (-lkstat)])
-+	BUILD_WITH_LIBKSTAT_LIBS="-lkstat"
-+	AC_SUBST(BUILD_WITH_LIBKSTAT_LIBS)
- fi
- AM_CONDITIONAL(BUILD_WITH_LIBKSTAT, test "x$with_kstat" = "xyes")
- AM_CONDITIONAL(BUILD_WITH_LIBDEVINFO, test "x$with_devinfo" = "xyes")
-@@ -3317,8 +3320,8 @@ AC_ARG_WITH(libmongoc, [AS_HELP_STRING([
- 	 with_libmongoc="no"
-  else
- 	 with_libmongoc="yes"
--	 LIBMONGOC_CPPFLAGS="$LIBMONGOC_CPPFLAGS -I$withval/include"
--	 LIBMONGOC_LDFLAGS="$LIBMONGOC_LDFLAGS -L$withval/lib"
-+	 LIBMONGOC_CPPFLAGS="$LIBMONGOC_CPPFLAGS -I$withval/include/libmongoc-1.0 -I$withval/include/libbson-1.0"
-+	 LIBMONGOC_LDFLAGS="$LIBMONGOC_LDFLAGS -L$withval/lib -lsasl2 -lssl -lcrypto  -lmongoc-1.0 -lbson-1.0"
-  fi; fi
- ],
- [with_libmongoc="yes"])
-@@ -3335,7 +3338,7 @@ then
- 	then
- 		AC_MSG_NOTICE([libmongoc CPPFLAGS: $LIBMONGOC_CPPFLAGS])
- 	fi
--	AC_CHECK_HEADERS(mongo.h,
-+	AC_CHECK_HEADERS(mongoc.h,
- 	[with_libmongoc="yes"],
- 	[with_libmongoc="no ('mongo.h' not found)"],
- [#if HAVE_STDINT_H
-@@ -3351,7 +3354,7 @@ then
- 	then
- 		AC_MSG_NOTICE([libmongoc LDFLAGS: $LIBMONGOC_LDFLAGS])
- 	fi
--	AC_CHECK_LIB(mongoc, mongo_run_command,
-+	AC_CHECK_LIB(mongoc-1.0, mongoc_client_command,
- 	[with_libmongoc="yes"],
- 	[with_libmongoc="no (symbol 'mongo_run_command' not found)"])
- fi
-@@ -4137,7 +4140,7 @@ then
- 	SAVE_LIBS="$LIBS"
- 	# trigger an error if Perl_load_module*() uses __attribute__nonnull__(3)
- 	# (see issues #41 and #42)
--	CFLAGS="$CFLAGS $PERL_CFLAGS -Wall -Werror"
-+	CFLAGS="$CFLAGS $PERL_CFLAGS -Wall "
- 	LIBS="$LIBS $PERL_LIBS"
+ AC_CHECK_FUNCS([strptime], [have_strptime="yes"], [have_strptime="no"])
+@@ -3362,6 +3362,8 @@ AC_ARG_WITH([libmongoc],
+   [
+     if test "x$withval" = "xyes"; then
+       with_libmongoc="yes"
++      LIBMONGOC_CFLAGS="$LIBMONGOC_CFLAGS -I$withval/include/libmongoc-1.0 -I$withval/include/libbson-1.0"
++      LIBMONGOC_LDFLAGS="$LIBMONGOC_LDFLAGS -L$withval/lib -lsasl2 -lssl -lcrypto  -lmongoc-1.0 -lbson-1.0"
+     else if test "x$withval" = "xno"; then
+       with_libmongoc="no"
+     else
+@@ -4205,7 +4207,7 @@ if test "x$with_libperl" = "xyes"; then
+   # (see issues #41 and #42)
+   SAVE_CFLAGS="$CFLAGS"
+   SAVE_LIBS="$LIBS"
+-  CFLAGS="$CFLAGS $PERL_CFLAGS -Wall -Werror"
++  CFLAGS="$CFLAGS $PERL_CFLAGS -Wall "
+   LIBS="$LIBS $PERL_LIBS"
  
- 	AC_CACHE_CHECK([for broken Perl_load_module()],
-@@ -5499,6 +5502,66 @@ fi
- AM_CONDITIONAL(BUILD_WITH_LIBYAJL, test "x$with_libyajl" = "xyes")
+   AC_CACHE_CHECK([for broken Perl_load_module()],
+@@ -5621,6 +5623,66 @@ AC_SUBST([BUILD_WITH_LIBYAJL_LIBS])
+ AM_CONDITIONAL([BUILD_WITH_LIBYAJL], [test "x$with_libyajl" = "xyes"])
  # }}}
  
 +# --with-libdtrace {{{
@@ -91,151 +54,96 @@
 +with_libdtrace_ldflags=""
 +AC_ARG_WITH(libdtrace, [AS_HELP_STRING([--with-libdtrace@<:@=PREFIX@:>@], [Path to libdtrace. ])],
 +[
-+	if test "x$withval" = "xyes"
-+	then
-+		with_libdtrace_cppflags="\
++  if test "x$withval" = "xyes"
++  then
++    with_libdtrace_cppflags="\
 +-I /usr/src/cddl/compat/opensolaris/include \
 +-I /usr/src/cddl/contrib/opensolaris/lib/libdtrace/common \
 +-I /usr/src/sys/cddl/compat/opensolaris \
 +-I /usr/src/sys/cddl/contrib/opensolaris/uts/common \
 +"
-+		with_libdtrace_ldflags="-ldtrace"
-+		with_libdtrace="yes"
-+	else
-+		with_libdtrace="no"
-+	fi
++    with_libdtrace_ldflags="-ldtrace"
++    with_libdtrace="yes"
++  else
++    with_libdtrace="no"
++  fi
 +],
 +[
-+	with_libdtrace="no"
++  with_libdtrace="no"
 +])
 +if test "x$with_libdtrace" = "xyes"
 +then
-+	SAVE_CPPFLAGS="$CPPFLAGS"
-+	SAVE_LDFLAGS="$LDFLAGS"
++  SAVE_CPPFLAGS="$CPPFLAGS"
++  SAVE_LDFLAGS="$LDFLAGS"
 +
-+	CPPFLAGS="$CPPFLAGS $with_libdtrace_cppflags"
-+	LDFLAGS="$LDFLAGS $with_libdtrace_ldflags"
++  CPPFLAGS="$CPPFLAGS $with_libdtrace_cppflags"
++  LDFLAGS="$LDFLAGS $with_libdtrace_ldflags"
 +
-+	AC_CHECK_LIB(dtrace, dtrace_open,
-+	[
-+		AC_DEFINE(HAVE_LIBDTRACE, 1, [Define to 1 if you have the dtrace library (-ldtrace).])
-+	], [with_libdtrace="no (libdtrace not found)"])
++  AC_CHECK_LIB(dtrace, dtrace_open,
++  [
++    AC_DEFINE(HAVE_LIBDTRACE, 1, [Define to 1 if you have the dtrace library (-ldtrace).])
++  ], [with_libdtrace="no (libdtrace not found)"])
 +
-+	CPPFLAGS="$SAVE_CPPFLAGS"
-+	LDFLAGS="$SAVE_LDFLAGS"
++  CPPFLAGS="$SAVE_CPPFLAGS"
++  LDFLAGS="$SAVE_LDFLAGS"
 +fi
 +if test "x$with_libdtrace" = "xyes"
 +then
-+	SAVE_CPPFLAGS="$CPPFLAGS"
-+	CPPFLAGS="$CPPFLAGS $with_libdtrace_cppflags"
++  SAVE_CPPFLAGS="$CPPFLAGS"
++  CPPFLAGS="$CPPFLAGS $with_libdtrace_cppflags"
 +
-+	AC_CHECK_HEADERS(dtrace.h,
-+	[
-+		AC_DEFINE(HAVE_LIBDTRACE_H, 1, [Define to 1 if you have the <libdtrace.h> header file.])
-+	], [with_libdtrace="no (dtrace.h not found)"])
++  AC_CHECK_HEADERS(dtrace.h,
++  [
++    AC_DEFINE(HAVE_LIBDTRACE_H, 1, [Define to 1 if you have the <libdtrace.h> header file.])
++  ], [with_libdtrace="no (dtrace.h not found)"])
 +
-+	CPPFLAGS="$SAVE_CPPFLAGS"
++  CPPFLAGS="$SAVE_CPPFLAGS"
 +fi
 +if test "x$with_libdtrace" = "xyes"
 +then
-+	BUILD_WITH_LIBDTRACE_CPPFLAGS="$with_libdtrace_cppflags"
-+	BUILD_WITH_LIBDTRACE_LDFLAGS="$with_libdtrace_ldflags"
-+	AC_SUBST(BUILD_WITH_LIBDTRACE_CPPFLAGS)
-+	AC_SUBST(BUILD_WITH_LIBDTRACE_LDFLAGS)
++  BUILD_WITH_LIBDTRACE_CPPFLAGS="$with_libdtrace_cppflags"
++  BUILD_WITH_LIBDTRACE_LDFLAGS="$with_libdtrace_ldflags"
++  AC_SUBST(BUILD_WITH_LIBDTRACE_CPPFLAGS)
++  AC_SUBST(BUILD_WITH_LIBDTRACE_LDFLAGS)
 +fi
 +AM_CONDITIONAL(BUILD_WITH_LIBDTRACE, test "x$with_libdtrace" = "xyes")
 +# }}}
 +
  # --with-mic {{{
- with_mic_cflags="-I/opt/intel/mic/sysmgmt/sdk/include"
- with_mic_ldpath="-L/opt/intel/mic/sysmgmt/sdk/lib/Linux"
-@@ -5571,8 +5634,8 @@ AC_ARG_WITH(libvarnish, [AS_HELP_STRING(
- 	else if test -d "$with_libvarnish/lib"
- 	then
- 		AC_MSG_NOTICE([Not checking for libvarnish: Manually configured])
--		with_libvarnish_cflags="-I$withval/include"
--		with_libvarnish_libs="-L$withval/lib -lvarnishapi"
-+		with_libvarnish_cflags="-I$withval/include/varnish"
-+		with_libvarnish_libs="-L$withval/lib/varnish -lvarnishapi"
- 		with_libvarnish="yes"
- 	fi; fi; fi
- ],
-@@ -6004,7 +6067,7 @@ collectd features:])
- AC_COLLECTD([debug],     [enable],  [feature], [debugging])
- AC_COLLECTD([daemon],    [disable], [feature], [daemon mode])
- AC_COLLECTD([getifaddrs],[enable],  [feature], [getifaddrs under Linux])
--AC_COLLECTD([werror],    [disable], [feature], [building with -Werror])
-+AC_COLLECTD([werror],    [disable], [feature], [building with ])
+ with_mic_cppflags="-I/opt/intel/mic/sysmgmt/sdk/include"
+ with_mic_ldflags="-L/opt/intel/mic/sysmgmt/sdk/lib/Linux"
+@@ -6247,8 +6309,12 @@ fi
+ # FreeBSD
  
- dependency_warning="no"
- dependency_error="no"
-@@ -6022,6 +6085,7 @@ plugin_cpufreq="no"
- plugin_cpusleep="no"
- plugin_curl_json="no"
- plugin_curl_xml="no"
-+plugin_clt="no"
- plugin_df="no"
- plugin_disk="no"
- plugin_drbd="no"
-@@ -6030,6 +6094,7 @@ plugin_entropy="no"
- plugin_ethstat="no"
- plugin_fhcount="no"
- plugin_fscache="no"
-+plugin_geom_stat="no"
- plugin_gps="no"
- plugin_grpc="no"
- plugin_hugepages="no"
-@@ -6043,6 +6108,7 @@ plugin_log_logstash="no"
- plugin_memory="no"
- plugin_multimeter="no"
- plugin_nfs="no"
-+plugin_nfsstat="no"
- plugin_numa="no"
- plugin_perl="no"
- plugin_pinba="no"
-@@ -6066,6 +6132,7 @@ plugin_wireless="no"
- plugin_write_prometheus="no"
- plugin_xencpu="no"
- plugin_zfs_arc="no"
-+plugin_zfs_arc_v2="no"
- plugin_zone="no"
- plugin_zookeeper="no"
- 
-@@ -6151,8 +6218,12 @@ fi
- 
- if test "x$ac_system" = "xFreeBSD"
- then
-+	plugin_ctl="yes"
- 	plugin_disk="yes"
-+	plugin_geom_stat="yes"
-+	plugin_nfsstat="yes"
- 	plugin_zfs_arc="yes"
-+	plugin_zfs_arc_v2="yes"
+ if test "x$ac_system" = "xFreeBSD"; then
++  plugin_ctl="yes"
+   plugin_disk="yes"
++  plugin_geom_stat="yes"
++  plugin_nfsstat="yes"
+   plugin_zfs_arc="yes"
++  plugin_zfs_arc_v2="yes"
  fi
  
  
-@@ -6180,6 +6251,7 @@ then
- 	plugin_processes="yes"
- 	plugin_uptime="yes"
- 	plugin_zfs_arc="yes"
-+	plugin_zfs_arc_v2="yes"
- 	plugin_zone="yes"
+@@ -6273,6 +6339,7 @@ if test "x$with_kstat" = "xyes"; then
+   plugin_processes="yes"
+   plugin_uptime="yes"
+   plugin_zfs_arc="yes"
++  plugin_zfs_arc_v2="yes"
+   plugin_zone="yes"
  fi
  
-@@ -6479,10 +6551,12 @@ AC_PLUGIN([contextswitch],       [$plugi
+@@ -6511,7 +6578,9 @@ AC_PLUGIN([contextswitch],       [$plugin_contextswitch],   [context switch stat
  AC_PLUGIN([cpu],                 [$plugin_cpu],             [CPU usage statistics])
  AC_PLUGIN([cpufreq],             [$plugin_cpufreq],         [CPU frequency statistics])
  AC_PLUGIN([cpusleep],            [$plugin_cpusleep],        [CPU sleep statistics])
 +AC_PLUGIN([cputemp],             [yes],                     [CPU temperature statistics])
  AC_PLUGIN([csv],                 [yes],                     [CSV output plugin])
++AC_PLUGIN([ctl],                 [$plugin_ctl],             [CAM target layer statistics])
  AC_PLUGIN([curl],                [$with_libcurl],           [CURL generic web statistics])
  AC_PLUGIN([curl_json],           [$plugin_curl_json],       [CouchDB statistics])
  AC_PLUGIN([curl_xml],            [$plugin_curl_xml],        [CURL generic xml statistics])
-+AC_PLUGIN([ctl],                 [$plugin_ctl],             [CAM target layer statistics])
- AC_PLUGIN([dbi],                 [$with_libdbi],            [General database statistics])
- AC_PLUGIN([df],                  [$plugin_df],              [Filesystem usage statistics])
- AC_PLUGIN([disk],                [$plugin_disk],            [Disk usage statistics])
-@@ -6496,6 +6570,7 @@ AC_PLUGIN([exec],                [yes], 
+@@ -6529,6 +6598,7 @@ AC_PLUGIN([exec],                [yes],                     [Execution of extern
  AC_PLUGIN([fhcount],             [$plugin_fhcount],         [File handles statistics])
  AC_PLUGIN([filecount],           [yes],                     [Count files in directories])
  AC_PLUGIN([fscache],             [$plugin_fscache],         [fscache statistics])
@@ -243,7 +151,7 @@
  AC_PLUGIN([gmond],               [$with_libganglia],        [Ganglia plugin])
  AC_PLUGIN([gps],                 [$plugin_gps],             [GPS plugin])
  AC_PLUGIN([grpc],                [$plugin_grpc],            [gRPC plugin])
-@@ -6535,6 +6610,7 @@ AC_PLUGIN([netapp],              [$with_
+@@ -6570,6 +6640,7 @@ AC_PLUGIN([netapp],              [$with_libnetapp],         [NetApp plugin])
  AC_PLUGIN([netlink],             [$with_libmnl],            [Enhanced Linux network statistics])
  AC_PLUGIN([network],             [yes],                     [Network communication plugin])
  AC_PLUGIN([nfs],                 [$plugin_nfs],             [NFS statistics])
@@ -251,7 +159,7 @@
  AC_PLUGIN([nginx],               [$with_libcurl],           [nginx statistics])
  AC_PLUGIN([notify_desktop],      [$with_libnotify],         [Desktop notifications])
  AC_PLUGIN([notify_email],        [$with_libesmtp],          [Email notifier])
-@@ -6607,6 +6683,7 @@ AC_PLUGIN([write_tsdb],          [yes], 
+@@ -6646,6 +6717,7 @@ AC_PLUGIN([write_tsdb],          [yes],                     [TSDB output plugin]
  AC_PLUGIN([xencpu],              [$plugin_xencpu],          [Xen Host CPU usage])
  AC_PLUGIN([xmms],                [$with_libxmms],           [XMMS statistics])
  AC_PLUGIN([zfs_arc],             [$plugin_zfs_arc],         [ZFS ARC statistics])
@@ -259,46 +167,14 @@
  AC_PLUGIN([zone],                [$plugin_zone],            [Solaris container statistics])
  AC_PLUGIN([zookeeper],           [yes],                     [Zookeeper statistics])
  
-@@ -6775,8 +6852,8 @@ AM_CFLAGS="-Wall"
+@@ -6788,8 +6860,8 @@ AC_CONFIG_FILES([src/libcollectdclient/collectd/lcc_features.h])
+ AM_CFLAGS="-Wall"
  AM_CXXFLAGS="-Wall"
- if test "x$enable_werror" != "xno"
- then
--        AM_CFLAGS="$AM_CFLAGS -Werror"
--        AM_CXXFLAGS="$AM_CXXFLAGS -Werror"
-+        AM_CFLAGS="$AM_CFLAGS "
-+        AM_CXXFLAGS="$AM_CXXFLAGS "
+ if test "x$enable_werror" != "xno"; then
+-  AM_CFLAGS="$AM_CFLAGS -Werror"
+-  AM_CXXFLAGS="$AM_CXXFLAGS -Werror"
++  AM_CFLAGS="$AM_CFLAGS "
++  AM_CXXFLAGS="$AM_CXXFLAGS "
  fi
+ 
  AC_SUBST([AM_CFLAGS])
- AC_SUBST([AM_CXXFLAGS])
-@@ -6917,6 +6994,7 @@ AC_MSG_RESULT([    cpu . . . . . . . . .
- AC_MSG_RESULT([    cpufreq . . . . . . . $enable_cpufreq])
- AC_MSG_RESULT([    cpusleep  . . . . . . $enable_cpusleep])
- AC_MSG_RESULT([    csv . . . . . . . . . $enable_csv])
-+AC_MSG_RESULT([    ctl . . . . . . . . . $enable_ctl])
- AC_MSG_RESULT([    curl  . . . . . . . . $enable_curl])
- AC_MSG_RESULT([    curl_json . . . . . . $enable_curl_json])
- AC_MSG_RESULT([    curl_xml  . . . . . . $enable_curl_xml])
-@@ -6933,6 +7011,7 @@ AC_MSG_RESULT([    exec  . . . . . . . .
- AC_MSG_RESULT([    fhcount . . . . . . . $enable_fhcount])
- AC_MSG_RESULT([    filecount . . . . . . $enable_filecount])
- AC_MSG_RESULT([    fscache . . . . . . . $enable_fscache])
-+AC_MSG_RESULT([    geom_stat . . . . . . $enable_geom_stat])
- AC_MSG_RESULT([    gmond . . . . . . . . $enable_gmond])
- AC_MSG_RESULT([    gps . . . . . . . . . $enable_gps])
- AC_MSG_RESULT([    grpc  . . . . . . . . $enable_grpc])
-@@ -6972,6 +7051,7 @@ AC_MSG_RESULT([    netapp  . . . . . . .
- AC_MSG_RESULT([    netlink . . . . . . . $enable_netlink])
- AC_MSG_RESULT([    network . . . . . . . $enable_network])
- AC_MSG_RESULT([    nfs . . . . . . . . . $enable_nfs])
-+AC_MSG_RESULT([    nfsstat . . . . . . . $enable_nfsstat])
- AC_MSG_RESULT([    nginx . . . . . . . . $enable_nginx])
- AC_MSG_RESULT([    notify_desktop  . . . $enable_notify_desktop])
- AC_MSG_RESULT([    notify_email  . . . . $enable_notify_email])
-@@ -7043,6 +7123,7 @@ AC_MSG_RESULT([    write_tsdb  . . . . .
- AC_MSG_RESULT([    xencpu  . . . . . . . $enable_xencpu])
- AC_MSG_RESULT([    xmms  . . . . . . . . $enable_xmms])
- AC_MSG_RESULT([    zfs_arc . . . . . . . $enable_zfs_arc])
-+AC_MSG_RESULT([    zfs_arc_v2  . . . . . $enable_zfs_arc_v2])
- AC_MSG_RESULT([    zone  . . . . . . . . $enable_zone])
- AC_MSG_RESULT([    zookeeper . . . . . . $enable_zookeeper])
- AC_MSG_RESULT()
