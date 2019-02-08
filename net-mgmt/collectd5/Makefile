@@ -2,8 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	collectd
-PORTVERSION=	5.7.2
-PORTREVISION=	5
+PORTVERSION=	5.8.1
+PORTREVISION=	1
 CATEGORIES=	net-mgmt
 MASTER_SITES=	https://storage.googleapis.com/collectd-tarballs/
 PKGNAMESUFFIX=	5
@@ -14,20 +14,20 @@ COMMENT=	Systems & network statistics collection daemon
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-LIB_DEPENDS=	libltdl.so:devel/libltdl
-
 USES=		autoreconf gmake libtool pkgconfig shebangfix tar:bzip2
 GNU_CONFIGURE=	yes
 
 OPTIONS_DEFINE=		CGI DEBUG GCRYPT LIBDTRACE LOGSTASH VIRT
 OPTIONS_GROUP=		INPUT OUTPUT
-OPTIONS_GROUP_OUTPUT=	KAFKA MONGODB NOTIFYDESKTOP NOTIFYEMAIL RIEMANN RRDTOOL \
-			TSDB
+OPTIONS_GROUP_OUTPUT=	KAFKA MONGODB NOTIFYDESKTOP NOTIFYEMAIL PROMETHEUS RIEMANN \
+			RRDTOOL TSDB
 OPTIONS_GROUP_INPUT=	CHRONY CURL CURL_JSON CURL_XML DBI IPMI JSON \
 			MEMCACHEC MODBUS MQTT MYSQL NUTUPS OLSRD ONEWIRE OPENLDAP \
 			PERL PGSQL PINBA PING PYTHON RABBITMQ REDIS ROUTEROS \
 			SIGROK SNMP STATSD TOKYOTYRANT VARNISH XML \
-			XMMS ZOOKEEPER
+			ZOOKEEPER
+
+OPTIONS_DEFAULT=	LOGGING GCRYPT PING
 
 CGI_DESC=		Install collection.cgi (requires rrdtool)
 CHRONY_DESC=		Enable chronyd plugin
@@ -40,6 +40,7 @@ IPMI_DESC=		Enable OpenIPMI plugin
 JSON_DESC=		Enable JSON plugins
 KAFKA_DESC=		Enable write_kafka plugin
 LIBDTRACE_DESC=	Build with LibDTrace
+LOGGING_DESC=		Enable debug logging
 LOGSTASH_DESC=		Enable log_logstash plugin (requires json)
 MEMCACHEC_DESC=		Enable memcachec plugin
 MODBUS_DESC=		Enable modbus plugin
@@ -56,6 +57,7 @@ PERL_DESC=		Enable libperl plugin and binding
 PGSQL_DESC=		Enable postgresql-based plugins
 PINBA_DESC=		Enable pinba plugin (via protobuf-c)
 PING_DESC=		Enable ping plugin
+PROMETHEUS_DESC=		Enable write prometheus plugin
 PYTHON_DESC=		Enable python-based plugins
 RABBITMQ_DESC=		Enable rabbitmq-based plugins
 REDIS_DESC=		Enable redis-based plugins
@@ -70,7 +72,6 @@ TSDB_DESC=		Enable write_tsdb plugin
 VARNISH_DESC=		Enable varnish 4.x cache statistics
 VIRT_DESC=		Enable libvirt plugin (requires XML)
 XML_DESC=		Enable XML plugins
-XMMS_DESC=		Enable xmms plugin
 ZOOKEEPER_DESC=		Enable zookeeper plugin
 
 OPTIONS_SUB=	yes
@@ -148,6 +149,8 @@ JSON_CONFIGURE_WITH=		libyajl=${LOCALBASE}
 KAFKA_LIB_DEPENDS=		librdkafka.so:net/librdkafka
 KAFKA_CONFIGURE_ENABLE=		write_kafka
 
+LOGGING_CONFIGURE_ENABLE=	debug
+
 LOGSTASH_CONFIGURE_ENABLE=	log_logstash
 LOGSTASH_IMPLIES=		JSON
 
@@ -199,7 +202,7 @@ OPENLDAP_CONFIGURE_WITH=	libldap=${LOCALBASE}
 
 PERL_USES=			perl5
 PERL_CONFIGURE_ENABLE=		perl
-PERL_CONFIGURE_WITH=		perl=${PERL} perl-bindings
+PERL_CONFIGURE_WITH=		perl=${PERL} perl-bindings libperl
 
 PGSQL_USES=			pgsql
 PGSQL_CONFIGURE_ENABLE=		postgresql
@@ -212,9 +215,15 @@ PING_LIB_DEPENDS=		liboping.so:net/liboping
 PING_CONFIGURE_ENABLE=		ping
 PING_CONFIGURE_WITH=		liboping=${LOCALBASE}
 
-PYTHON_USES=			python:3
+PROMETHEUS_LIB_DEPENDS=	libprotobuf-c.so:devel/protobuf-c
+PROMETHEUS_LIB_DEPENDS+=	libprotoc.so:devel/protobuf
+PROMETHEUS_LIB_DEPENDS+=	libmicrohttpd.so:www/libmicrohttpd
+PROMETHEUS_CONFIGURE_ENABLE=	write_prometheus
+
+PYTHON_USES=			python:3.5+
 PYTHON_CONFIGURE_ENABLE=	python
 PYTHON_CONFIGURE_WITH=		python=${PYTHON_CMD}
+PYTHON_BUILD_DEPENDS=		python3>0:lang/python3
 
 RABBITMQ_LIB_DEPENDS=		librabbitmq.so:net/rabbitmq-c
 RABBITMQ_CONFIGURE_ENABLE=	rabbitmq
@@ -224,7 +233,8 @@ REDIS_LIB_DEPENDS=		libhiredis.so:databases/hiredis
 REDIS_CONFIGURE_ENABLE=		redis write_redis
 REDIS_CONFIGURE_WITH=		libhiredis=${LOCALBASE}
 
-RIEMANN_LIB_DEPENDS=		libriemann-client.so:net-mgmt/riemann-c-client
+RIEMANN_LIB_DEPENDS=		libriemann-client.so:net-mgmt/riemann-c-client \
+				libltdl.so:devel/libltdl
 RIEMANN_CONFIGURE_ENABLE=	write_riemann
 
 ROUTEROS_LIB_DEPENDS=		librouteros.so:net/librouteros \
@@ -259,7 +269,6 @@ TSDB_CONFIGURE_ENABLE=		write_tsdb
 
 VARNISH_LIB_DEPENDS=		libvarnishapi.so:www/varnish4
 VARNISH_CONFIGURE_ENABLE=	varnish
-VARNISH_CONFIGURE_WITH=		libvarnish=${LOCALBASE}
 
 VIRT_IMPLIES=			XML
 VIRT_LIB_DEPENDS=		libvirt.so:devel/libvirt \
@@ -270,12 +279,6 @@ VIRT_CONFIGURE_WITH=		virt=${LOCALBASE}
 
 XML_LIB_DEPENDS=		libxml2.so:textproc/libxml2
 XML_CONFIGURE_WITH=		libxml2=${LOCALBASE}
-
-XMMS_CFLAGS=			`xmms-config --cflags`
-XMMS_LIB_DEPENDS=		libxmms.so:multimedia/xmms
-XMMS_CONFIGURE_ENABLE=		xmms
-XMMS_CONFIGURE_WITH=		libxmms=${LOCALBASE}
-XMMS_USE=			XORG=x11,xext,xi
 
 ZOOKEEPER_LIB_DEPENDS=		libzookeeper_mt.so:devel/libzookeeper
 ZOOKEEPER_CONFIGURE_ENABLE=	zookeeper
