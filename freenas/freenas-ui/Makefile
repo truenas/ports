@@ -48,10 +48,10 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}django110>0:www/py-django110@${PY_FLAVOR} \
 	freenas-pkgtools>0:freenas/freenas-pkgtools \
 	${PYTHON_PKGNAMEPREFIX}libzfs>0:devel/py-libzfs@${PY_FLAVOR}
 
-.if exists(/usr/local_source/${PORTNAME})
-PORTVERSION!=	stat -f %m /usr/local_source/${PORTNAME}
+.if exists(/usr/ports/local_source/${PORTNAME})
+PORTVERSION!=	stat -f %m /usr/ports/local_source/${PORTNAME}
 EXTRACT_ONLY=
-WRKSRC=		/usr/local_source/${PORTNAME}
+WRKSRC=		/usr/ports/local_source/${PORTNAME}
 .else
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
@@ -74,7 +74,7 @@ SUB_LIST+=	PYTHON_CMD=${PYTHON_CMD}
 RUN_DEPENDS+=	truenas-files>0:${PORTSDIR}/truenas/truenas-files
 .endif
 
-.if exists(/usr/local_source/${PORTNAME})
+.if exists(/usr/ports/local_source/${PORTNAME})
 checksum fetch:
 	echo ${.TARGET} not needed because building direct
 .endif

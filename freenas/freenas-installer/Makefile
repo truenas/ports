@@ -14,10 +14,10 @@ PRODUCT?=
 USE_XZ=		yes
 NO_BUILD=	yes
 
-.if exists(/usr/local_source/${PORTNAME})
-PORTVERSION!=	stat -f %m /usr/local_source/${PORTNAME}
+.if exists(/usr/ports/local_source/${PORTNAME})
+PORTVERSION!=	stat -f %m /usr/ports/local_source/${PORTNAME}
 EXTRACT_ONLY=
-WRKSRC=         /usr/local_source/${PORTNAME}
+WRKSRC=         /usr/ports/local_source/${PORTNAME}
 .else
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
@@ -45,7 +45,7 @@ PLIST_SUB+=	TRUENAS=""
 PLIST_SUB+=	TRUENAS="@comment "
 .endif
 
-.if exists(/usr/local_source/${PORTNAME})
+.if exists(/usr/ports/local_source/${PORTNAME})
 checksum fetch:
 	echo ${.TARGET} not needed because building direct
 .endif

@@ -13,10 +13,10 @@ PRODUCT?=
 
 USES=		python
 
-.if exists(/usr/local_source/${PORTNAME})
-PORTVERSION!=	stat -f %m /usr/local_source/${PORTNAME}
+.if exists(/usr/ports/local_source/${PORTNAME})
+PORTVERSION!=	stat -f %m /usr/ports/local_source/${PORTNAME}
 EXTRACT_ONLY=
-WRKSRC=		/usr/local_source/${PORTNAME}
+WRKSRC=		/usr/ports/local_source/${PORTNAME}
 .else
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
@@ -25,7 +25,7 @@ GH_TAGNAME=	0b41f67016fd0cf62377a504619ff1b39ce67fa1
 .endif
 
 
-.if exists(/usr/local_source/${PORTNAME})
+.if exists(/usr/ports/local_source/${PORTNAME})
 # no checksum, we just used git!
 checksum fetch:
 	${ECHO_CMD} ${.TARGET} not needed because building direct

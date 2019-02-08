@@ -50,10 +50,10 @@ USE_RC_SUBR=	middlewared
 
 WRKSRC_SUBDIR=	src/middlewared
 
-.if exists(/usr/local_source/${PORTNAME})
-PORTVERSION!=	stat -f %m /usr/local_source/${PORTNAME}
+.if exists(/usr/ports/local_source/${PORTNAME})
+PORTVERSION!=	stat -f %m /usr/ports/local_source/${PORTNAME}
 EXTRACT_ONLY=
-WRKSRC=		/usr/local_source/${PORTNAME}
+WRKSRC=		/usr/ports/local_source/${PORTNAME}
 .else
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
@@ -61,7 +61,7 @@ GH_PROJECT=	freenas
 GH_TAGNAME=	aa4f3daed3d45b92fa0857d52917b5fc70163f8d
 .endif
 
-.if exists(/usr/local_source/${PORTNAME})
+.if exists(/usr/ports/local_source/${PORTNAME})
 checksum fetch:
 	echo ${.TARGET} not needed because building direct
 .endif

@@ -20,9 +20,9 @@ BUILD_DEPENDS=	rsync>0:net/rsync \
 USES=	gmake
 NO_BUILD=	yes
 
-.if exists(/usr/local_source/${PORTNAME})
-PORTVERSION!=	stat -f %m /usr/local_source/${PORTNAME}
-WRKSRC=		/usr/local_source/${PORTNAME}
+.if exists(/usr/ports/local_source/${PORTNAME})
+PORTVERSION!=	stat -f %m /usr/ports/local_source/${PORTNAME}
+WRKSRC=		/usr/ports/local_source/${PORTNAME}
 EXTRACT_ONLY=
 .else
 USE_GITHUB=	yes
@@ -32,7 +32,7 @@ GH_TAGNAME=	e2e080d3d33656f33263843a8219efd7949c7d9b
 .endif
 
 
-.if exists(/usr/local_source/${PORTNAME})
+.if exists(/usr/ports/local_source/${PORTNAME})
 checksum:
 	${ECHO_CMD} ${.TARGET} not needed because building direct
 

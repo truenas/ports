@@ -16,10 +16,10 @@ PREFIX=/
 USES= 	python
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}snmp_passpersist>=1.3.0:net-mgmt/py-snmp_passpersist
 
-.if exists(/usr/local_source/${PORTNAME})
-PORTVERSION!=	stat -f %m /usr/local_source/${PORTNAME}
+.if exists(/usr/ports/local_source/${PORTNAME})
+PORTVERSION!=	stat -f %m /usr/ports/local_source/${PORTNAME}
 EXTRACT_ONLY=
-WRKSRC=         /usr/local_source/${PORTNAME}
+WRKSRC=         /usr/ports/local_source/${PORTNAME}
 .else
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
@@ -37,7 +37,7 @@ MAKE_JOBS_UNSAFE=yes
 
 .include <bsd.port.pre.mk>
 
-.if exists(/usr/local_source/${PORTNAME})
+.if exists(/usr/ports/local_source/${PORTNAME})
 checksum fetch:
 	echo ${.TARGET} not needed because building direct
 .endif
