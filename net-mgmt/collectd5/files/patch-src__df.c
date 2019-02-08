@@ -41,23 +41,23 @@
 +  if (il_errors == NULL)
 +    il_errors = ignorelist_create(0);
  
-   return (0);
+   return 0;
  }
-@@ -123,6 +133,13 @@ static int df_config(const char *key, co
+@@ -122,6 +132,13 @@ static int df_config(const char *key, const char *value) {
+     else
        values_percentage = 0;
  
-     return (0);
++    return 0;
 +  } else if (strcasecmp(key, "LogOnce") == 0) {
 +    if (IS_TRUE(value))
 +      log_once = 1;
 +    else
 +      log_once = 0;
 +
-+    return (0);
+     return 0;
    }
  
-   return (-1);
-@@ -202,13 +219,29 @@ static int df_read(void) {
+@@ -203,13 +220,29 @@ static int df_read(void) {
        continue;
  
      if (STATANYFS(mnt_ptr->dir, &statbuf) < 0) {
@@ -90,7 +90,7 @@
        continue;
  
      if (by_device) {
-@@ -295,14 +328,22 @@ static int df_read(void) {
+@@ -298,14 +331,22 @@ static int df_read(void) {
        uint64_t inode_used;
  
        /* Sanity-check for the values in the struct */
