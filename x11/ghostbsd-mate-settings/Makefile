@@ -5,8 +5,8 @@
 # $FreeBSD$
 #
 
-PORTNAME=	mate-installed-settings
-PORTVERSION=	3.4
+PORTNAME=	ghostbsd-mate-settings
+PORTVERSION=	3.5
 CATEGORIES=	x11
 
 MAINTAINER=	ericturgeon.bsd@gmail.com
@@ -23,8 +23,6 @@ RUN_DEPENDS=	glib-compile-schemas:devel/glib20 \
 NO_BUILD=	yes
 
 do-install:
-	${MKDIR} ${STAGEDIR}/${PREFIX}/share/ghostbsd/mate-installed-settings
-	${CP} -R   ${WRKSRC}/ghostbsd/* ${STAGEDIR}/${PREFIX}/share/ghostbsd/mate-installed-settings
 	${MKDIR} ${STAGEDIR}/${PREFIX}/share/glib-2.0/schemas
 	${CP} -R   ${WRKSRC}/schemas/* ${STAGEDIR}/${PREFIX}/share/glib-2.0/schemas
 .include <bsd.port.mk>
