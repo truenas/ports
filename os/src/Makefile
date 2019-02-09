@@ -1,7 +1,9 @@
 # $FreeBSD$
 
+.include "../Makefile.common"
+
 PORTNAME=	src
-PORTVERSION=	20190012520
+PORTVERSION=	${OS_PORTVERSION}
 CATEGORIES=	os
 
 MAINTAINER=	kris@ixsystems.com
