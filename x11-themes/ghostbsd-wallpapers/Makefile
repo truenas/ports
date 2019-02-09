@@ -6,10 +6,10 @@
 #
 
 PORTNAME=	ghostbsd-wallpapers
-PORTVERSION=	18.08.0
+PORTVERSION=	19.02
 CATEGORIES=	x11-themes
 
-MAINTAINER=	angelescuo@yahoo.com
+MAINTAINER=	ericturgeon@ghostbsd.org
 COMMENT=	GhostBSD 18 wallpaper colection
 
 LICENSE=	BSD
