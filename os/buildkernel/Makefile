@@ -24,6 +24,10 @@ LOCAL_SDIR?=	/usr/local_source
 WRKSRC=	${LOCAL_SDIR}/${PORTNAME}
 .endif
 
+.if defined(_MAKE_JOBS_NUMBER)
+JOBFLAG=	-j ${_MAKE_JOBS_NUMBER}
+.endif
+
 .include "Makefile.options"
 .include "Makefile.options.desc"
 
@@ -38,14 +42,14 @@ MFLAGS+=	WITH_${var}=YES
 .endfor
 
 do-build:
-	cd ${WRKSRC} && make -j ${_MAKE_JOBS_NUMBER} ${KERNEL_MAKE_FLAGS} \
+	cd ${WRKSRC} && make ${JOBFLAG} ${KERNEL_MAKE_FLAGS} \
 		MAKEOBJDIRPREFIX=${WRKDIR}/obj \
 		buildkernel
 
 do-install:
 	${MKDIR} -p ${STAGEDIR}/kernel
 	${MKDIR} -p ${STAGEDIR}/usr/dist
-	cd ${WRKSRC} && make -j ${_MAKE_JOBS_NUMBER} ${KERNEL_MAKE_FLAGS} \
+	cd ${WRKSRC} && make ${JOBFLAG} ${KERNEL_MAKE_FLAGS} \
 		MAKEOBJDIRPREFIX=${WRKDIR}/obj \
 	       	DESTDIR=${STAGEDIR}/kernel \
 		installkernel
