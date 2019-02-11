@@ -1528,6 +1528,8 @@
     SUBDIR += zisofs-tools
     SUBDIR += znapzend
     SUBDIR += zogftw
+    SUBDIR += zol-kmod
+    SUBDIR += zol
     SUBDIR += zrep
     SUBDIR += zrepl
     SUBDIR += zsd
