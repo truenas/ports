@@ -38,12 +38,6 @@ MFLAGS+=	WITH_${var}=YES
 .endif
 .endfor
 
-.if defined(TRUEOS_MANIFEST)
-TMANIFEST=	${TRUEOS_MANIFEST}
-.else
-TMANIFEST=	${WRKSRC}/release/trueos-manifest.json
-.endif
-
 .if defined(_MAKE_JOBS_NUMBER)
 JOBFLAG=	-j ${_MAKE_JOBS_NUMBER}
 .else
@@ -72,7 +66,9 @@ do-install:
 		${MFLAGS} \
 		DESTDIR=${STAGEDIR}/world \
 		distribution
-	cp ${TMANIFEST} ${STAGEDIR}/world/var/db/trueos-manifest.json
+	if [ -n "${TRUEOS_MANIFEST}" ] ; then \
+		cp ${TRUEOS_MANIFEST} ${STAGEDIR}/world/var/db/trueos-manifest.json ; \
+	fi
 	tar cvJf ${STAGEDIR}/usr/dist/world.txz -C ${STAGEDIR}/world .
 	chflags -R noschg ${STAGEDIR}/world
 	rm -rf ${STAGEDIR}/world
