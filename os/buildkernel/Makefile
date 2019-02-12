@@ -26,6 +26,8 @@ WRKSRC=	${LOCAL_SDIR}/${PORTNAME}
 
 .if defined(_MAKE_JOBS_NUMBER)
 JOBFLAG=	-j ${_MAKE_JOBS_NUMBER}
+.else
+JOBFLAG=	-j ${_SMP_CPUS}
 .endif
 
 .include "Makefile.options"
