@@ -365,10 +365,10 @@ index 0000000..27f8977
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 0000000..6e53cbf
+index 0000000..249613b
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,1202 @@
+@@ -0,0 +1,1205 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -398,16 +398,17 @@ index 0000000..6e53cbf
 +#include <fstab.h>
 +#include <sys/types.h>
 +#include <ufs/ufs/quota.h>
-+
-+#if HAVE_FREEBSD_SUNACL_H
-+#include "sunacl.h"
-+#endif
++#include <sys/acl.h>
 +
 +#if HAVE_LIBZFS
 +#include "lib/util/tevent_ntstatus.h"
 +#include "modules/smb_libzfs.h"
 +#endif
 +#include <libutil.h>
++
++#if HAVE_FREEBSD_SUNACL_H
++#include "sunacl.h"
++#endif
 +
 +#define ZFSACL_MODULE_NAME "ixnas"
 +static int vfs_ixnas_debug_level = DBGC_VFS;
@@ -750,12 +751,12 @@ index 0000000..6e53cbf
 +				      struct ixnas_config_data *config)
 +{
 +	int naces, i;
-+	ace_t *acebuf;
 +	struct SMB4ACL_T *pacl;
 +	SMB_STRUCT_STAT sbuf;
 +	const SMB_STRUCT_STAT *psbuf = NULL;
 +	int ret;
 +	bool is_dir;
++	acl_t zacl;
 +	bool inherited_present = false;
 +
 +	if (VALID_STAT(smb_fname->st)) {
@@ -765,7 +766,7 @@ index 0000000..6e53cbf
 +	if (psbuf == NULL) {
 +		ret = vfs_stat_smb_basename(conn, smb_fname, &sbuf);
 +		if (ret != 0) {
-+			DBG_INFO("stat [%s]failed: %s\n",
++			DBG_ERR("stat [%s]failed: %s\n",
 +				 smb_fname_str_dbg(smb_fname), strerror(errno));
 +			return map_nt_error_from_unix(errno);
 +		}
@@ -773,46 +774,67 @@ index 0000000..6e53cbf
 +	}
 +	is_dir = S_ISDIR(psbuf->st_ex_mode);
 +
-+	/* read the number of file aces */
-+	if((naces = acl(smb_fname->base_name, ACE_GETACLCNT, 0, NULL)) == -1) {
-+		if(errno == ENOSYS) {
-+			DBG_ERR("acl(ACE_GETACLCNT, %s): Operation is not "
-+				  "supported on the filesystem where the file "
-+				  "reside\n", smb_fname->base_name);
-+		} else {
-+			DBG_ERR("acl(ACE_GETACLCNT, %s): %s ", smb_fname->base_name,
-+					strerror(errno));
-+		}
++	zacl = acl_get_file(smb_fname->base_name, ACL_TYPE_NFS4);
++	if ( zacl == NULL) {
++		DBG_ERR("ixnas: acl_get_file() failed for %s: %s\n",
++		smb_fname->base_name, strerror(errno));
 +		return map_nt_error_from_unix(errno);
 +	}
-+	/* allocate the field of ZFS aces */
-+	mem_ctx = talloc_tos();
-+	acebuf = (ace_t *) talloc_size(mem_ctx, sizeof(ace_t)*naces);
-+	if(acebuf == NULL) {
-+		return NT_STATUS_NO_MEMORY;
-+	}
-+	/* read the aces into the field */
-+	if(acl(smb_fname->base_name, ACE_GETACL, naces, acebuf) < 0) {
-+		DBG_ERR("acl(ACE_GETACL, %s): %s ", smb_fname->base_name,
-+				strerror(errno));
-+		return map_nt_error_from_unix(errno);
-+	}
++	naces = zacl->ats_acl.acl_cnt;
++	
 +	/* create SMB4ACL data */
 +	if((pacl = smb_create_smb4acl(mem_ctx)) == NULL) {
++		acl_free(zacl);
++		DBG_ERR("ixnas: smb_create_smb4acl failed\n");
 +		return NT_STATUS_NO_MEMORY;
 +	}
++
 +	for(i=0; i<naces; i++) {
-+		SMB_ACE4PROP_T aceprop;
++		SMB_ACE4PROP_T aceprop = { 0 };
++		int l, m, h;
++		l = m = h = 0;
 +
-+		aceprop.aceType  = (uint32_t) acebuf[i].a_type;
-+		aceprop.aceFlags = (uint32_t) acebuf[i].a_flags;
-+		aceprop.aceMask  = (uint32_t) acebuf[i].a_access_mask;
-+		aceprop.who.id   = (uint32_t) acebuf[i].a_who;
++		l = zacl->ats_acl.acl_entry[i].ae_perm >> 3;
++		m = zacl->ats_acl.acl_entry[i].ae_perm >> 2;
++		h = zacl->ats_acl.acl_entry[i].ae_perm << 5;
++		l &= (SMB_ACE4_READ_DATA|SMB_ACE4_WRITE_DATA|SMB_ACE4_APPEND_DATA|SMB_ACE4_READ_NAMED_ATTRS|SMB_ACE4_WRITE_NAMED_ATTRS); //remove bits higher than SMB_ACE4_WRITE_NAMED_ATTRS
++		m &= (SMB_ACE4_WRITE_ATTRIBUTES|SMB_ACE4_READ_ATTRIBUTES|SMB_ACE4_DELETE_CHILD);
++		h &= (SMB_ACE4_DELETE|SMB_ACE4_READ_ACL|SMB_ACE4_WRITE_ACL|SMB_ACE4_WRITE_OWNER|SMB_ACE4_SYNCHRONIZE); //remove bits lower than SMB_ACE4_DELETE
++		aceprop.aceMask = (l|m|h);
++		if (zacl->ats_acl.acl_entry[i].ae_perm & ACL_EXECUTE) {
++			//ACL_EXECUTE is 0x0001 and so it doesn't map cleanly. 
++			aceprop.aceMask |= SMB_ACE4_EXECUTE;
++		}
++		aceprop.aceType  =  zacl->ats_acl.acl_entry[i].ae_entry_type >> 9;
++		aceprop.aceFlags = (uint32_t) zacl->ats_acl.acl_entry[i].ae_flags;
 +
-+		if (aceprop.aceFlags & ACE_EVERYONE){
-+			if (!(acebuf[i].a_access_mask &= ACE_ALL_PERMS)) {
++		if ( zacl->ats_acl.acl_entry[i].ae_tag & ACL_EVERYONE ){
++			if ( zacl->ats_acl.acl_entry[i].ae_perm == 0 ) {
 +				continue;
 +			}
++		}
++		switch (zacl->ats_acl.acl_entry[i].ae_tag) {
++			case ACL_USER_OBJ:
++				aceprop.flags = SMB_ACE4_ID_SPECIAL;
++				aceprop.who.special_id = SMB_ACE4_WHO_OWNER;
++				break;
++			case ACL_GROUP_OBJ:
++				aceprop.flags = SMB_ACE4_ID_SPECIAL;
++				aceprop.who.special_id = SMB_ACE4_WHO_GROUP;
++				break;
++			case ACL_EVERYONE:
++				aceprop.flags = SMB_ACE4_ID_SPECIAL;
++				aceprop.who.special_id = SMB_ACE4_WHO_EVERYONE;
++				break;
++			case ACL_GROUP:
++				aceprop.flags = 0;
++				aceprop.aceFlags |= SMB_ACE4_IDENTIFIER_GROUP;
++				aceprop.who.gid   = (uint32_t) zacl->ats_acl.acl_entry[i].ae_id;
++				break;
++			default:
++				aceprop.who.uid   = (uint32_t) zacl->ats_acl.acl_entry[i].ae_id;
++				aceprop.flags = 0;
++				break;
 +		}
 +
 +		/*
@@ -827,42 +849,33 @@ index 0000000..6e53cbf
 +		if (is_dir && (aceprop.aceMask & SMB_ACE4_ADD_FILE)) {
 +			aceprop.aceMask |= SMB_ACE4_DELETE_CHILD;
 +		}
-+ 		/*
++		/*
 +		 * Test whether ACL contains any ACEs with the
 +		 * inherited flag set. We use this to determine whether
-+   		 * to set DACL_PROTECTED in the security descriptor.
-+   		 */
-+ 		if(aceprop.aceFlags & ACE_INHERITED_ACE) {
-+ 			inherited_present = true;
-+ 		}
-+
-+		if(aceprop.aceFlags & ACE_OWNER) {
-+			aceprop.flags = SMB_ACE4_ID_SPECIAL;
-+			aceprop.who.special_id = SMB_ACE4_WHO_OWNER;
-+		} else if(aceprop.aceFlags & ACE_GROUP) {
-+			aceprop.flags = SMB_ACE4_ID_SPECIAL;
-+			aceprop.who.special_id = SMB_ACE4_WHO_GROUP;
-+		} else if(aceprop.aceFlags & ACE_EVERYONE) {
-+			aceprop.flags = SMB_ACE4_ID_SPECIAL;
-+			aceprop.who.special_id = SMB_ACE4_WHO_EVERYONE;
-+		} else {
-+			aceprop.flags	= 0;
++		 * to set DACL_PROTECTED in the security descriptor.
++		 */
++		if(aceprop.aceFlags & SMB_ACE4_INHERITED_ACE) {
++			inherited_present = true;
 +		}
-+		if(smb_add_ace4(pacl, &aceprop) == NULL)
++
++		if (smb_add_ace4(pacl, &aceprop) == NULL) {
++			acl_free(zacl);
 +			return NT_STATUS_NO_MEMORY;
++		}
 +	}
 +
 +	/*
-+  	 * If the ACL doesn't contain any inherited ACEs, then set DACL_PROTECTED 
-+  	 * in the security descriptor using smb4acl4_set_control_flags().
-+   	 * This makes it so that the "Disable Inheritance" button works in Windows Explorer
-+   	 * and prevents resulting ACL from auto-inheriting ACL changes in parent directory.
-+   	 */
-+ 	if (!inherited_present) {
-+ 		smbacl4_set_controlflags(pacl, SEC_DESC_DACL_PROTECTED|SEC_DESC_SELF_RELATIVE);
-+ 	}
++	 * If the ACL doesn't contain any inherited ACEs, then set DACL_PROTECTED 
++	 * in the security descriptor using smb4acl4_set_control_flags().
++	 * This makes it so that the "Disable Inheritance" button works in Windows Explorer
++	 * and prevents resulting ACL from auto-inheriting ACL changes in parent directory.
++	 */
++	if (!inherited_present) {
++		smbacl4_set_controlflags(pacl, SEC_DESC_DACL_PROTECTED|SEC_DESC_SELF_RELATIVE);
++	}
 +
 +	*ppacl = pacl;
++	acl_free(zacl);
 +	return NT_STATUS_OK;
 +}
 +
@@ -870,93 +883,142 @@ index 0000000..6e53cbf
 +static bool zfs_process_smbacl(vfs_handle_struct *handle, files_struct *fsp,
 +			       struct SMB4ACL_T *smbacl)
 +{
-+	SMB_ACE4PROP_T hidden_ace;
-+	if (S_ISDIR(fsp->fsp_name->st.st_ex_mode)) {
-+		hidden_ace.flags = SMB_ACE4_ID_SPECIAL;
-+		hidden_ace.who.id = SMB_ACE4_WHO_EVERYONE;
-+		hidden_ace.aceType = SMB_ACE4_ACCESS_ALLOWED_ACE_TYPE;
-+		hidden_ace.aceFlags = (SMB_ACE4_FILE_INHERIT_ACE|SMB_ACE4_DIRECTORY_INHERIT_ACE);
-+		hidden_ace.aceMask = 0;
-+		DBG_DEBUG("ixnas: setting empty everyone@ ace on dir  %s \n", fsp->fsp_name->base_name);	
-+	} else {
-+		hidden_ace.flags = SMB_ACE4_ID_SPECIAL;
-+		hidden_ace.who.id = SMB_ACE4_WHO_EVERYONE;
-+		hidden_ace.aceType = SMB_ACE4_ACCESS_ALLOWED_ACE_TYPE;
-+		hidden_ace.aceFlags = 0;
-+		hidden_ace.aceMask = 0;
-+		DBG_DEBUG("ixnas: setting empty everyone@ ace on file  %s \n", fsp->fsp_name->base_name);	
-+	}
-+
-+	smb_add_ace4(smbacl, &hidden_ace);
-+
-+	int naces = smb_get_naces(smbacl), i;
-+	ace_t *acebuf;
++	int ret, naces, nzaces, i;
++	i = nzaces = naces = smb_get_naces(smbacl);
++	acl_t zacl;
++	acl_entry_t hidden_entry;
 +	struct SMB4ACE_T *smbace;
-+	TALLOC_CTX	*mem_ctx;
-+	bool have_special_id = false;
++	zacl = acl_init(nzaces);
++	DBG_ERR("nzaces: %d, naces: %d\n", nzaces, naces);
++	bool is_dir;
++	SMB_STRUCT_STAT sbuf;
++	const SMB_STRUCT_STAT *psbuf = NULL;
 +
-+	/* allocate the field of ZFS aces */
-+	mem_ctx = talloc_tos();
-+	acebuf = (ace_t *) talloc_size(mem_ctx, sizeof(ace_t)*naces);
-+	if(acebuf == NULL) {
-+		errno = ENOMEM;
-+		return False;
++	if (VALID_STAT(fsp->fsp_name->st)) {
++		psbuf = &fsp->fsp_name->st;
 +	}
-+	/* handle all aces */
++
++	if (psbuf == NULL) {
++		ret = vfs_stat_smb_basename(handle->conn, fsp->fsp_name, &sbuf);
++		if (ret != 0) {
++			DBG_DEBUG("stat [%s]failed: %s\n",
++				fsp_str_dbg(fsp), strerror(errno));
++			acl_free(zacl);
++			return False;
++		}
++		psbuf = &sbuf;
++	}
++	is_dir = S_ISDIR(psbuf->st_ex_mode);
++	
++	/* 
++	 * handle all aces 
++	 * The ACL structs line up between Samba and FreeBSD with the following exceptions: 
++	 * - Windows clients often expect ACL_SYNCHRONIZE. See samba bug #7909.
++	 * - Samba stores flag indicating that this is a group entry under aceFlags. This is ae_tag in FBSD.
++	 *   In this case we remove 0x0040 from ae_flags for the ACL entry.
++	 * - FreeBSD also has ACL_USER ae_tag that Samba lacks. We add this tag if 
++	 *   1) SMB ACL flag "SMB_ACE4_ID_SPECIAL" is not set. I.e. not owner@, group@, everyone@.
++	 *   2) SMB ACL ace_Flags "SMB4_ACE_IDENTIFIER_GROUP" is not set.
++	 * - NFS4 access mask has padding that is absent from the ae_perm. See RFC 3530 and <sys/acl.h>
++	 *   This padding needs to be added or removed as we read and write the ACL. 
++	 */
++	zacl->ats_brand = ACL_BRAND_NFS4;
++	zacl->ats_acl.acl_maxcnt = ACL_MAX_ENTRIES;
++	zacl->ats_acl.acl_cnt = nzaces; 
 +	for(smbace = smb_first_ace4(smbacl), i = 0;
 +			smbace!=NULL;
 +			smbace = smb_next_ace4(smbace), i++) {
 +		SMB_ACE4PROP_T *aceprop = smb_get_ace4(smbace);
++		int l, m, h;
++		l = m = h = 0;
 +
-+		acebuf[i].a_type        = aceprop->aceType;
-+		acebuf[i].a_flags       = aceprop->aceFlags;
-+		acebuf[i].a_access_mask = aceprop->aceMask;
-+		/* SYNC on acls is a no-op on ZFS.
-+		   See bug #7909. */
-+		acebuf[i].a_access_mask &= ~SMB_ACE4_SYNCHRONIZE;
-+		acebuf[i].a_who         = aceprop->who.id;
++		l = (uint32_t) aceprop->aceMask << 3;
++		m = (uint32_t) aceprop->aceMask << 2;
++		h = (uint32_t) aceprop->aceMask >> 5;
++		l &= (ACL_READ_DATA|ACL_WRITE_DATA|ACL_APPEND_DATA|ACL_READ_NAMED_ATTRS|ACL_WRITE_NAMED_ATTRS);
++		m &= (ACL_WRITE_ATTRIBUTES|ACL_READ_ATTRIBUTES|ACL_DELETE_CHILD); 
++		h &= (ACL_READ_ACL|ACL_WRITE_ACL|ACL_WRITE_OWNER|ACL_DELETE); //Drop SYNCRHONIZE per#7909 
++
++		zacl->ats_acl.acl_entry[i].ae_flags              = aceprop->aceFlags;
++		zacl->ats_acl.acl_entry[i].ae_perm               = (l|m|h);
++		zacl->ats_acl.acl_entry[i].ae_flags             &= ~SMB_ACE4_IDENTIFIER_GROUP; //FreeBSD doesn't store group in ae_flags
++		if (aceprop->aceType) {
++			zacl->ats_acl.acl_entry[i].ae_entry_type = aceprop->aceType << 9;
++		}
++		else {
++			zacl->ats_acl.acl_entry[i].ae_entry_type = ACL_ENTRY_TYPE_ALLOW;
++		}
++		if (aceprop->aceMask & SMB_ACE4_EXECUTE) {
++			zacl->ats_acl.acl_entry[i].ae_perm	|= ACL_EXECUTE; //0x0001 (doesn't map cleanly)	
++		}
 +		if(aceprop->flags & SMB_ACE4_ID_SPECIAL) {
 +			switch(aceprop->who.special_id) {
++			/*
++			 * ae_id should be set to ACL_UNDEFINED_ID iff ae_tag is 
++			 * ACL_USER_OBJ, ACL_GROUP_OBJ, or ACL_EVERYONE
++			 */
 +			case SMB_ACE4_WHO_EVERYONE:
-+				acebuf[i].a_flags |= ACE_EVERYONE;
++				zacl->ats_acl.acl_entry[i].ae_tag  = ACL_EVERYONE;
++				zacl->ats_acl.acl_entry[i].ae_id   = ACL_UNDEFINED_ID;
 +				break;
 +			case SMB_ACE4_WHO_OWNER:
-+				acebuf[i].a_flags |= ACE_OWNER;
++				zacl->ats_acl.acl_entry[i].ae_tag  = ACL_USER_OBJ;
++				zacl->ats_acl.acl_entry[i].ae_id   = ACL_UNDEFINED_ID;
 +				break;
 +			case SMB_ACE4_WHO_GROUP:
-+				acebuf[i].a_flags |= ACE_GROUP|ACE_IDENTIFIER_GROUP;
++				zacl->ats_acl.acl_entry[i].ae_tag  = ACL_GROUP_OBJ;
++				zacl->ats_acl.acl_entry[i].ae_id   = ACL_UNDEFINED_ID;
 +				break;
 +			default:
-+				DBG_INFO("unsupported special_id %d\n", \
++				DBG_DEBUG("unsupported special_id %d\n", \
 +					aceprop->who.special_id);
 +				continue; /* don't add it !!! */
 +			}
-+			have_special_id = true;
 +		}
-+	}
-+
-+	if (!have_special_id
-+	    && lp_parm_bool(fsp->conn->params->service, "ixnas",
-+			    "denymissingspecial", false)) {
-+		errno = EACCES;
-+		return false;
++		else {
++			if (aceprop->aceFlags & SMB_ACE4_IDENTIFIER_GROUP) {
++				zacl->ats_acl.acl_entry[i].ae_tag  = ACL_GROUP;
++				zacl->ats_acl.acl_entry[i].ae_id   = aceprop->who.id;
++			} 
++			else {
++				zacl->ats_acl.acl_entry[i].ae_tag  = ACL_USER;
++				zacl->ats_acl.acl_entry[i].ae_id   = aceprop->who.id;
++			}
++		}
 +	}
 +
 +	SMB_ASSERT(i == naces);
-+
-+	/* store acl */
-+	if(acl(fsp->fsp_name->base_name, ACE_SETACL, naces, acebuf)) {
-+		if(errno == ENOSYS) {
-+			DBG_ERR("acl(ACE_SETACL, %s): Operation is not "
-+				  "supported on the filesystem where the file "
-+				  "reside", fsp_str_dbg(fsp));
-+		} else {
-+			DBG_DEBUG("acl(ACE_SETACL, %s): %s ", fsp_str_dbg(fsp),
-+				  strerror(errno));
-+		}
-+		return 0;
++	if (acl_create_entry(&zacl, &hidden_entry) < 0) {
++		DBG_ERR("Failed to create new ACL entry: %s\n", strerror(errno));
 +	}
 +
++	if (is_dir) {
++		hidden_entry->ae_flags = ACL_ENTRY_DIRECTORY_INHERIT|ACL_ENTRY_FILE_INHERIT;
++	}
++	else {
++		hidden_entry->ae_flags = 0;
++	}
++	hidden_entry->ae_perm = 0;
++	hidden_entry->ae_entry_type = ACL_ENTRY_TYPE_ALLOW;
++	hidden_entry->ae_tag = ACL_EVERYONE;
++	hidden_entry->ae_id = ACL_UNDEFINED_ID;
++	/* store acl */
++	if(acl_set_file(fsp->fsp_name->base_name, ACL_TYPE_NFS4, zacl) < 0) {
++		DBG_DEBUG("(acl_set_file(): %s): %s\n", fsp_str_dbg(fsp), strerror(errno));
++		if ( pathconf(fsp->fsp_name->base_name, _PC_ACL_NFS4) < 0 ) {
++			DBG_INFO("%s: pathconf(..., _PC_ACL_NFS4) failed. Path does not support NFS4 ACL.",
++				fsp_str_dbg(fsp));
++			errno = ENOSYS; //preserve behavior from libsunacl and zfsacl
++		} 
++		else {
++			DBG_ERR("(acl_set_file(): %s): %s ", fsp_str_dbg(fsp),
++				  strerror(errno));
++		}
++		acl_free(zacl);
++		return False; 
++	}
++	
++	acl_free(zacl);
 +	return True;
 +}
 +
