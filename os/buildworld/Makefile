@@ -62,7 +62,7 @@ do-install:
 		${MFLAGS} \
 	       	DESTDIR=${STAGEDIR}/world \
 		installworld
-	cd ${WRKSRC} && env -i make ${WORLD_MAKE_FLAGS} \
+	cd ${WRKSRC} && env -i make ${JOBFLAG} ${WORLD_MAKE_FLAGS} \
 		${MFLAGS} \
 		DESTDIR=${STAGEDIR}/world \
 		distribution
