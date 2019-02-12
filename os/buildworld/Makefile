@@ -65,6 +65,9 @@ do-install:
 		${MFLAGS} \
 		DESTDIR=${STAGEDIR}/world \
 		distribution
+	if [ -n "${TRUEOS_MANIFEST}" ] ; then \
+		cp ${TRUEOS_MANIFEST} ${STAGEDIR}/world/var/db/trueos-manifest.json ; \
+	fi
 	tar cvJf ${STAGEDIR}/usr/dist/world.txz -C ${STAGEDIR}/world .
 	chflags -R noschg ${STAGEDIR}/world
 	rm -rf ${STAGEDIR}/world
