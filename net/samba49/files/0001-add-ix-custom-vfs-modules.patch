@@ -365,10 +365,10 @@ index 0000000..27f8977
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 0000000..249613b
+index 0000000..b65d63e
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,1205 @@
+@@ -0,0 +1,1207 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -889,7 +889,6 @@ index 0000000..249613b
 +	acl_entry_t hidden_entry;
 +	struct SMB4ACE_T *smbace;
 +	zacl = acl_init(nzaces);
-+	DBG_ERR("nzaces: %d, naces: %d\n", nzaces, naces);
 +	bool is_dir;
 +	SMB_STRUCT_STAT sbuf;
 +	const SMB_STRUCT_STAT *psbuf = NULL;
@@ -932,9 +931,9 @@ index 0000000..249613b
 +		int l, m, h;
 +		l = m = h = 0;
 +
-+		l = (uint32_t) aceprop->aceMask << 3;
-+		m = (uint32_t) aceprop->aceMask << 2;
-+		h = (uint32_t) aceprop->aceMask >> 5;
++		l =  aceprop->aceMask << 3;
++		m =  aceprop->aceMask << 2;
++		h =  aceprop->aceMask >> 5;
 +		l &= (ACL_READ_DATA|ACL_WRITE_DATA|ACL_APPEND_DATA|ACL_READ_NAMED_ATTRS|ACL_WRITE_NAMED_ATTRS);
 +		m &= (ACL_WRITE_ATTRIBUTES|ACL_READ_ATTRIBUTES|ACL_DELETE_CHILD); 
 +		h &= (ACL_READ_ACL|ACL_WRITE_ACL|ACL_WRITE_OWNER|ACL_DELETE); //Drop SYNCRHONIZE per#7909 
@@ -989,7 +988,10 @@ index 0000000..249613b
 +
 +	SMB_ASSERT(i == naces);
 +	if (acl_create_entry(&zacl, &hidden_entry) < 0) {
-+		DBG_ERR("Failed to create new ACL entry: %s\n", strerror(errno));
++		DBG_ERR("acl_create_entry() failed for %s with error: %s\n", 
++			fsp_str_dbg(fsp), strerror(errno));
++		acl_free(zacl);
++		return False;
 +	}
 +
 +	if (is_dir) {
