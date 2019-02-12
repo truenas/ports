@@ -1,0 +1,27 @@
+#!/sbin/openrc-run
+
+# Service dependencies
+depend()
+{
+        need localmount
+        after network
+} 
+
+name="ec2_bootmail"
+
+start()
+{
+	(
+		echo "To: ${ec2_bootmail_addr}"
+		echo "From: EC2 Instance <root@localhost>"
+		echo "Subject: Instance launch"
+		echo
+		uname -a
+		echo "Instance type: `fetch -qo - http://169.254.169.254/latest/meta-data/instance-type`"
+	) | sendmail -t
+}
+
+stop()
+{
+	return 0
+}

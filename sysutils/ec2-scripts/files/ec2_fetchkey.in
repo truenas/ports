@@ -1,0 +1,51 @@
+#!/sbin/openrc-run
+
+# Service dependencies
+depend()
+{
+        need localmount
+        after network
+} 
+
+# Set ec2_fetchkey_user to change the user for which SSH keys are provided.
+: ${ec2_fetchkey_user=ec2-user}
+
+name="ec2_fetchkey"
+
+SSHKEYURL="http://169.254.169.254/1.0/meta-data/public-keys/0/openssh-key"
+
+start()
+{
+	# If the user does not exist, create it.
+	if ! grep -q "^${ec2_fetchkey_user}:" /etc/passwd; then
+		echo "Creating user ${ec2_fetchkey_user}"
+		pw useradd ${ec2_fetchkey_user} -m -G wheel
+	fi
+
+	# Figure out where the SSH public key needs to go.
+	eval SSHKEYFILE="~${ec2_fetchkey_user}/.ssh/authorized_keys"
+
+	# Grab the provided SSH public key and add it to the
+	# right authorized_keys file to allow it to be used to
+	# log in as the specified user.
+	einfo "Fetching SSH public key for ${ec2_fetchkey_user}"
+	mkdir -p `dirname ${SSHKEYFILE}`
+	chmod 700 `dirname ${SSHKEYFILE}`
+	chown ${ec2_fetchkey_user} `dirname ${SSHKEYFILE}`
+	ftp -o ${SSHKEYFILE}.ec2 -a ${SSHKEYURL} >/dev/null
+	if [ -f ${SSHKEYFILE}.ec2 ]; then
+		touch ${SSHKEYFILE}
+		sort -u ${SSHKEYFILE} ${SSHKEYFILE}.ec2		\
+		    > ${SSHKEYFILE}.tmp
+		mv ${SSHKEYFILE}.tmp ${SSHKEYFILE}
+		chown ${ec2_fetchkey_user} ${SSHKEYFILE}
+		rm ${SSHKEYFILE}.ec2
+	else
+		ewarn "Fetching SSH public key failed!"
+	fi
+}
+
+stop()
+{
+
+}

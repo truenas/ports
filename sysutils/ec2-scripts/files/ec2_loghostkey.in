@@ -1,0 +1,28 @@
+#!/sbin/openrc-run
+
+# Service dependencies
+depend()
+{
+        need localmount
+        after network
+	need sshd
+} 
+
+name="ec2_loghostkey"
+
+start()
+{
+	# Print the SSH host keys in EC2-standard format.
+	echo '#############################################################' | logger -s -t 'ec2'
+	echo '-----BEGIN SSH HOST KEY FINGERPRINTS-----' | logger -s -t 'ec2'
+	for F in /etc/ssh/ssh_host_*key.pub; do
+		ssh-keygen -l -f $F | logger -s -t 'ec2'
+	done
+	echo '-----END SSH HOST KEY FINGERPRINTS-----' | logger -s -t 'ec2'
+	echo '#############################################################' | logger -s -t 'ec2'
+}
+
+stop()
+{
+
+}

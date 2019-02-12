@@ -3,6 +3,7 @@
 
 PORTNAME=	ec2-scripts
 PORTVERSION=	1.10
+PORTREVISION=	1
 CATEGORIES=	sysutils
 MASTER_SITES=	http://freebsd-ec2-dist.s3.amazonaws.com/
 EXTRACT_SUFX=	.tgz

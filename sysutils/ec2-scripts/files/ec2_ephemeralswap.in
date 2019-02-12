@@ -1,0 +1,182 @@
+#!/sbin/openrc-run
+
+# Service dependencies
+depend()
+{
+        need localmount
+        after network
+	before savecore
+} 
+
+# Define ec2_ephemeralswap_size=N in /etc/rc.conf to use N MB of swap space
+# instead of auto-sizing based on the amount of RAM.
+#
+: ${ec2_ephemeralswap_size=AUTO}
+
+name="ec2_ephemeralswap"
+
+start()
+{
+	local RAM RAMMB SWAPMB SWZONESTRUCTS SWZONEMAXMB
+	local EC2DISKS EC2DISK BLKDEV SWAPDISKS NSWAPDISKS
+	local SWAPPERDISK SWAPDISK
+
+	# Compute "ideal" swap size:
+	#     2*RAM if RAM <= 4 GB
+	#     8 GB  if 4 GB <= RAM <= 8 GB
+	#     RAM   if 8 GB <= RAM
+	RAM=`sysctl -n hw.physmem`
+	RAMMB=`expr $RAM / 1048576`
+	if [ $RAMMB -lt 4096 ]; then
+		SWAPMB=`expr $RAMMB \* 2`
+	elif [ $RAMMB -lt 8192 ]; then
+		SWAPMB=8192
+	else
+		SWAPMB=$RAMMB
+	fi
+
+	# If a swap size was specified, use that instead of our "ideal" value.
+	case ${ec2_ephemeralswap_size} in
+	[Aa][Uu][Tt][Oo])
+		;;
+	*)
+		SWAPMB=${ec2_ephemeralswap_size}
+		;;
+	esac
+
+	# Reduce this size if the kernel hasn't reserved enough space to
+	# keep track of that much swap.
+	SWZONESTRUCTS=`vmstat -z | tr -d , | awk '/^SWAPMETA/ { print $3 }'`
+	SWZONEMAXMB=`expr $SWZONESTRUCTS / 16`
+	if [ $SWZONEMAXMB -lt $SWAPMB ]; then
+		echo -n "Reducing ephemeral swap target from $SWAPMB MB to"
+		echo -n " $SWZONEMAXMB MB since kernel SWAPMETA zone is"
+		echo " too small."
+		SWAPMB=$SWZONEMAXMB
+	fi
+
+	# Fetch a list of EC2 disks
+	EC2DISKS=`fetch -qo - http://169.254.169.254/latest/meta-data/block-device-mapping/ | grep -E '^ephemeral[0-9]+$'`
+	debug "EC2 ephemeral disks are $EC2DISKS"
+
+	# Figure out where they're mapped to
+	SWAPDISKS=""
+	NSWAPDISKS=0
+	for EC2DISK in $EC2DISKS; do
+		BLKDEV=`fetch -qo - http://169.254.169.254/latest/meta-data/block-device-mapping/$EC2DISK | sed 's|/dev/||'`
+		case "$BLKDEV" in
+		sd[a-j])
+			SWAPDISK="/dev/xbd`echo $BLKDEV | cut -c 3 | tr 'a-j' '0-9'`"
+			;;
+		xvd[a-z])
+			SWAPDISK="/dev/xbd`echo $BLKDEV | cut -c 4 | tr 'a-j' '0-9'`"
+			;;
+		*)
+			echo "Can't translate $EC2DISK to a FreeBSD device name"
+			continue
+			;;
+		esac
+		if [ -c $SWAPDISK ]; then
+			SWAPDISKS="$SWAPDISKS $SWAPDISK"
+			NSWAPDISKS=$(($NSWAPDISKS + 1))
+		else
+			debug "Ephemeral swap disk $SWAPDISK doesn't exist"
+		fi
+	done
+
+	# If we have no ephemeral disks, give up.
+	if [ $NSWAPDISKS -eq 0 ]; then
+		echo -n "No ephemeral disks are available,"
+		echo " so no swap space is being created."
+		return 0;
+	fi
+
+	# How much swap space do we want per disk?
+	SWAPPERDISK=`expr $SWAPMB / $NSWAPDISKS`
+	if [ $SWAPPERDISK -gt 32768 ]; then
+		# FreeBSD swap_pager code can't use more than 32 GB per device
+		SWAPPERDISK=32768
+	fi
+
+	debug "Want $SWAPPERDISK MB swap on each of $NSWAPDISKS disks: $SWAPDISKS"
+
+	# Slice and partition disks
+	for SWAPDISK in $SWAPDISKS; do
+		if [ `ls $SWAPDISK[a-z.]* 2>/dev/null | wc -l` -gt 1 ]; then
+			debug "Ephemeral swap disk $SWAPDISK already in use"
+			continue;
+		fi
+
+		# Figure out how large the disk is.  Subtract off 16 MB for
+		# losses to "cylinder" alignment etc.
+		DISKSZ=`diskinfo $SWAPDISK | awk '{ print $3 }'`
+		DISKSZM=`expr $DISKSZ / 1048576 - 16`
+
+		# Use the size we want or the size we've got, whichever is less
+		if [ $DISKSZM -lt $SWAPPERDISK ]; then
+			SWAPSZ=$DISKSZM;
+		else
+			SWAPSZ=$SWAPPERDISK;
+		fi
+
+		# Try to create a $SWAPSZ MB slice on this disk.
+		echo -n "Attempting to create a $SWAPSZ MB swap area on $SWAPDISK..."
+		( echo "p 1 0xa5 64 ${SWAPSZ}M"; echo "p 2 0xa5 * *" ) |
+		    fdisk -i -f /dev/stdin $SWAPDISK >/dev/null 2>/dev/null
+
+		# Attempt to create a swap partition on the new slice.
+		( echo "b: * 0 swap"; echo "c: * 0 unused" ) |
+		    bsdlabel -R ${SWAPDISK}s1 /dev/stdin
+
+		# Did we succeed?
+		if [ -c ${SWAPDISK}s1b ]; then
+			echo " done."
+		else
+			echo " failed."
+		fi
+	done
+
+	# Turn on swap
+	for SWAPDISK in $SWAPDISKS; do
+		# If there isn't an s1b partition, this isn't one of ours.
+		if ! [ -c "${SWAPDISK}s1b" ]; then
+			continue;
+		fi
+
+		# Make sure that s1b is a swap partition.
+		if ! bsdlabel ${SWAPDISK}s1 | grep b: | grep -q swap; then
+			continue;
+		fi
+
+		# Enable swap on this disk
+		echo "Enabling swapping to ${SWAPDISK}s1b"
+		swapon ${SWAPDISK}s1b
+	done
+
+	# Turn on dumping, if ${dumpdev} is AUTO (the dumpon rc.d script runs
+	# early in the boot process, but we can't run until the network has
+	# been brought up -- so we duplicate here some of the work which that
+	# script does.
+	case ${dumpdev} in
+	[Aa][Uu][Tt][Oo])
+		for SWAPDISK in $SWAPDISKS; do
+			# Skip if this is not a disk we're swapping to.
+			if ! swapinfo | grep -Eq "^${SWAPDISK}s1b"; then
+				continue;
+			fi
+
+			# If we don't have a dump disk yet, use this one.
+			if ! [ -e /dev/dumpdev ]; then
+				echo "Enabling crash dumps to ${SWAPDISK}s1b"
+				dumpon ${SWAPDISK}s1b
+				ln -sf ${SWAPDISK}s1b /dev/dumpdev
+			fi
+		done
+		;;
+	esac
+}
+
+stop()
+{
+	return 0
+}
