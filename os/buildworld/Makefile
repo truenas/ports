@@ -46,6 +46,8 @@ TMANIFEST=	${WRKSRC}/release/trueos-manifest.json
 
 .if defined(_MAKE_JOBS_NUMBER)
 JOBFLAG=	-j ${_MAKE_JOBS_NUMBER}
+.else
+JOBFLAG=	-j ${_SMP_CPUS}
 .endif
 
 PLIST_FILES+=	usr/dist/world.txz
