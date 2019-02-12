@@ -75,6 +75,7 @@
     SUBDIR += gdm
     SUBDIR += ghostbsd-installed-common-settings
     SUBDIR += ghostbsd-live-common-settings
+    SUBDIR += ghostbsd-mate-settings
     SUBDIR += ghostbsd-slim-theme
     SUBDIR += gmrun
     SUBDIR += gnome-clipboard-daemon
@@ -222,7 +223,6 @@
     SUBDIR += mate-applets
     SUBDIR += mate-base
     SUBDIR += mate-desktop
-    SUBDIR += mate-installed-settings
     SUBDIR += mate-live-settings
     SUBDIR += mate-menus
     SUBDIR += mate-panel
