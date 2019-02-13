@@ -649,6 +649,7 @@
     SUBDIR += magicrescue
     SUBDIR += manck
     SUBDIR += mapchan
+    SUBDIR += mapdir
     SUBDIR += massadmin
     SUBDIR += mate-control-center
     SUBDIR += mate-polkit

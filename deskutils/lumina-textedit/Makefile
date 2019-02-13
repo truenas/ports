@@ -11,6 +11,7 @@ MAINTAINER=	jt@ixsystems.com
 COMMENT=	Plaintext editor from the Lumina Desktop
 
 LICENSE=	BSD3CLAUSE
+LICENSE_FILE=	${WRKSRC}/../../../LICENSE
 
 CONFLICTS_INSTALL=	lumina-1.2.*
 

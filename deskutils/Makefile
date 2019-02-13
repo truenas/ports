@@ -232,6 +232,7 @@
     SUBDIR += sugarcrm
     SUBDIR += synapse
     SUBDIR += syncthing-gtk
+    SUBDIR += sysctlview
     SUBDIR += systempreferences
     SUBDIR += taskcoach
     SUBDIR += taskd

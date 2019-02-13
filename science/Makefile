@@ -107,6 +107,7 @@
     SUBDIR += iboview
     SUBDIR += isaac-cfd
     SUBDIR += jdftx
+    SUBDIR += jmol
     SUBDIR += jstrack
     SUBDIR += kalzium
     SUBDIR += kst2
@@ -153,6 +154,7 @@
     SUBDIR += mmtf
     SUBDIR += mol2ps
     SUBDIR += molgif
+    SUBDIR += molscript
     SUBDIR += molsketch
     SUBDIR += mpb
     SUBDIR += mpqc
@@ -238,6 +240,7 @@
     SUBDIR += py-molmod
     SUBDIR += py-netCDF4
     SUBDIR += py-obspy
+    SUBDIR += py-oddt
     SUBDIR += py-openpiv
     SUBDIR += py-paida
     SUBDIR += py-paramz
