@@ -44,6 +44,12 @@ JOBFLAG=	-j ${_MAKE_JOBS_NUMBER}
 JOBFLAG=	-j ${_SMP_CPUS}
 .endif
 
+.if defined(__MAKE_CONF)
+MCONF=	__MAKE_CONF=${__MAKE_CONF}
+.else
+MCONF=
+.endif
+
 PLIST_FILES+=	usr/dist/world.txz
 
 # This is broken right now
@@ -51,18 +57,18 @@ PLIST_FILES+=	usr/dist/world.txz
 
 
 do-build:
-	cd ${WRKSRC} && env -i make ${JOBFLAG} ${WORLD_MAKE_FLAGS} \
+	cd ${WRKSRC} && env -i make ${JOBFLAG} ${MCONF} ${WORLD_MAKE_FLAGS} \
 		${MFLAGS} \
 		buildworld
 
 do-install:
 	${MKDIR} -p ${STAGEDIR}/world
 	${MKDIR} -p ${STAGEDIR}/usr/dist
-	cd ${WRKSRC} && env -i make ${JOBFLAG} ${WORLD_MAKE_FLAGS} \
+	cd ${WRKSRC} && env -i make ${JOBFLAG} ${MCONF} ${WORLD_MAKE_FLAGS} \
 		${MFLAGS} \
 	       	DESTDIR=${STAGEDIR}/world \
 		installworld
-	cd ${WRKSRC} && env -i make ${JOBFLAG} ${WORLD_MAKE_FLAGS} \
+	cd ${WRKSRC} && env -i make ${JOBFLAG} ${MCONF} ${WORLD_MAKE_FLAGS} \
 		${MFLAGS} \
 		DESTDIR=${STAGEDIR}/world \
 		distribution
