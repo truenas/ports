@@ -3,6 +3,7 @@
 
     COMMENT = FreeNAS specific ports
 
+    SUBDIR += freenas
     SUBDIR += freenas-files
     SUBDIR += freenas-installer
     SUBDIR += freenas-migrate93
