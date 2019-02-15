@@ -18,7 +18,7 @@ CONFLICTS_INSTALL=	nss_mdns-[0-9]*
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
-GH_TAGNAME=	d628da5
+GH_TAGNAME=	982a2b7
 
 .include <bsd.port.pre.mk>
 
