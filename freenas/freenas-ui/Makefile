@@ -2,7 +2,7 @@
 
 PORTNAME=       freenas-ui
 PORTVERSION=	20190215183601
-PORTREVISION=	0
+PORTREVISION=	1
 
 CATEGORIES=     freenas
 VALID_CATEGORIES+=	freenas
@@ -65,7 +65,6 @@ MAKE_JOBS_UNSAFE=yes
 
 ALL_TARGET=obj all
 
-SUB_FILES=	pkg-install
 SUB_LIST+=	PYTHON_CMD=${PYTHON_CMD}
 
 .include <bsd.port.pre.mk>
