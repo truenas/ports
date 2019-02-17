@@ -27,7 +27,7 @@ freenas-ui-post-install()
         chroot ${PKG_ROOTDIR} %%PYTHON_CMD%% ${dstCR}/manage.py collectstatic --noinput
         chroot ${PKG_ROOTDIR} %%PYTHON_CMD%% ${dstCR}/tools/compilemsgs.py
 
-        chroot ${PKG_ROOTDIR} env FREENAS_INSTALL=yes /usr/local/sbin/migrate93 -f /data/freenas-v1.db
+        chroot ${PKG_ROOTDIR} env FREENAS_INSTALL=yes PATH=$PATH /usr/local/sbin/migrate93 -f /data/freenas-v1.db
         # Lets be evil here and kill pkg(8) if this fails
         # because pkg does not check return code of POST-INSTALL script
         if [ $? -ne 0 ]; then
