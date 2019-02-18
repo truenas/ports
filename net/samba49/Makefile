@@ -20,6 +20,7 @@ CONFLICTS_INSTALL?=		samba4-4.0.* samba4[1-79]-4.* p5-Parse-Pidl-4.*
 EXTRA_PATCHES+=			${PATCHDIR}/0001-zfs-provisioning-patches.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-Freenas-master-mdns-fixes-22.patch:-p1
 EXTRA_PATCHES+=		 	${PATCHDIR}/0001-add-ix-custom-vfs-modules.patch:-p1
+EXTRA_PATCHES+=		 	${PATCHDIR}/0001-add-shadow_copy_zfs.patch:-p1
 EXTRA_PATCHES+=		 	${PATCHDIR}/0001-add-support-for-xattrs-larger-than-64k.patch:-p1
 EXTRA_PATCHES+=		 	${PATCHDIR}/0001-add-parameters-for-ha-configuration.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-add-idmap_fruit-backend.patch:-p1
@@ -342,7 +343,7 @@ LDAP_VARS=			SAMBA4_MODULES+=idmap_ldap
 
 LIBZFS_CONFIGURE_WITH=		libzfs
 LIBZFS_CONFIGURE_OFF=		--without-libzfs
-LIBZFS_VARS=			SAMBA4_MODULES+=vfs_zfs_space vfs_ixnas
+LIBZFS_VARS=			SAMBA4_MODULES+=vfs_zfs_space vfs_ixnas vfs_shadow_copy_zfs
 
 MANDOC_BUILD_DEPENDS=		${LOCALBASE}/share/xsl/docbook/manpages/docbook.xsl:textproc/docbook-xsl \
 				xsltproc:textproc/libxslt
@@ -381,8 +382,8 @@ SAMBA4_MODULES+=		auth_skel pdb_test gpext_security gpext_registry gpext_scripts
 
 .if ${PORT_OPTIONS:MLIBZFS}
 CONFIGURE_ARGS+=        --with-libzfs
-WANT_EXP_MODULES+=      vfs_zfs_space vfs_ixnas
-SAMBA4_MODULES+=        vfs_zfs_space vfs_ixnas
+WANT_EXP_MODULES+=      vfs_zfs_space vfs_ixnas vfs_shadow_copy_zfs
+SAMBA4_MODULES+=        vfs_zfs_space vfs_ixnas vfs_shadow_copy_zfs
 PLIST_SUB+=             LIBZFS=""
 .else
 CONFIGURE_ARGS+=        --without-libzfs
