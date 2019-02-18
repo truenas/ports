@@ -23,6 +23,7 @@ lib/gbi/backend-query/update-part-list.sh
 lib/gbi/backend-query/xkeyboard-layouts.sh
 lib/gbi/backend-query/xkeyboard-models.sh
 lib/gbi/backend-query/xkeyboard-variants.sh
+lib/gbi/boot_manager.py
 lib/gbi/create_cfg.py
 lib/gbi/desktopbsd-style.css
 lib/gbi/end.py
