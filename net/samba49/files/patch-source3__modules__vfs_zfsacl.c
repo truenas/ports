@@ -8,13 +8,9 @@
  	bool is_dir;
  
  	if (VALID_STAT(smb_fname->st)) {
-@@ -113,10 +114,12 @@ static NTSTATUS zfs_get_nt_acl_common(st
- 			aceprop.aceMask |= SMB_ACE4_SYNCHRONIZE;
+@@ -117,6 +118,11 @@ static NTSTATUS zfs_get_nt_acl_common(st
+ 			aceprop.aceMask |= SMB_ACE4_DELETE_CHILD;
  		}
- 
--		if (is_dir && (aceprop.aceMask & SMB_ACE4_ADD_FILE)) {
--			aceprop.aceMask |= SMB_ACE4_DELETE_CHILD;
--		}
  
 +#ifdef ACE_INHERITED_ACE
 + 		if(aceprop.aceFlags & ACE_INHERITED_ACE) {
@@ -24,7 +20,7 @@
  		if(aceprop.aceFlags & ACE_OWNER) {
  			aceprop.flags = SMB_ACE4_ID_SPECIAL;
  			aceprop.who.special_id = SMB_ACE4_WHO_OWNER;
-@@ -133,6 +136,13 @@ static NTSTATUS zfs_get_nt_acl_common(st
+@@ -133,6 +139,13 @@ static NTSTATUS zfs_get_nt_acl_common(st
  			return NT_STATUS_NO_MEMORY;
  	}
  
