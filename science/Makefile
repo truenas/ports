@@ -67,6 +67,7 @@
     SUBDIR += dlib-cpp
     SUBDIR += dlpoly-classic
     SUBDIR += drawxtl
+    SUBDIR += dvc
     SUBDIR += eccodes
     SUBDIR += elk
     SUBDIR += epte
@@ -151,7 +152,7 @@
     SUBDIR += metaphysicl
     SUBDIR += minc2
     SUBDIR += mmdb2
-    SUBDIR += mmtf
+    SUBDIR += mmtf-cpp
     SUBDIR += mol2ps
     SUBDIR += molgif
     SUBDIR += molscript
@@ -173,6 +174,7 @@
     SUBDIR += openmx
     SUBDIR += opensim-core
     SUBDIR += openstructure
+    SUBDIR += opsin
     SUBDIR += p5-Algorithm-SVMLight
     SUBDIR += p5-Chemistry-3DBuilder
     SUBDIR += p5-Chemistry-Bond-Find

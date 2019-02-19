@@ -1201,6 +1201,7 @@
     SUBDIR += rubygem-signet
     SUBDIR += rubygem-six
     SUBDIR += rubygem-sshkey
+    SUBDIR += rubygem-sshkey1
     SUBDIR += rubygem-sshkit
     SUBDIR += rubygem-timfel-krb5
     SUBDIR += rubygem-twitter_oauth
@@ -1225,7 +1226,6 @@
     SUBDIR += sectok
     SUBDIR += secure_delete
     SUBDIR += setaudit
-    SUBDIR += sguil
     SUBDIR += sha
     SUBDIR += sha1collisiondetection
     SUBDIR += sha2wordlist
@@ -1308,7 +1308,6 @@
     SUBDIR += titus
     SUBDIR += tls-check
     SUBDIR += tlswrap
-    SUBDIR += tmux-cssh
     SUBDIR += tor
     SUBDIR += tor-devel
     SUBDIR += tpm-tools
