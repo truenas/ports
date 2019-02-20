@@ -212,7 +212,8 @@ lib/samba4/private/libasn1-samba4.so.8
 lib/samba4/private/libasn1-samba4.so.8.0.0
 lib/samba4/private/libasn1util-samba4.so
 lib/samba4/private/libauth-samba4.so
-lib/samba4/private/libsmb-libzfs-samba4.so
+%%LIBZFS%%lib/samba4/private/libsmb-libzfs-samba4.so
+%%LIBZFS%%lib/samba4/private/libzfs-list-snapshots-samba4.so
 lib/samba4/private/libauth-unix-token-samba4.so
 lib/samba4/private/libauth4-samba4.so
 lib/samba4/private/libauthkrb5-samba4.so

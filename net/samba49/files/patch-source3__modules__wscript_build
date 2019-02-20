@@ -1,5 +1,14 @@
 --- source3/modules/wscript_build.orig	2018-09-06 03:59:20.000000000 -0400
-+++ source3/modules/wscript_build	2018-12-28 16:24:34.386822000 -0500
++++ source3/modules/wscript_build	2019-02-06 16:50:58.986391000 -0500
+@@ -88,7 +88,7 @@ bld.SAMBA3_MODULE('vfs_fake_acls',
+ bld.SAMBA3_MODULE('vfs_recycle',
+                  subsystem='vfs',
+                  source='vfs_recycle.c',
+-                 deps='samba-util',
++                 deps='NFS4_ACLS sunacl samba-util',
+                  init_function='',
+                  internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_recycle'),
+                  enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_recycle'))
 @@ -219,6 +219,23 @@ bld.SAMBA3_MODULE('vfs_solarisacl',
                   internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_solarisacl'),
                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_solarisacl'))
@@ -24,7 +33,7 @@
  bld.SAMBA3_MODULE('vfs_zfsacl',
                   subsystem='vfs',
                   source='vfs_zfsacl.c',
-@@ -556,9 +573,35 @@ bld.SAMBA3_MODULE('vfs_error_inject',
+@@ -556,9 +573,67 @@ bld.SAMBA3_MODULE('vfs_error_inject',
                   internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_error_inject'),
                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_error_inject'))
  
@@ -62,5 +71,37 @@
                   init_function='',
 -                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_delay_inject'),
 -                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_delay_inject'))
-+                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_zfs_space'),
-+                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_zfs_space'))
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_zfs_space'))
++
++bld.SAMBA3_LIBRARY('zfs_list_snapshots',
++                   source='zfs_list_snapshots.c',
++                   cflags='-DNEED_SOLARIS_BOOLEAN',
++                   deps='samba-util',
++                   includes=[
++                       '/usr/src/cddl/contrib/opensolaris/lib/libzpool/common',
++                       '/usr/src/cddl/compat/opensolaris/include',
++                       '/usr/src/cddl/compat/opensolaris/lib/libumem',
++                       '/usr/src/sys/cddl/compat/opensolaris',
++                       '/usr/src/cddl/contrib/opensolaris/head',
++                       '/usr/src/cddl/contrib/opensolaris/lib/libuutil/common',
++                       '/usr/src/cddl/contrib/opensolaris/lib/libzfs/common',
++                       '/usr/src/cddl/contrib/opensolaris/lib/libzfs_core/common',
++                       '/usr/src/cddl/contrib/opensolaris/lib/libumem/common',
++                       '/usr/src/cddl/contrib/opensolaris/lib/libnvpair',
++                       '/usr/src/sys/cddl/contrib/opensolaris/uts/common',
++                       '/usr/src/sys/cddl/contrib/opensolaris/uts/common/fs/zfs',
++                       '/usr/src/sys/cddl/contrib/opensolaris/uts/common/sys',
++                       '/usr/src/sys/cddl/contrib/opensolaris/common/zfs',
++                   ],
++                   ldflags='-lgeom -luutil -lzfs_core -lzfs',
++                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_shadow_copy_zfs'),
++                   private_library=True)
++
++bld.SAMBA3_MODULE('vfs_shadow_copy_zfs',
++                 subsystem='vfs',
++                 source='vfs_shadow_copy_zfs.c',
++                 allow_warnings=True,
++                 deps='samba-util tdb zfs_list_snapshots',
++                 init_function='',
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_shadow_copy_zfs'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_shadow_copy_zfs'))
