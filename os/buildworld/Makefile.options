@@ -90,6 +90,7 @@ OPTIONS_DEFINE=	ACCT \
     MAIL \
     MAILWRAPPER \
     MAKE \
+    META_MODE \
     MLX5TOOL \
     NDIS \
     NETCAT \
