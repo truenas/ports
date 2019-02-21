@@ -1,1 +1,1 @@
-USE_OPENRC_SUBR=	openrc-bincimap
+USE_OPENRC_SUBR=	openrc-bincimapd
