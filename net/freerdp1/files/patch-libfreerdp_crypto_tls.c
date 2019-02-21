@@ -1,8 +1,3 @@
-<<<<<<< HEAD
---- libfreerdp/crypto/tls.c.orig	2016-11-24 14:45:22 UTC
-+++ libfreerdp/crypto/tls.c
-@@ -218,9 +218,9 @@ static long bio_rdp_tls_ctrl(BIO* bio, i
-=======
 --- libfreerdp/crypto/tls.c.orig	2014-09-11 22:46:32 UTC
 +++ libfreerdp/crypto/tls.c
 @@ -34,6 +34,7 @@
@@ -91,7 +86,6 @@
 +
  	switch (cmd)
  	{
->>>>>>> freebsd/master
  		case BIO_CTRL_RESET:
  			SSL_shutdown(tls->ssl);
  
@@ -103,8 +97,6 @@
  				SSL_set_accept_state(tls->ssl);
  
  			SSL_clear(tls->ssl);
-<<<<<<< HEAD
-=======
  
 -			if (bio->next_bio)
 -				status = BIO_ctrl(bio->next_bio, cmd, num, ptr);
@@ -402,4 +394,3 @@
  
  	do
  	{
->>>>>>> freebsd/master
