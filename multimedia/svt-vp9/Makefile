@@ -18,7 +18,7 @@ ONLY_FOR_ARCHS_REASON=	uses x86-64 assembly
 
 BUILD_DEPENDS=	nasm:devel/nasm
 
-USES=		cmake
+USES=		cmake compiler:c11
 USE_GITHUB=	yes
 USE_LDCONFIG=	yes
 GH_ACCOUNT=	OpenVisualCloud
@@ -30,6 +30,7 @@ post-patch:
 	@${REINPLACE_CMD} -i .flags -E -e 's/ -mavx//' \
 		-e 's/-O2 -flto //' \
 		-e '/C_FLAGS_(RELEASE|DEBUG)/d' \
+		-e '/NASM_FLAGS_DEBUG/d' \
 		${WRKSRC}/CMakeLists.txt
 # Avoid devel/yasm dependency
 	@${REINPLACE_CMD} -i .typo 's/MAKE_ASM_NASM_COMPILER/s&/' \

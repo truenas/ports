@@ -18,7 +18,7 @@ ONLY_FOR_ARCHS_REASON=	uses x86-64 assembly
 
 BUILD_DEPENDS=	nasm:devel/nasm
 
-USES=		cmake
+USES=		cmake compiler:c11
 USE_GITHUB=	yes
 USE_LDCONFIG=	yes
 GH_ACCOUNT=	OpenVisualCloud
@@ -30,7 +30,10 @@ post-patch:
 	@${REINPLACE_CMD} -i .flags -E -e 's/ -mavx//' \
 		-e 's/CMAKE_C_FLAGS "/&$${CMAKE_C_FLAGS} /' \
 		-e '/C_FLAGS_(RELEASE|DEBUG)/d' \
+		-e '/NASM_FLAGS_DEBUG/d' \
 		${WRKSRC}/CMakeLists.txt
+	@${REINPLACE_CMD} -i .flags -e 's/-march=core-avx2/-mavx2/' \
+		${WRKSRC}/Source/Lib/ASM_AVX2/CMakeLists.txt \
 # Avoid lang/gcc* dependency
 	@${REINPLACE_CMD} -i .gcc -e 's/gcc-//' \
 		-e '/CMAKE_C/{ s/STREQUAL/MATCHES/; s/"GNU/&|Clang/; }' \

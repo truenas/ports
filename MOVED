@@ -11622,3 +11622,9 @@ www/mod_geoip2|www/mod_maxminddb|2019-02-16|Has expired: Uses legacy GeoIP 1 for
 devel/libdouble-conversion|devel/double-conversion|2019-02-16|Rename to match the project name on github and on most other systems, and in installed cmake files
 security/tmux-cssh||2019-02-17|Upstream has disappeared; sysutils/scct is an alternative
 net/GeoIP|net/libmaxminddb|2019-02-17|Has expired: Legacy databases no longer available. Switch to net/libmaxminddb instead
+x11-toolkits/bakery||2019-02-20|Abandonware, no depend on
+net-im/telepathy-butterfly||2019-02-20|Abandoned non function MSN client
+net-im/papyon||2019-02-20|Abandoned non function MSN client
+net-im/emesene||2019-02-20|Abandoned non function MSN client
+net-im/pebrot||2019-02-20|Abandoned non function MSN client
+games/plutocracy||2019-02-21|Has expired: broken, upstream gone
