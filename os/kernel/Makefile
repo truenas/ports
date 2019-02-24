@@ -16,7 +16,17 @@ EXTRACT_ONLY=
 DISTFILES=
 WRKSRC=/usr/src
 
+NO_OPTIONS_SORT=	yes
+
+OPTIONS_DEFINE=	 DEBUG
+OPTIONS_DEFAULT=
+OPTIONS_SUB=	yes
+
 .include <bsd.port.pre.mk>
+
+.if ${PORT_OPTIONS:MDEBUG}
+RUN_DEPENDS+=	kernel-debug=${OS_PORTVERSION}:os/kernel-debug
+.endif
 
 do-build:
 	@${MKDIR} -p ${STAGEDIR}
