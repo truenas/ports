@@ -1566,6 +1566,7 @@
     SUBDIR += znapzend
     SUBDIR += zogftw
     SUBDIR += zol
+    SUBDIR += zol-src
     SUBDIR += zol-kmod
     SUBDIR += zrep
     SUBDIR += zrepl
