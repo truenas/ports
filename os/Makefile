@@ -5,13 +5,13 @@
 
     SUBDIR += buildkernel
     SUBDIR += buildworld
-    SUBDIR += docs
     SUBDIR += kernel
     SUBDIR += kernel-debug
     SUBDIR += src
     SUBDIR += userland
     SUBDIR += userland-base
     SUBDIR += userland-debug
+    SUBDIR += userland-docs
     SUBDIR += userland-lib32
     SUBDIR += userland-tests
 

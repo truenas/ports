@@ -2,7 +2,7 @@
 
 .include "../Makefile.common"
 
-PORTNAME=	docs
+PORTNAME=	userland-docs
 PORTVERSION=	${OS_PORTVERSION}
 CATEGORIES=	os
 
