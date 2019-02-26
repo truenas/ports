@@ -1,0 +1,39 @@
+diff --git a/source3/passdb/pdb_ldap.c b/source3/passdb/pdb_ldap.c
+index 1ac6c50..5d58316 100644
+--- a/source3/passdb/pdb_ldap.c
++++ b/source3/passdb/pdb_ldap.c
+@@ -68,6 +68,9 @@
+ #include "passdb/pdb_ldap_util.h"
+ #include "passdb/pdb_ldap_schema.h"
+ 
++
++static bool ldap_map_builtin;
++
+ /**********************************************************************
+  Simple helper function to make stuff better readable
+  **********************************************************************/
+@@ -6487,6 +6490,12 @@ static void free_private_data(void **vp)
+ 	/* No need to free any further, as it is talloc()ed */
+ }
+ 
++static bool ldapsam_is_responsible_for_builtin(struct pdb_methods *m)
++{
++	return ldap_map_builtin;
++}
++
++
+ /*********************************************************************
+  Intitalise the parts of the pdb_methods structure that are common to 
+  all pdb_ldap modes
+@@ -6520,6 +6529,11 @@ static NTSTATUS pdb_init_ldapsam_common(struct pdb_methods **pdb_method, const c
+ 	(*pdb_method)->delete_group_mapping_entry = ldapsam_delete_group_mapping_entry;
+ 	(*pdb_method)->enum_group_mapping = ldapsam_enum_group_mapping;
+ 
++	(*pdb_method)->is_responsible_for_builtin =
++						ldapsam_is_responsible_for_builtin;
++	ldap_map_builtin = lp_parm_bool(-1, "ldapsam", "map builtin", true);
++
++
+ 	(*pdb_method)->get_account_policy = ldapsam_get_account_policy;
+ 	(*pdb_method)->set_account_policy = ldapsam_set_account_policy;
+ 
