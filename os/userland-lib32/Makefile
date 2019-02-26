@@ -4,7 +4,6 @@
 
 PORTNAME=	userland-lib32
 PORTVERSION=	${OS_PORTVERSION}
-PORTREVISION=	1
 CATEGORIES=	os
 
 MAINTAINER=	kris@ixsystems.com

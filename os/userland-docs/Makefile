@@ -4,7 +4,6 @@
 
 PORTNAME=	userland-docs
 PORTVERSION=	${OS_PORTVERSION}
-PORTREVISION=	1
 CATEGORIES=	os
 
 MAINTAINER=	kris@ixsystems.com
