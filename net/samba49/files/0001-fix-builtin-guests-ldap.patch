@@ -1,0 +1,14 @@
+diff --git a/source3/auth/token_util.c b/source3/auth/token_util.c
+index f5b0e69..d2bc9f7 100644
+--- a/source3/auth/token_util.c
++++ b/source3/auth/token_util.c
+@@ -745,7 +745,8 @@ NTSTATUS finalize_local_nt_token(struct security_token *result,
+ 		status = create_builtin_guests(domain_sid);
+ 		unbecome_root();
+ 
+-		if (NT_STATUS_EQUAL(status, NT_STATUS_PROTOCOL_UNREACHABLE)) {
++		if (NT_STATUS_EQUAL(status, NT_STATUS_PROTOCOL_UNREACHABLE) || 
++                    NT_STATUS_EQUAL(status, NT_STATUS_ACCESS_DENIED)) {
+ 			/*
+ 			 * Add BUILTIN\Guests directly to token.
+ 			 * But only if the token already indicates
