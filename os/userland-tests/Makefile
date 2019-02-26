@@ -33,9 +33,9 @@ do-install:
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
 		| ${AWK} '{print $$2 }' \
-		| ${GREP} -v -e '/' \
+		| ${GREP} -v -x '/' \
 		| ${XARGS} -I '{}' echo "@dir {}" \
-		| ${GREP} -v -w '@dir ' \
+		| ${GREP} -v -x '@dir ' \
 		| ${CAT} >> ${TMPPLIST})
 
 clean:
