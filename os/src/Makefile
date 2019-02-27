@@ -28,7 +28,7 @@ WRKSRC=	${LOCAL_SDIR}/${PORTNAME}
 
 .if exists(${LOCAL_SDIR}/${PORTNAME})
 checksum fetch:
-	${ECHO_MGS} ${.TARGET} not needed because building direct
+	${ECHO_MSG} ${.TARGET} not needed because building direct
 .endif
 
 do-install:
