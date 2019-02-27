@@ -15,15 +15,15 @@ CONFIGURL="http://169.254.169.254/latest/user-data"
 start()
 {
 	# Download to a temporary location.
-	einfo -n "Fetching EC2 user-data"
+	einfo "Fetching EC2 user-data"
 	CONFFILE=`mktemp "${TMPDIR:-/tmp}/configinit.XXXXXX"`
 	fetch -o ${CONFFILE} ${CONFIGURL} 2>/dev/null
 
 	# If we succeeded, process it; otherwise report failure.
-	if [ $? = 0 ]; then
+	if [ $? -eq 0 ]; then
 		# Process the user-data.
 		echo .
-		einfo -n "Processing EC2 user-data"
+		einfo "Processing EC2 user-data"
 		/usr/local/sbin/configinit $CONFFILE
 		echo .
 	else
