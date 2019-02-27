@@ -17,7 +17,9 @@ command_args="--daemon --config ${rsyncd_config}"
 required_files=${rsyncd_config}
 
 # Open up the rsync configuration file, ignore comments, and pull out the pidfile location
-pidfile=`grep -v '^[[:space:]]*#' ${rsyncd_config} | grep 'pid file' | awk -F '=[[:space:]]*' '{print $2}'`
+if [ -e "$rsyncd_config" ] ; then
+	pidfile=`grep -v '^[[:space:]]*#' ${rsyncd_config} | grep 'pid file' | awk -F '=[[:space:]]*' '{print $2}'`
+fi
 
 # Service dependencies
 depend()
