@@ -9,6 +9,11 @@ if [ "x${2}" != "xPOST-INSTALL" ]; then
     exit 0
 fi
 
+if [ -n "${PKG_ROOTDIR}" ] ; then
+	LOCALBASE="${PKG_ROOTDIR}${LOCALBASE}"
+	PKG_PREFIX="${PKG_ROOTDIR}${PKG_PREFIX}"
+fi
+
 # Ensure all JDKs and JREs are installed
 _excl_dirs='bootstrap-openjdk'
 _find_expr='-depth 2 -regex .*/bin/java'
