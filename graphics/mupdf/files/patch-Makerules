@@ -1,6 +1,5 @@
 --- Makerules.orig	2018-10-04 09:19:28 UTC
 +++ Makerules
-<<<<<<< HEAD
 @@ -87,7 +87,7 @@
  RANLIB_CMD = xcrun ranlib $@
  
@@ -31,7 +30,6 @@
 -HAVE_OPENSSL_SSL := yes
 -SYS_CURL_CFLAGS += $(shell pkg-config --cflags openssl)
 -SYS_CURL_DEPS += $(shell pkg-config --libs openssl)
-=======
 @@ -24,28 +24,28 @@ ifeq ($(build),debug)
    CFLAGS += -pipe -g
    LDFLAGS += -g $(LDREMOVEUNREACH)
@@ -79,7 +77,6 @@
  	PTHREAD_LIBS := -lpthread
    endif
  
->>>>>>> freebsd/master
 -endif
 +else ifeq ($(OS),FreeBSD)
 +  PTHREAD_LIBS := -lthr

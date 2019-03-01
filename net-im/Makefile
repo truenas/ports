@@ -144,11 +144,8 @@
     SUBDIR += py-unmessage
     SUBDIR += py-xmpppy
     SUBDIR += py-xmpppy-irc
-<<<<<<< HEAD
     SUBDIR += py-xmpppy-yahoo
     SUBDIR += qmlryver
-=======
->>>>>>> freebsd/master
     SUBDIR += qTox
     SUBDIR += qq
     SUBDIR += quaternion

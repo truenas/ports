@@ -1,9 +1,6 @@
 bin/mupdf
 bin/mupdf-gl
-<<<<<<< HEAD
-=======
 bin/muraster
->>>>>>> freebsd/master
 bin/mutool
 include/mupdf/fitz.h
 include/mupdf/fitz/annotation.h
