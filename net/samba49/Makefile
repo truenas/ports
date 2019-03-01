@@ -128,6 +128,12 @@ NSUPDATE_DESC=			Use samba NSUPDATE utility for AD DC
 ##############################################################################
 PLIST_SUB+=			CLUSTER="@comment "
 SUB_LIST+=			CLUSTER="@comment "
+
+# Needs ZFS to build, if not built in base we'll bring in ZoL
+.if !exists(/sbin/zpool)
+LIB_DEPENDS+=	zol>=0:sysutils/zol
+.endif
+
 # XXX: Unconditional dependencies which can't be switched off(if present in the system)
 # popt
 LIB_DEPENDS+=			libpopt.so:devel/popt
