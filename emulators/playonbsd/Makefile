@@ -31,8 +31,13 @@ GECKO_RUN_DEPENDS=	wine-gecko>=2.21:emulators/wine-gecko
 
 ONLY_FOR_ARCHS=	amd64 i386
 
+<<<<<<< HEAD
 USES=		python:2.7:run perl5
 USE_WX=		2.8+
+=======
+USES=		python:2.7,run perl5
+USE_WX=		3.0
+>>>>>>> freebsd/master
 WX_COMPS=	python:run
 
 USE_GITHUB=	yes

@@ -76,7 +76,7 @@
     SUBDIR += cagibi
     SUBDIR += calendarsupport
     SUBDIR += ccxstream
-    SUBDIR += ceph
+    SUBDIR += ceph12
     SUBDIR += ceph13
     SUBDIR += cf
     SUBDIR += charm
@@ -361,6 +361,7 @@
     SUBDIR += libbgpdump
     SUBDIR += libcapn
     SUBDIR += libcmis
+    SUBDIR += libcoap
     SUBDIR += libdmapsharing
     SUBDIR += libdnet
     SUBDIR += libexosip2
@@ -372,7 +373,7 @@
     SUBDIR += libgrss
     SUBDIR += libgweather
     SUBDIR += libilbc
-    SUBDIR += libjson-rpc-cpp 
+    SUBDIR += libjson-rpc-cpp
     SUBDIR += libkgapi
     SUBDIR += libksieve
     SUBDIR += libkvkontakte

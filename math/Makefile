@@ -690,6 +690,7 @@
     SUBDIR += py-algopy
     SUBDIR += py-altgraph
     SUBDIR += py-apgl
+    SUBDIR += py-autograd
     SUBDIR += py-basemap
     SUBDIR += py-basemap-data
     SUBDIR += py-bayesian-optimization
@@ -769,6 +770,7 @@
     SUBDIR += py-pysym
     SUBDIR += py-python-louvain
     SUBDIR += py-pyvtk
+    SUBDIR += py-quadprog
     SUBDIR += py-random2
     SUBDIR += py-rapi
     SUBDIR += py-roman

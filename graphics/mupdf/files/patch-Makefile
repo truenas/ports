@@ -1,10 +1,18 @@
+<<<<<<< HEAD
 --- Makefile.orig	2018-04-27 15:44:49.547344000 -0400
 +++ Makefile
 @@ -325,8 +325,8 @@
+=======
+$OpenBSD: patch-Makefile,v 1.12 2016/12/12 10:54:39 sthen Exp $
+--- Makefile.orig	2018-10-04 09:19:28 UTC
++++ Makefile
+@@ -190,13 +190,15 @@ generate: source/pdf/js/util.js.h
+>>>>>>> freebsd/master
  
  # --- Library ---
  
 -MUPDF_LIB = $(OUT)/libmupdf.a
+<<<<<<< HEAD
 -THIRD_LIB = $(OUT)/libmupdfthird.a
 +MUPDF_LIB = libmupdf.so.$(SOVERSION)
 +THIRD_LIB = libmupdfthird.so.$(SOVERSION)
@@ -13,14 +21,19 @@
  
 @@ -356,7 +356,11 @@
  	$(LCMS2_OBJ)
+=======
+-THIRD_LIB = $(OUT)/libmupdf-third.a
++MUPDF_LIB = $(OUT)/libmupdf.so.$(SOVERSION)
++THIRD_LIB = $(OUT)/libmupdf-third.so.$(SOVERSION)
+ THREAD_LIB = $(OUT)/libmupdf-threads.a
+ PKCS7_LIB = $(OUT)/libmupdf-pkcs7.a
+>>>>>>> freebsd/master
  
 -$(MUPDF_LIB) : $(MUPDF_OBJ)
 +$(MUPDF_LIB) : $(MUPDF_OBJ) $(THIRD_LIB)
-+	$(CC) $(LDFLAGS) -fPIC -shared -Wl,-soname=$@ -Wl,--no-undefined -o $@ $^ $(LIBS)
-+
++	$(LINK_CMD) -shared -Wl,-soname -Wl,libmupdf.so.$(SOVERSION)
  $(THIRD_LIB) : $(THIRD_OBJ)
-+	$(CC) $(LDFLAGS) -fPIC -shared -Wl,-soname=$@ -Wl,--no-undefined -o $@ $^ $(LIBS)
-+
++	$(LINK_CMD) -shared -Wl,-soname -Wl,libmupdf-third.so.$(SOVERSION)
  $(THREAD_LIB) : $(THREAD_OBJ)
  $(PKCS7_LIB) : $(PKCS7_OBJ)
  
