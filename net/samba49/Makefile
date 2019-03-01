@@ -3,7 +3,7 @@
 
 PORTNAME=			${SAMBA4_BASENAME}49
 PORTVERSION=			${SAMBA4_VERSION}
-PORTREVISION=			2
+PORTREVISION=			3
 CATEGORIES?=			net
 MASTER_SITES=			SAMBA/samba/stable SAMBA/samba/rc
 DISTNAME=			${SAMBA4_DISTNAME}
@@ -20,10 +20,12 @@ CONFLICTS_INSTALL?=		samba4-4.0.* samba4[1-79]-4.* p5-Parse-Pidl-4.*
 EXTRA_PATCHES+=			${PATCHDIR}/0001-zfs-provisioning-patches.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-Freenas-master-mdns-fixes-22.patch:-p1
 EXTRA_PATCHES+=		 	${PATCHDIR}/0001-add-ix-custom-vfs-modules.patch:-p1
+EXTRA_PATCHES+=		 	${PATCHDIR}/0001-add-shadow_copy_zfs.patch:-p1
 EXTRA_PATCHES+=		 	${PATCHDIR}/0001-add-support-for-xattrs-larger-than-64k.patch:-p1
 EXTRA_PATCHES+=		 	${PATCHDIR}/0001-add-parameters-for-ha-configuration.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-add-idmap_fruit-backend.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-fix-listen-backlog.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/0001-fix-builtin-guests-ldap.patch:-p1
 
 SAMBA4_BASENAME=		samba
 SAMBA4_PORTNAME=		${SAMBA4_BASENAME}4
@@ -49,6 +51,7 @@ SAMBA4_MODULEDIR=		${PREFIX}/lib/shared-modules
 SAMBA4_INCLUDEDIR=		${PREFIX}/include/${SAMBA4_PORTNAME}
 SAMBA4_CONFDIR=			${PREFIX}/etc
 SAMBA4_CONFIG=			smb4.conf
+SAMBA4_PYTHON3_CMD=		${LOCALBASE}/bin/python${PYTHON3_DEFAULT}
 
 CONFIGURE_ARGS+=		--mandir="${MANPREFIX}/man" \
 				--sysconfdir="${SAMBA4_CONFDIR}" \
@@ -90,7 +93,7 @@ SUB_LIST+=			PKGCONFIGDIR=${PKGCONFIGDIR_REL}
 # Options
 OPTIONS_SUB=			yes
 
-OPTIONS_DEFINE=			AD_DC ADS DEBUG DOCS FAM LDAP LIBZFS\
+OPTIONS_DEFINE=			AD_DC ADS DEBUG DOCS FAM LDAP LIBZFS WSDD\
 				QUOTAS SYSLOG UTMP
 # Make those default options
 OPTIONS_DEFAULT:=		${OPTIONS_DEFINE}
@@ -116,6 +119,7 @@ GPGME_DESC=			GpgME
 GLUSTERFS_DESC=			GlusterFS
 LDAP_DESC=			LDAP client
 LIBZFS_DESC=			LibZFS
+WSDD_DESC=			Web Service Discovery Daemon
 SPOTLIGHT_DESC=			Spotlight
 MANDOC_DESC=			Build manpages from DOCBOOK templates
 NTVFS_DESC=			Build *DEPRECATED* NTVFS file server
@@ -313,6 +317,8 @@ GLUSTERFS_VARS=			SAMBA4_MODULES+=vfs_glusterfs
 GPGME_CONFIGURE_WITH=		gpgme
 GPGME_LIB_DEPENDS=		libgpgme.so:security/gpgme
 
+WSDD_RUN_DEPENDS=		py${PYTHON3_DEFAULT:S/.//}-wsdd>=1.0.0:sysutils/py-wsdd
+
 PROFILE_CONFIGURE_WITH=		profiling-data
 
 QUOTAS_CONFIGURE_WITH=		quotas
@@ -339,7 +345,7 @@ LDAP_VARS=			SAMBA4_MODULES+=idmap_ldap
 
 LIBZFS_CONFIGURE_WITH=		libzfs
 LIBZFS_CONFIGURE_OFF=		--without-libzfs
-LIBZFS_VARS=			SAMBA4_MODULES+=vfs_zfs_space vfs_ixnas
+LIBZFS_VARS=			SAMBA4_MODULES+=vfs_zfs_space vfs_ixnas vfs_shadow_copy_zfs
 
 MANDOC_BUILD_DEPENDS=		${LOCALBASE}/share/xsl/docbook/manpages/docbook.xsl:textproc/docbook-xsl \
 				xsltproc:textproc/libxslt
@@ -378,8 +384,8 @@ SAMBA4_MODULES+=		auth_skel pdb_test gpext_security gpext_registry gpext_scripts
 
 .if ${PORT_OPTIONS:MLIBZFS}
 CONFIGURE_ARGS+=        --with-libzfs
-WANT_EXP_MODULES+=      vfs_zfs_space vfs_ixnas
-SAMBA4_MODULES+=        vfs_zfs_space vfs_ixnas
+WANT_EXP_MODULES+=      vfs_zfs_space vfs_ixnas vfs_shadow_copy_zfs
+SAMBA4_MODULES+=        vfs_zfs_space vfs_ixnas vfs_shadow_copy_zfs
 PLIST_SUB+=             LIBZFS=""
 .else
 CONFIGURE_ARGS+=        --without-libzfs
@@ -542,6 +548,9 @@ pre-build-MANDOC-off:
 					${INSTALL_MAN} ${FILESDIR}/man/${man} ${BUILD_WRKSRC}/bin/default/ctdb/
 .	endfor
 .endif
+
+pre-install:
+				@${REINPLACE_CMD} -e 's|%%SAMBA4_PYTHON3_CMD%%|${SAMBA4_PYTHON3_CMD}|g' ${WRKDIR}/samba_server 
 
 post-install-rm-junk:
 .for f in vfs_aio_linux.8 vfs_btrfs.8 vfs_ceph.8 vfs_gpfs.8

@@ -1,14 +1,12 @@
-# Created by: John Hixson (jhixson@FreeBSD.org)
 # $FreeBSD$
 
 PORTNAME=	dsoperator
-PORTVERSION=	14.0.0.1
-PORTREVISION=	2
+PORTVERSION=	14.1
 CATEGORIES=	sysutils
-MASTER_SITES=	http://www.asigra.com/updates/14.0/DS-Operator/14.0.0.1/
-DISTNAME=	DS-Operator_FreeBSD_14_0_0_1
+MASTER_SITES=	http://builds.ixsystems.com/ix-iso/asigra/14.1/
+DISTNAME=	DS-Operator
 
-MAINTAINER=	jhixson@FreeBSD.org
+MAINTAINER=	wg@FreeBSD.org
 COMMENT=	Award cloud backup and restore server application
 
 ONLY_FOR_ARCHS=	amd64

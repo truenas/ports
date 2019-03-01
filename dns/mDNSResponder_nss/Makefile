@@ -2,6 +2,7 @@
 
 PORTNAME=	mDNSResponder
 PORTVERSION=	878.1.1
+PORTREVISION=	1
 CATEGORIES=	dns net
 MASTER_SITES=	http://opensource.apple.com/tarballs/mDNSResponder/
 PKGNAMESUFFIX=	_nss
@@ -18,7 +19,7 @@ CONFLICTS_INSTALL=	nss_mdns-[0-9]*
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
-GH_TAGNAME=	d628da5
+GH_TAGNAME=	3813550
 
 .include <bsd.port.pre.mk>
 

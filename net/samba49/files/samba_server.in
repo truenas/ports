@@ -43,6 +43,9 @@ configtest_cmd="samba_server_checkconfig"
 reload_cmd="samba_server_reload_cmd"
 rcvar_cmd="samba_server_rcvar_cmd"
 
+wsdd_cmd="%%PREFIX%%/bin/wsdd.py"
+python3_cmd="%%SAMBA4_PYTHON3_CMD%%"
+
 samba_server_checkconfig() {
     echo -n "Performing sanity check on Samba configuration: "
     if ${testparm_command} >/dev/null 2>&1; then
@@ -62,7 +65,58 @@ samba_server_prestart() {
     if [ -d "${samba_server_privatedir}" -o ! -e "${samba_server_privatedir}" ]; then
 	install -d -m 0700 "${samba_server_privatedir}"
     fi
+    # Winbind will fail to start if permissions on winbindd_privileged is wrong.
+    # Fix permissions if needed.
+    if [ -d "${samba_server_statedir}"/winbindd_privileged ] && \
+       [ $(stat -f %p "${samba_server_statedir}"/winbindd_privileged) != 40750 ]; then
+        chmod 0750 "${samba_server_statedir}"/winbindd_privileged
+    fi
     samba_server_checkconfig
+}
+
+samba_server_wsdd_cmd() {
+    local workgroup interfaces pidfile wsdd_opts wsdd_pid
+    pidfile="${samba_server_piddir}/wsdd.pid"
+    workgroup="$(${testparm_command} --parameter-name='workgroup' 2>/dev/null)"
+    interfaces="$(${testparm_command} --parameter-name='interfaces' 2>/dev/null)"
+    if [ ! -z "${interfaces}" ]; then
+	wsdd_opts="-w ${workgroup} -i ${interfaces}"
+    else
+	wsdd_opts="-w ${workgroup}"
+    fi
+    case ${rc_arg} in
+	start)
+	    if [ ! -f ${pidfile} ]; then
+	        /usr/sbin/daemon -p ${pidfile} -S ${python3_cmd} ${wsdd_cmd} ${wsdd_opts}
+		debug "Starting wsdd"
+	        echo "Starting wsdd"
+	    else
+	        wsdd_pid=$(cat "${pidfile}")
+	        debug "wsdd already running?  (pid=${wsdd_pid})"
+	        echo "wsdd already running?  (pid=${wsdd_pid})"
+	    fi
+	;;
+	stop)
+	    if [ -f ${pidfile} ]; then
+	        wsdd_pid=$(cat "${pidfile}")
+	        debug "Stopping wsdd: ${wsdd_pid}"
+	        echo "Stopping wsdd: ${wsdd_pid}"
+	        kill -9 ${wsdd_pid}
+	    fi
+	;;
+	status)
+	    if [ -f ${pidfile} ]; then
+	        wsdd_pid=$(cat "${pidfile}")
+	        debug "wsdd running is running as pid ${wsdd_pid}."
+	        echo "wsdd running is running as pid ${wsdd_pid}."
+	    else
+	        debug "wsdd: stopped"
+	        echo "wsdd: stopped"
+	    fi
+	;;
+	*)
+	;;
+    esac
 }
 
 samba_server_rcvar_cmd() {
@@ -133,6 +187,9 @@ samba_server_cmd() {
 	    result=$((${result} || $?))
 	fi
     done
+    if [ ${wsdd_enabled} == 'Yes' ]; then
+	samba_server_wsdd_cmd
+    fi
     return ${result}
 }
 
@@ -148,29 +205,32 @@ samba_server_config_init() {
     testparm_command="%%PREFIX%%/bin/testparm --suppress-prompt --verbose ${samba_server_config}"
     # Determine what daemons are necessary to run Samba in the current role
     samba_server_role=$(${testparm_command} --parameter-name='server role' 2>/dev/null)
+    nmbd_disabled=$(${testparm_command} --parameter-name='disable netbios' 2>/dev/null)
+    wsdd_enabled=$(${testparm_command} --parameter-name='enable web service discovery' 2>/dev/null) 
     case "${samba_server_role}" in
 	active\ directory\ domain\ controller)
 	    samba_daemons="samba"
 	    ;;
-	auto|*)
+	*)
 	    samba_daemons="nmbd smbd winbindd"
 	    ;;
     esac
+
     # Load daemons configuration
     for name in ${samba_daemons}; do
 	load_rc_config "${name}"
 	# If samba_server_enable is 'YES'
 	if [ -n "${rcvar}" ] && checkyesno "${rcvar}"; then
-	    if [ "${name}" != "winbindd" ]; then
-		# Set variable to 'YES' only if it is unset
-		eval ${name}_enable=\${${name}_enable-YES}
-	    else
-		# Winbindd
-		samba_server_idmap=$(${testparm_command} --parameter-name='idmap uid' 2>/dev/null)
-		if [ -n "${samba_server_idmap}" ]; then
-		    winbindd_enable="YES"
-		fi
-	    fi
+	    case "${name}" in
+	        nmbd)
+	            if [ ${nmbd_disabled} == "No" ]; then
+		        eval ${name}_enable=\${${name}_enable-YES}
+                    fi
+	            ;;
+	        *)
+		    eval ${name}_enable=\${${name}_enable-YES}
+	    esac
+
 	fi
 	# If variable is empty, set it to 'NO'
 	eval ${name}_enable=\${${name}_enable:-NO}
@@ -182,6 +242,7 @@ samba_server_config_init() {
     samba_server_piddir=${samba_server_piddir:=%%SAMBA4_RUNDIR%%}
     samba_server_privatedir="$(${testparm_command} --parameter-name='private dir' 2>/dev/null)"
     samba_server_privatedir=${samba_server_privatedir:=%%SAMBA4_PRIVATEDIR%%}
+    samba_server_statedir="$(${testparm_command} --parameter-name='state directory' 2>/dev/null)"
 }
 
 # Load configuration variables
