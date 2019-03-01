@@ -74,6 +74,7 @@ CONFIGURE_ARGS+=		--mandir="${MANPREFIX}/man" \
 				--with-logfilebase="${SAMBA4_LOGDIR}"
 # XXX: Flags
 CONFIGURE_ENV+=			PTHREAD_LDFLAGS="-lpthread"
+CFLAGS+= 			-D_ACL_PRIVATE
 CPPFLAGS+=			-I${LOCALBASE}/include
 LDFLAGS+=			-L${LOCALBASE}/lib
 
