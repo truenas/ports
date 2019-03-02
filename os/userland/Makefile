@@ -7,51 +7,37 @@ PORTVERSION=	${OS_PORTVERSION}
 CATEGORIES=	os
 
 MAINTAINER=	kris@ixsystems.com
-COMMENT=	Port for the OS userland binaries
+COMMENT=	Metaport for the OS userland
 
-BUILD_DEPENDS=  /usr/dist/world.txz:os/buildworld
-
-PREFIX=/
-EXTRACT_ONLY=
-DISTFILES=
+USES=	metaport
 
 NO_OPTIONS_SORT=	yes
 
+OPTIONS_DEFINE=	DEBUG DOCS LIB32 TESTS
+OPTIONS_DEFAULT= DOCS
+OPTIONS_SUB=	yes
+DOCS_DESC=	Include manpages and other documentation
+LIB32_DESC=	Support for execution of i386 applications
+TESTS_DESC=	Optional test framework scripts and tools
+
+RUN_DEPENDS+=	/bin/sh:os/userland-base
+
 .include <bsd.port.pre.mk>
 
-do-build:
-	@${MKDIR} -p ${STAGEDIR}
-	@${ECHO_MSG} "==> Extracting world.txz..."
-	@${TAR} xpf /usr/dist/world.txz -C ${STAGEDIR}
+.if ${PORT_OPTIONS:MDEBUG}
+RUN_DEPENDS+=	/usr/lib/debug/bin/sh.debug:os/userland-debug
+.endif
 
-do-install:
-	@${ECHO_MSG} "==> Generating plist..."
-	@(cd ${STAGEDIR}; ${FIND} . \( -type f -o -type l \) \
-		| ${SED} -e 's,^\./,,g' \
-		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
-		| ${AWK} '{print $$2 }' \
-		| ${GREP} -v -e 'usr/lib/debug' -e 'usr/tests' -e 'usr/lib32' -e 'usr/share/doc' -e 'usr/share/man' \
-		>> ${TMPPLIST})
-	@(cd ${STAGEDIR}; ${FIND} ./ \( -type d \) \
-		| ${SED} -e 's,^\./,,g' \
-		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
-		| ${AWK} '{print $$2 }' \
-		| ${GREP} -v -e '/' \
-		| ${GREP} -v -e 'usr/lib/debug' -e 'usr/tests' -e 'usr/lib32' -e 'usr/share/doc' -e 'usr/share/man' \
-		| ${XARGS} -I '{}' echo "@dir {}" \
-		| ${GREP} -v -w '@dir ' \
-		| ${CAT} >> ${TMPPLIST})
-	@sh ${FILESDIR}/setconfig.sh ${FILESDIR}/configs ${TMPPLIST}
+.if ${PORT_OPTIONS:MDOCS}
+RUN_DEPENDS+=	/usr/share/man/man1/sh.1.gz:os/userland-docs
+.endif
 
-clean:
-	@if [ -d ${WRKDIR} ]; then \
-		if [ -w ${WRKDIR} ]; then \
-			${ECHO_MSG} "===> Cleaning for ${PKGNAME}"; \
-			chflags -R noschg ${WRKDIR} ; \
-			${RM} -r ${WRKDIR}; \
-		else \
-			${ECHO_MSG} "===>   ${WRKDIR} not writable, skipping"; \
-		fi; \
-	fi
+.if ${PORT_OPTIONS:MLIB32}
+RUN_DEPENDS+=	/usr/lib32/libalias.so.7:os/userland-lib32
+.endif
+
+.if ${PORT_OPTIONS:MTESTS}
+RUN_DEPENDS+=	/usr/tests/README:os/userland-tests
+.endif
 
 .include <bsd.port.post.mk>
