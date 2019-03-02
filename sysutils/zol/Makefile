@@ -5,16 +5,18 @@ PORTVERSION=	2019030100
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 
-MAINTAINER=	miwi@FreeBSD.org
+MAINTAINER=	kmoore@FreeBSD.org
 COMMENT=	ZFS
 
 LICENSE=	CDDL
 
-RUN_DEPENDS=	zol-kmod>=0:sysutils/zol-kmod \
+RUN_DEPENDS=	zol-kmod>=0:sysutils/zol-kmod
+
+USES=		autoreconf:build libtool gmake gettext-runtime:run
 
 GNU_CONFIGURE=  yes
 CONFIGURE_ARGS=	--prefix=${PREFIX} --enable-debug --enable-debuginfo --with-config="user"
-USES=		autoreconf:build libtool gmake gettext-runtime:run
+
 USE_GITHUB=	yes
 GH_ACCOUNT=	zfsonfreebsd
 GH_PROJECT=	ZoF
