@@ -13,12 +13,13 @@ USES=	metaport
 
 NO_OPTIONS_SORT=	yes
 
-OPTIONS_DEFINE=	DEBUG DOCS LIB32 TESTS
+OPTIONS_DEFINE=	DEBUG DOCS LIB32 TESTS ZOL
 OPTIONS_DEFAULT= DOCS
 OPTIONS_SUB=	yes
 DOCS_DESC=	Include manpages and other documentation
 LIB32_DESC=	Support for execution of i386 applications
 TESTS_DESC=	Optional test framework scripts and tools
+ZOL_DESC=	ZFS on Linux userland and kernel support
 
 RUN_DEPENDS+=	/bin/sh:os/userland-base
 
@@ -38,6 +39,10 @@ RUN_DEPENDS+=	/usr/lib32/libalias.so.7:os/userland-lib32
 
 .if ${PORT_OPTIONS:MTESTS}
 RUN_DEPENDS+=	/usr/tests/README:os/userland-tests
+.endif
+
+.if ${PORT_OPTIONS:MZOL}
+RUN_DEPENDS+=	${PREFIX}/sbin/zpool:sysutils/zol
 .endif
 
 .include <bsd.port.post.mk>
