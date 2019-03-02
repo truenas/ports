@@ -6,7 +6,7 @@ DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 PKGNAMESUFFIX=	-kmod
 
-MAINTAINER=	miwi@FreeBSD.org
+MAINTAINER=	kmoore@FreeBSD.org
 COMMENT=	ZFS
 
 LICENSE=	CDDL
@@ -26,7 +26,7 @@ GCOV_DESC=	Build kernel module with GCOV support (Requires gcc)
 .include <bsd.port.pre.mk>
 
 .if ${OSVERSION} < 1300013
-IGNORE=      Needs FreeBSD 13 with AES-CCM support 
+IGNORE=      needs FreeBSD 13 with AES-CCM support
 .endif
 
 .if ${PORT_OPTIONS:MDEBUG}
