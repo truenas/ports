@@ -42,7 +42,7 @@ RUN_DEPENDS+=	/usr/tests/README:os/userland-tests
 .endif
 
 .if ${PORT_OPTIONS:MZOL}
-RUN_DEPENDS+=	${PREFIX}/sbin/zpool:sysutils/zol
+RUN_DEPENDS+=	${LOCALBASE}/sbin/zpool:sysutils/zol
 .endif
 
 .include <bsd.port.post.mk>

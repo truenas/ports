@@ -10,6 +10,7 @@
     SUBDIR += kernel-debug
     SUBDIR += src
     SUBDIR += userland
+    SUBDIR += userland-base
     SUBDIR += userland-debug
     SUBDIR += userland-lib32
     SUBDIR += userland-tests
