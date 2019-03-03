@@ -69,6 +69,38 @@ find_dep() {
 	fi
 }
 
+inject_base_dep() {
+	ORIGIN="${1}"
+	NAME=$(make -C ${PORTSDIR}/${ORIGIN} -V PORTNAME)
+	VERSION=$(make -C ${PORTSDIR}/${ORIGIN} -V PKGVERSION)
+	echo "\"${NAME}\": {origin: \"${ORIGIN}\", version: \"$VERSION\"}"
+}
+
 for lookup; do
+	# Ugly, but currently we cannot install BASE packages into read-only poudriere base
+	# This allows us to still inject depends on os/* packages
+	case ${lookup} in
+		/bin/sh)
+			inject_base_dep "os/userland-base"
+			continue
+			;;
+		/usr/lib/debug/bin/sh.debug)
+			inject_base_dep "os/userland-debug"
+			continue
+			;;
+		/usr/share/man/man1/sh.1.gz)
+			inject_base_dep "os/userland-docs"
+			continue
+			;;
+		/usr/lib32/libalias.so.7)
+			inject_base_dep "os/userland-lib32"
+			continue
+			;;
+		/usr/tests/README)
+			inject_base_dep "os/userland-tests"
+			continue
+			;;
+		*) ;;
+	esac
 	${PKG_BIN} query "\"%n\": {origin: \"%o\", version: \"%v\"}" "$(find_dep ${lookup})" || :
 done
