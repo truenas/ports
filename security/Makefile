@@ -291,7 +291,6 @@
     SUBDIR += john
     SUBDIR += kbfs
     SUBDIR += kbfsd
-    SUBDIR += kc
     SUBDIR += kc24
     SUBDIR += kdbx-viewer
     SUBDIR += kedpm
@@ -336,6 +335,7 @@
     SUBDIR += libcryptui
     SUBDIR += libdecaf
     SUBDIR += libecc
+    SUBDIR += libfido2
     SUBDIR += libfprint
     SUBDIR += libgcrypt
     SUBDIR += libgnome-keyring
