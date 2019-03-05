@@ -1314,6 +1314,7 @@
     SUBDIR += syslogger
     SUBDIR += sysrc
     SUBDIR += system-tools-backends
+    SUBDIR += sysup
     SUBDIR += sysvbanner
     SUBDIR += tai64nfrac
     SUBDIR += tarsnap
