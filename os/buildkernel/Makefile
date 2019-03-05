@@ -30,6 +30,12 @@ JOBFLAG=	-j ${_MAKE_JOBS_NUMBER}
 JOBFLAG=	-j ${_SMP_CPUS}
 .endif
 
+.if defined(__MAKE_CONF)
+MCONF=	__MAKE_CONF=${__MAKE_CONF}
+.else
+MCONF=
+.endif
+
 .include "Makefile.options"
 .include "Makefile.options.desc"
 
@@ -45,12 +51,14 @@ MFLAGS+=	WITH_${var}=YES
 
 do-build:
 	cd ${WRKSRC} && env -i make ${JOBFLAG} ${KERNEL_MAKE_FLAGS} \
+		${MFLAGS} \
 		buildkernel
 
 do-install:
 	${MKDIR} -p ${STAGEDIR}/kernel
 	${MKDIR} -p ${STAGEDIR}/usr/dist
-	cd ${WRKSRC} && env -i make ${JOBFLAG} ${KERNEL_MAKE_FLAGS} \
+	cd ${WRKSRC} && env -i make ${JOBFLAG} ${MCONF} ${KERNEL_MAKE_FLAGS} \
+		${MFLAGS} \
 	       	DESTDIR=${STAGEDIR}/kernel \
 		installkernel
 	tar cvJf ${STAGEDIR}/usr/dist/kernel.txz -C ${STAGEDIR}/kernel .
