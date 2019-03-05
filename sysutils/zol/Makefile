@@ -27,9 +27,9 @@ GH_TAGNAME=	e10a5fb
 
 .include <bsd.port.pre.mk>
 
-.if ${OSVERSION} < 1300013
-IGNORE=      needs FreeBSD 13 with AES-CCM support
-.endif
+#.if ${OSVERSION} < 1300013
+#IGNORE=      needs FreeBSD 13 with AES-CCM support
+#.endif
 
 .if ${PORT_OPTIONS:MDEBUG}
 CONFIGURE_ARGS+=	--enable-debug --enable-debuginfo
