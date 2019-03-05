@@ -50,7 +50,7 @@ MFLAGS+=	WITH_${var}=YES
 .endfor
 
 do-build:
-	cd ${WRKSRC} && env -i make ${JOBFLAG} ${KERNEL_MAKE_FLAGS} \
+	cd ${WRKSRC} && env -i make ${JOBFLAG} ${MCONF} ${KERNEL_MAKE_FLAGS} \
 		${MFLAGS} \
 		buildkernel
 
