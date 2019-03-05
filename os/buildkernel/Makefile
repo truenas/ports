@@ -51,12 +51,14 @@ MFLAGS+=	WITH_${var}=YES
 
 do-build:
 	cd ${WRKSRC} && env -i make ${JOBFLAG} ${MCONF} ${KERNEL_MAKE_FLAGS} \
+		${MFLAGS} \
 		buildkernel
 
 do-install:
 	${MKDIR} -p ${STAGEDIR}/kernel
 	${MKDIR} -p ${STAGEDIR}/usr/dist
 	cd ${WRKSRC} && env -i make ${JOBFLAG} ${MCONF} ${KERNEL_MAKE_FLAGS} \
+		${MFLAGS} \
 	       	DESTDIR=${STAGEDIR}/kernel \
 		installkernel
 	tar cvJf ${STAGEDIR}/usr/dist/kernel.txz -C ${STAGEDIR}/kernel .
