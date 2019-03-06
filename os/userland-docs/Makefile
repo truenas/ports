@@ -40,9 +40,6 @@ do-install:
 	@sh ${PORTSDIR}/os/userland-base/files/scrubplist.sh \
 		${PORTSDIR}/os/userland-base/files/configs \
 		${TMPPLIST} ${STAGEDIR}
-	@sh ${PORTSDIR}/os/userland-base/files/scrubplist.sh \
-		${PORTSDIR}/os/userland-base/files/configs \
-		${TMPPLIST} ${STAGEDIR}
 
 clean:
 	@if [ -d ${WRKDIR} ]; then \
