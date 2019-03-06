@@ -1,9 +1,3 @@
-<<<<<<< HEAD
 TIMESTAMP = 1528810080
 SHA256 (trueos-sysadm-201806120928-aab6f484ef01c893ae1701f64732254855eb3cdd_GH0.tar.gz) = 697623bdeefbc8e386784548c496af7a502b731c9341b3d9812008f00dbe1f5d
 SIZE (trueos-sysadm-201806120928-aab6f484ef01c893ae1701f64732254855eb3cdd_GH0.tar.gz) = 157118
-=======
-TIMESTAMP = 1541453177
-SHA256 (trueos-sysadm-v1.1_GH0.tar.gz) = d2802b66837da999d334fb3bc9a44cafc278ab944af22259ef1333ae1b8a2b19
-SIZE (trueos-sysadm-v1.1_GH0.tar.gz) = 156939
->>>>>>> freebsd/master

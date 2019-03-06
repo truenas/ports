@@ -6,22 +6,11 @@ $OpenBSD: patch-Makefile,v 1.12 2016/12/12 10:54:39 sthen Exp $
  # --- Library ---
  
 -MUPDF_LIB = $(OUT)/libmupdf.a
-<<<<<<< HEAD
--THIRD_LIB = $(OUT)/libmupdfthird.a
-+MUPDF_LIB = libmupdf.so.$(SOVERSION)
-+THIRD_LIB = libmupdfthird.so.$(SOVERSION)
- THREAD_LIB = $(OUT)/libmuthreads.a
- PKCS7_LIB = $(OUT)/libmupkcs7.a
- 
-@@ -356,7 +356,11 @@
- 	$(LCMS2_OBJ)
-=======
 -THIRD_LIB = $(OUT)/libmupdf-third.a
 +MUPDF_LIB = $(OUT)/libmupdf.so.$(SOVERSION)
 +THIRD_LIB = $(OUT)/libmupdf-third.so.$(SOVERSION)
  THREAD_LIB = $(OUT)/libmupdf-threads.a
  PKCS7_LIB = $(OUT)/libmupdf-pkcs7.a
->>>>>>> freebsd/master
  
 -$(MUPDF_LIB) : $(MUPDF_OBJ)
 +$(MUPDF_LIB) : $(MUPDF_OBJ) $(THIRD_LIB)
