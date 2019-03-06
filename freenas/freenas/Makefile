@@ -158,8 +158,6 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}bsd>=0:freenas/py-bsd@${PY_FLAVOR} \
 		uefi-edk2-bhyve-csm>=0:sysutils/uefi-edk2-bhyve-csm \
 		uefi-edk2-bhyve>=0:sysutils/uefi-edk2-bhyve \
 		unison-nox11>=0:net/unison \
-		viamillipede>=0:net/viamillipede \
-		virtualbox-ose-kmod>=0:emulators/virtualbox-ose-kmod \
 		vm-bhyve>=0:sysutils/vm-bhyve \
 		websockify>=0:www/novnc-websockify \
 		wget>=0:ftp/wget \
