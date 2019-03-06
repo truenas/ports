@@ -2,9 +2,9 @@
 
 PORTNAME=	dssystem
 PORTVERSION=	14.1
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	sysutils
-MASTER_SITES=	http://builds.ixsystems.com/ix-iso/asigra/14.1/
+MASTER_SITES=	http://builds.ixsystems.com/ix-iso/asigra/14.1-20190301/
 DISTFILES=	dssystem-14.1.txz
 
 MAINTAINER=	wg@FreeBSD.org
