@@ -37,6 +37,12 @@ do-install:
 		| ${XARGS} -I '{}' echo "@dir {}" \
 		| ${GREP} -v -x '@dir ' \
 		| ${CAT} >> ${TMPPLIST})
+	@sh ${PORTSDIR}/os/userland-base/files/scrubplist.sh \
+		${PORTSDIR}/os/userland-base/files/configs \
+		${TMPPLIST} ${STAGEDIR}
+	@sh ${PORTSDIR}/os/userland-base/files/scrubplist.sh \
+		${PORTSDIR}/os/userland-base/files/configs \
+		${TMPPLIST} ${STAGEDIR}
 
 clean:
 	@if [ -d ${WRKDIR} ]; then \
