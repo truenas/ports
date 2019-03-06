@@ -41,7 +41,7 @@ do-install:
 		| ${XARGS} -I '{}' echo "@dir {}" \
 		| ${GREP} -v -w '@dir ' \
 		| ${CAT} >> ${TMPPLIST})
-	@sh ${FILESDIR}/setconfig.sh ${FILESDIR}/configs ${TMPPLIST}
+	@sh ${FILESDIR}/scrubplist.sh ${FILESDIR}/configs ${TMPPLIST} ${STAGEDIR}
 
 clean:
 	@if [ -d ${WRKDIR} ]; then \
