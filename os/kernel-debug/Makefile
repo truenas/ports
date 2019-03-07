@@ -15,6 +15,7 @@ PREFIX=/
 EXTRACT_ONLY=
 DISTFILES=
 WRKSRC=/usr/src
+NEED_ROOT=	yes
 
 .include <bsd.port.pre.mk>
 
