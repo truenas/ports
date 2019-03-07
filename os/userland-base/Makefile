@@ -14,6 +14,7 @@ BUILD_DEPENDS=  /usr/dist/world.txz:os/buildworld
 PREFIX=/
 EXTRACT_ONLY=
 DISTFILES=
+NEED_ROOT=	yes
 
 NO_OPTIONS_SORT=	yes
 
