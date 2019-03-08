@@ -206,7 +206,6 @@
     SUBDIR += gtkpasman
     SUBDIR += gwee
     SUBDIR += hackbot
-    SUBDIR += hamachi
     SUBDIR += hardening-check
     SUBDIR += hashcat
     SUBDIR += hashcat-legacy
@@ -1277,6 +1276,7 @@
     SUBDIR += sshpass
     SUBDIR += ssl-admin
     SUBDIR += ssllabs-scan
+    SUBDIR += sslproxy
     SUBDIR += sslscan
     SUBDIR += sslsniffer
     SUBDIR += sslsplit

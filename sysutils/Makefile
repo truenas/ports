@@ -856,6 +856,7 @@
     SUBDIR += panicmail
     SUBDIR += parafly
     SUBDIR += parallel
+    SUBDIR += pass-otp
     SUBDIR += password-store
     SUBDIR += passwordsafe
     SUBDIR += patchelf
@@ -1562,7 +1563,6 @@
     SUBDIR += znapzend
     SUBDIR += zogftw
     SUBDIR += zol
-    SUBDIR += zol-src
     SUBDIR += zol-kmod
     SUBDIR += zrep
     SUBDIR += zrepl
