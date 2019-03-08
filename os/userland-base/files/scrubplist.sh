@@ -4,11 +4,16 @@ PLIST="$2"
 STAGEDIR="$3"
 
 get_prop_line() {
-	stat -f '%Sf' ${STAGEDIR}/${1} | grep -q "schg"
+	# Use a single stat due to it being expensive
+	local SOUT=$(stat -f '%Sf %Su,%Sg,%OMp%OLp' ${STAGEDIR}/${1})
+	local flags=$(echo $SOUT | awk '{print $1}')
+	local prop=$(echo $SOUT | awk '{print $2}')
+
+	echo $flags | grep -q "schg"
 	if [ $? -eq 0 ] ; then
-		stat -f '%Su,%Sg,%OMp%OLp,schg' ${STAGEDIR}/${1}
+		echo "${prop},schg"
 	else
-		stat -f '%Su,%Sg,%OMp%OLp,' ${STAGEDIR}/${1}
+		echo "${prop}"
 	fi
 }
 
@@ -33,18 +38,8 @@ do
 	props=$(get_prop_line $pline)
 
 	# Is this a config file?
-	config=0
-	while read cfg
-	do
-		echo ${pline} | grep -q "^${cfg}"
-		if [ $? -eq 0 ] ; then
-			# This is a config file
-			config=1
-			break
-		fi
-	done < $CONFIGS
-
-	if [ $config -eq 1 ] ; then
+	grep -q -w "${pline}" ${CONFIGS} 2>/dev/null
+	if [ $? -eq 0 ] ; then
 		echo "@config(${props}) ${pline}" >> ${PLIST}.new
 	else
 		echo "@(${props}) ${pline}" >> ${PLIST}.new
