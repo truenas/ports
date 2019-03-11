@@ -269,6 +269,7 @@
     SUBDIR += dsbmc
     SUBDIR += dsbmc-cli
     SUBDIR += dsbmd
+    SUBDIR += dsbsu
     SUBDIR += dsbwrtsysctl
     SUBDIR += dt
     SUBDIR += dtc

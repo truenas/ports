@@ -275,6 +275,7 @@
     SUBDIR += polybar
     SUBDIR += printscreen
     SUBDIR += props
+    SUBDIR += py-caffeine-ng
     SUBDIR += py-pyvirtualdisplay
     SUBDIR += py-qt4-opengl
     SUBDIR += py-qt5-opengl
