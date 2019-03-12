@@ -1,6 +1,6 @@
 PORTNAME=	middlewared
 PORTVERSION=	20190311200305
-PORTREVISION=	0
+PORTREVISION=	1
 PKGNAMEPREFIX=  ${PYTHON_PKGNAMEPREFIX}
 
 CATEGORIES=     freenas
@@ -41,7 +41,6 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}ws4py>0:www/py-ws4py@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}certbot-dns-google>0:security/py-certbot-dns-google@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}certbot-dns-ovh>0:security/py-certbot-dns-ovh@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}zettarepl>0:sysutils/py-zettarepl@${FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}pandas>0:math/py-pandas@${PY_FLAVOR} \
 		rclone>0:net/rclone \
 		sysup>0:sysutils/sysup \
 		ifstat>0:net/ifstat \
