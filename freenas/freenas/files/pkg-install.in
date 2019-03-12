@@ -22,7 +22,7 @@ freenas-ui-post-install()
         # XXXXX Bogus set of version for now
         # FIXME later with something better
         # Needed for migrate script to finish
-        echo "FreeNAS 12.0-PRERELEASE ()" > ${PKG_ROOTDIR}/etc/version
+        echo "FreeNAS-12.0-PRERELEASE ()" > ${PKG_ROOTDIR}/etc/version
 
         chroot ${PKG_ROOTDIR} %%PYTHON_CMD%% ${dstCR}/manage.py collectstatic --noinput
         chroot ${PKG_ROOTDIR} %%PYTHON_CMD%% ${dstCR}/tools/compilemsgs.py
