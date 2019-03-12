@@ -2,7 +2,7 @@
 
 PORTNAME=	freenas
 PORTVERSION=	20190215153809
-PORTREVISION=	0
+PORTREVISION=	1
 CATEGORIES=	freenas
 
 MAINTAINER=	dev@ixsystems.com
@@ -146,7 +146,6 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}bsd>=0:freenas/py-bsd@${PY_FLAVOR} \
 		smbldap-tools>=0:net/smbldap-tools \
 		smp_utils>=0:sysutils/smp_utils \
 		sqlite3>=0:databases/sqlite3 \
-		sssd>=0:security/sssd \
 		stunnel>=0:security/stunnel \
 		sudo>=0:security/sudo \
 		swagger-ui>=0:freenas/swagger-ui \
