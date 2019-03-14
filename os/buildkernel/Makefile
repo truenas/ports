@@ -36,8 +36,8 @@ MCONF=	__MAKE_CONF=${__MAKE_CONF}
 MCONF=
 .endif
 
-.include "Makefile.options"
-.include "Makefile.options.desc"
+.include "../buildworld/Makefile.options"
+.include "../buildworld/Makefile.options.desc"
 
 .include <bsd.port.pre.mk>
 
