@@ -1,8 +1,8 @@
 # $FreeBSD$
 
 PORTNAME=	freenas-installer
-PORTVERSION=	20190306192448
-PORTREVISION=	0
+PORTVERSION=	20190314140252
+PORTREVISION=	1
 
 CATEGORIES=	freenas
 VALID_CATEGORIES+=	freenas
@@ -22,7 +22,7 @@ WRKSRC=         /usr/ports/local_source/${PORTNAME}
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
 GH_PROJECT=	freenas
-GH_TAGNAME=	bc043b8406d06bd75c2706591e93269c43d9c95f
+GH_TAGNAME=	6f4f6a1789f63ec994a882c04bb49484c4447df1
 .endif
 
 PREFIX=/
@@ -56,7 +56,7 @@ do-install:
 	mkdir -p ${STAGEDIR}/${PREFIX}/pre-install
 	${INSTALL_SCRIPT} ${WRKSRC}/src/freenas-installer/bin/install_worker.sh ${STAGEDIR}/${PREFIX}/bin/install_worker.sh
 	${INSTALL_SCRIPT} ${WRKSRC}/src/freenas-installer/bin/install_worker2.sh ${STAGEDIR}/${PREFIX}/bin/install_worker2.sh
-	${INSTALL_SCRIPT} ${WRKSRC}/src/freenas-installer/etc/install.sh ${STAGEDIR}/${PREFIX}/etc/install.sh
+	${INSTALL_SCRIPT} ${WRKSRC}/src/freenas-installer/etc/installer12.sh ${STAGEDIR}/${PREFIX}/etc/installer12.sh
 	${INSTALL_SCRIPT} ${WRKSRC}/src/freenas-installer/etc/rc ${STAGEDIR}/${PREFIX}/etc/rc
 	${INSTALL_SCRIPT} ${WRKSRC}/src/freenas-installer/lib/functions.sh ${STAGEDIR}/${PREFIX}/lib/functions.sh
 	cp -a ${WRKSRC}/src/freenas-installer/pre-install/ ${STAGEDIR}/${PREFIX}/pre-install/
