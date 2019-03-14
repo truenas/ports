@@ -6,6 +6,7 @@ OPTIONS_DEFINE=	ACCT \
     AMD \
     APM \
     AT \
+    ASSERT_DEBUG \
     ATM \
     AUDIT \
     AUTHPF \
@@ -20,6 +21,7 @@ OPTIONS_DEFINE=	ACCT \
     BOOTPD \
     BSD_CPIO \
     BSD_CRTBEGIN \
+    BSD_GREP \
     BSDINSTALL \
     BSNMP \
     BZIP2 \
@@ -31,7 +33,6 @@ OPTIONS_DEFINE=	ACCT \
     CPP \
     CROSS_COMPILER \
     CRYPT \
-    CTM \
     CUSE \
     CXX \
     CXGBETOOL \
@@ -162,6 +163,7 @@ OPTIONS_DEFAULT= ACCT \
     BOOTPD \
     BSD_CPIO \
     BSD_CRTBEGIN \
+    BSD_GREP \
     BSDINSTALL \
     BSNMP \
     BZIP2 \
@@ -173,7 +175,6 @@ OPTIONS_DEFAULT= ACCT \
     CPP \
     CROSS_COMPILER \
     CRYPT \
-    CTM \
     CUSE \
     CXX \
     CXGBETOOL \
