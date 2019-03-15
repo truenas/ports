@@ -24,10 +24,11 @@ EXTRA_PATCHES+=			${PATCHDIR}/0001-add-ix-custom-vfs-modules.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-add-support-for-xattrs-larger-than-64k.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-add-idmap_fruit-backend.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-fix-listen-backlog.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/0001-add-shadow_copy_zfs.patch:-p1
 
 SAMBA4_BASENAME=		samba
 SAMBA4_PORTNAME=		${SAMBA4_BASENAME}4
-SAMBA4_VERSION=			4.10.0rc2
+SAMBA4_VERSION=			4.10.0rc4
 SAMBA4_DISTNAME=		${SAMBA4_BASENAME}-${SAMBA4_VERSION:S|.p|pre|:S|.r|rc|:S|.t|tp|:S|.a|alpha|}
 
 WRKSRC?=			${WRKDIR}/${DISTNAME}
@@ -72,8 +73,11 @@ CONFIGURE_ARGS+=		--mandir="${MANPREFIX}/man" \
 				--with-logfilebase="${SAMBA4_LOGDIR}"
 # XXX: Flags
 CONFIGURE_ENV+=			PTHREAD_LDFLAGS="-lpthread"
+CFLAGS+=                        -D_ACL_PRIVATE
 CPPFLAGS+=			-I${LOCALBASE}/include
 LDFLAGS+=			-L${LOCALBASE}/lib
+LLD_UNSAFE=			yes
+BINARY_ALIAS=			ld=ld.bfd
 
 USES=				cpe compiler waf pkgconfig perl5 \
 				iconv shebangfix
@@ -90,7 +94,7 @@ SUB_LIST+=			PKGCONFIGDIR=${PKGCONFIGDIR_REL}
 # Options
 OPTIONS_SUB=			yes
 
-OPTIONS_DEFINE=			AD_DC ADS DEBUG DOCS FAM LDAP LIBZFS WSDD\
+OPTIONS_DEFINE=			AD_DC ADS DEBUG DOCS FAM LDAP LIBZFS\
 				QUOTAS SYSLOG UTMP
 # Make those default options
 OPTIONS_DEFAULT:=		${OPTIONS_DEFINE}
@@ -100,7 +104,7 @@ OPTIONS_DEFINE+=		DEVELOPER MANDOC
 OPTIONS_DEFINE_amd64=		AESNI
 OPTIONS_DEFAULT_amd64=		AESNI
 
-OPTIONS_DEFINE+=		CUPS GPGME NTVFS SPOTLIGHT
+OPTIONS_DEFINE+=		CUPS GPGME NTVFS SPOTLIGHT WSDD
 
 OPTIONS_RADIO=			DNS ZEROCONF
 OPTIONS_RADIO_DNS=		NSUPDATE BIND911
@@ -130,6 +134,10 @@ NSUPDATE_DESC=			Use samba NSUPDATE utility for AD DC
 ##############################################################################
 PLIST_SUB+=			CLUSTER="@comment "
 SUB_LIST+=			CLUSTER="@comment "
+# Needs ZFS to build, if not built in base we'll bring in ZoL
+.if !exists(/sbin/zpool)
+LIB_DEPENDS+=	zol>=0:sysutils/zol
+.endif
 # XXX: Unconditional dependencies which can't be switched off(if present in the system)
 # popt
 LIB_DEPENDS+=			libpopt.so:devel/popt
@@ -377,8 +385,8 @@ SAMBA4_MODULES+=		auth_skel pdb_test gpext_security gpext_registry gpext_scripts
 
 .if ${PORT_OPTIONS:MLIBZFS}
 CONFIGURE_ARGS+= 	--with-libzfs
-WANT_EXP_MODULES+=	vfs_zfs_space vfs_ixnas
-SAMBA4_MODULES+=	vfs_zfs_space vfs_ixnas
+WANT_EXP_MODULES+=	vfs_zfs_space vfs_ixnas shadow_copy_zfs
+SAMBA4_MODULES+=	vfs_zfs_space vfs_ixnas shadow_copy_zfs
 PLIST_SUB+=		LIBZFS=""
 .else
 CONFIGURE_ARGS+=	--without-libzfs
