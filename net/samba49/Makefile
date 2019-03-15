@@ -73,6 +73,8 @@ CONFIGURE_ARGS+=		--mandir="${MANPREFIX}/man" \
 CONFIGURE_ENV+=			PTHREAD_LDFLAGS="-lpthread"
 CPPFLAGS+=			-I${LOCALBASE}/include
 LDFLAGS+=			-L${LOCALBASE}/lib
+LLD_UNSAFE=			yes
+BINARY_ALIAS=			ld=ld.bfd
 
 USES=				cpe compiler waf pkgconfig perl5 \
 				iconv shebangfix
