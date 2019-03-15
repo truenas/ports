@@ -100,7 +100,6 @@ NTP_DESC=			Build "ntpd" and related programs
 NVME_DESC=			Build NVME related tools and kernel modules
 OFED_DESC=			
 OPENSSL_DESC=			
-PAM_DESC=			Build PAM library and modules
 PC_SYSINSTALL_DESC=			Build "pc-sysinstall" and related programs
 PF_DESC=			Build PF firewall package
 PKGBOOTSTRAP_DESC=			Build "pkg" bootstrap tool
