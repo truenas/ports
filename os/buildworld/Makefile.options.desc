@@ -128,7 +128,6 @@ TCSH_DESC=			Build /bin/csh (which is actually tcsh)
 TELNET_DESC=			Build "telnet" and related programs
 TEXTPROC_DESC=			Build programs used for text processing
 TFTP_DESC=			Build "tftp" and "tftpd"
-TIMED_DESC=			
 UNBOUND_DESC=			Build "unbound" and related programs
 USB_DESC=			Build USB-related programs and libraries
 UTMPX_DESC=			Build user accounting tools such as "last", "users", "who", "ac", "lastlogin", and "utx"

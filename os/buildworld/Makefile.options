@@ -128,7 +128,6 @@ OPTIONS_DEFINE=	ACCT \
     TELNET \
     TEXTPROC \
     TFTP \
-    TIMED \
     UNBOUND \
     USB \
     UTMPX \
@@ -265,7 +264,6 @@ OPTIONS_DEFAULT= ACCT \
     TELNET \
     TEXTPROC \
     TFTP \
-    TIMED \
     UNBOUND \
     USB \
     UTMPX \
