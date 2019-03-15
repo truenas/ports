@@ -385,8 +385,8 @@ SAMBA4_MODULES+=		auth_skel pdb_test gpext_security gpext_registry gpext_scripts
 
 .if ${PORT_OPTIONS:MLIBZFS}
 CONFIGURE_ARGS+= 	--with-libzfs
-WANT_EXP_MODULES+=	vfs_zfs_space vfs_ixnas shadow_copy_zfs
-SAMBA4_MODULES+=	vfs_zfs_space vfs_ixnas shadow_copy_zfs
+WANT_EXP_MODULES+=	vfs_zfs_space vfs_ixnas vfs_shadow_copy_zfs
+SAMBA4_MODULES+=	vfs_zfs_space vfs_ixnas vfs_shadow_copy_zfs
 PLIST_SUB+=		LIBZFS=""
 .else
 CONFIGURE_ARGS+=	--without-libzfs

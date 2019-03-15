@@ -1,3 +1,20 @@
+diff --git a/docs-xml/smbdotconf/base/enablewebservicediscovery.xml b/docs-xml/smbdotconf/base/enablewebservicediscovery.xml
+new file mode 100644
+index 0000000..9495393
+--- /dev/null
++++ b/docs-xml/smbdotconf/base/enablewebservicediscovery.xml
+@@ -0,0 +1,11 @@
++<samba:parameter name="enable web service discovery"
++                 type="boolean"
++                 context="G"
++                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
++<description>
++        <para>Enable Web Services Dynamic Discovery (WS-Discovery) to
++        make samba_server appear in Network Neighborhood on Windows
++        clients.</para>
++</description>
++<value type="default">no</value>
++</samba:parameter>
 diff --git a/docs-xml/smbdotconf/base/truenaspassivecontroller.xml b/docs-xml/smbdotconf/base/truenaspassivecontroller.xml
 new file mode 100644
 index 0000000..ad7499b
@@ -73,7 +90,7 @@ index 0000000..66755f5
 +<value type="example">no</value>
 +</samba:parameter>
 diff --git a/source3/libnet/libnet_join.c b/source3/libnet/libnet_join.c
-index a9405e8..95c1c8a 100644
+index 27fc513..f0ff99b 100644
 --- a/source3/libnet/libnet_join.c
 +++ b/source3/libnet/libnet_join.c
 @@ -533,7 +533,7 @@ static ADS_STATUS libnet_join_set_machine_spn(TALLOC_CTX *mem_ctx,
@@ -86,10 +103,18 @@ index a9405e8..95c1c8a 100644
  			/*
  			 * Add HOST/NETBIOSNAME
 diff --git a/source3/param/loadparm.c b/source3/param/loadparm.c
-index 322934c..eefae67 100644
+index 29d9d59..6852227 100644
 --- a/source3/param/loadparm.c
 +++ b/source3/param/loadparm.c
-@@ -723,6 +723,10 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
+@@ -690,6 +690,7 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
+ #endif
+ 	Globals.time_server = false;
+ 	Globals.bind_interfaces_only = false;
++	Globals.enable_web_service_discovery = false;
+ 	Globals.unix_password_sync = false;
+ 	Globals.pam_password_change = false;
+ 	Globals.passwd_chat_debug = false;
+@@ -721,6 +722,10 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
  	Globals.log_writeable_files_on_exit = false;
  	Globals.create_krb5_conf = true;
  	Globals.include_system_krb5_conf = true;
@@ -101,10 +126,10 @@ index 322934c..eefae67 100644
  
  	/* hostname lookups can be very expensive and are broken on
 diff --git a/source3/utils/net_ads.c b/source3/utils/net_ads.c
-index ffa67d8..ad24e0d 100644
+index 1f05550..0656c8b 100644
 --- a/source3/utils/net_ads.c
 +++ b/source3/utils/net_ads.c
-@@ -1391,6 +1391,10 @@ static void _net_ads_join_dns_updates(struct net_context *c, TALLOC_CTX *ctx, st
+@@ -1755,6 +1755,10 @@ static void _net_ads_join_dns_updates(struct net_context *c, TALLOC_CTX *ctx, st
  		return;
  	}
  

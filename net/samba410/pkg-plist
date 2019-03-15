@@ -114,11 +114,9 @@ include/samba4/util/fault.h
 include/samba4/util/genrand.h
 include/samba4/util/idtree_random.h
 include/samba4/util/idtree.h
-include/samba4/util/safe_string.h
 include/samba4/util/signal.h
 include/samba4/util/string_wrappers.h
 include/samba4/util/substitute.h
-include/samba4/util/talloc_stack.h
 include/samba4/util/tevent_ntstatus.h
 include/samba4/util/tevent_unix.h
 include/samba4/util/tevent_werror.h
@@ -298,6 +296,7 @@ lib/samba4/private/libserver-id-db-samba4.so
 lib/samba4/private/libserver-role-samba4.so
 lib/samba4/private/libshares-samba4.so
 %%LIBZFS%%lib/samba4/private/libsmb-libzfs-samba4.so
+%%LIBZFS%%lib/samba4/private/libzfs-list-snapshots-samba4.so
 lib/samba4/private/libsmb-transport-samba4.so
 lib/samba4/private/libsmbclient-raw-samba4.so
 lib/samba4/private/libsmbd-base-samba4.so
