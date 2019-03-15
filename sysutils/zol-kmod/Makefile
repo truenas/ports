@@ -25,9 +25,9 @@ GCOV_DESC=	Build kernel module with GCOV support (Requires gcc)
 
 .include <bsd.port.pre.mk>
 
-#.if ${OSVERSION} < 1300013
-#IGNORE=      needs FreeBSD 13 with AES-CCM support
-#.endif
+.if (${OSVERSION} < 1200504) || (${OSVERSION} >= 1300000 && ${OSVERSION} < 1300013)
+IGNORE=      needs FreeBSD 12/13 with AES-CCM support
+.endif
 
 .if ${PORT_OPTIONS:MDEBUG}
 MAKE_OPTS+=	WITH_DEBUG=true
