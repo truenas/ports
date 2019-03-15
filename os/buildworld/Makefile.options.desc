@@ -78,7 +78,6 @@ LIBPTHREAD_DESC=			Build the "libpthread" providing library, "libthr"
 LIBTHR_DESC=			Build the "libthr" library (1:1 threading)
 LLVM_COV_DESC=			Build the "llvm-cov" utility
 LOADER_GELI_DESC=			Include GELI crypto support in the boot chain binaries
-LOADER_LUA_DESC=			Build the LUA bindings for the boot loader
 LOADER_OFW_DESC=			Build openfirmware bootloader components
 LOADER_UBOOT_DESC=			Build ubldr
 LOADER_ZFS_DESC=			Build ZFS file system boot loader support.
