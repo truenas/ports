@@ -117,7 +117,6 @@ SENDMAIL_DESC=			Build "sendmail" and related programs
 SERVICESDB_DESC=			Install "/var/db/services.db"
 SETUID_LOGIN_DESC=			Allow "login" to be a set-user-ID root program
 SHAREDOCS_DESC=			Build the BSD4.4 legacy documentaion
-SOURCELESS_DESC=			Build kernel modules that include sourceless code (microcode or native code for host CPU)
 SOURCELESS_HOST_DESC=			Build kernel modules that include sourceless native code for host CPU
 SOURCELESS_UCODE_DESC=			Build kernel modules that include sourceless microcode
 SVNLITE_DESC=			Build "svnlite" and related programs
