@@ -49,7 +49,6 @@ OPTIONS_DEFINE=	ACCT \
     FINGER \
     FLOPPY \
     FMTREE \
-    FORTH \
     FP_LIBC \
     FREEBSD_UPDATE \
     FTP \
@@ -191,7 +190,6 @@ OPTIONS_DEFAULT= ACCT \
     FINGER \
     FLOPPY \
     FMTREE \
-    FORTH \
     FP_LIBC \
     FREEBSD_UPDATE \
     FTP \

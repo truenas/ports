@@ -48,7 +48,6 @@ FILE_DESC=			Build "file" and related programs
 FINGER_DESC=			Build "finger" and "fingerd"
 FLOPPY_DESC=			Build programs for operating floppy disk drivers
 FMTREE_DESC=			Build /usr/sbin/fmtree
-FORTH_DESC=			Build bootloaders with Forth support
 FP_LIBC_DESC=			Build "libc" with floating-point support
 FREEBSD_UPDATE_DESC=		Build "freebsd-update"	
 FTP_DESC=			Build "ftp" and "ftpd"
