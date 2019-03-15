@@ -99,7 +99,6 @@ OPTIONS_DEFINE=	ACCT \
     NTP \
     NVME \
     OFED \
-    OPENSSL \
     PC_SYSINSTALL \
     PF \
     PKGBOOTSTRAP \
@@ -235,7 +234,6 @@ OPTIONS_DEFAULT= ACCT \
     NTP \
     NVME \
     OFED \
-    OPENSSL \
     PC_SYSINSTALL \
     PF \
     PKGBOOTSTRAP \
