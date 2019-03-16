@@ -1,18 +1,7 @@
-From 923bc7a1afeb0b920e60e14846987ae1d2d7dca4 Mon Sep 17 00:00:00 2001
-From: John Hixson <john@ixsystems.com>
-Date: Thu, 7 Dec 2017 09:36:32 -0500
-Subject: [PATCH] Freenas/master mdns fixes (#22)
-
-* mDNS fixes for Samba (work in progress).
-
-* Fix mDNS - Can advertise on individual interfaces
-
-* Fix mDNS browsing in smbclient
-
-Signed-off-by: Timur I. Bakeyev <timur@iXsystems.com>
-
---- source3/client/dnsbrowse.c.orig	2019-01-15 10:07:00 UTC
-+++ source3/client/dnsbrowse.c
+diff --git a/source3/client/dnsbrowse.c b/source3/client/dnsbrowse.c
+index be6eb88..83aef96 100644
+--- a/source3/client/dnsbrowse.c
++++ b/source3/client/dnsbrowse.c
 @@ -39,6 +39,7 @@ struct mdns_smbsrv_result
  struct mdns_browse_state
  {
@@ -21,7 +10,7 @@ Signed-off-by: Timur I. Bakeyev <timur@iXsystems.com>
  	int browseDone;
  
  };
-@@ -64,7 +65,7 @@ static void do_smb_resolve(struct mdns_s
+@@ -64,7 +65,7 @@ static void do_smb_resolve(struct mdns_smbsrv_result *browsesrv)
  	struct timeval tv;
  	DNSServiceErrorType err;
  
@@ -30,7 +19,7 @@ Signed-off-by: Timur I. Bakeyev <timur@iXsystems.com>
  
  	err = DNSServiceResolve(&mdns_conn_sdref, 0 /* flags */,
  		browsesrv->ifIndex,
-@@ -91,7 +92,7 @@ static void do_smb_resolve(struct mdns_s
+@@ -91,7 +92,7 @@ static void do_smb_resolve(struct mdns_smbsrv_result *browsesrv)
  		}
  	}
  
@@ -39,7 +28,7 @@ Signed-off-by: Timur I. Bakeyev <timur@iXsystems.com>
  	DNSServiceRefDeallocate(mdns_conn_sdref);
  }
  
-@@ -124,18 +125,19 @@ do_smb_browse_reply(DNSServiceRef sdRef,
+@@ -124,18 +125,19 @@ do_smb_browse_reply(DNSServiceRef sdRef, DNSServiceFlags flags,
  		return;
  	}
  
@@ -78,8 +67,10 @@ Signed-off-by: Timur I. Bakeyev <timur@iXsystems.com>
  	err = DNSServiceBrowse(&mdns_conn_sdref, 0, 0, "_smb._tcp", "",
  			do_smb_browse_reply, &bstate);
  
---- source3/smbd/dnsregister.c.orig	2019-01-15 10:07:00 UTC
-+++ source3/smbd/dnsregister.c
+diff --git a/source3/smbd/dnsregister.c b/source3/smbd/dnsregister.c
+index df18900..ad81825 100644
+--- a/source3/smbd/dnsregister.c
++++ b/source3/smbd/dnsregister.c
 @@ -29,6 +29,29 @@
   * browse for advertised SMB services.
   */
@@ -110,7 +101,7 @@ Signed-off-by: Timur I. Bakeyev <timur@iXsystems.com>
  #define DNS_REG_RETRY_INTERVAL (5*60)  /* in seconds */
  
  #ifdef WITH_DNSSD_SUPPORT
-@@ -36,85 +59,177 @@
+@@ -36,85 +59,178 @@
  #include <dns_sd.h>
  
  struct dns_reg_state {
@@ -184,14 +175,14 @@ Signed-off-by: Timur I. Bakeyev <timur@iXsystems.com>
 +	char *str;
 +	va_list ap;
 +	va_start( ap, fmt );
- 
--static bool dns_register_smbd_schedule(struct dns_reg_state *dns_state,
++
 +	if( 0 > vasprintf(&str, fmt, ap ) ) {
 +		va_end(ap);
 +		return -1;
 +	}
 +	va_end(ap);
-+
+ 
+-static bool dns_register_smbd_schedule(struct dns_reg_state *dns_state,
 +	if( kDNSServiceErr_NoError != TXTRecordSetValue(rec, key, strlen(str), str) ) {
 +		ret = -1;
 +	}
@@ -287,6 +278,7 @@ Signed-off-by: Timur I. Bakeyev <timur@iXsystems.com>
 +	TXTRecordRef txt_adisk;
 +	TXTRecordRef txt_devinfo;
 +	char *servname;
++	char *zeroconf_name = lp_zeroconf_name();
 +	char *v_uuid;
 +	int num_services = lp_numservices();
  
@@ -318,7 +310,7 @@ Signed-off-by: Timur I. Bakeyev <timur@iXsystems.com>
 +	err = DNSServiceRegister(&state->srv_ref,
 +			0		/* flags */,
 +			state->if_index /* interface index */,
-+			NULL		/* service name */,
++			zeroconf_name	/* service name */,
 +			"_smb._tcp"	/* service type */,
 +			NULL		/* domain */,
 +			""		/* SRV target host name */,
@@ -331,7 +323,7 @@ Signed-off-by: Timur I. Bakeyev <timur@iXsystems.com>
  
  	if (err != kDNSServiceErr_NoError) {
  		/* Failed to register service. Schedule a re-try attempt.
-@@ -123,24 +238,96 @@ static void dns_register_smbd_retry(stru
+@@ -123,24 +239,96 @@ static void dns_register_smbd_retry(struct tevent_context *ctx,
  		goto retry;
  	}
  
@@ -383,7 +375,7 @@ Signed-off-by: Timur I. Bakeyev <timur@iXsystems.com>
 +		err = DNSServiceRegister(&state->srv_ref,
 +				0		/* flags */,
 +				state->if_index /* interface index */,
-+				NULL		/* service name */,
++				zeroconf_name	/* service name */,
 +				"_adisk._tcp"	/* service type */,
 +				NULL		/* domain */,
 +				""		/* SRV target host name */,
@@ -438,7 +430,7 @@ Signed-off-by: Timur I. Bakeyev <timur@iXsystems.com>
  		timeval_current_ofs(DNS_REG_RETRY_INTERVAL, 0));
  }
  
-@@ -150,44 +337,77 @@ static void dns_register_smbd_fde_handle
+@@ -150,44 +338,83 @@ static void dns_register_smbd_fde_handler(struct tevent_context *ev,
  					  uint16_t flags,
  					  void *private_data)
  {
@@ -481,6 +473,12 @@ Signed-off-by: Timur I. Bakeyev <timur@iXsystems.com>
  	struct dns_reg_state *dns_state;
 +	bool bind_all = true;
 +	int i;
++
++	if (lp_truenas_passive_controller()) {
++		DEBUG(3, ("Bypassing mDNS registration for passive storage controller\n"));
++		return true;
++	}
++
  
  	dns_state = talloc_zero(mem_ctx, struct dns_reg_state);
 -	if (dns_state == NULL) {
@@ -507,8 +505,7 @@ Signed-off-by: Timur I. Bakeyev <timur@iXsystems.com>
 +	for (i = 0; i < dns_state->count; i++) {
 +		struct interface *iface = get_interface(i);
 +		struct reg_state *state = &dns_state->drs[i];
- 
--	return dns_register_smbd_schedule(dns_state, timeval_zero());
++
 +		state->mem_ctx = mem_ctx;
 +		state->srv_ref = NULL;
 +		state->event_ctx = ev;
@@ -518,7 +515,8 @@ Signed-off-by: Timur I. Bakeyev <timur@iXsystems.com>
 +		state->fd = -1;
 +
 +		state->if_index = bind_all ? kDNSServiceInterfaceIndexAny : iface->if_index;
-+
+ 
+-	return dns_register_smbd_schedule(dns_state, timeval_zero());
 +		dns_register_smbd_schedule(&dns_state->drs[i], timeval_zero());
 +	}
 +	
