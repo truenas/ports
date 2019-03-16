@@ -1,0 +1,2065 @@
+diff --git a/lib/util/memcache.c b/lib/util/memcache.c
+index 819ba44..616539d 100644
+--- a/lib/util/memcache.c
++++ b/lib/util/memcache.c
+@@ -55,6 +55,7 @@ static bool memcache_is_talloc(enum memcache_number n)
+ 	case SINGLETON_CACHE_TALLOC:
+ 	case SHARE_MODE_LOCK_CACHE:
+ 	case GETWD_CACHE:
++	case ZSNAP_CACHE:
+ 	case VIRUSFILTER_SCAN_RESULTS_CACHE_TALLOC:
+ 		result = true;
+ 		break;
+diff --git a/lib/util/memcache.h b/lib/util/memcache.h
+index 4331c2f..a9de97f 100644
+--- a/lib/util/memcache.h
++++ b/lib/util/memcache.h
+@@ -46,6 +46,7 @@ enum memcache_number {
+ 	SMB1_SEARCH_OFFSET_MAP,
+ 	SHARE_MODE_LOCK_CACHE,	/* talloc */
+ 	VIRUSFILTER_SCAN_RESULTS_CACHE_TALLOC, /* talloc */
++	ZSNAP_CACHE,
+ 	DFREE_CACHE,
+ };
+ 
+diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
+new file mode 100644
+index 0000000..cb6e21b
+--- /dev/null
++++ b/source3/modules/vfs_shadow_copy_zfs.c
+@@ -0,0 +1,1692 @@
++/* shadow_copy_zfs: a shadow copy module for ZFS
++ *
++ * Copyright (C) Andrew Tridgell   2007 (portions taken from shadow_copy_zfs)
++ * Copyright (C) Ed Plese          2009
++ * Copyright (C) Volker Lendecke   2011
++ * Copyright (C) Christian Ambach  2011
++ * Copyright (C) Michael Adam      2013
++ * Copyright (C) XStor Systems Inc 2011
++ * Copyright (C) iXsystems Inc     2016
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ */
++
++#include "includes.h"
++#include "smbd/smbd.h"
++#include "system/filesys.h"
++#include "include/ntioctl.h"
++#include "modules/zfs_list_snapshots.h"
++#include "../lib/util/memcache.h"
++
++#define GMT_NAME_LEN 24 /* length of a @GMT- name */
++
++#define SHADOW_COPY_ZFS_DEFAULT_SORT "desc"
++#define SHADOW_COPY_ZFS_SNAP_DIR ".zfs/snapshot"
++#define MAX_CACHE_TIME 10.0
++#define ZSNAP_CACHE_BUFFER_SIZE   (PATH_MAX + 128)
++
++
++/*
++ * This module does the following:
++ * 1) Determines whether file path received from client contains an "@GMT token". This is
++ *    a special token that can be present as part of a file path to indicate a request to see
++ *    a previous version of the file or directory. The format is "@GMT-YYYY.MM.DD-HH.MM.SS".
++ *    This 16-bit Unicode string represents a time and date in UTC. If the path contains an 
++ *    @GMT token, then redirect to the correct .zfs/snapshot path.
++ * 2) Generates snapshot list for FSCTL_SRV_ENUMERATE_SNAPSHOTS response.
++ *    shadow_copy_zfs_get_shadow_copy_zfs_data()
++ */
++
++static const char *null_string = NULL;
++static const char **empty_list = &null_string;
++
++struct shadow_copy_zfs_config {
++    /* Cache parameters */
++    bool 			cache_enabled;
++
++    /* Snapshot parameters */
++    const char 			*sort_order;
++    const char 			*dataset_path;
++    const char 			**inclusions;
++    const char 			**exclusions;
++    char 			*shadow_connectpath;
++    struct snapshot_list 	*snapshots;
++};
++
++static bool shadow_copy_zfs_find_slashes(TALLOC_CTX *mem_ctx, const char *str,
++				      size_t **poffsets,
++				      unsigned *pnum_offsets)
++{
++	unsigned num_offsets;
++	size_t *offsets;
++	const char *p;
++
++	num_offsets = 0;
++
++	p = str;
++	while ((p = strchr(p, '/')) != NULL) {
++		num_offsets += 1;
++		p += 1;
++	}
++
++	offsets = talloc_array(mem_ctx, size_t, num_offsets);
++	if (offsets == NULL) {
++		return false;
++	}
++
++	p = str;
++	num_offsets = 0;
++	while ((p = strchr(p, '/')) != NULL) {
++		offsets[num_offsets] = p-str;
++		num_offsets += 1;
++		p += 1;
++	}
++
++	*poffsets = offsets;
++	*pnum_offsets = num_offsets;
++	return true;
++}
++
++/*
++  make very sure it is one of our special names
++ */
++static inline bool shadow_copy_zfs_match_name(const char *name,
++    const char **gmt_start)
++{
++	unsigned year, month, day, hr, min, sec;
++	const char *p;
++	if (gmt_start) {
++		(*gmt_start) = NULL;
++	}
++	p = strstr_m(name, "@GMT-");
++	if (p == NULL) {
++		DEBUG(11, ("@GMT not found\n")); //this one goes to 11
++		return false;
++	}
++	if (p > name && p[-1] != '/') {
++		DBG_DEBUG("not at start, p=%p, name=%p, p[-1]=%d\n",
++			p, name, (int)p[-1]);
++		return False;
++	}
++	if (sscanf(p, "@GMT-%04u.%02u.%02u-%02u.%02u.%02u", &year, &month,
++		   &day, &hr, &min, &sec) != 6) {
++		return False;
++	}
++	if (p[24] != 0 && p[24] != '/') {
++		return False;
++	}
++	if (gmt_start) {
++		(*gmt_start) = p;
++	}
++	return True;
++}
++
++/*
++  Strip @GMT-XXXX in prep for path-to-zhandle calls. At this point
++  path has been normalized.
++ */
++
++static const char *shadow_copy_zfs_strip_gmt(TALLOC_CTX *mem_ctx,
++    const char *path)
++{
++	char *pcopy;
++	size_t len = strlen(path);
++	if (GMT_NAME_LEN > len) {
++		DBG_ERR("path too short\n");
++		return NULL;
++	}
++	else if (GMT_NAME_LEN == len) {
++		DBG_ERR("returning root of share\n");
++		//return ".";
++		return "";
++	}
++	pcopy = talloc_strdup(mem_ctx, path);
++	if (pcopy == NULL) {
++		DBG_ERR("path too short\n");
++		return NULL;
++	}
++	memmove(pcopy, pcopy+GMT_NAME_LEN+1, len-GMT_NAME_LEN+2);
++	return pcopy;
++}
++
++static const char *shadow_copy_zfs_get_working_path(vfs_handle_struct *handle, TALLOC_CTX *mem_ctx,
++    const char *path)
++{
++	int i = 0;
++	int ret;
++	char *pcopy;
++	char *parent;
++	size_t *slashes = NULL;
++	unsigned num_slashes;
++	pcopy = talloc_strdup(mem_ctx, path);
++	char rp[PATH_MAX] = { 0 };
++	if (pcopy == NULL) {
++		DBG_ERR("Memory error\n");
++		return NULL;
++	}
++	if (!shadow_copy_zfs_find_slashes(mem_ctx, path, &slashes, &num_slashes)) {
++		TALLOC_FREE(pcopy);
++		TALLOC_FREE(slashes);
++		DBG_ERR("Failed to find slashes in path [%s]\n", path);
++		return NULL;
++	}
++	if ( num_slashes == 0 ) {
++		TALLOC_FREE(pcopy);
++		TALLOC_FREE(slashes);
++		return handle->conn->connectpath; //we're in the root of the share, so return connectpath.
++	}
++	for (i = 0; i<num_slashes+1; i++) {
++                if (!parent_dirname(mem_ctx, pcopy, &parent, NULL)) {
++                        DBG_ERR("failed to generate parent dir name for %s\n", rp);
++			goto out;
++                }
++		if ((ret = access(parent, F_OK)) == 0) {
++			if ( realpath(parent, rp) == NULL ) {
++				DBG_ERR("Unable to get realpath for %s: %s\n", parent, strerror(errno));
++				pcopy = NULL;
++				goto out;
++			}
++			TALLOC_FREE(pcopy);
++			pcopy = talloc_strdup(mem_ctx, rp);
++			goto out;
++		}
++		TALLOC_FREE(pcopy);
++		pcopy = talloc_strdup(mem_ctx, parent);
++		//pcopy = parent;
++		TALLOC_FREE(parent);	
++	}
++	TALLOC_FREE(pcopy);
++	TALLOC_FREE(slashes);
++	return NULL;
++
++out:
++	TALLOC_FREE(slashes);
++	TALLOC_FREE(parent);	
++	return pcopy;
++}
++
++/*
++  shadow copy paths can also come into the server in this form:
++
++    /foo/bar/@GMT-XXXXX/some/file
++
++  This function normalises the filename to be of the form:
++
++    @GMT-XXXX/foo/bar/some/file
++ */
++static const char *shadow_copy_zfs_normalise_path(TALLOC_CTX *mem_ctx,
++    const char *path,
++    const char *gmt_start)
++{
++	char *pcopy;
++	char buf[GMT_NAME_LEN];
++	size_t prefix_len;
++
++	if (path == gmt_start) {
++		DBG_ERR("Bailing early on path %s\n", path);
++		return path;
++	}
++
++	prefix_len = gmt_start - path - 1;
++
++	/*
++	 * We've got a/b/c/@GMT-YYYY.MM.DD-HH.MM.SS/d/e. convert to
++	 * @GMT-YYYY.MM.DD-HH.MM.SS/a/b/c/d/e before further
++	 * processing. As many VFS calls provide a const char *,
++	 * unfortunately we have to make a copy.
++	 */
++
++	pcopy = talloc_strdup(mem_ctx, path);
++	if (pcopy == NULL) {
++		return NULL;
++	}
++
++	gmt_start = pcopy + prefix_len;
++
++	/*
++	 * Copy away "@GMT-YYYY.MM.DD-HH.MM.SS"
++	 */
++	memcpy(buf, gmt_start+1, GMT_NAME_LEN);
++
++	/*
++	 * Make space for it including a trailing /
++	 */
++	memmove(pcopy + GMT_NAME_LEN + 1, pcopy, prefix_len);
++
++	/*
++	 * Move in "@GMT-YYYY.MM.DD-HH.MM.SS/" at the beginning again
++	 */
++	memcpy(pcopy, buf, GMT_NAME_LEN);
++	pcopy[GMT_NAME_LEN] = '/';
++
++	return pcopy;
++}
++
++static int shadow_copy_zfs_label_cmp_asc(const void *x, const void *y)
++{
++	return strncmp((*((struct snapshot_entry **) x))->label,
++		       (*((struct snapshot_entry **) y))->label,
++		       sizeof(SHADOW_COPY_LABEL));
++}
++
++static int shadow_copy_zfs_label_cmp_desc(const void *x, const void *y)
++{
++	return -strncmp((*((struct snapshot_entry **) x))->label,
++			(*((struct snapshot_entry **) y))->label,
++			sizeof(SHADOW_COPY_LABEL));
++}
++
++/*
++  sort the shadow copy data in ascending or descending order
++ */
++static void shadow_copy_zfs_sort_data(vfs_handle_struct *handle,
++    struct snapshot_list *snapshots)
++{
++	const char *sort;
++
++	if (snapshots->num_entries <= 0) {
++		return;
++	}
++
++	sort = lp_parm_const_string(SNUM(handle->conn), "shadow",
++				    "sort", SHADOW_COPY_ZFS_DEFAULT_SORT);
++
++	if (strcmp(sort, "asc") == 0) {
++		snapshots->cmpfunc = shadow_copy_zfs_label_cmp_asc;
++	} else {
++		snapshots->cmpfunc = shadow_copy_zfs_label_cmp_desc;
++	}
++
++	TYPESAFE_QSORT(snapshots->entries, snapshots->num_entries,
++		       snapshots->cmpfunc);
++
++	return;
++}
++
++static void shadow_copy_zfs_free_snapshots(void **datap)
++{
++	TALLOC_FREE(*datap);
++}
++
++/*
++ * Convert a filename containing an @GMT token to a path in the corresponding
++ * .zfs/snapshot/<snap_name> directory.
++ */
++static char *convert_shadow_zfs_name(vfs_handle_struct *handle,
++    const char *fname, const char *gmt_path,
++    const bool incl_rel)
++{
++	//TALLOC_CTX *tmp_ctx = talloc_tos();
++	TALLOC_CTX *tmp_ctx = talloc_new(handle->data);
++	struct shadow_copy_zfs_config *config;
++	struct snapshot_list *snapshots;
++	NTSTATUS status;
++	struct snapshot_entry entry_buf, *entry = &entry_buf;
++	const char *relpath, *mpoffset, *mountpoint, *snapshot, *normalized_fname, *cache_entry;
++	size_t mplen;
++	char *ret, *prefix;
++	unsigned idx;
++	char rp[PATH_MAX] = { 0 };
++	uint32_t name_hash;
++	size_t fds_len = 0; // store length of dataset name for connectpath and the filename passed to server
++
++	SMB_VFS_HANDLE_GET_DATA(handle, config, struct shadow_copy_zfs_config,
++	    return NULL);
++
++	/* 
++	 * Some legacy SMB clients (Windows XP) may append the @GMT- token to the end of the path
++	 * In this case, we need to normalize it (move it to the beginning of the path) before continuing.
++	 */
++	if (strncmp(fname, "@GMT-", 5) != 0) {
++		normalized_fname = shadow_copy_zfs_normalise_path(tmp_ctx, fname, gmt_path);
++		if (fname == NULL) {
++			TALLOC_FREE(tmp_ctx);
++			return NULL;
++		}
++	}
++	else {
++		normalized_fname = fname;
++	}
++
++	/*
++	 * Converting from @GMT- token to a path inside a snapdir is expensive. First try to use
++	 * cached value if it exists.
++         */ 
++
++	if (config->cache_enabled) {
++		/*
++ 		 * file_name_hash will generate a jenkins hash based on the connect path
++		 * and normalized "@GMT" path. See full_path_tos() This value is then used as index 
++		 * for cached "@GMT" -> realpath mapping. Since shares pointing to same
++		 * underlying dataset would have the same hash value, we need to cache the full
++		 * path to the file rather than a relative path.
++		 */
++		status = file_name_hash(handle->conn, normalized_fname, &name_hash);
++		if (NT_STATUS_EQUAL(status, NT_STATUS_NO_MEMORY)) {
++			/* 
++			 * NT_STATUS_NO_MEMORY is the only NTSTATUS error returned from this function
++			 */ 
++			DBG_ERR("failed to generate filename hash for %s\n", normalized_fname);
++			errno=ENOMEM;
++			TALLOC_FREE(tmp_ctx);
++			return NULL;
++		}
++
++		ret = (const char *)memcache_lookup_talloc(
++                	                        smbd_memcache(),
++                        	                ZSNAP_CACHE,
++                                	        data_blob_const(&name_hash, sizeof(name_hash)));
++
++		if (ret != NULL) {
++			DBG_DEBUG("Found cached entry for hash [%s]. [%s] -> [%s]\n", 
++				name_hash, normalized_fname, ret); //This one may need to go to log level 11
++			cache_entry = talloc_strdup(talloc_tos(), ret);
++			TALLOC_FREE(tmp_ctx);
++			return cache_entry;
++		}
++	}
++
++	/* 
++	 * Strip the @GMT- token in preparation for zfs_path_to_zhandle() in shadow_copy_list_snapshots()
++	 */
++	normalized_fname = shadow_copy_zfs_strip_gmt(tmp_ctx, normalized_fname);
++
++	if (access(normalized_fname, F_OK) < 0) {
++		normalized_fname = shadow_copy_zfs_get_working_path(handle, tmp_ctx, normalized_fname); 
++		snapshots = shadow_copy_zfs_list_snapshots(tmp_ctx,
++							   normalized_fname,
++							   config->inclusions,
++							   config->exclusions);
++	}
++	else {
++		if (realpath(normalized_fname, rp) == NULL) {
++			DBG_ERR("realpath() failed for %s: %s\n", normalized_fname, strerror(errno));
++			TALLOC_FREE(tmp_ctx);
++			return NULL;
++		}
++		snapshots = shadow_copy_zfs_list_snapshots(tmp_ctx,
++							   rp,
++							   config->inclusions,
++							   config->exclusions);
++	}
++
++	if (snapshots == NULL) {
++		TALLOC_FREE(tmp_ctx);
++		return NULL;
++	}
++
++	/*
++	 * Handling for nested datasets. config->dataset_path is the dataset for the root
++	 * of the share. This is to address issue of <@GMT-token>nested_dataset/dir1 where
++	 * connectpath is <pool>/<dataset1> and nested_dataset is <pool>/<dataset1>/nested_dataset.
++	 * in this case, we need "<pool>/<dataset1>/<nested_dataset>/.zfs/snapshot/<snapshot>/dir1" 
++         * instead of "<pool>/<dataset1>/<nested_dataset>/.zfs/snapshot/<snapshot>/nested_dataset/dir1" 
++ 	 * This may need to be rewritten to use mountpoints rather than dataset names.
++	 */
++
++	if ( strcmp(config->dataset_path, snapshots->dataset_name) != 0) {
++	 	fds_len = strlen(snapshots->dataset_name) - strlen(config->dataset_path);	
++	}
++	
++	shadow_copy_zfs_sort_data(handle, snapshots);
++
++	/* get the mountpoint */
++	mountpoint = snapshots->mountpoint;
++	mplen = strlen(mountpoint);
++	mpoffset = handle->conn->connectpath + mplen;
++
++	/* check if we've already normalized this */
++	prefix = talloc_asprintf(tmp_ctx, "%s/%s/", mountpoint,
++				 SHADOW_COPY_ZFS_SNAP_DIR);
++
++	if (strncmp(fname, prefix, (talloc_get_size(prefix)-1)) == 0) {
++		/* this looks like as we have already normalized it, leave it
++		   untouched
++		*/
++		TALLOC_FREE(prefix);
++		TALLOC_FREE(tmp_ctx);
++		return talloc_strdup(handle->data, fname);
++	}
++
++	if (strncmp(fname, "@GMT-", 5) != 0) {
++		fname = shadow_copy_zfs_normalise_path(tmp_ctx, fname, gmt_path);
++		if (fname == NULL) {
++			DBG_ERR("shadow_copy_zfs_normalize_path failed\n");
++			TALLOC_FREE(prefix);
++			TALLOC_FREE(tmp_ctx);
++			return NULL;
++		}
++	}
++	/* get snapshot name */
++	strlcpy(entry->label, fname, GMT_NAME_LEN+1);
++	snapshot = bsearch(&entry, snapshots->entries, snapshots->num_entries,
++			   sizeof(snapshots->entries[0]), snapshots->cmpfunc);
++	for (idx = 0; idx < snapshots->num_entries; idx++) {
++		if (strncmp(fname, snapshots->entries[idx]->label, GMT_NAME_LEN)
++		    == 0) {
++			snapshot = snapshots->entries[idx]->name;
++			break;
++		}
++	}
++
++	if (snapshot == NULL) {
++		DBG_INFO("convert_shadow_zfs_name: no snapshot found for %s\n",
++		    fname);
++		if (strcmp(handle->conn->connectpath, mountpoint) == 0) {
++			/*
++			 * Sub datasets can have snapshots that don't exist at the root 
++			 * of the share. It appears that SMB clients still try to enter
++			 * the root of the share using the @GMT token of the sub-dataset
++			 * We need to allow access here, otherwise access to the snapshot
++			 * will fail. 
++			 */
++			ret = mountpoint;
++			TALLOC_FREE(prefix);
++			TALLOC_FREE(tmp_ctx);
++			return ret;
++		}
++		TALLOC_FREE(prefix);
++		TALLOC_FREE(tmp_ctx);
++		return NULL;
++	}
++
++	/* assemble the new path */
++	relpath = fname + GMT_NAME_LEN;
++	// take care of extra path components from nested datasets
++	relpath += fds_len;
++
++	if (*relpath == '/') relpath++;
++	if (*mpoffset == '/') mpoffset++;
++	if (strlen(relpath) > 0) {
++		ret = talloc_asprintf(handle->data, "%s%s/%s",
++				      prefix,
++				      snapshot,
++				      relpath); 
++	}
++	else {
++		ret = talloc_asprintf(handle->data, "%s%s",
++				      prefix,
++				      snapshot);
++	}
++	TALLOC_FREE(prefix);
++
++	if (config->cache_enabled) {
++	        cache_entry = talloc_strdup(tmp_ctx, ret);
++
++		/*
++		 * Ensure the memory going into the cache
++		 * doesn't have a destructor so it can be
++		 * cleanly freed.
++	 	*/
++		talloc_set_destructor(cache_entry, NULL);
++
++		/* 
++		 * This is currently limited by the max stat cache size.
++		 * May need to implement differently.
++		 */
++		memcache_add_talloc(smbd_memcache(),
++					ZSNAP_CACHE,
++					data_blob_const(&name_hash, sizeof(name_hash)),
++					&cache_entry);
++	}
++
++	TALLOC_FREE(tmp_ctx);
++	return ret;
++}
++
++static DIR *shadow_copy_zfs_opendir(vfs_handle_struct *handle,
++    const struct smb_filename *smb_fname,
++    const char *mask,
++    uint32_t attr)
++{
++	DIR *ret;
++	int saved_errno;
++	const char *gmt_start;
++	char *conv;
++	struct smb_filename *conv_smb_fname = NULL;
++
++	if (shadow_copy_zfs_match_name(smb_fname->base_name, &gmt_start)) {
++		conv = convert_shadow_zfs_name(handle, smb_fname->base_name,	
++		     gmt_start, True);
++		if (conv == NULL) {
++			return NULL;
++		}
++
++		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
++						     conv,
++						     NULL,
++						     NULL,
++						     smb_fname->flags);
++		if (conv_smb_fname == NULL) {
++			TALLOC_FREE(conv);
++			return NULL;
++		}
++
++		ret = SMB_VFS_NEXT_OPENDIR(handle, conv_smb_fname, mask, attr);
++		saved_errno = errno;
++		TALLOC_FREE(conv);
++		TALLOC_FREE(conv_smb_fname);
++		errno = saved_errno;
++		return ret;
++	} else {
++		return SMB_VFS_NEXT_OPENDIR(handle, smb_fname, mask, attr);
++	}
++}
++
++static int shadow_copy_zfs_rename(vfs_handle_struct *handle,
++			       const struct smb_filename *smb_fname_src,
++			       const struct smb_filename *smb_fname_dst)
++{
++	const char *gmt_start;
++	int ret_src, ret_dst;
++
++	ret_src = shadow_copy_zfs_match_name(smb_fname_src->base_name,
++					     &gmt_start);
++	ret_dst = shadow_copy_zfs_match_name(smb_fname_dst->base_name,
++					     &gmt_start);
++
++	if (ret_src != 0) {
++		errno = EXDEV;
++		return -1;
++	}
++
++	if (ret_dst != 0) {
++		errno = EROFS;
++		return -1;
++	}
++
++	return SMB_VFS_NEXT_RENAME(handle, smb_fname_src, smb_fname_dst);
++}
++
++static int shadow_copy_zfs_symlink(vfs_handle_struct *handle,
++				const char *link_contents, const struct smb_filename *new_smb_filename)
++{
++	const char *gmt_start;
++	int ret_old, ret_new;
++
++	ret_old = shadow_copy_zfs_match_name(link_contents, &gmt_start);
++	ret_new = shadow_copy_zfs_match_name(new_smb_filename->base_name, &gmt_start);
++
++	if ((ret_old != 0) || (ret_new != 0)) {
++		errno = EROFS;
++		return -1;
++	}
++
++	return SMB_VFS_NEXT_SYMLINK(handle, link_contents, new_smb_filename);
++}
++
++static int shadow_copy_zfs_link(vfs_handle_struct *handle,
++			     const struct smb_filename *oldname, 
++			     const struct smb_filename *newname)
++{
++	const char *gmt_start;
++	int ret_old, ret_new;
++
++	ret_old = shadow_copy_zfs_match_name(oldname->base_name, &gmt_start);
++	ret_new = shadow_copy_zfs_match_name(newname->base_name, &gmt_start);
++
++	if ((ret_old != 0) || (ret_new != 0)) {
++		errno = EROFS;
++		return -1;
++	}
++
++	return SMB_VFS_NEXT_LINK(handle, oldname, newname);
++}
++
++static int shadow_copy_zfs_stat(vfs_handle_struct *handle,
++			     struct smb_filename *smb_fname)
++{
++	int ret, saved_errno;
++	const char *gmt_start;
++	char *conv;
++	struct smb_filename *conv_smb_fname;
++	char *tmp;
++
++	if (shadow_copy_zfs_match_name(smb_fname->base_name, &gmt_start)) {
++		tmp = smb_fname->base_name;
++		smb_fname->base_name = convert_shadow_zfs_name(
++		    handle, smb_fname->base_name, gmt_start, True);
++
++		if (smb_fname->base_name == NULL) {
++			smb_fname->base_name = tmp;
++			return -1;
++		}
++
++		ret = SMB_VFS_NEXT_STAT(handle, smb_fname);
++		saved_errno = errno;
++		TALLOC_FREE(smb_fname->base_name);
++		smb_fname->base_name = tmp;
++		errno = saved_errno;
++		return ret;
++	} else {
++		return SMB_VFS_NEXT_STAT(handle, smb_fname);
++	}
++}
++
++static int shadow_copy_zfs_lstat(vfs_handle_struct *handle,
++			      struct smb_filename *smb_fname)
++{
++	int ret, saved_errno;
++	const char *gmt_start;
++	char *tmp;
++
++	if (shadow_copy_zfs_match_name(smb_fname->base_name, &gmt_start)) {
++		tmp = smb_fname->base_name;
++		smb_fname->base_name = convert_shadow_zfs_name(
++		    handle, smb_fname->base_name, gmt_start, True);
++
++		if (smb_fname->base_name == NULL) {
++			smb_fname->base_name = tmp;
++			return -1;
++		}
++
++		ret = SMB_VFS_NEXT_LSTAT(handle, smb_fname);
++		saved_errno = errno;
++
++		TALLOC_FREE(smb_fname->base_name);
++		smb_fname->base_name = tmp;
++
++		errno = saved_errno;
++
++		return ret;
++	} else {
++		return SMB_VFS_NEXT_LSTAT(handle, smb_fname);
++	}
++}
++
++static int shadow_copy_zfs_fstat(vfs_handle_struct *handle, files_struct *fsp,
++			      SMB_STRUCT_STAT *sbuf)
++{
++	int ret;
++	const char *gmt_start;
++
++	ret = SMB_VFS_NEXT_FSTAT(handle, fsp, sbuf);
++	if (ret == -1) {
++		return ret;
++	}
++
++	return 0;
++}
++
++static int shadow_copy_zfs_open(vfs_handle_struct *handle,
++			     struct smb_filename *smb_fname, files_struct *fsp,
++			     int flags, mode_t mode)
++{
++	int ret, saved_errno;
++	const char *gmt_start;
++	char *tmp;
++
++	if (shadow_copy_zfs_match_name(smb_fname->base_name, &gmt_start)) {
++		tmp = smb_fname->base_name;
++		smb_fname->base_name = convert_shadow_zfs_name(
++		    handle, smb_fname->base_name, gmt_start, True);
++
++		if (smb_fname->base_name == NULL) {
++			smb_fname->base_name = tmp;
++			return -1;
++		}
++
++		ret = SMB_VFS_NEXT_OPEN(handle, smb_fname, fsp, flags, mode);
++		saved_errno = errno;
++
++		TALLOC_FREE(smb_fname->base_name);
++		smb_fname->base_name = tmp;
++
++		errno = saved_errno;
++		return ret;
++	} else {
++		return SMB_VFS_NEXT_OPEN(handle, smb_fname, fsp, flags, mode);
++	}
++}
++
++static int shadow_copy_zfs_unlink(vfs_handle_struct *handle,
++			       const struct smb_filename *smb_fname) {
++	int ret, saved_errno;
++	const char *gmt_start;
++	struct smb_filename *conv;
++
++	if (shadow_copy_zfs_match_name(smb_fname->base_name, &gmt_start)) {
++		conv = cp_smb_filename(talloc_tos(), smb_fname);
++		if (conv == NULL) {
++			errno = ENOMEM;
++			return -1;
++		}
++
++		conv->base_name = convert_shadow_zfs_name(handle,
++							  smb_fname->base_name,
++							  gmt_start, True);
++		if (conv == NULL) {
++			return -1;
++		}
++
++		ret = SMB_VFS_NEXT_UNLINK(handle, conv);
++		saved_errno = errno;
++		TALLOC_FREE(conv);
++		errno = saved_errno;
++		return ret;
++	} else {
++		return SMB_VFS_NEXT_UNLINK(handle, smb_fname);
++	}
++}
++
++static int shadow_copy_zfs_chmod(vfs_handle_struct *handle,
++    const struct smb_filename *smb_fname,
++    mode_t mode)
++{
++	int ret, saved_errno;
++	const char *gmt_start;
++	char *conv;
++	struct smb_filename *conv_smb_fname = NULL;
++
++	if (shadow_copy_zfs_match_name(smb_fname->base_name, &gmt_start)) {
++		conv = convert_shadow_zfs_name(handle, smb_fname->base_name,
++					       gmt_start, True);
++		if (conv == NULL) {
++			return -1;
++		}
++
++		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
++						     conv,
++						     NULL,
++						     NULL,
++						     smb_fname->flags);
++		if (conv_smb_fname == NULL) {
++			TALLOC_FREE(conv);
++			errno = ENOMEM;
++			return -1;
++		}
++
++		ret = SMB_VFS_NEXT_CHMOD(handle, conv_smb_fname, mode);
++		saved_errno = errno;
++		TALLOC_FREE(conv);
++		TALLOC_FREE(conv_smb_fname);
++		errno = saved_errno;
++		return ret;
++	} else {
++		return SMB_VFS_NEXT_CHMOD(handle, smb_fname, mode);
++	}
++}
++
++static int shadow_copy_zfs_chown(vfs_handle_struct *handle,
++    const struct smb_filename *smb_fname,
++    uid_t uid,
++    gid_t gid)
++{
++	int ret, saved_errno;
++	const char *gmt_start;
++	char *conv;
++	struct smb_filename *conv_smb_fname = NULL;
++
++	if (shadow_copy_zfs_match_name(smb_fname->base_name, &gmt_start)) {
++		conv = convert_shadow_zfs_name(handle, smb_fname->base_name,
++					       gmt_start, True);
++		if (conv == NULL) {
++			return -1;
++		}
++
++		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
++						     conv,
++						     NULL,
++						     NULL,
++						     smb_fname->flags);
++		if (conv_smb_fname == NULL) {
++			TALLOC_FREE(conv);
++			errno = ENOMEM;
++			return -1;
++		}
++
++		ret = SMB_VFS_NEXT_CHOWN(handle, conv_smb_fname, uid, gid);
++		saved_errno = errno;
++		TALLOC_FREE(conv);
++		TALLOC_FREE(conv_smb_fname);
++		errno = saved_errno;
++		return ret;
++	} else {
++		return SMB_VFS_NEXT_CHOWN(handle, smb_fname, uid, gid);
++	}
++}
++
++static int shadow_copy_zfs_chdir(vfs_handle_struct *handle,
++			      const struct smb_filename *smb_fname)
++{
++	int ret, saved_errno;
++	const char *gmt_start;
++	char *conv;
++	struct smb_filename *conv_smb_fname = NULL;
++
++	if (shadow_copy_zfs_match_name(smb_fname->base_name, &gmt_start)) {
++		conv = convert_shadow_zfs_name(handle, smb_fname->base_name, gmt_start, True);
++		if (conv == NULL) {
++			return -1;
++		}
++
++		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
++						     conv,
++						     NULL,
++						     NULL,
++						     smb_fname->flags);
++		if (conv_smb_fname == NULL) {
++			TALLOC_FREE(conv);
++			return -1;
++		}
++
++		ret = SMB_VFS_NEXT_CHDIR(handle, conv_smb_fname);
++		saved_errno = errno;
++		TALLOC_FREE(conv);
++		TALLOC_FREE(conv_smb_fname);
++		errno = saved_errno;
++		return ret;
++	} else {
++		ret = SMB_VFS_NEXT_CHDIR(handle, smb_fname);
++		return ret;
++	}
++}
++
++static int shadow_copy_zfs_ntimes(vfs_handle_struct *handle,
++			       const struct smb_filename *smb_fname,
++			       struct smb_file_time *ft) {
++	int ret, saved_errno;
++	const char *gmt_start;
++	struct smb_filename *conv;
++
++	if (shadow_copy_zfs_match_name(smb_fname->base_name, &gmt_start)) {
++		conv = cp_smb_filename(talloc_tos(), smb_fname);
++		if (conv == NULL) {
++			errno = ENOMEM;
++			return -1;
++		}
++
++		conv->base_name = convert_shadow_zfs_name(handle,
++							  smb_fname->base_name,
++							  gmt_start, True);
++		if (conv->base_name == NULL) {
++			TALLOC_FREE(conv);
++			return -1;
++		}
++
++		ret = SMB_VFS_NEXT_NTIMES(handle, conv, ft);
++		saved_errno = errno;
++		TALLOC_FREE(conv);
++		errno = saved_errno;
++		return ret;
++	} else {
++		return SMB_VFS_NEXT_NTIMES(handle, smb_fname, ft);
++	}
++}
++
++static int shadow_copy_zfs_readlink(vfs_handle_struct *handle,
++				 const struct smb_filename *smb_fname, 
++				 char *buf, 
++				 size_t bufsiz)
++{
++	int ret, saved_errno;
++	const char *gmt_start;
++ 	struct smb_filename *conv = NULL;	
++
++	if (shadow_copy_zfs_match_name(smb_fname->base_name, &gmt_start)) {
++		conv = cp_smb_filename(talloc_tos(), smb_fname);
++		if (conv == NULL) {
++			return -1;
++		}
++		conv->base_name = convert_shadow_zfs_name(handle, smb_fname->base_name, gmt_start, True);
++
++		if (conv->base_name == NULL){
++			TALLOC_FREE(conv);
++			return -1;
++		}
++		ret = SMB_VFS_NEXT_READLINK(handle, conv, buf, bufsiz);
++		saved_errno = errno;
++		TALLOC_FREE(conv);
++		errno = saved_errno;
++		return ret;
++	} else {
++		return SMB_VFS_NEXT_READLINK(handle, smb_fname, buf, bufsiz);
++	}
++}
++
++static int shadow_copy_zfs_mknod(vfs_handle_struct *handle,
++				const struct smb_filename *smb_fname, 
++				mode_t mode, 
++				SMB_DEV_T dev) 
++{
++	int ret, saved_errno;
++	const char *gmt_start;
++	char *conv;
++	struct smb_filename *conv_smb_fname;
++
++	if (shadow_copy_zfs_match_name(smb_fname->base_name, &gmt_start)) {
++		conv = convert_shadow_zfs_name(handle, smb_fname->base_name, gmt_start, True);
++		if (conv == NULL) {
++			return -1;
++		}
++		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
++						     conv,
++						     NULL,
++						     NULL,
++						     smb_fname->flags);
++		if (conv_smb_fname == NULL) {
++			TALLOC_FREE(conv);
++			return -1;
++		}
++
++		ret = SMB_VFS_NEXT_MKNOD(handle, conv_smb_fname, mode, dev);
++		saved_errno = errno;
++		TALLOC_FREE(conv);
++		TALLOC_FREE(conv_smb_fname);
++		errno = saved_errno;
++		return ret;
++	} else {
++		return SMB_VFS_NEXT_MKNOD(handle, smb_fname, mode, dev);
++	}
++}
++
++static struct smb_filename *shadow_copy_zfs_realpath(vfs_handle_struct *handle, TALLOC_CTX *ctx,
++				   const struct smb_filename *smb_fname)
++{
++	struct smb_filename *ret = NULL;
++	int saved_errno;
++	const char *gmt_start;
++	char *conv;
++	struct smb_filename *conv_smb_fname;
++
++	if (shadow_copy_zfs_match_name(smb_fname->base_name, &gmt_start)) {
++		conv = convert_shadow_zfs_name(handle, smb_fname->base_name, gmt_start, True);
++		if (conv == NULL) {
++			TALLOC_FREE(conv);
++			return NULL;
++		}
++		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
++						     conv,
++						     NULL,
++						     NULL,
++						     smb_fname->flags);
++		if (conv_smb_fname == NULL) {
++			TALLOC_FREE(conv);
++			return NULL;
++		}
++
++		ret = SMB_VFS_NEXT_REALPATH(handle, ctx, conv_smb_fname);
++		saved_errno = errno;
++		TALLOC_FREE(conv);
++		TALLOC_FREE(conv_smb_fname);
++		errno = saved_errno;
++		return ret;
++	} else {
++		return SMB_VFS_NEXT_REALPATH(handle, ctx, smb_fname);
++	}
++}
++
++static int shadow_copy_zfs_get_shadow_copy_zfs_data(vfs_handle_struct *handle,
++						    files_struct *fsp,
++						    struct shadow_copy_data
++						    *shadow_copy_zfs_data,
++						    bool labels)
++{
++	TALLOC_CTX *tmp_ctx;
++	struct shadow_copy_zfs_config *config;
++	struct snapshot_list *snapshots;
++	unsigned idx;
++	char tmpbuf[PATH_MAX];
++	char *fullpath, *to_free;
++	ssize_t len;
++
++        /* Set the hash of the full pathname. */
++
++	len = full_path_tos(handle->conn->connectpath, fsp->fsp_name->base_name, tmpbuf,
++			    sizeof(tmpbuf), &fullpath, &to_free);
++
++	if (len == -1) {
++		errno = ENOMEM;
++                return -1;
++        }
++
++	SMB_VFS_HANDLE_GET_DATA(handle, config, struct shadow_copy_zfs_config,
++	    return -1);
++
++	tmp_ctx = talloc_new(config);
++
++	snapshots = shadow_copy_zfs_list_snapshots(tmp_ctx,
++						   fullpath,
++						   config->inclusions,
++						   config->exclusions);
++
++	if (snapshots == NULL) {
++		DBG_ERR("failed to retrieve snapshots for %s\n", fullpath);
++		TALLOC_FREE(tmp_ctx);
++		TALLOC_FREE(to_free);
++		return -1;
++	}
++	shadow_copy_zfs_sort_data(handle, snapshots);
++	shadow_copy_zfs_data->num_volumes = snapshots->num_entries;
++	shadow_copy_zfs_data->labels = NULL;
++
++	if (labels) {
++		shadow_copy_zfs_data->labels =
++			talloc_array(shadow_copy_zfs_data,
++				     SHADOW_COPY_LABEL,
++				     shadow_copy_zfs_data->num_volumes);
++
++		if (shadow_copy_zfs_data->labels == NULL) {
++			DEBUG(0,("shadow_copy_zfs: out of memory\n"));
++			TALLOC_FREE(tmp_ctx);
++			TALLOC_FREE(to_free);
++			return -1;
++		}
++
++		for (idx = 0; idx < snapshots->num_entries; idx++) {
++			strlcpy(shadow_copy_zfs_data->labels[idx],
++				snapshots->entries[idx]->label,
++				sizeof(shadow_copy_zfs_data->labels[0]));
++		}
++	}
++
++	TALLOC_FREE(to_free);
++	TALLOC_FREE(tmp_ctx);
++	return 0;
++}
++
++static NTSTATUS shadow_copy_zfs_fget_nt_acl(vfs_handle_struct *handle,
++					struct files_struct *fsp,
++					uint32_t security_info,
++					TALLOC_CTX *mem_ctx,
++					struct security_descriptor **ppdesc)
++{
++	NTSTATUS ret;
++	int saved_errno;
++	const char *gmt_start;
++	char *conv;
++	struct smb_filename *smb_fname = NULL;
++
++	if (shadow_copy_zfs_match_name(fsp->fsp_name->base_name, &gmt_start)) {
++		conv = convert_shadow_zfs_name(handle, fsp->fsp_name->base_name,
++					       gmt_start, True);
++		if (conv == NULL) {
++			return map_nt_error_from_unix(errno);
++		}
++
++		smb_fname = synthetic_smb_fname(talloc_tos(),
++						conv,
++						NULL,
++						NULL,
++						fsp->fsp_name->flags);
++		if (smb_fname == NULL) {
++			TALLOC_FREE(conv);
++			return NT_STATUS_NO_MEMORY;
++		}
++
++		ret = SMB_VFS_NEXT_GET_NT_ACL(handle, smb_fname, security_info,
++					      mem_ctx, ppdesc);
++		saved_errno = errno;
++		TALLOC_FREE(conv);
++		TALLOC_FREE(smb_fname);
++		errno = saved_errno;
++		return ret;
++	} else {
++		return SMB_VFS_NEXT_FGET_NT_ACL(handle, fsp, security_info,
++					       mem_ctx, ppdesc);
++	}
++}
++
++static NTSTATUS shadow_copy_zfs_get_nt_acl(vfs_handle_struct *handle,
++    const struct smb_filename *smb_fname,
++    uint32_t security_info,
++    TALLOC_CTX *mem_ctx,
++    struct security_descriptor **ppdesc)
++{
++	NTSTATUS ret;
++	int saved_errno;
++	const char *gmt_start;
++	char *conv;
++	struct smb_filename *conv_smb_fname = NULL;
++
++	if (shadow_copy_zfs_match_name(smb_fname->base_name, &gmt_start)) {
++		conv = convert_shadow_zfs_name(handle, smb_fname->base_name,
++					       gmt_start, True);
++		if (conv == NULL) {
++			return map_nt_error_from_unix(errno);
++		}
++
++		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
++						     conv,
++						     NULL,
++						     NULL,
++						     smb_fname->flags);
++		if (conv_smb_fname == NULL) {
++			TALLOC_FREE(conv);
++			return NT_STATUS_NO_MEMORY;
++		}
++
++		ret = SMB_VFS_NEXT_GET_NT_ACL(handle, conv_smb_fname,
++					      security_info, mem_ctx, ppdesc);
++		saved_errno = errno;
++		TALLOC_FREE(conv);
++		TALLOC_FREE(conv_smb_fname);
++		errno = saved_errno;
++		return ret;
++	} else {
++		return SMB_VFS_NEXT_GET_NT_ACL(handle, smb_fname, security_info,
++					       mem_ctx, ppdesc);
++	}
++}
++
++static int shadow_copy_zfs_mkdir(vfs_handle_struct *handle,
++    const struct smb_filename *smb_fname, mode_t mode)
++{
++	int ret, saved_errno;
++	const char *gmt_start;
++	char *conv;
++	struct smb_filename *conv_smb_fname = NULL;
++
++	if (shadow_copy_zfs_match_name(smb_fname->base_name, &gmt_start)) {
++		conv = convert_shadow_zfs_name(handle, smb_fname->base_name,
++					       gmt_start, True);
++		if (conv == NULL) {
++			return -1;
++		}
++
++		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
++						     conv,
++						     NULL,
++						     NULL,
++						     smb_fname->flags);
++
++		if (conv_smb_fname == NULL) {
++			TALLOC_FREE(conv);
++			return -1;
++		}
++
++		ret = SMB_VFS_NEXT_MKDIR(handle, conv_smb_fname, mode);
++		saved_errno = errno;
++		TALLOC_FREE(conv);
++		TALLOC_FREE(conv_smb_fname);
++		errno = saved_errno;
++		return ret;
++	} else {
++		return SMB_VFS_NEXT_MKDIR(handle, smb_fname, mode);
++	}
++}
++
++static int shadow_copy_zfs_rmdir(vfs_handle_struct *handle,
++    const struct smb_filename *smb_fname)
++{
++	int ret, saved_errno;
++	const char *gmt_start;
++	char *conv;
++	struct smb_filename *conv_smb_fname = NULL;
++
++	if (shadow_copy_zfs_match_name(smb_fname->base_name, &gmt_start)) {
++		conv = convert_shadow_zfs_name(handle, smb_fname->base_name,
++					       gmt_start, True);
++		if (conv == NULL) {
++			return -1;
++		}
++
++		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
++						     conv,
++						     NULL,
++						     NULL,
++						     smb_fname->flags);
++		if (conv_smb_fname == NULL) {
++			TALLOC_FREE(conv);
++			return -1;
++		}
++
++		ret = SMB_VFS_NEXT_RMDIR(handle, conv_smb_fname);
++		saved_errno = errno;
++		TALLOC_FREE(conv);
++		TALLOC_FREE(conv_smb_fname);
++		errno = saved_errno;
++		return ret;
++	} else {
++		return SMB_VFS_NEXT_RMDIR(handle, smb_fname);
++	}
++}
++
++static int shadow_copy_zfs_chflags(vfs_handle_struct *handle, 
++				const struct smb_filename *smb_fname,
++				unsigned int flags)
++{
++	int ret, saved_errno;
++	const char *gmt_start;
++	char *conv;
++	struct smb_filename *conv_smb_fname = NULL;
++
++	if (shadow_copy_zfs_match_name(smb_fname->base_name, &gmt_start)) {
++		conv = convert_shadow_zfs_name(handle, smb_fname->base_name, gmt_start, True);
++		if (conv == NULL) {
++			return -1;
++		}
++		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
++						conv,
++						NULL,
++						NULL,
++						smb_fname->flags);
++		if (conv_smb_fname == NULL) {
++			TALLOC_FREE(conv);
++			return -1;
++		}
++
++		ret = SMB_VFS_NEXT_CHFLAGS(handle, conv_smb_fname, flags);
++		saved_errno = errno;
++		TALLOC_FREE(conv);
++		TALLOC_FREE(conv_smb_fname);
++		errno = saved_errno;
++		return ret;
++	} else {
++		return SMB_VFS_NEXT_CHFLAGS(handle, smb_fname, flags);
++	}
++}
++
++static ssize_t shadow_copy_zfs_getxattr(vfs_handle_struct *handle,
++				const struct smb_filename *smb_fname, 
++				const char *aname,
++				void *value, 
++				size_t size)
++{
++	int ret, saved_errno;
++	const char *gmt_start;
++	char *conv;
++	struct smb_filename *conv_smb_fname = NULL;
++
++	if (shadow_copy_zfs_match_name(smb_fname->base_name, &gmt_start)) {
++		conv = convert_shadow_zfs_name(handle, smb_fname->base_name, gmt_start, True);
++		if (conv == NULL) {
++			return -1;
++		}
++		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
++						conv,
++						NULL,
++						NULL,
++						smb_fname->flags);
++		if (conv_smb_fname == NULL) {
++			TALLOC_FREE(conv);
++			return -1;
++		}
++
++		ret = SMB_VFS_NEXT_GETXATTR(handle, conv_smb_fname, aname, value,
++					    size);
++		saved_errno = errno;
++		TALLOC_FREE(conv);
++		TALLOC_FREE(conv_smb_fname);
++		errno = saved_errno;
++		return ret;
++	} else {
++		return SMB_VFS_NEXT_GETXATTR(handle, smb_fname, aname, value,
++					     size);
++	}
++}
++
++static ssize_t shadow_copy_zfs_listxattr(struct vfs_handle_struct *handle,
++				const struct smb_filename *smb_fname,
++				char *list, 
++				size_t size)
++{
++	int ret, saved_errno;
++	const char *gmt_start;
++	char *conv;
++	struct smb_filename *conv_smb_fname = NULL;
++
++	if (shadow_copy_zfs_match_name(smb_fname->base_name, &gmt_start)) {
++		conv = convert_shadow_zfs_name(handle, smb_fname->base_name, gmt_start, True);
++		if (conv == NULL) {
++			return -1;
++		}
++		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
++						conv,
++						NULL,
++						NULL,
++						smb_fname->flags);
++		if (conv_smb_fname == NULL) {
++			TALLOC_FREE(conv);
++			return -1;
++		}
++
++		ret = SMB_VFS_NEXT_LISTXATTR(handle, conv_smb_fname, list, size);
++		saved_errno = errno;
++		TALLOC_FREE(conv);
++		TALLOC_FREE(conv_smb_fname);
++		errno = saved_errno;
++		return ret;
++	} else {
++		return SMB_VFS_NEXT_LISTXATTR(handle, smb_fname, list, size);
++	}
++}
++
++static int shadow_copy_zfs_removexattr(vfs_handle_struct *handle,
++				const struct smb_filename *smb_fname, 
++				const char *aname)
++{
++	int ret, saved_errno;
++	const char *gmt_start;
++	char *conv;
++	struct smb_filename *conv_smb_fname = NULL;
++
++	if (shadow_copy_zfs_match_name(smb_fname->base_name, &gmt_start)) {
++		conv = convert_shadow_zfs_name(handle, smb_fname->base_name, gmt_start, True);
++		if (conv == NULL) {
++			return -1;
++		}
++		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
++						conv,
++						NULL,
++						NULL,
++						smb_fname->flags);
++		if (conv_smb_fname == NULL) {
++			TALLOC_FREE(conv);
++			return -1;
++		}
++
++		ret = SMB_VFS_NEXT_REMOVEXATTR(handle, conv_smb_fname, aname);
++		saved_errno = errno;
++		TALLOC_FREE(conv);
++		TALLOC_FREE(conv_smb_fname);
++		errno = saved_errno;
++		return ret;
++	} else {
++		return SMB_VFS_NEXT_REMOVEXATTR(handle, smb_fname, aname);
++	}
++}
++
++static int shadow_copy_zfs_setxattr(struct vfs_handle_struct *handle,
++				const struct smb_filename *smb_fname,
++				const char *aname, 
++				const void *value,
++				size_t size, 
++				int flags)
++{
++	int ret, saved_errno;
++	const char *gmt_start;
++	char *conv;
++	struct smb_filename *conv_smb_fname = NULL;
++
++	if (shadow_copy_zfs_match_name(smb_fname->base_name, &gmt_start)) {
++		conv = convert_shadow_zfs_name(handle, smb_fname->base_name, gmt_start, True);
++		if (conv == NULL) {
++			return -1;
++		}
++		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
++						conv,
++						NULL,
++						NULL,
++						smb_fname->flags);
++		if (conv_smb_fname == NULL) {
++			TALLOC_FREE(conv);
++			return -1;
++		}
++
++		ret = SMB_VFS_NEXT_SETXATTR(handle, conv_smb_fname, aname, value, size,
++					    flags);
++		saved_errno = errno;
++		TALLOC_FREE(conv);
++		errno = saved_errno;
++		return ret;
++	} else {
++		return SMB_VFS_NEXT_SETXATTR(handle, smb_fname, aname, value, size,
++					     flags);
++	}
++}
++
++static int shadow_copy_zfs_get_real_filename(struct vfs_handle_struct *handle,
++					  const char *path,
++					  const char *name,
++					  TALLOC_CTX *mem_ctx,
++					  char **found_name)
++{
++	const char *gmt_start;
++	ssize_t ret;
++	int saved_errno;
++	char *conv;
++
++
++	if (shadow_copy_zfs_match_name(path, &gmt_start)) {
++		conv = convert_shadow_zfs_name(handle, path, gmt_start, True);
++		if (conv == NULL) {
++			return -1;
++		}
++
++		ret = SMB_VFS_NEXT_GET_REAL_FILENAME(handle, conv, name,
++						     mem_ctx, found_name);
++		saved_errno = errno;
++		TALLOC_FREE(conv);
++		errno = saved_errno;
++		return ret;
++	} else {
++		return SMB_VFS_NEXT_GET_REAL_FILENAME(handle, path, name,
++						      mem_ctx, found_name);
++	}
++}
++
++static const char *shadow_copy_zfs_connectpath(struct vfs_handle_struct *handle,
++					    const struct smb_filename *smb_fname)
++{
++	const char *ret;
++	int saved_errno;
++	const char *gmt_start;
++	char *conv;
++	const struct smb_filename *conv_smb_fname = NULL;
++	const struct smb_filename *tmp_smb_fname = NULL;
++
++	if (shadow_copy_zfs_match_name(smb_fname->base_name, &gmt_start)) {
++		conv = convert_shadow_zfs_name(handle, smb_fname->base_name, gmt_start, True);
++#if 0
++		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
++						conv,
++						NULL,
++						NULL,
++						smb_fname->flags);
++		if (conv_smb_fname == NULL) {
++			TALLOC_FREE(conv);
++			return NULL;
++		}
++		tmp_smb_fname = SMB_VFS_NEXT_REALPATH(handle, talloc_tos(), conv_smb_fname);
++		saved_errno = errno;
++		TALLOC_FREE(conv);
++		TALLOC_FREE(conv_smb_fname);
++		errno = saved_errno;
++		return tmp_smb_fname->base_name;
++#endif
++		return conv;
++	} else {
++		return SMB_VFS_NEXT_CONNECTPATH(handle, smb_fname);
++	}
++}
++
++static uint64_t shadow_copy_zfs_disk_free(vfs_handle_struct *handle,
++				const struct smb_filename *smb_fname, 
++				uint64_t *bsize,
++				uint64_t *dfree, 
++				uint64_t *dsize)
++{
++	uint64_t ret = (uint64_t)-1;
++	int saved_errno;
++	const char *gmt_start;
++	char *conv;
++	struct smb_filename *conv_smb_fname = NULL;
++
++	if (shadow_copy_zfs_match_name(smb_fname->base_name, &gmt_start)) {
++		conv = convert_shadow_zfs_name(handle, smb_fname->base_name, gmt_start, True);
++		if (conv == NULL) {
++			return (uint64_t)-1;
++		}
++		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
++						conv,
++						NULL,
++						NULL,
++						smb_fname->flags);
++		if (conv_smb_fname == NULL) {
++			TALLOC_FREE(conv);
++			return -1;
++		}
++
++		ret = SMB_VFS_NEXT_DISK_FREE(handle, conv_smb_fname, bsize, dfree, dsize);
++		saved_errno = errno;
++		TALLOC_FREE(conv);
++		TALLOC_FREE(conv_smb_fname);
++		errno = saved_errno;
++		return ret;
++	} else {
++		return SMB_VFS_NEXT_DISK_FREE(handle, smb_fname, bsize, dfree,
++					      dsize);
++	}
++}
++
++static int shadow_copy_zfs_get_quota(vfs_handle_struct *handle, const struct smb_filename *smb_fname,
++				  enum SMB_QUOTA_TYPE qtype, unid_t id,
++				  SMB_DISK_QUOTA *dq)
++{
++	int ret, saved_errno;
++	const char *gmt_start;
++	char *conv;
++	struct smb_filename *conv_smb_fname = NULL;
++
++	if (shadow_copy_zfs_match_name(smb_fname->base_name, &gmt_start)) {
++		conv = convert_shadow_zfs_name(handle, smb_fname->base_name, gmt_start, True);
++		if (conv == NULL) {
++			return -1;
++		}
++		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
++						conv,
++						NULL,
++						NULL,
++						smb_fname->flags);
++		if (conv_smb_fname == NULL) {
++			TALLOC_FREE(conv);
++			return -1;
++		}
++
++		ret = SMB_VFS_NEXT_GET_QUOTA(handle, conv_smb_fname, qtype, id, dq);
++		saved_errno = errno;
++		TALLOC_FREE(conv);
++		TALLOC_FREE(conv_smb_fname);
++		errno = saved_errno;
++		return ret;
++	} else {
++		return SMB_VFS_NEXT_GET_QUOTA(handle, smb_fname, qtype, id, dq);
++	}
++}
++
++static int shadow_copy_zfs_connect(struct vfs_handle_struct *handle,
++				const char *service, const char *user)
++{
++	struct shadow_copy_zfs_config *config;
++	int ret;
++	const char *gmt_format;
++	const char *sort_order;
++	const char *tmp_ds = NULL;
++
++	DEBUG(10, (__location__ ": cnum[%u], connectpath[%s]\n",
++		   (unsigned)handle->conn->cnum,
++		   handle->conn->connectpath));
++
++	ret = SMB_VFS_NEXT_CONNECT(handle, service, user);
++	if (ret < 0) {
++		return ret;
++	}
++
++	config = talloc_zero(handle->conn, struct shadow_copy_zfs_config);
++	if (config == NULL) {
++		DEBUG(0, ("talloc_zero() failed\n"));
++		errno = ENOMEM;
++		return -1;
++	}
++
++	shadow_copy_path_to_dataset(handle->conn->connectpath, &tmp_ds);
++
++	config->dataset_path = talloc_strdup(config, tmp_ds);
++
++	if (config->dataset_path == NULL) {
++		DBG_ERR("unable to detect dataset for path %s\n", handle->conn->connectpath);
++		errno = EINVAL;
++		return -1;
++	}
++
++	DBG_INFO("Dataset_Path is %s\n", config->dataset_path);
++
++	sort_order = lp_parm_const_string(SNUM(handle->conn),
++					  "shadow", "sort", "desc");
++
++	config->sort_order = talloc_strdup(config, sort_order);
++	if (config->sort_order == NULL) {
++		DEBUG(0, ("talloc_strdup() failed\n"));
++		errno = ENOMEM;
++		return -1;
++	}
++
++	config->inclusions = lp_parm_string_list(SNUM(handle->conn), "shadow",
++						"include", empty_list);
++	config->exclusions = lp_parm_string_list(SNUM(handle->conn), "shadow",
++						 "exclude", empty_list);
++
++	config->cache_enabled = lp_parm_bool(SNUM(handle->conn), "shadow",
++						"cache_enabled", true);
++
++	DBG_DEBUG("shadow_copy_zfs_connect: configuration:\n"
++		   "  share root: '%s'\n"
++		   "  dataset path: '%s'\n"
++		   "  sort order: %s\n"
++		   "",
++		   handle->conn->connectpath,
++		   config->dataset_path,
++		   config->sort_order
++		   );
++
++
++	SMB_VFS_HANDLE_SET_DATA(handle, config,
++				NULL, struct shadow_copy_zfs_config,
++				return -1);
++
++	return 0;
++}
++
++static struct vfs_fn_pointers vfs_shadow_copy_zfs_fns = {
++	.connect_fn = shadow_copy_zfs_connect,
++	.opendir_fn = shadow_copy_zfs_opendir,
++	.disk_free_fn = shadow_copy_zfs_disk_free,
++	.get_quota_fn = shadow_copy_zfs_get_quota,
++	.rename_fn = shadow_copy_zfs_rename,
++	.link_fn = shadow_copy_zfs_link,
++	.symlink_fn = shadow_copy_zfs_symlink,
++	.stat_fn = shadow_copy_zfs_stat,
++	.lstat_fn = shadow_copy_zfs_lstat,
++	.fstat_fn = shadow_copy_zfs_fstat,
++	.open_fn = shadow_copy_zfs_open,
++	.unlink_fn = shadow_copy_zfs_unlink,
++	.chmod_fn = shadow_copy_zfs_chmod,
++	.chown_fn = shadow_copy_zfs_chown,
++	.chdir_fn = shadow_copy_zfs_chdir,
++	.ntimes_fn = shadow_copy_zfs_ntimes,
++	.readlink_fn = shadow_copy_zfs_readlink,
++	.mknod_fn = shadow_copy_zfs_mknod,
++	.realpath_fn = shadow_copy_zfs_realpath,
++	.get_nt_acl_fn = shadow_copy_zfs_get_nt_acl,
++	.fget_nt_acl_fn = shadow_copy_zfs_fget_nt_acl,
++	.get_shadow_copy_data_fn = shadow_copy_zfs_get_shadow_copy_zfs_data,
++	.mkdir_fn = shadow_copy_zfs_mkdir,
++	.rmdir_fn = shadow_copy_zfs_rmdir,
++	.getxattr_fn = shadow_copy_zfs_getxattr,
++	.listxattr_fn = shadow_copy_zfs_listxattr,
++	.removexattr_fn = shadow_copy_zfs_removexattr,
++	.setxattr_fn = shadow_copy_zfs_setxattr,
++	.chflags_fn = shadow_copy_zfs_chflags,
++	.get_real_filename_fn = shadow_copy_zfs_get_real_filename,
++	.connectpath_fn = shadow_copy_zfs_connectpath,
++};
++
++NTSTATUS vfs_shadow_copy_zfs_init(TALLOC_CTX *);
++NTSTATUS vfs_shadow_copy_zfs_init(TALLOC_CTX *ctx)
++{
++	return smb_register_vfs(SMB_VFS_INTERFACE_VERSION,
++				"shadow_copy_zfs", &vfs_shadow_copy_zfs_fns);
++}
+diff --git a/source3/modules/zfs_list_snapshots.c b/source3/modules/zfs_list_snapshots.c
+new file mode 100644
+index 0000000..3977e11
+--- /dev/null
++++ b/source3/modules/zfs_list_snapshots.c
+@@ -0,0 +1,276 @@
++/* shadow_copy_zfs: a shadow copy module for ZFS
++ *
++ * Copyright (C) XStor Systems Inc 2011
++ * Copyright (C) iXsystems Inc     2016
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ */
++
++#include <stdbool.h>
++#include <talloc.h>
++#include <sys/types.h>
++#include <sys/time.h>
++#include <libzfs.h>
++#include "../lib/util/debug.h"
++#include "smb_macros.h"
++#include "modules/zfs_list_snapshots.h"
++
++#define SHADOW_COPY_ZFS_GMT_FORMAT "@GMT-%Y.%m.%d-%H.%M.%S"
++
++int shadow_copy_path_to_dataset(const char *pathname, const char **dataset_name_out)
++{
++        libzfs_handle_t *libzfsp;
++        zfs_handle_t *zfsp;
++	const char *dataset_name = NULL;
++        if (pathname == NULL) {
++                return (-1);
++        }
++
++        if ((libzfsp = libzfs_init()) == NULL) {
++                return (NULL);
++        }
++
++        libzfs_print_on_error(libzfsp, B_TRUE);
++
++        zfsp = zfs_path_to_zhandle(libzfsp, pathname,
++                ZFS_TYPE_VOLUME|ZFS_TYPE_DATASET|ZFS_TYPE_FILESYSTEM);
++
++        if (zfsp == NULL) {
++                DBG_ERR("Failed to obtain zhandle on parent directory: (%s)\n", pathname);
++                libzfs_fini(libzfsp);
++                return -1;
++        }
++        dataset_name = zfs_get_name(zfsp);
++        zfs_close(zfsp);
++        libzfs_fini(libzfsp);
++	 *dataset_name_out = dataset_name;
++
++        return 0;
++}
++
++static bool shadow_copy_zfs_is_snapshot_included(struct iter_info *info,
++    const char *snap_name)
++{
++	const char **pattern;
++
++#if 0
++	pattern = info->inclusions;
++	while (*pattern) {
++		if (unix_wild_match(*pattern, snap_name)) {
++			break;
++		}
++		pattern++;
++	}
++
++	if (*info->inclusions && !*pattern) {
++		DEBUG(2,("shadow_copy_zfs_add_snapshot: snapshot %s "
++		    "not in inclusion list\n", snap_name));
++		return false;
++	}
++
++	pattern = info->exclusions;
++	while (*pattern) {
++		if (unix_wild_match(*pattern, snap_name)) {
++			DEBUG(2,("shadow_copy_zfs_add_snapshot: snapshot %s "
++			    "in exclusion list\n", snap_name));
++			return false;
++		}
++		pattern++;
++	}
++#endif
++
++	return true;
++}
++
++static int shadow_copy_zfs_add_snapshot(zfs_handle_t *snap, void *data)
++{
++	struct iter_info *info = (struct iter_info *) data;
++	struct snapshot_entry *entry;
++	const char *snap_name;
++	char ts_buf[20];
++	time_t timestamp_t;
++	struct tm timestamp;
++	int rc;
++	size_t req_mem, name_len;
++
++	/* ignore excluded snapshots */
++	snap_name = strchr(zfs_get_name(snap), '@') + 1;
++
++	if (!shadow_copy_zfs_is_snapshot_included(info, snap_name)) {
++		zfs_close(snap);
++		return 0;
++	}
++
++	/* get creation date */
++	rc = zfs_prop_get(snap, ZFS_PROP_CREATION, ts_buf, sizeof(ts_buf),
++			  NULL, NULL, 0, 1);
++	if (rc != 0) {
++		DEBUG(0,("shadow_copy_zfs_add_snapshot: error getting "
++		    "creation date: %s\n", strerror(errno)));
++
++		zfs_close(snap);
++		return -2;
++	}
++
++	sscanf(ts_buf, "%lu", &timestamp_t);
++
++	/* expand list if necessary */
++	req_mem = sizeof(*info->snapshots) +
++		  info->snapshots->num_entries *
++		  sizeof(info->snapshots->entries[0]);
++
++	if (req_mem > talloc_get_size(info->snapshots)) {
++		req_mem += info->snapshots->num_entries / 2 *
++			   sizeof(info->snapshots->entries[0]);
++		info->snapshots = TALLOC_REALLOC(talloc_parent(info->snapshots),
++						 info->snapshots, req_mem);
++		if (info->snapshots == NULL) {
++			DEBUG(0,("shadow_copy_zfs_add_snapshot: out of memory "
++			    "(requested %zu bytes)\n", req_mem));
++
++			zfs_close(snap);
++			return -2;
++		}
++	}
++
++	/* add entry */
++	name_len = strlen(snap_name);
++
++	entry = talloc_size(info->snapshots, sizeof(*entry) + name_len);
++	if (entry == NULL) {
++		DEBUG(0,("shadow_copy_zfs_add_snapshot: out of memory "
++		    "(requested %lu bytes)\n", sizeof(*entry) + name_len));
++
++		zfs_close(snap);
++		return -2;
++	}
++
++	info->snapshots->entries[info->snapshots->num_entries++] = entry;
++
++	gmtime_r(&timestamp_t, &timestamp);
++	strftime(entry->label, sizeof(entry->label), SHADOW_COPY_ZFS_GMT_FORMAT,
++		 &timestamp);
++
++	strlcpy(entry->name, snap_name, name_len + 1);
++
++	zfs_close(snap);
++	return 0;
++}
++
++/*
++  work out the mountpoint of the filesystem
++ */
++struct snapshot_list *shadow_copy_zfs_list_snapshots(TALLOC_CTX *mem_ctx,
++    const char *fs, const char **inclusions, const char **exclusions)
++{
++	struct snapshot_list *snapshots = NULL;
++	struct iter_info iter_info;
++	size_t initial_size;
++	libzfs_handle_t *libzfs = NULL;
++	zfs_handle_t *zfs = NULL;
++	int rc;
++
++	/* initialize our result */
++	initial_size = sizeof(*snapshots) + 10 * sizeof(snapshots->entries[0]);
++	snapshots = talloc_size(mem_ctx, initial_size);
++
++	if (snapshots == NULL) {
++		DEBUG(0,("shadow_copy_zfs_list_snapshots: out of memory"
++		    "(requested %zu bytes)\n", initial_size));
++		goto error;
++	}
++
++	snapshots->mountpoint = NULL;
++	snapshots->dataset_name = NULL;
++	snapshots->num_entries = 0;
++
++	libzfs = libzfs_init();
++
++	if (!libzfs) {
++		DEBUG(0,("shadow_copy_zfs_list_snapshots: error opening "
++		    "libzfs: %s\n", strerror(errno)));
++		goto error;
++	}
++
++        zfs = zfs_path_to_zhandle(libzfs, fs,
++                ZFS_TYPE_VOLUME|ZFS_TYPE_DATASET|ZFS_TYPE_FILESYSTEM);
++
++        if (zfs == NULL) {
++                DBG_ERR("shadow_copy_zfs_list_snapshots: error getting " 
++			"zhandle from path '%s' (%s)\n", fs, strerror(errno));
++		goto error;
++        }
++
++	/* get mountpoint */
++	snapshots->mountpoint = talloc_size(snapshots, ZFS_MAXPROPLEN + 1);
++	snapshots->dataset_name = zfs_get_name(zfs);
++
++	if (snapshots->mountpoint == NULL) {
++		DEBUG(0,("shadow_copy_zfs_list_snapshots: out of memory "
++		    "(requested %d bytes)\n",  ZFS_MAXPROPLEN + 1));
++		goto error;
++	}
++
++	rc = zfs_prop_get(zfs, ZFS_PROP_MOUNTPOINT, snapshots->mountpoint,
++			  talloc_get_size(snapshots->mountpoint), NULL, NULL,
++			  0, 0);
++
++	if (rc != 0) {
++		DEBUG(0,("shadow_copy_zfs_list_snapshots: error getting "
++		    "mountpoint for '%s': %s\n", fs, strerror(errno)));
++		goto error;
++	}
++
++	/* get snapshots */
++	iter_info.snapshots = snapshots;
++	iter_info.inclusions = inclusions;
++	iter_info.exclusions = exclusions;
++
++	if (iter_info.inclusions == NULL) {
++		DEBUG(0,("shadow_copy_zfs_list_snapshots: error getting "
++		    "shadow:include parameter\n"));
++		goto error;
++	}
++
++	if (iter_info.exclusions == NULL) {
++		DEBUG(0,("shadow_copy_zfs_list_snapshots: error getting "
++		    "shadow:exclude parameter\n"));
++		goto error;
++	}
++
++	rc = zfs_iter_snapshots(zfs, false, shadow_copy_zfs_add_snapshot, &iter_info);
++
++	if (rc != 0) {
++		DEBUG(0,("shadow_copy_zfs_list_snapshots: error getting "
++		    "snapshots for '%s': %s\n", fs, strerror(errno)));
++		goto error;
++	}
++
++	snapshots = iter_info.snapshots;
++	time(&snapshots->timestamp);
++
++	goto done;
++
++error:
++	TALLOC_FREE(snapshots);
++
++done:
++	if (zfs)
++		zfs_close(zfs);
++	if (libzfs)
++		libzfs_fini(libzfs);
++
++	return snapshots;
++}
+diff --git a/source3/modules/zfs_list_snapshots.h b/source3/modules/zfs_list_snapshots.h
+new file mode 100644
+index 0000000..951dd34
+--- /dev/null
++++ b/source3/modules/zfs_list_snapshots.h
+@@ -0,0 +1,55 @@
++/*
++ * shadow_copy_zfs: a shadow copy module for ZFS
++ *
++ * Copyright (C) XStor Systems Inc 2011
++ * Copyright (C) iXsystems Inc     2016
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ */
++
++
++#ifndef __ZFS_LIST_SNAPSHOTS_H
++#define __ZFS_LIST_SNAPSHOTS_H
++
++int shadow_copy_path_to_dataset(const char *pathname, const char **dataset_name);
++
++struct iter_info
++{
++    struct snapshot_list *snapshots;
++    const char **inclusions;
++    const char **exclusions;
++};
++
++struct snapshot_entry
++{
++    char label[25];
++    char name[1];
++};
++
++struct snapshot_list
++{
++    time_t timestamp;
++    char *mountpoint;
++    char *dataset_name;
++    int (*cmpfunc)(const void *, const void *);
++    size_t num_entries;
++    struct snapshot_entry *entries[1];
++};
++
++struct snapshot_list *shadow_copy_zfs_list_snapshots(TALLOC_CTX *mem_ctx,
++    const char *fs, const char **inclusions, const char **exclusions);
++
++#endif	/* __ZFS_LIST_SNAPSHOTS_H */
++
