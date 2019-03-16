@@ -276,9 +276,9 @@ lib/samba4/private/libpopt-samba3-samba4.so
 lib/samba4/private/libpopt-samba3-cmdline-samba4.so 
 lib/samba4/private/libprinting-migrate-samba4.so
 %%AD_DC%%lib/samba4/private/libpyldb-util.so.1
-%%AD_DC%%lib/samba4/private/libpyldb-util.so.1.5.2
+%%AD_DC%%lib/samba4/private/libpyldb-util.so.1.5.4
 %%AD_DC%%lib/samba4/private/libpytalloc-util.so.2
-%%AD_DC%%lib/samba4/private/libpytalloc-util.so.2.1.15
+%%AD_DC%%lib/samba4/private/libpytalloc-util.so.2.1.16
 lib/samba4/private/libregistry-samba4.so
 lib/samba4/private/libreplace-samba4.so
 lib/samba4/private/libroken-samba4.so.19
