@@ -1,5 +1,5 @@
 '\" t
-.\"     Title: SAMBA_GPOUPDATE
+.\"     Title: SAMBA_GPUPDATE
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
 .\"      Date: 2017-07-11
@@ -28,29 +28,25 @@
 .\" * MAIN CONTENT STARTS HERE *
 .\" -----------------------------------------------------------------
 .SH "NAME"
-samba_gpoupdate \- apply group policy
+samba_gpupdate \- apply group policy
 .SH "SYNOPSIS"
-.HP \w'\fBsamba_gpoupdate\fR\ 'u
-\fBsamba_gpoupdate\fR
-.HP \w'\fBsamba_gpoupdate\fR\ 'u
-\fBsamba_gpoupdate\fR [\fIoptions\fR]
+.HP \w'\fBsamba_gpupdate\fR\ 'u
+\fBsamba_gpupdate\fR
+.HP \w'\fBsamba_gpupdate\fR\ 'u
+\fBsamba_gpupdate\fR [\fIoptions\fR]
 .SH "DESCRIPTION"
 .PP
 This tool is part of the
 \fBsamba\fR(1)
 suite\&.
 .PP
-\fBsamba_gpoupdate\fR
+\fBsamba_gpupdate\fR
 a script for applying and unapplying Group Policy\&. Group Policy application is experimental\&. Currently this applies password policies (minimum/maximum password age, minimum password length, and password complexity) and kerberos policies (user/service ticket lifetime and renew lifetime)\&.
 .SH "OPTIONS"
 .PP
 \fB\-h\fR,
 \fB\-\-help\fR
 show this help message and exit
-.PP
-\fB\-H \fRURL,
-\fB\-\-url\fR=\fIURL\fR
-URL for the samdb
 .PP
 \fB\-X\fR,
 \fB\-\-unapply\fR

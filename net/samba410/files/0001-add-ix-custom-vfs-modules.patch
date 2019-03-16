@@ -1,0 +1,2094 @@
+diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
+new file mode 100644
+index 0000000..8b16452
+--- /dev/null
++++ b/source3/modules/smb_libzfs.c
+@@ -0,0 +1,314 @@
++/*-
++ * Copyright 2018 iXsystems, Inc.
++ * All rights reserved
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted providing that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, this list of conditions and the following disclaimer.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
++ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
++ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
++ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
++ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
++ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
++ * POSSIBILITY OF SUCH DAMAGE.
++ *
++ */
++
++#define NEED_SOLARIS_BOOLEAN
++
++#include <stdbool.h>
++#include <talloc.h>
++#include <sys/types.h>
++#include <sys/time.h>
++#include <libzfs.h>
++#include "lib/util/debug.h"
++#include "smb_macros.h"
++#include "modules/smb_libzfs.h"
++
++enum SMB_QUOTA_TYPE {
++        SMB_INVALID_QUOTA_TYPE = -1,
++        SMB_USER_FS_QUOTA_TYPE = 1,
++        SMB_USER_QUOTA_TYPE = 2,
++        SMB_GROUP_FS_QUOTA_TYPE = 3,/* not used yet */
++        SMB_GROUP_QUOTA_TYPE = 4 /* used by disk_free queries */
++};
++
++int
++smb_zfs_get_quota(char *path, int64_t xid, enum SMB_QUOTA_TYPE quota_type, uint64_t *hardlimit, uint64_t *usedspace)
++{
++	int ret;
++	size_t blocksize = 1024;
++	libzfs_handle_t *libzfsp;
++	zfs_handle_t *zfsp;
++	char u_req[256] = { 0 };
++	char q_req[256] = { 0 };
++	uint64_t quota, used; 
++	quota = used = 0;
++
++	DBG_DEBUG("Path: (%s), xid: %lu), qtype (%u)\n",
++		path, xid, quota_type);
++
++	switch (quota_type) {
++	case SMB_USER_QUOTA_TYPE:
++	case SMB_USER_FS_QUOTA_TYPE:
++		snprintf(u_req, sizeof(u_req), "userused@%lu", xid);
++		snprintf(q_req, sizeof(q_req), "userquota@%lu", xid);
++		DBG_DEBUG("u_req: (%s), q_req (%s)\n", u_req, q_req);
++		break;
++	case SMB_GROUP_QUOTA_TYPE:
++	case SMB_GROUP_FS_QUOTA_TYPE:
++		snprintf(u_req, sizeof(u_req), "groupused@%lu", xid);
++		snprintf(q_req, sizeof(q_req), "groupquota@%lu", xid);
++		DBG_DEBUG("u_req: (%s), q_req (%s)\n", u_req, q_req);
++		break;
++	default:
++		DBG_ERR("Received unknown quota type (%d)\n", quota_type);
++		return (-1);
++	}
++
++	if (path == NULL) {
++		DBG_ERR("Path does not exist\n");
++		return (-1);
++	}
++
++	if ((libzfsp = libzfs_init()) == NULL) {
++		DBG_ERR("Failed to init libzfs\n");
++		return (-1);
++	}
++
++	libzfs_print_on_error(libzfsp, B_TRUE);
++
++	zfsp = zfs_path_to_zhandle(libzfsp, path,
++		ZFS_TYPE_VOLUME|ZFS_TYPE_DATASET|ZFS_TYPE_FILESYSTEM);
++
++	if (zfsp == NULL) {
++		DBG_ERR("Failed to convert path (%s) to zhandle\n", path);
++		libzfs_fini(libzfsp);
++		return (-1);
++	}
++	
++	zfs_prop_get_userquota_int(zfsp, q_req, &quota);
++	zfs_prop_get_userquota_int(zfsp, u_req, &used);
++
++	zfs_close(zfsp);
++	libzfs_fini(libzfsp);
++
++	quota /= blocksize;
++	used /= blocksize;
++
++	*hardlimit = quota;
++	*usedspace = used;
++
++	return 0;
++}
++
++int
++smb_zfs_set_quota(char *path, int64_t xid, enum SMB_QUOTA_TYPE quota_type, uint64_t hardlimit)
++{
++	size_t blocksize = 1024;
++	libzfs_handle_t *libzfsp;
++	zfs_handle_t *zfsp;
++	char q_req[256] = { 0 };
++	char quota[256] = { 0 };
++	hardlimit *= blocksize;
++	snprintf(quota, sizeof(quota), "%lu", hardlimit); 
++
++	DBG_DEBUG("Path: (%s), xid: %lu), qtype (%u), limit (%lu)\n",
++		path, xid, quota_type, hardlimit);
++	switch (quota_type) {
++	case SMB_USER_QUOTA_TYPE:
++	case SMB_USER_FS_QUOTA_TYPE:
++		snprintf(q_req, sizeof(q_req), "userquota@%lu", xid);
++		DBG_DEBUG("userquota string is (%s)\n", q_req);
++		break;
++	case SMB_GROUP_QUOTA_TYPE:
++	case SMB_GROUP_FS_QUOTA_TYPE:
++		snprintf(q_req, sizeof(q_req), "groupquota@%lu", xid);
++		DBG_DEBUG("groupquota string is (%s)\n", q_req);
++		break;
++	default:
++		DBG_ERR("Received unknown quota type (%d)\n", quota_type);
++		return (-1);
++	}
++
++	if (path == NULL) {
++		DBG_ERR("smb_zfs_set_quota received NULL path\n");
++		return (-1);
++	}
++
++	if ((libzfsp = libzfs_init()) == NULL) {
++		DBG_ERR("libzfs_init failed\n");
++		return (-1);
++	}
++
++	libzfs_print_on_error(libzfsp, B_TRUE);
++
++	zfsp = zfs_path_to_zhandle(libzfsp, path,
++		ZFS_TYPE_VOLUME|ZFS_TYPE_DATASET|ZFS_TYPE_FILESYSTEM);
++
++	if (zfsp == NULL){
++		DBG_ERR("Failed to convert path (%s) to zhandle\n", path);
++		libzfs_fini(libzfsp);
++		return (-1);
++	}
++
++	if (zfs_prop_set(zfsp, q_req, quota) != 0) {
++		DBG_ERR("Failed to set (%s = %s)\n", q_req, quota);
++		zfs_close(zfsp);
++		libzfs_fini(libzfsp);
++		return (-1);
++	}
++
++	zfs_close(zfsp);
++	libzfs_fini(libzfsp);
++
++	DBG_INFO("smb_zfs_set_quota: Set (%s = %s)\n", q_req, quota);
++
++	return 0;
++}
++
++uint64_t
++smb_zfs_disk_free(char *path, uint64_t *bsize, uint64_t *dfree, uint64_t *dsize, uid_t euid)
++{
++	size_t blocksize = 1024;
++	libzfs_handle_t *libzfsp;
++	zfs_handle_t *zfsp;
++	char uu_req[256];
++	char uq_req[256];
++	snprintf(uu_req, sizeof(uu_req), "userused@%u", euid);
++	snprintf(uq_req, sizeof(uq_req), "userquota@%u", euid);
++	
++	uint64_t available, usedbysnapshots, usedbydataset,
++		usedbychildren, usedbyrefreservation, real_used, total, 
++		userquota, userused, userquotarem;
++
++	if (path == NULL) {
++		DBG_ERR("received NULL path\n");
++		return (-1);
++	}
++
++	if ((libzfsp = libzfs_init()) == NULL) {
++		DBG_ERR("libzfs_init failed\n");
++		return (-1);
++	}
++
++	libzfs_print_on_error(libzfsp, B_TRUE);
++
++	zfsp = zfs_path_to_zhandle(libzfsp, path,
++		ZFS_TYPE_VOLUME|ZFS_TYPE_DATASET|ZFS_TYPE_FILESYSTEM);
++	if (zfsp == NULL) {
++		DBG_ERR("Failed to convert path (%s) to zhandle\n", path);
++		libzfs_fini(libzfsp);
++		return (-1);
++	}
++
++	available = zfs_prop_get_int(zfsp, ZFS_PROP_AVAILABLE);
++	usedbysnapshots = zfs_prop_get_int(zfsp, ZFS_PROP_USEDSNAP);
++	usedbydataset = zfs_prop_get_int(zfsp, ZFS_PROP_USEDDS);
++	usedbychildren = zfs_prop_get_int(zfsp, ZFS_PROP_USEDCHILD);
++	usedbyrefreservation = zfs_prop_get_int(zfsp, ZFS_PROP_USEDREFRESERV);
++	zfs_prop_get_userquota_int(zfsp, uq_req, &userquota);
++	zfs_prop_get_userquota_int(zfsp, uu_req, &userused);
++
++	zfs_close(zfsp);
++	libzfs_fini(libzfsp);
++
++	real_used = usedbysnapshots + usedbydataset + usedbychildren;
++
++	userquotarem = (userquota - userused) / blocksize;
++	userquota /= blocksize;
++
++	total = (real_used + available) / blocksize;
++	available /= blocksize;
++
++	*bsize = blocksize;
++	if ( userquota && (available > userquotarem) ) {
++		*dfree = userquotarem;
++	}
++	else {
++		*dfree = available;
++	}
++	if ( userquota && (total > userquota) ) {
++		*dsize = userquota;
++	}
++	else {
++		*dsize = total;
++	}
++
++	return (*dfree);
++}
++
++int
++smb_zfs_create_homedir(char *parent, const char *base, const char *quota)
++{
++	libzfs_handle_t *libzfsp;
++	zfs_handle_t *zfsp;
++	zfs_handle_t *new_zfsp;
++	char *p = strdup(parent);
++	const char *parent_dataset;
++	char nd[PATH_MAX] = { 0 };
++	if (parent == NULL) {
++		return (-1);
++	}
++
++	if ((libzfsp = libzfs_init()) == NULL) {
++		return (-1);
++	}
++
++	libzfs_print_on_error(libzfsp, B_TRUE);
++
++	zfsp = zfs_path_to_zhandle(libzfsp, p,
++		ZFS_TYPE_VOLUME|ZFS_TYPE_DATASET|ZFS_TYPE_FILESYSTEM);
++
++	if (zfsp == NULL) {
++		DBG_ERR("Failed to obtain zhandle on parent directory: (%s)\n", parent);
++		libzfs_fini(libzfsp);
++		return (-1);
++	}
++	parent_dataset = zfs_get_name(zfsp); 
++	snprintf(nd, sizeof(nd), "%s/%s", parent_dataset, base);
++  
++	if (zfs_create(libzfsp, nd, ZFS_TYPE_DATASET, NULL) != 0){
++		DBG_ERR("Failed to create dataset to path (%s)\n", nd);
++		zfs_close(zfsp);
++		libzfs_fini(libzfsp);
++		return (-1);	
++	} 
++	zfs_close(zfsp);
++
++	new_zfsp = zfs_open(libzfsp, nd, ZFS_TYPE_DATASET);
++
++	if (new_zfsp == NULL) {
++		DBG_ERR("Failed to obtain zhandle on new dataset: (%s)\n", nd);
++		libzfs_fini(libzfsp);
++		return (-1);
++	}
++
++	if (zfs_mount(new_zfsp, NULL, 0) != 0) {
++		DBG_ERR("Failed to mount ZFS dataset (%s)\n", nd);
++	}
++
++	if (quota) {
++		if (zfs_prop_set(new_zfsp, "quota", quota) != 0) {
++			DBG_ERR("Failed to set quota to (%s)\n", quota);
++		}
++	}
++
++	DBG_INFO("Created ZFS dataset (%s) with quota (%s)\n", nd, quota);
++
++	zfs_close(new_zfsp);
++	libzfs_fini(libzfsp);
++
++	return 0;
++}
+diff --git a/source3/modules/smb_libzfs.h b/source3/modules/smb_libzfs.h
+new file mode 100644
+index 0000000..27f8977
+--- /dev/null
++++ b/source3/modules/smb_libzfs.h
+@@ -0,0 +1,39 @@
++/*-
++ * Copyright 2018 iXsystems, Inc.
++ * All rights reserved
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted providing that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, this list of conditions and the following disclaimer.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
++ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
++ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
++ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
++ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
++ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
++ * POSSIBILITY OF SUCH DAMAGE.
++ *
++ */
++
++#ifndef	__SMB_LIBZFS_H
++#define	__SMB_LIBZFS_H
++#include <pwd.h>
++
++int smb_zfs_get_quota(char *path, int64_t xid, int quota_type, uint64_t *hardlimit, uint64_t *usedspace);
++int smb_zfs_set_quota(char *path, int64_t xid, int quota_type, uint64_t hardlimit);
++uint64_t smb_zfs_disk_free(char *path, uint64_t *bsize, uint64_t *dfree, uint64_t *dsize, uid_t euid);
++int smb_zfs_create_homedir(char *parent, const char *base, const char *quota);
++
++
++
++#endif	/* !__SMB_LIBZFS_H */
+diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
+new file mode 100644
+index 0000000..b65d63e
+--- /dev/null
++++ b/source3/modules/vfs_ixnas.c
+@@ -0,0 +1,1207 @@
++/*
++ *  Unix SMB/CIFS implementation.
++ *  A dumping ground for FreeBSD-specific VFS functions. For testing case
++ *  of reducing number enabled VFS modules to bare minimum by creating
++ *  single large VFS module.
++ * 
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License as published by
++ *  the Free Software Foundation; either version 3 of the License, or
++ *  (at your option) any later version.
++ *
++ *  This program is distributed in the hope that it will be useful,
++ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *  GNU General Public License for more details.
++ *
++ *  You should have received a copy of the GNU General Public License
++ *  along with this program; if not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include "includes.h"
++#include "MacExtensions.h"
++#include "smbd/smbd.h"
++#include "libcli/security/security.h"
++#include "nfs4_acls.h"
++#include "system/filesys.h"
++#include <fstab.h>
++#include <sys/types.h>
++#include <ufs/ufs/quota.h>
++#include <sys/acl.h>
++
++#if HAVE_LIBZFS
++#include "lib/util/tevent_ntstatus.h"
++#include "modules/smb_libzfs.h"
++#endif
++#include <libutil.h>
++
++#if HAVE_FREEBSD_SUNACL_H
++#include "sunacl.h"
++#endif
++
++#define ZFSACL_MODULE_NAME "ixnas"
++static int vfs_ixnas_debug_level = DBGC_VFS;
++
++#undef DBGC_CLASS
++#define DBGC_CLASS vfs_ixnas_debug_level
++
++struct ixnas_config_data {
++	struct smbacl4_vfs_params nfs4_params;
++	bool posix_rename;
++	bool zfs_acl_enabled;
++	bool zfs_acl_expose_snapdir;
++	bool zfs_acl_denymissingspecial;
++	bool zfs_space_enabled;
++	bool zfs_quota_enabled;
++	bool zfs_auto_homedir;
++	const char *homedir_quota;
++	uint64_t base_user_quota; 
++};
++
++/********************************************************************
++ Fuctions to store DOS attributes as File Flags.
++********************************************************************/
++static uint32_t fileflags_to_dosmode(uint32_t fileflags)
++{
++	uint32_t dosmode = 0;
++	if (fileflags & UF_READONLY){
++		dosmode |= FILE_ATTRIBUTE_READONLY;
++	}
++	if (fileflags & UF_ARCHIVE){
++		dosmode |= FILE_ATTRIBUTE_ARCHIVE;
++	}
++	if (fileflags & UF_SYSTEM){
++		dosmode |= FILE_ATTRIBUTE_SYSTEM;
++	}
++	if (fileflags & UF_HIDDEN){
++		dosmode |= FILE_ATTRIBUTE_HIDDEN;
++	}
++	if (fileflags & UF_SPARSE){
++		dosmode |= FILE_ATTRIBUTE_SPARSE;
++	}
++	if (fileflags & UF_OFFLINE){
++		dosmode |= FILE_ATTRIBUTE_OFFLINE;
++	}
++
++	return dosmode;
++}
++
++static uint32_t dosmode_to_fileflags(uint32_t dosmode)
++{
++	uint32_t fileflags = 0;
++	if (dosmode & FILE_ATTRIBUTE_ARCHIVE) {
++		fileflags |= UF_ARCHIVE;
++	}
++	if (dosmode & FILE_ATTRIBUTE_HIDDEN) {
++		fileflags |= UF_HIDDEN;
++	}
++	if (dosmode & FILE_ATTRIBUTE_OFFLINE) {
++		fileflags |= UF_OFFLINE;
++	}
++	if (dosmode & FILE_ATTRIBUTE_READONLY) {
++		fileflags |= UF_READONLY;
++	}
++	if (dosmode & FILE_ATTRIBUTE_SYSTEM) {
++		fileflags |= UF_SYSTEM;
++	}
++	if (dosmode & FILE_ATTRIBUTE_SPARSE) {
++		fileflags |= UF_SPARSE;
++	}
++
++	return fileflags;
++}
++
++static NTSTATUS set_dos_attributes_common(struct vfs_handle_struct *handle,
++					 const struct smb_filename *smb_fname,
++					 uint32_t dosmode)
++{
++	int ret;
++	bool set_dosmode_ok = false;
++	NTSTATUS status = NT_STATUS_OK;
++	uint32_t fileflags = dosmode_to_fileflags(dosmode);
++
++	DBG_INFO("ixnas:set_dos_attributes: set attribute 0x%x, on file %s\n",
++		dosmode, smb_fname->base_name);
++	/*
++	* Optimization. This is most likely set by file owner. First try without
++	* performing additional permissions checks and using become_root().
++	*/
++
++	ret = SMB_VFS_CHFLAGS(handle->conn, smb_fname, fileflags);
++
++	if (ret ==-1 && errno == EPERM) {
++	/*
++	* We want DOS semantics, i.e. allow non-owner with write permission to
++	* change the bits on a file.   
++	*/
++
++		if (!CAN_WRITE(handle->conn)) {
++			return NT_STATUS_ACCESS_DENIED;
++		}
++
++		status = smbd_check_access_rights(handle->conn, smb_fname, false,
++						FILE_WRITE_ATTRIBUTES);
++		if (NT_STATUS_IS_OK(status)) {
++			set_dosmode_ok = true;
++		}
++
++		if (!set_dosmode_ok && lp_dos_filemode(SNUM(handle->conn))) {
++			set_dosmode_ok = can_write_to_file(handle->conn, smb_fname);
++		}
++
++		if (!set_dosmode_ok){
++			return NT_STATUS_ACCESS_DENIED;
++		}
++
++		/* becomeroot() because non-owners need to write flags */
++
++		become_root();
++		ret = SMB_VFS_CHFLAGS(handle->conn, smb_fname, fileflags);
++		unbecome_root();
++
++		if (ret == -1) {
++			DBG_WARNING("Setting dosmode failed for %s: %s\n",
++			smb_fname->base_name, strerror(errno));
++			return map_nt_error_from_unix(errno);
++		}
++		return NT_STATUS_OK;
++	}
++
++	if (ret == -1) {
++		DBG_WARNING("Setting dosmode failed for %s: %s\n",
++			smb_fname->base_name, strerror(errno));
++		return map_nt_error_from_unix(errno);
++	}
++	return NT_STATUS_OK;
++}
++
++static NTSTATUS ixnas_get_dos_attributes(struct vfs_handle_struct *handle,
++					 struct smb_filename *smb_fname,
++					 uint32_t *dosmode)
++{
++	*dosmode |= fileflags_to_dosmode(smb_fname->st.st_ex_flags);
++
++	if (S_ISDIR(smb_fname->st.st_ex_mode)) {
++	/*
++ 	 * Windows default behavior appears to be that the archive bit 
++ 	 * on a directory is only explicitly set by clients. FreeBSD
++ 	 * sets this bit when the directory's contents are modified. 
++ 	 * This is a temporary hack until we can make OS behavior 
++ 	 * configurable 
++ 	 */
++		*dosmode &= ~FILE_ATTRIBUTE_ARCHIVE;
++	}
++
++	return NT_STATUS_OK;
++}
++
++static NTSTATUS ixnas_fget_dos_attributes(struct vfs_handle_struct *handle,
++                                            struct files_struct *fsp,
++                                            uint32_t *dosmode)
++{
++        *dosmode |= fileflags_to_dosmode(fsp->fsp_name->st.st_ex_flags);
++
++	if (S_ISDIR(fsp->fsp_name->st.st_ex_mode)) {
++	/*
++ 	 * Windows default behavior appears to be that the archive bit 
++ 	 * on a directory is only explicitly set by clients. FreeBSD
++ 	 * sets this bit when the directory's contents are modified. 
++ 	 * This is a temporary hack until we can make OS behavior 
++ 	 * configurable 
++ 	 */
++		*dosmode &= ~FILE_ATTRIBUTE_ARCHIVE;
++	}
++
++        return NT_STATUS_OK;
++}
++
++static NTSTATUS ixnas_set_dos_attributes(struct vfs_handle_struct *handle,
++                                           const struct smb_filename *smb_fname,
++                                           uint32_t dosmode)
++{
++	NTSTATUS ret;
++
++	ret = set_dos_attributes_common(handle, smb_fname, dosmode);
++                
++        return ret;
++}
++
++static NTSTATUS ixnas_fset_dos_attributes(struct vfs_handle_struct *handle,
++                                            struct files_struct *fsp,
++                                            uint32_t dosmode)
++{
++	NTSTATUS ret;
++
++	ret = set_dos_attributes_common(handle, fsp->fsp_name, dosmode);
++
++	return ret;
++}
++
++/********************************************************************
++ Correctly calculate free space on ZFS 
++ Per MS-FSCC, behavior for Windows 2000 -> 2008R2 is to account for
++ user quotas in TotalAllocationUnits and CallerAvailableAllocationUnits  
++ in FileFsFullSizeInformation.
++********************************************************************/
++#if HAVE_LIBZFS
++static uint64_t ixnas_disk_free(vfs_handle_struct *handle, const struct smb_filename *smb_fname,
++				uint64_t *bsize, uint64_t *dfree, uint64_t *dsize)
++{
++	uint64_t res;
++	char rp[PATH_MAX] = { 0 };
++
++	if (realpath(smb_fname->base_name, rp) == NULL)
++		return (-1);
++
++	DBG_DEBUG("realpath = %s\n", rp);
++
++	res = smb_zfs_disk_free(rp, bsize, dfree, dsize, geteuid());
++	if (res == (uint64_t)-1)
++		res = SMB_VFS_NEXT_DISK_FREE(handle, smb_fname, bsize, dfree, dsize);
++	if (res == (uint64_t)-1)
++		return (res);
++
++	DBG_DEBUG("*bsize = %" PRIu64 "\n", *bsize);
++	DBG_DEBUG("*dfree = %" PRIu64 "\n", *dfree);
++	DBG_DEBUG("*dsize = %" PRIu64 "\n", *dsize);
++
++	return (res);
++}
++#endif
++
++/********************************************************************
++ Functions for OSX compatibility. 
++********************************************************************/
++static NTSTATUS ixnas_create_file(vfs_handle_struct *handle,
++				  struct smb_request *req,
++				  uint16_t root_dir_fid,
++				  struct smb_filename *smb_fname,
++				  uint32_t access_mask,
++				  uint32_t share_access,
++				  uint32_t create_disposition,
++				  uint32_t create_options,
++				  uint32_t file_attributes,
++				  uint32_t oplock_request,
++				  struct smb2_lease *lease,
++				  uint64_t allocation_size,
++				  uint32_t private_flags,
++				  struct security_descriptor *sd,
++				  struct ea_list *ea_list,
++				  files_struct **result,
++				  int *pinfo,
++				  const struct smb2_create_blobs *in_context_blobs,
++				  struct smb2_create_blobs *out_context_blobs)
++{
++	NTSTATUS status;
++	struct ixnas_config_data *config = NULL;
++	files_struct *fsp = NULL;
++
++	SMB_VFS_HANDLE_GET_DATA(handle, config,
++				struct ixnas_config_data,
++				return NT_STATUS_INTERNAL_ERROR);
++
++	status = SMB_VFS_NEXT_CREATE_FILE(
++		handle, req, root_dir_fid, smb_fname,
++		access_mask, share_access,
++		create_disposition, create_options,
++		file_attributes, oplock_request,
++		lease,
++		allocation_size, private_flags,
++		sd, ea_list, result,
++		pinfo, in_context_blobs, out_context_blobs);
++
++	if (!NT_STATUS_IS_OK(status)) {
++		return status;
++	}
++
++	fsp = *result;
++
++	if (config->posix_rename && fsp->is_directory) {
++		fsp->posix_flags |= FSP_POSIX_FLAGS_RENAME;
++	}
++
++	return status;
++}
++
++/********************************************************************
++ Functions to use ZFS ACLs. 
++********************************************************************/
++/* zfs_get_nt_acl()
++ * read the local file's acls and return it in NT form
++ * using the NFSv4 format conversion
++ */
++static NTSTATUS zfs_get_nt_acl_common(struct connection_struct *conn,
++				      TALLOC_CTX *mem_ctx,
++				      const struct smb_filename *smb_fname,
++				      struct SMB4ACL_T **ppacl,
++				      struct ixnas_config_data *config)
++{
++	int naces, i;
++	struct SMB4ACL_T *pacl;
++	SMB_STRUCT_STAT sbuf;
++	const SMB_STRUCT_STAT *psbuf = NULL;
++	int ret;
++	bool is_dir;
++	acl_t zacl;
++	bool inherited_present = false;
++
++	if (VALID_STAT(smb_fname->st)) {
++		psbuf = &smb_fname->st;
++	}
++
++	if (psbuf == NULL) {
++		ret = vfs_stat_smb_basename(conn, smb_fname, &sbuf);
++		if (ret != 0) {
++			DBG_ERR("stat [%s]failed: %s\n",
++				 smb_fname_str_dbg(smb_fname), strerror(errno));
++			return map_nt_error_from_unix(errno);
++		}
++		psbuf = &sbuf;
++	}
++	is_dir = S_ISDIR(psbuf->st_ex_mode);
++
++	zacl = acl_get_file(smb_fname->base_name, ACL_TYPE_NFS4);
++	if ( zacl == NULL) {
++		DBG_ERR("ixnas: acl_get_file() failed for %s: %s\n",
++		smb_fname->base_name, strerror(errno));
++		return map_nt_error_from_unix(errno);
++	}
++	naces = zacl->ats_acl.acl_cnt;
++	
++	/* create SMB4ACL data */
++	if((pacl = smb_create_smb4acl(mem_ctx)) == NULL) {
++		acl_free(zacl);
++		DBG_ERR("ixnas: smb_create_smb4acl failed\n");
++		return NT_STATUS_NO_MEMORY;
++	}
++
++	for(i=0; i<naces; i++) {
++		SMB_ACE4PROP_T aceprop = { 0 };
++		int l, m, h;
++		l = m = h = 0;
++
++		l = zacl->ats_acl.acl_entry[i].ae_perm >> 3;
++		m = zacl->ats_acl.acl_entry[i].ae_perm >> 2;
++		h = zacl->ats_acl.acl_entry[i].ae_perm << 5;
++		l &= (SMB_ACE4_READ_DATA|SMB_ACE4_WRITE_DATA|SMB_ACE4_APPEND_DATA|SMB_ACE4_READ_NAMED_ATTRS|SMB_ACE4_WRITE_NAMED_ATTRS); //remove bits higher than SMB_ACE4_WRITE_NAMED_ATTRS
++		m &= (SMB_ACE4_WRITE_ATTRIBUTES|SMB_ACE4_READ_ATTRIBUTES|SMB_ACE4_DELETE_CHILD);
++		h &= (SMB_ACE4_DELETE|SMB_ACE4_READ_ACL|SMB_ACE4_WRITE_ACL|SMB_ACE4_WRITE_OWNER|SMB_ACE4_SYNCHRONIZE); //remove bits lower than SMB_ACE4_DELETE
++		aceprop.aceMask = (l|m|h);
++		if (zacl->ats_acl.acl_entry[i].ae_perm & ACL_EXECUTE) {
++			//ACL_EXECUTE is 0x0001 and so it doesn't map cleanly. 
++			aceprop.aceMask |= SMB_ACE4_EXECUTE;
++		}
++		aceprop.aceType  =  zacl->ats_acl.acl_entry[i].ae_entry_type >> 9;
++		aceprop.aceFlags = (uint32_t) zacl->ats_acl.acl_entry[i].ae_flags;
++
++		if ( zacl->ats_acl.acl_entry[i].ae_tag & ACL_EVERYONE ){
++			if ( zacl->ats_acl.acl_entry[i].ae_perm == 0 ) {
++				continue;
++			}
++		}
++		switch (zacl->ats_acl.acl_entry[i].ae_tag) {
++			case ACL_USER_OBJ:
++				aceprop.flags = SMB_ACE4_ID_SPECIAL;
++				aceprop.who.special_id = SMB_ACE4_WHO_OWNER;
++				break;
++			case ACL_GROUP_OBJ:
++				aceprop.flags = SMB_ACE4_ID_SPECIAL;
++				aceprop.who.special_id = SMB_ACE4_WHO_GROUP;
++				break;
++			case ACL_EVERYONE:
++				aceprop.flags = SMB_ACE4_ID_SPECIAL;
++				aceprop.who.special_id = SMB_ACE4_WHO_EVERYONE;
++				break;
++			case ACL_GROUP:
++				aceprop.flags = 0;
++				aceprop.aceFlags |= SMB_ACE4_IDENTIFIER_GROUP;
++				aceprop.who.gid   = (uint32_t) zacl->ats_acl.acl_entry[i].ae_id;
++				break;
++			default:
++				aceprop.who.uid   = (uint32_t) zacl->ats_acl.acl_entry[i].ae_id;
++				aceprop.flags = 0;
++				break;
++		}
++
++		/*
++		 * Windows clients expect SYNC on acls to correctly allow
++		 * rename, cf bug #7909. But not on DENY ace entries, cf bug
++		 * #8442.
++		 */
++		if (aceprop.aceType == SMB_ACE4_ACCESS_ALLOWED_ACE_TYPE) {
++			aceprop.aceMask |= SMB_ACE4_SYNCHRONIZE;
++		}
++
++		if (is_dir && (aceprop.aceMask & SMB_ACE4_ADD_FILE)) {
++			aceprop.aceMask |= SMB_ACE4_DELETE_CHILD;
++		}
++		/*
++		 * Test whether ACL contains any ACEs with the
++		 * inherited flag set. We use this to determine whether
++		 * to set DACL_PROTECTED in the security descriptor.
++		 */
++		if(aceprop.aceFlags & SMB_ACE4_INHERITED_ACE) {
++			inherited_present = true;
++		}
++
++		if (smb_add_ace4(pacl, &aceprop) == NULL) {
++			acl_free(zacl);
++			return NT_STATUS_NO_MEMORY;
++		}
++	}
++
++	/*
++	 * If the ACL doesn't contain any inherited ACEs, then set DACL_PROTECTED 
++	 * in the security descriptor using smb4acl4_set_control_flags().
++	 * This makes it so that the "Disable Inheritance" button works in Windows Explorer
++	 * and prevents resulting ACL from auto-inheriting ACL changes in parent directory.
++	 */
++	if (!inherited_present) {
++		smbacl4_set_controlflags(pacl, SEC_DESC_DACL_PROTECTED|SEC_DESC_SELF_RELATIVE);
++	}
++
++	*ppacl = pacl;
++	acl_free(zacl);
++	return NT_STATUS_OK;
++}
++
++/* call-back function processing the NT acl -> ZFS acl using NFSv4 conv. */
++static bool zfs_process_smbacl(vfs_handle_struct *handle, files_struct *fsp,
++			       struct SMB4ACL_T *smbacl)
++{
++	int ret, naces, nzaces, i;
++	i = nzaces = naces = smb_get_naces(smbacl);
++	acl_t zacl;
++	acl_entry_t hidden_entry;
++	struct SMB4ACE_T *smbace;
++	zacl = acl_init(nzaces);
++	bool is_dir;
++	SMB_STRUCT_STAT sbuf;
++	const SMB_STRUCT_STAT *psbuf = NULL;
++
++	if (VALID_STAT(fsp->fsp_name->st)) {
++		psbuf = &fsp->fsp_name->st;
++	}
++
++	if (psbuf == NULL) {
++		ret = vfs_stat_smb_basename(handle->conn, fsp->fsp_name, &sbuf);
++		if (ret != 0) {
++			DBG_DEBUG("stat [%s]failed: %s\n",
++				fsp_str_dbg(fsp), strerror(errno));
++			acl_free(zacl);
++			return False;
++		}
++		psbuf = &sbuf;
++	}
++	is_dir = S_ISDIR(psbuf->st_ex_mode);
++	
++	/* 
++	 * handle all aces 
++	 * The ACL structs line up between Samba and FreeBSD with the following exceptions: 
++	 * - Windows clients often expect ACL_SYNCHRONIZE. See samba bug #7909.
++	 * - Samba stores flag indicating that this is a group entry under aceFlags. This is ae_tag in FBSD.
++	 *   In this case we remove 0x0040 from ae_flags for the ACL entry.
++	 * - FreeBSD also has ACL_USER ae_tag that Samba lacks. We add this tag if 
++	 *   1) SMB ACL flag "SMB_ACE4_ID_SPECIAL" is not set. I.e. not owner@, group@, everyone@.
++	 *   2) SMB ACL ace_Flags "SMB4_ACE_IDENTIFIER_GROUP" is not set.
++	 * - NFS4 access mask has padding that is absent from the ae_perm. See RFC 3530 and <sys/acl.h>
++	 *   This padding needs to be added or removed as we read and write the ACL. 
++	 */
++	zacl->ats_brand = ACL_BRAND_NFS4;
++	zacl->ats_acl.acl_maxcnt = ACL_MAX_ENTRIES;
++	zacl->ats_acl.acl_cnt = nzaces; 
++	for(smbace = smb_first_ace4(smbacl), i = 0;
++			smbace!=NULL;
++			smbace = smb_next_ace4(smbace), i++) {
++		SMB_ACE4PROP_T *aceprop = smb_get_ace4(smbace);
++		int l, m, h;
++		l = m = h = 0;
++
++		l =  aceprop->aceMask << 3;
++		m =  aceprop->aceMask << 2;
++		h =  aceprop->aceMask >> 5;
++		l &= (ACL_READ_DATA|ACL_WRITE_DATA|ACL_APPEND_DATA|ACL_READ_NAMED_ATTRS|ACL_WRITE_NAMED_ATTRS);
++		m &= (ACL_WRITE_ATTRIBUTES|ACL_READ_ATTRIBUTES|ACL_DELETE_CHILD); 
++		h &= (ACL_READ_ACL|ACL_WRITE_ACL|ACL_WRITE_OWNER|ACL_DELETE); //Drop SYNCRHONIZE per#7909 
++
++		zacl->ats_acl.acl_entry[i].ae_flags              = aceprop->aceFlags;
++		zacl->ats_acl.acl_entry[i].ae_perm               = (l|m|h);
++		zacl->ats_acl.acl_entry[i].ae_flags             &= ~SMB_ACE4_IDENTIFIER_GROUP; //FreeBSD doesn't store group in ae_flags
++		if (aceprop->aceType) {
++			zacl->ats_acl.acl_entry[i].ae_entry_type = aceprop->aceType << 9;
++		}
++		else {
++			zacl->ats_acl.acl_entry[i].ae_entry_type = ACL_ENTRY_TYPE_ALLOW;
++		}
++		if (aceprop->aceMask & SMB_ACE4_EXECUTE) {
++			zacl->ats_acl.acl_entry[i].ae_perm	|= ACL_EXECUTE; //0x0001 (doesn't map cleanly)	
++		}
++		if(aceprop->flags & SMB_ACE4_ID_SPECIAL) {
++			switch(aceprop->who.special_id) {
++			/*
++			 * ae_id should be set to ACL_UNDEFINED_ID iff ae_tag is 
++			 * ACL_USER_OBJ, ACL_GROUP_OBJ, or ACL_EVERYONE
++			 */
++			case SMB_ACE4_WHO_EVERYONE:
++				zacl->ats_acl.acl_entry[i].ae_tag  = ACL_EVERYONE;
++				zacl->ats_acl.acl_entry[i].ae_id   = ACL_UNDEFINED_ID;
++				break;
++			case SMB_ACE4_WHO_OWNER:
++				zacl->ats_acl.acl_entry[i].ae_tag  = ACL_USER_OBJ;
++				zacl->ats_acl.acl_entry[i].ae_id   = ACL_UNDEFINED_ID;
++				break;
++			case SMB_ACE4_WHO_GROUP:
++				zacl->ats_acl.acl_entry[i].ae_tag  = ACL_GROUP_OBJ;
++				zacl->ats_acl.acl_entry[i].ae_id   = ACL_UNDEFINED_ID;
++				break;
++			default:
++				DBG_DEBUG("unsupported special_id %d\n", \
++					aceprop->who.special_id);
++				continue; /* don't add it !!! */
++			}
++		}
++		else {
++			if (aceprop->aceFlags & SMB_ACE4_IDENTIFIER_GROUP) {
++				zacl->ats_acl.acl_entry[i].ae_tag  = ACL_GROUP;
++				zacl->ats_acl.acl_entry[i].ae_id   = aceprop->who.id;
++			} 
++			else {
++				zacl->ats_acl.acl_entry[i].ae_tag  = ACL_USER;
++				zacl->ats_acl.acl_entry[i].ae_id   = aceprop->who.id;
++			}
++		}
++	}
++
++	SMB_ASSERT(i == naces);
++	if (acl_create_entry(&zacl, &hidden_entry) < 0) {
++		DBG_ERR("acl_create_entry() failed for %s with error: %s\n", 
++			fsp_str_dbg(fsp), strerror(errno));
++		acl_free(zacl);
++		return False;
++	}
++
++	if (is_dir) {
++		hidden_entry->ae_flags = ACL_ENTRY_DIRECTORY_INHERIT|ACL_ENTRY_FILE_INHERIT;
++	}
++	else {
++		hidden_entry->ae_flags = 0;
++	}
++	hidden_entry->ae_perm = 0;
++	hidden_entry->ae_entry_type = ACL_ENTRY_TYPE_ALLOW;
++	hidden_entry->ae_tag = ACL_EVERYONE;
++	hidden_entry->ae_id = ACL_UNDEFINED_ID;
++	/* store acl */
++	if(acl_set_file(fsp->fsp_name->base_name, ACL_TYPE_NFS4, zacl) < 0) {
++		DBG_DEBUG("(acl_set_file(): %s): %s\n", fsp_str_dbg(fsp), strerror(errno));
++		if ( pathconf(fsp->fsp_name->base_name, _PC_ACL_NFS4) < 0 ) {
++			DBG_INFO("%s: pathconf(..., _PC_ACL_NFS4) failed. Path does not support NFS4 ACL.",
++				fsp_str_dbg(fsp));
++			errno = ENOSYS; //preserve behavior from libsunacl and zfsacl
++		} 
++		else {
++			DBG_ERR("(acl_set_file(): %s): %s ", fsp_str_dbg(fsp),
++				  strerror(errno));
++		}
++		acl_free(zacl);
++		return False; 
++	}
++	
++	acl_free(zacl);
++	return True;
++}
++
++/* zfs_set_nt_acl()
++ * set the local file's acls obtaining it in NT form
++ * using the NFSv4 format conversion
++ */
++static NTSTATUS zfs_set_nt_acl(vfs_handle_struct *handle, files_struct *fsp,
++			   uint32_t security_info_sent,
++			   const struct security_descriptor *psd,
++			   struct ixnas_config_data *config)
++{
++        return smb_set_nt_acl_nfs4(handle, fsp, &config->nfs4_params, security_info_sent, psd,
++				   zfs_process_smbacl);
++}
++
++static NTSTATUS ixnas_fget_nt_acl(struct vfs_handle_struct *handle,
++				   struct files_struct *fsp,
++				   uint32_t security_info,
++				   TALLOC_CTX *mem_ctx,
++				   struct security_descriptor **ppdesc)
++{
++	struct SMB4ACL_T *pacl;
++	NTSTATUS status;
++	TALLOC_CTX *frame = talloc_stackframe();
++	struct ixnas_config_data *config;
++
++	SMB_VFS_HANDLE_GET_DATA(handle, config,
++				struct ixnas_config_data,
++				return NT_STATUS_INTERNAL_ERROR);
++
++	if (!config->zfs_acl_enabled) {
++		TALLOC_FREE(frame);
++		return SMB_VFS_NEXT_FGET_NT_ACL(handle, fsp, security_info, mem_ctx, ppdesc);
++	}
++
++	status = zfs_get_nt_acl_common(handle->conn, frame,
++				       fsp->fsp_name, &pacl, config);
++
++	if (!NT_STATUS_IS_OK(status)) {
++		TALLOC_FREE(frame);
++		// Control whether we expose .zfs/snapdir over SMB.
++		if (!config->zfs_acl_expose_snapdir || !NT_STATUS_EQUAL(status, NT_STATUS_NOT_SUPPORTED)) {
++			return status;
++		}
++
++		status = make_default_filesystem_acl(mem_ctx,
++						     DEFAULT_ACL_POSIX,
++						     fsp->fsp_name->base_name,
++						     &fsp->fsp_name->st,
++						     ppdesc);
++		if (!NT_STATUS_IS_OK(status)) {
++			return status;
++		}
++		(*ppdesc)->type |= SEC_DESC_DACL_PROTECTED;
++		return NT_STATUS_OK;
++	}
++
++	status = smb_fget_nt_acl_nfs4(fsp, &config->nfs4_params, security_info, mem_ctx,
++				      ppdesc, pacl);
++	TALLOC_FREE(frame);
++	return status;
++}
++
++static NTSTATUS ixnas_get_nt_acl(struct vfs_handle_struct *handle,
++				const struct smb_filename *smb_fname,
++				uint32_t security_info,
++				TALLOC_CTX *mem_ctx,
++				struct security_descriptor **ppdesc)
++{
++	struct SMB4ACL_T *pacl;
++	NTSTATUS status;
++	TALLOC_CTX *frame = talloc_stackframe();
++	struct ixnas_config_data *config;
++
++	SMB_VFS_HANDLE_GET_DATA(handle, config,
++				struct ixnas_config_data,
++				return NT_STATUS_INTERNAL_ERROR);
++
++	if (!config->zfs_acl_enabled) {
++		TALLOC_FREE(frame);
++		return SMB_VFS_NEXT_GET_NT_ACL(handle, smb_fname, security_info, mem_ctx, ppdesc);
++	}
++
++	status = zfs_get_nt_acl_common(handle->conn, frame, smb_fname, &pacl, config);
++
++	if (!NT_STATUS_IS_OK(status)) {
++		TALLOC_FREE(frame);
++		// Control whether we expose .zfs/snapdir over SMB.
++		if (!config->zfs_acl_expose_snapdir || !NT_STATUS_EQUAL(status, NT_STATUS_NOT_SUPPORTED)) {
++			return status;
++		}
++
++		if (!VALID_STAT(smb_fname->st)) {
++			DBG_ERR("No stat info for [%s]\n",
++				smb_fname_str_dbg(smb_fname));
++			return NT_STATUS_INTERNAL_ERROR;
++		}
++
++		status = make_default_filesystem_acl(mem_ctx,
++						     DEFAULT_ACL_POSIX,
++						     smb_fname->base_name,
++						     &smb_fname->st,
++						     ppdesc);
++		if (!NT_STATUS_IS_OK(status)) {
++			return status;
++		}
++		(*ppdesc)->type |= SEC_DESC_DACL_PROTECTED;
++		return NT_STATUS_OK;
++	}
++
++	status = smb_get_nt_acl_nfs4(handle->conn,
++					smb_fname,
++					&config->nfs4_params,
++					security_info,
++					mem_ctx,
++					ppdesc,
++					pacl);
++	TALLOC_FREE(frame);
++	return status;
++}
++
++static NTSTATUS ixnas_fset_nt_acl(vfs_handle_struct *handle,
++			 files_struct *fsp,
++			 uint32_t security_info_sent,
++			 const struct security_descriptor *psd)
++{
++	struct ixnas_config_data *config;
++
++	SMB_VFS_HANDLE_GET_DATA(handle, config,
++				struct ixnas_config_data,
++				return NT_STATUS_INTERNAL_ERROR);
++
++	if (!config->zfs_acl_enabled) {
++		return SMB_VFS_NEXT_FSET_NT_ACL(handle, fsp, security_info_sent, psd);
++	}
++
++	return zfs_set_nt_acl(handle, fsp, security_info_sent, psd, config);
++}
++
++static SMB_ACL_T ixnas_fail__sys_acl_get_file(vfs_handle_struct *handle,
++					const struct smb_filename *smb_fname,
++					SMB_ACL_TYPE_T type,
++					TALLOC_CTX *mem_ctx)
++{
++	return (SMB_ACL_T)NULL;
++}
++
++static SMB_ACL_T ixnas_fail__sys_acl_get_fd(vfs_handle_struct *handle,
++					     files_struct *fsp,
++					     TALLOC_CTX *mem_ctx)
++{
++	return (SMB_ACL_T)NULL;
++}
++
++static int ixnas_fail__sys_acl_set_file(vfs_handle_struct *handle,
++					 const struct smb_filename *smb_fname,
++					 SMB_ACL_TYPE_T type,
++					 SMB_ACL_T theacl)
++{
++	return -1;
++}
++
++static int ixnas_fail__sys_acl_set_fd(vfs_handle_struct *handle,
++				       files_struct *fsp,
++				       SMB_ACL_T theacl)
++{
++	return -1;
++}
++
++static int ixnas_fail__sys_acl_delete_def_file(vfs_handle_struct *handle,
++			const struct smb_filename *smb_fname)
++{
++	return -1;
++}
++
++static int ixnas_fail__sys_acl_blob_get_file(vfs_handle_struct *handle,
++			const struct smb_filename *smb_fname,
++			TALLOC_CTX *mem_ctx,
++			char **blob_description,
++			DATA_BLOB *blob)
++{
++	return -1;
++}
++
++static int ixnas_fail__sys_acl_blob_get_fd(vfs_handle_struct *handle, files_struct *fsp, TALLOC_CTX *mem_ctx, char **blob_description, DATA_BLOB *blob)
++{
++	return -1;
++}
++
++#if HAVE_LIBZFS
++/********************************************************************
++  Expose ZFS user/group quotas 
++********************************************************************/
++static int ixnas_get_quota(struct vfs_handle_struct *handle,
++                                const struct smb_filename *smb_fname,
++                                enum SMB_QUOTA_TYPE qtype,
++                                unid_t id,
++                                SMB_DISK_QUOTA *qt)
++{
++	int ret;
++	char rp[PATH_MAX] = { 0 };
++	struct ixnas_config_data *config;
++	uint64_t hardlimit, usedspace;
++	uid_t current_user = geteuid();
++	hardlimit = usedspace = 0;
++
++	SMB_VFS_HANDLE_GET_DATA(handle, config,
++				struct ixnas_config_data,
++				return -1);
++
++	if (!config->zfs_quota_enabled) {
++		DBG_DEBUG("Quotas disabled in ixnas configuration.\n");
++		errno = ENOSYS;
++		return -1;
++	}
++
++	if (realpath(smb_fname->base_name, rp) == NULL) {
++		DBG_ERR("failed to get realpath for (%s)\n", smb_fname->base_name);
++		return (-1);
++	}
++	switch (qtype) {
++	case SMB_USER_QUOTA_TYPE:
++	case SMB_USER_FS_QUOTA_TYPE:
++		//passing -1 to quotactl means that the current UID should be used. Do the same.
++		if (id.uid == -1) {
++			become_root();
++       			ret = smb_zfs_get_quota(rp, current_user, qtype, &hardlimit, &usedspace);
++			unbecome_root();
++		}
++		else {
++			become_root();
++       			ret = smb_zfs_get_quota(rp, id.uid, qtype, &hardlimit, &usedspace);
++			unbecome_root();
++		}
++		break;
++	case SMB_GROUP_QUOTA_TYPE:
++	case SMB_GROUP_FS_QUOTA_TYPE:
++		become_root();
++        	ret = smb_zfs_get_quota(rp, id.gid, qtype, &hardlimit, &usedspace);
++		unbecome_root();
++		break;
++        default:
++		DBG_ERR("Unrecognized quota type.\n");
++		ret = -1;
++                break;
++        }
++
++	ZERO_STRUCTP(qt);
++	qt->bsize = 1024;
++	qt->hardlimit = hardlimit;
++	qt->softlimit = hardlimit;
++	qt->curblocks = usedspace;
++	qt->ihardlimit = hardlimit;
++	qt->isoftlimit = hardlimit;
++	qt->curinodes = usedspace;
++	qt->qtype = qtype;
++	qt->qflags = QUOTAS_DENY_DISK|QUOTAS_ENABLED;
++
++        DBG_INFO("ixnas_get_quota: hardlimit: (%lu), usedspace: (%lu)\n", qt->hardlimit, qt->curblocks);
++
++        return ret;
++}
++
++static int ixnas_set_quota(struct vfs_handle_struct *handle,
++			enum SMB_QUOTA_TYPE qtype, unid_t id,
++			SMB_DISK_QUOTA *qt)
++{
++	struct ixnas_config_data *config;
++	int ret;
++	
++
++	SMB_VFS_HANDLE_GET_DATA(handle, config,
++				struct ixnas_config_data,
++				return -1);
++
++	if (!config->zfs_quota_enabled) {
++		DBG_DEBUG("Quotas disabled in ixnas configuration.\n");
++		errno = ENOSYS;
++		return -1;
++	}
++
++	become_root();
++	switch (qtype) {
++	case SMB_USER_QUOTA_TYPE:
++	case SMB_USER_FS_QUOTA_TYPE:
++		DBG_INFO("ixnas_set_quota: quota type: (%d), id: (%d), h-limit: (%lu), s-limit: (%lu)\n", 
++			qtype, id.uid, qt->hardlimit, qt->softlimit);
++		become_root();
++		ret = smb_zfs_set_quota(handle->conn->connectpath, id.uid, qtype, qt->hardlimit);
++		unbecome_root();
++		break;
++	case SMB_GROUP_QUOTA_TYPE:
++	case SMB_GROUP_FS_QUOTA_TYPE:
++		DBG_INFO("ixnas_set_quota: quota type: (%d), id: (%d), h-limit: (%lu), s-limit: (%lu)\n", 
++			qtype, id.gid, qt->hardlimit, qt->softlimit);
++		become_root();
++		ret = smb_zfs_set_quota(handle->conn->connectpath, id.gid, qtype, qt->hardlimit);
++		unbecome_root();
++		break;
++        default:
++		DBG_ERR("Received unknown quota type.\n");
++		ret = -1;
++		break;
++        }
++
++	return ret;
++
++}
++
++
++/********************************************************************
++ Create datasets for home directories. We fail if the path already
++ exists  
++********************************************************************/
++
++static int create_zfs_autohomedir(vfs_handle_struct *handle, 
++				  const char *homedir_quota,
++				  const char *user)
++{
++	bool ret;
++	int naces;
++	char rp[PATH_MAX] = { 0 };
++	char *parent;
++	const char *base;
++	ace_t *parent_acl;
++	TALLOC_CTX *tmp_ctx = talloc_new(handle->data);
++
++	if (realpath(handle->conn->connectpath, rp)) {
++		DEBUG(0, ("Home directory already exists. Skipping dataset creation\n") );
++		TALLOC_FREE(tmp_ctx);
++		return -1;	
++	}
++
++	if (!parent_dirname(talloc_tos(), handle->conn->connectpath, &parent, &base)) {
++		TALLOC_FREE(tmp_ctx);
++		return -1;
++	}
++
++	DBG_INFO("Preparing to create dataset (%s) with parentdir (%s) with quota (%s)\n", 
++		parent, base, homedir_quota);
++
++	if (realpath(parent, rp) == NULL ){
++		DBG_ERR("Parent directory does not exist, skipping automatic dataset creation.\n");
++		TALLOC_FREE(parent);
++		TALLOC_FREE(tmp_ctx);
++		return -1;
++	}
++
++	ret = smb_zfs_create_homedir(parent, base, homedir_quota);
++
++	if ((naces = acl(parent, ACE_GETACLCNT, 0, NULL)) < 0) {
++		DBG_ERR("ACE_GETACLCNT failed with (%s)\n", strerror(errno));
++		TALLOC_FREE(parent);
++		TALLOC_FREE(tmp_ctx);
++		return -1;
++	}
++	if ((parent_acl = talloc_size(tmp_ctx, sizeof(ace_t) * naces)) == NULL) {
++		DBG_ERR("Failed to allocate memory for parent ACL\n");
++		errno = ENOMEM;
++		TALLOC_FREE(parent);
++		TALLOC_FREE(tmp_ctx);
++		return -1;
++	}
++
++	if ((acl(parent, ACE_GETACL, naces, parent_acl)) < 0) {
++		DBG_ERR("ACE_GETACL failed with (%s)\n", strerror(errno));
++		TALLOC_FREE(parent);
++		TALLOC_FREE(tmp_ctx);
++		return -1;
++	}
++
++	if (acl(handle->conn->connectpath, ACE_SETACL, naces, parent_acl) < 0) {
++		DBG_ERR("ACE_SETACL failed with (%s)\n", strerror(errno));
++		TALLOC_FREE(parent);
++		TALLOC_FREE(tmp_ctx);
++		return -1;
++	}
++
++	if (lp_parm_bool(SNUM(handle->conn), "ixnas", "chown_homedir", true)) {
++		struct passwd *current_user = Get_Pwnam_alloc(tmp_ctx, user);
++		if ( !current_user ) {
++			DBG_ERR("Get_Pwnam_alloc failed for (%s).\n", user); 
++			TALLOC_FREE(parent);
++			TALLOC_FREE(tmp_ctx);
++			return -1;
++		}		
++		if (chown(handle->conn->connectpath, current_user->pw_uid, current_user->pw_gid) < 0) {
++			DBG_ERR("Failed to chown (%s) to (%u:%u)\n",
++				handle->conn->connectpath, current_user->pw_uid, getegid() );
++			ret = -1;
++		}	
++	} 
++
++	TALLOC_FREE(parent);
++	TALLOC_FREE(tmp_ctx);
++        return ret;
++}
++
++/*
++ * Fake the presence of a base quota. Check if user quota already exists.
++ * If it exists, then we assume that the base quota has either already been set
++ * or it has been modified by the admin. In either case, do nothing.
++ */
++
++static int set_base_user_quota(vfs_handle_struct *handle, uint64_t base_quota, const char *user)
++{
++	int ret;
++	uint64_t existing_quota, usedspace;
++	existing_quota = usedspace = 0;
++	uid_t current_user = nametouid(user);
++	base_quota /= 1024;
++
++	if ( !current_user ) {
++		DBG_ERR("Failed to convert (%s) to uid.\n", user); 
++		return -1;
++	}
++
++	if ( smb_zfs_get_quota(handle->conn->connectpath, 
++				current_user,
++				SMB_USER_QUOTA_TYPE,
++				&existing_quota,
++				&usedspace) < 0 ) {
++		DBG_ERR("Failed to get base quota uid: (%u), path (%s)\n",
++			current_user, handle->conn->connectpath );
++		return -1;
++	}
++
++	DBG_INFO("set_base_user_quote: uid (%u), quota (%lu)\n", current_user, base_quota);
++
++	if ( !existing_quota ) {
++		ret = smb_zfs_set_quota(handle->conn->connectpath,
++					current_user,
++					SMB_USER_QUOTA_TYPE,
++					base_quota);
++		if (!ret) {
++			DBG_ERR("Failed to set base quota uid: (%u), path (%s), value (%lu)\n",
++				current_user, handle->conn->connectpath, base_quota );
++		}
++	}
++	return ret;
++}
++#endif
++
++/********************************************************************
++ Optimization. Load parameters on connect. This allows us to enable
++ and disable portions of the large vfs module on demand.
++********************************************************************/
++static int ixnas_connect(struct vfs_handle_struct *handle,
++			    const char *service, const char *user)
++{
++	struct ixnas_config_data *config;
++	int ret;
++	const char *homedir_quota = NULL;
++	const char *base_quota_str = NULL;
++
++	config = talloc_zero(handle->conn, struct ixnas_config_data);
++	if (!config) {
++		DEBUG(0, ("talloc_zero() failed\n"));
++		errno = ENOMEM;
++		return -1;
++	}	
++
++#if HAVE_LIBZFS
++	/* Parameters for homedirs and quotas */
++	config->zfs_auto_homedir = lp_parm_bool(SNUM(handle->conn), 
++			"ixnas", "zfs_auto_homedir", false);
++	config->homedir_quota = lp_parm_const_string(SNUM(handle->conn),
++			"ixnas", "homedir_quota", NULL);
++	
++	base_quota_str = lp_parm_const_string(SNUM(handle->conn),
++			"ixnas", "base_user_quota", NULL);
++
++	if (base_quota_str != NULL) {
++		config->base_user_quota = conv_str_size(base_quota_str); 
++        }
++
++	if (config->base_user_quota) {
++		set_base_user_quota(handle, config->base_user_quota, user);
++	}
++
++	if (config->zfs_auto_homedir) {
++		create_zfs_autohomedir(handle, config->homedir_quota, user);
++	}
++#endif
++
++	/* OS-X Compatibility */
++	config->posix_rename = lp_parm_bool(SNUM(handle->conn),
++			"ixnas", "posix_rename", false);
++
++	/* 
++	 * Ensure other alternate methods of mapping dosmodes are disabled.
++	 */
++
++	if ((lp_map_readonly(SNUM(handle->conn))) == MAP_READONLY_YES) {
++		DBG_INFO("ixnas:dosmode to file flag mapping enabled,"
++			  "disabling 'map readonly'\n");
++		lp_do_parameter(SNUM(handle->conn), "map readonly",
++				"no");
++	}
++
++	if (lp_map_archive(SNUM(handle->conn))) {
++		DBG_INFO("ixnas:dosmode to file flag mapping enabled,"
++			  "disabling 'map archive'\n");
++		lp_do_parameter(SNUM(handle->conn), "map archive",
++				"no");
++	}
++
++	if (lp_store_dos_attributes(SNUM(handle->conn))){
++		DBG_INFO("ixnas:dosmode to file flag mapping enabled,"
++			  "disabling 'store dos attributes'\n");
++		lp_do_parameter(SNUM(handle->conn), "store dos attributes",
++				"no");
++	}
++
++	/* ZFS ACL PARAMETERS */
++	config->zfs_acl_enabled = lp_parm_bool(SNUM(handle->conn),
++			"ixnas", "zfs_acl_enabled", true);
++
++	if (config->zfs_acl_enabled) {
++		config->zfs_acl_expose_snapdir = lp_parm_bool(SNUM(handle->conn),
++			"ixnas","zfsacl_expose_snapdir", true);	
++		
++		config->zfs_acl_denymissingspecial = lp_parm_bool(SNUM(handle->conn),
++			"ixnas","zfsacl_denymissingspecial",false);
++	}
++	
++	/* ZFS SPACE PARAMETERS */
++#if HAVE_LIBZFS
++	config->zfs_space_enabled = lp_parm_bool(SNUM(handle->conn),
++			"ixnas", "zfs_space_enabled", true);
++
++	config->zfs_quota_enabled = lp_parm_bool(SNUM(handle->conn),
++			"ixnas", "zfs_quota_enabled", true);
++#endif
++	
++	ret = SMB_VFS_NEXT_CONNECT(handle, service, user);
++	if (ret < 0) {
++		TALLOC_FREE(config);
++		return ret;
++	}
++
++	ret = smbacl4_get_vfs_params(handle->conn, &config->nfs4_params);
++	if (ret < 0) {
++		TALLOC_FREE(config);
++		return ret;
++	}
++
++	SMB_VFS_HANDLE_SET_DATA(handle, config,
++				NULL, struct ixnas_config_data,
++				return -1);
++
++	return 0;
++}
++
++static struct vfs_fn_pointers ixnas_fns = {
++	.connect_fn = ixnas_connect,
++	.create_file_fn = ixnas_create_file,
++	/* dosmode_enabled */
++	.get_dos_attributes_fn = ixnas_get_dos_attributes,
++	.fget_dos_attributes_fn = ixnas_fget_dos_attributes,
++	.set_dos_attributes_fn = ixnas_set_dos_attributes,
++	.fset_dos_attributes_fn = ixnas_fset_dos_attributes,
++	/* zfs_acl_enabled = true */
++	.fget_nt_acl_fn = ixnas_fget_nt_acl,
++	.get_nt_acl_fn = ixnas_get_nt_acl,
++	.fset_nt_acl_fn = ixnas_fset_nt_acl,
++	.sys_acl_get_file_fn = ixnas_fail__sys_acl_get_file,
++	.sys_acl_get_fd_fn = ixnas_fail__sys_acl_get_fd,
++	.sys_acl_blob_get_file_fn = ixnas_fail__sys_acl_blob_get_file,
++	.sys_acl_blob_get_fd_fn = ixnas_fail__sys_acl_blob_get_fd,
++	.sys_acl_set_file_fn = ixnas_fail__sys_acl_set_file,
++	.sys_acl_set_fd_fn = ixnas_fail__sys_acl_set_fd,
++	.sys_acl_delete_def_file_fn = ixnas_fail__sys_acl_delete_def_file,
++	
++#if HAVE_LIBZFS
++	.get_quota_fn = ixnas_get_quota,
++	.set_quota_fn = ixnas_set_quota,
++	.disk_free_fn = ixnas_disk_free
++#endif
++};
++
++NTSTATUS vfs_ixnas_init(TALLOC_CTX *);
++NTSTATUS vfs_ixnas_init(TALLOC_CTX *ctx)
++{
++	return smb_register_vfs(SMB_VFS_INTERFACE_VERSION, "ixnas",
++				&ixnas_fns);
++
++	vfs_ixnas_debug_level = debug_add_class("ixnas");
++	if (vfs_ixnas_debug_level == -1) {
++		vfs_ixnas_debug_level = DBGC_VFS;
++		DBG_ERR("%s: Couldn't register custom debugging class!\n",
++			"vfs_ixnas_init");
++	} else {
++		DBG_DEBUG("%s: Debug class number of '%s': %d\n",
++		"vfs_ixnas_init","ixnas",vfs_ixnas_debug_level);
++	}
++}
+diff --git a/source3/modules/vfs_winmsa.c b/source3/modules/vfs_winmsa.c
+new file mode 100644
+index 0000000..8387a64
+--- /dev/null
++++ b/source3/modules/vfs_winmsa.c
+@@ -0,0 +1,332 @@
++/*
++ *  *	Windows MoveSecurityAttributes
++ *   */
++
++#include "includes.h"
++#include "system/filesys.h"
++#include "smbd/smbd.h"
++#include "nfs4_acls.h"
++
++#if HAVE_FREEBSD_SUNACL_H
++#include "sunacl.h"
++#endif
++
++#ifndef NAME_MAX
++#define NAME_MAX 255
++#endif
++
++#undef DBGC_CLASS
++#define DBGC_CLASS DBGC_VFS
++
++#define WINMSA_MODULE_NAME "winmsa"
++
++typedef struct winmsa_info {
++	int d_naces;
++	int f_naces;
++	ace_t *d_aces;
++	ace_t *f_aces;
++	uid_t uid;
++	gid_t gid;
++	char *path;
++} winmsa_info_t;
++
++
++static char *parent_dir(TALLOC_CTX *ctx, const char *name)
++{
++	const char *p = strrchr(name, '/');
++	if (p == NULL)
++		return NULL;
++
++	return  talloc_strndup(ctx, name, (p + 1) - name);
++}
++
++static void winmsa_dump_acl(const char *path, ace_t *aces, int naces)
++{
++	int i;
++
++	DEBUG(5, ("PATH=%s\n", path));
++	for (i = 0;i < naces;i++) {
++		ace_t *ace = &(aces[i]);
++		DEBUG(5, ("ACE: [%02d/%02d] who=%08x [%-10d] mask=%08x flags=%08x type=%08x\n",
++			i + 1, naces, ace->a_who, ace->a_who, ace->a_access_mask, ace->a_flags, ace->a_type));
++	}
++}
++
++static int winmsa_get_naces(const char *path)
++{
++	int naces;
++
++	if ((naces = acl(path, ACE_GETACLCNT, 0, NULL)) < 0) {
++		if(errno == ENOSYS) {
++			DEBUG(5, ("acl(ACE_GETACLCNT, %s): Operation is not "
++				"supported on the filesystem where the file reside\n", path));
++		} else {
++			DEBUG(5, ("acl(ACE_GETACLCNT, %s): %s ", path, strerror(errno)));
++		}
++		return -1;
++	}
++
++	return naces;
++}
++
++static int winmsa_get_acl(TALLOC_CTX *ctx, winmsa_info_t *info)
++{
++	int i;
++
++	if (info == NULL || info->path == NULL)
++		return -1;
++
++	if ((info->d_naces = winmsa_get_naces(info->path)) < 0)
++		return -1;
++
++	if ((info->d_aces = talloc_size(ctx, sizeof(ace_t) * info->d_naces)) == NULL) {
++		errno = ENOMEM;
++		return -1;
++	}
++
++	if ((acl(info->path, ACE_GETACL, info->d_naces, info->d_aces)) < 0) {
++		DEBUG(3, ("winmsa_get_acl(%s): %s ", info->path, strerror(errno)));
++		return -1;
++	}
++
++	for (i = 0;i < info->d_naces;i++) {
++		info->d_aces[i].a_flags |= ACE_INHERITED_ACE;
++	}
++	
++	return 0;
++}
++
++static int winmsa_file_acl(TALLOC_CTX *ctx, winmsa_info_t *info)	
++{
++	int i;
++
++	if (info == NULL || info->path == NULL)
++		return -1;
++
++	if ((info->f_naces = winmsa_get_naces(info->path)) < 0)
++		return -1;
++
++	if ((info->f_aces = talloc_size(ctx, sizeof(ace_t) * info->f_naces)) == NULL) {
++		errno = ENOMEM;
++		return -1;
++	}
++
++	if ((acl(info->path, ACE_GETACL, info->f_naces, info->f_aces)) < 0) {
++		DEBUG(3, ("winmsa_file_acl(%s): %s ", info->path, strerror(errno)));
++		return -1;
++	}
++
++	for (i = 0;i < info->f_naces;i++) {
++		info->f_aces[i].a_flags &= ~(
++			ACE_FILE_INHERIT_ACE|
++			ACE_DIRECTORY_INHERIT_ACE|
++			ACE_NO_PROPAGATE_INHERIT_ACE|
++			ACE_INHERIT_ONLY_ACE
++		);
++		
++		info->f_aces[i].a_flags |= ACE_INHERITED_ACE;
++	}
++
++	return 0;
++}
++
++static int winmsa_get_ownership(winmsa_info_t *info)
++{
++	SMB_STRUCT_STAT sbuf;
++
++	if (sys_lstat(info->path, &sbuf, false) < 0) {
++		DEBUG(3, ("winmsa_get_ownership: stat failed for %s\n", info->path));
++		return -1;
++	}
++
++	info->uid = sbuf.st_ex_uid;
++	info->gid = sbuf.st_ex_gid;
++
++	return 0;
++}
++
++/* this  routine must be called under a become_root context to operate with sufficent access */
++static int winmsa_set_acls(TALLOC_CTX *ctx, struct vfs_handle_struct *handle,
++						winmsa_info_t *info, const char *path)
++{
++	int ret;
++	DIR *dh;
++	struct dirent de;
++	struct dirent *result;
++	SMB_STRUCT_STAT sbuf;
++
++	if (sys_lstat(path, &sbuf, false) < 0) {
++		DEBUG(3, ("winmsa_set_acls: stat failed for %s\n", path));
++		return -1;
++	}
++
++	if (S_ISLNK(sbuf.st_ex_mode))
++		return 0;
++
++	if (!S_ISDIR(sbuf.st_ex_mode)) {
++		/* these calls require escalated privileges */
++		if (lp_parm_bool(handle->conn->params->service, "winmsa", "chown", True)){
++			if (chown(path, info->uid, info->gid) < 0)
++				DEBUG(3, ("winmsa_set_acls: chown failed for %s\n", path));
++		}
++
++		if (acl(path, ACE_SETACL, info->f_naces, info->f_aces) < 0)
++			DEBUG(3, ("winmsa_set_acls: acl failed for %s\n", path));
++		return 0;
++	}
++
++	if ((dh = opendir(path)) == NULL) {
++		DEBUG(3, ("winmsa_set_acls: opendir failed for %s\n", path));
++		return -1;
++	}
++
++	for (ret = readdir_r(dh, &de, &result); result != NULL && ret == 0; ret = readdir_r(dh, &de, &result)) {
++		char *rp, *buf;
++
++		if (strcmp(de.d_name, ".") == 0 ||
++			strcmp(de.d_name, "..") == 0) {
++			continue;
++		}
++
++		if ((rp = talloc_size(ctx, PATH_MAX)) == NULL) {
++			errno = ENOMEM;
++			closedir(dh);
++			return -1;
++		}
++
++		if (realpath(path, rp) == NULL) {
++			talloc_free(rp);
++			DEBUG(3, ("winmsa_set_acls: realpath failed for %s\n", path));
++			continue;
++		}
++
++		if ((buf = talloc_size(ctx, PATH_MAX)) == NULL) {
++			talloc_free(rp);
++			errno = ENOMEM;
++			closedir(dh);
++			return -1;
++		}
++
++		snprintf(buf, PATH_MAX, "%s/%s", rp, de.d_name);
++		talloc_free(rp);
++
++		winmsa_set_acls(ctx, handle, info, buf);
++		talloc_free(buf);
++	}
++
++	closedir(dh);
++
++	/* these calls may require escalated privileges */
++	if (lp_parm_bool(handle->conn->params->service, "winmsa", "chown", True)){
++ 		if (chown(path, info->uid, info->gid) < 0)
++			DEBUG(3, ("winmsa_set_acls: chown failed for %s\n", path));
++	}
++ 
++	if (acl(path, ACE_SETACL, info->d_naces, info->d_aces) < 0)
++		DEBUG(3, ("winmsa_set_acls: acl failed for %s\n", path));
++
++	return 0;
++}
++
++static int winmsa_rename(struct vfs_handle_struct *handle,
++						const struct smb_filename *smb_fname_src,
++						const struct smb_filename *smb_fname_dst)
++{
++
++	int result = -1;
++	winmsa_info_t *info;
++	char *parent, *p1, *p2, *dst;
++	TALLOC_CTX *ctx;
++
++
++	if (SMB_VFS_NEXT_RENAME(handle, smb_fname_src, smb_fname_dst) < 0) {
++		DEBUG(3, ("winmsa_rename: rename failed: %s\n", strerror(errno)));
++		result = -1;
++		goto out;
++	}
++
++	if ((ctx = talloc_new(NULL)) == NULL) {
++		DEBUG(3, ("winmsa_rename: talloc failed\n"));
++		result = -1;
++		goto out;
++	}
++
++	p1 = parent_dir(ctx, smb_fname_src->base_name);
++	p2 = parent_dir(ctx, smb_fname_dst->base_name);
++
++	if (p1 != NULL && p2 != NULL && strcmp(p1, p2) == 0) {
++		DEBUG(5, ("winmsa_rename: source and destination parent directory is the same\n"));
++		result = 0;
++		goto out;
++	}
++
++	if ((parent = parent_dir(ctx, smb_fname_dst->base_name)) == NULL) {
++		result = 0;
++		goto out;
++	}
++
++	if ((info = talloc_size(ctx, sizeof(winmsa_info_t))) == NULL) {
++		DEBUG(3, ("winmsa_rename: talloc_size failed\n"));
++		result = -1;
++		goto out;
++	}
++
++	info->path = talloc_size(ctx, PATH_MAX);
++	if (realpath(parent, info->path) == NULL) {
++		DEBUG(3, ("winmsa_rename: realpath failed for %s\n", parent));
++		result = -1;
++		goto out;
++	}
++
++	dst = talloc_size(ctx, PATH_MAX);
++	if (realpath(smb_fname_dst->base_name, dst) == NULL) {
++		DEBUG(3, ("winmsa_rename: realpath failed for %s\n", smb_fname_dst->base_name));
++		result = -1;
++		goto out;
++	}
++
++	if (winmsa_get_acl(ctx, info) < 0) {
++		DEBUG(3, ("winmsa_rename: winmsa_get_acl failed\n"));
++		result = -1;
++		goto out;
++	}
++
++	if (winmsa_file_acl(ctx, info) < 0) {
++		DEBUG(3, ("winmsa_rename: winmsa_file_acl failed\n"));
++		result = -1;
++		goto out;
++	}
++
++	if (winmsa_get_ownership(info) < 0) {
++		DEBUG(3, ("winmsa_rename: winmsa_get_ownership failed\n"));
++		result = -1;
++		goto out;
++	}
++
++	/* WinMSA theory of operation requires setting the new file to  clone the ACE and Ownership
++ * 	of the parent of destination directory. Field deployment showed ( see jrq-485 )
++ * 		that the effective user did not always have the UNIX rights to accomplish this. 
++ * 			We become root here for the minimal necessary time due to multiple returns in
++ * 				winmsa_set_acls and goto's in this routine. */
++	become_root(); 
++	if ((result = winmsa_set_acls(ctx, handle, info, dst)) < 0) {
++		DEBUG(3, ("winmsa_rename: winmsa_set_acls failed\n"));
++		result = -1;
++	}
++	unbecome_root(); 
++
++out:
++	TALLOC_FREE(ctx);
++	return result;
++}
++
++static struct vfs_fn_pointers winmsa_fns = {
++	.rename_fn = winmsa_rename,
++};
++
++NTSTATUS vfs_winmsa_init(TALLOC_CTX *);
++NTSTATUS vfs_winmsa_init(TALLOC_CTX *ctx)
++{
++	return smb_register_vfs(SMB_VFS_INTERFACE_VERSION, "winmsa",
++				&winmsa_fns);
++}
+diff --git a/source3/modules/vfs_zfs_space.c b/source3/modules/vfs_zfs_space.c
+new file mode 100644
+index 0000000..28f4b36
+--- /dev/null
++++ b/source3/modules/vfs_zfs_space.c
+@@ -0,0 +1,68 @@
++/*-
++ * Copyright 2015 iXsystems, Inc.
++ * All rights reserved
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted providing that the following conditions
++ * are met:
++ * 1. Redistributions of source code must retain the above copyright
++ *    notice, this list of conditions and the following disclaimer.
++ * 2. Redistributions in binary form must reproduce the above copyright
++ *    notice, this list of conditions and the following disclaimer in the
++ *    documentation and/or other materials provided with the distribution.
++ *
++ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
++ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
++ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY
++ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
++ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
++ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
++ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING
++ * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
++ * POSSIBILITY OF SUCH DAMAGE.
++ *
++ */
++
++#include "includes.h"
++#include "system/filesys.h"
++#include "lib/util/tevent_ntstatus.h"
++
++#include "modules/smb_libzfs.h"
++
++
++static uint64_t vfs_zfs_space_disk_free(vfs_handle_struct *handle, const struct smb_filename *smb_fname,
++    uint64_t *bsize, uint64_t *dfree, uint64_t *dsize)
++{
++	uint64_t res;
++	char rp[PATH_MAX] = { 0 };
++
++	if (realpath(smb_fname->base_name, rp) == NULL)
++		return (-1);
++
++	DEBUG(9, ("realpath = %s\n", rp));
++
++	res = smb_zfs_disk_free(rp, bsize, dfree, dsize, geteuid());
++	if (res == (uint64_t)-1)
++		res = SMB_VFS_NEXT_DISK_FREE(handle, smb_fname, bsize, dfree, dsize);
++	if (res == (uint64_t)-1)
++		return (res);
++
++	DEBUG(9, ("*bsize = %" PRIu64 "\n", *bsize));
++	DEBUG(9, ("*dfree = %" PRIu64 "\n", *dfree));
++	DEBUG(9, ("*dsize = %" PRIu64 "\n", *dsize));
++
++	return (res);
++}
++
++static struct vfs_fn_pointers vfs_zfs_space_fns = {
++	.disk_free_fn = vfs_zfs_space_disk_free
++};
++
++NTSTATUS vfs_zfs_space_init(TALLOC_CTX *);
++NTSTATUS vfs_zfs_space_init(TALLOC_CTX *ctx)
++{
++	return smb_register_vfs(SMB_VFS_INTERFACE_VERSION,
++		"zfs_space", &vfs_zfs_space_fns);
++}
+diff --git a/source3/smbd/fake_file.c b/source3/smbd/fake_file.c
+index 83b66d6..07bf87c 100644
+--- a/source3/smbd/fake_file.c
++++ b/source3/smbd/fake_file.c
+@@ -128,6 +128,7 @@ NTSTATUS open_fake_file(struct smb_request *req, connection_struct *conn,
+ {
+ 	files_struct *fsp = NULL;
+ 	NTSTATUS status;
++	bool is_disk_op;
+ 
+ 	status = smbd_calculate_access_mask(conn, smb_fname, false,
+ 					    access_mask, &access_mask);
+@@ -140,15 +141,35 @@ NTSTATUS open_fake_file(struct smb_request *req, connection_struct *conn,
+ 		return status;
+ 	}
+ 
+-	/* access check */
+-	if (geteuid() != sec_initial_uid()) {
+-		DEBUG(3, ("open_fake_file_shared: access_denied to "
+-			  "service[%s] file[%s] user[%s]\n",
+-			  lp_servicename(talloc_tos(), SNUM(conn)),
+-			  smb_fname_str_dbg(smb_fname),
+-			  conn->session_info->unix_info->unix_name));
+-		return NT_STATUS_ACCESS_DENIED;
+-
++	/* access check 
++ 	 * Allow access to QUOTA fake file if user has DISK_OPERATOR
++ 	 * privileges. This is a subset of local admin rights.
++ 	 */
++	switch(fake_file_type){
++	case FAKE_FILE_TYPE_QUOTA:
++ 		is_disk_op = security_token_has_privilege(
++			conn->session_info->security_token,
++			SEC_PRIV_DISK_OPERATOR);
++		if (!is_disk_op) {
++			DBG_NOTICE("Access denied to "
++				   "service[%s] file[%s]. User [%s] "
++				   "lacks SE_PRIV_DISK_OPERATOR\n",
++				   lp_servicename(talloc_tos(), SNUM(conn)),
++				   smb_fname_str_dbg(smb_fname),
++				   conn->session_info->unix_info->unix_name);
++			return NT_STATUS_ACCESS_DENIED;
++		}
++		break;
++	default:
++		if (geteuid() != sec_initial_uid()) {
++			DEBUG(3, ("open_fake_file_shared: access_denied to "
++				  "service[%s] file[%s] user[%s]\n",
++				  lp_servicename(talloc_tos(), SNUM(conn)),
++				  smb_fname_str_dbg(smb_fname),
++				  conn->session_info->unix_info->unix_name));
++			return NT_STATUS_ACCESS_DENIED;
++
++		}	
+ 	}
+ 
+ 	status = file_new(req, conn, &fsp);
+diff --git a/source3/smbd/trans2.c b/source3/smbd/trans2.c
+index 61757c6..e4d4b51 100644
+--- a/source3/smbd/trans2.c
++++ b/source3/smbd/trans2.c
+@@ -3748,12 +3748,21 @@ cBytesSector=%u, cUnitTotal=%u, cUnitAvail=%d\n", (unsigned int)bsize, (unsigned
+ 
+ 			ZERO_STRUCT(fsp);
+ 			ZERO_STRUCT(quotas);
++			bool allowed_user;
++			if ((get_current_uid(conn) == 0) || (security_token_has_privilege(
++			   conn->session_info->security_token, SEC_PRIV_DISK_OPERATOR) == 0)) {
++				allowed_user = true;
++			}
++
++
+ 
+ 			fsp.conn = conn;
+ 			fsp.fnum = FNUM_FIELD_INVALID;
+ 
+-			/* access check */
+-			if (get_current_uid(conn) != 0) {
++			/* access check 
++ 			 * Allow access in case we have SEC_PRIV_DISK_OPERATOR.
++ 			 */
++			if ( !allowed_user ) {
+ 				DEBUG(0,("get_user_quota: access_denied "
+ 					 "service [%s] user [%s]\n",
+ 					 lp_servicename(talloc_tos(), SNUM(conn)),
+@@ -4050,11 +4059,17 @@ static NTSTATUS smb_set_fsquota(connection_struct *conn,
+ {
+ 	NTSTATUS status;
+ 	SMB_NTQUOTA_STRUCT quotas;
++	bool allowed_user;
++
++	if ((get_current_uid(conn) == 0) || (security_token_has_privilege(
++	   conn->session_info->security_token, SEC_PRIV_DISK_OPERATOR) == 0)) { 
++		allowed_user = true;
++	}
+ 
+ 	ZERO_STRUCT(quotas);
+ 
+ 	/* access check */
+-	if ((get_current_uid(conn) != 0) || !CAN_WRITE(conn)) {
++	if ((!allowed_user) || !CAN_WRITE(conn)) {
+ 		DEBUG(3, ("set_fsquota: access_denied service [%s] user [%s]\n",
+ 			  lp_servicename(talloc_tos(), SNUM(conn)),
+ 			  conn->session_info->unix_info->unix_name));

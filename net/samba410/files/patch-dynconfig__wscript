@@ -1,5 +1,5 @@
---- dynconfig/wscript.orig	2019-01-15 10:07:00 UTC
-+++ dynconfig/wscript
+--- dynconfig/wscript.orig	2019-02-06 06:39:00.362351000 -0500
++++ dynconfig/wscript	2019-02-06 06:43:37.991365000 -0500
 @@ -141,6 +141,8 @@ dynconfig = {
      'PKGCONFIGDIR' : {
           'STD-PATH':  '${LIBDIR}/pkgconfig',
@@ -15,8 +15,8 @@
      'CONFIGFILE' : {
 -         'STD-PATH':  '${CONFIGDIR}/smb.conf',
 -         'FHS-PATH':  '${CONFIGDIR}/smb.conf',
-+         'STD-PATH':  '${CONFIGDIR}/%%SAMBA4_CONFIG%%',
-+         'FHS-PATH':  '${CONFIGDIR}/%%SAMBA4_CONFIG%%',
++         'STD-PATH':  '${CONFIGDIR}/smb4.conf',
++         'FHS-PATH':  '${CONFIGDIR}/smb4.conf',
           'DELAY':     True,
      },
      'LMHOSTSFILE' : {

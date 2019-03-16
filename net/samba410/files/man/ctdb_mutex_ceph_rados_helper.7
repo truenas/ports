@@ -1,5 +1,5 @@
 '\" t
-.\"     Title: ctdb_diagnostics
+.\"     Title: Ceph RADOS Mutex
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
 .\"      Date: 11/20/2017
@@ -7,7 +7,7 @@
 .\"    Source: ctdb
 .\"  Language: English
 .\"
-.TH "CTDB_DIAGNOSTICS" "1" "11/20/2017" "ctdb" "CTDB \- clustered TDB database"
+.TH "CEPH RADOS MUTEX" "7" "11/20/2017" "ctdb" "CTDB \- clustered TDB database"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -28,46 +28,46 @@
 .\" * MAIN CONTENT STARTS HERE *
 .\" -----------------------------------------------------------------
 .SH "NAME"
-ctdb_diagnostics \- dump diagnostic information about CTDB/Samba installation
-.SH "SYNOPSIS"
-.HP \w'\fBctdb_diagnostics\fR\ 'u
-\fBctdb_diagnostics\fR [OPTIONS] \&.\&.\&.
+ctdb_mutex_ceph_rados_helper \- Ceph RADOS cluster mutex helper
 .SH "DESCRIPTION"
 .PP
-ctdb_diagnostics is used to dump diagnostic information about a clustered Samba installation\&. This includes configuration files, output of relevant commands and logs\&. This information can be used to check the correctness of the configuration and to diagnose problems\&.
-.SH "OPTIONS"
-.PP
-\-n <nodes>
+ctdb_mutex_ceph_rados_helper can be used as a recovery lock provider for CTDB\&. When configured, split brain avoidance during CTDB recovery will be handled using locks against an object located in a Ceph RADOS pool\&. To enable this functionality, include the following line in your CTDB config file:
+.sp
+.if n \{\
 .RS 4
-Comma separated list of nodes to operate on
+.\}
+.nf
+CTDB_RECOVERY_LOCK="!ctdb_mutex_ceph_rados_helper [Cluster] [User] [Pool] [Object]"
+
+Cluster: Ceph cluster name (e\&.g\&. ceph)
+User: Ceph cluster user name (e\&.g\&. client\&.admin)
+Pool: Ceph RADOS pool name
+Object: Ceph RADOS object name
+    
+.fi
+.if n \{\
 .RE
+.\}
 .PP
-\-c
-.RS 4
-Ignore comment lines (starting with \*(Aq#\*(Aq) in file comparisons
-.RE
-.PP
-\-w
-.RS 4
-Ignore whitespace in file comparisons
-.RE
-.PP
-\-\-no\-ads
-.RS 4
-Do not use commands that assume an Active Directory Server
-.RE
+The Ceph cluster
+\fICluster\fR
+must be up and running, with a configuration, and keyring file for
+\fIUser\fR
+located in a librados default search path (e\&.g\&. /etc/ceph/)\&.
+\fIPool\fR
+must already exist\&.
 .SH "SEE ALSO"
 .PP
-\fBctdb\fR(1),
 \fBctdb\fR(7),
-\m[blue]\fB\%https://ctdb.samba.org/\fR\m[]
+\fBctdbd\fR(1),
+\m[blue]\fB\%http://ctdb.samba.org/\fR\m[]
 .SH "AUTHOR"
 .br
 .PP
-This documentation was written by Martijn van Brummelen
+This documentation was written by David Disseldorp
 .SH "COPYRIGHT"
 .br
-Copyright \(co 2015 Martijn van Brummelen
+Copyright \(co 2016 David Disseldorp
 .br
 .PP
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version\&.
