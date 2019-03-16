@@ -1,0 +1,56 @@
+--- source3/wscript.orig	2019-02-22 03:02:36.000000000 -0500
++++ source3/wscript	2019-03-15 11:00:29.692863000 -0400
+@@ -50,6 +50,7 @@ def options(opt):
+     opt.SAMBA3_ADD_OPTION('sendfile-support', default=None)
+     opt.SAMBA3_ADD_OPTION('utmp')
+     opt.SAMBA3_ADD_OPTION('avahi', with_name="enable", without_name="disable")
++    opt.SAMBA3_ADD_OPTION('dnssd', with_name="enable", without_name="disable")
+     opt.SAMBA3_ADD_OPTION('iconv')
+     opt.SAMBA3_ADD_OPTION('acl-support')
+     opt.SAMBA3_ADD_OPTION('dnsupdate')
+@@ -767,7 +768,7 @@ msg.msg_accrightslen = sizeof(fd);
+         conf.env['HAVE_ADS'] = '1'
+         Logs.info("Building with Active Directory support.")
+         # these have broken dependencies
+-        forced_shared_modules.extend(TO_LIST('idmap_ad idmap_rfc2307'))
++        forced_shared_modules.extend(TO_LIST('idmap_ad idmap_fruit idmap_rfc2307'))
+     elif Options.options.with_ads == False:
+         Logs.info("Building without Active Directory support (--without-ads).")
+     else:
+@@ -836,6 +837,17 @@ msg.msg_accrightslen = sizeof(fd);
+         conf.SET_TARGET_TYPE('avahi-common', 'EMPTY')
+         conf.SET_TARGET_TYPE('avahi-client', 'EMPTY')
+ 
++    if Options.options.with_dnssd:
++        conf.env.with_dnssd = True
++        if not conf.CHECK_HEADERS('dns_sd.h'):
++            conf.env.with_dnssd = False
++        if not conf.CHECK_FUNCS_IN('DNSServiceRegister', 'dns_sd'):
++            conf.env.with_dnssd = False
++        if conf.env.with_dnssd:
++            conf.DEFINE('WITH_DNSSD_SUPPORT', 1)
++    else:
++        conf.SET_TARGET_TYPE('dns_sd', 'EMPTY')
++
+     if Options.options.with_iconv:
+         conf.env.with_iconv = True
+         if not conf.CHECK_FUNCS_IN('iconv_open', 'iconv', headers='iconv.h'):
+@@ -1692,6 +1704,7 @@ main() {
+ 
+     if conf.CONFIG_SET('HAVE_FREEBSD_SUNACL_H'):
+         default_shared_modules.extend(TO_LIST('vfs_zfsacl'))
++        default_shared_modules.extend(TO_LIST('vfs_winmsa'))
+ 
+     if conf.CONFIG_SET('HAVE_DIRFD_DECL'):
+         default_shared_modules.extend(TO_LIST('vfs_syncops vfs_dirsort'))
+@@ -1707,6 +1720,10 @@ main() {
+ 
+     if conf.CONFIG_SET('HAVE_LDAP'):
+         default_static_modules.extend(TO_LIST('pdb_ldapsam idmap_ldap'))
++
++    if Options.options.with_libzfs:
++        default_static_modules.extend(TO_LIST('vfs_zfs_space'))
++        default_static_modules.extend(TO_LIST('vfs_shadow_copy_zfs'))
+ 
+     if conf.CONFIG_SET('DARWINOS'):
+         default_static_modules.extend(TO_LIST('charset_macosxfs'))
