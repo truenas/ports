@@ -12,7 +12,7 @@ COMMENT=	Port for the OS base sources
 USE_GITHUB=	yes
 GH_ACCOUNT=     darkfiberiru	
 GH_PROJECT=	trueos
-GH_TAGNAME=	af1ce7e2b6e857362eba0eb64715d1a805940a93
+GH_TAGNAME=	f04e507273a32c6b0a0847571f2bb80ff8227885
 
 PREFIX=/
 SRCDIR?=/usr/src
