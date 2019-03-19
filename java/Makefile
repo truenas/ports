@@ -69,9 +69,10 @@
     SUBDIR += jcommon
     SUBDIR += jd-gui
     SUBDIR += jdbcpool
-    SUBDIR += jdk10-doc
     SUBDIR += jdk8-doc
     SUBDIR += jdk9-doc
+    SUBDIR += jdk10-doc
+    SUBDIR += jdk11-doc
     SUBDIR += jdom
     SUBDIR += jflex
     SUBDIR += jfreechart
@@ -110,6 +111,7 @@
     SUBDIR += openjdk7-jre
     SUBDIR += openjdk8
     SUBDIR += openjdk8-jre
+    SUBDIR += openjdk11
     SUBDIR += openjfx8-devel
     SUBDIR += openjfx8-scenebuilder
     SUBDIR += phpeclipse

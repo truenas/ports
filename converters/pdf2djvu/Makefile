@@ -2,6 +2,7 @@
 
 PORTNAME=	pdf2djvu
 PORTVERSION=	0.9.12
+PORTREVISION=	1
 CATEGORIES=	converters
 MASTER_SITES=	https://github.com/jwilk/${PORTNAME}/releases/download/${PORTVERSION}/
 
@@ -9,7 +10,6 @@ MAINTAINER=	samy.mahmoudi@gmail.com
 COMMENT=	Creates DjVu files from PDF files
 
 LICENSE=	GPLv2
-LICENSE_FILE=	${WRKSRC}/COPYING
 
 BUILD_DEPENDS=	${LOCALBASE}/include/pstreams/pstream.h:devel/pstreams
 LIB_DEPENDS=	libdjvulibre.so:graphics/djvulibre \
