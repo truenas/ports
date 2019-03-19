@@ -6,7 +6,8 @@
 # in any of it's log files.  This version was tested under the load and
 # no problems encountered so far.  Thanks.
 PORTNAME=	hadoop
-PORTVERSION=	2.9.1
+PORTVERSION=	2.7.2
+PORTREVISION=	2
 CATEGORIES=	devel java
 MASTER_SITES=	APACHE/${PORTNAME}/common/hadoop-${PORTVERSION} \
 		LOCAL/demon/:maven \
