@@ -136,7 +136,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}bsd>=0:freenas/py-bsd@${PY_FLAVOR} \
 		rrdtool>=0:databases/rrdtool \
 		rsync>=0:net/rsync \
 		samba-nsupdate>=0:dns/samba-nsupdate \
-		samba49>=0:net/samba49 \
+		samba410>=0:net/samba410 \
 		scponly>=0:shells/scponly \
 		screen>=0:sysutils/screen \
 		sedutil>=0:sysutils/sedutil \
