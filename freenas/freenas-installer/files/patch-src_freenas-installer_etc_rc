@@ -1,6 +1,6 @@
---- src/freenas-installer/etc/rc.orig	2019-03-11 20:41:11 UTC
+--- src/freenas-installer/etc/rc.orig	2019-03-18 19:59:06 UTC
 +++ src/freenas-installer/etc/rc
-@@ -54,9 +54,44 @@ dlv=`/sbin/sysctl -n vfs.nfs.diskless_valid 2> /dev/nu
+@@ -54,9 +54,47 @@ dlv=`/sbin/sysctl -n vfs.nfs.diskless_valid 2> /dev/nu
  if [ ${dlv:=0} -ne 0 -o -f /etc/diskless ]; then
  	sh /etc/rc.initdiskless
  fi
@@ -39,6 +39,9 @@
 +
 +# Sleep a tick first, which prevents from odd services from crashing
 +sleep 1
++
++# Load zfs
++/sbin/kldload zfs
  	
  while :; do
 -    /etc/install.sh
