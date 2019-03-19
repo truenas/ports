@@ -33,7 +33,6 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}bsd>=0:freenas/py-bsd@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}xattr>=0:devel/py-xattr@${PY_FLAVOR} \
 		ap24-mod_mpm_itk>=0:www/mod_mpm_itk \
 		apache24>=0:www/apache24 \
-		ataidle>=0:sysutils/ataidle \
 		base64>=0:converters/base64 \
 		bash>=0:shells/bash \
 		beadm>=0:sysutils/beadm \
@@ -68,7 +67,6 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}bsd>=0:freenas/py-bsd@${PY_FLAVOR} \
 		gdb>=0:devel/gdb \
 		git-lite>=0:devel/git-lite \
 		glib>=0:devel/glib20 \
-		gnome_subr>=0:sysutils/gnome_subr \
 		gnupg>=0:security/gnupg \
 		graid5>=0:sysutils/graid5 \
 		graphite2>=0:graphics/graphite2 \
