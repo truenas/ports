@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	freenas
-PORTVERSION=	20190219110927
+PORTVERSION=	20190320020711
 CATEGORIES=	freenas
 
 MAINTAINER=	dev@ixsystems.com
@@ -118,6 +118,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}bsd>=0:freenas/py-bsd@${PY_FLAVOR} \
 		openldap-sasl-client>=0:net/openldap24-sasl-client \
 		openssh-portable>=0:security/openssh-portable \
 		openvpn>=0:security/openvpn \
+		p7zip>=0:archivers/p7zip \
 		pam_mkhomedir>=0:security/pam_mkhomedir \
 		pciutils>=0:sysutils/pciutils \
 		pigz>=0:archivers/pigz \
