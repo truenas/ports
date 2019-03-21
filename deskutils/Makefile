@@ -138,7 +138,6 @@
     SUBDIR += korganizer
     SUBDIR += kruler
     SUBDIR += latte-dock
-    SUBDIR += launchy
     SUBDIR += libkdepim
     SUBDIR += libopensync-plugin-vformat-devel
     SUBDIR += ljcharm
