@@ -4319,6 +4319,7 @@
     SUBDIR += py-cachetools3
     SUBDIR += py-cachy
     SUBDIR += py-cadquery-pywrap
+    SUBDIR += py-cam
     SUBDIR += py-canonicaljson
     SUBDIR += py-capstone
     SUBDIR += py-capturer
