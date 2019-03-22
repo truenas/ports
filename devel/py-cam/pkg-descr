@@ -1,0 +1,4 @@
+Python wrapper for FreeBSD CAM system, allowing to retrieve disk information
+including the temperate.
+
+WWW: https://github.com/freenas/py-cam
