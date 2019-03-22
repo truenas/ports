@@ -4251,6 +4251,7 @@
     SUBDIR += py-cachetools
     SUBDIR += py-cachy
     SUBDIR += py-calendar
+    SUBDIR += py-cam
     SUBDIR += py-canonicaljson
     SUBDIR += py-capstone
     SUBDIR += py-castellan
