@@ -2,6 +2,7 @@
 
 PORTNAME=	zol
 PORTVERSION=	2019032100
+PORTREVISION=	1
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 PKGNAMESUFFIX=	-kmod
@@ -31,6 +32,7 @@ IGNORE=      needs FreeBSD 12/13 with AES-CCM support
 
 .if ${PORT_OPTIONS:MDEBUG}
 MAKE_OPTS+=	WITH_DEBUG=true
+PLIST_FILES+=	${KMODDIR}/zfs.ko.debug
 .endif
 
 .if ${PORT_OPTIONS:MGCOV}
@@ -46,5 +48,8 @@ do-build:
 
 do-install:
 	${INSTALL} ${WRKSRC}/module/zfs.ko ${STAGEDIR}${KMODDIR}
+.if ${PORT_OPTIONS:MDEBUG}
+	${INSTALL} ${WRKSRC}/module/zfs.ko.debug ${STAGEDIR}${KMODDIR}
+.endif
 
 .include <bsd.port.post.mk>
