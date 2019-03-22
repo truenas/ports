@@ -5,7 +5,7 @@ PORTNAME=	lumina-mediaplayer
 PORTVERSION=	1.4.2
 PORTREVISION=	201803131031
 PORTREVISION=	2
-ATEGORIES=	deskutils
+CATEGORIES=	deskutils
 
 MAINTAINER=	jt@ixsystems.com
 COMMENT=	Streaming media player from the Lumina Desktop
