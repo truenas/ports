@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	manifest
-PORTVERSION=	${:!/usr/bin/stat -f %Sm -t %s ${PORTSDIR}/trueos-manifest.json!}
+PORTVERSION=	${:!/usr/bin/stat -f %Sm -t %s ${PORTSDIR}/local_source/trueos-manifest.json!}
 CATEGORIES=	os
 
 MAINTAINER=	ken@ixsystems.com
@@ -17,6 +17,6 @@ PLIST_FILES=	/var/db/current-manifest.json
 
 do-install:
 	@${MKDIR} -p ${STAGEDIR}/var/db
-	@${CP} ${PORTSDIR}/trueos-manifest.json ${STAGEDIR}/var/db/current-manifest.json
+	@${CP} ${PORTSDIR}/local_source/trueos-manifest.json ${STAGEDIR}/var/db/current-manifest.json
 
 .include <bsd.port.post.mk>
