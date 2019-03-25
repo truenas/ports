@@ -12,7 +12,6 @@ NO_BUILD=	yes
 EXTRACT_ONLY=
 DISTFILES=
 PLIST_FILES=	/var/db/current-manifest.json
-PLIST_DIRS=		/var/db
 
 .include <bsd.port.pre.mk>
 
