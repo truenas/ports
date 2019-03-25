@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	manifest
-PORTVERSION=	${:!stat -f %Sm -t %s ${PORTSDIR}/trueos-manifest.json!}
+PORTVERSION=	${:!/usr/bin/stat -f %Sm -t %s ${PORTSDIR}/trueos-manifest.json!}
 CATEGORIES=	os
 
 MAINTAINER=	ken@ixsystems.com
