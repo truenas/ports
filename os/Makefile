@@ -7,6 +7,7 @@
     SUBDIR += buildworld
     SUBDIR += kernel
     SUBDIR += kernel-debug
+    SUBDIR += manifest
     SUBDIR += src
     SUBDIR += userland
     SUBDIR += userland-base
