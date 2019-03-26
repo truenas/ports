@@ -2,7 +2,7 @@
 
 PORTNAME=       freenas-ui
 PORTVERSION=	20190320165726
-PORTREVISION=	1
+PORTREVISION=	2
 
 CATEGORIES=     freenas
 VALID_CATEGORIES+=	freenas
@@ -44,8 +44,10 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}django110>0:www/py-django110@${PY_FLAVOR} \
 	openssl111>0:security/openssl111 \
 	pyvmomi>0:net/py-pyvmomi \
 	dmidecode>0:sysutils/dmidecode \
+	freenas-files>0:freenas/freenas-files \
 	freenas-migrate93>0:freenas/freenas-migrate93 \
 	freenas-pkgtools>0:freenas/freenas-pkgtools \
+	zol>=0:sysutils/zol \
 	${PYTHON_PKGNAMEPREFIX}libzfs>0:devel/py-libzfs@${PY_FLAVOR}
 
 .if exists(/usr/ports/local_source/${PORTNAME})
@@ -94,5 +96,41 @@ do-install:
 	${MKDIR} ${STAGEDIR}${PREFIX}/www/freenasUI
 	${CP} -a ${WRKSRC}/gui/* ${STAGEDIR}${PREFIX}/www/freenasUI/
 	${LN} -s -f /etc/local_settings.py ${STAGEDIR}${PREFIX}/www/freenasUI/local_settings.py
+
+	${MKDIR} -p /data
+	${MKDIR} -p /etc
+	${ECHO_CMD} "FreeNAS-12.0-PRERELEASE ()" > /etc/version
+	${ENV} FREENAS_INSTALL=yes /usr/local/sbin/migrate93 -f /data/freenas-v1.db
+	${ENV} FREENAS_INSTALL=yes ${PYTHON_CMD} ${STAGEDIR}${PREFIX}/www/freenasUI/manage.py migrate --fake-initial --noinput --traceback
+
+	${MKDIR} -p ${STAGEDIR}/data
+	${MKDIR} -p ${STAGEDIR}/etc
+	${CP} /data/* ${STAGEDIR}/data/
+	${CP} /etc/version ${STAGEDIR}/etc/
+
+	${ECHO_CMD} "@comment database files" >> ${TMPPLIST}
+	${FIND} /data -type f \
+		| ${SED} -e 's|^|@sample |' \
+		| ${SORT} >> ${TMPPLIST}
+	${ECHO_CMD} "@dir /data" >> ${TMPPLIST}
+
+	${ECHO_CMD} /etc/version >> ${TMPPLIST}
+	${ECHO_CMD} "@dir /etc" >> ${TMPPLIST}
+
+	${PYTHON_CMD} ${STAGEDIR}${PREFIX}/www/freenasUI/manage.py collectstatic --noinput
+	${PYTHON_CMD} ${STAGEDIR}${PREFIX}/www/freenasUI/tools/compilemsgs.py
+
+	${ECHO_CMD} "@comment static files" >> ${TMPPLIST}
+	${FIND} ${STAGEDIR}${PREFIX}/www/freenasUI/static -type f | \
+		${SED} -e 's|^${STAGEDIR}${PREFIX}/||' \
+		| ${SORT} >> ${TMPPLIST}
+
+	${FIND} ${STAGEDIR}${PREFIX}/www/freenasUI/static -type d | \
+		 ${SED} -e 's|^${STAGEDIR}${PREFIX}/||' -e 's|^|@dir |' \
+		| ${SORT} -r >> ${TMPPLIST}
+
+	${FIND} ${STAGEDIR}${PREFIX}/www/freenasUI/locale -name "*mo" | \
+		${SED} -e 's|^${STAGEDIR}${PREFIX}/||' \
+		| ${SORT} >> ${TMPPLIST}
 
 .include <bsd.port.post.mk>
