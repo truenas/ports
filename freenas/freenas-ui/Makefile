@@ -67,6 +67,9 @@ MAKE_JOBS_UNSAFE=yes
 
 ALL_TARGET=obj all
 
+SUB_FILES=	pkg-install
+SUB_LIST+=	PYTHON_CMD=${PYTHON_CMD}
+
 .include <bsd.port.pre.mk>
 
 .if ${PRODUCT} == "TrueNAS"
