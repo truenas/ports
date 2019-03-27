@@ -2,8 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	rrdtool
-PORTVERSION=	1.7.0
-PORTREVISION=	2
+PORTVERSION=	1.7.1
+PORTREVISION=	1
 CATEGORIES=	databases graphics
 MASTER_SITES=	http://oss.oetiker.ch/rrdtool/pub/
 
