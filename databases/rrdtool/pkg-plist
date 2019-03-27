@@ -10,7 +10,7 @@ include/rrd_format.h
 lib/librrd.a
 lib/librrd.so
 lib/librrd.so.8
-lib/librrd.so.8.1.0
+lib/librrd.so.8.2.0
 %%PERL%%%%SITE_PERL%%/RRDp.pm
 %%PERL%%%%SITE_ARCH%%/RRDs.pm
 %%PERL%%%%SITE_ARCH%%/auto/RRDs/RRDs.so
