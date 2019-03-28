@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	freenas
-PORTVERSION=	20190320020711
+PORTVERSION=	20190326130711
 CATEGORIES=	freenas
 
 MAINTAINER=	dev@ixsystems.com
@@ -163,9 +163,6 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}bsd>=0:freenas/py-bsd@${PY_FLAVOR} \
 		zerotier>=0:net/zerotier \
 		zfs-stats-lite>=0:sysutils/zfs-stats-lite \
 		zsh>=0:shells/zsh
-
-SUB_FILES=	pkg-install
-SUB_LIST+=	PYTHON_CMD=${PYTHON_CMD}
 
 USES+=		metaport
 
