@@ -8,12 +8,15 @@ sbin/pc-sysinstall
 %%DATADIR%%/backend-query/disk-list.sh
 %%DATADIR%%/backend-query/disk-part.sh
 %%DATADIR%%/backend-query/enable-net.sh
+%%DATADIR%%/backend-query/get-packages.sh
 %%DATADIR%%/backend-query/list-components.sh
 %%DATADIR%%/backend-query/list-config.sh
 %%DATADIR%%/backend-query/list-mirrors.sh
+%%DATADIR%%/backend-query/list-packages.sh
 %%DATADIR%%/backend-query/list-rsync-backups.sh
 %%DATADIR%%/backend-query/list-tzones.sh
 %%DATADIR%%/backend-query/list-zpools.sh
+%%DATADIR%%/backend-query/part-label.sh
 %%DATADIR%%/backend-query/query-langs.sh
 %%DATADIR%%/backend-query/send-logs.sh
 %%DATADIR%%/backend-query/set-mirror.sh
@@ -25,6 +28,8 @@ sbin/pc-sysinstall
 %%DATADIR%%/backend-query/xkeyboard-layouts.sh
 %%DATADIR%%/backend-query/xkeyboard-models.sh
 %%DATADIR%%/backend-query/xkeyboard-variants.sh
+%%DATADIR%%/backend-partmanager/create-part.sh
+%%DATADIR%%/backend-partmanager/delete-part.sh
 %%DATADIR%%/backend/functions-bsdlabel.sh
 %%DATADIR%%/backend/functions-cleanup.sh
 %%DATADIR%%/backend/functions-disk.sh
