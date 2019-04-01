@@ -14,13 +14,11 @@ PRODUCT?=
 USES=		python
 
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}django110>0:www/py-django110@${PY_FLAVOR} \
-	uwsgi>0:www/uwsgi \
 	${PYTHON_PKGNAMEPREFIX}django-formtools>0:www/py-django-formtools@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}django-tastypie>0:www/py-django-tastypie@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}lockfile>0:devel/py-lockfile@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}ipaddr>0:devel/py-ipaddr@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}bsddb3>0:databases/py-bsddb3@${PY_FLAVOR} \
-	${PYTHON_PKGNAMEPREFIX}polib>0:devel/py-polib@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}ldap>0:net/py-ldap@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}dojango>0:www/py-dojango@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}sysctl>0:devel/py-sysctl@${PY_FLAVOR} \
@@ -121,7 +119,6 @@ do-install:
 	${ECHO_CMD} "@dir /etc" >> ${TMPPLIST}
 
 	${PYTHON_CMD} ${STAGEDIR}${PREFIX}/www/freenasUI/manage.py collectstatic --noinput
-	${PYTHON_CMD} ${STAGEDIR}${PREFIX}/www/freenasUI/tools/compilemsgs.py
 
 	${ECHO_CMD} "@comment static files" >> ${TMPPLIST}
 	${FIND} ${STAGEDIR}${PREFIX}/www/freenasUI/static -type f | \
