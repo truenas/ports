@@ -6,7 +6,7 @@ PORTVERSION=	20190331000237
 CATEGORIES=	sysutils
 
 MAINTAINER=	kmoore@FreeBSD.org
-COMMENT=	PC-BSD install backend
+COMMENT=	TrueOS install backend
 
 LICENSE=	BSD2CLAUSE
 
