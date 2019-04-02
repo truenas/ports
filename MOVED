@@ -6047,7 +6047,6 @@ www/phpbb-devel|www/phpbb3|2014-06-22|Has expired: Use www/phpbb3 instead
 math/polymake||2014-06-22|Has expired: Does not build with any supported version of Perl
 www/phpsysinfo-dev|www/phpsysinfo|2014-06-22|Has expired: Use www/phpsysinfo instead
 print/pkg-texinfo|print/texinfo-minimal|2014-06-24|Has been renamed
-sysutils/pc-sysinstall|sysutils/pcbsd-utils|2014-06-24|Removed: pc-sysinstall is included in sysutils/pcbsd-utils
 print/texinfo-minimal|print/texinfo-lite|2014-06-24|Has been renamed
 devel/gmake-minimal|devel/gmake-lite|2014-06-24|Has been renamed
 converters/mule-ucs||2014-06-27|Removed: dependent on editors/emacs21
