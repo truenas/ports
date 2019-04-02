@@ -88,7 +88,7 @@ do-install:
 	${FIND} ${WRKSRC}/gui -type f | \
 		${SED} -e 's|^${WRKSRC}/gui|/usr/local/www/freenasUI|' -e 's|^/||' \
 		| ${SORT} >> ${TMPPLIST}
-	${ECHO_CMD} www/freenasUI/local_settings.py >> ${TMPPLIST}
+	${ECHO_CMD} /usr/local/www/freenasUI/local_settings.py >> ${TMPPLIST}
 	${ECHO_CMD} "@comment directories" >> ${TMPPLIST}
 	${FIND} ${WRKSRC}/gui -type d \
 		| ${SED} -e 's|^${WRKSRC}/gui|/usr/local/www/freenasUI|' -e 's|^/||' -e 's|^|@dir |' \
