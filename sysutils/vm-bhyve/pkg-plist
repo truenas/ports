@@ -1,3 +1,4 @@
+etc/init.d/vm
 etc/rc.d/vm
 lib/vm-bhyve/vm-base
 lib/vm-bhyve/vm-cmd
@@ -35,3 +36,4 @@ sbin/vm
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/resflash.conf
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/ubuntu.conf
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/windows.conf
+
