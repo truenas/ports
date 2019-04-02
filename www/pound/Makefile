@@ -1,5 +1,5 @@
 # Created by: Anders Nordby <anders@FreeBSD.org>
-# $FreeBSD$
+# $FreeBSD: head/www/pound/Makefile 497256 2019-03-30 15:47:42Z danfe $
 
 PORTNAME=	pound
 PORTVERSION=	2.8
@@ -25,14 +25,10 @@ LICENSE_FILE=	${WRKSRC}/GPL.txt
 USES=		tar:tgz ssl
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--disable-tcmalloc --disable-hoard
-<<<<<<< HEAD
-USE_RC_SUBR=	pound
-=======
 USE_RC_SUBR=	${PORTNAME}
 
 SUB_FILES=	${PORTNAME}.cfg
 SUB_LIST=	NAME=${PORTNAME}
->>>>>>> freebsd/master
 
 PLIST_FILES=	@sample\ etc/pound.cfg.sample \
 		sbin/pound \
