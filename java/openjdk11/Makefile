@@ -12,38 +12,36 @@ COMMENT=	Java Development Kit ${JDK_MAJOR_VERSION}
 
 LICENSE=	GPLv2
 
-ONLY_FOR_ARCHS=	amd64
+ONLY_FOR_ARCHS=	amd64 i386
 
 BUILD_DEPENDS=	zip:archivers/zip \
 		autoconf>0:devel/autoconf \
 		${LOCALBASE}/include/cups/cups.h:print/cups \
 		bash:shells/bash
-LIB_DEPENDS=	libfreetype.so:print/freetype2 \
+LIB_DEPENDS=	libasound.so:audio/alsa-lib \
 		libfontconfig.so:x11-fonts/fontconfig \
-		liblcms2.so:graphics/lcms2 \
+		libfreetype.so:print/freetype2 \
 		libgif.so:graphics/giflib \
+		liblcms2.so:graphics/lcms2 \
 		libpng16.so:graphics/png
 
 USES=		compiler:features gmake iconv jpeg pkgconfig
-USE_XORG=	xext x11 xrender xtst xi xt
+USE_XORG=	x11 xext xi xrender xt xtst
 
 WRKSRC=		${WRKDIR}/${PORTNAME}-jdk${JDK_MAJOR_VERSION}u-jdk-${JDK_MAJOR_VERSION}.${JDK_MINOR_VERSION}.${JDK_PATCH_VERSION}-${JDK_BUILD_NUMBER}-${BSD_JDK_VERSION}
 
 _MAKE_JOBS=	#
-CPPFLAGS+=	-I${LOCALBASE}/include
-LDFLAGS+=	-L${LOCALBASE}/lib
 MAKE_ENV=	LANG="C" \
 		LC_ALL="C" \
 		CLASSPATH="" \
 		JAVA_HOME="" \
 		LD_LIBRARY_PATH="" \
-		LDFLAGS=-L${LOCALBASE}/lib \
 		CC=/usr/bin/cc \
 		CXX=/usr/bin/c++ \
 		MAKEFLAGS="" \
 		USE_CLANG=true
 
-JDK_OSARCH=	bsd-${ARCH:S/amd64/x86_64/}
+JDK_OSARCH=	bsd-${ARCH:S/amd64/x86_64/:S/i386/x86/}
 JDK_BUILDDIR=	${WRKSRC}/build/${JDK_OSARCH}-normal-${JDK_BUILD_JVM}-${JDK_BUILD_TYPE}
 JDK_IMAGEDIR=	${JDK_BUILDDIR}/images/jdk
 INSTALLDIR=	${PREFIX}/${PKGBASE}
@@ -54,14 +52,13 @@ JDK_MAJOR_VERSION=	11
 JDK_MINOR_VERSION=	0
 JDK_PATCH_VERSION=	2
 JDK_BUILD_NUMBER=	9
-BSD_JDK_VERSION=	1
+BSD_JDK_VERSION=	4
 
 GNU_CONFIGURE=	yes
 CONFIGURE_ENV=	CC=/usr/bin/cc \
 		CXX=/usr/bin/c++
 CONFIGURE_ARGS=	--with-boot-jdk=${BOOTSTRAPJDKDIR} \
 		--disable-ccache \
-		--disable-dtrace \
 		--disable-javac-server \
 		--disable-hotspot-gtest \
 		--with-alsa=${LOCALBASE} \
@@ -72,16 +69,14 @@ CONFIGURE_ARGS=	--with-boot-jdk=${BOOTSTRAPJDKDIR} \
 		--with-freetype-lib=${LOCALBASE}/lib \
 		--with-libjpeg=system \
 		--with-giflib=system \
+		--with-giflib-include=${LOCALBASE}/include \
+		--with-giflib-lib=${LOCALBASE}/lib \
 		--with-libpng=system \
 		--with-zlib=system \
 		--with-lcms=system \
-		--with-extra-cflags=-I${LOCALBASE}/include \
-		--with-extra-cxxflags=-I${LOCALBASE}/include \
-		--with-extra-ldflags=-L${LOCALBASE}/lib \
 		--with-toolchain-type=clang \
 		--x-includes=${LOCALBASE}/include \
 		--x-libraries=${LOCALBASE}/lib \
-		--with-package-path=${LOCALBASE} \
 		--with-cacerts-file=${FILESDIR}/cacerts \
 		--with-version-string=${JDK_MAJOR_VERSION}.${JDK_MINOR_VERSION}.${JDK_PATCH_VERSION}+${JDK_BUILD_NUMBER}-${BSD_JDK_VERSION} \
 		--with-native-debug-symbols=none \
@@ -113,23 +108,30 @@ BUILD_DEPENDS+=		${BOOTSTRAPJDKDIR}/bin/javac:java/bootstrap-openjdk11
 JDK_BUILD_JVM=	server
 
 .if empty(ICONV_LIB)
-ICONV_CPPFLAGS=	-DLIBICONV_PLUG
+ICONV_CFLAGS=	-DLIBICONV_PLUG
 .else
-ICONV_CPPFLAGS=	-I${LOCALBASE}/include
-ICONV_LDFLAGS=	-L${LOCALBASE}/lib ${ICONV_LIB}
+ICONV_CFLAGS=	-I${LOCALBASE}/include
+ICONV_LDFLAGS=	-L${LOCALBASE}/lib
+ICONV_LIBS=	${ICONV_LIB}
 .endif
 
 post-patch:
 	@${FIND} ${WRKSRC} -name '*.orig' -delete
 	@${CHMOD} 755 ${WRKSRC}/configure
 	@${REINPLACE_CMD} -e 's|%%LOCALBASE%%|${LOCALBASE}|' \
-		 ${WRKSRC}/configure
+		${WRKSRC}/configure \
+		${WRKSRC}/src/hotspot/os/bsd/os_bsd.cpp
+	@${REINPLACE_CMD} -e 's|%%ICONV_CFLAGS%%|${ICONV_CFLAGS}|' \
+		-e 's|%%ICONV_LDFLAGS%%|${ICONV_LDFLAGS}|' \
+		-e 's|%%ICONV_LIBS%%|${ICONV_LIBS}|' \
+		${WRKSRC}/make/autoconf/libraries.m4
 
 do-install:
 	@${MKDIR} ${STAGEDIR}${INSTALLDIR}
 	@cd ${JDK_IMAGEDIR} && ${COPYTREE_SHARE} . ${STAGEDIR}${INSTALLDIR}
 	@cd ${STAGEDIR}${INSTALLDIR} && \
 		${FIND} bin -type f -exec ${CHMOD} ${BINMODE} {} \;
+	@${CHMOD} ${BINMODE} ${STAGEDIR}${INSTALLDIR}/lib/jspawnhelper
 	@${FIND} ${STAGEDIR}${INSTALLDIR} -not -type d | ${SORT} | \
 		${SED} -e 's|^${STAGEDIR}${PREFIX}/||' >> ${TMPPLIST}
 

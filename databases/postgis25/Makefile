@@ -42,8 +42,6 @@ TOPOLOGY_DESC=	Topology support
 SFCGAL_DESC=	Enable sfcgal
 ADDRSTD_DESC=	Enable address standardizer
 
-CONFLICTS_INSTALL=	postgis20  postgis21 postgis22 postgis23 postgis24
-
 LOADERGUI_CONFIGURE_WITH=	gui
 LOADERGUI_USE=			GNOME=gtk20
 TOPOLOGY_CONFIGURE_WITH=	topology
@@ -57,6 +55,13 @@ VER=		${PORTVERSION:R}
 
 PLIST_SUB=	PORTVERSION=${PORTVERSION} \
 		VER=${VER}
+
+post-patch:
+.if exists(/usr/lib/libstdc++.so)
+	${REINPLACE_CMD} -e '/^#pragma GCC diagnostic/d' \
+		${WRKSRC}/postgis/lwgeom_functions_basic.c \
+		${WRKSRC}/postgis/lwgeom_geos.c
+.endif
 
 post-install:
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/*

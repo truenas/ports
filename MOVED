@@ -7327,7 +7327,6 @@ security/cyassl|security/wolfssl|2015-03-28|Renamed upstream
 devel/rubygem-rcov||2015-03-28|Has expired: Does not work with Ruby 2.x
 emulators/linux_dist-gentoo-stage3||2015-03-28|Has expired: Broken for more than 6 months
 emulators/linux_base-gentoo-stage3||2015-03-28|Has expired: Broken for more than 6 months
-www/vimb|www/vimb-gtk3|2015-03-29|Split into www/vimb-gtk2 and www/vimb-gtk3 (former default)
 ports-mgmt/portbuilder||2015-03-31|Has expired: No longer developed and overcome by changed in the Ports Collection
 devel/subversion16|devel/subversion|2015-03-31|Has expired: EoL, use devel/subversion
 lang/nimrod|lang/nim|2015-04-03|Renamed by upstream
@@ -7876,7 +7875,6 @@ graphics/rubyphoto||2015-11-28|Has expired: Broken for more than 6 months
 german/bsdpaste||2015-11-28|Has expired: Broken for more than 6 months
 audio/amrcoder||2015-11-28|Has expired: Broken for more than 6 months
 sysutils/bashburn||2015-11-28|Has expired: Broken for more than 6 months
-editors/e93||2015-11-28|Has expired: Broken for more than 6 months
 audio/tepsonic||2015-11-28|Has expired: Broken for more than 6 months
 astro/ephem||2015-11-28|Has expired: Broken for more than 6 months
 chinese/cce||2015-11-28|Has expired: Broken for more than 6 months
@@ -11700,14 +11698,10 @@ audio/esperanza||2019-03-16|Has expired: Qt4 has been EOL since december 2015
 audio/lastfm-desktop||2019-03-16|Has expired: Qt4 has been EOL since december 2015
 audio/minitunes||2019-03-16|Has expired: Qt4 has been EOL since december 2015
 audio/mixxx20||2019-03-16|Has expired: Qt4 has been EOL since december 2015
-audio/mumble||2019-03-16|Has expired: Qt4 has been EOL since december 2015
-audio/murmur||2019-03-16|Has expired: Qt4 has been EOL since december 2015
 audio/puddletag||2019-03-16|Has expired: Qt4 has been EOL since december 2015
 audio/qmpdclient||2019-03-16|Has expired: Qt4 has been EOL since december 2015
 audio/skype-call-recorder||2019-03-16|Has expired: Qt4 has been EOL since december 2015
-audio/virtual_oss_ctl||2019-03-16|Has expired: Qt4 has been EOL since december 2015
 biology/clustalx||2019-03-16|Has expired: Qt4 has been EOL since december 2015
-cad/klayout||2019-03-16|Has expired: Qt4 has been EOL since december 2015
 cad/layouteditor||2019-03-16|Has expired: Qt4 has been EOL since december 2015
 cad/leocad||2019-03-16|Has expired: Qt4 has been EOL since december 2015
 cad/meshlab||2019-03-16|Has expired: Qt4 has been EOL since december 2015
@@ -11924,7 +11918,6 @@ sysutils/qpxtool||2019-03-16|Has expired: Qt4 has been EOL since december 2015
 sysutils/qsynergy||2019-03-16|Has expired: Qt4 has been EOL since december 2015
 sysutils/qzeitgeist||2019-03-16|Has expired: Qt4 has been EOL since december 2015
 sysutils/searchmonkey||2019-03-16|Has expired: Qt4 has been EOL since december 2015
-sysutils/unetbootin||2019-03-16|Has expired: Qt4 has been EOL since december 2015
 textproc/beediff||2019-03-16|Has expired: Qt4 has been EOL since december 2015
 textproc/dixit||2019-03-16|Has expired: Qt4 has been EOL since december 2015
 textproc/goldendict||2019-03-16|Has expired: Qt4 has been EOL since december 2015
@@ -11977,3 +11970,185 @@ security/yubikey-piv-manager||2019-03-16|Has expired: Qt4 has been EOL since dec
 textproc/xxdiff-scripts||2019-03-16|Has expired: Qt4 has been EOL since december 2015
 graphics/py-pivy||2019-03-16|Has expired: Qt4 has been EOL since december 2015
 security/pinentry-qt4||2019-03-17|Has expired: Qt4 has been EOL since december 2015
+www/libsocialweb||2019-03-23|Project was archived upstream
+www/vimb-gtk2|www/vimb|2019-03-24|Merged into www/vimb
+www/vimb-gtk3|www/vimb|2019-03-24|Merged into www/vimb
+audio/gmpc-wikipedia||2019-03-24|Has expired: webkit-gtk* last release in 2016 and security issues
+cad/xtrkcad||2019-03-24|Has expired: webkit-gtk* last release in 2016 and security issues
+deskutils/rednotebook||2019-03-24|Has expired: webkit-gtk* last release in 2016 and security issues
+devel/dissy||2019-03-24|Has expired: webkit-gtk* last release in 2016 and security issues
+devel/geany-plugin-devhelp||2019-03-24|Has expired: webkit-gtk* last release in 2016 and security issues
+devel/geany-plugin-webhelper||2019-03-24|Has expired: webkit-gtk* last release in 2016 and security issues
+editors/gwrite||2019-03-24|Has expired: webkit-gtk* last release in 2016 and security issues
+mail/claws-mail-fancy||2019-03-24|Has expired: webkit-gtk* last release in 2016 and security issues
+multimedia/miro||2019-03-24|Has expired: webkit-gtk* last release in 2016 and security issues
+misc/xiphos||2019-03-24|Has expired: webkit-gtk* last release in 2016 and security issues
+net/libproxy-webkit||2019-03-24|Has expired: webkit-gtk* last release in 2016 and security issues
+net-im/hotot||2019-03-24|Has expired: webkit-gtk* last release in 2016 and security issues
+www/deforaos-surfer||2019-03-24|Has expired: webkit-gtk* last release in 2016 and security issues
+www/gnome-web-photo||2019-03-24|Has expired: webkit-gtk* last release in 2016 and security issue
+www/hs-webkit||2019-03-24|Has expired: webkit-gtk* last release in 2016 and security issues
+www/p5-Gtk2-WebKit||2019-03-24|Has expired: webkit-gtk* last release in 2016 and security issues
+www/py-jswebkit||2019-03-24|Has expired: webkit-gtk* last release in 2016 and security issue
+www/py-webkitgtk||2019-03-24|Has expired: webkit-gtk* last release in 2016 and security issues
+www/rubygem-webkit-gtk||2019-03-24|Has expired: webkit-gtk* last release in 2016 and security issues
+www/rubygem-webkit-gtk2||2019-03-24|Has expired: webkit-gtk* last release in 2016 and security issues
+www/uzbl||2019-03-24|Has expired: webkit-gtk* last release in 2016 and security issues
+www/webkit-gtk2||2019-03-24|Has expired: webkit-gtk* last release in 2016 and security issues
+www/webkit-gtk3||2019-03-24|Has expired: webkit-gtk* last release in 2016 and security issues
+www/webkit-sharp||2019-03-24|Has expired: webkit-gtk* last release in 2016 and security issues
+www/xombrero||2019-03-24|Has expired: webkit-gtk* last release in 2016 and security issue
+net/rubygem-fog-openstack02|net/rubygem-fog-openstack|2019-03-25|Obsolete, please use net/rubygem-fog-openstack instead
+www/rubygem-unicorn-worker-killer044|www/rubygem-unicorn-worker-killer|2019-03-25|Obsolete, please use www/rubygem-unicorn-worker-killer instead
+www/rubygem-unicorn51|www/rubygem-unicorn|2019-03-25|Obsolete, please use www/rubygem-unicorn instead
+textproc/rubygem-version_sorter21|textproc/rubygem-version_sorter|2019-03-25|Obsolete, please use textproc/rubygem-version_sorter instead
+net-im/rubygem-hipchat15|net-im/rubygem-hipchat|2019-03-25|Obsolete, please use net-im/rubygem-hipchat instead
+devel/rubygem-fog-json102|devel/rubygem-fog-json|2019-03-25|Obsolete, please use devel/rubygem-fog-json instead
+x11/libmfmqt-l10n||2019-03-28|Obsolete by upstream
+x11-toolkits/qtermwidget-l10n||2019-03-28|Obsolete by upstream
+graphics/lximageqt-l10n||2019-03-28|Obsolete by upstream
+x11/lxqt-globalkeys-l10n||2019-03-28|Obsolete by upstream
+x11-fm/pcmanfmqt-l10n||2019-03-28|Obsolete by upstream
+devel/liblxqt-l10n||2019-03-28|Obsolete by upstream
+x11/lxqt-l10n||2019-03-28|Obsolete by upstream
+x11/qterminal-l10n||2019-03-28|Obsolete by upstream
+mail/thunderbird-i18n||2019-03-29|Obsolete, manually download preferred langpack and set intl.locale.requested
+www/firefox-esr-i18n||2019-03-29|Obsolete, manually download preferred langpack and set intl.locale.requested
+www/firefox-i18n||2019-03-29|Obsolete, use native UI to select and download preferred langpack
+www/seamonkey-i18n||2019-03-29|Obsolete, manually download preferred langpack and set general.useragent.locale
+mail/xpi-displayquota||2019-03-29|Legacy extensions aren't supported after Firefox 57
+mail/xpi-dispmua||2019-03-29|Legacy extensions aren't supported after Firefox 57
+russian/xpi-tabextensions||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-adblock_plus||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-adblock||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-clear_cache_button||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-close-all-tabs||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-colorfultabs||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-conkeror||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-cssviewer||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-cutemenus-crystalsvg||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-default_full_zoom_level||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-delicious||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-downthemall||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-errorzilla||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-firebug||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-firefox-showcase||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-firemobilesimulator||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-fission||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-flagfox||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-flashblock||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-flashgot||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-flatbmark||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-forecastfox||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-formfox||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-foxmarks||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-foxyproxy||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-gdata_provider||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-ghostery||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-gmail-manager||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-google-notebook||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-google_shortcuts||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-grab_and_drag||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-greasemonkey||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-httpfox||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-imagezoom||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-imdbpreview||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-imglikeopera||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-infolister||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-informenter||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-inline-google-definitions||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-it_s_all_text||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-jslib||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-jsview||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-jv||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-leechblock||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-linkification||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-live_http_headers||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-live_pagerank||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-menueditor||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-modify_headers||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-mrtech-local-install||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-neo-diggler||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-no-referrer||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-passwordmaker||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-pdf_download||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-permatabs||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-quick-locale-switcher||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-quickproxy||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-resurrectpages||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-sameplace||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-scrapbook||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-searchstatus||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-server_spy||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-server_switcher||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-sessionmanager||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-showip||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-speed-dial||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-splash||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-stumbleupon||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-stylish||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-table2clipboard||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-tabmixplus||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-tagzilla||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-togglewordwrap||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-torbutton||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-twitterfox||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-u2f4moz||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-uBlock_origin||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-unplug||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-urllink||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-user_agent_switcher||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-vimperator||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-web_developer||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-wmlbrowser||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-xhtml-ruby-support||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-xmpp4moz||2019-03-29|Legacy extensions aren't supported after Firefox 57
+www/xpi-yslow||2019-03-29|Legacy extensions aren't supported after Firefox 57
+converters/py-pint|devel/py-Pint|2019-03-31|Remove duplicate port
+graphics/py-PyX12|graphics/py-PyX|2019-03-31|Duplicate port
+x11-toolkits/fltk-devel||2019-03-31|Has expired: Older than x11-toolkits/fltk -- there is no point in having old snapshots
+devel/rubygem-sidekiq-cron0|devel/rubygem-sidekiq-cron|2019-03-31|Has expired: Use devel/rubygem-sidekiq-cron instead
+lang/ruby23|lang/ruby24|2019-03-31|Has expired: Use lang/ruby24 or above
+misc/rubygem-mime-types29|misc/rubygem-mime-types|2019-03-31|Has expired: Use misc/rubygem-mime-types instead
+net/rubygem-gitlab_omniauth-ldap20|net/rubygem-gitlab_omniauth-ldap|2019-03-31|Has expired: Use net/rubygem-gitlab_omniauth-ldap instead
+net/rubygem-rubyntlm05|net/rubygem-rubyntlm|2019-03-31|Has expired: Use net/rubygem-rubyntlm instead
+security/kbfs|security/keybase|2019-03-31|Has expired: Merged into security/keybase
+security/rubygem-sshkey1|security/rubygem-sshkey|2019-03-31|Has expired: Use security/rubygem-sshkey instead
+devel/llvm38|devel/llvm80|2019-04-01|Has expired: Use a modern version instead
+archivers/go-compress||2019-04-01|Has expired: Go libraries should not be packaged
+textproc/go.text||2019-04-01|Has expired: Go libraries should not be packaged
+devel/go-hashicorp-logutils||2019-04-01|Has expired: Go libraries should not be packaged
+devel/go-cpuid||2019-04-01|Has expired: Go libraries should not be packaged
+devel/go-nuid||2019-04-01|Has expired: Go libraries should not be packaged
+devel/go-yaml||2019-04-01|Has expired: Go libraries should not be packaged
+devel/go-raw||2019-04-01|Has expired: Go libraries should not be packaged
+devel/go-go.uuid||2019-04-01|Has expired: Go libraries should not be packaged
+devel/go-goregen||2019-04-01|Has expired: Go libraries should not be packaged
+devel/go-runewidth||2019-04-01|Has expired: Go libraries should not be packaged
+devel/go-cobra||2019-04-01|Has expired: Go libraries should not be packaged
+devel/go-pflag||2019-04-01|Has expired: Go libraries should not be packaged
+devel/go-slices||2019-04-01|Has expired: Go libraries should not be packaged
+devel/go-form||2019-04-01|Has expired: Go libraries should not be packaged
+devel/go-bayesian||2019-04-01|Has expired: Go libraries should not be packaged
+devel/go-uuid||2019-04-01|Has expired: Go libraries should not be packaged
+devel/go-logrus||2019-04-01|Has expired: Go libraries should not be packaged
+devel/go-metrics||2019-04-01|Has expired: Go libraries should not be packaged
+devel/go-codec||2019-04-01|Has expired: Go libraries should not be packaged
+devel/go-faker||2019-04-01|Has expired: Go libraries should not be packaged
+devel/go-crc32||2019-04-01|Has expired: Go libraries should not be packaged
+security/goptlib||2019-04-01|Has expired: Go libraries should not be packaged
+security/go.crypto||2019-04-01|Has expired: Go libraries should not be packaged
+net/go-httppath||2019-04-01|Has expired: Go libraries should not be packaged
+net/go-amqp||2019-04-01|Has expired: Go libraries should not be packaged
+net/go.net||2019-04-01|Has expired: Go libraries should not be packaged
+net/go-nats||2019-04-01|Has expired: Go libraries should not be packaged
+net/go-httptreemux||2019-04-01|Has expired: Go libraries should not be packaged
+databases/gosqlite3||2019-04-01|Has expired: Go libraries should not be packaged
+databases/redigo||2019-04-01|Has expired: Go libraries should not be packaged
+databases/gomdb||2019-04-01|Has expired: Go libraries should not be packaged
+databases/radix.v2||2019-04-01|Has expired: Go libraries should not be packaged
+databases/levigo||2019-04-01|Has expired: Go libraries should not be packaged
+www/unit-go||2019-04-01|Has expired: Go libraries should not be packaged
+www/webgo||2019-04-01|Has expired: Go libraries should not be packaged
+www/go-fasthttp||2019-04-01|Has expired: Go libraries should not be packaged
+graphics/llpp||2019-04-01|Has expired: fails to build with mupdf 1.14.0 and unable to update due to outdated lang/ocaml

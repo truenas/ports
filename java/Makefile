@@ -73,6 +73,7 @@
     SUBDIR += jdk9-doc
     SUBDIR += jdk10-doc
     SUBDIR += jdk11-doc
+    SUBDIR += jdk12-doc
     SUBDIR += jdom
     SUBDIR += jflex
     SUBDIR += jfreechart
@@ -112,6 +113,7 @@
     SUBDIR += openjdk8
     SUBDIR += openjdk8-jre
     SUBDIR += openjdk11
+    SUBDIR += openjdk12
     SUBDIR += openjfx8-devel
     SUBDIR += openjfx8-scenebuilder
     SUBDIR += phpeclipse

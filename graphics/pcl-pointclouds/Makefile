@@ -3,9 +3,12 @@
 PORTNAME=	pcl
 DISTVERSIONPREFIX=	${PORTNAME}-
 DISTVERSION=	1.9.1
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	graphics math
 PKGNAMESUFFIX=	-pointclouds
+
+PATCH_SITES=	https://github.com/${GH_ACCOUNT}/${GH_PROJECT}/commit/
+PATCHFILES+=	5605910a26f2.patch:-p1
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Point Cloud Library
@@ -14,6 +17,8 @@ LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
 BROKEN_i386=	undefined reference to `__atomic_load'
+NOT_FOR_ARCHS=		armv6 armv7
+NOT_FOR_ARCHS_REASON=	common/include/pcl/pcl_macros.h:420:4: error: aligned_malloc not supported on your platform
 
 LIB_DEPENDS=	libboost_system.so:devel/boost-libs \
 		libexpat.so:textproc/expat2 \

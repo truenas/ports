@@ -13,7 +13,6 @@
     SUBDIR += diorite
     SUBDIR += flowcanvas
     SUBDIR += fltk
-    SUBDIR += fltk-devel
     SUBDIR += fox14
     SUBDIR += fox16
     SUBDIR += fox17
@@ -233,7 +232,6 @@
     SUBDIR += qt5-widgets
     SUBDIR += qt5pas
     SUBDIR += qtermwidget
-    SUBDIR += qtermwidget-l10n
     SUBDIR += qwt5-qt5
     SUBDIR += qwt6
     SUBDIR += rep-gtk2

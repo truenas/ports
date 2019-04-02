@@ -436,7 +436,6 @@
     SUBDIR += rubygem-mime-types
     SUBDIR += rubygem-mime-types-data
     SUBDIR += rubygem-mime-types1
-    SUBDIR += rubygem-mime-types29
     SUBDIR += rubygem-mimemagic
     SUBDIR += rubygem-rabbit
     SUBDIR += rubygem-vpim
@@ -534,7 +533,6 @@
     SUBDIR += xfce4-weather-plugin
     SUBDIR += xfce4-wm-themes
     SUBDIR += xgas
-    SUBDIR += xiphos
     SUBDIR += xless
     SUBDIR += xosd
     SUBDIR += xtail

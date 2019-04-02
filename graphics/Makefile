@@ -527,13 +527,11 @@
     SUBDIR += linux-c7-sdl_image
     SUBDIR += linux-c7-sdl_ttf
     SUBDIR += linux-c7-tiff
-    SUBDIR += llpp
     SUBDIR += lua-gd
     SUBDIR += luminance-qt5
     SUBDIR += luxrender
     SUBDIR += luxrender14
     SUBDIR += lximage-qt
-    SUBDIR += lximageqt-l10n
     SUBDIR += magnum
     SUBDIR += magnum-examples
     SUBDIR += magnum-extras
@@ -553,6 +551,7 @@
     SUBDIR += metacam
     SUBDIR += metapixel
     SUBDIR += mhgui
+    SUBDIR += milton
     SUBDIR += minder
     SUBDIR += ming
     SUBDIR += mirage
@@ -733,6 +732,7 @@
     SUBDIR += pear-Image_GraphViz
     SUBDIR += pear-Image_Transform
     SUBDIR += pecl-imagick
+    SUBDIR += pecl-imagick-im7
     SUBDIR += pecl-qrencode
     SUBDIR += pecomato
     SUBDIR += pencil2d
@@ -802,7 +802,6 @@
     SUBDIR += py-PyOpenGL
     SUBDIR += py-PyOpenGL-accelerate
     SUBDIR += py-PyX
-    SUBDIR += py-PyX12
     SUBDIR += py-actdiag
     SUBDIR += py-blockdiag
     SUBDIR += py-blockdiagcontrib-cisco

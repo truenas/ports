@@ -62,6 +62,7 @@
     SUBDIR += boclient
     SUBDIR += boinc-client
     SUBDIR += boinc_curses
+    SUBDIR += boringtun
     SUBDIR += bosh-bootloader
     SUBDIR += bosh-cli
     SUBDIR += bounce
@@ -191,13 +192,8 @@
     SUBDIR += gnome-online-miners
     SUBDIR += gnu-dico
     SUBDIR += gnu-radius
-    SUBDIR += go-amqp
     SUBDIR += go-bapu
     SUBDIR += go-cs
-    SUBDIR += go-httppath
-    SUBDIR += go-httptreemux
-    SUBDIR += go-nats
-    SUBDIR += go.net
     SUBDIR += gobgp
     SUBDIR += gofish
     SUBDIR += gogoc
@@ -235,6 +231,7 @@
     SUBDIR += haproxy
     SUBDIR += haproxy-devel
     SUBDIR += haproxy17
+    SUBDIR += haproxy18
     SUBDIR += hexinject
     SUBDIR += hidentd
     SUBDIR += hinfo
@@ -403,7 +400,6 @@
     SUBDIR += libproxy-mozjs
     SUBDIR += libproxy-perl
     SUBDIR += libproxy-python
-    SUBDIR += libproxy-webkit
     SUBDIR += libproxy-webkit3
     SUBDIR += librdkafka
     SUBDIR += librouteros
@@ -1227,17 +1223,18 @@
     SUBDIR += rubygem-fog-aws2
     SUBDIR += rubygem-fog-azure
     SUBDIR += rubygem-fog-brightbox
+    SUBDIR += rubygem-fog-brightbox0
     SUBDIR += rubygem-fog-cloudatcost
     SUBDIR += rubygem-fog-digitalocean
     SUBDIR += rubygem-fog-dnsimple
     SUBDIR += rubygem-fog-dynect
     SUBDIR += rubygem-fog-ecloud
     SUBDIR += rubygem-fog-google
+    SUBDIR += rubygem-fog-google17
     SUBDIR += rubygem-fog-internet-archive
     SUBDIR += rubygem-fog-joyent
     SUBDIR += rubygem-fog-local
     SUBDIR += rubygem-fog-openstack
-    SUBDIR += rubygem-fog-openstack02
     SUBDIR += rubygem-fog-ovirt
     SUBDIR += rubygem-fog-powerdns
     SUBDIR += rubygem-fog-profitbricks
@@ -1256,7 +1253,6 @@
     SUBDIR += rubygem-gitaly
     SUBDIR += rubygem-gitaly-proto
     SUBDIR += rubygem-gitlab_omniauth-ldap
-    SUBDIR += rubygem-gitlab_omniauth-ldap20
     SUBDIR += rubygem-google-cloud-core
     SUBDIR += rubygem-google-cloud-env
     SUBDIR += rubygem-grpc
@@ -1313,7 +1309,6 @@
     SUBDIR += rubygem-ruby-yadis
     SUBDIR += rubygem-ruby_smb
     SUBDIR += rubygem-rubyntlm
-    SUBDIR += rubygem-rubyntlm05
     SUBDIR += rubygem-rubytter
     SUBDIR += rubygem-rudy
     SUBDIR += rubygem-rye
@@ -1434,6 +1429,8 @@
     SUBDIR += thcrut
     SUBDIR += throttled
     SUBDIR += tigervnc
+    SUBDIR += tigervnc-server
+    SUBDIR += tigervnc-viewer
     SUBDIR += tightvnc
     SUBDIR += timed
     SUBDIR += tintin++
