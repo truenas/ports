@@ -59,6 +59,8 @@ GH_PROJECT=	freenas
 GH_TAGNAME=	0413e7b0768992dbed24f15330f812e7adcb6373
 .endif
 
+PREFIX=/
+
 NO_BUILD=yes
 
 MAKE_JOBS_UNSAFE=yes
@@ -85,18 +87,18 @@ do-install:
 	${ECHO_CMD} "@group www"  >> ${TMPPLIST}
 	${ECHO_CMD} "@comment files" >> ${TMPPLIST}
 	${FIND} ${WRKSRC}/gui -type f | \
-		${SED} -e 's|^${WRKSRC}/gui|/www/freenasUI|' -e 's|^/||' \
+		${SED} -e 's|^${WRKSRC}/gui|/usr/local/www/freenasUI|' -e 's|^/||' \
 		| ${SORT} >> ${TMPPLIST}
 	${ECHO_CMD} www/freenasUI/local_settings.py >> ${TMPPLIST}
 	${ECHO_CMD} "@comment directories" >> ${TMPPLIST}
 	${FIND} ${WRKSRC}/gui -type d \
-		| ${SED} -e 's|^${WRKSRC}/gui|/www/freenasUI|' -e 's|^/||' -e 's|^|@dir |' \
+		| ${SED} -e 's|^${WRKSRC}/gui|/usr/local/www/freenasUI|' -e 's|^/||' -e 's|^|@dir |' \
 		| ${SORT} -r >> ${TMPPLIST}
 
-	${RM} -fr ${STAGEDIR}${PREFIX}/www/freenasUI
-	${MKDIR} ${STAGEDIR}${PREFIX}/www/freenasUI
-	${CP} -a ${WRKSRC}/gui/* ${STAGEDIR}${PREFIX}/www/freenasUI/
-	${LN} -s -f /etc/local_settings.py ${STAGEDIR}${PREFIX}/www/freenasUI/local_settings.py
+	${RM} -fr ${STAGEDIR}${PREFIX}/usr/local/www/freenasUI
+	${MKDIR} ${STAGEDIR}${PREFIX}/usr/local/www/freenasUI
+	${CP} -a ${WRKSRC}/gui/* ${STAGEDIR}${PREFIX}/usr/local/www/freenasUI/
+	${LN} -s -f /etc/local_settings.py ${STAGEDIR}${PREFIX}/usr/local/www/freenasUI/local_settings.py
 
 	${MKDIR} -p /data
 	${MKDIR} -p /etc
@@ -106,30 +108,29 @@ do-install:
 
 	${MKDIR} -p ${STAGEDIR}/data
 	${MKDIR} -p ${STAGEDIR}/etc
-	${CP} /data/* ${STAGEDIR}/data/
-	${CP} /etc/version ${STAGEDIR}/etc/
+	${CP} /data/freenas-v1.db ${STAGEDIR}${PREFIX}/data/freenas-v1.db.sample
+	${CP} /etc/version ${STAGEDIR}${PREFIX}/etc/
 
 	${ECHO_CMD} "@comment database files" >> ${TMPPLIST}
-	${FIND} /data -type f \
-		| ${SED} -e 's|^|@sample |' \
-		| ${SORT} >> ${TMPPLIST}
+	${ECHO_CMD} "@sample /data/freenas-v1.db.sample" >> ${TMPPLIST}
+
 	${ECHO_CMD} "@dir /data" >> ${TMPPLIST}
 
 	${ECHO_CMD} /etc/version >> ${TMPPLIST}
 	${ECHO_CMD} "@dir /etc" >> ${TMPPLIST}
 
-	${PYTHON_CMD} ${STAGEDIR}${PREFIX}/www/freenasUI/manage.py collectstatic --noinput
+	${PYTHON_CMD} ${STAGEDIR}${PREFIX}/usr/local/www/freenasUI/manage.py collectstatic --noinput
 
 	${ECHO_CMD} "@comment static files" >> ${TMPPLIST}
-	${FIND} ${STAGEDIR}${PREFIX}/www/freenasUI/static -type f | \
-		${SED} -e 's|^${STAGEDIR}${PREFIX}/||' \
+	${FIND} ${STAGEDIR}${PREFIX}/usr/local/www/freenasUI/static -type f | \
+		${SED} -e 's|^${STAGEDIR}${PREFIX}||' \
 		| ${SORT} >> ${TMPPLIST}
 
-	${FIND} ${STAGEDIR}${PREFIX}/www/freenasUI/static -type d | \
+	${FIND} ${STAGEDIR}${PREFIX}/usr/local/www/freenasUI/static -type d | \
 		 ${SED} -e 's|^${STAGEDIR}${PREFIX}/||' -e 's|^|@dir |' \
 		| ${SORT} -r >> ${TMPPLIST}
 
-	${FIND} ${STAGEDIR}${PREFIX}/www/freenasUI/locale -name "*mo" | \
+	${FIND} ${STAGEDIR}${PREFIX}/usr/local/www/freenasUI/locale -name "*mo" | \
 		${SED} -e 's|^${STAGEDIR}${PREFIX}/||' \
 		| ${SORT} >> ${TMPPLIST}
 
