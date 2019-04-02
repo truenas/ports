@@ -2,6 +2,7 @@
 
 PORTNAME=       freenas-ui
 PORTVERSION=	20190401205412
+PORTREVISION=	1
 
 CATEGORIES=     freenas
 VALID_CATEGORIES+=	freenas
@@ -111,12 +112,8 @@ do-install:
 	${CP} /etc/version ${STAGEDIR}${PREFIX}/etc/
 
 	${ECHO_CMD} "@comment database files" >> ${TMPPLIST}
-	${ECHO_CMD} "@sample /data/freenas-v1.db.sample" >> ${TMPPLIST}
-
-	${ECHO_CMD} "@dir /data" >> ${TMPPLIST}
-
-	${ECHO_CMD} /etc/version >> ${TMPPLIST}
-	${ECHO_CMD} "@dir /etc" >> ${TMPPLIST}
+	${ECHO_CMD} "@sample data/freenas-v1.db.sample" >> ${TMPPLIST}
+	${ECHO_CMD} etc/version >> ${TMPPLIST}
 
 	${PYTHON_CMD} ${STAGEDIR}${PREFIX}/usr/local/www/freenasUI/manage.py collectstatic --noinput
 
