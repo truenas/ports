@@ -12,7 +12,7 @@ COMMENT=	Port for the OS base sources
 USE_GITHUB=	yes
 GH_ACCOUNT=	trueos
 GH_PROJECT=	trueos
-GH_TAGNAME=	e2d60a162cac9393cf235d5399530e85a100ff3e
+GH_TAGNAME=	b7b558f894bd233fbe07dfc117150ac0f53258fe
 
 PREFIX=/
 SRCDIR?=/usr/src
