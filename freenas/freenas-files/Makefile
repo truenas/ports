@@ -80,6 +80,6 @@ do-install:
 		| ${SED} -e 's,^\./,,g' \
 		| grep -v 'compat/linux/proc' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
-		| ${AWK} '{if($$2 ~ /rc$$/){print "@sample "$$2} else {print $$2}}' >> ${TMPPLIST})
+		| ${AWK} '{if($$2 ~ /\.sample$$/){print "@sample "$$2} else {print $$2}}' >> ${TMPPLIST})
 
 .include <bsd.port.post.mk>
