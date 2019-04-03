@@ -1,9 +1,10 @@
---- src/daemon/utils_ignorelist.c	2017-01-23 07:53:57 UTC
-+++ src/daemon/utils_ignorelist.c
-@@ -279,6 +279,40 @@
+--- src/utils_ignorelist.c	2017-01-23 07:53:57 UTC
++++ src/utils_ignorelist.c
+@@ -278,6 +278,40 @@ int ignorelist_add(ignorelist_t *il, const char *entry) {
+   return ignorelist_append_string(il, entry);
  } /* int ignorelist_add (ignorelist_t *il, const char *entry) */
  
- /*
++/*
 + * remove entry from ignorelist_t
 + * return 0 for success
 + */
@@ -37,7 +38,6 @@
 +  return (1);
 +} /* int ignorelist_remove (ignorelist_t *il, const char *entry) */
 +
-+/*
+ /*
   * check list for entry
   * return 1 for ignored entry
-  */
