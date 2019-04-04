@@ -1,5 +1,5 @@
 PORTNAME=	middlewared
-PORTVERSION=	20190403202419
+PORTVERSION=	20190404170032
 PORTREVISION=	1
 PKGNAMEPREFIX=  ${PYTHON_PKGNAMEPREFIX}
 
@@ -58,7 +58,7 @@ WRKSRC=		/usr/ports/local_source/${PORTNAME}
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
 GH_PROJECT=	freenas
-GH_TAGNAME=	e86ae0798ad9f09e9740ca369153a6aa874c9a4d
+GH_TAGNAME=	c67c035b41aab3df0bba1867eb2cf9dacff7c65f
 .endif
 
 .if exists(/usr/ports/local_source/${PORTNAME})
