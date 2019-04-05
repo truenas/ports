@@ -11,6 +11,7 @@ COMMENT=	System Update Utility
 LICENSE=	BSD2CLAUSE
 
 BUILD_DEPENDS=	${LOCALBASE}/bin/go:lang/go
+RUN_DEPENDS=	${LOCALBASE}/sbin/beadm:sysutils/beadm
 
 USES=		compiler
 
