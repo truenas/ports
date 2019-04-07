@@ -863,6 +863,7 @@
     SUBDIR += pbimaker
     SUBDIR += pc-diskmanager
     SUBDIR += pc-firewall
+    SUBDIR += pc-installdialog
     SUBDIR += pc-networkmanager
     SUBDIR += pc-sysinstall
     SUBDIR += pc-updatemanager
