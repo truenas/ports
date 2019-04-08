@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=		ldb
-PORTVERSION=		1.4.3
+PORTVERSION=		1.4.6
 PORTREVISION=		0
 PORTEPOCH=		0
 CATEGORIES=		databases
@@ -21,7 +21,6 @@ RUN_DEPENDS=		${LDB_DEPENDS}
 LDB_DEPENDS=		talloc>=2.1.14:devel/talloc \
 			tevent>=0.9.37:devel/tevent \
 			tdb>=1.3.16:databases/tdb \
-			lmdb>=0.9.16:databases/lmdb \
 			cmocka>=1.1.1:sysutils/cmocka \
 			popt>=0:devel/popt
 
@@ -46,14 +45,16 @@ CONFIGURE_ARGS+=	--bundled-libraries=!talloc,!tevent,!tdb,!popt,!cmocka \
 			--with-privatelibdir=${PREFIX}/lib/ldb \
 			--mandir=${MANPREFIX}/man \
 			--with-openldap=${LOCALBASE} \
+                        --without-ldb-lmdb \
 			--disable-rpath \
 			--without-gettext
 
-OPTIONS_DEFINE=		MANPAGES DEBUG
+OPTIONS_DEFINE=		MANPAGES DEBUG NOPYTHON
 MANPAGES_DESC=		Build and install manpages (requires textproc/docbook-xsl)
 
 .include <bsd.port.options.mk>
 
+NOPYTHON_CONFIGURE_ON=	--without-python
 DEBUG_CONFIGURE_ON=	--verbose --enable-debug
 DEBUG_MAKE_ARGS=	--verbose
 DEBUG_FLAGS=		-g -ggdb3 -O0
@@ -67,7 +68,6 @@ LDB_BINS=		bin/ldbedit \
 
 LDB_LIBS=		lib/libldb.so \
 			lib/libldb.so.1 \
-			lib/ldb/libldb-mdb-int.so \
 			lib/ldb/libldb-key-value.so \
 			lib/ldb/libldb-cmdline.so \
 			lib/shared-modules/ldb/skel.so \
@@ -76,7 +76,6 @@ LDB_LIBS=		lib/libldb.so \
 			lib/shared-modules/ldb/rdn_name.so \
 			lib/shared-modules/ldb/paged_searches.so \
 			lib/shared-modules/ldb/paged_results.so \
-			lib/shared-modules/ldb/mdb.so \
 			lib/shared-modules/ldb/ldb.so \
 			lib/shared-modules/ldb/ldap.so \
 			lib/shared-modules/ldb/asq.so \
@@ -91,7 +90,7 @@ PLIST_FILES=		include/ldb_version.h \
 			${LDB_LIBS} \
 			${PKGCONFIGDIR}/ldb.pc
 
-.if defined(NO_PYTHON)
+.if ${PORT_OPTIONS:MNOPYTHON}
 USES+=			python:2.7,build
 CONFIGURE_ARGS+=	--disable-python
 .else
@@ -181,7 +180,7 @@ post-install:
 .for lib in ${LDB_BINS} ${LDB_LIBS}
 			${STRIP_CMD} ${STAGEDIR}${PREFIX}/${lib}
 .endfor
-.if !defined(NO_PYTHON)
+.if !${PORT_OPTIONS:MNOPYTHON}
 		${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/libpyldb-util.so
 		${STRIP_CMD} ${STAGEDIR}${PYTHONPREFIX_SITELIBDIR}/ldb.so
 .	if defined(SAMBA4_PYTHON3)

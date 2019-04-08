@@ -1,0 +1,14 @@
+--- wscript.orig	2019-04-07 07:01:44.859835834 -0700
++++ wscript	2019-04-07 07:01:54.127459976 -0700
+@@ -500,11 +500,6 @@ def build(bld):
+                          deps='cmocka ldb',
+                          install=False)
+ 
+-        bld.SAMBA_BINARY('ldb_match_test',
+-                         source='tests/ldb_match_test.c',
+-                         deps='cmocka ldb',
+-                         install=False)
+-
+         if bld.CONFIG_SET('HAVE_LMDB'):
+             bld.SAMBA_BINARY('ldb_mdb_mod_op_test',
+                              source='tests/ldb_mod_op_test.c',
