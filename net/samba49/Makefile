@@ -3,7 +3,7 @@
 
 PORTNAME=			${SAMBA4_BASENAME}49
 PORTVERSION=			${SAMBA4_VERSION}
-PORTREVISION=			3
+PORTREVISION=			4
 CATEGORIES?=			net
 MASTER_SITES=			SAMBA/samba/stable SAMBA/samba/rc
 DISTNAME=			${SAMBA4_DISTNAME}
@@ -25,11 +25,10 @@ EXTRA_PATCHES+=		 	${PATCHDIR}/0001-add-support-for-xattrs-larger-than-64k.patch
 EXTRA_PATCHES+=		 	${PATCHDIR}/0001-add-parameters-for-ha-configuration.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-add-idmap_fruit-backend.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-fix-listen-backlog.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/0001-fix-builtin-guests-ldap.patch:-p1
 
 SAMBA4_BASENAME=		samba
 SAMBA4_PORTNAME=		${SAMBA4_BASENAME}4
-SAMBA4_VERSION=			4.9.4
+SAMBA4_VERSION=			4.9.6
 SAMBA4_DISTNAME=		${SAMBA4_BASENAME}-${SAMBA4_VERSION:S|.p|pre|:S|.r|rc|:S|.t|tp|:S|.a|alpha|}
 
 WRKSRC?=			${WRKDIR}/${DISTNAME}
