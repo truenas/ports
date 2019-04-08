@@ -10,6 +10,8 @@ COMMENT=	TrueOS Text Installer
 
 LICENSE=	BSD2CLAUSE
 
+RUN_DEPENDS=	${LOCALBASE}/bin/jq:textproc/jq
+
 USES=		pkgconfig tar:xz
 MAKE_ARGS=	PREFIX=${STAGEDIR}${PREFIX}
 
