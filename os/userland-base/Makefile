@@ -24,6 +24,7 @@ do-build:
 	@${MKDIR} -p ${STAGEDIR}
 	@${ECHO_MSG} "==> Extracting world.txz..."
 	@${TAR} xpf /usr/dist/world.txz -C ${STAGEDIR}
+	@${INSTALL_SCRIPT} ${FILESDIR}/pkgbase.setup.in ${STAGEDIR}/etc/pkgbase.setup
 
 do-install:
 	@${ECHO_MSG} "==> Generating plist..."
