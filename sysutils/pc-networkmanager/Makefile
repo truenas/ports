@@ -10,6 +10,13 @@ COMMENT=	TrueOS Qt based network manager
 
 LICENSE=	BSD2CLAUSE
 
+<<<<<<< HEAD
+=======
+BROKEN_FreeBSD_12=	use of undeclared identifiers 'IFM_FDDI' and 'IFM_TOKEN'
+BROKEN_FreeBSD_13=	use of undeclared identifiers 'IFM_FDDI' and 'IFM_TOKEN'
+ONLY_FOR_ARCHS=	amd64
+
+>>>>>>> freebsd/master
 LIB_DEPENDS=	libtrueos-ui.so:sysutils/trueos-libqt5
 
 MAKE_ARGS=      PREFIX=${STAGEDIR}${PREFIX}

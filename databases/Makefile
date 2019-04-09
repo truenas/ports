@@ -75,7 +75,6 @@
     SUBDIR += fastdb
     SUBDIR += firebird25-client
     SUBDIR += firebird25-server
-    SUBDIR += flamerobin
     SUBDIR += fortytwo-bdb
     SUBDIR += foundationdb
     SUBDIR += fpc-dblib
@@ -183,8 +182,6 @@
     SUBDIR += mantis
     SUBDIR += mariadb-connector-c
     SUBDIR += mariadb-connector-odbc
-    SUBDIR += mariadb100-client
-    SUBDIR += mariadb100-server
     SUBDIR += mariadb101-client
     SUBDIR += mariadb101-server
     SUBDIR += mariadb102-client
@@ -887,7 +884,6 @@
     SUBDIR += rrdtool
     SUBDIR += rrdtool12
     SUBDIR += ruby-bdb
-    SUBDIR += ruby-gdbm
     SUBDIR += ruby-odbc
     SUBDIR += ruby-qdbm
     SUBDIR += ruby-tokyocabinet
@@ -947,6 +943,7 @@
     SUBDIR += rubygem-familia
     SUBDIR += rubygem-flipper-active_record
     SUBDIR += rubygem-flipper-active_record013
+    SUBDIR += rubygem-gdbm
     SUBDIR += rubygem-globalid
     SUBDIR += rubygem-globalid-rails5
     SUBDIR += rubygem-globalid-rails50
