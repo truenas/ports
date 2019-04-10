@@ -73,6 +73,12 @@ fi
 # Do the first-time setup of package repo
 if [ ! -e "${PKG_ROOTDIR}/etc/pkg/Train.conf" ] ; then
 
+	# Disable the FreeBSD repo by default
+	if [ -e "${PKG_ROOTDIR}/etc/pkg/FreeBSD.conf" ] ; then
+		mkdir -p ${PKG_ROOTDIR}/usr/local/etc/pkg/repos || true
+		echo "FreeBSD: { enabled: no }" >${PKG_ROOTDIR}/usr/local/etc/pkg/repos/FreeBSD.conf
+	fi
+
 	# Do Setup for pkg repo
 	TM_PUBKEY="none"
 	if [ "$(jq -r '."pkg-repo"."pubKey" | length' ${TM})" != "0" ]; then
@@ -83,12 +89,13 @@ if [ ! -e "${PKG_ROOTDIR}/etc/pkg/Train.conf" ] ; then
 	fi
 	if [ "$(jq -r '."pkg-repo"."url" | length' ${TM})" != "0" ]; then
 		TM_PKGURL="$(jq -r '."pkg-repo"."url"' ${TM})"
-		cat ${PKG_ROOTDIR}/etc/pkg/TrueOS.conf.pubkey.dist \
-		| sed "s|%%REPONAME%%|${REPONAME}|g" \
-		| sed "s|%%TRAINNAME%%|${TRAINNAME}|g" \
-		| sed "s|%%PUBKEY%%|${TM_PUBKEY}|g" \
-		| sed "s|%%URL%%|${TM_PKGURL}|g" \
-		>${PKG_ROOTDIR}/etc/pkg/Train.conf
+		cat >${PKG_ROOTDIR}/etc/pkg/Train.conf <<-EOF
+		${REPONAME}: {
+		  url: "${TM_PKGURL}",
+		  signature_type: "pubkey",
+		  pubkey: "${TM_PUBKEY}",
+		}
+		EOF
 	fi
 fi
 
