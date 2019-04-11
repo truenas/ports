@@ -25,6 +25,7 @@ EXTRA_PATCHES+=			${PATCHDIR}/0001-add-support-for-xattrs-larger-than-64k.patch:
 EXTRA_PATCHES+=			${PATCHDIR}/0001-add-idmap_fruit-backend.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-fix-listen-backlog.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-add-shadow_copy_zfs.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/0001-enable-keytab-updates-on-machine-account-change.patch:-p1
 
 SAMBA4_BASENAME=		samba
 SAMBA4_PORTNAME=		${SAMBA4_BASENAME}4
