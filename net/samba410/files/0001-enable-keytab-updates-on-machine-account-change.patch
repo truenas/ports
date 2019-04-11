@@ -1,5 +1,5 @@
 diff --git a/source3/winbindd/winbindd_dual.c b/source3/winbindd/winbindd_dual.c
-index 6e3277e..b461510 100644
+index 6e3277e..bd64b6e 100644
 --- a/source3/winbindd/winbindd_dual.c
 +++ b/source3/winbindd/winbindd_dual.c
 @@ -29,6 +29,9 @@
@@ -23,35 +23,61 @@ index 6e3277e..b461510 100644
  	struct timeval next_change;
  
  	DEBUG(10,("machine_password_change_handler called\n"));
-@@ -1339,6 +1346,26 @@ static void machine_password_change_handler(struct tevent_context *ctx,
+@@ -1339,6 +1346,52 @@ static void machine_password_change_handler(struct tevent_context *ctx,
  		DEBUG(10, ("calculate_next_machine_pwd_change failed\n"));
  		return;
  	}
-+	old_krb5ccname = getenv(KRB5_ENV_CCNAME);
-+	setenv(KRB5_ENV_CCNAME, "MEMORY:net_ads", 1);
-+	ads = ads_init(lp_realm(), lp_workgroup(), NULL);
-+	SAFE_FREE(ads->auth.password);
-+	ads->auth.password = secrets_fetch_machine_password(lp_workgroup(), NULL, NULL);
-+	ret = ads_connect(ads);
-+	if (!ADS_ERR_OK(ret)) {
-+		DBG_ERR("ads_connect failed: %s\n", ads_errstr(ret));
-+	}
 +	if (USE_SYSTEM_KEYTAB) {
-+		res = ads_keytab_create_default(ads);
++		/*
++		 * Update the system keytab if we're configured to use
++		 * "secrets and keytab" for the kerberos method. On failure
++		 * to reset password, schedule retry in 30 minutes. 
++		 */
++		old_krb5ccname = getenv(KRB5_ENV_CCNAME);
++		setenv(KRB5_ENV_CCNAME, "MEMORY:net_ads", 1);
++		ads = ads_init(lp_realm(), lp_workgroup(), NULL);
++		SAFE_FREE(ads->auth.password);
++		ads->auth.password = secrets_fetch_machine_password(lp_workgroup(), NULL, NULL);
++		ret = ads_connect(ads);
++		if (!ADS_ERR_OK(ret)) {
++			struct timeval tmp;
++			DBG_ERR("ads_connect failed: %s\n", ads_errstr(ret));
++			DBG_ERR("Failed to update kerberos keytab. Retrying in 30 minutes.\n");
++			tmp  = timeval_current_ofs(1800, 0);
++			next_change = timeval_max(&next_change, &tmp);
++			unsetenv(KRB5_ENV_CCNAME);
++			if (old_krb5ccname != NULL) {
++				setenv(KRB5_ENV_CCNAME, old_krb5ccname, 0);
++			}
++			ads_destroy(&ads);
++			goto done;
++		}
++		else {
++			res = ads_keytab_create_default(ads);
++		}
++		if (res != 0) {
++			DBG_ERR("Failed to update kerberos keytab. Retrying in 30 minutes.\n");
++			struct timeval tmp;
++			tmp  = timeval_current_ofs(1800, 0);
++			unsetenv(KRB5_ENV_CCNAME);
++			if (old_krb5ccname != NULL) {
++				setenv(KRB5_ENV_CCNAME, old_krb5ccname, 0);
++			}
++			ads_destroy(&ads);
++			next_change = timeval_max(&next_change, &tmp);
++			goto done;
++		}
++		unsetenv(KRB5_ENV_CCNAME);
++		if (old_krb5ccname != NULL) {
++			setenv(KRB5_ENV_CCNAME, old_krb5ccname, 0);
++		}
++		ads_destroy(&ads);
 +	}
-+	if (res != 0) {
-+		DBG_ERR("Failed to update kerberos keytab.\n");
-+	}
-+	unsetenv(KRB5_ENV_CCNAME);
-+	if (old_krb5ccname != NULL) {
-+		setenv(KRB5_ENV_CCNAME, old_krb5ccname, 0);
-+	}
-+	ads_destroy(&ads);
  
  	DEBUG(10, ("calculate_next_machine_pwd_change returned %s\n",
  		   timeval_string(talloc_tos(), &next_change, false)));
 diff --git a/source3/winbindd/winbindd_dual_srv.c b/source3/winbindd/winbindd_dual_srv.c
-index ab14f5d..36a685d 100644
+index ab14f5d..ac62a74 100644
 --- a/source3/winbindd/winbindd_dual_srv.c
 +++ b/source3/winbindd/winbindd_dual_srv.c
 @@ -21,6 +21,10 @@
@@ -76,50 +102,47 @@ index ab14f5d..36a685d 100644
  
  	domain = wb_child_domain();
  	if (domain == NULL) {
-@@ -783,12 +791,46 @@ NTSTATUS _wbint_ChangeMachineAccount(struct pipes_struct *p,
- 				 domain->dcname,
- 				 true); /* force */
- 
--	/* Pass back result code - zero for success, other values for
--	   specific failures. */
-+	old_krb5ccname = getenv(KRB5_ENV_CCNAME);
-+	setenv(KRB5_ENV_CCNAME, "MEMORY:net_ads", 1);
-+	ads = ads_init(lp_realm(), lp_workgroup(), NULL);
-+	SAFE_FREE(ads->auth.password);
-+	ads->auth.password = secrets_fetch_machine_password(lp_workgroup(), NULL, NULL);
-+
-+        /* Pass back result code - zero for success, other values for
-+           specific failures. */
- 
+@@ -789,6 +797,45 @@ NTSTATUS _wbint_ChangeMachineAccount(struct pipes_struct *p,
  	DEBUG(3,("domain %s secret %s\n", domain->name,
  		NT_STATUS_IS_OK(status) ? "changed" : "unchanged"));
  
-+	ret = ads_connect(ads);
-+	if (!ADS_ERR_OK(ret)) {
-+		DBG_ERR("ads_connect failed: %s\n", ads_errstr(ret));
-+		ads_destroy(&ads);
-+		unsetenv(KRB5_ENV_CCNAME);
-+		if (old_krb5ccname != NULL) {
-+			setenv(KRB5_ENV_CCNAME, old_krb5ccname, 0);
-+		}
-+		return ads_ntstatus(ret);
-+	}
 +	if (USE_SYSTEM_KEYTAB) {
++		/*
++		 * Update system keytab after password change. 
++		 */
++		old_krb5ccname = getenv(KRB5_ENV_CCNAME);
++		setenv(KRB5_ENV_CCNAME, "MEMORY:net_ads", 1);
++		ads = ads_init(lp_realm(), lp_workgroup(), NULL);
++		SAFE_FREE(ads->auth.password);
++		ads->auth.password = secrets_fetch_machine_password(lp_workgroup(), NULL, NULL);
++		ret = ads_connect(ads);
++		if (!ADS_ERR_OK(ret)) {
++			DBG_ERR("ads_connect failed: %s\n", ads_errstr(ret));
++			ads_destroy(&ads);
++			unsetenv(KRB5_ENV_CCNAME);
++			if (old_krb5ccname != NULL) {
++				setenv(KRB5_ENV_CCNAME, old_krb5ccname, 0);
++			}
++			return ads_ntstatus(ret);
++		}
 +		res = ads_keytab_create_default(ads);
-+	}
-+	if (res != 0) {
-+		DBG_ERR("Failed to update kerberos keytab.\n",);
++		if (res != 0) {
++			DBG_ERR("Failed to update kerberos keytab.\n");
++			ads_destroy(&ads);
++			unsetenv(KRB5_ENV_CCNAME);
++			if (old_krb5ccname != NULL) {
++				setenv(KRB5_ENV_CCNAME, old_krb5ccname, 0);
++			}
++			return NT_STATUS_ACCESS_DENIED;
++		}
 +		ads_destroy(&ads);
 +		unsetenv(KRB5_ENV_CCNAME);
-+		if (old_krb5ccname != NULL) {
++			if (old_krb5ccname != NULL) {
 +			setenv(KRB5_ENV_CCNAME, old_krb5ccname, 0);
 +		}
-+		return NT_ACCESS_DENIED;
 +	}
-+	ads_destroy(&ads);
-+	unsetenv(KRB5_ENV_CCNAME);
-+	if (old_krb5ccname != NULL) {
-+		setenv(KRB5_ENV_CCNAME, old_krb5ccname, 0);
++        else {
++		DBG_DEBUG("kerberos method is set to %s. Bypassing keytab update.\n", lp_kerberos_method()); 
 +	}
 +
   done:
