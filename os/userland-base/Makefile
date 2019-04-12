@@ -4,6 +4,7 @@
 
 PORTNAME=	userland-base
 PORTVERSION=	${OS_PORTVERSION}
+PORTREVISION=	2
 CATEGORIES=	os
 
 MAINTAINER=	kris@ixsystems.com
