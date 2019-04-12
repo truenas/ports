@@ -86,16 +86,26 @@ if [ ! -e "${PKG_ROOTDIR}/etc/pkg/Train.conf" ] ; then
 		jq -r '."pkg-repo"."pubKey" | join("\n")' ${TM} \
 		> ${PKG_ROOTDIR}/usr/share/keys/pkg/${REPONAME}.pub
 		TM_PUBKEY="/usr/share/keys/pkg/${REPONAME}.pub"
-	fi
-	if [ "$(jq -r '."pkg-repo"."url" | length' ${TM})" != "0" ]; then
-		TM_PKGURL="$(jq -r '."pkg-repo"."url"' ${TM})"
-		cat >${PKG_ROOTDIR}/etc/pkg/Train.conf <<-EOF
-		${REPONAME}: {
-		  url: "${TM_PKGURL}",
-		  signature_type: "pubkey",
-		  pubkey: "${TM_PUBKEY}",
-		}
-		EOF
+		if [ "$(jq -r '."pkg-repo"."url" | length' ${TM})" != "0" ]; then
+			TM_PKGURL="$(jq -r '."pkg-repo"."url"' ${TM})"
+			cat >${PKG_ROOTDIR}/etc/pkg/Train.conf <<-EOF
+			${REPONAME}: {
+			  url: "${TM_PKGURL}",
+			  signature_type: "pubkey",
+			  pubkey: "${TM_PUBKEY}",
+			}
+			EOF
+		fi
+	else
+		if [ "$(jq -r '."pkg-repo"."url" | length' ${TM})" != "0" ]; then
+			TM_PKGURL="$(jq -r '."pkg-repo"."url"' ${TM})"
+			cat >${PKG_ROOTDIR}/etc/pkg/Train.conf <<-EOF
+			${REPONAME}: {
+			  url: "${TM_PKGURL}",
+			  signature_type: "none",
+			}
+			EOF
+		fi
 	fi
 fi
 
