@@ -36,7 +36,7 @@ update_port()
 	fi
 
 	GH_HASH=$(fetch -o - https://api.github.com/repos/$project/$repo/git/refs/heads/$dbranch 2>/dev/null | jq -r '."object"."sha"')
-	if [ -z GH_HASH ] ; then
+	if [ -z "${GH_HASH}" ] ; then
 		#Not a branch or commit hash. Check to see if it is a version "tag" instead
 		GH_HASH=$(fetch -o - https://api.github.com/repos/$project/$repo/git/refs/tags/$dbranch 2>/dev/null | jq -r '."object"."sha"')
 	fi
