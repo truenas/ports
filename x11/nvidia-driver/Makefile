@@ -10,9 +10,9 @@
 # slave ports instead (`x11/nvidia-driver-340' or `x11/nvidia-driver-304').
 
 PORTNAME=	nvidia-driver
-DISTVERSION?=	390.87
+DISTVERSION?=	410.93
 # Always try to set PORTREVISION as it can be overridden by the slave ports
-PORTREVISION?=	2
+PORTREVISION?=	0
 CATEGORIES=	x11
 MASTER_SITES=	NVIDIA/XFree86/FreeBSD-${ARCH_SUFX}/${DISTVERSION}
 DISTNAME=	NVIDIA-FreeBSD-${ARCH_SUFX}-${DISTVERSION}
@@ -41,7 +41,8 @@ USE_LDCONFIG=	yes
 # fixed upstream (across all versions, including legacy ones), use this
 # hack below to universally set NVIDIA_ROOT.  Also provide X11BASE value
 # since it is still used by legacy drivers.
-MAKE_ENV=	NVIDIA_ROOT=${WRKSRC} X11BASE=${LOCALBASE}
+MAKE_ENV=	NVIDIA_ROOT=${WRKSRC} X11BASE=${LOCALBASE} \
+		EGL_GLVND_JSON_PATH=${STAGEDIR}/${PREFIX}/share/glvnd/egl_vendor.d
 PLIST_RE=	# empty
 SUB_FILES=	pkg-deinstall pkg-install pkg-message nvidia.conf
 SUB_PATCHES=	extra-patch-src-Makefile \
@@ -284,7 +285,11 @@ LINUX32_LINKS+=	libOpenGL.so.0 libOpenGL.so
 PLIST_RE+=	'\,${LINUXBASE}.*libGLdispatch\.so,d' \
 		'\,${LINUXBASE}.*libOpenGL\.so,d'
 .endif
-.if ${NVVERSION} >= 387.012
+.if ${NVVERSION} >= 410.057
+LINUX_LIBS+=	libnvidia-egl-wayland.so.1.1.0
+LINUX_LINKS+=	libnvidia-egl-wayland.so.1.1.0 libnvidia-egl-wayland.so.1
+PLIST_RE+=	'\,${LINUXBASE},s/(libnvidia-egl-wayland\.so)\.X/\1.1.1.0/'
+.elif ${NVVERSION} >= 387.012
 LINUX_LIBS+=	libnvidia-egl-wayland.so.1.0.2
 LINUX_LINKS+=	libnvidia-egl-wayland.so.1.0.2 libnvidia-egl-wayland.so.1
 PLIST_RE+=	'\,${LINUXBASE},s/(libnvidia-egl-wayland\.so)\.X/\1.1.0.2/'
@@ -302,6 +307,17 @@ LINUX_LINKS+=	libnvidia-egl-wayland.so.${PORTVERSION} libnvidia-egl-wayland.so.1
 PLIST_RE+=	'\,${LINUXBASE},s/(libnvidia-egl-wayland\.so)\.X/\1.${PORTVERSION}/'
 .else
 PLIST_RE+=	'\,${LINUXBASE}.*libnvidia-egl-wayland\.so,d'
+.endif
+.if ${NVVERSION} >= 410.057
+LINUX_LIBS+=	libnvidia-rtcore.so.${PORTVERSION}
+.else
+PLIST_RE+=	'\,${LINUXBASE}.*libnvidia-rtcore,d'
+.endif
+.if ${NVVERSION} >= 396.018
+LINUX_LIBS+=	libnvidia-glvkspirv.so.${PORTVERSION}
+LINUX32_LIBS+=	libnvidia-glvkspirv.so.${PORTVERSION}
+.else
+PLIST_RE+=	'\,${LINUXBASE}.*libnvidia-glvkspirv,d'
 .endif
 .if ${NVVERSION} >= 331.013
 LINUX_LIBS+=	libnvidia-eglcore.so.${PORTVERSION} \
@@ -461,9 +477,18 @@ post-patch: .SILENT
 # /usr/share/nvidia path is hardcoded in libGL and nvidia-settings, but we
 # won't adhere to this stupidity and install nvidia-application-profiles-*
 # files as part of documentation
-.if ${NVVERSION} >= 334.016
+.if ${NVVERSION} >= 410.057
+	${REINPLACE_CMD} -e 's,/usr/share/nvidia,${STAGEDIR}${DOCSDIR},' \
+		${WRKSRC}/lib/libGLX_nvidia/Makefile ${WRKSRC}/doc/Makefile
+.elif ${NVVERSION} >= 334.016
 	${REINPLACE_CMD} -e 's,/usr/share/nvidia,${STAGEDIR}${DOCSDIR},' \
 		${WRKSRC}/lib/libGL/Makefile ${WRKSRC}/doc/Makefile
+.endif
+.if ${NVVERSION} >= 410.057
+	${REINPLACE_CMD} -e 's|AUXLINK_LINK=   $${DESTDIR}$${LIBDIR}/libGLX_indirect.so.0|AUXLINK_LINK=   $${LIBDIR}/libGLX_indirect.so.0|' \
+		${WRKSRC}/lib/libGLX_nvidia/Makefile
+	${REINPLACE_CMD} -e 's|/etc/glvnd/egl_vendor.d:/usr/share/glvnd/egl_vendor.d|/usr/local/share/glvnd/egl_vendor.d:                 |' \
+		${WRKSRC}/obj/libglvnd/libEGL.so.1
 .endif
 # Finally, process OPTIONS
 .if ${PORT_OPTIONS:MFREEBSD_AGP}
@@ -510,6 +535,14 @@ post-install: .SILENT
 	${INSTALL_SCRIPT} ${WRKSRC}/obj/nvidia-bug-report.sh \
 		${STAGEDIR}${PREFIX}/bin
 # pkg-plist is already overbloated, so use these hacks instead of PLIST_SUB's
+.if ${NVVERSION} < 410.057
+	${REINPLACE_CMD} 's|.nvidia/libglxserver_nvidia.so|.nvidia/libglx.so|g' \
+		${TMPPLIST}
+	${REINPLACE_CMD} -E '\,${LINUXBASE},!{/lib(EGL_nvidia|GLESv2_nvidia|GLX|GLdispatch|OpenGL)/d;}' \
+		${TMPPLIST}
+	${REINPLACE_CMD} -E '\,${LINUXBASE},!{/10_nvidia.json/d;}' \
+		${TMPPLIST}
+.endif
 .if ${NVVERSION} >= 304.128 && ${NVVERSION} < 310.019 || ${NVVERSION} >= 361.016
 	${REINPLACE_CMD} -E '\,${LINUXBASE},!{/libvdpau(_trace)?\.so/d;}' \
 		${TMPPLIST}
