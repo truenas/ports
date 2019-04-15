@@ -19,6 +19,9 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 BROKEN=		doesnt build on FreeBSD 12
 BROKEN_SSL=	openssl-devel
 BROKEN_SSL_REASON_openssl-devel=	field has incomplete type 'EVP_CIPHER_CTX' (aka 'evp_cipher_ctx_st')
+DEPRECATED=	Newer version available; use devel/poco instead
+EXPIRATION_DATE=	2019-04-30
+
 BROKEN_SSL=	openssl111
 BROKEN_SSL_REASON_openssl111=	field has incomplete type 'EVP_CIPHER_CTX' (aka 'evp_cipher_ctx_st')
 

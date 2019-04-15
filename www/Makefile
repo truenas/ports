@@ -1048,6 +1048,7 @@
     SUBDIR += p5-ModPerl-VersionUtil
     SUBDIR += p5-Mojo-IOLoop-ForkCall
     SUBDIR += p5-Mojo-Server-FastCGI
+    SUBDIR += p5-Mojo-Weixin
     SUBDIR += p5-MojoMojo
     SUBDIR += p5-MojoX-Log-Dispatch-Simple
     SUBDIR += p5-MojoX-Renderer-Xslate
