@@ -1,8 +1,8 @@
 # $FreeBSD$
 
 PORTNAME=       freenas-ui
-PORTVERSION=	20190329205412
-PORTREVISION=	2
+PORTVERSION=	20190413195622
+PORTREVISION=	1
 
 CATEGORIES=     freenas
 VALID_CATEGORIES+=	freenas
@@ -14,13 +14,11 @@ PRODUCT?=
 USES=		python
 
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}django110>0:www/py-django110@${PY_FLAVOR} \
-	uwsgi>0:www/uwsgi \
 	${PYTHON_PKGNAMEPREFIX}django-formtools>0:www/py-django-formtools@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}django-tastypie>0:www/py-django-tastypie@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}lockfile>0:devel/py-lockfile@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}ipaddr>0:devel/py-ipaddr@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}bsddb3>0:databases/py-bsddb3@${PY_FLAVOR} \
-	${PYTHON_PKGNAMEPREFIX}polib>0:devel/py-polib@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}ldap>0:net/py-ldap@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}dojango>0:www/py-dojango@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}sysctl>0:devel/py-sysctl@${PY_FLAVOR} \
@@ -58,8 +56,10 @@ WRKSRC=		/usr/ports/local_source/${PORTNAME}
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
 GH_PROJECT=	freenas
-GH_TAGNAME=	0413e7b0768992dbed24f15330f812e7adcb6373
+GH_TAGNAME=	bf4abeefe0f9bb988d88f71114670ab5d05c2515
 .endif
+
+PREFIX=/
 
 NO_BUILD=yes
 
@@ -87,52 +87,46 @@ do-install:
 	${ECHO_CMD} "@group www"  >> ${TMPPLIST}
 	${ECHO_CMD} "@comment files" >> ${TMPPLIST}
 	${FIND} ${WRKSRC}/gui -type f | \
-		${SED} -e 's|^${WRKSRC}/gui|/www/freenasUI|' -e 's|^/||' \
+		${SED} -e 's|^${WRKSRC}/gui|/usr/local/www/freenasUI|' -e 's|^/||' \
 		| ${SORT} >> ${TMPPLIST}
-	${ECHO_CMD} www/freenasUI/local_settings.py >> ${TMPPLIST}
+	${ECHO_CMD} /usr/local/www/freenasUI/local_settings.py >> ${TMPPLIST}
 	${ECHO_CMD} "@comment directories" >> ${TMPPLIST}
 	${FIND} ${WRKSRC}/gui -type d \
-		| ${SED} -e 's|^${WRKSRC}/gui|/www/freenasUI|' -e 's|^/||' -e 's|^|@dir |' \
+		| ${SED} -e 's|^${WRKSRC}/gui|/usr/local/www/freenasUI|' -e 's|^/||' -e 's|^|@dir |' \
 		| ${SORT} -r >> ${TMPPLIST}
 
-	${RM} -fr ${STAGEDIR}${PREFIX}/www/freenasUI
-	${MKDIR} ${STAGEDIR}${PREFIX}/www/freenasUI
-	${CP} -a ${WRKSRC}/gui/* ${STAGEDIR}${PREFIX}/www/freenasUI/
-	${LN} -s -f /etc/local_settings.py ${STAGEDIR}${PREFIX}/www/freenasUI/local_settings.py
+	${RM} -fr ${STAGEDIR}${PREFIX}/usr/local/www/freenasUI
+	${MKDIR} ${STAGEDIR}${PREFIX}/usr/local/www/freenasUI
+	${CP} -a ${WRKSRC}/gui/* ${STAGEDIR}${PREFIX}/usr/local/www/freenasUI/
+	${LN} -s -f /etc/local_settings.py ${STAGEDIR}${PREFIX}/usr/local/www/freenasUI/local_settings.py
 
 	${MKDIR} -p /data
 	${MKDIR} -p /etc
 	${ECHO_CMD} "FreeNAS-12.0-PRERELEASE ()" > /etc/version
 	${ENV} FREENAS_INSTALL=yes /usr/local/sbin/migrate93 -f /data/freenas-v1.db
-	${ENV} FREENAS_INSTALL=yes ${PYTHON_CMD} ${STAGEDIR}${PREFIX}/www/freenasUI/manage.py migrate --fake-initial --noinput --traceback
+	${ENV} FREENAS_INSTALL=yes ${PYTHON_CMD} ${STAGEDIR}${PREFIX}/usr/local/www/freenasUI/manage.py migrate --fake-initial --noinput --traceback
 
 	${MKDIR} -p ${STAGEDIR}/data
 	${MKDIR} -p ${STAGEDIR}/etc
-	${CP} /data/* ${STAGEDIR}/data/
-	${CP} /etc/version ${STAGEDIR}/etc/
+	${CP} /data/freenas-v1.db ${STAGEDIR}${PREFIX}/data/freenas-v1.db.sample
+	${CP} /etc/version ${STAGEDIR}${PREFIX}/etc/
 
 	${ECHO_CMD} "@comment database files" >> ${TMPPLIST}
-	${FIND} /data -type f \
-		| ${SED} -e 's|^|@sample |' \
-		| ${SORT} >> ${TMPPLIST}
-	${ECHO_CMD} "@dir /data" >> ${TMPPLIST}
+	${ECHO_CMD} "@sample data/freenas-v1.db.sample" >> ${TMPPLIST}
+	${ECHO_CMD} etc/version >> ${TMPPLIST}
 
-	${ECHO_CMD} /etc/version >> ${TMPPLIST}
-	${ECHO_CMD} "@dir /etc" >> ${TMPPLIST}
-
-	${PYTHON_CMD} ${STAGEDIR}${PREFIX}/www/freenasUI/manage.py collectstatic --noinput
-	${PYTHON_CMD} ${STAGEDIR}${PREFIX}/www/freenasUI/tools/compilemsgs.py
+	${PYTHON_CMD} ${STAGEDIR}${PREFIX}/usr/local/www/freenasUI/manage.py collectstatic --noinput
 
 	${ECHO_CMD} "@comment static files" >> ${TMPPLIST}
-	${FIND} ${STAGEDIR}${PREFIX}/www/freenasUI/static -type f | \
-		${SED} -e 's|^${STAGEDIR}${PREFIX}/||' \
+	${FIND} ${STAGEDIR}${PREFIX}/usr/local/www/freenasUI/static -type f | \
+		${SED} -e 's|^${STAGEDIR}${PREFIX}||' \
 		| ${SORT} >> ${TMPPLIST}
 
-	${FIND} ${STAGEDIR}${PREFIX}/www/freenasUI/static -type d | \
+	${FIND} ${STAGEDIR}${PREFIX}/usr/local/www/freenasUI/static -type d | \
 		 ${SED} -e 's|^${STAGEDIR}${PREFIX}/||' -e 's|^|@dir |' \
 		| ${SORT} -r >> ${TMPPLIST}
 
-	${FIND} ${STAGEDIR}${PREFIX}/www/freenasUI/locale -name "*mo" | \
+	${FIND} ${STAGEDIR}${PREFIX}/usr/local/www/freenasUI/locale -name "*mo" | \
 		${SED} -e 's|^${STAGEDIR}${PREFIX}/||' \
 		| ${SORT} >> ${TMPPLIST}
 

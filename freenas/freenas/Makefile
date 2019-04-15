@@ -126,8 +126,6 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}bsd>=0:freenas/py-bsd@${PY_FLAVOR} \
 		plzip>=0:archivers/plzip \
 		proftpd>=0:ftp/proftpd \
 		pv>=0:sysutils/pv \
-		python27>=0:lang/python27 \
-		python2>=0:lang/python2 \
 		python3>=0:lang/python3 \
 		python>=0:lang/python \
 		pyvmomi>=0:net/py-pyvmomi@${PY_FLAVOR} \

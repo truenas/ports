@@ -1,6 +1,6 @@
 PORTNAME=	middlewared
-PORTVERSION=	20190329205412
-PORTREVISION=	1
+PORTVERSION=	20190413195622
+PORTREVISION=	2
 PKGNAMEPREFIX=  ${PYTHON_PKGNAMEPREFIX}
 
 CATEGORIES=     freenas
@@ -32,6 +32,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}ws4py>0:www/py-ws4py@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}influxdb>0:databases/py-influxdb@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}asyncssh>0:security/py-asyncssh@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}croniter>0:sysutils/py-croniter@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}aiorwlock>0:devel/py-aiorwlock@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}bidict>0:devel/py-bidict@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}markdown2>0:textproc/py-markdown2@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}acme>0:security/py-acme@${FLAVOR} \
@@ -58,7 +59,7 @@ WRKSRC=		/usr/ports/local_source/${PORTNAME}
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
 GH_PROJECT=	freenas
-GH_TAGNAME=	0413e7b0768992dbed24f15330f812e7adcb6373
+GH_TAGNAME=	bf4abeefe0f9bb988d88f71114670ab5d05c2515
 .endif
 
 .if exists(/usr/ports/local_source/${PORTNAME})

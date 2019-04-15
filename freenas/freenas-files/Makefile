@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	freenas-files
-PORTVERSION=	20190329205412
+PORTVERSION=	20190413195622
 PORTREVISION=	0
 
 CATEGORIES=	freenas
@@ -24,7 +24,7 @@ WRKSRC=         /usr/ports/local_source/${PORTNAME}
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
 GH_PROJECT=	freenas
-GH_TAGNAME=	0413e7b0768992dbed24f15330f812e7adcb6373
+GH_TAGNAME=	bf4abeefe0f9bb988d88f71114670ab5d05c2515
 .endif
 
 # explicitly set this for the port build
@@ -47,8 +47,6 @@ do-build:
 	${MAKE} -C ${WRKSRC}/src/extract-tarball  all
 	${MAKE} -C ${WRKSRC}/src/fix_ea obj
 	${MAKE} -C ${WRKSRC}/src/fix_ea all
-	${MAKE} -C ${WRKSRC}/src/freenas-sysctl obj
-	${MAKE} -C ${WRKSRC}/src/freenas-sysctl all
 	${MAKE} -C ${WRKSRC}/src/winacl   obj
 	${MAKE} -C ${WRKSRC}/src/winacl  all
 
@@ -59,7 +57,6 @@ do-install:
 	${MAKE} -C ${WRKSRC}/src/extract-tarball  BINDIR=${STAGEDIR}${PREFIX}/usr/local/bin install
 	${MAKE} -C ${WRKSRC}/src/fix_ea  BINDIR=${STAGEDIR}${PREFIX}/usr/local/bin install
 	${MAKE} -C ${WRKSRC}/src/winacl  BINDIR=${STAGEDIR}${PREFIX}/usr/local/bin install
-	${MAKE} -C ${WRKSRC}/src/freenas-sysctl KMODDIR=${STAGEDIR}${PREFIX}/boot/modules install
 	#
 	# Adding autotune
 	#
@@ -74,14 +71,12 @@ do-install:
 		${STAGEDIR}/boot/loader.rc.local \
 		${STAGEDIR}/etc/sysctl.conf \
 		${STAGEDIR}/etc/pf.conf.block \
-		${STAGEDIR}/etc/motd \
-		${STAGEDIR}/etc/ix.rc.d/ix_pf_early \
-		${STAGEDIR}/etc/ix.rc.d/ix_pf_late
+		${STAGEDIR}/etc/motd
 .endif
 	(cd ${STAGEDIR}; ${FIND} . \( -type f -o -type l \) \
 		| ${SED} -e 's,^\./,,g' \
 		| grep -v 'compat/linux/proc' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
-		| ${AWK} '{print $$2 }' >> ${TMPPLIST})
+		| ${AWK} '{if($$2 ~ /\.sample$$/){print "@sample "$$2} else {print $$2}}' >> ${TMPPLIST})
 
 .include <bsd.port.post.mk>

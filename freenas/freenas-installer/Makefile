@@ -1,8 +1,8 @@
 # $FreeBSD$
 
 PORTNAME=	freenas-installer
-PORTVERSION=	20190329205412
-PORTREVISION=	1
+PORTVERSION=	20190413195622
+PORTREVISION=	0
 
 CATEGORIES=	freenas
 VALID_CATEGORIES+=	freenas
@@ -22,7 +22,7 @@ WRKSRC=         /usr/ports/local_source/${PORTNAME}
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
 GH_PROJECT=	freenas
-GH_TAGNAME=	0413e7b0768992dbed24f15330f812e7adcb6373
+GH_TAGNAME=	bf4abeefe0f9bb988d88f71114670ab5d05c2515
 .endif
 
 PREFIX=/
@@ -60,6 +60,8 @@ do-install:
 	${INSTALL_SCRIPT} ${WRKSRC}/src/freenas-installer/etc/rc ${STAGEDIR}/${PREFIX}/etc/rc
 	${INSTALL_SCRIPT} ${WRKSRC}/src/freenas-installer/lib/functions.sh ${STAGEDIR}/${PREFIX}/lib/functions.sh
 	cp -a ${WRKSRC}/src/freenas-installer/pre-install/ ${STAGEDIR}/${PREFIX}/pre-install/
+	cp -a ${WRKSRC}/src/freenas-installer/boot/ ${STAGEDIR}/${PREFIX}/boot/
+	cp -a ${WRKSRC}/src/freenas/boot/lua ${STAGEDIR}/${PREFIX}/boot/
 .if ${PRODUCT} == "TrueNAS"
 	${INSTALL_SCRIPT} /usr/truenas/src/freenas-installer/etc/install_sata_dom.sh ${STAGEDIR}/${PREFIX}/etc/install_sata_dom.sh
 	cp -a /usr/truenas/src/freenas-installer/pre-install/ ${STAGEDIR}/${PREFIX}/pre-install/
