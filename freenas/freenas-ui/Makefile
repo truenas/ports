@@ -56,7 +56,7 @@ WRKSRC=		/usr/ports/local_source/${PORTNAME}
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
 GH_PROJECT=	freenas
-GH_TAGNAME=	2eea53cdcc404d4f03b4ce4a193d4b314420b314
+GH_TAGNAME=	bf4abeefe0f9bb988d88f71114670ab5d05c2515
 .endif
 
 PREFIX=/
