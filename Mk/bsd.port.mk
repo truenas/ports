@@ -4305,6 +4305,7 @@ create-manifest:
 			dp_PREFIX='${PREFIX}'                                 \
 			dp_USERS='${USERS:u:S/$/,/}'                          \
 			dp_WWW='${WWW}'                                       \
+			dp_VITAL='${PKGVITAL}'                                \
 			${PKG_NOTES_ENV}                                      \
 			${SH} ${SCRIPTSDIR}/create-manifest.sh
 
