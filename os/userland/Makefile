@@ -23,6 +23,9 @@ ZOL_DESC=	ZFS on Linux userland and kernel support
 
 RUN_DEPENDS+=	/bin/sh:os/userland-base
 
+PKG_NOTES+=	train
+PKG_NOTE_train=	FreeNAS-12-Nightlies
+
 .include <bsd.port.pre.mk>
 
 .if ${PORT_OPTIONS:MDEBUG}
