@@ -23,8 +23,9 @@ ZOL_DESC=	ZFS on Linux userland and kernel support
 
 RUN_DEPENDS+=	/bin/sh:os/userland-base
 
-PKG_NOTES+=	train
+PKG_NOTES+=	buildepochtime train
 PKG_NOTE_train=	FreeNAS-12-Nightlies
+PKG_NOTE_buildepochtime=	${BUILD_EPOCH_TIME}
 
 .include <bsd.port.pre.mk>
 
