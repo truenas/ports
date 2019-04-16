@@ -7,7 +7,6 @@
     SUBDIR += freenas-files
     SUBDIR += freenas-installer
     SUBDIR += freenas-migrate93
-    SUBDIR += freenas-pkgtools
     SUBDIR += freenas-ui
     SUBDIR += freenas-webui
     SUBDIR += node9

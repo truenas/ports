@@ -44,7 +44,6 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}django110>0:www/py-django110@${PY_FLAVOR} \
 	dmidecode>0:sysutils/dmidecode \
 	freenas-files>0:freenas/freenas-files \
 	freenas-migrate93>0:freenas/freenas-migrate93 \
-	freenas-pkgtools>0:freenas/freenas-pkgtools \
 	zol>=0:sysutils/zol \
 	${PYTHON_PKGNAMEPREFIX}libzfs>0:devel/py-libzfs@${PY_FLAVOR}
 
