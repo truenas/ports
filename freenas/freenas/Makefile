@@ -164,4 +164,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}bsd>=0:freenas/py-bsd@${PY_FLAVOR} \
 
 USES+=		metaport
 
+PKG_NOTES+=	buildepochtime
+PKG_NOTE_buildepochtime=	${BUILD_EPOCH_TIME}
+
 .include <bsd.port.mk>
