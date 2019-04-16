@@ -16,8 +16,8 @@ BUILD_DEPENDS=	${BASH_CMD}:shells/bash \
 		nasm:devel/nasm \
 		${PYTHON_LIBDIR}/lib-dynload/_sqlite3.so:databases/py-sqlite3@${PY_FLAVOR}
 
-USES=		gmake \
-		python:2.7,build
+USES=		gmake python:2.7,build
+BINARY_ALIAS=	python=${PYTHON_CMD}
 USE_GCC=	8+
 USE_GITHUB=	yes
 GH_ACCOUNT=	freebsd
@@ -62,7 +62,7 @@ do-build:
 	${LN} -sf ${LOCALBASE}/bin/objcopy ${BUILD_WRKSRC}/BaseTools/Bin/FreeBSD-${MACHINE}/objcopy
 	${LN} -sf ${LOCALBASE}/bin/nasm ${BUILD_WRKSRC}/BaseTools/Bin/FreeBSD-${MACHINE}/nasm
 	unset ARCH; unset MAKEFLAGS
-	PYTHON_COMMAND=${PYTHON_CMD} ${BASH_CMD} -c "cd ${WRKSRC}; . ./edksetup.sh; ${MAKE_CMD} ${MAKE_ARGS} -C ${WRKSRC}/BaseTools"
+	${BASH_CMD} -c "cd ${WRKSRC}; . ./edksetup.sh; ${MAKE_CMD} ${MAKE_ARGS} -C ${WRKSRC}/BaseTools"
 	${BASH_CMD} -c " \
 		cd ${BUILD_WRKSRC}; \
 		unset ARCH; unset MAKEFLAGS; \
