@@ -1,8 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	sysup
-DISTVERSION=    0.6.4-3	
-DISTVERSIONSUFFIX= -g4bd2434 
+PORTVERSION=	0.6.4
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 
@@ -18,7 +17,6 @@ USES=		compiler
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	trueos
-GH_TAGNAME=     4bd2434e105
 
 USE_RC_SUBR=	sysup
 
