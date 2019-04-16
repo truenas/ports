@@ -51,14 +51,12 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}bsd>=0:freenas/py-bsd@${PY_FLAVOR} \
 		devcpu-data>=0:sysutils/devcpu-data \
 		dmidecode>=0:sysutils/dmidecode \
 		dnsmasq>=0:dns/dnsmasq \
-		dojo>=0:www/dojo \
 		drm-fbsd12.0-kmod>=0:graphics/drm-fbsd12.0-kmod \
 		e2fsprogs>=0:sysutils/e2fsprogs \
 		easy-rsa>=0:security/easy-rsa \
 		fio>=0:benchmarks/fio \
 		freenas-files>=0:freenas/freenas-files \
 		freenas-migrate93>=0:freenas/freenas-migrate93 \
-		freenas-pkgtools>=0:freenas/freenas-pkgtools \
 		freenas-ui>=0:freenas/freenas-ui \
 		freenas-webui>=0:freenas/freenas-webui \
 		fusefs-libs>=0:sysutils/fusefs-libs \
@@ -137,7 +135,6 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}bsd>=0:freenas/py-bsd@${PY_FLAVOR} \
 		screen>=0:sysutils/screen \
 		sedutil>=0:sysutils/sedutil \
 		sg3_utils>=0:sysutils/sg3_utils \
-		sipcalc>=0:net-mgmt/sipcalc \
 		smartmontools>=0:sysutils/smartmontools \
 		smbldap-tools>=0:net/smbldap-tools \
 		smp_utils>=0:sysutils/smp_utils \
