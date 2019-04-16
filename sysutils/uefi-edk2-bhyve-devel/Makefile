@@ -18,7 +18,6 @@ BUILD_DEPENDS=	${BASH_CMD}:shells/bash \
 
 USES=		gmake \
 		python:2.7,build
-MAKE_ENV=	PYTHON_COMMAND=/usr/local/bin/python2.7
 USE_GCC=	8+
 USE_GITHUB=	yes
 GH_ACCOUNT=	freebsd
@@ -63,7 +62,7 @@ do-build:
 	${LN} -sf ${LOCALBASE}/bin/objcopy ${BUILD_WRKSRC}/BaseTools/Bin/FreeBSD-${MACHINE}/objcopy
 	${LN} -sf ${LOCALBASE}/bin/nasm ${BUILD_WRKSRC}/BaseTools/Bin/FreeBSD-${MACHINE}/nasm
 	unset ARCH; unset MAKEFLAGS
-	${BASH_CMD} -c "cd ${WRKSRC}; . ./edksetup.sh; ${MAKE_CMD} ${MAKE_ARGS} -C ${WRKSRC}/BaseTools"
+	PYTHON_COMMAND=${PYTHON_CMD} ${BASH_CMD} -c "cd ${WRKSRC}; . ./edksetup.sh; ${MAKE_CMD} ${MAKE_ARGS} -C ${WRKSRC}/BaseTools"
 	${BASH_CMD} -c " \
 		cd ${BUILD_WRKSRC}; \
 		unset ARCH; unset MAKEFLAGS; \
