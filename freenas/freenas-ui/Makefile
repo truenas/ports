@@ -102,7 +102,7 @@ do-install:
 
 	${MKDIR} -p /data
 	${MKDIR} -p /etc
-	${ECHO_CMD} "FreeNAS-12.0-PRERELEASE ()" > /etc/version
+	${ECHO_CMD} "FreeNAS-12.0-MASTER-$$(date -r ${BUILD_EPOCH_TIME} +%Y%m%d%H%M) (${GH_TAGNAME})" > /etc/version
 	${ENV} FREENAS_INSTALL=yes /usr/local/sbin/migrate93 -f /data/freenas-v1.db
 	${ENV} FREENAS_INSTALL=yes ${PYTHON_CMD} ${STAGEDIR}${PREFIX}/usr/local/www/freenasUI/manage.py migrate --fake-initial --noinput --traceback
 
