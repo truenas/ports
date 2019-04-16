@@ -18,6 +18,7 @@ BUILD_DEPENDS=	${BASH_CMD}:shells/bash \
 
 USES=		gmake \
 		python:2.7,build
+MAKE_ENV=	PYTHON_COMMAND=/usr/local/bin/python2.7
 USE_GCC=	8+
 USE_GITHUB=	yes
 GH_ACCOUNT=	freebsd
