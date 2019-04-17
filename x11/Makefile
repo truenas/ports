@@ -72,6 +72,10 @@
     SUBDIR += fstobdf
     SUBDIR += gcb
     SUBDIR += gdm
+    SUBDIR += ghostbsd-installed-common-settings
+    SUBDIR += ghostbsd-live-common-settings
+    SUBDIR += ghostbsd-mate-settings
+    SUBDIR += ghostbsd-slim-theme
     SUBDIR += ghostbsd-xfce-settings
     SUBDIR += gmrun
     SUBDIR += gnome-clipboard-daemon
@@ -304,6 +308,7 @@
     SUBDIR += sselp
     SUBDIR += stalonetray
     SUBDIR += startup-notification
+    SUBDIR += station-tweak
     SUBDIR += sterm
     SUBDIR += stjerm
     SUBDIR += swarp
