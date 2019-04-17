@@ -1,3 +1,2 @@
-etc/pkg/repos/GhostBSD-base.conf
-etc/pkg/repos/GhostBSD-ports.conf
-etc/pkg/repos/TrueOS.conf
+etc/pkg/repos/GhostBSD.conf
+etc/pkg/repos/Train.conf

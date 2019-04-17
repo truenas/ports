@@ -12,7 +12,6 @@ case "$2" in
     if [ ! -d /usr/local/etc/default ]; then
         mkdir -p /usr/local/etc/default
     fi
-    cp -af /usr/local/share/ghostbsd/xfce-installed-settings/etc/default/*   /usr/local/etc/default
 
     # copy xdg
     cp -af /usr/local/share/ghostbsd/xfce-installed-settings/etc/xdg/*   /usr/local/etc/xdg/

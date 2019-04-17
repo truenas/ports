@@ -5,11 +5,11 @@
 # $FreeBSD$
 #
 
-PORTNAME=	xfce-installed-settings
-PORTVERSION=	2.7
+PORTNAME=	ghostbsd-xfce-settings
+PORTVERSION=	2.8
 CATEGORIES=	x11
 
-MAINTAINER=	angelescuo@yahoo.com
+MAINTAINER=	eturgeon@ixsystems.com
 COMMENT=	GhostBSD xfce settings in installed mode
 
 LICENSE=	BSD
@@ -22,8 +22,6 @@ NO_BUILD=	yes
 do-install:
 	${MKDIR} ${STAGEDIR}/${PREFIX}/share/ghostbsd/xfce-installed-settings/etc/skel
 	${CP} -R   ${WRKSRC}/etc/skel/* ${STAGEDIR}/${PREFIX}/share/ghostbsd/xfce-installed-settings/etc/skel
-	${MKDIR} ${STAGEDIR}/${PREFIX}/share/ghostbsd/xfce-installed-settings/etc/default/grub.d
-	${CP} -R   ${WRKSRC}/etc/default/* ${STAGEDIR}/${PREFIX}/share/ghostbsd/xfce-installed-settings/etc/default
 	${MKDIR} ${STAGEDIR}/${PREFIX}/share/ghostbsd/xfce-installed-settings/etc/xdg
 	${CP} -R   ${WRKSRC}/etc/xdg/* ${STAGEDIR}/${PREFIX}/share/ghostbsd/xfce-installed-settings/etc/xdg
 .include <bsd.port.mk>
