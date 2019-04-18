@@ -4,13 +4,14 @@
 
 PORTNAME=	userland-base
 PORTVERSION=	${OS_PORTVERSION}
-PORTREVISION=	5
+PORTREVISION=	6
 CATEGORIES=	os
 
 MAINTAINER=	kris@ixsystems.com
 COMMENT=	Port for the OS userland binaries
 
-BUILD_DEPENDS=  /usr/dist/world.txz:os/buildworld
+BUILD_DEPENDS=  /usr/dist/world.txz:os/buildworld \
+		${LOCALBASE}/bin/jq:textproc/jq
 
 PREFIX=/
 EXTRACT_ONLY=
@@ -46,6 +47,9 @@ do-install:
 		| ${GREP} -v -w '@dir ' \
 		| ${CAT} >> ${TMPPLIST})
 	@sh ${FILESDIR}/scrubplist.sh ${FILESDIR}/configs ${TMPPLIST} ${STAGEDIR}
+	@if [ -n "${STAGEDIR}/var/db/trueos-manifest.json" ] ; then \
+		sh ${FILESDIR}/mk-pkg-repo.sh ${STAGEDIR}/var/db/trueos-manifest.json ${STAGEDIR} ; \
+	fi
 
 clean:
 	@if [ -d ${WRKDIR} ]; then \
