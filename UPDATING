@@ -5,6 +5,79 @@ they are unavoidable.
 You should get into the habit of checking this file for changes each time
 you update your ports collection, before attempting any port upgrades.
 
+20190421:
+  AFFECTS: users of databases/cego
+  AUTHOR: pi@FreeBSD.org
+
+  To upgrade from cego 2.39.16 to 2.44.1, you need to export to xml before
+  the upgrade and import from xml after the upgrade, because the internal
+  storage has changed for some types.
+
+  Use these steps:
+
+  - export your database while it runs, see
+    http://www.lemke-it.com/litexec?request=pubcegodoc&user=&lang=en&section=cgdoc_database_running.html#tsimpexp_mode
+    for details.
+  - stop the database
+    service cego stop
+  - upgrade the port/package
+  - re-create the database
+    cego --mode=create --tableset=<database> --dbxml=<database>.xml
+  - import the database
+    cego --mode=xmlimport --tableset=<database> \
+	--dbxml=<database>.xml --impfile=export.xml --doLogging
+  - modify /etc/rc.conf by adding
+    cego_<database>_cpdump="YES"
+    cego_<database>_cleanup="YES"
+  - start the database
+    service cego start
+
+20190420:
+  AFFECTS: users of lang/ruby24
+  AUTHOR: mfechner@FreeBSD.org
+
+  The default ruby version has been updated from 2.4 to 2.5.
+
+  If you compile your own ports you may keep 2.4 as the default version by
+  adding the following lines to your /etc/make.conf file:
+
+  #
+  # Keep ruby 2.4 as default version
+  #
+  DEFAULT_VERSIONS+=ruby=2.4
+
+  If you wish to update to the new default version, you need to first stop any
+  software that uses ruby. Then, you will need to follow these steps, depending
+  upon how you manage your system.
+
+  If you use pkgng, simply upgrade:
+  # pkg upgrade
+
+  If you use portmaster, install new ruby, then rebuild all ports that depend
+  on ruby:
+  # portmaster -o lang/ruby25 lang/ruby24
+  # portmaster -R -r ruby-2.5
+
+  If you use portupgrade, install new ruby, then rebuild all ports that depend
+  on ruby:
+
+  # pkg delete -f ruby portupgrade
+  # make -C /usr/ports/ports-mgmt/portupgrade install clean
+  # pkg set -o lang/ruby24:lang/ruby25
+  # portupgrade -x ruby-2.5.\* -fr lang/ruby25
+
+20190419:
+  AFFECTS: users of emulators/qemu
+  AUTHOR: bofh@FreeBSD.org
+
+  qemu 2.X version has been moved to qemu2. If you would like to use
+  2.X you should use qemu2. Otherwise you can use the new stable 
+  upstream branch of 3.0.X.
+
+  Portmaster users will need to run this command:
+
+  portmaster -o emulators/qemu2 emulators/qemu
+
 20190410:
   AFFECTS: users of python
   AUTHOR: antoine@FreeBSD.org
