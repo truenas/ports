@@ -3,6 +3,7 @@
 
 PORTNAME=	software-station
 PORTVERSION=	0.4
+PORTREVISION=	1
 CATEGORIES=	ports-mgmt
 MASTER_SITES=	https://github.com/GhostBSD/${PORTNAME}/archive/
 
@@ -10,7 +11,8 @@ MAINTAINER=	ericturgeon@ghostbsd.org
 COMMENT=	Tool install and deinstall software and pksystem packages.
 LICENSE =	BSD
 
-RUN_DEPENDS=	sudo:security/sudo
+RUN_DEPENDS=	sudo:security/sudo \
+		${LOCALBASE}/etc/pkg/repos/GhostBSD.conf:misc/ghostbsd-pkg-conf
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	GhostBSD

@@ -7,6 +7,7 @@
 
 PORTNAME=	update-station
 PORTVERSION=	1.9
+PORTREVISION=	1
 CATEGORIES=	ports-mgmt
 MASTER_SITES=	https://github.com/GhostBSD/${PORTNAME}/archive/
 
@@ -15,7 +16,8 @@ COMMENT=	Tool to update FreeBSD/GhostBSD software and system.
 LICENSE =	BSD
 
 RUN_DEPENDS=	sudo:security/sudo \
-		fbsdpkgupdate:ports-mgmt/fbsdpkgupdate
+		fbsdpkgupdate:ports-mgmt/fbsdpkgupdate \
+		${LOCALBASE}/etc/pkg/repos/GhostBSD.conf:misc/ghostbsd-pkg-conf
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	GhostBSD
