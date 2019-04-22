@@ -201,6 +201,7 @@
     SUBDIR += mongodb36
     SUBDIR += mongodb36-tools
     SUBDIR += mongodb40
+    SUBDIR += mongodb40-tools
     SUBDIR += mroonga
     SUBDIR += mrtg-mysql-load
     SUBDIR += mtools-mongodb
@@ -847,6 +848,7 @@
     SUBDIR += py-sqlrelay
     SUBDIR += py-swift
     SUBDIR += py-sybase
+    SUBDIR += py-tableschema
     SUBDIR += py-tarantool
     SUBDIR += py-umemcache
     SUBDIR += py-unqlite
