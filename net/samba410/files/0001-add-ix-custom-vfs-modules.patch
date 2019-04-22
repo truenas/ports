@@ -1575,10 +1575,10 @@ index 0000000..e8e3b1f
 +}
 diff --git a/source3/modules/vfs_noacl.c b/source3/modules/vfs_noacl.c
 new file mode 100644
-index 0000000..b052cf0
+index 0000000..00af9c3
 --- /dev/null
 +++ b/source3/modules/vfs_noacl.c
-@@ -0,0 +1,352 @@
+@@ -0,0 +1,355 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  This program is free software; you can redistribute it and/or modify
@@ -1770,6 +1770,9 @@ index 0000000..b052cf0
 +                                            struct files_struct *fsp,
 +                                            uint32_t *dosmode)
 +{
++	if ((fsp->fsp_name->st.st_ex_mode & (S_IWUSR | S_IWGRP | S_IWOTH)) == 0) {
++		*dosmode |= FILE_ATTRIBUTE_READONLY;
++	}
 +        *dosmode |= fileflags_to_dosmode(fsp->fsp_name->st.st_ex_flags);
 +
 +	if (S_ISDIR(fsp->fsp_name->st.st_ex_mode)) {
