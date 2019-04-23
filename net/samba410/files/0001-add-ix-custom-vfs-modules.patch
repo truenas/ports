@@ -1575,7 +1575,7 @@ index 0000000..e8e3b1f
 +}
 diff --git a/source3/modules/vfs_noacl.c b/source3/modules/vfs_noacl.c
 new file mode 100644
-index 0000000..00af9c3
+index 0000000..6b13939
 --- /dev/null
 +++ b/source3/modules/vfs_noacl.c
 @@ -0,0 +1,355 @@
@@ -1703,9 +1703,9 @@ index 0000000..00af9c3
 +		dosmode, smb_fname->base_name);
 +
 +
-+        if (IS_DOS_READONLY(dosmode)) {
-+                new_mode &= ~(S_IWUSR | S_IWGRP | S_IWOTH);
-+        }
++	if (IS_DOS_READONLY(dosmode)) {
++		new_mode &= ~(S_IWUSR | S_IWGRP | S_IWOTH);
++		}
 +	else {
 +		new_mode |= (S_IWUSR | S_IWGRP | S_IWOTH);
 +	}
@@ -1773,7 +1773,7 @@ index 0000000..00af9c3
 +	if ((fsp->fsp_name->st.st_ex_mode & (S_IWUSR | S_IWGRP | S_IWOTH)) == 0) {
 +		*dosmode |= FILE_ATTRIBUTE_READONLY;
 +	}
-+        *dosmode |= fileflags_to_dosmode(fsp->fsp_name->st.st_ex_flags);
++	*dosmode |= fileflags_to_dosmode(fsp->fsp_name->st.st_ex_flags);
 +
 +	if (S_ISDIR(fsp->fsp_name->st.st_ex_mode)) {
 +	/*
@@ -1796,8 +1796,8 @@ index 0000000..00af9c3
 +	NTSTATUS ret;
 +
 +	ret = set_dos_attributes_common(handle, smb_fname, dosmode);
-+                
-+        return ret;
++
++	return ret;
 +}
 +
 +static NTSTATUS noacl_fset_dos_attributes(struct vfs_handle_struct *handle,
