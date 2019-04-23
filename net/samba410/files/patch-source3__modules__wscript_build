@@ -1,5 +1,5 @@
---- source3/modules/wscript_build.orig	2019-02-06 03:02:32.000000000 -0500
-+++ source3/modules/wscript_build	2019-03-15 09:18:09.087557000 -0400
+--- source3/modules/wscript_build.orig	2019-02-06 00:02:32.000000000 -0800
++++ source3/modules/wscript_build	2019-04-22 07:44:42.087261569 -0700
 @@ -235,6 +235,23 @@ bld.SAMBA3_MODULE('vfs_solarisacl',
                   internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_solarisacl'),
                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_solarisacl'))
@@ -24,11 +24,21 @@
  bld.SAMBA3_MODULE('vfs_zfsacl',
                   subsystem='vfs',
                   source='vfs_zfsacl.c',
-@@ -580,9 +597,69 @@ bld.SAMBA3_MODULE('vfs_error_inject',
+@@ -580,9 +597,76 @@ bld.SAMBA3_MODULE('vfs_error_inject',
                   internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_error_inject'),
                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_error_inject'))
  
 -bld.SAMBA3_MODULE('vfs_delay_inject',
++bld.SAMBA3_MODULE('vfs_noacl',
+                  subsystem='vfs',
+-                 source='vfs_delay_inject.c',
++                 source='vfs_noacl.c',
+                  init_function='',
+-                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_delay_inject'),
+-                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_delay_inject'))
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_noacl'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_noacl'))
++
 +bld.SAMBA3_LIBRARY('smb_libzfs',
 +                   source='smb_libzfs.c',
 +                   cflags='-DNEED_SOLARIS_BOOLEAN',
@@ -54,14 +64,11 @@
 +                   private_library=True)
 +
 +bld.SAMBA3_MODULE('vfs_zfs_space',
-                  subsystem='vfs',
--                 source='vfs_delay_inject.c',
++                 subsystem='vfs',
 +                 source='vfs_zfs_space.c',
 +                 deps='smb_libzfs',
 +                 allow_undefined_symbols=True,
-                  init_function='',
--                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_delay_inject'),
--                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_delay_inject'))
++                 init_function='',
 +                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_zfs_space'),
 +                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_zfs_space'))
 +
