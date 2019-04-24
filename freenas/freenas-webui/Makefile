@@ -16,7 +16,7 @@ FETCH_DEPENDS=	git>0:devel/git \
 BUILD_DEPENDS=	rsync>0:net/rsync \
 		python2>0:lang/python2 \
 		npm5>=0:freenas/npm5 \
-		yarn>=0:www/yarn
+		yarn>=0:freenas/yarn
 USES=	gmake
 NO_BUILD=	yes
 
