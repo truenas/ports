@@ -3,6 +3,7 @@
 PORTNAME=	yarn
 DISTVERSIONPREFIX=	v
 DISTVERSION=	1.15.2
+PORTREVISION=	1
 CATEGORIES=	freenas www
 MASTER_SITES=	https://yarnpkg.com/downloads/${PORTVERSION}/
 
@@ -24,7 +25,7 @@ NODE6_DESC=	Use www/node6 as backend
 
 OPTIONS_SUB=	yes
 
-NODE_RUN_DEPENDS=	node9>=0:freenas/node9
+NODE_RUN_DEPENDS=	node10>=0:freenas/node10
 NODE10_RUN_DEPENDS=	node10>=10.0.0:www/node10
 NODE8_RUN_DEPENDS=	node8>=0.8.0:www/node8
 NODE6_RUN_DEPENDS=	node6>=0.8.0:www/node6
