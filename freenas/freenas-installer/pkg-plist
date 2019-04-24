@@ -1,0 +1,13 @@
+/bin/install_worker.sh
+/bin/install_worker2.sh
+/etc/installer12.sh
+%%TRUENAS%%/etc/install_sata_dom.sh
+/etc/rc
+/lib/functions.sh
+/pre-install/0001.prevent_downgrade.sh
+/pre-install/0002.arch.sh
+/pre-install/0003.project_switch.sh
+/pre-install/0004.hardware_requirements.sh
+/boot/lua/brand-FreeNAS.lua
+/boot/lua/logo-FreeNAS.lua
+/boot/loader.conf.local
