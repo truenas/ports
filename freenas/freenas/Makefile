@@ -149,7 +149,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}bsd>=0:freenas/py-bsd@${PY_FLAVOR} \
 		tw_cli>=0:sysutils/tw_cli \
 		uefi-edk2-bhyve-csm>=0:sysutils/uefi-edk2-bhyve-csm \
 		uefi-edk2-bhyve>=0:sysutils/uefi-edk2-bhyve \
-		unison-nox11>=0:net/unison \
+		unison-nox11>=0:net/unison@nox11 \
 		vm-bhyve>=0:sysutils/vm-bhyve \
 		websockify>=0:www/novnc-websockify \
 		wget>=0:ftp/wget \
