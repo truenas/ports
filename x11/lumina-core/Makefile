@@ -1,14 +1,16 @@
+# Created by: Ken Moore <ken@pcbsd.org>
 # $FreeBSD$
 
 PORTNAME=	lumina-core
-PORTVERSION=	1.4.2
-PORTREVISION=	201803131031
+PORTVERSION=	1.4.1
+PORTREVISION=	1
 CATEGORIES=	x11
 
 MAINTAINER=	jt@ixsystems.com
 COMMENT=	Lumina Desktop Environment
 
 LICENSE=	BSD3CLAUSE
+LICENSE_FILE=	${WRKSRC}/../../LICENSE
 
 RUN_DEPENDS=	fluxbox>=0:x11-wm/fluxbox \
 		xscreensaver>=0:x11/xscreensaver \
@@ -19,19 +21,17 @@ RUN_DEPENDS=	fluxbox>=0:x11-wm/fluxbox \
 LIB_DEPENDS+=	libxcb-ewmh.so:x11/xcb-util-wm \
 		libxcb-icccm.so:x11/xcb-util-wm \
 		libxcb-image.so:x11/xcb-util-image \
-		libxcb-util.so:x11/xcb-util \
-		libXcursor.so:x11/libXcursor
+		libxcb-util.so:x11/xcb-util
 
 CONFLICTS_INSTALL=	lumina-1.2.*
 
 OPTIONS_DEFINE=	MULTIMEDIA TRUEOS I18N
-OPTIONS_SUB=		yes
 OPTIONS_DEFAULT=	MULTIMEDIA I18N
 OPTIONS_SUB=	yes
 
 MULTIMEDIA_DESC=	Install multimedia support backend (gstreamer)
 TRUEOS_DESC=	Use the TrueOS system interface settings.
-I18N_DESC= Install localization files
+I18N_DESC=	Install localization files
 
 .include <bsd.port.options.mk>
 
@@ -41,17 +41,16 @@ RUN_DEPENDS+=	gstreamer1-plugins-core>=0:multimedia/gstreamer1-plugins-core
 
 MAKE_JOBS_UNSAFE=yes
 
-USES=		qmake qt:5
+USES=		compiler:c++11-lang gl qmake qt:5
 USE_GL=		gl
 USE_XORG=	x11 xdamage xcb
 USE_LDCONFIG=	yes
 USE_QT=		core gui widgets network svg multimedia imageformats \
 		buildtools_build x11extras concurrent
-
 USE_GITHUB=	yes
 GH_ACCOUNT=	trueos
 GH_PROJECT=	lumina
-GH_TAGNAME=	e1dae8c03e02869f752ca6210ea276e32545f11a
+GH_TAGNAME=	b6536c1547571ae8dd0618bed752e2e0025bf2a7
 WRKSRC_SUBDIR=	src-qt5/core
 
 #Setup the qmake qt:5 configuration options

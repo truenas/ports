@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	urdfdom-headers
-DISTVERSION=	1.0.2
+DISTVERSION=	1.0.3
 CATEGORIES=	misc
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -10,7 +10,7 @@ COMMENT=	Unified Robot Description Format (URDF) parser headers
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USES=		cmake:outsource
+USES=		cmake
 USE_GITHUB=	yes
 GH_ACCOUNT=	ros
 GH_PROJECT=	${PORTNAME:S/-/_/}

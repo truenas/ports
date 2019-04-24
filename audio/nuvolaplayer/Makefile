@@ -2,10 +2,10 @@
 
 PORTNAME=	nuvolaplayer
 PORTVERSION=	3.0.4
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	audio www
 
-MAINTAINER=	multimedia@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Cloud music integration for your desktop
 
 LICENSE=	BSD2CLAUSE

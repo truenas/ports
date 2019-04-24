@@ -135,7 +135,6 @@ _GSTREAMER_PLUGINS+= \
 		mp3 \
 		nas \
 		python \
-		qt4 \
 		schroedinger \
 		sdl \
 		vdpau \
@@ -161,6 +160,7 @@ _GSTREAMER_PLUGINS+= \
 		kms \
 		libav \
 		libde265 \
+		lv2 \
 		modplug \
 		mpg123 \
 		mplex \
@@ -178,11 +178,12 @@ _GSTREAMER_PLUGINS+= \
 		vpx \
 		vulkan \
 		webp \
+		webrtcdsp \
 		x \
 		x265 \
 		ximagesrc \
 		zbar
-# vaapi webrtcdsp
+# vaapi
 .endif # USE_GSTREAMER1
 
 # other plugins
@@ -261,6 +262,9 @@ ladspa_IMPL=	bad
 lame_DEPENDS=	audio/gstreamer-plugins-lame
 lame_IMPL=	ugly
 
+lv2_DEPENDS=	audio/gstreamer-plugins-lv2
+lv2_IMPL=	bad
+
 mad_DEPENDS=	audio/gstreamer-plugins-mad
 mad_IMPL=	ugly
 
@@ -323,6 +327,9 @@ vorbis_IMPL=	#
 
 wavpack_DEPENDS=	audio/gstreamer-plugins-wavpack
 wavpack_IMPL=		good
+
+webrtcdsp_DEPENDS=	audio/gstreamer-plugins-webrtcdsp
+webrtcdsp_IMPL=		bad
 
 #-- comms plugin section --------------------------------------------------#
 
@@ -490,10 +497,6 @@ mplex_IMPL=	bad
 openh264_DEPENDS=	multimedia/gstreamer-plugins-openh264
 openh264_IMPL=		bad
 
-qt4_DEPENDS=	multimedia/gstreamer-qt4
-qt4_GST_PREFIX=	gstreamer-
-qt4_IMPL=	#
-
 rtmp_DEPENDS=	multimedia/gstreamer-plugins-rtmp
 rtmp_IMPL=	bad
 
@@ -544,9 +547,6 @@ ugly_IMPL=	#
 
 vdpau_DEPENDS=	multimedia/gstreamer-plugins-vdpau
 vdpau_IMPL=	bad
-
-webrtcdsp_DEPENDS=	multimedia/gstreamer-plugins-webrtcdsp
-webrtcdsp_IMPL=		bad
 
 x264_DEPENDS=	multimedia/gstreamer-plugins-x264
 x264_IMPL=	ugly

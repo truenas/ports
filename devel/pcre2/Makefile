@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	pcre2
-PORTVERSION=	10.31
+PORTVERSION=	10.32
+PORTREVISION=	1
 CATEGORIES=	devel
 MASTER_SITES=	SF/pcre/${PORTNAME}/${PORTVERSION} \
 		ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/ \

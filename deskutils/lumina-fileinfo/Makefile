@@ -2,8 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	lumina-fileinfo
-PORTVERSION=	1.4.2
-PORTREVISION=	201803131031
+PORTVERSION=	1.4.1
+PORTREVISION=	3
 CATEGORIES=	deskutils
 
 MAINTAINER=	jt@ixsystems.com
@@ -22,7 +22,7 @@ USE_QT=		core gui widgets network svg \
 USE_GITHUB=	yes
 GH_ACCOUNT=	trueos
 GH_PROJECT=	lumina
-GH_TAGNAME=	e1dae8c03e02869f752ca6210ea276e32545f11a
+GH_TAGNAME=	b6536c1547571ae8dd0618bed752e2e0025bf2a7
 WRKSRC_SUBDIR=	src-qt5/desktop-utils/${PORTNAME}
 
 OPTIONS_DEFINE=	NLS

@@ -2,7 +2,7 @@
 
 PORTNAME=	nestopia
 DISTVERSION=	1.49
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	emulators
 
 MAINTAINER=	neel@neelc.org
@@ -14,9 +14,9 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 BUILD_DEPENDS=	autoconf-archive>=0:devel/autoconf-archive
 LIB_DEPENDS=	libao.so:audio/libao libepoxy.so:graphics/libepoxy
 
-CXXFLAGS+=	-Wno-narrowing
-
-USES=		autoreconf desktop-file-utils libarchive localbase:ldflags pkgconfig
+USES=		autoreconf desktop-file-utils gl gnome libarchive \
+		localbase:ldflags pkgconfig
+USE_CXXSTD=	c++98
 USE_GITHUB=	yes
 GH_ACCOUNT=	rdanbrook
 GNU_CONFIGURE=	yes
@@ -25,6 +25,9 @@ USE_GNOME=	cairo gdkpixbuf2 gtk30
 USE_SDL=	sdl2
 INSTALLS_ICONS=	yes
 
-OPTIONS_DEFINE=	DOCS
+OPTIONS_DEFINE=	DOCS JACK
+
+JACK_LIB_DEPENDS=libjack.so:audio/jack
+JACK_CONFIGURE_WITH=jack
 
 .include <bsd.port.mk>

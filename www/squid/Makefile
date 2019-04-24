@@ -1,7 +1,8 @@
 # $FreeBSD$
 
 PORTNAME=	squid
-PORTVERSION=	4.4
+PORTVERSION=	4.6
+PORTREVISION=	1
 CATEGORIES=	www ipv6
 MASTER_SITES=	http://www.squid-cache.org/Versions/v4/ \
 		http://www2.us.squid-cache.org/Versions/v4/ \
@@ -17,8 +18,6 @@ PATCH_SITES=	http://www.squid-cache.org/%SUBDIR%/ \
 		http://www1.jp.squid-cache.org/%SUBDIR%/ \
 		http://master.squid-cache.org/~amosjeffries/patches/:nosid
 PATCH_SITE_SUBDIR=	Versions/v4/changesets
-PATCHFILES=	squid-4-bc54d7a6f7ec510a25966f2f800d3ea874657546.patch:-p1\
-		squid-4-0022167d80725513d95b38aaebc90086fc0b6938.patch:-p1
 
 MAINTAINER=	timp87@gmail.com
 COMMENT=	HTTP Caching Proxy
@@ -111,7 +110,7 @@ PCRE_LIB_DEPENDS=		libpcre.so:devel/pcre
 PCRE_CPPFLAGS=			-I${LOCALBASE}/include
 PCRE_LDFLAGS=			-L${LOCALBASE}/lib -lpcreposix -lpcre
 SNMP_CONFIGURE_ENABLE=		snmp
-SSL_CONFIGURE_ENABLE=		portssl
+SSL_CONFIGURE_ENABLE=		ssl
 SSL_CONFIGURE_ON=		--with-openssl=${OPENSSLBASE} \
 				--enable-security-cert-generators="file" \
 				LIBOPENSSL_CFLAGS=-I${OPENSSLINC} \
@@ -139,15 +138,21 @@ GSSAPI_NONE_CONFIGURE_ON=	--without-heimdal-krb5 \
 				--without-gss
 
 GSSAPI_BASE_USES=		gssapi
-GSSAPI_BASE_CONFIGURE_ON=	--with-heimdal-krb5=${GSSAPIBASEDIR} ${GSSAPI_CONFIGURE_ARGS}
+GSSAPI_BASE_CONFIGURE_ON=	--with-heimdal-krb5=${GSSAPIBASEDIR} \
+				${GSSAPI_CONFIGURE_ARGS} \
+				krb5_config=${GSSAPIBASEDIR}/bin/krb5-config
 GSSAPI_BASE_PLIST_SUB=		AUTH_KERB=""
 
 GSSAPI_HEIMDAL_USES=		gssapi:heimdal
-GSSAPI_HEIMDAL_CONFIGURE_ON=	--with-heimdal-krb5=${GSSAPIBASEDIR} ${GSSAPI_CONFIGURE_ARGS}
+GSSAPI_HEIMDAL_CONFIGURE_ON=	--with-heimdal-krb5=${GSSAPIBASEDIR} \
+				${GSSAPI_CONFIGURE_ARGS} \
+				krb5_config=${GSSAPIBASEDIR}/bin/krb5-config
 GSSAPI_HEIMDAL_PLIST_SUB=	AUTH_KERB=""
 
 GSSAPI_MIT_USES=		gssapi:mit
-GSSAPI_MIT_CONFIGURE_ON=	--with-mit-krb5=${GSSAPIBASEDIR} ${GSSAPI_CONFIGURE_ARGS}
+GSSAPI_MIT_CONFIGURE_ON=	--with-mit-krb5=${GSSAPIBASEDIR} \
+				${GSSAPI_CONFIGURE_ARGS} \
+				krb5_config=${GSSAPIBASEDIR}/bin/krb5-config
 GSSAPI_MIT_PLIST_SUB=		AUTH_KERB=""
 
 ARP_ACL_DESC=		ARP/MAC/EUI based authentification

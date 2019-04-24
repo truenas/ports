@@ -4,7 +4,7 @@
 PORTNAME=	soundkonverter
 PORTVERSION=	3.0.1
 DISTVERSIONPREFIX=	v
-PORTREVISION=	1
+PORTREVISION=	5
 CATEGORIES=	audio kde
 
 MAINTAINER=	dbn@FreeBSD.org
@@ -14,10 +14,10 @@ LICENSE=	GPLv2
 
 LIB_DEPENDS=	libtag.so:audio/taglib \
 		libcdda_paranoia.so:audio/cdparanoia \
-		libphonon4qt5.so:multimedia/phonon@qt5
+		libphonon4qt5.so:multimedia/phonon
 
 GH_ACCOUNT=	HessiJames
-USES=		cmake:outsource compiler:c++11-lang kde:5 qt:5
+USES=		cmake compiler:c++11-lang kde:5 qt:5
 USE_GITHUB=	yes
 USE_QT=		dbus concurrent core buildtools_build gui network printsupport \
 		qmake_build widgets xml

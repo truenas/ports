@@ -4,7 +4,7 @@
 PORTNAME=	h2o
 DISTVERSIONPREFIX=	v
 DISTVERSION=	2.2.5
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	www
 
 MAINTAINER=	dch@FreeBSD.org
@@ -16,8 +16,6 @@ LICENSE_COMB=	multi
 BROKEN_armv6=		fails to compile: asm_arm.inc:139:36: '.syntax divided' arm assembly not supported
 BROKEN_armv7=		fails to compile: asm_arm.inc:139:36: '.syntax divided' arm assembly not supported
 BROKEN_powerpc64=	fails to link: unrecognized option '-Wl,-rpath=/usr/local/lib/gcc6'
-
-LIB_DEPENDS=	libuv.so:devel/libuv
 
 LIB_DEPENDS=	libuv.so:devel/libuv
 

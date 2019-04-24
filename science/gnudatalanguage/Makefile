@@ -4,6 +4,7 @@
 PORTNAME=	gnudatalanguage
 PORTVERSION=	0.9.9
 DISTVERSIONPREFIX=	v
+PORTREVISION=	7
 CATEGORIES=	science lang
 .if defined(BUILD_PYTHON_MODULE)
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -25,7 +26,7 @@ LIB_DEPENDS+=	libgeotiff.so:graphics/libgeotiff\
 USE_GITHUB=	yes
 GH_PROJECT=	gdl
 
-USES=		cmake:outsource compiler:c++11-lang fortran ncurses pkgconfig readline tar:tgz
+USES=		cmake compiler:c++11-lang fortran ncurses pkgconfig readline tar:tgz
 USE_WX=		3.0+
 USE_XORG=	x11 sm ice xext
 

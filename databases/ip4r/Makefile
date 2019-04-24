@@ -3,9 +3,10 @@
 
 PORTNAME=	ip4r
 PORTVERSION=	2.2
+PORTREVISION=	1
 CATEGORIES=	databases net
 
-MAINTAINER=	tobez@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	IP address and IP range index types for PostgreSQL
 
 LICENSE=	PostgreSQL

@@ -1,5 +1,6 @@
 # $FreeBSD$
 
+PORTREVISION=	3
 PKGNAMESUFFIX=	-daemon
 
 USES=		ssl

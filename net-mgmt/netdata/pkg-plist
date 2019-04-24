@@ -6,7 +6,6 @@
 %%ETCDIR%%/statsd.d/.keep
 @sample(netdata,netdata,0640) lib/netdata/conf.d/apps_groups.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/charts.d.conf.sample
-lib/netdata/conf.d/charts.d/.keep
 @sample(netdata,netdata,0640) lib/netdata/conf.d/charts.d/ap.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/charts.d/apache.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/charts.d/apcupsd.conf.sample
@@ -28,7 +27,6 @@ lib/netdata/conf.d/charts.d/.keep
 @sample(netdata,netdata,0640) lib/netdata/conf.d/charts.d/squid.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/charts.d/tomcat.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/fping.conf.sample
-lib/netdata/conf.d/health.d/.keep
 @sample(netdata,netdata,0640) lib/netdata/conf.d/health.d/adaptec_raid.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/health.d/apache.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/health.d/apcupsd.conf.sample
@@ -39,6 +37,7 @@ lib/netdata/conf.d/health.d/.keep
 @sample(netdata,netdata,0640) lib/netdata/conf.d/health.d/boinc.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/health.d/btrfs.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/health.d/ceph.conf.sample
+@sample(netdata,netdata,0640) lib/netdata/conf.d/health.d/cgroups.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/health.d/couchdb.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/health.d/cpu.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/health.d/disks.conf.sample
@@ -75,6 +74,7 @@ lib/netdata/conf.d/health.d/.keep
 @sample(netdata,netdata,0640) lib/netdata/conf.d/health.d/retroshare.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/health.d/softnet.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/health.d/squid.conf.sample
+@sample(netdata,netdata,0640) lib/netdata/conf.d/health.d/sslcheck.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/health.d/stiebeleltron.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/health.d/swap.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/health.d/tcp_conn.conf.sample
@@ -89,9 +89,7 @@ lib/netdata/conf.d/health.d/.keep
 @sample(netdata,netdata,0640) lib/netdata/conf.d/health_alarm_notify.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/health_email_recipients.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/node.d.conf.sample
-lib/netdata/conf.d/node.d/.keep
 @sample(netdata,netdata,0640) lib/netdata/conf.d/python.d.conf.sample
-lib/netdata/conf.d/python.d/.keep
 @sample(netdata,netdata,0640) lib/netdata/conf.d/python.d/adaptec_raid.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/python.d/apache.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/python.d/beanstalk.conf.sample
@@ -131,6 +129,9 @@ lib/netdata/conf.d/python.d/.keep
 @sample(netdata,netdata,0640) lib/netdata/conf.d/python.d/nginx_plus.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/python.d/nsd.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/python.d/ntpd.conf.sample
+@sample(netdata,netdata,0640) lib/netdata/conf.d/python.d/nvidia_smi.conf.sample
+@sample(netdata,netdata,0640) lib/netdata/conf.d/python.d/openldap.conf.sample
+@sample(netdata,netdata,0640) lib/netdata/conf.d/python.d/oracledb.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/python.d/ovpn_status_log.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/python.d/phpfpm.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/python.d/portcheck.conf.sample
@@ -150,13 +151,13 @@ lib/netdata/conf.d/python.d/.keep
 @sample(netdata,netdata,0640) lib/netdata/conf.d/python.d/springboot.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/python.d/squid.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/python.d/tomcat.conf.sample
+@sample(netdata,netdata,0640) lib/netdata/conf.d/python.d/tor.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/python.d/traefik.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/python.d/unbound.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/python.d/uwsgi.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/python.d/varnish.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/python.d/w1sensor.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/python.d/web_log.conf.sample
-lib/netdata/conf.d/statsd.d/.keep
 @sample(netdata,netdata,0640) lib/netdata/conf.d/statsd.d/example.conf.sample
 @sample(netdata,netdata,0640) lib/netdata/conf.d/stream.conf.sample
 libexec/netdata/charts.d/ap.chart.sh
@@ -197,13 +198,16 @@ libexec/netdata/node.d/stiebeleltron.node.js
 libexec/netdata/plugins.d/alarm-email.sh
 libexec/netdata/plugins.d/alarm-notify.sh
 libexec/netdata/plugins.d/alarm-test.sh
+libexec/netdata/plugins.d/anonymous-statistics.sh
 libexec/netdata/plugins.d/apps.plugin
 libexec/netdata/plugins.d/cgroup-name.sh
 libexec/netdata/plugins.d/cgroup-network-helper.sh
 libexec/netdata/plugins.d/charts.d.dryrun-helper.sh
 libexec/netdata/plugins.d/charts.d.plugin
+%%CUPS%%libexec/netdata/plugins.d/cups.plugin
 libexec/netdata/plugins.d/fping.plugin
-%%FREEIPMI%%libexec/netdata/plugins.d/freeipmi.plugin
+@(,,4755) %%FREEIPMI%%libexec/netdata/plugins.d/freeipmi.plugin
+libexec/netdata/plugins.d/health-cmdapi-test.sh
 libexec/netdata/plugins.d/loopsleepms.sh.inc
 libexec/netdata/plugins.d/node.d.plugin
 libexec/netdata/plugins.d/python.d.plugin
@@ -247,6 +251,9 @@ libexec/netdata/python.d/nginx.chart.py
 libexec/netdata/python.d/nginx_plus.chart.py
 libexec/netdata/python.d/nsd.chart.py
 libexec/netdata/python.d/ntpd.chart.py
+libexec/netdata/python.d/nvidia_smi.chart.py
+libexec/netdata/python.d/openldap.chart.py
+libexec/netdata/python.d/oracledb.chart.py
 libexec/netdata/python.d/ovpn_status_log.chart.py
 libexec/netdata/python.d/phpfpm.chart.py
 libexec/netdata/python.d/portcheck.chart.py
@@ -355,6 +362,7 @@ libexec/netdata/python.d/spigotmc.chart.py
 libexec/netdata/python.d/springboot.chart.py
 libexec/netdata/python.d/squid.chart.py
 libexec/netdata/python.d/tomcat.chart.py
+libexec/netdata/python.d/tor.chart.py
 libexec/netdata/python.d/traefik.chart.py
 libexec/netdata/python.d/unbound.chart.py
 libexec/netdata/python.d/uwsgi.chart.py
@@ -394,23 +402,38 @@ sbin/netdata
 %%DATADIR%%/web/images/alert-128-red.png
 %%DATADIR%%/web/images/alert-multi-size-orange.ico
 %%DATADIR%%/web/images/alert-multi-size-red.ico
+%%DATADIR%%/web/images/android-icon-144x144.png
+%%DATADIR%%/web/images/android-icon-192x192.png
+%%DATADIR%%/web/images/android-icon-36x36.png
+%%DATADIR%%/web/images/android-icon-48x48.png
+%%DATADIR%%/web/images/android-icon-72x72.png
+%%DATADIR%%/web/images/android-icon-96x96.png
 %%DATADIR%%/web/images/animated.gif
+%%DATADIR%%/web/images/apple-icon-114x114.png
+%%DATADIR%%/web/images/apple-icon-120x120.png
+%%DATADIR%%/web/images/apple-icon-144x144.png
+%%DATADIR%%/web/images/apple-icon-152x152.png
+%%DATADIR%%/web/images/apple-icon-180x180.png
+%%DATADIR%%/web/images/apple-icon-57x57.png
+%%DATADIR%%/web/images/apple-icon-60x60.png
+%%DATADIR%%/web/images/apple-icon-72x72.png
+%%DATADIR%%/web/images/apple-icon-76x76.png
+%%DATADIR%%/web/images/apple-icon-precomposed.png
+%%DATADIR%%/web/images/apple-icon.png
+%%DATADIR%%/web/images/banner-icon-144x144.png
 %%DATADIR%%/web/images/check-mark-2-128-green.png
 %%DATADIR%%/web/images/check-mark-2-multi-size-green.ico
+%%DATADIR%%/web/images/favicon-16x16.png
+%%DATADIR%%/web/images/favicon-32x32.png
+%%DATADIR%%/web/images/favicon-96x96.png
+%%DATADIR%%/web/images/favicon.ico
+%%DATADIR%%/web/images/ms-icon-144x144.png
+%%DATADIR%%/web/images/ms-icon-150x150.png
+%%DATADIR%%/web/images/ms-icon-310x310.png
+%%DATADIR%%/web/images/ms-icon-70x70.png
+%%DATADIR%%/web/images/netdata-logomark.svg
 %%DATADIR%%/web/images/netdata.svg
 %%DATADIR%%/web/images/post.png
-%%DATADIR%%/web/images/seo-performance-114.png
-%%DATADIR%%/web/images/seo-performance-128.png
-%%DATADIR%%/web/images/seo-performance-16.png
-%%DATADIR%%/web/images/seo-performance-24.png
-%%DATADIR%%/web/images/seo-performance-256.png
-%%DATADIR%%/web/images/seo-performance-32.png
-%%DATADIR%%/web/images/seo-performance-48.png
-%%DATADIR%%/web/images/seo-performance-512.png
-%%DATADIR%%/web/images/seo-performance-64.png
-%%DATADIR%%/web/images/seo-performance-72.png
-%%DATADIR%%/web/images/seo-performance-multi-size.icns
-%%DATADIR%%/web/images/seo-performance-multi-size.ico
 %%DATADIR%%/web/index.html
 %%DATADIR%%/web/infographic.html
 %%DATADIR%%/web/lib/bootstrap-3.3.7.min.js
@@ -418,7 +441,6 @@ sbin/netdata
 %%DATADIR%%/web/lib/bootstrap-table-1.11.0.min.js
 %%DATADIR%%/web/lib/bootstrap-table-export-1.11.0.min.js
 %%DATADIR%%/web/lib/bootstrap-toggle-2.2.2.min.js
-%%DATADIR%%/web/lib/c3-0.4.18.min.js
 %%DATADIR%%/web/lib/clipboard-polyfill-be05dad.js
 %%DATADIR%%/web/lib/d3-4.12.2.min.js
 %%DATADIR%%/web/lib/d3pie-0.2.1-netdata-3.js
@@ -431,15 +453,14 @@ sbin/netdata
 %%DATADIR%%/web/lib/jquery.peity-3.2.0.min.js
 %%DATADIR%%/web/lib/jquery.sparkline-2.1.2.min.js
 %%DATADIR%%/web/lib/lz-string-1.4.4.min.js
-%%DATADIR%%/web/lib/morris-0.5.1.min.js
 %%DATADIR%%/web/lib/pako-1.0.6.min.js
 %%DATADIR%%/web/lib/perfect-scrollbar-0.6.15.min.js
-%%DATADIR%%/web/lib/raphael-2.2.4-min.js
 %%DATADIR%%/web/lib/tableExport-1.6.0.min.js
+%%DATADIR%%/web/main.css
+%%DATADIR%%/web/main.js
 %%DATADIR%%/web/netdata-swagger.json
 %%DATADIR%%/web/netdata-swagger.yaml
 %%DATADIR%%/web/refresh-badges.js
-%%DATADIR%%/web/registry.html
 %%DATADIR%%/web/robots.txt
 %%DATADIR%%/web/sitemap.xml
 %%DATADIR%%/web/tv.html

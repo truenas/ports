@@ -1,4 +1,3 @@
---- sql-common/client_authentication.cc.orig
 sql-common/client_authentication.cc:86:56: error: comparison between pointer and integer ('char *' and 'int')
       mysql->options.extension->server_public_key_path != '\0')
       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^  ~~~~

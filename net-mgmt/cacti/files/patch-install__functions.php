@@ -1,11 +1,11 @@
---- install/functions.php.orig	2017-08-13 04:06:37 UTC
+--- install/functions.php.orig	2019-03-30 23:40:23 UTC
 +++ install/functions.php
-@@ -432,7 +432,7 @@ function install_file_paths () {
- 	if (config_value_exists('path_cactilog')) {
- 		$input['path_cactilog']['default'] = read_config_option('path_cactilog');
+@@ -533,7 +533,7 @@ function install_file_paths() {
+ 	if (!config_value_exists('path_cactilog')) {
+ 		$input['path_cactilog'] = $settings['path']['path_cactilog'];
+ 		if (empty($input['path_cactilog']['default'])) {
+-			$input['path_cactilog']['default'] = $config['base_path'] . '/log/cacti.log';
++			$input['path_cactilog']['default'] = '/var/log/cacti/log';
+ 		}
  	} else {
--		$input['path_cactilog']['default'] = $config['base_path'] . '/log/cacti.log';
-+		$input['path_cactilog']['default'] = '/var/log/cacti/log';
- 	}
- 
- 	/* Theme */
+ 		$input['path_cactilog'] = $settings['path']['path_cactilog'];

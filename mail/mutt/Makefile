@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	mutt
-DISTVERSION=	1.11.1
+DISTVERSION=	1.11.4
+#PORTREVISION=	0
 CATEGORIES+=	mail ipv6
 MASTER_SITES=	ftp://ftp.mutt.org/pub/mutt/ \
 		ftp://ftp.fu-berlin.de/pub/unix/mail/mutt/ \
@@ -29,10 +30,6 @@ USES=		cpe shebangfix ssl
 
 CONFLICTS=	ja-mutt-[0-9]* ja-mutt-devel-[0-9]* mutt-1.4* mutt-devel-lite-[0-9]* mutt-lite-[0-9]* zh-mutt-devel-[0-9]*
 
-DOCSDIR?=	${PREFIX}/share/doc/mutt
-EXAMPLESDIR?=	${PREFIX}/share/examples/mutt
-DATADIR?=	${PREFIX}/share/mutt
-CONFIGURE_ENV=	CC="${CC} -I${LOCALBASE}/include"
 CONFIGURE_ARGS=	--disable-fcntl --with-ssl=${OPENSSLBASE} \
 		--with-docdir=${DOCSDIR} --sysconfdir=${PREFIX}/etc \
 		--enable-external-dotlock --enable-pop --enable-imap \
@@ -104,7 +101,7 @@ URLVIEW_RUN_DEPENDS=	urlview:textproc/urlview
 
 .ifmake makesum # for optional distfiles patchfiles
 PORT_DBDIR=		/dev/null
-OPTIONS_DEFAULT=	${OPTIONS_DEFINE}
+OPTIONS_DEFAULT+=	${OPTIONS_DEFINE}
 .endif
 
 DEBUG_CONFIGURE_ON=	--enable-debug
@@ -132,20 +129,19 @@ GSSAPI_NONE_CONFIGURE_ON=	--without-gss
 HCACHE_NONE_CONFIGURE_ON=	--disable-hcache
 HCACHE_NONE_CONFIGURE_OFF=	--enable-hcache --without-qdbm --without-gdbm
 
-HCACHE_BDB_CONFIGURE_WITH=	bdb
+HCACHE_BDB_CONFIGURE_WITH=	bdb=${LOCALBASE}
 HCACHE_BDB_USES=	bdb:42+
 
-HCACHE_TOKYOCABINET_CONFIGURE_WITH=	tokyocabinet
+HCACHE_TOKYOCABINET_CONFIGURE_WITH=	tokyocabinet=${LOCALBASE}
 HCACHE_TOKYOCABINET_LIB_DEPENDS=	libtokyocabinet.so:databases/tokyocabinet
 
-HCACHE_KYOTOCABINET_CONFIGURE_WITH=	kyotocabinet
+HCACHE_KYOTOCABINET_CONFIGURE_WITH=	kyotocabinet=${LOCALBASE}
 HCACHE_KYOTOCABINET_LIB_DEPENDS=	libkyotocabinet.so:databases/kyotocabinet
 
 ICONV_USES=	iconv:translit
 ICONV_CONFIGURE_ON=	${ICONV_CONFIGURE_ARG}
 ICONV_CONFIGURE_OFF=	--disable-iconv
 
-ASPELL_EXTRA_PATCHES=	${PATCHDIR}/extra-patch-aspell
 REVERSE_REPLY_PATCH_EXTRA_PATCHES=	${PATCHDIR}/extra-patch-reverse_reply
 
 SASL_LIB_DEPENDS=	libsasl2.so:security/cyrus-sasl2
@@ -160,7 +156,7 @@ LOCALES_FIX_CONFIGURE_ON=	--enable-locales-fix
 
 IDN_LIB_DEPENDS=	libidn2.so:dns/libidn2 \
 			libunistring.so:devel/libunistring
-IDN_CONFIGURE_WITH=	idn2
+IDN_CONFIGURE_WITH=	idn2=${LOCALBASE}
 IDN_IMPLIES=	ICONV
 
 IFDEF_PATCH_EXTRA_PATCHES=	${PATCHDIR}/extra-patch-ifdef
@@ -174,11 +170,11 @@ SMTP_CONFIGURE_ENABLE=	smtp
 
 GREETING_PATCH_PATCHFILES=	mutt-${GREETING_PATCH_VERSION}.vc.greeting:vc
 
-QUOTE_PATCH_PATCHFILES=	patch-${VVV_PATCH_VERSION}.vvv.initials.gz:vvv \
-			patch-${VVV_PATCH_VERSION}.vvv.quote.gz:vvv
+QUOTE_PATCH_PATCHFILES=	patch-${VVV_PATCH_VERSION}.vvv.initials.xz:vvv \
+			patch-${VVV_PATCH_VERSION}.vvv.quote.xz:vvv
 
-NNTP_BROKEN=	NNTP 1.10.0 broken with mutt ${DISTVERSION}
-NNTP_PATCHFILES=	patch-${VVV_PATCH_VERSION}.vvv.nntp.gz:-p1:vvv
+NNTP_PATCHFILES=	patch-${VVV_PATCH_VERSION}.vvv.nntp.xz:-p1:vvv
+NNTP_EXTRA_PATCHES=	${PATCHDIR}/extra-nntp-depfiles
 NNTP_CONFIGURE_ON=	--enable-nntp
 NNTP_VARS=	XML_NEEDED=yes
 NNTP_CATEGORIES=	news
@@ -189,8 +185,8 @@ DOCS_EXTRA_PATCHES=	${PATCHDIR}/extra-patch-doc-ref
 .include <bsd.port.options.mk>
 
 # un/comment as each VERSION is created for PORTVERSION
-VVV_PATCH_VERSION=	1.10.0
-#GREETING_PATCH_VERSION=	1.11.1
+VVV_PATCH_VERSION=	1.11.1
+GREETING_PATCH_VERSION=	1.11.4
 
 .if !defined(VVV_PATCH_VERSION)
 VVV_PATCH_VERSION=	${PORTVERSION}
@@ -198,8 +194,6 @@ VVV_PATCH_VERSION=	${PORTVERSION}
 .if !defined(GREETING_PATCH_VERSION)
 GREETING_PATCH_VERSION=	${PORTVERSION}
 .endif
-
-LDFLAGS+=		-L${LOCALBASE}/lib -Wl,-rpath=${LOCALBASE}/lib:/usr/lib -ltinfow
 
 post-patch-NNTP-on:
 # Restore timestamps for autotools sources
@@ -231,8 +225,6 @@ WRKSRC=		${WRKDIR}/${DISTNAME:S/i$//}
 pre-configure::
 	@${REINPLACE_CMD} -e 's,?eimdal\*),?eimdal*|\"FreeBSD heimdal\"*),' \
 		${CONFIGURE_WRKSRC}/${CONFIGURE_SCRIPT}
-	@${REINPLACE_CMD} -e 's,/usr/bin/gpg,${LOCALBASE}/bin/gpg,g' \
-		${WRKSRC}/contrib/gpg.rc
 	@${REINPLACE_CMD} -e 's,pgp6,pgp,g' \
 		${WRKSRC}/contrib/pgp6.rc
 	@${REINPLACE_CMD} -E -e 's#(/samples|samples/)#share/examples/mutt#g' \
@@ -244,6 +236,11 @@ pre-configure::
 		${WRKSRC}/init.h
 	@${REINPLACE_CMD} -e 's#$$(docdir)/samples#${EXAMPLESDIR}#g' \
 		${WRKSRC}/contrib/Makefile.in
+
+pre-configure-ASPELL-on:
+	@${REINPLACE_CMD} -e '/^# append-hook/p' \
+		-e 's/^# append-hook.*$$/set ispell="aspell --mode=email check"/' \
+	${WRKSRC}/doc/Muttrc.head
 
 pre-configure-HCACHE_BDB-on:
 	@${REINPLACE_CMD} -E -e 's/BDB_VERSIONS="/&${BDB_LIB_NAME} db${BDB_VER} /' \

@@ -3,7 +3,7 @@
 
 PORTNAME=	fracplanet
 PORTVERSION=	0.5.1
-PORTREVISION=	3
+PORTREVISION=	8
 CATEGORIES=	graphics
 MASTER_SITES=	SF \
 		SF/nemysisfreebsdp/:icons
@@ -18,24 +18,10 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 
 LIB_DEPENDS=	libboost_program_options.so:devel/boost-libs
 
-FLAVORS=	qt5 qt4
-FLAVOR?=	${FLAVORS:[1]}
-qt5_PKGNAMESUFFIX=	-${FLAVOR}
-
-qt4_DEPRECATED=		Qt4 has been EOL since december 2015
-qt4_EXPIRATION_DATE=	2019-03-15
-
-USES=		compiler:c++11-lang gl qmake:outsource
+USES=		compiler:c++11-lang gl qmake:outsource qt:5
 USE_GL=		gl glu
 QMAKE_ARGS=	VERSION_NUMBER=${PORTVERSION}
-
-.if ${FLAVOR} == qt4
-USES+=	qt:4
-USE_QT=		corelib gui moc_build opengl
-.else
-USES+=	qt:5
 USE_QT=		buildtools_build core gui opengl
-.endif
 
 DESKTOP_ENTRIES=	"Fracplanet" \
 			"" \
@@ -50,6 +36,8 @@ WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}
 OPTIONS_DEFINE=		DOXYGEN DOCS
 DOXYGEN_BUILD_DEPENDS=	doxygen:devel/doxygen
 DOXYGEN_IMPLIES=	DOCS
+
+CONFLICTS_INSTALL=	fracplanet-qt5
 
 DOCFILES=	BUGS NEWS README THANKS fracplanet.css fracplanet.htm
 ICON_SIZES=	32x32 48x48 64x64 72x72 96x96

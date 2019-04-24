@@ -3,7 +3,7 @@
 
 PORTNAME=	openal
 PORTVERSION=	20060211
-PORTREVISION=	15
+PORTREVISION=	16
 CATEGORIES=	audio
 MASTER_SITES=	GENTOO
 DISTNAME=	${PORTNAME}-0.0.8
@@ -13,6 +13,9 @@ COMMENT=	3D positional spatialized sound library
 
 LICENSE=	GPLv2
 
+DEPRECATED=	Abandonware. Use audio/openal-soft instead
+EXPIRATION_DATE=	2019-04-30
+
 CONFLICTS=	openal-soft-[0-9]*
 
 GNU_CONFIGURE=	yes
@@ -20,17 +23,16 @@ CPPFLAGS+=	-I${LOCALBASE}/include
 CFLAGS+=	-Wno-return-type
 LDFLAGS+=	-L${LOCALBASE}/lib
 CONFIGURE_ARGS=	--enable-capture \
-		--disable-arts
+		--disable-arts \
+		--disable-esd
 USES=		pathfix pkgconfig gmake libtool:keepla
 USE_LDCONFIG=	yes
 
-OPTIONS_DEFINE=	ESOUND SDL VORBIS SMPEG ALSA
+OPTIONS_DEFINE=	SDL VORBIS SMPEG ALSA
 OPTIONS_DEFINE_i386=	ASM
 OPTIONS_DEFAULT_i386=	ASM
 SMPEG_DESC=	smpeg support
 
-ESOUND_USE=		GNOME=esound
-ESOUND_CONFIGURE_ENABLE=esd
 SDL_USE=		SDL=sdl
 SDL_CONFIGURE_ENABLE=	sdl
 VORBIS_LIB_DEPENDS=	libvorbisfile.so:audio/libvorbis

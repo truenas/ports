@@ -3,7 +3,7 @@
 
 PORTNAME=	grub2-efi
 PORTVERSION=	2.02
-PORTREVISION=	19
+PORTREVISION=	20
 CATEGORIES=	sysutils
 MASTER_SITES=	http://www.pcbsd.org/~kris/software/ \
 		ftp://ftp.pcbsd.org/pub/software/
@@ -13,6 +13,10 @@ MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Multiboot EFI boot loader
 
 LICENSE=	GPLv3
+
+BROKEN=		depends on broken grub2-pcbsd
+DEPRECATED=	Broken for more than 6 months
+EXPIRATION_DATE=	2019-05-08
 
 RUN_DEPENDS=	${LOCALBASE}/bin/mformat:emulators/mtools \
 		${LOCALBASE}/bin/grub-mkrescue:sysutils/grub2-pcbsd

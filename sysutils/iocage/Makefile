@@ -2,10 +2,11 @@
 # $FreeBSD$
 
 PORTNAME=	iocage
-PORTVERSION=	20190422173739
-PORTREVISION=	1
+PORTVERSION=	${PRODUCT_VERSION:C/\-.*//:C/\_.*//}
+PORTREVISION=	${REVISION}
 CATEGORIES=	sysutils python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
+EXTRACT_ONLY=
 
 MAINTAINER=	brandon@ixsystems.com
 COMMENT=	FreeBSD jail manager written in Python
@@ -27,24 +28,14 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}click>=6.7:devel/py-click@${PY_FLAVOR} \
 
 CONFLICTS=  py-iocage-[0-9]* iocage-[0-9]* iocage-devel-[0-9]*
 
-.if exists(/usr/local_source/${PORTNAME})
-PORTVERSION!=	git -C /usr/local_source/${PORTNAME} log -1 --pretty=format:%ct
-EXTRACT_ONLY=
-WRKSRC=		/usr/local_source/${PORTNAME}
-.else
-USE_GITHUB=	yes
-GH_ACCOUNT=	freenas
-GH_PROJECT=	iocage
-GH_TAGNAME=	2ca31cb8a3990eab65627563368161489afba225
-.endif
+NO_CHECKSUM=yes
+WRKSRC=/usr/iocage_src
 
 NO_ARCH=	yes
 USES=		python:3.6+
 USE_PYTHON=	autoplist distutils
 
-.if exists(/usr/local_source/${PORTNAME})
 checksum fetch:
 	${ECHO_CMD} ${.TARGET} not needed because building direct
-.endif
 
 .include <bsd.port.mk>

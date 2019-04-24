@@ -3,7 +3,7 @@
 
 PORTNAME=	dunelegacy
 PORTVERSION=	0.96.4
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	games
 MASTER_SITES=	SF
 DISTNAME=	${PORTNAME}-${PORTVERSION}-src
@@ -18,5 +18,9 @@ USES=		autoreconf compiler:c++11-lib tar:bzip2 pkgconfig
 GNU_CONFIGURE=	yes
 USE_SDL=	sdl2 mixer2
 WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}
+
+post-patch:
+	@${REINPLACE_CMD} -e 's|MIX_INIT_FLUIDSYNTH|MIX_INIT_MID|g' \
+		${WRKSRC}/src/FileClasses/music/*.cpp
 
 .include <bsd.port.mk>

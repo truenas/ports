@@ -29,7 +29,7 @@ OPTIONS_DEFAULT=	SSL SASL
 SASL_USE=	my_tags=sasl
 SASL_LIB_DEPENDS=	libsasl2.so:security/cyrus-sasl2
 
-SSL_USES=	portssl
+SSL_USES=	ssl
 SSL_USE=	my_tags=ssl
 
 ONLY_FOR_ARCHS=	amd64 i386
@@ -42,6 +42,13 @@ MAKE_ENV=	GOPATH="${WRKSRC}/.gopath:${WRKSRC}/vendor" \
 		CGO_CXXFLAGS="${CXXFLAGS}" CGO_LDFLAGS="-L${LOCALBASE}/lib ${LDFLAGS}"
 
 MY_TAGS=	-tags "${USE_MY_TAGS}"
+
+.include <bsd.port.pre.mk>
+
+.if ${SSL_DEFAULT} == base
+BROKEN_FreeBSD_12=	variable has incomplete type 'BIO_METHOD' (aka 'struct bio_method_st')
+BROKEN_FreeBSD_13=	variable has incomplete type 'BIO_METHOD' (aka 'struct bio_method_st')
+.endif
 
 post-patch:
 	@cd ${WRKSRC} ; ${MKDIR} ${WRKSRC}/.gopath/src/github.com/${GH_ACCOUNT} ; \
@@ -65,4 +72,4 @@ do-install:
 	${INSTALL_MAN} ${WRKSRC}/${x} ${STAGEDIR}${DOCSDIR}
 .endfor
 
-.include <bsd.port.mk>
+.include <bsd.port.post.mk>

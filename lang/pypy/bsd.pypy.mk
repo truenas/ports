@@ -5,7 +5,7 @@ LICENSE=	MIT PSFL
 LICENSE_COMB=	multi
 .endif
 
-USES+=		compiler:c11 portssl
+USES+=		compiler:c11
 
 PYTHON_IMPL?=	${PORTNAME}
 PYPY_DIR=	${PYTHON_IMPL}-${DISTVERSION:C|([0-9])\.([0-9]+).*|\1.\2|}

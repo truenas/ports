@@ -2,7 +2,6 @@
 
 PORTNAME=	grantlee-editor
 DISTVERSION=	${KDE_APPLICATIONS_VERSION}
-PORTREVISION=	1
 CATEGORIES=	deskutils kde kde-applications
 
 MAINTAINER=	kde@FreeBSD.org
@@ -16,7 +15,7 @@ LIB_DEPENDS=	libassuan.so:security/libassuan \
 		libgpgmepp.so:security/gpgme-cpp \
 		libqgpgme.so:security/gpgme-qt5
 
-USES=		cmake:outsource compiler:c++11-lib gettext grantlee:5 \
+USES=		cmake compiler:c++11-lib gettext grantlee:5 \
 		kde:5 qt:5 tar:xz
 USE_KDE=	archive attica auth codecs completion config configwidgets \
 		coreaddons crash dbusaddons  ecm i18n itemmodels jobwidgets \

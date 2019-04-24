@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	tclreadline
-PORTVERSION=	2.3.1
+PORTVERSION=	2.3.5
+PORTREVISION=	1
 DISTVERSIONPREFIX=	v
 CATEGORIES=	devel tcl
 
@@ -16,7 +17,8 @@ GNU_CONFIGURE=	yes
 CONFIGURE_ARGS+=--with-tcl=${TCL_LIBDIR} \
 		--with-tcl-includes=${TCL_INCLUDEDIR} \
 		--with-readline-includes=${LOCALBASE}/include \
-		--with-readline-library="-L${LOCALBASE}/lib -lreadline"
+		--with-readline-library="-L${LOCALBASE}/lib -lreadline" \
+		--with-tk=no
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	flightaware

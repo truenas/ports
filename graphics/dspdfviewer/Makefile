@@ -3,7 +3,7 @@
 PORTNAME=	dspdfviewer
 PORTVERSION=	1.15.1
 DISTVERSIONPREFIX=v
-PORTREVISION=	9
+PORTREVISION=	13
 CATEGORIES=	graphics
 
 MAINTAINER=	santhosh.raju@gmail.com
@@ -19,7 +19,7 @@ BUILD_WRKSRC=		${WRKSRC}/build
 CONFIGURE_WRKSRC=	${WRKSRC}/build
 INSTALL_WRKSRC=		${WRKSRC}/build
 
-USES=		cmake pkgconfig qt:5
+USES=		cmake:insource pkgconfig qt:5
 USE_QT=		buildtools_build core gui qmake_build linguisttools widgets xml
 CMAKE_ARGS=	-DPOPPLER_LIBRARIES=${LOCALBASE}/lib/libpoppler-qt5.so -DBuildTests=OFF
 USE_LDCONFIG=	yes
@@ -39,6 +39,11 @@ CFLAGS+=	-Wno-error=undefined-func-template
 
 .if ${OPSYS} == FreeBSD && ${OSVERSION} >= 1200039
 CFLAGS+=	-Wno-error=zero-as-null-pointer-constant
+.endif
+
+# Fixes build failure for Clang 8.0.0
+.if ${OPSYS} == FreeBSD && ${OSVERSION} >= 1300014
+CFLAGS+=       -Wno-error=extra-semi-stmt
 .endif
 
 CFLAGS+=	-Wno-error=redundant-parens

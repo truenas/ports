@@ -40,13 +40,10 @@
 # dependency.
 # env or PYTHON_NO_DEPENDS can be set to not add any dependencies.
 #
-# Variables, which can be set by a user:
+# Exported variables:
 #
 # PYTHON_VERSION	- The chosen Python interpreter including the version,
-#			  e.g. python2.7, python3.3, etc. This allows the user
-#			  to override the currently chosen default version and
-#			  to install the port for a specific Python version.
-#			  It must not be set by a port.
+#			  e.g. python2.7, python3.3, etc.
 #
 # Variables, which can be set by the port:
 #
@@ -244,10 +241,24 @@ _INCLUDE_USES_PYTHON_MK=	yes
 # What Python version and what Python interpreters are currently supported?
 # When adding a version, please keep the comment in
 # Mk/bsd.default-versions.mk in sync.
-_PYTHON_VERSIONS=		2.7 3.6 3.7 3.5 3.4	# preferred first
+_PYTHON_VERSIONS=		2.7 3.6 3.7 3.5 # preferred first
 _PYTHON_PORTBRANCH=		2.7		# ${_PYTHON_VERSIONS:[1]}
 _PYTHON_BASECMD=		${LOCALBASE}/bin/python
 _PYTHON_RELPORTDIR=		lang/python
+
+# List all valid USE_PYTHON features here
+_VALID_PYTHON_FEATURES=	allflavors autoplist concurrent cython cython_run \
+			distutils flavors noegginfo noflavors optsuffix \
+			py3kplist pythonprefix
+_INVALID_PYTHON_FEATURES=
+.for var in ${USE_PYTHON}
+.  if empty(_VALID_PYTHON_FEATURES:M${var})
+_INVALID_PYTHON_FEATURES+=	${var}
+.  endif
+.endfor
+.if !empty(_INVALID_PYTHON_FEATURES)
+IGNORE=	uses unknown USE_PYTHON features: ${_INVALID_PYTHON_FEATURES}
+.endif
 
 # Make each individual feature available as _PYTHON_FEATURE_<FEATURENAME>
 .for var in ${USE_PYTHON}
@@ -307,7 +318,7 @@ WARNING+=	"PYTHON_DEFAULT must be a version present in PYTHON2_DEFAULT or PYTHON
 .if ${_PYTHON_ARGS} == "2"
 DEV_ERROR+=		"USES=python:2 is no longer supported, use USES=python:2.7"
 .elif ${_PYTHON_ARGS} == "3"
-DEV_ERROR+=		"USES=python:3 is no longer supported, use USES=python:3.4+ or an appropriate version range"
+DEV_ERROR+=		"USES=python:3 is no longer supported, use USES=python:3.5+ or an appropriate version range"
 .endif  # ${_PYTHON_ARGS} == "2"
 
 .if defined(PYTHON_VERSION)
@@ -337,6 +348,13 @@ _PYTHON_VERSION_MINIMUM_TMP:=	${_PYTHON_VERSION_CHECK:C/([1-9]\.[0-9])[-+].*/\1/
 _PYTHON_VERSION_MINIMUM:=	${_PYTHON_VERSION_MINIMUM_TMP:M[1-9].[0-9]}
 _PYTHON_VERSION_MAXIMUM_TMP:=	${_PYTHON_VERSION_CHECK:C/.*-([1-9]\.[0-9])/\1/}
 _PYTHON_VERSION_MAXIMUM:=	${_PYTHON_VERSION_MAXIMUM_TMP:M[1-9].[0-9]}
+
+# At this point we should have no argument left in ${_PYTHON_ARGS}
+# except a version spec
+_PYTHON_ARGS:=	${_PYTHON_ARGS:N[1-9].[0-9]-[1-9].[0-9]:N[1-9].[0-9]:N[1-9].[0-9]+:N-[1-9].[0-9]}
+.if !empty(_PYTHON_ARGS)
+IGNORE=	uses unknown USES=python arguments: ${_PYTHON_ARGS}
+.endif
 
 .undef _PYTHON_VERSION_NONSUPPORTED
 .if !empty(_PYTHON_VERSION_MINIMUM) && (${_PYTHON_VERSION} < ${_PYTHON_VERSION_MINIMUM})

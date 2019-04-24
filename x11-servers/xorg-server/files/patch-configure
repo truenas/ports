@@ -1,15 +1,6 @@
 --- configure.orig	2016-07-19 17:27:31 UTC
 +++ configure
-@@ -21738,7 +21738,7 @@ if test `${RAWCPP} < conftest.$ac_ext | grep -c 'prese
- 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
- $as_echo "no" >&6; }
- else
--	if test `${RAWCPP} -traditional < conftest.$ac_ext | grep -c 'preserve   \"'` -eq 1 ; then
-+	if true; then
- 		TRADITIONALCPPFLAGS="-traditional"
- 		RAWCPPFLAGS="${RAWCPPFLAGS} -traditional"
- 		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-@@ -23168,9 +23168,14 @@ $as_echo "#define USE_ALPHA_PIO 1" >>confdefs.h
+@@ -23168,9 +23168,14 @@ $as_echo "#define USE_ALPHA_PIO 1" >>con
  	esac
  	GLX_ARCH_DEFINES="-D__GLX_ALIGN64 -mieee"
  	;;

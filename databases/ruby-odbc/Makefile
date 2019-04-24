@@ -14,6 +14,9 @@ MAINTAINER=	knu@FreeBSD.org
 COMMENT=	Ruby extension library to use ODBC data sources
 
 BROKEN_RUBY24=	yes
+BROKEN_RUBY25=	yes
+DEPRECATED=	Broken for more than 6 months
+EXPIRATION_DATE=	2019-05-08
 
 OPTIONS_DEFINE=	DOCS EXAMPLES
 

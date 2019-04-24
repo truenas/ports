@@ -1,9 +1,9 @@
-Boilerplate for SSL_CTX_set1_groups() used in qsslcontext_openssl.cpp.
-*
-* Fix for libressl atter openssl111 API change
-* Definitions for TLS_VERSIONS needed for  qsslcontext_openssl11.cpp (QSslContext::initSslContext)
-*
---- src/network/ssl/qsslsocket_openssl_symbols_p.h.orig	2018-10-21 17:04:11 UTC
+Define maximum TLS version as 1.2 so as to not hit any possibly
+unsupported TLS 1.3 symbols.
+
+Also do not define SSL_CONF_CTX symbols absent from LibreSSL.
+
+--- src/network/ssl/qsslsocket_openssl_symbols_p.h.orig	2018-12-03 11:15:26 UTC
 +++ src/network/ssl/qsslsocket_openssl_symbols_p.h
 @@ -74,6 +74,13 @@
  
@@ -19,7 +19,7 @@ Boilerplate for SSL_CTX_set1_groups() used in qsslcontext_openssl.cpp.
  #define DUMMYARG
  
  #if !defined QT_LINKED_OPENSSL
-@@ -356,7 +363,7 @@ int q_SSL_CTX_use_PrivateKey(SSL_CTX *a,
+@@ -359,7 +366,7 @@ int q_SSL_CTX_use_PrivateKey(SSL_CTX *a, EVP_PKEY *b);
  int q_SSL_CTX_use_RSAPrivateKey(SSL_CTX *a, RSA *b);
  int q_SSL_CTX_use_PrivateKey_file(SSL_CTX *a, const char *b, int c);
  X509_STORE *q_SSL_CTX_get_cert_store(const SSL_CTX *a);
@@ -28,13 +28,3 @@ Boilerplate for SSL_CTX_set1_groups() used in qsslcontext_openssl.cpp.
  SSL_CONF_CTX *q_SSL_CONF_CTX_new();
  void q_SSL_CONF_CTX_free(SSL_CONF_CTX *a);
  void q_SSL_CONF_CTX_set_ssl_ctx(SSL_CONF_CTX *a, SSL_CTX *b);
-@@ -468,6 +475,9 @@ void q_EC_KEY_free(EC_KEY *ecdh);
- size_t q_EC_get_builtin_curves(EC_builtin_curve *r, size_t nitems);
- #if OPENSSL_VERSION_NUMBER >= 0x10002000L
- int q_EC_curve_nist2nid(const char *name);
-+#if defined(LIBRESSL_VERSION_NUMBER)
-+int q_SSL_CTX_set1_groups(SSL_CTX *a, int *b, int c);
-+#endif // defined(LIBRESSL_VERSION_NUMBER)
- #endif // OPENSSL_VERSION_NUMBER >= 0x10002000L
- #endif // OPENSSL_NO_EC
- #if OPENSSL_VERSION_NUMBER >= 0x10002000L

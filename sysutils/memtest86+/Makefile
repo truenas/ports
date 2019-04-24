@@ -3,12 +3,15 @@
 
 PORTNAME=	memtest86+
 PORTVERSION=	5.01
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	sysutils
 MASTER_SITES=	http://www.memtest.org/download/${PORTVERSION}/
 
 MAINTAINER=	avg@icyb.net.ua
 COMMENT=	Stand-alone memory test for x86 architecture computers
+
+BUILD_DEPENDS=	gcc48:lang/gcc48
+CC=		gcc48
 
 LICENSE=	GPLv2
 
@@ -17,8 +20,6 @@ ONLY_FOR_ARCHS=	i386 amd64
 USES=	gmake
 ALL_TARGET=	all
 PORTDOCS=	*
-
-USE_GCC=	4.8
 
 # Please provide absolute path below (cannot be root)
 BOOT_DIR?=	/boot/opt
@@ -76,3 +77,4 @@ do-install:
 .endif
 
 .include <bsd.port.mk>
+RUN_DEPENDS:=	${RUN_DEPENDS:Ngcc*}

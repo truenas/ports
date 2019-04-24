@@ -1,22 +1,23 @@
 # $FreeBSD$
 
 PORTNAME=	sysadm
-PORTVERSION=	201806120928
+PORTVERSION=	1.1
+DISTVERSIONPREFIX=	v
+PORTREVISION=	1
 CATEGORIES=	sysutils
 
-MAINTAINER=	jt@ixsystems.com
+MAINTAINER=	kmoore@FreeBSD.org
 COMMENT=	SysAdm API server
 
-LICENSE=	BSD3CLAUSE
+LICENSE=	BSD2CLAUSE
+LICENSE_FILE=	${WRKSRC}/../LICENSE
 
 WRKSRC_SUBDIR=	src
+USES=		compiler:c++11-lang pkgconfig qmake qt:5 ssl tar:xz
 USE_QT=		concurrent core network buildtools qmake gui websockets sql
-USES=		pkgconfig qt:5 tar:xz qmake ssl
 MAKE_ARGS=	PREFIX=${STAGEDIR}${PREFIX}
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	trueos
-GH_PROJECT=	sysadm
-GH_TAGNAME=	aab6f484ef01c893ae1701f64732254855eb3cdd
 
 .include <bsd.port.mk>

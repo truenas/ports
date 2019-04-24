@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	publicsuffixlist
-PORTVERSION=	0.6.2
+PORTVERSION=	0.6.6
 PORTREVISION=	2
 CATEGORIES=	dns python
 MASTER_SITES=	CHEESESHOP
@@ -16,8 +16,8 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 
 PATCH_DEPENDS=	public_suffix_list>=0:dns/public_suffix_list
 
-USE_PYTHON=	autoplist concurrent distutils
 USES=		python
+USE_PYTHON=	autoplist concurrent distutils
 
 NO_ARCH=	yes
 

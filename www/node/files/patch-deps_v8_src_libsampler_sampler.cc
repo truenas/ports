@@ -1,6 +1,6 @@
---- deps/v8/src/libsampler/sampler.cc.orig	2018-08-15 13:53:25 UTC
+--- deps/v8/src/libsampler/sampler.cc.orig	2019-04-23 12:30:43 UTC
 +++ deps/v8/src/libsampler/sampler.cc
-@@ -550,9 +550,9 @@ void SignalHandler::FillRegisterState(vo
+@@ -466,9 +466,9 @@ void SignalHandler::FillRegisterState(void* context, R
    state->sp = reinterpret_cast<void*>(mcontext.mc_rsp);
    state->fp = reinterpret_cast<void*>(mcontext.mc_rbp);
  #elif V8_HOST_ARCH_ARM

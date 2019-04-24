@@ -2,6 +2,7 @@
 
 PORTNAME=	ignition-fuel-tools
 DISTVERSION=	1.2.0
+PORTREVISION=	1
 CATEGORIES=	misc
 MASTER_SITES=	https://bitbucket.org/${BB_ACCOUNT}/${BB_PROJECT}/get/${BB_COMMIT}.tar.gz?dummy=/
 
@@ -19,7 +20,7 @@ LIB_DEPENDS=	libcurl.so:ftp/curl \
 		libyaml.so:textproc/libyaml \
 		libzip.so:archivers/libzip
 
-USES=		cmake:outsource compiler:c++17-lang pkgconfig
+USES=		cmake compiler:c++17-lang pkgconfig
 USE_LDCONFIG=	yes
 
 CMAKE_OFF=	BUILD_TESTING

@@ -2,6 +2,7 @@
 
 PORTNAME=	libxsmm
 DISTVERSION=	1.10
+PORTREVISION=	2
 CATEGORIES=	math science
 
 MAINTAINER=	yuri@FreeBSD.org

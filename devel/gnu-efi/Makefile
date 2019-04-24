@@ -3,7 +3,7 @@
 
 PORTNAME=	gnu-efi
 PORTVERSION=	3.0.9
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	devel
 MASTER_SITES=	SF/gnu-efi
 
@@ -25,9 +25,9 @@ MAKE_ARGS+=	CC=${CC} HOSTCC=${CC} AR=${AR}
 .include <bsd.port.pre.mk>
 
 .if ${ARCH} == amd64
-PLIST_SUB=	ARCH_amd64="" ARCH_i386="@comment "
+PLIST_SUB+=	ARCH_amd64="" ARCH_i386="@comment "
 .elif ${ARCH} == i386
-PLIST_SUB=	ARCH_i386="" ARCH_amd64="@comment "
+PLIST_SUB+=	ARCH_i386="" ARCH_amd64="@comment "
 .endif
 
 post-install:

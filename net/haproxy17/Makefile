@@ -16,7 +16,7 @@ LICENSE_COMB=	multi
 BROKEN_mips=		fails to build: undefined reference to '__sync_sub_and_fetch_4'
 BROKEN_mips64=		fails to build: undefined reference to '__sync_sub_and_fetch_4'
 
-CONFLICTS_INSTALL=	haproxy-[0-9]* haproxy-devel-[0-9]*
+CONFLICTS_INSTALL=	haproxy-[0-9]* haproxy-devel-[0-9]* haproxy18-[0-9]*
 
 USES=		cpe gmake
 USE_RC_SUBR=	haproxy
@@ -48,10 +48,6 @@ LUA_MAKE_ARGS=		USE_LUA=1 LUA_INC=${LUA_INCDIR} LUA_LIB=${LUA_LIBDIR} LUA_LIB_NA
 
 .if ${ARCH} == "amd64" || ${ARCH} == "i386"
 MAKE_ARGS+=	USE_REGPARM=1
-.endif
-
-.if ${PORT_OPTIONS:MOPENSSL} && ${SSL_DEFAULT:Mopenssl111}
-BROKEN=		Does not build with openssl111
 .endif
 
 post-build:

@@ -1,7 +1,8 @@
 # $FreeBSD$
 
 PORTNAME=	trueos-libqt5
-PORTVERSION=	20180529
+PORTVERSION=	20171003
+PORTREVISION=	2
 CATEGORIES=	sysutils
 
 MAINTAINER=	jt@ixsystems.com
@@ -9,26 +10,26 @@ COMMENT=	TrueOS QT5 Library
 
 LICENSE=	BSD2CLAUSE
 
-ONLY_FOR_ARCHS= amd64
+ONLY_FOR_ARCHS=	amd64
 
-MAKE_JOBS_UNSAFE=yes
-MAKE_ARGS=      PREFIX=${STAGEDIR}${PREFIX}
+USES=		gl qmake qt:5 shebangfix tar:xz
+
+MAKE_ARGS=	PREFIX=${STAGEDIR}${PREFIX}
 
 MAKE_JOBS_UNSAFE=	yes
 
-USES=		qmake qt:5 shebangfix tar:xz
 USE_LDCONFIG=	yes
-USE_GL+=	gl
-USE_QT=        core gui network svg linguist \
+USE_QT=		core gui network svg linguist \
 		buildtools x11extras widgets
-USE_LDCONFIG=   yes
+USE_GL+=	gl
 
-QMAKE_ARGS=     CONFIG+="configure"
+WRKSRC_SUBDIR=	src-qt5
+
+QMAKE_ARGS=	CONFIG+="configure"
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	trueos
 GH_PROJECT=	trueos-libqt5
-GH_TAGNAME=	5b180825d66b072f6bf74053996145fba8eea31f
-WRKSRC_SUBDIR=  src-qt5
+GH_TAGNAME=	9e92b465d823185c9b96f2017e06f2a06b6143fa
 
 .include <bsd.port.mk>

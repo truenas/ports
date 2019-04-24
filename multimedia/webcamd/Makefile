@@ -2,11 +2,11 @@
 # $FreeBSD$
 
 PORTNAME=	webcamd
-PORTVERSION=	4.17.0.3
+PORTVERSION=	4.20.0.1
 PORTREVISION=	2
 CATEGORIES=	multimedia
 MASTER_SITES=	http://www.selasky.org/hans_petter/distfiles/ \
-		http://home.selasky.org:8192/distfiles/
+		http://home.selasky.org/distfiles/
 
 MAINTAINER=	hselasky@FreeBSD.org
 COMMENT=	Port of Linux USB webcam and DVB drivers into userspace
@@ -23,7 +23,7 @@ SUB_FILES=	webcamd.conf
 USE_LDCONFIG=	yes
 
 OPTIONS_DEFINE=	CUSE DEBUG HAL VT_CLIENT VT_SERVER DVB INPUT KEYBOARD MOUSE RADIO WEBCAM
-OPTIONS_DEFAULT=DVB INPUT RADIO WEBCAM
+OPTIONS_DEFAULT=DVB HAL INPUT RADIO WEBCAM
 
 .if exists(/usr/lib/libcuse.so)
 OPTIONS_DEFAULT+=	CUSE
@@ -85,7 +85,7 @@ post-patch:
 	@(cd ${WRKSRC}/patches && ${SH} ./do_patch.sh)
 
 post-install:
-	@${MKDIR} ${STAGEDIR}${PREFIX}/etc/devd-openrc
-	${INSTALL_DATA} "${WRKDIR}/webcamd.conf" ${STAGEDIR}${PREFIX}/etc/devd-openrc
+	@${MKDIR} ${STAGEDIR}${PREFIX}/etc/devd
+	${INSTALL_DATA} "${WRKDIR}/webcamd.conf" ${STAGEDIR}${PREFIX}/etc/devd
 
 .include <bsd.port.mk>

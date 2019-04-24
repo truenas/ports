@@ -22,6 +22,7 @@ USES=		tar:bzip2 gmake
 USE_SDL=	sdl net mixer ttf image
 
 MAKE_JOBS_UNSAFE=	yes
+
 CXXFLAGS+=	-Wno-c++11-narrowing -Wno-reserved-user-defined-literal
 
 DATAVERSION=	2005-12-21

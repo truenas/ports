@@ -2,7 +2,6 @@
 
 PORTNAME=	kio-extras
 DISTVERSION=	${KDE_APPLICATIONS_VERSION}
-PORTREVISION=	2
 CATEGORIES=	devel kde kde-applications # kde kde-applications-plasma
 
 MAINTAINER=	kde@FreeBSD.org
@@ -11,13 +10,13 @@ COMMENT=	Plasma5 library to increase the functionality of KIO
 LIB_DEPENDS=	libtag.so:audio/taglib \
 		libHalf.so:graphics/ilmbase
 
-USES=		cmake:outsource compiler:c++11-lib gettext gperf kde:5 \
+USES=		cmake compiler:c++11-lib gettext gperf kde:5 \
 		pkgconfig qt:5 shared-mime-info shebangfix tar:xz
 USE_KDE=	activities archive auth bookmarks codecs completion config \
 		configwidgets coreaddons crash dbusaddons dnssd doctools ecm \
 		emoticons guiaddons i18n iconthemes init itemmodels itemviews \
 		jobwidgets js kdelibs4support khtml kio notifications parts \
-		pty service solid sonnet textwidgets unitconversion \
+		pty service solid sonnet syntaxhighlighting textwidgets unitconversion \
 		widgetsaddons windowsystem xmlgui
 USE_QT=		core dbus declarative gui location network phonon4 printsupport \
 		sql svg testlib webchannel widgets xml \

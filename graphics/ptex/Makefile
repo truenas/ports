@@ -3,6 +3,7 @@
 PORTNAME=	ptex
 PORTVERSION=	2.3.0
 DISTVERSIONPREFIX=	v
+PORTREVISION=	1
 CATEGORIES?=	graphics
 
 MAINTAINER=	FreeBSD@Shaneware.biz
@@ -10,7 +11,7 @@ COMMENT=	Per face texture library
 
 LICENSE=	BSD3CLAUSE
 
-USES=		cmake
+USES=		cmake:insource
 USE_LDCONFIG=	yes
 
 USE_GITHUB=	yes

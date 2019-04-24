@@ -3,7 +3,7 @@
 PORTNAME=	triceratops
 DISTVERSIONPREFIX=	lv2-v
 DISTVERSION=	0.3.1
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	audio
 MASTER_SITES=	SF/triceratops
 PKGNAMESUFFIX=	-lv2
@@ -18,7 +18,7 @@ BUILD_DEPENDS=	lv2>0:audio/lv2
 LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig \
 		libfreetype.so:print/freetype2
 
-USES=		compiler:c++11-lang pkgconfig waf
+USES=		compiler:c++11-lang gnome pkgconfig waf
 USE_GNOME=	cairo cairomm gdkpixbuf2 gtk20 gtkmm24
 NO_WRKSUBDIR=	yes
 LDFLAGS_i386=	-Wl,-znotext

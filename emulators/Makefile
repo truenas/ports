@@ -23,7 +23,6 @@
     SUBDIR += cpmtools
     SUBDIR += cpmtools2
     SUBDIR += darcnes
-    SUBDIR += dboxfe
     SUBDIR += desmume
     SUBDIR += dgen-sdl
     SUBDIR += dolphin-emu
@@ -33,6 +32,7 @@
     SUBDIR += dynagui
     SUBDIR += dynamips-community
     SUBDIR += e-uae
+    SUBDIR += emulationstation
     SUBDIR += fceux
     SUBDIR += fmsx
     SUBDIR += frodo
@@ -43,12 +43,9 @@
     SUBDIR += fuse-utils
     SUBDIR += gbe
     SUBDIR += gem5
-    SUBDIR += generator
-    SUBDIR += generator-cbiere
     SUBDIR += gens
     SUBDIR += gngb
     SUBDIR += gngeo
-    SUBDIR += gns3
     SUBDIR += gxemul
     SUBDIR += hatari
     SUBDIR += hercules
@@ -111,10 +108,9 @@
     SUBDIR += ppsspp
     SUBDIR += ppsspp-qt5
     SUBDIR += py-gns3-converter
-    SUBDIR += py-nova
     SUBDIR += py-unicorn
-    SUBDIR += q4wine
     SUBDIR += qemu
+    SUBDIR += qemu2
     SUBDIR += qemu-cheri
     SUBDIR += qemu-devel
     SUBDIR += qemu-powernv
@@ -123,7 +119,6 @@
     SUBDIR += qemu-user-static
     SUBDIR += qemu-utils
     SUBDIR += qmc2
-    SUBDIR += qtemu
     SUBDIR += quasi88
     SUBDIR += riscv-fesvr
     SUBDIR += riscv-isa-sim
@@ -136,7 +131,7 @@
     SUBDIR += spim
     SUBDIR += stella
     SUBDIR += stonx
-    SUBDIR += swine
+    SUBDIR += teo
     SUBDIR += tiemu3
     SUBDIR += tilem
     SUBDIR += tme
@@ -173,7 +168,7 @@
     SUBDIR += x49gp
     SUBDIR += xbraitenberg
     SUBDIR += xcpc
-    SUBDIR += xen-kernel411
+    SUBDIR += xen-kernel
     SUBDIR += xen-kernel47
     SUBDIR += xhomer
     SUBDIR += xsystem35

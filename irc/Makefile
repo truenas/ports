@@ -8,7 +8,9 @@
     SUBDIR += bip
     SUBDIR += bitchx
     SUBDIR += bitlbee
+    SUBDIR += bitlbee-discord
     SUBDIR += bitlbee-facebook
+    SUBDIR += bitlbee-mastodon
     SUBDIR += bitlbee-steam
     SUBDIR += bnc
     SUBDIR += bopm
@@ -27,7 +29,6 @@
     SUBDIR += evangeline
     SUBDIR += ezbounce
     SUBDIR += fisg
-    SUBDIR += ghostbsd-irc
     SUBDIR += gruftistats
     SUBDIR += gseen.mod
     SUBDIR += hexchat
@@ -47,7 +48,6 @@
     SUBDIR += ircd-ru
     SUBDIR += ircproxy
     SUBDIR += ircservices
-    SUBDIR += iroffer
     SUBDIR += iroffer-dinoex
     SUBDIR += iroffer-lamm
     SUBDIR += irssi
@@ -61,7 +61,6 @@
     SUBDIR += keitairc2
     SUBDIR += konversation
     SUBDIR += kvirc
-    SUBDIR += kvirc-qt4
     SUBDIR += libircclient
     SUBDIR += lostirc
     SUBDIR += miau

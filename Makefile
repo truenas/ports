@@ -19,7 +19,6 @@ SUBDIR += dns
 SUBDIR += editors
 SUBDIR += emulators
 SUBDIR += finance
-SUBDIR += freenas
 SUBDIR += french
 SUBDIR += ftp
 SUBDIR += games

@@ -4,7 +4,7 @@
 PORTNAME=	poco
 # New version 1.4.6p4 is available; please use DISTVERSION upon updating
 PORTVERSION=	1.4.3
-PORTREVISION=	5
+PORTREVISION=	6
 CATEGORIES=	devel net
 MASTER_SITES=	SF/${PORTNAME}/sources/${PORTNAME}-${PORTVERSION}
 PKGNAMESUFFIX=	-ssl
@@ -16,9 +16,9 @@ COMMENT=	C++ libraries with a network/internet focus (full version)
 LICENSE=	BSL
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-BROKEN=		doesnt build on FreeBSD 12
-BROKEN_SSL=	openssl-devel
-BROKEN_SSL_REASON_openssl-devel=	field has incomplete type 'EVP_CIPHER_CTX' (aka 'evp_cipher_ctx_st')
+DEPRECATED=	Newer version available; use devel/poco instead
+EXPIRATION_DATE=	2019-04-30
+
 BROKEN_SSL=	openssl111
 BROKEN_SSL_REASON_openssl111=	field has incomplete type 'EVP_CIPHER_CTX' (aka 'evp_cipher_ctx_st')
 
@@ -29,7 +29,6 @@ USES_powerpc=	compiler:c++11-lang
 USES_powerpcspe=	compiler:c++11-lang
 USES_powerpc64=	compiler:c++11-lang
 USES_sparc64=	compiler:c++11-lang
-
 HAS_CONFIGURE=	yes
 CONFIGURE_ARGS=	--prefix=${PREFIX} --config=FreeBSD
 USE_LDCONFIG=	yes
@@ -52,6 +51,13 @@ MYSQL_CONFIGURE_OFF=	--omit=Data/MySQL
 SQLITE_USES=		sqlite
 SQLITE_CONFIGURE_OFF=	--omit=Data/SQLite
 
+.include <bsd.port.pre.mk>
+
+.if ${SSL_DEFAULT} == base
+BROKEN_FreeBSD_12=	error: field has incomplete type 'EVP_CIPHER_CTX' (aka 'evp_cipher_ctx_st')
+BROKEN_FreeBSD_13=	error: field has incomplete type 'EVP_CIPHER_CTX' (aka 'evp_cipher_ctx_st')
+.endif
+
 post-extract:
 	@${RM} -f ${WRKSRC}/Foundation/include/Poco/._Version.h
 
@@ -65,4 +71,4 @@ post-install:
 	@${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/*d
 	@${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/*d.so.*
 
-.include <bsd.port.mk>
+.include <bsd.port.post.mk>

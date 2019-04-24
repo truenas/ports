@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	kamailio
-PORTVERSION=	5.1.6
+PORTVERSION=	5.2.0
+PORTREVISION=	1
 
 CATEGORIES=	net
 MASTER_SITES=	http://www.kamailio.org/pub/kamailio/${PORTVERSION}/src/
@@ -50,7 +51,7 @@ PGSQL_USES=	pgsql
 JITSI_RUN_DEPENDS=	jitsi:net-im/jitsi
 UNIXODBC_LIB_DEPENDS=	libodbc.so:databases/unixODBC
 RADIUS_LIB_DEPENDS=	libradiusclient-ng.so:net/radiusclient
-TLS_USES=	portssl
+TLS_USES=	ssl
 
 .include <bsd.port.options.mk>
 

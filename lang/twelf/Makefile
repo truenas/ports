@@ -3,7 +3,7 @@
 
 PORTNAME=	twelf
 PORTVERSION=	1.7.1
-PORTREVISION=	2
+PORTREVISION=	3
 DISTVERSIONPREFIX=	src-
 CATEGORIES=	lang math
 MASTER_SITES=	http://twelf.plparty.org/releases/ \
@@ -14,6 +14,9 @@ COMMENT=	Meta-logical framework for deductive systems
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
+
+BROKEN_FreeBSD_12=	invalid target: self
+BROKEN_FreeBSD_13=	invalid target: self
 
 RUN_DEPENDS=	mlton:lang/mlton
 BUILD_DEPENDS=	mlton:lang/mlton \

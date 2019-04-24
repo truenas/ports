@@ -2,10 +2,9 @@
 # $FreeBSD$
 
 PORTNAME=	tlf
-PORTVERSION=	1.3.0
+PORTVERSION=	1.3.2
+DISTVERSIONPREFIX=	${PORTNAME}-
 CATEGORIES=	comms hamradio
-MASTER_SITES=	http://www.hs-mittweida.de/tb/ \
-		LOCAL/shurd
 
 MAINTAINER=	hamradio@FreeBSD.org
 COMMENT=	Amateur Radio curses based logging program
@@ -15,7 +14,8 @@ LICENSE=	GPLv2
 RUN_DEPENDS=	rec:audio/sox \
 		wget:ftp/wget
 
-USES=		ncurses pkgconfig
+USES=		autoreconf gnome ncurses pkgconfig
+USE_GITHUB=	yes
 GNU_CONFIGURE=	yes
 CONFIGURE_ENV=	PANEL_LIB=-lpanel
 USE_GNOME=	glib20
@@ -32,7 +32,5 @@ HAMLIB_LIB_DEPENDS=	libhamlib.so:comms/hamlib
 HAMLIB_CONFIGURE_ENABLE=hamlib
 FLDIGI_LIB_DEPENDS=	libxmlrpc.so:net/xmlrpc-c
 FLDIGI_CONFIGURE_ENABLE=fldigi-xmlrpc
-
-OPTIONS_DEFINE=	DOCS
 
 .include <bsd.port.mk>

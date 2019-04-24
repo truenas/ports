@@ -5,18 +5,14 @@
 
 # List of ports to update
 # Usage: <portname>::<project>::<repo>::<defaultbranch>
-PLIST="devel/py-libzfs::freenas::py-libzfs::master"
-PLIST="${PLIST} freenas/freenas-files::freenas::freenas::freenas/12-devel"
+PLIST="freenas/freenas-files::freenas::freenas::freenas/12-devel"
 PLIST="${PLIST} freenas/freenas-installer::freenas::freenas::freenas/12-devel"
-PLIST="${PLIST} freenas/freenas-pkgtools::freenas::freenas-pkgtools::master"
 PLIST="${PLIST} freenas/freenas-ui::freenas::freenas::freenas/12-devel"
 PLIST="${PLIST} freenas/freenas-webui::freenas::webui::master"
 PLIST="${PLIST} freenas/pipewatcher::freenas::freenas::freenas/12-devel"
 PLIST="${PLIST} freenas/py-bsd::freenas::py-bsd::master"
 PLIST="${PLIST} freenas/py-licenselib::freenas::licenselib::master"
 PLIST="${PLIST} freenas/py-middlewared::freenas::freenas::freenas/12-devel"
-PLIST="${PLIST} net/py-netif::freenas::py-netif::master"
-PLIST="${PLIST} sysutils/py-zettarepl::freenas::zettarepl::master"
 PLIST="${PLIST} sysutils/iocage::freenas::iocage::master"
 PLIST="${PLIST} os::trueos::trueos::freenas/12-stable"
 

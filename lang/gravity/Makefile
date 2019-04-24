@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	gravity
-DISTVERSION=	0.5.9
+DISTVERSION=	0.6.6
 CATEGORIES=	lang
 PKGNAMESUFFIX=	-lang
 
@@ -11,15 +11,12 @@ COMMENT=	Embeddable programming language
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USES=		cmake:outsource
+USES=		cmake
 USE_GITHUB=	yes
 GH_ACCOUNT=	marcobambini
 
 LDFLAGS+=	-lm
 
 PLIST_FILES=	bin/${PORTNAME}
-
-do-install:
-	${INSTALL_PROGRAM} ${BUILD_WRKSRC}/${PORTNAME} ${STAGEDIR}${PREFIX}/bin/
 
 .include <bsd.port.mk>

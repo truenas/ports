@@ -3,6 +3,7 @@
 
 PORTNAME=	love
 PORTVERSION=	11.2
+PORTREVISION=	1
 CATEGORIES=	devel games
 MASTER_SITES=	https://bitbucket.org/rude/love/downloads/ \
 		http://mirror.amdmi3.ru/distfiles/
@@ -13,6 +14,9 @@ COMMENT=	Open-source 2D game engine
 
 LICENSE=	ZLIB
 LICENSE_FILE=	${WRKSRC}/license.txt
+
+NOT_FOR_ARCHS=		powerpc powerpc64 powerpcspe sparc64
+NOT_FOR_ARCHS_REASON=	Hashing not yet implemented for big endian
 
 LIB_DEPENDS=	libmodplug.so:audio/libmodplug \
 		libmpg123.so:audio/mpg123 \

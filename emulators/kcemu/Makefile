@@ -3,7 +3,7 @@
 
 PORTNAME=	kcemu
 PORTVERSION=	0.5.1
-PORTREVISION=	16
+PORTREVISION=	17
 CATEGORIES=	emulators
 MASTER_SITES=	SF/${PORTNAME}/KCemu/KCemu-${PORTVERSION}
 DISTNAME=	KCemu-${PORTVERSION}
@@ -22,11 +22,11 @@ LIB_DEPENDS=	libaudiofile.so:audio/libaudiofile \
 		libxvidcore.so:multimedia/xvid \
 		libz80ex.so:devel/z80ex
 
-GNU_CONFIGURE=	yes
-USE_XORG=	xmu
-USE_GNOME=	gtk20
-USES=		gettext ncurses pkgconfig
+USES=		compiler:c++11-lang gettext ncurses pkgconfig
 USE_CXXSTD=	gnu++98
+USE_GNOME=	gtk20
+USE_XORG=	xmu
+GNU_CONFIGURE=	yes
 
 LDFLAGS+=	-L${LOCALBASE}/lib
 WRKSRC=		${WRKDIR}/KCemu-${PORTVERSION}

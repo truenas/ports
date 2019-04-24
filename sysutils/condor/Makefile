@@ -6,7 +6,7 @@
 
 PORTNAME=	condor
 DISTVERSION=	8.4.12
-PORTREVISION=	3
+PORTREVISION=	6
 CATEGORIES=	sysutils net
 MASTER_SITES=	http://www.acadix.biz/Ports/distfiles/
 DISTNAME=	condor_src-${PORTVERSION}-all-all
@@ -25,7 +25,7 @@ LIB_DEPENDS=	libkrb5support.so:security/krb5 \
 
 # Does not work with Python 3
 USES=		cmake:noninja compiler:c++11-lang cpe perl5 pgsql \
-			python:2.7 shebangfix ssl
+		python:2.7 shebangfix ssl
 USE_LDCONFIG=	yes
 
 CPE_VENDOR=	condor_project

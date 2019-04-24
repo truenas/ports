@@ -2,7 +2,7 @@
 
 PORTNAME=	openvsp
 DISTVERSIONPREFIX=	${GH_PROJECT}_
-DISTVERSION=	3.16.2
+DISTVERSION=	3.17.0
 CATEGORIES=	cad
 
 MAINTAINER=	fernape@FreeBSD.org
@@ -23,15 +23,13 @@ LIB_DEPENDS=	libdrm.so:graphics/libdrm \
 		libexpat.so:textproc/expat2 \
 		libfontconfig.so:x11-fonts/fontconfig \
 		libfltk.so:x11-toolkits/fltk \
-		libGLEW.so:graphics/glew \
 		libcpptest.so:devel/cpptest
 BUILD_DEPENDS=	${LOCALBASE}/lib/libopenNURBS.a:graphics/opennurbs \
 		${LOCALBASE}/include/glm/glm.hpp:math/glm \
 		${LOCALBASE}/libdata/pkgconfig/pthread-stubs.pc:devel/libpthread-stubs
 
-USES=		compiler:c++11-lang cmake:outsource,noninja localbase\
+USES=		compiler:c++11-lang cmake:noninja localbase\
 		gl gnome jpeg
-
 USE_GITHUB=	yes
 GH_PROJECT=	OpenVSP
 GH_ACCOUNT=	${GH_PROJECT}
@@ -49,7 +47,7 @@ CMAKE_ARGS=	-DVSP_USE_SYSTEM_CMINPACK:BOOLEAN=yes \
 		-DVSP_USE_SYSTEM_GLEW:BOOLEAN=yes
 USE_XORG=	ice sm x11 xau xcb xdamage xdmcp xext xfixes xft \
 		xinerama xrender xxf86vm
-USE_GL=		gl glu
+USE_GL=		gl glew glu
 
 USE_GNOME=	libxml2
 

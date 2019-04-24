@@ -2,9 +2,10 @@
 # $FreeBSD$
 
 PORTNAME=	grass
-PORTVERSION=	7.4.3
+PORTVERSION=	7.6.1
+PORTREVISION=	2
 CATEGORIES=	databases geography
-MASTER_SITES=	http://grass.osgeo.org/%SUBDIR%/ \
+MASTER_SITES=	https://grass.osgeo.org/%SUBDIR%/ \
 		http://grass.cict.fr/%SUBDIR%/ \
 		http://grass.fbk.eu/%SUBDIR%/ \
 		http://grass.gis-lab.info/%SUBDIR%/ \
@@ -15,7 +16,7 @@ MASTER_SITES=	http://grass.osgeo.org/%SUBDIR%/ \
 		http://pinus.gntech.ac.kr/grass/%SUBDIR%/ \
 		http://wgbis.ces.iisc.ernet.in/grass/%SUBDIR%/ \
 		http://wgrass.media.osaka-cu.ac.jp/grassh/%SUBDIR%/
-MASTER_SITE_SUBDIR=	grass74/source
+MASTER_SITE_SUBDIR=	grass${VER}/source
 PKGNAMESUFFIX=	7
 
 MAINTAINER=	lbartoletti@tuxfamily.org
@@ -37,7 +38,7 @@ LIB_DEPENDS=	libgdal.so:graphics/gdal \
 		libgeos.so:graphics/geos
 RUN_DEPENDS=	bash:shells/bash
 
-USES=		blaslapack compiler:openmp fortran gettext gmake iconv \
+USES=		blaslapack compiler:openmp fortran gettext gmake gl iconv \
 		jpeg perl5 pkgconfig python:2.7 readline shebangfix tk
 SHEBANG_LANG=	nviz
 nviz_OLD_CMD=	nviz
@@ -72,21 +73,22 @@ CONFIGURE_ARGS=	--with-includes=${LOCALBASE}/include \
 ALL_TARGET=	default
 USE_LDCONFIG=	${PREFIX}/${GRASS_INST_DIR}/lib
 MAKE_ENV+=	TARGET="${CONFIGURE_TARGET}"
+VER=		${PORTVERSION:R:C/\.//}
 
 PLIST_SUB=	GRASS_INST_DIR="${GRASS_INST_DIR}" \
-		VERSION="${PORTVERSION}" \
-		VER="${PORTVERSION:R:C/\.//}"
+		VERSION="${PORTVERSION}" VERS="${PORTVERSION:C/([0-9]+).([0-9]+)(.*)/\1.\2/}" \
+		VER="${VER}" MAJVER="${PKGNAMESUFFIX}"
 
 OPTIONS_DEFINE=		LAS MOTIF NETCDF PDAL
 OPTIONS_MULTI=		DB
 OPTIONS_MULTI_DB=	MYSQL ODBC PGSQL SQLITE
 #OPTIONS_SINGLE=		BLAS
 #OPTIONS_SINGLE_BLAS=	ATLAS NETLIB GOTOBLAS OPENBLAS
-OPTIONS_DEFAULT=	LAS PDAL PGSQL SQLITE NETLIB
+OPTIONS_DEFAULT=	LAS PDAL PGSQL SQLITE NETLIB MOTIF NETCDF MYSQL ODBC
 OPTIONS_SUB=		yes
 
 #BLAS_DESC=		BLAS/LAPACK support
-#GOTOBLAS_DESC=		GotoBLAS implementation
+#GOTOBLAS_DESC=		GotoBLAS implementationS
 LAS_DESC=		Enable LiDAR modules
 PDAL_DESC=		Enable points cloud data modules
 #ATLAS_USES=		blaslapack:atlas
@@ -121,10 +123,10 @@ SQLITE_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}sqlite3>0:databases/py-sqlite3@${PY_F
 .include <bsd.port.options.mk>
 
 .if !defined (GRASS_INST_DIR)
-GRASS_INST_DIR=	${PORTNAME}-${PORTVERSION}
+GRASS_INST_DIR=	${PORTNAME}${VER}
 .endif
 
-MANDIRS=	${PREFIX}/grass-${PORTVERSION}/docs/man/man1
+MANDIRS=	${PREFIX}/grass${VER}/docs/man/man1
 
 post-patch:
 	${REINPLACE_CMD} -e \
@@ -165,7 +167,7 @@ post-patch:
 post-install:
 	${RM} -rf ${STAGEDIR}${PREFIX}/${GRASS_INST_DIR}/demolocation/PERMANENT/.tmp/
 	${RM} -rf ${STAGEDIR}${PREFIX}/${GRASS_INST_DIR}/docs/html/colortables/*bak.png
-	${MKDIR} ${STAGEDIR}${LOCALBASE}/${PORTNAME}-${PORTVERSION}/docs/html/
+	${MKDIR} ${STAGEDIR}${LOCALBASE}/${PORTNAME}${VER}/docs/html/
 .for file in i_atcorr_B02_atcorr.png \
 		i_ortho_photo_step1.png \
 		i_ortho_photo_step5.png \
@@ -178,7 +180,7 @@ post-install:
 		rterraflow_dir3.png \
 		sweep1.png \
 		sweep2.png
-	${TOUCH} ${STAGEDIR}${LOCALBASE}/${PORTNAME}-${PORTVERSION}/docs/html/${file}
+	${TOUCH} ${STAGEDIR}${LOCALBASE}/${PORTNAME}${VER}/docs/html/${file}
 .endfor
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/${GRASS_INST_DIR}/bin/*
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/${GRASS_INST_DIR}/driver/db/*
@@ -188,5 +190,8 @@ post-install:
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/${GRASS_INST_DIR}/etc/lister/*
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/${GRASS_INST_DIR}/lib/libgrass_*.so
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/${GRASS_INST_DIR}/tools/g.echo
-
+	${LN} -sf ${PORTNAME}${VER} \
+		${STAGEDIR}${PREFIX}/bin/${PORTNAME}${PKGNAMESUFFIX}
+	${LN} -s ${PORTNAME}${VER} \
+		${STAGEDIR}${PREFIX}/${PORTNAME}-${PORTVERSION}
 .include <bsd.port.mk>

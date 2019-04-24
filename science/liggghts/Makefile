@@ -2,7 +2,7 @@
 
 PORTNAME=	liggghts
 DISTVERSION=	3.8.0
-PORTREVISION=	1
+PORTREVISION=	4
 CATEGORIES=	science
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -19,7 +19,7 @@ LIB_DEPENDS=	libexpat.so:textproc/expat2 \
 		libtiff.so:graphics/tiff \
 		libvtkViewsCore-8.1.so:math/vtk8
 
-USES=		compiler:c++17-lang cmake:outsource fortran jpeg qt:5
+USES=		compiler:c++17-lang cmake fortran jpeg qt:5
 USE_GITHUB=	yes
 GH_ACCOUNT=	CFDEMproject
 GH_PROJECT=	${PORTNAME:tu}-PUBLIC

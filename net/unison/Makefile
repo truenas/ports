@@ -12,11 +12,12 @@ COMMENT=	User-level file synchronization tool
 LICENSE=	GPLv3
 
 FLAVORS=	x11 nox11
-FLAVOR?=	nox11
+FLAVOR?=	${FLAVORS[1]}
 
 nox11_PKGNAMESUFFIX= -nox11
 nox11_CONFLICTS_INSTALL=	unison
 
+x11_CONFLICTS_INSTALL=		unison-nox11
 x11_BUILD_DEPENDS=	lablgtk2:x11-toolkits/ocaml-lablgtk2 \
 			icotool:graphics/icoutils
 x11_LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig \

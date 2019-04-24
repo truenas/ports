@@ -2,7 +2,6 @@ bin/pc-ethernetconfig
 bin/pc-netmanager
 bin/pc-nettray
 bin/pc-wificonfig
-etc/sudoers.d/netmanager
 etc/xdg/autostart/pc-nettray.desktop
 share/applications/pc-netmanager.desktop
 share/applications/pc-nettray.desktop

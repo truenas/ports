@@ -4,6 +4,7 @@ PORTNAME=	znc-push
 DISTVERSIONPREFIX=	v
 DISTVERSION=	1.0.0-167
 DISTVERSIONSUFFIX=	-g5f95488
+PORTREVISION=	1
 CATEGORIES=	irc
 
 MAINTAINER=	dor.bsd@xm0.uk
@@ -16,7 +17,7 @@ BUILD_DEPENDS=	znc:irc/znc
 LIB_DEPENDS=	libicudata.so:devel/icu
 RUN_DEPENDS=	znc:irc/znc
 
-USES=	gmake ssl
+USES=	compiler:c++11-lang gmake ssl
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	jreese

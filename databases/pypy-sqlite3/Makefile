@@ -8,7 +8,7 @@ MAINTAINER=	python@FreeBSD.org
 COMMENT=	Standard PyPy binding to the SQLite3 library
 
 LIB_DEPENDS=	libsqlite3.so:databases/sqlite3
-USES+=	portssl
+
 CFFI_NAME=	_ffi
 
 .include "${.CURDIR}/../../lang/pypy/bsd.pypy.cffi.mk"

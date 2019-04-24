@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	lollypop
-DISTVERSION=	0.9.521
+DISTVERSION=	1.0.2
 CATEGORIES=	audio
 
 MAINTAINER=	greg@unrelenting.technology
@@ -20,12 +20,12 @@ LIB_DEPENDS=	libnotify.so:devel/libnotify \
 		libappstream-glib.so:devel/appstream-glib \
 		libtotem-plparser.so:multimedia/totem-pl-parser
 
-USES=		python:3.4+ pkgconfig gettext meson shebangfix sqlite desktop-file-utils
+USES=		python:3.5+ pkgconfig gnome gettext meson shebangfix sqlite desktop-file-utils
 USE_GITLAB=	yes
 GL_SITE=	https://gitlab.gnome.org
 GL_ACCOUNT=	World
-GL_COMMIT=	86ff0eac3231802b5dc49c50f6d89eec1aa08a7e
-GL_TUPLE=	gnumdk:lollypop-po:1a41364ef42a2040292ec5c002cd2c8d93674c5e:po/subprojects/po
+GL_COMMIT=	8e6fbe2294bbdfe3c3ee5889c2093d9274618e04
+GL_TUPLE=	gnumdk:lollypop-po:fc5fd94a645b80172e63a59832d22d185ef9d202:po/subprojects/po
 USE_GNOME=	glib20 gtk30 pygobject3 introspection:build intltool intlhack
 USE_GSTREAMER1=	yes mpg123 ogg flac opus libav faad good speex
 USE_PYTHON=	py3kplist noflavors

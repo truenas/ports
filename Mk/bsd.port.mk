@@ -364,8 +364,6 @@ FreeBSD_MAINTAINER=	portmgr@FreeBSD.org
 #				 Append the cxxflags to CXXFLAGS only on the specified architecture
 ##
 # LDFLAGS_${ARCH} Append the ldflags to LDFLAGS only on the specified architecture
-# USE_SDL		- If set, this port uses the sdl libraries.
-#				  See bsd.sdl.mk for more information.
 ##
 # USE_OPENLDAP	- If set, this port uses the OpenLDAP libraries.
 #				  Implies: WANT_OPENLDAP_VER?=24
@@ -425,14 +423,6 @@ FreeBSD_MAINTAINER=	portmgr@FreeBSD.org
 #				  automatically be expanded, they will be installed in
 #				  ${PREFIX}/etc/rc.d if ${PREFIX} is not /usr, otherwise they
 #				  will be installed in /etc/rc.d/ and added to the packing list.
-#
-# USE_OPENRC_SUBR- If set, the ports startup/shutdown script uses the common
-#				  routines found in /etc/init.d
-#				  If this is set to a list of files, these files will be
-#				  automatically added to ${SUB_FILES}, some %%VAR%%'s will
-#				  automatically be expanded, they will be installed in
-#				  ${PREFIX}/etc/init.d if ${PREFIX} is not /usr, otherwise they
-#				  will be installed in /etc/init.d/ and added to the packing list.
 ##
 # Conflict checking.  Use if your port cannot be installed at the same time as
 # another package.
@@ -1241,10 +1231,6 @@ SLAVE_PORT?=	no
 MASTER_PORT?=
 .endif
 
-.if exists(${.CURDIR}/Makefile.trueos)
-.include "${.CURDIR}/Makefile.trueos"
-.endif
-
 # If they exist, include Makefile.inc, then architecture/operating
 # system specific Makefiles, then local Makefile.local.
 
@@ -1437,6 +1423,11 @@ DEV_WARNING+=	"Using USE_GL alone is deprecated, please add USES=gl."
 USES+=	gl
 .endif
 
+.if defined(USE_SDL) && (!defined(USES) || !${USES:Msdl})
+DEV_WARNING+=	"Using USE_SDL alone is deprecated, please add USES=sdl."
+USES+=	sdl
+.endif
+
 .if defined(USE_MYSQL)
 USE_MYSQL:=		${USE_MYSQL:N[yY][eE][sS]:Nclient}
 .if defined(WANT_MYSQL_VER)
@@ -1455,10 +1446,6 @@ USES+=mysql:${USE_MYSQL}
 
 .if defined(WANT_GSTREAMER) || defined(USE_GSTREAMER) || defined(USE_GSTREAMER1)
 .include "${PORTSDIR}/Mk/bsd.gstreamer.mk"
-.endif
-
-.if defined(USE_SDL)
-.include "${PORTSDIR}/Mk/bsd.sdl.mk"
 .endif
 
 .if !defined(UID)
@@ -1516,8 +1503,7 @@ FLAVORS:=	${FLAVOR} ${FLAVORS:N${FLAVOR}}
 
 .if !empty(FLAVOR) && !defined(_DID_FLAVORS_HELPERS)
 _DID_FLAVORS_HELPERS=	yes
-_FLAVOR_HELPERS_OVERRIDE=	DESCR PLIST PKGNAMEPREFIX PKGNAMESUFFIX \
-							DEPRECATED EXPIRATION_DATE
+_FLAVOR_HELPERS_OVERRIDE=	DESCR PLIST PKGNAMEPREFIX PKGNAMESUFFIX
 _FLAVOR_HELPERS_APPEND=	 	CONFLICTS CONFLICTS_BUILD CONFLICTS_INSTALL \
 							PKG_DEPENDS EXTRACT_DEPENDS PATCH_DEPENDS \
 							FETCH_DEPENDS BUILD_DEPENDS LIB_DEPENDS \
@@ -1811,9 +1797,9 @@ MAKE_ENV+=		SHELL=${MAKE_SHELL} NO_LINT=YES
 PATCH_DEPENDS+=		${LOCALBASE}/bin/unzip:archivers/unzip
 .endif
 
-# Check the compatibility layer for amd64/ia64
+# Check the compatibility layer for amd64
 
-.if ${ARCH} == "amd64" || ${ARCH} =="ia64"
+.if ${ARCH} == "amd64"
 .if exists(/usr/lib32)
 HAVE_COMPAT_IA32_LIBS?=  YES
 .endif
@@ -1827,7 +1813,7 @@ HAVE_COMPAT_IA32_KERN!= if ${SYSCTL} -n compat.ia32.maxvmem >/dev/null 2>&1; the
 _EXPORTED_VARS+=	HAVE_COMPAT_IA32_KERN
 
 .if defined(IA32_BINARY_PORT) && ${ARCH} != "i386"
-.if ${ARCH} == "amd64" || ${ARCH} == "ia64"
+.if ${ARCH} == "amd64"
 .if !defined(HAVE_COMPAT_IA32_KERN)
 IGNORE=		requires a kernel with compiled-in IA32 compatibility
 .elif !defined(HAVE_COMPAT_IA32_LIBS)
@@ -1896,10 +1882,6 @@ MAKE_ENV+=	${b}="${${b}}"
 SUB_FILES+=	${USE_RC_SUBR}
 .endif
 
-.if defined(USE_OPENRC_SUBR)
-SUB_FILES+=	${USE_OPENRC_SUBR}
-.endif
-
 .if defined(USE_LDCONFIG) && ${USE_LDCONFIG:tl} == "yes"
 USE_LDCONFIG=	${PREFIX}/lib
 .endif
@@ -1962,10 +1944,6 @@ _FORCE_POST_PATTERNS=	rmdir kldxref mkfontscale mkfontdir fc-cache \
 
 .if defined(USE_OCAML)
 .include "${PORTSDIR}/Mk/bsd.ocaml.mk"
-.endif
-
-.if defined(USE_SDL)
-.include "${PORTSDIR}/Mk/bsd.sdl.mk"
 .endif
 
 .if defined(USE_PHP) && (!defined(USES) || ( defined(USES) && !${USES:Mphp*} ))
@@ -2586,7 +2564,7 @@ VALID_CATEGORIES+= accessibility afterstep arabic archivers astro audio \
 	palm parallel pear perl5 plan9 polish portuguese ports-mgmt \
 	print python ruby rubygems russian \
 	scheme science security shells spanish sysutils \
-	tcl textproc tk  \
+	tcl textproc tk \
 	ukrainian vietnamese windowmaker wayland www \
 	x11 x11-clocks x11-drivers x11-fm x11-fonts x11-servers x11-themes \
 	x11-toolkits x11-wm xfce zope base
@@ -3468,7 +3446,7 @@ install-package:
 .if !target(check-already-installed)
 .if !defined(NO_PKG_REGISTER) && !defined(FORCE_PKG_REGISTER)
 check-already-installed:
-		@${ECHO_MSG} "===>  Checking if ${PKGBASE} already installed"; \
+		@${ECHO_MSG} "===>  Checking if ${PKGBASE} is already installed"; \
 		pkgname=`${PKG_INFO} -q -O ${PKGBASE}`; \
 		if [ -n "$${pkgname}" ]; then \
 			v=`${PKG_VERSION} -t $${pkgname} ${PKGNAME}`; \
@@ -3898,7 +3876,7 @@ _CHECKSUM_INIT_ENV= \
 # the options consistent when fetching and when makesum'ing.
 # As we're fetching new distfiles, that are not in the distinfo file, disable
 # checksum and sizes checks.
-makesum:
+makesum: check-sanity
 .if !empty(DISTFILES)
 	@${SETENV} \
 			${_DO_FETCH_ENV} ${_MASTER_SITES_ENV} \
@@ -4597,21 +4575,6 @@ install-rc-script:
 .endif
 .endif
 
-.if !target(install-openrc-script)
-.if defined(USE_OPENRC_SUBR)
-install-openrc-script:
-	@${ECHO_MSG} "===> Staging init.d startup script(s)"
-	@for i in ${USE_OPENRC_SUBR}; do \
-		_prefix=${PREFIX}; \
-		_nfile=`${ECHO_CMD} $${i%.sh} | ${SED} -e "s|openrc-||g"`; \
-		[ "${PREFIX}" = "/usr" ] && _prefix="" ; \
-		[ ! -d "${STAGEDIR}$${_prefix}/etc/init.d" ] && ${MKDIR} ${STAGEDIR}$${_prefix}/etc/init.d ; \
-		${INSTALL_SCRIPT} ${WRKDIR}/$${i} ${STAGEDIR}$${_prefix}/etc/init.d/$${_nfile}; \
-		${ECHO_CMD} "$${_prefix}/etc/init.d/$${_nfile}" >> ${TMPPLIST}; \
-	done
-.endif
-.endif
-
 .if !target(check-man)
 check-man: stage
 	@${ECHO_MSG} "====> Checking man pages (check-man)"
@@ -4631,7 +4594,7 @@ check-man: stage
 .endif
 
 # Compress all manpage not already compressed which are not hardlinks
-# Find all manpages which are not compressed and are hadlinks, and only get the list of inodes concerned, for each of them compress the first one found and recreate the hardlinks for the others
+# Find all manpages which are not compressed and are hardlinks, and only get the list of inodes concerned, for each of them compress the first one found and recreate the hardlinks for the others
 # Fixes all dead symlinks left by the previous round
 .if !target(compress-man)
 compress-man:
@@ -5060,7 +5023,7 @@ showconfig: check-config
 
 .if !target(showconfig-recursive)
 showconfig-recursive:
-	@${ECHO_MSG} "===> The following configuration options are available for ${PKGNAME} and dependencies";
+	@${ECHO_MSG} "===> The following configuration options are available for ${PKGNAME} and its dependencies";
 	@recursive_cmd="showconfig"; \
 	    recursive_dirs="${.CURDIR} $$(${ALL-DEPENDS-FLAVORS-LIST})"; \
 		${_FLAVOR_RECURSIVE_SH}
@@ -5087,7 +5050,7 @@ rmconfig:
 
 .if !target(rmconfig-recursive)
 rmconfig-recursive:
-	@${ECHO_MSG} "===> Removing user-specified options for ${PKGNAME} and dependencies";
+	@${ECHO_MSG} "===> Removing user-specified options for ${PKGNAME} and its dependencies";
 	@recursive_cmd="rmconfig"; \
 	    recursive_dirs="${.CURDIR} $$(${ALL-DEPENDS-FLAVORS-LIST})"; \
 		${_FLAVOR_RECURSIVE_SH}
@@ -5289,7 +5252,7 @@ _STAGE_SEQ=		050:stage-message 100:stage-dir 150:run-depends \
 				400:generate-plist 450:pre-su-install 475:create-users-groups \
 				500:do-install 550:kmod-post-install 600:fixup-lib-pkgconfig 700:post-install \
 				750:post-install-script 800:post-stage 850:compress-man \
-				860:install-rc-script 861:install-openrc-script 870:install-ldconfig-file \
+				860:install-rc-script 870:install-ldconfig-file \
 				880:install-license 890:install-desktop-entries \
 				900:add-plist-info 910:add-plist-docs 920:add-plist-examples \
 				930:add-plist-data 940:add-plist-post ${POST_PLIST:C/^/990:/} \

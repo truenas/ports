@@ -3,6 +3,7 @@
 
 PORTNAME=	opencolorio
 PORTVERSION=	1.1.0
+PORTREVISION=	1
 DISTVERSIONPREFIX=	v
 CATEGORIES=	graphics multimedia
 
@@ -11,7 +12,7 @@ COMMENT?=	Complete color management solution
 
 LICENSE=	BSD3CLAUSE
 
-USES=		alias cmake:outsource compiler:c++11-lang pkgconfig shebangfix
+USES=		alias cmake compiler:c++11-lang pkgconfig shebangfix
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	imageworks

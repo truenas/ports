@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	mdb
-PORTVERSION=	0.3
+PORTVERSION=	20190315
 CATEGORIES=	devel
 
 MAINTAINER=	jhb@FreeBSD.org
@@ -14,7 +14,7 @@ USES=		uidfix
 USE_GITHUB=	yes
 GH_ACCOUNT=	bsdjhb
 GH_PROJECT=	illumos-gate
-GH_TAGNAME=	fc55b6de75
+GH_TAGNAME=	dbca84a2a4
 
 ONLY_FOR_ARCHS=	amd64
 
@@ -25,6 +25,8 @@ MAKE_ARGS+=	FREEBSD_SRC_DIR=${SRC_BASE}
 WRKSRC_SUBDIR=	freebsd/cddl/usr.bin/mdb
 CFLAGS+=	-DMDB_PREFIX=\\\"${PREFIX}\\\" -g
 
+.include <bsd.port.pre.mk>
+
 .if !exists(${SRC_BASE}/cddl/compat) || !exists(${SRC_BASE}/sys/cddl/compat)
 IGNORE=		requires full source tree with CDDL sources
 .endif
@@ -32,4 +34,4 @@ IGNORE=		requires full source tree with CDDL sources
 pre-install:
 	${MKDIR} ${STAGEDIR}${PREFIX}/lib/mdb/kvm/${MACHINE_ARCH}
 
-.include <bsd.port.mk>
+.include <bsd.port.post.mk>

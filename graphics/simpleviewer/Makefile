@@ -3,7 +3,7 @@
 
 PORTNAME=	simpleviewer
 PORTVERSION=	2.92
-PORTREVISION=	4
+PORTREVISION=	6
 CATEGORIES=	graphics
 MASTER_SITES=	https://bitbucket.org/andreyu/simple-viewer-gl/get/
 DISTNAME=	v${PORTVERSION}	# version tag, thus no embedded ${PORTNAME}
@@ -25,15 +25,23 @@ LIB_DEPENDS=	libIlmImf.so:graphics/openexr \
 		libtiff.so:graphics/tiff \
 		libwebp.so:graphics/webp
 
-USES=		cmake compiler:c++11-lang jpeg pkgconfig tar:bzip2
+USES=		cmake:insource compiler:c++11-lang jpeg pkgconfig tar:bzip2
 USE_GL=		glu
 USE_XORG=	ice sm x11 xcursor xext xinerama xrandr xxf86vm
 
 WRKSRC=		${WRKDIR}/andreyu-simple-viewer-gl-b3bd8710e176
 
 PLIST_FILES=	bin/sviewgl
+PORTEXAMPLES=	config.example
+SUB_FILES=	pkg-message
+
+OPTIONS_DEFINE=	EXAMPLES
 
 do-install:
 	${INSTALL_PROGRAM} ${WRKSRC}/sviewgl ${STAGEDIR}${PREFIX}/bin
+
+do-install-EXAMPLES-on:
+	@${MKDIR} ${STAGEDIR}${EXAMPLESDIR}
+	${INSTALL_DATA} ${WRKSRC}/config.example ${STAGEDIR}${EXAMPLESDIR}
 
 .include <bsd.port.mk>

@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	libzfs
-PORTVERSION=	20190412105609
+PORTVERSION=	1.0.20190403
 CATEGORIES=	devel python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
@@ -20,18 +20,13 @@ RUN_DEPENDS=	${PY_ENUM34}
 USE_GITHUB=     yes
 GH_ACCOUNT=	freenas
 GH_PROJECT=	py-libzfs
-GH_TAGNAME=	fcaa2f52b010ebede7d156cbc29e9de2d2d91444
+GH_TAGNAME=	af5250b
 
 HAS_CONFIGURE=	yes
 USES=		python
 USE_PYTHON=	autoplist distutils cython
+GNU_CONFIGURE=	yes
 
-# Py-libzfs needs libzfs to be built
-.if !exists(/sbin/zpool)
-BUILD_DEPENDS+=	zol>=0:sysutils/zol
-.endif
-
-SRC_BASE?=	/usr/src
 MAKE_ENV=	FREEBSD_SRC=${SRC_BASE}
 
 .include <bsd.port.options.mk>

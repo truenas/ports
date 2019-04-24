@@ -1,12 +1,12 @@
 # $FreeBSD$
 
 # This port opens too many files during build, more than the default setting.
-# Its build is known to succeed with MAX_FILES_RStudio=2048 in poudriere.conf when ports-mgmt/poudriere-devel is used.
+# Its build is known to succeed with MAX_FILES_RStudio=4096 in poudriere.conf when ports-mgmt/poudriere-devel is used.
 
 PORTNAME=	RStudio
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.2.679
-PORTREVISION=	5
+DISTVERSION=	1.2.1335
+PORTREVISION=	2
 CATEGORIES=	devel math java
 MASTER_SITES=	https://s3.amazonaws.com/rstudio-dictionaries/:dictionaries \
 		https://s3.amazonaws.com/rstudio-buildtools/:buildtools
@@ -21,6 +21,8 @@ COMMENT=	Integrated development environment (IDE) for R
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
 
+BROKEN=		fails to build with boost 1.70, see bug 236603
+
 BUILD_DEPENDS=	ant:devel/apache-ant \
 		${LOCALBASE}/include/sys/sysinfo.h:devel/libsysinfo \
 		pandoc:textproc/hs-pandoc
@@ -29,7 +31,7 @@ LIB_DEPENDS=	libR.so:math/R \
 		libinotify.so:devel/libinotify \
 		libuuid.so:misc/e2fsprogs-libuuid
 
-USES=		cmake:outsource desktop-file-utils fortran pkgconfig qt:5 shared-mime-info ssl
+USES=		cmake desktop-file-utils fortran pkgconfig qt:5 shared-mime-info ssl
 USE_QT=		core dbus declarative gui location network opengl printsupport sensors \
 		sql svg webchannel webengine webkit widgets xml xmlpatterns buildtools_build qmake_build
 USE_JAVA=	yes
@@ -45,6 +47,7 @@ CMAKE_ARGS=	-DRSTUDIO_TARGET=Desktop \
 		-DFREEBSD_RSTUDIO_VERSION:STRING=${PORTVERSION} \
 		-DFREEBSD_LIBDIR:STRING=${PREFIX}/lib
 CMAKE_ARGS+=	-DRSTUDIO_BOOST_SIGNALS_VERSION=2 # until Boost 1.69 or RStudio 1.3
+CMAKE_ARGS+=    -DQT_QMAKE_EXECUTABLE:STRING=${QMAKE}
 MAKE_ENV=	HOME=${WRKDIR} \
 		ANT_OPTS="-Duser.home=${WRKDIR}"
 

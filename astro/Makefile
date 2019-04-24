@@ -9,7 +9,6 @@
     SUBDIR += boinc-astropulse
     SUBDIR += boinc-setiathome
     SUBDIR += celestia
-    SUBDIR += celestia-gnome
     SUBDIR += celestia-gtk
     SUBDIR += cfitsio
     SUBDIR += fowsr
@@ -17,6 +16,7 @@
     SUBDIR += garmindev
     SUBDIR += geographiclib
     SUBDIR += gkrellmoon2
+    SUBDIR += gnuastro
     SUBDIR += google-earth
     SUBDIR += gpsbabel
     SUBDIR += gpsbabel14
@@ -30,16 +30,13 @@
     SUBDIR += jday
     SUBDIR += josm
     SUBDIR += kstars
-    SUBDIR += kstars-kde4
     SUBDIR += libgal
     SUBDIR += libkgeomap
-    SUBDIR += libkgeomap-kde4
     SUBDIR += libnova
     SUBDIR += libosmium
     SUBDIR += libosmpbf
     SUBDIR += luna
     SUBDIR += marble
-    SUBDIR += marble-kde4
     SUBDIR += match
     SUBDIR += merkaartor
     SUBDIR += mkgmap
@@ -74,8 +71,10 @@
     SUBDIR += p5-GPS
     SUBDIR += p5-GPS-Babel
     SUBDIR += p5-GPS-OID
+    SUBDIR += p5-GPS-Point
     SUBDIR += p5-Geo-METAR
     SUBDIR += p5-Misc-Quality
+    SUBDIR += p5-Net-GPSD3
     SUBDIR += p5-Starlink-AST
     SUBDIR += p5-Weather-Underground
     SUBDIR += phoon
@@ -95,7 +94,6 @@
     SUBDIR += py-spacetrack
     SUBDIR += pyephem
     SUBDIR += pyweather
-    SUBDIR += qlandkartegt
     SUBDIR += qmapshack
     SUBDIR += readosm
     SUBDIR += rmap
@@ -110,7 +108,6 @@
     SUBDIR += starplot
     SUBDIR += stars
     SUBDIR += stellarium
-    SUBDIR += stellarium-qt4
     SUBDIR += sunclock
     SUBDIR += sunwait
     SUBDIR += swe
@@ -119,7 +116,7 @@
     SUBDIR += viking
     SUBDIR += wcslib
     SUBDIR += weather
-    SUBDIR += weatherspect
+    SUBDIR += wmglobe
     SUBDIR += wmjupiter
     SUBDIR += wmmoonclock
     SUBDIR += wmsolar
@@ -128,7 +125,6 @@
     SUBDIR += xearth
     SUBDIR += xeartk
     SUBDIR += xephem
-    SUBDIR += xglobe
     SUBDIR += xmoontool
     SUBDIR += xphoon
     SUBDIR += xplanet

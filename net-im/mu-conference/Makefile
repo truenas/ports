@@ -3,7 +3,7 @@
 
 PORTNAME=	mu-conference
 PORTVERSION=	0.8
-PORTREVISION=	6
+PORTREVISION=	7
 CATEGORIES=	net-im
 MASTER_SITES=	http://download.gna.org/mu-conference/
 DISTNAME=	${PORTNAME}_${PORTVERSION}
@@ -65,6 +65,7 @@ JABBER_PIDDIR?=         /var/jabberd/pid
 JABBER_SPOOLDIR?=       /var/spool/jabber
 RUN_DEPENDS+=           ejabberdctl:net-im/ejabberd
 .elif ${PORT_OPTIONS:MDAEMON}
+JABBER_REQUIRE?=        DAEMON
 JABBER_USER?=           nobody
 JABBER_PIDDIR?=         /var/run/mu-conference
 JABBER_SPOOLDIR?=       /var/spool/mu-conference

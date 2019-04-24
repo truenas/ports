@@ -3,7 +3,7 @@
 
 PORTNAME?=	percona
 DISTVERSION=	5.7.21-20
-PORTREVISION?=	2
+PORTREVISION?=	3
 CATEGORIES=	databases ipv6
 MASTER_SITES=	http://www.percona.com/downloads/Percona-Server-5.7/Percona-Server-${DISTVERSION}/source/tarball/:percona \
 		SF/boost/boost/1.59.0:boost
@@ -20,11 +20,9 @@ LICENSE?=	GPLv2+
 LIB_DEPENDS=	libevent.so:devel/libevent \
 		liblz4.so:archivers/liblz4
 
-BROKEN_powerpc64=	Does not build
-
 SLAVEDIRS=	databases/percona57-client \
 		databases/percona57-pam-for-mysql
-USES=		bison:build cmake:noninja compiler:c11 compiler:c++11-lib \
+USES=		bison:build cmake:insource,noninja compiler:c11 \
 		cpe libedit localbase perl5 shebangfix
 
 MY_DBDIR=	/var/db/mysql
@@ -84,6 +82,7 @@ USES+=		libedit
 USES+=		libedit
 .else
 LIB_DEPENDS+=	libcurl.so:ftp/curl
+
 # MySQL-Server part
 OPTIONS_DEFINE=	OPENSSL FASTMTX INNODBMEMCACHED TOKUDB
 OPTIONS_DEFAULT=	OPENSSL INNODBMEMCACHED
@@ -94,7 +93,7 @@ FASTMTX_CMAKE_ON=	-DWITH_FAST_MUTEXES=1
 INNODBMEMCACHED_DESC=	InnoDB Memcached plugin
 INNODBMEMCACHED_CMAKE_ON=	-DWITH_INNODB_MEMCACHED=1
 OPENSSL_CMAKE_ON=	-DWITH_SSL=system
-OPENSSL_USES=	portssl
+OPENSSL_USES=	ssl
 TOKUDB_DESC=	TokuDB Engine (experimental)
 TOKUDB_CMAKE_ON=	-DUSE_CTAGS=0
 TOKUDB_EXTRA_PATCHES=${PATCHDIR}/extrapatch-tokudb
@@ -149,6 +148,10 @@ post-patch:
 	${WRKSRC}/configure.cmake
 
 .include <bsd.port.pre.mk>
+
+.if ${CHOSEN_COMPILER_TYPE} == gcc
+CXXFLAGS+=	-fpermissive
+.endif
 
 .if ${ARCH} == "arm"
 BROKEN=		Does not compile on arm

@@ -3,7 +3,7 @@
 
 PORTNAME=	kadu
 PORTVERSION=	4.3
-PORTREVISION=	8
+PORTREVISION=	13
 PORTEPOCH=	1
 CATEGORIES=	polish net-im
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/${PORTVERSION}/:kadu \
@@ -23,7 +23,7 @@ BUILD_DEPENDS=	bash:shells/bash \
 LIB_DEPENDS=	libmpdclient.so:audio/libmpdclient \
 		libsndfile.so:audio/libsndfile \
 		libinjeqt.so:devel/injeqt \
-		libqca-qt5.so:devel/qca@qt5 \
+		libqca-qt5.so:devel/qca \
 		libidn.so:dns/libidn \
 		libqxmpp.so:net-im/qxmpp-qt5 \
 		libgadu.so:polish/libgadu \
@@ -36,7 +36,7 @@ LIB_DEPENDS=	libmpdclient.so:audio/libmpdclient \
 GG6_EMOTS_DISTFILE=	kompatybilne_z_GG6.tar.gz
 GG7_EMOTS_DISTFILE=	dodatkowe_emoty_GG7.tar.gz
 
-USES=		cmake compiler:c++11-lib gettext-runtime \
+USES=		cmake:insource compiler:c++11-lib gettext-runtime \
 		libarchive pkgconfig qt:5 readline tar:bzip2
 USE_XORG=	x11 xext xfixes xscrnsaver
 USE_GNOME=	glib20

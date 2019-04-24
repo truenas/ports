@@ -4,7 +4,7 @@
 PORTNAME=	curlpp
 PORTVERSION=	0.8.1
 DISTVERSIONPREFIX=	v
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	ftp
 
 MAINTAINER=	sunpoet@FreeBSD.org
@@ -18,10 +18,8 @@ LIB_DEPENDS=	libcurl.so:ftp/curl
 OPTIONS_DEFINE=	DOCS EXAMPLES
 
 USES=		cmake compiler:c++11-lang localbase pathfix
-USE_LDCONFIG=	yes
 
-PORTDOCS=	*
-PORTEXAMPLES=	*
+USE_LDCONFIG=	yes
 
 GH_ACCOUNT=	jpbarrette
 USE_GITHUB=	yes

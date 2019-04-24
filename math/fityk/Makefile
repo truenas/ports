@@ -3,8 +3,8 @@
 
 PORTNAME=	fityk
 PORTVERSION=	1.3.1
-PORTREVISION=	2
 DISTVERSIONPREFIX=	v
+PORTREVISION=	7
 CATEGORIES=	math
 
 MAINTAINER=	ports@FreeBSD.org
@@ -12,6 +12,8 @@ COMMENT=	Free peak fitting software
 
 LICENSE=	GPLv2 # (or later)
 LICENSE_FILE=	${WRKSRC}/COPYING
+
+BROKEN=		fails to build
 
 BUILD_DEPENDS=	boost-libs>=1.35:devel/boost-libs \
 		swig3.0:devel/swig30 \

@@ -44,14 +44,13 @@ OPTIONS_DEFAULT=	PYTHON
 OPTIONS_SLAVE=	PYTHON
 .endif
 
-CFLAGS+=	-Wno-incompatible-pointer-types-discards-qualifiers
 ALL_TARGET=	${PORTNAME}-c
 BUILD_WRKSRC?=	${WRKDIR}/build/usession-release-pypy2.7-v${DISTVERSION}-0/testing_1
 MAKE_ENV+=	PYPY_LOCALBASE=${LOCALBASE} LDSHARED="${CC} -shared"
 PACKAGE_ARGS?=	--without-gdbm --without-sqlite3 --without-tk
 USE_LDCONFIG=	${PREFIX}/${PYPY_DIR}/bin
 LLD_UNSAFE=	yes
-USES=		gettext-runtime gmake shebangfix portssl tar:bzip2
+USES=		gettext-runtime gmake shebangfix ssl tar:bzip2
 SHEBANG_FILES?=	lib-python/2.7/plat-mac/appletrunner.py \
 		lib-python/2.7/plat-mac/bundlebuilder.py \
 		lib-python/2.7/keyword.py \

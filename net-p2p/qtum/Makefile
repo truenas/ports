@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	qtum
-PORTVERSION=	0.16.2
+PORTVERSION=	0.17.3
 DISTVERSIONPREFIX=	mainnet-ignition-v
 CATEGORIES=	net-p2p finance
 
@@ -21,6 +21,8 @@ LIB_DEPENDS=	libboost_date_time.so:devel/boost-libs \
 		libprotobuf.so:devel/protobuf \
 		libqrencode.so:graphics/libqrencode
 
+USES=		autoreconf bdb:5+ compiler:c++14-lang gmake libtool pkgconfig qt:5 ssl
+
 GNU_CONFIGURE=	yes
 CONFIGURE_ENV=	BDB_CFLAGS="-I${BDB_INCLUDE_DIR}" \
 		BDB_LIBS="-L${BDB_LIB_DIR} -l${BDB_LIB_CXX_NAME}"
@@ -36,7 +38,6 @@ CONFIGURE_ARGS=	--disable-man \
 		--with-qrencode \
 		--without-libs
 
-USES=		autoreconf bdb:5+ compiler:c++14-lang gmake libtool pkgconfig qt:5 ssl
 USE_QT=		buildtools core dbus gui linguisttools network testlib widgets
 USE_GITHUB=	yes
 GH_TUPLE=	qtumproject:qtum:${DISTVERSIONPREFIX}${PORTVERSION} \

@@ -3,6 +3,7 @@
 PORTNAME=	opencollada
 DISTVERSIONPREFIX=	v
 DISTVERSION=	1.6.68
+PORTREVISION=	1
 CATEGORIES=	graphics devel
 
 MAINTAINER=	sunpoet@FreeBSD.org
@@ -14,7 +15,7 @@ BROKEN_sparc64=	cannot build: runaway process
 
 LIB_DEPENDS=	libpcre.so:devel/pcre
 
-USES=		cmake:outsource compiler:c++11-lib dos2unix iconv localbase gnome pkgconfig
+USES=		cmake compiler:c++11-lib dos2unix iconv localbase gnome pkgconfig
 USE_GNOME=	libxml2
 
 USE_GITHUB=	yes

@@ -1,8 +1,0 @@
-#!/sbin/openrc-run
-
-# VMware guest daemon
-name="vmware_guestd"
-command_args="-c /usr/local/share/vmware-tools/tools.conf -p /usr/local/lib/open-vm-tools/plugins/vmsvc > /dev/null"
-pidfile="/var/run/${name}.pid"
-
-[ -z "$vmware_guestd_flags" ] && vmware_guestd_flags="--background ${pidfile}"

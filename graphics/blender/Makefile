@@ -3,7 +3,7 @@
 
 PORTNAME=	blender
 PORTVERSION=	2.79b
-PORTREVISION=	7
+PORTREVISION=	11
 CATEGORIES=	graphics games
 MASTER_SITES=	http://download.blender.org/source/ \
 		http://mirror.cs.umn.edu/blender.org/source/ \
@@ -25,7 +25,7 @@ RUN_DEPENDS=	${PYNUMPY}
 # are set. We will pull boost in just to be on the safe side.
 
 # USES=compiler is needed to support gcc built archs
-USES=		cmake:outsource compiler:c++14-lang desktop-file-utils \
+USES=		cmake compiler:c++14-lang desktop-file-utils \
 		jpeg python:3.5 shebangfix
 USE_XORG=	x11 xext xfixes xmu xrender
 USE_GL=		gl glu glew
@@ -46,6 +46,14 @@ PLIST_SUB+=	VER=2.79
 OPTIONS_SUB=	yes
 
 .include "${.CURDIR}/Makefile.options"
+
+# libunwind is specific to amd64/i386
+OPTIONS_EXCLUDE_aarch64=	CAMERATRACK
+OPTIONS_EXCLUDE_armv6=		CAMERATRACK
+OPTIONS_EXCLUDE_armv7=		CAMERATRACK
+OPTIONS_EXCLUDE_powerpc=	CAMERATRACK
+OPTIONS_EXCLUDE_powerpc64=	CAMERATRACK
+OPTIONS_EXCLUDE_powerpcspe=	CAMERATRACK
 
 ALEMBIC_CMAKE_BOOL=		WITH_ALEMBIC
 ALEMBIC_LIB_DEPENDS=		libAlembic.so:graphics/alembic

@@ -3,7 +3,7 @@
 
 PORTNAME=	vdr-plugin-live
 PORTVERSION=	0.3.0
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	www multimedia
 MASTER_SITES=	http://live.vdr-developer.org/downloads/:release \
 		LOCAL/nox/:snapshot
@@ -33,7 +33,6 @@ OPTIONS_DEFINE=	DOCS
 
 .if ${COMPILER_FEATURES:Mlibc++}
 EXTRA_PATCHES+=		${FILESDIR}/extra-patch-libcxx
-EXTRA_PATCH_STRIP=	-p1
 .endif
 
 post-patch: post-patch-plugin

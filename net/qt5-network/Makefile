@@ -2,7 +2,6 @@
 
 PORTNAME=	network
 DISTVERSION=	${QT5_VERSION}
-PORTREVISION=	1
 CATEGORIES=	net ipv6
 PKGNAMEPREFIX=	qt5-
 
@@ -11,7 +10,7 @@ COMMENT=	Qt network module
 
 RUN_DEPENDS=	${LOCALBASE}/share/certs/ca-root-nss.crt:security/ca_root_nss
 
-USES=		compiler:c++11-lang qmake:no_env qt-dist:5,base portssl
+USES=		compiler:c++11-lang qmake:no_env qt-dist:5,base ssl
 USE_QT=		core buildtools_build
 HAS_CONFIGURE=	yes
 CONFIGURE_ARGS=	-no-gui -no-xcb

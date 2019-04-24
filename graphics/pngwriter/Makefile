@@ -3,6 +3,7 @@
 
 PORTNAME=	pngwriter
 PORTVERSION=	0.7.0
+PORTREVISION=	1
 CATEGORIES=	graphics devel
 
 MAINTAINER=	rakuco@FreeBSD.org
@@ -18,7 +19,7 @@ OPTIONS_DEFINE=	DOCS
 
 PORTDOCS=	CHANGES EXAMPLES README PNGwriterQuickReference.pdf
 
-USES=		cmake:outsource compiler:c++11-lang
+USES=		cmake compiler:c++11-lang
 CMAKE_ON=	BUILD_SHARED_LIBS PNGwriter_USE_FREETYPE
 USE_GITHUB=	yes
 USE_LDCONFIG=	yes

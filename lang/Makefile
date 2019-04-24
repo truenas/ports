@@ -33,13 +33,11 @@
     SUBDIR += chibi-scheme
     SUBDIR += chicken
     SUBDIR += chicken5
-    SUBDIR += cilkplus
     SUBDIR += cim
     SUBDIR += cint
     SUBDIR += cjs
-    SUBDIR += clang-devel
-    SUBDIR += clang35
     SUBDIR += cling
+    SUBDIR += clisp
     SUBDIR += clojure
     SUBDIR += clojure-mode.el
     SUBDIR += clover
@@ -67,6 +65,7 @@
     SUBDIR += erlang
     SUBDIR += erlang-doc
     SUBDIR += erlang-java
+    SUBDIR += erlang-man
     SUBDIR += erlang-riak
     SUBDIR += erlang-runtime15
     SUBDIR += erlang-runtime16
@@ -75,6 +74,7 @@
     SUBDIR += erlang-runtime19
     SUBDIR += erlang-runtime20
     SUBDIR += erlang-runtime21
+    SUBDIR += erlang-runtime22
     SUBDIR += erlang-wx
     SUBDIR += execline
     SUBDIR += expect
@@ -113,6 +113,7 @@
     SUBDIR += gforth
     SUBDIR += ghc
     SUBDIR += ghc843
+    SUBDIR += ghc844
     SUBDIR += ghc862
     SUBDIR += gjs
     SUBDIR += gnat_util
@@ -163,7 +164,6 @@
     SUBDIR += kf5-kross
     SUBDIR += kross-interpreters
     SUBDIR += kturtle
-    SUBDIR += kturtle-kde4
     SUBDIR += lafontaine
     SUBDIR += lci
     SUBDIR += ldc
@@ -264,7 +264,6 @@
     SUBDIR += parrot
     SUBDIR += pbasic
     SUBDIR += pcc
-    SUBDIR += pecl-perl
     SUBDIR += perl5-devel
     SUBDIR += perl5.24
     SUBDIR += perl5.26
@@ -275,15 +274,12 @@
     SUBDIR += pharo
     SUBDIR += phc
     SUBDIR += php-mode.el
-    SUBDIR += php56
-    SUBDIR += php56-extensions
     SUBDIR += php71
     SUBDIR += php71-extensions
     SUBDIR += php72
     SUBDIR += php72-extensions
     SUBDIR += php73
     SUBDIR += php73-extensions
-    SUBDIR += php_doc
     SUBDIR += picoc
     SUBDIR += pocl
     SUBDIR += polyml
@@ -306,7 +302,6 @@
     SUBDIR += python2
     SUBDIR += python27
     SUBDIR += python3
-    SUBDIR += python34
     SUBDIR += python35
     SUBDIR += python36
     SUBDIR += python37
@@ -324,7 +319,6 @@
     SUBDIR += rexx-wrapper
     SUBDIR += rhino
     SUBDIR += rubinius
-    SUBDIR += ruby23
     SUBDIR += ruby24
     SUBDIR += ruby25
     SUBDIR += runawk

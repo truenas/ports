@@ -21,8 +21,8 @@ LIB_DEPENDS=	libFLAC.so:audio/flac \
 RUN_DEPENDS=	cdrecord:sysutils/cdrtools
 BUILD_DEPENDS=	cdrecord:sysutils/cdrtools
 
-USES=		cmake:outsource desktop-file-utils gettext iconv kde:5 pkgconfig \
-		qt:5 shared-mime-info tar:xz
+USES=		cmake compiler:c++11-lang desktop-file-utils gettext iconv \
+		kde:5 pkgconfig qt:5 shared-mime-info tar:xz
 
 USE_KDE=	archive attica auth bookmarks codecs completion config \
 		configwidgets coreaddons ecm filemetadata i18n iconthemes \
@@ -34,7 +34,7 @@ USE_QT=		core dbus gui network webkit widgets xml \
 # The ffmpeg-plugin needs patching
 CMAKE_ARGS=	-DK3B_BUILD_FFMPEG_DECODER_PLUGIN:BOOL=FALSE
 
-OPTIONS_DEFINE=		CDRDAO DVDPLUSRW EMOVIX VCDIMAGER DOCS
+OPTIONS_DEFINE=		CDRDAO CDRSKIN DVDPLUSRW EMOVIX VCDIMAGER DOCS
 OPTIONS_DEFAULT=	${OPTIONS_DEFINE}
 
 CDRDAO_DESC=		Burning: cdrdao
@@ -48,5 +48,8 @@ EMOVIX_RUN_DEPENDS=	mkmovixiso:multimedia/emovix
 
 VCDIMAGER_DESC=		Burning: VCDImager (video CDs)
 VCDIMAGER_RUN_DEPENDS=	vcdxrip:multimedia/vcdimager
+
+CDRSKIN_DESC=		Burning: cdrskin (improved performance)
+CDRSKIN_RUN_DEPENDS=	cdrskin:devel/libburn
 
 .include <bsd.port.mk>

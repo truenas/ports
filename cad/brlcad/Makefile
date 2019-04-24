@@ -15,6 +15,8 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 
 BROKEN=		fails to build
 BROKEN_sparc64=	does not compile: invokes i386 assembler
+DEPRECATED=	Broken for more than 6 months
+EXPIRATION_DATE=	2019-05-08
 
 BUILD_DEPENDS=	${LOCALBASE}/libdata/pkgconfig/pthread-stubs.pc:devel/libpthread-stubs \
 		${LOCALBASE}/include/tnt/jama_lu.h:math/jama \
@@ -28,7 +30,7 @@ LIB_DEPENDS=	libdrm.so:graphics/libdrm \
 
 CONFLICTS_INSTALL=	py[23][0-9]-epsilon
 
-USES=		bison cmake:outsource pathfix pkgconfig python:env shebangfix \
+USES=		bison cmake:insource pathfix pkgconfig python:env shebangfix \
 		tar:bzip2 tk:85
 USE_GL=		gl glu
 USE_XORG=	ice sm x11 xau xcb xdamage xdmcp xext xfixes xft xi \

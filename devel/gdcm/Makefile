@@ -3,6 +3,7 @@
 
 PORTNAME=	gdcm
 PORTVERSION=	${GDCM_MAJOR}.${GDCM_MINOR}.${GDCM_PATCH}
+PORTREVISION=	1
 CATEGORIES=	devel
 MASTER_SITES=	SF/gdcm/gdcm%202.x/GDCM%20${PORTVERSION}
 
@@ -11,11 +12,10 @@ COMMENT=	Grassroots DICOM library
 
 LICENSE=	BSD3CLAUSE
 
-BUILD_DEPENDS=	pkgconf:devel/pkgconf
 LIB_DEPENDS=	libopenjp2.so:graphics/openjpeg \
 		libexpat.so:textproc/expat2
 
-USES=		alias cmake:outsource compiler:c++11-lang tar:bzip2 ssl
+USES=		alias cmake compiler:c++11-lang pkgconfig tar:bzip2 ssl
 
 OPTIONS_DEFINE=		VTK6
 OPTIONS_SUB=		yes
@@ -28,7 +28,7 @@ VTK6_CMAKE_ON=		-DGDCM_USE_VTK:BOOL=ON \
 # Change this when updating the port
 GDCM_MAJOR=	2
 GDCM_MINOR=	8
-GDCM_PATCH=	8
+GDCM_PATCH=	9
 
 # Change this whenever VTK is updated
 VTK6_VERSION=	6.2

@@ -2,11 +2,12 @@
 
 PORTNAME=	mkdocs
 DISTVERSION=	1.0
+PORTREVISION=	1
 CATEGORIES=	textproc python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	freebsd_ports@k-worx.org
+MAINTAINER=	kai@FreeBSD.org
 COMMENT=	Project documentation with Markdown
 
 LICENSE=	BSD2CLAUSE

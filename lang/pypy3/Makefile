@@ -53,7 +53,7 @@ SHEBANG_FILES=	\
 		lib_pypy/_cffi_ssl/tools/make_ssl_data.py
 
 PACKAGE_ARGS=	--without-_gdbm --without-sqlite3 --without-tk
-USES+= portssl
+
 PYPY_CFFI_VER=	${PORTNAME}-${DISTVERSION:C/.[^.]+$//:S/.//}-${ARCH}-${OPSYS:tl}${OSREL:C/\..*//}
 
 pre-install:

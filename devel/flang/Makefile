@@ -3,7 +3,7 @@
 
 PORTNAME=	flang
 DISTVERSION=	6.0-g20180904
-PORTREVISION=	1
+PORTREVISION=	3
 CATEGORIES=	devel
 
 MAINTAINER=	jmd@FreeBSD.org
@@ -20,10 +20,7 @@ RUN_DEPENDS=	llvm60>=0:devel/llvm60 \
 		flang-clang>=0:devel/flang-clang
 LIB_DEPENDS=	libpgmath.so:math/libpgmath
 
-OPTIONS_DEFINE=	TESTS
-TESTS_DESC=	build unit tests for flang
-
-USES=		cmake:outsource,noninja compiler:c++11-lib libedit perl5 tar:xz \
+USES=		cmake:noninja compiler:c++11-lib libedit perl5 tar:xz \
 		shebangfix
 _USES_PYTHON?=	python:build
 USES+=		${_USES_PYTHON}
@@ -43,10 +40,13 @@ CMAKE_ARGS+=	-DLLVM_CONFIG=${LOCALBASE}/bin/llvm-config60 \
 
 CMAKE_INSTALL_PREFIX=	${PREFIX}/flang
 
-.include <bsd.port.options.mk>
-TESTS_CMAKE_ON=	FLANG_INCLUDE_TESTS
-
 MAKE_JOBS_UNSAFE=	yes
+
+OPTIONS_DEFINE=	TESTS
+
+TESTS_DESC=	build unit tests for flang
+
+TESTS_CMAKE_BOOL=	FLANG_INCLUDE_TESTS
 
 post-patch:
 	@${CP} -r  ${WRKSRC}/tools/flang2/flang2exe/x86_64-Linux ${WRKSRC}/tools/flang2/flang2exe/x86_64-FreeBSD
