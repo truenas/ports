@@ -2,13 +2,12 @@
 # $FreeBSD$
 
 PORTNAME=	netatalk
-PORTVERSION=	3.1.11
-PORTREVISION=	3
+PORTVERSION=	20181220173508
 PORTEPOCH=	1
 CATEGORIES=	net
 PKGNAMESUFFIX=	3
 
-MAINTAINER=	john@ixsystems.com
+MAINTAINER=	dev@ixsystems.com
 COMMENT=	File server for Mac OS X
 
 LICENSE=	GPLv2
@@ -19,13 +18,27 @@ RUN_DEPENDS=	p5-IO-Socket-INET6>=0:net/p5-IO-Socket-INET6
 
 NO_CHECKSUM=	yes
 
-WRKSRC=	/usr/netatalk_src
-
 USES=		bdb:5+ gettext gmake iconv pathfix autoreconf libtool perl5 pkgconfig shebangfix ssl tar:bzip2
 GNU_CONFIGURE=	yes
 USE_LDCONFIG=	yes
 USE_RC_SUBR=	netatalk
 INSTALL_TARGET=install-strip
+
+.if exists(/usr/ports/local_source/${PORTNAME})
+PORTVERSION!=	stat -f %m /usr/ports/local_source/${PORTNAME}
+EXTRACT_ONLY=
+WRKSRC=		/usr/ports/local_source/${PORTNAME}
+.else
+USE_GITHUB=	yes
+GH_ACCOUNT=	freenas
+GH_PROJECT=	Netatalk
+GH_TAGNAME=	9259d49f8793399338ce25f2eb7efe95cacd6b5b
+.endif
+
+.if exists(/usr/ports/local_source/${PORTNAME})
+checksum fetch:
+	echo ${.TARGET} not needed because building direct
+.endif
 
 CONFIGURE_ARGS+=	--with-pkgconfdir=${PREFIX}/etc \
 			--with-libgcrypt-dir=${LOCALBASE} \
@@ -82,9 +95,6 @@ SHEBANG_GLOB=	afpstats
 CONFLICTS=	bigloo-2.* cap-6.0.* tct-1.* netatalk-[12]* yudit-[0-9]*
 
 .include <bsd.port.pre.mk>
-
-checksum extract fetch:
-	${ECHO_CMD} ${.TARGET} not needed because building direct
 
 .if ${PORT_OPTIONS:MAVAHI}=="" && ${PORT_OPTIONS:MMDNSRESPONDER}==""
 SUB_LIST+=	ZEROCONF=""

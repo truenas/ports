@@ -14,6 +14,7 @@ PLIST="${PLIST} freenas/py-bsd::freenas::py-bsd::master"
 PLIST="${PLIST} freenas/py-licenselib::freenas::licenselib::master"
 PLIST="${PLIST} freenas/py-middlewared::freenas::freenas::freenas/12-devel"
 PLIST="${PLIST} net/mDNSResponder::freenas::mDNSResponder::freenas/master"
+PLIST="${PLIST} net/netatalk3::freenas::Netatalk::freenas/master"
 PLIST="${PLIST} sysutils/iocage::freenas::iocage::master"
 PLIST="${PLIST} os::trueos::trueos::freenas/12-stable"
 
