@@ -2,8 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	stp
-DISTVERSION=	2.3.1
-PORTREVISION=	4
+DISTVERSION=	2.3.2
+PORTREVISION=	2
 PORTEPOCH=	1
 CATEGORIES=	math
 
@@ -19,12 +19,12 @@ LIB_DEPENDS=	libboost_program_options.so:devel/boost-libs \
 		libminisat.so:math/minisat \
 		libcryptominisat5.so:math/cryptominisat
 
-USES=		bison:build compiler:c++11-lang cmake:outsource perl5 python
+USES=		bison:build compiler:c++11-lang cmake perl5 python
 USE_GITHUB=	yes
 USE_PERL5=	build
 USE_LDCONFIG=	yes
 
 post-install:
-	@${MV} ${STAGEDIR}${PREFIX}/bin/stp-2.1.2 ${STAGEDIR}${PREFIX}/bin/stp
+	@${MV} ${STAGEDIR}${PREFIX}/bin/stp-${PORTVERSION} ${STAGEDIR}${PREFIX}/bin/stp
 
 .include <bsd.port.mk>

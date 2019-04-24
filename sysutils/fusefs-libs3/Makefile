@@ -3,7 +3,7 @@
 
 PORTNAME=	fusefs-libs3
 DISTVERSIONPREFIX=	fuse-
-DISTVERSION=	3.3.0
+DISTVERSION=	3.5.0
 CATEGORIES=	sysutils
 
 MAINTAINER=	se@FreeBSD.org
@@ -15,11 +15,11 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 
 USES=		meson
 USE_LDCONFIG=	yes
+PLIST_SUB=	VERSION=${PORTVERSION}
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	libfuse
 GH_PROJECT=	libfuse
-GH_TAGNAME=	11d9ed6
 
 .include <bsd.port.pre.mk>
 

@@ -2,8 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	emacs
-DISTVERSION=	${EMACS_VER}
-PORTREVISION=	4
+DISTVERSION=	26.2
 PORTEPOCH=	3
 CATEGORIES=	editors ipv6
 MASTER_SITES=	GNU
@@ -43,7 +42,7 @@ CPE_VENDOR=	gnu
 
 CONFIGURE_ARGS=	--disable-build-details \
 		--localstatedir=/var \
-		--with-gameuser=games:games
+		--without-gpm
 .if ${FLAVOR:U} == canna
 CONFIGURE_ARGS+=	--with-canna
 .endif
@@ -75,14 +74,14 @@ INFO_PATH=	${DATADIR_REL}/info
 INSTALLS_ICONS=	yes
 .endif
 .if ${FLAVOR:U} == canna
-PLIST_FILES+=	${DATADIR}/${EMACS_VER}/lisp/canna.el.gz \
-		${DATADIR}/${EMACS_VER}/lisp/canna.elc \
-		${DATADIR}/${EMACS_VER}/lisp/isearch-ext.el.gz	\
-		${DATADIR}/${EMACS_VER}/lisp/isearch-ext.elc
+PLIST_FILES+=	${DATADIR}/${DISTVERSION}/lisp/canna.el.gz \
+		${DATADIR}/${DISTVERSION}/lisp/canna.elc \
+		${DATADIR}/${DISTVERSION}/lisp/isearch-ext.el.gz	\
+		${DATADIR}/${DISTVERSION}/lisp/isearch-ext.elc
 .endif
-PLIST_SUB=	EMACS_VER=${EMACS_VER} GNU_HOST=${CONFIGURE_TARGET}
+PLIST_SUB=	EMACS_VER=${DISTVERSION} GNU_HOST=${CONFIGURE_TARGET}
 SUB_FILES=	sources.el
-SUB_LIST=	EMACS_VER=${EMACS_VER} # sources.el
+SUB_LIST=	EMACS_VER=${DISTVERSION} # sources.el
 
 OPTIONS_DEFINE=	ACL DBUS GCONF GNUTLS GSETTINGS JSON LCMS2 M17N MAILUTILS \
 		MODULES OTF SCROLLBARS SOURCES THREADS XFT XIM XML XWIDGETS
@@ -128,26 +127,32 @@ XWIDGETS_DESC=	Experimental GTK widgets               (requires GTK3)
 ACL_CONFIGURE_ENABLE=	acl
 ALSA_CONFIGURE_ON=	--with-sound=alsa
 ALSA_LIB_DEPENDS=	libasound.so:audio/alsa-lib
+CAIRO_USES=		gnome
 CAIRO_USE=		GNOME=cairo
 CAIRO_CONFIGURE_WITH=	cairo
 CAIRO_IMPLIES=		PNG XFT
 DBUS_LIB_DEPENDS=	libdbus-1.so:devel/dbus
 DBUS_CONFIGURE_WITH=	dbus
+GCONF_USES=		gnome
 GCONF_USE=		GNOME=gconf2
 GCONF_CONFIGURE_WITH=	gconf
 GFILE_CONFIGURE_ON=	--with-file-notification=gfile
+GFILE_USES=		gnome
 GFILE_USE=		GNOME=glib20
 GIF_LIB_DEPENDS=	libgif.so:graphics/giflib
 GIF_CONFIGURE_WITH=	gif
 GNUTLS_LIB_DEPENDS=	libgnutls.so:security/gnutls
 GNUTLS_CONFIGURE_WITH=	gnutls
+GSETTINGS_USES=		gnome
 GSETTINGS_USE=		GNOME=glib20
 GSETTINGS_CONFIGURE_WITH=	gsettings
 GSETTINGS_IMPLIES=	DBUS
+GTK2_USES=		gnome
 GTK2_USE=		GNOME=cairo,gtk20
 GTK2_CONFIGURE_ON=	--with-x-toolkit=gtk2
 GTK2_LIB_DEPENDS=	libfreetype.so:print/freetype2 \
 			libfontconfig.so:x11-fonts/fontconfig
+GTK3_USES=		gnome
 GTK3_USE=		GNOME=cairo,gtk30
 GTK3_CONFIGURE_ON=	--with-x-toolkit=gtk3
 JPEG_USES=		jpeg
@@ -178,8 +183,9 @@ PNG_LIB_DEPENDS=	libpng.so:graphics/png
 PNG_CONFIGURE_WITH=	png
 SCROLLBARS_CONFIGURE_WITH=	toolkit-scroll-bars
 .if ${FLAVOR:U} == canna
-SOURCES_PLIST_FILES=	${DATADIR}/${EMACS_VER}/src/canna.c
+SOURCES_PLIST_FILES=	${DATADIR}/${DISTVERSION}/src/canna.c
 .endif
+SVG_USES=		gnome
 SVG_USE=		GNOME=cairo,librsvg2
 SVG_CONFIGURE_WITH=	rsvg
 SVG_IMPLIES=		PNG
@@ -195,6 +201,7 @@ XFT_CONFIGURE_WITH=	xft
 XFT_LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig \
 			libfreetype.so:print/freetype2
 XIM_CONFIGURE_WITH=	xim
+XML_USES=		gnome
 XML_USE=		GNOME=libxml2
 XML_CONFIGURE_WITH=	xml2
 XPM_USE=		XORG=xpm
@@ -204,8 +211,6 @@ XWIDGETS_CONFIGURE_WITH=	xwidgets
 XWIDGETS_LIB_DEPENDS=	libwebkit2gtk-4.0.so:www/webkit2-gtk3 \
 			libsoup-2.4.so:devel/libsoup
 XWIDGETS_IMPLIES=	GTK3
-
-EMACS_VER=		26.1
 
 .include <bsd.port.options.mk>
 
@@ -229,12 +234,12 @@ post-patch:
 
 post-install-MAILUTILS-on:
 	${LN} -sf ${PREFIX}/bin/movemail \
-		${STAGEDIR}${PREFIX}/libexec/emacs/${EMACS_VER}/${CONFIGURE_TARGET}
+		${STAGEDIR}${PREFIX}/libexec/emacs/${DISTVERSION}/${CONFIGURE_TARGET}
 
 post-install-SOURCES-on:
-	@${MKDIR} ${STAGEDIR}${DATADIR}/${EMACS_VER}/src
-	${INSTALL_DATA} ${WRKSRC}/src/*.[ch] ${STAGEDIR}${DATADIR}/${EMACS_VER}/src
-	${INSTALL_DATA} ${WRKDIR}/sources.el ${STAGEDIR}${DATADIR}/${EMACS_VER}/site-lisp/site-start.el
+	@${MKDIR} ${STAGEDIR}${DATADIR}/${DISTVERSION}/src
+	${INSTALL_DATA} ${WRKSRC}/src/*.[ch] ${STAGEDIR}${DATADIR}/${DISTVERSION}/src
+	${INSTALL_DATA} ${WRKDIR}/sources.el ${STAGEDIR}${DATADIR}/${DISTVERSION}/site-lisp/site-start.el
 
 post-install:
 	@${RM} -r ${STAGEDIR}${PREFIX}/lib/systemd

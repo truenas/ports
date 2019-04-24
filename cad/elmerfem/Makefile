@@ -3,13 +3,17 @@
 
 PORTNAME=	elmerfem
 PORTVERSION=	8.3.20170524
-PORTREVISION=	4
+PORTREVISION=	5
 CATEGORIES=	cad science
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	ELMER FEM package
 
 LICENSE=	GPLv2
+
+BROKEN=		fails to build
+DEPRECATED=	Broken for more than 6 months
+EXPIRATION_DATE=	2019-05-08
 
 LIB_DEPENDS=	libparpack.so:math/arpack-ng \
 		libmpich.so:net/mpich
@@ -18,7 +22,7 @@ USE_GITHUB=	yes
 GH_ACCOUNT=	ElmerCSC
 GH_TAGNAME=	release-8.3
 
-USES=		blaslapack:netlib cmake:outsource fortran gmake tcl
+USES=		blaslapack:netlib cmake fortran gmake tcl
 
 USE_LDCONFIG=	${PREFIX}/lib/elmersolver
 ALL_TARGET=	# empty

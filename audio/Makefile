@@ -12,7 +12,6 @@
     SUBDIR += abcselect
     SUBDIR += abgate-lv2
     SUBDIR += abraca
-    SUBDIR += acoustid-fingerprinter
     SUBDIR += adplay
     SUBDIR += afsp
     SUBDIR += aften
@@ -23,7 +22,7 @@
     SUBDIR += alsa-sndio
     SUBDIR += alsa-utils
     SUBDIR += alure
-    SUBDIR += amarok-kde4
+    SUBDIR += amarok
     SUBDIR += amb-plugins
     SUBDIR += ample
     SUBDIR += amsynth
@@ -43,7 +42,6 @@
     SUBDIR += aubio
     SUBDIR += aucatctl
     SUBDIR += audacity
-    SUBDIR += audex
     SUBDIR += audiere
     SUBDIR += audiocd-kio
     SUBDIR += audiotag
@@ -53,6 +51,7 @@
     SUBDIR += autozen
     SUBDIR += avldrums-lv2
     SUBDIR += aylet
+    SUBDIR += bambootracker
     SUBDIR += baresip
     SUBDIR += baudline
     SUBDIR += bcg729
@@ -91,13 +90,11 @@
     SUBDIR += cpige
     SUBDIR += cplay
     SUBDIR += cpp-xmms2
-    SUBDIR += creox
     SUBDIR += crip
     SUBDIR += csound
     SUBDIR += csoundqt
     SUBDIR += ctronome
     SUBDIR += cue2toc
-    SUBDIR += cueplayer
     SUBDIR += cuetools
     SUBDIR += cutmp3
     SUBDIR += dagrab
@@ -118,7 +115,6 @@
     SUBDIR += dir2ogg
     SUBDIR += discid
     SUBDIR += dpf-plugins-lv2
-    SUBDIR += dream
     SUBDIR += drumgizmo
     SUBDIR += drumkv1-lv2
     SUBDIR += drumpiler
@@ -139,7 +135,6 @@
     SUBDIR += eq10q-lv2
     SUBDIR += esound
     SUBDIR += espeak
-    SUBDIR += esperanza
     SUBDIR += etcd
     SUBDIR += eteroj-lv2
     SUBDIR += etktab
@@ -152,6 +147,7 @@
     SUBDIR += fabla2-lv2
     SUBDIR += fapg
     SUBDIR += fasttracker2
+    SUBDIR += faudio
     SUBDIR += faust
     SUBDIR += faust-lv2
     SUBDIR += faustlive
@@ -212,11 +208,9 @@
     SUBDIR += ghostess
     SUBDIR += giada
     SUBDIR += gimmix
-    SUBDIR += gkrellmms2
     SUBDIR += gkrellmvolume2
     SUBDIR += glurp
     SUBDIR += gmidimonitor
-    SUBDIR += gmixer
     SUBDIR += gmpc
     SUBDIR += gmpc-alarm
     SUBDIR += gmpc-albumview
@@ -231,7 +225,6 @@
     SUBDIR += gmpc-mdcover
     SUBDIR += gmpc-mserver
     SUBDIR += gmpc-shout
-    SUBDIR += gmpc-wikipedia
     SUBDIR += gmsynth-lv2
     SUBDIR += gmtp
     SUBDIR += gmusicbrowser
@@ -245,10 +238,10 @@
     SUBDIR += goattracker
     SUBDIR += gogglesmm
     SUBDIR += goobox
-    SUBDIR += gqmpeg
     SUBDIR += gqradio
     SUBDIR += gradio
     SUBDIR += gramofile
+    SUBDIR += gsequencer
     SUBDIR += gsm
     SUBDIR += gsound
     SUBDIR += gstreamer-plugins-a52dec
@@ -300,6 +293,7 @@
     SUBDIR += gstreamer1-plugins-jack
     SUBDIR += gstreamer1-plugins-ladspa
     SUBDIR += gstreamer1-plugins-lame
+    SUBDIR += gstreamer1-plugins-lv2
     SUBDIR += gstreamer1-plugins-modplug
     SUBDIR += gstreamer1-plugins-mpg123
     SUBDIR += gstreamer1-plugins-musepack
@@ -336,6 +330,7 @@
     SUBDIR += hs-OpenAL
     SUBDIR += hs-libmpd
     SUBDIR += hts_engine-API
+    SUBDIR += hvl2wav
     SUBDIR += hydrogen
     SUBDIR += icecast
     SUBDIR += icecast-kh
@@ -366,25 +361,17 @@
     SUBDIR += jmusic
     SUBDIR += jokosher
     SUBDIR += juk
-    SUBDIR += juk-kde4
     SUBDIR += juke
     SUBDIR += julius
     SUBDIR += kexis
-    SUBDIR += kid3-kde4
     SUBDIR += kid3-kf5
-    SUBDIR += kid3-qt4
     SUBDIR += kid3-qt5
-    SUBDIR += kio-audiocd-kde4
     SUBDIR += kmix
-    SUBDIR += kmix-kde4
-    SUBDIR += kscd-kde4
     SUBDIR += ksmp3play
-    SUBDIR += kstreamripper
     SUBDIR += kwave
     SUBDIR += ladspa
     SUBDIR += lame
     SUBDIR += lash
-    SUBDIR += lastfm-desktop
     SUBDIR += liba52
     SUBDIR += libaacplus
     SUBDIR += libadplug
@@ -417,10 +404,7 @@
     SUBDIR += libid3tag
     SUBDIR += libinstpatch
     SUBDIR += libkcddb
-    SUBDIR += libkcddb-kde4
     SUBDIR += libkcompactdisc
-    SUBDIR += libkcompactdisc-kde4
-    SUBDIR += liblastfm
     SUBDIR += liblastfm-qt5
     SUBDIR += liblo
     SUBDIR += liblscp
@@ -514,7 +498,6 @@
     SUBDIR += maplay
     SUBDIR += mate-media
     SUBDIR += mbox
-    SUBDIR += mcplay
     SUBDIR += mctoolame-decoder
     SUBDIR += mctoolame-encoder
     SUBDIR += mda-lv2
@@ -523,11 +506,10 @@
     SUBDIR += midipp
     SUBDIR += mikmod
     SUBDIR += milkytracker
-    SUBDIR += minitunes
     SUBDIR += mixer.app
     SUBDIR += mixmos
     SUBDIR += mixxx
-    SUBDIR += mixxx20
+    SUBDIR += mixxx21
     SUBDIR += mma
     SUBDIR += moc
     SUBDIR += modplugplay
@@ -580,6 +562,7 @@
     SUBDIR += ncmpc
     SUBDIR += ncmpcpp
     SUBDIR += nekobee
+    SUBDIR += nekobi-lv2
     SUBDIR += noise-repellent-lv2
     SUBDIR += normalize
     SUBDIR += nosefart
@@ -668,10 +651,11 @@
     SUBDIR += praat
     SUBDIR += pragha
     SUBDIR += protracker
-    SUBDIR += puddletag
     SUBDIR += pulseaudio
     SUBDIR += pulseaudio-module-sndio
     SUBDIR += pulseaudio-module-xrdp
+    SUBDIR += pulseaudio-qt
+    SUBDIR += pulseeffects
     SUBDIR += py-SoundFile
     SUBDIR += py-al
     SUBDIR += py-ao
@@ -715,11 +699,10 @@
     SUBDIR += pytone
     SUBDIR += qjackctl
     SUBDIR += qmidiarp
-    SUBDIR += qmpdclient
+    SUBDIR += qmidictl
     SUBDIR += qsampler
     SUBDIR += qsynth
     SUBDIR += quimup
-    SUBDIR += raop_play
     SUBDIR += raul
     SUBDIR += rawrec
     SUBDIR += re
@@ -731,7 +714,6 @@
     SUBDIR += rhvoice
     SUBDIR += rhvoice-dictionary
     SUBDIR += rhythmbox
-    SUBDIR += rio500
     SUBDIR += rioutil
     SUBDIR += ripit
     SUBDIR += ripperx
@@ -756,7 +738,6 @@
     SUBDIR += sc3-plugins
     SUBDIR += schismtracker
     SUBDIR += screcord-lv2
-    SUBDIR += scrobbler
     SUBDIR += sdl2_mixer
     SUBDIR += sdl_mixer
     SUBDIR += sdl_sound
@@ -768,18 +749,16 @@
     SUBDIR += shorten
     SUBDIR += shout
     SUBDIR += shout-idjc
-    SUBDIR += shoutcast
     SUBDIR += sidplay
     SUBDIR += sidplay2
     SUBDIR += sidplayer
-    SUBDIR += simon
     SUBDIR += simplemod
     SUBDIR += siren
-    SUBDIR += skype-call-recorder
     SUBDIR += slv2
     SUBDIR += snack
     SUBDIR += snd
     SUBDIR += sndio
+    SUBDIR += so-synth-lv2
     SUBDIR += solfege
     SUBDIR += sonata
     SUBDIR += sonic-visualiser
@@ -789,7 +768,6 @@
     SUBDIR += soundgrab
     SUBDIR += soundkonverter
     SUBDIR += soundtouch
-    SUBDIR += soundtracker
     SUBDIR += sox
     SUBDIR += spc2it
     SUBDIR += specimen
@@ -806,8 +784,10 @@
     SUBDIR += spiralsynthmodular
     SUBDIR += splay
     SUBDIR += splaytk
+    SUBDIR += spotifyd
     SUBDIR += squash
     SUBDIR += sratom
+    SUBDIR += stegosaurus-lv2
     SUBDIR += stk
     SUBDIR += streamripper
     SUBDIR += streamtranscoder
@@ -830,7 +810,6 @@
     SUBDIR += tcd
     SUBDIR += teamspeak3-server
     SUBDIR += tempest_for_eliza
-    SUBDIR += terminatorx
     SUBDIR += thunar-media-tags-plugin
     SUBDIR += timemachine
     SUBDIR += timidity
@@ -858,6 +837,8 @@
     SUBDIR += umurmur
     SUBDIR += vagalume
     SUBDIR += vamp-plugin-sdk
+    SUBDIR += vgmplay
+    SUBDIR += vimpc
     SUBDIR += virtual_oss
     SUBDIR += virtual_oss_ctl
     SUBDIR += vitunes
@@ -880,7 +861,6 @@
     SUBDIR += webrtc-audio-processing
     SUBDIR += whysynth
     SUBDIR += wildmidi
-    SUBDIR += wmalbum
     SUBDIR += wmix
     SUBDIR += wmmp
     SUBDIR += wmrecord
@@ -901,27 +881,8 @@
     SUBDIR += xmix
     SUBDIR += xmixer
     SUBDIR += xmmix
-    SUBDIR += xmms-ahx
-    SUBDIR += xmms-curses
-    SUBDIR += xmms-faad
-    SUBDIR += xmms-festalon
-    SUBDIR += xmms-flac
-    SUBDIR += xmms-gbsplay
-    SUBDIR += xmms-ladspa
-    SUBDIR += xmms-mailnotify
-    SUBDIR += xmms-nas
-    SUBDIR += xmms-nsf
-    SUBDIR += xmms-sapplug
-    SUBDIR += xmms-scrobbler
-    SUBDIR += xmms-sexypsf
-    SUBDIR += xmms-shn
-    SUBDIR += xmms-volnorm
-    SUBDIR += xmms-wavpack
-    SUBDIR += xmms-xf86audio
-    SUBDIR += xmms-xymms
     SUBDIR += xmms2
     SUBDIR += xmms2-scrobbler
-    SUBDIR += xmmsctrl
     SUBDIR += xmp
     SUBDIR += xmradio
     SUBDIR += xoscope
@@ -935,6 +896,7 @@
     SUBDIR += zinf
     SUBDIR += zita-convolver
     SUBDIR += zita-resampler
+    SUBDIR += zrythm
     SUBDIR += zynaddsubfx
 
 .include <bsd.port.subdir.mk>

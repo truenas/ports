@@ -5,7 +5,7 @@ PORTNAME=	raspberrypi-userland
 PORTVERSION=	20161026
 CATEGORIES=	misc
 
-MAINTAINER=	mikael.urankar@gmail.com
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Various libraries for the Raspberry Pi
 
 LICENSE=	BSD3CLAUSE
@@ -14,7 +14,7 @@ ONLY_FOR_ARCHS=	armv6 armv7
 
 CONFLICTS_INSTALL=	mesa-libs
 
-USES=		cmake:outsource pkgconfig shebangfix
+USES=		cmake pkgconfig shebangfix
 
 USE_LDCONFIG=	yes
 

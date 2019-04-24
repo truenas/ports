@@ -2,11 +2,11 @@
 # $FreeBSD$
 
 PORTNAME=	tautulli
-PORTVERSION=	2.1.22
+PORTVERSION=	2.1.28
 DISTVERSIONPREFIX=v
 CATEGORIES=	multimedia python
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	christer.edwards@gmail.com
 COMMENT=	Monitoring, analytics, and notifications for Plex Media Server
 
 LICENSE=	GPLv3
@@ -47,6 +47,7 @@ do-install:
 post-install-DOCS-on:
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}
 	${INSTALL_DATA} ${PORTDOCS:S|^|${WRKSRC}/|} ${STAGEDIR}${DOCSDIR}
+	${RLN} ${STAGEDIR}${DOCSDIR}/CHANGELOG.md ${STAGEDIR}${WWWDIR}/CHANGELOG.md
 
 post-install:
 	${FIND} -s ${STAGEDIR}${WWWDIR} -type d -empty -delete

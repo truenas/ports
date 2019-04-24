@@ -1,20 +1,24 @@
 Only enter the directories we want to build, otherwise we might fail due to
 missing dependencies.
 
---- src/src.pro.orig	2018-09-21 17:53:44 UTC
+--- src/src.pro.orig	2019-03-18 19:54:17 UTC
 +++ src/src.pro
-@@ -1,48 +1,3 @@
+@@ -1,54 +1,3 @@
  TEMPLATE = subdirs
  
 -qtHaveModule(widgets) {
 -    no-png {
 -        message("Some graphics-related tools are unavailable without PNG support")
 -    } else {
--        SUBDIRS = assistant \
--                  pixeltool \
--                  designer
+-        QT_FOR_CONFIG += widgets
+-        qtConfig(pushbutton):qtConfig(toolbutton) {
+-            SUBDIRS = assistant \
+-                      designer \
+-                      pixeltool
 -
--        linguist.depends = designer
+-            linguist.depends = designer
+-        }
+-        qtHaveModule(quick):qtConfig(thread):qtConfig(toolbutton): SUBDIRS += distancefieldgenerator
 -    }
 -}
 -
@@ -25,11 +29,13 @@ missing dependencies.
 -    !android|android_app: SUBDIRS += qtplugininfo
 -}
 -
--config_clang: SUBDIRS += qdoc
+-include($$OUT_PWD/qdoc/qtqdoc-config.pri)
+-QT_FOR_CONFIG += qdoc-private
+-qtConfig(qdoc): qtConfig(thread): SUBDIRS += qdoc
 -
--if(!android|android_app):!uikit: SUBDIRS += qtpaths
+-!android|android_app: SUBDIRS += qtpaths
 -
--mac {
+-macos {
 -    SUBDIRS += macdeployqt
 -}
 -
@@ -37,11 +43,11 @@ missing dependencies.
 -
 -win32|winrt:SUBDIRS += windeployqt
 -winrt:SUBDIRS += winrtrunner
--qtHaveModule(gui):!android:!uikit:!qnx:!winrt: SUBDIRS += qtdiag
+-qtHaveModule(gui):!wasm:!android:!uikit:!qnx:!winrt: SUBDIRS += qtdiag
 -
 -qtNomakeTools( \
+-    distancefieldgenerator \
 -    pixeltool \
--    macdeployqt \
 -)
 -
 -# This is necessary to avoid a race condition between toolchain.prf
@@ -52,4 +58,4 @@ missing dependencies.
 -    winrtrunner.depends += qtattributionsscanner
 -    linguist.depends += qtattributionsscanner
 -}
-+SUBDIRS += linguist
++SUBDIRS = linguist

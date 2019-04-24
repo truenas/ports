@@ -2,8 +2,7 @@
 
 PORTNAME=	iqtree
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.6.8
-PORTREVISION=	1
+DISTVERSION=	1.6.10
 CATEGORIES=	biology
 
 MAINTAINER=	jrm@FreeBSD.org
@@ -28,7 +27,7 @@ PORTEXAMPLES=	example.cf example.nex example.phy models.nex
 OPTIONS_DEFINE=	EXAMPLES
 
 do-install:
-	${INSTALL_PROGRAM} ${WRKSRC}/iqtree ${STAGEDIR}${PREFIX}/bin
+	${INSTALL_PROGRAM} ${BUILD_WRKSRC}/iqtree ${STAGEDIR}${PREFIX}/bin
 
 do-install-EXAMPLES-on:
 	@${MKDIR} ${STAGEDIR}${EXAMPLESDIR}

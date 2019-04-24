@@ -1,9 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	urdfdom
-DISTVERSION=	1.0.0-9
-PORTREVISION=	1
-DISTVERSIONSUFFIX=	-g1857a55
+DISTVERSION=	1.0.3
 CATEGORIES=	misc
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -17,7 +15,7 @@ LIB_DEPENDS=	libconsole_bridge.so:misc/console-bridge \
 		libtinyxml.so:textproc/tinyxml
 RUN_DEPENDS=	urdfdom-headers>0:misc/urdfdom-headers
 
-USES=		compiler:c++11-lang cmake:outsource
+USES=		compiler:c++11-lang cmake
 USE_GITHUB=	yes
 GH_ACCOUNT=	ros
 USE_LDCONFIG=	yes

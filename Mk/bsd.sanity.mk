@@ -86,6 +86,10 @@ DEV_ERROR+=	"USE_GNOME=pkgconfig is unsupported, please use USES=pkgconfig"
 DEV_ERROR+=	"USE_ZOPE=yes is unsupported, please use USES=zope instead"
 .endif
 
+.if defined(USE_SDL) && ${USE_SDL} == yes
+DEV_ERROR+=	"USE_SDL=yes is unsupported, please use USE_SDL=sdl instead"
+.endif
+
 .if defined(USE_GITHUB) && defined(GH_COMMIT)
 DEV_ERROR+=	"GH_COMMIT is unsupported, please convert GHL-\>GH in MASTER_SITES and set GH_TAGNAME to tag or commit hash and remove GH_COMMIT"
 .endif
@@ -163,6 +167,18 @@ DEV_ERROR+=	"USE_FPC=yes is no longer supported, please use USES=fpc"
 DEV_ERROR+=	"PORT${_type} does not do anything unless the ${_type} option is present."
 .  endif
 .endfor
+
+_BROKEN_OPTIONS_HELPERS=
+.for opt in ${_REALLY_ALL_POSSIBLE_OPTIONS}
+.  for helper in ${_ALL_OPTIONS_HELPERS}
+.    if defined(${opt}_${helper}) && empty(_OPTIONS_HELPERS_SEEN:M${opt}_${helper})
+_BROKEN_OPTIONS_HELPERS+=	${opt}_${helper}
+.    endif
+.  endfor
+.endfor
+.if !empty(_BROKEN_OPTIONS_HELPERS)
+DEV_ERROR+=	"The following options helpers are incorrectly set after bsd.port.options.mk and are ineffective: ${_BROKEN_OPTIONS_HELPERS}"
+.endif
 
 SANITY_UNSUPPORTED=	USE_OPENAL USE_FAM USE_MAKESELF USE_ZIP USE_LHA USE_CMAKE \
 		USE_READLINE USE_ICONV PERL_CONFIGURE PERL_MODBUILD \

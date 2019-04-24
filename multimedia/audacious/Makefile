@@ -2,10 +2,9 @@
 # $FreeBSD$
 
 PORTNAME=	audacious
-PORTVERSION=	3.10
-PORTREVISION=	1
+PORTVERSION=	3.10.1
 CATEGORIES=	multimedia audio
-MASTER_SITES=	http://distfiles.audacious-media-player.org/
+MASTER_SITES=	https://distfiles.audacious-media-player.org/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Lightweight and versatile audio player

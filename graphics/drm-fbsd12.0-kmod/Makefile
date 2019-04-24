@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	drm-fbsd12.0-kmod
-PORTVERSION=	4.16.g20181210
+PORTVERSION=	4.16.g20190305
 CATEGORIES=	graphics
 
 MAINTAINER=	jmd@FreeBSD.org
@@ -25,12 +25,12 @@ USES=		kmod uidfix compiler:c++11-lang
 USE_GITHUB=	yes
 GH_ACCOUNT=	FreeBSDDesktop
 GH_PROJECT=	kms-drm
-GH_TAGNAME=	ad84bf0
+GH_TAGNAME=	4192575
 
 .include <bsd.port.options.mk>
 
-.if ${OPSYS} == FreeBSD && ${OSVERSION} >= 1200000 && ${OSVERSION} < 1200058
-IGNORE=		not supported on older CURRENT, no kernel support
+.if ${OPSYS} == FreeBSD && ${OSVERSION} < 1200058
+IGNORE=		only supported on FreeBSD 12.0 and later
 .endif
 .if ${OPSYS} != FreeBSD
 IGNORE=		not supported on anything but FreeBSD (missing linuxkpi functionality)

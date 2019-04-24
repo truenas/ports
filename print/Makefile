@@ -77,7 +77,6 @@
     SUBDIR += gl2ps
     SUBDIR += gsfonts
     SUBDIR += gspdf
-    SUBDIR += gsview
     SUBDIR += gtklp
     SUBDIR += gutenprint
     SUBDIR += gv
@@ -93,8 +92,6 @@
     SUBDIR += indexinfo
     SUBDIR += jabref
     SUBDIR += kde_poster
-    SUBDIR += kover
-    SUBDIR += kpdftool
     SUBDIR += latex-beamer
     SUBDIR += latex-biber
     SUBDIR += latex-ltablex
@@ -112,7 +109,6 @@
     SUBDIR += libotf
     SUBDIR += libpagemaker
     SUBDIR += libpaper
-    SUBDIR += libppd
     SUBDIR += libspectre
     SUBDIR += lilypond
     SUBDIR += lilypond-devel
@@ -120,7 +116,6 @@
     SUBDIR += linux-c7-cups-libs
     SUBDIR += linux-c7-harfbuzz
     SUBDIR += lout
-    SUBDIR += lpr-wrapper
     SUBDIR += lprps
     SUBDIR += lyx
     SUBDIR += magicfilter
@@ -162,9 +157,7 @@
     SUBDIR += pdfstitch
     SUBDIR += pdftk
     SUBDIR += pear-File_PDF
-    SUBDIR += pecl-haru
     SUBDIR += pecl-pdflib
-    SUBDIR += pecl-ps
     SUBDIR += pfbtopfa
     SUBDIR += photoprint
     SUBDIR += pic2fig
@@ -180,7 +173,6 @@
     SUBDIR += pnm2ppa
     SUBDIR += poster
     SUBDIR += print-manager
-    SUBDIR += print-manager-kde4
     SUBDIR += ps2eps
     SUBDIR += pscal
     SUBDIR += psdim
@@ -229,7 +221,6 @@
     SUBDIR += rubygem-rbpdf
     SUBDIR += rubygem-rbpdf-font
     SUBDIR += rubygem-ttfunk
-    SUBDIR += scribus
     SUBDIR += scribus-devel
     SUBDIR += sgf2tex
     SUBDIR += splix

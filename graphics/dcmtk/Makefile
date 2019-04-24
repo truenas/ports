@@ -4,6 +4,7 @@
 PORTNAME=	dcmtk
 DISTVERSIONPREFIX=	${PORTNAME:tu}-
 DISTVERSION=	3.6.4
+PORTREVISION=	1
 CATEGORIES=	graphics devel
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -16,7 +17,7 @@ LIB_DEPENDS=	libicuuc.so:devel/icu \
 		libpng16.so:graphics/png \
 		libtiff.so:graphics/tiff
 
-USES=		cmake:outsource gnome jpeg ssl
+USES=		compiler:c++11-lang cmake gnome jpeg ssl
 USE_GITHUB=	yes
 GH_ACCOUNT=	${PORTNAME:tu}
 USE_GNOME=	libxml2

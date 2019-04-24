@@ -3,6 +3,7 @@
 
 PORTNAME=	pip
 PORTVERSION=	9.0.3
+PORTREVISION=	1
 CATEGORIES=	devel python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
@@ -32,7 +33,6 @@ DOCS_PORTDOCS=	*
 DOCS_VARS=	PYDISTUTILS_BUILD_TARGET=build_sphinx \
 		PYDISTUTILS_BUILDARGS="-n --all-files --fresh-env"
 
-NO_ARCH=	yes
 USES=		python shebangfix
 USE_GITHUB=	yes
 USE_PYTHON=	autoplist concurrent distutils

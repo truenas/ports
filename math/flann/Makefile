@@ -3,7 +3,7 @@
 PORTNAME=	flann
 DISTVERSION=	1.9.1-19
 DISTVERSIONSUFFIX=	-gf3a17cd
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	math
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -15,7 +15,7 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 LIB_DEPENDS=	libhdf5.so:science/hdf5 \
 		libsz.so:science/szip
 
-USES=		cmake:outsource
+USES=		cmake
 USE_GITHUB=	yes
 GH_ACCOUNT=	mariusmuja
 USE_LDCONFIG=	yes

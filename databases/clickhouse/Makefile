@@ -2,10 +2,10 @@
 # $FreeBSD$
 
 PORTNAME=	clickhouse
-PORTVERSION=	18.14.11
+PORTVERSION=	18.14.18
 DISTVERSIONPREFIX=	v
 DISTVERSIONSUFFIX=	-stable
-PORTREVISION=	2
+PORTREVISION=	7
 CATEGORIES=	databases
 
 MAINTAINER=	proler@gmail.com
@@ -18,9 +18,9 @@ ONLY_FOR_ARCHS_REASON=	"Only supported on amd64"
 
 BUILD_DEPENDS=	bash:shells/bash \
 		sparsehash>=0:devel/sparsehash \
-		cctz>=0:devel/cctz \
-		libdouble-conversion>=0:devel/libdouble-conversion
-LIB_DEPENDS=	libtcmalloc.so:devel/google-perftools \
+		cctz>=0:devel/cctz
+LIB_DEPENDS=	libdouble-conversion.so:devel/double-conversion \
+		libtcmalloc.so:devel/google-perftools \
 		libodbc.so:databases/unixODBC \
 		libltdl.so:devel/libltdl \
 		libicudata.so:devel/icu \
@@ -35,7 +35,7 @@ LIB_DEPENDS=	libtcmalloc.so:devel/google-perftools \
 		libcpuid.so:sysutils/libcpuid \
 		libgtest.so:devel/googletest
 
-USES=		compiler:c++14-lang cmake iconv mysql ssl readline shebangfix
+USES=		compiler:c++14-lang cmake:insource iconv mysql ssl readline shebangfix
 USE_LDCONFIG=	yes
 
 CMAKE_ARGS=	-DUNBUNDLED=1 \

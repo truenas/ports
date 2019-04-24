@@ -1,11 +1,9 @@
 # $FreeBSD$
 
 PORTNAME=	drumkv1
-DISTVERSION=	0.9.3
-PORTREVISION=	1
+DISTVERSION=	0.9.7
 CATEGORIES=	audio multimedia
-MASTER_SITES=	SF/${PORTNAME}/
-MASTER_SITES=	http://download.sourceforge.net/${PORTNAME}/
+MASTER_SITES=	SF
 PKGNAMESUFFIX=	-lv2
 
 MAINTAINER=	yuri@FreeBSD.org

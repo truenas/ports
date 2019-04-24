@@ -43,7 +43,6 @@ include/KPim/kdav/davurl.h
 include/KPim/kdav/enums.h
 include/KPim/kdav/etagcache.h
 include/KPim/kdav/kpimkdav_export.h
-include/KPim/kdav/libkdav_debug.h
 include/KPim/kdav/utils.h
 include/KPim/kpimkdav_version.h
 lib/cmake/KPimKDAV/KPimKDAVConfig.cmake
@@ -55,7 +54,6 @@ lib/libKPimKDAV.so.5
 lib/libKPimKDAV.so.%%KDE_APPLICATIONS_SHLIB_VER%%
 %%QT_MKSPECDIR%%/modules/qt_kdav.pri
 share/locale/ar/LC_MESSAGES/libkdav.mo
-share/locale/ast/LC_MESSAGES/libkdav.mo
 share/locale/ca/LC_MESSAGES/libkdav.mo
 share/locale/ca@valencia/LC_MESSAGES/libkdav.mo
 share/locale/cs/LC_MESSAGES/libkdav.mo
@@ -79,3 +77,4 @@ share/locale/sr/LC_MESSAGES/libkdav.mo
 share/locale/sv/LC_MESSAGES/libkdav.mo
 share/locale/uk/LC_MESSAGES/libkdav.mo
 share/locale/zh_CN/LC_MESSAGES/libkdav.mo
+share/locale/zh_TW/LC_MESSAGES/libkdav.mo

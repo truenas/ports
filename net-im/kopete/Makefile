@@ -11,10 +11,11 @@ BUILD_DEPENDS=	v4l_compat>0:multimedia/v4l_compat
 LIB_DEPENDS=    libidn.so:dns/libidn \
 		libjasper.so:graphics/jasper \
 		libotr.so:security/libotr \
-		libqca-qt5.so:devel/qca@qt5 \
+		libqca-qt5.so:devel/qca \
 		libv4l2.so:multimedia/libv4l
 
-USES=		cmake:outsource jpeg kde:5 qt:5 shebangfix tar:xz
+USES=		cmake compiler:c++11-lang jpeg kde:5 qt:5 shebangfix \
+		tar:xz
 USE_GNOME=	libxml2 libxslt
 USE_KDE=	archive auth bookmarks codecs completion config configwidgets \
 		coreaddons crash dbusaddons dnssd ecm emoticons guiaddons i18n \

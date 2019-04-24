@@ -2,7 +2,6 @@
 
 PORTNAME=	kaccounts-providers
 DISTVERSION=	${KDE_APPLICATIONS_VERSION}
-PORTREVISION=	2
 CATEGORIES=	net-im kde kde-applications
 
 MAINTAINER=	kde@FreeBSD.org
@@ -13,7 +12,7 @@ LIB_DEPENDS=	libaccounts-glib.so:net-im/libaccounts-glib \
 		libaccounts-qt5.so:net-im/libaccounts-qt5 \
 		libsignon-qt5.so:sysutils/signon-qt5
 
-USES=		cmake:outsource compiler:c++11-lang gettext gnome kde:5 \
+USES=		cmake compiler:c++11-lang gettext gnome kde:5 \
 		pkgconfig qt:5 tar:xz
 USE_GNOME=	intltool
 USE_KDE=	config coreaddons i18n kdeclarative kio package service

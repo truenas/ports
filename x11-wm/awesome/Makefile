@@ -2,8 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	awesome
-PORTVERSION=	4.2
-PORTREVISION=	3
+PORTVERSION=	4.3
 DISTVERSIONPREFIX=	v
 PORTEPOCH=	1
 CATEGORIES=	x11-wm
@@ -30,7 +29,7 @@ LIB_DEPENDS=	libcairo.so:graphics/cairo \
 
 CONFLICTS_INSTALL=	awesome3-[0-9]*
 
-USES=		cmake:outsource compiler:c11 gettext iconv pkgconfig lua shebangfix
+USES=		cmake compiler:c11 gettext iconv pkgconfig lua shebangfix
 USE_GITHUB=	yes
 GH_ACCOUNT=	awesomewm
 SHEBANG_FILES=	utils/awesome-client
@@ -48,8 +47,7 @@ OPTIONS_SUB=	yes
 DBUS_LIB_DEPENDS=	libdbus-1.so:devel/dbus
 DBUS_CMAKE_OFF=		-DWITH_DBUS:BOOL=OFF
 
-MANPAGES_BUILD_DEPENDS=	asciidoc:textproc/asciidoc \
-			xmlto:textproc/xmlto
+MANPAGES_BUILD_DEPENDS=	asciidoctor:textproc/rubygem-asciidoctor
 MANPAGES_CMAKE_OFF=	-DGENERATE_MANPAGES:BOOL=OFF
 
 .include <bsd.port.pre.mk>
@@ -63,7 +61,5 @@ post-patch:
 	# Ref https://github.com/awesomeWM/awesome/issues/1377
 	@${REINPLACE_CMD} -e "/COMMAND lua/ s,lua,${LUA_CMD}," \
 		${WRKSRC}/awesomeConfig.cmake
-	@${REINPLACE_CMD} -e "s,^lua ,${LUA_CMD} ," \
-		${WRKSRC}/build-utils/lgi-check.sh
 
 .include <bsd.port.post.mk>

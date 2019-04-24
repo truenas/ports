@@ -2,10 +2,9 @@
 # $FreeBSD$
 
 PORTNAME=	piwigo
-DISTVERSION=	2.9.4
-PORTREVISION=	2
+DISTVERSION=	2.9.5
 CATEGORIES=	www
-MASTER_SITES=	http://piwigo.org/download/dlcounter.php?code=${PORTVERSION}&/
+MASTER_SITES=	https://piwigo.org/download/dlcounter.php?code=${PORTVERSION}&/
 
 MAINTAINER=	tremere@cainites.net
 COMMENT=	PHP based Web Gallery

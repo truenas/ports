@@ -1,10 +1,9 @@
 # $FreeBSD$
 
 PORTNAME=	cups-filters
-PORTVERSION=	1.21.3
-PORTREVISION=	1
+PORTVERSION=	1.22.5
 CATEGORIES=	print
-MASTER_SITES=	http://www.openprinting.org/download/cups-filters/
+MASTER_SITES=	https://www.openprinting.org/download/cups-filters/
 
 MAINTAINER=	tijl@FreeBSD.org
 COMMENT=	Additional backends, filters and other software for CUPS

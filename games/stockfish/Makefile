@@ -2,8 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	stockfish
-DISTVERSION=	9
-PORTREVISION=	1
+DISTVERSION=	10
 DISTVERSIONSUFFIX=	-src
 CATEGORIES=	games
 MASTER_SITES=	http://stockfish.s3.amazonaws.com/
@@ -27,6 +26,8 @@ WRKSRC_SUBDIR=	src
 MYARCH=		${ARCH}
 MYCC=		${CHOSEN_COMPILER_TYPE}
 TGTBLD=		build
+
+LDFLAGS+=	-fuse-ld=lld
 
 PLIST_FILES=	bin/stockfish
 PORTDOCS=	Readme.md
@@ -60,6 +61,8 @@ ALL_TARGET=	${TGTBLD} ARCH=${MYARCH} COMP=${MYCC}
 
 post-patch:
 	@${REINPLACE_CMD} -e "s/^PREFIX =/PREFIX ?=/" ${WRKSRC}/Makefile
+	@${REINPLACE_CMD} -e "s/CXX=g++/CXX=g++${GCC_DEFAULT}/" \
+		${WRKSRC}/Makefile
 
 do-install:
 	${INSTALL_PROGRAM} ${WRKSRC}/stockfish ${STAGEDIR}${PREFIX}/bin

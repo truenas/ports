@@ -3,7 +3,7 @@
 PORTNAME=	simbody
 DISTVERSIONPREFIX=	Simbody-
 DISTVERSION=	3.6.1
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	science biology
 
 PATCH_SITES=	https://github.com/${PORTNAME}/${PORTNAME}/commit/
@@ -18,7 +18,7 @@ LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
 LIB_DEPENDS=	libopenblas.so:math/openblas
 
-USES=		blaslapack:openblas cmake:outsource compiler:c++11-lang fortran # fortran only for openblas
+USES=		blaslapack:openblas cmake compiler:c++11-lang fortran # fortran only for openblas
 USE_GITHUB=	yes
 USE_LDCONFIG=	yes
 

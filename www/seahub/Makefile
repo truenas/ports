@@ -3,7 +3,6 @@
 PORTNAME=	seahub
 DISTVERSIONPREFIX=	v
 DISTVERSION=	${SEAHUB_VER}
-PORTREVISION=	1
 DISTVERSIONSUFFIX=	-pro
 CATEGORIES=	www
 
@@ -68,8 +67,7 @@ USE_RC_SUBR=	${PORTNAME}
 
 SUB_FILES=	pkg-message
 
-do-patch:
-	echo "${WRKSRC}..."
+post-patch:
 	${REINPLACE_CMD} -Ee "s|SEAFILE_VERSION = '[0-9]+\.[0-9]+\.[0-9]+'|SEAFILE_VERSION = '${SEAFILE_VER}'|" \
 			 ${WRKSRC}/seahub/settings.py
 	${REINPLACE_CMD} -e 's|##FIX_WWWDIR##|${PREFIX}/${HAIWENDIR}|' ${WRKSRC}/*.template

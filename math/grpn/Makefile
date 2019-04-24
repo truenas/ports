@@ -2,25 +2,33 @@
 # $FreeBSD$
 
 PORTNAME=	grpn
-PORTVERSION=	1.1.2
-PORTREVISION=	8
+PORTVERSION=	1.5.2
+DISTVERSIONPREFIX=	v
 CATEGORIES=	math
-MASTER_SITES=	http://lashwhip.com/grpn/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	GTK+-based reverse polish notation (RPN) calculator
 
-DEPRECATED=	Uses obsolete glib12
-EXPIRATION_DATE=	2018-12-20
+LICENSE=	GPLv2
 
-USE_GNOME=	gtk12
+USES=		gnome pkgconfig
+USE_GNOME=	gtk20
+USE_GITHUB=	yes
+GH_ACCOUNT=	utopiabound
 
-ALL_TARGET=
+WRKSRC_SUBDIR=	src
 
 PLIST_FILES=	bin/grpn man/man1/grpn.1.gz
+PORTDOCS=	CHANGES
 
-do-install:
-	${INSTALL_PROGRAM} ${WRKSRC}/grpn ${STAGEDIR}${PREFIX}/bin
-	${INSTALL_MAN} ${WRKSRC}/grpn.1 ${STAGEDIR}${PREFIX}/man/man1
+OPTIONS_DEFINE=	DOCS
+
+post-patch:
+	@${REINPLACE_CMD} -e 's,ulong,unsigned long,g' \
+		${WRKSRC}/real.c
+
+post-install-DOCS-on:
+	@${MKDIR} ${STAGEDIR}${DOCSDIR}
+	${INSTALL_DATA} ${PORTDOCS:S|^|${WRKSRC}/|} ${STAGEDIR}${DOCSDIR}
 
 .include <bsd.port.mk>

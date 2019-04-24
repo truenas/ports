@@ -1,4 +1,3 @@
-%%QT_BINDIR%%/qvkgen
 %%QT_INCDIR%%/QtAccessibilitySupport/%%FULLVER%%/QtAccessibilitySupport/private/qaccessiblebridgeutils_p.h
 %%QT_INCDIR%%/QtAccessibilitySupport/QtAccessibilitySupport
 %%QT_INCDIR%%/QtAccessibilitySupport/QtAccessibilitySupportDepends
@@ -109,6 +108,7 @@
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qiconloader_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qimage_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qimagepixmapcleanuphooks_p.h
+%%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qimagereaderwriterhelpers_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qimagescale_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qinputcontrol_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qinputdevicemanager_p.h
@@ -117,6 +117,7 @@
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qinternalmimedata_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qkeymapper_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qkeysequence_p.h
+%%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qktxhandler_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qlayoutpolicy_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qmath_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qmemrotate_p.h
@@ -138,6 +139,7 @@
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qopengltexturecache_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qopengltextureglyphcache_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qopengltexturehelper_p.h
+%%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qopengltextureuploader_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qopenglversionfunctionsfactory_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qopenglvertexarrayobject_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qoutlinemapper_p.h
@@ -158,6 +160,7 @@
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qpixmap_blitter_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qpixmap_raster_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qpixmapcache_p.h
+%%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qpkmhandler_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qpnghandler_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qpolygonclipper_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qppmhandler_p.h
@@ -195,6 +198,9 @@
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qtextobject_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qtextodfwriter_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qtexttable_p.h
+%%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qtexturefiledata_p.h
+%%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qtexturefilehandler_p.h
+%%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qtexturefilereader_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qtextureglyphcache_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qtgui-config_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qtguiglobal_p.h
@@ -202,6 +208,7 @@
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qtriangulatingstroker_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qtriangulator_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qvectorpath_p.h
+%%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qvulkanfunctions_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qvulkanwindow_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qwindow_p.h
 %%QT_INCDIR%%/QtGui/%%FULLVER%%/QtGui/private/qxbmhandler_p.h
@@ -614,6 +621,7 @@
 %%QT_INCDIR%%/QtGui/qsurface.h
 %%QT_INCDIR%%/QtGui/qsurfaceformat.h
 %%QT_INCDIR%%/QtGui/qsyntaxhighlighter.h
+%%QT_INCDIR%%/QtGui/qtestsupport_gui.h
 %%QT_INCDIR%%/QtGui/qtextcursor.h
 %%QT_INCDIR%%/QtGui/qtextdocument.h
 %%QT_INCDIR%%/QtGui/qtextdocumentfragment.h
@@ -672,11 +680,11 @@
 %%QT_INCDIR%%/QtPlatformHeaders/QEGLNativeContext
 %%QT_INCDIR%%/QtPlatformHeaders/QEglFSFunctions
 %%QT_INCDIR%%/QtPlatformHeaders/QGLXNativeContext
+%%QT_INCDIR%%/QtPlatformHeaders/QLinuxFbFunctions
 %%QT_INCDIR%%/QtPlatformHeaders/QPlatformHeaderHelper
 %%QT_INCDIR%%/QtPlatformHeaders/QWGLNativeContext
 %%QT_INCDIR%%/QtPlatformHeaders/QWaylandWindowFunctions
 %%QT_INCDIR%%/QtPlatformHeaders/QWindowsWindowFunctions
-%%QT_INCDIR%%/QtPlatformHeaders/QXcbIntegrationFunctions
 %%QT_INCDIR%%/QtPlatformHeaders/QXcbScreenFunctions
 %%QT_INCDIR%%/QtPlatformHeaders/QXcbWindowFunctions
 %%QT_INCDIR%%/QtPlatformHeaders/QtPlatformHeaders
@@ -687,12 +695,12 @@
 %%QT_INCDIR%%/QtPlatformHeaders/qeglfsfunctions.h
 %%QT_INCDIR%%/QtPlatformHeaders/qeglnativecontext.h
 %%QT_INCDIR%%/QtPlatformHeaders/qglxnativecontext.h
+%%QT_INCDIR%%/QtPlatformHeaders/qlinuxfbfunctions.h
 %%QT_INCDIR%%/QtPlatformHeaders/qplatformheaderhelper.h
 %%QT_INCDIR%%/QtPlatformHeaders/qtplatformheadersversion.h
 %%QT_INCDIR%%/QtPlatformHeaders/qwaylandwindowfunctions.h
 %%QT_INCDIR%%/QtPlatformHeaders/qwglnativecontext.h
 %%QT_INCDIR%%/QtPlatformHeaders/qwindowswindowfunctions.h
-%%QT_INCDIR%%/QtPlatformHeaders/qxcbintegrationfunctions.h
 %%QT_INCDIR%%/QtPlatformHeaders/qxcbscreenfunctions.h
 %%QT_INCDIR%%/QtPlatformHeaders/qxcbwindowfunctions.h
 %%QT_INCDIR%%/QtServiceSupport/%%FULLVER%%/QtServiceSupport/private/qgenericunixservices_p.h
@@ -736,6 +744,7 @@
 %%QT_CMAKEDIR%%/Qt5Gui/Qt5Gui_QXcbIntegrationPlugin.cmake
 %%QT_CMAKEDIR%%/Qt5OpenGLExtensions/Qt5OpenGLExtensionsConfig.cmake
 %%QT_CMAKEDIR%%/Qt5OpenGLExtensions/Qt5OpenGLExtensionsConfigVersion.cmake
+%%QT_BINDIR%%/qvkgen
 %%QT_LIBDIR%%/libQt5AccessibilitySupport.a
 %%QT_LIBDIR%%/libQt5AccessibilitySupport.prl
 %%QT_LIBDIR%%/libQt5DeviceDiscoverySupport.a
@@ -812,12 +821,12 @@
 %%DEBUG%%%%QT_PLUGINDIR%%/platforminputcontexts/libibusplatforminputcontextplugin.so.debug
 %%QT_PLUGINDIR%%/platforms/libqbsdfb.so
 %%DEBUG%%%%QT_PLUGINDIR%%/platforms/libqbsdfb.so.debug
-%%QT_PLUGINDIR%%/platforms/libqvnc.so
-%%DEBUG%%%%QT_PLUGINDIR%%/platforms/libqvnc.so.debug
 %%QT_PLUGINDIR%%/platforms/libqminimal.so
 %%DEBUG%%%%QT_PLUGINDIR%%/platforms/libqminimal.so.debug
 %%QT_PLUGINDIR%%/platforms/libqoffscreen.so
 %%DEBUG%%%%QT_PLUGINDIR%%/platforms/libqoffscreen.so.debug
+%%QT_PLUGINDIR%%/platforms/libqvnc.so
+%%DEBUG%%%%QT_PLUGINDIR%%/platforms/libqvnc.so.debug
 %%QT_PLUGINDIR%%/platforms/libqxcb.so
 %%DEBUG%%%%QT_PLUGINDIR%%/platforms/libqxcb.so.debug
 %%QT_PLUGINDIR%%/xcbglintegrations/libqxcb-egl-integration.so

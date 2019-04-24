@@ -131,6 +131,13 @@
 #				Option enabled  -D${content}=no
 #				Option disabled -D${content}=yes
 #
+# ${opt}_MESON_ENABLED		Will add to MESON_ARGS:
+#				Option enabled	-D${content}=enabled
+#				Option disabled	-D${content}=disabled
+# ${opt}_MESON_DISABLED		Will add to MESON_ARGS:
+#				Option enabled	-D${content}=disabled
+#				Option disabled	-D${content}=enabled
+#
 # ${opt}_IMPLIES		When opt is enabled, options named in IMPLIES will
 #				get enabled too.
 # ${opt}_PREVENTS		When opt is enabled, if any options in PREVENTS are
@@ -185,6 +192,15 @@ _OPTIONS_FLAGS=	ALL_TARGET BROKEN CATEGORIES CFLAGS CONFIGURE_ENV CONFLICTS \
 		PLIST_SUB PORTDOCS PORTEXAMPLES SUB_FILES SUB_LIST \
 		TEST_TARGET USES BINARY_ALIAS
 _OPTIONS_DEPENDS=	PKG FETCH EXTRACT PATCH BUILD LIB RUN TEST
+_ALL_OPTIONS_HELPERS=	${_OPTIONS_DEPENDS:S/$/_DEPENDS/} \
+			${_OPTIONS_DEPENDS:S/$/_DEPENDS_OFF/} \
+			${_OPTIONS_FLAGS:S/$/_OFF/} ${_OPTIONS_FLAGS} \
+			CMAKE_BOOL CMAKE_BOOL_OFF CMAKE_OFF CMAKE_ON \
+			CONFIGURE_ENABLE CONFIGURE_OFF CONFIGURE_ON \
+			CONFIGURE_WITH IMPLIES MESON_ARGS MESON_DISABLED \
+			MESON_ENABLED MESON_FALSE MESON_OFF MESON_ON MESON_TRUE \
+			PREVENTS PREVENTS_MSG QMAKE_OFF QMAKE_ON USE USE_OFF \
+			VARS VARS_OFF
 
 # The format here is target_family:priority:target-type
 _OPTIONS_TARGETS=	fetch:300:pre fetch:500:do fetch:700:post \
@@ -503,6 +519,12 @@ MESON_ARGS+=		${${opt}_MESON_YES:C/.*/-D&=yes/}
 .    if defined(${opt}_MESON_NO)
 MESON_ARGS+=		${${opt}_MESON_NO:C/.*/-D&=no/}
 .    endif
+.    if defined(${opt}_MESON_ENABLED)
+MESON_ARGS+=		${${opt}_MESON_ENABLED:C/.*/-D&=enabled/}
+.    endif
+.    if defined(${opt}_MESON_DISABLED)
+MESON_ARGS+=		${${opt}_MESON_DISABLED:C/.*/-D&=disabled/}
+.    endif
 .    for configure in CONFIGURE CMAKE MESON QMAKE
 .      if defined(${opt}_${configure}_ON)
 ${configure}_ARGS+=	${${opt}_${configure}_ON}
@@ -565,6 +587,12 @@ MESON_ARGS+=		${${opt}_MESON_YES:C/.*/-D&=no/}
 .    if defined(${opt}_MESON_NO)
 MESON_ARGS+=		${${opt}_MESON_NO:C/.*/-D&=yes/}
 .    endif
+.    if defined(${opt}_MESON_ENABLED)
+MESON_ARGS+=		${${opt}_MESON_ENABLED:C/.*/-D&=disabled/}
+.    endif
+.    if defined(${opt}_MESON_DISABLED)
+MESON_ARGS+=		${${opt}_MESON_DISABLED:C/.*/-D&=enabled/}
+.    endif
 .    for configure in CONFIGURE CMAKE MESON QMAKE
 .      if defined(${opt}_${configure}_OFF)
 ${configure}_ARGS+=	${${opt}_${configure}_OFF}
@@ -587,6 +615,18 @@ _type=		${target:C/.*://}
 _OPTIONS_${_target}:=	${_OPTIONS_${_target}} ${_prio}:${_type}-${_target}-${opt}-off
 .    endfor
 .  endif
+.endfor
+
+# Collect which options helpers are defined at this point for
+# bsd.sanity.mk later to make sure no other options helper is
+# defined after bsd.port.options.mk.
+_OPTIONS_HELPERS_SEEN=
+.for opt in ${_REALLY_ALL_POSSIBLE_OPTIONS}
+.  for helper in ${_ALL_OPTIONS_HELPERS}
+.    if defined(${opt}_${helper})
+_OPTIONS_HELPERS_SEEN+=	${opt}_${helper}
+.    endif
+.  endfor
 .endfor
 
 .undef (SELECTED_OPTIONS)

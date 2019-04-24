@@ -3,8 +3,8 @@
 
 PORTNAME=	lmms
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.2.0-rc7
-PORTREVISION=	2
+DISTVERSION=	1.2.0-rc8
+PORTREVISION=	1
 PORTEPOCH=	2
 CATEGORIES=	audio
 
@@ -30,7 +30,7 @@ RUN_DEPENDS=	${LOCALBASE}/share/ladspa/rdf/caps.rdf:audio/caps-plugins \
 		${LOCALBASE}/share/ladspa/rdf/swh-plugins.rdf:audio/swhplugins \
 		${LOCALBASE}/share/ladspa/rdf/tap-plugins.rdf:audio/tap-plugins
 
-USES=		cmake:outsource desktop-file-utils localbase:ldflags pkgconfig \
+USES=		cmake desktop-file-utils localbase:ldflags pkgconfig \
 		qt:5 shared-mime-info
 USE_GITHUB=	yes
 GH_ACCOUNT=	LMMS

@@ -1,8 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=		kreport
-DISTVERSION=		3.1.0
-PORTREVISION=	1
+DISTVERSION=		3.2.0
 CATEGORIES=		textproc kde
 MASTER_SITES=		KDE/stable/${PORTNAME}/src
 DIST_SUBDIR=		KDE/${PORTNAME}
@@ -12,7 +11,7 @@ COMMENT=		Framework for creation of reports in multiple formats
 
 LIB_DEPENDS=		libKPropertyCore3.so:x11-toolkits/kproperty
 
-USES=			cmake:outsource compiler:c++11-lang gettext kde:5 \
+USES=			cmake compiler:c++11-lang gettext kde:5 \
 			python:2.7 qt:5 tar:xz
 USE_KDE=		config coreaddons ecm marble widgetsaddons
 USE_QT=			core declarative gui network webkit widgets xml \

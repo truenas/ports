@@ -2,9 +2,9 @@
 
 PORTNAME=	mpich
 PORTVERSION=	3.2.1
-PORTREVISION=	2
+PORTREVISION=	4
 CATEGORIES=	net parallel
-MASTER_SITES=	http://www.mpich.org/static/downloads/${DISTVERSION}/
+MASTER_SITES=	https://www.mpich.org/static/downloads/${DISTVERSION}/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Portable implementation of MPI-1, MPI-2 and MPI-3

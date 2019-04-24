@@ -1,8 +1,8 @@
 # $FreeBSD$
 
 PORTNAME=	armadillo
-PORTVERSION=	9.200.5
-PORTREVISION=	2
+PORTVERSION=	9.200.7
+PORTREVISION=	1
 CATEGORIES=	math
 MASTER_SITES=	SF/arma
 
@@ -22,6 +22,7 @@ LIB_DEPENDS=	libboost_date_time.so:devel/boost-libs \
 		libsz.so:science/szip
 
 USES=		blaslapack cmake compiler:c++11-lang pkgconfig tar:xz
+
 USE_LDCONFIG=	yes
 CMAKE_ARGS+=	-DPKG_CONFIG_DIR=${LOCALBASE}/libdata/pkgconfig/
 

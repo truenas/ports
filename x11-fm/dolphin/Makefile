@@ -2,7 +2,6 @@
 
 PORTNAME=	dolphin
 DISTVERSION=	${KDE_APPLICATIONS_VERSION}
-PORTREVISION=	1
 CATEGORIES=	x11-fm kde kde-applications
 
 MAINTAINER=	kde@FreeBSD.org
@@ -15,7 +14,7 @@ RUN_DEPENDS=	${QT_PLUGINDIR}/ffmpegthumbs.so:multimedia/kdemultimedia-ffmpegthum
 		${QT_PLUGINDIR}/gsthumbnail.so:graphics/kdegraphics-thumbnailers \
 		${QT_PLUGINDIR}/audiothumbnail.so:devel/kio-extras
 
-USES=		cmake:outsource compiler:c++11-lib gettext kde:5 qt:5 tar:xz
+USES=		cmake compiler:c++11-lib gettext kde:5 qt:5 tar:xz
 USE_KDE=	activities attica auth baloo baloo-widgets bookmarks codecs \
 		completion config configwidgets coreaddons crash dbusaddons \
 		doctools ecm emoticons filemetadata i18n iconthemes init \

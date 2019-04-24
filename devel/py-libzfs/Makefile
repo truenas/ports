@@ -25,6 +25,7 @@ GH_TAGNAME=	af5250b
 HAS_CONFIGURE=	yes
 USES=		python
 USE_PYTHON=	autoplist distutils cython
+GNU_CONFIGURE=	yes
 
 MAKE_ENV=	FREEBSD_SRC=${SRC_BASE}
 

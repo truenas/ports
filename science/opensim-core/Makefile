@@ -2,7 +2,7 @@
 
 PORTNAME=	OpenSim
 DISTVERSION=	4.0
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	science
 PKGNAMESUFFIX=	-core
 
@@ -15,7 +15,7 @@ LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 LIB_DEPENDS=	libdocopt.so:devel/docopt.cpp \
 		libSimTKcommon.so:science/simbody
 
-USES=		blaslapack:openblas cmake:outsource compiler:c++11-lib fortran gl # fortran only for simbody/openblas
+USES=		blaslapack:openblas cmake compiler:c++11-lib fortran gl # fortran only for simbody/openblas
 USE_GITHUB=	yes
 GH_ACCOUNT=	${PORTNAME:tl}-org
 GH_PROJECT=	${PORTNAME:tl}-core

@@ -5,8 +5,9 @@ PORTNAME=	solaar
 # release for now:
 # https://github.com/pwr/Solaar/issues/288
 # https://github.com/pwr/Solaar/issues/296
-DISTVERSION=	0.9.2-221
-DISTVERSIONSUFFIX=	-g1a67b33
+DISTVERSION=	0.9.2-259
+PORTREVISION=	1
+DISTVERSIONSUFFIX=	-gc07c115
 CATEGORIES=	sysutils
 
 MAINTAINER=	tobik@FreeBSD.org

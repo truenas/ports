@@ -3,11 +3,11 @@
 
 PORTNAME=	libcec
 PORTVERSION=	4.0.2
-PORTREVISION=	6
+PORTREVISION=	7
 DISTVERSIONPREFIX=	${PORTNAME}-
 CATEGORIES=	multimedia
 
-MAINTAINER=	mikael.urankar@gmail.com
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Library to control Pulse-Eight's HDMI-CEC adapter
 
 LICENSE=	GPLv2
