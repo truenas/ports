@@ -37,7 +37,7 @@ CPE_PRODUCT=	node_packaged_modules
 SHEBANG_GLOB=	*.py
 SHEBANG_FILES=	lib/node_modules/npm/node_modules/node-gyp/gyp/samples/samples
 
-NODE_RUN_DEPENDS=	node:freenas/node9
+NODE_RUN_DEPENDS=	node:freenas/node10
 NODE4_RUN_DEPENDS=	node4>=0.8.0:www/node4
 NODE6_RUN_DEPENDS=	node6>=0.8.0:www/node6
 NODE8_RUN_DEPENDS=	node8>=0.8.0:www/node8
