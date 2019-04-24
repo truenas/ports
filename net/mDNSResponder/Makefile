@@ -2,23 +2,21 @@
 # $FreeBSD$
 
 PORTNAME=	mDNSResponder
-PORTVERSION=	878.1.1
-PORTREVISION=	0
+PORTVERSION=	20190218083537
 CATEGORIES=	net dns
 
-MAINTAINER=	john@ixsystems.com
+MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Bonjour (zero-configuration networking) by Apple
 
 LICENSE=	APACHE20 BSD3CLAUSE
 LICENSE_COMB=	dual
 
-NO_CHECKSUM=	yes
-WRKSRC=		/usr/mdnsresponder_src
-
 # lib/libdns_sd.so.1 sbin/mdnsd
 CONFLICTS_INSTALL=	avahi-libdns openmdns
 
 OPTIONS_DEFINE=	IPV6
+
+USES=		cpe gmake
 
 ALL_TARGET=	all dnsextd
 BUILD_WRKSRC=	${WRKSRC}/mDNSPosix
@@ -27,7 +25,6 @@ MAKE_ARGS=	LDCONFIG=${TRUE} LOCALBASE=${PREFIX} MAN_PATH=${MANPREFIX}/man STRIP=
 MAKE_JOBS_UNSAFE=	yes
 USE_LDCONFIG=	yes
 USE_RC_SUBR=	mdnsd mdnsresponderposix
-USES=		bison cpe gmake
 
 CPE_VENDOR=	apple
 CPE_PRODUCT=	${PORTNAME:tl}
@@ -37,10 +34,23 @@ EXTRA_MAN1=	dns-sd.1
 EXTRA_MAN8=	dnsextd.8 mDNSResponderPosix.8
 EXTRA_SBIN=	dnsextd
 
+
+.if exists(/usr/ports/local_source/${PORTNAME})
+PORTVERSION!=	stat -f %m /usr/ports/local_source/${PORTNAME}
+EXTRACT_ONLY=
+WRKSRC=		/usr/ports/local_source/${PORTNAME}
+.else
+USE_GITHUB=	yes
+GH_ACCOUNT=	freenas
+GH_PROJECT=	mDNSResponder
+GH_TAGNAME=	b5fa13dced7334834fe63992f1b281014b093cca
+.endif
+
+
 post-patch:
 	@${REINPLACE_CMD} -e '/^CFLAGS_DEBUG/ s|-Os|${CFLAGS}|' ${WRKSRC}/mDNSPosix/Makefile
 	@${REINPLACE_CMD} -e 's|\(#define IPV6_2292_PKTINFO \).*|\1IPV6_PKTINFO|; s|\(#define IPV6_2292_HOPLIMIT \).*|\1IPV6_HOPLIMIT|' ${WRKSRC}/mDNSPosix/mDNSUNP.h
-	@${CP} ${WRKSRC}/mDNSShared/mDNSResponder.8 ${WRKSRC}/mDNSShared/mDNSResponderPosix.8
+	@${MV} ${WRKSRC}/mDNSShared/mDNSResponder.8 ${WRKSRC}/mDNSShared/mDNSResponderPosix.8
 
 post-patch-IPV6-off:
 	@${REINPLACE_CMD} -e '/^CFLAGS_OS/ s|-DHAVE_IPV6|-UHAVE_IPV6|' ${WRKSRC}/mDNSPosix/Makefile
@@ -51,8 +61,5 @@ post-install:
 	cd ${WRKSRC}/mDNSShared/ && ${INSTALL_MAN} ${EXTRA_MAN8} ${STAGEDIR}${PREFIX}/man/man8/
 	cd ${WRKSRC}/mDNSPosix/build/prod/ && ${INSTALL_PROGRAM} ${EXTRA_SBIN} ${STAGEDIR}${PREFIX}/sbin/
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/dns-sd
-
-checksum extract fetch:
-	${ECHO_CMD} ${.TARGET} not needed because building direct
 
 .include <bsd.port.mk>
