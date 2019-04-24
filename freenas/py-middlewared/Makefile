@@ -1,6 +1,6 @@
 PORTNAME=	middlewared
 PORTVERSION=	20190424004426
-PORTREVISION=	2
+PORTREVISION=	3
 PKGNAMEPREFIX=  ${PYTHON_PKGNAMEPREFIX}
 
 CATEGORIES=     freenas
@@ -42,12 +42,14 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}ws4py>0:www/py-ws4py@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}certbot-dns-digitalocean>0:security/py-certbot-dns-digitalocean@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}certbot-dns-google>0:security/py-certbot-dns-google@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}certbot-dns-ovh>0:security/py-certbot-dns-ovh@${FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}pyotp>0:security/py-pyotp@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}zettarepl>0:sysutils/py-zettarepl@${FLAVOR} \
 		rclone>0:net/rclone \
 		sysup>0:sysutils/sysup \
 		ifstat>0:net/ifstat \
 		samba410>=4.10.0:net/samba410 \
-		swagger-ui>0:freenas/swagger-ui
+		swagger-ui>0:freenas/swagger-ui \
+		oath-toolkit>0:security/oath-toolkit
 
 USE_RC_SUBR=	middlewared
 
