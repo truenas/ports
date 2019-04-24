@@ -1,0 +1,51 @@
+#!/bin/sh
+
+PATH=/sbin:/bin:/usr/sbin:/usr/bin::/usr/local/sbin:/usr/local/bin
+
+post-upgrade()
+{
+	set -x
+
+	echo "Updating Database"
+	UPDATE_FAILED_LOG="/data/update.failed"
+
+	cp /data/freenas-v1.db /data/freenas-v1.db.bak
+
+	%%PYTHON_CMD%% /usr/local/www/freenasUI/manage.py migrate --noinput --traceback > \
+		$UPDATE_FAILED_LOG 2>&1
+
+	if [ $? -ne 0 ]; then
+		echo "Migration failed. Reverting back to previous state"
+		mv /data/freenas-v1.db.bak /data/freenas-v1.db
+	else
+		echo "Database updated successfully"
+		rm -f $UPDATE_FAILED_LOG
+		rm -f /data/freenas-v1.db.bak
+	fi
+}
+
+pre-install()
+{
+}
+
+post-install()
+{
+}
+
+case $2 in
+POST-UPGRADE)
+	post-upgrade
+	exit 0
+	;;
+PRE-INSTALL)
+	pre-install
+	exit 0
+	;;
+POST-INSTALL)
+	post-install
+	exit 0
+	;;
+*)
+	exit 1
+	;;
+esac
