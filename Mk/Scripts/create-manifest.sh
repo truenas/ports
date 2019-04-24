@@ -61,7 +61,7 @@ EOT
 [ -n "${dp_NO_ARCH}" -a -z "${dp_ABISTRING}" ] && echo "abi : $(${dp_PKG_BIN} config abi | cut -d: -f1,2):*"
 [ -n "${dp_ABISTRING}" ] && echo "arch : $(echo ${dp_ABISTRING} | tr '[:upper:]' '[:lower:]')"
 [ -n "${dp_ABISTRING}" ] && echo "abi : $(echo ${dp_ABISTRING})"
-[ -n "${dp_VITAL}" ] || echo "vital: true"
+[ -n "${dp_VITAL}" ] && echo "vital: true"
 
 # Then the key/values sections
 echo "deps: { "
