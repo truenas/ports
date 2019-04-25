@@ -7,6 +7,8 @@ etc/rc.d/ixautomation
 etc/sudoers.d/ixautomation
 ixautomation/vms/.config/system.conf
 ixautomation/vms/.templates/freenas.conf
+ixautomation/vms/.templates/freenas11_2.conf
+ixautomation/vms/.templates/freenas_webui.conf
 ixautomation/vms/.templates/trueos.conf
 ixautomation/vms/.templates/trueview.conf
 lib/ixautomation/freenas-11.2-userboot.so
