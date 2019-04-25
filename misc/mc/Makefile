@@ -16,7 +16,7 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 
 CONFLICTS=	mc-light-4*
 
-USES=		gmake gnome libtool perl5 pkgconfig python:2.7,run shebangfix tar:xz
+USES=		gmake gnome libtool perl5 pkgconfig python:run shebangfix tar:xz
 SHEBANG_FILES=	${WRKSRC}/src/vfs/extfs/helpers/s3+.in \
 		${WRKSRC}/src/vfs/extfs/helpers/uc1541.in
 python_OLD_CMD=	@PYTHON@
