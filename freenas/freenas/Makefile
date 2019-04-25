@@ -109,7 +109,6 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}bsd>=0:freenas/py-bsd@${PY_FLAVOR} \
 		netperf>=0:benchmarks/netperf \
 		nginx>=0:www/nginx \
 		novnc>=0:www/novnc \
-		nsq>=0:net/nsq \
 		nss-pam-ldapd-sasl>=0:net/nss-pam-ldapd-sasl \
 		nut>=0:sysutils/nut \
 		open-vm-tools-nox11>=0:emulators/open-vm-tools-nox11 \
