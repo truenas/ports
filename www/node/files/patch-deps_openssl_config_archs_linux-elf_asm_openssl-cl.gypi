@@ -1,9 +1,9 @@
---- deps/openssl/config/archs/linux-elf/no-asm/openssl-cl.gypi.orig	2019-01-30 20:43:11 UTC
-+++ deps/openssl/config/archs/linux-elf/no-asm/openssl-cl.gypi
-@@ -7,12 +7,11 @@
-       'OPENSSL_PIC',
+--- deps/openssl/config/archs/linux-elf/asm/openssl-cl.gypi.orig	2019-01-30 20:43:11 UTC
++++ deps/openssl/config/archs/linux-elf/asm/openssl-cl.gypi
+@@ -26,12 +26,11 @@
      ],
      'openssl_cflags_linux-elf': [
+       '-Wa,--noexecstack',
 -      '-Wall -O3 -fomit-frame-pointer',
 +      '-Wall -O3',
        '-pthread',
