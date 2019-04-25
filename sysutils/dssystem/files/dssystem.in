@@ -7,6 +7,8 @@
 # REQUIRE: NETWORKING LOGIN
 # KEYWORD: shutdown
 
+: ${dssystem_enable="NO"}
+
 dssystem_stop()
 {
 	pids="`pgrep -j none dssystem_dc`"
