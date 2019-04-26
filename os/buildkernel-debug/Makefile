@@ -33,7 +33,11 @@ PKG_ABISTRING=	FreeBSD:13:${ARCH}
 .endif
 
 # Set default debug config
+.if defined(${DEBUGKERNCONF})
+KERNCONF=	${DEBUGKERNCONF}
+.else
 KERNCONF?=	GENERIC
+.endif
 
 .if defined(_MAKE_JOBS_NUMBER)
 JOBFLAG=	-j ${_MAKE_JOBS_NUMBER}
