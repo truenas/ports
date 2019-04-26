@@ -11,7 +11,9 @@ MAINTAINER=	kris@ixsystems.com
 COMMENT=	Buildkernel portition of os packages
 
 SRCDIR?=/usr/src
+.if !exists(${SRCDIR}/Makefile)
 BUILD_DEPENDS=	${SRCDIR}/Makefile:os/src
+.endif
 
 PREFIX=/
 EXTRACT_ONLY=
@@ -20,6 +22,7 @@ WITHOUT_FBSD10_FIX=	yes
 WRKSRC=${SRCDIR}
 PLIST_FILES+=	/usr/dist/kernel.txz
 LOCAL_SDIR?=	/usr/local_source
+NEED_ROOT=	yes
 .if exists(${LOCAL_SDIR}/${PORTNAME})
 WRKSRC=	${LOCAL_SDIR}/${PORTNAME}
 .endif
@@ -27,6 +30,13 @@ WRKSRC=	${LOCAL_SDIR}/${PORTNAME}
 PKG_ABISTRING=	${BASEPKG_ABISTRING}
 .else
 PKG_ABISTRING=	FreeBSD:13:${ARCH}
+.endif
+
+# Set default non-debug config for HEAD / Other
+.if exists(${SRCDIR}/sys/${ARCH}/conf/GENERIC-NODEBUG)
+KERNCONF?=	GENERIC-NODEBUG
+.else
+KERNCONF?=	GENERIC
 .endif
 
 .if defined(_MAKE_JOBS_NUMBER)
@@ -55,14 +65,16 @@ MFLAGS+=	WITH_${var}=YES
 .endfor
 
 do-build:
-	cd ${WRKSRC} && env -i make ${JOBFLAG} ${MCONF} ${KERNEL_MAKE_FLAGS} \
+	cd ${WRKSRC} && env -i MAKEOBJDIRPREFIX=${WRKDIR} make ${JOBFLAG} ${MCONF} ${KERNEL_MAKE_FLAGS} \
+		KERNCONF=${KERNCONF} \
 		${MFLAGS} \
 		buildkernel
 
 do-install:
 	${MKDIR} -p ${STAGEDIR}/kernel
 	${MKDIR} -p ${STAGEDIR}/usr/dist
-	cd ${WRKSRC} && env -i make ${JOBFLAG} ${MCONF} ${KERNEL_MAKE_FLAGS} \
+	cd ${WRKSRC} && env -i MAKEOBJDIRPREFIX=${WRKDIR} make ${JOBFLAG} ${MCONF} ${KERNEL_MAKE_FLAGS} \
+		KERNCONF=${KERNCONF} \
 		${MFLAGS} \
 	       	DESTDIR=${STAGEDIR}/kernel \
 		installkernel

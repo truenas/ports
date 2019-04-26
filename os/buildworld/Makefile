@@ -20,6 +20,7 @@ SRCDIR?=/usr/src
 WRKSRC=${SRCDIR}
 WITHOUT_FBSD10_FIX=	yes
 LOCAL_SDIR?=	/usr/local_source
+NEED_ROOT=	yes
 .if exists(${LOCAL_SDIR}/${PORTNAME})
 WRKSRC=	${LOCAL_SDIR}/${PORTNAME}
 .endif

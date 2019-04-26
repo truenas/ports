@@ -2,12 +2,12 @@
 
 .include "../Makefile.common"
 
-PORTNAME=	kernel-debug
+PORTNAME=	kernel-debug-symbols
 PORTVERSION=	${OS_PORTVERSION}
 CATEGORIES=	os
 
 MAINTAINER=	kris@ixsystems.com
-COMMENT=	Port for the kernel compiled with debugging enabled
+COMMENT=	Port for the kernel debug symbol files
 
 BUILD_DEPENDS=	/usr/dist/kernel-debug.txz:os/buildkernel-debug
 
@@ -27,11 +27,11 @@ do-build:
 do-install:
 	@${ECHO_MSG} "==> Generating plist..."
 	@${MKDIR} -p ${STAGEDIR}
-	@(cd ${STAGEDIR}; ${FIND} ./boot/kernel-debug \( -type f -o -type l \) \
+	@(cd ${STAGEDIR}; ${FIND} ./usr/lib/debug/boot/kernel \( -type f -o -type l \) \
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
 		| ${AWK} '{print $$2 }' >> ${TMPPLIST})
-	@(cd ${STAGEDIR}; ${FIND} ./boot/kernel-debug \( -type d \) \
+	@(cd ${STAGEDIR}; ${FIND} ./usr/lib/debug/boot/kernel \( -type d \) \
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
 		| ${AWK} '{print $$2 }' \
