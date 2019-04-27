@@ -24,12 +24,6 @@ NEED_ROOT=	yes
 .if exists(${LOCAL_SDIR}/${PORTNAME})
 WRKSRC=	${LOCAL_SDIR}/${PORTNAME}
 .endif
-.if defined(BASEPKG_ABISTRING)
-PKG_ABISTRING=	${BASEPKG_ABISTRING}
-.else
-PKG_ABISTRING=	FreeBSD:13:${ARCH}
-.endif
-
 
 .include "Makefile.options"
 .include "Makefile.options.desc"
