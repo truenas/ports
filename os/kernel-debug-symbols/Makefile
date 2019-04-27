@@ -23,15 +23,15 @@ do-build:
 	@${MKDIR} -p ${STAGEDIR}
 	@${ECHO_MSG} "==> Extracting kernel-debug.txz..."
 	@${TAR} xpf /usr/dist/kernel-debug.txz -C ${STAGEDIR}
+	@${MV} ${STAGEDIR}/usr/lib/debug/boot/kernel ${STAGEDIR}/usr/lib/debug/boot/kernel-debug
 
 do-install:
 	@${ECHO_MSG} "==> Generating plist..."
-	@${MKDIR} -p ${STAGEDIR}
-	@(cd ${STAGEDIR}; ${FIND} ./usr/lib/debug/boot/kernel \( -type f -o -type l \) \
+	@(cd ${STAGEDIR}; ${FIND} ./usr/lib/debug/boot/kernel-debug \( -type f -o -type l \) \
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
 		| ${AWK} '{print $$2 }' >> ${TMPPLIST})
-	@(cd ${STAGEDIR}; ${FIND} ./usr/lib/debug/boot/kernel \( -type d \) \
+	@(cd ${STAGEDIR}; ${FIND} ./usr/lib/debug/boot/kernel-debug \( -type d \) \
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
 		| ${AWK} '{print $$2 }' \
