@@ -15,17 +15,20 @@ BUILD_DEPENDS=	${BASH_CMD}:shells/bash \
 		nasm:devel/nasm \
 		${PYTHON_LIBDIR}/lib-dynload/_sqlite3.so:databases/py-sqlite3@${PY_FLAVOR}
 
+
 USES=		gmake \
 		python:2.7,build
 USE_GCC=	8+
 USE_GITHUB=	yes
 GH_ACCOUNT=	freebsd
 GH_PROJECT=	uefi-edk2
+
 GH_TAGNAME=	0613ec3
 GH_TUPLE=	openssl:openssl:OpenSSL_1_1_0j:openssl/src/github.com/openssl/openssl
 
 PLIST_FILES=	share/uefi-firmware/BHYVE_UEFI_CODE${PLIST_SUFFIX}-devel.fd \
 		share/uefi-firmware/BHYVE_UEFI_VARS${PLIST_SUFFIX}-devel.fd
+
 
 OPTIONS_DEFINE=	DEBUG HTTP_BOOT
 OPTIONS_DEFAULT=	HTTP_BOOT
@@ -44,6 +47,7 @@ MAKE_ARGS+=	SHELL=${BASH_CMD}
 MAKE_ENV+=	PYTHON_COMMAND=${PYTHON_CMD}
 BUILD_ARGS=	-DDEBUG_ON_SERIAL_PORT=TRUE
 
+
 post-extract:
 	@${RMDIR} ${WRKSRC}/CryptoPkg/Library/OpensslLib/openssl
 	@${MV} ${WRKSRC}/src/github.com/openssl/openssl \
@@ -60,8 +64,10 @@ do-build:
 	${LN} -sf ${LOCALBASE}/bin/objcopy ${BUILD_WRKSRC}/BaseTools/Bin/FreeBSD-${MACHINE}/objcopy
 	${LN} -sf ${LOCALBASE}/bin/nasm ${BUILD_WRKSRC}/BaseTools/Bin/FreeBSD-${MACHINE}/nasm
 	unset ARCH; unset MAKEFLAGS
+
 	${SETENV} ${MAKE_ENV} ${BASH_CMD} -c "cd ${WRKSRC}; . ./edksetup.sh; ${MAKE_CMD} ${MAKE_ARGS} -C ${WRKSRC}/BaseTools"
 	${SETENV} ${MAKE_ENV} ${BASH_CMD} -c " \
+
 		cd ${BUILD_WRKSRC}; \
 		unset ARCH; unset MAKEFLAGS; \
 		. ./edksetup.sh; \
