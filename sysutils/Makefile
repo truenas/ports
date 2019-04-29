@@ -1430,11 +1430,8 @@
     SUBDIR += udfclient
     SUBDIR += uefi-edk2-bhyve
     SUBDIR += uefi-edk2-bhyve-csm
-<<<<<<< HEAD
     SUBDIR += UEFITool
-=======
     SUBDIR += uefi-edk2-bhyve-devel
->>>>>>> freebsd/master
     SUBDIR += ufs_copy
     SUBDIR += uhidd
     SUBDIR += uif2iso
