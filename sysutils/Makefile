@@ -1429,7 +1429,6 @@
     SUBDIR += ucspi-unix
     SUBDIR += udfclient
     SUBDIR += uefi-edk2-bhyve
-    SUBDIR += uefi-edk2-bhyve-devel
     SUBDIR += uefi-edk2-bhyve-csm
     SUBDIR += UEFITool
     SUBDIR += uefi-edk2-bhyve-devel

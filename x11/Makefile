@@ -238,7 +238,6 @@
     SUBDIR += nvidia-driver
     SUBDIR += nvidia-driver-304
     SUBDIR += nvidia-driver-340
-    SUBDIR += nvidia-driver-390
     SUBDIR += nvidia-settings
     SUBDIR += nvidia-xconfig
     SUBDIR += nxcomp
