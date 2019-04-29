@@ -49,6 +49,7 @@ PLIST_FILES+=	usr/dist/world.txz
 # This is broken right now
 #MFLAGS+=	MAKEOBJDIRPREFIX=${WRKDIR}/obj
 
+check-sanity:
 
 do-build:
 	cd ${WRKSRC} && env -i make ${JOBFLAG} ${WORLD_MAKE_FLAGS} \
