@@ -31,6 +31,8 @@ checksum fetch:
 	${ECHO_MSG} ${.TARGET} not needed because building direct
 .endif
 
+stage-qa: stage
+
 do-install:
 	${MKDIR} -p ${STAGEDIR}${SRCDIR}
 	${TAR} cf - -C ${WRKSRC} --exclude .git --exclude .svn . | ${TAR} xpf - -C ${STAGEDIR}${SRCDIR}

@@ -59,6 +59,8 @@ MFLAGS+=	WITH_${var}=YES
 .endif
 .endfor
 
+check-sanity:
+
 do-build:
 	cd ${WRKSRC} && env -i MAKEOBJDIRPREFIX=${WRKDIR} make ${JOBFLAG} ${MCONF} ${KERNEL_MAKE_FLAGS} \
 		KERNCONF=${KERNCONF} \
