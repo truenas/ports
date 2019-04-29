@@ -1,4 +1,0 @@
-Build manifest for the current version of the packages.
-Gets installed to /var/db/current-manifest.json
-
-WWW: https://github.com/trueos/trueos
