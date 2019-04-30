@@ -20,6 +20,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}bsd>=0:freenas/py-bsd@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}ipaddr>=0:devel/py-ipaddr@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}ldap>=0:net/py-ldap@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}licenselib>=0:freenas/py-licenselib@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}midcli>=0:freenas/py-midcli@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}middlewared>=0:freenas/py-middlewared@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}oauth2>=0:net/py-oauth2@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}openssl>=0:security/py-openssl@${PY_FLAVOR} \

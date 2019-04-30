@@ -15,6 +15,7 @@
     SUBDIR += py-bsd
     SUBDIR += py-licenselib
     SUBDIR += py-middlewared
+    SUBDIR += py-midcli
     SUBDIR += swagger-ui
 
 .include <bsd.port.subdir.mk>
