@@ -63,7 +63,7 @@ WRKSRC=		/usr/ports/local_source/${PORTNAME}
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
 GH_PROJECT=	freenas
-GH_TAGNAME=	c57507d7833f3ce33e530efcf769b1be08fd7bd1
+GH_TAGNAME=	6ad880acced3c1a041e937350febe101c12909d1
 .endif
 
 .if exists(/usr/ports/local_source/${PORTNAME})
