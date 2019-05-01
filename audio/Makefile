@@ -140,7 +140,6 @@
     SUBDIR += etktab
     SUBDIR += exaile
     SUBDIR += exaile-devel
-    SUBDIR += extace
     SUBDIR += ezstream
     SUBDIR += faac
     SUBDIR += faad
@@ -473,7 +472,6 @@
     SUBDIR += linux-c7-pulseaudio-utils
     SUBDIR += linux-c7-sdl_mixer
     SUBDIR += linux-laudio
-    SUBDIR += linux-skype_oss_wrapper
     SUBDIR += linuxsampler
     SUBDIR += listener
     SUBDIR += lmms
@@ -571,7 +569,6 @@
     SUBDIR += nuvolaplayer
     SUBDIR += oaml
     SUBDIR += ocp
-    SUBDIR += openal
     SUBDIR += openal-soft
     SUBDIR += opencore-amr
     SUBDIR += openspc

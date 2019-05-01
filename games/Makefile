@@ -507,7 +507,6 @@
     SUBDIR += legesmotus
     SUBDIR += lexter
     SUBDIR += lgeneral
-    SUBDIR += lianliankan
     SUBDIR += libggz
     SUBDIR += libgnome-games-support
     SUBDIR += libkdegames
@@ -679,6 +678,7 @@
     SUBDIR += opengfx
     SUBDIR += openglad
     SUBDIR += openjazz
+    SUBDIR += openjk
     SUBDIR += openlierox
     SUBDIR += openmortal
     SUBDIR += openmsx

@@ -12200,3 +12200,10 @@ net-mgmt/zabbix34-proxy|net-mgmt/zabbix4-proxy|2019-04-28|Has expired: End of Li
 net-mgmt/zabbix34-server|net-mgmt/zabbix4-server|2019-04-28|Has expired: End of Life was October, 2018
 databases/zabbix32-libzbxpgsql||2019-04-28|Removed, depends on expired net-mgmt/zabbix32-agent
 databases/zabbix34-libzbxpgsql||2019-04-28|Removed, depends on expired net-mgmt/zabbix34-agent
+games/lianliankan||2019-04-30|Has expired: Depends on expired esound
+audio/extace||2019-04-30|Has expired: Depends on expired esound
+audio/openal||2019-04-30|Has expired: Abandonware. Use audio/openal-soft instead
+devel/poco-ssl||2019-04-30|Has expired: Newer version available; use devel/poco instead
+audio/linux-skype_oss_wrapper||2019-04-30|Has expired: Only useful for net-im/skype4
+net-im/skype4||2019-04-30|Has expired: Unsupported upstream
+devel/llvm50|devel/llvm80|2019-04-30|Has expired: Use a modern version instead
