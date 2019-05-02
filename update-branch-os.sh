@@ -73,6 +73,9 @@ fi
 
 BRANCH="$2"
 
+# Set the ports dir location
+export PORTSDIR="$(pwd)"
+
 if [ "$1" = "all" ] ; then
 	for p in $PLIST
 	do
