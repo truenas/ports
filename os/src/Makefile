@@ -10,9 +10,9 @@ MAINTAINER=	kris@ixsystems.com
 COMMENT=	Port for the OS base sources
 
 USE_GITHUB=	yes
-GH_ACCOUNT=	trueos
-GH_PROJECT=	trueos
-GH_TAGNAME=	ac6a1a009182967dfec7902f34d7ada42adf25b5
+GH_ACCOUNT=	freenas
+GH_PROJECT=	os
+GH_TAGNAME=	1f44ee2fe1e71bc7722b652ae4f3e1d230edaf0b
 
 PREFIX=/
 SRCDIR?=/usr/src
