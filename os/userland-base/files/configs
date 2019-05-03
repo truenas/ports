@@ -123,6 +123,7 @@ etc/pam.d/xdm
 etc/pccard_ether
 etc/pf.os
 etc/phones
+etc/pkg/Train.conf
 etc/portsnap.conf
 etc/ppp/ppp.conf
 etc/printcap
@@ -154,3 +155,4 @@ etc/syslog.d/lpr.conf
 etc/syslog.d/ppp.conf
 etc/termcap.small
 etc/ttys
+usr/local/etc/pkg/repos/FreeBSD.conf
