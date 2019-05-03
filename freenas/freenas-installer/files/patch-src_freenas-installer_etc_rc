@@ -5,7 +5,7 @@
  	
  while :; do
 -    /etc/install.sh
-+    /etc/install12.sh
++    /etc/installer12.sh
  #    TERM=xterm \
  #       PYTHONPATH=/usr/local/lib \
  #       PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:/rescue \
