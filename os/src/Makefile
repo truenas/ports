@@ -12,7 +12,7 @@ COMMENT=	Port for the OS base sources
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
 GH_PROJECT=	os
-GH_TAGNAME=	a1d7041f75ad5054c4fe938e077f2f9f8853c54e
+GH_TAGNAME=	00b511c19340bef28de9e9b3e2b0b36f6822ef07
 
 PREFIX=/
 SRCDIR?=/usr/src
