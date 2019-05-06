@@ -2,16 +2,20 @@
 # $FreeBSD$
 
 PORTNAME=	ws4py
-PORTVERSION=	0.3.4
+PORTVERSION=	0.5.1
 PORTREVISION=	1
 CATEGORIES=	www python
-MASTER_SITES=	http://www.defuze.org/oss/${PORTNAME}/
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	wg@FreeBSD.org
 COMMENT=	WebSocket package for Python
 
 LICENSE=	BSD3CLAUSE
+
+USE_GITHUB=	yes
+GH_ACCOUNT=	Lawouach
+GH_PROJECT=	WebSocket-for-Python
+GH_TAGNAME=	961c07ce16ce4eedc34ca1fdacd29442870feccc
 
 USES=		python
 USE_PYTHON=	distutils autoplist
@@ -24,9 +28,9 @@ CHERRYPY_DESC=	CherryPy server support
 GEVENT_DESC=	gevent-based client/server support
 TORNADO_DESC=	Tornado client support
 
-CHERRYPY_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}cherrypy>=3.2.2:www/py-cherrypy@${PY_FLAVOR}
-GEVENT_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}gevent>=0.13.8:devel/py-gevent@${PY_FLAVOR}
-TORNADO_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}tornado>=3.1:www/py-tornado@${PY_FLAVOR}
+CHERRYPY_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}cherrypy>=5.5.0:www/py-cherrypy@${PY_FLAVOR}
+GEVENT_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}gevent>=1.1.1:devel/py-gevent@${PY_FLAVOR}
+TORNADO_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}tornado>=4.2.3:www/py-tornado@${PY_FLAVOR}
 
 # Do not install files which will not work
 post-patch-CHERRYPY-off:
