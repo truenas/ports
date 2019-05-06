@@ -16,6 +16,7 @@ RUN_DEPENDS=	zol-kmod>=0:sysutils/zol-kmod
 
 USES=		autoreconf:build libtool gmake gettext-runtime:run python:3.3+ \
 		shebangfix
+USE_PYTHON=	distutils
 
 GNU_CONFIGURE=  yes
 CONFIGURE_ARGS=	--prefix=${PREFIX} --with-config="user" --with-python=${PYTHON_VER}
