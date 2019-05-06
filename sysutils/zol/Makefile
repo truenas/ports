@@ -12,8 +12,10 @@ LICENSE=	CDDL
 
 BROKEN_aarch64=	invokes x86 assembler
 
-BUILD_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}setuptools>0:devel/py-setuptools@${PY_FLAVOR}
-RUN_DEPENDS=	zol-kmod>=0:sysutils/zol-kmod
+BUILD_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}setuptools>0:devel/py-setuptools@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}cffi>0:devel/py-cffi@${PY_FLAVOR}
+RUN_DEPENDS=	zol-kmod>=0:sysutils/zol-kmod \
+		${PYTHON_PKGNAMEPREFIX}cffi>0:devel/py-cffi@${PY_FLAVOR}
 
 USES=		autoreconf:build libtool gmake gettext-runtime:run python:3.3+ \
 		shebangfix
