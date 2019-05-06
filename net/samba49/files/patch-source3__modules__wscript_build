@@ -1,5 +1,5 @@
---- source3/modules/wscript_build.orig	2018-09-06 03:59:20.000000000 -0400
-+++ source3/modules/wscript_build	2019-02-06 16:50:58.986391000 -0500
+--- source3/modules/wscript_build.orig  2019-03-12 01:19:04.000000000 -0700
++++ source3/modules/wscript_build       2019-05-05 23:28:16.116449396 -0700
 @@ -88,7 +88,7 @@ bld.SAMBA3_MODULE('vfs_fake_acls',
  bld.SAMBA3_MODULE('vfs_recycle',
                   subsystem='vfs',
@@ -33,7 +33,7 @@
  bld.SAMBA3_MODULE('vfs_zfsacl',
                   subsystem='vfs',
                   source='vfs_zfsacl.c',
-@@ -556,9 +573,67 @@ bld.SAMBA3_MODULE('vfs_error_inject',
+@@ -564,9 +581,74 @@ bld.SAMBA3_MODULE('vfs_error_inject',
                   internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_error_inject'),
                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_error_inject'))
  
@@ -105,3 +105,11 @@
 +                 init_function='',
 +                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_shadow_copy_zfs'),
 +                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_shadow_copy_zfs'))
++
++bld.SAMBA3_MODULE('vfs_noacl',
++                 subsystem='vfs',
++                 source='vfs_noacl.c',
++                 init_function='',
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_noacl'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_noacl'))
+

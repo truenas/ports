@@ -3,7 +3,7 @@
 
 PORTNAME=			${SAMBA4_BASENAME}49
 PORTVERSION=			${SAMBA4_VERSION}
-PORTREVISION=			4
+PORTREVISION=			5
 CATEGORIES?=			net
 MASTER_SITES=			SAMBA/samba/stable SAMBA/samba/rc
 DISTNAME=			${SAMBA4_DISTNAME}
@@ -344,7 +344,7 @@ LDAP_VARS=			SAMBA4_MODULES+=idmap_ldap
 
 LIBZFS_CONFIGURE_WITH=		libzfs
 LIBZFS_CONFIGURE_OFF=		--without-libzfs
-LIBZFS_VARS=			SAMBA4_MODULES+=vfs_zfs_space vfs_ixnas vfs_shadow_copy_zfs
+LIBZFS_VARS=			SAMBA4_MODULES+=vfs_zfs_space vfs_ixnas vfs_shadow_copy_zfs vfs_noacl
 
 MANDOC_BUILD_DEPENDS=		${LOCALBASE}/share/xsl/docbook/manpages/docbook.xsl:textproc/docbook-xsl \
 				xsltproc:textproc/libxslt
@@ -383,8 +383,8 @@ SAMBA4_MODULES+=		auth_skel pdb_test gpext_security gpext_registry gpext_scripts
 
 .if ${PORT_OPTIONS:MLIBZFS}
 CONFIGURE_ARGS+=        --with-libzfs
-WANT_EXP_MODULES+=      vfs_zfs_space vfs_ixnas vfs_shadow_copy_zfs
-SAMBA4_MODULES+=        vfs_zfs_space vfs_ixnas vfs_shadow_copy_zfs
+WANT_EXP_MODULES+=      vfs_zfs_space vfs_ixnas vfs_shadow_copy_zfs vfs_noacl
+SAMBA4_MODULES+=        vfs_zfs_space vfs_ixnas vfs_shadow_copy_zfs vfs_noacl
 PLIST_SUB+=             LIBZFS=""
 .else
 CONFIGURE_ARGS+=        --without-libzfs
