@@ -18,7 +18,7 @@ USES=		autoreconf:build libtool gmake gettext-runtime:run python:3.3+ \
 		shebangfix
 
 GNU_CONFIGURE=  yes
-CONFIGURE_ARGS=	--prefix=${PREFIX} --with-config="user"
+CONFIGURE_ARGS=	--prefix=${PREFIX} --with-config="user" --with-python=${PYTHON_VER}
 
 OPTIONS_DEFINE= DEBUG
 OPTIONS_SUB=    yes
