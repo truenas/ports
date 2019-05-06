@@ -12,11 +12,11 @@ LICENSE=	CDDL
 
 BROKEN_aarch64=	invokes x86 assembler
 
+BUILD_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}setuptools>0:devel/py-setuptools@${PY_FLAVOR}
 RUN_DEPENDS=	zol-kmod>=0:sysutils/zol-kmod
 
 USES=		autoreconf:build libtool gmake gettext-runtime:run python:3.3+ \
 		shebangfix
-USE_PYTHON=	distutils
 
 GNU_CONFIGURE=  yes
 CONFIGURE_ARGS=	--prefix=${PREFIX} --with-config="user" --with-python=${PYTHON_VER}
