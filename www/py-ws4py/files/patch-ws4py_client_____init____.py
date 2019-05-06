@@ -1,6 +1,6 @@
---- ws4py/client/__init__.py.orig	2018-03-16 14:28:29 UTC
+--- ws4py/client/__init__.py.orig	2019-05-06 22:47:23 UTC
 +++ ws4py/client/__init__.py
-@@ -103,7 +103,6 @@ class WebSocketBaseClient(WebSocket):
+@@ -110,7 +110,6 @@ class WebSocketBaseClient(WebSocket):
  
              sock = socket.socket(family, socktype, proto)
              sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
