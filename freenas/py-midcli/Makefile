@@ -1,5 +1,5 @@
 PORTNAME=	midcli
-PORTVERSION=	20190506200626
+PORTVERSION=	20190509171453
 PKGNAMEPREFIX=  ${PYTHON_PKGNAMEPREFIX}
 
 CATEGORIES=     freenas
@@ -24,7 +24,7 @@ WRKSRC=		/usr/ports/local_source/${PORTNAME}
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
 GH_PROJECT=	midcli
-GH_TAGNAME=	f49eb3b7c03ec242c33acd89b81ebf7c5e5b9951
+GH_TAGNAME=	5ac8045e9f1f4a6cee30fbc698df8cb01f6e9d75
 .endif
 
 .if exists(/usr/ports/local_source/${PORTNAME})
