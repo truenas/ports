@@ -365,10 +365,10 @@ index 0000000..27f8977
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 0000000..e8e3b1f
+index 0000000..861ae2e
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,1204 @@
+@@ -0,0 +1,1214 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -895,11 +895,21 @@ index 0000000..e8e3b1f
 +		zacl->ats_acl.acl_entry[i].ae_flags              = aceprop->aceFlags;
 +		zacl->ats_acl.acl_entry[i].ae_perm               = (l|m|h);
 +		zacl->ats_acl.acl_entry[i].ae_flags             &= ~SMB_ACE4_IDENTIFIER_GROUP; //FreeBSD doesn't store group in ae_flags
-+		if (aceprop->aceType) {
-+			zacl->ats_acl.acl_entry[i].ae_entry_type = aceprop->aceType << 9;
-+		}
-+		else {
-+			zacl->ats_acl.acl_entry[i].ae_entry_type = ACL_ENTRY_TYPE_ALLOW;
++		switch (aceprop->aceFlags) {
++			case SMB_ACE4_ACCESS_ALLOWED_ACE_TYPE:
++				zacl->ats_acl.acl_entry[i].ae_entry_type = ACL_ENTRY_TYPE_ALLOW;
++				break;
++			case SMB_ACE4_ACCESS_DENIED_ACE_TYPE:
++				zacl->ats_acl.acl_entry[i].ae_entry_type = ACL_ENTRY_TYPE_DENY;
++				break;
++			case SMB_ACE4_SYSTEM_AUDIT_ACE_TYPE:
++				zacl->ats_acl.acl_entry[i].ae_entry_type = ACL_ENTRY_TYPE_ALARM;
++				break;
++			case SMB_ACE4_SYSTEM_ALARM_ACE_TYPE:
++				zacl->ats_acl.acl_entry[i].ae_entry_type = ACL_ENTRY_TYPE_AUDIT;
++				break;
++			default:
++				smb_panic("zfs_process_smbacl: aceType is invalid");
 +		}
 +		if (aceprop->aceMask & SMB_ACE4_EXECUTE) {
 +			zacl->ats_acl.acl_entry[i].ae_perm	|= ACL_EXECUTE; //0x0001 (doesn't map cleanly)	
