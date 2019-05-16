@@ -61,9 +61,17 @@ case "$daily_status_3ware_raid_enable" in
 		fi
 		mv -f ${alarms_log}.today ${alarms_log}.yesterday
 		${tw_cli} alarms > ${alarms_log}.today
-		cmp -zs ${alarms_log}.yesterday ${alarms_log}.today
-		raid_rc=$?
-		if test $raid_rc -ne 0; then
+		old=$(mktemp /tmp/tmp.XXXXX)
+		new=$(mktemp /tmp/tmp.XXXXX)
+		sort < "${alarms_log}.yesterday" > "$old"
+		sort < "${alarms_log}.today" > "$new"
+		comm -13 "$old" "$new" | grep -q '[^[:space:]]'
+		file_diff=$?
+		rm -f "$old" "$new"
+		if [ "$file_diff" -ne 0 ]; then
+			raid_rc=0
+		else
+			raid_rc=1
 			diff -u ${alarms_log}.yesterday ${alarms_log}.today | \
 				grep -v '^-\|^$'
 		fi
