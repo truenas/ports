@@ -365,10 +365,10 @@ index 0000000..27f8977
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 0000000..a98f75f
+index 0000000..2d3405f
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,1523 @@
+@@ -0,0 +1,1596 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -388,7 +388,6 @@ index 0000000..a98f75f
 + *  You should have received a copy of the GNU General Public License
 + *  along with this program; if not, see <http://www.gnu.org/licenses/>.
 + */
-+
 +#include "includes.h"
 +#include "MacExtensions.h"
 +#include "smbd/smbd.h"
@@ -410,21 +409,17 @@ index 0000000..a98f75f
 +#endif
 +#include <libutil.h>
 +
-+#if HAVE_FREEBSD_SUNACL_H
-+#include "sunacl.h"
-+#endif
-+
-+#define ZFSACL_MODULE_NAME "ixnas"
 +static int vfs_ixnas_debug_level = DBGC_VFS;
 +
 +#undef DBGC_CLASS
 +#define DBGC_CLASS vfs_ixnas_debug_level
 +
++extern const struct generic_mapping file_generic_mapping;
++
 +struct ixnas_config_data {
 +	struct smbacl4_vfs_params nfs4_params;
 +	bool posix_rename;
 +	bool zfs_acl_enabled;
-+	bool zfs_acl_expose_snapdir;
 +	bool zfs_acl_sortaces;
 +	bool zfs_acl_map_modify;
 +	bool zfs_acl_ignore_empty_mode;
@@ -434,8 +429,6 @@ index 0000000..a98f75f
 +	const char *homedir_quota;
 +	uint64_t base_user_quota; 
 +};
-+extern const struct generic_mapping file_generic_mapping;
-+
 +/********************************************************************
 + Fuctions to store DOS attributes as File Flags.
 +********************************************************************/
@@ -704,9 +697,32 @@ index 0000000..a98f75f
 +/********************************************************************
 + Functions to use ZFS ACLs. 
 +********************************************************************/
-+/* zfs_get_nt_acl()
-+ * read the local file's acls and return it in NT form
-+ * using the NFSv4 format conversion
++/*  
++ * These permissions unfortunately don't line up directly so we
++ * perform bitwise operations to transform them.
++ * BSD perms are defined in acl.h and Windows perms in security.idl
++ * Several permissions share the same mask. The chart below shows
++ * the file constants unless the permission only applies to directories.
++ * (DELETE_CHILD).
++ * ____________________________   ___________________________________
++ * READ_DATA         0x00000008 | SEC_FILE_READ_DATA       0x00000001
++ * WRITE_DATA        0x00000010 | SEC_FILE_WRITE_DATA      0x00000002
++ * APPEND_DATA       0x00000020 | SEC_FILE_APPEND_DATA     0x00000004
++ * READ_NAMED_ATTRS  0x00000040 | SEC_FILE_READ_EA         0x00000008
++ * WRITE_NAMED_ATTRS 0x00000080 | SEC_FILE_WRITE_EA        0x00000010
++ * EXECUTE               0x0001 | SEC_FILE_EXECUTE         0x00000020
++ * DELETE_CHILD      0x00000100 | SEC_DIR_DELETE_CHILD     0x00000040
++ * READ_ATTRIBUTES   0x00000200 | SEC_FILE_READ_ATTRIBUTE  0x00000080
++ * WRITE_ATTRIBUTES  0x00000400 | SEC_FILE_WRITE_ATTRIBUTE 0x00000100
++ * DELETE            0x00000800 | SEC_STD_DELETE           0x00001000
++ * READ_ACL          0x00001000 | SEC_STD_READ_CONTROL     0x00002000
++ * WRITE_ACL         0x00002000 | SEC_STD_WRITE_DAC        0x00004000
++ * WRITE_OWNER       0x00004000 | SEC_STD_WRITE_OWNER      0x00008000
++ * SYNCHRONIZE       0x00008000 | SEC_STD_SYNCHRONIZE      0x00010000
++ *
++ * Requests for GENERIC rights will fail if the ACE lacks synchronize.
++ * this means that this bit must be added to allow ACEs but not deny
++ * ACEs. See Samba bugzilla tickets #7909 and #8442. 
 + */
 +uint32_t bsd2winperms(acl_perm_t bsd_perm)
 +{
@@ -716,16 +732,15 @@ index 0000000..a98f75f
 +	l = bsd_perm >> 3;
 +	m = bsd_perm >> 2;
 +	h = bsd_perm << 5;
-+	l &= (SMB_ACE4_READ_DATA|SMB_ACE4_WRITE_DATA|
-+	      SMB_ACE4_APPEND_DATA|SMB_ACE4_READ_NAMED_ATTRS|
-+	      SMB_ACE4_WRITE_NAMED_ATTRS);
-+	m &= (SMB_ACE4_WRITE_ATTRIBUTES|SMB_ACE4_READ_ATTRIBUTES|SMB_ACE4_DELETE_CHILD);
-+	h &= (SMB_ACE4_DELETE|SMB_ACE4_READ_ACL|
-+	      SMB_ACE4_WRITE_ACL|SMB_ACE4_WRITE_OWNER|
-+	      SMB_ACE4_SYNCHRONIZE); //remove bits lower than SMB_ACE4_DELETE
++	l &= (SEC_FILE_READ_DATA|SEC_FILE_WRITE_DATA|
++	      SEC_FILE_APPEND_DATA|SEC_FILE_READ_EA|
++	      SEC_FILE_WRITE_EA);
++	m &= (SEC_FILE_READ_ATTRIBUTE|SEC_FILE_WRITE_ATTRIBUTE|SEC_DIR_DELETE_CHILD);
++	h &= (SEC_STD_DELETE|SEC_STD_READ_CONTROL|
++	      SEC_STD_WRITE_DAC|SEC_STD_WRITE_OWNER|
++	      SEC_STD_SYNCHRONIZE); //remove bits lower than SMB_ACE4_DELETE
 +	winperms = (l|m|h);
 +	if (bsd_perm & ACL_EXECUTE) {
-+		//ACL_EXECUTE is 0x0001 and so it doesn't map cleanly. 
 +		winperms |= SEC_DIR_TRAVERSE;
 +	}
 +
@@ -752,14 +767,45 @@ index 0000000..a98f75f
 +	return bsd_perm;
 +}
 +
-+uint16_t win2bsdflags(uint32_t win_flags, bool is_dir)
++/*
++ * FILE_INHERIT (0x0001) through INHERIT_ONY (0x0008) map directly.
++ * INHERITED (0x0080) and SEC_ACE_FLAG_INHERITED (0x10) do not.
++ * SUCCESSFUL_ACCESS and FAILED_ACCESS are not implemented in FreeBSD. 
++ * __________________________    ______________________________________
++ * FILE_INHERIT         0x0001 | SEC_ACE_FLAG_OBJECT_INHERIT       0x01
++ * DIRECTORY_INHERIT    0x0002 | SEC_ACE_FLAG_CONTAINER_INHERIT    0x02
++ * NO_PROPAGATE_INHERIT 0x0004 | SEC_ACE_FLAG_NO_PROPAGATE_INHERIT 0x04
++ * INHERIT_ONLY         0x0008 | SEC_ACE_FLAG_INHERIT_ONLY         0x08
++ * SUCCESSFUL_ACCESS    0x0010 | SEC_ACE_FLAG_SUCCESSFUL_ACCESS    0x40
++ * FAILED_ACCESS        0x0020 | SEC_ACE_FLAG_FAILED_ACCESS        0x80
++ * INHERITED            0x0080 | SEC_ACE_FLAG_INHERITED_ACE        0x10
++ *                             | SEC_ACE_FLAG_VALID_INHERIT        0x0f
++ *
++ * Invalid inheritance bits for files are stripped from windows flags before
++ * returning the BSD flags.
++ */
++
++uint8_t bsd2winflags(uint16_t bsd_flags)
++{
++	uint8_t win_flags = 0;
++	win_flags = bsd_flags & (ACL_ENTRY_FILE_INHERIT|
++				 ACL_ENTRY_DIRECTORY_INHERIT|
++				 ACL_ENTRY_NO_PROPAGATE_INHERIT|
++				 ACL_ENTRY_INHERIT_ONLY);
++	if (bsd_flags & ACL_ENTRY_INHERITED) {
++		win_flags |= SEC_ACE_FLAG_INHERITED_ACE;
++	}
++	return win_flags;
++}
++
++uint16_t win2bsdflags(uint8_t win_flags, bool is_dir)
 +{
 +	uint16_t bsd_flags = 0;
 +	if (is_dir) {
-+		bsd_flags = win_flags & (ACL_ENTRY_FILE_INHERIT|
-+					 ACL_ENTRY_DIRECTORY_INHERIT|
-+					 ACL_ENTRY_NO_PROPAGATE_INHERIT|
-+					 ACL_ENTRY_INHERIT_ONLY);
++		bsd_flags = win_flags & (SEC_ACE_FLAG_OBJECT_INHERIT|
++					 SEC_ACE_FLAG_CONTAINER_INHERIT|
++					 SEC_ACE_FLAG_NO_PROPAGATE_INHERIT|
++					 SEC_ACE_FLAG_INHERIT_ONLY);
 +	}
 +	if (win_flags & SEC_ACE_FLAG_INHERITED_ACE) {
 +		bsd_flags |= ACL_ENTRY_INHERITED;
@@ -776,17 +822,51 @@ index 0000000..a98f75f
 +	int *pgood_aces,
 +	uint16_t *acl_control_flags)
 +{
-+	int naces, i;
++	int naces, i, good_aces, saved_errno;
 +	bool is_dir, inherited_present;
 +	acl_t zacl;
-+	int good_aces = 0;
++	i = naces = saved_errno = good_aces = 0;
 +	is_dir = inherited_present = false;
 +	struct security_ace *nt_ace_list = NULL;
 +
 +	zacl = acl_get_file(smb_fname->base_name, ACL_TYPE_NFS4);
 +	if ( zacl == NULL) {
-+		DBG_ERR("ixnas: acl_get_file() failed for %s: %s\n",
-+		smb_fname->base_name, strerror(errno));
++		/*
++		 * If we fail to get the ACL on the path in question,
++ 		 * make a pathconf() call to determine whether the path
++		 * supports NFSv4 ACLs. If it does not, then it's clear that
++		 * the filesystem underly the path in question is not ZFS.
++		 * In this case we want to pass through to the next VFS module
++		 * in the stack, which will probably treat the path as having
++		 * posix ACLs. errno is set to ENOSYS in this case because
++		 * neither pathconf() nor acl_get_file() set it to this value, and
++		 * because this is the behavior of libsunacl / vfs_zfsacl.
++		 */
++		saved_errno = errno;
++		errno = 0;
++		if (pathconf(smb_fname->base_name, _PC_ACL_NFS4) < 0) {
++			DBG_INFO("%s: pathconf(..., _PC_ACL_NFS4) failed. Path does not support NFS4 ACL.",
++				smb_fname->base_name);
++			/*
++			 * If path does not support NFS4 ACLs, then pathconf() returns -1
++			 * and errno is not modified. If pathconf() itself fails, then it
++			 * returns -1 and errno is set.
++			 */
++			if (errno == 0) {
++				DBG_INFO("%s: pathconf(..., _PC_ACL_NFS4) failed. Path does not support NFS4 ACL.",
++					smb_fname->base_name);
++				errno = ENOSYS;
++			}
++			else {
++				DBG_ERR("ixnas: pathconf() failed for %s: %s\n",
++					smb_fname->base_name, strerror(errno));
++			}
++                }
++		else {
++			DBG_ERR("ixnas: acl_get_file() failed for %s: %s\n",
++				smb_fname->base_name, strerror(errno));
++			errno = saved_errno;
++		}
 +		return false;
 +	}
 +	naces = zacl->ats_acl.acl_cnt;
@@ -800,9 +880,9 @@ index 0000000..a98f75f
 +		return false;
 +	}
 +	for(i=0; i<naces; i++) {
-+		uint32_t mask;
-+		uint32_t win_ace_flags;
-+		uint32_t win_ace_type;
++		uint32_t mask = 0;
++		uint8_t win_ace_flags = 0;
++		uint32_t win_ace_type = 0;
 +		struct dom_sid sid;
 +		bool map_special_entry = false;
 +		DBG_DEBUG("ae_tag: %d, ae_id: %d, ae_perm: %x, "
@@ -820,24 +900,10 @@ index 0000000..a98f75f
 +
 +		mask = bsd2winperms(zacl->ats_acl.acl_entry[i].ae_perm);
 +
-+		win_ace_flags = zacl->ats_acl.acl_entry[i].ae_flags;
-+
-+		/*
-+		 * NFSv4 flags map directly to NTFS flags with the exception
-+		 * of SEC_ACE_FLAG_INHERITED_ACE.
-+		 */
-+		if (zacl->ats_acl.acl_entry[i].ae_flags & ACL_ENTRY_INHERITED) {
-+			inherited_present = True;
-+			win_ace_flags |= SEC_ACE_FLAG_INHERITED_ACE;
-+		}
++		win_ace_flags = bsd2winflags(zacl->ats_acl.acl_entry[i].ae_flags);
 +
 +		win_ace_type = zacl->ats_acl.acl_entry[i].ae_entry_type >> 9; 
 +
-+		/*
-+		 * Windows clients expect SEC_STD_SYNCHRONIZE to allow
-+		 * rename. See Samba bug #7909. This must not be added to
-+		 * DENY aces bug #8442.
-+		 */
 +		if (win_ace_type == SEC_ACE_TYPE_ACCESS_ALLOWED) {
 +			mask |= SEC_STD_SYNCHRONIZE;
 +		}
@@ -873,17 +939,19 @@ index 0000000..a98f75f
 +			 * and inheritance flags are stripped. This implements windows
 +			 * behavior for CREATOR-OWNER and CREATOR-GROUP.
 +			 */
++			DBG_ERR("preparing to generate perms / id \n");
 +			if ((zacl->ats_acl.acl_entry[i].ae_perm & ACL_WRITE_DATA) &&
-+			     config->zfs_acl_map_modify && !(zacl->ats_acl.acl_entry[i].ae_flags) &&
-+			     winac_ace_type == SEC_ACE_TYPE_ACCESS_ALLOWED) {
++			     config->zfs_acl_map_modify) {
 +				/*
 +				 * Compatibilty logic for posix modes on
 +				 * special ids. for group, map "rw" to "modify". 
 +				 * for user, map "rw" to "full control".
 +				 */
++				DBG_ERR("preparing to map new mask entries\n");
 +				mask |= (SEC_STD_DELETE|
 +					 SEC_FILE_WRITE_EA|
 +					 SEC_FILE_WRITE_ATTRIBUTE);
++				DBG_ERR("New mask: 0x%08x\n");
 +			}
 +
 +			if (!(win_ace_flags & SEC_ACE_FLAG_INHERIT_ONLY)) {
@@ -942,6 +1010,12 @@ index 0000000..a98f75f
 +	}
 +	*ppnt_ace_list = nt_ace_list;
 +	*pgood_aces = good_aces;
++
++	/*
++	 * NFSv4.1 ACL control flags are not implemented in FreeBSD and so
++         * we need to fake them. This is required in order for users to be
++         * able to disable permissions inheritance.
++	 */
 +	if (inherited_present) {
 +		*acl_control_flags = (SEC_DESC_DACL_PROTECTED|
 +				     SEC_DESC_SELF_RELATIVE);
@@ -1043,9 +1117,9 @@ index 0000000..a98f75f
 +	return NT_STATUS_OK;
 +}
 +
-+/* zfs_set_nt_acl()
-+ * set the local file's acls obtaining it in NT form
-+ * using the NFSv4 format conversion
++/*
++ * Convert the Security Descriptor DACL into a ZFS ACL
++ * using FreeBSD nfsv4 ACL API.
 + */
 +static NTSTATUS ixnas_set_nfs4_acl(vfs_handle_struct *handle,
 +				   files_struct *fsp,
@@ -1226,7 +1300,7 @@ index 0000000..a98f75f
 +
 +	if(acl_set_file(fsp->fsp_name->base_name, ACL_TYPE_NFS4, zacl) < 0) {
 +		DBG_DEBUG("(acl_set_file(): %s): %s\n", fsp_str_dbg(fsp), strerror(errno));
-+		if ( pathconf(fsp->fsp_name->base_name, _PC_ACL_NFS4) < 0 ) {
++		if (pathconf(fsp->fsp_name->base_name, _PC_ACL_NFS4) < 0) {
 +			DBG_INFO("%s: pathconf(..., _PC_ACL_NFS4) failed. Path does not support NFS4 ACL.",
 +				fsp_str_dbg(fsp));
 +			errno = ENOSYS; //preserve behavior from libsunacl and zfsacl
@@ -1273,21 +1347,25 @@ index 0000000..a98f75f
 +
 +	if (!NT_STATUS_IS_OK(status)) {
 +		TALLOC_FREE(frame);
-+		// Control whether we expose .zfs/snapdir over SMB.
-+		if (!config->zfs_acl_expose_snapdir || !NT_STATUS_EQUAL(status, NT_STATUS_NOT_SUPPORTED)) {
++		/*
++		 * NT_STATUS_NOT_SUPPORTED is returned if acl_get_file() fails
++		 * and pathconf() call determines that path does not support
++		 * NFSv4 ACLs.
++		 */
++		if (!NT_STATUS_EQUAL(status, NT_STATUS_NOT_SUPPORTED)) {
 +			return status;
 +		}
-+
-+		status = make_default_filesystem_acl(mem_ctx,
-+						     DEFAULT_ACL_POSIX,
-+						     fsp->fsp_name->base_name,
-+						     &fsp->fsp_name->st,
-+						     ppdesc);
-+		if (!NT_STATUS_IS_OK(status)) {
-+			return status;
++		/*
++		 * NFSv4 ACLs are not supported on the path
++		 * (may be UFS or other FS mounted inside ZFS share), pass to next in stack.
++		 * In this case, set DACL_PROTECTED to prevent Windows clients from trying
++		 * to apply premissions across the FS boundary.
++		 */
++		status = SMB_VFS_NEXT_FGET_NT_ACL(handle, fsp, security_info, mem_ctx, ppdesc);
++		if (NT_STATUS_IS_OK(status)) {
++			(*ppdesc)->type |= SEC_DESC_DACL_PROTECTED;
 +		}
-+		(*ppdesc)->type |= SEC_DESC_DACL_PROTECTED;
-+		return NT_STATUS_OK;
++		return status;
 +	}
 +
 +	TALLOC_FREE(frame);
@@ -1323,27 +1401,25 @@ index 0000000..a98f75f
 +
 +	if (!NT_STATUS_IS_OK(status)) {
 +		TALLOC_FREE(frame);
-+		// Control whether we expose .zfs/snapdir over SMB.
-+		if (!config->zfs_acl_expose_snapdir || !NT_STATUS_EQUAL(status, NT_STATUS_NOT_SUPPORTED)) {
++		/*
++		 * NT_STATUS_NOT_SUPPORTED is returned if acl_get_file() fails
++		 * and pathconf() call determines that path does not support
++		 * NFSv4 ACLs.
++		 */
++		if (!NT_STATUS_EQUAL(status, NT_STATUS_NOT_SUPPORTED)) {
 +			return status;
 +		}
-+
-+		if (!VALID_STAT(smb_fname->st)) {
-+			DBG_ERR("No stat info for [%s]\n",
-+				smb_fname_str_dbg(smb_fname));
-+			return NT_STATUS_INTERNAL_ERROR;
++		/*
++		 * NFSv4 ACLs are not supported on the path
++		 * (may be UFS or other FS mounted inside ZFS share), pass to next in stack.
++		 * In this case, set DACL_PROTECTED to prevent Windows clients from trying
++		 * to apply premissions across the FS boundary.
++		 */
++		status = SMB_VFS_NEXT_GET_NT_ACL(handle, smb_fname, security_info, mem_ctx, ppdesc);
++		if (NT_STATUS_IS_OK(status)) {
++			(*ppdesc)->type |= SEC_DESC_DACL_PROTECTED;
 +		}
-+
-+		status = make_default_filesystem_acl(mem_ctx,
-+						     DEFAULT_ACL_POSIX,
-+						     smb_fname->base_name,
-+						     &smb_fname->st,
-+						     ppdesc);
-+		if (!NT_STATUS_IS_OK(status)) {
-+			return status;
-+		}
-+		(*ppdesc)->type |= SEC_DESC_DACL_PROTECTED;
-+		return NT_STATUS_OK;
++		return status;
 +	}
 +
 +	TALLOC_FREE(frame);
@@ -1424,10 +1500,16 @@ index 0000000..a98f75f
 +			security_info_sent);
 +		return NT_STATUS_OK;
 + 	}
++	/*
++	 * nfs4_acls.c in some situations will become_root() before calling this.
++	 */
 +	status = ixnas_set_nfs4_acl(handle, fsp, security_info_sent, psd, config);
 +	return status;
 +}
 +
++/*
++ * Functions below are related to posix1e ACLs. Logic copied from vfs_zfsacl.
++ */
 +static SMB_ACL_T ixnas_fail__sys_acl_get_file(vfs_handle_struct *handle,
 +					const struct smb_filename *smb_fname,
 +					SMB_ACL_TYPE_T type,
@@ -1473,7 +1555,11 @@ index 0000000..a98f75f
 +	return -1;
 +}
 +
-+static int ixnas_fail__sys_acl_blob_get_fd(vfs_handle_struct *handle, files_struct *fsp, TALLOC_CTX *mem_ctx, char **blob_description, DATA_BLOB *blob)
++static int ixnas_fail__sys_acl_blob_get_fd(vfs_handle_struct *handle,
++			files_struct *fsp,
++			TALLOC_CTX *mem_ctx,
++			char **blob_description,
++			DATA_BLOB *blob)
 +{
 +	return -1;
 +}
@@ -1613,7 +1699,7 @@ index 0000000..a98f75f
 +	char rp[PATH_MAX] = { 0 };
 +	char *parent;
 +	const char *base;
-+	ace_t *parent_acl;
++	acl_t zacl;
 +	TALLOC_CTX *tmp_ctx = talloc_new(handle->data);
 +
 +	if (realpath(handle->conn->connectpath, rp)) {
@@ -1639,31 +1725,21 @@ index 0000000..a98f75f
 +
 +	ret = smb_zfs_create_homedir(parent, base, homedir_quota);
 +
-+	if ((naces = acl(parent, ACE_GETACLCNT, 0, NULL)) < 0) {
-+		DBG_ERR("ACE_GETACLCNT failed with (%s)\n", strerror(errno));
-+		TALLOC_FREE(parent);
-+		TALLOC_FREE(tmp_ctx);
-+		return -1;
-+	}
-+	if ((parent_acl = talloc_size(tmp_ctx, sizeof(ace_t) * naces)) == NULL) {
-+		DBG_ERR("Failed to allocate memory for parent ACL\n");
-+		errno = ENOMEM;
++	zacl = acl_get_file(parent, ACL_TYPE_NFS4);
++	if ( zacl == NULL) {
++		DBG_ERR("ixnas: acl_get_file() failed for %s: %s\n",
++		parent, strerror(errno));
 +		TALLOC_FREE(parent);
 +		TALLOC_FREE(tmp_ctx);
 +		return -1;
 +	}
 +
-+	if ((acl(parent, ACE_GETACL, naces, parent_acl)) < 0) {
-+		DBG_ERR("ACE_GETACL failed with (%s)\n", strerror(errno));
++	if(acl_set_file(handle->conn->connectpath, ACL_TYPE_NFS4, zacl) < 0) {
++		DBG_ERR("ixnas: acl_set_file() failed for %s: %s\n",
++			handle->conn->connectpath, strerror(errno));
 +		TALLOC_FREE(parent);
 +		TALLOC_FREE(tmp_ctx);
-+		return -1;
-+	}
-+
-+	if (acl(handle->conn->connectpath, ACE_SETACL, naces, parent_acl) < 0) {
-+		DBG_ERR("ACE_SETACL failed with (%s)\n", strerror(errno));
-+		TALLOC_FREE(parent);
-+		TALLOC_FREE(tmp_ctx);
++		acl_free(zacl);
 +		return -1;
 +	}
 +
@@ -1811,11 +1887,8 @@ index 0000000..a98f75f
 +		config->zfs_acl_map_modify = lp_parm_bool(SNUM(handle->conn),
 +			"ixnas", "zfsacl_map_modify", false);
 +
-+		config->zfs_acl_map_modify = lp_parm_bool(SNUM(handle->conn),
++		config->zfs_acl_ignore_empty_mode = lp_parm_bool(SNUM(handle->conn),
 +			"ixnas", "zfsacl_ignore_empty_mode", false);
-+		
-+		config->zfs_acl_expose_snapdir = lp_parm_bool(SNUM(handle->conn),
-+			"ixnas", "zfsacl_expose_snapdir", true);	
 +		
 +		config->zfs_acl_sortaces = lp_parm_bool(SNUM(handle->conn),
 +			"ixnas", "zfsacl_sortaces", false);
