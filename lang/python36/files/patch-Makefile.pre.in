@@ -1,14 +1,6 @@
-# Description: Remove duplicate CFLAGS, CPPFLAGS, LDFLAGS by stripping CONFIGURE_*
-# Submitted by: koobs (r326729)
-# TODO: Upstream
-
-# Description: Create symlinks for non-ABI-suffixed python*-config and ABI-suffixed python-*.pc
-# Submitted by: antoine@ (r358029)
-# TODO: Upstream
-
---- Makefile.pre.in.orig	2016-12-26 00:30:30.873942000 +0800
-+++ Makefile.pre.in	2016-12-26 02:51:45.233175000 +0800
-@@ -80,23 +80,20 @@
+--- Makefile.pre.in.orig	2019-05-08 18:17:12 UTC
++++ Makefile.pre.in
+@@ -79,7 +79,6 @@ MAKESETUP=      $(srcdir)/Modules/makesetup
  OPT=		@OPT@
  BASECFLAGS=	@BASECFLAGS@
  BASECPPFLAGS=	@BASECPPFLAGS@
@@ -16,7 +8,10 @@
  # CFLAGS_NODIST is used for building the interpreter and stdlib C extensions.
  # Use it when a compiler flag should _not_ be part of the distutils CFLAGS
  # once Python is installed (Issue #21121).
- CONFIGURE_CFLAGS_NODIST=@CFLAGS_NODIST@
+@@ -88,18 +87,16 @@ CONFIGURE_CFLAGS_NODIST=@CFLAGS_NODIST@
+ # Use it when a linker flag should _not_ be part of the distutils LDFLAGS
+ # once Python is installed (bpo-35257)
+ CONFIGURE_LDFLAGS_NODIST=@LDFLAGS_NODIST@
 -CONFIGURE_CPPFLAGS=	@CPPFLAGS@
 -CONFIGURE_LDFLAGS=	@LDFLAGS@
  # Avoid assigning CFLAGS, LDFLAGS, etc. so users can use them on the
@@ -32,23 +27,27 @@
 -PY_LDFLAGS=	$(CONFIGURE_LDFLAGS) $(LDFLAGS)
 +PY_CPPFLAGS=	$(BASECPPFLAGS) -I. -I$(srcdir)/Include $(CPPFLAGS)
 +PY_LDFLAGS=	$(LDFLAGS)
+ PY_LDFLAGS_NODIST=$(CONFIGURE_LDFLAGS_NODIST) $(LDFLAGS_NODIST)
  NO_AS_NEEDED=	@NO_AS_NEEDED@
  LDLAST=		@LDLAST@
- SGI_ABI=	@SGI_ABI@
-@@ -1145,12 +1142,6 @@
- 	else true; \
- 	fi
- 	(cd $(DESTDIR)$(BINDIR); $(LN) -s python$(VERSION)$(EXE) python3$(EXE))
--	-if test "$(VERSION)" != "$(LDVERSION)"; then \
--		rm -f $(DESTDIR)$(BINDIR)/python$(VERSION)-config; \
--		(cd $(DESTDIR)$(BINDIR); $(LN) -s python$(LDVERSION)-config python$(VERSION)-config); \
--		rm -f $(DESTDIR)$(LIBPC)/python-$(LDVERSION).pc; \
--		(cd $(DESTDIR)$(LIBPC); $(LN) -s python-$(VERSION).pc python-$(LDVERSION).pc); \
--	fi
- 	-rm -f $(DESTDIR)$(BINDIR)/python3-config
- 	(cd $(DESTDIR)$(BINDIR); $(LN) -s python$(VERSION)-config python3-config)
- 	-rm -f $(DESTDIR)$(LIBPC)/python3.pc
-@@ -1412,6 +1403,12 @@
+@@ -196,6 +193,8 @@ FILEMODE=	644
+ # configure script arguments
+ CONFIG_ARGS=	@CONFIG_ARGS@
+ 
++# disabled extensions
++DISABLED_EXTENSIONS=	@DISABLED_EXTENSIONS@
+ 
+ # Subdirectories with code
+ SRCDIRS= 	@SRCDIRS@
+@@ -595,6 +594,7 @@ sharedmods: $(BUILDPYTHON) pybuilddir.tx
+ 		$(PYTHON_FOR_BUILD) $(srcdir)/setup.py $$quiet build"; \
+ 	$(RUNSHARED) CC='$(CC)' LDSHARED='$(BLDSHARED)' OPT='$(OPT)' \
+ 		_TCLTK_INCLUDES='$(TCLTK_INCLUDES)' _TCLTK_LIBS='$(TCLTK_LIBS)' \
++		DISABLED_EXTENSIONS="$(DISABLED_EXTENSIONS)" \
+ 		$(PYTHON_FOR_BUILD) $(srcdir)/setup.py $$quiet build
+ 
+
+@@ -1451,6 +1451,12 @@ libainstall:	@DEF_MAKE_RULE@ python-conf
  	$(INSTALL_SCRIPT) $(srcdir)/install-sh $(DESTDIR)$(LIBPL)/install-sh
  	$(INSTALL_SCRIPT) python-config.py $(DESTDIR)$(LIBPL)/python-config.py
  	$(INSTALL_SCRIPT) python-config $(DESTDIR)$(BINDIR)/python$(LDVERSION)-config
@@ -61,3 +60,13 @@
  	@if [ -s Modules/python.exp -a \
  		"`echo $(MACHDEP) | sed 's/^\(...\).*/\1/'`" = "aix" ]; then \
  		echo; echo "Installing support files for building shared extension modules on AIX:"; \
+@@ -1470,7 +1476,8 @@ libainstall:	@DEF_MAKE_RULE@ python-conf
+ # Install the dynamically loadable modules
+ # This goes into $(exec_prefix)
+ sharedinstall: sharedmods
+-	$(RUNSHARED) $(PYTHON_FOR_BUILD) $(srcdir)/setup.py install \
++	$(RUNSHARED) DISABLED_EXTENSIONS="$(DISABLED_EXTENSIONS)" \
++		$(PYTHON_FOR_BUILD) $(srcdir)/setup.py install \
+ 	   	--prefix=$(prefix) \
+ 		--install-scripts=$(BINDIR) \
+ 		--install-platlib=$(DESTSHARED) \
