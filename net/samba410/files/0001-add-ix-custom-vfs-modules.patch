@@ -365,10 +365,10 @@ index 0000000..27f8977
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 0000000..861ae2e
+index 0000000..8fcc710
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,1214 @@
+@@ -0,0 +1,1601 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -388,11 +388,14 @@ index 0000000..861ae2e
 + *  You should have received a copy of the GNU General Public License
 + *  along with this program; if not, see <http://www.gnu.org/licenses/>.
 + */
-+
 +#include "includes.h"
 +#include "MacExtensions.h"
 +#include "smbd/smbd.h"
 +#include "libcli/security/security.h"
++#include "librpc/gen_ndr/ndr_security.h"
++#include "../libcli/security/dom_sid.h"
++#include "../libcli/security/security.h"
++#include "passdb/lookup_sid.h"
 +#include "nfs4_acls.h"
 +#include "system/filesys.h"
 +#include <fstab.h>
@@ -406,29 +409,26 @@ index 0000000..861ae2e
 +#endif
 +#include <libutil.h>
 +
-+#if HAVE_FREEBSD_SUNACL_H
-+#include "sunacl.h"
-+#endif
-+
-+#define ZFSACL_MODULE_NAME "ixnas"
 +static int vfs_ixnas_debug_level = DBGC_VFS;
 +
 +#undef DBGC_CLASS
 +#define DBGC_CLASS vfs_ixnas_debug_level
 +
++extern const struct generic_mapping file_generic_mapping;
++
 +struct ixnas_config_data {
 +	struct smbacl4_vfs_params nfs4_params;
 +	bool posix_rename;
 +	bool zfs_acl_enabled;
-+	bool zfs_acl_expose_snapdir;
-+	bool zfs_acl_denymissingspecial;
++	bool zfs_acl_sortaces;
++	bool zfs_acl_map_modify;
++	bool zfs_acl_ignore_empty_mode;
 +	bool zfs_space_enabled;
 +	bool zfs_quota_enabled;
 +	bool zfs_auto_homedir;
 +	const char *homedir_quota;
 +	uint64_t base_user_quota; 
 +};
-+
 +/********************************************************************
 + Fuctions to store DOS attributes as File Flags.
 +********************************************************************/
@@ -620,6 +620,14 @@ index 0000000..861ae2e
 +{
 +	uint64_t res;
 +	char rp[PATH_MAX] = { 0 };
++	struct ixnas_config_data *config = NULL;
++	SMB_VFS_HANDLE_GET_DATA(handle, config,
++				struct ixnas_config_data,
++				return -1);
++
++	if (!config->zfs_space_enabled) {
++		return SMB_VFS_NEXT_DISK_FREE(handle, smb_fname, bsize, dfree, dsize);
++	}
 +
 +	if (realpath(smb_fname->base_name, rp) == NULL)
 +		return (-1);
@@ -697,281 +705,607 @@ index 0000000..861ae2e
 +/********************************************************************
 + Functions to use ZFS ACLs. 
 +********************************************************************/
-+/* zfs_get_nt_acl()
-+ * read the local file's acls and return it in NT form
-+ * using the NFSv4 format conversion
++/*  
++ * These permissions unfortunately don't line up directly so we
++ * perform bitwise operations to transform them.
++ * BSD perms are defined in acl.h and Windows perms in security.idl
++ * Several permissions share the same mask. The chart below shows
++ * the file constants unless the permission only applies to directories.
++ * (DELETE_CHILD).
++ * ____________________________   ___________________________________
++ * READ_DATA         0x00000008 | SEC_FILE_READ_DATA       0x00000001
++ * WRITE_DATA        0x00000010 | SEC_FILE_WRITE_DATA      0x00000002
++ * APPEND_DATA       0x00000020 | SEC_FILE_APPEND_DATA     0x00000004
++ * READ_NAMED_ATTRS  0x00000040 | SEC_FILE_READ_EA         0x00000008
++ * WRITE_NAMED_ATTRS 0x00000080 | SEC_FILE_WRITE_EA        0x00000010
++ * EXECUTE               0x0001 | SEC_FILE_EXECUTE         0x00000020
++ * DELETE_CHILD      0x00000100 | SEC_DIR_DELETE_CHILD     0x00000040
++ * READ_ATTRIBUTES   0x00000200 | SEC_FILE_READ_ATTRIBUTE  0x00000080
++ * WRITE_ATTRIBUTES  0x00000400 | SEC_FILE_WRITE_ATTRIBUTE 0x00000100
++ * DELETE            0x00000800 | SEC_STD_DELETE           0x00001000
++ * READ_ACL          0x00001000 | SEC_STD_READ_CONTROL     0x00002000
++ * WRITE_ACL         0x00002000 | SEC_STD_WRITE_DAC        0x00004000
++ * WRITE_OWNER       0x00004000 | SEC_STD_WRITE_OWNER      0x00008000
++ * SYNCHRONIZE       0x00008000 | SEC_STD_SYNCHRONIZE      0x00010000
++ *
++ * Requests for GENERIC rights will fail if the ACE lacks synchronize.
++ * this means that this bit must be added to allow ACEs but not deny
++ * ACEs. See Samba bugzilla tickets #7909 and #8442. 
 + */
-+static NTSTATUS zfs_get_nt_acl_common(struct connection_struct *conn,
-+				      TALLOC_CTX *mem_ctx,
-+				      const struct smb_filename *smb_fname,
-+				      struct SMB4ACL_T **ppacl,
-+				      struct ixnas_config_data *config)
++uint32_t bsd2winperms(acl_perm_t bsd_perm)
 +{
-+	int naces, i;
-+	struct SMB4ACL_T *pacl;
-+	SMB_STRUCT_STAT sbuf;
-+	const SMB_STRUCT_STAT *psbuf = NULL;
-+	int ret;
-+	bool is_dir;
-+	acl_t zacl;
-+	bool inherited_present = false;
-+
-+	if (VALID_STAT(smb_fname->st)) {
-+		psbuf = &smb_fname->st;
++	uint32_t winperms = 0;
++	int l, m, h;
++	l = m = h = 0;
++	l = bsd_perm >> 3;
++	m = bsd_perm >> 2;
++	h = bsd_perm << 5;
++	l &= (SEC_FILE_READ_DATA|SEC_FILE_WRITE_DATA|
++	      SEC_FILE_APPEND_DATA|SEC_FILE_READ_EA|
++	      SEC_FILE_WRITE_EA);
++	m &= (SEC_FILE_READ_ATTRIBUTE|SEC_FILE_WRITE_ATTRIBUTE|SEC_DIR_DELETE_CHILD);
++	h &= (SEC_STD_DELETE|SEC_STD_READ_CONTROL|
++	      SEC_STD_WRITE_DAC|SEC_STD_WRITE_OWNER|
++	      SEC_STD_SYNCHRONIZE); //remove bits lower than SMB_ACE4_DELETE
++	winperms = (l|m|h);
++	if (bsd_perm & ACL_EXECUTE) {
++		winperms |= SEC_DIR_TRAVERSE;
 +	}
 +
-+	if (psbuf == NULL) {
++	return winperms;	
++}
++
++uint32_t win2bsdperms(uint32_t win_perm)
++{
++	uint32_t bsd_perm = 0;
++	int l, m, h;
++	l = m = h = 0;
++
++	l =  win_perm << 3;
++	m =  win_perm << 2;
++	h =  win_perm >> 5;
++	l &= (ACL_READ_DATA|ACL_WRITE_DATA|ACL_APPEND_DATA|
++	      ACL_READ_NAMED_ATTRS|ACL_WRITE_NAMED_ATTRS);
++	m &= (ACL_WRITE_ATTRIBUTES|ACL_READ_ATTRIBUTES|ACL_DELETE_CHILD); 
++	h &= (ACL_READ_ACL|ACL_WRITE_ACL|ACL_WRITE_OWNER|ACL_DELETE); //Drop SYNCRHONIZE per#7909 
++	bsd_perm = (l|m|h);
++	if (win_perm & SEC_DIR_TRAVERSE) {
++		bsd_perm |= ACL_EXECUTE; //0x0001 (doesn't map cleanly)
++	}
++	return bsd_perm;
++}
++
++/*
++ * FILE_INHERIT (0x0001) through INHERIT_ONY (0x0008) map directly.
++ * INHERITED (0x0080) and SEC_ACE_FLAG_INHERITED (0x10) do not.
++ * SUCCESSFUL_ACCESS and FAILED_ACCESS are not implemented in FreeBSD. 
++ * __________________________    ______________________________________
++ * FILE_INHERIT         0x0001 | SEC_ACE_FLAG_OBJECT_INHERIT       0x01
++ * DIRECTORY_INHERIT    0x0002 | SEC_ACE_FLAG_CONTAINER_INHERIT    0x02
++ * NO_PROPAGATE_INHERIT 0x0004 | SEC_ACE_FLAG_NO_PROPAGATE_INHERIT 0x04
++ * INHERIT_ONLY         0x0008 | SEC_ACE_FLAG_INHERIT_ONLY         0x08
++ * SUCCESSFUL_ACCESS    0x0010 | SEC_ACE_FLAG_SUCCESSFUL_ACCESS    0x40
++ * FAILED_ACCESS        0x0020 | SEC_ACE_FLAG_FAILED_ACCESS        0x80
++ * INHERITED            0x0080 | SEC_ACE_FLAG_INHERITED_ACE        0x10
++ *                             | SEC_ACE_FLAG_VALID_INHERIT        0x0f
++ *
++ * Invalid inheritance bits for files are stripped from windows flags before
++ * returning the BSD flags.
++ */
++
++uint8_t bsd2winflags(uint16_t bsd_flags)
++{
++	uint8_t win_flags = 0;
++	win_flags = bsd_flags & (ACL_ENTRY_FILE_INHERIT|
++				 ACL_ENTRY_DIRECTORY_INHERIT|
++				 ACL_ENTRY_NO_PROPAGATE_INHERIT|
++				 ACL_ENTRY_INHERIT_ONLY);
++	if (bsd_flags & ACL_ENTRY_INHERITED) {
++		win_flags |= SEC_ACE_FLAG_INHERITED_ACE;
++	}
++	return win_flags;
++}
++
++uint16_t win2bsdflags(uint8_t win_flags, bool is_dir)
++{
++	uint16_t bsd_flags = 0;
++	if (is_dir) {
++		bsd_flags = win_flags & (SEC_ACE_FLAG_OBJECT_INHERIT|
++					 SEC_ACE_FLAG_CONTAINER_INHERIT|
++					 SEC_ACE_FLAG_NO_PROPAGATE_INHERIT|
++					 SEC_ACE_FLAG_INHERIT_ONLY);
++	}
++	if (win_flags & SEC_ACE_FLAG_INHERITED_ACE) {
++		bsd_flags |= ACL_ENTRY_INHERITED;
++	}
++	return bsd_flags;
++}
++
++static bool bsdacl4_2win(TALLOC_CTX *mem_ctx,
++	struct ixnas_config_data *config,
++	const struct smb_filename *smb_fname,
++	struct dom_sid *psid_owner,
++	struct dom_sid *psid_group,
++	struct security_ace **ppnt_ace_list,
++	int *pgood_aces,
++	uint16_t *acl_control_flags)
++{
++	int naces, i, good_aces, saved_errno;
++	bool is_dir, inherited_present;
++	acl_t zacl;
++	i = naces = saved_errno = good_aces = 0;
++	is_dir = inherited_present = false;
++	struct security_ace *nt_ace_list = NULL;
++
++	zacl = acl_get_file(smb_fname->base_name, ACL_TYPE_NFS4);
++	if ( zacl == NULL) {
++		/*
++		 * If we fail to get the ACL on the path in question,
++ 		 * make a pathconf() call to determine whether the path
++		 * supports NFSv4 ACLs. If it does not, then it's clear that
++		 * the filesystem underly the path in question is not ZFS.
++		 * In this case we want to pass through to the next VFS module
++		 * in the stack, which will probably treat the path as having
++		 * posix ACLs. errno is set to ENOSYS in this case because
++		 * neither pathconf() nor acl_get_file() set it to this value, and
++		 * because this is the behavior of libsunacl / vfs_zfsacl.
++		 */
++		saved_errno = errno;
++		errno = 0;
++		if (pathconf(smb_fname->base_name, _PC_ACL_NFS4) < 0) {
++			DBG_INFO("%s: pathconf(..., _PC_ACL_NFS4) failed. Path does not support NFS4 ACL.",
++				smb_fname->base_name);
++			/*
++			 * If path does not support NFS4 ACLs, then pathconf() returns -1
++			 * and errno is not modified. If pathconf() itself fails, then it
++			 * returns -1 and errno is set.
++			 */
++			if (errno == 0) {
++				DBG_INFO("%s: pathconf(..., _PC_ACL_NFS4) failed. Path does not support NFS4 ACL.",
++					smb_fname->base_name);
++				errno = ENOSYS;
++			}
++			else {
++				DBG_ERR("ixnas: pathconf() failed for %s: %s\n",
++					smb_fname->base_name, strerror(errno));
++			}
++                }
++		else {
++			DBG_ERR("ixnas: acl_get_file() failed for %s: %s\n",
++				smb_fname->base_name, strerror(errno));
++			errno = saved_errno;
++		}
++		return false;
++	}
++	naces = zacl->ats_acl.acl_cnt;
++	nt_ace_list = talloc_zero_array(mem_ctx, struct security_ace,
++					2 * naces);
++	if (nt_ace_list==NULL)
++	{
++		DBG_ERR("talloc error with %d aces", naces);
++		errno = ENOMEM;
++		acl_free(zacl);
++		return false;
++	}
++	for(i=0; i<naces; i++) {
++		uint32_t mask = 0;
++		uint8_t win_ace_flags = 0;
++		uint32_t win_ace_type = 0;
++		struct dom_sid sid;
++		bool map_special_entry = false;
++		DBG_DEBUG("ae_tag: %d, ae_id: %d, ae_perm: %x, "
++			  "ae_flags: %x, ae_entry_type %x\n",
++			  zacl->ats_acl.acl_entry[i].ae_tag,
++			  zacl->ats_acl.acl_entry[i].ae_id,
++			  zacl->ats_acl.acl_entry[i].ae_perm,
++			  zacl->ats_acl.acl_entry[i].ae_flags,
++			  zacl->ats_acl.acl_entry[i].ae_entry_type);
++
++		if (!(zacl->ats_acl.acl_entry[i].ae_perm) &&
++		    (zacl->ats_acl.acl_entry[i].ae_tag & ACL_EVERYONE)) {
++			continue;
++		}
++
++		mask = bsd2winperms(zacl->ats_acl.acl_entry[i].ae_perm);
++
++		win_ace_flags = bsd2winflags(zacl->ats_acl.acl_entry[i].ae_flags);
++
++		win_ace_type = zacl->ats_acl.acl_entry[i].ae_entry_type >> 9; 
++
++		if (win_ace_type == SEC_ACE_TYPE_ACCESS_ALLOWED) {
++			mask |= SEC_STD_SYNCHRONIZE;
++		}
++
++		switch (zacl->ats_acl.acl_entry[i].ae_tag) {
++			case ACL_USER_OBJ:
++				sid_copy(&sid, psid_owner);
++				map_special_entry = True;
++				break;
++			case ACL_GROUP_OBJ:
++				sid_copy(&sid, psid_group);
++				map_special_entry = True;
++				break;
++			case ACL_EVERYONE:
++				sid_copy(&sid, &global_sid_World);
++				break;
++			case ACL_GROUP:
++				gid_to_sid(&sid, zacl->ats_acl.acl_entry[i].ae_id);
++				break;
++			default:
++				uid_to_sid(&sid, zacl->ats_acl.acl_entry[i].ae_id);
++				break;
++		}
++		if (map_special_entry) {
++			/*
++			 * Special handling for owner@, and group@ entries.
++			 * These entries are split into two entries in the Windows SD.
++			 * For the first entry owner@ and group@ are mapped to 
++			 * S-1-3-0 and S-1-3-1 respectively. Their permset is not changed
++			 * for these entries, but SEC_ACE_FLAG_INHERIT_ONLY is added 
++			 * to the inheritance flags. The second entry is mapped to
++			 * the SID associated with the UID or GID of the owner or group,
++			 * and inheritance flags are stripped. This implements windows
++			 * behavior for CREATOR-OWNER and CREATOR-GROUP.
++			 */
++			if ((zacl->ats_acl.acl_entry[i].ae_perm & ACL_WRITE_DATA) &&
++			     config->zfs_acl_map_modify) {
++				/*
++				 * Compatibilty logic for posix modes on
++				 * special ids. for group, map "rw" to "modify". 
++				 * for user, map "rw" to "full control".
++				 */
++				mask |= (SEC_STD_DELETE|
++					 SEC_FILE_WRITE_EA|
++					 SEC_FILE_WRITE_ATTRIBUTE);
++			}
++
++			if (!(win_ace_flags & SEC_ACE_FLAG_INHERIT_ONLY)) {
++				uint32_t win_ace_flags_current;
++				win_ace_flags_current = win_ace_flags &
++					~(SEC_ACE_FLAG_OBJECT_INHERIT |
++					  SEC_ACE_FLAG_CONTAINER_INHERIT);
++				DBG_DEBUG("map current sid:: ace_type: %x, mask: %x, flags%x\n",
++					  win_ace_type, mask, win_ace_flags_current);
++				init_sec_ace(&nt_ace_list[good_aces++], &sid,
++					win_ace_type, mask,
++					win_ace_flags_current);
++			}
++			if ((zacl->ats_acl.acl_entry[i].ae_tag == ACL_USER_OBJ) &&
++			     win_ace_flags & (SEC_ACE_FLAG_OBJECT_INHERIT |
++					      SEC_ACE_FLAG_CONTAINER_INHERIT)) {
++				uint32_t win_ace_flags_creator;
++				win_ace_flags_creator = win_ace_flags |
++					SEC_ACE_FLAG_INHERIT_ONLY;
++				DBG_DEBUG("map creator owner:: ace_type: %x, mask: %x, flags%x\n",
++					  win_ace_type, mask, win_ace_flags_creator);
++				init_sec_ace(&nt_ace_list[good_aces++],
++					&global_sid_Creator_Owner,
++					win_ace_type, mask,
++					win_ace_flags_creator);
++			}
++			if ((zacl->ats_acl.acl_entry[i].ae_tag == ACL_GROUP_OBJ) &&
++			     win_ace_flags & (SEC_ACE_FLAG_OBJECT_INHERIT |
++					      SEC_ACE_FLAG_CONTAINER_INHERIT)) {
++				uint32_t win_ace_flags_creator;
++				win_ace_flags_creator = win_ace_flags |
++					SEC_ACE_FLAG_INHERIT_ONLY;
++				DBG_DEBUG("map creator group:: ace_type: %x, mask: %x, flags%x\n",
++					  win_ace_type, mask, win_ace_flags_creator);
++				init_sec_ace(&nt_ace_list[good_aces++],
++					&global_sid_Creator_Group,
++					win_ace_type, mask,
++					win_ace_flags_creator);
++			}
++		} else {
++			DBG_DEBUG("map normal ace:: ace_type: %x, mask: %x, flags%x\n",
++				  win_ace_type, mask, win_ace_flags);
++			init_sec_ace(&nt_ace_list[good_aces++], &sid,
++				     win_ace_type, mask, win_ace_flags);
++		}
++	}
++	nt_ace_list = talloc_realloc(mem_ctx, nt_ace_list, struct security_ace,
++				     good_aces);
++
++	/* returns a NULL ace list when good_aces is zero. */
++	if (good_aces && nt_ace_list == NULL) {
++		DBG_DEBUG("realloc error with %d aces\n", good_aces);
++		errno = ENOMEM;
++		acl_free(zacl);
++		return false;
++	}
++	*ppnt_ace_list = nt_ace_list;
++	*pgood_aces = good_aces;
++
++	/*
++	 * NFSv4.1 ACL control flags are not implemented in FreeBSD and so
++         * we need to fake them. This is required in order for users to be
++         * able to disable permissions inheritance.
++	 */
++	if (inherited_present) {
++		*acl_control_flags = (SEC_DESC_DACL_PROTECTED|
++				     SEC_DESC_SELF_RELATIVE);
++	}
++	else {
++		*acl_control_flags = (SEC_DESC_SELF_RELATIVE);
++	}
++	acl_free(zacl);
++	return true;
++}
++
++static NTSTATUS ixnas_get_nt_acl_nfs4_common(struct connection_struct *conn,
++					     TALLOC_CTX *mem_ctx,
++					     const struct smb_filename *smb_fname,
++					     struct security_descriptor **ppdesc,
++					     uint32_t security_info,
++					     struct ixnas_config_data *config)
++{
++	/*
++	 * Converts native NFSv4 ACL into Windows Security Descriptor (SD)
++	 * ACEs in the DACL in the SD map more or less directly to ZFS ACEs,
++	 * SMB clients use SIDs and so all xIDs must be converted to SIDs.
++	 * FreeBSD currently does not implement NFSv4.1 ACL control flags,
++	 * and so special handling of the SEC_DESC_DACL_PROTECTED flag is
++	 * required.
++	 */
++	int good_aces = 0;
++	uint16_t acl_control_flags;
++	struct dom_sid sid_owner, sid_group;
++	size_t sd_size = 0;
++	struct security_ace *nt_ace_list = NULL;
++	struct security_acl *psa = NULL;
++	struct security_descriptor *psd = NULL;
++	TALLOC_CTX *frame = talloc_stackframe();
++	SMB_STRUCT_STAT sbuf;
++	int ret;
++	bool ok;
++        if (VALID_STAT(smb_fname->st)) {
++                sbuf = smb_fname->st;
++        }
++	else {
 +		ret = vfs_stat_smb_basename(conn, smb_fname, &sbuf);
 +		if (ret != 0) {
 +			DBG_ERR("stat [%s]failed: %s\n",
 +				 smb_fname_str_dbg(smb_fname), strerror(errno));
 +			return map_nt_error_from_unix(errno);
 +		}
-+		psbuf = &sbuf;
 +	}
-+	is_dir = S_ISDIR(psbuf->st_ex_mode);
 +
-+	zacl = acl_get_file(smb_fname->base_name, ACL_TYPE_NFS4);
-+	if ( zacl == NULL) {
-+		DBG_ERR("ixnas: acl_get_file() failed for %s: %s\n",
-+		smb_fname->base_name, strerror(errno));
++	uid_to_sid(&sid_owner, sbuf.st_ex_uid);
++	gid_to_sid(&sid_group, sbuf.st_ex_gid);
++
++	ok = bsdacl4_2win(mem_ctx, config, smb_fname, &sid_owner, &sid_group,
++                          &nt_ace_list, &good_aces, &acl_control_flags);
++
++	if (!ok) {
++		DBG_INFO("bsdacl4_2win failed\n");
++		TALLOC_FREE(frame);
 +		return map_nt_error_from_unix(errno);
 +	}
-+	naces = zacl->ats_acl.acl_cnt;
-+	
-+	/* create SMB4ACL data */
-+	if((pacl = smb_create_smb4acl(mem_ctx)) == NULL) {
-+		acl_free(zacl);
-+		DBG_ERR("ixnas: smb_create_smb4acl failed\n");
++	psa = make_sec_acl(frame, NT4_ACL_REVISION, good_aces, nt_ace_list);
++	if (psa == NULL) {
++		DBG_ERR("make_sec_acl failed\n");
++		TALLOC_FREE(frame);
 +		return NT_STATUS_NO_MEMORY;
 +	}
-+
-+	for(i=0; i<naces; i++) {
-+		SMB_ACE4PROP_T aceprop = { 0 };
-+		int l, m, h;
-+		l = m = h = 0;
-+
-+		l = zacl->ats_acl.acl_entry[i].ae_perm >> 3;
-+		m = zacl->ats_acl.acl_entry[i].ae_perm >> 2;
-+		h = zacl->ats_acl.acl_entry[i].ae_perm << 5;
-+		l &= (SMB_ACE4_READ_DATA|SMB_ACE4_WRITE_DATA|SMB_ACE4_APPEND_DATA|SMB_ACE4_READ_NAMED_ATTRS|SMB_ACE4_WRITE_NAMED_ATTRS); //remove bits higher than SMB_ACE4_WRITE_NAMED_ATTRS
-+		m &= (SMB_ACE4_WRITE_ATTRIBUTES|SMB_ACE4_READ_ATTRIBUTES|SMB_ACE4_DELETE_CHILD);
-+		h &= (SMB_ACE4_DELETE|SMB_ACE4_READ_ACL|SMB_ACE4_WRITE_ACL|SMB_ACE4_WRITE_OWNER|SMB_ACE4_SYNCHRONIZE); //remove bits lower than SMB_ACE4_DELETE
-+		aceprop.aceMask = (l|m|h);
-+		if (zacl->ats_acl.acl_entry[i].ae_perm & ACL_EXECUTE) {
-+			//ACL_EXECUTE is 0x0001 and so it doesn't map cleanly. 
-+			aceprop.aceMask |= SMB_ACE4_EXECUTE;
-+		}
-+		aceprop.aceType  =  zacl->ats_acl.acl_entry[i].ae_entry_type >> 9;
-+		aceprop.aceFlags = (uint32_t) zacl->ats_acl.acl_entry[i].ae_flags;
-+
-+		if ( zacl->ats_acl.acl_entry[i].ae_tag & ACL_EVERYONE ){
-+			if ( zacl->ats_acl.acl_entry[i].ae_perm == 0 ) {
-+				continue;
-+			}
-+		}
-+		switch (zacl->ats_acl.acl_entry[i].ae_tag) {
-+			case ACL_USER_OBJ:
-+				aceprop.flags = SMB_ACE4_ID_SPECIAL;
-+				aceprop.who.special_id = SMB_ACE4_WHO_OWNER;
-+				break;
-+			case ACL_GROUP_OBJ:
-+				aceprop.flags = SMB_ACE4_ID_SPECIAL;
-+				aceprop.who.special_id = SMB_ACE4_WHO_GROUP;
-+				break;
-+			case ACL_EVERYONE:
-+				aceprop.flags = SMB_ACE4_ID_SPECIAL;
-+				aceprop.who.special_id = SMB_ACE4_WHO_EVERYONE;
-+				break;
-+			case ACL_GROUP:
-+				aceprop.flags = 0;
-+				aceprop.aceFlags |= SMB_ACE4_IDENTIFIER_GROUP;
-+				aceprop.who.gid   = (uint32_t) zacl->ats_acl.acl_entry[i].ae_id;
-+				break;
-+			default:
-+				aceprop.who.uid   = (uint32_t) zacl->ats_acl.acl_entry[i].ae_id;
-+				aceprop.flags = 0;
-+				break;
-+		}
-+
-+		/*
-+		 * Windows clients expect SYNC on acls to correctly allow
-+		 * rename, cf bug #7909. But not on DENY ace entries, cf bug
-+		 * #8442.
-+		 */
-+		if (aceprop.aceType == SMB_ACE4_ACCESS_ALLOWED_ACE_TYPE) {
-+			aceprop.aceMask |= SMB_ACE4_SYNCHRONIZE;
-+		}
-+
-+		/*
-+		 * Test whether ACL contains any ACEs with the
-+		 * inherited flag set. We use this to determine whether
-+		 * to set DACL_PROTECTED in the security descriptor.
-+		 */
-+		if(aceprop.aceFlags & SMB_ACE4_INHERITED_ACE) {
-+			inherited_present = true;
-+		}
-+
-+		if (smb_add_ace4(pacl, &aceprop) == NULL) {
-+			acl_free(zacl);
-+			return NT_STATUS_NO_MEMORY;
-+		}
++	psd = make_sec_desc(
++		mem_ctx, SD_REVISION, acl_control_flags,
++		(security_info & SECINFO_OWNER) ? &sid_owner : NULL,
++		(security_info & SECINFO_GROUP) ? &sid_group : NULL,
++		NULL, psa, &sd_size);
++	if (psd==NULL) {
++		DBG_ERR("make_sec_desc failed\n");
++		TALLOC_FREE(frame);
++		return NT_STATUS_NO_MEMORY;
 +	}
-+
 +	/*
-+	 * If the ACL doesn't contain any inherited ACEs, then set DACL_PROTECTED 
-+	 * in the security descriptor using smb4acl4_set_control_flags().
-+	 * This makes it so that the "Disable Inheritance" button works in Windows Explorer
-+	 * and prevents resulting ACL from auto-inheriting ACL changes in parent directory.
++	 * Optionally order the ACEs per guidelines here:
++	 * https://docs.microsoft.com/en-us/windows/desktop/secauthz/order-of-aces-in-a-dacl
++	 *
++	 * The following steps describe the preferred order:
++	 * 1. All explicit ACEs are placed in a group before any inherited ACEs.
++	 * 2. Within the group of explicit ACEs, access-denied ACEs are placed before access-allowed ACEs.
++	 * 3. Inherited ACEs are placed in the order in which they are inherited. ACEs inherited from
++	 *    the child object's parent come first, then ACEs inherited from the grandparent, and so on
++	 *    up the tree of objects.
++	 * 4. For each level of inherited ACEs, access-denied ACEs are placed before access-allowed ACEs.
++	 *
++	 * This is potentially expensive and so is disabled by default, but may be required
++	 * in environments where clients (perhaps using other filesharing protocols) may write
++	 * ACLs with entries outside of the preferred order.
 +	 */
-+	if (!inherited_present) {
-+		smbacl4_set_controlflags(pacl, SEC_DESC_DACL_PROTECTED|SEC_DESC_SELF_RELATIVE);
-+	}
-+
-+	*ppacl = pacl;
-+	acl_free(zacl);
++	if (psd->dacl && config->zfs_acl_sortaces) {
++		dacl_sort_into_canonical_order(psd->dacl->aces, (unsigned int)psd->dacl->num_aces);
++	}	
++	*ppdesc = psd;
++	DBG_DEBUG("sd size %d\n", (int)ndr_size_security_descriptor(*ppdesc, 0));
++	TALLOC_FREE(frame);
 +	return NT_STATUS_OK;
 +}
 +
-+/* call-back function processing the NT acl -> ZFS acl using NFSv4 conv. */
-+static bool zfs_process_smbacl(vfs_handle_struct *handle, files_struct *fsp,
-+			       struct SMB4ACL_T *smbacl)
++/*
++ * Convert the Security Descriptor DACL into a ZFS ACL
++ * using FreeBSD nfsv4 ACL API.
++ */
++static NTSTATUS ixnas_set_nfs4_acl(vfs_handle_struct *handle,
++				   files_struct *fsp,
++				   uint32_t security_info_sent,
++				   const struct security_descriptor *psd,
++				   struct ixnas_config_data *config)
 +{
-+	int ret, naces, nzaces, i;
-+	i = nzaces = naces = smb_get_naces(smbacl);
++	int ret, naces, i, saved_errno;
++	naces = psd->dacl->num_aces;
 +	acl_t zacl;
 +	acl_entry_t hidden_entry;
-+	struct SMB4ACE_T *smbace;
-+	zacl = acl_init(nzaces);
++	zacl = acl_init(ACL_MAX_ENTRIES);
 +	bool is_dir;
++	uint32_t tmp_mask = 0;
++
 +	SMB_STRUCT_STAT sbuf;
-+	const SMB_STRUCT_STAT *psbuf = NULL;
 +
 +	if (VALID_STAT(fsp->fsp_name->st)) {
-+		psbuf = &fsp->fsp_name->st;
++		sbuf = fsp->fsp_name->st;
 +	}
-+
-+	if (psbuf == NULL) {
++	else {
 +		ret = vfs_stat_smb_basename(handle->conn, fsp->fsp_name, &sbuf);
 +		if (ret != 0) {
 +			DBG_DEBUG("stat [%s]failed: %s\n",
 +				fsp_str_dbg(fsp), strerror(errno));
 +			acl_free(zacl);
-+			return False;
++			return map_nt_error_from_unix(errno);
 +		}
-+		psbuf = &sbuf;
 +	}
-+	is_dir = S_ISDIR(psbuf->st_ex_mode);
-+	
-+	/* 
-+	 * handle all aces 
-+	 * The ACL structs line up between Samba and FreeBSD with the following exceptions: 
-+	 * - Windows clients often expect ACL_SYNCHRONIZE. See samba bug #7909.
-+	 * - Samba stores flag indicating that this is a group entry under aceFlags. This is ae_tag in FBSD.
-+	 *   In this case we remove 0x0040 from ae_flags for the ACL entry.
-+	 * - FreeBSD also has ACL_USER ae_tag that Samba lacks. We add this tag if 
-+	 *   1) SMB ACL flag "SMB_ACE4_ID_SPECIAL" is not set. I.e. not owner@, group@, everyone@.
-+	 *   2) SMB ACL ace_Flags "SMB4_ACE_IDENTIFIER_GROUP" is not set.
-+	 * - NFS4 access mask has padding that is absent from the ae_perm. See RFC 3530 and <sys/acl.h>
-+	 *   This padding needs to be added or removed as we read and write the ACL. 
-+	 */
-+	zacl->ats_brand = ACL_BRAND_NFS4;
-+	zacl->ats_acl.acl_maxcnt = ACL_MAX_ENTRIES;
-+	zacl->ats_acl.acl_cnt = nzaces; 
-+	for(smbace = smb_first_ace4(smbacl), i = 0;
-+			smbace!=NULL;
-+			smbace = smb_next_ace4(smbace), i++) {
-+		SMB_ACE4PROP_T *aceprop = smb_get_ace4(smbace);
-+		int l, m, h;
-+		l = m = h = 0;
++	is_dir = S_ISDIR(sbuf.st_ex_mode);
++	for (i=0; i<psd->dacl->num_aces; i++) {
++		acl_entry_t new_entry = NULL;
++		acl_perm_t permset = 0;
++		acl_entry_type_t type = 0;
++		acl_flag_t flags = 0;
++		uid_t id;
++		acl_tag_t tag = 0;
 +
-+		l =  aceprop->aceMask << 3;
-+		m =  aceprop->aceMask << 2;
-+		h =  aceprop->aceMask >> 5;
-+		l &= (ACL_READ_DATA|ACL_WRITE_DATA|ACL_APPEND_DATA|ACL_READ_NAMED_ATTRS|ACL_WRITE_NAMED_ATTRS);
-+		m &= (ACL_WRITE_ATTRIBUTES|ACL_READ_ATTRIBUTES|ACL_DELETE_CHILD); 
-+		h &= (ACL_READ_ACL|ACL_WRITE_ACL|ACL_WRITE_OWNER|ACL_DELETE); //Drop SYNCRHONIZE per#7909 
-+
-+		zacl->ats_acl.acl_entry[i].ae_flags              = aceprop->aceFlags;
-+		zacl->ats_acl.acl_entry[i].ae_perm               = (l|m|h);
-+		zacl->ats_acl.acl_entry[i].ae_flags             &= ~SMB_ACE4_IDENTIFIER_GROUP; //FreeBSD doesn't store group in ae_flags
-+		switch (aceprop->aceFlags) {
-+			case SMB_ACE4_ACCESS_ALLOWED_ACE_TYPE:
-+				zacl->ats_acl.acl_entry[i].ae_entry_type = ACL_ENTRY_TYPE_ALLOW;
++		const struct security_ace *ace_nt = psd->dacl->aces +i; 
++		DBG_DEBUG("[dacl entry] access_mask: 0x%x, flags: 0x%x, type: 0x%x\n",
++			ace_nt->access_mask, ace_nt->flags, ace_nt->type); 
++		tmp_mask = ace_nt->access_mask & (SEC_STD_ALL | SEC_FILE_ALL);
++		se_map_generic(&tmp_mask, &file_generic_mapping);
++		if (tmp_mask != ace_nt->access_mask)
++			DBG_INFO("tmp_mask (0x%x) != access_mask(0x%x)\n",
++				  tmp_mask, ace_nt->access_mask);
++		permset = win2bsdperms(tmp_mask);
++		flags = win2bsdflags(ace_nt->flags, is_dir);
++		switch (ace_nt->type) {
++			case SEC_ACE_TYPE_ACCESS_ALLOWED:
++				type = ACL_ENTRY_TYPE_ALLOW;
 +				break;
-+			case SMB_ACE4_ACCESS_DENIED_ACE_TYPE:
-+				zacl->ats_acl.acl_entry[i].ae_entry_type = ACL_ENTRY_TYPE_DENY;
++			case SEC_ACE_TYPE_ACCESS_DENIED:
++				type = ACL_ENTRY_TYPE_DENY;
 +				break;
-+			case SMB_ACE4_SYSTEM_AUDIT_ACE_TYPE:
-+				zacl->ats_acl.acl_entry[i].ae_entry_type = ACL_ENTRY_TYPE_ALARM;
++			case SEC_ACE_TYPE_SYSTEM_AUDIT:
++				type = ACL_ENTRY_TYPE_ALARM;
 +				break;
-+			case SMB_ACE4_SYSTEM_ALARM_ACE_TYPE:
-+				zacl->ats_acl.acl_entry[i].ae_entry_type = ACL_ENTRY_TYPE_AUDIT;
++			case SEC_ACE_TYPE_SYSTEM_ALARM:
++				type = ACL_ENTRY_TYPE_AUDIT;
 +				break;
 +			default:
-+				smb_panic("zfs_process_smbacl: aceType is invalid");
++				DBG_ERR("Unsupported aceType: %x\n", ace_nt->type);
++				continue;
 +		}
-+		if (aceprop->aceMask & SMB_ACE4_EXECUTE) {
-+			zacl->ats_acl.acl_entry[i].ae_perm	|= ACL_EXECUTE; //0x0001 (doesn't map cleanly)	
++
++		/*
++		 * Convert SD trustee to ae_tag and ae_id. Implements nfs4:mode = simple 
++		 *
++		 * S-1-1-0 (World) is mapped to everyone@
++		 * S-1-3-0 (Creator-Owner) and S-1-3-1 (Creator-Group) are mapped to .
++		 * owner@ and group@ respectively, and set to "inherit only". If the entries
++		 * do not have (CI|OI) then we don't add the entry to the ACL (INHERIT_ONLY
++		 * without other inheritance flags is invalid). This is to implement Windows
++		 * behavior for these SIDs.
++		 *
++		 * The SID is first attempted to map to a UID. This is because in ID_TYPE_BOTH
++		 * SIDs will have a corresponding GID entry, but not a UID entry.
++		 * If the mapped UID is identical to the owner of the file, and inheritance flags
++		 * not set, then map the SID to owner@.
++		 *
++		 * Same logic applies to GID / group@.
++		 *
++		 * In all other cases, map the SID to the respective UID/GID and set appropriate
++		 * ACL tag.
++		 */
++		if (dom_sid_equal(&ace_nt->trustee, &global_sid_World)) {
++			tag  = ACL_EVERYONE;
++			id   = ACL_UNDEFINED_ID;
 +		}
-+		if(aceprop->flags & SMB_ACE4_ID_SPECIAL) {
-+			switch(aceprop->who.special_id) {
-+			/*
-+			 * ae_id should be set to ACL_UNDEFINED_ID iff ae_tag is 
-+			 * ACL_USER_OBJ, ACL_GROUP_OBJ, or ACL_EVERYONE
-+			 */
-+			case SMB_ACE4_WHO_EVERYONE:
-+				zacl->ats_acl.acl_entry[i].ae_tag  = ACL_EVERYONE;
-+				zacl->ats_acl.acl_entry[i].ae_id   = ACL_UNDEFINED_ID;
-+				break;
-+			case SMB_ACE4_WHO_OWNER:
-+				zacl->ats_acl.acl_entry[i].ae_tag  = ACL_USER_OBJ;
-+				zacl->ats_acl.acl_entry[i].ae_id   = ACL_UNDEFINED_ID;
-+				break;
-+			case SMB_ACE4_WHO_GROUP:
-+				zacl->ats_acl.acl_entry[i].ae_tag  = ACL_GROUP_OBJ;
-+				zacl->ats_acl.acl_entry[i].ae_id   = ACL_UNDEFINED_ID;
-+				break;
-+			default:
-+				DBG_DEBUG("unsupported special_id %d\n", \
-+					aceprop->who.special_id);
-+				continue; /* don't add it !!! */
++		else if (dom_sid_equal(&ace_nt->trustee, &global_sid_Creator_Owner)){
++			tag  = ACL_USER_OBJ;
++			id   = ACL_UNDEFINED_ID;
++			flags |= ACL_ENTRY_INHERIT_ONLY;
++			if (flags & !(ACL_ENTRY_FILE_INHERIT|ACL_ENTRY_DIRECTORY_INHERIT)) {
++				continue;
 +			}
++		}
++		else if (dom_sid_equal(&ace_nt->trustee, &global_sid_Creator_Group)) {
++			tag  = ACL_GROUP_OBJ;
++			id   = ACL_UNDEFINED_ID;
++			flags |= ACL_ENTRY_INHERIT_ONLY;
++			if (flags & !(ACL_ENTRY_FILE_INHERIT|ACL_ENTRY_DIRECTORY_INHERIT)) {
++				continue;
++			}
++		}	
++		else {
++			uid_t uid;
++			gid_t gid;
++			if (sid_to_uid(&ace_nt->trustee, &uid)) {
++				if ((uid == sbuf.st_ex_uid) && 
++				    (ace_nt->flags & !(SEC_ACE_FLAG_OBJECT_INHERIT|
++						       SEC_ACE_FLAG_CONTAINER_INHERIT|
++						       SEC_ACE_FLAG_INHERIT_ONLY))) {
++					tag  = ACL_USER_OBJ;
++					id   = ACL_UNDEFINED_ID;
++				} 
++				else {
++					tag  = ACL_USER;
++					id   = uid;
++				}
++			}
++			else if (sid_to_gid(&ace_nt->trustee, &gid)) {
++				if ((gid == sbuf.st_ex_gid) &&
++				    (ace_nt->flags & !(SEC_ACE_FLAG_OBJECT_INHERIT|
++						       SEC_ACE_FLAG_CONTAINER_INHERIT|
++						       SEC_ACE_FLAG_INHERIT_ONLY))) {
++					tag  = ACL_GROUP_OBJ;
++					id   = ACL_UNDEFINED_ID;
++					
++				}
++				else {
++					tag  = ACL_GROUP;
++					id   = gid;
++				}
++			}
++			else if (dom_sid_compare_domain(&ace_nt->trustee, &global_sid_Unix_NFS) == 0) {
++				continue;
++			}
++			else {
++				DBG_ERR("ixnas: file [%s] could not convert to uid or gid\n",
++					fsp->fsp_name->base_name);
++				continue;
++			}
++		}
++		DBG_DEBUG("tag: 0x%08x, id: %d, perm: 0x%08x, flags: 0x%04x, type: 0x%04x\n",
++			tag, id, permset, flags, type); 
++		
++		if (acl_create_entry(&zacl, &new_entry) < 0) {
++			DBG_ERR("Failed to create new ACL entry: %s\n", strerror(errno));
++		}
++		new_entry->ae_perm = permset;
++		new_entry->ae_flags = flags;
++		new_entry->ae_entry_type = type;
++		new_entry->ae_tag = tag;
++		new_entry->ae_id = id;
++	}
++	/*
++	 * The 'hidden entry' is added to lock down ZFS behavior of appending
++	 * special entries to ZFS ACL on file creation on absence of inheriting
++	 * special entries in the parent directory.
++	 */
++	if (config->zfs_acl_ignore_empty_mode) {
++		if (acl_create_entry(&zacl, &hidden_entry) < 0) {
++			DBG_ERR("Failed to create new ACL entry: %s\n", strerror(errno));
++		}
++		if (is_dir) {
++			hidden_entry->ae_flags = ACL_ENTRY_DIRECTORY_INHERIT|ACL_ENTRY_FILE_INHERIT;
 +		}
 +		else {
-+			if (aceprop->aceFlags & SMB_ACE4_IDENTIFIER_GROUP) {
-+				zacl->ats_acl.acl_entry[i].ae_tag  = ACL_GROUP;
-+				zacl->ats_acl.acl_entry[i].ae_id   = aceprop->who.id;
-+			} 
-+			else {
-+				zacl->ats_acl.acl_entry[i].ae_tag  = ACL_USER;
-+				zacl->ats_acl.acl_entry[i].ae_id   = aceprop->who.id;
-+			}
++			hidden_entry->ae_flags = 0;
 +		}
++		hidden_entry->ae_perm = 0;
++		hidden_entry->ae_entry_type = ACL_ENTRY_TYPE_ALLOW;
++		hidden_entry->ae_tag = ACL_EVERYONE;
++		hidden_entry->ae_id = ACL_UNDEFINED_ID;
 +	}
 +
-+	SMB_ASSERT(i == naces);
-+	if (acl_create_entry(&zacl, &hidden_entry) < 0) {
-+		DBG_ERR("acl_create_entry() failed for %s with error: %s\n", 
-+			fsp_str_dbg(fsp), strerror(errno));
-+		acl_free(zacl);
-+		return False;
-+	}
-+
-+	if (is_dir) {
-+		hidden_entry->ae_flags = ACL_ENTRY_DIRECTORY_INHERIT|ACL_ENTRY_FILE_INHERIT;
-+	}
-+	else {
-+		hidden_entry->ae_flags = 0;
-+	}
-+	hidden_entry->ae_perm = 0;
-+	hidden_entry->ae_entry_type = ACL_ENTRY_TYPE_ALLOW;
-+	hidden_entry->ae_tag = ACL_EVERYONE;
-+	hidden_entry->ae_id = ACL_UNDEFINED_ID;
-+	/* store acl */
 +	if(acl_set_file(fsp->fsp_name->base_name, ACL_TYPE_NFS4, zacl) < 0) {
 +		DBG_DEBUG("(acl_set_file(): %s): %s\n", fsp_str_dbg(fsp), strerror(errno));
-+		if ( pathconf(fsp->fsp_name->base_name, _PC_ACL_NFS4) < 0 ) {
++		if (pathconf(fsp->fsp_name->base_name, _PC_ACL_NFS4) < 0) {
 +			DBG_INFO("%s: pathconf(..., _PC_ACL_NFS4) failed. Path does not support NFS4 ACL.",
 +				fsp_str_dbg(fsp));
 +			errno = ENOSYS; //preserve behavior from libsunacl and zfsacl
@@ -980,25 +1314,13 @@ index 0000000..861ae2e
 +			DBG_ERR("(acl_set_file(): %s): %s ", fsp_str_dbg(fsp),
 +				  strerror(errno));
 +		}
++		saved_errno = errno;
 +		acl_free(zacl);
-+		return False; 
++		errno = saved_errno;
++		return map_nt_error_from_unix(errno);
 +	}
-+	
 +	acl_free(zacl);
-+	return True;
-+}
-+
-+/* zfs_set_nt_acl()
-+ * set the local file's acls obtaining it in NT form
-+ * using the NFSv4 format conversion
-+ */
-+static NTSTATUS zfs_set_nt_acl(vfs_handle_struct *handle, files_struct *fsp,
-+			   uint32_t security_info_sent,
-+			   const struct security_descriptor *psd,
-+			   struct ixnas_config_data *config)
-+{
-+        return smb_set_nt_acl_nfs4(handle, fsp, &config->nfs4_params, security_info_sent, psd,
-+				   zfs_process_smbacl);
++	return NT_STATUS_OK;	
 +}
 +
 +static NTSTATUS ixnas_fget_nt_acl(struct vfs_handle_struct *handle,
@@ -1021,30 +1343,36 @@ index 0000000..861ae2e
 +		return SMB_VFS_NEXT_FGET_NT_ACL(handle, fsp, security_info, mem_ctx, ppdesc);
 +	}
 +
-+	status = zfs_get_nt_acl_common(handle->conn, frame,
-+				       fsp->fsp_name, &pacl, config);
++	status = ixnas_get_nt_acl_nfs4_common(handle->conn,
++					      frame,
++					      fsp->fsp_name,
++					      ppdesc,
++					      security_info,
++					      config); 
 +
 +	if (!NT_STATUS_IS_OK(status)) {
 +		TALLOC_FREE(frame);
-+		// Control whether we expose .zfs/snapdir over SMB.
-+		if (!config->zfs_acl_expose_snapdir || !NT_STATUS_EQUAL(status, NT_STATUS_NOT_SUPPORTED)) {
++		/*
++		 * NT_STATUS_NOT_SUPPORTED is returned if acl_get_file() fails
++		 * and pathconf() call determines that path does not support
++		 * NFSv4 ACLs.
++		 */
++		if (!NT_STATUS_EQUAL(status, NT_STATUS_NOT_SUPPORTED)) {
 +			return status;
 +		}
-+
-+		status = make_default_filesystem_acl(mem_ctx,
-+						     DEFAULT_ACL_POSIX,
-+						     fsp->fsp_name->base_name,
-+						     &fsp->fsp_name->st,
-+						     ppdesc);
-+		if (!NT_STATUS_IS_OK(status)) {
-+			return status;
++		/*
++		 * NFSv4 ACLs are not supported on the path
++		 * (may be UFS or other FS mounted inside ZFS share), pass to next in stack.
++		 * In this case, set DACL_PROTECTED to prevent Windows clients from trying
++		 * to apply premissions across the FS boundary.
++		 */
++		status = SMB_VFS_NEXT_FGET_NT_ACL(handle, fsp, security_info, mem_ctx, ppdesc);
++		if (NT_STATUS_IS_OK(status)) {
++			(*ppdesc)->type |= SEC_DESC_DACL_PROTECTED;
 +		}
-+		(*ppdesc)->type |= SEC_DESC_DACL_PROTECTED;
-+		return NT_STATUS_OK;
++		return status;
 +	}
 +
-+	status = smb_fget_nt_acl_nfs4(fsp, &config->nfs4_params, security_info, mem_ctx,
-+				      ppdesc, pacl);
 +	TALLOC_FREE(frame);
 +	return status;
 +}
@@ -1069,42 +1397,60 @@ index 0000000..861ae2e
 +		return SMB_VFS_NEXT_GET_NT_ACL(handle, smb_fname, security_info, mem_ctx, ppdesc);
 +	}
 +
-+	status = zfs_get_nt_acl_common(handle->conn, frame, smb_fname, &pacl, config);
++	status = ixnas_get_nt_acl_nfs4_common(handle->conn,
++					      mem_ctx,
++					      smb_fname,
++					      ppdesc,
++					      security_info,
++					      config); 
 +
 +	if (!NT_STATUS_IS_OK(status)) {
 +		TALLOC_FREE(frame);
-+		// Control whether we expose .zfs/snapdir over SMB.
-+		if (!config->zfs_acl_expose_snapdir || !NT_STATUS_EQUAL(status, NT_STATUS_NOT_SUPPORTED)) {
++		/*
++		 * NT_STATUS_NOT_SUPPORTED is returned if acl_get_file() fails
++		 * and pathconf() call determines that path does not support
++		 * NFSv4 ACLs.
++		 */
++		if (!NT_STATUS_EQUAL(status, NT_STATUS_NOT_SUPPORTED)) {
 +			return status;
 +		}
-+
-+		if (!VALID_STAT(smb_fname->st)) {
-+			DBG_ERR("No stat info for [%s]\n",
-+				smb_fname_str_dbg(smb_fname));
-+			return NT_STATUS_INTERNAL_ERROR;
++		/*
++		 * NFSv4 ACLs are not supported on the path
++		 * (may be UFS or other FS mounted inside ZFS share), pass to next in stack.
++		 * In this case, set DACL_PROTECTED to prevent Windows clients from trying
++		 * to apply premissions across the FS boundary.
++		 */
++		status = SMB_VFS_NEXT_GET_NT_ACL(handle, smb_fname, security_info, mem_ctx, ppdesc);
++		if (NT_STATUS_IS_OK(status)) {
++			(*ppdesc)->type |= SEC_DESC_DACL_PROTECTED;
 +		}
-+
-+		status = make_default_filesystem_acl(mem_ctx,
-+						     DEFAULT_ACL_POSIX,
-+						     smb_fname->base_name,
-+						     &smb_fname->st,
-+						     ppdesc);
-+		if (!NT_STATUS_IS_OK(status)) {
-+			return status;
-+		}
-+		(*ppdesc)->type |= SEC_DESC_DACL_PROTECTED;
-+		return NT_STATUS_OK;
++		return status;
 +	}
 +
-+	status = smb_get_nt_acl_nfs4(handle->conn,
-+					smb_fname,
-+					&config->nfs4_params,
-+					security_info,
-+					mem_ctx,
-+					ppdesc,
-+					pacl);
 +	TALLOC_FREE(frame);
 +	return status;
++}
++
++static int ixnas_get_file_owner(files_struct *fsp, SMB_STRUCT_STAT *psbuf)
++{
++	ZERO_STRUCTP(psbuf);
++
++	if (fsp->fh->fd == -1) {
++		if (vfs_stat_smb_basename(fsp->conn, fsp->fsp_name, psbuf) != 0) {
++			DBG_ERR("vfs_stat_smb_basename failed with error %s\n",
++				strerror(errno));
++			return -1;
++		}
++		return 0;
++	}
++	if (SMB_VFS_FSTAT(fsp, psbuf) != 0)
++	{
++		DBG_ERR("SMB_VFS_FSTAT failed with error %s\n",
++			strerror(errno));
++		return -1;
++	}
++
++	return 0;
 +}
 +
 +static NTSTATUS ixnas_fset_nt_acl(vfs_handle_struct *handle,
@@ -1113,6 +1459,10 @@ index 0000000..861ae2e
 +			 const struct security_descriptor *psd)
 +{
 +	struct ixnas_config_data *config;
++	NTSTATUS status;
++	uid_t newUID = (uid_t)-1;
++	gid_t newGID = (gid_t)-1;
++	SMB_STRUCT_STAT sbuf;
 +
 +	SMB_VFS_HANDLE_GET_DATA(handle, config,
 +				struct ixnas_config_data,
@@ -1122,9 +1472,49 @@ index 0000000..861ae2e
 +		return SMB_VFS_NEXT_FSET_NT_ACL(handle, fsp, security_info_sent, psd);
 +	}
 +
-+	return zfs_set_nt_acl(handle, fsp, security_info_sent, psd, config);
++	if (ixnas_get_file_owner(fsp, &sbuf)) {
++		return map_nt_error_from_unix(errno);
++	}
++
++	if (config->nfs4_params.do_chown) {
++		status = unpack_nt_owners(fsp->conn, &newUID, &newGID,
++					  security_info_sent, psd);
++		if (!NT_STATUS_IS_OK(status)) {
++			DBG_INFO("unpack_nt_owners failed\n");
++			return status;
++		}
++		if (((newUID != (uid_t)-1) && (sbuf.st_ex_uid != newUID)) ||
++		    ((newGID != (gid_t)-1) && (sbuf.st_ex_gid != newGID))) {
++			status = try_chown(fsp, newUID, newGID);
++			if (!NT_STATUS_IS_OK(status)) {
++				DBG_INFO("chown %s, %u, %u failed. Error = "
++					 "%s.\n", fsp_str_dbg(fsp),
++					 (unsigned int)newUID,
++					 (unsigned int)newGID,
++					 nt_errstr(status));
++				return status;
++			}
++			DBG_DEBUG("chown %s, %u, %u succeeded.\n",
++				  fsp_str_dbg(fsp), (unsigned int)newUID,
++				  (unsigned int)newGID);
++		}
++	}
++
++	if (!(security_info_sent & SECINFO_DACL) || psd->dacl ==NULL) {
++		DBG_ERR("No dacl found: security_info_sent = 0x%x\n",
++			security_info_sent);
++		return NT_STATUS_OK;
++ 	}
++	/*
++	 * nfs4_acls.c in some situations will become_root() before calling this.
++	 */
++	status = ixnas_set_nfs4_acl(handle, fsp, security_info_sent, psd, config);
++	return status;
 +}
 +
++/*
++ * Functions below are related to posix1e ACLs. Logic copied from vfs_zfsacl.
++ */
 +static SMB_ACL_T ixnas_fail__sys_acl_get_file(vfs_handle_struct *handle,
 +					const struct smb_filename *smb_fname,
 +					SMB_ACL_TYPE_T type,
@@ -1170,7 +1560,11 @@ index 0000000..861ae2e
 +	return -1;
 +}
 +
-+static int ixnas_fail__sys_acl_blob_get_fd(vfs_handle_struct *handle, files_struct *fsp, TALLOC_CTX *mem_ctx, char **blob_description, DATA_BLOB *blob)
++static int ixnas_fail__sys_acl_blob_get_fd(vfs_handle_struct *handle,
++			files_struct *fsp,
++			TALLOC_CTX *mem_ctx,
++			char **blob_description,
++			DATA_BLOB *blob)
 +{
 +	return -1;
 +}
@@ -1310,7 +1704,7 @@ index 0000000..861ae2e
 +	char rp[PATH_MAX] = { 0 };
 +	char *parent;
 +	const char *base;
-+	ace_t *parent_acl;
++	acl_t zacl;
 +	TALLOC_CTX *tmp_ctx = talloc_new(handle->data);
 +
 +	if (realpath(handle->conn->connectpath, rp)) {
@@ -1336,31 +1730,21 @@ index 0000000..861ae2e
 +
 +	ret = smb_zfs_create_homedir(parent, base, homedir_quota);
 +
-+	if ((naces = acl(parent, ACE_GETACLCNT, 0, NULL)) < 0) {
-+		DBG_ERR("ACE_GETACLCNT failed with (%s)\n", strerror(errno));
-+		TALLOC_FREE(parent);
-+		TALLOC_FREE(tmp_ctx);
-+		return -1;
-+	}
-+	if ((parent_acl = talloc_size(tmp_ctx, sizeof(ace_t) * naces)) == NULL) {
-+		DBG_ERR("Failed to allocate memory for parent ACL\n");
-+		errno = ENOMEM;
++	zacl = acl_get_file(parent, ACL_TYPE_NFS4);
++	if ( zacl == NULL) {
++		DBG_ERR("ixnas: acl_get_file() failed for %s: %s\n",
++		parent, strerror(errno));
 +		TALLOC_FREE(parent);
 +		TALLOC_FREE(tmp_ctx);
 +		return -1;
 +	}
 +
-+	if ((acl(parent, ACE_GETACL, naces, parent_acl)) < 0) {
-+		DBG_ERR("ACE_GETACL failed with (%s)\n", strerror(errno));
++	if(acl_set_file(handle->conn->connectpath, ACL_TYPE_NFS4, zacl) < 0) {
++		DBG_ERR("ixnas: acl_set_file() failed for %s: %s\n",
++			handle->conn->connectpath, strerror(errno));
 +		TALLOC_FREE(parent);
 +		TALLOC_FREE(tmp_ctx);
-+		return -1;
-+	}
-+
-+	if (acl(handle->conn->connectpath, ACE_SETACL, naces, parent_acl) < 0) {
-+		DBG_ERR("ACE_SETACL failed with (%s)\n", strerror(errno));
-+		TALLOC_FREE(parent);
-+		TALLOC_FREE(tmp_ctx);
++		acl_free(zacl);
 +		return -1;
 +	}
 +
@@ -1505,11 +1889,14 @@ index 0000000..861ae2e
 +			"ixnas", "zfs_acl_enabled", true);
 +
 +	if (config->zfs_acl_enabled) {
-+		config->zfs_acl_expose_snapdir = lp_parm_bool(SNUM(handle->conn),
-+			"ixnas","zfsacl_expose_snapdir", true);	
++		config->zfs_acl_map_modify = lp_parm_bool(SNUM(handle->conn),
++			"ixnas", "zfsacl_map_modify", false);
++
++		config->zfs_acl_ignore_empty_mode = lp_parm_bool(SNUM(handle->conn),
++			"ixnas", "zfsacl_ignore_empty_mode", false);
 +		
-+		config->zfs_acl_denymissingspecial = lp_parm_bool(SNUM(handle->conn),
-+			"ixnas","zfsacl_denymissingspecial",false);
++		config->zfs_acl_sortaces = lp_parm_bool(SNUM(handle->conn),
++			"ixnas", "zfsacl_sortaces", false);
 +	}
 +	
 +	/* ZFS SPACE PARAMETERS */
