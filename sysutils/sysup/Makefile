@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	sysup
-PORTVERSION=	0.7.3
+PORTVERSION=	0.8.2
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 
@@ -11,6 +11,7 @@ COMMENT=	System Update Utility
 LICENSE=	BSD2CLAUSE
 
 BUILD_DEPENDS=	${LOCALBASE}/bin/go:lang/go
+RUN_DEPENDS=	${LOCALBASE}/sbin/beadm:sysutils/beadm
 
 USES=		go
 
