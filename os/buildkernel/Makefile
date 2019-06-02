@@ -1,12 +1,13 @@
 # $FreeBSD$
 
-.include "../Makefile.common"
-
 PORTNAME=	buildkernel
-PORTVERSION=	${OS_PORTVERSION}
+PORTVERSION=	${BASEPKG_PORTVERSION}
 CATEGORIES=	os
+PKGNAMEPREFIX=	${OS_PKGNAMEPREFIX}
+DISTFILES=
+EXTRACT_ONLY=
 
-MAINTAINER=	kris@ixsystems.com
+MAINTAINER=	kmoore@FreeBSD.org
 COMMENT=	Buildkernel portition of os packages
 
 SRCDIR?=/usr/src
@@ -14,13 +15,12 @@ SRCDIR?=/usr/src
 BUILD_DEPENDS=	${SRCDIR}/Makefile:os/src
 .endif
 
+USES=	os:flavors
+
 PREFIX=/
-EXTRACT_ONLY=
-DISTFILES=
 WITHOUT_FBSD10_FIX=	yes
 WRKSRC=${SRCDIR}
-PLIST_FILES+=	/usr/dist/kernel.txz
-PKG_ABISTRING=	FreeBSD:12:${ARCH}
+PLIST_FILES+=	${OS_KERNDIST}
 LOCAL_SDIR?=	/usr/local_source
 NEED_ROOT=	yes
 .if exists(${LOCAL_SDIR}/${PORTNAME})
@@ -46,8 +46,8 @@ MCONF=	__MAKE_CONF=${__MAKE_CONF}
 MCONF=
 .endif
 
-.include "Makefile.options"
-.include "Makefile.options.desc"
+.include "../buildworld/Makefile.options"
+.include "../buildworld/Makefile.options.desc"
 
 .include <bsd.port.pre.mk>
 
@@ -62,21 +62,22 @@ MFLAGS+=	WITH_${var}=YES
 check-sanity:
 
 do-build:
-	cd ${WRKSRC} && env -i MAKEOBJDIRPREFIX=${WRKDIR} make ${JOBFLAG} ${MCONF} ${KERNEL_MAKE_FLAGS} \
+	cd ${WRKSRC} && ${SETENV} -i MAKEOBJDIRPREFIX=${WRKDIR} make ${JOBFLAG} ${MCONF} ${KERNEL_MAKE_FLAGS} \
 		KERNCONF=${KERNCONF} \
 		${MFLAGS} \
 		buildkernel
 
 do-install:
-	${MKDIR} -p ${STAGEDIR}/kernel
-	${MKDIR} -p ${STAGEDIR}/usr/dist
-	cd ${WRKSRC} && env -i MAKEOBJDIRPREFIX=${WRKDIR} make ${JOBFLAG} ${MCONF} ${KERNEL_MAKE_FLAGS} \
+	${MKDIR} ${STAGEDIR}/kernel
+	${MKDIR} ${STAGEDIR}/usr/dist
+	cd ${WRKSRC} && ${SETENV} -i MAKEOBJDIRPREFIX=${WRKDIR} make ${JOBFLAG} ${MCONF} ${KERNEL_MAKE_FLAGS} \
 		KERNCONF=${KERNCONF} \
 		${MFLAGS} \
-	       	DESTDIR=${STAGEDIR}/kernel \
+		DESTDIR=${STAGEDIR}/kernel \
 		installkernel
-	tar cvJf ${STAGEDIR}/usr/dist/kernel.txz -C ${STAGEDIR}/kernel .
+	tar cvJf ${STAGEDIR}${OS_KERNDIST} -C ${STAGEDIR}/kernel .
 	chflags -R noschg ${STAGEDIR}/kernel
 	${RM} -rf ${STAGEDIR}/kernel
 
+.include "../Makefile.common"
 .include <bsd.port.post.mk>

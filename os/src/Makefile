@@ -1,40 +1,32 @@
 # $FreeBSD$
-#
-.include "../Makefile.common"
 
 PORTNAME=	src
-PORTVERSION=	${OS_PORTVERSION}
+PORTVERSION=	${BASEPKG_PORTVERSION}
 CATEGORIES=	os
+DISTFILES=
+EXTRACT_ONLY=
 
-MAINTAINER=	kris@ixsystems.com
+MAINTAINER=	kmoore@FreeBSD.org
 COMMENT=	Port for the OS base sources
-
-USE_GITHUB=	yes
-GH_ACCOUNT=	freenas
-GH_PROJECT=	os
-GH_TAGNAME=	20eb91787a1793814cbbaf4377a473a6be49b285
 
 PREFIX=/
 SRCDIR?=/usr/src
 NO_BUILD=	yes
 WITHOUT_FBSD10_FIX=	yes
-PKG_ABISTRING=	FreeBSD:12:${ARCH}
-LOCAL_SDIR?=	/usr/local_source
-.if exists(${LOCAL_SDIR}/${PORTNAME})
-WRKSRC=	${LOCAL_SDIR}/${PORTNAME}
-.endif
+WRKSRC=	${BASEPKG_SRCDIR}
 
 .include <bsd.port.pre.mk>
 
-.if exists(${LOCAL_SDIR}/${PORTNAME})
-checksum fetch:
+patch:
+	${MKDIR} ${WRKDIR}
+
+checksum fetch extract:
 	${ECHO_MSG} ${.TARGET} not needed because building direct
-.endif
 
 stage-qa: stage
 
 do-install:
-	${MKDIR} -p ${STAGEDIR}${SRCDIR}
+	${MKDIR} ${STAGEDIR}${SRCDIR}
 	${TAR} cf - -C ${WRKSRC} --exclude .git --exclude .svn . | ${TAR} xpf - -C ${STAGEDIR}${SRCDIR}
 	(cd ${STAGEDIR}; ${FIND} . \( -type f -o -type l \) \
 		| ${SED} -e 's,^\./,,g' \
@@ -46,4 +38,5 @@ do-install:
 		| ${AWK} '{print $$2 }' \
 		| ${XARGS} -I '{}' echo "@dir {}" >> ${TMPPLIST})
 
+.include "../Makefile.common"
 .include <bsd.port.post.mk>

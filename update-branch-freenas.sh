@@ -17,7 +17,6 @@ PLIST="${PLIST} freenas/py-middlewared::freenas::freenas::freenas/12-devel"
 PLIST="${PLIST} net/mDNSResponder::freenas::mDNSResponder::freenas/master"
 PLIST="${PLIST} net/netatalk3::freenas::Netatalk::freenas/master"
 PLIST="${PLIST} sysutils/iocage::freenas::iocage::master"
-PLIST="${PLIST} os::freenas::os::freenas/12-stable"
 
 usage()
 {
@@ -61,15 +60,9 @@ update_port()
 
 	#echo "$TSTAMP"
 
-	if [ "$port" = "os" ] ; then
-		sed -i '' "s/.*OS_PORTVERSION=.*/OS_PORTVERSION=	$TSTAMP/" ${port}/Makefile.common
-		sed -i '' "s/.*GH_TAGNAME=.*/GH_TAGNAME=	$GH_HASH/" ${port}/src/Makefile
-		make -C ${port}/src OSVERSION=1200000 makesum
-	else
-		sed -i '' "s/.*PORTVERSION=.*/PORTVERSION=	$TSTAMP/" ${port}/Makefile
-		sed -i '' "s/.*GH_TAGNAME=.*/GH_TAGNAME=	$GH_HASH/" ${port}/Makefile
-		make -C ${port} OSVERSION=1200000 makesum
-	fi
+	sed -i '' "s/.*PORTVERSION=.*/PORTVERSION=	$TSTAMP/" ${port}/Makefile
+	sed -i '' "s/.*GH_TAGNAME=.*/GH_TAGNAME=	$GH_HASH/" ${port}/Makefile
+	make -C ${port} OSVERSION=1200000 makesum
 
 }
 

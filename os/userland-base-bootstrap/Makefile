@@ -1,6 +1,6 @@
 # $FreeBSD$
 
-PORTNAME=	userland-tests
+PORTNAME=	userland-base-bootstrap
 PORTVERSION=	${BASEPKG_PORTVERSION}
 CATEGORIES=	os
 PKGNAMEPREFIX=	${OS_PKGNAMEPREFIX}
@@ -8,14 +8,17 @@ DISTFILES=
 EXTRACT_ONLY=
 
 MAINTAINER=	kmoore@FreeBSD.org
-COMMENT=	Userland tests
+COMMENT=	Port for libelf, rtld and other critical early libraries
 
-BUILD_DEPENDS=  ${OS_WORLDDIST}:os/buildworld@${OS_FLAVOR}
+BUILD_DEPENDS=	${OS_WORLDDIST}:os/buildworld@${OS_FLAVOR}
 
 USES=	os:flavors
 
 PREFIX=/
-NEED_ROOT=yes
+NEED_ROOT=	yes
+PKGVITAL=	yes
+
+NO_OPTIONS_SORT=	yes
 
 .include <bsd.port.pre.mk>
 
@@ -26,22 +29,21 @@ do-build:
 
 do-install:
 	@${ECHO_MSG} "==> Generating plist..."
-	@(cd ${STAGEDIR}; ${FIND} ./usr/tests \( -type f -o -type l \) \
+	@(cd ${STAGEDIR}; ${FIND} ./libexec/ld-elf* ./lib/libc.* ./lib/libthr.* ./lib/libm.* \
+		./usr/lib/libthr.* ./usr/lib/libm.* ./usr/lib/libc.* \
+		\( -type f -o -type l \) \
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
 		| ${AWK} '{print $$2 }' \
 		>> ${TMPPLIST})
-	@(cd ${STAGEDIR}; ${FIND} ./usr/tests \( -type d \) \
+	@(cd ${STAGEDIR}; ${FIND} ./libexec ./lib ./usr/lib \( -type d \) \
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
 		| ${AWK} '{print $$2 }' \
-		| ${GREP} -v -x '/' \
+		| ${GREP} -v -e '/' \
 		| ${XARGS} -I '{}' echo "@dir {}" \
-		| ${GREP} -v -x '@dir ' \
+		| ${GREP} -v -w '@dir ' \
 		| ${CAT} >> ${TMPPLIST})
-	@${SH} ${PORTSDIR}/os/userland-base/files/scrubplist.sh \
-		${PORTSDIR}/os/userland-base/files/configs \
-		${TMPPLIST} ${STAGEDIR}
 
 clean:
 	@if [ -d ${WRKDIR} ]; then \

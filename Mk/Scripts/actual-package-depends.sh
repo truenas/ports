@@ -71,7 +71,7 @@ find_dep() {
 
 inject_base_dep() {
 	ORIGIN="${1}"
-	NAME=$(make -C ${PORTSDIR}/${ORIGIN} -V PORTNAME)
+	NAME=$(make -C ${PORTSDIR}/${ORIGIN} -V PKGBASE)
 	VERSION=$(make -C ${PORTSDIR}/${ORIGIN} -V PKGVERSION)
 	echo "\"${NAME}\": {origin: \"${ORIGIN}\", version: \"$VERSION\"}"
 }
@@ -84,6 +84,10 @@ for lookup; do
 			inject_base_dep "os/userland-base"
 			continue
 			;;
+		/libexec/ld-elf.so.1)
+			inject_base_dep "os/userland-base-bootstrap"
+			continue
+			;;
 		/usr/lib/debug/bin/sh.debug)
 			inject_base_dep "os/userland-debug"
 			continue
@@ -92,7 +96,7 @@ for lookup; do
 			inject_base_dep "os/userland-docs"
 			continue
 			;;
-		/usr/lib32/libalias.so.7)
+		/usr/lib32/libc.a)
 			inject_base_dep "os/userland-lib32"
 			continue
 			;;

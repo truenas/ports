@@ -6,6 +6,7 @@ OPTIONS_DEFINE=	ACCT \
     AMD \
     APM \
     AT \
+    ASSERT_DEBUG \
     ATM \
     AUDIT \
     AUTHPF \
@@ -20,6 +21,7 @@ OPTIONS_DEFINE=	ACCT \
     BOOTPD \
     BSD_CPIO \
     BSD_CRTBEGIN \
+    BSD_GREP \
     BSDINSTALL \
     BSNMP \
     BZIP2 \
@@ -31,7 +33,6 @@ OPTIONS_DEFINE=	ACCT \
     CPP \
     CROSS_COMPILER \
     CRYPT \
-    CTM \
     CUSE \
     CXX \
     CXGBETOOL \
@@ -48,7 +49,6 @@ OPTIONS_DEFINE=	ACCT \
     FINGER \
     FLOPPY \
     FMTREE \
-    FORTH \
     FP_LIBC \
     FREEBSD_UPDATE \
     FTP \
@@ -78,8 +78,8 @@ OPTIONS_DEFINE=	ACCT \
     LIBPTHREAD \
     LIBTHR \
     LLVM_COV \
+    LOADER_EFI_SECUREBOOT \
     LOADER_GELI \
-    LOADER_LUA \
     LOADER_OFW \
     LOADER_UBOOT \
     LOCALES \
@@ -90,6 +90,7 @@ OPTIONS_DEFINE=	ACCT \
     MAIL \
     MAILWRAPPER \
     MAKE \
+    META_MODE \
     MLX5TOOL \
     NDIS \
     NETCAT \
@@ -99,8 +100,6 @@ OPTIONS_DEFINE=	ACCT \
     NTP \
     NVME \
     OFED \
-    OPENSSL \
-    PAM \
     PC_SYSINSTALL \
     PF \
     PKGBOOTSTRAP \
@@ -117,7 +116,6 @@ OPTIONS_DEFINE=	ACCT \
     SERVICESDB \
     SETUID_LOGIN \
     SHAREDOCS \
-    SOURCELESS \
     SOURCELESS_HOST \
     SOURCELESS_UCODE \
     SVNLITE \
@@ -130,7 +128,6 @@ OPTIONS_DEFINE=	ACCT \
     TELNET \
     TEXTPROC \
     TFTP \
-    TIMED \
     UNBOUND \
     USB \
     UTMPX \
@@ -161,6 +158,7 @@ OPTIONS_DEFAULT= ACCT \
     BOOTPD \
     BSD_CPIO \
     BSD_CRTBEGIN \
+    BSD_GREP \
     BSDINSTALL \
     BSNMP \
     BZIP2 \
@@ -172,7 +170,6 @@ OPTIONS_DEFAULT= ACCT \
     CPP \
     CROSS_COMPILER \
     CRYPT \
-    CTM \
     CUSE \
     CXX \
     CXGBETOOL \
@@ -189,7 +186,6 @@ OPTIONS_DEFAULT= ACCT \
     FINGER \
     FLOPPY \
     FMTREE \
-    FORTH \
     FP_LIBC \
     FREEBSD_UPDATE \
     FTP \
@@ -220,7 +216,6 @@ OPTIONS_DEFAULT= ACCT \
     LIBTHR \
     LLVM_COV \
     LOADER_GELI \
-    LOADER_LUA \
     LOADER_OFW \
     LOADER_UBOOT \
     LOCALES \
@@ -240,8 +235,6 @@ OPTIONS_DEFAULT= ACCT \
     NTP \
     NVME \
     OFED \
-    OPENSSL \
-    PAM \
     PC_SYSINSTALL \
     PF \
     PKGBOOTSTRAP \
@@ -258,7 +251,6 @@ OPTIONS_DEFAULT= ACCT \
     SERVICESDB \
     SETUID_LOGIN \
     SHAREDOCS \
-    SOURCELESS \
     SOURCELESS_HOST \
     SOURCELESS_UCODE \
     SVNLITE \
@@ -271,7 +263,6 @@ OPTIONS_DEFAULT= ACCT \
     TELNET \
     TEXTPROC \
     TFTP \
-    TIMED \
     UNBOUND \
     USB \
     UTMPX \
