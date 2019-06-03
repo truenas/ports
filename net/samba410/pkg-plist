@@ -33,6 +33,7 @@ bin/smbtar
 bin/smbtree
 bin/testparm
 bin/wbinfo
+bin/wsdd.py
 sbin/eventlogadm
 sbin/nmbd
 sbin/smbd
