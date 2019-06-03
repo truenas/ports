@@ -26,6 +26,7 @@ EXTRA_PATCHES+=			${PATCHDIR}/0001-add-idmap_fruit-backend.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-fix-listen-backlog.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-add-shadow_copy_zfs.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-enable-keytab-updates-on-machine-account-change.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/0001-add_ws_discovery.patch:-p1
 
 SAMBA4_BASENAME=		samba
 SAMBA4_PORTNAME=		${SAMBA4_BASENAME}4
@@ -322,8 +323,6 @@ GLUSTERFS_VARS=			SAMBA4_MODULES+=vfs_glusterfs
 
 GPGME_CONFIGURE_WITH=		gpgme
 GPGME_LIB_DEPENDS=		libgpgme.so:security/gpgme
-
-WSDD_RUN_DEPENDS=		py${PYTHON3_DEFAULT:S/.//}-wsdd>=1.0.0:sysutils/py-wsdd
 
 PROFILE_CONFIGURE_WITH=		profiling-data
 
