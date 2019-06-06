@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 0000000..8b16452
+index 0000000..26f17bd
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,314 @@
+@@ -0,0 +1,358 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -318,12 +318,56 @@ index 0000000..8b16452
 +
 +	return 0;
 +}
++
++int
++smb_zfs_is_case_sensitive(char* path)
++{
++	int ret = B_TRUE;
++	char buf[ZFS_MAXPROPLEN];
++	char source[ZFS_MAX_DATASET_NAME_LEN];
++	zprop_source_t sourcetype;	
++	libzfs_handle_t *libzfsp;
++	zfs_handle_t *zfsp;
++
++	if (path == NULL) {
++		return (-1);
++	}
++
++	if ((libzfsp = libzfs_init()) == NULL) {
++		return (-1);
++	}
++
++	libzfs_print_on_error(libzfsp, B_TRUE);
++	zfsp = zfs_path_to_zhandle(libzfsp, path,
++		ZFS_TYPE_VOLUME|ZFS_TYPE_DATASET|ZFS_TYPE_FILESYSTEM);
++
++	if (zfsp == NULL) {
++		DBG_ERR("Failed to obtain zhandle on path: (%s)\n", path);
++		libzfs_fini(libzfsp);
++		return (-1);
++	}
++	if (zfs_prop_get(zfsp, ZFS_PROP_CASE,
++	    buf, sizeof (buf), &sourcetype, 
++	    source, sizeof (source), B_FALSE) != 0) {
++		DBG_ERR("Failed to look up casesensitivity propertiy on path: (%s)\n", path);
++		zfs_close(zfsp);
++		libzfs_fini(libzfsp);
++		return (-1);
++	}
++	if (strequal("insensitive", buf)) {
++		ret = B_FALSE;
++	}
++	zfs_close(zfsp);
++	libzfs_fini(libzfsp);
++	
++	return ret;
++}
 diff --git a/source3/modules/smb_libzfs.h b/source3/modules/smb_libzfs.h
 new file mode 100644
-index 0000000..27f8977
+index 0000000..000a2a6
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.h
-@@ -0,0 +1,39 @@
+@@ -0,0 +1,41 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -359,16 +403,18 @@ index 0000000..27f8977
 +int smb_zfs_set_quota(char *path, int64_t xid, int quota_type, uint64_t hardlimit);
 +uint64_t smb_zfs_disk_free(char *path, uint64_t *bsize, uint64_t *dfree, uint64_t *dsize, uid_t euid);
 +int smb_zfs_create_homedir(char *parent, const char *base, const char *quota);
++int smb_zfs_is_case_sensitive(char* path);
++
 +
 +
 +
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 0000000..8fcc710
+index 0000000..07181e9
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,1601 @@
+@@ -0,0 +1,1611 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -426,6 +472,7 @@ index 0000000..8fcc710
 +	bool zfs_space_enabled;
 +	bool zfs_quota_enabled;
 +	bool zfs_auto_homedir;
++	bool dataset_is_casesensitive;
 +	const char *homedir_quota;
 +	uint64_t base_user_quota; 
 +};
@@ -1831,6 +1878,7 @@ index 0000000..8fcc710
 +		errno = ENOMEM;
 +		return -1;
 +	}	
++	config->dataset_is_casesensitive = True;
 +
 +#if HAVE_LIBZFS
 +	/* Parameters for homedirs and quotas */
@@ -1852,6 +1900,14 @@ index 0000000..8fcc710
 +
 +	if (config->zfs_auto_homedir) {
 +		create_zfs_autohomedir(handle, config->homedir_quota, user);
++	}
++	config->dataset_is_casesensitive = smb_zfs_is_case_sensitive(handle->conn->connectpath);
++	if (!config->dataset_is_casesensitive) {
++		DBG_INFO("ixnas: case insensitive dataset detected, "
++			 "automatically adjusting case sensitivity settings.");
++		lp_do_parameter(SNUM(handle->conn),
++				"case sensitive", "yes");
++		handle->conn->case_sensitive = True;
 +	}
 +#endif
 +
