@@ -39,7 +39,7 @@ EXTRA_SBIN=	dnsextd
 
 post-patch:
 	@${REINPLACE_CMD} -e '/^CFLAGS_DEBUG/ s|-Os|${CFLAGS}|' ${WRKSRC}/mDNSPosix/Makefile
-        @${REINPLACE_CMD} -e 's|Engineering Build|FreeBSD ${OSREL}|g' ${WORKSRC}/mDNSPosix/PosixDaemon.c
+	@${REINPLACE_CMD} -e 's|Engineering Build|FreeBSD ${OSREL}|g' ${WRKSRC}/mDNSPosix/PosixDaemon.c
 	@${REINPLACE_CMD} -e 's|\(#define IPV6_2292_PKTINFO \).*|\1IPV6_PKTINFO|; s|\(#define IPV6_2292_HOPLIMIT \).*|\1IPV6_HOPLIMIT|' ${WRKSRC}/mDNSPosix/mDNSUNP.h
 	@${CP} ${WRKSRC}/mDNSShared/mDNSResponder.8 ${WRKSRC}/mDNSShared/mDNSResponderPosix.8
 
