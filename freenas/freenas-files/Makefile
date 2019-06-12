@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	freenas-files
-PORTVERSION=	20190610174617
+PORTVERSION=	20190611201543
 PORTREVISION=	0
 
 CATEGORIES=	freenas
@@ -24,7 +24,7 @@ WRKSRC=         /usr/ports/local_source/${PORTNAME}
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
 GH_PROJECT=	freenas
-GH_TAGNAME=	df3851a5a3d4c86e509ea53ddf7a438732b5c0d9
+GH_TAGNAME=	51846f0f7256ca8a4107db6f3c364cb992ff6cf1
 .endif
 
 # explicitly set this for the port build
