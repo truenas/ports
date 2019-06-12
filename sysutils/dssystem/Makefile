@@ -2,10 +2,11 @@
 
 PORTNAME=	dssystem
 PORTVERSION=	14.1
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	sysutils
-MASTER_SITES=	http://builds.ixsystems.com/ix-iso/asigra/14.1-20190301/
-DISTFILES=	dssystem-14.1.txz
+MASTER_SITES=	https://asigra-f611.kxcdn.com/14.1/hotfixes/
+DISTNAME=	DS-System_14_0_0_1_FreeBSD
+EXTRACT_SUFX=	.zip
 
 MAINTAINER=	wg@FreeBSD.org
 COMMENT=	Award cloud backup and restore server application
@@ -33,6 +34,10 @@ EXTRACT_AFTER_ARGS=	-C ${STAGEDIR}
 
 pre-extract:
 	${MKDIR} ${STAGEDIR}
+
+post-extract:
+	@${FIND} ${STAGEDIR}/${DISTNAME}/ -name "*txz" -exec tar -C ${STAGEDIR} -xzf {} \;
+	@${RM} -rf ${STAGEDIR}/${DISTNAME}
 
 do-install:
 	${CP} ${FILESDIR}/dssystem_install.ini ${STAGEDIR}

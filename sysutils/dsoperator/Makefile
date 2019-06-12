@@ -2,9 +2,11 @@
 
 PORTNAME=	dsoperator
 PORTVERSION=	14.1
+PORTREVISION=	1
 CATEGORIES=	sysutils
-MASTER_SITES=	http://builds.ixsystems.com/ix-iso/asigra/14.1/
-DISTNAME=	DS-Operator
+MASTER_SITES=	https://asigra-f611.kxcdn.com/14.1/hotfixes/
+DISTNAME=	DS-Operator_FreeBSD_14_0_0_1
+EXTRACT_SUFX=	.zip
 
 MAINTAINER=	wg@FreeBSD.org
 COMMENT=	Award cloud backup and restore server application
