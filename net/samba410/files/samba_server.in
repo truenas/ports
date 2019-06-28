@@ -89,8 +89,8 @@ samba_server_wsdd_cmd() {
 	start)
 	    if [ ! -f ${pidfile} ]; then
 	        /usr/sbin/daemon -p ${pidfile} -S ${python3_cmd} ${wsdd_cmd} ${wsdd_opts} 
-		debug "Starting wsdd"
-	        echo "Starting wsdd"
+		debug "Starting wsdd."
+	        echo "Starting wsdd."
             else
 	        wsdd_pid=$(cat "${pidfile}")
 	        debug "wsdd already running?  (pid=${wsdd_pid})"
@@ -206,8 +206,8 @@ samba_server_config_init() {
     testparm_command="%%PREFIX%%/bin/testparm --suppress-prompt --verbose ${samba_server_config}"
     # Determine what daemons are necessary to run Samba in the current role
     samba_server_role=$(${testparm_command} --parameter-name='server role' 2>/dev/null)
-    nmbd_disabled=$(${testparm_command} --parameter-name='disable netbios' 2>/dev/null)
-    wsdd_enabled=$(${testparm_command} --parameter-name='enable web service discovery' 2>/dev/null) 
+    nmbd_disabled=$(${testparm_command:-"No"} --parameter-name='disable netbios' 2>/dev/null)
+    wsdd_enabled=$(${testparm_command:-"No"} --parameter-name='enable web service discovery' 2>/dev/null) 
     case "${samba_server_role}" in
 	active\ directory\ domain\ controller)
 	    samba_daemons="samba"
