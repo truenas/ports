@@ -1575,7 +1575,7 @@ index 0000000..e8e3b1f
 +}
 diff --git a/source3/modules/vfs_noacl.c b/source3/modules/vfs_noacl.c
 new file mode 100644
-index 0000000..6b13939
+index 0000000..c9248d6
 --- /dev/null
 +++ b/source3/modules/vfs_noacl.c
 @@ -0,0 +1,355 @@
@@ -1894,7 +1894,6 @@ index 0000000..6b13939
 +			handle->conn->connectpath, strerror(errno));
 +		return -1;
 +	}
-+
 +	if ((lp_map_readonly(SNUM(handle->conn))) == MAP_READONLY_YES) {
 +		DBG_INFO("noacl:dosmode to file flag mapping enabled,"
 +			  "disabling 'map readonly'\n");
@@ -1908,6 +1907,7 @@ index 0000000..6b13939
 +		lp_do_parameter(SNUM(handle->conn), "map archive",
 +				"no");
 +	}
++	lp_do_parameter(SNUM(handle->conn), "nt acl support", "no");
 +	return SMB_VFS_NEXT_CONNECT(handle, service, user);
 +}
 +
