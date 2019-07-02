@@ -152,7 +152,7 @@ index 0000000..58be86d
 +		goto failure;
 +	}
 +	json_str = json_to_string(mem_ctx, &jsobj);
-+	DBG_DEBUG("json string representing is winbind state: %s\n", json_str);
++	DBG_DEBUG("json string representing winbind state: %s\n", json_str);
 +	json_free(&jsobj);
 +	return json_str;
 +failure:
