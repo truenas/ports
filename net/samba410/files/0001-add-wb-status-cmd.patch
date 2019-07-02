@@ -1,0 +1,255 @@
+diff --git a/docs-xml/smbdotconf/winbind/winbindstatuscmd.xml b/docs-xml/smbdotconf/winbind/winbindstatuscmd.xml
+new file mode 100644
+index 0000000..6b9d4c3
+--- /dev/null
++++ b/docs-xml/smbdotconf/winbind/winbindstatuscmd.xml
+@@ -0,0 +1,26 @@
++<samba:parameter name="winbind status cmd"
++                 context="G"
++                 type="string"
++                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
++<description>
++	<para>
++	Command to run when winbind changes status. A JSON object with the
++	following keys will be appended as an argument to the command:
++
++	winbind_message - integer. defined in librpc/idl/messaging.idl
++	following keys are from struct winbindd_domain in source3/winbindd/winbindd.h.
++	domain_name_netbios - string.
++	forest_name - string.
++	domain_flags - integer.
++	domain_type - integer.
++	domain_trust_attribs - integer.
++	primary - boolean. 
++	internal - boolean.
++	rodc - boolean.
++	startup_time - int.
++	startup - boolean. (within first 30 seconds after startup_time).
++	</para>
++</description>
++
++<value type="default"></value>
++</samba:parameter>
+diff --git a/source3/winbindd/winbindd_cm.c b/source3/winbindd/winbindd_cm.c
+index 22d3dca..843bb86 100644
+--- a/source3/winbindd/winbindd_cm.c
++++ b/source3/winbindd/winbindd_cm.c
+@@ -60,6 +60,7 @@
+ 
+ #include "includes.h"
+ #include "winbindd.h"
++#include "winbindd_json.h"
+ #include "libsmb/namequery.h"
+ #include "../libcli/auth/libcli_auth.h"
+ #include "../librpc/gen_ndr/ndr_netlogon_c.h"
+@@ -472,6 +473,7 @@ void set_domain_offline(struct winbindd_domain *domain)
+ 					   (const uint8_t *)domain->name,
+ 					   strlen(domain->name)+1);
+ 		}			
++		cmd_update_status(MSG_WINBIND_OFFLINE, domain);
+ 	}
+ 
+ 	return;	
+@@ -558,6 +560,7 @@ static void set_domain_online(struct winbindd_domain *domain)
+ 					   (const uint8_t *)domain->name,
+ 					   strlen(domain->name)+1);
+ 		}			
++		cmd_update_status(MSG_WINBIND_ONLINE, domain);
+ 	}
+ 
+ 	return;	
+@@ -3547,3 +3550,4 @@ void winbind_msg_disconnect_dc(struct messaging_context *msg_ctx,
+ 		invalidate_cm_connection(domain);
+ 	}
+ }
++canary;
+diff --git a/source3/winbindd/winbindd_json.c b/source3/winbindd/winbindd_json.c
+new file mode 100644
+index 0000000..58be86d
+--- /dev/null
++++ b/source3/winbindd/winbindd_json.c
+@@ -0,0 +1,141 @@
++/*
++ * Copyright 2019 iXsystems, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 3 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#include "includes.h"
++#include "winbindd.h"
++
++#ifdef HAVE_JANSSON
++#include <jansson.h>
++#include "audit_logging.h" /* various JSON helpers */
++#include "auth/common_auth.h"
++
++
++char *msg_and_domain_to_json(TALLOC_CTX *mem_ctx, uint32_t msg, struct winbindd_domain *domain)
++{
++	/*
++	 * Convert msg and winbindd_domain to JSON representation
++	 */
++	int ret = 0;
++	char *json_str;
++	struct json_object jsobj = json_new_object();
++	if (json_is_invalid(&jsobj)) {
++		DBG_ERR("Error setting up JSON value: %s\n", strerror(errno));
++		goto failure;
++	}
++	ret = json_add_int(&jsobj, "winbind_message", msg);
++	if (ret != 0) {
++		goto failure;
++	}
++	ret = json_add_string(&jsobj, "domain_name_netbios", domain->name);
++	if (ret != 0) {
++		goto failure;
++	}
++	ret = json_add_string(&jsobj, "forest_name", domain->forest_name);
++	if (ret != 0) {
++		goto failure;
++	}
++	ret = json_add_int(&jsobj, "domain_flags", domain->domain_flags);
++	if (ret != 0) {
++		goto failure;
++	}
++	ret = json_add_int(&jsobj, "domain_type", domain->domain_type);	
++	if (ret != 0) {
++		goto failure;
++	}
++	ret = json_add_int(&jsobj, "domain_trust_attribs", domain->domain_trust_attribs);
++	if (ret != 0) {
++		goto failure;
++	}
++	ret = json_add_bool(&jsobj, "primary", domain->primary);
++	if (ret != 0) {
++		goto failure;
++	}
++	ret = json_add_bool(&jsobj, "internal", domain->internal);
++	if (ret != 0) {
++		goto failure;
++	}
++	ret = json_add_bool(&jsobj, "rodc", domain->internal);
++	if (ret != 0) {
++		goto failure;
++	}
++	ret = json_add_int(&jsobj, "startup_time", domain->startup_time);
++	if (ret != 0) {
++		goto failure;
++	}
++	ret = json_add_bool(&jsobj, "startup", domain->startup);
++	if (ret != 0) {
++		goto failure;
++	}
++	json_str = json_to_string(mem_ctx, &jsobj);
++	DBG_DEBUG("json string representing is winbind state: %s\n", json_str);
++	json_free(&jsobj);
++	return json_str;
++failure:
++	json_free(&jsobj);
++	return NULL;	
++}
++
++int cmd_update_status(uint32_t msg, struct winbindd_domain *domain)
++{
++	/*
++	 * Convert msg and winbindd_domain struct to JSON
++	 * and execute command specified as "winbind status cmd"
++	 * with resulting JSON as an argument.
++	 */
++	int ret = 0;
++	const char *cmd;
++	char *cmd_run;
++	char *json_str;
++	TALLOC_CTX *mem_ctx = NULL;
++	mem_ctx = talloc_init("cmd_update_status");
++	if (!mem_ctx) {
++		DBG_ERR("talloc_init failed\n");
++		return -1;
++	}
++	cmd = lp_winbind_status_cmd(mem_ctx);
++	if ((cmd == NULL) || (strlen(cmd) == 0)) {
++		DBG_DEBUG("No winbind status command is configured.\n");
++		goto failure;
++	}
++	json_str = msg_and_domain_to_json(mem_ctx, msg, domain);
++	if (json_str == NULL) {
++		DBG_ERR("Failed to generate json: %s\n", strerror(errno));
++		goto failure;
++	}
++
++	cmd_run = talloc_asprintf(mem_ctx, "%s \'%s\'", cmd, json_str);
++	if (cmd_run == NULL) {
++		DBG_ERR("talloc_asprintf failed\n");
++		goto failure;
++	}
++	DBG_DEBUG("Running command %s\n", cmd_run);
++	ret = smbrun(cmd_run, NULL, NULL);
++	if (ret != 0) {
++		DBG_ERR("%s failed with error: %s\n", cmd_run, strerror(errno));
++	}
++	talloc_free(mem_ctx);
++	return ret;
++failure:
++	talloc_free(mem_ctx);
++	return -1;	
++}
++#else /*no JSON support*/
++int cmd_update_status(uint32_t msg, struct winbindd_domain *domain)
++{
++	return 0;
++}
++#endif /* [HAVE_JANSSON] */
+diff --git a/source3/winbindd/winbindd_json.h b/source3/winbindd/winbindd_json.h
+new file mode 100644
+index 0000000..98e6518
+--- /dev/null
++++ b/source3/winbindd/winbindd_json.h
+@@ -0,0 +1,25 @@
++/*
++ * Copyright 2019 iXsystems, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 3 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#ifndef _WINBINDD_JSON_H
++#define _WINBINDD_JSON_H
++
++#include "winbindd.h"
++
++int cmd_update_status(uint32_t msg, struct winbindd_domain *domain);
++
++#endif /*_WINBINDD_JSON_H*/
+diff --git a/source3/winbindd/wscript_build b/source3/winbindd/wscript_build
+index a23c445..fef307b 100644
+--- a/source3/winbindd/wscript_build
++++ b/source3/winbindd/wscript_build
+@@ -233,6 +233,7 @@ bld.SAMBA3_BINARY('winbindd',
+                  winbindd_show_sequence.c
+                  winbindd_getgrgid.c
+                  winbindd_getgrnam.c
++                 winbindd_json.c
+                  winbindd_getusersids.c
+                  winbindd_lookuprids.c
+                  winbindd_setpwent.c
