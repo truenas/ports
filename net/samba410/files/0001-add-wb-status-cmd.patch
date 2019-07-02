@@ -1,17 +1,16 @@
-diff --git a/docs-xml/smbdotconf/winbind/winbindstatuscmd.xml b/docs-xml/smbdotconf/winbind/winbindstatuscmd.xml
+diff --git a/docs-xml/smbdotconf/winbind/winbindstatusfifo.xml b/docs-xml/smbdotconf/winbind/winbindstatusfifo.xml
 new file mode 100644
-index 0000000..6b9d4c3
+index 0000000..56371b9
 --- /dev/null
-+++ b/docs-xml/smbdotconf/winbind/winbindstatuscmd.xml
-@@ -0,0 +1,26 @@
-+<samba:parameter name="winbind status cmd"
++++ b/docs-xml/smbdotconf/winbind/winbindstatusfifo.xml
+@@ -0,0 +1,25 @@
++<samba:parameter name="winbind status fifo"
 +                 context="G"
-+                 type="string"
++                 type="boolean"
 +                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 +<description>
 +	<para>
-+	Command to run when winbind changes status. A JSON object with the
-+	following keys will be appended as an argument to the command:
++	JSON object with the following keys will be written to the winbind status FIFO:
 +
 +	winbind_message - integer. defined in librpc/idl/messaging.idl
 +	following keys are from struct winbindd_domain in source3/winbindd/winbindd.h.
@@ -28,7 +27,7 @@ index 0000000..6b9d4c3
 +	</para>
 +</description>
 +
-+<value type="default"></value>
++<value type="default">No</value>
 +</samba:parameter>
 diff --git a/source3/winbindd/winbindd_cm.c b/source3/winbindd/winbindd_cm.c
 index 22d3dca..843bb86 100644
@@ -65,10 +64,10 @@ index 22d3dca..843bb86 100644
 +canary;
 diff --git a/source3/winbindd/winbindd_json.c b/source3/winbindd/winbindd_json.c
 new file mode 100644
-index 0000000..58be86d
+index 0000000..14e2c83
 --- /dev/null
 +++ b/source3/winbindd/winbindd_json.c
-@@ -0,0 +1,141 @@
+@@ -0,0 +1,161 @@
 +/*
 + * Copyright 2019 iXsystems, Inc.
 + *
@@ -86,6 +85,10 @@ index 0000000..58be86d
 + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 + */
 +
++#include <stdio.h>
++#include <stdlib.h>
++#include <fcntl.h>
++#include <unistd.h>
 +#include "includes.h"
 +#include "winbindd.h"
 +
@@ -94,6 +97,7 @@ index 0000000..58be86d
 +#include "audit_logging.h" /* various JSON helpers */
 +#include "auth/common_auth.h"
 +
++#define WB_FIFO "/var/tmp/.wb_fifo"
 +
 +char *msg_and_domain_to_json(TALLOC_CTX *mem_ctx, uint32_t msg, struct winbindd_domain *domain)
 +{
@@ -152,7 +156,7 @@ index 0000000..58be86d
 +		goto failure;
 +	}
 +	json_str = json_to_string(mem_ctx, &jsobj);
-+	DBG_DEBUG("json string representing winbind state: %s\n", json_str);
++	DBG_DEBUG("json string representing is winbind state: %s\n", json_str);
 +	json_free(&jsobj);
 +	return json_str;
 +failure:
@@ -160,26 +164,50 @@ index 0000000..58be86d
 +	return NULL;	
 +}
 +
-+int cmd_update_status(uint32_t msg, struct winbindd_domain *domain)
++int cmd_send_fifo(char *json_str)
++{
++	int fd;
++	int ret = 0;
++	DBG_ERR("Entered send_fifo\n");
++	if (access(WB_FIFO, F_OK) != 0) {
++		DBG_ERR("Winbind status fifo does not exist. Generating new one\n");
++		if (mkfifo(WB_FIFO, 0600) != 0) {
++			DBG_ERR("Failed to generate fifo %s\n", strerror(errno));
++			return -1;
++		}
++ 	}
++	fd = open(WB_FIFO, O_WRONLY|O_NONBLOCK);
++	if (fd == -1) {
++		DBG_ERR("Failed to open fifo: %s\n", strerror(errno));
++		return -1;
++	}
++ 	ret = write(fd, json_str, strlen(json_str));	
++	if (ret == -1) {
++		DBG_ERR("Failed to write to fifo: %s\n", strerror(errno));
++	}
++	if (close(fd) == -1) {
++		DBG_ERR("failed to close fd\n");
++	}
++	DBG_ERR("successfully_sent_fifo\n");
++	return ret;
++}
++
++void cmd_update_status(uint32_t msg, struct winbindd_domain *domain)
 +{
 +	/*
 +	 * Convert msg and winbindd_domain struct to JSON
-+	 * and execute command specified as "winbind status cmd"
-+	 * with resulting JSON as an argument.
++	 * and write to the winbindd status FIFO. 
 +	 */
-+	int ret = 0;
-+	const char *cmd;
-+	char *cmd_run;
++
++	DBG_ERR("Entered cmd_update_status\n");
 +	char *json_str;
 +	TALLOC_CTX *mem_ctx = NULL;
 +	mem_ctx = talloc_init("cmd_update_status");
 +	if (!mem_ctx) {
 +		DBG_ERR("talloc_init failed\n");
-+		return -1;
++		return;
 +	}
-+	cmd = lp_winbind_status_cmd(mem_ctx);
-+	if ((cmd == NULL) || (strlen(cmd) == 0)) {
-+		DBG_DEBUG("No winbind status command is configured.\n");
++	if (!lp_winbind_status_fifo()){
 +		goto failure;
 +	}
 +	json_str = msg_and_domain_to_json(mem_ctx, msg, domain);
@@ -187,32 +215,23 @@ index 0000000..58be86d
 +		DBG_ERR("Failed to generate json: %s\n", strerror(errno));
 +		goto failure;
 +	}
-+
-+	cmd_run = talloc_asprintf(mem_ctx, "%s \'%s\'", cmd, json_str);
-+	if (cmd_run == NULL) {
-+		DBG_ERR("talloc_asprintf failed\n");
-+		goto failure;
++	DBG_INFO("Preparing to send winbind status over FIFO\n");
++	if (cmd_send_fifo(json_str) < 0) {
++		DBG_ERR("Failed to send winbind status over FIFO\n");
 +	}
-+	DBG_DEBUG("Running command %s\n", cmd_run);
-+	ret = smbrun(cmd_run, NULL, NULL);
-+	if (ret != 0) {
-+		DBG_ERR("%s failed with error: %s\n", cmd_run, strerror(errno));
-+	}
-+	talloc_free(mem_ctx);
-+	return ret;
 +failure:
 +	talloc_free(mem_ctx);
-+	return -1;	
++	return;	
 +}
 +#else /*no JSON support*/
-+int cmd_update_status(uint32_t msg, struct winbindd_domain *domain)
++void cmd_update_status(uint32_t msg, struct winbindd_domain *domain)
 +{
-+	return 0;
++	return;
 +}
 +#endif /* [HAVE_JANSSON] */
 diff --git a/source3/winbindd/winbindd_json.h b/source3/winbindd/winbindd_json.h
 new file mode 100644
-index 0000000..98e6518
+index 0000000..ee43a44
 --- /dev/null
 +++ b/source3/winbindd/winbindd_json.h
 @@ -0,0 +1,25 @@
@@ -238,7 +257,7 @@ index 0000000..98e6518
 +
 +#include "winbindd.h"
 +
-+int cmd_update_status(uint32_t msg, struct winbindd_domain *domain);
++void cmd_update_status(uint32_t msg, struct winbindd_domain *domain);
 +
 +#endif /*_WINBINDD_JSON_H*/
 diff --git a/source3/winbindd/wscript_build b/source3/winbindd/wscript_build
