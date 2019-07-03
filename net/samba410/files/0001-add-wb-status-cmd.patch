@@ -30,7 +30,7 @@ index 0000000..56371b9
 +<value type="default">No</value>
 +</samba:parameter>
 diff --git a/source3/winbindd/winbindd_cm.c b/source3/winbindd/winbindd_cm.c
-index 22d3dca..843bb86 100644
+index 22d3dca..49e329c 100644
 --- a/source3/winbindd/winbindd_cm.c
 +++ b/source3/winbindd/winbindd_cm.c
 @@ -60,6 +60,7 @@
@@ -41,33 +41,32 @@ index 22d3dca..843bb86 100644
  #include "libsmb/namequery.h"
  #include "../libcli/auth/libcli_auth.h"
  #include "../librpc/gen_ndr/ndr_netlogon_c.h"
-@@ -472,6 +473,7 @@ void set_domain_offline(struct winbindd_domain *domain)
+@@ -472,6 +473,9 @@ void set_domain_offline(struct winbindd_domain *domain)
  					   (const uint8_t *)domain->name,
  					   strlen(domain->name)+1);
  		}			
-+		cmd_update_status(MSG_WINBIND_OFFLINE, domain);
++		if (lp_winbind_status_fifo()) {
++			fifo_update_status(MSG_WINBIND_OFFLINE, domain);
++		}
  	}
  
  	return;	
-@@ -558,6 +560,7 @@ static void set_domain_online(struct winbindd_domain *domain)
+@@ -558,6 +562,9 @@ static void set_domain_online(struct winbindd_domain *domain)
  					   (const uint8_t *)domain->name,
  					   strlen(domain->name)+1);
  		}			
-+		cmd_update_status(MSG_WINBIND_ONLINE, domain);
++		if (lp_winbind_status_fifo()) {
++			fifo_update_status(MSG_WINBIND_ONLINE, domain);
++		}
  	}
  
  	return;	
-@@ -3547,3 +3550,4 @@ void winbind_msg_disconnect_dc(struct messaging_context *msg_ctx,
- 		invalidate_cm_connection(domain);
- 	}
- }
-+canary;
 diff --git a/source3/winbindd/winbindd_json.c b/source3/winbindd/winbindd_json.c
 new file mode 100644
-index 0000000..14e2c83
+index 0000000..719e38f
 --- /dev/null
 +++ b/source3/winbindd/winbindd_json.c
-@@ -0,0 +1,161 @@
+@@ -0,0 +1,152 @@
 +/*
 + * Copyright 2019 iXsystems, Inc.
 + *
@@ -97,7 +96,7 @@ index 0000000..14e2c83
 +#include "audit_logging.h" /* various JSON helpers */
 +#include "auth/common_auth.h"
 +
-+#define WB_FIFO "/var/tmp/.wb_fifo"
++#define WB_FIFO ".wb_fifo"
 +
 +char *msg_and_domain_to_json(TALLOC_CTX *mem_ctx, uint32_t msg, struct winbindd_domain *domain)
 +{
@@ -111,48 +110,37 @@ index 0000000..14e2c83
 +		DBG_ERR("Error setting up JSON value: %s\n", strerror(errno));
 +		goto failure;
 +	}
-+	ret = json_add_int(&jsobj, "winbind_message", msg);
-+	if (ret != 0) {
++	if (json_add_int(&jsobj, "winbind_message", msg) != 0) {
 +		goto failure;
 +	}
-+	ret = json_add_string(&jsobj, "domain_name_netbios", domain->name);
-+	if (ret != 0) {
++	if (json_add_string(&jsobj, "domain_name_netbios", domain->name) != 0) {
 +		goto failure;
 +	}
-+	ret = json_add_string(&jsobj, "forest_name", domain->forest_name);
-+	if (ret != 0) {
++	if (json_add_string(&jsobj, "forest_name", domain->forest_name) != 0) {
 +		goto failure;
 +	}
-+	ret = json_add_int(&jsobj, "domain_flags", domain->domain_flags);
-+	if (ret != 0) {
++	if (json_add_int(&jsobj, "domain_flags", domain->domain_flags) != 0) { 
 +		goto failure;
 +	}
-+	ret = json_add_int(&jsobj, "domain_type", domain->domain_type);	
-+	if (ret != 0) {
++	if (json_add_int(&jsobj, "domain_type", domain->domain_type) != 0) {	
 +		goto failure;
 +	}
-+	ret = json_add_int(&jsobj, "domain_trust_attribs", domain->domain_trust_attribs);
-+	if (ret != 0) {
++	if (json_add_int(&jsobj, "domain_trust_attribs", domain->domain_trust_attribs) != 0) { 
 +		goto failure;
 +	}
-+	ret = json_add_bool(&jsobj, "primary", domain->primary);
-+	if (ret != 0) {
++	if (json_add_bool(&jsobj, "primary", domain->primary) != 0) {
 +		goto failure;
 +	}
-+	ret = json_add_bool(&jsobj, "internal", domain->internal);
-+	if (ret != 0) {
++	if (json_add_bool(&jsobj, "internal", domain->internal) != 0) {
 +		goto failure;
 +	}
-+	ret = json_add_bool(&jsobj, "rodc", domain->internal);
-+	if (ret != 0) {
++	if (json_add_bool(&jsobj, "rodc", domain->internal) != 0) {
 +		goto failure;
 +	}
-+	ret = json_add_int(&jsobj, "startup_time", domain->startup_time);
-+	if (ret != 0) {
++	if (json_add_int(&jsobj, "startup_time", domain->startup_time) != 0) {
 +		goto failure;
 +	}
-+	ret = json_add_bool(&jsobj, "startup", domain->startup);
-+	if (ret != 0) {
++	if (json_add_bool(&jsobj, "startup", domain->startup) != 0) {
 +		goto failure;
 +	}
 +	json_str = json_to_string(mem_ctx, &jsobj);
@@ -164,21 +152,28 @@ index 0000000..14e2c83
 +	return NULL;	
 +}
 +
-+int cmd_send_fifo(char *json_str)
++int cmd_send_fifo(TALLOC_CTX *mem_ctx, char *json_str)
 +{
 +	int fd;
 +	int ret = 0;
-+	DBG_ERR("Entered send_fifo\n");
-+	if (access(WB_FIFO, F_OK) != 0) {
-+		DBG_ERR("Winbind status fifo does not exist. Generating new one\n");
-+		if (mkfifo(WB_FIFO, 0600) != 0) {
++	char *fifo_path;
++	fifo_path = talloc_asprintf(mem_ctx, "%s/%s", lp_lock_directory(), WB_FIFO);	
++	if (access(fifo_path, F_OK) != 0) {
++		DBG_ERR("Winbind status fifo does not exist. Generating new one at %s\n",
++			fifo_path);
++		if (mkfifo(fifo_path, 0600) != 0) {
 +			DBG_ERR("Failed to generate fifo %s\n", strerror(errno));
 +			return -1;
 +		}
 + 	}
-+	fd = open(WB_FIFO, O_WRONLY|O_NONBLOCK);
++	fd = open(fifo_path, O_WRONLY|O_NONBLOCK);
 +	if (fd == -1) {
-+		DBG_ERR("Failed to open fifo: %s\n", strerror(errno));
++		if (errno == ENXIO) {
++			DBG_INFO("Remote end of FIFO not open.\n");
++		}
++		else {
++			DBG_ERR("Failed to open fifo: %s\n", strerror(errno));
++		}
 +		return -1;
 +	}
 + 	ret = write(fd, json_str, strlen(json_str));	
@@ -188,18 +183,16 @@ index 0000000..14e2c83
 +	if (close(fd) == -1) {
 +		DBG_ERR("failed to close fd\n");
 +	}
-+	DBG_ERR("successfully_sent_fifo\n");
 +	return ret;
 +}
 +
-+void cmd_update_status(uint32_t msg, struct winbindd_domain *domain)
++void fifo_update_status(uint32_t msg, struct winbindd_domain *domain)
 +{
 +	/*
 +	 * Convert msg and winbindd_domain struct to JSON
 +	 * and write to the winbindd status FIFO. 
 +	 */
 +
-+	DBG_ERR("Entered cmd_update_status\n");
 +	char *json_str;
 +	TALLOC_CTX *mem_ctx = NULL;
 +	mem_ctx = talloc_init("cmd_update_status");
@@ -207,16 +200,13 @@ index 0000000..14e2c83
 +		DBG_ERR("talloc_init failed\n");
 +		return;
 +	}
-+	if (!lp_winbind_status_fifo()){
-+		goto failure;
-+	}
 +	json_str = msg_and_domain_to_json(mem_ctx, msg, domain);
 +	if (json_str == NULL) {
 +		DBG_ERR("Failed to generate json: %s\n", strerror(errno));
 +		goto failure;
 +	}
-+	DBG_INFO("Preparing to send winbind status over FIFO\n");
-+	if (cmd_send_fifo(json_str) < 0) {
++	DBG_INFO("Preparing to send winbind status over FIFO: %s\n", json_str);
++	if (cmd_send_fifo(mem_ctx, json_str) < 0) {
 +		DBG_ERR("Failed to send winbind status over FIFO\n");
 +	}
 +failure:
@@ -231,7 +221,7 @@ index 0000000..14e2c83
 +#endif /* [HAVE_JANSSON] */
 diff --git a/source3/winbindd/winbindd_json.h b/source3/winbindd/winbindd_json.h
 new file mode 100644
-index 0000000..ee43a44
+index 0000000..201837b
 --- /dev/null
 +++ b/source3/winbindd/winbindd_json.h
 @@ -0,0 +1,25 @@
@@ -257,7 +247,7 @@ index 0000000..ee43a44
 +
 +#include "winbindd.h"
 +
-+void cmd_update_status(uint32_t msg, struct winbindd_domain *domain);
++void fifo_update_status(uint32_t msg, struct winbindd_domain *domain);
 +
 +#endif /*_WINBINDD_JSON_H*/
 diff --git a/source3/winbindd/wscript_build b/source3/winbindd/wscript_build
