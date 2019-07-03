@@ -1,6 +1,6 @@
 # $FreeBSD$
 
-PORTNAME=	userland-debug
+PORTNAME=	userland-bin
 PORTVERSION=	${BASEPKG_PORTVERSION}
 CATEGORIES=	os
 PKGNAMEPREFIX=	${OS_PKGNAMEPREFIX}
@@ -8,7 +8,7 @@ DISTFILES=
 EXTRACT_ONLY=
 
 MAINTAINER=	kmoore@FreeBSD.org
-COMMENT=	Userland debuging symbols
+COMMENT=	Userland bin executables
 
 BUILD_DEPENDS=  ${OS_WORLDDIST}:os/buildworld@${OS_FLAVOR}
 
@@ -26,12 +26,14 @@ do-build:
 
 do-install:
 	${ECHO_MSG} "==> Generating plist..."
-	(cd ${STAGEDIR}; ${FIND} ./usr/lib/debug \( -type f -o -type l \) \
+	(cd ${STAGEDIR}; ${FIND} ./bin ./usr/bin \( -type f -o -type l \) \
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
 		| ${AWK} '{print $$2 }' \
+		| ${GREP} -v -e 'usr/bin/clang' -e 'usr/bin/cc' -e 'usr/bin/c++' \
+			-e 'usr/bin/ld' -e 'usr/bin/llvm' -e 'usr/bin/lldb' \
 		>> ${TMPPLIST})
-	(cd ${STAGEDIR}; ${FIND} ./usr/lib/debug \( -type d \) \
+	(cd ${STAGEDIR}; ${FIND} ./bin ./usr/bin \( -type d \) \
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
 		| ${AWK} '{print $$2 }' \

@@ -2,6 +2,7 @@
 
 PORTNAME=	userland-base
 PORTVERSION=	${BASEPKG_PORTVERSION}
+PORTREVISION=	4
 CATEGORIES=	os
 PKGNAMEPREFIX=	${OS_PKGNAMEPREFIX}
 DISTFILES=
@@ -11,8 +12,14 @@ MAINTAINER=	kmoore@FreeBSD.org
 COMMENT=	Port for the OS userland binaries
 
 BUILD_DEPENDS=	${OS_WORLDDIST}:os/buildworld@${OS_FLAVOR} \
-		${LOCALBASE}/bin/jq:textproc/jq
-RUN_DEPENDS=	/libexec/ld-elf.so.1:os/userland-base-bootstrap@${OS_FLAVOR}
+				jq:textproc/jq
+RUN_DEPENDS=	/libexec/ld-elf.so.1:os/userland-base-bootstrap@${OS_FLAVOR} \
+		/bin/sh:os/userland-bin@${OS_FLAVOR} \
+		/boot/defaults/loader.conf:os/userland-boot@${OS_FLAVOR} \
+		/etc/rc:os/userland-conf@${OS_FLAVOR} \
+		/usr/lib/libelf.so:os/userland-lib@${OS_FLAVOR} \
+		/rescue/sh:os/userland-rescue@${OS_FLAVOR} \
+		/sbin/init:os/userland-sbin@${OS_FLAVOR}
 
 USES=	os:flavors
 
@@ -20,62 +27,48 @@ PREFIX=/
 NEED_ROOT=	yes
 PKGVITAL=	yes
 
-NO_OPTIONS_SORT=	yes
-
 .include <bsd.port.pre.mk>
 
 do-build:
 	@${MKDIR} ${STAGEDIR}
-	@${ECHO_MSG} "==> Extracting ${OS_WORLDDIST}..."
-	@${TAR} xpf ${OS_WORLDDIST} \
-		--exclude ./libexec/ld-elf.so.1 \
-		--exclude ./libexec/ld-elf32.so.1 \
-		--exclude ./lib/libc.* \
-		--exclude ./lib/libthr.* \
-		--exclude ./lib/libm.* \
-		--exclude ./usr/lib/libc.so \
-		--exclude ./usr/lib/libthr.so \
-		--exclude ./usr/lib/libm.so \
-		-C ${STAGEDIR}
+	${ECHO_MSG} "==> Extracting ${OS_WORLDDIST}..."
+	${TAR} xpf ${OS_WORLDDIST} -C ${STAGEDIR}
+	${INSTALL_SCRIPT} ${FILESDIR}/base-update.in ${STAGEDIR}/usr/sbin/base-update
 	${INSTALL_SCRIPT} ${FILESDIR}/pkgbase.setup.in ${STAGEDIR}/etc/pkgbase.setup
-	@if [ -n "${STAGEDIR}/var/db/trueos-manifest.json" ] ; then \
+	if [ -e "${STAGEDIR}/var/db/trueos-manifest.json" ] ; then \
 		${SH} ${FILESDIR}/mk-pkg-repo.sh ${STAGEDIR}/var/db/trueos-manifest.json ${STAGEDIR} ; \
 	fi
-	@${ECHO} "${_OSVERSION_MAJOR}-${PKGVERSION}" > ${STAGEDIR}/etc/base_version
+	${ECHO} "${_OSVERSION_MAJOR}-${PKGVERSION}" > ${STAGEDIR}/etc/base_version
 
 do-install:
-	@${ECHO_MSG} "==> Generating plist..."
-	@(cd ${STAGEDIR}; ${FIND} . \( -type f -o -type l \) \
+	${ECHO_MSG} "==> Generating plist..."
+	${ECHO} "usr/sbin/base-update" >> ${TMPPLIST}
+	${ECHO} "etc/pkgbase.setup" >> ${TMPPLIST}
+	if [ -e "${STAGEDIR}/etc/pkg/Train.conf" ] ; then \
+		${ECHO} "etc/pkg/Train.conf" >> ${TMPPLIST} ; \
+	fi
+	(cd ${STAGEDIR}; ${FIND} . \( -type f -o -type l \) \
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
 		| ${AWK} '{print $$2 }' \
-		| ${GREP} -v \
-			-e 'etc/login.conf.db' \
-			-e 'etc/pwd.db' \
-			-e 'etc/spwd.db' \
-			-e 'usr/lib/debug' \
-			-e 'usr/tests' \
-			-e 'usr/lib32' \
-			-e 'usr/share/doc' \
-			-e 'usr/share/man' \
-			-e 'var/db/services.db' \
+		| ${GREP} -v -f ${FILESDIR}/exclude-list \
 		>> ${TMPPLIST})
-	@(cd ${STAGEDIR}; ${FIND} ./ \( -type d \) \
+	(cd ${STAGEDIR}; ${FIND} ./ \( -type d \) \
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
 		| ${AWK} '{print $$2 }' \
 		| ${GREP} -v -e '/' \
-		| ${GREP} -v -e 'usr/lib/debug' -e 'usr/tests' -e 'usr/lib32' -e 'usr/share/doc' -e 'usr/share/man' \
+		| ${GREP} -v -f ${FILESDIR}/exclude-list \
 		| ${XARGS} -I '{}' echo "@dir {}" \
 		| ${GREP} -v -w '@dir ' \
 		| ${CAT} >> ${TMPPLIST})
-	@${SH} ${FILESDIR}/scrubplist.sh ${FILESDIR}/configs ${TMPPLIST} ${STAGEDIR}
+	${SH} ${FILESDIR}/scrubplist.sh ${FILESDIR}/configs ${TMPPLIST} ${STAGEDIR}
 
 clean:
-	@if [ -d ${WRKDIR} ]; then \
+	if [ -d ${WRKDIR} ]; then \
 		if [ -w ${WRKDIR} ]; then \
 			${ECHO_MSG} "===> Cleaning for ${PKGNAME}"; \
-			chflags -R noschg ${WRKDIR} ; \
+			${CHFLAGS} -R noschg ${WRKDIR} ; \
 			${RM} -r ${WRKDIR}; \
 		else \
 			${ECHO_MSG} "===>   ${WRKDIR} not writable, skipping"; \

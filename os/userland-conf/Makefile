@@ -1,6 +1,6 @@
 # $FreeBSD$
 
-PORTNAME=	userland-debug
+PORTNAME=	userland-conf
 PORTVERSION=	${BASEPKG_PORTVERSION}
 CATEGORIES=	os
 PKGNAMEPREFIX=	${OS_PKGNAMEPREFIX}
@@ -8,7 +8,7 @@ DISTFILES=
 EXTRACT_ONLY=
 
 MAINTAINER=	kmoore@FreeBSD.org
-COMMENT=	Userland debuging symbols
+COMMENT=	Userland conf files
 
 BUILD_DEPENDS=  ${OS_WORLDDIST}:os/buildworld@${OS_FLAVOR}
 
@@ -26,12 +26,13 @@ do-build:
 
 do-install:
 	${ECHO_MSG} "==> Generating plist..."
-	(cd ${STAGEDIR}; ${FIND} ./usr/lib/debug \( -type f -o -type l \) \
+	(cd ${STAGEDIR}; ${FIND} ./etc \( -type f -o -type l \) \
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
 		| ${AWK} '{print $$2 }' \
+		| ${GREP} -v -e etc/login.conf.db -e etc/pwd.db -e etc/spwd.db \
 		>> ${TMPPLIST})
-	(cd ${STAGEDIR}; ${FIND} ./usr/lib/debug \( -type d \) \
+	(cd ${STAGEDIR}; ${FIND} ./etc \( -type d \) \
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
 		| ${AWK} '{print $$2 }' \
@@ -39,6 +40,9 @@ do-install:
 		| ${XARGS} -I '{}' echo "@dir {}" \
 		| ${GREP} -v -x '@dir ' \
 		| ${CAT} >> ${TMPPLIST})
+	${SH} ${PORTSDIR}/os/userland-base/files/scrubplist.sh \
+		${PORTSDIR}/os/userland-base/files/configs \
+		${TMPPLIST} ${STAGEDIR}
 
 clean:
 	if [ -d ${WRKDIR} ]; then \

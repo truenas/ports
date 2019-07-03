@@ -12,15 +12,12 @@ MAINTAINER=	kmoore@FreeBSD.org
 COMMENT=	Port for the OS kernel
 
 BUILD_DEPENDS=	${OS_KERNDIST}:os/buildkernel@${OS_FLAVOR}
-RUN_DEPENDS+=	kernel-kmod-sentinel=${BASEPKG_PORTVERSION}:os/kernel-kmod-sentinel
 
 USES=	os:flavors
 
 PREFIX=/
 NEED_ROOT=	yes
 PKGVITAL=	yes
-
-NO_OPTIONS_SORT=	yes
 
 OPTIONS_DEFINE=	 DEBUG
 OPTIONS_DEFAULT=
@@ -34,17 +31,17 @@ RUN_DEPENDS+=	kernel-symbols=${BASEPKG_PORTVERSION}:os/kernel-symbols@${OS_FLAVO
 
 do-build:
 	@${MKDIR} ${STAGEDIR}
-	@${ECHO_MSG} "==> Extracting ${OS_KERNDIST}..."
-	@${TAR} xpf ${OS_KERNDIST} -C ${STAGEDIR}
+	${ECHO_MSG} "==> Extracting ${OS_KERNDIST}..."
+	${TAR} xpf ${OS_KERNDIST} -C ${STAGEDIR}
 
 do-install:
-	@${ECHO_MSG} "==> Generating plist..."
+	${ECHO_MSG} "==> Generating plist..."
 	@${MKDIR} ${STAGEDIR}
-	@(cd ${STAGEDIR}; ${FIND} ./boot/kernel \( -type f -o -type l \) \
+	(cd ${STAGEDIR}; ${FIND} ./boot/kernel \( -type f -o -type l \) \
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
 		| ${AWK} '{print $$2 }' >> ${TMPPLIST})
-	@(cd ${STAGEDIR}; ${FIND} ./boot/kernel \( -type d \) \
+	(cd ${STAGEDIR}; ${FIND} ./boot/kernel \( -type d \) \
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
 		| ${AWK} '{print $$2 }' \
