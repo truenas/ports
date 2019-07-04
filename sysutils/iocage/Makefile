@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	iocage
-PORTVERSION=	20190627124357
+PORTVERSION=	20190701041844
 CATEGORIES=	sysutils python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
@@ -36,7 +36,7 @@ WRKSRC=         /usr/ports/local_source/${PORTNAME}
 USE_GITHUB=     yes
 GH_ACCOUNT=     freenas
 GH_PROJECT=     iocage
-GH_TAGNAME=	812c7b5b880581bd7e6ed9e67fb120048ec89492
+GH_TAGNAME=	35fb0a5adaceddad62c6d7dce5933cd2d07db3e0
 .endif
 
 CONFLICTS=	py27-iocage-[0-9]*
