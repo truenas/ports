@@ -1,19 +1,20 @@
 # $FreeBSD$
 
-PORTNAME=	src
+PORTNAME=	ports
 PORTVERSION=	${BASEPKG_PORTVERSION}
 CATEGORIES=	os
 DISTFILES=
 EXTRACT_ONLY=
 
 MAINTAINER=	kmoore@FreeBSD.org
-COMMENT=	FreeBSD base system source
+COMMENT=	FreeBSD ports tree
 
 PREFIX=/
-SRCDIR?=/usr/src
+BASE_PORTSDIR?=	/usr/ports
+SRCDIR?=/usr/ports
 NO_BUILD=	yes
 WITHOUT_FBSD10_FIX=	yes
-WRKSRC=	${BASEPKG_SRCDIR}
+WRKSRC=	${BASE_PORTSDIR}
 
 .include <bsd.port.pre.mk>
 
@@ -27,7 +28,11 @@ stage-qa: stage
 
 do-install:
 	@${MKDIR} ${STAGEDIR}/${SRCDIR}
-	${TAR} cf - -C ${WRKSRC} --exclude .git --exclude .svn . | ${TAR} xpf - -C ${STAGEDIR}/${SRCDIR}
+	${TAR} cf - -C ${WRKSRC} --exclude ./distfiles \
+		--exclude ./work/ \
+		--exclude .git \
+		--exclude .svn . \
+		| ${TAR} xpf - -C ${STAGEDIR}/${SRCDIR}
 	(cd ${STAGEDIR}; ${FIND} . \( -type f -o -type l \) \
 		| ${SED} -e 's,^\./,,g' \
 		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
