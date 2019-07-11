@@ -1,11 +1,10 @@
 # $FreeBSD$
 
 PORTNAME=	dssystem
-PORTVERSION=	14.1
-PORTREVISION=	3
+PORTVERSION=	14.1.0.2
 CATEGORIES=	sysutils
-MASTER_SITES=	http://builds.ixsystems.com/ix-iso/asigra/14.1-20190301/
-DISTFILES=	dssystem-14.1.txz
+MASTER_SITES=	https://asigra-f611.kxcdn.com/14.1/20190711/
+EXTRACT_SUFX=	.txz
 
 MAINTAINER=	wg@FreeBSD.org
 COMMENT=	Award cloud backup and restore server application
