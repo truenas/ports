@@ -2,10 +2,10 @@
 
 PORTNAME=	dsoperator
 PORTVERSION=	14.1
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	sysutils
-MASTER_SITES=	https://asigra-f611.kxcdn.com/14.1/hotfixes/
-DISTNAME=	DS-Operator_FreeBSD_14_0_0_1
+MASTER_SITES=	https://asigra-f611.kxcdn.com/14.1/20190301/
+DISTNAME=	DS-Operator
 EXTRACT_SUFX=	.zip
 
 MAINTAINER=	wg@FreeBSD.org
