@@ -24,10 +24,10 @@ index 4331c2f..a9de97f 100644
  
 diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
 new file mode 100644
-index 0000000..517ed4d
+index 0000000..e5a99b0
 --- /dev/null
 +++ b/source3/modules/vfs_shadow_copy_zfs.c
-@@ -0,0 +1,1816 @@
+@@ -0,0 +1,1806 @@
 +/* shadow_copy_zfs: a shadow copy module for ZFS
 + *
 + * Copyright (C) Andrew Tridgell   2007 (portions taken from shadow_copy_zfs)
@@ -804,7 +804,6 @@ index 0000000..517ed4d
 +static int shadow_copy_zfs_fstat(vfs_handle_struct *handle, files_struct *fsp,
 +			      SMB_STRUCT_STAT *sbuf)
 +{
-+#if 0
 +	int ret;
 +	const char *gmt_start;
 +	struct smb_filename *orig_smb_fname = NULL;
@@ -845,15 +844,6 @@ index 0000000..517ed4d
 +		fsp->base_fsp->fsp_name = orig_base_smb_fname;
 +	}
 +	return ret;
-+#endif
-+        int ret;
-+
-+        ret = SMB_VFS_NEXT_FSTAT(handle, fsp, sbuf);
-+        if (ret == -1) {
-+                return ret;
-+        }
-+
-+        return 0;
 +}
 +
 +static int shadow_copy_zfs_open(vfs_handle_struct *handle,
