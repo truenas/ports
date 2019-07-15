@@ -1,5 +1,5 @@
 '\" t
-.\"     Title: ctdb_diagnostics
+.\"     Title: ping_pong
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
 .\"      Date: 11/20/2017
@@ -7,7 +7,7 @@
 .\"    Source: ctdb
 .\"  Language: English
 .\"
-.TH "CTDB_DIAGNOSTICS" "1" "11/20/2017" "ctdb" "CTDB \- clustered TDB database"
+.TH "PING_PONG" "1" "11/20/2017" "ctdb" "CTDB \- clustered TDB database"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -28,46 +28,89 @@
 .\" * MAIN CONTENT STARTS HERE *
 .\" -----------------------------------------------------------------
 .SH "NAME"
-ctdb_diagnostics \- dump diagnostic information about CTDB/Samba installation
+ping_pong \- measures the ping\-pong byte range lock latency
 .SH "SYNOPSIS"
-.HP \w'\fBctdb_diagnostics\fR\ 'u
-\fBctdb_diagnostics\fR [OPTIONS] \&.\&.\&.
+.HP \w'\fBping_pong\fR\ 'u
+\fBping_pong\fR {\-r | \-w | \-rw} [\-m] [\-c] {\fIFILENAME\fR} {\fINUM\-LOCKS\fR}
 .SH "DESCRIPTION"
 .PP
-ctdb_diagnostics is used to dump diagnostic information about a clustered Samba installation\&. This includes configuration files, output of relevant commands and logs\&. This information can be used to check the correctness of the configuration and to diagnose problems\&.
+ping_pong measures the byte range lock latency\&. It is especially useful on a cluster of nodes sharing a common lock manager as it will give some indication of the lock manager\*(Aqs performance under stress\&.
+.PP
+FILENAME is a file on shared storage to use for byte range locking tests\&.
+.PP
+NUM\-LOCKS is the number of byte range locks, so needs to be (strictly) greater than the number of nodes in the cluster\&.
 .SH "OPTIONS"
 .PP
-\-n <nodes>
+\-r
 .RS 4
-Comma separated list of nodes to operate on
-.RE
-.PP
-\-c
-.RS 4
-Ignore comment lines (starting with \*(Aq#\*(Aq) in file comparisons
+test read performance
 .RE
 .PP
 \-w
 .RS 4
-Ignore whitespace in file comparisons
+test write performance
 .RE
 .PP
-\-\-no\-ads
+\-m
 .RS 4
-Do not use commands that assume an Active Directory Server
+use mmap
 .RE
+.PP
+\-c
+.RS 4
+validate the locks
+.RE
+.SH "EXAMPLES"
+.PP
+Testing lock coherence
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+      ping_pong test\&.dat N
+    
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+Testing lock coherence with lock validation
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+      ping_pong \-c test\&.dat N
+    
+.fi
+.if n \{\
+.RE
+.\}
+.PP
+Testing IO coherence
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+      ping_pong \-rw test\&.dat N
+    
+.fi
+.if n \{\
+.RE
+.\}
 .SH "SEE ALSO"
 .PP
-\fBctdb\fR(1),
 \fBctdb\fR(7),
-\m[blue]\fB\%https://ctdb.samba.org/\fR\m[]
+\m[blue]\fB\%https://wiki.samba.org/index.php/Ping_pong\fR\m[]
 .SH "AUTHOR"
 .br
 .PP
-This documentation was written by Martijn van Brummelen
+This documentation was written by Mathieu Parent
 .SH "COPYRIGHT"
 .br
-Copyright \(co 2015 Martijn van Brummelen
+Copyright \(co 2002 Andrew Tridgell
 .br
 .PP
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version\&.

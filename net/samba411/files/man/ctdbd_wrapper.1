@@ -1,5 +1,5 @@
 '\" t
-.\"     Title: ctdb_diagnostics
+.\"     Title: ctdbd_wrapper
 .\"    Author: 
 .\" Generator: DocBook XSL Stylesheets v1.79.1 <http://docbook.sf.net/>
 .\"      Date: 11/20/2017
@@ -7,7 +7,7 @@
 .\"    Source: ctdb
 .\"  Language: English
 .\"
-.TH "CTDB_DIAGNOSTICS" "1" "11/20/2017" "ctdb" "CTDB \- clustered TDB database"
+.TH "CTDBD_WRAPPER" "1" "11/20/2017" "ctdb" "CTDB \- clustered TDB database"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -28,46 +28,36 @@
 .\" * MAIN CONTENT STARTS HERE *
 .\" -----------------------------------------------------------------
 .SH "NAME"
-ctdb_diagnostics \- dump diagnostic information about CTDB/Samba installation
+ctdbd_wrapper \- Wrapper for ctdbd
 .SH "SYNOPSIS"
-.HP \w'\fBctdb_diagnostics\fR\ 'u
-\fBctdb_diagnostics\fR [OPTIONS] \&.\&.\&.
+.HP \w'\fBctdbd_wrapper\fR\ 'u
+\fBctdbd_wrapper\fR {\fIPIDFILE\fR} {start | stop}
 .SH "DESCRIPTION"
 .PP
-ctdb_diagnostics is used to dump diagnostic information about a clustered Samba installation\&. This includes configuration files, output of relevant commands and logs\&. This information can be used to check the correctness of the configuration and to diagnose problems\&.
-.SH "OPTIONS"
+ctdbd_wrapper is used to start or stop the main CTDB daemon\&.
 .PP
-\-n <nodes>
-.RS 4
-Comma separated list of nodes to operate on
-.RE
+\fIPIDFILE\fR
+specifies the location of the file containing the PID of the main CTDB daemon\&.
 .PP
-\-c
-.RS 4
-Ignore comment lines (starting with \*(Aq#\*(Aq) in file comparisons
-.RE
+ctdbd_wrapper constructs command\-line options for ctdbd from configuration variables specified in
+\fBctdbd.conf\fR(5)\&.
 .PP
-\-w
-.RS 4
-Ignore whitespace in file comparisons
-.RE
-.PP
-\-\-no\-ads
-.RS 4
-Do not use commands that assume an Active Directory Server
-.RE
+See
+\fBctdb\fR(7)
+for an overview of CTDB\&.
 .SH "SEE ALSO"
 .PP
-\fBctdb\fR(1),
+\fBctdbd\fR(1),
+\fBctdbd.conf\fR(5),
 \fBctdb\fR(7),
-\m[blue]\fB\%https://ctdb.samba.org/\fR\m[]
+\m[blue]\fB\%http://ctdb.samba.org/\fR\m[]
 .SH "AUTHOR"
 .br
 .PP
-This documentation was written by Martijn van Brummelen
+This documentation was written by Amitay Isaacs, Martin Schwenke
 .SH "COPYRIGHT"
 .br
-Copyright \(co 2015 Martijn van Brummelen
+Copyright \(co 2007 Andrew Tridgell, Ronnie Sahlberg
 .br
 .PP
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 3 of the License, or (at your option) any later version\&.
