@@ -1,0 +1,142 @@
+diff --git a/docs-xml/smbdotconf/base/enablewebservicediscovery.xml b/docs-xml/smbdotconf/base/enablewebservicediscovery.xml
+new file mode 100644
+index 0000000..9495393
+--- /dev/null
++++ b/docs-xml/smbdotconf/base/enablewebservicediscovery.xml
+@@ -0,0 +1,11 @@
++<samba:parameter name="enable web service discovery"
++                 type="boolean"
++                 context="G"
++                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
++<description>
++        <para>Enable Web Services Dynamic Discovery (WS-Discovery) to
++        make samba_server appear in Network Neighborhood on Windows
++        clients.</para>
++</description>
++<value type="default">no</value>
++</samba:parameter>
+diff --git a/docs-xml/smbdotconf/base/truenaspassivecontroller.xml b/docs-xml/smbdotconf/base/truenaspassivecontroller.xml
+new file mode 100644
+index 0000000..ad7499b
+--- /dev/null
++++ b/docs-xml/smbdotconf/base/truenaspassivecontroller.xml
+@@ -0,0 +1,11 @@
++<samba:parameter name="truenas passive controller"
++                 type="boolean"
++                 context="G"
++                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
++<description>
++        <para>Boolean flag indicating that the server is the passive
++	storage controller on an HA server.</para>
++
++</description>
++<value type="default">no</value>
++</samba:parameter>
+diff --git a/docs-xml/smbdotconf/base/zeroconfname.xml b/docs-xml/smbdotconf/base/zeroconfname.xml
+new file mode 100644
+index 0000000..78b054d
+--- /dev/null
++++ b/docs-xml/smbdotconf/base/zeroconfname.xml
+@@ -0,0 +1,17 @@
++<samba:parameter name="zeroconf name"
++                 context="G"
++                 type="ustring"
++                 constant="1"
++                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
++<description>
++        <para>
++		This sets the name used for mdns registration. If it is not set,
++		then the server hostname will be used.	
++	</para>
++
++</description>
++
++<related>netbios aliases</related>
++<value type="default"><comment>empty string</comment></value>
++<value type="example">MYNAME</value>
++</samba:parameter>
+diff --git a/docs-xml/smbdotconf/domain/adsdnsupdate.xml b/docs-xml/smbdotconf/domain/adsdnsupdate.xml
+new file mode 100644
+index 0000000..ee113b1
+--- /dev/null
++++ b/docs-xml/smbdotconf/domain/adsdnsupdate.xml
+@@ -0,0 +1,10 @@
++<samba:parameter name="ads dns update"
++                 context="G"
++                 type="boolean"
++                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
++<description>
++	<para>This option sets whether Samba should do AD DNS updates.</para>
++</description>
++<value type="default">yes</value>
++<value type="example">no</value>
++</samba:parameter>
+diff --git a/docs-xml/smbdotconf/winbind/winbindnetbiosaliasspn.xml b/docs-xml/smbdotconf/winbind/winbindnetbiosaliasspn.xml
+new file mode 100644
+index 0000000..66755f5
+--- /dev/null
++++ b/docs-xml/smbdotconf/winbind/winbindnetbiosaliasspn.xml
+@@ -0,0 +1,12 @@
++<samba:parameter name="winbind netbios alias spn"
++		context="G"
++		type="boolean"
++		xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
++<description>
++	<para>This parameter is designed to control whether netbios alias should
++	be added to the spn during domain join.                                                  
++	</para>
++</description>
++<value type="default">yes</value>
++<value type="example">no</value>
++</samba:parameter>
+diff --git a/source3/libnet/libnet_join.c b/source3/libnet/libnet_join.c
+index 27fc513..f0ff99b 100644
+--- a/source3/libnet/libnet_join.c
++++ b/source3/libnet/libnet_join.c
+@@ -533,7 +533,7 @@ static ADS_STATUS libnet_join_set_machine_spn(TALLOC_CTX *mem_ctx,
+ 	}
+ 
+ 	netbios_aliases = lp_netbios_aliases();
+-	if (netbios_aliases != NULL) {
++	if (netbios_aliases != NULL && lp_winbind_netbios_alias_spn()) {
+ 		for (; *netbios_aliases != NULL; netbios_aliases++) {
+ 			/*
+ 			 * Add HOST/NETBIOSNAME
+diff --git a/source3/param/loadparm.c b/source3/param/loadparm.c
+index 29d9d59..6852227 100644
+--- a/source3/param/loadparm.c
++++ b/source3/param/loadparm.c
+@@ -690,6 +690,7 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
+ #endif
+ 	Globals.time_server = false;
+ 	Globals.bind_interfaces_only = false;
++	Globals.enable_web_service_discovery = false;
+ 	Globals.unix_password_sync = false;
+ 	Globals.pam_password_change = false;
+ 	Globals.passwd_chat_debug = false;
+@@ -721,6 +722,10 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
+ 	Globals.log_writeable_files_on_exit = false;
+ 	Globals.create_krb5_conf = true;
+ 	Globals.include_system_krb5_conf = true;
++	Globals.winbind_netbios_alias_spn = true;
++	Globals.ads_dns_update = 1;
++	Globals.truenas_passive_controller = false;
++	lpcfg_string_set(Globals.ctx, &Globals.zeroconf_name, "");
+ 	Globals._winbind_max_domain_connections = 1;
+ 
+ 	/* hostname lookups can be very expensive and are broken on
+diff --git a/source3/utils/net_ads.c b/source3/utils/net_ads.c
+index 1f05550..0656c8b 100644
+--- a/source3/utils/net_ads.c
++++ b/source3/utils/net_ads.c
+@@ -1755,6 +1755,10 @@ static void _net_ads_join_dns_updates(struct net_context *c, TALLOC_CTX *ctx, st
+ 		return;
+ 	}
+ 
++	if (!lp_ads_dns_update()) {
++		return;
++	}
++
+ 	if (!r->out.domain_is_ad) {
+ 		return;
+ 	}
