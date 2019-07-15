@@ -1,0 +1,76 @@
+'\" t
+.\"     Title: ldbadd
+.\"    Author: [see the "AUTHOR" section]
+.\" Generator: DocBook XSL Stylesheets v1.76.1 <http://docbook.sf.net/>
+.\"      Date: 11/05/2017
+.\"    Manual: System Administration tools
+.\"    Source: LDB 1.1
+.\"  Language: English
+.\"
+.TH "OLSCHEMA2LDIF" "1" "11/05/2017" "LDB 1\&.1" "System Administration tools"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+oLschema2ldif \- Converts LDAP schema's to LDB\-compatible LDIF
+.SH "SYNOPSIS"
+.HP \w'\foLschema2ldif\fR\ 'u
+\oLschema2ldif\fR [\-I INPUT\-FILE] [\-O OUTPUT\-FILE]
+.SH "DESCRIPTION"
+.PP
+oLschema2ldif is a simple tool that converts standard OpenLDAP schema files to a LDIF format that is understood by LDB.
+.PP
+.SH "OPTIONS"
+.PP
+\-I input-file
+.RS 4
+OpenLDAP schema to read. If none are specified, the schema file will be read from standard input\&.
+.RE
+.PP
+\-O output\-file
+.RS 4
+File to write ldif version of schema to.
+.RE
+.SH "ENVIRONMENT"
+.PP
+LDB_URL
+.RS 4
+LDB URL to connect to (can be overrided by using the \-H command\-line option\&.)
+.RE
+.SH "VERSION"
+.PP
+This man page is correct for version 4.11 of the Samba suite.
+.SH "SEE ALSO"
+.PP
+ldb(7), ldbmodify, ldbdel, ldif(5)
+.SH "AUTHOR"
+.PP
+ldb was written by Andrew Tridgell [1] . oLschema2ldif was written by Simo Sorce [2]\&.
+If you wish to report a problem or make a suggestion then please see the http://ldb.samba.org/ web site for current contact and maintainer information\&.
+.PP
+If you wish to report a problem or make a suggestion then please see the
+\m[blue]\fB\%http://ldb.samba.org/\fR\m[]
+web site for current contact and maintainer information\&.
+.PP
+.SH "NOTES"
+.IP " 1." 4
+Andrew Tridgell
+.RS 4
+\%https://www.samba.org/~tridge/
+.RE
