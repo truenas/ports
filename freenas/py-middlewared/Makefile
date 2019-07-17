@@ -60,6 +60,8 @@ WRKSRC_SUBDIR=	src/middlewared
 PORTVERSION!=	stat -f %m /usr/ports/local_source/${PORTNAME}
 EXTRACT_ONLY=
 WRKSRC=		/usr/ports/local_source/${PORTNAME}
+BUILD_WRKSRC=	${WRKDIR}/build
+INSTALL_WRKSRC=	${WRKDIR}/build
 .else
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
@@ -70,6 +72,9 @@ GH_TAGNAME=	69b1cac831affed38c894f6fdcf47f4b34c720c8
 .if exists(/usr/ports/local_source/${PORTNAME})
 checksum fetch:
 	echo ${.TARGET} not needed because building direct
+
+pre-configure:
+	cp -R ${WRKSRC} ${WRKDIR}/build
 .endif
 
 .include <bsd.port.mk>
