@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 0000000..26f17bd
+index 0000000..d0f60d7
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,358 @@
+@@ -0,0 +1,369 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -41,6 +41,10 @@ index 0000000..26f17bd
 +#include "lib/util/debug.h"
 +#include "smb_macros.h"
 +#include "modules/smb_libzfs.h"
++
++#ifndef SAFE_FREE
++#define SAFE_FREE(x) do { if ((x) != NULL) {free(x); (x)=NULL;} } while(0)
++#endif
 +
 +enum SMB_QUOTA_TYPE {
 +        SMB_INVALID_QUOTA_TYPE = -1,
@@ -265,10 +269,12 @@ index 0000000..26f17bd
 +	const char *parent_dataset;
 +	char nd[PATH_MAX] = { 0 };
 +	if (parent == NULL) {
++		SAFE_FREE(p);
 +		return (-1);
 +	}
 +
 +	if ((libzfsp = libzfs_init()) == NULL) {
++		SAFE_FREE(p);
 +		return (-1);
 +	}
 +
@@ -277,6 +283,8 @@ index 0000000..26f17bd
 +	zfsp = zfs_path_to_zhandle(libzfsp, p,
 +		ZFS_TYPE_VOLUME|ZFS_TYPE_DATASET|ZFS_TYPE_FILESYSTEM);
 +
++	SAFE_FREE(p);
++
 +	if (zfsp == NULL) {
 +		DBG_ERR("Failed to obtain zhandle on parent directory: (%s)\n", parent);
 +		libzfs_fini(libzfsp);
@@ -284,12 +292,12 @@ index 0000000..26f17bd
 +	}
 +	parent_dataset = zfs_get_name(zfsp); 
 +	snprintf(nd, sizeof(nd), "%s/%s", parent_dataset, base);
-+  
++
 +	if (zfs_create(libzfsp, nd, ZFS_TYPE_DATASET, NULL) != 0){
 +		DBG_ERR("Failed to create dataset to path (%s)\n", nd);
 +		zfs_close(zfsp);
 +		libzfs_fini(libzfsp);
-+		return (-1);	
++		return (-1);
 +	} 
 +	zfs_close(zfsp);
 +
@@ -305,6 +313,10 @@ index 0000000..26f17bd
 +		DBG_ERR("Failed to mount ZFS dataset (%s)\n", nd);
 +	}
 +
++	if (zfs_prop_inherit(new_zfsp, zfs_prop_to_name(ZFS_PROP_ACLMODE), B_FALSE) < 0){
++		DBG_ERR("Failed to inherit aclmode from parent dataset\n");
++	}
++
 +	if (quota) {
 +		if (zfs_prop_set(new_zfsp, "quota", quota) != 0) {
 +			DBG_ERR("Failed to set quota to (%s)\n", quota);
@@ -315,14 +327,13 @@ index 0000000..26f17bd
 +
 +	zfs_close(new_zfsp);
 +	libzfs_fini(libzfsp);
-+
 +	return 0;
 +}
 +
 +int
 +smb_zfs_is_case_sensitive(char* path)
 +{
-+	int ret = B_TRUE;
++	bool is_sensitive = B_TRUE;
 +	char buf[ZFS_MAXPROPLEN];
 +	char source[ZFS_MAX_DATASET_NAME_LEN];
 +	zprop_source_t sourcetype;	
@@ -354,13 +365,13 @@ index 0000000..26f17bd
 +		libzfs_fini(libzfsp);
 +		return (-1);
 +	}
-+	if (strequal("insensitive", buf)) {
-+		ret = B_FALSE;
++	if (strcmp("insensitive", buf) == 0) {
++		is_sensitive = B_FALSE;
 +	}
 +	zfs_close(zfsp);
 +	libzfs_fini(libzfsp);
-+	
-+	return ret;
++
++	return is_sensitive;
 +}
 diff --git a/source3/modules/smb_libzfs.h b/source3/modules/smb_libzfs.h
 new file mode 100644
@@ -411,10 +422,10 @@ index 0000000..000a2a6
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 0000000..07181e9
+index 0000000..0895952
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,1611 @@
+@@ -0,0 +1,1736 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -1742,25 +1753,115 @@ index 0000000..07181e9
 + exists  
 +********************************************************************/
 +
++static acl_t calculate_inherited_acl(acl_t parent_acl)
++{
++	acl_t tmp_acl;
++	acl_t new_acl = NULL;
++	int trivial = 0;
++	acl_entry_t entry, dir_entry;
++	acl_permset_t permset;
++	acl_flagset_t flagset, dir_flag;
++	int entry_id, d_entry_id;
++	entry_id = d_entry_id = ACL_FIRST_ENTRY;
++	if (acl_is_trivial_np(parent_acl, &trivial) != 0) {
++		DBG_ERR("acl_is_trivial_np() failed\n");
++		return NULL;
++	}
++	if (trivial) {
++		DBG_ERR("ACL is trivial, not calculating inherited ACL\n");
++		return parent_acl;
++	}
++	if ((new_acl = acl_init(ACL_MAX_ENTRIES)) == NULL) {
++		DBG_ERR("Failed to initialize new ACL for connectpath.\n");
++		return NULL;
++	}
++	tmp_acl = acl_dup(parent_acl);
++	while (acl_get_entry(tmp_acl, entry_id, &entry) == 1) {
++		entry_id = ACL_NEXT_ENTRY;
++		if (acl_get_permset(entry, &permset)) {
++			DBG_ERR("acl_get_permset() failed on connectpath.\n");
++			return NULL;
++		}
++		if (acl_get_flagset_np(entry, &flagset)) {
++			DBG_ERR("acl_get_flagset_np() failed\n");
++			return NULL;
++		} 
++		/* Entry is not inheritable at all. Skip. */
++		if ((*flagset & (ACL_ENTRY_DIRECTORY_INHERIT|ACL_ENTRY_FILE_INHERIT)) == 0) {
++			continue;
++		}
++		/* Skip if the ACE has NO_PROPAGATE flag set and does not have INHERIT_ONLY flag. */
++		if ((*flagset & ACL_ENTRY_NO_PROPAGATE_INHERIT) &&
++		    (*flagset & ACL_ENTRY_INHERIT_ONLY) == 0) {
++			continue;
++		}
++
++		/*
++		 * Skip if the ACE has NO_PROPAGATE flag set and does not have DIRECTORY INHERIT.
++		 * This is acceptible in this limited case of calculating inherited ACLs on
++		 * child datasets. We know that the ACL generated here will not be applied to a file.
++		 */
++		if ((*flagset & ACL_ENTRY_NO_PROPAGATE_INHERIT) &&
++		    (*flagset & ACL_ENTRY_DIRECTORY_INHERIT) == 0) {
++			continue;
++		}
++
++		/*
++		 * By the time we've gotten here, we're inheriting something somewhere.
++		 * Strip inherit only from the flagset and set ACL_ENTRY_INHERITED.
++		 * I have mixed feelings about seting INHERITED here since the ACL applies
++		 * to a dataset, and the flag may allow permissions auto-inheritance from
++		 * Windows clients.
++		 */
++		*flagset &= ~ACL_ENTRY_INHERIT_ONLY;
++		*flagset |= ACL_ENTRY_INHERITED;
++
++		if (acl_create_entry_np(&new_acl, &dir_entry, d_entry_id) == -1) {
++			DBG_ERR("acl_create_entry() failed in connectpath.\n");
++			return NULL;
++		}
++		if (acl_copy_entry(dir_entry, entry) == -1) {
++			DBG_ERR("acl_copy_entry() failed in connectpath.\n");
++			return NULL;
++		}
++		if (acl_get_flagset_np(dir_entry, &dir_flag) == -1) {
++			DBG_ERR("acl_copy_entry() failed in connectpath.\n");
++			return NULL;
++		}
++		if (*flagset & ACL_ENTRY_NO_PROPAGATE_INHERIT) {
++			*dir_flag &= ~(ACL_ENTRY_DIRECTORY_INHERIT|ACL_ENTRY_FILE_INHERIT|ACL_ENTRY_NO_PROPAGATE_INHERIT);
++		}
++		/*
++		 * If only FILE_INHERIT is set then turn on INHERIT_ONLY
++		 * on directories. This is to prevent ACE from applying to directories.
++		 */
++		else if ((*flagset & ACL_ENTRY_DIRECTORY_INHERIT) == 0) {
++			*dir_flag |= ACL_ENTRY_INHERIT_ONLY;
++		}
++	}
++	acl_free(tmp_acl);
++	return new_acl;
++}
++
 +static int create_zfs_autohomedir(vfs_handle_struct *handle, 
 +				  const char *homedir_quota,
 +				  const char *user)
 +{
-+	bool ret;
++	bool ret = 0;
 +	int naces;
 +	char rp[PATH_MAX] = { 0 };
 +	char *parent;
 +	const char *base;
-+	acl_t zacl;
-+	TALLOC_CTX *tmp_ctx = talloc_new(handle->data);
++	acl_t zacl, new_acl;
++	TALLOC_CTX *tmp_ctx = talloc_stackframe();
 +
 +	if (realpath(handle->conn->connectpath, rp)) {
-+		DEBUG(0, ("Home directory already exists. Skipping dataset creation\n") );
++		DBG_INFO("Home directory already exists. Skipping dataset creation\n");
 +		TALLOC_FREE(tmp_ctx);
-+		return -1;	
++		return ret;	
 +	}
 +
-+	if (!parent_dirname(talloc_tos(), handle->conn->connectpath, &parent, &base)) {
++	if (!parent_dirname(tmp_ctx, handle->conn->connectpath, &parent, &base)) {
 +		TALLOC_FREE(tmp_ctx);
 +		return -1;
 +	}
@@ -1769,50 +1870,82 @@ index 0000000..07181e9
 +		parent, base, homedir_quota);
 +
 +	if (realpath(parent, rp) == NULL ){
-+		DBG_ERR("Parent directory does not exist, skipping automatic dataset creation.\n");
-+		TALLOC_FREE(parent);
++		DBG_ERR("Parent directory does not exist, attempting to create parent.\n");
++		char *grandparent;
++		const char *parent_relpath;
++		if (!parent_dirname(tmp_ctx, parent, &grandparent, &parent_relpath)) {
++			TALLOC_FREE(tmp_ctx);
++			return -1;
++		}
++		if (smb_zfs_create_homedir(grandparent, parent_relpath, NULL) < 0) {
++			DBG_ERR("Failed to auto-create grandparent dataset\n");
++			TALLOC_FREE(tmp_ctx);
++			return -1;
++		}
++		if ((zacl = acl_get_file(grandparent, ACL_TYPE_NFS4)) == NULL) {
++			DBG_ERR("ixnas: acl_get_file() failed for %s: %s\n",
++				parent, strerror(errno));
++			TALLOC_FREE(tmp_ctx);
++			return -1;
++		}
++		if ((new_acl = calculate_inherited_acl(zacl)) == NULL) {
++			acl_free(zacl);
++			TALLOC_FREE(tmp_ctx);
++			return -1;
++		}
++		acl_free(zacl);
++		if (acl_set_file(parent, ACL_TYPE_NFS4, new_acl) < 0) {
++			DBG_ERR("ixnas: acl_set_file() failed for %s: %s\n",
++				handle->conn->connectpath, strerror(errno));
++			acl_free(new_acl);
++			TALLOC_FREE(tmp_ctx);
++			return -1;
++		}
++		acl_free(new_acl);
++	}
++
++	if (smb_zfs_create_homedir(parent, base, homedir_quota) < 0) {
++		DBG_ERR("Failed to auto-create connectpath dataset\n");
 +		TALLOC_FREE(tmp_ctx);
 +		return -1;
 +	}
-+
-+	ret = smb_zfs_create_homedir(parent, base, homedir_quota);
-+
-+	zacl = acl_get_file(parent, ACL_TYPE_NFS4);
-+	if ( zacl == NULL) {
++	if ((zacl = acl_get_file(parent, ACL_TYPE_NFS4)) == NULL) {
 +		DBG_ERR("ixnas: acl_get_file() failed for %s: %s\n",
-+		parent, strerror(errno));
-+		TALLOC_FREE(parent);
++			parent, strerror(errno));
 +		TALLOC_FREE(tmp_ctx);
 +		return -1;
 +	}
++	if ((new_acl = calculate_inherited_acl(zacl)) == NULL) {
++		acl_free(zacl);
++		TALLOC_FREE(tmp_ctx);
++		return -1;
++	}
++	acl_free(zacl);
 +
-+	if(acl_set_file(handle->conn->connectpath, ACL_TYPE_NFS4, zacl) < 0) {
++	if (acl_set_file(handle->conn->connectpath, ACL_TYPE_NFS4, new_acl) < 0) {
 +		DBG_ERR("ixnas: acl_set_file() failed for %s: %s\n",
 +			handle->conn->connectpath, strerror(errno));
-+		TALLOC_FREE(parent);
++		acl_free(new_acl);
 +		TALLOC_FREE(tmp_ctx);
-+		acl_free(zacl);
 +		return -1;
 +	}
++	acl_free(new_acl);
 +
 +	if (lp_parm_bool(SNUM(handle->conn), "ixnas", "chown_homedir", true)) {
 +		struct passwd *current_user = Get_Pwnam_alloc(tmp_ctx, user);
 +		if ( !current_user ) {
 +			DBG_ERR("Get_Pwnam_alloc failed for (%s).\n", user); 
-+			TALLOC_FREE(parent);
 +			TALLOC_FREE(tmp_ctx);
 +			return -1;
-+		}		
++		}
 +		if (chown(handle->conn->connectpath, current_user->pw_uid, current_user->pw_gid) < 0) {
 +			DBG_ERR("Failed to chown (%s) to (%u:%u)\n",
 +				handle->conn->connectpath, current_user->pw_uid, getegid() );
 +			ret = -1;
 +		}	
 +	} 
-+
-+	TALLOC_FREE(parent);
 +	TALLOC_FREE(tmp_ctx);
-+        return ret;
++	return ret;
 +}
 +
 +/*
@@ -1899,12 +2032,15 @@ index 0000000..07181e9
 +	}
 +
 +	if (config->zfs_auto_homedir) {
-+		create_zfs_autohomedir(handle, config->homedir_quota, user);
++		if (create_zfs_autohomedir(handle, config->homedir_quota, user) < 0) {
++			DBG_ERR("Failed to automatically generate connectpath.\n");
++			return -1;
++		}
 +	}
 +	config->dataset_is_casesensitive = smb_zfs_is_case_sensitive(handle->conn->connectpath);
 +	if (!config->dataset_is_casesensitive) {
 +		DBG_INFO("ixnas: case insensitive dataset detected, "
-+			 "automatically adjusting case sensitivity settings.");
++			 "automatically adjusting case sensitivity settings.\n");
 +		lp_do_parameter(SNUM(handle->conn),
 +				"case sensitive", "yes");
 +		handle->conn->case_sensitive = True;
