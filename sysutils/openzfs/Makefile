@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	openzfs
-PORTVERSION=	2019072200
+PORTVERSION=	2019071000
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 
@@ -25,7 +25,7 @@ OPTIONS_SUB=    yes
 USE_GITHUB=	yes
 GH_ACCOUNT=	zfsonfreebsd
 GH_PROJECT=	ZoF
-GH_TAGNAME=	05f627f
+GH_TAGNAME=	e398e94
 
 .include <bsd.port.pre.mk>
 
