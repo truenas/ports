@@ -1,0 +1,90 @@
+#!/bin/sh
+#
+# PROVIDE: wsdd
+# REQUIRE: DAEMON smbd
+#
+
+. /etc/rc.subr
+
+name="wsdd"
+rcvar="wsdd_enable"
+wsdd_group=""
+
+pidfile="%%SAMBA4_RUNDIR%%/wsdd.pid"
+d="/usr/sbin/daemon"
+extra_commands="status"
+stop_cmd='wsdd_stop'
+status_cmd='wsdd_status'
+start_cmd='wsdd_start'
+wsdd_cmd="%%PREFIX%%/bin/wsdd.py"
+
+wsdd_status()
+{
+    local wsdd_pid force_run
+    if [ -n "${_rc_prefix}" -a "${_rc_prefix}" = "one" ] || [ -n "${rc_force}" ] || [ -n "${rc_fast}" ]; then
+        force_run=yes
+    fi
+
+    if ( [ -n "${rcvar}" ] && checkyesno "${rcvar}" ) || [ -n "$force_run" ]; then
+        if [ -f ${pidfile} ]; then
+            wsdd_pid=$(cat "${pidfile}")
+            echo "wsdd running as pid ${wsdd_pid}"
+        else
+            echo "wsdd: stopped"
+        fi 
+    fi
+    return 0
+}
+
+wsdd_stop()
+{
+    local res wsdd_pid force_run
+    if [ -n "${_rc_prefix}" -a "${_rc_prefix}" = "one" ] || [ -n "${rc_force}" ] || [ -n "${rc_fast}" ]; then
+        force_run=yes
+    fi
+
+    if ( [ -n "${rcvar}" ] && checkyesno "${rcvar}" ) || [ -n "$force_run" ]; then
+        if [ -f ${pidfile} ]; then
+            wsdd_pid=$(cat "${pidfile}")
+            echo "Stopping wsdd: ${wsdd_pid}" 
+            kill -TERM ${wsdd_pid}
+            return $?
+        fi
+    fi
+    echo "wsdd is already stopped."
+    return 0
+}
+
+wsdd_start()
+{
+    local res wsdd_pid force_run
+    if [ -n "${_rc_prefix}" -a "${_rc_prefix}" = "one" ] || [ -n "${rc_force}" ] || [ -n "${rc_fast}" ]; then
+        force_run=yes
+    fi
+
+    if ( [ -n "${rcvar}" ] && checkyesno "${rcvar}" ) || [ -n "$force_run" ]; then
+        if [ -f ${pidfile} ]; then
+            wsdd_pid=$(cat "${pidfile}")
+            echo "wsdd is running as pid ${wsdd_pid}"
+            return 1
+        fi
+    fi
+    env PATH=$PATH:%%PREFIX%%/sbin:%%PREFIX%%/bin LC_ALL=en_US.UTF-8 ${d} -f -p ${pidfile} -u daemon -S ${wsdd_cmd}
+    res=$?
+    echo "starting wsdd"
+    return ${res}
+}
+
+
+samba_server_config_init()
+{
+    load_rc_config $name
+    if [ -n "${samba_server_enable}" ] && [ "${samba_server_enable}" == "YES" ]; then
+        eval ${name}_enable=\${${name}_enable:-"YES"}
+    fi
+    eval ${name}_enable=\${${name}_enable:-"NO"}
+}
+
+samba_server_config_init
+load_rc_config $name
+run_rc_command "$1"
