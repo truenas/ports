@@ -477,7 +477,8 @@ SAMBA4_SUB=			SAMBA4_LOGDIR="${SAMBA4_LOGDIR}" \
 PLIST_SUB+=			${SAMBA4_SUB}
 SUB_LIST+=			${SAMBA4_SUB}
 
-USE_RC_SUBR=			samba_server
+USE_RC_SUBR=			samba_server smbd nmbd winbindd wsdd
+
 SUB_FILES=			pkg-message README.FreeBSD
 
 PORTDOCS=			README.FreeBSD
