@@ -1,0 +1,66 @@
+#!/bin/sh
+#
+# PROVIDE: nmbd 
+# REQUIRE: SAMBA_SERVER 
+# BEFORE: winbindd
+# KEYWORD: shutdown
+#
+. /etc/rc.subr
+
+name="nmbd"
+rcvar=nmbd_enable
+nmbd_group=""
+
+nmbd_pidfile="%%SAMBA4_RUNDIR%%/nmbd.pid"
+extra_commands="dump status"
+
+start_cmd="nmbd_cmd"
+stop_cmd="nmbd_cmd"
+status_cmd="nmbd_cmd"
+dump_cmd="nmbd_dump"
+
+nmbd_dump() {
+    
+    local command force_run
+    if [ -n "${_rc_prefix}" -a "${_rc_prefix}" = "one" ] || [ -n "${rc_force}" ] || [ -n "${rc_fast}" ]; then
+        force_run=yes
+    fi
+    command="%%PREFIX%%/sbin/${name}"
+    pid="$(check_pidfile "${nmbd_pidfile}" "${command}")"
+    if ( [ -n "${rcvar}" ] && checkyesno "${rcvar}" ) || [ -n "$force_run" ]; then
+        if [ -n ${pid} ]; then
+            debug "dumping namelists to %%SAMBA4_RUNDIR%%"
+            echo "dumping namelists to %%SAMBA4_RUNDIR%%"
+            kill -s HUP ${pid} >/dev/null 2>&1
+        fi
+    fi
+}
+
+nmbd_cmd() {
+    local command pidfile result force_run
+    unset "${rc_arg}_cmd"
+    if [ -n "${_rc_prefix}" -a "${_rc_prefix}" = "one" ] || [ -n "${rc_force}" ] || [ -n "${rc_fast}" ]; then
+        force_run=yes
+    fi
+    result=0
+    command="%%PREFIX%%/sbin/${name}"
+    pidfile=${nmbd_pidfile}
+    if ( [ -n "${rcvar}" ] && checkyesno "${rcvar}" ) || [ -n "$force_run" ]; then
+        run_rc_command "${_rc_prefix}${rc_arg}" ${rc_extra_args}
+        result=$((${result} || $?))
+    fi
+    return ${result}
+}
+
+samba_server_config_init()
+{
+    load_rc_config $name
+    if [ -n "${samba_server_enable}" ] && [ "${samba_server_enable}" == "YES" ]; then
+        eval ${name}_enable=\${${name}_enable:-"YES"}
+    fi
+    eval ${name}_enable=\${${name}_enable:-"NO"}
+}
+
+samba_server_config_init
+nmbd_flags="--daemon"
+run_rc_command "$1"
