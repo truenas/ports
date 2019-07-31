@@ -2,7 +2,7 @@
 #
 # PROVIDE: winbindd 
 # REQUIRE: SAMBA_SERVER 
-# BEFORE: LOGIN
+# BEFORE: smbd
 # KEYWORD: shutdown
 #
 . /etc/rc.subr
@@ -11,7 +11,7 @@ name="winbindd"
 rcvar="winbindd_enable"
 winbindd_group=""
 
-winbindd_pidfile="/var/run/samba4/winbindd.pid"
+winbindd_pidfile="%%SAMBA4_RUNDIR%%/winbindd.pid"
 extra_commands="reload status dump"
 
 start_cmd="winbindd_cmd"
@@ -25,7 +25,7 @@ winbindd_reload() {
     if [ -n "${_rc_prefix}" -a "${_rc_prefix}" = "one" ] || [ -n "${rc_force}" ] || [ -n "${rc_fast}" ]; then
         force_run=yes
     fi
-    command="/usr/local/sbin/${name}"
+    command="%%PREFIX%%/sbin/${name}"
     pid="$(check_pidfile "${winbindd_pidfile}" "${command}")"
     if ( [ -n "${rcvar}" ] && checkyesno "${rcvar}" ) || [ -n "$force_run" ]; then
         if [ -n ${pid} ]; then
@@ -41,7 +41,7 @@ winbindd_dump() {
     if [ -n "${_rc_prefix}" -a "${_rc_prefix}" = "one" ] || [ -n "${rc_force}" ] || [ -n "${rc_fast}" ]; then
         force_run=yes
     fi
-    command="/usr/local/sbin/${name}"
+    command="%%PREFIX%%/sbin/${name}"
     pid="$(check_pidfile "${winbindd_pidfile}" "${command}")"
     if ( [ -n "${rcvar}" ] && checkyesno "${rcvar}" ) || [ -n "$force_run" ]; then
         if [ -n ${pid} ]; then
@@ -59,7 +59,7 @@ winbindd_cmd() {
         force_run=yes
     fi
     result=0
-    command="/usr/local/sbin/${name}"
+    command="%%PREFIX%%/sbin/${name}"
     pidfile=${winbindd_pidfile}
     if ( [ -n "${rcvar}" ] && checkyesno "${rcvar}" ) || [ -n "$force_run" ]; then
         run_rc_command "${_rc_prefix}${rc_arg}" ${rc_extra_args}

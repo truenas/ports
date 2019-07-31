@@ -11,7 +11,7 @@ name="smbd"
 rcvar=smbd_enable
 smbd_group=""
 
-smbd_pidfile="/var/run/samba4/smbd.pid"
+smbd_pidfile="%%SAMBA4_RUNDIR%%/smbd.pid"
 extra_commands="dump status"
 
 start_cmd="smbd_cmd"
@@ -25,7 +25,7 @@ smbd_reload() {
     if [ -n "${_rc_prefix}" -a "${_rc_prefix}" = "one" ] || [ -n "${rc_force}" ] || [ -n "${rc_fast}" ]; then
         force_run=yes
     fi
-    command="/usr/local/sbin/${name}"
+    command="%%PREFIX%%/sbin/${name}"
     pid="$(check_pidfile "${smbd_pidfile}" "${command}")"
     if ( [ -n "${rcvar}" ] && checkyesno "${rcvar}" ) || [ -n "$force_run" ]; then
         if [ -n ${pid} ]; then
@@ -43,7 +43,7 @@ smbd_cmd() {
         force_run=yes
     fi
     result=0
-    command="/usr/local/sbin/${name}"
+    command="%%PREFIX%%/sbin/${name}"
     pidfile=${smbd_pidfile}
     if ( [ -n "${rcvar}" ] && checkyesno "${rcvar}" ) || [ -n "$force_run" ]; then
         run_rc_command "${_rc_prefix}${rc_arg}" ${rc_extra_args}

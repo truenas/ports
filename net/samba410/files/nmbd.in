@@ -2,7 +2,7 @@
 #
 # PROVIDE: nmbd 
 # REQUIRE: SAMBA_SERVER 
-# BEFORE: LOGIN
+# BEFORE: winbindd
 # KEYWORD: shutdown
 #
 . /etc/rc.subr
@@ -11,7 +11,7 @@ name="nmbd"
 rcvar=nmbd_enable
 nmbd_group=""
 
-nmbd_pidfile="/var/run/samba4/nmbd.pid"
+nmbd_pidfile="%%SAMBA4_RUNDIR%%/nmbd.pid"
 extra_commands="dump status"
 
 start_cmd="nmbd_cmd"
@@ -25,12 +25,12 @@ nmbd_dump() {
     if [ -n "${_rc_prefix}" -a "${_rc_prefix}" = "one" ] || [ -n "${rc_force}" ] || [ -n "${rc_fast}" ]; then
         force_run=yes
     fi
-    command="/usr/local/sbin/${name}"
+    command="%%PREFIX%%/sbin/${name}"
     pid="$(check_pidfile "${nmbd_pidfile}" "${command}")"
     if ( [ -n "${rcvar}" ] && checkyesno "${rcvar}" ) || [ -n "$force_run" ]; then
         if [ -n ${pid} ]; then
-            debug "dumping namelists to /var/run/samba4/"
-            echo "dumping namelists to /var/run/samba4/"
+            debug "dumping namelists to %%SAMBA4_RUNDIR%%"
+            echo "dumping namelists to %%SAMBA4_RUNDIR%%"
             kill -s HUP ${pid} >/dev/null 2>&1
         fi
     fi
@@ -43,7 +43,7 @@ nmbd_cmd() {
         force_run=yes
     fi
     result=0
-    command="/usr/local/sbin/${name}"
+    command="%%PREFIX%%/sbin/${name}"
     pidfile=${nmbd_pidfile}
     if ( [ -n "${rcvar}" ] && checkyesno "${rcvar}" ) || [ -n "$force_run" ]; then
         run_rc_command "${_rc_prefix}${rc_arg}" ${rc_extra_args}

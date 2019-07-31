@@ -10,13 +10,13 @@ name="wsdd"
 rcvar="wsdd_enable"
 wsdd_group=""
 
-pidfile="/var/run/samba4/wsdd.pid"
+pidfile="%%SAMBA4_RUNDIR%%/wsdd.pid"
 d="/usr/sbin/daemon"
 extra_commands="status"
 stop_cmd='wsdd_stop'
 status_cmd='wsdd_status'
 start_cmd='wsdd_start'
-wsdd_cmd="/usr/local/bin/wsdd.py"
+wsdd_cmd="%%PREFIX%%/bin/wsdd.py"
 
 wsdd_status()
 {
@@ -69,7 +69,7 @@ wsdd_start()
             return 1
         fi
     fi
-    env PATH=$PATH:/usr/local/sbin:/usr/local/bin LC_ALL=en_US.UTF-8 ${d} -p ${pidfile} -u daemon -S ${wsdd_cmd}
+    env PATH=$PATH:%%PREFIX%%/sbin:%%PREFIX%%/bin LC_ALL=en_US.UTF-8 ${d} -p ${pidfile} -u daemon -S ${wsdd_cmd}
     res=$?
     echo "starting wsdd"
     return ${res}
