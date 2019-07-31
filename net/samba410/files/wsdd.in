@@ -47,7 +47,7 @@ wsdd_stop()
         if [ -f ${pidfile} ]; then
             wsdd_pid=$(cat "${pidfile}")
             echo "Stopping wsdd: ${wsdd_pid}" 
-            kill -15 ${wsdd_pid}
+            kill -TERM ${wsdd_pid}
             return $?
         fi
     fi
@@ -69,7 +69,7 @@ wsdd_start()
             return 1
         fi
     fi
-    env PATH=$PATH:%%PREFIX%%/sbin:%%PREFIX%%/bin LC_ALL=en_US.UTF-8 ${d} -p ${pidfile} -u daemon -S ${wsdd_cmd}
+    env PATH=$PATH:%%PREFIX%%/sbin:%%PREFIX%%/bin LC_ALL=en_US.UTF-8 ${d} -f -p ${pidfile} -u daemon -S ${wsdd_cmd}
     res=$?
     echo "starting wsdd"
     return ${res}
