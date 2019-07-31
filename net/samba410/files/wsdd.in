@@ -20,24 +20,36 @@ wsdd_cmd="/usr/local/bin/wsdd.py"
 
 wsdd_status()
 {
-    local wsdd_pid
-    if [ -f ${pidfile} ]; then
-        wsdd_pid=$(cat "${pidfile}")
-        echo "wsdd running as pid ${wsdd_pid}"
-    else
-        echo "wsdd: stopped"
-    fi 
+    local wsdd_pid force_run
+    if [ -n "${_rc_prefix}" -a "${_rc_prefix}" = "one" ] || [ -n "${rc_force}" ] || [ -n "${rc_fast}" ]; then
+        force_run=yes
+    fi
+
+    if ( [ -n "${rcvar}" ] && checkyesno "${rcvar}" ) || [ -n "$force_run" ]; then
+        if [ -f ${pidfile} ]; then
+            wsdd_pid=$(cat "${pidfile}")
+            echo "wsdd running as pid ${wsdd_pid}"
+        else
+            echo "wsdd: stopped"
+        fi 
+    fi
     return 0
 }
 
 wsdd_stop()
 {
-    local res wsdd_pid
-    if [ -f ${pidfile} ]; then
-        wsdd_pid=$(cat "${pidfile}")
-        echo "Stopping wsdd: ${wsdd_pid}" 
-        kill -9 ${wsdd_pid}
-        return $?
+    local res wsdd_pid force_run
+    if [ -n "${_rc_prefix}" -a "${_rc_prefix}" = "one" ] || [ -n "${rc_force}" ] || [ -n "${rc_fast}" ]; then
+        force_run=yes
+    fi
+
+    if ( [ -n "${rcvar}" ] && checkyesno "${rcvar}" ) || [ -n "$force_run" ]; then
+        if [ -f ${pidfile} ]; then
+            wsdd_pid=$(cat "${pidfile}")
+            echo "Stopping wsdd: ${wsdd_pid}" 
+            kill -15 ${wsdd_pid}
+            return $?
+        fi
     fi
     echo "wsdd is already stopped."
     return 0
@@ -45,11 +57,17 @@ wsdd_stop()
 
 wsdd_start()
 {
-    local res wsdd_pid
-    if [ -f ${pidfile} ]; then
-        wsdd_pid=$(cat "${pidfile}")
-        echo "wsdd is running as pid ${wsdd_pid}"
-        return 1
+    local res wsdd_pid force_run
+    if [ -n "${_rc_prefix}" -a "${_rc_prefix}" = "one" ] || [ -n "${rc_force}" ] || [ -n "${rc_fast}" ]; then
+        force_run=yes
+    fi
+
+    if ( [ -n "${rcvar}" ] && checkyesno "${rcvar}" ) || [ -n "$force_run" ]; then
+        if [ -f ${pidfile} ]; then
+            wsdd_pid=$(cat "${pidfile}")
+            echo "wsdd is running as pid ${wsdd_pid}"
+            return 1
+        fi
     fi
     env PATH=$PATH:/usr/local/sbin:/usr/local/bin LC_ALL=en_US.UTF-8 ${d} -p ${pidfile} -u daemon -S ${wsdd_cmd}
     res=$?

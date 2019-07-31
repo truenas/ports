@@ -21,7 +21,7 @@ dump_cmd="nmbd_dump"
 
 nmbd_dump() {
     
-    local command pidfile force_run
+    local command force_run
     if [ -n "${_rc_prefix}" -a "${_rc_prefix}" = "one" ] || [ -n "${rc_force}" ] || [ -n "${rc_fast}" ]; then
         force_run=yes
     fi
@@ -37,7 +37,7 @@ nmbd_dump() {
 }
 
 nmbd_cmd() {
-    local command pidfile samba_daemons result force_run
+    local command pidfile result force_run
     unset "${rc_arg}_cmd"
     if [ -n "${_rc_prefix}" -a "${_rc_prefix}" = "one" ] || [ -n "${rc_force}" ] || [ -n "${rc_fast}" ]; then
         force_run=yes
@@ -47,7 +47,6 @@ nmbd_cmd() {
     pidfile=${nmbd_pidfile}
     if ( [ -n "${rcvar}" ] && checkyesno "${rcvar}" ) || [ -n "$force_run" ]; then
         run_rc_command "${_rc_prefix}${rc_arg}" ${rc_extra_args}
-        # If any of the commands failed, take it as a global result
         result=$((${result} || $?))
     fi
     return ${result}

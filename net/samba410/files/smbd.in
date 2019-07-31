@@ -21,7 +21,7 @@ reload_cmd="smbd_reload"
 
 smbd_reload() {
     
-    local command pidfile force_run
+    local command force_run
     if [ -n "${_rc_prefix}" -a "${_rc_prefix}" = "one" ] || [ -n "${rc_force}" ] || [ -n "${rc_fast}" ]; then
         force_run=yes
     fi

@@ -53,7 +53,7 @@ winbindd_dump() {
 }
 
 winbindd_cmd() {
-    local command pidfile samba_daemons result force_run
+    local command pidfile result force_run
     unset "${rc_arg}_cmd"
     if [ -n "${_rc_prefix}" -a "${_rc_prefix}" = "one" ] || [ -n "${rc_force}" ] || [ -n "${rc_fast}" ]; then
         force_run=yes

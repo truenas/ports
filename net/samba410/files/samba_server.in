@@ -49,9 +49,7 @@ samba_server_cmd() {
 
 samba_server_config_init() {
     local name
-    # Load configuration
     load_rc_config "${name}"
-    # Defaults
     samba_server_enable=${samba_server_enable:=NO}
     testparm_command="/usr/local/bin/testparm --suppress-prompt"
     # Determine what daemons are necessary to run Samba in the current role
