@@ -1,0 +1,83 @@
+#!/bin/sh
+#
+# PROVIDE: winbindd 
+# REQUIRE: SAMBA_SERVER 
+# BEFORE: smbd
+# KEYWORD: shutdown
+#
+. /etc/rc.subr
+
+name="winbindd"
+rcvar="winbindd_enable"
+winbindd_group=""
+
+winbindd_pidfile="%%SAMBA4_RUNDIR%%/winbindd.pid"
+extra_commands="reload status dump"
+
+start_cmd="winbindd_cmd"
+stop_cmd="winbindd_cmd"
+status_cmd="winbindd_cmd"
+reload_cmd="winbindd_reload"
+dump_cmd="winbindd_dump"
+
+winbindd_reload() {
+    local command pidfile force_run
+    if [ -n "${_rc_prefix}" -a "${_rc_prefix}" = "one" ] || [ -n "${rc_force}" ] || [ -n "${rc_fast}" ]; then
+        force_run=yes
+    fi
+    command="%%PREFIX%%/sbin/${name}"
+    pid="$(check_pidfile "${winbindd_pidfile}" "${command}")"
+    if ( [ -n "${rcvar}" ] && checkyesno "${rcvar}" ) || [ -n "$force_run" ]; then
+        if [ -n ${pid} ]; then
+            debug "reloading ${name} configuration"
+            echo "Reloading ${name}."
+            kill -s HUP ${pid} >/dev/null 2>&1
+        fi
+    fi
+}
+
+winbindd_dump() {
+    local command pidfile force_run
+    if [ -n "${_rc_prefix}" -a "${_rc_prefix}" = "one" ] || [ -n "${rc_force}" ] || [ -n "${rc_fast}" ]; then
+        force_run=yes
+    fi
+    command="%%PREFIX%%/sbin/${name}"
+    pid="$(check_pidfile "${winbindd_pidfile}" "${command}")"
+    if ( [ -n "${rcvar}" ] && checkyesno "${rcvar}" ) || [ -n "$force_run" ]; then
+        if [ -n ${pid} ]; then
+            debug "dumping ${name} status information to log.winbindd"
+            echo "dumping ${name} status information to log.winbindd"
+            kill -s USR2 ${pid} >/dev/null 2>&1
+        fi
+    fi
+}
+
+winbindd_cmd() {
+    local command pidfile result force_run
+    unset "${rc_arg}_cmd"
+    if [ -n "${_rc_prefix}" -a "${_rc_prefix}" = "one" ] || [ -n "${rc_force}" ] || [ -n "${rc_fast}" ]; then
+        force_run=yes
+    fi
+    result=0
+    command="%%PREFIX%%/sbin/${name}"
+    pidfile=${winbindd_pidfile}
+    if ( [ -n "${rcvar}" ] && checkyesno "${rcvar}" ) || [ -n "$force_run" ]; then
+        run_rc_command "${_rc_prefix}${rc_arg}" ${rc_extra_args}
+        # If any of the commands failed, take it as a global result
+        result=$((${result} || $?))
+    fi
+    return ${result}
+}
+
+samba_server_config_init()
+{
+    load_rc_config $name
+    if [ -n "${samba_server_enable}" ] && [ "${samba_server_enable}" == "YES" ]; then
+        eval ${name}_enable=\${${name}_enable:-"YES"}
+    fi
+    eval ${name}_enable=\${${name}_enable:-"NO"}
+}
+
+samba_server_config_init
+winbindd_flags="--daemon"
+run_rc_command "$1"

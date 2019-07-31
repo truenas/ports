@@ -1,0 +1,67 @@
+#!/bin/sh
+#
+# PROVIDE: smbd 
+# REQUIRE: SAMBA_SERVER 
+# BEFORE: LOGIN
+# KEYWORD: shutdown
+#
+. /etc/rc.subr
+
+name="smbd"
+rcvar=smbd_enable
+smbd_group=""
+
+smbd_pidfile="%%SAMBA4_RUNDIR%%/smbd.pid"
+extra_commands="dump status"
+
+start_cmd="smbd_cmd"
+stop_cmd="smbd_cmd"
+status_cmd="smbd_cmd"
+reload_cmd="smbd_reload"
+
+smbd_reload() {
+    
+    local command force_run
+    if [ -n "${_rc_prefix}" -a "${_rc_prefix}" = "one" ] || [ -n "${rc_force}" ] || [ -n "${rc_fast}" ]; then
+        force_run=yes
+    fi
+    command="%%PREFIX%%/sbin/${name}"
+    pid="$(check_pidfile "${smbd_pidfile}" "${command}")"
+    if ( [ -n "${rcvar}" ] && checkyesno "${rcvar}" ) || [ -n "$force_run" ]; then
+        if [ -n ${pid} ]; then
+            debug "reloading smbd."
+            echo "reloading smbd"
+            smbcontrol smbd reload > /dev/null 2>&1
+        fi
+    fi
+}
+
+smbd_cmd() {
+    local command pidfile samba_daemons result force_run
+    unset "${rc_arg}_cmd"
+    if [ -n "${_rc_prefix}" -a "${_rc_prefix}" = "one" ] || [ -n "${rc_force}" ] || [ -n "${rc_fast}" ]; then
+        force_run=yes
+    fi
+    result=0
+    command="%%PREFIX%%/sbin/${name}"
+    pidfile=${smbd_pidfile}
+    if ( [ -n "${rcvar}" ] && checkyesno "${rcvar}" ) || [ -n "$force_run" ]; then
+        run_rc_command "${_rc_prefix}${rc_arg}" ${rc_extra_args}
+        # If any of the commands failed, take it as a global result
+        result=$((${result} || $?))
+    fi
+    return ${result}
+}
+
+samba_server_config_init()
+{
+    load_rc_config $name
+    if [ -n "${samba_server_enable}" ] && [ "${samba_server_enable}" == "YES" ]; then
+        eval ${name}_enable=\${${name}_enable:-"YES"}
+    fi
+    eval ${name}_enable=\${${name}_enable:-"NO"}
+}
+
+samba_server_config_init
+smbd_flags="--daemon"
+run_rc_command "$1"
