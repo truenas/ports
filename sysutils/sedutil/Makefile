@@ -3,7 +3,7 @@
 
 PORTNAME=	sedutil
 PORTVERSION=	1.15.1
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	sysutils
 
 MAINTAINER=	mav@FreeBSD.org
@@ -14,7 +14,7 @@ LICENSE=	GPLv3
 USES=		gmake
 USE_GITHUB=	yes
 GH_ACCOUNT=	amotin
-GH_TAGNAME=	fcc545ea
+GH_TAGNAME=	abcbb19
 
 PLIST_FILES=	sbin/sedutil-cli man/man8/sedutil-cli.8.gz
 
