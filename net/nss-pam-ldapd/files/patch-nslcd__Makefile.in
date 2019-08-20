@@ -1,0 +1,19 @@
+--- nslcd/Makefile.in.orig	2019-08-20 09:31:33.159083976 -0700
++++ nslcd/Makefile.in	2019-08-20 09:32:24.853816914 -0700
+@@ -125,7 +125,7 @@ CONFIG_CLEAN_VPATH_FILES =
+ am__installdirs = "$(DESTDIR)$(sbindir)"
+ PROGRAMS = $(sbin_PROGRAMS)
+ am_nslcd_OBJECTS = nslcd.$(OBJEXT) log.$(OBJEXT) daemonize.$(OBJEXT) \
+-	common.$(OBJEXT) myldap.$(OBJEXT) cfg.$(OBJEXT) \
++	common.$(OBJEXT) nslcd_json.$(OBJEXT) myldap.$(OBJEXT) cfg.$(OBJEXT) \
+ 	attmap.$(OBJEXT) nsswitch.$(OBJEXT) invalidator.$(OBJEXT) \
+ 	config.$(OBJEXT) alias.$(OBJEXT) ether.$(OBJEXT) \
+ 	group.$(OBJEXT) host.$(OBJEXT) netgroup.$(OBJEXT) \
+@@ -335,6 +335,7 @@ nslcd_SOURCES = nslcd.c ../nslcd.h ../co
+                 log.c log.h \
+                 daemonize.c daemonize.h \
+                 common.c common.h \
++                nslcd_json.c nslcd_json.h \
+                 myldap.c myldap.h \
+                 cfg.c cfg.h \
+                 attmap.c attmap.h \
