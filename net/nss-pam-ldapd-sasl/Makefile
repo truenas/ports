@@ -10,7 +10,7 @@ COMMENT=	Advanced fork of nss_ldap with sasl support
 LICENSE=	# pet portlint
 
 OPTIONS_SLAVE+=	SASL
-LDFLAGS=        -ljansson
+LDFLAGS+=       -ljansson
 BUILD_DEPENDS+= jansson>=2.10:devel/jansson
 RUN_DEPENDS+=   jansson>=2.10:devel/jansson
 

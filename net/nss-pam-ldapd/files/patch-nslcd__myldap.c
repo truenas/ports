@@ -1,5 +1,5 @@
---- nslcd/myldap.c.orig	2017-06-20 13:47:52.000000000 -0700
-+++ nslcd/myldap.c	2019-08-20 10:05:35.581088557 -0700
+--- nslcd/myldap.c.orig	2018-09-01 02:09:35.000000000 -0700
++++ nslcd/myldap.c	2019-08-20 11:44:54.369661056 -0700
 @@ -34,6 +34,7 @@
  */
  
@@ -16,7 +16,7 @@
  #endif
  #ifdef HAVE_GSSLDAP_H
  #include <gssldap.h>
-@@ -2528,3 +2530,45 @@ int myldap_error_message(MYLDAP_SESSION 
+@@ -2528,3 +2530,50 @@ int myldap_error_message(MYLDAP_SESSION 
      ldap_memfree(msg_diag);
    return LDAP_SUCCESS;
  }
@@ -33,7 +33,9 @@
 +    goto failure;
 +  }
 +  json_add_timestamp(&jsobj);
-+  json_add_int(&jsobj, "reconnect_retrytime", reconnect);
++  if (json_add_int(&jsobj, "reconnect_retrytime", reconnect) != 0) {
++    goto failure;
++  }
 +  pthread_mutex_lock(&uris_mutex);
 +  for (i = 0; i < (NSS_LDAP_CONFIG_MAX_URIS +1); i++)
 +  {
@@ -44,10 +46,12 @@
 +       int lastfail = (int)nslcd_cfg->uris[i].lastfail;
 +       if (json_add_int(&jsobjint, "firstfail", firstfail) != 0) {
 +           json_free(&jsobjint);
++           pthread_mutex_unlock(&uris_mutex);
 +           goto failure;
 +       }
 +       if (json_add_int(&jsobjint, "lastfail", lastfail) != 0) {
 +           json_free(&jsobjint);
++           pthread_mutex_unlock(&uris_mutex);
 +           goto failure;
 +       }
 +       json_add_object(&ldap_servers, nslcd_cfg->uris[i].uri, &jsobjint);
@@ -59,6 +63,7 @@
 +  json_free(&jsobj);
 +  return json;
 +failure:
++  json_free(&ldap_servers);
 +  json_free(&jsobj);
 +  return NULL;
 +}
