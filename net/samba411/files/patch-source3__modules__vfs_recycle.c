@@ -1,5 +1,5 @@
---- source3/modules/vfs_recycle.c.orig	2018-07-12 04:23:36.000000000 -0400
-+++ source3/modules/vfs_recycle.c	2019-02-07 11:54:36.021712000 -0500
+--- source3/modules/vfs_recycle.c.orig	2019-01-15 02:07:00.000000000 -0800
++++ source3/modules/vfs_recycle.c	2019-07-24 07:16:12.827315334 -0700
 @@ -27,6 +27,7 @@
  #include "system/filesys.h"
  #include "../librpc/gen_ndr/ndr_netlogon.h"
@@ -56,30 +56,84 @@
  static const char *recycle_repository(vfs_handle_struct *handle)
  {
  	const char *tmp_str = NULL;
-@@ -267,6 +309,7 @@ static bool recycle_create_dir(vfs_handl
- 	char *tok_str;
- 	bool ret = False;
- 	char *saveptr;
-+	bool recycle_acl_is_set = False;
- 
- 	mode = recycle_directory_mode(handle);
- 
-@@ -313,11 +356,18 @@ static bool recycle_create_dir(vfs_handl
+@@ -257,7 +299,7 @@ static off_t recycle_get_file_size(vfs_h
+  * @param dname Directory tree to be created
+  * @return Returns True for success
+  **/
+-static bool recycle_create_dir(vfs_handle_struct *handle, const char *dname)
++static bool recycle_create_dir(vfs_handle_struct *handle, const char *dname, bool is_repo)
+ {
+ 	size_t len;
+ 	mode_t mode;
+@@ -313,6 +355,9 @@ static bool recycle_create_dir(vfs_handl
  				ret = False;
  				goto done;
  			}
-+			if (!recycle_acl_is_set) {
-+				if ( !lp_parm_bool(SNUM(handle->conn), "recycle", "preserveacl", False)
-+				     && !set_recycle_acl(handle, smb_fname, mode) ) {
-+					DBG_ERR("recycle: failed to prep ACL on %s\n", smb_fname->base_name);
-+				} 
++			if (is_repo && !set_recycle_acl(handle, smb_fname, recycle_directory_mode(handle))) {
++				DBG_ERR("recycle: failed to prep ACL on %s\n", smb_fname->base_name);
 +			}
  			TALLOC_FREE(smb_fname);
  		}
  		if (strlcat(new_dir, "/", len+1) >= len+1) {
- 			goto done;
- 		}
-+		recycle_acl_is_set = True;
- 		mode = recycle_subdir_mode(handle);
- 	}
+@@ -576,7 +621,7 @@ static int recycle_unlink(vfs_handle_str
+ 		DEBUG(10, ("recycle: Directory already exists\n"));
+ 	} else {
+ 		DEBUG(10, ("recycle: Creating directory %s\n", temp_name));
+-		if (recycle_create_dir(handle, temp_name) == False) {
++		if (recycle_create_dir(handle, temp_name, false) == False) {
+ 			DEBUG(3, ("recycle: Could not create directory, "
+ 				  "purging %s...\n",
+ 				  smb_fname_str_dbg(smb_fname)));
+@@ -658,8 +703,51 @@ done:
+ 	return rc;
+ }
  
++static int recycle_connect(struct vfs_handle_struct *handle,
++                            const char *service, const char *user)
++{
++	int ret = -1;
++	char *repository = NULL;
++	char *recycle_path = NULL;
++	repository = talloc_sub_advanced(NULL, lp_servicename(talloc_tos(), SNUM(handle->conn)),
++					handle->conn->session_info->unix_info->unix_name,
++					handle->conn->connectpath,
++					handle->conn->session_info->unix_token->gid,
++					handle->conn->session_info->unix_info->sanitized_username,
++					handle->conn->session_info->info->domain_name,
++					recycle_repository(handle));
++	ALLOC_CHECK(repository, done);
++	trim_char(repository, '\0', '/');
++
++	if(!repository || *(repository) == '\0') {
++		/*
++		 * In case repository is not set, return -1 on connect which will prevent users
++		 * from connecting to the share. Otherwise, deletion can result in unexpected
++		 * data loss. 
++		 */
++		DBG_ERR("recycle: repository path not set, files will be automatically deleted\n");
++		DBG_ERR("recycle: denying access to share\n");
++		errno = EINVAL;
++		goto done;
++	}
++	recycle_path = talloc_asprintf(talloc_tos(), "%s/%s", handle->conn->connectpath, repository);
++	if ( !lp_parm_bool(SNUM(handle->conn), "recycle", "preserveacl", False) &&
++	     !directory_exist(recycle_path) ) {
++		DBG_INFO("recycle_path is: [%s]\n", recycle_path);
++		if (!recycle_create_dir(handle, recycle_path, true)) {
++			DBG_ERR("Failed to create recycle path [%s]\n", recycle_path);
++		}
++	}
++	TALLOC_FREE(recycle_path);
++	ret = SMB_VFS_NEXT_CONNECT(handle, service, user);
++done:
++	TALLOC_FREE(repository);
++	return ret; 
++}
++
+ static struct vfs_fn_pointers vfs_recycle_fns = {
+-	.unlink_fn = recycle_unlink
++	.unlink_fn = recycle_unlink,
++	.connect_fn = recycle_connect
+ };
+ 
+ static_decl_vfs;
