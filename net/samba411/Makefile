@@ -3,7 +3,7 @@
 
 PORTNAME=			${SAMBA4_BASENAME}411
 PORTVERSION=			${SAMBA4_VERSION}
-PORTREVISION=			0
+PORTREVISION=			1
 CATEGORIES?=			net
 MASTER_SITES=			SAMBA/samba/stable SAMBA/samba/rc
 DISTNAME=			${SAMBA4_DISTNAME}
@@ -138,7 +138,7 @@ PLIST_SUB+=			CLUSTER="@comment "
 SUB_LIST+=			CLUSTER="@comment "
 # Needs ZFS to build, if not built in base we'll bring in ZoL
 .if !exists(/sbin/zpool)
-LIB_DEPENDS+=	zol>=0:sysutils/zol
+BUILD_DEPENDS+=			openzfs>=0:sysutils/openzfs
 .endif
 # XXX: Unconditional dependencies which can't be switched off(if present in the system)
 # popt
