@@ -1,6 +1,6 @@
---- initscript/freebsd/avahi-daemon.sh.in.orig	2017-07-10 10:14:59 UTC
-+++ initscript/freebsd/avahi-daemon.sh.in
-@@ -9,18 +9,22 @@
+--- initscript/freebsd/avahi-daemon.sh.in.orig	2017-07-10 03:14:59.135369946 -0700
++++ initscript/freebsd/avahi-daemon.sh.in	2019-08-22 10:24:18.947832743 -0700
+@@ -9,18 +9,24 @@
  # Avahi's mDNSResponder, a Zeroconf (Bonjour) service advertisement daemon.
  #
  
@@ -8,16 +8,18 @@
  avahi_daemon_flags=${avahi_daemon_flags-"-D"}
  
  . /etc/rc.subr
-+. %%GNOME_SUBR%%
-+
-+avahi_daemon_enable=${avahi_daemon_enable-${gnome_enable}}
++. /usr/local/etc/gnome.subr
  
++avahi_daemon_enable=${avahi_daemon_enable-${gnome_enable}}
++extra_commands="reload"
++
  name=avahi_daemon
 -rcvar=`set_rcvar`
 +rcvar=avahi_daemon_enable
  
  start_cmd=avahi_daemon_start
  stop_cmd=avahi_daemon_stop
++reload_cmd=avahi_daemon_reload
  
  avahi_daemon_bin=@sbindir@/avahi-daemon
 +command=${avahi_daemon_bin}
@@ -25,3 +27,15 @@
  
  avahi_daemon_start() {
      checkyesno avahi_daemon_enable && echo "Starting avahi-daemon." && \
+@@ -30,6 +36,11 @@ avahi_daemon_start() {
+ avahi_daemon_stop() {
+     checkyesno avahi_daemon_enable && echo "Stopping avahi-daemon." && \
+     	${avahi_daemon_bin} -k
++}
++
++avahi_daemon_reload() {
++    checkyesno avahi_daemon_enable && echo "Reloading avahi-daemon." && \
++        ${avahi_daemon_bin} -r
+ }
+ 
+ load_rc_config ${name}
