@@ -760,6 +760,7 @@ man/man8/winbindd.8.gz
 %%SAMBA4_BUNDLED_TDB%%bin/tdbtool
 %%SAMBA4_BUNDLED_CMOCKA%%lib/samba4/private/libcmocka-samba4.so
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb-cmdline-samba4.so
+%%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldbsamba-samba4.so
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb.so.2
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb.so.2.0.5
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb-key-value-samba4.so
@@ -768,7 +769,7 @@ man/man8/winbindd.8.gz
 %%SAMBA4_BUNDLED_TALLOC%%lib/samba4/private/libtalloc.so.2
 %%SAMBA4_BUNDLED_TALLOC%%lib/samba4/private/libtalloc.so.2.2.0
 %%SAMBA4_BUNDLED_TDB%%lib/samba4/private/libtdb.so.1
-%%SAMBA4_BUNDLED_TDB%%lib/samba4/private/libtdb.so.1.4.1
+%%SAMBA4_BUNDLED_TDB%%lib/samba4/private/libtdb.so.1.4.2
 %%SAMBA4_BUNDLED_TEVENT%%lib/samba4/private/libtevent.so.0
 %%SAMBA4_BUNDLED_TEVENT%%lib/samba4/private/libtevent.so.0.10.0
 %%SAMBA4_BUNDLED_LDB%%lib/shared-modules/ldb/asq.so
