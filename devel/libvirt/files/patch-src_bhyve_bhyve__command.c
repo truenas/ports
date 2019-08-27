@@ -1,6 +1,19 @@
 --- src/bhyve/bhyve_command.c.orig	2019-04-27 10:31:34 UTC
 +++ src/bhyve/bhyve_command.c
-@@ -236,8 +236,9 @@ bhyveBuildAHCIControllerArgStr(const virDomainDef *def
+@@ -228,6 +228,12 @@ bhyveBuildAHCIControllerArgStr(const virDomainDef *def
+                            _("unsupported disk device"));
+             goto error;
+         }
++        if (disk->blockio.logical_block_size) {
++            virBufferAsprintf(&device, ",sectorsize=%d", disk->blockio.logical_block_size);
++            if (disk->blockio.physical_block_size) {
++                virBufferAsprintf(&device, "/%d", disk->blockio.physical_block_size);
++            }
++        }
+         virBufferAddBuffer(&buf, &device);
+         virBufferFreeAndReset(&device);
+     }
+@@ -236,8 +242,9 @@ bhyveBuildAHCIControllerArgStr(const virDomainDef *def
          goto error;
 
      virCommandAddArg(cmd, "-s");
@@ -11,18 +24,36 @@
                             virBufferCurrentContent(&buf));
 
      ret = 0;
-@@ -311,8 +312,9 @@ bhyveBuildVirtIODiskArgStr(const virDomainDef *def ATT
+@@ -291,6 +298,7 @@ bhyveBuildVirtIODiskArgStr(const virDomainDef *def ATT
+                      virCommandPtr cmd)
+ {
+     const char *disk_source;
++    virBuffer opt = VIR_BUFFER_INITIALIZER;
+
+     if (virDomainDiskTranslateSourcePool(disk) < 0)
+         return -1;
+@@ -310,10 +318,17 @@ bhyveBuildVirtIODiskArgStr(const virDomainDef *def ATT
+
      disk_source = virDomainDiskGetSource(disk);
 
++    virBufferAsprintf(&opt, "%d:%d,virtio-blk,%s", disk->info.addr.pci.slot, disk->info.addr.pci.function, disk_source);
++
++    if (disk->blockio.logical_block_size) {
++        virBufferAsprintf(&opt, ",sectorsize=%d", disk->blockio.logical_block_size);
++        if (disk->blockio.physical_block_size) {
++            virBufferAsprintf(&opt, "/%d", disk->blockio.physical_block_size);
++        }
++     }
++
      virCommandAddArg(cmd, "-s");
 -    virCommandAddArgFormat(cmd, "%d:0,virtio-blk,%s",
-+    virCommandAddArgFormat(cmd, "%d:%d,virtio-blk,%s",
-                            disk->info.addr.pci.slot,
-+                           disk->info.addr.pci.function,
-                            disk_source);
+-                           disk->info.addr.pci.slot,
+-                           disk_source);
++    virCommandAddArgBuffer(cmd, &opt);
 
      return 0;
-@@ -383,17 +385,6 @@ bhyveBuildGraphicsArgStr(const virDomainDef *def,
+ }
+@@ -383,17 +398,6 @@ bhyveBuildGraphicsArgStr(const virDomainDef *def,
              goto error;
          }
 
@@ -40,7 +71,7 @@
          if (glisten->address) {
              escapeAddr = strchr(glisten->address, ':') != NULL;
              if (escapeAddr)
-@@ -415,6 +406,9 @@ bhyveBuildGraphicsArgStr(const virDomainDef *def,
+@@ -415,6 +419,9 @@ bhyveBuildGraphicsArgStr(const virDomainDef *def,
          }
 
          virBufferAsprintf(&opt, ":%d", graphics->data.vnc.port);
