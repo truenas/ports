@@ -422,10 +422,10 @@ index 0000000..000a2a6
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 0000000..0895952
+index 0000000..cb5574c
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,1736 @@
+@@ -0,0 +1,1778 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -1993,6 +1993,47 @@ index 0000000..0895952
 +}
 +#endif
 +
++static int ixnas_ntimes(vfs_handle_struct *handle,
++                                 const struct smb_filename *smb_fname,
++                                 struct smb_file_time *ft)
++{
++	int result = -1;
++	if (smb_fname->stream_name) {
++		errno = ENOENT;
++		return result;
++	}
++
++	if (ft != NULL) {
++		struct timespec ts[2];
++		if (null_timespec(ft->atime)) {
++			ft->atime= smb_fname->st.st_ex_atime;
++		}
++        
++                if (null_timespec(ft->mtime)) {
++			ft->mtime = smb_fname->st.st_ex_mtime;
++		}
++		if ((timespec_compare(&ft->atime,
++				      &smb_fname->st.st_ex_atime) == 0) &&
++		    (timespec_compare(&ft->mtime,
++				      &smb_fname->st.st_ex_mtime) == 0)) {
++			return 0;
++		}
++		if (null_timespec(ft->create_time)) {
++			ft->create_time = smb_fname->st.st_ex_btime;
++		}
++		ts[0] = ft->atime;
++		ts[1] = ft->create_time;
++		result = utimensat(AT_FDCWD, smb_fname->base_name, ts, 0);
++		if (timespec_compare(&ft->mtime, &ft->create_time) != 0) {
++			ts[1] = ft->mtime;
++			result = utimensat(AT_FDCWD, smb_fname->base_name, ts, 0);
++		}
++	} else {
++		result = utimensat(AT_FDCWD, smb_fname->base_name, NULL, 0);
++	}
++	return result;
++}
++
 +/********************************************************************
 + Optimization. Load parameters on connect. This allows us to enable
 + and disable portions of the large vfs module on demand.
@@ -2128,6 +2169,7 @@ index 0000000..0895952
 +	.set_dos_attributes_fn = ixnas_set_dos_attributes,
 +	.fset_dos_attributes_fn = ixnas_fset_dos_attributes,
 +	/* zfs_acl_enabled = true */
++	.ntimes_fn = ixnas_ntimes,
 +	.fget_nt_acl_fn = ixnas_fget_nt_acl,
 +	.get_nt_acl_fn = ixnas_get_nt_acl,
 +	.fset_nt_acl_fn = ixnas_fset_nt_acl,
