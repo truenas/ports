@@ -174,6 +174,7 @@
     SUBDIR += octopus
     SUBDIR += openbabel
     SUBDIR += openkim
+    SUBDIR += openkim-models
     SUBDIR += openmx
     SUBDIR += opensim-core
     SUBDIR += opensph
@@ -231,6 +232,8 @@
     SUBDIR += py-ase
     SUBDIR += py-avogadrolibs
     SUBDIR += py-cdo
+    SUBDIR += py-chainer
+    SUBDIR += py-chainer-chemistry
     SUBDIR += py-chempy
     SUBDIR += py-coards
     SUBDIR += py-dlib
@@ -278,6 +281,8 @@
     SUBDIR += py-scipy
     SUBDIR += py-scoria
     SUBDIR += py-spglib
+    SUBDIR += py-tensorflow
+    SUBDIR += py-tensorflow-estimator
     SUBDIR += py-veusz
     SUBDIR += py-ws2300
     SUBDIR += pybrain
@@ -326,8 +331,8 @@
     SUBDIR += vmd
     SUBDIR += voro++
     SUBDIR += wannier90
-    SUBDIR += wxmacmolplt
     SUBDIR += wwplot
+    SUBDIR += wxmacmolplt
     SUBDIR += xcrysden
     SUBDIR += xdrawchem
     SUBDIR += xfce4-equake-plugin

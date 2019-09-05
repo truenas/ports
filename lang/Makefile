@@ -34,7 +34,6 @@
     SUBDIR += chicken
     SUBDIR += chicken5
     SUBDIR += cim
-    SUBDIR += cint
     SUBDIR += cjs
     SUBDIR += cling
     SUBDIR += clips
@@ -53,8 +52,6 @@
     SUBDIR += diveintopython
     SUBDIR += dlang-tools
     SUBDIR += dlv
-    SUBDIR += dmd1
-    SUBDIR += dmd2
     SUBDIR += duktape
     SUBDIR += duktape-lib
     SUBDIR += ecl
@@ -93,6 +90,7 @@
     SUBDIR += fpc-rtl-extra
     SUBDIR += fpc-rtl-objpas
     SUBDIR += fpc-rtl-unicode
+    SUBDIR += fpc-source
     SUBDIR += fpc-units
     SUBDIR += fpc-utils
     SUBDIR += fsharp
@@ -133,7 +131,6 @@
     SUBDIR += go-devel
     SUBDIR += go14
     SUBDIR += gomacro
-    SUBDIR += gprolog
     SUBDIR += gravity
     SUBDIR += groovy
     SUBDIR += gscheme
@@ -168,6 +165,7 @@
     SUBDIR += jython
     SUBDIR += kawa
     SUBDIR += kf5-kross
+    SUBDIR += kotlin
     SUBDIR += kross-interpreters
     SUBDIR += kturtle
     SUBDIR += lafontaine
@@ -292,7 +290,6 @@
     SUBDIR += polyml
     SUBDIR += ponyc
     SUBDIR += ptoc
-    SUBDIR += pure
     SUBDIR += py-hy
     SUBDIR += py-mx-base
     SUBDIR += py-prolog
@@ -364,7 +361,6 @@
     SUBDIR += starlogo
     SUBDIR += stldoc
     SUBDIR += swi-pl
-    SUBDIR += swift
     SUBDIR += tcbasic
     SUBDIR += tcc
     SUBDIR += tcl-manual

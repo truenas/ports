@@ -3,7 +3,7 @@
 
 PORTNAME=	luxrender
 DISTVERSION?=	1.6
-PORTREVISION=	14
+PORTREVISION=	15
 CATEGORIES=	graphics
 MASTER_SITES=	https://bitbucket.org/luxrender/lux/get/ \
 		https://bitbucket.org/luxrender/luxrays/get/:lr
@@ -17,6 +17,8 @@ COMMENT=	Physically based and unbiased rendering system
 LICENSE=	GPLv3
 
 BROKEN=		fails to build with boost 1.70, see bug 236599
+DEPRECATED=	Depends on expiring graphics/embree
+EXPIRATION_DATE=	2019-09-04
 
 LIB_DEPENDS=	${PY_BOOST} \
 		libfftw3.so:math/fftw3 \

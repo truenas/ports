@@ -74,7 +74,7 @@ CONFIGURE_OUTSOURCE=	yes
 
 BUNDLE_LIBS=	yes
 
-BUILD_DEPENDS+=	${RUST_DEFAULT}>=1.34:lang/${RUST_DEFAULT}
+BUILD_DEPENDS+=	${RUST_DEFAULT}>=1.35:lang/${RUST_DEFAULT}
 
 .if ${MOZILLA_VER:R:R} >= 56
 BUILD_DEPENDS+=	llvm${LLVM_DEFAULT}>0:devel/llvm${LLVM_DEFAULT}
@@ -247,7 +247,8 @@ RUN_DEPENDS+=	ffmpeg>=0.8,1:multimedia/ffmpeg
 .endif
 
 .if ${PORT_OPTIONS:MGCONF}
-USE_GNOME+=		gconf2
+# XXX USE_GNOME+=gconf2:build is not supported
+BUILD_DEPENDS+=	${LOCALBASE}/lib/libgconf-2.so:devel/gconf2
 MOZ_OPTIONS+=	--enable-gconf
 .else
 MOZ_OPTIONS+=	--disable-gconf

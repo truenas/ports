@@ -2,19 +2,22 @@
 # $FreeBSD$
 
 PORTNAME=	rust
-PORTVERSION?=	1.36.0
+PORTVERSION?=	1.37.0
 PORTREVISION?=	0
 CATEGORIES=	lang
 MASTER_SITES=	https://static.rust-lang.org/dist/:src \
 		https://static.rust-lang.org/dist/:rust_bootstrap \
 		LOCAL/tobik/rust:rust_bootstrap \
 		https://static.rust-lang.org/dist/:cargo_bootstrap \
-		LOCAL/tobik/rust:cargo_bootstrap
+		LOCAL/tobik/rust:cargo_bootstrap \
+		https://github.com/llvm/llvm-project/releases/download/llvmorg-8.0.1/:compiler_rt
 DISTNAME?=	${PORTNAME}c-${PORTVERSION}-src
 DISTFILES?=	${NIGHTLY_SUBDIR}${DISTNAME}${EXTRACT_SUFX}:src \
 		${RUSTC_BOOTSTRAP}${BOOTSTRAPS_SUFFIX}.tar.gz:rust_bootstrap \
 		${RUST_STD_BOOTSTRAP}${BOOTSTRAPS_SUFFIX}.tar.gz:rust_bootstrap \
-		${CARGO_BOOTSTRAP}${BOOTSTRAPS_SUFFIX}.tar.gz:cargo_bootstrap
+		${CARGO_BOOTSTRAP}${BOOTSTRAPS_SUFFIX}.tar.gz:cargo_bootstrap \
+		${DISTFILES_${ARCH}}
+DISTFILES_armv6=	compiler-rt-8.0.1.src.tar.xz:compiler_rt
 DIST_SUBDIR?=	rust
 EXTRACT_ONLY?=	${DISTFILES:N*\:*bootstrap:C/:.*//}
 
@@ -38,15 +41,15 @@ ONLY_FOR_ARCHS_REASON=	requires prebuilt bootstrap compiler
 CONFLICTS_INSTALL?=	rust-nightly
 
 # See WRKSRC/src/stage0.txt for this date and version values.
-BOOTSTRAPS_DATE?=		2019-05-23
+BOOTSTRAPS_DATE?=		2019-07-04
 BOOTSTRAPS_SUFFIX?=		${BOOTSTRAPS_SUFFIX_${ARCH}}
 BOOTSTRAPS_SUFFIX_powerpc64?=	-elfv1
 
-RUST_BOOTSTRAP_VERSION?=	1.35.0
+RUST_BOOTSTRAP_VERSION?=	1.36.0
 RUSTC_BOOTSTRAP=		${BOOTSTRAPS_DATE_${ARCH}:U${BOOTSTRAPS_DATE}}/rustc-${RUST_BOOTSTRAP_VERSION_${ARCH}:U${RUST_BOOTSTRAP_VERSION}}-${RUST_TARGET}
 RUST_STD_BOOTSTRAP=		${BOOTSTRAPS_DATE_${ARCH}:U${BOOTSTRAPS_DATE}}/rust-std-${RUST_BOOTSTRAP_VERSION_${ARCH}:U${RUST_BOOTSTRAP_VERSION}}-${RUST_TARGET}
 
-CARGO_BOOTSTRAP_VERSION?=	0.36.0
+CARGO_BOOTSTRAP_VERSION?=	0.37.0
 CARGO_BOOTSTRAP=		${BOOTSTRAPS_DATE_${ARCH}:U${BOOTSTRAPS_DATE}}/cargo-${CARGO_BOOTSTRAP_VERSION_${ARCH}:U${CARGO_BOOTSTRAP_VERSION}}-${RUST_TARGET}
 
 CARGO_VENDOR_DIR?=		${WRKSRC}/vendor
@@ -107,6 +110,9 @@ post-extract:
 		${WRKSRC}/build/cache/${RUST_STD_BOOTSTRAP}.tar.gz
 	${LN} -sf ${DISTDIR}/${DIST_SUBDIR}/${CARGO_BOOTSTRAP}${BOOTSTRAPS_SUFFIX}.tar.gz \
 		${WRKSRC}/build/cache/${CARGO_BOOTSTRAP}.tar.gz
+.if ${ARCH} == armv6
+	${LN} -sf ${WRKDIR}/compiler-rt-8.0.1.src ${WRKSRC}/src/llvm-project/compiler-rt
+.endif
 
 post-patch:
 	@${REINPLACE_CMD} 's,gdb,${LOCALBASE}/bin/gdb,' ${WRKSRC}/src/etc/rust-gdb
@@ -130,7 +136,7 @@ post-patch-SOURCES-off:
 	@${REINPLACE_CMD} -e 's/config.tools.*"src".*/false;/' \
 		${WRKSRC}/src/bootstrap/install.rs
 
-.if defined(WITH_CCACHE_BUILD) && !defined(NO_CCACHE)
+.if defined(WITH_CCACHE_BUILD) && !defined(NO_CCACHE) && !defined(NOCCACHE)
 CCACHE_VALUE=	"${CCACHE_WRAPPER_PATH:C,/libexec/ccache$,,}/bin/ccache"
 .else
 CCACHE_VALUE=	false
@@ -243,9 +249,12 @@ makesum:
 .for arch in ${ONLY_FOR_ARCHS:O:[2..-1]}
 	${MAKE} -D_RUST_MAKESUM_GUARD makesum ARCH=${arch} DISTINFO_FILE=${DISTINFO_FILE}.${arch}
 	${GREP} ${RUST_ARCH_${arch}} ${DISTINFO_FILE}.${arch} >> ${DISTINFO_FILE}
+.for file in ${DISTFILES_${arch}}
+	${GREP} ${file:S,:, ,:[1]} ${DISTINFO_FILE}.${arch} >> ${DISTINFO_FILE}
+.endfor
 	${RM} ${DISTINFO_FILE}.${arch}
 .endfor
-	${MAKE} -D_RUST_MAKESUM_GUARD makesum ARCH=powerpc64 BOOTSTRAPS_SUFFIX="" DISTINFO_FILE=${DISTINFO_FILE}.powerpc64-elfv2
+	${MAKE} -D_RUST_MAKESUM_GUARD makesum ARCH=powerpc64 BOOTSTRAPS_SUFFIX="-elfv2" DISTINFO_FILE=${DISTINFO_FILE}.powerpc64-elfv2
 	${GREP} ${RUST_ARCH_powerpc64} ${DISTINFO_FILE}.powerpc64-elfv2 >> ${DISTINFO_FILE}
 	${RM} ${DISTINFO_FILE}.powerpc64-elfv2
 .endif

@@ -2,6 +2,7 @@
 
 PORTNAME=	xournalpp
 DISTVERSION=	1.0.13-nightly.20190722
+PORTREVISION=	3
 CATEGORIES=	graphics
 
 MAINTAINER=	yuri@FreeBSD.org

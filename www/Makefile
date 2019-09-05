@@ -158,7 +158,6 @@
     SUBDIR += faup
     SUBDIR += fcgi
     SUBDIR += fcgiwrap
-    SUBDIR += feedjack
     SUBDIR += ffproxy
     SUBDIR += ffsend
     SUBDIR += fgallery
@@ -235,7 +234,6 @@
     SUBDIR += habari
     SUBDIR += halberd
     SUBDIR += hastymail2-devel
-    SUBDIR += havp
     SUBDIR += helma
     SUBDIR += hiawatha
     SUBDIR += hiawatha-monitor
@@ -503,6 +501,7 @@
     SUBDIR += opera-linuxplugins
     SUBDIR += orangehrm
     SUBDIR += osrm-backend
+    SUBDIR += ot-recorder
     SUBDIR += otrs
     SUBDIR += otter-browser
     SUBDIR += owncloud
@@ -1308,7 +1307,6 @@
     SUBDIR += p5-WebService-Linode
     SUBDIR += p5-WebService-MoviePosterDB
     SUBDIR += p5-WebService-MusicBrainz
-    SUBDIR += p5-WebService-MusicBrainz0
     SUBDIR += p5-WebService-NoPaste
     SUBDIR += p5-WebService-Pushover
     SUBDIR += p5-WebService-Rakuten
@@ -1497,6 +1495,8 @@
     SUBDIR += py-dj22-django-cors-headers
     SUBDIR += py-dj22-django-debug-toolbar
     SUBDIR += py-dj22-django-filter
+    SUBDIR += py-dj22-django-formset-js-improved
+    SUBDIR += py-dj22-django-jquery-js
     SUBDIR += py-dj22-django-js-asset
     SUBDIR += py-dj22-django-mptt
     SUBDIR += py-dj22-django-prometheus
@@ -1505,8 +1505,10 @@
     SUBDIR += py-dj22-django-taggit-serializer
     SUBDIR += py-dj22-django-timezone-field
     SUBDIR += py-dj22-django-treebeard
+    SUBDIR += py-dj22-django_csp
     SUBDIR += py-dj22-djangorestframework
     SUBDIR += py-dj22-drf-yasg
+    SUBDIR += py-dj22-swapper
     SUBDIR += py-django
     SUBDIR += py-django-allauth
     SUBDIR += py-django-annotations
@@ -1530,6 +1532,7 @@
     SUBDIR += py-django-configurations
     SUBDIR += py-django-constance
     SUBDIR += py-django-contact-form
+    SUBDIR += py-django-context-decorator
     SUBDIR += py-django-contrib-comments
     SUBDIR += py-django-cors-headers
     SUBDIR += py-django-countries
@@ -1546,13 +1549,16 @@
     SUBDIR += py-django-guardian
     SUBDIR += py-django-happenings
     SUBDIR += py-django-haystack
+    SUBDIR += py-django-hierarkey
     SUBDIR += py-django-hijack
     SUBDIR += py-django-htmlmin
+    SUBDIR += py-django-i18nfield
     SUBDIR += py-django-js-asset
     SUBDIR += py-django-json-rpc
     SUBDIR += py-django-jsonfield
     SUBDIR += py-django-jsonfield2
     SUBDIR += py-django-ldapdb
+    SUBDIR += py-django-libsass
     SUBDIR += py-django-markdownx
     SUBDIR += py-django-markwhat
     SUBDIR += py-django-mezzanine
@@ -1560,6 +1566,7 @@
     SUBDIR += py-django-mezzanine-grappelli
     SUBDIR += py-django-model-utils
     SUBDIR += py-django-modelcluster
+    SUBDIR += py-django-modelcluster4
     SUBDIR += py-django-modern-rpc
     SUBDIR += py-django-mptt
     SUBDIR += py-django-netfields
@@ -1691,6 +1698,7 @@
     SUBDIR += py-hyperframe
     SUBDIR += py-hyperlink
     SUBDIR += py-imdbpy
+    SUBDIR += py-inlinestyler
     SUBDIR += py-instabot
     SUBDIR += py-internetarchive
     SUBDIR += py-jonpy
@@ -1838,6 +1846,7 @@
     SUBDIR += py-rhodecode
     SUBDIR += py-rollbar
     SUBDIR += py-routes
+    SUBDIR += py-rules
     SUBDIR += py-scgi
     SUBDIR += py-scrapy
     SUBDIR += py-seafdav
@@ -1869,6 +1878,7 @@
     SUBDIR += py-unit
     SUBDIR += py-url
     SUBDIR += py-urlgrabber
+    SUBDIR += py-urlman
     SUBDIR += py-urlobject
     SUBDIR += py-urlwatch
     SUBDIR += py-user_agent
@@ -1884,6 +1894,7 @@
     SUBDIR += py-webunit
     SUBDIR += py-werkzeug
     SUBDIR += py-wfuzz
+    SUBDIR += py-whitenoise
     SUBDIR += py-wikipedia
     SUBDIR += py-wikitools
     SUBDIR += py-ws4py
@@ -1942,9 +1953,11 @@
     SUBDIR += rubygem-ace-rails-ap
     SUBDIR += rubygem-actioncable5
     SUBDIR += rubygem-actioncable50
+    SUBDIR += rubygem-actioncable52
     SUBDIR += rubygem-actionpack4
     SUBDIR += rubygem-actionpack5
     SUBDIR += rubygem-actionpack50
+    SUBDIR += rubygem-actionpack52
     SUBDIR += rubygem-activeresource4
     SUBDIR += rubygem-activeresource5
     SUBDIR += rubygem-acts-as-taggable-on
@@ -1959,6 +1972,8 @@
     SUBDIR += rubygem-amazon-ecs
     SUBDIR += rubygem-anemone
     SUBDIR += rubygem-asana
+    SUBDIR += rubygem-async-http
+    SUBDIR += rubygem-async-rest
     SUBDIR += rubygem-async_sinatra
     SUBDIR += rubygem-atlassian-jwt
     SUBDIR += rubygem-best_in_place
@@ -1971,6 +1986,7 @@
     SUBDIR += rubygem-carrierwave
     SUBDIR += rubygem-cgi_multipart_eof_fix
     SUBDIR += rubygem-chosen-rails
+    SUBDIR += rubygem-chromedriver-helper
     SUBDIR += rubygem-cookiejar
     SUBDIR += rubygem-crass
     SUBDIR += rubygem-cuba
@@ -2013,6 +2029,7 @@
     SUBDIR += rubygem-gollum-rugged_adapter
     SUBDIR += rubygem-gon-rails5
     SUBDIR += rubygem-gon-rails50
+    SUBDIR += rubygem-gon-rails52
     SUBDIR += rubygem-hackpad-cli
     SUBDIR += rubygem-haml
     SUBDIR += rubygem-haml-coderay
@@ -2032,8 +2049,8 @@
     SUBDIR += rubygem-http
     SUBDIR += rubygem-http-cookie
     SUBDIR += rubygem-http-form_data
-    SUBDIR += rubygem-http_router
     SUBDIR += rubygem-http3
+    SUBDIR += rubygem-http_router
     SUBDIR += rubygem-httparty
     SUBDIR += rubygem-httpclient
     SUBDIR += rubygem-httpi
@@ -2059,13 +2076,16 @@
     SUBDIR += rubygem-kaminari-actionview
     SUBDIR += rubygem-kaminari-actionview-rails5
     SUBDIR += rubygem-kaminari-actionview-rails50
+    SUBDIR += rubygem-kaminari-actionview-rails52
     SUBDIR += rubygem-kaminari-activerecord
     SUBDIR += rubygem-kaminari-activerecord-rails5
     SUBDIR += rubygem-kaminari-activerecord-rails50
+    SUBDIR += rubygem-kaminari-activerecord-rails52
     SUBDIR += rubygem-kaminari-core
     SUBDIR += rubygem-kaminari-rails4
     SUBDIR += rubygem-kaminari-rails5
     SUBDIR += rubygem-kaminari-rails50
+    SUBDIR += rubygem-kaminari-rails52
     SUBDIR += rubygem-kensa
     SUBDIR += rubygem-kubeclient
     SUBDIR += rubygem-layout_yullio_generator
@@ -2074,6 +2094,7 @@
     SUBDIR += rubygem-link_header
     SUBDIR += rubygem-lograge
     SUBDIR += rubygem-lograge-rails5
+    SUBDIR += rubygem-lograge-rails52
     SUBDIR += rubygem-maruku
     SUBDIR += rubygem-mechanize
     SUBDIR += rubygem-merb-assets
@@ -2097,6 +2118,10 @@
     SUBDIR += rubygem-pagerduty
     SUBDIR += rubygem-passenger
     SUBDIR += rubygem-platform-api
+    SUBDIR += rubygem-protocol-hpack
+    SUBDIR += rubygem-protocol-http
+    SUBDIR += rubygem-protocol-http1
+    SUBDIR += rubygem-protocol-http2
     SUBDIR += rubygem-puma
     SUBDIR += rubygem-puma_worker_killer
     SUBDIR += rubygem-pusher-client
@@ -2125,6 +2150,7 @@
     SUBDIR += rubygem-rails4
     SUBDIR += rubygem-rails5
     SUBDIR += rubygem-rails50
+    SUBDIR += rubygem-rails52
     SUBDIR += rubygem-rails_12factor
     SUBDIR += rubygem-rails_autolink
     SUBDIR += rubygem-rails_serve_static_assets
@@ -2132,6 +2158,7 @@
     SUBDIR += rubygem-railties4
     SUBDIR += rubygem-railties5
     SUBDIR += rubygem-railties50
+    SUBDIR += rubygem-railties52
     SUBDIR += rubygem-raindrops
     SUBDIR += rubygem-ramaze
     SUBDIR += rubygem-raphael-rails
@@ -2144,10 +2171,12 @@
     SUBDIR += rubygem-redis-rails
     SUBDIR += rubygem-redis-rails-rails5
     SUBDIR += rubygem-redis-rails-rails50
+    SUBDIR += rubygem-redis-rails-rails52
     SUBDIR += rubygem-redmine_acts_as_taggable_on
     SUBDIR += rubygem-responders
     SUBDIR += rubygem-responders-rails5
-    SUBDIR += rubygem-responders2-rails5
+    SUBDIR += rubygem-responders-rails52
+    SUBDIR += rubygem-responders2-rails52
     SUBDIR += rubygem-rest-client
     SUBDIR += rubygem-rfacebook
     SUBDIR += rubygem-rfeedfinder
@@ -2185,8 +2214,6 @@
     SUBDIR += rubygem-totoridipjp
     SUBDIR += rubygem-tumblr_client
     SUBDIR += rubygem-turbolinks
-    SUBDIR += rubygem-turbolinks-rails5
-    SUBDIR += rubygem-turbolinks-rails50
     SUBDIR += rubygem-turbolinks-source
     SUBDIR += rubygem-typhoeus
     SUBDIR += rubygem-uglifier
@@ -2198,8 +2225,9 @@
     SUBDIR += rubygem-url_mount
     SUBDIR += rubygem-vegas
     SUBDIR += rubygem-wasabi
+    SUBDIR += rubygem-webdrivers
     SUBDIR += rubygem-webmock
-    SUBDIR += rubygem-webpack-rails-rails5
+    SUBDIR += rubygem-webpack-rails-rails52
     SUBDIR += rubygem-webrobots
     SUBDIR += rubygem-websocket
     SUBDIR += rubygem-websocket-driver
@@ -2394,6 +2422,7 @@
     SUBDIR += validator
     SUBDIR += varnish-libvmod-awsrest
     SUBDIR += varnish-libvmod-digest
+    SUBDIR += varnish-libvmod-dynamic
     SUBDIR += varnish-libvmod-maxminddb
     SUBDIR += varnish-modules
     SUBDIR += varnish-nagios
@@ -2441,6 +2470,7 @@
     SUBDIR += wsdlpull
     SUBDIR += wsmake
     SUBDIR += wt
+    SUBDIR += wt3
     SUBDIR += wuzz
     SUBDIR += www6to4
     SUBDIR += wwwoffle

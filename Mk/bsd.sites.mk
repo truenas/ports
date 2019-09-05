@@ -544,7 +544,7 @@ check-makevars::
 	@${FALSE}
 .      endif
 .    endfor
-GL_SITE+=	${GL_TUPLE:C@^(([^:]*://[^:/]*(:[0-9]{1,5})?(/[^:]*[^/])?:)?)([^:]*):([^:]*):([^:]*)(:[^:/]*)((/.*)?)@\1\8@}
+GL_SITE+=	${GL_TUPLE:C@^(([^:]*://[^:/]*(:[0-9]{1,5})?(/[^:]*[^/])?:)?)([^:]*):([^:]*):([^:]*)(:[^:/]*)((/.*)?)@\1\8@:S@::@:@}
 GL_ACCOUNT+=	${GL_TUPLE:C@^(([^:]*://[^:/]*(:[0-9]{1,5})?(/[^:]*[^/])?:)?)([^:]*):([^:]*):([^:]*)(:[^:/]*)((/.*)?)@\5\8@}
 GL_PROJECT+=	${GL_TUPLE:C@^(([^:]*://[^:/]*(:[0-9]{1,5})?(/[^:]*[^/])?:)?)([^:]*):([^:]*):([^:]*)(:[^:/]*)((/.*)?)@\6\8@}
 GL_COMMIT+=	${GL_TUPLE:C@^(([^:]*://[^:/]*(:[0-9]{1,5})?(/[^:]*[^/])?:)?)([^:]*):([^:]*):([^:]*)(:[^:/]*)((/.*)?)@\7\8@}
@@ -855,15 +855,12 @@ MASTER_SITE_MYSQL+= \
 
 .if !defined(IGNORE_MASTER_SITE_NETBSD)
 MASTER_SITE_NETBSD+= \
-	https://ftp.netbsd.org/pub/NetBSD/packages/distfiles/%SUBDIR%/ \
-	ftp://ftp.iastate.edu/pub/netbsd/packages/distfiles/%SUBDIR%/ \
-	ftp://ftp.plig.net/pub/NetBSD/packages/distfiles/%SUBDIR%/ \
-	ftp://ftp.proxad.net/mirrors/ftp.netbsd.org/packages/distfiles/%SUBDIR%/ \
-	ftp://ftp.unina.it/pub/Unix/NetBSD/packages/distfiles/%SUBDIR%/ \
-	ftp://ftp.uninett.no/bsd/unix/NetBSD/packages/distfiles/%SUBDIR%/ \
-	ftp://sunsite.uio.no/bsd/unix/NetBSD/packages/distfiles/%SUBDIR%/ \
-	ftp://ftp.demon.co.uk/pub/mirrors/NetBSD/packages/distfiles/%SUBDIR%/ \
-	ftp://ftp.funet.fi/pub/NetBSD/packages/distfiles/%SUBDIR%/
+	https://ftp.netbsd.org/pub/pkgsrc/distfiles/%SUBDIR%/ \
+	http://ftp.fr.netbsd.org/pub/pkgsrc/%%SUBDIR%%/ \
+	ftp://ftp2.fr.netbsd.org/pub/pkgsrc/%%SUBDIR%%/ \
+	ftp://ftp3.de.netbsd.org/pub/pkgsrc/%%SUBDIR%%/ \
+	ftp://ftp2.jp.netbsd.org/pub/pkgsrc/%%SUBDIR%%/ \
+	ftp://ftp7.jp.netbsd.org/pub/pkgsrc/%%SUBDIR%%/
 .endif
 
 .if !defined(IGNORE_MASTER_SITE_NETLIB)
@@ -1189,23 +1186,16 @@ MASTER_SITE_XFCE+= \
 .if !defined(IGNORE_MASTER_SITE_XORG)
 MASTER_SITE_XORG+= \
 	https://xorg.freedesktop.org/releases/%SUBDIR%/ \
-	http://xorg.mirrors.pair.com/%SUBDIR%/ \
-	http://mirror.us.leaseweb.net/xorg/%SUBDIR%/ \
 	https://mirror.csclub.uwaterloo.ca/x.org/%SUBDIR%/ \
 	https://artfiles.org/x.org/pub/%SUBDIR%/ \
 	https://ftp.gwdg.de/pub/x11/x.org/pub/%SUBDIR%/ \
 	https://mi.mirror.garr.it/mirrors/x.org/%SUBDIR%/ \
-	http://mirror.switch.ch/ftp/mirror/X11/pub/%SUBDIR%/ \
 	https://mirrors.ircam.fr/pub/x.org/%SUBDIR%/ \
 	https://www.mirrorservice.org/sites/ftp.x.org/pub/%SUBDIR%/ \
-	http://www.portal-to-web.de/pub/mirrors/x.org/%SUBDIR%/ \
-	http://x.cybermirror.org/%SUBDIR%/ \
-	https://x.europnews.de/pub/%SUBDIR%/ \
-	http://xorg.mirror.solnet.ch/pub/%SUBDIR%/ \
 	https://mirror.nl.leaseweb.net/xorg/%SUBDIR%/ \
-	http://mirror.de.leaseweb.net/xorg/%SUBDIR%/ \
-	http://mirrors.go-part.com/xorg/%SUBDIR%/ \
 	https://ftp.yz.yamagata-u.ac.jp/pub/X11/x.org/%SUBDIR%/ \
+	http://piotrkosoft.net/pub/mirrors/ftp.x.org/pub/%SUBDIR%/ \
+	http://xorg.mirrors.pair.com/%SUBDIR%/ \
 	http://ftp.kaist.ac.kr/x.org/%SUBDIR%/
 .endif
 

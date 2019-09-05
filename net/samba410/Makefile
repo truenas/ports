@@ -31,7 +31,7 @@ EXTRA_PATCHES+=			${PATCHDIR}/0001-add-wb-status-cmd.patch:-p1
 
 SAMBA4_BASENAME=		samba
 SAMBA4_PORTNAME=		${SAMBA4_BASENAME}4
-SAMBA4_VERSION=			4.10.6
+SAMBA4_VERSION=			4.10.8
 SAMBA4_DISTNAME=		${SAMBA4_BASENAME}-${SAMBA4_VERSION:S|.p|pre|:S|.r|rc|:S|.t|tp|:S|.a|alpha|}
 
 WRKSRC?=			${WRKDIR}/${DISTNAME}
@@ -100,18 +100,23 @@ OPTIONS_SUB=			yes
 OPTIONS_DEFINE=			AD_DC ADS DEBUG DOCS FAM LDAP LIBZFS WSDD\
 				QUOTAS SYSLOG UTMP
 # Make those default options
-OPTIONS_DEFAULT:=		${OPTIONS_DEFINE}
+OPTIONS_DEFAULT:=		${OPTIONS_DEFINE} GSSAPI_BUILTIN AVAHI
 # This shouldn't be default in the release
 OPTIONS_DEFINE+=		DEVELOPER MANDOC
 
 OPTIONS_DEFINE_amd64=		AESNI
 OPTIONS_DEFAULT_amd64=		AESNI
 
-OPTIONS_DEFINE+=		CUPS GPGME NTVFS SPOTLIGHT WSDD
+OPTIONS_DEFINE+=		CLUSTER CUPS GLUSTERFS GPGME NTVFS SPOTLIGHT
+#OPTIONS_DEFINE+=		MEMORY_DEBUG
 
-OPTIONS_RADIO=			DNS ZEROCONF
-OPTIONS_RADIO_DNS=		NSUPDATE BIND911
-OPTIONS_RADIO_ZEROCONF=		MDNSRESPONDER AVAHI
+OPTIONS_SINGLE=			GSSAPI ZEROCONF
+# GSSAPI_HEIMDAL
+OPTIONS_SINGLE_GSSAPI=		GSSAPI_BUILTIN GSSAPI_MIT
+OPTIONS_SINGLE_ZEROCONF=	AVAHI MDNSRESPONDER
+
+OPTIONS_RADIO=			DNS
+OPTIONS_RADIO_DNS=		NSUPDATE BIND911 BIND914
 ##############################################################################
 AD_DC_DESC=			Active Directory Domain Controller
 ADS_DESC=			Active Directory client(implies LDAP)
@@ -133,6 +138,7 @@ QUOTAS_DESC=			Disk quota
 UTMP_DESC=			UTMP accounting
 
 BIND911_DESC=			Use Bind 9.11 as AD DC DNS server frontend
+BIND914_DESC=			Use Bind 9.14 as AD DC DNS server frontend
 NSUPDATE_DESC=			Use samba NSUPDATE utility for AD DC
 ##############################################################################
 PLIST_SUB+=			CLUSTER="@comment "
@@ -164,15 +170,15 @@ SAMBA4_BUNDLED_LIBS+=		!libarchive
 BUILD_DEPENDS+=			libarchive>=3.1.2:archivers/libarchive
 RUN_DEPENDS+=			libarchive>=3.1.2:archivers/libarchive
 ### Bundled libraries
-SAMBA4_BUNDLED_CMOCKA=		yes
-SAMBA4_BUNDLED_TALLOC=		yes
-SAMBA4_BUNDLED_TEVENT=		yes
-SAMBA4_BUNDLED_TDB=		yes
-SAMBA4_BUNDLED_LDB=		yes
-SAMBA4_LDB=			14
+SAMBA4_BUNDLED_CMOCKA?=		no
+SAMBA4_BUNDLED_TALLOC?=		no
+SAMBA4_BUNDLED_TEVENT?=		no
+SAMBA4_BUNDLED_TDB?=		no
+SAMBA4_BUNDLED_LDB?=		yes
 # cmocka
 .if defined(SAMBA4_BUNDLED_CMOCKA)
 SAMBA4_BUNDLED_LIBS+=		cmocka
+SAMBA4_BUILTIN_LIBS+=		cmocka
 CONFLICTS+=			cmocka-1.*
 PLIST_SUB+=			SAMBA4_BUNDLED_CMOCKA=""
 SUB_LIST+=			SAMBA4_BUNDLED_CMOCKA=""
@@ -186,7 +192,8 @@ SUB_LIST+=			SAMBA4_BUNDLED_CMOCKA="@comment "
 # talloc
 .if defined(SAMBA4_BUNDLED_TALLOC)
 SAMBA4_BUNDLED_LIBS+=		talloc
-CONFLICTS+=			talloc-2.*
+SAMBA4_BUILTIN_LIBS+=		talloc
+CONFLICTS+=			talloc-* talloc1-*
 PLIST_SUB+=			SAMBA4_BUNDLED_TALLOC=""
 SUB_LIST+=			SAMBA4_BUNDLED_TALLOC=""
 .else
@@ -199,7 +206,8 @@ SUB_LIST+=			SAMBA4_BUNDLED_TALLOC="@comment "
 # tevent
 .if defined(SAMBA4_BUNDLED_TEVENT)
 SAMBA4_BUNDLED_LIBS+=		tevent
-CONFLICTS+=			tevent-0.*
+SAMBA4_BUILTIN_LIBS+=		tevent
+CONFLICTS+=			tevent-* tevent1-*
 PLIST_SUB+=			SAMBA4_BUNDLED_TEVENT=""
 SUB_LIST+=			SAMBA4_BUNDLED_TEVENT=""
 .else
@@ -212,7 +220,8 @@ SUB_LIST+=			SAMBA4_BUNDLED_TEVENT="@comment "
 # tdb
 .if defined(SAMBA4_BUNDLED_TDB)
 SAMBA4_BUNDLED_LIBS+=		tdb
-CONFLICTS+=			tdb-1.*
+SAMBA4_BUILTIN_LIBS+=		tdb
+CONFLICTS+=			tdb-* tdb1-*
 PLIST_SUB+=			SAMBA4_BUNDLED_TDB=""
 SUB_LIST+=			SAMBA4_BUNDLED_TDB=""
 .else
@@ -223,10 +232,10 @@ PLIST_SUB+=			SAMBA4_BUNDLED_TDB="@comment "
 SUB_LIST+=			SAMBA4_BUNDLED_TDB="@comment "
 .endif
 # ldb
-.if defined(SAMBA4_BUNDLED_LDB) || !defined(SAMBA4_LDB)
+.if defined(SAMBA4_BUNDLED_LDB) && ${SAMBA4_BUNDLED_LDB} == yes
 SAMBA4_BUNDLED_LDB=		yes
 SAMBA4_BUNDLED_LIBS+=		ldb
-CONFLICTS+=			ldb-1.* ldb1[234]-1.*
+SAMBA4_BUILTIN_LIBS+=		ldb
 PLIST_SUB+=			SAMBA4_BUNDLED_LDB=""
 SUB_LIST+=			SAMBA4_BUNDLED_LDB=""
 .else
@@ -244,12 +253,18 @@ BUILD_DEPENDS+=			ldb>=1.1.29:databases/ldb
 RUN_DEPENDS+=			ldb>=1.1.29:databases/ldb
 .       endif
 SAMBA4_BUNDLED_LIBS+=		!ldb
+BUILD_DEPENDS+=			ldb15>=1.5.4:databases/ldb15
+RUN_DEPENDS+=			ldb15>=1.5.4:databases/ldb15
 PLIST_SUB+=			SAMBA4_BUNDLED_LDB="@comment "
 SUB_LIST+=			SAMBA4_BUNDLED_LDB="@comment "
 .endif
 
-.if defined(SAMBA4_BUNDLED_TALLOC) || defined(SAMBA4_BUNDLED_TEVENT) || defined(SAMBA4_BUNDLED_TDB)
+.if (defined(SAMBA4_BUNDLED_TALLOC) && ${SAMBA4_BUNDLED_TEVENT} == yes) \
+	|| (defined(SAMBA4_BUNDLED_TDB) && ${SAMBA4_BUNDLED_TDB} == yes) \
+	|| (defined(SAMBA4_BUNDLED_LDB) && ${SAMBA4_BUNDLED_LDB} == yes) \
+	|| (defined(SAMBA4_BUNDLED_TEVENT) && ${SAMBA4_BUNDLED_TEVENT} == yes)
 SAMBA4_BUNDLED_LIBS+=		replace
+#SAMBA4_BUILTIN_LIBS+=		replace
 .endif
 # Don't use external libcom_err
 SAMBA4_BUNDLED_LIBS+=		com_err
@@ -282,6 +297,7 @@ CONFIGURE_ARGS+=		\
 
 ##############################################################################
 BIND911_RUN_DEPENDS=		bind911>=9.11.0.0:dns/bind911
+BIND914_RUN_DEPENDS=		bind914>=9.14.0.0:dns/bind914
 NSUPDATE_RUN_DEPENDS=		samba-nsupdate:dns/samba-nsupdate
 
 AVAHI_CONFIGURE_ENABLE=		avahi
@@ -306,6 +322,7 @@ DEVELOPER_TEST_DEPENDS=		${GDB_CMD}:devel/gdb
 DEVELOPER_VARS_OFF=		GDB_CMD=true
 # XXX: Mostly used in conjuction with the DEVELOPER option, don't enable it
 # if you don't know what you are doing
+NTVFS_IMPLIES=			AD_DC
 NTVFS_CONFIGURE_WITH=		ntvfs-fileserver
 NTVFS_PLIST_FILES=		lib/shared-modules/service/smb.so \
 				lib/samba4/private/libntvfs-samba4.so
@@ -393,23 +410,6 @@ PLIST_SUB+=		LIBZFS=""
 CONFIGURE_ARGS+=	--without-libzfs
 PLIST_SUB+=		LIBZFS="@comment "
 .endif
-
-.if defined(WANT_EXP_MODULES) && !empty(WANT_EXP_MODULES)
-SAMBA4_MODULES+=		${WANT_EXP_MODULES}
-.endif
-
-.if defined(SAMBA4_BUNDLED_LIBS) && !empty(SAMBA4_BUNDLED_LIBS)
-CONFIGURE_ARGS+=		--bundled-libraries="${SAMBA4_BUNDLED_LIBS:Q:C|(\\\\ )+|,|g:S|\\||g}"
-.endif
-
-.if defined(SAMBA4_MODULES) && !empty(SAMBA4_MODULES)
-CONFIGURE_ARGS+=		--with-shared-modules="${SAMBA4_MODULES:C|-|_|:Q:C|(\\\\ )+|,|g:S|\\||g}"
-.endif
-# XXX: Hack for nss-info_* -> nss_info/* modules
-# Add selected modules to the plist
-.for module in ${SAMBA4_MODULES}
-PLIST_FILES+=			lib/shared-modules/${module:C|_|/|:C|-|_|}.so
-.endfor
 # Python bindings
 .if defined(NO_PYTHON)
 USES+=				python:2.7,build,test
@@ -421,17 +421,28 @@ USES+=				python:3.4+
 PLIST_SUB+=			SAMBA4_PYTHON3=""
 SUB_LIST+=			SAMBA4_PYTHON3=""
 
-.if !defined(SAMBA4_BUNDLED_TALLOC)
+.if defined(SAMBA4_BUNDLED_TALLOC) && ${SAMBA4_BUNDLED_TALLOC} == yes
+SAMBA4_BUNDLED_LIBS+=		pytalloc-util
+.else
 SAMBA4_BUNDLED_LIBS+=		!pytalloc-util
 .endif
-.if !defined(SAMBA4_BUNDLED_TEVENT)
+
+.if defined(SAMBA4_BUNDLED_TEVENT) && ${SAMBA4_BUNDLED_TEVENT} == yes
+SAMBA4_BUNDLED_LIBS+=		pytevent
+.else
 SAMBA4_BUNDLED_LIBS+=		!pytevent
 .endif
-.if !defined(SAMBA4_BUNDLED_TDB)
+
+.if defined(SAMBA4_BUNDLED_TDB) && ${SAMBA4_BUNDLED_TDB} == yes
+SAMBA4_BUNDLED_LIBS+=		pytdb
+.else
 SAMBA4_BUNDLED_LIBS+=		!pytdb
 .endif
-.if !defined(SAMBA4_BUNDLED_LDB)
-SAMBA4_BUNDLED_LIBS+=		!pyldb,!pyldb-util
+
+.if defined(SAMBA4_BUNDLED_LDB) && ${SAMBA4_BUNDLED_LDB} == yes
+SAMBA4_BUNDLED_LIBS+=		pyldb pyldb-util
+.else
+SAMBA4_BUNDLED_LIBS+=		!pyldb !pyldb-util
 .endif
 # External Python modules
 BUILD_DEPENDS+=			${PYTHON_PKGNAMEPREFIX}dnspython>=1.15.0:dns/py-dnspython@${PY_FLAVOR}
@@ -439,6 +450,24 @@ RUN_DEPENDS+=			${PYTHON_PKGNAMEPREFIX}dnspython>=1.15.0:dns/py-dnspython@${PY_F
 
 BUILD_DEPENDS+=			${PYTHON_PKGNAMEPREFIX}iso8601>=0.1.11:devel/py-iso8601@${PY_FLAVOR}
 .endif
+
+.if defined(WANT_EXP_MODULES) && !empty(WANT_EXP_MODULES)
+SAMBA4_MODULES+=		${WANT_EXP_MODULES}
+.endif
+
+.if defined(SAMBA4_BUNDLED_LIBS) && !empty(SAMBA4_BUNDLED_LIBS)
+CONFIGURE_ARGS+=		--bundled-libraries="${SAMBA4_BUNDLED_LIBS:Q:C|(\\\\ )+|,|g:S|\\||g}"
+CONFIGURE_ARGS+=		--builtin-libraries="${SAMBA4_BUILTIN_LIBS:Q:C|(\\\\ )+|,|g:S|\\||g}"
+.endif
+
+.if defined(SAMBA4_MODULES) && !empty(SAMBA4_MODULES)
+CONFIGURE_ARGS+=		--with-shared-modules="${SAMBA4_MODULES:C|-|_|:Q:C|(\\\\ )+|,|g:S|\\||g}"
+.endif
+# XXX: Hack for nss-info_* -> nss_info/* modules
+# Add selected modules to the plist
+.for module in ${SAMBA4_MODULES}
+PLIST_FILES+=			${SAMBA4_MODULEDIR}/${module:C|_|/|:C|-|_|}.so
+.endfor
 # !SAMBA4_SUBPORT
 .endif
 
@@ -453,6 +482,24 @@ CONFIGURE_ARGS+=		--accel-aes=intelaesni
 PLIST_FILES+=			lib/samba4/private/libaesni-intel-samba4.so
 .else
 CONFIGURE_ARGS+=		--accel-aes=none
+.endif
+
+# Only for 64-bit architectures
+.if ${ARCH} != armv6 && ${ARCH} != armv7 && ${ARCH} != i386 && ${ARCH} != mips && ${ARCH} != powerpc && ${ARCH} != powerpcspe
+.	if defined(SAMBA4_BUNDLED_LDB) && ${SAMBA4_BUNDLED_LDB} == yes && (${PORT_OPTIONS:MAD_DC} || ${PORT_OPTIONS:MDEVELOPER})
+# LMDB
+SAMBA4_LMDB_DEPENDS=		lmdb>=0.9.16:databases/lmdb
+PLIST_FILES+=			lib/samba4/private/libldb-mdb-int-samba4.so \
+				${SAMBA4_MODULEDIR}/ldb/mdb.so
+.	endif
+.endif
+
+.if ${PORT_OPTIONS:MGSSAPI_MIT}
+PLIST_FILES+=			${SAMBA4_MODULEDIR}/krb5/winbind_krb5_localauth.so \
+				man/man8/winbind_krb5_localauth.8.gz
+.	if ${PORT_OPTIONS:MAD_DC}
+PLIST_FILES+=			lib/samba4/krb5/plugins/kdb/samba.so
+.	endif
 .endif
 # for libexecinfo: (so that __builtin_frame_address() finds the top of the stack)
 CFLAGS_amd64+=			-fno-omit-frame-pointer
@@ -533,7 +580,6 @@ pre-build-MANDOC-off:
 				lib/tdb/man/tdbtool.8 \
 				lib/talloc/man/talloc.3 \
 				lib/tdb/man/tdbrestore.8 \
-				lib/ldb/man/ldb.3 \
 				lib/ldb/man/ldbadd.1 \
 				lib/ldb/man/ldbsearch.1 \
 				lib/ldb/man/ldbmodify.1 \
@@ -557,11 +603,27 @@ pre-install:
 				@${REINPLACE_CMD} -e 's|%%SAMBA4_PYTHON3_CMD%%|${SAMBA4_PYTHON3_CMD}|g' ${WRKDIR}/samba_server 
 
 post-install-rm-junk:
+.if defined(NO_PYTHON)
+				${RM} -r ${STAGEDIR}${PYTHON_SITELIBDIR}/samba/third_party/dns \
+					 ${STAGEDIR}${PYTHON_SITELIBDIR}/samba/third_party/iso8601
+.endif
+
+post-install-fix-manpages:
 .for f in vfs_aio_linux.8 vfs_btrfs.8 vfs_ceph.8 vfs_gpfs.8
 				${RM} ${STAGEDIR}${PREFIX}/man/man8/${f}
 .endfor
+.if defined(SAMBA4_BUNDLED_LDB) && ${SAMBA4_BUNDLED_LDB} == yes
+.	for f in ldbadd.1 ldbdel.1 ldbedit.1 ldbmodify.1 ldbrename.1 ldbsearch.1
+				${MV} ${STAGEDIR}${PREFIX}/man/man1/${f} ${STAGEDIR}${PREFIX}/man/man1/samba-${f}
+.	endfor
+.endif
+.if defined(SAMBA4_BUNDLED_TDB) && ${SAMBA4_BUNDLED_TDB} == yes
+.	for f in tdbbackup.8 tdbdump.8 tdbrestore.8 tdbtool.8
+				${MV} ${STAGEDIR}${PREFIX}/man/man8/${f} ${STAGEDIR}${PREFIX}/man/man8/samba-${f}
+.	endfor
+.endif
 
-post-install: post-install-rm-junk
+post-install: post-install-rm-junk post-install-fix-manpages
 				${LN} -sf smb.conf.5.gz ${STAGEDIR}${PREFIX}/man/man5/smb4.conf.5.gz
 # Run post-install script
 .for dir in			${SAMBA4_LOGDIR} ${SAMBA4_RUNDIR} ${SAMBA4_LOCKDIR} ${SAMBA4_MODULEDIR}
@@ -578,6 +640,12 @@ post-install-DOCS-on:
 .for doc in			${PORTDOCS}
 				${INSTALL_DATA} ${WRKDIR}/${doc} ${STAGEDIR}${DOCSDIR}
 .endfor
+
+post-install-CLUSTER-on:
+	${LN} -nfs ../../../../share/ctdb/events/legacy/00.ctdb.script      ${STAGEDIR}${PREFIX}/etc/ctdb/events/legacy/00.ctdb.script
+	${LN} -nfs ../../../../share/ctdb/events/legacy/10.interface.script ${STAGEDIR}${PREFIX}/etc/ctdb/events/legacy/10.interface.script
+	${LN} -nfs ../../../../share/ctdb/events/legacy/05.system.script    ${STAGEDIR}${PREFIX}/etc/ctdb/events/legacy/05.system.script
+	${LN} -nfs ../../../../share/ctdb/events/legacy/01.reclock.script   ${STAGEDIR}${PREFIX}/etc/ctdb/events/legacy/01.reclock.script
 
 # !SAMBA4_SUBPORT
 .endif

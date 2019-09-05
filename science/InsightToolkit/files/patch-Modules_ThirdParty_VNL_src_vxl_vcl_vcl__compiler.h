@@ -4,7 +4,7 @@
  #  else
  #   define VCL_GCC_70
  #  endif
-+#  elif (__GNUC__==8)
++#  elif (__GNUC__==8) || (__GNUC__==9)
 +#   define VCL_GCC_7
 +#   define VCL_GCC_73
  # else
