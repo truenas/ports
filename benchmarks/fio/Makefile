@@ -7,7 +7,7 @@ PORTREVISION=	1
 CATEGORIES=	benchmarks
 MASTER_SITES=	http://brick.kernel.dk/snaps/
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	krion@FreeBSD.org
 COMMENT=	Flexible IO tester
 
 LICENSE=	GPLv2
