@@ -3,7 +3,7 @@
 
 PORTNAME=	boinc-astropulse
 PORTVERSION=	6.01
-PORTREVISION=	13
+PORTREVISION=	14
 CATEGORIES=	astro
 MASTER_SITES=	LOCAL/rene
 DISTNAME=	astropulse-svn-1702 # modified archive, see leftout in top directory
@@ -21,7 +21,7 @@ BUILD_DEPENDS=	${LOCALBASE}/include/fftw3.h:math/fftw3 \
 RUN_DEPENDS=	boinc_client:net/boinc-client
 LIB_DEPENDS=	libfftw3f.so:math/fftw3-float
 
-USES=		autoreconf gmake libtool pkgconfig tar:xz
+USES=		autoreconf compiler:c++11-lang gmake libtool pkgconfig tar:xz
 
 GNU_CONFIGURE=	yes
 

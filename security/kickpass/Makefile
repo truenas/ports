@@ -2,8 +2,8 @@
 
 PORTNAME=	kickpass
 PORTVERSION=	0.2.0
-PORTREVISION=	1
 DISTVERSIONPREFIX=	v
+PORTREVISION=	2
 CATEGORIES=	security
 
 MAINTAINER=	bapt@FreeBSD.org
@@ -26,7 +26,6 @@ PLIST_FILES=	bin/kickpass \
 		share/zsh/site-functions/_kickpass
 
 USE_GITHUB=	yes
-GH_ACCOUNT=	paulfariello
 USE_LDCONFIG=	yes
 
 .include <bsd.port.mk>

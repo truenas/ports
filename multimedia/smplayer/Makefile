@@ -2,12 +2,11 @@
 # $FreeBSD$
 
 PORTNAME=	smplayer
-DISTVERSION=	18.10.0
-PORTREVISION=	1
+DISTVERSION=	19.5.0
 CATEGORIES=	multimedia audio kde
 MASTER_SITES=	SF/${PORTNAME}/SMPlayer/${PORTVERSION}
 
-MAINTAINER=	kikadf.01@gmail.com
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Complete front-end based on Qt for mplayer
 
 LICENSE=	GPLv2+

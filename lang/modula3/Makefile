@@ -3,7 +3,7 @@
 
 PORTNAME=	modula3
 PORTVERSION=	5.10.0
-PORTREVISION=	9
+PORTREVISION=	10
 CATEGORIES=	lang
 MASTER_SITES=	http://downloads.dragonlace.net/m3/:boot
 DISTFILES=	${SRCDISTFILE} ${BOOTDIST}
@@ -16,6 +16,10 @@ LICENSE_NAME=	CM3 License defined by DEC and Critical Mass copyrights
 LICENSE_FILE=	${WRKSRC}/COM_LICENSE
 LICENSE_PERMS=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
 
+BROKEN=		unfetchable
+DEPRECATED=	Unfetchable, unmaintained
+EXPIRATION_DATE=	2019-10-16
+
 LIB_DEPENDS=	libodbc.so:databases/unixODBC
 
 NEWBOOTDIR=	${WRKDIR}/new-bootstrap/bootstrap
@@ -23,6 +27,8 @@ SRCDISTFILE=	modula3-cm3-${PORTVERSION}-${GH_TAGNAME}_GH0.tar.gz
 DST1=		m3-bootstrap.AMD64.FREEBSD.92.tar.bz2:boot
 DST2=		m3-bootstrap.x86_64.DRAGONFLY.36.tar.bz2:boot
 
+BROKEN_FreeBSD_12=	fails to build
+BROKEN_FreeBSD_13=	fails to build
 ONLY_FOR_ARCHS=		amd64
 PORTSCOUT=		ignore:1
 

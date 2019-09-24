@@ -2,9 +2,10 @@
 # $FreeBSD$
 
 PORTNAME=	qcad
-PORTVERSION=	3.21.3.15
+PORTVERSION=	3.22.0.12
+PORTREVISION=	1
 DISTVERSIONPREFIX=	v
-PORTREVISION=	3
+#PORTREVISION=
 CATEGORIES=	cad
 DIST_SUBDIR=	${PORTNAME}
 
@@ -13,9 +14,12 @@ COMMENT=	Professional CAD system
 
 LICENSE=	GPLv3
 
+.if ${/usr/bin/ld:L:tA} == /usr/bin/ld.lld
+BROKEN_i386=	ld: error: relocation R_386_PC32 cannot be used against symbol ON_GetPointListBoundingBox
+.endif
+
 BUILD_DEPENDS=	bash:shells/bash	\
 		${LOCALBASE}/lib/libopenNURBS.a:graphics/opennurbs
-LIB_DEPENDS=	libquazip5.so:archivers/quazip
 
 MAKE_JOBS_UNSAFE=yes
 
@@ -41,7 +45,7 @@ RESDIR=		${WRKSRC}/release
 .endif
 
 SHRLIBS=	qcadcore qcadecmaapi qcadentity qcadgrid qcadgui qcadoperations	\
-		qcadsnap qcadspatialindex qcadstemmer spatialindexnavel qcadzip
+		qcadsnap qcadspatialindex qcadstemmer spatialindexnavel
 STALIBS=	dxflib stemmer
 SHRDIR=		fonts libraries linetypes patterns plugins scripts themes ts
 #QSCRIPTS should not be installed to avoid conflicts with texlive-base

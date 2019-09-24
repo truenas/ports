@@ -9,7 +9,7 @@ PORTREVISION=	0
 .else
 # XXX: correct version
 # dns/bind9xx here
-PORTREVISION=	1
+PORTREVISION=	0
 .endif
 CATEGORIES=	dns net ipv6
 # XXX: put the ISC master_site
@@ -39,15 +39,15 @@ RUN_DEPENDS=	bind-tools>0:dns/bind-tools
 .endif
 
 # XXX: remove tar:bz2
-USES=	compiler:c11 cpe libedit ssl tar:bz2
+USES=	compiler:c11 cpe libedit pkgconfig ssl tar:bz2
 # ISC releases things like 9.8.0-P1, which our versioning doesn't like
-ISCVERSION=	9.15.0a0.2019.04.23
+ISCVERSION=	9.15.3a0.2019.09.17
 # XXX: Remove gitlab
 USE_GITLAB=	yes
 GL_SITE=	https://gitlab.isc.org
 GL_ACCOUNT=	isc-projects
 GL_PROJECT=	bind9
-GL_COMMIT=	fd7f2c8f9dbfd0a10690044683398778a2359e83
+GL_COMMIT=	6aec894c4c4ac708f94ef495a010862733f8e5af
 
 CPE_VENDOR=	isc
 CPE_VERSION=	${ISCVERSION:C/-.*//}
@@ -57,51 +57,52 @@ CPE_UPDATE=	${ISCVERSION:C/.*-//:tl}
 
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--localstatedir=/var --disable-linux-caps \
-		--with-libxml2=${LOCALBASE} \
+		--with-libxml2 \
 		--with-readline="-L${LOCALBASE}/lib -ledit" \
 		--with-dlopen=yes \
 		--with-openssl=${OPENSSLBASE} \
 		--sysconfdir=${ETCDIR}
 ETCDIR=		${PREFIX}/etc/namedb
 
-# XXX: Add -devel
-CONFLICTS=	bind911 bind912 bind913 bind914
-
 .if defined(BIND_TOOLS_SLAVE)
 CONFIGURE_ARGS+=	--disable-shared
 EXTRA_PATCHES=	${PATCHDIR}/extrapatch-bind-tools
 .else
-CONFIGURE_ARGS+=	--without-python
 USE_RC_SUBR=	named
 SUB_FILES=	pkg-message named.conf
 EXTRA_PATCHES=	${PATCHDIR}/extrapatch-no-bind-tools
 
 PORTDOCS=	*
+
+# XXX: Add -devel
+CONFLICTS=	bind911 bind912 bind913 bind914
 .endif	# BIND_TOOLS_SLAVE
 
 MAKE_JOBS_UNSAFE=	yes
 
-OPTIONS_DEFAULT=	SIGCHASE IDN GSSAPI_NONE JSON
-OPTIONS_DEFINE=		IDN LARGE_FILE JSON \
-			FIXED_RRSET SIGCHASE
+OPTIONS_DEFAULT=	DLZ_FILESYSTEM GSSAPI_NONE IDN JSON \
+			LMDB PYTHON SIGCHASE TCP_FASTOPEN
+OPTIONS_DEFINE=		DNSTAP DOCS FIXED_RRSET IDN JSON LARGE_FILE \
+			LMDB OVERRIDECACHE PORTREVISION PYTHON QUERYTRACE \
+			SIGCHASE START_LATE TCP_FASTOPEN TUNING_LARGE GEOIP
 
 OPTIONS_RADIO=	CRYPTO
 OPTIONS_RADIO_CRYPTO=	NATIVE_PKCS11
 
-.if defined(BIND_TOOLS_SLAVE)
-OPTIONS_DEFINE+=	PYTHON
-OPTIONS_DEFAULT+=	PYTHON
-.else
-OPTIONS_DEFAULT+=	DLZ_FILESYSTEM LMDB TCP_FASTOPEN
-OPTIONS_DEFINE+=	DOCS \
-			OVERRIDECACHE PORTREVISION QUERYTRACE LMDB DNSTAP \
-			START_LATE TUNING_LARGE TCP_FASTOPEN
 OPTIONS_GROUP=		DLZ
 OPTIONS_GROUP_DLZ=	DLZ_POSTGRESQL DLZ_MYSQL DLZ_BDB \
 			DLZ_LDAP DLZ_FILESYSTEM DLZ_STUB
-.endif	# BIND_TOOLS_SLAVE
+
 OPTIONS_SINGLE=		GSSAPI
 OPTIONS_SINGLE_GSSAPI=	GSSAPI_BASE GSSAPI_HEIMDAL GSSAPI_MIT GSSAPI_NONE
+
+.if defined(BIND_TOOLS_SLAVE)
+OPTIONS_EXCLUDE=	DOCS ${OPTIONS_GROUP_DLZ} \
+			OVERRIDECACHE PORTREVISION QUERYTRACE LMDB DNSTAP \
+			START_LATE TUNING_LARGE TCP_FASTOPEN GEOIP
+.else
+OPTIONS_EXCLUDE=	PYTHON
+.endif	# BIND_TOOLS_SLAVE
 
 OPTIONS_SUB=	yes
 
@@ -153,6 +154,10 @@ DNSTAP_LIB_DEPENDS=	libfstrm.so:devel/fstrm \
 
 FIXED_RRSET_CONFIGURE_ENABLE=	fixed-rrset
 
+GEOIP_CONFIGURE_ENABLE=	geoip
+GEOIP_CONFIGURE_WITH=	maxminddb
+GEOIP_LIB_DEPENDS=	libmaxminddb.so:net/libmaxminddb
+
 GSSAPI_BASE_CONFIGURE_ON=\
 	--with-gssapi=${GSSAPIBASEDIR} KRB5CONFIG="${KRB5CONFIG}"
 GSSAPI_BASE_USES=	gssapi
@@ -172,8 +177,9 @@ IDN_CONFIGURE_ON=	--with-libidn2=${LOCALBASE} ${ICONV_CONFIGURE_BASE}
 IDN_LIB_DEPENDS=	libidn2.so:dns/libidn2
 IDN_USES=		iconv
 
-JSON_CONFIGURE_WITH=	libjson=${LOCALBASE}
+JSON_CONFIGURE_WITH=	json-c
 JSON_LIB_DEPENDS=	libjson-c.so:devel/json-c
+JSON_LDFLAGS=		-L${LOCALBASE}/lib -ljson-c
 
 LARGE_FILE_CONFIGURE_ENABLE=	largefile
 
@@ -208,7 +214,7 @@ TUNING_LARGE_CONFIGURE_OFF=	--with-tuning=default
 .if defined(WITH_DEBUG)
 CONFIGURE_ARGS+=	--enable-symtable \
 			--enable-developer
-USES+=	perl5 pkgconfig
+USES+=	perl5
 USE_PERL5=	build
 BUILD_DEPENDS+=	cmocka>0:sysutils/cmocka
 .else

@@ -3,7 +3,7 @@
 
 PORTNAME=	vegastrike
 PORTVERSION=	0.5.1.r1
-PORTREVISION=	15
+PORTREVISION=	18
 CATEGORIES=	games
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/${PORTVERSION:R}/
 DISTNAME=	${PORTNAME}-src-${PORTVERSION}
@@ -20,7 +20,7 @@ RUN_DEPENDS=	${LOCALBASE}/${DATADIR_REL}/vegastrike.ico:games/vegastrike-data
 LIB_DEPENDS=	${PY_BOOST} \
 		libexpat.so:textproc/expat2 \
 		libogg.so:audio/libogg \
-		libpng16.so:graphics/png \
+		libpng.so:graphics/png \
 		libvorbis.so:audio/libvorbis \
 		libfontconfig.so:x11-fonts/fontconfig \
 		libfreetype.so:print/freetype2
@@ -53,7 +53,7 @@ OPTIONS_DEFINE=	MESHER DOCS
 MESHER_DESC=	Enable mesher modelling tool
 
 MESHER_VARS=	BIN_FILES+=bin/mesher
-MESHER_LIB_DEPENDS=	libOgreMain.so:graphics/ogre3d
+MESHER_LIB_DEPENDS=	libOgreMain.so:graphics/ogre3d19
 MESHER_CONFIGURE_ENABLE=	ogre
 
 post-patch:
@@ -61,6 +61,8 @@ post-patch:
 		${WRKSRC}/configure
 	@${REINPLACE_CMD} -e 's/-lboost_python/-l${PY_BOOST_LIB}/' \
 		${WRKSRC}/Makefile.in
+	@${REINPLACE_CMD} -e '/#include <sys\/dir\.h>/d' \
+		${WRKSRC}/setup/src/c/setup.cpp
 
 do-install:
 	${INSTALL_PROGRAM} ${BIN_FILES:S|bin|${WRKSRC}|} \

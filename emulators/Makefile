@@ -9,11 +9,13 @@
     SUBDIR += advancemess
     SUBDIR += aftp
     SUBDIR += almostti
+    SUBDIR += anese 
     SUBDIR += aqemu
     SUBDIR += atari800
     SUBDIR += bfe
     SUBDIR += bochs
     SUBDIR += bsvc
+    SUBDIR += cannonball
     SUBDIR += catapult
     SUBDIR += cinc
     SUBDIR += cingb
@@ -23,7 +25,6 @@
     SUBDIR += cpmtools
     SUBDIR += cpmtools2
     SUBDIR += darcnes
-    SUBDIR += desmume
     SUBDIR += dgen-sdl
     SUBDIR += dolphin-emu
     SUBDIR += dosbox
@@ -32,6 +33,7 @@
     SUBDIR += dynagui
     SUBDIR += dynamips-community
     SUBDIR += e-uae
+    SUBDIR += edumips64
     SUBDIR += emulationstation
     SUBDIR += fceux
     SUBDIR += fmsx
@@ -73,6 +75,7 @@
     SUBDIR += mame
     SUBDIR += mastergear
     SUBDIR += mednafen
+    SUBDIR += mesen
     SUBDIR += mess
     SUBDIR += mgba
     SUBDIR += mtools
@@ -100,9 +103,9 @@
     SUBDIR += openmsx
     SUBDIR += p5-Acme-6502
     SUBDIR += parallels-tools
+    SUBDIR += pcem
     SUBDIR += pcemu
     SUBDIR += pcsxr
-    SUBDIR += pearpc
     SUBDIR += pipelight
     SUBDIR += playonbsd
     SUBDIR += ppsspp
@@ -110,14 +113,13 @@
     SUBDIR += py-gns3-converter
     SUBDIR += py-unicorn
     SUBDIR += qemu
-    SUBDIR += qemu2
     SUBDIR += qemu-cheri
     SUBDIR += qemu-devel
     SUBDIR += qemu-powernv
-    SUBDIR += qemu-riscv
     SUBDIR += qemu-sbruno
     SUBDIR += qemu-user-static
     SUBDIR += qemu-utils
+    SUBDIR += qemu30
     SUBDIR += qmc2
     SUBDIR += quasi88
     SUBDIR += riscv-fesvr
@@ -169,12 +171,11 @@
     SUBDIR += xbraitenberg
     SUBDIR += xcpc
     SUBDIR += xen-kernel
-    SUBDIR += xen-kernel47
     SUBDIR += xhomer
     SUBDIR += xsystem35
     SUBDIR += xzx
-    SUBDIR += yabause
-    SUBDIR += yape
+    SUBDIR += yuzu
+    SUBDIR += yuzu-qt5
     SUBDIR += zsnes
 
 .include <bsd.port.subdir.mk>

@@ -35,6 +35,7 @@
     SUBDIR += dfu-programmer
     SUBDIR += dfu-util
     SUBDIR += direwolf
+    SUBDIR += dsd
     SUBDIR += dump1090
     SUBDIR += ebook2cw
     SUBDIR += ebook2cwgui
@@ -68,8 +69,10 @@
     SUBDIR += hylafax
     SUBDIR += ibp
     SUBDIR += inspectrum
+    SUBDIR += iwmbt-firmware
     SUBDIR += java-simple-serial-connector
     SUBDIR += jerm
+    SUBDIR += jpilot-picsnvideos
     SUBDIR += kb
     SUBDIR += kermit
     SUBDIR += klog
@@ -107,6 +110,7 @@
     SUBDIR += obexapp
     SUBDIR += openobex
     SUBDIR += openzwave
+    SUBDIR += openzwave-devel
     SUBDIR += owfs
     SUBDIR += p5-Cisco-UCS
     SUBDIR += p5-Device-Gsm
@@ -205,6 +209,7 @@
     SUBDIR += wy60
     SUBDIR += xastir
     SUBDIR += xcwcp
+    SUBDIR += xdemorse
     SUBDIR += xdx
     SUBDIR += xlog
     SUBDIR += xmorse

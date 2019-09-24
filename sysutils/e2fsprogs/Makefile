@@ -2,8 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	e2fsprogs
-PORTVERSION=	1.45.0
-PORTREVISION?=	0
+PORTVERSION=	1.45.3
+PORTREVISION?=	2
 CATEGORIES?=	sysutils
 MASTER_SITES=	KERNEL_ORG/linux/kernel/people/tytso/${PORTNAME}/v${PORTVERSION}
 
@@ -14,7 +14,7 @@ LICENSE?=	GPLv2+
 .if !defined(_no_license_file)
 LICENSE_FILE?=	${WRKSRC}/NOTICE
 .endif
-LICENSE_DISTFILES_GPLv2=	${DISTNAME}${EXTRACT_SUFX}
+LICENSE_DISTFILES_GPLv2+ =	${DISTNAME}${EXTRACT_SUFX}
 
 PORTSCOUT=	ignore	# cannot handle the version in the directory
 

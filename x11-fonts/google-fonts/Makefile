@@ -1,11 +1,10 @@
 # $FreeBSD$
 
 PORTNAME=	google-fonts
-DISTVERSION=	0.0.0.20190118
-PORTREVISION=	2
+DISTVERSION=	0.0.0.20190509
 CATEGORIES=	x11-fonts
 
-MAINTAINER=	dg@syrec.org
+MAINTAINER=	dmgk@FreeBSD.org
 COMMENT=	Collection of freely redistributable TrueType fonts from Google
 
 LICENSE=	APACHE20 OFL11
@@ -30,7 +29,7 @@ NO_BUILD=	yes
 USE_GITHUB=	yes
 GH_ACCOUNT=	google
 GH_PROJECT=	fonts
-GH_TAGNAME=	1ebe5dc
+GH_TAGNAME=	1c76cff
 
 SUB_FILES=	pkg-message
 

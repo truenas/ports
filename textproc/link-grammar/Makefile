@@ -2,7 +2,7 @@
 
 PORTNAME=	link-grammar
 DISTVERSION=	5.4.4
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	textproc
 MASTER_SITES=	http://www.abisource.com/downloads/${PORTNAME}/${PORTVERSION}/
 
@@ -11,6 +11,10 @@ COMMENT=	Grammar checking library
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE
+
+.if ${/usr/bin/ld:L:tA} == /usr/bin/ld.lld
+BROKEN=		ld: error: ../link-grammar/.libs/liblink-grammar.so: undefined reference to std::__1::__vector_base_common<true>::__throw_length_error() const
+.endif
 
 BUILD_DEPENDS=	autoconf-archive>=0:devel/autoconf-archive
 

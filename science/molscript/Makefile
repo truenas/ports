@@ -2,6 +2,7 @@
 
 PORTNAME=	MolScript
 DISTVERSION=	2.1.2
+PORTREVISION=	1
 CATEGORIES=	science
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -10,7 +11,7 @@ COMMENT=	Display 3D molecules in schematic and detailed representations
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/../LICENSE.txt
 
-LIB_DEPENDS=	libpng16.so:graphics/png
+LIB_DEPENDS=	libpng.so:graphics/png
 RUN_DEPENDS=	render:graphics/raster3d # molscript use requires the executable 'render' to be present
 
 USES=		gl gmake jpeg localbase:ldflags

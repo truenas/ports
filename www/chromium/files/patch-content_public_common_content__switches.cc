@@ -1,6 +1,6 @@
---- content/public/common/content_switches.cc.orig	2019-03-11 22:00:58 UTC
+--- content/public/common/content_switches.cc.orig	2019-07-24 18:58:24 UTC
 +++ content/public/common/content_switches.cc
-@@ -968,7 +968,7 @@ const char kDisableAudioSupportForDesktopShare[] =
+@@ -949,7 +949,7 @@ const char kEnableAutomation[] = "enable-automation";
  const char kDisablePanelFitting[]           = "disable-panel-fitting";
  #endif
  

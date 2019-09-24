@@ -20,10 +20,10 @@ USE_KDE=	attica auth bookmarks codecs completion config configwidgets \
 		windowsystem xmlgui
 # pim components
 USE_KDE+=	akonadi akonadicontacts akonadinotes akonadisearch  \
-		calendarcore calendarutils contacts kontactinterface libkdepim \
+		calendarcore calendarutils contacts grantleetheme imap kontactinterface libkdepim \
 		mime pimcommon pimtextedit \
 		kdepim-runtime5_run
-USE_QT=		core dbus gui network printsupport widgets x11extras xml \
+USE_QT=		concurrent core dbus gui network printsupport widgets x11extras xml \
 		buildtools_build qmake_build
 USE_XORG=	ice sm x11 xext
 USE_LDCONFIG=	yes

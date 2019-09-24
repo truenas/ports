@@ -42,10 +42,6 @@
     SUBDIR += hffzip
     SUBDIR += hlextract
     SUBDIR += hpack.non-usa.only
-    SUBDIR += hs-tar
-    SUBDIR += hs-zip-archive
-    SUBDIR += hs-zlib
-    SUBDIR += hs-zlib-bindings
     SUBDIR += innoextract
     SUBDIR += javatar
     SUBDIR += jzlib
@@ -74,12 +70,14 @@
     SUBDIR += libunrar
     SUBDIR += libunrar5
     SUBDIR += libzip
+    SUBDIR += linux-c7-lz4
     SUBDIR += lizard
     SUBDIR += lrzip
     SUBDIR += lua-lzlib
     SUBDIR += lua51-zlib
     SUBDIR += lzfse
     SUBDIR += lzip
+    SUBDIR += lziprecover
     SUBDIR += lzlib
     SUBDIR += lzma
     SUBDIR += lzmalib
@@ -92,7 +90,6 @@
     SUBDIR += mscompress
     SUBDIR += mtf
     SUBDIR += nomarch
-    SUBDIR += nulib
     SUBDIR += nwreckdum
     SUBDIR += ocaml-bz2
     SUBDIR += ocaml-zip
@@ -119,6 +116,7 @@
     SUBDIR += p5-Compress-Snappy
     SUBDIR += p5-Gzip-Faster
     SUBDIR += p5-IO-Compress
+    SUBDIR += p5-IO-Compress-Brotli
     SUBDIR += p5-IO-Compress-Lzf
     SUBDIR += p5-IO-Compress-Lzma
     SUBDIR += p5-IO-Compress-Lzop
@@ -165,6 +163,10 @@
     SUBDIR += php73-phar
     SUBDIR += php73-zip
     SUBDIR += php73-zlib
+    SUBDIR += php74-bz2
+    SUBDIR += php74-phar
+    SUBDIR += php74-zip
+    SUBDIR += php74-zlib
     SUBDIR += pigz
     SUBDIR += pixz
     SUBDIR += plzip
@@ -173,10 +175,10 @@
     SUBDIR += ppunpack
     SUBDIR += pxz
     SUBDIR += py-acefile
-    SUBDIR += py-attic
     SUBDIR += py-backports.lzma
     SUBDIR += py-borgbackup
     SUBDIR += py-brotli
+    SUBDIR += py-brotlipy
     SUBDIR += py-bup
     SUBDIR += py-bz2file
     SUBDIR += py-czipfile
@@ -184,6 +186,7 @@
     SUBDIR += py-librtfcomp
     SUBDIR += py-lz4
     SUBDIR += py-lzma
+    SUBDIR += py-lzstring
     SUBDIR += py-pyliblzma
     SUBDIR += py-python-lhafile
     SUBDIR += py-python-lzo
@@ -193,6 +196,7 @@
     SUBDIR += py-rjsmin
     SUBDIR += py-warctools
     SUBDIR += py-xopen
+    SUBDIR += py-zopfli
     SUBDIR += py-zstandard
     SUBDIR += py-zstd
     SUBDIR += qpress

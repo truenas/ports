@@ -18,7 +18,7 @@ BUILD_DEPENDS=  ${PYTHON_PKGNAMEPREFIX}cffi>1.1.0:devel/py-cffi@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}xcffib>=0.5.0:x11/py-xcffib@${PY_FLAVOR}
 LIB_DEPENDS=	libpangocairo-1.0.so:x11-toolkits/pango
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}xcffib>=0.5.0:x11/py-xcffib@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}cairocffi>0.7:graphics/py-cairocffi@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}cairocffi>=0.9:graphics/py-cairocffi@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}asyncio>0:devel/py-asyncio@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}dbus>=0.8:devel/py-dbus@${PY_FLAVOR}
 

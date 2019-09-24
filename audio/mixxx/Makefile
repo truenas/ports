@@ -3,7 +3,7 @@
 
 PORTNAME=	mixxx
 DISTVERSIONPREFIX=	release-
-DISTVERSION=	2.2.0
+DISTVERSION=	2.2.2
 PORTREVISION=	2
 CATEGORIES=	audio
 
@@ -14,8 +14,8 @@ LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 BROKEN_aarch64=		fails to compile: Exception("invalid machine type")
-BROKEN_powerpc64=	fails to configure: unmet dependencies: Could not find libprotobuf, libchromaprint, libmp4, and libwavpack
 
+BUILD_DEPENDS=	lv2>=1.14.0:audio/lv2
 LIB_DEPENDS=	libchromaprint.so:audio/chromaprint \
 		libFLAC.so:audio/flac \
 		libfftw3.so:math/fftw3 \
@@ -47,7 +47,7 @@ USE_QT=		buildtools concurrent core dbus gui network opengl script scripttools \
 CONFLICTS=	mixxx20* mixxx21*
 
 MAKE_ARGS=	qtdir="${PREFIX}" install_root="${PREFIX}" \
-		build=release optimize=native ${GUI} battery=0 vamp=1 modplug=1
+		build=release optimize=off ${GUI} battery=0 vamp=1 modplug=1 mad=1
 LATE_INSTALL_ARGS=	--install-sandbox=${STAGEDIR}
 
 GUI=		qt5=1
@@ -55,14 +55,17 @@ GUI=		qt5=1
 PORTDATA=	*
 PORTDOCS=	*
 
-OPTIONS_DEFINE=		DOCS FAAD GPERFTOOLS HID LAME OPUS SHOUTCAST WAVPACK
-OPTIONS_DEFAULT=	FAAD HID SHOUTCAST OPUS WAVPACK
+OPTIONS_DEFINE=		DOCS FAAD FFMPEG GPERFTOOLS HID LAME OPUS SHOUTCAST WAVPACK
+OPTIONS_DEFAULT=	FAAD FFMPEG HID SHOUTCAST OPUS WAVPACK
 OPTIONS_SUB=		yes
 
 FAAD_LIB_DEPENDS=	libfaad.so:audio/faad \
 			libmp4v2.so:multimedia/mp4v2
 FAAD_MAKE_ARGS=		faad=1
 FAAD_MAKE_ARGS_OFF=	faad=0
+FFMPEG_LIB_DEPENDS=	libavcodec.so:multimedia/ffmpeg
+FFMPEG_MAKE_ARGS=	ffmpeg=1
+FFMPEG_MAKE_ARGS_OFF=	ffmpeg=0
 GPERFTOOLS_LIB_DEPENDS=	libtcmalloc.so:devel/google-perftools
 GPERFTOOLS_MAKE_ARGS=	perftools=1
 GPERFTOOLS_MAKE_ARGS_OFF=	perftools=0
@@ -90,7 +93,7 @@ post-patch:
 	@${REINPLACE_CMD} -e "/('install', docs)/d" \
 		${WRKSRC}/src/SConscript
 	@${REINPLACE_CMD} -e "s|^Exec=.*|Exec=mixxx| ; \
-		 s|^Icon=.*|Icon=${PREFIX}/share/pixmaps/mixxx-icon.png|" \
+		 s|^Icon=.*|Icon=${PREFIX}/share/pixmaps/mixxx_icon.svg|" \
 		${WRKSRC}/res/linux/mixxx.desktop
 	@${REINPLACE_CMD} -e "s,(Q_OS_LINUX),(Q_OS_LINUX) || defined(Q_OS_FREEBSD),g" \
 		${WRKSRC}/src/util/screensaver.h

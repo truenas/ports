@@ -2,18 +2,18 @@
 # $FreeBSD$
 
 PORTNAME=	inkscape
-PORTVERSION=	0.92.3
-PORTREVISION=	10
+PORTVERSION=	0.92.4
+PORTREVISION=	7
 CATEGORIES=	graphics gnome
-MASTER_SITES=	https://inkscape.org/en/gallery/item/12187/
+MASTER_SITES=	https://media.inkscape.org/dl/resources/file/
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Full featured open source SVG editor
 
 LICENSE=	GPLv2+ GPLv3+ LGPL21 MPL11
 LICENSE_COMB=	multi
-LICENSE_FILE_GPLv2=	${WRKSRC}/GPL2.txt
-LICENSE_FILE_GPLv3=	${WRKSRC}/GPL3.txt
+LICENSE_FILE_GPLv2+ =	${WRKSRC}/GPL2.txt
+LICENSE_FILE_GPLv3+ =	${WRKSRC}/GPL3.txt
 LICENSE_FILE_LGPL21=	${WRKSRC}/LGPL2.1.txt
 
 BUILD_DEPENDS=	${LOCALBASE}/include/boost/concept_check.hpp:devel/boost-libs

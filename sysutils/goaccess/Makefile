@@ -3,7 +3,7 @@
 
 PORTNAME=	goaccess
 PORTVERSION=	1.3
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	sysutils
 MASTER_SITES=	http://tar.goaccess.io/
 
@@ -16,7 +16,7 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 GNU_CONFIGURE=	yes
 INSTALL_TARGET=	install-strip
 USE_LDCONFIG=	yes
-USES=		alias pkgconfig ncurses
+USES=		alias compiler:c11 pkgconfig ncurses
 
 CFLAGS+=	-I${NCURSESINC} -I${LOCALBASE}/include
 LDFLAGS+=	-L${NCURSESLIB} -L${LOCALBASE}/lib

@@ -2,6 +2,7 @@
 
 PORTNAME=	klayout
 PORTVERSION=	0.25.8
+PORTREVISION=	1
 DISTVERSIONPREFIX=	v
 CATEGORIES=	cad
 
@@ -9,6 +10,9 @@ MAINTAINER=	hrs@FreeBSD.org
 COMMENT=	Qt-based GDS2 Viewer
 
 LICENSE=	GPLv2
+
+BROKEN_i386=	type 'hash<long long>' does not provide a call operator
+BROKEN_sparc64=	Does not compile on sparc64: gcc bug
 
 USES=		compiler:c++0x gmake gl python qt:5
 USE_GITHUB=	yes
@@ -30,8 +34,6 @@ LIBS+=		-lQt5${M}
 MAKE_ENV=	INSTALL_ROOT=${STAGEDIR}
 BUILD_WRKSRC=	${WRKSRC}/build-release
 INSTALL_WRKSRC=	${WRKSRC}/build-release
-
-BROKEN_sparc64=	Does not compile on sparc64: gcc bug
 
 do-configure:
 	cd ${WRKSRC} && \

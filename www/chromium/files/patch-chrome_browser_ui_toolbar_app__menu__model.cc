@@ -1,4 +1,4 @@
---- chrome/browser/ui/toolbar/app_menu_model.cc.orig	2019-03-11 22:00:54 UTC
+--- chrome/browser/ui/toolbar/app_menu_model.cc.orig	2019-07-24 18:58:12 UTC
 +++ chrome/browser/ui/toolbar/app_menu_model.cc
 @@ -671,7 +671,7 @@ bool AppMenuModel::IsCommandIdVisible(int command_id) 
        return app_menu_icon_controller_->GetTypeAndSeverity().type ==

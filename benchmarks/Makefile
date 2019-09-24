@@ -26,9 +26,8 @@
     SUBDIR += gtkperf
     SUBDIR += hey
     SUBDIR += himenobench
+    SUBDIR += hipercontracer
     SUBDIR += hpl
-    SUBDIR += hs-criterion
-    SUBDIR += hs-criterion-measurement
     SUBDIR += httperf
     SUBDIR += hyperfine
     SUBDIR += imb
@@ -75,6 +74,8 @@
     SUBDIR += ramspeed
     SUBDIR += randomio
     SUBDIR += rubygem-benchmark-ips
+    SUBDIR += rubygem-benchmark-memory
+    SUBDIR += rubygem-derailed_benchmarks
     SUBDIR += rubygem-railsbench
     SUBDIR += scimark2
     SUBDIR += scimark2c

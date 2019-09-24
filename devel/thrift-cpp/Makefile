@@ -3,7 +3,7 @@
 
 PORTNAME=	thrift
 PORTVERSION=	${THRIFT_PORTVERSION} # to keep in sync with thrift
-PORTREVISION=	7
+PORTREVISION=	11
 PORTEPOCH=	1
 CATEGORIES=	devel
 MASTER_SITES=	APACHE/thrift/${PORTVERSION}
@@ -13,12 +13,13 @@ DISTNAME=	thrift-${PORTVERSION}
 MAINTAINER=	komarov@valerka.net
 COMMENT=	C++ interface to Thrift
 
+BROKEN_i386=	undefined reference to 'boost::atomics::detail::lockpool::scoped_lock::scoped_lock(void const volatile*)'
+
 LIB_DEPENDS=	libboost_system.so:devel/boost-libs \
 		libevent.so:devel/libevent
 
 DISTINFO_FILE=		${.CURDIR}/../thrift/distinfo
 
-BROKEN_powerpc64=	fails to compile: undefined reference to std::__throw_out_of_range_fmt
 BROKEN_SSL=	openssl111
 BROKEN_SSL_REASON_openssl111=	'configure: error: "Error: libcrypto required."'
 
@@ -42,15 +43,19 @@ CONFIGURE_ARGS+=	\
 		--without-php_extension \
 		--without-python \
 		--without-ruby \
+		--without-lua \
+		--with-qt5=no \
 		--without-go
-
-LDFLAGS+=	-L${OPENSSLLIB}
-CFLAGS+=	-I${OPENSSLINC}
 
 .include <bsd.port.pre.mk>
 
 .if ${CHOSEN_COMPILER_TYPE} == clang
 USE_CXXSTD=	c++11
+.endif
+
+.if ${SSL_DEFAULT} != base
+LDFLAGS+=	-L${OPENSSLLIB}
+CFLAGS+=	-I${OPENSSLINC}
 .endif
 
 post-install:

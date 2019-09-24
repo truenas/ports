@@ -38,6 +38,7 @@
     SUBDIR += cl-clx
     SUBDIR += cl-clx-sbcl
     SUBDIR += compton-conf
+    SUBDIR += conlecterm
     SUBDIR += controllermap
     SUBDIR += cool-retro-term
     SUBDIR += decurs
@@ -112,6 +113,7 @@
     SUBDIR += innerspace
     SUBDIR += ipager
     SUBDIR += j4-dmenu-desktop
+    SUBDIR += kanshi
     SUBDIR += kb2mb2
     SUBDIR += kde-baseapps
     SUBDIR += kde5
@@ -151,6 +153,7 @@
     SUBDIR += libXinerama
     SUBDIR += libXp
     SUBDIR += libXpm
+    SUBDIR += libXpresent
     SUBDIR += libXprintAppUtil
     SUBDIR += libXprintUtil
     SUBDIR += libXrandr
@@ -192,6 +195,7 @@
     SUBDIR += lilyterm
     SUBDIR += linux-c6-pixman
     SUBDIR += linux-c6-xorg-libs
+    SUBDIR += linux-c7-libxkbcommon
     SUBDIR += linux-c7-pixman
     SUBDIR += linux-c7-xorg-libs
     SUBDIR += listres
@@ -224,6 +228,7 @@
     SUBDIR += metisse
     SUBDIR += mkcomposecache
     SUBDIR += mlterm
+    SUBDIR += mons
     SUBDIR += mrxvt
     SUBDIR += mrxvt-devel
     SUBDIR += multi-aterm
@@ -262,6 +267,7 @@
     SUBDIR += printscreen
     SUBDIR += props
     SUBDIR += py-caffeine-ng
+    SUBDIR += py-pyscreenshot
     SUBDIR += py-pyvirtualdisplay
     SUBDIR += py-qt5-opengl
     SUBDIR += py-xcffib
@@ -275,6 +281,7 @@
     SUBDIR += rendercheck
     SUBDIR += rgb
     SUBDIR += rofi
+    SUBDIR += rofi-calc
     SUBDIR += rofi-pass
     SUBDIR += rox-wallpaper
     SUBDIR += roxbg
@@ -295,6 +302,7 @@
     SUBDIR += simdock
     SUBDIR += simplestroke
     SUBDIR += sisctrl
+    SUBDIR += slick-greeter
     SUBDIR += slim
     SUBDIR += slock
     SUBDIR += slop
@@ -306,6 +314,7 @@
     SUBDIR += sterm
     SUBDIR += stjerm
     SUBDIR += swarp
+    SUBDIR += swaybg
     SUBDIR += swayidle
     SUBDIR += swaylock
     SUBDIR += sxhkd
@@ -325,10 +334,15 @@
     SUBDIR += urxvt-perls
     SUBDIR += vdesk
     SUBDIR += viewres
+    SUBDIR += virtboard
     SUBDIR += virtualgl
+    SUBDIR += wallutils
+    SUBDIR += waybar
     SUBDIR += wbar
     SUBDIR += wbarconf
     SUBDIR += wdm
+    SUBDIR += wev
+    SUBDIR += wf-shell
     SUBDIR += wl-clipboard
     SUBDIR += wmappl
     SUBDIR += wmblob
@@ -480,7 +494,6 @@
     SUBDIR += xscreensaver-gnome
     SUBDIR += xscreensaver-gnome-hacks
     SUBDIR += xscreensaver.app
-    SUBDIR += xsel
     SUBDIR += xsel-conrad
     SUBDIR += xset
     SUBDIR += xsetmode

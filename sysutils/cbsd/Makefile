@@ -1,11 +1,12 @@
 # $FreeBSD$
 
 PORTNAME=	cbsd
-DISTVERSION=	12.0.9
+DISTVERSION=	12.1.1
+PORTREVISION=	1
 CATEGORIES=	sysutils
 
 MAINTAINER=	olevole@olevole.ru
-COMMENT=	Yet another FreeBSD Jail and Bhyve Management Utility
+COMMENT=	Yet another FreeBSD Jail, XEN and Bhyve Management Utility
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

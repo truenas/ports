@@ -2,12 +2,12 @@
 # $FreeBSD$
 
 PORTNAME=	exiv2
-DISTVERSION=	0.27.0
-DISTVERSIONSUFFIX=	a-Source
-PORTREVISION=	1
+DISTVERSION=	0.27.1
+DISTVERSIONSUFFIX=	-Source
+PORTREVISION=	2
 PORTEPOCH=	1
 CATEGORIES=	graphics
-MASTER_SITES=	http://www.exiv2.org/builds/
+MASTER_SITES=	https://www.exiv2.org/releases/
 
 MAINTAINER=	multimedia@FreeBSD.org
 COMMENT=	Exif, IPTC, and XMP metadata manipulation library and tools

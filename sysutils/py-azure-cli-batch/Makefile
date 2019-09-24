@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	azure-cli-batch
-PORTVERSION=	4.0.0
+PORTVERSION=	4.0.3
 CATEGORIES=	sysutils python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -10,6 +10,9 @@ MAINTAINER=	dbaio@FreeBSD.org
 COMMENT=	Microsoft Azure Command-Line Tools Batch Command Module
 
 LICENSE=	MIT
+
+DEPRECATED=	Incorporated into azure-cli package
+EXPIRATION_DATE=2019-09-30
 
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}azure-mgmt-batch>=6.0.0:devel/py-azure-mgmt-batch@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}azure-batch>=6.0.0:devel/py-azure-batch@${PY_FLAVOR} \

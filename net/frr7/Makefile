@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	frr
-PORTVERSION=	7.0
+PORTVERSION=	7.1
 DISTVERSIONPREFIX=	frr-
 CATEGORIES=	net ipv6
 PKGNAMESUFFIX=	7
@@ -17,7 +17,7 @@ LIB_DEPENDS=	libjson-c.so:devel/json-c \
 		libyang.so:net/libyang
 
 USES=		autoreconf bison compiler:c++11-lang gmake pkgconfig libtool \
-		makeinfo python:3.6+,build readline
+		makeinfo python:2.7-3.6,build readline
 
 BINARY_ALIAS=	python=${PYTHON_VERSION}
 
@@ -64,7 +64,8 @@ CONFIGURE_ARGS=	--enable-user=frr \
 		--sysconfdir=${ETCDIR} \
 		--localstatedir=/var/run/frr \
 		--disable-nhrpd \
-		--disable-pimd
+		--disable-pimd \
+		--with-vtysh-pager=cat
 
 MANPAGES_BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}sphinx>=0:textproc/py-sphinx@${PY_FLAVOR}
 MANPAGES_CONFIGURE_OFF=	--disable-doc

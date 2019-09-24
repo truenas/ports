@@ -52,8 +52,6 @@
     SUBDIR += aoi
     SUBDIR += apngasm
     SUBDIR += apngdis
-    SUBDIR += appleseed
-    SUBDIR += apvlv
     SUBDIR += argyllcms
     SUBDIR += asciio
     SUBDIR += aseprite
@@ -67,6 +65,7 @@
     SUBDIR += barbecue
     SUBDIR += barcode
     SUBDIR += batik
+    SUBDIR += bitmap
     SUBDIR += blender
     SUBDIR += blender-doc
     SUBDIR += bmeps
@@ -90,7 +89,6 @@
     SUBDIR += cfdg
     SUBDIR += charls
     SUBDIR += cimg
-    SUBDIR += cinepaint
     SUBDIR += cloudcompare
     SUBDIR += clutter
     SUBDIR += clutter-gtk3
@@ -140,10 +138,12 @@
     SUBDIR += drawpile
     SUBDIR += driconf
     SUBDIR += drm-current-kmod
+    SUBDIR += drm-devel-kmod
     SUBDIR += drm-fbsd11.2-kmod
     SUBDIR += drm-fbsd12.0-kmod
     SUBDIR += drm-kmod
     SUBDIR += drm-legacy-kmod
+    SUBDIR += drm_info
     SUBDIR += dspdfviewer
     SUBDIR += duhdraw
     SUBDIR += dynamechs
@@ -180,6 +180,7 @@
     SUBDIR += figurine
     SUBDIR += flam3
     SUBDIR += flasm
+    SUBDIR += flif
     SUBDIR += flphoto
     SUBDIR += fly
     SUBDIR += fortytwo
@@ -198,6 +199,7 @@
     SUBDIR += fpc-rsvg
     SUBDIR += fpc-svgalib
     SUBDIR += fracplanet
+    SUBDIR += fractgen
     SUBDIR += fraqtive
     SUBDIR += freeglut
     SUBDIR += freeimage
@@ -252,11 +254,11 @@
     SUBDIR += gimp-refocus-plugin
     SUBDIR += gimp-resynthesizer
     SUBDIR += gimp-save-for-web
-    SUBDIR += gimp-wavelet-decompose-plugin
     SUBDIR += gimp-wavelet-denoise-plugin
     SUBDIR += gimp-wavelet-sharpen-plugin
     SUBDIR += giram
     SUBDIR += gkrellkam2
+    SUBDIR += glad
     SUBDIR += gle
     SUBDIR += glee
     SUBDIR += glew
@@ -337,12 +339,6 @@
     SUBDIR += hiptext
     SUBDIR += hobbes-icons-xpm
     SUBDIR += hppsmtools
-    SUBDIR += hs-JuicyPixels
-    SUBDIR += hs-cairo
-    SUBDIR += hs-dia-base
-    SUBDIR += hs-dia-functions
-    SUBDIR += hs-graphviz
-    SUBDIR += hs-svgcairo
     SUBDIR += hugin
     SUBDIR += icat
     SUBDIR += icc-profiles-adobe-cs4
@@ -362,6 +358,7 @@
     SUBDIR += imc
     SUBDIR += imgtops
     SUBDIR += imgv
+    SUBDIR += imgvtopgm
     SUBDIR += imlib2
     SUBDIR += imlib2-webp
     SUBDIR += imlib2_loaders
@@ -383,6 +380,7 @@
     SUBDIR += jhead
     SUBDIR += jogamp-jogl
     SUBDIR += jogl
+    SUBDIR += jp
     SUBDIR += jp2a
     SUBDIR += jpatch
     SUBDIR += jpeg
@@ -406,14 +404,16 @@
     SUBDIR += kf5-prison
     SUBDIR += kgraphviewer
     SUBDIR += kimagemapeditor
-    SUBDIR += kipiplugins
+    SUBDIR += kipi-plugins
     SUBDIR += kix-kmod
     SUBDIR += klatexformula
     SUBDIR += kludge3d
     SUBDIR += kolourpaint
+    SUBDIR += kooka
     SUBDIR += kphotoalbum
     SUBDIR += krita
     SUBDIR += kudu
+    SUBDIR += kxstitch
     SUBDIR += l2p
     SUBDIR += largetifftools
     SUBDIR += laternamagica
@@ -494,6 +494,7 @@
     SUBDIR += librsvg2-rust
     SUBDIR += libsixel
     SUBDIR += libspiro
+    SUBDIR += libspng
     SUBDIR += libsvg
     SUBDIR += libsvg-cairo
     SUBDIR += libvisual
@@ -502,6 +503,7 @@
     SUBDIR += libwmf
     SUBDIR += libwmf-nox11
     SUBDIR += libwpg03
+    SUBDIR += libxatracker
     SUBDIR += libyuv
     SUBDIR += libzmf
     SUBDIR += lightzone
@@ -517,6 +519,7 @@
     SUBDIR += linux-c6-sdl_ttf
     SUBDIR += linux-c6-tiff
     SUBDIR += linux-c7-cairo
+    SUBDIR += linux-c7-cairo-gobject
     SUBDIR += linux-c7-dri
     SUBDIR += linux-c7-gdk-pixbuf2
     SUBDIR += linux-c7-glx-utils
@@ -524,14 +527,16 @@
     SUBDIR += linux-c7-jasper
     SUBDIR += linux-c7-jbigkit
     SUBDIR += linux-c7-jpeg
+    SUBDIR += linux-c7-libdrm
+    SUBDIR += linux-c7-libepoxy
+    SUBDIR += linux-c7-libglvnd
     SUBDIR += linux-c7-png
     SUBDIR += linux-c7-sdl_image
     SUBDIR += linux-c7-sdl_ttf
     SUBDIR += linux-c7-tiff
+    SUBDIR += linux-c7-wayland
     SUBDIR += lua-gd
     SUBDIR += luminance-qt5
-    SUBDIR += luxrender
-    SUBDIR += luxrender14
     SUBDIR += lximage-qt
     SUBDIR += magnum
     SUBDIR += magnum-examples
@@ -556,6 +561,7 @@
     SUBDIR += minder
     SUBDIR += ming
     SUBDIR += mirage
+    SUBDIR += mirtk
     SUBDIR += mmrecover
     SUBDIR += movit
     SUBDIR += mozjpeg
@@ -566,6 +572,7 @@
     SUBDIR += mxp
     SUBDIR += mypaint
     SUBDIR += mypaint-brushes
+    SUBDIR += nanosvg
     SUBDIR += nathive
     SUBDIR += netpbm
     SUBDIR += nip2
@@ -579,6 +586,7 @@
     SUBDIR += ocrad
     SUBDIR += ocre
     SUBDIR += ogre3d
+    SUBDIR += ogre3d19
     SUBDIR += oidn
     SUBDIR += okular
     SUBDIR += open3d
@@ -734,14 +742,18 @@
     SUBDIR += pecl-imagick
     SUBDIR += pecl-imagick-im7
     SUBDIR += pecl-qrencode
+    SUBDIR += pecl-vips
     SUBDIR += pecomato
     SUBDIR += pencil2d
     SUBDIR += peps
     SUBDIR += perceptualdiff
+    SUBDIR += peruse
     SUBDIR += pfstools
     SUBDIR += pgplot
     SUBDIR += pho
     SUBDIR += photivo
+    SUBDIR += photoflare
+    SUBDIR += photoflow
     SUBDIR += photopc
     SUBDIR += photoqt
     SUBDIR += phototonic
@@ -753,6 +765,8 @@
     SUBDIR += php72-gd
     SUBDIR += php73-exif
     SUBDIR += php73-gd
+    SUBDIR += php74-exif
+    SUBDIR += php74-gd
     SUBDIR += phplot
     SUBDIR += picpuz
     SUBDIR += piddle
@@ -767,6 +781,7 @@
     SUBDIR += plasma-kmod
     SUBDIR += plotutils
     SUBDIR += png
+    SUBDIR += png++
     SUBDIR += png2html
     SUBDIR += png2ico
     SUBDIR += pngcheck
@@ -795,6 +810,7 @@
     SUBDIR += price
     SUBDIR += processing
     SUBDIR += proj
+    SUBDIR += proj5
     SUBDIR += pstoedit
     SUBDIR += pstoepsi
     SUBDIR += ptex
@@ -809,6 +825,8 @@
     SUBDIR += py-cairocffi
     SUBDIR += py-cartopy
     SUBDIR += py-chart
+    SUBDIR += py-colour
+    SUBDIR += py-descartes
     SUBDIR += py-django-easy-thumbnails
     SUBDIR += py-djvulibre
     SUBDIR += py-editobj
@@ -834,6 +852,7 @@
     SUBDIR += py-imageio-ffmpeg
     SUBDIR += py-imageio24
     SUBDIR += py-imagesize
+    SUBDIR += py-img2pdf
     SUBDIR += py-imgurpython
     SUBDIR += py-leather
     SUBDIR += py-mapclassify
@@ -858,6 +877,7 @@
     SUBDIR += py-pycollada
     SUBDIR += py-pydot
     SUBDIR += py-pyembree
+    SUBDIR += py-pyepsg
     SUBDIR += py-pygal
     SUBDIR += py-pyganim
     SUBDIR += py-pyglet
@@ -867,14 +887,17 @@
     SUBDIR += py-pyocr
     SUBDIR += py-pypillowfight
     SUBDIR += py-pyproj
+    SUBDIR += py-pyqrcode
     SUBDIR += py-pyqtgraph
     SUBDIR += py-python-poppler-qt5
     SUBDIR += py-qt5-svg
+    SUBDIR += py-rawkit
     SUBDIR += py-sane
     SUBDIR += py-scikit-image
     SUBDIR += py-seqdiag
     SUBDIR += py-sorl-thumbnail
     SUBDIR += py-soya3d
+    SUBDIR += py-spectra
     SUBDIR += py-stltools
     SUBDIR += py-svgwrite
     SUBDIR += py-termtosvg
@@ -891,7 +914,6 @@
     SUBDIR += qgis
     SUBDIR += qgis-ltr
     SUBDIR += qiv
-    SUBDIR += qslim
     SUBDIR += qt5-3d
     SUBDIR += qt5-graphicaleffects
     SUBDIR += qt5-imageformats
@@ -907,8 +929,8 @@
     SUBDIR += quesoglc
     SUBDIR += radiance
     SUBDIR += radius-engine
+    SUBDIR += rapid-photo-downloader
     SUBDIR += raster3d
-    SUBDIR += rawstudio
     SUBDIR += rawtherapee
     SUBDIR += rayshade
     SUBDIR += reactphysics3d
@@ -943,6 +965,7 @@
     SUBDIR += rubygem-gruff
     SUBDIR += rubygem-image_science
     SUBDIR += rubygem-imagesize
+    SUBDIR += rubygem-invisible_captcha
     SUBDIR += rubygem-mini_magick
     SUBDIR += rubygem-objectdetect
     SUBDIR += rubygem-opengl
@@ -962,6 +985,7 @@
     SUBDIR += sane-epkowa
     SUBDIR += sane-frontends
     SUBDIR += scale2x
+    SUBDIR += scantailor
     SUBDIR += scr2png
     SUBDIR += scrot
     SUBDIR += scwm-icons
@@ -997,6 +1021,7 @@
     SUBDIR += svg2pdf
     SUBDIR += svg2png
     SUBDIR += svgalib
+    SUBDIR += svgbob
     SUBDIR += swfdec
     SUBDIR += swfmill
     SUBDIR += swftools
@@ -1020,7 +1045,6 @@
     SUBDIR += tkpng
     SUBDIR += togl
     SUBDIR += ttygif
-    SUBDIR += tulip
     SUBDIR += tumble
     SUBDIR += ufraw
     SUBDIR += uniconvertor

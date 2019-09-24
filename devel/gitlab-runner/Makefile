@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	gitlab-runner
-PORTVERSION=	11.10.0
+PORTVERSION=	12.1.0
 CATEGORIES=	devel
 MASTER_SITES=	\
 		https://gitlab-runner-downloads.s3.amazonaws.com/master/docker/:dockerx64 \
@@ -18,20 +18,22 @@ COMMENT=	Official GitLab Runner written in Go
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-BUILD_DEPENDS=	go:lang/go \
-		go-bindata:devel/go-bindata
+BUILD_DEPENDS=	go-bindata:devel/go-bindata
 RUN_DEPENDS=	ca_root_nss>=0:security/ca_root_nss \
 		bash:shells/bash \
 		git:devel/git
+
+USES=		go
 
 USE_GITLAB=	yes
 
 # Find tags here:
 # https://gitlab.com/gitlab-org/gitlab-runner/tags
 GL_ACCOUNT=	gitlab-org
-GL_COMMIT=	3001a600b2465b6ce803841a84a5a3cac0aadad2
-GITBRANCH=	11-10-stable
-BUILT=		2019-01-15T15:24:23+0000
+GL_COMMIT=	de7731dd40f8e65738ac1452c13e8636dc3453c6
+GITBRANCH=	12-1-stable
+# https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-freebsd-amd64
+BUILT=		2019-07-19T13:53:05+0000
 
 GO_LDFLAGS=	-X gitlab.com/gitlab-org/gitlab-runner/common.VERSION=${PORTVERSION} \
 		-X gitlab.com/gitlab-org/gitlab-runner/common.REVISION=${GL_COMMIT:C/^(........).*/\1/} \

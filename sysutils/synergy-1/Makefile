@@ -2,8 +2,7 @@
 
 PORTNAME=	synergy-1
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.10.1
-PORTREVISION=	1
+DISTVERSION=	1.10.3
 DISTVERSIONSUFFIX=	-stable
 CATEGORIES=	sysutils
 
@@ -15,7 +14,7 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 
 LIB_DEPENDS=	libcurl.so:ftp/curl
 
-USES=		cmake compiler:c++14-lang cpe ssl
+USES=		cmake compiler:c++14-lang cpe ssl xorg
 CPE_VENDOR=	synergy-foss
 USE_GITHUB=	yes
 GH_ACCOUNT=	symless
@@ -24,6 +23,7 @@ USE_XORG=	ice xtst x11 sm xext xinerama xrandr xi
 
 CONFLICTS=	synergy
 
+CMAKE_OFF=	SYNERGY_BUILD_LEGACY_INSTALLER SYNERGY_BUILD_LEGACY_GUI
 CMAKE_ARGS=	-DSYNERGY_REVISION:STRING=${DISTVERSION:S/.//g}0000 # it expects a 7-digit hash
 
 CFLAGS+=	-I${LOCALBASE}/include -L${LOCALBASE}/lib

@@ -1,4 +1,4 @@
---- build/config/compiler/compiler.gni.orig	2019-03-11 22:00:52 UTC
+--- build/config/compiler/compiler.gni.orig	2019-07-24 18:58:02 UTC
 +++ build/config/compiler/compiler.gni
 @@ -179,7 +179,7 @@ declare_args() {
  declare_args() {

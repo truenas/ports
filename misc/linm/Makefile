@@ -3,7 +3,7 @@
 
 PORTNAME=	linm
 DISTVERSION=	0.8.1-1
-PORTREVISION=	7
+PORTREVISION=	8
 CATEGORIES=	misc shells
 MASTER_SITES=	http://kldp.net/frs/download.php/4508/
 DISTNAME=	${PORTNAME}_${DISTVERSION}
@@ -13,6 +13,10 @@ COMMENT=	Clone of Mdir, mc-style terminal file manager
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
+
+BROKEN=		unfetchable
+DEPRECATED=	Unfetchable, unmaintained
+EXPIRATION_DATE=	2019-10-16
 
 USES=		gettext iconv:translit pkgconfig gmake localbase libtool ncurses ssl
 GNU_CONFIGURE=	yes

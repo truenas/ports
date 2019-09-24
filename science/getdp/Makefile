@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	getdp
-PORTVERSION=	3.1.0
+PORTVERSION=	3.2.0
 PORTREVISION=	1
 CATEGORIES=	science
 MASTER_SITES=	http://www.geuz.org/getdp/src/

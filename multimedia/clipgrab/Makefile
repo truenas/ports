@@ -3,7 +3,7 @@
 
 PORTNAME=	clipgrab
 PORTVERSION=	3.7.2
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	multimedia
 MASTER_SITES=	https://download.clipgrab.org/
 
@@ -15,7 +15,7 @@ COMMENT=	Program to download videos from YouTube and etc
 
 LICENSE=	GPLv3
 
-USES=		qmake qt:5
+USES=		compiler:c++11-lang qmake qt:5
 USE_QT=		core dbus gui network webkit widgets xml buildtools_build
 
 LDFLAGS+=	-Wl,--as-needed # cf. PR 224488

@@ -27,6 +27,7 @@
     SUBDIR += calcurse
     SUBDIR += calibre
     SUBDIR += cartotheque
+    SUBDIR += cfiles
     SUBDIR += charmtimetracker
     SUBDIR += chart
     SUBDIR += cherrytree
@@ -40,6 +41,7 @@
     SUBDIR += dailystrips
     SUBDIR += deforaos-todo
     SUBDIR += devd-notifier
+    SUBDIR += dfshow
     SUBDIR += dlume
     SUBDIR += docear
     SUBDIR += dosage
@@ -95,6 +97,7 @@
     SUBDIR += gnote
     SUBDIR += gnustep-wrapper
     SUBDIR += go-for-it
+    SUBDIR += goesimage
     SUBDIR += gourmet
     SUBDIR += gpicker
     SUBDIR += grantlee-editor
@@ -117,7 +120,6 @@
     SUBDIR += horde-nag
     SUBDIR += hot-babe
     SUBDIR += howm
-    SUBDIR += hs-fdo-notify
     SUBDIR += ical
     SUBDIR += jjclient
     SUBDIR += jlj
@@ -185,6 +187,7 @@
     SUBDIR += p5-Goo
     SUBDIR += pal
     SUBDIR += parcellite
+    SUBDIR += pet
     SUBDIR += phpicalendar
     SUBDIR += pim-data-exporter
     SUBDIR += pim-sieve-editor
@@ -229,6 +232,7 @@
     SUBDIR += sugarcrm
     SUBDIR += synapse
     SUBDIR += syncthing-gtk
+    SUBDIR += syncthingtray
     SUBDIR += sysctlview
     SUBDIR += systempreferences
     SUBDIR += taskcoach

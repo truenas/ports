@@ -3,9 +3,9 @@
 
 PORTNAME=	xfburn
 PORTVERSION=	0.5.5
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	sysutils
-MASTER_SITES=	XFCE/src/apps/${PORTNAME}/${PORTVERSION:R}
+MASTER_SITES=	XFCE/apps
 DIST_SUBDIR=	xfce4
 
 MAINTAINER=	xfce@FreeBSD.org
@@ -22,8 +22,8 @@ RUN_DEPENDS=	cdrdao:sysutils/cdrdao \
 		${LOCALBASE}/include/libisofs/libisofs.h:devel/libisofs
 
 USES=		desktop-file-utils gettext-tools gmake gnome pkgconfig \
-		tar:bzip2 xfce
-USE_GNOME=	cairo glib20 gtk20 intlhack intltool
+		tar:bzip2 xfce:gtk2
+USE_GNOME=	cairo glib20 gtk20 intltool
 USE_XFCE=	libexo
 
 GNU_CONFIGURE=	yes

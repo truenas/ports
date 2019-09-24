@@ -2,10 +2,11 @@
 # $FreeBSD$
 
 PORTNAME=	protobuf
-PORTVERSION=	3.7.1
-DISTVERSIONPREFIX=	v
+PORTVERSION=	3.9.1
+DISTVERSIONPREFIX=	all-
 PORTEPOCH=	1
 CATEGORIES=	devel
+MASTER_SITES=	https://github.com/protocolbuffers/protobuf/releases/download/v${PORTVERSION}/
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Data interchange format library
@@ -18,7 +19,7 @@ BROKEN_sparc64=	fails to compile: no atomic ops available
 TEST_DEPENDS=	googlemock>=0:devel/googlemock \
 		googletest>=0:devel/googletest
 
-USES=		autoreconf compiler:c++11-lang gmake libtool localbase pathfix pkgconfig
+USES=		compiler:c++11-lang gmake libtool localbase pathfix pkgconfig
 
 CFLAGS+=	-D_THREAD_SAFE -DGOOGLE_PROTOBUF_NO_RTTI -I${WRKSRC}/src
 CONFIGURE_ENV=	CC_FOR_BUILD="${CC}" \
@@ -33,12 +34,11 @@ TEST_ARGS=	${MAKE_ARGS} ${_MAKE_JOBS}
 TEST_TARGET=	check
 USE_CXXSTD=	c++11
 USE_LDCONFIG=	yes
-
-GH_ACCOUNT=	protocolbuffers
-USE_GITHUB=	yes
+WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}
 
 post-patch:
-	@${REINPLACE_CMD} -e 's|^check-local:|disabled-&|' ${WRKSRC}/Makefile.am
-	@${REINPLACE_CMD} -Ee '/gtest|mock/ s|[^ ]*lib(.*)\.la|-l\1|' ${WRKSRC}/src/Makefile.am
+	@${REINPLACE_CMD} -e 's|^check-local:|disabled-&|' ${WRKSRC}/Makefile.in
+	@${REINPLACE_CMD} -e 's|$$(GOOGLETEST_BUILD_DIR)/lib/libgtest\.la|-lgtest|' ${WRKSRC}/src/Makefile.in
+	@${REINPLACE_CMD} -e 's|$$(GOOGLEMOCK_BUILD_DIR)/lib/libgmock\(.*\)\.la|-lgmock\1|' ${WRKSRC}/src/Makefile.in
 
 .include <bsd.port.mk>

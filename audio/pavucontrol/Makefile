@@ -3,6 +3,7 @@
 
 PORTNAME=	pavucontrol
 PORTVERSION=	4.0
+PORTREVISION=	2
 CATEGORIES=	audio
 MASTER_SITES=	http://freedesktop.org/software/pulseaudio/${PORTNAME}/
 

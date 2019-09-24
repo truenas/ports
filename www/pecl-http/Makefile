@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	http
-PORTVERSION=	3.2.0
+PORTVERSION=	3.2.1
+PORTREVISION=	1
 CATEGORIES=	www
 DISTNAME=	pecl_${PORTNAME}-${PORTVERSION}
 
@@ -25,6 +26,8 @@ LIB_DEPENDS=	libcurl.so:ftp/curl \
 
 USES=		php:pecl
 USE_PHP=	zlib:build
+IGNORE_WITH_PHP=	74
+
 CONFLICTS=	pecl-http[12]*
 
 .include <bsd.port.mk>

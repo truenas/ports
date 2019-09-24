@@ -54,16 +54,16 @@ _KDE_RELNAME=		KDE${_KDE_VERSION}
 
 # === VERSIONS OF THE DIFFERENT COMPONENTS =====================================
 # Current KDE desktop.
-KDE_PLASMA_VERSION?=		5.15.4
+KDE_PLASMA_VERSION?=		5.16.5
 KDE_PLASMA_BRANCH?=		stable
 
 # Current KDE frameworks.
-KDE_FRAMEWORKS_VERSION?=	5.57.0
+KDE_FRAMEWORKS_VERSION?=	5.62.0
 KDE_FRAMEWORKS_BRANCH?= 	stable
 
 # Current KDE applications.
-KDE_APPLICATIONS_VERSION?=	19.04.0
-KDE_APPLICATIONS_SHLIB_VER?=	5.11.0
+KDE_APPLICATIONS_VERSION?=	19.08.1
+KDE_APPLICATIONS_SHLIB_VER?=	5.12.1
 KDE_APPLICATIONS_BRANCH?=	stable
 # Upstream moves old software to Attic/. Specify the newest applications release there.
 # Only the major version is used for the comparison.
@@ -128,7 +128,7 @@ PORTVERSION?=		${KDE_FRAMEWORKS_VERSION}
 PKGNAMEPREFIX?=		kf5-
 # This is a slight duplication of _USE_FRAMEWORKS_PORTING -- it maybe would be
 # better to rely on ${_USE_FRAMEWORKS_PORTING:S/^/k/g}
-_PORTINGAIDS=		kjs kjsembed kdelibs4support khtml kmediaplayer kross
+_PORTINGAIDS=		kjs kjsembed kdelibs4support kdesignerplugin kdewebkit khtml kmediaplayer kross
 .        if ${_PORTINGAIDS:M*${PORTNAME}*}
 MASTER_SITES?=		KDE/${KDE_FRAMEWORKS_BRANCH}/frameworks/${KDE_FRAMEWORKS_VERSION:R}/portingAids
 .        else
@@ -168,20 +168,6 @@ PLIST_SUB+=		KDE_APPLICATIONS_VERSION="${KDE_APPLICATIONS_VERSION}"
 .    if ${_KDE_VERSION:M*5*}
 PLIST_SUB+=		KDE_PLASMA_VERSION="${KDE_PLASMA_VERSION}" \
 			KDE_FRAMEWORKS_VERSION="${KDE_FRAMEWORKS_VERSION}"
-.    endif
-# ==============================================================================
-
-# === HANDLE PYTHON ============================================================
-# TODO: Keep in sync with cmake/modules/PythonMacros.cmake
-_PYTHON_SHORT_VER=	${PYTHON_VERSION:S/^python//:S/.//}
-.    if ${_PYTHON_SHORT_VER} > 31
-PLIST_SUB+=		PYCACHE="__pycache__/" \
-			PYC_SUFFIX=cpython-${_PYTHON_SHORT_VER}.pyc \
-			PYO_SUFFIX=cpython-${_PYTHON_SHORT_VER}.pyo
-.    else
-PLIST_SUB+=		PYCACHE="" \
-			PYC_SUFFIX=pyc \
-			PYO_SUFFIX=pyo
 .    endif
 # ==============================================================================
 
@@ -311,7 +297,7 @@ kde-dbusaddons_PORT=		devel/kf5-kdbusaddons
 kde-dbusaddons_LIB=		libKF5DBusAddons.so
 
 kde-designerplugin_PORT=	x11-toolkits/kf5-kdesignerplugin
-kde-designerplugin_PATH=	${QT_PLUGINDIR}/designer/kf5widgets.so
+kde-designerplugin_PATH=	${KDE_PREFIX}/bin/kgendesignerplugin
 kde-designerplugin_TYPE=	run
 
 kde-dnssd_PORT=			dns/kf5-kdnssd
@@ -547,7 +533,7 @@ kde-ksysguard_PORT=		sysutils/plasma5-ksysguard
 kde-ksysguard_PATH=		${KDE_PREFIX}/bin/ksysguard
 
 kde-kwallet-pam_PORT=		security/plasma5-kwallet-pam
-kde-kwallet-pam_PATH=		${KDE_PREFIX}/lib/security/pam_kwallet5.so
+kde-kwallet-pam_PATH=		${KDE_PREFIX}/lib/pam_kwallet5.so
 
 kde-kwayland-integration_PORT=	x11/plasma5-kwayland-integration
 kde-kwayland-integration_PATH=	${QT_PLUGINDIR}/kf5/org.kde.kidletime.platforms/KF5IdleTimeKWaylandPlugin.so
@@ -568,7 +554,7 @@ kde-milou_PORT=			deskutils/plasma5-milou
 kde-milou_LIB=			libmilou.so.5
 
 kde-oxygen_PORT= 		x11-themes/plasma5-oxygen
-kde-oxygen_LIB=			liboxygenstyle5.so
+kde-oxygen_PATH=			${QT_PLUGINDIR}/styles/oxygen.so
 
 kde-plasma-browser-integration_PORT=	www/plasma5-plasma-browser-integration
 kde-plasma-browser-integration_PATH=	${KDE_PREFIX}/bin/plasma-browser-integration-host
@@ -760,7 +746,7 @@ kde-mbox-importer_PORT=		deskutils/mbox-importer
 kde-mbox-importer_PATH=		${KDE_PREFIX}/bin/mboximporter
 
 kde-pim-data-exporter_PORT=	deskutils/pim-data-exporter
-kde-pim-data-exporter_PATH=	${KDE_PREFIX}/bin/pimsettingexporter
+kde-pim-data-exporter_PATH=	${KDE_PREFIX}/bin/pimdataexporter
 # ====================== end of pim5 components ================================
 
 # ====================== multiversion component ================================

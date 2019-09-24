@@ -31,11 +31,15 @@ CONFLICTS=  py-iocage-[0-9]* iocage-[0-9]* iocage-devel-[0-9]*
 NO_CHECKSUM=yes
 WRKSRC=/usr/iocage_src
 
-NO_ARCH=	yes
 USES=		python:3.6+
 USE_PYTHON=	autoplist distutils
 
+NO_ARCH=	yes
+
+CONFLICTS=	py27-iocage-[0-9]*
+
 checksum fetch:
 	${ECHO_CMD} ${.TARGET} not needed because building direct
+
 
 .include <bsd.port.mk>

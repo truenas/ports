@@ -1,8 +1,8 @@
 # $FreeBSD$
 
 PORTNAME=	kdevelop
-DISTVERSION=	5.3.2
-PORTREVISION=	2
+DISTVERSION=	5.4.2
+PORTREVISION=	1
 CATEGORIES=	devel kde
 MASTER_SITES=	KDE/stable/kdevelop/${DISTVERSION}/src
 DIST_SUBDIR=	KDE/kdevelop
@@ -15,7 +15,7 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 
 BUILD_DEPENDS=	kdev-pg-qt:devel/kdevelop-pg-qt \
 		llvm${LLVM_DEFAULT}>0:devel/llvm${LLVM_DEFAULT}
-LIB_DEPENDS=	libkasten3controllers.so:devel/okteta \
+LIB_DEPENDS=	libKasten4Controllers.so:devel/okteta \
 		libapr-1.so:devel/apr1 \
 		libsvn_client-1.so:devel/subversion \
 		libboost_thread.so:devel/boost-libs \
@@ -29,7 +29,7 @@ USE_KDE=	archive attica auth bookmarks codecs completion config configwidgets \
 		coreaddons crash guiaddons emoticons i18n iconthemes init \
 		itemmodels itemviews jobwidgets kcmutils kdeclarative \
 		kio libksysguard newstuff notifications \
-		notifyconfig package parts plasma-framework \
+		notifyconfig package parts plasma-framework purpose \
 		runner service solid sonnet texteditor textwidgets threadweaver \
 		widgetsaddons windowsystem xmlgui
 USE_QT=		concurrent core dbus declarative gui help network \
@@ -39,6 +39,11 @@ SHEBANG_FILES=	kdevplatform/util/kdevplatform_shell_environment.sh \
 		kdevplatform/util/.zshrc
 
 CMAKE_ARGS=	-DCMAKE_POLICY_DEFAULT_CMP0074=NEW -DLLVM_ROOT=${LOCALBASE}/llvm${LLVM_DEFAULT}
+
+# Versioning values, to reduce plist churn
+PLATFORM_VER=	32
+SO_VER=		54
+PLIST_SUB+=	PLATFORM_VER=${PLATFORM_VER} SO_VER=${SO_VER} SO_VER_LONG=${DISTVERSION}
 
 OPTIONS_DEFINE=	WEBENGINE
 WEBENGINE_DESC=	Use WebEngine as help reader

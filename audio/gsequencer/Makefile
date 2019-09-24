@@ -1,9 +1,9 @@
 # $FreeBSD$
 
 PORTNAME=	gsequencer
-DISTVERSION=	2.1.69
+DISTVERSION=	2.3.3
 CATEGORIES=	audio
-MASTER_SITES=	SAVANNAH/gsequencer/2.1.x
+MASTER_SITES=	SAVANNAH/gsequencer/${DISTVERSION:R}.x
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Advanced Gtk+ sequencer
@@ -23,7 +23,7 @@ LIB_DEPENDS=	libasound.so:audio/alsa-lib \
 		libuuid.so:misc/e2fsprogs-libuuid
 RUN_DEPENDS=	dssi>0:audio/dssi
 
-USES=		desktop-file-utils gettext-runtime gmake gnome libtool localbase pkgconfig shared-mime-info
+USES=		desktop-file-utils gettext-runtime gmake gnome libtool localbase pkgconfig shared-mime-info xorg
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--disable-alsa --enable-oss
 USE_GNOME=	atk cairo gdkpixbuf2 glib20 gtk20 libxml2 pango
@@ -32,8 +32,11 @@ USE_GCC=	yes # the project uses gnu99 extensions, clang fails even with USE_CSTD
 USE_CSTD=	gnu99
 USE_LDCONFIG=	yes
 
+CPPFLAGS+=	-DAGS_LICENSE_FILENAME=\\\"${LOCALBASE}/share/licenses/${PKGNAME}/${LICENSE}\\\" \
+		-DAGS_LOGO_FILENAME=\\\"${DATADIR}/images/ags.png\\\" # there should be no need to supply AGS_LOGO_FILENAME here since the app knows its location
 LDFLAGS+=	-luuid
 
+INSTALL_TARGET=	install-strip
 INSTALLS_ICONS=	yes
 
 PLIST_SUB=	PORTVERSION=${PORTVERSION}

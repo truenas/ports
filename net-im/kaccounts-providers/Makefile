@@ -16,7 +16,7 @@ USES=		cmake compiler:c++11-lang gettext gnome kde:5 \
 		pkgconfig qt:5 tar:xz
 USE_GNOME=	intltool
 USE_KDE=	config coreaddons i18n kdeclarative kio package service
-USE_QT=		core declarative gui network xml \
+USE_QT=		concurrent core dbus declarative gui network xml \
 		buildtools_build qmake_build
 
 OPTIONS_DEFINE=	DOCS

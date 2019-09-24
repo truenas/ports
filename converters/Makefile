@@ -11,7 +11,9 @@
     SUBDIR += ascii2binary
     SUBDIR += asr10
     SUBDIR += base64
+    SUBDIR += base91
     SUBDIR += bibtexconv
+    SUBDIR += bmfdec
     SUBDIR += bsdconv
     SUBDIR += btoa
     SUBDIR += chmview
@@ -32,11 +34,7 @@
     SUBDIR += fribidi
     SUBDIR += gbase
     SUBDIR += gbsdconv
-    SUBDIR += hs-aeson
-    SUBDIR += hs-aeson-compat
     SUBDIR += hs-aeson-pretty
-    SUBDIR += hs-json
-    SUBDIR += hs-sandi
     SUBDIR += htx
     SUBDIR += i18ntools
     SUBDIR += ical2html
@@ -48,6 +46,7 @@
     SUBDIR += libiconv
     SUBDIR += libticonv
     SUBDIR += libutf-8
+    SUBDIR += linux-c7-fribidi
     SUBDIR += lua-iconv
     SUBDIR += lua-json
     SUBDIR += lua51-iconv
@@ -149,6 +148,8 @@
     SUBDIR += php73-iconv
     SUBDIR += php73-mbstring
     SUBDIR += php73-recode
+    SUBDIR += php74-iconv
+    SUBDIR += php74-mbstring
     SUBDIR += psiconv
     SUBDIR += py-bcode
     SUBDIR += py-bencode.py

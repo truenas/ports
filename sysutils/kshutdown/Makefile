@@ -1,14 +1,14 @@
 # $FreeBSD$
 
 PORTNAME=	kshutdown
-DISTVERSION=	4.99-beta
+DISTVERSION=	5.0
 PORTREVISION=	1
 CATEGORIES=	sysutils kde
-MASTER_SITES=	SF/${PORTNAME}/KShutdown/4.99%20Beta/
+MASTER_SITES=	SF/${PORTNAME}/KShutdown/${DISTVERSION}/
 DISTNAME=	${PORTNAME}-source-${DISTVERSION}
 
 MAINTAINER=	kde@FreeBSD.org
-COMMENT=	Advanced shutdown utility for KDE
+COMMENT=	Advanced shutdown utility
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -22,5 +22,8 @@ WRKSRC=		${WRKDIR}/${PORTNAME}-${DISTVERSION}
 
 CMAKE_ON=	KS_KF5
 CMAKE_OFF=	KS_PURE_QT
+
+# Uses c++14 thousands literall
+USE_CXXSTD=	c++14
 
 .include <bsd.port.mk>

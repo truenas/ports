@@ -2,8 +2,11 @@
 
 PORTNAME=	colmap
 DISTVERSION=	3.5
-PORTREVISION=	7
+PORTREVISION=	9
 CATEGORIES=	graphics
+
+PATCH_SITES=	https://github.com/${GH_ACCOUNT}/${GH_PROJECT}/commit/
+PATCHFILES+=	b5ccc54e68e3.patch:-p1
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Structure from motion and multi-view stereo
@@ -31,8 +34,6 @@ USE_QT=		qmake_build buildtools_build core gui opengl_build widgets
 EXCLUDE=	SQLite
 EXTRACT_AFTER_ARGS=	${EXCLUDE:S,^,--exclude lib/,}
 CMAKE_OFF=	BOOST_STATIC CUDA_ENABLED
-CXXFLAGS+=	-D_GLIBCXX_USE_C99 -D_GLIBCXX_USE_C99_MATH_TR1 \
-		-D_DECLARE_C99_LDBL_MATH # XXX ports/193528
 LDFLAGS+=	-Wl,--as-needed # gflags, glu, xi, xmu
 TEST_TARGET=	test ARGS="-V"
 
@@ -49,7 +50,8 @@ DOCS_PORTDOCS=		*
 
 OPENMP_USES=		compiler:openmp
 OPENMP_CMAKE_BOOL=	OPENMP_ENABLED
-.if !exists(/usr/include/omp.h)
+.if ${MACHINE_ARCH} == i386 || !exists(/usr/include/omp.h)
+# XXX base/230888 via #pragma omp atomic
 # XXX ports/199603 + ports/210337
 OPENMP_VARS=		OPENMP=gcc-
 .endif

@@ -3,7 +3,7 @@
 PORTNAME=	lazpaint
 PORTVERSION=	6.4.1
 DISTVERSIONPREFIX=	v
-PORTREVISION=	2
+PORTREVISION=	4
 CATEGORIES=	graphics
 PKGNAMESUFFIX=	${LAZARUS_PKGNAMESUFFIX}
 
@@ -12,9 +12,8 @@ COMMENT=	Image editor written in Lazarus
 
 LICENSE=	GPLv3
 
-gtk2_CONFLICTS_INSTALL=	${PORTNAME}-qt4 ${PORTNAME}-qt5
-qt4_CONFLICTS_INSTALL=	${PORTNAME}-gtk2 ${PORTNAME}-qt5
-qt5_CONFLICTS_INSTALL=	${PORTNAME}-gtk2 ${PORTNAME}-qt4
+gtk2_CONFLICTS_INSTALL=	${PORTNAME}-qt5
+qt5_CONFLICTS_INSTALL=	${PORTNAME}-gtk2
 
 USES=		dos2unix fpc lazarus:flavors
 USE_FPC=	chm fcl-base fcl-image fcl-json fcl-net fcl-web fcl-xml \
@@ -38,7 +37,6 @@ LAZARUS_PROJECT_FILES+=	bgracontrols/bgracontrols.lpk
 LAZARUS_PROJECT_FILES+=	lazpaint/lazpaint.lpi
 
 LAZBUILD_ARGS=	-d
-LLD_UNSAFE=	yes
 
 post-patch:
 	${REINPLACE_CMD} 's|%%DATADIR%%|${DATADIR}|g' ${WRKSRC}/lazpaint/utranslation.pas

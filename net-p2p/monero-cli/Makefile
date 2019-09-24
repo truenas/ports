@@ -3,9 +3,9 @@
 
 PORTNAME=	monero-cli
 # To build from an arbitrary git commit comment PORTVERSION and PORTREVISION (if present)
-PORTVERSION=	0.14.0.2
+PORTVERSION=	0.14.1.2
 DISTVERSIONPREFIX=	v
-PORTREVISION=	3
+PORTREVISION=	2
 # and uncomment the following two lines (use for example -git-HEAD or -git-b6420e1)
 #PORTVERSION=	0
 #PKGNAMESUFFIX=	-git-HEAD
@@ -19,7 +19,7 @@ LICENSE=	BSD3CLAUSE
 BROKEN_aarch64=		fails to compile: the clang compiler does not support -march=native
 BROKEN_armv6=		fails to compile: the clang compiler does not support -march=native
 BROKEN_armv7=		fails to compile: the clang compiler does not support -march=native
-BROKEN_i386=		fails to compile: register %r15d is only available in 64-bit mode
+BROKEN_i386=		fails to compile: register r15d is only available in 64-bit mode
 BROKEN_powerpc64=	fails to compile: the clang compiler does not support -march=native
 
 LIB_DEPENDS=	\
@@ -45,7 +45,6 @@ USE_GITHUB=	yes
 
 GH_ACCOUNT=	monero-project
 GH_PROJECT=	monero
-GH_TAGNAME=	1f809e7485fc3085
 .if defined(PKGNAMESUFFIX)
 GH_TAGNAME=	${PKGNAMESUFFIX:C/-git-//}
 .endif

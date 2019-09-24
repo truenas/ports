@@ -2,11 +2,8 @@
 
 PORTNAME=	restic
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.9.4
+DISTVERSION=	0.9.5
 CATEGORIES=	sysutils
-
-PATCH_SITES=	https://github.com/${GH_ACCOUNT}/${PORTNAME}/commit/
-PATCHFILES=	1d8b21cdad7e8d2c1c2aa99d10233563638594c5.patch:-p1 # https://github.com/restic/restic/pull/2197
 
 MAINTAINER=	gregf@hugops.pw
 COMMENT=	Fast, secure, efficient backup program
@@ -14,11 +11,10 @@ COMMENT=	Fast, secure, efficient backup program
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USES=		go
+USES=		go:modules
 USE_GITHUB=	yes
 
-GO_PKGNAME=	github.com/${GH_ACCOUNT}/${PORTNAME}
-GO_TARGET=	${GO_PKGNAME}/cmd/${PORTNAME}
+GO_TARGET=	./cmd/${PORTNAME}
 
 PLIST_SUB=	PORTNAME=${PORTNAME}
 

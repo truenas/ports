@@ -2,6 +2,7 @@
 
 PORTNAME=	STAR
 DISTVERSION=	2.7.0f
+PORTREVISION=	1
 CATEGORIES=	biology
 PKGNAMEPREFIX=	rna-
 
@@ -22,7 +23,14 @@ WRKSRC_SUBDIR=	source
 
 PLIST_FILES=	bin/STAR
 
+.include <bsd.port.pre.mk>
+
+# Force newer compiler on platforms using GCC 4.2 as base
+.if ${CHOSEN_COMPILER_TYPE} == gcc
+USE_GCC=	yes
+.endif
+
 do-install:
 	${INSTALL_PROGRAM} ${WRKSRC}/STAR ${STAGEDIR}${PREFIX}/bin
 
-.include <bsd.port.mk>
+.include <bsd.port.post.mk>

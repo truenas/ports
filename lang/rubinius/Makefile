@@ -3,7 +3,7 @@
 
 PORTNAME=	rubinius
 PORTVERSION=	3.86
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	lang
 MASTER_SITES=	http://releases.rubini.us/:source
 DISTFILES=	${DISTNAME}${EXTRACT_SUFX}:source
@@ -15,6 +15,7 @@ COMMENT=	LLVM based ruby language implementation
 LICENSE=	MPL20
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
+BROKEN=		Could not find 'bundler' (1.13.6)
 ONLY_FOR_ARCHS=	amd64
 
 BUILD_DEPENDS=	${LOCALBASE}/bin/bundle:sysutils/rubygem-bundler \

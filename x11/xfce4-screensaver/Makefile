@@ -1,9 +1,9 @@
 # $FreeBSD$
 
 PORTNAME=	xfce4-screensaver
-PORTVERSION=	0.1.4
+PORTVERSION=	0.1.8
 CATEGORIES=	x11 xfce
-MASTER_SITES=	XFCE/src/apps/${PORTNAME}/${PORTVERSION:R}
+MASTER_SITES=	XFCE/apps
 DIST_SUBDIR=	xfce4
 
 MAINTAINER=	xfce@FreeBSD.org
@@ -16,16 +16,16 @@ LICENSE_FILE_LGPL20=	${WRKSRC}/COPYING.LIB
 
 LIB_DEPENDS=	libdbus-1.so:devel/dbus \
 		libdbus-glib-1.so:devel/dbus-glib \
-		libnotify.so:devel/libnotify \
-		libstartup-notification-1.so:x11/startup-notification \
 		libxklavier.so:x11/libxklavier
 
-USES=		gettext-tools gmake gnome pkgconfig tar:bzip2 xfce:gtk3
+USES=		gettext-tools gl gmake gnome pkgconfig python:3.5+ shebangfix \
+		tar:bzip2 xfce xorg
 USE_GL=		gl
-USE_GNOME=	cairo gdkpixbuf2 glib20 gtk30 intltool
-USE_XFCE=	garcon libexo libutil
+USE_GNOME=	cairo gdkpixbuf2 glib20 gtk30 intltool libwnck3
+USE_XFCE=	garcon libexo xfconf
 USE_XORG=	ice sm x11 xext xrandr xscrnsaver xxf86vm
 
+SHEBANG_FILES=	src/xfce4-screensaver-configure
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--with-xscreensaverdir=${XSCREENSAVER_DIR} \
 		--with-xscreensaverhackdir=${LOCALBASE}/bin/xscreensaver-hacks \

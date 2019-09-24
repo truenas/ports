@@ -2,11 +2,8 @@
 
 PORTNAME=	gmmlib
 DISTVERSIONPREFIX=	intel-${PORTNAME}-
-DISTVERSION=	19.1.2
+DISTVERSION=	19.3.2
 CATEGORIES=	multimedia
-
-PATCH_SITES=	https://github.com/${GH_ACCOUNT}/${GH_PROJECT}/commit/
-PATCHFILES=	c8f5db3ec008.patch:-p1
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Intel Graphics Memory Management Library
@@ -24,7 +21,9 @@ GH_ACCOUNT=	intel
 CMAKE_ARGS=	-DBUILD_TYPE:STRING="${CMAKE_BUILD_TYPE}" \
 		-DGMMLIB_MARCH:STRING="${CPUTYPE}"
 
-OPTIONS_DEFINE=	TEST
+OPTIONS_DEFINE=	DEBUG TEST
+
+DEBUG_CFLAGS=	-D_DEBUG
 
 # XXX Unbundle googletest
 TEST_CMAKE_BOOL=	RUN_TEST_SUITE
@@ -34,6 +33,12 @@ post-patch:
 # Silence -Wmacro-redefined
 	@${REINPLACE_CMD} -e '/__fastcall/d' \
 		${WRKSRC}/Source/inc/portable_compiler.h
+# XXX Uncomment and drop patches if upstream doesn't regain sanity
+.if !exists(${.CURDIR}/files/patch-gcc-atomics) && !exists(${.CURDIR}/files/patch-unix)
+# Avoid platform whitelists for generic non-Windows code
+	@${GREP} --exclude='*/os.h*' --exclude='*/googletest/*' -Flr '__linux' ${WRKSRC} | ${XARGS} \
+		${REINPLACE_CMD} -i .opsys -E 's/__linux(__)?/__unix__/'
+.endif
 
 post-install:
 # Clean up after PATTERN-based install

@@ -3,7 +3,7 @@
 
 PORTNAME=	deadbeef
 PORTVERSION=	0.7.2
-PORTREVISION=	13
+PORTREVISION=	16
 CATEGORIES=	audio
 MASTER_SITES=	SF/${PORTNAME}/
 
@@ -13,7 +13,6 @@ COMMENT=	Ultimate music player for Unix-like systems
 LICENSE=	GPLv2 LGPL21
 LICENSE_COMB=	dual
 
-BROKEN_aarch64=		Fails to compile: error: invalid conversion between vector type and integer type
 BROKEN_armv6=		Fails to compile: error: invalid conversion between vector type and integer type
 BROKEN_armv7=		Fails to compile: error: invalid conversion between vector type and integer type
 
@@ -176,7 +175,7 @@ SC68_CONFIGURE_OFF=	--disable-sc68
 
 SHN_CONFIGURE_OFF=	--disable-shn
 
-SHELLEXEC_CONFIGURE_ARGS+=	--disable-shellexec
+SHELLEXEC_CONFIGURE_OFF=	--disable-shellexec
 
 NLS_CONFIGURE_OFF=	--disable-nls
 

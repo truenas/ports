@@ -3,7 +3,7 @@
 
 PORTNAME=	openblas
 PORTVERSION=	0.2.20
-PORTREVISION=	8
+PORTREVISION=	10
 DISTVERSIONPREFIX=	v
 PORTEPOCH=	1
 CATEGORIES=	math
@@ -16,8 +16,6 @@ COMMENT=	Optimized BLAS library based on GotoBLAS2
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
-
-BROKEN_powerpc64=	fails to compile: gemm.c:403: 'SGEMM_DEFAULT_Q' undeclared (first use in this function)
 
 USES=		fortran gmake perl5
 
@@ -42,6 +40,8 @@ BUILDFLAGS=	FCOMMON_OPT=-frecursive MAKE_NB_JOBS=-1
 OPTIONS_DEFINE=		INTERFACE64 OPENMP
 OPTIONS_DEFINE_i386=	DYNAMIC_ARCH AVX AVX2
 OPTIONS_DEFINE_amd64=	${OPTIONS_DEFINE_i386}
+OPTIONS_DEFINE_powerpc64=	POWER6
+OPTIONS_EXCLUDE_powerpc64=	OPENMP
 
 .if defined(BATCH) || defined(PACKAGE_BUILDING)
 OPTIONS_DEFAULT_i386=	DYNAMIC_ARCH
@@ -53,8 +53,18 @@ INTERFACE64_DESC=	Use 8 byte integers on 64-bit architectures
 OPENMP_DESC=		Use OpenMP for threading
 AVX_DESC=		Support Advanced Vector Extensions (AVX)
 AVX2_DESC=		Support Advanced Vector Extensions 2 (AVX2)
+POWER6_DESC=		Optimize for POWER6, instead of the default PPC970
 
 .include <bsd.port.options.mk>
+
+.if ${ARCH} == powerpc64
+USE_GCC=	yes
+.  if ${PORT_OPTIONS:MPOWER6}
+TARGET_CPU_ARCH=	POWER6
+.else
+TARGET_CPU_ARCH=	PPC970
+.  endif
+.endif
 
 .if defined(TARGET_CPU_ARCH)
 BUILDFLAGS+=	TARGET=${TARGET_CPU_ARCH}
@@ -84,6 +94,8 @@ BUILDFLAGS+=	INTERFACE64=1
 .if ${PORT_OPTIONS:MOPENMP}
 USES+=		compiler:openmp
 BUILDFLAGS_THREAD+=	USE_OPENMP=1
+.else
+USES+=		compiler:c11
 .endif
 
 .if ! ${PORT_OPTIONS:MAVX}
@@ -131,6 +143,10 @@ post-patch:
 	-e 's+$${CROSS_SUFFIX}+${LOCALBASE}/bin/+' \
 	-e '/Clang.*OpenMP/g' \
 		${WRKSRC}/Makefile.system
+	${REINPLACE_CMD} \
+	-e 's/defined(linux)/(defined(linux) || defined(__FreeBSD__))/g' \
+	-e 's/ifdef linux/if defined(linux) || defined(__FreeBSD__)/g' \
+		${WRKSRC}/kernel/power/*.S
 
 post-patch-OPENMP-on:
 	${REINPLACE_CMD} -e "s+OPENBLAS_NUM_THREADS+OMP_NUM_THREADS+g" \

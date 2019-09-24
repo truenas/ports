@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	gegl
-PORTVERSION=	0.4.12
+PORTVERSION=	0.4.16
 PORTREVISION=	3
 CATEGORIES=	graphics
 MASTER_SITES=	GIMP
@@ -20,7 +20,7 @@ LIB_DEPENDS=	libbabl-0.1.so:x11/babl \
 		libfribidi.so:converters/fribidi \
 		libpng.so:graphics/png
 
-USES=		compiler:c11 cpe gettext gmake gnome jpeg libtool localbase \
+USES=		compiler:c++14-lang cpe gettext gmake gnome jpeg libtool localbase \
 		pathfix pkgconfig shebangfix uniquefiles tar:bzip2
 USE_GNOME=	glib20 intltool introspection:build
 USE_LDCONFIG=	yes
@@ -30,7 +30,7 @@ CONFIGURE_ARGS=	--without-vala --disable-docs
 CONFIGURE_ARGS+=--without-mrg --without-lensfun
 INSTALL_TARGET=	install-strip
 
-GEGL_MINOR=	412
+GEGL_MINOR=	416
 GEGL_VER=	0.4
 PLIST_SUB+=	GEGL_MINOR="${GEGL_MINOR}" GEGL_VER=${GEGL_VER}
 
@@ -45,11 +45,11 @@ UNIQUE_SUFFIX=	-${GEGL_VER}
 UNIQUE_SUFFIX_FILES=	bin/gcut
 
 OPTIONS_SUB=	yes
-OPTIONS_DEFINE=	CAIRO ENSCRIPT EXIV2 FFMPEG PIXBUF GRAPHVIZ JASPER \
-		LUA OPENEXR RAW PANGO LIBRSVG2 SDL SPIRO V4L \
+OPTIONS_DEFINE=	CAIRO ENSCRIPT FFMPEG PIXBUF GRAPHVIZ JASPER \
+		LUA OPENEXR RAW PANGO POPPLER LIBRSVG2 SDL SPIRO V4L \
 		EXAMPLES LCMS2 WEBP TIFF GEXIV2
-OPTIONS_DEFAULT=CAIRO ENSCRIPT EXIV2 PIXBUF GRAPHVIZ JASPER LCMS2 LUA \
-		OPENEXR RAW PANGO LIBRSVG2 SDL SPIRO V4L WEBP TIFF
+OPTIONS_DEFAULT=CAIRO ENSCRIPT GEXIV2 PIXBUF GRAPHVIZ JASPER LCMS2 LUA \
+		OPENEXR RAW PANGO POPPLER LIBRSVG2 SDL SPIRO V4L WEBP TIFF
 
 ENSCRIPT_DESC=	Enscript support
 SPIRO_DESC=	Spiro support
@@ -64,6 +64,9 @@ CAIRO_CONFIGURE_WITH=	cairo
 
 PANGO_USE=	GNOME=pango
 PANGO_CONFIGURE_WITH=	pango
+
+POPPLER_LIB_DEPENDS=	libpoppler-glib.so:graphics/poppler-glib
+POPPLER_CONFIGURE_WITH=	popplerglib
 
 ENSCRIPT_BUILD_DEPENDS=	enscript:print/enscript-a4
 
@@ -93,6 +96,7 @@ LIBRSVG2_USE=		GNOME=librsvg2
 LIBRSVG2_CONFIGURE_OFF=	--without-librsvg
 
 SDL_USE=		SDL=sdl
+SDL_USES=		sdl
 SDL_CONFIGURE_WITH=	sdl
 
 SPIRO_LIB_DEPENDS=	libspiro.so:graphics/libspiro
@@ -112,16 +116,13 @@ WEBP_CONFIGURE_WITH=	webp
 #UMFPACK_CONFIGURE_WITH=	umfpack
 CONFIGURE_ARGS+=	--without-umfpack
 
-EXIV2_LIB_DEPENDS=	libexiv2.so:graphics/exiv2
-EXIV2_CONFIGURE_WITH=	exiv2
-
 GEXIV2_LIB_DEPENDS=	libgexiv2.so:graphics/gexiv2
 GEXIV2_CONFIGURE_WITH=	gexiv2
 
 TIFF_LIB_DEPENDS=	libtiff.so:graphics/tiff
 TIFF_CONFIGURE_WITH=	libtiff
 
-.include <bsd.port.options.mk>
+.include <bsd.port.pre.mk>
 
 .if ${PORT_OPTIONS:MPANGO} && ${PORT_OPTIONS:MCAIRO}
 PLIST_SUB+=	PANGOCAIRO=""
@@ -134,6 +135,9 @@ post-patch:
 	${REINPLACE_CMD} -e "s/lua >/lua-${LUA_VER} >/g" \
 		-e 's|\(lua\)\(5\.1\)|\1-\2|g ; s|x86_64|amd64|g' \
 		${WRKSRC}/configure
+.if ${CHOSEN_COMPILER_TYPE} == clang
+	${REINPLACE_CMD} -e '/altivec.h/d' ${WRKSRC}/gegl/opencl/cl_platform.h
+.endif
 
 post-patch-EXAMPLES-off:
 	${REINPLACE_CMD} -e 's|tools examples|tools|g' \
@@ -146,4 +150,4 @@ post-install-EXAMPLES-on:
 	${INSTALL_DATA} ${WRKSRC}/examples/${ex}.c ${STAGEDIR}${EXAMPLESDIR}
 .endfor
 
-.include <bsd.port.mk>
+.include <bsd.port.post.mk>

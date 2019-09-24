@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	babl
-PORTVERSION=	0.1.60
+PORTVERSION=	0.1.66
 PORTREVISION=	1
 CATEGORIES=	x11
 MASTER_SITES=	GIMP
@@ -12,6 +12,8 @@ COMMENT=	Dynamic pixel format conversion library
 
 LICENSE=	LGPL3
 LICENSE_FILE=	${WRKSRC}/COPYING
+
+LIB_DEPENDS=	liblcms2.so:graphics/lcms2
 
 USES=		compiler:c11 gmake libtool pathfix pkgconfig tar:bzip2
 

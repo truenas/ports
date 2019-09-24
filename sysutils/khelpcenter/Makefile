@@ -17,7 +17,7 @@ USE_KDE=	archive auth bookmarks codecs completion config configwidgets \
 		itemmodels itemviews jobwidgets js kcmutils kdelibs4support \
 		kio khtml parts service sonnet textwidgets widgetsaddons \
 		windowsystem xmlgui
-USE_QT=		core dbus gui network widgets xml \
+USE_QT=		concurrent core dbus gui network widgets xml \
 		buildtools_build qmake_build
 SHEBANG_FILES=	searchhandlers/khc_mansearch.pl
 

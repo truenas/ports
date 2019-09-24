@@ -1,8 +1,8 @@
 # $FreeBSD$
 
 PORTNAME=	elisa
-PORTVERSION=	0.3.0
-PORTREVISION=	2
+PORTVERSION=	0.4.2
+PORTREVISION=	1
 CATEGORIES=	audio kde
 MASTER_SITES=	KDE/stable/${PORTNAME}/${PORTVERSION}
 
@@ -19,7 +19,7 @@ USE_QT=		buildtools_build qmake_build testlib_build \
 		quickcontrols2 sql svg widgets xml
 USE_KDE=	auth baloo5 bookmarks codecs completion config configwidgets \
 		coreaddons crash dbusaddons filemetadata i18n itemviews \
-		jobwidgets kcmutils kdeclarative kio package service solid \
-		widgetsaddons xmlgui
+		jobwidgets kcmutils kdeclarative kio kirigami2 package \
+		service solid widgetsaddons xmlgui
 
 .include <bsd.port.mk>

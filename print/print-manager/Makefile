@@ -14,7 +14,7 @@ USE_KDE=	auth codecs completion config configwidgets coreaddons \
 		dbusaddons ecm i18n iconthemes itemviews jobwidgets kcmutils \
 		kio notifications plasma-framework service widgetsaddons \
 		windowsystem
-USE_QT=		core dbus declarative gui network widgets xml \
+USE_QT=		concurrent core dbus declarative gui network widgets xml \
 		buildtools_build qmake_build
 
 OPTIONS_DEFINE=	DOCS

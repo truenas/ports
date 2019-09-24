@@ -12,7 +12,7 @@ USE_GL=		gl glu
 USE_KDE=	archive auth codecs completion config configwidgets \
 		coreaddons crash ecm guiaddons i18n jobwidgets kio \
 		libkdegames service widgetsaddons xmlgui
-USE_QT=		core dbus declarative gui network opengl printsupport \
+USE_QT=		concurrent core dbus declarative gui network opengl printsupport \
 		svg widgets xml \
 		buildtools_build qmake_build
 

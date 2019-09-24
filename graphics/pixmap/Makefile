@@ -14,6 +14,10 @@ COMMENT=	Pixmap editor based on XPM library
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/COPYRIGHT
 
+BROKEN=		'sys/dir.h' file not found
+DEPRECATED=	No longer maintained
+EXPIRATION_DATE=	2019-09-20
+
 # requires rgb.txt
 BUILD_DEPENDS=	showrgb:x11/rgb \
 		xrdb:x11/xrdb
@@ -23,8 +27,9 @@ WRKSRC=		${WRKDIR}/${PORTNAME}
 USES=		imake
 USE_XORG=	xpm xbitmaps x11 xaw xmu xt sm ice xext
 
-CFLAGS+=	-D_X_SENTINEL\(x\)= -D_X_ATTRIBUTE_PRINTF\(x,y\)= \
-		-D_X_DEPRECATED= -DUSG
+# Remove bundled X11 headers and use headers from X11 libraries
+post-extract:
+	${RM} -rf ${WRKSRC}/X11
 
 post-configure:
 	@${REINPLACE_CMD} 's| $$(PIXMAPDIR|$$(PIXMAPDIR|' \

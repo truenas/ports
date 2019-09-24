@@ -4,7 +4,7 @@ PORTNAME=	openage
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.3.0-1262
 DISTVERSIONSUFFIX=	-ga554ab49
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	games
 
 MAINTAINER=	freebsd@sysctl.cz
@@ -24,7 +24,7 @@ LIB_DEPENDS=	libepoxy.so:graphics/libepoxy \
 		libogg.so:audio/libogg \
 		libopus.so:audio/opus \
 		libopusfile.so:audio/opusfile \
-		libpng16.so:graphics/png \
+		libpng.so:graphics/png \
 		libnyan.so:lang/nyan
 RUN_DEPENDS=	${PYNUMPY} \
 		${PYTHON_PKGNAMEPREFIX}Jinja2>0:devel/py-Jinja2@${PY_FLAVOR} \

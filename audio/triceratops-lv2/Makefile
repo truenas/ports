@@ -3,7 +3,7 @@
 PORTNAME=	triceratops
 DISTVERSIONPREFIX=	lv2-v
 DISTVERSION=	0.3.1
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	audio
 MASTER_SITES=	SF/triceratops
 PKGNAMESUFFIX=	-lv2
@@ -13,6 +13,8 @@ COMMENT=	Polyphonic synthesizer LV2 plugin
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
+
+BROKEN=		fails to configure
 
 BUILD_DEPENDS=	lv2>0:audio/lv2
 LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig \

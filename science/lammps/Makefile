@@ -14,9 +14,9 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 BROKEN_i386=	undefined reference to `__atomic_load'
 CONFLICTS_BUILD=	ga # conflicts with include/error.h, already fixed in the head
 
-USES=		blaslapack:openblas cmake:noninja eigen:3 fortran shebangfix
+USES=		blaslapack:openblas cmake:noninja eigen:3 fortran localbase:ldflags shebangfix
 USE_GITHUB=	yes
-GH_TAGNAME=	patch_29Mar2019
+GH_TAGNAME=	patch_19Sep2019
 SHEBANG_GLOB=	*.sh *.bash
 SHEBANG_FILES=	lib/kokkos/bin/nvcc_wrapper
 
@@ -32,6 +32,7 @@ PARALLEL_DESC=		Enable parallelizations:
 MPI_CMAKE_BOOL=		BUILD_MPI
 MPI_LIB_DEPENDS=	libmpi.so:net/openmpi
 
+OPENMP_USES=		localbase
 OPENMP_CMAKE_BOOL=	BUILD_OMP
 OPENMP_LIB_DEPENDS=	libomp.so:devel/openmp
 
@@ -42,7 +43,7 @@ JPEG_CMAKE_BOOL=	WITH_JPEG
 JPEG_USES=		jpeg
 
 PNG_CMAKE_BOOL=		WITH_PNG
-PNG_LIB_DEPENDS=	libpng16.so:graphics/png
+PNG_LIB_DEPENDS=	libpng.so:graphics/png
 
 GZIP_CMAKE_BOOL=	WITH_GZIP
 
@@ -56,11 +57,7 @@ LATTE_DESC=		Use LATTE package
 LATTE_CMAKE_BOOL=	PKG_LATTE
 LATTE_LIB_DEPENDS=	liblatte.so:science/latte
 
-# use clang from ports because cmake can't find OpenMP with base clang, see https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=223678
-BUILD_DEPENDS+=	clang${LLVM_DEFAULT}:devel/llvm${LLVM_DEFAULT}
-CPP=		clang-cpp${LLVM_DEFAULT}
-CC=		clang${LLVM_DEFAULT}
-CXX=		clang++${LLVM_DEFAULT}
+PORTSCOUT=	ignore # due to a special version tagging scheme that this project uses portscout fails to find new versions, watching their GitHub release page instead
 
 post-patch:
 	@${REINPLACE_CMD} 's|SHELL = /bin/bash|SHELL = ${LOCALBASE}/bin/bash|' ${WRKSRC}/src/Makefile

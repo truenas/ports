@@ -1,3 +1,3 @@
-TIMESTAMP = 1553771067
-SHA256 (ideaIU-2019.1-no-jbr.tar.gz) = 323802b35953398eed8ed491ae370b876ace6f4eccceaf06d699730612704d3b
-SIZE (ideaIU-2019.1-no-jbr.tar.gz) = 617441620
+TIMESTAMP = 1568131622
+SHA256 (jetbrains/ideaIU-2019.2.2-no-jbr.tar.gz) = 4e744cb08ea243fc47ed90b56e8d255bd1facc1433607a6968c9733238a8318d
+SIZE (jetbrains/ideaIU-2019.2.2-no-jbr.tar.gz) = 699929262
