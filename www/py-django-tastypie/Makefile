@@ -12,7 +12,7 @@ COMMENT=	Create REST API for Django apps
 
 LICENSE=	BSD3CLAUSE
 
-MY_DEPENDS=	${PYTHON_PKGNAMEPREFIX}mimeparse>=0.1.4:devel/py-mimeparse@${FLAVOR} \
+MY_DEPENDS=	${PYTHON_PKGNAMEPREFIX}python-mimeparse>=0.1.4:devel/py-python-mimeparse@${FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}dateutil>=2.1:devel/py-dateutil@${FLAVOR}
 
 BUILD_DEPENDS=	${MY_DEPENDS}
