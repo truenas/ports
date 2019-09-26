@@ -34,7 +34,6 @@ start_precmd="install -o root /dev/null ${pidfile}"
 command=/usr/sbin/daemon
 command_args=" \
 	-c \
-	-f \
 	-t ${name} \
 	-r \
 	-P ${pidfile} \
