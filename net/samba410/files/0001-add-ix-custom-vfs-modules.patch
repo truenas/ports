@@ -459,10 +459,10 @@ index bf6b303..c70f9f3 100644
  static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 0000000..58a241e
+index 0000000..ab964e3
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2200 @@
+@@ -0,0 +1,2204 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -2583,6 +2583,10 @@ index 0000000..58a241e
 +		
 +		config->zfs_acl_sortaces = lp_parm_bool(SNUM(handle->conn),
 +			"ixnas", "zfsacl_sortaces", false);
++		if (lp_parm_bool(SNUM(handle->conn), "fruit", "time machine", false)) {
++			config->zfs_acl_map_modify = true;
++		}
++
 +	}
 +
 +	config->zfs_acl_chmod_enabled = lp_parm_bool(SNUM(handle->conn),
