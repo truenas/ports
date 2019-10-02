@@ -1,3 +1,16 @@
+diff --git a/VERSION b/VERSION
+index 4775b6f..d2721c2 100644
+--- a/VERSION
++++ b/VERSION
+@@ -99,7 +99,7 @@ SAMBA_VERSION_RC_RELEASE=
+ # e.g. SAMBA_VERSION_IS_SVN_SNAPSHOT=yes               #
+ #  ->  "3.0.0-SVN-build-199"                           #
+ ########################################################
+-SAMBA_VERSION_IS_GIT_SNAPSHOT=yes
++SAMBA_VERSION_IS_GIT_SNAPSHOT=no
+ 
+ ########################################################
+ # This is for specifying a release nickname            #
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
 index 0000000..8b16452
@@ -363,12 +376,55 @@ index 0000000..27f8977
 +
 +
 +#endif	/* !__SMB_LIBZFS_H */
+diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
+index 8aaa991..0f3e505 100644
+--- a/source3/modules/vfs_default.c
++++ b/source3/modules/vfs_default.c
+@@ -76,32 +76,20 @@ static int vfswrap_get_quota(struct vfs_handle_struct *handle,
+ 				unid_t id,
+ 				SMB_DISK_QUOTA *qt)
+ {
+-#ifdef HAVE_SYS_QUOTAS
+-	int result;
+-
+-	START_PROFILE(syscall_get_quota);
+-	result = sys_get_quota(smb_fname->base_name, qtype, id, qt);
+-	END_PROFILE(syscall_get_quota);
+-	return result;
+-#else
++/*
++ * Exclusively rely on stacked VFS modules for quotas. 
++ */
+ 	errno = ENOSYS;
+ 	return -1;
+-#endif
+ }
+ 
+ static int vfswrap_set_quota(struct vfs_handle_struct *handle, enum SMB_QUOTA_TYPE qtype, unid_t id, SMB_DISK_QUOTA *qt)
+ {
+-#ifdef HAVE_SYS_QUOTAS
+-	int result;
+-
+-	START_PROFILE(syscall_set_quota);
+-	result = sys_set_quota(handle->conn->connectpath, qtype, id, qt);
+-	END_PROFILE(syscall_set_quota);
+-	return result;
+-#else
++/*
++ * Exclusively rely on stacked VFS modules for quotas. 
++ */
+ 	errno = ENOSYS;
+ 	return -1;
+-#endif
+ }
+ 
+ static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 0000000..e8e3b1f
+index 0000000..0c724f4
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,1204 @@
+@@ -0,0 +1,1222 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -395,6 +451,8 @@ index 0000000..e8e3b1f
 +#include "libcli/security/security.h"
 +#include "nfs4_acls.h"
 +#include "system/filesys.h"
++#include "auth.h"
++#include "privileges.h"
 +#include <fstab.h>
 +#include <sys/types.h>
 +#include <ufs/ufs/quota.h>
@@ -453,6 +511,9 @@ index 0000000..e8e3b1f
 +	if (fileflags & UF_OFFLINE){
 +		dosmode |= FILE_ATTRIBUTE_OFFLINE;
 +	}
++	if (fileflags & UF_REPARSE){
++		dosmode |= FILE_ATTRIBUTE_REPARSE_POINT;
++	}
 +
 +	return dosmode;
 +}
@@ -477,6 +538,9 @@ index 0000000..e8e3b1f
 +	}
 +	if (dosmode & FILE_ATTRIBUTE_SPARSE) {
 +		fileflags |= UF_SPARSE;
++	}
++	if (dosmode & FILE_ATTRIBUTE_REPARSE_POINT){
++		fileflags |= UF_REPARSE;
 +	}
 +
 +	return fileflags;
@@ -1245,7 +1309,7 @@ index 0000000..e8e3b1f
 +{
 +	struct ixnas_config_data *config;
 +	int ret;
-+	
++	bool is_disk_op;	
 +
 +	SMB_VFS_HANDLE_GET_DATA(handle, config,
 +				struct ixnas_config_data,
@@ -1257,7 +1321,17 @@ index 0000000..e8e3b1f
 +		return -1;
 +	}
 +
-+	become_root();
++	is_disk_op = security_token_has_privilege(
++		handle->conn->session_info->security_token,
++		SEC_PRIV_DISK_OPERATOR);
++
++	if (!is_disk_op) {
++		DBG_ERR("%s does not have sufficient privileges to set quotas.\n",
++			geteuid());
++		errno = EPERM;
++		return -1;
++	}
++
 +	switch (qtype) {
 +	case SMB_USER_QUOTA_TYPE:
 +	case SMB_USER_FS_QUOTA_TYPE:
@@ -2347,10 +2421,18 @@ index 0000000..28f4b36
 +		"zfs_space", &vfs_zfs_space_fns);
 +}
 diff --git a/source3/smbd/fake_file.c b/source3/smbd/fake_file.c
-index 83b66d6..07bf87c 100644
+index 83b66d6..12566d2 100644
 --- a/source3/smbd/fake_file.c
 +++ b/source3/smbd/fake_file.c
-@@ -128,6 +128,7 @@ NTSTATUS open_fake_file(struct smb_request *req, connection_struct *conn,
+@@ -22,6 +22,7 @@
+ #include "smbd/globals.h"
+ #include "fake_file.h"
+ #include "auth.h"
++#include "privileges.h"
+ 
+ struct fake_file_type {
+ 	const char *name;
+@@ -128,6 +129,7 @@ NTSTATUS open_fake_file(struct smb_request *req, connection_struct *conn,
  {
  	files_struct *fsp = NULL;
  	NTSTATUS status;
@@ -2358,7 +2440,7 @@ index 83b66d6..07bf87c 100644
  
  	status = smbd_calculate_access_mask(conn, smb_fname, false,
  					    access_mask, &access_mask);
-@@ -140,15 +141,35 @@ NTSTATUS open_fake_file(struct smb_request *req, connection_struct *conn,
+@@ -140,15 +142,35 @@ NTSTATUS open_fake_file(struct smb_request *req, connection_struct *conn,
  		return status;
  	}
  
@@ -2404,10 +2486,10 @@ index 83b66d6..07bf87c 100644
  
  	status = file_new(req, conn, &fsp);
 diff --git a/source3/smbd/trans2.c b/source3/smbd/trans2.c
-index 61757c6..e4d4b51 100644
+index 76f73c0..b3b10a4 100644
 --- a/source3/smbd/trans2.c
 +++ b/source3/smbd/trans2.c
-@@ -3748,12 +3748,21 @@ cBytesSector=%u, cUnitTotal=%u, cUnitAvail=%d\n", (unsigned int)bsize, (unsigned
+@@ -3752,12 +3752,21 @@ cBytesSector=%u, cUnitTotal=%u, cUnitAvail=%d\n", (unsigned int)bsize, (unsigned
  
  			ZERO_STRUCT(fsp);
  			ZERO_STRUCT(quotas);
@@ -2431,7 +2513,7 @@ index 61757c6..e4d4b51 100644
  				DEBUG(0,("get_user_quota: access_denied "
  					 "service [%s] user [%s]\n",
  					 lp_servicename(talloc_tos(), SNUM(conn)),
-@@ -4050,11 +4059,17 @@ static NTSTATUS smb_set_fsquota(connection_struct *conn,
+@@ -4054,11 +4063,17 @@ static NTSTATUS smb_set_fsquota(connection_struct *conn,
  {
  	NTSTATUS status;
  	SMB_NTQUOTA_STRUCT quotas;
