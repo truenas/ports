@@ -19,10 +19,10 @@ index 4256272..156f28d 100644
              # Create a file system security descriptor
              domain_sid = security.dom_sid(self.samdb.get_domain_sid())
 diff --git a/python/samba/ntacls.py b/python/samba/ntacls.py
-index 32ceb54..d2aeb57 100644
+index ff2e926..9ef00ab 100644
 --- a/python/samba/ntacls.py
 +++ b/python/samba/ntacls.py
-@@ -90,7 +90,14 @@ def getdosinfo(lp, file):
+@@ -92,7 +92,14 @@ def getdosinfo(lp, file):
      return ndr_unpack(xattr.DOSATTRIB, attribute)
  
  def getntacl(lp, file, backend=None, eadbfile=None, direct_db_access=True, service=None):
@@ -38,7 +38,7 @@ index 32ceb54..d2aeb57 100644
          (backend_obj, dbname) = checkset_backend(lp, backend, eadbfile)
          if dbname is not None:
              try:
-@@ -273,7 +280,7 @@ def ldapmask2filemask(ldm):
+@@ -275,7 +282,7 @@ def ldapmask2filemask(ldm):
      return filemask
  
  
@@ -47,7 +47,7 @@ index 32ceb54..d2aeb57 100644
      """
  
      This function takes an the SDDL representation of a DS
-@@ -292,9 +299,16 @@ def dsacl2fsacl(dssddl, sid, as_sddl=True):
+@@ -294,9 +301,16 @@ def dsacl2fsacl(dssddl, sid, as_sddl=True):
          if not ace.type & security.SEC_ACE_TYPE_ACCESS_ALLOWED_OBJECT and str(ace.trustee) != security.SID_BUILTIN_PREW2K:
         #    if fdescr.type & security.SEC_DESC_DACL_AUTO_INHERITED:
              ace.flags = ace.flags | security.SEC_ACE_FLAG_OBJECT_INHERIT | security.SEC_ACE_FLAG_CONTAINER_INHERIT
@@ -68,10 +68,10 @@ index 32ceb54..d2aeb57 100644
              fdescr.dacl_add(ace)
  
 diff --git a/python/samba/provision/__init__.py b/python/samba/provision/__init__.py
-index 066411a..e716729 100644
+index aceb6a8..aaefb93 100644
 --- a/python/samba/provision/__init__.py
 +++ b/python/samba/provision/__init__.py
-@@ -1634,21 +1634,14 @@ def setsysvolacl(samdb, netlogon, sysvol, uid, gid, domainsid, dnsdomain,
+@@ -1644,21 +1644,14 @@ def setsysvolacl(samdb, netlogon, sysvol, uid, gid, domainsid, dnsdomain,
          s3conf = s3param.get_context()
          s3conf.load(lp.configfile)
  
@@ -99,7 +99,7 @@ index 066411a..e716729 100644
                  smbd.chown(file.name, uid, gid)
              except OSError:
                  raise ProvisioningError("Unable to chown a file on your filesystem.  "
-@@ -1727,10 +1720,10 @@ def acl_type(direct_db_access):
+@@ -1737,10 +1730,10 @@ def acl_type(direct_db_access):
      else:
          return "VFS"
  
@@ -112,7 +112,7 @@ index 066411a..e716729 100644
          raise ProvisioningError('%s ACL on GPO directory %s %s does not match expected value %s from GPO object' % (acl_type(direct_db_access), path, fsacl_sddl, acl))
  
      for root, dirs, files in os.walk(path, topdown=False):
-@@ -1740,7 +1733,7 @@ def check_dir_acl(path, acl, lp, domainsid, direct_db_access):
+@@ -1750,7 +1743,7 @@ def check_dir_acl(path, acl, lp, domainsid, direct_db_access):
              if fsacl is None:
                  raise ProvisioningError('%s ACL on GPO file %s %s not found!' % (acl_type(direct_db_access), os.path.join(root, name)))
              fsacl_sddl = fsacl.as_sddl(domainsid)
@@ -121,7 +121,7 @@ index 066411a..e716729 100644
                  raise ProvisioningError('%s ACL on GPO file %s %s does not match expected value %s from GPO object' % (acl_type(direct_db_access), os.path.join(root, name), fsacl_sddl, acl))
  
          for name in dirs:
-@@ -1749,7 +1742,7 @@ def check_dir_acl(path, acl, lp, domainsid, direct_db_access):
+@@ -1759,7 +1752,7 @@ def check_dir_acl(path, acl, lp, domainsid, direct_db_access):
              if fsacl is None:
                  raise ProvisioningError('%s ACL on GPO directory %s %s not found!' % (acl_type(direct_db_access), os.path.join(root, name)))
              fsacl_sddl = fsacl.as_sddl(domainsid)
@@ -130,7 +130,7 @@ index 066411a..e716729 100644
                  raise ProvisioningError('%s ACL on GPO directory %s %s does not match expected value %s from GPO object' % (acl_type(direct_db_access), os.path.join(root, name), fsacl_sddl, acl))
  
  
-@@ -1774,7 +1767,7 @@ def check_gpos_acl(sysvol, dnsdomain, domainsid, domaindn, samdb, lp,
+@@ -1784,7 +1777,7 @@ def check_gpos_acl(sysvol, dnsdomain, domainsid, domaindn, samdb, lp,
          raise ProvisioningError('DB ACL on policy root %s %s not found!' % (acl_type(direct_db_access), root_policy_path))
      fsacl_sddl = fsacl.as_sddl(domainsid)
      if fsacl_sddl != POLICIES_ACL:
@@ -139,7 +139,7 @@ index 066411a..e716729 100644
      res = samdb.search(base="CN=Policies,CN=System,%s"%(domaindn),
                          attrs=["cn", "nTSecurityDescriptor"],
                          expression="", scope=ldb.SCOPE_ONELEVEL)
-@@ -1783,7 +1776,7 @@ def check_gpos_acl(sysvol, dnsdomain, domainsid, domaindn, samdb, lp,
+@@ -1793,7 +1786,7 @@ def check_gpos_acl(sysvol, dnsdomain, domainsid, domaindn, samdb, lp,
          acl = ndr_unpack(security.descriptor,
                           str(policy["nTSecurityDescriptor"])).as_sddl()
          policy_path = getpolicypath(sysvol, dnsdomain, str(policy["cn"]))
@@ -148,7 +148,7 @@ index 066411a..e716729 100644
                        domainsid, direct_db_access)
  
  
-@@ -1913,6 +1906,9 @@ def provision_fill(samdb, secrets_ldb, logger, names, paths,
+@@ -1923,6 +1916,9 @@ def provision_fill(samdb, secrets_ldb, logger, names, paths,
          samdb.transaction_commit()
  
      if serverrole == "active directory domain controller":
@@ -158,7 +158,7 @@ index 066411a..e716729 100644
          # Continue setting up sysvol for GPO. This appears to require being
          # outside a transaction.
          if not skip_sysvolacl:
-@@ -2293,6 +2289,9 @@ def provision(logger, session_info, smbconf=None,
+@@ -2303,6 +2299,9 @@ def provision(logger, session_info, smbconf=None,
              if not os.path.isdir(paths.netlogon):
                  os.makedirs(paths.netlogon, 0o755)
  
@@ -190,7 +190,7 @@ index c80f8f3..51077bc 100644
  #define DBGC_CLASS DBGC_ACLS
  
 diff --git a/source3/param/loadparm.c b/source3/param/loadparm.c
-index 322934c..3e3e134 100644
+index 322f971..3b9b7ee 100644
 --- a/source3/param/loadparm.c
 +++ b/source3/param/loadparm.c
 @@ -2744,6 +2744,13 @@ static void init_locals(void)
@@ -208,10 +208,10 @@ index 322934c..3e3e134 100644
  				lp_do_parameter(-1, "vfs objects", "dfs_samba4 acl_xattr");
  			}
 diff --git a/source3/smbd/pysmbd.c b/source3/smbd/pysmbd.c
-index 1431925..5d565e7 100644
+index 845ea25..f7e267d 100644
 --- a/source3/smbd/pysmbd.c
 +++ b/source3/smbd/pysmbd.c
-@@ -387,6 +387,18 @@ static SMB_ACL_T make_simple_acl(TALLOC_CTX *mem_ctx,
+@@ -382,6 +382,18 @@ static SMB_ACL_T make_simple_acl(TALLOC_CTX *mem_ctx,
  	return acl;
  }
  
@@ -230,7 +230,7 @@ index 1431925..5d565e7 100644
  /*
    set a simple ACL on a file, as a test
   */
-@@ -410,7 +422,7 @@ static PyObject *py_smbd_set_simple_acl(PyObject *self, PyObject *args, PyObject
+@@ -405,7 +417,7 @@ static PyObject *py_smbd_set_simple_acl(PyObject *self, PyObject *args, PyObject
  	acl = make_simple_acl(frame, gid, mode);
  	if (acl == NULL) {
  		TALLOC_FREE(frame);
@@ -239,7 +239,7 @@ index 1431925..5d565e7 100644
  	}
  
  	conn = get_conn_tos(service, NULL);
-@@ -433,6 +445,113 @@ static PyObject *py_smbd_set_simple_acl(PyObject *self, PyObject *args, PyObject
+@@ -428,6 +440,113 @@ static PyObject *py_smbd_set_simple_acl(PyObject *self, PyObject *args, PyObject
  }
  
  /*
@@ -353,7 +353,7 @@ index 1431925..5d565e7 100644
    chown a file
   */
  static PyObject *py_smbd_chown(PyObject *self, PyObject *args, PyObject *kwargs)
-@@ -843,9 +962,24 @@ static PyMethodDef py_smbd_methods[] = {
+@@ -838,9 +957,24 @@ static PyMethodDef py_smbd_methods[] = {
  	{ "have_posix_acls",
  		(PyCFunction)py_smbd_have_posix_acls, METH_NOARGS,
  		NULL },
