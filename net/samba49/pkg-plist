@@ -871,6 +871,7 @@ lib/shared-modules/vfs/zfsacl.so
 %%AD_DC%%%%DATADIR%%/setup/provision_schema_basedn.ldif
 %%AD_DC%%%%DATADIR%%/setup/provision_self_join_config.ldif
 %%AD_DC%%%%DATADIR%%/setup/provision_self_join_modify_config.ldif
+%%AD_DC%%%%DATADIR%%/setup/provision_self_join_modify_schema.ldif
 %%AD_DC%%%%DATADIR%%/setup/provision_self_join_modify.ldif
 %%AD_DC%%%%DATADIR%%/setup/provision_self_join.ldif
 %%AD_DC%%%%DATADIR%%/setup/provision_users_add.ldif
