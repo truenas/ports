@@ -408,7 +408,7 @@ index 8aaa991..0f3e505 100644
  static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 0000000..0c724f4
+index 0000000..673769c
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
 @@ -0,0 +1,1222 @@
@@ -1513,12 +1513,12 @@ index 0000000..0c724f4
 +		config->base_user_quota = conv_str_size(base_quota_str); 
 +        }
 +
-+	if (config->base_user_quota) {
-+		set_base_user_quota(handle, config->base_user_quota, user);
-+	}
-+
 +	if (config->zfs_auto_homedir) {
 +		create_zfs_autohomedir(handle, config->homedir_quota, user);
++	}
++
++	if (config->base_user_quota) {
++		set_base_user_quota(handle, config->base_user_quota, user);
 +	}
 +#endif
 +
