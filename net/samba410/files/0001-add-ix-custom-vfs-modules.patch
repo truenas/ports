@@ -459,10 +459,10 @@ index bf6b303..c70f9f3 100644
  static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 0000000..ab964e3
+index 0000000..d55262f
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2204 @@
+@@ -0,0 +1,2208 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -1675,7 +1675,7 @@ index 0000000..ab964e3
 +{
 +	int ret;
 +	char rp[PATH_MAX] = { 0 };
-+	struct ixnas_config_data *config;
++	struct ixnas_config_data *config = NULL;
 +	uint64_t hardlimit, usedspace;
 +	uid_t current_user = geteuid();
 +	hardlimit = usedspace = 0;
@@ -1741,7 +1741,7 @@ index 0000000..ab964e3
 +			enum SMB_QUOTA_TYPE qtype, unid_t id,
 +			SMB_DISK_QUOTA *qt)
 +{
-+	struct ixnas_config_data *config;
++	struct ixnas_config_data *config = NULL;
 +	int ret;
 +	bool is_disk_op = false;
 +
@@ -1987,7 +1987,6 @@ index 0000000..ab964e3
 +				}
 +				res = recalculate_flagset(flagset);
 +				if (res != 0) {
-+					DBG_ERR("not recalculating flagset\n");
 +					continue;
 +				}
 +				res = acl_create_entry(&new_acl, &new_entry);
@@ -2176,11 +2175,11 @@ index 0000000..ab964e3
 +		entry_id = ACL_NEXT_ENTRY;
 +		if (acl_get_permset(entry, &permset)) {
 +			DBG_ERR("acl_get_permset() failed on connectpath.\n");
-+			return NULL;
++			goto failure;
 +		}
 +		if (acl_get_flagset_np(entry, &flagset)) {
 +			DBG_ERR("acl_get_flagset_np() failed\n");
-+			return NULL;
++			goto failure;
 +		} 
 +		/* Entry is not inheritable at all. Skip. */
 +		if ((*flagset & (ACL_ENTRY_DIRECTORY_INHERIT|ACL_ENTRY_FILE_INHERIT)) == 0) {
@@ -2214,15 +2213,15 @@ index 0000000..ab964e3
 +
 +		if (acl_create_entry_np(&new_acl, &dir_entry, d_entry_id) == -1) {
 +			DBG_ERR("acl_create_entry() failed in connectpath.\n");
-+			return NULL;
++			goto failure;
 +		}
 +		if (acl_copy_entry(dir_entry, entry) == -1) {
 +			DBG_ERR("acl_copy_entry() failed in connectpath.\n");
-+			return NULL;
++			goto failure;
 +		}
 +		if (acl_get_flagset_np(dir_entry, &dir_flag) == -1) {
 +			DBG_ERR("acl_copy_entry() failed in connectpath.\n");
-+			return NULL;
++			goto failure;
 +		}
 +		if (*flagset & ACL_ENTRY_NO_PROPAGATE_INHERIT) {
 +			*dir_flag &= ~(ACL_ENTRY_DIRECTORY_INHERIT|ACL_ENTRY_FILE_INHERIT|ACL_ENTRY_NO_PROPAGATE_INHERIT);
@@ -2237,6 +2236,10 @@ index 0000000..ab964e3
 +	}
 +	acl_free(tmp_acl);
 +	return new_acl;
++failure:
++	acl_free(tmp_acl);
++	acl_free(new_acl);
++	return NULL;
 +}
 +
 +static int create_zfs_autohomedir(vfs_handle_struct *handle, 
@@ -2494,7 +2497,7 @@ index 0000000..ab964e3
 +static int ixnas_connect(struct vfs_handle_struct *handle,
 +			    const char *service, const char *user)
 +{
-+	struct ixnas_config_data *config;
++	struct ixnas_config_data *config = NULL;
 +	int ret;
 +	const char *homedir_quota = NULL;
 +	const char *base_quota_str = NULL;
@@ -2509,6 +2512,8 @@ index 0000000..ab964e3
 +
 +#if HAVE_LIBZFS
 +	/* Parameters for homedirs and quotas */
++	config->dataset_is_casesensitive = smb_zfs_is_case_sensitive(handle->conn->connectpath);
++
 +	config->zfs_auto_homedir = lp_parm_bool(SNUM(handle->conn), 
 +			"ixnas", "zfs_auto_homedir", false);
 +	config->homedir_quota = lp_parm_const_string(SNUM(handle->conn),
@@ -2517,6 +2522,12 @@ index 0000000..ab964e3
 +	base_quota_str = lp_parm_const_string(SNUM(handle->conn),
 +			"ixnas", "base_user_quota", NULL);
 +
++	if (config->zfs_auto_homedir) {
++		if (create_zfs_autohomedir(handle, config->homedir_quota, user) < 0) {
++			DBG_ERR("Failed to automatically generate connectpath.\n");
++			return -1;
++		}
++	}
 +	if (base_quota_str != NULL) {
 +		config->base_user_quota = conv_str_size(base_quota_str); 
 +        }
@@ -2525,13 +2536,6 @@ index 0000000..ab964e3
 +		set_base_user_quota(handle, config->base_user_quota, user);
 +	}
 +
-+	if (config->zfs_auto_homedir) {
-+		if (create_zfs_autohomedir(handle, config->homedir_quota, user) < 0) {
-+			DBG_ERR("Failed to automatically generate connectpath.\n");
-+			return -1;
-+		}
-+	}
-+	config->dataset_is_casesensitive = smb_zfs_is_case_sensitive(handle->conn->connectpath);
 +	if (!config->dataset_is_casesensitive) {
 +		DBG_INFO("ixnas: case insensitive dataset detected, "
 +			 "automatically adjusting case sensitivity settings.\n");
