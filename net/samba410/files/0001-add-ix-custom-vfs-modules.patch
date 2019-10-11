@@ -459,10 +459,10 @@ index bf6b303..c70f9f3 100644
  static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 0000000..d55262f
+index 0000000..9348e65
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2208 @@
+@@ -0,0 +1,2244 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -2501,6 +2501,8 @@ index 0000000..d55262f
 +	int ret;
 +	const char *homedir_quota = NULL;
 +	const char *base_quota_str = NULL;
++	acl_t zacl;
++	int is_trivial = 0;
 +
 +	config = talloc_zero(handle->conn, struct ixnas_config_data);
 +	if (!config) {
@@ -2578,6 +2580,16 @@ index 0000000..d55262f
 +	config->zfs_acl_enabled = lp_parm_bool(SNUM(handle->conn),
 +			"ixnas", "zfs_acl_enabled", true);
 +
++	/*
++	 * Disable the get/set NT ACL functions here if the path lacks NFSv4 ACL support.
++	 * The user may have mounted a non-ZFS filesystem and shared it via Samba. Our
++	 * middleware will probably not let the user get this far, but it's better to
++	 * be somewhat safer.
++	 */
++	if (pathconf(handle->conn->connectpath, _PC_ACL_NFS4) < 0) {
++		DBG_ERR("Connectpath does not support NFSv4 ACLs. Disabling ZFS ACL handling.\n");
++		config->zfs_acl_enabled = false;
++	}
 +	if (config->zfs_acl_enabled) {
 +		config->zfs_acl_map_modify = lp_parm_bool(SNUM(handle->conn),
 +			"ixnas", "zfsacl_map_modify", false);
@@ -2587,7 +2599,31 @@ index 0000000..d55262f
 +		
 +		config->zfs_acl_sortaces = lp_parm_bool(SNUM(handle->conn),
 +			"ixnas", "zfsacl_sortaces", false);
++		/*
++		 * Loosen up ACL interpretation for time machine shares.
++		 * This makes our POSIX mode behave more POSIX-like over SMB,
++		 * which generally makes MacOS clients happier.
++		 */
 +		if (lp_parm_bool(SNUM(handle->conn), "fruit", "time machine", false)) {
++			config->zfs_acl_map_modify = true;
++		}
++		/*
++		 * Ditto for cases where the ACL on the connectpath is trivial.
++		 * If the user has only set a POSIX mode, then do our darndest
++		 * to actually make this work as expected.
++		 */
++		zacl = acl_get_file(handle->conn->connectpath, ACL_TYPE_NFS4);
++		if (zacl == NULL) {
++			DBG_ERR("Failed to retrieve connectpath ACL\n");
++			return -1;
++		}
++		ret = acl_is_trivial_np(zacl, &is_trivial);
++		acl_free(zacl);
++		if (ret != 0) {
++			DBG_ERR("Failed to determine whether connecpath ACL is trivial\n");
++			return -1;
++		}
++		if (is_trivial) {
 +			config->zfs_acl_map_modify = true;
 +		}
 +
