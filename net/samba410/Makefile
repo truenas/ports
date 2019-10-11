@@ -29,6 +29,7 @@ EXTRA_PATCHES+=			${PATCHDIR}/0001-enable-keytab-updates-on-machine-account-chan
 EXTRA_PATCHES+=			${PATCHDIR}/0001-add_ws_discovery.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-add-wb-status-cmd.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-smbd_reply.c.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/tevent_kqueue.patch:-p1
 
 SAMBA4_BASENAME=		samba
 SAMBA4_PORTNAME=		${SAMBA4_BASENAME}4
