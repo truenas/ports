@@ -459,10 +459,10 @@ index bf6b303..c70f9f3 100644
  static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 0000000..9348e65
+index 0000000..292ea23
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2244 @@
+@@ -0,0 +1,2254 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -1241,6 +1241,10 @@ index 0000000..9348e65
 +	zacl = acl_init(ACL_MAX_ENTRIES);
 +	bool is_dir;
 +	uint32_t tmp_mask = 0;
++	uid_t uid;
++	gid_t gid;
++	bool has_uid = false;
++	bool has_gid = false;
 +
 +	SMB_STRUCT_STAT sbuf;
 +
@@ -1303,12 +1307,15 @@ index 0000000..9348e65
 +		 * without other inheritance flags is invalid). This is to implement Windows
 +		 * behavior for these SIDs.
 +		 *
-+		 * The SID is first attempted to map to a UID. This is because in ID_TYPE_BOTH
-+		 * SIDs will have a corresponding GID entry, but not a UID entry.
-+		 * If the mapped UID is identical to the owner of the file, and inheritance flags
-+		 * not set, then map the SID to owner@.
++		 * The SID is first attempted to map to UID and GID. ID_TYPE_BOTH returns both
++		 * a UID and GID. If the mapped UID is identical to the owner of the file, and
++		 * inheritance flags are not set, then map the SID to owner@. If it is identical
++		 * to the owner of the file, but has inheritance bits set, then map to an explicit
++		 * entry.
 +		 *
-+		 * Same logic applies to GID / group@.
++		 * Same logic applies to GID / group@. Presuppose that we have groups rather than
++		 * users. This mostly works because every user is a member of a group with a GID
++		 * identical to its UID.
 +		 *
 +		 * In all other cases, map the SID to the respective UID/GID and set appropriate
 +		 * ACL tag.
@@ -1332,24 +1339,23 @@ index 0000000..9348e65
 +			if (flags & !(ACL_ENTRY_FILE_INHERIT|ACL_ENTRY_DIRECTORY_INHERIT)) {
 +				continue;
 +			}
-+		}	
++		}
 +		else {
-+			uid_t uid;
-+			gid_t gid;
-+			if (sid_to_uid(&ace_nt->trustee, &uid)) {
-+				if ((uid == sbuf.st_ex_uid) && 
-+				    (ace_nt->flags & !(SEC_ACE_FLAG_OBJECT_INHERIT|
++			has_uid = (sid_to_uid(&ace_nt->trustee, &uid));
++			has_gid = (sid_to_gid(&ace_nt->trustee, &gid));
++			if (has_uid && uid == sbuf.st_ex_uid) {
++				if (ace_nt->flags & !(SEC_ACE_FLAG_OBJECT_INHERIT|
 +						       SEC_ACE_FLAG_CONTAINER_INHERIT|
-+						       SEC_ACE_FLAG_INHERIT_ONLY))) {
++						       SEC_ACE_FLAG_INHERIT_ONLY)) {
 +					tag  = ACL_USER_OBJ;
 +					id   = ACL_UNDEFINED_ID;
-+				} 
++				}
 +				else {
 +					tag  = ACL_USER;
 +					id   = uid;
 +				}
 +			}
-+			else if (sid_to_gid(&ace_nt->trustee, &gid)) {
++			else if (has_gid) {
 +				if ((gid == sbuf.st_ex_gid) &&
 +				    (ace_nt->flags & !(SEC_ACE_FLAG_OBJECT_INHERIT|
 +						       SEC_ACE_FLAG_CONTAINER_INHERIT|
@@ -1362,6 +1368,10 @@ index 0000000..9348e65
 +					tag  = ACL_GROUP;
 +					id   = gid;
 +				}
++			}
++			else if (has_uid) {
++				tag  = ACL_USER;
++				id   = uid;
 +			}
 +			else if (dom_sid_compare_domain(&ace_nt->trustee, &global_sid_Unix_NFS) == 0) {
 +				continue;
