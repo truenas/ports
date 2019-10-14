@@ -13,8 +13,21 @@ rcvar=mdnsd_enable
 
 load_rc_config $name
 
+start_postcmd="mdnsd_poststart"
+stop_precmd="mdnsd_prestop"
+
 : ${mdnsd_enable="NO"}
 : ${mdnsd_pidfile="/var/run/${name}.pid"}
+
+mdnsd_poststart() {
+    echo "restarting mdnsadvertise."
+    %%PREFIX%%/bin/midclt call mdnsadvertise.restart > /dev/null
+}
+
+mdnsd_prestop() {
+    echo "stopping mdnsadvertise."
+    %%PREFIX%%/bin/midclt call mdnsadvertise.stop > /dev/null
+}
 
 command="%%PREFIX%%/sbin/${name}"
 pidfile="${mdnsd_pidfile}"
