@@ -20,13 +20,13 @@ stop_precmd="mdnsd_prestop"
 : ${mdnsd_pidfile="/var/run/${name}.pid"}
 
 mdnsd_poststart() {
-    echo "restarting mdnsadvertise"
-    LD_LIBRARY_PATH=%%PREFIX%%/lib %%PREFIX%%/bin/midclt call mdnsadvertise.restart > /dev/null
+    echo "restarting mdnsadvertise."
+    %%PREFIX%%/bin/midclt call mdnsadvertise.restart > /dev/null
 }
 
 mdnsd_prestop() {
-    echo "stopping mdnsadvertise"
-    LD_LIBRARY_PATH=%%PREFIX%%/lib %%PREFIX%%/bin/midclt call mdnsadvertise.stop > /dev/null
+    echo "stopping mdnsadvertise."
+    %%PREFIX%%/bin/midclt call mdnsadvertise.stop > /dev/null
 }
 
 command="%%PREFIX%%/sbin/${name}"
