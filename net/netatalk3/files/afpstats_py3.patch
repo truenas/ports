@@ -1,0 +1,20 @@
+diff --git a/contrib/shell_utils/afpstats b/contrib/shell_utils/afpstats
+index 8c5413c..a2c6152 100755
+--- a/contrib/shell_utils/afpstats
++++ b/contrib/shell_utils/afpstats
+@@ -1,4 +1,5 @@
+-#!/usr/bin/env python
++#!/usr/local/bin/python
++from __future__ import print_function
+ 
+ usage = """Usage:
+ python afpstats.py
+@@ -23,7 +24,7 @@ def main():
+ 
+     reply = iface.GetUsers()
+     for name in reply:
+-        print name
++        print(name)
+ 
+ if __name__ == '__main__':
+     main()
