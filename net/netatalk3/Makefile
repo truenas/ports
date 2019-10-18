@@ -17,6 +17,8 @@ LICENSE=	GPLv2
 LIB_DEPENDS=	libgcrypt.so:security/libgcrypt \
 		libevent.so:devel/libevent
 
+RUN_DEPENDS=	p5-IO-Socket-INET6>=0:net/p5-IO-Socket-INET6
+
 USES=		bdb:5+ gettext gmake iconv libtool perl5 pkgconfig shebangfix ssl tar:bzip2
 GNU_CONFIGURE=	yes
 USE_LDCONFIG=	yes
@@ -90,9 +92,9 @@ post-patch:
 	@${REINPLACE_CMD} -e 's|%%DB_NAME%%|${BDB_INCLUDE_DIR:T}| ; \
 		s|%%DB_LIB%%|-l${BDB_LIB_NAME}|g ; \
 		s|%%LOCALBASE%%|${LOCALBASE}|g' \
-		${WRKSRC}/configure
+		${WRKSRC}/macros/db3-check.m4
 	@${REINPLACE_CMD} -e 's|\.dist|\.sample|g' \
-		${WRKSRC}/config/Makefile.in
+		${WRKSRC}/config/Makefile.am
 #	@${REINPLACE_CMD} -e 's|%%PYTHONCMD%%|${PYTHONCMD}|' \
 #		${WRKSRC}/contrib/shell_utils/afpstats
 
