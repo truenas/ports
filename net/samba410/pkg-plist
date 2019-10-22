@@ -404,6 +404,7 @@ lib/shared-modules/vfs/dirsort.so
 lib/shared-modules/vfs/expand_msdfs.so
 lib/shared-modules/vfs/extd_audit.so
 lib/shared-modules/vfs/fake_perms.so
+lib/shared-modules/vfs/fbsd_aio.so
 lib/shared-modules/vfs/fruit.so
 lib/shared-modules/vfs/full_audit.so
 lib/shared-modules/vfs/linux_xfs_sgid.so

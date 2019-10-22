@@ -1,5 +1,5 @@
---- source3/modules/wscript_build.orig	2019-02-06 00:02:32.000000000 -0800
-+++ source3/modules/wscript_build	2019-04-22 07:44:42.087261569 -0700
+--- source3/modules/wscript_build.orig	2019-05-07 01:38:21.000000000 -0700
++++ source3/modules/wscript_build	2019-10-22 09:03:24.425085687 -0700
 @@ -235,6 +235,23 @@ bld.SAMBA3_MODULE('vfs_solarisacl',
                   internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_solarisacl'),
                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_solarisacl'))
@@ -24,7 +24,7 @@
  bld.SAMBA3_MODULE('vfs_zfsacl',
                   subsystem='vfs',
                   source='vfs_zfsacl.c',
-@@ -580,9 +597,76 @@ bld.SAMBA3_MODULE('vfs_error_inject',
+@@ -580,9 +597,84 @@ bld.SAMBA3_MODULE('vfs_error_inject',
                   internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_error_inject'),
                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_error_inject'))
  
@@ -71,6 +71,14 @@
 +                 init_function='',
 +                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_zfs_space'),
 +                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_zfs_space'))
++
++bld.SAMBA3_MODULE('vfs_fbsd_aio',
++                 subsystem='vfs',
++                 source='vfs_fbsd_aio.c',
++                 deps='samba-util tevent',
++                 init_function='',
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_fbsd_aio'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_fbsd_aio'))
 +
 +bld.SAMBA3_LIBRARY('zfs_list_snapshots',
 +                   source='zfs_list_snapshots.c',

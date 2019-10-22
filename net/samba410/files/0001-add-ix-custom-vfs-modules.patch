@@ -457,6 +457,433 @@ index bf6b303..c70f9f3 100644
  }
  
  static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
+diff --git a/source3/modules/vfs_fbsd_aio.c b/source3/modules/vfs_fbsd_aio.c
+new file mode 100644
+index 0000000..413c75f
+--- /dev/null
++++ b/source3/modules/vfs_fbsd_aio.c
+@@ -0,0 +1,421 @@
++/*
++ * Use FreeBSD kernel aio(4)
++ *
++ * Copyright (C) Volker Lendecke 2008
++ * Copyright (C) Jeremy Allison 2010
++ * Copyright (C) Stefan Metzmacher 2019
++ * Copyright (C) Andrew Walker 2019
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ */
++
++#include "includes.h"
++#include "system/filesys.h"
++#include "smbd/smbd.h"
++#include "smbd/globals.h"
++#include "lib/util/tevent_unix.h"
++#include "smbprofile.h"
++#include <sys/event.h>
++#include <aio.h>
++
++struct vfs_fbsd_aio_request;
++
++struct vfs_fbsd_aio_config {
++	int kqueue_fd;
++	struct tevent_fd *fde;
++	uint nkevents;
++};
++
++struct vfs_fbsd_aio_request {
++	struct tevent_req *req;
++	void *state;
++	struct aiocb *iocbp;
++	bool in_progress;
++	struct timespec start_time;
++	struct timespec end_time;
++	SMBPROFILE_BYTES_ASYNC_STATE(profile_bytes);
++};
++
++static int vfs_fbsd_aio_config_destructor(struct vfs_fbsd_aio_config *config)
++{
++	TALLOC_FREE(config->fde);
++	close(config->kqueue_fd);
++	config->kqueue_fd = -1;
++	return 0;
++}
++
++/*
++ * If possible, wait for existing aio requests to complete.
++ * May need to fine-tune the timeout later.
++ */
++static int vfs_fbsd_aio_request_waitcomplete(struct aiocb *iocbp)
++{
++	int ret;
++	struct timespec timeout = {5,0};
++	DBG_ERR("aio op currently in progress for "
++		"fd [%d], waiting for completion\n",
++		iocbp->aio_fildes);
++	ret = aio_waitcomplete(&iocbp, &timeout);
++	if (ret == -1) {
++		DBG_ERR("aio_waitcomplete() failed "
++			"%s\n", strerror(errno));
++			return ret;
++	}
++	else if (ret == EINPROGRESS) {
++		DBG_ERR("timer expired and aio still in-flight\n");
++		return -1;
++	}
++
++	return 0;
++}
++
++/*
++ * Refuse to deallocate fbsd_aio_request if we have
++ * in-flight AIO, and can't cancel it. Returning -1 here
++ * accomplishes this. Per aio_ manpages, the async control
++ * block structure pointed to by iocb and the buffer must
++ * remain valid until the operation has completed.
++ */
++static int vfs_fbsd_aio_request_state_destructor(struct vfs_fbsd_aio_request *req)
++{
++	int ret;
++	if (req->in_progress) {
++		ret = aio_cancel(req->iocbp->aio_fildes, req->iocbp);
++		if (ret == -1) {
++			DBG_ERR("aio_cancel returned -1: %s\n",
++				strerror(errno));
++			return ret;
++		}
++		/* return 0x2 = AIO_NOTCANCELED */
++		else if (ret == 2) {
++			ret = aio_error(req->iocbp);
++			if (ret == -1) {
++				DBG_ERR("aio_error failed: %s\n",
++					strerror(errno));
++				return ret;
++			}
++			else if (ret == EINPROGRESS) {
++				ret = vfs_fbsd_aio_request_waitcomplete(req->iocbp);
++				if (ret == -1) {
++					return ret;
++				}
++			}
++		}
++	}
++	SAFE_FREE(req->iocbp);
++	return 0;
++}
++
++static void vfs_fbsd_aio_fd_handler(struct tevent_context *ev,
++				    struct tevent_fd *fde,
++				    uint16_t flags,
++				    void *private_data);
++
++static int vfs_fbsd_aio_connect(vfs_handle_struct *handle, const char *service,
++				const char *user)
++{
++	int ret;
++	struct vfs_fbsd_aio_config *config;
++	bool sqpoll;
++	unsigned flags = 0;
++
++	config = talloc_zero(handle->conn, struct vfs_fbsd_aio_config);
++	if (config == NULL) {
++		DEBUG(0, ("talloc_zero() failed\n"));
++		return -1;
++	}
++
++	SMB_VFS_HANDLE_SET_DATA(handle, config,
++				NULL, struct vfs_fbsd_aio_config,
++				return -1);
++
++	ret = SMB_VFS_NEXT_CONNECT(handle, service, user);
++	if (ret < 0) {
++		return ret;
++	}
++
++	talloc_set_destructor(config, vfs_fbsd_aio_config_destructor);
++
++	config->kqueue_fd = kqueue();
++	config->fde = tevent_add_fd(handle->conn->sconn->ev_ctx,
++				    config,
++				    config->kqueue_fd,
++				    TEVENT_FD_READ,
++				    vfs_fbsd_aio_fd_handler,
++				    handle);
++	if (config->fde == NULL) {
++		ret = errno;
++		SMB_VFS_NEXT_DISCONNECT(handle);
++		errno = ret;
++		return -1;
++	}
++
++	return 0;
++}
++
++static void vfs_fbsd_aio_queue_run(struct vfs_fbsd_aio_config *config)
++{
++	int ret, i;
++	struct timespec timeout = {0,0};
++	struct kevent received[config->nkevents];
++
++	ret = kevent(config->kqueue_fd,
++		     NULL,		/* changelist */
++		     0,			/* nchanges */
++		     received,		/* eventlist */
++		     config->nkevents,	/* nevents */
++		     &timeout);		/* timeout */
++
++	for (i=0;i<ret;i++) {
++		struct tevent_req *req = NULL;
++		SMB_ASSERT(received[i].filter == EVFILT_AIO);
++		req = talloc_get_type_abort(received[i].udata, struct tevent_req);
++		config->nkevents--;
++		tevent_req_done(req);
++	}
++}
++
++static void vfs_fbsd_aio_fd_handler(struct tevent_context *ev,
++				    struct tevent_fd *fde,
++				    uint16_t flags,
++				    void *private_data)
++{
++	vfs_handle_struct *handle = (vfs_handle_struct *)private_data;
++	struct vfs_fbsd_aio_config *config = NULL;
++
++	SMB_VFS_HANDLE_GET_DATA(handle, config,
++				struct vfs_fbsd_aio_config,
++				smb_panic(__location__));
++
++	vfs_fbsd_aio_queue_run(config);
++}
++
++static struct tevent_req *vfs_fbsd_aio_pread_send(struct vfs_handle_struct *handle,
++					     TALLOC_CTX *mem_ctx,
++					     struct tevent_context *ev,
++					     struct files_struct *fsp,
++					     void *data,
++					     size_t n, off_t offset)
++{
++	int ret;
++	struct tevent_req *req = NULL;
++	struct vfs_fbsd_aio_request *state = NULL;
++	struct vfs_fbsd_aio_config *config = NULL;
++	struct timespec start_time;
++
++	SMB_VFS_HANDLE_GET_DATA(handle, config,
++				struct vfs_fbsd_aio_config,
++				smb_panic(__location__));
++
++	req = tevent_req_create(mem_ctx, &state, struct vfs_fbsd_aio_request);
++	state->iocbp = (struct aiocb*)calloc(1, sizeof(struct aiocb));
++	if (state == NULL) {
++		DBG_ERR("calloc() failed\n");
++		return NULL;
++	}
++
++	if (req == NULL) {
++		SAFE_FREE(state->iocbp);
++		return NULL;
++	}
++	state->state = state;
++	state->req = req;
++	state->iocbp->aio_fildes = fsp->fh->fd;
++	state->iocbp->aio_offset = offset;
++	state->iocbp->aio_buf = data;
++	state->iocbp->aio_sigevent.sigev_notify_kqueue = config->kqueue_fd;
++	state->iocbp->aio_sigevent.sigev_value.sival_ptr = req;
++	state->iocbp->aio_sigevent.sigev_notify = SIGEV_KEVENT;
++	state->iocbp->aio_nbytes = n;
++	DBG_DEBUG("fildes: %d, offset: %ld, size: %lu\n",
++		state->iocbp->aio_fildes, state->iocbp->aio_offset, state->iocbp->aio_nbytes);
++	PROFILE_TIMESTAMP(&start_time);
++	ret = aio_read(state->iocbp);
++	state->in_progress = true;
++	talloc_set_destructor(state, vfs_fbsd_aio_request_state_destructor);
++	if (ret != 0) {
++		DBG_ERR("Failed to add to AIO queue %s\n", strerror(errno));
++		return NULL; //errno to status
++	}
++	state->start_time = start_time;
++	config->nkevents++;
++	vfs_fbsd_aio_queue_run(config);
++
++	if (!tevent_req_is_in_progress(req)) {
++		return tevent_req_post(req, ev);
++	}
++
++	tevent_req_defer_callback(req, ev);
++	return req;
++}
++
++static ssize_t vfs_fbsd_aio_common_recv(struct tevent_req *req,
++				  struct vfs_aio_state *vfs_aio_state)
++{
++	struct vfs_fbsd_aio_request *state = tevent_req_data(req, struct vfs_fbsd_aio_request);
++	int ret;
++	struct timespec stop_time;
++
++	PROFILE_TIMESTAMP(&stop_time);
++	state->in_progress = false;
++	ret = aio_return(state->iocbp);
++	if (ret < 0) {
++		DBG_ERR("aio_return failed: %s\n", strerror(errno));
++		vfs_aio_state->error = ret;
++		return -1;
++	}
++	vfs_aio_state->duration = nsec_time_diff(&state->start_time,
++						 &stop_time);
++
++	if (tevent_req_is_unix_error(req, &vfs_aio_state->error)) {
++		DBG_ERR("Is unix error\n");
++		return -1;
++	}
++	vfs_aio_state->error = 0;
++
++	tevent_req_received(req);
++	return ret;
++}
++
++static struct tevent_req *vfs_fbsd_aio_pwrite_send(struct vfs_handle_struct *handle,
++					     TALLOC_CTX *mem_ctx,
++					     struct tevent_context *ev,
++					     struct files_struct *fsp,
++					     const void *data,
++					     size_t n, off_t offset)
++{
++	int ret;
++	struct tevent_req *req = NULL;
++	struct vfs_fbsd_aio_request *state = NULL;
++	struct vfs_fbsd_aio_config *config = NULL;
++	struct timespec start_time;
++
++	SMB_VFS_HANDLE_GET_DATA(handle, config,
++				struct vfs_fbsd_aio_config,
++				smb_panic(__location__));
++
++	req = tevent_req_create(mem_ctx, &state, struct vfs_fbsd_aio_request);
++	state->iocbp = (struct aiocb*)calloc(1, sizeof(struct aiocb));
++	if (state == NULL) {
++		DBG_ERR("calloc() failed\n");
++		return NULL;
++	}
++	if (req == NULL) {
++		SAFE_FREE(state->iocbp);
++		return NULL;
++	}
++	state->state = state;
++	state->req = req;
++	state->iocbp->aio_fildes = fsp->fh->fd;
++	state->iocbp->aio_offset = offset;
++	state->iocbp->aio_buf = data;
++	state->iocbp->aio_sigevent.sigev_notify_kqueue = config->kqueue_fd;
++	state->iocbp->aio_sigevent.sigev_value.sival_ptr = req;
++	state->iocbp->aio_sigevent.sigev_notify = SIGEV_KEVENT;
++	state->iocbp->aio_nbytes = n;
++	DBG_DEBUG("fildes: %d, offset: %ld, size: %lu\n",
++		state->iocbp->aio_fildes, state->iocbp->aio_offset, state->iocbp->aio_nbytes);
++	PROFILE_TIMESTAMP(&start_time);
++	ret = aio_write(state->iocbp);
++	talloc_set_destructor(state, vfs_fbsd_aio_request_state_destructor);
++	if (ret != 0) {
++		DBG_ERR("Failed to add to AIO queue %s\n", strerror(errno));
++		return NULL; //errno to status
++	}
++	state->in_progress = true;
++	state->start_time = start_time;
++	config->nkevents++;
++	vfs_fbsd_aio_queue_run(config);
++
++	if (!tevent_req_is_in_progress(req)) {
++		return tevent_req_post(req, ev);
++	}
++
++	tevent_req_defer_callback(req, ev);
++	return req;
++}
++
++static struct tevent_req *vfs_fbsd_aio_fsync_send(struct vfs_handle_struct *handle,
++					     TALLOC_CTX *mem_ctx,
++					     struct tevent_context *ev,
++					     struct files_struct *fsp)
++{
++	int ret;
++	struct tevent_req *req = NULL;
++	struct vfs_fbsd_aio_request *state = NULL;
++	struct vfs_fbsd_aio_config *config = NULL;
++	struct timespec start_time;
++
++	SMB_VFS_HANDLE_GET_DATA(handle, config,
++				struct vfs_fbsd_aio_config,
++				smb_panic(__location__));
++
++	req = tevent_req_create(mem_ctx, &state, struct vfs_fbsd_aio_request);
++	state->iocbp = (struct aiocb*)calloc(1, sizeof(struct aiocb));
++	if (state == NULL) {
++		DBG_ERR("calloc() failed\n");
++		return NULL;
++	}
++
++	if (req == NULL) {
++		SAFE_FREE(state->iocbp);
++		return NULL;
++	}
++	state->state = state;
++	state->req = req;
++	state->iocbp->aio_fildes = fsp->fh->fd;
++	PROFILE_TIMESTAMP(&start_time);
++	state->start_time = start_time;
++	ret = aio_fsync(O_SYNC, state->iocbp);
++	talloc_set_destructor(state, vfs_fbsd_aio_request_state_destructor);
++	if (ret != 0) {
++		DBG_ERR("Failed to add to AIO queue %s\n", strerror(errno));
++		return NULL; //errno to status
++	}
++	state->in_progress = true;
++	ret = aio_fsync(O_SYNC, state->iocbp);
++	config->nkevents++;
++	vfs_fbsd_aio_queue_run(config);
++
++	if (!tevent_req_is_in_progress(req)) {
++		return tevent_req_post(req, ev);
++	}
++
++	tevent_req_defer_callback(req, ev);
++	return req;
++}
++
++static int vfs_fbsd_aio_fsync_recv(struct tevent_req *req,
++				  struct vfs_aio_state *vfs_aio_state)
++{
++	return vfs_fbsd_aio_common_recv(req, vfs_aio_state);
++}
++
++static struct vfs_fn_pointers vfs_fbsd_aio_fns = {
++	.connect_fn = vfs_fbsd_aio_connect,
++	.pread_send_fn = vfs_fbsd_aio_pread_send,
++	.pread_recv_fn = vfs_fbsd_aio_common_recv,
++	.pwrite_send_fn = vfs_fbsd_aio_pwrite_send,
++	.pwrite_recv_fn = vfs_fbsd_aio_common_recv,
++	.fsync_send_fn = vfs_fbsd_aio_fsync_send,
++	.fsync_recv_fn = vfs_fbsd_aio_fsync_recv,
++};
++
++static_decl_vfs;
++NTSTATUS vfs_fbsd_aio_init(TALLOC_CTX *ctx)
++{
++	return smb_register_vfs(SMB_VFS_INTERFACE_VERSION,
++				"fbsd_aio", &vfs_fbsd_aio_fns);
++}
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
 index 0000000..292ea23
