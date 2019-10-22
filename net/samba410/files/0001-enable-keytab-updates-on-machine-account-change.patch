@@ -35,7 +35,7 @@ index 6e3277e..bd64b6e 100644
 +		 */
 +		old_krb5ccname = getenv(KRB5_ENV_CCNAME);
 +		setenv(KRB5_ENV_CCNAME, "MEMORY:net_ads", 1);
-+		ads = ads_init(lp_realm(), lp_workgroup(), NULL);
++		ads = ads_init(lp_realm(), lp_workgroup(), NULL, ADS_SASL_PLAIN);
 +		SAFE_FREE(ads->auth.password);
 +		ads->auth.password = secrets_fetch_machine_password(lp_workgroup(), NULL, NULL);
 +		ret = ads_connect(ads);
@@ -112,7 +112,7 @@ index ab14f5d..ac62a74 100644
 +		 */
 +		old_krb5ccname = getenv(KRB5_ENV_CCNAME);
 +		setenv(KRB5_ENV_CCNAME, "MEMORY:net_ads", 1);
-+		ads = ads_init(lp_realm(), lp_workgroup(), NULL);
++		ads = ads_init(lp_realm(), lp_workgroup(), NULL, ADS_SASL_PLAIN);
 +		SAFE_FREE(ads->auth.password);
 +		ads->auth.password = secrets_fetch_machine_password(lp_workgroup(), NULL, NULL);
 +		ret = ads_connect(ads);
@@ -142,7 +142,7 @@ index ab14f5d..ac62a74 100644
 +		}
 +	}
 +        else {
-+		DBG_DEBUG("kerberos method is set to %s. Bypassing keytab update.\n", lp_kerberos_method()); 
++		DBG_DEBUG("kerberos method is set to %d. Bypassing keytab update.\n", lp_kerberos_method()); 
 +	}
 +
   done:
