@@ -277,7 +277,7 @@ lib/samba4/private/libpopt-samba3-samba4.so
 lib/samba4/private/libpopt-samba3-cmdline-samba4.so 
 lib/samba4/private/libprinting-migrate-samba4.so
 lib/samba4/private/libpyldb-util.so.1
-lib/samba4/private/libpyldb-util.so.1.5.5
+lib/samba4/private/libpyldb-util.so.1.5.6
 lib/samba4/private/libpytalloc-util.so.2
 lib/samba4/private/libpytalloc-util.so.2.1.16
 lib/samba4/private/libregistry-samba4.so
@@ -796,7 +796,7 @@ man/man8/winbindd.8.gz
 %%SAMBA4_BUNDLED_CMOCKA%%lib/samba4/private/libcmocka-samba4.so
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb-cmdline-samba4.so
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb.so.1
-%%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb.so.1.5.5
+%%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb.so.1.5.6
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb-key-value-samba4.so
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb-tdb-err-map-samba4.so
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb-tdb-int-samba4.so
