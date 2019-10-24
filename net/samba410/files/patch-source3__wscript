@@ -41,7 +41,7 @@
          default_shared_modules.extend(TO_LIST('vfs_zfsacl'))
 +        default_shared_modules.extend(TO_LIST('vfs_winmsa'))
 +        default_shared_modules.extend(TO_LIST('vfs_fbsd_aio'))
-+        default_shared_modules.extend(TO_LIST('vfs_posix_aio'))
++        default_shared_modules.extend(TO_LIST('vfs_aio_posix'))
  
      if conf.CONFIG_SET('HAVE_DIRFD_DECL'):
          default_shared_modules.extend(TO_LIST('vfs_syncops vfs_dirsort'))
