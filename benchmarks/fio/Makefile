@@ -15,6 +15,7 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 
 HAS_CONFIGURE=	yes
 USES=		gmake tar:bzip2
+CONFIGURE_ARGS= --disable_native
 
 CONFIGURE_ARGS+=	--disable-native
 
