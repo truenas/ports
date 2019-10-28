@@ -7,7 +7,7 @@ DISTVERSION=	1.85
 CATEGORIES=	sysutils
 PKGNAMEPREFIX=	fusefs-
 
-MAINTAINER=	dmgk@FreeBSD.org
+MAINTAINER=	dg@syrec.org
 COMMENT=	FUSE-based file system backed by Amazon S3
 
 LICENSE=	GPLv2

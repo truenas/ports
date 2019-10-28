@@ -1,0 +1,3 @@
+%%EXECUTABLE_DAEMON%%
+@sample etc/%%PORTNAME%%.conf.sample
+%%CLI%%%%EXECUTABLE_CLI%%

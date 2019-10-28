@@ -4,7 +4,7 @@
 PORTNAME=	www6to4
 PORTVERSION=	1.6
 PORTREVISION=	1
-CATEGORIES=	www
+CATEGORIES=	www ipv6
 MASTER_SITES=	ftp://ftp.pasta.cs.uit.no/pub/Vermicelli/
 
 MAINTAINER=	jmohacsi@bsd.hu

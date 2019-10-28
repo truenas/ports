@@ -14,7 +14,7 @@ LIB_DEPENDS=	libcligen.so:devel/cligen \
 		libfcgi.so:www/fcgi
 BUILD_DEPENDS=	cligen>=4.0.0:devel/cligen
 
-USES=		autoreconf bison compiler:c11 gmake
+USES=		autoreconf bison gmake
 
 USE_LDCONFIG=	yes
 USE_GITHUB=	yes

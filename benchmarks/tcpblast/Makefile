@@ -4,7 +4,7 @@
 PORTNAME=	tcpblast
 PORTVERSION=	1.1
 PORTREVISION=	1
-CATEGORIES=	benchmarks net
+CATEGORIES=	benchmarks net ipv6
 MASTER_SITES=	# none
 DISTFILES=	# none
 

@@ -4,10 +4,10 @@
 PORTNAME=	encryptpad
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.4.0.4
-PORTREVISION=	8
+PORTREVISION=	6
 CATEGORIES=	editors security
 
-MAINTAINER=	dmgk@FreeBSD.org
+MAINTAINER=	dg@syrec.org
 COMMENT=	Minimalist secure text editor and binary encryptor
 
 LICENSE=	GPLv2+

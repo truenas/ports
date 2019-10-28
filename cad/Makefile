@@ -20,9 +20,9 @@
     SUBDIR += cura-engine
     SUBDIR += digital
     SUBDIR += dinotrace
+    SUBDIR += dxf2fig
     SUBDIR += electric
     SUBDIR += electric-ng
-    SUBDIR += fasm
     SUBDIR += feappv
     SUBDIR += fidocadj
     SUBDIR += freecad
@@ -31,6 +31,7 @@
     SUBDIR += gdsreader
     SUBDIR += gdt
     SUBDIR += geda
+    SUBDIR += gerbv
     SUBDIR += ghdl
     SUBDIR += gmsh
     SUBDIR += gnucap
@@ -67,7 +68,6 @@
     SUBDIR += meshdev
     SUBDIR += netgen
     SUBDIR += ngspice_rework
-    SUBDIR += nvc
     SUBDIR += opencascade
     SUBDIR += openscad
     SUBDIR += openscad-devel

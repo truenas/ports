@@ -7,4 +7,3 @@ sbin/vpncmd
 @dir libexec/softether
 @dir %%SE_DBDIR%%
 @dir %%SE_LOGDIR%%
-@dir %%SE_PIDDIR%%

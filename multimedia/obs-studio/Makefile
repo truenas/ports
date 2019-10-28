@@ -1,7 +1,8 @@
 # $FreeBSD$
 
 PORTNAME=	obs-studio
-DISTVERSION=	24.0.3
+DISTVERSION=	23.2.1
+PORTREVISION=	2
 CATEGORIES=	multimedia
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -31,7 +32,7 @@ LIB_DEPENDS=	libavcodec.so:multimedia/ffmpeg \
 		libv4l2.so:multimedia/libv4l \
 		libx264.so:multimedia/libx264
 
-USES=		cmake compiler:c++11-lib gl lua pkgconfig python:3.4+ qt:5 xorg
+USES=		cmake compiler:c++11-lib gl lua pkgconfig python:3.4+ qt:5
 USE_GITHUB=	yes
 GH_ACCOUNT=	obsproject
 USE_QT=		core gui svg widgets x11extras buildtools_build imageformats_run qmake_build
@@ -43,8 +44,14 @@ CMAKE_ARGS=	-DUNIX_STRUCTURE:BOOL=ON \
 		-DOBS_VERSION_OVERRIDE:STRING="${PORTVERSION}"
 CFLAGS+=	-D_WITH_GETLINE
 
+.include <bsd.port.pre.mk>
+
+.if ${CHOSEN_COMPILER_TYPE} == gcc
+CXXFLAGS+=	-D_GLIBCXX_USE_C99
+.endif
+
 post-patch:
 	@${REINPLACE_CMD} -e 's| 3.4)| ${PYTHON_VER})|' \
 		${WRKSRC}/cmake/Modules/FindPythonDeps.cmake
 
-.include <bsd.port.mk>
+.include <bsd.port.post.mk>

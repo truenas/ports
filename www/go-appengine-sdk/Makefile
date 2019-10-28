@@ -6,7 +6,7 @@ CATEGORIES=	www devel
 MASTER_SITES=	https://storage.googleapis.com/appengine-sdks/featured/
 DISTNAME=	${PORTNAME:S,-,_,g}_linux_amd64-${PORTVERSION}
 
-MAINTAINER=	dmgk@FreeBSD.org
+MAINTAINER=	dg@syrec.org
 COMMENT=	App Engine SDK for Go
 
 # The actual license for this port is "APACHE20 and BSD3CLAUSE and MIT and PSFL and (GPLv2+ or LGPL21+ or MPL11)".

@@ -2,9 +2,12 @@
 
 PORTNAME=	xpdf
 PORTVERSION=	3.04
-PORTREVISION=	11
+PORTREVISION=	10
 CATEGORIES=	graphics print
-MASTER_SITES=	https://xpdfreader-dl.s3.amazonaws.com/old/
+MASTER_SITES=	http://mirrors.rit.edu/zi/ \
+		ftp://ftp.foolabs.com/pub/xpdf/ \
+		TEX_CTAN/support/xpdf \
+		http://komquats.com/distfiles/
 .if !defined(MASTERDIR)
 PKGNAMESUFFIX=	3
 CONFLICTS_INSTALL=	xpdf4-* xpdf-*
@@ -21,9 +24,7 @@ LIB_DEPENDS=	libfreetype.so:print/freetype2 \
 		libpng.so:graphics/png
 
 GNU_CONFIGURE=	yes
-USES=		gmake cpe localbase xorg
-USE_XORG=	ice sm x11 xext xt
-
+USES=		gmake cpe localbase
 CPE_VENDOR=	foolabs
 CONFIGURE_ARGS=	--enable-opi \
 		--with-freetype2-library="${LOCALBASE}/lib" \

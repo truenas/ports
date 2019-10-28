@@ -16,6 +16,5 @@ PORTSCOUT=	limit:^2.*
 
 USES=		gmake php:pecl
 CONFLICTS=	pecl-raphf-1*
-IGNORE_WITH_PHP=	74
 
 .include <bsd.port.mk>

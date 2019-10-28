@@ -5,7 +5,7 @@ DISTVERSION=	4.17.1
 CATEGORIES=	x11-wm
 PKGNAMESUFFIX=	-gaps
 
-MAINTAINER=	dmgk@FreeBSD.org
+MAINTAINER=	dg@syrec.org
 COMMENT=	Fork of i3 tiling window manager with more features, including gaps
 
 LICENSE=	BSD3CLAUSE

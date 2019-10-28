@@ -1,8 +1,8 @@
-# Created by: Jos? Garc?a Juanino <jjuanino@gmail.com>
+# Created by: José García Juanino <jjuanino@gmail.com>
 # $FreeBSD$
 
 PORTNAME=	bup
-PORTVERSION=	0.29.3
+PORTVERSION=	0.29.2
 CATEGORIES=	archivers python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 

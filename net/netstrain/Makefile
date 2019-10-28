@@ -3,7 +3,7 @@
 
 PORTNAME=	netstrain
 PORTVERSION=	3.0
-CATEGORIES=	net
+CATEGORIES=	net ipv6
 MASTER_SITES=	SF
 
 MAINTAINER=	jmohacsi@bsd.hu

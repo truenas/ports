@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	check
-PORTVERSION=	0.13.0
+PORTVERSION=	0.12.0
+PORTREVISION=	1
 CATEGORIES=	devel
 
 MAINTAINER=	sunpoet@FreeBSD.org
@@ -12,12 +13,11 @@ LICENSE=	LGPL21
 
 OPTIONS_DEFINE=	DOCS EXAMPLES
 
-USES=		autoreconf libtool makeinfo pathfix pkgconfig
-
 CONFIGURE_ENV=	ac_cv_path_AWK_PATH=${AWK}
 GNU_CONFIGURE=	yes
 INSTALL_TARGET=	install-strip
 USE_LDCONFIG=	yes
+USES=		autoreconf libtool makeinfo pathfix pkgconfig
 
 INFO=		check
 PORTDOCS=	*

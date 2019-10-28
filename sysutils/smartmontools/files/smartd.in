@@ -3,7 +3,7 @@
 # $FreeBSD$
 #
 # PROVIDE: smartd
-# REQUIRE: root ldconfig devfs syslogd mail
+# REQUIRE: LOGIN
 # KEYWORD: shutdown nojail
 #
 # Define these smartd_* variables in one of these files:

@@ -3,7 +3,7 @@
 
 PORTNAME=	xfce4-timer-plugin
 PORTVERSION=	1.7.0
-PORTREVISION=	2
+PORTREVISION=	1
 CATEGORIES=	x11-clocks xfce
 MASTER_SITES=	XFCE/panel-plugins
 DIST_SUBDIR=	xfce4
@@ -13,8 +13,7 @@ COMMENT=	Timer plugin for Xfce
 
 LICENSE=	GPLv2
 
-USES=		compiler:c11 gettext-tools gmake gnome libtool pkgconfig \
-		tar:bzip2 xfce
+USES=		gettext-tools gmake gnome libtool pkgconfig tar:bzip2 xfce:gtk3
 USE_GNOME=	cairo gtk30 intltool
 USE_XFCE=	panel
 

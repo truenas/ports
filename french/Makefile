@@ -15,7 +15,6 @@
     SUBDIR += libreoffice
     SUBDIR += med
     SUBDIR += mythes
-    SUBDIR += py-grammalecte-fr
     SUBDIR += trytond28_account_fr
     SUBDIR += verbiste
     SUBDIR += wordpress

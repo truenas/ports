@@ -1,9 +1,9 @@
-
+# Created by: Stefan Bethke <stb@lassitu.de>
 # $FreeBSD$
 
 PORTNAME=	gitea
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.9.4
+DISTVERSION=	1.9.2
 CATEGORIES=	www
 
 MAINTAINER=	stb@lassitu.de
@@ -19,8 +19,7 @@ USE_GITHUB=	yes
 GH_ACCOUNT=	go-gitea
 USE_RC_SUBR=	gitea
 
-GO_BUILDFLAGS=	-tags "${GO_TAGS}" -ldflags '-X "main.Version=${PORTVERSION}"'
-GO_TARGET=	:${PREFIX}/sbin/${PORTNAME}
+GO_BUILDFLAGS=	-tags "${GO_TAGS}"
 
 SUB_FILES+=	app.ini.sample
 SUB_LIST+=	GITUSER=${USERS}
@@ -48,7 +47,17 @@ DAEMONARGS=	-f
 
 SUB_LIST+=	DAEMONARGS="${DAEMONARGS}"
 
-post-install:
+post-patch:
+	# Gitea releases don't supply the release version number; the
+	# automatic method to obtain the version number in the Gitea build
+	# system only works when sources are checked out from git.
+	# See https://github.com/go-gitea/gitea/issues/1136#issuecomment-311622745
+	@${SED} -Ei .orig \
+		-e 's#^(var Version = )"[^"]+"#\1"${PORTVERSION}"#' \
+		${GO_WRKSRC}/main.go
+
+do-install:
+	${INSTALL_PROGRAM} ${GO_WRKDIR_BIN}/${PORTNAME} ${STAGEDIR}${PREFIX}/sbin
 	@${MKDIR} ${STAGEDIR}${ETCDIR}/conf
 	${INSTALL_DATA} ${WRKDIR}/app.ini.sample ${STAGEDIR}${ETCDIR}/conf/app.ini.sample
 	${INSTALL_DATA} ${GO_WRKSRC}/custom/conf/app.ini.sample ${STAGEDIR}${ETCDIR}/conf/app.ini.defaults

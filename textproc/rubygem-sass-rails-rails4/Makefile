@@ -2,18 +2,22 @@
 # $FreeBSD$
 
 PORTNAME=	sass-rails
-PORTVERSION=	6.0.0
+PORTVERSION=	5.0.7
 CATEGORIES=	textproc rubygems
 MASTER_SITES=	RG
 PKGNAMESUFFIX=	-rails4
 
-MAINTAINER=	sunpoet@FreeBSD.org
+MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Sass adapter for the Rails asset pipeline
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/MIT-LICENSE
 
-RUN_DEPENDS=	rubygem-sassc-rails-rails4>=2.1.1<3:textproc/rubygem-sassc-rails-rails4
+RUN_DEPENDS=	rubygem-railties4>=4.0.0:www/rubygem-railties4 \
+		rubygem-sass>=3.1:textproc/rubygem-sass \
+		rubygem-sprockets3>=3.0.3:devel/rubygem-sprockets3 \
+		rubygem-sprockets-rails>=2.0:devel/rubygem-sprockets-rails \
+		rubygem-tilt>=1.1:devel/rubygem-tilt
 
 USES=		gem
 USE_RUBY=	yes

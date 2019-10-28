@@ -2,9 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	redis
-PORTVERSION=	3.2.1
+PORTVERSION=	2.10.6
 CATEGORIES=	databases python
-MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	koobs@FreeBSD.org
@@ -13,24 +12,25 @@ COMMENT=	Python client for Redis key-value store
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}mock>0:devel/py-mock@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}pytest>=2.7.0:devel/py-pytest@${PY_FLAVOR} \
-		redis-server:databases/redis
-
-USES=		python
-USE_PYTHON=	distutils autoplist concurrent
+TEST_DEPENDS=	redis-server:databases/redis
 
 OPTIONS_DEFINE=	HIREDIS
 
 HIREDIS_DESC=	High performance response parser (via hiredis)
 
-HIREDIS_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}hiredis>=0.1.3:databases/py-hiredis@${PY_FLAVOR}
+HIREDIS_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}hiredis>0:databases/py-hiredis@${PY_FLAVOR}
+
+USES=		python
+USE_PYTHON=	distutils autoplist concurrent
+
+USE_GITHUB=	yes
+GH_ACCOUNT=	andymccurdy
+GH_PROJECT=	${PORTNAME}-py
 
 NO_ARCH=	yes
-CONFLICTS_INSTALL=	${PYTHON_PKGNAMEPREFIX}redis2
 
 # Needs redis-server to be running
 do-test:
-	@cd ${WRKSRC} && ${PYTHON_CMD} -m pytest -v -rs
+	@cd ${WRKSRC} && ${PYTHON_CMD} ${PYDISTUTILS_SETUP} test
 
 .include <bsd.port.mk>

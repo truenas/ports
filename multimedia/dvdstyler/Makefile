@@ -2,14 +2,14 @@
 # $FreeBSD$
 
 PORTNAME=	dvdstyler
-PORTVERSION=	3.1
-PORTREVISION=	0
+PORTVERSION=	2.9.6
+PORTREVISION=	13
 PORTEPOCH=	2
 CATEGORIES=	multimedia
 MASTER_SITES=	SF
 DISTNAME=	DVDStyler-${PORTVERSION}
 
-MAINTAINER=	ahicks@p-o.co.uk
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	WxWidgets frontend to dvd recoding and authoring programs
 
 LICENSE=	GPLv2

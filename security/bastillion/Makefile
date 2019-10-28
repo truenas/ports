@@ -2,10 +2,8 @@
 
 PORTNAME=		bastillion
 DISTVERSIONPREFIX=	jetty-v
-DISTVERSION=		3.08_01
-DISTFILES=		${DISTNAME}${EXTRACT_SUFX} \
-			${PORTNAME}-upgrade-3.08.00.jar
-PORTREVISION=		0
+DISTVERSION=		3.06_04
+PORTREVISION=		1
 CATEGORIES=		security www java
 MASTER_SITES=		https://github.com/${GH_ACCOUNT}/${GH_PROJECT}/releases/download/v${PORTVERSION}/
 
@@ -27,7 +25,7 @@ GH_PROJECT=	Bastillion
 
 NO_ARCH=	yes
 NO_BUILD=	yes
-JAVA_VERSION=	11+
+JAVA_VERSION=	1.9+
 JAVA_VENDOR=	openjdk
 USE_RC_SUBR=	${PORTNAME}
 
@@ -67,21 +65,20 @@ do-install:
 	${MKDIR} ${STAGEDIR}/var/log/${PORTNAME}
 	${MKDIR} ${STAGEDIR}/var/run/${PORTNAME}
 	cd ${WRKSRC}; ${COPYTREE_BIN} jetty_bastillion ${STAGEDIR}${PREFIX} "! -name *\.orig"
-	${MKDIR} ${STAGEDIR}${PREFIX}/jetty_bastillion/upgrade
 	cd ${WRKSRC}; ${COPYTREE_SHARE} webapps ${STAGEDIR}${PREFIX}/${WWWDIR} "! -name *\.orig"
 	cd ${WRKSRC}; ${COPYTREE_SHARE} etc ${STAGEDIR}${PREFIX}/${WWWDIR} "! -name *\.orig"
 	${RLN} ${STAGEDIR}${PREFIX}/${WWWDIR}/etc ${STAGEDIR}${PREFIX}/jetty_bastillion/etc
 	${INSTALL_DATA} ${WRKSRC}/start.ini ${STAGEDIR}${PREFIX}/${WWWDIR}
 	${INSTALL_DATA} ${WRKSRC}/*.md ${STAGEDIR}${PREFIX}/${WWWDIR}
 	${INSTALL_DATA} ${WRKDIR}/${PORTNAME}.sample ${STAGEDIR}${ETCDIR}/
-	${INSTALL_DATA} ${DISTDIR}/bastillion-upgrade-3.08.00.jar ${STAGEDIR}${PREFIX}/jetty_bastillion/upgrade/
 
 gen-plist:
 	${ECHO} '@sample %%ETCDIR%%/%%APP_NAME%%.sample' >${PLIST}.new
 	${ECHO} '@sample(www,www,644) jetty_bastillion/bastillion/WEB-INF/classes/BastillionConfig.properties.sample' >> ${PLIST}.new
 	${ECHO} '@dir(www,www,755) /var/log/%%APP_NAME%%' >> ${PLIST}.new
 	${ECHO} '@dir(www,www,755) /var/run/%%APP_NAME%%' >> ${PLIST}.new
-	${FIND} ${STAGEDIR}${PREFIX}/jetty_bastillion -type f -a ! -name \*.orig -a ! -name \*.sample | ${SED} -e "s:${STAGEDIR}${PREFIX}/::g" | ${SORT} >> ${PLIST}.new
+	${FIND} ${WRKSRC}/jetty_bastillion -type f -a ! -name \*.orig | ${SED} -e "s:${WRKSRC}/::g" | ${SORT} >> ${PLIST}.new
+#	${REINPLACE_CMD} 's:jetty_bastillion/bastillion/WEB-INF/classes/BastillionConfig.properties$$:@(www,www,644) jetty_bastillion/bastillion/WEB-INF/classes/BastillionConfig.properties:g' ${PLIST}.new
 	${ECHO} '@dir(www,www,755) jetty_bastillion/bastillion/WEB-INF/classes' >> ${PLIST}.new
 	${ECHO} '@dir(www,www,755) %%WWWDIR%%' >> ${PLIST}.new
 	${ECHO} '@dir(www,www,755) %%WWWDIR%%/work' >> ${PLIST}.new
@@ -89,8 +86,8 @@ gen-plist:
 	${ECHO} '%%WWWDIR%%/3rdPartyLicenses.md' >> ${PLIST}.new
 	${ECHO} '%%WWWDIR%%/LICENSE.md' >> ${PLIST}.new
 	${ECHO} '%%WWWDIR%%/README.md' >> ${PLIST}.new
-	${FIND} ${STAGEDIR}${PREFIX}/${WWWDIR}/webapps -type f -a ! -name \*.orig | ${SED} -e "s:${STAGEDIR}${PREFIX}/${WWWDIR}:%%WWWDIR%%:g" | ${SORT} >> ${PLIST}.new
-	${FIND} ${STAGEDIR}${PREFIX}/${WWWDIR}/etc -type f -a ! -name \*.orig | ${SED} -e "s:${STAGEDIR}${PREFIX}/${WWWDIR}:%%WWWDIR%%:g" | ${SORT} >> ${PLIST}.new
+	${FIND} ${WRKSRC}/webapps -type f -a ! -name \*.orig | ${SED} -e "s:${WRKSRC}/webapps:%%WWWDIR%%/webapps:g" | ${SORT} >> ${PLIST}.new
+	${FIND} ${WRKSRC}/etc -type f -a ! -name \*.orig | ${SED} -e "s:${WRKSRC}/etc:%%WWWDIR%%/etc:g" | ${SORT} >> ${PLIST}.new
 	${ECHO} 'jetty_bastillion/etc' >> ${PLIST}.new
 
 .include <bsd.port.mk>

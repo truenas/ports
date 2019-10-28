@@ -2,7 +2,8 @@
 
 PORTNAME=	wl-clipboard
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2.0.0
+DISTVERSION=	1.0.0-43
+DISTVERSIONSUFFIX=	-g7f36466
 CATEGORIES=	x11 wayland
 
 MAINTAINER=	greg@unrelenting.technology
@@ -22,10 +23,6 @@ PLIST_FILES=	bin/wl-copy \
 		bin/wl-paste \
 		man/man1/wl-clipboard.1.gz \
 		man/man1/wl-copy.1.gz \
-		man/man1/wl-paste.1.gz \
-		share/bash-completion/completions/wl-copy \
-		share/bash-completion/completions/wl-paste \
-		share/zsh/site-functions/_wl-copy \
-		share/zsh/site-functions/_wl-paste
+		man/man1/wl-paste.1.gz
 
 .include <bsd.port.mk>

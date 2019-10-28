@@ -11,7 +11,9 @@ COMMENT=	Simple card game to test fortune and probability theory
 
 LICENSE=	BSD2CLAUSE
 
-USES=		compiler:c11
+BROKEN_mips=		fails to compile: deckClass.h: error: random: No such file or directory
+BROKEN_mips64=		fails to compile: deckClass.h: error: random: No such file or directory
+BROKEN_powerpc64=	fails to compile: deckClass.h: error: random: No such file or directory
 
 PLIST_FILES=	bin/redorblack
 

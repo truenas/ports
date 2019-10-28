@@ -4,7 +4,7 @@
 PORTNAME=	silc-toolkit
 PORTVERSION=	1.1.12
 PORTREVISION=	1
-CATEGORIES=	devel net security
+CATEGORIES=	devel ipv6 net security
 MASTER_SITES=	SF/silc/silc/toolkit/sources
 DISTNAME=	${PORTNAME}${PKGNAMESUFFIX}-${PORTVERSION}
 

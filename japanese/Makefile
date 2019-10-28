@@ -7,6 +7,7 @@
     SUBDIR += CGdic-fpw
     SUBDIR += FreeWnn-lib
     SUBDIR += FreeWnn-server
+    SUBDIR += VTPSfont
     SUBDIR += Wnn6-lib
     SUBDIR += Wnn7-lib
     SUBDIR += a2ps
@@ -16,6 +17,7 @@
     SUBDIR += alias-fonts
     SUBDIR += another-htmllint
     SUBDIR += anthy
+    SUBDIR += asterisk-sounds
     SUBDIR += awffull
     SUBDIR += bible_names-fpw
     SUBDIR += boiled-mozc
@@ -24,6 +26,7 @@
     SUBDIR += bugzilla50
     SUBDIR += canna-lib
     SUBDIR += canna-server
+    SUBDIR += cannadic
     SUBDIR += cdrom2
     SUBDIR += celrw
     SUBDIR += chasen-base
@@ -44,6 +47,7 @@
     SUBDIR += ebview-gtk2
     SUBDIR += edict
     SUBDIR += edict-fpw
+    SUBDIR += edict-utf-8
     SUBDIR += edyvalue
     SUBDIR += eijiro-fpw
     SUBDIR += epwutil
@@ -88,8 +92,6 @@
     SUBDIR += font-mplus-bitmap
     SUBDIR += font-mplus-ipa
     SUBDIR += font-mplus-outline
-    SUBDIR += font-myrica
-    SUBDIR += font-myricam
     SUBDIR += font-naga10
     SUBDIR += font-nasu
     SUBDIR += font-ricty
@@ -125,6 +127,7 @@
     SUBDIR += jed
     SUBDIR += jishyo
     SUBDIR += jls
+    SUBDIR += jpilot
     SUBDIR += jstrings
     SUBDIR += jvim3
     SUBDIR += kakasi
@@ -139,6 +142,7 @@
     SUBDIR += kiten
     SUBDIR += kon2-14dot
     SUBDIR += kon2-16dot
+    SUBDIR += kpcal
     SUBDIR += kterm
     SUBDIR += latex-jlisting
     SUBDIR += leafrogue
@@ -169,6 +173,7 @@
     SUBDIR += mozc-el
     SUBDIR += mozc-server
     SUBDIR += mozc-tool
+    SUBDIR += multiskkserv
     SUBDIR += mutt-devel
     SUBDIR += mypaedia-fpw-package
     SUBDIR += namazu
@@ -246,6 +251,7 @@
     SUBDIR += skk-jisyo
     SUBDIR += skk-jisyo-cdb
     SUBDIR += skk-tools
+    SUBDIR += skkfep
     SUBDIR += skkinput
     SUBDIR += skkinput3
     SUBDIR += skkserv
@@ -286,6 +292,7 @@
     SUBDIR += xshodou
     SUBDIR += xtr
     SUBDIR += xv
+    SUBDIR += yasou-fpw
     SUBDIR += yc.el
     SUBDIR += zinnia
     SUBDIR += zinnia-tomoe

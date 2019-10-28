@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	flang
-DISTVERSION=	7.0-g20191020
+DISTVERSION=	6.0-g20180904
+PORTREVISION=	4
 CATEGORIES=	devel
 
 MAINTAINER=	jmd@FreeBSD.org
@@ -13,10 +14,9 @@ LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
 ONLY_FOR_ARCHS=	amd64
 
-LLVM_VER=	70
-BUILD_DEPENDS=	llvm${LLVM_VER}>=0:devel/llvm${LLVM_VER} \
+BUILD_DEPENDS=	llvm60>=0:devel/llvm60 \
 		flang-clang>=0:devel/flang-clang
-RUN_DEPENDS=	llvm${LLVM_VER}>=0:devel/llvm${LLVM_VER} \
+RUN_DEPENDS=	llvm60>=0:devel/llvm60 \
 		flang-clang>=0:devel/flang-clang
 LIB_DEPENDS=	libpgmath.so:math/libpgmath
 
@@ -28,13 +28,13 @@ USE_LDCONFIG=	${PREFIX}/flang/lib
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	flang-compiler
-GH_TAGNAME=	d07daf3
+GH_TAGNAME=	53e368b
 
-CMAKE_ARGS+=	-DLLVM_CONFIG=${LOCALBASE}/bin/llvm-config${LLVM_VER} \
+CMAKE_ARGS+=	-DLLVM_CONFIG=${LOCALBASE}/bin/llvm-config60 \
 		-DCMAKE_CXX_COMPILER=${LOCALBASE}flang/bin/clang++ \
 		-DCMAKE_C_COMPILER=${LOCALBASE}/flang/bin/clang \
 		-DCMAKE_Fortran_COMPILER=${LOCALBASE}/flang/bin/flang \
-		-DFLANG_LIBOMP=${LOCALBASE}/llvm${LLVM_VER}/lib/libomp.so \
+		-DFLANG_LIBOMP=${LOCALBASE}/llvm60/lib/libomp.so \
 		-DLIBPGMATH="${LOCALBASE}/lib/libpgmath.a" \
 		-WWITH_ERROR=OFF
 

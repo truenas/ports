@@ -2,10 +2,10 @@
 # $FreeBSD$
 
 PORTNAME=	ngircd
-PORTVERSION=	25
+PORTVERSION=	24
 PORTREVISION=	1
 PORTEPOCH=	1
-CATEGORIES=	irc
+CATEGORIES=	irc ipv6
 MASTER_SITES=	http://arthur.barton.de/pub/${PORTNAME}/ \
 		http://ngircd.mirror.3rz.org/pub/${PORTNAME}/
 
@@ -41,7 +41,7 @@ ICONV_USES=			iconv
 ICONV_CONFIGURE_WITH=		iconv
 IDENT_DESC=			IDENT (AUTH) protocol support
 IDENT_LIB_DEPENDS=		libident.so:security/libident
-IDENT_CONFIGURE_WITH=		ident
+INDENT_CONFIGURE_WITH=		dent
 IPV6_CONFIGURE_ENABLE=		ipv6
 IRCPLUS_DESC=			IRC+ protocol
 IRCPLUS_CONFIGURE_ENABLE=	ircplus

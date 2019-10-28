@@ -4,11 +4,13 @@
 PORTNAME=	stardict-computer
 PORTVERSION=	2.4.2
 CATEGORIES=	russian
-MASTER_SITES=	http://download.huzheng.org/ru/
+MASTER_SITES=	http://abloz.com/huzheng/stardict-dic/ru/
 DISTNAME=	${PORTNAME}-ru-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	English-Russian Computer dictionary
+
+BROKEN=		unfetchable
 
 USES=	tar:bzip2
 

@@ -11,10 +11,9 @@ COMMENT=	Modify Extensions, Kextcache and Packages on InstallESD
 
 LICENSE=	BSD2CLAUSE
 
-USES=		gem
-USE_RUBY=	yes
-
 NO_ARCH=	yes
+USE_RUBY=	yes
+USES=		gem
 
 PLIST_FILES=	bin/iesd
 

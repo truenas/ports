@@ -2,18 +2,19 @@
 
 PORTNAME=	math77
 PORTVERSION=	6.0
-PORTREVISION=	9
+PORTREVISION=	8
 CATEGORIES=	math
 MASTER_SITES=	NL/math
 DISTNAME=	${PORTNAME}
 DIST_SUBDIR=	${PORTNAME}
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	as@cmplx.uk
 COMMENT=	CalTech mathematical subprogram libraries for Fortran 77
 
 LICENSE=	BSD3CLAUSE
 
 BROKEN_aarch64=		fails to compile: error: unknown architecture native
+BROKEN_powerpc64=	fails to compile: error: unrecognized command line option -march=native
 
 USES=		fortran gmake tar:tgz
 WRKSRC=		${WRKDIR}/MATH77

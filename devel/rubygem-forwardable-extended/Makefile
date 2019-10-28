@@ -12,9 +12,8 @@ COMMENT=	Forwardable with hash, and instance variable extensions
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USES=		gem
-USE_RUBY=	yes
-
 NO_ARCH=	yes
+USE_RUBY=	yes
+USES=		gem
 
 .include <bsd.port.mk>

@@ -3,7 +3,6 @@
 
 PORTNAME=	mate-settings-daemon
 PORTVERSION=	1.22.0
-PORTREVISION=	1
 CATEGORIES=	sysutils mate
 MASTER_SITES=	MATE
 DIST_SUBDIR=	mate
@@ -28,9 +27,9 @@ RUN_DEPENDS=	xrdb:x11/xrdb
 PORTSCOUT=	limitw:1,even
 
 USES=		gettext gmake libtool localbase pathfix \
-		pkgconfig tar:xz xorg
+		pkgconfig tar:xz
 USE_MATE=	desktop libmatekbd mixer
-USE_XORG=	ice sm x11 xext xi
+USE_XORG=	ice sm x11 xext xi xxf86misc
 USE_GNOME=	cairo dconf gtk30 intlhack
 USE_LDCONFIG=	yes
 GNU_CONFIGURE=	yes

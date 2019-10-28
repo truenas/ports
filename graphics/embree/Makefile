@@ -11,14 +11,19 @@ COMMENT=	Collection of high-performance ray tracing kernels
 
 LICENSE=	APACHE20
 
-ONLY_FOR_ARCHS=	amd64 i386
+BROKEN=		fails to link
+DEPRECATED=	Broken for more than 6 months
+EXPIRATION_DATE=	2019-09-04
+
+ONLY_FOR_ARCHS=	i386 amd64
 ONLY_FOR_ARCHS_REASON=	heavy use of SSE instructions
 
-USES=		cmake compiler:env gl xorg
+USE_GITHUB=	yes
+
+USES=		cmake compiler:env
 USE_GL=		gl glu glut
 USE_XORG=	xi xmu
 USE_LDCONFIG=	yes
-USE_GITHUB=	yes
 
 CMAKE_ARGS=	-DEMBREE_TASKING_SYSTEM:STRING=INTERNAL
 
@@ -26,6 +31,7 @@ DOCSDIR=	${PREFIX}/share/doc/${PORTNAME}2
 PLIST_SUB+=	VERSION=${DISTVERSION}
 
 OPTIONS_DEFINE=	DOCS IMAGEMAGICK ISPC JPEG PNG
+OPTIONS_DEFAULT=	ISPC
 OPTIONS_SUB=	yes
 
 IMAGEMAGICK_DESC=	BMP, GIF, PNG, TGA, TIFF image formats support

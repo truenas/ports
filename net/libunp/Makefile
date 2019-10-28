@@ -4,7 +4,7 @@
 PORTNAME=	libunp
 PORTVERSION=	1.0
 PORTREVISION=	1
-CATEGORIES=	net
+CATEGORIES=	net ipv6
 MASTER_SITES=	http://www.kohala.com/start/unpv12e/
 DISTNAME=	unpv12e
 

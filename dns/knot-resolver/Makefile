@@ -4,7 +4,7 @@
 PORTNAME=	knot-resolver
 DISTVERSION=	4.1.0
 PORTREVISION=	2
-CATEGORIES=	dns
+CATEGORIES=	dns ipv6
 MASTER_SITES=	https://secure.nic.cz/files/knot-resolver/ \
 		https://dns.company/downloads/knot-resolver/
 
@@ -86,6 +86,7 @@ DOXYGEN_BUILD_DEPENDS=		doxygen:devel/doxygen
 
 GO_DESC=			go
 GO_USES=			go:no_targets
+GO_BUILD_DEPENDS=		go>=1.5:lang/go
 #GO_MAKE_ARGS_ON=		HAS_go=yes
 #GO_MAKE_ARGS_OFF=		HAS_go=no
 

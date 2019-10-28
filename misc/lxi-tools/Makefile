@@ -6,7 +6,7 @@ DISTVERSION=	1.21
 PORTREVISION=	1
 CATEGORIES=	misc
 
-MAINTAINER=	dmgk@FreeBSD.org
+MAINTAINER=	dg@syrec.org
 COMMENT=	Collection of tools that enables control of LXI compatible instruments
 
 LICENSE=	BSD3CLAUSE

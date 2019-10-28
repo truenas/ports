@@ -2,11 +2,11 @@
 # $FreeBSD$
 
 PORTNAME=	ruby-prof
-PORTVERSION=	1.0.0
+PORTVERSION=	0.17.0
 CATEGORIES=	devel rubygems
 MASTER_SITES=	RG
 
-MAINTAINER=	mfechner@FreeBSD.org
+MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Fast profiler for Ruby
 
 LICENSE=	BSD2CLAUSE

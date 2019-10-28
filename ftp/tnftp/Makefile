@@ -3,7 +3,7 @@
 
 PORTNAME=	tnftp
 PORTVERSION=	20151004
-CATEGORIES=	ftp
+CATEGORIES=	ftp ipv6
 MASTER_SITES=	ftp://ftp.netbsd.org/pub/NetBSD/misc/tnftp/
 
 MAINTAINER=	danilo@FreeBSD.org

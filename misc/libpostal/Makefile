@@ -6,7 +6,7 @@ DISTVERSION=	1.1
 DISTVERSIONSUFFIX=	-alpha
 CATEGORIES=	misc geography
 
-MAINTAINER=	dmgk@FreeBSD.org
+MAINTAINER=	dg@syrec.org
 COMMENT=	Library for parsing/normalizing street addresses around the world
 
 LICENSE=	MIT

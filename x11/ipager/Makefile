@@ -33,6 +33,10 @@ post-patch:
 		-e "s/\([^-]pthread'\)/\1, 'X11'/" \
 		${WRKSRC}/SConstruct
 
+pre-build:
+	# scons is too stupid to create DESTDIR by itself
+	@${MKDIR} ${STAGEDIR}
+
 post-install:
 	${MKDIR} ${STAGEDIR}${DOCSDIR}
 .for f in ${DOCS}

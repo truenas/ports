@@ -1,6 +1,0 @@
-bin/findoid
-bin/sanoid
-bin/sleepymutex
-bin/syncoid
-%%ETCDIR%%/sanoid.defaults.conf
-@sample %%ETCDIR%%/sanoid.conf.sample

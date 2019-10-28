@@ -2,20 +2,20 @@
 # $FreeBSD$
 
 PORTNAME=	Crypt_GPG
-PORTVERSION=	1.6.3
+PORTVERSION=	1.4.3
 CATEGORIES=	security www pear
 
-MAINTAINER=	sunpoet@FreeBSD.org
+MAINTAINER=	dem.procopiou@gmail.com
 COMMENT=	GNU Privacy Guard (GPG)
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-RUN_DEPENDS=	${PEAR_PKGNAMEPREFIX}Console_CommandLine>=1.1.10:devel/pear-Console_CommandLine@${PHP_FLAVOR}
-
-USES=		pear php
-USE_PHP=	mbstring posix
+BUILD_DEPENDS=	${PEAR_PKGNAMEPREFIX}Console_CommandLine>=1.1.10:devel/pear-Console_CommandLine@${PHP_FLAVOR}
+RUN_DEPENDS:=	${BUILD_DEPENDS}
 
 NO_ARCH=	yes
+USES=		pear php
+USE_PHP=	mbstring posix
 
 .include <bsd.port.mk>

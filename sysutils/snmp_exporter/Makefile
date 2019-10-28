@@ -18,8 +18,7 @@ USE_RC_SUBR=	snmp_exporter
 
 GH_ACCOUNT=	prometheus
 
-GO_TARGET=	. \
-		./generator:snmp_exporter_generator
+GO_TARGET=	. ./generator
 
 post-patch:
 	@${REINPLACE_CMD} -e 's|/usr/local|${PREFIX}|g' ${GO_WRKSRC}/generator/main.go
@@ -27,5 +26,6 @@ post-patch:
 post-install:
 	${MKDIR} ${STAGEDIR}${PREFIX}/etc/snmp_exporter/
 	${INSTALL_DATA} ${FILESDIR}/generator.yml ${STAGEDIR}${PREFIX}/etc/snmp_exporter/generator.yml
+	${MV} ${STAGEDIR}${PREFIX}/bin/generator ${STAGEDIR}${PREFIX}/bin/snmp_exporter_generator
 
 .include <bsd.port.mk>

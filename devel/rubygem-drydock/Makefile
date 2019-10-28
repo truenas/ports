@@ -13,11 +13,9 @@ COMMENT=	Build seaworthy command-line apps with a powerful Ruby DSL
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
-USES=		gem shebangfix
-USE_RUBY=	yes
-
 NO_ARCH=	yes
-
+USE_RUBY=	yes
+USES=		gem shebangfix
 SHEBANG_FILES=	bin/example
 
 .include <bsd.port.mk>

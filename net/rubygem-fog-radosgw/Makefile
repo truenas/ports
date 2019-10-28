@@ -16,9 +16,8 @@ RUN_DEPENDS=	rubygem-fog-core>=1.21.0:devel/rubygem-fog-core \
 		rubygem-fog-json>=0:devel/rubygem-fog-json \
 		rubygem-fog-xml>=0.0.1:textproc/rubygem-fog-xml
 
-USES=		gem
-USE_RUBY=	yes
-
 NO_ARCH=	yes
+USE_RUBY=	yes
+USES=		gem
 
 .include <bsd.port.mk>

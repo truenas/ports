@@ -25,6 +25,7 @@ OPTIONS_DEFAULT=TKMAN THREADS
 OPTIONS_SUB=	yes
 TKMAN_DESC=	Install Tk function manpages
 DEMOS_DESC=	Install demos
+XSS_DESC=	XScrnSaver support
 
 WRKSRC=		${WRKDIR}/${PORTNAME}${PORTVERSION}/unix
 

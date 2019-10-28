@@ -3,8 +3,7 @@
 
 PORTNAME=	burp
 PORTVERSION?=	2.2.18
-PORTREVISION?=	1	#whenever PORTREVISION is increased, it must be increased for
-			#the slave port sysutils/burp-devel too
+PORTREVISION?=	1
 CATEGORIES=	sysutils
 
 MAINTAINER=	phascolarctos@protonmail.ch

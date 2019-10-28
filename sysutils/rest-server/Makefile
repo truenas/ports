@@ -25,4 +25,7 @@ GROUPS=		restserver
 
 PLIST_FILES=	bin/${PORTNAME}
 
+do-install:
+	${INSTALL_PROGRAM} ${WRKDIR}/bin/${PORTNAME} ${STAGEDIR}${PREFIX}/bin/${PORTNAME}
+
 .include <bsd.port.mk>

@@ -2,7 +2,6 @@
 
 PORTNAME=	theonionbox
 DISTVERSION=	4.3.1
-PORTREVISION=	1
 CATEGORIES=	security net python
 MASTER_SITES=	CHEESESHOP
 
@@ -43,7 +42,7 @@ post-patch:
 post-patch-DOCS-off:
 	@${REINPLACE_CMD} "s|('share/doc/${PORTNAME}', \['docs/\*\.\*'\]),||" ${WRKSRC}/setup.py
 
-post-install:
+xpost-install:
 	@${CHMOD} +x ${STAGEDIR}${PREFIX}/etc/rc.d/${PORTNAME}
 
 correct-plist:

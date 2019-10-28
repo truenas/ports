@@ -4,10 +4,12 @@
 PORTNAME=	utopia
 PORTVERSION=	1.1
 CATEGORIES=	print
-MASTER_SITES=	https://BSDforge.com/projects/source/print/utopia/
+MASTER_SITES=	http://www.mammothcheese.ca/
 
-MAINTAINER=	portmaster@BSDforge.com
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Adobe Utopia typeface for Groff
+
+BROKEN=		unfetchable
 
 MAKE_ARGS=	DEST=${STAGEDIR}${DATADIR}/devps \
 		INSTALL_DATA="${INSTALL_DATA}" \

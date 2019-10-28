@@ -13,11 +13,10 @@ COMMENT=	Act of enabling/disabling features in your application
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USES=		gem
-USE_RUBY=	yes
+PORTSCOUT=	limit:^0\.13\.
 
 NO_ARCH=	yes
-
-PORTSCOUT=	limit:^0\.13\.
+USE_RUBY=	yes
+USES=		gem
 
 .include <bsd.port.mk>

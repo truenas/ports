@@ -2,7 +2,6 @@
 
 PORTNAME=	crate
 DISTVERSION=	0.1.3
-PORTREVISION=	1
 CATEGORIES=	sysutils emulators
 
 MAINTAINER=	yuri@FreeBSD.org

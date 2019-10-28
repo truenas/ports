@@ -12,7 +12,7 @@ COMMENT=	Deprecated library that extends math operations
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
-USES=		gem
 USE_RUBY=	yes
+USES=		gem
 
 .include <bsd.port.mk>

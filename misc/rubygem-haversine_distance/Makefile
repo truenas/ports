@@ -11,9 +11,8 @@ COMMENT=	Calculate the great-circle distance
 
 LICENSE=	MIT
 
-USES=		gem
-USE_RUBY=	yes
-
 NO_ARCH=	yes
+USE_RUBY=	yes
+USES=		gem
 
 .include <bsd.port.mk>

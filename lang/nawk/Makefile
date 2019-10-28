@@ -3,14 +3,15 @@
 
 PORTNAME=	nawk
 PORTVERSION=	20121220
-PORTREVISION=	1
 CATEGORIES=	lang
-MASTER_SITES=	https://BSDforge.com/projects/source/lang/nawk/
+MASTER_SITES=	http://www.cs.princeton.edu/~bwk/btl.mirror/
 DISTNAME=	awk
 DIST_SUBDIR=	nawk-${PORTVERSION}
 
-MAINTAINER=	portmaster@BSDforge.com
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Brian Kernighan's pattern scanning and processing language
+
+BROKEN=		unfetchable
 
 NO_WRKSUBDIR=	yes
 MAKEFILE=	makefile

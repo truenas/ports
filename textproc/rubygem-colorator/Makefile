@@ -6,15 +6,14 @@ PORTVERSION=	1.1.0
 CATEGORIES=	textproc rubygems
 MASTER_SITES=	RG
 
-MAINTAINER=	sunpoet@FreeBSD.org
-COMMENT=	Colorize your text in the terminal
+MAINTAINER=	ruby@FreeBSD.org
+COMMENT=	Colorize your text in a terminal with a simple API
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USES=		gem
-USE_RUBY=	yes
-
 NO_ARCH=	yes
+USE_RUBY=	yes
+USES=		gem
 
 .include <bsd.port.mk>

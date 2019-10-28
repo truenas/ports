@@ -1,6 +1,6 @@
---- Telegram/SourceFiles/platform/freebsd/info_freebsd.cpp.orig	2019-09-29 04:23:33 UTC
+--- Telegram/SourceFiles/platform/freebsd/info_freebsd.cpp.orig	2019-07-28 03:19:18 UTC
 +++ Telegram/SourceFiles/platform/freebsd/info_freebsd.cpp
-@@ -0,0 +1,49 @@
+@@ -0,0 +1,35 @@
 +/*
 +This file is part of Telegram Desktop,
 +the official desktop application for the Telegram messaging service.
@@ -24,29 +24,15 @@
 +}
 +
 +QString SystemCountry() {
-+	return QLocale::system().name().split('_').last();
++	return QString();
 +}
 +
 +QString SystemLanguage() {
-+	const auto system = QLocale::system();
-+	const auto languages = system.uiLanguages();
-+	return languages.isEmpty()
-+		? system.name().split('_').first()
-+		: languages.front();
++	return QString();
 +}
 +
 +QDate WhenSystemBecomesOutdated() {
 +	return QDate();
 +}
-+
-+int AutoUpdateVersion() {
-+	return 2;
-+}
-+
-+QString AutoUpdateKey() {
-+    return "freebsd";
-+}
-+
-+
 +
 +} // namespace Platform

@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	wisper
-PORTVERSION=	2.0.1
+PORTVERSION=	2.0.0
 CATEGORIES=	devel rubygems
 MASTER_SITES=	RG
 
@@ -11,12 +11,8 @@ COMMENT=	Library for Ruby objects with Publish-Subscribe capabilities
 
 LICENSE=	MIT
 
-USES=		gem
-USE_RUBY=	yes
-
 NO_ARCH=	yes
-
-post-install:
-	${RM} ${STAGEDIR}${PREFIX}/bin/console ${STAGEDIR}${PREFIX}/bin/setup
+USE_RUBY=	yes
+USES=		gem
 
 .include <bsd.port.mk>

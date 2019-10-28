@@ -7,7 +7,7 @@ DISTVERSION=	1.3
 PORTREVISION=	3
 CATEGORIES=	x11
 
-MAINTAINER=	dmgk@FreeBSD.org
+MAINTAINER=	dg@syrec.org
 COMMENT=	Lightweight xcb based bar
 
 LICENSE=	MIT

@@ -3,7 +3,7 @@
 
 PORTNAME=	thttpd
 PORTVERSION=	2.29
-CATEGORIES=	www
+CATEGORIES=	www ipv6
 MASTER_SITES=	http://www.acme.com/software/thttpd/
 
 MAINTAINER=	danfe@FreeBSD.org

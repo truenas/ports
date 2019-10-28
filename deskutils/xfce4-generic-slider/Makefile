@@ -3,7 +3,6 @@
 
 PORTNAME=	xfce4-generic-slider
 PORTVERSION=	0.0.20171223
-PORTREVISION=	1
 CATEGORIES=	deskutils
 
 MAINTAINER=	ehaupt@FreeBSD.org
@@ -15,7 +14,7 @@ BUILD_DEPENDS=	xdt-autogen:devel/xfce4-dev-tools
 LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig \
 		libfreetype.so:print/freetype2
 
-USES=		gettext gmake gnome libtool pkgconfig xfce:gtk2
+USES=		gettext gmake libtool pkgconfig xfce
 USE_GNOME=	atk cairo gdkpixbuf2 glib20 gtk20 intltool pango
 USE_XFCE=	libmenu panel
 

@@ -1,3 +1,0 @@
-%%QT_CMAKEDIR%%/Qt5Gui/Qt5Gui_QWebGLIntegrationPlugin.cmake
-%%QT_PLUGINDIR%%/platforms/libqwebgl.so
-%%DEBUG%%%%QT_PLUGINDIR%%/platforms/libqwebgl.so.debug

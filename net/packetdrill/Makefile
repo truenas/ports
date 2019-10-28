@@ -2,7 +2,7 @@
 
 PORTNAME=	packetdrill
 PORTVERSION=	0.0.2019022601
-CATEGORIES=	net
+CATEGORIES=	net ipv6
 
 MAINTAINER=	kbowling@FreeBSD.org
 COMMENT=	Network stack testing tool

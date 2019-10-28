@@ -3,19 +3,22 @@
 
 PORTNAME=	streamripper
 PORTVERSION=	1.64.6
-PORTREVISION=	7
+PORTREVISION=	5
 CATEGORIES=	audio
-MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}%20%28current%29/${PORTVERSION}
-DISTFILES=	${DISTNAME}${EXTRACT_SUFX}
+MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}%20%28current%29/${PORTVERSION} \
+		http://gd.tuwien.ac.at/hci/cdk/:cdk
+DISTFILES=	${DISTNAME}${EXTRACT_SUFX} \
+		cdk-${CDK_VERSION}.tgz:cdk
 
-MAINTAINER=	freebsdports@xorcara.com
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Splits SHOUTcast stream into tracks
 
 LICENSE=	GPLv2
 
+BROKEN=		unfetchable
+
 LIB_DEPENDS=	libmad.so:audio/libmad \
-		libtre.so:textproc/libtre \
-		libcdk.so:devel/cdk
+		libtre.so:textproc/libtre
 
 OPTIONS_DEFINE=	FAAD VORBIS
 OPTIONS_DEFAULT=FAAD VORBIS
@@ -33,14 +36,34 @@ PLIST_FILES=	bin/streamripper \
 
 CFLAGS+=	-DANSI_PROTOTYPES
 CPPFLAGS+=	-I${LOCALBASE}/include
-LDFLAGS+=	-L${LOCALBASE}/lib
+LDFLAGS+=	-Lcdk-${CDK_VERSION} -L${LOCALBASE}/lib
+
+CDK_VERSION=	5.0-20060507
 
 FAAD_CONFIGURE_OFF=	ac_cv_lib_faad_NeAACDecDecode2=no
 FAAD_LIB_DEPENDS=	libfaad.so:audio/faad
 
-VORBIS_CONFIGURE_WITH=	ogg=${LOCALBASE}
-VORBIS_LIB_DEPENDS=	libogg.so:audio/libogg \
-			libvorbis.so:audio/libvorbis
+VORBIS_CONFIGURE_WITH=	ogg
+VORBIS_LIB_DEPENDS=	libvorbis.so:audio/libvorbis
+
+post-extract:
+	${MV} ${WRKDIR}/cdk-${CDK_VERSION} ${WRKSRC}
+
+post-patch:
+	@${REINPLACE_CMD} -e '/if test/s|==|=|g' ${WRKSRC}/configure
+#	avoid potential name conflict with ncurses
+	@${LN} -sv ${WRKSRC}/cdk-5.0-20060507/include/menu.h \
+		${WRKSRC}/cdk-5.0-20060507/include/cdkmenu.h
+	@${REINPLACE_CMD} -e "s|<menu.h>|<cdkmenu.h>|g" \
+		${WRKSRC}/cdk-5.0-20060507/include/cdk.h
+
+pre-configure:
+	(cd ${WRKSRC}/cdk-${CDK_VERSION} && ${SETENV} CC="${CC}" \
+		CFLAGS="${CFLAGS}" LDFLAGS="${LDFLAGS}" ${SH} ./configure)
+
+pre-build:
+	(cd ${WRKSRC}/cdk-${CDK_VERSION} && ${SETENV} ${MAKE_ENV} \
+		${MAKE} ${MAKE_FLAGS} ${MAKEFILE} ${ALL_TARGET})
 
 do-install:
 	${INSTALL_PROGRAM} ${WRKSRC}/streamripper ${STAGEDIR}${PREFIX}/bin

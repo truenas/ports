@@ -23,8 +23,8 @@ LIB_DEPENDS=	libclutter-glx-1.0.so:graphics/clutter \
 		libdbus-1.so:devel/dbus
 RUN_DEPENDS=	py3?-atspi>=2.1.91:accessibility/py-atspi@${PY_FLAVOR}
 
-USES=		gettext gl gmake gnome libtool localbase pathfix \
-		pkgconfig python:3.3+ shebangfix tar:xz xorg
+USES=		gettext gmake gnome libtool localbase pathfix \
+		pkgconfig python:3.3+ shebangfix tar:xz
 USE_GNOME=	cairo gdkpixbuf2 gtk30 intlhack introspection:build libxml2 \
 		libxslt:build pygobject3
 USE_PYTHON=	py3kplist

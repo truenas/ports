@@ -3,7 +3,6 @@
 
 PORTNAME=	xml-security
 DISTVERSION=	1_5_5
-PORTREVISION=	1
 CATEGORIES=	security java
 MASTER_SITES=	APACHE/santuario/java-library/${DISTVERSION}
 DISTNAME=	${PORTNAME}-src-${DISTVERSION}
@@ -11,9 +10,9 @@ DISTNAME=	${PORTNAME}-src-${DISTVERSION}
 MAINTAINER=	ale@FreeBSD.org
 COMMENT=	Java library for XML Signature and Encryption
 
-BUILD_DEPENDS=	${JAVALIBDIR}/commons-logging.jar:java/apache-commons-logging \
+BUILD_DEPENDS=	${JAVALIBDIR}/commons-logging.jar:java/jakarta-commons-logging \
 		${JAVALIBDIR}/xalan.jar:textproc/xalan-j
-RUN_DEPENDS=	${JAVALIBDIR}/commons-logging.jar:java/apache-commons-logging
+RUN_DEPENDS=	${JAVALIBDIR}/commons-logging.jar:java/jakarta-commons-logging
 
 LICENSE=	APACHE20
 

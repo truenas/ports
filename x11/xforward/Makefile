@@ -3,7 +3,6 @@
 
 PORTNAME=	xforward
 PORTVERSION=	1.0
-PORTREVISION=	1
 CATEGORIES=	x11
 MASTER_SITES=	http://komquats.com/distfiles/ \
 		http://people.freebsd.org/~cy/distfiles/
@@ -19,8 +18,8 @@ LIB_DEPENDS=	libpng.so:graphics/png \
 		libexpat.so:textproc/expat2 \
 		libfreetype.so:print/freetype2
 		
-USES=		motif xorg
-USE_XORG=	x11 xt xaw xmu xt xext sm ice xft xau xcb xdmcp xrender
+USES=		motif
+USE_XORG=	x11 xt xaw xmu xt xext sm ice xp xft xau xcb xdmcp xrender
 
 MAKE_ARGS=	PREFIX=${PREFIX} LOCALBASE=${LOCALBASE}
 NO_WRKSUBDIR=	yes

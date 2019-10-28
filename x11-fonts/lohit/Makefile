@@ -1,22 +1,20 @@
 # $FreeBSD$
 
 PORTNAME=	Lohit
-DISTVERSION=	20140220
-PORTREVISION=	3
+PORTVERSION=	20140220
+PORTREVISION=	2
 CATEGORIES=	x11-fonts
 MASTER_SITES=	https://releases.pagure.org/lohit/
 DISTNAME=	lohit-ttf-${PORTVERSION}
 
-MAINTAINER=	0mp@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Lohit fonts
 
 LICENSE=	OFL11
-LICENSE_FILE=	${WRKSRC}/COPYRIGHT
 
 USES=		fonts
-
-NO_ARCH=	yes
 NO_BUILD=	yes
+WRKSRC=		${WRKDIR}/${DISTNAME:S,.orig,,:S,_,-,}
 
 PLIST_FILES=	${FONTSDIR}/Lohit-Assamese.ttf \
 		${FONTSDIR}/Lohit-Bengali.ttf \
@@ -34,7 +32,7 @@ PLIST_FILES=	${FONTSDIR}/Lohit-Assamese.ttf \
 SUB_FILES=	pkg-message
 
 do-install:
-	@${MKDIR} ${STAGEDIR}${FONTSDIR}
+	${MKDIR} ${STAGEDIR}${FONTSDIR}
 	${INSTALL_DATA} ${WRKSRC}/*.ttf ${STAGEDIR}${FONTSDIR}
 
 .include <bsd.port.mk>

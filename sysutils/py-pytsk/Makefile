@@ -3,7 +3,6 @@
 
 PORTNAME=	pytsk
 PORTVERSION=	20190507
-PORTREVISION=	2
 CATEGORIES=	sysutils security devel python
 MASTER_SITES=	CHEESESHOP \
 		https://github.com/py4n6/pytsk/releases/download/${PORTVERSION}/

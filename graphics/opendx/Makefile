@@ -3,7 +3,7 @@
 
 PORTNAME=	opendx
 PORTVERSION=	4.4.4
-PORTREVISION=	31
+PORTREVISION=	30
 CATEGORIES=	graphics math java
 MASTER_SITES=	http://www.sfr-fresh.com/unix/misc/
 DISTNAME=	dx-${PORTVERSION}
@@ -18,10 +18,11 @@ LICENSE_PERMS=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
 
 LIB_DEPENDS=	libMagickWand-6.so:graphics/ImageMagick6	\
 		libtiff.so:graphics/tiff		\
-		libcdf.so:science/cdf
+		libcdf.so:science/cdf			\
+		libXp.so:x11/libXp
 
 MAKE_JOBS_UNSAFE=	yes
-USES=		bison compiler:c++17-lang gl gmake libtool motif xorg
+USES=		bison compiler:c++17-lang gmake libtool motif
 USE_XORG=	x11 xt xinerama xext xpm xmu sm ice
 USE_GL=		gl glu
 GNU_CONFIGURE=	yes

@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	cheetah
-DISTVERSION=	3.2.4
+DISTVERSION=	3.2.3
 CATEGORIES=	devel textproc www python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -18,8 +18,5 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}markdown>=2.0.3:textproc/py-markdown@${PY_FL
 
 USES=		python
 USE_PYTHON=	autoplist concurrent distutils
-
-post-install:
-	${STRIP_CMD} ${STAGEDIR}${PYTHON_SITELIBDIR}/Cheetah/*.so
 
 .include <bsd.port.mk>

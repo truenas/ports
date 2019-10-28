@@ -13,9 +13,11 @@ COMMENT=	Persistence of Vision Ray Tracer
 LICENSE=	AGPLv3+
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
+BROKEN_powerpc64=	Does not build: c++: Internal error: Killed (program cc1plus)
+
 LIB_DEPENDS=	libboost_thread.so:devel/boost-libs
 
-USES=		autoreconf:build compiler:c11 gmake
+USES=		autoreconf:build gmake
 USE_GITHUB=	yes
 GH_ACCOUNT=	POV-Ray
 

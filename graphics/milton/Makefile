@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	milton
-PORTVERSION=	1.9.1
+PORTVERSION=	1.6.2
+PORTREVISION=	1
 DISTVERSIONPREFIX=	v
 CATEGORIES=	graphics
 
@@ -16,7 +17,7 @@ BUILD_DEPENDS=	icotool:graphics/icoutils
 USE_GITHUB=	yes
 GH_ACCOUNT=	serge-rgb
 
-USES=		cmake compiler:c++11-lang gl gnome sdl xorg
+USES=		cmake compiler:c++11-lang gl gnome sdl
 USE_GL=		gl glu
 USE_GNOME=	cairo gtk20
 USE_SDL=	sdl2 image2

@@ -9,7 +9,7 @@ CATEGORIES=	math
 MASTER_SITES=	http://mirror.shatow.net/freebsd/${PORTNAME}/ \
 		LOCAL/jase
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	bdrewery@FreeBSD.org
 COMMENT=	Multiprecision Integer and Rational Arithmetic C/C++ Library
 
 LICENSE=	AGPLv3 COMMERCIAL

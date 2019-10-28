@@ -41,7 +41,7 @@ USE_GITHUB=		yes
 
 OPTIONS_DEFINE=		DEBUG DOCS DYNLOAD FFMPEG FLAC ID3TAG LADSPA LAME LV2 \
 			MAD MOD_NYQ_BENCH MOD_SCRIPT_PIPE NLS SBSMS SOUNDTOUCH \
-			SSE TWOLAME VAMP VORBIS VST
+			SSE STATIC_WX TWOLAME VAMP VORBIS VST
 OPTIONS_DEFAULT=	FLAC ID3TAG LADSPA MAD SBSMS SOUNDTOUCH TWOLAME VAMP \
 			VORBIS VST
 
@@ -56,6 +56,8 @@ MOD_SCRIPT_PIPE_DESC=	mod-script-pipe scripting support
 MOD_NYQ_BENCH_DESC=	Enable Nyquist Workbench
 SBSMS_DESC=		Use libsbsms for pitch and tempo changing
 SOUNDTOUCH_DESC=	Use libSoundTouch for pitch and tempo changing
+STATIC_WX_DESC=		Link wx statically
+TAGLIB_DESC=		Use TagLib for metadata support
 TWOLAME_DESC=		Use libtwolame for MP2 export support
 VAMP_DESC=		Vamp plug-in support
 VST_DESC=		VST plug-in support
@@ -98,6 +100,8 @@ FLAC_LIB_DEPENDS=	libFLAC.so:audio/flac
 ID3TAG_CONFIGURE_WITH=	libid3tag=system
 ID3TAG_LIB_DEPENDS=	libid3tag.so:audio/libid3tag
 
+JACK_LIB_DEPENDS=	libjack.so:audio/jack
+
 LADSPA_CONFIGURE_ENABLE=	ladspa
 LADSPA_RUN_DEPENDS=		listplugins:audio/ladspa
 
@@ -126,6 +130,8 @@ SOUNDTOUCH_CONFIGURE_WITH=	soundtouch=system
 SOUNDTOUCH_LIB_DEPENDS=		libSoundTouch.so:audio/soundtouch
 
 SSE_CONFIGURE_ENABLE=	sse
+
+STATIC_WX_ENABLE=	static-wx
 
 TWOLAME_CONFIGURE_WITH=	libtwolame=system
 TWOLAME_LIB_DEPENDS=	libtwolame.so:audio/twolame

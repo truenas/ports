@@ -2,9 +2,9 @@
 # $FreeBSD$
 
 PORTNAME=	mod_auth_cas
-PORTVERSION=	1.2
+PORTVERSION=	1.1
 DISTVERSIONPREFIX=	v
-PORTREVISION=	0
+PORTREVISION=	1
 CATEGORIES=	www
 PKGNAMEPREFIX=	${APACHE_PKGNAMEPREFIX}
 
@@ -12,7 +12,6 @@ MAINTAINER=	apache@FreeBSD.org
 COMMENT=	Apache 2.x module that supports the CASv1 and CASv2 protocols
 
 LICENSE=	APACHE20
-LICENSE_FILE=	${WRKSRC}/README
 
 LIB_DEPENDS=	libcurl.so:ftp/curl \
 		libpcre.so:devel/pcre

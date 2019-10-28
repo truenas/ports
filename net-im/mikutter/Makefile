@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	mikutter
-PORTVERSION=	3.9.5
+PORTVERSION=	3.9.2
+PORTREVISION=	1
 CATEGORIES=	net-im ruby
 MASTER_SITES=	https://mikutter.hachune.net/bin/ \
 		LOCAL/meta/${PORTNAME}

@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	BioPerl
-PORTVERSION=	1.007006
+PORTVERSION=	1.007005
+PORTREVISION=	1
 CATEGORIES=	biology perl5
 MASTER_SITES=	CPAN
 MASTER_SITE_SUBDIR=	CPAN:CDRAUG
@@ -17,8 +18,10 @@ LICENSE_COMB=	dual
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 BUILD_DEPENDS=	${RUN_DEPENDS}
-RUN_DEPENDS=	p5-Data-Stag>=0:devel/p5-Data-Stag \
+RUN_DEPENDS=	p5-DBI>=0:databases/p5-DBI \
+		p5-Data-Stag>=0:devel/p5-Data-Stag \
 		p5-Error>=0:lang/p5-Error \
+		p5-GD>=0:graphics/p5-GD \
 		p5-Graph>=0:math/p5-Graph \
 		p5-HTTP-Message>=0:www/p5-HTTP-Message \
 		p5-IO-String>=0:devel/p5-IO-String \
@@ -49,9 +52,16 @@ USE_PERL5=	configure
 
 NO_ARCH=	yes
 
-OPTIONS_DEFINE=	DOCS EXAMPLES
+OPTIONS_DEFINE=	DOCS EXAMPLES PGTEST SQLITETEST
+PGTEST_DESC=	Test PostGreSQL
+SQLITETEST_DESC=Test SQLite
 
-SHEBANG_GLOB=	*.pl
+PGTEST_RUN_DEPENDS=	p5-DBD-Pg>=3:databases/p5-DBD-Pg
+PGTEST_BUILD_DEPENDS=	p5-DBD-Pg>=3:databases/p5-DBD-Pg
+SQLITETEST_RUN_DEPENDS=	p5-DBD-SQLite>=1:databases/p5-DBD-SQLite
+SQLITETEST_BUILD_DEPENDS=	p5-DBD-SQLite>=1:databases/p5-DBD-SQLite
+
+SHEBANG_FILES=	examples/*.pl examples/*/*.pl
 
 post-install-DOCS-on:
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}

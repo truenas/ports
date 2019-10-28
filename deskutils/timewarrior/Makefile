@@ -15,4 +15,6 @@ LICENSE=	MIT
 USES=		cmake compiler:c++11-lang
 CMAKE_ARGS+=	-DTIMEW_DOCDIR=${DOCSDIR}
 
+OPTIONS_SUB=	yes
+
 .include <bsd.port.mk>

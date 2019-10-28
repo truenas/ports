@@ -11,9 +11,9 @@ MAINTAINER=	gmm@tutanota.com
 COMMENT=	Forecasting time series data based on an additive model
 
 LICENSE=	MIT
-LICENSE_FILE=	${WRKSRC}/LICENSE
+LICENSE_FILE=	LICENSE
 
-USES=		compiler:c11 python
+USES=		python
 USE_PYTHON=	autoplist distutils
 
 BUILD_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}pystan>2.14:math/py-pystan@${PY_FLAVOR}

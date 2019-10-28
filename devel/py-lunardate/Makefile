@@ -11,6 +11,7 @@ MAINTAINER=	gmm@tutanota.com
 COMMENT=	Chinese Calendar Library in Pure Python
 
 LICENSE=	MIT
+LICENSE_FILE=	LICENSE.txt
 
 USES=		python
 USE_PYTHON=	autoplist distutils

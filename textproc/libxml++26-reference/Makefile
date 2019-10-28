@@ -10,8 +10,6 @@ BUILD_DEPENDS=	${LOCALBASE}/libdata/pkgconfig/libxml++-2.6.pc:textproc/libxml++2
 USES=		gmake pkgconfig
 GNU_CONFIGURE=	yes
 
-BROKEN=		fails to stage
-
 DOCSDIR=	${PREFIX}/share/doc/libxml++-2.6
 
 do-install:

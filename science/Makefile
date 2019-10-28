@@ -149,6 +149,7 @@
     SUBDIR += mdynamix
     SUBDIR += medit
     SUBDIR += meep
+    SUBDIR += metaf2xml
     SUBDIR += metaphysicl
     SUBDIR += minc2
     SUBDIR += mmdb2
@@ -209,7 +210,6 @@
     SUBDIR += p5-Mcstas-Tools
     SUBDIR += p5-PerlMol
     SUBDIR += p5-Physics-Unit
-    SUBDIR += packmol
     SUBDIR += pagmo2
     SUBDIR += paje
     SUBDIR += paraview

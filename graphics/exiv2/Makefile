@@ -2,11 +2,12 @@
 # $FreeBSD$
 
 PORTNAME=	exiv2
-DISTVERSION=	0.27.2
+DISTVERSION=	0.27.1
 DISTVERSIONSUFFIX=	-Source
+PORTREVISION=	2
 PORTEPOCH=	1
 CATEGORIES=	graphics
-MASTER_SITES=	https://www.exiv2.org/builds/
+MASTER_SITES=	https://www.exiv2.org/releases/
 
 MAINTAINER=	multimedia@FreeBSD.org
 COMMENT=	Exif, IPTC, and XMP metadata manipulation library and tools
@@ -22,7 +23,7 @@ USE_LDCONFIG=	yes
 LDFLAGS+=	-lintl
 
 CMAKE_ON=	EXIV2_ENABLE_VIDEO \
-		EXIV2_ENABLE_NLS
+		EXIV2_BUILD_PO
 CMAKE_OFF=	EXIV2_ENABLE_LIBXMP
 
 OPTIONS_DEFINE=	SAMPLE

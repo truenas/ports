@@ -6,12 +6,10 @@ PORTVERSION=	1.2.1
 CATEGORIES=	security www pear
 DISTNAME=	Text_password-${PORTVERSION}
 
-MAINTAINER=	sunpoet@FreeBSD.org
+MAINTAINER=	dem.procopiou@gmail.com
 COMMENT=	PEAR random password creator
 
-USES=		pear
-
-NO_ARCH=	yes
-WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}
+USES=	pear
+WRKSRC=		${WRKDIR}/Text_Password-${PORTVERSION}
 
 .include <bsd.port.mk>

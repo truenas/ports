@@ -2,25 +2,23 @@
 
 PORTNAME=	wmutils-core
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.5
+DISTVERSION=	1.4
 CATEGORIES=	x11
 
-MAINTAINER=	dmgk@FreeBSD.org
+MAINTAINER=	dg@syrec.org
 COMMENT=	Set of window manipulation tools
 
 LICENSE=	ISCL
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-LIB_DEPENDS=	libxcb-util.so:x11/xcb-util \
-		libxcb-cursor.so:x11/xcb-util-cursor
+LIB_DEPENDS=	libxcb-util.so:x11/xcb-util
 
-USES=		localbase:ldflags xorg
+USES=		localbase:ldflags
+USE_XORG=	xcb
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	wmutils
 GH_PROJECT=	core
-
-USE_XORG=	xcb
 
 CONFLICTS=	wtf  # games/wtf
 

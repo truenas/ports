@@ -18,11 +18,10 @@ GH_TUPLE=	\
 		google:skylark:a5f7082:skylark/vendor/github.com/google/skylark
 
 GO_PKGNAME=	github.com/${GH_ACCOUNT}/${GH_PROJECT}
-GO_TARGET=	./buildifier \
-		./buildifier2 \
-		./buildozer \
-		./unused_deps
+GO_TARGET=	${EXES:S/^/${GO_PKGNAME}\//}
 
-PLIST_FILES=	${GO_TARGET:S/^./bin/}
+PLIST_FILES=	${EXES:S/^/bin\//}
+
+EXES=		buildifier buildifier2 buildozer unused_deps
 
 .include <bsd.port.mk>

@@ -1,8 +1,6 @@
---- pkg/minikube/constants/constants_freebsd.go.orig	2019-10-26 17:48:57 UTC
+--- pkg/minikube/constants/constants_freebsd.go.orig	2019-09-01 15:23:36 UTC
 +++ pkg/minikube/constants/constants_freebsd.go
-@@ -0,0 +1,26 @@
-+// +build freebsd, !gendocs
-+
+@@ -0,0 +1,28 @@
 +/*
 +Copyright 2016 The Kubernetes Authors All rights reserved.
 +
@@ -25,5 +23,9 @@
 +	"k8s.io/client-go/util/homedir"
 +)
 +
-+// DefaultMountDir is the default mount dir
 +var DefaultMountDir = homedir.HomeDir()
++
++// SupportedVMDrivers is a list of supported drivers on FreeBSD.
++var SupportedVMDrivers = [...]string{
++        DriverVirtualbox,
++}

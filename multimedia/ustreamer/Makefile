@@ -2,8 +2,9 @@
 
 PORTNAME=	ustreamer
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.9
-CATEGORIES=	multimedia net
+DISTVERSION=	1.0
+PORTREVISION=	2
+CATEGORIES=	multimedia ipv6 net
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Lightweight and fast MJPG-HTTP streamer

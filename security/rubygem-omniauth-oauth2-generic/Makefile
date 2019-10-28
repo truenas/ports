@@ -12,12 +12,11 @@ COMMENT=	Generic, Configurable OmniAuth Strategy for OAuth2 providers
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.md
 
-RUN_DEPENDS=	rubygem-omniauth-oauth2>=1.0<2:net/rubygem-omniauth-oauth2
-
-USES=		gem
-USE_RUBY=	yes
+RUN_DEPENDS=	rubygem-omniauth-oauth2>=1.0:net/rubygem-omniauth-oauth2
 
 NO_ARCH=	yes
+USE_RUBY=	yes
+USES=		gem
 
 post-install:
 	${RM} ${STAGEDIR}${PREFIX}/bin/console ${STAGEDIR}${PREFIX}/bin/setup

@@ -3,17 +3,19 @@
 
 PORTNAME=	ttcp
 PORTVERSION=	1.12
-PORTREVISION=	2
+PORTREVISION=	1
 CATEGORIES=	benchmarks net
-MASTER_SITES=	https://BSDforge.com/projects/source/benchmarks/ttcp/
+MASTER_SITES=	ftp://ftp.sgi.com/sgi/src/ttcp/
 DISTFILES=	ttcp.c ttcp.1 README
 DIST_SUBDIR=	${PORTNAME}
 EXTRACT_ONLY=	# none
 
-MAINTAINER=	portmaster@BSDforge.com
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Benchmarking tool for analysing TCP and UDP performance
 
 LICENSE=	PD
+
+BROKEN=		unfetchable
 
 NO_WRKSUBDIR=	yes
 

@@ -4,7 +4,7 @@
 PORTNAME=	yafc
 PORTVERSION=	1.2.5
 PORTREVISION=	4
-CATEGORIES=	ftp
+CATEGORIES=	ftp ipv6
 MASTER_SITES=	http://www.yafc-ftp.com/downloads/
 
 MAINTAINER=	wg@FreeBSD.org

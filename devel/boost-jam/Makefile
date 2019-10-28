@@ -13,8 +13,6 @@ MAKE_FLAGS=	#
 _MAKE_JOBS=	#
 MAKEFILE=	#
 
-USES=		compiler:c++11-lang
-
 WRKSRC_SUBDIR=	tools/build/src/engine
 
 .include "${.CURDIR}/../boost-all/common.mk"

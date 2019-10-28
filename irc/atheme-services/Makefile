@@ -3,7 +3,7 @@
 
 PORTNAME=	atheme-services
 PORTVERSION=	7.2.9
-CATEGORIES=	irc net
+CATEGORIES=	irc ipv6 net
 MASTER_SITES=	https://github.com/atheme/atheme/releases/download/v${PORTVERSION}/
 DISTNAME=	atheme-${PORTVERSION}
 

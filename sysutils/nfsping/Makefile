@@ -6,7 +6,7 @@ CATEGORIES=	sysutils net-mgmt
 MASTER_SITES=	GH \
 		LOCAL/bdrewery/${PORTNAME}/
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	bdrewery@FreeBSD.org
 COMMENT=	Command line tool to check NFS server response times
 
 LICENSE=	BSD2CLAUSE

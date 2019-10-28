@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	flang-clang
-DISTVERSION=	7.0-g20191020
+DISTVERSION=	6.0-g20180904
+PORTREVISION=	4
 CATEGORIES=	devel lang
 
 MAINTAINER=	jmd@FreeBSD.org
@@ -15,32 +16,26 @@ LICENSE_PERMS=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
 
 ONLY_FOR_ARCHS=	amd64
 
-LLVM_VER=	70
-BUILD_DEPENDS=	llvm${LLVM_VER}>=0:devel/llvm${LLVM_VER}
-RUN_DEPENDS=	llvm${LLVM_VER}>=0:devel/llvm${LLVM_VER}
+BUILD_DEPENDS=	llvm60>=0:devel/llvm60
+RUN_DEPENDS=	llvm60>=0:devel/llvm60
 
-USES=		cmake libedit tar:xz perl5 \
+USES=		cmake compiler:c++11-lib libedit tar:xz perl5 \
 		python shebangfix
 USE_LDCONFIG=	${PREFIX}/flang/lib
 USE_GNOME=	libxml2
 
 SHEBANG_FILES=	tools/scan-view/bin/scan-view \
 		tools/clang-format/git-clang-format \
-		tools/clang-format/clang-format-diff.py \
-		utils/hmaptool/hmaptool
+		tools/clang-format/clang-format-diff.py
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	flang-compiler
 GH_PROJECT=	flang-driver
-GH_TAGNAME=	984936a
+GH_TAGNAME=	742de5f
 
-CMAKE_ARGS+=	-DLLVM_CONFIG=${LOCALBASE}/bin/llvm-config${LLVM_VER} \
-		-DLLVM_DIR=${LOCALBASE}/llvm${LLVM_VER}/lib/cmake/llvm
+CMAKE_ARGS+=	-DLLVM_CONFIG=${LOCALBASE}/bin/llvm-config60
 
 CMAKE_INSTALL_PREFIX=	${PREFIX}/flang
-
-CC=		${LOCALBASE}/llvm${LLVM_VER}/bin/clang
-CXX=		${LOCALBASE}/llvm${LLVM_VER}/bin/clang++
 
 post-patch:
 	@${REINPLACE_CMD} -e 's|%%LOCALBASE%%|${LOCALBASE}|' ${WRKSRC}/lib/Driver/ToolChains/FreeBSD.cpp

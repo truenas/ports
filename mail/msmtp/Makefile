@@ -2,8 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	msmtp
-PORTVERSION=	1.8.6
-CATEGORIES=	mail
+PORTVERSION=	1.8.5
+CATEGORIES=	mail ipv6
 MASTER_SITES=	https://marlam.de/msmtp/releases/
 
 MAINTAINER=	novel@FreeBSD.org

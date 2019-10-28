@@ -2,8 +2,9 @@
 # $FreeBSD$
 
 PORTNAME=	fmit
-PORTVERSION=	1.2.13
+PORTVERSION=	1.2.6
 DISTVERSIONPREFIX=	v
+PORTREVISION=	3
 CATEGORIES=	audio
 
 MAINTAINER=	danilo@FreeBSD.org
@@ -16,7 +17,7 @@ LICENSE_FILE_LGPL21=	${WRKSRC}/COPYING_LGPL.txt
 
 LIB_DEPENDS=	libfftw3.so:math/fftw3
 
-USES=		compiler:c++11-lang gl gnome pkgconfig qmake qt:5 tar:bzip2 xorg
+USES=		compiler:c++11-lang gl gnome pkgconfig qmake qt:5 tar:bzip2
 
 USE_QT=		buildtools_build core gui opengl qmake_build multimedia network svg widgets
 USE_GL=		gl glut

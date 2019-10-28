@@ -16,10 +16,9 @@ LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 RUN_DEPENDS=	rubygem-builder>=2.0.0:devel/rubygem-builder \
 		rubygem-byebug>=0:devel/rubygem-byebug
 
-USES=		gem
-USE_RUBY=	yes
-
 NO_ARCH=	yes
+USE_RUBY=	yes
+USES=		gem
 
 PLIST_FILES=	bin/rdebug-ide bin/rdebug-vim
 

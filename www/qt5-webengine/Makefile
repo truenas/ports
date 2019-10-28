@@ -18,6 +18,7 @@
 
 PORTNAME=	webengine
 DISTVERSION=	${QT5_VERSION}
+PORTREVISION=	3
 CATEGORIES=	www
 PKGNAMEPREFIX=	qt5-
 
@@ -48,7 +49,7 @@ LIB_DEPENDS=	libavcodec.so:multimedia/ffmpeg \
 		libwebp.so:graphics/webp
 
 DISTINFO_FILE=	${.CURDIR}/distinfo
-QT5_VERSION=	5.13.0
+QT5_VERSION=	5.12.2
 
 OPTIONS_SINGLE=		AUDIO
 OPTIONS_SINGLE_AUDIO=	ALSA PULSEAUDIO SNDIO
@@ -73,7 +74,7 @@ SNDIO_VARS_OFF=		QMAKE_CONFIGURE_ARGS+=-no-sndio
 # whether webenginewidgets is available, which fails when qmake processes all
 # .pro files at once.
 USES=		gl gnome gperf jpeg python:2.7,build pkgconfig \
-		qmake:norecursive,outsource qt-dist:5,webengine shebangfix xorg
+		qmake:norecursive,outsource qt-dist:5,webengine shebangfix
 USE_GL=		gl
 USE_GNOME=	glib20 libxml2 libxslt
 USE_QT=		core declarative designer gui location network webchannel \

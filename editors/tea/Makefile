@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	tea
-PORTVERSION=	47.1.0
+PORTVERSION=	47.0.1
+PORTREVISION=	3
 CATEGORIES=	editors
 
 MAINTAINER=	danilo@FreeBSD.org
@@ -10,7 +11,7 @@ COMMENT=	Simple and powerful Qt-based text editor
 
 LICENSE=	GPLv3
 
-USES=		compiler:c++11-lang gl gmake pkgconfig:build qmake qt:5 xorg
+USES=		compiler:c++11-lang gl gmake pkgconfig:build qmake qt:5
 
 OPTIONS_DEFINE=		DOCS
 OPTIONS_GROUP=		SPELL

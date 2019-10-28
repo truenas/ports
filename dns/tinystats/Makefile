@@ -3,7 +3,7 @@
 
 PORTNAME=	tinystats
 PORTVERSION=	1.1
-CATEGORIES=	dns
+CATEGORIES=	dns ipv6
 MASTER_SITES=	http://www.morettoni.net/bsd/ \
 		LOCAL/ehaupt
 

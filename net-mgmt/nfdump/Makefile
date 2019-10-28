@@ -2,8 +2,9 @@
 # $FreeBSD$
 
 PORTNAME=	nfdump
-PORTVERSION=	1.6.18
+PORTVERSION=	1.6.17
 DISTVERSIONPREFIX=v
+PORTREVISION=	1
 CATEGORIES=	net-mgmt
 
 MAINTAINER=	pi@FreeBSD.org
@@ -23,7 +24,7 @@ MAKE_JOBS_UNSAFE=	yes
 
 #flow-tools support
 OPTIONS_DEFINE=		DOCS FT2NFDUMP NFPROFILE FIXTIMEBUG READPCAP NFTRACK \
-			SFLOW NFPCAPD NFDUMP15 NSEL INFLUXDB
+			SFLOW NFDUMP15 NSEL INFLUXDB
 OPTIONS_DEFAULT=	NFPROFILE
 
 FT2NFDUMP_DESC=		With Flow-tools to nfdump converter
@@ -32,13 +33,13 @@ FIXTIMEBUG_DESC=	With fixing swap time bug of some v5
 READPCAP_DESC=		With pcap support
 NFTRACK_DESC=		With PortTracker support
 SFLOW_DESC=		Build sflow collector daemon also
-NFPCAPD_DESC=		Build nfpcapd collector daemon also
 NFDUMP15_DESC=		Enable compatibility with version 1.5
 NSEL_DESC=		Read and process ASA/NSEL/NEL event data
 INFLUXDB_DESC=		Enable stats to InfluxDB
 
 post-patch:
 	${REINPLACE_CMD} 's|-ggdb||' ${WRKSRC}/bin/Makefile.am
+	${REINPLACE_CMD} "s|1.6.15|${PORTVERSION}|" ${WRKSRC}/bin/Makefile.am
 
 .include <bsd.port.options.mk>
 
@@ -110,14 +111,6 @@ PLIST_FILES+=	bin/sfcapd man/man1/sfcapd.1.gz
 CONFIGURE_ARGS+=	--disable-sflow
 .endif
 
-#nfpcapd capture support
-.if ${PORT_OPTIONS:MNFPCAPD}
-CONFIGURE_ARGS+=	--enable-nfpcapd
-PLIST_FILES+=	bin/nfpcapd man/man1/nfpcapd.1.gz
-.else
-CONFIGURE_ARGS+=	--disable-nfpcapd
-.endif
-
 #influxdb support
 .if ${PORT_OPTIONS:MINFLUXDB}
 CONFIGURE_ARGS+=	--enable-influxdb
@@ -127,7 +120,7 @@ CONFIGURE_ARGS+=	--disable-influxdb
 .endif
 
 do-install:
-.for binary in nfanon nfcapd nfpcapd nfdump nfexpire nfreplay
+.for binary in nfanon nfcapd nfdump nfexpire nfreplay
 	${INSTALL_PROGRAM} ${WRKSRC}/bin/.libs/${binary} ${STAGEDIR}${PREFIX}/bin
 .endfor
 	${INSTALL_LIB} ${WRKSRC}/bin/.libs/libnfdump-${PORTVERSION}.so ${STAGEDIR}${PREFIX}/lib
@@ -149,11 +142,6 @@ do-install:
 .if ${PORT_OPTIONS:MSFLOW}
 	${INSTALL_PROGRAM} ${WRKSRC}/bin/.libs/sfcapd ${STAGEDIR}${PREFIX}/bin
 	${INSTALL_MAN}	${WRKSRC}/man/sfcapd.1	${STAGEDIR}${PREFIX}/man/man1
-.endif
-
-.if ${PORT_OPTIONS:MNFPCAPD}
-	${INSTALL_PROGRAM} ${WRKSRC}/bin/.libs/nfpcapd ${STAGEDIR}${PREFIX}/bin
-	${INSTALL_MAN}	${WRKSRC}/man/nfpcapd.1	${STAGEDIR}${PREFIX}/man/man1
 .endif
 
 .for filename in nfanon nfdump nfcapd nfexpire nfreplay

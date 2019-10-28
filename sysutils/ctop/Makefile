@@ -5,7 +5,7 @@ DISTVERSIONPREFIX=	v
 DISTVERSION=	0.7.2
 CATEGORIES=	sysutils
 
-MAINTAINER=	dmgk@FreeBSD.org
+MAINTAINER=	dg@syrec.org
 COMMENT=	Top-like interface for Docker container metrics
 
 LICENSE=	MIT

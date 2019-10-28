@@ -16,14 +16,13 @@ RUN_DEPENDS=	ffmpeg:multimedia/ffmpeg \
 		${LOCALBASE}/lib/libSDL.so:devel/sdl12
 
 USES=		desktop-file-utils gl pkgconfig \
-		qmake qt:5 sdl shared-mime-info \
-		xorg
+		qmake qt:5 sdl shared-mime-info
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	mltframework
 
 # Needed to be able to correctly check for updates in-app.
-FULLVERSION=	19.10.20
+FULLVERSION=	19.08.16
 
 USE_GL+=	gl
 USE_QT=		buildtools_build concurrent_build core declarative \

@@ -17,8 +17,7 @@ COMMENT=	Software package for large-scale nonlinear optimization
 
 LICENSE=	EPL
 
-USES=		blaslapack compiler:c++11-lang fortran libtool pathfix \
-		pkgconfig tar:tgz
+USES=		blaslapack fortran libtool pathfix pkgconfig tar:tgz
 GNU_CONFIGURE=	yes
 USE_LDCONFIG=	yes
 TEST_TARGET=	test

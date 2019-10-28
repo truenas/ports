@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	samhain
-PORTVERSION=	4.3.3
+PORTVERSION=	4.3.2
 CATEGORIES=	security
 MASTER_SITES=	http://la-samhna.de/archive/
 DISTNAME=	samhain_signed-${PORTVERSION}
@@ -16,16 +16,12 @@ BROKEN_aarch64=		fails to build: undefined reference to sbrk
 BROKEN_mips=		fails to configure: error: Could not find the libwrap library
 BROKEN_mips64=		fails to configure: error: Could not find the libwrap library
 
-OPTIONS_DEFINE=		ASM DB_RELOAD DEBUG DNMALLOC DOCS ENCRYPT GNUPG IPV6 \
-			KCHECK LIBWRAP LOGFILE_MONITOR LOGIN_WATCH MAIL \
-			MOUNTS_CHECK PORT_CHECK POSIX_ACL PRELUDE PROCESS_CHECK \
-			PTRACE SRP STATIC SUIDCHECK UDP USERFILES XML_LOGS
-OPTIONS_DEFAULT=	ASM DNMALLOC ENCRYPT LIBWRAP MAIL SRP
-OPTIONS_RADIO=		DB
-OPTIONS_RADIO_DB=	MYSQL ODBC PGSQL
-OPTIONS_SUB=		yes
+OPTIONS_DEFINE=	ASM DB_RELOAD DEBUG DNMALLOC DOCS ENCRYPT GNUPG IPV6 KCHECK \
+		LIBWRAP LOGFILE_MONITOR LOGIN_WATCH MAIL MOUNTS_CHECK MYSQL \
+		ODBC PGSQL PORT_CHECK PROCESS_CHECK POSIX_ACL PRELUDE PTRACE \
+		SRP STATIC SUIDCHECK UDP USERFILES XML_LOGS
+OPTIONS_DEFAULT=ASM DNMALLOC ENCRYPT LIBWRAP MAIL SRP
 
-DB_DESC=	Database support
 DB_RELOAD_DESC=	Enable database reload on SIGHUP
 DNMALLOC_DESC=	Enable dnmalloc
 ENCRYPT_DESC=	Enable client/server encryption
@@ -44,6 +40,8 @@ SUIDCHECK_DESC=	Enable check for suid/sgid files
 UDP_DESC=	Enable UDP server
 USERFILES_DESC=	Enable check for users config files
 XML_LOGS_DESC=	Enable XML-formatted logs
+
+OPTIONS_SUB=	yes
 
 WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}
 
@@ -84,17 +82,14 @@ MAIL_CONFIGURE_ENABLE=		mail
 
 MOUNTS_CHECK_CONFIGURE_ENABLE=	mounts-check
 
-MYSQL_IMPLIES=			XML_LOGS
 MYSQL_USES=			mysql
-MYSQL_CONFIGURE_ON=		--with-database=mysql
+MYSQL_CONFIGURE_ARGS=		--with-database=mysql
 
-ODBC_IMPLIES=			XML_LOGS
+ODBC_CONFIGURE_ARGS=		--with-database=odbc
 ODBC_LIB_DEPENDS=		libodbc.so:databases/unixODBC
-ODBC_CONFIGURE_ON=		--with-database=odbc
 
-PGSQL_IMPLIES=			XML_LOGS
 PGSQL_USES=			pgsql
-PGSQL_CONFIGURE_ON=		--with-database=postgresql
+PGSQL_CONFIGURE_ARGS=		--with-database=postgresql
 
 PORT_CHECK_CONFIGURE_ENABLE=	port-check
 
@@ -171,6 +166,14 @@ IGNORE=		can't build client and server at once
 	@${ECHO_MSG} "and /dev/mem. If you're not building as root, please hit"
 	@${ECHO_MSG} "Control-C and restart the build as root."
 	@${ECHO_MSG}
+.endif
+
+.if ${PORT_OPTIONS:MMYSQL} && ! ${PORT_OPTIONS:MXML_LOGS}
+IGNORE=		xml logging is required to log to MySQL
+.endif
+
+.if ${PORT_OPTIONS:MPGSQL} && ! ${PORT_OPTIONS:MXML_LOGS}
+IGNORE=		xml logging is required to log to Postgres
 .endif
 
 post-extract:

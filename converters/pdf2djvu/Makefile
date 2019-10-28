@@ -1,7 +1,8 @@
 # $FreeBSD$
 
 PORTNAME=	pdf2djvu
-PORTVERSION=	0.9.13
+PORTVERSION=	0.9.12
+PORTREVISION=	10
 CATEGORIES=	converters
 MASTER_SITES=	https://github.com/jwilk/${PORTNAME}/releases/download/${PORTVERSION}/
 
@@ -9,7 +10,6 @@ MAINTAINER=	samy.mahmoudi@gmail.com
 COMMENT=	Creates DjVu files from PDF files
 
 LICENSE=	GPLv2
-LICENSE_FILE=	${WRKSRC}/doc/COPYING
 
 BUILD_DEPENDS=	${LOCALBASE}/include/pstreams/pstream.h:devel/pstreams
 LIB_DEPENDS=	libdjvulibre.so:graphics/djvulibre \
@@ -26,7 +26,7 @@ OPTIONS_DEFAULT=COLOR_QUANTIZATION          MULTITHREADING XMP
 OPTIONS_SUB=	yes
 
 COLOR_QUANTIZATION_DESC=Color quantization via GraphicsMagick++
-DOCS_DESC=		Generate the man page
+DOCS=			Generate the man page
 NLS_DESC=		Native Language Support via gettext utilities
 MULTITHREADING_DESC=	Multithreading support via OpenMP
 XMP_DESC=		XMP metadata support via Exiv2

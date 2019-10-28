@@ -3,14 +3,16 @@
 
 PORTNAME=	nagiosql
 PORTVERSION=	3.4.0
-PORTREVISION=	3
+PORTREVISION=	2
 CATEGORIES=	net-mgmt www
+MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/NagiosQL%20${PORTVERSION}/
 
-MAINTAINER=	dvl@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Web based administration tool for Nagios
 
 LICENSE=	GPLv2
-LICENSE_FILE=	${WRKSRC}/LICENSE
+
+BROKEN=		unfetchable
 
 RUN_DEPENDS=	nagios:net-mgmt/nagios \
 		${PEARDIR}/HTML/Template/IT.php:devel/pear-HTML_Template_IT@${PHP_FLAVOR}
@@ -18,17 +20,13 @@ RUN_DEPENDS=	nagios:net-mgmt/nagios \
 USES=		cpe gettext mysql php:web tar:bzip2
 USE_PHP=	filter gettext mysqli session simplexml
 
-USE_GITLAB=	yes
-GL_ACCOUNT=	wizonet
-GL_COMMIT=	0f1c063740b4d3dae98d74f293c53234f341b06e
-
 USERS?=		nagios
 GROUPS?=	nagios
 NAGIOSUSER?=	nagios
 
 NO_BUILD=	yes
 NO_ARCH=	yes
-WRKSRC=		${WRKDIR}/${PORTNAME}-${GL_COMMIT}-${GL_COMMIT}
+WRKSRC=		${WRKDIR}/${PORTNAME}
 
 SUB_FILES=	pkg-message
 PLIST_SUB=	WWWOWN=${WWWOWN} WWWGRP=${WWWGRP} NAGIOSUSER=${NAGIOSUSER}
@@ -52,10 +50,10 @@ post-patch:
 		-e "s|nagiosql/etc/|${ETCDIR}/|" \
 		-e "s|>/etc/nagiosql|>${ETCDIR}|g" \
 		-e "s|>/etc/nagios/|>${LOCALBASE}/etc/nagios/|g" \
-		${WRKSRC}/install/sql/nagiosQL_v32_db_mysql.sql
+		${WRKSRC}-${PORTVERSION}/install/sql/nagiosQL_v32_db_mysql.sql
 
 	${REINPLACE_CMD} -e "s|\"/etc/|\"${LOCALBASE}/etc/|" \
-		${WRKSRC}/install/install.php
+		${WRKSRC}-${PORTVERSION}/install/install.php
 
 do-install:
 	@${MKDIR} ${STAGEDIR}${WWWDIR}
@@ -67,6 +65,6 @@ do-install:
 	@${MKDIR} ${STAGEDIR}${ETCDIR}/backup/hosts
 	@${MKDIR} ${STAGEDIR}${ETCDIR}/backup/services
 	@${MKDIR} ${STAGEDIR}${ETCDIR}/backup/ssh
-	(cd ${WRKSRC} && ${COPYTREE_SHARE} . ${STAGEDIR}${WWWDIR} "! ( -name *\.orig -o -name *\.bak )")
+	(cd ${WRKSRC}-${PORTVERSION} && ${COPYTREE_SHARE} . ${STAGEDIR}${WWWDIR} "! ( -name *\.orig -o -name *\.bak )")
 
 .include <bsd.port.mk>

@@ -8,7 +8,6 @@
     SUBDIR += R-cran-RPostgreSQL
     SUBDIR += R-cran-RSQLite
     SUBDIR += R-cran-RSQLite.extfuns
-    SUBDIR += R-cran-fastmap
     SUBDIR += R-cran-sqldf
     SUBDIR += WWWdb
     SUBDIR += adabase
@@ -16,7 +15,6 @@
     SUBDIR += adodb
     SUBDIR += adodb5
     SUBDIR += akonadi
-    SUBDIR += apache-commons-dbutils
     SUBDIR += apq
     SUBDIR += apq-mysql
     SUBDIR += apq-odbc
@@ -93,7 +91,6 @@
     SUBDIR += frontbase-jdbc
     SUBDIR += gadfly
     SUBDIR += galera
-    SUBDIR += galera26
     SUBDIR += gdbm
     SUBDIR += geoserver-mysql-plugin
     SUBDIR += gigabase
@@ -115,6 +112,7 @@
     SUBDIR += ipa_sdb
     SUBDIR += iplike
     SUBDIR += isql-viewer
+    SUBDIR += jakarta-commons-dbutils
     SUBDIR += jasperreports
     SUBDIR += jdb
     SUBDIR += jdbc-oracle11g
@@ -188,6 +186,7 @@
     SUBDIR += mariadb104-server
     SUBDIR += mariadb55-client
     SUBDIR += mariadb55-server
+    SUBDIR += mdbconv
     SUBDIR += mdbtools
     SUBDIR += mdcached
     SUBDIR += memcached
@@ -201,6 +200,7 @@
     SUBDIR += mongodb40
     SUBDIR += mongodb40-tools
     SUBDIR += mroonga
+    SUBDIR += mrtg-mysql-load
     SUBDIR += mtools-mongodb
     SUBDIR += mtop
     SUBDIR += mydbf2mysql
@@ -522,6 +522,7 @@
     SUBDIR += p5-Xapian
     SUBDIR += p5-mysql-genocide
     SUBDIR += p5-tokyotyrant
+    SUBDIR += palm-db-tools
     SUBDIR += pear-DB
     SUBDIR += pear-DBA
     SUBDIR += pear-DBA_Relational
@@ -655,22 +656,9 @@
     SUBDIR += php73-pdo_sqlite
     SUBDIR += php73-pgsql
     SUBDIR += php73-sqlite3
-    SUBDIR += php74-dba
-    SUBDIR += php74-mysqli
-    SUBDIR += php74-odbc
-    SUBDIR += php74-pdo
-    SUBDIR += php74-pdo_dblib
-    SUBDIR += php74-pdo_firebird
-    SUBDIR += php74-pdo_mysql
-    SUBDIR += php74-pdo_odbc
-    SUBDIR += php74-pdo_pgsql
-    SUBDIR += php74-pdo_sqlite
-    SUBDIR += php74-pgsql
-    SUBDIR += php74-sqlite3
     SUBDIR += phpliteadmin
     SUBDIR += phpminiadmin
     SUBDIR += phpmyadmin
-    SUBDIR += phpmyadmin-devel
     SUBDIR += phppgadmin
     SUBDIR += pldebugger
     SUBDIR += plpgsql_check
@@ -679,6 +667,7 @@
     SUBDIR += postgis23
     SUBDIR += postgis24
     SUBDIR += postgis25
+    SUBDIR += postgres-xl
     SUBDIR += postgresql-cstore_fdw
     SUBDIR += postgresql-jdbc
     SUBDIR += postgresql-libpgeasy
@@ -687,9 +676,9 @@
     SUBDIR += postgresql-libpqxx4
     SUBDIR += postgresql-mysql_fdw
     SUBDIR += postgresql-odbc
-    SUBDIR += postgresql-ogr_fdw
     SUBDIR += postgresql-orafce
     SUBDIR += postgresql-plproxy
+    SUBDIR += postgresql-plruby
     SUBDIR += postgresql-plv8js
     SUBDIR += postgresql-prefix
     SUBDIR += postgresql-relay
@@ -843,7 +832,6 @@
     SUBDIR += py-queries
     SUBDIR += py-rb
     SUBDIR += py-redis
-    SUBDIR += py-redis2
     SUBDIR += py-riak
     SUBDIR += py-rrdtool_lgpl
     SUBDIR += py-sispy
@@ -1010,6 +998,7 @@
     SUBDIR += sequeler
     SUBDIR += sfcgal
     SUBDIR += sharedance
+    SUBDIR += skytools
     SUBDIR += slony1v2
     SUBDIR += soci
     SUBDIR += spatialite
@@ -1036,6 +1025,7 @@
     SUBDIR += sqlrelay
     SUBDIR += sqsh
     SUBDIR += squirrel-sql
+    SUBDIR += tablelog
     SUBDIR += tarantool
     SUBDIR += tarantool-c
     SUBDIR += tcl-Mysql
@@ -1061,6 +1051,7 @@
     SUBDIR += virtuoso
     SUBDIR += vsqlite
     SUBDIR += wfb2sql
+    SUBDIR += wmjsql
     SUBDIR += xapian-bindings
     SUBDIR += xapian-bindings12
     SUBDIR += xapian-core

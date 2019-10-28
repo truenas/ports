@@ -23,10 +23,6 @@ USE_GITHUB=	yes
 GH_ACCOUNT=	influxdata
 GH_SUBDIR=	src/github.com/${GH_ACCOUNT}/${PORTNAME}
 
-GO_BUILDFLAGS+=	-ldflags "-X main.version=${DISTVERSION}"
-GO_TARGET=	./cmd/kapacitor \
-		./cmd/kapacitord
-
 SUB_FILES=	kapacitord
 SUB_LIST+=	KAPACITORD_USER=${KAPACITORD_USER} \
 		KAPACITORD_GROUP=${KAPACITORD_GROUP} \
@@ -56,14 +52,21 @@ SUB_LIST+=	KAPACITORD_LOGCMD="logger"
 KAPACITORD_DBDIR=	/var/db/${PORTNAME}/
 KAPACITORD_LOGDIR=	/var/log/${PORTNAME}/
 
-post-install:
+do-build:
+	@cd ${WRKSRC}/src/github.com/influxdata/${PORTNAME} \
+		&& ${SETENV} ${MAKE_ENV} GOPATH=${WRKSRC} go install -ldflags "-X main.version=${DISTVERSION}" ./cmd/${PORTNAME} \
+		&& ${SETENV} ${MAKE_ENV} GOPATH=${WRKSRC} go install -ldflags "-X main.version=${DISTVERSION}" ./cmd/${PORTNAME}d
+
+do-install:
 	${MKDIR} ${STAGEDIR}${KAPACITORD_DBDIR} \
 	${STAGEDIR}${KAPACITORD_LOGDIR}
+	${INSTALL_PROGRAM} ${WRKSRC}/bin/${PORTNAME} ${STAGEDIR}${PREFIX}/bin/${PORTNAME}
+	${INSTALL_PROGRAM} ${WRKSRC}/bin/${PORTNAME}d ${STAGEDIR}${PREFIX}/bin/${PORTNAME}d
 	@${SED} -i .bak -e \
 		"s|/var/lib/kapacitor|/var/db/kapacitor|g" \
-		${WRKSRC}/etc/${PORTNAME}/${PORTNAME}.conf
+		${WRKSRC}/src/github.com/${GH_ACCOUNT}/${GH_PROJECT}/etc/${PORTNAME}/${PORTNAME}.conf
 	${INSTALL_DATA} \
-		${WRKSRC}/etc/${PORTNAME}/${PORTNAME}.conf  \
+		${WRKSRC}/src/github.com/${GH_ACCOUNT}/${GH_PROJECT}/etc/${PORTNAME}/${PORTNAME}.conf  \
 		${STAGEDIR}${PREFIX}/etc/${PORTNAME}.conf.sample
 
 .include <bsd.port.post.mk>

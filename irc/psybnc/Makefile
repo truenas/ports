@@ -4,7 +4,7 @@
 PORTNAME=	psybnc
 DISTVERSION=	2.3.2-9
 PORTREVISION=	2
-CATEGORIES=	irc
+CATEGORIES=	irc ipv6
 MASTER_SITES=	http://www.psybnc.at/download/beta/
 DISTNAME=	psyBNC-${DISTVERSION}
 

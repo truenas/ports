@@ -2,11 +2,9 @@
 # $FreeBSD$
 
 PKGNAMESUFFIX=		-filter-pause
-PORTREVISION=		-0
+PORTREVISION=		2
 
 COMMENT=		Pause incoming OpenSMTPD messages to reduce spam
-
-IGNORE=			temporary unavailable
 
 PLIST_FILES=		libexec/opensmtpd/filter-pause \
 			man/man8/filter-pause.8.gz

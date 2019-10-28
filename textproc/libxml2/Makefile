@@ -21,7 +21,7 @@ LICENSE_FILE_TRIO=	${FILESDIR}/LICENSE.TRIO
 LICENSE_PERMS_TRIO=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
 
 GNU_CONFIGURE=	yes
-USES+=		compiler cpe gmake iconv libtool pathfix pkgconfig shebangfix
+USES+=		cpe gmake iconv libtool pathfix pkgconfig shebangfix
 CPE_VENDOR=	xmlsoft
 USE_LDCONFIG=	yes
 CONFIGURE_ARGS?=--with-iconv=${ICONV_PREFIX} \
@@ -54,13 +54,6 @@ THREAD_ALLOC_CONFIGURE_WITH=	thread-alloc
 
 .endif # !defined(MASTERDIR)
 
-.if !defined(MASTERDIR)
-post-install:
-	@${RM} -r ${STAGEDIR}${PREFIX}/share/gtk-doc
-.endif
-
-.include <bsd.port.pre.mk>
-
 post-patch:
 .for d in . doc doc/devhelp doc/examples
 	@${REINPLACE_CMD} -e '/^install-data-am:/ s|install-data-local||' \
@@ -72,10 +65,15 @@ post-patch:
 		 s|/etc/sgml/catalog|${LOCALBASE}/share/sgml/catalog|g' \
 		${WRKSRC}/${f}
 .endfor
-.if ${CHOSEN_COMPILER_TYPE} == gcc
+.if exists(/usr/lib/libstdc++.so)
 	@${REINPLACE_CMD} -e 's/ -Wno-array-bounds//' ${WRKSRC}/configure
 .endif
 
-.include <bsd.port.post.mk>
+.if !defined(MASTERDIR)
+post-install:
+	@${RM} -r ${STAGEDIR}${PREFIX}/share/gtk-doc
+.endif
+
+.include <bsd.port.mk>
 
 .endif

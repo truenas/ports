@@ -2,15 +2,13 @@
 # $FreeBSD$
 
 ######################################################################
-# Anytime PORTVERSION changes please bump PORTREVISION of:           #
-# - mail/dovecot-pigeonhole. See ports/146029 for an explanation.    #
-# - mail/dovecot-fts-xapian.                                         #
+# Anytime PORTVERSION changes please bump PORTREVISION of            #
+# mail/dovecot-pigeonhole. See ports/146029 for an explanation.      #
 ######################################################################
 
 PORTNAME=	dovecot
-PORTVERSION=	2.3.8
-PORTREVISION=	3
-CATEGORIES=	mail
+PORTVERSION=	2.3.7.2
+CATEGORIES=	mail ipv6
 MASTER_SITES=	https://dovecot.org/releases/2.3/
 
 MAINTAINER=	ler@FreeBSD.org

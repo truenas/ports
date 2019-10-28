@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME?=	svxlink
-PORTVERSION=	19.09.1
+PORTVERSION=	17.12.2
 PORTREVISION=	1
 CATEGORIES=	comms hamradio
 
@@ -18,8 +18,7 @@ LIB_DEPENDS?=	libgsm.so:audio/gsm \
 		libsigc-2.0.so:devel/libsigc++20 \
 		libpopt.so:devel/popt \
 		libopus.so:audio/opus \
-		librtlsdr.so:comms/rtl-sdr \
-		libcurl.so:ftp/curl
+		librtlsdr.so:comms/rtl-sdr
 BUILD_DEPENDS=	${LOCALBASE}/include/linux/input.h:devel/evdev-proto
 
 USES+=		cmake:noninja compiler:c++11-lang groff pkgconfig tcl
@@ -29,9 +28,7 @@ GH_PROJECT=	svxlink
 
 CMAKE_SOURCE_PATH=	${WRKSRC}/src
 CMAKE_ARGS+=	-DMAN_INSTALL_DIR:FILEPATH=${MANDIRS} \
-		-DLOCAL_STATE_DIR=/var \
-		-DLOCALBASE:STRING="${LOCALBASE}"
-
+		-DLOCAL_STATE_DIR=/var
 .if ${PORTNAME}==svxlink
 CMAKE_ARGS+=	-DUSE_QT:BOOL=NO
 .endif
@@ -110,12 +107,6 @@ post-install:
 		${STAGEDIR}${PREFIX}/etc/svxlink/svxlink.d/ModuleSelCallEnc.conf.sample
 	${MV}	${STAGEDIR}${PREFIX}/etc/svxlink/svxlink.d/ModuleTclVoiceMail.conf \
 		${STAGEDIR}${PREFIX}/etc/svxlink/svxlink.d/ModuleTclVoiceMail.conf.sample
-	${MV}	${STAGEDIR}${PREFIX}/etc/svxlink/svxlink.d/ModuleTrx.conf \
-		${STAGEDIR}${PREFIX}/etc/svxlink/svxlink.d/ModuleTrx.conf.sample
-
-do-install-DOCS-on:
-	@${MKDIR} ${STAGEDIR}${DOCSDIR}
-	${INSTALL_DATA} ${WRKSRC}/src/doc/README-19.09.adoc ${STAGEDIR}${DOCSDIR}
 .endif
 .if ${PORTNAME}==qtel
 post-install:

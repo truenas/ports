@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	helm
-PORTVERSION=	2.15.1
+PORTVERSION=	2.14.3
 CATEGORIES=	sysutils
 MASTER_SITES=	LOCAL/danilo
 
@@ -15,15 +15,29 @@ RUN_DEPENDS=	kubectl:sysutils/kubectl
 
 USES=		go tar:xz
 
-GO_PKGNAME=	k8s.io/helm
-GO_BUILDFLAGS=	-ldflags="-X k8s.io/helm/pkg/version.Version=v${PORTVERSION} \
-		-X k8s.io/helm/pkg/version.GitCommit=cf1de4f8ba70eded310918a8af3a96bfe8e7683b \
-		-X k8s.io/helm/pkg/version.BuildMetadata="
-GO_TARGET=	./cmd/${PORTNAME} \
-		./cmd/tiller \
-		./cmd/rudder
+PLIST_FILES=	bin/${PORTNAME} \
+		bin/tiller \
+		bin/rudder
 
-PLIST_FILES=	${GO_TARGET:C/.\/cmd/bin/}
+post-patch:
+	${MV} ${WRKSRC}/vendor/* ${WRKDIR}/src/
+	${LN} -s ${WRKSRC} ${WRKDIR}/src/k8s.io/helm
+
+do-build:
+.for cmd in helm tiller rudder
+	cd ${WRKDIR}/src/k8s.io/helm/cmd/${cmd} ; \
+		GOPATH=${WRKDIR} GOCACHE=${WRKDIR}/.gocache go build \
+		-ldflags="-X k8s.io/helm/pkg/version.Version=v${PORTVERSION} \
+		-X k8s.io/helm/pkg/version.GitCommit=5270352a09c7e8b6e8c9593002a73535276507c0 \
+		-X k8s.io/helm/pkg/version.BuildMetadata="
+.endfor
+
+do-install:
+.for cmd in helm tiller rudder
+	${INSTALL_PROGRAM} \
+		${WRKSRC}/cmd/${cmd}/${cmd} \
+		${STAGEDIR}${PREFIX}/bin/${cmd}
+.endfor
 
 maintainer-distfile:
 	(cd /tmp; fetch https://github.com/helm/helm/archive/v${PORTVERSION}.tar.gz; \

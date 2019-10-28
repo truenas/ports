@@ -16,8 +16,6 @@ USE_GITHUB=	yes
 GH_ACCOUNT=	adnanh
 USE_RC_SUBR=	webhook
 
-GO_TARGET=	:${PREFIX}/sbin/webhook
-
 PLIST_FILES=	"@sample etc/webhook.yaml.sample" sbin/webhook
 
 .include <bsd.port.options.mk>
@@ -30,7 +28,8 @@ DAEMONARGS=	-f
 
 SUB_LIST+=	DAEMONARGS="${DAEMONARGS}"
 
-post-install:
+do-install:
+	${INSTALL_PROGRAM} ${GO_WRKDIR_BIN}/${PORTNAME} ${STAGEDIR}${PREFIX}/sbin
 	${INSTALL_DATA}  ${FILESDIR}/webhook.yaml ${STAGEDIR}${PREFIX}/etc/webhook.yaml.sample
 
 .include <bsd.port.mk>

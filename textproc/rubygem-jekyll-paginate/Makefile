@@ -13,11 +13,12 @@ COMMENT=	Built-in Pagination Generator for Jekyll
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
-USES=		gem shebangfix
-USE_RUBY=	yes
-
 NO_ARCH=	yes
 
-SHEBANG_FILES=	script/*
+USE_RUBY=	yes
+USES=		gem shebangfix
+SHEBANG_FILES=	script/bootstrap \
+		script/cibuild \
+		script/unbundle
 
 .include <bsd.port.mk>

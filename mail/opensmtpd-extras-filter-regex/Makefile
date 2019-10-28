@@ -2,11 +2,9 @@
 # $FreeBSD$
 
 PKGNAMESUFFIX=		-filter-regex
-PORTREVISION=		0
+PORTREVISION=		2
 
 COMMENT=		Regular expression filter for OpenSMTPD
-
-IGNORE=			temporary unavailable
 
 CONFIGURE_ARGS+=	--with-experimental-filter-regex
 

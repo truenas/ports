@@ -1,6 +1,0 @@
-bin/ebusd
-bin/ebusctl
-bin/ebusfeed
-@dir(%%USER%%,%%GROUP%%,750) %%RUNDIR%%
-@dir(%%USER%%,%%GROUP%%,750) %%LOGDIR%%
-@dir %%ETCDIR%%

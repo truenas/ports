@@ -7,7 +7,7 @@ DISTVERSIONPREFIX=v
 CATEGORIES=	net devel
 PKGNAMESUFFIX=	2
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	bdrewery@FreeBSD.org
 COMMENT=	Library for delta compression of streams
 
 LICENSE=	LGPL21+

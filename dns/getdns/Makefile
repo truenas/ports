@@ -4,7 +4,7 @@
 PORTNAME=	getdns
 PORTVERSION=	1.5.2
 PORTREVISION=	4
-CATEGORIES=	dns
+CATEGORIES=	dns ipv6
 MASTER_SITES=	https://getdnsapi.net/dist/ \
 		ZI \
 		http://getdnsapi.net/dist/

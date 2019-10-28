@@ -14,7 +14,7 @@ COMMENT=	ATK accessibility wrapper for python
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-USES=		gnome pkgconfig python:2.7
+USES=		pkgconfig python:2.7
 USE_GNOME=	atk
 USE_PYTHON=	autoplist distutils
 

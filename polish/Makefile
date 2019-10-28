@@ -4,6 +4,8 @@
     COMMENT = Polish language support
 
     SUBDIR += aspell
+    SUBDIR += ekg
+    SUBDIR += ekg2
     SUBDIR += fortunepl
     SUBDIR += gnugadu2
     SUBDIR += hunspell

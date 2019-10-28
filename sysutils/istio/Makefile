@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	istio
-PORTVERSION=	1.3.3
+PORTVERSION=	1.2.5
 CATEGORIES=	sysutils
 
 MAINTAINER=	danilo@FreeBSD.org

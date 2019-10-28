@@ -3,7 +3,6 @@
 
 PORTNAME=	eclipse
 PORTVERSION=	4.12
-PORTREVISION=	1
 CATEGORIES=	java devel
 
 # Update to git-tag on git.eclipse.org
@@ -38,8 +37,8 @@ ECLIPSE_MODULES=jdt/eclipse.jdt \
 		equinox/rt.equinox.p2
 # Each Eclipse module has its own MASTER_SITE
 .for M in ${ECLIPSE_MODULES}
-MASTER_SITES+=	https://github.com/${GH_ACCOUNT}/${GH_PROJECT}/releases/download/${PORTVERSION}/:${M:C/[\.\/]//g} \
-		https://git.eclipse.org/c/${M}.git/snapshot/:${M:C/[\.\/]//g}
+MASTER_SITES+=	https://git.eclipse.org/c/${M}.git/snapshot/:${M:C/[\.\/]//g} \
+		https://github.com/${GH_ACCOUNT}/${GH_PROJECT}/releases/download/${PORTVERSION}/:${M:C/[\.\/]//g}
 DISTFILES+=	${M:C/.*\///}-${ECLIPSE_SUFX}:${M:C/[\.\/]//g}
 .endfor
 

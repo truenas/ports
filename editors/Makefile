@@ -166,7 +166,6 @@
     SUBDIR += libreoffice-st
     SUBDIR += libreoffice-sv
     SUBDIR += libreoffice-sw_TZ
-    SUBDIR += libreoffice-szl
     SUBDIR += libreoffice-ta
     SUBDIR += libreoffice-te
     SUBDIR += libreoffice-tg
@@ -188,7 +187,6 @@
     SUBDIR += mg
     SUBDIR += micro
     SUBDIR += mined
-    SUBDIR += mle
     SUBDIR += morla
     SUBDIR += mousepad
     SUBDIR += mp
@@ -200,7 +198,6 @@
     SUBDIR += neovim-qt
     SUBDIR += nvi-devel
     SUBDIR += nvi-m17n
-    SUBDIR += o
     SUBDIR += omegaT
     SUBDIR += openoffice-4
     SUBDIR += openoffice-devel
@@ -259,5 +256,6 @@
     SUBDIR += xvile
     SUBDIR += yudit
     SUBDIR += zile
+    SUBDIR += zoinks
 
 .include <bsd.port.subdir.mk>

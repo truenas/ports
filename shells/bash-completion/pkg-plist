@@ -1,4 +1,3 @@
-%%FREEBSD%%etc/bash_completion.d/make
 %%FREEBSD%%etc/bash_completion.d/mandoc
 %%FREEBSD%%etc/bash_completion.d/pkg
 %%FREEBSD%%etc/bash_completion.d/service

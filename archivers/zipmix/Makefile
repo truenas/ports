@@ -5,7 +5,7 @@ PORTNAME=	zipmix
 DISTVERSION=	20070221
 CATEGORIES=	archivers
 MASTER_SITES=	http://www.advsys.net/ken/util/ \
-		https://BSDforge.com/projects/source/archivers/zipmix/
+		http://BSDforge.com/projects/source/archivers/zipmix/
 DISTNAME=	${PORTNAME}_src
 
 MAINTAINER=	portmaster@BSDforge.com

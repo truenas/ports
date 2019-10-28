@@ -11,7 +11,7 @@ MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/${PORTNAME}-${PORTVERSION}	\
 MAINTAINER=	vlm@lionet.info
 COMMENT=	Handles CGI forms, MIME, templates, date conversions, etc
 
-USES=		autoreconf compiler:c11 libtool
+USES=		autoreconf libtool
 GNU_CONFIGURE=	yes
 USE_LDCONFIG=	yes
 CONFIGURE_ARGS=	--program-prefix=""

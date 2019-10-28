@@ -10,9 +10,6 @@ MASTER_SITES=	SAVANNAH
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Molecule Viewer Program Based on Motif Widget
 
-DEPRECATED=    Depends on expiring graphics/libGLw
-EXPIRATION_DATE=       2019-11-01
-
 USES=		gmake motif shebangfix
 USE_XORG=	xpm
 USE_GL=		glut glw

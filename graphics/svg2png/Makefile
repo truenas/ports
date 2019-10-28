@@ -11,10 +11,6 @@ MASTER_SITES=	http://cairographics.org/snapshots/
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Render an SVG image to a PNG image (using cairo)
 
-.if ${/usr/bin/ld:L:tA} == /usr/bin/ld.lld
-BROKEN=		ld: error: /usr/local/lib/libsvg-cairo.so: undefined reference to atan2
-.endif
-
 LIB_DEPENDS=	libsvg-cairo.so:graphics/libsvg-cairo
 
 GNU_CONFIGURE=	yes

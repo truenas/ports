@@ -2,7 +2,7 @@
 
 PORTNAME=	wwwoffle
 PORTVERSION=	2.9j
-CATEGORIES=	www
+CATEGORIES=	www ipv6
 MASTER_SITES=	http://www.gedanken.org.uk/software/wwwoffle/download/
 
 MAINTAINER=	ports@FreeBSD.org

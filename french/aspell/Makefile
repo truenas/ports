@@ -10,11 +10,7 @@ CATEGORIES=	french textproc
 MAINTAINER=	office@FreeBSD.org
 COMMENT=	Aspell French dictionaries
 
-LICENSE=	GPLv2
-
-NO_ARCH=	yes
-
-DICT=		fr
+DICT=	 	fr
 
 .include "${.CURDIR}/../../textproc/aspell/Makefile.inc"
 .include <bsd.port.post.mk>

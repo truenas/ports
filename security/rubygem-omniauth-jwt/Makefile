@@ -13,11 +13,10 @@ LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
 RUN_DEPENDS=	rubygem-jwt>=0:www/rubygem-jwt \
-		rubygem-omniauth>=1.1<2:security/rubygem-omniauth
-
-USES=		gem
-USE_RUBY=	yes
+		rubygem-omniauth>=1.1:security/rubygem-omniauth
 
 NO_ARCH=	yes
+USE_RUBY=	yes
+USES=		gem
 
 .include <bsd.port.mk>
