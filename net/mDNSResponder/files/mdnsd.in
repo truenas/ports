@@ -21,6 +21,7 @@ stop_precmd="mdnsd_prestop"
 
 mdnsd_poststart() {
     echo "restarting mdnsadvertise."
+    sleep 1
     %%PREFIX%%/bin/midclt call mdnsadvertise.restart > /dev/null
 }
 
