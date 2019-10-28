@@ -10,8 +10,6 @@
     SUBDIR += bitcoin-daemon
     SUBDIR += bitcoin-utils
     SUBDIR += bitflu
-    SUBDIR += bnbt
-    SUBDIR += btpd
     SUBDIR += couchpotato
     SUBDIR += cpuminer
     SUBDIR += createtorrent
@@ -28,7 +26,6 @@
     SUBDIR += eiskaltdcpp-gtk
     SUBDIR += eiskaltdcpp-lib
     SUBDIR += frost
-    SUBDIR += gkremldk
     SUBDIR += go-ethereum
     SUBDIR += gtk-gnutella
     SUBDIR += gtorrentviewer
@@ -78,6 +75,7 @@
     SUBDIR += rtorrent
     SUBDIR += shx
     SUBDIR += sonarr
+    SUBDIR += sonarr-devel
     SUBDIR += squall
     SUBDIR += torrent-file-editor
     SUBDIR += torrentcheck
@@ -93,5 +91,7 @@
     SUBDIR += vuze
     SUBDIR += xmrig
     SUBDIR += zetacoin
+    SUBDIR += zetacoin-daemon
+    SUBDIR += zetacoin-utils
 
 .include <bsd.port.subdir.mk>

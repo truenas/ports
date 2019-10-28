@@ -208,11 +208,11 @@ include/libzfs/sys/sdt.h
 include/libzfs/sys/sha2.h
 include/libzfs/sys/skein.h
 include/libzfs/sys/spa.h
+include/libzfs/sys/spa_log_spacemap.h
 include/libzfs/sys/spa_boot.h
 include/libzfs/sys/spa_checkpoint.h
 include/libzfs/sys/spa_checksum.h
 include/libzfs/sys/spa_impl.h
-include/libzfs/sys/spa_log_spacemap.h
 include/libzfs/sys/space_map.h
 include/libzfs/sys/space_reftree.h
 include/libzfs/sys/sysevent.h

@@ -19,7 +19,6 @@
     SUBDIR += cd-hit
     SUBDIR += cdbfasta
     SUBDIR += checkm
-    SUBDIR += chemeq
     SUBDIR += clustal-omega
     SUBDIR += clustalw
     SUBDIR += consed
@@ -51,6 +50,7 @@
     SUBDIR += graphlan
     SUBDIR += grappa
     SUBDIR += groopm
+    SUBDIR += haplohseq
     SUBDIR += hhsuite
     SUBDIR += hisat2
     SUBDIR += hmmer
@@ -68,7 +68,6 @@
     SUBDIR += libbigwig
     SUBDIR += libgtextutils
     SUBDIR += libsbml
-    SUBDIR += linux-foldingathome
     SUBDIR += mafft
     SUBDIR += mapm3
     SUBDIR += migrate
@@ -127,6 +126,7 @@
     SUBDIR += py-gtfparse
     SUBDIR += py-loompy
     SUBDIR += py-macs2
+    SUBDIR += py-multiqc
     SUBDIR += py-orange3-bioinformatics
     SUBDIR += py-orange3-single-cell
     SUBDIR += py-pyfaidx
@@ -156,6 +156,7 @@
     SUBDIR += tRNAscan-SE
     SUBDIR += t_coffee
     SUBDIR += tabixpp
+    SUBDIR += tophat
     SUBDIR += treekin
     SUBDIR += treepuzzle
     SUBDIR += trimadap

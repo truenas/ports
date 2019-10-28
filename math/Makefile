@@ -120,7 +120,6 @@
     SUBDIR += adol-c
     SUBDIR += algae
     SUBDIR += alglib
-    SUBDIR += algotutor
     SUBDIR += alt-ergo
     SUBDIR += amath
     SUBDIR += ambit
@@ -196,6 +195,7 @@
     SUBDIR += curv
     SUBDIR += cvc3
     SUBDIR += cvc4
+    SUBDIR += darknet
     SUBDIR += dbcsr
     SUBDIR += deal.ii
     SUBDIR += diehard
@@ -245,6 +245,7 @@
     SUBDIR += gambit
     SUBDIR += gap
     SUBDIR += gau2grid
+    SUBDIR += gemmlowp
     SUBDIR += geogebra
     SUBDIR += geogram
     SUBDIR += geonext
@@ -283,6 +284,7 @@
     SUBDIR += hpipm
     SUBDIR += hs-Agda
     SUBDIR += hs-semigroups
+    SUBDIR += ideep
     SUBDIR += ignition-math
     SUBDIR += igraph
     SUBDIR += intervaltree
@@ -354,6 +356,7 @@
     SUBDIR += matlab-installer
     SUBDIR += maxima
     SUBDIR += mbasecalc
+    SUBDIR += mcsim
     SUBDIR += metis
     SUBDIR += metis-edf
     SUBDIR += metis4
@@ -386,7 +389,6 @@
     SUBDIR += nlopt
     SUBDIR += ntl
     SUBDIR += numdiff
-    SUBDIR += nyh-hoc
     SUBDIR += ocaml-ocamlgraph
     SUBDIR += ocaml-zarith
     SUBDIR += ocamlgsl
@@ -406,8 +408,10 @@
     SUBDIR += octave-forge-dicom
     SUBDIR += octave-forge-divand
     SUBDIR += octave-forge-doctest
+    SUBDIR += octave-forge-econometrics
     SUBDIR += octave-forge-fenv
     SUBDIR += octave-forge-financial
+    SUBDIR += octave-forge-fits
     SUBDIR += octave-forge-fpl
     SUBDIR += octave-forge-fuzzy-logic-toolkit
     SUBDIR += octave-forge-ga
@@ -648,6 +652,8 @@
     SUBDIR += php72-gmp
     SUBDIR += php73-bcmath
     SUBDIR += php73-gmp
+    SUBDIR += php74-bcmath
+    SUBDIR += php74-gmp
     SUBDIR += physcalc
     SUBDIR += picosat
     SUBDIR += piranha
@@ -729,6 +735,7 @@
     SUBDIR += py-numpy
     SUBDIR += py-nzmath
     SUBDIR += py-onnx
+    SUBDIR += py-onnx-tf
     SUBDIR += py-osqp
     SUBDIR += py-pandas
     SUBDIR += py-pandas-datareader
@@ -784,6 +791,7 @@
     SUBDIR += py-uncertainties
     SUBDIR += py-vincenty
     SUBDIR += py-viper
+    SUBDIR += py-yt
     SUBDIR += py-z3-solver
     SUBDIR += qalculate
     SUBDIR += qd
@@ -846,13 +854,11 @@
     SUBDIR += suitesparse
     SUBDIR += sundials
     SUBDIR += superlu
-    SUBDIR += superlu_mt
     SUBDIR += symmetrica
     SUBDIR += symphony
     SUBDIR += tablix
     SUBDIR += taucs
     SUBDIR += tblis
-    SUBDIR += testu01
     SUBDIR += tetgen
     SUBDIR += timbl
     SUBDIR += tmv

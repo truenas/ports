@@ -8,7 +8,7 @@ CATEGORIES=	www python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER?=	wg@FreeBSD.org
+MAINTAINER=	wg@FreeBSD.org
 COMMENT=	Create REST API for Django apps
 
 LICENSE=	BSD3CLAUSE
@@ -20,6 +20,6 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}dateutil>=2.1:devel/py-dateutil@${PY_FLAVOR}
 USES=		python
 USE_PYTHON=	distutils autoplist
 
-CONFLICTS_INSTALL=	 ${PKGNAMEPREFIX}${PORTNAME}16
+NO_ARCH=	yes
 
 .include <bsd.port.mk>

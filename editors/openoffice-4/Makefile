@@ -3,7 +3,7 @@
 
 PORTNAME=	apache-openoffice
 PORTVERSION=	${AOOVERSION}
-PORTREVISION=	7
+PORTREVISION=	1
 CATEGORIES=	editors java
 MASTER_SITES=	APACHE/openoffice/${PORTVERSION}/source \
 		http://tools.openoffice.org/unowinreg_prebuild/680/:unoreg \
@@ -62,7 +62,7 @@ BUILD_DEPENDS=								\
 		gpatch:devel/patch					\
 		${LOCALBASE}/include/sane/sane.h:graphics/sane-backends	\
 		${LOCALBASE}/bin/vigra-config:graphics/vigra		\
-		${JAVALIBDIR}/commons-lang.jar:java/jakarta-commons-lang \
+		${JAVALIBDIR}/commons-lang.jar:java/apache-commons-lang \
 		${JAVALIBDIR}/junit.jar:java/junit			\
 		${JAVALIBDIR}/bsh.jar:lang/bsh				\
 		bash:shells/bash					\
@@ -90,7 +90,7 @@ LIB_DEPENDS=								\
 		libfontconfig.so:x11-fonts/fontconfig
 RUN_DEPENDS=								\
 		${LOCALBASE}/share/icons/hicolor/index.theme:misc/hicolor-icon-theme \
-		${JAVALIBDIR}/commons-lang.jar:java/jakarta-commons-lang \
+		${JAVALIBDIR}/commons-lang.jar:java/apache-commons-lang \
 		${JAVALIBDIR}/bsh.jar:lang/bsh				\
 		${LOCALBASE}/share/fonts/Caladea/Caladea-Bold.ttf:x11-fonts/crosextrafonts-caladea-ttf \
 		${LOCALBASE}/share/fonts/Carlito/Carlito-Bold.ttf:x11-fonts/crosextrafonts-carlito-ttf \
@@ -98,7 +98,7 @@ RUN_DEPENDS=								\
 
 USES=		autoreconf bison compiler:c++11-lib cpe desktop-file-utils \
 		gettext-runtime gl gmake gnome iconv jpeg perl5 pkgconfig \
-		python:2.7 shared-mime-info ssl tar:bzip2
+		python:2.7 shared-mime-info ssl tar:bzip2 xorg
 USE_GL=		gl glu
 USE_GNOME=	gtk20 libxslt libidl glib20
 USE_JAVA=	yes
@@ -114,16 +114,16 @@ CONFLICTS_INSTALL=	apache-openoffice-devel-*
 
 AOOVERSION1=	4
 AOOVERSION2=	1
-AOOVERSION3=	6
+AOOVERSION3=	7
 # From solenv/inc/minor.mk SOURCEREVISION LAST_MINOR BUILD
-AOOTAG=		AOO416m1\(Build:9790\)
-SVNREVISION=	1844436
+AOOTAG=		AOO417m1\(Build:9800\)
+GITREVISION=	46059c9192
 EXTSRC=		ApacheOpenOffice.ext_sources.${AOOVERSION1}.x.x.20150707.tar.gz
 
 AOOVERSION=	${AOOVERSION1}.${AOOVERSION2}.${AOOVERSION3}
 AOOXXX=		${AOOVERSION1}${AOOVERSION2}${AOOVERSION3}
 AOOSUFFIX=	${PORTVERSION}
-AOOSRC=		apache-openoffice-${AOOVERSION}-r${SVNREVISION}-src${EXTRACT_SUFX}
+AOOSRC=		apache-openoffice-${AOOVERSION}-${GITREVISION}-src${EXTRACT_SUFX}
 
 AOOUDIR=		.openoffice.org\/${AOOVERSION1}
 INSTALLATION_BASEDIR?=	openoffice-${AOOSUFFIX}
@@ -185,7 +185,7 @@ WIKI_PUBLISHER_CONFIGURE_WITH=						\
 WIKI_PUBLISHER_JAR_DEPENDS=						\
 	${JAVALIBDIR}/commons-codec.jar:java/jakarta-commons-codec	\
 	${JAVALIBDIR}/commons-httpclient.jar:java/jakarta-commons-httpclient \
-	${JAVALIBDIR}/commons-logging.jar:java/jakarta-commons-logging
+	${JAVALIBDIR}/commons-logging.jar:java/apache-commons-logging
 WIKI_PUBLISHER_BUILD_DEPENDS=	${WIKI_PUBLISHER_JAR_DEPENDS}
 WIKI_PUBLISHER_RUN_DEPENDS=	${WIKI_PUBLISHER_JAR_DEPENDS}
 WIKI_PUBLISHER_VARS=	BUNDLED_EXTENSIONS+=swext/wiki-publisher.oxt
@@ -367,6 +367,8 @@ post-patch:
 		${WRKSRC}/sysui/desktop/productversion.mk
 	${REINPLACE_CMD} -e "s|%%JAVA_HOME%%|${JAVA_HOME}|" \
 		${WRKSRC}/desktop/scripts/soffice.sh
+	${REINPLACE_CMD} -e "/#test/i\\${.newline}	return '${GITREVISION}';" \
+		${WRKSRC}/solenv/bin/modules/SvnRevision.pm
 	${REINPLACE_CMD} -e '/^mkdir -p/,$$d' ${CREATE_TREE}
 .if ${CHOSEN_COMPILER_TYPE} == gcc
 	# g++49 -Os sometimes leaves inline class methods undefined,

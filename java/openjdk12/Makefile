@@ -57,7 +57,7 @@ JDK_MAJOR_VERSION=	12
 JDK_MINOR_VERSION=	0
 JDK_PATCH_VERSION=	2
 JDK_BUILD_NUMBER=	10
-BSD_JDK_VERSION=	2
+BSD_JDK_VERSION=	3
 
 GNU_CONFIGURE=	yes
 CONFIGURE_ENV=	CC=${CC} \
@@ -83,7 +83,7 @@ CONFIGURE_ARGS=	--with-boot-jdk=${BOOTSTRAPJDKDIR} \
 		--x-includes=${LOCALBASE}/include \
 		--x-libraries=${LOCALBASE}/lib \
 		--with-cacerts-file=${FILESDIR}/cacerts \
-		--with-version-string=${JDK_MAJOR_VERSION}+${JDK_BUILD_NUMBER}-${BSD_JDK_VERSION} \
+		--with-version-string=${JDK_MAJOR_VERSION}.${JDK_MINOR_VERSION}.${JDK_PATCH_VERSION}+${JDK_BUILD_NUMBER}-${BSD_JDK_VERSION} \
 		--with-native-debug-symbols=none \
 		--with-debug-level=release
 
@@ -123,18 +123,19 @@ CONFIGURE_ARGS+=	--with-toolchain-type=${COMPILER_TYPE}
 
 .if ${COMPILER_TYPE} == gcc
 USE_GCC=	yes
-CONFIGURE_ARGS+=	--disable-warnings-as-errors \
-			--disable-dtrace \
-			--with-extra-ldflags="-Wl,-rpath=${LOCALBASE}/lib/gcc${GCC_DEFAULT} -L/usr/local/lib/gcc${GCC_DEFAULT}" \
+CONFIGURE_ARGS+=	--with-extra-ldflags="-Wl,-rpath=${LOCALBASE}/lib/gcc${GCC_DEFAULT} -L/usr/local/lib/gcc${GCC_DEFAULT}" \
 			--with-extra-cflags="-Wl,-rpath=${LOCALBASE}/lib/gcc${GCC_DEFAULT}" \
 			--with-extra-cxxflags="-Wl,-rpath=${LOCALBASE}/lib/gcc${GCC_DEFAULT}"
 .else
 MAKE_ENV+=	USE_CLANG=true
 .endif
 
-.if ${ARCH} == aarch64
+.if ${ARCH} == aarch64 || ${ARCH} == powerpc64
 CONFIGURE_ARGS+=	--disable-warnings-as-errors \
 			--disable-dtrace
+.endif
+.if ${ARCH} != amd64
+CONFIGURE_ARGS+=	--enable-aot=no
 .endif
 
 .if empty(ICONV_LIB)

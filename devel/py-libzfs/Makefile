@@ -28,6 +28,9 @@ USES=		python
 USE_PYTHON=	autoplist distutils cython
 GNU_CONFIGURE=	yes
 
+
+CONFIGURE_ENV=	FREEBSD_SRC=${SRC_BASE}
+
 # Py-libzfs needs libzfs to be built
 .if !exists(/sbin/zpool)
 BUILD_DEPENDS+=	openzfs>=0:sysutils/openzfs

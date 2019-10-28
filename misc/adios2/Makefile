@@ -2,7 +2,7 @@
 
 PORTNAME=	adios2
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2.4.0
+DISTVERSION=	2.5.0
 CATEGORIES=	misc science
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -23,7 +23,8 @@ RUN_DEPENDS=	bash:shells/bash
 
 USES=		bison cmake compiler:c++11-lang localbase:ldflags pkgconfig \
 		perl5 python shebangfix
-SHEBANG_FILES=	cmake/install/post/adios2-config.pre.sh.in cmake/install/post/generate-adios2-config.sh.in source/utils/bp4dbg/bp4dbg.py
+SHEBANG_FILES=	cmake/install/post/adios2-config.pre.sh.in cmake/install/post/generate-adios2-config.sh.in source/utils/bp4dbg/bp4dbg.py \
+		source/utils/adios_deactivate_bp.sh
 USE_GITHUB=	yes
 GH_ACCOUNT=	ornladios
 GH_PROJECT=	ADIOS2

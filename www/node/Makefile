@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	node
-PORTVERSION=	11.14.0
+PORTVERSION=	12.13.0
 DISTVERSIONPREFIX=	v
 CATEGORIES=	www
 MASTER_SITES=	http://nodejs.org/dist/v${PORTVERSION}/
@@ -13,7 +13,7 @@ LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 BROKEN_SSL=		openssl libressl libressl-devel
-BROKEN_SSL_REASON=	Node.js 11.x requires OpenSSL 1.1.x or the BUNDLED_SSL option enabled
+BROKEN_SSL_REASON=	Node.js 12.x requires OpenSSL 1.1.x or the BUNDLED_SSL option enabled
 ONLY_FOR_ARCHS=		aarch64 amd64 armv6 armv7 i386 powerpc64
 
 OPTIONS_DEFINE=		BUNDLED_SSL DOCS NLS DTRACE
@@ -38,7 +38,7 @@ BUNDLED_SSL_CONFIGURE_OFF=	--shared-openssl --openssl-use-def-ca-store
 BUNDLED_SSL_RUN_DEPENDS_OFF=	ca_root_nss>=0:security/ca_root_nss
 
 NLS_CONFIGURE_ON=	--with-intl=system-icu
-NLS_BUILD_DEPENDS=	icu>=63.1:devel/icu
+NLS_BUILD_DEPENDS=	icu>=64.2:devel/icu
 NLS_LIB_DEPENDS=	libicui18n.so:devel/icu
 
 DTRACE_CONFIGURE_ON=	--with-dtrace
@@ -66,8 +66,8 @@ MAKE_ENV+=	CC.host=${CC} CFLAGS.host="${CFLAGS}" \
 		LINK.host=${CXX} LDFLAGS.host="${LDFLAGS}"
 
 BUILD_DEPENDS+=	c-ares>=1.15.0:dns/c-ares\
-		libuv>=1.27.0:devel/libuv \
-		libnghttp2>=1.37.0:www/libnghttp2
+		libuv>=1.32.0:devel/libuv \
+		libnghttp2>=1.39.2:www/libnghttp2
 LIB_DEPENDS+=	libcares.so:dns/c-ares\
 		libuv.so:devel/libuv \
 		libnghttp2.so:www/libnghttp2
@@ -78,20 +78,13 @@ LIB_DEPENDS+=	libcares.so:dns/c-ares\
 BROKEN_SSL+=	base
 .endif
 
-.if ${PORT_OPTIONS:MBUNDLED_SSL} && ${ARCH} != amd64 && ${ARCH} != i386
+.if ${PORT_OPTIONS:MBUNDLED_SSL} && ${ARCH} != amd64
 CONFIGURE_ARGS+=--openssl-no-asm
-.endif
-
-.include <bsd.port.pre.mk>
-
-.if ${CHOSEN_COMPILER_TYPE} == gcc
-# GCC does not expose std::snprintf() without this define
-CXXFLAGS+=	-D_GLIBCXX_USE_C99
 .endif
 
 post-patch:
 	@${REINPLACE_CMD} -e 's|/usr/local|${LOCALBASE}|' \
-		${WRKSRC}/deps/v8/gypfiles/v8.gyp
+		${WRKSRC}/tools/v8_gypfiles/v8.gyp
 
 post-configure:
 	# Post-process Makefile and *.mk files created by node-gyp and remove
@@ -106,4 +99,4 @@ post-configure:
 post-install:
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/node
 
-.include <bsd.port.post.mk>
+.include <bsd.port.mk>

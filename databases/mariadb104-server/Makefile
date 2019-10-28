@@ -4,7 +4,7 @@
 PORTNAME?=	mariadb
 PORTVERSION=	10.4.7
 PORTREVISION?=	0
-CATEGORIES=	databases ipv6
+CATEGORIES=	databases
 MASTER_SITES=	http://mirrors.supportex.net/${SITESDIR}/ \
 		http://mirror2.hs-esslingen.de/pub/Mirrors/${SITESDIR}/ \
 		http://gd.tuwien.ac.at/db/${SITESDIR}/ \
@@ -214,7 +214,7 @@ post-install:
 	${RM} -r ${STAGEDIR}${DATADIR}
 	${RM} -r ${STAGEDIR}${PREFIX}/include/mysql/server
 
-post-install-GSSAPI_NONE:
+post-install-GSSAPI_NONE-off:
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/mysql/plugin/auth_gssapi_client.so
 
 .else # ! ${PKGNAMESUFFIX:M*-client}
