@@ -1,12 +1,13 @@
 # $FreeBSD$
 
 PORTNAME=	mDNSResponder
-PORTVERSION=	878.70.2
+PORTVERSION=	878.1.1
+PORTREVISION=	1
 CATEGORIES=	dns net
 MASTER_SITES=	http://opensource.apple.com/tarballs/mDNSResponder/
 PKGNAMESUFFIX=	_nss
 
-MAINTAINER=	mazhe@alkumuna.eu
+MAINTAINER=	john@ixsystems.com
 COMMENT=	Apple mDNS responder - FreeBSD nsswitch module
 
 LICENSE=	APACHE20 BSD3CLAUSE
@@ -16,20 +17,21 @@ LIB_DEPENDS=	libdns_sd.so:net/mDNSResponder
 
 CONFLICTS_INSTALL=	nss_mdns-[0-9]*
 
-WRKSRC=		${WRKDIR}/${PORTNAME:S/_nss//}-${PORTVERSION}
+USE_GITHUB=	yes
+GH_ACCOUNT=	freenas
+GH_TAGNAME=	b5fa13d
 
 .include <bsd.port.pre.mk>
 
+.if ${ARCH:C/^(...).*/\1/} == "arm"
 LD=${CC}
-
-post-extract:
-	@${CP} ${FILESDIR}/nss_mdns_freebsd.c ${WRKSRC}/mDNSPosix
+.endif
 
 do-build:
 	(cd ${WRKSRC}/mDNSPosix && ${CC} ${CFLAGS} -c -std=c99 -Wall -fPIC \
 		-I. -I${PREFIX}/include -DPREFIX=\"${PREFIX}\" \
 		nss_mdns.c nss_mdns_freebsd.c)
-	(cd ${WRKSRC}/mDNSPosix && ${LD} -shared -Wl,-soname=nss_mdns.so.1 nss_mdns.o nss_mdns_freebsd.o \
+	(cd ${WRKSRC}/mDNSPosix && ${LD} -shared nss_mdns.o nss_mdns_freebsd.o \
 		-o nss_mdns.so.1 -L${PREFIX}/lib -R${PREFIX}/lib -ldns_sd)
 
 post-build:
@@ -38,7 +40,7 @@ post-build:
 do-install:
 	${INSTALL_LIB} ${WRKSRC}/mDNSPosix/nss_mdns.so.1 \
 		${STAGEDIR}${PREFIX}/lib
-	${LN} -sf nss_mdns.so.1 \
+	${LN} -sf ${PREFIX}/lib/nss_mdns.so.1 \
 		${STAGEDIR}${PREFIX}/lib/nss_mdns.so
 	${MKDIR} ${STAGEDIR}${EXAMPLESDIR}
 	${INSTALL_DATA} ${WRKSRC}/mDNSPosix/nss_mdns.conf \
