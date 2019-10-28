@@ -9,6 +9,7 @@
     SUBDIR += ADMsmb
     SUBDIR += ADMsnmp
     SUBDIR += R-cran-ROAuth
+    SUBDIR += R-cran-askpass
     SUBDIR += R-cran-digest
     SUBDIR += R-cran-openssl
     SUBDIR += acme.sh
@@ -31,10 +32,9 @@
     SUBDIR += arm
     SUBDIR += arpCounterattack
     SUBDIR += asignify
-    SUBDIR += authforce
     SUBDIR += autossh
-    SUBDIR += avcheck
     SUBDIR += aws-iam-authenticator
+    SUBDIR += aws-vault
     SUBDIR += axTLS
     SUBDIR += barnyard2
     SUBDIR += barnyard2-sguil
@@ -123,7 +123,6 @@
     SUBDIR += dehydrated
     SUBDIR += denyhosts
     SUBDIR += destroy
-    SUBDIR += digest
     SUBDIR += dirbuster
     SUBDIR += dirmngr
     SUBDIR += distcache
@@ -159,7 +158,6 @@
     SUBDIR += fl0p
     SUBDIR += flawfinder
     SUBDIR += fpc-openssl
-    SUBDIR += fpm2
     SUBDIR += fprint_demo
     SUBDIR += fprintd
     SUBDIR += fragroute
@@ -170,7 +168,6 @@
     SUBDIR += fuzz
     SUBDIR += fwanalog
     SUBDIR += fwbuilder
-    SUBDIR += fwipe
     SUBDIR += fwknop
     SUBDIR += fwlogwatch
     SUBDIR += gag
@@ -181,7 +178,6 @@
     SUBDIR += git-secret
     SUBDIR += gnome-keyring
     SUBDIR += gnome-keyring-sharp
-    SUBDIR += gnome-password-generator
     SUBDIR += gnome-ssh-askpass
     SUBDIR += gnomint
     SUBDIR += gnupg
@@ -220,7 +216,6 @@
     SUBDIR += honggfuzz
     SUBDIR += hotssh
     SUBDIR += hpenc
-    SUBDIR += httprint
     SUBDIR += hydra
     SUBDIR += i2p
     SUBDIR += i2pd
@@ -228,13 +223,11 @@
     SUBDIR += idea
     SUBDIR += identify
     SUBDIR += ike
-    SUBDIR += ike-scan
     SUBDIR += integrit
     SUBDIR += ipfcount
     SUBDIR += ipfilter2dshield
     SUBDIR += ipfmeta
     SUBDIR += ipfw2dshield
-    SUBDIR += ipfwcount
     SUBDIR += ipguard
     SUBDIR += ipsec-tools
     SUBDIR += ipv6toolkit
@@ -272,6 +265,7 @@
     SUBDIR += krb5-devel
     SUBDIR += kripp
     SUBDIR += kstart
+    SUBDIR += ktls_isa-l_crypto-kmod
     SUBDIR += kwalletmanager
     SUBDIR += l0pht-watch
     SUBDIR += l0phtcrack
@@ -308,11 +302,11 @@
     SUBDIR += libpwstor
     SUBDIR += libressl
     SUBDIR += libressl-devel
+    SUBDIR += libscep 
     SUBDIR += libscrypt
     SUBDIR += libsecret
     SUBDIR += libsectok
     SUBDIR += libsodium
-    SUBDIR += libsparkcrypto
     SUBDIR += libssh
     SUBDIR += libssh2
     SUBDIR += libtasn1
@@ -360,8 +354,6 @@
     SUBDIR += matrixssl
     SUBDIR += mbedtls
     SUBDIR += mcrypt
-    SUBDIR += md4coll
-    SUBDIR += md5coll
     SUBDIR += md5deep
     SUBDIR += medusa
     SUBDIR += meek
@@ -441,7 +433,6 @@
     SUBDIR += openvpn-mbedtls
     SUBDIR += ophcrack
     SUBDIR += orthrus
-    SUBDIR += osiris
     SUBDIR += ossec-hids
     SUBDIR += ossec-hids-agent
     SUBDIR += ossec-hids-agent-config
@@ -539,6 +530,7 @@
     SUBDIR += p5-Crypt-Juniper
     SUBDIR += p5-Crypt-Khazad
     SUBDIR += p5-Crypt-LE
+    SUBDIR += p5-Crypt-LibSCEP
     SUBDIR += p5-Crypt-License
     SUBDIR += p5-Crypt-Lite
     SUBDIR += p5-Crypt-Loki97
@@ -738,6 +730,7 @@
     SUBDIR += pam_pseudo
     SUBDIR += pam_pwdfile
     SUBDIR += pam_require
+    SUBDIR += pam_script
     SUBDIR += pam_search_list
     SUBDIR += pam_ssh_agent_auth
     SUBDIR += pam_yubico
@@ -805,6 +798,9 @@
     SUBDIR += php73-hash
     SUBDIR += php73-openssl
     SUBDIR += php73-sodium
+    SUBDIR += php74-filter
+    SUBDIR += php74-openssl
+    SUBDIR += php74-sodium
     SUBDIR += phpsecinfo
     SUBDIR += picosha2
     SUBDIR += pidentd
@@ -833,6 +829,7 @@
     SUBDIR += portsentry
     SUBDIR += ppars
     SUBDIR += proftpd-mod_clamav
+    SUBDIR += protonvpn-cli
     SUBDIR += proxycheck
     SUBDIR += proxytunnel
     SUBDIR += pscan
@@ -898,6 +895,7 @@
     SUBDIR += py-docker-pycreds
     SUBDIR += py-ecdsa
     SUBDIR += py-ed25519ll
+    SUBDIR += py-exscript
     SUBDIR += py-fail2ban
     SUBDIR += py-fchksum
     SUBDIR += py-fido2
@@ -1042,7 +1040,6 @@
     SUBDIR += quantis-kmod
     SUBDIR += racoon2
     SUBDIR += radamsa
-    SUBDIR += ranpwd
     SUBDIR += ratproxy
     SUBDIR += rats
     SUBDIR += razorback-api
@@ -1061,7 +1058,6 @@
     SUBDIR += razorback-virusTotal
     SUBDIR += razorback-yaraNugget
     SUBDIR += rcracki_mt
-    SUBDIR += rdigest
     SUBDIR += regripper
     SUBDIR += reop
     SUBDIR += retranslator
@@ -1206,7 +1202,6 @@
     SUBDIR += sks
     SUBDIR += slurpie
     SUBDIR += slush
-    SUBDIR += smap
     SUBDIR += smtpscan
     SUBDIR += smurflog
     SUBDIR += sniff
@@ -1221,7 +1216,6 @@
     SUBDIR += softether
     SUBDIR += softether-devel
     SUBDIR += softether5
-    SUBDIR += softhsm
     SUBDIR += softhsm2
     SUBDIR += sops
     SUBDIR += spass
@@ -1235,7 +1229,6 @@
     SUBDIR += ssh-multiadd
     SUBDIR += ssh-vault
     SUBDIR += ssh_askpass_gtk2
-    SUBDIR += sshblock
     SUBDIR += sshguard
     SUBDIR += sshpass
     SUBDIR += ssl-admin
@@ -1261,6 +1254,7 @@
     SUBDIR += sudoscript
     SUBDIR += super
     SUBDIR += suricata
+    SUBDIR += suricata5
     SUBDIR += swatch
     SUBDIR += switzerland
     SUBDIR += symbion-sslproxy
@@ -1268,6 +1262,7 @@
     SUBDIR += tcpcrypt
     SUBDIR += teleport
     SUBDIR += testssl.sh
+    SUBDIR += tfhe
     SUBDIR += theonionbox
     SUBDIR += tinc
     SUBDIR += tinc-devel
@@ -1277,7 +1272,11 @@
     SUBDIR += tlswrap
     SUBDIR += tor
     SUBDIR += tor-devel
+    SUBDIR += totp-cli
     SUBDIR += tpm-tools
+    SUBDIR += tpm2-abrmd
+    SUBDIR += tpm2-tools
+    SUBDIR += tpm2-tss
     SUBDIR += trezord
     SUBDIR += trinokiller
     SUBDIR += tripwire
@@ -1304,6 +1303,7 @@
     SUBDIR += vxquery
     SUBDIR += w3af
     SUBDIR += wapiti
+    SUBDIR += wazuh-agent
     SUBDIR += webfwlog
     SUBDIR += webscarab
     SUBDIR += whatweb

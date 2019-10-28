@@ -49,7 +49,6 @@
     SUBDIR += ircproxy
     SUBDIR += ircservices
     SUBDIR += iroffer-dinoex
-    SUBDIR += iroffer-lamm
     SUBDIR += irssi
     SUBDIR += irssi-dcc_send_limiter
     SUBDIR += irssi-fish
@@ -63,7 +62,6 @@
     SUBDIR += libircclient
     SUBDIR += lostirc
     SUBDIR += miau
-    SUBDIR += minbif
     SUBDIR += muh
     SUBDIR += nethirc
     SUBDIR += ngircd
