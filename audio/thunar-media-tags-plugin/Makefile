@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	thunar-media-tags-plugin
-PORTVERSION=	0.3.0
+PORTVERSION=	0.2.1
+PORTREVISION=	5
 CATEGORIES=	audio xfce
 MASTER_SITES=	XFCE/thunar-plugins
 DIST_SUBDIR=	xfce4
@@ -13,11 +14,12 @@ COMMENT=	Media tags plugin
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-LIB_DEPENDS=	libtag.so:audio/taglib
+LIB_DEPENDS=	libtag.so:audio/taglib \
+		libfontconfig.so:x11-fonts/fontconfig \
+		libfreetype.so:print/freetype2
 
-USES=		compiler:c11 gettext-tools gmake gnome libtool pkgconfig \
-		tar:bzip2 xfce
-USE_GNOME=	cairo gdkpixbuf2 gtk30 intltool
+USES=		gettext-tools gmake gnome libtool pkgconfig tar:bzip2 xfce
+USE_GNOME=	cairo gdkpixbuf2 gtk20 intlhack intltool
 USE_XFCE=	libexo thunar
 
 GNU_CONFIGURE=	yes

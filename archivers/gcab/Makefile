@@ -12,10 +12,7 @@ COMMENT=	GObject library to create cabinet files
 BUILD_DEPENDS=	vala:lang/vala \
 		gtkdoc-scan:textproc/gtk-doc
 
-LICENSE=	LGPL21
-LICENSE_FILE=	${WRKSRC}/COPYING
-
-USES=		cpe gettext gnome meson pkgconfig tar:xz
+USES=		cpe gettext meson pkgconfig tar:xz
 USE_GNOME=	glib20 introspection:build
 CPE_VENDOR=	gnome
 

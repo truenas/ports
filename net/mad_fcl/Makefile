@@ -3,7 +3,7 @@
 
 PORTNAME=	mad_fcl
 PORTVERSION=	1.7
-CATEGORIES=	net
+CATEGORIES=	net ipv6
 MASTER_SITES=	http://mad.cs.tut.fi/download/
 DISTNAME=	${PORTNAME}_v${PORTVERSION}_src
 

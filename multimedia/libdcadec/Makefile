@@ -15,6 +15,7 @@ USE_GITHUB=	yes
 GH_ACCOUNT=	foo86
 GH_PROJECT=	dcadec
 
+NO_CONFIGURE=	yes
 USES=		pkgconfig gmake
 LDFLAGS+=	-lm
 MAKE_ENV+=	CONFIG_SHARED=yes

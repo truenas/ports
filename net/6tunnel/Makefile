@@ -3,7 +3,7 @@
 
 PORTNAME=	6tunnel
 DISTVERSION=	0.12
-CATEGORIES=	net
+CATEGORIES=	net ipv6
 MASTER_SITES=	GH \
 		LOCAL/bdrewery/${PORTNAME}/
 

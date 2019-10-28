@@ -40,6 +40,8 @@
     SUBDIR += aalib
     SUBDIR += aaphoto
     SUBDIR += acidwarp
+    SUBDIR += aeskulap
+    SUBDIR += agave
     SUBDIR += agg
     SUBDIR += alembic
     SUBDIR += alpng
@@ -58,7 +60,6 @@
     SUBDIR += autopano-sift-c
     SUBDIR += autotrace
     SUBDIR += aview
-    SUBDIR += avir
     SUBDIR += azpainter
     SUBDIR += backfract
     SUBDIR += barbecue
@@ -81,6 +82,7 @@
     SUBDIR += cal3d
     SUBDIR += camera
     SUBDIR += camerakit
+    SUBDIR += cbview
     SUBDIR += cbviewer
     SUBDIR += cegui
     SUBDIR += cenon
@@ -99,9 +101,11 @@
     SUBDIR += commons-utilities
     SUBDIR += compupic
     SUBDIR += converseen
+    SUBDIR += copperspice
     SUBDIR += cosmoplayer
     SUBDIR += cptutils
     SUBDIR += crw
+    SUBDIR += cthumb
     SUBDIR += curator
     SUBDIR += cuttlefish
     SUBDIR += darktable
@@ -143,7 +147,6 @@
     SUBDIR += dspdfviewer
     SUBDIR += duhdraw
     SUBDIR += dynamechs
-    SUBDIR += ebsynth
     SUBDIR += edje_viewer
     SUBDIR += electricsheep
     SUBDIR += electrix
@@ -206,6 +209,7 @@
     SUBDIR += frei0r-plugins-opencv
     SUBDIR += frogr
     SUBDIR += ftgl
+    SUBDIR += fujiplay
     SUBDIR += fusefs-gphotofs
     SUBDIR += fv
     SUBDIR += fyre
@@ -239,12 +243,20 @@
     SUBDIR += gimp-app
     SUBDIR += gimp-beautify-plugin
     SUBDIR += gimp-data-extras
+    SUBDIR += gimp-ez-perspective-plugin
+    SUBDIR += gimp-focusblur-plugin
     SUBDIR += gimp-gmic-plugin
     SUBDIR += gimp-help
+    SUBDIR += gimp-jagged-border-script
     SUBDIR += gimp-lensfun-plugin
     SUBDIR += gimp-lqr-plugin
+    SUBDIR += gimp-manual-html
     SUBDIR += gimp-refocus-plugin
     SUBDIR += gimp-resynthesizer
+    SUBDIR += gimp-save-for-web
+    SUBDIR += gimp-wavelet-denoise-plugin
+    SUBDIR += gimp-wavelet-sharpen-plugin
+    SUBDIR += giram
     SUBDIR += gkrellkam2
     SUBDIR += glad
     SUBDIR += gle
@@ -346,6 +358,7 @@
     SUBDIR += imc
     SUBDIR += imgtops
     SUBDIR += imgv
+    SUBDIR += imgvtopgm
     SUBDIR += imlib2
     SUBDIR += imlib2-webp
     SUBDIR += imlib2_loaders
@@ -355,6 +368,7 @@
     SUBDIR += instant-meshes
     SUBDIR += intel-backlight
     SUBDIR += intergif
+    SUBDIR += inventor
     SUBDIR += ipe
     SUBDIR += jalbum
     SUBDIR += jasper
@@ -373,6 +387,8 @@
     SUBDIR += jpeg-turbo
     SUBDIR += jpeginfo
     SUBDIR += jpegoptim
+    SUBDIR += jpg2pdf
+    SUBDIR += jpgraph2
     SUBDIR += jpgtn
     SUBDIR += jslice
     SUBDIR += kamera
@@ -503,7 +519,6 @@
     SUBDIR += linux-c6-sdl_ttf
     SUBDIR += linux-c6-tiff
     SUBDIR += linux-c7-cairo
-    SUBDIR += linux-c7-cairo-gobject
     SUBDIR += linux-c7-dri
     SUBDIR += linux-c7-gdk-pixbuf2
     SUBDIR += linux-c7-glx-utils
@@ -511,8 +526,6 @@
     SUBDIR += linux-c7-jasper
     SUBDIR += linux-c7-jbigkit
     SUBDIR += linux-c7-jpeg
-    SUBDIR += linux-c7-libdrm
-    SUBDIR += linux-c7-libepoxy
     SUBDIR += linux-c7-libglvnd
     SUBDIR += linux-c7-png
     SUBDIR += linux-c7-sdl_image
@@ -521,6 +534,8 @@
     SUBDIR += linux-c7-wayland
     SUBDIR += lua-gd
     SUBDIR += luminance-qt5
+    SUBDIR += luxrender
+    SUBDIR += luxrender14
     SUBDIR += lximage-qt
     SUBDIR += magnum
     SUBDIR += magnum-examples
@@ -528,6 +543,7 @@
     SUBDIR += magnum-plugins
     SUBDIR += mahotas
     SUBDIR += maim
+    SUBDIR += makehuman
     SUBDIR += mandelbulber
     SUBDIR += mapcache
     SUBDIR += mapnik
@@ -555,7 +571,6 @@
     SUBDIR += mxp
     SUBDIR += mypaint
     SUBDIR += mypaint-brushes
-    SUBDIR += nanosvg
     SUBDIR += nathive
     SUBDIR += netpbm
     SUBDIR += nip2
@@ -640,6 +655,8 @@
     SUBDIR += p5-Geo-GDAL
     SUBDIR += p5-Geo-GML
     SUBDIR += p5-Geo-Gpx
+    SUBDIR += p5-Geo-Point
+    SUBDIR += p5-Geo-Proj4
     SUBDIR += p5-Geometry-Primitive
     SUBDIR += p5-Gimp
     SUBDIR += p5-Google-Chart
@@ -746,8 +763,6 @@
     SUBDIR += php72-gd
     SUBDIR += php73-exif
     SUBDIR += php73-gd
-    SUBDIR += php74-exif
-    SUBDIR += php74-gd
     SUBDIR += phplot
     SUBDIR += picpuz
     SUBDIR += piddle
@@ -758,6 +773,7 @@
     SUBDIR += pixelize
     SUBDIR += pixen
     SUBDIR += pixie
+    SUBDIR += pixmap
     SUBDIR += plasma-kmod
     SUBDIR += plotutils
     SUBDIR += png
@@ -790,7 +806,9 @@
     SUBDIR += price
     SUBDIR += processing
     SUBDIR += proj
+    SUBDIR += proj5
     SUBDIR += pstoedit
+    SUBDIR += pstoepsi
     SUBDIR += ptex
     SUBDIR += py-OWSLib
     SUBDIR += py-PyOpenGL
@@ -803,7 +821,6 @@
     SUBDIR += py-cairocffi
     SUBDIR += py-cartopy
     SUBDIR += py-chart
-    SUBDIR += py-colour
     SUBDIR += py-descartes
     SUBDIR += py-django-easy-thumbnails
     SUBDIR += py-djvulibre
@@ -854,7 +871,6 @@
     SUBDIR += py-pycha
     SUBDIR += py-pycollada
     SUBDIR += py-pydot
-    SUBDIR += py-pyembree
     SUBDIR += py-pyepsg
     SUBDIR += py-pygal
     SUBDIR += py-pyganim
@@ -869,13 +885,11 @@
     SUBDIR += py-pyqtgraph
     SUBDIR += py-python-poppler-qt5
     SUBDIR += py-qt5-svg
-    SUBDIR += py-rawkit
     SUBDIR += py-sane
     SUBDIR += py-scikit-image
     SUBDIR += py-seqdiag
     SUBDIR += py-sorl-thumbnail
     SUBDIR += py-soya3d
-    SUBDIR += py-spectra
     SUBDIR += py-stltools
     SUBDIR += py-svgwrite
     SUBDIR += py-termtosvg
@@ -884,7 +898,6 @@
     SUBDIR += py-wand
     SUBDIR += py-webcolors
     SUBDIR += py-willow
-    SUBDIR += py-willow11
     SUBDIR += py-yaswfp
     SUBDIR += pygts
     SUBDIR += pymorph
@@ -908,7 +921,6 @@
     SUBDIR += quesoglc
     SUBDIR += radiance
     SUBDIR += radius-engine
-    SUBDIR += rapid-photo-downloader
     SUBDIR += raster3d
     SUBDIR += rawtherapee
     SUBDIR += rayshade
@@ -964,7 +976,6 @@
     SUBDIR += sane-epkowa
     SUBDIR += sane-frontends
     SUBDIR += scale2x
-    SUBDIR += scantailor
     SUBDIR += scr2png
     SUBDIR += scrot
     SUBDIR += scwm-icons
@@ -1045,7 +1056,6 @@
     SUBDIR += vv
     SUBDIR += waffle
     SUBDIR += waifu2x-converter-cpp
-    SUBDIR += waifu2x-ncnn-vulkan
     SUBDIR += wayland
     SUBDIR += wayland-protocols
     SUBDIR += waylandpp
@@ -1066,6 +1076,7 @@
     SUBDIR += xglurbules
     SUBDIR += xgrasp
     SUBDIR += xli
+    SUBDIR += xmandel
     SUBDIR += xmedcon
     SUBDIR += xmlgraphics-commons
     SUBDIR += xmountains

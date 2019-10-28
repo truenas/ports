@@ -3,7 +3,7 @@
 
 PORTNAME=	exult
 PORTVERSION=	1.5.0.20160514
-PORTREVISION=	9
+PORTREVISION=	8
 CATEGORIES=	games
 
 MAINTAINER=	ports@FreeBSD.org
@@ -11,6 +11,9 @@ COMMENT=	Ultima VII engine
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
+
+BROKEN_armv6=		fails to compile: constant expression evaluates to -1 which cannot be narrowed to type char
+BROKEN_armv7=		fails to compile: constant expression evaluates to -1 which cannot be narrowed to type char
 
 LIB_DEPENDS=	libvorbis.so:audio/libvorbis \
 		libpng.so:graphics/png

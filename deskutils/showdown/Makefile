@@ -5,7 +5,7 @@ DISTVERSION=	0.6
 PORTREVISION=	2
 CATEGORIES=	deskutils
 
-MAINTAINER=	dmgk@FreeBSD.org
+MAINTAINER=	dg@syrec.org
 COMMENT=	Simple markdown viewer, written in Vala and GTK 3
 
 LICENSE=	GPLv3

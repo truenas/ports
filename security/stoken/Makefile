@@ -1,4 +1,4 @@
-# Created by: Alex Samorukov <samm@freebsd.org>
+# Created by: Alex Samorukov <samm@os2.kiev.ua>
 # $FreeBSD$
 
 PORTNAME=	stoken
@@ -6,11 +6,13 @@ DISTVERSION=	0.92
 CATEGORIES=	security
 MASTER_SITES=	SF/stoken
 
-MAINTAINER=	samm@freebsd.org
+MAINTAINER=	samm@os2.kiev.ua
 COMMENT=	Software Token for UNIX compatible with RSA SecurID
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING.LIB
+
+BROKEN=		Package requirements (nettle >= 2.4) were not met
 
 LIB_DEPENDS=	libtomcrypt.so:security/libtomcrypt # can alternatively use nettle, potentially port option can be created
 

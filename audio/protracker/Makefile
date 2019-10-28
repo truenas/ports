@@ -14,7 +14,6 @@ LICENSE=	WTFPL
 LICENSE_FILE=	${WRKSRC}/src/COPYING.txt
 
 USES=		localbase:ldflags sdl
-USE_CSTD=	c99
 USE_SDL=	sdl2
 
 SVN_URL=	https://svn.code.sf.net/p/protracker/code/trunk

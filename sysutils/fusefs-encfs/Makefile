@@ -8,7 +8,7 @@ PORTREVISION=	4
 CATEGORIES=	sysutils
 PKGNAMEPREFIX=	fusefs-
 
-MAINTAINER=	dmgk@FreeBSD.org
+MAINTAINER=	dg@syrec.org
 COMMENT=	Encrypted pass-through FUSE filesystem
 
 LICENSE=	GPLv3

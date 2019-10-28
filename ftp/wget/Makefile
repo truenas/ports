@@ -3,8 +3,9 @@
 
 PORTNAME=	wget
 DISTVERSION=	1.20.3
-CATEGORIES=	ftp www
+CATEGORIES=	ftp www ipv6
 MASTER_SITES=	GNU
+EXTRACT_SUFX=	.tar.lz
 
 MAINTAINER=	vd@FreeBSD.org
 COMMENT=	Retrieve files from the Net via HTTP(S) and FTP
@@ -15,7 +16,7 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 TEST_DEPENDS=	p5-HTTP-Daemon>=0:www/p5-HTTP-Daemon \
 		p5-IO-Socket-SSL>=0:security/p5-IO-Socket-SSL
 
-USES=		charsetfix cpe iconv tar:lz
+USES=		charsetfix cpe iconv tar:xz
 CPE_VENDOR=	gnu
 GNU_CONFIGURE=	yes
 OPTIONS_SUB=	yes

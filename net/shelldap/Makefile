@@ -2,9 +2,10 @@
 # $FreeBSD$
 
 PORTNAME=	shelldap
-PORTVERSION=	1.5.1
-DISTVERSIONPREFIX=	v
+PORTVERSION=	1.5.0
 CATEGORIES=	net perl5
+MASTER_SITES=	https://bitbucket.org/mahlon/shelldap/downloads/ \
+		http://www.martini.nu/misc/
 
 MAINTAINER=	mahlon@martini.nu
 COMMENT=	Shell-like environment for LDAP
@@ -21,9 +22,6 @@ RUN_DEPENDS=	p5-Algorithm-Diff>=0:devel/p5-Algorithm-Diff \
 
 USES=		perl5
 USE_PERL5=	extract build run
-
-USE_GITHUB=	yes
-GH_ACCOUNT=	mahlonsmith
 
 PLIST_FILES=	bin/shelldap man/man1/shelldap.1.gz
 

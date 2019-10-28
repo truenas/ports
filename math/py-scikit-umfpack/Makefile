@@ -2,7 +2,7 @@
 
 PORTNAME=	scikit-umfpack
 DISTVERSION=	0.3.2
-PORTREVISION=	3
+PORTREVISION=	2
 CATEGORIES=	math python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -16,7 +16,9 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 BUILD_DEPENDS=	${PYNUMPY} \
 		${PYTHON_PKGNAMEPREFIX}scipy>0:science/py-scipy@${PY_FLAVOR} \
 		swig3.0:devel/swig30
-LIB_DEPENDS=	libumfpack.so:math/suitesparse
+LIB_DEPENDS=	libblas.so:math/blas \
+		libcblas.so:math/cblas \
+		libumfpack.so:math/suitesparse
 RUN_DEPENDS=	${PYNUMPY} \
 		${PYTHON_PKGNAMEPREFIX}scipy>0:science/py-scipy@${PY_FLAVOR}
 

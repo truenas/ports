@@ -15,7 +15,7 @@ settings to gn.
      macos: return(mac)
      win32: return(win)
      linux: return(linux)
-+    freebsd: return(freebsd)
++    freebsd: return(bsd)
      error(Unsupported platform)
      return(unknown)
  }

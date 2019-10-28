@@ -4,10 +4,8 @@ bin/zone2json
 bin/zone2sql
 sbin/pdns_server
 %%PROTOBUF%%bin/dnspcap2protobuf
-%%TOOLS%%bin/calidns
 %%TOOLS%%bin/dnsbulktest
 %%TOOLS%%bin/dnsgram
-%%TOOLS%%bin/dnspcap2calidns
 %%TOOLS%%bin/dnsreplay
 %%TOOLS%%bin/dnsscan
 %%TOOLS%%bin/dnsscope
@@ -23,8 +21,7 @@ sbin/pdns_server
 %%TOOLS%%bin/stubquery
 lib/pdns/libbindbackend.so
 lib/pdns/libpipebackend.so
-%%GEOIP%%lib/pdns/libgeoipbackend.so
-%%LUABACKEND%%lib/pdns/liblua2backend.so
+%%LUABACKEND%%lib/pdns/libluabackend.so
 %%MYDNS%%lib/pdns/libmydnsbackend.so
 %%MYSQL%%lib/pdns/libgmysqlbackend.so
 %%OPENDBX%%lib/pdns/libopendbxbackend.so
@@ -38,7 +35,6 @@ lib/pdns/libpipebackend.so
 %%TOOLS%%man/man1/calidns.1.gz
 %%TOOLS%%man/man1/dnsbulktest.1.gz
 %%TOOLS%%man/man1/dnsgram.1.gz
-%%TOOLS%%man/man1/dnspcap2calidns.1.gz
 %%TOOLS%%man/man1/dnsscan.1.gz
 %%TOOLS%%man/man1/dumresp.1.gz
 %%TOOLS%%man/man1/ixplore.1.gz
@@ -63,10 +59,6 @@ man/man1/zone2sql.1.gz
 %%PORTEXAMPLES%%@dir %%EXAMPLESDIR%%
 %%MYSQL%%%%PORTDOCS%%%%DOCSDIR%%/3.4.0_to_4.1.0_schema.mysql.sql
 %%PGSQL%%%%PORTDOCS%%%%DOCSDIR%%/3.4.0_to_4.1.0_schema.pgsql.sql
-%%SQLITE3%%%%PORTDOCS%%%%DOCSDIR%%/3.4.0_to_4.0.0_schema.sqlite3.sql
-%%SQLITE3%%%%PORTDOCS%%%%DOCSDIR%%/4.0.0_to_4.2.0_schema.sqlite3.sql
-%%MYSQL%%%%PORTDOCS%%%%DOCSDIR%%/4.1.0_to_4.2.0_schema.mysql.sql
-%%PGSQL%%%%PORTDOCS%%%%DOCSDIR%%/4.1.0_to_4.2.0_schema.pgsql.sql
 %%MYSQL%%%%PORTDOCS%%%%DOCSDIR%%/dnssec-3.x_to_3.4.0_schema.mysql.sql
 %%PGSQL%%%%PORTDOCS%%%%DOCSDIR%%/dnssec-3.x_to_3.4.0_schema.pgsql.sql
 %%SQLITE3%%%%PORTDOCS%%%%DOCSDIR%%/dnssec-3.x_to_3.4.0_schema.sqlite3.sql

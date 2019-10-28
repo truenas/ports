@@ -39,7 +39,6 @@
     SUBDIR += dump1090
     SUBDIR += ebook2cw
     SUBDIR += ebook2cwgui
-    SUBDIR += ebusd
     SUBDIR += echolinux
     SUBDIR += efax
     SUBDIR += ems-flasher
@@ -60,6 +59,7 @@
     SUBDIR += gqrx
     SUBDIR += gr-osmosdr
     SUBDIR += grig
+    SUBDIR += gsmlib
     SUBDIR += gstreamer1-plugins-spandsp
     SUBDIR += gtkmmorse
     SUBDIR += hackrf
@@ -72,6 +72,7 @@
     SUBDIR += iwmbt-firmware
     SUBDIR += java-simple-serial-connector
     SUBDIR += jerm
+    SUBDIR += jpilot-picsnvideos
     SUBDIR += kb
     SUBDIR += kermit
     SUBDIR += klog
@@ -104,6 +105,7 @@
     SUBDIR += ncid
     SUBDIR += nec2c
     SUBDIR += nmealib
+    SUBDIR += nokryptia
     SUBDIR += o2sms
     SUBDIR += obexapp
     SUBDIR += openobex

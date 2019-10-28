@@ -5,10 +5,9 @@ PORTNAME=	baekmukfonts
 PORTVERSION=	2.2
 PORTREVISION=	3
 CATEGORIES=	korean
-MASTER_SITES=	https://kldp.net/baekmuk/release/ \
-		LOCAL/jkim
+MASTER_SITES=	http://kldp.net/frs/download.php/1429/
 PKGNAMESUFFIX=	-ttf
-DISTNAME=	865-${FONTNAME}${PKGNAMESUFFIX}-${PORTVERSION}
+DISTNAME=	${FONTNAME}${PKGNAMESUFFIX}-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Baekmuk family Korean TrueType Fonts
@@ -16,11 +15,12 @@ COMMENT=	Baekmuk family Korean TrueType Fonts
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/COPYRIGHT
 
-USES=		fonts
+BROKEN=		unfetchable
 
-FONTNAME=	baekmuk
 NO_BUILD=	yes
-WRKSRC=		${WRKDIR}/${DISTNAME:S/^865-//}
+
+USES=		fonts
+FONTNAME=	baekmuk
 
 do-install:
 	@${MKDIR} ${STAGEDIR}${FONTSDIR}

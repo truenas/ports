@@ -2,11 +2,12 @@
 # $FreeBSD$
 
 PORTNAME=	ntl
-PORTVERSION=	11.4.1
+PORTVERSION=	11.3.2
+PORTREVISION=	3
 CATEGORIES=	math
 MASTER_SITES=	http://www.shoup.net/ntl/
 
-MAINTAINER=	ndowens04@gmail.com
+MAINTAINER=	ndowens@yahoo.com
 COMMENT=	Victor Shoup's Number Theory Library
 
 LICENSE=	LGPL21+

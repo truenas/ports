@@ -4,7 +4,7 @@ PORTNAME=	logitechmediaserver
 PORTVERSION=	7.9.2.g2018.12.10
 CATEGORIES=	audio
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	mark@tranquillussoftware.co.uk
 COMMENT=	Audio streaming server that powers Squeezebox players from Logitech
 
 LICENSE=	SDL

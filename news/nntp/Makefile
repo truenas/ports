@@ -4,7 +4,7 @@
 PORTNAME=	nntp
 PORTVERSION=	1.5.12.2
 PORTREVISION=	10
-CATEGORIES=	news
+CATEGORIES=	news ipv6
 MASTER_SITES=	ftp://ftp.dinoex.org/pub/c-news/
 DISTNAME=	${PORTNAME}.${PORTVERSION}
 

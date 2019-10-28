@@ -28,10 +28,12 @@ GO_PKGNAME=	github.com/${GH_ACCOUNT}/${PORTNAME}
 USE_RC_SUBR=	grok_exporter
 SUB_FILES=	config.yml
 
-post-patch:
+do-build:
 	${LN} -sf ${WRKSRC}/tailer/fileTailer_darwin.go ${WRKSRC}/tailer/fileTailer_freebsd.go
+	@(cd ${GO_WRKSRC}; ${SETENV} ${MAKE_ENV} ${GO_ENV} ${GO_CMD} build -o ${PORTNAME} .)
 
-post-install:
+do-install:
+	${INSTALL_PROGRAM} ${GO_WRKSRC}/${PORTNAME} ${STAGEDIR}${PREFIX}/bin/${PORTNAME}
 	${MKDIR} ${STAGEDIR}${ETCDIR}
 	${INSTALL_DATA} ${WRKDIR}/config.yml ${STAGEDIR}${ETCDIR}
 	@(cd ${WRKSRC} && ${COPYTREE_SHARE} example ${STAGEDIR}${DATADIR})

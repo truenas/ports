@@ -19,4 +19,11 @@ GH_SUBDIR=	src/github.com/${GH_ACCOUNT}/${PORTNAME}
 
 PLIST_FILES=	bin/${PORTNAME}
 
+do-build:
+	@cd ${WRKSRC}/${GH_SUBDIR} && \
+		${SETENV} ${MAKE_ENV} GOPATH=${WRKSRC} go build
+
+do-install:
+	${INSTALL_PROGRAM} ${WRKSRC}/${PORTNAME} ${STAGEDIR}${PREFIX}/bin
+
 .include <bsd.port.mk>

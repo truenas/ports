@@ -16,7 +16,7 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 USE_GITHUB=	yes
 GH_ACCOUNT=	magnush
 
-USES=		autoreconf gnome localbase pathfix pkgconfig tar:bzip2
+USES=		autoreconf localbase pathfix pkgconfig tar:bzip2
 USE_GNOME=	gtk20
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--without-alsalib \

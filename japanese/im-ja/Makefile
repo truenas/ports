@@ -3,7 +3,7 @@
 
 PORTNAME=	im-ja
 PORTVERSION=	1.5
-PORTREVISION=	13
+PORTREVISION=	12
 CATEGORIES=	japanese x11-toolkits
 MASTER_SITES=	http://im-ja.sourceforge.net/
 

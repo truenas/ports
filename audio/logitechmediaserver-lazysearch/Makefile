@@ -9,7 +9,7 @@ PKGNAMEPREFIX=	logitechmediaserver-
 DISTNAME=	LazySearch2-7-${PORTVERSION}
 DIST_SUBDIR=	logitechmediaserver
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	mark@tranquillussoftware.co.uk
 COMMENT=	Logitech Media Server plugin for performing lazy searches
 
 LICENSE=	GPLv2

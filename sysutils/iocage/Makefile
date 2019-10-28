@@ -31,6 +31,7 @@ CONFLICTS=  py-iocage-[0-9]* iocage-[0-9]* iocage-devel-[0-9]*
 NO_CHECKSUM=yes
 WRKSRC=/usr/iocage_src
 
+NO_ARCH=	yes
 USES=		python:3.6+
 USE_PYTHON=	autoplist distutils
 

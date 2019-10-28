@@ -2,28 +2,27 @@
 # $FreeBSD$
 
 PORTNAME=	tcping
-PORTVERSION=	1.3.6
+PORTVERSION=	1.3.5
 CATEGORIES=	net
+MASTER_SITES=	http://www.linuxco.de/tcping/ \
+		http://dryice.name/computer/FreeBSD/distfiles/
 
-MAINTAINER=	ehaupt@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Do a TCP connect to the given IP/port combination
 
-LICENSE=	MIT
+LICENSE=	LGPL3
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USE_GITHUB=	yes
-
-GH_ACCOUNT=	mkirchner
-
-OPTIONS_DEFINE=	DOCS
-
-CFLAGS+=	-DHAVE_HSTRERROR
+BROKEN=		unfetchable
 
 PLIST_FILES=	bin/tcping
 PORTDOCS=	README
 
+OPTIONS_DEFINE=	DOCS
+
 do-build:
-	${CC} ${CFLAGS} -o ${WRKSRC}/tcping ${WRKSRC}/tcping.c
+	cd ${WRKSRC} && \
+	${CC} ${CFLAGS} -DHAVE_HSTRERROR -o tcping tcping.c
 
 do-install:
 	${INSTALL_PROGRAM} ${WRKSRC}/tcping ${STAGEDIR}${PREFIX}/bin

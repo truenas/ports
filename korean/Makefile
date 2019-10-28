@@ -12,6 +12,7 @@
     SUBDIR += engdic
     SUBDIR += fcitx-hangul
     SUBDIR += gimp-help
+    SUBDIR += gtkcomm
     SUBDIR += h2ps
     SUBDIR += hanyangfonts
     SUBDIR += hcode

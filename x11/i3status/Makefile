@@ -9,7 +9,6 @@ MAINTAINER=	bapt@FreeBSD.org
 COMMENT=	Small program for generating a status bar
 
 LICENSE=	BSD3CLAUSE
-LICENSE_FILE=	${WRKSRC}/LICENSE
 
 LIB_DEPENDS=	libconfuse.so:devel/libconfuse \
 		libyajl.so:devel/yajl
@@ -28,5 +27,6 @@ post-patch:
 post-install:
 	${INSTALL_DATA} ${WRKSRC}/i3status.conf \
 		${STAGEDIR}${PREFIX}/etc/i3status.conf.sample
+
 
 .include <bsd.port.mk>

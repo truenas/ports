@@ -4,7 +4,7 @@ PORTNAME=	google-fonts
 DISTVERSION=	0.0.0.20190509
 CATEGORIES=	x11-fonts
 
-MAINTAINER=	dmgk@FreeBSD.org
+MAINTAINER=	dg@syrec.org
 COMMENT=	Collection of freely redistributable TrueType fonts from Google
 
 LICENSE=	APACHE20 OFL11

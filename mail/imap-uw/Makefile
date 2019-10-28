@@ -5,7 +5,7 @@ PORTNAME=	imap
 PORTVERSION=	2007f
 PORTREVISION=	1
 PORTEPOCH=	1
-CATEGORIES=	mail
+CATEGORIES=	mail ipv6
 MASTER_SITES=	ftp://ftp.cac.washington.edu/imap/%SUBDIR%/ \
 		ftp://ftp.nuug.no/pub/anders/distfiles/%SUBDIR%/ \
 		http://atreides.freenix.no/~anders/%SUBDIR%/ \

@@ -4,7 +4,7 @@
 PORTNAME=	icecast
 DISTVERSIONPREFIX=	icecast-
 DISTVERSION=	2.4.0-kh10
-CATEGORIES=	audio net
+CATEGORIES=	audio net ipv6
 PKGNAMESUFFIX=	-kh
 
 MAINTAINER=	ports@FreeBSD.org

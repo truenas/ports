@@ -2,10 +2,10 @@
 
 PORTNAME=	dte
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.9
+DISTVERSION=	1.8.2
 CATEGORIES=	editors
 
-MAINTAINER=	dmgk@FreeBSD.org
+MAINTAINER=	dg@syrec.org
 COMMENT=	Small and easy to use console text editor
 
 LICENSE=	GPLv2
@@ -26,7 +26,7 @@ PLIST_FILES=	bin/dte \
 		man/man5/dte-syntax.5.gz \
 		man/man5/dterc.5.gz \
 
-PORTDOCS=	README.md keys.md
+PORTDOCS=	README.md
 
 OPTIONS_DEFINE=	DOCS
 
@@ -35,7 +35,6 @@ post-install:
 
 post-install-DOCS-on:
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}
-	${INSTALL_DATA} ${WRKSRC}/README.md ${STAGEDIR}${DOCSDIR}
-	${INSTALL_DATA} ${WRKSRC}/docs/keys.md ${STAGEDIR}${DOCSDIR}
+	${INSTALL_DATA} ${PORTDOCS:S|^|${WRKSRC}/|} ${STAGEDIR}${DOCSDIR}
 
 .include <bsd.port.mk>

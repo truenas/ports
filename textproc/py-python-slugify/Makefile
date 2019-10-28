@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	python-slugify
-PORTVERSION=	4.0.0
+PORTVERSION=	3.0.3
 CATEGORIES=	textproc python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -11,11 +11,7 @@ COMMENT=	Slugify application that handles unicode
 
 LICENSE=	MIT
 
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}text-unidecode>=1.3:converters/py-text-unidecode@${PY_FLAVOR}
-
-### Can alternatively require:
-### 	${PYTHON_PKGNAMEPREFIX}unidecode>=1.1.1:converters/py-unidecode@${PY_FLAVOR}
-### but text-unidecode is preferred upstream.
+RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}unidecode>=0.04.16:converters/py-unidecode@${PY_FLAVOR}
 
 USES=		python
 USE_PYTHON=	autoplist distutils

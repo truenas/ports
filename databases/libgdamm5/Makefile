@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	libgdamm
-PORTVERSION=	4.99.11
+PORTVERSION=	4.99.8
+PORTREVISION=	4
 CATEGORIES=	databases gnome
 MASTER_SITES=	GNOME
 DIST_SUBDIR=	gnome3
@@ -10,14 +11,15 @@ DIST_SUBDIR=	gnome3
 MAINTAINER=	bland@FreeBSD.org
 COMMENT=	C++ wrapper for libgda5 library
 
-USES=		gmake libtool pathfix pkgconfig tar:xz compiler:c++11-lang gnome
+BUILD_DEPENDS=	gm4:devel/m4
+
+USES=		gmake libtool pathfix pkgconfig tar:xz compiler:c++11-lang
 USE_CXXSTD=	c++11
 USE_GNOME=	libgda5 glibmm
 GNU_CONFIGURE=	yes
 INSTALL_TARGET=	install-strip
 USE_LDCONFIG=	yes
 CONFIGURE_ARGS=	--disable-documentation
-BINARY_WRAPPERS=	gm4
 
 OPTIONS_DEFINE=	BDB
 

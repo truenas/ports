@@ -6,7 +6,7 @@ DISTVERSIONPREFIX=	v
 DISTVERSION=	0.3.1
 CATEGORIES=	x11
 
-MAINTAINER=	dmgk@FreeBSD.org
+MAINTAINER=	dg@syrec.org
 COMMENT=	Small X11 utility to hide the mouse pointer when unused
 
 LICENSE=	BSD3CLAUSE

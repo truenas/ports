@@ -2,8 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	netsurf
-PORTVERSION=	3.9
-PORTREVISION=	1
+PORTVERSION=	3.8
 CATEGORIES=	www
 MASTER_SITES=	http://download.netsurf-browser.org/netsurf/releases/source/
 DISTNAME=	${PORTNAME}-${PORTVERSION}-src
@@ -16,12 +15,11 @@ LICENSE_COMB=	multi
 
 BUILD_DEPENDS=	duk:lang/duktape \
 		nsgenbind:devel/nsgenbind \
-		p5-HTML-Parser>=3.72:www/p5-HTML-Parser \
-		xxd:editors/vim-console
+		p5-HTML-Parser>=3.72:www/p5-HTML-Parser
 LIB_DEPENDS=	libcurl.so:ftp/curl \
 		libpng.so:graphics/png \
 		libnsutils.so:devel/libnsutils \
-		libutf8proc.so:textproc/utf8proc \
+		libutf8proc.so:textproc/libutf8proc \
 		libnsgif.so:graphics/libnsgif \
 		libnsbmp.so:graphics/libnsbmp \
 		libdom.so:www/libdom \

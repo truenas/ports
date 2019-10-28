@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	terraform
-PORTVERSION=	0.12.10
+PORTVERSION=	0.12.6
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 
@@ -16,7 +16,9 @@ GH_ACCOUNT=	hashicorp
 
 PLIST_FILES=	bin/${PORTNAME}
 
-USES=	go:modules
+USES=	go
+
+GO_PKGNAME=	github.com/${GH_ACCOUNT}/${PORTNAME}
 
 post-patch:
 	${REINPLACE_CMD} 's|Prerelease = "dev"|Prerelease = ""|' \

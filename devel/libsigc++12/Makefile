@@ -12,12 +12,11 @@ DIST_SUBDIR=	gnome2
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Callback Framework for C++
 
-LICENSE=	LGPL21
+BUILD_DEPENDS=	gm4:devel/m4
 
 GNU_CONFIGURE=	yes
 INSTALL_TARGET=	install-strip
 USES=		gmake libtool pathfix pkgconfig
 USE_LDCONFIG=	yes
-BINARY_WRAPPERS=	gm4
 
 .include <bsd.port.mk>

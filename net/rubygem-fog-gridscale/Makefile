@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	fog-gridscale
-PORTVERSION=	0.1.5
+PORTVERSION=	0.1.4
 CATEGORIES=	net rubygems
 MASTER_SITES=	RG
 

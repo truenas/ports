@@ -2,11 +2,11 @@
 # $FreeBSD$
 
 PORTNAME=	translate-toolkit
-PORTVERSION=	2.4.0
+PORTVERSION=	2.3.1
 CATEGORIES=	textproc
 MASTER_SITES=	CHEESESHOP
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	jpaetzel@FreeBSD.org
 COMMENT=	Converts between many translation formats
 
 LICENSE=	GPLv2

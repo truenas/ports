@@ -9,18 +9,18 @@ MASTER_SITES=	http://linux.thai.net/pub/thailinux/software/libthai/
 MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Double-array trie implementation library
 
-LICENSE=	LGPL21+
-LICENSE_FILE=	${WRKSRC}/COPYING
+LICENSE=	LGPL21
 
-USES=		iconv libtool localbase:ldflags pathfix tar:xz
+OPTIONS_DEFINE=	DOCS
+
 GNU_CONFIGURE=	yes
+USES=		iconv libtool pathfix tar:xz
 USE_LDCONFIG=	yes
 
-LDFLAGS+=	${ICONV_LIB}
+CPPFLAGS+=	-I${LOCALBASE}/include
+LDFLAGS+=	-L${LOCALBASE}/lib ${ICONV_LIB}
 
 PORTDOCS=	README.migration
 INSTALL_TARGET=	install-strip
-
-OPTIONS_DEFINE=	DOCS
 
 .include <bsd.port.mk>

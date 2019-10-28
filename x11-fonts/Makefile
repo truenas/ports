@@ -11,7 +11,6 @@
     SUBDIR += alfont
     SUBDIR += andika
     SUBDIR += anonymous-pro
-    SUBDIR += apl385
     SUBDIR += artwiz-aleczapka
     SUBDIR += artwiz-aleczapka-de
     SUBDIR += artwiz-aleczapka-se
@@ -24,7 +23,6 @@
     SUBDIR += bitter
     SUBDIR += c64bdf
     SUBDIR += cantarell-fonts
-    SUBDIR += cascadia-code
     SUBDIR += charis
     SUBDIR += charis-compact
     SUBDIR += clearsans
@@ -70,6 +68,7 @@
     SUBDIR += font-bh-type1
     SUBDIR += font-bitstream-100dpi
     SUBDIR += font-bitstream-75dpi
+    SUBDIR += font-bitstream-speedo
     SUBDIR += font-bitstream-type1
     SUBDIR += font-cronyx-cyrillic
     SUBDIR += font-cursor-misc
@@ -99,7 +98,6 @@
     SUBDIR += font-xfree86-type1
     SUBDIR += fontconfig
     SUBDIR += fontconfig-reference
-    SUBDIR += fontmatrix
     SUBDIR += fonts-indic
     SUBDIR += fonttosfnt
     SUBDIR += freefont-ttf
@@ -119,6 +117,7 @@
     SUBDIR += hermit
     SUBDIR += inconsolata-lgc-ttf
     SUBDIR += inconsolata-ttf
+    SUBDIR += indic-ttf
     SUBDIR += intlfonts
     SUBDIR += iosevka
     SUBDIR += isabella
@@ -135,6 +134,7 @@
     SUBDIR += libFS
     SUBDIR += libXfont
     SUBDIR += libXfont2
+    SUBDIR += libXfontcache
     SUBDIR += libXft
     SUBDIR += liberation-fonts-ttf
     SUBDIR += libfontenc
@@ -154,7 +154,6 @@
     SUBDIR += mkfontscale
     SUBDIR += mkitalic
     SUBDIR += mondulkiri
-    SUBDIR += monoid
     SUBDIR += montecarlo_fonts
     SUBDIR += montserrat
     SUBDIR += moveable-type-fonts
@@ -170,7 +169,6 @@
     SUBDIR += nucleus
     SUBDIR += ohsnap
     SUBDIR += oldschool-pc-fonts
-    SUBDIR += open-sans
     SUBDIR += orbitron
     SUBDIR += oxygen-fonts
     SUBDIR += p5-Font-AFM
@@ -180,6 +178,7 @@
     SUBDIR += padauk
     SUBDIR += paratype
     SUBDIR += pcf2bdf
+    SUBDIR += pingwi
     SUBDIR += plex-ttf
     SUBDIR += powerline-fonts
     SUBDIR += prociono
@@ -208,7 +207,6 @@
     SUBDIR += sourceserifpro-ttf
     SUBDIR += spleen
     SUBDIR += stix-fonts
-    SUBDIR += sudo-font
     SUBDIR += suxus
     SUBDIR += symbola
     SUBDIR += tamsyn

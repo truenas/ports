@@ -10,7 +10,7 @@ MASTER_SITES=	\
 		http://mirror.shatow.net/freebsd/${PORTNAME}/ \
 		GH
 
-MAINTAINER=	vermaden@interia.pl
+MAINTAINER=	bdrewery@FreeBSD.org
 COMMENT=	Solaris-like utility to manage Boot Environments on ZFS
 
 LICENSE=	BSD2CLAUSE

@@ -15,9 +15,8 @@ LICENSE_FILE=	${WRKSRC}/LICENSE.md
 RUN_DEPENDS=	rubygem-fission>=0:emulators/rubygem-fission \
 		rubygem-fog-core>=0:devel/rubygem-fog-core
 
-USES=		gem
-USE_RUBY=	yes
-
 NO_ARCH=	yes
+USE_RUBY=	yes
+USES=		gem
 
 .include <bsd.port.mk>

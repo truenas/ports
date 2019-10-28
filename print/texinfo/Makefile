@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	texinfo
-PORTVERSION=	6.7
+PORTVERSION=	6.6
+PORTREVISION=	2
 PORTEPOCH=	1
 CATEGORIES=	print
 MASTER_SITES=	GNU \
@@ -43,8 +44,8 @@ USE_TEX=	yes
 INFO=		info-stnd texinfo
 
 HTMLXREF_CNF_RELDATE=	20190611
-TEXI2DVI_RELDATE=	20190818
-TEXINFO_TEX_RELDATE=	20190924
+TEXI2DVI_RELDATE=	20190331
+TEXINFO_TEX_RELDATE=	20190601
 
 CPE_VENDOR=	gnu
 CPE_VERSION=	${PORTVERSION:R}
@@ -58,7 +59,6 @@ post-patch:
 	@${INSTALL_SCRIPT} ${DISTDIR}/${DIST_SUBDIR}/texi2dvi-${TEXI2DVI_RELDATE} ${WRKSRC}/util/texi2dvi
 	@${REINPLACE_CMD} -e '/rm -f $$(DESTDIR)/ s|$$| $$(DESTDIR)$$(xsdir)/XSParagraph.*|' ${WRKSRC}/tp/Texinfo/XS/Makefile.in
 	@${REINPLACE_CMD} -e 's|free (.*)|Safe&|' ${WRKSRC}/tp/Texinfo/XS/misc.c
-	@${REINPLACE_CMD} -e 's/tinfo/tinfow/g' ${WRKSRC}/configure
 
 post-install:
 	${INSTALL_DATA} ${WRKSRC}/util/htmlxref.cnf ${STAGEDIR}${DATADIR}

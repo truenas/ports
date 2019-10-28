@@ -2,11 +2,9 @@
 # $FreeBSD$
 
 PKGNAMESUFFIX=		-filter-python
-PORTREVISION=		0
+PORTREVISION=		3
 
 COMMENT=		Python-script filter support for OpenSMTPD
-
-IGNORE=			temporary unavailable
 
 PLIST_FILES=		libexec/opensmtpd/filter-python
 

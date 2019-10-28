@@ -1,7 +1,8 @@
 # $FreeBSD$
 
 PORTNAME=	botan
-DISTVERSION=	2.12.0
+DISTVERSION=	2.10.0
+PORTREVISION=	4
 CATEGORIES=	security
 MASTER_SITES=	http://botan.randombit.net/releases/
 PKGNAMESUFFIX=	2
@@ -13,30 +14,26 @@ COMMENT=	Portable, easy to use and efficient C++ crypto library
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/license.txt
 
-BROKEN_armv6=	include/arm_neon.h:28:2: error: "NEON support not enabled"
+BROKEN_armv6=		include/arm_neon.h:28:2: error: "NEON support not enabled"
 
 LIB_DEPENDS=	libboost_filesystem.so:devel/boost-libs
 
-USES=		compiler:c++11-lang gmake python:build shebangfix tar:xz
+USES=		compiler:c++11-lang gmake python:build shebangfix tar:tgz
+SHEBANG_FILES=	configure.py src/scripts/install.py
+HAS_CONFIGURE=	yes
 USE_LDCONFIG=	yes
 
-SHEBANG_FILES=	configure.py src/scripts/install.py
-
-HAS_CONFIGURE=		yes
 CONFIGURE_SCRIPT=	configure.py
-CONFIGURE_ARGS=		--cc=${COMPILER_TYPE} \
-			--with-boost \
-			--with-bzip2 \
-			--with-external-includedir=${LOCALBASE}/include \
-			--with-external-libdir=${LOCALBASE}/lib \
-			--with-lzma \
-			--with-zlib
-LDFLAGS+=		-pthread
+CONFIGURE_ARGS=	--with-external-includedir=${PREFIX}/include \
+		--with-external-libdir=${PREFIX}/lib \
+		--with-boost --with-bzip2 --with-lzma --with-zlib \
+		--cc=${COMPILER_TYPE}
+LDFLAGS+=	-pthread
 
-DOCSDIR=	${LOCALBASE}/share/doc/${PORTNAME}-${PORTVERSION}
+SHLIBVER=	${DISTVERSION:S/./ /g:[2]}
+PLIST_SUB=	SHLIBVER=${SHLIBVER}
 
-_SHLIBVER=	${DISTVERSION:S/./ /g:[2]}
-PLIST_SUB=	SHLIBVER=${_SHLIBVER}
+DOCSDIR=	${PREFIX}/share/doc/${PORTNAME}-${PORTVERSION}
 PORTDOCS=	*
 
 OPTIONS_DEFINE=		DOCS SQLITE3 SSL
@@ -55,10 +52,6 @@ SSL_CONFIGURE_WITH=	openssl
 CONFIGURE_ARGS+=	--cc-abi="-march=armv8-a+crypto"
 .endif
 
-.if ${OPSYS} == FreeBSD && ${OSVERSION} < 1200000
-CONFIGURE_ARGS+=	--without-os-features=getentropy,elf_aux_info
-.endif
-
 .if ${ARCH} == i386 || ${ARCH} == amd64
 PLIST_SUB+=	HAS_RDRAND_RNG=""
 .else
@@ -70,6 +63,6 @@ post-patch:
 		${WRKSRC}/src/build-data/cc/clang.txt
 
 post-install:
-	${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/botan ${STAGEDIR}${PREFIX}/lib/libbotan-2.so.${_SHLIBVER}.${_SHLIBVER}.0
+	${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/botan ${STAGEDIR}${PREFIX}/lib/libbotan-2.so.${SHLIBVER}.${SHLIBVER}.0
 
 .include <bsd.port.mk>

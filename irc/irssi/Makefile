@@ -1,7 +1,8 @@
 # $FreeBSD$
 
 PORTNAME=	irssi
-PORTVERSION=	1.2.2
+PORTVERSION=	1.2.1
+PORTREVISION=	1
 PORTEPOCH=	1
 CATEGORIES?=	irc
 MASTER_SITES=	https://github.com/irssi/irssi/releases/download/${PORTVERSION}/

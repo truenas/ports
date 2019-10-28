@@ -2,9 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	oclgrind
-PORTVERSION=	20190907
+PORTVERSION=	20190807
 DISTVERSIONPREFIX=	v
-PORTREVISION=	1
 CATEGORIES=	devel
 
 MAINTAINER=	jmd@FreeBSD.org
@@ -18,23 +17,13 @@ BUILD_DEPENDS=	opencl>=0:devel/opencl \
 LIB_DEPENDS=	libOpenCL.so:devel/ocl-icd
 RUN_DEPENDS=	opencl>=0:devel/opencl
 
-USES=		cmake
+USES=		cmake compiler:c++11-lang
 USE_GITHUB=	yes
 GH_ACCOUNT=	jrprice
 GH_PROJECT=	Oclgrind
-GH_TAGNAME=	e7c87b0
+GH_TAGNAME=	cd8cad1
 USE_LDCONFIG=	yes
 
-CC=		clang${LLVM_DEFAULT}
-CXX=		clang++${LLVM_DEFAULT}
-CPP=		clang-cpp${LLVM_DEFAULT}
-
-CMAKE_ARGS+=	-DLLVM_DIR=${LOCALBASE}/llvm${LLVM_DEFAULT}/lib/cmake/llvm
-
-.include <bsd.port.options.mk>
-
-.if ${LLVM_DEFAULT:S,-devel,990,} >= 90
-LLVM_DEFAULT=	80
-.endif
+CMAKE_ARGS+=	-DLLVM_DIR=${LOCALBASE}/llvm${LLVM_DEFAULT}/share/llvm/cmake
 
 .include <bsd.port.mk>

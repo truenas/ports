@@ -4,15 +4,16 @@
 PORTNAME=	cvsps
 DISTVERSION=	2.2b1
 CATEGORIES=	devel
-MASTER_SITES=	SF/${PORTNAME}/
+MASTER_SITES=	http://www.cobite.com/cvsps/
 PKGNAMESUFFIX?=	-devel
 
-MAINTAINER=	garga@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Create patchset information from CVS
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
+BROKEN=		unfetchable
 CONFLICTS=	cvsps-[0-9]*
 
 USES=		gmake

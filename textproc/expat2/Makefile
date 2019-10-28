@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	expat
-PORTVERSION=	2.2.8
+PORTVERSION=	2.2.6
+PORTREVISION=	1
 CATEGORIES=	textproc
 MASTER_SITES=	https://github.com/libexpat/libexpat/releases/download/R_${PORTVERSION:S|.|_|g}/
 
@@ -19,8 +20,5 @@ CONFIGURE_ARGS=	--without-docbook
 INSTALL_TARGET=	install-strip
 
 OPTIONS_DEFINE=	DOCS
-
-post-install:
-	${INSTALL_MAN} ${WRKSRC}/doc/xmlwf.1 ${STAGEDIR}${MANPREFIX}/man/man1/
 
 .include <bsd.port.mk>

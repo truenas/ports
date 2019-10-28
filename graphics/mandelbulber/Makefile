@@ -3,7 +3,6 @@
 
 PORTNAME=	mandelbulber
 DISTVERSION=	2.19
-PORTREVISION=	2
 CATEGORIES=	graphics
 
 MAINTAINER=	amdmi3@FreeBSD.org

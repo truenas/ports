@@ -5,7 +5,7 @@ DISTVERSIONPREFIX=	x
 DISTVERSION=	36.1
 CATEGORIES=	devel editors
 
-MAINTAINER=	dmgk@FreeBSD.org
+MAINTAINER=	dg@syrec.org
 COMMENT=	Simple, open source, cross-platform Go IDE
 
 LICENSE=	LGPL21+

@@ -2,12 +2,13 @@
 # $FreeBSD$
 
 PORTNAME=	dpkg
-PORTVERSION=	1.19.7
+PORTVERSION=	1.19.4
+PORTREVISION=	1
 CATEGORIES=	archivers sysutils
 MASTER_SITES=	DEBIAN_POOL
 DISTNAME=	dpkg_${PORTVERSION}
 
-MAINTAINER=	ndowens04@gmail.com
+MAINTAINER=	ndowens@yahoo.com
 COMMENT=	Debian package maintenance system
 
 LICENSE=	GPLv2+

@@ -2,32 +2,29 @@
 # $FreeBSD$
 
 PORTNAME=	denyhosts
-PORTVERSION=	3.1
-DISTVERSIONPREFIX=	v
+PORTVERSION=	2.6
+PORTREVISION=	7
 CATEGORIES=	security
-PKGNAMESUFFIX=	${PYTHON_PKGNAMESUFFIX}
+MASTER_SITES=	SF
+DISTNAME=	DenyHosts-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
-COMMENT=	Script to thwart ssh and imap attacks
+COMMENT=	Script to thwart ssh attacks
 
 LICENSE=	GPLv2
-LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
-BUILD_DEPENDS=	${RUN_DEPENDS}
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}ipaddr>=0:devel/py-ipaddr@${PY_FLAVOR}
+OPTIONS_DEFINE=	DOCS
 
-USES=		cpe python shebangfix
-USE_PYTHON=	autoplist concurrent distutils
-
-NO_ARCH=	yes
+USES=		cpe python:2.7 shebangfix
 REINPLACE_ARGS=	-i ''
+USE_PYTHON=	autoplist distutils
 USE_RC_SUBR=	denyhosts
+CPE_VENDOR=	phil_schwartz
+NO_ARCH=	yes
 
-PLIST_FILES=	"@sample etc/denyhosts.conf.sample"
+PORTDOCS=	CHANGELOG.txt LICENSE.txt README.txt
 SUB_FILES=	pkg-message
 SUB_LIST=	PYTHON=${PYTHON_CMD}
-
-USE_GITHUB=	yes
 
 SHEBANG_LANG=	env
 SHEBANG_FILES=	daemon-control-dist \
@@ -38,11 +35,12 @@ env_OLD_CMD=	/bin/env
 env_CMD=	${SETENV}
 
 post-patch:
-	@${REINPLACE_CMD} -e 's|%%PREFIX%%|${PREFIX}|' ${WRKSRC}/daemon-control-dist ${WRKSRC}/denyhosts.conf ${WRKSRC}/setup.py
-	@${REINPLACE_CMD} -e 's|%%PYTHON_CMD%%|${PYTHON_CMD}|' ${WRKSRC}/daemon-control-dist
+	@${REINPLACE_CMD} -e 's|%%PREFIX%%|${PREFIX}|' ${WRKSRC}/daemon-control-dist ${WRKSRC}/denyhosts.cfg-dist ${WRKSRC}/setup.py
 	@${FIND} ${WRKSRC} -type f -name '*.bak' -o -name '*.orig' -delete
 
 post-install:
-	${INSTALL_DATA} ${WRKSRC}/denyhosts.conf ${STAGEDIR}${PREFIX}/etc/denyhosts.conf.sample
+	${INSTALL_DATA} ${WRKSRC}/denyhosts.cfg-dist ${STAGEDIR}${PREFIX}/etc/denyhosts.conf.sample
+	${MKDIR} ${STAGEDIR}${DOCSDIR}/
+	cd ${WRKSRC}/ && ${INSTALL_DATA} ${PORTDOCS} ${STAGEDIR}${DOCSDIR}/
 
 .include <bsd.port.mk>

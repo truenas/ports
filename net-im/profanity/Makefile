@@ -1,8 +1,11 @@
 # $FreeBSD$
 
 PORTNAME=	profanity
-PORTVERSION=	0.7.1
+PORTVERSION=	0.6.0
+PORTREVISION=	1
 CATEGORIES=	net-im
+MASTER_SITES=	http://www.profanity.im/ \
+		LOCAL/arved
 
 MAINTAINER=	arved@FreeBSD.org
 COMMENT=	Console based XMPP client
@@ -17,14 +20,10 @@ LIB_DEPENDS=	libmesode.so:net-im/libmesode \
 		libuuid.so:misc/e2fsprogs-libuuid \
 		libgpgme.so:security/gpgme \
 		libassuan.so:security/libassuan \
-		libgpg-error.so:security/libgpg-error \
-		libgcrypt.so:security/libgcrypt
+		libgpg-error.so:security/libgpg-error
 
 USES=		ncurses pkgconfig ssl python readline autoreconf libtool gnome
 USE_GNOME=	glib20
-USE_GITHUB=	yes
-GH_ACCOUNT=	profanity-im
-GH_PROJECT=	profanity
 
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--enable-otr --enable-python-plugins --enable-c-plugins \

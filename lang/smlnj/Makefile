@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	smlnj
-PORTVERSION=	110.91
+PORTVERSION=	110.84
 CATEGORIES=	lang
 MASTER_SITES=	http://smlnj.cs.uchicago.edu/dist/working/${PORTVERSION}/ \
 		ftp://mirror.free.de/http/smlnj.cs.uchicago.edu/dist/working/${PORTVERSION}/
@@ -27,10 +27,12 @@ SUB_FILES=	pkg-install
 SUB_LIST=	EXEBINDIR=${MLBINRELATIVE} EXENAMES="${MLEXE}"
 PKGDEINSTALL=	${PKGINSTALL}
 
-OPTIONS_DEFINE=		EVERYTHING RECOMPILE
+OPTIONS_DEFINE=		EVERYTHING RECOMPILE POSITION64
 RECOMPILE_IMPLIES=	EVERYTHING
+POSITION64_IMPLIES=	RECOMPILE
 EVERYTHING_DESC=	install everything from the SML/NJ distribution
 RECOMPILE_DESC=		recompile the SML compiler - implies EVERYTHING
+POSITION64_DESC=	use 64bit file positions - implies RECOMPILE
 
 .include <bsd.port.pre.mk>
 
@@ -39,7 +41,6 @@ CFLAGS+=	-m32
 AS?=		as
 ASFLAGS+=	--32
 .endif
-CPPASFLAGS+=	-DGNU_ASSEMBLER
 .if (${ARCH} == "i386" || ${ARCH} == "amd64")
 MLARCH=		x86
 DISTFILES+=	boot.x86-unix.tgz
@@ -50,8 +51,11 @@ DISTFILES+=	MLRISC.tgz asdl.tgz ckit.tgz cml.tgz doc.tgz heap2asm.tgz \
 
 PLIST_SUB+=	MLARCH=${MLARCH}
 
-# Useful for tuning recompilation.
+.if ${PORT_OPTIONS:MPOSITION64}
+CMB_COMMAND=	'(\#set o CMB.symval) "USE_64_BIT_POSITIONS" (SOME 1);'
+.else
 CMB_COMMAND=
+.endif
 
 .if ${PORT_OPTIONS:MEVERYTHING}
 DISTFILES+=	cm.tgz compiler.tgz eXene.tgz \
@@ -78,7 +82,6 @@ MLTARGETS=	heap2asm
 MLEXE=		asdlgen heap2exec ml-antlr ml-build ml-burg ml-lex \
 		ml-makedepend ml-nlffigen ml-ulex ml-yacc sml
 .if ${PORT_OPTIONS:MEVERYTHING}
-MLSTDSRCDIRS+=	eXene pgraph smlnj-c
 MLTARGETS+=	eXene mlrisc-tools nowhere pgraph-util src-smlnj
 MLEXE+=		nowhere
 PLIST=		${WRKDIR}/.PLIST
@@ -98,6 +101,10 @@ pre-fetch:
 .if ! ${PORT_OPTIONS:MRECOMPILE}
 	@${ECHO} 'Use port option RECOMPILE to recompile the compiler.'
 	@${ECHO} ' This implies EVERYTHING.'
+.endif
+.if ! ${PORT_OPTIONS:MPOSITION64}
+	@${ECHO} 'Use port option POSITION64 to use 64bit file positions.'
+	@${ECHO} ' This implies RECOMPILE.'
 .endif
 	@${ECHO}
 
@@ -170,8 +177,7 @@ do-build:
 	MLSTANDARDPATCHDIRS=`${MLSTANDARDPATCHDIRS_CMD}` \
 	MLSOURCEPATCHES=`${MLSOURCEPATCHES_CMD}` \
 	CFLAGS='${CFLAGS}' LDFLAGS='${LDFLAGS}' \
-	AS='${AS}' ASFLAGS='${ASFLAGS}' CPPASFLAGS='${CPPASFLAGS}' \
-	EXTRA_DEFS='${EXTRA_DEFS}' \
+	AS='${AS}' ASFLAGS='${ASFLAGS}' EXTRA_DEFS='${EXTRA_DEFS}' \
 	./config/install.sh
 .if ${PORT_OPTIONS:MRECOMPILE}
 	-${RM} ${WRKSRC}/config/targets.customized
@@ -198,8 +204,7 @@ do-build:
 	PATCH_ARGS="-d ${PATCH_WRKSRC} ${PATCH_ARGS}" \
 	MLNORUNTIMECLEAN=yes RECOMPILEDIR="${RECOMPILEDIR}" \
 	CFLAGS='${CFLAGS}' LDFLAGS='${LDFLAGS}' \
-	AS='${AS}' ASFLAGS='${ASFLAGS}' CPPASFLAGS='${CPPASFLAGS}' \
-	EXTRA_DEFS='${EXTRA_DEFS}' \
+	AS='${AS}' ASFLAGS='${ASFLAGS}' EXTRA_DEFS='${EXTRA_DEFS}' \
 	./config/install.sh
 .endif
 
@@ -297,8 +302,7 @@ do-install:
 	STAGEDIR="${STAGEDIR}" MLLIB="${MLLIB}" \
 	INSTALLDIR="${STAGEDIR}${MLROOT}" \
 	CFLAGS='${CFLAGS}' LDFLAGS='${LDFLAGS}' \
-	AS='${AS}' ASFLAGS='${ASFLAGS}' CPPASFLAGS='${CPPASFLAGS}' \
-	EXTRA_DEFS='${EXTRA_DEFS}' \
+	AS='${AS}' ASFLAGS='${ASFLAGS}' EXTRA_DEFS='${EXTRA_DEFS}' \
 	./config/install.sh
 .else
 	@${ECHO} '(* Rebuilding the recompiled libs: *)'
@@ -316,8 +320,7 @@ do-install:
 	STAGEDIR="${STAGEDIR}" MLLIB="${MLLIB}" \
 	INSTALLDIR="${STAGEDIR}${MLROOT}" RECOMPILEDIR="${RECOMPILEDIR}" \
 	CFLAGS='${CFLAGS}' LDFLAGS='${LDFLAGS}' \
-	AS='${AS}' ASFLAGS='${ASFLAGS}' CPPASFLAGS='${CPPASFLAGS}' \
-	EXTRA_DEFS='${EXTRA_DEFS}' \
+	AS='${AS}' ASFLAGS='${ASFLAGS}' EXTRA_DEFS='${EXTRA_DEFS}' \
 	./config/install.sh
 .endif
 	@${ECHO} '(* Installing man pages. *)'

@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	pithos
-PORTVERSION=	1.5.0
+PORTVERSION=	1.4.1
 CATEGORIES=	audio
 
 MAINTAINER=	jhixson@FreeBSD.org

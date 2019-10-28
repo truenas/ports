@@ -16,8 +16,12 @@ USE_GITHUB=	yes
 
 GH_ACCOUNT=	jesseduffield
 
-GO_PKGNAME=	github.com/${GH_ACCOUNT}/${PORTNAME}
-
 PLIST_FILES=	bin/${PORTNAME}
+
+post-extract:
+	${MKDIR} ${GO_WRKSRC:H}
+	${LN} -sf ${WRKSRC} ${GO_WRKSRC:H}/${PORTNAME}
+	${MKDIR} ${GO_WRKSRC}/vendor/github.com/${GH_ACCOUNT}/${PORTNAME}/
+	${MV} ${GO_WRKSRC}/pkg ${GO_WRKSRC}/vendor/github.com/${GH_ACCOUNT}/${PORTNAME}/
 
 .include <bsd.port.mk>

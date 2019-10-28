@@ -2,8 +2,8 @@
 
 PORTNAME=	python-poppler-qt5
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.74.0
-PORTREVISION=	1
+DISTVERSION=	0.24.2
+PORTREVISION=	6
 CATEGORIES=	graphics python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
@@ -17,14 +17,11 @@ LIB_DEPENDS=	libpoppler-qt5.so:graphics/poppler-qt5
 
 USES=		compiler:c++11-lang pkgconfig pyqt:5 python:3.4+ qmake qt:5
 USE_PYQT=	gui xml sip_build
-USE_PYTHON=	autoplist distutils
+USE_PYTHON=	distutils autoplist
 USE_GITHUB=	yes
 GH_ACCOUNT=	wbsoft
 
 PYDISTUTILS_BUILD_TARGET=	build_ext
-PYDISTUTILS_BUILDARGS+=	--pyqt-sip-dir=${PYQT_SIPDIR}
-
-post-install:
-	@${STRIP_CMD} ${STAGEDIR}${PYTHONPREFIX_SITELIBDIR}/popplerqt5.so
+PYDISTUTILS_BUILDARGS+=		--pyqt-sip-dir=${PYQT_SIPDIR}
 
 .include <bsd.port.mk>

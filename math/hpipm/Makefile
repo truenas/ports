@@ -17,10 +17,4 @@ USES=		cmake localbase
 USE_GITHUB=	yes
 GH_ACCOUNT=	giaf
 
-.include <bsd.port.pre.mk>
-
-.if ${ARCH} != amd64 && ${ARCH} != i386
-CMAKE_ARGS+=	-DAVX:BOOL=OFF
-.endif
-
-.include <bsd.port.post.mk>
+.include <bsd.port.mk>

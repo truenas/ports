@@ -2,16 +2,15 @@
 
 PORTNAME=	xdm
 PORTVERSION=	1.1.12
-PORTREVISION=	1
 CATEGORIES=	x11
 
 MAINTAINER=	x11@FreeBSD.org
 COMMENT=	X.Org X display manager
 
 LICENSE=	MIT
-LICENSE_FILE=	${WRKSRC}/COPYING
 
-USES=		cpe libtool xorg xorg-cat:app
+XORG_CAT=	app
+USES=		cpe libtool
 USE_LDCONFIG=	yes
 USE_XORG=	x11 xau xaw xdmcp xext xinerama xmu xpm xrender xt
 CPE_PRODUCT=	x_display_manager

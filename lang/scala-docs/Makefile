@@ -2,17 +2,14 @@
 # $FreeBSD$
 
 PORTNAME=	scala-docs
-PORTVERSION=	2.13.1
+PORTVERSION=	2.12.8
 CATEGORIES=	lang java
 MASTER_SITES=	http://www.scala-lang.org/files/archive/
 
 MAINTAINER=	ale@FreeBSD.org
 COMMENT=	Documentation for the Scala libraries & compiler
 
-LICENSE=	APACHE20
-
 USES=		tar:txz
-
 NO_BUILD=	yes
 NO_ARCH=	yes
 
@@ -20,11 +17,15 @@ PORTDOCS=	*
 
 OPTIONS_DEFINE=	DOCS
 
-DOCS_IGNORE_OFF=port only installs documentation
-
 WRKSRC=		${WRKDIR}/scala-${PORTVERSION}
 
-#PORTSCOUT=	limit:^2\.13\.
+PORTSCOUT=	limit:^2\.12\.
+
+.include <bsd.port.options.mk>
+
+.if ! ${PORT_OPTIONS:MDOCS}
+IGNORE=		port only installs documentation
+.endif
 
 do-install:
 	@${ECHO} -n ">> Installing documentation in ${DOCSDIR}..."

@@ -8,8 +8,10 @@ PKGNAMEPREFIX=	gnatcross-
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	C/Ada cross-compiler, target: ${LABEL_TARGET}
 
+BROKEN=		unfetchable
+
 LABEL_TARGET=	FreeBSD/ARM64
-DROID_TARGET=	aarch64-aux-freebsd11.3
+DROID_TARGET=	aarch64-aux-freebsd11.0
 ARG_ARCH=	# don't specify
 ARG_FPU=	# don't specify
 ARG_FLOATSOFT=	# don't specify

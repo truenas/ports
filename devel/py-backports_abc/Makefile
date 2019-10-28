@@ -7,7 +7,7 @@ CATEGORIES=	devel python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	sunpoet@FreeBSD.org
+MAINTAINER=	sunpoets@FreeBSD.org
 COMMENT=	Backport of recent additions to the 'collections.abc' module
 
 LICENSE=	PSFL

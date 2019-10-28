@@ -5,7 +5,7 @@ DISTVERSIONPREFIX=	v
 DISTVERSION=	1.32
 CATEGORIES=	comms
 
-MAINTAINER=	dmgk@FreeBSD.org
+MAINTAINER=	dg@syrec.org
 COMMENT=	Simple TTY terminal I/O application
 
 LICENSE=	GPLv2+

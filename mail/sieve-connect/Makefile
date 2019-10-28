@@ -2,11 +2,12 @@
 # $FreeBSD$
 
 PORTNAME=	sieve-connect
-DISTVERSION=	0.90
+DISTVERSION=	0.89
+PORTREVISION=	1
 CATEGORIES=	mail
 MASTER_SITES=	http://people.spodhuis.org/phil.pennock/software/
 
-MAINTAINER=	bapt@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Command-line client for the MANAGESIEVE protocol
 
 LICENSE=	BSD3CLAUSE

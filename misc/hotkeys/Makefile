@@ -3,16 +3,18 @@
 
 PORTNAME=	hotkeys
 PORTVERSION=	0.5.7.1
-PORTREVISION=	18
+PORTREVISION=	16
 CATEGORIES=	misc
-MASTER_SITES=	https://BSDforge.com/projects/source/misc/hotkeys/${PORTVERSION}/
+MASTER_SITES=	http://ypwong.org/hotkeys/${PORTVERSION}/
 DISTNAME=	hotkeys_${PORTVERSION}
 
-MAINTAINER=	portmaster@BSDforge.com
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Allows usage of special keys on internet/multimedia keyboards
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
+
+BROKEN=		unfetchable
 
 LIB_DEPENDS=	libxml2.so:textproc/libxml2
 

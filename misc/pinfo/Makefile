@@ -3,7 +3,7 @@
 
 PORTNAME=	pinfo
 PORTVERSION=	0.6.10
-PORTREVISION=	5
+PORTREVISION=	4
 CATEGORIES=	misc
 MASTER_SITES=	GENTOO \
 		http://alioth.debian.org/frs/download.php/file/3351/
@@ -16,9 +16,10 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 
 BROKEN_aarch64=	Fails to link: missing sbrk
 
-USES=		autoreconf gettext-tools libtool localbase makeinfo ncurses tar:bzip2
+USES=		autoreconf gettext-tools libtool makeinfo ncurses tar:bzip2
 GNU_CONFIGURE=	yes
-CONFIGURE_ARGS=	--with-curses=${NCURSESBASE}
+CPPFLAGS+=	-I${LOCALBASE}/include
+LIBS+=		-L${LOCALBASE}/lib
 
 INFO=		pinfo
 PLIST_FILES=	bin/pinfo etc/pinforc man/man1/pinfo.1.gz

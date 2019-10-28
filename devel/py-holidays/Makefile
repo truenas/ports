@@ -11,7 +11,7 @@ MAINTAINER=	gmm@tutanota.com
 COMMENT=	Generate country, province, & state specific holiday sets on the fly
 
 LICENSE=	MIT
-LICENSE_FILE=	${WRKSRC}/LICENSE
+LICENSE_FILE=	LICENSE
 
 USES=		python
 USE_PYTHON=	autoplist distutils

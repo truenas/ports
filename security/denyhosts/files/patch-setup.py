@@ -1,21 +1,24 @@
---- setup.py.orig	2015-09-16 19:40:15 UTC
+--- setup.py.orig
 +++ setup.py
-@@ -11,8 +11,8 @@ from DenyHosts.util import normalize_whi
- from DenyHosts.version import VERSION
+@@ -8,7 +8,7 @@
+ from glob import glob
  
- etcpath = "/etc"
--manpath = "/usr/share/man/man8"
+ 
 -libpath = "/usr/share/denyhosts"
-+manpath = "%%PREFIX%%/man/man8"
 +libpath = "%%PREFIX%%/share/denyhosts"
- scriptspath = ospj("scripts", libpath)
- pluginspath = ospj("plugins", libpath)
+ scriptspath = "%s/scripts" % libpath
+ pluginspath = "%s/plugins" % libpath
  
-@@ -28,7 +28,6 @@ setup(
-     packages=["DenyHosts"],
-     requires=["ipaddr"],
-     data_files=[
--        (etcpath, glob("denyhosts.conf")),
-         (manpath, glob("denyhosts.8")),
-     ],
-     license="GPL v2",
+@@ -26,11 +26,8 @@
+       data_files=[(libpath, glob("denyhosts.cfg-dist")),
+                   (libpath, glob("setup.py")),
+                   (libpath, glob("daemon-control-dist")),
+-                  (libpath, glob("CHANGELOG.txt")),
+-                  (libpath, glob("README.txt")),
+                   (scriptspath, glob("scripts/*")),
+-                  (pluginspath, glob("plugins/*")),
+-                  (libpath, glob("LICENSE.txt"))],
++                  (pluginspath, glob("plugins/*"))],
+       license="GPL v2",
+       ##extra_path='denyhosts',
+       long_description="""

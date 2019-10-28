@@ -7,7 +7,7 @@ PORTREVISION=	1
 CATEGORIES=	misc
 MASTER_SITES=	http://matt.immute.net/src/mtail/
 
-MAINTAINER=	dmgk@FreeBSD.org
+MAINTAINER=	dg@syrec.org
 COMMENT=	Small tail workalike that performs output coloring
 
 LICENSE=	MIT

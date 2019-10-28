@@ -3,7 +3,6 @@
 
 PORTNAME=	cinnamon-screensaver
 PORTVERSION=	2.4.1
-PORTREVISION=	1
 CATEGORIES=	x11 gnome
 DIST_SUBDIR=	gnome3
 
@@ -22,10 +21,10 @@ RUN_DEPENDS=	pam_helper:security/pam_helper \
 		gsettings-desktop-schemas>=3.2.0:devel/gsettings-desktop-schemas \
 		gnome-keyring>=0:security/gnome-keyring
 
-USES=		autoreconf:build gettext gmake libtool pathfix pkgconfig xorg
+USES=		autoreconf:build gettext gmake libtool pathfix pkgconfig
 USE_GITHUB=	yes
 GH_ACCOUNT=	linuxmint
-USE_XORG=	x11 xext xxf86vm xscrnsaver
+USE_XORG=	x11 xext xxf86vm xxf86misc xscrnsaver
 USE_GNOME=	gnomedesktop3 gnomeprefix intlhack intlhack libgnomekbd libxml2
 GNU_CONFIGURE=	yes
 CPPFLAGS+=	-I${LOCALBASE}/include

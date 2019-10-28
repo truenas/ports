@@ -78,7 +78,6 @@ PORTSCOUT=	limit:^\d+\.\d+\.[1-9].*
 
 .include <bsd.port.pre.mk>
 
-BROKEN=			checksum and size mismatch
 .if ${SSL_DEFAULT} == base
 BROKEN_FreeBSD_12=	fails to compile: incomplete definition of type 'struct bio_st'
 BROKEN_FreeBSD_13=	fails to compile: incomplete definition of type 'struct bio_st'

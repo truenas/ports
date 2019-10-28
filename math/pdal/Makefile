@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	pdal
-DISTVERSION=	2.0.1
+DISTVERSION=	1.9.1
+PORTREVISION=	3
 CATEGORIES=	math databases graphics
 
 MAINTAINER=	lbartoletti@tuxfamily.org
@@ -11,7 +12,6 @@ COMMENT=	Library for translating and manipulating point cloud data
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
-BUILD_DEPENDS=	nlohmann-json>0:devel/nlohmann-json
 LIB_DEPENDS=	libgdal.so:graphics/gdal \
 		libgeos.so:graphics/geos \
 		libboost_thread.so:devel/boost-libs \
@@ -19,13 +19,16 @@ LIB_DEPENDS=	libgdal.so:graphics/gdal \
 		libgeotiff.so:graphics/libgeotiff \
 		libxml2.so:textproc/libxml2 \
 		liblaszip.so:archivers/laszip \
-		libzstd.so:archivers/zstd
+		libjsoncpp.so:devel/jsoncpp
 
 USES=		cmake compiler:c++11-lib pathfix pkgconfig
 USE_LDCONFIG=	yes
 USE_GITHUB=	yes
 GH_ACCOUNT=	${PORTNAME:tu}
 GH_PROJECT=	${GH_ACCOUNT}
+
+# Unhide std::to_string() to fix build with GCC (see ports/193528 for details).
+CXXFLAGS+=	-D_GLIBCXX_USE_C99
 
 CMAKE_ON=	WITH_LASZIP #LASZIP is recommended
 

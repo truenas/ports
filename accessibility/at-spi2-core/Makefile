@@ -17,7 +17,7 @@ LIB_DEPENDS=	libdbus-1.so:devel/dbus \
 
 PORTSCOUT=	limitw:1,even
 
-USES=		gettext gnome localbase meson pkgconfig tar:xz xorg
+USES=		gettext gnome localbase meson pkgconfig tar:xz
 USE_GNOME=	glib20 introspection:build
 USE_XORG=	ice sm x11 xi xtst xext
 USE_LDCONFIG=	yes

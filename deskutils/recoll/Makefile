@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	recoll
-DISTVERSION=	1.25.22
+DISTVERSION=	1.25.16
+PORTREVISION=	1
 CATEGORIES=	deskutils
 MASTER_SITES=	https://www.lesbonscomptes.com/recoll/
 

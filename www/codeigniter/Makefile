@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	codeigniter
-PORTVERSION=	3.1.11
+PORTVERSION=	3.1.10
 CATEGORIES=	www
 
 MAINTAINER=	sunpoet@FreeBSD.org

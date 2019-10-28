@@ -4,7 +4,7 @@
 PORTNAME=	dkimproxy
 PORTVERSION=	1.4.1
 PORTREVISION=	1
-CATEGORIES=	mail
+CATEGORIES=	mail ipv6
 MASTER_SITES=	SF
 
 MAINTAINER=	andrey@bsdnir.info

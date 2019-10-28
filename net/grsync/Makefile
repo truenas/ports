@@ -3,7 +3,7 @@
 
 PORTNAME=	grsync
 PORTVERSION=	1.2.6
-CATEGORIES=	net
+CATEGORIES=	net ipv6
 MASTER_SITES=	http://www.opbyte.it/release/ \
 		LOCAL/martymac
 

@@ -1,14 +1,6 @@
---- ulxmlrpcpp/contrib/ssl_connection.cpp.orig	2009-08-12 14:37:53 UTC
+--- ulxmlrpcpp/contrib/ssl_connection.cpp.orig
 +++ ulxmlrpcpp/contrib/ssl_connection.cpp
-@@ -40,6 +40,7 @@
- //STL
- #include <deque>
- #include <iostream>
-+#include <cstring>
- 
- #include <errno.h>
- 
-@@ -227,7 +228,11 @@ ULXR_API_IMPL(void) SSLConnection::initializeCTX()
+@@ -227,7 +227,11 @@
  	if (ssl_ctx != 0)
      	    SSL_CTX_free(ssl_ctx);
  

@@ -3,7 +3,6 @@
 
 PORTNAME=	bcftools
 PORTVERSION=	1.9
-PORTREVISION=	1
 CATEGORIES=	biology
 
 MAINTAINER=	cartwright@asu.edu

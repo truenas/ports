@@ -3,7 +3,7 @@
 PORTNAME=	ipv6toolkit
 PORTVERSION=	2.0
 DISTVERSIONPREFIX=	v
-CATEGORIES=	security
+CATEGORIES=	security ipv6
 MASTER_SITES=	http://www.si6networks.com/tools/ipv6toolkit/
 
 MAINTAINER=	hrs@FreeBSD.org

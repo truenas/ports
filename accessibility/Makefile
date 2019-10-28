@@ -16,8 +16,6 @@
     SUBDIR += kmouth
     SUBDIR += libqaccessibilityclient
     SUBDIR += linux-c6-atk
-    SUBDIR += linux-c7-at-spi2-atk
-    SUBDIR += linux-c7-at-spi2-core
     SUBDIR += linux-c7-atk
     SUBDIR += orca
     SUBDIR += py-atspi

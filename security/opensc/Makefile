@@ -2,8 +2,9 @@
 # $FreeBSD$
 
 PORTNAME=	opensc
-DISTVERSION=	0.20.0-rc3
+PORTVERSION=	0.19.0
 CATEGORIES=	security devel
+MASTER_SITES=	https://github.com/OpenSC/OpenSC/releases/download/${PORTVERSION}/
 
 MAINTAINER=	ale@FreeBSD.org
 COMMENT=	Libraries and utilities to access smart cards
@@ -23,11 +24,6 @@ OPENCT_DESC=	Use OpenCT backend
 CTAPI_DESC=	Use CT-API backend
 SM_DESC=	Enable secure messaging support
 NOTIFY_DESC=	Enable notification support
-
-USE_GITHUB=	yes
-GH_ACCOUNT=	OpenSC
-GH_PROJECT=	${GH_ACCOUNT}
-GH_TAGNAME=	${GH_PROJECT}-${DISTVERSION}
 
 GNU_CONFIGURE=	yes
 USE_LDCONFIG=	yes

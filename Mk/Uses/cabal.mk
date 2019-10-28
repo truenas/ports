@@ -55,7 +55,6 @@ EXECUTABLES?=	${PORTNAME}
 CABAL_HOME=	${WRKDIR}/cabal-home
 CABAL_LIBEXEC=	libexec/cabal
 CABAL_EXTRACT_SUFX=	.tar.gz
-CABAL_ARCH=	${ARCH:S/amd64/x86_64/:C/armv.*/arm/:S/powerpc64/ppc64/}
 
 .  if !defined(CABAL_BOOTSTRAP)
 BUILD_DEPENDS+=	cabal:devel/hs-cabal-install \
@@ -80,7 +79,6 @@ DISTFILES?=	${PORTNAME}-${PORTVERSION}${CABAL_EXTRACT_SUFX}
 EXTRACT_ONLY?=	${PORTNAME}-${PORTVERSION}${CABAL_EXTRACT_SUFX}
 
 _USES_extract=	701:cabal-post-extract
-_USES_patch=	701:cabal-post-patch
 _USES_stage=	751:cabal-post-install-script
 
 BUILD_TARGET?=	${EXECUTABLES:S/^/exe:&/}
@@ -139,6 +137,9 @@ make-use-cabal-revs:
 .  if !defined(CABAL_BOOTSTRAP)
 
 cabal-post-extract:
+.    if ${cabal_ARGS:Mhpack}
+	cd ${WRKSRC} && ${SETENV} HOME=${CABAL_HOME} hpack
+.    endif
 .    for package in ${_use_cabal}
 .      if ${package:C/[^_]*//:S/_//} != ""
 		cp ${DISTDIR}/${DIST_SUBDIR}/${package:C/_[0-9]+//}/revision/${package:C/[^_]*//:S/_//}.cabal `find ${WRKDIR}/${package:C/_[0-9]+//} -name *.cabal -depth 1`
@@ -148,11 +149,6 @@ cabal-post-extract:
 .    endfor
 	mkdir -p ${CABAL_HOME}/.cabal
 	touch ${CABAL_HOME}/.cabal/config
-
-cabal-post-patch:
-.    if ${cabal_ARGS:Mhpack}
-	cd ${WRKSRC} && ${SETENV} HOME=${CABAL_HOME} hpack
-.    endif
 
 .    if !target(do-build)
 do-build:

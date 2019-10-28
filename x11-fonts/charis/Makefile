@@ -2,12 +2,13 @@
 # $FreeBSD$
 
 PORTNAME=	CharisSIL
-PORTVERSION=	5.000
+PORTVERSION=	4.114
+PORTREVISION=	2
 CATEGORIES=	x11-fonts
 MASTER_SITES=	http://scripts.sil.org/cms/scripts/render_download.php?&format=file&media_id=${MEDIA_ID}&filename=/ \
 		LOCAL/bf
 
-MAINTAINER=	thierry@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Charis SIL TrueType font collection
 
 LICENSE=	OFL11
@@ -16,7 +17,6 @@ USES=		fonts zip
 
 MEDIA_ID=	${DISTNAME}${EXTRACT_SUFX}
 NO_BUILD=	yes
-NO_ARCH=	yes
 
 .for type in B BI I R
 PLIST_FILES+=	${FONTSDIR}/${PORTNAME}-${type}.ttf

@@ -5,7 +5,7 @@ PORTVERSION=	g20171216
 PORTREVISION=	8
 CATEGORIES=	sysutils
 
-MAINTAINER=	dmgk@FreeBSD.org
+MAINTAINER=	dg@syrec.org
 COMMENT=	Notification system for tiling window managers
 
 LICENSE=	LGPL3

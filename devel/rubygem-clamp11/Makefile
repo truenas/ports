@@ -13,11 +13,10 @@ COMMENT=	Command-line utility framework for Ruby
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USES=		gem
-USE_RUBY=	yes
+PORTSCOUT=	limit:^1\.1\.
 
 NO_ARCH=	yes
-
-PORTSCOUT=	limit:^1\.1\.
+USE_RUBY=	yes
+USES=		gem
 
 .include <bsd.port.mk>

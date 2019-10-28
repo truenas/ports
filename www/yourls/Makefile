@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	yourls
-PORTVERSION=	1.7.4
+PORTVERSION=	1.7.3
 CATEGORIES=	www
 
 MAINTAINER=	sunpoet@FreeBSD.org

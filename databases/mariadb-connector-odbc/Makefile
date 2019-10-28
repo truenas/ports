@@ -2,7 +2,7 @@
 
 PORTNAME=	mariadb
 DISTVERSION=	3.0.9
-CATEGORIES=	databases
+CATEGORIES=	databases ipv6
 MASTER_SITES=	http://ftp.osuosl.org/pub/${SITESDIR}/ \
 		http://mirrors.supportex.net/${SITESDIR}/ \
 		http://mirror2.hs-esslingen.de/pub/Mirrors/${SITESDIR}/ \

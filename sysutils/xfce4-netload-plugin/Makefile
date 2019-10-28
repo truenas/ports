@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	xfce4-netload-plugin
-PORTVERSION=	1.3.2
+PORTVERSION=	1.3.1
 CATEGORIES=	sysutils xfce
 MASTER_SITES=	XFCE/panel-plugins
 DIST_SUBDIR=	xfce4
@@ -13,8 +13,7 @@ COMMENT=	Network Load plugin for Xfce4
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-USES=		compiler:c11 gettext-tools gmake gnome libtool pkgconfig \
-		tar:bzip2 xfce
+USES=		gettext-tools gmake gnome libtool pkgconfig tar:bzip2 xfce:gtk3
 USE_GNOME=	cairo gtk30 intltool
 USE_XFCE=	panel
 

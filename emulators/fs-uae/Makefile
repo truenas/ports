@@ -2,23 +2,24 @@
 # $FreeBSD$
 
 PORTNAME=	fs-uae
-PORTVERSION=	3.0.0
+PORTVERSION=	2.8.4
+PORTREVISION=	1
 CATEGORIES=	emulators
 MASTER_SITES=	http://fs-uae.net/stable/${PORTVERSION}/
 
-MAINTAINER=	sirdice@gmail.com
+MAINTAINER=	tomse@oagd.net
 COMMENT=	Amiga emulator
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
 BUILD_DEPENDS=	zip:archivers/zip
-LIB_DEPENDS=	libmpeg2.so:multimedia/libmpeg2 \
+LIB_DEPENDS=	libpng.so:graphics/png \
 		libopenal.so:audio/openal-soft \
-		libpng.so:graphics/png
+		libmpeg2.so:multimedia/libmpeg2
 
-USES=		compiler:c11 desktop-file-utils gettext gl gmake gnome \
-		localbase pkgconfig sdl shared-mime-info xorg
+USES=		compiler:c11 desktop-file-utils gettext gl gmake \
+		gnome localbase pkgconfig shared-mime-info
 
 USE_SDL=	sdl2
 USE_GL=		gl
@@ -33,10 +34,5 @@ CONFIGURE_ARGS=	--disable-jit
 CFLAGS+=	-Wno-c++11-narrowing
 
 OPTIONS_DEFINE=	DOCS
-
-post-patch:
-	@${REINPLACE_CMD} -e 's|= bind|= ::bind|' \
-		${WRKSRC}/src/od-fs/bsdsocket_posix.cpp \
-		${WRKSRC}/src/support/socket.cpp
 
 .include <bsd.port.mk>

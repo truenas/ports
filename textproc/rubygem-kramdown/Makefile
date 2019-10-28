@@ -2,21 +2,22 @@
 # $FreeBSD$
 
 PORTNAME=	kramdown
-PORTVERSION=	2.1.0
+PORTVERSION=	1.17.0
 CATEGORIES=	textproc rubygems
 MASTER_SITES=	RG
 
-MAINTAINER=	sunpoet@FreeBSD.org
+MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Yet-another-markdown-parser but fast, pure Ruby
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-USES=		gem
-USE_RUBY=	yes
-
 NO_ARCH=	yes
+USE_RUBY=	yes
+USES=		gem shebangfix
 
 PLIST_FILES=	bin/kramdown
+
+SHEBANG_FILES=	benchmark/*.sh
 
 .include <bsd.port.mk>

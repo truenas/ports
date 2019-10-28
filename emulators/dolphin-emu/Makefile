@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	dolphin-emu
-PORTVERSION=	5.0.10960
+PORTVERSION=	5.0.9209
+PORTREVISION=	4
 CATEGORIES=	emulators
 
 MAINTAINER=	martymac@FreeBSD.org
@@ -14,14 +15,13 @@ LICENSE_FILE=	${WRKSRC}/license.txt
 BROKEN_aarch64=	fails to build: Source/Core/Common/ArmCPUDetect.cpp:5:10: fatal error: 'asm/hwcap.h' file not found
 
 # Notes on dependencies:
+# - alsa support disabled (not optimal)
 # - enet and soundtouch come from Externals/ as Dolphin's versions diverge
 #   (see comments in CMakeLists.txt)
-# - alsa support has been disabled (not optimal)
 # Various problems that may be addressed in the future:
 # - xxhash comes from Externals/ as it cannot be properly detected yet
-# - freesurround comes from Externals/ as it is not available from ports yet
-# - cubeb comes from Externals/ as it is not available from ports yet
 # - gtest detection is missing (Externals/ version enforced by CMakeLists.txt)
+# - cubeb comes from Externals/ as it is not available from ports yet
 LIB_DEPENDS=	libpulse.so:audio/pulseaudio \
 		libavcodec.so:multimedia/ffmpeg \
 		libavdevice.so:multimedia/ffmpeg \
@@ -42,11 +42,11 @@ LIB_DEPENDS=	libpulse.so:audio/pulseaudio \
 		libhidapi.so:comms/hidapi
 
 USES=		cmake compiler:c++17-lang desktop-file-utils gl iconv \
-		pkgconfig qmake qt:5 sdl xorg
+		pkgconfig qmake qt:5 sdl
 
 USE_GITHUB=	yes
 GH_PROJECT=	dolphin
-GH_TAGNAME=	19ed641
+GH_TAGNAME=	2dcd058
 
 USE_GL=		gl glew glu
 USE_SDL=	sdl2

@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	xcircuit
-PORTVERSION=	3.10.13
+PORTVERSION=	3.10.12
 PORTEPOCH=	1
 CATEGORIES=	cad
 MASTER_SITES=	http://opencircuitdesign.com/xcircuit/archive/ \
@@ -16,7 +16,7 @@ LICENSE=	GPLv2
 LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig \
 		libfreetype.so:print/freetype2
 
-USES=		ghostscript:x11,run gmake gnome pkgconfig tar:tgz tk:tea xorg
+USES=		ghostscript:x11,run gmake gnome pkgconfig tar:tgz tk:tea
 
 OPTIONS_DEFINE=	EXAMPLES
 

@@ -1,8 +1,9 @@
 # Created by: Olivier Duchateau
 # $FreeBSD$
+#
 
 PORTNAME=	granite
-DISTVERSION=	5.2.5
+DISTVERSION=	5.2.4
 CATEGORIES=	x11-toolkits
 
 MAINTAINER=	tobik@FreeBSD.org
@@ -24,6 +25,6 @@ INSTALLS_ICONS=	yes
 USE_LDCONFIG=	yes
 
 BINARY_ALIAS=	python3=${PYTHON_CMD}
-PLIST_SUB=	DISTVERSION=${DISTVERSION}
+CFLAGS+=	-Wno-return-type
 
 .include <bsd.port.mk>

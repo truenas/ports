@@ -14,7 +14,7 @@ LICENSE_NAME=	Tcl/Tk License
 LICENSE_FILE=	${WRKSRC}/license.terms
 LICENSE_PERMS=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
 
-USES=		tk:tea xorg
+USES=		tk:tea
 USE_LDCONFIG=	${PREFIX}/lib/${TCL_PKG}
 USE_XORG=	x11
 TCL_PKG=	treectrl${PORTVERSION}

@@ -2,8 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	tor
-DISTVERSION=	0.4.1.6
-CATEGORIES=	security net
+DISTVERSION=	0.4.1.5
+CATEGORIES=	security net ipv6
 MASTER_SITES=	TOR
 
 MAINTAINER=	yuri@FreeBSD.org

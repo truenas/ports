@@ -153,6 +153,7 @@ bin/mwm
 bin/mxmkmf
 bin/uil
 bin/xmbind
+include/Dt/Print.h
 include/Mrm/MrmAppl.h
 include/Mrm/MrmDecls.h
 include/Mrm/MrmPrivate.h
@@ -330,6 +331,10 @@ lib/X11/app-defaults/Mwm
 lib/X11/mwm/README
 lib/X11/mwm/alt.map
 lib/X11/mwm/system.mwmrc
+lib/libDtPrint.a
+lib/libDtPrint.so
+lib/libDtPrint.so.1
+lib/libDtPrint.so.1.0.0
 lib/libMrm.a
 lib/libMrm.so
 lib/libMrm.so.2

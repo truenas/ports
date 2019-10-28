@@ -14,7 +14,8 @@ LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
 
 BUILD_DEPENDS=	asciidoc:textproc/asciidoc \
-		bash:shells/bash
+		bash:shells/bash \
+		gm4:devel/m4
 RUN_DEPENDS=	bash:shells/bash
 LIB_DEPENDS=	libarchive.so.13:archivers/libarchive
 
@@ -26,7 +27,6 @@ CONFIGURE_ARGS=	--with-root-dir="${PACMAN_ROOT}" \
 		--localstatedir=/var
 CONFIGURE_ENV=	LIBSSL_CFLAGS="-I${OPENSSLINC}" LIBSSL_LIBS="-L${OPENSSLLIB}"
 USE_LDCONFIG=	yes
-BINARY_WRAPPERS=	gm4
 
 SUB_FILES=	pkg-message pkg-deinstall
 SUB_LIST=	PACMAN_ROOT="${PACMAN_ROOT}" PREFIX="${PREFIX}"

@@ -4,7 +4,7 @@
 PORTNAME=	socket
 PORTVERSION=	1.2
 #PORTREVISION=	1
-CATEGORIES=	sysutils net
+CATEGORIES=	sysutils net ipv6
 MASTER_SITES=	https://wolfram.schneider.org/src/ LOCAL/wosch
 
 MAINTAINER=	ports@FreeBSD.org

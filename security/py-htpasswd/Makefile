@@ -12,8 +12,6 @@ MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Replacement for htpasswd
 
 BROKEN=		unfetchable
-DEPRECATED=	Unfetchable, unmaintained
-EXPIRATION_DATE=	2019-10-16
 
 USES=		python shebangfix tar:xz
 

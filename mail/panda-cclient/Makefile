@@ -4,7 +4,7 @@
 PORTNAME=	cclient
 PORTVERSION=	20130621
 PORTREVISION=	1
-CATEGORIES=	mail devel
+CATEGORIES=	mail devel ipv6
 PKGNAMEPREFIX=	panda-
 
 MAINTAINER=	thierry@FreeBSD.org

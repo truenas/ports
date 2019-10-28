@@ -2,11 +2,12 @@
 # $FreeBSD$
 
 PORTNAME=	gloox
-DISTVERSION=	1.0.22
+PORTVERSION=	1.0.20
+PORTREVISION=	1
 CATEGORIES=	net-im
 MASTER_SITES=	http://camaya.net/download/
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	dem.procopiou@gmail.com
 COMMENT=	Jabber/XMPP client library
 
 LICENSE=	GPLv3 # with OpenSSL exception

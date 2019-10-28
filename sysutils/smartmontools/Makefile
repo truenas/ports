@@ -3,11 +3,11 @@
 
 PORTNAME=	smartmontools
 PORTVERSION=	7.0
-PORTREVISION=	2
+PORTREVISION=	1
 CATEGORIES=	sysutils
 MASTER_SITES=	SF
 
-MAINTAINER=	samm@freebsd.org
+MAINTAINER=	samm@os2.kiev.ua
 COMMENT=	S.M.A.R.T. disk monitoring tools
 
 LICENSE=	GPLv2+

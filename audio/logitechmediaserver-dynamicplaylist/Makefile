@@ -9,7 +9,7 @@ PKGNAMEPREFIX=	logitechmediaserver-
 DISTNAME=	DynamicPlayList-${PORTVERSION:S/b/beta/}
 DIST_SUBDIR=	logitechmediaserver
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	mark@tranquillussoftware.co.uk
 COMMENT=	Logitech Media Server plugin to create dynamic playlists
 
 LICENSE=	GPLv2+

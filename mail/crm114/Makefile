@@ -3,7 +3,7 @@
 
 PORTNAME=	crm114
 PORTVERSION=	20100106
-PORTREVISION=	4
+PORTREVISION=	2
 # WARNING change versionname in CRM114RELEASENAME too.
 # portlint didn't like this variable at this place.
 # So I have to put it down in this file.
@@ -14,7 +14,7 @@ MASTER_SITES=	http://crm114.sourceforge.net/tarballs/
 # .css extention.
 DISTNAME=	${PORTNAME}-${PORTVERSION}-${CRM114RELEASENAME}.src
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	chalpin@cs.wisc.edu
 COMMENT=	Markov based SpamFilter
 
 LICENSE=	GPLv2
@@ -23,6 +23,7 @@ LIB_DEPENDS=	libtre.so:textproc/libtre
 
 CRM114RELEASENAME=BlameMichelson
 
+USES=		gettext iconv
 USE_CSTD=gnu89
 
 OPTIONS_DEFINE=	NORMALIZEMIME DOCS EXAMPLES
@@ -33,7 +34,8 @@ MAKE_ARGS=	CC="${CC}" prefix="${STAGEDIR}${PREFIX}" \
 		INSTALL_PROGRAM="${INSTALL_PROGRAM}"
 
 CFLAGS+=	-I${LOCALBASE}/include
-LDFLAGS+=	-L${LOCALBASE}/lib -Wl,--as-needed
+LDFLAGS+=	-L${LOCALBASE}/lib
+LIBS+=		-L${LOCALBASE}/lib ${ICONV_LIB} -lintl
 
 CFLAGS+=	-DVERSION='\"${PORTVERSION}-${CRM114RELEASENAME}\"'
 CFLAGS+=	-DNO_LOGL
@@ -55,12 +57,6 @@ post-patch:
 
 # Peter Jeremy recommended the use of b64decode and md5 20040302
 post-install:
-	${STRIP_CMD} \
-		${STAGEDIR}${PREFIX}/bin/crm \
-		${STAGEDIR}${PREFIX}/bin/cssdiff \
-		${STAGEDIR}${PREFIX}/bin/cssutil \
-		${STAGEDIR}${PREFIX}/bin/osbf-util \
-		${STAGEDIR}${PREFIX}/bin/cssmerge
 	@${REINPLACE_CMD} -Ee 's|^(.*/openssl base64 -d/)|#\1|' \
 		-e 's|/mewdecode/|/b64decode -pr/|' ${WRKSRC}/mailfilter.cf
 	@${REINPLACE_CMD} -e 's|/md5sum/|/md5 -r/|' \

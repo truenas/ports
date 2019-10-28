@@ -7,7 +7,7 @@ PORTREVISION=	0
 PORTEPOCH=	1
 CATEGORIES=	irc ruby
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	bdrewery@FreeBSD.org
 COMMENT=	Ruby IRC bot similar to infobot
 
 LICENSE=	GPLv2 MIT

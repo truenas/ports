@@ -5,7 +5,7 @@ PORTNAME=	mrtg
 PORTVERSION=	2.17.4
 PORTREVISION=	7
 PORTEPOCH=	1
-CATEGORIES=	net-mgmt
+CATEGORIES=	net-mgmt ipv6
 MASTER_SITES=	http://oss.oetiker.ch/mrtg/pub/ \
 		ftp://ftp.idilis.ro/mirrors/mrtg/ \
 		ftp://ftp.nstu.ru/pub/sources/nettools/monitoring/ \

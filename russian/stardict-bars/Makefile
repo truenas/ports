@@ -3,11 +3,13 @@
 PORTNAME=	stardict-bars
 PORTVERSION=	2.4.2
 CATEGORIES=	russian
-MASTER_SITES=	http://download.huzheng.org/ru/
+MASTER_SITES=	http://abloz.com/huzheng/stardict-dic/ru/
 DISTNAME=	stardict-en-ru-bars-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	New Comprehensive English-Russian dictionary
+
+BROKEN=		unfetchable
 
 USES=		tar:bzip2
 

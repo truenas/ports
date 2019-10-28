@@ -1,2 +1,0 @@
-bin/tusd
-@dir(%%TUSD_USER%%,%%TUSD_GROUP%%,750) %%TUSD_UPLOAD_DIR%%

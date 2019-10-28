@@ -3,10 +3,10 @@
 PORTNAME=	libav
 PORTVERSION=	12.3
 PORTREVISION=	4
-CATEGORIES=	multimedia audio net
+CATEGORIES=	multimedia audio ipv6 net
 MASTER_SITES=	http://libav.org/releases/
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	dem.procopiou@gmail.com
 COMMENT=	Realtime audio/video conversion library
 
 LICENSE=	GPLv2+

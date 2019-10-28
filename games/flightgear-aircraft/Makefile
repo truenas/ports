@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	flightgear-aircraft
-PORTVERSION=	20190826
+PORTVERSION=	20180516
 CATEGORIES=	games
 # See http://www.flightgear.org/templates.js
 MASTER_SITES=	http://mirrors.ibiblio.org/flightgear/ftp/Aircraft/ \
@@ -54,9 +54,8 @@ LICENSE=	GPLv2
 
 RUN_DEPENDS=	${LOCALBASE}/share/flightgear/version:games/flightgear-data
 
-USES=		zip
-
 NO_BUILD=	yes
+USES=		zip
 WRKSRC=	${WRKDIR}/fgaircraft
 EXTRACT_AFTER_ARGS=	-d ${WRKSRC}
 DATADIR=	${PREFIX}/share/flightgear/Aircraft

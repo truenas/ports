@@ -8,7 +8,7 @@ MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Automatic theorem prover
 
 LICENSE=	BSD2CLAUSE
-LICENSE_FILE=	${WRKSRC}/LICENCE
+xLICENSE_FILE=	${WRKSRC}/LICENSE
 
 USES=		compiler:c++11-lang gmake
 USE_GITHUB=	yes

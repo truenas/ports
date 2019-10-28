@@ -29,7 +29,7 @@ NAGIOS3X_RUN_DEPENDS=	${LOCALBASE}/bin/nagios:net-mgmt/nagios
 NAGIOS4X_RUN_DEPENDS=	${LOCALBASE}/bin/nagios:net-mgmt/nagios4
 NANOSLEEP_CONFIGURE_ENABLE=	nanosleep
 
-USES=		compiler:c11 mysql perl5 ssl
+USES=		mysql perl5 ssl
 USE_RC_SUBR=	ndo2db
 SUB_FILES=	pkg-message
 

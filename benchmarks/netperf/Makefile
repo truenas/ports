@@ -4,7 +4,7 @@
 PORTNAME=	netperf
 PORTVERSION=	2.7.1.p20170921
 PORTREVISION=	1
-CATEGORIES=	benchmarks
+CATEGORIES=	benchmarks ipv6
 
 MAINTAINER=	marius@FreeBSD.org
 COMMENT=	Network performance benchmarking package

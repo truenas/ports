@@ -1,22 +1,21 @@
 # $FreeBSD$
 
 PORTNAME=	jekyll-redirect-from
-PORTVERSION=	0.15.0
+PORTVERSION=	0.14.0
 CATEGORIES=	textproc rubygems
 MASTER_SITES=	RG
 
-MAINTAINER=	sunpoet@FreeBSD.org
+MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Handles redirection URLs for jekyll pages and posts
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
-RUN_DEPENDS=	rubygem-jekyll>=3.3<5.0:www/rubygem-jekyll
-
-USES=		gem shebangfix
-USE_RUBY=	yes
+RUN_DEPENDS=	rubygem-jekyll>=3.3:www/rubygem-jekyll
 
 NO_ARCH=	yes
+USE_RUBY=	yes
+USES=		gem shebangfix
 
 SHEBANG_FILES=	script/*
 

@@ -24,6 +24,8 @@ GH_ACCOUNT=	msoos
 
 WRKSRC_SUBDIR=	python
 
+PYDISTUTILS_BUILDTARGET=	build_ext --include-dirs=${LOCALBASE}/include
+
 post-patch:
 	${REINPLACE_CMD} -e 's|@PROJECT_VERSION@|${PORTVERSION}|' \
 		-e 's|$${CMAKE_C_COMPILER}|${CC}|' \

@@ -9,11 +9,10 @@ MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}-2/${PORTVERSION}/
 MAINTAINER=	multimedia@FreeBSD.org
 COMMENT=	1394-based DC Control Library
 
-LICENSE=	LGPL21+
-LICENSE_FILE=	${WRKSRC}/COPYING
+LICENSE=	LGPL21
 
-USES=		libtool pathfix
 GNU_CONFIGURE=	yes
+USES=	libtool pathfix
 USE_LDCONFIG=	yes
 INSTALL_TARGET=	install-strip
 

@@ -9,8 +9,6 @@ DISTNAME=	Korilla_Icons-v${PORTVERSION}
 
 COMMENT=	KDE Kool Gorilla iconset
 
-BROKEN=		unfetchable
-
 USES=		tar:bzip2
 WRKSRC=		"${WRKDIR}/Kool.Gorilla"
 

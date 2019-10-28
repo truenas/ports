@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	uroot
-DISTVERSION=	2.1-0
+DISTVERSION=	2.0-10
+PORTREVISION=	1
 CATEGORIES=	math
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
@@ -11,6 +12,6 @@ COMMENT=	Unit Root Tests for Seasonal Time Series
 
 LICENSE=	GPLv2
 
-USES=		cran:auto-plist
+USES=		cran:auto-plist,compiles
 
 .include <bsd.port.mk>

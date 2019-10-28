@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	deviceatlas-enterprise-c
-PORTVERSION=	2.1.5
+PORTVERSION=	2.1.4
 CATEGORIES=	net devel
 MASTER_SITES=	#
 

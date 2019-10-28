@@ -1,7 +1,8 @@
 # $FreeBSD$
 
 PORTNAME=	aws-sdk-cpp
-PORTVERSION=	1.7.197
+PORTVERSION=	1.7.113
+PORTREVISION=	1
 CATEGORIES=	devel
 
 MAINTAINER=	danilo@FreeBSD.org
@@ -13,6 +14,7 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 BROKEN_aarch64=		fails to build: runaway process
 BROKEN_armv6=		fails to build: runaway process
 BROKEN_armv7=		fails to build: runaway process
+BROKEN_powerpc64=	fails to build: runaway process
 
 LIB_DEPENDS=	libcurl.so:ftp/curl \
 		libpulse.so:audio/pulseaudio \
@@ -36,16 +38,9 @@ CXXFLAGS+=	-Wno-error -Wno-c11-extensions
 CFLAGS+=	-I${LOCALBASE}/include
 LDFLAGS+=	-L${LOCALBASE}/lib
 
-.include <bsd.port.pre.mk>
-
-.if ${ARCH} == i386
-USE_GCC=        yes
-LDFLAGS+=	-latomic
-.endif
-
 post-patch:
 	${REINPLACE_CMD} -e "s,/pkgconfig,/../libdata/pkgconfig,g" \
 		${WRKSRC}/aws-cpp-sdk-core/CMakeLists.txt \
 		${WRKSRC}/cmake/utilities.cmake
 
-.include <bsd.port.post.mk>
+.include <bsd.port.mk>

@@ -3,10 +3,10 @@
 
 PORTNAME=	sdlpop
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.20
+DISTVERSION=	1.19
 CATEGORIES=	games
 
-MAINTAINER=	pkubaj@FreeBSD.org
+MAINTAINER=	pkubaj@anongoth.pl
 COMMENT=	Open-source port of Prince of Persia
 
 LICENSE=	GPLv3

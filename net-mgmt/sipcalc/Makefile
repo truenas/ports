@@ -3,7 +3,7 @@
 
 PORTNAME=	sipcalc
 PORTVERSION=	1.1.6
-CATEGORIES=	net-mgmt
+CATEGORIES=	net-mgmt ipv6
 MASTER_SITES=	http://www.routemeister.net/projects/sipcalc/files/
 
 MAINTAINER=	ports@FreeBSD.org

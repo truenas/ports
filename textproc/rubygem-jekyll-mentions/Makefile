@@ -1,21 +1,20 @@
 # $FreeBSD$
 
 PORTNAME=	jekyll-mentions
-PORTVERSION=	1.5.1
+PORTVERSION=	1.4.1
 CATEGORIES=	textproc rubygems
 MASTER_SITES=	RG
 
-MAINTAINER=	sunpoet@FreeBSD.org
+MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	At-mention support for Jekyll sites
 
 LICENSE=	MIT
 
-RUN_DEPENDS=	rubygem-html-pipeline>=2.3<3:textproc/rubygem-html-pipeline \
-		rubygem-jekyll>=3.7<5.0:www/rubygem-jekyll
-
-USES=		gem
-USE_RUBY=	yes
+RUN_DEPENDS=	rubygem-html-pipeline>=2.3:textproc/rubygem-html-pipeline \
+		rubygem-jekyll>=3.0:www/rubygem-jekyll
 
 NO_ARCH=	yes
+USE_RUBY=	yes
+USES=		gem
 
 .include <bsd.port.mk>

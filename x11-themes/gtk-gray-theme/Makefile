@@ -12,8 +12,6 @@ MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Gray theme for GTK+ 2.0
 
 BROKEN=		unfetchable
-DEPRECATED=	Unfetchable, unmaintained
-EXPIRATION_DATE=	2019-10-16
 
 RUN_DEPENDS=	icons-tango>0:x11-themes/icons-tango
 
