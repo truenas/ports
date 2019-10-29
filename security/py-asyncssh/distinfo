@@ -1,3 +1,3 @@
-TIMESTAMP = 1536543976
-SHA256 (asyncssh-1.14.0.tar.gz) = a80025ffa5f4f9a4d1aa6883f2b187fe536fa19e7d012027f57228608e2a3138
-SIZE (asyncssh-1.14.0.tar.gz) = 307133
+TIMESTAMP = 1572278449
+SHA256 (ronf-asyncssh-2.0.0-bcd1c2bb3b5671e2a1d32965d937bd41acfa4cda_GH0.tar.gz) = 32e4fad90a63e8c8d498d823f4eb1f01b9ee82bcc920b769a421528cc3b28118
+SIZE (ronf-asyncssh-2.0.0-bcd1c2bb3b5671e2a1d32965d937bd41acfa4cda_GH0.tar.gz) = 363538
