@@ -2,9 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	cryptography
-PORTVERSION=	2.6.1
+PORTVERSION=	2.8
 CATEGORIES=	security python
-MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	koobs@FreeBSD.org
@@ -27,6 +26,11 @@ TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}cryptography-vectors>=${PORTVERSION}:securi
 		${PYTHON_PKGNAMEPREFIX}pretend>0:devel/py-pretend@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}pytest>=3.6.0:devel/py-pytest@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}pytz>0:devel/py-pytz@${PY_FLAVOR}
+
+USE_GITHUB=	yes
+GH_ACCOUNT=	pyca
+GH_PROJECT=	cryptography
+GH_TAGNAME=	25494f96d57b8995ee2fde099146b1192582ee1b
 
 # Python 2.7, 3.4-3.7
 USES=		compiler:env python ssl
