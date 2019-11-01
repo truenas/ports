@@ -3,6 +3,7 @@
 
 PORTNAME=		inadyn-troglobit
 DISTVERSION=	2.5
+PORTREVISION=	1
 CATEGORIES=		dns
 
 MAINTAINER=	themylogin@gmail.com
@@ -20,10 +21,12 @@ PLIST_FILES=man/man8/inadyn.8.gz \
 			share/doc/inadyn/README.md \
 			sbin/inadyn
 
-USES=		autoreconf libtool pkgconfig
+USES=		autoreconf libtool pkgconfig ssl
 USE_GITHUB=		yes
 USE_RC_SUBR=	inadyn
 GNU_CONFIGURE=	yes
+CONFIGURE_ARGS=	--enable-openssl
+CONFIGURE_ENV=	OpenSSL_CFLAGS="-I${OPENSSLINC}" OpenSSL_LIBS="-L${OPENSSLLIB} -lssl"
 
 GH_ACCOUNT=		troglobit
 GH_PROJECT=		inadyn
