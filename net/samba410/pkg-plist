@@ -30,6 +30,7 @@ bin/smbpasswd
 bin/smbspool
 bin/smbstatus
 bin/smbtar
+bin/smbtorture
 bin/smbtree
 bin/testparm
 bin/wbinfo
