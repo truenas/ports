@@ -24,10 +24,10 @@ index 4331c2f..a9de97f 100644
  
 diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
 new file mode 100644
-index 0000000..f9cc538
+index 0000000..0eaf896
 --- /dev/null
 +++ b/source3/modules/vfs_shadow_copy_zfs.c
-@@ -0,0 +1,1900 @@
+@@ -0,0 +1,1905 @@
 +/* shadow_copy_zfs: a shadow copy module for ZFS
 + *
 + * Copyright (C) Andrew Tridgell   2007 (portions taken from shadow_copy_zfs)
@@ -425,6 +425,11 @@ index 0000000..f9cc538
 +		status = dbwrap_store(config->vss_db, key,
 +				      string_term_tdb_data(resolved_path),
 +				      TDB_INSERT);
++		if (!NT_STATUS_IS_OK(status)) {
++			DBG_ERR("Failed to generate tdb cache entry for %s\n",
++				resolved_path);	
++			return -1;
++		}
 +		TALLOC_FREE(resolved_path);
 +	}
 +	else {
