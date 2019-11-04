@@ -1,0 +1,78 @@
+#!/bin/sh
+#
+# $FreeBSD: head/net/samba43/files/samba_server.in 402642 2015-11-30 01:35:36Z timur $
+#
+
+# PROVIDE: samba_server
+# REQUIRE: NETWORKING SERVERS DAEMON ldconfig resolv ntpd
+# BEFORE: LOGIN
+# KEYWORD: shutdown
+#
+# Add the following lines to /etc/rc.conf.local or /etc/rc.conf
+# to enable this service:
+#
+#samba_server_enable="YES"
+#
+# You can disable/enable any of the Samba daemons by specifying:
+#samba_enable="NO"
+#nmbd_enable="NO"
+#smbd_enable="NO"
+#wsdd_enable="NO"
+# You need to enable winbindd separately, by adding:
+#winbindd_enable="YES"
+
+. /etc/rc.subr
+
+name="samba_server"
+rcvar=${name}_enable
+extra_commands="status"
+
+start_cmd="samba_server_cmd"
+stop_cmd="samba_server_cmd"
+status_cmd="samba_server_cmd"
+
+samba_server_cmd() {
+    local samba_daemons result force_run
+    unset "${rc_arg}_cmd"
+    result=0
+    if [ -n "${_rc_prefix}" -a "${_rc_prefix}" = "one" ] || [ -n "${rc_force}" ] || [ -n "${rc_fast}" ]; then
+        force_run=yes
+    fi
+    for name in ${samba_daemons}; do
+        if [ -n "$force_run" ] || [ ${rc_arg} == "status" ]; then
+            service ${name} "${_rc_prefix}${rc_arg}" ${rc_extra_args}
+            result=$((${result} || $?))
+        fi
+    done
+    return ${result}
+}
+
+samba_server_config_init() {
+    local name
+    load_rc_config "${name}"
+    samba_server_enable=${samba_server_enable:=NO}
+    testparm_command="%%PREFIX%%/bin/testparm --suppress-prompt"
+    # Determine what daemons are necessary to run Samba in the current role
+    samba_server_role=$(${testparm_command} --parameter-name='server role' 2>/dev/null)
+    case "${samba_server_role}" in
+        active\ directory\ domain\ controller)
+            samba_daemons="samba"
+            ;;
+        *)
+            samba_daemons="nmbd smbd winbindd"
+            ;;
+    esac
+
+    # Load daemons configuration
+    for name in ${samba_daemons}; do
+        load_rc_config "${name}"
+        # If samba_server_enable is 'YES'
+        if [ -n "${rcvar}" ] && checkyesno "${rcvar}"; then
+            eval ${name}_enable=\${${name}_enable-YES}
+        fi
+        eval ${name}_enable=\${${name}_enable:-NO}
+    done
+}
+
+samba_server_config_init
+run_rc_command "$1"
