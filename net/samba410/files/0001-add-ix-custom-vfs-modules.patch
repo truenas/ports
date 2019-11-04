@@ -421,7 +421,7 @@ index 0000000..000a2a6
 +
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
-index bf6b303..c70f9f3 100644
+index 5095f65..1b55e64 100644
 --- a/source3/modules/vfs_default.c
 +++ b/source3/modules/vfs_default.c
 @@ -76,32 +76,14 @@ static int vfswrap_get_quota(struct vfs_handle_struct *handle,
@@ -2719,10 +2719,10 @@ index 0000000..292ea23
 +}
 diff --git a/source3/modules/vfs_noacl.c b/source3/modules/vfs_noacl.c
 new file mode 100644
-index 0000000..c9248d6
+index 0000000..391625a
 --- /dev/null
 +++ b/source3/modules/vfs_noacl.c
-@@ -0,0 +1,355 @@
+@@ -0,0 +1,499 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  This program is free software; you can redistribute it and/or modify
@@ -2743,6 +2743,10 @@ index 0000000..c9248d6
 +#include "smbd/smbd.h"
 +#include "libcli/security/security.h"
 +#include "system/filesys.h"
++#include "passdb/lookup_sid.h"
++#include "librpc/gen_ndr/ndr_security.h"
++#include "../libcli/security/dom_sid.h"
++#include "../libcli/security/security.h"
 +#include <sys/acl.h>
 +
 +static uint32_t noacl_fs_capabilities(struct vfs_handle_struct *handle,
@@ -2870,6 +2874,7 @@ index 0000000..c9248d6
 +
 + 	status = smbd_check_access_rights(handle->conn, smb_fname, false,
 +					  FILE_WRITE_ATTRIBUTES);
++
 +	if (!NT_STATUS_IS_OK(status)) {
 +		DBG_WARNING("User %d lacks permissions to write new dosmode\n", geteuid());
 +		return status;
@@ -2931,6 +2936,143 @@ index 0000000..c9248d6
 +	}
 +
 +	return NT_STATUS_OK;
++}
++
++static NTSTATUS noacl_get_nt_acl_common(TALLOC_CTX *ctx,
++					struct vfs_handle_struct *handle,
++					const char *name,
++					const SMB_STRUCT_STAT *psbuf,
++					struct security_descriptor **ppdesc)
++{
++	struct dom_sid owner_sid, group_sid;
++	size_t size = 0;
++	struct security_ace aces[4];
++	uint32_t access_mask = 0;
++	mode_t mode = psbuf->st_ex_mode;
++	struct security_acl *new_dacl = NULL;
++	int idx = 0;
++
++	DBG_DEBUG("file %s mode = 0%o\n",name, (int)mode);
++
++	uid_to_sid(&owner_sid, psbuf->st_ex_uid);
++	gid_to_sid(&group_sid, psbuf->st_ex_gid);
++
++	/* 
++	 * SEC_FILE_WRITE_EA | SEC_FILE_WRITE_ATTRIBUTE always granted for file 
++	 * owner. This better reflects the truth regarding what the owner can
++	 * actually do.
++	 */
++	if (mode & S_IRUSR) {
++		if (mode & S_IWUSR) {
++			access_mask |= SEC_RIGHTS_FILE_ALL;
++		} else {
++			access_mask |= SEC_RIGHTS_FILE_READ | SEC_FILE_EXECUTE \
++				    | SEC_FILE_WRITE_EA | SEC_FILE_WRITE_ATTRIBUTE;
++		}
++	}
++	if (mode & S_IWUSR) {
++		access_mask |= SEC_RIGHTS_FILE_WRITE | SEC_STD_DELETE;
++	}
++
++	init_sec_ace(&aces[idx],
++			&owner_sid,
++			SEC_ACE_TYPE_ACCESS_ALLOWED,
++			access_mask,
++			0);
++	idx++;
++
++	access_mask = 0;
++	if (mode & S_IRGRP) {
++		access_mask |= SEC_RIGHTS_FILE_READ | SEC_FILE_EXECUTE;
++	}
++	if (mode & S_IWGRP) {
++		access_mask |= SEC_RIGHTS_FILE_WRITE | SEC_STD_DELETE;
++	}
++	if (lp_dos_filemode(SNUM(handle->conn))) {
++		access_mask |= SEC_FILE_WRITE_ATTRIBUTE;
++	}
++	if (access_mask) {
++		init_sec_ace(&aces[idx],
++			&group_sid,
++			SEC_ACE_TYPE_ACCESS_ALLOWED,
++			access_mask,
++			0);
++		idx++;
++	}
++
++	access_mask = 0;
++	if (mode & S_IROTH) {
++		access_mask |= SEC_RIGHTS_FILE_READ | SEC_FILE_EXECUTE;
++	}
++	if (mode & S_IWOTH) {
++		access_mask |= SEC_RIGHTS_FILE_WRITE | SEC_STD_DELETE;
++	}
++	if (access_mask) {
++		init_sec_ace(&aces[idx],
++			&global_sid_World,
++			SEC_ACE_TYPE_ACCESS_ALLOWED,
++			access_mask,
++			0);
++		idx++;
++	}
++	if (lp_dos_filemode(SNUM(handle->conn))) {
++		access_mask |= SEC_FILE_WRITE_ATTRIBUTE;
++	}
++
++	init_sec_ace(&aces[idx],
++			&global_sid_System,
++			SEC_ACE_TYPE_ACCESS_ALLOWED,
++			SEC_RIGHTS_FILE_ALL,
++			0);
++	idx++;
++
++	new_dacl = make_sec_acl(ctx,
++			NT4_ACL_REVISION,
++			idx,
++			aces);
++
++	if (!new_dacl) {
++		return NT_STATUS_NO_MEMORY;
++	}
++
++	*ppdesc = make_sec_desc(ctx,
++			SECURITY_DESCRIPTOR_REVISION_1,
++			SEC_DESC_SELF_RELATIVE|SEC_DESC_DACL_PRESENT,
++			&owner_sid,
++			&group_sid,
++			NULL,
++			new_dacl,
++			&size);
++	if (!*ppdesc) {
++		return NT_STATUS_NO_MEMORY;
++	}
++	return NT_STATUS_OK;
++}
++
++static NTSTATUS noacl_get_nt_acl(struct vfs_handle_struct *handle,
++				 const struct smb_filename *smb_fname,
++				 uint32_t security_info,
++				 TALLOC_CTX *mem_ctx,
++				 struct security_descriptor **ppdesc)
++{
++	return noacl_get_nt_acl_common(mem_ctx,
++				       handle,
++				       smb_fname->base_name,
++				       &smb_fname->st,
++				       ppdesc);
++}
++
++static NTSTATUS noacl_fget_nt_acl(struct vfs_handle_struct *handle,
++				  struct files_struct *fsp,
++				  uint32_t security_info,
++				  TALLOC_CTX *mem_ctx,
++				  struct security_descriptor **ppdesc)
++{
++	return noacl_get_nt_acl_common(mem_ctx,
++				       handle,
++				       fsp->fsp_name->base_name,
++				       &fsp->fsp_name->st,
++				       ppdesc);
 +}
 +
 +static NTSTATUS noacl_set_dos_attributes(struct vfs_handle_struct *handle,
@@ -3063,6 +3205,8 @@ index 0000000..c9248d6
 +	.set_dos_attributes_fn = noacl_set_dos_attributes,
 +	.fset_dos_attributes_fn = noacl_fset_dos_attributes,
 +	.fset_nt_acl_fn = noacl_fset_nt_acl,
++	.get_nt_acl_fn = noacl_get_nt_acl,
++	.fget_nt_acl_fn = noacl_fget_nt_acl,
 +	.sys_acl_get_file_fn = noacl_fail__sys_acl_get_file,
 +	.sys_acl_get_fd_fn = noacl_fail__sys_acl_get_fd,
 +	.sys_acl_blob_get_file_fn = noacl_fail__sys_acl_blob_get_file,
@@ -3556,10 +3700,10 @@ index 83b66d6..12566d2 100644
  
  	status = file_new(req, conn, &fsp);
 diff --git a/source3/smbd/trans2.c b/source3/smbd/trans2.c
-index 5fbc6db..c8c77aa 100644
+index 0539b35..6147d34 100644
 --- a/source3/smbd/trans2.c
 +++ b/source3/smbd/trans2.c
-@@ -3758,12 +3758,21 @@ cBytesSector=%u, cUnitTotal=%u, cUnitAvail=%d\n", (unsigned int)bsize, (unsigned
+@@ -3824,12 +3824,21 @@ cBytesSector=%u, cUnitTotal=%u, cUnitAvail=%d\n", (unsigned int)bsize, (unsigned
  
  			ZERO_STRUCT(fsp);
  			ZERO_STRUCT(quotas);
@@ -3583,7 +3727,7 @@ index 5fbc6db..c8c77aa 100644
  				DEBUG(0,("get_user_quota: access_denied "
  					 "service [%s] user [%s]\n",
  					 lp_servicename(talloc_tos(), SNUM(conn)),
-@@ -4060,11 +4069,17 @@ static NTSTATUS smb_set_fsquota(connection_struct *conn,
+@@ -4126,11 +4135,17 @@ static NTSTATUS smb_set_fsquota(connection_struct *conn,
  {
  	NTSTATUS status;
  	SMB_NTQUOTA_STRUCT quotas;
