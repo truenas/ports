@@ -3,7 +3,7 @@
 
 PORTNAME=			${SAMBA4_BASENAME}410
 PORTVERSION=			${SAMBA4_VERSION}
-PORTREVISION=			0
+PORTREVISION=			1
 CATEGORIES?=			net
 MASTER_SITES=			SAMBA/samba/stable SAMBA/samba/rc
 DISTNAME=			${SAMBA4_DISTNAME}
@@ -29,6 +29,7 @@ EXTRA_PATCHES+=			${PATCHDIR}/0001-enable-keytab-updates-on-machine-account-chan
 EXTRA_PATCHES+=			${PATCHDIR}/0001-add_ws_discovery.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-add-wb-status-cmd.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-smbd_reply.c.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/talloc_arc4random.patch:-p1
 
 SAMBA4_BASENAME=		samba
 SAMBA4_PORTNAME=		${SAMBA4_BASENAME}4
