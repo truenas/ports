@@ -282,7 +282,7 @@ lib/samba4/private/libposix-eadb-samba4.so
 lib/samba4/private/libprinter-driver-samba4.so
 lib/samba4/private/libprinting-migrate-samba4.so
 lib/samba4/private/libpyldb-util.so.2
-lib/samba4/private/libpyldb-util.so.2.0.5
+lib/samba4/private/libpyldb-util.so.2.0.7
 lib/samba4/private/libpytalloc-util.so.2
 lib/samba4/private/libpytalloc-util.so.2.2.0
 lib/samba4/private/libregistry-samba4.so
@@ -397,8 +397,11 @@ lib/shared-modules/krb5/winbind_krb5_locator.so
 lib/shared-modules/auth/script.so
 lib/shared-modules/vfs/acl_tdb.so
 lib/shared-modules/vfs/acl_xattr.so
+lib/shared-modules/vfs/aio_fbsd.so
 lib/shared-modules/vfs/aio_fork.so
 lib/shared-modules/vfs/aio_pthread.so
+lib/shared-modules/vfs/aio_posix.so
+lib/shared-modules/vfs/aio_spthread.so
 lib/shared-modules/vfs/audit.so
 lib/shared-modules/vfs/cap.so
 lib/shared-modules/vfs/catia.so
@@ -762,7 +765,7 @@ man/man8/winbindd.8.gz
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb-cmdline-samba4.so
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldbsamba-samba4.so
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb.so.2
-%%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb.so.2.0.5
+%%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb.so.2.0.7
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb-key-value-samba4.so
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb-tdb-err-map-samba4.so
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb-tdb-int-samba4.so
