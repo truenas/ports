@@ -1,5 +1,5 @@
 diff --git a/source3/utils/status.c b/source3/utils/status.c
-index 417c99a..28135b2 100644
+index 417c99a..87bcb0c 100644
 --- a/source3/utils/status.c
 +++ b/source3/utils/status.c
 @@ -51,6 +51,12 @@
@@ -15,7 +15,7 @@ index 417c99a..28135b2 100644
  #define SMB_MAXPIDS		2048
  static uid_t 		Ucrit_uid = 0;               /* added by OH */
  static struct server_id	Ucrit_pid[SMB_MAXPIDS];  /* Ugly !!! */   /* added by OH */
-@@ -64,9 +70,80 @@ static bool processes_only;
+@@ -64,9 +70,13 @@ static bool processes_only;
  static bool show_brl;
  static bool numeric_only;
  static bool do_checks = true;
@@ -26,77 +26,10 @@ index 417c99a..28135b2 100644
  
 +static const char *session_dialect_str(uint16_t dialect);
 +
-+#ifdef HAVE_JANSSON
-+struct txt2mask {
-+	char	*field;
-+	int	mask;
-+};
-+
-+struct txt2mask accessmask[] = {
-+	{"READ_DATA", FILE_READ_DATA},
-+	{"WRITE_DATA", FILE_WRITE_DATA},
-+	{"APPEND_DATA", FILE_APPEND_DATA},
-+	{"READ_EA", FILE_READ_EA},
-+	{"WRITE_EA", FILE_WRITE_EA},
-+	{"EXECUTE", FILE_EXECUTE},
-+	{"READ_ATTRIBUTES", FILE_READ_ATTRIBUTES},
-+	{"WRITE_ATTRIBUTES", FILE_WRITE_ATTRIBUTES},
-+	{"DELETE_CHILD", FILE_DELETE_CHILD},
-+	{"DELETE", SEC_STD_DELETE},
-+	{"READ_CONTROL", SEC_STD_READ_CONTROL},
-+	{"WRITE_DAC", SEC_STD_WRITE_DAC},
-+	{"SYNCHRONIZE", SEC_STD_SYNCHRONIZE},
-+	{"ACCESS_SYSTEM_SECURITY", SEC_FLAG_SYSTEM_SECURITY},
-+	{"MAXIMUM_ALLOWED", SEC_FLAG_MAXIMUM_ALLOWED},
-+	{"GENERIC_ALL", SEC_GENERIC_ALL},
-+	{"GENERIC_EXECUTE", SEC_GENERIC_EXECUTE},
-+	{"GENERIC_WRITE", SEC_GENERIC_WRITE},
-+	{"GENERIC_READ", SEC_GENERIC_READ},
-+	{0, 0}
-+};
-+
-+struct txt2mask oplockmask[] = {
-+	{"EXCLUSIVE", EXCLUSIVE_OPLOCK},
-+	{"BATCH", BATCH_OPLOCK},
-+	{"LEVEL_II", LEVEL_II_OPLOCK},
-+	{"LEASE", LEASE_OPLOCK},
-+	{0, 0}
-+};
-+
-+struct txt2mask leasemask[] = {
-+	{"READ", SMB2_LEASE_READ},
-+	{"WRITE", SMB2_LEASE_WRITE},
-+	{"HANDLE", SMB2_LEASE_HANDLE},
-+	{0, 0}
-+};
-+
-+/*
-+ * Convert a mask of some sort (access, oplock, leases),
-+ * to key/value pairs in a JSON object.
-+ */
-+static int map_json_mask(struct json_object *jsobj,
-+                         int tomap,
-+                         const struct txt2mask *table)
-+{
-+        const struct txt2mask *a;
-+        int ret = 0;
-+        for (a = table; a->field !=0; a++) {
-+                if (json_add_bool(jsobj,
-+                                  a->field,
-+                                  (tomap & a->mask)
-+                                  ?true:false) < 0){
-+                        return -1;
-+                }
-+        }
-+
-+        return 0;
-+}
-+#endif /* [HAVE_JANSSON] */
-+
  /* added by OH */
  static void Ucrit_addUid(uid_t uid)
  {
-@@ -118,12 +195,648 @@ static bool Ucrit_addPid( struct server_id pid )
+@@ -118,12 +128,646 @@ static bool Ucrit_addPid( struct server_id pid )
  	return True;
  }
  
@@ -106,22 +39,13 @@ index 417c99a..28135b2 100644
 +				 const struct share_mode_entry *e,
 +				 void *private_data)
 +{
-+	TALLOC_CTX *tmp_ctx = talloc_new(NULL);
-+	if (tmp_ctx == NULL) {
-+		return -1;
-+	}
-+	struct json_object jsobj;
-+	struct json_object jsobjint;
-+	jsobj = *(struct json_object *)private_data;
-+	jsobjint = json_new_object();
++	struct json_object jsobj = *(struct json_object *)private_data;
++	struct json_object jsobjint = json_new_object();
 +	static int count;
-+	const char *denymode = NULL;
-+	char *access_mask = NULL;
-+	const char *lstate_hex = NULL;
++	static int ret = 0;
++	char *denymode = NULL;
 +
 +	if (do_checks && !is_valid_share_mode_entry(e)) {
-+		TALLOC_FREE(tmp_ctx);
-+		json_free(&jsobjint);
 +		return 0;
 +	}
 +
@@ -129,31 +53,26 @@ index 417c99a..28135b2 100644
 +
 +	if (do_checks && !serverid_exists(&e->pid)) {
 +		/* the process for this entry does not exist any more */
-+		TALLOC_FREE(tmp_ctx);
-+		json_free(&jsobjint);
 +		return 0;
 +	}
 +	if (Ucrit_checkPid(e->pid)) {
 +		struct server_id_buf tmp;
-+		uint denymode_int = 0;
-+		denymode_int = map_share_mode_to_deny_mode(e->share_access,
-+							   e->private_options);
-+
 +		if (json_is_invalid(&jsobjint)) {
 +			return -1;
 +		}
 +		if (json_add_string(&jsobjint, "pid",
 +				    server_id_str_buf(e->pid, &tmp)) < 0) {
-+			goto failure;
++			goto failure;	
 +		}
 +		if (resolve_uids && (json_add_string(&jsobjint, "username",
 +					    uidtoname(e->uid)) < 0)) {
-+			goto failure;
++			goto failure;	
 +		}
 +		if (json_add_int(&jsobjint, "uid", (unsigned int)e->uid) < 0) {
-+			goto failure;
++			goto failure;	
 +		}
-+		switch (denymode_int) {
++		switch (map_share_mode_to_deny_mode(e->share_access,
++						    e->private_options)) {
 +			case DENY_NONE: denymode = "DENY_NONE"; break;
 +			case DENY_ALL:  denymode = "DENY_ALL"; break;
 +			case DENY_DOS:  denymode = "DENY_DOS"; break;
@@ -161,56 +80,133 @@ index 417c99a..28135b2 100644
 +			case DENY_WRITE:denymode = "DENY_WRITE"; break;
 +			case DENY_FCB:  denymode = "DENY_FCB"; break;
 +			default: {
-+				denymode = talloc_asprintf(tmp_ctx,
-+							   "UNKNOWN(0x%08x)",
-+							   denymode_int);
++				denymode = "UNKNOWN"; 
 +				break;
 +			}
 +		}
-+	        struct json_object amask;
-+	        amask = json_new_object();
++	        struct json_object amask = json_new_object();
 +		if (json_is_invalid(&amask)) {
-+			goto failure;
++			goto failure;	
 +		}
-+		access_mask = talloc_asprintf(tmp_ctx, "0x%08x",
-+					      (unsigned int)e->access_mask);
++		char *access_mask = NULL;
++		access_mask = talloc_asprintf(NULL, "0x%08x", (unsigned int)e->access_mask);
 +		if (json_add_string(&amask, "hex", access_mask) < 0) {
-+			goto failure;
++			TALLOC_FREE(access_mask);
++			ret = -1;
++			goto failure;	
 +		}
 +		TALLOC_FREE(access_mask);
 +		if (verbose) {
-+			if (map_json_mask(&amask, e->access_mask, accessmask) < 0) {
++			if (json_add_bool(&amask, "READ_DATA",
++				 (e->access_mask & FILE_READ_DATA)?true:false) < 0) {
 +				json_free(&amask);
-+				goto failure;
++				goto failure;	
++			}
++			if (json_add_bool(&amask, "WRITE_DATA",
++				 (e->access_mask & FILE_WRITE_DATA)?true:false) < 0) {
++				json_free(&amask);
++				goto failure;	
++			}
++			if (json_add_bool(&amask, "APPEND_DATA",
++				 (e->access_mask & FILE_APPEND_DATA)?true:false) < 0) {
++				json_free(&amask);
++				goto failure;	
++			}
++			if (json_add_bool(&amask, "READ_EA",
++				 (e->access_mask & FILE_READ_EA)?true:false) < 0) {
++				json_free(&amask);
++				goto failure;	
++			}
++			if (json_add_bool(&amask, "WRITE_EA",
++				 (e->access_mask & FILE_WRITE_EA)?true:false) < 0) {
++				json_free(&amask);
++				goto failure;	
++			}
++			if (json_add_bool(&amask, "EXECUTE",
++				 (e->access_mask & FILE_EXECUTE)?true:false) < 0) {
++				json_free(&amask);
++				goto failure;	
++			}
++			if (json_add_bool(&amask, "READ_ATTRIBUTES",
++				 (e->access_mask & FILE_READ_ATTRIBUTES)?true:false) < 0) {
++				json_free(&amask);
++				goto failure;	
++			}
++			if (json_add_bool(&amask, "WRITE_ATTRIBUTES",
++				 (e->access_mask & FILE_WRITE_ATTRIBUTES)?true:false) < 0) {
++				json_free(&amask);
++				goto failure;	
++			}
++			if (json_add_bool(&amask, "DELETE_CHILD",
++				 (e->access_mask & FILE_DELETE_CHILD)?true:false) < 0) {
++				json_free(&amask);
++				goto failure;	
++			}
++			if (json_add_bool(&amask, "DELETE",
++				 (e->access_mask & SEC_STD_DELETE)?true:false) < 0) {
++				json_free(&amask);
++				goto failure;	
++			}
++			if (json_add_bool(&amask, "READ_CONTROL",
++				 (e->access_mask & SEC_STD_READ_CONTROL)?true:false) < 0) {
++				json_free(&amask);
++				goto failure;	
++			}
++			if (json_add_bool(&amask, "WRITE_DAC",
++				 (e->access_mask & SEC_STD_WRITE_DAC)?true:false) < 0) {
++				json_free(&amask);
++				goto failure;	
++			}
++			if (json_add_bool(&amask, "WRITE_OWNER",
++				 (e->access_mask & SEC_STD_WRITE_OWNER)?true:false) < 0) {
++				json_free(&amask);
++				goto failure;	
++			}
++			if (json_add_bool(&amask, "SYNCHRONIZE",
++				 (e->access_mask & SEC_STD_SYNCHRONIZE)?true:false) < 0) {
++				json_free(&amask);
++				goto failure;	
 +			}
 +		}
 +		if (json_add_object(&jsobjint, "access_mask", &amask) < 0) {
 +			json_free(&amask);
 +			goto failure;
 +		}
-+
-+		struct json_object oplock;
-+		oplock = json_new_object();
++		struct json_object oplock = json_new_object();
 +		if (json_is_invalid(&oplock)) {
 +			goto failure;
 +		}
-+
-+		struct txt2mask *o;
-+		if (map_json_mask(&oplock, e->op_type, oplockmask) < 0) {
-+			json_free(&amask);
++			
++		if (json_add_bool(&oplock, "EXCLUSIVE",
++				 (e->op_type & EXCLUSIVE_OPLOCK)?true:false) < 0) {
++			json_free(&oplock);
++			goto failure;
++		}
++		if (json_add_bool(&oplock, "BATCH",
++				 (e->op_type & BATCH_OPLOCK)?true:false) < 0) {
++			json_free(&oplock);
++			goto failure;
++		}
++		if (json_add_bool(&oplock, "LEVEL_II",
++				 (e->op_type & LEVEL_II_OPLOCK)?true:false) < 0) {
++			json_free(&oplock);
++			goto failure;
++		}
++		if (json_add_bool(&oplock, "LEASE",
++				 (e->op_type & LEASE_OPLOCK)?true:false) < 0) {
++			json_free(&oplock);
 +			goto failure;
 +		}
 +		if (json_add_object(&jsobjint, "oplock", &oplock) < 0) {
 +			json_free(&oplock);
 +			goto failure;
 +		}
-+
-+		struct json_object lease;
-+		lease = json_new_object();
-+		if (json_is_invalid(&lease)) {
-+			goto failure;
-+		}
-+		if (e->op_type & LEASE_OPLOCK) {
++		struct json_object lease = json_new_object();
++		if (json_output && (e->op_type & LEASE_OPLOCK)) {
++			struct json_object lease = json_new_object();
++			if (json_is_invalid(&lease)) {
++				goto failure;
++			}
 +			NTSTATUS status;
 +			uint32_t lstate;
 +
@@ -226,21 +222,18 @@ index 417c99a..28135b2 100644
 +				NULL); /* epoch */
 +
 +			if (NT_STATUS_IS_OK(status)) {
-+				if (map_json_mask(&lease,
-+						  lstate,
-+						  leasemask) < 0) {
++				if (json_add_bool(&lease, "READ",
++						 (lstate & SMB2_LEASE_READ)?true:false) < 0) {
 +					json_free(&lease);
 +					goto failure;
 +				}
-+			}
-+			if (lstate > SMB2_LEASE_WRITE) {
-+				const char *lstate_hex;
-+				lstate_hex = talloc_asprintf(tmp_ctx,
-+							     "0x%04x",
-+							     lstate);
-+				if (json_add_bool(&lease,
-+						  "UNKNOWN",
-+						  lstate_hex) < 0) {
++				if (json_add_bool(&lease, "WRITE",
++						 (lstate & SMB2_LEASE_WRITE)?true:false) < 0) {
++					json_free(&lease);
++					goto failure;
++				}
++				if (json_add_bool(&lease, "HANDLE",
++						 (lstate & SMB2_LEASE_HANDLE)?true:false) < 0) {
 +					json_free(&lease);
 +					goto failure;
 +				}
@@ -251,7 +244,15 @@ index 417c99a..28135b2 100644
 +			}
 +		}
 +		else {
-+			if (map_json_mask(&lease, 0, leasemask) < 0) {
++			if (json_add_bool(&lease, "READ", false) < 0) {
++				json_free(&lease);
++				goto failure;
++			}
++			if (json_add_bool(&lease, "WRITE", false) < 0) {
++				json_free(&lease);
++				goto failure;
++			}
++			if (json_add_bool(&lease, "HANDLE", false) < 0) {
 +				json_free(&lease);
 +				goto failure;
 +			}
@@ -264,37 +265,35 @@ index 417c99a..28135b2 100644
 +			goto failure;
 +		}
 +		char *filename = NULL;
-+		filename = talloc_asprintf(tmp_ctx, "%s%s", d->base_name,
++		filename = talloc_asprintf(NULL, "%s%s", d->base_name,
 +			(d->stream_name != NULL) ? d->stream_name : "");
 +		if (json_add_string(&jsobjint, "filename", filename) < 0) {
 +			TALLOC_FREE(filename);
 +			goto failure;
 +		}
++		TALLOC_FREE(filename);
 +		if (json_add_object(&jsobj, NULL, &jsobjint) < 0) {
 +			goto failure;
 +		}
 +	}
-+	TALLOC_FREE(tmp_ctx);
++
 +	return 0;
 +
 +failure:
-+	TALLOC_FREE(tmp_ctx);
 +	json_free(&jsobjint);
 +	return -1;
 +}
 +
 +static void print_brl_json(struct file_id id,
-+			struct server_id pid,
++			struct server_id pid, 
 +			enum brl_type lock_type,
 +			enum brl_flavour lock_flav,
 +			br_off start,
 +			br_off size,
 +			void *private_data)
 +{
-+	struct json_object jsobj;
-+	struct json_object jsobjint;
-+	jsobj = *(struct json_object *)private_data;
-+	jsobjint = json_new_object();
++	struct json_object jsobj = *(struct json_object *)private_data;
++	struct json_object jsobjint = json_new_object();
 +	static int count;
 +	unsigned int i;
 +	static const struct {
@@ -336,30 +335,30 @@ index 417c99a..28135b2 100644
 +		}
 +	}
 +	if (json_is_invalid(&jsobjint)) {
-+		goto failure;
++		goto failure;	
 +	}
 +	if (json_add_string(&jsobjint, "pid",
 +			    server_id_str_buf(pid, &tmp)) < 0) {
-+		goto failure;
++		goto failure;	
 +	}
 +	if (json_add_string(&jsobjint, "dev_inode",
 +			    file_id_string_tos(&id)) < 0) {
-+		goto failure;
++		goto failure;	
 +	}
 +	if (json_add_string(&jsobjint, "read_write", desc) < 0) {
-+		goto failure;
++		goto failure;	
 +	}
 +	if (json_add_int(&jsobjint, "start", (intmax_t)start) < 0) {
-+		goto failure;
++		goto failure;	
 +	}
 +	if (json_add_int(&jsobjint, "size", (intmax_t)size) < 0) {
-+		goto failure;
++		goto failure;	
 +	}
 +	if (json_add_string(&jsobjint, "share_path", sharepath) < 0) {
-+		goto failure;
++		goto failure;	
 +	}
 +	if (json_add_string(&jsobjint, "file_name", fname) < 0) {
-+		goto failure;
++		goto failure;	
 +	}
 +	if (json_add_object(&jsobj, NULL, &jsobjint) < 0) {
 +		goto failure;
@@ -378,39 +377,25 @@ index 417c99a..28135b2 100644
 +				const struct connections_data *crec,
 +				void *private_data)
 +{
-+	TALLOC_CTX *tmp_ctx = talloc_new(NULL);
-+	if (tmp_ctx == NULL) {
-+		return -1;
-+	}
-+	struct json_object jsobj;
-+	struct json_object jsobjint;
-+	jsobj = *(struct json_object *)private_data;
-+	jsobjint = json_new_object();
++	struct json_object jsobj = *(struct json_object *)private_data;
++	struct json_object jsobjint = json_new_object();
 +	struct server_id_buf tmp;
 +	char *timestr = NULL;
 +	int result = 0;
 +	const char *encryption = "-";
 +	const char *signing = "-";
-+	if (json_is_invalid(&jsobjint)) {
-+		TALLOC_FREE(tmp_ctx);
-+		return -1;
-+	}
 +
 +	if (crec->cnum == TID_FIELD_INVALID)
-+		TALLOC_FREE(tmp_ctx);
-+		json_free(&jsobjint);
 +		return 0;
 +
 +	if (do_checks &&
 +	    (!process_exists(crec->pid) || !Ucrit_checkUid(crec->uid))) {
-+		TALLOC_FREE(tmp_ctx);
-+		json_free(&jsobjint);
 +		return 0;
 +	}
 +
-+	timestr = timestring(tmp_ctx, crec->start);
++	timestr = timestring(NULL, crec->start);
 +	if (timestr == NULL) {
-+		goto failure;
++		return -1;
 +	}
 +
 +	if (smbXsrv_is_encrypted(crec->encryption_flags)) {
@@ -425,39 +410,26 @@ index 417c99a..28135b2 100644
 +			encryption = "AES-128-GCM";
 +			break;
 +		default:
-+			encryption = talloc_asprintf(tmp_ctx,
-+						     "UNKNOWN(0x%08x)",
-+						     crec->cipher);
++			encryption = "???";
 +			result = -1;
 +			break;
 +		}
 +	}
 +
 +	if (smbXsrv_is_signed(crec->signing_flags)) {
-+		switch (crec->dialect) {
-+		case SMB3_DIALECT_REVISION_311:
-+		case SMB3_DIALECT_REVISION_302:
++		if (crec->dialect >= SMB3_DIALECT_REVISION_302) {
 +			signing = "AES-128-CMAC";
-+			break;
-+		case SMB2_DIALECT_REVISION_2FF:
-+		case SMB2_DIALECT_REVISION_224:
-+		case SMB2_DIALECT_REVISION_222:
-+		case SMB2_DIALECT_REVISION_210:
-+		case SMB2_DIALECT_REVISION_202:
++		} else if (crec->dialect >= SMB2_DIALECT_REVISION_202) {
 +			signing = "HMAC-SHA256";
-+			break;
-+		case SMB2_DIALECT_REVISION_000:
++		} else {
 +			signing = "HMAC-MD5";
-+			break;
-+		default:
-+			signing = talloc_asprintf(tmp_ctx,
-+						  "UNKNOWN_DIALECT(0x%08x)",
-+						  crec->dialect);
-+			result = -1;
-+			break;
 +		}
 +	}
 +
++	if (json_is_invalid(&jsobjint)) {
++		TALLOC_FREE(timestr);
++		return -1;	
++	}
 +	if (json_add_string(&jsobjint, "service", crec->servicename) < 0) {
 +		goto failure;
 +	}
@@ -481,11 +453,11 @@ index 417c99a..28135b2 100644
 +		goto failure;
 +	}
 +
-+	TALLOC_FREE(tmp_ctx);
++	TALLOC_FREE(timestr);
 +	return result;
 +
 +failure:
-+	TALLOC_FREE(tmp_ctx);
++	TALLOC_FREE(timestr);
 +	json_free(&jsobjint);
 +	return -1;
 +}
@@ -493,14 +465,8 @@ index 417c99a..28135b2 100644
 +static int traverse_sessionid_json(const char *key, struct sessionid *session,
 +				    void *private_data)
 +{
-+	TALLOC_CTX *tmp_ctx = talloc_new(NULL);
-+	if (tmp_ctx == NULL) {
-+		return -1;
-+	}
-+	struct json_object jsobj;
-+	struct json_object jsobjint;
-+	jsobj = *(struct json_object *)private_data;
-+	jsobjint = json_new_object();
++	struct json_object jsobj = *(struct json_object *)private_data;
++	struct json_object jsobjint = json_new_object();
 +	struct server_id_buf tmp;
 +	int result = 0;
 +	const char *encryption = "-";
@@ -545,7 +511,7 @@ index 417c99a..28135b2 100644
 +			 * The session is not fully authenticated yet.
 +			 */
 +			if (json_add_string(&jsobjint, "username",
-+					    "(auth in progress)") < 0) {
++					    "(auth in progress)") < 0) { 
 +				goto failure;
 +			}
 +			if (json_add_string(&jsobjint, "groupname",
@@ -580,7 +546,7 @@ index 417c99a..28135b2 100644
 +					goto failure;
 +				}
 +				if (json_add_string(&jsobjint, "groupname",
-+						    gid_name) < 0) {
++					 	    gid_name) < 0) {
 +					goto failure;
 +				}
 +			}
@@ -596,9 +562,7 @@ index 417c99a..28135b2 100644
 +			encryption = "AES-128-GCM";
 +			break;
 +		default:
-+			encryption = talloc_asprintf(tmp_ctx,
-+						     "UNKNOWN(0x%08x)",
-+						     session->cipher);
++			encryption = "???";
 +			result = -1;
 +			break;
 +		}
@@ -614,88 +578,57 @@ index 417c99a..28135b2 100644
 +			encryption = "partial(AES-128-GCM)";
 +			break;
 +		default:
-+			encryption = talloc_asprintf(tmp_ctx,
-+						     "UNKNOWN(0x%08x)",
-+						     session->cipher);
++			encryption = "???";
 +			result = -1;
 +			break;
 +		}
 +	}
 +
 +	if (smbXsrv_is_signed(session->signing_flags)) {
-+		switch (session->connection_dialect) {
-+		case SMB3_DIALECT_REVISION_311:
-+		case SMB3_DIALECT_REVISION_302:
++		if (session->connection_dialect >= SMB3_DIALECT_REVISION_302) {
 +			signing = "AES-128-CMAC";
-+			break;
-+		case SMB2_DIALECT_REVISION_2FF:
-+		case SMB2_DIALECT_REVISION_224:
-+		case SMB2_DIALECT_REVISION_222:
-+		case SMB2_DIALECT_REVISION_210:
-+		case SMB2_DIALECT_REVISION_202:
++		} else if (session->connection_dialect >= SMB2_DIALECT_REVISION_202) {
 +			signing = "HMAC-SHA256";
-+			break;
-+		case SMB2_DIALECT_REVISION_000:
++		} else {
 +			signing = "HMAC-MD5";
-+			break;
-+		default:
-+			signing = talloc_asprintf(tmp_ctx,
-+						  "UNKNOWN_DIALECT(0x%08x)",
-+						  session->connection_dialect);
-+			result = -1;
-+			break;
 +		}
 +	} else if (smbXsrv_is_partially_signed(session->signing_flags)) {
-+		switch (session->connection_dialect) {
-+		case SMB3_DIALECT_REVISION_311:
-+		case SMB3_DIALECT_REVISION_302:
-+			signing = "AES-128-CMAC";
-+			break;
-+		case SMB2_DIALECT_REVISION_2FF:
-+		case SMB2_DIALECT_REVISION_224:
-+		case SMB2_DIALECT_REVISION_222:
-+		case SMB2_DIALECT_REVISION_210:
-+		case SMB2_DIALECT_REVISION_202:
-+			signing = "HMAC-SHA256";
-+			break;
-+		case SMB2_DIALECT_REVISION_000:
-+			signing = "HMAC-MD5";
-+			break;
-+		default:
-+			signing = talloc_asprintf(tmp_ctx,
-+						  "UNKNOWN_DIALECT(0x%08x)",
-+						  session->connection_dialect);
-+			result = -1;
-+			break;
++		if (session->connection_dialect >= SMB3_DIALECT_REVISION_302) {
++			signing = "partial(AES-128-CMAC)";
++		} else if (session->connection_dialect >= SMB2_DIALECT_REVISION_202) {
++			signing = "partial(HMAC-SHA256)";
++		} else {
++			signing = "partial(HMAC-MD5)";
 +		}
 +	}
 +
-+	if (json_add_string(&jsobjint, "remote_machine",
-+			    session->remote_machine) < 0) {
-+		goto failure;
-+	}
-+	if (json_add_string(&jsobjint, "hostname", session->hostname) < 0) {
-+		goto failure;
-+	}
-+	if (json_add_string(&jsobjint, "session_dialect",
-+		    session_dialect_str(session->connection_dialect)) < 0) {
-+		goto failure;
-+	}
-+	if (json_add_string(&jsobjint, "encryption", encryption) < 0) {
-+		goto failure;
-+	}
-+	if (json_add_string(&jsobjint, "signing", signing) < 0) {
-+		goto failure;
-+	}
-+	if (json_add_object(&jsobj, server_id_str_buf(session->pid, &tmp), &jsobjint) < 0) {
-+		goto failure;
++
++	if (json_output) {
++		if (json_add_string(&jsobjint, "remote_machine",
++				    session->remote_machine) < 0) {
++			goto failure;
++		}
++		if (json_add_string(&jsobjint, "hostname", session->hostname) < 0) {
++			goto failure;
++		}
++		if (json_add_string(&jsobjint, "session_dialect",
++				    session_dialect_str(session->connection_dialect)) < 0) {
++			goto failure;
++		}
++		if (json_add_string(&jsobjint, "encryption", encryption) < 0) {
++			goto failure;
++		}
++		if (json_add_string(&jsobjint, "signing", signing) < 0) {
++			goto failure;
++		}
++		if (json_add_object(&jsobj, server_id_str_buf(session->pid, &tmp), &jsobjint) < 0) {
++			goto failure;
++		}
 +	}
 +
-+	TALLOC_FREE(tmp_ctx);
 +	return result;
 +
 +failure:
-+	TALLOC_FREE(tmp_ctx);
 +	json_free(&jsobjint);
 +	return -1;
 +}
@@ -705,10 +638,8 @@ index 417c99a..28135b2 100644
 +			     void *private_data)
 +{
 +	struct server_id_buf idbuf;
-+	struct json_object jsobj;
-+	struct json_object jsobjint;
-+	jsobj = *(struct json_object *)private_data;
-+	jsobjint = json_new_object();
++	struct json_object jsobj = *(struct json_object *)private_data;
++	struct json_object jsobjint = json_new_object();
 +
 +	if (json_is_invalid(&jsobjint)) {
 +		return false;
@@ -746,7 +677,7 @@ index 417c99a..28135b2 100644
  	static int count;
  
  	if (do_checks && !is_valid_share_mode_entry(e)) {
-@@ -156,7 +869,7 @@ static int print_share_mode(struct file_id fid,
+@@ -156,7 +800,7 @@ static int print_share_mode(struct file_id fid,
  			case DENY_ALL:  d_printf("DENY_ALL   "); break;
  			case DENY_DOS:  d_printf("DENY_DOS   "); break;
  			case DENY_READ: d_printf("DENY_READ  "); break;
@@ -755,7 +686,7 @@ index 417c99a..28135b2 100644
  			case DENY_FCB:  d_printf("DENY_FCB "); break;
  			default: {
  				d_printf("unknown-please report ! "
-@@ -508,7 +1221,6 @@ static int traverse_sessionid(const char *key, struct sessionid *session,
+@@ -508,7 +1152,6 @@ static int traverse_sessionid(const char *key, struct sessionid *session,
  	return result;
  }
  
@@ -763,17 +694,21 @@ index 417c99a..28135b2 100644
  static bool print_notify_rec(const char *path, struct server_id server,
  			     const struct notify_instance *instance,
  			     void *private_data)
-@@ -532,8 +1244,7 @@ int main(int argc, const char *argv[])
+@@ -530,9 +1173,12 @@ int main(int argc, const char *argv[])
+ {
+ 	int c;
  	int profile_only = 0;
++	#ifdef HAVE_JANSSON
++	char *json_str = NULL;
++	struct json_object jsobj = json_new_object();
++	#endif /* [HAVE_JANSSON] */
  	bool show_processes, show_locks, show_shares;
  	bool show_notify = false;
 -	bool resolve_uids = false;
--	poptContext pc;
-+	poptContext pc = NULL;
+ 	poptContext pc;
  	struct poptOption long_options[] = {
  		POPT_AUTOHELP
- 		{
-@@ -625,6 +1336,14 @@ int main(int argc, const char *argv[])
+@@ -625,6 +1271,14 @@ int main(int argc, const char *argv[])
  			.descrip    = "Numeric uid/gid"
  		},
  		{
@@ -788,43 +723,7 @@ index 417c99a..28135b2 100644
  			.longName   = "fast",
  			.shortName  = 'f',
  			.argInfo    = POPT_ARG_NONE,
-@@ -655,14 +1374,33 @@ int main(int argc, const char *argv[])
- 	setup_logging(argv[0], DEBUG_STDERR);
- 	lp_set_cmdline("log level", "0");
- 
-+	#ifdef HAVE_JANSSON
-+	struct json_object jsobj = json_new_object();
-+	#else /* [HAVE_JANSSON] */
-+	if (json_output) {
-+		fprintf(stderr, "JSON support not available\n");
-+		goto done;
-+	}
-+	#endif /* [HAVE_JANSSON] */
-+
- 	if (getuid() != geteuid()) {
--		d_printf("smbstatus should not be run setuid\n");
-+		if (json_output) {
-+			fprintf(stderr, "smbstatus should not be run setuid\n");
-+		}
-+		else {
-+			d_printf("smbstatus should not be run setuid\n");
-+		}
- 		ret = 1;
- 		goto done;
- 	}
- 
- 	if (getuid() != 0) {
--		d_printf("smbstatus only works as root!\n");
-+		if (json_output) {
-+			fprintf(stderr, "smbstatus only works as root!\n");
-+		}
-+		else {
-+			d_printf("smbstatus only works as root!\n");
-+		}
- 		ret = 1;
- 		goto done;
- 	}
-@@ -704,6 +1442,9 @@ int main(int argc, const char *argv[])
+@@ -704,6 +1358,9 @@ int main(int argc, const char *argv[])
  		case 'n':
  			numeric_only = true;
  			break;
@@ -834,7 +733,7 @@ index 417c99a..28135b2 100644
  		case 'f':
  			do_checks = false;
  			break;
-@@ -722,13 +1463,18 @@ int main(int argc, const char *argv[])
+@@ -722,7 +1379,7 @@ int main(int argc, const char *argv[])
  	if ( username )
  		Ucrit_addUid( nametouid(username) );
  
@@ -843,19 +742,7 @@ index 417c99a..28135b2 100644
  		d_printf("using configfile = %s\n", get_dyn_CONFIGFILE());
  	}
  
- 	msg_ctx = cmdline_messaging_context(get_dyn_CONFIGFILE());
- 	if (msg_ctx == NULL) {
--		fprintf(stderr, "Could not initialize messaging, not root?\n");
-+		if (json_output) {
-+			fprintf(stderr, "Could not initialize messaging, not root?\n");
-+		}
-+		else {
-+			fprintf(stderr, "Could not initialize messaging, not root?\n");
-+		}
- 		ret = -1;
- 		goto done;
- 	}
-@@ -754,11 +1500,30 @@ int main(int argc, const char *argv[])
+@@ -754,11 +1411,30 @@ int main(int argc, const char *argv[])
  	}
  
  	if ( show_processes ) {
@@ -872,7 +759,7 @@ index 417c99a..28135b2 100644
 +		else {
 +			struct json_object sessions = json_new_object();
 +			if (json_is_invalid(&sessions)) {
-+				fprintf(stderr, "Failed to create JSON object [sessions]\n");
++				d_printf("Failed to create JSON object [sessions]\n");
 +				ret = -1;
 +				goto done;
 +			}
@@ -880,7 +767,7 @@ index 417c99a..28135b2 100644
 -		sessionid_traverse_read(traverse_sessionid, frame);
 +			sessionid_traverse_read(traverse_sessionid_json, &sessions);
 +			if (json_add_object(&jsobj, "sessions", &sessions) < 0) {
-+				fprintf(stderr, "Failed to add JSON object [sessions]\n");
++				d_printf("Failed to add JSON object [sessions]\n");
 +				json_free(&sessions);
 +				ret = -1;
 +				goto done;
@@ -890,14 +777,11 @@ index 417c99a..28135b2 100644
  
  		if (processes_only) {
  			goto done;
-@@ -770,12 +1535,32 @@ int main(int argc, const char *argv[])
+@@ -769,13 +1445,33 @@ int main(int argc, const char *argv[])
+ 		if (brief) {
  			goto done;
  		}
- 
--		d_printf("\n%-12s %-7s %-13s %-32s %-12s %-12s\n", "Service", "pid", "Machine", "Connected at", "Encryption", "Signing");
--		d_printf("---------------------------------------------------------------------------------------------\n");
--
--		connections_forall_read(traverse_connections, frame);
++ 
 +		if (!json_output) {
 +			d_printf("\n%-12s %-7s %-13s %-32s %-12s %-12s\n", "Service", "pid", "Machine", "Connected at", "Encryption", "Signing");
 +			d_printf("---------------------------------------------------------------------------------------------\n");
@@ -907,18 +791,23 @@ index 417c99a..28135b2 100644
 +		else {
 +			struct json_object shares_array = json_new_array();
 +			if (json_is_invalid(&shares_array)) {
-+				fprintf(stderr, "Failed to create JSON array [shares_array]\n");
++				d_printf("Failed to create JSON array [shares_array]\n");
 +				ret = 1;
 +				goto done;
 +			}
 +			connections_forall_read(traverse_connections_json, &shares_array);
 +			if (json_add_object(&jsobj, "shares", &shares_array) < 0) {
-+				fprintf(stderr, "Failed to add JSON array [shares_array]\n");
++				d_printf("Failed to add JSON array [shares_array]\n");
 +				json_free(&shares_array);
 +				ret = -1;
 +				goto done;
 +			}
  
+-		d_printf("\n%-12s %-7s %-13s %-32s %-12s %-12s\n", "Service", "pid", "Machine", "Connected at", "Encryption", "Signing");
+-		d_printf("---------------------------------------------------------------------------------------------\n");
+-
+-		connections_forall_read(traverse_connections, frame);
+-
 -		d_printf("\n");
 +			if (!json_output) {
 +				d_printf("\n");
@@ -928,41 +817,7 @@ index 417c99a..28135b2 100644
  
  		if ( shares_only ) {
  			goto done;
-@@ -788,7 +1573,12 @@ int main(int argc, const char *argv[])
- 
- 		db_path = lock_path(talloc_tos(), "locking.tdb");
- 		if (db_path == NULL) {
--			d_printf("Out of memory - exiting\n");
-+			if (json_output) {
-+				fprintf(stderr, "Out of memory - exiting\n");
-+			}
-+			else {
-+				d_printf("Out of memory - exiting\n");
-+			}
- 			ret = -1;
- 			goto done;
- 		}
-@@ -798,9 +1588,16 @@ int main(int argc, const char *argv[])
- 			     DBWRAP_LOCK_ORDER_1, DBWRAP_FLAG_NONE);
- 
- 		if (!db) {
--			d_printf("%s not initialised\n", db_path);
--			d_printf("This is normal if an SMB client has never "
--				 "connected to your server.\n");
-+			if (json_output) {
-+				fprintf(stderr, "%s not initialised\n", db_path);
-+				fprintf(stderr, "This is normal if an SMB client has never "
-+					 "connected to your server.\n");
-+			}
-+			else {
-+				d_printf("%s not initialised\n", db_path);
-+				d_printf("This is normal if an SMB client has never "
-+					 "connected to your server.\n");
-+			}
- 			TALLOC_FREE(db_path);
- 			exit(0);
- 		} else {
-@@ -813,20 +1610,66 @@ int main(int argc, const char *argv[])
+@@ -813,8 +1509,27 @@ int main(int argc, const char *argv[])
  			ret = 1;
  			goto done;
  		}
@@ -976,14 +831,14 @@ index 417c99a..28135b2 100644
 +			struct json_object locks_array = json_new_array();
 +			if (json_is_invalid(&locks_array)) {
 +				locking_end();
-+				fprintf(stderr, "Failed to create JSON array [locks_array]\n");
++				d_printf("Failed to create JSON array [locks_array]\n");
 +				ret = 1;
 +				goto done;
 +			}
 +			result = share_entry_forall(print_share_mode_json, &locks_array);
 +			if (json_add_object(&jsobj, "locked_files", &locks_array) < 0) {
 +				locking_end();
-+				fprintf(stderr, "Failed to add JSON array [locks_array]\n");
++				d_printf("Failed to add JSON array [locks_array]\n");
 +				ret = 1;
 +				goto done;
 +			}
@@ -991,18 +846,9 @@ index 417c99a..28135b2 100644
 +		#endif /* [HAVE_JANSSON] */
  
  		if (result == 0) {
--			d_printf("No locked files\n");
-+			if (!json_output) {
-+				d_printf("No locked files\n");
-+			}
- 		} else if (result < 0) {
--			d_printf("locked file list truncated\n");
-+			if (json_output) {
-+				fprintf(stderr, "locked file list truncated\n");
-+			}
-+			else {
-+				d_printf("locked file list truncated\n");
-+			}
+ 			d_printf("No locked files\n");
+@@ -822,11 +1537,31 @@ int main(int argc, const char *argv[])
+ 			d_printf("locked file list truncated\n");
  		}
  
 -		d_printf("\n");
@@ -1019,14 +865,14 @@ index 417c99a..28135b2 100644
 +			struct json_object brl_array = json_new_array();
 +			if (json_is_invalid(&brl_array)) {
 +				locking_end();
-+				fprintf(stderr, "Failed to create JSON array [brl_array]\n");
++				d_printf("Failed to create JSON array [brl_array]\n");
 +				ret = 1;
 +				goto done;
 +			}
 +			brl_forall(print_brl_json, &brl_array);
 +			if (json_add_object(&jsobj, "brl", &brl_array) < 0) {
 +				locking_end();
-+				fprintf(stderr, "Failed to add JSON array [brl_array]\n");
++				d_printf("Failed to add JSON array [brl_array]\n");
 +				ret = 1;
 +				goto done;
 +			}
@@ -1035,7 +881,7 @@ index 417c99a..28135b2 100644
  
  		locking_end();
  	}
-@@ -839,11 +1682,38 @@ int main(int argc, const char *argv[])
+@@ -839,11 +1574,37 @@ int main(int argc, const char *argv[])
  		if (n == NULL) {
  			goto done;
  		}
@@ -1048,14 +894,14 @@ index 417c99a..28135b2 100644
 +			struct json_object notify_array = json_new_array();
 +			if (json_is_invalid(&notify_array)) {
 +				locking_end();
-+				fprintf(stderr, "Failed to create JSON array [notify_array]\n");
++				d_printf("Failed to create JSON array [notify_array]\n");
 +				ret = 1;
 +				goto done;
 +			}
 +			notify_walk(n, print_notify_rec_json, &notify_array);
 +			if (json_add_object(&jsobj, "notify", &notify_array) < 0) {
 +				locking_end();
-+				fprintf(stderr, "Failed to add JSON array [notify_array]\n");
++				d_printf("Failed to add JSON array [notify_array]\n");
 +				ret = 1;
 +				goto done;
 +			}
@@ -1065,13 +911,12 @@ index 417c99a..28135b2 100644
  	}
  
  done:
-+	poptFreeContext(pc);
 +	#ifdef HAVE_JANSSON
 +	if (json_output) {
 +		d_printf("%s\n", json_to_string(frame, &jsobj));
 +	}
 +	json_free(&jsobj);
-+	#endif /* [HAVE_JANSSON] */
++	#endif HAVE_JANSSON
  	TALLOC_FREE(frame);
  	return ret;
  }
