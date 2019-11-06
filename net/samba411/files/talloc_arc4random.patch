@@ -1,0 +1,57 @@
+diff --git a/lib/talloc/talloc.c b/lib/talloc/talloc.c
+index 518ffbd..22bafcc 100644
+--- a/lib/talloc/talloc.c
++++ b/lib/talloc/talloc.c
+@@ -396,6 +396,9 @@ void talloc_lib_init(void) __attribute__((constructor));
+ void talloc_lib_init(void)
+ {
+ 	uint32_t random_value;
++#if defined(HAVE_ARC4RANDOM)
++        random_value = arc4random();
++#else
+ #if defined(HAVE_GETAUXVAL) && defined(AT_RANDOM)
+ 	uint8_t *p;
+ 	/*
+@@ -421,7 +424,7 @@ void talloc_lib_init(void)
+ 		int offset = rand() % (16 - sizeof(random_value));
+ 		memcpy(&random_value, p + offset, sizeof(random_value));
+ 	} else
+-#endif
++#endif /* HAVE_GETAUXVAL */
+ 	{
+ 		/*
+ 		 * Otherwise, hope the location we are loaded in
+@@ -429,6 +432,7 @@ void talloc_lib_init(void)
+ 		 */
+ 		random_value = ((uintptr_t)talloc_lib_init & 0xFFFFFFFF);
+ 	}
++#endif /* HAVE_ARC4RANDOM */
+ 	talloc_magic = random_value & ~TALLOC_FLAG_MASK;
+ }
+ #else
+diff --git a/lib/talloc/wscript b/lib/talloc/wscript
+index eda62d1..aa36412 100644
+--- a/lib/talloc/wscript
++++ b/lib/talloc/wscript
+@@ -52,6 +52,7 @@ def configure(conf):
+ 
+     conf.CHECK_HEADERS('sys/auxv.h')
+     conf.CHECK_FUNCS('getauxval')
++    conf.CHECK_FUNCS('arc4random')
+ 
+     conf.SAMBA_CONFIG_H()
+ 
+diff --git a/source4/heimdal/lib/roken/rand.c b/source4/heimdal/lib/roken/rand.c
+index ef92c20..f847859 100644
+--- a/source4/heimdal/lib/roken/rand.c
++++ b/source4/heimdal/lib/roken/rand.c
+@@ -37,7 +37,9 @@ void ROKEN_LIB_FUNCTION
+ rk_random_init(void)
+ {
+ #if defined(HAVE_ARC4RANDOM)
++#if defined(HAVE_ARC4RANDOM_STIR) 
+     arc4random_stir();
++#endif /* HAVE_ARC4RANDOM_STIR */
+ #elif defined(HAVE_SRANDOMDEV)
+     srandomdev();
+ #elif defined(HAVE_RANDOM)
