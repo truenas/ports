@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 0000000..d0f60d7
+index 0000000..5960fcd
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,369 @@
+@@ -0,0 +1,711 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -31,8 +31,6 @@ index 0000000..d0f60d7
 + *
 + */
 +
-+#define NEED_SOLARIS_BOOLEAN
-+
 +#include <stdbool.h>
 +#include <talloc.h>
 +#include <sys/types.h>
@@ -46,25 +44,132 @@ index 0000000..d0f60d7
 +#define SAFE_FREE(x) do { if ((x) != NULL) {free(x); (x)=NULL;} } while(0)
 +#endif
 +
++#define SHADOW_COPY_ZFS_GMT_FORMAT "@GMT-%Y.%m.%d-%H.%M.%S"
++
 +enum SMB_QUOTA_TYPE {
-+        SMB_INVALID_QUOTA_TYPE = -1,
-+        SMB_USER_FS_QUOTA_TYPE = 1,
-+        SMB_USER_QUOTA_TYPE = 2,
-+        SMB_GROUP_FS_QUOTA_TYPE = 3,/* not used yet */
-+        SMB_GROUP_QUOTA_TYPE = 4 /* used by disk_free queries */
++	SMB_INVALID_QUOTA_TYPE = -1,
++	SMB_USER_FS_QUOTA_TYPE = 1,
++	SMB_USER_QUOTA_TYPE = 2,
++	SMB_GROUP_FS_QUOTA_TYPE = 3,/* not used yet */
++	SMB_GROUP_QUOTA_TYPE = 4 /* used by disk_free queries */
 +};
 +
++struct enum_list {
++	int value;
++	const char *name;
++};
++
++static struct enum_list casesensitivity[] = {
++	{SMBZFS_SENSITIVE, "sensitive"},
++	{SMBZFS_INSENSITIVE, "insensitive"},
++	{SMBZFS_MIXED, "mixed"},
++	{ -1, NULL}
++};
++
++struct smblibzfs_int {
++	libzfs_handle_t *libzfsp;
++};
++
++static int get_enum(const char *s, const struct enum_list *_enum)
++{
++	int i;
++
++	if (!s || !*s || !_enum) {
++		return (-1);
++	}
++
++	for (i=0; _enum[i].name; i++) {
++		if (strcmp(_enum[i].name,s) == 0)
++			return _enum[i].value;
++	}
++
++	DBG_ERR("get_enum(%s,enum): value is not in enum_list!\n", s);
++	return (-1);
++}
++
++static int smblibzfs_handle_destructor(struct smblibzfs_int *slibzp)
++{
++	if (slibzp->libzfsp == NULL) {
++		DBG_ERR("Failed to retrieve libzfs handle"
++			"from smblibzfs handle\n");
++		return 0; //proceed with freeing memory. Nothing we can do here.
++	}
++	libzfs_fini(slibzp->libzfsp);
++	return 0;
++}
++
++int get_smblibzfs_handle(TALLOC_CTX *mem_ctx, struct smblibzfshandle **smblibzfsp)
++{
++	libzfs_handle_t *libzfsp = NULL;
++	struct smblibzfs_int *slibzp_int = NULL;
++	struct smblibzfshandle *slibzp_ext = NULL;
++	slibzp_int = talloc_zero(mem_ctx, struct smblibzfs_int);
++	slibzp_ext = talloc_zero(mem_ctx, struct smblibzfshandle);
++	libzfsp = libzfs_init();
++	if (libzfsp == NULL) {
++		DBG_ERR("Failed to init libzfs\n");
++		return -1;
++	}
++	libzfs_print_on_error(libzfsp, B_TRUE);
++	slibzp_int->libzfsp = libzfsp;
++	talloc_set_destructor(slibzp_int, smblibzfs_handle_destructor);
++	slibzp_ext->private = slibzp_int;
++	*smblibzfsp = slibzp_ext;
++	return 0;
++}
++
++int 
++smb_zfs_path_to_dataset(struct smblibzfshandle *smblibzfsp,
++			const char *pathname,
++			const char **dataset_name_out)
++{
++	zfs_handle_t *zfsp = NULL;
++	struct smblibzfs_int *slibzp_int = NULL;
++	slibzp_int = talloc_get_type_abort(smblibzfsp->private,
++					   struct smblibzfs_int);
++	if (slibzp_int == NULL) {
++		DBG_ERR("Failed to retrieve smblibzfs_int handle\n");
++		return -1;
++	}
++
++	if (pathname == NULL) {
++		DBG_ERR("No pathname provided\n");
++		return (-1);
++	}
++
++	zfsp = zfs_path_to_zhandle(slibzp_int->libzfsp, pathname,
++		ZFS_TYPE_VOLUME|ZFS_TYPE_DATASET|ZFS_TYPE_FILESYSTEM);
++
++	if (zfsp == NULL) {
++		DBG_ERR("Failed to obtain zhandle on parent directory: (%s)\n",
++			pathname);
++		return -1;
++	}
++	*dataset_name_out = zfs_get_name(zfsp);
++	zfs_close(zfsp);
++	return 0;
++}
++
 +int
-+smb_zfs_get_quota(char *path, int64_t xid, enum SMB_QUOTA_TYPE quota_type, uint64_t *hardlimit, uint64_t *usedspace)
++smb_zfs_get_userspace_quota(struct smblibzfshandle *smblibzfsp,
++		  char *path, int64_t xid, 
++		  enum SMB_QUOTA_TYPE quota_type,
++		  uint64_t *hardlimit, uint64_t *usedspace)
 +{
 +	int ret;
 +	size_t blocksize = 1024;
-+	libzfs_handle_t *libzfsp;
-+	zfs_handle_t *zfsp;
++	struct smblibzfs_int *slibzp_int = NULL;
++	zfs_handle_t *zfsp = NULL;
 +	char u_req[256] = { 0 };
 +	char q_req[256] = { 0 };
 +	uint64_t quota, used; 
 +	quota = used = 0;
++	slibzp_int = talloc_get_type_abort(smblibzfsp->private,
++					   struct smblibzfs_int);
++	if (slibzp_int == NULL) {
++		DBG_ERR("Failed to retrieve smblibzfs_int handle\n");
++		return -1;
++	}
 +
 +	DBG_DEBUG("Path: (%s), xid: %lu), qtype (%u)\n",
 +		path, xid, quota_type);
@@ -92,19 +197,11 @@ index 0000000..d0f60d7
 +		return (-1);
 +	}
 +
-+	if ((libzfsp = libzfs_init()) == NULL) {
-+		DBG_ERR("Failed to init libzfs\n");
-+		return (-1);
-+	}
-+
-+	libzfs_print_on_error(libzfsp, B_TRUE);
-+
-+	zfsp = zfs_path_to_zhandle(libzfsp, path,
++	zfsp = zfs_path_to_zhandle(slibzp_int->libzfsp, path,
 +		ZFS_TYPE_VOLUME|ZFS_TYPE_DATASET|ZFS_TYPE_FILESYSTEM);
 +
 +	if (zfsp == NULL) {
 +		DBG_ERR("Failed to convert path (%s) to zhandle\n", path);
-+		libzfs_fini(libzfsp);
 +		return (-1);
 +	}
 +	
@@ -112,7 +209,6 @@ index 0000000..d0f60d7
 +	zfs_prop_get_userquota_int(zfsp, u_req, &used);
 +
 +	zfs_close(zfsp);
-+	libzfs_fini(libzfsp);
 +
 +	quota /= blocksize;
 +	used /= blocksize;
@@ -124,16 +220,25 @@ index 0000000..d0f60d7
 +}
 +
 +int
-+smb_zfs_set_quota(char *path, int64_t xid, enum SMB_QUOTA_TYPE quota_type, uint64_t hardlimit)
++smb_zfs_set_userspace_quota(struct smblibzfshandle *smblibzfsp,
++		  char *path, int64_t xid,
++		  enum SMB_QUOTA_TYPE quota_type,
++		  uint64_t hardlimit)
 +{
 +	size_t blocksize = 1024;
-+	libzfs_handle_t *libzfsp;
-+	zfs_handle_t *zfsp;
++	struct smblibzfs_int *slibzp_int = NULL;
++	zfs_handle_t *zfsp = NULL;
 +	char q_req[256] = { 0 };
 +	char quota[256] = { 0 };
 +	hardlimit *= blocksize;
 +	snprintf(quota, sizeof(quota), "%lu", hardlimit); 
-+
++	slibzp_int = talloc_get_type_abort(smblibzfsp->private,
++					   struct smblibzfs_int);
++	if (slibzp_int == NULL) {
++		DBG_ERR("Failed to retrieve smblibzfs_int handle\n");
++		return -1;
++	}
++	
 +	DBG_DEBUG("Path: (%s), xid: %lu), qtype (%u), limit (%lu)\n",
 +		path, xid, quota_type, hardlimit);
 +	switch (quota_type) {
@@ -157,69 +262,57 @@ index 0000000..d0f60d7
 +		return (-1);
 +	}
 +
-+	if ((libzfsp = libzfs_init()) == NULL) {
-+		DBG_ERR("libzfs_init failed\n");
-+		return (-1);
-+	}
-+
-+	libzfs_print_on_error(libzfsp, B_TRUE);
-+
-+	zfsp = zfs_path_to_zhandle(libzfsp, path,
++	zfsp = zfs_path_to_zhandle(slibzp_int->libzfsp, path,
 +		ZFS_TYPE_VOLUME|ZFS_TYPE_DATASET|ZFS_TYPE_FILESYSTEM);
 +
 +	if (zfsp == NULL){
 +		DBG_ERR("Failed to convert path (%s) to zhandle\n", path);
-+		libzfs_fini(libzfsp);
 +		return (-1);
 +	}
 +
 +	if (zfs_prop_set(zfsp, q_req, quota) != 0) {
 +		DBG_ERR("Failed to set (%s = %s)\n", q_req, quota);
 +		zfs_close(zfsp);
-+		libzfs_fini(libzfsp);
 +		return (-1);
 +	}
 +
 +	zfs_close(zfsp);
-+	libzfs_fini(libzfsp);
-+
 +	DBG_INFO("smb_zfs_set_quota: Set (%s = %s)\n", q_req, quota);
-+
 +	return 0;
 +}
 +
 +uint64_t
-+smb_zfs_disk_free(char *path, uint64_t *bsize, uint64_t *dfree, uint64_t *dsize, uid_t euid)
++smb_zfs_disk_free(struct smblibzfshandle *smblibzfsp,
++		  char *path, uint64_t *bsize, uint64_t *dfree,
++		  uint64_t *dsize, uid_t euid)
 +{
 +	size_t blocksize = 1024;
-+	libzfs_handle_t *libzfsp;
-+	zfs_handle_t *zfsp;
-+	char uu_req[256];
-+	char uq_req[256];
-+	snprintf(uu_req, sizeof(uu_req), "userused@%u", euid);
-+	snprintf(uq_req, sizeof(uq_req), "userquota@%u", euid);
-+	
++	struct smblibzfs_int *slibzp_int = NULL;
++	zfs_handle_t *zfsp = NULL;
++	char uu_req[256] = { 0 };
++	char uq_req[256] = { 0 };
 +	uint64_t available, usedbysnapshots, usedbydataset,
 +		usedbychildren, usedbyrefreservation, real_used, total, 
 +		userquota, userused, userquotarem;
 +
++	snprintf(uu_req, sizeof(uu_req), "userused@%u", euid);
++	snprintf(uq_req, sizeof(uq_req), "userquota@%u", euid);
++	slibzp_int = talloc_get_type_abort(smblibzfsp->private,
++					   struct smblibzfs_int);
++	if (slibzp_int == NULL) {
++		DBG_ERR("Failed to retrieve smblibzfs_int handle\n");
++		return -1;
++	}
++	
 +	if (path == NULL) {
 +		DBG_ERR("received NULL path\n");
 +		return (-1);
 +	}
 +
-+	if ((libzfsp = libzfs_init()) == NULL) {
-+		DBG_ERR("libzfs_init failed\n");
-+		return (-1);
-+	}
-+
-+	libzfs_print_on_error(libzfsp, B_TRUE);
-+
-+	zfsp = zfs_path_to_zhandle(libzfsp, path,
++	zfsp = zfs_path_to_zhandle(slibzp_int->libzfsp, path,
 +		ZFS_TYPE_VOLUME|ZFS_TYPE_DATASET|ZFS_TYPE_FILESYSTEM);
 +	if (zfsp == NULL) {
 +		DBG_ERR("Failed to convert path (%s) to zhandle\n", path);
-+		libzfs_fini(libzfsp);
 +		return (-1);
 +	}
 +
@@ -232,7 +325,6 @@ index 0000000..d0f60d7
 +	zfs_prop_get_userquota_int(zfsp, uu_req, &userused);
 +
 +	zfs_close(zfsp);
-+	libzfs_fini(libzfsp);
 +
 +	real_used = usedbysnapshots + usedbydataset + usedbychildren;
 +
@@ -259,53 +351,63 @@ index 0000000..d0f60d7
 +	return (*dfree);
 +}
 +
++/*
++ * This function creates a child dataset of a specified parent dataset.
++ * Realpath of parent dataset should be passed into the function. Name
++ * of child dataset is expected to be relative to parent dataset. I.e.
++ * if parent datset is tank/share and you wish to create tank/share/sub1
++ * then the expected name of the child dataset is "sub1". Aclmode
++ * will be inherited from parent.
++ *
++ * @param[in]	smblibzfsp		smblibzfs handle struct
++ * @param[in]	parent			realpath to parent dataset
++ * @param[in]	base			name of child dataset.
++ * @param[in]	quota			ZFS dataset quota
++ *
++ * @return	0 on success -1 on failure. 
++ */
 +int
-+smb_zfs_create_homedir(char *parent, const char *base, const char *quota)
++smb_zfs_create_child_dataset(struct smblibzfshandle *smblibzfsp,
++			     char *parent, const char *base,
++			     const char *quota)
 +{
-+	libzfs_handle_t *libzfsp;
 +	zfs_handle_t *zfsp;
 +	zfs_handle_t *new_zfsp;
-+	char *p = strdup(parent);
 +	const char *parent_dataset;
 +	char nd[PATH_MAX] = { 0 };
++	struct smblibzfs_int *slibzp_int = NULL;
++
++	slibzp_int = talloc_get_type_abort(smblibzfsp->private,
++					   struct smblibzfs_int);
++	if (slibzp_int == NULL) {
++		DBG_ERR("Failed to retrieve smblibzfs_int handle\n");
++		return -1;
++	}
 +	if (parent == NULL) {
-+		SAFE_FREE(p);
 +		return (-1);
 +	}
 +
-+	if ((libzfsp = libzfs_init()) == NULL) {
-+		SAFE_FREE(p);
-+		return (-1);
-+	}
-+
-+	libzfs_print_on_error(libzfsp, B_TRUE);
-+
-+	zfsp = zfs_path_to_zhandle(libzfsp, p,
++	zfsp = zfs_path_to_zhandle(slibzp_int->libzfsp, parent,
 +		ZFS_TYPE_VOLUME|ZFS_TYPE_DATASET|ZFS_TYPE_FILESYSTEM);
-+
-+	SAFE_FREE(p);
 +
 +	if (zfsp == NULL) {
 +		DBG_ERR("Failed to obtain zhandle on parent directory: (%s)\n", parent);
-+		libzfs_fini(libzfsp);
 +		return (-1);
 +	}
 +	parent_dataset = zfs_get_name(zfsp); 
 +	snprintf(nd, sizeof(nd), "%s/%s", parent_dataset, base);
 +
-+	if (zfs_create(libzfsp, nd, ZFS_TYPE_DATASET, NULL) != 0){
++	if (zfs_create(slibzp_int->libzfsp, nd, ZFS_TYPE_DATASET, NULL) != 0){
 +		DBG_ERR("Failed to create dataset to path (%s)\n", nd);
 +		zfs_close(zfsp);
-+		libzfs_fini(libzfsp);
 +		return (-1);
 +	} 
 +	zfs_close(zfsp);
 +
-+	new_zfsp = zfs_open(libzfsp, nd, ZFS_TYPE_DATASET);
++	new_zfsp = zfs_open(slibzp_int->libzfsp, nd, ZFS_TYPE_DATASET);
 +
 +	if (new_zfsp == NULL) {
 +		DBG_ERR("Failed to obtain zhandle on new dataset: (%s)\n", nd);
-+		libzfs_fini(libzfsp);
 +		return (-1);
 +	}
 +
@@ -326,59 +428,299 @@ index 0000000..d0f60d7
 +	DBG_INFO("Created ZFS dataset (%s) with quota (%s)\n", nd, quota);
 +
 +	zfs_close(new_zfsp);
-+	libzfs_fini(libzfsp);
 +	return 0;
 +}
 +
 +int
-+smb_zfs_is_case_sensitive(char* path)
++smb_zfs_get_case_sensitivity(struct smblibzfshandle *smblibzfsp, char* path)
 +{
-+	bool is_sensitive = B_TRUE;
++	int casesens = 0;
 +	char buf[ZFS_MAXPROPLEN];
 +	char source[ZFS_MAX_DATASET_NAME_LEN];
-+	zprop_source_t sourcetype;	
-+	libzfs_handle_t *libzfsp;
-+	zfs_handle_t *zfsp;
++	zprop_source_t sourcetype;
++	zfs_handle_t *zfsp = NULL;
++	struct smblibzfs_int *slibzp_int = NULL;
++
++	slibzp_int = talloc_get_type_abort(smblibzfsp->private,
++					   struct smblibzfs_int);
++	if (slibzp_int == NULL) {
++		DBG_ERR("Failed to retrieve smblibzfs_int handle\n");
++		return -1;
++	}
 +
 +	if (path == NULL) {
 +		return (-1);
 +	}
 +
-+	if ((libzfsp = libzfs_init()) == NULL) {
-+		return (-1);
-+	}
-+
-+	libzfs_print_on_error(libzfsp, B_TRUE);
-+	zfsp = zfs_path_to_zhandle(libzfsp, path,
++	zfsp = zfs_path_to_zhandle(slibzp_int->libzfsp, path,
 +		ZFS_TYPE_VOLUME|ZFS_TYPE_DATASET|ZFS_TYPE_FILESYSTEM);
 +
 +	if (zfsp == NULL) {
 +		DBG_ERR("Failed to obtain zhandle on path: (%s)\n", path);
-+		libzfs_fini(libzfsp);
 +		return (-1);
 +	}
 +	if (zfs_prop_get(zfsp, ZFS_PROP_CASE,
-+	    buf, sizeof (buf), &sourcetype, 
-+	    source, sizeof (source), B_FALSE) != 0) {
-+		DBG_ERR("Failed to look up casesensitivity propertiy on path: (%s)\n", path);
++	    buf, sizeof(buf), &sourcetype, 
++	    source, sizeof(source), B_FALSE) != 0) {
++		DBG_ERR("Failed to look up casesensitivity propertiy on path: (%s)\n",
++			path);
 +		zfs_close(zfsp);
-+		libzfs_fini(libzfsp);
 +		return (-1);
 +	}
-+	if (strcmp("insensitive", buf) == 0) {
-+		is_sensitive = B_FALSE;
-+	}
++	casesens = get_enum(buf, casesensitivity);
 +	zfs_close(zfsp);
-+	libzfs_fini(libzfsp);
++	return casesens;
++}
 +
-+	return is_sensitive;
++static bool 
++shadow_copy_zfs_is_snapshot_included(struct iter_info *info,
++    const char *snap_name)
++{
++	const char **pattern;
++
++	pattern = info->inclusions;
++	while (*pattern) {
++		if (unix_wild_match(*pattern, snap_name)) {
++			break;
++		}
++		pattern++;
++	}
++
++	if (*info->inclusions && !*pattern) {
++		DEBUG(2,("smb_zfs_add_snapshot: snapshot %s "
++		    "not in inclusion list\n", snap_name));
++		return false;
++	}
++
++	pattern = info->exclusions;
++	while (*pattern) {
++		if (unix_wild_match(*pattern, snap_name)) {
++			DEBUG(2,("smb_zfs_add_snapshot: snapshot %s "
++			    "in exclusion list\n", snap_name));
++			return false;
++		}
++		pattern++;
++	}
++
++	return true;
++}
++
++static int
++smb_zfs_add_snapshot(zfs_handle_t *snap, void *data)
++{
++	struct iter_info *info = NULL;
++	struct snapshot_entry *entry = NULL;
++	const char *snap_name;
++	char ts_buf[20];
++	time_t timestamp_t;
++	struct tm timestamp;
++	int rc, used;
++	size_t req_mem, name_len;
++
++	if (unlikely(data == NULL)) {
++		DBG_ERR("received NULL for data\n");
++		errno = ENOMEM;
++		return -1;
++	}
++	info = (struct iter_info *) data;
++
++	/* ignore excluded snapshots */
++	snap_name = strchr(zfs_get_name(snap), '@') + 1;
++
++	if (!shadow_copy_zfs_is_snapshot_included(info, snap_name)) {
++		zfs_close(snap);
++		return 0;
++	}
++
++	if (info->ignore_empty_snaps) {
++		used = zfs_prop_get_int(snap, ZFS_PROP_USED);
++		if (used == 0) {
++			zfs_close(snap);
++			return 0;
++		}
++	}
++
++	/* get creation date */
++	rc = zfs_prop_get(snap, ZFS_PROP_CREATION, ts_buf, sizeof(ts_buf),
++			  NULL, NULL, 0, 1);
++	if (rc != 0) {
++		DEBUG(0,("smb_zfs_add_snapshot: error getting "
++		    "creation date: %s\n", strerror(errno)));
++
++		zfs_close(snap);
++		return -2;
++	}
++
++	sscanf(ts_buf, "%lu", &timestamp_t);
++
++	/* expand list if necessary */
++	req_mem = sizeof(*info->snapshots) +
++		  info->snapshots->num_entries *
++		  sizeof(info->snapshots->entries[0]);
++
++	if (req_mem > talloc_get_size(info->snapshots)) {
++		req_mem += info->snapshots->num_entries / 2 *
++			   sizeof(info->snapshots->entries[0]);
++		info->snapshots = TALLOC_REALLOC(talloc_parent(info->snapshots),
++						 info->snapshots, req_mem);
++		if (info->snapshots == NULL) {
++			DEBUG(0,("smb_zfs_add_snapshot: out of memory "
++			    "(requested %zu bytes)\n", req_mem));
++
++			zfs_close(snap);
++			return -2;
++		}
++	}
++
++	/* add entry */
++	name_len = strlen(snap_name);
++
++	entry = talloc_size(info->snapshots, sizeof(*entry) + name_len);
++	if (entry == NULL) {
++		DEBUG(0,("smb_zfs_add_snapshot: out of memory "
++		    "(requested %lu bytes)\n", sizeof(*entry) + name_len));
++
++		zfs_close(snap);
++		errno = ENOMEM;
++		return -2;
++	}
++
++	info->snapshots->entries[info->snapshots->num_entries++] = entry;
++
++	gmtime_r(&timestamp_t, &timestamp);
++	strftime(entry->label, sizeof(entry->label), SHADOW_COPY_ZFS_GMT_FORMAT,
++		 &timestamp);
++
++	strlcpy(entry->name, snap_name, name_len + 1);
++
++	zfs_close(snap);
++	return 0;
++}
++
++
++/*
++ * This function lists ZFS snapshots
++ * @param[in]	smblibzfsp		smblibzfs handle struct
++ * @param[in]	mem_ctx			TALLOC memory context
++ * @param[in]	ignore_empty_snaps	ignore snapshots with zero space used
++ * @param[in]	inclusions		list of filters to determine whether to
++ *					include a snapshot in the list
++ * @param[in]	exclusions		list of filters to determine whether to
++ *					exclude a snapshot from the resulting list
++ *
++ * @return	struct snapshot_list
++ */
++struct
++snapshot_list *smb_zfs_list_snapshots(struct smblibzfshandle *smblibzfsp,
++				      TALLOC_CTX *mem_ctx,
++				      const char *path,
++				      bool ignore_empty_snaps,
++				      const char **inclusions,
++				      const char **exclusions)
++{
++	struct snapshot_list *snapshots = NULL;
++	struct iter_info iter_info;
++	size_t initial_size;
++	zfs_handle_t *zfs = NULL;
++	struct smblibzfs_int *slibzp_int = NULL;
++	char dataset_name = NULL;
++	int rc;
++	slibzp_int = talloc_get_type_abort(smblibzfsp->private,
++					   struct smblibzfs_int);
++	if (slibzp_int == NULL) {
++		DBG_ERR("Failed to retrieve smblibzfs_int handle\n");
++		return snapshots;
++	}
++
++	/* initialize our result */
++	initial_size = sizeof(*snapshots) + 10 * sizeof(snapshots->entries[0]);
++	snapshots = talloc_size(mem_ctx, initial_size);
++
++	if (snapshots == NULL) {
++		DEBUG(0,("smb_zfs_list_snapshots: out of memory"
++		    "(requested %zu bytes)\n", initial_size));
++		goto done;
++	}
++
++	snapshots->mountpoint = NULL;
++	snapshots->dataset_name = NULL;
++	snapshots->num_entries = 0;
++
++	zfs = zfs_path_to_zhandle(slibzp_int->libzfsp, path,
++		ZFS_TYPE_VOLUME|ZFS_TYPE_DATASET|ZFS_TYPE_FILESYSTEM);
++
++	if (zfs == NULL) {
++		DBG_ERR("smb_zfs_list_snapshots: error getting "
++			"zhandle from path '%s' (%s)\n", path, strerror(errno));
++		goto error;
++	}
++
++	/* get mountpoint */
++	snapshots->mountpoint = talloc_size(snapshots, ZFS_MAXPROPLEN + 1);
++	snapshots->dataset_name = talloc_strdup(mem_ctx, zfs_get_name(zfs));
++
++	if (snapshots->mountpoint == NULL) {
++		DEBUG(0,("smb_zfs_list_snapshots: out of memory "
++		    "(requested %d bytes)\n",  ZFS_MAXPROPLEN + 1));
++		goto error;
++	}
++
++	rc = zfs_prop_get(zfs, ZFS_PROP_MOUNTPOINT, snapshots->mountpoint,
++			  talloc_get_size(snapshots->mountpoint), NULL, NULL,
++			  0, 0);
++
++	if (rc != 0) {
++		DEBUG(0,("smb_zfs_list_snapshots: error getting "
++		    "mountpoint for '%s': %s\n", path, strerror(errno)));
++		goto error;
++	}
++
++	/* get snapshots */
++	iter_info.snapshots = snapshots;
++	iter_info.inclusions = inclusions;
++	iter_info.exclusions = exclusions;
++	iter_info.ignore_empty_snaps = ignore_empty_snaps;
++
++	if (iter_info.inclusions == NULL) {
++		DEBUG(0,("smb_zfs_list_snapshots: error getting "
++		    "shadow:include parameter\n"));
++		goto error;
++	}
++
++	if (iter_info.exclusions == NULL) {
++		DEBUG(0,("smb_zfs_list_snapshots: error getting "
++		    "shadow:exclude parameter\n"));
++		goto error;
++	}
++
++	rc = zfs_iter_snapshots(zfs, false, smb_zfs_add_snapshot, &iter_info);
++
++	if (rc != 0) {
++		DEBUG(0,("smb_zfs_list_snapshots: error getting "
++		    "snapshots for '%s': %s\n", path, strerror(errno)));
++		goto error;
++	}
++
++	snapshots = iter_info.snapshots;
++	time(&snapshots->timestamp);
++
++	goto done;
++
++error:
++	TALLOC_FREE(snapshots);
++
++done:
++	if (zfs)
++		zfs_close(zfs);
++
++	return snapshots;
 +}
 diff --git a/source3/modules/smb_libzfs.h b/source3/modules/smb_libzfs.h
 new file mode 100644
-index 0000000..000a2a6
+index 0000000..0378541
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.h
-@@ -0,0 +1,41 @@
+@@ -0,0 +1,95 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -409,15 +751,69 @@ index 0000000..000a2a6
 +#ifndef	__SMB_LIBZFS_H
 +#define	__SMB_LIBZFS_H
 +#include <pwd.h>
++#include <talloc.h>
 +
-+int smb_zfs_get_quota(char *path, int64_t xid, int quota_type, uint64_t *hardlimit, uint64_t *usedspace);
-+int smb_zfs_set_quota(char *path, int64_t xid, int quota_type, uint64_t hardlimit);
-+uint64_t smb_zfs_disk_free(char *path, uint64_t *bsize, uint64_t *dfree, uint64_t *dsize, uid_t euid);
-+int smb_zfs_create_homedir(char *parent, const char *base, const char *quota);
-+int smb_zfs_is_case_sensitive(char* path);
++struct smblibzfshandle {
++	void *private;
++};
++
++struct iter_info
++{
++    struct snapshot_list *snapshots;
++    bool ignore_empty_snaps;
++    const char **inclusions;
++    const char **exclusions;
++};
++
++struct snapshot_entry
++{
++    char label[25];
++    char name[1];
++    struct snapshot_entry *prev, *next;
++};
++
++struct snapshot_list
++{
++    time_t timestamp;
++    char *mountpoint;
++    char *dataset_name;
++    int (*cmpfunc)(const void *, const void *);
++    size_t num_entries;
++    struct snapshot_entry *entries[1];
++};
 +
 +
++enum casesensitivity {SMBZFS_SENSITIVE, SMBZFS_INSENSITIVE, SMBZFS_MIXED};
 +
++struct zfs_dataset_prop
++{
++	enum casesensitivity *casesens;
++	bool readonly;
++};
++
++
++int get_smblibzfs_handle(TALLOC_CTX *mem_ctx, struct smblibzfshandle **smblibzfsp);
++
++int smb_zfs_path_to_dataset(struct smblibzfshandle *smblibzfsp,
++			    const char *pathname, const char **dataset_name_out);
++
++int smb_zfs_get_userspace_quota(struct smblibzfshandle *smblibzfsp, char *path,
++				int64_t xid, int quota_type, uint64_t *hardlimit,
++				uint64_t *usedspace);
++
++int smb_zfs_set_userspace_quota(struct smblibzfshandle *smblibzfsp, char *path,
++				int64_t xid, int quota_type, uint64_t hardlimit);
++
++uint64_t smb_zfs_disk_free(struct smblibzfshandle *smblibzfsp, char *path,
++			   uint64_t *bsize, uint64_t *dfree, uint64_t *dsize, uid_t euid);
++
++int smb_zfs_create_child_dataset(struct smblibzfshandle *smblibzfsp, char *parent,
++				 const char *new, const char *quota);
++
++int smb_zfs_get_case_sensitivity(struct smblibzfshandle *smblibzfsp, char* path);
++
++struct snapshot_list *smb_zfs_list_snapshots(struct smblibzfshandle *smblibzfsp,
++    TALLOC_CTX *mem_ctx, const char *fs, bool ignore_empty_snaps, const char **inclusions, const char **exclusions);
 +
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
@@ -459,10 +855,10 @@ index 5095f65..1b55e64 100644
  static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 0000000..292ea23
+index 0000000..dec41de
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2254 @@
+@@ -0,0 +1,2284 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -514,6 +910,7 @@ index 0000000..292ea23
 +
 +struct ixnas_config_data {
 +	struct smbacl4_vfs_params nfs4_params;
++	struct smblibzfshandle *libzp;
 +	bool posix_rename;
 +	bool zfs_acl_enabled;
 +	bool zfs_acl_sortaces;
@@ -738,7 +1135,7 @@ index 0000000..292ea23
 +
 +	DBG_DEBUG("realpath = %s\n", rp);
 +
-+	res = smb_zfs_disk_free(rp, bsize, dfree, dsize, geteuid());
++	res = smb_zfs_disk_free(config->libzp, rp, bsize, dfree, dsize, geteuid());
 +	if (res == (uint64_t)-1)
 +		res = SMB_VFS_NEXT_DISK_FREE(handle, smb_fname, bsize, dfree, dsize);
 +	if (res == (uint64_t)-1)
@@ -1682,6 +2079,7 @@ index 0000000..292ea23
 +                                enum SMB_QUOTA_TYPE qtype,
 +                                unid_t id,
 +                                SMB_DISK_QUOTA *qt)
++
 +{
 +	int ret;
 +	char rp[PATH_MAX] = { 0 };
@@ -1710,26 +2108,32 @@ index 0000000..292ea23
 +		//passing -1 to quotactl means that the current UID should be used. Do the same.
 +		if (id.uid == -1) {
 +			become_root();
-+       			ret = smb_zfs_get_quota(rp, current_user, qtype, &hardlimit, &usedspace);
++			ret = smb_zfs_get_userspace_quota(config->libzp,
++							  rp, current_user,
++							  qtype, &hardlimit, &usedspace);
 +			unbecome_root();
 +		}
 +		else {
 +			become_root();
-+       			ret = smb_zfs_get_quota(rp, id.uid, qtype, &hardlimit, &usedspace);
++			ret = smb_zfs_get_userspace_quota(config->libzp,
++							  rp, id.uid, qtype,
++							  &hardlimit, &usedspace);
 +			unbecome_root();
 +		}
 +		break;
 +	case SMB_GROUP_QUOTA_TYPE:
 +	case SMB_GROUP_FS_QUOTA_TYPE:
 +		become_root();
-+        	ret = smb_zfs_get_quota(rp, id.gid, qtype, &hardlimit, &usedspace);
++		ret = smb_zfs_get_userspace_quota(config->libzp,
++						  rp, id.gid, qtype,
++						  &hardlimit, &usedspace);
 +		unbecome_root();
 +		break;
-+        default:
++	default:
 +		DBG_ERR("Unrecognized quota type.\n");
 +		ret = -1;
-+                break;
-+        }
++		break;
++	}
 +
 +	ZERO_STRUCTP(qt);
 +	qt->bsize = 1024;
@@ -1780,7 +2184,9 @@ index 0000000..292ea23
 +		DBG_INFO("ixnas_set_quota: quota type: (%d), id: (%d), h-limit: (%lu), s-limit: (%lu)\n", 
 +			qtype, id.uid, qt->hardlimit, qt->softlimit);
 +		become_root();
-+		ret = smb_zfs_set_quota(handle->conn->connectpath, id.uid, qtype, qt->hardlimit);
++		ret = smb_zfs_set_userspace_quota(config->libzp,
++						  handle->conn->connectpath,
++						  id.uid, qtype, qt->hardlimit);
 +		unbecome_root();
 +		break;
 +	case SMB_GROUP_QUOTA_TYPE:
@@ -1788,17 +2194,18 @@ index 0000000..292ea23
 +		DBG_INFO("ixnas_set_quota: quota type: (%d), id: (%d), h-limit: (%lu), s-limit: (%lu)\n", 
 +			qtype, id.gid, qt->hardlimit, qt->softlimit);
 +		become_root();
-+		ret = smb_zfs_set_quota(handle->conn->connectpath, id.gid, qtype, qt->hardlimit);
++		ret = smb_zfs_set_userspace_quota(config->libzp,
++						  handle->conn->connectpath,
++						  id.gid, qtype, qt->hardlimit);
 +		unbecome_root();
 +		break;
-+        default:
++	default:
 +		DBG_ERR("Received unknown quota type.\n");
 +		ret = -1;
 +		break;
-+        }
++	}
 +
 +	return ret;
-+
 +}
 +/********************************************************************
 + Convert chmod() requests into an appropriate non-inheriting ACL
@@ -2253,7 +2660,7 @@ index 0000000..292ea23
 +}
 +
 +static int create_zfs_autohomedir(vfs_handle_struct *handle, 
-+				  const char *homedir_quota,
++				  struct ixnas_config_data *config,
 +				  const char *user)
 +{
 +	bool ret = 0;
@@ -2276,7 +2683,7 @@ index 0000000..292ea23
 +	}
 +
 +	DBG_INFO("Preparing to create dataset (%s) with parentdir (%s) with quota (%s)\n", 
-+		parent, base, homedir_quota);
++		parent, base, config->homedir_quota);
 +
 +	if (realpath(parent, rp) == NULL ){
 +		DBG_ERR("Parent directory does not exist, attempting to create parent.\n");
@@ -2286,7 +2693,7 @@ index 0000000..292ea23
 +			TALLOC_FREE(tmp_ctx);
 +			return -1;
 +		}
-+		if (smb_zfs_create_homedir(grandparent, parent_relpath, NULL) < 0) {
++		if (smb_zfs_create_child_dataset(config->libzp, grandparent, parent_relpath, NULL) < 0) {
 +			DBG_ERR("Failed to auto-create grandparent dataset\n");
 +			TALLOC_FREE(tmp_ctx);
 +			return -1;
@@ -2313,7 +2720,7 @@ index 0000000..292ea23
 +		acl_free(new_acl);
 +	}
 +
-+	if (smb_zfs_create_homedir(parent, base, homedir_quota) < 0) {
++	if (smb_zfs_create_child_dataset(config->libzp, parent, base, config->homedir_quota) < 0) {
 +		DBG_ERR("Failed to auto-create connectpath dataset\n");
 +		TALLOC_FREE(tmp_ctx);
 +		return -1;
@@ -2363,33 +2770,38 @@ index 0000000..292ea23
 + * or it has been modified by the admin. In either case, do nothing.
 + */
 +
-+static int set_base_user_quota(vfs_handle_struct *handle, uint64_t base_quota, const char *user)
++static int set_base_user_quota(vfs_handle_struct *handle,
++			       struct ixnas_config_data *config,
++			       const char *user)
 +{
 +	int ret;
-+	uint64_t existing_quota, usedspace;
++	uint64_t existing_quota, usedspace, base_quota;
 +	existing_quota = usedspace = 0;
 +	uid_t current_user = nametouid(user);
-+	base_quota /= 1024;
++	base_quota = config->base_user_quota / 1024;
 +
 +	if ( !current_user ) {
 +		DBG_ERR("Failed to convert (%s) to uid.\n", user); 
 +		return -1;
 +	}
 +
-+	if ( smb_zfs_get_quota(handle->conn->connectpath, 
-+				current_user,
-+				SMB_USER_QUOTA_TYPE,
-+				&existing_quota,
-+				&usedspace) < 0 ) {
++	if (smb_zfs_get_userspace_quota(config->libzp,
++			      handle->conn->connectpath, 
++			      current_user,
++			      SMB_USER_QUOTA_TYPE,
++			      &existing_quota,
++			      &usedspace) < 0) {
 +		DBG_ERR("Failed to get base quota uid: (%u), path (%s)\n",
 +			current_user, handle->conn->connectpath );
 +		return -1;
 +	}
 +
-+	DBG_INFO("set_base_user_quote: uid (%u), quota (%lu)\n", current_user, base_quota);
++	DBG_INFO("set_base_user_quote: uid (%u), quota (%lu)\n",
++		 current_user, base_quota);
 +
 +	if ( !existing_quota ) {
-+		ret = smb_zfs_set_quota(handle->conn->connectpath,
++		ret = smb_zfs_set_userspace_quota(config->libzp,
++					handle->conn->connectpath,
 +					current_user,
 +					SMB_USER_QUOTA_TYPE,
 +					base_quota);
@@ -2508,9 +2920,11 @@ index 0000000..292ea23
 +			    const char *service, const char *user)
 +{
 +	struct ixnas_config_data *config = NULL;
-+	int ret;
++	struct smblibzfshandle *libzp = NULL;
++	int ret, consens;
 +	const char *homedir_quota = NULL;
 +	const char *base_quota_str = NULL;
++	bool can_use_libzfs;
 +	acl_t zacl;
 +	int is_trivial = 0;
 +
@@ -2523,8 +2937,20 @@ index 0000000..292ea23
 +	config->dataset_is_casesensitive = True;
 +
 +#if HAVE_LIBZFS
++	ret = get_smblibzfs_handle(handle->conn, &libzp);
++	if (ret != 0) {
++		DBG_ERR("Failed to get smblibzfs handle\n");
++		errno = ENOMEM;
++		return -1;
++	}
++	config->libzp = libzp;
++
 +	/* Parameters for homedirs and quotas */
-+	config->dataset_is_casesensitive = smb_zfs_is_case_sensitive(handle->conn->connectpath);
++	consens = smb_zfs_get_case_sensitivity(config->libzp, handle->conn->connectpath);
++	if (consens == SMBZFS_INSENSITIVE) {
++		DBG_ERR("setting case sensitivity to insensitive\n");
++		config->dataset_is_casesensitive = False;
++	}
 +
 +	config->zfs_auto_homedir = lp_parm_bool(SNUM(handle->conn), 
 +			"ixnas", "zfs_auto_homedir", false);
@@ -2535,7 +2961,7 @@ index 0000000..292ea23
 +			"ixnas", "base_user_quota", NULL);
 +
 +	if (config->zfs_auto_homedir) {
-+		if (create_zfs_autohomedir(handle, config->homedir_quota, user) < 0) {
++		if (create_zfs_autohomedir(handle, config, user) < 0) {
 +			DBG_ERR("Failed to automatically generate connectpath.\n");
 +			return -1;
 +		}
@@ -2545,7 +2971,7 @@ index 0000000..292ea23
 +        }
 +
 +	if (config->base_user_quota) {
-+		set_base_user_quota(handle, config->base_user_quota, user);
++		set_base_user_quota(handle, config, user);
 +	}
 +
 +	if (!config->dataset_is_casesensitive) {
@@ -3562,10 +3988,10 @@ index 0000000..8387a64
 +}
 diff --git a/source3/modules/vfs_zfs_space.c b/source3/modules/vfs_zfs_space.c
 new file mode 100644
-index 0000000..28f4b36
+index 0000000..c1a810f
 --- /dev/null
 +++ b/source3/modules/vfs_zfs_space.c
-@@ -0,0 +1,68 @@
+@@ -0,0 +1,103 @@
 +/*-
 + * Copyright 2015 iXsystems, Inc.
 + * All rights reserved
@@ -3599,19 +4025,26 @@ index 0000000..28f4b36
 +
 +#include "modules/smb_libzfs.h"
 +
++struct zfs_space_config_data {
++	struct smblibzfshandle *libzp;
++};
 +
 +static uint64_t vfs_zfs_space_disk_free(vfs_handle_struct *handle, const struct smb_filename *smb_fname,
 +    uint64_t *bsize, uint64_t *dfree, uint64_t *dsize)
 +{
 +	uint64_t res;
 +	char rp[PATH_MAX] = { 0 };
++	struct zfs_space_config_data *config = NULL;
++	SMB_VFS_HANDLE_GET_DATA(handle, config,
++				struct zfs_space_config_data,
++				return -1);
 +
 +	if (realpath(smb_fname->base_name, rp) == NULL)
 +		return (-1);
 +
 +	DEBUG(9, ("realpath = %s\n", rp));
 +
-+	res = smb_zfs_disk_free(rp, bsize, dfree, dsize, geteuid());
++	res = smb_zfs_disk_free(config->libzp, rp, bsize, dfree, dsize, geteuid());
 +	if (res == (uint64_t)-1)
 +		res = SMB_VFS_NEXT_DISK_FREE(handle, smb_fname, bsize, dfree, dsize);
 +	if (res == (uint64_t)-1)
@@ -3624,8 +4057,36 @@ index 0000000..28f4b36
 +	return (res);
 +}
 +
++static int vfs_zfs_space_connect(struct vfs_handle_struct *handle,
++                            const char *service, const char *user)
++{
++	int ret;
++	struct zfs_space_config_data *config = NULL;
++	struct smblibzfshandle *libzp = NULL;
++
++	config = talloc_zero(handle->conn, struct zfs_space_config_data);
++	if (!config) {
++		DBG_ERR("talloc_zero() failed\n");
++		errno = ENOMEM;
++		return -1;
++	}
++
++	ret = get_smblibzfs_handle(handle->conn, &libzp);
++	if (ret != 0) {
++		DBG_ERR("Failed to get smblibzfs handle\n");
++		errno = ENOMEM;
++		return -1;
++	}
++	config->libzp = libzp;
++	SMB_VFS_HANDLE_SET_DATA(handle, config,
++				NULL, struct zfs_space_config_data,
++				return -1);
++	return SMB_VFS_NEXT_CONNECT(handle, service, user);
++}
++
 +static struct vfs_fn_pointers vfs_zfs_space_fns = {
-+	.disk_free_fn = vfs_zfs_space_disk_free
++	.disk_free_fn = vfs_zfs_space_disk_free,
++	.connect_fn = vfs_zfs_space_connect
 +};
 +
 +NTSTATUS vfs_zfs_space_init(TALLOC_CTX *);

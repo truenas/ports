@@ -24,10 +24,10 @@ index 4331c2f..a9de97f 100644
  
 diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
 new file mode 100644
-index 0000000..0eaf896
+index 0000000..496ab46
 --- /dev/null
 +++ b/source3/modules/vfs_shadow_copy_zfs.c
-@@ -0,0 +1,1905 @@
+@@ -0,0 +1,1990 @@
 +/* shadow_copy_zfs: a shadow copy module for ZFS
 + *
 + * Copyright (C) Andrew Tridgell   2007 (portions taken from shadow_copy_zfs)
@@ -59,7 +59,7 @@ index 0000000..0eaf896
 +#include "include/ntioctl.h"
 +#include "dbwrap/dbwrap.h"
 +#include "dbwrap/dbwrap_open.h"
-+#include "modules/zfs_list_snapshots.h"
++#include "modules/smb_libzfs.h"
 +#include "../lib/util/memcache.h"
 +#include "util/util_tdb.h"
 +
@@ -69,7 +69,6 @@ index 0000000..0eaf896
 +#define SHADOW_COPY_ZFS_SNAP_DIR ".zfs/snapshot"
 +#define MAX_CACHE_TIME 10.0
 +#define ZSNAP_CACHE_BUFFER_SIZE   (PATH_MAX + 128)
-+
 +
 +/*
 + * This module does the following:
@@ -94,12 +93,16 @@ index 0000000..0eaf896
 +};
 +
 +struct shadow_copy_zfs_config {
++	struct smblibzfshandle	*libzp;
++
 +	/* Cache parameters */
 +	bool 			cache_enabled;
 +	enum cachebackend	cache_backend;
 +	struct db_context	*vss_db;
++	int			timedelta;
 +
 +	/* Snapshot parameters */
++	bool 			ignore_empty_snaps;	
 +	const char 		*sort_order;
 +	const char 		*dataset_path;
 +	const char 		**inclusions;
@@ -141,6 +144,73 @@ index 0000000..0eaf896
 +	*poffsets = offsets;
 +	*pnum_offsets = num_offsets;
 +	return true;
++}
++
++/**
++ * This function will check if snaplist is updated or not. If snaplist
++ * is empty then it will create a new list. Each time snaplist is updated
++ * the time is recorded. If the snapshot time is greater than the snaplist
++ * update time then chances are we are working on an older list. Then discard
++ * the old list and fetch a new snaplist. End-users can adjust the timeout
++ * period by adjusting the parameter "shadow:snap_timedelta=300"
++ *
++ * @param[in]	handle		VFS handle struct
++ * @param[in]	mem_ctx		talloc context
++ * @param[in]	path		full path in which to check snapshots
++ *
++ * @return	true if the list is updated else false
++ */
++static bool shadow_copy_zfs_update_snaplist(struct vfs_handle_struct *handle,
++					    TALLOC_CTX *mem_ctx,
++					    const char *path,
++					    struct snapshot_list **snapp)
++{
++	bool snaplist_updated = false;
++	bool is_same_dataset = false;
++        double seconds = 0.0;
++	time_t snap_time;
++	char *dataset = NULL;
++	struct shadow_copy_zfs_config *config = NULL;
++	struct snapshot_list *snapshots = NULL;
++	time(&snap_time);
++	SMB_VFS_HANDLE_GET_DATA(handle, config, struct shadow_copy_zfs_config,
++	    return NULL);
++
++	if (config->snapshots != NULL) {
++		seconds = difftime(snap_time, config->snapshots->timestamp);
++	}
++
++	smb_zfs_path_to_dataset(config->libzp, path, &dataset);
++	if (config->snapshots != NULL) {
++		is_same_dataset = strequal(dataset, config->snapshots->dataset_name);
++	}
++
++	if (seconds > config->timedelta || config->snapshots == NULL || !is_same_dataset) {
++		DBG_INFO("refreshing stored snaplist - current timedelta: %f",
++			"permitted timedelta: %d, is_same_dataset: %s\n", seconds, 
++			config->timedelta, is_same_dataset ? "true": "false");
++		snapshots = smb_zfs_list_snapshots(config->libzp,
++						   mem_ctx,
++						   path,
++						   config->ignore_empty_snaps,
++						   config->inclusions,
++						   config->exclusions);
++		if (snapshots != NULL) {
++			if (config->snapshots != NULL) {
++				TALLOC_FREE(config->snapshots);
++			}
++			config->snapshots = snapshots;
++			SMB_VFS_HANDLE_SET_DATA(handle, config,
++				NULL, struct shadow_copy_zfs_config,
++				return false);
++			snaplist_updated = true;
++		} else {
++			DBG_ERR("Failed to get shadow copy data for %s\n", path);
++		}
++	}
++	*snapp = config->snapshots;
++
++	return snaplist_updated;
 +}
 +
 +/*
@@ -473,8 +543,9 @@ index 0000000..0eaf896
 +	NTSTATUS status;
 +	struct snapshot_entry entry_buf, *entry = &entry_buf;
 +	const char *relpath, *mpoffset, *mountpoint, *snapshot;
-+	bool connectpath_is_dataset_mp = True;
-+	bool relpath_is_talloc = False;
++	bool connectpath_is_dataset_mp = true;
++	bool relpath_is_talloc = false;
++	bool snaps_updated = false;
 +	size_t mplen;
 +	char *ret = NULL;
 +	char *prefix = NULL;
@@ -512,16 +583,14 @@ index 0000000..0eaf896
 +	}
 +
 +	/*
-+	 * Strip the @GMT- token in preparation for zfs_path_to_zhandle() in shadow_copy_list_snapshots()
++	 * Strip the @GMT- token in preparation for zfs_path_to_zhandle() in smb_zfs_list_snapshots()
 +	 */
 +	normalized_fname = shadow_copy_zfs_strip_gmt(tmp_ctx, normalized_fname);
 +
 +	if (access(normalized_fname, F_OK) < 0) {
 +		normalized_fname = shadow_copy_zfs_get_working_path(handle, tmp_ctx, normalized_fname);
-+		snapshots = shadow_copy_zfs_list_snapshots(tmp_ctx,
-+							   normalized_fname,
-+							   config->inclusions,
-+							   config->exclusions);
++		snaps_updated = shadow_copy_zfs_update_snaplist(
++			handle, handle->conn, normalized_fname, &snapshots);
 +	}
 +	else {
 +		if (realpath(normalized_fname, rp) == NULL) {
@@ -529,13 +598,13 @@ index 0000000..0eaf896
 +			TALLOC_FREE(tmp_ctx);
 +			return NULL;
 +		}
-+		snapshots = shadow_copy_zfs_list_snapshots(tmp_ctx,
-+							   rp,
-+							   config->inclusions,
-+							   config->exclusions);
++		snaps_updated = shadow_copy_zfs_update_snaplist(
++			handle, handle->conn, rp, &snapshots);
 +	}
 +
 +	if (snapshots == NULL) {
++		DBG_ERR("Failed to get snapshot list for %s\n",
++			normalized_fname);
 +		TALLOC_FREE(tmp_ctx);
 +		return NULL;
 +	}
@@ -549,7 +618,7 @@ index 0000000..0eaf896
 +	 * This may need to be rewritten to use mountpoints rather than dataset names.
 +	 */
 +
-+	if ( strcmp(config->dataset_path, snapshots->dataset_name) != 0) {
++	if (strcmp(config->dataset_path, snapshots->dataset_name) != 0) {
 +		fds_len = strlen(snapshots->dataset_name) - strlen(config->dataset_path);
 +	}
 +
@@ -1221,9 +1290,9 @@ index 0000000..0eaf896
 +						    *shadow_copy_zfs_data,
 +						    bool labels)
 +{
-+	TALLOC_CTX *tmp_ctx;
-+	struct shadow_copy_zfs_config *config;
-+	struct snapshot_list *snapshots;
++	TALLOC_CTX *tmp_ctx = NULL;
++	struct shadow_copy_zfs_config *config = NULL;
++	struct snapshot_list *snapshots = NULL;
 +	unsigned idx;
 +	char tmpbuf[PATH_MAX];
 +	char *fullpath, *to_free;
@@ -1244,10 +1313,12 @@ index 0000000..0eaf896
 +
 +	tmp_ctx = talloc_new(config);
 +
-+	snapshots = shadow_copy_zfs_list_snapshots(tmp_ctx,
-+						   fullpath,
-+						   config->inclusions,
-+						   config->exclusions);
++	snapshots = smb_zfs_list_snapshots(config->libzp,
++					   tmp_ctx,
++					   fullpath,
++					   config->ignore_empty_snaps,
++					   config->inclusions,
++					   config->exclusions);
 +
 +	if (snapshots == NULL) {
 +		DBG_INFO("failed to retrieve snapshots for %s\n", fullpath);
@@ -1803,9 +1874,9 @@ index 0000000..0eaf896
 +static int shadow_copy_zfs_connect(struct vfs_handle_struct *handle,
 +				const char *service, const char *user)
 +{
++	struct smblibzfshandle	*libzp;
 +	struct shadow_copy_zfs_config *config = NULL;
 +	int ret, enumval;
-+	const char *gmt_format;
 +	const char *sort_order;
 +	const char *backend_str = NULL;
 +	const char *tmp_ds = NULL;
@@ -1821,6 +1892,14 @@ index 0000000..0eaf896
 +		errno = ENOMEM;
 +		return -1;
 +	}
++
++	ret = get_smblibzfs_handle(handle->conn, &libzp);
++	if (ret != 0) {
++		DBG_ERR("Failed to get smblibzfs handle\n");
++		errno = ENOMEM;
++		return -1;
++	}
++	config->libzp = libzp;
 +
 +	enumval = lp_parm_enum(SNUM(handle->conn), "shadow",
 +			"cache_backend", cachebackend, SHADOW_MEMCACHE);
@@ -1845,7 +1924,7 @@ index 0000000..0eaf896
 +		}
 +	}
 +
-+	shadow_copy_path_to_dataset(handle->conn->connectpath, &tmp_ds);
++	smb_zfs_path_to_dataset(config->libzp, handle->conn->connectpath, &tmp_ds);
 +
 +	config->dataset_path = talloc_strdup(config, tmp_ds);
 +
@@ -1874,6 +1953,12 @@ index 0000000..0eaf896
 +
 +	config->cache_enabled = lp_parm_bool(SNUM(handle->conn), "shadow",
 +						"cache_enabled", true);
++
++	config->ignore_empty_snaps = lp_parm_bool(SNUM(handle->conn), "shadow",
++						"ignore_empty_snaps", true);
++
++	config->timedelta = lp_parm_int(SNUM(handle->conn),
++					"shadow", "snap_timedelta", 300);
 +
 +	DBG_DEBUG("shadow_copy_zfs_connect: configuration:\n"
 +		   "  share root: '%s'\n"
@@ -1933,345 +2018,3 @@ index 0000000..0eaf896
 +	return smb_register_vfs(SMB_VFS_INTERFACE_VERSION,
 +				"shadow_copy_zfs", &vfs_shadow_copy_zfs_fns);
 +}
-diff --git a/source3/modules/zfs_list_snapshots.c b/source3/modules/zfs_list_snapshots.c
-new file mode 100644
-index 0000000..ee098d7
---- /dev/null
-+++ b/source3/modules/zfs_list_snapshots.c
-@@ -0,0 +1,276 @@
-+/* shadow_copy_zfs: a shadow copy module for ZFS
-+ *
-+ * Copyright (C) XStor Systems Inc 2011
-+ * Copyright (C) iXsystems Inc     2016
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-+ */
-+
-+#include <stdbool.h>
-+#include <talloc.h>
-+#include <sys/types.h>
-+#include <sys/time.h>
-+#include <libzfs.h>
-+#include "../lib/util/debug.h"
-+#include "../lib/util/discard.h" /* for discard_const */
-+#include "smb_macros.h"
-+#include "modules/zfs_list_snapshots.h"
-+
-+#define SHADOW_COPY_ZFS_GMT_FORMAT "@GMT-%Y.%m.%d-%H.%M.%S"
-+
-+int shadow_copy_path_to_dataset(const char *pathname, const char **dataset_name_out)
-+{
-+	libzfs_handle_t *libzfsp;
-+	zfs_handle_t *zfsp;
-+	if (pathname == NULL) {
-+		return (-1);
-+	}
-+
-+	if ((libzfsp = libzfs_init()) == NULL) {
-+		return (-1);
-+	}
-+
-+	libzfs_print_on_error(libzfsp, B_TRUE);
-+
-+	zfsp = zfs_path_to_zhandle(libzfsp, pathname,
-+			ZFS_TYPE_VOLUME|ZFS_TYPE_DATASET|ZFS_TYPE_FILESYSTEM);
-+
-+	if (zfsp == NULL) {
-+		DBG_ERR("Failed to obtain zhandle on parent directory: (%s)\n",
-+			pathname);
-+		libzfs_fini(libzfsp);
-+		return -1;
-+	}
-+	*dataset_name_out = zfs_get_name(zfsp);
-+	zfs_close(zfsp);
-+	libzfs_fini(libzfsp);
-+
-+	return 0;
-+}
-+
-+static bool shadow_copy_zfs_is_snapshot_included(struct iter_info *info,
-+    const char *snap_name)
-+{
-+	const char **pattern;
-+
-+#if 0
-+	pattern = info->inclusions;
-+	while (*pattern) {
-+		if (unix_wild_match(*pattern, snap_name)) {
-+			break;
-+		}
-+		pattern++;
-+	}
-+
-+	if (*info->inclusions && !*pattern) {
-+		DEBUG(2,("shadow_copy_zfs_add_snapshot: snapshot %s "
-+		    "not in inclusion list\n", snap_name));
-+		return false;
-+	}
-+
-+	pattern = info->exclusions;
-+	while (*pattern) {
-+		if (unix_wild_match(*pattern, snap_name)) {
-+			DEBUG(2,("shadow_copy_zfs_add_snapshot: snapshot %s "
-+			    "in exclusion list\n", snap_name));
-+			return false;
-+		}
-+		pattern++;
-+	}
-+#endif
-+
-+	return true;
-+}
-+
-+static int shadow_copy_zfs_add_snapshot(zfs_handle_t *snap, void *data)
-+{
-+	struct iter_info *info = (struct iter_info *) data;
-+	struct snapshot_entry *entry;
-+	const char *snap_name;
-+	char ts_buf[20];
-+	time_t timestamp_t;
-+	struct tm timestamp;
-+	int rc;
-+	size_t req_mem, name_len;
-+
-+	/* ignore excluded snapshots */
-+	snap_name = strchr(zfs_get_name(snap), '@') + 1;
-+
-+	if (!shadow_copy_zfs_is_snapshot_included(info, snap_name)) {
-+		zfs_close(snap);
-+		return 0;
-+	}
-+
-+	/* get creation date */
-+	rc = zfs_prop_get(snap, ZFS_PROP_CREATION, ts_buf, sizeof(ts_buf),
-+			  NULL, NULL, 0, 1);
-+	if (rc != 0) {
-+		DEBUG(0,("shadow_copy_zfs_add_snapshot: error getting "
-+		    "creation date: %s\n", strerror(errno)));
-+
-+		zfs_close(snap);
-+		return -2;
-+	}
-+
-+	sscanf(ts_buf, "%lu", &timestamp_t);
-+
-+	/* expand list if necessary */
-+	req_mem = sizeof(*info->snapshots) +
-+		  info->snapshots->num_entries *
-+		  sizeof(info->snapshots->entries[0]);
-+
-+	if (req_mem > talloc_get_size(info->snapshots)) {
-+		req_mem += info->snapshots->num_entries / 2 *
-+			   sizeof(info->snapshots->entries[0]);
-+		info->snapshots = TALLOC_REALLOC(talloc_parent(info->snapshots),
-+						 info->snapshots, req_mem);
-+		if (info->snapshots == NULL) {
-+			DEBUG(0,("shadow_copy_zfs_add_snapshot: out of memory "
-+			    "(requested %zu bytes)\n", req_mem));
-+
-+			zfs_close(snap);
-+			return -2;
-+		}
-+	}
-+
-+	/* add entry */
-+	name_len = strlen(snap_name);
-+
-+	entry = talloc_size(info->snapshots, sizeof(*entry) + name_len);
-+	if (entry == NULL) {
-+		DEBUG(0,("shadow_copy_zfs_add_snapshot: out of memory "
-+		    "(requested %lu bytes)\n", sizeof(*entry) + name_len));
-+
-+		zfs_close(snap);
-+		return -2;
-+	}
-+
-+	info->snapshots->entries[info->snapshots->num_entries++] = entry;
-+
-+	gmtime_r(&timestamp_t, &timestamp);
-+	strftime(entry->label, sizeof(entry->label), SHADOW_COPY_ZFS_GMT_FORMAT,
-+		 &timestamp);
-+
-+	strlcpy(entry->name, snap_name, name_len + 1);
-+
-+	zfs_close(snap);
-+	return 0;
-+}
-+
-+/*
-+  work out the mountpoint of the filesystem
-+ */
-+struct snapshot_list *shadow_copy_zfs_list_snapshots(TALLOC_CTX *mem_ctx,
-+    const char *fs, const char **inclusions, const char **exclusions)
-+{
-+	struct snapshot_list *snapshots = NULL;
-+	struct iter_info iter_info;
-+	size_t initial_size;
-+	libzfs_handle_t *libzfs = NULL;
-+	zfs_handle_t *zfs = NULL;
-+	int rc;
-+
-+	/* initialize our result */
-+	initial_size = sizeof(*snapshots) + 10 * sizeof(snapshots->entries[0]);
-+	snapshots = talloc_size(mem_ctx, initial_size);
-+
-+	if (snapshots == NULL) {
-+		DEBUG(0,("shadow_copy_zfs_list_snapshots: out of memory"
-+		    "(requested %zu bytes)\n", initial_size));
-+		goto error;
-+	}
-+
-+	snapshots->mountpoint = NULL;
-+	snapshots->dataset_name = NULL;
-+	snapshots->num_entries = 0;
-+
-+	libzfs = libzfs_init();
-+
-+	if (!libzfs) {
-+		DEBUG(0,("shadow_copy_zfs_list_snapshots: error opening "
-+		    "libzfs: %s\n", strerror(errno)));
-+		goto error;
-+	}
-+
-+	zfs = zfs_path_to_zhandle(libzfs, fs,
-+		ZFS_TYPE_VOLUME|ZFS_TYPE_DATASET|ZFS_TYPE_FILESYSTEM);
-+
-+	if (zfs == NULL) {
-+		DBG_ERR("shadow_copy_zfs_list_snapshots: error getting "
-+			"zhandle from path '%s' (%s)\n", fs, strerror(errno));
-+		goto error;
-+	}
-+
-+	/* get mountpoint */
-+	snapshots->mountpoint = talloc_size(snapshots, ZFS_MAXPROPLEN + 1);
-+	snapshots->dataset_name = discard_const(zfs_get_name(zfs));
-+
-+	if (snapshots->mountpoint == NULL) {
-+		DEBUG(0,("shadow_copy_zfs_list_snapshots: out of memory "
-+		    "(requested %d bytes)\n",  ZFS_MAXPROPLEN + 1));
-+		goto error;
-+	}
-+
-+	rc = zfs_prop_get(zfs, ZFS_PROP_MOUNTPOINT, snapshots->mountpoint,
-+			  talloc_get_size(snapshots->mountpoint), NULL, NULL,
-+			  0, 0);
-+
-+	if (rc != 0) {
-+		DEBUG(0,("shadow_copy_zfs_list_snapshots: error getting "
-+		    "mountpoint for '%s': %s\n", fs, strerror(errno)));
-+		goto error;
-+	}
-+
-+	/* get snapshots */
-+	iter_info.snapshots = snapshots;
-+	iter_info.inclusions = inclusions;
-+	iter_info.exclusions = exclusions;
-+
-+	if (iter_info.inclusions == NULL) {
-+		DEBUG(0,("shadow_copy_zfs_list_snapshots: error getting "
-+		    "shadow:include parameter\n"));
-+		goto error;
-+	}
-+
-+	if (iter_info.exclusions == NULL) {
-+		DEBUG(0,("shadow_copy_zfs_list_snapshots: error getting "
-+		    "shadow:exclude parameter\n"));
-+		goto error;
-+	}
-+
-+	rc = zfs_iter_snapshots(zfs, false, shadow_copy_zfs_add_snapshot, &iter_info);
-+
-+	if (rc != 0) {
-+		DEBUG(0,("shadow_copy_zfs_list_snapshots: error getting "
-+		    "snapshots for '%s': %s\n", fs, strerror(errno)));
-+		goto error;
-+	}
-+
-+	snapshots = iter_info.snapshots;
-+	time(&snapshots->timestamp);
-+
-+	goto done;
-+
-+error:
-+	TALLOC_FREE(snapshots);
-+
-+done:
-+	if (zfs)
-+		zfs_close(zfs);
-+	if (libzfs)
-+		libzfs_fini(libzfs);
-+
-+	return snapshots;
-+}
-diff --git a/source3/modules/zfs_list_snapshots.h b/source3/modules/zfs_list_snapshots.h
-new file mode 100644
-index 0000000..05a6f75
---- /dev/null
-+++ b/source3/modules/zfs_list_snapshots.h
-@@ -0,0 +1,54 @@
-+/*
-+ * shadow_copy_zfs: a shadow copy module for ZFS
-+ *
-+ * Copyright (C) XStor Systems Inc 2011
-+ * Copyright (C) iXsystems Inc     2016
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-+ */
-+
-+
-+#ifndef __ZFS_LIST_SNAPSHOTS_H
-+#define __ZFS_LIST_SNAPSHOTS_H
-+
-+int shadow_copy_path_to_dataset(const char *pathname, const char **dataset_name);
-+
-+struct iter_info
-+{
-+    struct snapshot_list *snapshots;
-+    const char **inclusions;
-+    const char **exclusions;
-+};
-+
-+struct snapshot_entry
-+{
-+    char label[25];
-+    char name[1];
-+};
-+
-+struct snapshot_list
-+{
-+    time_t timestamp;
-+    char *mountpoint;
-+    char *dataset_name;
-+    int (*cmpfunc)(const void *, const void *);
-+    size_t num_entries;
-+    struct snapshot_entry *entries[1];
-+};
-+
-+struct snapshot_list *shadow_copy_zfs_list_snapshots(TALLOC_CTX *mem_ctx,
-+    const char *fs, const char **inclusions, const char **exclusions);
-+
-+#endif	/* __ZFS_LIST_SNAPSHOTS_H */
