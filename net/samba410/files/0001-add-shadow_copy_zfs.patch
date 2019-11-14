@@ -24,10 +24,10 @@ index 4331c2f..a9de97f 100644
  
 diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
 new file mode 100644
-index 0000000..496ab46
+index 0000000..1bace80
 --- /dev/null
 +++ b/source3/modules/vfs_shadow_copy_zfs.c
-@@ -0,0 +1,1990 @@
+@@ -0,0 +1,1919 @@
 +/* shadow_copy_zfs: a shadow copy module for ZFS
 + *
 + * Copyright (C) Andrew Tridgell   2007 (portions taken from shadow_copy_zfs)
@@ -103,7 +103,6 @@ index 0000000..496ab46
 +
 +	/* Snapshot parameters */
 +	bool 			ignore_empty_snaps;	
-+	const char 		*sort_order;
 +	const char 		*dataset_path;
 +	const char 		**inclusions;
 +	const char 		**exclusions;
@@ -194,7 +193,7 @@ index 0000000..496ab46
 +						   path,
 +						   config->ignore_empty_snaps,
 +						   config->inclusions,
-+						   config->exclusions);
++						   config->exclusions, 0, 0);
 +		if (snapshots != NULL) {
 +			if (config->snapshots != NULL) {
 +				TALLOC_FREE(config->snapshots);
@@ -386,47 +385,6 @@ index 0000000..496ab46
 +	pcopy[GMT_NAME_LEN] = '/';
 +
 +	return pcopy;
-+}
-+
-+static int shadow_copy_zfs_label_cmp_asc(const void *x, const void *y)
-+{
-+	return strncmp((*((struct snapshot_entry **) x))->label,
-+		       (*((struct snapshot_entry **) y))->label,
-+		       sizeof(SHADOW_COPY_LABEL));
-+}
-+
-+static int shadow_copy_zfs_label_cmp_desc(const void *x, const void *y)
-+{
-+	return -strncmp((*((struct snapshot_entry **) x))->label,
-+			(*((struct snapshot_entry **) y))->label,
-+			sizeof(SHADOW_COPY_LABEL));
-+}
-+
-+/*
-+  sort the shadow copy data in ascending or descending order
-+ */
-+static void shadow_copy_zfs_sort_data(vfs_handle_struct *handle,
-+    struct snapshot_list *snapshots)
-+{
-+	const char *sort;
-+
-+	if (snapshots->num_entries <= 0) {
-+		return;
-+	}
-+
-+	sort = lp_parm_const_string(SNUM(handle->conn), "shadow",
-+				    "sort", SHADOW_COPY_ZFS_DEFAULT_SORT);
-+
-+	if (strcmp(sort, "asc") == 0) {
-+		snapshots->cmpfunc = shadow_copy_zfs_label_cmp_asc;
-+	} else {
-+		snapshots->cmpfunc = shadow_copy_zfs_label_cmp_desc;
-+	}
-+
-+	TYPESAFE_QSORT(snapshots->entries, snapshots->num_entries,
-+		       snapshots->cmpfunc);
-+
-+	return;
 +}
 +
 +static void shadow_copy_zfs_free_snapshots(void **datap)
@@ -622,8 +580,6 @@ index 0000000..496ab46
 +		fds_len = strlen(snapshots->dataset_name) - strlen(config->dataset_path);
 +	}
 +
-+	shadow_copy_zfs_sort_data(handle, snapshots);
-+
 +	/* get the mountpoint */
 +	mountpoint = snapshots->mountpoint;
 +	mplen = strlen(mountpoint);
@@ -659,13 +615,9 @@ index 0000000..496ab46
 +		}
 +	}
 +	/* get snapshot name */
-+	strlcpy(entry->label, fname, GMT_NAME_LEN+1);
-+	snapshot = bsearch(&entry, snapshots->entries, snapshots->num_entries,
-+			   sizeof(snapshots->entries[0]), snapshots->cmpfunc);
-+	for (idx = 0; idx < snapshots->num_entries; idx++) {
-+		if (strncmp(fname, snapshots->entries[idx]->label, GMT_NAME_LEN)
-+		    == 0) {
-+			snapshot = snapshots->entries[idx]->name;
++	for (entry = snapshots->entries; entry; entry = entry->next) {
++		if (strncmp(fname, entry->label, GMT_NAME_LEN) == 0) {
++			snapshot = entry->name;
 +			break;
 +		}
 +	}
@@ -1293,7 +1245,8 @@ index 0000000..496ab46
 +	TALLOC_CTX *tmp_ctx = NULL;
 +	struct shadow_copy_zfs_config *config = NULL;
 +	struct snapshot_list *snapshots = NULL;
-+	unsigned idx;
++	struct snapshot_entry *entry = NULL;
++	uint idx = 0;
 +	char tmpbuf[PATH_MAX];
 +	char *fullpath, *to_free;
 +	ssize_t len;
@@ -1312,13 +1265,12 @@ index 0000000..496ab46
 +	    return -1);
 +
 +	tmp_ctx = talloc_new(config);
-+
 +	snapshots = smb_zfs_list_snapshots(config->libzp,
 +					   tmp_ctx,
 +					   fullpath,
 +					   config->ignore_empty_snaps,
 +					   config->inclusions,
-+					   config->exclusions);
++					   config->exclusions, 0, 0);
 +
 +	if (snapshots == NULL) {
 +		DBG_INFO("failed to retrieve snapshots for %s\n", fullpath);
@@ -1326,7 +1278,6 @@ index 0000000..496ab46
 +		TALLOC_FREE(to_free);
 +		return -1;
 +	}
-+	shadow_copy_zfs_sort_data(handle, snapshots);
 +	shadow_copy_zfs_data->num_volumes = snapshots->num_entries;
 +	shadow_copy_zfs_data->labels = NULL;
 +
@@ -1343,13 +1294,12 @@ index 0000000..496ab46
 +			return -1;
 +		}
 +
-+		for (idx = 0; idx < snapshots->num_entries; idx++) {
++		for (entry = snapshots->entries; entry; entry = entry->next) {
 +			strlcpy(shadow_copy_zfs_data->labels[idx],
-+				snapshots->entries[idx]->label,
-+				sizeof(shadow_copy_zfs_data->labels[0]));
-+		}
++				entry->label, sizeof(entry->label));
++			idx++;
++        	}
 +	}
-+
 +	TALLOC_FREE(to_free);
 +	TALLOC_FREE(tmp_ctx);
 +	return 0;
@@ -1877,7 +1827,6 @@ index 0000000..496ab46
 +	struct smblibzfshandle	*libzp;
 +	struct shadow_copy_zfs_config *config = NULL;
 +	int ret, enumval;
-+	const char *sort_order;
 +	const char *backend_str = NULL;
 +	const char *tmp_ds = NULL;
 +
@@ -1936,16 +1885,6 @@ index 0000000..496ab46
 +
 +	DBG_INFO("Dataset_Path is %s\n", config->dataset_path);
 +
-+	sort_order = lp_parm_const_string(SNUM(handle->conn),
-+					  "shadow", "sort", "desc");
-+
-+	config->sort_order = talloc_strdup(config, sort_order);
-+	if (config->sort_order == NULL) {
-+		DEBUG(0, ("talloc_strdup() failed\n"));
-+		errno = ENOMEM;
-+		return -1;
-+	}
-+
 +	config->inclusions = lp_parm_string_list(SNUM(handle->conn), "shadow",
 +						"include", empty_list);
 +	config->exclusions = lp_parm_string_list(SNUM(handle->conn), "shadow",
@@ -1959,16 +1898,6 @@ index 0000000..496ab46
 +
 +	config->timedelta = lp_parm_int(SNUM(handle->conn),
 +					"shadow", "snap_timedelta", 300);
-+
-+	DBG_DEBUG("shadow_copy_zfs_connect: configuration:\n"
-+		   "  share root: '%s'\n"
-+		   "  dataset path: '%s'\n"
-+		   "  sort order: %s\n"
-+		   "",
-+		   handle->conn->connectpath,
-+		   config->dataset_path,
-+		   config->sort_order
-+		   );
 +
 +
 +	SMB_VFS_HANDLE_SET_DATA(handle, config,

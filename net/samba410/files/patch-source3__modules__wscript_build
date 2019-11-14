@@ -59,7 +59,7 @@
 +                       '%%SRC_BASE%%/sys/cddl/contrib/opensolaris/uts/common/sys',
 +                       '%%SRC_BASE%%/sys/cddl/contrib/opensolaris/common/zfs',
 +                   ],
-+                   ldflags='-lgeom -luutil -lzfs_core -lzfs',
++                   ldflags='-lgeom -luutil -lzfs_core -lzfs -lnvpair',
 +                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_ixnas'),
 +                   private_library=True)
 +
