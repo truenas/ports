@@ -330,7 +330,7 @@ CONFIGURE_ARGS+=	--enable-aggregation \
 			--enable-write_graphite \
 			--enable-write_log \
 			--enable-zfs_arc \
-			--enable-zfs_arc_v2 \
+			--enable-zfs_arc_v2
 INSTALL_TARGET=		install-strip
 SHEBANG_FILES=		contrib/collection.cgi
 

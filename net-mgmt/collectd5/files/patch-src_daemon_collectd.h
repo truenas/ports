@@ -1,12 +1,11 @@
 --- src/daemon/collectd.h.orig	2019-06-13 09:13:42 UTC
 +++ src/daemon/collectd.h
-@@ -203,15 +203,15 @@
+@@ -213,7 +213,7 @@ typedef int uid_t;
  #endif
  
  #ifndef LOCALSTATEDIR
 -#define LOCALSTATEDIR PREFIX "/var"
 +#define LOCALSTATEDIR "/var"
-@@ -213,7 +213,7 @@ typedef int uid_t;
  #endif
  
  #ifndef PKGLOCALSTATEDIR
