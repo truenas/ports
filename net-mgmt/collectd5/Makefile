@@ -129,7 +129,6 @@ CURL_XML_CONFIGURE_ENABLE=	ascent bind curl_xml
 DEBUG_CONFIGURE_ENABLE=		debug
 
 DBI_LIB_DEPENDS=	libdbi.so:databases/libdbi
-DBI_CONFIGURE_ENABLE=	libdbi=${LOCALBASE}
 DBI_CONFIGURE_ENABLE=	dbi
 DBI_CFLAGS=		-Wno-deprecated-declarations
 
