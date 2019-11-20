@@ -21,16 +21,16 @@
 +    "LogOnce"};
  static int config_keys_num = STATIC_ARRAY_SIZE(config_keys);
  
- static ignorelist_t *il_device = NULL;
- static ignorelist_t *il_mountpoint = NULL;
- static ignorelist_t *il_fstype = NULL;
-+static ignorelist_t *il_errors = NULL;
+ static ignorelist_t *il_device;
+ static ignorelist_t *il_mountpoint;
+ static ignorelist_t *il_fstype;
++static ignorelist_t *il_errors;
  
- static _Bool by_device = 0;
- static _Bool report_inodes = 0;
- static _Bool values_absolute = 1;
- static _Bool values_percentage = 0;
-+static _Bool log_once = 0;
+ static bool by_device;
+ static bool report_inodes;
+ static bool values_absolute = true;
+ static bool values_percentage;
++static bool log_once;
  
  static int df_init(void) {
    if (il_device == NULL)
@@ -57,22 +57,18 @@
      return 0;
    }
  
-@@ -203,13 +220,29 @@ static int df_read(void) {
+@@ -203,11 +220,27 @@ static int df_read(void) {
        continue;
  
      if (STATANYFS(mnt_ptr->dir, &statbuf) < 0) {
--      char errbuf[1024];
--      ERROR(STATANYFS_STR "(%s) failed: %s", mnt_ptr->dir,
--            sstrerror(errno, errbuf, sizeof(errbuf)));
+-      ERROR(STATANYFS_STR "(%s) failed: %s", mnt_ptr->dir, STRERRNO);
 +      if (log_once == 0 || ignorelist_match(il_errors, mnt_ptr->dir) == 0)
 +      {
 +        if (log_once == 1)
 +        {
 +          ignorelist_add(il_errors, mnt_ptr->dir);
 +        }
-+        char errbuf[1024];
-+        ERROR(STATANYFS_STR "(%s) failed: %s", mnt_ptr->dir,
-+              sstrerror(errno, errbuf, sizeof(errbuf)));
++        ERROR(STATANYFS_STR "(%s) failed: %s", mnt_ptr->dir, STRERRNO);
 +      }
        continue;
 +    } else {
