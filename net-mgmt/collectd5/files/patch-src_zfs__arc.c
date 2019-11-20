@@ -1,4 +1,4 @@
---- src/zfs_arc.c
+--- src/zfs_arc.c.orig	2019-06-13 09:13:42 UTC
 +++ src/zfs_arc.c
 @@ -197,6 +197,9 @@ static void za_submit_ratio(const char *type_instance, gauge_t hits,
    za_submit_gauge("cache_ratio", type_instance, ratio);
@@ -19,7 +19,7 @@
      l2_size_avail = 0;
  
    /* Operations */
-@@ -301,8 +301,6 @@ static int za_read(void) {
+@@ -322,8 +322,6 @@ static int za_read(void) {
    za_read_derive(ksp, "prefetch_metadata_hits", "cache_result",
                   "prefetch_metadata-hit");
    za_read_derive(ksp, "demand_data_misses", "cache_result", "demand_data-miss");
