@@ -1,5 +1,5 @@
---- src/utils_ignorelist.c	2017-01-23 07:53:57 UTC
-+++ src/utils_ignorelist.c
+--- src/utils/ignorelist/ignorelist.c	2017-01-23 07:53:57 UTC
++++ src/utils/ignorelist/ignorelist.c
 @@ -278,6 +278,40 @@ int ignorelist_add(ignorelist_t *il, const char *entry) {
    return ignorelist_append_string(il, entry);
  } /* int ignorelist_add (ignorelist_t *il, const char *entry) */
