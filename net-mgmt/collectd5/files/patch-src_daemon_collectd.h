@@ -1,6 +1,6 @@
---- src/daemon/collectd.h.orig	2017-01-23 07:53:57 UTC
+--- src/daemon/collectd.h.orig	2019-06-13 09:13:42 UTC
 +++ src/daemon/collectd.h
-@@ -203,15 +203,15 @@
+@@ -213,7 +213,7 @@ typedef int uid_t;
  #endif
  
  #ifndef LOCALSTATEDIR
