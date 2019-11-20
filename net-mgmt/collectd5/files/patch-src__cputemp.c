@@ -30,7 +30,7 @@
 +
 +#include "collectd.h"
 +#include "plugin.h"
-+#include "common.h"
++#include "utils/common/common.h"
 +#include "utils_cache.h"
 +
 +#include <sys/types.h>
