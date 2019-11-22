@@ -302,7 +302,6 @@ lib/samba4/private/libserver-id-db-samba4.so
 lib/samba4/private/libserver-role-samba4.so
 lib/samba4/private/libshares-samba4.so
 %%LIBZFS%%lib/samba4/private/libsmb-libzfs-samba4.so
-%%LIBZFS%%lib/samba4/private/libzfs-list-snapshots-samba4.so
 lib/samba4/private/libsmb-transport-samba4.so
 lib/samba4/private/libsmbclient-raw-samba4.so
 lib/samba4/private/libsmbd-base-samba4.so
@@ -400,7 +399,6 @@ lib/shared-modules/vfs/acl_xattr.so
 lib/shared-modules/vfs/aio_fbsd.so
 lib/shared-modules/vfs/aio_fork.so
 lib/shared-modules/vfs/aio_pthread.so
-lib/shared-modules/vfs/aio_posix.so
 lib/shared-modules/vfs/aio_spthread.so
 lib/shared-modules/vfs/audit.so
 lib/shared-modules/vfs/cap.so
