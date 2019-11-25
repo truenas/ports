@@ -785,7 +785,7 @@ index 0000000..f6f400f
 +		goto error;
 +	}
 +
-+	rc = zfs_iter_snapshots(zfs, false, smb_zfs_add_snapshot, state);
++	rc = zfs_iter_snapshots(zfs, false, smb_zfs_add_snapshot, state, 0, 0);
 +
 +	if (rc != 0) {
 +		DBG_ERR("smb_zfs_list_snapshots: error getting "
