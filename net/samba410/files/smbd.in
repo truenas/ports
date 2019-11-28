@@ -12,7 +12,7 @@ rcvar=smbd_enable
 smbd_group=""
 
 smbd_pidfile="%%SAMBA4_RUNDIR%%/smbd.pid"
-extra_commands="dump status"
+extra_commands="reload status"
 
 start_cmd="smbd_cmd"
 stop_cmd="smbd_cmd"
