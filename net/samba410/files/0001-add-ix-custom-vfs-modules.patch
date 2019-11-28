@@ -3066,7 +3066,7 @@ index 0000000..dec41de
 +	}
 +
 +	config->zfs_acl_chmod_enabled = lp_parm_bool(SNUM(handle->conn),
-+			"ixnas", "zfs_acl_chmod_enabled", true);
++			"ixnas", "zfs_acl_chmod_enabled", false);
 +
 +	/* ZFS SPACE PARAMETERS */
 +#if HAVE_LIBZFS
