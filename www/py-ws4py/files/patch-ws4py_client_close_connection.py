@@ -1,6 +1,4 @@
-diff --git a/ws4py/websocket.py b/ws4py/websocket.py
-index 61f8c33..3614f80 100644
---- a/ws4py/websocket.py
+--- a/ws4py/websocket.py  2019-12-02 14:38:00 UTC
 +++ b/ws4py/websocket.py
 @@ -222,11 +222,21 @@ class WebSocket(object):
          """
@@ -23,5 +21,5 @@ index 61f8c33..3614f80 100644
              finally:
 +                self.sock.close()
                  self.sock = None
- 
+
      def ping(self, message):
