@@ -1,0 +1,5 @@
+PyKMIP is a Python implementation of the Key Management Interoperability Protocol (KMIP), an OASIS communication
+standard for the management of objects stored and maintained by key management systems. KMIP defines how key
+management operations and operation data should be encoded and communicated between client and server applications.
+
+WWW: https://github.com/OpenKMIP/PyKMIP
