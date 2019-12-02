@@ -1,6 +1,6 @@
---- a/ws4py/websocket.py  2019-12-02 14:38:00 UTC
-+++ b/ws4py/websocket.py
-@@ -222,11 +222,21 @@ class WebSocket(object):
+--- ws4py/websocket.py.orig	2019-12-02 11:30:46 UTC
++++ ws4py/websocket.py
+@@ -203,11 +203,21 @@ class WebSocket(object):
          """
          if self.sock:
              try:
@@ -22,4 +22,4 @@
 +                self.sock.close()
                  self.sock = None
 
-     def ping(self, message):
+     def ponged(self, pong):
