@@ -4599,6 +4599,7 @@
     SUBDIR += py-keystonemiddleware
     SUBDIR += py-keystonemiddleware8
     SUBDIR += py-kitchen
+    SUBDIR += py-kmip
     SUBDIR += py-knack
     SUBDIR += py-l18n
     SUBDIR += py-lark-parser
