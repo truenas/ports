@@ -4705,6 +4705,7 @@
     SUBDIR += py-keystoneauth1
     SUBDIR += py-keystonemiddleware
     SUBDIR += py-kitchen
+    SUBDIR += py-kmip
     SUBDIR += py-knack
     SUBDIR += py-l18n
     SUBDIR += py-lark-parser
