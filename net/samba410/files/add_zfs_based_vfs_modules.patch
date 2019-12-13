@@ -1947,3 +1947,531 @@ index 0000000..1bace80
 +	return smb_register_vfs(SMB_VFS_INTERFACE_VERSION,
 +				"shadow_copy_zfs", &vfs_shadow_copy_zfs_fns);
 +}
+diff --git a/source3/modules/vfs_tmprotect.c b/source3/modules/vfs_tmprotect.c
+new file mode 100644
+index 0000000..0d8f95f
+--- /dev/null
++++ b/source3/modules/vfs_tmprotect.c
+@@ -0,0 +1,283 @@
++/* tmprotect: a module for automatic ZFS snapshot maintenance.
++ *
++ * Copyright (C) iXsystems Inc     2019
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ */
++
++#include "includes.h"
++#include "system/filesys.h"
++#include "lib/util/tevent_ntstatus.h"
++
++#include "modules/smb_libzfs.h"
++
++#define TMPROTECT_PREFIX "aapltm"
++#define TMPROTECT_MODULE "tmprotect"
++
++static const char *null_string = NULL;
++static const char **empty_list = &null_string;
++static const char *default_aapl = "aapltm-*";
++static const char **default_prefix = &default_aapl;
++
++enum autorollback {A_ALWAYS, A_POWERLOSS, A_DISABLED};
++
++struct tmprotect_config_data {
++	struct smblibzfshandle *libzp;
++	const char **inclusions;
++	const char **exclusions;
++	const char *connectpath;
++	enum autorollback autorollback;
++	time_t last_snap;
++	time_t oldest_snap;
++};
++
++static const struct enum_list autorollback[] = {
++	{A_ALWAYS, "always"},
++	{A_POWERLOSS, "powerloss"},
++	{A_DISABLED, "never"},
++	{ -1, NULL}
++};
++
++static void tmprotect_free_data(void **pptr) {
++	/*
++	 * Remove dataset flag in destructor function of VFS handle.
++	 * This ensures will get triggered in case of session ending
++	 * but will not be triggered in case of power loss event or
++	 * application crash. The idea here is that if this function
++	 * isn't called for an smb session, then the data is more
++	 * likely to be questionable. 
++	 */
++	struct tmprotect_config_data *config = NULL;
++
++	config = talloc_get_type_abort(*pptr, struct tmprotect_config_data);
++	if (config == NULL) {
++		DBG_ERR("Unable to retrieve config information from handle\n");
++		return;
++	}
++	if (config->autorollback != A_DISABLED) {
++		smb_zfs_set_user_prop(config->libzp, config->connectpath,
++				      "tm_in_progress", "false");
++	}
++}
++
++
++static void tmprotect_disconnect(vfs_handle_struct *handle)
++{
++	int ret;
++	time_t curtime;
++	struct tmprotect_config_data *config = NULL;
++	char *snapshot_name = NULL;
++	time(&curtime);
++	SMB_VFS_HANDLE_GET_DATA(handle,
++				config,
++				struct tmprotect_config_data,
++				NULL);
++
++	/*
++	 * Time machine will back up once every 15 minutes by default.
++	 * Refuse to take more frequent snapshots than that.
++	 */
++	if ((config->last_snap + 900) > curtime) {
++		DBG_INFO("Refusing to generate new snapshot on disconnect"
++			 "last snapshot is less than 15 minutes old\n");
++		return;
++	}
++	snapshot_name = talloc_asprintf(talloc_tos(), "%s-%lu",
++					TMPROTECT_PREFIX,
++					curtime);
++
++	ret = smb_zfs_snapshot(config->libzp,
++			       handle->conn->connectpath,
++			       snapshot_name,
++			       false);
++	if (ret != 0) {
++		DBG_ERR("Failed to generate closing snapshot on path: %s\n",
++			handle->conn->connectpath);
++	}
++}
++
++static int tmprotect_connect(struct vfs_handle_struct *handle,
++			     const char *service, const char *user)
++{
++	int ret, retention, min_snaps, enumval;
++	size_t remaining_snaps;
++	struct tmprotect_config_data *config = NULL;
++	struct smblibzfshandle *libzp = NULL;
++	struct snapshot_list *snapshots = NULL;
++	struct snapshot_list *to_delete = NULL;
++	struct snapshot_entry *entry = NULL;
++	struct snapshot_entry *del_entry = NULL;
++	time_t curtime;
++	double seconds = 0.0;
++	ret = retention = min_snaps = 0;
++	char *backup_interrupted = NULL;
++
++	config = talloc_zero(handle->conn, struct tmprotect_config_data);
++	if (!config) {
++		DBG_ERR("talloc_zero() failed\n");
++		errno = ENOMEM;
++		return -1;
++	}
++	to_delete = talloc_zero(handle->conn, struct snapshot_list);
++
++	ret = get_smblibzfs_handle(handle->conn, &libzp);
++	if (ret != 0) {
++		DBG_ERR("Failed to get smblibzfs handle\n");
++		errno = ENOMEM;
++		return -1;
++	}
++	config->libzp = libzp;
++
++	/*
++	 * Copy the connectpath to the config so that it's guaranteed
++	 * to be available in the config destructor. It must be
++	 * available so that we can unset the custom dataset property
++	 * indicating that a backup is in progress.
++	 */
++	config->connectpath = talloc_strdup(config, handle->conn->connectpath);
++
++	config->inclusions = lp_parm_string_list(SNUM(handle->conn),
++						 TMPROTECT_MODULE,
++						 "include", default_prefix);
++
++	config->exclusions = lp_parm_string_list(SNUM(handle->conn),
++						 TMPROTECT_MODULE,
++						 "exclude", empty_list);
++
++
++	enumval = lp_parm_enum(SNUM(handle->conn), TMPROTECT_MODULE, 
++			       "auto_rollback", autorollback, A_DISABLED);
++
++	if (enumval == -1) {
++		DBG_ERR("value for [tmprotect: auto_rollback] type unknown\n");
++		errno = EINVAL;
++		return -1;
++	}
++
++	config->autorollback = (enum autorollback)enumval;
++
++
++	retention = lp_parm_int(SNUM(handle->conn),
++				TMPROTECT_MODULE,
++				"retention", 7);
++
++	min_snaps = lp_parm_int(SNUM(handle->conn),
++				TMPROTECT_MODULE,
++				"min_snaps", 24);
++
++	retention *= 86400; //convert from days to seconds 
++
++	time(&curtime);
++
++	/*
++	 * Iterate through list of snapshots with the tmprotect 
++	 * prefixand check for ones that we need to remove,
++	 * and add them to the to_delete list.
++	 */
++	snapshots = smb_zfs_list_snapshots(config->libzp,
++					   talloc_tos(),
++					   handle->conn->connectpath,
++					   false,
++					   config->inclusions,
++					   config->exclusions,
++					   0, 0);
++
++	for (entry = snapshots->entries; entry; entry = entry->next) {
++		if ((config->last_snap == 0) || 
++		    (entry->cr_time > config->last_snap)) {
++			config->last_snap = entry->cr_time;
++		}
++		seconds = difftime(curtime, entry->cr_time);
++		if (((config->oldest_snap == 0) ||
++		    (entry->cr_time < config->oldest_snap)) &&
++		    (seconds < retention)) {
++			config->oldest_snap = entry->cr_time;
++		}
++		if (seconds > retention) {
++			DBG_INFO("Appending [%s] to list of snapshots "
++				 "to be deleted.\n", entry->name);
++			del_entry = talloc_zero(talloc_tos(), struct snapshot_entry);
++			del_entry->name = talloc_strdup(talloc_tos(), entry->name);
++			DLIST_ADD(to_delete->entries, del_entry);
++			to_delete->num_entries++;
++		}
++	}
++	remaining_snaps = snapshots->num_entries - to_delete->num_entries;
++	/*
++	 * We need to ensure that we keep at least min_snaps, and that at least one
++	 * of those snaps is somewhat old. Otherwise, refuse to delete. This is to
++	 * address potential issue of login storm causing min_snaps to suddenly increase
++	 * and trigger a pruning of useful history. It's better to err on the side of
++	 * having too many snapshots. 
++	 */
++	if (remaining_snaps > min_snaps || (config->oldest_snap > (curtime-(retention/2)))) {
++		DBG_DEBUG("num_snaps: %d, num_delete: %d, remaining_snaps: %d, "
++			  "min snaps: %d\n", snapshots->num_entries,
++			  to_delete->num_entries, remaining_snaps, min_snaps);
++		to_delete->dataset_name = talloc_strdup(talloc_tos(), snapshots->dataset_name);
++		ret = smb_zfs_delete_snapshots(config->libzp,
++					       talloc_tos(),
++					       to_delete);
++		if (ret != 0) {
++			DBG_ERR("failed to delete list of expired snapshots\n");
++		}
++	}
++	else {
++		DBG_INFO("Refusing to delete stale snapshots because "
++			 "the remaining number of snapshots would "
++			 "be less than the value specified in "
++			 "tmprotect:min_snaps [%d]\n", min_snaps);
++	}
++	TALLOC_FREE(to_delete);
++
++	switch (config->autorollback){
++	case A_ALWAYS:
++		smb_zfs_rollback_last(config->libzp, handle->conn->connectpath);	
++		break;
++	case A_POWERLOSS:
++		ret = smb_zfs_get_user_prop(config->libzp,
++					    talloc_tos(),
++					    handle->conn->connectpath,
++					    "tm_in_progress",
++					    &backup_interrupted);
++		if ((ret == 0) && (strcmp(backup_interrupted, "true") == 0)) {
++			smb_zfs_rollback_last(config->libzp,
++					      handle->conn->connectpath);	
++		} 
++		break;
++	default:
++		break;
++	}
++	if (config->autorollback != A_DISABLED) {
++		smb_zfs_set_user_prop(config->libzp, handle->conn->connectpath,
++				      "tm_in_progress", "true");
++	}
++	SMB_VFS_HANDLE_SET_DATA(handle, config,
++				tmprotect_free_data, struct tmprotect_config_data,
++				return -1);
++
++	return SMB_VFS_NEXT_CONNECT(handle, service, user);
++}
++
++static struct vfs_fn_pointers tmprotect_fns = {
++	.disconnect_fn = tmprotect_disconnect,
++	.connect_fn = tmprotect_connect
++};
++
++NTSTATUS vfs_tmprotect_init(TALLOC_CTX *);
++NTSTATUS vfs_tmprotect_init(TALLOC_CTX *ctx)
++{
++	return smb_register_vfs(SMB_VFS_INTERFACE_VERSION, "tmprotect", &tmprotect_fns);
++}
+diff --git a/source3/modules/vfs_zfs_fsrvp.c b/source3/modules/vfs_zfs_fsrvp.c
+new file mode 100644
+index 0000000..ecde122
+--- /dev/null
++++ b/source3/modules/vfs_zfs_fsrvp.c
+@@ -0,0 +1,233 @@
++/* zfs_fsrvp: a module implementing FSS using ZFS 
++ *
++ * Copyright (C) iXsystems Inc     2019
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ */
++
++#include "includes.h"
++#include "system/filesys.h"
++#include "modules/smb_libzfs.h"
++
++#define ZFS_FSRVP_PREFIX "fss"
++#define ZFS_FSRVP_MODULE "zfs_fsrvp"
++#define ZFS_FSRVP_SNAPLEN 17 
++
++struct zfs_fsrvp_config_data {
++	struct smblibzfshandle *libzp;
++	char *dataset_name;
++};
++
++
++/*
++ * Check whether a path can be shadow copied. Return the base ZFS dataset, allowing
++ * the caller to determine if multiple paths lie on the same ZFS dataset.
++ */
++static NTSTATUS zfs_fsrvp_check_path(struct vfs_handle_struct *handle,
++				     TALLOC_CTX *mem_ctx,
++				     const char *service_path,
++				     char **base_volume)
++{
++	struct zfs_fsrvp_config_data *config = NULL;
++	SMB_VFS_HANDLE_GET_DATA(handle,
++				config,
++				struct zfs_fsrvp_config_data,
++				return NT_STATUS_NO_MEMORY);
++
++	*base_volume = talloc_strdup(mem_ctx, config->dataset_name);
++	return NT_STATUS_OK;
++}
++
++static NTSTATUS zfs_fsrvp_snap_create(struct vfs_handle_struct *handle,
++				      TALLOC_CTX *mem_ctx,
++				      const char *base_volume,
++				      time_t *tstamp,
++				      bool rw,
++				      char **base_path,
++				      char **snap_path)
++{
++	/*
++	 * Snap_path must be set to the full path inside the
++	 * correct .zfs/snapshot directory. This path is used
++	 * when generating the dynamic shares for FSS. 
++	 *
++	 * base_path is set to the ZFS dataset underlying
++	 * the original service path.
++	 */
++
++	int ret;
++	struct timespec ts;
++	struct zfs_fsrvp_config_data *config = NULL;
++	char snap_name[ZFS_FSRVP_SNAPLEN] = { 0 };
++
++	SMB_VFS_HANDLE_GET_DATA(handle,
++				config,
++				struct zfs_fsrvp_config_data,
++				return NT_STATUS_NO_MEMORY);
++
++	/*
++	 * Snapshots take the format: "fss-<timestamp>".
++	 * try to keep the snapshot name as short as possible
++	 * while avoiding collisions with other snapshots.
++	 * Since these may also be managed from the commandline
++	 * "zfs" application, a timestamp is somewhat useful to present. 
++	 * FreeBSD prior to 12.0 is limited to 80 characters for the
++	 * length of mountpoint names, and so shorter is better here.
++	 */
++	ts = timespec_current();
++	snprintf(snap_name, sizeof(snap_name), "%s-%ld%ld",
++		 ZFS_FSRVP_PREFIX, ts.tv_sec, ts.tv_nsec);
++
++	ret = smb_zfs_snapshot(config->libzp, handle->conn->connectpath,
++			       snap_name, false);
++	if (ret != 0) {
++		return map_nt_error_from_unix(errno);
++	}
++	*snap_path = talloc_asprintf(mem_ctx, "%s/.zfs/snapshot/%s",
++				     handle->conn->connectpath, snap_name);
++	*base_path = talloc_strdup(mem_ctx, base_volume); 
++	return NT_STATUS_OK;
++}
++
++static NTSTATUS zfs_fsrvp_snap_delete(struct vfs_handle_struct *handle,
++				      TALLOC_CTX *mem_ctx,
++				      char *base_path,
++				      char *snap_path)
++{
++	int ret;
++	struct zfs_fsrvp_config_data *config = NULL;
++	TALLOC_CTX *tmp_ctx;
++	struct snapshot_list *to_delete = NULL;
++	struct snapshot_entry *del_entry = NULL;
++	char *parent = NULL;
++	size_t rlen, slen;
++	const char *base;
++
++	SMB_VFS_HANDLE_GET_DATA(handle,
++				config,
++				struct zfs_fsrvp_config_data,
++				return NT_STATUS_NO_MEMORY);
++
++	tmp_ctx = talloc_new(mem_ctx);
++
++	/* The last component of the snapshot mp is the name of the ZFS snapshot */ 
++	if (!parent_dirname(tmp_ctx, snap_path, &parent, &base)) {
++		TALLOC_FREE(tmp_ctx);
++		return NT_STATUS_NO_MEMORY;
++	}
++
++	to_delete = talloc_zero(tmp_ctx, struct snapshot_list);
++	del_entry = talloc_zero(tmp_ctx, struct snapshot_entry);
++
++	to_delete->dataset_name = talloc_strdup(tmp_ctx, base_path);
++	to_delete->num_entries = 1;
++	del_entry->name = talloc_strdup(tmp_ctx, base);
++	DLIST_ADD(to_delete->entries, del_entry);
++
++	ret = smb_zfs_delete_snapshots(config->libzp,
++				       tmp_ctx,
++				       to_delete);
++	if (ret != 0) {
++		TALLOC_FREE(tmp_ctx);
++		DBG_ERR("Failed to delete snapshots: %s\n",
++			strerror(errno));
++		return NT_STATUS_NO_MEMORY;
++	}
++	TALLOC_FREE(tmp_ctx);
++	return NT_STATUS_OK;
++}
++
++static int zfs_fsrvp_connect(struct vfs_handle_struct *handle,
++			     const char *service, const char *user)
++{
++	int ret;
++	struct zfs_fsrvp_config_data *config = NULL;
++	struct smblibzfshandle *libzp = NULL;
++	char *dataset_name = NULL;
++	char *dataset_mp = NULL;
++
++	config = talloc_zero(handle->conn, struct zfs_fsrvp_config_data);
++	if (!config) {
++		DBG_ERR("talloc_zero() failed\n");
++		errno = ENOMEM;
++		return -1;
++	}
++
++	ret = get_smblibzfs_handle(handle->conn, &libzp);
++	if (ret != 0) {
++		DBG_ERR("Failed to get smblibzfs handle on path [%s]\n",
++			handle->conn->connectpath);
++		errno = ENOMEM;
++		return -1;
++	}
++	config->libzp = libzp;
++
++	ret = smb_zfs_path_to_dataset(config->libzp,
++				      handle->conn->connectpath,
++				      &dataset_name); 
++	if (ret != 0) {
++		DBG_ERR("Failed to get dataset name.\n");
++		if (strstr(handle->conn->connectpath, ".zfs/snapshot") == NULL) {
++			DBG_ERR("Connectpath is not in [.zfs/snapshot] and libzfs "
++				"was unable to obtain zfs handle. Closing conn.\n");
++			errno = ENOMEM;
++			return -1;
++		}
++		TALLOC_FREE(config);
++		return SMB_VFS_NEXT_CONNECT(handle, service, user);
++	}
++	config->dataset_name = talloc_strdup(handle->conn, dataset_name);
++	ret = smb_zfs_dataset_name_to_mp(config->libzp,
++					 handle->conn,
++					 config->dataset_name,
++					 &dataset_mp);
++	if (ret != 0) {
++		errno = ENOMEM;
++		return -1;
++	}
++
++	/*
++	 * In majority of observed deployments, users are sharing the
++	 * dataset mountpoints and not directories inside the dataset.
++	 * For now, it seems to be a suitable compromise in terms of
++	 * code simplicity and security to have this limitation in the 
++	 * module.
++	 */
++	if (strcmp(dataset_mp, handle->conn->connectpath) != 0) {
++		DBG_ERR("Sharing a subdirectory inside a ZFS dataset "
++			"is not permitted.");
++		errno = EPERM;
++		return -1;
++	}
++	SMB_VFS_HANDLE_SET_DATA(handle, config,
++				NULL, struct zfs_fsrvp_config_data,
++				return -1);
++
++	return SMB_VFS_NEXT_CONNECT(handle, service, user);
++}
++
++static struct vfs_fn_pointers zfs_fsrvp_fns = {
++	.snap_check_path_fn = zfs_fsrvp_check_path,
++	.snap_create_fn = zfs_fsrvp_snap_create,
++	.snap_delete_fn = zfs_fsrvp_snap_delete,
++	.connect_fn = zfs_fsrvp_connect
++};
++
++NTSTATUS vfs_zfs_fsrvp_init(TALLOC_CTX *);
++NTSTATUS vfs_zfs_fsrvp_init(TALLOC_CTX *ctx)
++{
++	return smb_register_vfs(SMB_VFS_INTERFACE_VERSION,
++			        "zfs_fsrvp", &zfs_fsrvp_fns);
++}

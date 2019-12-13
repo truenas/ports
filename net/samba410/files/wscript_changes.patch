@@ -1,0 +1,167 @@
+diff --git a/source3/modules/wscript_build b/source3/modules/wscript_build
+index 4d61dc6..88a29a2 100644
+--- a/source3/modules/wscript_build
++++ b/source3/modules/wscript_build
+@@ -240,6 +240,55 @@ bld.SAMBA3_MODULE('vfs_solarisacl',
+                  internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_solarisacl'),
+                  enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_solarisacl'))
+ 
++bld.SAMBA3_MODULE('vfs_winmsa',
++                 subsystem='vfs',
++                 source='vfs_winmsa.c',
++                 deps='NFS4_ACLS sunacl',
++                 init_function='',
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_winmsa'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_winmsa'))
++                       
++                       
++bld.SAMBA3_MODULE('vfs_ixnas',
++                 subsystem='vfs',
++                 source='vfs_ixnas.c',
++                 deps='NFS4_ACLS sunacl smb_libzfs',
++                 init_function='',
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_ixnas'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_ixnas'))
++                       
++bld.SAMBA3_MODULE('vfs_tmprotect',
++                 subsystem='vfs',
++                 source='vfs_tmprotect.c',
++                 deps='smb_libzfs',
++                 init_function='',
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_tmprotect'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_tmprotect'))
++
++bld.SAMBA3_MODULE('vfs_zfs_fsrvp',
++                 subsystem='vfs',
++                 source='vfs_zfs_fsrvp.c',
++                 deps='smb_libzfs',
++                 init_function='',
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_zfs_fsrvp'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_zfs_fsrvp'))
++
++bld.SAMBA3_MODULE('vfs_shadow_copy_zfs',
++                 subsystem='vfs',
++                 source='vfs_shadow_copy_zfs.c',
++                 allow_warnings=True,
++                 deps='samba-util tdb smb_libzfs',
++                 init_function='',
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_shadow_copy_zfs'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_shadow_copy_zfs'))
++
++bld.SAMBA3_MODULE('vfs_noacl',
++                 subsystem='vfs',
++                 source='vfs_noacl.c',
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_noacl'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_noacl'))
++
++
+ bld.SAMBA3_MODULE('vfs_zfsacl',
+                  subsystem='vfs',
+                  source='vfs_zfsacl.c',
+@@ -248,6 +297,39 @@ bld.SAMBA3_MODULE('vfs_zfsacl',
+                  internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_zfsacl'),
+                  enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_zfsacl'))
+ 
++bld.SAMBA3_MODULE('vfs_zfs_space',
++                 subsystem='vfs',
++                 source='vfs_zfs_space.c',
++                 deps='smb_libzfs',
++                 allow_undefined_symbols=True,
++                 init_function='',
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_zfs_space'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_zfs_space'))
++
++bld.SAMBA3_LIBRARY('smb_libzfs',
++                   source='smb_libzfs.c',
++                   cflags='-DNEED_SOLARIS_BOOLEAN',
++                   deps='samba-util',
++                   includes=[
++                       '%%SRC_BASE%%/cddl/contrib/opensolaris/lib/libzpool/common',
++                       '%%SRC_BASE%%/cddl/compat/opensolaris/include',
++                       '%%SRC_BASE%%/cddl/compat/opensolaris/lib/libumem',
++                       '%%SRC_BASE%%/sys/cddl/compat/opensolaris',
++                       '%%SRC_BASE%%/cddl/contrib/opensolaris/head',
++                       '%%SRC_BASE%%/cddl/contrib/opensolaris/lib/libuutil/common',
++                       '%%SRC_BASE%%/cddl/contrib/opensolaris/lib/libzfs/common',
++                       '%%SRC_BASE%%/cddl/contrib/opensolaris/lib/libzfs_core/common',
++                       '%%SRC_BASE%%/cddl/contrib/opensolaris/lib/libumem/common',
++                       '%%SRC_BASE%%/cddl/contrib/opensolaris/lib/libnvpair',
++                       '%%SRC_BASE%%/sys/cddl/contrib/opensolaris/uts/common',
++                       '%%SRC_BASE%%/sys/cddl/contrib/opensolaris/uts/common/fs/zfs',
++                       '%%SRC_BASE%%/sys/cddl/contrib/opensolaris/uts/common/sys',
++                       '%%SRC_BASE%%/sys/cddl/contrib/opensolaris/common/zfs',
++                   ],
++                   ldflags='-lgeom -luutil -lzfs_core -lzfs -lnvpair',
++                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_ixnas'),
++                   private_library=True)
++
+ xdr_buf_hack = 'sed -e "s@^\([ \t]*register int32_t \*buf\);@\\1 = buf;@"'
+ 
+ bld.SAMBA_GENERATOR('nfs41acl-xdr-c',
+diff --git a/source3/wscript b/source3/wscript
+index 5c2ba18..66c0f9d 100644
+--- a/source3/wscript
++++ b/source3/wscript
+@@ -50,6 +50,7 @@ def options(opt):
+     opt.SAMBA3_ADD_OPTION('sendfile-support', default=None)
+     opt.SAMBA3_ADD_OPTION('utmp')
+     opt.SAMBA3_ADD_OPTION('avahi', with_name="enable", without_name="disable")
++    opt.SAMBA3_ADD_OPTION('dnssd', with_name="enable", without_name="disable")
+     opt.SAMBA3_ADD_OPTION('iconv')
+     opt.SAMBA3_ADD_OPTION('acl-support')
+     opt.SAMBA3_ADD_OPTION('dnsupdate')
+@@ -766,7 +767,7 @@ msg.msg_accrightslen = sizeof(fd);
+         conf.env['HAVE_ADS'] = '1'
+         Logs.info("Building with Active Directory support.")
+         # these have broken dependencies
+-        forced_shared_modules.extend(TO_LIST('idmap_ad idmap_rfc2307'))
++        forced_shared_modules.extend(TO_LIST('idmap_ad idmap_fruit idmap_rfc2307'))
+     elif Options.options.with_ads == False:
+         Logs.info("Building without Active Directory support (--without-ads).")
+     else:
+@@ -835,6 +836,17 @@ msg.msg_accrightslen = sizeof(fd);
+         conf.SET_TARGET_TYPE('avahi-common', 'EMPTY')
+         conf.SET_TARGET_TYPE('avahi-client', 'EMPTY')
+ 
++    if Options.options.with_dnssd:
++        conf.env.with_dnssd = True
++        if not conf.CHECK_HEADERS('dns_sd.h'):
++            conf.env.with_dnssd = False
++        if not conf.CHECK_FUNCS_IN('DNSServiceRegister', 'dns_sd'):
++            conf.env.with_dnssd = False
++        if conf.env.with_dnssd:
++            conf.DEFINE('WITH_DNSSD_SUPPORT', 1)
++    else:
++        conf.SET_TARGET_TYPE('dns_sd', 'EMPTY')
++
+     if Options.options.with_iconv:
+         conf.env.with_iconv = True
+         if not conf.CHECK_FUNCS_IN('iconv_open', 'iconv', headers='iconv.h'):
+@@ -1692,6 +1704,7 @@ main() {
+         default_shared_modules.extend(TO_LIST('vfs_posix_eadb'))
+ 
+     if conf.CONFIG_SET('HAVE_FREEBSD_SUNACL_H'):
++        default_shared_modules.extend(TO_LIST('vfs_winmsa'))
+         default_shared_modules.extend(TO_LIST('vfs_zfsacl'))
+ 
+     if conf.CONFIG_SET('HAVE_DIRFD_DECL'):
+diff --git a/source3/wscript_build b/source3/wscript_build
+index 26e251f..019d03e 100644
+--- a/source3/wscript_build
++++ b/source3/wscript_build
+@@ -738,6 +738,7 @@ bld.SAMBA3_LIBRARY('smbd_base',
+                         smbd_conn
+                         param_service
+                         AVAHI
++                        dns_sd
+                         PRINTBASE
+                         PROFILE
+                         LOCKING
+@@ -1115,6 +1116,7 @@ bld.SAMBA3_BINARY('client/smbclient',
+                       msrpc3
+                       RPC_NDR_SRVSVC
+                       cli_smb_common
++                      dns_sd
+                       archive
+                       ''')
+ 

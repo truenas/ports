@@ -429,6 +429,7 @@ lib/shared-modules/vfs/xattr_tdb.so
 lib/shared-modules/vfs/zfsacl.so
 %%LIBZFS%%lib/shared-modules/vfs/ixnas.so
 %%LIBZFS%%lib/shared-modules/vfs/zfs_space.so
+%%LIBZFS%%lib/shared-modules/vfs/tmprotect.so
 @dir lib/shared-modules/vfs
 %%AD_DC%%@dir lib/shared-modules/service
 %%AD_DC%%@dir lib/shared-modules/process_model

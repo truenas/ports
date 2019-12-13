@@ -3,7 +3,7 @@
 
 PORTNAME=			${SAMBA4_BASENAME}410
 PORTVERSION=			${SAMBA4_VERSION}
-PORTREVISION=			3
+PORTREVISION=			4
 CATEGORIES?=			net
 MASTER_SITES=			SAMBA/samba/stable SAMBA/samba/rc
 DISTNAME=			${SAMBA4_DISTNAME}
@@ -24,12 +24,13 @@ EXTRA_PATCHES+=			${PATCHDIR}/0001-add-ix-custom-vfs-modules.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-add-support-for-xattrs-larger-than-64k.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-add-idmap_fruit-backend.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-fix-listen-backlog.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/0001-add-shadow_copy_zfs.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-enable-keytab-updates-on-machine-account-change.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-add_ws_discovery.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-add-wb-status-cmd.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-smbd_reply.c.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/talloc_arc4random.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/add_zfs_based_vfs_modules.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/wscript_changes.patch:-p1
 
 SAMBA4_BASENAME=		samba
 SAMBA4_PORTNAME=		${SAMBA4_BASENAME}4
@@ -388,8 +389,8 @@ SAMBA4_MODULES+=		auth_skel pdb_test gpext_security gpext_registry gpext_scripts
 
 .if ${PORT_OPTIONS:MLIBZFS}
 CONFIGURE_ARGS+= 	--with-libzfs
-WANT_EXP_MODULES+=	vfs_zfs_space vfs_ixnas vfs_shadow_copy_zfs vfs_noacl
-SAMBA4_MODULES+=	vfs_zfs_space vfs_ixnas vfs_shadow_copy_zfs vfs_noacl
+WANT_EXP_MODULES+=	vfs_zfs_space vfs_ixnas vfs_shadow_copy_zfs vfs_noacl vfs_tmprotect vfs_zfs_fsrvp
+SAMBA4_MODULES+=	vfs_zfs_space vfs_ixnas vfs_shadow_copy_zfs vfs_noacl vfs_tmprotect vfs_zfs_fsrvp
 PLIST_SUB+=		LIBZFS=""
 .else
 CONFIGURE_ARGS+=	--without-libzfs
