@@ -1,0 +1,31 @@
+--- agent/mibgroup/agent/nsCache.c
++++ agent/mibgroup/agent/nsCache.c
+@@ -96,6 +96,7 @@ init_nsCache(void)
+      */
+     iinfo      = SNMP_MALLOC_TYPEDEF(netsnmp_iterator_info);
+     if (!iinfo) {
++        SNMP_FREE(table_info);
+         return;
+     }
+     iinfo->get_first_data_point = get_first_cache_entry;
+--- agent/mibgroup/agent/nsDebug.c
++++ agent/mibgroup/agent/nsDebug.c
+@@ -81,6 +81,7 @@ init_nsDebug(void)
+      */
+     iinfo      = SNMP_MALLOC_TYPEDEF(netsnmp_iterator_info);
+     if (!iinfo) {
++        SNMP_FREE(table_info);
+         return;
+     }
+     iinfo->get_first_data_point = get_first_debug_entry;
+--- agent/mibgroup/agent/nsLogging.c
++++ agent/mibgroup/agent/nsLogging.c
+@@ -54,6 +54,7 @@ init_nsLogging(void)
+      */
+     iinfo      = SNMP_MALLOC_TYPEDEF(netsnmp_iterator_info);
+     if (!iinfo) {
++        SNMP_FREE(table_info);
+         return;
+     }
+     iinfo->get_first_data_point = get_first_logging_entry;
+
