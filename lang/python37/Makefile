@@ -14,6 +14,8 @@ COMMENT=	Interpreted object-oriented programming language
 
 LICENSE=	PSFL
 
+EXTRA_PATCHES+=	${PATCHDIR}/reentrancy_updates.patch:-p1
+
 USES=		cpe ncurses pathfix pkgconfig readline:port shebangfix ssl tar:xz
 PATHFIX_MAKEFILEIN=	Makefile.pre.in
 USE_LDCONFIG=	yes
