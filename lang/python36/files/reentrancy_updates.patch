@@ -1,0 +1,508 @@
+diff --git a/Misc/NEWS.d/next/Library/2018-05-23-17-07-54.bpo-33625.nzQgD8.rst b/Misc/NEWS.d/next/Library/2018-05-23-17-07-54.bpo-33625.nzQgD8.rst
+new file mode 100644
+index 0000000..265fab2
+--- /dev/null
++++ b/Misc/NEWS.d/next/Library/2018-05-23-17-07-54.bpo-33625.nzQgD8.rst
+@@ -0,0 +1,3 @@
++Release GIL on `grp.getgrnam`, `grp.getgrgid`, `pwd.getpwnam` and
++`pwd.getpwuid` if reentrant variants of these functions are available.
++Patch by William Grzybowski.
+diff --git a/Misc/NEWS.d/next/Library/2018-09-07-10-16-34.bpo-34604.xL7-kG.rst b/Misc/NEWS.d/next/Library/2018-09-07-10-16-34.bpo-34604.xL7-kG.rst
+new file mode 100644
+index 0000000..958b74f
+--- /dev/null
++++ b/Misc/NEWS.d/next/Library/2018-09-07-10-16-34.bpo-34604.xL7-kG.rst
+@@ -0,0 +1,3 @@
++Fix possible mojibake in the error message of `pwd.getpwnam` and
++`grp.getgrnam` using string representation because of invisible characters
++or trailing whitespaces. Patch by William Grzybowski.
+diff --git a/Modules/clinic/pwdmodule.c.h b/Modules/clinic/pwdmodule.c.h
+index f9e0644..979dfdb 100644
+--- a/Modules/clinic/pwdmodule.c.h
++++ b/Modules/clinic/pwdmodule.c.h
+@@ -14,7 +14,7 @@ PyDoc_STRVAR(pwd_getpwuid__doc__,
+     {"getpwuid", (PyCFunction)pwd_getpwuid, METH_O, pwd_getpwuid__doc__},
+ 
+ PyDoc_STRVAR(pwd_getpwnam__doc__,
+-"getpwnam($module, arg, /)\n"
++"getpwnam($module, name, /)\n"
+ "--\n"
+ "\n"
+ "Return the password database entry for the given user name.\n"
+@@ -25,18 +25,18 @@ PyDoc_STRVAR(pwd_getpwnam__doc__,
+     {"getpwnam", (PyCFunction)pwd_getpwnam, METH_O, pwd_getpwnam__doc__},
+ 
+ static PyObject *
+-pwd_getpwnam_impl(PyObject *module, PyObject *arg);
++pwd_getpwnam_impl(PyObject *module, PyObject *name);
+ 
+ static PyObject *
+-pwd_getpwnam(PyObject *module, PyObject *arg_)
++pwd_getpwnam(PyObject *module, PyObject *arg)
+ {
+     PyObject *return_value = NULL;
+-    PyObject *arg;
++    PyObject *name;
+ 
+-    if (!PyArg_Parse(arg_, "U:getpwnam", &arg)) {
++    if (!PyArg_Parse(arg, "U:getpwnam", &name)) {
+         goto exit;
+     }
+-    return_value = pwd_getpwnam_impl(module, arg);
++    return_value = pwd_getpwnam_impl(module, name);
+ 
+ exit:
+     return return_value;
+@@ -69,4 +69,4 @@ pwd_getpwall(PyObject *module, PyObject *Py_UNUSED(ignored))
+ #ifndef PWD_GETPWALL_METHODDEF
+     #define PWD_GETPWALL_METHODDEF
+ #endif /* !defined(PWD_GETPWALL_METHODDEF) */
+-/*[clinic end generated code: output=fc41d8d88ec206d8 input=a9049054013a1b77]*/
++/*[clinic end generated code: output=3c93120d6dd86905 input=a9049054013a1b77]*/
+diff --git a/Modules/grpmodule.c b/Modules/grpmodule.c
+index 8a724b6..ab766b9 100644
+--- a/Modules/grpmodule.c
++++ b/Modules/grpmodule.c
+@@ -37,6 +37,8 @@ static PyStructSequence_Desc struct_group_type_desc = {
+ static int initialized;
+ static PyTypeObject StructGrpType;
+ 
++#define DEFAULT_BUFFER_SIZE 1024
++
+ static PyObject *
+ mkgrent(struct group *p)
+ {
+@@ -96,7 +98,9 @@ static PyObject *
+ grp_getgrgid_impl(PyObject *module, PyObject *id)
+ /*[clinic end generated code: output=30797c289504a1ba input=15fa0e2ccf5cda25]*/
+ {
+-    PyObject *py_int_id;
++    PyObject *py_int_id, *retval = NULL;
++    int nomem = 0;
++    char *buf = NULL, *buf2 = NULL;
+     gid_t gid;
+     struct group *p;
+ 
+@@ -119,8 +123,49 @@ grp_getgrgid_impl(PyObject *module, PyObject *id)
+         }
+         Py_DECREF(py_int_id);
+     }
++#ifdef HAVE_GETGRGID_R
++    int status;
++    Py_ssize_t bufsize;
++    /* Note: 'grp' will be used via pointer 'p' on getgrgid_r success. */
++    struct group grp;
++
++    Py_BEGIN_ALLOW_THREADS
++    bufsize = sysconf(_SC_GETGR_R_SIZE_MAX);
++    if (bufsize == -1) {
++        bufsize = DEFAULT_BUFFER_SIZE;
++    }
++
++    while (1) {
++        buf2 = PyMem_RawRealloc(buf, bufsize);
++        if (buf2 == NULL) {
++            p = NULL;
++            nomem = 1;
++            break;
++        }
++        buf = buf2;
++        status = getgrgid_r(gid, &grp, buf, bufsize, &p);
++        if (status != 0) {
++            p = NULL;
++        }
++        if (p != NULL || status != ERANGE) {
++            break;
++        }
++        if (bufsize > (PY_SSIZE_T_MAX >> 1)) {
++            nomem = 1;
++            break;
++        }
++        bufsize <<= 1;
++    }
+ 
+-    if ((p = getgrgid(gid)) == NULL) {
++    Py_END_ALLOW_THREADS
++#else
++    p = getgrgid(gid);
++#endif
++    if (p == NULL) {
++        PyMem_RawFree(buf);
++        if (nomem == 1) {
++            return PyErr_NoMemory();
++        }
+         PyObject *gid_obj = _PyLong_FromGid(gid);
+         if (gid_obj == NULL)
+             return NULL;
+@@ -128,7 +173,11 @@ grp_getgrgid_impl(PyObject *module, PyObject *id)
+         Py_DECREF(gid_obj);
+         return NULL;
+     }
+-    return mkgrent(p);
++    retval = mkgrent(p);
++#ifdef HAVE_GETGRGID_R
++    PyMem_RawFree(buf);
++#endif
++    return retval;
+ }
+ 
+ /*[clinic input]
+@@ -145,7 +194,8 @@ static PyObject *
+ grp_getgrnam_impl(PyObject *module, PyObject *name)
+ /*[clinic end generated code: output=67905086f403c21c input=08ded29affa3c863]*/
+ {
+-    char *name_chars;
++    char *buf = NULL, *buf2 = NULL, *name_chars;
++    int nomem = 0;
+     struct group *p;
+     PyObject *bytes, *retval = NULL;
+ 
+@@ -154,13 +204,56 @@ grp_getgrnam_impl(PyObject *module, PyObject *name)
+     /* check for embedded null bytes */
+     if (PyBytes_AsStringAndSize(bytes, &name_chars, NULL) == -1)
+         goto out;
++#ifdef HAVE_GETGRNAM_R
++    int status;
++    Py_ssize_t bufsize;
++    /* Note: 'grp' will be used via pointer 'p' on getgrnam_r success. */
++    struct group grp;
++
++    Py_BEGIN_ALLOW_THREADS
++    bufsize = sysconf(_SC_GETGR_R_SIZE_MAX);
++    if (bufsize == -1) {
++        bufsize = DEFAULT_BUFFER_SIZE;
++    }
++
++    while(1) {
++        buf2 = PyMem_RawRealloc(buf, bufsize);
++        if (buf2 == NULL) {
++            p = NULL;
++            nomem = 1;
++            break;
++        }
++        buf = buf2;
++        status = getgrnam_r(name_chars, &grp, buf, bufsize, &p);
++        if (status != 0) {
++            p = NULL;
++        }
++        if (p != NULL || status != ERANGE) {
++            break;
++        }
++        if (bufsize > (PY_SSIZE_T_MAX >> 1)) {
++            nomem = 1;
++            break;
++        }
++        bufsize <<= 1;
++    }
+ 
+-    if ((p = getgrnam(name_chars)) == NULL) {
+-        PyErr_Format(PyExc_KeyError, "getgrnam(): name not found: %R", name);
++    Py_END_ALLOW_THREADS
++#else
++    p = getgrnam(name_chars);
++#endif
++    if (p == NULL) {
++        if (nomem == 1) {
++            PyErr_NoMemory();
++        }
++        else {
++            PyErr_Format(PyExc_KeyError, "getgrnam(): name not found: %R", name);
++        }
+         goto out;
+     }
+     retval = mkgrent(p);
+ out:
++    PyMem_RawFree(buf);
+     Py_DECREF(bytes);
+     return retval;
+ }
+diff --git a/Modules/pwdmodule.c b/Modules/pwdmodule.c
+index 810427a..aeb36d8 100644
+--- a/Modules/pwdmodule.c
++++ b/Modules/pwdmodule.c
+@@ -50,6 +50,8 @@ exception is raised if the entry asked for cannot be found.");
+ static int initialized;
+ static PyTypeObject StructPwdType;
+ 
++#define DEFAULT_BUFFER_SIZE 1024
++
+ static void
+ sets(PyObject *v, int i, const char* val)
+ {
+@@ -116,8 +118,11 @@ static PyObject *
+ pwd_getpwuid(PyObject *module, PyObject *uidobj)
+ /*[clinic end generated code: output=c4ee1d4d429b86c4 input=ae64d507a1c6d3e8]*/
+ {
++    PyObject *retval = NULL;
+     uid_t uid;
++    int nomem = 0;
+     struct passwd *p;
++    char *buf = NULL, *buf2 = NULL;
+ 
+     if (!_Py_Uid_Converter(uidobj, &uid)) {
+         if (PyErr_ExceptionMatches(PyExc_OverflowError))
+@@ -125,7 +130,48 @@ pwd_getpwuid(PyObject *module, PyObject *uidobj)
+                          "getpwuid(): uid not found");
+         return NULL;
+     }
+-    if ((p = getpwuid(uid)) == NULL) {
++#ifdef HAVE_GETPWUID_R
++    int status;
++    Py_ssize_t bufsize;
++    /* Note: 'pwd' will be used via pointer 'p' on getpwuid_r success. */
++    struct passwd pwd;
++
++    Py_BEGIN_ALLOW_THREADS
++    bufsize = sysconf(_SC_GETPW_R_SIZE_MAX);
++    if (bufsize == -1) {
++        bufsize = DEFAULT_BUFFER_SIZE;
++    }
++
++    while(1) {
++        buf2 = PyMem_RawRealloc(buf, bufsize);
++        if (buf2 == NULL) {
++            nomem = 1;
++            break;
++        }
++        buf = buf2;
++        status = getpwuid_r(uid, &pwd, buf, bufsize, &p);
++        if (status != 0) {
++            p = NULL;
++        }
++        if (p != NULL || status != ERANGE) {
++            break;
++        }
++        if (bufsize > (PY_SSIZE_T_MAX >> 1)) {
++            nomem = 1;
++            break;
++        }
++        bufsize <<= 1;
++    }
++
++    Py_END_ALLOW_THREADS
++#else
++    p = getpwuid(uid);
++#endif
++    if (p == NULL) {
++        PyMem_RawFree(buf);
++        if (nomem == 1) {
++            return PyErr_NoMemory();
++        }
+         PyObject *uid_obj = _PyLong_FromUid(uid);
+         if (uid_obj == NULL)
+             return NULL;
+@@ -134,13 +180,17 @@ pwd_getpwuid(PyObject *module, PyObject *uidobj)
+         Py_DECREF(uid_obj);
+         return NULL;
+     }
+-    return mkpwent(p);
++    retval = mkpwent(p);
++#ifdef HAVE_GETPWUID_R
++    PyMem_RawFree(buf);
++#endif
++    return retval;
+ }
+ 
+ /*[clinic input]
+ pwd.getpwnam
+ 
+-    arg: unicode
++    name: unicode
+     /
+ 
+ Return the password database entry for the given user name.
+@@ -149,25 +199,69 @@ See `help(pwd)` for more on password database entries.
+ [clinic start generated code]*/
+ 
+ static PyObject *
+-pwd_getpwnam_impl(PyObject *module, PyObject *arg)
+-/*[clinic end generated code: output=6abeee92430e43d2 input=d5f7e700919b02d3]*/
++pwd_getpwnam_impl(PyObject *module, PyObject *name)
++/*[clinic end generated code: output=359ce1ddeb7a824f input=a6aeb5e3447fb9e0]*/
+ {
+-    char *name;
++    char *buf = NULL, *buf2 = NULL, *name_chars;
++    int nomem = 0;
+     struct passwd *p;
+     PyObject *bytes, *retval = NULL;
+ 
+-    if ((bytes = PyUnicode_EncodeFSDefault(arg)) == NULL)
++    if ((bytes = PyUnicode_EncodeFSDefault(name)) == NULL)
+         return NULL;
+     /* check for embedded null bytes */
+-    if (PyBytes_AsStringAndSize(bytes, &name, NULL) == -1)
++    if (PyBytes_AsStringAndSize(bytes, &name_chars, NULL) == -1)
+         goto out;
+-    if ((p = getpwnam(name)) == NULL) {
+-        PyErr_Format(PyExc_KeyError,
+-                     "getpwnam(): name not found: %R", arg);
++#ifdef HAVE_GETPWNAM_R
++    int status;
++    Py_ssize_t bufsize;
++    /* Note: 'pwd' will be used via pointer 'p' on getpwnam_r success. */
++    struct passwd pwd;
++
++    Py_BEGIN_ALLOW_THREADS
++    bufsize = sysconf(_SC_GETPW_R_SIZE_MAX);
++    if (bufsize == -1) {
++        bufsize = DEFAULT_BUFFER_SIZE;
++    }
++
++    while(1) {
++        buf2 = PyMem_RawRealloc(buf, bufsize);
++        if (buf2 == NULL) {
++            nomem = 1;
++            break;
++        }
++        buf = buf2;
++        status = getpwnam_r(name_chars, &pwd, buf, bufsize, &p);
++        if (status != 0) {
++            p = NULL;
++        }
++        if (p != NULL || status != ERANGE) {
++            break;
++        }
++        if (bufsize > (PY_SSIZE_T_MAX >> 1)) {
++            nomem = 1;
++            break;
++        }
++        bufsize <<= 1;
++    }
++
++    Py_END_ALLOW_THREADS
++#else
++    p = getpwnam(name_chars);
++#endif
++    if (p == NULL) {
++        if (nomem == 1) {
++            PyErr_NoMemory();
++        }
++        else {
++            PyErr_Format(PyExc_KeyError,
++                         "getpwnam(): name not found: %R", name);
++        }
+         goto out;
+     }
+     retval = mkpwent(p);
+ out:
++    PyMem_RawFree(buf);
+     Py_DECREF(bytes);
+     return retval;
+ }
+diff --git a/configure b/configure
+index 0f466db..261a544 100755
+--- a/configure
++++ b/configure
+@@ -780,6 +780,7 @@ infodir
+ docdir
+ oldincludedir
+ includedir
++runstatedir
+ localstatedir
+ sharedstatedir
+ sysconfdir
+@@ -893,6 +894,7 @@ datadir='${datarootdir}'
+ sysconfdir='${prefix}/etc'
+ sharedstatedir='${prefix}/com'
+ localstatedir='${prefix}/var'
++runstatedir='${localstatedir}/run'
+ includedir='${prefix}/include'
+ oldincludedir='/usr/include'
+ docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
+@@ -1145,6 +1147,15 @@ do
+   | -silent | --silent | --silen | --sile | --sil)
+     silent=yes ;;
+ 
++  -runstatedir | --runstatedir | --runstatedi | --runstated \
++  | --runstate | --runstat | --runsta | --runst | --runs \
++  | --run | --ru | --r)
++    ac_prev=runstatedir ;;
++  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
++  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
++  | --run=* | --ru=* | --r=*)
++    runstatedir=$ac_optarg ;;
++
+   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
+     ac_prev=sbindir ;;
+   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
+@@ -1282,7 +1293,7 @@ fi
+ for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
+ 		datadir sysconfdir sharedstatedir localstatedir includedir \
+ 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
+-		libdir localedir mandir
++		libdir localedir mandir runstatedir
+ do
+   eval ac_val=\$$ac_var
+   # Remove trailing slashes.
+@@ -1435,6 +1446,7 @@ Fine tuning of the installation directories:
+   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
+   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
+   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
++  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
+   --libdir=DIR            object code libraries [EPREFIX/lib]
+   --includedir=DIR        C header files [PREFIX/include]
+   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
+@@ -11464,8 +11476,9 @@ for ac_func in alarm accept4 setitimer getitimer bind_textdomain_codeset chown \
+  clock confstr ctermid dup3 execv faccessat fchmod fchmodat fchown fchownat \
+  fexecve fdopendir fork fpathconf fstatat ftime ftruncate futimesat \
+  futimens futimes gai_strerror getentropy \
++ getgrgid_r getgrnam_r \
+  getgrouplist getgroups getlogin getloadavg getpeername getpgid getpid \
+- getpriority getresuid getresgid getpwent getspnam getspent getsid getwd \
++ getpriority getresuid getresgid getpwent getpwnam_r getpwuid_r getspnam getspent getsid getwd \
+  if_nameindex \
+  initgroups kill killpg lchown lockf linkat lstat lutimes mmap \
+  memrchr mbrtowc mkdirat mkfifo \
+@@ -14058,6 +14071,7 @@ fi
+ 
+ 
+ 
++
+ # checks for system services
+ # (none yet)
+ 
+diff --git a/configure.ac b/configure.ac
+index 1ef0df7..37455c7 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -3559,8 +3559,9 @@ AC_CHECK_FUNCS(alarm accept4 setitimer getitimer bind_textdomain_codeset chown \
+  clock confstr ctermid dup3 execv faccessat fchmod fchmodat fchown fchownat \
+  fexecve fdopendir fork fpathconf fstatat ftime ftruncate futimesat \
+  futimens futimes gai_strerror getentropy \
++ getgrgid_r getgrnam_r \
+  getgrouplist getgroups getlogin getloadavg getpeername getpgid getpid \
+- getpriority getresuid getresgid getpwent getspnam getspent getsid getwd \
++ getpriority getresuid getresgid getpwent getpwnam_r getpwuid_r getspnam getspent getsid getwd \
+  if_nameindex \
+  initgroups kill killpg lchown lockf linkat lstat lutimes mmap \
+  memrchr mbrtowc mkdirat mkfifo \
+diff --git a/pyconfig.h.in b/pyconfig.h.in
+index d36fc93..0c21fcf 100644
+--- a/pyconfig.h.in
++++ b/pyconfig.h.in
+@@ -406,6 +406,12 @@
+ /* Define to 1 if you have the `getentropy' function. */
+ #undef HAVE_GETENTROPY
+ 
++/* Define to 1 if you have the `getgrgid_r' function. */
++#undef HAVE_GETGRGID_R
++
++/* Define to 1 if you have the `getgrnam_r' function. */
++#undef HAVE_GETGRNAM_R
++
+ /* Define to 1 if you have the `getgrouplist' function. */
+ #undef HAVE_GETGROUPLIST
+ 
+@@ -460,6 +466,12 @@
+ /* Define to 1 if you have the `getpwent' function. */
+ #undef HAVE_GETPWENT
+ 
++/* Define to 1 if you have the `getpwnam_r' function. */
++#undef HAVE_GETPWNAM_R
++
++/* Define to 1 if you have the `getpwuid_r' function. */
++#undef HAVE_GETPWUID_R
++
+ /* Define to 1 if the getrandom() function is available */
+ #undef HAVE_GETRANDOM
+ 
