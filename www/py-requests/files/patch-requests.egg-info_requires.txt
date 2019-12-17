@@ -1,0 +1,10 @@
+--- requests.egg-info/requires.txt.orig	2019-11-29 22:58:47 UTC
++++ requests.egg-info/requires.txt
+@@ -1,6 +1,6 @@
+ chardet<3.1.0,>=3.0.2
+ idna<2.9,>=2.5
+-urllib3<1.25,>=1.21.1
++urllib3<1.26,>=1.21.1
+ certifi>=2017.4.17
+ 
+ [security]
