@@ -1,0 +1,1087 @@
+--- agent/agent_handler.c
++++ agent/agent_handler.c
+@@ -293,8 +293,16 @@ netsnmp_register_handler(netsnmp_handler_registration *reginfo)
+      * for handlers that can't GETBULK, force a conversion handler on them 
+      */
+     if (!(reginfo->modes & HANDLER_CAN_GETBULK)) {
+-        netsnmp_inject_handler(reginfo,
+-                               netsnmp_get_bulk_to_next_handler());
++        handler = netsnmp_get_bulk_to_next_handler();
++        if (!handler ||
++            (netsnmp_inject_handler(reginfo, handler) != SNMPERR_SUCCESS)) {
++            snmp_log(LOG_WARNING, "could not inject bulk to next handler\n");
++            if (handler)
++                netsnmp_handler_free(handler);
++            /** should this be a critical error? */
++            netsnmp_handler_registration_free(reginfo);
++            return SNMP_ERR_GENERR;
++        }
+     }
+ 
+     for (handler = reginfo->handler; handler; handler = handler->next) {
+--- agent/helpers/baby_steps.c
++++ agent/helpers/baby_steps.c
+@@ -356,8 +356,15 @@ netsnmp_feature_child_of(netsnmp_baby_steps_handler_init,netsnmp_unused)
+ void
+ netsnmp_baby_steps_handler_init(void)
+ {
+-    netsnmp_register_handler_by_name("baby_steps",
+-                                     netsnmp_baby_steps_handler_get(BABY_STEP_ALL));
++    netsnmp_mib_handler *handler =
++        netsnmp_baby_steps_handler_get(BABY_STEP_ALL);
++    if (NULL == handler) {
++        netsnmp_handler_free(handler);
++        snmp_log(LOG_ERR, "could not create baby steps handler\n");
++        return;
++    }
++
++    netsnmp_register_handler_by_name("baby_steps", handler);
+ }
+ #endif /* NETSNMP_FEATURE_REMOVE_NETSNMP_BABY_STEPS_HANDLER_INIT */
+ 
+--- agent/helpers/bulk_to_next.c
++++ agent/helpers/bulk_to_next.c
+@@ -132,8 +132,11 @@ netsnmp_bulk_to_next_helper(netsnmp_mib_handler *handler,
+ void
+ netsnmp_init_bulk_to_next_helper(void)
+ {
+-    netsnmp_register_handler_by_name("bulk_to_next",
+-                                     netsnmp_get_bulk_to_next_handler());
++    netsnmp_mib_handler *hnd = netsnmp_get_bulk_to_next_handler();
++    if (!hnd)
++        return;
++
++    netsnmp_register_handler_by_name("bulk_to_next", hnd);
+ }
+ /**  @} */
+ 
+--- agent/helpers/cache_handler.c
++++ agent/helpers/cache_handler.c
+@@ -428,6 +428,28 @@ netsnmp_get_cache_handler(int timeout, NetsnmpCacheLoad * load_hook,
+     return ret;
+ }
+ 
++#if !defined(NETSNMP_FEATURE_REMOVE_NETSNMP_CACHE_HANDLER_REGISTER) || !defined(NETSNMP_FEATURE_REMOVE_NETSNMP_REGISTER_CACHE_HANDLER)
++static int
++_cache_handler_register(netsnmp_handler_registration * reginfo,
++                        netsnmp_mib_handler *handler)
++{
++    /** success path */
++    if (reginfo && handler &&
++        (netsnmp_inject_handler(reginfo, handler) == SNMPERR_SUCCESS))
++        return netsnmp_register_handler(reginfo);
++
++    /** error path */
++    snmp_log(LOG_ERR, "could not register cache handler\n");
++
++    if (handler)
++        netsnmp_handler_free(handler);
++
++    netsnmp_handler_registration_free(reginfo);
++
++    return MIB_REGISTRATION_FAILED;
++}
++#endif
++
+ /** functionally the same as calling netsnmp_register_handler() but also
+  * injects a cache handler at the same time for you. */
+ netsnmp_feature_child_of(netsnmp_cache_handler_register,netsnmp_unused)
+@@ -436,11 +458,13 @@ int
+ netsnmp_cache_handler_register(netsnmp_handler_registration * reginfo,
+                                netsnmp_cache* cache)
+ {
+-    netsnmp_mib_handler *handler = NULL;
+-    handler = netsnmp_cache_handler_get(cache);
++    if ((NULL == reginfo) || (NULL == cache)) {
++        snmp_log(LOG_ERR, "bad param in netsnmp_cache_handler_register\n");
++        netsnmp_handler_registration_free(reginfo);
++        return MIB_REGISTRATION_FAILED;
++    }
+ 
+-    netsnmp_inject_handler(reginfo, handler);
+-    return netsnmp_register_handler(reginfo);
++    return _cache_handler_register(reginfo, netsnmp_cache_handler_get(cache));
+ }
+ #endif /* NETSNMP_FEATURE_REMOVE_NETSNMP_CACHE_HANDLER_REGISTER */
+ 
+@@ -453,13 +477,19 @@ netsnmp_register_cache_handler(netsnmp_handler_registration * reginfo,
+                                int timeout, NetsnmpCacheLoad * load_hook,
+                                NetsnmpCacheFree * free_hook)
+ {
+-    netsnmp_mib_handler *handler = NULL;
+-    handler = netsnmp_get_cache_handler(timeout, load_hook, free_hook,
+-                                        reginfo->rootoid,
+-                                        reginfo->rootoid_len);
++    netsnmp_mib_handler *handler;
++
++    if (NULL == reginfo) {
++        snmp_log(LOG_ERR, "bad param in netsnmp_cache_handler_register\n");
++        netsnmp_handler_registration_free(reginfo);
++        return MIB_REGISTRATION_FAILED;
++    }
++
++    handler =  netsnmp_get_cache_handler(timeout, load_hook, free_hook,
++                                         reginfo->rootoid,
++                                         reginfo->rootoid_len);
+ 
+-    netsnmp_inject_handler(reginfo, handler);
+-    return netsnmp_register_handler(reginfo);
++    return _cache_handler_register(reginfo, handler);
+ }
+ #endif /* NETSNMP_FEATURE_REMOVE_NETSNMP_REGISTER_CACHE_HANDLER */
+ 
+--- agent/helpers/debug_handler.c
++++ agent/helpers/debug_handler.c
+@@ -161,6 +161,11 @@ netsnmp_debug_helper(netsnmp_mib_handler *handler,
+ void
+ netsnmp_init_debug_helper(void)
+ {
+-    netsnmp_register_handler_by_name("debug", netsnmp_get_debug_handler());
++    netsnmp_mib_handler *handler = netsnmp_get_debug_handler();
++    if (!handler) {
++        snmp_log(LOG_ERR, "could not create debug handler\n");
++        return;
++    }
++    netsnmp_register_handler_by_name("debug", handler);
+ }
+ /**  @} */
+--- agent/helpers/instance.c
++++ agent/helpers/instance.c
+@@ -98,9 +98,17 @@ int
+ netsnmp_register_instance(netsnmp_handler_registration *reginfo)
+ {
+     netsnmp_mib_handler *handler = netsnmp_get_instance_handler();
+-    handler->flags |= MIB_HANDLER_INSTANCE;
+-    netsnmp_inject_handler(reginfo, handler);
+-    return netsnmp_register_serialize(reginfo);
++    if (handler) {
++        handler->flags |= MIB_HANDLER_INSTANCE;
++        if (netsnmp_inject_handler(reginfo, handler) == SNMPERR_SUCCESS)
++            return netsnmp_register_serialize(reginfo);
++    }
++
++    snmp_log(LOG_ERR, "failed to register instance\n");
++    netsnmp_handler_free(handler);
++    netsnmp_handler_registration_free(reginfo);
++
++    return MIB_REGISTRATION_FAILED;
+ }
+ 
+ /**
+@@ -124,9 +132,24 @@ netsnmp_register_instance(netsnmp_handler_registration *reginfo)
+ int
+ netsnmp_register_read_only_instance(netsnmp_handler_registration *reginfo)
+ {
+-    netsnmp_inject_handler(reginfo, netsnmp_get_instance_handler());
+-    netsnmp_inject_handler(reginfo, netsnmp_get_read_only_handler());
+-    return netsnmp_register_serialize(reginfo);
++    netsnmp_mib_handler *h1, *h2;
++    if (!reginfo)
++        return MIB_REGISTRATION_FAILED;
++
++    h1 = netsnmp_get_instance_handler();
++    h2 = netsnmp_get_read_only_handler();
++    if (h1 && h2 && netsnmp_inject_handler(reginfo, h1) == SNMPERR_SUCCESS) {
++        h1 = NULL;
++        if (netsnmp_inject_handler(reginfo, h2) == SNMPERR_SUCCESS)
++            return netsnmp_register_serialize(reginfo);
++    }
++
++    snmp_log(LOG_ERR, "failed to register read only instance\n");
++    netsnmp_handler_free(h1);
++    netsnmp_handler_free(h2);
++    netsnmp_handler_registration_free(reginfo);
++
++   return MIB_REGISTRATION_FAILED;
+ }
+ 
+ #ifndef NETSNMP_FEATURE_REMOVE_REGISTER_NUM_FILE_INSTANCE
+@@ -145,29 +168,42 @@ get_reg(const char *name,
+ 
+     if (subhandler) {
+         myreg =
+-            netsnmp_create_handler_registration(name,
+-                                                subhandler,
+-                                                reg_oid, reg_oid_len,
+-                                                modes);
++            netsnmp_create_handler_registration(name, subhandler, reg_oid,
++                                                reg_oid_len, modes);
++        if (!myreg)
++            return NULL;
+         myhandler = netsnmp_create_handler(ourname, scalarh);
++        if (!myhandler) {
++            netsnmp_handler_registration_free(myreg);
++            return NULL;
++        }
+         myhandler->myvoid = it;
+ 	myhandler->data_clone = (void*(*)(void*))netsnmp_num_file_instance_ref;
+ 	myhandler->data_free = (void(*)(void*))netsnmp_num_file_instance_deref;
+-        netsnmp_inject_handler(myreg, myhandler);
++        if (netsnmp_inject_handler(myreg, myhandler) != SNMPERR_SUCCESS) {
++            netsnmp_handler_free(myhandler);
++            netsnmp_handler_registration_free(myreg);
++            return NULL;
++        }
+     } else {
+-        myreg =
+-            netsnmp_create_handler_registration(name,
+-                                                scalarh,
+-                                                reg_oid, reg_oid_len,
+-                                                modes);
++        myreg = netsnmp_create_handler_registration(name, scalarh, reg_oid,
++                                                    reg_oid_len, modes);
++        if (!myreg)
++            return NULL;
+         myreg->handler->myvoid = it;
+ 	myreg->handler->data_clone
+ 	    = (void *(*)(void *))netsnmp_num_file_instance_ref;
+ 	myreg->handler->data_free
+ 	    = (void (*)(void *))netsnmp_num_file_instance_deref;
+     }
+-    if (contextName)
++    if (contextName) {
+         myreg->contextName = strdup(contextName);
++        if (!myreg->contextName) {
++            netsnmp_handler_registration_free(myreg);
++            return NULL;
++        }
++    }
++
+     return myreg;
+ }
+ #endif /* NETSNMP_FEATURE_REMOVE_REGISTER_NUM_FILE_INSTANCE */
+--- agent/helpers/null.c
++++ agent/helpers/null.c
+@@ -32,6 +32,16 @@ netsnmp_register_null_context(oid * loc, size_t loc_len,
+         if (contextName)
+             reginfo->contextName = strdup(contextName);
+         reginfo->modes = HANDLER_CAN_DEFAULT | HANDLER_CAN_GETBULK;
++
++        if (!reginfo->handlerName || !reginfo->handler ||
++            (contextName && !reginfo->contextName)) {
++            snmp_log(LOG_ERR,"null context allocation failure(s)\n");
++            netsnmp_handler_registration_free(reginfo);
++            return MIB_REGISTRATION_FAILED;
++        }
++    } else {
++        snmp_log(LOG_ERR,"null context allocation failure\n");
++        return MIB_REGISTRATION_FAILED;
+     }
+     return netsnmp_register_handler(reginfo);
+ }
+--- agent/helpers/old_api.c
++++ agent/helpers/old_api.c
+@@ -134,8 +134,9 @@ netsnmp_register_old_api(const char *moduleName,
+          * register ourselves in the mib tree 
+          */
+         if (netsnmp_register_handler(reginfo) != MIB_REGISTERED_OK) {
+-            /** netsnmp_handler_registration_free(reginfo); already freed */
+-            /* SNMP_FREE(vp); already freed */
++            /** reginfo already freed on error. */
++            snmp_log(LOG_ERR, "old_api handler registration failed\n");
++            return SNMP_ERR_GENERR;
+         }
+     }
+     return SNMPERR_SUCCESS;
+@@ -171,6 +172,7 @@ netsnmp_register_mib_table_row(const char *moduleName,
+              * Unregister whatever we have registered so far, and
+              * return an error.  
+              */
++            snmp_log(LOG_ERR, "mib table row registration failed\n");
+             rc = MIB_REGISTRATION_FAILED;
+             break;
+         }
+@@ -217,6 +219,7 @@ netsnmp_register_mib_table_row(const char *moduleName,
+         if ((rc =
+              netsnmp_register_handler_nocallback(r)) !=
+             MIB_REGISTERED_OK) {
++            snmp_log(LOG_ERR, "mib table row registration failed\n");
+             DEBUGMSGTL(("netsnmp_register_mib_table_row",
+                         "register failed %d\n", rc));
+             /** reginfo already freed */
+--- agent/helpers/read_only.c
++++ agent/helpers/read_only.c
+@@ -73,8 +73,12 @@ netsnmp_read_only_helper(netsnmp_mib_handler *handler,
+ void
+ netsnmp_init_read_only_helper(void)
+ {
+-    netsnmp_register_handler_by_name("read_only",
+-                                     netsnmp_get_read_only_handler());
++    netsnmp_mib_handler *handler = netsnmp_get_read_only_handler();
++    if (!handler) {
++        snmp_log(LOG_ERR, "could not create read_only handler\n");
++        return;
++    }
++    netsnmp_register_handler_by_name("read_only", handler);
+ }
+ /**  @} */
+ 
+--- agent/helpers/row_merge.c
++++ agent/helpers/row_merge.c
+@@ -50,9 +50,21 @@ netsnmp_feature_child_of(register_row_merge, row_merge_all)
+ int
+ netsnmp_register_row_merge(netsnmp_handler_registration *reginfo)
+ {
+-    netsnmp_inject_handler(reginfo,
+-		    netsnmp_get_row_merge_handler(reginfo->rootoid_len+1));
+-    return netsnmp_register_handler(reginfo);
++    netsnmp_mib_handler *handler;
++
++    if (!reginfo)
++        return MIB_REGISTRATION_FAILED;
++
++    handler = netsnmp_get_row_merge_handler(reginfo->rootoid_len+1);
++    if (handler &&
++        (netsnmp_inject_handler(reginfo, handler) == SNMPERR_SUCCESS))
++        return netsnmp_register_handler(reginfo);
++
++    snmp_log(LOG_ERR, "failed to register row_merge\n");
++    netsnmp_handler_free(handler);
++    netsnmp_handler_registration_free(reginfo);
++
++    return MIB_REGISTRATION_FAILED;
+ }
+ #endif /* NETSNMP_FEATURE_REMOVE_REGISTER_ROW_MERGE */
+ 
+--- agent/helpers/scalar.c
++++ agent/helpers/scalar.c
+@@ -74,6 +74,8 @@ netsnmp_get_scalar_handler(void)
+ int
+ netsnmp_register_scalar(netsnmp_handler_registration *reginfo)
+ {
++    netsnmp_mib_handler *h1, *h2;
++
+     /*
+      * Extend the registered OID with space for the instance subid
+      * (but don't extend the length just yet!)
+@@ -82,9 +84,22 @@ netsnmp_register_scalar(netsnmp_handler_registration *reginfo)
+                                     (reginfo->rootoid_len+1) * sizeof(oid) );
+     reginfo->rootoid[ reginfo->rootoid_len ] = 0;
+ 
+-    netsnmp_inject_handler(reginfo, netsnmp_get_instance_handler());
+-    netsnmp_inject_handler(reginfo, netsnmp_get_scalar_handler());
+-    return netsnmp_register_serialize(reginfo);
++    h1 = netsnmp_get_instance_handler();
++    h2 = netsnmp_get_scalar_handler();
++    if (h1 && h2) {
++        if (netsnmp_inject_handler(reginfo, h1) == SNMPERR_SUCCESS) {
++            h1 = NULL;
++            if (netsnmp_inject_handler(reginfo, h2) == SNMPERR_SUCCESS)
++                return netsnmp_register_serialize(reginfo);
++        }
++    }
++
++    snmp_log(LOG_ERR, "register scalar failed\n");
++    netsnmp_handler_free(h1);
++    netsnmp_handler_free(h2);
++    netsnmp_handler_registration_free(reginfo);
++
++    return MIB_REGISTRATION_FAILED;
+ }
+ 
+ 
+@@ -99,7 +114,7 @@ netsnmp_register_scalar(netsnmp_handler_registration *reginfo)
+  *                a read only scalar helper handler.
+  *
+  * @return  MIB_REGISTERED_OK is returned if the registration was a success.
+- *  	Failures are MIB_REGISTRATION_FAILURE and MIB_DUPLICATE_REGISTRATION.
++ *  	Failures are MIB_REGISTRATION_FAILED and MIB_DUPLICATE_REGISTRATION.
+  *
+  * @see netsnmp_register_scalar
+  * @see netsnmp_get_scalar_handler
+@@ -109,6 +124,7 @@ netsnmp_register_scalar(netsnmp_handler_registration *reginfo)
+ int
+ netsnmp_register_read_only_scalar(netsnmp_handler_registration *reginfo)
+ {
++    netsnmp_mib_handler *h1, *h2, *h3;
+     /*
+      * Extend the registered OID with space for the instance subid
+      * (but don't extend the length just yet!)
+@@ -117,10 +133,27 @@ netsnmp_register_read_only_scalar(netsnmp_handler_registration *reginfo)
+                                     (reginfo->rootoid_len+1) * sizeof(oid) );
+     reginfo->rootoid[ reginfo->rootoid_len ] = 0;
+ 
+-    netsnmp_inject_handler(reginfo, netsnmp_get_instance_handler());
+-    netsnmp_inject_handler(reginfo, netsnmp_get_scalar_handler());
+-    netsnmp_inject_handler(reginfo, netsnmp_get_read_only_handler());
+-    return netsnmp_register_serialize(reginfo);
++    h1 = netsnmp_get_instance_handler();
++    h2 = netsnmp_get_scalar_handler();
++    h3 = netsnmp_get_read_only_handler();
++    if (h1 && h2 && h3) {
++        if (netsnmp_inject_handler(reginfo, h1) == SNMPERR_SUCCESS) {
++            h1 = NULL;
++            if (netsnmp_inject_handler(reginfo, h2) == SNMPERR_SUCCESS) {
++                h2 = NULL;
++                if (netsnmp_inject_handler(reginfo, h3) == SNMPERR_SUCCESS)
++                    return netsnmp_register_serialize(reginfo);
++            }
++        }
++    }
++
++    snmp_log(LOG_ERR, "register read only scalar failed\n");
++    netsnmp_handler_free(h1);
++    netsnmp_handler_free(h2);
++    netsnmp_handler_free(h3);
++    netsnmp_handler_registration_free(reginfo);
++
++    return MIB_REGISTRATION_FAILED;
+ }
+ 
+ 
+--- agent/helpers/scalar_group.c
++++ agent/helpers/scalar_group.c
+@@ -60,9 +60,25 @@ int
+ netsnmp_register_scalar_group(netsnmp_handler_registration *reginfo,
+                               oid first, oid last)
+ {
+-    netsnmp_inject_handler(reginfo, netsnmp_get_instance_handler());
+-    netsnmp_inject_handler(reginfo, netsnmp_get_scalar_group_handler(first, last));
+-    return netsnmp_register_serialize(reginfo);
++    netsnmp_mib_handler *h1, *h2;
++
++    h1 = netsnmp_get_instance_handler();
++    h2 = netsnmp_get_scalar_group_handler(first, last);
++
++    if (h1 && h2) {
++        if (netsnmp_inject_handler(reginfo, h1) == SNMPERR_SUCCESS) {
++            h1 = NULL;
++            if (netsnmp_inject_handler(reginfo, h2) == SNMPERR_SUCCESS)
++                return netsnmp_register_serialize(reginfo);
++        }
++    }
++
++    snmp_log(LOG_ERR, "register read only scalar group failed\n");
++    netsnmp_handler_free(h1);
++    netsnmp_handler_free(h2);
++    netsnmp_handler_registration_free(reginfo);
++
++    return MIB_REGISTRATION_FAILED;
+ }
+ 
+ 
+--- agent/helpers/serialize.c
++++ agent/helpers/serialize.c
+@@ -33,7 +33,15 @@ netsnmp_get_serialize_handler(void)
+ int
+ netsnmp_register_serialize(netsnmp_handler_registration *reginfo)
+ {
+-    netsnmp_inject_handler(reginfo, netsnmp_get_serialize_handler());
++    netsnmp_mib_handler *handler = netsnmp_get_serialize_handler();
++    if (!handler ||
++        (netsnmp_inject_handler(reginfo, handler) != SNMPERR_SUCCESS)) {
++        snmp_log(LOG_ERR, "could not create serialize handler\n");
++        netsnmp_handler_free(handler);
++        netsnmp_handler_registration_free(reginfo);
++        return MIB_REGISTRATION_FAILED;
++    }
++
+     return netsnmp_register_handler(reginfo);
+ }
+ 
+@@ -86,8 +94,12 @@ netsnmp_serialize_helper_handler(netsnmp_mib_handler *handler,
+ void
+ netsnmp_init_serialize(void)
+ {
+-    netsnmp_register_handler_by_name("serialize",
+-                                     netsnmp_get_serialize_handler());
++    netsnmp_mib_handler *handler = netsnmp_get_serialize_handler();
++    if (!handler) {
++        snmp_log(LOG_ERR, "could not create serialize handler\n");
++        return;
++    }
++    netsnmp_register_handler_by_name("serialize", handler);
+ }
+ /**  @} */
+ 
+--- agent/helpers/snmp_get_statistic.c
++++ agent/helpers/snmp_get_statistic.c
+@@ -52,9 +52,17 @@ int
+ netsnmp_register_statistic_handler(netsnmp_handler_registration *reginfo,
+                                    oid start, int begin, int end)
+ {
+-    netsnmp_inject_handler(reginfo,
+-                           netsnmp_get_statistic_handler(begin - start));
+-    return netsnmp_register_scalar_group(reginfo, start, start + (end - begin));
++    netsnmp_mib_handler *handler =
++        netsnmp_get_statistic_handler(begin - start);
++    if (!handler ||
++        (netsnmp_inject_handler(reginfo, handler) != SNMPERR_SUCCESS)) {
++        snmp_log(LOG_ERR, "could not create statistic handler\n");
++        netsnmp_handler_free(handler);
++        netsnmp_handler_registration_free(reginfo);
++        return MIB_REGISTRATION_FAILED;
++    }
++    return netsnmp_register_scalar_group(reginfo, start,
++                                         start + (end - begin));
+ }
+ #else /* !NETSNMP_FEATURE_REMOVE_HELPER_GET_STATISTICS */
+ netsnmp_feature_unused(helper_statistics);
+--- agent/helpers/table.c
++++ agent/helpers/table.c
+@@ -151,9 +151,14 @@ int
+ netsnmp_register_table(netsnmp_handler_registration *reginfo,
+                        netsnmp_table_registration_info *tabreq)
+ {
+-    int rc = netsnmp_inject_handler(reginfo, netsnmp_get_table_handler(tabreq));
+-    if (SNMPERR_SUCCESS != rc)
+-        return rc;
++    netsnmp_mib_handler *handler = netsnmp_get_table_handler(tabreq);
++    if (!handler ||
++        (netsnmp_inject_handler(reginfo, handler) != SNMPERR_SUCCESS)) {
++        snmp_log(LOG_ERR, "could not create table handler\n");
++        netsnmp_handler_free(handler);
++        netsnmp_handler_registration_free(reginfo);
++        return MIB_REGISTRATION_FAILED;
++    }
+ 
+     return netsnmp_register_handler(reginfo);
+ }
+@@ -828,12 +833,11 @@ netsnmp_sparse_table_register(netsnmp_handler_registration *reginfo,
+                        netsnmp_table_registration_info *tabreq)
+ {
+     netsnmp_mib_handler *handler1, *handler2;
+-    int rc;
+ 
+     handler1 = netsnmp_create_handler(SPARSE_TABLE_HANDLER_NAME,
+                                      sparse_table_helper_handler);
+     if (NULL == handler1)
+-        return SNMP_ERR_GENERR;
++        return MIB_REGISTRATION_FAILED;
+ 
+     handler2 = netsnmp_get_table_handler(tabreq);
+     if (NULL == handler2 ) {
+@@ -841,18 +845,16 @@ netsnmp_sparse_table_register(netsnmp_handler_registration *reginfo,
+         return SNMP_ERR_GENERR;
+     }
+ 
+-    rc = netsnmp_inject_handler(reginfo, handler1);
+-    if (SNMPERR_SUCCESS != rc) {
++    if (SNMPERR_SUCCESS != netsnmp_inject_handler(reginfo, handler1)) {
+         netsnmp_handler_free(handler1);
+         netsnmp_handler_free(handler2);
+-        return rc;
++        return MIB_REGISTRATION_FAILED;
+     }
+ 
+-    rc = netsnmp_inject_handler(reginfo, handler2);
+-    if (SNMPERR_SUCCESS != rc) {
++    if (SNMPERR_SUCCESS != netsnmp_inject_handler(reginfo, handler2)) {
+         /** handler1 is in reginfo... remove and free?? */
+         netsnmp_handler_free(handler2);
+-        return rc;
++        return MIB_REGISTRATION_FAILED;
+     }
+ 
+     /** both handlers now in reginfo, so nothing to do on error */
+--- agent/helpers/table_array.c
++++ agent/helpers/table_array.c
+@@ -212,9 +212,17 @@ netsnmp_table_array_register(netsnmp_handler_registration *reginfo,
+                              netsnmp_container *container,
+                              int group_rows)
+ {
+-    netsnmp_inject_handler(reginfo,
+-                           netsnmp_create_handler(reginfo->handlerName,
+-                               netsnmp_table_array_helper_handler));
++    netsnmp_mib_handler *handler =
++        netsnmp_create_handler(reginfo->handlerName,
++                               netsnmp_table_array_helper_handler);
++    if (!handler ||
++        (netsnmp_inject_handler(reginfo, handler) != SNMPERR_SUCCESS)) {
++        snmp_log(LOG_ERR, "could not create table array handler\n");
++        netsnmp_handler_free(handler);
++        netsnmp_handler_registration_free(reginfo);
++        return SNMP_ERR_GENERR;
++    }
++
+     return netsnmp_table_container_register(reginfo, tabreg, cb,
+                                             container, group_rows);
+ }
+--- agent/helpers/table_container.c
++++ agent/helpers/table_container.c
+@@ -340,6 +340,7 @@ netsnmp_container_table_register(netsnmp_handler_registration *reginfo,
+ 
+     if ((NULL == reginfo) || (NULL == reginfo->handler) || (NULL == tabreg)) {
+         snmp_log(LOG_ERR, "bad param in netsnmp_container_table_register\n");
++        netsnmp_handler_registration_free(reginfo);
+         return SNMPERR_GENERR;
+     }
+ 
+@@ -347,7 +348,13 @@ netsnmp_container_table_register(netsnmp_handler_registration *reginfo,
+         container = netsnmp_container_find(reginfo->handlerName);
+ 
+     handler = netsnmp_container_table_handler_get(tabreg, container, key_type);
+-    netsnmp_inject_handler(reginfo, handler );
++    if (!handler ||
++        (netsnmp_inject_handler(reginfo, handler) != SNMPERR_SUCCESS)) {
++        snmp_log(LOG_ERR, "could not create container table handler\n");
++        netsnmp_handler_free(handler);
++        netsnmp_handler_registration_free(reginfo);
++        return MIB_REGISTRATION_FAILED;
++    }
+ 
+     return netsnmp_register_table(reginfo, tabreg);
+ }
+--- agent/helpers/table_data.c
++++ agent/helpers/table_data.c
+@@ -430,7 +430,15 @@ netsnmp_register_table_data(netsnmp_handler_registration *reginfo,
+                             netsnmp_table_data *table,
+                             netsnmp_table_registration_info *table_info)
+ {
+-    netsnmp_inject_handler(reginfo, netsnmp_get_table_data_handler(table));
++    netsnmp_mib_handler *handler = netsnmp_get_table_data_handler(table);
++    if (!table || !handler ||
++        (netsnmp_inject_handler(reginfo, handler) != SNMPERR_SUCCESS)) {
++        snmp_log(LOG_ERR, "could not create table data handler\n");
++        netsnmp_handler_free(handler);
++        netsnmp_handler_registration_free(reginfo);
++        return MIB_REGISTRATION_FAILED;
++    }
++
+     return netsnmp_register_table(reginfo, table_info);
+ }
+ 
+@@ -443,7 +451,15 @@ netsnmp_register_read_only_table_data(netsnmp_handler_registration *reginfo,
+                                       netsnmp_table_data *table,
+                                       netsnmp_table_registration_info *table_info)
+ {
+-    netsnmp_inject_handler(reginfo, netsnmp_get_read_only_handler());
++    netsnmp_mib_handler *handler = netsnmp_get_read_only_handler();
++    if (!handler ||
++        (netsnmp_inject_handler(reginfo, handler) != SNMPERR_SUCCESS)) {
++        snmp_log(LOG_ERR, "could not create read only table data handler\n");
++        netsnmp_handler_free(handler);
++        netsnmp_handler_registration_free(reginfo);
++        return MIB_REGISTRATION_FAILED;
++    }
++
+     return netsnmp_register_table_data(reginfo, table, table_info);
+ }
+ #endif /* NETSNMP_FEATURE_REMOVE_REGISTER_READ_ONLY_TABLE_DATA */
+--- agent/helpers/table_dataset.c
++++ agent/helpers/table_dataset.c
+@@ -425,6 +425,7 @@ netsnmp_register_table_data_set(netsnmp_handler_registration *reginfo,
+                                 netsnmp_table_data_set *data_set,
+                                 netsnmp_table_registration_info *table_info)
+ {
++    netsnmp_mib_handler *handler;
+     int ret;
+ 
+     if (NULL == table_info) {
+@@ -462,8 +463,15 @@ netsnmp_register_table_data_set(netsnmp_handler_registration *reginfo,
+             table_info->max_column = maxcol;
+     }
+ 
+-    netsnmp_inject_handler(reginfo,
+-                           netsnmp_get_table_data_set_handler(data_set));
++    handler = netsnmp_get_table_data_set_handler(data_set);
++    if (!handler ||
++        (netsnmp_inject_handler(reginfo, handler) != SNMPERR_SUCCESS)) {
++        snmp_log(LOG_ERR, "could not create table data set handler\n");
++        netsnmp_handler_free(handler);
++        netsnmp_handler_registration_free(reginfo);
++        return MIB_REGISTRATION_FAILED;
++    }
++
+     ret = netsnmp_register_table_data(reginfo, data_set->table,
+                                        table_info);
+     if (ret == SNMPERR_SUCCESS && reginfo->handler)
+--- agent/helpers/table_iterator.c
++++ agent/helpers/table_iterator.c
+@@ -259,14 +259,21 @@ int
+ netsnmp_register_table_iterator(netsnmp_handler_registration *reginfo,
+                                 netsnmp_iterator_info *iinfo)
+ {
++    netsnmp_mib_handler *handler = netsnmp_get_table_iterator_handler(iinfo);
++
++    if (!reginfo || !iinfo || !handler ||
++        (netsnmp_inject_handler(reginfo, handler) != SNMPERR_SUCCESS)) {
++        snmp_log(LOG_ERR, "could not create iterator table handler\n");
++        netsnmp_handler_free(handler);
++        netsnmp_handler_registration_free(reginfo);
++        return SNMP_ERR_GENERR;
++    }
++
+ #ifndef NETSNMP_FEATURE_REMOVE_STASH_CACHE
+     reginfo->modes |= HANDLER_CAN_STASH;
+ #endif  /* NETSNMP_FEATURE_REMOVE_STASH_CACHE */
+-    netsnmp_inject_handler(reginfo,
+-                           netsnmp_get_table_iterator_handler(iinfo));
+-    if (!iinfo)
+-        return SNMPERR_GENERR;
+-    if (!iinfo->indexes && iinfo->table_reginfo &&
++
++   if (!iinfo->indexes && iinfo->table_reginfo &&
+                            iinfo->table_reginfo->indexes )
+         iinfo->indexes = snmp_clone_varbind( iinfo->table_reginfo->indexes );
+ 
+--- agent/helpers/table_row.c
++++ agent/helpers/table_row.c
+@@ -110,6 +110,7 @@ netsnmp_table_row_register(netsnmp_handler_registration *reginfo,
+ 
+     if ((NULL == reginfo) || (NULL == reginfo->handler) || (NULL == tabreg)) {
+         snmp_log(LOG_ERR, "bad param in netsnmp_table_row_register\n");
++        netsnmp_handler_registration_free(reginfo);
+         return SNMPERR_GENERR;
+     }
+ 
+@@ -150,7 +151,13 @@ netsnmp_table_row_register(netsnmp_handler_registration *reginfo,
+          * ... insert a minimal handler ...
+          */
+     handler = netsnmp_table_row_handler_get(row);
+-    netsnmp_inject_handler(reginfo, handler );
++    if (!handler ||
++        (netsnmp_inject_handler(reginfo, handler) != SNMPERR_SUCCESS)) {
++        snmp_log(LOG_ERR, "could not create table row handler\n");
++        netsnmp_handler_free(handler);
++        netsnmp_handler_registration_free(reginfo);
++        return SNMP_ERR_GENERR;
++    }
+ 
+         /*
+          * ... and register the row
+--- agent/helpers/table_tdata.c
++++ agent/helpers/table_tdata.c
+@@ -405,7 +405,16 @@ netsnmp_tdata_register(netsnmp_handler_registration    *reginfo,
+                        netsnmp_tdata                   *table,
+                        netsnmp_table_registration_info *table_info)
+ {
+-    netsnmp_inject_handler(reginfo, netsnmp_get_tdata_handler(table));
++    netsnmp_mib_handler *handler = netsnmp_get_tdata_handler(table);
++
++    if (!reginfo || !table || !table_info || !handler ||
++        (netsnmp_inject_handler(reginfo, handler) != SNMPERR_SUCCESS)) {
++        snmp_log(LOG_ERR, "could not create tdata handler\n");
++        netsnmp_handler_free(handler);
++        netsnmp_handler_registration_free(reginfo);
++        return SNMP_ERR_GENERR;
++    }
++
+     return netsnmp_container_table_register(reginfo, table_info,
+                   table->container, TABLE_CONTAINER_KEY_NETSNMP_INDEX);
+ }
+--- agent/helpers/watcher.c
++++ agent/helpers/watcher.c
+@@ -107,13 +107,22 @@ int
+ netsnmp_register_watched_instance(netsnmp_handler_registration *reginfo,
+                                   netsnmp_watcher_info         *watchinfo)
+ {
+-    netsnmp_mib_handler *whandler;
++    netsnmp_mib_handler *whandler = NULL;
++
++    if (reginfo && watchinfo) {
++        whandler = netsnmp_get_watcher_handler();
++        if (whandler) {
++            whandler->myvoid = (void *)watchinfo;
++            if (netsnmp_inject_handler(reginfo, whandler) == SNMPERR_SUCCESS)
++                return netsnmp_register_instance(reginfo);
++        }
++    }
+ 
+-    whandler         = netsnmp_get_watcher_handler();
+-    whandler->myvoid = (void *)watchinfo;
++    snmp_log(LOG_ERR, "could not create watched instance handler\n");
++    netsnmp_handler_free(whandler);
++    netsnmp_handler_registration_free(reginfo);
+ 
+-    netsnmp_inject_handler(reginfo, whandler);
+-    return netsnmp_register_instance(reginfo);
++    return MIB_REGISTRATION_FAILED;
+ }
+ 
+ /**
+@@ -125,14 +134,23 @@ int
+ netsnmp_register_watched_instance2(netsnmp_handler_registration *reginfo,
+ 				   netsnmp_watcher_info         *watchinfo)
+ {
+-    netsnmp_mib_handler *whandler;
++    netsnmp_mib_handler *whandler = NULL;
++
++    if (reginfo && watchinfo) {
++        whandler = netsnmp_get_watcher_handler();
++        if (whandler) {
++            whandler->myvoid = (void *)watchinfo;
++            netsnmp_owns_watcher_info(whandler);
++            if (netsnmp_inject_handler(reginfo, whandler) == SNMPERR_SUCCESS)
++                return netsnmp_register_instance(reginfo);
++        }
++    }
+ 
+-    whandler         = netsnmp_get_watcher_handler();
+-    whandler->myvoid = (void *)watchinfo;
+-    netsnmp_owns_watcher_info(whandler);
++    snmp_log(LOG_ERR, "could not create watched instance2 handler\n");
++    netsnmp_handler_free(whandler);
++    netsnmp_handler_registration_free(reginfo);
+ 
+-    netsnmp_inject_handler(reginfo, whandler);
+-    return netsnmp_register_instance(reginfo);
++    return MIB_REGISTRATION_FAILED;
+ }
+ 
+ /**
+@@ -144,13 +162,22 @@ int
+ netsnmp_register_watched_scalar(netsnmp_handler_registration *reginfo,
+                                   netsnmp_watcher_info         *watchinfo)
+ {
+-    netsnmp_mib_handler *whandler;
++    netsnmp_mib_handler *whandler = NULL;
++
++    if (reginfo && watchinfo) {
++        whandler = netsnmp_get_watcher_handler();
++        if (whandler) {
++            whandler->myvoid = (void *)watchinfo;
++            if (netsnmp_inject_handler(reginfo, whandler) == SNMPERR_SUCCESS)
++                return netsnmp_register_scalar(reginfo);
++        }
++    }
+ 
+-    whandler         = netsnmp_get_watcher_handler();
+-    whandler->myvoid = (void *)watchinfo;
++    snmp_log(LOG_ERR, "could not create watched scalar handler\n");
++    netsnmp_handler_free(whandler);
++    netsnmp_handler_registration_free(reginfo);
+ 
+-    netsnmp_inject_handler(reginfo, whandler);
+-    return netsnmp_register_scalar(reginfo);
++    return MIB_REGISTRATION_FAILED;
+ }
+ 
+ /**
+@@ -162,14 +189,23 @@ int
+ netsnmp_register_watched_scalar2(netsnmp_handler_registration *reginfo,
+                                   netsnmp_watcher_info         *watchinfo)
+ {
+-    netsnmp_mib_handler *whandler;
++    netsnmp_mib_handler *whandler = NULL;
+ 
+-    whandler         = netsnmp_get_watcher_handler();
+-    whandler->myvoid = (void *)watchinfo;
+-    netsnmp_owns_watcher_info(whandler);
++    if (reginfo && watchinfo) {
++        whandler = netsnmp_get_watcher_handler();
++        if (whandler) {
++            whandler->myvoid = (void *)watchinfo;
++            netsnmp_owns_watcher_info(whandler);
++            if (netsnmp_inject_handler(reginfo, whandler) == SNMPERR_SUCCESS)
++                return netsnmp_register_scalar(reginfo);
++        }
++    }
+ 
+-    netsnmp_inject_handler(reginfo, whandler);
+-    return netsnmp_register_scalar(reginfo);
++    snmp_log(LOG_ERR, "could not create watched scalar2 handler\n");
++    netsnmp_handler_free(whandler);
++    netsnmp_handler_registration_free(reginfo);
++
++    return MIB_REGISTRATION_FAILED;
+ }
+ 
+ void
+@@ -361,9 +397,16 @@ netsnmp_watched_timestamp_register(netsnmp_mib_handler *whandler,
+                                    netsnmp_handler_registration *reginfo,
+                                    marker_t timestamp)
+ {
+-    whandler->myvoid = (void *)timestamp;
+-    netsnmp_inject_handler(reginfo, whandler);
+-    return netsnmp_register_scalar(reginfo);   /* XXX - or instance? */
++    if (reginfo && whandler && timestamp) {
++        whandler->myvoid = (void *)timestamp;
++        if (netsnmp_inject_handler(reginfo, whandler) == SNMPERR_SUCCESS)
++            return netsnmp_register_scalar(reginfo);   /* XXX - or instance? */
++    }
++
++    snmp_log(LOG_ERR, "could not create watched timestamp handler\n");
++    netsnmp_handler_registration_free(reginfo);
++
++    return MIB_REGISTRATION_FAILED;
+ }
+ 
+ #ifndef NETSNMP_FEATURE_REMOVE_WATCHER_REGISTER_TIMESTAMP
+@@ -372,10 +415,15 @@ netsnmp_register_watched_timestamp(netsnmp_handler_registration *reginfo,
+                                    marker_t timestamp)
+ {
+     netsnmp_mib_handler *whandler;
++    int                  rc;
+ 
+     whandler         = netsnmp_get_watched_timestamp_handler();
+ 
+-    return netsnmp_watched_timestamp_register(whandler, reginfo, timestamp);
++    rc = netsnmp_watched_timestamp_register(whandler, reginfo, timestamp);
++    if (MIB_REGISTRATION_FAILED == rc && whandler)
++        netsnmp_handler_free(whandler);
++
++    return rc;
+ }
+ #endif /* NETSNMP_FEATURE_REMOVE_WATCHER_REGISTER_TIMESTAMP */
+ 
+@@ -454,15 +502,28 @@ int
+ netsnmp_register_watched_spinlock(netsnmp_handler_registration *reginfo,
+                                    int *spinlock)
+ {
+-    netsnmp_mib_handler  *whandler;
+-    netsnmp_watcher_info *winfo;
+-
+-    whandler         = netsnmp_get_watched_spinlock_handler();
+-    whandler->myvoid = (void *)spinlock;
+-    winfo            = netsnmp_create_watcher_info((void *)spinlock,
+-		           sizeof(int), ASN_INTEGER, WATCHER_FIXED_SIZE);
+-    netsnmp_inject_handler(reginfo, whandler);
+-    return netsnmp_register_watched_scalar2(reginfo, winfo);
++    netsnmp_mib_handler  *whandler = NULL;
++    netsnmp_watcher_info *winfo = NULL;
++
++    if (reginfo && spinlock) {
++        whandler = netsnmp_get_watched_spinlock_handler();
++        if (whandler) {
++            whandler->myvoid = (void *)spinlock;
++            winfo = netsnmp_create_watcher_info((void *)spinlock, sizeof(int),
++                                                ASN_INTEGER,
++                                                WATCHER_FIXED_SIZE);
++            if (winfo &&
++                (netsnmp_inject_handler(reginfo, whandler) == SNMPERR_SUCCESS))
++                return netsnmp_register_watched_scalar2(reginfo, winfo);
++        }
++    }
++
++    snmp_log(LOG_ERR, "could not create watched spinlock handler\n");
++    SNMP_FREE(winfo);
++    netsnmp_handler_free(whandler);
++    netsnmp_handler_registration_free(reginfo);
++
++    return MIB_REGISTRATION_FAILED;
+ }
+ 
+ 
+@@ -539,26 +600,34 @@ register_scalar_watcher(const char* name,
+ {
+     netsnmp_handler_registration *reginfo = NULL;
+     netsnmp_mib_handler *whandler = NULL;
+-    netsnmp_watcher_info* watchinfo =
+-        netsnmp_create_watcher_info(data, size, type, WATCHER_FIXED_SIZE);
+-    if (watchinfo)
++    netsnmp_watcher_info* watchinfo;
++
++    if (!name || !reg_oid || !data)
++        return MIB_REGISTRATION_FAILED;
++
++    watchinfo = netsnmp_create_watcher_info(data, size, type,
++                                            WATCHER_FIXED_SIZE);
++    if (watchinfo) {
+         whandler = netsnmp_get_watcher_handler();
+-    if (watchinfo && whandler) {
+-        whandler->myvoid = watchinfo;
+-	netsnmp_owns_watcher_info(whandler);
+-        reginfo =
+-            netsnmp_create_handler_registration(
+-                name, subhandler, reg_oid, reg_oid_len, mode);
+-    }
+-    if (watchinfo && whandler && reginfo) {
+-        netsnmp_inject_handler(reginfo, whandler);
+-        return netsnmp_register_scalar(reginfo);
++        if (whandler) {
++            whandler->myvoid = watchinfo;
++            netsnmp_owns_watcher_info(whandler);
++            reginfo =
++                netsnmp_create_handler_registration(name, subhandler,
++                                                    reg_oid, reg_oid_len,
++                                                    mode);
++            if (reginfo &&
++                (netsnmp_inject_handler(reginfo, whandler) == SNMPERR_SUCCESS))
++                return netsnmp_register_scalar(reginfo);
++        }
+     }
+-    if (whandler)
+-        netsnmp_handler_free(whandler);
+-    else if (watchinfo)
+-        free(watchinfo);
+-    return SNMP_ERR_RESOURCEUNAVAILABLE;
++
++    snmp_log(LOG_ERR, "failed to register scalar watcher\n");
++    netsnmp_handler_free(whandler);
++    SNMP_FREE(watchinfo);
++    netsnmp_handler_registration_free(reginfo);
++
++    return MIB_REGISTRATION_FAILED;
+ }
+ 
+ #ifndef NETSNMP_FEATURE_REMOVE_WATCHER_ULONG_SCALAR
+--- agent/mibgroup/mibII/snmp_mib.c
++++ agent/mibgroup/mibII/snmp_mib.c
+@@ -112,13 +112,23 @@ init_snmp_mib(void)
+     {
+         const oid snmpEnableAuthenTraps_oid[] = { 1, 3, 6, 1, 2, 1, 11, 30, 0 };
+ 	static netsnmp_watcher_info enableauthen_info;
++        netsnmp_mib_handler *handler;
+         netsnmp_handler_registration *reg =
+             netsnmp_create_update_handler_registration(
+                 "mibII/snmpEnableAuthenTraps",
+                 snmpEnableAuthenTraps_oid,
+                 OID_LENGTH(snmpEnableAuthenTraps_oid),
+                 HANDLER_CAN_RWRITE, &snmp_enableauthentrapsset);
+-        netsnmp_inject_handler(reg, netsnmp_get_truthvalue());
++        handler = netsnmp_get_truthvalue();
++        if (!handler ||
++            (netsnmp_inject_handler(reg, handler) != SNMPERR_SUCCESS)) {
++            snmp_log(LOG_ERR,
++                     "could not create mibII/snmpEnableAuthenTraps handler\n");
++            if (handler)
++                netsnmp_handler_free(handler);
++            netsnmp_handler_registration_free(reg);
++            return;
++        }
+         netsnmp_register_watched_instance(
+             reg,
+             netsnmp_init_watcher_info(
+--- agent/mibgroup/snmpv3/snmpMPDStats_5_5.c
++++ agent/mibgroup/snmpv3/snmpMPDStats_5_5.c
+@@ -32,12 +32,17 @@ init_snmpMPDStats_5_5(void)
+         netsnmp_create_handler_registration(
+             "snmpMPDStats", NULL, snmpMPDStats, OID_LENGTH(snmpMPDStats),
+             HANDLER_CAN_RONLY);
+-    if (s &&
+-	NETSNMP_REGISTER_STATISTIC_HANDLER(s, 1, MPD) == MIB_REGISTERED_OK) {
+-        REGISTER_SYSOR_ENTRY(snmpMPDCompliance,
+-                             "The MIB for Message Processing and Dispatching.");
+-        snmpMPDStats_reg = s;
++    if (!s)
++        return;
++
++    if (NETSNMP_REGISTER_STATISTIC_HANDLER(s, 1, MPD) != MIB_REGISTERED_OK) {
++        netsnmp_handler_registration_free(s);
++        return;
+     }
++
++    REGISTER_SYSOR_ENTRY(snmpMPDCompliance,
++                         "The MIB for Message Processing and Dispatching.");
++    snmpMPDStats_reg = s;
+ }
+ 
+ void
+--- agent/mibgroup/snmpv3/usmStats_5_5.c
++++ agent/mibgroup/snmpv3/usmStats_5_5.c
+@@ -31,13 +31,18 @@ init_usmStats_5_5(void)
+         netsnmp_create_handler_registration(
+             "usmStats", NULL, usmStats, OID_LENGTH(usmStats),
+             HANDLER_CAN_RONLY);
+-    if (s &&
+-	NETSNMP_REGISTER_STATISTIC_HANDLER(s, 1, USM) == MIB_REGISTERED_OK) {
+-        REGISTER_SYSOR_ENTRY(usmMIBCompliance,
+-                             "The management information definitions for the "
+-                             "SNMP User-based Security Model.");
+-        usmStats_reg = s;
++    if (!s)
++        return;
++
++    if (NETSNMP_REGISTER_STATISTIC_HANDLER(s, 1, USM) != MIB_REGISTERED_OK) {
++        netsnmp_handler_registration_free(s);
++        return;
+     }
++
++    REGISTER_SYSOR_ENTRY(usmMIBCompliance,
++                         "The management information definitions for the "
++                         "SNMP User-based Security Model.");
++    usmStats_reg = s;
+ }
+ 
+ void
