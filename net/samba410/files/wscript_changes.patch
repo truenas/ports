@@ -1,8 +1,8 @@
 diff --git a/source3/modules/wscript_build b/source3/modules/wscript_build
-index 4d61dc6..88a29a2 100644
+index 4d61dc6..2492010 100644
 --- a/source3/modules/wscript_build
 +++ b/source3/modules/wscript_build
-@@ -240,6 +240,55 @@ bld.SAMBA3_MODULE('vfs_solarisacl',
+@@ -240,6 +240,70 @@ bld.SAMBA3_MODULE('vfs_solarisacl',
                   internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_solarisacl'),
                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_solarisacl'))
  
@@ -13,7 +13,22 @@ index 4d61dc6..88a29a2 100644
 +                 init_function='',
 +                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_winmsa'),
 +                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_winmsa'))
-+                       
++
++bld.SAMBA3_MODULE('vfs_aio_fbsd',
++                 subsystem='vfs',
++                 source='vfs_aio_fbsd.c',
++                 deps='samba-util tevent',
++                 init_function='',
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_aio_fbsd'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_aio_fbsd'))
++
++bld.SAMBA3_MODULE('vfs_aio_spthread',
++                 subsystem='vfs',
++                 source='vfs_aio_spthread.c',
++                 deps='samba-util tevent',
++                 init_function='',
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_aio_spthread'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_aio_spthread'))
 +                       
 +bld.SAMBA3_MODULE('vfs_ixnas',
 +                 subsystem='vfs',
@@ -58,7 +73,7 @@ index 4d61dc6..88a29a2 100644
  bld.SAMBA3_MODULE('vfs_zfsacl',
                   subsystem='vfs',
                   source='vfs_zfsacl.c',
-@@ -248,6 +297,39 @@ bld.SAMBA3_MODULE('vfs_zfsacl',
+@@ -248,6 +312,39 @@ bld.SAMBA3_MODULE('vfs_zfsacl',
                   internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_zfsacl'),
                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_zfsacl'))
  
@@ -99,7 +114,7 @@ index 4d61dc6..88a29a2 100644
  
  bld.SAMBA_GENERATOR('nfs41acl-xdr-c',
 diff --git a/source3/wscript b/source3/wscript
-index 5c2ba18..66c0f9d 100644
+index 5c2ba18..1a3bf36 100644
 --- a/source3/wscript
 +++ b/source3/wscript
 @@ -50,6 +50,7 @@ def options(opt):
@@ -137,16 +152,26 @@ index 5c2ba18..66c0f9d 100644
      if Options.options.with_iconv:
          conf.env.with_iconv = True
          if not conf.CHECK_FUNCS_IN('iconv_open', 'iconv', headers='iconv.h'):
-@@ -1692,6 +1704,7 @@ main() {
+@@ -1692,7 +1704,9 @@ main() {
          default_shared_modules.extend(TO_LIST('vfs_posix_eadb'))
  
      if conf.CONFIG_SET('HAVE_FREEBSD_SUNACL_H'):
 +        default_shared_modules.extend(TO_LIST('vfs_winmsa'))
          default_shared_modules.extend(TO_LIST('vfs_zfsacl'))
++        default_shared_modules.extend(TO_LIST('vfs_aio_fbsd'))
  
      if conf.CONFIG_SET('HAVE_DIRFD_DECL'):
+         default_shared_modules.extend(TO_LIST('vfs_syncops vfs_dirsort'))
+@@ -1705,6 +1719,7 @@ main() {
+ 
+     if Options.options.with_pthreadpool:
+         default_shared_modules.extend(TO_LIST('vfs_aio_pthread'))
++        default_shared_modules.extend(TO_LIST('vfs_aio_spthread'))
+ 
+     if conf.CONFIG_SET('HAVE_LDAP'):
+         default_static_modules.extend(TO_LIST('pdb_ldapsam idmap_ldap'))
 diff --git a/source3/wscript_build b/source3/wscript_build
-index 26e251f..019d03e 100644
+index 26e251f..dbf3f6a 100644
 --- a/source3/wscript_build
 +++ b/source3/wscript_build
 @@ -738,6 +738,7 @@ bld.SAMBA3_LIBRARY('smbd_base',
