@@ -3619,10 +3619,10 @@ index 0000000..f6ea466
 +}
 diff --git a/source3/modules/vfs_noacl.c b/source3/modules/vfs_noacl.c
 new file mode 100644
-index 0000000..391625a
+index 0000000..7a5984c
 --- /dev/null
 +++ b/source3/modules/vfs_noacl.c
-@@ -0,0 +1,499 @@
+@@ -0,0 +1,522 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  This program is free software; you can redistribute it and/or modify
@@ -3840,19 +3840,36 @@ index 0000000..391625a
 +
 +static NTSTATUS noacl_get_nt_acl_common(TALLOC_CTX *ctx,
 +					struct vfs_handle_struct *handle,
-+					const char *name,
-+					const SMB_STRUCT_STAT *psbuf,
++					const struct smb_filename *smb_fname,
 +					struct security_descriptor **ppdesc)
 +{
++	int ret;
 +	struct dom_sid owner_sid, group_sid;
 +	size_t size = 0;
 +	struct security_ace aces[4];
 +	uint32_t access_mask = 0;
-+	mode_t mode = psbuf->st_ex_mode;
++	mode_t mode = 0; 
++	SMB_STRUCT_STAT sbuf;
++	const SMB_STRUCT_STAT *psbuf = NULL;
 +	struct security_acl *new_dacl = NULL;
 +	int idx = 0;
 +
-+	DBG_DEBUG("file %s mode = 0%o\n",name, (int)mode);
++	if (VALID_STAT(smb_fname->st)) {
++		psbuf = &smb_fname->st;
++	}
++
++	if (psbuf == NULL) {
++		ret = vfs_stat_smb_basename(handle->conn, smb_fname, &sbuf);
++		if (ret != 0) {
++			DBG_INFO("stat [%s]failed: %s\n",
++				smb_fname_str_dbg(smb_fname), strerror(errno));
++			return map_nt_error_from_unix(errno);
++		}
++		psbuf = &sbuf;
++        }
++	mode = psbuf->st_ex_mode;
++
++	DBG_DEBUG("file %s mode = 0%o\n",smb_fname->base_name, (int)mode);
 +
 +	uid_to_sid(&owner_sid, psbuf->st_ex_uid);
 +	gid_to_sid(&group_sid, psbuf->st_ex_gid);
@@ -3907,6 +3924,9 @@ index 0000000..391625a
 +	if (mode & S_IWOTH) {
 +		access_mask |= SEC_RIGHTS_FILE_WRITE | SEC_STD_DELETE;
 +	}
++	if (lp_dos_filemode(SNUM(handle->conn))) {
++		access_mask |= SEC_FILE_WRITE_ATTRIBUTE;
++	}
 +	if (access_mask) {
 +		init_sec_ace(&aces[idx],
 +			&global_sid_World,
@@ -3915,16 +3935,6 @@ index 0000000..391625a
 +			0);
 +		idx++;
 +	}
-+	if (lp_dos_filemode(SNUM(handle->conn))) {
-+		access_mask |= SEC_FILE_WRITE_ATTRIBUTE;
-+	}
-+
-+	init_sec_ace(&aces[idx],
-+			&global_sid_System,
-+			SEC_ACE_TYPE_ACCESS_ALLOWED,
-+			SEC_RIGHTS_FILE_ALL,
-+			0);
-+	idx++;
 +
 +	new_dacl = make_sec_acl(ctx,
 +			NT4_ACL_REVISION,
@@ -3957,8 +3967,7 @@ index 0000000..391625a
 +{
 +	return noacl_get_nt_acl_common(mem_ctx,
 +				       handle,
-+				       smb_fname->base_name,
-+				       &smb_fname->st,
++				       smb_fname,
 +				       ppdesc);
 +}
 +
@@ -3970,8 +3979,7 @@ index 0000000..391625a
 +{
 +	return noacl_get_nt_acl_common(mem_ctx,
 +				       handle,
-+				       fsp->fsp_name->base_name,
-+				       &fsp->fsp_name->st,
++				       fsp->fsp_name,
 +				       ppdesc);
 +}
 +
@@ -4094,6 +4102,21 @@ index 0000000..391625a
 +				"no");
 +	}
 +	lp_do_parameter(SNUM(handle->conn), "nt acl support", "no");
++	lp_do_parameter(SNUM(handle->conn), "store dos attributes", "no");
++	if (lp_parm_bool(SNUM(handle->conn), "noacl", "chroot", false)) {
++		ret = chdir(handle->conn->connectpath);
++		if (ret != 0) {
++			DBG_ERR("chdir() to connectpath failed\n");
++			return -1;
++		}
++		ret = chroot(handle->conn->connectpath);
++		if (ret != 0) {
++			DBG_ERR("chroot to connectpath failed\n");
++			return -1;
++		}
++		handle->conn->connectpath = talloc_strdup(handle->conn, "/");
++	}
++
 +	return SMB_VFS_NEXT_CONNECT(handle, service, user);
 +}
 +
