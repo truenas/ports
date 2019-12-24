@@ -9,7 +9,7 @@
      char                 buf[BUFSIZ+1], **argv;
      netsnmp_swrun_entry *entry;
 
-@@ -203,7 +203,12 @@
+@@ -203,7 +203,11 @@
          entry = netsnmp_swrun_entry_create(proc_table[i].SWRUN_K_PID);
          if (NULL == entry)
              continue;   /* error already logged by function */
