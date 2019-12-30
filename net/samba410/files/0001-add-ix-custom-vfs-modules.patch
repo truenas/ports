@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 0000000..e3ae9f7
+index 0000000..6ae45e5
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,969 @@
+@@ -0,0 +1,992 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -85,7 +85,6 @@ index 0000000..e3ae9f7
 +
 +struct snap_cb
 +{
-+	TALLOC_CTX *mem_ctx;
 +	struct snapshot_list *snapshots;
 +	struct iter_info *iter_info;
 +};
@@ -706,7 +705,7 @@ index 0000000..e3ae9f7
 +		return 0;
 +	}
 +
-+	entry = talloc_zero(state->mem_ctx, struct snapshot_entry);
++	entry = talloc_zero(state->snapshots, struct snapshot_entry);
 +
 +	name_len = strlen(snap_name);
 +	gmtime_r(&cr_time, &timestamp);
@@ -714,7 +713,7 @@ index 0000000..e3ae9f7
 +		 &timestamp);
 +
 +	entry->cr_time = cr_time;
-+	entry->name = talloc_strndup(state->mem_ctx, snap_name, name_len +1);
++	entry->name = talloc_strndup(entry, snap_name, name_len +1);
 +	DLIST_ADD(state->snapshots->entries, entry);
 +	state->snapshots->num_entries++;
 +	zfs_close(snap);
@@ -731,21 +730,45 @@ index 0000000..e3ae9f7
 +				      time_t start,
 +				      time_t end)
 +{
++	TALLOC_CTX *tmp_ctx = NULL;
 +	struct snap_cb *state = NULL;
++	struct snapshot_list *snapshots = NULL;
 +	struct iter_info iter_info;
 +	size_t initial_size;
 +	zfs_handle_t *zfs = NULL;
 +	int rc;
 +
-+	/* initialize our result */
-+	state = talloc_zero(mem_ctx, struct snap_cb);
++	tmp_ctx = talloc_new(mem_ctx);
++	if (tmp_ctx == NULL) {
++		DBG_ERR("talloc() failed\n");
++		return NULL;
++	}
++	
++	state = talloc_zero(tmp_ctx, struct snap_cb);
 +	if (state == NULL) {
 +		DBG_ERR("smb_zfs_list_snapshots: out of memory");
 +		goto done;
 +	}
-+	state->snapshots = talloc_zero(mem_ctx, struct snapshot_list);
-+	state->iter_info = talloc_zero(mem_ctx, struct iter_info);
-+		
++
++	snapshots = talloc_zero(mem_ctx, struct snapshot_list);
++	if (snapshots == NULL) {
++		DBG_ERR("talloc() failed\n"); 
++		goto done;
++	}
++
++	snapshots->mountpoint = talloc_zero_size(snapshots, MAXPATHLEN);
++	if (snapshots->mountpoint == NULL) { 
++		DBG_ERR("talloc() failed\n");
++		goto error;
++	}
++
++	state->iter_info = talloc_zero(tmp_ctx, struct iter_info);
++	if (state->iter_info == NULL) {
++		DBG_ERR("talloc() failed\n");
++		goto error;
++	}
++
++	state->snapshots = snapshots;
 +
 +	zfs = get_zhandle(smblibzfsp, path);
 +	if (zfs == NULL) {
@@ -755,10 +778,10 @@ index 0000000..e3ae9f7
 +	}
 +
 +	/* get mountpoint */
-+	state->snapshots->dataset_name = zfs_get_name(zfs);
++	snapshots->dataset_name = zfs_get_name(zfs);
 +
-+	rc = zfs_prop_get(zfs, ZFS_PROP_MOUNTPOINT, state->snapshots->mountpoint,
-+			  talloc_get_size(state->snapshots->mountpoint), NULL, NULL,
++	rc = zfs_prop_get(zfs, ZFS_PROP_MOUNTPOINT, snapshots->mountpoint,
++			  talloc_get_size(snapshots->mountpoint), NULL, NULL,
 +			  0, 0);
 +
 +	if (rc != 0) {
@@ -767,7 +790,6 @@ index 0000000..e3ae9f7
 +		goto error;
 +	}
 +
-+	/* get snapshots */
 +	state->iter_info->inclusions = inclusions;
 +	state->iter_info->exclusions = exclusions;
 +	state->iter_info->ignore_empty_snaps = ignore_empty_snaps;
@@ -785,7 +807,6 @@ index 0000000..e3ae9f7
 +			"shadow:exclude parameter\n");
 +		goto error;
 +	}
-+
 +	rc = zfs_iter_snapshots(zfs, false, smb_zfs_add_snapshot, state);
 +
 +	if (rc != 0) {
@@ -794,18 +815,20 @@ index 0000000..e3ae9f7
 +		goto error;
 +	}
 +
-+	time(&state->snapshots->timestamp);
-+
++	time(&snapshots->timestamp);
++	state->snapshots = NULL;
 +	goto done;
 +
 +error:
-+	TALLOC_FREE(state);
-+
++	TALLOC_FREE(tmp_ctx);
++	TALLOC_FREE(snapshots);
++	return NULL;
 +done:
++	TALLOC_FREE(tmp_ctx);
 +	if (zfs)
 +		zfs_close(zfs);
 +
-+	return state->snapshots;
++	return snapshots;
 +}
 +
 +/*
@@ -975,10 +998,10 @@ index 0000000..e3ae9f7
 +}
 diff --git a/source3/modules/smb_libzfs.h b/source3/modules/smb_libzfs.h
 new file mode 100644
-index 0000000..d580233
+index 0000000..03c72d7
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.h
-@@ -0,0 +1,309 @@
+@@ -0,0 +1,310 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -1202,7 +1225,8 @@ index 0000000..d580233
 +
 +/*
 + * This function returns a list of ZFS snapshots matching the specified
-+ * filters.
++ * filters, allocated under a user-provided talloc memory context. Returns 
++ * NULL on error.
 + *
 + * @param[in]	smblibzfsp		smblibzfs handle struct
 + * @param[in]	mem_ctx			talloc memory context
