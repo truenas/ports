@@ -1,0 +1,336 @@
+diff --git a/source4/torture/vfs/shadow_copy_zfs.c b/source4/torture/vfs/shadow_copy_zfs.c
+new file mode 100644
+index 0000000..d9db753
+--- /dev/null
++++ b/source4/torture/vfs/shadow_copy_zfs.c
+@@ -0,0 +1,302 @@
++/*
++   Unix SMB/CIFS implementation.
++
++   Copyright (C) iXsystems 2020 
++
++   This program is free software; you can redistribute it and/or modify
++   it under the terms of the GNU General Public License as published by
++   the Free Software Foundation; either version 3 of the License, or
++   (at your option) any later version.
++
++   This program is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++   GNU General Public License for more details.
++
++   You should have received a copy of the GNU General Public License
++   along with this program.  If not, see <http://www.gnu.org/licenses/>.
++*/
++
++#include "includes.h"
++#include "lib/cmdline/popt_common.h"
++#include "libcli/smb2/smb2.h"
++#include "libcli/smb2/smb2_calls.h"
++#include "libcli/smb/smbXcli_base.h"
++#include "torture/torture.h"
++#include "torture/vfs/proto.h"
++#include "libcli/resolve/resolve.h"
++#include "torture/util.h"
++#include "torture/smb2/proto.h"
++#include "lib/param/param.h"
++#include "source3/modules/smb_libzfs.h"
++#include <sys/acl.h>
++
++#define BASEDIR "smb2-testsd"
++#define ZSHARE "zshare"
++#define ZFILE "testfile"
++#define ZFILE2 "TESTDATASET/testfile2"
++#define ZFILE3 "testfile3"
++#define ZFILE4 "TESTDATASET/testfile4"
++#define ZPATH "/mnt/tank/zshare"
++#define ZPATH2 "/mnt/tank/zshare/TESTDATASET"
++
++static const char *null_string = NULL;
++static const char **empty_list = &null_string;
++static const char *default_test = "TESTSNAP*";
++static const char **default_prefix = &default_test;
++
++
++/**
++ * SMB2 connect with explicit share
++ **/
++static NTSTATUS torture_smb2_con_share(struct torture_context *tctx,
++                           const char *share,
++                           struct smb2_tree **tree)
++{
++        struct smbcli_options options;
++        NTSTATUS status;
++        const char *host = torture_setting_string(tctx, "host", NULL);
++
++        lpcfg_smbcli_options(tctx->lp_ctx, &options);
++
++        status = smb2_connect_ext(tctx,
++                                  host,
++                                  lpcfg_smb_ports(tctx->lp_ctx),
++                                  share,
++                                  lpcfg_resolve_context(tctx->lp_ctx),
++                                  popt_get_cmdline_credentials(),
++                                  0,
++                                  tree,
++                                  tctx->ev,
++                                  &options,
++                                  lpcfg_socket_options(tctx->lp_ctx),
++                                  lpcfg_gensec_settings(tctx, tctx->lp_ctx)
++                                  );
++        if (!NT_STATUS_IS_OK(status)) {
++                printf("Failed to connect to SMB2 share \\\\%s\\%s - %s\n",
++                       host, share, nt_errstr(status));
++        }
++        return status;
++}
++
++static bool test_zfs_enum_snaps(struct torture_context *tctx,
++				TALLOC_CTX *mem_ctx,
++				struct smb2_tree *tree,
++				struct smb2_handle fh,
++				int *_count)
++{
++	struct smb2_ioctl io;
++	NTSTATUS status;
++
++	ZERO_STRUCT(io);
++	io.level = RAW_IOCTL_SMB2;
++	io.in.file.handle = fh;
++	io.in.function = FSCTL_SRV_ENUM_SNAPS;
++	io.in.max_response_size = 16;
++	io.in.flags = SMB2_IOCTL_FLAG_IS_FSCTL;
++
++	status = smb2_ioctl(tree, mem_ctx, &io);
++	torture_assert_ntstatus_ok(tctx, status, "enum ioctl");
++ 
++	*_count = IVAL(io.out.out.data, 0);
++
++	/* with max_response_size=16, no labels should be sent */
++	torture_assert_int_equal(tctx, IVAL(io.out.out.data, 4), 0,
++				 "enum snaps labels");
++
++	/* TODO with 0 snaps, needed_data_count should be 0? */
++	if (*_count != 0) {
++		torture_assert(tctx, IVAL(io.out.out.data, 8) != 0,
++				"enum snaps needed non-zero");
++	}
++
++	return true;
++}
++
++
++static bool test_zfs_access_shadow_copy(struct torture_context *tctx,
++				        struct smb2_tree *tree_unused)
++{
++	NTSTATUS status;
++	TALLOC_CTX *tmp_ctx = talloc_new(tctx);
++	struct smb2_tree *tree_base = NULL;
++	struct smb2_handle base_fh, sub_fh;
++	struct smb2_handle vss_fh1, vss_fh2;
++	struct smblibzfshandle *libzp = NULL;
++	struct snapshot_list *snaps = NULL;
++	int count, ret;
++	ZERO_STRUCT(base_fh);
++	char *vss = NULL;
++	snaps = talloc_zero(tmp_ctx, struct snapshot_list);
++	status = torture_smb2_con_share(tctx, ZSHARE, &tree_base);
++	smb2_util_unlink(tree_base, ZFILE3);
++	status = torture_smb2_testfile_access(tree_base, ZFILE3, &base_fh,
++				SEC_STD_READ_CONTROL |
++				SEC_STD_WRITE_DAC |
++				SEC_RIGHTS_FILE_ALL);
++	torture_assert_ntstatus_ok(tctx, status, "base write open");
++	status = smb2_util_write(tree_base, base_fh, "pre-snap", 0,
++				 sizeof("pre-snap"));
++	torture_assert_ntstatus_ok(tctx, status, "src write");
++	ret = get_smblibzfs_handle(tmp_ctx, &libzp);
++	torture_assert_int_equal(tctx, ret, 0, "init libzfs handle");
++
++	/* test connectpath dataset */
++	torture_comment(tctx, "Create and test first snapshot\n");
++	ret = smb_zfs_snapshot(libzp, ZPATH, "TESTSNAP01", false);
++	torture_assert_int_equal(tctx, ret, 0, "zfs snapshot 01");
++	smb2_util_unlink(tree_base, ZFILE3);
++	snaps = smb_zfs_list_snapshots(libzp, tmp_ctx, ZPATH, false,
++				       default_prefix, empty_list, 0, 0);
++	torture_assert_not_null(tctx, snaps, "get snapshots");
++	vss = talloc_asprintf(tmp_ctx, "%s/%s", snaps->entries->label, ZFILE3);
++	torture_comment(tctx, "Preparing to access [%s]\n", vss);
++	status = torture_smb2_open(tree_base, vss, SEC_RIGHTS_FILE_READ, &vss_fh1);	
++	torture_assert_ntstatus_ok(tctx, status, "vss1 open");
++
++	/* cleanup -- TODO: delete child dataset. */
++	torture_comment(tctx, "Removing snapshot.\n");
++	ret = smb_zfs_delete_snapshots(libzp, tmp_ctx, snaps);
++	torture_assert_int_equal(tctx, ret, 0, "zfs_delete_snapshots");
++
++	/* move on to child dataset */
++	status = torture_smb2_testfile_access(tree_base, ZFILE4, &sub_fh,
++				SEC_STD_READ_CONTROL |
++				SEC_STD_WRITE_DAC |
++				SEC_RIGHTS_FILE_ALL);
++	torture_assert_ntstatus_ok(tctx, status, "base write open");
++	status = smb2_util_write(tree_base, sub_fh, "pre-snap", 0,
++				 sizeof("pre-snap"));
++	torture_assert_ntstatus_ok(tctx, status, "src write");
++	torture_comment(tctx, "Create and test snapshot on subdataset\n");
++	ret = smb_zfs_snapshot(libzp, ZPATH2, "TESTSNAP01", false);
++	torture_assert_int_equal(tctx, ret, 0, "zfs snapshot 01");
++	smb2_util_unlink(tree_base, ZFILE4);
++	snaps = smb_zfs_list_snapshots(libzp, tmp_ctx, ZPATH2, false,
++				       default_prefix, empty_list, 0, 0);
++	torture_assert_not_null(tctx, snaps, "get snapshots");
++	TALLOC_FREE(vss);
++	vss = talloc_asprintf(tmp_ctx, "%s/%s", snaps->entries->label, ZFILE4);
++	torture_comment(tctx, "Preparing to access [%s]\n", vss);
++	status = torture_smb2_open(tree_base, vss, SEC_RIGHTS_FILE_READ, &vss_fh2);	
++	torture_assert_ntstatus_ok(tctx, status, "vss2 open");
++
++	/* cleanup -- TODO: delete child dataset. */
++	torture_comment(tctx, "Removing snapshot.\n");
++	ret = smb_zfs_delete_snapshots(libzp, tmp_ctx, snaps);
++	torture_assert_int_equal(tctx, ret, 0, "zfs_delete_snapshots");
++	
++	talloc_free(tmp_ctx);
++	return true;
++}
++
++static bool test_zfs_enum_created(struct torture_context *tctx,
++				  struct smb2_tree *tree_unused)
++{
++	NTSTATUS status;
++	TALLOC_CTX *tmp_ctx = talloc_new(tctx);
++	struct smb2_tree *tree_base = NULL;
++	struct smb2_handle base_fh;
++	struct smb2_handle sub_fh;
++	struct smblibzfshandle *libzp = NULL;
++	struct snapshot_list *snaps = NULL;
++	acl_t acl;
++	int count, ret;
++	ZERO_STRUCT(base_fh);
++	snaps = talloc_zero(tmp_ctx, struct snapshot_list);
++	torture_comment(tctx, "Connect to share [%s]\n", ZSHARE);
++	status = torture_smb2_con_share(tctx, ZSHARE, &tree_base);
++	torture_assert_ntstatus_ok(tctx, status,
++				   "Failed to connect to SMB2 share");
++
++	smb2_util_unlink(tree_base, ZFILE);
++	status = torture_smb2_testfile_access(tree_base, ZFILE, &base_fh,
++				SEC_STD_READ_CONTROL |
++				SEC_STD_WRITE_DAC |
++				SEC_RIGHTS_FILE_ALL);
++	torture_assert_ntstatus_ok(tctx, status, "base write open");
++
++	status = smb2_util_write(tree_base, base_fh, "pre-snap", 0,
++				 sizeof("pre-snap"));
++	torture_assert_ntstatus_ok(tctx, status, "src write");
++
++	torture_assert(tctx,
++		       test_zfs_enum_snaps(tctx, tmp_ctx, tree_base, base_fh,
++					     &count),
++		       "count");
++	torture_assert_int_equal(tctx, count, 0, "num snaps");
++
++	ret = get_smblibzfs_handle(tmp_ctx, &libzp);
++	torture_assert_int_equal(tctx, ret, 0, "init libzfs handle");
++	torture_comment(tctx, "Create and test first snapshot\n");
++	ret = smb_zfs_snapshot(libzp, ZPATH, "TESTSNAP01", false);
++	torture_assert_int_equal(tctx, ret, 0, "zfs snapshot 01");
++	smb2_util_unlink(tree_base, ZFILE);
++	torture_assert(tctx,
++		       test_zfs_enum_snaps(tctx, tmp_ctx, tree_base, base_fh,
++					     &count),
++		       "count");
++	torture_assert_int_equal(tctx, count, 1, "num snaps");
++
++	torture_comment(tctx, "Create and test second snapshot\n");
++	smb_msleep(1100);	/* @GMT tokens have a 1 second resolution */
++	ret = smb_zfs_snapshot(libzp, ZPATH, "TESTSNAP02", false);
++	torture_assert_int_equal(tctx, ret, 0, "zfs snapshot 02");
++
++	torture_assert(tctx,
++		       test_zfs_enum_snaps(tctx, tmp_ctx, tree_base, base_fh,
++					     &count),
++		       "count");
++	torture_assert_int_equal(tctx, count, 2, "num snaps");
++
++	/* test child dataset */
++	torture_comment(tctx, "Create and test child dataset.\n");
++	ret = smb_zfs_create_child_dataset(libzp, ZPATH, "TESTDATASET", 0);
++	torture_assert_int_equal(tctx, ret, 0, "create child dataset");
++
++	torture_comment(tctx, "Copying ACL from parent.\n");
++	acl = acl_get_file(ZPATH, ACL_TYPE_NFS4);
++	torture_assert_not_null(tctx, acl, "get parent ACL");
++	ret = acl_set_file(ZPATH2, ACL_TYPE_NFS4, acl);
++	torture_assert_int_equal(tctx, ret, 0, "set child ACL");
++	
++	status = torture_smb2_testfile_access(tree_base, ZFILE2, &sub_fh,
++				SEC_STD_READ_CONTROL |
++				SEC_STD_WRITE_DAC |
++				SEC_RIGHTS_FILE_ALL);
++	torture_assert_ntstatus_ok(tctx, status, "base write open");
++	smb2_util_unlink(tree_base, ZFILE2);
++
++	torture_comment(tctx, "Checking snapshots on child dataset.\n");
++	torture_assert(tctx,
++		       test_zfs_enum_snaps(tctx, tmp_ctx, tree_base, sub_fh,
++					     &count),
++		       "count");
++	torture_assert_int_equal(tctx, count, 0, "num snaps");
++
++	/* cleanup -- TODO: delete child dataset. */
++	torture_comment(tctx, "Cleaning up.\n");
++	snaps = smb_zfs_list_snapshots(libzp, tmp_ctx, ZPATH, false,
++				       default_prefix, empty_list, 0, 0);
++
++	torture_assert_int_equal(tctx, snaps->num_entries, 2, "num snaps");
++
++	ret = smb_zfs_delete_snapshots(libzp, tmp_ctx, snaps);
++	torture_assert_int_equal(tctx, ret, 0, "zfs_delete_snapshots");
++
++	talloc_free(tmp_ctx);
++
++	return true;
++}
++
++struct torture_suite *torture_shadow_copy_zfs(TALLOC_CTX *ctx)
++{
++	struct torture_suite *suite = torture_suite_create(ctx, "shadow_copy_zfs");
++
++	torture_suite_add_1smb2_test(suite, "enum_created", test_zfs_enum_created);
++	torture_suite_add_1smb2_test(suite, "access_vss", test_zfs_access_shadow_copy);
++
++	suite->description = talloc_strdup(suite, "vfs_shadow_copy_zfs tests");
++
++	return suite;
++}
+diff --git a/source4/torture/vfs/vfs.c b/source4/torture/vfs/vfs.c
+index 39cd573..de64d98 100644
+--- a/source4/torture/vfs/vfs.c
++++ b/source4/torture/vfs/vfs.c
+@@ -111,6 +111,7 @@ NTSTATUS torture_vfs_init(TALLOC_CTX *ctx)
+ 	torture_suite_add_suite(suite, torture_vfs_fruit(suite));
+ 	torture_suite_add_suite(suite, torture_vfs_fruit_netatalk(suite));
+ 	torture_suite_add_suite(suite, torture_acl_xattr(suite));
++	torture_suite_add_suite(suite, torture_shadow_copy_zfs(suite));
+ 	torture_suite_add_suite(suite, torture_vfs_fruit_file_id(suite));
+ 	torture_suite_add_suite(suite, torture_vfs_fruit_timemachine(suite));
+ 	torture_suite_add_suite(suite, torture_vfs_fruit_conversion(suite));
+diff --git a/source4/torture/wscript_build b/source4/torture/wscript_build
+index 6bd4a21..7751b14 100644
+--- a/source4/torture/wscript_build
++++ b/source4/torture/wscript_build
+@@ -287,9 +287,9 @@ bld.SAMBA_MODULE('TORTURE_NTP',
+ 	)
+ 
+ bld.SAMBA_MODULE('TORTURE_VFS',
+-	source='vfs/vfs.c vfs/fruit.c vfs/acl_xattr.c',
++	source='vfs/vfs.c vfs/fruit.c vfs/acl_xattr.c vfs/shadow_copy_zfs.c',
+ 	subsystem='smbtorture',
+-	deps='LIBCLI_SMB POPT_CREDENTIALS TORTURE_UTIL smbclient-raw TORTURE_RAW',
++	deps='LIBCLI_SMB POPT_CREDENTIALS TORTURE_UTIL smbclient-raw TORTURE_RAW smb_libzfs',
+ 	internal_module=True,
+ 	autoproto='vfs/proto.h',
+ 	init_function='torture_vfs_init'
