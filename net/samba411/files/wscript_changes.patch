@@ -1,5 +1,5 @@
 diff --git a/source3/modules/wscript_build b/source3/modules/wscript_build
-index 80b0ce9..9e90c94 100644
+index 80b0ce9..c9d3f9c 100644
 --- a/source3/modules/wscript_build
 +++ b/source3/modules/wscript_build
 @@ -243,6 +243,23 @@ bld.SAMBA3_MODULE('vfs_solarisacl',
@@ -26,15 +26,41 @@ index 80b0ce9..9e90c94 100644
  bld.SAMBA3_MODULE('vfs_zfsacl',
                   subsystem='vfs',
                   source='vfs_zfsacl.c',
-@@ -612,9 +629,69 @@ bld.SAMBA3_MODULE('vfs_error_inject',
+@@ -390,6 +407,22 @@ bld.SAMBA3_MODULE('vfs_fileid',
+                  internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_fileid'),
+                  enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_fileid'))
+ 
++bld.SAMBA3_MODULE('vfs_aio_fbsd',
++                 subsystem='vfs',
++                 source='vfs_aio_fbsd.c',
++                 deps='samba-util tevent',
++                 init_function='',
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_aio_fbsd'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_aio_fbsd'))
++
++bld.SAMBA3_MODULE('vfs_aio_spthread',
++                 subsystem='vfs',
++                 source='vfs_aio_spthread.c',
++                 deps='samba-util tevent',
++                 init_function='',
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_aio_spthread'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_aio_spthread'))
++
+ bld.SAMBA3_MODULE('vfs_aio_fork',
+                  subsystem='vfs',
+                  source='vfs_aio_fork.c',
+@@ -612,9 +645,69 @@ bld.SAMBA3_MODULE('vfs_error_inject',
                   internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_error_inject'),
                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_error_inject'))
  
 -bld.SAMBA3_MODULE('vfs_delay_inject',
 +bld.SAMBA3_MODULE('vfs_noacl',
-+                 subsystem='vfs',
+                  subsystem='vfs',
+-                 source='vfs_delay_inject.c',
 +                 source='vfs_noacl.c',
-+                 init_function='',
+                  init_function='',
+-                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_delay_inject'),
+-                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_delay_inject'))
 +                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_noacl'),
 +                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_noacl'))
 +
@@ -72,31 +98,28 @@ index 80b0ce9..9e90c94 100644
 +                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_zfs_space'),
 +                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_zfs_space'))
 +
-+bld.SAMBA3_MODULE('vfs_aio_fbsd',
++bld.SAMBA3_MODULE('vfs_tmprotect',
 +                 subsystem='vfs',
-+                 source='vfs_aio_fbsd.c',
-+                 deps='samba-util tevent',
++                 source='vfs_tmprotect.c',
++                 deps='smb_libzfs',
 +                 init_function='',
-+                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_aio_fbsd'),
-+                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_aio_fbsd'))
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_tmprotect'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_tmprotect'))
 +
-+bld.SAMBA3_MODULE('vfs_aio_spthread',
++bld.SAMBA3_MODULE('vfs_zfs_fsrvp',
 +                 subsystem='vfs',
-+                 source='vfs_aio_spthread.c',
-+                 deps='samba-util tevent',
++                 source='vfs_zfs_fsrvp.c',
++                 deps='smb_libzfs',
 +                 init_function='',
-+                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_aio_spthread'),
-+                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_aio_spthread'))
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_zfs_fsrvp'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_zfs_fsrvp'))
 +
 +bld.SAMBA3_MODULE('vfs_shadow_copy_zfs',
-                  subsystem='vfs',
--                 source='vfs_delay_inject.c',
++                 subsystem='vfs',
 +                 source='vfs_shadow_copy_zfs.c',
 +                 allow_warnings=True,
 +                 deps='samba-util tdb smb_libzfs',
-                  init_function='',
--                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_delay_inject'),
--                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_delay_inject'))
++                 init_function='',
 +                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_shadow_copy_zfs'),
 +                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_shadow_copy_zfs'))
 +
