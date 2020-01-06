@@ -11,7 +11,7 @@
     SUBDIR += alchemist.el
     SUBDIR += algol68g
     SUBDIR += angelscript
-    SUBDIR += arena
+    SUBDIR += apache-commons-jelly
     SUBDIR += asis
     SUBDIR += asn1c
     SUBDIR += atlast
@@ -49,7 +49,6 @@
     SUBDIR += crystal
     SUBDIR += csharp-mode.el
     SUBDIR += cython
-    SUBDIR += diveintopython
     SUBDIR += dlang-tools
     SUBDIR += dlv
     SUBDIR += duktape
@@ -102,7 +101,6 @@
     SUBDIR += gcc-ecj45
     SUBDIR += gcc10-devel
     SUBDIR += gcc48
-    SUBDIR += gcc5
     SUBDIR += gcc6
     SUBDIR += gcc6-aux
     SUBDIR += gcc7
@@ -152,7 +150,6 @@
     SUBDIR += io-devel
     SUBDIR += itcl
     SUBDIR += itcl4
-    SUBDIR += jakarta-commons-jelly
     SUBDIR += janet
     SUBDIR += jimtcl
     SUBDIR += jruby
@@ -200,7 +197,6 @@
     SUBDIR += mixal
     SUBDIR += mlton
     SUBDIR += mmix
-    SUBDIR += modula3
     SUBDIR += mono
     SUBDIR += mono-basic
     SUBDIR += mosh
@@ -235,7 +231,6 @@
     SUBDIR += opendylan
     SUBDIR += ott
     SUBDIR += owl-lisp
-    SUBDIR += p2c
     SUBDIR += p5-Data-JavaScript
     SUBDIR += p5-Error
     SUBDIR += p5-Expect
@@ -275,7 +270,6 @@
     SUBDIR += perl5.30
     SUBDIR += petite-chez
     SUBDIR += pfe
-    SUBDIR += phantomjs
     SUBDIR += pharo
     SUBDIR += phc
     SUBDIR += php-mode.el
@@ -292,11 +286,14 @@
     SUBDIR += pocl
     SUBDIR += polyml
     SUBDIR += ponyc
+    SUBDIR += ponyc-static
     SUBDIR += ptoc
+    SUBDIR += purescript
     SUBDIR += py-hy
     SUBDIR += py-mx-base
     SUBDIR += py-prolog
     SUBDIR += py-qt5-qml
+    SUBDIR += py-textX
     SUBDIR += pypy
     SUBDIR += pypy3
     SUBDIR += python
@@ -312,9 +309,9 @@
     SUBDIR += python35
     SUBDIR += python36
     SUBDIR += python37
+    SUBDIR += python38
     SUBDIR += qmasm
     SUBDIR += qscheme
-    SUBDIR += quack
     SUBDIR += quickjs
     SUBDIR += racket
     SUBDIR += racket-minimal
@@ -363,7 +360,6 @@
     SUBDIR += squeak
     SUBDIR += squirrel
     SUBDIR += starlogo
-    SUBDIR += stldoc
     SUBDIR += swi-pl
     SUBDIR += tcbasic
     SUBDIR += tcc

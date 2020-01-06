@@ -3,10 +3,10 @@
 
 PORTNAME=	inn
 PORTVERSION=	2.6.1
-CATEGORIES=	news ipv6
+CATEGORIES=	news
 MASTER_SITES=	ISC/${PORTNAME}
 
-MAINTAINER=	johans@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	InterNetNews -- the Internet meets Netnews
 
 BUILD_DEPENDS=	p5-GD>=0:graphics/p5-GD \

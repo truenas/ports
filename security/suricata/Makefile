@@ -2,8 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	suricata
-DISTVERSION=	4.1.4
-PORTREVISION=	4
+DISTVERSION=	5.0.0
 CATEGORIES=	security
 MASTER_SITES=	https://www.openinfosecfoundation.org/download/
 
@@ -13,6 +12,8 @@ COMMENT=	High Performance Network IDS, IPS and Security Monitoring engine
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
+BUILD_DEPENDS=	rustc:lang/${RUST_DEFAULT}
+
 LIB_DEPENDS=	libpcre.so:devel/pcre \
 		libnet.so:net/libnet \
 		liblz4.so:archivers/liblz4 \
@@ -20,11 +21,11 @@ LIB_DEPENDS=	libpcre.so:devel/pcre \
 
 USES=		autoreconf cpe gmake iconv:translit libtool pathfix pkgconfig
 
-CONFLICTS_INSTALL=libhtp
+CONFLICTS_INSTALL=	libhtp suricata5
 
 USE_LDCONFIG=	yes
 USE_RC_SUBR=	${PORTNAME}
-PLIST_SUB=	PORTVERSION=${PORTVERSION}
+PLIST_SUB=	PORTVERSION=${DISTVERSION:C/-/_/g}
 
 GNU_CONFIGURE=	yes
 
@@ -33,17 +34,16 @@ CPE_VENDOR=	openinfosecfoundation
 INSTALL_TARGET=		install-strip
 TEST_TARGET=		check
 
-OPTIONS_DEFINE=		IPFW JSON NETMAP NSS PORTS_PCAP PRELUDE \
-			PYTHON REDIS RUST TESTS
+OPTIONS_DEFINE=		GEOIP IPFW JSON NETMAP NSS PORTS_PCAP PRELUDE \
+			PYTHON REDIS TESTS
 OPTIONS_DEFINE_amd64=	HYPERSCAN
-OPTIONS_DEFAULT=	IPFW JSON NETMAP PYTHON RUST
+OPTIONS_DEFAULT=	IPFW JSON NETMAP PYTHON
 OPTIONS_SUB=		yes
 
 OPTIONS_RADIO=		SCRIPTS
 OPTIONS_RADIO_SCRIPTS=	LUA LUAJIT
 
-SCRIPTS_DESC=		Scripting
-
+GEOIP_DESC=		GeoIP support
 HYPERSCAN_DESC=		Hyperscan support
 IPFW_DESC=		IPFW and IP Divert support for inline IDP
 JSON_DESC=		JSON output support
@@ -55,8 +55,11 @@ PORTS_PCAP_DESC=	Use libpcap from ports
 PRELUDE_DESC=		Prelude support for NIDS alerts
 PYTHON_DESC=		Python-based update and control utilities
 REDIS_DESC=		Redis output support
-RUST_DESC=		Rust parser support
+SCRIPTS_DESC=		Scripting
 TESTS_DESC=		Unit tests in suricata binary
+
+GEOIP_LIB_DEPENDS=		libmaxminddb.so:net/libmaxminddb
+GEOIP_CONFIGURE_ON=		--enable-geoip
 
 HYPERSCAN_LIB_DEPENDS=		libhs.so:devel/hyperscan
 HYPERSCAN_CONFIGURE_ON=		--with-libhs-includes=${LOCALBASE}/include \
@@ -111,9 +114,6 @@ REDIS_CONFIGURE_ON=		--enable-hiredis \
 				--with-libhiredis-includes=${LOCALBASE}/include \
 				--with-libhiredis-libraries=${LOCALBASE}/lib
 
-RUST_BUILD_DEPENDS=		rustc:lang/${RUST_DEFAULT}
-RUST_CONFIGURE_ENABLE=		rust
-
 TESTS_CONFIGURE_ENABLE=		unittests
 
 SUB_FILES=	pkg-message
@@ -130,10 +130,6 @@ CONFIGURE_ARGS+=--enable-gccprotect \
 		--with-libhtp-libraries=${LOCALBASE}/lib \
 	        --disable-gccmarch-native
 
-CONFIG_DIR?=	${ETCDIR}
-CONFIG_FILES=	suricata.yaml classification.config reference.config threshold.config
-LOGS_DIR?=	/var/log/${PORTNAME}
-
 pre-patch:
 	@${CP} ${FILESDIR}/ax_check_compile_flag.m4 ${WRKSRC}/m4
 
@@ -142,10 +138,12 @@ post-patch-PYTHON-on:
 		${WRKSRC}/configure.ac
 
 post-install:
-	@${MKDIR} ${STAGEDIR}${CONFIG_DIR}
-	@${MKDIR} ${STAGEDIR}${LOGS_DIR}
-.for f in ${CONFIG_FILES}
-	${INSTALL_DATA} ${WRKSRC}/${f} ${STAGEDIR}${CONFIG_DIR}/${f}.sample
+	@${MKDIR} ${STAGEDIR}${ETCDIR} ${STAGEDIR}/var/log/${PORTNAME}
+.for f in classification.config reference.config
+	@${MV} ${STAGEDIR}${DATADIR}/${f} ${STAGEDIR}${DATADIR}/${f}.sample
+.endfor
+.for f in suricata.yaml threshold.config
+	${INSTALL_DATA} ${WRKSRC}/${f} ${STAGEDIR}${ETCDIR}/${f}.sample
 .endfor
 
 post-install-PYTHON-on:

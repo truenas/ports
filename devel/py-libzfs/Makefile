@@ -20,12 +20,21 @@ RUN_DEPENDS=	${PY_ENUM34}
 USE_GITHUB=     yes
 GH_ACCOUNT=	freenas
 GH_PROJECT=	py-libzfs
-GH_TAGNAME=	2268929b480356792dd0ffeda4889740af6c6d94
+GH_TAGNAME=	cad01203870386bba908bf55549de1089c1701fe
 
 HAS_CONFIGURE=	yes
 USES=		python
 USE_PYTHON=	autoplist distutils cython
 GNU_CONFIGURE=	yes
+
+
+CONFIGURE_ENV=	FREEBSD_SRC=${SRC_BASE}
+
+# Py-libzfs needs libzfs to be built
+.if !exists(/sbin/zpool)
+BUILD_DEPENDS+=	openzfs>=0:sysutils/openzfs
+RUN_DEPENDS+=	openzfs>=0:sysutils/openzfs
+.endif
 
 MAKE_ENV=	FREEBSD_SRC=${SRC_BASE}
 

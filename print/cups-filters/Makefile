@@ -1,7 +1,8 @@
 # $FreeBSD$
 
 PORTNAME=	cups-filters
-PORTVERSION=	1.25.5
+PORTVERSION=	1.25.11
+PORTREVISION=	1
 CATEGORIES=	print
 MASTER_SITES=	https://www.openprinting.org/download/cups-filters/
 
@@ -134,7 +135,5 @@ post-patch:
 		${WRKSRC}/utils/cups-browsed.8 \
 		${WRKSRC}/utils/cups-browsed.conf.5 \
 		${WRKSRC}/utils/driverless.1
-	@${REINPLACE_CMD} '/^texttotext_LDADD =/s/$$/ ${ICONV_LIB}/' \
-		${WRKSRC}/Makefile.in
 
 .include <bsd.port.mk>

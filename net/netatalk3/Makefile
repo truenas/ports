@@ -2,22 +2,26 @@
 # $FreeBSD$
 
 PORTNAME=	netatalk
-PORTVERSION=	3.1.12
-PORTREVISION=	2
+PORTVERSION=	3.1.11
+PORTREVISION=	4
 PORTEPOCH=	1
 CATEGORIES=	net
-MASTER_SITES=	SF
 PKGNAMESUFFIX=	3
 
-MAINTAINER=	marcus@FreeBSD.org
+MAINTAINER=	john@ixsystems.com
 COMMENT=	File server for Mac OS X
 
 LICENSE=	GPLv2
 
 LIB_DEPENDS=	libgcrypt.so:security/libgcrypt \
 		libevent.so:devel/libevent
+RUN_DEPENDS=	p5-IO-Socket-INET6>=0:net/p5-IO-Socket-INET6
 
-USES=		bdb:5+ gettext gmake iconv libtool perl5 pkgconfig shebangfix ssl tar:bzip2
+NO_CHECKSUM=	yes
+
+WRKSRC=	/usr/netatalk_src
+
+USES=		bdb:5+ gettext gmake iconv pathfix autoreconf libtool perl5 pkgconfig shebangfix ssl tar:bzip2
 GNU_CONFIGURE=	yes
 USE_LDCONFIG=	yes
 USE_RC_SUBR=	netatalk
@@ -81,6 +85,9 @@ CONFLICTS=	bigloo-2.* cap-6.0.* tct-1.* netatalk-[12]* yudit-[0-9]*
 
 .include <bsd.port.pre.mk>
 
+checksum extract fetch:
+	${ECHO_CMD} ${.TARGET} not needed because building direct
+
 .if ${PORT_OPTIONS:MAVAHI}=="" && ${PORT_OPTIONS:MMDNSRESPONDER}==""
 SUB_LIST+=	ZEROCONF=""
 CONFIGURE_ARGS+=--disable-zeroconf
@@ -90,11 +97,9 @@ post-patch:
 	@${REINPLACE_CMD} -e 's|%%DB_NAME%%|${BDB_INCLUDE_DIR:T}| ; \
 		s|%%DB_LIB%%|-l${BDB_LIB_NAME}|g ; \
 		s|%%LOCALBASE%%|${LOCALBASE}|g' \
-		${WRKSRC}/configure
+		${WRKSRC}/macros/db3-check.m4
 	@${REINPLACE_CMD} -e 's|\.dist|\.sample|g' \
-		${WRKSRC}/config/Makefile.in
-#	@${REINPLACE_CMD} -e 's|%%PYTHONCMD%%|${PYTHONCMD}|' \
-#		${WRKSRC}/contrib/shell_utils/afpstats
+		${WRKSRC}/config/Makefile.am
 
 post-install:
 	${INSTALL_SCRIPT} ${WRKSRC}/contrib/macusers/macusers \

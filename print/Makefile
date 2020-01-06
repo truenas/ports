@@ -174,7 +174,6 @@
     SUBDIR += pkpgcounter
     SUBDIR += pmw
     SUBDIR += pnm2ppa
-    SUBDIR += poster
     SUBDIR += print-manager
     SUBDIR += ps2eps
     SUBDIR += pscal
@@ -183,7 +182,6 @@
     SUBDIR += pstotext
     SUBDIR += psutils
     SUBDIR += py-fonttools
-    SUBDIR += py-fonttools-lxml-ufo
     SUBDIR += py-fpdf
     SUBDIR += py-pdf
     SUBDIR += py-pdf2

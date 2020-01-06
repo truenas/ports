@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	libvirt
-PORTVERSION=	5.7.0
+PORTVERSION=	5.8.0
 CATEGORIES=	devel
 MASTER_SITES=	http://libvirt.org/sources/ \
 		ftp://libvirt.org/libvirt/
@@ -92,6 +92,11 @@ CONFIGURE_ARGS+=	--without-avahi \
 # random_data fix can be removed when 8.x is eol
 CONFIGURE_ENV=	ac_cv_type_struct_random_data=""
 
+.if !exists(/sbin/zpool)
+BUILD_DEPENDS+=	openzfs>=0:sysutils/openzfs
+RUN_DEPENDS+=	openzfs>=0:sysutils/openzfs
+.endif
+
 # limit production release x.x.x
 PORTSCOUT=	limit:\d+\.\d+\.\d+$$
 
@@ -105,7 +110,7 @@ USE_PERL5=	build
 USE_LDCONFIG=	yes
 INSTALL_TARGET=	install-strip
 TEST_TARGET=	check
-SHLIB_VER=	0.5007.0
+SHLIB_VER=	0.5008.0
 PLIST_SUB+=	SHLIB_VER=${SHLIB_VER}
 PORTDOCS=	*
 SHEBANG_FILES=	src/keycodemapdb/tools/keymap-gen

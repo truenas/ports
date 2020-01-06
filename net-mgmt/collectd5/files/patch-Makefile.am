@@ -6,9 +6,9 @@
  	-DLOCALSTATEDIR='"${localstatedir}"' \
 -	-DPKGLOCALSTATEDIR='"${localstatedir}/lib/${PACKAGE_NAME}"' \
 +	-DPKGLOCALSTATEDIR='"/var/db/${PACKAGE_NAME}"' \
- 	-DPLUGINDIR='"${pkglibdir}"' \
- 	-DPKGDATADIR='"${pkgdatadir}"'
- 
+ 	-DPLUGINDIR='"${cpkglibdir}"' \
+ 	-DPKGDATADIR='"${cpkgdatadir}"'
+ if BUILD_WIN32 
 @@ -693,12 +693,26 @@ cpusleep_la_SOURCES = src/cpusleep.c
  cpusleep_la_LDFLAGS = $(PLUGIN_LDFLAGS)
  endif
@@ -87,7 +87,7 @@
  if BUILD_PLUGIN_ZOOKEEPER
  pkglib_LTLIBRARIES += zookeeper.la
  zookeeper_la_SOURCES = src/zookeeper.c
-@@ -1964,15 +1964,10 @@ endif
+@@ -2184,15 +2184,10 @@ endif
  
  install-exec-hook:
  	$(mkinstalldirs) $(DESTDIR)$(localstatedir)/run

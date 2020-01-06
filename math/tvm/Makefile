@@ -2,8 +2,7 @@
 
 PORTNAME=	tvm
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.4-1440
-DISTVERSIONSUFFIX=	-g347e3d9d
+DISTVERSION=	0.5.20191028
 CATEGORIES=	math
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -18,7 +17,11 @@ BUILD_DEPENDS=	dmlc-core>0:devel/dmlc-core \
 USES=		cmake localbase
 USE_GITHUB=	yes
 GH_ACCOUNT=	dmlc
-GH_TUPLE=	dmlc:dlpack:0acb731:dlpack/3rdparty/dlpack
+GH_TAGNAME=	e889928
+GH_TUPLE=	dmlc:dlpack:0acb731:dlpack/3rdparty/dlpack \
+		dmlc:dmlc-core:808f485:dmlc_core/3rdparty/dmlc-core
 USE_LDCONFIG=	yes
+
+PORTSCOUT=	skipv:0.5 # https://github.com/dmlc/tvm/issues/3848
 
 .include <bsd.port.mk>

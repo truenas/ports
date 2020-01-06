@@ -3,6 +3,7 @@
 
 PORTNAME=	libxatracker
 PORTVERSION=	${MESAVERSION}
+PORTREVISION=	2
 CATEGORIES=	graphics
 
 COMMENT=	Mesa XA state tracker

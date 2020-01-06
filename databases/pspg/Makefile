@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	pspg
-DISTVERSION=	2.0.4
+DISTVERSION=	2.5.3
 CATEGORIES=	databases
 
 MAINTAINER=	dmgk@FreeBSD.org
@@ -17,12 +17,19 @@ USE_GITHUB=	yes
 GH_ACCOUNT=	okbob
 GNU_CONFIGURE=	yes
 
+SUB_FILES=	pkg-message
+
 PLIST_FILES=	bin/pspg
 PORTDOCS=	README.md
 
-SUB_FILES=	pkg-message
+OPTIONS_DEFINE=	DOCS PGSQL
+OPTIONS_DEFAULT=	PGSQL
 
-OPTIONS_DEFINE=	DOCS
+PGSQL_DESC=	Work as PostgreSQL interactive client
+
+PGSQL_USES=	pgsql
+PGSQL_CONFIGURE_WITH=	postgresql=yes
+PGSQL_VARS=	WANT_PGSQL=client
 
 post-install:
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/pspg

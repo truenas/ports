@@ -2,8 +2,7 @@
 
 PORTNAME=	pulseaudio-module-xrdp
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.3
-PORTREVISION=	1
+DISTVERSION=	0.4
 CATEGORIES=	audio
 
 MAINTAINER=	meta@FreeBSD.org
@@ -14,7 +13,7 @@ LICENSE=	APACHE20
 BUILD_DEPENDS=	${NONEXISTENT}:audio/pulseaudio:configure
 LIB_DEPENDS=	libpulse.so:audio/pulseaudio
 
-USES=		autoreconf:build libtool localbase pkgconfig
+USES=		autoreconf:build compiler:c11 libtool localbase pkgconfig
 USE_GITHUB=	yes
 
 GNU_CONFIGURE=	yes

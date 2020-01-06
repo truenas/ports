@@ -2,10 +2,10 @@
 # $FreeBSD$
 
 PORTNAME?=	postgresql
-DISTVERSION?=	12beta4
+DISTVERSION?=	12.0
 # PORTREVISION must be ?= otherwise, all slave ports get this PORTREVISION and
 # not their own.  Probably best to keep it at ?=0 when reset here too.
-PORTREVISION?=	2
+PORTREVISION?=	0
 CATEGORIES?=	databases
 MASTER_SITES=	PGSQL/source/v${DISTVERSION}
 PKGNAMESUFFIX?= ${PORTVERSION:R}${COMPONENT}
@@ -218,9 +218,11 @@ CONFIGURE_ARGS+=--with-gssapi
 # so configure's -lgssapi_krb5 won't go.
 LDFLAGS+=	-lgssapi
 LDFLAGS_SL+=	-lgssapi
+PLIST_SUB+=	GSSAPI=""
 .endif
 .else
 CONFIGURE_ARGS+=--without-gssapi
+PLIST_SUB+=	GSSAPI="@comment "
 .endif
 
 .  if ${PORT_OPTIONS:MMIT_KRB5}
@@ -237,6 +239,12 @@ LIB_DEPENDS+=	libkrb5.so.3:security/krb5
 
 .  if ${PORT_OPTIONS:MHEIMDAL_KRB5}
 CONFIGURE_ARGS+=--with-krb5
+.  endif
+
+.  if ${PORT_OPTIONS:MSSL}
+PLIST_SUB+=	SSL=""
+.  else
+PLIST_SUB+=	SSL="@comment "
 .  endif
 
 .endif # !SLAVE_ONLY

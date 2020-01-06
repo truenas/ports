@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	collectd
-PORTVERSION=	5.8.1
+PORTVERSION=	5.9.0
 PORTREVISION=	2
 CATEGORIES=	net-mgmt
 MASTER_SITES=	https://storage.googleapis.com/collectd-tarballs/
@@ -19,13 +19,12 @@ GNU_CONFIGURE=	yes
 
 OPTIONS_DEFINE=		CGI DEBUG GCRYPT LIBDTRACE LOGSTASH VIRT
 OPTIONS_GROUP=		INPUT OUTPUT
-OPTIONS_GROUP_OUTPUT=	KAFKA MONGODB NOTIFYDESKTOP NOTIFYEMAIL PROMETHEUS RIEMANN \
-			RRDTOOL TSDB
-OPTIONS_GROUP_INPUT=	CHRONY CURL CURL_JSON CURL_XML DBI IPMI JSON \
-			MEMCACHEC MODBUS MQTT MYSQL NUTUPS OLSRD ONEWIRE OPENLDAP \
-			PERL PGSQL PINBA PING PYTHON RABBITMQ REDIS ROUTEROS \
-			SIGROK SNMP STATSD TOKYOTYRANT VARNISH XML \
-			ZOOKEEPER
+OPTIONS_GROUP_OUTPUT=	KAFKA MONGODB NOTIFYDESKTOP NOTIFYEMAIL PROMETHEUS \
+			RIEMANN RRDTOOL TSDB
+OPTIONS_GROUP_INPUT=	CHRONY CURL CURL_JSON CURL_XML DBI IPMI JSON MEMCACHEC \
+			MODBUS MQTT MYSQL NUTUPS OLSRD ONEWIRE OPENLDAP PERL \
+			PGSQL PINBA PING PYTHON RABBITMQ REDIS SIGROK \
+			SNMP STATSD TOKYOTYRANT VARNISH XML ZOOKEEPER
 
 OPTIONS_DEFAULT=	LOGGING GCRYPT PING
 
@@ -62,7 +61,6 @@ PYTHON_DESC=		Enable python-based plugins
 RABBITMQ_DESC=		Enable rabbitmq-based plugins
 REDIS_DESC=		Enable redis-based plugins
 RIEMANN_DESC=		Enable write_riemann plugin (via riemann-c-client)
-ROUTEROS_DESC=		Enable routeros plugin
 RRDTOOL_DESC=		Enable rrdtool plugin (also rrdcached plugin)
 SIGROK_DESC=		Enable sigrok plugin
 SNMP_DESC=		Enable SNMP plugin
@@ -91,11 +89,18 @@ CONFIGURE_ARGS=	--localstatedir=/var \
 		--disable-ceph \
 		--disable-cgroups \
 		--disable-fhcount \
+		--disable-lvm \
+		--disable-static \
+		--disable-turbostat \
+		--enable-disk \
+		--localstatedir=/var \
 		--without-java \
 		--without-libaquaero5 \
 		--without-libganglia \
 		--without-libiptc \
 		--without-libjvm \
+		--without-liblvm2app \
+		--without-libldap \
 		--without-liblvm2app \
 		--without-libkstat \
 		--without-libldap \
@@ -237,12 +242,6 @@ RIEMANN_LIB_DEPENDS=		libriemann-client.so:net-mgmt/riemann-c-client \
 				libltdl.so:devel/libltdl
 RIEMANN_CONFIGURE_ENABLE=	write_riemann
 
-ROUTEROS_LIB_DEPENDS=		librouteros.so:net/librouteros \
-				libgcrypt.so:security/libgcrypt \
-				libgpg-error.so:security/libgpg-error
-ROUTEROS_CONFIGURE_ENABLE=	routeros
-ROUTEROS_CONFIGURE_WITH=	librouteros=${LOCALBASE}
-
 RRDTOOL_LIB_DEPENDS=		librrd.so:databases/rrdtool
 RRDTOOL_CONFIGURE_ENABLE=	rrdcached rrdtool
 RRDTOOL_CONFIGURE_WITH=		librrd=${LOCALBASE}
@@ -285,63 +284,62 @@ ZOOKEEPER_CONFIGURE_ENABLE=	zookeeper
 ZOOKEEPER_CONFIGURE_WITH=	libzookeeper=${LOCALBASE}
 
 # NOTE: Plugins without external dependencies
-CONFIGURE_ARGS+=--enable-aggregation \
-		--enable-apcups \
-		--enable-contextswitch \
-		--enable-cpu \
-		--enable-cputemp \
-		--enable-csv \
-		--enable-ctl \
-		--enable-df \
-		--enable-dns \
-		--enable-email \
-		--enable-exec \
-		--enable-filecount \
-		--enable-geom-stat \
-		--enable-interface \
-		--enable-load \
-		--enable-logfile \
-		--enable-match_empty_counter \
-		--enable-match_hashed \
-		--enable-match_regex \
-		--enable-match_timediff \
-		--enable-match_value \
-		--enable-mbmon \
-		--enable-memcached \
-		--enable-memory \
-		--enable-network \
-		--enable-nfsstat \
-		--enable-ntpd \
-		--enable-openvpn \
-		--enable-powerdns \
-		--enable-pf \
-		--enable-processes \
-		--enable-statsd \
-		--enable-swap \
-		--enable-syslog \
-		--enable-table \
-		--enable-tail \
-		--enable-tail_csv \
-		--enable-target_notification \
-		--enable-target_replace \
-		--enable-target_scale \
-		--enable-target_set \
-		--enable-target_v5upgrade \
-		--enable-tcpconns \
-		--enable-teamspeak2 \
-		--enable-ted \
-		--enable-threshold \
-		--enable-unixsock \
-		--enable-uptime \
-		--enable-users \
-		--enable-uuid \
-		--enable-write_graphite \
-		--enable-write_log \
-		--enable-zfs_arc \
-		--enable-zfs_arc_v2 \
-
-INSTALL_TARGET=	install-strip
-SHEBANG_FILES=	contrib/collection.cgi
+CONFIGURE_ARGS+=	--enable-aggregation \
+			--enable-apcups \
+			--enable-contextswitch \
+			--enable-cpu \
+			--enable-cputemp \
+			--enable-csv \
+			--enable-ctl \
+			--enable-df \
+			--enable-dns \
+			--enable-email \
+			--enable-exec \
+			--enable-filecount \
+			--enable-geom-stat \
+			--enable-interface \
+			--enable-load \
+			--enable-logfile \
+			--enable-match_empty_counter \
+			--enable-match_hashed \
+			--enable-match_regex \
+			--enable-match_timediff \
+			--enable-match_value \
+			--enable-mbmon \
+			--enable-memcached \
+			--enable-memory \
+			--enable-network \
+			--enable-nfsstat \
+			--enable-ntpd \
+			--enable-openvpn \
+			--enable-powerdns \
+			--enable-pf \
+			--enable-processes \
+			--enable-statsd \
+			--enable-swap \
+			--enable-syslog \
+			--enable-table \
+			--enable-tail \
+			--enable-tail_csv \
+			--enable-target_notification \
+			--enable-target_replace \
+			--enable-target_scale \
+			--enable-target_set \
+			--enable-target_v5upgrade \
+			--enable-tcpconns \
+			--enable-teamspeak2 \
+			--enable-ted \
+			--enable-threshold \
+			--enable-unixsock \
+			--enable-uptime \
+			--enable-users \
+			--enable-uuid \
+			--enable-write_graphite \
+			--enable-write_log \
+			--enable-zfs_arc \
+			--enable-zfs_arc_v2
+INSTALL_TARGET=		install-strip
+SHEBANG_FILES=		contrib/collection.cgi
 
 post-patch:
 	@${REINPLACE_CMD} 's/-Werror//' \

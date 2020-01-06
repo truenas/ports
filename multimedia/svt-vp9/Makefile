@@ -1,7 +1,9 @@
 # $FreeBSD$
 
 PORTNAME=	svt-vp9
-PORTVERSION=	s20190919
+DISTVERSIONPREFIX=	v
+DISTVERSION=	0.1.0
+PORTREVISION=	1
 CATEGORIES=	multimedia
 
 MAINTAINER=	jbeich@FreeBSD.org
@@ -23,15 +25,10 @@ USE_GITHUB=	yes
 USE_LDCONFIG=	yes
 GH_ACCOUNT=	OpenVisualCloud
 GH_PROJECT=	SVT-VP9
-GH_TAGNAME=	68b81bd
 CMAKE_ON=	BUILD_SHARED_LIBS
 CMAKE_OFF=	NATIVE
 
 post-patch:
-# Keep using nasm and drop vendor -O/-g
-	@${REINPLACE_CMD} -e '/find_program.*yasm/d' \
-		-Ee '/set.*(release|debug)_flags_to_test/,/\)/d' \
-		${WRKSRC}/CMakeLists.txt
 # Avoid conflict with standard types
 	@${GREP} -Flr '_T_DEFINED' ${WRKSRC} | ${XARGS} \
 		${REINPLACE_CMD} -i .types 's/_T_DEFINED/_DEFINED/'

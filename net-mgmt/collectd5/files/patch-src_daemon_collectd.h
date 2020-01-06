@@ -8,6 +8,11 @@
 +#define LOCALSTATEDIR "/var"
  #endif
  
+ #ifndef LOCALSTATEDIR
+-#define LOCALSTATEDIR PREFIX "/var"
++#define LOCALSTATEDIR "/var"
+ #endif
+ 
  #ifndef PKGLOCALSTATEDIR
 -#define PKGLOCALSTATEDIR PREFIX "/var/lib/" PACKAGE_NAME
 +#define PKGLOCALSTATEDIR "/var/db/" PACKAGE_NAME

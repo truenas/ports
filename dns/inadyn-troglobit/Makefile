@@ -2,8 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=		inadyn-troglobit
-DISTVERSION=	2.5
-PORTREVISION=	2
+DISTVERSION=	2.2
 CATEGORIES=		dns
 
 MAINTAINER=	themylogin@gmail.com
@@ -21,15 +20,13 @@ PLIST_FILES=man/man8/inadyn.8.gz \
 			share/doc/inadyn/README.md \
 			sbin/inadyn
 
-USES=		autoreconf libtool pkgconfig ssl
+USES=		autoreconf libtool pkgconfig
 USE_GITHUB=		yes
 USE_RC_SUBR=	inadyn
 GNU_CONFIGURE=	yes
-CONFIGURE_ARGS=	--enable-openssl
-CONFIGURE_ENV=	OpenSSL_CFLAGS="-I${OPENSSLINC}" OpenSSL_LIBS="-L${OPENSSLLIB} -lssl"
 
 GH_ACCOUNT=		troglobit
 GH_PROJECT=		inadyn
-GH_TAGNAME=		9d3d7852991d04438079f61e8f6092cd7b86668a
+GH_TAGNAME=		0e0001592fb77c6b68413da26a483d56edf12586
 
 .include <bsd.port.mk>

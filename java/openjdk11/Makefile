@@ -55,7 +55,7 @@ NOPRECIOUSMAKEVARS=	yes
 JDK_MAJOR_VERSION=	11
 JDK_MINOR_VERSION=	0
 JDK_PATCH_VERSION=	5
-JDK_BUILD_NUMBER=	8
+JDK_BUILD_NUMBER=	10
 BSD_JDK_VERSION=	1
 
 GNU_CONFIGURE=	yes
@@ -131,6 +131,9 @@ MAKE_ENV+=	USE_CLANG=true
 .if ${ARCH} == aarch64 || ${ARCH} == powerpc64
 CONFIGURE_ARGS+=	--disable-warnings-as-errors \
 			--disable-dtrace
+.endif
+.if ${ARCH} != amd64
+CONFIGURE_ARGS+=	--enable-aot=no
 .endif
 
 .if empty(ICONV_LIB)

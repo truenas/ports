@@ -5,8 +5,7 @@
 
 PORTNAME=	RStudio
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.2.1335
-PORTREVISION=	4
+DISTVERSION=	1.2.5001
 CATEGORIES=	devel math java
 MASTER_SITES=	https://s3.amazonaws.com/rstudio-dictionaries/:dictionaries \
 		https://s3.amazonaws.com/rstudio-buildtools/:buildtools
@@ -15,13 +14,14 @@ DISTFILES=	core-dictionaries.zip:dictionaries \
 		gwt-${GWT_VERSION}.zip:buildtools \
 		mathjax-26.zip:buildtools
 
+PATCH_SITES=	https://github.com/${GH_ACCOUNT}/${GH_PROJECT}/commit/
+PATCHFILES+=	33c2c42d40ad.patch:-p1
+
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Integrated development environment (IDE) for R
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
-
-BROKEN=		fails to build with boost 1.70, see bug 236603
 
 BUILD_DEPENDS=	ant:devel/apache-ant \
 		${LOCALBASE}/include/sys/sysinfo.h:devel/libsysinfo \
@@ -46,8 +46,9 @@ GH_TUPLE=	rstudio:r2d3:v0.2.0:r2d3/dependencies/common/r2d3 \
 CMAKE_ARGS=	-DRSTUDIO_TARGET=Desktop \
 		-DFREEBSD_RSTUDIO_VERSION:STRING=${PORTVERSION} \
 		-DFREEBSD_LIBDIR:STRING=${PREFIX}/lib
-CMAKE_ARGS+=	-DRSTUDIO_BOOST_SIGNALS_VERSION=2 # until Boost 1.69 or RStudio 1.3
-CMAKE_ARGS+=    -DQT_QMAKE_EXECUTABLE:STRING=${QMAKE}
+CMAKE_ARGS+=	-DQT_QMAKE_EXECUTABLE:STRING=${QMAKE}
+CMAKE_ARGS+=	-DRSTUDIO_BOOST_SIGNALS_VERSION=2
+CMAKE_ARGS+=	-DFREEBSD_PORT_VERSION:STRING=${DISTVERSION}
 MAKE_ENV=	HOME=${WRKDIR} \
 		ANT_OPTS="-Duser.home=${WRKDIR}"
 

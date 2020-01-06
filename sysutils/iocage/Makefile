@@ -24,8 +24,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}click>=6.7:devel/py-click@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}requests>=2.11.1:www/py-requests@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}libzfs>=1.0:devel/py-libzfs@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}GitPython>=2.1.10:devel/py-gitpython@${PY_FLAVOR} \
-	${PYTHON_PKGNAMEPREFIX}netifaces>=0.10.6:net/py-netifaces@${PY_FLAVOR} \
-	merge:devel/rcs57
+	${PYTHON_PKGNAMEPREFIX}netifaces>=0.10.6:net/py-netifaces@${PY_FLAVOR}
 
 CONFLICTS=  py-iocage-[0-9]* iocage-[0-9]* iocage-devel-[0-9]*
 
@@ -35,9 +34,8 @@ WRKSRC=/usr/iocage_src
 USES=		python:3.6+
 USE_PYTHON=	autoplist distutils
 
-NO_ARCH=	yes
-
-CONFLICTS=	py27-iocage-[0-9]*
+checksum fetch:
+	${ECHO_CMD} ${.TARGET} not needed because building direct
 
 checksum fetch:
 	${ECHO_CMD} ${.TARGET} not needed because building direct
