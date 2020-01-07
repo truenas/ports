@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 0000000..f6f400f
+index 0000000..6ae45e5
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,966 @@
+@@ -0,0 +1,992 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -85,7 +85,6 @@ index 0000000..f6f400f
 +
 +struct snap_cb
 +{
-+	TALLOC_CTX *mem_ctx;
 +	struct snapshot_list *snapshots;
 +	struct iter_info *iter_info;
 +};
@@ -227,8 +226,8 @@ index 0000000..f6f400f
 +	size_t blocksize = 1024;
 +	struct smblibzfs_int *slibzp_int = NULL;
 +	zfs_handle_t *zfsp = NULL;
-+	char u_req[256] = { 0 };
-+	char q_req[256] = { 0 };
++	char u_req[ZFS_MAXPROPLEN] = { 0 };
++	char q_req[ZFS_MAXPROPLEN] = { 0 };
 +	uint64_t quota, used; 
 +	quota = used = 0;
 +	slibzp_int = talloc_get_type_abort(smblibzfsp->private,
@@ -453,7 +452,7 @@ index 0000000..f6f400f
 +		DBG_ERR("Failed to create dataset to path (%s)\n", nd);
 +		zfs_close(zfsp);
 +		return (-1);
-+	} 
++	}
 +	zfs_close(zfsp);
 +
 +	new_zfsp = zfs_open(slibzp_int->libzfsp, nd, ZFS_TYPE_DATASET);
@@ -524,7 +523,7 @@ index 0000000..f6f400f
 +	*value = talloc_strdup(mem_ctx, propstr);
 +	zfs_close(zfsp);
 +	return 0;
-+} 
++}
 +
 +int
 +smb_zfs_set_user_prop(struct smblibzfshandle *smblibzfsp,
@@ -563,11 +562,12 @@ index 0000000..f6f400f
 +}
 +
 +int
-+smb_zfs_get_path_props(struct smblibzfshandle *smblibzfsp,
++smb_zfs_path_get_props(struct smblibzfshandle *smblibzfsp,
 +		       const char *path,
 +		       struct zfs_dataset_prop **pprop)
 +{
 +	int casesens = 0;
++	int ret;
 +	char buf[ZFS_MAXPROPLEN];
 +	char source[ZFS_MAX_DATASET_NAME_LEN];
 +	zprop_source_t sourcetype;
@@ -577,7 +577,8 @@ index 0000000..f6f400f
 +
 +	zfsp = get_zhandle(smblibzfsp, path);
 +	if (zfsp == NULL) {
-+		DBG_ERR("Failed to obtain zhandle on path: (%s)\n", path);
++		DBG_ERR("Failed to obtain zhandle on [%s]: %s\n",
++			path, strerror(errno));
 +		return -1;
 +	}
 +	if (zfs_prop_get(zfsp, ZFS_PROP_CASE,
@@ -591,9 +592,9 @@ index 0000000..f6f400f
 +	props->casesens = get_enum(buf, casesensitivity);
 +	props->readonly = zfs_prop_get_int(zfsp, ZFS_PROP_READONLY);
 +#if 0 /* properties we may wish to return in the future */
-+	*props->exec = zfs_prop_get_int(zfsp, ZFS_PROP_EXEC);
-+	*props->atime = zfs_prop_get_int(zfsp, ZFS_PROP_ATIME);
-+	*props->atime = zfs_prop_get_int(zfsp, ZFS_PROP_SETUID);
++	props->exec = zfs_prop_get_int(zfsp, ZFS_PROP_EXEC);
++	props->atime = zfs_prop_get_int(zfsp, ZFS_PROP_ATIME);
++	props->setuid = zfs_prop_get_int(zfsp, ZFS_PROP_SETUID);
 +#endif
 +	zfs_close(zfsp);
 +	return 0;
@@ -704,7 +705,7 @@ index 0000000..f6f400f
 +		return 0;
 +	}
 +
-+	entry = talloc_zero(state->mem_ctx, struct snapshot_entry);
++	entry = talloc_zero(state->snapshots, struct snapshot_entry);
 +
 +	name_len = strlen(snap_name);
 +	gmtime_r(&cr_time, &timestamp);
@@ -712,7 +713,7 @@ index 0000000..f6f400f
 +		 &timestamp);
 +
 +	entry->cr_time = cr_time;
-+	entry->name = talloc_strndup(state->mem_ctx, snap_name, name_len +1);
++	entry->name = talloc_strndup(entry, snap_name, name_len +1);
 +	DLIST_ADD(state->snapshots->entries, entry);
 +	state->snapshots->num_entries++;
 +	zfs_close(snap);
@@ -729,22 +730,45 @@ index 0000000..f6f400f
 +				      time_t start,
 +				      time_t end)
 +{
++	TALLOC_CTX *tmp_ctx = NULL;
 +	struct snap_cb *state = NULL;
++	struct snapshot_list *snapshots = NULL;
 +	struct iter_info iter_info;
 +	size_t initial_size;
 +	zfs_handle_t *zfs = NULL;
 +	int rc;
 +
-+	/* initialize our result */
-+	state = talloc_zero(mem_ctx, struct snap_cb);
-+	state->snapshots = talloc_zero(mem_ctx, struct snapshot_list);
-+	state->iter_info = talloc_zero(mem_ctx, struct iter_info);
-+		
-+
++	tmp_ctx = talloc_new(mem_ctx);
++	if (tmp_ctx == NULL) {
++		DBG_ERR("talloc() failed\n");
++		return NULL;
++	}
++	
++	state = talloc_zero(tmp_ctx, struct snap_cb);
 +	if (state == NULL) {
 +		DBG_ERR("smb_zfs_list_snapshots: out of memory");
 +		goto done;
 +	}
++
++	snapshots = talloc_zero(mem_ctx, struct snapshot_list);
++	if (snapshots == NULL) {
++		DBG_ERR("talloc() failed\n"); 
++		goto done;
++	}
++
++	snapshots->mountpoint = talloc_zero_size(snapshots, MAXPATHLEN);
++	if (snapshots->mountpoint == NULL) { 
++		DBG_ERR("talloc() failed\n");
++		goto error;
++	}
++
++	state->iter_info = talloc_zero(tmp_ctx, struct iter_info);
++	if (state->iter_info == NULL) {
++		DBG_ERR("talloc() failed\n");
++		goto error;
++	}
++
++	state->snapshots = snapshots;
 +
 +	zfs = get_zhandle(smblibzfsp, path);
 +	if (zfs == NULL) {
@@ -754,10 +778,10 @@ index 0000000..f6f400f
 +	}
 +
 +	/* get mountpoint */
-+	state->snapshots->dataset_name = zfs_get_name(zfs);
++	snapshots->dataset_name = zfs_get_name(zfs);
 +
-+	rc = zfs_prop_get(zfs, ZFS_PROP_MOUNTPOINT, state->snapshots->mountpoint,
-+			  talloc_get_size(state->snapshots->mountpoint), NULL, NULL,
++	rc = zfs_prop_get(zfs, ZFS_PROP_MOUNTPOINT, snapshots->mountpoint,
++			  talloc_get_size(snapshots->mountpoint), NULL, NULL,
 +			  0, 0);
 +
 +	if (rc != 0) {
@@ -766,7 +790,6 @@ index 0000000..f6f400f
 +		goto error;
 +	}
 +
-+	/* get snapshots */
 +	state->iter_info->inclusions = inclusions;
 +	state->iter_info->exclusions = exclusions;
 +	state->iter_info->ignore_empty_snaps = ignore_empty_snaps;
@@ -784,7 +807,6 @@ index 0000000..f6f400f
 +			"shadow:exclude parameter\n");
 +		goto error;
 +	}
-+
 +	rc = zfs_iter_snapshots(zfs, false, smb_zfs_add_snapshot, state, 0, 0);
 +
 +	if (rc != 0) {
@@ -793,18 +815,20 @@ index 0000000..f6f400f
 +		goto error;
 +	}
 +
-+	time(&state->snapshots->timestamp);
-+
++	time(&snapshots->timestamp);
++	state->snapshots = NULL;
 +	goto done;
 +
 +error:
-+	TALLOC_FREE(state);
-+
++	TALLOC_FREE(tmp_ctx);
++	TALLOC_FREE(snapshots);
++	return NULL;
 +done:
++	TALLOC_FREE(tmp_ctx);
 +	if (zfs)
 +		zfs_close(zfs);
 +
-+	return state->snapshots;
++	return snapshots;
 +}
 +
 +/*
@@ -839,7 +863,7 @@ index 0000000..f6f400f
 +					   "%s@%s",
 +					   snaps->dataset_name,
 +					   entry->name);
-+		DBG_ERR("snapname: %s\n", snapname);
++		DBG_INFO("deleting snapshot: %s\n", snapname);
 +		fnvlist_add_boolean(to_delete, snapname);
 +		TALLOC_FREE(snapname);
 +	}
@@ -893,8 +917,10 @@ index 0000000..f6f400f
 +	ret = zfs_snapshot(slibzp_int->libzfsp,
 +			   snap, recursive, NULL);
 +	if (ret != 0) {
-+		DBG_ERR("Failed to create snapshot %s\n", snap);
++		DBG_ERR("Failed to create snapshot %s: [%s]\n",
++			snap, strerror(errno));
 +	}
++	DBG_INFO("Successfully created snapshot: %s\n", snap);
 +	return ret;
 +}
 +
@@ -904,7 +930,8 @@ index 0000000..f6f400f
 +int
 +smb_zfs_rollback(struct smblibzfshandle *smblibzfsp,
 +		 const char *path,
-+		 const char *snapshot_name)
++		 const char *snapshot_name,
++		 bool force)
 +{
 +	int ret;
 +	struct smblibzfs_int *slibzp_int = NULL;
@@ -933,7 +960,7 @@ index 0000000..f6f400f
 +		zfs_close(dataset_handle);
 +		return -1;
 +	}
-+	ret = zfs_rollback(dataset_handle, snap_handle, false);
++	ret = zfs_rollback(dataset_handle, snap_handle, force);
 +	if (ret != 0) {
 +		DBG_ERR("Failed to roll back %s to snapshot %s\n",
 +			path, snapshot_name);
@@ -946,7 +973,6 @@ index 0000000..f6f400f
 +/*
 + * Roll back to last snapshot
 + */
-+
 +int
 +smb_zfs_rollback_last(struct smblibzfshandle *smblibzfsp,
 +		      const char *path)
@@ -972,10 +998,10 @@ index 0000000..f6f400f
 +}
 diff --git a/source3/modules/smb_libzfs.h b/source3/modules/smb_libzfs.h
 new file mode 100644
-index 0000000..aa748a2
+index 0000000..03c72d7
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.h
-@@ -0,0 +1,301 @@
+@@ -0,0 +1,310 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -1193,13 +1219,14 @@ index 0000000..aa748a2
 + *
 + * @return	0 on success -1 on failure
 + */
-+int smb_zfs_get_path_props(struct smblibzfshandle *smblibzfsp,
++int smb_zfs_path_get_props(struct smblibzfshandle *smblibzfsp,
 +			   const char *path,
 +			   struct zfs_dataset_prop **pprop);
 +
 +/*
 + * This function returns a list of ZFS snapshots matching the specified
-+ * filters.
++ * filters, allocated under a user-provided talloc memory context. Returns 
++ * NULL on error.
 + *
 + * @param[in]	smblibzfsp		smblibzfs handle struct
 + * @param[in]	mem_ctx			talloc memory context
@@ -1253,17 +1280,25 @@ index 0000000..aa748a2
 +		     bool recursive);
 +
 +/*
-+ * Roll back to named snapshot. This is a destructive process. All
-+ * data from after the named snapshot will be destroyed..
++ * Roll back to named snapshot. This is a destructive process.
++ * Given a path, convert path to dataset handle and rollback to a specific
++ * snapshot, discarding any data changes since then and making it the
++ * active dataset.
++ *
++ * Any snapshots and bookmarks more recent than the target are
++ * destroyed, along with their dependents (i.e. clones).
++ *
 + * @param[in]	smblibzfsp		smblibzfs handle struct
 + * @param[in]	path			path on which to take snapshot
 + * @param[in]	snapshot_name		name to give snapshot 
++ * @param[in]	force			forcibly unmount cloned filesystems
 + *
 + * @return	0 on success -1 on failure
 + */
 +int smb_zfs_rollback(struct smblibzfshandle *smblibzfsp,
 +		     const char *path,
-+		     const char *snapshot_name);
++		     const char *snapshot_name,
++		     bool force);
 +
 +/*
 + * Roll back to the last successful snapshot. This is a destructive process. All
@@ -1316,7 +1351,7 @@ index 5095f65..1b55e64 100644
  static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 0000000..1f4e242
+index 0000000..f6ea466
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
 @@ -0,0 +1,2286 @@
@@ -3408,7 +3443,7 @@ index 0000000..1f4e242
 +	config->libzp = libzp;
 +
 +	/* Parameters for homedirs and quotas */
-+	ret = smb_zfs_get_path_props(config->libzp,
++	ret = smb_zfs_path_get_props(config->libzp,
 +				     handle->conn->connectpath,
 +				     &config->props);
 +	if (ret == -1) {
@@ -3529,7 +3564,7 @@ index 0000000..1f4e242
 +	}
 +
 +	config->zfs_acl_chmod_enabled = lp_parm_bool(SNUM(handle->conn),
-+			"ixnas", "zfs_acl_chmod_enabled", true);
++			"ixnas", "zfs_acl_chmod_enabled", false);
 +
 +	/* ZFS SPACE PARAMETERS */
 +#if HAVE_LIBZFS
@@ -3608,10 +3643,10 @@ index 0000000..1f4e242
 +}
 diff --git a/source3/modules/vfs_noacl.c b/source3/modules/vfs_noacl.c
 new file mode 100644
-index 0000000..391625a
+index 0000000..7a5984c
 --- /dev/null
 +++ b/source3/modules/vfs_noacl.c
-@@ -0,0 +1,499 @@
+@@ -0,0 +1,522 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  This program is free software; you can redistribute it and/or modify
@@ -3829,19 +3864,36 @@ index 0000000..391625a
 +
 +static NTSTATUS noacl_get_nt_acl_common(TALLOC_CTX *ctx,
 +					struct vfs_handle_struct *handle,
-+					const char *name,
-+					const SMB_STRUCT_STAT *psbuf,
++					const struct smb_filename *smb_fname,
 +					struct security_descriptor **ppdesc)
 +{
++	int ret;
 +	struct dom_sid owner_sid, group_sid;
 +	size_t size = 0;
 +	struct security_ace aces[4];
 +	uint32_t access_mask = 0;
-+	mode_t mode = psbuf->st_ex_mode;
++	mode_t mode = 0; 
++	SMB_STRUCT_STAT sbuf;
++	const SMB_STRUCT_STAT *psbuf = NULL;
 +	struct security_acl *new_dacl = NULL;
 +	int idx = 0;
 +
-+	DBG_DEBUG("file %s mode = 0%o\n",name, (int)mode);
++	if (VALID_STAT(smb_fname->st)) {
++		psbuf = &smb_fname->st;
++	}
++
++	if (psbuf == NULL) {
++		ret = vfs_stat_smb_basename(handle->conn, smb_fname, &sbuf);
++		if (ret != 0) {
++			DBG_INFO("stat [%s]failed: %s\n",
++				smb_fname_str_dbg(smb_fname), strerror(errno));
++			return map_nt_error_from_unix(errno);
++		}
++		psbuf = &sbuf;
++        }
++	mode = psbuf->st_ex_mode;
++
++	DBG_DEBUG("file %s mode = 0%o\n",smb_fname->base_name, (int)mode);
 +
 +	uid_to_sid(&owner_sid, psbuf->st_ex_uid);
 +	gid_to_sid(&group_sid, psbuf->st_ex_gid);
@@ -3896,6 +3948,9 @@ index 0000000..391625a
 +	if (mode & S_IWOTH) {
 +		access_mask |= SEC_RIGHTS_FILE_WRITE | SEC_STD_DELETE;
 +	}
++	if (lp_dos_filemode(SNUM(handle->conn))) {
++		access_mask |= SEC_FILE_WRITE_ATTRIBUTE;
++	}
 +	if (access_mask) {
 +		init_sec_ace(&aces[idx],
 +			&global_sid_World,
@@ -3904,16 +3959,6 @@ index 0000000..391625a
 +			0);
 +		idx++;
 +	}
-+	if (lp_dos_filemode(SNUM(handle->conn))) {
-+		access_mask |= SEC_FILE_WRITE_ATTRIBUTE;
-+	}
-+
-+	init_sec_ace(&aces[idx],
-+			&global_sid_System,
-+			SEC_ACE_TYPE_ACCESS_ALLOWED,
-+			SEC_RIGHTS_FILE_ALL,
-+			0);
-+	idx++;
 +
 +	new_dacl = make_sec_acl(ctx,
 +			NT4_ACL_REVISION,
@@ -3946,8 +3991,7 @@ index 0000000..391625a
 +{
 +	return noacl_get_nt_acl_common(mem_ctx,
 +				       handle,
-+				       smb_fname->base_name,
-+				       &smb_fname->st,
++				       smb_fname,
 +				       ppdesc);
 +}
 +
@@ -3959,8 +4003,7 @@ index 0000000..391625a
 +{
 +	return noacl_get_nt_acl_common(mem_ctx,
 +				       handle,
-+				       fsp->fsp_name->base_name,
-+				       &fsp->fsp_name->st,
++				       fsp->fsp_name,
 +				       ppdesc);
 +}
 +
@@ -4083,6 +4126,21 @@ index 0000000..391625a
 +				"no");
 +	}
 +	lp_do_parameter(SNUM(handle->conn), "nt acl support", "no");
++	lp_do_parameter(SNUM(handle->conn), "store dos attributes", "no");
++	if (lp_parm_bool(SNUM(handle->conn), "noacl", "chroot", false)) {
++		ret = chdir(handle->conn->connectpath);
++		if (ret != 0) {
++			DBG_ERR("chdir() to connectpath failed\n");
++			return -1;
++		}
++		ret = chroot(handle->conn->connectpath);
++		if (ret != 0) {
++			DBG_ERR("chroot to connectpath failed\n");
++			return -1;
++		}
++		handle->conn->connectpath = talloc_strdup(handle->conn, "/");
++	}
++
 +	return SMB_VFS_NEXT_CONNECT(handle, service, user);
 +}
 +
