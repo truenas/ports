@@ -1,4 +1,4 @@
---- src/zfs_arc.c
+--- src/zfs_arc.c.orig	2019-06-13 09:13:42 UTC
 +++ src/zfs_arc.c
 @@ -197,6 +197,9 @@ static void za_submit_ratio(const char *type_instance, gauge_t hits,
    za_submit_gauge("cache_ratio", type_instance, ratio);
