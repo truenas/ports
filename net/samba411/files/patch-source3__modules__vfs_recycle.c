@@ -94,7 +94,7 @@
 +	int ret = -1;
 +	char *repository = NULL;
 +	char *recycle_path = NULL;
-+	repository = talloc_sub_advanced(NULL, lp_servicename(talloc_tos(), SNUM(handle->conn)),
++	repository = talloc_sub_full(NULL, lp_servicename(talloc_tos(), SNUM(handle->conn)),
 +					handle->conn->session_info->unix_info->unix_name,
 +					handle->conn->connectpath,
 +					handle->conn->session_info->unix_token->gid,
