@@ -1,0 +1,127 @@
+diff --git a/source3/rpc_server/srvsvc/srv_srvsvc_nt.c b/source3/rpc_server/srvsvc/srv_srvsvc_nt.c
+index 3af4cef..0ee8ad5 100644
+--- a/source3/rpc_server/srvsvc/srv_srvsvc_nt.c
++++ b/source3/rpc_server/srvsvc/srv_srvsvc_nt.c
+@@ -1968,6 +1969,8 @@ WERROR _srvsvc_NetShareAdd(struct pipes_struct *p,
+ 	int snum;
+ 	int ret;
+ 	char *path;
++	char *parent = NULL;
++	const char *base;
+ 	struct security_descriptor *psd = NULL;
+ 	bool is_disk_op;
+ 	int max_connections = 0;
+@@ -2072,6 +2075,14 @@ WERROR _srvsvc_NetShareAdd(struct pipes_struct *p,
+ 	}
+ 
+ 	ret = sys_lstat(path, &st, false);
++	if (ret == -1 && (errno != EACCES) && lp_allow_dataset_creation()) {
++		ret = parent_dirname(ctx, path, &parent, &base); 
++		if (!ret) {
++			return WERR_NOT_ENOUGH_MEMORY;
++		}
++		ret = sys_lstat(parent, &st, false);
++
++	}
+ 	if (ret == -1 && (errno != EACCES)) {
+ 		/*
+ 		 * If path has any other than permission
+diff --git a/source3/script/smb.addshare.py b/source3/script/smb.addshare.py
+new file mode 100755
+index 0000000..c7c29a9
+--- /dev/null
++++ b/source3/script/smb.addshare.py
+@@ -0,0 +1,46 @@
++#!/usr/local/bin/python3 
++import os
++import argparse
++from middlewared.client import Client
++
++def make_it_so(args):
++    parent_dir = None
++    args.pathName
++    if not os.path.exists(args.pathName):
++        """
++        This is experimental and doesn't get called yet.
++        Samba bails out early if the path doesn't exist.
++        I can probably modify samba to allow this in this case.
++        """
++        parent_dir = os.path.dirname(args.pathName)
++        bn = os.path.basename(args.pathName)
++        if not os.path.exists(parent_dir):
++            return 1
++        pds = Client().call('pool.dataset.query', [('mountpoint', '=', parent_dir)])['id']
++        Client.call('pool.dataset.create', {
++            'name': f'{pds}/{bn}', 
++            'share_type': 'SMB',
++            'atime': 'OFF', 
++        })
++
++    Client().call('sharing.smb.create', {
++        'path': args.pathName,
++        'name': args.shareName,
++        'comment': args.comment,
++    })
++
++    return 0
++
++def main():
++    parser = argparse.ArgumentParser(description='Add SMB Share')
++    parser.add_argument('configFile', type=str, help='Config File Path.')
++    parser.add_argument('shareName', type=str, help='the name of the share.')
++    parser.add_argument('pathName', type=str, help='path to an existing directory.')
++    parser.add_argument('comment', type=str, help='comment string to associate with the new share.')
++    parser.add_argument('maxConnections', type=str, help='Number of maximum connections to this share.')
++    args = parser.parse_args()
++    ret = make_it_so(args)
++    
++
++if __name__ == '__main__':
++    main()
+diff --git a/source3/script/smb.delshare.py b/source3/script/smb.delshare.py
+new file mode 100755
+index 0000000..d0e6388
+--- /dev/null
++++ b/source3/script/smb.delshare.py
+@@ -0,0 +1,18 @@
++#!/usr/local/bin/python3 
++
++import argparse
++from middlewared.client import Client
++
++def del_share(args):
++    id = Client().call('sharing.smb.query', [('name', '=', args.shareName)], {'get': True})['id']
++    Client().call('sharing.smb.delete', id)
++
++def main():
++    parser = argparse.ArgumentParser(description='Delete SMB Share')
++    parser.add_argument('configFile', type=str, help='Config File Path.')
++    parser.add_argument('shareName', type=str, help='the name of the share.')
++    args = parser.parse_args()
++    del_share(args)
++
++if __name__ == '__main__':
++    main()
+diff --git a/source3/script/wscript_build b/source3/script/wscript_build
+index 40ecdd7..c7c19f09 100644
+--- a/source3/script/wscript_build
++++ b/source3/script/wscript_build
+@@ -6,6 +6,18 @@ bld.INSTALL_FILES('${BINDIR}',
+ 	          'smbtar',
+                   chmod=MODE_755, flat=True)
+ 
++bld.INSTALL_FILES('${BINDIR}',
++	          'wsdd.py',
++                  chmod=MODE_755, flat=True)
++
++bld.INSTALL_FILES('${BINDIR}',
++	          'smb.addshare.py',
++                  chmod=MODE_755, flat=True)
++
++bld.INSTALL_FILES('${BINDIR}',
++	          'smb.delshare.py',
++                  chmod=MODE_755, flat=True)
++
+ # Callout scripts for use in selftest environment
+ bld.SAMBA_SCRIPT('smbaddshare', pattern='smbaddshare', installdir='.')
+ bld.SAMBA_SCRIPT('smbchangeshare', pattern='smbchangeshare', installdir='.')
