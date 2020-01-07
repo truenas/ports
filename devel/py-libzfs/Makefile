@@ -22,6 +22,12 @@ USE_PYTHON=	autoplist distutils cython
 CONFIGURE_ENV=	freebsd_src=${SRC_BASE}
 MAKE_ENV=	freebsd_src=${SRC_BASE}
 
+# Py-libzfs needs libzfs to be built
+.if !exists(/sbin/zpool)
+BUILD_DEPENDS+=        openzfs>=0:sysutils/openzfs
+RUN_DEPENDS+=  openzfs>=0:sysutils/openzfs
+.endif
+
 .include <bsd.port.options.mk>
 
 .if !exists(${SRC_BASE}/sys/Makefile)
