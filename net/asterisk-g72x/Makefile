@@ -12,7 +12,7 @@ COMMENT=	G.729 codec for Asterisk PBX
 
 LIB_DEPENDS=	libbcg729.so:audio/bcg729
 
-FLAVORS=			asterisk13 asterisk16
+FLAVORS=			asterisk16 asterisk13
 FLAVOR?=			${FLAVORS:[1]}
 
 asterisk13_PKGNAMEPREFIX=	asterisk13-
@@ -33,7 +33,7 @@ CONFIGURE_ARGS+=		--with-asterisk160
 
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS+=	--with-bcg729
-USES=		autoreconf compiler libtool localbase tar:bzip2
+USES=		autoreconf compiler:c11 libtool localbase tar:bzip2
 
 PLIST_FILES=	lib/asterisk/modules/codec_g729.so
 

@@ -12,6 +12,9 @@ PKGNAMESUFFIX=	28
 MAINTAINER=	matthias@petermann-it.de
 COMMENT=	Tryton Application Platform (Gtk+ Client)
 
+DEPRECATED=	Outdated, uses EOLed python27
+EXPIRATION_DATE=	2020-02-03
+
 LICENSE=	GPLv3
 
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}dateutil>=1.5:devel/py-dateutil@${PY_FLAVOR} \
@@ -19,7 +22,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}dateutil>=1.5:devel/py-dateutil@${PY_FLAVOR}
 
 CONFLICTS=	tryton-2.[46].*
 
-USES=		desktop-file-utils gettext python:2.7
+USES=		desktop-file-utils gettext gnome python:2.7
 USE_PYTHON=	distutils autoplist
 USE_GNOME=	gtk20 pygtk2
 

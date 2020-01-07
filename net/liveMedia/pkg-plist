@@ -1,4 +1,5 @@
 bin/MPEG2TransportStreamIndexer
+bin/live555HLSProxy
 bin/live555MediaServer
 bin/live555ProxyServer
 bin/openRTSP
@@ -8,6 +9,7 @@ bin/sapWatch
 bin/testAMRAudioStreamer
 bin/testDVVideoStreamer
 bin/testH264VideoStreamer
+bin/testH264VideoToHLSSegments
 bin/testH264VideoToTransportStream
 bin/testH265VideoStreamer
 bin/testH265VideoToTransportStream
@@ -108,6 +110,7 @@ include/liveMedia/H265VideoRTPSink.hh
 include/liveMedia/H265VideoRTPSource.hh
 include/liveMedia/H265VideoStreamDiscreteFramer.hh
 include/liveMedia/H265VideoStreamFramer.hh
+include/liveMedia/HLSSegmenter.hh
 include/liveMedia/InputFile.hh
 include/liveMedia/JPEG2000VideoRTPSink.hh
 include/liveMedia/JPEG2000VideoRTPSource.hh
@@ -193,6 +196,7 @@ include/liveMedia/SimpleRTPSource.hh
 include/liveMedia/StreamReplicator.hh
 include/liveMedia/T140TextRTPSink.hh
 include/liveMedia/TCPStreamSink.hh
+include/liveMedia/TLSState.hh
 include/liveMedia/TextRTPSink.hh
 include/liveMedia/TheoraVideoRTPSink.hh
 include/liveMedia/TheoraVideoRTPSource.hh

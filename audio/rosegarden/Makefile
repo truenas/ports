@@ -2,8 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	rosegarden
-PORTVERSION=	18.12
-PORTREVISION=	2
+PORTVERSION=	19.12
 CATEGORIES=	audio
 MASTER_SITES=	SF
 
@@ -41,7 +40,5 @@ LIRC_LIB_DEPENDS=	liblirc_client.so:comms/lirc
 LIRC_CMAKE_ON=		-DENABLE_LIRC:BOOL=ON
 
 CMAKE_ON=		USE_QT5
-
-.include <bsd.port.options.mk>
 
 .include <bsd.port.mk>

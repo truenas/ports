@@ -45,6 +45,7 @@ Browser*.tar.gz		net/ldapbrowser		No reply from author regarding redistribution 
 bzip-*			archivers/bzip		Some algorithms used may infringe certain US patents.  Opinions differ.  Commercial use could render you liable to unfriendly legal action
 citrix_ica-*		net/citrix_ica		License prohibits redistribution
 arcconf-v*		sysutils/arcconf	May not be redistributed in binary form
+cloudflare-cloudflared*	net/cloudflared		Not sure if we are allowed to redistribute it.
 clustalw-*		biology/clustalw	No commercial use
 consed_linux.tar.gz	biology/consed		Redistribution is not permitted in any form. You must request access permission via e-mail to get the tarball. Free for academic use.
 cos-*			java/cos		Special conditions apply for commercial use
@@ -159,7 +160,6 @@ OptimFROG*		audio/optimfrog		No commercial use
 oracle/*		databases/jdbc-oracle11g	This software is under license and export controls
 oracle/sqldeveloper*	databases/sqldeveloper	This software is under license and export controls
 oracle/instantclient-basic-linux*	databases/linux-oracle-instantclient-basic	Packaging prohibited by Oracle license
-oracle/instantclient-sqlplus-linux*	databases/linux-oracle-instantclient-sqlplus	Packaging prohibited by Oracle license
 pcsv*fb.tar.gz		lang/petite-chez	User must accept license terms before installation
 PDFlib-Lite-*.tar.gz	print/pdflib		Many odd restrictions on usage and distribution
 ppsmall-*		archivers/ppunpack	No commercial redistribution
@@ -239,3 +239,4 @@ vmd-*			science/vmd		No commercial use: commercial use requires a commercial lic
 msms-*			science/msms		No commercial use, only for use by individuals in scientific research
 unifi-devel-*		net-mgmt/unifi-devel	License restrictions, see https://www.ubnt.com/eula/
 netio*			benchmarks/netio	No commercial use: commercial use requires a commercial license
+zerotier-*	net/zerotier	No SaaS or Govt usage: https://github.com/zerotier/ZeroTierOne/blob/master/LICENSE.txt

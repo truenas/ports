@@ -14,9 +14,12 @@ COMMENT=	Libsexy bindings for Python
 
 LICENSE=	LGPL21
 
+DEPRECATED=	Unmaintained, uses EOLed python27
+EXPIRATION_DATE=	2020-02-04
+
 LIB_DEPENDS=	libsexy.so:x11-toolkits/libsexy
 
-USES=		libtool pkgconfig python:2.7
+USES=		gnome libtool pkgconfig python:2.7
 USE_GNOME=	pygtk2
 USE_PYTHON=	flavors
 GNU_CONFIGURE=	yes

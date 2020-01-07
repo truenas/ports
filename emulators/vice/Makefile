@@ -62,8 +62,10 @@ SDLSOUND_DESC=	build with SDL2 sound system support
 
 GTK3UI_CONFIGURE_ENABLE=	native-gtk3ui
 GTK3UI_BUILD_DEPENDS=		${LOCALBASE}/bin/bash:shells/bash
+SDLUI2_USES=			sdl
 SDLUI2_USE=			SDL=sdl2
 SDLUI2_CONFIGURE_ENABLE=	sdlui2
+SDLSOUND_USES=			sdl
 SDLSOUND_USE=			SDL=sdl2
 SDLSOUND_CONFIGURE_ON=		--with-sdlsound
 ALSA_CONFIGURE_OFF=		--without-alsa
@@ -83,6 +85,7 @@ __pmlinks1!=	${ECHO_CMD} '${LMLINKS:S/    / /}' | ${AWK} \
 .endif
 
 .if ${PORT_OPTIONS:MGTK3UI}
+USES+=		gnome gl
 USE_GNOME+=	gtk30 vte3 cairo gdkpixbuf2 pango
 USE_GL+=	glu gl
 .endif

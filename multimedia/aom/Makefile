@@ -2,8 +2,9 @@
 
 PORTNAME=	aom
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.0.0-2607
-DISTVERSIONSUFFIX=	-gc3ab92774
+# XXX Switch to release after https://bugs.chromium.org/p/aomedia/issues/detail?id=2545
+DISTVERSION=	1.0.0-2890
+DISTVERSIONSUFFIX=	-ge75b58a0c
 CATEGORIES=	multimedia
 
 MAINTAINER=	jbeich@FreeBSD.org
@@ -23,6 +24,13 @@ USE_LDCONFIG=	yes
 GH_ACCOUNT=	jbeich # mirror
 CMAKE_ON=	BUILD_SHARED_LIBS
 CMAKE_OFF=	ENABLE_DOCS ENABLE_TESTS
+
+OPTIONS_DEFINE=	VMAF
+
+VMAF_DESC=		Encoding tuning for VMAF
+VMAF_BUILD_DEPENDS=	${LOCALBASE}/lib/libvmaf.a:multimedia/vmaf
+VMAF_USES=		localbase:ldflags
+VMAF_CMAKE_ON=		-DCONFIG_TUNE_VMAF:STRING=1
 
 post-patch:
 # Extract (snapshot) version from the port instead of CHANGELOG

@@ -38,6 +38,7 @@
     SUBDIR += homebank
     SUBDIR += jgnash
     SUBDIR += kmymoney
+    SUBDIR += kraft
     SUBDIR += ktoblzcheck
     SUBDIR += ledger
     SUBDIR += ledgersmb12
@@ -96,6 +97,7 @@
     SUBDIR += py-pycoin
     SUBDIR += py-python-bitcoinlib
     SUBDIR += py-python-obelisk
+    SUBDIR += py-quantecon
     SUBDIR += py-stripe
     SUBDIR += py-ta-lib
     SUBDIR += py-vatnumber

@@ -14,8 +14,8 @@ LICENSE=	GPLv2
 LIB_DEPENDS=	libespeak.so:audio/espeak \
 		libsamplerate.so:audio/libsamplerate
 
-FLAVORS=			asterisk13 asterisk16
-FLAVOR?=			${FLAVORS[1]}
+FLAVORS=			asterisk16 asterisk13
+FLAVOR?=			${FLAVORS:[1]}
 
 asterisk13_PKGNAMEPREFIX=	asterisk13-
 asterisk13_CONFLICTS_INSTALL=	asterisk16-espeak
@@ -27,7 +27,7 @@ asterisk16_CONFLICTS_INSTALL=	asterisk13-espeak
 asterisk16_BUILD_DEPENDS=	asterisk:net/asterisk16
 asterisk16_RUN_DEPENDS=		asterisk:net/asterisk16
 
-USES=		compiler gmake localbase
+USES=		compiler:c11 gmake localbase
 INSTALL_TARGET=	install samples
 
 USE_GITHUB=	yes

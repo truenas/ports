@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	tbb
-PORTVERSION=	2019.8
+PORTVERSION=	2020.0
+DISTVERSIONPREFIX=	v
 CATEGORIES=	devel
 
 MAINTAINER=	martymac@FreeBSD.org
@@ -17,7 +18,6 @@ USES=	compiler gmake tar:tgz
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	01org
-GH_TAGNAME=	${PORTVERSION:S/./_U/}
 
 SUB_FILES=	tbb.pc
 SUB_LIST=	prefix="${PREFIX}" \

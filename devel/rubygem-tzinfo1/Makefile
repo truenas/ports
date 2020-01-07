@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	tzinfo
-PORTVERSION=	1.2.5
+PORTVERSION=	1.2.6
 CATEGORIES=	devel rubygems
 MASTER_SITES=	RG
 PKGNAMESUFFIX=	1
@@ -13,7 +13,7 @@ COMMENT=	Daylight-savings aware timezone support for Ruby
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-RUN_DEPENDS=	rubygem-thread_safe>=0.1:devel/rubygem-thread_safe
+RUN_DEPENDS=	rubygem-thread_safe>=0.1<1:devel/rubygem-thread_safe
 
 USES=		gem
 USE_RUBY=	yes

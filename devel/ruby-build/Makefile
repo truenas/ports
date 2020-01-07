@@ -1,9 +1,10 @@
 # $FreeBSD$
 
 PORTNAME=	ruby-build
-PORTVERSION=	20191004 # pend update until bug 241633 solved
+PORTVERSION=	20191223
 DISTVERSIONPREFIX=	v
 CATEGORIES=	devel ruby
+DIST_SUBDIR=	rbenv
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Compile and install different ruby versions

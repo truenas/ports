@@ -9,9 +9,12 @@ MASTER_SITES=	SF/${PORTNAME:tl}/${PORTVERSION}
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Application to view PDF files
 
+DEPRECATED=	Unmaintained, uses EOLed python27
+EXPIRATION_DATE=	2020-01-27
+
 LICENSE=	GPLv2
 
-USES=		desktop-file-utils pkgconfig python:2.7 tar:bzip2 waf
+USES=		desktop-file-utils gnome pkgconfig python:2.7 tar:bzip2 waf
 USE_GNOME=	gtk20 glib20 intltool intlhack
 
 MAKE_ENV=	DESTDIR="${STAGEDIR}" \

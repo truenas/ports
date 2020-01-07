@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	doh-proxy
-DISTVERSION=	0.1.21
+DISTVERSION=	0.2.1
 CATEGORIES=	dns
 
 MAINTAINER=	mat@FreeBSD.org

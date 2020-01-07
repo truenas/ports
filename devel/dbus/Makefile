@@ -2,11 +2,11 @@
 # $FreeBSD$
 
 PORTNAME=	dbus
-PORTVERSION=	1.12.12
+DISTVERSION=	1.12.16
 CATEGORIES=	devel gnome
 MASTER_SITES=	http://dbus.freedesktop.org/releases/dbus/
 
-MAINTAINER=	gnome@FreeBSD.org
+MAINTAINER=	desktop@FreeBSD.org
 COMMENT=	Message bus system for inter-application communication
 
 LICENSE=	GPLv2

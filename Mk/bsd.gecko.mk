@@ -264,10 +264,8 @@ MOZ_OPTIONS+=	--disable-pulseaudio
 BUILD_DEPENDS+=	${LOCALBASE}/include/sndio.h:audio/sndio
 post-patch-SNDIO-on:
 	@${REINPLACE_CMD} -e 's|OpenBSD|${OPSYS}|g' \
-		${MOZSRC}/media/libcubeb/src/moz.build \
-		${MOZSRC}/toolkit/library/moz.build
-	@${REINPLACE_CMD} -e 's|OpenBSD|${OPSYS}|g' \
-			 ${MOZSRC}/media/libcubeb/gtest/moz.build
+		-e '/DISABLE_LIBSNDIO_DLOPEN/d' \
+		${MOZSRC}/media/libcubeb/src/moz.build
 .endif
 
 .if ${PORT_OPTIONS:MDEBUG}
@@ -323,7 +321,6 @@ LDFLAGS+=	-B${LOCALBASE}/bin
 .elif ${ARCH:Mpowerpc*}
 . if ${ARCH} == "powerpc64"
 MOZ_EXPORT+=	UNAME_m="${ARCH}"
-CFLAGS+=	-mminimal-toc
 . endif
 .elif ${ARCH} == "sparc64"
 # Work around miscompilation/mislinkage of the sCanonicalVTable hacks.
@@ -375,6 +372,9 @@ gecko-post-patch:
 		-e 's|share/mozilla/extensions|lib/xpi|g' \
 		${MOZSRC}/xpcom/io/nsAppFileLocationProvider.cpp \
 		${MOZSRC}/toolkit/xre/nsXREDirProvider.cpp
+# Disable vendor checksums like lang/rust
+	@${REINPLACE_CMD} 's,"files":{[^}]*},"files":{},' \
+		${MOZSRC}/third_party/rust/*/.cargo-checksum.json
 
 post-install-script: gecko-create-plist
 
