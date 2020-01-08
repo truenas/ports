@@ -2,6 +2,7 @@
 
 PORTNAME=	powerdns
 DISTVERSION=	4.2.0
+PORTREVISION=	1
 CATEGORIES=	dns
 MASTER_SITES=	https://downloads.powerdns.com/releases/
 DISTNAME=	pdns-${DISTVERSION}
@@ -116,7 +117,7 @@ ZEROMQ_CONFIGURE_ON=	--enable-remotebackend-zeromq
 
 .include <bsd.port.pre.mk>
 
-.if ${OPSYS} == FreeBSD && ${OSVERSION} < 1200085 && ${SSL_DEFAULT} != openssl111
+.if ${OPSYS} == FreeBSD && ${OSVERSION} < 1200085 && ${SSL_DEFAULT} != openssl
 CONFIGURE_ARGS+=	--with-libdecaf \
 			--with-libsodium
 LIB_DEPENDS+=		libdecaf.so:security/libdecaf \

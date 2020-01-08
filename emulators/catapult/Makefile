@@ -11,6 +11,9 @@ DISTNAME=	openmsx-${PORTNAME}-${PORTVERSION}
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	GUI for openMSX
 
+DEPRECATED=	Unmaintained, uses EOLed python27
+EXPIRATION_DATE=	2020-01-27
+
 LICENSE=	GPLv2
 
 BUILD_DEPENDS=	openmsx:emulators/openmsx
@@ -18,7 +21,7 @@ RUN_DEPENDS=	openmsx:emulators/openmsx
 
 OPTIONS_DEFINE=	DEBUG DOCS
 
-USES=		gmake pkgconfig python:2.7,build
+USES=		gmake gnome pkgconfig python:2.7,build
 USE_GCC=	yes
 USE_CXXSTD=	gnu++0x
 USE_GNOME=	gtk20 libxml2

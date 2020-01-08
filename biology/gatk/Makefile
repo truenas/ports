@@ -1,8 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	gatk
-DISTVERSION=	4.1.2.0-43
-DISTVERSIONSUFFIX=	-g1f31a805b
+DISTVERSION=	4.1.3.0
 CATEGORIES=	biology java
 EXTRACT_ONLY=	${DISTNAME}${EXTRACT_SUFX}
 
@@ -12,7 +11,7 @@ COMMENT=	Variant discovery in high-throughput sequencing data
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.TXT
 
-BUILD_DEPENDS=	gradle:devel/gradle
+BUILD_DEPENDS=	gradle5:devel/gradle5
 
 USES=		gettext-runtime
 USE_GITHUB=	yes
@@ -53,7 +52,7 @@ post-extract: # need a separate extract step because the cache is in /tmp, and n
 
 
 do-build:
-	@cd ${WRKSRC} && ${SETENV} ${MAKE_ENV} gradle \
+	@cd ${WRKSRC} && ${SETENV} ${MAKE_ENV} gradle5 \
 		--gradle-user-home ${DEPS_CACHE_DIR}/gradle-${PORTNAME} --project-cache-dir ${DEPS_CACHE_DIR}/gradle-${PORTNAME} \
 		${GRADLE_ARGS} --build-cache localJar
 

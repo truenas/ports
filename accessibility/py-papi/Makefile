@@ -11,6 +11,9 @@ PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	ATK accessibility wrapper for python
 
+DEPRECATED=	Unmaintained, uses EOLed python27
+EXPIRATION_DATE=	2020-01-27
+
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYING
 
@@ -24,7 +27,7 @@ EXAMPLES=	atkaction.py atkapplication.py atkcapi.c atktext.py atkvalue.py \
 OPTIONS_DEFINE=	EXAMPLES
 
 post-patch:
-	@${REINPLACE_CMD} -i "" -e 's|: docfiles|: []|g' ${WRKSRC}/setup.py
+	@${RM} ${WRKSRC}/setup.py.orig
 
 post-install-EXAMPLES-on:
 	@${MKDIR} ${STAGEDIR}${EXAMPLESDIR}/

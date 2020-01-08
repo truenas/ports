@@ -3,11 +3,17 @@
 PORTNAME=		unanimity
 DISTVERSIONPREFIX=	v
 DISTVERSION=		3.4.1
-PORTREVISION=		3
+PORTREVISION=		4
 CATEGORIES=		biology
 
-MAINTAINER=	jwb@FreeBSD.org
+# As of March 2018, unanimity is no longer open source.
+# See https://github.com/PacificBiosciences/ccs.
+MAINTAINER=     ports@FreeBSD.org
 COMMENT=	Pacific Biosciences consensus library and applications
+
+BROKEN=		unfetchable
+DEPRECATED=	Unmaintained, uses EOLed python27
+EXPIRATION_DATE=	2020-01-27
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

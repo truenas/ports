@@ -16,7 +16,7 @@ LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
 RUN_DEPENDS=	${JAVALIBDIR}/httpcore.jar:www/httpcore \
 		${JAVALIBDIR}/commons-logging.jar:java/apache-commons-logging \
-		${JAVALIBDIR}/commons-codec.jar:java/jakarta-commons-codec
+		${JAVALIBDIR}/commons-codec.jar:java/apache-commons-codec
 
 OPTIONS_DEFINE=	DOCS
 
@@ -25,7 +25,6 @@ CPE_PRODUCT=	commons-httpclient
 CPE_VENDOR=	apache
 
 USE_JAVA=	yes
-JAVA_VERSION=	1.6+
 NO_BUILD=	yes
 NO_ARCH=	yes
 WRKSRC=		${WRKDIR}/httpcomponents-client-${DISTVERSION}

@@ -3,12 +3,14 @@
 
 PORTNAME=	linuxcnc
 PORTVERSION=	20170708
-PORTREVISION=	15
+PORTREVISION=	17
 CATEGORIES=	cad
 PKGNAMESUFFIX=	-devel
 
 MAINTAINER=	trasz@FreeBSD.org
 COMMENT=	Open Source CNC machine controller
+
+BROKEN=		unfetchable
 
 LICENSE=	GPLv2
 
@@ -43,7 +45,7 @@ MAKE_ENV=	BUILD_VERBOSE=1
 USES=		autoreconf gettext gl gmake gnome ncurses pkgconfig python:2.7 \
 		readline shebangfix tk xorg
 USE_GL=		gl glu
-USE_GNOME=	cairo gdkpixbuf2 libgnomeprintui pygtksourceview
+USE_GNOME=	cairo gdkpixbuf2 pygtksourceview
 USE_XORG=	ice sm x11 xext xft xinerama xmu xrender xscrnsaver xt
 USE_LDCONFIG=	yes
 USE_GITHUB=	yes

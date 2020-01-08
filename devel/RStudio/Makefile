@@ -5,7 +5,7 @@
 
 PORTNAME=	RStudio
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.2.5001
+DISTVERSION=	1.2.5033
 CATEGORIES=	devel math java
 MASTER_SITES=	https://s3.amazonaws.com/rstudio-dictionaries/:dictionaries \
 		https://s3.amazonaws.com/rstudio-buildtools/:buildtools
@@ -22,6 +22,8 @@ COMMENT=	Integrated development environment (IDE) for R
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
+
+BROKEN_i386=	[ERROR] Line 101: Failed to resolve 'org.rstudio.studio.client.workbench.views.vcs.common.diff.LineActionButtonRenderer.GrayResources' via deferred binding
 
 BUILD_DEPENDS=	ant:devel/apache-ant \
 		${LOCALBASE}/include/sys/sysinfo.h:devel/libsysinfo \
@@ -50,6 +52,7 @@ CMAKE_ARGS+=	-DQT_QMAKE_EXECUTABLE:STRING=${QMAKE}
 CMAKE_ARGS+=	-DRSTUDIO_BOOST_SIGNALS_VERSION=2
 CMAKE_ARGS+=	-DFREEBSD_PORT_VERSION:STRING=${DISTVERSION}
 MAKE_ENV=	HOME=${WRKDIR} \
+		JAVA_HOME=${JAVA_HOME} \
 		ANT_OPTS="-Duser.home=${WRKDIR}"
 
 GWT_VERSION=	2.8.1
@@ -89,7 +92,7 @@ post-install:
 	  echo "fi"; \
 	  echo ""; \
 	  echo "# workaround for the problem that RStudio passes /lib with LD_LIBRARY_PATH that causes the /lib/libgcc_s.so.1 conflict with gcc"; \
-	  echo "LD_PRELOAD=${PREFIX}/lib/gcc${GCC_DEFAULT}/libgcc_s.so ${PREFIX}/lib/rstudio/bin/rstudio \"$$@\"" \
+	  echo "LD_PRELOAD=${PREFIX}/lib/gcc${GCC_DEFAULT}/libgcc_s.so JAVA_HOME=${JAVA_HOME} ${PREFIX}/lib/rstudio/bin/rstudio \"$$@\"" \
 	) > ${STAGEDIR}${PREFIX}/bin/rstudio
 	@${CHMOD} +x ${STAGEDIR}${PREFIX}/bin/rstudio
 	@${REINPLACE_CMD} -e 's|^Exec=.*/rstudio|Exec=${PREFIX}/bin/rstudio|' ${STAGEDIR}${PREFIX}/share/applications/rstudio.desktop

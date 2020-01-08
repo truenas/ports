@@ -183,8 +183,6 @@
     SUBDIR += lightdm
     SUBDIR += lightdm-gtk-greeter
     SUBDIR += lilyterm
-    SUBDIR += linux-c6-pixman
-    SUBDIR += linux-c6-xorg-libs
     SUBDIR += linux-c7-libxkbcommon
     SUBDIR += linux-c7-pixman
     SUBDIR += linux-c7-xorg-libs
@@ -207,6 +205,7 @@
     SUBDIR += lxqt-globalkeys
     SUBDIR += lxqt-runner
     SUBDIR += lxrandr
+    SUBDIR += ly
     SUBDIR += mate
     SUBDIR += mate-applets
     SUBDIR += mate-base
@@ -263,6 +262,7 @@
     SUBDIR += printscreen
     SUBDIR += props
     SUBDIR += py-caffeine-ng
+    SUBDIR += py-i3ipc
     SUBDIR += py-pyscreenshot
     SUBDIR += py-pyvirtualdisplay
     SUBDIR += py-qt5-opengl
@@ -304,6 +304,7 @@
     SUBDIR += slop
     SUBDIR += slurp
     SUBDIR += smproxy
+    SUBDIR += squeekboard
     SUBDIR += sselp
     SUBDIR += stalonetray
     SUBDIR += startup-notification
@@ -419,10 +420,8 @@
     SUBDIR += xfce4-whiskermenu-plugin
     SUBDIR += xfce4-wmdock-plugin
     SUBDIR += xfd
-    SUBDIR += xfindproxy
     SUBDIR += xfishtank
     SUBDIR += xforward
-    SUBDIR += xfwp
     SUBDIR += xgamma
     SUBDIR += xgc
     SUBDIR += xgrab

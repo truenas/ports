@@ -21,6 +21,7 @@
     SUBDIR += R-cran-diagram
     SUBDIR += R-cran-dichromat
     SUBDIR += R-cran-dygraphs
+    SUBDIR += R-cran-farver
     SUBDIR += R-cran-ggplot2
     SUBDIR += R-cran-gridBase
     SUBDIR += R-cran-gridExtra
@@ -250,6 +251,7 @@
     SUBDIR += gle
     SUBDIR += glee
     SUBDIR += glew
+    SUBDIR += glew-wayland
     SUBDIR += glexcess
     SUBDIR += glfw
     SUBDIR += glfw2
@@ -385,6 +387,7 @@
     SUBDIR += kdiagram
     SUBDIR += kf5-kimageformats
     SUBDIR += kf5-kplotting
+    SUBDIR += kf5-kquickcharts
     SUBDIR += kf5-prison
     SUBDIR += kgraphviewer
     SUBDIR += kimagemapeditor
@@ -395,6 +398,7 @@
     SUBDIR += kolourpaint
     SUBDIR += kooka
     SUBDIR += kphotoalbum
+    SUBDIR += kqtquickcharts
     SUBDIR += krita
     SUBDIR += kudu
     SUBDIR += kxstitch
@@ -491,16 +495,6 @@
     SUBDIR += libzmf
     SUBDIR += lightzone
     SUBDIR += linplasma
-    SUBDIR += linux-c6-cairo
-    SUBDIR += linux-c6-dri
-    SUBDIR += linux-c6-gdk-pixbuf2
-    SUBDIR += linux-c6-glx-utils
-    SUBDIR += linux-c6-jasper
-    SUBDIR += linux-c6-jpeg
-    SUBDIR += linux-c6-png
-    SUBDIR += linux-c6-sdl_image
-    SUBDIR += linux-c6-sdl_ttf
-    SUBDIR += linux-c6-tiff
     SUBDIR += linux-c7-cairo
     SUBDIR += linux-c7-cairo-gobject
     SUBDIR += linux-c7-dri
@@ -598,7 +592,7 @@
     SUBDIR += optar
     SUBDIR += optipng
     SUBDIR += osg
-    SUBDIR += osg-devel
+    SUBDIR += osg34
     SUBDIR += osgearth
     SUBDIR += ossim
     SUBDIR += oyranos
@@ -739,8 +733,6 @@
     SUBDIR += phototonic
     SUBDIR += php-facedetect
     SUBDIR += php-geos
-    SUBDIR += php71-exif
-    SUBDIR += php71-gd
     SUBDIR += php72-exif
     SUBDIR += php72-gd
     SUBDIR += php73-exif
@@ -753,6 +745,7 @@
     SUBDIR += piglit
     SUBDIR += pikopixel
     SUBDIR += pinpoint
+    SUBDIR += pinta
     SUBDIR += pixd
     SUBDIR += pixelize
     SUBDIR += pixen
@@ -800,6 +793,7 @@
     SUBDIR += py-blockdiagcontrib-cisco
     SUBDIR += py-cairo
     SUBDIR += py-cairocffi
+    SUBDIR += py-cairosvg
     SUBDIR += py-cartopy
     SUBDIR += py-chart
     SUBDIR += py-colour
@@ -858,6 +852,7 @@
     SUBDIR += py-pygal
     SUBDIR += py-pyganim
     SUBDIR += py-pyglet
+    SUBDIR += py-pyglet12
     SUBDIR += py-pygooglechart
     SUBDIR += py-pygraphviz
     SUBDIR += py-pyinsane2
@@ -866,7 +861,9 @@
     SUBDIR += py-pyproj
     SUBDIR += py-pyqrcode
     SUBDIR += py-pyqtgraph
+    SUBDIR += py-pyrsgis
     SUBDIR += py-python-poppler-qt5
+    SUBDIR += py-pyvips
     SUBDIR += py-qt5-svg
     SUBDIR += py-rawkit
     SUBDIR += py-sane
@@ -880,6 +877,7 @@
     SUBDIR += py-termtosvg
     SUBDIR += py-toyplot
     SUBDIR += py-traitsui
+    SUBDIR += py-visvis
     SUBDIR += py-wand
     SUBDIR += py-webcolors
     SUBDIR += py-willow
@@ -1024,10 +1022,12 @@
     SUBDIR += togl
     SUBDIR += ttygif
     SUBDIR += tumble
+    SUBDIR += tweeny
     SUBDIR += ufraw
     SUBDIR += uniconvertor
     SUBDIR += uniconvw
     SUBDIR += unpaper
+    SUBDIR += urho3d
     SUBDIR += urt
     SUBDIR += vapoursynth-fmtconv
     SUBDIR += vapoursynth-waifu2x-w2xc
@@ -1085,6 +1085,7 @@
     SUBDIR += xv-m17n
     SUBDIR += xwpick
     SUBDIR += xzgv
+    SUBDIR += yacreader
     SUBDIR += yafaray
     SUBDIR += yed
     SUBDIR += yukon

@@ -92,7 +92,8 @@ ABIFLAGS:=	d${ABIFLAGS}
 .if !empty(ABIFLAGS)
 PLIST_FILES+=	bin/python${PYTHON_VER}${ABIFLAGS} \
 		bin/python${PYTHON_VER}${ABIFLAGS}-config \
-		libdata/pkgconfig/python-${PYTHON_VER}${ABIFLAGS}.pc
+		libdata/pkgconfig/python-${PYTHON_VER}${ABIFLAGS}.pc \
+		libdata/pkgconfig/python-${PYTHON_VER}${ABIFLAGS}-embed.pc
 .endif
 
 # https://bugs.python.org/issue22521

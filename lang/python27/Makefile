@@ -2,6 +2,7 @@
 
 PORTNAME=	python
 PORTVERSION=	${PYTHON_PORTVERSION}
+PORTREVISION=	1
 CATEGORIES=	lang python
 MASTER_SITES=	PYTHON/ftp/python/${PORTVERSION}
 PKGNAMESUFFIX=	27
@@ -12,6 +13,9 @@ MAINTAINER=	python@FreeBSD.org
 COMMENT=	Interpreted object-oriented programming language
 
 LICENSE=	PSFL
+
+DEPRECATED=	EOLed upstream
+EXPIRATION_DATE=	2020-12-31
 
 USES=		cpe ncurses pathfix pkgconfig readline:port shebangfix ssl tar:xz
 PATHFIX_MAKEFILEIN=	Makefile.pre.in

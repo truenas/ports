@@ -2,8 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	calculix
-PORTVERSION=	2.15
-PORTREVISION=	1
+PORTVERSION=	2.16
 CATEGORIES=	cad
 MASTER_SITES=	http://www.dhondt.de/
 DISTFILES=	${DIST_SOURCES}
@@ -14,8 +13,6 @@ MAINTAINER=	pfg@FreeBSD.org
 COMMENT=	Three-Dimensional Structural Finite Element Program
 
 LICENSE=	GPLv2
-
-BROKEN_aarch64=		fails to link: shapeFunctions.c:(function attach_new): relocation R_AARCH64_CALL26 out of range
 
 RUN_DEPENDS=	ccx:cad/calculix-ccx
 

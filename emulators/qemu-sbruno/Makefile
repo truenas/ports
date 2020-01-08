@@ -2,17 +2,17 @@
 # $FreeBSD$
 
 PORTNAME=	qemu
-PORTVERSION=	2.11.50.g20191029
+PORTVERSION=	2.11.50.g20191211
 CATEGORIES=	emulators
 PKGNAMESUFFIX?=	-sbruno
 DIST_SUBDIR=	qemu/${PORTVERSION}
 
-MAINTAINER=	sbruno@FreeBSD.org
+MAINTAINER=	emulation@FreeBSD.org
 COMMENT?=	QEMU CPU Emulator - github bsd-user branch
 
 LICENSE=	GPLv2
 USE_GITHUB=	yes
-GH_TUPLE=	seanbruno:qemu-bsd-user:25ce28e \
+GH_TUPLE=	seanbruno:qemu-bsd-user:d587db6	\
 		qemu:keycodemapdb:10739aa:keycodemapdb/ui/keycodemapdb
 HAS_CONFIGURE=	yes
 USES=		bison compiler:c11 gmake perl5 pkgconfig python:2.7,build
@@ -40,6 +40,8 @@ OPTIONS_DEFAULT=X11 GTK2 OPENGL GNUTLS SASL JPEG PNG CDROM_DMA CURL PCAP
 
 .if !defined(QEMU_USER_STATIC)
 CONFLICTS_INSTALL=	qemu-[0-9]* qemu-devel-*
+.else
+CONFLICTS_INSTALL=	qemu-user-static-devel-*
 .endif
 
 .if defined(QEMU_USER_STATIC)
@@ -145,6 +147,7 @@ CONFIGURE_ARGS+=	--prefix=${PREFIX} --cc=${CC} --enable-docs \
 CONFIGURE_ARGS+=	--disable-sdl
 .else
 CONFIGURE_ARGS+=	--enable-sdl
+USES+=		sdl
 USE_SDL=	sdl
 .endif
 

@@ -23,8 +23,6 @@ USE_LDCONFIG=	yes
 USE_RC_SUBR=	netatalk
 INSTALL_TARGET=install-strip
 
-EXTRA_PATCHES+=	${PATCHDIR}/afpstats_py3.patch:-p1
-
 CONFIGURE_ARGS+=	--with-pkgconfdir=${PREFIX}/etc \
 			--with-libgcrypt-dir=${LOCALBASE} \
 			--with-uams-path=${PREFIX}/libexec/netatalk-uams \
@@ -64,12 +62,12 @@ LDAP_CFLAGS=		-I${LOCALBASE}/include -L${LOCALBASE}/lib
 LDAP_USE=	OPENLDAP=yes
 LDAP_CONFIGURE_OFF=	--without-ldap
 SENDFILE_CONFIGURE_ENABLE=sendfile
-DBUS_USES=	python
+DBUS_USES=	gnome python:2.7
 DBUS_USE=	GNOME=glib20
 DBUS_LIB_DEPENDS=	libdbus-glib-1.so:devel/dbus-glib \
 			libdbus-1.so:devel/dbus
-DBUS_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}dbus>0:devel/py-dbus@${PY_FLAVOR}
-MYSQL_USE=	MYSQL=yes
+DBUS_RUN_DEPENDS=	${PYTHON_SITELIBDIR}/dbus/_dbus.py:devel/py-dbus@${PY_FLAVOR}
+MYSQL_USES=	mysql
 MYSQL_CONFIGURE_OFF=--with-mysql-config=/nonexistent
 ACL_LIB_DEPENDS=	libsunacl.so:sysutils/libsunacl
 ACL_CONFIGURE_WITH=acls

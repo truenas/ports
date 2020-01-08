@@ -23,6 +23,12 @@ USES=		gnome tar:bzip2 kmod pkgconfig
 USE_GNOME=	gtk20 cairo gdkpixbuf2
 USE_RC_SUBR=	oss
 
+.include <bsd.port.options.mk>
+
+.if ${OSVERSION} > 1300067
+BROKEN=	Still uses removed timeout interface and needs updating
+.endif
+
 HAS_CONFIGURE=	yes
 CONFIGURE_OUTSOURCE=	yes
 CONFIGURE_ENV=	HOSTCC="${CC}"
@@ -64,6 +70,12 @@ post-patch:
 	${FIND} ${PATCH_WRKSRC} -name configure -or \
 	    -name make.local -or -name soundoff -or -name soundon | \
 	    ${XARGS} ${REINPLACE_CMD} -e 's|%%PREFIX%%|${PREFIX}|g'
+
+pre-build:
+	${MAKE_CMD} -C ${BUILD_WRKSRC}/kernel/OS/FreeBSD \
+		-f /usr/share/mk/bsd.kmod.mk \
+		KMOD=osscore SRCS=os_freebsd.c \
+		device_if.h bus_if.h pci_if.h
 
 do-install:
 	${INSTALL_PROGRAM} ${PROTO_BINDIR}/* ${STAGEDIR}${PREFIX}/bin/

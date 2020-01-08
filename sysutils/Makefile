@@ -27,6 +27,7 @@
     SUBDIR += ah-tty
     SUBDIR += aimage
     SUBDIR += aird
+    SUBDIR += alfio
     SUBDIR += am-utils
     SUBDIR += amazon-ssm-agent
     SUBDIR += amdmsrtweaker
@@ -38,7 +39,6 @@
     SUBDIR += android-file-transfer-qt5
     SUBDIR += ansible
     SUBDIR += ansible-sysrc
-    SUBDIR += ansible1
     SUBDIR += ansible23
     SUBDIR += ansible24
     SUBDIR += ansible25
@@ -86,7 +86,6 @@
     SUBDIR += baloo-widgets
     SUBDIR += bamf
     SUBDIR += bareos-client
-    SUBDIR += bareos-docs
     SUBDIR += bareos-server
     SUBDIR += bareos-traymonitor
     SUBDIR += bareos16-client
@@ -119,7 +118,6 @@
     SUBDIR += bsdhwmon
     SUBDIR += bsdinfo
     SUBDIR += bsdisks
-    SUBDIR += bsdploy
     SUBDIR += bsdstats
     SUBDIR += bstack
     SUBDIR += btsixad
@@ -154,11 +152,13 @@
     SUBDIR += cfengine-masterfiles312
     SUBDIR += cfengine-masterfiles313
     SUBDIR += cfengine-masterfiles314
+    SUBDIR += cfengine-masterfiles315
     SUBDIR += cfengine310
     SUBDIR += cfengine311
     SUBDIR += cfengine312
     SUBDIR += cfengine313
     SUBDIR += cfengine314
+    SUBDIR += cfengine315
     SUBDIR += chgrep
     SUBDIR += chyves
     SUBDIR += cinnamon-control-center
@@ -203,6 +203,7 @@
     SUBDIR += cpu-x
     SUBDIR += cpuburn
     SUBDIR += cpuid
+    SUBDIR += cpuid2cpuflags
     SUBDIR += cpulimit
     SUBDIR += cpupdate
     SUBDIR += cramfs
@@ -276,6 +277,7 @@
     SUBDIR += dunst
     SUBDIR += dupd
     SUBDIR += duplicity
+    SUBDIR += duplicity-devel
     SUBDIR += duply
     SUBDIR += dupmerge
     SUBDIR += dvd+rw-tools
@@ -303,7 +305,6 @@
     SUBDIR += etc_os-release
     SUBDIR += etcmerge
     SUBDIR += etcupdate
-    SUBDIR += eventlog
     SUBDIR += evhz
     SUBDIR += evtviewer
     SUBDIR += exa
@@ -370,7 +371,6 @@
     SUBDIR += fusefs-encfs
     SUBDIR += fusefs-exfat
     SUBDIR += fusefs-ext2
-    SUBDIR += fusefs-ext4fuse
     SUBDIR += fusefs-funionfs
     SUBDIR += fusefs-fusepak
     SUBDIR += fusefs-fusexmp_fh
@@ -378,6 +378,7 @@
     SUBDIR += fusefs-gstfs
     SUBDIR += fusefs-gunzip
     SUBDIR += fusefs-hfsfuse
+    SUBDIR += fusefs-httpdirfs
     SUBDIR += fusefs-httpfs
     SUBDIR += fusefs-ifuse
     SUBDIR += fusefs-jmtpfs
@@ -427,6 +428,7 @@
     SUBDIR += gkrelltop
     SUBDIR += gksu
     SUBDIR += glogg
+    SUBDIR += glow
     SUBDIR += gnome-control-center
     SUBDIR += gnome-mount
     SUBDIR += gnome-power-manager
@@ -543,6 +545,7 @@
     SUBDIR += jvmtop
     SUBDIR += jx
     SUBDIR += k3b
+    SUBDIR += k4dirstat
     SUBDIR += k8temp
     SUBDIR += kbackup
     SUBDIR += kcron
@@ -550,7 +553,6 @@
     SUBDIR += kdebugsettings
     SUBDIR += kdf
     SUBDIR += kdialog
-    SUBDIR += kdirstat
     SUBDIR += keyboard-daemon
     SUBDIR += kf5-baloo
     SUBDIR += kf5-kwallet
@@ -585,13 +587,10 @@
     SUBDIR += libsysstat
     SUBDIR += libudisks
     SUBDIR += liburcu
-    SUBDIR += life-preserver
     SUBDIR += lineak-defaultplugin
     SUBDIR += lineak-xosdplugin
     SUBDIR += lineakd
     SUBDIR += linrename
-    SUBDIR += linux-c6-lttng-ust
-    SUBDIR += linux-c6-userspace-rcu
     SUBDIR += linux-c7-lttng-ust
     SUBDIR += linux-c7-userspace-rcu
     SUBDIR += linux-crashplan
@@ -608,6 +607,7 @@
     SUBDIR += logstash-forwarder
     SUBDIR += logstash5
     SUBDIR += logstash6
+    SUBDIR += logstash7
     SUBDIR += logtool
     SUBDIR += logwatch
     SUBDIR += lookat
@@ -675,10 +675,10 @@
     SUBDIR += mgeupsd
     SUBDIR += minikube
     SUBDIR += minimunin
+    SUBDIR += minipot
     SUBDIR += minipro
     SUBDIR += minirsyslogd
     SUBDIR += mixer
-    SUBDIR += mkdesktop
     SUBDIR += mkfile
     SUBDIR += mkfwimage
     SUBDIR += mkntpwd
@@ -854,18 +854,14 @@
     SUBDIR += parafly
     SUBDIR += parallel
     SUBDIR += pass-otp
+    SUBDIR += pass-update
     SUBDIR += password-store
     SUBDIR += passwordsafe
     SUBDIR += patchelf
     SUBDIR += pax-utils
-    SUBDIR += pbi-manager
     SUBDIR += pbimaker
     SUBDIR += pc-networkmanager
     SUBDIR += pcapfix
-    SUBDIR += pcbsd-appweb
-    SUBDIR += pcbsd-libsh
-    SUBDIR += pcbsd-syscache
-    SUBDIR += pcbsd-utils
     SUBDIR += pciutils
     SUBDIR += pcpustat
     SUBDIR += pdixtract
@@ -891,8 +887,6 @@
     SUBDIR += pftables
     SUBDIR += pftop
     SUBDIR += phantom
-    SUBDIR += php71-fileinfo
-    SUBDIR += php71-posix
     SUBDIR += php72-fileinfo
     SUBDIR += php72-posix
     SUBDIR += php73-fileinfo
@@ -996,7 +990,6 @@
     SUBDIR += py-packet-python
     SUBDIR += py-pkginfo
     SUBDIR += py-ploy
-    SUBDIR += py-ploy_ansible
     SUBDIR += py-ploy_ec2
     SUBDIR += py-ploy_ezjail
     SUBDIR += py-ploy_fabric
@@ -1022,6 +1015,11 @@
     SUBDIR += py-supervisor
     SUBDIR += py-tarsnapper
     SUBDIR += py-tmuxp
+    SUBDIR += py-upt
+    SUBDIR += py-upt-cpan
+    SUBDIR += py-upt-freebsd
+    SUBDIR += py-upt-pypi
+    SUBDIR += py-upt-rubygems
     SUBDIR += py-uptime
     SUBDIR += py-zdaemon
     SUBDIR += py-zettarepl
@@ -1258,21 +1256,18 @@
     SUBDIR += symon
     SUBDIR += synergy
     SUBDIR += synergy-1
+    SUBDIR += sysctlbyname-improved-kmod
     SUBDIR += sysctlinfo-kmod
     SUBDIR += sysgather
     SUBDIR += sysinfo
     SUBDIR += syslinux
     SUBDIR += syslog-ng
-    SUBDIR += syslog-ng311
-    SUBDIR += syslog-ng315
-    SUBDIR += syslog-ng317
-    SUBDIR += syslog-ng318
-    SUBDIR += syslog-ng319
     SUBDIR += syslog-ng320
     SUBDIR += syslog-ng321
     SUBDIR += syslog-ng322
     SUBDIR += syslog-ng323
     SUBDIR += syslog-ng324
+    SUBDIR += syslog-ng325
     SUBDIR += syslogger
     SUBDIR += sysrc
     SUBDIR += system-tools-backends
@@ -1309,6 +1304,7 @@
     SUBDIR += topless
     SUBDIR += torque
     SUBDIR += toshctl
+    SUBDIR += toybox
     SUBDIR += tracker
     SUBDIR += tracker-miners
     SUBDIR += tree
@@ -1366,6 +1362,7 @@
     SUBDIR += u-boot-rpi-0-w
     SUBDIR += u-boot-rpi2
     SUBDIR += u-boot-rpi3
+    SUBDIR += u-boot-rpi4
     SUBDIR += u-boot-sinovoip-bpi-m3
     SUBDIR += u-boot-sopine
     SUBDIR += u-boot-tools
@@ -1414,10 +1411,12 @@
     SUBDIR += vbetool
     SUBDIR += vchanger
     SUBDIR += vcp
+    SUBDIR += vector
     SUBDIR += videogen
     SUBDIR += vii
     SUBDIR += vils
     SUBDIR += vimpager
+    SUBDIR += virt-what
     SUBDIR += virtualmin
     SUBDIR += vm-bhyve
     SUBDIR += vmdktool
@@ -1430,7 +1429,6 @@
     SUBDIR += vttest
     SUBDIR += vzvol
     SUBDIR += wait_on
-    SUBDIR += warden
     SUBDIR += watchdog
     SUBDIR += watchfolder
     SUBDIR += watchman

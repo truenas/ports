@@ -8,7 +8,7 @@
     SUBDIR += advancemenu
     SUBDIR += advancemess
     SUBDIR += almostti
-    SUBDIR += anese 
+    SUBDIR += anese
     SUBDIR += aqemu
     SUBDIR += atari800
     SUBDIR += bfe
@@ -63,10 +63,8 @@
     SUBDIR += lib765
     SUBDIR += libdsk
     SUBDIR += libspectrum
-    SUBDIR += linux-c6
     SUBDIR += linux-c7
     SUBDIR += linux-power9-functional-sim
-    SUBDIR += linux_base-c6
     SUBDIR += linux_base-c7
     SUBDIR += lisaem
     SUBDIR += mame
@@ -91,6 +89,7 @@
     SUBDIR += mupen64plus-video-glide64mk2
     SUBDIR += mupen64plus-video-rice
     SUBDIR += mupen64plus-video-z64
+    SUBDIR += nemu
     SUBDIR += nestopia
     SUBDIR += nonpareil
     SUBDIR += o2em
@@ -114,8 +113,10 @@
     SUBDIR += qemu-powernv
     SUBDIR += qemu-sbruno
     SUBDIR += qemu-user-static
+    SUBDIR += qemu-user-static-devel
     SUBDIR += qemu-utils
     SUBDIR += qemu30
+    SUBDIR += qemu31
     SUBDIR += qemu40
     SUBDIR += qmc2
     SUBDIR += quasi88
@@ -138,6 +139,7 @@
     SUBDIR += tuxnes
     SUBDIR += uae
     SUBDIR += ucon64
+    SUBDIR += ukncbtl
     SUBDIR += unicorn
     SUBDIR += vba
     SUBDIR += vboxtool

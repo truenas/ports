@@ -208,6 +208,7 @@
     SUBDIR += doom-wolfendoom
     SUBDIR += doomlegacy
     SUBDIR += doomsday
+    SUBDIR += dose-response
     SUBDIR += dreamchess
     SUBDIR += drm
     SUBDIR += duckmaze
@@ -391,6 +392,7 @@
     SUBDIR += hohlin
     SUBDIR += hoichess
     SUBDIR += holotz-castle
+    SUBDIR += homura
     SUBDIR += hoverboard-sdl
     SUBDIR += hs-scroll
     SUBDIR += hypatia_engine
@@ -548,6 +550,7 @@
     SUBDIR += mahjong
     SUBDIR += maitretarot
     SUBDIR += manaplus
+    SUBDIR += mancala
     SUBDIR += mangband
     SUBDIR += mari0
     SUBDIR += marsnomercy
@@ -790,9 +793,11 @@
     SUBDIR += qwdtools
     SUBDIR += r1q2
     SUBDIR += railroad-rampage
+    SUBDIR += rawgl
     SUBDIR += redeclipse
     SUBDIR += redeclipse-data
     SUBDIR += redorblack
+    SUBDIR += regoth
     SUBDIR += reminiscence
     SUBDIR += renpy
     SUBDIR += renpy6
@@ -852,6 +857,9 @@
     SUBDIR += simplevaders
     SUBDIR += simsu
     SUBDIR += simutrans
+    SUBDIR += simutrans-pak128
+    SUBDIR += simutrans-pak128.german
+    SUBDIR += simutrans-pak64
     SUBDIR += sjeng
     SUBDIR += ski
     SUBDIR += sl
@@ -973,6 +981,7 @@
     SUBDIR += vectoroids
     SUBDIR += vegastrike
     SUBDIR += vegastrike-data
+    SUBDIR += veloren
     SUBDIR += violetland
     SUBDIR += viruskiller
     SUBDIR += vitetris

@@ -24,8 +24,8 @@ COMMENT=	Apache Map/Reduce framework
 
 LICENSE=	APACHE20
 
-BROKEN_SSL=	openssl111
-BROKEN_SSL_REASON_openssl111=	incomplete definition of type 'struct evp_cipher_ctx_st'
+BROKEN_SSL=	openssl
+BROKEN_SSL_REASON_openssl=	incomplete definition of type 'struct evp_cipher_ctx_st'
 
 BUILD_DEPENDS=	${LOCALBASE}/share/java/maven3/bin/mvn:devel/maven3 \
 		cmake:devel/cmake \
@@ -39,7 +39,6 @@ CONFLICTS_INSTALL=	hadoop-1* yarn
 USES=		cpe shebangfix
 CPE_VENDOR=	apache
 USE_JAVA=	yes
-JAVA_VERSION=	1.7+
 USE_LDCONFIG=	yes
 SHEBANG_FILES=	hadoop-hdfs-project/hadoop-hdfs-httpfs/src/main/sbin/httpfs.sh hadoop-hdfs-project/hadoop-hdfs-httpfs/src/main/libexec/httpfs-config.sh hadoop-hdfs-project/hadoop-hdfs-httpfs/src/main/conf/httpfs-env.sh hadoop-common-project/hadoop-kms/src/main/sbin/kms.sh hadoop-common-project/hadoop-kms/src/main/libexec/kms-config.sh hadoop-common-project/hadoop-kms/src/main/conf/kms-env.sh hadoop-tools/hadoop-sls/src/main/bin/rumen2sls.sh hadoop-tools/hadoop-sls/src/main/bin/slsrun.sh
 MAKE_ENV+=	JAVA_HOME=${JAVA_HOME} HADOOP_PROTOC_PATH=${LOCALBASE}/protobuf25/bin/protoc

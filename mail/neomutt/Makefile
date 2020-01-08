@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	neomutt
-PORTVERSION=	20191102
+PORTVERSION=	20191207
 CATEGORIES=	mail
 
 MAINTAINER=	bapt@FreeBSD.org
@@ -17,6 +17,7 @@ USES=		iconv:translit localbase perl5 shebangfix ssl
 
 USE_GITHUB=	yes
 USE_PERL5=	build
+MAKE_JOBS_UNSAFE=	yes
 
 HAS_CONFIGURE=	yes
 
@@ -43,6 +44,7 @@ SCREEN_DESC=	Screen options
 
 CONFIGURE_ARGS=	--with-ssl="${OPENSSLBASE}" \
 		--locales-fix \
+		--fmemopen \
 		--mandir=${PREFIX}/man \
 		${ICONV_CONFIGURE_ARGS}
 
@@ -62,7 +64,6 @@ TOKYOCABINET_LIB_DEPENDS=	libtokyocabinet.so:databases/tokyocabinet
 
 NLS_CONFIGURE_ENABLE=	nls
 NLS_USES=		gettext
-NLS_USES_OFF=		gettext-runtime:build gettext-tools:build
 
 IDN_LIB_DEPENDS=	libidn.so:dns/libidn
 IDN_CONFIGURE_ENABLE=	idn
