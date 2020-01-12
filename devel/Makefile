@@ -5822,6 +5822,7 @@
     SUBDIR += rubygem-dry-core
     SUBDIR += rubygem-dry-equalizer
     SUBDIR += rubygem-dry-inflector
+    SUBDIR += rubygem-dry-logic
     SUBDIR += rubygem-drydock
     SUBDIR += rubygem-dynflow
     SUBDIR += rubygem-edavis10-object_daddy
