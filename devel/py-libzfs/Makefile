@@ -27,8 +27,8 @@ HAS_CONFIGURE=	yes
 USES=		python
 USE_PYTHON=	autoplist distutils cython
 
-CONFIGURE_ENV=	FREEBSD_SRC=${SRC_BASE}
-MAKE_ENV=	FREEBSD_SRC=${SRC_BASE}
+CONFIGURE_ENV=	freebsd_src=${SRC_BASE}
+MAKE_ENV=	freebsd_src=${SRC_BASE}
 
 # Py-libzfs needs libzfs to be built
 .if !exists(/sbin/zpool)
