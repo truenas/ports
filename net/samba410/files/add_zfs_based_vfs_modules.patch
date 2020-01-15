@@ -1,8 +1,8 @@
 diff --git a/lib/util/memcache.c b/lib/util/memcache.c
-index 819ba44..616539d 100644
+index 1e616bd..cc484e6 100644
 --- a/lib/util/memcache.c
 +++ b/lib/util/memcache.c
-@@ -55,6 +55,7 @@ static bool memcache_is_talloc(enum memcache_number n)
+@@ -60,6 +60,7 @@ static bool memcache_is_talloc(enum memcache_number n)
  	case SINGLETON_CACHE_TALLOC:
  	case SHARE_MODE_LOCK_CACHE:
  	case GETWD_CACHE:
@@ -24,10 +24,10 @@ index 4331c2f..a9de97f 100644
  
 diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
 new file mode 100644
-index 0000000..1bace80
+index 0000000..b010044
 --- /dev/null
 +++ b/source3/modules/vfs_shadow_copy_zfs.c
-@@ -0,0 +1,1919 @@
+@@ -0,0 +1,1958 @@
 +/* shadow_copy_zfs: a shadow copy module for ZFS
 + *
 + * Copyright (C) Andrew Tridgell   2007 (portions taken from shadow_copy_zfs)
@@ -1246,25 +1246,43 @@ index 0000000..1bace80
 +	struct shadow_copy_zfs_config *config = NULL;
 +	struct snapshot_list *snapshots = NULL;
 +	struct snapshot_entry *entry = NULL;
++	SMB_STRUCT_STAT sbuf, cur_st, prev_st;
++	const SMB_STRUCT_STAT *psbuf = NULL;
 +	uint idx = 0;
 +	char tmpbuf[PATH_MAX];
 +	char *fullpath, *to_free;
++	char *tmp_file = NULL;
 +	ssize_t len;
-+
-+        /* Set the hash of the full pathname. */
++	int rv;
 +
 +	len = full_path_tos(handle->conn->connectpath, fsp->fsp_name->base_name, tmpbuf,
 +			    sizeof(tmpbuf), &fullpath, &to_free);
 +
 +	if (len == -1) {
 +		errno = ENOMEM;
-+                return -1;
-+        }
++		return -1;
++	}
 +
 +	SMB_VFS_HANDLE_GET_DATA(handle, config, struct shadow_copy_zfs_config,
 +	    return -1);
 +
 +	tmp_ctx = talloc_new(config);
++
++	if (VALID_STAT(fsp->fsp_name->st)) {
++		psbuf = &fsp->fsp_name->st;
++	}
++
++	if (psbuf == NULL) {
++		rv = vfs_stat_smb_basename(handle->conn, fsp->fsp_name, &sbuf);
++		if (rv != 0) {
++			DBG_ERR("stat [%s]failed: %s\n",
++				fsp_str_dbg(fsp), strerror(errno));
++			return -1;
++		}
++		psbuf = &sbuf;
++	}
++	prev_st = *psbuf;
++
 +	snapshots = smb_zfs_list_snapshots(config->libzp,
 +					   tmp_ctx,
 +					   fullpath,
@@ -1278,14 +1296,13 @@ index 0000000..1bace80
 +		TALLOC_FREE(to_free);
 +		return -1;
 +	}
-+	shadow_copy_zfs_data->num_volumes = snapshots->num_entries;
 +	shadow_copy_zfs_data->labels = NULL;
 +
 +	if (labels) {
 +		shadow_copy_zfs_data->labels =
 +			talloc_array(shadow_copy_zfs_data,
 +				     SHADOW_COPY_LABEL,
-+				     shadow_copy_zfs_data->num_volumes);
++				     snapshots->num_entries);
 +
 +		if (shadow_copy_zfs_data->labels == NULL) {
 +			DEBUG(0,("shadow_copy_zfs: out of memory\n"));
@@ -1295,11 +1312,33 @@ index 0000000..1bace80
 +		}
 +
 +		for (entry = snapshots->entries; entry; entry = entry->next) {
++			/*
++			 * Directories should always be added if they exist in the
++			 * snapshot. Files only be added if mtime differs.
++			 */
++			tmp_file = talloc_asprintf(tmp_ctx, "%s/.zfs/snapshot/%s/%s",
++						   snapshots->mountpoint,
++						   entry->name,
++						   fsp->fsp_name->base_name);
++			rv = sys_stat(tmp_file, &cur_st, false);
++			TALLOC_FREE(tmp_file);
++			if (rv != 0) {
++				DBG_INFO("stat() failed for [%s] in mp [%s] snap [%s]: %s\n",
++					 fsp_str_dbg(fsp), snapshots->mountpoint, entry->name,
++					 strerror(errno));
++				continue;
++			}
++			if (config->ignore_empty_snaps && !S_ISDIR(cur_st.st_ex_mode) && 
++			    (timespec_compare(&cur_st.st_ex_mtime, &prev_st.st_ex_mtime) == 0)) {
++				continue;
++			}
 +			strlcpy(shadow_copy_zfs_data->labels[idx],
 +				entry->label, sizeof(entry->label));
 +			idx++;
++			prev_st = cur_st;
 +        	}
 +	}
++	shadow_copy_zfs_data->num_volumes = idx;
 +	TALLOC_FREE(to_free);
 +	TALLOC_FREE(tmp_ctx);
 +	return 0;
