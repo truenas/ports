@@ -25,7 +25,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}click>=6.7:devel/py-click@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}libzfs>=1.0:devel/py-libzfs@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}GitPython>=2.1.10:devel/py-gitpython@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}netifaces>=0.10.6:net/py-netifaces@${PY_FLAVOR} \
-	merge:devel/rcs57
+	rcs57>0:devel/rcs57
 
 CONFLICTS=  py-iocage-[0-9]* iocage-[0-9]* iocage-devel-[0-9]*
 
