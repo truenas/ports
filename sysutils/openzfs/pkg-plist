@@ -2,6 +2,7 @@
 %%PYTHON%%bin/arcstat
 %%PYTHON%%bin/dbufstat
 bin/raidz_test
+bin/zgenhostid
 etc/sudoers.d/zfs
 etc/zfs/vdev_id.conf.alias.example
 etc/zfs/vdev_id.conf.multipath.example
@@ -67,7 +68,6 @@ include/libspl/string.h
 include/libspl/stropts.h
 include/libspl/sys/acl.h
 include/libspl/sys/acl_impl.h
-include/libspl/sys/byteorder.h
 include/libspl/sys/callb.h
 include/libspl/sys/cmn_err.h
 include/libspl/sys/cred.h
@@ -76,7 +76,6 @@ include/libspl/sys/dkio.h
 include/libspl/sys/dklabel.h
 include/libspl/sys/dktp/fdisk.h
 include/libspl/sys/feature_tests.h
-include/libspl/sys/file.h
 include/libspl/sys/int_limits.h
 include/libspl/sys/int_types.h
 include/libspl/sys/inttypes.h
@@ -87,9 +86,6 @@ include/libspl/sys/list.h
 include/libspl/sys/list_impl.h
 include/libspl/sys/mhd.h
 include/libspl/sys/mkdev.h
-include/libspl/sys/mnttab.h
-include/libspl/sys/mount.h
-include/libspl/sys/param.h
 include/libspl/sys/policy.h
 include/libspl/sys/poll.h
 include/libspl/sys/priv.h
@@ -97,12 +93,10 @@ include/libspl/sys/processor.h
 include/libspl/sys/sha2.h
 include/libspl/sys/simd.h
 include/libspl/sys/stack.h
-include/libspl/sys/stat.h
 include/libspl/sys/stdtypes.h
 include/libspl/sys/strings.h
 include/libspl/sys/stropts.h
 include/libspl/sys/sunddi.h
-include/libspl/sys/sysmacros.h
 include/libspl/sys/systeminfo.h
 include/libspl/sys/time.h
 include/libspl/sys/trace_spl.h
@@ -110,13 +104,10 @@ include/libspl/sys/trace_zfs.h
 include/libspl/sys/types.h
 include/libspl/sys/types32.h
 include/libspl/sys/tzfile.h
-include/libspl/sys/uio.h
 include/libspl/sys/va_list.h
 include/libspl/sys/varargs.h
-include/libspl/sys/vfs.h
 include/libspl/sys/vnode.h
 include/libspl/sys/vtoc.h
-include/libspl/sys/zfs_context_os.h
 include/libspl/sys/zone.h
 include/libspl/thread.h
 include/libspl/tzfile.h
@@ -423,6 +414,7 @@ man/man8/zfs-userspace.8.gz
 man/man8/zfs.8.gz
 man/man8/zfsconcepts.8.gz
 man/man8/zfsprops.8.gz
+man/man8/zgenhostid.8.gz
 man/man8/zinject.8.gz
 man/man8/zpool-add.8.gz
 man/man8/zpool-attach.8.gz
@@ -475,7 +467,6 @@ share/zfs/runfiles/freebsd.run
 share/zfs/runfiles/linux.run
 share/zfs/runfiles/longevity.run
 share/zfs/runfiles/perf-regression.run
-share/zfs/runfiles/sunos.run
 share/zfs/test-runner/bin/test-runner.py
 share/zfs/test-runner/bin/zts-report.py
 share/zfs/test-runner/include/logapi.shlib
@@ -513,7 +504,6 @@ share/zfs/zfs-tests/include/default.cfg
 share/zfs/zfs-tests/include/libtest.shlib
 share/zfs/zfs-tests/include/math.shlib
 share/zfs/zfs-tests/include/properties.shlib
-share/zfs/zfs-tests/include/tunables.cfg
 share/zfs/zfs-tests/include/zpool_script.shlib
 share/zfs/zfs-tests/tests/functional/acl/acl.cfg
 share/zfs/zfs-tests/tests/functional/acl/acl_common.kshlib
@@ -2029,7 +2019,6 @@ share/zfs/zfs-tests/tests/functional/rsend/send_freeobjects.ksh
 share/zfs/zfs-tests/tests/functional/rsend/send_holds.ksh
 share/zfs/zfs-tests/tests/functional/rsend/send_hole_birth.ksh
 share/zfs/zfs-tests/tests/functional/rsend/send_mixed_raw.ksh
-share/zfs/zfs-tests/tests/functional/rsend/send_partial_dataset.ksh
 share/zfs/zfs-tests/tests/functional/rsend/send_realloc_dnode_size.ksh
 share/zfs/zfs-tests/tests/functional/rsend/send_realloc_encrypted_files.ksh
 share/zfs/zfs-tests/tests/functional/rsend/send_realloc_files.ksh
