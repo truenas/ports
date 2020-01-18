@@ -4658,6 +4658,7 @@
     SUBDIR += py-molecule
     SUBDIR += py-mondrian
     SUBDIR += py-mongokit
+    SUBDIR += py-monkeytype
     SUBDIR += py-monotonic
     SUBDIR += py-monty
     SUBDIR += py-more-itertools
