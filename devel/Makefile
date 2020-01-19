@@ -6042,6 +6042,7 @@
     SUBDIR += rubygem-method_source
     SUBDIR += rubygem-micromachine
     SUBDIR += rubygem-micromachine2
+    SUBDIR += rubygem-middleware
     SUBDIR += rubygem-mini_portile2
     SUBDIR += rubygem-minitest
     SUBDIR += rubygem-mixlib-archive
