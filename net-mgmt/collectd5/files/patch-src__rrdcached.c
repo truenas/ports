@@ -21,7 +21,7 @@
 +            daemon_address, rrd_get_error(), status);
 +      reported_connect_error = 1;
 +    }
-     return -1;
+     return (-1);
    }
 +  reported_connect_error = 0;
  
@@ -40,7 +40,7 @@
 +            daemon_address, rrd_get_error(), status);
 +      reported_connect_error = 1;
 +    }
-     return -1;
+     return (-1);
    }
 +  reported_connect_error = 0;
  
@@ -59,7 +59,7 @@
 +            daemon_address, rrd_get_error(), status);
 +      reported_connect_error = 1;
 +    }
-     return -1;
+     return (-1);
    }
 +  reported_connect_error = 0;
  
@@ -89,7 +89,7 @@
 +            daemon_address, rrd_get_error(), status);
 +      reported_connect_error = 1;
 +    }
-     return -1;
+     return (-1);
    }
 +  reported_connect_error = 0;
  
