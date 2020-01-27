@@ -5737,6 +5737,7 @@
     SUBDIR += rubygem-azure_mgmt_customer_insights
     SUBDIR += rubygem-azure_mgmt_data_factory
     SUBDIR += rubygem-azure_mgmt_data_migration
+    SUBDIR += rubygem-azure_mgmt_databox
     SUBDIR += rubygem-backports
     SUBDIR += rubygem-bacon
     SUBDIR += rubygem-baf
