@@ -5745,6 +5745,7 @@
     SUBDIR += rubygem-azure_mgmt_dev_spaces
     SUBDIR += rubygem-azure_mgmt_devtestlabs
     SUBDIR += rubygem-azure_mgmt_dns
+    SUBDIR += rubygem-azure_mgmt_edgegateway
     SUBDIR += rubygem-backports
     SUBDIR += rubygem-bacon
     SUBDIR += rubygem-baf
