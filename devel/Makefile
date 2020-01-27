@@ -5699,6 +5699,7 @@
     SUBDIR += rubygem-azure_cognitiveservices_luisauthoring
     SUBDIR += rubygem-azure_cognitiveservices_luisruntime
     SUBDIR += rubygem-azure_cognitiveservices_newssearch
+    SUBDIR += rubygem-azure_cognitiveservices_personalizer
     SUBDIR += rubygem-backports
     SUBDIR += rubygem-bacon
     SUBDIR += rubygem-baf
