@@ -5787,6 +5787,7 @@
     SUBDIR += rubygem-azure_mgmt_privatedns
     SUBDIR += rubygem-azure_mgmt_recovery_services
     SUBDIR += rubygem-azure_mgmt_recovery_services_backup
+    SUBDIR += rubygem-azure_mgmt_recovery_services_site_recovery
     SUBDIR += rubygem-backports
     SUBDIR += rubygem-bacon
     SUBDIR += rubygem-baf
