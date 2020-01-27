@@ -5780,6 +5780,7 @@
     SUBDIR += rubygem-azure_mgmt_peering
     SUBDIR += rubygem-azure_mgmt_policy
     SUBDIR += rubygem-azure_mgmt_policy_insights
+    SUBDIR += rubygem-azure_mgmt_portal
     SUBDIR += rubygem-backports
     SUBDIR += rubygem-bacon
     SUBDIR += rubygem-baf
