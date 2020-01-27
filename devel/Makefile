@@ -5717,6 +5717,7 @@
     SUBDIR += rubygem-azure_mgmt_api_management
     SUBDIR += rubygem-azure_mgmt_appconfiguration
     SUBDIR += rubygem-azure_mgmt_attestation
+    SUBDIR += rubygem-azure_mgmt_authorization
     SUBDIR += rubygem-backports
     SUBDIR += rubygem-bacon
     SUBDIR += rubygem-baf
