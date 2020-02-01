@@ -1,0 +1,27 @@
+--- wscript.orig	2019-02-08 04:53:52.663834793 -0800
++++ wscript	2019-02-08 04:54:57.142749163 -0800
+@@ -77,6 +77,14 @@ def options(opt):
+                    dest='with_system_heimdalkrb5',
+                    default=False)
+ 
++    opt.add_option('--with-libzfs',
++                   help='enable libZFS support',
++                   action='store_true', dest='with_libzfs', default=False)
++
++    opt.add_option('--without-libzfs',
++                   help='disable libZFS support',
++                   action='store_false', dest='with_libzfs', default=True)
++
+     opt.add_option('--without-ad-dc',
+                    help='disable AD DC functionality (enables only Samba FS (File Server, Winbind, NMBD) and client utilities.',
+                    action='store_true', dest='without_ad_dc', default=False)
+@@ -354,6 +362,9 @@ def configure(conf):
+                          msg="Checking compiler for full RELRO support"):
+             conf.env['ENABLE_RELRO'] = True
+ 
++    if Options.options.with_libzfs != False:
++        conf.DEFINE('HAVE_LIBZFS', '1')
++
+     conf.SAMBA_CONFIG_H('include/config.h')
+ 
+ def etags(ctx):
