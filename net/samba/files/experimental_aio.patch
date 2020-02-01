@@ -1,0 +1,1263 @@
+diff --git a/source3/modules/vfs_aio_fbsd.c b/source3/modules/vfs_aio_fbsd.c
+new file mode 100644
+index 0000000..4b54c7b
+--- /dev/null
++++ b/source3/modules/vfs_aio_fbsd.c
+@@ -0,0 +1,444 @@
++/*
++ * Copyright (C) Volker Lendecke 2008
++ * Copyright (C) Jeremy Allison 2010
++ * Copyright (C) Stefan Metzmacher 2019
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ */
++
++#include "includes.h"
++#include "system/filesys.h"
++#include "smbd/smbd.h"
++#include "smbd/globals.h"
++#include "lib/util/tevent_unix.h"
++#include "smbprofile.h"
++#include <sys/event.h>
++#include <aio.h>
++#include <pthread.h>
++
++#define MAX_KEVENTS 8 
++
++struct vfs_aio_fbsd_request;
++
++struct vfs_aio_fbsd_config {
++	int kqueue_fd;
++};
++
++struct vfs_aio_fbsd_request {
++	struct vfs_aio_fbsd_requeust *prev, *next;
++	struct tevent_req *req;
++	struct aiocb *iocbp;
++	bool in_progress;
++	size_t ret;
++	int saved_errno;
++	void *state;
++};
++
++struct vfs_aio_fbsd_kevent {
++	struct vfs_aio_fbsd_kevent *prev, *next;
++	struct aiocb *iocbp;
++	bool in_progress;
++	size_t ret;
++	int saved_errno;
++	void *state;
++};
++
++struct vfs_fbsd_kevent_thread_data {
++	int k_fd;
++	struct tevent_thread_proxy *tp;
++};
++
++static int vfs_aio_fbsd_config_destructor(struct vfs_aio_fbsd_config *config)
++{
++	close(config->kqueue_fd);
++	config->kqueue_fd = -1;
++	return 0;
++}
++
++/*
++ * If possible, wait for existing aio requests to complete.
++ * May need to fine-tune the timeout later.
++ */
++static int vfs_aio_fbsd_request_waitcomplete(struct aiocb *iocbp)
++{
++	int ret;
++	struct timespec timeout = {5,0};
++	DBG_ERR("aio op currently in progress for "
++		"fd [%d], waiting for completion\n",
++		iocbp->aio_fildes);
++	ret = aio_waitcomplete(&iocbp, &timeout); 
++	if (ret == -1) {
++		DBG_ERR("aio_waitcomplete() failed "
++			"%s\n", strerror(errno));
++			return ret;
++	}
++	else if (ret == EINPROGRESS) {
++		DBG_ERR("timer expired and aio still in-flight\n");
++		return -1;
++	}
++
++	return 0;
++}
++
++/*
++ * Refuse to deallocate aio_fbsd_request if we have
++ * in-flight AIO, and can't cancel it. Returning -1 here
++ * accomplishes this. Per aio_ manpages, the async control
++ * block structure pointed to by iocb and the buffer must
++ * remain valid until the operation has completed.
++ */
++static int vfs_aio_fbsd_request_state_destructor(struct vfs_aio_fbsd_request *req)
++{
++	int ret;
++	if (req->in_progress) {
++		ret = aio_cancel(req->iocbp->aio_fildes, req->iocbp);
++		if (ret == -1) {
++			DBG_ERR("aio_cancel returned -1: %s\n",
++				strerror(errno));
++			return ret;
++		}
++		/* return 0x2 = AIO_NOTCANCELED */
++		else if (ret == 2) {
++			ret = aio_error(req->iocbp);
++			if (ret == -1) {
++				DBG_ERR("aio_error failed: %s\n",
++					strerror(errno));
++				return ret;
++			}
++			else if (ret == EINPROGRESS) {
++				ret = vfs_aio_fbsd_request_waitcomplete(req->iocbp);
++				if (ret == -1) {
++					return ret;
++				}
++			}
++		}
++	}
++	SAFE_FREE(req->iocbp);
++	return 0;
++}
++
++static void aio_proxy_callback_handler(struct tevent_context *ev,
++				       struct tevent_immediate *im,
++				       void *private_ptr)
++{
++	struct vfs_aio_fbsd_kevent *kev = NULL;
++	struct tevent_req *req = NULL;
++	kev = talloc_get_type_abort(private_ptr,
++				    struct vfs_aio_fbsd_kevent);
++
++	req = talloc_get_type_abort(kev->state,
++				    struct tevent_req);
++
++	struct vfs_aio_fbsd_request *state = tevent_req_data(
++		req, struct vfs_aio_fbsd_request);
++
++	state->in_progress = kev->in_progress;
++	state->ret = kev->ret;
++	state->saved_errno = kev->saved_errno;
++	tevent_req_done(req);
++}
++
++static void *vfs_fbsd_aio_queue_thread(void *arg)
++{
++	struct vfs_fbsd_kevent_thread_data *kctx = (struct vfs_fbsd_kevent_thread_data *)arg;
++	int ret, i;
++	TALLOC_CTX *kqt_ctx = talloc_init("kqt_ctx");
++	struct timespec *timeout = NULL;
++	struct vfs_aio_fbsd_kevent *req;
++	struct kevent received[MAX_KEVENTS];
++	struct tevent_immediate *im;
++	for (;/*ever*/;) {
++		ret = kevent(kctx->k_fd,
++			     NULL,		/* changelist */
++			     0,			/* nchanges */
++			     received,		/* eventlist */
++			     MAX_KEVENTS,	/* nevents */
++			     timeout);		/* timeout */
++
++		SMB_ASSERT(ret != -1);
++		for (i=0;i<ret;i++) {
++			im = tevent_create_immediate(kqt_ctx);
++			req = NULL;
++			SMB_ASSERT(received[i].filter == EVFILT_AIO);
++			req = talloc_get_type_abort(received[i].udata, struct vfs_aio_fbsd_kevent);
++			req->in_progress = false;
++			req->ret = aio_return(req->iocbp);
++			req->saved_errno = errno;
++			tevent_thread_proxy_schedule(kctx->tp,
++				&im,
++				aio_proxy_callback_handler,
++                                &req);
++		}
++	}
++}
++
++static int vfs_aio_fbsd_connect(vfs_handle_struct *handle, const char *service,
++				const char *user)
++{
++	int ret;
++	struct vfs_aio_fbsd_config *config;
++	struct vfs_fbsd_kevent_thread_data *kctx;
++	bool sqpoll;
++	unsigned flags = 0;
++	pthread_t *kevent_th;
++	TALLOC_CTX *thd_ctx = talloc_init("thd_ctx");
++
++	config = talloc_zero(handle->conn, struct vfs_aio_fbsd_config);
++	if (config == NULL) {
++		DBG_ERR("talloc_zero() failed\n");
++		return -1;
++	}
++
++	SMB_VFS_HANDLE_SET_DATA(handle, config,
++				NULL, struct vfs_aio_fbsd_config,
++				return -1);
++
++	ret = SMB_VFS_NEXT_CONNECT(handle, service, user);
++	if (ret < 0) {
++		return ret;
++	}
++
++	talloc_set_destructor(config, vfs_aio_fbsd_config_destructor);
++
++	config->kqueue_fd = kqueue();
++	kctx = talloc_zero(NULL, struct vfs_fbsd_kevent_thread_data);
++	kctx->k_fd = config->kqueue_fd;
++	kctx->tp = tevent_thread_proxy_create(handle->conn->sconn->ev_ctx);
++	if (kctx->tp == NULL) {
++		DBG_ERR("failed to create thread proxy\n");
++		return -1;
++	}
++
++	//talloc_set_destructor(kctx, kctx_deny_destructor);
++	ret = pthread_create(kevent_th, NULL, vfs_fbsd_aio_queue_thread,
++			     (void *)kctx);
++
++	return 0;
++}
++
++static struct tevent_req *vfs_aio_fbsd_pread_send(struct vfs_handle_struct *handle,
++					     TALLOC_CTX *mem_ctx,
++					     struct tevent_context *ev,
++					     struct files_struct *fsp,
++					     void *data,
++					     size_t n, off_t offset)
++{
++	int ret;
++	struct tevent_req *req = NULL;
++	struct vfs_aio_fbsd_request *state = NULL;
++	struct vfs_aio_fbsd_config *config = NULL;
++	struct vfs_aio_fbsd_kevent *kev = NULL;
++
++	SMB_VFS_HANDLE_GET_DATA(handle, config,
++				struct vfs_aio_fbsd_config,
++				smb_panic(__location__));
++
++	req = tevent_req_create(mem_ctx, &state, struct vfs_aio_fbsd_request);
++	kev = talloc_zero(mem_ctx, struct vfs_aio_fbsd_kevent);
++	kev->iocbp = (struct aiocb*)calloc(1, sizeof(struct aiocb));
++	if (kev->iocbp == NULL) {
++		DBG_ERR("calloc() failed\n");
++		return NULL;
++	}
++
++	if (req == NULL) {
++		SAFE_FREE(kev->iocbp);
++		return NULL;
++	}
++	state->req = req;
++	state->state = state;
++	state->iocbp = kev->iocbp;
++	kev->state = req;
++	kev->iocbp->aio_fildes = fsp->fh->fd;
++	kev->iocbp->aio_offset = offset;
++	kev->iocbp->aio_buf = data;
++	kev->iocbp->aio_sigevent.sigev_notify_kqueue = config->kqueue_fd;
++	kev->iocbp->aio_sigevent.sigev_value.sival_ptr = kev;
++	kev->iocbp->aio_sigevent.sigev_notify = SIGEV_KEVENT;
++	kev->iocbp->aio_nbytes = n;
++	state->in_progress = true;
++	DBG_DEBUG("fildes: %d, offset: %ld, size: %lu preq: [%p], pstate: [%p]\n",
++		state->iocbp->aio_fildes, state->iocbp->aio_offset, state->iocbp->aio_nbytes, req, state); 
++	ret = aio_read(kev->iocbp);
++	talloc_set_destructor(state, vfs_aio_fbsd_request_state_destructor);
++	/*
++	 * "The asynchronous I/O interfaces don't affect the file offset maintained
++	 * by the operating system. This won't be a problem as long as we never mix
++	 * a I/O functions with conventional functions on the same file in the same
++	 * process." - APUE
++	 * This is why we're not retrying with conventional IO on EAGAIN here.
++	 */
++	if (ret != 0) {
++		DBG_ERR("Failed to add to AIO queue %s\n", strerror(errno));
++		return NULL; //errno to status
++	}
++
++	if (!tevent_req_is_in_progress(req)) {
++		return tevent_req_post(req, ev);
++	}
++
++	tevent_req_defer_callback(req, ev);
++	return req;
++}
++
++static ssize_t vfs_aio_fbsd_common_recv(struct tevent_req *req,
++				  struct vfs_aio_state *vfs_aio_state)
++{
++	struct vfs_aio_fbsd_request *state = tevent_req_data(req, struct vfs_aio_fbsd_request);
++	if (state->ret < 0) {
++		DBG_ERR("aio_return failed: %s\n", strerror(state->saved_errno));
++		vfs_aio_state->error = state->ret;
++		return -1;
++	}
++
++	if (tevent_req_is_unix_error(req, &vfs_aio_state->error)) {
++		DBG_ERR("Is unix error\n");
++		return -1;
++	}
++	vfs_aio_state->error = 0;
++	
++	tevent_req_received(req);
++	return state->ret;
++}
++
++static struct tevent_req *vfs_aio_fbsd_pwrite_send(struct vfs_handle_struct *handle,
++					     TALLOC_CTX *mem_ctx,
++					     struct tevent_context *ev,
++					     struct files_struct *fsp,
++					     const void *data,
++					     size_t n, off_t offset)
++{
++	int ret;
++	struct tevent_req *req = NULL;
++	struct vfs_aio_fbsd_request *state = NULL;
++	struct vfs_aio_fbsd_config *config = NULL;
++	struct vfs_aio_fbsd_kevent *kev = NULL;
++
++	SMB_VFS_HANDLE_GET_DATA(handle, config,
++				struct vfs_aio_fbsd_config,
++				smb_panic(__location__));
++
++	req = tevent_req_create(mem_ctx, &state, struct vfs_aio_fbsd_request);
++	kev = talloc_zero(mem_ctx, struct vfs_aio_fbsd_kevent);
++	kev->iocbp = (struct aiocb*)calloc(1, sizeof(struct aiocb));
++	if (kev->iocbp == NULL) {
++		DBG_ERR("calloc() failed\n");
++		return NULL;
++	}
++
++	if (req == NULL) {
++		SAFE_FREE(kev->iocbp);
++		return NULL;
++	}
++	state->req = req;
++	state->state = state;
++	state->iocbp = kev->iocbp;
++	kev->state = req;
++	kev->iocbp->aio_fildes = fsp->fh->fd;
++	kev->iocbp->aio_offset = offset;
++	kev->iocbp->aio_buf = discard_const(data);
++	kev->iocbp->aio_sigevent.sigev_notify_kqueue = config->kqueue_fd;
++	kev->iocbp->aio_sigevent.sigev_value.sival_ptr = kev;
++	kev->iocbp->aio_sigevent.sigev_notify = SIGEV_KEVENT;
++	kev->iocbp->aio_nbytes = n;
++	state->in_progress = true;
++	DBG_DEBUG("fildes: %d, offset: %ld, size: %lu preq: [%p], pkev: [%p]\n",
++		state->iocbp->aio_fildes, state->iocbp->aio_offset, state->iocbp->aio_nbytes, req, kev); 
++	ret = aio_write(kev->iocbp);
++	talloc_set_destructor(state, vfs_aio_fbsd_request_state_destructor);
++	if (ret != 0) {
++		DBG_ERR("Failed to add to AIO queue %s\n", strerror(errno));
++		return NULL; //errno to status
++	}
++
++	if (!tevent_req_is_in_progress(req)) {
++		return tevent_req_post(req, ev);
++	}
++
++	tevent_req_defer_callback(req, ev);
++	return req;
++}
++
++static struct tevent_req *vfs_aio_fbsd_fsync_send(struct vfs_handle_struct *handle,
++					     TALLOC_CTX *mem_ctx,
++					     struct tevent_context *ev,
++					     struct files_struct *fsp)
++{
++	int ret;
++	struct tevent_req *req = NULL;
++	struct vfs_aio_fbsd_request *state = NULL;
++	struct vfs_aio_fbsd_config *config = NULL;
++	struct vfs_aio_fbsd_kevent *kev = NULL;
++
++	SMB_VFS_HANDLE_GET_DATA(handle, config,
++				struct vfs_aio_fbsd_config,
++				smb_panic(__location__));
++
++	req = tevent_req_create(mem_ctx, &state, struct vfs_aio_fbsd_request);
++	kev = talloc_zero(mem_ctx, struct vfs_aio_fbsd_kevent);
++	kev->iocbp = (struct aiocb*)calloc(1, sizeof(struct aiocb));
++	state->req = req;
++	state->state = state;
++	state->iocbp = kev->iocbp;
++	kev->state = req;
++	if (kev->iocbp == NULL) {
++		DBG_ERR("calloc() failed\n");
++		return NULL;
++	}
++
++	if (req == NULL) {
++		SAFE_FREE(state->iocbp);
++		return NULL;
++	}
++	kev->iocbp->aio_fildes = fsp->fh->fd;
++	ret = aio_fsync(O_SYNC, kev->iocbp);
++	talloc_set_destructor(state, vfs_aio_fbsd_request_state_destructor);
++	if (ret != 0) {
++		DBG_ERR("Failed to add to AIO queue %s\n", strerror(errno));
++		return NULL; //errno to status
++	}
++	state->in_progress = true;
++	ret = aio_fsync(O_SYNC, state->iocbp);
++
++	if (!tevent_req_is_in_progress(req)) {
++		return tevent_req_post(req, ev);
++	}
++
++	tevent_req_defer_callback(req, ev);
++	return req;
++}
++
++static int vfs_aio_fbsd_fsync_recv(struct tevent_req *req,
++				  struct vfs_aio_state *vfs_aio_state)
++{
++	return vfs_aio_fbsd_common_recv(req, vfs_aio_state);
++}
++
++static struct vfs_fn_pointers vfs_aio_fbsd_fns = {
++	.connect_fn = vfs_aio_fbsd_connect,
++	.pread_send_fn = vfs_aio_fbsd_pread_send,
++	.pread_recv_fn = vfs_aio_fbsd_common_recv,
++	.pwrite_send_fn = vfs_aio_fbsd_pwrite_send,
++	.pwrite_recv_fn = vfs_aio_fbsd_common_recv,
++	.fsync_send_fn = vfs_aio_fbsd_fsync_send,
++	.fsync_recv_fn = vfs_aio_fbsd_fsync_recv,
++};
++
++static_decl_vfs;
++NTSTATUS vfs_aio_fbsd_init(TALLOC_CTX *ctx)
++{
++	return smb_register_vfs(SMB_VFS_INTERFACE_VERSION,
++				"aio_fbsd", &vfs_aio_fbsd_fns);
++}
+diff --git a/source3/modules/vfs_aio_posix.c b/source3/modules/vfs_aio_posix.c
+new file mode 100644
+index 0000000..329d723
+--- /dev/null
++++ b/source3/modules/vfs_aio_posix.c
+@@ -0,0 +1,301 @@
++/*
++ * Simulate pread_send/recv and pwrite_send/recv using posix aio
++ *
++ * Copyright (C) Volker Lendecke 2012
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 3 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++ */
++
++#include "includes.h"
++#include "system/filesys.h"
++#include "system/shmem.h"
++#include "smbd/smbd.h"
++#include "smbd/globals.h"
++#include "lib/util/tevent_unix.h"
++#include <aio.h>
++
++/* The signal we'll use to signify aio done. */
++#ifndef RT_SIGNAL_AIO
++#define RT_SIGNAL_AIO	(SIGRTMIN+3)
++#endif
++
++#ifndef HAVE_STRUCT_SIGEVENT_SIGEV_VALUE_SIVAL_PTR
++#ifdef HAVE_STRUCT_SIGEVENT_SIGEV_VALUE_SIGVAL_PTR
++#define sival_int	sigval_int
++#define sival_ptr	sigval_ptr
++#endif
++#endif
++
++static struct tevent_signal *aio_signal_event = NULL;
++
++struct aio_posix_state {
++	struct aiocb acb;
++	ssize_t ret;
++	int err;
++};
++
++static int aio_posix_state_destructor(struct aio_posix_state *s)
++{
++	int ret;
++
++	/*
++	 * We could do better here. This destructor is run when a
++	 * request is prematurely cancelled. We wait for the aio to
++	 * complete, so that we do not have to maintain aiocb structs
++	 * beyond the life of an aio_posix_state. Possible, but not
++	 * sure the effort is worth it right now.
++	 */
++
++	do {
++		const struct aiocb *a = &s->acb;
++		ret = aio_suspend(&a, 1, NULL);
++	} while ((ret == -1) && (errno == EINTR));
++
++	return 0;
++}
++
++static struct tevent_req *aio_posix_pread_send(
++	struct vfs_handle_struct *handle,
++	TALLOC_CTX *mem_ctx, struct tevent_context *ev,
++	struct files_struct *fsp, void *data, size_t n, off_t offset)
++{
++	struct tevent_req *req;
++	struct aio_posix_state *state;
++	struct aiocb *a;
++	int ret;
++
++	req = tevent_req_create(mem_ctx, &state, struct aio_posix_state);
++	if (req == NULL) {
++		return NULL;
++	}
++
++	a = &state->acb;
++
++	a->aio_fildes = fsp->fh->fd;
++	a->aio_buf = data;
++	a->aio_nbytes = n;
++	a->aio_offset = offset;
++	a->aio_sigevent.sigev_notify = SIGEV_SIGNAL;
++	a->aio_sigevent.sigev_signo  = RT_SIGNAL_AIO;
++	a->aio_sigevent.sigev_value.sival_ptr = req;
++
++	ret = aio_read(a);
++	if (ret == 0) {
++		talloc_set_destructor(state, aio_posix_state_destructor);
++		return req;
++	}
++
++	if (errno == EAGAIN) {
++		/*
++		 * aio overloaded, do the sync fallback
++		 */
++		state->ret = pread(fsp->fh->fd, data, n, offset);
++		if (state->ret == -1) {
++			state->err = errno;
++		}
++		tevent_req_done(req);
++		return tevent_req_post(req, ev);
++	}
++
++	tevent_req_error(req, errno);
++	return tevent_req_post(req, ev);
++}
++
++static struct tevent_req *aio_posix_pwrite_send(
++	struct vfs_handle_struct *handle,
++	TALLOC_CTX *mem_ctx, struct tevent_context *ev,
++	struct files_struct *fsp, const void *data, size_t n, off_t offset)
++{
++	struct tevent_req *req;
++	struct aio_posix_state *state;
++	struct aiocb *a;
++	int ret;
++
++	req = tevent_req_create(mem_ctx, &state, struct aio_posix_state);
++	if (req == NULL) {
++		return NULL;
++	}
++
++	a = &state->acb;
++
++	a->aio_fildes = fsp->fh->fd;
++	a->aio_buf = discard_const(data);
++	a->aio_nbytes = n;
++	a->aio_offset = offset;
++	a->aio_sigevent.sigev_notify = SIGEV_SIGNAL;
++	a->aio_sigevent.sigev_signo  = RT_SIGNAL_AIO;
++	a->aio_sigevent.sigev_value.sival_ptr = req;
++
++	ret = aio_write(a);
++	if (ret == 0) {
++		talloc_set_destructor(state, aio_posix_state_destructor);
++		return req;
++	}
++
++	if (errno == EAGAIN) {
++		/*
++		 * aio overloaded, do the sync fallback
++		 */
++		state->ret = pwrite(fsp->fh->fd, data, n, offset);
++		if (state->ret == -1) {
++			state->err = errno;
++		}
++		tevent_req_done(req);
++		return tevent_req_post(req, ev);
++	}
++
++	tevent_req_error(req, errno);
++	return tevent_req_post(req, ev);
++}
++
++static void aio_posix_signal_handler(struct tevent_context *ev,
++				     struct tevent_signal *se,
++				     int signum, int count,
++				     void *_info, void *private_data)
++{
++	siginfo_t *info;
++	struct tevent_req *req;
++	struct aio_posix_state *state;
++	int err;
++
++	info = (siginfo_t *)_info;
++	req = talloc_get_type_abort(info->si_value.sival_ptr,
++				    struct tevent_req);
++	state = tevent_req_data(req, struct aio_posix_state);
++
++	err = aio_error(&state->acb);
++	if (err == EINPROGRESS) {
++		DEBUG(10, ("aio_posix_signal_handler: operation req %p "
++			   "still in progress\n", req));
++		return;
++	}
++	if (err == ECANCELED) {
++		DEBUG(10, ("aio_posix_signal_handler: operation req %p "
++			   "canceled\n", req));
++		return;
++	}
++
++	/*
++	 * No need to suspend for this in the destructor anymore
++	 */
++	talloc_set_destructor(state, NULL);
++
++	state->ret = aio_return(&state->acb);
++	state->err = err;
++	tevent_req_done(req);
++}
++
++static ssize_t aio_posix_recv(struct tevent_req *req, struct vfs_aio_state *vfs_aio_state)
++{
++	
++	struct aio_posix_state *state = tevent_req_data(
++		req, struct aio_posix_state);
++
++	if (tevent_req_is_unix_error(req, &vfs_aio_state->error)) {
++		return -1;
++	}
++	return state->ret;
++}
++
++static struct tevent_req *aio_posix_fsync_send(
++	struct vfs_handle_struct *handle, TALLOC_CTX *mem_ctx,
++	struct tevent_context *ev, struct files_struct *fsp)
++{
++	struct tevent_req *req;
++	struct aio_posix_state *state;
++	struct aiocb *a;
++	int ret;
++
++	req = tevent_req_create(mem_ctx, &state, struct aio_posix_state);
++	if (req == NULL) {
++		return NULL;
++	}
++
++	a = &state->acb;
++
++	a->aio_fildes = fsp->fh->fd;
++	a->aio_sigevent.sigev_notify = SIGEV_SIGNAL;
++	a->aio_sigevent.sigev_signo  = RT_SIGNAL_AIO;
++	a->aio_sigevent.sigev_value.sival_ptr = req;
++
++	ret = aio_fsync(O_SYNC, a);
++	if (ret == 0) {
++		talloc_set_destructor(state, aio_posix_state_destructor);
++		return req;
++	}
++
++	if (errno == EAGAIN) {
++		/*
++		 * aio overloaded, do the sync fallback
++		 */
++		state->ret = fsync(fsp->fh->fd);
++		if (state->ret == -1) {
++			state->err = errno;
++		}
++		tevent_req_done(req);
++		return tevent_req_post(req, ev);
++	}
++
++	tevent_req_error(req, errno);
++	return tevent_req_post(req, ev);
++}
++
++static int aio_posix_int_recv(struct tevent_req *req, struct vfs_aio_state *vfs_aio_state)
++{
++	struct aio_posix_state *state = tevent_req_data(
++		req, struct aio_posix_state);
++
++	if (tevent_req_is_unix_error(req, &vfs_aio_state->error)) {
++		return -1;
++        }
++        vfs_aio_state->error = 0;
++	return state->ret;
++}
++
++static int aio_posix_connect(vfs_handle_struct *handle, const char *service,
++			     const char *user)
++{
++	if (aio_signal_event == NULL) {
++		struct tevent_context *ev = handle->conn->sconn->ev_ctx;
++
++		aio_signal_event = tevent_add_signal(
++			ev, ev, RT_SIGNAL_AIO, SA_SIGINFO,
++			aio_posix_signal_handler, NULL);
++
++		if (aio_signal_event == NULL) {
++			DEBUG(1, ("tevent_add_signal failed\n"));
++			return -1;
++		}
++	}
++	return SMB_VFS_NEXT_CONNECT(handle, service, user);
++}
++
++static struct vfs_fn_pointers vfs_aio_posix_fns = {
++	.connect_fn = aio_posix_connect,
++	.pread_send_fn = aio_posix_pread_send,
++	.pread_recv_fn = aio_posix_recv,
++	.pwrite_send_fn = aio_posix_pwrite_send,
++	.pwrite_recv_fn = aio_posix_recv,
++	.fsync_send_fn = aio_posix_fsync_send,
++	.fsync_recv_fn = aio_posix_int_recv,
++};
++
++static_decl_vfs;
++NTSTATUS vfs_aio_posix_init(TALLOC_CTX *ctx)
++{
++        return smb_register_vfs(SMB_VFS_INTERFACE_VERSION,
++				"aio_posix", &vfs_aio_posix_fns);
++}
++
+diff --git a/source3/modules/vfs_aio_spthread.c b/source3/modules/vfs_aio_spthread.c
+new file mode 100644
+index 0000000..d75b402
+--- /dev/null
++++ b/source3/modules/vfs_aio_spthread.c
+@@ -0,0 +1,500 @@
++/*
++   Unix SMB/CIFS implementation.
++   Wrap disk only vfs functions to sidestep dodgy compilers.
++   Copyright (C) Tim Potter 1998
++   Copyright (C) Jeremy Allison 2007
++
++   This program is free software; you can redistribute it and/or modify
++   it under the terms of the GNU General Public License as published by
++   the Free Software Foundation; either version 3 of the License, or
++   (at your option) any later version.
++
++   This program is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++   GNU General Public License for more details.
++
++   You should have received a copy of the GNU General Public License
++   along with this program.  If not, see <http://www.gnu.org/licenses/>.
++*/
++
++#include "includes.h"
++#include "system/time.h"
++#include "system/filesys.h"
++#include "smbd/smbd.h"
++#include "smbd/globals.h"
++#include "ntioctl.h"
++#include "smbprofile.h"
++#include "../libcli/security/security.h"
++#include "passdb/lookup_sid.h"
++#include "source3/include/msdfs.h"
++#include "librpc/gen_ndr/ndr_dfsblobs.h"
++#include "lib/util/tevent_unix.h"
++#include "lib/util/tevent_ntstatus.h"
++#include "lib/util/sys_rw.h"
++#include "lib/pthreadpool/pthreadpool_tevent.h"
++#include "librpc/gen_ndr/ndr_ioctl.h"
++#include "offload_token.h"
++
++#undef DBGC_CLASS
++#define DBGC_CLASS DBGC_VFS
++
++/* Check for NULL pointer parameters in aio_spthread_* functions */
++
++/* We don't want to have NULL function pointers lying around.  Someone
++   is sure to try and execute them.  These stubs are used to prevent
++   this possibility. */
++
++struct vfs_aio_spthread_config {
++	struct pthreadpool_tevent *pool;
++};
++
++struct aio_spthread_pread_state {
++	ssize_t ret;
++	int fd;
++	void *buf;
++	size_t count;
++	off_t offset;
++
++	struct vfs_aio_state vfs_aio_state;
++	SMBPROFILE_BYTES_ASYNC_STATE(profile_bytes);
++};
++
++static void vfs_pread_do(void *private_data);
++static void vfs_pread_done(struct tevent_req *subreq);
++static int vfs_pread_state_destructor(struct aio_spthread_pread_state *state);
++
++static struct tevent_req *aio_spthread_pread_send(struct vfs_handle_struct *handle,
++					     TALLOC_CTX *mem_ctx,
++					     struct tevent_context *ev,
++					     struct files_struct *fsp,
++					     void *data,
++					     size_t n, off_t offset)
++{
++	struct tevent_req *req, *subreq;
++	struct aio_spthread_pread_state *state;
++	struct vfs_aio_spthread_config *config = NULL;
++
++	SMB_VFS_HANDLE_GET_DATA(handle, config,
++				struct vfs_aio_spthread_config,
++				smb_panic(__location__));
++
++	req = tevent_req_create(mem_ctx, &state, struct aio_spthread_pread_state);
++	if (req == NULL) {
++		return NULL;
++	}
++
++	state->ret = -1;
++	state->fd = fsp->fh->fd;
++	state->buf = data;
++	state->count = n;
++	state->offset = offset;
++
++	SMBPROFILE_BYTES_ASYNC_START(syscall_asys_pread, profile_p,
++				     state->profile_bytes, n);
++	SMBPROFILE_BYTES_ASYNC_SET_IDLE(state->profile_bytes);
++
++	subreq = pthreadpool_tevent_job_send(
++		state, ev, config->pool,
++		vfs_pread_do, state);
++	if (tevent_req_nomem(subreq, req)) {
++		return tevent_req_post(req, ev);
++	}
++	tevent_req_set_callback(subreq, vfs_pread_done, req);
++
++	talloc_set_destructor(state, vfs_pread_state_destructor);
++
++	return req;
++}
++
++static void vfs_pread_do(void *private_data)
++{
++	struct aio_spthread_pread_state *state = talloc_get_type_abort(
++		private_data, struct aio_spthread_pread_state);
++	struct timespec start_time;
++	struct timespec end_time;
++
++	SMBPROFILE_BYTES_ASYNC_SET_BUSY(state->profile_bytes);
++
++	PROFILE_TIMESTAMP(&start_time);
++
++	do {
++		state->ret = pread(state->fd, state->buf, state->count,
++				   state->offset);
++	} while ((state->ret == -1) && (errno == EINTR));
++
++	if (state->ret == -1) {
++		state->vfs_aio_state.error = errno;
++	}
++
++	PROFILE_TIMESTAMP(&end_time);
++
++	state->vfs_aio_state.duration = nsec_time_diff(&end_time, &start_time);
++
++	SMBPROFILE_BYTES_ASYNC_SET_IDLE(state->profile_bytes);
++}
++
++static int vfs_pread_state_destructor(struct aio_spthread_pread_state *state)
++{
++	return -1;
++}
++
++static void vfs_pread_done(struct tevent_req *subreq)
++{
++	struct tevent_req *req = tevent_req_callback_data(
++		subreq, struct tevent_req);
++	struct aio_spthread_pread_state *state = tevent_req_data(
++		req, struct aio_spthread_pread_state);
++	int ret;
++
++	ret = pthreadpool_tevent_job_recv(subreq);
++	TALLOC_FREE(subreq);
++	SMBPROFILE_BYTES_ASYNC_END(state->profile_bytes);
++	talloc_set_destructor(state, NULL);
++	if (ret != 0) {
++		if (ret != EAGAIN) {
++			tevent_req_error(req, ret);
++			return;
++		}
++		/*
++		 * If we get EAGAIN from pthreadpool_tevent_job_recv() this
++		 * means the lower level pthreadpool failed to create a new
++		 * thread. Fallback to sync processing in that case to allow
++		 * some progress for the client.
++		 */
++		vfs_pread_do(state);
++	}
++
++	tevent_req_done(req);
++}
++
++static ssize_t aio_spthread_pread_recv(struct tevent_req *req,
++				  struct vfs_aio_state *vfs_aio_state)
++{
++	struct aio_spthread_pread_state *state = tevent_req_data(
++		req, struct aio_spthread_pread_state);
++
++	if (tevent_req_is_unix_error(req, &vfs_aio_state->error)) {
++		return -1;
++	}
++
++	*vfs_aio_state = state->vfs_aio_state;
++	return state->ret;
++}
++
++struct aio_spthread_pwrite_state {
++	ssize_t ret;
++	int fd;
++	const void *buf;
++	size_t count;
++	off_t offset;
++
++	struct vfs_aio_state vfs_aio_state;
++	SMBPROFILE_BYTES_ASYNC_STATE(profile_bytes);
++};
++
++static void vfs_pwrite_do(void *private_data);
++static void vfs_pwrite_done(struct tevent_req *subreq);
++static int vfs_pwrite_state_destructor(struct aio_spthread_pwrite_state *state);
++
++static struct tevent_req *aio_spthread_pwrite_send(struct vfs_handle_struct *handle,
++					      TALLOC_CTX *mem_ctx,
++					      struct tevent_context *ev,
++					      struct files_struct *fsp,
++					      const void *data,
++					      size_t n, off_t offset)
++{
++	struct tevent_req *req, *subreq;
++	struct aio_spthread_pwrite_state *state;
++	struct vfs_aio_spthread_config *config = NULL;
++
++	SMB_VFS_HANDLE_GET_DATA(handle, config,
++				struct vfs_aio_spthread_config,
++				smb_panic(__location__));
++
++	req = tevent_req_create(mem_ctx, &state, struct aio_spthread_pwrite_state);
++	if (req == NULL) {
++		return NULL;
++	}
++
++	state->ret = -1;
++	state->fd = fsp->fh->fd;
++	state->buf = data;
++	state->count = n;
++	state->offset = offset;
++
++	SMBPROFILE_BYTES_ASYNC_START(syscall_asys_pwrite, profile_p,
++				     state->profile_bytes, n);
++	SMBPROFILE_BYTES_ASYNC_SET_IDLE(state->profile_bytes);
++
++	subreq = pthreadpool_tevent_job_send(
++		state, ev, config->pool,
++		vfs_pwrite_do, state);
++	if (tevent_req_nomem(subreq, req)) {
++		return tevent_req_post(req, ev);
++	}
++	tevent_req_set_callback(subreq, vfs_pwrite_done, req);
++
++	talloc_set_destructor(state, vfs_pwrite_state_destructor);
++
++	return req;
++}
++
++static void vfs_pwrite_do(void *private_data)
++{
++	struct aio_spthread_pwrite_state *state = talloc_get_type_abort(
++		private_data, struct aio_spthread_pwrite_state);
++	struct timespec start_time;
++	struct timespec end_time;
++
++	SMBPROFILE_BYTES_ASYNC_SET_BUSY(state->profile_bytes);
++
++	PROFILE_TIMESTAMP(&start_time);
++
++	do {
++		state->ret = pwrite(state->fd, state->buf, state->count,
++				   state->offset);
++	} while ((state->ret == -1) && (errno == EINTR));
++
++	if (state->ret == -1) {
++		state->vfs_aio_state.error = errno;
++	}
++
++	PROFILE_TIMESTAMP(&end_time);
++
++	state->vfs_aio_state.duration = nsec_time_diff(&end_time, &start_time);
++
++	SMBPROFILE_BYTES_ASYNC_SET_IDLE(state->profile_bytes);
++}
++
++static int vfs_pwrite_state_destructor(struct aio_spthread_pwrite_state *state)
++{
++	return -1;
++}
++
++static void vfs_pwrite_done(struct tevent_req *subreq)
++{
++	struct tevent_req *req = tevent_req_callback_data(
++		subreq, struct tevent_req);
++	struct aio_spthread_pwrite_state *state = tevent_req_data(
++		req, struct aio_spthread_pwrite_state);
++	int ret;
++
++	ret = pthreadpool_tevent_job_recv(subreq);
++	TALLOC_FREE(subreq);
++	SMBPROFILE_BYTES_ASYNC_END(state->profile_bytes);
++	talloc_set_destructor(state, NULL);
++	if (ret != 0) {
++		if (ret != EAGAIN) {
++			tevent_req_error(req, ret);
++			return;
++		}
++		/*
++		 * If we get EAGAIN from pthreadpool_tevent_job_recv() this
++		 * means the lower level pthreadpool failed to create a new
++		 * thread. Fallback to sync processing in that case to allow
++		 * some progress for the client.
++		 */
++		vfs_pwrite_do(state);
++	}
++
++	tevent_req_done(req);
++}
++
++static ssize_t aio_spthread_pwrite_recv(struct tevent_req *req,
++				   struct vfs_aio_state *vfs_aio_state)
++{
++	struct aio_spthread_pwrite_state *state = tevent_req_data(
++		req, struct aio_spthread_pwrite_state);
++
++	if (tevent_req_is_unix_error(req, &vfs_aio_state->error)) {
++		return -1;
++	}
++
++	*vfs_aio_state = state->vfs_aio_state;
++	return state->ret;
++}
++
++struct aio_spthread_fsync_state {
++	ssize_t ret;
++	int fd;
++
++	struct vfs_aio_state vfs_aio_state;
++	SMBPROFILE_BYTES_ASYNC_STATE(profile_bytes);
++};
++
++static void vfs_fsync_do(void *private_data);
++static void vfs_fsync_done(struct tevent_req *subreq);
++static int vfs_fsync_state_destructor(struct aio_spthread_fsync_state *state);
++
++static struct tevent_req *aio_spthread_fsync_send(struct vfs_handle_struct *handle,
++					     TALLOC_CTX *mem_ctx,
++					     struct tevent_context *ev,
++					     struct files_struct *fsp)
++{
++	struct tevent_req *req, *subreq;
++	struct aio_spthread_fsync_state *state;
++	struct vfs_aio_spthread_config *config = NULL;
++
++	SMB_VFS_HANDLE_GET_DATA(handle, config,
++				struct vfs_aio_spthread_config,
++				smb_panic(__location__));
++
++	req = tevent_req_create(mem_ctx, &state, struct aio_spthread_fsync_state);
++	if (req == NULL) {
++		return NULL;
++	}
++
++	state->ret = -1;
++	state->fd = fsp->fh->fd;
++
++	SMBPROFILE_BYTES_ASYNC_START(syscall_asys_fsync, profile_p,
++				     state->profile_bytes, 0);
++	SMBPROFILE_BYTES_ASYNC_SET_IDLE(state->profile_bytes);
++
++	subreq = pthreadpool_tevent_job_send(
++		state, ev, config->pool, vfs_fsync_do, state);
++	if (tevent_req_nomem(subreq, req)) {
++		return tevent_req_post(req, ev);
++	}
++	tevent_req_set_callback(subreq, vfs_fsync_done, req);
++
++	talloc_set_destructor(state, vfs_fsync_state_destructor);
++
++	return req;
++}
++
++static void vfs_fsync_do(void *private_data)
++{
++	struct aio_spthread_fsync_state *state = talloc_get_type_abort(
++		private_data, struct aio_spthread_fsync_state);
++	struct timespec start_time;
++	struct timespec end_time;
++
++	SMBPROFILE_BYTES_ASYNC_SET_BUSY(state->profile_bytes);
++
++	PROFILE_TIMESTAMP(&start_time);
++
++	do {
++		state->ret = fsync(state->fd);
++	} while ((state->ret == -1) && (errno == EINTR));
++
++	if (state->ret == -1) {
++		state->vfs_aio_state.error = errno;
++	}
++
++	PROFILE_TIMESTAMP(&end_time);
++
++	state->vfs_aio_state.duration = nsec_time_diff(&end_time, &start_time);
++
++	SMBPROFILE_BYTES_ASYNC_SET_IDLE(state->profile_bytes);
++}
++
++static int vfs_fsync_state_destructor(struct aio_spthread_fsync_state *state)
++{
++	return -1;
++}
++
++static void vfs_fsync_done(struct tevent_req *subreq)
++{
++	struct tevent_req *req = tevent_req_callback_data(
++		subreq, struct tevent_req);
++	struct aio_spthread_fsync_state *state = tevent_req_data(
++		req, struct aio_spthread_fsync_state);
++	int ret;
++
++	ret = pthreadpool_tevent_job_recv(subreq);
++	TALLOC_FREE(subreq);
++	SMBPROFILE_BYTES_ASYNC_END(state->profile_bytes);
++	talloc_set_destructor(state, NULL);
++	if (ret != 0) {
++		if (ret != EAGAIN) {
++			tevent_req_error(req, ret);
++			return;
++		}
++		/*
++		 * If we get EAGAIN from pthreadpool_tevent_job_recv() this
++		 * means the lower level pthreadpool failed to create a new
++		 * thread. Fallback to sync processing in that case to allow
++		 * some progress for the client.
++		 */
++		vfs_fsync_do(state);
++	}
++
++	tevent_req_done(req);
++}
++
++static int aio_spthread_fsync_recv(struct tevent_req *req,
++			      struct vfs_aio_state *vfs_aio_state)
++{
++	struct aio_spthread_fsync_state *state = tevent_req_data(
++		req, struct aio_spthread_fsync_state);
++
++	if (tevent_req_is_unix_error(req, &vfs_aio_state->error)) {
++		return -1;
++	}
++
++	*vfs_aio_state = state->vfs_aio_state;
++	return state->ret;
++}
++
++static int vfs_aio_spthread_connect(vfs_handle_struct *handle, const char *service,
++				const char *user)
++{
++	int ret;
++	int max_threads;
++	struct vfs_aio_spthread_config *config;
++
++	config = talloc_zero(handle->conn, struct vfs_aio_spthread_config);
++	if (config == NULL) {
++		DBG_ERR("talloc_zero() failed\n");
++		return -1;
++	}
++	max_threads = lp_parm_int(SNUM(handle->conn), "aio_spthread",
++				  "max_threads", 2);
++
++ 
++	ret = pthreadpool_tevent_init(handle->conn->sconn, max_threads,
++				      &config->pool);
++        if (ret != 0) {
++		DBG_ERR("pthreadpool_tevent_init() failed.");
++		return -1;
++        }
++
++	SMB_VFS_HANDLE_SET_DATA(handle, config,
++				NULL, struct vfs_aio_fbsd_config,
++				return -1);
++
++	ret = SMB_VFS_NEXT_CONNECT(handle, service, user);
++	if (ret < 0) {
++		return ret;
++	}
++
++	//talloc_set_destructor(config, vfs_aio_spthread_config_destructor);
++
++	return 0;
++}
++
++static struct vfs_fn_pointers vfs_aio_spthread_fns = {
++	.connect_fn = vfs_aio_spthread_connect,
++	.pread_send_fn = aio_spthread_pread_send,
++	.pread_recv_fn = aio_spthread_pread_recv,
++	.pwrite_send_fn = aio_spthread_pwrite_send,
++	.pwrite_recv_fn = aio_spthread_pwrite_recv,
++	.fsync_send_fn = aio_spthread_fsync_send,
++	.fsync_recv_fn = aio_spthread_fsync_recv,
++};
++
++static_decl_vfs;
++NTSTATUS vfs_aio_spthread_init(TALLOC_CTX *ctx)
++{
++	/*
++	 * Here we need to implement every call!
++	 *
++	 * As this is the end of the vfs module chain.
++	 */
++	return smb_register_vfs(SMB_VFS_INTERFACE_VERSION,
++				"aio_spthread", &vfs_aio_spthread_fns);
++}
++
++
