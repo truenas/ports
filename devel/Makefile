@@ -5936,6 +5936,7 @@
     SUBDIR += rubygem-dry-types
     SUBDIR += rubygem-drydock
     SUBDIR += rubygem-dynflow
+    SUBDIR += rubygem-e2mmap
     SUBDIR += rubygem-edavis10-object_daddy
     SUBDIR += rubygem-elif
     SUBDIR += rubygem-enumerize
