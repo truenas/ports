@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	openzfs
-PORTVERSION=	2020020400
+PORTVERSION=	2020020500
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 PKGNAMESUFFIX?=	-kmod
@@ -19,6 +19,7 @@ GH_TAGNAME=	7abdfdc8c
 KMODTARGET?=	openzfs.ko
 
 PLIST_FILES=	${KMODDIR}/${KMODTARGET}
+PLIST_FILES+=	${KMODDIR}/${KMODTARGET}.debug
 
 OPTIONS_DEFINE=	DEBUG GCOV
 OPTIONS_SUB=	yes
@@ -32,7 +33,6 @@ IGNORE=      needs FreeBSD 12/13 with AES-CCM support
 
 .if ${PORT_OPTIONS:MDEBUG}
 MAKE_OPTS+=	WITH_DEBUG=true
-PLIST_FILES+=	${KMODDIR}/${KMODTARGET}.debug
 .endif
 
 .if ${PORT_OPTIONS:MGCOV}
@@ -40,16 +40,19 @@ USE_GCC=yes
 MAKE_OPTS+=	WITH_GCOV=true
 .endif
 
+ZFS_META_VERSION=	${PORTNAME}${PKGNAMESUFFIX}-${DISTVERSIONPREFIX}${PORTVERSION}
+ZFS_META_RELEASE=	${GH_PROJECT}_${GH_TAGNAME}
+
 post-patch:
 	${CP} ${FILESDIR}/zfs_gitrev.h ${WRKSRC}/include
+	${ECHO} '#define ZFS_META_VERSION "${ZFS_META_VERSION}"' > ${WRKSRC}/zfs_config.h
+	${ECHO} '#define ZFS_META_RELEASE "${ZFS_META_RELEASE}"' >> ${WRKSRC}/zfs_config.h
 
 do-build:
 	(cd ${WRKSRC}/module/ && make -f Makefile.bsd CC=${CC} ${MAKE_OPTS})
 
 do-install:
 	${INSTALL} ${WRKSRC}/module/openzfs.ko ${STAGEDIR}${KMODDIR}/${KMODTARGET}
-.if ${PORT_OPTIONS:MDEBUG}
 	${INSTALL} ${WRKSRC}/module/openzfs.ko.debug ${STAGEDIR}${KMODDIR}/${KMODTARGET}.debug
-.endif
 
 .include <bsd.port.post.mk>
