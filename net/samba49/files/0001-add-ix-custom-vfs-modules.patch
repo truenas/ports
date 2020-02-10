@@ -364,7 +364,7 @@ index 0000000..27f8977
 +
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
-index 8aaa991..0f3e505 100644
+index 8aaa991..1b4e371 100644
 --- a/source3/modules/vfs_default.c
 +++ b/source3/modules/vfs_default.c
 @@ -76,32 +76,20 @@ static int vfswrap_get_quota(struct vfs_handle_struct *handle,
@@ -406,6 +406,16 @@ index 8aaa991..0f3e505 100644
  }
  
  static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
+@@ -2193,7 +2181,8 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
+ 	}
+ 
+ #if defined(HAVE_UTIMENSAT)
+-	if (ft != NULL) {
++	if (ft != NULL &&
++	    (timespec_compare(&ft->mtime, &smb_fname->st.st_ex_btime) == 1)) {
+ 		struct timespec ts[2];
+ 		ts[0] = ft->atime;
+ 		ts[1] = ft->mtime;
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
 index 0000000..673769c
