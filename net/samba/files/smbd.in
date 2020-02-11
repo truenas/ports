@@ -12,7 +12,8 @@ rcvar=smbd_enable
 smbd_group=""
 
 smbd_pidfile="%%SAMBA4_RUNDIR%%/smbd.pid"
-extra_commands="dump status"
+smbcontrol="%%PREFIX%%/bin/smbcontrol"
+extra_commands="reload status"
 
 start_cmd="smbd_cmd"
 stop_cmd="smbd_cmd"
@@ -31,7 +32,7 @@ smbd_reload() {
         if [ -n ${pid} ]; then
             debug "reloading smbd."
             echo "reloading smbd"
-            smbcontrol smbd reload > /dev/null 2>&1
+            ${smbcontrol} ${name} 'reload-config' > /dev/null 2>&1
         fi
     fi
 }
