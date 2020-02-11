@@ -24,10 +24,10 @@ index 4331c2f..a9de97f 100644
  
 diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
 new file mode 100644
-index 0000000..ab4b12f
+index 0000000..28a3269
 --- /dev/null
 +++ b/source3/modules/vfs_shadow_copy_zfs.c
-@@ -0,0 +1,1961 @@
+@@ -0,0 +1,1983 @@
 +/* shadow_copy_zfs: a shadow copy module for ZFS
 + *
 + * Copyright (C) Andrew Tridgell   2007 (portions taken from shadow_copy_zfs)
@@ -1252,8 +1252,10 @@ index 0000000..ab4b12f
 +	char tmpbuf[PATH_MAX];
 +	char *fullpath, *to_free;
 +	char *tmp_file = NULL;
-+	ssize_t len;
++	char *file_name = NULL;
++	ssize_t len, cpathlen, mplen;
 +	int rv;
++	cpathlen = strlen(handle->conn->connectpath);
 +
 +	len = full_path_tos(handle->conn->connectpath, fsp->fsp_name->base_name, tmpbuf,
 +			    sizeof(tmpbuf), &fullpath, &to_free);
@@ -1297,6 +1299,8 @@ index 0000000..ab4b12f
 +		return -1;
 +	}
 +	shadow_copy_zfs_data->labels = NULL;
++	DBG_INFO("Retrieved %d snapshots for %s\n",
++		 snapshots->num_entries, fsp_str_dbg(fsp));
 +
 +	if (labels) {
 +		shadow_copy_zfs_data->labels =
@@ -1317,10 +1321,28 @@ index 0000000..ab4b12f
 +		 * Directories should always be added if they exist in the
 +		 * snapshot. Files only be added if mtime differs.
 +		 */
-+		tmp_file = talloc_asprintf(tmp_ctx, "%s/.zfs/snapshot/%s/%s",
-+					   snapshots->mountpoint,
-+					   entry->name,
-+					   fsp->fsp_name->base_name);
++		file_name = talloc_strdup(tmp_ctx, fsp->fsp_name->base_name);
++		mplen = strlen(snapshots->mountpoint);
++		if (cpathlen < mplen) {
++			if (!(strlen(file_name) > (mplen - cpathlen))) {
++				TALLOC_FREE(file_name);
++				file_name = NULL;
++			}
++			else {
++				file_name += (mplen - cpathlen);		
++			}
++		}	
++		if (file_name == NULL) {
++			tmp_file = talloc_asprintf(tmp_ctx, "%s/.zfs/snapshot/%s",
++						   snapshots->mountpoint,
++						   entry->name);
++		}
++		else {
++			tmp_file = talloc_asprintf(tmp_ctx, "%s/.zfs/snapshot/%s/%s",
++						   snapshots->mountpoint,
++						   entry->name,
++						   file_name);
++		}
 +		rv = sys_stat(tmp_file, &cur_st, false);
 +		TALLOC_FREE(tmp_file);
 +		if (rv != 0) {
