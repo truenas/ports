@@ -48,6 +48,7 @@ wsdd_stop()
             wsdd_pid=$(cat "${pidfile}")
             echo "Stopping wsdd: ${wsdd_pid}" 
             kill -TERM ${wsdd_pid}
+            wait_for_pids ${wsdd_pid}
             return $?
         fi
     fi
