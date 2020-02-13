@@ -24,10 +24,10 @@ index 4331c2f..a9de97f 100644
  
 diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
 new file mode 100644
-index 0000000..6ea1c1a
+index 0000000..6549f6b
 --- /dev/null
 +++ b/source3/modules/vfs_shadow_copy_zfs.c
-@@ -0,0 +1,1786 @@
+@@ -0,0 +1,1842 @@
 +/* shadow_copy_zfs: a shadow copy module for ZFS
 + *
 + * Copyright (C) Andrew Tridgell   2007 (portions taken from shadow_copy_zfs)
@@ -80,6 +80,10 @@ index 0000000..6ea1c1a
 +
 +static const char *null_string = NULL;
 +static const char **empty_list = &null_string;
++static int vfs_shadow_copy_zfs_debug_level = DBGC_VFS;
++
++#undef DBGC_CLASS
++#define DBGC_CLASS vfs_shadow_copy_zfs_debug_level
 +
 +enum cachebackend {SHADOW_MEMCACHE, SHADOW_TDB};
 +
@@ -95,7 +99,11 @@ index 0000000..6ea1c1a
 +	/* Cache parameters */
 +	bool 			cache_enabled;
 +	enum cachebackend	cache_backend;
-+	struct db_context	*vss_db;
++	union {
++		struct db_context	*db;
++		struct memcache *mem;
++	} vss;
++
 +	int			timedelta;
 +
 +	/* Snapshot parameters */
@@ -142,6 +150,26 @@ index 0000000..6ea1c1a
 +	return true;
 +}
 +
++static struct snapshot_list *get_cached_snapshot(TDB_DATA ds,
++			   struct shadow_copy_zfs_config *config)
++{
++	return (struct snaplist_cache *)memcache_lookup_talloc(
++				config->vss.mem,
++				ZSNAP_CACHE,
++				data_blob_const(ds.dptr, ds.dsize));
++}
++
++static bool put_cached_snapshot(TDB_DATA key,
++				struct snapshot_list *snaps,
++				struct shadow_copy_zfs_config *config)
++{
++	memcache_add_talloc(config->vss.mem,
++				ZSNAP_CACHE,
++				data_blob_const(key.dptr, key.dsize),
++				&snaps);
++	return true;
++}
++
 +/**
 + * This function will check if snaplist is updated or not. If snaplist
 + * is empty then it will create a new list. Each time snaplist is updated
@@ -153,12 +181,15 @@ index 0000000..6ea1c1a
 + * @param[in]	handle		VFS handle struct
 + * @param[in]	mem_ctx		talloc context
 + * @param[in]	path		full path in which to check snapshots
++ * @param[in]	do_update	update existing snapshot list cache
++ * @param[out]	snapp		snapshot list
 + *
 + * @return	true if the list is updated else false
 + */
 +static bool shadow_copy_zfs_update_snaplist(struct vfs_handle_struct *handle,
 +					    TALLOC_CTX *mem_ctx,
 +					    const char *path,
++					    bool do_update,
 +					    struct snapshot_list **snapp)
 +{
 +	bool snaplist_updated = false;
@@ -166,25 +197,28 @@ index 0000000..6ea1c1a
 +        double seconds = 0.0;
 +	time_t snap_time;
 +	char *dataset = NULL;
++	TDB_DATA key = { .dptr = NULL, .dsize = 0 };
 +	struct shadow_copy_zfs_config *config = NULL;
 +	struct snapshot_list *snapshots = NULL;
++	struct snapshot_list *cached_snaps = NULL;
 +	time(&snap_time);
 +	SMB_VFS_HANDLE_GET_DATA(handle, config, struct shadow_copy_zfs_config,
 +	    return NULL);
 +
-+	if (config->snapshots != NULL) {
-+		seconds = difftime(snap_time, config->snapshots->timestamp);
-+	}
 +
 +	smb_zfs_path_to_dataset(config->libzp, path, &dataset);
-+	if (config->snapshots != NULL) {
-+		is_same_dataset = strequal(dataset, config->snapshots->dataset_name);
++
++	key.dptr = discard_const_p(uint8_t, dataset);
++	key.dsize = strlen(dataset);
++
++	if (cached_snaps != NULL) {
++		seconds = difftime(snap_time, cached_snaps->timestamp);
 +	}
 +
-+	if (seconds > config->timedelta || config->snapshots == NULL || !is_same_dataset) {
-+		DBG_INFO("refreshing stored snaplist - current timedelta: %f",
-+			"permitted timedelta: %d, is_same_dataset: %s\n", seconds, 
-+			config->timedelta, is_same_dataset ? "true": "false");
++	if (((seconds > config->timedelta) && do_update) || cached_snaps == NULL) {
++		DBG_INFO("refreshing stored snaplist - current timedelta: %f "
++			 "permitted timedelta: %d\n", seconds, config->timedelta);
++
 +		snapshots = smb_zfs_list_snapshots(config->libzp,
 +						   mem_ctx,
 +						   path,
@@ -192,19 +226,16 @@ index 0000000..6ea1c1a
 +						   config->inclusions,
 +						   config->exclusions, 0, 0);
 +		if (snapshots != NULL) {
-+			if (config->snapshots != NULL) {
-+				TALLOC_FREE(config->snapshots);
-+			}
-+			config->snapshots = snapshots;
-+			SMB_VFS_HANDLE_SET_DATA(handle, config,
-+				NULL, struct shadow_copy_zfs_config,
-+				return false);
-+			snaplist_updated = true;
++			snaplist_updated = put_cached_snapshot(key, snapshots,
++							       config);
 +		} else {
 +			DBG_ERR("Failed to get shadow copy data for %s\n", path);
 +		}
++		*snapp = snapshots;
 +	}
-+	*snapp = config->snapshots;
++	else {
++		*snapp = cached_snaps;
++	}
 +
 +	return snaplist_updated;
 +}
@@ -416,7 +447,7 @@ index 0000000..6ea1c1a
 +	NTSTATUS status;
 +	TDB_DATA data = { .dptr = NULL, .dsize = 0 };
 +	if (config->cache_backend == SHADOW_TDB) {
-+		status = dbwrap_fetch(config->vss_db, tmp_ctx,
++		status = dbwrap_fetch(config->vss.db, tmp_ctx,
 +				      key,
 +				      &data);
 +		if (!NT_STATUS_IS_OK(status)) {
@@ -429,20 +460,20 @@ index 0000000..6ea1c1a
 +	}
 +	else {
 +		return (char *)memcache_lookup_talloc(
-+					smbd_memcache(),
++					config->vss.mem,
 +					ZSNAP_CACHE,
 +					data_blob_const(key.dptr, key.dsize));
 +	}
 +}
 +
-+static int *snapcache_set(TALLOC_CTX *tmp_ctx,
++static int snapcache_set(TALLOC_CTX *tmp_ctx,
 +			  struct shadow_copy_zfs_config *config,
 +			  TDB_DATA key,
 +			  char *resolved_path)
 +{
 +	NTSTATUS status;
 +	if (config->cache_backend == SHADOW_TDB) {
-+		status = dbwrap_store(config->vss_db, key,
++		status = dbwrap_store(config->vss.db, key,
 +				      string_term_tdb_data(resolved_path),
 +				      TDB_INSERT);
 +		if (!NT_STATUS_IS_OK(status)) {
@@ -453,7 +484,7 @@ index 0000000..6ea1c1a
 +		TALLOC_FREE(resolved_path);
 +	}
 +	else {
-+		memcache_add_talloc(smbd_memcache(),
++		memcache_add_talloc(config->vss.mem,
 +					ZSNAP_CACHE,
 +					data_blob_const(key.dptr, key.dsize),
 +					&resolved_path);
@@ -525,6 +556,8 @@ index 0000000..6ea1c1a
 +		key.dsize = strlen(normalized_fname);
 +		ret = snapcache_get(tmp_ctx, handle, config, key);
 +		if (ret != NULL) {
++			DBG_DEBUG("Retrieved cache entry for %s->%s\n",
++				  normalized_fname, ret);
 +			cache_entry = talloc_strdup(talloc_tos(), ret);
 +			TALLOC_FREE(tmp_ctx);
 +			return cache_entry;
@@ -539,7 +572,7 @@ index 0000000..6ea1c1a
 +	if (access(normalized_fname, F_OK) < 0) {
 +		normalized_fname = shadow_copy_zfs_get_working_path(handle, tmp_ctx, normalized_fname);
 +		snaps_updated = shadow_copy_zfs_update_snaplist(
-+			handle, handle->conn, normalized_fname, &snapshots);
++			handle, handle->conn, normalized_fname, false, &snapshots);
 +	}
 +	else {
 +		if (realpath(normalized_fname, rp) == NULL) {
@@ -548,7 +581,7 @@ index 0000000..6ea1c1a
 +			return NULL;
 +		}
 +		snaps_updated = shadow_copy_zfs_update_snaplist(
-+			handle, handle->conn, rp, &snapshots);
++			handle, handle->conn, rp, false, &snapshots);
 +	}
 +
 +	if (snapshots == NULL) {
@@ -675,6 +708,8 @@ index 0000000..6ea1c1a
 +		cache_entry = talloc_strdup(tmp_ctx, ret);
 +		talloc_set_destructor(cache_entry, NULL);
 +		snapcache_set(tmp_ctx, config, key, cache_entry);
++		DBG_DEBUG("Set cache entry for %s->%s\n",
++			  normalized_fname, ret);
 +	}
 +
 +	TALLOC_FREE(tmp_ctx);
@@ -1183,12 +1218,11 @@ index 0000000..6ea1c1a
 +	}
 +	prev_st = *psbuf;
 +
-+	snapshots = smb_zfs_list_snapshots(config->libzp,
-+					   tmp_ctx,
-+					   fullpath,
-+					   config->ignore_empty_snaps,
-+					   config->inclusions,
-+					   config->exclusions, 0, 0);
++	shadow_copy_zfs_update_snaplist(handle,
++					handle->conn,
++					fullpath,
++					true,
++					&snapshots);
 +
 +	if (snapshots == NULL) {
 +		DBG_INFO("failed to retrieve snapshots for %s\n", fullpath);
@@ -1197,7 +1231,7 @@ index 0000000..6ea1c1a
 +		return -1;
 +	}
 +	shadow_copy_zfs_data->labels = NULL;
-+	DBG_INFO("Retrieved %d snapshots for %s\n",
++	DBG_INFO("Retrieved %zu snapshots for %s\n",
 +		 snapshots->num_entries, fsp_str_dbg(fsp));
 +
 +	if (labels) {
@@ -1684,7 +1718,7 @@ index 0000000..6ea1c1a
 +			"[%s]\n", db_name);
 +		return -1;
 +	}
-+	config->vss_db = vss_db;
++	config->vss.db = vss_db;
 +	return 0;
 +}
 +
@@ -1734,7 +1768,16 @@ index 0000000..6ea1c1a
 +			DBG_ERR("Failed to initialize cache tdb\n");
 +			return -1;
 +		}
-+		if (config->vss_db == NULL) {
++		if (config->vss.db == NULL) {
++			errno = ENOMEM;
++			return -1;
++		}
++	}
++	else {
++		config->vss.mem = memcache_init(handle,
++						(lp_parm_int(SNUM(handle->conn),
++						"shadow", "cache_size", 512) * 1024));
++		if (!config->vss.mem) {
 +			errno = ENOMEM;
 +			return -1;
 +		}
@@ -1811,8 +1854,21 @@ index 0000000..6ea1c1a
 +NTSTATUS vfs_shadow_copy_zfs_init(TALLOC_CTX *);
 +NTSTATUS vfs_shadow_copy_zfs_init(TALLOC_CTX *ctx)
 +{
-+	return smb_register_vfs(SMB_VFS_INTERFACE_VERSION,
-+				"shadow_copy_zfs", &vfs_shadow_copy_zfs_fns);
++	NTSTATUS ret =  smb_register_vfs(SMB_VFS_INTERFACE_VERSION,
++					 "shadow_copy_zfs", &vfs_shadow_copy_zfs_fns);
++	if (!NT_STATUS_IS_OK(ret))
++		return ret;
++
++	vfs_shadow_copy_zfs_debug_level = debug_add_class("shadowzfs");
++	if (vfs_shadow_copy_zfs_debug_level == -1) {
++		vfs_shadow_copy_zfs_debug_level = DBGC_VFS;
++		DBG_ERR("vfs_shadow_copy_zfs: Couldn't register custom debugging class!\n");
++	} else {
++		DBG_DEBUG("vfs_shadow_copy_zfs: Debug class number of 'shadowzfs': %d\n",
++			  vfs_shadow_copy_zfs_debug_level);
++	}
++
++	return ret;
 +}
 diff --git a/source3/modules/vfs_tmprotect.c b/source3/modules/vfs_tmprotect.c
 new file mode 100644
