@@ -243,6 +243,7 @@ include/libzfs/sys/zcp.h
 include/libzfs/sys/zcp_global.h
 include/libzfs/sys/zcp_iter.h
 include/libzfs/sys/zcp_prop.h
+include/libzfs/sys/zcp_set.h
 include/libzfs/sys/zfeature.h
 include/libzfs/sys/zfs_acl.h
 include/libzfs/sys/zfs_context.h
@@ -653,6 +654,10 @@ share/zfs/zfs-tests/tests/functional/channel_program/lua_core/tst.timeout.ksh
 share/zfs/zfs-tests/tests/functional/channel_program/lua_core/tst.timeout.zcp
 share/zfs/zfs-tests/tests/functional/channel_program/synctask_core/cleanup.ksh
 share/zfs/zfs-tests/tests/functional/channel_program/synctask_core/setup.ksh
+share/zfs/zfs-tests/tests/functional/channel_program/synctask_core/tst.bookmark.copy.ksh
+share/zfs/zfs-tests/tests/functional/channel_program/synctask_core/tst.bookmark.copy.zcp
+share/zfs/zfs-tests/tests/functional/channel_program/synctask_core/tst.bookmark.create.ksh
+share/zfs/zfs-tests/tests/functional/channel_program/synctask_core/tst.bookmark.create.zcp
 share/zfs/zfs-tests/tests/functional/channel_program/synctask_core/tst.destroy_fs.ksh
 share/zfs/zfs-tests/tests/functional/channel_program/synctask_core/tst.destroy_snap.ksh
 share/zfs/zfs-tests/tests/functional/channel_program/synctask_core/tst.get_count_and_limit.ksh
@@ -685,6 +690,8 @@ share/zfs/zfs-tests/tests/functional/channel_program/synctask_core/tst.promote_m
 share/zfs/zfs-tests/tests/functional/channel_program/synctask_core/tst.promote_simple.ksh
 share/zfs/zfs-tests/tests/functional/channel_program/synctask_core/tst.rollback_mult.ksh
 share/zfs/zfs-tests/tests/functional/channel_program/synctask_core/tst.rollback_one.ksh
+share/zfs/zfs-tests/tests/functional/channel_program/synctask_core/tst.set_props.ksh
+share/zfs/zfs-tests/tests/functional/channel_program/synctask_core/tst.set_props.zcp
 share/zfs/zfs-tests/tests/functional/channel_program/synctask_core/tst.snapshot_destroy.ksh
 share/zfs/zfs-tests/tests/functional/channel_program/synctask_core/tst.snapshot_destroy.zcp
 share/zfs/zfs-tests/tests/functional/channel_program/synctask_core/tst.snapshot_neg.ksh
@@ -724,6 +731,7 @@ share/zfs/zfs-tests/tests/functional/cli_root/zdb/zdb_005_pos.ksh
 share/zfs/zfs-tests/tests/functional/cli_root/zdb/zdb_006_pos.ksh
 share/zfs/zfs-tests/tests/functional/cli_root/zdb/zdb_checksum.ksh
 share/zfs/zfs-tests/tests/functional/cli_root/zdb/zdb_decompress.ksh
+share/zfs/zfs-tests/tests/functional/cli_root/zdb/zdb_display_block.ksh
 share/zfs/zfs-tests/tests/functional/cli_root/zdb/zdb_object_range_neg.ksh
 share/zfs/zfs-tests/tests/functional/cli_root/zdb/zdb_object_range_pos.ksh
 share/zfs/zfs-tests/tests/functional/cli_root/zdb/zdb_objset_id.ksh
@@ -2177,7 +2185,6 @@ share/zfs/zfs-tests/tests/functional/vdev_zaps/vdev_zaps_006_pos.ksh
 share/zfs/zfs-tests/tests/functional/vdev_zaps/vdev_zaps_007_pos.ksh
 share/zfs/zfs-tests/tests/functional/write_dirs/cleanup.ksh
 share/zfs/zfs-tests/tests/functional/write_dirs/setup.ksh
-share/zfs/zfs-tests/tests/functional/write_dirs/write_dirs.cfg
 share/zfs/zfs-tests/tests/functional/write_dirs/write_dirs_001_pos.ksh
 share/zfs/zfs-tests/tests/functional/write_dirs/write_dirs_002_pos.ksh
 share/zfs/zfs-tests/tests/functional/xattr/cleanup.ksh
