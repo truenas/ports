@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 0000000..6ae45e5
+index 0000000..189f9b8
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,992 @@
+@@ -0,0 +1,1006 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -87,6 +87,8 @@ index 0000000..6ae45e5
 +{
 +	struct snapshot_list *snapshots;
 +	struct iter_info *iter_info;
++	int prev_u;
++	int prev_prev_u;
 +};
 +
 +static int get_enum(const char *s, const struct enum_list *_enum)
@@ -687,13 +689,18 @@ index 0000000..6ae45e5
 +		return 0;
 +	}
 +
-+	if (state->iter_info->ignore_empty_snaps) {
-+		used = zfs_prop_get_int(snap, ZFS_PROP_USED);
-+		if (used == 0) {
-+			zfs_close(snap);
-+			return 0;
++	used = zfs_prop_get_int(snap, ZFS_PROP_USED);
++	if (used == 0 && state->snapshots->num_entries != 0) {
++		if (!((state->prev_u == 0) && 
++		      (state->prev_prev_u != 0))) {
++			state->prev_prev_u = state->prev_u;
++			state->prev_u = used;
++			goto done;
 +		}
++		state->prev_prev_u = state->prev_u;
++		state->prev_u = used;
 +	}
++
 +	cr_time = zfs_prop_get_int(snap, ZFS_PROP_CREATION);
 +
 +	if (state->iter_info->start && state->iter_info->start > cr_time) {
@@ -714,8 +721,10 @@ index 0000000..6ae45e5
 +
 +	entry->cr_time = cr_time;
 +	entry->name = talloc_strndup(entry, snap_name, name_len +1);
++
 +	DLIST_ADD(state->snapshots->entries, entry);
 +	state->snapshots->num_entries++;
++done:
 +	zfs_close(snap);
 +	return 0;
 +}
@@ -807,7 +816,12 @@ index 0000000..6ae45e5
 +			"shadow:exclude parameter\n");
 +		goto error;
 +	}
-+	rc = zfs_iter_snapshots(zfs, false, smb_zfs_add_snapshot, state);
++
++	/*
++	 * ZAP does not guarantee ordering. zfs_iter_snapshots_sorted
++	 * will generate AVL tree sorted by txg.
++	 */
++	rc = zfs_iter_snapshots_sorted(zfs, smb_zfs_add_snapshot, state);
 +
 +	if (rc != 0) {
 +		DBG_ERR("smb_zfs_list_snapshots: error getting "
@@ -1313,10 +1327,71 @@ index 0000000..03c72d7
 +
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
-index bf6b303..4afaeab 100644
+index bf6b303..a988930 100644
 --- a/source3/modules/vfs_default.c
 +++ b/source3/modules/vfs_default.c
-@@ -76,32 +76,14 @@ static int vfswrap_get_quota(struct vfs_handle_struct *handle,
+@@ -18,6 +18,8 @@
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
++#include <sys/param.h>
++#include <sys/jail.h>
+ #include "includes.h"
+ #include "system/time.h"
+ #include "system/filesys.h"
+@@ -47,7 +49,50 @@
+ 
+ static int vfswrap_connect(vfs_handle_struct *handle, const char *service, const char *user)
+ {
+-    return 0;    /* Return >= 0 for success */
++	int ret, jid;
++	const char *securelevel;
++	char *jailname = NULL;
++	ret = 0;
++	if (!lp_parm_bool(SNUM(handle->conn), "jail", "enable", false)) {
++		return ret;
++	}
++
++	securelevel = lp_parm_const_string(SNUM(handle->conn),
++                        "jail", "securelevel", "3");
++
++	jailname = talloc_asprintf(handle->conn->sconn,
++				   "SERVICE_SMB-%s",
++				    service);
++	ret = chdir(handle->conn->connectpath);
++	if (ret != 0) {
++		DBG_ERR("chdir() to connectpath failed\n");
++		return -1;
++	}
++	jid = jail_getid(jailname);
++	if (jid == -1) {
++		DBG_ERR("Failed to get id for jail: %s\n",
++			jailname);
++		jid = jail_setv(JAIL_CREATE | JAIL_ATTACH,
++				"name", jailname,
++				"securelevel", securelevel,
++				"path", handle->conn->connectpath, NULL);
++	}
++	else {
++		ret = jail_attach(jid);
++		if (ret != 0) {
++			DBG_ERR("Failed to attach to jail %d with error: %s\n",
++				jid, strerror(errno));
++			return -1;
++		}
++	}
++	if (jid == -1) {
++		DBG_ERR("Jail command failed with %s\n", strerror(errno));
++		return -1;
++	}
++	handle->conn->sconn->jid = jid;
++	handle->conn->sconn->jail_path = handle->conn->connectpath; 
++	handle->conn->connectpath = talloc_strdup(handle->conn, "/");
++	return ret;
+ }
+ 
+ static void vfswrap_disconnect(vfs_handle_struct *handle)
+@@ -76,32 +121,14 @@ static int vfswrap_get_quota(struct vfs_handle_struct *handle,
  				unid_t id,
  				SMB_DISK_QUOTA *qt)
  {
@@ -1349,7 +1424,7 @@ index bf6b303..4afaeab 100644
  }
  
  static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
-@@ -2364,7 +2346,8 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
+@@ -2364,7 +2391,8 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
  	}
  
  #if defined(HAVE_UTIMENSAT)
@@ -4730,6 +4805,19 @@ index 83b66d6..12566d2 100644
  	}
  
  	status = file_new(req, conn, &fsp);
+diff --git a/source3/smbd/globals.h b/source3/smbd/globals.h
+index 9bb7b1f..c9fcd92 100644
+--- a/source3/smbd/globals.h
++++ b/source3/smbd/globals.h
+@@ -882,6 +882,8 @@ struct smbd_server_connection {
+ 	bool using_smb2;
+ 	bool aapl_zero_file_id; /* Apple-specific */
+ 	int trans_num;
++	int jid;
++	const char *jail_path;
+ 
+ 	size_t num_users;
+ 	struct user_struct *users;
 diff --git a/source3/smbd/trans2.c b/source3/smbd/trans2.c
 index f8d987b..bfb9132 100644
 --- a/source3/smbd/trans2.c

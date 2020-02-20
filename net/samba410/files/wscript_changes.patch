@@ -114,7 +114,7 @@ index 4d61dc6..2492010 100644
  
  bld.SAMBA_GENERATOR('nfs41acl-xdr-c',
 diff --git a/source3/wscript b/source3/wscript
-index 5c2ba18..1a3bf36 100644
+index 9d283e4..d086fd1 100644
 --- a/source3/wscript
 +++ b/source3/wscript
 @@ -50,6 +50,7 @@ def options(opt):
@@ -125,7 +125,15 @@ index 5c2ba18..1a3bf36 100644
      opt.SAMBA3_ADD_OPTION('iconv')
      opt.SAMBA3_ADD_OPTION('acl-support')
      opt.SAMBA3_ADD_OPTION('dnsupdate')
-@@ -766,7 +767,7 @@ msg.msg_accrightslen = sizeof(fd);
+@@ -124,6 +125,7 @@ def configure(conf):
+     conf.CHECK_FUNCS_IN('dn_expand', 'inet')
+     conf.CHECK_DECLS('fdatasync', reverse=True)
+     conf.CHECK_DECLS('readahead', reverse=True, headers='fcntl.h')
++    conf.ADD_LDFLAGS('-ljail')
+ 
+     if conf.CHECK_CODE('''
+ #if defined(HAVE_UNISTD_H)
+@@ -763,7 +765,7 @@ msg.msg_accrightslen = sizeof(fd);
          conf.env['HAVE_ADS'] = '1'
          Logs.info("Building with Active Directory support.")
          # these have broken dependencies
@@ -134,7 +142,7 @@ index 5c2ba18..1a3bf36 100644
      elif Options.options.with_ads == False:
          Logs.info("Building without Active Directory support (--without-ads).")
      else:
-@@ -835,6 +836,17 @@ msg.msg_accrightslen = sizeof(fd);
+@@ -832,6 +834,17 @@ msg.msg_accrightslen = sizeof(fd);
          conf.SET_TARGET_TYPE('avahi-common', 'EMPTY')
          conf.SET_TARGET_TYPE('avahi-client', 'EMPTY')
  
@@ -152,7 +160,7 @@ index 5c2ba18..1a3bf36 100644
      if Options.options.with_iconv:
          conf.env.with_iconv = True
          if not conf.CHECK_FUNCS_IN('iconv_open', 'iconv', headers='iconv.h'):
-@@ -1692,7 +1704,9 @@ main() {
+@@ -1689,7 +1702,9 @@ main() {
          default_shared_modules.extend(TO_LIST('vfs_posix_eadb'))
  
      if conf.CONFIG_SET('HAVE_FREEBSD_SUNACL_H'):
@@ -162,7 +170,7 @@ index 5c2ba18..1a3bf36 100644
  
      if conf.CONFIG_SET('HAVE_DIRFD_DECL'):
          default_shared_modules.extend(TO_LIST('vfs_syncops vfs_dirsort'))
-@@ -1705,6 +1719,7 @@ main() {
+@@ -1702,6 +1717,7 @@ main() {
  
      if Options.options.with_pthreadpool:
          default_shared_modules.extend(TO_LIST('vfs_aio_pthread'))
