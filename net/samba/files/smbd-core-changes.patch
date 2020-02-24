@@ -776,7 +776,7 @@ index 81ccbde..433dc7a 100644
  		file_free(req, fsp);
  		return NT_STATUS_NO_MEMORY;
 diff --git a/source3/smbd/files.c b/source3/smbd/files.c
-index 99b2f34..e5212d9 100644
+index 99b2f34..d067684 100644
 --- a/source3/smbd/files.c
 +++ b/source3/smbd/files.c
 @@ -23,9 +23,257 @@
@@ -870,7 +870,7 @@ index 99b2f34..e5212d9 100644
 +		ret = memcache_lookup(sconn->fsp_fi_table.fi_u.dm, FSP_FI_CACHE, key, &val);
 +
 +		if (!ret) {
-+			DBG_INFO("Generating new fspcache entry for [%s]\n"
++			DBG_INFO("Generating new fspcache entry for [%s]\n",
 +				 fsp_str_dbg(fsp));
 +			fsplist = talloc_zero(sconn, struct fspcache_list);
 +		}
@@ -1697,10 +1697,18 @@ index 2c4449b..415c724 100644
  	if (fsp == NULL) {
  		/* race? */
 diff --git a/source3/smbd/pipes.c b/source3/smbd/pipes.c
-index 4be57bc..65dbb65 100644
+index 4be57bc..4afc033 100644
 --- a/source3/smbd/pipes.c
 +++ b/source3/smbd/pipes.c
-@@ -50,6 +50,7 @@ NTSTATUS open_np_file(struct smb_request *smb_req, const char *name,
+@@ -38,6 +38,7 @@ NTSTATUS open_np_file(struct smb_request *smb_req, const char *name,
+ 	struct files_struct *fsp;
+ 	struct smb_filename *smb_fname = NULL;
+ 	NTSTATUS status;
++	int ret;
+ 
+ 	status = file_new(smb_req, conn, &fsp);
+ 	if (!NT_STATUS_IS_OK(status)) {
+@@ -50,6 +51,7 @@ NTSTATUS open_np_file(struct smb_request *smb_req, const char *name,
  	fsp->vuid = smb_req->vuid;
  	fsp->can_lock = false;
  	fsp->access_mask = FILE_READ_DATA | FILE_WRITE_DATA;
@@ -1708,7 +1716,7 @@ index 4be57bc..65dbb65 100644
  
  	smb_fname = synthetic_smb_fname(talloc_tos(), name, NULL, NULL, 0);
  	if (smb_fname == NULL) {
-@@ -76,6 +77,10 @@ NTSTATUS open_np_file(struct smb_request *smb_req, const char *name,
+@@ -76,6 +78,10 @@ NTSTATUS open_np_file(struct smb_request *smb_req, const char *name,
  		file_free(smb_req, fsp);
  		return status;
  	}
