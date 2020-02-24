@@ -1623,20 +1623,10 @@ index 7b26d04..d27d955 100644
  
  	struct pending_message_list *deferred_open_queue;
 diff --git a/source3/smbd/open.c b/source3/smbd/open.c
-index e64e225..e045d56 100644
+index e64e225..1161fb5 100644
 --- a/source3/smbd/open.c
 +++ b/source3/smbd/open.c
-@@ -2242,6 +2242,9 @@ static NTSTATUS try_lease_upgrade(struct files_struct *fsp,
- 				  nt_errstr(set_status));
- 			return set_status;
- 		}
-+		/* Ensure we're in sync with current lease state. */
-+		fsp_lease_update(lck, fsp->file_id, fsp_client_guid(fsp), fsp->lease);
-+		return NT_STATUS_OK;
- 	}
- 
- 	fsp_lease_update(fsp);
-@@ -4208,6 +4211,7 @@ static NTSTATUS open_directory(connection_struct *conn,
+@@ -4208,6 +4208,7 @@ static NTSTATUS open_directory(connection_struct *conn,
  	NTSTATUS status;
  	struct timespec mtimespec;
  	int info = 0;
@@ -1644,7 +1634,7 @@ index e64e225..e045d56 100644
  	bool ok;
  
  	if (is_ntfs_stream_smb_fname(smb_dname)) {
-@@ -4404,6 +4408,11 @@ static NTSTATUS open_directory(connection_struct *conn,
+@@ -4404,6 +4405,11 @@ static NTSTATUS open_directory(connection_struct *conn,
  		file_free(req, fsp);
  		return status;
  	}
@@ -1656,7 +1646,7 @@ index e64e225..e045d56 100644
  
  	/* Don't store old timestamps for directory
  	   handles in the internal database. We don't
-@@ -4428,6 +4437,11 @@ static NTSTATUS open_directory(connection_struct *conn,
+@@ -4428,6 +4434,11 @@ static NTSTATUS open_directory(connection_struct *conn,
  		file_free(req, fsp);
  		return status;
  	}
@@ -1668,7 +1658,7 @@ index e64e225..e045d56 100644
  
  	status = vfs_stat_fsp(fsp);
  	if (!NT_STATUS_IS_OK(status)) {
-@@ -4436,6 +4450,7 @@ static NTSTATUS open_directory(connection_struct *conn,
+@@ -4436,6 +4447,7 @@ static NTSTATUS open_directory(connection_struct *conn,
  		return status;
  	}
  
@@ -1676,7 +1666,7 @@ index e64e225..e045d56 100644
  	if(!S_ISDIR(fsp->fsp_name->st.st_ex_mode)) {
  		DEBUG(5,("open_directory: %s is not a directory !\n",
  			 smb_fname_str_dbg(smb_dname)));
-@@ -5329,6 +5344,7 @@ static NTSTATUS create_file_unixpath(connection_struct *conn,
+@@ -5329,6 +5341,7 @@ static NTSTATUS create_file_unixpath(connection_struct *conn,
  				     int *pinfo)
  {
  	struct smb2_lease none_lease;
@@ -1684,7 +1674,7 @@ index e64e225..e045d56 100644
  	int info = FILE_WAS_OPENED;
  	files_struct *base_fsp = NULL;
  	files_struct *fsp = NULL;
-@@ -5618,6 +5634,10 @@ static NTSTATUS create_file_unixpath(connection_struct *conn,
+@@ -5618,6 +5631,10 @@ static NTSTATUS create_file_unixpath(connection_struct *conn,
  	}
  
  	fsp->base_fsp = base_fsp;
