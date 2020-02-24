@@ -1720,7 +1720,7 @@ index 4be57bc..65dbb65 100644
  	*pfsp = fsp;
  
 diff --git a/source3/smbd/proto.h b/source3/smbd/proto.h
-index 96d5740..e9e64e4 100644
+index 96d5740..3a3c362 100644
 --- a/source3/smbd/proto.h
 +++ b/source3/smbd/proto.h
 @@ -373,6 +373,7 @@ NTSTATUS filename_convert_with_privilege(TALLOC_CTX *mem_ctx,
@@ -1739,6 +1739,14 @@ index 96d5740..e9e64e4 100644
  	const struct smb2_lease_key *lease_key);
  bool file_find_subpath(files_struct *dir_fsp);
  void fsp_free(files_struct *fsp);
+@@ -419,6 +421,7 @@ NTSTATUS file_name_hash(connection_struct *conn,
+ NTSTATUS fsp_set_smb_fname(struct files_struct *fsp,
+ 			   const struct smb_filename *smb_fname_in);
+ size_t fsp_fullbasepath(struct files_struct *fsp, char *buf, size_t buflen);
++int fspcache_append(struct smbd_server_connection *sconn, struct files_struct *fsp);
+ 
+ /* The following definitions come from smbd/ipc.c  */
+ 
 diff --git a/source3/smbd/reply.c b/source3/smbd/reply.c
 index 40cd748..916ce8f 100644
 --- a/source3/smbd/reply.c
