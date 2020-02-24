@@ -776,10 +776,10 @@ index 81ccbde..433dc7a 100644
  		file_free(req, fsp);
  		return NT_STATUS_NO_MEMORY;
 diff --git a/source3/smbd/files.c b/source3/smbd/files.c
-index 99b2f34..b79f3f0 100644
+index 99b2f34..e5212d9 100644
 --- a/source3/smbd/files.c
 +++ b/source3/smbd/files.c
-@@ -23,9 +23,260 @@
+@@ -23,9 +23,257 @@
  #include "libcli/security/security.h"
  #include "util_tdb.h"
  #include "lib/util/bitmap.h"
@@ -850,10 +850,8 @@ index 99b2f34..b79f3f0 100644
 +
 +		if (fsplist == NULL) {
 +			DBG_INFO("Generating new fspcache entry for [%s] "
-+				 "with fileid: [%s] at address [%p]\n", fsp_str_dbg(fsp),
-+				 file_id_string_tos(&tmp_id), fsp);
++				 "at address [%p]\n", fsp_str_dbg(fsp), fsp);
 +			fsplist = talloc_zero(sconn, struct fspcache_list);
-+			fsplist->name = talloc_asprintf(fsplist, "%s", file_id_string_tos(&tmp_id));
 +			fsplist->entries = NULL;
 +		}
 +		DLIST_ADD(fsplist->entries, fsp);
@@ -872,9 +870,8 @@ index 99b2f34..b79f3f0 100644
 +		ret = memcache_lookup(sconn->fsp_fi_table.fi_u.dm, FSP_FI_CACHE, key, &val);
 +
 +		if (!ret) {
-+			DBG_INFO("Generating new fspcache entry for [%s]"
-+				 "with fileid: [%s]\n", fsp_str_dbg(fsp),
-+				 file_id_string_tos(&tmp_id));
++			DBG_INFO("Generating new fspcache entry for [%s]\n"
++				 fsp_str_dbg(fsp));
 +			fsplist = talloc_zero(sconn, struct fspcache_list);
 +		}
 +		else {
@@ -1040,7 +1037,7 @@ index 99b2f34..b79f3f0 100644
  /**
   * create new fsp to be used for file_new or a durable handle reconnect
   */
-@@ -33,6 +284,7 @@ NTSTATUS fsp_new(struct connection_struct *conn, TALLOC_CTX *mem_ctx,
+@@ -33,6 +281,7 @@ NTSTATUS fsp_new(struct connection_struct *conn, TALLOC_CTX *mem_ctx,
  		 files_struct **result)
  {
  	NTSTATUS status = NT_STATUS_NO_MEMORY;
@@ -1048,7 +1045,7 @@ index 99b2f34..b79f3f0 100644
  	files_struct *fsp = NULL;
  	struct smbd_server_connection *sconn = conn->sconn;
  
-@@ -67,9 +319,15 @@ NTSTATUS fsp_new(struct connection_struct *conn, TALLOC_CTX *mem_ctx,
+@@ -67,9 +316,15 @@ NTSTATUS fsp_new(struct connection_struct *conn, TALLOC_CTX *mem_ctx,
  	fsp->conn = conn;
  	fsp->close_write_time = make_omit_timespec();
  
@@ -1066,7 +1063,7 @@ index 99b2f34..b79f3f0 100644
  	conn->num_files_open++;
  
  	*result = fsp;
-@@ -146,9 +404,6 @@ NTSTATUS file_new(struct smb_request *req, connection_struct *conn,
+@@ -146,9 +401,6 @@ NTSTATUS file_new(struct smb_request *req, connection_struct *conn,
  		return NT_STATUS_NO_MEMORY;
  	}
  
@@ -1076,7 +1073,7 @@ index 99b2f34..b79f3f0 100644
  	if (req != NULL) {
  		fsp->mid = req->mid;
  		req->chain_fsp = fsp;
-@@ -168,12 +423,28 @@ NTSTATUS file_new(struct smb_request *req, connection_struct *conn,
+@@ -168,12 +420,28 @@ NTSTATUS file_new(struct smb_request *req, connection_struct *conn,
  /****************************************************************************
   Close all open files for a connection.
  ****************************************************************************/
@@ -1109,7 +1106,7 @@ index 99b2f34..b79f3f0 100644
  		next = fsp->next;
  		if (fsp->conn != conn) {
  			continue;
-@@ -184,27 +455,63 @@ void file_close_conn(connection_struct *conn)
+@@ -184,27 +452,63 @@ void file_close_conn(connection_struct *conn)
  			 */
  			fsp->op->global->durable = false;
  		}
@@ -1181,7 +1178,7 @@ index 99b2f34..b79f3f0 100644
  /****************************************************************************
   Initialise file structures.
  ****************************************************************************/
-@@ -263,22 +570,69 @@ bool file_init(struct smbd_server_connection *sconn)
+@@ -263,22 +567,69 @@ bool file_init(struct smbd_server_connection *sconn)
  /****************************************************************************
   Close files open by a specified vuid.
  ****************************************************************************/
@@ -1256,7 +1253,7 @@ index 99b2f34..b79f3f0 100644
  
  struct files_struct *files_forall(
  	struct smbd_server_connection *sconn,
-@@ -286,15 +640,15 @@ struct files_struct *files_forall(
+@@ -286,15 +637,15 @@ struct files_struct *files_forall(
  				   void *private_data),
  	void *private_data)
  {
@@ -1280,7 +1277,7 @@ index 99b2f34..b79f3f0 100644
  	}
  	return NULL;
  }
-@@ -302,21 +656,42 @@ struct files_struct *files_forall(
+@@ -302,21 +653,42 @@ struct files_struct *files_forall(
  /****************************************************************************
   Find a fsp given a file descriptor.
  ****************************************************************************/
@@ -1333,7 +1330,7 @@ index 99b2f34..b79f3f0 100644
  	return NULL;
  }
  
-@@ -327,19 +702,23 @@ files_struct *file_find_fd(struct smbd_server_connection *sconn, int fd)
+@@ -327,19 +699,23 @@ files_struct *file_find_fd(struct smbd_server_connection *sconn, int fd)
  files_struct *file_find_dif(struct smbd_server_connection *sconn,
  			    struct file_id id, unsigned long gen_id)
  {
@@ -1365,7 +1362,7 @@ index 99b2f34..b79f3f0 100644
  			}
  			/* Paranoia check. */
  			if ((fsp->fh->fd == -1) &&
-@@ -366,28 +745,48 @@ files_struct *file_find_dif(struct smbd_server_connection *sconn,
+@@ -366,28 +742,48 @@ files_struct *file_find_dif(struct smbd_server_connection *sconn,
   Find the first fsp given a device and inode.
   We use a singleton cache here to speed up searching from getfilepathinfo
   calls.
@@ -1422,7 +1419,7 @@ index 99b2f34..b79f3f0 100644
  	/* Setup negative cache. */
  	sconn->fsp_fi_cache.fsp = NULL;
  	return NULL;
-@@ -412,11 +811,22 @@ files_struct *file_find_di_next(files_struct *start_fsp)
+@@ -412,11 +808,22 @@ files_struct *file_find_di_next(files_struct *start_fsp)
  
  struct files_struct *file_find_one_fsp_from_lease_key(
  	struct smbd_server_connection *sconn,
@@ -1447,7 +1444,7 @@ index 99b2f34..b79f3f0 100644
  		if ((fsp->lease != NULL) &&
  		    (fsp->lease->lease.lease_key.data[0] ==
  		     lease_key->data[0]) &&
-@@ -431,13 +841,30 @@ struct files_struct *file_find_one_fsp_from_lease_key(
+@@ -431,13 +838,30 @@ struct files_struct *file_find_one_fsp_from_lease_key(
  /****************************************************************************
   Find any fsp open with a pathname below that of an already open path.
  ****************************************************************************/
@@ -1481,7 +1478,7 @@ index 99b2f34..b79f3f0 100644
  	d_fullname = talloc_asprintf(talloc_tos(), "%s/%s",
  				     dir_fsp->conn->connectpath,
  				     dir_fsp->fsp_name->base_name);
-@@ -448,7 +875,10 @@ bool file_find_subpath(files_struct *dir_fsp)
+@@ -448,7 +872,10 @@ bool file_find_subpath(files_struct *dir_fsp)
  
  	dlen = strlen(d_fullname);
  
@@ -1493,7 +1490,7 @@ index 99b2f34..b79f3f0 100644
  		char *d1_fullname;
  
  		if (fsp == dir_fsp) {
-@@ -468,13 +898,28 @@ bool file_find_subpath(files_struct *dir_fsp)
+@@ -468,13 +895,28 @@ bool file_find_subpath(files_struct *dir_fsp)
  				(d1_fullname[dlen] == '/')) {
  			TALLOC_FREE(d1_fullname);
  			TALLOC_FREE(d_fullname);
@@ -1524,7 +1521,7 @@ index 99b2f34..b79f3f0 100644
  }
  
  /****************************************************************************
-@@ -483,16 +928,37 @@ bool file_find_subpath(files_struct *dir_fsp)
+@@ -483,16 +925,37 @@ bool file_find_subpath(files_struct *dir_fsp)
  
  void fsp_free(files_struct *fsp)
  {
@@ -1566,7 +1563,7 @@ index 99b2f34..b79f3f0 100644
  	TALLOC_FREE(fsp->fake_file_handle);
  
  	if (fsp->fh->ref_count == 1) {
-@@ -510,7 +976,6 @@ void fsp_free(files_struct *fsp)
+@@ -510,7 +973,6 @@ void fsp_free(files_struct *fsp)
  	}
  
  	fsp->conn->num_files_open--;
@@ -1574,7 +1571,7 @@ index 99b2f34..b79f3f0 100644
  	/* this is paranoia, just in case someone tries to reuse the
  	   information */
  	ZERO_STRUCTP(fsp);
-@@ -567,7 +1032,7 @@ void file_free(struct smb_request *req, files_struct *fsp)
+@@ -567,7 +1029,7 @@ void file_free(struct smb_request *req, files_struct *fsp)
  	fsp_free(fsp);
  
  	DEBUG(5,("freed files structure %llu (%u used)\n",
