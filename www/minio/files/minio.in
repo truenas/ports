@@ -67,6 +67,15 @@ minio_startprecmd()
 
 	for disk in "${minio_disks}"; do
 		if [ ! -d "${disk}" ]; then
+			parent="$(dirname "$disk")"
+			if [ ! -d "${parent}" ]; then
+				echo "${parent} does not exist or is not a directory."
+				return 1
+			fi
+			if [ "$(stat -f '%d' "${parent}")" == "$(stat -f '%d' "/mnt")" ]; then
+				echo "${parent} is not a ZFS filesystem."
+				return 1
+			fi
 			install -d -o "${minio_user}" -g "${minio_group}" "${disk}"
 		fi
 	done
