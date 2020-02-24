@@ -20,6 +20,24 @@ index 0000000..7c66891
 +</description>
 +<value type="default">list</value>
 +</samba:parameter>
+diff --git a/lib/param/param_table.c b/lib/param/param_table.c
+index 47b85de..15727bc 100644
+--- a/lib/param/param_table.c
++++ b/lib/param/param_table.c
+@@ -173,6 +173,13 @@ static const struct enum_list enum_dns_update_settings[] = {
+ 	{-1, NULL}
+ };
+ 
++static const struct enum_list enum_fsp_fi_cache_type[] = {
++	{FSP_FI_LIST, "list"},
++	{FSP_FI_MEMCACHE, "memcache"},
++	{FSP_FI_DBHASH, "db_hash"},
++	{-1, NULL}
++};
++
+ /*
+    Do you want session setups at user level security with a invalid
+    password to be rejected or allowed in as guest? WinNT rejects them
 diff --git a/lib/util/db_hash.c b/lib/util/db_hash.c
 new file mode 100644
 index 0000000..6c63a6f
