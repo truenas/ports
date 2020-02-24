@@ -1312,53 +1312,6 @@ index 0000000..03c72d7
 +int smb_zfs_rollback_last(struct smblibzfshandle *smblibzfsp, const char *path);
 +
 +#endif	/* !__SMB_LIBZFS_H */
-diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
-index f0c92f8..3d40108 100644
---- a/source3/modules/vfs_default.c
-+++ b/source3/modules/vfs_default.c
-@@ -76,32 +76,14 @@ static int vfswrap_get_quota(struct vfs_handle_struct *handle,
- 				unid_t id,
- 				SMB_DISK_QUOTA *qt)
- {
--#ifdef HAVE_SYS_QUOTAS
--	int result;
--
--	START_PROFILE(syscall_get_quota);
--	result = sys_get_quota(smb_fname->base_name, qtype, id, qt);
--	END_PROFILE(syscall_get_quota);
--	return result;
--#else
- 	errno = ENOSYS;
- 	return -1;
--#endif
- }
- 
- static int vfswrap_set_quota(struct vfs_handle_struct *handle, enum SMB_QUOTA_TYPE qtype, unid_t id, SMB_DISK_QUOTA *qt)
- {
--#ifdef HAVE_SYS_QUOTAS
--	int result;
--
--	START_PROFILE(syscall_set_quota);
--	result = sys_set_quota(handle->conn->connectpath, qtype, id, qt);
--	END_PROFILE(syscall_set_quota);
--	return result;
--#else
- 	errno = ENOSYS;
- 	return -1;
--#endif
- }
- 
- static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
-@@ -2393,7 +2375,8 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
- 	}
- 
- #if defined(HAVE_UTIMENSAT)
--	if (ft != NULL) {
-+	if ((ft != NULL) &&
-+	    (timespec_compare(&ft->mtime, &smb_fname->st.st_ex_btime) == 1)) {
- 		struct timespec ts[2];
- 		ts[0] = ft->atime;
- 		ts[1] = ft->mtime;
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
 index 0000000..6ce2c3d
@@ -4767,50 +4720,3 @@ index 81ccbde..074bb70 100644
  	}
  
  	status = file_new(req, conn, &fsp);
-diff --git a/source3/smbd/trans2.c b/source3/smbd/trans2.c
-index 2cf669f..96e5eb0 100644
---- a/source3/smbd/trans2.c
-+++ b/source3/smbd/trans2.c
-@@ -3908,12 +3908,21 @@ cBytesSector=%u, cUnitTotal=%u, cUnitAvail=%d\n", (unsigned int)bsize, (unsigned
- 
- 			ZERO_STRUCT(fsp);
- 			ZERO_STRUCT(quotas);
-+			bool allowed_user;
-+			if ((get_current_uid(conn) == 0) || (security_token_has_privilege(
-+			   conn->session_info->security_token, SEC_PRIV_DISK_OPERATOR) == 0)) {
-+				allowed_user = true;
-+			}
-+
-+
- 
- 			fsp.conn = conn;
- 			fsp.fnum = FNUM_FIELD_INVALID;
- 
--			/* access check */
--			if (get_current_uid(conn) != 0) {
-+			/* access check 
-+ 			 * Allow access in case we have SEC_PRIV_DISK_OPERATOR.
-+ 			 */
-+			if ( !allowed_user ) {
- 				DEBUG(0,("get_user_quota: access_denied "
- 					 "service [%s] user [%s]\n",
- 					 lp_servicename(talloc_tos(), lp_sub, SNUM(conn)),
-@@ -4212,11 +4221,17 @@ static NTSTATUS smb_set_fsquota(connection_struct *conn,
- 		loadparm_s3_global_substitution();
- 	NTSTATUS status;
- 	SMB_NTQUOTA_STRUCT quotas;
-+	bool allowed_user;
-+
-+	if ((get_current_uid(conn) == 0) || (security_token_has_privilege(
-+	   conn->session_info->security_token, SEC_PRIV_DISK_OPERATOR) == 0)) { 
-+		allowed_user = true;
-+	}
- 
- 	ZERO_STRUCT(quotas);
- 
- 	/* access check */
--	if ((get_current_uid(conn) != 0) || !CAN_WRITE(conn)) {
-+	if ((!allowed_user) || !CAN_WRITE(conn)) {
- 		DEBUG(3, ("set_fsquota: access_denied service [%s] user [%s]\n",
- 			  lp_servicename(talloc_tos(), lp_sub, SNUM(conn)),
- 			  conn->session_info->unix_info->unix_name));
