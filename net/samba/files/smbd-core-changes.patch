@@ -697,7 +697,7 @@ index 37b59d8..45a017b 100644
  		ts[0] = ft->atime;
  		ts[1] = ft->mtime;
 diff --git a/source3/smbd/fake_file.c b/source3/smbd/fake_file.c
-index 81ccbde..26890c6 100644
+index 81ccbde..433dc7a 100644
 --- a/source3/smbd/fake_file.c
 +++ b/source3/smbd/fake_file.c
 @@ -22,6 +22,7 @@
@@ -708,15 +708,16 @@ index 81ccbde..26890c6 100644
  
  struct fake_file_type {
  	const char *name;
-@@ -130,6 +131,7 @@ NTSTATUS open_fake_file(struct smb_request *req, connection_struct *conn,
+@@ -130,6 +131,8 @@ NTSTATUS open_fake_file(struct smb_request *req, connection_struct *conn,
  		loadparm_s3_global_substitution();
  	files_struct *fsp = NULL;
  	NTSTATUS status;
 +	bool is_disk_op;
++	int ret;
  
  	status = smbd_calculate_access_mask(conn, smb_fname, false,
  					    access_mask, &access_mask);
-@@ -142,15 +144,34 @@ NTSTATUS open_fake_file(struct smb_request *req, connection_struct *conn,
+@@ -142,15 +145,34 @@ NTSTATUS open_fake_file(struct smb_request *req, connection_struct *conn,
  		return status;
  	}
  
@@ -742,7 +743,7 @@ index 81ccbde..26890c6 100644
 +			DBG_NOTICE("Access denied to "
 +				   "service[%s] file[%s]. User [%s] "
 +				   "lacks SE_PRIV_DISK_OPERATOR\n",
-+				   lp_servicename(talloc_tos(), SNUM(conn)),
++				   lp_servicename(talloc_tos(), lp_sub, SNUM(conn)),
 +				   smb_fname_str_dbg(smb_fname),
 +				   conn->session_info->unix_info->unix_name);
 +			return NT_STATUS_ACCESS_DENIED;
@@ -752,7 +753,7 @@ index 81ccbde..26890c6 100644
 +		if (geteuid() != sec_initial_uid()) {
 +			DEBUG(3, ("open_fake_file_shared: access_denied to "
 +				  "service[%s] file[%s] user[%s]\n",
-+				  lp_servicename(talloc_tos(), SNUM(conn)),
++				  lp_servicename(talloc_tos(), lp_sub, SNUM(conn)),
 +				  smb_fname_str_dbg(smb_fname),
 +				  conn->session_info->unix_info->unix_name));
 +			return NT_STATUS_ACCESS_DENIED;
@@ -760,7 +761,7 @@ index 81ccbde..26890c6 100644
  	}
  
  	status = file_new(req, conn, &fsp);
-@@ -175,7 +196,12 @@ NTSTATUS open_fake_file(struct smb_request *req, connection_struct *conn,
+@@ -175,7 +197,12 @@ NTSTATUS open_fake_file(struct smb_request *req, connection_struct *conn,
  	}
  
  	fsp->fake_file_handle = init_fake_file_handle(fake_file_type);
