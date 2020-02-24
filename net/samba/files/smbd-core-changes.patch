@@ -20,6 +20,20 @@ index 0000000..7c66891
 +</description>
 +<value type="default">list</value>
 +</samba:parameter>
+diff --git a/lib/param/loadparm.h b/lib/param/loadparm.h
+index 65ff62c..c0e1aae 100644
+--- a/lib/param/loadparm.h
++++ b/lib/param/loadparm.h
+@@ -226,6 +226,9 @@ enum dns_update_settings {DNS_UPDATE_OFF, DNS_UPDATE_ON, DNS_UPDATE_SIGNED};
+ /* MDNS name sources */
+ enum mdns_name_values {MDNS_NAME_NETBIOS, MDNS_NAME_MDNS};
+ 
++/* FSP FI CACHE sources */
++enum fsp_fi_cache_type {FSP_FI_LIST, FSP_FI_MEMCACHE, FSP_FI_DBHASH};
++
+ /* LDAP SSL options */
+ enum ldap_ssl_types {LDAP_SSL_OFF, LDAP_SSL_START_TLS};
+ 
 diff --git a/lib/param/param_table.c b/lib/param/param_table.c
 index 47b85de..15727bc 100644
 --- a/lib/param/param_table.c
@@ -603,14 +617,14 @@ index 4331c2f..7bc5782 100644
 +
  #endif
 diff --git a/lib/util/wscript_build b/lib/util/wscript_build
-index a827eea..ee994c8 100644
+index a827eea..b66747c 100644
 --- a/lib/util/wscript_build
 +++ b/lib/util/wscript_build
 @@ -124,6 +124,7 @@ else:
      bld.SAMBA_LIBRARY('samba-util',
                    source='''
                           base64.c
-+                         dbhash.c
++                         db_hash.c
                           dprintf.c
                           fsusage.c
                           genrand_util.c
