@@ -776,7 +776,7 @@ index 81ccbde..433dc7a 100644
  		file_free(req, fsp);
  		return NT_STATUS_NO_MEMORY;
 diff --git a/source3/smbd/files.c b/source3/smbd/files.c
-index 99b2f34..d067684 100644
+index 99b2f34..7135d4e 100644
 --- a/source3/smbd/files.c
 +++ b/source3/smbd/files.c
 @@ -23,9 +23,257 @@
@@ -840,7 +840,7 @@ index 99b2f34..d067684 100644
 +	struct fspcache_list *fsplist = NULL;
 +	struct file_id tmp_id;
 +	tmp_id.devid = fsp->file_id.devid;
-+        tmp_id.inode = fsp->file_id.inode;
++	tmp_id.inode = fsp->file_id.inode;
 +	tmp_id.extid = 0;
 +	if (backend == FSP_FI_DBHASH) {
 +		ret = db_hash_fetch(sconn->fsp_fi_table.fi_u.dh,
@@ -898,7 +898,7 @@ index 99b2f34..d067684 100644
 +	sconn->fsp_fi_table.nentries++;
 +	return ret;
 +}
- 
++
 +int fspcache_traverse(struct smbd_server_connection *sconn,
 +		      fspcache_cb cb,
 +		      void *private_data,
@@ -961,7 +961,7 @@ index 99b2f34..d067684 100644
 +	}
 +	return ret;
 +}
-+
+ 
 +int fspcache_destroy(struct smbd_server_connection *sconn,
 +		     struct file_id id)
 +{
@@ -1092,12 +1092,12 @@ index 99b2f34..d067684 100644
 +	int i;
 +
 +	conn = (connection_struct *)private_data;
- 
--	for (fsp=conn->sconn->files; fsp; fsp=next) {
++
 +	fsplist = talloc_get_type_abort(*(void **)databuf,
 +				       struct fspcache_list);
 +	SMB_ASSERT(fsplist != NULL);
-+
+ 
+-	for (fsp=conn->sconn->files; fsp; fsp=next) {
 +	if (fsplist == NULL) {
 +		return -1;
 +	}
@@ -1330,7 +1330,7 @@ index 99b2f34..d067684 100644
  	return NULL;
  }
  
-@@ -327,19 +699,23 @@ files_struct *file_find_fd(struct smbd_server_connection *sconn, int fd)
+@@ -327,19 +699,27 @@ files_struct *file_find_fd(struct smbd_server_connection *sconn, int fd)
  files_struct *file_find_dif(struct smbd_server_connection *sconn,
  			    struct file_id id, unsigned long gen_id)
  {
@@ -1341,11 +1341,15 @@ index 99b2f34..d067684 100644
 +	files_struct *next = NULL;
 +	struct fspcache_list *fsplist = NULL;
 +	bool must_free_fis = false;
++	struct file_id tmp_id;
++	tmp_id.devid = id.devid;
++	tmp_id.inode = id.inode;
++	tmp_id.extid = 0;
  
  	if (gen_id == 0) {
  		return NULL;
  	}
-+	ret = fspcache_get(sconn, id, &fsplist);
++	ret = fspcache_get(sconn, tmp_id, &fsplist);
  
 -	for (fsp=sconn->files; fsp; fsp=fsp->next,count++) {
 -		/* We can have a fsp->fh->fd == -1 here as it could be a stat open. */
@@ -1362,15 +1366,7 @@ index 99b2f34..d067684 100644
  			}
  			/* Paranoia check. */
  			if ((fsp->fh->fd == -1) &&
-@@ -366,28 +742,48 @@ files_struct *file_find_dif(struct smbd_server_connection *sconn,
-  Find the first fsp given a device and inode.
-  We use a singleton cache here to speed up searching from getfilepathinfo
-  calls.
-+
-+ If singleton cache lookup fails, then perform hashtable lookup and grab
-+ head of fsplist. If this also fails, then cache the negative result.
- ****************************************************************************/
- 
+@@ -371,16 +751,35 @@ files_struct *file_find_dif(struct smbd_server_connection *sconn,
  files_struct *file_find_di_first(struct smbd_server_connection *sconn,
  				 struct file_id id)
  {
@@ -1381,6 +1377,10 @@ index 99b2f34..d067684 100644
 +	struct fspcache_list *fsplist = NULL;
 +	enum fsp_fi_cache_type backend;
 +	backend = sconn->fsp_fi_table.backend_type;
++	struct file_id tmp_id;
++	tmp_id.devid = id.devid;
++        tmp_id.inode = id.inode;
++	tmp_id.extid = 0;
  
  	if (file_id_equal(&sconn->fsp_fi_cache.id, &id)) {
  		/* Positive or negative cache hit. */
@@ -1390,36 +1390,30 @@ index 99b2f34..d067684 100644
  	sconn->fsp_fi_cache.id = id;
  
 -	for (fsp=sconn->files;fsp;fsp=fsp->next) {
--		if (file_id_equal(&fsp->file_id, &id)) {
--			/* Setup positive cache. */
--			sconn->fsp_fi_cache.fsp = fsp;
--			return fsp;
--		}
-+	ret = fspcache_get(sconn, id, &fsplist);
++	ret = fspcache_get(sconn, tmp_id, &fsplist);
 +	if (ret != 0) {
 +		DBG_ERR("Failed to retrieve fsp_fi_cache entry\n");
 +		goto failure;
 +	}
-+	if (backend != FSP_FI_LIST) {
-+		sconn->fsp_fi_cache.fsp = fsplist->entries;
-+		return fsplist->entries;
++	/*
++	 * For memcache and db_hash backends, in principal we should return 
++	 * first entry in list, but list is keyed on devid and inode and so
++	 * it's possible that we may need to iterate through the list.
++	 */
++	for (fsp=fsplist->entries, i=0;fsplist->nentries > i;fsp=next, i++) {
++		next = fsp->next;
+ 		if (file_id_equal(&fsp->file_id, &id)) {
+ 			/* Setup positive cache. */
+ 			sconn->fsp_fi_cache.fsp = fsp;
+@@ -388,6 +787,7 @@ files_struct *file_find_di_first(struct smbd_server_connection *sconn,
+ 		}
  	}
-+	else {
-+		for (fsp=fsplist->entries, i=0;fsplist->nentries > i;fsp=next, i++) {
-+			next = fsp->next;
-+			if (file_id_equal(&fsp->file_id, &id)) {
-+				/* Setup positive cache. */
-+				sconn->fsp_fi_cache.fsp = fsp;
-+				return fsp;
-+			}
-+		}
  
-+	}
 +failure:
  	/* Setup negative cache. */
  	sconn->fsp_fi_cache.fsp = NULL;
  	return NULL;
-@@ -412,11 +808,22 @@ files_struct *file_find_di_next(files_struct *start_fsp)
+@@ -412,11 +812,27 @@ files_struct *file_find_di_next(files_struct *start_fsp)
  
  struct files_struct *file_find_one_fsp_from_lease_key(
  	struct smbd_server_connection *sconn,
@@ -1432,7 +1426,12 @@ index 99b2f34..d067684 100644
 +	struct files_struct *fsp = NULL;
 +	struct files_struct *next = NULL;
 +	struct fspcache_list *fsplist = NULL;
-+	ret = fspcache_get(sconn, id, &fsplist);
++	struct file_id tmp_id;
++	tmp_id.devid = id.devid;
++        tmp_id.inode = id.inode;
++	tmp_id.extid = 0;
++
++	ret = fspcache_get(sconn, tmp_id, &fsplist);
 +	if (ret != 0) {
 +		DBG_ERR("Failed to retrieve fsplist based on id\n");
 +		return NULL;
@@ -1444,7 +1443,7 @@ index 99b2f34..d067684 100644
  		if ((fsp->lease != NULL) &&
  		    (fsp->lease->lease.lease_key.data[0] ==
  		     lease_key->data[0]) &&
-@@ -431,13 +838,30 @@ struct files_struct *file_find_one_fsp_from_lease_key(
+@@ -431,13 +847,30 @@ struct files_struct *file_find_one_fsp_from_lease_key(
  /****************************************************************************
   Find any fsp open with a pathname below that of an already open path.
  ****************************************************************************/
@@ -1478,7 +1477,7 @@ index 99b2f34..d067684 100644
  	d_fullname = talloc_asprintf(talloc_tos(), "%s/%s",
  				     dir_fsp->conn->connectpath,
  				     dir_fsp->fsp_name->base_name);
-@@ -448,7 +872,10 @@ bool file_find_subpath(files_struct *dir_fsp)
+@@ -448,7 +881,10 @@ bool file_find_subpath(files_struct *dir_fsp)
  
  	dlen = strlen(d_fullname);
  
@@ -1490,7 +1489,7 @@ index 99b2f34..d067684 100644
  		char *d1_fullname;
  
  		if (fsp == dir_fsp) {
-@@ -468,13 +895,28 @@ bool file_find_subpath(files_struct *dir_fsp)
+@@ -468,13 +904,28 @@ bool file_find_subpath(files_struct *dir_fsp)
  				(d1_fullname[dlen] == '/')) {
  			TALLOC_FREE(d1_fullname);
  			TALLOC_FREE(d_fullname);
@@ -1521,7 +1520,7 @@ index 99b2f34..d067684 100644
  }
  
  /****************************************************************************
-@@ -483,16 +925,37 @@ bool file_find_subpath(files_struct *dir_fsp)
+@@ -483,16 +934,41 @@ bool file_find_subpath(files_struct *dir_fsp)
  
  void fsp_free(files_struct *fsp)
  {
@@ -1529,11 +1528,15 @@ index 99b2f34..d067684 100644
  	struct smbd_server_connection *sconn = fsp->conn->sconn;
 +	struct fspcache_list *fsplist = NULL;
 +	fsplist = talloc_zero(fsp, struct fspcache_list);
++	struct file_id tmp_id;
++	tmp_id.devid = fsp->file_id.devid;
++	tmp_id.inode = fsp->file_id.inode;
++	tmp_id.extid = 0;
  
  	if (fsp == sconn->fsp_fi_cache.fsp) {
  		ZERO_STRUCT(sconn->fsp_fi_cache);
  	}
-+	ret = fspcache_get(sconn, fsp->file_id, &fsplist);
++	ret = fspcache_get(sconn, tmp_id, &fsplist);
 +	if (ret != 0) {
 +		DBG_ERR("Failed to get fsplist for [%s]\n", fsp_str_dbg(fsp));
 +		goto done;
@@ -1563,7 +1566,7 @@ index 99b2f34..d067684 100644
  	TALLOC_FREE(fsp->fake_file_handle);
  
  	if (fsp->fh->ref_count == 1) {
-@@ -510,7 +973,6 @@ void fsp_free(files_struct *fsp)
+@@ -510,7 +986,6 @@ void fsp_free(files_struct *fsp)
  	}
  
  	fsp->conn->num_files_open--;
@@ -1571,7 +1574,7 @@ index 99b2f34..d067684 100644
  	/* this is paranoia, just in case someone tries to reuse the
  	   information */
  	ZERO_STRUCTP(fsp);
-@@ -567,7 +1029,7 @@ void file_free(struct smb_request *req, files_struct *fsp)
+@@ -567,7 +1042,7 @@ void file_free(struct smb_request *req, files_struct *fsp)
  	fsp_free(fsp);
  
  	DEBUG(5,("freed files structure %llu (%u used)\n",
