@@ -1361,10 +1361,10 @@ index bf6b303..4afaeab 100644
  		ts[1] = ft->mtime;
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 0000000..14fa2d7
+index 0000000..bd1cfd5
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2325 @@
+@@ -0,0 +1,2354 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -1418,6 +1418,7 @@ index 0000000..14fa2d7
 +	struct smbacl4_vfs_params nfs4_params;
 +	struct smblibzfshandle *libzp;
 +	bool posix_rename;
++	bool dosattrib_xattr;
 +	bool zfs_acl_enabled;
 +	bool zfs_acl_sortaces;
 +	bool zfs_acl_map_modify;
@@ -1561,12 +1562,12 @@ index 0000000..14fa2d7
 +
 +	if (S_ISDIR(smb_fname->st.st_ex_mode)) {
 +	/*
-+ 	 * Windows default behavior appears to be that the archive bit 
-+ 	 * on a directory is only explicitly set by clients. FreeBSD
-+ 	 * sets this bit when the directory's contents are modified. 
-+ 	 * This is a temporary hack until we can make OS behavior 
-+ 	 * configurable 
-+ 	 */
++	 * Windows default behavior appears to be that the archive bit 
++	 * on a directory is only explicitly set by clients. FreeBSD
++	 * sets this bit when the directory's contents are modified. 
++	 * This is a temporary hack until we can make OS behavior 
++	 * configurable 
++	 */
 +		*dosmode &= ~FILE_ATTRIBUTE_ARCHIVE;
 +	}
 +
@@ -1581,16 +1582,16 @@ index 0000000..14fa2d7
 +
 +	if (S_ISDIR(fsp->fsp_name->st.st_ex_mode)) {
 +	/*
-+ 	 * Windows default behavior appears to be that the archive bit 
-+ 	 * on a directory is only explicitly set by clients. FreeBSD
-+ 	 * sets this bit when the directory's contents are modified. 
-+ 	 * This is a temporary hack until we can make OS behavior 
-+ 	 * configurable 
-+ 	 */
++	 * Windows default behavior appears to be that the archive bit 
++	 * on a directory is only explicitly set by clients. FreeBSD
++	 * sets this bit when the directory's contents are modified. 
++	 * This is a temporary hack until we can make OS behavior 
++	 * configurable 
++	 */
 +		*dosmode &= ~FILE_ATTRIBUTE_ARCHIVE;
 +	}
 +
-+        return NT_STATUS_OK;
++	return NT_STATUS_OK;
 +}
 +
 +static NTSTATUS ixnas_set_dos_attributes(struct vfs_handle_struct *handle,
@@ -1598,10 +1599,22 @@ index 0000000..14fa2d7
 +                                           uint32_t dosmode)
 +{
 +	NTSTATUS ret;
++	struct ixnas_config_data *config = NULL;
 +
-+	ret = set_dos_attributes_common(handle, smb_fname, dosmode);
-+                
-+        return ret;
++	SMB_VFS_HANDLE_GET_DATA(handle, config,
++				struct ixnas_config_data,
++				return NT_STATUS_INTERNAL_ERROR);
++
++	if (!config->dosattrib_xattr) {
++		ret = set_dos_attributes_common(handle, smb_fname, dosmode);
++	}
++	else {
++		ret = SMB_VFS_NEXT_SET_DOS_ATTRIBUTES(handle,
++						      smb_fname,
++						      dosmode);
++	}
++
++	return ret;
 +}
 +
 +static NTSTATUS ixnas_fset_dos_attributes(struct vfs_handle_struct *handle,
@@ -1609,8 +1622,20 @@ index 0000000..14fa2d7
 +                                            uint32_t dosmode)
 +{
 +	NTSTATUS ret;
++	struct ixnas_config_data *config = NULL;
 +
-+	ret = set_dos_attributes_common(handle, fsp->fsp_name, dosmode);
++	SMB_VFS_HANDLE_GET_DATA(handle, config,
++				struct ixnas_config_data,
++				return NT_STATUS_INTERNAL_ERROR);
++
++	if (!config->dosattrib_xattr) {
++		ret = set_dos_attributes_common(handle, fsp->fsp_name, dosmode);
++	}
++	else {
++		ret = SMB_VFS_NEXT_FSET_DOS_ATTRIBUTES(handle,
++						       fsp,
++						       dosmode);
++	}
 +
 +	return ret;
 +}
@@ -3537,26 +3562,30 @@ index 0000000..14fa2d7
 +	/* 
 +	 * Ensure other alternate methods of mapping dosmodes are disabled.
 +	 */
++	config->dosattrib_xattr = lp_parm_bool(SNUM(handle->conn),
++			"ixnas", "dosattrib_xattr", false);
 +
-+	if ((lp_map_readonly(SNUM(handle->conn))) == MAP_READONLY_YES) {
-+		DBG_INFO("ixnas:dosmode to file flag mapping enabled,"
-+			  "disabling 'map readonly'\n");
-+		lp_do_parameter(SNUM(handle->conn), "map readonly",
-+				"no");
-+	}
++	if (!config->dosattrib_xattr) {
++		if ((lp_map_readonly(SNUM(handle->conn))) == MAP_READONLY_YES) {
++			DBG_INFO("ixnas:dosmode to file flag mapping enabled,"
++				  "disabling 'map readonly'\n");
++			lp_do_parameter(SNUM(handle->conn), "map readonly",
++					"no");
++		}
 +
-+	if (lp_map_archive(SNUM(handle->conn))) {
-+		DBG_INFO("ixnas:dosmode to file flag mapping enabled,"
-+			  "disabling 'map archive'\n");
-+		lp_do_parameter(SNUM(handle->conn), "map archive",
-+				"no");
-+	}
++		if (lp_map_archive(SNUM(handle->conn))) {
++			DBG_INFO("ixnas:dosmode to file flag mapping enabled,"
++				  "disabling 'map archive'\n");
++			lp_do_parameter(SNUM(handle->conn), "map archive",
++					"no");
++		}
 +
-+	if (lp_store_dos_attributes(SNUM(handle->conn))){
-+		DBG_INFO("ixnas:dosmode to file flag mapping enabled,"
-+			  "disabling 'store dos attributes'\n");
-+		lp_do_parameter(SNUM(handle->conn), "store dos attributes",
-+				"no");
++		if (lp_store_dos_attributes(SNUM(handle->conn))){
++			DBG_INFO("ixnas:dosmode to file flag mapping enabled,"
++				  "disabling 'store dos attributes'\n");
++			lp_do_parameter(SNUM(handle->conn), "store dos attributes",
++					"no");
++		}
 +	}
 +
 +	/* ZFS ACL PARAMETERS */
