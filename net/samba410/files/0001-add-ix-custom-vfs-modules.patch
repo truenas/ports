@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 0000000..6ae45e5
+index 0000000..189f9b8
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,992 @@
+@@ -0,0 +1,1006 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -87,6 +87,8 @@ index 0000000..6ae45e5
 +{
 +	struct snapshot_list *snapshots;
 +	struct iter_info *iter_info;
++	int prev_u;
++	int prev_prev_u;
 +};
 +
 +static int get_enum(const char *s, const struct enum_list *_enum)
@@ -687,13 +689,18 @@ index 0000000..6ae45e5
 +		return 0;
 +	}
 +
-+	if (state->iter_info->ignore_empty_snaps) {
-+		used = zfs_prop_get_int(snap, ZFS_PROP_USED);
-+		if (used == 0) {
-+			zfs_close(snap);
-+			return 0;
++	used = zfs_prop_get_int(snap, ZFS_PROP_USED);
++	if (used == 0 && state->snapshots->num_entries != 0) {
++		if (!((state->prev_u == 0) && 
++		      (state->prev_prev_u != 0))) {
++			state->prev_prev_u = state->prev_u;
++			state->prev_u = used;
++			goto done;
 +		}
++		state->prev_prev_u = state->prev_u;
++		state->prev_u = used;
 +	}
++
 +	cr_time = zfs_prop_get_int(snap, ZFS_PROP_CREATION);
 +
 +	if (state->iter_info->start && state->iter_info->start > cr_time) {
@@ -714,8 +721,10 @@ index 0000000..6ae45e5
 +
 +	entry->cr_time = cr_time;
 +	entry->name = talloc_strndup(entry, snap_name, name_len +1);
++
 +	DLIST_ADD(state->snapshots->entries, entry);
 +	state->snapshots->num_entries++;
++done:
 +	zfs_close(snap);
 +	return 0;
 +}
@@ -807,7 +816,12 @@ index 0000000..6ae45e5
 +			"shadow:exclude parameter\n");
 +		goto error;
 +	}
-+	rc = zfs_iter_snapshots(zfs, false, smb_zfs_add_snapshot, state);
++
++	/*
++	 * ZAP does not guarantee ordering. zfs_iter_snapshots_sorted
++	 * will generate AVL tree sorted by txg.
++	 */
++	rc = zfs_iter_snapshots_sorted(zfs, smb_zfs_add_snapshot, state);
 +
 +	if (rc != 0) {
 +		DBG_ERR("smb_zfs_list_snapshots: error getting "
