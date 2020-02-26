@@ -371,7 +371,6 @@ libexec/zfs/zpool.d/vendor
 libexec/zfs/zpool.d/w_proc
 libexec/zfs/zpool.d/w_ucor
 man/man1/raidz_test.1.gz
-man/man1/test-runner.1.gz
 man/man1/zhack.1.gz
 man/man1/ztest.1.gz
 man/man1/zvol_wait.1.gz
