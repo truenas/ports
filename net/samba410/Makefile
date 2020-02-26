@@ -33,6 +33,7 @@ EXTRA_PATCHES+=			${PATCHDIR}/add_zfs_based_vfs_modules.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/wscript_changes.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/experimental_aio.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/ix-smbtorture.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/debug.patch:-p1
 
 SAMBA4_BASENAME=		samba
 SAMBA4_PORTNAME=		${SAMBA4_BASENAME}4
