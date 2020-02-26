@@ -1,13 +1,241 @@
+diff --git a/source4/torture/vfs/ixnas.c b/source4/torture/vfs/ixnas.c
+new file mode 100644
+index 0000000..6090ff1
+--- /dev/null
++++ b/source4/torture/vfs/ixnas.c
+@@ -0,0 +1,222 @@
++/*
++   Unix SMB/CIFS implementation.
++
++   Copyright (C) iXsystems 2020
++
++   This program is free software; you can redistribute it and/or modify
++   it under the terms of the GNU General Public License as published by
++   the Free Software Foundation; either version 3 of the License, or
++   (at your option) any later version.
++
++   This program is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++   GNU General Public License for more details.
++
++   You should have received a copy of the GNU General Public License
++   along with this program.  If not, see <http://www.gnu.org/licenses/>.
++*/
++
++#include "includes.h"
++#include "lib/cmdline/popt_common.h"
++#include "libcli/smb2/smb2.h"
++#include "libcli/smb2/smb2_calls.h"
++#include "libcli/smb/smbXcli_base.h"
++#include "torture/torture.h"
++#include "torture/vfs/proto.h"
++#include "libcli/resolve/resolve.h"
++#include "torture/util.h"
++#include "torture/smb2/proto.h"
++#include "lib/param/param.h"
++#include "source3/modules/smb_libzfs.h"
++#include <sys/acl.h>
++
++#define BASEDIR "ixnas-timestamp"
++#define IXNASPATH "ixnas_test"
++#define MP "/mnt/tank/ixnas_test"
++
++static const char *null_string = NULL;
++static const char **empty_list = &null_string;
++static const char *default_test = "TESTSNAP*";
++static const char **default_prefix = &default_test;
++
++
++/**
++ * SMB2 connect with explicit share
++ **/
++static NTSTATUS torture_smb2_con_share(struct torture_context *tctx,
++                           const char *share,
++                           struct smb2_tree **tree)
++{
++        struct smbcli_options options;
++        NTSTATUS status;
++        const char *host = torture_setting_string(tctx, "host", NULL);
++
++        lpcfg_smbcli_options(tctx->lp_ctx, &options);
++
++        status = smb2_connect_ext(tctx,
++                                  host,
++                                  lpcfg_smb_ports(tctx->lp_ctx),
++                                  share,
++                                  lpcfg_resolve_context(tctx->lp_ctx),
++                                  popt_get_cmdline_credentials(),
++                                  0,
++                                  tree,
++                                  tctx->ev,
++                                  &options,
++                                  lpcfg_socket_options(tctx->lp_ctx),
++                                  lpcfg_gensec_settings(tctx, tctx->lp_ctx)
++                                  );
++        if (!NT_STATUS_IS_OK(status)) {
++                printf("Failed to connect to SMB2 share \\\\%s\\%s - %s\n",
++                       host, share, nt_errstr(status));
++        }
++        return status;
++}
++
++static bool test_mtime_btime(struct torture_context *tctx,
++			     struct smb2_tree *tree,
++			     const char *fname,
++			     time_t btime,
++			     time_t mtime)
++{
++	char *filename = NULL;
++	char *localname = NULL;
++	struct smb2_create cr;
++	struct smb2_handle handle = {{0}};
++	struct smb2_handle testdirh = {{0}};
++	struct timespec ts_b = { .tv_sec = btime };
++	struct timespec ts_m = { .tv_sec = mtime };
++	uint64_t nttime_b, nttime_m;
++	union smb_setfileinfo si;
++	NTSTATUS status;
++	bool ret = true;
++	smb2_deltree(tree, BASEDIR);
++	struct stat st = {0};
++	int res;
++
++	ZERO_STRUCT(cr);
++	torture_comment(tctx, "Testing [%s]: create: %ld, write: %ld\n",
++			fname, btime, mtime);
++	status = torture_smb2_testdir(tree, BASEDIR, &testdirh);
++	torture_assert_ntstatus_ok_goto(tctx, status, ret, done,
++					"torture_smb2_testdir failed\n");
++
++	filename = talloc_asprintf(tctx, "%s\\%s", BASEDIR, fname);
++	torture_assert_not_null_goto(tctx, filename, ret, done,
++				     "talloc_asprintf failed\n");
++
++	cr = (struct smb2_create) {
++		.in.desired_access = SEC_FLAG_MAXIMUM_ALLOWED,
++		.in.file_attributes = FILE_ATTRIBUTE_NORMAL,
++		.in.share_access = NTCREATEX_SHARE_ACCESS_MASK,
++		.in.create_disposition = NTCREATEX_DISP_OPEN_IF,
++		.in.impersonation_level = NTCREATEX_IMPERSONATION_ANONYMOUS,
++		.in.fname = filename,
++	};
++	TALLOC_FREE(filename);
++
++	status = smb2_create(tree, tctx, &cr);
++	torture_assert_ntstatus_ok_goto(tctx, status, ret, done,
++					"smb2_create failed\n");
++	handle = cr.out.file.handle;
++
++	si = (union smb_setfileinfo) {
++		.basic_info.level = RAW_SFILEINFO_BASIC_INFORMATION,
++		.basic_info.in.file.handle = handle,
++	};
++
++	nttime_b = unix_timespec_to_nt_time(ts_b);
++	nttime_m = unix_timespec_to_nt_time(ts_m);
++	si.basic_info.in.create_time = nttime_b;
++	if (mtime != 0) {
++		si.basic_info.in.write_time = nttime_m;
++	}
++
++	status = smb2_setinfo_file(tree, &si);
++	torture_assert_ntstatus_ok_goto(tctx, status, ret, done,
++					"smb2_setinfo_file failed\n");
++
++	localname = talloc_asprintf(tctx, "%s/%s/%s", MP, BASEDIR, fname);
++	status = smb2_util_close(tree, handle);
++	torture_assert_ntstatus_ok_goto(tctx, status, ret, done,
++                                        "smb2_util_close failed\n");
++	res = stat(localname, &st);
++	if (res != 0) {
++		torture_comment(tctx, "Stat [%s] failed: %s\n",
++				localname, strerror(errno));
++		ret = false;
++		goto done;
++	}
++	TALLOC_FREE(localname);
++
++	if (btime > mtime || btime == 0) {
++		/* These are known failure conditions. Time should not be changed */
++		torture_assert_u64_equal_goto(tctx,
++					      st.st_birthtim.tv_sec,
++					      st.st_mtim.tv_sec,
++					      ret, done,
++					      "Wrong write time\n");
++		ret = true;
++		goto done;
++	}
++
++	torture_assert_u64_equal_goto(tctx,
++				      unix_timespec_to_nt_time(ts_b),
++				      unix_timespec_to_nt_time(st.st_birthtimespec),
++				      ret, done,
++				      "Wrong create time\n");
++
++	torture_assert_u64_equal_goto(tctx,
++				      unix_timespec_to_nt_time(ts_m),
++				      unix_timespec_to_nt_time(st.st_mtimespec),
++				      ret, done,
++				      "Wrong write time\n");
++
++	ZERO_STRUCT(handle);
++
++done:
++	if (!smb2_util_handle_empty(handle)) {
++		smb2_util_close(tree, handle);
++	}
++	if (!smb2_util_handle_empty(testdirh)) {
++		smb2_util_close(tree, testdirh);
++	}
++	smb2_deltree(tree, BASEDIR);
++	return ret;
++
++}
++
++static bool test_ntimes(struct torture_context *tctx,
++			struct smb2_tree *tree_unused)
++{
++	struct smb2_tree *tree_base = NULL;
++	NTSTATUS status;
++	bool ret = true;
++	status = torture_smb2_con_share(tctx, IXNASPATH, &tree_base);
++	torture_assert_ntstatus_ok(tctx, status,
++				   "Failed to connect to [ixnas_test] share");
++
++	if (!test_mtime_btime(tctx, tree_base, "robocopy.txt", 0, 315619200)) {
++		ret = false;
++	}
++	if (!test_mtime_btime(tctx, tree_base, "mtime_newer_than_btime.txt", 1581359440, 315619200)) {
++		ret = false;
++	}
++	if (!test_mtime_btime(tctx, tree_base, "1980_to_future.txt", 315619200, 1581359440)) {
++		ret = false;
++	}
++
++	return ret;
++}
++
++struct torture_suite *torture_ixnas(TALLOC_CTX *ctx)
++{
++	struct torture_suite *suite = torture_suite_create(ctx, "ixnas");
++
++	torture_suite_add_1smb2_test(suite, "ntimes", test_ntimes);
++
++	suite->description = talloc_strdup(suite, "ixnas tests");
++
++	return suite;
++}
 diff --git a/source4/torture/vfs/shadow_copy_zfs.c b/source4/torture/vfs/shadow_copy_zfs.c
 new file mode 100644
-index 0000000..d9db753
+index 0000000..1936a93
 --- /dev/null
 +++ b/source4/torture/vfs/shadow_copy_zfs.c
 @@ -0,0 +1,302 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
-+   Copyright (C) iXsystems 2020 
++   Copyright (C) iXsystems 2020
 +
 +   This program is free software; you can redistribute it and/or modify
 +   it under the terms of the GNU General Public License as published by
@@ -103,7 +331,7 @@ index 0000000..d9db753
 +
 +	status = smb2_ioctl(tree, mem_ctx, &io);
 +	torture_assert_ntstatus_ok(tctx, status, "enum ioctl");
-+ 
++
 +	*_count = IVAL(io.out.out.data, 0);
 +
 +	/* with max_response_size=16, no labels should be sent */
@@ -157,7 +385,7 @@ index 0000000..d9db753
 +	torture_assert_not_null(tctx, snaps, "get snapshots");
 +	vss = talloc_asprintf(tmp_ctx, "%s/%s", snaps->entries->label, ZFILE3);
 +	torture_comment(tctx, "Preparing to access [%s]\n", vss);
-+	status = torture_smb2_open(tree_base, vss, SEC_RIGHTS_FILE_READ, &vss_fh1);	
++	status = torture_smb2_open(tree_base, vss, SEC_RIGHTS_FILE_READ, &vss_fh1);
 +	torture_assert_ntstatus_ok(tctx, status, "vss1 open");
 +
 +	/* cleanup -- TODO: delete child dataset. */
@@ -184,14 +412,14 @@ index 0000000..d9db753
 +	TALLOC_FREE(vss);
 +	vss = talloc_asprintf(tmp_ctx, "%s/%s", snaps->entries->label, ZFILE4);
 +	torture_comment(tctx, "Preparing to access [%s]\n", vss);
-+	status = torture_smb2_open(tree_base, vss, SEC_RIGHTS_FILE_READ, &vss_fh2);	
++	status = torture_smb2_open(tree_base, vss, SEC_RIGHTS_FILE_READ, &vss_fh2);
 +	torture_assert_ntstatus_ok(tctx, status, "vss2 open");
 +
 +	/* cleanup -- TODO: delete child dataset. */
 +	torture_comment(tctx, "Removing snapshot.\n");
 +	ret = smb_zfs_delete_snapshots(libzp, tmp_ctx, snaps);
 +	torture_assert_int_equal(tctx, ret, 0, "zfs_delete_snapshots");
-+	
++
 +	talloc_free(tmp_ctx);
 +	return true;
 +}
@@ -265,7 +493,7 @@ index 0000000..d9db753
 +	torture_assert_not_null(tctx, acl, "get parent ACL");
 +	ret = acl_set_file(ZPATH2, ACL_TYPE_NFS4, acl);
 +	torture_assert_int_equal(tctx, ret, 0, "set child ACL");
-+	
++
 +	status = torture_smb2_testfile_access(tree_base, ZFILE2, &sub_fh,
 +				SEC_STD_READ_CONTROL |
 +				SEC_STD_WRITE_DAC |
@@ -307,19 +535,20 @@ index 0000000..d9db753
 +	return suite;
 +}
 diff --git a/source4/torture/vfs/vfs.c b/source4/torture/vfs/vfs.c
-index 39cd573..de64d98 100644
+index 39cd573..19473c8 100644
 --- a/source4/torture/vfs/vfs.c
 +++ b/source4/torture/vfs/vfs.c
-@@ -111,6 +111,7 @@ NTSTATUS torture_vfs_init(TALLOC_CTX *ctx)
+@@ -111,6 +111,8 @@ NTSTATUS torture_vfs_init(TALLOC_CTX *ctx)
  	torture_suite_add_suite(suite, torture_vfs_fruit(suite));
  	torture_suite_add_suite(suite, torture_vfs_fruit_netatalk(suite));
  	torture_suite_add_suite(suite, torture_acl_xattr(suite));
 +	torture_suite_add_suite(suite, torture_shadow_copy_zfs(suite));
++	torture_suite_add_suite(suite, torture_ixnas(suite));
  	torture_suite_add_suite(suite, torture_vfs_fruit_file_id(suite));
  	torture_suite_add_suite(suite, torture_vfs_fruit_timemachine(suite));
  	torture_suite_add_suite(suite, torture_vfs_fruit_conversion(suite));
 diff --git a/source4/torture/wscript_build b/source4/torture/wscript_build
-index 6bd4a21..7751b14 100644
+index 6bd4a21..734fe6e 100644
 --- a/source4/torture/wscript_build
 +++ b/source4/torture/wscript_build
 @@ -287,9 +287,9 @@ bld.SAMBA_MODULE('TORTURE_NTP',
@@ -327,7 +556,7 @@ index 6bd4a21..7751b14 100644
  
  bld.SAMBA_MODULE('TORTURE_VFS',
 -	source='vfs/vfs.c vfs/fruit.c vfs/acl_xattr.c',
-+	source='vfs/vfs.c vfs/fruit.c vfs/acl_xattr.c vfs/shadow_copy_zfs.c',
++	source='vfs/vfs.c vfs/fruit.c vfs/acl_xattr.c vfs/shadow_copy_zfs.c vfs/ixnas.c',
  	subsystem='smbtorture',
 -	deps='LIBCLI_SMB POPT_CREDENTIALS TORTURE_UTIL smbclient-raw TORTURE_RAW',
 +	deps='LIBCLI_SMB POPT_CREDENTIALS TORTURE_UTIL smbclient-raw TORTURE_RAW smb_libzfs',
