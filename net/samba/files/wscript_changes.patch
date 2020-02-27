@@ -142,10 +142,18 @@ index cb0c083..e263bcf 100644
  bld.SAMBA3_MODULE('vfs_nfs4acl_xattr',
                    subsystem='vfs',
 diff --git a/source3/wscript b/source3/wscript
-index 62fe8ea..3b5758c 100644
+index 62fe8ea..3d1991f 100644
 --- a/source3/wscript
 +++ b/source3/wscript
-@@ -806,7 +806,7 @@ msg.msg_accrightslen = sizeof(fd);
+@@ -124,6 +124,7 @@ def configure(conf):
+     conf.CHECK_FUNCS_IN('dn_expand _dn_expand __dn_expand', 'resolv')
+     conf.CHECK_FUNCS_IN('dn_expand', 'inet')
+     conf.CHECK_DECLS('readahead', reverse=True, headers='fcntl.h')
++    conf.ADD_LDFLAGS('-ljail')
+ 
+     if conf.CHECK_CODE('''
+ #if defined(HAVE_UNISTD_H)
+@@ -806,7 +807,7 @@ msg.msg_accrightslen = sizeof(fd);
          conf.env['HAVE_ADS'] = '1'
          Logs.info("Building with Active Directory support.")
          # these have broken dependencies
@@ -154,7 +162,7 @@ index 62fe8ea..3b5758c 100644
      elif Options.options.with_ads == False:
          Logs.info("Building without Active Directory support (--without-ads).")
      else:
-@@ -1921,7 +1921,9 @@ main() {
+@@ -1921,7 +1922,9 @@ main() {
          default_shared_modules.extend(TO_LIST('vfs_posix_eadb'))
  
      if conf.CONFIG_SET('HAVE_FREEBSD_SUNACL_H'):
@@ -164,7 +172,7 @@ index 62fe8ea..3b5758c 100644
  
      if conf.CONFIG_SET('HAVE_DIRFD_DECL'):
          default_shared_modules.extend(TO_LIST('vfs_syncops vfs_dirsort'))
-@@ -1934,6 +1936,7 @@ main() {
+@@ -1934,6 +1937,7 @@ main() {
  
      if Options.options.with_pthreadpool:
          default_shared_modules.extend(TO_LIST('vfs_aio_pthread'))
