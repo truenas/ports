@@ -1,0 +1,415 @@
+diff --git a/lib/util/memcache.c b/lib/util/memcache.c
+index 1e616bd..6e7b6e7 100644
+--- a/lib/util/memcache.c
++++ b/lib/util/memcache.c
+@@ -60,6 +60,7 @@ static bool memcache_is_talloc(enum memcache_number n)
+ 	case SINGLETON_CACHE_TALLOC:
+ 	case SHARE_MODE_LOCK_CACHE:
+ 	case GETWD_CACHE:
++	case ZSNAP_CACHE:
+ 	case VIRUSFILTER_SCAN_RESULTS_CACHE_TALLOC:
+ 		result = true;
+ 		break;
+@@ -446,3 +447,25 @@ void memcache_flush(struct memcache *cache, enum memcache_number n)
+ 		node = next;
+ 	}
+ }
++
++int memcache_traverse(struct memcache *cache,
++                      memcache_parser_fn fn, void *private_data,
++                      int *count)
++{
++	int ret = 0;
++	count = 0;
++	struct memcache_element *e = NULL;
++	struct memcache_element *next = NULL;
++	DATA_BLOB key, value;
++
++	for (e = cache->mru; e != NULL; e = next) {
++		count++;
++		memcache_element_parse(e, &key, &value);
++		if (fn && fn(key.data, key.length, value.data, value.length, private_data)) {
++			/* They want us to terminate traversal */
++			return 0;
++                }
++		next = e->next;
++	}
++	return ret;
++}
+diff --git a/lib/util/memcache.h b/lib/util/memcache.h
+index 4331c2f..7bc5782 100644
+--- a/lib/util/memcache.h
++++ b/lib/util/memcache.h
+@@ -46,6 +46,8 @@ enum memcache_number {
+ 	SMB1_SEARCH_OFFSET_MAP,
+ 	SHARE_MODE_LOCK_CACHE,	/* talloc */
+ 	VIRUSFILTER_SCAN_RESULTS_CACHE_TALLOC, /* talloc */
++	FSP_FI_CACHE,
++	ZSNAP_CACHE,
+ 	DFREE_CACHE,
+ };
+ 
+@@ -114,4 +116,31 @@ void *memcache_lookup_talloc(struct memcache *cache, enum memcache_number n,
+ 
+ void memcache_flush(struct memcache *cache, enum memcache_number n);
+ 
++/**
++ * @brief Parser callback function called when fetching a record
++ *
++ * This function is called when fetching a record. This function should
++ * not modify key and data arguments.
++ *
++ * The function should return 0 on success and errno on error.
++ */
++typedef int (*memcache_parser_fn)(uint8_t *keybuf, size_t keylen,
++				  uint8_t *databuf, size_t datalen,
++				  void *private_data);
++
++/**
++ * @brief Traverse memcache
++ *
++ * The parser function should return non-zero value to stop traverse.
++ *
++ * @param[in] dh The tdb hash table context
++ * @param[in] parser Function called for each record
++ * @param[in] private_data Private data to parser function
++ * @param[out] count Number of records traversed
++ * @return 0 on success, errno on failure
++ */
++int memcache_traverse(struct memcache *cache,
++		      memcache_parser_fn parser, void *private_data,
++		      int *count);
++
+ #endif
+diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
+index 37b59d8..f7758b2 100644
+--- a/source3/modules/vfs_default.c
++++ b/source3/modules/vfs_default.c
+@@ -18,6 +18,8 @@
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+ 
++#include <sys/param.h>
++#include <sys/jail.h>
+ #include "includes.h"
+ #include "system/time.h"
+ #include "system/filesys.h"
+@@ -47,7 +49,50 @@
+ 
+ static int vfswrap_connect(vfs_handle_struct *handle, const char *service, const char *user)
+ {
+-    return 0;    /* Return >= 0 for success */
++	int ret, jid;
++	const char *securelevel;
++	char *jailname = NULL;
++	ret = 0;
++	if (!lp_parm_bool(SNUM(handle->conn), "jail", "enable", false)) {
++		return ret;
++	}
++
++	securelevel = lp_parm_const_string(SNUM(handle->conn),
++                        "jail", "securelevel", "3");
++
++	jailname = talloc_asprintf(handle->conn->sconn,
++				   "SERVICE_SMB-%s",
++				    service);
++	ret = chdir(handle->conn->connectpath);
++	if (ret != 0) {
++		DBG_ERR("chdir() to connectpath failed\n");
++		return -1;
++	}
++	jid = jail_getid(jailname);
++	if (jid == -1) {
++		DBG_ERR("Failed to get id for jail: %s\n",
++			jailname);
++		jid = jail_setv(JAIL_CREATE | JAIL_ATTACH,
++				"name", jailname,
++				"securelevel", securelevel,
++				"path", handle->conn->connectpath, NULL);
++	}
++	else {
++		ret = jail_attach(jid);
++		if (ret != 0) {
++			DBG_ERR("Failed to attach to jail %d with error: %s\n",
++				jid, strerror(errno));
++			return -1;
++		}
++	}
++	if (jid == -1) {
++		DBG_ERR("Jail command failed with %s\n", strerror(errno));
++		return -1;
++	}
++	handle->conn->sconn->jid = jid;
++	handle->conn->sconn->jail_path = handle->conn->connectpath;
++	handle->conn->connectpath = talloc_strdup(handle->conn, "/");
++	return ret;
+ }
+ 
+ static void vfswrap_disconnect(vfs_handle_struct *handle)
+@@ -76,32 +121,14 @@ static int vfswrap_get_quota(struct vfs_handle_struct *handle,
+ 				unid_t id,
+ 				SMB_DISK_QUOTA *qt)
+ {
+-#ifdef HAVE_SYS_QUOTAS
+-	int result;
+-
+-	START_PROFILE(syscall_get_quota);
+-	result = sys_get_quota(smb_fname->base_name, qtype, id, qt);
+-	END_PROFILE(syscall_get_quota);
+-	return result;
+-#else
+ 	errno = ENOSYS;
+ 	return -1;
+-#endif
+ }
+ 
+ static int vfswrap_set_quota(struct vfs_handle_struct *handle, enum SMB_QUOTA_TYPE qtype, unid_t id, SMB_DISK_QUOTA *qt)
+ {
+-#ifdef HAVE_SYS_QUOTAS
+-	int result;
+-
+-	START_PROFILE(syscall_set_quota);
+-	result = sys_set_quota(handle->conn->connectpath, qtype, id, qt);
+-	END_PROFILE(syscall_set_quota);
+-	return result;
+-#else
+ 	errno = ENOSYS;
+ 	return -1;
+-#endif
+ }
+ 
+ static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
+@@ -2495,7 +2522,8 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
+ 	}
+ 
+ #if defined(HAVE_UTIMENSAT)
+-	if (ft != NULL) {
++	if ((ft != NULL) &&
++	    (timespec_compare(&ft->mtime, &smb_fname->st.st_ex_btime) == 1)) {
+ 		struct timespec ts[2];
+ 		ts[0] = ft->atime;
+ 		ts[1] = ft->mtime;
+diff --git a/source3/smbd/fake_file.c b/source3/smbd/fake_file.c
+index 81ccbde..280f2bf 100644
+--- a/source3/smbd/fake_file.c
++++ b/source3/smbd/fake_file.c
+@@ -22,6 +22,7 @@
+ #include "smbd/globals.h"
+ #include "fake_file.h"
+ #include "auth.h"
++#include "privileges.h"
+ 
+ struct fake_file_type {
+ 	const char *name;
+@@ -130,6 +131,8 @@ NTSTATUS open_fake_file(struct smb_request *req, connection_struct *conn,
+ 		loadparm_s3_global_substitution();
+ 	files_struct *fsp = NULL;
+ 	NTSTATUS status;
++	bool is_disk_op;
++	int ret;
+ 
+ 	status = smbd_calculate_access_mask(conn, smb_fname, false,
+ 					    access_mask, &access_mask);
+@@ -142,15 +145,34 @@ NTSTATUS open_fake_file(struct smb_request *req, connection_struct *conn,
+ 		return status;
+ 	}
+ 
+-	/* access check */
+-	if (geteuid() != sec_initial_uid()) {
+-		DEBUG(3, ("open_fake_file_shared: access_denied to "
+-			  "service[%s] file[%s] user[%s]\n",
+-			  lp_servicename(talloc_tos(), lp_sub, SNUM(conn)),
+-			  smb_fname_str_dbg(smb_fname),
+-			  conn->session_info->unix_info->unix_name));
+-		return NT_STATUS_ACCESS_DENIED;
+-
++	/* access check
++	 * Allow access to QUOTA fake file if user has DISK_OPERATOR
++	 * privileges. This is a subset of local admin rights.
++	 */
++	switch(fake_file_type){
++	case FAKE_FILE_TYPE_QUOTA:
++		is_disk_op = security_token_has_privilege(
++			conn->session_info->security_token,
++			SEC_PRIV_DISK_OPERATOR);
++		if (!is_disk_op) {
++			DBG_NOTICE("Access denied to "
++				   "service[%s] file[%s]. User [%s] "
++				   "lacks SE_PRIV_DISK_OPERATOR\n",
++				   lp_servicename(talloc_tos(), lp_sub, SNUM(conn)),
++				   smb_fname_str_dbg(smb_fname),
++				   conn->session_info->unix_info->unix_name);
++			return NT_STATUS_ACCESS_DENIED;
++		}
++		break;
++	default:
++		if (geteuid() != sec_initial_uid()) {
++			DEBUG(3, ("open_fake_file_shared: access_denied to "
++				  "service[%s] file[%s] user[%s]\n",
++				  lp_servicename(talloc_tos(), lp_sub, SNUM(conn)),
++				  smb_fname_str_dbg(smb_fname),
++				  conn->session_info->unix_info->unix_name));
++			return NT_STATUS_ACCESS_DENIED;
++		}
+ 	}
+ 
+ 	status = file_new(req, conn, &fsp);
+diff --git a/source3/smbd/globals.h b/source3/smbd/globals.h
+index 7b26d04..fb86b4a 100644
+--- a/source3/smbd/globals.h
++++ b/source3/smbd/globals.h
+@@ -855,6 +855,8 @@ struct smbd_server_connection {
+ 	struct notify_context *notify_ctx;
+ 	bool using_smb2;
+ 	int trans_num;
++	int jid;
++	const char *jail_path;
+ 
+ 	size_t num_users;
+ 
+diff --git a/source3/smbd/reply.c b/source3/smbd/reply.c
+index 40cd748..916ce8f 100644
+--- a/source3/smbd/reply.c
++++ b/source3/smbd/reply.c
+@@ -6962,7 +6962,9 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
+ 	NTSTATUS status = NT_STATUS_OK;
+ 	struct share_mode_lock *lck = NULL;
+ 	uint32_t access_mask = SEC_DIR_ADD_FILE;
+-	bool dst_exists, old_is_stream, new_is_stream;
++	bool dst_exists, old_is_stream, new_is_stream, is_same_fileid;
++	struct file_id fileid_src;
++	struct file_id fileid_dst;
+ 	int ret;
+ 
+ 	status = check_name(conn, smb_fname_dst_in);
+@@ -6975,10 +6977,17 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
+ 		return status;
+ 	}
+ 
++/*
++        FIXME: OS-X clients will set a RH lease on AFP_Resource streams which results
++        in a share-mode lock being set on a file. Which causes the following check to
++        prevent users from renaming the file until the OS-X client with the lease disconnects.
++        This is incorrect behavior per MS docs.
++ */
++/*
+ 	if (file_has_open_streams(fsp)) {
+ 		return NT_STATUS_ACCESS_DENIED;
+ 	}
+-
++ */
+ 	/* Make a copy of the dst smb_fname structs */
+ 
+ 	smb_fname_dst = cp_smb_filename(ctx, smb_fname_dst_in);
+@@ -7124,7 +7133,19 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
+ 
+ 	dst_exists = SMB_VFS_STAT(conn, smb_fname_dst) == 0;
+ 
+-	if(!replace_if_exists && dst_exists) {
++	/*
++	 * Some filesystems are case-insensitive, but case-preserving
++	 * Compare fileid in this situation to determine whether the
++	 * source and destination are the same file. If this is the
++	 * case, then bypass these checks and hand off to VFS_RENAME
++	 * and hope that a VFS module is enabled that has special
++	 * handling for this situation.
++	 */
++	fileid_src = vfs_file_id_from_sbuf(conn, &fsp->fsp_name->st);
++	fileid_dst = vfs_file_id_from_sbuf(conn, &smb_fname_dst->st);
++	is_same_fileid = file_id_equal(&fileid_src, &fileid_dst);
++
++	if(!replace_if_exists && dst_exists && !is_same_fileid) {
+ 		DEBUG(3, ("rename_internals_fsp: dest exists doing rename "
+ 			  "%s -> %s\n", smb_fname_str_dbg(fsp->fsp_name),
+ 			  smb_fname_str_dbg(smb_fname_dst)));
+@@ -7132,7 +7153,7 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
+ 		goto out;
+ 	}
+ 
+-	if (dst_exists) {
++	if (dst_exists && !is_same_fileid) {
+ 		struct file_id fileid = vfs_file_id_from_sbuf(conn,
+ 		    &smb_fname_dst->st);
+ 		files_struct *dst_fsp = file_find_di_first(conn->sconn,
+diff --git a/source3/smbd/trans2.c b/source3/smbd/trans2.c
+index 2cf669f..19fc9b4 100644
+--- a/source3/smbd/trans2.c
++++ b/source3/smbd/trans2.c
+@@ -258,9 +258,22 @@ NTSTATUS get_ea_value(TALLOC_CTX *mem_ctx,
+ 			struct ea_struct *pea)
+ {
+ 	/* Get the value of this xattr. Max size is 64k. */
+-	size_t attr_size = 256;
++	size_t attr_size = 0;
+ 	char *val = NULL;
+ 	ssize_t sizeret;
++	static size_t min_xattr_size = 0;
++	static size_t max_xattr_size = 0;
++
++	if (min_xattr_size == 0) {
++		min_xattr_size = (size_t)lp_parm_ulonglong(
++			SNUM(conn), "smbd", "min_xattr_size", 256);
++	}
++	attr_size = min_xattr_size;
++
++	if (max_xattr_size == 0) {
++		max_xattr_size = (size_t)lp_parm_ulonglong(
++			SNUM(conn), "smbd", "max_xattr_size", 16*1024*1024);
++	}
+ 
+  again:
+ 
+@@ -276,8 +289,8 @@ NTSTATUS get_ea_value(TALLOC_CTX *mem_ctx,
+ 				ea_name, val, attr_size);
+ 	}
+ 
+-	if (sizeret == -1 && errno == ERANGE && attr_size != 65536) {
+-		attr_size = 65536;
++	if (sizeret == -1 && errno == ERANGE && attr_size <= max_xattr_size) {
++		attr_size = max_xattr_size;
+ 		goto again;
+ 	}
+ 
+@@ -3908,12 +3921,21 @@ cBytesSector=%u, cUnitTotal=%u, cUnitAvail=%d\n", (unsigned int)bsize, (unsigned
+ 
+ 			ZERO_STRUCT(fsp);
+ 			ZERO_STRUCT(quotas);
++			bool allowed_user;
++			if ((get_current_uid(conn) == 0) || (security_token_has_privilege(
++			   conn->session_info->security_token, SEC_PRIV_DISK_OPERATOR) == 0)) {
++				allowed_user = true;
++			}
++
++
+ 
+ 			fsp.conn = conn;
+ 			fsp.fnum = FNUM_FIELD_INVALID;
+ 
+-			/* access check */
+-			if (get_current_uid(conn) != 0) {
++			/* access check
++			 * Allow access in case we have SEC_PRIV_DISK_OPERATOR.
++			 */
++			if ( !allowed_user ) {
+ 				DEBUG(0,("get_user_quota: access_denied "
+ 					 "service [%s] user [%s]\n",
+ 					 lp_servicename(talloc_tos(), lp_sub, SNUM(conn)),
+@@ -4212,11 +4234,17 @@ static NTSTATUS smb_set_fsquota(connection_struct *conn,
+ 		loadparm_s3_global_substitution();
+ 	NTSTATUS status;
+ 	SMB_NTQUOTA_STRUCT quotas;
++	bool allowed_user;
++
++	if ((get_current_uid(conn) == 0) || (security_token_has_privilege(
++	   conn->session_info->security_token, SEC_PRIV_DISK_OPERATOR) == 0)) {
++		allowed_user = true;
++	}
+ 
+ 	ZERO_STRUCT(quotas);
+ 
+ 	/* access check */
+-	if ((get_current_uid(conn) != 0) || !CAN_WRITE(conn)) {
++	if ((!allowed_user) || !CAN_WRITE(conn)) {
+ 		DEBUG(3, ("set_fsquota: access_denied service [%s] user [%s]\n",
+ 			  lp_servicename(talloc_tos(), lp_sub, SNUM(conn)),
+ 			  conn->session_info->unix_info->unix_name));

@@ -3,7 +3,7 @@
 
 PORTNAME=			${SAMBA4_BASENAME}
 PORTVERSION=			${SAMBA4_VERSION}
-PORTREVISION=			4
+PORTREVISION=			5
 CATEGORIES?=			net
 MASTER_SITES=			SAMBA/samba/stable SAMBA/samba/rc
 DISTNAME=			${SAMBA4_DISTNAME}
@@ -20,7 +20,6 @@ CONFLICTS_INSTALL?=		samba4-4.0.* samba4[1-79]-4.* p5-Parse-Pidl-4.*
 
 EXTRA_PATCHES+=			${PATCHDIR}/0001-add-parameters-for-ha-configuration.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-add-ix-custom-vfs-modules.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/0001-add-support-for-xattrs-larger-than-64k.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-add-idmap_fruit-backend.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-enable-keytab-updates-on-machine-account-change.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-add_ws_discovery.patch:-p1
@@ -32,7 +31,8 @@ EXTRA_PATCHES+=			${PATCHDIR}/add_zfs_based_vfs_modules.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/wscript_changes.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/add_del_share.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/ix-smbtorture.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/source3__smbd__reply.c.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/smbd-core-changes.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/debug.patch:-p1
 
 SAMBA4_BASENAME=		samba
 SAMBA4_PORTNAME=		${SAMBA4_BASENAME}4
