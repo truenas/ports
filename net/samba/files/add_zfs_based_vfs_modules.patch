@@ -1,27 +1,3 @@
-diff --git a/lib/util/memcache.c b/lib/util/memcache.c
-index 1e616bd..cc484e6 100644
---- a/lib/util/memcache.c
-+++ b/lib/util/memcache.c
-@@ -60,6 +60,7 @@ static bool memcache_is_talloc(enum memcache_number n)
- 	case SINGLETON_CACHE_TALLOC:
- 	case SHARE_MODE_LOCK_CACHE:
- 	case GETWD_CACHE:
-+	case ZSNAP_CACHE:
- 	case VIRUSFILTER_SCAN_RESULTS_CACHE_TALLOC:
- 		result = true;
- 		break;
-diff --git a/lib/util/memcache.h b/lib/util/memcache.h
-index 4331c2f..a9de97f 100644
---- a/lib/util/memcache.h
-+++ b/lib/util/memcache.h
-@@ -46,6 +46,7 @@ enum memcache_number {
- 	SMB1_SEARCH_OFFSET_MAP,
- 	SHARE_MODE_LOCK_CACHE,	/* talloc */
- 	VIRUSFILTER_SCAN_RESULTS_CACHE_TALLOC, /* talloc */
-+	ZSNAP_CACHE,
- 	DFREE_CACHE,
- };
- 
 diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
 new file mode 100644
 index 0000000..798674f
