@@ -254,6 +254,19 @@ index 81ccbde..280f2bf 100644
  	}
  
  	status = file_new(req, conn, &fsp);
+diff --git a/source3/smbd/filename.c b/source3/smbd/filename.c
+index 32e5835..f2457ae 100644
+--- a/source3/smbd/filename.c
++++ b/source3/smbd/filename.c
+@@ -1326,7 +1326,7 @@ NTSTATUS check_name(connection_struct *conn,
+ 		return status;
+ 	}
+ 
+-	if (!lp_widelinks(SNUM(conn)) || !lp_follow_symlinks(SNUM(conn))) {
++	if (!conn->sconn->jid || !lp_widelinks(SNUM(conn)) || !lp_follow_symlinks(SNUM(conn))) {
+ 		status = check_reduced_name(conn, NULL, smb_fname);
+ 		if (!NT_STATUS_IS_OK(status)) {
+ 			DEBUG(5,("check_name: name %s failed with %s\n",
 diff --git a/source3/smbd/globals.h b/source3/smbd/globals.h
 index 7b26d04..fb86b4a 100644
 --- a/source3/smbd/globals.h
@@ -267,6 +280,19 @@ index 7b26d04..fb86b4a 100644
  
  	size_t num_users;
  
+diff --git a/source3/smbd/open.c b/source3/smbd/open.c
+index e64e225..e7c8481 100644
+--- a/source3/smbd/open.c
++++ b/source3/smbd/open.c
+@@ -767,7 +767,7 @@ NTSTATUS fd_open(struct connection_struct *conn,
+ 	}
+ 
+ 	/* Ensure path is below share definition. */
+-	if (!lp_widelinks(SNUM(conn))) {
++	if (!conn->sconn->jid || !lp_widelinks(SNUM(conn))) {
+ 		struct smb_filename *conn_rootdir_fname = NULL;
+ 		const char *conn_rootdir = SMB_VFS_CONNECTPATH(conn,
+ 						smb_fname);
 diff --git a/source3/smbd/reply.c b/source3/smbd/reply.c
 index 40cd748..916ce8f 100644
 --- a/source3/smbd/reply.c
@@ -413,3 +439,17 @@ index 2cf669f..19fc9b4 100644
  		DEBUG(3, ("set_fsquota: access_denied service [%s] user [%s]\n",
  			  lp_servicename(talloc_tos(), lp_sub, SNUM(conn)),
  			  conn->session_info->unix_info->unix_name));
+diff --git a/source3/smbd/vfs.c b/source3/smbd/vfs.c
+index 7dc1515..818b9d5 100644
+--- a/source3/smbd/vfs.c
++++ b/source3/smbd/vfs.c
+@@ -1294,7 +1294,8 @@ NTSTATUS check_reduced_name(connection_struct *conn,
+ 	allow_symlinks = lp_follow_symlinks(SNUM(conn));
+ 
+ 	/* Common widelinks and symlinks checks. */
+-	if (!allow_widelinks || !allow_symlinks) {
++	/* Jailed processes are automatically chrooted to the share connectpath */
++	if (!conn->sconn->jid || !allow_widelinks || !allow_symlinks) {
+ 		const char *conn_rootdir;
+ 		size_t rootdir_len;
+ 
