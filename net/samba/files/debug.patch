@@ -1,0 +1,47 @@
+diff --git a/lib/util/debug.c b/lib/util/debug.c
+index 38df787c658..62b81ec38f0 100644
+--- a/lib/util/debug.c
++++ b/lib/util/debug.c
+@@ -45,6 +45,7 @@
+  * for a terminating null byte.
+  */
+ #define FORMAT_BUFR_SIZE 4096
++#define LOGDIR "/var/log/samba4/"
+ 
+ /* -------------------------------------------------------------------------- **
+  * This module implements Samba's debugging utility.
+@@ -90,6 +91,7 @@ static struct {
+ 	const char *prog_name;
+ 	bool reopening_logs;
+ 	bool schedule_reopen_logs;
++	int logdir_fd;
+ 
+ 	struct debug_settings settings;
+ 	debug_callback_fn callback;
+@@ -663,6 +665,7 @@ void gfree_debugsyms(void)
+ 	for (i = 0; i < ARRAY_SIZE(debug_backends); i++) {
+ 		SAFE_FREE(debug_backends[i].option);
+ 	}
++	close(state.logdir_fd);
+ }
+ 
+ /****************************************************************************
+@@ -928,6 +931,8 @@ static void debug_init(void)
+ 
+ 	state.initialized = true;
+ 
++	state.logdir_fd = open(LOGDIR, O_RDONLY|O_DIRECTORY, 0755);
++
+ 	debug_setup_talloc_log();
+ 
+ 	for (i = 0; i < ARRAY_SIZE(default_classname_table); i++) {
+@@ -1084,7 +1089,8 @@ static bool reopen_one_log(int *fd, const char *logfile)
+ 		return true;
+ 	}
+ 
+-	new_fd = open(logfile, O_WRONLY|O_APPEND|O_CREAT, 0644);
++	new_fd = openat(state.logdir_fd, (logfile + strlen(LOGDIR)),
++			O_WRONLY|O_APPEND|O_CREAT, 0644);
+ 	if (new_fd == -1) {
+ 		log_overflow = true;
+ 		DBG_ERR("Unable to open new log file '%s': %s\n",
