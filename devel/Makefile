@@ -4227,6 +4227,7 @@
     SUBDIR += py-click-threading
     SUBDIR += py-click6
     SUBDIR += py-cliff
+    SUBDIR += py-cliff2
     SUBDIR += py-cligj
     SUBDIR += py-clikit
     SUBDIR += py-clint
