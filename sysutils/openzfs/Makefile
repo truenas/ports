@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	openzfs
-PORTVERSION=	2020022900
+PORTVERSION=	2020030200
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 
@@ -19,7 +19,7 @@ USES+=		autoreconf:build libtool gmake gettext-runtime:run python:3.3+,build she
 GNU_CONFIGURE=  yes
 CONFIGURE_ARGS=	--prefix=${PREFIX} --with-config="user"
 
-OPTIONS_DEFINE= DEBUG PYTHON
+OPTIONS_DEFINE= DEBUG PYTHON TESTS
 OPTIONS_SUB=    yes
 
 USE_GITHUB=	yes
