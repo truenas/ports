@@ -1,6 +1,6 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 0000000..189f9b8
+index 00000000000..189f9b89af9
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
 @@ -0,0 +1,1006 @@
@@ -1012,7 +1012,7 @@ index 0000000..189f9b8
 +}
 diff --git a/source3/modules/smb_libzfs.h b/source3/modules/smb_libzfs.h
 new file mode 100644
-index 0000000..03c72d7
+index 00000000000..03c72d7fcd0
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.h
 @@ -0,0 +1,310 @@
@@ -1327,7 +1327,7 @@ index 0000000..03c72d7
 +
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
-index bf6b303..a988930 100644
+index bf6b303bac6..d6c156703e7 100644
 --- a/source3/modules/vfs_default.c
 +++ b/source3/modules/vfs_default.c
 @@ -18,6 +18,8 @@
@@ -1339,6 +1339,15 @@ index bf6b303..a988930 100644
  #include "includes.h"
  #include "system/time.h"
  #include "system/filesys.h"
+@@ -38,7 +40,7 @@
+ 
+ #undef DBGC_CLASS
+ #define DBGC_CLASS DBGC_VFS
+-
++#define ROBOCOPYTS 315619200
+ /* Check for NULL pointer parameters in vfswrap_* functions */
+ 
+ /* We don't want to have NULL function pointers lying around.  Someone
 @@ -47,7 +49,50 @@
  
  static int vfswrap_connect(vfs_handle_struct *handle, const char *service, const char *user)
@@ -1424,19 +1433,38 @@ index bf6b303..a988930 100644
  }
  
  static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
-@@ -2364,7 +2391,8 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
+@@ -2326,6 +2353,18 @@ static struct smb_filename *vfswrap_getwd(vfs_handle_struct *handle,
+  nsec timestamp resolution call. Convert down to whatever the underlying
+  system will support.
+ **********************************************************************/
++static bool is_robocopy_init(struct smb_file_time *ft)
++{
++	if (!null_timespec(ft->atime) ||
++	    !null_timespec(ft->create_time)) {
++		return false;
++	}
++	if (!null_timespec(ft->mtime) &&
++	    ft->mtime.tv_sec == ROBOCOPYTS) {
++		return true;
++	}
++	return false;
++}
+ 
+ static int vfswrap_ntimes(vfs_handle_struct *handle,
+ 			  const struct smb_filename *smb_fname,
+@@ -2341,6 +2380,9 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
  	}
  
- #if defined(HAVE_UTIMENSAT)
--	if (ft != NULL) {
-+	if ((ft != NULL) &&
-+	    (timespec_compare(&ft->mtime, &smb_fname->st.st_ex_btime) == 1)) {
- 		struct timespec ts[2];
- 		ts[0] = ft->atime;
- 		ts[1] = ft->mtime;
+ 	if (ft != NULL) {
++		if (is_robocopy_init(ft)) {
++			return 0;
++		}
+ 		if (null_timespec(ft->atime)) {
+ 			ft->atime= smb_fname->st.st_ex_atime;
+ 		}
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 0000000..bd1cfd5
+index 00000000000..bd1cfd53bad
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
 @@ -0,0 +1,2354 @@
@@ -3796,7 +3824,7 @@ index 0000000..bd1cfd5
 +}
 diff --git a/source3/modules/vfs_noacl.c b/source3/modules/vfs_noacl.c
 new file mode 100644
-index 0000000..7a5984c
+index 00000000000..7a5984c82e5
 --- /dev/null
 +++ b/source3/modules/vfs_noacl.c
 @@ -0,0 +1,522 @@
@@ -4324,7 +4352,7 @@ index 0000000..7a5984c
 +}
 diff --git a/source3/modules/vfs_winmsa.c b/source3/modules/vfs_winmsa.c
 new file mode 100644
-index 0000000..8387a64
+index 00000000000..8387a64e667
 --- /dev/null
 +++ b/source3/modules/vfs_winmsa.c
 @@ -0,0 +1,332 @@
@@ -4662,7 +4690,7 @@ index 0000000..8387a64
 +}
 diff --git a/source3/modules/vfs_zfs_space.c b/source3/modules/vfs_zfs_space.c
 new file mode 100644
-index 0000000..c1a810f
+index 00000000000..c1a810fc08c
 --- /dev/null
 +++ b/source3/modules/vfs_zfs_space.c
 @@ -0,0 +1,103 @@
@@ -4770,7 +4798,7 @@ index 0000000..c1a810f
 +		"zfs_space", &vfs_zfs_space_fns);
 +}
 diff --git a/source3/smbd/fake_file.c b/source3/smbd/fake_file.c
-index 83b66d6..12566d2 100644
+index 83b66d6bd39..12566d29630 100644
 --- a/source3/smbd/fake_file.c
 +++ b/source3/smbd/fake_file.c
 @@ -22,6 +22,7 @@
@@ -4835,7 +4863,7 @@ index 83b66d6..12566d2 100644
  
  	status = file_new(req, conn, &fsp);
 diff --git a/source3/smbd/globals.h b/source3/smbd/globals.h
-index 9bb7b1f..c9fcd92 100644
+index 02f1e58b77b..0c30a1c46f4 100644
 --- a/source3/smbd/globals.h
 +++ b/source3/smbd/globals.h
 @@ -882,6 +882,8 @@ struct smbd_server_connection {
@@ -4848,7 +4876,7 @@ index 9bb7b1f..c9fcd92 100644
  	size_t num_users;
  	struct user_struct *users;
 diff --git a/source3/smbd/trans2.c b/source3/smbd/trans2.c
-index f8d987b..bfb9132 100644
+index 5fbc6db3925..c8c77aa5352 100644
 --- a/source3/smbd/trans2.c
 +++ b/source3/smbd/trans2.c
 @@ -3758,12 +3758,21 @@ cBytesSector=%u, cUnitTotal=%u, cUnitAvail=%d\n", (unsigned int)bsize, (unsigned
