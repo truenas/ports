@@ -1464,10 +1464,10 @@ index bf6b303bac6..d6c156703e7 100644
  		}
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..bd1cfd53bad
+index 00000000000..1d1fd340c37
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2354 @@
+@@ -0,0 +1,2348 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -3505,6 +3505,19 @@ index 00000000000..bd1cfd53bad
 +	return result;
 +}
 +
++static bool is_robocopy_init(struct smb_file_time *ft)
++{
++	if (!null_timespec(ft->atime) ||
++	    null_timespec(ft->create_time)) {
++		return false;
++	}
++	if (!null_timespec(ft->mtime) &&
++	    ft->mtime.tv_sec == 315619200) {
++		return true;
++	}
++	return false;
++}
++
 +static int ixnas_ntimes(vfs_handle_struct *handle,
 +                                 const struct smb_filename *smb_fname,
 +                                 struct smb_file_time *ft)
@@ -3525,6 +3538,9 @@ index 00000000000..bd1cfd53bad
 +	 * to set the birth time and the second to set the (presumabley newer).
 +	 */
 +	if (ft != NULL) {
++		if (is_robocopy_init(ft)) {
++			return 0;
++		}
 +		struct timespec ts[2];
 +		if (null_timespec(ft->atime)) {
 +			ft->atime= smb_fname->st.st_ex_atime;
@@ -3538,28 +3554,6 @@ index 00000000000..bd1cfd53bad
 +		    (timespec_compare(&ft->mtime,
 +				      &smb_fname->st.st_ex_mtime) == 0)) {
 +			return 0;
-+		}
-+		if (timespec_compare(&smb_fname->st.st_ex_btime, &ft->mtime) == 1) {
-+			/*
-+			 * btime on file is more recent that requested mtime
-+			 * and client did not specify create_time. In this case
-+			 * we have no mechanism to set the requested time.
-+			 */
-+			if (null_timespec(ft->create_time)) {
-+				DBG_INFO("Refusing to set mtime "
-+					 "that is older than current create_time\n");
-+				result = utimensat(AT_FDCWD, smb_fname->base_name, NULL, 0);
-+				goto out;
-+			}
-+			/*
-+			 *  We received conflicting time values from the client.
-+			 */
-+		 	if (timespec_compare(&ft->create_time, &ft->mtime) == 1) {
-+				DBG_ERR("User-specified mtime is less than "
-+					"User-specified create_time\n");
-+				result = utimensat(AT_FDCWD, smb_fname->base_name, NULL, 0);
-+				goto out;
-+			}
 +		}
 +		/*
 +		 * Perform two utimensat() calls if needed to set the specified
