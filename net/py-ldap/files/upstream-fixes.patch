@@ -54,3 +54,226 @@ index 8fa71c3..8697a04 100644
          else:
            if __debug__ and self._trace_level>=1:
              self._trace_file.write('*** %s reconnect to %s successful => repeat last operation\n' % (
+diff --git a/Modules/functions.c b/Modules/functions.c
+index 4731efb..3a43c7c 100644
+--- a/Modules/functions.c
++++ b/Modules/functions.c
+@@ -15,13 +15,18 @@ l_ldap_initialize(PyObject *unused, PyObject *args)
+     char *uri;
+     LDAP *ld = NULL;
+     int ret;
++    PyThreadState *save;
+ 
+     if (!PyArg_ParseTuple(args, "s:initialize", &uri))
+         return NULL;
+ 
+-    Py_BEGIN_ALLOW_THREADS ret = ldap_initialize(&ld, uri);
+-    Py_END_ALLOW_THREADS if (ret != LDAP_SUCCESS)
++    save = PyEval_SaveThread();
++    ret = ldap_initialize(&ld, uri);
++    PyEval_RestoreThread(save);
++
++    if (ret != LDAP_SUCCESS)
+         return LDAPerror(ld, "ldap_initialize");
++
+     return (PyObject *)newLDAPObject(ld);
+ }
+ 
+@@ -75,9 +80,8 @@ l_ldap_str2dn(PyObject *unused, PyObject *args)
+             tuple = Py_BuildValue("(O&O&i)",
+                                   LDAPberval_to_unicode_object, &ava->la_attr,
+                                   LDAPberval_to_unicode_object, &ava->la_value,
+-                                  ava->
+-                                  la_flags & ~(LDAP_AVA_FREE_ATTR |
+-                                               LDAP_AVA_FREE_VALUE));
++                                  ava->la_flags & ~(LDAP_AVA_FREE_ATTR |
++                                                    LDAP_AVA_FREE_VALUE));
+             if (!tuple) {
+                 Py_DECREF(rdnlist);
+                 goto failed;
+diff --git a/Modules/ldapcontrol.c b/Modules/ldapcontrol.c
+index f53e681..6615598 100644
+--- a/Modules/ldapcontrol.c
++++ b/Modules/ldapcontrol.c
+@@ -339,6 +339,7 @@ encode_assertion_control(PyObject *self, PyObject *args)
+     char *assertion_filterstr;
+     struct berval ctrl_val;
+     LDAP *ld = NULL;
++    PyThreadState *save;
+ 
+     if (!PyArg_ParseTuple(args, "s:encode_assertion_control",
+                           &assertion_filterstr)) {
+@@ -348,21 +349,27 @@ encode_assertion_control(PyObject *self, PyObject *args)
+     /* XXX: ldap_create() is a nasty and slow hack. It's creating a full blown
+      * LDAP object just to encode assertion controls.
+      */
+-    Py_BEGIN_ALLOW_THREADS err = ldap_create(&ld);
+-    Py_END_ALLOW_THREADS if (err != LDAP_SUCCESS)
++    save = PyEval_SaveThread();
++    err = ldap_create(&ld);
++    PyEval_RestoreThread(save);
++    if (err != LDAP_SUCCESS)
+         return LDAPerror(ld, "ldap_create");
+ 
+-    err =
+-        ldap_create_assertion_control_value(ld, assertion_filterstr,
+-                                            &ctrl_val);
++    err = ldap_create_assertion_control_value(ld, assertion_filterstr,
++                                              &ctrl_val);
+ 
+     if (err != LDAP_SUCCESS) {
+         LDAPerror(ld, "ldap_create_assertion_control_value");
+-        Py_BEGIN_ALLOW_THREADS ldap_unbind_ext(ld, NULL, NULL);
+-        Py_END_ALLOW_THREADS return NULL;
++        save = PyEval_SaveThread();
++        ldap_unbind_ext(ld, NULL, NULL);
++        PyEval_RestoreThread(save);
++        return NULL;
+     }
+-    Py_BEGIN_ALLOW_THREADS ldap_unbind_ext(ld, NULL, NULL);
+-    Py_END_ALLOW_THREADS res = LDAPberval_to_object(&ctrl_val);
++    save = PyEval_SaveThread();
++    ldap_unbind_ext(ld, NULL, NULL);
++    PyEval_RestoreThread(save);
++    res = LDAPberval_to_object(&ctrl_val);
++
+     if (ctrl_val.bv_val != NULL) {
+         ber_memfree(ctrl_val.bv_val);
+     }
+diff --git a/Modules/options.c b/Modules/options.c
+index 85560e6..549a672 100644
+--- a/Modules/options.c
++++ b/Modules/options.c
+@@ -185,11 +185,18 @@ LDAP_set_option(LDAPObject *self, int option, PyObject *value)
+         return 0;
+     }
+ 
+-    if (self)
++    if (self) {
+         LDAP_BEGIN_ALLOW_THREADS(self);
+-    res = ldap_set_option(ld, option, ptr);
+-    if (self)
++        res = ldap_set_option(ld, option, ptr);
+         LDAP_END_ALLOW_THREADS(self);
++    }
++    else {
++        PyThreadState *save;
++
++        save = PyEval_SaveThread();
++        res = ldap_set_option(NULL, option, ptr);
++        PyEval_RestoreThread(save);
++    }
+ 
+     if ((option == LDAP_OPT_SERVER_CONTROLS) ||
+         (option == LDAP_OPT_CLIENT_CONTROLS))
+@@ -203,6 +210,26 @@ LDAP_set_option(LDAPObject *self, int option, PyObject *value)
+     return 1;
+ }
+ 
++static int
++LDAP_int_get_option(LDAPObject *self, int option, void *value)
++{
++    int res;
++
++    if (self != NULL) {
++        LDAP_BEGIN_ALLOW_THREADS(self);
++        res = ldap_get_option(self->ldap, option, value);
++        LDAP_END_ALLOW_THREADS(self);
++    }
++    else {
++        PyThreadState *save;
++
++        save = PyEval_SaveThread();
++        res = ldap_get_option(NULL, option, value);
++        PyEval_RestoreThread(save);
++    }
++    return res;
++}
++
+ PyObject *
+ LDAP_get_option(LDAPObject *self, int option)
+ {
+@@ -214,18 +241,11 @@ LDAP_get_option(LDAPObject *self, int option)
+     char *strval;
+     PyObject *extensions, *v;
+     Py_ssize_t i, num_extensions;
+-    LDAP *ld;
+-
+-    ld = self ? self->ldap : NULL;
+ 
+     switch (option) {
+     case LDAP_OPT_API_INFO:
+         apiinfo.ldapai_info_version = LDAP_API_INFO_VERSION;
+-        if (self)
+-            LDAP_BEGIN_ALLOW_THREADS(self);
+-        res = ldap_get_option(ld, option, &apiinfo);
+-        if (self)
+-            LDAP_END_ALLOW_THREADS(self);
++        res = LDAP_int_get_option(self, option, &apiinfo);
+         if (res != LDAP_OPT_SUCCESS)
+             return option_error(res, "ldap_get_option");
+ 
+@@ -236,8 +256,8 @@ LDAP_get_option(LDAPObject *self, int option)
+         extensions = PyTuple_New(num_extensions);
+         for (i = 0; i < num_extensions; i++)
+             PyTuple_SET_ITEM(extensions, i,
+-                             PyUnicode_FromString(apiinfo.
+-                                                  ldapai_extensions[i]));
++                             PyUnicode_FromString(apiinfo.ldapai_extensions
++                                                  [i]));
+ 
+         /* return api info as a dictionary */
+         v = Py_BuildValue("{s:i, s:i, s:i, s:s, s:i, s:O}",
+@@ -299,11 +319,7 @@ LDAP_get_option(LDAPObject *self, int option)
+     case LDAP_OPT_X_KEEPALIVE_INTERVAL:
+ #endif
+         /* Integer-valued options */
+-        if (self)
+-            LDAP_BEGIN_ALLOW_THREADS(self);
+-        res = ldap_get_option(ld, option, &intval);
+-        if (self)
+-            LDAP_END_ALLOW_THREADS(self);
++        res = LDAP_int_get_option(self, option, &intval);
+         if (res != LDAP_OPT_SUCCESS)
+             return option_error(res, "ldap_get_option");
+         return PyInt_FromLong(intval);
+@@ -347,11 +363,7 @@ LDAP_get_option(LDAPObject *self, int option)
+ #endif
+ #endif
+         /* String-valued options */
+-        if (self)
+-            LDAP_BEGIN_ALLOW_THREADS(self);
+-        res = ldap_get_option(ld, option, &strval);
+-        if (self)
+-            LDAP_END_ALLOW_THREADS(self);
++        res = LDAP_int_get_option(self, option, &strval);
+         if (res != LDAP_OPT_SUCCESS)
+             return option_error(res, "ldap_get_option");
+         if (strval == NULL) {
+@@ -365,11 +377,7 @@ LDAP_get_option(LDAPObject *self, int option)
+     case LDAP_OPT_TIMEOUT:
+     case LDAP_OPT_NETWORK_TIMEOUT:
+         /* Double-valued timeval options */
+-        if (self)
+-            LDAP_BEGIN_ALLOW_THREADS(self);
+-        res = ldap_get_option(ld, option, &tv);
+-        if (self)
+-            LDAP_END_ALLOW_THREADS(self);
++        res = LDAP_int_get_option(self, option, &tv);
+         if (res != LDAP_OPT_SUCCESS)
+             return option_error(res, "ldap_get_option");
+         if (tv == NULL) {
+@@ -384,12 +392,7 @@ LDAP_get_option(LDAPObject *self, int option)
+ 
+     case LDAP_OPT_SERVER_CONTROLS:
+     case LDAP_OPT_CLIENT_CONTROLS:
+-        if (self)
+-            LDAP_BEGIN_ALLOW_THREADS(self);
+-        res = ldap_get_option(ld, option, &lcs);
+-        if (self)
+-            LDAP_END_ALLOW_THREADS(self);
+-
++        res = LDAP_int_get_option(self, option, &lcs);
+         if (res != LDAP_OPT_SUCCESS)
+             return option_error(res, "ldap_get_option");
+ 
