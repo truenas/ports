@@ -103,12 +103,12 @@ index 00000000000..e6136fb1bb5
 +		return dl->root;
 +	}
 +	ret = stat(path, &st);
-+	if (st.st_dev == dl->root->devid) {
-+		return dl->root;
-+	}
 +	if (ret < 0) {
 +		DBG_ERR("Stat of %s failed with error: %s\n",
 +			path, strerror(errno));
++	}
++	if (st.st_dev == dl->root->devid) {
++		return dl->root;
 +	}
 +	for (child=dl->children; child; child=child->next) {
 +		if (child->devid == st.st_dev) {
