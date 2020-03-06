@@ -968,7 +968,7 @@ index 00000000000..d7606f026c0
 +			"shadow:exclude parameter\n");
 +		goto error;
 +	}
-+	rc = zfs_iter_snapshots_sorted(zfs, smb_zfs_add_snapshot, state);
++	rc = zfs_iter_snapshots_sorted(zfs, smb_zfs_add_snapshot, state, 0, 0);
 +
 +	if (rc != 0) {
 +		DBG_ERR("smb_zfs_list_snapshots: error getting "
