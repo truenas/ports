@@ -1,7 +1,16 @@
 diff --git a/source3/modules/wscript_build b/source3/modules/wscript_build
-index cb0c083..e263bcf 100644
+index 41d8568e43a..c5a0d2a7fab 100644
 --- a/source3/modules/wscript_build
 +++ b/source3/modules/wscript_build
+@@ -50,7 +50,7 @@ bld.SAMBA3_SUBSYSTEM('HASH_INODE',
+ bld.SAMBA3_MODULE('vfs_default',
+                  subsystem='vfs',
+                  source='vfs_default.c',
+-                 deps='samba-util NDR_DFSBLOBS OFFLOAD_TOKEN',
++                 deps='samba-util NDR_DFSBLOBS OFFLOAD_TOKEN smb_libzfs',
+                  init_function='',
+                  internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_default'),
+                  enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_default'))
 @@ -233,6 +233,70 @@ bld.SAMBA3_MODULE('vfs_solarisacl',
                   internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_solarisacl'),
                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_solarisacl'))
@@ -142,7 +151,7 @@ index cb0c083..e263bcf 100644
  bld.SAMBA3_MODULE('vfs_nfs4acl_xattr',
                    subsystem='vfs',
 diff --git a/source3/wscript b/source3/wscript
-index 62fe8ea..3d1991f 100644
+index 85466b493fa..9a802cd994d 100644
 --- a/source3/wscript
 +++ b/source3/wscript
 @@ -124,6 +124,7 @@ def configure(conf):
@@ -162,7 +171,7 @@ index 62fe8ea..3d1991f 100644
      elif Options.options.with_ads == False:
          Logs.info("Building without Active Directory support (--without-ads).")
      else:
-@@ -1921,7 +1922,9 @@ main() {
+@@ -1929,7 +1930,9 @@ main() {
          default_shared_modules.extend(TO_LIST('vfs_posix_eadb'))
  
      if conf.CONFIG_SET('HAVE_FREEBSD_SUNACL_H'):
@@ -172,7 +181,7 @@ index 62fe8ea..3d1991f 100644
  
      if conf.CONFIG_SET('HAVE_DIRFD_DECL'):
          default_shared_modules.extend(TO_LIST('vfs_syncops vfs_dirsort'))
-@@ -1934,6 +1937,7 @@ main() {
+@@ -1945,6 +1948,7 @@ main() {
  
      if Options.options.with_pthreadpool:
          default_shared_modules.extend(TO_LIST('vfs_aio_pthread'))
