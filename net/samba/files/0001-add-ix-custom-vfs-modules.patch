@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 00000000000..f31791f4b46
+index 00000000000..f411867aa39
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,1281 @@
+@@ -0,0 +1,1277 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -108,7 +108,6 @@ index 00000000000..f31791f4b46
 +
 +static int smblibzfs_handle_destructor(struct smblibzfs_int *slibzp)
 +{
-+	DBG_ERR("here\n");
 +	if (slibzp->libzfsp == NULL) {
 +		DBG_ERR("Failed to retrieve libzfs handle"
 +			"from smblibzfs handle\n");
@@ -120,15 +119,12 @@ index 00000000000..f31791f4b46
 +
 +static int smbzhandle_destructor(struct smbzhandle_int *szhp)
 +{
-+	DBG_ERR("here: %p", szhp);
 +	if (szhp->zhandle == NULL) {
 +		DBG_INFO("Failed to retrieve smb zfs dataset handle"
 +			"from smbzhandle\n");
 +		return 0; //proceed with freeing memory. Nothing we can do here.
 +	}
-+	DBG_ERR("Preparing to close zhandle\n");
 +	zfs_close(szhp->zhandle);
-+	DBG_ERR("Closed\n");
 +	return 0;
 +}
 +
@@ -233,7 +229,7 @@ index 00000000000..f31791f4b46
 +	return;
 +}
 +
-+int 
++int
 +smb_zfs_path_to_dataset(struct smblibzfshandle *smblibzfsp,
 +			const char *pathname,
 +			const char **dataset_name_out)
@@ -300,7 +296,7 @@ index 00000000000..f31791f4b46
 +
 +int
 +smb_zfs_get_userspace_quota(struct smblibzfshandle *smblibzfsp,
-+		  char *path, int64_t xid, 
++		  char *path, int64_t xid,
 +		  enum SMB_QUOTA_TYPE quota_type,
 +		  uint64_t *hardlimit, uint64_t *usedspace)
 +{
@@ -310,7 +306,7 @@ index 00000000000..f31791f4b46
 +	zfs_handle_t *zfsp = NULL;
 +	char u_req[ZFS_MAXPROPLEN] = { 0 };
 +	char q_req[ZFS_MAXPROPLEN] = { 0 };
-+	uint64_t quota, used; 
++	uint64_t quota, used;
 +	quota = used = 0;
 +	slibzp_int = talloc_get_type_abort(smblibzfsp->private,
 +					   struct smblibzfs_int);
@@ -352,7 +348,7 @@ index 00000000000..f31791f4b46
 +		DBG_ERR("Failed to convert path (%s) to zhandle\n", path);
 +		return (-1);
 +	}
-+	
++
 +	zfs_prop_get_userquota_int(zfsp, q_req, &quota);
 +	zfs_prop_get_userquota_int(zfsp, u_req, &used);
 +
@@ -379,14 +375,14 @@ index 00000000000..f31791f4b46
 +	char q_req[256] = { 0 };
 +	char quota[256] = { 0 };
 +	hardlimit *= blocksize;
-+	snprintf(quota, sizeof(quota), "%lu", hardlimit); 
++	snprintf(quota, sizeof(quota), "%lu", hardlimit);
 +	slibzp_int = talloc_get_type_abort(smblibzfsp->private,
 +					   struct smblibzfs_int);
 +	if (slibzp_int == NULL) {
 +		DBG_ERR("Failed to retrieve smblibzfs_int handle\n");
 +		return -1;
 +	}
-+	
++
 +	DBG_DEBUG("Path: (%s), xid: %lu), qtype (%u), limit (%lu)\n",
 +		path, xid, quota_type, hardlimit);
 +	switch (quota_type) {
@@ -440,7 +436,7 @@ index 00000000000..f31791f4b46
 +	char uu_req[256] = { 0 };
 +	char uq_req[256] = { 0 };
 +	uint64_t available, usedbysnapshots, usedbydataset,
-+		usedbychildren, usedbyrefreservation, real_used, total, 
++		usedbychildren, usedbyrefreservation, real_used, total,
 +		userquota, userused, userquotarem;
 +
 +	snprintf(uu_req, sizeof(uu_req), "userused@%u", euid);
@@ -451,7 +447,7 @@ index 00000000000..f31791f4b46
 +		DBG_ERR("Failed to retrieve smblibzfs_int handle\n");
 +		return -1;
 +	}
-+	
++
 +	if (path == NULL) {
 +		DBG_ERR("received NULL path\n");
 +		return (-1);
@@ -527,7 +523,7 @@ index 00000000000..f31791f4b46
 +		DBG_ERR("Failed to obtain zhandle on parent directory: (%s)\n", parent);
 +		return (-1);
 +	}
-+	parent_dataset = zfs_get_name(zfsp); 
++	parent_dataset = zfs_get_name(zfsp);
 +	snprintf(nd, sizeof(nd), "%s/%s", parent_dataset, base);
 +
 +	if (zfs_create(slibzp_int->libzfsp, nd, ZFS_TYPE_DATASET, NULL) != 0){
@@ -584,7 +580,7 @@ index 00000000000..f31791f4b46
 +		return -1;
 +	}
 +	userprops = zfs_get_user_props(zfsp);
-+	prefixed_prop = talloc_asprintf(mem_ctx, "%s:%s", 
++	prefixed_prop = talloc_asprintf(mem_ctx, "%s:%s",
 +					ZFS_PROP_SAMBA_PREFIX,
 +					prop);
 +	ret = nvlist_lookup_nvlist(userprops, prefixed_prop, &propval);
@@ -592,15 +588,15 @@ index 00000000000..f31791f4b46
 +		DBG_INFO("Failed to look up custom user property %s "
 +			 "on path [%s]: %s\n", prop, path, strerror(errno));
 +		zfs_close(zfsp);
-+		return -1;	
++		return -1;
 +	}
 +	ret = nvlist_lookup_string(propval, ZPROP_VALUE, &propstr);
 +	TALLOC_FREE(prefixed_prop);
 +	if (ret != 0) {
 +		DBG_ERR("Failed to get nvlist string for property %s\n",
-+			prop); 
++			prop);
 +		zfs_close(zfsp);
-+		return -1;	
++		return -1;
 +	}
 +	*value = talloc_strdup(mem_ctx, propstr);
 +	zfs_close(zfsp);
@@ -662,7 +658,7 @@ index 00000000000..f31791f4b46
 +		return -1;
 +	}
 +	if (zfs_prop_get(zfsp, ZFS_PROP_CASE,
-+	    buf, sizeof(buf), &sourcetype, 
++	    buf, sizeof(buf), &sourcetype,
 +	    source, sizeof(source), B_FALSE) != 0) {
 +		DBG_ERR("Failed to look up casesensitivity property\n");
 +		return -1;
@@ -709,7 +705,7 @@ index 00000000000..f31791f4b46
 +			dsout = NULL;
 +		}
 +	}
-+	return dsout;	
++	return dsout;
 +}
 +
 +struct zfs_dataset *smb_zfs_path_get_dataset(struct smblibzfshandle *smblibzfsp,
@@ -726,7 +722,7 @@ index 00000000000..f31791f4b46
 +		DBG_ERR("Failed to get zhandle\n");
 +		return NULL;
 +	}
-+	dsout = zhandle_get_dataset(zfs_ext, mem_ctx, get_props); 
++	dsout = zhandle_get_dataset(zfs_ext, mem_ctx, get_props);
 +	if (dsout == NULL) {
 +		return dsout;
 +	}
@@ -751,7 +747,7 @@ index 00000000000..f31791f4b46
 +		return (-1);
 +	}
 +	if (zfs_prop_get(zfsp, ZFS_PROP_CASE,
-+	    buf, sizeof(buf), &sourcetype, 
++	    buf, sizeof(buf), &sourcetype,
 +	    source, sizeof(source), B_FALSE) != 0) {
 +		DBG_ERR("Failed to look up casesensitivity propertiy on path: (%s)\n",
 +			path);
@@ -763,7 +759,7 @@ index 00000000000..f31791f4b46
 +	return casesens;
 +}
 +
-+static bool 
++static bool
 +shadow_copy_zfs_is_snapshot_included(struct iter_info *info,
 +    const char *snap_name)
 +{
@@ -901,7 +897,7 @@ index 00000000000..f31791f4b46
 +		DBG_ERR("talloc() failed\n");
 +		return NULL;
 +	}
-+	
++
 +	state = talloc_zero(tmp_ctx, struct snap_cb);
 +	if (state == NULL) {
 +		DBG_ERR("smb_zfs_list_snapshots: out of memory");
@@ -910,12 +906,12 @@ index 00000000000..f31791f4b46
 +
 +	snapshots = talloc_zero(mem_ctx, struct snapshot_list);
 +	if (snapshots == NULL) {
-+		DBG_ERR("talloc() failed\n"); 
++		DBG_ERR("talloc() failed\n");
 +		goto done;
 +	}
 +
 +	snapshots->mountpoint = talloc_zero_size(snapshots, MAXPATHLEN);
-+	if (snapshots->mountpoint == NULL) { 
++	if (snapshots->mountpoint == NULL) {
 +		DBG_ERR("talloc() failed\n");
 +		goto error;
 +	}
@@ -1074,7 +1070,7 @@ index 00000000000..f31791f4b46
 +		errno=ENOMEM;
 +		return -1;
 +	}
-+	
++
 +	zfsp = get_zhandle(smblibzfsp, path);
 +	if (zfsp == NULL) {
 +		DBG_ERR("Failed to obtain zhandle on path: (%s)\n",
@@ -1143,7 +1139,7 @@ index 00000000000..f31791f4b46
 +	}
 +	zfs_close(dataset_handle);
 +	zfs_close(snap_handle);
-+	return ret;	
++	return ret;
 +}
 +
 +/*
@@ -1170,7 +1166,7 @@ index 00000000000..f31791f4b46
 +		DBG_ERR("Failed to roll back snapshot on %s\n", path);
 +	}
 +	zfs_close(dataset_handle);
-+	return ret;	
++	return ret;
 +}
 +
 +static int
@@ -1287,7 +1283,7 @@ index 00000000000..f31791f4b46
 +}
 diff --git a/source3/modules/smb_libzfs.h b/source3/modules/smb_libzfs.h
 new file mode 100644
-index 00000000000..9ba65a6948d
+index 00000000000..1e493d0db57
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.h
 @@ -0,0 +1,392 @@
@@ -1421,7 +1417,7 @@ index 00000000000..9ba65a6948d
 + * @param[in]	mem_ctx			talloc memory context
 + * @param[in]	dataset_name		name of ZFS dataset.
 + * @param[out]	dataset_mp_out		mountpoint of ZFS dataset (talloc'ed string).
-+ *	
++ *
 + * @return	0 on success -1 on failure
 + */
 +int smb_zfs_dataset_name_to_mp(struct smblibzfshandle *smblibzfsp,
@@ -1436,7 +1432,7 @@ index 00000000000..9ba65a6948d
 + * @param[in]	quota_type	 	quota type
 + * @param[out]	hardlimit	 	quota size in bytes
 + * @param[out]	usedspace		space used against quota in bytes
-+ * 
++ *
 + * @return	0 on success -1 on failure
 + */
 +int smb_zfs_get_userspace_quota(struct smblibzfshandle *smblibzfsp,
@@ -1454,7 +1450,7 @@ index 00000000000..9ba65a6948d
 + * @param[in]	xid		 	user id or group id.
 + * @param[in]	quota_type	 	quota type
 + * @param[in]	hardlimit	 	quota size in bytes
-+ * 
++ *
 + * @return	0 on success -1 on failure
 + */
 +int smb_zfs_set_userspace_quota(struct smblibzfshandle *smblibzfsp,
@@ -1473,7 +1469,7 @@ index 00000000000..9ba65a6948d
 +/*
 + * This function creates a child dataset of a specified parent dataset.
 + * Realpath of parent dataset should be passed into the function. Name
-+ * of child dataset is expected to be relative to parent dataset. For example, 
++ * of child dataset is expected to be relative to parent dataset. For example,
 + * if parent datset is tank/share and you wish to create tank/share/sub1
 + * then the expected name of the child dataset is "sub1". Aclmode
 + * will be inherited from parent.
@@ -1499,7 +1495,7 @@ index 00000000000..9ba65a6948d
 + * @param[in]	path			path on which to retrieve
 + *					custom user property
 + * @param[in]	prop			property name
-+ * @param[out]	value			talloc'ed string containing 
++ * @param[out]	value			talloc'ed string containing
 + *					value of propert.
 + *
 + * @return	0 on success -1 on failure
@@ -1515,10 +1511,10 @@ index 00000000000..9ba65a6948d
 + * "org.samba:" prefix will be automatically applied.
 + *
 + * @param[in]	smblibzfsp		smblibzfs handle struct
-+ * @param[in]	path			path on which to set 
++ * @param[in]	path			path on which to set
 + *					custom user property
 + * @param[in]	prop			property name
-+ * @param[out]	value			value to set 
++ * @param[out]	value			value to set
 + *
 + * @return	0 on success -1 on failure
 + */
@@ -1541,7 +1537,7 @@ index 00000000000..9ba65a6948d
 +int smb_get_dataset_name(struct smbzhandle *zhandle_ext, const char **dataset_name_out);
 +/*
 + * This function returns a list of ZFS snapshots matching the specified
-+ * filters, allocated under a user-provided talloc memory context. Returns 
++ * filters, allocated under a user-provided talloc memory context. Returns
 + * NULL on error. It is a wrapper around zhandle_list_snapshots.
 + *
 + * @param[in]	smblibzfsp		smblibzfs handle struct
@@ -1613,7 +1609,7 @@ index 00000000000..9ba65a6948d
 + * Take a named snapshot of a given path.
 + * @param[in]	smblibzfsp		smblibzfs handle struct
 + * @param[in]	path			path on which to take snapshot
-+ * @param[in]	snapshot_name		name to give snapshot 
++ * @param[in]	snapshot_name		name to give snapshot
 + *
 + * @return	0 on success -1 on failure
 + */
@@ -1633,7 +1629,7 @@ index 00000000000..9ba65a6948d
 + *
 + * @param[in]	smblibzfsp		smblibzfs handle struct
 + * @param[in]	path			path on which to take snapshot
-+ * @param[in]	snapshot_name		name to give snapshot 
++ * @param[in]	snapshot_name		name to give snapshot
 + * @param[in]	force			forcibly unmount cloned filesystems
 + *
 + * @return	0 on success -1 on failure
@@ -1645,10 +1641,10 @@ index 00000000000..9ba65a6948d
 +
 +/*
 + * Roll back to the last successful snapshot. This is a destructive process. All
-+ * data from after the last snapshot was taken will be destroyed. 
++ * data from after the last snapshot was taken will be destroyed.
 + * @param[in]	smblibzfsp		smblibzfs handle struct
 + * @param[in]	path			path on which to take snapshot
-+ * @param[in]	snapshot_name		name to give snapshot 
++ * @param[in]	snapshot_name		name to give snapshot
 + *
 + * @return	0 on success -1 on failure
 + */
