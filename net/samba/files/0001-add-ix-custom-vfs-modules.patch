@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 00000000000..f411867aa39
+index 00000000000..d7606f026c0
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,1277 @@
+@@ -0,0 +1,1293 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -180,16 +180,16 @@ index 00000000000..f411867aa39
 +{
 +	if (!zhandle_ext->is_open) {
 +		DBG_ERR("zhandle is closed!\n");
-+		errno = EDOOFUS;
++		errno = EINVAL;
 +		return NULL;
 +	}
 +	struct smbzhandle_int *zfsp_int = NULL;
-+        zfsp_int = talloc_get_type_abort(zhandle_ext->private,
-+                                         struct smbzhandle_int);
-+        if (zfsp_int == NULL) {
-+                DBG_ERR("Failed to retrieve smbzhandle_int\n");
-+                return NULL;
-+        }
++	zfsp_int = talloc_get_type_abort(zhandle_ext->private,
++					 struct smbzhandle_int);
++	if (zfsp_int == NULL) {
++		DBG_ERR("Failed to retrieve smbzhandle_int\n");
++		return NULL;
++	}
 +	return zfsp_int->zhandle;
 +}
 +
@@ -223,6 +223,11 @@ index 00000000000..f411867aa39
 +	}
 +	zfs_handle_t *zfsp_int = NULL;
 +	zfsp_int = get_zhandle_from_smbzhandle(zfsp_ext);
++	if (!zfsp_int) {
++		DBG_ERR("failed to get zhandle\n");
++		zfsp_ext->is_open = false;
++		return;
++	}
 +	zfs_close(zfsp_int);
 +	zfsp_int = NULL;
 +	zfsp_ext->is_open = false;
@@ -255,6 +260,9 @@ index 00000000000..f411867aa39
 +	struct smbzhandle_int *zfsp_int = NULL;
 +	zfs_handle_t *zfsp = NULL;
 +	zfsp = get_zhandle_from_smbzhandle(zhandle_ext);
++	if (!zfsp) {
++		return -1;
++	}
 +	*dataset_name_out = zfs_get_name(zfsp);
 +	return 0;
 +}
@@ -869,6 +877,9 @@ index 00000000000..f411867aa39
 +	int ret;
 +	zfs_handle_t *zfs = NULL;
 +	zfs = get_zhandle_from_smbzhandle(zhandle_ext);
++	if (!zfs) {
++		return -1;
++	}
 +	ret = (zfs_jail(zfs, jid, attach) != 0);
 +	return ret;
 +}
@@ -891,6 +902,9 @@ index 00000000000..f411867aa39
 +	zfs_handle_t *zfs = NULL;
 +
 +	zfs = get_zhandle_from_smbzhandle(zhandle_ext);
++	if (!zfs) {
++		return -1;
++	}
 +
 +	tmp_ctx = talloc_new(mem_ctx);
 +	if (tmp_ctx == NULL) {
@@ -958,7 +972,8 @@ index 00000000000..f411867aa39
 +
 +	if (rc != 0) {
 +		DBG_ERR("smb_zfs_list_snapshots: error getting "
-+			"snapshots for '%s': %s\n",snapshots->dataset_name, strerror(errno));
++			"snapshots for '%s': %s\n",
++			snapshots->dataset_name, strerror(errno));
 +		goto error;
 +	}
 +
@@ -1238,9 +1253,10 @@ index 00000000000..f411867aa39
 +		return -1;
 +	}
 +	if (jid != -1) {
-+		zhandle_jail(ds_list->root->zhandle, jid, true);
++		ret = zhandle_jail(ds_list->root->zhandle, jid, true);
 +		if (ret != 0) {
 +			DBG_ERR("zhandle_jail failed with %s\n", strerror(errno));
++			errno = ENOMEM;
 +		}
 +	}
 +	ret = stat(ds_list->root->mountpoint, &ds_st);

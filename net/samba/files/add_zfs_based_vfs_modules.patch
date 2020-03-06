@@ -1,9 +1,9 @@
 diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
 new file mode 100644
-index 00000000000..e6136fb1bb5
+index 00000000000..47629cfd58d
 --- /dev/null
 +++ b/source3/modules/vfs_shadow_copy_zfs.c
-@@ -0,0 +1,1720 @@
+@@ -0,0 +1,1718 @@
 +/* shadow_copy_zfs: a shadow copy module for ZFS
 + *
 + * Copyright (C) Andrew Tridgell   2007 (portions taken from shadow_copy_zfs)
@@ -467,8 +467,6 @@ index 00000000000..e6136fb1bb5
 +	 */
 +
 +	if (strcmp(config->dataset_path, snapshots->dataset_name) != 0) {
-+		DBG_ERR("config->dataset_path: %s, snapshots->dataset_name: %s\n",
-+			config->dataset_path, snapshots->dataset_name);
 +		fds_len = strlen(snapshots->dataset_name) - strlen(config->dataset_path);
 +	}
 +
@@ -479,8 +477,8 @@ index 00000000000..e6136fb1bb5
 +	 * may be a subdirectory under the mountpoint.
 +	 */
 +	mpoffset = talloc_strdup(tmp_ctx, handle->conn->connectpath);
-+	if (strlen(mpoffset) > (mplen)) {
-+		mpoffset += (mplen);
++	if (strlen(mpoffset) > mplen) {
++		mpoffset += mplen;
 +		connectpath_is_dataset_mp = False;
 +	}
 +
