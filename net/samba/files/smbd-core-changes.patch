@@ -94,7 +94,7 @@ index fec38f20644..5e6c87cd23b 100644
  
  /*
 diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
-index 37b59d8c3c0..4f884b1d234 100644
+index 37b59d8c3c0..6affbfff415 100644
 --- a/source3/modules/vfs_default.c
 +++ b/source3/modules/vfs_default.c
 @@ -18,9 +18,13 @@
@@ -111,7 +111,7 @@ index 37b59d8c3c0..4f884b1d234 100644
  #include "smbd/smbd.h"
  #include "smbd/globals.h"
  #include "ntioctl.h"
-@@ -45,9 +49,111 @@
+@@ -45,9 +49,112 @@
     is sure to try and execute them.  These stubs are used to prevent
     this possibility. */
  
@@ -120,23 +120,24 @@ index 37b59d8c3c0..4f884b1d234 100644
 +	int ret = 0;
 +	struct smblibzfshandle  *libzp = NULL;
 +	struct smbzhandle *conn_zfsp = NULL;
-+        if (!handle->conn->sconn->libzp){
++	if (!handle->conn->sconn->libzp){
 +		libzp = talloc_zero(handle->conn->sconn, struct smblibzfshandle);
-+                ret = get_smblibzfs_handle(handle->conn, &libzp);
-+                if (ret != 0) {
-+                        DBG_ERR("Failed to get smblibzfs handle\n");
-+                        errno = ENOMEM;
-+                        return -1;
-+                }
-+                handle->conn->sconn->libzp = libzp;
++		ret = get_smblibzfs_handle(handle->conn, &libzp);
++		if (ret != 0) {
++			DBG_ERR("Failed to get smblibzfs handle\n");
++			errno = ENOMEM;
++			return -1;
++		}
++		handle->conn->sconn->libzp = libzp;
 +		get_smbzhandle(libzp, handle->conn,
 +			       handle->conn->connectpath, &conn_zfsp);
 +		handle->conn->sconn->ds_list = zhandle_list_children(
 +							handle->conn->sconn,
 +							conn_zfsp,
 +							true);
-+        }
-+	if (!handle->conn->sconn->ds_list) {
++	}
++	if (!handle->conn->sconn->ds_list ||
++	    !handle->conn->sconn->jid) {
 +		get_smbzhandle(handle->conn->sconn->libzp, handle->conn,
 +			       handle->conn->connectpath, &conn_zfsp);
 +		handle->conn->sconn->ds_list = zhandle_list_children(
@@ -224,7 +225,7 @@ index 37b59d8c3c0..4f884b1d234 100644
  }
  
  static void vfswrap_disconnect(vfs_handle_struct *handle)
-@@ -76,32 +182,14 @@ static int vfswrap_get_quota(struct vfs_handle_struct *handle,
+@@ -76,32 +183,14 @@ static int vfswrap_get_quota(struct vfs_handle_struct *handle,
  				unid_t id,
  				SMB_DISK_QUOTA *qt)
  {
@@ -257,7 +258,7 @@ index 37b59d8c3c0..4f884b1d234 100644
  }
  
  static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
-@@ -2495,7 +2583,8 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
+@@ -2495,7 +2584,8 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
  	}
  
  #if defined(HAVE_UTIMENSAT)
