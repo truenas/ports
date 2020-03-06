@@ -837,6 +837,7 @@ man/man8/winbindd.8.gz
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/dcerpc/irpc.so
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/dcerpc/krb5pac.so
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/dcerpc/lsa.so
+%%SPOTLIGHT%%%%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/dcerpc/mdssvc.so
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/dcerpc/messaging.so
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/dcerpc/mgmt.so
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/dcerpc/misc.so
@@ -945,6 +946,7 @@ man/man8/winbindd.8.gz
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/remove_dc.py
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/samba3/__init__.py
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/samba3/libsmb_samba_internal.so
+%%SPOTLIGHT%%%%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/samba3/mdscli.so
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/samba3/param.so
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/samba3/passdb.so
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/samba3/smbd.so
@@ -989,6 +991,7 @@ man/man8/winbindd.8.gz
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/tests/dcerpc/bare.py
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/tests/dcerpc/dnsserver.py
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/tests/dcerpc/integer.py
+%%SPOTLIGHT%%%%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/tests/dcerpc/mdssvc.py
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/tests/dcerpc/misc.py
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/tests/dcerpc/raw_protocol.py
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/tests/dcerpc/raw_testcase.py
