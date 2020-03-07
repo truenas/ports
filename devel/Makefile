@@ -6626,6 +6626,7 @@
     SUBDIR += tinycbor
     SUBDIR += tinygo
     SUBDIR += tinylaf
+    SUBDIR += tl-expected
     SUBDIR += tkcon
     SUBDIR += tkcvs
     SUBDIR += tkmerge
