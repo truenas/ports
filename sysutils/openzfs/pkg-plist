@@ -507,6 +507,7 @@ share/pkgconfig/libzfs_core.pc
 %%TESTS%%share/zfs/zfs-tests/bin/threadsappend
 %%TESTS%%share/zfs/zfs-tests/callbacks/zfs_dbgmsg.ksh
 %%TESTS%%share/zfs/zfs-tests/callbacks/zfs_dmesg.ksh
+%%TESTS%%share/zfs/zfs-tests/callbacks/zfs_failsafe.ksh
 %%TESTS%%share/zfs/zfs-tests/callbacks/zfs_mmp.ksh
 %%TESTS%%share/zfs/zfs-tests/include/blkdev.shlib
 %%TESTS%%share/zfs/zfs-tests/include/commands.cfg
@@ -1433,6 +1434,9 @@ share/pkgconfig/libzfs_core.pc
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_wait/zpool_wait_no_activity.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_wait/zpool_wait_remove.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_wait/zpool_wait_remove_cancel.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_wait/zpool_wait_trim_basic.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_wait/zpool_wait_trim_cancel.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_wait/zpool_wait_trim_flag.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_wait/zpool_wait_usage.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_user/misc/arc_summary_001_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_user/misc/arc_summary_002_neg.ksh
