@@ -4404,7 +4404,6 @@
     SUBDIR += py-fypp
     SUBDIR += py-game
     SUBDIR += py-game_sdl2
-    SUBDIR += py-gamin
     SUBDIR += py-gast
     SUBDIR += py-gdata
     SUBDIR += py-gdbgui
@@ -4449,7 +4448,6 @@
     SUBDIR += py-hash_ring
     SUBDIR += py-heapdict
     SUBDIR += py-hghooks
-    SUBDIR += py-hgsubversion
     SUBDIR += py-hgtools
     SUBDIR += py-holidays
     SUBDIR += py-http-prompt
