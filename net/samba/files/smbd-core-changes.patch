@@ -1,12 +1,12 @@
 diff --git a/lib/util/memcache.c b/lib/util/memcache.c
-index 1e616bd0e9a..6e7b6e79863 100644
+index 1e616bd0e9a..5f3f930b696 100644
 --- a/lib/util/memcache.c
 +++ b/lib/util/memcache.c
 @@ -60,6 +60,7 @@ static bool memcache_is_talloc(enum memcache_number n)
  	case SINGLETON_CACHE_TALLOC:
  	case SHARE_MODE_LOCK_CACHE:
  	case GETWD_CACHE:
-+	case ZSNAP_CACHE:
++	case ZFS_CACHE:
  	case VIRUSFILTER_SCAN_RESULTS_CACHE_TALLOC:
  		result = true;
  		break;
@@ -37,7 +37,7 @@ index 1e616bd0e9a..6e7b6e79863 100644
 +	return ret;
 +}
 diff --git a/lib/util/memcache.h b/lib/util/memcache.h
-index 4331c2f1465..7bc5782c28b 100644
+index 4331c2f1465..25ff32152f1 100644
 --- a/lib/util/memcache.h
 +++ b/lib/util/memcache.h
 @@ -46,6 +46,8 @@ enum memcache_number {
@@ -45,7 +45,7 @@ index 4331c2f1465..7bc5782c28b 100644
  	SHARE_MODE_LOCK_CACHE,	/* talloc */
  	VIRUSFILTER_SCAN_RESULTS_CACHE_TALLOC, /* talloc */
 +	FSP_FI_CACHE,
-+	ZSNAP_CACHE,
++	ZFS_CACHE,
  	DFREE_CACHE,
  };
  
