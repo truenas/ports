@@ -94,7 +94,7 @@ index fec38f20644..5e6c87cd23b 100644
  
  /*
 diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
-index 37b59d8c3c0..6affbfff415 100644
+index 37b59d8c3c0..2a2df2b96a6 100644
 --- a/source3/modules/vfs_default.c
 +++ b/source3/modules/vfs_default.c
 @@ -18,9 +18,13 @@
@@ -111,11 +111,11 @@ index 37b59d8c3c0..6affbfff415 100644
  #include "smbd/smbd.h"
  #include "smbd/globals.h"
  #include "ntioctl.h"
-@@ -45,9 +49,112 @@
+@@ -45,9 +49,101 @@
     is sure to try and execute them.  These stubs are used to prevent
     this possibility. */
  
-+static int conn_zfs_init(vfs_handle_struct * handle)
++static int conn_zfs_init(vfs_handle_struct *handle)
 +{
 +	int ret = 0;
 +	struct smblibzfshandle  *libzp = NULL;
@@ -129,29 +129,21 @@ index 37b59d8c3c0..6affbfff415 100644
 +			return -1;
 +		}
 +		handle->conn->sconn->libzp = libzp;
-+		get_smbzhandle(libzp, handle->conn,
-+			       handle->conn->connectpath, &conn_zfsp);
-+		handle->conn->sconn->ds_list = zhandle_list_children(
-+							handle->conn->sconn,
-+							conn_zfsp,
-+							true);
 +	}
-+	if (!handle->conn->sconn->ds_list ||
-+	    !handle->conn->sconn->jid) {
-+		get_smbzhandle(handle->conn->sconn->libzp, handle->conn,
-+			       handle->conn->connectpath, &conn_zfsp);
-+		handle->conn->sconn->ds_list = zhandle_list_children(
-+							handle->conn->sconn,
-+							conn_zfsp,
-+							true);
-+	}
-+	return 0;
++
++	get_smbzhandle(handle->conn->sconn->libzp, handle->conn->sconn,
++		       handle->conn->connectpath, &conn_zfsp);
++
++	handle->conn->sconn->ds_list = cache_zhandle_list_children(
++						handle->conn->sconn,
++						conn_zfsp);
++	return ret;
 +}
 +
  static int vfswrap_connect(vfs_handle_struct *handle, const char *service, const char *user)
  {
 -    return 0;    /* Return >= 0 for success */
-+	if (handle->conn->ipc) {
++	if (IS_IPC(handle->conn) || IS_PRINT(handle->conn)) {
 +		return 0;
 +	}
 +	int ret, jid;
@@ -160,16 +152,12 @@ index 37b59d8c3c0..6affbfff415 100644
 +	ret = 0;
 +	struct zfs_dataset *child = NULL;
 +	struct stat ds_st;
++
 +	ret = conn_zfs_init(handle);
 +	if (ret != 0) {
 +		return -1;
 +	}
 +	if (!lp_parm_bool(SNUM(handle->conn), "jail", "enable", false)) {
-+		ret = jail_dataset_list(handle->conn->sconn->ds_list, -1);
-+		if (ret != 0) {
-+			DBG_ERR("failed to stat ds_list: %s\n",
-+				strerror(errno));
-+		}
 +		return ret;
 +	}
 +	securelevel = lp_parm_const_string(SNUM(handle->conn),
@@ -178,6 +166,7 @@ index 37b59d8c3c0..6affbfff415 100644
 +	jailname = talloc_asprintf(handle->conn->sconn,
 +				   "SERVICE_SMB-%s",
 +				    service);
++
 +	ret = chdir(handle->conn->connectpath);
 +	if (ret != 0) {
 +		DBG_ERR("chdir() to connectpath failed\n");
@@ -225,7 +214,7 @@ index 37b59d8c3c0..6affbfff415 100644
  }
  
  static void vfswrap_disconnect(vfs_handle_struct *handle)
-@@ -76,32 +183,14 @@ static int vfswrap_get_quota(struct vfs_handle_struct *handle,
+@@ -76,32 +172,14 @@ static int vfswrap_get_quota(struct vfs_handle_struct *handle,
  				unid_t id,
  				SMB_DISK_QUOTA *qt)
  {
@@ -258,7 +247,7 @@ index 37b59d8c3c0..6affbfff415 100644
  }
  
  static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
-@@ -2495,7 +2584,8 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
+@@ -2495,7 +2573,8 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
  	}
  
  #if defined(HAVE_UTIMENSAT)
