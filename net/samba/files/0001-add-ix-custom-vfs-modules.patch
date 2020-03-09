@@ -1,6 +1,6 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 00000000000..d7606f026c0
+index 00000000000..bde7d0fc3b8
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
 @@ -0,0 +1,1293 @@
@@ -1697,10 +1697,10 @@ index 00000000000..1e493d0db57
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..cb02b471e7f
+index 00000000000..6835b973bfb
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2344 @@
+@@ -0,0 +1,2304 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -3754,67 +3754,27 @@ index 00000000000..cb02b471e7f
 +		errno = ENOENT;
 +		return result;
 +	}
-+	/*
-+	 * man utimensat(2)
-+	 * If times is non-NULL, it is assumed to point to an array of two
-+	 * timespec structures. The access time is set to the value of the
-+	 * second element. For filesystems that support file birth (creation) times,
-+	 * the birth time will be set to the value of the second element if the
-+	 * second element is older than the currently set birthtime. To set both
-+	 * a birth time and a modification tie, two calls are required. The first
-+	 * to set the birth time and the second to set the (presumabley newer).
-+	 */
 +	if (ft != NULL) {
-+		struct timespec ts[2];
++		struct timespec ts[3];
 +		if (null_timespec(ft->atime)) {
 +			ft->atime= smb_fname->st.st_ex_atime;
 +		}
 +		if (null_timespec(ft->mtime)) {
 +			ft->mtime = smb_fname->st.st_ex_mtime;
 +		}
++		if (null_timespec(ft->create_time)) {
++			ft->mtime = smb_fname->st.st_ex_btime;
++		}
 +		/* mtime and atime are unchanged */
 +		if ((timespec_compare(&ft->atime,
 +				      &smb_fname->st.st_ex_atime) == 0) &&
++		    (timespec_compare(&ft->create_time,
++				      &smb_fname->st.st_ex_btime) == 0) &&
 +		    (timespec_compare(&ft->mtime,
 +				      &smb_fname->st.st_ex_mtime) == 0)) {
 +			return 0;
 +		}
-+		if (timespec_compare(&smb_fname->st.st_ex_btime, &ft->mtime) == 1) {
-+			/*
-+			 * btime on file is more recent that requested mtime
-+			 * and client did not specify create_time. In this case
-+			 * we have no mechanism to set the requested time.
-+			 */
-+			if (null_timespec(ft->create_time)) {
-+				DBG_INFO("Refusing to set mtime "
-+					 "that is older than current create_time\n");
-+				result = utimensat(AT_FDCWD, smb_fname->base_name, NULL, 0);
-+				goto out;
-+			}
-+			/*
-+			 *  We received conflicting time values from the client.
-+			 */
-+		 	if (timespec_compare(&ft->create_time, &ft->mtime) == 1) {
-+				DBG_ERR("User-specified mtime is less than "
-+					"User-specified create_time\n");
-+				result = utimensat(AT_FDCWD, smb_fname->base_name, NULL, 0);
-+				goto out;
-+			}
-+		}
-+		/*
-+		 * Perform two utimensat() calls if needed to set the specified
-+		 * timestamps.
-+		 */
-+		if (null_timespec(ft->create_time)) {
-+			ft->create_time = ft->mtime;
-+		}
-+		ts[0] = ft->atime;
-+		ts[1] = ft->create_time;
-+		result = utimensat(AT_FDCWD, smb_fname->base_name, ts, 0);
-+		if (timespec_compare(&ft->mtime, &ft->create_time) != 0) {
-+			ts[1] = ft->mtime;
-+			result = utimensat(AT_FDCWD, smb_fname->base_name, ts, 0);
-+		}
++		result = utimensat2(AT_FDCWD, smb_fname->base_name, ts, 3, 0);
 +	} else {
 +		result = utimensat(AT_FDCWD, smb_fname->base_name, NULL, 0);
 +	}
