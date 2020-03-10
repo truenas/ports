@@ -1,5 +1,5 @@
---- source3/modules/vfs_recycle.c.orig	2019-01-15 02:07:00.000000000 -0800
-+++ source3/modules/vfs_recycle.c	2019-07-24 07:16:12.827315334 -0700
+--- source3/modules/vfs_recycle.c.orig	2020-01-23 07:32:53.000000000 -0800
++++ source3/modules/vfs_recycle.c	2020-03-10 06:58:26.789636309 -0700
 @@ -27,6 +27,7 @@
  #include "system/filesys.h"
  #include "../librpc/gen_ndr/ndr_netlogon.h"
@@ -94,13 +94,13 @@
 +	int ret = -1;
 +	char *repository = NULL;
 +	char *recycle_path = NULL;
-+	repository = talloc_sub_advanced(NULL, lp_servicename(talloc_tos(), SNUM(handle->conn)),
-+					handle->conn->session_info->unix_info->unix_name,
-+					handle->conn->connectpath,
-+					handle->conn->session_info->unix_token->gid,
-+					handle->conn->session_info->unix_info->sanitized_username,
-+					handle->conn->session_info->info->domain_name,
-+					recycle_repository(handle));
++	repository = talloc_sub_full(NULL, lp_servicename(talloc_tos(), SNUM(handle->conn)),
++				     handle->conn->session_info->unix_info->unix_name,
++				     handle->conn->connectpath,
++				     handle->conn->session_info->unix_token->gid,
++				     handle->conn->session_info->unix_info->sanitized_username,
++				     handle->conn->session_info->info->domain_name,
++				     recycle_repository(handle));
 +	ALLOC_CHECK(repository, done);
 +	trim_char(repository, '\0', '/');
 +
