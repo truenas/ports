@@ -1,6 +1,6 @@
 diff --git a/docs-xml/smbdotconf/base/enablewebservicediscovery.xml b/docs-xml/smbdotconf/base/enablewebservicediscovery.xml
 new file mode 100644
-index 0000000..9495393
+index 00000000000..949539378cd
 --- /dev/null
 +++ b/docs-xml/smbdotconf/base/enablewebservicediscovery.xml
 @@ -0,0 +1,11 @@
@@ -17,7 +17,7 @@ index 0000000..9495393
 +</samba:parameter>
 diff --git a/docs-xml/smbdotconf/base/truenaspassivecontroller.xml b/docs-xml/smbdotconf/base/truenaspassivecontroller.xml
 new file mode 100644
-index 0000000..ad7499b
+index 00000000000..ad7499b0107
 --- /dev/null
 +++ b/docs-xml/smbdotconf/base/truenaspassivecontroller.xml
 @@ -0,0 +1,11 @@
@@ -34,7 +34,7 @@ index 0000000..ad7499b
 +</samba:parameter>
 diff --git a/docs-xml/smbdotconf/base/zeroconfname.xml b/docs-xml/smbdotconf/base/zeroconfname.xml
 new file mode 100644
-index 0000000..78b054d
+index 00000000000..f825ab17d5b
 --- /dev/null
 +++ b/docs-xml/smbdotconf/base/zeroconfname.xml
 @@ -0,0 +1,17 @@
@@ -46,7 +46,7 @@ index 0000000..78b054d
 +<description>
 +        <para>
 +		This sets the name used for mdns registration. If it is not set,
-+		then the server hostname will be used.	
++		then the server hostname will be used.
 +	</para>
 +
 +</description>
@@ -57,7 +57,7 @@ index 0000000..78b054d
 +</samba:parameter>
 diff --git a/docs-xml/smbdotconf/domain/adsdnsupdate.xml b/docs-xml/smbdotconf/domain/adsdnsupdate.xml
 new file mode 100644
-index 0000000..ee113b1
+index 00000000000..ee113b12ea7
 --- /dev/null
 +++ b/docs-xml/smbdotconf/domain/adsdnsupdate.xml
 @@ -0,0 +1,10 @@
@@ -73,7 +73,7 @@ index 0000000..ee113b1
 +</samba:parameter>
 diff --git a/docs-xml/smbdotconf/winbind/winbindnetbiosaliasspn.xml b/docs-xml/smbdotconf/winbind/winbindnetbiosaliasspn.xml
 new file mode 100644
-index 0000000..66755f5
+index 00000000000..6979955a101
 --- /dev/null
 +++ b/docs-xml/smbdotconf/winbind/winbindnetbiosaliasspn.xml
 @@ -0,0 +1,12 @@
@@ -83,27 +83,27 @@ index 0000000..66755f5
 +		xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
 +<description>
 +	<para>This parameter is designed to control whether netbios alias should
-+	be added to the spn during domain join.                                                  
++	be added to the spn during domain join.
 +	</para>
 +</description>
 +<value type="default">yes</value>
 +<value type="example">no</value>
 +</samba:parameter>
 diff --git a/source3/libnet/libnet_join.c b/source3/libnet/libnet_join.c
-index 27fc513..f0ff99b 100644
+index 9d4f656ffec..e6743ed24db 100644
 --- a/source3/libnet/libnet_join.c
 +++ b/source3/libnet/libnet_join.c
-@@ -533,7 +533,7 @@ static ADS_STATUS libnet_join_set_machine_spn(TALLOC_CTX *mem_ctx,
+@@ -564,7 +564,7 @@ static ADS_STATUS libnet_join_set_machine_spn(TALLOC_CTX *mem_ctx,
  	}
  
- 	netbios_aliases = lp_netbios_aliases();
--	if (netbios_aliases != NULL) {
-+	if (netbios_aliases != NULL && lp_winbind_netbios_alias_spn()) {
- 		for (; *netbios_aliases != NULL; netbios_aliases++) {
- 			/*
- 			 * Add HOST/NETBIOSNAME
+ 	for (netbios_aliases = lp_netbios_aliases();
+-	     netbios_aliases != NULL && *netbios_aliases != NULL;
++	     netbios_aliases != NULL && *netbios_aliases != NULL && lp_winbind_netbios_alias_spn();
+ 	     netbios_aliases++) {
+ 		/*
+ 		 * Add HOST/NETBIOSNAME
 diff --git a/source3/param/loadparm.c b/source3/param/loadparm.c
-index 29d9d59..6852227 100644
+index 12f32192bfe..1f7a8e3ef56 100644
 --- a/source3/param/loadparm.c
 +++ b/source3/param/loadparm.c
 @@ -690,6 +690,7 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
@@ -126,10 +126,10 @@ index 29d9d59..6852227 100644
  
  	/* hostname lookups can be very expensive and are broken on
 diff --git a/source3/utils/net_ads.c b/source3/utils/net_ads.c
-index 1f05550..0656c8b 100644
+index 07a22098fb1..fc42661e37d 100644
 --- a/source3/utils/net_ads.c
 +++ b/source3/utils/net_ads.c
-@@ -1755,6 +1755,10 @@ static void _net_ads_join_dns_updates(struct net_context *c, TALLOC_CTX *ctx, st
+@@ -1759,6 +1759,10 @@ static void _net_ads_join_dns_updates(struct net_context *c, TALLOC_CTX *ctx, st
  		return;
  	}
  
