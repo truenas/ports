@@ -82,10 +82,18 @@ index 4331c2f1465..25ff32152f1 100644
 +
  #endif
 diff --git a/source3/include/vfs.h b/source3/include/vfs.h
-index fec38f20644..5e6c87cd23b 100644
+index fec38f20644..bf275c0c297 100644
 --- a/source3/include/vfs.h
 +++ b/source3/include/vfs.h
-@@ -648,6 +648,7 @@ struct smb_filename {
+@@ -455,6 +455,7 @@ typedef struct files_struct {
+ #define FSP_POSIX_FLAGS_OPEN		0x01
+ #define FSP_POSIX_FLAGS_RENAME		0x02
+ #define FSP_POSIX_FLAGS_PATHNAMES	0x04
++#define SMB_FILENAME_PATH_CANONICALIZED	0x10
+ 
+ #define FSP_POSIX_FLAGS_ALL			\
+ 	(FSP_POSIX_FLAGS_OPEN |			\
+@@ -648,6 +649,7 @@ struct smb_filename {
  	char *original_lcomp;
  	uint32_t flags;
  	SMB_STRUCT_STAT st;
@@ -93,6 +101,18 @@ index fec38f20644..5e6c87cd23b 100644
  };
  
  /*
+diff --git a/source3/lib/filename_util.c b/source3/lib/filename_util.c
+index 66c07001eba..78b4a9c7c49 100644
+--- a/source3/lib/filename_util.c
++++ b/source3/lib/filename_util.c
+@@ -236,6 +236,7 @@ struct smb_filename *cp_smb_filename(TALLOC_CTX *mem_ctx,
+ 	}
+ 	out->flags = in->flags;
+ 	out->st = in->st;
++	out->vss_tval.tv_sec = in->vss_tval.tv_sec;
+ 	return out;
+ }
+ 
 diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
 index 37b59d8c3c0..2a2df2b96a6 100644
 --- a/source3/modules/vfs_default.c
@@ -323,7 +343,7 @@ index 81ccbde6aab..280f2bf7980 100644
  
  	status = file_new(req, conn, &fsp);
 diff --git a/source3/smbd/filename.c b/source3/smbd/filename.c
-index 32e5835e676..153a373f115 100644
+index 32e5835e676..b969000cf9f 100644
 --- a/source3/smbd/filename.c
 +++ b/source3/smbd/filename.c
 @@ -310,19 +310,11 @@ static NTSTATUS rearrange_snapshot_path(struct smb_filename *smb_fname,
@@ -357,16 +377,32 @@ index 32e5835e676..153a373f115 100644
  {
  	char *startp = strchr_m(smb_fname->base_name, '@');
  	char *endp = NULL;
-@@ -379,6 +371,8 @@ static NTSTATUS canonicalize_snapshot_path(struct smb_filename *smb_fname)
+@@ -379,6 +371,9 @@ static NTSTATUS canonicalize_snapshot_path(struct smb_filename *smb_fname)
  		/* Not a valid timestring. */
  		return NT_STATUS_OK;
  	}
 +	smb_fname->vss_tval.tv_sec = timegm(&tm);
 +	smb_fname->vss_tval.tv_usec = 0;
++	smb_fname->flags |= SMB_FILENAME_PATH_CANONICALIZED;
  
  	if ( endp[0] == '\0') {
  		return rearrange_snapshot_path(smb_fname,
-@@ -1326,7 +1320,7 @@ NTSTATUS check_name(connection_struct *conn,
+@@ -538,9 +533,11 @@ NTSTATUS unix_convert(TALLOC_CTX *ctx,
+ 
+ 	/* Canonicalize any @GMT- paths. */
+ 	if (snapshot_path) {
+-		status = canonicalize_snapshot_path(smb_fname);
+-		if (!NT_STATUS_IS_OK(status)) {
+-			goto err;
++		if ((smb_fname->flags & SMB_FILENAME_PATH_CANONICALIZED) == 0) {
++			status = canonicalize_snapshot_path(smb_fname);
++			if (!NT_STATUS_IS_OK(status)) {
++				goto err;
++			}
+ 		}
+ 	}
+ 
+@@ -1326,7 +1323,7 @@ NTSTATUS check_name(connection_struct *conn,
  		return status;
  	}
  
