@@ -1,12 +1,12 @@
 diff --git a/lib/util/memcache.c b/lib/util/memcache.c
-index 1e616bd0e9a..6e7b6e79863 100644
+index 1e616bd0e9a..5f3f930b696 100644
 --- a/lib/util/memcache.c
 +++ b/lib/util/memcache.c
 @@ -60,6 +60,7 @@ static bool memcache_is_talloc(enum memcache_number n)
  	case SINGLETON_CACHE_TALLOC:
  	case SHARE_MODE_LOCK_CACHE:
  	case GETWD_CACHE:
-+	case ZSNAP_CACHE:
++	case ZFS_CACHE:
  	case VIRUSFILTER_SCAN_RESULTS_CACHE_TALLOC:
  		result = true;
  		break;
@@ -37,7 +37,7 @@ index 1e616bd0e9a..6e7b6e79863 100644
 +	return ret;
 +}
 diff --git a/lib/util/memcache.h b/lib/util/memcache.h
-index 4331c2f1465..7bc5782c28b 100644
+index 4331c2f1465..25ff32152f1 100644
 --- a/lib/util/memcache.h
 +++ b/lib/util/memcache.h
 @@ -46,6 +46,8 @@ enum memcache_number {
@@ -45,7 +45,7 @@ index 4331c2f1465..7bc5782c28b 100644
  	SHARE_MODE_LOCK_CACHE,	/* talloc */
  	VIRUSFILTER_SCAN_RESULTS_CACHE_TALLOC, /* talloc */
 +	FSP_FI_CACHE,
-+	ZSNAP_CACHE,
++	ZFS_CACHE,
  	DFREE_CACHE,
  };
  
@@ -82,10 +82,18 @@ index 4331c2f1465..7bc5782c28b 100644
 +
  #endif
 diff --git a/source3/include/vfs.h b/source3/include/vfs.h
-index fec38f20644..5e6c87cd23b 100644
+index fec38f20644..bf275c0c297 100644
 --- a/source3/include/vfs.h
 +++ b/source3/include/vfs.h
-@@ -648,6 +648,7 @@ struct smb_filename {
+@@ -455,6 +455,7 @@ typedef struct files_struct {
+ #define FSP_POSIX_FLAGS_OPEN		0x01
+ #define FSP_POSIX_FLAGS_RENAME		0x02
+ #define FSP_POSIX_FLAGS_PATHNAMES	0x04
++#define SMB_FILENAME_PATH_CANONICALIZED	0x10
+ 
+ #define FSP_POSIX_FLAGS_ALL			\
+ 	(FSP_POSIX_FLAGS_OPEN |			\
+@@ -648,6 +649,7 @@ struct smb_filename {
  	char *original_lcomp;
  	uint32_t flags;
  	SMB_STRUCT_STAT st;
@@ -93,8 +101,20 @@ index fec38f20644..5e6c87cd23b 100644
  };
  
  /*
+diff --git a/source3/lib/filename_util.c b/source3/lib/filename_util.c
+index 66c07001eba..78b4a9c7c49 100644
+--- a/source3/lib/filename_util.c
++++ b/source3/lib/filename_util.c
+@@ -236,6 +236,7 @@ struct smb_filename *cp_smb_filename(TALLOC_CTX *mem_ctx,
+ 	}
+ 	out->flags = in->flags;
+ 	out->st = in->st;
++	out->vss_tval.tv_sec = in->vss_tval.tv_sec;
+ 	return out;
+ }
+ 
 diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
-index 37b59d8c3c0..6affbfff415 100644
+index 37b59d8c3c0..2a2df2b96a6 100644
 --- a/source3/modules/vfs_default.c
 +++ b/source3/modules/vfs_default.c
 @@ -18,9 +18,13 @@
@@ -111,11 +131,11 @@ index 37b59d8c3c0..6affbfff415 100644
  #include "smbd/smbd.h"
  #include "smbd/globals.h"
  #include "ntioctl.h"
-@@ -45,9 +49,112 @@
+@@ -45,9 +49,101 @@
     is sure to try and execute them.  These stubs are used to prevent
     this possibility. */
  
-+static int conn_zfs_init(vfs_handle_struct * handle)
++static int conn_zfs_init(vfs_handle_struct *handle)
 +{
 +	int ret = 0;
 +	struct smblibzfshandle  *libzp = NULL;
@@ -129,29 +149,21 @@ index 37b59d8c3c0..6affbfff415 100644
 +			return -1;
 +		}
 +		handle->conn->sconn->libzp = libzp;
-+		get_smbzhandle(libzp, handle->conn,
-+			       handle->conn->connectpath, &conn_zfsp);
-+		handle->conn->sconn->ds_list = zhandle_list_children(
-+							handle->conn->sconn,
-+							conn_zfsp,
-+							true);
 +	}
-+	if (!handle->conn->sconn->ds_list ||
-+	    !handle->conn->sconn->jid) {
-+		get_smbzhandle(handle->conn->sconn->libzp, handle->conn,
-+			       handle->conn->connectpath, &conn_zfsp);
-+		handle->conn->sconn->ds_list = zhandle_list_children(
-+							handle->conn->sconn,
-+							conn_zfsp,
-+							true);
-+	}
-+	return 0;
++
++	get_smbzhandle(handle->conn->sconn->libzp, handle->conn->sconn,
++		       handle->conn->connectpath, &conn_zfsp);
++
++	handle->conn->sconn->ds_list = cache_zhandle_list_children(
++						handle->conn->sconn,
++						conn_zfsp);
++	return ret;
 +}
 +
  static int vfswrap_connect(vfs_handle_struct *handle, const char *service, const char *user)
  {
 -    return 0;    /* Return >= 0 for success */
-+	if (handle->conn->ipc) {
++	if (IS_IPC(handle->conn) || IS_PRINT(handle->conn)) {
 +		return 0;
 +	}
 +	int ret, jid;
@@ -160,16 +172,12 @@ index 37b59d8c3c0..6affbfff415 100644
 +	ret = 0;
 +	struct zfs_dataset *child = NULL;
 +	struct stat ds_st;
++
 +	ret = conn_zfs_init(handle);
 +	if (ret != 0) {
 +		return -1;
 +	}
 +	if (!lp_parm_bool(SNUM(handle->conn), "jail", "enable", false)) {
-+		ret = jail_dataset_list(handle->conn->sconn->ds_list, -1);
-+		if (ret != 0) {
-+			DBG_ERR("failed to stat ds_list: %s\n",
-+				strerror(errno));
-+		}
 +		return ret;
 +	}
 +	securelevel = lp_parm_const_string(SNUM(handle->conn),
@@ -178,6 +186,7 @@ index 37b59d8c3c0..6affbfff415 100644
 +	jailname = talloc_asprintf(handle->conn->sconn,
 +				   "SERVICE_SMB-%s",
 +				    service);
++
 +	ret = chdir(handle->conn->connectpath);
 +	if (ret != 0) {
 +		DBG_ERR("chdir() to connectpath failed\n");
@@ -225,7 +234,7 @@ index 37b59d8c3c0..6affbfff415 100644
  }
  
  static void vfswrap_disconnect(vfs_handle_struct *handle)
-@@ -76,32 +183,14 @@ static int vfswrap_get_quota(struct vfs_handle_struct *handle,
+@@ -76,32 +172,14 @@ static int vfswrap_get_quota(struct vfs_handle_struct *handle,
  				unid_t id,
  				SMB_DISK_QUOTA *qt)
  {
@@ -258,7 +267,7 @@ index 37b59d8c3c0..6affbfff415 100644
  }
  
  static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
-@@ -2495,7 +2584,8 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
+@@ -2495,7 +2573,8 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
  	}
  
  #if defined(HAVE_UTIMENSAT)
@@ -334,7 +343,7 @@ index 81ccbde6aab..280f2bf7980 100644
  
  	status = file_new(req, conn, &fsp);
 diff --git a/source3/smbd/filename.c b/source3/smbd/filename.c
-index 32e5835e676..153a373f115 100644
+index 32e5835e676..b969000cf9f 100644
 --- a/source3/smbd/filename.c
 +++ b/source3/smbd/filename.c
 @@ -310,19 +310,11 @@ static NTSTATUS rearrange_snapshot_path(struct smb_filename *smb_fname,
@@ -368,16 +377,32 @@ index 32e5835e676..153a373f115 100644
  {
  	char *startp = strchr_m(smb_fname->base_name, '@');
  	char *endp = NULL;
-@@ -379,6 +371,8 @@ static NTSTATUS canonicalize_snapshot_path(struct smb_filename *smb_fname)
+@@ -379,6 +371,9 @@ static NTSTATUS canonicalize_snapshot_path(struct smb_filename *smb_fname)
  		/* Not a valid timestring. */
  		return NT_STATUS_OK;
  	}
 +	smb_fname->vss_tval.tv_sec = timegm(&tm);
 +	smb_fname->vss_tval.tv_usec = 0;
++	smb_fname->flags |= SMB_FILENAME_PATH_CANONICALIZED;
  
  	if ( endp[0] == '\0') {
  		return rearrange_snapshot_path(smb_fname,
-@@ -1326,7 +1320,7 @@ NTSTATUS check_name(connection_struct *conn,
+@@ -538,9 +533,11 @@ NTSTATUS unix_convert(TALLOC_CTX *ctx,
+ 
+ 	/* Canonicalize any @GMT- paths. */
+ 	if (snapshot_path) {
+-		status = canonicalize_snapshot_path(smb_fname);
+-		if (!NT_STATUS_IS_OK(status)) {
+-			goto err;
++		if ((smb_fname->flags & SMB_FILENAME_PATH_CANONICALIZED) == 0) {
++			status = canonicalize_snapshot_path(smb_fname);
++			if (!NT_STATUS_IS_OK(status)) {
++				goto err;
++			}
+ 		}
+ 	}
+ 
+@@ -1326,7 +1323,7 @@ NTSTATUS check_name(connection_struct *conn,
  		return status;
  	}
  
