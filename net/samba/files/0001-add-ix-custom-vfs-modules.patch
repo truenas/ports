@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 00000000000..d7606f026c0
+index 00000000000..8c492f9d78d
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,1293 @@
+@@ -0,0 +1,1359 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -40,10 +40,12 @@ index 00000000000..d7606f026c0
 +#include <fnmatch.h>
 +#include "lib/util/debug.h"
 +#include "lib/util/dlinklist.h"
++#include "lib/util/memcache.h"
 +#include "smb_macros.h"
 +#include "includes.h"
 +#include "modules/smb_libzfs.h"
 +#include "smbd/globals.h"
++#include "smbd/smbd.h"
 +
 +#ifndef SAFE_FREE
 +#define SAFE_FREE(x) do { if ((x) != NULL) {free(x); (x)=NULL;} } while(0)
@@ -51,6 +53,7 @@ index 00000000000..d7606f026c0
 +
 +#define SHADOW_COPY_ZFS_GMT_FORMAT "@GMT-%Y.%m.%d-%H.%M.%S"
 +#define ZFS_PROP_SAMBA_PREFIX "org.samba"
++
 +static struct enum_list casesensitivity[] = {
 +	{SMBZFS_SENSITIVE, "sensitive"},
 +	{SMBZFS_INSENSITIVE, "insensitive"},
@@ -144,6 +147,7 @@ index 00000000000..d7606f026c0
 +	slibzp_int->libzfsp = libzfsp;
 +	talloc_set_destructor(slibzp_int, smblibzfs_handle_destructor);
 +	slibzp_ext->private = slibzp_int;
++	slibzp_ext->zcache = memcache_init(slibzp_int, (1024 * 1024));
 +	*smblibzfsp = slibzp_ext;
 +	return 0;
 +}
@@ -212,6 +216,7 @@ index 00000000000..d7606f026c0
 +	szhandle_int->zhandle = zfsp;
 +	szhandle_ext->is_open = true;
 +	szhandle_ext->private = szhandle_int;
++	szhandle_ext->lz = smblibzfsp;
 +	*smbzhandle = szhandle_ext;
 +	return 0;
 +}
@@ -688,6 +693,7 @@ index 00000000000..d7606f026c0
 +	int ret;
 +	zfs_handle_t *zfsp = NULL;
 +	struct zfs_dataset *dsout = NULL;
++	struct stat ds_st;
 +	zfsp = get_zhandle_from_smbzhandle(zfsp_ext);
 +	if (zfsp == NULL) {
 +		return NULL;
@@ -713,6 +719,15 @@ index 00000000000..d7606f026c0
 +			dsout = NULL;
 +		}
 +	}
++	ret = stat(dsout->mountpoint, &ds_st);
++	if (ret < 0) {
++		DBG_ERR("Failed to stat dataset mounpoint [%s] "
++			"for dataset [%s]: %s\n",
++			dsout->mountpoint, dsout->dataset_name,
++			strerror(errno));
++		return NULL;
++	}
++	dsout->devid = ds_st.st_dev;
 +	return dsout;
 +}
 +
@@ -903,7 +918,7 @@ index 00000000000..d7606f026c0
 +
 +	zfs = get_zhandle_from_smbzhandle(zhandle_ext);
 +	if (!zfs) {
-+		return -1;
++		return NULL;
 +	}
 +
 +	tmp_ctx = talloc_new(mem_ctx);
@@ -1208,12 +1223,44 @@ index 00000000000..d7606f026c0
 +		close_smbzhandle(ds_new->zhandle);
 +	}
 +	DLIST_ADD(state->dslist->children, ds_new);
++	state->dslist->nentries++;
 +	return 0;
++}
++
++static struct dataset_list *cache_get_dataset_list(TALLOC_CTX *mem_ctx, struct smbzhandle *zh)
++{
++	char *ds_name = NULL;
++	struct dataset_list *out = NULL;
++	int ret;
++	ret = smb_get_dataset_name(zh, &ds_name);
++	if (ret != 0) {
++		DBG_ERR("Failed to get dataset name\n");
++		return NULL;
++	}
++	char *keystr = talloc_asprintf(mem_ctx, "dataset_list:%s", ds_name);
++	out = (struct dataset_list *)memcache_lookup_talloc(
++					zh->lz->zcache,
++					ZFS_CACHE,
++					data_blob_const(discard_const_p(uint8_t, ds_name), strlen(ds_name)));
++	TALLOC_FREE(keystr);
++	return out;
++}
++
++static void *cache_set_dataset_list(TALLOC_CTX *mem_ctx, struct dataset_list *dsl)
++{
++	char *keystr = talloc_asprintf(mem_ctx, "dataset_list:%s",
++				    dsl->root->dataset_name);
++	DATA_BLOB key = data_blob_const(discard_const_p(uint8_t, keystr),
++					strlen(keystr));
++
++	memcache_add_talloc(dsl->root->zhandle->lz->zcache,
++			    ZFS_CACHE, key, &dsl);
++	TALLOC_FREE(keystr);
 +}
 +
 +struct dataset_list *zhandle_list_children(TALLOC_CTX *mem_ctx,
 +					  struct smbzhandle *zhandle_ext,
-+                                          bool open_zhandles)
++					  bool open_zhandles)
 +{
 +	int ret ;
 +	TALLOC_CTX *tmp_ctx = NULL;
@@ -1221,6 +1268,7 @@ index 00000000000..d7606f026c0
 +	char *ds_name = NULL;
 +	struct child_cb *state = NULL;
 +	zfs_handle_t *zfsp = NULL;
++
 +	zfsp = get_zhandle_from_smbzhandle(zhandle_ext);
 +	if (zfsp == NULL) {
 +		return NULL;
@@ -1238,6 +1286,24 @@ index 00000000000..d7606f026c0
 +	state->dslist = dl;
 +	dl->root = zhandle_get_dataset(zhandle_ext, mem_ctx, true);
 +	ret = zfs_iter_filesystems(zfsp, smb_zfs_add_child, state);
++	TALLOC_FREE(tmp_ctx);
++	if (ret < 0) {
++		TALLOC_FREE(dl);
++		return NULL;
++	}
++	return dl;
++}
++
++struct dataset_list *cache_zhandle_list_children(TALLOC_CTX *mem_ctx,
++					  struct smbzhandle *zhandle_ext)
++{
++	struct dataset_list *dl;
++	dl = cache_get_dataset_list(mem_ctx, zhandle_ext);
++	if (dl != NULL) {
++		return dl;
++	}
++	dl = zhandle_list_children(mem_ctx, zhandle_ext, false);
++	cache_set_dataset_list(mem_ctx, dl);
 +	return dl;
 +}
 +
@@ -1299,10 +1365,10 @@ index 00000000000..d7606f026c0
 +}
 diff --git a/source3/modules/smb_libzfs.h b/source3/modules/smb_libzfs.h
 new file mode 100644
-index 00000000000..1e493d0db57
+index 00000000000..83743daed1a
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.h
-@@ -0,0 +1,392 @@
+@@ -0,0 +1,399 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -1336,10 +1402,13 @@ index 00000000000..1e493d0db57
 +#include <talloc.h>
 +
 +struct smblibzfshandle {
++	struct memcache *zcache;
++	struct db_context *db;
 +	void *private;
 +};
 +
 +struct smbzhandle {
++	struct smblibzfshandle *lz;
 +	void *private;
 +	bool is_open;
 +};
@@ -1389,6 +1458,7 @@ index 00000000000..1e493d0db57
 +	time_t timestamp;	/* when list generated */
 +	struct zfs_dataset *root;
 +	struct zfs_dataset *children;
++	size_t nentries;
 +};
 +
 +/*
@@ -1673,8 +1743,9 @@ index 00000000000..1e493d0db57
 + *
 + * @param[in]	mem_ctx			talloc memory context on which to hang results.
 + * @param[in]	smbzhandle_ext		smb zfs dataset handle
-+ * @param[out]	open_handles		specifies whether to leave zhandles on child
++ * @param[in]	open_handles		specifies whether to leave zhandles on child
 + *					datasets open
++ * @param[out]	from_cache		true if returned from cache
 + * @return	dataset_list		dataset->root->zhandle is a pointer to the
 +					same zhandle used to generate the dataset list.
 + */
@@ -1682,6 +1753,8 @@ index 00000000000..1e493d0db57
 +                                          struct smbzhandle *zhandle_ext,
 +                                          bool open_zhandles);
 +
++struct dataset_list *cache_zhandle_list_children(TALLOC_CTX *mem_ctx,
++						 struct smbzhandle *zhandle_ext);
 +/*
 + * Attach a list of ZFS datasets to a specified jail. This function
 + * also will populate the devid field of the datasets. If jid is -1 then
