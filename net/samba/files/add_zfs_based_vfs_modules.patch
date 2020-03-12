@@ -1,9 +1,9 @@
 diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
 new file mode 100644
-index 00000000000..47629cfd58d
+index 00000000000..98791c94b15
 --- /dev/null
 +++ b/source3/modules/vfs_shadow_copy_zfs.c
-@@ -0,0 +1,1718 @@
+@@ -0,0 +1,1725 @@
 +/* shadow_copy_zfs: a shadow copy module for ZFS
 + *
 + * Copyright (C) Andrew Tridgell   2007 (portions taken from shadow_copy_zfs)
@@ -160,7 +160,7 @@ index 00000000000..47629cfd58d
 +{
 +	return (struct snapshot_list *)memcache_lookup_talloc(
 +				config->vss.mem,
-+				ZSNAP_CACHE,
++				ZFS_CACHE,
 +				data_blob_const(ds.dptr, ds.dsize));
 +}
 +
@@ -169,7 +169,7 @@ index 00000000000..47629cfd58d
 +				struct shadow_copy_zfs_config *config)
 +{
 +	memcache_add_talloc(config->vss.mem,
-+				ZSNAP_CACHE,
++				ZFS_CACHE,
 +				data_blob_const(key.dptr, key.dsize),
 +				&snaps);
 +	return true;
@@ -201,7 +201,6 @@ index 00000000000..47629cfd58d
 +	bool is_same_dataset = false;
 +        double seconds = 0.0;
 +	time_t snap_time;
-+	char *dataset = NULL;
 +	size_t jlen = 0;
 +	TDB_DATA key = { .dptr = NULL, .dsize = 0 };
 +	struct shadow_copy_zfs_config *config = NULL;
@@ -257,6 +256,15 @@ index 00000000000..47629cfd58d
 +
 +static inline bool shadow_copy_zfs_match_name(const struct smb_filename *name)
 +{
++	NTSTATUS status;
++	if ((name->flags & SMB_FILENAME_PATH_CANONICALIZED) == 0) {
++		status = canonicalize_snapshot_path(name);
++		if (!NT_STATUS_IS_OK(status)) {
++			DBG_ERR("Failed to canonicalize path for %s\n",
++				name->base_name);
++			return false;
++		}
++	}
 +	if (timeval_is_zero(&name->vss_tval)) {
 +		return false;
 +	}
@@ -361,7 +369,7 @@ index 00000000000..47629cfd58d
 +	else {
 +		return (char *)memcache_lookup_talloc(
 +					config->vss.mem,
-+					ZSNAP_CACHE,
++					ZFS_CACHE,
 +					data_blob_const(key.dptr, key.dsize));
 +	}
 +}
@@ -385,7 +393,7 @@ index 00000000000..47629cfd58d
 +	}
 +	else {
 +		memcache_add_talloc(config->vss.mem,
-+					ZSNAP_CACHE,
++					ZFS_CACHE,
 +					data_blob_const(key.dptr, key.dsize),
 +					&resolved_path);
 +	}
@@ -449,6 +457,7 @@ index 00000000000..47629cfd58d
 +		}
 +		shadow_copy_zfs_update_snaplist(handle, handle->conn, rp, false, &snapshots);
 +	}
++
 +
 +	if (snapshots == NULL) {
 +		DBG_ERR("Failed to get snapshot list for %s\n",
@@ -1633,9 +1642,7 @@ index 00000000000..47629cfd58d
 +		}
 +	}
 +	else {
-+		config->vss.mem = memcache_init(handle,
-+						(lp_parm_int(SNUM(handle->conn),
-+						"shadow", "cache_size", 512) * 1024));
++		config->vss.mem = config->libzp->zcache;
 +		if (!config->vss.mem) {
 +			errno = ENOMEM;
 +			return -1;
