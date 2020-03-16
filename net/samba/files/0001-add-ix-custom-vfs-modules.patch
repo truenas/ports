@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 00000000000..8c492f9d78d
+index 00000000000..118da690ebb
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,1359 @@
+@@ -0,0 +1,1364 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -1219,6 +1219,11 @@ index 00000000000..8c492f9d78d
 +	zhandle_ext->is_open = true;
 +	zhandle_int->zhandle = child;
 +	ds_new = zhandle_get_dataset(zhandle_ext, state->dslist, true);
++	if (ds_new == NULL) {
++		close_smbzhandle(zhandle_ext);
++		TALLOC_FREE(zhandle_ext);
++		return 0;
++	}
 +	if (!state->open_zhandle) {
 +		close_smbzhandle(ds_new->zhandle);
 +	}
