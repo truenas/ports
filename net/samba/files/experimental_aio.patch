@@ -1,13 +1,14 @@
 diff --git a/source3/modules/vfs_aio_fbsd.c b/source3/modules/vfs_aio_fbsd.c
 new file mode 100644
-index 0000000..4b54c7b
+index 00000000000..95f06621c04
 --- /dev/null
 +++ b/source3/modules/vfs_aio_fbsd.c
-@@ -0,0 +1,444 @@
+@@ -0,0 +1,448 @@
 +/*
 + * Copyright (C) Volker Lendecke 2008
 + * Copyright (C) Jeremy Allison 2010
 + * Copyright (C) Stefan Metzmacher 2019
++ * Copyright (C) iXsystems 2020
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License as published by
@@ -196,11 +197,13 @@ index 0000000..4b54c7b
 +	int ret;
 +	struct vfs_aio_fbsd_config *config;
 +	struct vfs_fbsd_kevent_thread_data *kctx;
++	struct timespec slp;
 +	bool sqpoll;
 +	unsigned flags = 0;
 +	pthread_t *kevent_th;
 +	TALLOC_CTX *thd_ctx = talloc_init("thd_ctx");
 +
++	talloc_disable_null_tracking();
 +	config = talloc_zero(handle->conn, struct vfs_aio_fbsd_config);
 +	if (config == NULL) {
 +		DBG_ERR("talloc_zero() failed\n");
@@ -217,17 +220,18 @@ index 0000000..4b54c7b
 +	}
 +
 +	talloc_set_destructor(config, vfs_aio_fbsd_config_destructor);
++	slp.tv_sec = 0;
++	slp.tv_nsec = 1000000;
 +
 +	config->kqueue_fd = kqueue();
-+	kctx = talloc_zero(NULL, struct vfs_fbsd_kevent_thread_data);
++	kctx = talloc_zero(thd_ctx, struct vfs_fbsd_kevent_thread_data);
 +	kctx->k_fd = config->kqueue_fd;
 +	kctx->tp = tevent_thread_proxy_create(handle->conn->sconn->ev_ctx);
 +	if (kctx->tp == NULL) {
 +		DBG_ERR("failed to create thread proxy\n");
 +		return -1;
 +	}
-+
-+	//talloc_set_destructor(kctx, kctx_deny_destructor);
++	nanosleep(&slp, NULL);
 +	ret = pthread_create(kevent_th, NULL, vfs_fbsd_aio_queue_thread,
 +			     (void *)kctx);
 +
@@ -450,7 +454,7 @@ index 0000000..4b54c7b
 +}
 diff --git a/source3/modules/vfs_aio_posix.c b/source3/modules/vfs_aio_posix.c
 new file mode 100644
-index 0000000..329d723
+index 00000000000..329d7239497
 --- /dev/null
 +++ b/source3/modules/vfs_aio_posix.c
 @@ -0,0 +1,301 @@
@@ -757,7 +761,7 @@ index 0000000..329d723
 +
 diff --git a/source3/modules/vfs_aio_spthread.c b/source3/modules/vfs_aio_spthread.c
 new file mode 100644
-index 0000000..d75b402
+index 00000000000..d75b402572b
 --- /dev/null
 +++ b/source3/modules/vfs_aio_spthread.c
 @@ -0,0 +1,500 @@
