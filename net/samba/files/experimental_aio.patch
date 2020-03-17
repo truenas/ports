@@ -1,6 +1,6 @@
 diff --git a/source3/modules/vfs_aio_fbsd.c b/source3/modules/vfs_aio_fbsd.c
 new file mode 100644
-index 00000000000..95f06621c04
+index 00000000000..4f9190ad94f
 --- /dev/null
 +++ b/source3/modules/vfs_aio_fbsd.c
 @@ -0,0 +1,448 @@
@@ -413,15 +413,15 @@ index 00000000000..95f06621c04
 +		return NULL;
 +	}
 +	kev->iocbp->aio_fildes = fsp->fh->fd;
++	kev->iocbp->aio_sigevent.sigev_notify_kqueue = config->kqueue_fd;
++	kev->iocbp->aio_sigevent.sigev_value.sival_ptr = kev;
++	kev->iocbp->aio_sigevent.sigev_notify = SIGEV_KEVENT;
 +	ret = aio_fsync(O_SYNC, kev->iocbp);
 +	talloc_set_destructor(state, vfs_aio_fbsd_request_state_destructor);
 +	if (ret != 0) {
 +		DBG_ERR("Failed to add to AIO queue %s\n", strerror(errno));
 +		return NULL; //errno to status
 +	}
-+	state->in_progress = true;
-+	ret = aio_fsync(O_SYNC, state->iocbp);
-+
 +	if (!tevent_req_is_in_progress(req)) {
 +		return tevent_req_post(req, ev);
 +	}
