@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	openzfs
-PORTVERSION=	2020031700
+PORTVERSION=	2020031800
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 PKGNAMESUFFIX?=	-kmod
@@ -47,10 +47,10 @@ post-patch:
 	${ECHO} '#define ZFS_META_RELEASE "${ZFS_META_RELEASE}"' >> ${WRKSRC}/zfs_config.h
 
 do-build:
-	(cd ${WRKSRC}/module/ && make -f Makefile.bsd CC=${CC} ${MAKE_OPTS} WITH_DEBUG=true)
+	(cd ${WRKSRC}/module/ && make -f Makefile.bsd CC=${CC} ${MAKE_OPTS} clean all WITH_DEBUG=true)
 	mv ${WRKSRC}/module/openzfs.ko ${WRKSRC}/module/openzfs-debug.ko
 	mv ${WRKSRC}/module/openzfs.ko.debug ${WRKSRC}/module/openzfs-debug.ko.debug
-	(cd ${WRKSRC}/module/ && make -f Makefile.bsd CC=${CC} ${MAKE_OPTS})
+	(cd ${WRKSRC}/module/ && make -f Makefile.bsd CC=${CC} ${MAKE_OPTS} clean all)
 
 do-install:
 	${INSTALL} ${WRKSRC}/module/openzfs-debug.ko ${STAGEDIR}${KMODDIR}/openzfs-debug.ko
