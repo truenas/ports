@@ -1,5 +1,5 @@
 diff --git a/lib/util/memcache.c b/lib/util/memcache.c
-index 1e616bd..cc484e6 100644
+index 1e616bd0e9a..cc484e6f821 100644
 --- a/lib/util/memcache.c
 +++ b/lib/util/memcache.c
 @@ -60,6 +60,7 @@ static bool memcache_is_talloc(enum memcache_number n)
@@ -11,7 +11,7 @@ index 1e616bd..cc484e6 100644
  		result = true;
  		break;
 diff --git a/lib/util/memcache.h b/lib/util/memcache.h
-index 4331c2f..a9de97f 100644
+index 4331c2f1465..a9de97ff291 100644
 --- a/lib/util/memcache.h
 +++ b/lib/util/memcache.h
 @@ -46,6 +46,7 @@ enum memcache_number {
@@ -24,10 +24,10 @@ index 4331c2f..a9de97f 100644
  
 diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
 new file mode 100644
-index 0000000..3369d4f
+index 00000000000..bcfc85e3a1d
 --- /dev/null
 +++ b/source3/modules/vfs_shadow_copy_zfs.c
-@@ -0,0 +1,1746 @@
+@@ -0,0 +1,1770 @@
 +/* shadow_copy_zfs: a shadow copy module for ZFS
 + *
 + * Copyright (C) Andrew Tridgell   2007 (portions taken from shadow_copy_zfs)
@@ -172,6 +172,76 @@ index 0000000..3369d4f
 +	return true;
 +}
 +
++char *get_snapshot_path(TALLOC_CTX *mem_ctx,
++			char *connectpath, size_t clen,
++			char *mountpoint, size_t mplen,
++			char *filename, size_t flen,
++			char *mpoffset,
++			struct snapshot_entry *snap)
++{
++	DBG_DEBUG("connectpath: %s, clen: %zu, mountpoint: %s, mplen %zu "
++		  "filename: %s, flen %zu, mpoffset: %s, snapshot: %s\n",
++		  connectpath, clen, mountpoint, mplen, filename, flen,
++		  mpoffset, snap->name);
++	char *ret = NULL;
++	char *tmp_name = NULL;
++	bool is_child = false;
++	tmp_name = talloc_strdup(mem_ctx, filename);
++	if (mplen > clen) {
++		/*
++		 * This is not the same dataset as the one underlying the connectpath.
++		 */
++		is_child = true;
++		if (!(flen > (mplen - clen)) && (strcmp(mountpoint + clen, filename) == 0)) {
++			/* The path is a dataset mountpoint. Set last path component
++			 * to NULL so that we later exclude from our returned string.
++			 */
++			TALLOC_FREE(tmp_name);
++			tmp_name = NULL;
++		}
++		else {
++			tmp_name += (mplen - clen);
++		}
++	}
++	/*
++	 * A mountpoint offset occurs when a directory inside a dataset is shared
++	 * rather than the actual dataset mountpoint. We will only adjust the path
++	 * relative to the snapshot if (1) there's an offset and (2) if the
++	 * the path is not a child dataset. The mountpoint offset only applies to
++	 * the dataset underlying the share's connectpath (at least on TrueNAS).
++	 */
++	if (mpoffset && !is_child) {
++		if (flen) {
++			ret = talloc_asprintf(mem_ctx, "%s/.zfs/snapshot/%s/%s/%s",
++					      mountpoint, snap->name, mpoffset, tmp_name);
++		}
++		else {
++			ret = talloc_asprintf(mem_ctx, "%s/.zfs/snapshot/%s/%s",
++					      mountpoint, snap->name, mpoffset);
++		}
++	}
++	/*
++	 * Path is a dataset mountpoint for child dataset.
++	 */
++	else if (tmp_name == NULL) {
++		ret = talloc_asprintf(mem_ctx, "%s/.zfs/snapshot/%s",
++				      mountpoint, snap->name);
++	}
++	/*
++	 * All other cases. If needed, we have adjusted the pointer for
++	 * the filename to make it relative to the snapshot mountpoint
++	 * rather than the share connectpath.
++	 */
++	else {
++		ret = talloc_asprintf(mem_ctx, "%s/.zfs/snapshot/%s/%s",
++				      mountpoint, snap->name, tmp_name);
++	}
++	if (tmp_name) {
++		TALLOC_FREE(tmp_name);
++	}
++	return ret;
++}
++
 +/**
 + * This function will check if snaplist is updated or not. If snaplist
 + * is empty then it will create a new list. Each time snaplist is updated
@@ -293,7 +363,6 @@ index 0000000..3369d4f
 +	}
 +	else if (GMT_NAME_LEN == len) {
 +		DBG_INFO("returning root of share\n");
-+		TALLOC_FREE(path);
 +		return talloc_strdup(mem_ctx, "");
 +	}
 +	pcopy = talloc_strdup(mem_ctx, path);
@@ -309,12 +378,11 @@ index 0000000..3369d4f
 +{
 +	int i = 0;
 +	int ret;
-+	char *pcopy;
-+	char *parent;
++	char *pcopy = NULL;
++	char *parent = NULL;
 +	size_t *slashes = NULL;
 +	unsigned num_slashes;
 +	pcopy = talloc_strdup(mem_ctx, path);
-+	talloc_free(path);
 +	char rp[PATH_MAX] = { 0 };
 +	if (pcopy == NULL) {
 +		DBG_ERR("Memory error\n");
@@ -445,15 +513,13 @@ index 0000000..3369d4f
 +	struct shadow_copy_zfs_config *config = NULL;
 +	struct snapshot_list *snapshots = NULL;
 +	struct snapshot_entry *entry = NULL;
-+	const char *relpath, *mpoffset, *snapshot;
-+	bool connectpath_is_dataset_mp = true;
-+	size_t mplen;
++	char *mpoffset = NULL;
++	size_t mplen, flen, clen;
 +	char *ret = NULL;
 +	char *normalized_fname = NULL;
 +	char *cache_entry = NULL;
 +	char rp[PATH_MAX] = { 0 };
 +	TDB_DATA key = { .dptr = NULL, .dsize = 0 };
-+	size_t fds_len = 0; // store length of dataset name for connectpath and the filename passed to server
 +
 +	SMB_VFS_HANDLE_GET_DATA(handle, config, struct shadow_copy_zfs_config,
 +	    return NULL);
@@ -503,42 +569,29 @@ index 0000000..3369d4f
 +		return NULL;
 +	}
 +
-+	/*
-+	 * Handling for nested datasets. config->dataset_path is the dataset for the root
-+	 * of the share. This is to address issue of <@GMT-token>nested_dataset/dir1 where
-+	 * connectpath is <pool>/<dataset1> and nested_dataset is <pool>/<dataset1>/nested_dataset.
-+	 * in this case, we need "<pool>/<dataset1>/<nested_dataset>/.zfs/snapshot/<snapshot>/dir1"
-+	 * instead of "<pool>/<dataset1>/<nested_dataset>/.zfs/snapshot/<snapshot>/nested_dataset/dir1"
-+	 * This may need to be rewritten to use mountpoints rather than dataset names.
-+	 */
-+
-+	if (strcmp(config->dataset_path, snapshots->dataset_name) != 0) {
-+		fds_len = strlen(snapshots->dataset_name) - strlen(config->dataset_path);
-+	}
-+
-+	mplen = strlen(snapshots->mountpoint);
-+
-+	/*
-+	 * Determine our offset from our dataset's mountpoint. The share path
-+	 * may be a subdirectory under the mountpoint.
-+	 */
-+	mpoffset = talloc_strdup(tmp_ctx, handle->conn->connectpath);
-+	if (strlen(mpoffset) > mplen) {
-+		mpoffset += mplen;
-+		connectpath_is_dataset_mp = False;
-+	}
-+
 +	/* get snapshot name */
 +	for (entry = snapshots->entries; entry; entry = entry->next) {
 +		if (strncmp(fname, entry->label, GMT_NAME_LEN) == 0) {
-+			snapshot = entry->name;
 +			break;
 +		}
 +	}
++	mplen = strlen(snapshots->mountpoint);
++	clen = strlen(handle->conn->connectpath);
++	flen = strlen(fname);
++	if (flen == GMT_NAME_LEN) {
++		flen = 0;
++	}
++	else {
++		flen -= (GMT_NAME_LEN + 1);
++	}
 +
-+	if (snapshot == NULL) {
-+		DBG_INFO("convert_shadow_zfs_name: no snapshot found for %s\n",
-+		    fname);
++	if (clen > mplen) {
++		mpoffset = talloc_strdup(tmp_ctx, handle->conn->connectpath + mplen + 1);
++	}
++
++	if (entry == NULL) {
++		DBG_INFO("Failed to retrieve snapshot entry for filename: %s, "
++			 "with snapshot mountpoint: %s\n", fname, snapshots->mountpoint);
 +		if (strcmp(handle->conn->connectpath, snapshots->mountpoint) == 0) {
 +			/*
 +			 * Sub datasets can have snapshots that don't exist at the root
@@ -551,48 +604,25 @@ index 0000000..3369d4f
 +			TALLOC_FREE(tmp_ctx);
 +			return ret;
 +		}
++		else if (mpoffset) {
++			/*
++			 * In this cause we need to avoid granting access to the
++			 * snapshot mountpoint because share is a subdirectory inside a
++			 * dataset.
++			 */
++			ret = talloc_strdup(talloc_tos(), handle->conn->connectpath);
++			TALLOC_FREE(tmp_ctx);
++			return ret;
++		}
 +		TALLOC_FREE(tmp_ctx);
 +		return NULL;
 +	}
-+
-+	/* assemble the new path */
-+	relpath = fname + GMT_NAME_LEN;
-+	/* take care of extra path components from nested datasets */
-+	relpath += fds_len;
-+
-+	if (*relpath == '/') relpath++;
-+	if (*mpoffset == '/') mpoffset++;
-+
-+	if (!connectpath_is_dataset_mp && (strlen(mpoffset) > 0)) {
-+		mpoffset = talloc_asprintf(tmp_ctx, "/%s", mpoffset);
-+	}
-+	if (strlen(relpath) > 0) {
-+		relpath = talloc_asprintf(tmp_ctx, "/%s", relpath);
-+	}
-+
-+	/*
-+	 * If snaproot_len > 0, the path will become a cached value for the
-+	 * connectpath. We probably don't want this for the root of the share or
-+	 * dot files.
-+	 */
-+	if (connectpath_is_dataset_mp) {
-+		ret = talloc_asprintf(talloc_tos(), "%s/%s/%s%s",
-+					snapshots->mountpoint,
-+					SHADOW_COPY_ZFS_SNAP_DIR,
-+					snapshot,
-+					relpath);
-+	}
-+	else {
-+		ret = talloc_asprintf(talloc_tos(), "%s/%s/%s%s%s",
-+					snapshots->mountpoint,
-+					SHADOW_COPY_ZFS_SNAP_DIR,
-+					snapshot,
-+					mpoffset,
-+					relpath);
-+	}
++	ret = get_snapshot_path(talloc_tos(), handle->conn->connectpath, clen,
++				snapshots->mountpoint, mplen,
++				fname + GMT_NAME_LEN + 1, flen,
++				mpoffset, entry);
 +
 +	if ((snaproot_len != NULL) && normalized_fname && !ISDOT(normalized_fname)) {
-+		DBG_DEBUG("snapshot: %s, mpoffset %s\n", snapshot, mpoffset);
 +		*snaproot_len = strlen(ret);
 +	}
 +
@@ -600,8 +630,8 @@ index 0000000..3369d4f
 +		cache_entry = talloc_strdup(tmp_ctx, ret);
 +		talloc_set_destructor(cache_entry, NULL);
 +		snapcache_set(tmp_ctx, config, key, cache_entry);
-+		DBG_DEBUG("Set cache entry for %s->%s\n",
-+			  normalized_fname, ret);
++		DBG_INFO("Set cache entry for %s->%s\n",
++			 normalized_fname, ret);
 +	}
 +
 +	TALLOC_FREE(tmp_ctx);
@@ -1084,7 +1114,8 @@ index 0000000..3369d4f
 +	char *fullpath, *to_free;
 +	char *tmp_file = NULL;
 +	char *file_name = NULL;
-+	ssize_t len, cpathlen, mplen;
++	char *mpoffset = NULL;
++	ssize_t len, cpathlen, mplen, flen;
 +	int rv;
 +	cpathlen = strlen(handle->conn->connectpath);
 +
@@ -1145,34 +1176,27 @@ index 0000000..3369d4f
 +			return -1;
 +		}
 +	}
++	mplen = strlen(snapshots->mountpoint);
++	flen = strlen(fsp->fsp_name->base_name);
++	if (cpathlen > mplen) {
++		/*
++		 * Connectpath for share is longer than the dataset mountpoint.
++		 * This happens if share is directory outside of mountpoint, which
++		 * most commonly occurs when share is a [homes] share.
++		 */
++		mpoffset = talloc_strdup(tmp_ctx, (handle->conn->connectpath + mplen + 1));
++	}
 +
 +	for (entry = snapshots->entries; entry; entry = entry->next) {
 +		/*
 +		 * Directories should always be added if they exist in the
 +		 * snapshot. Files only be added if mtime differs.
 +		 */
-+		file_name = talloc_strdup(tmp_ctx, fsp->fsp_name->base_name);
-+		mplen = strlen(snapshots->mountpoint);
-+		if (cpathlen < mplen) {
-+			if (!(strlen(file_name) > (mplen - cpathlen))) {
-+				TALLOC_FREE(file_name);
-+				file_name = NULL;
-+			}
-+			else {
-+				file_name += (mplen - cpathlen);		
-+			}
-+		}	
-+		if (file_name == NULL) {
-+			tmp_file = talloc_asprintf(tmp_ctx, "%s/.zfs/snapshot/%s",
-+						   snapshots->mountpoint,
-+						   entry->name);
-+		}
-+		else {
-+			tmp_file = talloc_asprintf(tmp_ctx, "%s/.zfs/snapshot/%s/%s",
-+						   snapshots->mountpoint,
-+						   entry->name,
-+						   file_name);
-+		}
++		tmp_file = get_snapshot_path(tmp_ctx, handle->conn->connectpath,
++					     cpathlen, snapshots->mountpoint,
++					     mplen, fsp->fsp_name->base_name,
++					     flen, mpoffset, entry);
++
 +		rv = sys_stat(tmp_file, &cur_st, false);
 +		TALLOC_FREE(tmp_file);
 +		if (rv != 0) {
@@ -1776,7 +1800,7 @@ index 0000000..3369d4f
 +}
 diff --git a/source3/modules/vfs_tmprotect.c b/source3/modules/vfs_tmprotect.c
 new file mode 100644
-index 0000000..0d8f95f
+index 00000000000..0d8f95f2401
 --- /dev/null
 +++ b/source3/modules/vfs_tmprotect.c
 @@ -0,0 +1,283 @@
@@ -2065,7 +2089,7 @@ index 0000000..0d8f95f
 +}
 diff --git a/source3/modules/vfs_zfs_fsrvp.c b/source3/modules/vfs_zfs_fsrvp.c
 new file mode 100644
-index 0000000..ecde122
+index 00000000000..ecde1225bef
 --- /dev/null
 +++ b/source3/modules/vfs_zfs_fsrvp.c
 @@ -0,0 +1,233 @@
