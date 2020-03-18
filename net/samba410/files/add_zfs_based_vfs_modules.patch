@@ -24,10 +24,10 @@ index 4331c2f1465..a9de97ff291 100644
  
 diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
 new file mode 100644
-index 00000000000..bcfc85e3a1d
+index 00000000000..0fb22b24313
 --- /dev/null
 +++ b/source3/modules/vfs_shadow_copy_zfs.c
-@@ -0,0 +1,1770 @@
+@@ -0,0 +1,1772 @@
 +/* shadow_copy_zfs: a shadow copy module for ZFS
 + *
 + * Copyright (C) Andrew Tridgell   2007 (portions taken from shadow_copy_zfs)
@@ -200,6 +200,7 @@ index 00000000000..bcfc85e3a1d
 +			tmp_name = NULL;
 +		}
 +		else {
++			SMB_ASSERT(flen >= (mplen - clen));
 +			tmp_name += (mplen - clen);
 +		}
 +	}
@@ -221,9 +222,10 @@ index 00000000000..bcfc85e3a1d
 +		}
 +	}
 +	/*
-+	 * Path is a dataset mountpoint for child dataset.
++	 * Path is a dataset mountpoint for child dataset or
++	 * the share's connectpath.
 +	 */
-+	else if (tmp_name == NULL) {
++	else if ((tmp_name == NULL) || (flen == 0)) {
 +		ret = talloc_asprintf(mem_ctx, "%s/.zfs/snapshot/%s",
 +				      mountpoint, snap->name);
 +	}
@@ -236,7 +238,7 @@ index 00000000000..bcfc85e3a1d
 +		ret = talloc_asprintf(mem_ctx, "%s/.zfs/snapshot/%s/%s",
 +				      mountpoint, snap->name, tmp_name);
 +	}
-+	if (tmp_name) {
++	if (tmp_name != NULL) {
 +		TALLOC_FREE(tmp_name);
 +	}
 +	return ret;
@@ -619,7 +621,7 @@ index 00000000000..bcfc85e3a1d
 +	}
 +	ret = get_snapshot_path(talloc_tos(), handle->conn->connectpath, clen,
 +				snapshots->mountpoint, mplen,
-+				fname + GMT_NAME_LEN + 1, flen,
++				flen ? fname + GMT_NAME_LEN + 1 : fname + GMT_NAME_LEN, flen,
 +				mpoffset, entry);
 +
 +	if ((snaproot_len != NULL) && normalized_fname && !ISDOT(normalized_fname)) {
