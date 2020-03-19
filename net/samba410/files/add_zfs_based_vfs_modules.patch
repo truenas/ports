@@ -24,10 +24,10 @@ index 4331c2f1465..a9de97ff291 100644
  
 diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
 new file mode 100644
-index 00000000000..0fb22b24313
+index 00000000000..adbcbeccbdb
 --- /dev/null
 +++ b/source3/modules/vfs_shadow_copy_zfs.c
-@@ -0,0 +1,1772 @@
+@@ -0,0 +1,1781 @@
 +/* shadow_copy_zfs: a shadow copy module for ZFS
 + *
 + * Copyright (C) Andrew Tridgell   2007 (portions taken from shadow_copy_zfs)
@@ -183,25 +183,36 @@ index 00000000000..0fb22b24313
 +		  "filename: %s, flen %zu, mpoffset: %s, snapshot: %s\n",
 +		  connectpath, clen, mountpoint, mplen, filename, flen,
 +		  mpoffset, snap->name);
++	TALLOC_CTX *tmp_ctx = NULL;
 +	char *ret = NULL;
 +	char *tmp_name = NULL;
 +	bool is_child = false;
-+	tmp_name = talloc_strdup(mem_ctx, filename);
++	tmp_ctx = talloc_new(mem_ctx);
++	if (tmp_ctx == NULL) {
++		DBG_ERR("Failed to init new talloc context\n");
++		errno = ENOMEM;
++		return NULL;
++	}
++	tmp_name = talloc_strdup(tmp_ctx, filename);
 +	if (mplen > clen) {
 +		/*
 +		 * This is not the same dataset as the one underlying the connectpath.
 +		 */
 +		is_child = true;
-+		if (!(flen > (mplen - clen)) && (strcmp(mountpoint + clen, filename) == 0)) {
++		if (!(flen > (mplen - clen -1)) && (strcmp(mountpoint + clen + 1, tmp_name) == 0)) {
 +			/* The path is a dataset mountpoint. Set last path component
 +			 * to NULL so that we later exclude from our returned string.
 +			 */
 +			TALLOC_FREE(tmp_name);
 +			tmp_name = NULL;
++			DBG_DEBUG("file [%s] is a sub-dataset mountpoint\n",
++				  filename);
 +		}
 +		else {
-+			SMB_ASSERT(flen >= (mplen - clen));
++			SMB_ASSERT(flen >= (mplen - clen - 1));
 +			tmp_name += (mplen - clen);
++			DBG_DEBUG("file [%s] is within sub-dataset [%s] base_name rewritten to [%s]\n",
++				  filename, mountpoint + clen, tmp_name);
 +		}
 +	}
 +	/*
@@ -238,9 +249,7 @@ index 00000000000..0fb22b24313
 +		ret = talloc_asprintf(mem_ctx, "%s/.zfs/snapshot/%s/%s",
 +				      mountpoint, snap->name, tmp_name);
 +	}
-+	if (tmp_name != NULL) {
-+		TALLOC_FREE(tmp_name);
-+	}
++	TALLOC_FREE(tmp_ctx);
 +	return ret;
 +}
 +
