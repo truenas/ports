@@ -1,9 +1,9 @@
 diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
 new file mode 100644
-index 00000000000..3747518ea86
+index 00000000000..1f9d99f4dd0
 --- /dev/null
 +++ b/source3/modules/vfs_shadow_copy_zfs.c
-@@ -0,0 +1,1752 @@
+@@ -0,0 +1,1761 @@
 +/* shadow_copy_zfs: a shadow copy module for ZFS
 + *
 + * Copyright (C) Andrew Tridgell   2007 (portions taken from shadow_copy_zfs)
@@ -86,7 +86,6 @@ index 00000000000..3747518ea86
 +
 +	/* Snapshot parameters */
 +	bool 			ignore_empty_snaps;	
-+	const char 		*dataset_path;
 +	const char 		**inclusions;
 +	const char 		**exclusions;
 +	struct snapshot_list 	*snapshots;
@@ -504,6 +503,13 @@ index 00000000000..3747518ea86
 +
 +	SMB_VFS_HANDLE_GET_DATA(handle, config, struct shadow_copy_zfs_config,
 +	    return NULL);
++
++	if (handle->conn->sconn->ds_list == NULL) {
++		DBG_ERR("Refusing to convert to shadow copy due to "
++			"path not supporting snapshots\n");
++		errno = EINVAL;
++		return NULL;
++	}
 +
 +	if (config->cache_enabled) {
 +		tsname = talloc_asprintf(tmp_ctx, "%ld/%s", tval.tv_sec, fname);
@@ -1119,6 +1125,14 @@ index 00000000000..3747518ea86
 +	char *mpoffset = NULL;
 +	ssize_t len, cpathlen, mplen, flen;
 +	int rv;
++
++
++	if (handle->conn->sconn->ds_list == NULL) {
++		DBG_ERR("No dataset list present for share at path: %s\n",
++			handle->conn->connectpath);
++		return 0;
++	}
++
 +	cpathlen = strlen(handle->conn->connectpath);
 +
 +	len = full_path_tos(handle->conn->connectpath, fsp->fsp_name->base_name, tmpbuf,
@@ -1676,11 +1690,6 @@ index 00000000000..3747518ea86
 +		}
 +	}
 +
-+	config->dataset_path = talloc_strdup(config,
-+					     handle->conn->sconn->ds_list->root->dataset_name);
-+
-+	DBG_INFO("Dataset_Path is %s\n", config->dataset_path);
-+
 +	config->inclusions = lp_parm_string_list(SNUM(handle->conn), "shadow",
 +						"include", empty_list);
 +	config->exclusions = lp_parm_string_list(SNUM(handle->conn), "shadow",
@@ -2047,10 +2056,10 @@ index 00000000000..0d8f95f2401
 +}
 diff --git a/source3/modules/vfs_zfs_fsrvp.c b/source3/modules/vfs_zfs_fsrvp.c
 new file mode 100644
-index 00000000000..ecde1225bef
+index 00000000000..7c9c96692a1
 --- /dev/null
 +++ b/source3/modules/vfs_zfs_fsrvp.c
-@@ -0,0 +1,233 @@
+@@ -0,0 +1,240 @@
 +/* zfs_fsrvp: a module implementing FSS using ZFS 
 + *
 + * Copyright (C) iXsystems Inc     2019
@@ -2072,7 +2081,10 @@ index 00000000000..ecde1225bef
 +
 +#include "includes.h"
 +#include "system/filesys.h"
++#include "smbd/globals.h"
 +#include "modules/smb_libzfs.h"
++#include "../libcli/security/security.h"
++#include "../libcli/security/dom_sid.h"
 +
 +#define ZFS_FSRVP_PREFIX "fss"
 +#define ZFS_FSRVP_MODULE "zfs_fsrvp"
@@ -2100,7 +2112,22 @@ index 00000000000..ecde1225bef
 +				return NT_STATUS_NO_MEMORY);
 +
 +	*base_volume = talloc_strdup(mem_ctx, config->dataset_name);
++	DBG_INFO("zfs_fsrvp: base volume is [%s]\n", *base_volume);
 +	return NT_STATUS_OK;
++}
++
++static bool is_permitted_user(const struct security_token *token)
++{
++	bool is_disk_op, is_backup_op;
++	is_disk_op = is_backup_op = false;
++	is_disk_op = security_token_has_privilege(
++			token,
++			SEC_PRIV_DISK_OPERATOR);
++	is_backup_op = security_token_has_sid(
++			token,
++			&global_sid_Builtin_Backup_Operators);
++
++	return (is_disk_op || is_backup_op);
 +}
 +
 +static NTSTATUS zfs_fsrvp_snap_create(struct vfs_handle_struct *handle,
@@ -2125,6 +2152,10 @@ index 00000000000..ecde1225bef
 +	struct zfs_fsrvp_config_data *config = NULL;
 +	char snap_name[ZFS_FSRVP_SNAPLEN] = { 0 };
 +
++	if (!is_permitted_user(handle->conn->session_info->security_token)) {
++		return NT_STATUS_ACCESS_DENIED;
++	}
++
 +	SMB_VFS_HANDLE_GET_DATA(handle,
 +				config,
 +				struct zfs_fsrvp_config_data,
@@ -2142,15 +2173,19 @@ index 00000000000..ecde1225bef
 +	ts = timespec_current();
 +	snprintf(snap_name, sizeof(snap_name), "%s-%ld%ld",
 +		 ZFS_FSRVP_PREFIX, ts.tv_sec, ts.tv_nsec);
-+
++	become_root();
 +	ret = smb_zfs_snapshot(config->libzp, handle->conn->connectpath,
 +			       snap_name, false);
++	unbecome_root();
 +	if (ret != 0) {
 +		return map_nt_error_from_unix(errno);
 +	}
++	DBG_INFO("Successfully snapshotted [%s]\n", snap_name);
 +	*snap_path = talloc_asprintf(mem_ctx, "%s/.zfs/snapshot/%s",
 +				     handle->conn->connectpath, snap_name);
 +	*base_path = talloc_strdup(mem_ctx, base_volume); 
++	DBG_INFO("Setting snap path to [%s] and base path to [%s]\n",
++		 *snap_path, *base_path);
 +	return NT_STATUS_OK;
 +}
 +
@@ -2167,6 +2202,10 @@ index 00000000000..ecde1225bef
 +	char *parent = NULL;
 +	size_t rlen, slen;
 +	const char *base;
++
++	if (!is_permitted_user(handle->conn->session_info->security_token)) {
++		return NT_STATUS_ACCESS_DENIED;
++	}
 +
 +	SMB_VFS_HANDLE_GET_DATA(handle,
 +				config,
@@ -2188,10 +2227,11 @@ index 00000000000..ecde1225bef
 +	to_delete->num_entries = 1;
 +	del_entry->name = talloc_strdup(tmp_ctx, base);
 +	DLIST_ADD(to_delete->entries, del_entry);
-+
++	become_root();
 +	ret = smb_zfs_delete_snapshots(config->libzp,
 +				       tmp_ctx,
 +				       to_delete);
++	unbecome_root();
 +	if (ret != 0) {
 +		TALLOC_FREE(tmp_ctx);
 +		DBG_ERR("Failed to delete snapshots: %s\n",
@@ -2208,8 +2248,16 @@ index 00000000000..ecde1225bef
 +	int ret;
 +	struct zfs_fsrvp_config_data *config = NULL;
 +	struct smblibzfshandle *libzp = NULL;
-+	char *dataset_name = NULL;
-+	char *dataset_mp = NULL;
++	ret = SMB_VFS_NEXT_CONNECT(handle, service, user);
++	if (ret != 0) {
++		return ret;
++	}
++	if (handle->conn->sconn->ds_list == NULL) {
++		DBG_ERR("Failed to obtain dataset list for connect path. "
++			"Path may not be a ZFS filesystem: %s\n",
++			handle->conn->connectpath);
++		return -1;
++	}
 +
 +	config = talloc_zero(handle->conn, struct zfs_fsrvp_config_data);
 +	if (!config) {
@@ -2218,49 +2266,17 @@ index 00000000000..ecde1225bef
 +		return -1;
 +	}
 +
-+	ret = get_smblibzfs_handle(handle->conn, &libzp);
-+	if (ret != 0) {
-+		DBG_ERR("Failed to get smblibzfs handle on path [%s]\n",
-+			handle->conn->connectpath);
-+		errno = ENOMEM;
-+		return -1;
-+	}
-+	config->libzp = libzp;
++	config->libzp = handle->conn->sconn->libzp;
 +
-+	ret = smb_zfs_path_to_dataset(config->libzp,
-+				      handle->conn->connectpath,
-+				      &dataset_name); 
-+	if (ret != 0) {
-+		DBG_ERR("Failed to get dataset name.\n");
-+		if (strstr(handle->conn->connectpath, ".zfs/snapshot") == NULL) {
-+			DBG_ERR("Connectpath is not in [.zfs/snapshot] and libzfs "
-+				"was unable to obtain zfs handle. Closing conn.\n");
-+			errno = ENOMEM;
-+			return -1;
-+		}
-+		TALLOC_FREE(config);
-+		return SMB_VFS_NEXT_CONNECT(handle, service, user);
-+	}
-+	config->dataset_name = talloc_strdup(handle->conn, dataset_name);
-+	ret = smb_zfs_dataset_name_to_mp(config->libzp,
-+					 handle->conn,
-+					 config->dataset_name,
-+					 &dataset_mp);
-+	if (ret != 0) {
-+		errno = ENOMEM;
-+		return -1;
-+	}
++	config->dataset_name = talloc_strdup(handle->conn,
++					     handle->conn->sconn->ds_list->root->dataset_name);
 +
-+	/*
-+	 * In majority of observed deployments, users are sharing the
-+	 * dataset mountpoints and not directories inside the dataset.
-+	 * For now, it seems to be a suitable compromise in terms of
-+	 * code simplicity and security to have this limitation in the 
-+	 * module.
-+	 */
-+	if (strcmp(dataset_mp, handle->conn->connectpath) != 0) {
++	if ((strcmp(handle->conn->sconn->ds_list->root->mountpoint, handle->conn->connectpath) != 0) &&
++	    (strlen(handle->conn->connectpath) > 15) &&
++	    (strnstr(handle->conn->connectpath, "/.zfs/snapshot/", PATH_MAX) == NULL)) {
 +		DBG_ERR("Sharing a subdirectory inside a ZFS dataset "
-+			"is not permitted.");
++			"is not permitted.: Connectpath: %s, Mountpoint: %s\n",
++			handle->conn->connectpath, handle->conn->sconn->ds_list->root->mountpoint);
 +		errno = EPERM;
 +		return -1;
 +	}
@@ -2268,7 +2284,7 @@ index 00000000000..ecde1225bef
 +				NULL, struct zfs_fsrvp_config_data,
 +				return -1);
 +
-+	return SMB_VFS_NEXT_CONNECT(handle, service, user);
++	return ret;
 +}
 +
 +static struct vfs_fn_pointers zfs_fsrvp_fns = {

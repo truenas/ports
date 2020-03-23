@@ -114,7 +114,7 @@ index 66c07001eba..78b4a9c7c49 100644
  }
  
 diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
-index 37b59d8c3c0..2a2df2b96a6 100644
+index 37b59d8c3c0..dcaf4ba104d 100644
 --- a/source3/modules/vfs_default.c
 +++ b/source3/modules/vfs_default.c
 @@ -18,9 +18,13 @@
@@ -131,7 +131,7 @@ index 37b59d8c3c0..2a2df2b96a6 100644
  #include "smbd/smbd.h"
  #include "smbd/globals.h"
  #include "ntioctl.h"
-@@ -45,9 +49,101 @@
+@@ -45,9 +49,123 @@
     is sure to try and execute them.  These stubs are used to prevent
     this possibility. */
  
@@ -140,11 +140,15 @@ index 37b59d8c3c0..2a2df2b96a6 100644
 +	int ret = 0;
 +	struct smblibzfshandle  *libzp = NULL;
 +	struct smbzhandle *conn_zfsp = NULL;
++	char *tmp_name = NULL;
++	size_t to_remove, new_len;
++
 +	if (!handle->conn->sconn->libzp){
 +		libzp = talloc_zero(handle->conn->sconn, struct smblibzfshandle);
 +		ret = get_smblibzfs_handle(handle->conn, &libzp);
 +		if (ret != 0) {
-+			DBG_ERR("Failed to get smblibzfs handle\n");
++			DBG_ERR("Failed to obtain libzfshandle on connectpath: %s\n",
++				strerror(errno));
 +			errno = ENOMEM;
 +			return -1;
 +		}
@@ -153,6 +157,24 @@ index 37b59d8c3c0..2a2df2b96a6 100644
 +
 +	get_smbzhandle(handle->conn->sconn->libzp, handle->conn->sconn,
 +		       handle->conn->connectpath, &conn_zfsp);
++
++	if ((conn_zfsp == NULL) && (strlen(handle->conn->connectpath) > 15)) {
++		DBG_ERR("Failed to obtain zhandle on connectpath: %s\n",
++			strerror(errno));
++		tmp_name = strnstr(handle->conn->connectpath, "/.zfs/snapshot/", PATH_MAX);
++		if (tmp_name != NULL) {
++			DBG_INFO("Connectpath is zfs snapshot. Opening zhandle "
++				 "on parent dataset.\n");
++			to_remove = strlen(tmp_name);
++			new_len = strlen(handle->conn->connectpath) - to_remove;
++			tmp_name = talloc_strndup(handle->conn->sconn,
++						  handle->conn->connectpath,
++						  new_len);
++			get_smbzhandle(handle->conn->sconn->libzp, handle->conn->sconn,
++				       tmp_name, &conn_zfsp);
++			TALLOC_FREE(tmp_name);
++		}
++	}
 +
 +	handle->conn->sconn->ds_list = cache_zhandle_list_children(
 +						handle->conn->sconn,
@@ -234,7 +256,7 @@ index 37b59d8c3c0..2a2df2b96a6 100644
  }
  
  static void vfswrap_disconnect(vfs_handle_struct *handle)
-@@ -76,32 +172,14 @@ static int vfswrap_get_quota(struct vfs_handle_struct *handle,
+@@ -76,32 +194,14 @@ static int vfswrap_get_quota(struct vfs_handle_struct *handle,
  				unid_t id,
  				SMB_DISK_QUOTA *qt)
  {
@@ -267,7 +289,7 @@ index 37b59d8c3c0..2a2df2b96a6 100644
  }
  
  static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
-@@ -2495,7 +2573,8 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
+@@ -2495,7 +2595,8 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
  	}
  
  #if defined(HAVE_UTIMENSAT)
