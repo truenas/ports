@@ -1,10 +1,25 @@
+diff --git a/source3/script/wscript_build b/source3/script/wscript_build
+index 40ecdd7ef50..88cca4dee57 100644
+--- a/source3/script/wscript_build
++++ b/source3/script/wscript_build
+@@ -6,6 +6,10 @@ bld.INSTALL_FILES('${BINDIR}',
+ 	          'smbtar',
+                   chmod=MODE_755, flat=True)
+ 
++bld.INSTALL_FILES('${BINDIR}',
++	          'wsdd.py',
++                  chmod=MODE_755, flat=True)
++
+ # Callout scripts for use in selftest environment
+ bld.SAMBA_SCRIPT('smbaddshare', pattern='smbaddshare', installdir='.')
+ bld.SAMBA_SCRIPT('smbchangeshare', pattern='smbchangeshare', installdir='.')
 diff --git a/source3/script/wsdd.py b/source3/script/wsdd.py
 new file mode 100644
-index 0000000..2aa7110
+index 00000000000..e46adb9feea
 --- /dev/null
 +++ b/source3/script/wsdd.py
-@@ -0,0 +1,760 @@
-+#!/usr/bin/env python3 
+@@ -0,0 +1,767 @@
++#!/usr/bin/env python3
 +
 +# Implements a target service according to the Web Service Discovery
 +# specification.
@@ -32,6 +47,11 @@ index 0000000..2aa7110
 +import collections
 +import xml.etree.ElementTree as ElementTree
 +import http.server
++
++from middlewared.client import Client
++from samba.samba3 import param
++
++LP_CTX = param.get_context()
 +
 +# Add extend action to ArgumentParser
 +class ExtendAction(argparse.Action):
@@ -338,6 +358,9 @@ index 0000000..2aa7110
 +    return matches
 +
 +
++def getparm(parm):
++    return LP_CTX.get(parm)
++
 +def wsd_handle_get():
 +    # see https://msdn.microsoft.com/en-us/library/hh441784.aspx for an example
 +    metadata = ElementTree.Element('wsx:Metadata')
@@ -535,6 +558,10 @@ index 0000000..2aa7110
 +        raise OSError(ctypes.get_errno())
 +
 +    addrs = []
++    bind_ips = Client().call('smb.config')['bindip']
++    if not bind_ips:
++        bind_ips = [x['address'] for x in Client().call('interface.ip_in_use')]
++
 +    ptr = addr
 +    while ptr:
 +        deref = ptr[0]
@@ -561,8 +588,7 @@ index 0000000..2aa7110
 +    if args.ipv6only:
 +        addrs = [x for x in addrs if x[1] == socket.AF_INET6]
 +
-+    if args.interface:
-+        addrs = [x for x in addrs if x[2] in args.interface]
++    addrs = [x for x in addrs if x[2] in bind_ips]
 +
 +    addrs = [x for x in addrs if not x[0].startswith('lo')]
 +
@@ -583,10 +609,6 @@ index 0000000..2aa7110
 +    parser.register('action', 'extend', ExtendAction)
 +
 +    parser.add_argument(
-+        '-i', '--interface', nargs='+',
-+        help='interface address to use',
-+        action='extend', default=[])
-+    parser.add_argument(
 +        '-H', '--hoplimit',
 +        help='hop limit for multicast packets (default = 1)', type=int,
 +        default=1)
@@ -601,7 +623,7 @@ index 0000000..2aa7110
 +    parser.add_argument(
 +        '-d', '--domain',
 +        help='set domain name (disables workgroup)',
-+        default=None)
++        default=getparm('realm'))
 +    parser.add_argument(
 +        '-n', '--hostname',
 +        help='override (NetBIOS) hostname to be used (default hostname)',
@@ -610,7 +632,7 @@ index 0000000..2aa7110
 +    parser.add_argument(
 +        '-w', '--workgroup',
 +        help='set workgroup name (default WORKGROUP)',
-+        default='WORKGROUP')
++        default=getparm('workgroup'))
 +    parser.add_argument(
 +        '-t', '--nohttp',
 +        help='disable http service (for debugging, e.g.)',
@@ -645,9 +667,6 @@ index 0000000..2aa7110
 +
 +    logging.basicConfig(level=log_level, format=fmt)
 +    logger = logging.getLogger('wsdd')
-+
-+    if not args.interface:
-+        logger.warning('no interface given, using all interfaces')
 +
 +    if not args.uuid:
 +        args.uuid = uuid.uuid5(uuid.NAMESPACE_DNS, socket.gethostname())
@@ -750,8 +769,11 @@ index 0000000..2aa7110
 +
 +
 +def main():
++    LP_CTX.load("/usr/local/etc/smb4.conf")
 +    parse_args()
-+
++    if not getparm('enable web service discovery'):
++        logger.debug('Web service discovery is disabled. Exiting')
++        return 1
 +    addresses = enumerate_host_interfaces()
 +    if not addresses:
 +        logger.error("No multicast addresses available. Exiting.")
