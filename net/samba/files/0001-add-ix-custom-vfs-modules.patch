@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 00000000000..118da690ebb
+index 00000000000..392b2f1ef5e
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,1364 @@
+@@ -0,0 +1,1365 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -136,8 +136,8 @@ index 00000000000..118da690ebb
 +	libzfs_handle_t *libzfsp = NULL;
 +	struct smblibzfs_int *slibzp_int = NULL;
 +	struct smblibzfshandle *slibzp_ext = NULL;
-+	slibzp_int = talloc_zero(mem_ctx, struct smblibzfs_int);
 +	slibzp_ext = talloc_zero(mem_ctx, struct smblibzfshandle);
++	slibzp_int = talloc_zero(slibzp_ext, struct smblibzfs_int);
 +	libzfsp = libzfs_init();
 +	if (libzfsp == NULL) {
 +		DBG_ERR("Failed to init libzfs\n");
@@ -147,7 +147,7 @@ index 00000000000..118da690ebb
 +	slibzp_int->libzfsp = libzfsp;
 +	talloc_set_destructor(slibzp_int, smblibzfs_handle_destructor);
 +	slibzp_ext->private = slibzp_int;
-+	slibzp_ext->zcache = memcache_init(slibzp_int, (1024 * 1024));
++	slibzp_ext->zcache = memcache_init(slibzp_ext, (1024 * 1024));
 +	*smblibzfsp = slibzp_ext;
 +	return 0;
 +}
@@ -158,6 +158,7 @@ index 00000000000..118da690ebb
 +	/* "path" here can be either mountpoint or dataset name */
 +	zfs_handle_t *zfsp = NULL;
 +	struct smblibzfs_int *slibzp_int = NULL;
++
 +	slibzp_int = talloc_get_type_abort(smblibzfsp->private,
 +					   struct smblibzfs_int);
 +	if (slibzp_int == NULL) {
@@ -983,7 +984,7 @@ index 00000000000..118da690ebb
 +			"shadow:exclude parameter\n");
 +		goto error;
 +	}
-+	rc = zfs_iter_snapshots_sorted(zfs, smb_zfs_add_snapshot, state, 0, 0);
++	rc = zfs_iter_snapshots_sorted(zfs, smb_zfs_add_snapshot, state);
 +
 +	if (rc != 0) {
 +		DBG_ERR("smb_zfs_list_snapshots: error getting "

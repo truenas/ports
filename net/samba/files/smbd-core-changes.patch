@@ -114,7 +114,7 @@ index 66c07001eba..78b4a9c7c49 100644
  }
  
 diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
-index 37b59d8c3c0..dcaf4ba104d 100644
+index 37b59d8c3c0..78e1b552d6d 100644
 --- a/source3/modules/vfs_default.c
 +++ b/source3/modules/vfs_default.c
 @@ -18,9 +18,13 @@
@@ -131,7 +131,7 @@ index 37b59d8c3c0..dcaf4ba104d 100644
  #include "smbd/smbd.h"
  #include "smbd/globals.h"
  #include "ntioctl.h"
-@@ -45,9 +49,123 @@
+@@ -45,9 +49,122 @@
     is sure to try and execute them.  These stubs are used to prevent
     this possibility. */
  
@@ -144,8 +144,7 @@ index 37b59d8c3c0..dcaf4ba104d 100644
 +	size_t to_remove, new_len;
 +
 +	if (!handle->conn->sconn->libzp){
-+		libzp = talloc_zero(handle->conn->sconn, struct smblibzfshandle);
-+		ret = get_smblibzfs_handle(handle->conn, &libzp);
++		ret = get_smblibzfs_handle(handle->conn->sconn, &libzp);
 +		if (ret != 0) {
 +			DBG_ERR("Failed to obtain libzfshandle on connectpath: %s\n",
 +				strerror(errno));
@@ -256,7 +255,7 @@ index 37b59d8c3c0..dcaf4ba104d 100644
  }
  
  static void vfswrap_disconnect(vfs_handle_struct *handle)
-@@ -76,32 +194,14 @@ static int vfswrap_get_quota(struct vfs_handle_struct *handle,
+@@ -76,32 +193,14 @@ static int vfswrap_get_quota(struct vfs_handle_struct *handle,
  				unid_t id,
  				SMB_DISK_QUOTA *qt)
  {
@@ -289,7 +288,7 @@ index 37b59d8c3c0..dcaf4ba104d 100644
  }
  
  static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
-@@ -2495,7 +2595,8 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
+@@ -2495,7 +2594,8 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
  	}
  
  #if defined(HAVE_UTIMENSAT)
