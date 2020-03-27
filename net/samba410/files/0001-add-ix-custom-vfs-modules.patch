@@ -1464,10 +1464,10 @@ index bf6b303bac6..d6c156703e7 100644
  		}
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..1d1fd340c37
+index 00000000000..7270ad02344
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2348 @@
+@@ -0,0 +1,2389 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -1956,6 +1956,14 @@ index 00000000000..1d1fd340c37
 +	return bsd_flags;
 +}
 +
++bool nt_ace_is_inherit(uint8_t win_flags)
++{
++	return win_flags & (SEC_ACE_FLAG_INHERIT_ONLY|
++			    SEC_ACE_FLAG_OBJECT_INHERIT|
++			    SEC_ACE_FLAG_CONTAINER_INHERIT);
++}
++
++
 +static bool bsdacl4_2win(TALLOC_CTX *mem_ctx,
 +	struct ixnas_config_data *config,
 +	const struct smb_filename *smb_fname,
@@ -2044,6 +2052,10 @@ index 00000000000..1d1fd340c37
 +		mask = bsd2winperms(zacl->ats_acl.acl_entry[i].ae_perm);
 +
 +		win_ace_flags = bsd2winflags(zacl->ats_acl.acl_entry[i].ae_flags);
++
++		if (win_ace_flags & SEC_ACE_FLAG_INHERITED_ACE) {
++			inherited_present = true;
++		}
 +
 +		win_ace_type = zacl->ats_acl.acl_entry[i].ae_entry_type >> 9; 
 +
@@ -2156,7 +2168,7 @@ index 00000000000..1d1fd340c37
 +         * we need to fake them. This is required in order for users to be
 +         * able to disable permissions inheritance.
 +	 */
-+	if (inherited_present) {
++	if (!inherited_present) {
 +		*acl_control_flags = (SEC_DESC_DACL_PROTECTED|
 +				     SEC_DESC_SELF_RELATIVE);
 +	}
@@ -2263,7 +2275,8 @@ index 00000000000..1d1fd340c37
 +				   files_struct *fsp,
 +				   uint32_t security_info_sent,
 +				   const struct security_descriptor *psd,
-+				   struct ixnas_config_data *config)
++				   struct ixnas_config_data *config,
++				   bool set_acl_as_root)
 +{
 +	int ret, naces, i, saved_errno;
 +	naces = psd->dacl->num_aces;
@@ -2375,9 +2388,7 @@ index 00000000000..1d1fd340c37
 +			has_uid = (sid_to_uid(&ace_nt->trustee, &uid));
 +			has_gid = (sid_to_gid(&ace_nt->trustee, &gid));
 +			if (has_uid && uid == sbuf.st_ex_uid) {
-+				if (ace_nt->flags & !(SEC_ACE_FLAG_OBJECT_INHERIT|
-+						       SEC_ACE_FLAG_CONTAINER_INHERIT|
-+						       SEC_ACE_FLAG_INHERIT_ONLY)) {
++				if (!nt_ace_is_inherit(ace_nt->flags)) {
 +					tag  = ACL_USER_OBJ;
 +					id   = ACL_UNDEFINED_ID;
 +				}
@@ -2391,6 +2402,9 @@ index 00000000000..1d1fd340c37
 +				    (ace_nt->flags & !(SEC_ACE_FLAG_OBJECT_INHERIT|
 +						       SEC_ACE_FLAG_CONTAINER_INHERIT|
 +						       SEC_ACE_FLAG_INHERIT_ONLY))) {
++				DBG_ERR("Has gid: %zu, st_ex_gid: %zu, flags: 0x%08x\n", gid, sbuf.st_ex_gid, ace_nt->flags);
++				if ((gid == sbuf.st_ex_gid) &&
++				    !nt_ace_is_inherit(ace_nt->flags)) {
 +					tag  = ACL_GROUP_OBJ;
 +					id   = ACL_UNDEFINED_ID;
 +					
@@ -2446,7 +2460,26 @@ index 00000000000..1d1fd340c37
 +		hidden_entry->ae_id = ACL_UNDEFINED_ID;
 +	}
 +
-+	if(acl_set_file(fsp->fsp_name->base_name, ACL_TYPE_NFS4, zacl) < 0) {
++	if (fsp->fh->fd == -1) {
++		if (set_acl_as_root) {
++			become_root();
++		}
++		ret = acl_set_file(fsp->fsp_name->base_name, ACL_TYPE_NFS4, zacl);
++		if (set_acl_as_root) {
++			unbecome_root();
++		}
++	}
++	else {
++		if (set_acl_as_root) {
++			become_root();
++		}
++		ret = acl_set_fd_np(fsp->fh->fd, zacl, ACL_TYPE_NFS4);
++		if (set_acl_as_root) {
++			unbecome_root();
++		}
++	}
++
++	if (ret != 0) {
 +		DBG_DEBUG("(acl_set_file(): %s): %s\n", fsp_str_dbg(fsp), strerror(errno));
 +		if (pathconf(fsp->fsp_name->base_name, _PC_ACL_NFS4) < 0) {
 +			DBG_INFO("%s: pathconf(..., _PC_ACL_NFS4) failed. Path does not support NFS4 ACL.",
@@ -2598,6 +2631,7 @@ index 00000000000..1d1fd340c37
 +	uid_t newUID = (uid_t)-1;
 +	gid_t newGID = (gid_t)-1;
 +	SMB_STRUCT_STAT sbuf;
++	bool set_acl_as_root = false;
 +
 +	SMB_VFS_HANDLE_GET_DATA(handle, config,
 +				struct ixnas_config_data,
@@ -2632,6 +2666,12 @@ index 00000000000..1d1fd340c37
 +			DBG_DEBUG("chown %s, %u, %u succeeded.\n",
 +				  fsp_str_dbg(fsp), (unsigned int)newUID,
 +				  (unsigned int)newGID);
++
++			status = vfs_stat_fsp(fsp);
++			if (!NT_STATUS_IS_OK(status)) {
++				return status;
++			}
++			set_acl_as_root = true;
 +		}
 +	}
 +
@@ -2643,7 +2683,8 @@ index 00000000000..1d1fd340c37
 +	/*
 +	 * nfs4_acls.c in some situations will become_root() before calling this.
 +	 */
-+	status = ixnas_set_nfs4_acl(handle, fsp, security_info_sent, psd, config);
++	status = ixnas_set_nfs4_acl(handle, fsp, security_info_sent, psd, config,
++				    set_acl_as_root);
 +	return status;
 +}
 +
@@ -4857,7 +4898,7 @@ index 83b66d6bd39..12566d29630 100644
  
  	status = file_new(req, conn, &fsp);
 diff --git a/source3/smbd/globals.h b/source3/smbd/globals.h
-index 02f1e58b77b..0c30a1c46f4 100644
+index 9bb7b1f49c8..c9fcd923c63 100644
 --- a/source3/smbd/globals.h
 +++ b/source3/smbd/globals.h
 @@ -882,6 +882,8 @@ struct smbd_server_connection {
@@ -4870,7 +4911,7 @@ index 02f1e58b77b..0c30a1c46f4 100644
  	size_t num_users;
  	struct user_struct *users;
 diff --git a/source3/smbd/trans2.c b/source3/smbd/trans2.c
-index 5fbc6db3925..c8c77aa5352 100644
+index f8d987bbe63..bfb913223b7 100644
 --- a/source3/smbd/trans2.c
 +++ b/source3/smbd/trans2.c
 @@ -3758,12 +3758,21 @@ cBytesSector=%u, cUnitTotal=%u, cUnitAvail=%d\n", (unsigned int)bsize, (unsigned
