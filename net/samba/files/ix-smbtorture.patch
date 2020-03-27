@@ -1,6 +1,85 @@
+diff --git a/source4/torture/raw/openbench.c b/source4/torture/raw/openbench.c
+index 167a62626b4..ac0e6f3f170 100644
+--- a/source4/torture/raw/openbench.c
++++ b/source4/torture/raw/openbench.c
+@@ -42,7 +42,6 @@
+ static int nprocs;
+ static int open_failed;
+ static int close_failed;
+-static char **fnames;
+ static int num_connected;
+ static struct tevent_timer *report_te;
+ 
+@@ -52,6 +51,7 @@ struct benchopen_state {
+ 	struct tevent_context *ev;
+ 	struct smbcli_state *cli;
+ 	struct smbcli_tree *tree;
++	char **fnames;
+ 	int client_num;
+ 	int close_fnum;
+ 	int open_fnum;
+@@ -185,7 +185,7 @@ static void next_open(struct benchopen_state *state)
+ 	state->open_parms.ntcreatex.in.create_options = 0;
+ 	state->open_parms.ntcreatex.in.impersonation = 0;
+ 	state->open_parms.ntcreatex.in.security_flags = 0;
+-	state->open_parms.ntcreatex.in.fname = fnames[state->pending_file_num];
++	state->open_parms.ntcreatex.in.fname = state->fnames[state->pending_file_num];
+ 
+ 	state->req_open = smb_raw_open_send(state->tree, &state->open_parms);
+ 	state->req_open->async.fn = open_completed;
+@@ -375,7 +375,7 @@ bool torture_bench_open(struct torture_context *torture)
+ {
+ 	bool ret = true;
+ 	TALLOC_CTX *mem_ctx = talloc_new(torture);
+-	int i;
++	int i, j;
+ 	int timelimit = torture_setting_int(torture, "timelimit", 10);
+ 	struct timeval tv;
+ 	struct benchopen_state *state;
+@@ -383,6 +383,8 @@ bool torture_bench_open(struct torture_context *torture)
+ 	int total_retries = 0;
+ 	int minops = 0;
+ 	bool progress=false;
++	char *randomdir = NULL;
++	randomdir = talloc_asprintf(mem_ctx, "%s_%s", BASEDIR, generate_random_str(mem_ctx, 8));
+ 
+ 	progress = torture_setting_bool(torture, "progress", true);
+ 	
+@@ -425,17 +427,16 @@ bool torture_bench_open(struct torture_context *torture)
+ 
+ 	num_connected = i;
+ 
+-	if (!torture_setup_dir(state[0].cli, BASEDIR)) {
++	if (!torture_setup_dir(state[0].cli, randomdir)) {
+ 		goto failed;
+ 	}
+ 
+-	fnames = talloc_array(mem_ctx, char *, 3*nprocs);
+-	for (i=0;i<3*nprocs;i++) {
+-		fnames[i] = talloc_asprintf(fnames, "%s\\file%d.dat", BASEDIR, i);
+-	}
+-
+ 	for (i=0;i<nprocs;i++) {
+ 		/* all connections start with the same file */
++		state[i].fnames = talloc_array(state, char *, 3*nprocs);
++		for (j=0;j<3*nprocs;j++) {
++			state[i].fnames[j] = talloc_asprintf(state[i].fnames, "%s\\file%d_%d.dat", randomdir, i, j);
++		}
+ 		state[i].next_file_num = 0;
+ 		state[i].open_fnum = -1;
+ 		state[i].close_fnum = -1;
+@@ -492,7 +493,7 @@ bool torture_bench_open(struct torture_context *torture)
+ 		smb_raw_exit(state[i].tree->session);
+ 	}
+ 
+-	smbcli_deltree(state[0].tree, BASEDIR);
++	smbcli_deltree(state[0].tree, randomdir);
+ 	talloc_free(mem_ctx);
+ 	return ret;
+ 
 diff --git a/source4/torture/vfs/ixnas.c b/source4/torture/vfs/ixnas.c
 new file mode 100644
-index 0000000..4d33203
+index 00000000000..4d33203d9f5
 --- /dev/null
 +++ b/source4/torture/vfs/ixnas.c
 @@ -0,0 +1,225 @@
@@ -231,7 +310,7 @@ index 0000000..4d33203
 +}
 diff --git a/source4/torture/vfs/shadow_copy_zfs.c b/source4/torture/vfs/shadow_copy_zfs.c
 new file mode 100644
-index 0000000..2eedb49
+index 00000000000..2eedb499528
 --- /dev/null
 +++ b/source4/torture/vfs/shadow_copy_zfs.c
 @@ -0,0 +1,302 @@
@@ -538,7 +617,7 @@ index 0000000..2eedb49
 +	return suite;
 +}
 diff --git a/source4/torture/vfs/vfs.c b/source4/torture/vfs/vfs.c
-index c26e31f..c56bee8 100644
+index c26e31f147a..c56bee84d70 100644
 --- a/source4/torture/vfs/vfs.c
 +++ b/source4/torture/vfs/vfs.c
 @@ -111,6 +111,8 @@ NTSTATUS torture_vfs_init(TALLOC_CTX *ctx)
@@ -551,7 +630,7 @@ index c26e31f..c56bee8 100644
  	torture_suite_add_suite(suite, torture_vfs_fruit_timemachine(suite));
  	torture_suite_add_suite(suite, torture_vfs_fruit_conversion(suite));
 diff --git a/source4/torture/wscript_build b/source4/torture/wscript_build
-index 65af160..876112a 100644
+index 65af160b322..876112a5fbc 100644
 --- a/source4/torture/wscript_build
 +++ b/source4/torture/wscript_build
 @@ -289,9 +289,9 @@ bld.SAMBA_MODULE('TORTURE_NTP',
