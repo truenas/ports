@@ -1,10 +1,10 @@
 # $FreeBSD$
 
 PORTNAME=	asigrajail
-PORTVERSION=	2
+PORTVERSION=	3
 CATEGORIES=	sysutils
 MASTER_SITES=	https://asigra-f611.kxcdn.com/jail/
-DISTNAME=	asigra_migration_image_9b5802df_2020-03-12
+DISTNAME=	asigra_migration_image_9b5802df_2020-03-29
 EXTRACT_SUFX=	.tar.xz
 
 EXTRACT_ONLY=
