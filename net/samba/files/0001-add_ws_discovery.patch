@@ -15,10 +15,10 @@ index 40ecdd7ef50..88cca4dee57 100644
  bld.SAMBA_SCRIPT('smbchangeshare', pattern='smbchangeshare', installdir='.')
 diff --git a/source3/script/wsdd.py b/source3/script/wsdd.py
 new file mode 100644
-index 00000000000..e46adb9feea
+index 00000000000..2d05d4b754f
 --- /dev/null
 +++ b/source3/script/wsdd.py
-@@ -0,0 +1,767 @@
+@@ -0,0 +1,862 @@
 +#!/usr/bin/env python3
 +
 +# Implements a target service according to the Web Service Discovery
@@ -47,6 +47,10 @@ index 00000000000..e46adb9feea
 +import collections
 +import xml.etree.ElementTree as ElementTree
 +import http.server
++import os
++import pwd
++import grp
++import encodings.idna
 +
 +from middlewared.client import Client
 +from samba.samba3 import param
@@ -214,6 +218,8 @@ index 00000000000..e46adb9feea
 +
 +WSA_ANON = WSA_URI + '/role/anonymous'
 +WSA_DISCOVERY = 'urn:schemas-xmlsoap-org:ws:2005:04:discovery'
++
++MIME_TYPE_SOAP_XML = 'application/soap+xml'
 +
 +# protocol assignments (WSD spec/Section 2.4)
 +WSD_UDP_PORT = 3702
@@ -389,14 +395,14 @@ index 00000000000..e46adb9feea
 +    ElementTree.SubElement(host, 'wsdp:ServiceId').text = args.uuid.urn
 +    if args.domain:
 +        ElementTree.SubElement(host, PUB_COMPUTER).text = (
-+                '{0}/Domain:{1}'.format(
-+                    args.hostname.upper(),
-+                    args.domain))
++            '{0}/Domain:{1}'.format(
++                args.hostname if args.preserve_case else args.hostname.lower(),
++                args.domain))
 +    else:
 +        ElementTree.SubElement(host, PUB_COMPUTER).text = (
-+                '{0}/Workgroup:{1}'.format(
-+                    args.hostname.upper(),
-+                    args.workgroup.upper()))
++            '{0}/Workgroup:{1}'.format(
++                args.hostname if args.preserve_case else args.hostname.upper(),
++                args.workgroup.upper()))
 +
 +    return metadata
 +
@@ -533,7 +539,8 @@ index 00000000000..e46adb9feea
 +        if s.path != '/' + str(args.uuid):
 +            s.send_error(404)
 +
-+        if s.headers['Content-Type'] != 'application/soap+xml':
++        ct = s.headers['Content-Type']
++        if ct is None or not ct.startswith(MIME_TYPE_SOAP_XML):
 +            s.send_error(400, 'Invalid Content-Type')
 +
 +        content_length = int(s.headers['Content-Length'])
@@ -542,7 +549,7 @@ index 00000000000..e46adb9feea
 +        response = wsd_handle_message(body, None, None)
 +        if response:
 +            s.send_response(200)
-+            s.send_header('Content-Type', 'application/soap+xml')
++            s.send_header('Content-Type', MIME_TYPE_SOAP_XML)
 +            s.end_headers()
 +            s.wfile.write(response)
 +        else:
@@ -550,12 +557,14 @@ index 00000000000..e46adb9feea
 +
 +
 +def enumerate_host_interfaces():
-+    """Get all addresses of all installed interfaces, except loopback"""
++    """Get all addresses of all installed interfaces except loopbacks"""
 +    libc = ctypes.CDLL(ctypes.util.find_library('c'), use_errno=True)
 +    addr = ctypes.POINTER(if_addrs)()
 +    retval = libc.getifaddrs(ctypes.byref(addr))
 +    if retval:
 +        raise OSError(ctypes.get_errno())
++
++    IFF_LOOPBACK = 0x8  # common value for Linux, Free/OpenBSD
 +
 +    addrs = []
 +    bind_ips = Client().call('smb.config')['bindip']
@@ -566,14 +575,17 @@ index 00000000000..e46adb9feea
 +    while ptr:
 +        deref = ptr[0]
 +        family = deref.addr[0].family if deref.addr else None
-+        if family == socket.AF_INET:
++        dev_name = deref.name.decode()
++        if deref.flags & IFF_LOOPBACK != 0:
++            logger.debug('ignoring loop-back interface {}'.format(dev_name))
++        elif family == socket.AF_INET:
 +            addrs.append((
-+                deref.name.decode(), family,
++                dev_name, family,
 +                socket.inet_ntop(family, bytes(deref.addr[0].data[2:6]))))
 +        elif family == socket.AF_INET6:
 +            if bytes(deref.addr[0].data[6:8]) == b'\xfe\x80':
 +                addrs.append((
-+                    deref.name.decode(), family,
++                    dev_name, family,
 +                    socket.inet_ntop(family, bytes(deref.addr[0].data[6:22]))))
 +
 +        ptr = deref.next
@@ -581,7 +593,6 @@ index 00000000000..e46adb9feea
 +    libc.freeifaddrs(addr)
 +
 +    # filter detected addresses by command line arguments,
-+    # always exclude 'lo' interface
 +    if args.ipv4only:
 +        addrs = [x for x in addrs if x[1] == socket.AF_INET]
 +
@@ -613,7 +624,7 @@ index 00000000000..e46adb9feea
 +        help='hop limit for multicast packets (default = 1)', type=int,
 +        default=1)
 +    parser.add_argument(
-+        '-u', '--uuid',
++        '-U', '--uuid',
 +        help='UUID for the target device',
 +        default=None)
 +    parser.add_argument(
@@ -649,6 +660,18 @@ index 00000000000..e46adb9feea
 +        '-s', '--shortlog',
 +        help='log only level and message',
 +        action='store_true')
++    parser.add_argument(
++        '-p', '--preserve-case',
++        help='preserve case of the provided/detected hostname',
++        action='store_true')
++    parser.add_argument(
++        '-c', '--chroot',
++        help='directory to chroot into',
++        default="/var/empty")
++    parser.add_argument(
++        '-u', '--user',
++        help='drop privileges to user:group',
++        default="daemon:daemon")
 +
 +    args = parser.parse_args(sys.argv[1:])
 +
@@ -718,6 +741,59 @@ index 00000000000..e46adb9feea
 +    return None
 +
 +
++def chroot(root):
++    """
++    Chroot into a separate directory to isolate ourself for increased security.
++    """
++    try:
++        os.chroot(root)
++        os.chdir('/')
++        logger.info('chrooted successfully to {}'.format(root))
++    except Exception as e:
++        logger.error('could not chroot to {}: {}'.format(root, e))
++        return False
++
++    return True
++
++
++def get_ids_from_userspec(user_spec):
++    uid = None
++    gid = None
++    try:
++        user, _, group = user_spec.partition(':')
++
++        if user:
++            uid = pwd.getpwnam(user).pw_uid
++
++        if group:
++            gid = grp.getgrnam(group).gr_gid
++    except Exception as e:
++        logger.error('could not get uid/gid for {}: {}'.format(user_spec, e))
++        return False
++
++    return (uid, gid)
++
++
++def drop_privileges(uid, gid):
++    try:
++        if gid is not None:
++            os.setgid(gid)
++            os.setegid(gid)
++            logger.debug('switched uid to {}'.format(uid))
++
++        if uid is not None:
++            os.setuid(uid)
++            os.seteuid(uid)
++            logger.debug('switched gid to {}'.format(gid))
++
++        logger.info('running as {} ({}:{})'.format(args.user, uid, gid))
++    except Exception as e:
++        logger.error('dropping privileges failed: {}'.format(e))
++        return False
++
++    return True
++
++
 +def serve_wsd_requests(addresses):
 +    """
 +    Multicast handling: send Hello message on startup, receive from multicast
@@ -766,6 +842,7 @@ index 00000000000..e46adb9feea
 +        srv.send_bye()
 +
 +    send_outstanding_messages(True)
++    return 0
 +
 +
 +def main():
@@ -779,10 +856,28 @@ index 00000000000..e46adb9feea
 +        logger.error("No multicast addresses available. Exiting.")
 +        return 1
 +
++    if args.user is not None:
++        ids = get_ids_from_userspec(args.user)
++        if not ids:
++            return 3
++
++    if args.chroot is not None:
++        if not chroot(args.chroot):
++            return 2
++
++    if args.user is not None:
++        if not drop_privileges(ids[0], ids[1]):
++            return 3
++
++    if os.getuid() == 0 or os.getgid() == 0:
++        return 4
++
 +    signal.signal(signal.SIGTERM, sigterm_handler)
-+    serve_wsd_requests(addresses)
-+    logger.info('Done.')
++    retval = serve_wsd_requests(addresses)
++    if retval == 0:
++        logger.info('Done.')
++    return retval
 +
 +
 +if __name__ == '__main__':
-+    main()
++    sys.exit(main())
