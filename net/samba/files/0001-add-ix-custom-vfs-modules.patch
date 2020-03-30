@@ -1207,12 +1207,12 @@ index 00000000000..08abe96656f
 +	struct smbzhandle *zhandle_ext = NULL;
 +	struct smbzhandle_int *zhandle_int = NULL;
 +	struct zfs_dataset *ds_new = NULL;
++	if (zfs_get_type(child) != ZFS_TYPE_FILESYSTEM) {
++		return 0;
++	}
 +	if (!zfs_is_mounted(child, NULL)) {
 +		DBG_INFO("Dataset [%s] is not mounted\n",
 +			 zfs_get_name(child));
-+		return 0;
-+	}
-+	if (zfs_get_type(child) != ZFS_TYPE_FILESYSTEM) {
 +		return 0;
 +	}
 +	state = talloc_get_type_abort(data, struct child_cb);
