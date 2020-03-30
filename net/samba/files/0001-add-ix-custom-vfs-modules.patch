@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 00000000000..392b2f1ef5e
+index 00000000000..08abe96656f
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,1365 @@
+@@ -0,0 +1,1373 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -1207,6 +1207,14 @@ index 00000000000..392b2f1ef5e
 +	struct smbzhandle *zhandle_ext = NULL;
 +	struct smbzhandle_int *zhandle_int = NULL;
 +	struct zfs_dataset *ds_new = NULL;
++	if (zfs_get_type(child) != ZFS_TYPE_FILESYSTEM) {
++		return 0;
++	}
++	if (!zfs_is_mounted(child, NULL)) {
++		DBG_INFO("Dataset [%s] is not mounted\n",
++			 zfs_get_name(child));
++		return 0;
++	}
 +	state = talloc_get_type_abort(data, struct child_cb);
 +	if (state == NULL) {
 +		DBG_ERR("failed to get child_cb private data\n");
