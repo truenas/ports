@@ -70,7 +70,7 @@ wsdd_start()
             return 1
         fi
     fi
-    env PATH=$PATH:%%PREFIX%%/sbin:%%PREFIX%%/bin LC_ALL=en_US.UTF-8 ${d} -f -p ${pidfile} -u daemon -S ${wsdd_cmd}
+    env PATH=$PATH:%%PREFIX%%/sbin:%%PREFIX%%/bin LC_ALL=en_US.UTF-8 ${d} -f -p ${pidfile} -S ${wsdd_cmd}
     res=$?
     echo "starting wsdd"
     return ${res}
