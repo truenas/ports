@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 00000000000..08abe96656f
+index 00000000000..164a522bb97
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,1373 @@
+@@ -0,0 +1,1436 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -137,7 +137,15 @@ index 00000000000..08abe96656f
 +	struct smblibzfs_int *slibzp_int = NULL;
 +	struct smblibzfshandle *slibzp_ext = NULL;
 +	slibzp_ext = talloc_zero(mem_ctx, struct smblibzfshandle);
++	if (slibzp_ext == NULL) {
++		errno = ENOMEM;
++		return -1;
++	}
 +	slibzp_int = talloc_zero(slibzp_ext, struct smblibzfs_int);
++	if (slibzp_int == NULL) {
++		errno = ENOMEM;
++		return -1;
++	}
 +	libzfsp = libzfs_init();
 +	if (libzfsp == NULL) {
 +		DBG_ERR("Failed to init libzfs\n");
@@ -213,7 +221,15 @@ index 00000000000..08abe96656f
 +		return -1;
 +	}
 +	szhandle_int = talloc_zero(mem_ctx, struct smbzhandle_int);
++	if (szhandle_int == NULL) {
++		errno = ENOMEM;
++		return -1;
++	}
 +	szhandle_ext = talloc_zero(mem_ctx, struct smbzhandle);
++	if (szhandle_ext == NULL) {
++		errno = ENOMEM;
++		return -1;
++	}
 +	szhandle_int->zhandle = zfsp;
 +	szhandle_ext->is_open = true;
 +	szhandle_ext->private = szhandle_int;
@@ -283,6 +299,10 @@ index 00000000000..08abe96656f
 +	struct smblibzfs_int *slibzp_int = NULL;
 +	zfs_handle_t *zfsp = NULL;
 +	*dataset_mp_out = talloc_zero_size(mem_ctx, PATH_MAX);
++	if (*dataset_mp_out == NULL) {
++		errno = ENOMEM;
++		return -1;
++	}
 +	slibzp_int = talloc_get_type_abort(smblibzfsp->private,
 +					   struct smblibzfs_int);
 +	if (slibzp_int == NULL) {
@@ -700,7 +720,15 @@ index 00000000000..08abe96656f
 +		return NULL;
 +	}
 +	dsout = talloc_zero(mem_ctx, struct zfs_dataset);
++	if (dsout == NULL) {
++		errno = ENOMEM;
++		return NULL;
++	}
 +	dsout->mountpoint = talloc_zero_size(dsout, PATH_MAX);
++	if (dsout->mountpoint == NULL) {
++		errno = ENOMEM;
++		return NULL;
++	}
 +	dsout->zhandle = zfsp_ext;
 +	dsout->dataset_name = talloc_strdup(dsout, zfs_get_name(zfsp));
 +	ret = zfs_prop_get(zfsp, ZFS_PROP_MOUNTPOINT, dsout->mountpoint,
@@ -714,6 +742,10 @@ index 00000000000..08abe96656f
 +	}
 +	if (get_props) {
 +		dsout->properties = talloc_zero(dsout, struct zfs_dataset_prop);
++		if (dsout->properties == NULL) {
++			errno = ENOMEM;
++			return NULL;
++		}
 +		ret = zhandle_get_props(zfsp_ext, mem_ctx, &dsout->properties);
 +		if (ret != 0) {
 +			DBG_ERR("Failed to get properties for dataset\n");
@@ -867,6 +899,10 @@ index 00000000000..08abe96656f
 +	}
 +
 +	entry = talloc_zero(state->snapshots, struct snapshot_entry);
++	if (entry == NULL) {
++		errno = ENOMEM;
++		return -1;
++	}
 +
 +	name_len = strlen(snap_name);
 +	gmtime_r(&cr_time, &timestamp);
@@ -1223,7 +1259,15 @@ index 00000000000..08abe96656f
 +		return -1;
 +	}
 +	zhandle_ext = talloc_zero(state->dslist, struct smbzhandle);
++	if (zhandle_ext == NULL) {
++		errno = ENOMEM;
++		return -1;
++	}
 +	zhandle_int = talloc_zero(zhandle_ext, struct smbzhandle_int);
++	if (zhandle_int == NULL) {
++		errno = ENOMEM;
++		return -1;
++	}
 +	zhandle_ext->private = zhandle_int;
 +	zhandle_ext->is_open = true;
 +	zhandle_int->zhandle = child;
@@ -1291,14 +1335,30 @@ index 00000000000..08abe96656f
 +	tmp_ctx = talloc_new(mem_ctx);
 +	if (tmp_ctx == NULL) {
 +		DBG_ERR("talloc() failed\n");
++		errno = ENOMEM;
 +		return NULL;
 +	}
 +
 +	state = talloc_zero(tmp_ctx, struct child_cb);
++	if (state == NULL) {
++		errno = ENOMEM;
++		return NULL;
++	}
 +	state->open_zhandle = open_zhandles;
 +	dl = talloc_zero(mem_ctx, struct dataset_list);
++	if (dl == NULL) {
++		errno = ENOMEM;
++		return NULL;
++	}
 +	state->dslist = dl;
 +	dl->root = zhandle_get_dataset(zhandle_ext, mem_ctx, true);
++	if (dl->root == NULL) {
++		DBG_ERR("Failed to get dataset information for root "
++			"of dataset list\n");
++		TALLOC_FREE(tmp_ctx);
++		TALLOC_FREE(dl);
++		return NULL;
++	}
 +	ret = zfs_iter_filesystems(zfsp, smb_zfs_add_child, state);
 +	TALLOC_FREE(tmp_ctx);
 +	if (ret < 0) {
@@ -1317,6 +1377,9 @@ index 00000000000..08abe96656f
 +		return dl;
 +	}
 +	dl = zhandle_list_children(mem_ctx, zhandle_ext, false);
++	if (dl == NULL) {
++		return dl;
++	}
 +	cache_set_dataset_list(mem_ctx, dl);
 +	return dl;
 +}
