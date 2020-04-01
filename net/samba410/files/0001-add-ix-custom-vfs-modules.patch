@@ -1464,10 +1464,10 @@ index bf6b303bac6..d6c156703e7 100644
  		}
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..7270ad02344
+index 00000000000..b94e9df0a3a
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2389 @@
+@@ -0,0 +1,2384 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -2398,11 +2398,6 @@ index 00000000000..7270ad02344
 +				}
 +			}
 +			else if (has_gid) {
-+				if ((gid == sbuf.st_ex_gid) &&
-+				    (ace_nt->flags & !(SEC_ACE_FLAG_OBJECT_INHERIT|
-+						       SEC_ACE_FLAG_CONTAINER_INHERIT|
-+						       SEC_ACE_FLAG_INHERIT_ONLY))) {
-+				DBG_ERR("Has gid: %zu, st_ex_gid: %zu, flags: 0x%08x\n", gid, sbuf.st_ex_gid, ace_nt->flags);
 +				if ((gid == sbuf.st_ex_gid) &&
 +				    !nt_ace_is_inherit(ace_nt->flags)) {
 +					tag  = ACL_GROUP_OBJ;
