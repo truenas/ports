@@ -48,7 +48,7 @@
 +#define	NFSSTAT_PERCENTAGE		0x00000004
 +#define	NFSSTAT_ALL				(NFSSTAT_CLIENT_ONLY|NFSSTAT_SERVER_ONLY)
 +
-+static _Bool nfsstat_flags = NFSSTAT_ALL;
++static int nfsstat_flags = NFSSTAT_ALL;
 +
 +static const char *nfsstat_config_keys[] = {
 +	"ClientStats",
