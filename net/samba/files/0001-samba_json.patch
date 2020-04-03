@@ -1128,10 +1128,10 @@ index 36f7030e4f4..a7b5c733d1b 100644
  	return ret;
  }
 diff --git a/source3/utils/status_profile.c b/source3/utils/status_profile.c
-index 829e84cef1c..9e31295bc56 100644
+index 829e84cef1c..b18bda5693c 100644
 --- a/source3/utils/status_profile.c
 +++ b/source3/utils/status_profile.c
-@@ -21,43 +21,126 @@
+@@ -21,43 +21,130 @@
  #include "includes.h"
  #include "smbprofile.h"
  #include "status_profile.h"
@@ -1156,7 +1156,7 @@ index 829e84cef1c..9e31295bc56 100644
 +{
 +	int ret;
 +	size_t tlen;
-+	char l[80];
++	char l[80] = {0};
 +	char * end;
 +	switch (proft) {
 +	case PROF_TEXT:
@@ -1172,12 +1172,16 @@ index 829e84cef1c..9e31295bc56 100644
 +		d_printf("%s\n", l);
 +		break;
 +	case PROF_JSON:
++		tlen = strlen(title);
++		SMB_ASSERT(tlen < 80);
++		memcpy(l, title + 1, (tlen -2));
++
 +		*jo = json_new_object();
 +		if (json_is_invalid(jo)) {
 +			fprintf(stderr, "jo is invalid JSON\n");
 +			return;
 +		}
-+		ret = json_add_object(&jsobj, title, jo);
++		ret = json_add_object(&jsobj, l, jo);
 +		if (ret != 0) {
 +			fprintf(stderr, "failed to add new json object: %s\n",
 +				title);
@@ -1274,13 +1278,10 @@ index 829e84cef1c..9e31295bc56 100644
  #define SMBPROFILE_STATS_COUNT(name) do { \
  	__PRINT_FIELD_LINE(#name, name##_stats,  count); \
  } while(0);
-@@ -95,6 +178,19 @@ bool status_profile_dump(bool verbose)
+@@ -95,6 +182,19 @@ bool status_profile_dump(bool verbose)
  #undef SMBPROFILE_STATS_SECTION_END
  #undef SMBPROFILE_STATS_END
  
-+	if (!header_complete && proft != PROF_TEXT) {
-+		printf("\n");
-+	}
 +	first_done = False;
 +	if (proft == PROF_JSON) {
 +		printf("%s\n", json_to_string(mem_ctx, &jsobj));
@@ -1288,13 +1289,16 @@ index 829e84cef1c..9e31295bc56 100644
 +		json_free(&jsobj);
 +	}
 +	else if (proft == PROF_CSV) {
++		if (!header_complete) {
++			printf("\n");
++		}
 +		printf("%s\n", csvout);
 +	}
 +	header_complete = True;
  	return True;
  }
  
-@@ -361,3 +457,41 @@ bool status_profile_rates(bool verbose)
+@@ -361,3 +461,41 @@ bool status_profile_rates(bool verbose)
  
  	return True;
  }
