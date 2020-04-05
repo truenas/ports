@@ -4476,6 +4476,7 @@
     SUBDIR += py-iniparse
     SUBDIR += py-instant
     SUBDIR += py-intbitset
+    SUBDIR += py-intervals
     SUBDIR += py-intervaltree
     SUBDIR += py-invoke
     SUBDIR += py-ioflo
