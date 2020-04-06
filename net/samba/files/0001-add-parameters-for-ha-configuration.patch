@@ -1,6 +1,6 @@
 diff --git a/docs-xml/smbdotconf/base/allowdatasetcreation.xml b/docs-xml/smbdotconf/base/allowdatasetcreation.xml
 new file mode 100644
-index 0000000..592342f
+index 00000000000..592342f5de0
 --- /dev/null
 +++ b/docs-xml/smbdotconf/base/allowdatasetcreation.xml
 @@ -0,0 +1,11 @@
@@ -17,7 +17,7 @@ index 0000000..592342f
 +</samba:parameter>
 diff --git a/docs-xml/smbdotconf/base/enablewebservicediscovery.xml b/docs-xml/smbdotconf/base/enablewebservicediscovery.xml
 new file mode 100644
-index 0000000..9495393
+index 00000000000..949539378cd
 --- /dev/null
 +++ b/docs-xml/smbdotconf/base/enablewebservicediscovery.xml
 @@ -0,0 +1,11 @@
@@ -34,7 +34,7 @@ index 0000000..9495393
 +</samba:parameter>
 diff --git a/docs-xml/smbdotconf/base/truenaspassivecontroller.xml b/docs-xml/smbdotconf/base/truenaspassivecontroller.xml
 new file mode 100644
-index 0000000..ad7499b
+index 00000000000..ad7499b0107
 --- /dev/null
 +++ b/docs-xml/smbdotconf/base/truenaspassivecontroller.xml
 @@ -0,0 +1,11 @@
@@ -51,7 +51,7 @@ index 0000000..ad7499b
 +</samba:parameter>
 diff --git a/docs-xml/smbdotconf/base/zeroconfname.xml b/docs-xml/smbdotconf/base/zeroconfname.xml
 new file mode 100644
-index 0000000..f825ab1
+index 00000000000..f825ab17d5b
 --- /dev/null
 +++ b/docs-xml/smbdotconf/base/zeroconfname.xml
 @@ -0,0 +1,17 @@
@@ -74,7 +74,7 @@ index 0000000..f825ab1
 +</samba:parameter>
 diff --git a/docs-xml/smbdotconf/domain/adsdnsupdate.xml b/docs-xml/smbdotconf/domain/adsdnsupdate.xml
 new file mode 100644
-index 0000000..ee113b1
+index 00000000000..ee113b12ea7
 --- /dev/null
 +++ b/docs-xml/smbdotconf/domain/adsdnsupdate.xml
 @@ -0,0 +1,10 @@
@@ -90,7 +90,7 @@ index 0000000..ee113b1
 +</samba:parameter>
 diff --git a/docs-xml/smbdotconf/winbind/winbindnetbiosaliasspn.xml b/docs-xml/smbdotconf/winbind/winbindnetbiosaliasspn.xml
 new file mode 100644
-index 0000000..6979955
+index 00000000000..6979955a101
 --- /dev/null
 +++ b/docs-xml/smbdotconf/winbind/winbindnetbiosaliasspn.xml
 @@ -0,0 +1,12 @@
@@ -106,15 +106,33 @@ index 0000000..6979955
 +<value type="default">yes</value>
 +<value type="example">no</value>
 +</samba:parameter>
+diff --git a/lib/param/loadparm.c b/lib/param/loadparm.c
+index 611c1b240af..83e9caf392f 100644
+--- a/lib/param/loadparm.c
++++ b/lib/param/loadparm.c
+@@ -3207,9 +3207,11 @@ static bool lpcfg_load_internal(struct loadparm_context *lp_ctx,
+ 	char *n2;
+ 	bool bRetval;
+ 
+-	filename = talloc_strdup(lp_ctx, filename);
++	if (lp_ctx->szConfigFile != NULL) {
++		TALLOC_FREE(lp_ctx->szConfigFile);
++	}
+ 
+-	lp_ctx->szConfigFile = filename;
++	lp_ctx->szConfigFile = talloc_strdup(lp_ctx, filename);
+ 
+ 	if (lp_ctx->s3_fns) {
+ 		return lp_ctx->s3_fns->load(filename);
 diff --git a/source3/libnet/libnet_join.c b/source3/libnet/libnet_join.c
-index 9d4f656..75efa33 100644
+index eb8e0ea17f7..32ed02307b6 100644
 --- a/source3/libnet/libnet_join.c
 +++ b/source3/libnet/libnet_join.c
 @@ -563,6 +563,13 @@ static ADS_STATUS libnet_join_set_machine_spn(TALLOC_CTX *mem_ctx,
  		goto done;
  	}
  
-+	/* 
++	/*
 +	 * Workaround for legacy HA systems. Below parameter defaults to 'true'
 +	 * If it is not set to 'false' on legacy HA system, then domain join
 +	 * will fail on one of the nodes due to constraint violation on
@@ -133,10 +151,10 @@ index 9d4f656..75efa33 100644
  	for (addl_hostnames = lp_additional_dns_hostnames();
  	     addl_hostnames != NULL && *addl_hostnames != NULL;
 diff --git a/source3/param/loadparm.c b/source3/param/loadparm.c
-index a8d5fdc..990387e 100644
+index ce41477097a..6a717abb94a 100644
 --- a/source3/param/loadparm.c
 +++ b/source3/param/loadparm.c
-@@ -689,6 +689,7 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
+@@ -690,6 +690,7 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
  #endif
  	Globals.time_server = false;
  	Globals.bind_interfaces_only = false;
@@ -144,7 +162,7 @@ index a8d5fdc..990387e 100644
  	Globals.unix_password_sync = false;
  	Globals.pam_password_change = false;
  	Globals.passwd_chat_debug = false;
-@@ -720,6 +721,11 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
+@@ -721,6 +722,11 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
  	Globals.log_writeable_files_on_exit = false;
  	Globals.create_krb5_conf = true;
  	Globals.include_system_krb5_conf = true;
@@ -157,7 +175,7 @@ index a8d5fdc..990387e 100644
  
  	/* hostname lookups can be very expensive and are broken on
 diff --git a/source3/utils/net_ads.c b/source3/utils/net_ads.c
-index 19ac9e4..b847f3b 100644
+index 95a6ed74b78..ccb3d7e8922 100644
 --- a/source3/utils/net_ads.c
 +++ b/source3/utils/net_ads.c
 @@ -1759,6 +1759,10 @@ static void _net_ads_join_dns_updates(struct net_context *c, TALLOC_CTX *ctx, st
