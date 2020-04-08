@@ -24,10 +24,10 @@ index 7f82969badf..dc4ec88e578 100644
  
  #endif
 diff --git a/source3/lib/util_sd.c b/source3/lib/util_sd.c
-index 39083b15438..27356d7cef9 100644
+index 39083b15438..183f2da618c 100644
 --- a/source3/lib/util_sd.c
 +++ b/source3/lib/util_sd.c
-@@ -28,29 +28,46 @@
+@@ -28,30 +28,47 @@
  #include "../libcli/security/security.h"
  #include "rpc_client/cli_pipe.h"
  #include "rpc_client/cli_lsarpc.h"
@@ -51,13 +51,14 @@ index 39083b15438..27356d7cef9 100644
 -	{ "D", SEC_STD_DELETE },
 -	{ "P", SEC_STD_WRITE_DAC },
 -	{ "O", SEC_STD_WRITE_OWNER },
+-	{ NULL, 0 },
 +	{ "R", "READ", SEC_RIGHTS_FILE_READ },
 +	{ "W", "WRITE", SEC_RIGHTS_FILE_WRITE },
 +	{ "X", "EXECUTE", SEC_RIGHTS_FILE_EXECUTE },
 +	{ "D", "DELETE", SEC_STD_DELETE },
 +	{ "P", "WRITE_DAC", SEC_STD_WRITE_DAC },
 +	{ "O", "WRITE_OWNER", SEC_STD_WRITE_OWNER },
-+	{ NULL, 0 },
++	{ NULL, NULL, 0 },
 +};
 +
 +static const struct perm_value extended_values[] = {
@@ -69,7 +70,7 @@ index 39083b15438..27356d7cef9 100644
 +        { "d", "DELETE_CHILD", FILE_DELETE_CHILD},
 +        { "c", "READ_CONTROL", SEC_STD_READ_CONTROL},
 +        { "S", "SYNCHRONIZE", SEC_STD_SYNCHRONIZE},
- 	{ NULL, 0 },
++	{ NULL, NULL, 0 },
  };
  
  static const struct perm_value standard_values[] = {
@@ -79,10 +80,12 @@ index 39083b15438..27356d7cef9 100644
 +	{ "CHANGE", "CHANGE", SEC_RIGHTS_DIR_READ|SEC_STD_DELETE|\
  	  SEC_RIGHTS_DIR_WRITE|SEC_DIR_TRAVERSE },
 -	{ "FULL",   SEC_RIGHTS_DIR_ALL },
+-	{ NULL, 0 },
 +	{ "FULL", "FULL",  SEC_RIGHTS_DIR_ALL },
- 	{ NULL, 0 },
++	{ NULL, NULL, 0 },
  };
  
+ static const struct {
 @@ -366,6 +383,280 @@ void print_ace(struct cli_state *cli, FILE *f, struct security_ace *ace,
  	}
  }
