@@ -1,3 +1,698 @@
+diff --git a/source3/include/util_sd.h b/source3/include/util_sd.h
+index 7f82969badf..dc4ec88e578 100644
+--- a/source3/include/util_sd.h
++++ b/source3/include/util_sd.h
+@@ -23,6 +23,12 @@
+ 
+ #ifndef __UTIL_SD_H__
+ #define __UTIL_SD_H__
++#ifdef HAVE_JANSSON
++#include <jansson.h>
++#include "audit_logging.h" /* various JSON helpers */
++#include "auth/common_auth.h"
++#endif /*HAVE_JANSSON*/
++
+ 
+ void SidToString(struct cli_state *cli, fstring str, const struct dom_sid *sid,
+ 		 bool numeric);
+@@ -33,5 +39,7 @@ bool parse_ace(struct cli_state *cli, struct security_ace *ace,
+ 	       const char *orig_str);
+ void sec_desc_print(struct cli_state *cli, FILE *f,
+ 		    struct security_descriptor *sd, bool numeric);
++bool sec_desc_to_json(struct cli_state *cli, struct json_object *out,
++                      struct security_descriptor *sd, bool numeric, bool share_acl);
+ 
+ #endif
+diff --git a/source3/lib/util_sd.c b/source3/lib/util_sd.c
+index 39083b15438..183f2da618c 100644
+--- a/source3/lib/util_sd.c
++++ b/source3/lib/util_sd.c
+@@ -28,30 +28,47 @@
+ #include "../libcli/security/security.h"
+ #include "rpc_client/cli_pipe.h"
+ #include "rpc_client/cli_lsarpc.h"
++#ifdef HAVE_JANSSON
++#include <jansson.h>
++#include "audit_logging.h" /* various JSON helpers */
++#endif /* [HAVE_JANSSON] */
+ 
+ /* These values discovered by inspection */
+ 
+ struct perm_value {
+ 	const char *perm;
++	const char *text;
+ 	uint32_t mask;
+ };
+ 
+ static const struct perm_value special_values[] = {
+-	{ "R", SEC_RIGHTS_FILE_READ },
+-	{ "W", SEC_RIGHTS_FILE_WRITE },
+-	{ "X", SEC_RIGHTS_FILE_EXECUTE },
+-	{ "D", SEC_STD_DELETE },
+-	{ "P", SEC_STD_WRITE_DAC },
+-	{ "O", SEC_STD_WRITE_OWNER },
+-	{ NULL, 0 },
++	{ "R", "READ", SEC_RIGHTS_FILE_READ },
++	{ "W", "WRITE", SEC_RIGHTS_FILE_WRITE },
++	{ "X", "EXECUTE", SEC_RIGHTS_FILE_EXECUTE },
++	{ "D", "DELETE", SEC_STD_DELETE },
++	{ "P", "WRITE_DAC", SEC_STD_WRITE_DAC },
++	{ "O", "WRITE_OWNER", SEC_STD_WRITE_OWNER },
++	{ NULL, NULL, 0 },
++};
++
++static const struct perm_value extended_values[] = {
++        { "p", "APPEND_DATA", SEC_FILE_APPEND_DATA},
++        { "a", "READ_ATTRIBUTES", SEC_FILE_READ_ATTRIBUTE},
++        { "A", "WRITE_ATTRIBUTES", SEC_FILE_WRITE_ATTRIBUTE},
++        { "r", "READ_EA", SEC_FILE_READ_EA},
++        { "w", "WRITE_EA", SEC_FILE_WRITE_EA},
++        { "d", "DELETE_CHILD", FILE_DELETE_CHILD},
++        { "c", "READ_CONTROL", SEC_STD_READ_CONTROL},
++        { "S", "SYNCHRONIZE", SEC_STD_SYNCHRONIZE},
++	{ NULL, NULL, 0 },
+ };
+ 
+ static const struct perm_value standard_values[] = {
+-	{ "READ",   SEC_RIGHTS_DIR_READ|SEC_DIR_TRAVERSE },
+-	{ "CHANGE", SEC_RIGHTS_DIR_READ|SEC_STD_DELETE|\
++	{ "READ", "READ", SEC_RIGHTS_DIR_READ|SEC_DIR_TRAVERSE },
++	{ "CHANGE", "CHANGE", SEC_RIGHTS_DIR_READ|SEC_STD_DELETE|\
+ 	  SEC_RIGHTS_DIR_WRITE|SEC_DIR_TRAVERSE },
+-	{ "FULL",   SEC_RIGHTS_DIR_ALL },
+-	{ NULL, 0 },
++	{ "FULL", "FULL",  SEC_RIGHTS_DIR_ALL },
++	{ NULL, NULL, 0 },
+ };
+ 
+ static const struct {
+@@ -366,6 +383,280 @@ void print_ace(struct cli_state *cli, FILE *f, struct security_ace *ace,
+ 	}
+ }
+ 
++static bool add_ace_flags_json(struct json_object *jsobj, uint8_t flags)
++{
++	struct json_object js_flags;
++	int ret;
++	if (json_is_invalid(jsobj)) {
++		return false;
++	}
++	js_flags = json_new_object();
++	if (json_is_invalid(&js_flags)) {
++		return false;
++	}
++
++	ret = json_add_bool(&js_flags, "object_inherit",
++			    (flags & SEC_ACE_FLAG_OBJECT_INHERIT)
++			    ? true : false);
++	if (ret < 0) {
++		goto failure;
++	}
++	ret = json_add_bool(&js_flags, "container_inherit",
++			    (flags & SEC_ACE_FLAG_CONTAINER_INHERIT)
++			    ? true : false);
++	if (ret < 0) {
++		goto failure;
++	}
++	ret = json_add_bool(&js_flags, "no_propagate_inherit",
++			    (flags & SEC_ACE_FLAG_NO_PROPAGATE_INHERIT)
++			    ? true : false);
++	if (ret < 0) {
++		goto failure;
++	}
++	ret = json_add_bool(&js_flags, "inherit_only",
++			    (flags & SEC_ACE_FLAG_INHERIT_ONLY)
++			    ? true : false);
++	if (ret < 0) {
++		goto failure;
++	}
++	ret = json_add_bool(&js_flags, "inherited",
++			    (flags & SEC_ACE_FLAG_INHERITED_ACE)
++			    ? true : false);
++	if (ret < 0) {
++		goto failure;
++	}
++
++	ret = json_add_object(jsobj, "flags", &js_flags);
++	if (ret < 0) {
++		fprintf(stderr, "Failed to add flags to JSON object: %s\n",
++			strerror(errno));
++		return false;
++	}
++	return true;
++
++failure:
++	json_free(&js_flags);
++	return false;
++}
++
++static bool add_perms_json(struct json_object *jsobj,
++			   const struct perm_value *perm,
++			   struct security_ace *ace,
++			   uint32_t *got_mask)
++{
++	int ret;
++	const struct perm_value *v;
++
++	for (v = perm; v->perm; v++) {
++		if ((ace->access_mask & v->mask) == v->mask) {
++			ret = json_add_bool(jsobj, v->text, true);
++			if (ret < 0) {
++				return false;
++			}
++			*got_mask &= ~v->mask;
++		}
++		else {
++			ret = json_add_bool(jsobj, v->text, false);
++			if (ret < 0) {
++				return false;
++			}
++		}
++	}
++	return true;
++}
++
++static bool add_access_mask_json(struct json_object *jsobj,
++				 struct security_ace *ace,
++				 bool share_acl)
++{
++	struct json_object js_amask, special;
++	int ret;
++	const struct perm_value *v;
++	char buf[80];
++	bool has_standard = false;
++	uint32_t got_mask;
++	if (json_is_invalid(jsobj)) {
++		return false;
++	}
++	js_amask = json_new_object();
++	if (json_is_invalid(&js_amask)) {
++		return false;
++	}
++	special = json_new_object();
++	if (json_is_invalid(&special)) {
++		json_free(&js_amask);
++		return false;
++	}
++	snprintf(buf, sizeof(buf), "0x%08x", ace->access_mask);
++	ret = json_add_string(&js_amask, "hex", buf);
++	if (ret < 0) {
++		goto failure;
++	}
++	for (v = standard_values; v->perm; v++) {
++		if (ace->access_mask == v->mask) {
++			ret = json_add_string(&js_amask, "standard", v->perm);
++			if (ret < 0) {
++				json_free(&js_amask);
++				return false;
++			}
++			has_standard = true;
++		}
++	}
++	if (share_acl) {
++		goto done;
++	}
++
++	if (!has_standard) {
++		ret = json_add_string(&js_amask, "standard", "");
++		if (ret < 0) {
++			goto failure;
++		}
++	}
++
++	got_mask = ace->access_mask;
++
++	ret = add_perms_json(&special, special_values, ace, &got_mask);
++	if (!ret) {
++		goto failure;
++	}
++
++	ret = add_perms_json(&special, extended_values, ace, &got_mask);
++	if (!ret) {
++		goto failure;
++	}
++
++	ret = json_add_object(&js_amask, "special", &special);
++	if (ret < 0) {
++		fprintf(stderr,
++			"failed to add special entries to access mask "
++			"JSON object: %s\n", strerror(errno));
++		goto failure;
++	}
++	snprintf(buf, sizeof(buf), "0x%08x", got_mask);
++	ret = json_add_string(&js_amask, "unknown", buf);
++	if (ret < 0) {
++		goto failure;
++	}
++done:
++	ret = json_add_object(jsobj, "access_mask", &js_amask);
++	if (ret < 0) {
++		fprintf(stderr, "Failed to add access mask to JSON object: %s\n",
++			strerror(errno));
++		return false;
++	}
++	return true;
++failure:
++	json_free(&js_amask);
++	json_free(&special);
++	return false;
++}
++
++static bool add_ace_json(struct cli_state *cli, struct json_object *jsobj,
++			 struct security_ace *ace, bool numeric, bool share_acl)
++{
++	const struct perm_value *v;
++	struct json_object jsace, trustee;
++	fstring sidstr;
++	int do_print = 0;
++	int ret;
++	char buf[80] = {0};
++	bool has_js_amask = false;
++	if (json_is_invalid(jsobj)) {
++		return false;
++	}
++	jsace = json_new_object();
++	if (json_is_invalid(&jsace)) {
++		fprintf(stderr, "Failed to create new JSON object: %s\n",
++			strerror(errno));
++		return false;
++	}
++	trustee = json_new_object();
++	if (json_is_invalid(&trustee)) {
++		fprintf(stderr, "Failed to create new JSON object: %s\n",
++			strerror(errno));
++		goto failure;
++	}
++
++	SidToString(cli, sidstr, &ace->trustee, true);
++
++	ret = json_add_string(&trustee, "sid", sidstr);
++	if (ret != 0) {
++		fprintf(stderr,
++			"Failed to add trustee [%s] to JSON object "
++			"for ACE: %s\n", sidstr, strerror(errno));
++		goto failure;
++	}
++	SidToString(cli, sidstr, &ace->trustee, false);
++	ret = json_add_string(&trustee, "name", (cli != NULL) ? sidstr : "");
++	if (ret != 0) {
++		fprintf(stderr,
++			"Failed to add trustee [%s] to JSON object "
++			"for ACE: %s\n", sidstr, strerror(errno));
++		goto failure;
++	}
++	ret = json_add_object(&jsace, "trustee", &trustee);
++
++	if (numeric) {
++		ret = json_add_int(&jsace, "type", ace->type);
++		if (ret < 0 ) {
++			goto failure;
++		}
++		ret = json_add_int(&jsace, "flags", ace->flags);
++		if (ret < 0 ) {
++			goto failure;
++		}
++		snprintf(buf, sizeof(buf), "0x%08x", ace->access_mask);
++		ret = json_add_string(&jsace, "access_mask", buf);
++		if (ret < 0 ) {
++			goto failure;
++		}
++		ret = json_add_object(jsobj, NULL, &jsace);
++		if (ret < 0 ) {
++			goto failure;
++		}
++		return true;
++	}
++	switch(ace->type) {
++	case SEC_ACE_TYPE_ACCESS_ALLOWED:
++		snprintf(buf, sizeof(buf), "%s", "ALLOWED");
++		break;
++	case SEC_ACE_TYPE_ACCESS_DENIED:
++		snprintf(buf, sizeof(buf), "%s", "DENIED");
++		break;
++	default:
++		snprintf(buf, sizeof(buf), "UNKNOWN - %d", ace->type);
++		break;
++	}
++	ret = json_add_string(&jsace, "type", buf);
++	if (ret != 0) {
++		fprintf(stderr,
++			"Failed to add ace_type [%s] to JSON object "
++			"for ACE: %s\n", buf, strerror(errno));
++		goto failure;
++	}
++	ret = add_access_mask_json(&jsace, ace, share_acl);
++	if (!ret) {
++		goto failure;
++	}
++	if (!share_acl) {
++		ret = add_ace_flags_json(&jsace, ace->flags);
++		if (!ret) {
++			goto failure;
++		}
++	}
++	ret = json_add_object(jsobj, NULL, &jsace);
++	if (ret < 0) {
++		fprintf(stderr, "Failed to add new ACE to JSON object: %s\n",
++			strerror(errno));
++		return false;
++	}
++	return true;
++
++failure:
++	json_free(&jsace);
++	return false;
++}
++
+ static bool parse_ace_flags(const char *str, unsigned int *pflags)
+ {
+ 	const char *p = str;
+@@ -647,3 +938,72 @@ void sec_desc_print(struct cli_state *cli, FILE *f,
+ 	}
+ 
+ }
++
++bool sec_desc_to_json(struct cli_state *cli, struct json_object *out,
++		      struct security_descriptor *sd, bool numeric,
++		      bool share_acl)
++{
++	struct json_object jsret, dacl;
++	fstring sidstr;
++	uint32_t i;
++	int ret;
++	jsret = json_new_object();
++	if (json_is_invalid(&jsret)) {
++		fprintf(stderr, "Failed to create new JSON object: %s\n",
++			strerror(errno));
++		return false;
++	}
++	ret = json_add_int(&jsret, "revision", sd->revision);
++	if (ret < 0) {
++		fprintf(stderr, "Failed to add REVISION to JSON object\n");
++		goto failure;
++	}
++
++	if (!share_acl) {
++		if (sd->owner_sid) {
++			SidToString(cli, sidstr, sd->owner_sid, numeric);
++		} else {
++			fstrcpy(sidstr, "");
++		}
++		ret = json_add_string(&jsret, "owner", sidstr);
++		if (ret < 0) {
++			fprintf(stderr, "Failed to add OWNER to JSON object\n");
++			goto failure;
++		}
++		if (sd->group_sid) {
++			SidToString(cli, sidstr, sd->group_sid, numeric);
++		} else {
++			fstrcpy(sidstr, "");
++		}
++		ret = json_add_string(&jsret, "group", sidstr);
++		if (ret < 0) {
++			fprintf(stderr, "Failed to add group to JSON object\n");
++			goto failure;
++		}
++	}
++
++	dacl = json_get_array(&jsret, "dacl");
++	if (json_is_invalid(&dacl)) {
++		goto failure;
++	}
++	for (i = 0; sd->dacl && i < sd->dacl->num_aces; i++) {
++		struct security_ace *ace = &sd->dacl->aces[i];
++		ret = add_ace_json(cli, &dacl, ace, numeric, share_acl);
++		if (!ret) {
++			json_free(&dacl);
++			goto failure;
++		}
++	}
++	ret = json_add_object(&jsret, "dacl", &dacl);
++	if (ret == -1) {
++		fprintf(stderr, "Failed to add DACL to jsret: %s\n",
++			strerror(errno));
++	}
++
++	*out = jsret;
++	return true;
++
++failure:
++	json_free(&jsret);
++	return false;
++}
+diff --git a/source3/utils/sharesec.c b/source3/utils/sharesec.c
+index 454c5bfe36b..337d8ac82ef 100644
+--- a/source3/utils/sharesec.c
++++ b/source3/utils/sharesec.c
+@@ -29,6 +29,11 @@ struct cli_state;
+ #include "passdb/machine_sid.h"
+ #include "util_sd.h"
+ #include "cmdline_contexts.h"
++#ifdef HAVE_JANSSON
++#include <jansson.h>
++#include "audit_logging.h" /* various JSON helpers */
++#include "auth/common_auth.h"
++#endif /* [HAVE_JANSSON] */
+ 
+ static TALLOC_CTX *ctx;
+ 
+@@ -157,12 +162,15 @@ static void sort_acl(struct security_acl *the_acl)
+ }
+ 
+ 
+-static int change_share_sec(TALLOC_CTX *mem_ctx, const char *sharename, char *the_acl, enum acl_mode mode)
++static int change_share_sec(TALLOC_CTX *mem_ctx, const char *sharename,
++			    char *the_acl, enum acl_mode mode, struct json_object *jsobj)
+ {
+ 	struct security_descriptor *sd = NULL;
+ 	struct security_descriptor *old = NULL;
+ 	size_t sd_size = 0;
+ 	uint32_t i, j;
++	bool rv;
++	char *to_free = NULL;
+ 	NTSTATUS status;
+ 
+ 	if (mode != SMB_ACL_SET && mode != SMB_SD_DELETE) {
+@@ -184,7 +192,15 @@ static int change_share_sec(TALLOC_CTX *mem_ctx, const char *sharename, char *th
+ 		/* should not happen */
+ 		return 0;
+ 	case SMB_ACL_VIEW:
+-		sec_desc_print(NULL, stdout, old, false);
++		if (jsobj != NULL) {
++			rv = sec_desc_to_json(NULL, jsobj, old, false, true);
++			if (!rv) {
++				return -1;
++			}
++		}
++		else {
++			sec_desc_print(NULL, stdout, old, false);
++		}
+ 		return 0;
+ 	case SMB_ACL_DELETE:
+ 	    for (i=0;sd->dacl && i<sd->dacl->num_aces;i++) {
+@@ -330,10 +346,13 @@ int main(int argc, const char *argv[])
+ 	int retval = 0;
+ 	enum acl_mode mode = SMB_ACL_SET;
+ 	static char *the_acl = NULL;
++	char *to_free = NULL;
+ 	fstring sharename;
+ 	bool force_acl = False;
++	bool do_json = False;
+ 	int snum;
+ 	poptContext pc;
++	struct json_object jsobj, jsint;
+ 	bool initialize_sid = False;
+ 	struct poptOption long_options[] = {
+ 		POPT_AUTOHELP
+@@ -430,6 +449,14 @@ int main(int argc, const char *argv[])
+ 			.descrip    = "Force storing the ACL",
+ 			.argDescrip = "ACLS",
+ 		},
++		{
++			.longName   = "json",
++			.shortName  = 'j',
++			.argInfo    = POPT_ARG_NONE,
++			.arg        = NULL,
++			.val        = 'J',
++			.descrip    = "View ACL in JSON",
++		},
+ 		POPT_COMMON_SAMBA
+ 		POPT_TABLEEND
+ 	};
+@@ -493,6 +520,10 @@ int main(int argc, const char *argv[])
+ 			force_acl = True;
+ 			break;
+ 
++		case 'J':
++			do_json = True;
++			break;
++
+ 		case 'M':
+ 			initialize_sid = True;
+ 			break;
+@@ -531,6 +562,13 @@ int main(int argc, const char *argv[])
+ 
+ 	if (mode == SMB_ACL_VIEW_ALL) {
+ 		int i;
++		if (do_json) {
++			jsobj = json_new_object();
++			if (json_is_invalid(&jsobj)) {
++				fprintf(stderr, "Failed to generate valid JSON object\n");
++				goto done;
++			}
++		}
+ 
+ 		for (i=0; i<lp_numservices(); i++) {
+ 			TALLOC_CTX *frame = talloc_stackframe();
+@@ -542,11 +580,29 @@ int main(int argc, const char *argv[])
+ 				continue;
+ 			}
+ 
+-			printf("[%s]\n", service);
+-			change_share_sec(frame, service, NULL, SMB_ACL_VIEW);
+-			printf("\n");
++			if (do_json) {
++				change_share_sec(frame, service, NULL, SMB_ACL_VIEW, &jsint);
++				retval = json_add_object(&jsobj, service, &jsint);
++				if (retval != 0) {
++					fprintf(stderr,
++						"Failed to add JSON object for [%s]: %s\n",
++						service, strerror(errno));
++					goto done;
++				}
++			}
++			else {
++				printf("[%s]\n", service);
++				change_share_sec(frame, service, NULL, SMB_ACL_VIEW, NULL);
++				printf("\n");
++			}
+ 			TALLOC_FREE(frame);
+ 		}
++		if (do_json) {
++			to_free =  json_to_string(talloc_tos(), &jsobj);
++                        printf("%s", to_free);
++			TALLOC_FREE(to_free);
++			json_free(&jsobj);
++		}
+ 		goto done;
+ 	}
+ 
+@@ -576,7 +632,7 @@ int main(int argc, const char *argv[])
+ 		retval = view_sharesec_sddl(sharename);
+ 		break;
+ 	default:
+-		retval = change_share_sec(ctx, sharename, the_acl, mode);
++		retval = change_share_sec(ctx, sharename, the_acl, mode, NULL);
+ 		break;
+ 	}
+ 
+diff --git a/source3/utils/smbcacls.c b/source3/utils/smbcacls.c
+index 084df9f9a4a..93cde926801 100644
+--- a/source3/utils/smbcacls.c
++++ b/source3/utils/smbcacls.c
+@@ -32,6 +32,11 @@
+ #include "passdb/machine_sid.h"
+ #include "../librpc/gen_ndr/ndr_lsa_c.h"
+ #include "util_sd.h"
++#ifdef HAVE_JANSSON
++#include <jansson.h>
++#include "audit_logging.h" /* various JSON helpers */
++#include "auth/common_auth.h"
++#endif /* [HAVE_JANSSON] */
+ 
+ static int test_args;
+ 
+@@ -418,6 +423,48 @@ static int cacl_dump(struct cli_state *cli, const char *filename, bool numeric)
+ 	return EXIT_OK;
+ }
+ 
++static int cacl_dump_json(struct cli_state *cli, const char *filename, bool numeric)
++{
++	TALLOC_CTX *frame = talloc_stackframe();
++	struct security_descriptor *sd;
++	struct json_object jsobj;
++	int ret;
++
++	if (test_args) {
++		return EXIT_OK;
++	}
++
++	sd = get_secdesc(cli, filename);
++	if (sd == NULL) {
++		return EXIT_FAILED;
++	}
++
++	if (sddl) {
++		char *str = sddl_encode(talloc_tos(), sd, get_domain_sid(cli));
++		if (str == NULL) {
++			return EXIT_FAILED;
++		}
++		printf("%s\n", str);
++		TALLOC_FREE(str);
++	} else {
++		ret = sec_desc_to_json(cli, &jsobj, sd, numeric, false);
++		if (!ret) {
++			fprintf(stderr, "Failed to get secdesc_json\n");
++			TALLOC_FREE(frame);
++			return ret;
++		}
++		printf("%s", json_to_string(frame, &jsobj));
++	}
++	if (want_mxac) {
++		ret = cacl_mxac(cli, filename);
++		if (ret != EXIT_OK) {
++			return ret;
++		}
++	}
++	TALLOC_FREE(frame);
++	return EXIT_OK;
++}
++
+ /***************************************************** 
+ Change the ownership or group ownership of a file. Just
+ because the NT docs say this can't be done :-). JRA.
+@@ -813,6 +860,7 @@ int main(int argc, char *argv[])
+ 	int result;
+ 	char *path;
+ 	char *filename = NULL;
++	bool json_output = false;
+ 	poptContext pc;
+ 	/* numeric is set when the user wants numeric SIDs and ACEs rather
+ 	   than going via LSA calls to resolve them */
+@@ -906,6 +954,14 @@ int main(int argc, char *argv[])
+ 			.val        = 1,
+ 			.descrip    = "The security-info flags for queries"
+ 		},
++		{
++			.longName   = "json-output",
++			.shortName  = 'j',
++			.argInfo    = POPT_ARG_NONE,
++			.arg        = NULL,
++			.val        = 'j',
++			.descrip    = "JSON output"
++		},
+ 		{
+ 			.longName   = "set-security-info",
+ 			.shortName  = 0,
+@@ -1009,6 +1065,9 @@ int main(int argc, char *argv[])
+ 			owner_username = poptGetOptArg(pc);
+ 			change_mode = REQUEST_INHERIT;
+ 			break;
++		case 'j':
++			json_output = true;
++			break;
+ 		case 'm':
+ 			lp_set_cmdline("client max protocol", poptGetOptArg(pc));
+ 			break;
+@@ -1086,6 +1145,8 @@ int main(int argc, char *argv[])
+ 		result = owner_set(cli, change_mode, filename, owner_username);
+ 	} else if (the_acl) {
+ 		result = cacl_set(cli, filename, the_acl, mode, numeric);
++	} else if (json_output) {
++		result = cacl_dump_json(cli, filename, numeric);
+ 	} else {
+ 		result = cacl_dump(cli, filename, numeric);
+ 	}
 diff --git a/source3/utils/status.c b/source3/utils/status.c
 index 36f7030e4f4..a7b5c733d1b 100644
 --- a/source3/utils/status.c
@@ -1128,7 +1823,7 @@ index 36f7030e4f4..a7b5c733d1b 100644
  	return ret;
  }
 diff --git a/source3/utils/status_profile.c b/source3/utils/status_profile.c
-index 829e84cef1c..b18bda5693c 100644
+index 829e84cef1c..5f6a9db855d 100644
 --- a/source3/utils/status_profile.c
 +++ b/source3/utils/status_profile.c
 @@ -21,43 +21,130 @@
