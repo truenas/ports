@@ -4930,6 +4930,7 @@
     SUBDIR += py-pyvisa-py
     SUBDIR += py-pyxb
     SUBDIR += py-pyxml2obj
+    SUBDIR += py-pyyaml-include
     SUBDIR += py-q
     SUBDIR += py-qpid
     SUBDIR += py-qserve
