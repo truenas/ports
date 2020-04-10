@@ -24,7 +24,7 @@ index 7f82969badf..dc4ec88e578 100644
  
  #endif
 diff --git a/source3/lib/util_sd.c b/source3/lib/util_sd.c
-index 39083b15438..183f2da618c 100644
+index 39083b15438..80eea0b6dac 100644
 --- a/source3/lib/util_sd.c
 +++ b/source3/lib/util_sd.c
 @@ -28,30 +28,47 @@
@@ -86,10 +86,112 @@ index 39083b15438..183f2da618c 100644
  };
  
  static const struct {
-@@ -366,6 +383,280 @@ void print_ace(struct cli_state *cli, FILE *f, struct security_ace *ace,
+@@ -366,6 +383,369 @@ void print_ace(struct cli_state *cli, FILE *f, struct security_ace *ace,
  	}
  }
  
++static bool add_acl_ctrl_json(struct json_object *jsobj, uint16_t ctrl, bool numeric)
++{
++	struct json_object control, tmp;
++	int i, ret;
++	control = json_new_object();
++	if (json_is_invalid(&control)) {
++		fprintf(stderr, "Failed to get JSON array for ACL control\n");
++		return false;
++	}
++
++	for (i = ARRAY_SIZE(sec_desc_ctrl_bits) - 1; i >= 0; i--) {
++		if (ctrl & sec_desc_ctrl_bits[i].mask) {
++			ret =json_add_bool(&control, sec_desc_ctrl_bits[i].desc, true);
++			if (ret != 0) {
++				fprintf(stderr, "Failed to add control bits\n");
++				json_free(&control);
++				return false;
++			}
++
++		}
++		else {
++			ret = json_add_bool(&control, sec_desc_ctrl_bits[i].desc, false);
++			if (ret != 0) {
++				fprintf(stderr, "Failed to add control bits\n");
++				json_free(&control);
++				return false;
++			}
++		}
++	}
++	ret = json_add_object(jsobj, "control", &control);
++	return true;
++}
++
++static bool add_trustee_json(struct json_object *jsobj, struct cli_state *cli,
++			     const struct dom_sid *sid, char *title,
++			     bool numeric)
++{
++	struct json_object trustee;
++	int ret;
++	NTSTATUS status;
++	char *domain = NULL;
++	char *name = NULL;
++	fstring str;
++
++	enum lsa_SidType type;
++
++	trustee = json_new_object();
++	if (json_is_invalid(&trustee)) {
++		fprintf(stderr, "New JSON object for trustee is invalid\n");
++		return false;
++	}
++	ret = json_add_sid(&trustee, "sid", sid);
++	if (ret != 0) {
++		fprintf(stderr, "Failed to add SID to trustee JSON object: %s\n",
++			strerror(errno));
++		json_free(&trustee);
++		return false;
++	}
++        if (numeric || cli == NULL) {
++		ret = json_add_string(&trustee, "name", "");
++		if (ret != 0) {
++			json_free(&trustee);
++			return false;
++		}
++        }
++	else {
++		status = cli_lsa_lookup_sid(cli, sid, talloc_tos(), &type,
++					    &domain, &name);
++
++		if (!NT_STATUS_IS_OK(status)) {
++			fprintf(stderr, "cli_lsa_lookup_sid failed\n");
++			json_free(&trustee);
++			return false;
++		}
++		if (*domain) {
++			slprintf(str, sizeof(fstring) - 1, "%s%s%s",
++				domain, lp_winbind_separator(), name);
++			ret = json_add_string(&trustee, "name", str);
++			if (ret != 0) {
++				fprintf(stderr, "Failed to add name to trustee: %s",
++					strerror(errno));
++				json_free(&trustee);
++				return false;
++			}
++		} else {
++			ret = json_add_string(&trustee, "name", "");
++			if (ret != 0) {
++				json_free(&trustee);
++				return false;
++			}
++		}
++	}
++	ret = json_add_object(jsobj, title, &trustee);
++	if (ret != 0) {
++		fprintf(stderr, "Failed to %s to JSON object: %s\n",
++			title, strerror(errno));
++		json_free(&trustee);
++		return false;
++	}
++	return true;
++}
++
 +static bool add_ace_flags_json(struct json_object *jsobj, uint8_t flags)
 +{
 +	struct json_object js_flags;
@@ -102,31 +204,31 @@ index 39083b15438..183f2da618c 100644
 +		return false;
 +	}
 +
-+	ret = json_add_bool(&js_flags, "object_inherit",
++	ret = json_add_bool(&js_flags, "OBJECT_INHERIT",
 +			    (flags & SEC_ACE_FLAG_OBJECT_INHERIT)
 +			    ? true : false);
 +	if (ret < 0) {
 +		goto failure;
 +	}
-+	ret = json_add_bool(&js_flags, "container_inherit",
++	ret = json_add_bool(&js_flags, "CONTAINER_INHERIT",
 +			    (flags & SEC_ACE_FLAG_CONTAINER_INHERIT)
 +			    ? true : false);
 +	if (ret < 0) {
 +		goto failure;
 +	}
-+	ret = json_add_bool(&js_flags, "no_propagate_inherit",
++	ret = json_add_bool(&js_flags, "NO_PROPAGATE_INHERIT",
 +			    (flags & SEC_ACE_FLAG_NO_PROPAGATE_INHERIT)
 +			    ? true : false);
 +	if (ret < 0) {
 +		goto failure;
 +	}
-+	ret = json_add_bool(&js_flags, "inherit_only",
++	ret = json_add_bool(&js_flags, "INHERIT_ONLY",
 +			    (flags & SEC_ACE_FLAG_INHERIT_ONLY)
 +			    ? true : false);
 +	if (ret < 0) {
 +		goto failure;
 +	}
-+	ret = json_add_bool(&js_flags, "inherited",
++	ret = json_add_bool(&js_flags, "INHERITED",
 +			    (flags & SEC_ACE_FLAG_INHERITED_ACE)
 +			    ? true : false);
 +	if (ret < 0) {
@@ -266,6 +368,7 @@ index 39083b15438..183f2da618c 100644
 +	fstring sidstr;
 +	int do_print = 0;
 +	int ret;
++	bool rv;
 +	char buf[80] = {0};
 +	bool has_js_amask = false;
 +	if (json_is_invalid(jsobj)) {
@@ -284,24 +387,10 @@ index 39083b15438..183f2da618c 100644
 +		goto failure;
 +	}
 +
-+	SidToString(cli, sidstr, &ace->trustee, true);
-+
-+	ret = json_add_string(&trustee, "sid", sidstr);
-+	if (ret != 0) {
-+		fprintf(stderr,
-+			"Failed to add trustee [%s] to JSON object "
-+			"for ACE: %s\n", sidstr, strerror(errno));
++	rv = add_trustee_json(&jsace, cli, &ace->trustee, "trustee", numeric);
++	if (!rv) {
 +		goto failure;
 +	}
-+	SidToString(cli, sidstr, &ace->trustee, false);
-+	ret = json_add_string(&trustee, "name", (cli != NULL) ? sidstr : "");
-+	if (ret != 0) {
-+		fprintf(stderr,
-+			"Failed to add trustee [%s] to JSON object "
-+			"for ACE: %s\n", sidstr, strerror(errno));
-+		goto failure;
-+	}
-+	ret = json_add_object(&jsace, "trustee", &trustee);
 +
 +	if (numeric) {
 +		ret = json_add_int(&jsace, "type", ace->type);
@@ -367,7 +456,7 @@ index 39083b15438..183f2da618c 100644
  static bool parse_ace_flags(const char *str, unsigned int *pflags)
  {
  	const char *p = str;
-@@ -647,3 +938,72 @@ void sec_desc_print(struct cli_state *cli, FILE *f,
+@@ -647,3 +1027,71 @@ void sec_desc_print(struct cli_state *cli, FILE *f,
  	}
  
  }
@@ -376,10 +465,11 @@ index 39083b15438..183f2da618c 100644
 +		      struct security_descriptor *sd, bool numeric,
 +		      bool share_acl)
 +{
-+	struct json_object jsret, dacl;
++	struct json_object jsret, dacl, owner, group, control;
 +	fstring sidstr;
 +	uint32_t i;
 +	int ret;
++	bool rv;
 +	jsret = json_new_object();
 +	if (json_is_invalid(&jsret)) {
 +		fprintf(stderr, "Failed to create new JSON object: %s\n",
@@ -393,24 +483,16 @@ index 39083b15438..183f2da618c 100644
 +	}
 +
 +	if (!share_acl) {
-+		if (sd->owner_sid) {
-+			SidToString(cli, sidstr, sd->owner_sid, numeric);
-+		} else {
-+			fstrcpy(sidstr, "");
-+		}
-+		ret = json_add_string(&jsret, "owner", sidstr);
-+		if (ret < 0) {
-+			fprintf(stderr, "Failed to add OWNER to JSON object\n");
++		rv = add_trustee_json(&jsret, cli, sd->owner_sid, "owner", numeric);
++		if (!rv) {
++			fprintf(stderr, "Failed to add owner to JSON object: %s\n",
++				strerror(errno));
 +			goto failure;
 +		}
-+		if (sd->group_sid) {
-+			SidToString(cli, sidstr, sd->group_sid, numeric);
-+		} else {
-+			fstrcpy(sidstr, "");
-+		}
-+		ret = json_add_string(&jsret, "group", sidstr);
-+		if (ret < 0) {
-+			fprintf(stderr, "Failed to add group to JSON object\n");
++		rv = add_trustee_json(&jsret, cli, sd->group_sid, "group", numeric);
++		if (!rv) {
++			fprintf(stderr, "Failed to add owner to JSON object: %s\n",
++				strerror(errno));
 +			goto failure;
 +		}
 +	}
@@ -431,6 +513,12 @@ index 39083b15438..183f2da618c 100644
 +	if (ret == -1) {
 +		fprintf(stderr, "Failed to add DACL to jsret: %s\n",
 +			strerror(errno));
++	}
++
++	rv = add_acl_ctrl_json(&jsret, sd->type, numeric);
++	if (!rv) {
++		fprintf(stderr, "Failed to do control: %s\n", strerror(errno));
++		goto failure;
 +	}
 +
 +	*out = jsret;
