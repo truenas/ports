@@ -1,6 +1,6 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 00000000000..164a522bb97
+index 00000000000..46fd4de8dd1
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
 @@ -0,0 +1,1436 @@
@@ -1847,10 +1847,10 @@ index 00000000000..83743daed1a
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..30a38b300d6
+index 00000000000..70f172796d7
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2381 @@
+@@ -0,0 +1,2421 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -2347,25 +2347,12 @@ index 00000000000..30a38b300d6
 +			    SEC_ACE_FLAG_CONTAINER_INHERIT);
 +}
 +
-+
-+static bool bsdacl4_2win(TALLOC_CTX *mem_ctx,
-+	struct ixnas_config_data *config,
-+	const struct smb_filename *smb_fname,
-+	struct dom_sid *psid_owner,
-+	struct dom_sid *psid_group,
-+	struct security_ace **ppnt_ace_list,
-+	int *pgood_aces,
-+	uint16_t *acl_control_flags)
++static acl_t get_zfs_acl(const struct smb_filename *smb_fname)
 +{
-+	int naces, i, good_aces, saved_errno;
-+	bool is_dir, inherited_present;
 +	acl_t zacl;
-+	i = naces = saved_errno = good_aces = 0;
-+	is_dir = inherited_present = false;
-+	struct security_ace *nt_ace_list = NULL;
-+
++	int ret, saved_errno;
 +	zacl = acl_get_file(smb_fname->base_name, ACL_TYPE_NFS4);
-+	if ( zacl == NULL) {
++	if (zacl == NULL) {
 +		/*
 +		 * If we fail to get the ACL on the path in question,
 + 		 * make a pathconf() call to determine whether the path
@@ -2378,32 +2365,76 @@ index 00000000000..30a38b300d6
 +		 * because this is the behavior of libsunacl / vfs_zfsacl.
 +		 */
 +		saved_errno = errno;
-+		errno = 0;
-+		if (pathconf(smb_fname->base_name, _PC_ACL_NFS4) < 0) {
-+			DBG_INFO("%s: pathconf(..., _PC_ACL_NFS4) failed. Path does not support NFS4 ACL.",
-+				smb_fname->base_name);
++		ret = pathconf(smb_fname->base_name, _PC_ACL_NFS4);
++		if (ret != 0) {
 +			/*
 +			 * If path does not support NFS4 ACLs, then pathconf() returns -1
 +			 * and errno is not modified. If pathconf() itself fails, then it
 +			 * returns -1 and errno is set.
 +			 */
-+			if (errno == 0) {
++			if (errno != saved_errno) {
 +				DBG_INFO("%s: pathconf(..., _PC_ACL_NFS4) failed. Path does not support NFS4 ACL.",
 +					smb_fname->base_name);
 +				errno = ENOSYS;
 +			}
 +			else {
-+				DBG_ERR("ixnas: pathconf() failed for %s: %s\n",
++				DBG_INFO("ixnas: pathconf() failed for %s: %s\n",
 +					smb_fname->base_name, strerror(errno));
 +			}
-+                }
-+		else {
-+			DBG_ERR("ixnas: acl_get_file() failed for %s: %s\n",
-+				smb_fname->base_name, strerror(errno));
-+			errno = saved_errno;
 +		}
-+		return false;
 +	}
++	return zacl;
++}
++
++static acl_t fget_zfs_acl(struct files_struct *fsp)
++{
++	acl_t zacl;
++	int ret, saved_errno;
++	if (fsp->fh->fd == -1) {
++		return get_zfs_acl(fsp->fsp_name);
++	}
++	zacl = acl_get_fd_np(fsp->fh->fd, ACL_TYPE_NFS4);
++
++	if (zacl == NULL) {
++		/* See above note in get_zfs_acl() */
++		saved_errno = errno;
++		ret = fpathconf(fsp->fh->fd, _PC_ACL_NFS4);
++		if (ret != 0) {
++			/*
++			 * If path does not support NFS4 ACLs, then pathconf() returns -1
++			 * and errno is not modified. If pathconf() itself fails, then it
++			 * returns -1 and errno is set.
++			 */
++			if (errno != saved_errno) {
++				DBG_INFO("%s: pathconf(..., _PC_ACL_NFS4) failed. Path does not support NFS4 ACL.",
++					 fsp->fsp_name->base_name);
++				errno = ENOSYS;
++			}
++			else {
++				DBG_INFO("ixnas: pathconf() failed for %s: %s\n",
++					 fsp->fsp_name->base_name, strerror(errno));
++			}
++		}
++	}
++	return zacl;
++}
++
++static bool bsdacl4_2win(TALLOC_CTX *mem_ctx,
++	struct ixnas_config_data *config,
++	acl_t zacl,
++	const struct smb_filename *smb_fname,
++	struct dom_sid *psid_owner,
++	struct dom_sid *psid_group,
++	struct security_ace **ppnt_ace_list,
++	int *pgood_aces,
++	uint16_t *acl_control_flags)
++{
++	int naces, i, good_aces, saved_errno;
++	bool is_dir, inherited_present;
++	i = naces = saved_errno = good_aces = 0;
++	is_dir = inherited_present = false;
++	struct security_ace *nt_ace_list = NULL;
++
 +	naces = zacl->ats_acl.acl_cnt;
 +	nt_ace_list = talloc_zero_array(mem_ctx, struct security_ace,
 +					2 * naces);
@@ -2566,6 +2597,8 @@ index 00000000000..30a38b300d6
 +static NTSTATUS ixnas_get_nt_acl_nfs4_common(struct connection_struct *conn,
 +					     TALLOC_CTX *mem_ctx,
 +					     const struct smb_filename *smb_fname,
++					     acl_t bsdacl,
++					     SMB_STRUCT_STAT *psbuf,
 +					     struct security_descriptor **ppdesc,
 +					     uint32_t security_info,
 +					     struct ixnas_config_data *config)
@@ -2588,22 +2621,13 @@ index 00000000000..30a38b300d6
 +	SMB_STRUCT_STAT sbuf;
 +	int ret;
 +	bool ok;
-+        if (VALID_STAT(smb_fname->st)) {
-+                sbuf = smb_fname->st;
-+        }
-+	else {
-+		ret = vfs_stat_smb_basename(conn, smb_fname, &sbuf);
-+		if (ret != 0) {
-+			DBG_ERR("stat [%s]failed: %s\n",
-+				 smb_fname_str_dbg(smb_fname), strerror(errno));
-+			return map_nt_error_from_unix(errno);
-+		}
-+	}
++
++	sbuf = *psbuf;
 +
 +	uid_to_sid(&sid_owner, sbuf.st_ex_uid);
 +	gid_to_sid(&sid_group, sbuf.st_ex_gid);
 +
-+	ok = bsdacl4_2win(frame, config, smb_fname, &sid_owner, &sid_group,
++	ok = bsdacl4_2win(frame, config, bsdacl, smb_fname, &sid_owner, &sid_group,
 +                          &nt_ace_list, &good_aces, &acl_control_flags);
 +
 +	if (!ok) {
@@ -2680,6 +2704,7 @@ index 00000000000..30a38b300d6
 +		sbuf = fsp->fsp_name->st;
 +	}
 +	else {
++		ZERO_STRUCT(sbuf);
 +		ret = vfs_stat_smb_basename(handle->conn, fsp->fsp_name, &sbuf);
 +		if (ret != 0) {
 +			DBG_DEBUG("stat [%s]failed: %s\n",
@@ -2782,7 +2807,6 @@ index 00000000000..30a38b300d6
 +				}
 +			}
 +			else if (has_gid) {
-+				DBG_ERR("Has gid: %zu, st_ex_gid: %zu, flags: 0x%08x\n", gid, sbuf.st_ex_gid, ace_nt->flags);
 +				if ((gid == sbuf.st_ex_gid) &&
 +				    !nt_ace_is_inherit(ace_nt->flags)) {
 +					tag  = ACL_GROUP_OBJ;
@@ -2887,7 +2911,9 @@ index 00000000000..30a38b300d6
 +{
 +	struct SMB4ACL_T *pacl;
 +	NTSTATUS status;
++	acl_t bsdacl;
 +	struct ixnas_config_data *config = NULL;
++	SMB_STRUCT_STAT *psbuf = NULL;
 +
 +	SMB_VFS_HANDLE_GET_DATA(handle, config,
 +				struct ixnas_config_data,
@@ -2897,34 +2923,39 @@ index 00000000000..30a38b300d6
 +		return SMB_VFS_NEXT_FGET_NT_ACL(handle, fsp, security_info, mem_ctx, ppdesc);
 +	}
 +
++	if (!VALID_STAT(fsp->fsp_name->st)) {
++		if (SMB_VFS_FSTAT(fsp, psbuf) != 0) {
++			DBG_INFO("SMB_VFS_FSTAT failed with error %s\n",
++				 strerror(errno));
++			return map_nt_error_from_unix(errno);
++		}
++	}
++	else {
++		psbuf = &fsp->fsp_name->st;
++	}
++	bsdacl = fget_zfs_acl(fsp);
++
++	if (bsdacl == NULL) {
++		if (errno == ENOSYS) {
++			status = SMB_VFS_NEXT_FGET_NT_ACL(handle, fsp, security_info, mem_ctx, ppdesc);
++			if (NT_STATUS_IS_OK(status)) {
++				(*ppdesc)->type |= SEC_DESC_DACL_PROTECTED;
++			}
++			return status;
++		}
++		else {
++			return map_nt_error_from_unix(errno);
++		}
++	}
++
 +	status = ixnas_get_nt_acl_nfs4_common(handle->conn,
 +					      mem_ctx,
 +					      fsp->fsp_name,
++					      bsdacl,
++					      psbuf,
 +					      ppdesc,
 +					      security_info,
 +					      config); 
-+
-+	if (!NT_STATUS_IS_OK(status)) {
-+		/*
-+		 * NT_STATUS_NOT_SUPPORTED is returned if acl_get_file() fails
-+		 * and pathconf() call determines that path does not support
-+		 * NFSv4 ACLs.
-+		 */
-+		if (!NT_STATUS_EQUAL(status, NT_STATUS_NOT_SUPPORTED)) {
-+			return status;
-+		}
-+		/*
-+		 * NFSv4 ACLs are not supported on the path
-+		 * (may be UFS or other FS mounted inside ZFS share), pass to next in stack.
-+		 * In this case, set DACL_PROTECTED to prevent Windows clients from trying
-+		 * to apply premissions across the FS boundary.
-+		 */
-+		status = SMB_VFS_NEXT_FGET_NT_ACL(handle, fsp, security_info, mem_ctx, ppdesc);
-+		if (NT_STATUS_IS_OK(status)) {
-+			(*ppdesc)->type |= SEC_DESC_DACL_PROTECTED;
-+		}
-+		return status;
-+	}
 +
 +	return status;
 +}
@@ -2937,7 +2968,10 @@ index 00000000000..30a38b300d6
 +{
 +	struct SMB4ACL_T *pacl;
 +	NTSTATUS status;
++	int ret;
++	acl_t bsdacl;
 +	struct ixnas_config_data *config = NULL;
++	SMB_STRUCT_STAT *psbuf = NULL;
 +
 +	SMB_VFS_HANDLE_GET_DATA(handle, config,
 +				struct ixnas_config_data,
@@ -2947,34 +2981,40 @@ index 00000000000..30a38b300d6
 +		return SMB_VFS_NEXT_GET_NT_ACL(handle, smb_fname, security_info, mem_ctx, ppdesc);
 +	}
 +
++	if (VALID_STAT(smb_fname->st)) {
++		psbuf = &smb_fname->st;
++	}
++	else {
++		ret = vfs_stat_smb_basename(handle->conn, smb_fname, psbuf);
++		if (ret != 0) {
++			DBG_INFO("stat [%s]failed: %s\n",
++				 smb_fname_str_dbg(smb_fname), strerror(errno));
++			return map_nt_error_from_unix(errno);
++		}
++	}
++	bsdacl = get_zfs_acl(smb_fname);
++
++	if (bsdacl == NULL) {
++		if (errno == ENOSYS) {
++			status = SMB_VFS_NEXT_GET_NT_ACL(handle, smb_fname, security_info, mem_ctx, ppdesc);
++			if (NT_STATUS_IS_OK(status)) {
++				(*ppdesc)->type |= SEC_DESC_DACL_PROTECTED;
++			}
++			return status;
++		}
++		else {
++			return map_nt_error_from_unix(errno);
++		}
++	}
++
 +	status = ixnas_get_nt_acl_nfs4_common(handle->conn,
 +					      mem_ctx,
 +					      smb_fname,
++					      bsdacl,
++					      psbuf,
 +					      ppdesc,
 +					      security_info,
 +					      config); 
-+
-+	if (!NT_STATUS_IS_OK(status)) {
-+		/*
-+		 * NT_STATUS_NOT_SUPPORTED is returned if acl_get_file() fails
-+		 * and pathconf() call determines that path does not support
-+		 * NFSv4 ACLs.
-+		 */
-+		if (!NT_STATUS_EQUAL(status, NT_STATUS_NOT_SUPPORTED)) {
-+			return status;
-+		}
-+		/*
-+		 * NFSv4 ACLs are not supported on the path
-+		 * (may be UFS or other FS mounted inside ZFS share), pass to next in stack.
-+		 * In this case, set DACL_PROTECTED to prevent Windows clients from trying
-+		 * to apply premissions across the FS boundary.
-+		 */
-+		status = SMB_VFS_NEXT_GET_NT_ACL(handle, smb_fname, security_info, mem_ctx, ppdesc);
-+		if (NT_STATUS_IS_OK(status)) {
-+			(*ppdesc)->type |= SEC_DESC_DACL_PROTECTED;
-+		}
-+		return status;
-+	}
 +
 +	return status;
 +}
