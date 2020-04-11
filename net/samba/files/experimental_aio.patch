@@ -1,9 +1,9 @@
 diff --git a/source3/modules/vfs_aio_fbsd.c b/source3/modules/vfs_aio_fbsd.c
 new file mode 100644
-index 00000000000..4f9190ad94f
+index 00000000000..88abb07cbd0
 --- /dev/null
 +++ b/source3/modules/vfs_aio_fbsd.c
-@@ -0,0 +1,448 @@
+@@ -0,0 +1,453 @@
 +/*
 + * Copyright (C) Volker Lendecke 2008
 + * Copyright (C) Jeremy Allison 2010
@@ -176,10 +176,10 @@ index 00000000000..4f9190ad94f
 +
 +		SMB_ASSERT(ret != -1);
 +		for (i=0;i<ret;i++) {
-+			im = tevent_create_immediate(kqt_ctx);
 +			req = NULL;
 +			SMB_ASSERT(received[i].filter == EVFILT_AIO);
 +			req = talloc_get_type_abort(received[i].udata, struct vfs_aio_fbsd_kevent);
++			im = tevent_create_immediate(kqt_ctx);
 +			req->in_progress = false;
 +			req->ret = aio_return(req->iocbp);
 +			req->saved_errno = errno;
@@ -275,10 +275,12 @@ index 00000000000..4f9190ad94f
 +	kev->iocbp->aio_offset = offset;
 +	kev->iocbp->aio_buf = data;
 +	kev->iocbp->aio_sigevent.sigev_notify_kqueue = config->kqueue_fd;
++	kev->iocbp->aio_sigevent.sigev_notify_kevent_flags = EV_ONESHOT;
 +	kev->iocbp->aio_sigevent.sigev_value.sival_ptr = kev;
 +	kev->iocbp->aio_sigevent.sigev_notify = SIGEV_KEVENT;
 +	kev->iocbp->aio_nbytes = n;
 +	state->in_progress = true;
++	kev->in_progress = true;
 +	DBG_DEBUG("fildes: %d, offset: %ld, size: %lu preq: [%p], pstate: [%p]\n",
 +		state->iocbp->aio_fildes, state->iocbp->aio_offset, state->iocbp->aio_nbytes, req, state); 
 +	ret = aio_read(kev->iocbp);
@@ -361,9 +363,11 @@ index 00000000000..4f9190ad94f
 +	kev->iocbp->aio_buf = discard_const(data);
 +	kev->iocbp->aio_sigevent.sigev_notify_kqueue = config->kqueue_fd;
 +	kev->iocbp->aio_sigevent.sigev_value.sival_ptr = kev;
++	kev->iocbp->aio_sigevent.sigev_notify_kevent_flags = EV_ONESHOT;
 +	kev->iocbp->aio_sigevent.sigev_notify = SIGEV_KEVENT;
 +	kev->iocbp->aio_nbytes = n;
 +	state->in_progress = true;
++	kev->in_progress = true;
 +	DBG_DEBUG("fildes: %d, offset: %ld, size: %lu preq: [%p], pkev: [%p]\n",
 +		state->iocbp->aio_fildes, state->iocbp->aio_offset, state->iocbp->aio_nbytes, req, kev); 
 +	ret = aio_write(kev->iocbp);
@@ -416,6 +420,7 @@ index 00000000000..4f9190ad94f
 +	kev->iocbp->aio_sigevent.sigev_notify_kqueue = config->kqueue_fd;
 +	kev->iocbp->aio_sigevent.sigev_value.sival_ptr = kev;
 +	kev->iocbp->aio_sigevent.sigev_notify = SIGEV_KEVENT;
++	kev->iocbp->aio_sigevent.sigev_notify_kevent_flags = EV_ONESHOT;
 +	ret = aio_fsync(O_SYNC, kev->iocbp);
 +	talloc_set_destructor(state, vfs_aio_fbsd_request_state_destructor);
 +	if (ret != 0) {
