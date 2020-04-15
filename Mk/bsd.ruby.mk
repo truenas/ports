@@ -15,7 +15,7 @@ Ruby_Include_MAINTAINER=	ruby@FreeBSD.org
 # [variables that a user may define]
 #
 # RUBY_VER		- (See below)
-# RUBY_DEFAULT_VER	- Set to (e.g.) "2.4" if you want to refer to "ruby24"
+# RUBY_DEFAULT_VER	- Set to (e.g.) "2.5" if you want to refer to "ruby25"
 #			  just as "ruby".
 # RUBY_ARCH		- (See below)
 #
@@ -144,20 +144,11 @@ RUBY?=			${LOCALBASE}/bin/${RUBY_NAME}
 .if defined(RUBY_VER)
 # When adding a version, please keep the comment in
 # Mk/bsd.default-versions.mk in sync.
-. if ${RUBY_VER} == 2.4
-#
-# Ruby 2.4
-#
-RUBY_VERSION=		2.4.9
-RUBY_PORTREVISION=	0
-RUBY_PORTEPOCH=		1
-RUBY24=			""	# PLIST_SUB helpers
-
-. elif ${RUBY_VER} == 2.5
+. if ${RUBY_VER} == 2.5
 #
 # Ruby 2.5
 #
-RUBY_VERSION=		2.5.7
+RUBY_VERSION=		2.5.8
 RUBY_PORTREVISION=	0
 RUBY_PORTEPOCH=		1
 RUBY25=			""	# PLIST_SUB helpers
@@ -166,10 +157,19 @@ RUBY25=			""	# PLIST_SUB helpers
 #
 # Ruby 2.6
 #
-RUBY_VERSION=		2.6.5
+RUBY_VERSION=		2.6.6
 RUBY_PORTREVISION=	0
 RUBY_PORTEPOCH=		1
 RUBY26=			""	# PLIST_SUB helpers
+
+. elif ${RUBY_VER} == 2.7
+#
+# Ruby 2.7
+#
+RUBY_VERSION=		2.7.1
+RUBY_PORTREVISION=	0
+RUBY_PORTEPOCH=		1
+RUBY27=			""	# PLIST_SUB helpers
 
 # When adding a version, please keep the comment in
 # Mk/bsd.default-versions.mk in sync.
@@ -177,7 +177,7 @@ RUBY26=			""	# PLIST_SUB helpers
 #
 # Other versions
 #
-IGNORE=	Only ruby 2.4, 2.5 and 2.6 are supported
+IGNORE=	Only ruby 2.5, 2.6 and 2.7 are supported
 _INVALID_RUBY_VER=	1
 . endif
 .endif # defined(RUBY_VER)
@@ -187,6 +187,7 @@ _INVALID_RUBY_VER=	1
 RUBY24?=		"@comment "
 RUBY25?=		"@comment "
 RUBY26?=		"@comment "
+RUBY27?=		"@comment "
 
 .if defined(BROKEN_RUBY${RUBY_VER:R}${RUBY_VER:E})
 .if ${BROKEN_RUBY${RUBY_VER:R}${RUBY_VER:E}} == "yes"
@@ -247,7 +248,11 @@ RUBY_CONFIGURE_ARGS+=	--program-suffix="${RUBY_SUFFIX}"
 RUBY_MODNAME?=		${PORTNAME}
 
 # Commands
+.if ${RUBY_VER} < 2.7
 RUBY_RDOC?=		${LOCALBASE}/bin/rdoc${RUBY_VER:S/.//}
+.else
+RUBY_RDOC?=		${LOCALBASE}/bin/rdoc
+.endif
 
 # Ports
 RUBY_BASE_PORT?=	lang/ruby${RUBY_VER:S/.//}
@@ -294,7 +299,8 @@ PLIST_SUB+=		${PLIST_RUBY_DIRS:C,DIR="(${LOCALBASE}|${PREFIX})/,DIR=",} \
 			RUBY_DEFAULT_SUFFIX="${RUBY_DEFAULT_SUFFIX}" \
 			RUBY24=${RUBY24} \
 			RUBY25=${RUBY25} \
-			RUBY26=${RUBY26}
+			RUBY26=${RUBY26} \
+			RUBY27=${RUBY27}
 
 .if defined(USE_RUBY_RDOC)
 MAKE_ENV+=	RUBY_RDOC=${RUBY_RDOC}

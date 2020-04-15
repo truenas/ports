@@ -2,8 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	saga
-PORTVERSION=	7.3.0
-PORTREVISION=	4
+PORTVERSION=	7.6.2
 CATEGORIES=	math
 MASTER_SITES=	SF/saga-gis/SAGA%20-%20${PORTVERSION:C/\.[[:digit:]]\.[[:digit:]]*$//}/SAGA%20-%20${PORTVERSION}
 
@@ -13,7 +12,7 @@ COMMENT=	System for Automated Geoscientific Analyses
 LICENSE=	GPLv2 LGPL21
 LICENSE_COMB=	multi
 
-BUILD_DEPENDS=	clang${LLVM_VER}:devel/llvm${LLVM_VER} \
+BUILD_DEPENDS=	clang${LLVM_DEFAULT}:devel/llvm${LLVM_DEFAULT} \
 		swig3.0:devel/swig30
 LIB_DEPENDS=	libcurl.so:ftp/curl \
 		libfftw3.so:math/fftw3 \
@@ -24,13 +23,14 @@ LIB_DEPENDS=	libcurl.so:ftp/curl \
 		libodbc.so:databases/unixODBC \
 		libopencv_core.so:graphics/opencv-core \
 		libopencv_ml.so:graphics/opencv \
+		libpdal_base.so:math/pdal \
 		libproj.so:graphics/proj \
 		libsvm.so:science/libsvm \
 		libtbb.so:devel/tbb \
 		libtiff.so:graphics/tiff
 RUN_DEPENDS:=	swig3.0:devel/swig30
 
-USES=		autoreconf compiler:c++11-lib desktop-file-utils dos2unix gnome \
+USES=		autoreconf compiler:c++11-lib dos2unix gnome \
 		iconv:wchar_t libtool localbase pkgconfig python
 USE_LDCONFIG=	yes
 USE_WX=		3.0+
@@ -56,11 +56,7 @@ OPENMP_DESC=	Enable Multiprocessing (only amd64 and i386)
 VIGRA_DESC=	Enable 'Vision with Generic Algorithms' Library
 
 OPENMP_CONFIGURE_ENABLE=	openmp
-OPENMP_LDFLAGS=		-L${LOCALBASE}/lib -lm
-# Use OpenMP from lang/llvm${LLVM_VER}
-OPENMP_LDFLAGS+=	-L${LOCALBASE}/llvm${LLVM_VER}/lib -lomp
-PGSQL_CONFIGURE_OFF=	--with-postgresql=no
-PGSQL_CONFIGURE_ON=	--with-postgresql=${LOCALBASE}/bin/pg_config
+PGSQL_CONFIGURE_WITH=	postgresql
 PGSQL_USES=		pgsql
 VIGRA_BUILD_DEPENDS=	${LOCALBASE}/lib/libvigraimpex.so:graphics/vigra
 VIGRA_RUN_DEPENDS=	${LOCALBASE}/lib/libvigraimpex.so:graphics/vigra
@@ -70,10 +66,9 @@ INSTALL_TARGET=	install-strip
 .include <bsd.port.pre.mk>
 
 # make describe needs them here
-LLVM_VER=	80
-CPP=		clang-cpp${LLVM_VER}
-CC=		clang${LLVM_VER}
-CXX=		clang++${LLVM_VER}
+CPP=		clang-cpp${LLVM_DEFAULT}
+CC=		clang${LLVM_DEFAULT}
+CXX=		clang++${LLVM_DEFAULT}
 
 SUB_FILES=	pkg-message
 
@@ -89,6 +84,7 @@ post-extract:
 		${WRKSRC}/src/tools/io/io_grid_image/Makefile.am \
 		${WRKSRC}/src/tools/io/io_shapes/Makefile.am \
 		${WRKSRC}/src/tools/io/io_virtual/Makefile.am \
+		${WRKSRC}/src/tools/io/io_webservices/Makefile.am \
 		${WRKSRC}/src/tools/pointcloud/pointcloud_tools/Makefile.am \
 		${WRKSRC}/src/tools/pointcloud/pointcloud_viewer/Makefile.am \
 		${WRKSRC}/src/tools/statistics/statistics_kriging/Makefile.am \
@@ -111,8 +107,6 @@ post-patch-OPENMP-on:
 		${WRKSRC}/src/accessories/templates/template4saga-tools/my_tool_library/Makefile
 
 post-configure:
-	@${REINPLACE_CMD} -e 's|cd $$(pkgdatadir);|cd ${STAGEDIR}${DATADIR};|g' \
-		${WRKSRC}/src/saga_core/saga_gui/Makefile
 	@${REINPLACE_CMD} -e 's|^LDFLAGS = .*|& -lopencv_core|' \
 		${WRKSRC}/src/tools/imagery/imagery_opencv/Makefile
 

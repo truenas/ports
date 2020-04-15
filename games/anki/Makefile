@@ -2,10 +2,10 @@
 # $FreeBSD$
 
 PORTNAME=	anki
-DISTVERSION=	2.1.15
+DISTVERSION=	2.1.16
 PORTREVISION=	1
 CATEGORIES=	games python
-MASTER_SITES=	https://apps.ankiweb.net/downloads/current/
+MASTER_SITES=	https://apps.ankiweb.net/downloads/archive/
 DISTNAME=	anki-${PORTVERSION}-source
 DIST_SUBDIR=	python
 
@@ -50,6 +50,7 @@ post-patch:
 	@${REINPLACE_CMD} -i '' \
 		's|%%PREFIX%%|${PREFIX}|' \
 		${WRKSRC}/anki/lang.py
+	@${FIND} ${WRKSRC} -name '*.orig' -delete
 
 post-patch-NLS-off:
 	@${REINPLACE_CMD} -i '' '/locale/s/^/#/' \

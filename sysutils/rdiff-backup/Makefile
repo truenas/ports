@@ -3,7 +3,7 @@
 
 PORTNAME=	rdiff-backup
 PORTVERSION=	1.2.8
-PORTREVISION=	2
+PORTREVISION=	3
 PORTEPOCH=	1
 CATEGORIES=	sysutils
 MASTER_SITES=	SAVANNAH \
@@ -14,13 +14,16 @@ COMMENT=	Local/remote mirroring+incremental backup
 
 LICENSE=	GPLv2
 
-LIB_DEPENDS=	librsync.so:net/librsync2
+DEPRECATED=	Uses deprecated version of python
+EXPIRATION_DATE=	2020-09-15
+
+LIB_DEPENDS=	librsync.so:net/librsync
 
 CONFLICTS=	rdiff-backup-devel-[0-9]* rdiff-backup-1.0*
 
 PORTSCOUT=	limitw:1,even
 
-USES=		python:-2.7
+USES=		python:2.7
 USE_PYTHON=	distutils
 USE_LDCONFIG=	yes
 

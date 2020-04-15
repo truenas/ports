@@ -35,7 +35,6 @@ include/igc/cif/cif/export/muiltiversion.h
 include/igc/cif/cif/export/pimpl_base.h
 include/igc/cif/cif/export/registry.cpp
 include/igc/cif/cif/export/registry.h
-include/igc/cif/cif/helpers/error.cpp
 include/igc/cif/cif/helpers/error.h
 include/igc/cif/cif/helpers/memory.h
 include/igc/cif/cif/import/cif_main.cpp
@@ -79,7 +78,6 @@ include/igc/ocl_igc_interface/ocl_translation_output.h
 include/igc/ocl_igc_interface/platform.h
 include/igc/ocl_igc_interface/platform_helper.h
 include/igc/ocl_igc_shared/device_enqueue/DeviceEnqueueInternalTypes.h
-include/igc/ocl_igc_shared/device_enqueue/device_enqueue_internal_types.h
 include/igc/ocl_igc_shared/executable_format/patch_g10.h
 include/igc/ocl_igc_shared/executable_format/patch_g7.h
 include/igc/ocl_igc_shared/executable_format/patch_g75.h

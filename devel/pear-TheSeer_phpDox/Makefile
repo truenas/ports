@@ -7,10 +7,12 @@ CATEGORIES=	devel pear
 MASTER_SITES=	http://pear.netpirates.net/get/
 PKGNAMEPREFIX=	${PEAR_PKGNAMEPREFIX}TheSeer_
 
-MAINTAINER=	joneum@FreeBSD.org
+MAINTAINER=	miwi@FreeBSD.org
 COMMENT=	PHP Documentation generation framework and tool
 
 BROKEN=		unfetchable
+DEPRECATED=	Broken for more than 6 months
+EXPIRATION_DATE=	2020-05-05
 
 LICENSE=	BSD3CLAUSE
 

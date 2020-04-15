@@ -6,7 +6,7 @@ CATEGORIES=	devel
 MASTER_SITES=	LOCAL/jbeich \
 		https://svn.freebsd.org/base/head/lib/${PORTNAME}/:svn
 
-MAINTAINER=	jbeich@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	imsg and ohash routines from OpenBSD libutil
 
 LICENSE=	ISCL
@@ -14,7 +14,7 @@ LICENSE=	ISCL
 USES=		uidfix tar:xz
 MAKE_ENV=	SHLIB_MAJOR=0 WITHOUT_PROFILE=1
 MAKE_ARGS=	INCLUDEDIR="${PREFIX}/include" LIBDIR="${PREFIX}/lib" \
-		MANDIR="${PREFIX}/man/man"
+		MANDIR="${PREFIX}/share/man/man"
 USE_LDCONFIG=	yes
 
 .include <bsd.port.options.mk>

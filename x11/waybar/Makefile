@@ -1,22 +1,23 @@
 # $FreeBSD$
 
 PORTNAME=	waybar
-DISTVERSION=	0.9.0
+DISTVERSION=	0.9.2
 CATEGORIES=	x11
 
 PATCH_SITES=	https://github.com/${GH_ACCOUNT}/${GH_PROJECT}/commit/
 # https://github.com/Alexays/Waybar/pull/425
-PATCHFILES+=	2e9d80139411.patch:-p1
-PATCHFILES+=	9ba4bfcb20f2.patch:-p1
-PATCHFILES+=	2155d9560887.patch:-p1
-PATCHFILES+=	abc17ff5393c.patch:-p1
-PATCHFILES+=	d3ad69814f28.patch:-p1
-PATCHFILES+=	4ceefa8ed4d9.patch:-p1
-PATCHFILES+=	7675d81f3205.patch:-p1
-PATCHFILES+=	4a151db3a433.patch:-p1
-PATCHFILES+=	e9263a38841b.patch:-p1
-PATCHFILES+=	acb51ccef3ab.patch:-p1
-PATCHFILES+=	6349d48af076.patch:-p1
+PATCHFILES+=	903b8a9ceb9f.patch:-p1
+PATCHFILES+=	db1d7e4dc8e9.patch:-p1
+PATCHFILES+=	f9bcb7ecc4c4.patch:-p1
+PATCHFILES+=	e704078a2203.patch:-p1
+PATCHFILES+=	11ce516b45ba.patch:-p1
+PATCHFILES+=	d2ba72fb4ec7.patch:-p1
+PATCHFILES+=	3281701b98ae.patch:-p1
+PATCHFILES+=	ff6decbf39ca.patch:-p1
+PATCHFILES+=	f74df748da05.patch:-p1
+PATCHFILES+=	212195c96548.patch:-p1
+PATCHFILES+=	f73e03b563af.patch:-p1
+PATCHFILES+=	83f3cb042457.patch:-p1
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Highly customizable Wayland bar for Sway and wlroots-based compositors
@@ -24,10 +25,11 @@ COMMENT=	Highly customizable Wayland bar for Sway and wlroots-based compositors
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-BUILD_DEPENDS=	spdlog>0:devel/spdlog \
-		wayland-protocols>0:graphics/wayland-protocols
-LIB_DEPENDS=	libjsoncpp.so:devel/jsoncpp \
+BUILD_DEPENDS=	wayland-protocols>0:graphics/wayland-protocols
+LIB_DEPENDS=	libtz.so:devel/date \
+		libjsoncpp.so:devel/jsoncpp \
 		libfmt.so:devel/libfmt \
+		libspdlog.so:devel/spdlog \
 		libwayland-client.so:graphics/wayland
 
 USES=		compiler:c++17-lang gnome meson pkgconfig
@@ -39,6 +41,13 @@ CPPFLAGS+=	-D_WITH_GETLINE # XXX Remove after FreeBSD 11 EOL
 PLIST_FILES=	bin/${PORTNAME} \
 		etc/xdg/${PORTNAME}/config \
 		etc/xdg/${PORTNAME}/style.css
+
+# XXX Add pkg-config support to devel/date
+.if exists(${.CURDIR}/files/date.pc.in)
+CONFIGURE_ENV+=	PKG_CONFIG_PATH="${WRKDIR}"
+SUB_FILES+=	date.pc
+post-patch:	apply-slist
+.endif
 
 OPTIONS_DEFINE=	DBUS GLS MANPAGES MPD PULSEAUDIO UDEV
 OPTIONS_DEFAULT=DBUS GLS MANPAGES MPD PULSEAUDIO UDEV
@@ -82,5 +91,11 @@ UDEV_DESC=		Monitor backlight level via libudev
 UDEV_LIB_DEPENDS=	libepoll-shim.so:devel/libepoll-shim \
 			libudev.so:devel/libudev-devd
 UDEV_MESON_ENABLED=	libudev
+
+post-patch:
+# Extract (snapshot) version from the port instead of meson.build
+	@${REINPLACE_CMD} -i .nogit -e 's/git.found()/false/' \
+		-e '/project_version/s/@0@/${DISTVERSIONFULL}/' \
+		${WRKSRC}/meson.build
 
 .include <bsd.port.mk>

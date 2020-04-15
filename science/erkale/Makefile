@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	erkale
-DISTVERSION=	g20191120
+DISTVERSION=	g20200319
 CATEGORIES=	science
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -17,7 +17,6 @@ LIB_DEPENDS=	libderiv.so:science/libint \
 		libgsl.so:math/gsl \
 		libhdf5.so:science/hdf5 \
 		libint.so:science/libint \
-		libopenblas.so:math/openblas \
 		libsz.so:science/szip \
 		libxc.so:science/libxc
 RUN_DEPENDS=	${LOCALBASE}/share/erkale/basis/6-21G.gbs:science/erkale-pseudopotentials
@@ -29,7 +28,7 @@ serial_PKGNAMESUFFIX=	-serial
 USES=		cmake:noninja fortran pkgconfig
 USE_GITHUB=	yes
 GH_ACCOUNT=	susilehtola
-GH_TAGNAME=	2afb257548dbd8246aac921d0d9dce7ecb744a6f
+GH_TAGNAME=	ae9df2c14f0acf4eefe82c3fb351a75584159675
 USE_LDCONFIG=	yes
 
 TEST_TARGET=	test
@@ -44,29 +43,22 @@ CMAKE_OFF=	USE_OPENMP
 .else # parallel
 CMAKE_ON+=	USE_OPENMP
 SUFFIX=		_omp
-LIB_DEPENDS+=	libomp.so:devel/llvm${LLVM_DEFAULT}
 .endif
 
 OPTIONS_SINGLE=		LINALG
 OPTIONS_SINGLE_LINALG=	NETLIB OPENBLAS
-OPTIONS_DEFAULT=	NETLIB
+OPTIONS_DEFAULT=	OPENBLAS
 LINALG_DESC=		Linear algebra library
 
 NETLIB_USES=		blaslapack:netlib
 NETLIB_CMAKE_ON=	-DLAPACK_LIBRARIES:STRING=-llapack -DBLAS_LIBRARIES:STRING=-lblas
 NETLIB_LDFLAGS=		${LOCALBASE}/lib/libcblas.so ${LOCALBASE}/lib/liblapack.so ${LOCALBASE}/lib/libblas.so
 NETLIB_LIB_DEPENDS=	libcblas.so:math/cblas
+NETLIB_BROKEN=		choosing NETLIB causes a conflict: openblas-0.3.7_3,1 conflicts with cblas-1.0_12 on /usr/local/include/cblas.h
 
 OPENBLAS_USES=		blaslapack:openblas
-OPENBLAS_CMAKE_ON=	-DLAPACK_LIBRARIES:STRING=-lopenblas -DBLAS_LIBRARIES:STRING=-lopenblasp
-OPENBLAS_BROKEN=	hits the number of threads limit: https://github.com/xianyi/OpenBLAS/issues/1882
-
-# use clang from ports because cmake can't find OpenMP with base clang, see https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=223678
-# have the same compiler for both serial and parallel flavors so that performance numbers can be compared
-BUILD_DEPENDS+=	clang${LLVM_DEFAULT}:devel/llvm${LLVM_DEFAULT}
-CPP=		clang-cpp${LLVM_DEFAULT}
-CC=		clang${LLVM_DEFAULT}
-CXX=		clang++${LLVM_DEFAULT}
+OPENBLAS_CMAKE_ON=	-DLAPACK_LIBRARIES:STRING=-lopenblas -DBLAS_LIBRARIES:STRING=-lopenblas
+OPENBLAS_LIB_DEPENDS=	libopenblas.so:math/openblas
 
 .if ${FLAVOR} == parallel
 post-install:

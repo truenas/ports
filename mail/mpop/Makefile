@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	mpop
-DISTVERSION=	1.4.7
+DISTVERSION=	1.4.8
 CATEGORIES=	mail
 MASTER_SITES=	https://marlam.de/mpop/releases/
 
@@ -27,7 +27,7 @@ OPTIONS_SUB=		yes
 GNUTLS_LIB_DEPENDS=	libgnutls.so:security/gnutls
 GNUTLS_CONFIGURE_ON=	--with-tls=gnutls
 GSASL_DESC=		${SASL_DESC} via GNU SASL
-GSASL_LIB_DEPENDS=	libgsasl.so:security/gsasl
+GSASL_LIB_DEPENDS=	libgsasl.so:security/libgsasl
 GSASL_CONFIGURE_WITH=	libgsasl
 IDN_LIB_DEPENDS=	libidn2.so:dns/libidn2
 IDN_CONFIGURE_WITH=	libidn

@@ -13,6 +13,7 @@
     SUBDIR += bind9-devel
     SUBDIR += bind911
     SUBDIR += bind914
+    SUBDIR += bind916
     SUBDIR += bindgraph
     SUBDIR += bundy
     SUBDIR += c-ares
@@ -47,7 +48,6 @@
     SUBDIR += dnshistory
     SUBDIR += dnsjava
     SUBDIR += dnsmasq
-    SUBDIR += dnsmasq-devel
     SUBDIR += dnsmax-perl
     SUBDIR += dnsperf
     SUBDIR += dnsproxy
@@ -110,6 +110,7 @@
     SUBDIR += mydns
     SUBDIR += mydns-ng
     SUBDIR += namesilo_ddns
+    SUBDIR += nextdns
     SUBDIR += noip
     SUBDIR += nsd
     SUBDIR += nsec3walker
@@ -197,6 +198,7 @@
     SUBDIR += py-namebench
     SUBDIR += py-ns1-python
     SUBDIR += py-publicsuffix
+    SUBDIR += py-publicsuffix2
     SUBDIR += py-publicsuffixlist
     SUBDIR += py-py3dns
     SUBDIR += py-pybonjour

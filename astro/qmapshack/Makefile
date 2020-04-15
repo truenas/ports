@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	qmapshack
-PORTVERSION=	1.14.0
+PORTVERSION=	1.14.1
 DISTVERSIONPREFIX=	V_
 CATEGORIES=	astro
 
@@ -20,11 +20,14 @@ RUN_DEPENDS=	${LOCALBASE}/bin/bsdisks:sysutils/bsdisks
 
 USES=		cmake compiler:c++11-lib desktop-file-utils gl jpeg \
 		pkgconfig qt:5 xorg
-USE_QT=		buildtools core dbus declarative gui linguisttools location network \
+USE_GITHUB=	yes
+USE_GL=		gl
+USE_QT=		buildtools core dbus declarative gui help linguisttools location network \
 		printsupport qmake sql sql-sqlite3 uitools \
 		webchannel webengine widgets xml
-USE_GL=		gl
-USE_GITHUB=	yes
+
 GH_ACCOUNT=	Maproom
+
+OPTIONS_DEFINE=	DOCS
 
 .include <bsd.port.mk>

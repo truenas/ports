@@ -2,10 +2,10 @@
 # $FreeBSD$
 
 PORTNAME=	yar
-DISTVERSION=	2.0.6
+DISTVERSION=	2.0.7
 CATEGORIES=	www
 
-MAINTAINER=	joneum@FreeBSD.org
+MAINTAINER=	miwi@FreeBSD.org
 COMMENT=	Yar (Yet another RPC framework) is a light, concurrent RPC framework
 
 LICENSE=	PHP301

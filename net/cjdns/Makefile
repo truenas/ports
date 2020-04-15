@@ -3,7 +3,7 @@
 
 PORTNAME=	cjdns
 DISTVERSIONPREFIX=	cjdns-v
-DISTVERSION=	20.4
+DISTVERSION=	20.6
 CATEGORIES=	net security
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -15,7 +15,7 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 BUILD_DEPENDS=	node:www/node \
 		bash:shells/bash
 
-USES=		gmake python:2.7
+USES=		gmake python
 USE_GITHUB=	yes
 GH_ACCOUNT=	cjdelisle
 USE_RC_SUBR=	cjdns

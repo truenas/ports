@@ -2,8 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	bazel
-DISTVERSION=	2.0.0
-PORTREVISION=	1
+DISTVERSION=	3.0.0
 CATEGORIES=	devel java
 MASTER_SITES=	https://storage.googleapis.com/bazel/${PORTVERSION}/rc${FINALRC}/
 DISTNAME=	bazel-${PORTVERSION}rc${FINALRC}-dist
@@ -17,19 +16,20 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 BROKEN_aarch64=		fails to build: java.lang.OutOfMemoryError: Java heap space
 BROKEN_armv6=		fails to package: cp: bazel: No such file or directory
 BROKEN_armv7=		fails to package: cp: bazel: No such file or directory
-BROKEN_powerpc64=	fails to compile: Action failed to execute: java.io.IOException: Cannot run program /usr/bin/clang
+BROKEN_FreeBSD_11_powerpc64=	fails to compile: Action failed to execute: java.io.IOException: Cannot run program /usr/bin/clang
+BROKEN_FreeBSD_12_powerpc64=	fails to compile: Action failed to execute: java.io.IOException: Cannot run program /usr/bin/clang
 
 BUILD_DEPENDS=	bash:shells/bash \
 		zip:archivers/zip
 
-CONFLICTS_INSTALL=	bazel029
-
 USES=		python:3.3+ shebangfix zip:infozip
+
+CONFLICTS_INSTALL=	bazel029
 
 # In bazel, a release is always code-wise identical to the final release candidate.
 # Hence we can also download that one and so have a simple way to also test earlier release
 # candidates.
-FINALRC=	4
+FINALRC=	2
 
 SHEBANG_REGEX=	.*(sh|txt|_stub|stub_.*|bazel|get_workspace_status|protobuf_support|_so)
 USE_JAVA=	yes
@@ -64,7 +64,7 @@ post-patch:
 	-e 's|^\(PYTHON_BIN=.*\)|if [ "%VERSION%" = "3" ] ; then PYTHON_BIN=${PYTHON_CMD}; else \1 ; fi|' \
 	${WRKSRC}/tools/python/pywrapper_template.txt
 	@${REINPLACE_CMD} \
-	-e 's|/usr/bin/env python|${PYTHON_CMD}|' \
+	-e 's|%%PYTHON_CMD%%|${PYTHON_CMD}|' \
 	${WRKSRC}/src/main/java/com/google/devtools/build/lib/bazel/rules/python/BazelPythonSemantics.java
 
 do-build:

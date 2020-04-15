@@ -1,16 +1,13 @@
 # $FreeBSD$
 
 PORTNAME=	vapoursynth
-DISTVERSION=	R48
+DISTVERSION=	R49
 CATEGORIES=	multimedia
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Video processing framework with simplicity in mind
 
 LICENSE=	LGPL21+
-
-ONLY_FOR_ARCHS=	amd64 i386
-ONLY_FOR_ARCHS_REASON=	https://github.com/vapoursynth/vapoursynth/issues/509
 
 USE_GITHUB=	yes
 
@@ -54,7 +51,7 @@ SIMD_CONFIGURE_ENABLE=		x86-asm
 # COMPS group
 
 CORE_DESC=			Core library
-CORE_BUILD_DEPENDS=		sekrit-twc-zimg>=2.9.1:graphics/sekrit-twc-zimg
+CORE_BUILD_DEPENDS=		sekrit-twc-zimg>=2.9.3:graphics/sekrit-twc-zimg
 CORE_LIB_DEPENDS=		libzimg.so:graphics/sekrit-twc-zimg
 CORE_USES=			compiler:c++11-lib
 CORE_CONFIGURE_ENABLE=		core
@@ -128,7 +125,7 @@ post-install-DOCS-on:
 		"${PORTDOCS}" ${STAGEDIR}${DOCSDIR})
 	@if [ -n "${PORT_OPTIONS:MVSPIPE}" ]; then \
 		${INSTALL_MAN} -v ${WRKSRC}/doc/_build/man/vspipe.1 \
-			${STAGEDIR}${MAN1PREFIX}/man/man1; \
+			${STAGEDIR}${PREFIX}/share/man/man1; \
 	fi
 
 .include <bsd.port.mk>

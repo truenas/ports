@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	node
-PORTVERSION=	12.13.1
+PORTVERSION=	12.16.2
 DISTVERSIONPREFIX=	v
 CATEGORIES=	www
 MASTER_SITES=	http://nodejs.org/dist/v${PORTVERSION}/
@@ -21,9 +21,6 @@ OPTIONS_DEFINE=		BUNDLED_SSL DOCS NLS DTRACE
 OPTIONS_DEFAULT=	DTRACE
 OPTIONS_DEFAULT_FreeBSD_11=	BUNDLED_SSL
 OPTIONS_DEFAULT+=	${OPTIONS_DEFAULT_${OPSYS}_${OSREL:R}}
-# FreeBSD 12.0-RELEASE includes OpenSSL 1.1.1a, but Node.js relies on 1.1.1d
-OPTIONS_DEFAULT_FreeBSD_12_0=	BUNDLED_SSL
-OPTIONS_DEFAULT+=	${OPTIONS_DEFAULT_${OPSYS}_${OSREL:R}_${OSREL:E}}
 OPTIONS_SUB=		yes
 
 .if !exists(/usr/sbin/dtrace)
@@ -70,8 +67,8 @@ MAKE_ENV+=	CC.host=${CC} CFLAGS.host="${CFLAGS}" \
 		LINK.host=${CXX} LDFLAGS.host="${LDFLAGS}"
 
 BUILD_DEPENDS+=	c-ares>=1.15.0:dns/c-ares\
-		libuv>=1.33.1:devel/libuv \
-		libnghttp2>=1.39.2:www/libnghttp2
+		libuv>=1.34.2:devel/libuv \
+		libnghttp2>=1.40.0:www/libnghttp2
 LIB_DEPENDS+=	libcares.so:dns/c-ares\
 		libuv.so:devel/libuv \
 		libnghttp2.so:www/libnghttp2

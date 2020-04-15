@@ -31,7 +31,13 @@ OPTIONS_DEFINE=	DOCS
 
 do-build:
 	cd ${WRKSRC} && ${EMACS_CMD} --batch \
-	    -f batch-byte-compile mu4e-maildirs-extension.el && \
+	    --eval "(provide 'mu4e)" \
+	    --eval "(defvar mu4e~main-buffer-name \"tests\")" \
+	    --eval "(defvar mu4e-mu-binary \"mu\")" \
+	    --eval "(require 'cl)" \
+	    -l dash.el \
+	    -l mu4e-maildirs-extension.el \
+	    --eval "(byte-compile-file \"mu4e-maildirs-extension.el\")" && \
 	    ${GZIP_CMD} mu4e-maildirs-extension.el
 
 do-install:

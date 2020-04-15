@@ -2,7 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	ilmbase
-PORTVERSION=	2.4.0
+PORTVERSION=	2.4.1
+PORTREVISION=	1
 CATEGORIES=	graphics devel
 
 MAINTAINER=	mandree@FreeBSD.org
@@ -19,18 +20,14 @@ USES=		cmake compiler:c++14-lang pkgconfig libtool
 USE_LDCONFIG=	yes
 
 USE_GITHUB=	yes
-GH_TUPLE=	AcademySoftwareFoundation:openexr:v2.4.0
+GH_TUPLE=	AcademySoftwareFoundation:openexr:v${PORTVERSION}
 WRKSRC_SUBDIR=	IlmBase
-
-# libtool links C++ libraries with -nostdlib, which prevents -pthread from
-# having an effect (at least with clang). Make sure we also pass -lpthread so
-# we do link against libthr.so.
-TEST_TARGET=	check
 
 PORTDOCS=	README.md
 OPTIONS_DEFINE=		DOCS LARGE_STACK
 LARGE_STACK_DESC=	Enable sys-dependent large stack optimizations
 LARGE_STACK_CONFIGURE_ENABLE=	large-stack
+LARGE_STACK_CMAKE_BOOL=		ILMBASE_ENABLE_LARGE_STACK
 
 CMAKE_ARGS+=	-DCMAKE_INSTALL_PREFIX=${PREFIX} --target install
 
@@ -46,7 +43,7 @@ PLIST_SUB+=	VER=${VER}
 
 HALF_BIN=	eLut toFloat
 
-regression-test regression check::
+test regression-test regression check::
 	cd ${BUILD_WRKSRC} && ctest
 
 post-install:

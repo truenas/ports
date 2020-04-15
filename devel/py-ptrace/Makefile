@@ -14,6 +14,9 @@ COMMENT=	Python binding of ptrace
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
+DEPRECATED=	Uses deprecated version of python
+EXPIRATION_DATE=	2020-08-15
+
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}distorm>0:devel/py-distorm@${PY_FLAVOR}
 
 USES=		python:2.7
@@ -39,7 +42,7 @@ post-patch:
 	${REINPLACE_CMD} -e 's|libdistorm64.so|${PYTHON_SITELIBDIR}/distorm3/libdistorm3.so|' \
 		${WRKSRC}/ptrace/pydistorm.py
 
-do-test: extract
+do-test:
 	@(cd ${WRKSRC} && ${PYTHON_CMD} runtests.py)
 
 .include <bsd.port.mk>

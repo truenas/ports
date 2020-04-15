@@ -18,7 +18,6 @@
     SUBDIR += awka
     SUBDIR += bas2tap
     SUBDIR += basic256
-    SUBDIR += beignet
     SUBDIR += bf2c
     SUBDIR += bsh
     SUBDIR += bwbasic
@@ -67,6 +66,7 @@
     SUBDIR += erlang-runtime20
     SUBDIR += erlang-runtime21
     SUBDIR += erlang-runtime22
+    SUBDIR += erlang-runtime23
     SUBDIR += erlang-wx
     SUBDIR += execline
     SUBDIR += expect
@@ -95,7 +95,6 @@
     SUBDIR += gcc-ecj45
     SUBDIR += gcc10-devel
     SUBDIR += gcc48
-    SUBDIR += gcc6
     SUBDIR += gcc6-aux
     SUBDIR += gcc7
     SUBDIR += gcc8
@@ -119,12 +118,12 @@
     SUBDIR += gnustep-base
     SUBDIR += go
     SUBDIR += go-devel
-    SUBDIR += go14
     SUBDIR += gomacro
     SUBDIR += gravity
     SUBDIR += groovy
     SUBDIR += gscheme
     SUBDIR += guile
+    SUBDIR += guile1
     SUBDIR += guile2
     SUBDIR += harbour
     SUBDIR += haskell-mode.el
@@ -146,7 +145,6 @@
     SUBDIR += janet
     SUBDIR += jimtcl
     SUBDIR += jruby
-    SUBDIR += js_of_ocaml
     SUBDIR += julia
     SUBDIR += julia06
     SUBDIR += julia07
@@ -279,8 +277,8 @@
     SUBDIR += ptoc
     SUBDIR += purescript
     SUBDIR += py-hy
+    SUBDIR += py-lupa
     SUBDIR += py-mx-base
-    SUBDIR += py-prolog
     SUBDIR += py-qt5-qml
     SUBDIR += py-textX
     SUBDIR += pypy
@@ -312,12 +310,12 @@
     SUBDIR += rexx-regutil
     SUBDIR += rexx-wrapper
     SUBDIR += rhino
-    SUBDIR += rubinius
-    SUBDIR += ruby24
     SUBDIR += ruby25
     SUBDIR += ruby26
+    SUBDIR += ruby27
     SUBDIR += runawk
     SUBDIR += rust
+    SUBDIR += rust-bootstrap
     SUBDIR += rust-nightly
     SUBDIR += sagittarius-scheme
     SUBDIR += sather-specification
@@ -327,7 +325,6 @@
     SUBDIR += scala-docs
     SUBDIR += scheme48
     SUBDIR += scm
-    SUBDIR += sdcc
     SUBDIR += see
     SUBDIR += seed7
     SUBDIR += siod

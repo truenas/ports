@@ -3,9 +3,8 @@
 
 PORTNAME=		ltfs
 DISTVERSIONPREFIX=	v
-DISTVERSION=		2.4.1.2
-DISTVERSIONSUFFIX=	-10254
-PORTREVISION=		1
+DISTVERSION=		2.4.2.0
+DISTVERSIONSUFFIX=	-10418
 CATEGORIES=		sysutils
 
 MAINTAINER=	kbowling@FreeBSD.org
@@ -16,7 +15,7 @@ LICENSE_FILE =	${WRKSRC}/LICENSE
 
 LIB_DEPENDS=	libicudata.so:devel/icu \
 		libnetsnmp.so:net-mgmt/net-snmp \
-		libpkg.so:ports-mgmt/pkg \
+		libpkg.so:${PKG_ORIGIN} \
 		libuuid.so:misc/e2fsprogs-libuuid
 
 USES=		autoreconf fuse gnome libtool:build pkgconfig ssl
