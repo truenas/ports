@@ -1,7 +1,7 @@
 --- setup.py.orig	2019-03-01 20:19:03 UTC
 +++ setup.py
 @@ -19,6 +19,9 @@ requires = [
-     's3transfer>=0.2.0,<0.3.0'
+     's3transfer>=0.3.0,<0.4.0'
  ]
  
 +tests_require = [
