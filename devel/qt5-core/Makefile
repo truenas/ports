@@ -2,6 +2,7 @@
 
 PORTNAME=	core
 DISTVERSION=	${QT5_VERSION}
+PORTREVISION=	1
 CATEGORIES=	devel
 PKGNAMEPREFIX=	qt5-
 
@@ -30,10 +31,11 @@ USE_LDCONFIG=	${PREFIX}/${QT_LIBDIR_REL}
 BUILD_WRKSRC=	${WRKSRC}/src/corelib
 INSTALL_WRKSRC=	${BUILD_WRKSRC}
 
+QT_BINARIES=	yes
 QT_DEFINES=	GLIB
 QT_CONFIG=	glib icu
 
-MORE_WRKSRCS=	src/tools/bootstrap src/tools/qfloat16-tables src/corelib src/tools/qlalr
+MORE_WRKSRCS=	src/tools/bootstrap src/corelib src/tools/qlalr
 
 .include <bsd.port.pre.mk>
 # FreeBSD base gained /etc/os-release in r354922, which

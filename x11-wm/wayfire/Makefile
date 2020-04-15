@@ -1,20 +1,21 @@
 # $FreeBSD$
 
 PORTNAME=	wayfire
-DISTVERSION=	0.3.1
+DISTVERSION=	0.4.0
 CATEGORIES=	x11-wm
 
 MAINTAINER=	jbeich@FreeBSD.org
-COMMENT=	3D wayland compositor
+COMMENT=	3D Wayland compositor
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 BUILD_DEPENDS=	evdev-proto>0:devel/evdev-proto \
+		wf-config>=0.4.0<0.5.0:devel/wf-config \
 		${LOCALBASE}/include/xf86drmMode.h:graphics/libdrm \
 		wayland-protocols>=1.12:graphics/wayland-protocols \
 		glm>=0.9.8:math/glm \
-		wlroots>=0.9.0<0.10.0:x11-toolkits/wlroots
+		wlroots>=0.9.0<0.11.0:x11-toolkits/wlroots
 LIB_DEPENDS=	libinotify.so:devel/libinotify \
 		libwf-config.so:devel/wf-config \
 		libpng.so:graphics/png \
@@ -23,7 +24,7 @@ LIB_DEPENDS=	libinotify.so:devel/libinotify \
 		libinput.so:x11/libinput \
 		libxkbcommon.so:x11/libxkbcommon
 
-USES=		compiler:c++11-lib gl gnome jpeg meson pkgconfig xorg
+USES=		compiler:c++17-lang gl gnome jpeg meson pkgconfig xorg
 USE_GITHUB=	yes
 USE_GL=		egl glesv2
 USE_GNOME=	cairo

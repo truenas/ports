@@ -16,6 +16,9 @@ COMMENT=	Multichannel digital audio workstation
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
 
+DEPRECATED=	Uses deprecated version of python
+EXPIRATION_DATE=	2020-09-15
+
 BUILD_DEPENDS=	lv2>=1.14.0:audio/lv2 itstool>2.0.0:textproc/itstool
 LIB_DEPENDS=	libserd-0.so:devel/serd \
 		libsord-0.so:devel/sord \
@@ -49,7 +52,6 @@ USE_LDCONFIG=	yes
 INSTALLS_ICONS=	yes
 
 BROKEN_aarch64=		fails to configure: Could not find the program gas,as,gcc
-BROKEN_powerpc64=	fails to compile: configuration_variable.cc: 'strtof' is not a member of 'std'
 
 PLIST_SUB=	ARDOURVERSION=${PORTVERSION}
 
@@ -104,6 +106,8 @@ post-install:
 WITH_ARCH_FLAGS=	--arch='-msse -mfpmath=sse' --dist-target=i386
 .elif ${ARCH} == "amd64"
 WITH_ARCH_FLAGS=	--arch='-msse -mfpmath=sse' --dist-target=x86_64
+.elif ${ARCH} == "powerpc64"
+LLD_UNSAFE=	yes
 .endif
 
 .if defined(WITH_ARCH_FLAGS)

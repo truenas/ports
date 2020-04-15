@@ -1,10 +1,11 @@
 # $FreeBSD$
 
-PORTREVISION=	3
+PORTREVISION=	0
 CATEGORIES=	graphics
 
 COMMENT=	GStreamer OpenExr codec plugin
 
+USES+=		compiler:c++11-lang
 GST_PLUGIN=	openexr
 DIST=		bad
 

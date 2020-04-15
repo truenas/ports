@@ -1,9 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	waifu2x-ncnn-vulkan
-DISTVERSION=	20190712-6
-DISTVERSIONSUFFIX=	-gb373ce2
-PORTREVISION=	1
+DISTVERSION=	20200414
 CATEGORIES=	graphics
 
 MAINTAINER=	jbeich@FreeBSD.org
@@ -15,7 +13,7 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 BUILD_DEPENDS=	glslangValidator:devel/glslang \
 		${LOCALBASE}/include/vulkan/vulkan.h:devel/vulkan-headers \
 		${LOCALBASE}/lib/libvulkan.so:graphics/vulkan-loader \
-		${LOCALBASE}/lib/libncnn.a:science/ncnn
+		${LOCALBASE}/lib/libncnn.a:misc/ncnn
 
 USES=		cmake compiler:${OPENMP}c++11-lib
 USE_GITHUB=	yes
@@ -26,7 +24,7 @@ PLIST_FILES=	bin/${PORTNAME}
 PORTDATA=	*
 
 .if !exists(/usr/include/omp.h)
-# XXX ports/199603 + ports/210337
+# XXX ports/199603: LLVM openmp in base doesn't support aarch64, armv6, armv7 yet
 OPENMP=		gcc-
 .endif
 

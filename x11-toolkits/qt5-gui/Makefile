@@ -2,7 +2,6 @@
 
 PORTNAME=	gui
 DISTVERSION=	${QT5_VERSION}
-PORTREVISION=	2
 CATEGORIES=	x11-toolkits graphics
 PKGNAMEPREFIX=	qt5-
 
@@ -65,6 +64,7 @@ MORE_WRKSRCS+=	src/plugins/imageformats \
 # openglextensions is the static library to use for further things like qtcanvas3d
 MORE_WRKSRCS+=	src/openglextensions
 
+QT_BINARIES=	yes
 QT_DEFINES=	ACCESSIBILITY DBUS FONTCONFIG FREETYPE GLIB \
 		IMAGEFORMAT_PNG OPENGL SHAPE XCB XKB XKBCOMMON XRENDER
 QT_CONFIG=	accessibility accessibility-atspi-bridge dbus \

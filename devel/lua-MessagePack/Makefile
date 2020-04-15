@@ -2,6 +2,7 @@
 
 PORTNAME=	MessagePack
 PORTVERSION=	0.3.5
+PORTREVISION=	1
 CATEGORIES=	devel
 PKGNAMEPREFIX=	${LUA_PKGNAMEPREFIX}
 
@@ -9,11 +10,13 @@ MAINTAINER=	oleksii.tsai@gmail.com
 COMMENT=	Efficient binary serialization format
 
 BROKEN=		unfetchable
+DEPRECATED=	Broken for more than 6 months
+EXPIRATION_DATE=	2020-05-05
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/COPYRIGHT
 
-USES=		lua
+USES=		lua:module
 NO_BUILD=	yes
 NO_ARCH=	yes
 

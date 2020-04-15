@@ -6,10 +6,12 @@ PORTVERSION=	1.1.2
 CATEGORIES=	devel pear
 MASTER_SITES=	http://pear.pdepend.org/get/
 
-MAINTAINER=	joneum@FreeBSD.org
+MAINTAINER=	miwi@FreeBSD.org
 COMMENT=	PHP_Depend design quality metrics for PHP packages
 
 BROKEN=		unfetchable
+DEPRECATED=	Broken for more than 6 months
+EXPIRATION_DATE=	2020-05-05
 
 LICENSE=	BSD3CLAUSE
 

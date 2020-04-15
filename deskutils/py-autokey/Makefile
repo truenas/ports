@@ -1,10 +1,10 @@
 # $FreeBSD$
 
 PORTNAME=	autokey
-DISTVERSION=	0.95.4
+DISTVERSIONPREFIX=	v
+DISTVERSION=	0.95.9
 PORTREVISION=	1
 CATEGORIES=	deskutils python
-MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	daniel@shafer.cc
@@ -23,6 +23,9 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}dbus>0:devel/py-dbus@${PY_FLAVOR} \
 
 USES=		python:3.6+ shebangfix
 USE_PYTHON=	distutils concurrent
+USE_GITHUB=	yes
+
+INSTALLS_ICONS=	yes
 
 NO_ARCH=	yes
 

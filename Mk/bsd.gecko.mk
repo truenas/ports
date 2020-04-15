@@ -76,8 +76,8 @@ LDFLAGS+=		-Wl,--as-needed
 BUNDLE_LIBS=	yes
 
 BUILD_DEPENDS+=	llvm${LLVM_DEFAULT}>0:devel/llvm${LLVM_DEFAULT} \
-				rust-cbindgen>=0.8.7:devel/rust-cbindgen \
-				${RUST_DEFAULT}>=1.35:lang/${RUST_DEFAULT} \
+				rust-cbindgen>=0.13.1:devel/rust-cbindgen \
+				${RUST_DEFAULT}>=1.41:lang/${RUST_DEFAULT} \
 				${LOCALBASE}/bin/python${PYTHON3_DEFAULT}:lang/python${PYTHON3_DEFAULT:S/.//g} \
 				node:www/node
 MOZ_EXPORT+=	${CONFIGURE_ENV} \
@@ -375,6 +375,11 @@ gecko-post-patch:
 # Disable vendor checksums like lang/rust
 	@${REINPLACE_CMD} 's,"files":{[^}]*},"files":{},' \
 		${MOZSRC}/third_party/rust/*/.cargo-checksum.json
+
+pre-configure-script:
+# Check that the running kernel has COMPAT_FREEBSD11 required by lang/rust post-ino64
+	@${SETENV} CC="${CC}" OPSYS="${OPSYS}" OSVERSION="${OSVERSION}" WRKDIR="${WRKDIR}" \
+		${SH} ${SCRIPTSDIR}/rust-compat11-canary.sh
 
 post-install-script: gecko-create-plist
 

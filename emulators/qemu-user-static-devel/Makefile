@@ -2,7 +2,7 @@
 
 PORTNAME=	qemu
 PORTVERSION=	3.1.0
-PORTREVISION=	1
+PORTREVISION=	3
 CATEGORIES=	emulators
 PKGNAMESUFFIX=	-user-static-devel
 DIST_SUBDIR=	qemu/${PORTVERSION}
@@ -39,7 +39,7 @@ CONFIGURE_ARGS+=	--extra-cflags=-I${LOCALBASE}/include
 CONFIGURE_ARGS+=	--disable-libssh2
 
 QEMU_TARGETS=		i386-bsd-user sparc-bsd-user arm-bsd-user mips-bsd-user mipsel-bsd-user ppc-bsd-user
-.if ${ARCH} == "amd64"
+.if ${ARCH} == "amd64" || ${ARCH} == "powerpc64"
 QEMU_TARGETS+=		x86_64-bsd-user riscv64-bsd-user sparc64-bsd-user mips64-bsd-user mips64el-bsd-user ppc64-bsd-user aarch64-bsd-user
 PLIST_SUB+=	64BIT=""
 .else
@@ -47,7 +47,6 @@ PLIST_SUB+=	64BIT="@comment "
 .endif
 CONFIGURE_ARGS+=	--target-list=${QEMU_TARGETS:ts,}
 
-SSP_CFLAGS?=	-fstack-protector # XXX -strong crashes qemu-user-static
 WITHOUT_CPU_CFLAGS=yes	#to avoid problems with register allocation
 CFLAGS:=	${CFLAGS:C/-fno-tree-vrp//}
 CFLAGS+=	-Wno-address-of-packed-member

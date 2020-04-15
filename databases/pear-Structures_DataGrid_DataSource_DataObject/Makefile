@@ -5,10 +5,12 @@ PORTNAME=	Structures_DataGrid_DataSource_DataObject
 PORTVERSION=	0.2.1
 CATEGORIES=	databases www pear
 
-MAINTAINER=	joneum@FreeBSD.org
+MAINTAINER=	miwi@FreeBSD.org
 COMMENT=	DataSource driver using PEAR::DB_DataObject
 
 BROKEN=		unfetchable
+DEPRECATED=	Broken for more than 6 months
+EXPIRATION_DATE=	2020-05-05
 
 LICENSE=	BSD2CLAUSE
 

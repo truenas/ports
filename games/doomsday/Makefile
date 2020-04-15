@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	doomsday
-PORTVERSION=	2.1.2
+PORTVERSION=	2.2.2
 CATEGORIES=	games
 MASTER_SITES=	SF/deng/Doomsday%20Engine/${PORTVERSION}
 
@@ -17,7 +17,7 @@ LIB_DEPENDS=	libcurl.so:ftp/curl \
 RUN_DEPENDS=	timidity:audio/timidity
 
 USES=		cmake compiler:c++11-lib gl localbase:ldflags ncurses ninja openal pkgconfig \
-		python:2.7,build qt:5 sdl xorg
+		python:3.5+,build qt:5 sdl xorg
 
 USE_GL=		gl glu
 USE_LDCONFIG=	yes

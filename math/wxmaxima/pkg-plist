@@ -1,15 +1,10 @@
 bin/wxmaxima
-man/man1/wxmaxima.1.gz
-share/metainfo/io.github.wxmaxima_developers.wxMaxima.appdata.xml
 %%DESKTOPDIR%%/io.github.wxmaxima_developers.wxMaxima.desktop
-share/bash-completion/completions/wxmaxima
 %%DOCSDIR%%/Autocomplete1.jpg
 %%DOCSDIR%%/Autocomplete2.jpg
 %%DOCSDIR%%/BatchImage.jpg
 %%DOCSDIR%%/BatchImage.png
-%%DOCSDIR%%/Matrix table example.png
 %%DOCSDIR%%/MatrixTableExample.png
-%%DOCSDIR%%/Second table example.png
 %%DOCSDIR%%/SecondTableExample.png
 %%DOCSDIR%%/ezUnits.jpg
 %%DOCSDIR%%/ezUnits.png
@@ -22,6 +17,9 @@ share/bash-completion/completions/wxmaxima
 %%DOCSDIR%%/wxMaxima_configuration_002.jpg
 %%DOCSDIR%%/wxMaxima_configuration_002.png
 %%DOCSDIR%%/wxmaxima.html
+share/bash-completion/completions/wxmaxima
+share/man/man1/wxmaxima.1.gz
+share/metainfo/io.github.wxmaxima_developers.wxMaxima.appdata.xml
 %%NLS%%share/locale/ca/LC_MESSAGES/wxMaxima.mo
 %%NLS%%share/locale/cs/LC_MESSAGES/wxMaxima.mo
 %%NLS%%share/locale/da/LC_MESSAGES/wxMaxima.mo
@@ -52,9 +50,6 @@ share/pixmaps/text-x-wxmathml.svg
 share/pixmaps/text-x-wxmaxima-batch.svg
 share/pixmaps/wxmaxima-16.xpm
 share/pixmaps/wxmaxima-32.xpm
-share/wxMaxima/COPYING
-share/wxMaxima/README
-share/wxMaxima/README.md
 share/wxMaxima/a.png
 share/wxMaxima/all-celltypes.wxmx
 share/wxMaxima/autosave.cfg
@@ -88,6 +83,7 @@ share/wxMaxima/matrixCells.wxm
 share/wxMaxima/multiplication.wxm
 share/wxMaxima/nonsenseConstructs.wxm
 share/wxMaxima/parenthesisCells.wxm
+share/wxMaxima/presubsupcells.wxm
 share/wxMaxima/printf_continuationLines.wxm
 share/wxMaxima/printf_equations.wxm
 share/wxMaxima/printf_simple.wxm
@@ -98,6 +94,7 @@ share/wxMaxima/sqrtCells.wxm
 share/wxMaxima/subCells.wxm
 share/wxMaxima/subsupCells.wxm
 share/wxMaxima/sumCells.wxm
+share/wxMaxima/threadtest.wxm
 share/wxMaxima/unicode.wxm
 share/wxMaxima/unicode_specialchars.wxm
 share/wxMaxima/weirdLabels.wxm

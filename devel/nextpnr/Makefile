@@ -5,12 +5,17 @@ DISTVERSION=	g20191026
 PORTREVISION=	1
 CATEGORIES=	devel
 
+PATCH_SITES=	https://github.com/YosysHQ/nextpnr/commit/
+PATCHFILES=	b6e2159cecdf79d0d94d0e6a9dda8cef6389cac1.patch:-p1
+
 MAINTAINER=	manu@FreeBSD.org
 COMMENT=	Portable FPGA place and route tool
 
 LICENSE=	ISCL
 LICENSE_FILE=	${WRKSRC}/COPYING
 
+NOT_FOR_ARCHS=	i386
+NOT_FOR_ARCHS_REASON=	clang segfault
 BROKEN_FreeBSD_11_powerpc64=	runaway build
 BROKEN_FreeBSD_12_powerpc64=	runaway build
 

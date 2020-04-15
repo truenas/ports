@@ -18,6 +18,8 @@ USE_CSTD=	gnu89
 
 CFLAGS_amd64=	-fPIC
 CFLAGS_i386=	-fPIC
+CFLAGS_powerpc64=	-fPIC
+CFLAGS_powerpc=	-fPIC
 
 PORTDOCS=	howto
 
