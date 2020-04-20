@@ -1,8 +1,8 @@
 --- src/df.c.orig	2017-06-06 18:13:54 UTC
 +++ src/df.c
 @@ -28,6 +28,11 @@
- #include "utils_ignorelist.h"
- #include "utils_mount.h"
+ #include "utils/ignorelist/ignorelist.h"
+ #include "utils/mount/mount.h"
  
 +#ifdef __FreeBSD__
 +/* We want to use statfs on FreeBSD, for the mount flags. */
@@ -12,70 +12,8 @@
  #if HAVE_STATVFS
  #if HAVE_SYS_STATVFS_H
  #include <sys/statvfs.h>
-@@ -48,17 +53,20 @@
- 
- static const char *config_keys[] = {
-     "Device",         "MountPoint",   "FSType",         "IgnoreSelected",
--    "ReportByDevice", "ReportInodes", "ValuesAbsolute", "ValuesPercentage"};
-+    "ReportByDevice", "ReportInodes", "ValuesAbsolute", "ValuesPercentage",
-+    "LogOnce"};
- static int config_keys_num = STATIC_ARRAY_SIZE(config_keys);
- 
- static ignorelist_t *il_device;
- static ignorelist_t *il_mountpoint;
- static ignorelist_t *il_fstype;
-+static ignorelist_t *il_errors;
- 
- static bool by_device;
- static bool report_inodes;
- static bool values_absolute = true;
- static bool values_percentage;
-+static bool log_once;
- 
- static int df_init(void) {
-   if (il_device == NULL)
-@@ -67,6 +75,8 @@ static int df_init(void) {
-     il_mountpoint = ignorelist_create(1);
-   if (il_fstype == NULL)
-     il_fstype = ignorelist_create(1);
-+  if (il_errors == NULL)
-+    il_errors = ignorelist_create(0);
- 
-   return 0;
- }
-@@ -122,6 +132,13 @@ static int df_config(const char *key, const char *value) {
-     else
-       values_percentage = 0;
- 
-+    return 0;
-+  } else if (strcasecmp(key, "LogOnce") == 0) {
-+    if (IS_TRUE(value))
-+      log_once = 1;
-+    else
-+      log_once = 0;
-+
-     return 0;
-   }
- 
-@@ -203,11 +220,27 @@ static int df_read(void) {
-       continue;
- 
-     if (STATANYFS(mnt_ptr->dir, &statbuf) < 0) {
--      ERROR(STATANYFS_STR "(%s) failed: %s", mnt_ptr->dir, STRERRNO);
-+      if (log_once == 0 || ignorelist_match(il_errors, mnt_ptr->dir) == 0)
-+      {
-+        if (log_once == 1)
-+        {
-+          ignorelist_add(il_errors, mnt_ptr->dir);
-+        }
-+        ERROR(STATANYFS_STR "(%s) failed: %s", mnt_ptr->dir, STRERRNO);
-+      }
-       continue;
-+    } else {
-+      if (log_once == 1)
-+      {
-+        ignorelist_remove(il_errors, mnt_ptr->dir);
-+      }
+@@ -228,7 +233,11 @@ static int df_read(void) {
+       }
      }
  
 +#ifdef __FreeBSD__
@@ -86,7 +24,7 @@
        continue;
  
      if (by_device) {
-@@ -298,14 +331,22 @@ static int df_read(void) {
+@@ -315,14 +324,22 @@ static int df_read(void) {
        uint64_t inode_used;
  
        /* Sanity-check for the values in the struct */
