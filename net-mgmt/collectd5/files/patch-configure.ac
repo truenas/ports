@@ -1,6 +1,6 @@
 --- configure.ac.orig	2017-06-06 18:13:54 UTC
 +++ configure.ac
-@@ -140,7 +140,7 @@ if test "x$ac_system" = "xAIX"; then
+@@ -145,7 +145,7 @@ if test "x$ac_system" = "xAIX"; then
  fi
  
  # Where to install .pc files.
@@ -9,7 +9,7 @@
  AC_SUBST([pkgconfigdir])
  
  #
-@@ -916,7 +916,7 @@ AC_CHECK_FUNCS([thread_info], [have_thread_info="yes"], [have_thread_info="no"])
+@@ -928,7 +928,7 @@ AC_CHECK_FUNCS([thread_info], [have_thread_info="yes"], [have_thread_info="no"])
  # Check for strptime {{{
  if test "x$GCC" = "xyes"; then
    SAVE_CFLAGS="$CFLAGS"
@@ -18,7 +18,7 @@
  fi
  
  AC_CHECK_FUNCS([strptime], [have_strptime="yes"], [have_strptime="no"])
-@@ -3362,6 +3362,8 @@ AC_ARG_WITH([libmongoc],
+@@ -3419,6 +3419,8 @@ AC_ARG_WITH([libmongoc],
    [
      if test "x$withval" = "xyes"; then
        with_libmongoc="yes"
@@ -27,17 +27,17 @@
      else if test "x$withval" = "xno"; then
        with_libmongoc="no"
      else
-@@ -4205,7 +4207,7 @@ if test "x$with_libperl" = "xyes"; then
-   # (see issues #41 and #42)
-   SAVE_CFLAGS="$CFLAGS"
+@@ -4329,7 +4331,7 @@ if test "x$with_libperl" = "xyes"; then
    SAVE_LIBS="$LIBS"
--  CFLAGS="$CFLAGS $PERL_CFLAGS -Wall -Werror"
-+  CFLAGS="$CFLAGS $PERL_CFLAGS -Wall "
+   CFLAGS="$CFLAGS $PERL_CFLAGS"
+   if test "x$GCC" = "xyes"; then
+-    CFLAGS="$CFLAGS -Wall -Werror"
++    CFLAGS="$CFLAGS -Wall"
+   fi
    LIBS="$LIBS $PERL_LIBS"
  
-   AC_CACHE_CHECK([for broken Perl_load_module()],
-@@ -5621,6 +5623,66 @@ AC_SUBST([BUILD_WITH_LIBYAJL_LIBS])
- AM_CONDITIONAL([BUILD_WITH_LIBYAJL], [test "x$with_libyajl" = "xyes"])
+@@ -5979,6 +5981,66 @@ AM_CONDITIONAL([BUILD_WITH_LIBYAJL], [test "x$with_libyajl" = "xyes"])
+ AM_CONDITIONAL([BUILD_WITH_LIBYAJL2], [test "x$with_libyajl$with_libyajl2" = "xyesyes"])
  # }}}
  
 +# --with-libdtrace {{{
@@ -103,8 +103,7 @@
  # --with-mic {{{
  with_mic_cppflags="-I/opt/intel/mic/sysmgmt/sdk/include"
  with_mic_ldflags="-L/opt/intel/mic/sysmgmt/sdk/lib/Linux"
-@@ -6247,9 +6309,13 @@ fi
- # FreeBSD
+@@ -6727,9 +6789,13 @@ fi
  
  if test "x$ac_system" = "xFreeBSD"; then
    plugin_cpufreq="yes"
@@ -112,13 +111,13 @@
    plugin_disk="yes"
 +  plugin_geom_stat="yes"
 +  plugin_nfsstat="yes"
+   plugin_ipstats="yes"
    plugin_zfs_arc="yes"
 +  plugin_zfs_arc_v2="yes"
  fi
  
  
-@@ -6273,7 +6339,8 @@ if test "x$with_kstat" = "xyes"; then
-   plugin_nfs="yes"
+@@ -6754,6 +6820,7 @@ if test "x$with_kstat" = "xyes"; then
    plugin_processes="yes"
    plugin_uptime="yes"
    plugin_zfs_arc="yes"
@@ -126,7 +125,7 @@
    plugin_zone="yes"
  fi
  
-@@ -6511,7 +6578,9 @@ AC_PLUGIN([contextswitch],       [$plugin_contextswitch],     [context switch stat
+@@ -7016,7 +7083,9 @@ AC_PLUGIN([contextswitch],       [$plugin_contextswitch],     [context switch st
  AC_PLUGIN([cpu],                 [$plugin_cpu],               [CPU usage statistics])
  AC_PLUGIN([cpufreq],             [$plugin_cpufreq],           [CPU frequency statistics])
  AC_PLUGIN([cpusleep],            [$plugin_cpusleep],          [CPU sleep statistics])
@@ -136,15 +135,15 @@
  AC_PLUGIN([curl],                [$with_libcurl],             [CURL generic web statistics])
  AC_PLUGIN([curl_json],           [$plugin_curl_json],         [CouchDB statistics])
  AC_PLUGIN([curl_xml],            [$plugin_curl_xml],          [CURL generic xml statistics])
-@@ -6529,6 +6598,7 @@ AC_PLUGIN([exec],                [yes],                       [Execution of extern
+@@ -7036,6 +7105,7 @@ AC_PLUGIN([exec],                [yes],                       [Execution of exte
  AC_PLUGIN([fhcount],             [$plugin_fhcount],           [File handles statistics])
  AC_PLUGIN([filecount],           [yes],                       [Count files in directories])
  AC_PLUGIN([fscache],             [$plugin_fscache],           [fscache statistics])
 +AC_PLUGIN([geom_stat],           [$plugin_geom_stat],         [FreeBSD GEOM statistics])
  AC_PLUGIN([gmond],               [$with_libganglia],          [Ganglia plugin])
  AC_PLUGIN([gps],                 [$plugin_gps],               [GPS plugin])
- AC_PLUGIN([grpc],                [$plugin_grpc],              [gRPC plugin])
-@@ -6570,6 +6640,7 @@ AC_PLUGIN([netapp],              [$with_libnetapp],         [NetApp plugin])
+ AC_PLUGIN([gpu_nvidia],          [$with_cuda],                [NVIDIA GPU plugin])
+@@ -7079,6 +7149,7 @@ AC_PLUGIN([netapp],              [$with_libnetapp],           [NetApp plugin])
  AC_PLUGIN([netlink],             [$with_libmnl],              [Enhanced Linux network statistics])
  AC_PLUGIN([network],             [yes],                       [Network communication plugin])
  AC_PLUGIN([nfs],                 [$plugin_nfs],               [NFS statistics])
@@ -152,7 +151,7 @@
  AC_PLUGIN([nginx],               [$with_libcurl],             [nginx statistics])
  AC_PLUGIN([notify_desktop],      [$with_libnotify],           [Desktop notifications])
  AC_PLUGIN([notify_email],        [$with_libesmtp],            [Email notifier])
-@@ -6646,6 +6717,7 @@ AC_PLUGIN([write_tsdb],          [yes],                     [TSDB output plugin]
+@@ -7164,6 +7235,7 @@ AC_PLUGIN([write_tsdb],          [yes],                       [TSDB output plugi
  AC_PLUGIN([xencpu],              [$plugin_xencpu],            [Xen Host CPU usage])
  AC_PLUGIN([xmms],                [$with_libxmms],             [XMMS statistics])
  AC_PLUGIN([zfs_arc],             [$plugin_zfs_arc],           [ZFS ARC statistics])
@@ -160,14 +159,13 @@
  AC_PLUGIN([zone],                [$plugin_zone],              [Solaris container statistics])
  AC_PLUGIN([zookeeper],           [yes],                       [Zookeeper statistics])
  
-@@ -6788,8 +6860,8 @@ AC_CONFIG_FILES([src/libcollectdclient/collectd/lcc_features.h])
- AM_CFLAGS="-Wall"
- AM_CXXFLAGS="-Wall"
- if test "x$enable_werror" != "xno"; then
--  AM_CFLAGS="$AM_CFLAGS -Werror"
--  AM_CXXFLAGS="$AM_CXXFLAGS -Werror"
-+  AM_CFLAGS="$AM_CFLAGS "
-+  AM_CXXFLAGS="$AM_CXXFLAGS "
+@@ -7307,8 +7379,8 @@ if test "x$GCC" = "xyes"; then
+   AM_CFLAGS="-Wall"
+   AM_CXXFLAGS="-Wall"
+   if test "x$enable_werror" != "xno"; then
+-    AM_CFLAGS="$AM_CFLAGS -Werror"
+-    AM_CXXFLAGS="$AM_CXXFLAGS -Werror"
++    AM_CFLAGS="$AM_CFLAGS"
++    AM_CXXFLAGS="$AM_CXXFLAGS"
+   fi
  fi
- 
- AC_SUBST([AM_CFLAGS])

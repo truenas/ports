@@ -27,6 +27,6 @@
                  "inactive", (gauge_t)sysctl_vals[5], "cache",
 -                (gauge_t)sysctl_vals[6]);
 +                (gauge_t)sysctl_vals[6], "laundry", (gauge_t)sysctl_vals[7]);
- /* #endif HAVE_SYSCTLBYNAME */
+   /* #endif HAVE_SYSCTLBYNAME */
  
  #elif KERNEL_LINUX
