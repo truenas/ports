@@ -1847,10 +1847,10 @@ index 00000000000..83743daed1a
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..b9ecdfd8524
+index 00000000000..4d947dd1588
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2470 @@
+@@ -0,0 +1,2474 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -4308,8 +4308,11 @@ index 00000000000..b9ecdfd8524
 +NTSTATUS vfs_ixnas_init(TALLOC_CTX *);
 +NTSTATUS vfs_ixnas_init(TALLOC_CTX *ctx)
 +{
-+	return smb_register_vfs(SMB_VFS_INTERFACE_VERSION, "ixnas",
-+				&ixnas_fns);
++	NTSTATUS ret = smb_register_vfs(SMB_VFS_INTERFACE_VERSION, "ixnas",
++					&ixnas_fns);
++	if (!NT_STATUS_IS_OK(ret)) {
++		return ret;
++	}
 +
 +	vfs_ixnas_debug_level = debug_add_class("ixnas");
 +	if (vfs_ixnas_debug_level == -1) {
@@ -4320,6 +4323,7 @@ index 00000000000..b9ecdfd8524
 +		DBG_DEBUG("%s: Debug class number of '%s': %d\n",
 +		"vfs_ixnas_init","ixnas",vfs_ixnas_debug_level);
 +	}
++	return ret;
 +}
 diff --git a/source3/modules/vfs_noacl.c b/source3/modules/vfs_noacl.c
 new file mode 100644
