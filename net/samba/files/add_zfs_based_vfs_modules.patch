@@ -1,6 +1,6 @@
 diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
 new file mode 100644
-index 00000000000..b325ee34433
+index 00000000000..dcfe5ff0a7b
 --- /dev/null
 +++ b/source3/modules/vfs_shadow_copy_zfs.c
 @@ -0,0 +1,1873 @@
@@ -286,7 +286,7 @@ index 00000000000..b325ee34433
 +{
 +	bool snaplist_updated = false;
 +	bool is_same_dataset = false;
-+        double seconds = 0.0;
++	double seconds = 0.0;
 +	time_t snap_time;
 +	size_t jlen = 0;
 +	TDB_DATA key = { .dptr = NULL, .dsize = 0 };
@@ -509,12 +509,12 @@ index 00000000000..b325ee34433
 +		TALLOC_FREE(priv->cwd->base_name);
 +	}
 +
-+        cwd_fname = SMB_VFS_NEXT_GETWD(handle, talloc_tos());
-+        if (cwd_fname == NULL) {
-+                smb_panic("getwd failed\n");
-+        }
++	cwd_fname = SMB_VFS_NEXT_GETWD(handle, talloc_tos());
++	if (cwd_fname == NULL) {
++		smb_panic("getwd failed\n");
++	}
 +
-+        priv->cwd->base_name = talloc_strdup(priv, cwd_fname->base_name);
++	priv->cwd->base_name = talloc_strdup(priv, cwd_fname->base_name);
 +	TALLOC_FREE(cwd_fname);
 +	cwd_dataset_name = snapshot_mp_to_dataset(priv, handle, priv->cwd->base_name);
 +	priv->cwd->ds = shadow_path_to_dataset(handle->conn->sconn->ds_list,
