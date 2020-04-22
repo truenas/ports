@@ -114,7 +114,7 @@ index 66c07001eba..78b4a9c7c49 100644
  }
  
 diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
-index 37b59d8c3c0..78e1b552d6d 100644
+index a30f3ba1d31..4165f6166c6 100644
 --- a/source3/modules/vfs_default.c
 +++ b/source3/modules/vfs_default.c
 @@ -18,9 +18,13 @@
@@ -288,7 +288,7 @@ index 37b59d8c3c0..78e1b552d6d 100644
  }
  
  static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
-@@ -2495,7 +2594,8 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
+@@ -2523,7 +2622,8 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
  	}
  
  #if defined(HAVE_UTIMENSAT)
@@ -459,10 +459,26 @@ index 7b26d04ed0f..1f4851be754 100644
  
  	size_t num_connections;
 diff --git a/source3/smbd/open.c b/source3/smbd/open.c
-index 98770358cf1..57803972bc5 100644
+index 98770358cf1..0abddf485f9 100644
 --- a/source3/smbd/open.c
 +++ b/source3/smbd/open.c
-@@ -767,7 +767,7 @@ NTSTATUS fd_open(struct connection_struct *conn,
+@@ -641,6 +641,7 @@ static int non_widelink_open(struct connection_struct *conn,
+ 	}
+ 
+ 	parent_dir_fname = (struct smb_filename) { .base_name = parent_dir };
++	parent_dir_fname.vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
+ 
+ 	oldwd_fname = vfs_GetWd(talloc_tos(), conn);
+ 	if (oldwd_fname == NULL) {
+@@ -661,6 +662,7 @@ static int non_widelink_open(struct connection_struct *conn,
+ 		saved_errno = ENOMEM;
+ 		goto out;
+ 	}
++	smb_fname_rel->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
+ 
+ 	/* Ensure the relative path is below the share. */
+ 	status = check_reduced_name(conn, &parent_dir_fname, smb_fname_rel);
+@@ -767,7 +769,7 @@ NTSTATUS fd_open(struct connection_struct *conn,
  	}
  
  	/* Ensure path is below share definition. */
@@ -471,6 +487,14 @@ index 98770358cf1..57803972bc5 100644
  		struct smb_filename *conn_rootdir_fname = NULL;
  		const char *conn_rootdir = SMB_VFS_CONNECTPATH(conn,
  						smb_fname);
+@@ -784,6 +786,7 @@ NTSTATUS fd_open(struct connection_struct *conn,
+ 		if (conn_rootdir_fname == NULL) {
+ 			return NT_STATUS_NO_MEMORY;
+ 		}
++		conn_rootdir_fname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
+ 
+ 		/*
+ 		 * Only follow symlinks within a share
 diff --git a/source3/smbd/proto.h b/source3/smbd/proto.h
 index 96d574023a5..a953f668d83 100644
 --- a/source3/smbd/proto.h
