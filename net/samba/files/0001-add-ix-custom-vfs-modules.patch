@@ -1847,10 +1847,10 @@ index 00000000000..83743daed1a
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..70f172796d7
+index 00000000000..b9ecdfd8524
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2421 @@
+@@ -0,0 +1,2470 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -1877,6 +1877,7 @@ index 00000000000..70f172796d7
 +#include "libcli/security/security.h"
 +#include "auth.h"
 +#include "privileges.h"
++#include "librpc/gen_ndr/idmap.h"
 +#include "librpc/gen_ndr/ndr_security.h"
 +#include "../libcli/security/dom_sid.h"
 +#include "../libcli/security/security.h"
@@ -2675,6 +2676,181 @@ index 00000000000..70f172796d7
 +	return NT_STATUS_OK;
 +}
 +
++
++static bool convert_ntace_to_bsdace(acl_t zacl,
++				    const struct security_ace *ace_nt,
++				    SMB_STRUCT_STAT sbuf,
++				    bool is_dir)
++{
++	struct dom_sid_buf buf;
++	uint32_t tmp_mask = 0;
++	acl_entry_t new_entry, new_entry2;
++	acl_perm_t permset = 0;
++	acl_entry_type_t type = 0;
++	acl_flag_t flags, flags2;
++	uid_t id, id2;
++	acl_tag_t tag, tag2;
++	bool add_ace2 = false;
++	struct unixid unixid;
++	bool ok = false;
++
++	DBG_DEBUG("[dacl entry] access_mask: 0x%x, flags: 0x%x, type: 0x%x\n",
++		  ace_nt->access_mask, ace_nt->flags, ace_nt->type);
++	tmp_mask = ace_nt->access_mask & (SEC_STD_ALL | SEC_FILE_ALL);
++	se_map_generic(&tmp_mask, &file_generic_mapping);
++	if (tmp_mask != ace_nt->access_mask)
++	DBG_INFO("tmp_mask (0x%x) != access_mask(0x%x)\n",
++		 tmp_mask, ace_nt->access_mask);
++
++	permset = win2bsdperms(tmp_mask);
++	flags = win2bsdflags(ace_nt->flags, is_dir);
++
++	/* Currently ZFS only supports ALLOW and DENY entries */
++	switch (ace_nt->type) {
++	case SEC_ACE_TYPE_ACCESS_ALLOWED:
++		type = ACL_ENTRY_TYPE_ALLOW;
++		break;
++	case SEC_ACE_TYPE_ACCESS_DENIED:
++		type = ACL_ENTRY_TYPE_DENY;
++		break;
++	case SEC_ACE_TYPE_SYSTEM_AUDIT:
++		DBG_ERR("AUDIT entries are not supported.\n");
++		errno = EINVAL;
++		return false;
++	case SEC_ACE_TYPE_SYSTEM_ALARM:
++		DBG_ERR("AUDIT entries are not supported.\n");
++		errno = EINVAL;
++		return false;
++	default:
++		DBG_ERR("Unsupported aceType: %x\n", ace_nt->type);
++		errno = EINVAL;
++		return false;
++	}
++
++	if (dom_sid_equal(&ace_nt->trustee, &global_sid_World)) {
++		/* Convert S-1-1-0 to everyone@ */
++		tag  = ACL_EVERYONE;
++		id   = ACL_UNDEFINED_ID;
++	}
++	else if (dom_sid_equal(&ace_nt->trustee, &global_sid_Creator_Owner)){
++		/* Convert S-1-3-0 to owner@ */
++		tag  = ACL_USER_OBJ;
++		id   = ACL_UNDEFINED_ID;
++		flags |= ACL_ENTRY_INHERIT_ONLY;
++		if (flags & !(ACL_ENTRY_FILE_INHERIT|ACL_ENTRY_DIRECTORY_INHERIT)) {
++			DBG_INFO("Dropping non-inheriting CREATOR_OWNER entry\n");
++			return true;
++		}
++	}
++	else if (dom_sid_equal(&ace_nt->trustee, &global_sid_Creator_Group)) {
++		/* Convert S-1-3-1 to group@ */
++		tag  = ACL_GROUP_OBJ;
++		id   = ACL_UNDEFINED_ID;
++		flags |= ACL_ENTRY_INHERIT_ONLY;
++		if (flags & !(ACL_ENTRY_FILE_INHERIT|ACL_ENTRY_DIRECTORY_INHERIT)) {
++			DBG_INFO("Dropping non-inheriting CREATOR_GROUP entry\n");
++			return true;
++		}
++	}
++	else {
++		ok = sids_to_unixids(&ace_nt->trustee, 1, &unixid);
++
++		if (!ok) {
++			DBG_WARNING("Could not convert %s to uid or gid.\n",
++				    dom_sid_str_buf(&ace_nt->trustee, &buf));
++			return true;
++		}
++		switch (unixid.type) {
++		/*
++		 * The SID resolves to both a GID and a UID. In this situation,
++		 * we prefer to convert to a group entry except in a few edge cases.
++		 * 1) If the SID is also the Group in the Security Descriptor
++		 *    _and_ it is not inheritable. In this case we convert to the special
++		 *    "group@" entry. This undoes the NFSv4 "simple" conversion performed on ACL read.
++		 * 2) If the SID is also the User in the Security Descriptor _and_ it is not
++		 *    inheritable, then add a secondary non-inheriting "owner@" entry.
++		 */
++		case ID_TYPE_BOTH:
++			tag  = ACL_GROUP;
++			id  = unixid.id;
++			if ((sbuf.st_ex_uid == id) &&
++			     !nt_ace_is_inherit(ace_nt->flags)) {
++				tag2 = ACL_USER_OBJ;
++				id2 = ACL_UNDEFINED_ID;
++				add_ace2 = true;
++			}
++			if ((sbuf.st_ex_gid == id) &&
++			    !nt_ace_is_inherit(ace_nt->flags)) {
++				tag = ACL_GROUP_OBJ;
++				id = ACL_UNDEFINED_ID;
++			}
++			break;
++		/*
++		 * The SID was converted into a GID. Create a "group@" entry if it is
++		 * not inheritable, otherwise create a normal group entry.
++		 */
++		case ID_TYPE_GID:
++			if ((sbuf.st_ex_uid == unixid.id) &&
++			    !nt_ace_is_inherit(ace_nt->flags)) {
++				id = ACL_UNDEFINED_ID;
++				tag = ACL_GROUP_OBJ;
++			}
++			else {
++				tag = ACL_GROUP;
++				id = unixid.id;
++			}
++			break;
++		/*
++		 * The SID was converted into a UID. Create a "user@" entry if it is
++		 * not inheritable, otherwise create a normal user entry.
++		 */
++		case ID_TYPE_UID:
++			if ((sbuf.st_ex_uid == unixid.id) &&
++			    !nt_ace_is_inherit(ace_nt->flags)) {
++				id = ACL_UNDEFINED_ID;
++				tag = ACL_USER_OBJ;
++			}
++			else {
++				tag = ACL_USER;
++				id = unixid.id;
++			}
++			break;
++		case ID_TYPE_NOT_SPECIFIED:
++		default:
++			DBG_WARNING("Could not convert %s to uid or gid\n",
++				    dom_sid_str_buf(&ace_nt->trustee, &buf));
++			return false;
++		}
++	}
++	DBG_DEBUG("tag: 0x%08x, id: %d, perm: 0x%08x, flags: 0x%04x, type: 0x%04x\n",
++		  tag, id, permset, flags, type);
++
++	if (acl_create_entry(&zacl, &new_entry) < 0) {
++		DBG_ERR("Failed to create new ACL entry: %s\n", strerror(errno));
++		return false;
++	}
++
++	new_entry->ae_perm = permset;
++	new_entry->ae_flags = flags;
++	new_entry->ae_entry_type = type;
++	new_entry->ae_tag = tag;
++	new_entry->ae_id = id;
++	if (add_ace2) {
++		if (acl_create_entry(&zacl, &new_entry2) < 0) {
++			DBG_ERR("Failed to create second new ACL entry: %s\n", strerror(errno));
++			return false;
++		}
++		new_entry2->ae_perm = permset;
++		new_entry2->ae_flags = flags;
++		new_entry2->ae_tag = tag2;
++		new_entry2->ae_id = id2;
++		new_entry2->ae_entry_type = type;
++		DBG_DEBUG("tag: 0x%08x, id: %d, perm: 0x%08x, flags: 0x%04x, type: 0x%04x\n",
++			  tag, id, permset, flags, type);
++	}
++	return true;
++}
++
 +/*
 + * Convert the Security Descriptor DACL into a ZFS ACL
 + * using FreeBSD nfsv4 ACL API.
@@ -2687,16 +2863,12 @@ index 00000000000..70f172796d7
 +				   bool set_acl_as_root)
 +{
 +	int ret, naces, i, saved_errno;
-+	naces = psd->dacl->num_aces;
 +	acl_t zacl;
 +	acl_entry_t hidden_entry;
++	bool ok, is_dir;
++
 +	zacl = acl_init(ACL_MAX_ENTRIES);
-+	bool is_dir;
-+	uint32_t tmp_mask = 0;
-+	uid_t uid;
-+	gid_t gid;
-+	bool has_uid = false;
-+	bool has_gid = false;
++	naces = psd->dacl->num_aces;
 +
 +	SMB_STRUCT_STAT sbuf;
 +
@@ -2715,133 +2887,12 @@ index 00000000000..70f172796d7
 +	}
 +	is_dir = S_ISDIR(sbuf.st_ex_mode);
 +	for (i=0; i<psd->dacl->num_aces; i++) {
-+		acl_entry_t new_entry = NULL;
-+		acl_perm_t permset = 0;
-+		acl_entry_type_t type = 0;
-+		acl_flag_t flags = 0;
-+		uid_t id;
-+		acl_tag_t tag = 0;
-+
-+		const struct security_ace *ace_nt = psd->dacl->aces +i; 
-+		DBG_DEBUG("[dacl entry] access_mask: 0x%x, flags: 0x%x, type: 0x%x\n",
-+			ace_nt->access_mask, ace_nt->flags, ace_nt->type); 
-+		tmp_mask = ace_nt->access_mask & (SEC_STD_ALL | SEC_FILE_ALL);
-+		se_map_generic(&tmp_mask, &file_generic_mapping);
-+		if (tmp_mask != ace_nt->access_mask)
-+			DBG_INFO("tmp_mask (0x%x) != access_mask(0x%x)\n",
-+				  tmp_mask, ace_nt->access_mask);
-+		permset = win2bsdperms(tmp_mask);
-+		flags = win2bsdflags(ace_nt->flags, is_dir);
-+		switch (ace_nt->type) {
-+			case SEC_ACE_TYPE_ACCESS_ALLOWED:
-+				type = ACL_ENTRY_TYPE_ALLOW;
-+				break;
-+			case SEC_ACE_TYPE_ACCESS_DENIED:
-+				type = ACL_ENTRY_TYPE_DENY;
-+				break;
-+			case SEC_ACE_TYPE_SYSTEM_AUDIT:
-+				type = ACL_ENTRY_TYPE_ALARM;
-+				break;
-+			case SEC_ACE_TYPE_SYSTEM_ALARM:
-+				type = ACL_ENTRY_TYPE_AUDIT;
-+				break;
-+			default:
-+				DBG_ERR("Unsupported aceType: %x\n", ace_nt->type);
-+				continue;
++		ok = convert_ntace_to_bsdace(zacl, (psd->dacl->aces + i),
++					     sbuf, is_dir);
++		if (!ok) {
++			acl_free(zacl);
++			return map_nt_error_from_unix(errno);
 +		}
-+
-+		/*
-+		 * Convert SD trustee to ae_tag and ae_id. Implements nfs4:mode = simple 
-+		 *
-+		 * S-1-1-0 (World) is mapped to everyone@
-+		 * S-1-3-0 (Creator-Owner) and S-1-3-1 (Creator-Group) are mapped to .
-+		 * owner@ and group@ respectively, and set to "inherit only". If the entries
-+		 * do not have (CI|OI) then we don't add the entry to the ACL (INHERIT_ONLY
-+		 * without other inheritance flags is invalid). This is to implement Windows
-+		 * behavior for these SIDs.
-+		 *
-+		 * The SID is first attempted to map to UID and GID. ID_TYPE_BOTH returns both
-+		 * a UID and GID. If the mapped UID is identical to the owner of the file, and
-+		 * inheritance flags are not set, then map the SID to owner@. If it is identical
-+		 * to the owner of the file, but has inheritance bits set, then map to an explicit
-+		 * entry.
-+		 *
-+		 * Same logic applies to GID / group@. Presuppose that we have groups rather than
-+		 * users. This mostly works because every user is a member of a group with a GID
-+		 * identical to its UID.
-+		 *
-+		 * In all other cases, map the SID to the respective UID/GID and set appropriate
-+		 * ACL tag.
-+		 */
-+		if (dom_sid_equal(&ace_nt->trustee, &global_sid_World)) {
-+			tag  = ACL_EVERYONE;
-+			id   = ACL_UNDEFINED_ID;
-+		}
-+		else if (dom_sid_equal(&ace_nt->trustee, &global_sid_Creator_Owner)){
-+			tag  = ACL_USER_OBJ;
-+			id   = ACL_UNDEFINED_ID;
-+			flags |= ACL_ENTRY_INHERIT_ONLY;
-+			if (flags & !(ACL_ENTRY_FILE_INHERIT|ACL_ENTRY_DIRECTORY_INHERIT)) {
-+				continue;
-+			}
-+		}
-+		else if (dom_sid_equal(&ace_nt->trustee, &global_sid_Creator_Group)) {
-+			tag  = ACL_GROUP_OBJ;
-+			id   = ACL_UNDEFINED_ID;
-+			flags |= ACL_ENTRY_INHERIT_ONLY;
-+			if (flags & !(ACL_ENTRY_FILE_INHERIT|ACL_ENTRY_DIRECTORY_INHERIT)) {
-+				continue;
-+			}
-+		}
-+		else {
-+			has_uid = (sid_to_uid(&ace_nt->trustee, &uid));
-+			has_gid = (sid_to_gid(&ace_nt->trustee, &gid));
-+			if (has_uid && uid == sbuf.st_ex_uid) {
-+				if (!nt_ace_is_inherit(ace_nt->flags)) {
-+					tag  = ACL_USER_OBJ;
-+					id   = ACL_UNDEFINED_ID;
-+				}
-+				else {
-+					tag  = ACL_USER;
-+					id   = uid;
-+				}
-+			}
-+			else if (has_gid) {
-+				if ((gid == sbuf.st_ex_gid) &&
-+				    !nt_ace_is_inherit(ace_nt->flags)) {
-+					tag  = ACL_GROUP_OBJ;
-+					id   = ACL_UNDEFINED_ID;
-+					
-+				}
-+				else {
-+					tag  = ACL_GROUP;
-+					id   = gid;
-+				}
-+			}
-+			else if (has_uid) {
-+				tag  = ACL_USER;
-+				id   = uid;
-+			}
-+			else if (dom_sid_compare_domain(&ace_nt->trustee, &global_sid_Unix_NFS) == 0) {
-+				continue;
-+			}
-+			else {
-+				DBG_ERR("ixnas: file [%s] could not convert to uid or gid\n",
-+					fsp->fsp_name->base_name);
-+				continue;
-+			}
-+		}
-+		DBG_DEBUG("tag: 0x%08x, id: %d, perm: 0x%08x, flags: 0x%04x, type: 0x%04x\n",
-+			tag, id, permset, flags, type); 
-+		
-+		if (acl_create_entry(&zacl, &new_entry) < 0) {
-+			DBG_ERR("Failed to create new ACL entry: %s\n", strerror(errno));
-+		}
-+		new_entry->ae_perm = permset;
-+		new_entry->ae_flags = flags;
-+		new_entry->ae_entry_type = type;
-+		new_entry->ae_tag = tag;
-+		new_entry->ae_id = id;
 +	}
 +	/*
 +	 * The 'hidden entry' is added to lock down ZFS behavior of appending
@@ -2864,23 +2915,15 @@ index 00000000000..70f172796d7
 +		hidden_entry->ae_id = ACL_UNDEFINED_ID;
 +	}
 +
-+	if (fsp->fh->fd == -1) {
-+		if (set_acl_as_root) {
-+			become_root();
-+		}
-+		ret = acl_set_file(fsp->fsp_name->base_name, ACL_TYPE_NFS4, zacl);
-+		if (set_acl_as_root) {
-+			unbecome_root();
-+		}
++	if (set_acl_as_root) {
++		become_root();
 +	}
-+	else {
-+		if (set_acl_as_root) {
-+			become_root();
-+		}
-+		ret = acl_set_fd_np(fsp->fh->fd, zacl, ACL_TYPE_NFS4);
-+		if (set_acl_as_root) {
-+			unbecome_root();
-+		}
++	ret = acl_set_file(fsp->fsp_name->base_name, ACL_TYPE_NFS4, zacl);
++	if (ret != 0 && errno == EBADF) {
++		ret = acl_set_file(fsp->fsp_name->base_name, ACL_TYPE_NFS4, zacl);
++	}
++	if (set_acl_as_root) {
++		unbecome_root();
 +	}
 +
 +	if (ret != 0) {
@@ -2914,6 +2957,7 @@ index 00000000000..70f172796d7
 +	acl_t bsdacl;
 +	struct ixnas_config_data *config = NULL;
 +	SMB_STRUCT_STAT *psbuf = NULL;
++	SMB_STRUCT_STAT sbuf;
 +
 +	SMB_VFS_HANDLE_GET_DATA(handle, config,
 +				struct ixnas_config_data,
@@ -2924,11 +2968,13 @@ index 00000000000..70f172796d7
 +	}
 +
 +	if (!VALID_STAT(fsp->fsp_name->st)) {
-+		if (SMB_VFS_FSTAT(fsp, psbuf) != 0) {
++		ZERO_STRUCT(sbuf);
++		if (SMB_VFS_FSTAT(fsp, &sbuf) != 0) {
 +			DBG_INFO("SMB_VFS_FSTAT failed with error %s\n",
 +				 strerror(errno));
 +			return map_nt_error_from_unix(errno);
 +		}
++		psbuf = &sbuf;
 +	}
 +	else {
 +		psbuf = &fsp->fsp_name->st;
@@ -2972,6 +3018,7 @@ index 00000000000..70f172796d7
 +	acl_t bsdacl;
 +	struct ixnas_config_data *config = NULL;
 +	SMB_STRUCT_STAT *psbuf = NULL;
++	SMB_STRUCT_STAT sbuf;
 +
 +	SMB_VFS_HANDLE_GET_DATA(handle, config,
 +				struct ixnas_config_data,
@@ -2985,12 +3032,14 @@ index 00000000000..70f172796d7
 +		psbuf = &smb_fname->st;
 +	}
 +	else {
-+		ret = vfs_stat_smb_basename(handle->conn, smb_fname, psbuf);
++		ZERO_STRUCT(sbuf);
++		ret = vfs_stat_smb_basename(handle->conn, smb_fname, &sbuf);
 +		if (ret != 0) {
 +			DBG_INFO("stat [%s]failed: %s\n",
 +				 smb_fname_str_dbg(smb_fname), strerror(errno));
 +			return map_nt_error_from_unix(errno);
 +		}
++		psbuf = &sbuf;
 +	}
 +	bsdacl = get_zfs_acl(smb_fname);
 +
