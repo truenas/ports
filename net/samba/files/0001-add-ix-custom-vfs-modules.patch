@@ -1847,10 +1847,10 @@ index 00000000000..83743daed1a
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..4d947dd1588
+index 00000000000..fbf9308dfde
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2474 @@
+@@ -0,0 +1,2476 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -2696,11 +2696,13 @@ index 00000000000..4d947dd1588
 +
 +	DBG_DEBUG("[dacl entry] access_mask: 0x%x, flags: 0x%x, type: 0x%x\n",
 +		  ace_nt->access_mask, ace_nt->flags, ace_nt->type);
++
 +	tmp_mask = ace_nt->access_mask & (SEC_STD_ALL | SEC_FILE_ALL);
 +	se_map_generic(&tmp_mask, &file_generic_mapping);
-+	if (tmp_mask != ace_nt->access_mask)
-+	DBG_INFO("tmp_mask (0x%x) != access_mask(0x%x)\n",
-+		 tmp_mask, ace_nt->access_mask);
++	if (tmp_mask != ace_nt->access_mask) {
++		DBG_INFO("tmp_mask (0x%x) != access_mask(0x%x)\n",
++			 tmp_mask, ace_nt->access_mask);
++	}
 +
 +	permset = win2bsdperms(tmp_mask);
 +	flags = win2bsdflags(ace_nt->flags, is_dir);
@@ -2718,7 +2720,7 @@ index 00000000000..4d947dd1588
 +		errno = EINVAL;
 +		return false;
 +	case SEC_ACE_TYPE_SYSTEM_ALARM:
-+		DBG_ERR("AUDIT entries are not supported.\n");
++		DBG_ERR("ALARM entries are not supported.\n");
 +		errno = EINVAL;
 +		return false;
 +	default:
