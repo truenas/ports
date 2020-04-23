@@ -24,10 +24,10 @@ index 7f82969badf..dc4ec88e578 100644
  
  #endif
 diff --git a/source3/lib/util_sd.c b/source3/lib/util_sd.c
-index 39083b15438..80eea0b6dac 100644
+index 39083b15438..e7396237f50 100644
 --- a/source3/lib/util_sd.c
 +++ b/source3/lib/util_sd.c
-@@ -28,30 +28,47 @@
+@@ -28,30 +28,53 @@
  #include "../libcli/security/security.h"
  #include "rpc_client/cli_pipe.h"
  #include "rpc_client/cli_lsarpc.h"
@@ -62,14 +62,20 @@ index 39083b15438..80eea0b6dac 100644
 +};
 +
 +static const struct perm_value extended_values[] = {
-+        { "p", "APPEND_DATA", SEC_FILE_APPEND_DATA},
-+        { "a", "READ_ATTRIBUTES", SEC_FILE_READ_ATTRIBUTE},
-+        { "A", "WRITE_ATTRIBUTES", SEC_FILE_WRITE_ATTRIBUTE},
-+        { "r", "READ_EA", SEC_FILE_READ_EA},
-+        { "w", "WRITE_EA", SEC_FILE_WRITE_EA},
-+        { "d", "DELETE_CHILD", FILE_DELETE_CHILD},
-+        { "c", "READ_CONTROL", SEC_STD_READ_CONTROL},
-+        { "S", "SYNCHRONIZE", SEC_STD_SYNCHRONIZE},
++	{ "R", "READ", SEC_FILE_READ_DATA },
++	{ "W", "WRITE", SEC_FILE_WRITE_DATA },
++	{ "X", "EXECUTE", SEC_FILE_EXECUTE },
++	{ "p", "APPEND_DATA", SEC_FILE_APPEND_DATA},
++	{ "a", "READ_ATTRIBUTES", SEC_FILE_READ_ATTRIBUTE},
++	{ "A", "WRITE_ATTRIBUTES", SEC_FILE_WRITE_ATTRIBUTE},
++	{ "r", "READ_EA", SEC_FILE_READ_EA},
++	{ "w", "WRITE_EA", SEC_FILE_WRITE_EA},
++	{ "D", "DELETE", SEC_STD_DELETE },
++	{ "d", "DELETE_CHILD", FILE_DELETE_CHILD},
++	{ "c", "READ_CONTROL", SEC_STD_READ_CONTROL},
++	{ "P", "WRITE_DAC", SEC_STD_WRITE_DAC },
++	{ "O", "WRITE_OWNER", SEC_STD_WRITE_OWNER },
++	{ "S", "SYNCHRONIZE", SEC_STD_SYNCHRONIZE},
 +	{ NULL, NULL, 0 },
  };
  
@@ -86,7 +92,7 @@ index 39083b15438..80eea0b6dac 100644
  };
  
  static const struct {
-@@ -366,6 +383,369 @@ void print_ace(struct cli_state *cli, FILE *f, struct security_ace *ace,
+@@ -366,6 +389,364 @@ void print_ace(struct cli_state *cli, FILE *f, struct security_ace *ace,
  	}
  }
  
@@ -324,11 +330,6 @@ index 39083b15438..80eea0b6dac 100644
 +
 +	got_mask = ace->access_mask;
 +
-+	ret = add_perms_json(&special, special_values, ace, &got_mask);
-+	if (!ret) {
-+		goto failure;
-+	}
-+
 +	ret = add_perms_json(&special, extended_values, ace, &got_mask);
 +	if (!ret) {
 +		goto failure;
@@ -456,7 +457,7 @@ index 39083b15438..80eea0b6dac 100644
  static bool parse_ace_flags(const char *str, unsigned int *pflags)
  {
  	const char *p = str;
-@@ -647,3 +1027,71 @@ void sec_desc_print(struct cli_state *cli, FILE *f,
+@@ -647,3 +1028,71 @@ void sec_desc_print(struct cli_state *cli, FILE *f,
  	}
  
  }
