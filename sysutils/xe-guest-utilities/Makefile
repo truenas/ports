@@ -10,7 +10,7 @@ DISTNAME=	${PORTNAME}-6.0.2
 MAINTAINER=	dinoex@FreeBSD.org
 COMMENT=	FreeBSD VM tools for Citrix XenServer and XCP
 
-RUN_DEPENDS=	xenstore:${PKGCATEGORY}/xen-guest-tools
+RUN_DEPENDS=	${LOCALBASE}/bin/xenstore:${PKGCATEGORY}/xen-guest-tools
 
 USES=		gmake python
 USE_RC_SUBR=	xenguest
