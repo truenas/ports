@@ -3,6 +3,7 @@
 
 PORTNAME=	syslog-ng
 DISTVERSION=	3.23.1
+PORTREVISION=	1
 CATEGORIES=	sysutils
 MASTER_SITES=	https://github.com/balabit/syslog-ng/releases/download/syslog-ng-${DISTVERSION}/
 .if !defined(MASTERDIR)
@@ -51,7 +52,6 @@ GNU_CONFIGURE=	yes
 # Note: Even if PYTHON is deselected, glib20 will install python.
 USE_GNOME=	glib20
 SUB_FILES=	pkg-message
-INSTALL_TARGET=	install-strip
 
 CONFIGURE_ARGS=	--sysconfdir=${LOCALBASE}/etc --localstatedir=/var/db \
 		--enable-dynamic-linking --enable-manpages \
