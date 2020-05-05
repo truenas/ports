@@ -51,7 +51,6 @@ GNU_CONFIGURE=	yes
 # Note: Even if PYTHON is deselected, glib20 will install python.
 USE_GNOME=	glib20
 SUB_FILES=	pkg-message
-INSTALL_TARGET=	install-strip
 
 CONFIGURE_ARGS=	--sysconfdir=${LOCALBASE}/etc --localstatedir=/var/db \
 		--enable-dynamic-linking --enable-manpages \
