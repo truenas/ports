@@ -1464,10 +1464,10 @@ index bf6b303bac6..d6c156703e7 100644
  		}
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..8250c9967a5
+index 00000000000..77785f5e465
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2437 @@
+@@ -0,0 +1,2436 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -3703,14 +3703,6 @@ index 00000000000..8250c9967a5
 +	config->libzp = libzp;
 +
 +	/* Parameters for homedirs and quotas */
-+	ret = smb_zfs_path_get_props(config->libzp,
-+				     handle->conn->connectpath,
-+				     &config->props);
-+	if (ret == -1) {
-+		DBG_ERR("Failed to get ZFS properties for share\n");
-+		return -1;
-+	}
-+
 +	config->zfs_auto_homedir = lp_parm_bool(SNUM(handle->conn), 
 +			"ixnas", "zfs_auto_homedir", false);
 +	config->homedir_quota = lp_parm_const_string(SNUM(handle->conn),
@@ -3731,6 +3723,13 @@ index 00000000000..8250c9967a5
 +
 +	if (config->base_user_quota) {
 +		set_base_user_quota(handle, config, user);
++	}
++	ret = smb_zfs_path_get_props(config->libzp,
++				     handle->conn->connectpath,
++				     &config->props);
++	if (ret == -1) {
++		DBG_ERR("Failed to get ZFS properties for share\n");
++		return -1;
 +	}
 +	if (config->props->casesens == SMBZFS_INSENSITIVE) {
 +		DBG_INFO("ixnas: case insensitive dataset detected, "
