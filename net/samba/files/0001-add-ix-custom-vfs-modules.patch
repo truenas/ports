@@ -1847,10 +1847,10 @@ index 00000000000..83743daed1a
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..fbf9308dfde
+index 00000000000..7eafae2b14c
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2476 @@
+@@ -0,0 +1,2490 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -3810,12 +3810,13 @@ index 00000000000..fbf9308dfde
 +				  const char *user)
 +{
 +	bool ret = 0;
-+	int naces;
++	int naces, rv;
 +	char rp[PATH_MAX] = { 0 };
 +	char *parent;
 +	const char *base;
 +	acl_t zacl, new_acl;
 +	TALLOC_CTX *tmp_ctx = talloc_stackframe();
++	struct smblibzfshandle *libzp = NULL;
 +
 +	if (realpath(handle->conn->connectpath, rp)) {
 +		DBG_INFO("Home directory already exists. Skipping dataset creation\n");
@@ -3831,6 +3832,13 @@ index 00000000000..fbf9308dfde
 +	DBG_INFO("Preparing to create dataset (%s) with parentdir (%s) with quota (%s)\n", 
 +		parent, base, config->homedir_quota);
 +
++	rv = get_smblibzfs_handle(tmp_ctx, &libzp);
++	if (rv != 0) {
++		DBG_ERR("Failed to obtain libzfshandle on connectpath: %s\n",
++			strerror(errno));
++		return -1;
++	}
++
 +	if (realpath(parent, rp) == NULL ){
 +		DBG_ERR("Parent directory does not exist, attempting to create parent.\n");
 +		char *grandparent;
@@ -3839,7 +3847,7 @@ index 00000000000..fbf9308dfde
 +			TALLOC_FREE(tmp_ctx);
 +			return -1;
 +		}
-+		if (smb_zfs_create_child_dataset(config->libzp, grandparent, parent_relpath, NULL) < 0) {
++		if (smb_zfs_create_child_dataset(libzp, grandparent, parent_relpath, NULL) < 0) {
 +			DBG_ERR("Failed to auto-create grandparent dataset\n");
 +			TALLOC_FREE(tmp_ctx);
 +			return -1;
@@ -3866,7 +3874,7 @@ index 00000000000..fbf9308dfde
 +		acl_free(new_acl);
 +	}
 +
-+	if (smb_zfs_create_child_dataset(config->libzp, parent, base, config->homedir_quota) < 0) {
++	if (smb_zfs_create_child_dataset(libzp, parent, base, config->homedir_quota) < 0) {
 +		DBG_ERR("Failed to auto-create connectpath dataset\n");
 +		TALLOC_FREE(tmp_ctx);
 +		return -1;
@@ -4117,38 +4125,44 @@ index 00000000000..fbf9308dfde
 +	bool can_use_libzfs;
 +	acl_t zacl;
 +	int is_trivial = 0;
-+	ret = SMB_VFS_NEXT_CONNECT(handle, service, user);
-+	if (ret < 0) {
-+		TALLOC_FREE(config);
-+		return ret;
-+	}
-+
 +	config = talloc_zero(handle->conn, struct ixnas_config_data);
 +	if (!config) {
 +		DEBUG(0, ("talloc_zero() failed\n"));
 +		errno = ENOMEM;
 +		return -1;
 +	}
++	/*
++	 * Check if we need to automatically create a new ZFS dataset
++	 * before falling through to SMB_VFS_NEXT_CONNECT
++	 */
++	config->zfs_auto_homedir = lp_parm_bool(SNUM(handle->conn), 
++			"ixnas", "zfs_auto_homedir", false);
++	config->homedir_quota = lp_parm_const_string(SNUM(handle->conn),
++			"ixnas", "homedir_quota", NULL);
++
++	if (config->zfs_auto_homedir) {
++		ret = create_zfs_autohomedir(handle, config, user);
++		if (ret < 0) {
++			DBG_ERR("Failed to automatically generate connectpath.\n");
++			return -1;
++		}
++	}
++
++	ret = SMB_VFS_NEXT_CONNECT(handle, service, user);
++	if (ret < 0) {
++		TALLOC_FREE(config);
++		return ret;
++	}
++
 +
 +#if HAVE_LIBZFS
 +	config->libzp = handle->conn->sconn->libzp;
 +
 +	config->props = handle->conn->sconn->ds_list->root->properties;
 +
-+	config->zfs_auto_homedir = lp_parm_bool(SNUM(handle->conn), 
-+			"ixnas", "zfs_auto_homedir", false);
-+	config->homedir_quota = lp_parm_const_string(SNUM(handle->conn),
-+			"ixnas", "homedir_quota", NULL);
-+	
 +	base_quota_str = lp_parm_const_string(SNUM(handle->conn),
 +			"ixnas", "base_user_quota", NULL);
 +
-+	if (config->zfs_auto_homedir) {
-+		if (create_zfs_autohomedir(handle, config, user) < 0) {
-+			DBG_ERR("Failed to automatically generate connectpath.\n");
-+			return -1;
-+		}
-+	}
 +	if (base_quota_str != NULL) {
 +		config->base_user_quota = conv_str_size(base_quota_str); 
 +        }
