@@ -1,3 +1,537 @@
+diff --git a/docs-xml/smbdotconf/base/fspficache.xml b/docs-xml/smbdotconf/base/fspficache.xml
+new file mode 100644
+index 00000000000..7c66891d250
+--- /dev/null
++++ b/docs-xml/smbdotconf/base/fspficache.xml
+@@ -0,0 +1,16 @@
++<samba:parameter name="fspcache backend"
++                 type="enum"
++                 context="G"
++                 enumlist="enum_fsp_fi_cache_type"
++                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
++
++<description>
++	<para>This parameter controls the data structure type
++	used for lookups of open fsps.</para>
++
++	<para>The default is a linked list. Other options are "memcache" and
++	"db_hash". </para>
++
++</description>
++<value type="default">list</value>
++</samba:parameter>
+diff --git a/lib/param/loadparm.h b/lib/param/loadparm.h
+index 65ff62cc3b9..65ae341f218 100644
+--- a/lib/param/loadparm.h
++++ b/lib/param/loadparm.h
+@@ -226,6 +226,8 @@ enum dns_update_settings {DNS_UPDATE_OFF, DNS_UPDATE_ON, DNS_UPDATE_SIGNED};
+ /* MDNS name sources */
+ enum mdns_name_values {MDNS_NAME_NETBIOS, MDNS_NAME_MDNS};
+ 
++enum fsp_fi_cache_type {FSP_FI_LIST, FSP_FI_MEMCACHE, FSP_FI_DBHASH};
++
+ /* LDAP SSL options */
+ enum ldap_ssl_types {LDAP_SSL_OFF, LDAP_SSL_START_TLS};
+ 
+diff --git a/lib/param/param_table.c b/lib/param/param_table.c
+index 47b85de1f87..145e48c387b 100644
+--- a/lib/param/param_table.c
++++ b/lib/param/param_table.c
+@@ -144,6 +144,13 @@ static const struct enum_list enum_mdns_name_values[] = {
+ 	{-1, NULL}
+ };
+ 
++static const struct enum_list enum_fsp_fi_cache_type[] = {
++	{FSP_FI_LIST, "list"},
++	{FSP_FI_MEMCACHE, "memcache"},
++	{FSP_FI_DBHASH, "db_hash"},
++	{-1, NULL}
++};
++
+ static const struct enum_list enum_tls_verify_peer_vals[] = {
+ 	{TLS_VERIFY_PEER_NO_CHECK,
+ 	 TLS_VERIFY_PEER_NO_CHECK_STRING},
+diff --git a/lib/util/db_hash.c b/lib/util/db_hash.c
+new file mode 100644
+index 00000000000..6c63a6fe499
+--- /dev/null
++++ b/lib/util/db_hash.c
+@@ -0,0 +1,295 @@
++/*
++   Using tdb as a hash table
++
++   Copyright (C) Amitay Isaacs  2015
++
++   This program is free software; you can redistribute it and/or modify
++   it under the terms of the GNU General Public License as published by
++   the Free Software Foundation; either version 3 of the License, or
++   (at your option) any later version.
++
++   This program is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++   GNU General Public License for more details.
++
++   You should have received a copy of the GNU General Public License
++   along with this program; if not, see <http://www.gnu.org/licenses/>.
++*/
++
++#include "replace.h"
++#include "system/filesys.h"
++
++#include <talloc.h>
++#include <tdb.h>
++
++#include "db_hash.h"
++
++struct db_hash_context {
++	struct tdb_context *db;
++};
++
++
++static int db_hash_destructor(struct db_hash_context *dh)
++{
++	if (dh->db != NULL) {
++		tdb_close(dh->db);
++		dh->db = NULL;
++	}
++	return 0;
++}
++
++int db_hash_init(TALLOC_CTX *mem_ctx, const char *name, int hash_size,
++		 enum db_hash_type type, struct db_hash_context **result)
++{
++	struct db_hash_context *dh;
++	int tdb_flags = TDB_INTERNAL | TDB_DISALLOW_NESTING;
++
++	dh = talloc_zero(mem_ctx, struct db_hash_context);
++	if (dh == NULL) {
++		return ENOMEM;
++	}
++
++	if (type == DB_HASH_COMPLEX) {
++		tdb_flags |= TDB_INCOMPATIBLE_HASH;
++	}
++
++	dh->db = tdb_open(name, hash_size, tdb_flags, O_RDWR|O_CREAT, 0);
++	if (dh->db == NULL) {
++		talloc_free(dh);
++		return ENOMEM;
++	}
++
++	talloc_set_destructor(dh, db_hash_destructor);
++	*result = dh;
++	return 0;
++}
++
++static int db_hash_map_tdb_error(struct db_hash_context *dh)
++{
++	enum TDB_ERROR tdb_err;
++	int ret;
++
++	tdb_err = tdb_error(dh->db);
++	switch (tdb_err) {
++		case TDB_SUCCESS:
++			ret = 0; break;
++		case TDB_ERR_OOM:
++			ret = ENOMEM; break;
++		case TDB_ERR_EXISTS:
++			ret = EEXIST; break;
++		case TDB_ERR_NOEXIST:
++			ret = ENOENT; break;
++		case TDB_ERR_EINVAL:
++			ret = EINVAL; break;
++		default:
++			ret = EIO; break;
++	}
++	return ret;
++}
++
++int db_hash_insert(struct db_hash_context *dh, uint8_t *keybuf, size_t keylen,
++		   uint8_t *databuf, size_t datalen)
++{
++	TDB_DATA key, data;
++	int ret;
++
++	if (dh == NULL) {
++		return EINVAL;
++	}
++
++	key.dptr = keybuf;
++	key.dsize = keylen;
++
++	data.dptr = databuf;
++	data.dsize = datalen;
++
++	ret = tdb_store(dh->db, key, data, TDB_INSERT);
++	if (ret != 0) {
++		ret = db_hash_map_tdb_error(dh);
++	}
++	return ret;
++}
++
++int db_hash_add(struct db_hash_context *dh, uint8_t *keybuf, size_t keylen,
++		uint8_t *databuf, size_t datalen)
++{
++	TDB_DATA key, data;
++	int ret;
++
++	if (dh == NULL) {
++		return EINVAL;
++	}
++
++	key.dptr = keybuf;
++	key.dsize = keylen;
++
++	data.dptr = databuf;
++	data.dsize = datalen;
++
++	ret = tdb_store(dh->db, key, data, TDB_REPLACE);
++	if (ret != 0) {
++		ret = db_hash_map_tdb_error(dh);
++	}
++	return ret;
++}
++
++int db_hash_delete(struct db_hash_context *dh, uint8_t *keybuf, size_t keylen)
++{
++	TDB_DATA key;
++	int ret;
++
++	key.dptr = keybuf;
++	key.dsize = keylen;
++
++	if (dh == NULL) {
++		return EINVAL;
++	}
++
++	ret = tdb_delete(dh->db, key);
++	if (ret != 0) {
++		ret = db_hash_map_tdb_error(dh);
++	}
++	return ret;
++}
++
++struct db_hash_fetch_state {
++	db_hash_record_parser_fn parser;
++	void *private_data;
++};
++
++static int db_hash_fetch_parser(TDB_DATA key, TDB_DATA data, void *private_data)
++{
++	struct db_hash_fetch_state *state =
++		(struct db_hash_fetch_state *)private_data;
++	int ret;
++
++	ret = state->parser(key.dptr, key.dsize, data.dptr, data.dsize,
++			    state->private_data);
++	return ret;
++}
++
++int db_hash_fetch(struct db_hash_context *dh, uint8_t *keybuf, size_t keylen,
++		  db_hash_record_parser_fn parser, void *private_data)
++{
++	struct db_hash_fetch_state state;
++	TDB_DATA key;
++	int ret;
++
++	if (dh == NULL || parser == NULL) {
++		return EINVAL;
++	}
++
++	state.parser = parser;
++	state.private_data = private_data;
++
++	key.dptr = keybuf;
++	key.dsize = keylen;
++
++	ret = tdb_parse_record(dh->db, key, db_hash_fetch_parser, &state);
++	if (ret == -1) {
++		return ENOENT;
++	}
++	return ret;
++}
++
++int db_hash_exists(struct db_hash_context *dh, uint8_t *keybuf, size_t keylen)
++{
++	TDB_DATA key;
++	int ret;
++
++	if (dh == NULL) {
++		return EINVAL;
++	}
++
++	key.dptr = keybuf;
++	key.dsize = keylen;
++
++	ret = tdb_exists(dh->db, key);
++	if (ret == 1) {
++		/* Key found */
++		ret = 0;
++	} else {
++		ret = db_hash_map_tdb_error(dh);
++		if (ret == 0) {
++			ret = ENOENT;
++		}
++	}
++	return ret;
++}
++
++struct db_hash_traverse_state {
++	db_hash_record_parser_fn parser;
++	void *private_data;
++};
++
++static int db_hash_traverse_parser(struct tdb_context *tdb,
++				   TDB_DATA key, TDB_DATA data,
++				   void *private_data)
++{
++	struct db_hash_traverse_state *state =
++		(struct db_hash_traverse_state *)private_data;
++
++	return state->parser(key.dptr, key.dsize, data.dptr, data.dsize,
++			     state->private_data);
++}
++
++int db_hash_traverse(struct db_hash_context *dh,
++		     db_hash_record_parser_fn parser, void *private_data,
++		     int *count)
++{
++	struct db_hash_traverse_state state;
++	int ret;
++
++	if (dh == NULL) {
++		return EINVAL;
++	}
++
++	/* Special case, for counting records */
++	if (parser == NULL) {
++		ret = tdb_traverse_read(dh->db, NULL, NULL);
++	} else {
++		state.parser = parser;
++		state.private_data = private_data;
++
++		ret = tdb_traverse_read(dh->db, db_hash_traverse_parser, &state);
++	}
++
++	if (ret == -1) {
++		ret = db_hash_map_tdb_error(dh);
++	} else {
++		if (count != NULL) {
++			*count = ret;
++		}
++		ret = 0;
++	}
++
++	return ret;
++}
++
++int db_hash_traverse_update(struct db_hash_context *dh,
++			    db_hash_record_parser_fn parser,
++			    void *private_data, int *count)
++{
++	struct db_hash_traverse_state state;
++	int ret;
++
++	if (dh == NULL || parser == NULL) {
++		return EINVAL;
++	}
++
++	state.parser = parser;
++	state.private_data = private_data;
++
++	ret = tdb_traverse(dh->db, db_hash_traverse_parser, &state);
++	if (ret == -1) {
++		ret = db_hash_map_tdb_error(dh);
++	} else {
++		if (count != NULL) {
++			*count = ret;
++		}
++		ret = 0;
++	}
++
++	return ret;
++}
+diff --git a/lib/util/db_hash.h b/lib/util/db_hash.h
+new file mode 100644
+index 00000000000..67e2b857961
+--- /dev/null
++++ b/lib/util/db_hash.h
+@@ -0,0 +1,174 @@
++/*
++   Using tdb as a hash table
++
++   Copyright (C) Amitay Isaacs  2015
++
++   This program is free software; you can redistribute it and/or modify
++   it under the terms of the GNU General Public License as published by
++   the Free Software Foundation; either version 3 of the License, or
++   (at your option) any later version.
++
++   This program is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++   GNU General Public License for more details.
++
++   You should have received a copy of the GNU General Public License
++   along with this program; if not, see <http://www.gnu.org/licenses/>.
++*/
++
++#ifndef __CTDB_DB_HASH_H__
++#define __CTDB_DB_HASH_H__
++
++#include <talloc.h>
++#include <tdb.h>
++
++/**
++ * @file db_hash.h
++ *
++ * @brief Use tdb database as a hash table
++ *
++ * This uses in-memory tdb databases to create a fixed sized hash table.
++ */
++
++/**
++ * @brief Hash type to indicate the hashing function to use.
++ *
++ * DB_HASH_SIMPLE uses default hashing function
++ * DB_HASH_COMPLEX uses jenkins hashing function
++ */
++enum db_hash_type {
++	DB_HASH_SIMPLE,
++	DB_HASH_COMPLEX,
++};
++
++/**
++ * @brief Parser callback function called when fetching a record
++ *
++ * This function is called when fetching a record. This function should
++ * not modify key and data arguments.
++ *
++ * The function should return 0 on success and errno on error.
++ */
++typedef int (*db_hash_record_parser_fn)(uint8_t *keybuf, size_t keylen,
++					uint8_t *databuf, size_t datalen,
++					void *private_data);
++
++/**
++ * @brief Abstract structure representing tdb hash table
++ */
++struct db_hash_context;
++
++/**
++ * @brief Initialize tdb hash table
++ *
++ * This returns a new tdb hash table context which is a talloc context.  Freeing
++ * this context will free all the memory associated with the hash table.
++ *
++ * @param[in] mem_ctx Talloc memory context
++ * @param[in] name The name for the hash table
++ * @param[in] hash_size The size of the hash table
++ * @param[in] type The type of hashing function to use
++ * @param[out] result The new db_hash_context structure
++ * @return 0 on success, errno on failure
++ */
++int db_hash_init(TALLOC_CTX *mem_ctx, const char *name, int hash_size,
++		 enum db_hash_type type, struct db_hash_context **result);
++
++/**
++ * @brief Insert a record into the hash table
++ *
++ * The key and data can be any binary data.  Insert only if the record does not
++ * exist.  If the record already exists, return error.
++ *
++ * @param[in] dh The tdb hash table context
++ * @param[in] keybuf The key buffer
++ * @param[in] keylen The key length
++ * @param[in] databuf The data buffer
++ * @param[in] datalen The data length
++ * @return 0 on success, errno on failure
++ */
++int db_hash_insert(struct db_hash_context *dh, uint8_t *keybuf, size_t keylen,
++		   uint8_t *databuf, size_t datalen);
++
++/**
++ * @brief Add a record into the hash table
++ *
++ * The key and data can be any binary data.  If the record does not exist,
++ * insert the record.  If the record already exists, replace the record.
++ *
++ * @param[in] dh The tdb hash table context
++ * @param[in] keybuf The key buffer
++ * @param[in] keylen The key length
++ * @param[in] databuf The data buffer
++ * @param[in] datalen The data length
++ * @return 0 on success, errno on failure
++ */
++int db_hash_add(struct db_hash_context *dh, uint8_t *keybuf, size_t keylen,
++		uint8_t *databuf, size_t datalen); 
++/**
++ * @brief Delete a record from the hash table
++ *
++ * @param[in] dh The tdb hash table context
++ * @param[in] keybuf The key buffer
++ * @param[in] keylen The key length
++ * @return 0 on success, errno on failure
++ */
++int db_hash_delete(struct db_hash_context *dh, uint8_t *keybuf, size_t keylen);
++
++/**
++ * @brief Fetch a record from the hash table
++ *
++ * The key and data can be any binary data.
++ *
++ * @param[in] dh The tdb hash table context
++ * @param[in] keybuf The key buffer
++ * @param[in] keylen The key length
++ * @param[in] parser Function called when the matching record is found
++ * @param[in] private_data Private data to parser function
++ * @return 0 on success, errno on failure
++ */
++int db_hash_fetch(struct db_hash_context *dh, uint8_t *keybuf, size_t keylen,
++		  db_hash_record_parser_fn parser, void *private_data);
++
++/**
++ * @brief Check if a record exists in the hash table
++ *
++ * @param[in] dh The tdb hash table context
++ * @param[in] keybuf The key buffer
++ * @param[in] keylen The key length
++ * @return 0 if the record exists, errno on failure
++ */
++int db_hash_exists(struct db_hash_context *dh, uint8_t *keybuf, size_t keylen);
++
++/**
++ * @brief Traverse the database without modification
++ *
++ * The parser function should return non-zero value to stop traverse.
++ *
++ * @param[in] dh The tdb hash table context
++ * @param[in] parser Function called for each record
++ * @param[in] private_data Private data to parser function
++ * @param[out] count Number of records traversed
++ * @return 0 on success, errno on failure
++ */
++int db_hash_traverse(struct db_hash_context *dh,
++		     db_hash_record_parser_fn parser, void *private_data,
++		     int *count);
++
++/**
++ * @brief Traverse the database for modifications
++ *
++ * The parser function should return non-zero value to stop traverse.
++ *
++ * @param[in] dh The tdb hash table context
++ * @param[in] parser Function called for each record
++ * @param[in] private_data Private data to parser function
++ * @param[out] count Number of records traversed
++ * @return 0 on success, errno on failure
++ */
++int db_hash_traverse_update(struct db_hash_context *dh,
++			    db_hash_record_parser_fn parser,
++			    void *private_data, int *count);
++
++#endif /* __CTDB_DB_HASH_H__ */
 diff --git a/lib/util/memcache.c b/lib/util/memcache.c
 index 1e616bd0e9a..5f3f930b696 100644
 --- a/lib/util/memcache.c
@@ -82,10 +616,32 @@ index 4331c2f1465..25ff32152f1 100644
 +
  #endif
 diff --git a/source3/include/vfs.h b/source3/include/vfs.h
-index fec38f20644..bf275c0c297 100644
+index fec38f20644..8fb80796740 100644
 --- a/source3/include/vfs.h
 +++ b/source3/include/vfs.h
-@@ -455,6 +455,7 @@ typedef struct files_struct {
+@@ -335,6 +335,7 @@ struct fd_handle {
+ 
+ struct fsp_lease {
+ 	size_t ref_count;
++	struct file_id file_id;
+ 	struct smbd_server_connection *sconn;
+ 	struct tevent_timer *timeout;
+ 	struct smb2_lease lease;
+@@ -381,11 +382,13 @@ typedef struct files_struct {
+ 	bool can_write;
+ 	bool modified;
+ 	bool is_directory;
++	bool is_fspcache;
+ 	bool aio_write_behind;
+ 	bool initial_delete_on_close; /* Only set at NTCreateX if file was created. */
+ 	bool delete_on_close;
+ 	uint64_t posix_flags;
+ 	bool is_sparse;
++	bool shutdown_close;
+ 	bool backup_intent; /* Handle was successfully opened with backup intent
+ 				and opener has privilege to do so. */
+ 	bool use_ofd_locks; /* Are we using open file description locks ? */
+@@ -455,6 +458,7 @@ typedef struct files_struct {
  #define FSP_POSIX_FLAGS_OPEN		0x01
  #define FSP_POSIX_FLAGS_RENAME		0x02
  #define FSP_POSIX_FLAGS_PATHNAMES	0x04
@@ -93,7 +649,7 @@ index fec38f20644..bf275c0c297 100644
  
  #define FSP_POSIX_FLAGS_ALL			\
  	(FSP_POSIX_FLAGS_OPEN |			\
-@@ -648,6 +649,7 @@ struct smb_filename {
+@@ -648,6 +652,7 @@ struct smb_filename {
  	char *original_lcomp;
  	uint32_t flags;
  	SMB_STRUCT_STAT st;
@@ -114,7 +670,7 @@ index 66c07001eba..78b4a9c7c49 100644
  }
  
 diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
-index a30f3ba1d31..4165f6166c6 100644
+index 37b59d8c3c0..78e1b552d6d 100644
 --- a/source3/modules/vfs_default.c
 +++ b/source3/modules/vfs_default.c
 @@ -18,9 +18,13 @@
@@ -288,7 +844,7 @@ index a30f3ba1d31..4165f6166c6 100644
  }
  
  static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
-@@ -2523,7 +2622,8 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
+@@ -2495,7 +2594,8 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
  	}
  
  #if defined(HAVE_UTIMENSAT)
@@ -299,7 +855,7 @@ index a30f3ba1d31..4165f6166c6 100644
  		ts[0] = ft->atime;
  		ts[1] = ft->mtime;
 diff --git a/source3/smbd/fake_file.c b/source3/smbd/fake_file.c
-index 81ccbde6aab..280f2bf7980 100644
+index 81ccbde6aab..9c3982e45a7 100644
 --- a/source3/smbd/fake_file.c
 +++ b/source3/smbd/fake_file.c
 @@ -22,6 +22,7 @@
@@ -332,13 +888,13 @@ index 81ccbde6aab..280f2bf7980 100644
 -			  conn->session_info->unix_info->unix_name));
 -		return NT_STATUS_ACCESS_DENIED;
 -
-+	/* access check
-+	 * Allow access to QUOTA fake file if user has DISK_OPERATOR
-+	 * privileges. This is a subset of local admin rights.
-+	 */
++	/* access check 
++ 	 * Allow access to QUOTA fake file if user has DISK_OPERATOR
++ 	 * privileges. This is a subset of local admin rights.
++ 	 */
 +	switch(fake_file_type){
 +	case FAKE_FILE_TYPE_QUOTA:
-+		is_disk_op = security_token_has_privilege(
++ 		is_disk_op = security_token_has_privilege(
 +			conn->session_info->security_token,
 +			SEC_PRIV_DISK_OPERATOR);
 +		if (!is_disk_op) {
@@ -363,6 +919,18 @@ index 81ccbde6aab..280f2bf7980 100644
  	}
  
  	status = file_new(req, conn, &fsp);
+@@ -175,6 +197,11 @@ NTSTATUS open_fake_file(struct smb_request *req, connection_struct *conn,
+ 	}
+ 
+ 	fsp->fake_file_handle = init_fake_file_handle(fake_file_type);
++	ZERO_STRUCT(fsp->file_id);
++        ret = fspcache_append(conn->sconn, fsp);
++        if (ret != 0) {
++                DBG_ERR("failed to append [%s] to fsplist\n", fsp_str_dbg(fsp));
++        }
+ 	
+ 	if (fsp->fake_file_handle==NULL) {
+ 		file_free(req, fsp);
 diff --git a/source3/smbd/filename.c b/source3/smbd/filename.c
 index 32e5835e676..b969000cf9f 100644
 --- a/source3/smbd/filename.c
@@ -432,8 +1000,846 @@ index 32e5835e676..b969000cf9f 100644
  		status = check_reduced_name(conn, NULL, smb_fname);
  		if (!NT_STATUS_IS_OK(status)) {
  			DEBUG(5,("check_name: name %s failed with %s\n",
+diff --git a/source3/smbd/files.c b/source3/smbd/files.c
+index 99b2f343685..783ddbe3881 100644
+--- a/source3/smbd/files.c
++++ b/source3/smbd/files.c
+@@ -23,9 +23,263 @@
+ #include "libcli/security/security.h"
+ #include "util_tdb.h"
+ #include "lib/util/bitmap.h"
++#include "lib/util/memcache.h"
++#include "lib/util/db_hash.h"
+ 
+ #define FILE_HANDLE_OFFSET 0x1000
++#define FSP_FI_TABLE "fsp_fi_table"
++
++struct smbpid_vuid {
++	uint16_t smbpid;
++	uint64_t vuid; 
++};
++
++struct fsp_fd {
++	int fd;
++	struct files_struct **fsp;
++};
++struct pathcheck {
++	struct files_struct *fsp;
++	bool is_subpath;
++};
++typedef int (*fspcache_cb)(uint8_t *keybuf, size_t keylen,
++			   uint8_t *databuf, size_t datalen,
++			   void *private_data);
++
++struct files_forall_priv {
++	struct files_struct *(*fn)(struct files_struct *fsp, void *private_data);
++	void *private_data; 
++	struct files_struct **retfsp;
++};
++/*
++ * 
++ */
++static int get_fsp_fi_parser(uint8_t *keybuf, size_t keylen,
++			     uint8_t *databuf, size_t datalen,
++			     void *private_data)
++{
++	struct fspcache_list *ret_fsplist = NULL;
++	struct fspcache_list **entry =
++		(struct fspcache_list **)private_data;
++
++	SMB_ASSERT(datalen == sizeof(*entry));
++
++	ret_fsplist = talloc_get_type_abort(*(void **)databuf,
++				       struct fspcache_list);
++
++	*entry = ret_fsplist;
++						
++	return 0;
++}
++
++int fspcache_append(struct smbd_server_connection *sconn,
++		    struct files_struct *fsp)
++{
++	int ret;
++	enum fsp_fi_cache_type backend;
++	backend = sconn->fsp_fi_table.backend_type;
++	SMB_ASSERT(sconn->fsp_fi_table.initialized);
++	struct fspcache_list *fsplist = NULL;
++	struct file_id tmp_id;
++	tmp_id.devid = fsp->file_id.devid;
++        tmp_id.inode = fsp->file_id.inode;
++	tmp_id.extid = 0;
++	struct file_id_buf fbuf;
++	if (backend == FSP_FI_DBHASH) {
++		ret = db_hash_fetch(sconn->fsp_fi_table.fi_u.dh,
++				    (uint8_t *)&tmp_id,
++				    sizeof(tmp_id),
++				    get_fsp_fi_parser, &fsplist);
++
++		if (fsplist == NULL) {
++			DBG_INFO("Generating new fspcache entry for [%s] "
++				 "with fileid: [%s] at address [%p]\n",
++				 fsp_str_dbg(fsp), file_id_str_buf(tmp_id, &fbuf), fsp);
++			fsplist = talloc_zero(sconn, struct fspcache_list);	
++			fsplist->name = talloc_strdup(fsplist, file_id_str_buf(tmp_id, &fbuf));
++			fsplist->entries = NULL;
++		}
++		DLIST_ADD(fsplist->entries, fsp);
++		fsplist->nentries++;
++		ret = db_hash_add(sconn->fsp_fi_table.fi_u.dh,
++				  (uint8_t *)&tmp_id,
++				  sizeof(tmp_id),
++				  (void *)&fsplist, sizeof(fsplist)); 
++	}
++	else if (backend == FSP_FI_MEMCACHE) {
++		DATA_BLOB key;
++		DATA_BLOB val;
++		key.data = (void *)&tmp_id;
++		key.length = sizeof(tmp_id);
++
++		ret = memcache_lookup(sconn->fsp_fi_table.fi_u.dm, FSP_FI_CACHE, key, &val);
++		
++		if (!ret) {
++			DBG_INFO("Generating new fspcache entry for [%s]"
++				 "with fileid: [%s]\n", fsp_str_dbg(fsp),
++				 file_id_str_buf(tmp_id, &fbuf));
++			fsplist = talloc_zero(sconn, struct fspcache_list);	
++		}
++		else {
++			fsplist = (struct fspcache_list *)val.data;
++		}
++		DLIST_ADD(fsplist->entries, fsp);
++		fsplist->nentries++;
++		val.data = (void*)&fsplist;
++		val.length = sizeof(fsplist);
++		memcache_add(sconn->fsp_fi_table.fi_u.dm,
++			     FSP_FI_CACHE, key, val);
++		ret = 0;
++	}
++	else {
++		return 0;
++	}
++	if (ret != 0) {
++		DBG_ERR("Failed to add fsp [%s] to fsplist %p: [%s]\n",
++			fsp_str_dbg(fsp), fsplist, strerror(errno));
++	}
++	fsp->is_fspcache = true;
++	sconn->fsp_fi_table.nentries++;
++	return ret;
++}
++
++int fspcache_traverse(struct smbd_server_connection *sconn,
++		      fspcache_cb cb,
++		      void *private_data,
++		      int *count)
++{
++	int ret = 0;
++	enum fsp_fi_cache_type backend;
++	DATA_BLOB key;
++	backend = sconn->fsp_fi_table.backend_type;
++	if (!sconn->fsp_fi_table.initialized) {
++		DBG_INFO("fsp_fi_table is not initialized.\n");
++		return -1;
++	}
++	if (backend == FSP_FI_DBHASH) {
++		ret = db_hash_traverse_update(sconn->fsp_fi_table.fi_u.dh, cb, private_data, count);
++	}
++	else if (backend == FSP_FI_MEMCACHE) {
++		ret = memcache_traverse(sconn->fsp_fi_table.fi_u.dm, cb, private_data, count);
++	}
++	else if (backend == FSP_FI_LIST) {
++		ret = cb(NULL, 0, (void *)&sconn->fsp_fi_table.fi_u.dl,
++			 sizeof(sconn->fsp_fi_table.fi_u.dl), private_data);
++	}
++	return ret;
++}
++
++int fspcache_get(struct smbd_server_connection *sconn,
++		 struct file_id id,
++		 struct fspcache_list **fsplist)
++		 
++{
++	int ret = 0;
++	enum fsp_fi_cache_type backend;
++	struct file_id tmp_id;
++	tmp_id.devid = id.devid;
++        tmp_id.inode = id.inode;
++	tmp_id.extid = 0;
++	backend = sconn->fsp_fi_table.backend_type;
++	if (backend == FSP_FI_DBHASH) {
++		ret = db_hash_fetch(sconn->fsp_fi_table.fi_u.dh,
++				    (uint8_t *)&tmp_id, sizeof(tmp_id),
++			    	    get_fsp_fi_parser, fsplist);
++
++	}
++	else if (backend == FSP_FI_MEMCACHE) {
++		DATA_BLOB key;
++		DATA_BLOB val;
++		key.data = (void *)&tmp_id;
++		key.length = sizeof(tmp_id);
++		ret = memcache_lookup(sconn->fsp_fi_table.fi_u.dm, FSP_FI_CACHE, key, &val);
++		if (ret) {
++			*fsplist = (struct fspcache_list *)val.data;
++			ret = 0;
++		}
++		else {
++			ret = -1;
++		}
++	}
++	else {
++		*fsplist = sconn->fsp_fi_table.fi_u.dl;
++	}
++	return ret;
++}
+ 
++int fspcache_destroy(struct smbd_server_connection *sconn,
++		     struct file_id id)
++{
++	int ret = 0;
++	DATA_BLOB key;
++	enum fsp_fi_cache_type backend;
++	struct file_id tmp_id;
++	tmp_id.devid = id.devid;
++        tmp_id.inode = id.inode;
++	tmp_id.extid = 0;
++	backend = sconn->fsp_fi_table.backend_type;
++	struct file_id_buf fbuf;
++	DBG_INFO("Entered destroy for fsplist for %s. Has [%zu] entries\n",
++		 file_id_str_buf(tmp_id, &fbuf), sconn->fsp_fi_table.nentries);
++
++	if (backend == FSP_FI_DBHASH) {
++		ret = db_hash_delete(sconn->fsp_fi_table.fi_u.dh, (uint8_t *)&tmp_id,
++				     sizeof(tmp_id));
++	}
++	else if (backend == FSP_FI_MEMCACHE) {
++		key.data = (void *)&tmp_id;
++		key.length = sizeof(tmp_id);
++		memcache_delete(sconn->fsp_fi_table.fi_u.dm, FSP_FI_CACHE, key); 
++	}
++	else {
++		return 0;
++	}
++	if (ret != 0) {
++		DBG_ERR("failed to delete cache entry: [%s]\n",
++			strerror(ret));
++		return ret;
++	}
++
++	sconn->fsp_fi_table.nentries--;
++	return ret;
++}
++
++static void fspcache_init(TALLOC_CTX *mem_ctx, struct smbd_server_connection *sconn,
++		  struct fsp_fi_table *c)
++{
++	int ret = 0;
++	c->backend_type = lp_fspcache_backend();
++	SMB_ASSERT(c->backend_type != -1);
++	DBG_INFO("Initializing fsp_fi backend = %d\n", c->backend_type);
++	switch (c->backend_type) {
++		case FSP_FI_LIST:
++			c->fi_u.dl = talloc_zero(mem_ctx, struct fspcache_list); 
++			if (c->fi_u.dl == NULL) {
++				DBG_ERR("Failed to allocate fspcache_list\n");
++				ret = -1;
++			}
++                        break;
++                case FSP_FI_DBHASH:
++			ret = db_hash_init(mem_ctx, FSP_FI_TABLE,
++					   sconn->real_max_open_files,
++					   DB_HASH_COMPLEX,
++					   &c->fi_u.dh);
++			if (ret != 0) {
++				DBG_ERR("Failed to initialize hash table: %s\n",
++					strerror(errno));
++			}
++			break;
++		case FSP_FI_MEMCACHE:
++			c->fi_u.dm = memcache_init(mem_ctx, 0); 
++			if (c->fi_u.dm == NULL) {
++				DBG_ERR("Failed to initialize memcache\n");
++				ret = -1;
++			}
++			break;
++	}
++	SMB_ASSERT(ret == 0);
++	c->initialized = true;
++}
+ /**
+  * create new fsp to be used for file_new or a durable handle reconnect
+  */
+@@ -33,6 +287,7 @@ NTSTATUS fsp_new(struct connection_struct *conn, TALLOC_CTX *mem_ctx,
+ 		 files_struct **result)
+ {
+ 	NTSTATUS status = NT_STATUS_NO_MEMORY;
++	int ret;
+ 	files_struct *fsp = NULL;
+ 	struct smbd_server_connection *sconn = conn->sconn;
+ 
+@@ -67,9 +322,15 @@ NTSTATUS fsp_new(struct connection_struct *conn, TALLOC_CTX *mem_ctx,
+ 	fsp->conn = conn;
+ 	fsp->close_write_time = make_omit_timespec();
+ 
+-	DLIST_ADD(sconn->files, fsp);
+-	sconn->num_files += 1;
++	/* Lazy initialize the cache. */
++	if (!sconn->fsp_fi_table.initialized) {
++		fspcache_init(conn, sconn, &sconn->fsp_fi_table);
++	}
+ 
++	if (sconn->fsp_fi_table.backend_type == FSP_FI_LIST) {
++		DLIST_ADD(sconn->fsp_fi_table.fi_u.dl->entries, fsp);
++		sconn->fsp_fi_table.fi_u.dl->nentries++;
++	}
+ 	conn->num_files_open++;
+ 
+ 	*result = fsp;
+@@ -146,9 +407,6 @@ NTSTATUS file_new(struct smb_request *req, connection_struct *conn,
+ 		return NT_STATUS_NO_MEMORY;
+ 	}
+ 
+-	DEBUG(5,("allocated file structure %s (%u used)\n",
+-		 fsp_fnum_dbg(fsp), (unsigned int)sconn->num_files));
+-
+ 	if (req != NULL) {
+ 		fsp->mid = req->mid;
+ 		req->chain_fsp = fsp;
+@@ -168,12 +426,28 @@ NTSTATUS file_new(struct smb_request *req, connection_struct *conn,
+ /****************************************************************************
+  Close all open files for a connection.
+ ****************************************************************************/
+-
+-void file_close_conn(connection_struct *conn)
++static int file_close_conn_cb(uint8_t *keybuf, size_t keylen,
++			      uint8_t *databuf, size_t datalen,
++			      void *private_data)
+ {
+-	files_struct *fsp, *next;
++	NTSTATUS status;
++	struct fspcache_list *fsplist = NULL;
++	struct files_struct *fsp = NULL;
++	struct files_struct *next = NULL;
++	connection_struct *conn = NULL;
++	int i;
++
++	conn = (connection_struct *)private_data;
++
++	fsplist = talloc_get_type_abort(*(void **)databuf,
++				       struct fspcache_list);
++	SMB_ASSERT(fsplist != NULL);
++		
++	if (fsplist == NULL) {
++		return -1;
++	}
+ 
+-	for (fsp=conn->sconn->files; fsp; fsp=next) {
++	for (fsp=fsplist->entries, i=0;fsplist->nentries > i;fsp=next, i++) {
+ 		next = fsp->next;
+ 		if (fsp->conn != conn) {
+ 			continue;
+@@ -184,27 +458,64 @@ void file_close_conn(connection_struct *conn)
+ 			 */
+ 			fsp->op->global->durable = false;
+ 		}
+-		close_file(NULL, fsp, SHUTDOWN_CLOSE);
++		fsp->shutdown_close = true;
++		status = close_file(NULL, fsp, SHUTDOWN_CLOSE);
+ 	}
++	TALLOC_FREE(fsplist);
++	return 0;
+ }
+ 
++void file_close_conn(connection_struct *conn)
++{
++	int ret, count;
++	ret = fspcache_traverse(conn->sconn, file_close_conn_cb, conn, &count);
++	conn->sconn->fsp_fi_table.initialized = false;
++	
++	DBG_INFO("closed [%d] fsplists\n", count);
++}
+ /****************************************************************************
+  Close all open files for a pid and a vuid.
+ ****************************************************************************/
+-
+-void file_close_pid(struct smbd_server_connection *sconn, uint16_t smbpid,
+-		    uint64_t vuid)
++static int file_close_pid_cb(uint8_t *keybuf, size_t keylen,
++			     uint8_t *databuf, size_t datalen,
++			     void *private_data)
+ {
+-	files_struct *fsp, *next;
+-
+-	for (fsp=sconn->files;fsp;fsp=next) {
++	struct fspcache_list *fsplist = NULL;
++	struct smbpid_vuid *sv = NULL;
++	struct files_struct *fsp = NULL;
++	struct files_struct *next = NULL;
++	int i;
++	fsplist = (struct fspcache_list *)databuf;
++	sv = (struct smbpid_vuid *)private_data;
++	SMB_ASSERT(fsplist != NULL);
++	for (fsp=fsplist->entries, i=0;fsplist->nentries > i;fsp=next, i++) {
+ 		next = fsp->next;
+-		if ((fsp->file_pid == smbpid) && (fsp->vuid == vuid)) {
++		if ((fsp->file_pid == sv->smbpid) && (fsp->vuid == sv->vuid)) {
+ 			close_file(NULL, fsp, SHUTDOWN_CLOSE);
+ 		}
++		else {
++			DLIST_REMOVE(fsplist->entries, fsp);
++			fsplist->nentries--;
++		}
+ 	}
++	return 0;
+ }
+ 
++void file_close_pid(struct smbd_server_connection *sconn, uint16_t smbpid,
++		    uint64_t vuid)
++{
++	int ret, count;
++	struct smbpid_vuid *sv = NULL;
++	enum fsp_fi_cache_type backend;
++	backend = sconn->fsp_fi_table.backend_type;
++	sv->smbpid = smbpid;
++	sv->vuid = vuid;
++
++	ret = fspcache_traverse(sconn, file_close_pid_cb, sv, &count);
++	if (ret != 0) {
++		DBG_ERR("db_hash_traverse failed\n");
++	} 
++}
+ /****************************************************************************
+  Initialise file structures.
+ ****************************************************************************/
+@@ -263,22 +574,72 @@ bool file_init(struct smbd_server_connection *sconn)
+ /****************************************************************************
+  Close files open by a specified vuid.
+ ****************************************************************************/
+-
+-void file_close_user(struct smbd_server_connection *sconn, uint64_t vuid)
++static int file_close_user_cb(uint8_t *keybuf, size_t keylen,
++			      uint8_t *databuf, size_t datalen,
++			      void *private_data)
+ {
+-	files_struct *fsp, *next;
+-
+-	for (fsp=sconn->files; fsp; fsp=next) {
++	struct fspcache_list *fsplist = NULL;
++	struct files_struct *fsp = NULL;
++	struct files_struct *next = NULL;
++	uint64_t vuid;
++	int i = 0;
++	fsplist = talloc_get_type_abort(*(void **)databuf,
++				       struct fspcache_list);
++	vuid = *(uint64_t *)private_data;
++	SMB_ASSERT(fsplist != NULL);
++	for (fsp=fsplist->entries, i=0;fsplist->nentries > i;fsp=next, i++) {
+ 		next=fsp->next;
++		DLIST_REMOVE(fsplist->entries, fsp);
++		fsplist->nentries--;
+ 		if (fsp->vuid == vuid) {
+ 			close_file(NULL, fsp, SHUTDOWN_CLOSE);
+ 		}
+ 	}
++	return 0;
++}
++
++
++void file_close_user(struct smbd_server_connection *sconn, uint64_t vuid)
++{
++	int ret, count;
++	struct smbpid_vuid *sv = NULL;
++	sv = talloc_zero(sconn, struct smbpid_vuid);
++	sv->smbpid = 0;
++	sv->vuid = vuid;
++	ret = fspcache_traverse(sconn, file_close_user_cb, sv, &count);
++	TALLOC_FREE(sv);
+ }
+ 
+ /*
+  * Walk the files table until "fn" returns non-NULL
+  */
++static int files_forall_cb(uint8_t *keybuf, size_t keylen,
++			   uint8_t *databuf, size_t datalen,
++			   void *private_data)
++{
++	int i;
++	struct fspcache_list *fsplist = NULL;
++	struct files_struct *fsp = NULL;
++	struct files_struct *next = NULL;
++	struct files_struct *found_fsp = NULL;
++	struct files_forall_priv *ffp = NULL;
++
++	fsplist = talloc_get_type_abort(*(void **)databuf,
++				       struct fspcache_list);
++	ffp = (struct files_forall_priv *)private_data;
++	SMB_ASSERT(fsplist != NULL);
++	for (fsp=fsplist->entries, i=0;fsplist->nentries > i;fsp=next, i++) {
++		DBG_INFO("fsp: %p, next: %p\n, nentries: %zu, i: %d\n",
++			 fsp, next, fsplist->nentries, i);
++		next = fsp->next;
++		found_fsp = ffp->fn(fsp, ffp->private_data);
++		if (found_fsp != NULL) {
++			*ffp->retfsp = found_fsp; 
++			return -1;
++		}
++	}
++	return 0;
++}
+ 
+ struct files_struct *files_forall(
+ 	struct smbd_server_connection *sconn,
+@@ -286,37 +647,63 @@ struct files_struct *files_forall(
+ 				   void *private_data),
+ 	void *private_data)
+ {
+-	struct files_struct *fsp, *next;
+-
+-	for (fsp = sconn->files; fsp; fsp = next) {
+-		struct files_struct *ret;
+-		next = fsp->next;
+-		ret = fn(fsp, private_data);
+-		if (ret != NULL) {
+-			return ret;
+-		}
++	int ret, count;
++	struct files_forall_priv *np = NULL;
++	np = talloc_zero(sconn, struct files_forall_priv); 
++	if (np == NULL) {
++		DBG_ERR("Failed to talloc_zero()\n");
++		return NULL;
+ 	}
++	np->fn = fn;
++	np->private_data = private_data;
++	struct files_struct *fsp, *next;
++	ret = fspcache_traverse(sconn, files_forall_cb, np, &count);
++	TALLOC_FREE(np);
++	if (ret != 0) {
++		return *np->retfsp;
++	} 
+ 	return NULL;
+ }
+ 
+ /****************************************************************************
+  Find a fsp given a file descriptor.
+ ****************************************************************************/
+-
+-files_struct *file_find_fd(struct smbd_server_connection *sconn, int fd)
++static int find_fd_cb(uint8_t *keybuf, size_t keylen,
++		      uint8_t *databuf, size_t datalen,
++		      void *private_data)
+ {
+-	int count=0;
+-	files_struct *fsp;
+-
+-	for (fsp=sconn->files; fsp; fsp=fsp->next,count++) {
+-		if (fsp->fh->fd == fd) {
+-			if (count > 10) {
+-				DLIST_PROMOTE(sconn->files, fsp);
++	int i;
++	struct fspcache_list *fsplist = NULL;
++	struct files_struct *fsp = NULL;
++	struct files_struct *next = NULL;
++	struct fsp_fd *fspfd = NULL;
++
++	fspfd = (struct fsp_fd *)private_data;
++	fsplist = (struct fspcache_list *)databuf;
++	SMB_ASSERT(fsplist != NULL);
++	for (fsp=fsplist->entries, i=0;fsplist->nentries > i;fsp=next, i++) {
++		next = fsp->next;
++		if (fsp->fh->fd == fspfd->fd) {
++			if (fsplist->nentries > 10) {
++				DLIST_PROMOTE(fsplist->entries, fsp);
+ 			}
+-			return fsp;
++			*fspfd->fsp = fsp;
++			return -1;
+ 		}
+ 	}
++	return 0;
++}
+ 
++files_struct *file_find_fd(struct smbd_server_connection *sconn, int fd)
++{
++	files_struct *fsp = NULL;
++	struct fsp_fd *fspfd = NULL;
++	int ret, count;
++	ret = fspcache_traverse(sconn, find_fd_cb, &fspfd, &count);
++	if (ret != 0) {
++		DBG_ERR("db_hash_traverse failed\n");
++		return *fspfd->fsp;
++	} 
+ 	return NULL;
+ }
+ 
+@@ -327,30 +714,32 @@ files_struct *file_find_fd(struct smbd_server_connection *sconn, int fd)
+ files_struct *file_find_dif(struct smbd_server_connection *sconn,
+ 			    struct file_id id, unsigned long gen_id)
+ {
+-	int count=0;
+-	files_struct *fsp;
++	int ret, i;
++	files_struct *fsp = NULL;
++	files_struct *next = NULL;
++	struct fspcache_list *fsplist = NULL;
++	bool must_free_fis = false;
+ 
+ 	if (gen_id == 0) {
+ 		return NULL;
+ 	}
++	ret = fspcache_get(sconn, id, &fsplist);
+ 
+-	for (fsp=sconn->files; fsp; fsp=fsp->next,count++) {
+-		/* We can have a fsp->fh->fd == -1 here as it could be a stat open. */
+-		if (file_id_equal(&fsp->file_id, &id) &&
+-		    fsp->fh->gen_id == gen_id ) {
+-			if (count > 10) {
+-				DLIST_PROMOTE(sconn->files, fsp);
++	SMB_ASSERT(fsplist != NULL);
++	for (fsp=fsplist->entries, i=0;fsplist->nentries > i;fsp=next, i++) {
++		next = fsp->next;
++		if (fsp->fh->gen_id == gen_id) {
++			if (i > 10) {
++				DLIST_PROMOTE(fsplist->entries, fsp);
+ 			}
+ 			/* Paranoia check. */
+ 			if ((fsp->fh->fd == -1) &&
+ 			    (fsp->oplock_type != NO_OPLOCK &&
+ 			     fsp->oplock_type != LEASE_OPLOCK)) {
+-				struct file_id_buf idbuf;
+-				DEBUG(0,("file_find_dif: file %s file_id = "
+-					 "%s, gen = %u oplock_type = %u is a "
++				DEBUG(0,("file_find_dif: file %s "
++					 "gen = %u oplock_type = %u is a "
+ 					 "stat open with oplock type !\n",
+ 					 fsp_str_dbg(fsp),
+-					 file_id_str_buf(fsp->file_id, &idbuf),
+ 					 (unsigned int)fsp->fh->gen_id,
+ 					 (unsigned int)fsp->oplock_type ));
+ 				smb_panic("file_find_dif");
+@@ -366,28 +755,48 @@ files_struct *file_find_dif(struct smbd_server_connection *sconn,
+  Find the first fsp given a device and inode.
+  We use a singleton cache here to speed up searching from getfilepathinfo
+  calls.
++
++ If singleton cache lookup fails, then perform hashtable lookup and grab
++ head of fsplist. If this also fails, then cache the negative result.
+ ****************************************************************************/
+ 
+ files_struct *file_find_di_first(struct smbd_server_connection *sconn,
+ 				 struct file_id id)
+ {
+-	files_struct *fsp;
++	int ret, i;
++	files_struct *fsp = NULL;
++	files_struct *next = NULL;
++	struct fspcache_list *fsplist = NULL;
++	enum fsp_fi_cache_type backend;
++	backend = sconn->fsp_fi_table.backend_type;
+ 
+ 	if (file_id_equal(&sconn->fsp_fi_cache.id, &id)) {
+ 		/* Positive or negative cache hit. */
+ 		return sconn->fsp_fi_cache.fsp;
+ 	}
+-
+ 	sconn->fsp_fi_cache.id = id;
+ 
+-	for (fsp=sconn->files;fsp;fsp=fsp->next) {
+-		if (file_id_equal(&fsp->file_id, &id)) {
+-			/* Setup positive cache. */
+-			sconn->fsp_fi_cache.fsp = fsp;
+-			return fsp;
+-		}
++	ret = fspcache_get(sconn, id, &fsplist);
++	if (ret != 0) {
++		DBG_ERR("Failed to retrieve fsp_fi_cache entry\n");
++		goto failure;
+ 	}
++	if (backend != FSP_FI_LIST) {
++		sconn->fsp_fi_cache.fsp = fsplist->entries;
++		return fsplist->entries;
++	}
++	else {
++		for (fsp=fsplist->entries, i=0;fsplist->nentries > i;fsp=next, i++) {
++			next = fsp->next;
++			if (file_id_equal(&fsp->file_id, &id)) {
++				/* Setup positive cache. */
++				sconn->fsp_fi_cache.fsp = fsp;
++				return fsp;
++			}
++		}
+ 
++	}
++failure:
+ 	/* Setup negative cache. */
+ 	sconn->fsp_fi_cache.fsp = NULL;
+ 	return NULL;
+@@ -412,11 +821,22 @@ files_struct *file_find_di_next(files_struct *start_fsp)
+ 
+ struct files_struct *file_find_one_fsp_from_lease_key(
+ 	struct smbd_server_connection *sconn,
++	struct file_id id,
+ 	const struct smb2_lease_key *lease_key)
+ {
+-	struct files_struct *fsp;
++	DBG_ERR("Entered here\n");
++	int ret, i;
++	struct files_struct *fsp = NULL;
++	struct files_struct *next = NULL;
++	struct fspcache_list *fsplist = NULL;
++	ret = fspcache_get(sconn, id, &fsplist);
++	if (ret != 0) {
++		DBG_ERR("Failed to retrieve fsplist based on id\n");
++		return NULL;
++	}
+ 
+-	for (fsp = sconn->files; fsp; fsp=fsp->next) {
++	for (fsp=fsplist->entries, i=0;fsplist->nentries > i;fsp=next, i++) {
++		next = fsp->next;
+ 		if ((fsp->lease != NULL) &&
+ 		    (fsp->lease->lease.lease_key.data[0] ==
+ 		     lease_key->data[0]) &&
+@@ -431,13 +851,30 @@ struct files_struct *file_find_one_fsp_from_lease_key(
+ /****************************************************************************
+  Find any fsp open with a pathname below that of an already open path.
+ ****************************************************************************/
+-
+-bool file_find_subpath(files_struct *dir_fsp)
++static int file_find_subpath_cb(uint8_t *keybuf, size_t keylen,
++		      		uint8_t *databuf, size_t datalen,
++		     		void *private_data)
+ {
+-	files_struct *fsp;
++	/*
++	 * Non-zero return stops traversal
++	 */
++	int i;
++	struct fspcache_list *fsplist = NULL;
++	struct files_struct *fsp = NULL;
++	struct files_struct *next = NULL;
++	struct files_struct *dir_fsp = NULL;
++	struct pathcheck *pc = NULL;
++	enum fsp_fi_cache_type backend;
++
+ 	size_t dlen;
+ 	char *d_fullname = NULL;
+ 
++	fsplist = (struct fspcache_list *)databuf;
++	pc = (struct pathcheck *)private_data;
++	dir_fsp = pc->fsp;
++	
++	backend = dir_fsp->conn->sconn->fsp_fi_table.backend_type;
++
+ 	d_fullname = talloc_asprintf(talloc_tos(), "%s/%s",
+ 				     dir_fsp->conn->connectpath,
+ 				     dir_fsp->fsp_name->base_name);
+@@ -448,7 +885,10 @@ bool file_find_subpath(files_struct *dir_fsp)
+ 
+ 	dlen = strlen(d_fullname);
+ 
+-	for (fsp=dir_fsp->conn->sconn->files; fsp; fsp=fsp->next) {
++	for (fsp=fsplist->entries, i=0;fsplist->nentries > i;fsp=next, i++) {
++		if (!fsp->fsp_name->base_name) {
++			continue; //loop until we get a valid base_name
++		}
+ 		char *d1_fullname;
+ 
+ 		if (fsp == dir_fsp) {
+@@ -468,13 +908,28 @@ bool file_find_subpath(files_struct *dir_fsp)
+ 				(d1_fullname[dlen] == '/')) {
+ 			TALLOC_FREE(d1_fullname);
+ 			TALLOC_FREE(d_fullname);
+-			return true;
++			pc->is_subpath = true;
++			return 2;
+ 		}
+ 		TALLOC_FREE(d1_fullname);
++		if (backend != FSP_FI_LIST) {
++			TALLOC_FREE(d_fullname);
++			return 1;
++		}
+ 	}
+ 
+ 	TALLOC_FREE(d_fullname);
+-	return false;
++	return 0;
++}
++
++bool file_find_subpath(files_struct *dir_fsp)
++{
++	int ret, count;
++	struct pathcheck *pc;
++	pc->fsp = dir_fsp;
++	pc->is_subpath = false;
++	ret = fspcache_traverse(dir_fsp->conn->sconn, file_find_subpath_cb, &pc, &count);
++	return pc->is_subpath;
+ }
+ 
+ /****************************************************************************
+@@ -483,16 +938,41 @@ bool file_find_subpath(files_struct *dir_fsp)
+ 
+ void fsp_free(files_struct *fsp)
+ {
++	int ret;
+ 	struct smbd_server_connection *sconn = fsp->conn->sconn;
++	struct fspcache_list *fsplist = NULL;
++	fsplist = talloc_zero(fsp, struct fspcache_list);
+ 
+ 	if (fsp == sconn->fsp_fi_cache.fsp) {
+ 		ZERO_STRUCT(sconn->fsp_fi_cache);
+ 	}
++	if (!fsp->is_fspcache) {
++		DBG_INFO("Not cached: %s\n", fsp_str_dbg(fsp));
++		goto done;
++	}
++	ret = fspcache_get(sconn, fsp->file_id, &fsplist);
++	if (ret != 0) {
++		DBG_ERR("Failed to get fsplist for [%s]\n", fsp_str_dbg(fsp));
++		goto done;
++	}
+ 
+-	DLIST_REMOVE(sconn->files, fsp);
+-	SMB_ASSERT(sconn->num_files > 0);
+-	sconn->num_files--;
+-
++	if (fsplist == NULL || fsplist->nentries == 0) {
++		DBG_ERR("fsplist is NULL, exiting\n");
++		goto done;
++	}
++	if (fsplist->nentries == 1) {
++		DBG_INFO("Removing cache entry for [%s] at [%p]\n",
++			 fsp_str_dbg(fsp), fsplist);
++		ret = fspcache_destroy(sconn, fsp->file_id);
++		if (ret != 0) {
++			DBG_ERR("Failed to remove fspcache_entry\n");
++		}
++	}
++	else {
++		DLIST_REMOVE(fsplist->entries, fsp);
++		fsplist->nentries--;
++	}
++done:
+ 	TALLOC_FREE(fsp->fake_file_handle);
+ 
+ 	if (fsp->fh->ref_count == 1) {
+@@ -510,7 +990,6 @@ void fsp_free(files_struct *fsp)
+ 	}
+ 
+ 	fsp->conn->num_files_open--;
+-
+ 	/* this is paranoia, just in case someone tries to reuse the
+ 	   information */
+ 	ZERO_STRUCTP(fsp);
+@@ -567,7 +1046,7 @@ void file_free(struct smb_request *req, files_struct *fsp)
+ 	fsp_free(fsp);
+ 
+ 	DEBUG(5,("freed files structure %llu (%u used)\n",
+-		 (unsigned long long)fnum, (unsigned int)sconn->num_files));
++		 (unsigned long long)fnum, (unsigned int)sconn->fsp_fi_table.nentries));
+ }
+ 
+ /****************************************************************************
 diff --git a/source3/smbd/globals.h b/source3/smbd/globals.h
-index 7b26d04ed0f..1f4851be754 100644
+index 7b26d04ed0f..7a083dd456a 100644
 --- a/source3/smbd/globals.h
 +++ b/source3/smbd/globals.h
 @@ -24,6 +24,7 @@
@@ -444,7 +1850,32 @@ index 7b26d04ed0f..1f4851be754 100644
  
  #ifdef USE_DMAPI
  struct smbd_dmapi_context;
-@@ -856,6 +857,13 @@ struct smbd_server_connection {
+@@ -36,6 +37,24 @@ struct fsp_singleton_cache {
+ 	struct file_id id;
+ };
+ 
++struct fspcache_list {
++	char *name;
++        struct files_struct *entries;
++        int nentries;
++};
++
++struct fsp_fi_table {
++        union {
++        	struct db_hash_context *dh;
++		struct memcache *dm;		
++		struct fspcache_list *dl;
++        } fi_u;
++	enum fsp_fi_cache_type backend_type;
++	bool initialized;
++        size_t nentries;
++};
++
++/* In files.c */
+ extern const struct mangle_fns *mangle_fns;
+ 
+ extern unsigned char *chartest;
+@@ -856,16 +875,21 @@ struct smbd_server_connection {
  	bool using_smb2;
  	int trans_num;
  
@@ -458,27 +1889,23 @@ index 7b26d04ed0f..1f4851be754 100644
  	size_t num_users;
  
  	size_t num_connections;
+ 	struct connection_struct *connections;
+ 
+-	size_t num_files;
+-	struct files_struct *files;
+-
+ 	int real_max_open_files;
+-	struct fsp_singleton_cache fsp_fi_cache;
++	struct fsp_fi_table fsp_fi_table; 
++	struct fsp_singleton_cache fsp_fi_cache; 
+ 
+ 	struct pending_message_list *deferred_open_queue;
+ 
 diff --git a/source3/smbd/open.c b/source3/smbd/open.c
-index 98770358cf1..0abddf485f9 100644
+index 98770358cf1..6f9655ff008 100644
 --- a/source3/smbd/open.c
 +++ b/source3/smbd/open.c
-@@ -641,6 +641,7 @@ static int non_widelink_open(struct connection_struct *conn,
- 	}
- 
- 	parent_dir_fname = (struct smb_filename) { .base_name = parent_dir };
-+	parent_dir_fname.vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	oldwd_fname = vfs_GetWd(talloc_tos(), conn);
- 	if (oldwd_fname == NULL) {
-@@ -661,6 +662,7 @@ static int non_widelink_open(struct connection_struct *conn,
- 		saved_errno = ENOMEM;
- 		goto out;
- 	}
-+	smb_fname_rel->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	/* Ensure the relative path is below the share. */
- 	status = check_reduced_name(conn, &parent_dir_fname, smb_fname_rel);
-@@ -767,7 +769,7 @@ NTSTATUS fd_open(struct connection_struct *conn,
+@@ -767,7 +767,7 @@ NTSTATUS fd_open(struct connection_struct *conn,
  	}
  
  	/* Ensure path is below share definition. */
@@ -487,16 +1914,86 @@ index 98770358cf1..0abddf485f9 100644
  		struct smb_filename *conn_rootdir_fname = NULL;
  		const char *conn_rootdir = SMB_VFS_CONNECTPATH(conn,
  						smb_fname);
-@@ -784,6 +786,7 @@ NTSTATUS fd_open(struct connection_struct *conn,
- 		if (conn_rootdir_fname == NULL) {
- 			return NT_STATUS_NO_MEMORY;
- 		}
-+		conn_rootdir_fname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
+@@ -3284,6 +3284,7 @@ static NTSTATUS open_file_ntcreate(connection_struct *conn,
+ 	struct smb_filename *smb_fname = fsp->fsp_name;
+ 	int flags=0;
+ 	int flags2=0;
++	int ret;
+ 	bool file_existed = VALID_STAT(smb_fname->st);
+ 	bool def_acl = False;
+ 	bool posix_open = False;
+@@ -4224,6 +4225,7 @@ static NTSTATUS open_directory(connection_struct *conn,
+ 	NTSTATUS status;
+ 	struct timespec mtimespec;
+ 	int info = 0;
++	int ret = 0;
+ 	bool ok;
  
- 		/*
- 		 * Only follow symlinks within a share
+ 	if (is_ntfs_stream_smb_fname(smb_dname)) {
+@@ -4394,7 +4396,6 @@ static NTSTATUS open_directory(connection_struct *conn,
+ 	/*
+ 	 * Setup the files_struct for it.
+ 	 */
+-
+ 	fsp->file_id = vfs_file_id_from_sbuf(conn, &smb_dname->st);
+ 	fsp->vuid = req ? req->vuid : UID_FIELD_INVALID;
+ 	fsp->file_pid = req ? req->smbpid : 0;
+@@ -4420,6 +4421,13 @@ static NTSTATUS open_directory(connection_struct *conn,
+ 		file_free(req, fsp);
+ 		return status;
+ 	}
++#if 0
++	DBG_ERR("Preparing to append %s to fsplist\n", fsp_str_dbg(fsp));
++	ret = fspcache_append(conn->sconn, fsp);
++	if (ret != 0) {
++		DBG_ERR("failed to append [%s] to fsplist\n", fsp_str_dbg(fsp));
++	}
++#endif
+ 
+ 	/* Don't store old timestamps for directory
+ 	   handles in the internal database. We don't
+@@ -5345,6 +5353,7 @@ static NTSTATUS create_file_unixpath(connection_struct *conn,
+ 				     int *pinfo)
+ {
+ 	struct smb2_lease none_lease;
++	int ret;
+ 	int info = FILE_WAS_OPENED;
+ 	files_struct *base_fsp = NULL;
+ 	files_struct *fsp = NULL;
+@@ -5634,6 +5643,10 @@ static NTSTATUS create_file_unixpath(connection_struct *conn,
+ 	}
+ 
+ 	fsp->base_fsp = base_fsp;
++	ret = fspcache_append(conn->sconn, fsp);
++	if (ret != 0) {
++		DBG_ERR("failed to append [%s] to fsplist\n", fsp_str_dbg(fsp));
++	}
+ 
+ 	if ((ea_list != NULL) &&
+ 	    ((info == FILE_WAS_CREATED) || (info == FILE_WAS_OVERWRITTEN))) {
+diff --git a/source3/smbd/oplock.c b/source3/smbd/oplock.c
+index 2c4449b10b2..67138c06c96 100644
+--- a/source3/smbd/oplock.c
++++ b/source3/smbd/oplock.c
+@@ -271,7 +271,7 @@ static void lease_timeout_handler(struct tevent_context *ctx,
+ 	struct share_mode_lock *lck;
+ 	uint16_t old_epoch = lease->lease.lease_epoch;
+ 
+-	fsp = file_find_one_fsp_from_lease_key(lease->sconn,
++	fsp = file_find_one_fsp_from_lease_key(lease->sconn, lease->file_id,
+ 					       &lease->lease.lease_key);
+ 	if (fsp == NULL) {
+ 		/* race? */
+@@ -447,7 +447,6 @@ static struct files_struct *fsps_lease_update_fn(
+ 	}
+ 
+ 	fsp_lease_update(fsp);
+-
+ 	return NULL;
+ }
+ 
 diff --git a/source3/smbd/proto.h b/source3/smbd/proto.h
-index 96d574023a5..a953f668d83 100644
+index 96d574023a5..8233f120e26 100644
 --- a/source3/smbd/proto.h
 +++ b/source3/smbd/proto.h
 @@ -370,6 +370,7 @@ NTSTATUS filename_convert_with_privilege(TALLOC_CTX *mem_ctx,
@@ -507,6 +2004,22 @@ index 96d574023a5..a953f668d83 100644
  
  /* The following definitions come from smbd/files.c  */
  
+@@ -390,6 +391,7 @@ struct files_struct *files_forall(
+ 				   void *private_data),
+ 	void *private_data);
+ files_struct *file_find_fd(struct smbd_server_connection *sconn, int fd);
++int fspcache_append(struct smbd_server_connection *sconn, struct files_struct *fsp);
+ files_struct *file_find_dif(struct smbd_server_connection *sconn,
+ 			    struct file_id id, unsigned long gen_id);
+ files_struct *file_find_di_first(struct smbd_server_connection *sconn,
+@@ -397,6 +399,7 @@ files_struct *file_find_di_first(struct smbd_server_connection *sconn,
+ files_struct *file_find_di_next(files_struct *start_fsp);
+ struct files_struct *file_find_one_fsp_from_lease_key(
+ 	struct smbd_server_connection *sconn,
++	struct file_id id,
+ 	const struct smb2_lease_key *lease_key);
+ bool file_find_subpath(files_struct *dir_fsp);
+ void fsp_free(files_struct *fsp);
 diff --git a/source3/smbd/reply.c b/source3/smbd/reply.c
 index 40cd7483750..916ce8f65f0 100644
 --- a/source3/smbd/reply.c
