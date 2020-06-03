@@ -101,10 +101,10 @@ index 5365fce3533..db11c857bae 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..bb70546374b
+index 00000000000..b275273ddd7
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
-@@ -0,0 +1,980 @@
+@@ -0,0 +1,978 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -333,10 +333,10 @@ index 00000000000..bb70546374b
 +	/*
 +	 * kevents are uniquely identified by the tuple (queue, ident, and filter).
 +	 * This means that if a tevent fd event has both TEVENT_FD_READ and TEVENT_FD_WRITE
-+	 * flags set, then two separate kevents will need to be generated. Consequently, 
++	 * flags set, then two separate kevents will need to be generated. Consequently,
 +	 * an array of kevents must be retrieved in loop_once() so that the correct
 +	 * tevent flags can be determined when calling the relevant handler function.
-+	 * KQUEUE_HAS_EXTRA_KEVENT is used to indicate that this is the case. 
++	 * KQUEUE_HAS_EXTRA_KEVENT is used to indicate that this is the case.
 +	 */
 +	if (!HAS_READ_OR_WRITE(fde->flags)) {
 +		return;
@@ -344,7 +344,7 @@ index 00000000000..bb70546374b
 +
 +	/*
 +	 * In tevent, multiple fd events with overlapping flags may be registered for the fd.
-+	 * On collision with existing kevent (same kqueue, fd, and filter), the existing 
++	 * On collision with existing kevent (same kqueue, fd, and filter), the existing
 +	 * kevent will be overwritten with new data. Future room for improvement here is
 +	 * to check if the existing kevent(s) already cover all the requisite filters. In
 +	 * this case, then we can simply place a pointer to new tevent_fd as additional_data
@@ -571,18 +571,18 @@ index 00000000000..bb70546374b
 +	struct tevent_fd *mpx_fde = NULL;
 +	/*
 +	 * If the fd being monitored has multiple tevent fd events registered for
-+	 * it, then invoke their fd handlers. 
++	 * it, then invoke their fd handlers.
 +	 */
 +	if (fde->additional_data != NULL) {
 +		mpx_fde = (struct tevent_fd *)fde->additional_data;
 +
 +		tevent_common_invoke_fd_handler(fde,
-+					      fde->flags & flags,
-+					      NULL);
++					        fde->flags & flags,
++					        NULL);
 +
 +		return tevent_common_invoke_fd_handler(mpx_fde,
-+						      mpx_fde->flags & flags,
-+						      NULL);
++						       mpx_fde->flags & flags,
++						       NULL);
 +	}
 +
 +	return tevent_common_invoke_fd_handler(fde, fde->flags & flags, NULL);
@@ -723,8 +723,6 @@ index 00000000000..bb70546374b
 +				     &fde,
 +				     &is_fd_event);
 +		if (!is_fd_event) {
-+			tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
-+			     "XXX: main_loop: not fd event\n");
 +			continue;
 +		}
 +
@@ -767,7 +765,7 @@ index 00000000000..bb70546374b
 +	/*
 +	 * Loop through an array of kevents. We need to retrieve multiple events at once
 +	 * in order to properly reconstruct the correct flags to send to the tevent
-+	 * fd handler. 
++	 * fd handler.
 +	 */
 +	int i, iloop, ret, nkevents;
 +	bool had_non_fd_event, is_fd_event;
