@@ -1,9 +1,9 @@
 diff --git a/source3/modules/vfs_aio_fbsd.c b/source3/modules/vfs_aio_fbsd.c
 new file mode 100644
-index 00000000000..88abb07cbd0
+index 00000000000..ced1b0cfbcb
 --- /dev/null
 +++ b/source3/modules/vfs_aio_fbsd.c
-@@ -0,0 +1,453 @@
+@@ -0,0 +1,267 @@
 +/*
 + * Copyright (C) Volker Lendecke 2008
 + * Copyright (C) Jeremy Allison 2010
@@ -33,46 +33,6 @@ index 00000000000..88abb07cbd0
 +#include "smbprofile.h"
 +#include <sys/event.h>
 +#include <aio.h>
-+#include <pthread.h>
-+
-+#define MAX_KEVENTS 8 
-+
-+struct vfs_aio_fbsd_request;
-+
-+struct vfs_aio_fbsd_config {
-+	int kqueue_fd;
-+};
-+
-+struct vfs_aio_fbsd_request {
-+	struct vfs_aio_fbsd_requeust *prev, *next;
-+	struct tevent_req *req;
-+	struct aiocb *iocbp;
-+	bool in_progress;
-+	size_t ret;
-+	int saved_errno;
-+	void *state;
-+};
-+
-+struct vfs_aio_fbsd_kevent {
-+	struct vfs_aio_fbsd_kevent *prev, *next;
-+	struct aiocb *iocbp;
-+	bool in_progress;
-+	size_t ret;
-+	int saved_errno;
-+	void *state;
-+};
-+
-+struct vfs_fbsd_kevent_thread_data {
-+	int k_fd;
-+	struct tevent_thread_proxy *tp;
-+};
-+
-+static int vfs_aio_fbsd_config_destructor(struct vfs_aio_fbsd_config *config)
-+{
-+	close(config->kqueue_fd);
-+	config->kqueue_fd = -1;
-+	return 0;
-+}
 +
 +/*
 + * If possible, wait for existing aio requests to complete.
@@ -106,7 +66,7 @@ index 00000000000..88abb07cbd0
 + * block structure pointed to by iocb and the buffer must
 + * remain valid until the operation has completed.
 + */
-+static int vfs_aio_fbsd_request_state_destructor(struct vfs_aio_fbsd_request *req)
++static int vfs_aio_fbsd_request_state_destructor(struct tevent_aio_request *req)
 +{
 +	int ret;
 +	if (req->in_progress) {
@@ -136,108 +96,6 @@ index 00000000000..88abb07cbd0
 +	return 0;
 +}
 +
-+static void aio_proxy_callback_handler(struct tevent_context *ev,
-+				       struct tevent_immediate *im,
-+				       void *private_ptr)
-+{
-+	struct vfs_aio_fbsd_kevent *kev = NULL;
-+	struct tevent_req *req = NULL;
-+	kev = talloc_get_type_abort(private_ptr,
-+				    struct vfs_aio_fbsd_kevent);
-+
-+	req = talloc_get_type_abort(kev->state,
-+				    struct tevent_req);
-+
-+	struct vfs_aio_fbsd_request *state = tevent_req_data(
-+		req, struct vfs_aio_fbsd_request);
-+
-+	state->in_progress = kev->in_progress;
-+	state->ret = kev->ret;
-+	state->saved_errno = kev->saved_errno;
-+	tevent_req_done(req);
-+}
-+
-+static void *vfs_fbsd_aio_queue_thread(void *arg)
-+{
-+	struct vfs_fbsd_kevent_thread_data *kctx = (struct vfs_fbsd_kevent_thread_data *)arg;
-+	int ret, i;
-+	TALLOC_CTX *kqt_ctx = talloc_init("kqt_ctx");
-+	struct timespec *timeout = NULL;
-+	struct vfs_aio_fbsd_kevent *req;
-+	struct kevent received[MAX_KEVENTS];
-+	struct tevent_immediate *im;
-+	for (;/*ever*/;) {
-+		ret = kevent(kctx->k_fd,
-+			     NULL,		/* changelist */
-+			     0,			/* nchanges */
-+			     received,		/* eventlist */
-+			     MAX_KEVENTS,	/* nevents */
-+			     timeout);		/* timeout */
-+
-+		SMB_ASSERT(ret != -1);
-+		for (i=0;i<ret;i++) {
-+			req = NULL;
-+			SMB_ASSERT(received[i].filter == EVFILT_AIO);
-+			req = talloc_get_type_abort(received[i].udata, struct vfs_aio_fbsd_kevent);
-+			im = tevent_create_immediate(kqt_ctx);
-+			req->in_progress = false;
-+			req->ret = aio_return(req->iocbp);
-+			req->saved_errno = errno;
-+			tevent_thread_proxy_schedule(kctx->tp,
-+				&im,
-+				aio_proxy_callback_handler,
-+                                &req);
-+		}
-+	}
-+}
-+
-+static int vfs_aio_fbsd_connect(vfs_handle_struct *handle, const char *service,
-+				const char *user)
-+{
-+	int ret;
-+	struct vfs_aio_fbsd_config *config;
-+	struct vfs_fbsd_kevent_thread_data *kctx;
-+	struct timespec slp;
-+	bool sqpoll;
-+	unsigned flags = 0;
-+	pthread_t *kevent_th;
-+	TALLOC_CTX *thd_ctx = talloc_init("thd_ctx");
-+
-+	talloc_disable_null_tracking();
-+	config = talloc_zero(handle->conn, struct vfs_aio_fbsd_config);
-+	if (config == NULL) {
-+		DBG_ERR("talloc_zero() failed\n");
-+		return -1;
-+	}
-+
-+	SMB_VFS_HANDLE_SET_DATA(handle, config,
-+				NULL, struct vfs_aio_fbsd_config,
-+				return -1);
-+
-+	ret = SMB_VFS_NEXT_CONNECT(handle, service, user);
-+	if (ret < 0) {
-+		return ret;
-+	}
-+
-+	talloc_set_destructor(config, vfs_aio_fbsd_config_destructor);
-+	slp.tv_sec = 0;
-+	slp.tv_nsec = 1000000;
-+
-+	config->kqueue_fd = kqueue();
-+	kctx = talloc_zero(thd_ctx, struct vfs_fbsd_kevent_thread_data);
-+	kctx->k_fd = config->kqueue_fd;
-+	kctx->tp = tevent_thread_proxy_create(handle->conn->sconn->ev_ctx);
-+	if (kctx->tp == NULL) {
-+		DBG_ERR("failed to create thread proxy\n");
-+		return -1;
-+	}
-+	nanosleep(&slp, NULL);
-+	ret = pthread_create(kevent_th, NULL, vfs_fbsd_aio_queue_thread,
-+			     (void *)kctx);
-+
-+	return 0;
-+}
-+
 +static struct tevent_req *vfs_aio_fbsd_pread_send(struct vfs_handle_struct *handle,
 +					     TALLOC_CTX *mem_ctx,
 +					     struct tevent_context *ev,
@@ -245,62 +103,43 @@ index 00000000000..88abb07cbd0
 +					     void *data,
 +					     size_t n, off_t offset)
 +{
-+	int ret;
 +	struct tevent_req *req = NULL;
-+	struct vfs_aio_fbsd_request *state = NULL;
-+	struct vfs_aio_fbsd_config *config = NULL;
-+	struct vfs_aio_fbsd_kevent *kev = NULL;
++	struct tevent_aio_request *state = NULL;
 +
-+	SMB_VFS_HANDLE_GET_DATA(handle, config,
-+				struct vfs_aio_fbsd_config,
-+				smb_panic(__location__));
++	req = tevent_req_create(mem_ctx, &state, struct tevent_aio_request);
++	if (req == NULL) {
++		return NULL;
++	}
 +
-+	req = tevent_req_create(mem_ctx, &state, struct vfs_aio_fbsd_request);
-+	kev = talloc_zero(mem_ctx, struct vfs_aio_fbsd_kevent);
-+	kev->iocbp = (struct aiocb*)calloc(1, sizeof(struct aiocb));
-+	if (kev->iocbp == NULL) {
++	state->iocbp = (struct aiocb*)calloc(1, sizeof(struct aiocb));
++	if (state->iocbp == NULL) {
 +		DBG_ERR("calloc() failed\n");
 +		return NULL;
 +	}
 +
-+	if (req == NULL) {
-+		SAFE_FREE(kev->iocbp);
-+		return NULL;
-+	}
 +	state->req = req;
-+	state->state = state;
-+	state->iocbp = kev->iocbp;
-+	kev->state = req;
-+	kev->iocbp->aio_fildes = fsp->fh->fd;
-+	kev->iocbp->aio_offset = offset;
-+	kev->iocbp->aio_buf = data;
-+	kev->iocbp->aio_sigevent.sigev_notify_kqueue = config->kqueue_fd;
-+	kev->iocbp->aio_sigevent.sigev_notify_kevent_flags = EV_ONESHOT;
-+	kev->iocbp->aio_sigevent.sigev_value.sival_ptr = kev;
-+	kev->iocbp->aio_sigevent.sigev_notify = SIGEV_KEVENT;
-+	kev->iocbp->aio_nbytes = n;
++	state->iocbp->aio_fildes = fsp->fh->fd;
++	state->iocbp->aio_offset = offset;
++	state->iocbp->aio_buf = data;
++	state->iocbp->aio_sigevent.sigev_notify_kevent_flags = EV_ONESHOT;
++	state->iocbp->aio_sigevent.sigev_value.sival_ptr = state;
++	state->iocbp->aio_sigevent.sigev_notify = SIGEV_KEVENT;
++	state->iocbp->aio_nbytes = n;
 +	state->in_progress = true;
-+	kev->in_progress = true;
 +	DBG_DEBUG("fildes: %d, offset: %ld, size: %lu preq: [%p], pstate: [%p]\n",
 +		state->iocbp->aio_fildes, state->iocbp->aio_offset, state->iocbp->aio_nbytes, req, state); 
-+	ret = aio_read(kev->iocbp);
++
++	tevent_add_fd(ev, state, -1, TEVENT_FD_AIO_READ, NULL, state);
 +	talloc_set_destructor(state, vfs_aio_fbsd_request_state_destructor);
-+	/*
-+	 * "The asynchronous I/O interfaces don't affect the file offset maintained
-+	 * by the operating system. This won't be a problem as long as we never mix
-+	 * a I/O functions with conventional functions on the same file in the same
-+	 * process." - APUE
-+	 * This is why we're not retrying with conventional IO on EAGAIN here.
-+	 */
-+	if (ret != 0) {
-+		DBG_ERR("Failed to add to AIO queue %s\n", strerror(errno));
++	if (state->saved_rv != 0) {
++		DBG_ERR("Failed to add to AIO queue %s\n", strerror(state->saved_errno));
++		errno = state->saved_errno;
 +		return NULL; //errno to status
 +	}
 +
 +	if (!tevent_req_is_in_progress(req)) {
 +		return tevent_req_post(req, ev);
 +	}
-+
 +	tevent_req_defer_callback(req, ev);
 +	return req;
 +}
@@ -308,7 +147,7 @@ index 00000000000..88abb07cbd0
 +static ssize_t vfs_aio_fbsd_common_recv(struct tevent_req *req,
 +				  struct vfs_aio_state *vfs_aio_state)
 +{
-+	struct vfs_aio_fbsd_request *state = tevent_req_data(req, struct vfs_aio_fbsd_request);
++	struct tevent_aio_request *state = tevent_req_data(req, struct tevent_aio_request);
 +	if (state->ret < 0) {
 +		DBG_ERR("aio_return failed: %s\n", strerror(state->saved_errno));
 +		vfs_aio_state->error = state->ret;
@@ -332,55 +171,42 @@ index 00000000000..88abb07cbd0
 +					     const void *data,
 +					     size_t n, off_t offset)
 +{
-+	int ret;
 +	struct tevent_req *req = NULL;
-+	struct vfs_aio_fbsd_request *state = NULL;
-+	struct vfs_aio_fbsd_config *config = NULL;
-+	struct vfs_aio_fbsd_kevent *kev = NULL;
++	struct tevent_aio_request *state = NULL;
 +
-+	SMB_VFS_HANDLE_GET_DATA(handle, config,
-+				struct vfs_aio_fbsd_config,
-+				smb_panic(__location__));
-+
-+	req = tevent_req_create(mem_ctx, &state, struct vfs_aio_fbsd_request);
-+	kev = talloc_zero(mem_ctx, struct vfs_aio_fbsd_kevent);
-+	kev->iocbp = (struct aiocb*)calloc(1, sizeof(struct aiocb));
-+	if (kev->iocbp == NULL) {
++	req = tevent_req_create(mem_ctx, &state, struct tevent_aio_request);
++	if (req == NULL) {
++		return NULL;
++	}
++	state->iocbp = (struct aiocb*)calloc(1, sizeof(struct aiocb));
++	if (state->iocbp == NULL) {
 +		DBG_ERR("calloc() failed\n");
 +		return NULL;
 +	}
 +
-+	if (req == NULL) {
-+		SAFE_FREE(kev->iocbp);
-+		return NULL;
-+	}
 +	state->req = req;
-+	state->state = state;
-+	state->iocbp = kev->iocbp;
-+	kev->state = req;
-+	kev->iocbp->aio_fildes = fsp->fh->fd;
-+	kev->iocbp->aio_offset = offset;
-+	kev->iocbp->aio_buf = discard_const(data);
-+	kev->iocbp->aio_sigevent.sigev_notify_kqueue = config->kqueue_fd;
-+	kev->iocbp->aio_sigevent.sigev_value.sival_ptr = kev;
-+	kev->iocbp->aio_sigevent.sigev_notify_kevent_flags = EV_ONESHOT;
-+	kev->iocbp->aio_sigevent.sigev_notify = SIGEV_KEVENT;
-+	kev->iocbp->aio_nbytes = n;
++	state->iocbp->aio_fildes = fsp->fh->fd;
++	state->iocbp->aio_offset = offset;
++	state->iocbp->aio_buf = discard_const(data);
++	state->iocbp->aio_sigevent.sigev_value.sival_ptr = state;
++	state->iocbp->aio_sigevent.sigev_notify_kevent_flags = EV_ONESHOT;
++	state->iocbp->aio_sigevent.sigev_notify = SIGEV_KEVENT;
++	state->iocbp->aio_nbytes = n;
 +	state->in_progress = true;
-+	kev->in_progress = true;
 +	DBG_DEBUG("fildes: %d, offset: %ld, size: %lu preq: [%p], pkev: [%p]\n",
-+		state->iocbp->aio_fildes, state->iocbp->aio_offset, state->iocbp->aio_nbytes, req, kev); 
-+	ret = aio_write(kev->iocbp);
++		state->iocbp->aio_fildes, state->iocbp->aio_offset, state->iocbp->aio_nbytes, req, state);
++
++	tevent_add_fd(ev, state, -1, TEVENT_FD_AIO_WRITE, NULL, state);
 +	talloc_set_destructor(state, vfs_aio_fbsd_request_state_destructor);
-+	if (ret != 0) {
-+		DBG_ERR("Failed to add to AIO queue %s\n", strerror(errno));
++
++	if (state->saved_rv != 0) {
++		DBG_ERR("Failed to add to AIO queue %s\n", strerror(state->saved_errno));
++		errno = state->saved_errno;
 +		return NULL; //errno to status
 +	}
-+
 +	if (!tevent_req_is_in_progress(req)) {
 +		return tevent_req_post(req, ev);
 +	}
-+
 +	tevent_req_defer_callback(req, ev);
 +	return req;
 +}
@@ -390,41 +216,30 @@ index 00000000000..88abb07cbd0
 +					     struct tevent_context *ev,
 +					     struct files_struct *fsp)
 +{
-+	int ret;
 +	struct tevent_req *req = NULL;
-+	struct vfs_aio_fbsd_request *state = NULL;
-+	struct vfs_aio_fbsd_config *config = NULL;
-+	struct vfs_aio_fbsd_kevent *kev = NULL;
++	struct tevent_aio_request *state = NULL;
 +
-+	SMB_VFS_HANDLE_GET_DATA(handle, config,
-+				struct vfs_aio_fbsd_config,
-+				smb_panic(__location__));
-+
-+	req = tevent_req_create(mem_ctx, &state, struct vfs_aio_fbsd_request);
-+	kev = talloc_zero(mem_ctx, struct vfs_aio_fbsd_kevent);
-+	kev->iocbp = (struct aiocb*)calloc(1, sizeof(struct aiocb));
-+	state->req = req;
-+	state->state = state;
-+	state->iocbp = kev->iocbp;
-+	kev->state = req;
-+	if (kev->iocbp == NULL) {
++	req = tevent_req_create(mem_ctx, &state, struct tevent_aio_request);
++	if (req == NULL) {
++		return NULL;
++	}
++	state->iocbp = (struct aiocb*)calloc(1, sizeof(struct aiocb));
++	if (state->iocbp == NULL) {
 +		DBG_ERR("calloc() failed\n");
 +		return NULL;
 +	}
 +
-+	if (req == NULL) {
-+		SAFE_FREE(state->iocbp);
-+		return NULL;
-+	}
-+	kev->iocbp->aio_fildes = fsp->fh->fd;
-+	kev->iocbp->aio_sigevent.sigev_notify_kqueue = config->kqueue_fd;
-+	kev->iocbp->aio_sigevent.sigev_value.sival_ptr = kev;
-+	kev->iocbp->aio_sigevent.sigev_notify = SIGEV_KEVENT;
-+	kev->iocbp->aio_sigevent.sigev_notify_kevent_flags = EV_ONESHOT;
-+	ret = aio_fsync(O_SYNC, kev->iocbp);
++	state->req = req;
++	state->iocbp->aio_fildes = fsp->fh->fd;
++	state->iocbp->aio_sigevent.sigev_value.sival_ptr = state;
++	state->iocbp->aio_sigevent.sigev_notify = SIGEV_KEVENT;
++	state->iocbp->aio_sigevent.sigev_notify_kevent_flags = EV_ONESHOT;
++
++	tevent_add_fd(ev, state, -1, TEVENT_FD_AIO_FSYNC, NULL, state);
 +	talloc_set_destructor(state, vfs_aio_fbsd_request_state_destructor);
-+	if (ret != 0) {
-+		DBG_ERR("Failed to add to AIO queue %s\n", strerror(errno));
++	if (state->saved_rv != 0) {
++		DBG_ERR("Failed to add to AIO queue %s\n", strerror(state->saved_errno));
++		errno = state->saved_errno;
 +		return NULL; //errno to status
 +	}
 +	if (!tevent_req_is_in_progress(req)) {
@@ -442,7 +257,6 @@ index 00000000000..88abb07cbd0
 +}
 +
 +static struct vfs_fn_pointers vfs_aio_fbsd_fns = {
-+	.connect_fn = vfs_aio_fbsd_connect,
 +	.pread_send_fn = vfs_aio_fbsd_pread_send,
 +	.pread_recv_fn = vfs_aio_fbsd_common_recv,
 +	.pwrite_send_fn = vfs_aio_fbsd_pwrite_send,
