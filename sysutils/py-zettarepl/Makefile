@@ -2,7 +2,7 @@
 
 PORTNAME=	zettarepl
 PORTVERSION=	0.1
-PORTREVISION=	14
+PORTREVISION=	15
 CATEGORIES=	sysutils python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
@@ -13,7 +13,7 @@ USES=		python:3.6+
 USE_PYTHON=	autoplist distutils
 USE_GITHUB=	yes
 GH_ACCOUNT=	freenas
-GH_TAGNAME=	3201168421aa237039ee10a6b0c9c8042ddc04cd
+GH_TAGNAME=	896c6e96de5ad02c628a9da5cf3b8b42f98a5472
 
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}coloredlogs>0:devel/py-coloredlogs@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}croniter>0:sysutils/py-croniter@${PY_FLAVOR} \
