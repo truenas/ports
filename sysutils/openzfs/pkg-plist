@@ -13,6 +13,7 @@ etc/zfs/zfs-functions
 etc/zfs/zpool.d/ata_err
 etc/zfs/zpool.d/cmd_to
 etc/zfs/zpool.d/defect
+etc/zfs/zpool.d/dm-deps
 etc/zfs/zpool.d/enc
 etc/zfs/zpool.d/encdev
 etc/zfs/zpool.d/fault_led
@@ -38,7 +39,6 @@ etc/zfs/zpool.d/rep_ucor
 etc/zfs/zpool.d/serial
 etc/zfs/zpool.d/ses
 etc/zfs/zpool.d/size
-etc/zfs/zpool.d/slaves
 etc/zfs/zpool.d/slot
 etc/zfs/zpool.d/smart
 etc/zfs/zpool.d/smart_test
@@ -334,6 +334,7 @@ lib/libzpool.so.4.0.0
 libexec/zfs/zpool.d/ata_err
 libexec/zfs/zpool.d/cmd_to
 libexec/zfs/zpool.d/defect
+libexec/zfs/zpool.d/dm-deps
 libexec/zfs/zpool.d/enc
 libexec/zfs/zpool.d/encdev
 libexec/zfs/zpool.d/fault_led
@@ -359,7 +360,6 @@ libexec/zfs/zpool.d/rep_ucor
 libexec/zfs/zpool.d/serial
 libexec/zfs/zpool.d/ses
 libexec/zfs/zpool.d/size
-libexec/zfs/zpool.d/slaves
 libexec/zfs/zpool.d/slot
 libexec/zfs/zpool.d/smart
 libexec/zfs/zpool.d/smart_test
