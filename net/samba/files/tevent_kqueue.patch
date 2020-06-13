@@ -101,10 +101,10 @@ index 5365fce3533..db11c857bae 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..9364b5fa8d2
+index 00000000000..6c1794efa8e
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
-@@ -0,0 +1,1339 @@
+@@ -0,0 +1,1164 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -149,12 +149,6 @@ index 00000000000..9364b5fa8d2
 +/* maximum number of kevents to process in loop_once*/
 +#define MAX_KEVENTS			16
 +
-+//Lower 24 bits may be used for user-defined flags in kevent
-+#define KEVENT_CHECK_SIGNAL			0x000001
-+#define KEVENT_THREADED_ACTIVATE_IMMEDIATE	0x000002
-+#define KEVENT_LOOP_IMMEDIATE			0x000004
-+#define KEVENT_ADD_IMMEDIATE			0x000008
-+
 +#define TEVENT_FD_RW (TEVENT_FD_READ|TEVENT_FD_WRITE)
 +#define HAS_AIO(flags) (flags & TEVENT_FD_AIO)
 +#define HAS_WRITE(flags) (flags & TEVENT_FD_WRITE)
@@ -163,8 +157,6 @@ index 00000000000..9364b5fa8d2
 +#define HAS_READ_AND_WRITE(flags) ((flags & TEVENT_FD_RW) == TEVENT_FD_RW)
 +#define KEVENT_TO_TEVENT_FLAGS(f) (abs(f) & TEVENT_FD_RW)
 +#define TIMEVAL_IS_ZERO(tv) (tv.tv_sec == 0 && tv.tv_usec == 0)
-+
-+enum queue {FD_QUEUE, TIMER_QUEUE, IMMEDIATE_QUEUE};
 +
 +struct kqueue_signal_list {
 +	struct kqueue_signal_list *prev, *next;
@@ -325,7 +317,6 @@ index 00000000000..9364b5fa8d2
 +		kqueue_panic(kqueue_ev, "kqueue() failed", false);
 +		return;
 +	}
-+
 +	kqueue_ev->pid = getpid();
 +	kqueue_ev->panic_state = &panic_triggered;
 +	for (fde=kqueue_ev->ev->fd_events;fde;fde=fde->next) {
@@ -604,82 +595,6 @@ index 00000000000..9364b5fa8d2
 +	return tevent_common_fd_destructor(fde);
 +}
 +
-+static void kqueue_event_immediate_cancel(struct tevent_immediate *im)
-+{
-+	const char *create_location = im->create_location;
-+	bool busy = im->busy;
-+
-+	if (im->destroyed) {
-+		tevent_abort(im->event_ctx, "tevent_immediate use after free");
-+		return;
-+	}
-+
-+	if (!im->event_ctx) {
-+		return;
-+	}
-+
-+	if (im->handler_name != NULL) {
-+		tevent_debug(im->event_ctx, TEVENT_DEBUG_TRACE,
-+			     "Cancel immediate event %p \"%s\"\n",
-+			     im, im->handler_name);
-+	}
-+
-+	/* let the backend free im->additional_data */
-+	if (im->cancel_fn) {
-+		im->cancel_fn(im);
-+	}
-+
-+	*im = (struct tevent_immediate) {
-+		.create_location	= create_location,
-+		.busy			= busy,
-+	};
-+
-+	if (!busy) {
-+		talloc_set_destructor(im, NULL);
-+	}
-+}
-+
-+static int kqueue_immediate_destructor(struct tevent_immediate *im)
-+{
-+	int ret;
-+	struct kevent event;
-+	struct tevent_context *ev = NULL;
-+	struct kqueue_event_context *kqueue_ev = NULL;
-+
-+	if (im->destroyed) {
-+		tevent_common_check_double_free(im,
-+			"tevent_immediate double free");
-+		goto done;
-+	}
-+
-+	ev = im->event_ctx;
-+	if (ev == NULL) {
-+		return -1;
-+	}
-+	kqueue_ev = talloc_get_type_abort(ev->additional_data,
-+					  struct kqueue_event_context);
-+
-+	kqueue_event_immediate_cancel(im);
-+	/* remove kevent if we're not processing the event */
-+	if (!im->busy) {
-+		EV_SET(&event, (uintptr_t)im, EVFILT_USER, EV_DELETE, 0, 0, 0);
-+		ret = kevent(kqueue_ev->kqueue_fd, &event, 1, NULL, 0, NULL);
-+		if (ret != 0 && errno != ENOENT) {
-+			tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
-+				     "KEVENT_IMMEDIATE_DESTRUCTOR failed "
-+				     "%s\n", strerror(errno));
-+		}
-+	}
-+	im->destroyed = true;
-+
-+done:
-+	if (im->busy) {
-+		return -1;
-+	}
-+
-+	return 0;
-+}
-+
 +static int kqueue_signal_list_destructor(struct kqueue_signal_list *sl)
 +{
 +	int ret;
@@ -797,28 +712,6 @@ index 00000000000..9364b5fa8d2
 +	tevent_req_done(aio_req->req);
 +}
 +
-+static inline void kqueue_process_immediate(struct kqueue_event_context *kqueue_ev,
-+					    void *udata)
-+{
-+	int ret;
-+	bool removed;
-+	struct tevent_immediate *im = NULL;
-+
-+	im = talloc_get_type_abort(udata, struct tevent_immediate);
-+	/*
-+         * Someone came around behind our back and cancelled the event while
-+	 * this was in progress?
-+	 */
-+	if (im->event_ctx == NULL) {
-+		return;
-+	}
-+	ret = tevent_common_invoke_immediate_handler(im, &removed);
-+	if (ret != 0) {
-+		tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
-+			"immediate handler failed\n");
-+	}
-+}
-+
 +static inline void kqueue_process_signal(struct kqueue_event_context *kqueue_ev,
 +				  uint signum, int count)
 +{
@@ -848,10 +741,6 @@ index 00000000000..9364b5fa8d2
 +	case EVFILT_READ:
 +		*fde = get_tevent_fd(kqueue_ev, kev.udata, true);
 +		*is_fd_event = true;
-+		break;
-+	case EVFILT_USER:
-+		kqueue_process_immediate(kqueue_ev, kev.udata);
-+		*is_fd_event = false;
 +		break;
 +	case EVFILT_SIGNAL:
 +		kqueue_process_signal(kqueue_ev, (uint)kev.ident, (int)kev.data);
@@ -957,22 +846,22 @@ index 00000000000..9364b5fa8d2
 +				next_fde = (struct tevent_fd *)fde->additional_data;
 +			}
 +			for (iloop=i+1;iloop<nkevents;iloop++) {
++				if (received[iloop].filter & ~(EVFILT_READ|EVFILT_WRITE)) {
++					continue;
++				}
 +				found_fde = get_tevent_fd(kqueue_ev,
 +							  received[iloop].udata,
 +							  true);
 +				if (found_fde == fde) {
 +					found_fde->additional_flags |= KQUEUE_EXTRA_KEVENT_DISCHARGED;
 +					flags |= KEVENT_TO_TEVENT_FLAGS(received[iloop].filter);
-+					break;
 +				}
 +				else if (next_fde && (next_fde->fd == found_fde->fd)) {
 +					found_fde->additional_flags |= KQUEUE_EXTRA_KEVENT_DISCHARGED;
 +					flags |= KEVENT_TO_TEVENT_FLAGS(received[iloop].filter);
-+					break;
 +				}
 +			}
 +		}
-+
 +		rv = kqueue_process_fd(kqueue_ev, fde, flags);
 +	}
 +	return rv;
@@ -1011,19 +900,37 @@ index 00000000000..9364b5fa8d2
 +	*nkp = nkevents;
 +
 +	if (nkevents == -1) {
-+		if (wait_errno != EINTR) {
-+			tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
-+				"kevent() failed: %s\n",strerror(errno));
-+			kqueue_panic(kqueue_ev, "kevent() failed", false);
++		/*
++		 * One likely cause for kevent() to fail with EBADF is that
++		 * we forked. In this case call kqueue_check_reopen() to reinitialize
++		 * the kqueue.
++		 */
++		tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
++			"kevent() failed: wait_errno [%d]: %s, errno [%d]: %s | pid: %d\n",
++			wait_errno, strerror(wait_errno), errno, strerror(errno), getpid());
++		if (wait_errno == EBADF) {
++			kqueue_check_reopen(kqueue_ev);
++			if (kqueue_ev->panic_state) {
++				tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
++					     "panic_tiggered in kqueue event loop once\n");
++				errno = EINVAL;
++				return -1;
++			}
++			nkevents = kevent(kqueue_ev->kqueue_fd, NULL, 0,
++					  received, MAX_KEVENTS, &ts);
 +		}
 +		/*
 +		 * kevent() returns -1 with errno EINTR if signal
 +		 * received before timeout expired and event events
 +		 * placed on the kqueue for return.
 +		 */
++		else if (wait_errno != EINTR) {
++			tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
++				"kevent() failed: %s\n",strerror(wait_errno));
++			kqueue_panic(kqueue_ev, "kevent() failed", false);
++		}
 +		return 0;
 +	}
-+
 +	if (nkevents == 1) {
 +		ret = process_single_kevent(kqueue_ev, nkevents, received);
 +	}
@@ -1225,85 +1132,6 @@ index 00000000000..9364b5fa8d2
 +}
 +
 +/*
-+ * Register immediate events with EVFILT_USER. This creates
-+ * separate kevents for each submitted immediate event.
-+ * We need to quantify how much the extra copy to / from
-+ * kernel space costs us. If it hurts performance, we can
-+ * register a single kevent to give notice that there are
-+ * pending immediate events, and process the immediate
-+ * queue at that time.
-+ */
-+void kqueue_event_add_immediate(struct tevent_immediate *im,
-+				struct tevent_context *ev,
-+				tevent_immediate_handler_t handler,
-+				void *private_data,
-+				const char *handler_name,
-+				const char *location)
-+{
-+	int ret;
-+	struct kevent event[2];
-+	struct kqueue_event_context *kqueue_ev = NULL;
-+	const char *create_location = im->create_location;
-+	bool busy = im->busy;
-+	struct tevent_wrapper_glue *glue = im->wrapper;
-+	kqueue_ev = talloc_get_type_abort(ev->additional_data,
-+					  struct kqueue_event_context);
-+
-+	kqueue_event_immediate_cancel(im);
-+
-+	if (!handler) {
-+		return;
-+	}
-+
-+	*im = (struct tevent_immediate) {
-+		.event_ctx              = ev,
-+		.wrapper                = glue,
-+		.handler                = handler,
-+		.private_data           = private_data,
-+		.handler_name           = handler_name,
-+		.create_location        = create_location,
-+		.schedule_location      = location,
-+		.busy                   = busy,
-+	};
-+
-+	tevent_debug(ev, TEVENT_DEBUG_TRACE,
-+		     "Schedule immediate event \"%s\": %p\n",
-+		     handler_name, im);
-+
-+	/*
-+	 * NOTE_TRIGGER will cause the event to immediately be triggered.
-+	 * The lower 24 bits of fflags field may be used for user-defined
-+	 * flags. See manpage for kevent(2) for details. On return,
-+	 * fflags contains the user-defined flags in the lower 24 bits.
-+	 */
-+	EV_SET(&event[0],			//kev
-+	       (uintptr_t)im,			//ident
-+	       EVFILT_USER,			//filter
-+	       EV_ADD|EV_ONESHOT,		//flags
-+	       0,				//fflags
-+	       0,				//data
-+	       im);				//udata
-+
-+	EV_SET(&event[1],			//kev
-+	       (uintptr_t)im,			//ident
-+	       EVFILT_USER,			//filter
-+	       0,				//flags
-+	       NOTE_TRIGGER,			//fflags
-+	       0,				//data
-+	       im);				//udata
-+
-+	ret = kevent(kqueue_ev->kqueue_fd, event, 2, NULL, 0, NULL);
-+	if (ret != 0) {
-+		tevent_debug(ev, TEVENT_DEBUG_FATAL,
-+			"failed to add immediate kevent for [%s]\n",
-+			handler_name);
-+	}
-+	else {
-+		talloc_set_destructor(im, kqueue_immediate_destructor);
-+	}
-+}
-+
-+/*
 + * Add a wrapper around tevent_common_add_signal(). This is to make it
 + * so that we process signals more or less immediately when we gather and process
 + * kevents (timeout).
@@ -1404,18 +1232,13 @@ index 00000000000..9364b5fa8d2
 +		tevent_common_threaded_activate_immediate(ev);
 +	}
 +
++	if (ev->immediate_events &&
++	    tevent_common_loop_immediate(ev)) {
++		return 0;
++	}
++
 +	kqueue_ev->panic_state = &panic_triggered;
 +	kqueue_ev->panic_force_replay = true;
-+	kqueue_check_reopen(kqueue_ev);
-+	if (panic_triggered) {
-+		tevent_debug(ev, TEVENT_DEBUG_FATAL,
-+			"panic_tiggered in kqueue event loop once\n");
-+		errno = EINVAL;
-+		return -1;
-+	}
-+	kqueue_ev->panic_force_replay = false;
-+	kqueue_ev->panic_state = NULL;
-+
 +	/*
 +	 * Loops untile we are no longer overflowing on kevents
 +	 * This can happen if large number of AIO kevents or
@@ -1424,6 +1247,8 @@ index 00000000000..9364b5fa8d2
 +	while (nkevents == MAX_KEVENTS) {
 +		ret = kqueue_event_loop(kqueue_ev, &nkevents);
 +	}
++	kqueue_ev->panic_force_replay = false;
++	kqueue_ev->panic_state = NULL;
 +	return ret;
 +}
 +
@@ -1434,7 +1259,7 @@ index 00000000000..9364b5fa8d2
 +	.get_fd_flags		= tevent_common_fd_get_flags,
 +	.set_fd_flags		= kqueue_event_set_fd_flags,
 +	.add_timer		= kqueue_event_add_timer,
-+	.schedule_immediate	= kqueue_event_add_immediate,
++	.schedule_immediate	= tevent_common_schedule_immediate,
 +	.add_signal		= kqueue_event_add_signal,
 +	.loop_once		= kqueue_event_loop_once,
 +	.loop_wait		= tevent_common_loop_wait,
