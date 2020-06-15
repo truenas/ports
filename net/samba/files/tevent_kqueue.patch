@@ -101,10 +101,10 @@ index 5365fce3533..db11c857bae 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..6c1794efa8e
+index 00000000000..490d3b7d653
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
-@@ -0,0 +1,1164 @@
+@@ -0,0 +1,1172 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -627,6 +627,16 @@ index 00000000000..6c1794efa8e
 +        return 0;
 +}
 +
++static struct timeval kqueue_get_current_time()
++{
++	struct timeval ret = tevent_timeval_zero();
++	struct timespec ts;
++	clock_gettime(CLOCK_REALTIME_FAST, &ts);
++	ret.tv_sec = ts.tv_sec;
++	ret.tv_usec = ts.tv_nsec / 1000;
++	return ret;
++}
++
 +static int kqueue_process_timer(struct kqueue_event_context *kqueue_ev,
 +					void *udata)
 +{
@@ -634,12 +644,13 @@ index 00000000000..6c1794efa8e
 +	struct tevent_timer *te = NULL;
 +	struct tevent_context *handler_ev = NULL;
 +
-+	struct timeval current_time = tevent_timeval_zero();
++	struct timeval current_time = kqueue_get_current_time();
 +
-+	te = talloc_get_type_abort(udata, struct tevent_timer);
++	te = (struct tevent_timer *)udata;
 +	if (te->event_ctx == NULL) {
 +		return 0;
 +	}
++
 +	handler_ev = te->event_ctx;
 +	te->busy = true;
 +	if (te->wrapper != NULL) {
@@ -905,9 +916,6 @@ index 00000000000..6c1794efa8e
 +		 * we forked. In this case call kqueue_check_reopen() to reinitialize
 +		 * the kqueue.
 +		 */
-+		tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
-+			"kevent() failed: wait_errno [%d]: %s, errno [%d]: %s | pid: %d\n",
-+			wait_errno, strerror(wait_errno), errno, strerror(errno), getpid());
 +		if (wait_errno == EBADF) {
 +			kqueue_check_reopen(kqueue_ev);
 +			if (kqueue_ev->panic_state) {
@@ -1202,7 +1210,7 @@ index 00000000000..6c1794efa8e
 +	}
 +	DLIST_ADD(handlers->entries, sl);
 +	handlers->nentries++;
-+	tevent_debug(ev, TEVENT_DEBUG_FATAL,
++	tevent_debug(ev, TEVENT_DEBUG_TRACE,
 +		"added signal [%u] kevent for [%s] nentries: %zu\n",
 +		signum, handler_name, handlers->nentries);
 +
