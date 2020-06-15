@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 00000000000..46fd4de8dd1
+index 00000000000..34447fd9f78
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,1436 @@
+@@ -0,0 +1,1402 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -154,7 +154,7 @@ index 00000000000..46fd4de8dd1
 +	libzfs_print_on_error(libzfsp, B_TRUE);
 +	slibzp_int->libzfsp = libzfsp;
 +	talloc_set_destructor(slibzp_int, smblibzfs_handle_destructor);
-+	slibzp_ext->private = slibzp_int;
++	slibzp_ext->sli = slibzp_int;
 +	slibzp_ext->zcache = memcache_init(slibzp_ext, (1024 * 1024));
 +	*smblibzfsp = slibzp_ext;
 +	return 0;
@@ -165,11 +165,8 @@ index 00000000000..46fd4de8dd1
 +{
 +	/* "path" here can be either mountpoint or dataset name */
 +	zfs_handle_t *zfsp = NULL;
-+	struct smblibzfs_int *slibzp_int = NULL;
 +
-+	slibzp_int = talloc_get_type_abort(smblibzfsp->private,
-+					   struct smblibzfs_int);
-+	if (slibzp_int == NULL) {
++	if (smblibzfsp->sli == NULL) {
 +		DBG_ERR("Failed to retrieve smblibzfs_int handle\n");
 +		return zfsp;
 +	}
@@ -179,7 +176,7 @@ index 00000000000..46fd4de8dd1
 +		return zfsp;
 +	}
 +
-+	zfsp = zfs_path_to_zhandle(slibzp_int->libzfsp, path,
++	zfsp = zfs_path_to_zhandle(smblibzfsp->sli->libzfsp, path,
 +		ZFS_TYPE_VOLUME|ZFS_TYPE_DATASET|ZFS_TYPE_FILESYSTEM);
 +
 +	if (zfsp == NULL) {
@@ -189,21 +186,14 @@ index 00000000000..46fd4de8dd1
 +	return zfsp;
 +}
 +
-+static zfs_handle_t *get_zhandle_from_smbzhandle(struct smbzhandle *zhandle_ext)
++static zfs_handle_t *get_zhandle_from_smbzhandle(struct smbzhandle *smbzhandle)
 +{
-+	if (!zhandle_ext->is_open) {
++	if (!smbzhandle->is_open) {
 +		DBG_ERR("zhandle is closed!\n");
 +		errno = EINVAL;
 +		return NULL;
 +	}
-+	struct smbzhandle_int *zfsp_int = NULL;
-+	zfsp_int = talloc_get_type_abort(zhandle_ext->private,
-+					 struct smbzhandle_int);
-+	if (zfsp_int == NULL) {
-+		DBG_ERR("Failed to retrieve smbzhandle_int\n");
-+		return NULL;
-+	}
-+	return zfsp_int->zhandle;
++	return smbzhandle->zhp->zhandle;
 +}
 +
 +int get_smbzhandle(struct smblibzfshandle *smblibzfsp,
@@ -232,7 +222,7 @@ index 00000000000..46fd4de8dd1
 +	}
 +	szhandle_int->zhandle = zfsp;
 +	szhandle_ext->is_open = true;
-+	szhandle_ext->private = szhandle_int;
++	szhandle_ext->zhp = szhandle_int;
 +	szhandle_ext->lz = smblibzfsp;
 +	*smbzhandle = szhandle_ext;
 +	return 0;
@@ -296,20 +286,17 @@ index 00000000000..46fd4de8dd1
 +			   char **dataset_mp_out)
 +{
 +	int ret;
-+	struct smblibzfs_int *slibzp_int = NULL;
 +	zfs_handle_t *zfsp = NULL;
 +	*dataset_mp_out = talloc_zero_size(mem_ctx, PATH_MAX);
 +	if (*dataset_mp_out == NULL) {
 +		errno = ENOMEM;
 +		return -1;
 +	}
-+	slibzp_int = talloc_get_type_abort(smblibzfsp->private,
-+					   struct smblibzfs_int);
-+	if (slibzp_int == NULL) {
++	if (smblibzfsp->sli == NULL) {
 +		DBG_ERR("Failed to retrieve smblibzfs_int handle\n");
 +		return -1;
 +	}
-+	zfsp = zfs_open(slibzp_int->libzfsp, dataset_name, ZFS_TYPE_DATASET);
++	zfsp = zfs_open(smblibzfsp->sli->libzfsp, dataset_name, ZFS_TYPE_DATASET);
 +	if (zfsp == NULL) {
 +		DBG_ERR("Failed to get zfs handle for %s: %s\n",
 +			dataset_name, strerror(errno));
@@ -336,15 +323,12 @@ index 00000000000..46fd4de8dd1
 +{
 +	int ret;
 +	size_t blocksize = 1024;
-+	struct smblibzfs_int *slibzp_int = NULL;
 +	zfs_handle_t *zfsp = NULL;
 +	char u_req[ZFS_MAXPROPLEN] = { 0 };
 +	char q_req[ZFS_MAXPROPLEN] = { 0 };
 +	uint64_t quota, used;
 +	quota = used = 0;
-+	slibzp_int = talloc_get_type_abort(smblibzfsp->private,
-+					   struct smblibzfs_int);
-+	if (slibzp_int == NULL) {
++	if (smblibzfsp->sli == NULL) {
 +		DBG_ERR("Failed to retrieve smblibzfs_int handle\n");
 +		return -1;
 +	}
@@ -375,7 +359,7 @@ index 00000000000..46fd4de8dd1
 +		return (-1);
 +	}
 +
-+	zfsp = zfs_path_to_zhandle(slibzp_int->libzfsp, path,
++	zfsp = zfs_path_to_zhandle(smblibzfsp->sli->libzfsp, path,
 +		ZFS_TYPE_VOLUME|ZFS_TYPE_DATASET|ZFS_TYPE_FILESYSTEM);
 +
 +	if (zfsp == NULL) {
@@ -404,15 +388,12 @@ index 00000000000..46fd4de8dd1
 +		  uint64_t hardlimit)
 +{
 +	size_t blocksize = 1024;
-+	struct smblibzfs_int *slibzp_int = NULL;
 +	zfs_handle_t *zfsp = NULL;
 +	char q_req[256] = { 0 };
 +	char quota[256] = { 0 };
 +	hardlimit *= blocksize;
 +	snprintf(quota, sizeof(quota), "%lu", hardlimit);
-+	slibzp_int = talloc_get_type_abort(smblibzfsp->private,
-+					   struct smblibzfs_int);
-+	if (slibzp_int == NULL) {
++	if (smblibzfsp->sli == NULL) {
 +		DBG_ERR("Failed to retrieve smblibzfs_int handle\n");
 +		return -1;
 +	}
@@ -440,7 +421,7 @@ index 00000000000..46fd4de8dd1
 +		return (-1);
 +	}
 +
-+	zfsp = zfs_path_to_zhandle(slibzp_int->libzfsp, path,
++	zfsp = zfs_path_to_zhandle(smblibzfsp->sli->libzfsp, path,
 +		ZFS_TYPE_VOLUME|ZFS_TYPE_DATASET|ZFS_TYPE_FILESYSTEM);
 +
 +	if (zfsp == NULL){
@@ -465,7 +446,6 @@ index 00000000000..46fd4de8dd1
 +		  uint64_t *dsize, uid_t euid)
 +{
 +	size_t blocksize = 1024;
-+	struct smblibzfs_int *slibzp_int = NULL;
 +	zfs_handle_t *zfsp = NULL;
 +	char uu_req[256] = { 0 };
 +	char uq_req[256] = { 0 };
@@ -475,9 +455,7 @@ index 00000000000..46fd4de8dd1
 +
 +	snprintf(uu_req, sizeof(uu_req), "userused@%u", euid);
 +	snprintf(uq_req, sizeof(uq_req), "userquota@%u", euid);
-+	slibzp_int = talloc_get_type_abort(smblibzfsp->private,
-+					   struct smblibzfs_int);
-+	if (slibzp_int == NULL) {
++	if (smblibzfsp->sli == NULL) {
 +		DBG_ERR("Failed to retrieve smblibzfs_int handle\n");
 +		return -1;
 +	}
@@ -487,7 +465,7 @@ index 00000000000..46fd4de8dd1
 +		return (-1);
 +	}
 +
-+	zfsp = zfs_path_to_zhandle(slibzp_int->libzfsp, path,
++	zfsp = zfs_path_to_zhandle(smblibzfsp->sli->libzfsp, path,
 +		ZFS_TYPE_VOLUME|ZFS_TYPE_DATASET|ZFS_TYPE_FILESYSTEM);
 +	if (zfsp == NULL) {
 +		DBG_ERR("Failed to convert path (%s) to zhandle\n", path);
@@ -538,11 +516,8 @@ index 00000000000..46fd4de8dd1
 +	zfs_handle_t *new_zfsp;
 +	const char *parent_dataset;
 +	char nd[PATH_MAX] = { 0 };
-+	struct smblibzfs_int *slibzp_int = NULL;
 +
-+	slibzp_int = talloc_get_type_abort(smblibzfsp->private,
-+					   struct smblibzfs_int);
-+	if (slibzp_int == NULL) {
++	if (smblibzfsp->sli == NULL) {
 +		DBG_ERR("Failed to retrieve smblibzfs_int handle\n");
 +		return -1;
 +	}
@@ -550,7 +525,7 @@ index 00000000000..46fd4de8dd1
 +		return (-1);
 +	}
 +
-+	zfsp = zfs_path_to_zhandle(slibzp_int->libzfsp, parent,
++	zfsp = zfs_path_to_zhandle(smblibzfsp->sli->libzfsp, parent,
 +		ZFS_TYPE_VOLUME|ZFS_TYPE_DATASET|ZFS_TYPE_FILESYSTEM);
 +
 +	if (zfsp == NULL) {
@@ -560,14 +535,14 @@ index 00000000000..46fd4de8dd1
 +	parent_dataset = zfs_get_name(zfsp);
 +	snprintf(nd, sizeof(nd), "%s/%s", parent_dataset, base);
 +
-+	if (zfs_create(slibzp_int->libzfsp, nd, ZFS_TYPE_DATASET, NULL) != 0){
++	if (zfs_create(smblibzfsp->sli->libzfsp, nd, ZFS_TYPE_DATASET, NULL) != 0){
 +		DBG_ERR("Failed to create dataset to path (%s)\n", nd);
 +		zfs_close(zfsp);
 +		return (-1);
 +	}
 +	zfs_close(zfsp);
 +
-+	new_zfsp = zfs_open(slibzp_int->libzfsp, nd, ZFS_TYPE_DATASET);
++	new_zfsp = zfs_open(smblibzfsp->sli->libzfsp, nd, ZFS_TYPE_DATASET);
 +
 +	if (new_zfsp == NULL) {
 +		DBG_ERR("Failed to obtain zhandle on new dataset: (%s)\n", nd);
@@ -602,7 +577,6 @@ index 00000000000..46fd4de8dd1
 +{
 +	int ret;
 +	zfs_handle_t *zfsp = NULL;
-+	struct smblibzfs_int *slibzp_int = NULL;
 +	nvlist_t *userprops = NULL;
 +	nvlist_t *propval = NULL;
 +	char *propstr = NULL;
@@ -1084,9 +1058,7 @@ index 00000000000..46fd4de8dd1
 +	struct smblibzfs_int *slibzp_int = NULL;
 +	struct snapshot_entry *entry = NULL;
 +	char *snapname = NULL;
-+	slibzp_int = talloc_get_type_abort(smblibzfsp->private,
-+					   struct smblibzfs_int);
-+	if (slibzp_int == NULL) {
++	if (smblibzfsp->sli == NULL) {
 +		errno=ENOMEM;
 +		DBG_ERR("Unable to re-use libzfs handle\n");
 +		return -1;
@@ -1106,7 +1078,7 @@ index 00000000000..46fd4de8dd1
 +		fnvlist_add_boolean(to_delete, snapname);
 +		TALLOC_FREE(snapname);
 +	}
-+	ret = zfs_destroy_snaps_nvl(slibzp_int->libzfsp,
++	ret = zfs_destroy_snaps_nvl(smblibzfsp->sli->libzfsp,
 +				    to_delete,
 +				    B_TRUE);
 +	if (ret !=0) {
@@ -1126,14 +1098,11 @@ index 00000000000..46fd4de8dd1
 +		 bool recursive)
 +{
 +	int ret;
-+	struct smblibzfs_int *slibzp_int = NULL;
 +	zfs_handle_t *zfsp = NULL;
 +	char snap[ZFS_MAXPROPLEN] = {0};
 +	const char *dataset_name;
 +
-+	slibzp_int = talloc_get_type_abort(smblibzfsp->private,
-+					   struct smblibzfs_int);
-+	if (slibzp_int == NULL) {
++	if (smblibzfsp->sli == NULL) {
 +		errno=ENOMEM;
 +		return -1;
 +	}
@@ -1153,7 +1122,7 @@ index 00000000000..46fd4de8dd1
 +			strerror(errno));
 +		return -1;
 +	}
-+	ret = zfs_snapshot(slibzp_int->libzfsp,
++	ret = zfs_snapshot(smblibzfsp->sli->libzfsp,
 +			   snap, recursive, NULL);
 +	if (ret != 0) {
 +		DBG_ERR("Failed to create snapshot %s: [%s]\n",
@@ -1173,13 +1142,10 @@ index 00000000000..46fd4de8dd1
 +		 bool force)
 +{
 +	int ret;
-+	struct smblibzfs_int *slibzp_int = NULL;
 +	zfs_handle_t *dataset_handle = NULL;
 +	zfs_handle_t *snap_handle = NULL;
 +
-+	slibzp_int = talloc_get_type_abort(smblibzfsp->private,
-+					   struct smblibzfs_int);
-+	if (slibzp_int == NULL) {
++	if (smblibzfsp->sli == NULL) {
 +		errno=ENOMEM;
 +		return -1;
 +	}
@@ -1191,7 +1157,7 @@ index 00000000000..46fd4de8dd1
 +		return -1;
 +	}
 +
-+	snap_handle = zfs_open(slibzp_int->libzfsp, snapshot_name,
++	snap_handle = zfs_open(smblibzfsp->sli->libzfsp, snapshot_name,
 +			       ZFS_TYPE_DATASET);
 +	if (snap_handle == NULL) {
 +		DBG_ERR("Failed to obtain zhandle for snap: (%s)\n",
@@ -1268,7 +1234,7 @@ index 00000000000..46fd4de8dd1
 +		errno = ENOMEM;
 +		return -1;
 +	}
-+	zhandle_ext->private = zhandle_int;
++	zhandle_ext->zhp = zhandle_int;
 +	zhandle_ext->is_open = true;
 +	zhandle_int->zhandle = child;
 +	ds_new = zhandle_get_dataset(zhandle_ext, state->dslist, true);
@@ -1442,10 +1408,10 @@ index 00000000000..46fd4de8dd1
 +}
 diff --git a/source3/modules/smb_libzfs.h b/source3/modules/smb_libzfs.h
 new file mode 100644
-index 00000000000..83743daed1a
+index 00000000000..c7390a8a76d
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.h
-@@ -0,0 +1,399 @@
+@@ -0,0 +1,402 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -1478,15 +1444,18 @@ index 00000000000..83743daed1a
 +#include <pwd.h>
 +#include <talloc.h>
 +
++struct smblibzfs_int;
++struct smbzhandle_int;
++
 +struct smblibzfshandle {
 +	struct memcache *zcache;
 +	struct db_context *db;
-+	void *private;
++	struct smblibzfs_int *sli;
 +};
 +
 +struct smbzhandle {
 +	struct smblibzfshandle *lz;
-+	void *private;
++	struct smbzhandle_int *zhp;
 +	bool is_open;
 +};
 +
