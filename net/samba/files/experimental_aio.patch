@@ -1,9 +1,9 @@
 diff --git a/source3/modules/vfs_aio_fbsd.c b/source3/modules/vfs_aio_fbsd.c
 new file mode 100644
-index 00000000000..ced1b0cfbcb
+index 00000000000..db40482c68d
 --- /dev/null
 +++ b/source3/modules/vfs_aio_fbsd.c
-@@ -0,0 +1,267 @@
+@@ -0,0 +1,268 @@
 +/*
 + * Copyright (C) Volker Lendecke 2008
 + * Copyright (C) Jeremy Allison 2010
@@ -234,6 +234,7 @@ index 00000000000..ced1b0cfbcb
 +	state->iocbp->aio_sigevent.sigev_value.sival_ptr = state;
 +	state->iocbp->aio_sigevent.sigev_notify = SIGEV_KEVENT;
 +	state->iocbp->aio_sigevent.sigev_notify_kevent_flags = EV_ONESHOT;
++	state->in_progress = true;
 +
 +	tevent_add_fd(ev, state, -1, TEVENT_FD_AIO_FSYNC, NULL, state);
 +	talloc_set_destructor(state, vfs_aio_fbsd_request_state_destructor);
