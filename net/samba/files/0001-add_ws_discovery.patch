@@ -1,18 +1,3 @@
-diff --git a/source3/script/wscript_build b/source3/script/wscript_build
-index 40ecdd7ef50..88cca4dee57 100644
---- a/source3/script/wscript_build
-+++ b/source3/script/wscript_build
-@@ -6,6 +6,10 @@ bld.INSTALL_FILES('${BINDIR}',
- 	          'smbtar',
-                   chmod=MODE_755, flat=True)
- 
-+bld.INSTALL_FILES('${BINDIR}',
-+	          'wsdd.py',
-+                  chmod=MODE_755, flat=True)
-+
- # Callout scripts for use in selftest environment
- bld.SAMBA_SCRIPT('smbaddshare', pattern='smbaddshare', installdir='.')
- bld.SAMBA_SCRIPT('smbchangeshare', pattern='smbchangeshare', installdir='.')
 diff --git a/source3/script/wsdd.py b/source3/script/wsdd.py
 new file mode 100644
 index 00000000000..2d05d4b754f
