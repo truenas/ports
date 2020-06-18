@@ -1,6 +1,6 @@
 diff --git a/docs-xml/smbdotconf/winbind/winbindstatusfifo.xml b/docs-xml/smbdotconf/winbind/winbindstatusfifo.xml
 new file mode 100644
-index 0000000..56371b9
+index 00000000000..56371b986a7
 --- /dev/null
 +++ b/docs-xml/smbdotconf/winbind/winbindstatusfifo.xml
 @@ -0,0 +1,25 @@
@@ -30,7 +30,7 @@ index 0000000..56371b9
 +<value type="default">No</value>
 +</samba:parameter>
 diff --git a/source3/winbindd/winbindd_cm.c b/source3/winbindd/winbindd_cm.c
-index 22d3dca..49e329c 100644
+index 4bd03ed8b7a..da2e79f1488 100644
 --- a/source3/winbindd/winbindd_cm.c
 +++ b/source3/winbindd/winbindd_cm.c
 @@ -60,6 +60,7 @@
@@ -63,7 +63,7 @@ index 22d3dca..49e329c 100644
  	return;	
 diff --git a/source3/winbindd/winbindd_json.c b/source3/winbindd/winbindd_json.c
 new file mode 100644
-index 0000000..719e38f
+index 00000000000..73a5b067993
 --- /dev/null
 +++ b/source3/winbindd/winbindd_json.c
 @@ -0,0 +1,152 @@
@@ -146,7 +146,7 @@ index 0000000..719e38f
 +	json_str = json_to_string(mem_ctx, &jsobj);
 +	DBG_DEBUG("json string representing is winbind state: %s\n", json_str);
 +	json_free(&jsobj);
-+	return json_str;
++	return talloc_strdup_append(json_str, "\n");
 +failure:
 +	json_free(&jsobj);
 +	return NULL;	
@@ -221,7 +221,7 @@ index 0000000..719e38f
 +#endif /* [HAVE_JANSSON] */
 diff --git a/source3/winbindd/winbindd_json.h b/source3/winbindd/winbindd_json.h
 new file mode 100644
-index 0000000..201837b
+index 00000000000..201837b7136
 --- /dev/null
 +++ b/source3/winbindd/winbindd_json.h
 @@ -0,0 +1,25 @@
@@ -251,7 +251,7 @@ index 0000000..201837b
 +
 +#endif /*_WINBINDD_JSON_H*/
 diff --git a/source3/winbindd/wscript_build b/source3/winbindd/wscript_build
-index a23c445..fef307b 100644
+index a23c44566ed..fef307bb96e 100644
 --- a/source3/winbindd/wscript_build
 +++ b/source3/winbindd/wscript_build
 @@ -233,6 +233,7 @@ bld.SAMBA3_BINARY('winbindd',
