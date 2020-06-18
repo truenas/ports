@@ -101,10 +101,10 @@ index 5365fce3533..db11c857bae 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..490d3b7d653
+index 00000000000..8ccd8445b65
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
-@@ -0,0 +1,1172 @@
+@@ -0,0 +1,1203 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -182,6 +182,7 @@ index 00000000000..490d3b7d653
 +	pid_t pid;
 +
 +	bool had_signal;
++	bool busy;
 +	bool panic_force_replay;
 +	bool *panic_state;
 +	bool (*panic_fallback)(struct tevent_context *ev, bool replay);
@@ -319,12 +320,14 @@ index 00000000000..490d3b7d653
 +	}
 +	kqueue_ev->pid = getpid();
 +	kqueue_ev->panic_state = &panic_triggered;
++	kqueue_ev->busy = true;
 +	for (fde=kqueue_ev->ev->fd_events;fde;fde=fde->next) {
 +		kqueue_add_event(kqueue_ev, fde);
 +		if (panic_triggered) {
 +			if (caller_panic_state != NULL) {
 +				*caller_panic_state = true;
 +			}
++			kqueue_ev->busy = false;
 +			return;
 +		}
 +	}
@@ -346,6 +349,7 @@ index 00000000000..490d3b7d653
 +		}
 +	}
 +
++	kqueue_ev->busy = false;
 +	kqueue_ev->panic_state = NULL;
 +}
 +
@@ -420,9 +424,26 @@ index 00000000000..490d3b7d653
 +	return;
 +
 +failure:
++	/*
++	 * kevent() will set errno to EBADF if the kqueue fd is invalid.
++	 * In the context of samba, this likely means that we've forked and
++	 * are in a child process.
++	 * kevent() will set errno EINVAL if the filter is invalid. In
++	 * the case of an fd-based filter (EVFILT_READ, EVFILT_WRITE), it
++	 * most likely indicates that the fd we're monitoring is closed.
++	 * In the former failure case, we should re-init the kqueue event
++	 * context (re-adding tevent_fd events). In the latter case, we should
++	 * remove the problematic fd from the list of things we are monitoring.
++	 */
 +	if (errno == EBADF) {
++		if (kqueue_ev->busy) {
++			return;
++		}
++		return kqueue_check_reopen(kqueue_ev);
++	}
++	else if (errno == EINVAL) {
 +		tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
-+			     "KEVENT EBADF for "
++			     "kevent EINVAL for "
 +			     "fde[%p] fd[%d] - disabling\n",
 +			     fde, fde->fd);
 +		DLIST_REMOVE(kqueue_ev->ev->fd_events, fde);
@@ -564,7 +585,6 @@ index 00000000000..490d3b7d653
 +{
 +	struct tevent_context *ev = fde->event_ctx;
 +	struct kqueue_event_context *kqueue_ev = NULL;
-+	bool panic_triggered = false;
 +	int flags = fde->flags;
 +
 +	if (ev == NULL) {
@@ -577,21 +597,8 @@ index 00000000000..490d3b7d653
 +	 * otherwise a panic fallback handler may
 +	 * reuse invalid memory
 +	 */
-+        DLIST_REMOVE(ev->fd_events, fde);
-+
-+	kqueue_ev->panic_state = &panic_triggered;
-+	kqueue_check_reopen(kqueue_ev);
-+	if (panic_triggered) {
-+		return tevent_common_fd_destructor(fde);
-+	}
-+
++	DLIST_REMOVE(ev->fd_events, fde);
 +	kqueue_delete_event(kqueue_ev, fde, fde->flags);
-+
-+	if (panic_triggered) {
-+		return tevent_common_fd_destructor(fde);
-+	}
-+	kqueue_ev->panic_state = NULL;
-+
 +	return tevent_common_fd_destructor(fde);
 +}
 +
@@ -604,10 +611,10 @@ index 00000000000..490d3b7d653
 +		return 0;
 +	}
 +	h = &sl->kqueue_ev->sig_handlers[sl->signum];
-+        if (h->nentries > 0) {
-+                DLIST_REMOVE(h->entries, sl);
++	if (h->nentries > 0) {
++		DLIST_REMOVE(h->entries, sl);
 +		h->nentries--;
-+        }
++	}
 +	if (h->nentries == 0) {
 +		EV_SET(&event,				//kev
 +		       (uintptr_t)&sl->signum,		//ident
@@ -624,7 +631,7 @@ index 00000000000..490d3b7d653
 +				sl->signum, strerror(errno));
 +		}
 +	}
-+        return 0;
++	return 0;
 +}
 +
 +static struct timeval kqueue_get_current_time()
@@ -736,9 +743,11 @@ index 00000000000..490d3b7d653
 +}
 +
 +static inline void kqueue_process_kev(struct kqueue_event_context *kqueue_ev,
-+				      struct kevent kev, struct tevent_fd **fde,
++				      struct kevent kev, struct tevent_fd **pfde,
 +				      bool *is_fd_event)
 +{
++	struct tevent_fd *fde = NULL;
++
 +	switch (kev.filter) {
 +	case EVFILT_AIO:
 +		kqueue_process_aio(kev.udata);
@@ -750,7 +759,7 @@ index 00000000000..490d3b7d653
 +		break;
 +	case EVFILT_WRITE:
 +	case EVFILT_READ:
-+		*fde = get_tevent_fd(kqueue_ev, kev.udata, true);
++		*pfde = get_tevent_fd(kqueue_ev, kev.udata, true);
 +		*is_fd_event = true;
 +		break;
 +	case EVFILT_SIGNAL:
@@ -917,6 +926,9 @@ index 00000000000..490d3b7d653
 +		 * the kqueue.
 +		 */
 +		if (wait_errno == EBADF) {
++			if (kqueue_ev->busy) {
++				return -1;
++			}
 +			kqueue_check_reopen(kqueue_ev);
 +			if (kqueue_ev->panic_state) {
 +				tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
@@ -1018,7 +1030,6 @@ index 00000000000..490d3b7d653
 +		talloc_get_type_abort(ev->additional_data,
 +		struct kqueue_event_context);
 +	struct tevent_fd *fde = NULL;
-+	bool panic_triggered = false;
 +
 +	if (HAS_AIO(flags)) {
 +		return kqueue_add_aio(kqueue_ev, flags, private_data);
@@ -1033,15 +1044,7 @@ index 00000000000..490d3b7d653
 +		return NULL;
 +	}
 +	talloc_set_destructor(fde, kqueue_event_fd_destructor);
-+	kqueue_ev->panic_state = &panic_triggered;
-+	kqueue_check_reopen(kqueue_ev);
-+	if (panic_triggered) {
-+		return fde;
-+	}
-+	kqueue_ev->panic_state = NULL;
-+
 +	kqueue_add_event(kqueue_ev, fde);
-+
 +	return fde;
 +}
 +
@@ -1049,7 +1052,6 @@ index 00000000000..490d3b7d653
 +{
 +	struct tevent_context *ev;
 +	struct kqueue_event_context *kqueue_ev;
-+	bool panic_triggered = false;
 +	uint16_t to_delete = 0;
 +
 +	if (fde->flags == flags) return;
@@ -1061,15 +1063,7 @@ index 00000000000..490d3b7d653
 +	kqueue_ev = talloc_get_type_abort(ev->additional_data,
 +					  struct kqueue_event_context);
 +	fde->flags = flags;
-+	kqueue_ev->panic_state = &panic_triggered;
-+	kqueue_check_reopen(kqueue_ev);
-+	if (panic_triggered) {
-+		return;
-+	}
-+	kqueue_ev->panic_state = NULL;
-+
 +	kqueue_delete_event(kqueue_ev, fde, to_delete);
-+
 +	kqueue_add_event(kqueue_ev, fde);
 +}
 +
@@ -1091,17 +1085,17 @@ index 00000000000..490d3b7d653
 +	kqueue_ev = talloc_get_type_abort(ev->additional_data,
 +					  struct kqueue_event_context);
 +
-+        te = talloc(mem_ctx?mem_ctx:ev, struct tevent_timer);
-+        if (te == NULL) return NULL;
++	te = talloc(mem_ctx?mem_ctx:ev, struct tevent_timer);
++	if (te == NULL) return NULL;
 +
-+        *te = (struct tevent_timer) {
-+                .event_ctx      = ev,
-+                .next_event     = next_event,
-+                .handler        = handler,
-+                .private_data   = private_data,
-+                .handler_name   = handler_name,
-+                .location       = location,
-+        };
++	*te = (struct tevent_timer) {
++		.event_ctx      = ev,
++		.next_event     = next_event,
++		.handler        = handler,
++		.private_data   = private_data,
++		.handler_name   = handler_name,
++		.location       = location,
++	};
 +
 +	usec_time = ((next_event.tv_sec) * 1000000) + next_event.tv_usec;
 +
@@ -1132,9 +1126,36 @@ index 00000000000..490d3b7d653
 +	talloc_set_destructor(te, kqueue_event_timer_destructor);
 +	ret = kevent(kqueue_ev->kqueue_fd, &event, 1, NULL, 0, NULL);
 +	if (ret != 0) {
-+		tevent_debug(ev, TEVENT_DEBUG_FATAL,
-+			"failed to add timed kevent for [%s]\n",
-+			handler_name);
++		if (errno == EBADF) {
++			/*
++			 * We may have forked and need to re-init
++			 * event context.
++			 */
++			if (kqueue_ev->busy) {
++				return NULL;
++			}
++			kqueue_check_reopen(kqueue_ev);
++			ret = kevent(kqueue_ev->kqueue_fd,
++				     &event, 1, NULL, 0, NULL);
++			if (ret != 0) {
++				tevent_debug(ev, TEVENT_DEBUG_FATAL,
++					"failed to add timed kevent for [%s]: %s\n",
++					handler_name, strerror(errno));
++				kqueue_panic(kqueue_ev, "failed to add timer:", false);
++			}
++		}
++		else if (errno == ENOMEM) {
++			tevent_debug(ev, TEVENT_DEBUG_FATAL,
++				"Attempt to add timed kevent for [%s] failed with ENOMEM. "
++				"This may indicate that the maximum number of timers has "
++				"been exceeded. This maximum is configurable via the "
++				"kern.kq_calloutmax sysctl.\n", handler_name);
++		}
++		else {
++			tevent_debug(ev, TEVENT_DEBUG_FATAL,
++				"failed to add timed kevent for [%s]: %s\n",
++				handler_name, strerror(errno));
++		}
 +	}
 +	return te;
 +}
@@ -1159,9 +1180,19 @@ index 00000000000..490d3b7d653
 +
 +	ret = kevent(kqueue_ev->kqueue_fd, &event, 1, NULL, 0, NULL);
 +	if (ret != 0) {
-+		tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
-+			"failed to add signal kevent for [%d] with handler "
-+			"[%s]: %s\n", signum, handler_name, strerror(errno));
++		if (errno == EBADF) {
++			if (kqueue_ev->busy) {
++				return -1;
++			}
++			kqueue_check_reopen(kqueue_ev);
++			ret = kevent(kqueue_ev->kqueue_fd,
++				     &event, 1, NULL, 0, NULL);
++		}
++		else {
++			tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
++				"failed to add signal kevent for [%d] with handler "
++				"[%s]: %s\n", signum, handler_name, strerror(errno));
++		}
 +	}
 +	return ret;
 +}
