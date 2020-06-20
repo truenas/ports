@@ -101,10 +101,10 @@ index 5365fce3533..db11c857bae 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..8ccd8445b65
+index 00000000000..bc7ed20f2ec
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
-@@ -0,0 +1,1203 @@
+@@ -0,0 +1,1210 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -524,9 +524,12 @@ index 00000000000..8ccd8445b65
 +	}
 +	if (count) {
 +		ret = kevent(kqueue_ev->kqueue_fd, event, count, NULL, 0, NULL);
-+		if (ret != 0 && errno != ENOENT) {
++		if (ret != 0) {
++			if ((errno == ENOENT) || (errno == EBADF)) {
++				return;
++			}
 +			tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
-+				     "KEVENT_UPDATE_DEL failed "
++				     "kqueue_delete_event() failed "
 +				     "for fde[%p] err: [%s]\n",
 +				     fde, strerror(errno));
 +		}
@@ -625,7 +628,10 @@ index 00000000000..8ccd8445b65
 +		       NULL);				//udata
 +
 +		ret = kevent(sl->kqueue_ev->kqueue_fd, &event, 1, NULL, 0, NULL);
-+		if (ret != 0 && errno != ENOENT) {
++		if (ret != 0) {
++			if ((errno == ENOENT) || (errno == EBADF)) {
++				return 0;
++			}
 +			tevent_debug(sl->kqueue_ev->ev, TEVENT_DEBUG_FATAL,
 +				"failed to delete signal kevent for [%d]: %s\n",
 +				sl->signum, strerror(errno));
@@ -704,14 +710,15 @@ index 00000000000..8ccd8445b65
 +	 */
 +	if (fde->additional_data != NULL) {
 +		mpx_fde = (struct tevent_fd *)fde->additional_data;
++		if (mpx_fde->flags & flags) {
++			tevent_common_invoke_fd_handler(fde,
++						        fde->flags & flags,
++						        NULL);
 +
-+		tevent_common_invoke_fd_handler(fde,
-+					        fde->flags & flags,
-+					        NULL);
-+
-+		return tevent_common_invoke_fd_handler(mpx_fde,
-+						       mpx_fde->flags & flags,
-+						       NULL);
++			return tevent_common_invoke_fd_handler(mpx_fde,
++							       mpx_fde->flags & flags,
++							       NULL);
++		}
 +	}
 +
 +	return tevent_common_invoke_fd_handler(fde, fde->flags & flags, NULL);
