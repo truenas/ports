@@ -34,6 +34,7 @@ EXTRA_PATCHES+=			${PATCHDIR}/ix-smbtorture.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/smbd-core-changes.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/debug.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/tevent_kqueue.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/silence-openpam-warnings.patch:-p1
 
 SAMBA4_BASENAME=		samba
 SAMBA4_PORTNAME=		${SAMBA4_BASENAME}4
