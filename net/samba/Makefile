@@ -3,7 +3,7 @@
 
 PORTNAME=			${SAMBA4_BASENAME}
 PORTVERSION=			${SAMBA4_VERSION}
-PORTREVISION=			4
+PORTREVISION=			5
 CATEGORIES?=			net
 MASTER_SITES=			SAMBA/samba/stable SAMBA/samba/rc
 DISTNAME=			${SAMBA4_DISTNAME}
@@ -35,6 +35,7 @@ EXTRA_PATCHES+=			${PATCHDIR}/smbd-core-changes.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/debug.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/tevent_kqueue.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/silence-openpam-warnings.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/fix-idmap_ad.patch:-p1
 
 SAMBA4_BASENAME=		samba
 SAMBA4_PORTNAME=		${SAMBA4_BASENAME}4
