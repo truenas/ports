@@ -35,18 +35,10 @@ index dbec1821e41..0bf2b5cf3e4 100644
  
  	tevent_standard_init();
 diff --git a/lib/tevent/tevent.h b/lib/tevent/tevent.h
-index 3c3e3cc2cef..1e132854351 100644
+index 3c3e3cc2cef..71fb05db816 100644
 --- a/lib/tevent/tevent.h
 +++ b/lib/tevent/tevent.h
-@@ -32,6 +32,7 @@
- #include <talloc.h>
- #include <sys/time.h>
- #include <stdbool.h>
-+#include <aio.h>
- 
- struct tevent_context;
- struct tevent_ops;
-@@ -491,6 +492,26 @@ void tevent_set_abort_fn(void (*abort_fn)(const char *reason));
+@@ -491,6 +491,17 @@ void tevent_set_abort_fn(void (*abort_fn)(const char *reason));
   */
  #define TEVENT_FD_WRITE 2
  
@@ -60,15 +52,6 @@ index 3c3e3cc2cef..1e132854351 100644
 +#define TEVENT_FD_AIO_WRITE 16
 +#define TEVENT_FD_AIO_FSYNC 32
 +#define TEVENT_FD_AIO (TEVENT_FD_AIO_READ|TEVENT_FD_AIO_WRITE|TEVENT_FD_AIO_FSYNC)
-+
-+struct tevent_aio_request {
-+	struct tevent_req *req;
-+	struct aiocb *iocbp;
-+	bool in_progress;
-+	size_t ret;
-+	int saved_rv;
-+	int saved_errno;
-+};
 +
  /**
   * Convenience function for declaring a tevent_fd writable
@@ -101,10 +84,10 @@ index 5365fce3533..db11c857bae 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..bc7ed20f2ec
+index 00000000000..38d5d9022aa
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
-@@ -0,0 +1,1210 @@
+@@ -0,0 +1,1226 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -137,6 +120,7 @@ index 00000000000..bc7ed20f2ec
 +#include "replace.h"
 +#include <sys/event.h>
 +#include <search.h>
++#include <aio.h>
 +#include "system/filesys.h"
 +#include "system/select.h"
 +#include "tevent.h"
@@ -724,17 +708,32 @@ index 00000000000..bc7ed20f2ec
 +	return tevent_common_invoke_fd_handler(fde, fde->flags & flags, NULL);
 +}
 +
-+static inline void kqueue_process_aio(void *udata)
++static inline void kqueue_process_aio(struct kqueue_event_context *kqueue_ev,
++				      void *udata)
 +{
-+	struct tevent_aio_request *aio_req = NULL;
-+	aio_req = talloc_get_type_abort(udata, struct tevent_aio_request);
-+	if (!aio_req->in_progress) {
++	int rv = 0;
++	struct tevent_req *req = NULL;
++	struct aiocb *iocbp = NULL;
++	req = talloc_get_type_abort(udata, struct tevent_req);
++	if (!tevent_req_is_in_progress(req)) {
 +		return;
 +	}
-+	aio_req->in_progress = false;
-+	aio_req->ret = aio_return(aio_req->iocbp);
-+	aio_req->saved_errno = errno;
-+	tevent_req_done(aio_req->req);
++	iocbp = tevent_req_data(req, struct aiocb);
++	if (iocbp == NULL) {
++		tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
++			     "failed to retrieve struct aiocb from "
++			     "tevent request. Aborting.\n");
++		abort();
++	}
++	rv = aio_return(iocbp);
++	if (rv == -1) {
++		tevent_req_error(req, errno);
++		return;
++	}
++	else if (rv == 0) {
++		tevent_req_done(req);
++	}
++	tevent_req_error(req, (uint64_t)rv << 16);
 +}
 +
 +static inline void kqueue_process_signal(struct kqueue_event_context *kqueue_ev,
@@ -757,7 +756,7 @@ index 00000000000..bc7ed20f2ec
 +
 +	switch (kev.filter) {
 +	case EVFILT_AIO:
-+		kqueue_process_aio(kev.udata);
++		kqueue_process_aio(kqueue_ev, kev.udata);
 +		*is_fd_event = false;
 +		break;
 +	case EVFILT_TIMER:
@@ -1001,28 +1000,28 @@ index 00000000000..bc7ed20f2ec
 +					void *private_data)
 +{
 +	int ret;
-+	struct tevent_aio_request *taio = NULL;
-+	taio = talloc_get_type_abort(private_data,
-+				     struct tevent_aio_request);
++	struct tevent_req *req = NULL;
++	struct aiocb *iocbp = NULL;
++	req = talloc_get_type_abort(private_data,
++				    struct tevent_req);
++	iocbp = tevent_req_data(req, struct aiocb);
 +
-+	taio->iocbp->aio_sigevent.sigev_notify_kqueue = kqueue_ev->kqueue_fd;
++	iocbp->aio_sigevent.sigev_notify_kqueue = kqueue_ev->kqueue_fd;
 +
 +	switch (flags & TEVENT_FD_AIO) {
 +	case TEVENT_FD_AIO_READ:
-+		ret = aio_read(taio->iocbp);
++		ret = aio_read(iocbp);
 +		break;
 +	case TEVENT_FD_AIO_WRITE:
-+		ret = aio_write(taio->iocbp);
++		ret = aio_write(iocbp);
 +		break;
 +	case TEVENT_FD_AIO_FSYNC:
-+		ret = aio_fsync(O_SYNC, taio->iocbp);
++		ret = aio_fsync(O_SYNC, iocbp);
 +		break;
 +	}
 +	if (ret != 0) {
-+		taio->ret = ret;
-+		taio->saved_errno = errno;
++		tevent_req_error(req, errno);
 +	}
-+	// Caller gets return value and errno from aio_request
 +	return NULL;
 +}
 +
