@@ -1,0 +1,15 @@
+diff --git a/source3/smbd/dosmode.c b/source3/smbd/dosmode.c
+index 322bf4476d6..0d249497a70 100644
+--- a/source3/smbd/dosmode.c
++++ b/source3/smbd/dosmode.c
+@@ -1168,10 +1168,6 @@ NTSTATUS file_set_sparse(connection_struct *conn,
+ 	DEBUG(10,("file_set_sparse: setting sparse bit %u on file %s\n",
+ 		  sparse, smb_fname_str_dbg(fsp->fsp_name)));
+ 
+-	if (!lp_store_dos_attributes(SNUM(conn))) {
+-		return NT_STATUS_INVALID_DEVICE_REQUEST;
+-	}
+-
+ 	status = vfs_stat_fsp(fsp);
+ 	if (!NT_STATUS_IS_OK(status)) {
+ 		return status;
