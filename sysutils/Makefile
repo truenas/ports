@@ -760,6 +760,7 @@
     SUBDIR += omnibackup
     SUBDIR += open
     SUBDIR += openipmi
+    SUBDIR += openseachest
     SUBDIR += openupsd
     SUBDIR += openzfs
     SUBDIR += openzfs-kmod
