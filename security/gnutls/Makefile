@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	gnutls
-PORTVERSION=	3.6.9
+PORTVERSION=	3.6.14
 CATEGORIES=	security net
 MASTER_SITES=	GNUPG/gnutls/v${PORTVERSION:R}
 
@@ -32,7 +32,6 @@ CONFIGURE_ARGS=	--disable-guile \
 		--with-trousers-lib=${LOCALBASE}/lib/libtspi.so.1 \
 		AUTOGEN=false \
 		ac_cv_type_max_align_t=yes
-LDFLAGS_i386=	-Wl,-z,notext
 MAKE_ENV=	MAKEINFOFLAGS=--no-split
 INSTALL_TARGET=	install-strip
 TEST_TARGET=	check
@@ -84,7 +83,7 @@ post-patch:
 		${WRKSRC}/lib/includes/gnutls/pkcs11.h \
 		${WRKSRC}/lib/pkcs11.c \
 		${WRKSRC}/src/p11tool-args.c.bak \
-		${WRKSRC}/src/srptool.c		
+		${WRKSRC}/src/srptool.c
 	@${REINPLACE_CMD} \
 		's,/etc/pkcs11/modules,${PREFIX}/share/p11-kit/modules,' \
 		${WRKSRC}/doc/cha-tokens.texi \
