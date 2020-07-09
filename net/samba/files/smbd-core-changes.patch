@@ -82,10 +82,25 @@ index 4331c2f1465..25ff32152f1 100644
 +
  #endif
 diff --git a/source3/include/vfs.h b/source3/include/vfs.h
-index fec38f20644..bf275c0c297 100644
+index fec38f20644..b162321119e 100644
 --- a/source3/include/vfs.h
 +++ b/source3/include/vfs.h
-@@ -455,6 +455,7 @@ typedef struct files_struct {
+@@ -317,6 +317,14 @@ typedef union unid_t {
+ 	gid_t gid;
+ } unid_t;
+ 
++enum acl_brand {
++	SMB_ACL_BRAND_POSIX,
++	SMB_ACL_BRAND_NFS40,
++	SMB_ACL_BRAND_NFS41,
++	SMB_ACL_BRAND_RICH,
++	SMB_ACL_BRAND_NONE,
++};
++
+ struct fd_handle {
+ 	size_t ref_count;
+ 	int fd;
+@@ -455,6 +463,7 @@ typedef struct files_struct {
  #define FSP_POSIX_FLAGS_OPEN		0x01
  #define FSP_POSIX_FLAGS_RENAME		0x02
  #define FSP_POSIX_FLAGS_PATHNAMES	0x04
@@ -93,7 +108,15 @@ index fec38f20644..bf275c0c297 100644
  
  #define FSP_POSIX_FLAGS_ALL			\
  	(FSP_POSIX_FLAGS_OPEN |			\
-@@ -648,6 +649,7 @@ struct smb_filename {
+@@ -498,6 +507,7 @@ typedef struct connection_struct {
+ 	   sub second timestamps on files
+ 	   and directories when setting time ? */
+ 	enum timestamp_set_resolution ts_res;
++	enum acl_brand aclbrand;
+ 	char *connectpath;
+ 	char *origpath;
+ 	struct files_struct *cwd_fsp; /* Working directory. */
+@@ -648,6 +658,7 @@ struct smb_filename {
  	char *original_lcomp;
  	uint32_t flags;
  	SMB_STRUCT_STAT st;
@@ -102,7 +125,7 @@ index fec38f20644..bf275c0c297 100644
  
  /*
 diff --git a/source3/lib/filename_util.c b/source3/lib/filename_util.c
-index 66c07001eba..78b4a9c7c49 100644
+index 58919256e0e..6b772c6df01 100644
 --- a/source3/lib/filename_util.c
 +++ b/source3/lib/filename_util.c
 @@ -236,6 +236,7 @@ struct smb_filename *cp_smb_filename(TALLOC_CTX *mem_ctx,
@@ -114,7 +137,7 @@ index 66c07001eba..78b4a9c7c49 100644
  }
  
 diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
-index a30f3ba1d31..1b2e56ed244 100644
+index 4cf553411cb..b06aeec0ee7 100644
 --- a/source3/modules/vfs_default.c
 +++ b/source3/modules/vfs_default.c
 @@ -18,9 +18,13 @@
@@ -373,7 +396,7 @@ index 81ccbde6aab..280f2bf7980 100644
  
  	status = file_new(req, conn, &fsp);
 diff --git a/source3/smbd/filename.c b/source3/smbd/filename.c
-index 32e5835e676..b969000cf9f 100644
+index d897ed8cea0..be02e0ce6cb 100644
 --- a/source3/smbd/filename.c
 +++ b/source3/smbd/filename.c
 @@ -310,19 +310,11 @@ static NTSTATUS rearrange_snapshot_path(struct smb_filename *smb_fname,
@@ -442,7 +465,7 @@ index 32e5835e676..b969000cf9f 100644
  		if (!NT_STATUS_IS_OK(status)) {
  			DEBUG(5,("check_name: name %s failed with %s\n",
 diff --git a/source3/smbd/globals.h b/source3/smbd/globals.h
-index 7b26d04ed0f..1f4851be754 100644
+index 5bcf0503b4c..6e1ed9ea5b5 100644
 --- a/source3/smbd/globals.h
 +++ b/source3/smbd/globals.h
 @@ -24,6 +24,7 @@
@@ -453,7 +476,7 @@ index 7b26d04ed0f..1f4851be754 100644
  
  #ifdef USE_DMAPI
  struct smbd_dmapi_context;
-@@ -856,6 +857,13 @@ struct smbd_server_connection {
+@@ -857,6 +858,13 @@ struct smbd_server_connection {
  	bool using_smb2;
  	int trans_num;
  
@@ -468,7 +491,7 @@ index 7b26d04ed0f..1f4851be754 100644
  
  	size_t num_connections;
 diff --git a/source3/smbd/open.c b/source3/smbd/open.c
-index 98770358cf1..0abddf485f9 100644
+index 03e66d30a3e..fc7014bb6e5 100644
 --- a/source3/smbd/open.c
 +++ b/source3/smbd/open.c
 @@ -641,6 +641,7 @@ static int non_widelink_open(struct connection_struct *conn,
@@ -504,11 +527,40 @@ index 98770358cf1..0abddf485f9 100644
  
  		/*
  		 * Only follow symlinks within a share
+@@ -3635,10 +3638,24 @@ static NTSTATUS open_file_ntcreate(connection_struct *conn,
+ 	/*
+ 	 * Ensure we pay attention to default ACLs on directories if required.
+ 	 */
+-
+-        if ((flags2 & O_CREAT) && lp_inherit_acls(SNUM(conn)) &&
+-	    (def_acl = directory_has_default_acl(conn, parent_dir))) {
+-		unx_mode = (0777 & lp_create_mask(SNUM(conn)));
++	switch(conn->aclbrand) {
++	case SMB_ACL_BRAND_POSIX:
++		if ((flags2 & O_CREAT) && lp_inherit_acls(SNUM(conn)) &&
++		    (def_acl = directory_has_default_acl(conn, parent_dir))) {
++			unx_mode = (0777 & lp_create_mask(SNUM(conn)));
++		}
++		break;
++	case SMB_ACL_BRAND_NFS40:
++	case SMB_ACL_BRAND_NFS41:
++	default:
++		/*
++		 * Pass along to VFS to determine whether the ACL has
++		 * any inheriting entries.
++		 */
++		if (flags2 & O_CREAT) {
++			def_acl = directory_has_default_acl(conn, parent_dir);
++		}
++		break;
+ 	}
+ 
+ 	DEBUG(4,("calling open_file with flags=0x%X flags2=0x%X mode=0%o, "
 diff --git a/source3/smbd/proto.h b/source3/smbd/proto.h
-index 96d574023a5..a953f668d83 100644
+index 60941ce6c1b..31aa2a3b332 100644
 --- a/source3/smbd/proto.h
 +++ b/source3/smbd/proto.h
-@@ -370,6 +370,7 @@ NTSTATUS filename_convert_with_privilege(TALLOC_CTX *mem_ctx,
+@@ -376,6 +376,7 @@ NTSTATUS filename_convert_with_privilege(TALLOC_CTX *mem_ctx,
  			uint32_t ucf_flags,
  			bool *ppath_contains_wcard,
  			struct smb_filename **pp_smb_fname);
@@ -517,10 +569,10 @@ index 96d574023a5..a953f668d83 100644
  /* The following definitions come from smbd/files.c  */
  
 diff --git a/source3/smbd/reply.c b/source3/smbd/reply.c
-index 40cd7483750..916ce8f65f0 100644
+index 54f3d330c95..3d4bd662c2d 100644
 --- a/source3/smbd/reply.c
 +++ b/source3/smbd/reply.c
-@@ -6962,7 +6962,9 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
+@@ -7516,7 +7516,9 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
  	NTSTATUS status = NT_STATUS_OK;
  	struct share_mode_lock *lck = NULL;
  	uint32_t access_mask = SEC_DIR_ADD_FILE;
@@ -531,7 +583,7 @@ index 40cd7483750..916ce8f65f0 100644
  	int ret;
  
  	status = check_name(conn, smb_fname_dst_in);
-@@ -6975,10 +6977,17 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
+@@ -7529,10 +7531,17 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
  		return status;
  	}
  
@@ -550,7 +602,7 @@ index 40cd7483750..916ce8f65f0 100644
  	/* Make a copy of the dst smb_fname structs */
  
  	smb_fname_dst = cp_smb_filename(ctx, smb_fname_dst_in);
-@@ -7124,7 +7133,19 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
+@@ -7678,7 +7687,19 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
  
  	dst_exists = SMB_VFS_STAT(conn, smb_fname_dst) == 0;
  
@@ -571,7 +623,7 @@ index 40cd7483750..916ce8f65f0 100644
  		DEBUG(3, ("rename_internals_fsp: dest exists doing rename "
  			  "%s -> %s\n", smb_fname_str_dbg(fsp->fsp_name),
  			  smb_fname_str_dbg(smb_fname_dst)));
-@@ -7132,7 +7153,7 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
+@@ -7686,7 +7707,7 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
  		goto out;
  	}
  
@@ -581,7 +633,7 @@ index 40cd7483750..916ce8f65f0 100644
  		    &smb_fname_dst->st);
  		files_struct *dst_fsp = file_find_di_first(conn->sconn,
 diff --git a/source3/smbd/trans2.c b/source3/smbd/trans2.c
-index 2cf669f4b4d..19fc9b43a92 100644
+index 339dd36b6af..387e17f6d1d 100644
 --- a/source3/smbd/trans2.c
 +++ b/source3/smbd/trans2.c
 @@ -258,9 +258,22 @@ NTSTATUS get_ea_value(TALLOC_CTX *mem_ctx,
@@ -663,10 +715,10 @@ index 2cf669f4b4d..19fc9b43a92 100644
  			  lp_servicename(talloc_tos(), lp_sub, SNUM(conn)),
  			  conn->session_info->unix_info->unix_name));
 diff --git a/source3/smbd/vfs.c b/source3/smbd/vfs.c
-index 7dc15158ccb..818b9d58a7e 100644
+index 96067e45005..079320c2048 100644
 --- a/source3/smbd/vfs.c
 +++ b/source3/smbd/vfs.c
-@@ -1294,7 +1294,8 @@ NTSTATUS check_reduced_name(connection_struct *conn,
+@@ -1356,7 +1356,8 @@ NTSTATUS check_reduced_name(connection_struct *conn,
  	allow_symlinks = lp_follow_symlinks(SNUM(conn));
  
  	/* Common widelinks and symlinks checks. */
