@@ -82,10 +82,10 @@ index 4331c2f1465..25ff32152f1 100644
 +
  #endif
 diff --git a/source3/include/vfs.h b/source3/include/vfs.h
-index fec38f20644..b162321119e 100644
+index d527f850628..7bc908b5b0d 100644
 --- a/source3/include/vfs.h
 +++ b/source3/include/vfs.h
-@@ -317,6 +317,14 @@ typedef union unid_t {
+@@ -355,6 +355,14 @@ typedef union unid_t {
  	gid_t gid;
  } unid_t;
  
@@ -100,7 +100,7 @@ index fec38f20644..b162321119e 100644
  struct fd_handle {
  	size_t ref_count;
  	int fd;
-@@ -455,6 +463,7 @@ typedef struct files_struct {
+@@ -487,6 +495,7 @@ typedef struct files_struct {
  #define FSP_POSIX_FLAGS_OPEN		0x01
  #define FSP_POSIX_FLAGS_RENAME		0x02
  #define FSP_POSIX_FLAGS_PATHNAMES	0x04
@@ -108,36 +108,16 @@ index fec38f20644..b162321119e 100644
  
  #define FSP_POSIX_FLAGS_ALL			\
  	(FSP_POSIX_FLAGS_OPEN |			\
-@@ -498,6 +507,7 @@ typedef struct connection_struct {
+@@ -530,6 +539,7 @@ typedef struct connection_struct {
  	   sub second timestamps on files
  	   and directories when setting time ? */
  	enum timestamp_set_resolution ts_res;
 +	enum acl_brand aclbrand;
  	char *connectpath;
- 	char *origpath;
  	struct files_struct *cwd_fsp; /* Working directory. */
-@@ -648,6 +658,7 @@ struct smb_filename {
- 	char *original_lcomp;
- 	uint32_t flags;
- 	SMB_STRUCT_STAT st;
-+	struct timeval vss_tval;
- };
- 
- /*
-diff --git a/source3/lib/filename_util.c b/source3/lib/filename_util.c
-index 58919256e0e..6b772c6df01 100644
---- a/source3/lib/filename_util.c
-+++ b/source3/lib/filename_util.c
-@@ -236,6 +236,7 @@ struct smb_filename *cp_smb_filename(TALLOC_CTX *mem_ctx,
- 	}
- 	out->flags = in->flags;
- 	out->st = in->st;
-+	out->vss_tval.tv_sec = in->vss_tval.tv_sec;
- 	return out;
- }
- 
+ 	bool tcon_done;
 diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
-index 4cf553411cb..b06aeec0ee7 100644
+index cf5e1cbc296..3383e5ab9a7 100644
 --- a/source3/modules/vfs_default.c
 +++ b/source3/modules/vfs_default.c
 @@ -18,9 +18,13 @@
@@ -154,7 +134,7 @@ index 4cf553411cb..b06aeec0ee7 100644
  #include "smbd/smbd.h"
  #include "smbd/globals.h"
  #include "ntioctl.h"
-@@ -45,9 +49,131 @@
+@@ -46,9 +50,131 @@
     is sure to try and execute them.  These stubs are used to prevent
     this possibility. */
  
@@ -287,7 +267,7 @@ index 4cf553411cb..b06aeec0ee7 100644
  }
  
  static void vfswrap_disconnect(vfs_handle_struct *handle)
-@@ -76,32 +202,14 @@ static int vfswrap_get_quota(struct vfs_handle_struct *handle,
+@@ -77,32 +203,14 @@ static int vfswrap_get_quota(struct vfs_handle_struct *handle,
  				unid_t id,
  				SMB_DISK_QUOTA *qt)
  {
@@ -320,7 +300,7 @@ index 4cf553411cb..b06aeec0ee7 100644
  }
  
  static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
-@@ -2523,7 +2631,8 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
+@@ -2542,7 +2650,8 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
  	}
  
  #if defined(HAVE_UTIMENSAT)
@@ -331,7 +311,7 @@ index 4cf553411cb..b06aeec0ee7 100644
  		ts[0] = ft->atime;
  		ts[1] = ft->mtime;
 diff --git a/source3/smbd/fake_file.c b/source3/smbd/fake_file.c
-index 81ccbde6aab..280f2bf7980 100644
+index 90921a65e36..865da147d8d 100644
 --- a/source3/smbd/fake_file.c
 +++ b/source3/smbd/fake_file.c
 @@ -22,6 +22,7 @@
@@ -349,9 +329,9 @@ index 81ccbde6aab..280f2bf7980 100644
 +	bool is_disk_op;
 +	int ret;
  
- 	status = smbd_calculate_access_mask(conn, smb_fname, false,
- 					    access_mask, &access_mask);
-@@ -142,15 +145,34 @@ NTSTATUS open_fake_file(struct smb_request *req, connection_struct *conn,
+ 	status = smbd_calculate_access_mask(conn,
+ 					conn->cwd_fsp,
+@@ -146,15 +149,34 @@ NTSTATUS open_fake_file(struct smb_request *req, connection_struct *conn,
  		return status;
  	}
  
@@ -396,10 +376,10 @@ index 81ccbde6aab..280f2bf7980 100644
  
  	status = file_new(req, conn, &fsp);
 diff --git a/source3/smbd/filename.c b/source3/smbd/filename.c
-index d897ed8cea0..be02e0ce6cb 100644
+index 73ea63ffd25..71a16665e35 100644
 --- a/source3/smbd/filename.c
 +++ b/source3/smbd/filename.c
-@@ -310,19 +310,11 @@ static NTSTATUS rearrange_snapshot_path(struct smb_filename *smb_fname,
+@@ -322,19 +322,11 @@ static NTSTATUS rearrange_snapshot_path(struct smb_filename *smb_fname,
  	}
  
  	if (ISDOT(parent)) {
@@ -421,41 +401,15 @@ index d897ed8cea0..be02e0ce6cb 100644
  					parent,
  					last_component);
  	}
-@@ -352,7 +344,7 @@ static NTSTATUS rearrange_snapshot_path(struct smb_filename *smb_fname,
-  * instead.
-  */
- 
--static NTSTATUS canonicalize_snapshot_path(struct smb_filename *smb_fname)
-+NTSTATUS canonicalize_snapshot_path(struct smb_filename *smb_fname)
- {
- 	char *startp = strchr_m(smb_fname->base_name, '@');
- 	char *endp = NULL;
-@@ -379,6 +371,9 @@ static NTSTATUS canonicalize_snapshot_path(struct smb_filename *smb_fname)
+@@ -404,6 +396,7 @@ NTSTATUS canonicalize_snapshot_path(struct smb_filename *smb_fname,
  		/* Not a valid timestring. */
  		return NT_STATUS_OK;
  	}
-+	smb_fname->vss_tval.tv_sec = timegm(&tm);
-+	smb_fname->vss_tval.tv_usec = 0;
 +	smb_fname->flags |= SMB_FILENAME_PATH_CANONICALIZED;
  
- 	if ( endp[0] == '\0') {
- 		return rearrange_snapshot_path(smb_fname,
-@@ -538,9 +533,11 @@ NTSTATUS unix_convert(TALLOC_CTX *ctx,
- 
- 	/* Canonicalize any @GMT- paths. */
- 	if (snapshot_path) {
--		status = canonicalize_snapshot_path(smb_fname);
--		if (!NT_STATUS_IS_OK(status)) {
--			goto err;
-+		if ((smb_fname->flags & SMB_FILENAME_PATH_CANONICALIZED) == 0) {
-+			status = canonicalize_snapshot_path(smb_fname);
-+			if (!NT_STATUS_IS_OK(status)) {
-+				goto err;
-+			}
- 		}
- 	}
- 
-@@ -1326,7 +1323,7 @@ NTSTATUS check_name(connection_struct *conn,
+ 	if (endp[0] != '\0' && endp[0] != '/') {
+ 		/*
+@@ -1443,7 +1436,7 @@ NTSTATUS check_name(connection_struct *conn,
  		return status;
  	}
  
@@ -465,7 +419,7 @@ index d897ed8cea0..be02e0ce6cb 100644
  		if (!NT_STATUS_IS_OK(status)) {
  			DEBUG(5,("check_name: name %s failed with %s\n",
 diff --git a/source3/smbd/globals.h b/source3/smbd/globals.h
-index 5bcf0503b4c..6e1ed9ea5b5 100644
+index fcf33a699c6..111257c1da5 100644
 --- a/source3/smbd/globals.h
 +++ b/source3/smbd/globals.h
 @@ -24,6 +24,7 @@
@@ -476,7 +430,7 @@ index 5bcf0503b4c..6e1ed9ea5b5 100644
  
  #ifdef USE_DMAPI
  struct smbd_dmapi_context;
-@@ -857,6 +858,13 @@ struct smbd_server_connection {
+@@ -888,6 +889,13 @@ struct smbd_server_connection {
  	bool using_smb2;
  	int trans_num;
  
@@ -491,54 +445,26 @@ index 5bcf0503b4c..6e1ed9ea5b5 100644
  
  	size_t num_connections;
 diff --git a/source3/smbd/open.c b/source3/smbd/open.c
-index 03e66d30a3e..fc7014bb6e5 100644
+index 79b72784249..c86f201b2ae 100644
 --- a/source3/smbd/open.c
 +++ b/source3/smbd/open.c
-@@ -641,6 +641,7 @@ static int non_widelink_open(struct connection_struct *conn,
- 	}
- 
- 	parent_dir_fname = (struct smb_filename) { .base_name = parent_dir };
-+	parent_dir_fname.vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	oldwd_fname = vfs_GetWd(talloc_tos(), conn);
- 	if (oldwd_fname == NULL) {
-@@ -661,6 +662,7 @@ static int non_widelink_open(struct connection_struct *conn,
- 		saved_errno = ENOMEM;
- 		goto out;
- 	}
-+	smb_fname_rel->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	/* Ensure the relative path is below the share. */
- 	status = check_reduced_name(conn, &parent_dir_fname, smb_fname_rel);
-@@ -767,7 +769,7 @@ NTSTATUS fd_open(struct connection_struct *conn,
- 	}
- 
- 	/* Ensure path is below share definition. */
--	if (!lp_widelinks(SNUM(conn))) {
-+	if (!conn->sconn->jid && !lp_widelinks(SNUM(conn))) {
- 		struct smb_filename *conn_rootdir_fname = NULL;
- 		const char *conn_rootdir = SMB_VFS_CONNECTPATH(conn,
- 						smb_fname);
-@@ -784,6 +786,7 @@ NTSTATUS fd_open(struct connection_struct *conn,
- 		if (conn_rootdir_fname == NULL) {
- 			return NT_STATUS_NO_MEMORY;
- 		}
-+		conn_rootdir_fname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 		/*
- 		 * Only follow symlinks within a share
-@@ -3635,10 +3638,24 @@ static NTSTATUS open_file_ntcreate(connection_struct *conn,
+@@ -3779,13 +3779,28 @@ static NTSTATUS open_file_ntcreate(connection_struct *conn,
  	/*
  	 * Ensure we pay attention to default ACLs on directories if required.
  	 */
 -
 -        if ((flags2 & O_CREAT) && lp_inherit_acls(SNUM(conn)) &&
--	    (def_acl = directory_has_default_acl(conn, parent_dir))) {
+-	    (def_acl = directory_has_default_acl(conn,
+-				conn->cwd_fsp,
+-				parent_dir_fname)))
+-	{
 -		unx_mode = (0777 & lp_create_mask(SNUM(conn)));
 +	switch(conn->aclbrand) {
 +	case SMB_ACL_BRAND_POSIX:
 +		if ((flags2 & O_CREAT) && lp_inherit_acls(SNUM(conn)) &&
-+		    (def_acl = directory_has_default_acl(conn, parent_dir))) {
++		    (def_acl = directory_has_default_acl(conn,
++					conn->cwd_fsp,
++					parent_dir_fname))) {
 +			unx_mode = (0777 & lp_create_mask(SNUM(conn)));
 +		}
 +		break;
@@ -550,29 +476,19 @@ index 03e66d30a3e..fc7014bb6e5 100644
 +		 * any inheriting entries.
 +		 */
 +		if (flags2 & O_CREAT) {
-+			def_acl = directory_has_default_acl(conn, parent_dir);
++			def_acl = directory_has_default_acl(conn,
++					conn->cwd_fsp,
++					parent_dir_fname);
 +		}
 +		break;
  	}
  
  	DEBUG(4,("calling open_file with flags=0x%X flags2=0x%X mode=0%o, "
-diff --git a/source3/smbd/proto.h b/source3/smbd/proto.h
-index 60941ce6c1b..31aa2a3b332 100644
---- a/source3/smbd/proto.h
-+++ b/source3/smbd/proto.h
-@@ -376,6 +376,7 @@ NTSTATUS filename_convert_with_privilege(TALLOC_CTX *mem_ctx,
- 			uint32_t ucf_flags,
- 			bool *ppath_contains_wcard,
- 			struct smb_filename **pp_smb_fname);
-+NTSTATUS canonicalize_snapshot_path(struct smb_filename *smb_fname);
- 
- /* The following definitions come from smbd/files.c  */
- 
 diff --git a/source3/smbd/reply.c b/source3/smbd/reply.c
-index 54f3d330c95..3d4bd662c2d 100644
+index f911fc006a3..20ffc201d2d 100644
 --- a/source3/smbd/reply.c
 +++ b/source3/smbd/reply.c
-@@ -7516,7 +7516,9 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
+@@ -7598,7 +7598,9 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
  	NTSTATUS status = NT_STATUS_OK;
  	struct share_mode_lock *lck = NULL;
  	uint32_t access_mask = SEC_DIR_ADD_FILE;
@@ -583,7 +499,7 @@ index 54f3d330c95..3d4bd662c2d 100644
  	int ret;
  
  	status = check_name(conn, smb_fname_dst_in);
-@@ -7529,10 +7531,17 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
+@@ -7611,10 +7613,17 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
  		return status;
  	}
  
@@ -602,7 +518,7 @@ index 54f3d330c95..3d4bd662c2d 100644
  	/* Make a copy of the dst smb_fname structs */
  
  	smb_fname_dst = cp_smb_filename(ctx, smb_fname_dst_in);
-@@ -7678,7 +7687,19 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
+@@ -7760,7 +7769,19 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
  
  	dst_exists = SMB_VFS_STAT(conn, smb_fname_dst) == 0;
  
@@ -623,7 +539,7 @@ index 54f3d330c95..3d4bd662c2d 100644
  		DEBUG(3, ("rename_internals_fsp: dest exists doing rename "
  			  "%s -> %s\n", smb_fname_str_dbg(fsp->fsp_name),
  			  smb_fname_str_dbg(smb_fname_dst)));
-@@ -7686,7 +7707,7 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
+@@ -7768,7 +7789,7 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
  		goto out;
  	}
  
@@ -633,10 +549,10 @@ index 54f3d330c95..3d4bd662c2d 100644
  		    &smb_fname_dst->st);
  		files_struct *dst_fsp = file_find_di_first(conn->sconn,
 diff --git a/source3/smbd/trans2.c b/source3/smbd/trans2.c
-index 339dd36b6af..387e17f6d1d 100644
+index 7acde285a90..18cdbcdacae 100644
 --- a/source3/smbd/trans2.c
 +++ b/source3/smbd/trans2.c
-@@ -258,9 +258,22 @@ NTSTATUS get_ea_value(TALLOC_CTX *mem_ctx,
+@@ -268,9 +268,22 @@ NTSTATUS get_ea_value(TALLOC_CTX *mem_ctx,
  			struct ea_struct *pea)
  {
  	/* Get the value of this xattr. Max size is 64k. */
@@ -660,7 +576,7 @@ index 339dd36b6af..387e17f6d1d 100644
  
   again:
  
-@@ -276,8 +289,8 @@ NTSTATUS get_ea_value(TALLOC_CTX *mem_ctx,
+@@ -286,8 +299,8 @@ NTSTATUS get_ea_value(TALLOC_CTX *mem_ctx,
  				ea_name, val, attr_size);
  	}
  
@@ -671,7 +587,7 @@ index 339dd36b6af..387e17f6d1d 100644
  		goto again;
  	}
  
-@@ -3908,12 +3921,21 @@ cBytesSector=%u, cUnitTotal=%u, cUnitAvail=%d\n", (unsigned int)bsize, (unsigned
+@@ -3935,12 +3948,21 @@ cBytesSector=%u, cUnitTotal=%u, cUnitAvail=%d\n", (unsigned int)bsize, (unsigned
  
  			ZERO_STRUCT(fsp);
  			ZERO_STRUCT(quotas);
@@ -695,7 +611,7 @@ index 339dd36b6af..387e17f6d1d 100644
  				DEBUG(0,("get_user_quota: access_denied "
  					 "service [%s] user [%s]\n",
  					 lp_servicename(talloc_tos(), lp_sub, SNUM(conn)),
-@@ -4212,11 +4234,17 @@ static NTSTATUS smb_set_fsquota(connection_struct *conn,
+@@ -4239,11 +4261,17 @@ static NTSTATUS smb_set_fsquota(connection_struct *conn,
  		loadparm_s3_global_substitution();
  	NTSTATUS status;
  	SMB_NTQUOTA_STRUCT quotas;
@@ -714,17 +630,3 @@ index 339dd36b6af..387e17f6d1d 100644
  		DEBUG(3, ("set_fsquota: access_denied service [%s] user [%s]\n",
  			  lp_servicename(talloc_tos(), lp_sub, SNUM(conn)),
  			  conn->session_info->unix_info->unix_name));
-diff --git a/source3/smbd/vfs.c b/source3/smbd/vfs.c
-index 96067e45005..079320c2048 100644
---- a/source3/smbd/vfs.c
-+++ b/source3/smbd/vfs.c
-@@ -1356,7 +1356,8 @@ NTSTATUS check_reduced_name(connection_struct *conn,
- 	allow_symlinks = lp_follow_symlinks(SNUM(conn));
- 
- 	/* Common widelinks and symlinks checks. */
--	if (!allow_widelinks || !allow_symlinks) {
-+	/* Jailed processes are automatically chrooted to the share connectpath */
-+	if (!conn->sconn->jid || !allow_widelinks || !allow_symlinks) {
- 		const char *conn_rootdir;
- 		size_t rootdir_len;
- 
