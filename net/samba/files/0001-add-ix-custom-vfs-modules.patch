@@ -1,6 +1,6 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 00000000000..e1a4bfc9334
+index 00000000000..b86b8a85fc0
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
 @@ -0,0 +1,1403 @@
@@ -47,12 +47,10 @@ index 00000000000..e1a4bfc9334
 +#include "smbd/globals.h"
 +#include "smbd/smbd.h"
 +
-+#ifndef SAFE_FREE
-+#define SAFE_FREE(x) do { if ((x) != NULL) {free(x); (x)=NULL;} } while(0)
-+#endif
-+
 +#define SHADOW_COPY_ZFS_GMT_FORMAT "@GMT-%Y.%m.%d-%H.%M.%S"
 +#define ZFS_PROP_SAMBA_PREFIX "org.samba"
++
++static struct smblibzfshandle *global_libzfs_handle = NULL;
 +
 +static struct enum_list casesensitivity[] = {
 +	{SMBZFS_SENSITIVE, "sensitive"},
@@ -1351,68 +1349,70 @@ index 00000000000..e1a4bfc9334
 +	return dl;
 +}
 +
-+int jail_dataset_list(struct dataset_list *ds_list, int jid)
++int conn_zfs_init(TALLOC_CTX *mem_ctx,
++		  const char *connectpath,
++		  struct smblibzfshandle **plibzp,
++		  struct dataset_list **pdsl)
 +{
 +	int ret = 0;
-+	struct zfs_dataset *child = NULL;
-+	struct stat ds_st;
-+	if (!ds_list->root->zhandle->is_open) {
-+		DBG_ERR("zhandle for %s is closed\n",
-+			ds_list->root->dataset_name);
-+		errno = ENOMEM;
-+		return -1;
-+	}
-+	if (jid != -1) {
-+		ret = zhandle_jail(ds_list->root->zhandle, jid, true);
++	struct smbzhandle *conn_zfsp = NULL;
++	char *tmp_name = NULL;
++	size_t to_remove, new_len;
++
++	if (global_libzfs_handle == NULL) {
++		ret = get_smblibzfs_handle(mem_ctx, &global_libzfs_handle);
++		/*
++		 * Attempt to get libzfs handle should succeed even if share
++		 * is not on ZFS. Failure here is significant error condition
++		 * and therefore fatal.
++		 */
 +		if (ret != 0) {
-+			DBG_ERR("zhandle_jail failed with %s\n", strerror(errno));
-+			errno = ENOMEM;
-+		}
-+	}
-+	ret = stat(ds_list->root->mountpoint, &ds_st);
-+	if (ret < 0) {
-+		DBG_ERR("Failed to stat dataset mounpoint [%s] "
-+			"for dataset [%s]: %s\n",
-+			ds_list->root->mountpoint,
-+			ds_list->root->dataset_name,
-+			strerror(errno));
-+			return -1;
-+	}
-+	ds_list->root->devid = ds_st.st_dev;
-+	for (child=ds_list->children; child; child=child->next) {
-+		if (!child->zhandle->is_open) {
-+			DBG_ERR("zhandle for %s is closed\n",
-+				child->dataset_name);
-+			errno = ENOMEM;
-+			return -1;
-+		}
-+		if (jid != -1) {
-+			ret = zhandle_jail(child->zhandle, jid, true);
-+			if (ret != 0) {
-+				DBG_ERR("zfs_jail failed for %s: %s\n",
-+					child->dataset_name, jid);
-+			}
-+		}
-+		ret = stat(child->mountpoint, &ds_st);
-+		if (ret < 0) {
-+			DBG_ERR("Failed to stat dataset mounpoint [%s] "
-+				"for dataset [%s]: %s\n",
-+				child->mountpoint, child->dataset_name,
++			DBG_ERR("Failed to obtain libzfshandle on connectpath: %s\n",
 +				strerror(errno));
++			errno = ENOMEM;
 +			return -1;
 +		}
-+		child->devid = ds_st.st_dev;
-+		close_smbzhandle(child->zhandle);
 +	}
-+	close_smbzhandle(ds_list->root->zhandle);
-+	return 0;
++
++	get_smbzhandle(global_libzfs_handle, mem_ctx, connectpath, &conn_zfsp);
++
++	/*
++	 * If for some reason a snapshot is being shared (for instance, through FSRVP),
++	 * then we will fail to get a zfs dataset handle.
++	 */
++	if ((conn_zfsp == NULL) && (strlen(connectpath) > 15)) {
++		DBG_ERR("Failed to obtain zhandle on connectpath: %s\n",
++			strerror(errno));
++		tmp_name = strnstr(connectpath, "/.zfs/snapshot/", PATH_MAX);
++		if (tmp_name != NULL) {
++			DBG_INFO("Connectpath is zfs snapshot. Opening zhandle "
++				 "on parent dataset.\n");
++			to_remove = strlen(tmp_name);
++			new_len = strlen(connectpath) - to_remove;
++			tmp_name = talloc_strndup(mem_ctx,
++						  connectpath,
++						  new_len);
++			get_smbzhandle(global_libzfs_handle,
++				       mem_ctx, tmp_name,
++				       &conn_zfsp);
++			TALLOC_FREE(tmp_name);
++		}
++	}
++	*plibzp = global_libzfs_handle;
++	if (conn_zfsp == NULL) {
++		/* Unable to get ZFS data underlying path -- perhaps not ZFS filesystem*/
++		*pdsl = NULL;
++		return 0;
++	}
++	*pdsl = cache_zhandle_list_children(mem_ctx, conn_zfsp);
++	return ret;
 +}
 diff --git a/source3/modules/smb_libzfs.h b/source3/modules/smb_libzfs.h
 new file mode 100644
-index 00000000000..2e551e2dd97
+index 00000000000..f0d334dcc50
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.h
-@@ -0,0 +1,403 @@
+@@ -0,0 +1,406 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -1795,7 +1795,7 @@ index 00000000000..2e551e2dd97
 + *					datasets open
 + * @param[out]	from_cache		true if returned from cache
 + * @return	dataset_list		dataset->root->zhandle is a pointer to the
-+					same zhandle used to generate the dataset list.
++ *					same zhandle used to generate the dataset list.
 + */
 +struct dataset_list *zhandle_list_children( TALLOC_CTX *mem_ctx,
 +                                          struct smbzhandle *zhandle_ext,
@@ -1803,25 +1803,28 @@ index 00000000000..2e551e2dd97
 +
 +struct dataset_list *cache_zhandle_list_children(TALLOC_CTX *mem_ctx,
 +						 struct smbzhandle *zhandle_ext);
++
 +/*
-+ * Attach a list of ZFS datasets to a specified jail. This function
-+ * also will populate the devid field of the datasets. If jid is -1 then
-+ * devid will be populated but dataset will not be jailed.
++ * Initialize global libzfs handle if necessary and populate
++ * dataset list for connectpath
 + *
-+ * @param[in]	ds_list			struct dataset_list to attach to jail.
-+ * @param[in]	jid			jail id for jail.
-+ *
-+ * @return	0 on success -1 on failure.
++ * @param[in]	mem_ctx			talloc memory context on which to hang results.
++ * @param[in]	connectpath		connectpath to share.
++ * @param[out]	ppdsl			returned dataset list for connectpath.
++ * @return	0 on success -1 on failure
 + */
-+int jail_dataset_list(struct dataset_list *ds_list, int jid);
++int conn_zfs_init(TALLOC_CTX *mem_ctx,
++		  const char *connectpath,
++		  struct smblibzfshandle **plibzfs,
++		  struct dataset_list **ppdsl);
 +
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..199ba433dd5
+index 00000000000..2e3411c4231
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2018 @@
+@@ -0,0 +1,2025 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -1866,16 +1869,18 @@ index 00000000000..199ba433dd5
 +#define DBGC_CLASS vfs_ixnas_debug_level
 +
 +struct ixnas_config_data {
-+	struct smbacl4_vfs_params nfs4_params;
++#if HAVE_LIBZFS
++	struct zfs_dataset_prop *props;
 +	struct smblibzfshandle *libzp;
++	struct dataset_list *dsl;
++#endif /* HAVE_LIBZFS */
++	struct smbacl4_vfs_params nfs4_params;
 +	bool dosattrib_xattr;
 +	bool map_modify;
-+	bool zfs_acl_ignore_empty_mode;
-+	bool zfs_acl_chmod_enabled;
++	bool acl_chmod_enabled;
 +	bool zfs_space_enabled;
 +	bool zfs_quota_enabled;
 +	bool zfs_auto_homedir;
-+	struct zfs_dataset_prop *props;
 +	const char *homedir_quota;
 +	uint64_t base_user_quota;
 +};
@@ -3130,7 +3135,7 @@ index 00000000000..199ba433dd5
 +				struct ixnas_config_data,
 +				return -1);
 +
-+	if (!config->zfs_acl_chmod_enabled) {
++	if (!config->acl_chmod_enabled) {
 +		return SMB_VFS_NEXT_CHMOD(handle, smb_fname, mode);
 +	}
 +	zacl = acl_get_file(smb_fname->base_name, ACL_TYPE_NFS4);
@@ -3191,7 +3196,7 @@ index 00000000000..199ba433dd5
 +				struct ixnas_config_data,
 +				return -1);
 +
-+	if (!config->zfs_acl_chmod_enabled) {
++	if (!config->acl_chmod_enabled) {
 +		return SMB_VFS_NEXT_FCHMOD(handle, fsp, mode);
 +	}
 +	zacl = acl_get_fd_np(fsp->fh->fd, ACL_TYPE_NFS4);
@@ -3658,11 +3663,11 @@ index 00000000000..199ba433dd5
 +		errno = ENOMEM;
 +		return -1;
 +	}
++#if HAVE_LIBZFS
 +	/*
 +	 * Check if we need to automatically create a new ZFS dataset
-+	 * before falling through to SMB_VFS_NEXT_CONNECT
++	 * before falling through to SMB_VFS_NEXT_CONNECT.
 +	 */
-+#if HAVE_LIBZFS
 +	config->zfs_auto_homedir = lp_parm_bool(SNUM(handle->conn),
 +			"ixnas", "zfs_auto_homedir", false);
 +	config->homedir_quota = lp_parm_const_string(SNUM(handle->conn),
@@ -3684,10 +3689,14 @@ index 00000000000..199ba433dd5
 +	}
 +
 +#if HAVE_LIBZFS
-+	config->libzp = handle->conn->sconn->libzp;
++	ret = conn_zfs_init(handle->conn->sconn,
++			    handle->conn->connectpath,
++			    &config->libzp,
++			    &config->dsl);
 +
-+	config->props = handle->conn->sconn->ds_list->root->properties;
-+
++	if (config->dsl) {
++		config->props = config->dsl->root->properties;
++	}
 +	base_quota_str = lp_parm_const_string(SNUM(handle->conn),
 +			"ixnas", "base_user_quota", NULL);
 +
@@ -3698,6 +3707,7 @@ index 00000000000..199ba433dd5
 +	if (config->base_user_quota) {
 +		set_base_user_quota(handle, config, user);
 +	}
++
 +	if (config->props->casesens == SMBZFS_INSENSITIVE) {
 +		DBG_INFO("ixnas: case insensitive dataset detected, "
 +			 "automatically adjusting case sensitivity settings.\n");
@@ -3769,13 +3779,13 @@ index 00000000000..199ba433dd5
 +		DBG_ERR("Failed to determine whether connecpath ACL is trivial\n");
 +		return -1;
 +	}
++
 +	if (is_trivial) {
 +		config->map_modify = true;
 +	}
 +
-+
-+	config->zfs_acl_chmod_enabled = lp_parm_bool(SNUM(handle->conn),
-+			"ixnas", "zfs_acl_chmod_enabled", false);
++	config->acl_chmod_enabled = lp_parm_bool(SNUM(handle->conn),
++			"ixnas", "acl_chmod_enabled", false);
 +
 +	ret = smbacl4_get_vfs_params(handle->conn, &config->nfs4_params);
 +	if (ret < 0) {
