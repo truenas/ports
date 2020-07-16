@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 00000000000..b86b8a85fc0
+index 00000000000..80e73c66b97
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,1403 @@
+@@ -0,0 +1,1570 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -112,7 +112,7 @@ index 00000000000..b86b8a85fc0
 +	if (slibzp->libzfsp == NULL) {
 +		DBG_ERR("Failed to retrieve libzfs handle"
 +			"from smblibzfs handle\n");
-+		return 0; //proceed with freeing memory. Nothing we can do here.
++		return 0;
 +	}
 +	libzfs_fini(slibzp->libzfsp);
 +	return 0;
@@ -123,13 +123,14 @@ index 00000000000..b86b8a85fc0
 +	if (szhp->zhandle == NULL) {
 +		DBG_INFO("Failed to retrieve smb zfs dataset handle"
 +			"from smbzhandle\n");
-+		return 0; //proceed with freeing memory. Nothing we can do here.
++		return 0;
 +	}
 +	zfs_close(szhp->zhandle);
 +	return 0;
 +}
 +
-+int get_smblibzfs_handle(TALLOC_CTX *mem_ctx, struct smblibzfshandle **smblibzfsp)
++int get_smblibzfs_handle(TALLOC_CTX *mem_ctx,
++			 struct smblibzfshandle **smblibzfsp)
 +{
 +	libzfs_handle_t *libzfsp = NULL;
 +	struct smblibzfs_int *slibzp_int = NULL;
@@ -156,6 +157,18 @@ index 00000000000..b86b8a85fc0
 +	slibzp_ext->zcache = memcache_init(slibzp_ext, (1024 * 1024));
 +	*smblibzfsp = slibzp_ext;
 +	return 0;
++}
++
++struct smblibzfshandle *get_global_smblibzfs_handle(TALLOC_CTX *mem_ctx) {
++	int ret;
++
++	if (global_libzfs_handle == NULL) {
++		ret = get_smblibzfs_handle(mem_ctx, &global_libzfs_handle);
++		if (ret != 0) {
++			return NULL;
++		}
++	}
++	return global_libzfs_handle;
 +}
 +
 +static zfs_handle_t *get_zhandle(struct smblibzfshandle *smblibzfsp,
@@ -186,11 +199,7 @@ index 00000000000..b86b8a85fc0
 +
 +static zfs_handle_t *get_zhandle_from_smbzhandle(struct smbzhandle *smbzhandle)
 +{
-+	if (!smbzhandle->is_open) {
-+		DBG_ERR("zhandle is closed!\n");
-+		errno = EINVAL;
-+		return NULL;
-+	}
++	SMB_ASSERT(smbzhandle->is_open);
 +	return smbzhandle->zhp->zhandle;
 +}
 +
@@ -204,8 +213,8 @@ index 00000000000..b86b8a85fc0
 +	zfsp = get_zhandle(smblibzfsp, path);
 +
 +	if (zfsp == NULL) {
-+		DBG_ERR("Failed to obtain zhandle on parent directory: (%s)\n",
-+			path);
++		DBG_ERR("Failed to obtain zhandle on path: [%s]: %s\n",
++			path, strerror(errno));
 +		return -1;
 +	}
 +	szhandle_int = talloc_zero(mem_ctx, struct smbzhandle_int);
@@ -264,7 +273,8 @@ index 00000000000..b86b8a85fc0
 +}
 +
 +int
-+smb_get_dataset_name(struct smbzhandle *zhandle_ext, const char **dataset_name_out)
++smb_get_dataset_name(struct smbzhandle *zhandle_ext,
++		     const char **dataset_name_out)
 +{
 +	int ret;
 +	struct smbzhandle_int *zfsp_int = NULL;
@@ -294,7 +304,9 @@ index 00000000000..b86b8a85fc0
 +		DBG_ERR("Failed to retrieve smblibzfs_int handle\n");
 +		return -1;
 +	}
-+	zfsp = zfs_open(smblibzfsp->sli->libzfsp, dataset_name, ZFS_TYPE_DATASET);
++	zfsp = zfs_open(smblibzfsp->sli->libzfsp,
++			dataset_name,
++			ZFS_TYPE_DATASET);
 +	if (zfsp == NULL) {
 +		DBG_ERR("Failed to get zfs handle for %s: %s\n",
 +			dataset_name, strerror(errno));
@@ -505,64 +517,224 @@ index 00000000000..b86b8a85fc0
 +	return (*dfree);
 +}
 +
-+int
-+smb_zfs_create_child_dataset(struct smblibzfshandle *smblibzfsp,
-+			     char *parent, const char *base,
-+			     const char *quota)
++static int
++existing_parent_name(const char *path,
++		     char *buf,
++		     size_t buflen,
++		     int *nslashes)
 +{
-+	zfs_handle_t *zfsp;
-+	zfs_handle_t *new_zfsp;
-+	const char *parent_dataset;
-+	char nd[PATH_MAX] = { 0 };
++	char *slashp = NULL;
++	*nslashes = 0;
++	strlcpy(buf, path, buflen);
++	for (;;) {
++		slashp = strrchr(buf, '/');
++		if (slashp == NULL) {
++			return -1;
++		}
++		*nslashes += 1;
++		*slashp = '\0';
++		if (access(buf, F_OK) == 0) {
++			break;
++		}
++	}
++	return 0;
++}
++
++static int
++get_mp_offset(zfs_handle_t *zfsp, size_t *offset)
++{
++	int rv;
++	char parent_mp[ZFS_MAXPROPLEN] = {0};
++	char *parent_dsname = NULL;
++
++	parent_dsname = zfs_get_name(zfsp);
++	rv = zfs_prop_get(zfsp, ZFS_PROP_MOUNTPOINT, parent_mp,
++			  sizeof(parent_mp), NULL, NULL,
++			  0, 0);
++	if (rv != 0) {
++		DBG_ERR("Failed to get mountpoint for %s: %s\n",
++			parent_dsname, strerror(errno));
++		return -1;
++	}
++	*offset = strlen(parent_mp) - strlen(parent_dsname);
++	return rv;
++}
++
++static char *
++get_target_name(zfs_handle_t *zfsp, const char *path)
++{
++	int rv;
++	size_t len_mp;
++	char *out = NULL;
++	rv = get_mp_offset(zfsp, &len_mp);
++	out = strdup(path);
++	if (out == NULL) {
++		DBG_ERR("strdup failed for %s: %s\n",
++			path, strerror(errno));
++		errno = ENOMEM;
++		return out;
++	}
++	if (strlen(path) < len_mp) {
++		errno = EINVAL;
++		free(out);
++		return NULL;
++	}
++	out += len_mp;
++	return out;
++}
++
++static int
++create_dataset_internal(struct smblibzfshandle *lz,
++			char *to_create,
++			char *quota)
++{
++	/* Create and mount new dataset. to_create should be dataset name */
++	int rv;
++	zfs_handle_t *new = NULL;
++
++	rv = zfs_create(lz->sli->libzfsp, to_create, ZFS_TYPE_FILESYSTEM, NULL);
++	if (rv != 0) {
++		DBG_ERR("Failed to create dataset [%s]: %s\n",
++			to_create, strerror(errno));
++		return -1;
++	}
++	new = zfs_open(lz->sli->libzfsp, to_create, ZFS_TYPE_FILESYSTEM);
++	if (new == NULL) {
++		DBG_ERR("Failed to open dataset [%s]: %s\n",
++			to_create, strerror(errno));
++		return -1;
++	}
++	rv = zfs_mount(new, NULL, 0);
++	if (rv != 0) {
++		DBG_ERR("Failed to mount dataset [%s] after dataset "
++			"creation: %s\n", to_create, strerror(errno));
++	}
++	if (quota != NULL) {
++		rv = zfs_prop_set(new, "quota", quota);
++		if (rv != 0) {
++			DBG_ERR("Failed to set quota to (%s): %s\n",
++				quota, strerror(errno));
++		}
++	}
++	zfs_close(new);
++	return rv;
++}
++
++struct dataset_list *path_to_dataset_list(TALLOC_CTX *mem_ctx,
++					  struct smblibzfshandle *lz,
++					  const char *path,
++					  int depth)
++{
++	char *slashp = NULL;
++	struct dataset_list *dl = NULL;
++	struct zfs_dataset *ds = NULL;
++	struct zfs_dataset *root = NULL;
++	char tmp_path[ZFS_MAXPROPLEN] = {0};
++	int rv;
++
++	strlcpy(tmp_path, path, sizeof(tmp_path));
++	dl = talloc_zero(mem_ctx, struct dataset_list);
++	for (dl->nentries = 0; dl->nentries <= depth; dl->nentries++) {
++		slashp = strrchr(tmp_path, '/');
++		if (slashp == NULL) {
++			DBG_ERR("Exiting at depth %zu", dl->nentries);
++			break;
++		}
++		*slashp = '\0';
++		ds = smb_zfs_path_get_dataset(lz, mem_ctx, tmp_path, true, false);
++		if (ds == NULL) {
++			return NULL;
++		}
++		DLIST_ADD_END(dl->children, ds);
++	}
++	if (dl != NULL) {
++		root = dl->children;
++		DLIST_REMOVE(dl->children, root);
++		dl->nentries--;
++	}
++	return dl;
++}
++
++int
++smb_zfs_create_dataset(TALLOC_CTX *mem_ctx,
++		       struct smblibzfshandle *smblibzfsp,
++		       const char *path, char *quota,
++		       struct dataset_list **created,
++		       bool create_ancestors)
++{
++	int rv, to_create;
++	zfs_handle_t *zfsp = NULL;
++	char parent[ZFS_MAXPROPLEN] = {0};
++	char *target_ds = NULL;
++	struct dataset_list *ds_list = NULL;
++
++	if (access(path, F_OK) == 0) {
++		DBG_ERR("Path %s already exists.\n", path);
++		errno = EEXIST;
++		return -1;
++	}
 +
 +	if (smblibzfsp->sli == NULL) {
 +		DBG_ERR("Failed to retrieve smblibzfs_int handle\n");
++		errno = ENOMEM;
 +		return -1;
 +	}
-+	if (parent == NULL) {
-+		return (-1);
-+	}
 +
++	rv = existing_parent_name(path, parent, sizeof(parent), &to_create);
++	if (rv != 0) {
++		DBG_ERR("Unable to access parent of %s\n", path);
++		errno = ENOENT;
++		return -1;
++	}
++	/*
++	 * This zfs dataset handle allows us to figure out the
++	 * name that our new dataset should have by looking at
++	 * dataset properties of parent dataset.
++	 */
 +	zfsp = zfs_path_to_zhandle(smblibzfsp->sli->libzfsp, parent,
-+		ZFS_TYPE_VOLUME|ZFS_TYPE_DATASET|ZFS_TYPE_FILESYSTEM);
-+
++				   ZFS_TYPE_FILESYSTEM);
 +	if (zfsp == NULL) {
-+		DBG_ERR("Failed to obtain zhandle on parent directory: (%s)\n", parent);
-+		return (-1);
++		DBG_ERR("Failed to obtain zhandle on %s: %s\n",
++			parent, strerror(errno));
++		return -1;
 +	}
-+	parent_dataset = zfs_get_name(zfsp);
-+	snprintf(nd, sizeof(nd), "%s/%s", parent_dataset, base);
 +
-+	if (zfs_create(smblibzfsp->sli->libzfsp, nd, ZFS_TYPE_DATASET, NULL) != 0){
-+		DBG_ERR("Failed to create dataset to path (%s)\n", nd);
++	target_ds = get_target_name(zfsp, path);
++	if (target_ds == NULL) {
 +		zfs_close(zfsp);
-+		return (-1);
++		return -1;
 +	}
 +	zfs_close(zfsp);
 +
-+	new_zfsp = zfs_open(smblibzfsp->sli->libzfsp, nd, ZFS_TYPE_DATASET);
-+
-+	if (new_zfsp == NULL) {
-+		DBG_ERR("Failed to obtain zhandle on new dataset: (%s)\n", nd);
-+		return (-1);
-+	}
-+
-+	if (zfs_mount(new_zfsp, NULL, 0) != 0) {
-+		DBG_ERR("Failed to mount ZFS dataset (%s)\n", nd);
-+	}
-+
-+	if (zfs_prop_inherit(new_zfsp, zfs_prop_to_name(ZFS_PROP_ACLMODE), B_FALSE) < 0){
-+		DBG_ERR("Failed to inherit aclmode from parent dataset\n");
-+	}
-+	if (quota) {
-+		if (zfs_prop_set(new_zfsp, "quota", quota) != 0) {
-+			DBG_ERR("Failed to set quota to (%s)\n", quota);
++	if (to_create > 1 && create_ancestors) {
++		rv = zfs_create_ancestors(smblibzfsp->sli->libzfsp, target_ds);
++		if (rv != 0 ) {
++			free(target_ds);
++			return -1;
 +		}
 +	}
++	else if (to_create > 1) {
++		DBG_ERR("Unable to create dataset [%s] due to "
++			"missing ancestor datasets.", target_ds);
++		errno = ENOENT;
++		free(target_ds);
++		return -1;
++	}
 +
-+	DBG_INFO("Created ZFS dataset (%s) with quota (%s)\n", nd, quota);
++	rv = create_dataset_internal(smblibzfsp, target_ds, quota);
++	if (rv != 0) {
++		free(target_ds);
++		return -1;
++	}
 +
-+	zfs_close(new_zfsp);
++	free(target_ds);
++	ds_list = path_to_dataset_list(mem_ctx, smblibzfsp, path, to_create);
++	if (ds_list == NULL) {
++		DBG_ERR("Failed to generate dataset list for %s\n",
++			path);
++		return -1;
++	}
++	*created = ds_list;
 +	return 0;
 +}
 +
@@ -764,6 +936,7 @@ index 00000000000..b86b8a85fc0
 +smb_zfs_get_case_sensitivity(struct smblibzfshandle *smblibzfsp, char* path)
 +{
 +	int casesens = 0;
++	int rv;
 +	char buf[ZFS_MAXPROPLEN];
 +	char source[ZFS_MAX_DATASET_NAME_LEN];
 +	zprop_source_t sourcetype;
@@ -774,11 +947,11 @@ index 00000000000..b86b8a85fc0
 +		DBG_ERR("Failed to obtain zhandle on path: (%s)\n", path);
 +		return (-1);
 +	}
-+	if (zfs_prop_get(zfsp, ZFS_PROP_CASE,
-+	    buf, sizeof(buf), &sourcetype,
-+	    source, sizeof(source), B_FALSE) != 0) {
-+		DBG_ERR("Failed to look up casesensitivity propertiy on path: (%s)\n",
-+			path);
++	rv = zfs_prop_get(zfsp, ZFS_PROP_CASE, buf, sizeof(buf),
++			  &sourcetype, source, sizeof(source), B_FALSE);
++	if (rv != 0) {
++		DBG_ERR("Failed to look up casesensitivity property "
++			"on path: (%s): %s\n", path, strerror(errno));
 +		zfs_close(zfsp);
 +		return (-1);
 +	}
@@ -830,6 +1003,7 @@ index 00000000000..b86b8a85fc0
 +	struct tm timestamp;
 +	int rc, used;
 +	size_t req_mem, name_len;
++	bool included;
 +
 +	state = talloc_get_type_abort(data, struct snap_cb);
 +	if (state == NULL) {
@@ -842,7 +1016,9 @@ index 00000000000..b86b8a85fc0
 +	/* ignore excluded snapshots */
 +	snap_name = strchr(zfs_get_name(snap), '@') + 1;
 +
-+	if (!shadow_copy_zfs_is_snapshot_included(state->iter_info, snap_name)) {
++	included = shadow_copy_zfs_is_snapshot_included(state->iter_info,
++							snap_name);
++	if (!included) {
 +		zfs_close(snap);
 +		return 0;
 +	}
@@ -890,23 +1066,6 @@ index 00000000000..b86b8a85fc0
 +done:
 +	zfs_close(snap);
 +	return 0;
-+}
-+
-+int zhandle_jail(struct smbzhandle *zhandle_ext,
-+		 int jid, int attach)
-+{
-+	if (!zhandle_ext->is_open) {
-+		DBG_ERR("zhandle is not open!\n");
-+		return -1;
-+	}
-+	int ret;
-+	zfs_handle_t *zfs = NULL;
-+	zfs = get_zhandle_from_smbzhandle(zhandle_ext);
-+	if (!zfs) {
-+		return -1;
-+	}
-+	ret = (zfs_jail(zfs, jid, attach) != 0);
-+	return ret;
 +}
 +
 +struct
@@ -972,7 +1131,9 @@ index 00000000000..b86b8a85fc0
 +
 +	if (rc != 0) {
 +		DBG_ERR("smb_zfs_list_snapshots: error getting "
-+			"mountpoint for '%s': %s\n", snapshots->dataset_name, strerror(errno));
++			"mountpoint for '%s': %s\n",
++			snapshots->dataset_name,
++			strerror(errno));
 +		goto error;
 +	}
 +
@@ -993,8 +1154,8 @@ index 00000000000..b86b8a85fc0
 +			"shadow:exclude parameter\n");
 +		goto error;
 +	}
-+	rc = zfs_iter_snapshots_sorted(zfs, smb_zfs_add_snapshot, state, 0, 0);
 +
++	rc = zfs_iter_snapshots_sorted(zfs, smb_zfs_add_snapshot, state, 0, 0);
 +	if (rc != 0) {
 +		DBG_ERR("smb_zfs_list_snapshots: error getting "
 +			"snapshots for '%s': %s\n",
@@ -1204,6 +1365,7 @@ index 00000000000..b86b8a85fc0
 +static int
 +smb_zfs_add_child(zfs_handle_t *child, void *data)
 +{
++	int ret;
 +	struct child_cb *state = NULL;
 +	struct smbzhandle *zhandle_ext = NULL;
 +	struct smbzhandle_int *zhandle_int = NULL;
@@ -1242,11 +1404,11 @@ index 00000000000..b86b8a85fc0
 +		TALLOC_FREE(zhandle_ext);
 +		return 0;
 +	}
++	DLIST_ADD(state->dslist->children, ds_new);
++	state->dslist->nentries++;
 +	if (!state->open_zhandle) {
 +		close_smbzhandle(ds_new->zhandle);
 +	}
-+	DLIST_ADD(state->dslist->children, ds_new);
-+	state->dslist->nentries++;
 +	return 0;
 +}
 +
@@ -1255,16 +1417,20 @@ index 00000000000..b86b8a85fc0
 +	char *ds_name = NULL;
 +	struct dataset_list *out = NULL;
 +	int ret;
++	DATA_BLOB key;
 +	ret = smb_get_dataset_name(zh, &ds_name);
 +	if (ret != 0) {
 +		DBG_ERR("Failed to get dataset name\n");
 +		return NULL;
 +	}
 +	char *keystr = talloc_asprintf(mem_ctx, "dataset_list:%s", ds_name);
-+	out = (struct dataset_list *)memcache_lookup_talloc(
-+					zh->lz->zcache,
-+					ZFS_CACHE,
-+					data_blob_const(discard_const_p(uint8_t, ds_name), strlen(ds_name)));
++
++	key = data_blob_const(discard_const_p(uint8_t, keystr),
++			      strlen(keystr));
++
++	out = (struct dataset_list *)memcache_lookup_talloc(zh->lz->zcache,
++							    ZFS_CACHE,
++							    key);
 +	TALLOC_FREE(keystr);
 +	return out;
 +}
@@ -1290,6 +1456,7 @@ index 00000000000..b86b8a85fc0
 +	struct dataset_list *dl = NULL;
 +	char *ds_name = NULL;
 +	struct child_cb *state = NULL;
++	struct zfs_dataset *ds = NULL;
 +	zfs_handle_t *zfsp = NULL;
 +
 +	zfsp = get_zhandle_from_smbzhandle(zhandle_ext);
@@ -1325,11 +1492,11 @@ index 00000000000..b86b8a85fc0
 +		return NULL;
 +	}
 +	ret = zfs_iter_filesystems(zfsp, smb_zfs_add_child, state);
-+	TALLOC_FREE(tmp_ctx);
 +	if (ret < 0) {
 +		TALLOC_FREE(dl);
 +		return NULL;
 +	}
++	TALLOC_FREE(tmp_ctx);
 +	return dl;
 +}
 +
@@ -1359,26 +1526,23 @@ index 00000000000..b86b8a85fc0
 +	char *tmp_name = NULL;
 +	size_t to_remove, new_len;
 +
++	get_global_smblibzfs_handle(mem_ctx);
 +	if (global_libzfs_handle == NULL) {
-+		ret = get_smblibzfs_handle(mem_ctx, &global_libzfs_handle);
 +		/*
 +		 * Attempt to get libzfs handle should succeed even if share
 +		 * is not on ZFS. Failure here is significant error condition
 +		 * and therefore fatal.
 +		 */
-+		if (ret != 0) {
-+			DBG_ERR("Failed to obtain libzfshandle on connectpath: %s\n",
-+				strerror(errno));
-+			errno = ENOMEM;
-+			return -1;
-+		}
++		DBG_ERR("Failed to initialize global libzfs handle: %s\n",
++			strerror(errno));
++		errno = ENOMEM;
++		return -1;
 +	}
-+
 +	get_smbzhandle(global_libzfs_handle, mem_ctx, connectpath, &conn_zfsp);
-+
 +	/*
-+	 * If for some reason a snapshot is being shared (for instance, through FSRVP),
-+	 * then we will fail to get a zfs dataset handle.
++	 * Attempt to get zfs dataset handle will fail if the dataset is a
++	 * snapshot. This may occur if the share is one dynamically created
++	 * by FSRVP when it exposes a snapshot.
 +	 */
 +	if ((conn_zfsp == NULL) && (strlen(connectpath) > 15)) {
 +		DBG_ERR("Failed to obtain zhandle on connectpath: %s\n",
@@ -1400,19 +1564,22 @@ index 00000000000..b86b8a85fc0
 +	}
 +	*plibzp = global_libzfs_handle;
 +	if (conn_zfsp == NULL) {
-+		/* Unable to get ZFS data underlying path -- perhaps not ZFS filesystem*/
++		/*
++		 * The filesystem is most likely not ZFS. Jailed processes
++		 * on FreeBSD may not be able to obtain ZFS dataset handles.
++		 */
 +		*pdsl = NULL;
 +		return 0;
 +	}
 +	*pdsl = cache_zhandle_list_children(mem_ctx, conn_zfsp);
-+	return ret;
++	return 0;
 +}
 diff --git a/source3/modules/smb_libzfs.h b/source3/modules/smb_libzfs.h
 new file mode 100644
-index 00000000000..f0d334dcc50
+index 00000000000..59ad02941ce
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.h
-@@ -0,0 +1,406 @@
+@@ -0,0 +1,410 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -1522,12 +1689,11 @@ index 00000000000..f0d334dcc50
 +
 +int get_smblibzfs_handle(TALLOC_CTX *mem_ctx,struct smblibzfshandle **smblibzfsp);
 +
++struct smblibzfshandle *get_global_smblibzfs_handle(TALLOC_CTX *mem_ctx);
++
 +int get_smbzhandle(struct smblibzfshandle *smblibzfsp,
 +		   TALLOC_CTX *mem_ctx, char *path,
 +		   struct smbzhandle **smbzhandle);
-+
-+int zhandle_jail(struct smbzhandle *zhandle_ext,
-+		 int jid, int attach);
 +
 +/*
 + * Get dataset name for a given path. This is useful because there may be
@@ -1601,24 +1767,29 @@ index 00000000000..f0d334dcc50
 +			   uid_t euid);
 +
 +/*
-+ * This function creates a child dataset of a specified parent dataset.
-+ * Realpath of parent dataset should be passed into the function. Name
-+ * of child dataset is expected to be relative to parent dataset. For example,
-+ * if parent datset is tank/share and you wish to create tank/share/sub1
-+ * then the expected name of the child dataset is "sub1". Aclmode
-+ * will be inherited from parent.
++ * Create a dataset with a given quota (NULL for no quota). Optionally,
++ * create any intermediate datasets required to fill out the specified path.
++ * For example, a dataset zroot/share exists and is mounted at /. If the
++ * path "/zroot/share/foo/bar" is specified along with `create_ancestors`,
++ * then the datasets zroot/share/foo and zroot/share/foo/bar will be created
++ * and mounted. In this situation, the specified `quota` will only be
++ * applied to "zroot/share/foo/bar", and not to the intermediate datasets.
 + *
++ * @param[in]	mem_ctx			memory context under which to
++ *					allocate the output dataset_list
 + * @param[in]	smblibzfsp		smblibzfs handle struct
-+ * @para[in]	parent			real path to parent dataset
-+ * @param[in]	base			name of child dataset.
-+ * @param[in]	quota			ZFS dataset quota
++ * @para[in]	path			path to be created.
++ * @para[in]	quota			quota to set on final dataset.
++ * @para[out]	created			dataset_list with new dataset(s).
++ * @para[in]	create_ancestors	create intermediate datasets.
 + *
 + * @return	0 on success -1 on failure.
 + */
-+int smb_zfs_create_child_dataset(struct smblibzfshandle *smblibzfsp,
-+				 char *parent,
-+				 const char *new,
-+				 const char *quota);
++int smb_zfs_create_dataset(TALLOC_CTX *mem_ctx,
++			   struct smblibzfshandle *smblibzfsp,
++			   const char *path, char *quota,
++			   struct dataset_list **created,
++			   bool create_ancestors);
 +
 +/*
 + * Retrieve the value of a user-defined ZFS dataset property
@@ -1821,10 +1992,10 @@ index 00000000000..f0d334dcc50
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..2e3411c4231
+index 00000000000..0438bb746d6
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2025 @@
+@@ -0,0 +1,2000 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -3348,27 +3519,19 @@ index 00000000000..2e3411c4231
 +				  const char *user)
 +{
 +	bool ret = 0;
-+	int naces, rv;
-+	char rp[PATH_MAX] = { 0 };
-+	char *parent;
-+	const char *base;
-+	acl_t zacl, new_acl;
++	int rv;
++	char *parent = NULL;
++	acl_t parent_acl, new_acl;
 +	TALLOC_CTX *tmp_ctx = talloc_stackframe();
 +	struct smblibzfshandle *libzp = NULL;
++	struct dataset_list *ds_list = NULL;
++	struct zfs_dataset *ds = NULL;
 +
-+	if (realpath(handle->conn->connectpath, rp)) {
++	if (access(handle->conn->connectpath, F_OK) == 0) {
 +		DBG_INFO("Home directory already exists. Skipping dataset creation\n");
 +		TALLOC_FREE(tmp_ctx);
 +		return ret;
 +	}
-+
-+	if (!parent_dirname(tmp_ctx, handle->conn->connectpath, &parent, &base)) {
-+		TALLOC_FREE(tmp_ctx);
-+		return -1;
-+	}
-+
-+	DBG_INFO("Preparing to create dataset (%s) with parentdir (%s) with quota (%s)\n",
-+		parent, base, config->homedir_quota);
 +
 +	rv = get_smblibzfs_handle(tmp_ctx, &libzp);
 +	if (rv != 0) {
@@ -3376,33 +3539,39 @@ index 00000000000..2e3411c4231
 +			strerror(errno));
 +		return -1;
 +	}
++	rv = smb_zfs_create_dataset(tmp_ctx, libzp, handle->conn->connectpath,
++				    config->homedir_quota, &ds_list, true);
++	if (rv !=0) {
++		TALLOC_FREE(tmp_ctx);
++		return -1;
++	}
 +
-+	if (realpath(parent, rp) == NULL ){
-+		DBG_ERR("Parent directory does not exist, attempting to create parent.\n");
-+		char *grandparent;
-+		const char *parent_relpath;
-+		if (!parent_dirname(tmp_ctx, parent, &grandparent, &parent_relpath)) {
++	for (ds = ds_list->children; ds; ds = ds->next) {
++		ret = parent_dirname(tmp_ctx, ds->mountpoint, &parent, NULL);
++		if (!ret)  {
++			DBG_ERR("Failed to get parent directory name for %s\n",
++				ds->mountpoint);
 +			TALLOC_FREE(tmp_ctx);
 +			return -1;
 +		}
-+		if (smb_zfs_create_child_dataset(libzp, grandparent, parent_relpath, NULL) < 0) {
-+			DBG_ERR("Failed to auto-create grandparent dataset\n");
-+			TALLOC_FREE(tmp_ctx);
-+			return -1;
-+		}
-+		if ((zacl = acl_get_file(grandparent, ACL_TYPE_NFS4)) == NULL) {
++		parent_acl = acl_get_file(parent, ACL_TYPE_NFS4);
++		if (parent_acl == NULL) {
 +			DBG_ERR("ixnas: acl_get_file() failed for %s: %s\n",
 +				parent, strerror(errno));
 +			TALLOC_FREE(tmp_ctx);
 +			return -1;
 +		}
-+		if ((new_acl = calculate_inherited_acl(zacl)) == NULL) {
-+			acl_free(zacl);
++
++		new_acl = calculate_inherited_acl(parent_acl);
++		if (new_acl == NULL) {
++			acl_free(parent_acl);
 +			TALLOC_FREE(tmp_ctx);
 +			return -1;
 +		}
-+		acl_free(zacl);
-+		if (acl_set_file(parent, ACL_TYPE_NFS4, new_acl) < 0) {
++
++		acl_free(parent_acl);
++		rv = acl_set_file(ds->mountpoint, ACL_TYPE_NFS4, new_acl);
++		if (rv < 0) {
 +			DBG_ERR("ixnas: acl_set_file() failed for %s: %s\n",
 +				handle->conn->connectpath, strerror(errno));
 +			acl_free(new_acl);
@@ -3410,34 +3579,8 @@ index 00000000000..2e3411c4231
 +			return -1;
 +		}
 +		acl_free(new_acl);
++		TALLOC_FREE(parent);
 +	}
-+
-+	if (smb_zfs_create_child_dataset(libzp, parent, base, config->homedir_quota) < 0) {
-+		DBG_ERR("Failed to auto-create connectpath dataset\n");
-+		TALLOC_FREE(tmp_ctx);
-+		return -1;
-+	}
-+	if ((zacl = acl_get_file(parent, ACL_TYPE_NFS4)) == NULL) {
-+		DBG_ERR("ixnas: acl_get_file() failed for %s: %s\n",
-+			parent, strerror(errno));
-+		TALLOC_FREE(tmp_ctx);
-+		return -1;
-+	}
-+	if ((new_acl = calculate_inherited_acl(zacl)) == NULL) {
-+		acl_free(zacl);
-+		TALLOC_FREE(tmp_ctx);
-+		return -1;
-+	}
-+	acl_free(zacl);
-+
-+	if (acl_set_file(handle->conn->connectpath, ACL_TYPE_NFS4, new_acl) < 0) {
-+		DBG_ERR("ixnas: acl_set_file() failed for %s: %s\n",
-+			handle->conn->connectpath, strerror(errno));
-+		acl_free(new_acl);
-+		TALLOC_FREE(tmp_ctx);
-+		return -1;
-+	}
-+	acl_free(new_acl);
 +
 +	if (lp_parm_bool(SNUM(handle->conn), "ixnas", "chown_homedir", true)) {
 +		struct passwd *current_user = Get_Pwnam_alloc(tmp_ctx, user);
@@ -3446,7 +3589,10 @@ index 00000000000..2e3411c4231
 +			TALLOC_FREE(tmp_ctx);
 +			return -1;
 +		}
-+		if (chown(handle->conn->connectpath, current_user->pw_uid, current_user->pw_gid) < 0) {
++		rv = chown(handle->conn->connectpath,
++			   current_user->pw_uid,
++			   current_user->pw_gid);
++		if (rv < 0) {
 +			DBG_ERR("Failed to chown (%s) to (%u:%u)\n",
 +				handle->conn->connectpath, current_user->pw_uid, getegid() );
 +			ret = -1;

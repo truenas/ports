@@ -1,9 +1,9 @@
 diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
 new file mode 100644
-index 00000000000..3727c0592b8
+index 00000000000..3b98a7dbba4
 --- /dev/null
 +++ b/source3/modules/vfs_shadow_copy_zfs.c
-@@ -0,0 +1,1717 @@
+@@ -0,0 +1,1730 @@
 +/* shadow_copy_zfs: a shadow copy module for ZFS
 + *
 + * Copyright (C) Andrew Tridgell   2007 (portions taken from shadow_copy_zfs)
@@ -105,6 +105,19 @@ index 00000000000..3727c0592b8
 +			return child;
 +		}
 +	}
++
++	/*
++	 * Our current cache of datasets does not contain the path in
++	 * question. Use libzfs to try to get it. Allocate under
++	 * memory context of our dataset list.
++	 */
++	child = smb_zfs_path_get_dataset(dl->root->zhandle->lz, dl,
++					 path, true, false);
++	if (child != NULL) {
++		DLIST_ADD(dl->children, child);
++		return child;
++	}
++
 +	DBG_ERR("No dataset found for %s with device id: %lu\n",
 +		path, st.st_dev);
 +	errno = ENOENT;
