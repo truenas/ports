@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 00000000000..19108f8e574
+index 00000000000..fc364b6d551
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,1402 @@
+@@ -0,0 +1,1404 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -1256,16 +1256,18 @@ index 00000000000..19108f8e574
 +	char *ds_name = NULL;
 +	struct dataset_list *out = NULL;
 +	int ret;
++	DATA_BLOB key;
 +	ret = smb_get_dataset_name(zh, &ds_name);
 +	if (ret != 0) {
 +		DBG_ERR("Failed to get dataset name\n");
 +		return NULL;
 +	}
 +	char *keystr = talloc_asprintf(mem_ctx, "dataset_list:%s", ds_name);
-+	out = (struct dataset_list *)memcache_lookup_talloc(
-+					zh->lz->zcache,
-+					ZFS_CACHE,
-+					data_blob_const(discard_const_p(uint8_t, ds_name), strlen(ds_name)));
++	key = data_blob_const(discard_const_p(uint8_t, keystr),
++			      strlen(keystr));
++	out = (struct dataset_list *)memcache_lookup_talloc(zh->lz->zcache,
++							    ZFS_CACHE,
++							    key);
 +	TALLOC_FREE(keystr);
 +	return out;
 +}
