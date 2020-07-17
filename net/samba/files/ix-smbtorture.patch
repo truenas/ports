@@ -310,10 +310,10 @@ index 00000000000..4d33203d9f5
 +}
 diff --git a/source4/torture/vfs/shadow_copy_zfs.c b/source4/torture/vfs/shadow_copy_zfs.c
 new file mode 100644
-index 00000000000..2eedb499528
+index 00000000000..9b5efd034e7
 --- /dev/null
 +++ b/source4/torture/vfs/shadow_copy_zfs.c
-@@ -0,0 +1,302 @@
+@@ -0,0 +1,303 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -516,6 +516,7 @@ index 00000000000..2eedb499528
 +	struct smb2_handle sub_fh;
 +	struct smblibzfshandle *libzp = NULL;
 +	struct snapshot_list *snaps = NULL;
++	struct dataset_list *ds_list = NULL;
 +	acl_t acl;
 +	int count, ret;
 +	ZERO_STRUCT(base_fh);
@@ -567,7 +568,7 @@ index 00000000000..2eedb499528
 +
 +	/* test child dataset */
 +	torture_comment(tctx, "Create and test child dataset.\n");
-+	ret = smb_zfs_create_child_dataset(libzp, ZPATH, "TESTDATASET", 0);
++	ret = smb_zfs_create_dataset(tctx, libzp, ZPATH2, NULL, &ds_list, false);
 +	torture_assert_int_equal(tctx, ret, 0, "create child dataset");
 +
 +	torture_comment(tctx, "Copying ACL from parent.\n");
@@ -630,10 +631,10 @@ index c26e31f147a..c56bee84d70 100644
  	torture_suite_add_suite(suite, torture_vfs_fruit_timemachine(suite));
  	torture_suite_add_suite(suite, torture_vfs_fruit_conversion(suite));
 diff --git a/source4/torture/wscript_build b/source4/torture/wscript_build
-index 65af160b322..876112a5fbc 100644
+index 42c4353d03d..4d49f38962c 100644
 --- a/source4/torture/wscript_build
 +++ b/source4/torture/wscript_build
-@@ -289,9 +289,9 @@ bld.SAMBA_MODULE('TORTURE_NTP',
+@@ -291,9 +291,9 @@ bld.SAMBA_MODULE('TORTURE_NTP',
  	)
  
  bld.SAMBA_MODULE('TORTURE_VFS',
