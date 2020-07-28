@@ -2,6 +2,7 @@
 %%PYTHON%%bin/arcstat
 %%PYTHON%%bin/dbufstat
 %%TESTS%%bin/raidz_test
+etc/rc.d/zfsd
 etc/sudoers.d/zfs
 etc/zfs/vdev_id.conf.alias.example
 etc/zfs/vdev_id.conf.multipath.example
