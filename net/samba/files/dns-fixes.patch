@@ -1,0 +1,5435 @@
+From e5e6dc825b9dce991b00b73f8400bc17f3f6f04e Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Wed, 15 Jul 2020 11:43:03 -0700
+Subject: [PATCH 01/59] s3: lib: Cleanup - all the ipstr_XXX() functions are
+ only used in namecache.c.
+
+Move them there. Will remove from the global namespace next.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+Reviewed-by: Volker Lendecke <vl@samba.org>
+---
+ source3/lib/util_str.c     | 164 -------------------------------------
+ source3/libsmb/namecache.c | 164 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 164 insertions(+), 164 deletions(-)
+
+diff --git a/source3/lib/util_str.c b/source3/lib/util_str.c
+index c62cbe16a59..c31667c8821 100644
+--- a/source3/lib/util_str.c
++++ b/source3/lib/util_str.c
+@@ -560,170 +560,6 @@ int fstr_sprintf(fstring s, const char *fmt, ...)
+ 	return ret;
+ }
+ 
+-#define IPSTR_LIST_SEP	","
+-#define IPSTR_LIST_CHAR	','
+-
+-/**
+- * Add ip string representation to ipstr list. Used also
+- * as part of @function ipstr_list_make
+- *
+- * @param ipstr_list pointer to string containing ip list;
+- *        MUST BE already allocated and IS reallocated if necessary
+- * @param ipstr_size pointer to current size of ipstr_list (might be changed
+- *        as a result of reallocation)
+- * @param ip IP address which is to be added to list
+- * @return pointer to string appended with new ip and possibly
+- *         reallocated to new length
+- **/
+-
+-static char *ipstr_list_add(char **ipstr_list, const struct ip_service *service)
+-{
+-	char *new_ipstr = NULL;
+-	char addr_buf[INET6_ADDRSTRLEN];
+-	int ret;
+-
+-	/* arguments checking */
+-	if (!ipstr_list || !service) {
+-		return NULL;
+-	}
+-
+-	print_sockaddr(addr_buf,
+-			sizeof(addr_buf),
+-			&service->ss);
+-
+-	/* attempt to convert ip to a string and append colon separator to it */
+-	if (*ipstr_list) {
+-		if (service->ss.ss_family == AF_INET) {
+-			/* IPv4 */
+-			ret = asprintf(&new_ipstr, "%s%s%s:%d",	*ipstr_list,
+-				       IPSTR_LIST_SEP, addr_buf,
+-				       service->port);
+-		} else {
+-			/* IPv6 */
+-			ret = asprintf(&new_ipstr, "%s%s[%s]:%d", *ipstr_list,
+-				       IPSTR_LIST_SEP, addr_buf,
+-				       service->port);
+-		}
+-		SAFE_FREE(*ipstr_list);
+-	} else {
+-		if (service->ss.ss_family == AF_INET) {
+-			/* IPv4 */
+-			ret = asprintf(&new_ipstr, "%s:%d", addr_buf,
+-				       service->port);
+-		} else {
+-			/* IPv6 */
+-			ret = asprintf(&new_ipstr, "[%s]:%d", addr_buf,
+-				       service->port);
+-		}
+-	}
+-	if (ret == -1) {
+-		return NULL;
+-	}
+-	*ipstr_list = new_ipstr;
+-	return *ipstr_list;
+-}
+-
+-/**
+- * Allocate and initialise an ipstr list using ip adresses
+- * passed as arguments.
+- *
+- * @param ipstr_list pointer to string meant to be allocated and set
+- * @param ip_list array of ip addresses to place in the list
+- * @param ip_count number of addresses stored in ip_list
+- * @return pointer to allocated ip string
+- **/
+-
+-char *ipstr_list_make(char **ipstr_list,
+-			const struct ip_service *ip_list,
+-			int ip_count)
+-{
+-	int i;
+-
+-	/* arguments checking */
+-	if (!ip_list || !ipstr_list) {
+-		return 0;
+-	}
+-
+-	*ipstr_list = NULL;
+-
+-	/* process ip addresses given as arguments */
+-	for (i = 0; i < ip_count; i++) {
+-		*ipstr_list = ipstr_list_add(ipstr_list, &ip_list[i]);
+-	}
+-
+-	return (*ipstr_list);
+-}
+-
+-
+-/**
+- * Parse given ip string list into array of ip addresses
+- * (as ip_service structures)
+- *    e.g. [IPv6]:port,192.168.1.100:389,192.168.1.78, ...
+- *
+- * @param ipstr ip string list to be parsed
+- * @param ip_list pointer to array of ip addresses which is
+- *        allocated by this function and must be freed by caller
+- * @return number of successfully parsed addresses
+- **/
+-
+-int ipstr_list_parse(const char *ipstr_list, struct ip_service **ip_list)
+-{
+-	TALLOC_CTX *frame;
+-	char *token_str = NULL;
+-	size_t i, count;
+-
+-	if (!ipstr_list || !ip_list)
+-		return 0;
+-
+-	count = count_chars(ipstr_list, IPSTR_LIST_CHAR) + 1;
+-	if ( (*ip_list = SMB_MALLOC_ARRAY(struct ip_service, count)) == NULL ) {
+-		DEBUG(0,("ipstr_list_parse: malloc failed for %lu entries\n",
+-					(unsigned long)count));
+-		return 0;
+-	}
+-
+-	frame = talloc_stackframe();
+-	for ( i=0; next_token_talloc(frame, &ipstr_list, &token_str,
+-				IPSTR_LIST_SEP) && i<count; i++ ) {
+-		char *s = token_str;
+-		char *p = strrchr(token_str, ':');
+-
+-		if (p) {
+-			*p = 0;
+-			(*ip_list)[i].port = atoi(p+1);
+-		}
+-
+-		/* convert single token to ip address */
+-		if (token_str[0] == '[') {
+-			/* IPv6 address. */
+-			s++;
+-			p = strchr(token_str, ']');
+-			if (!p) {
+-				continue;
+-			}
+-			*p = '\0';
+-		}
+-		if (!interpret_string_addr(&(*ip_list)[i].ss,
+-					s,
+-					AI_NUMERICHOST)) {
+-			continue;
+-		}
+-	}
+-	TALLOC_FREE(frame);
+-	return count;
+-}
+-
+-/**
+- * Safely free ip string list
+- *
+- * @param ipstr_list ip string list to be freed
+- **/
+-
+-void ipstr_list_free(char* ipstr_list)
+-{
+-	SAFE_FREE(ipstr_list);
+-}
+-
+ /* read a SMB_BIG_UINT from a string */
+ uint64_t STR_TO_SMB_BIG_UINT(const char *nptr, const char **entptr)
+ {
+diff --git a/source3/libsmb/namecache.c b/source3/libsmb/namecache.c
+index 082f256bc02..8fc65675db9 100644
+--- a/source3/libsmb/namecache.c
++++ b/source3/libsmb/namecache.c
+@@ -24,6 +24,170 @@
+ #include "includes.h"
+ #include "lib/gencache.h"
+ 
++#define IPSTR_LIST_SEP	","
++#define IPSTR_LIST_CHAR	','
++
++/**
++ * Add ip string representation to ipstr list. Used also
++ * as part of @function ipstr_list_make
++ *
++ * @param ipstr_list pointer to string containing ip list;
++ *        MUST BE already allocated and IS reallocated if necessary
++ * @param ipstr_size pointer to current size of ipstr_list (might be changed
++ *        as a result of reallocation)
++ * @param ip IP address which is to be added to list
++ * @return pointer to string appended with new ip and possibly
++ *         reallocated to new length
++ **/
++
++static char *ipstr_list_add(char **ipstr_list, const struct ip_service *service)
++{
++	char *new_ipstr = NULL;
++	char addr_buf[INET6_ADDRSTRLEN];
++	int ret;
++
++	/* arguments checking */
++	if (!ipstr_list || !service) {
++		return NULL;
++	}
++
++	print_sockaddr(addr_buf,
++			sizeof(addr_buf),
++			&service->ss);
++
++	/* attempt to convert ip to a string and append colon separator to it */
++	if (*ipstr_list) {
++		if (service->ss.ss_family == AF_INET) {
++			/* IPv4 */
++			ret = asprintf(&new_ipstr, "%s%s%s:%d",	*ipstr_list,
++				       IPSTR_LIST_SEP, addr_buf,
++				       service->port);
++		} else {
++			/* IPv6 */
++			ret = asprintf(&new_ipstr, "%s%s[%s]:%d", *ipstr_list,
++				       IPSTR_LIST_SEP, addr_buf,
++				       service->port);
++		}
++		SAFE_FREE(*ipstr_list);
++	} else {
++		if (service->ss.ss_family == AF_INET) {
++			/* IPv4 */
++			ret = asprintf(&new_ipstr, "%s:%d", addr_buf,
++				       service->port);
++		} else {
++			/* IPv6 */
++			ret = asprintf(&new_ipstr, "[%s]:%d", addr_buf,
++				       service->port);
++		}
++	}
++	if (ret == -1) {
++		return NULL;
++	}
++	*ipstr_list = new_ipstr;
++	return *ipstr_list;
++}
++
++/**
++ * Allocate and initialise an ipstr list using ip adresses
++ * passed as arguments.
++ *
++ * @param ipstr_list pointer to string meant to be allocated and set
++ * @param ip_list array of ip addresses to place in the list
++ * @param ip_count number of addresses stored in ip_list
++ * @return pointer to allocated ip string
++ **/
++
++char *ipstr_list_make(char **ipstr_list,
++			const struct ip_service *ip_list,
++			int ip_count)
++{
++	int i;
++
++	/* arguments checking */
++	if (!ip_list || !ipstr_list) {
++		return 0;
++	}
++
++	*ipstr_list = NULL;
++
++	/* process ip addresses given as arguments */
++	for (i = 0; i < ip_count; i++) {
++		*ipstr_list = ipstr_list_add(ipstr_list, &ip_list[i]);
++	}
++
++	return (*ipstr_list);
++}
++
++
++/**
++ * Parse given ip string list into array of ip addresses
++ * (as ip_service structures)
++ *    e.g. [IPv6]:port,192.168.1.100:389,192.168.1.78, ...
++ *
++ * @param ipstr ip string list to be parsed
++ * @param ip_list pointer to array of ip addresses which is
++ *        allocated by this function and must be freed by caller
++ * @return number of successfully parsed addresses
++ **/
++
++int ipstr_list_parse(const char *ipstr_list, struct ip_service **ip_list)
++{
++	TALLOC_CTX *frame;
++	char *token_str = NULL;
++	size_t i, count;
++
++	if (!ipstr_list || !ip_list)
++		return 0;
++
++	count = count_chars(ipstr_list, IPSTR_LIST_CHAR) + 1;
++	if ( (*ip_list = SMB_MALLOC_ARRAY(struct ip_service, count)) == NULL ) {
++		DEBUG(0,("ipstr_list_parse: malloc failed for %lu entries\n",
++					(unsigned long)count));
++		return 0;
++	}
++
++	frame = talloc_stackframe();
++	for ( i=0; next_token_talloc(frame, &ipstr_list, &token_str,
++				IPSTR_LIST_SEP) && i<count; i++ ) {
++		char *s = token_str;
++		char *p = strrchr(token_str, ':');
++
++		if (p) {
++			*p = 0;
++			(*ip_list)[i].port = atoi(p+1);
++		}
++
++		/* convert single token to ip address */
++		if (token_str[0] == '[') {
++			/* IPv6 address. */
++			s++;
++			p = strchr(token_str, ']');
++			if (!p) {
++				continue;
++			}
++			*p = '\0';
++		}
++		if (!interpret_string_addr(&(*ip_list)[i].ss,
++					s,
++					AI_NUMERICHOST)) {
++			continue;
++		}
++	}
++	TALLOC_FREE(frame);
++	return count;
++}
++
++/**
++ * Safely free ip string list
++ *
++ * @param ipstr_list ip string list to be freed
++ **/
++
++void ipstr_list_free(char* ipstr_list)
++{
++	SAFE_FREE(ipstr_list);
++}
++
+ #define NBTKEY_FMT  "NBT/%s#%02X"
+ 
+ /**
+-- 
+2.20.1
+
+
+From f74c08594f666cd3bd18e336a3894e97608b4225 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Wed, 15 Jul 2020 11:48:30 -0700
+Subject: [PATCH 02/59] s3: lib: Cleanup - nothing uses ipstr_list_free().
+ Remove it.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+Reviewed-by: Volker Lendecke <vl@samba.org>
+---
+ source3/include/proto.h    |  1 -
+ source3/libsmb/namecache.c | 11 -----------
+ 2 files changed, 12 deletions(-)
+
+diff --git a/source3/include/proto.h b/source3/include/proto.h
+index 12aa392abae..52d5c1cf852 100644
+--- a/source3/include/proto.h
++++ b/source3/include/proto.h
+@@ -635,7 +635,6 @@ char *ipstr_list_make(char **ipstr_list,
+ 			const struct ip_service *ip_list,
+ 			int ip_count);
+ int ipstr_list_parse(const char *ipstr_list, struct ip_service **ip_list);
+-void ipstr_list_free(char* ipstr_list);
+ uint64_t STR_TO_SMB_BIG_UINT(const char *nptr, const char **entptr);
+ uint64_t conv_str_size(const char * str);
+ int asprintf_strupper_m(char **strp, const char *fmt, ...)
+diff --git a/source3/libsmb/namecache.c b/source3/libsmb/namecache.c
+index 8fc65675db9..6a4bbc7216f 100644
+--- a/source3/libsmb/namecache.c
++++ b/source3/libsmb/namecache.c
+@@ -177,17 +177,6 @@ int ipstr_list_parse(const char *ipstr_list, struct ip_service **ip_list)
+ 	return count;
+ }
+ 
+-/**
+- * Safely free ip string list
+- *
+- * @param ipstr_list ip string list to be freed
+- **/
+-
+-void ipstr_list_free(char* ipstr_list)
+-{
+-	SAFE_FREE(ipstr_list);
+-}
+-
+ #define NBTKEY_FMT  "NBT/%s#%02X"
+ 
+ /**
+-- 
+2.20.1
+
+
+From eff627003f7ec781d2a40c7d13e005278f5ade34 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Wed, 15 Jul 2020 11:58:45 -0700
+Subject: [PATCH 03/59] s3: lib: Cleanup - make ipstr_list_make() and
+ ipstr_list_parse() private to the only user.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+Reviewed-by: Volker Lendecke <vl@samba.org>
+---
+ source3/include/proto.h    | 4 ----
+ source3/libsmb/namecache.c | 4 ++--
+ 2 files changed, 2 insertions(+), 6 deletions(-)
+
+diff --git a/source3/include/proto.h b/source3/include/proto.h
+index 52d5c1cf852..d349e22aa6b 100644
+--- a/source3/include/proto.h
++++ b/source3/include/proto.h
+@@ -631,10 +631,6 @@ size_t strlen_m_term(const char *s);
+ size_t strlen_m_term_null(const char *s);
+ int fstr_sprintf(fstring s, const char *fmt, ...);
+ 
+-char *ipstr_list_make(char **ipstr_list,
+-			const struct ip_service *ip_list,
+-			int ip_count);
+-int ipstr_list_parse(const char *ipstr_list, struct ip_service **ip_list);
+ uint64_t STR_TO_SMB_BIG_UINT(const char *nptr, const char **entptr);
+ uint64_t conv_str_size(const char * str);
+ int asprintf_strupper_m(char **strp, const char *fmt, ...)
+diff --git a/source3/libsmb/namecache.c b/source3/libsmb/namecache.c
+index 6a4bbc7216f..3b77c748527 100644
+--- a/source3/libsmb/namecache.c
++++ b/source3/libsmb/namecache.c
+@@ -97,7 +97,7 @@ static char *ipstr_list_add(char **ipstr_list, const struct ip_service *service)
+  * @return pointer to allocated ip string
+  **/
+ 
+-char *ipstr_list_make(char **ipstr_list,
++static char *ipstr_list_make(char **ipstr_list,
+ 			const struct ip_service *ip_list,
+ 			int ip_count)
+ {
+@@ -130,7 +130,7 @@ char *ipstr_list_make(char **ipstr_list,
+  * @return number of successfully parsed addresses
+  **/
+ 
+-int ipstr_list_parse(const char *ipstr_list, struct ip_service **ip_list)
++static int ipstr_list_parse(const char *ipstr_list, struct ip_service **ip_list)
+ {
+ 	TALLOC_CTX *frame;
+ 	char *token_str = NULL;
+-- 
+2.20.1
+
+
+From 3a89a5b6887f5c9682eadfd30c6492775c62c30f Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Wed, 15 Jul 2020 12:12:23 -0700
+Subject: [PATCH 04/59] s3: libsmb: Cleanup modern coding standards.
+ 'True/False' -> 'true/false'.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+Reviewed-by: Volker Lendecke <vl@samba.org>
+---
+ source3/libsmb/namecache.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/source3/libsmb/namecache.c b/source3/libsmb/namecache.c
+index 3b77c748527..832daea1e01 100644
+--- a/source3/libsmb/namecache.c
++++ b/source3/libsmb/namecache.c
+@@ -221,7 +221,7 @@ bool namecache_store(const char *name,
+ 	bool ret;
+ 
+ 	if (name_type > 255) {
+-		return False; /* Don't store non-real name types. */
++		return false; /* Don't store non-real name types. */
+ 	}
+ 
+ 	if ( DEBUGLEVEL >= 5 ) {
+@@ -247,7 +247,7 @@ bool namecache_store(const char *name,
+ 
+ 	key = namecache_key(name, name_type);
+ 	if (!key) {
+-		return False;
++		return false;
+ 	}
+ 
+ 	expiry = time(NULL) + lp_name_cache_timeout();
+@@ -293,11 +293,11 @@ bool namecache_fetch(const char *name,
+ 
+ 	/* exit now if null pointers were passed as they're required further */
+ 	if (!ip_list || !num_names) {
+-		return False;
++		return false;
+ 	}
+ 
+ 	if (name_type > 255) {
+-		return False; /* Don't fetch non-real name types. */
++		return false; /* Don't fetch non-real name types. */
+ 	}
+ 
+ 	*num_names = 0;
+@@ -307,13 +307,13 @@ bool namecache_fetch(const char *name,
+ 	 */
+ 	key = namecache_key(name, name_type);
+ 	if (!key) {
+-		return False;
++		return false;
+ 	}
+ 
+ 	if (!gencache_get(key, talloc_tos(), &value, &timeout)) {
+ 		DEBUG(5, ("no entry for %s#%02X found.\n", name, name_type));
+ 		SAFE_FREE(key);
+-		return False;
++		return false;
+ 	}
+ 
+ 	DEBUG(5, ("name %s#%02X found.\n", name, name_type));
+@@ -340,12 +340,12 @@ bool namecache_delete(const char *name, int name_type)
+ 	char *key;
+ 
+ 	if (name_type > 255) {
+-		return False; /* Don't fetch non-real name types. */
++		return false; /* Don't fetch non-real name types. */
+ 	}
+ 
+ 	key = namecache_key(name, name_type);
+ 	if (!key) {
+-		return False;
++		return false;
+ 	}
+ 	ret = gencache_del(key);
+ 	SAFE_FREE(key);
+@@ -414,7 +414,7 @@ bool namecache_status_store(const char *keyname, int keyname_type,
+ 	key = namecache_status_record_key(keyname, keyname_type,
+ 			name_type, keyip);
+ 	if (!key)
+-		return False;
++		return false;
+ 
+ 	expiry = time(NULL) + lp_name_cache_timeout();
+ 	ret = gencache_set(key, srvname, expiry);
+@@ -446,13 +446,13 @@ bool namecache_status_fetch(const char *keyname,
+ 	key = namecache_status_record_key(keyname, keyname_type,
+ 			name_type, keyip);
+ 	if (!key)
+-		return False;
++		return false;
+ 
+ 	if (!gencache_get(key, talloc_tos(), &value, &timeout)) {
+ 		DEBUG(5, ("namecache_status_fetch: no entry for %s found.\n",
+ 					key));
+ 		SAFE_FREE(key);
+-		return False;
++		return false;
+ 	} else {
+ 		DEBUG(5, ("namecache_status_fetch: key %s -> %s\n",
+ 					key, value ));
+@@ -461,5 +461,5 @@ bool namecache_status_fetch(const char *keyname,
+ 	strlcpy(srvname_out, value, 16);
+ 	SAFE_FREE(key);
+ 	TALLOC_FREE(value);
+-	return True;
++	return true;
+ }
+-- 
+2.20.1
+
+
+From 52fabd59b1da9747bf8ff393fa7af5ff767c6990 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Wed, 15 Jul 2020 13:28:33 -0700
+Subject: [PATCH 05/59] s3: libsmb: Cleanup - move talloc frame out of inner
+ scope.
+
+Make it available thoughout the function. Prepare to use
+talloc for namecache_key().
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+Reviewed-by: Volker Lendecke <vl@samba.org>
+---
+ source3/libsmb/namecache.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/source3/libsmb/namecache.c b/source3/libsmb/namecache.c
+index 832daea1e01..76d411e87d1 100644
+--- a/source3/libsmb/namecache.c
++++ b/source3/libsmb/namecache.c
+@@ -219,20 +219,21 @@ bool namecache_store(const char *name,
+ 	char *key, *value_string;
+ 	int i;
+ 	bool ret;
++	TALLOC_CTX *frame = talloc_stackframe();
+ 
+ 	if (name_type > 255) {
++		TALLOC_FREE(frame);
+ 		return false; /* Don't store non-real name types. */
+ 	}
+ 
+ 	if ( DEBUGLEVEL >= 5 ) {
+-		TALLOC_CTX *ctx = talloc_stackframe();
+ 		char *addr = NULL;
+ 
+ 		DEBUG(5, ("namecache_store: storing %d address%s for %s#%02x: ",
+ 			num_names, num_names == 1 ? "": "es", name, name_type));
+ 
+ 		for (i = 0; i < num_names; i++) {
+-			addr = print_canonical_sockaddr(ctx,
++			addr = print_canonical_sockaddr(frame,
+ 							&ip_list[i].ss);
+ 			if (!addr) {
+ 				continue;
+@@ -242,11 +243,11 @@ bool namecache_store(const char *name,
+ 
+ 		}
+ 		DEBUGADD(5, ("\n"));
+-		TALLOC_FREE(ctx);
+ 	}
+ 
+ 	key = namecache_key(name, name_type);
+ 	if (!key) {
++		TALLOC_FREE(frame);
+ 		return false;
+ 	}
+ 
+@@ -260,6 +261,7 @@ bool namecache_store(const char *name,
+ 	if (!ipstr_list_make(&value_string, ip_list, num_names)) {
+ 		SAFE_FREE(key);
+ 		SAFE_FREE(value_string);
++		TALLOC_FREE(frame);
+ 		return false;
+ 	}
+ 
+@@ -267,6 +269,7 @@ bool namecache_store(const char *name,
+ 	ret = gencache_set(key, value_string, expiry);
+ 	SAFE_FREE(key);
+ 	SAFE_FREE(value_string);
++	TALLOC_FREE(frame);
+ 	return ret;
+ }
+ 
+-- 
+2.20.1
+
+
+From 4b0bdfc51e37aa2ff4ab225f4874f61f91848072 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Wed, 15 Jul 2020 13:31:38 -0700
+Subject: [PATCH 06/59] s3: libsmb: Cleanup - namecache_store() initialize
+ stack variables.
+
+Preparing for common out: exit.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+Reviewed-by: Volker Lendecke <vl@samba.org>
+---
+ source3/libsmb/namecache.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/source3/libsmb/namecache.c b/source3/libsmb/namecache.c
+index 76d411e87d1..1127874c375 100644
+--- a/source3/libsmb/namecache.c
++++ b/source3/libsmb/namecache.c
+@@ -216,9 +216,10 @@ bool namecache_store(const char *name,
+ 			struct ip_service *ip_list)
+ {
+ 	time_t expiry;
+-	char *key, *value_string;
++	char *key = NULL;
++	char *value_string = NULL;
+ 	int i;
+-	bool ret;
++	bool ret = false;
+ 	TALLOC_CTX *frame = talloc_stackframe();
+ 
+ 	if (name_type > 255) {
+-- 
+2.20.1
+
+
+From 6bb3ad936b651293afb46b68b18d2e4f258ebe02 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Wed, 15 Jul 2020 13:33:27 -0700
+Subject: [PATCH 07/59] s3: libsmb: Cleanup - namecache_store() - use common
+ out.
+
+Prepare for moving malloc values to talloc.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+Reviewed-by: Volker Lendecke <vl@samba.org>
+---
+ source3/libsmb/namecache.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
+
+diff --git a/source3/libsmb/namecache.c b/source3/libsmb/namecache.c
+index 1127874c375..a4de493b08e 100644
+--- a/source3/libsmb/namecache.c
++++ b/source3/libsmb/namecache.c
+@@ -223,8 +223,8 @@ bool namecache_store(const char *name,
+ 	TALLOC_CTX *frame = talloc_stackframe();
+ 
+ 	if (name_type > 255) {
+-		TALLOC_FREE(frame);
+-		return false; /* Don't store non-real name types. */
++		/* Don't store non-real name types. */
++		goto out;
+ 	}
+ 
+ 	if ( DEBUGLEVEL >= 5 ) {
+@@ -248,8 +248,7 @@ bool namecache_store(const char *name,
+ 
+ 	key = namecache_key(name, name_type);
+ 	if (!key) {
+-		TALLOC_FREE(frame);
+-		return false;
++		goto out;
+ 	}
+ 
+ 	expiry = time(NULL) + lp_name_cache_timeout();
+@@ -260,14 +259,14 @@ bool namecache_store(const char *name,
+ 	 * place each single ip
+ 	 */
+ 	if (!ipstr_list_make(&value_string, ip_list, num_names)) {
+-		SAFE_FREE(key);
+-		SAFE_FREE(value_string);
+-		TALLOC_FREE(frame);
+-		return false;
++		goto out;
+ 	}
+ 
+ 	/* set the entry */
+ 	ret = gencache_set(key, value_string, expiry);
++
++  out:
++
+ 	SAFE_FREE(key);
+ 	SAFE_FREE(value_string);
+ 	TALLOC_FREE(frame);
+-- 
+2.20.1
+
+
+From 3c0524f9efd4a73d1a7a343d1726c3598b63b466 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Wed, 15 Jul 2020 13:37:59 -0700
+Subject: [PATCH 08/59] s3: libsmb: Cleanup - make namecache_key() use talloc.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+Reviewed-by: Volker Lendecke <vl@samba.org>
+---
+ source3/libsmb/namecache.c | 27 ++++++++++++++-------------
+ 1 file changed, 14 insertions(+), 13 deletions(-)
+
+diff --git a/source3/libsmb/namecache.c b/source3/libsmb/namecache.c
+index a4de493b08e..5457a9d47cc 100644
+--- a/source3/libsmb/namecache.c
++++ b/source3/libsmb/namecache.c
+@@ -191,13 +191,14 @@ static int ipstr_list_parse(const char *ipstr_list, struct ip_service **ip_list)
+  *         type number
+  */
+ 
+-static char *namecache_key(const char *name,
+-				int name_type)
++static char *namecache_key(TALLOC_CTX *ctx,
++			   const char *name,
++			   int name_type)
+ {
+-	char *keystr = NULL;
+-	asprintf_strupper_m(&keystr, NBTKEY_FMT, name, name_type);
+-
+-	return keystr;
++	return talloc_asprintf_strupper_m(ctx,
++					  NBTKEY_FMT,
++					  name,
++					  name_type);
+ }
+ 
+ /**
+@@ -246,7 +247,7 @@ bool namecache_store(const char *name,
+ 		DEBUGADD(5, ("\n"));
+ 	}
+ 
+-	key = namecache_key(name, name_type);
++	key = namecache_key(frame, name, name_type);
+ 	if (!key) {
+ 		goto out;
+ 	}
+@@ -267,7 +268,7 @@ bool namecache_store(const char *name,
+ 
+   out:
+ 
+-	SAFE_FREE(key);
++	TALLOC_FREE(key);
+ 	SAFE_FREE(value_string);
+ 	TALLOC_FREE(frame);
+ 	return ret;
+@@ -308,14 +309,14 @@ bool namecache_fetch(const char *name,
+ 	/*
+ 	 * Use gencache interface - lookup the key
+ 	 */
+-	key = namecache_key(name, name_type);
++	key = namecache_key(talloc_tos(), name, name_type);
+ 	if (!key) {
+ 		return false;
+ 	}
+ 
+ 	if (!gencache_get(key, talloc_tos(), &value, &timeout)) {
+ 		DEBUG(5, ("no entry for %s#%02X found.\n", name, name_type));
+-		SAFE_FREE(key);
++		TALLOC_FREE(key);
+ 		return false;
+ 	}
+ 
+@@ -326,7 +327,7 @@ bool namecache_fetch(const char *name,
+ 	 */
+ 	*num_names = ipstr_list_parse(value, ip_list);
+ 
+-	SAFE_FREE(key);
++	TALLOC_FREE(key);
+ 	TALLOC_FREE(value);
+ 
+ 	return *num_names > 0; /* true only if some ip has been fetched */
+@@ -346,12 +347,12 @@ bool namecache_delete(const char *name, int name_type)
+ 		return false; /* Don't fetch non-real name types. */
+ 	}
+ 
+-	key = namecache_key(name, name_type);
++	key = namecache_key(talloc_tos(), name, name_type);
+ 	if (!key) {
+ 		return false;
+ 	}
+ 	ret = gencache_del(key);
+-	SAFE_FREE(key);
++	TALLOC_FREE(key);
+ 	return ret;
+ }
+ 
+-- 
+2.20.1
+
+
+From 6c2bc823b3d4ea6c432ca16f34bedf479e4ce406 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Wed, 15 Jul 2020 14:38:23 -0700
+Subject: [PATCH 09/59] s3: libsmb: Cleanup - make
+ namecache_status_record_key() use talloc.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+Reviewed-by: Volker Lendecke <vl@samba.org>
+---
+ source3/libsmb/namecache.c | 33 +++++++++++++++++++++------------
+ 1 file changed, 21 insertions(+), 12 deletions(-)
+
+diff --git a/source3/libsmb/namecache.c b/source3/libsmb/namecache.c
+index 5457a9d47cc..ed0d116e3bb 100644
+--- a/source3/libsmb/namecache.c
++++ b/source3/libsmb/namecache.c
+@@ -391,18 +391,21 @@ void namecache_flush(void)
+ 
+ /* Construct a name status record key. */
+ 
+-static char *namecache_status_record_key(const char *name,
++static char *namecache_status_record_key(TALLOC_CTX *ctx,
++				const char *name,
+ 				int name_type1,
+ 				int name_type2,
+ 				const struct sockaddr_storage *keyip)
+ {
+ 	char addr[INET6_ADDRSTRLEN];
+-	char *keystr = NULL;
+ 
+ 	print_sockaddr(addr, sizeof(addr), keyip);
+-	asprintf_strupper_m(&keystr, "NBT/%s#%02X.%02X.%s", name,
+-			    name_type1, name_type2, addr);
+-	return keystr;
++	return talloc_asprintf_strupper_m(ctx,
++					  "NBT/%s#%02X.%02X.%s",
++					  name,
++					  name_type1,
++					  name_type2,
++					  addr);
+ }
+ 
+ /* Store a name status record. */
+@@ -415,8 +418,11 @@ bool namecache_status_store(const char *keyname, int keyname_type,
+ 	time_t expiry;
+ 	bool ret;
+ 
+-	key = namecache_status_record_key(keyname, keyname_type,
+-			name_type, keyip);
++	key = namecache_status_record_key(talloc_tos(),
++					  keyname,
++					  keyname_type,
++					  name_type,
++					  keyip);
+ 	if (!key)
+ 		return false;
+ 
+@@ -431,7 +437,7 @@ bool namecache_status_store(const char *keyname, int keyname_type,
+ 					key ));
+ 	}
+ 
+-	SAFE_FREE(key);
++	TALLOC_FREE(key);
+ 	return ret;
+ }
+ 
+@@ -447,15 +453,18 @@ bool namecache_status_fetch(const char *keyname,
+ 	char *value = NULL;
+ 	time_t timeout;
+ 
+-	key = namecache_status_record_key(keyname, keyname_type,
+-			name_type, keyip);
++	key = namecache_status_record_key(talloc_tos(),
++					  keyname,
++					  keyname_type,
++					  name_type,
++					  keyip);
+ 	if (!key)
+ 		return false;
+ 
+ 	if (!gencache_get(key, talloc_tos(), &value, &timeout)) {
+ 		DEBUG(5, ("namecache_status_fetch: no entry for %s found.\n",
+ 					key));
+-		SAFE_FREE(key);
++		TALLOC_FREE(key);
+ 		return false;
+ 	} else {
+ 		DEBUG(5, ("namecache_status_fetch: key %s -> %s\n",
+@@ -463,7 +472,7 @@ bool namecache_status_fetch(const char *keyname,
+ 	}
+ 
+ 	strlcpy(srvname_out, value, 16);
+-	SAFE_FREE(key);
++	TALLOC_FREE(key);
+ 	TALLOC_FREE(value);
+ 	return true;
+ }
+-- 
+2.20.1
+
+
+From 4b5f61ed85509b4443d69bbd66cc40b5855eb069 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Wed, 15 Jul 2020 14:41:45 -0700
+Subject: [PATCH 10/59] s3: libsmb: Cleanup - Move DEBUG -> DBG_XXX() macros.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+Reviewed-by: Volker Lendecke <vl@samba.org>
+---
+ source3/libsmb/namecache.c | 28 ++++++++++++----------------
+ 1 file changed, 12 insertions(+), 16 deletions(-)
+
+diff --git a/source3/libsmb/namecache.c b/source3/libsmb/namecache.c
+index ed0d116e3bb..3c1a376b35b 100644
+--- a/source3/libsmb/namecache.c
++++ b/source3/libsmb/namecache.c
+@@ -141,8 +141,8 @@ static int ipstr_list_parse(const char *ipstr_list, struct ip_service **ip_list)
+ 
+ 	count = count_chars(ipstr_list, IPSTR_LIST_CHAR) + 1;
+ 	if ( (*ip_list = SMB_MALLOC_ARRAY(struct ip_service, count)) == NULL ) {
+-		DEBUG(0,("ipstr_list_parse: malloc failed for %lu entries\n",
+-					(unsigned long)count));
++		DBG_ERR("malloc failed for %lu entries\n",
++					(unsigned long)count);
+ 		return 0;
+ 	}
+ 
+@@ -231,8 +231,8 @@ bool namecache_store(const char *name,
+ 	if ( DEBUGLEVEL >= 5 ) {
+ 		char *addr = NULL;
+ 
+-		DEBUG(5, ("namecache_store: storing %d address%s for %s#%02x: ",
+-			num_names, num_names == 1 ? "": "es", name, name_type));
++		DBG_INFO("storing %d address%s for %s#%02x: ",
++			num_names, num_names == 1 ? "": "es", name, name_type);
+ 
+ 		for (i = 0; i < num_names; i++) {
+ 			addr = print_canonical_sockaddr(frame,
+@@ -315,12 +315,12 @@ bool namecache_fetch(const char *name,
+ 	}
+ 
+ 	if (!gencache_get(key, talloc_tos(), &value, &timeout)) {
+-		DEBUG(5, ("no entry for %s#%02X found.\n", name, name_type));
++		DBG_INFO("no entry for %s#%02X found.\n", name, name_type);
+ 		TALLOC_FREE(key);
+ 		return false;
+ 	}
+ 
+-	DEBUG(5, ("name %s#%02X found.\n", name, name_type));
++	DBG_INFO("name %s#%02X found.\n", name, name_type);
+ 
+ 	/*
+ 	 * Split up the stored value into the list of IP adresses
+@@ -368,7 +368,7 @@ static void flush_netbios_name(const char *key,
+ 			void *dptr)
+ {
+ 	gencache_del(key);
+-	DEBUG(5, ("Deleting entry %s\n", key));
++	DBG_INFO("Deleting entry %s\n", key);
+ }
+ 
+ /**
+@@ -386,7 +386,7 @@ void namecache_flush(void)
+ 	 * by flush_netbios_name function
+ 	 */
+ 	gencache_iterate(flush_netbios_name, NULL, "NBT/*");
+-	DEBUG(5, ("Namecache flushed\n"));
++	DBG_INFO("Namecache flushed\n");
+ }
+ 
+ /* Construct a name status record key. */
+@@ -430,11 +430,9 @@ bool namecache_status_store(const char *keyname, int keyname_type,
+ 	ret = gencache_set(key, srvname, expiry);
+ 
+ 	if (ret) {
+-		DEBUG(5, ("namecache_status_store: entry %s -> %s\n",
+-					key, srvname ));
++		DBG_INFO("entry %s -> %s\n", key, srvname);
+ 	} else {
+-		DEBUG(5, ("namecache_status_store: entry %s store failed.\n",
+-					key ));
++		DBG_INFO("entry %s store failed.\n", key);
+ 	}
+ 
+ 	TALLOC_FREE(key);
+@@ -462,13 +460,11 @@ bool namecache_status_fetch(const char *keyname,
+ 		return false;
+ 
+ 	if (!gencache_get(key, talloc_tos(), &value, &timeout)) {
+-		DEBUG(5, ("namecache_status_fetch: no entry for %s found.\n",
+-					key));
++		DBG_INFO("no entry for %s found.\n", key);
+ 		TALLOC_FREE(key);
+ 		return false;
+ 	} else {
+-		DEBUG(5, ("namecache_status_fetch: key %s -> %s\n",
+-					key, value ));
++		DBG_INFO("key %s -> %s\n", key, value);
+ 	}
+ 
+ 	strlcpy(srvname_out, value, 16);
+-- 
+2.20.1
+
+
+From 6933aa9792a1235f5fa0eb6c523c818aad6ccab2 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Wed, 15 Jul 2020 15:02:02 -0700
+Subject: [PATCH 11/59] s3: libsmb: Cleanup - Make ipstr_list_make() talloc
+ rather than malloc.
+
+Remove the excessive and unneeded ipstr_list_add() function,
+fold it into ipstr_list_make() to make it much clearer what
+we're doing.
+
+The only use of MALLOC now is in ipstr_list_parse() returned
+by namecache_fetch(). We need to fix the caller before
+we can move that to talloc. As that is used inside internal_resolve_name()
+which is designed to return a MALLOC'ed ip list from all
+name resolution mechanisms leave that fix for another day.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+Reviewed-by: Volker Lendecke <vl@samba.org>
+
+Autobuild-User(master): Volker Lendecke <vl@samba.org>
+Autobuild-Date(master): Thu Jul 16 08:16:31 UTC 2020 on sn-devel-184
+---
+ source3/libsmb/namecache.c | 133 +++++++++++++++++--------------------
+ 1 file changed, 60 insertions(+), 73 deletions(-)
+
+diff --git a/source3/libsmb/namecache.c b/source3/libsmb/namecache.c
+index 3c1a376b35b..7f534587263 100644
+--- a/source3/libsmb/namecache.c
++++ b/source3/libsmb/namecache.c
+@@ -27,98 +27,86 @@
+ #define IPSTR_LIST_SEP	","
+ #define IPSTR_LIST_CHAR	','
+ 
+-/**
+- * Add ip string representation to ipstr list. Used also
+- * as part of @function ipstr_list_make
+- *
+- * @param ipstr_list pointer to string containing ip list;
+- *        MUST BE already allocated and IS reallocated if necessary
+- * @param ipstr_size pointer to current size of ipstr_list (might be changed
+- *        as a result of reallocation)
+- * @param ip IP address which is to be added to list
+- * @return pointer to string appended with new ip and possibly
+- *         reallocated to new length
+- **/
+-
+-static char *ipstr_list_add(char **ipstr_list, const struct ip_service *service)
+-{
+-	char *new_ipstr = NULL;
+-	char addr_buf[INET6_ADDRSTRLEN];
+-	int ret;
+-
+-	/* arguments checking */
+-	if (!ipstr_list || !service) {
+-		return NULL;
+-	}
+-
+-	print_sockaddr(addr_buf,
+-			sizeof(addr_buf),
+-			&service->ss);
+-
+-	/* attempt to convert ip to a string and append colon separator to it */
+-	if (*ipstr_list) {
+-		if (service->ss.ss_family == AF_INET) {
+-			/* IPv4 */
+-			ret = asprintf(&new_ipstr, "%s%s%s:%d",	*ipstr_list,
+-				       IPSTR_LIST_SEP, addr_buf,
+-				       service->port);
+-		} else {
+-			/* IPv6 */
+-			ret = asprintf(&new_ipstr, "%s%s[%s]:%d", *ipstr_list,
+-				       IPSTR_LIST_SEP, addr_buf,
+-				       service->port);
+-		}
+-		SAFE_FREE(*ipstr_list);
+-	} else {
+-		if (service->ss.ss_family == AF_INET) {
+-			/* IPv4 */
+-			ret = asprintf(&new_ipstr, "%s:%d", addr_buf,
+-				       service->port);
+-		} else {
+-			/* IPv6 */
+-			ret = asprintf(&new_ipstr, "[%s]:%d", addr_buf,
+-				       service->port);
+-		}
+-	}
+-	if (ret == -1) {
+-		return NULL;
+-	}
+-	*ipstr_list = new_ipstr;
+-	return *ipstr_list;
+-}
+-
+ /**
+  * Allocate and initialise an ipstr list using ip adresses
+  * passed as arguments.
+  *
+- * @param ipstr_list pointer to string meant to be allocated and set
++ * @param ctx TALLOC_CTX to use
+  * @param ip_list array of ip addresses to place in the list
+  * @param ip_count number of addresses stored in ip_list
+  * @return pointer to allocated ip string
+  **/
+ 
+-static char *ipstr_list_make(char **ipstr_list,
++static char *ipstr_list_make(TALLOC_CTX *ctx,
+ 			const struct ip_service *ip_list,
+ 			int ip_count)
+ {
++	char *ipstr_list = NULL;
+ 	int i;
+ 
+ 	/* arguments checking */
+-	if (!ip_list || !ipstr_list) {
+-		return 0;
++	if (ip_list == NULL) {
++		return NULL;
+ 	}
+ 
+-	*ipstr_list = NULL;
+-
+ 	/* process ip addresses given as arguments */
+ 	for (i = 0; i < ip_count; i++) {
+-		*ipstr_list = ipstr_list_add(ipstr_list, &ip_list[i]);
++		char addr_buf[INET6_ADDRSTRLEN];
++		char *new_str = NULL;
++
++		print_sockaddr(addr_buf,
++			       sizeof(addr_buf),
++			       &ip_list[i].ss);
++
++		if (ip_list->ss.ss_family == AF_INET) {
++			/* IPv4 */
++			new_str = talloc_asprintf(ctx,
++						  "%s:%d",
++						  addr_buf,
++						  ip_list[i].port);
++		} else {
++			/* IPv6 */
++			new_str = talloc_asprintf(ctx,
++						  "[%s]:%d",
++						  addr_buf,
++						  ip_list[i].port);
++		}
++		if (new_str == NULL) {
++			TALLOC_FREE(ipstr_list);
++			return NULL;
++		}
++
++		if (ipstr_list == NULL) {
++			/* First ip address. */
++			ipstr_list = new_str;
++		} else {
++			/*
++			 * Append the separator "," and then the new
++			 * ip address to the existing list.
++			 *
++			 * The efficiency here is horrible, but
++			 * ip_count should be small enough we can
++			 * live with it.
++			 */
++			char *tmp = talloc_asprintf(ctx,
++						    "%s%s%s",
++						    ipstr_list,
++						    IPSTR_LIST_SEP,
++						    new_str);
++			if (tmp == NULL) {
++				TALLOC_FREE(new_str);
++				TALLOC_FREE(ipstr_list);
++				return NULL;
++			}
++			TALLOC_FREE(new_str);
++			TALLOC_FREE(ipstr_list);
++			ipstr_list = tmp;
++		}
+ 	}
+ 
+-	return (*ipstr_list);
++	return ipstr_list;
+ }
+ 
+-
+ /**
+  * Parse given ip string list into array of ip addresses
+  * (as ip_service structures)
+@@ -256,10 +244,9 @@ bool namecache_store(const char *name,
+ 
+ 	/*
+ 	 * Generate string representation of ip addresses list
+-	 * First, store the number of ip addresses and then
+-	 * place each single ip
+ 	 */
+-	if (!ipstr_list_make(&value_string, ip_list, num_names)) {
++	value_string = ipstr_list_make(frame, ip_list, num_names);
++	if (value_string == NULL) {
+ 		goto out;
+ 	}
+ 
+@@ -269,7 +256,7 @@ bool namecache_store(const char *name,
+   out:
+ 
+ 	TALLOC_FREE(key);
+-	SAFE_FREE(value_string);
++	TALLOC_FREE(value_string);
+ 	TALLOC_FREE(frame);
+ 	return ret;
+ }
+-- 
+2.20.1
+
+
+From d419e65adaf5763d7a58495b73a386aaf8ff854c Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Thu, 16 Jul 2020 15:47:04 -0700
+Subject: [PATCH 12/59] s3: libsmb: Namecache. Fix bug missed by me in previous
+ cleanup.
+
+In ipstr_list_make() we need to look at the correct array entry
+to determine the ss_family for the sockaddr_storage.
+
+Otherwise we are always storing the type of the first entry.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+Reviewed-by: Volker Lendecke <vl@samba.org>
+
+Autobuild-User(master): Volker Lendecke <vl@samba.org>
+Autobuild-Date(master): Fri Jul 17 05:54:31 UTC 2020 on sn-devel-184
+---
+ source3/libsmb/namecache.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/source3/libsmb/namecache.c b/source3/libsmb/namecache.c
+index 7f534587263..fb4a4aac8c8 100644
+--- a/source3/libsmb/namecache.c
++++ b/source3/libsmb/namecache.c
+@@ -58,7 +58,7 @@ static char *ipstr_list_make(TALLOC_CTX *ctx,
+ 			       sizeof(addr_buf),
+ 			       &ip_list[i].ss);
+ 
+-		if (ip_list->ss.ss_family == AF_INET) {
++		if (ip_list[i].ss.ss_family == AF_INET) {
+ 			/* IPv4 */
+ 			new_str = talloc_asprintf(ctx,
+ 						  "%s:%d",
+-- 
+2.20.1
+
+
+From b00b87bd9a2a72227035387ffdf9b50ad3cc109d Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 20:57:44 -0700
+Subject: [PATCH 13/59] s3: libsmb: Cleanup - ensure we don't try and continue
+ resolving names on failure of convert_ss2service().
+
+Logic change, but correct error cleanup - jump to new 'fail:' label.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index 642f7b91b5a..f1d6de6a61a 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2682,6 +2682,7 @@ NTSTATUS internal_resolve_name(const char *name,
+ 							ss_list,
+ 							return_count)) {
+ 					status = NT_STATUS_NO_MEMORY;
++					goto fail;
+ 				}
+ 				goto done;
+ 			}
+@@ -2714,6 +2715,7 @@ NTSTATUS internal_resolve_name(const char *name,
+ 							ss_list,
+ 							return_count)) {
+ 					status = NT_STATUS_NO_MEMORY;
++					goto fail;
+ 				}
+ 				goto done;
+ 			}
+@@ -2730,6 +2732,7 @@ NTSTATUS internal_resolve_name(const char *name,
+ 								ss_list,
+ 								return_count)) {
+ 						status = NT_STATUS_NO_MEMORY;
++						goto fail;
+ 					}
+ 					goto done;
+ 				}
+@@ -2744,6 +2747,7 @@ NTSTATUS internal_resolve_name(const char *name,
+ 							ss_list,
+ 							return_count)) {
+ 					status = NT_STATUS_NO_MEMORY;
++					goto fail;
+ 				}
+ 				goto done;
+ 			}
+@@ -2755,6 +2759,8 @@ NTSTATUS internal_resolve_name(const char *name,
+ 
+ 	/* All of the resolve_* functions above have returned false. */
+ 
++  fail:
++
+ 	TALLOC_FREE(frame);
+ 	SAFE_FREE(*return_iplist);
+ 	*return_count = 0;
+-- 
+2.20.1
+
+
+From 9624c8a44bfb246391cf2606b07a11da92e510c8 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 16:54:45 -0700
+Subject: [PATCH 14/59] s3: libsmb: Cleanup - change to early continue in
+ internal_resolve_name() for resolve_hosts().
+
+No logic change.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index f1d6de6a61a..c964d90fc4b 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2677,15 +2677,16 @@ NTSTATUS internal_resolve_name(const char *name,
+ 			status = resolve_hosts(name, name_type,
+ 					       talloc_tos(), &ss_list,
+ 					       return_count);
+-			if (NT_STATUS_IS_OK(status)) {
+-				if (!convert_ss2service(return_iplist,
+-							ss_list,
+-							return_count)) {
+-					status = NT_STATUS_NO_MEMORY;
+-					goto fail;
+-				}
+-				goto done;
++			if (!NT_STATUS_IS_OK(status)) {
++				continue;
++			}
++			if (!convert_ss2service(return_iplist,
++						ss_list,
++						return_count)) {
++				status = NT_STATUS_NO_MEMORY;
++				goto fail;
+ 			}
++			goto done;
+ 		} else if(strequal( tok, "kdc")) {
+ 			/* deal with KDC_NAME_TYPE names here.
+ 			 * This will result in a SRV record lookup */
+-- 
+2.20.1
+
+
+From 272d3686fe5a6f5d9954763788831a3294054e94 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 16:56:14 -0700
+Subject: [PATCH 15/59] s3: libsmb: Cleanup - change to early continue in
+ internal_resolve_name() for KDC resolve_ads().
+
+No logic change.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index c964d90fc4b..ea6aec5290a 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2692,12 +2692,13 @@ NTSTATUS internal_resolve_name(const char *name,
+ 			 * This will result in a SRV record lookup */
+ 			status = resolve_ads(name, KDC_NAME_TYPE, sitename,
+ 					     return_iplist, return_count);
+-			if (NT_STATUS_IS_OK(status)) {
+-				/* Ensure we don't namecache
+-				 * this with the KDC port. */
+-				name_type = KDC_NAME_TYPE;
+-				goto done;
++			if (!NT_STATUS_IS_OK(status)) {
++				continue;
+ 			}
++			/* Ensure we don't namecache
++			 * this with the KDC port. */
++			name_type = KDC_NAME_TYPE;
++			goto done;
+ 		} else if(strequal( tok, "ads")) {
+ 			/* deal with 0x1c and 0x1b names here.
+ 			 * This will result in a SRV record lookup */
+-- 
+2.20.1
+
+
+From 8b5e40be869beb7ce6cd5df2426b958f2920f4dc Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 16:57:43 -0700
+Subject: [PATCH 16/59] s3: libsmb: Cleanup - change to early continue in
+ internal_resolve_name() for resolve_ads().
+
+No logic change.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index ea6aec5290a..58ae67aa972 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2704,9 +2704,10 @@ NTSTATUS internal_resolve_name(const char *name,
+ 			 * This will result in a SRV record lookup */
+ 			status = resolve_ads(name, name_type, sitename,
+ 					     return_iplist, return_count);
+-			if (NT_STATUS_IS_OK(status)) {
+-				goto done;
++			if (!NT_STATUS_IS_OK(status)) {
++				continue;
+ 			}
++			goto done;
+ 		} else if (strequal(tok, "lmhosts")) {
+ 			struct sockaddr_storage *ss_list;
+ 			status = resolve_lmhosts_file_as_sockaddr(
+-- 
+2.20.1
+
+
+From 0098c440cff866c4f0dd35a77546a9c5bb948720 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 16:58:46 -0700
+Subject: [PATCH 17/59] s3: libsmb: Cleanup - change to early continue in
+ internal_resolve_name() for resolve_lmhosts_file_as_sockaddr().
+
+No logic change.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index 58ae67aa972..e90392a43ff 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2713,15 +2713,16 @@ NTSTATUS internal_resolve_name(const char *name,
+ 			status = resolve_lmhosts_file_as_sockaddr(
+ 				get_dyn_LMHOSTSFILE(), name, name_type,
+ 				talloc_tos(), &ss_list, return_count);
+-			if (NT_STATUS_IS_OK(status)) {
+-				if (!convert_ss2service(return_iplist,
+-							ss_list,
+-							return_count)) {
+-					status = NT_STATUS_NO_MEMORY;
+-					goto fail;
+-				}
+-				goto done;
++			if (!NT_STATUS_IS_OK(status)) {
++				continue;
++			}
++			if (!convert_ss2service(return_iplist,
++						ss_list,
++						return_count)) {
++				status = NT_STATUS_NO_MEMORY;
++				goto fail;
+ 			}
++			goto done;
+ 		} else if (strequal(tok, "wins")) {
+ 			/* don't resolve 1D via WINS */
+ 			struct sockaddr_storage *ss_list = NULL;
+-- 
+2.20.1
+
+
+From fea4d7d7a7a5c0fbc28332980de7985ff1fe756a Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 16:59:38 -0700
+Subject: [PATCH 18/59] s3: libsmb: Cleanup - change to early continue in
+ internal_resolve_name() for 0x1D name in resolve_wins().
+
+No logic change.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 27 ++++++++++++++-------------
+ 1 file changed, 14 insertions(+), 13 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index e90392a43ff..37f9f0fa3dd 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2726,20 +2726,21 @@ NTSTATUS internal_resolve_name(const char *name,
+ 		} else if (strequal(tok, "wins")) {
+ 			/* don't resolve 1D via WINS */
+ 			struct sockaddr_storage *ss_list = NULL;
+-			if (name_type != 0x1D) {
+-				status = resolve_wins(name, name_type,
+-						      talloc_tos(),
+-						      &ss_list,
+-						      return_count);
+-				if (NT_STATUS_IS_OK(status)) {
+-					if (!convert_ss2service(return_iplist,
+-								ss_list,
+-								return_count)) {
+-						status = NT_STATUS_NO_MEMORY;
+-						goto fail;
+-					}
+-					goto done;
++			if (name_type == 0x1D) {
++				continue;
++			}
++			status = resolve_wins(name, name_type,
++					      talloc_tos(),
++					      &ss_list,
++					      return_count);
++			if (NT_STATUS_IS_OK(status)) {
++				if (!convert_ss2service(return_iplist,
++							ss_list,
++							return_count)) {
++					status = NT_STATUS_NO_MEMORY;
++					goto fail;
+ 				}
++				goto done;
+ 			}
+ 		} else if (strequal(tok, "bcast")) {
+ 			struct sockaddr_storage *ss_list = NULL;
+-- 
+2.20.1
+
+
+From c4168483847a32ffdd019bdc8f5b806342f31eea Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 17:00:35 -0700
+Subject: [PATCH 19/59] s3: libsmb: Cleanup - change to early continue in
+ internal_resolve_name() for resolve_wins().
+
+No logic change.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index 37f9f0fa3dd..e72504cfcaf 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2733,15 +2733,16 @@ NTSTATUS internal_resolve_name(const char *name,
+ 					      talloc_tos(),
+ 					      &ss_list,
+ 					      return_count);
+-			if (NT_STATUS_IS_OK(status)) {
+-				if (!convert_ss2service(return_iplist,
+-							ss_list,
+-							return_count)) {
+-					status = NT_STATUS_NO_MEMORY;
+-					goto fail;
+-				}
+-				goto done;
++			if (!NT_STATUS_IS_OK(status)) {
++				continue;
++			}
++			if (!convert_ss2service(return_iplist,
++						ss_list,
++						return_count)) {
++				status = NT_STATUS_NO_MEMORY;
++				goto fail;
+ 			}
++			goto done;
+ 		} else if (strequal(tok, "bcast")) {
+ 			struct sockaddr_storage *ss_list = NULL;
+ 			status = name_resolve_bcast(
+-- 
+2.20.1
+
+
+From 03fc8af1f6654fb5727b655f011e40a98976aa1f Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 17:01:04 -0700
+Subject: [PATCH 20/59] s3: libsmb: Cleanup - change to early continue in
+ internal_resolve_name() for name_resolve_bcast().
+
+No logic change.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index e72504cfcaf..5d4b1ee545f 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2748,15 +2748,16 @@ NTSTATUS internal_resolve_name(const char *name,
+ 			status = name_resolve_bcast(
+ 				name, name_type, talloc_tos(),
+ 				&ss_list, return_count);
+-			if (NT_STATUS_IS_OK(status)) {
+-				if (!convert_ss2service(return_iplist,
+-							ss_list,
+-							return_count)) {
+-					status = NT_STATUS_NO_MEMORY;
+-					goto fail;
+-				}
+-				goto done;
++			if (!NT_STATUS_IS_OK(status)) {
++				continue;
+ 			}
++			if (!convert_ss2service(return_iplist,
++						ss_list,
++						return_count)) {
++				status = NT_STATUS_NO_MEMORY;
++				goto fail;
++			}
++			goto done;
+ 		} else {
+ 			DEBUG(0,("resolve_name: unknown name switch type %s\n",
+ 				tok));
+-- 
+2.20.1
+
+
+From e94400109e6dd65c5c9bcbda44984f89bcb4a548 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 17:02:15 -0700
+Subject: [PATCH 21/59] s3: libsmb: Cleanup - use helper 'ok' bool for
+ resolve_hosts().
+
+No logic change.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index 5d4b1ee545f..2ad01f0eb99 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2593,6 +2593,7 @@ NTSTATUS internal_resolve_name(const char *name,
+ 	const char *tok;
+ 	NTSTATUS status = NT_STATUS_UNSUCCESSFUL;
+ 	int i;
++	bool ok;
+ 	TALLOC_CTX *frame = NULL;
+ 
+ 	*return_iplist = NULL;
+@@ -2680,9 +2681,10 @@ NTSTATUS internal_resolve_name(const char *name,
+ 			if (!NT_STATUS_IS_OK(status)) {
+ 				continue;
+ 			}
+-			if (!convert_ss2service(return_iplist,
++			ok = convert_ss2service(return_iplist,
+ 						ss_list,
+-						return_count)) {
++						return_count);
++			if (!ok) {
+ 				status = NT_STATUS_NO_MEMORY;
+ 				goto fail;
+ 			}
+-- 
+2.20.1
+
+
+From 168924da5b6ee0f97a2cc973e07ccfab45424107 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 17:03:21 -0700
+Subject: [PATCH 22/59] s3: libsmb: Cleanup - use helper 'ok' bool for
+ resolve_lmhosts_file_as_sockaddr().
+
+No logic change.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index 2ad01f0eb99..04f27a89ca5 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2718,9 +2718,10 @@ NTSTATUS internal_resolve_name(const char *name,
+ 			if (!NT_STATUS_IS_OK(status)) {
+ 				continue;
+ 			}
+-			if (!convert_ss2service(return_iplist,
++			ok = convert_ss2service(return_iplist,
+ 						ss_list,
+-						return_count)) {
++						return_count);
++			if (!ok) {
+ 				status = NT_STATUS_NO_MEMORY;
+ 				goto fail;
+ 			}
+-- 
+2.20.1
+
+
+From 83c53e40210702ee274993c0ee3d8a4e418a45fd Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 17:04:57 -0700
+Subject: [PATCH 23/59] s3: libsmb: Cleanup - use helper 'ok' bool for
+ resolve_wins().
+
+No logic change.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index 04f27a89ca5..31a760801e3 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2739,9 +2739,10 @@ NTSTATUS internal_resolve_name(const char *name,
+ 			if (!NT_STATUS_IS_OK(status)) {
+ 				continue;
+ 			}
+-			if (!convert_ss2service(return_iplist,
++			ok = convert_ss2service(return_iplist,
+ 						ss_list,
+-						return_count)) {
++						return_count);
++			if (!ok) {
+ 				status = NT_STATUS_NO_MEMORY;
+ 				goto fail;
+ 			}
+-- 
+2.20.1
+
+
+From d8f939b8551f2e5fcf55cb0aae798cd8dd6338e5 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 17:05:27 -0700
+Subject: [PATCH 24/59] s3: libsmb: Cleanup - use helper 'ok' bool for
+ name_resolve_bcast().
+
+No logic change.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index 31a760801e3..507ee1d6a70 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2755,9 +2755,10 @@ NTSTATUS internal_resolve_name(const char *name,
+ 			if (!NT_STATUS_IS_OK(status)) {
+ 				continue;
+ 			}
+-			if (!convert_ss2service(return_iplist,
++			ok = convert_ss2service(return_iplist,
+ 						ss_list,
+-						return_count)) {
++						return_count);
++			if (!ok) {
+ 				status = NT_STATUS_NO_MEMORY;
+ 				goto fail;
+ 			}
+-- 
+2.20.1
+
+
+From aeea4c133210f4b2857381751b171951820df4c8 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 17:27:13 -0700
+Subject: [PATCH 25/59] s3: libsmb: Cleanup - use helper 'ok' bool for
+ internal_resolve_name().
+
+No logic change.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index 507ee1d6a70..314484e48d5 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2613,8 +2613,9 @@ NTSTATUS internal_resolve_name(const char *name,
+ 		(*return_iplist)->port = PORT_NONE;
+ 
+ 		/* if it's in the form of an IP address then get the lib to interpret it */
+-		if (!interpret_string_addr(&(*return_iplist)->ss,
+-					name, AI_NUMERICHOST)) {
++		ok = interpret_string_addr(&(*return_iplist)->ss,
++					name, AI_NUMERICHOST);
++		if (!ok) {
+ 			DEBUG(1,("internal_resolve_name: interpret_string_addr "
+ 				"failed on %s\n",
+ 				name));
+-- 
+2.20.1
+
+
+From aa2208ef0a954edb1af08823802c40493e9bfb5d Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 17:28:41 -0700
+Subject: [PATCH 26/59] s3: libsmb: Cleanup - split allocation and NULL check
+ in internal_resolve_name().
+
+No logic change.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index 314484e48d5..e20a96239c9 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2603,8 +2603,8 @@ NTSTATUS internal_resolve_name(const char *name,
+ 			name, name_type, sitename ? sitename : "(null)"));
+ 
+ 	if (is_ipaddress(name)) {
+-		if ((*return_iplist = SMB_MALLOC_P(struct ip_service)) ==
+-				NULL) {
++		*return_iplist = SMB_MALLOC_P(struct ip_service);
++		if (*return_iplist == NULL) {
+ 			DEBUG(0,("internal_resolve_name: malloc fail !\n"));
+ 			return NT_STATUS_NO_MEMORY;
+ 		}
+-- 
+2.20.1
+
+
+From e88c422a436d4dc3b737194661a0341922ba7190 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 17:32:47 -0700
+Subject: [PATCH 27/59] s3: libsmb: Cleanup - modernize DEBUG -> DBG_ in
+ internal_resolve_name()
+
+No logic change.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index e20a96239c9..fa62a1b080f 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2599,13 +2599,13 @@ NTSTATUS internal_resolve_name(const char *name,
+ 	*return_iplist = NULL;
+ 	*return_count = 0;
+ 
+-	DEBUG(10, ("internal_resolve_name: looking up %s#%x (sitename %s)\n",
+-			name, name_type, sitename ? sitename : "(null)"));
++	DBG_DEBUG("looking up %s#%x (sitename %s)\n",
++		name, name_type, sitename ? sitename : "(null)");
+ 
+ 	if (is_ipaddress(name)) {
+ 		*return_iplist = SMB_MALLOC_P(struct ip_service);
+ 		if (*return_iplist == NULL) {
+-			DEBUG(0,("internal_resolve_name: malloc fail !\n"));
++			DBG_ERR("malloc fail !\n");
+ 			return NT_STATUS_NO_MEMORY;
+ 		}
+ 
+@@ -2616,9 +2616,8 @@ NTSTATUS internal_resolve_name(const char *name,
+ 		ok = interpret_string_addr(&(*return_iplist)->ss,
+ 					name, AI_NUMERICHOST);
+ 		if (!ok) {
+-			DEBUG(1,("internal_resolve_name: interpret_string_addr "
+-				"failed on %s\n",
+-				name));
++			DBG_WARNING("interpret_string_addr failed on %s\n",
++				name);
+ 			SAFE_FREE(*return_iplist);
+ 			return NT_STATUS_INVALID_PARAMETER;
+ 		}
+@@ -2646,7 +2645,7 @@ NTSTATUS internal_resolve_name(const char *name,
+ 	/* set the name resolution order */
+ 
+ 	if (resolve_order && strcmp(resolve_order[0], "NULL") == 0) {
+-		DEBUG(8,("internal_resolve_name: all lookups disabled\n"));
++		DBG_DEBUG("all lookups disabled\n");
+ 		return NT_STATUS_INVALID_PARAMETER;
+ 	}
+ 
+@@ -2765,8 +2764,8 @@ NTSTATUS internal_resolve_name(const char *name,
+ 			}
+ 			goto done;
+ 		} else {
+-			DEBUG(0,("resolve_name: unknown name switch type %s\n",
+-				tok));
++			DBG_ERR("unknown name switch type %s\n",
++				tok);
+ 		}
+ 	}
+ 
+@@ -2810,8 +2809,8 @@ NTSTATUS internal_resolve_name(const char *name,
+ 	/* Display some debugging info */
+ 
+ 	if ( DEBUGLEVEL >= 10 ) {
+-		DEBUG(10, ("internal_resolve_name: returning %d addresses: ",
+-					*return_count));
++		DBG_DEBUG("returning %d addresses: ",
++				*return_count);
+ 
+ 		for (i = 0; i < *return_count; i++) {
+ 			char addr[INET6_ADDRSTRLEN];
+-- 
+2.20.1
+
+
+From 8b82de9167469ea834b4bcaacb91a7e53cac5c07 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 17:35:22 -0700
+Subject: [PATCH 28/59] s3: libsmb: Cleanup - Remove incorrect comment in
+ resolve_ads(). The DNS code copes fine with IPv6 addresses.
+
+No logic change.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index fa62a1b080f..d771b8189d0 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2397,7 +2397,6 @@ static NTSTATUS resolve_ads(const char *name,
+ 		return NT_STATUS_NO_MEMORY;
+ 	}
+ 
+-	/* The DNS code needs fixing to find IPv6 addresses... JRA. */
+ 	switch (name_type) {
+ 		case 0x1b:
+ 			DEBUG(5,("resolve_ads: Attempting to resolve "
+-- 
+2.20.1
+
+
+From c1922dbbf464d83209d799aa43a27dffb61dcb56 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 17:38:20 -0700
+Subject: [PATCH 29/59] s3: libsmb: Cleanup - reformatting resolve_hosts()
+ parameters inside internal_resolve_name().
+
+No logic changes.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index d771b8189d0..f14884ad5cc 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2674,8 +2674,10 @@ NTSTATUS internal_resolve_name(const char *name,
+ 
+ 		if((strequal(tok, "host") || strequal(tok, "hosts"))) {
+ 			struct sockaddr_storage *ss_list;
+-			status = resolve_hosts(name, name_type,
+-					       talloc_tos(), &ss_list,
++			status = resolve_hosts(name,
++					       name_type,
++					       talloc_tos(),
++					       &ss_list,
+ 					       return_count);
+ 			if (!NT_STATUS_IS_OK(status)) {
+ 				continue;
+-- 
+2.20.1
+
+
+From a16bbec42557211bed027c8a2fee41695becf71a Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 17:39:33 -0700
+Subject: [PATCH 30/59] s3: libsmb: Cleanup - reformatting resolve_ads()
+ parameters inside internal_resolve_name().
+
+No logic changes.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index f14884ad5cc..2738f5e26f4 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2693,8 +2693,11 @@ NTSTATUS internal_resolve_name(const char *name,
+ 		} else if(strequal( tok, "kdc")) {
+ 			/* deal with KDC_NAME_TYPE names here.
+ 			 * This will result in a SRV record lookup */
+-			status = resolve_ads(name, KDC_NAME_TYPE, sitename,
+-					     return_iplist, return_count);
++			status = resolve_ads(name,
++					     KDC_NAME_TYPE,
++					     sitename,
++					     return_iplist,
++					     return_count);
+ 			if (!NT_STATUS_IS_OK(status)) {
+ 				continue;
+ 			}
+-- 
+2.20.1
+
+
+From 1d3ad99860a1983775d937ef5e58cc792cad5ce8 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 17:40:06 -0700
+Subject: [PATCH 31/59] s3: libsmb: Cleanup - reformatting 2nd use of
+ resolve_ads() parameters inside internal_resolve_name().
+
+No logic change.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index 2738f5e26f4..43faf143940 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2708,8 +2708,11 @@ NTSTATUS internal_resolve_name(const char *name,
+ 		} else if(strequal( tok, "ads")) {
+ 			/* deal with 0x1c and 0x1b names here.
+ 			 * This will result in a SRV record lookup */
+-			status = resolve_ads(name, name_type, sitename,
+-					     return_iplist, return_count);
++			status = resolve_ads(name,
++					     name_type,
++					     sitename,
++					     return_iplist,
++					     return_count);
+ 			if (!NT_STATUS_IS_OK(status)) {
+ 				continue;
+ 			}
+-- 
+2.20.1
+
+
+From e81813cba777ed73bd49014b3e7c43c2eeb42527 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 17:42:44 -0700
+Subject: [PATCH 32/59] s3: libsmb: Cleanup - reformatting
+ resolve_lmhosts_file_as_sockaddr() parameters inside internal_resolve_name().
+
+No logic changes.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index 43faf143940..b0993bbb37d 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2720,8 +2720,12 @@ NTSTATUS internal_resolve_name(const char *name,
+ 		} else if (strequal(tok, "lmhosts")) {
+ 			struct sockaddr_storage *ss_list;
+ 			status = resolve_lmhosts_file_as_sockaddr(
+-				get_dyn_LMHOSTSFILE(), name, name_type,
+-				talloc_tos(), &ss_list, return_count);
++				get_dyn_LMHOSTSFILE(),
++				name,
++				name_type,
++				talloc_tos(),
++				&ss_list,
++				return_count);
+ 			if (!NT_STATUS_IS_OK(status)) {
+ 				continue;
+ 			}
+-- 
+2.20.1
+
+
+From 820111ee1d0ac646cd478c187404a0ff7f7672e0 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 17:43:26 -0700
+Subject: [PATCH 33/59] s3: libsmb: Cleanup - reformatting resolve_wins()
+ parameters inside internal_resolve_name().
+
+No logic changes.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index b0993bbb37d..cf14b3c6bd3 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2743,7 +2743,8 @@ NTSTATUS internal_resolve_name(const char *name,
+ 			if (name_type == 0x1D) {
+ 				continue;
+ 			}
+-			status = resolve_wins(name, name_type,
++			status = resolve_wins(name,
++					      name_type,
+ 					      talloc_tos(),
+ 					      &ss_list,
+ 					      return_count);
+-- 
+2.20.1
+
+
+From 4e98538a23eb83c08ce041f361ce006c449fd070 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 17:44:03 -0700
+Subject: [PATCH 34/59] s3: libsmb: Cleanup - reformatting name_resolve_bcast()
+ parameters inside internal_resolve_name().
+
+No logic changes.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index cf14b3c6bd3..9df6a0a3b48 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2762,8 +2762,11 @@ NTSTATUS internal_resolve_name(const char *name,
+ 		} else if (strequal(tok, "bcast")) {
+ 			struct sockaddr_storage *ss_list = NULL;
+ 			status = name_resolve_bcast(
+-				name, name_type, talloc_tos(),
+-				&ss_list, return_count);
++						name,
++						name_type,
++						talloc_tos(),
++						&ss_list,
++						return_count);
+ 			if (!NT_STATUS_IS_OK(status)) {
+ 				continue;
+ 			}
+-- 
+2.20.1
+
+
+From aea38c9991b44bc5db32d5df0871bf7407feae77 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 17:45:44 -0700
+Subject: [PATCH 35/59] s3: libsmb: Cleanup - put talloc parameter first in
+ resolve_hosts().
+
+No logic changes.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index 9df6a0a3b48..1a54f8e5c96 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2284,8 +2284,9 @@ fail:
+  Resolve via "hosts" method.
+ *********************************************************/
+ 
+-static NTSTATUS resolve_hosts(const char *name, int name_type,
+-			      TALLOC_CTX *mem_ctx,
++static NTSTATUS resolve_hosts(TALLOC_CTX *mem_ctx,
++			      const char *name,
++			      int name_type,
+ 			      struct sockaddr_storage **return_iplist,
+ 			      int *return_count)
+ {
+@@ -2674,9 +2675,9 @@ NTSTATUS internal_resolve_name(const char *name,
+ 
+ 		if((strequal(tok, "host") || strequal(tok, "hosts"))) {
+ 			struct sockaddr_storage *ss_list;
+-			status = resolve_hosts(name,
++			status = resolve_hosts(talloc_tos(),
++					       name,
+ 					       name_type,
+-					       talloc_tos(),
+ 					       &ss_list,
+ 					       return_count);
+ 			if (!NT_STATUS_IS_OK(status)) {
+-- 
+2.20.1
+
+
+From 52a6c9743e82ef59c4f05df5dfa4296a2ab70893 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 17:50:21 -0700
+Subject: [PATCH 36/59] s3/s4: Cleanup. Move TALLOC_CTX * parameter to be first
+ in resolve_lmhosts_file_as_sockaddr() to match modern conventions.
+
+No logic changes.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ libcli/nbt/libnbt.h              | 7 ++++---
+ libcli/nbt/lmhosts.c             | 7 ++++---
+ source3/libsmb/namequery.c       | 2 +-
+ source4/libcli/resolve/lmhosts.c | 8 ++++++--
+ 4 files changed, 15 insertions(+), 9 deletions(-)
+
+diff --git a/libcli/nbt/libnbt.h b/libcli/nbt/libnbt.h
+index f7212789897..496b2b91783 100644
+--- a/libcli/nbt/libnbt.h
++++ b/libcli/nbt/libnbt.h
+@@ -367,9 +367,10 @@ bool getlmhostsent(TALLOC_CTX *ctx, FILE *fp, char **pp_name, int *name_type,
+ 		   struct sockaddr_storage *pss);
+ void endlmhosts(FILE *fp);
+ 
+-NTSTATUS resolve_lmhosts_file_as_sockaddr(const char *lmhosts_file, 
+-					  const char *name, int name_type,
+-					  TALLOC_CTX *mem_ctx, 
++NTSTATUS resolve_lmhosts_file_as_sockaddr(TALLOC_CTX *mem_ctx,
++					  const char *lmhosts_file,
++					  const char *name,
++					  int name_type,
+ 					  struct sockaddr_storage **return_iplist,
+ 					  int *return_count);
+ 
+diff --git a/libcli/nbt/lmhosts.c b/libcli/nbt/lmhosts.c
+index f47d8b9804f..0890c0407d3 100644
+--- a/libcli/nbt/lmhosts.c
++++ b/libcli/nbt/lmhosts.c
+@@ -159,9 +159,10 @@ void endlmhosts(FILE *fp)
+  Resolve via "lmhosts" method.
+ *********************************************************/
+ 
+-NTSTATUS resolve_lmhosts_file_as_sockaddr(const char *lmhosts_file,
+-					  const char *name, int name_type,
+-					  TALLOC_CTX *mem_ctx,
++NTSTATUS resolve_lmhosts_file_as_sockaddr(TALLOC_CTX *mem_ctx,
++					  const char *lmhosts_file,
++					  const char *name,
++					  int name_type,
+ 					  struct sockaddr_storage **return_iplist,
+ 					  int *return_count)
+ {
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index 1a54f8e5c96..68a3d237e71 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2721,10 +2721,10 @@ NTSTATUS internal_resolve_name(const char *name,
+ 		} else if (strequal(tok, "lmhosts")) {
+ 			struct sockaddr_storage *ss_list;
+ 			status = resolve_lmhosts_file_as_sockaddr(
++				talloc_tos(),
+ 				get_dyn_LMHOSTSFILE(),
+ 				name,
+ 				name_type,
+-				talloc_tos(),
+ 				&ss_list,
+ 				return_count);
+ 			if (!NT_STATUS_IS_OK(status)) {
+diff --git a/source4/libcli/resolve/lmhosts.c b/source4/libcli/resolve/lmhosts.c
+index 10e1f3d2a9d..0f2cf99b459 100644
+--- a/source4/libcli/resolve/lmhosts.c
++++ b/source4/libcli/resolve/lmhosts.c
+@@ -68,8 +68,12 @@ static struct composite_context *resolve_name_lmhosts_send(
+ 	if (composite_nomem(state, c)) return c;
+ 	c->private_data = state;
+ 
+-	c->status = resolve_lmhosts_file_as_sockaddr(dyn_LMHOSTSFILE, name->name, name->type,
+-						     state, &resolved_iplist, &resolved_count);
++	c->status = resolve_lmhosts_file_as_sockaddr(state,
++						     dyn_LMHOSTSFILE,
++						     name->name,
++						     name->type,
++						     &resolved_iplist,
++						     &resolved_count);
+ 	if (!composite_is_ok(c)) return c;
+ 
+ 	for (i=0; i < resolved_count; i += 2) {
+-- 
+2.20.1
+
+
+From 57086f623413734e7b54aefa652a895c0add035f Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 17:53:28 -0700
+Subject: [PATCH 37/59] s3: libsmb: Cleanup - put talloc parameter first in
+ resolve_wins().
+
+No logic changes.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 8 ++++----
+ source3/libsmb/namequery.h | 4 ++--
+ 2 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index 68a3d237e71..cf40b4a0511 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2252,9 +2252,9 @@ NTSTATUS resolve_wins_recv(struct tevent_req *req, TALLOC_CTX *mem_ctx,
+  Resolve via "wins" method.
+ *********************************************************/
+ 
+-NTSTATUS resolve_wins(const char *name,
++NTSTATUS resolve_wins(TALLOC_CTX *mem_ctx,
++		const char *name,
+ 		int name_type,
+-		TALLOC_CTX *mem_ctx,
+ 		struct sockaddr_storage **return_iplist,
+ 		int *return_count)
+ {
+@@ -2744,9 +2744,9 @@ NTSTATUS internal_resolve_name(const char *name,
+ 			if (name_type == 0x1D) {
+ 				continue;
+ 			}
+-			status = resolve_wins(name,
++			status = resolve_wins(talloc_tos(),
++					      name,
+ 					      name_type,
+-					      talloc_tos(),
+ 					      &ss_list,
+ 					      return_count);
+ 			if (!NT_STATUS_IS_OK(status)) {
+diff --git a/source3/libsmb/namequery.h b/source3/libsmb/namequery.h
+index d7bd4d338b4..7e31dc1b632 100644
+--- a/source3/libsmb/namequery.h
++++ b/source3/libsmb/namequery.h
+@@ -80,9 +80,9 @@ struct tevent_req *resolve_wins_send(TALLOC_CTX *mem_ctx,
+ NTSTATUS resolve_wins_recv(struct tevent_req *req, TALLOC_CTX *mem_ctx,
+ 			   struct sockaddr_storage **addrs,
+ 			   int *num_addrs, uint8_t *flags);
+-NTSTATUS resolve_wins(const char *name,
++NTSTATUS resolve_wins(TALLOC_CTX *mem_ctx,
++		const char *name,
+ 		int name_type,
+-		TALLOC_CTX *mem_ctx,
+ 		struct sockaddr_storage **return_iplist,
+ 		int *return_count);
+ NTSTATUS internal_resolve_name(const char *name,
+-- 
+2.20.1
+
+
+From 9d3409d2d757fe1f88946312b790af5705a0fe05 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 17:56:48 -0700
+Subject: [PATCH 38/59] s3: libsmb: Cleanup - put talloc parameter first in
+ name_resolve_bcast().
+
+No logic changes.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/libsmb_dir.c | 7 +++++--
+ source3/libsmb/namequery.c  | 6 +++---
+ source3/libsmb/namequery.h  | 4 ++--
+ source3/utils/nmblookup.c   | 8 +++++---
+ 4 files changed, 15 insertions(+), 10 deletions(-)
+
+diff --git a/source3/libsmb/libsmb_dir.c b/source3/libsmb/libsmb_dir.c
+index 12abb734c2d..b4ebc90bf49 100644
+--- a/source3/libsmb/libsmb_dir.c
++++ b/source3/libsmb/libsmb_dir.c
+@@ -606,8 +606,11 @@ SMBC_opendir_ctx(SMBCCTX *context,
+                  */
+ 
+                 ip_list = NULL;
+-		status = name_resolve_bcast(MSBROWSE, 1, talloc_tos(),
+-					    &ip_list, &count);
++		status = name_resolve_bcast(talloc_tos(),
++					    MSBROWSE,
++					    1,
++					    &ip_list,
++					    &count);
+                 if (!NT_STATUS_IS_OK(status))
+ 		{
+ 
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index cf40b4a0511..827fb209cbe 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -1909,9 +1909,9 @@ NTSTATUS name_resolve_bcast_recv(struct tevent_req *req, TALLOC_CTX *mem_ctx,
+ 	return NT_STATUS_OK;
+ }
+ 
+-NTSTATUS name_resolve_bcast(const char *name,
++NTSTATUS name_resolve_bcast(TALLOC_CTX *mem_ctx,
++			const char *name,
+ 			int name_type,
+-			TALLOC_CTX *mem_ctx,
+ 			struct sockaddr_storage **return_iplist,
+ 			int *return_count)
+ {
+@@ -2763,9 +2763,9 @@ NTSTATUS internal_resolve_name(const char *name,
+ 		} else if (strequal(tok, "bcast")) {
+ 			struct sockaddr_storage *ss_list = NULL;
+ 			status = name_resolve_bcast(
++						talloc_tos(),
+ 						name,
+ 						name_type,
+-						talloc_tos(),
+ 						&ss_list,
+ 						return_count);
+ 			if (!NT_STATUS_IS_OK(status)) {
+diff --git a/source3/libsmb/namequery.h b/source3/libsmb/namequery.h
+index 7e31dc1b632..aedb043ac81 100644
+--- a/source3/libsmb/namequery.h
++++ b/source3/libsmb/namequery.h
+@@ -68,9 +68,9 @@ struct tevent_req *name_resolve_bcast_send(TALLOC_CTX *mem_ctx,
+ NTSTATUS name_resolve_bcast_recv(struct tevent_req *req, TALLOC_CTX *mem_ctx,
+ 				 struct sockaddr_storage **addrs,
+ 				 int *num_addrs);
+-NTSTATUS name_resolve_bcast(const char *name,
++NTSTATUS name_resolve_bcast(TALLOC_CTX *mem_ctx,
++			const char *name,
+ 			int name_type,
+-			TALLOC_CTX *mem_ctx,
+ 			struct sockaddr_storage **return_iplist,
+ 			int *return_count);
+ struct tevent_req *resolve_wins_send(TALLOC_CTX *mem_ctx,
+diff --git a/source3/utils/nmblookup.c b/source3/utils/nmblookup.c
+index c74b6497a35..2f50c5c8f5a 100644
+--- a/source3/utils/nmblookup.c
++++ b/source3/utils/nmblookup.c
+@@ -171,9 +171,11 @@ static bool query_one(const char *lookup, unsigned int lookup_type)
+ 				    &bcast_addr, talloc_tos(),
+ 				    &ip_list, &count, &flags);
+ 	} else {
+-		status = name_resolve_bcast(
+-			lookup, lookup_type,
+-			talloc_tos(), &ip_list, &count);
++		status = name_resolve_bcast(talloc_tos(),
++					    lookup,
++					    lookup_type,
++					    &ip_list,
++					    &count);
+ 	}
+ 
+ 	if (!NT_STATUS_IS_OK(status)) {
+-- 
+2.20.1
+
+
+From 2fad9ea9c0e0aa1c192cb4cba05315b01d4ca694 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 20:27:38 -0700
+Subject: [PATCH 39/59] s3: libsmb: Cleanup - ensure ss_list variables are
+ initialized with NULL.
+
+No logic changes.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index 827fb209cbe..bc65975474a 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2674,7 +2674,7 @@ NTSTATUS internal_resolve_name(const char *name,
+ 		tok = resolve_order[i];
+ 
+ 		if((strequal(tok, "host") || strequal(tok, "hosts"))) {
+-			struct sockaddr_storage *ss_list;
++			struct sockaddr_storage *ss_list = NULL;
+ 			status = resolve_hosts(talloc_tos(),
+ 					       name,
+ 					       name_type,
+@@ -2719,7 +2719,7 @@ NTSTATUS internal_resolve_name(const char *name,
+ 			}
+ 			goto done;
+ 		} else if (strequal(tok, "lmhosts")) {
+-			struct sockaddr_storage *ss_list;
++			struct sockaddr_storage *ss_list = NULL;
+ 			status = resolve_lmhosts_file_as_sockaddr(
+ 				talloc_tos(),
+ 				get_dyn_LMHOSTSFILE(),
+-- 
+2.20.1
+
+
+From 80de957de6644484d11e6eedd1f50b74d55afff2 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 17:59:20 -0700
+Subject: [PATCH 40/59] s3: libsmb: Pass in TALLOC_CTX * parameter to
+ resolve_ads() instead of creating one internally.
+
+Pass in talloc_tos() to make it match the other resolve_XXX() functions.
+
+No memory leaks as this is used for transient data and is cleaned up
+when the calling frame in internal_resolve_name() is destroyed.
+
+Preparing to have it return a talloc'ed struct sockaddr_storage array
+rather than a malloc'ed struct ip_service array.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 20 ++++++--------------
+ 1 file changed, 6 insertions(+), 14 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index bc65975474a..e1c95c8996f 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2375,7 +2375,8 @@ static NTSTATUS resolve_hosts(TALLOC_CTX *mem_ctx,
+ /* Special name type used to cause a _kerberos DNS lookup. */
+ #define KDC_NAME_TYPE 0xDCDC
+ 
+-static NTSTATUS resolve_ads(const char *name,
++static NTSTATUS resolve_ads(TALLOC_CTX *ctx,
++			    const char *name,
+ 			    int name_type,
+ 			    const char *sitename,
+ 			    struct ip_service **return_iplist,
+@@ -2383,7 +2384,6 @@ static NTSTATUS resolve_ads(const char *name,
+ {
+ 	int 			i;
+ 	NTSTATUS  		status;
+-	TALLOC_CTX		*ctx;
+ 	struct dns_rr_srv	*dcs = NULL;
+ 	int			numdcs = 0;
+ 	int			numaddrs = 0;
+@@ -2393,11 +2393,6 @@ static NTSTATUS resolve_ads(const char *name,
+ 		return NT_STATUS_INVALID_PARAMETER;
+ 	}
+ 
+-	if ( (ctx = talloc_init("resolve_ads")) == NULL ) {
+-		DEBUG(0,("resolve_ads: talloc_init() failed!\n"));
+-		return NT_STATUS_NO_MEMORY;
+-	}
+-
+ 	switch (name_type) {
+ 		case 0x1b:
+ 			DEBUG(5,("resolve_ads: Attempting to resolve "
+@@ -2432,14 +2427,12 @@ static NTSTATUS resolve_ads(const char *name,
+ 	}
+ 
+ 	if ( !NT_STATUS_IS_OK( status ) ) {
+-		talloc_destroy(ctx);
+ 		return status;
+ 	}
+ 
+ 	if (numdcs == 0) {
+ 		*return_iplist = NULL;
+ 		*return_count = 0;
+-		talloc_destroy(ctx);
+ 		return NT_STATUS_OK;
+ 	}
+ 
+@@ -2455,7 +2448,6 @@ static NTSTATUS resolve_ads(const char *name,
+ 			NULL ) {
+ 		DEBUG(0,("resolve_ads: malloc failed for %d entries\n",
+ 					numaddrs ));
+-		talloc_destroy(ctx);
+ 		return NT_STATUS_NO_MEMORY;
+ 	}
+ 
+@@ -2497,7 +2489,6 @@ static NTSTATUS resolve_ads(const char *name,
+ 					if (res) {
+ 						freeaddrinfo(res);
+ 					}
+-					talloc_destroy(ctx);
+ 					return NT_STATUS_NO_MEMORY;
+ 				}
+ 			}
+@@ -2536,7 +2527,6 @@ static NTSTATUS resolve_ads(const char *name,
+ 		}
+ 	}
+ 
+-	talloc_destroy(ctx);
+ 	return NT_STATUS_OK;
+ }
+ 
+@@ -2694,7 +2684,8 @@ NTSTATUS internal_resolve_name(const char *name,
+ 		} else if(strequal( tok, "kdc")) {
+ 			/* deal with KDC_NAME_TYPE names here.
+ 			 * This will result in a SRV record lookup */
+-			status = resolve_ads(name,
++			status = resolve_ads(talloc_tos(),
++					     name,
+ 					     KDC_NAME_TYPE,
+ 					     sitename,
+ 					     return_iplist,
+@@ -2709,7 +2700,8 @@ NTSTATUS internal_resolve_name(const char *name,
+ 		} else if(strequal( tok, "ads")) {
+ 			/* deal with 0x1c and 0x1b names here.
+ 			 * This will result in a SRV record lookup */
+-			status = resolve_ads(name,
++			status = resolve_ads(talloc_tos(),
++					     name,
+ 					     name_type,
+ 					     sitename,
+ 					     return_iplist,
+-- 
+2.20.1
+
+
+From adbf4fdce6a61d1bee1ed2ff5bcbdf6e16f8f739 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 18:31:16 -0700
+Subject: [PATCH 41/59] s3: libsmb: Add in (currently unused) function
+ dns_lookup_list().
+
+This function takes a list of names returned from a DNS SRV
+query which didn't have returned IP addresses and returns an
+array of struct sockaddr_storage.
+
+Currently synchronous, but this is the function that will
+be changed to be asynchronous later.
+
+Compiles but commented out for now so we don't get "unused
+function" warnings.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 83 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 83 insertions(+)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index e1c95c8996f..b760ed46b99 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2280,6 +2280,89 @@ fail:
+ 	return status;
+ }
+ 
++#if 0
++/********************************************************
++ Resolve a list of DNS names to a list of IP addresses.
++ As this is a DC / LDAP / KDC lookup any IP address will
++ do, the requested names don't have to match the returned
++ IP address list.
++*********************************************************/
++
++static NTSTATUS dns_lookup_list(TALLOC_CTX *ctx,
++				size_t num_dns_names,
++				const char **dns_lookup_names,
++				size_t *p_num_addrs,
++				struct sockaddr_storage **pp_addrs)
++{
++	size_t total_num_addrs = 0;
++	size_t i;
++	struct sockaddr_storage *ret_addrs = NULL;
++
++	/* FIXME - make this asnyc using our async DNS code. */
++
++	for (i = 0; i < num_dns_names; i++ ) {
++		struct addrinfo *res = NULL;
++		struct addrinfo *p = NULL;
++		size_t num_addrs = 0;
++		bool ret = interpret_string_addr_internal(&res,
++					dns_lookup_names[i],
++					0);
++		if (!ret) {
++			continue;
++		}
++		/* Count the IP's returned from the lookup. */
++		for (p = res; p; p = p->ai_next) {
++			num_addrs++;
++		}
++
++		/* Wrap check. */
++		if (total_num_addrs + num_addrs < total_num_addrs) {
++			if (res) {
++				freeaddrinfo(res);
++			}
++			return NT_STATUS_INVALID_PARAMETER;
++		}
++		ret_addrs = talloc_realloc(ctx,
++					   ret_addrs,
++					   struct sockaddr_storage,
++					   total_num_addrs + num_addrs);
++		if (ret_addrs == NULL) {
++			if (res) {
++				freeaddrinfo(res);
++			}
++			return NT_STATUS_NO_MEMORY;
++		}
++
++		for (p = res; p; p = p->ai_next) {
++			char addr[INET6_ADDRSTRLEN];
++
++			memcpy(&ret_addrs[total_num_addrs],
++				p->ai_addr,
++				p->ai_addrlen);
++
++			if (is_zero_addr(&ret_addrs[total_num_addrs])) {
++				continue;
++			}
++
++			DBG_DEBUG("getaddrinfo name %s returned IP %s\n",
++				dns_lookup_names[i],
++				print_sockaddr(addr,
++					sizeof(addr),
++					&ret_addrs[total_num_addrs]));
++
++			total_num_addrs++;
++		}
++		if (res) {
++			freeaddrinfo(res);
++		}
++	}
++
++	*p_num_addrs = total_num_addrs;
++	*pp_addrs = ret_addrs;
++	return NT_STATUS_OK;
++}
++#endif
++
+ /********************************************************
+  Resolve via "hosts" method.
+ *********************************************************/
+-- 
+2.20.1
+
+
+From 050b755956ed7f6ab35b5bcdb55563e48dc992fd Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 19:50:04 -0700
+Subject: [PATCH 42/59] s3: libsmb: Rewrite resolve_ads() to use the previously
+ added dns_lookup_list() function.
+
+Clean up internals - a LOT.
+
+This one needs careful review. Ditch the (unused) port returns from
+the SRV replies.
+
+Internally uses talloc'ed arrays of struct sockaddr_storage
+which it then convert to MALLOC'ed struct ip_service.
+
+Still returns struct ip_service but this will be
+fixed in the next commit.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 242 ++++++++++++++++++++++++-------------
+ 1 file changed, 160 insertions(+), 82 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index b760ed46b99..3380d80a85e 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2280,7 +2280,6 @@ fail:
+ 	return status;
+ }
+ 
+-#if 0
+ /********************************************************
+  Resolve a list of DNS names to a list of IP addresses.
+  As this is a DC / LDAP / KDC lookup any IP address will
+@@ -2361,7 +2360,6 @@ static NTSTATUS dns_lookup_list(TALLOC_CTX *ctx,
+ 	*pp_addrs = ret_addrs;
+ 	return NT_STATUS_OK;
+ }
+-#endif
+ 
+ /********************************************************
+  Resolve via "hosts" method.
+@@ -2470,6 +2468,13 @@ static NTSTATUS resolve_ads(TALLOC_CTX *ctx,
+ 	struct dns_rr_srv	*dcs = NULL;
+ 	int			numdcs = 0;
+ 	int			numaddrs = 0;
++	size_t num_srv_addrs = 0;
++	struct sockaddr_storage *srv_addrs = NULL;
++	size_t num_dns_addrs = 0;
++	struct sockaddr_storage *dns_addrs = NULL;
++	size_t num_dns_names = 0;
++	const char **dns_lookup_names = NULL;
++	struct ip_service *iplist = NULL;
+ 
+ 	if ((name_type != 0x1c) && (name_type != KDC_NAME_TYPE) &&
+ 	    (name_type != 0x1b)) {
+@@ -2509,107 +2514,180 @@ static NTSTATUS resolve_ads(TALLOC_CTX *ctx,
+ 			break;
+ 	}
+ 
+-	if ( !NT_STATUS_IS_OK( status ) ) {
++	if (!NT_STATUS_IS_OK(status)) {
++		TALLOC_FREE(dcs);
+ 		return status;
+ 	}
+ 
+ 	if (numdcs == 0) {
++		TALLOC_FREE(dcs);
+ 		*return_iplist = NULL;
+ 		*return_count = 0;
+ 		return NT_STATUS_OK;
+ 	}
+ 
+-	for (i=0;i<numdcs;i++) {
+-		if (!dcs[i].ss_s) {
+-			numaddrs += 1;
++	/*
++	 * Split the returned values into 2 arrays. First one
++	 * is a struct sockaddr_storage array that contains results
++	 * from the SRV record lookup that contain both hostnames
++	 * and IP addresses. We only need to copy out the IP
++	 * addresses. This is srv_addrs.
++	 *
++	 * Second array contains the results from the SRV record
++	 * lookup that only contain hostnames - no IP addresses.
++	 * We must then call dns_lookup_list() to lookup
++	 * hostnames -> IP address. This is dns_addrs.
++	 *
++	 * Finally we will merge these two arrays to create the
++	 * return ip_service array.
++	 */
++
++	/* First count the sizes of each array. */
++	for(i = 0; i < numdcs; i++) {
++		if (dcs[i].ss_s != NULL) {
++			/* IP address returned in SRV record. */
++			if (num_srv_addrs + dcs[i].num_ips < num_srv_addrs) {
++				/* Wrap check. */
++				TALLOC_FREE(dcs);
++				return NT_STATUS_INVALID_PARAMETER;
++			}
++			/* Add in the number of addresses we got. */
++			num_srv_addrs += dcs[i].num_ips;
++			/*
++			 * If we got any IP addresses zero out
++			 * the hostname so we know we've already
++			 * processed this entry and won't add it
++			 * to the dns_lookup_names array we use
++			 * to do DNS queries below.
++			 */
++			dcs[i].hostname = NULL;
+ 		} else {
+-			numaddrs += dcs[i].num_ips;
++			/* Ensure we have a hostname to lookup. */
++			if (dcs[i].hostname == NULL) {
++				continue;
++			}
++			/* No IP address returned in SRV record. */
++			if (num_dns_names + 1 < num_dns_names) {
++				/* Wrap check. */
++				TALLOC_FREE(dcs);
++				return NT_STATUS_INVALID_PARAMETER;
++			}
++			/* One more name to lookup. */
++			num_dns_names += 1;
+ 		}
+-        }
++	}
+ 
+-	if ((*return_iplist = SMB_MALLOC_ARRAY(struct ip_service, numaddrs)) ==
+-			NULL ) {
+-		DEBUG(0,("resolve_ads: malloc failed for %d entries\n",
+-					numaddrs ));
++	/* Allocate the list of IP addresses we already have. */
++	srv_addrs = talloc_zero_array(ctx,
++				struct sockaddr_storage,
++				num_srv_addrs);
++	if (srv_addrs == NULL) {
++		TALLOC_FREE(dcs);
+ 		return NT_STATUS_NO_MEMORY;
+ 	}
+ 
+-	/* now unroll the list of IP addresses */
+-
+-	*return_count = 0;
++	/* Copy the addresses we already have. */
++	num_srv_addrs = 0;
++	for(i = 0; i < numdcs; i++) {
++		/* Copy all the IP addresses from the SRV response */
++		size_t j;
++		for (j = 0; j < dcs[i].num_ips; j++) {
++			char addr[INET6_ADDRSTRLEN];
+ 
+-	for (i = 0; i < numdcs && (*return_count<numaddrs); i++ ) {
+-		/* If we don't have an IP list for a name, lookup it up */
+-		if (!dcs[i].ss_s) {
+-			/* We need to get all IP addresses here. */
+-			struct addrinfo *res = NULL;
+-			struct addrinfo *p;
+-			int extra_addrs = 0;
+-
+-			if (!interpret_string_addr_internal(&res,
+-						dcs[i].hostname,
+-						0)) {
++			srv_addrs[num_srv_addrs] = dcs[i].ss_s[j];
++			if (is_zero_addr(&srv_addrs[num_srv_addrs])) {
+ 				continue;
+ 			}
+-			/* Add in every IP from the lookup. How
+-			   many is that ? */
+-			for (p = res; p; p = p->ai_next) {
+-				struct sockaddr_storage ss;
+-				memcpy(&ss, p->ai_addr, p->ai_addrlen);
+-				if (is_zero_addr(&ss)) {
+-					continue;
+-				}
+-				extra_addrs++;
+-			}
+-			if (extra_addrs > 1) {
+-				/* We need to expand the return_iplist array
+-				   as we only budgeted for one address. */
+-				numaddrs += (extra_addrs-1);
+-				*return_iplist = SMB_REALLOC_ARRAY(*return_iplist,
+-						struct ip_service,
+-						numaddrs);
+-				if (*return_iplist == NULL) {
+-					if (res) {
+-						freeaddrinfo(res);
+-					}
+-					return NT_STATUS_NO_MEMORY;
+-				}
+-			}
+-			for (p = res; p; p = p->ai_next) {
+-				(*return_iplist)[*return_count].port = dcs[i].port;
+-				memcpy(&(*return_iplist)[*return_count].ss,
+-						p->ai_addr,
+-						p->ai_addrlen);
+-				if (is_zero_addr(&(*return_iplist)[*return_count].ss)) {
+-					continue;
+-				}
+-				(*return_count)++;
+-				/* Should never happen, but still... */
+-				if (*return_count>=numaddrs) {
+-					break;
+-				}
+-			}
+-			if (res) {
+-				freeaddrinfo(res);
+-			}
+-		} else {
+-			/* use all the IP addresses from the SRV response */
+-			size_t j;
+-			for (j = 0; j < dcs[i].num_ips; j++) {
+-				(*return_iplist)[*return_count].port = dcs[i].port;
+-				(*return_iplist)[*return_count].ss = dcs[i].ss_s[j];
+-				if (is_zero_addr(&(*return_iplist)[*return_count].ss)) {
+-					continue;
+-				}
+-                                (*return_count)++;
+-				/* Should never happen, but still... */
+-				if (*return_count>=numaddrs) {
+-					break;
+-				}
+-			}
++
++			DBG_DEBUG("SRV lookup %s got IP[%zu] %s\n",
++				name,
++				j,
++				print_sockaddr(addr,
++					sizeof(addr),
++					&srv_addrs[num_srv_addrs]));
++
++			num_srv_addrs++;
+ 		}
+ 	}
+ 
++	/* Allocate the array of hostnames we must look up. */
++	dns_lookup_names = talloc_zero_array(ctx,
++					const char *,
++					num_dns_names);
++	if (dns_lookup_names == NULL) {
++		TALLOC_FREE(dcs);
++		TALLOC_FREE(srv_addrs);
++		return NT_STATUS_NO_MEMORY;
++	}
++
++	num_dns_names = 0;
++	for(i = 0; i < numdcs; i++) {
++		if (dcs[i].hostname == NULL) {
++			/*
++			 * Must have been a SRV return with an IP address.
++			 * We don't need to look up this hostname.
++			 */
++			continue;
++                }
++		dns_lookup_names[num_dns_names] = dcs[i].hostname;
++		num_dns_names++;
++	}
++
++	/* Lookup the addresses on the dns_lookup_list. */
++	status = dns_lookup_list(ctx,
++				num_dns_names,
++				dns_lookup_names,
++				&num_dns_addrs,
++				&dns_addrs);
++
++	if (!NT_STATUS_IS_OK(status)) {
++		TALLOC_FREE(dcs);
++		TALLOC_FREE(srv_addrs);
++		TALLOC_FREE(dns_lookup_names);
++		return status;
++	}
++
++	/*
++	 * Combine the two sockaddr_storage arrays into a MALLOC'ed
++	 * ipservice array return.
++	 */
++
++	numaddrs = num_srv_addrs + num_dns_addrs;
++	/* Wrap check + bloody int conversion check :-(. */
++	if (numaddrs < num_srv_addrs ||
++				numaddrs < 0) {
++		TALLOC_FREE(dcs);
++		TALLOC_FREE(srv_addrs);
++		TALLOC_FREE(dns_addrs);
++		TALLOC_FREE(dns_lookup_names);
++		return NT_STATUS_INVALID_PARAMETER;
++	}
++
++	iplist = SMB_MALLOC_ARRAY(struct ip_service, numaddrs);
++	if (iplist == NULL) {
++		TALLOC_FREE(dcs);
++		TALLOC_FREE(srv_addrs);
++		TALLOC_FREE(dns_addrs);
++		TALLOC_FREE(dns_lookup_names);
++		return NT_STATUS_NO_MEMORY;
++	}
++
++	for (i = 0; i < num_srv_addrs; i++) {
++		iplist[i].ss = srv_addrs[i];
++		iplist[i].port = 0;
++	}
++	for (i = 0; i < num_dns_addrs; i++) {
++		iplist[num_srv_addrs+i].ss = dns_addrs[i];
++		iplist[i].port = 0;
++	}
++
++	TALLOC_FREE(dcs);
++	TALLOC_FREE(srv_addrs);
++	TALLOC_FREE(dns_addrs);
++	TALLOC_FREE(dns_lookup_names);
++
++	*return_iplist = iplist;
++	*return_count = numaddrs;
+ 	return NT_STATUS_OK;
+ }
+ 
+-- 
+2.20.1
+
+
+From 51e0755bff408658cf9fa72fddc863fd857227b3 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 20:17:54 -0700
+Subject: [PATCH 43/59] s3: libsmb: Change resolve_ads() to return a talloc'ed
+ ss_list, matching the other name resolution methods.
+
+Now we can move all the convert_ss2service() calls to one place.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 46 +++++++++++++++++++++++++-------------
+ 1 file changed, 30 insertions(+), 16 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index 3380d80a85e..a324b786171 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2460,7 +2460,7 @@ static NTSTATUS resolve_ads(TALLOC_CTX *ctx,
+ 			    const char *name,
+ 			    int name_type,
+ 			    const char *sitename,
+-			    struct ip_service **return_iplist,
++			    struct sockaddr_storage **return_addrs,
+ 			    int *return_count)
+ {
+ 	int 			i;
+@@ -2474,7 +2474,7 @@ static NTSTATUS resolve_ads(TALLOC_CTX *ctx,
+ 	struct sockaddr_storage *dns_addrs = NULL;
+ 	size_t num_dns_names = 0;
+ 	const char **dns_lookup_names = NULL;
+-	struct ip_service *iplist = NULL;
++	struct sockaddr_storage *ret_addrs = NULL;
+ 
+ 	if ((name_type != 0x1c) && (name_type != KDC_NAME_TYPE) &&
+ 	    (name_type != 0x1b)) {
+@@ -2521,7 +2521,7 @@ static NTSTATUS resolve_ads(TALLOC_CTX *ctx,
+ 
+ 	if (numdcs == 0) {
+ 		TALLOC_FREE(dcs);
+-		*return_iplist = NULL;
++		*return_addrs = NULL;
+ 		*return_count = 0;
+ 		return NT_STATUS_OK;
+ 	}
+@@ -2539,7 +2539,7 @@ static NTSTATUS resolve_ads(TALLOC_CTX *ctx,
+ 	 * hostnames -> IP address. This is dns_addrs.
+ 	 *
+ 	 * Finally we will merge these two arrays to create the
+-	 * return ip_service array.
++	 * return sockaddr_storage array.
+ 	 */
+ 
+ 	/* First count the sizes of each array. */
+@@ -2648,9 +2648,9 @@ static NTSTATUS resolve_ads(TALLOC_CTX *ctx,
+ 	}
+ 
+ 	/*
+-	 * Combine the two sockaddr_storage arrays into a MALLOC'ed
+-	 * ipservice array return.
+-	 */
++	 * Combine the two sockaddr_storage arrays into a talloc'ed
++	 * struct sockaddr_storage array return.
++         */
+ 
+ 	numaddrs = num_srv_addrs + num_dns_addrs;
+ 	/* Wrap check + bloody int conversion check :-(. */
+@@ -2663,8 +2663,10 @@ static NTSTATUS resolve_ads(TALLOC_CTX *ctx,
+ 		return NT_STATUS_INVALID_PARAMETER;
+ 	}
+ 
+-	iplist = SMB_MALLOC_ARRAY(struct ip_service, numaddrs);
+-	if (iplist == NULL) {
++	ret_addrs = talloc_zero_array(ctx,
++				struct sockaddr_storage,
++				numaddrs);
++	if (ret_addrs == NULL) {
+ 		TALLOC_FREE(dcs);
+ 		TALLOC_FREE(srv_addrs);
+ 		TALLOC_FREE(dns_addrs);
+@@ -2673,12 +2675,10 @@ static NTSTATUS resolve_ads(TALLOC_CTX *ctx,
+ 	}
+ 
+ 	for (i = 0; i < num_srv_addrs; i++) {
+-		iplist[i].ss = srv_addrs[i];
+-		iplist[i].port = 0;
++		ret_addrs[i] = srv_addrs[i];
+ 	}
+ 	for (i = 0; i < num_dns_addrs; i++) {
+-		iplist[num_srv_addrs+i].ss = dns_addrs[i];
+-		iplist[i].port = 0;
++		ret_addrs[num_srv_addrs+i] = dns_addrs[i];
+ 	}
+ 
+ 	TALLOC_FREE(dcs);
+@@ -2686,7 +2686,7 @@ static NTSTATUS resolve_ads(TALLOC_CTX *ctx,
+ 	TALLOC_FREE(dns_addrs);
+ 	TALLOC_FREE(dns_lookup_names);
+ 
+-	*return_iplist = iplist;
++	*return_addrs = ret_addrs;
+ 	*return_count = numaddrs;
+ 	return NT_STATUS_OK;
+ }
+@@ -2845,11 +2845,12 @@ NTSTATUS internal_resolve_name(const char *name,
+ 		} else if(strequal( tok, "kdc")) {
+ 			/* deal with KDC_NAME_TYPE names here.
+ 			 * This will result in a SRV record lookup */
++			struct sockaddr_storage *ss_list = NULL;
+ 			status = resolve_ads(talloc_tos(),
+ 					     name,
+ 					     KDC_NAME_TYPE,
+ 					     sitename,
+-					     return_iplist,
++					     &ss_list,
+ 					     return_count);
+ 			if (!NT_STATUS_IS_OK(status)) {
+ 				continue;
+@@ -2857,19 +2858,32 @@ NTSTATUS internal_resolve_name(const char *name,
+ 			/* Ensure we don't namecache
+ 			 * this with the KDC port. */
+ 			name_type = KDC_NAME_TYPE;
++			ok = convert_ss2service(return_iplist,
++						ss_list,
++						return_count);
++			if (!ok) {
++				status = NT_STATUS_NO_MEMORY;
++			}
+ 			goto done;
+ 		} else if(strequal( tok, "ads")) {
+ 			/* deal with 0x1c and 0x1b names here.
+ 			 * This will result in a SRV record lookup */
++			struct sockaddr_storage *ss_list = NULL;
+ 			status = resolve_ads(talloc_tos(),
+ 					     name,
+ 					     name_type,
+ 					     sitename,
+-					     return_iplist,
++					     &ss_list,
+ 					     return_count);
+ 			if (!NT_STATUS_IS_OK(status)) {
+ 				continue;
+ 			}
++			ok = convert_ss2service(return_iplist,
++						ss_list,
++						return_count);
++			if (!ok) {
++				status = NT_STATUS_NO_MEMORY;
++			}
+ 			goto done;
+ 		} else if (strequal(tok, "lmhosts")) {
+ 			struct sockaddr_storage *ss_list = NULL;
+-- 
+2.20.1
+
+
+From fc1413ae881c3d86f022150be79fa5972584fcd6 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 20:40:02 -0700
+Subject: [PATCH 44/59] s3: libsmb: Now all resolution functions return a
+ ss_list on success, we only need one local variable for this.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index a324b786171..26278d3af32 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2745,6 +2745,7 @@ NTSTATUS internal_resolve_name(const char *name,
+ 	NTSTATUS status = NT_STATUS_UNSUCCESSFUL;
+ 	int i;
+ 	bool ok;
++	struct sockaddr_storage *ss_list = NULL;
+ 	TALLOC_CTX *frame = NULL;
+ 
+ 	*return_iplist = NULL;
+@@ -2825,7 +2826,6 @@ NTSTATUS internal_resolve_name(const char *name,
+ 		tok = resolve_order[i];
+ 
+ 		if((strequal(tok, "host") || strequal(tok, "hosts"))) {
+-			struct sockaddr_storage *ss_list = NULL;
+ 			status = resolve_hosts(talloc_tos(),
+ 					       name,
+ 					       name_type,
+@@ -2845,7 +2845,6 @@ NTSTATUS internal_resolve_name(const char *name,
+ 		} else if(strequal( tok, "kdc")) {
+ 			/* deal with KDC_NAME_TYPE names here.
+ 			 * This will result in a SRV record lookup */
+-			struct sockaddr_storage *ss_list = NULL;
+ 			status = resolve_ads(talloc_tos(),
+ 					     name,
+ 					     KDC_NAME_TYPE,
+@@ -2868,7 +2867,6 @@ NTSTATUS internal_resolve_name(const char *name,
+ 		} else if(strequal( tok, "ads")) {
+ 			/* deal with 0x1c and 0x1b names here.
+ 			 * This will result in a SRV record lookup */
+-			struct sockaddr_storage *ss_list = NULL;
+ 			status = resolve_ads(talloc_tos(),
+ 					     name,
+ 					     name_type,
+@@ -2886,7 +2884,6 @@ NTSTATUS internal_resolve_name(const char *name,
+ 			}
+ 			goto done;
+ 		} else if (strequal(tok, "lmhosts")) {
+-			struct sockaddr_storage *ss_list = NULL;
+ 			status = resolve_lmhosts_file_as_sockaddr(
+ 				talloc_tos(),
+ 				get_dyn_LMHOSTSFILE(),
+@@ -2907,7 +2904,6 @@ NTSTATUS internal_resolve_name(const char *name,
+ 			goto done;
+ 		} else if (strequal(tok, "wins")) {
+ 			/* don't resolve 1D via WINS */
+-			struct sockaddr_storage *ss_list = NULL;
+ 			if (name_type == 0x1D) {
+ 				continue;
+ 			}
+@@ -2928,7 +2924,6 @@ NTSTATUS internal_resolve_name(const char *name,
+ 			}
+ 			goto done;
+ 		} else if (strequal(tok, "bcast")) {
+-			struct sockaddr_storage *ss_list = NULL;
+ 			status = name_resolve_bcast(
+ 						talloc_tos(),
+ 						name,
+-- 
+2.20.1
+
+
+From 317c249bf732f5ca4a3f0276a939bf140812aac8 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Mon, 20 Jul 2020 20:52:58 -0700
+Subject: [PATCH 45/59] s3: libsmb: Move all calls to convert_ss2service() to
+ one place now all methods return a sockaddr_storage.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 50 ++++++--------------------------------
+ 1 file changed, 8 insertions(+), 42 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index 26278d3af32..a3e994e2e37 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2834,13 +2834,6 @@ NTSTATUS internal_resolve_name(const char *name,
+ 			if (!NT_STATUS_IS_OK(status)) {
+ 				continue;
+ 			}
+-			ok = convert_ss2service(return_iplist,
+-						ss_list,
+-						return_count);
+-			if (!ok) {
+-				status = NT_STATUS_NO_MEMORY;
+-				goto fail;
+-			}
+ 			goto done;
+ 		} else if(strequal( tok, "kdc")) {
+ 			/* deal with KDC_NAME_TYPE names here.
+@@ -2857,12 +2850,6 @@ NTSTATUS internal_resolve_name(const char *name,
+ 			/* Ensure we don't namecache
+ 			 * this with the KDC port. */
+ 			name_type = KDC_NAME_TYPE;
+-			ok = convert_ss2service(return_iplist,
+-						ss_list,
+-						return_count);
+-			if (!ok) {
+-				status = NT_STATUS_NO_MEMORY;
+-			}
+ 			goto done;
+ 		} else if(strequal( tok, "ads")) {
+ 			/* deal with 0x1c and 0x1b names here.
+@@ -2876,12 +2863,6 @@ NTSTATUS internal_resolve_name(const char *name,
+ 			if (!NT_STATUS_IS_OK(status)) {
+ 				continue;
+ 			}
+-			ok = convert_ss2service(return_iplist,
+-						ss_list,
+-						return_count);
+-			if (!ok) {
+-				status = NT_STATUS_NO_MEMORY;
+-			}
+ 			goto done;
+ 		} else if (strequal(tok, "lmhosts")) {
+ 			status = resolve_lmhosts_file_as_sockaddr(
+@@ -2894,13 +2875,6 @@ NTSTATUS internal_resolve_name(const char *name,
+ 			if (!NT_STATUS_IS_OK(status)) {
+ 				continue;
+ 			}
+-			ok = convert_ss2service(return_iplist,
+-						ss_list,
+-						return_count);
+-			if (!ok) {
+-				status = NT_STATUS_NO_MEMORY;
+-				goto fail;
+-			}
+ 			goto done;
+ 		} else if (strequal(tok, "wins")) {
+ 			/* don't resolve 1D via WINS */
+@@ -2915,13 +2889,6 @@ NTSTATUS internal_resolve_name(const char *name,
+ 			if (!NT_STATUS_IS_OK(status)) {
+ 				continue;
+ 			}
+-			ok = convert_ss2service(return_iplist,
+-						ss_list,
+-						return_count);
+-			if (!ok) {
+-				status = NT_STATUS_NO_MEMORY;
+-				goto fail;
+-			}
+ 			goto done;
+ 		} else if (strequal(tok, "bcast")) {
+ 			status = name_resolve_bcast(
+@@ -2933,13 +2900,6 @@ NTSTATUS internal_resolve_name(const char *name,
+ 			if (!NT_STATUS_IS_OK(status)) {
+ 				continue;
+ 			}
+-			ok = convert_ss2service(return_iplist,
+-						ss_list,
+-						return_count);
+-			if (!ok) {
+-				status = NT_STATUS_NO_MEMORY;
+-				goto fail;
+-			}
+ 			goto done;
+ 		} else {
+ 			DBG_ERR("unknown name switch type %s\n",
+@@ -2949,8 +2909,6 @@ NTSTATUS internal_resolve_name(const char *name,
+ 
+ 	/* All of the resolve_* functions above have returned false. */
+ 
+-  fail:
+-
+ 	TALLOC_FREE(frame);
+ 	SAFE_FREE(*return_iplist);
+ 	*return_count = 0;
+@@ -2959,6 +2917,14 @@ NTSTATUS internal_resolve_name(const char *name,
+ 
+   done:
+ 
++	ok = convert_ss2service(return_iplist, ss_list, return_count);
++	if (!ok) {
++		TALLOC_FREE(frame);
++		SAFE_FREE(*return_iplist);
++		*return_count = 0;
++		return NT_STATUS_NO_MEMORY;
++	}
++
+ 	/* Remove duplicate entries.  Some queries, notably #1c (domain
+ 	controllers) return the PDC in iplist[0] and then all domain
+ 	controllers including the PDC in iplist[1..n].  Iterating over
+-- 
+2.20.1
+
+
+From 62d9ceace845ef7dfc335de211ff8de9042820aa Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Fri, 17 Jul 2020 14:21:09 -0700
+Subject: [PATCH 46/59] lib: addns: Add code for asynchronously looking up A
+ records.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ lib/addns/dnsquery.c | 195 +++++++++++++++++++++++++++++++++++++++++++
+ lib/addns/dnsquery.h |  15 ++++
+ 2 files changed, 210 insertions(+)
+
+diff --git a/lib/addns/dnsquery.c b/lib/addns/dnsquery.c
+index 90e4de9a053..12bdbe94225 100644
+--- a/lib/addns/dnsquery.c
++++ b/lib/addns/dnsquery.c
+@@ -371,6 +371,201 @@ fail:
+ 	return status;
+ }
+ 
++/*********************************************************************
++ Async A record lookup.
++*********************************************************************/
++
++struct ads_dns_lookup_a_state {
++	uint8_t rcode;
++	size_t num_names;
++	char **hostnames;
++	struct sockaddr_storage *addrs;
++};
++
++static void ads_dns_lookup_a_done(struct tevent_req *subreq);
++
++struct tevent_req *ads_dns_lookup_a_send(TALLOC_CTX *mem_ctx,
++					 struct tevent_context *ev,
++					 const char *name)
++{
++	struct tevent_req *req, *subreq;
++	struct ads_dns_lookup_a_state *state;
++
++	req = tevent_req_create(mem_ctx, &state,
++				struct ads_dns_lookup_a_state);
++	if (req == NULL) {
++		return NULL;
++	}
++
++	subreq = dns_lookup_send(
++		state,
++		ev,
++		NULL,
++		name,
++		DNS_QCLASS_IN,
++		DNS_QTYPE_A);
++
++	if (tevent_req_nomem(subreq, req)) {
++		return tevent_req_post(req, ev);
++	}
++	tevent_req_set_callback(subreq, ads_dns_lookup_a_done, req);
++	return req;
++}
++
++static void ads_dns_lookup_a_done(struct tevent_req *subreq)
++{
++	struct tevent_req *req = tevent_req_callback_data(
++		subreq, struct tevent_req);
++	struct ads_dns_lookup_a_state *state = tevent_req_data(
++		req, struct ads_dns_lookup_a_state);
++	int ret;
++	struct dns_name_packet *reply;
++	uint16_t i;
++
++	ret = dns_lookup_recv(subreq, state, &reply);
++	TALLOC_FREE(subreq);
++	if (ret != 0) {
++		tevent_req_nterror(req, map_nt_error_from_unix_common(ret));
++		return;
++	}
++
++	state->rcode = (reply->operation & DNS_RCODE);
++	if (state->rcode != DNS_RCODE_OK) {
++		/* Don't bother looking for answers. */
++		tevent_req_done(req);
++		return;
++	}
++
++	/*
++	 * We don't care about CNAME answers here. We're
++	 * just wanting an async name -> IPv4 lookup.
++	 */
++	for (i=0; i<reply->ancount; i++) {
++		if (reply->answers[i].rr_type == DNS_QTYPE_A) {
++			state->num_names += 1;
++		}
++	}
++
++	state->hostnames = talloc_zero_array(state,
++					     char *,
++					     state->num_names);
++	if (tevent_req_nomem(state->hostnames, req)) {
++		return;
++	}
++	state->addrs = talloc_zero_array(state,
++					 struct sockaddr_storage,
++					 state->num_names);
++	if (tevent_req_nomem(state->addrs, req)) {
++		return;
++	}
++
++	state->num_names = 0;
++
++	for (i=0; i<reply->ancount; i++) {
++		bool ok;
++		struct dns_res_rec *an = &reply->answers[i];
++
++		if (an->rr_type != DNS_QTYPE_A) {
++			continue;
++		}
++		if (an->name == NULL) {
++			/* Can this happen? */
++			continue;
++		}
++		if (an->rdata.ipv4_record == NULL) {
++			/* Can this happen? */
++			continue;
++		}
++		state->hostnames[state->num_names] = talloc_strdup(
++							state->hostnames,
++							an->name);
++		if (tevent_req_nomem(state->hostnames[state->num_names], req)) {
++			return;
++		}
++		ok = dns_res_rec_get_sockaddr(an,
++					      &state->addrs[state->num_names]);
++		if (!ok) {
++			continue;
++		}
++		state->num_names += 1;
++	}
++
++	tevent_req_done(req);
++}
++
++NTSTATUS ads_dns_lookup_a_recv(struct tevent_req *req,
++			       TALLOC_CTX *mem_ctx,
++			       uint8_t *rcode_out,
++			       size_t *num_names_out,
++			       char ***hostnames_out,
++			       struct sockaddr_storage **addrs_out)
++{
++	struct ads_dns_lookup_a_state *state = tevent_req_data(
++		req, struct ads_dns_lookup_a_state);
++	NTSTATUS status;
++
++	if (tevent_req_is_nterror(req, &status)) {
++		return status;
++	}
++	if (rcode_out != NULL) {
++		/*
++		 * If we got no names, an upper layer may
++		 * want to print a debug message.
++		 */
++		*rcode_out = state->rcode;
++	}
++	if (hostnames_out != NULL) {
++		*hostnames_out = talloc_move(mem_ctx,
++					     &state->hostnames);
++	}
++	if (addrs_out != NULL) {
++		*addrs_out = talloc_move(mem_ctx,
++					 &state->addrs);
++	}
++	*num_names_out = state->num_names;
++	tevent_req_received(req);
++	return NT_STATUS_OK;
++}
++
++/*********************************************************************
++ Simple wrapper for a DNS A query
++*********************************************************************/
++
++NTSTATUS ads_dns_lookup_a(TALLOC_CTX *ctx,
++			  const char *name_in,
++			  size_t *num_names_out,
++			  char ***hostnames_out,
++			  struct sockaddr_storage **addrs_out)
++{
++	struct tevent_context *ev;
++	struct tevent_req *req;
++	NTSTATUS status = NT_STATUS_NO_MEMORY;
++
++	ev = samba_tevent_context_init(ctx);
++	if (ev == NULL) {
++		goto fail;
++	}
++	req = ads_dns_lookup_a_send(ev, ev, name_in);
++	if (req == NULL) {
++		goto fail;
++	}
++	if (!tevent_req_poll_ntstatus(req, ev, &status)) {
++		goto fail;
++	}
++	/*
++	 * Sychronous doesn't need to care about the rcode or
++	 * a copy of the name_in.
++	 */
++	status = ads_dns_lookup_a_recv(req,
++				       ctx,
++				       NULL,
++				       num_names_out,
++				       hostnames_out,
++				       addrs_out);
++fail:
++	TALLOC_FREE(ev);
++	return status;
++}
+ 
+ /********************************************************************
+  Query with optional sitename.
+diff --git a/lib/addns/dnsquery.h b/lib/addns/dnsquery.h
+index bb691f5d55a..229b2134ff7 100644
+--- a/lib/addns/dnsquery.h
++++ b/lib/addns/dnsquery.h
+@@ -48,6 +48,21 @@ NTSTATUS ads_dns_lookup_ns(TALLOC_CTX *ctx,
+ 				const char *dnsdomain,
+ 				struct dns_rr_ns **nslist,
+ 				int *numns);
++struct tevent_req *ads_dns_lookup_a_send(TALLOC_CTX *mem_ctx,
++				struct tevent_context *ev,
++				const char *name);
++NTSTATUS ads_dns_lookup_a_recv(struct tevent_req *req,
++				TALLOC_CTX *mem_ctx,
++				uint8_t *rcode_out,
++				size_t *num_names_out,
++				char ***hostnames_out,
++				struct sockaddr_storage **addrs_out);
++NTSTATUS ads_dns_lookup_a(TALLOC_CTX *ctx,
++			const char *name_in,
++			size_t *num_names_out,
++			char ***hostnames_out,
++			struct sockaddr_storage **addrs_out);
++
+ NTSTATUS ads_dns_query_dcs(TALLOC_CTX *ctx,
+ 			   const char *realm,
+ 			   const char *sitename,
+-- 
+2.20.1
+
+
+From e71d137ec6bb185cb220efe7731c7a7a21ddfbaf Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Fri, 17 Jul 2020 14:30:02 -0700
+Subject: [PATCH 47/59] lib: addns: Add code for asynchronously looking up AAAA
+ records.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ lib/addns/dnsquery.c | 198 +++++++++++++++++++++++++++++++++++++++++++
+ lib/addns/dnsquery.h |  16 ++++
+ 2 files changed, 214 insertions(+)
+
+diff --git a/lib/addns/dnsquery.c b/lib/addns/dnsquery.c
+index 12bdbe94225..b937a24f76a 100644
+--- a/lib/addns/dnsquery.c
++++ b/lib/addns/dnsquery.c
+@@ -567,6 +567,204 @@ fail:
+ 	return status;
+ }
+ 
++#if defined(HAVE_IPV6)
++/*********************************************************************
++ Async AAAA record lookup.
++*********************************************************************/
++
++struct ads_dns_lookup_aaaa_state {
++	uint8_t rcode;
++	size_t num_names;
++	char **hostnames;
++	struct sockaddr_storage *addrs;
++};
++
++static void ads_dns_lookup_aaaa_done(struct tevent_req *subreq);
++
++struct tevent_req *ads_dns_lookup_aaaa_send(TALLOC_CTX *mem_ctx,
++					    struct tevent_context *ev,
++					    const char *name)
++{
++	struct tevent_req *req, *subreq;
++	struct ads_dns_lookup_aaaa_state *state;
++
++	req = tevent_req_create(mem_ctx, &state,
++				struct ads_dns_lookup_aaaa_state);
++	if (req == NULL) {
++		return NULL;
++	}
++
++	subreq = dns_lookup_send(
++		state,
++		ev,
++		NULL,
++		name,
++		DNS_QCLASS_IN,
++		DNS_QTYPE_AAAA);
++
++	if (tevent_req_nomem(subreq, req)) {
++		return tevent_req_post(req, ev);
++	}
++	tevent_req_set_callback(subreq, ads_dns_lookup_aaaa_done, req);
++	return req;
++}
++
++static void ads_dns_lookup_aaaa_done(struct tevent_req *subreq)
++{
++	struct tevent_req *req = tevent_req_callback_data(
++		subreq, struct tevent_req);
++	struct ads_dns_lookup_aaaa_state *state = tevent_req_data(
++		req, struct ads_dns_lookup_aaaa_state);
++	int ret;
++	struct dns_name_packet *reply;
++	uint16_t i;
++
++	ret = dns_lookup_recv(subreq, state, &reply);
++	TALLOC_FREE(subreq);
++	if (ret != 0) {
++		tevent_req_nterror(req, map_nt_error_from_unix_common(ret));
++		return;
++	}
++
++	state->rcode = (reply->operation & DNS_RCODE);
++	if (state->rcode != DNS_RCODE_OK) {
++		/* Don't bother looking for answers. */
++		tevent_req_done(req);
++		return;
++	}
++
++	/*
++	 * We don't care about CNAME answers here. We're
++	 * just wanting an async name -> IPv6 lookup.
++	 */
++	for (i=0; i<reply->ancount; i++) {
++		if (reply->answers[i].rr_type == DNS_QTYPE_AAAA) {
++			state->num_names += 1;
++		}
++	}
++
++	state->hostnames = talloc_zero_array(state,
++					     char *,
++					     state->num_names);
++	if (tevent_req_nomem(state->hostnames, req)) {
++		return;
++	}
++	state->addrs = talloc_zero_array(state,
++					 struct sockaddr_storage,
++					 state->num_names);
++	if (tevent_req_nomem(state->addrs, req)) {
++		return;
++	}
++
++	state->num_names = 0;
++
++	for (i=0; i<reply->ancount; i++) {
++		bool ok;
++		struct dns_res_rec *an = &reply->answers[i];
++
++		if (an->rr_type != DNS_QTYPE_AAAA) {
++			continue;
++		}
++		if (an->name == NULL) {
++			/* Can this happen? */
++			continue;
++		}
++		if (an->rdata.ipv6_record == NULL) {
++			/* Can this happen? */
++			continue;
++		}
++		state->hostnames[state->num_names] = talloc_strdup(
++							state->hostnames,
++							an->name);
++		if (tevent_req_nomem(state->hostnames[state->num_names], req)) {
++			return;
++		}
++		ok = dns_res_rec_get_sockaddr(an,
++					      &state->addrs[state->num_names]);
++		if (!ok) {
++			continue;
++		}
++		state->num_names += 1;
++	}
++
++	tevent_req_done(req);
++}
++
++NTSTATUS ads_dns_lookup_aaaa_recv(struct tevent_req *req,
++				  TALLOC_CTX *mem_ctx,
++				  uint8_t *rcode_out,
++				  size_t *num_names_out,
++				  char ***hostnames_out,
++				  struct sockaddr_storage **addrs_out)
++{
++	struct ads_dns_lookup_aaaa_state *state = tevent_req_data(
++		req, struct ads_dns_lookup_aaaa_state);
++	NTSTATUS status;
++
++	if (tevent_req_is_nterror(req, &status)) {
++		return status;
++	}
++	if (rcode_out != NULL) {
++		/*
++		 * If we got no names, an upper layer may
++		 * want to print a debug message.
++		 */
++		*rcode_out = state->rcode;
++	}
++	if (hostnames_out != NULL) {
++		*hostnames_out = talloc_move(mem_ctx,
++					     &state->hostnames);
++	}
++	if (addrs_out != NULL) {
++		*addrs_out = talloc_move(mem_ctx,
++					 &state->addrs);
++	}
++	*num_names_out = state->num_names;
++	tevent_req_received(req);
++	return NT_STATUS_OK;
++}
++
++/*********************************************************************
++ Simple wrapper for a DNS AAAA query
++*********************************************************************/
++
++NTSTATUS ads_dns_lookup_aaaa(TALLOC_CTX *ctx,
++			     const char *name_in,
++			     size_t *num_names_out,
++			     char ***hostnames_out,
++			     struct sockaddr_storage **addrs_out)
++{
++	struct tevent_context *ev;
++	struct tevent_req *req;
++	NTSTATUS status = NT_STATUS_NO_MEMORY;
++
++	ev = samba_tevent_context_init(ctx);
++	if (ev == NULL) {
++		goto fail;
++	}
++	req = ads_dns_lookup_aaaa_send(ev, ev, name_in);
++	if (req == NULL) {
++		goto fail;
++	}
++	if (!tevent_req_poll_ntstatus(req, ev, &status)) {
++		goto fail;
++	}
++	/*
++	 * Sychronous doesn't need to care about the rcode or
++	 * a copy of the name_in.
++	 */
++	status = ads_dns_lookup_aaaa_recv(req,
++					  ctx,
++					  NULL,
++					  num_names_out,
++					  hostnames_out,
++					  addrs_out);
++fail:
++	TALLOC_FREE(ev);
++	return status;
++}
++#endif
++
+ /********************************************************************
+  Query with optional sitename.
+ ********************************************************************/
+diff --git a/lib/addns/dnsquery.h b/lib/addns/dnsquery.h
+index 229b2134ff7..c7d397172f0 100644
+--- a/lib/addns/dnsquery.h
++++ b/lib/addns/dnsquery.h
+@@ -62,6 +62,22 @@ NTSTATUS ads_dns_lookup_a(TALLOC_CTX *ctx,
+ 			size_t *num_names_out,
+ 			char ***hostnames_out,
+ 			struct sockaddr_storage **addrs_out);
++#if defined(HAVE_IPV6)
++struct tevent_req *ads_dns_lookup_aaaa_send(TALLOC_CTX *mem_ctx,
++				struct tevent_context *ev,
++				const char *name);
++NTSTATUS ads_dns_lookup_aaaa_recv(struct tevent_req *req,
++				TALLOC_CTX *mem_ctx,
++				uint8_t *rcode_out,
++				size_t *num_names_out,
++				char ***hostnames_out,
++				struct sockaddr_storage **addrs_out);
++NTSTATUS ads_dns_lookup_aaaa(TALLOC_CTX *ctx,
++			const char *name_in,
++			size_t *num_names_out,
++			char ***hostnames_out,
++			struct sockaddr_storage **addrs_out);
++#endif
+ 
+ NTSTATUS ads_dns_query_dcs(TALLOC_CTX *ctx,
+ 			   const char *realm,
+-- 
+2.20.1
+
+
+From 72c868ec2e5cf4e0eb433f6d8b3ba78e30ab6b09 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Fri, 17 Jul 2020 14:45:45 -0700
+Subject: [PATCH 48/59] WIP: Test harness for async DNS - not really thought
+ out.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/utils/net_ads.c | 82 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 82 insertions(+)
+
+diff --git a/source3/utils/net_ads.c b/source3/utils/net_ads.c
+index e5db844c2f2..bd524dc2a88 100644
+--- a/source3/utils/net_ads.c
++++ b/source3/utils/net_ads.c
+@@ -2219,6 +2219,80 @@ static int net_ads_dns_gethostbyname(struct net_context *c, int argc, const char
+ 	return 0;
+ }
+ 
++static int net_ads_dns_testasync(struct net_context *c, int argc, const char **argv)
++{
++	size_t num_names = 0;
++	char **hostnames;
++	size_t i = 0;
++	struct sockaddr_storage *addrs = NULL;
++	NTSTATUS status;
++
++	if (argc != 1 || c->display_usage) {
++		d_printf(  "%s\n"
++			   "    %s\n"
++			   "    %s\n",
++			 _("Usage:"),
++			 _("net ads dns testasync <name>\n"),
++			 _("  Async look up hostname from the DNS server\n"
++			   "    hostname\tName to look up\n"));
++		return -1;
++	}
++
++	status = ads_dns_lookup_a(talloc_tos(),
++					   argv[0],
++					   &num_names,
++					   &hostnames,
++					   &addrs);
++	if (!NT_STATUS_IS_OK(status)) {
++		d_printf("Looking up A record for %s got error %s\n",
++			 argv[0],
++			 nt_errstr(status));
++		return -1;
++	}
++	d_printf("Async A record lookup - got %u names for %s\n",
++		 (unsigned int)num_names,
++		 argv[0]);
++	for (i = 0; i < num_names; i++) {
++		char addr_buf[INET6_ADDRSTRLEN];
++		print_sockaddr(addr_buf,
++			       sizeof(addr_buf),
++			       &addrs[i]);
++		d_printf("hostname[%u] = %s, addr = %s\n",
++			(unsigned int)i,
++			hostnames[i],
++			addr_buf);
++	}
++
++#if defined(HAVE_IPV6)
++	status = ads_dns_lookup_aaaa(talloc_tos(),
++					   argv[0],
++					   &num_names,
++					   &hostnames,
++					   &addrs);
++	if (!NT_STATUS_IS_OK(status)) {
++		d_printf("Looking up AAAA record for %s got error %s\n",
++			 argv[0],
++			 nt_errstr(status));
++		return -1;
++	}
++	d_printf("Async AAAA record lookup - got %u names for %s\n",
++		 (unsigned int)num_names,
++		 argv[0]);
++	for (i = 0; i < num_names; i++) {
++		char addr_buf[INET6_ADDRSTRLEN];
++		print_sockaddr(addr_buf,
++			       sizeof(addr_buf),
++			       &addrs[i]);
++		d_printf("hostname[%u] = %s, addr = %s\n",
++			(unsigned int)i,
++			hostnames[i],
++			addr_buf);
++	}
++#endif
++	return 0;
++}
++
++
+ static int net_ads_dns(struct net_context *c, int argc, const char *argv[])
+ {
+ 	struct functable func[] = {
+@@ -2246,6 +2320,14 @@ static int net_ads_dns(struct net_context *c, int argc, const char *argv[])
+ 			N_("net ads dns gethostbyname\n"
+ 			   "    Look up host")
+ 		},
++		{
++			"testasync",
++			net_ads_dns_testasync,
++			NET_TRANSPORT_ADS,
++			N_("Look up host"),
++			N_("net ads dns testasync\n"
++			   "    Look up host")
++		},
+ 		{NULL, NULL, 0, NULL, NULL}
+ 	};
+ 
+-- 
+2.20.1
+
+
+From 97d4d140fe5894c44d1470714647429e7a1c88a9 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Thu, 23 Jul 2020 13:10:12 -0700
+Subject: [PATCH 49/59] s3: Parameters. Add 'dns timeout' parameter. Default to
+ 10.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ docs-xml/smbdotconf/tuning/dnstimeout.xml | 21 +++++++++++++++++++++
+ lib/param/loadparm.c                      |  4 ++++
+ source3/param/loadparm.c                  |  3 +++
+ 3 files changed, 28 insertions(+)
+ create mode 100644 docs-xml/smbdotconf/tuning/dnstimeout.xml
+
+diff --git a/docs-xml/smbdotconf/tuning/dnstimeout.xml b/docs-xml/smbdotconf/tuning/dnstimeout.xml
+new file mode 100644
+index 00000000000..a4fb3b3aadc
+--- /dev/null
++++ b/docs-xml/smbdotconf/tuning/dnstimeout.xml
+@@ -0,0 +1,21 @@
++<samba:parameter name="dns timeout"
++                 context="G"
++				 type="integer"
++                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
++<description>
++    <para>The number of seconds the asynchronous DNS
++    resolver code in Samba will wait for responses.
++    Some of the Samba client library code uses internal
++    asynchronous DNS resolution for A and AAAA records.
++    This value prevents Samba name resolution code from
++    waiting for DNS server timeouts.
++    </para>
++    <para>A dns timeout of zero indicates that Samba
++    will not wait for DNS queries being returned.
++    It is not recommended to set this parameter to
++    zero.</para>
++</description>
++
++<value type="default">10</value>
++<value type="example">20</value>
++</samba:parameter>
+diff --git a/lib/param/loadparm.c b/lib/param/loadparm.c
+index da639a8b0ff..aedd4bf9c3a 100644
+--- a/lib/param/loadparm.c
++++ b/lib/param/loadparm.c
+@@ -3065,6 +3065,10 @@ struct loadparm_context *loadparm_init(TALLOC_CTX *mem_ctx)
+ 	lpcfg_do_global_parameter(
+ 		lp_ctx, "ldap max search request size", "256000");
+ 
++	/* Async DNS query timeout in seconds. */
++	lpcfg_do_global_parameter(
++		lp_ctx, "dns timeout", "10");
++
+ 	for (i = 0; parm_table[i].label; i++) {
+ 		if (!(lp_ctx->flags[i] & FLAG_CMDLINE)) {
+ 			lp_ctx->flags[i] |= FLAG_DEFAULT;
+diff --git a/source3/param/loadparm.c b/source3/param/loadparm.c
+index cf5da0aca21..ca74dedfb0a 100644
+--- a/source3/param/loadparm.c
++++ b/source3/param/loadparm.c
+@@ -961,6 +961,9 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
+ 	Globals.ldap_max_authenticated_request_size = 16777216;
+ 	Globals.ldap_max_search_request_size = 256000;
+ 
++	/* Async DNS query timeout (in seconds). */
++	Globals.dns_timeout = 10;
++
+ 	/* Now put back the settings that were set with lp_set_cmdline() */
+ 	apply_lp_set_cmdline();
+ }
+-- 
+2.20.1
+
+
+From a630316233ac1b75bef90da9a8ce7615941b0b07 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Tue, 21 Jul 2020 12:34:02 -0700
+Subject: [PATCH 50/59] s3: libsmb: Add dns_lookup_list_async().
+
+Take a list of hostnames and does async A and AAAA (if
+supported) lookups on them. Interface compatible with
+dns_lookup_list() and we'll replace it in the next
+commit. Waits for lp_dns_timeout() seconds to complete.
+
+Commented out as not yet used.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 325 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 325 insertions(+)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index a3e994e2e37..45d8b0efc36 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -31,6 +31,7 @@
+ #include "../libcli/nbt/libnbt.h"
+ #include "libads/kerberos_proto.h"
+ #include "lib/gencache.h"
++#include "librpc/gen_ndr/dns.h"
+ 
+ /* nmbd.c sets this to True. */
+ bool global_in_nmbd = False;
+@@ -2280,6 +2281,330 @@ fail:
+ 	return status;
+ }
+ 
++#if 0
++/********************************************************
++ Use ads_dns_lookup_[a|aaaa]_send() calls to look up a
++ list of names asynchronously.
++*********************************************************/
++
++struct dns_query_state {
++	/* Used to tell our parent we've completed. */
++	struct dns_lookup_list_async_state *p_async_state;
++	const char *query_name; /* For debugging only. */
++	size_t num_addrs;
++	struct sockaddr_storage *addrs;
++};
++
++struct dns_lookup_list_async_state {
++	bool timed_out;
++	size_t num_query_returns;
++	struct dns_query_state *queries;
++};
++
++/* Called on query timeout. */
++static void dns_lookup_send_timeout_handler(struct tevent_context *ev,
++					    struct tevent_timer *te,
++					    struct timeval t,
++					    void *private_data)
++{
++	bool *timed_out = (bool *)private_data;
++	*timed_out = true;
++}
++
++static void dns_lookup_list_a_done(struct tevent_req *req);
++#if defined(HAVE_IPV6)
++static void dns_lookup_list_aaaa_done(struct tevent_req *req);
++#endif
++
++static NTSTATUS dns_lookup_list_async(TALLOC_CTX *ctx,
++				      size_t num_dns_names,
++				      const char **dns_lookup_names,
++				      size_t *p_num_addrs,
++				      struct sockaddr_storage **pp_addrs)
++{
++	struct dns_lookup_list_async_state *state = NULL;
++	struct tevent_context *ev = NULL;
++	struct tevent_req *req;
++	struct tevent_timer *timer;
++	size_t num_queries_sent = 0;
++	size_t queries_size = num_dns_names;
++	size_t i;
++	size_t num_addrs = 0;
++	struct sockaddr_storage *addr_out = NULL;
++	NTSTATUS status = NT_STATUS_NO_MEMORY;
++
++	/* Nothing to do. */
++	if (num_dns_names == 0) {
++		*p_num_addrs = 0;
++		*pp_addrs = NULL;
++		return NT_STATUS_OK;
++	}
++
++	state = talloc_zero(ctx, struct dns_lookup_list_async_state);
++	if (state == NULL) {
++		goto fail;
++	}
++	ev = samba_tevent_context_init(ctx);
++	if (ev == NULL) {
++		goto fail;
++	}
++
++#if defined(HAVE_IPV6)
++	queries_size = 2 * num_dns_names;
++	/* Wrap protection. */
++	if (queries_size < num_dns_names) {
++		goto fail;
++	}
++#else
++	queries_size = num_dns_names;
++#endif
++
++	state->queries = talloc_zero_array(state,
++					   struct dns_query_state,
++					   queries_size);
++	if (state == NULL) {
++		goto fail;
++	}
++
++	/* Hit all the DNS servers with asnyc lookups for all the names. */
++	for (i = 0; i < num_dns_names; i++) {
++		DBG_INFO("async DNS lookup A record for %s\n",
++			dns_lookup_names[i]);
++
++		/* Setup the query state. */
++		state->queries[num_queries_sent].query_name =
++					dns_lookup_names[i];
++		state->queries[num_queries_sent].p_async_state = state;
++
++		req = ads_dns_lookup_a_send(ev, ev, dns_lookup_names[i]);
++		if (req == NULL) {
++			goto fail;
++		}
++		tevent_req_set_callback(req,
++				dns_lookup_list_a_done,
++				&state->queries[num_queries_sent]);
++		num_queries_sent++;
++
++#if defined(HAVE_IPV6)
++		/* If we're IPv6 capable ask for that too. */
++		state->queries[num_queries_sent].query_name =
++					dns_lookup_names[i];
++		state->queries[num_queries_sent].p_async_state = state;
++
++		DBG_INFO("async DNS lookup AAAA record for %s\n",
++			dns_lookup_names[i]);
++
++		req = ads_dns_lookup_aaaa_send(ev, ev, dns_lookup_names[i]);
++		if (req == NULL) {
++			goto fail;
++		}
++		tevent_req_set_callback(req,
++					dns_lookup_list_aaaa_done,
++					&state->queries[num_queries_sent]);
++		num_queries_sent++;
++#endif
++	}
++
++	/* We must always have a timeout. */
++	timer = tevent_add_timer(ev,
++				 ev,
++				 timeval_current_ofs(lp_dns_timeout(), 0),
++				 dns_lookup_send_timeout_handler,
++				 &state->timed_out);
++	if (timer == NULL) {
++		goto fail;
++	}
++
++	/* Loop until timed out or got all replies. */
++	while (1) {
++		int ret;
++
++		if (state->timed_out) {
++			break;
++		}
++		if (state->num_query_returns == num_queries_sent) {
++			break;
++		}
++		ret = tevent_loop_once(ev);
++		if (ret != 0) {
++			goto fail;
++		}
++	}
++
++	/* Count what we got back. */
++	for (i = 0; i < num_queries_sent; i++) {
++		struct dns_query_state *query = &state->queries[i];
++
++		/* Wrap check. */
++		if (num_addrs + query->num_addrs < num_addrs) {
++			goto fail;
++		}
++		num_addrs += query->num_addrs;
++	}
++
++	if (state->timed_out) {
++		DBG_INFO("async DNS lookup timed out after %zu entries "
++			"(not an error)\n",
++			num_addrs);
++	}
++
++	addr_out = talloc_zero_array(ctx,
++				     struct sockaddr_storage,
++				     num_addrs);
++	if (addr_out == NULL) {
++		goto fail;
++	}
++
++	/* Copy what we got back. */
++	num_addrs = 0;
++	for (i = 0; i < num_queries_sent; i++) {
++		struct dns_query_state *query = &state->queries[i];
++
++		if (query->num_addrs == 0) {
++			continue;
++		}
++
++		memcpy(&addr_out[num_addrs],
++			query->addrs,
++			query->num_addrs * sizeof(query->addrs[0]));
++		num_addrs += query->num_addrs;
++	}
++
++	*p_num_addrs = num_addrs;
++	*pp_addrs = addr_out;
++
++	status = NT_STATUS_OK;
++
++  fail:
++
++	TALLOC_FREE(state);
++	TALLOC_FREE(ev);
++	return status;
++}
++
++/*
++ Called when an A record lookup completes.
++*/
++
++static void dns_lookup_list_a_done(struct tevent_req *req)
++{
++	/*
++	 * Callback data is an element of a talloc'ed array,
++	 * not a talloc object in its own right. So use the
++	 * tevent_req_callback_data_void() void * cast function.
++	 */
++	struct dns_query_state *state = (struct dns_query_state *)
++				tevent_req_callback_data_void(req);
++	uint8_t rcode = 0;
++	size_t i;
++	char **hostnames_out = NULL;
++	NTSTATUS status;
++
++	/* For good or ill, tell the parent we're finished. */
++	state->p_async_state->num_query_returns++;
++
++	status = ads_dns_lookup_a_recv(req,
++				       state->p_async_state,
++				       &rcode,
++				       &state->num_addrs,
++				       &hostnames_out,
++				       &state->addrs);
++	if (!NT_STATUS_IS_OK(status)) {
++		DBG_INFO("async DNS A lookup for %s returned %s\n",
++			state->query_name,
++			nt_errstr(status));
++		return;
++	}
++
++	if (rcode != DNS_RCODE_OK) {
++		DBG_INFO("async DNS A lookup for %s returned DNS code %u\n",
++			state->query_name,
++			(unsigned int)rcode);
++		return;
++	}
++
++	if (state->num_addrs == 0) {
++		DBG_INFO("async DNS A lookup for %s returned 0 addresses.\n",
++			state->query_name);
++		return;
++	}
++
++	/* Debug print. */
++	for (i = 0; i < state->num_addrs; i++) {
++		char addr[INET6_ADDRSTRLEN];
++		DBG_INFO("async DNS A lookup for %s [%zu] got %s -> %s\n",
++			state->query_name,
++			i,
++			hostnames_out[i],
++			print_sockaddr(addr,
++				sizeof(addr),
++				&state->addrs[i]));
++	}
++}
++
++#if defined(HAVE_IPV6)
++/*
++ Called when an AAAA record lookup completes.
++*/
++
++static void dns_lookup_list_aaaa_done(struct tevent_req *req)
++{
++	/*
++	 * Callback data is an element of a talloc'ed array,
++	 * not a talloc object in its own right. So use the
++	 * tevent_req_callback_data_void() void * cast function.
++	 */
++	struct dns_query_state *state = (struct dns_query_state *)
++				tevent_req_callback_data_void(req);
++	uint8_t rcode = 0;
++	size_t i;
++	char **hostnames_out = NULL;
++	NTSTATUS status;
++
++	/* For good or ill, tell the parent we're finished. */
++	state->p_async_state->num_query_returns++;
++
++	status = ads_dns_lookup_aaaa_recv(req,
++					  state->p_async_state,
++					  &rcode,
++					  &state->num_addrs,
++					  &hostnames_out,
++					  &state->addrs);
++	if (!NT_STATUS_IS_OK(status)) {
++		DBG_INFO("async DNS AAAA lookup for %s returned %s\n",
++			state->query_name,
++			nt_errstr(status));
++		return;
++	}
++
++	if (rcode != DNS_RCODE_OK) {
++		DBG_INFO("async DNS AAAA lookup for %s returned DNS code %u\n",
++			state->query_name,
++			(unsigned int)rcode);
++		return;
++	}
++
++	if (state->num_addrs == 0) {
++		DBG_INFO("async DNS AAAA lookup for %s returned 0 addresses.\n",
++			state->query_name);
++		return;
++	}
++
++	/* Debug print. */
++	for (i = 0; i < state->num_addrs; i++) {
++		char addr[INET6_ADDRSTRLEN];
++		DBG_INFO("async DNS AAAA lookup for %s [%zu] got %s -> %s\n",
++			state->query_name,
++			i,
++			hostnames_out[i],
++			print_sockaddr(addr,
++				sizeof(addr),
++				&state->addrs[i]));
++	}
++}
++#endif
++#endif
++
+ /********************************************************
+  Resolve a list of DNS names to a list of IP addresses.
+  As this is a DC / LDAP / KDC lookup any IP address will
+-- 
+2.20.1
+
+
+From 096bf91ac465475c4031bfcb4605eae18cfa3320 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Tue, 21 Jul 2020 12:38:42 -0700
+Subject: [PATCH 51/59] s3: libsmb: Use dns_lookup_list_async() instead of
+ dns_lookup_list().
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index 45d8b0efc36..2e1805ad67e 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2281,7 +2281,6 @@ fail:
+ 	return status;
+ }
+ 
+-#if 0
+ /********************************************************
+  Use ads_dns_lookup_[a|aaaa]_send() calls to look up a
+  list of names asynchronously.
+@@ -2603,8 +2602,8 @@ static void dns_lookup_list_aaaa_done(struct tevent_req *req)
+ 	}
+ }
+ #endif
+-#endif
+ 
++#if 0
+ /********************************************************
+  Resolve a list of DNS names to a list of IP addresses.
+  As this is a DC / LDAP / KDC lookup any IP address will
+@@ -2685,6 +2684,7 @@ static NTSTATUS dns_lookup_list(TALLOC_CTX *ctx,
+ 	*pp_addrs = ret_addrs;
+ 	return NT_STATUS_OK;
+ }
++#endif
+ 
+ /********************************************************
+  Resolve via "hosts" method.
+@@ -2959,7 +2959,7 @@ static NTSTATUS resolve_ads(TALLOC_CTX *ctx,
+ 	}
+ 
+ 	/* Lookup the addresses on the dns_lookup_list. */
+-	status = dns_lookup_list(ctx,
++	status = dns_lookup_list_async(ctx,
+ 				num_dns_names,
+ 				dns_lookup_names,
+ 				&num_dns_addrs,
+-- 
+2.20.1
+
+
+From adf98000766648112e5b033a47cb2afe7171c086 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Tue, 21 Jul 2020 22:14:02 -0700
+Subject: [PATCH 52/59] s3: libsmb: Remove dns_lookup_list(). No longer used.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 83 --------------------------------------
+ 1 file changed, 83 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index 2e1805ad67e..c4fe17b941f 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2603,89 +2603,6 @@ static void dns_lookup_list_aaaa_done(struct tevent_req *req)
+ }
+ #endif
+ 
+-#if 0
+-/********************************************************
+- Resolve a list of DNS names to a list of IP addresses.
+- As this is a DC / LDAP / KDC lookup any IP address will
+- do, the requested names don't have to match the returned
+- IP address list.
+-*********************************************************/
+-
+-static NTSTATUS dns_lookup_list(TALLOC_CTX *ctx,
+-				size_t num_dns_names,
+-				const char **dns_lookup_names,
+-				size_t *p_num_addrs,
+-				struct sockaddr_storage **pp_addrs)
+-{
+-	size_t total_num_addrs = 0;
+-	size_t i;
+-	struct sockaddr_storage *ret_addrs = NULL;
+-
+-	/* FIXME - make this asnyc using our async DNS code. */
+-
+-	for (i = 0; i < num_dns_names; i++ ) {
+-		struct addrinfo *res = NULL;
+-		struct addrinfo *p = NULL;
+-		size_t num_addrs = 0;
+-		bool ret = interpret_string_addr_internal(&res,
+-					dns_lookup_names[i],
+-					0);
+-		if (!ret) {
+-			continue;
+-		}
+-		/* Count the IP's returned from the lookup. */
+-		for (p = res; p; p = p->ai_next) {
+-			num_addrs++;
+-		}
+-
+-		/* Wrap check. */
+-		if (total_num_addrs + num_addrs < total_num_addrs) {
+-			if (res) {
+-				freeaddrinfo(res);
+-			}
+-			return NT_STATUS_INVALID_PARAMETER;
+-		}
+-		ret_addrs = talloc_realloc(ctx,
+-					   ret_addrs,
+-					   struct sockaddr_storage,
+-					   total_num_addrs + num_addrs);
+-		if (ret_addrs == NULL) {
+-			if (res) {
+-				freeaddrinfo(res);
+-			}
+-			return NT_STATUS_NO_MEMORY;
+-		}
+-
+-		for (p = res; p; p = p->ai_next) {
+-			char addr[INET6_ADDRSTRLEN];
+-
+-			memcpy(&ret_addrs[total_num_addrs],
+-				p->ai_addr,
+-				p->ai_addrlen);
+-
+-			if (is_zero_addr(&ret_addrs[total_num_addrs])) {
+-				continue;
+-			}
+-
+-			DBG_DEBUG("getaddrinfo name %s returned IP %s\n",
+-				dns_lookup_names[i],
+-				print_sockaddr(addr,
+-					sizeof(addr),
+-					&ret_addrs[total_num_addrs]));
+-
+-			total_num_addrs++;
+-		}
+-		if (res) {
+-			freeaddrinfo(res);
+-		}
+-	}
+-
+-	*p_num_addrs = total_num_addrs;
+-	*pp_addrs = ret_addrs;
+-	return NT_STATUS_OK;
+-}
+-#endif
+-
+ /********************************************************
+  Resolve via "hosts" method.
+ *********************************************************/
+-- 
+2.20.1
+
+
+From ad6a40922068b95777911ea380065877107f2dee Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Tue, 21 Jul 2020 12:48:44 -0700
+Subject: [PATCH 53/59] s3: libsmb: Make resolve_hosts() use new async DNS
+ lookup.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 78 ++++++++++++--------------------------
+ 1 file changed, 24 insertions(+), 54 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index c4fe17b941f..a94148f338b 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2616,11 +2616,9 @@ static NTSTATUS resolve_hosts(TALLOC_CTX *mem_ctx,
+ 	/*
+ 	 * "host" means do a localhost, or dns lookup.
+ 	 */
+-	struct addrinfo hints;
+-	struct addrinfo *ailist = NULL;
+-	struct addrinfo *res = NULL;
+-	int ret = -1;
+-	int i = 0;
++	size_t num_addrs = 0;
++	struct sockaddr_storage *addrs = NULL;
++	NTSTATUS status;
+ 
+ 	if ( name_type != 0x20 && name_type != 0x0) {
+ 		DEBUG(5, ("resolve_hosts: not appropriate "
+@@ -2635,60 +2633,32 @@ static NTSTATUS resolve_hosts(TALLOC_CTX *mem_ctx,
+ 	DEBUG(3,("resolve_hosts: Attempting host lookup for name %s<0x%x>\n",
+ 				name, name_type));
+ 
+-	ZERO_STRUCT(hints);
+-	/* By default make sure it supports TCP. */
+-	hints.ai_socktype = SOCK_STREAM;
+-	hints.ai_flags = AI_ADDRCONFIG;
+-
+-#if !defined(HAVE_IPV6)
+-	/* Unless we have IPv6, we really only want IPv4 addresses back. */
+-	hints.ai_family = AF_INET;
+-#endif
++	/* Lookup the addresses on the dns_lookup_list. */
++	status = dns_lookup_list_async(mem_ctx,
++				1,
++				&name,
++				&num_addrs,
++				&addrs);
+ 
+-	ret = getaddrinfo(name,
+-			NULL,
+-			&hints,
+-			&ailist);
+-	if (ret) {
+-		DEBUG(3,("resolve_hosts: getaddrinfo failed for name %s [%s]\n",
+-			name,
+-			gai_strerror(ret) ));
++	if (!NT_STATUS_IS_OK(status)) {
++		return status;
+ 	}
+ 
+-	for (res = ailist; res; res = res->ai_next) {
+-		struct sockaddr_storage ss;
+-
+-		if (!res->ai_addr || res->ai_addrlen == 0) {
+-			continue;
+-		}
+-
+-		ZERO_STRUCT(ss);
+-		memcpy(&ss, res->ai_addr, res->ai_addrlen);
+-
+-		if (is_zero_addr(&ss)) {
+-			continue;
+-		}
+-
+-		*return_count += 1;
+-
+-		*return_iplist = talloc_realloc(
+-			mem_ctx, *return_iplist, struct sockaddr_storage,
+-			*return_count);
+-		if (!*return_iplist) {
+-			DEBUG(3,("resolve_hosts: malloc fail !\n"));
+-			freeaddrinfo(ailist);
+-			return NT_STATUS_NO_MEMORY;
+-		}
+-		(*return_iplist)[i] = ss;
+-		i++;
+-	}
+-	if (ailist) {
+-		freeaddrinfo(ailist);
++	*return_count = (int)num_addrs;
++	if (return_count < 0) {
++		return NT_STATUS_INVALID_PARAMETER;
+ 	}
+-	if (*return_count) {
+-		return NT_STATUS_OK;
++	*return_iplist = addrs;
++	/*
++	 * resolve_hosts() semantics returns
++	 * NT_STATUS_UNSUCCESSFUL if no addresses
++	 * were returned. This allows lookup to
++	 * continue using another method.
++	 */
++	if (*return_count == 0) {
++		return NT_STATUS_UNSUCCESSFUL;
+ 	}
+-	return NT_STATUS_UNSUCCESSFUL;
++	return NT_STATUS_OK;
+ }
+ 
+ /********************************************************
+-- 
+2.20.1
+
+
+From d1103accc7a9142de1c27dedf8e8ed50279246d8 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Tue, 21 Jul 2020 14:49:35 -0700
+Subject: [PATCH 54/59] s3: libsmb: Tweak the interface to
+ dns_lookup_list_async() slightly.
+
+Allow a caller to request it to return an array of names that match
+element by element the array of IP addresses returned.
+
+Doing this and making exposing this interface will allow the
+async DNS lookups to be re-used inside the dsgetdcname() internals
+code used by winbindd to find DC's.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 48 +++++++++++++++++++++++++++++++++++---
+ 1 file changed, 45 insertions(+), 3 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index a94148f338b..614dc9961fd 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2319,7 +2319,8 @@ static NTSTATUS dns_lookup_list_async(TALLOC_CTX *ctx,
+ 				      size_t num_dns_names,
+ 				      const char **dns_lookup_names,
+ 				      size_t *p_num_addrs,
+-				      struct sockaddr_storage **pp_addrs)
++				      struct sockaddr_storage **pp_addrs,
++				      char ***pp_dns_names)
+ {
+ 	struct dns_lookup_list_async_state *state = NULL;
+ 	struct tevent_context *ev = NULL;
+@@ -2330,12 +2331,16 @@ static NTSTATUS dns_lookup_list_async(TALLOC_CTX *ctx,
+ 	size_t i;
+ 	size_t num_addrs = 0;
+ 	struct sockaddr_storage *addr_out = NULL;
++	char **dns_names_ret = NULL;
+ 	NTSTATUS status = NT_STATUS_NO_MEMORY;
+ 
+ 	/* Nothing to do. */
+ 	if (num_dns_names == 0) {
+ 		*p_num_addrs = 0;
+ 		*pp_addrs = NULL;
++		if (pp_dns_names != NULL) {
++			*pp_dns_names = NULL;
++		}
+ 		return NT_STATUS_OK;
+ 	}
+ 
+@@ -2454,6 +2459,21 @@ static NTSTATUS dns_lookup_list_async(TALLOC_CTX *ctx,
+ 		goto fail;
+ 	}
+ 
++	/*
++	 * Did the caller want an array of names back
++	 * that match the IP addresses ? If we provide
++	 * this, dsgetdcname() internals can now use this
++	 * async lookup code also.
++	 */
++	if (pp_dns_names != NULL) {
++		dns_names_ret = talloc_zero_array(ctx,
++						  char *,
++						  num_addrs);
++		if (dns_names_ret == NULL) {
++			goto fail;
++		}
++	}
++
+ 	/* Copy what we got back. */
+ 	num_addrs = 0;
+ 	for (i = 0; i < num_queries_sent; i++) {
+@@ -2463,6 +2483,23 @@ static NTSTATUS dns_lookup_list_async(TALLOC_CTX *ctx,
+ 			continue;
+ 		}
+ 
++		if (dns_names_ret != NULL) {
++			/*
++			 * If caller wants a name array matched with
++			 * the addrs array, copy the same queried name for
++			 * each IP address returned.
++			 */
++			size_t j;
++			for (j = 0; j < query->num_addrs; j++) {
++				dns_names_ret[num_addrs + j] = talloc_strdup(
++						ctx,
++						query->query_name);
++				if (dns_names_ret[num_addrs + j] == NULL) {
++					goto fail;
++				}
++			}
++		}
++
+ 		memcpy(&addr_out[num_addrs],
+ 			query->addrs,
+ 			query->num_addrs * sizeof(query->addrs[0]));
+@@ -2471,6 +2508,9 @@ static NTSTATUS dns_lookup_list_async(TALLOC_CTX *ctx,
+ 
+ 	*p_num_addrs = num_addrs;
+ 	*pp_addrs = addr_out;
++	if (pp_dns_names != NULL) {
++		*pp_dns_names = dns_names_ret;
++	}
+ 
+ 	status = NT_STATUS_OK;
+ 
+@@ -2638,7 +2678,8 @@ static NTSTATUS resolve_hosts(TALLOC_CTX *mem_ctx,
+ 				1,
+ 				&name,
+ 				&num_addrs,
+-				&addrs);
++				&addrs,
++				NULL);
+ 
+ 	if (!NT_STATUS_IS_OK(status)) {
+ 		return status;
+@@ -2850,7 +2891,8 @@ static NTSTATUS resolve_ads(TALLOC_CTX *ctx,
+ 				num_dns_names,
+ 				dns_lookup_names,
+ 				&num_dns_addrs,
+-				&dns_addrs);
++				&dns_addrs,
++				NULL);
+ 
+ 	if (!NT_STATUS_IS_OK(status)) {
+ 		TALLOC_FREE(dcs);
+-- 
+2.20.1
+
+
+From 49ebae1b3ff2ac3d12c444a26d9b8ddc62dc952f Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Tue, 21 Jul 2020 14:56:47 -0700
+Subject: [PATCH 55/59] s3: libsmb: Make dns_lookup_list_async() available to
+ other Samba callers.
+
+This allows the async DNS lookups to be re-used inside the dsgetdcname() internals
+code used by winbindd to find DC's.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/namequery.c | 12 ++++++------
+ source3/libsmb/namequery.h |  6 ++++++
+ 2 files changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/source3/libsmb/namequery.c b/source3/libsmb/namequery.c
+index 614dc9961fd..bec5fdc3f47 100644
+--- a/source3/libsmb/namequery.c
++++ b/source3/libsmb/namequery.c
+@@ -2315,12 +2315,12 @@ static void dns_lookup_list_a_done(struct tevent_req *req);
+ static void dns_lookup_list_aaaa_done(struct tevent_req *req);
+ #endif
+ 
+-static NTSTATUS dns_lookup_list_async(TALLOC_CTX *ctx,
+-				      size_t num_dns_names,
+-				      const char **dns_lookup_names,
+-				      size_t *p_num_addrs,
+-				      struct sockaddr_storage **pp_addrs,
+-				      char ***pp_dns_names)
++NTSTATUS dns_lookup_list_async(TALLOC_CTX *ctx,
++			      size_t num_dns_names,
++			      const char **dns_lookup_names,
++			      size_t *p_num_addrs,
++			      struct sockaddr_storage **pp_addrs,
++			      char ***pp_dns_names)
+ {
+ 	struct dns_lookup_list_async_state *state = NULL;
+ 	struct tevent_context *ev = NULL;
+diff --git a/source3/libsmb/namequery.h b/source3/libsmb/namequery.h
+index aedb043ac81..d6f5d216733 100644
+--- a/source3/libsmb/namequery.h
++++ b/source3/libsmb/namequery.h
+@@ -85,6 +85,12 @@ NTSTATUS resolve_wins(TALLOC_CTX *mem_ctx,
+ 		int name_type,
+ 		struct sockaddr_storage **return_iplist,
+ 		int *return_count);
++NTSTATUS dns_lookup_list_async(TALLOC_CTX *ctx,
++			       size_t num_dns_names,
++			       const char **dns_lookup_names,
++			       size_t *p_num_addrs,
++			       struct sockaddr_storage **pp_addrs,
++			       char ***pp_dns_names);
+ NTSTATUS internal_resolve_name(const char *name,
+ 			        int name_type,
+ 				const char *sitename,
+-- 
+2.20.1
+
+
+From d77530a0a6a8cf6f0833150d327f03e78cc1a7da Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Tue, 21 Jul 2020 22:09:27 -0700
+Subject: [PATCH 56/59] WIP
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libsmb/dsgetdcname.c | 229 ++++++++++++++++++++++++++++-------
+ 1 file changed, 183 insertions(+), 46 deletions(-)
+
+diff --git a/source3/libsmb/dsgetdcname.c b/source3/libsmb/dsgetdcname.c
+index 06119471c2b..bb1b29b021f 100644
+--- a/source3/libsmb/dsgetdcname.c
++++ b/source3/libsmb/dsgetdcname.c
+@@ -504,14 +504,17 @@ static NTSTATUS discover_dc_dns(TALLOC_CTX *mem_ctx,
+ 				struct ip_service_name **returned_dclist,
+ 				int *return_count)
+ {
+-	int i;
+-	size_t j;
++	size_t i;
+ 	NTSTATUS status;
+ 	struct dns_rr_srv *dcs = NULL;
+ 	int numdcs = 0;
+-	int numaddrs = 0;
+ 	struct ip_service_name *dclist = NULL;
+-	int count = 0;
++	size_t ret_count = 0;
++	size_t num_dns_lookups = 0;
++	const char **dns_lookups = NULL;
++	size_t num_lookups_ret = 0;
++	struct sockaddr_storage *dns_addrs_ret = NULL;
++	char **dns_lookups_ret = NULL;
+ 
+ 	if (flags & DS_PDC_REQUIRED) {
+ 		status = ads_dns_query_pdc(mem_ctx,
+@@ -554,74 +557,208 @@ static NTSTATUS discover_dc_dns(TALLOC_CTX *mem_ctx,
+ 	}
+ 
+ 	if (!NT_STATUS_IS_OK(status)) {
++		TALLOC_FREE(dcs);
+ 		return status;
+ 	}
+ 
+-	if (numdcs == 0) {
++	/* Wrap protect. */
++	if (numdcs < 0) {
++		TALLOC_FREE(dcs);
+ 		return NT_STATUS_DOMAIN_CONTROLLER_NOT_FOUND;
+ 	}
+ 
+-	for (i=0;i<numdcs;i++) {
+-		numaddrs += MAX(dcs[i].num_ips,1);
++	if (numdcs == 0) {
++		TALLOC_FREE(dcs);
++		return NT_STATUS_DOMAIN_CONTROLLER_NOT_FOUND;
+ 	}
+ 
++	/*
++	 * We're only returning one address per
++	 * DC name, so just allocate size numdcs.
++	 */
++
+ 	dclist = talloc_zero_array(mem_ctx,
+ 				   struct ip_service_name,
+-				   numaddrs);
++				   numdcs);
+ 	if (!dclist) {
++		TALLOC_FREE(dcs);
+ 		return NT_STATUS_NO_MEMORY;
+ 	}
+ 
+-	/* now unroll the list of IP addresses */
+-
+-	*return_count = 0;
+-	i = 0;
+-	j = 0;
+-
+-	while ((i < numdcs) && (count < numaddrs)) {
++	/*
++	 * First, copy the SRV record replies that
++	 * have IP addresses returned with them.
++	 */
++	ret_count = 0;
++	for (i = 0; i < numdcs; i++) {
++		size_t j;
++
++		if (dcs[i].num_ips == 0) {
++			/*
++			 * No addresses returned in the SRV
++			 * reply, we must look this up via
++			 * DNS.
++			 */
++			num_dns_lookups++;
++			continue;
++		}
+ 
+-		struct ip_service_name *r = &dclist[count];
++		dclist[ret_count].hostname = talloc_move(mem_ctx,
++						&dcs[i].hostname);
++
++		/*
++		 * Pick the first IPv4 address,
++		 * if none pick the first address.
++		 *
++		 * This is different from the previous
++		 * code which picked a 'next ip' address
++		 * each time, incrementing an index.
++		 * Too complex to maintain :-(.
++		 */
++		for (j = 0; j < dcs[i].num_ips; j++) {
++			if (dcs[i].ss_s[j].ss_family == AF_INET) {
++				dclist[ret_count].ss = dcs[i].ss_s[j];
++				break;
++			}
++		}
++		if (j == dcs[i].num_ips) {
++			/* No IPv4- use the first IPv6 addr. */
++			dclist[ret_count].ss = dcs[i].ss_s[0];
++		}
++		ret_count++;
++	}
++
++	/*
++	 * Now, create an array of hostnames we
++	 * will asynchronously look up in DNS.
++	 */
++	dns_lookups = talloc_zero_array(mem_ctx,
++					const char *,
++					num_dns_lookups);
++	if (dns_lookups == NULL) {
++		TALLOC_FREE(dcs);
++		TALLOC_FREE(dclist);
++		return NT_STATUS_NO_MEMORY;
++	}
+ 
+-		r->hostname = dcs[i].hostname;
++	num_dns_lookups = 0;
++	for (i = 0; i < numdcs; i++) {
++		if (dcs[i].num_ips != 0) {
++			/*
++			 * We already got an address
++			 * for this via SRV return.
++			 */
++			continue;
++		}
++		dns_lookups[num_dns_lookups] = talloc_strdup(mem_ctx,
++							dcs[i].hostname);
++		if (dns_lookups[num_dns_lookups] == NULL) {
++			TALLOC_FREE(dcs);
++			TALLOC_FREE(dclist);
++			TALLOC_FREE(dns_lookups);
++		}
++		num_dns_lookups++;
++	}
+ 
+-		/* If we don't have an IP list for a name, lookup it up */
++	status = dns_lookup_list_async(mem_ctx,
++				       num_dns_lookups,
++				       dns_lookups,
++				       &num_lookups_ret,
++				       &dns_addrs_ret,
++				       &dns_lookups_ret);
++	if (!NT_STATUS_IS_OK(status)) {
++		TALLOC_FREE(dcs);
++		TALLOC_FREE(dclist);
++		TALLOC_FREE(dns_lookups);
++		return status;
++	}
+ 
+-		if (!dcs[i].ss_s) {
+-			interpret_string_addr_prefer_ipv4(&r->ss,
+-						dcs[i].hostname, 0);
+-			i++;
+-			j = 0;
+-		} else {
+-			/* use the IP addresses from the SRV response */
++	/*
++	 * Remember, if we timed out or some
++	 * addresses didn't look up then
++	 * num_dns_lookups > num_lookups_ret,
++	 * so there isn't a one to one correspondence.
++	 *
++	 * The order of the requests is preserved
++	 * in the replies, but there may be requests
++	 * for which there are no replies if we
++	 * timed out.
++	 *
++	 * For example this means for looking up
++	 * names:
++	 *	NAME1
++	 *	NAME2
++	 *	NAME3
++	 *
++	 * The replies might look like:
++	 * 	NAME1 -> IPv4
++	 * 	NAME1 -> IPv4
++	 *	NAME1 -> IPv6
++	 *	NAME1 -> IPv6
++	 *	NAME3 -> IPv6
++	 *
++	 * But they will never be in the order:
++	 *
++	 *	NAME2
++	 *	NAME3
++	 *	NAME1
++	 *
++	 * Also in dns_lookup_list_async()
++	 * we arrange the requests/replies in
++	 * the order IPv4 followed by IPv6, so in
++	 * the replies, we can always pick the first
++	 * reply - we know it will be IPv4 if there
++	 * is an IPv4 for that name.
++	 *
++	 */
++
++	for (i = 0; i < num_lookups_ret; i++) {
++		/*
++		 * PARANOIA Check. This cannot happen.
++		 */
++		SMB_ASSERT(ret_count < numdcs);
++
++		if (ret_count == numdcs) {
++			TALLOC_FREE(dcs);
++			TALLOC_FREE(dclist);
++			TALLOC_FREE(dns_lookups);
++			return NT_STATUS_INTERNAL_ERROR;
++		}
+ 
+-			if (j >= dcs[i].num_ips) {
+-				i++;
+-				j = 0;
++		dclist[ret_count].hostname = talloc_move(mem_ctx,
++						&dns_lookups_ret[i]);
++		dclist[ret_count].ss = dns_addrs_ret[i];
++		/*
++		 * Is this a duplicate name return.
++		 * Remember we can look up both A and
++		 * AAAA records which can return multiple
++		 * addresses and the order of names
++		 * is preserved.
++		 */
++		if (ret_count > 0) {
++			if (strcmp(dclist[ret_count-1].hostname,
++				   dclist[ret_count].hostname) == 0) {
++				/*
++				 * Same name. Keep the first address
++				 * which is IPv4 by preference.
++				 */
+ 				continue;
+ 			}
+-
+-			r->ss = dcs[i].ss_s[j];
+-			j++;
+-		}
+-
+-		/* make sure it is a valid IP.  I considered checking the
+-		 * negative connection cache, but this is the wrong place for
+-		 * it.  Maybe only as a hack. After think about it, if all of
+-		 * the IP addresses returned from DNS are dead, what hope does a
+-		 * netbios name lookup have?  The standard reason for falling
+-		 * back to netbios lookups is that our DNS server doesn't know
+-		 * anything about the DC's   -- jerry */
+-
+-		if (!is_zero_addr(&r->ss)) {
+-			count++;
+-			continue;
+ 		}
++		ret_count++;
+ 	}
+ 
+ 	*returned_dclist = dclist;
+-	*return_count = count;
++	*return_count = (int)ret_count;
++
++	if (*return_count < 0) {
++		TALLOC_FREE(dcs);
++		TALLOC_FREE(dclist);
++		TALLOC_FREE(dns_lookups);
++		return NT_STATUS_INTERNAL_ERROR;
++	}
+ 
+-	if (count > 0) {
++	if (ret_count > 0) {
+ 		return NT_STATUS_OK;
+ 	}
+ 
+-- 
+2.20.1
+
+
+From becf47156b9ddbdd2339364cf9acd38948d42e5c Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Wed, 22 Jul 2020 15:35:43 -0700
+Subject: [PATCH 57/59] s3: libads: ads_connect can be passed in an ADS_STRUCT
+ with an existing IP address.
+
+ads_connect can be passed in an ADS_STRUCT
+with an existing ads->ldap.ss IP address that
+is stored by going through ads_find_dc(). Store this off
+before zeroing out ads->ldap so we don't need to do
+multiple calls to ads_find_dc().
+
+If a caller wants a clean ADS_STRUCT they
+will call ads_destroy().
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libads/ldap.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/source3/libads/ldap.c b/source3/libads/ldap.c
+index 55c9668089d..049b52995ef 100755
+--- a/source3/libads/ldap.c
++++ b/source3/libads/ldap.c
+@@ -592,6 +592,22 @@ ADS_STATUS ads_connect(ADS_STRUCT *ads)
+ 	ADS_STATUS status;
+ 	NTSTATUS ntstatus;
+ 	char addr[INET6_ADDRSTRLEN];
++	struct sockaddr_storage existing_ss = {0};
++
++	/*
++	 * ads_connect can be passed in an ADS_STRUCT
++	 * with an existing ads->ldap.ss IP address that
++	 * is stored by going through ads_find_dc(). Store this off
++	 * before zeroing out ads->ldap so we don't need to do
++	 * multiple calls to ads_find_dc().
++	 *
++	 * If a caller wants a clean ADS_STRUCT they
++	 * will call ads_destroy().
++	 */
++	if (!is_zero_addr(&ads->ldap.ss)) {
++		/* We already know who to talk to. */
++		existing_ss = ads->ldap.ss;
++	}
+ 
+ 	ZERO_STRUCT(ads->ldap);
+ 	ZERO_STRUCT(ads->ldap_wrap_data);
+@@ -638,6 +654,15 @@ ADS_STATUS ads_connect(ADS_STRUCT *ads)
+ 		}
+ 	}
+ 
++	if (!is_zero_addr(&existing_ss)) {
++		/* We already know who to talk to. */
++		bool ok = ads_try_connect(ads, ads->server.gc, &existing_ss);
++		if (ok) {
++			goto got_connection;
++		}
++		/* Keep trying.. */
++	}
++
+ 	ntstatus = ads_find_dc(ads);
+ 	if (NT_STATUS_IS_OK(ntstatus)) {
+ 		goto got_connection;
+-- 
+2.20.1
+
+
+From 6701b751f79031017149ced35e896f01c8646db1 Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Wed, 22 Jul 2020 19:00:52 -0700
+Subject: [PATCH 58/59] s3: libads: Don't re-do DNS lookups in
+ ads_current_time() if not needed.
+
+ADS_STRUCT may be being reused after a
+DC lookup, so ads->ldap.ss may already have a
+good address. Only do the DNS lookup if we have to.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libads/ldap.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
+
+diff --git a/source3/libads/ldap.c b/source3/libads/ldap.c
+index 049b52995ef..08b8f37d650 100755
+--- a/source3/libads/ldap.c
++++ b/source3/libads/ldap.c
+@@ -3241,11 +3241,19 @@ ADS_STATUS ads_current_time(ADS_STRUCT *ads)
+         /* establish a new ldap tcp session if necessary */
+ 
+ 	if ( !ads->ldap.ld ) {
+-		if ( (ads_s = ads_init( ads->server.realm, ads->server.workgroup, 
+-			ads->server.ldap_server, ADS_SASL_PLAIN )) == NULL )
+-		{
+-			status = ADS_ERROR(LDAP_NO_MEMORY);
+-			goto done;
++		/*
++		 * ADS_STRUCT may be being reused after a
++		 * DC lookup, so ads->ldap.ss may already have a
++		 * good address. Only do the DNS lookup if we have to.
++		 */
++		if (is_zero_addr(&ads->ldap.ss)) {
++			if ((ads_s = ads_init(ads->server.realm,
++					ads->server.workgroup,
++					ads->server.ldap_server,
++					ADS_SASL_PLAIN )) == NULL ) {
++				status = ADS_ERROR(LDAP_NO_MEMORY);
++				goto done;
++			}
+ 		}
+ 		ads_s->auth.flags = ADS_AUTH_ANON_BIND;
+ 		status = ads_connect( ads_s );
+-- 
+2.20.1
+
+
+From 06ac766a520723582210891c2f9cb035407efe4b Mon Sep 17 00:00:00 2001
+From: Jeremy Allison <jra@samba.org>
+Date: Wed, 22 Jul 2020 19:03:23 -0700
+Subject: [PATCH 59/59] s3: libads: Don't re-do DNS lookups in
+ ads_domain_func_level() if not needed.
+
+ADS_STRUCT may be being reused after a
+DC lookup, so ads->ldap.ss may already have a
+good address. Only do the DNS lookup if we have to.
+
+Signed-off-by: Jeremy Allison <jra@samba.org>
+---
+ source3/libads/ldap.c | 18 +++++++++++++-----
+ 1 file changed, 13 insertions(+), 5 deletions(-)
+
+diff --git a/source3/libads/ldap.c b/source3/libads/ldap.c
+index 08b8f37d650..7a9f73e8f59 100755
+--- a/source3/libads/ldap.c
++++ b/source3/libads/ldap.c
+@@ -3311,11 +3311,19 @@ ADS_STATUS ads_domain_func_level(ADS_STRUCT *ads, uint32_t *val)
+         /* establish a new ldap tcp session if necessary */
+ 
+ 	if ( !ads->ldap.ld ) {
+-		if ( (ads_s = ads_init( ads->server.realm, ads->server.workgroup, 
+-			ads->server.ldap_server, ADS_SASL_PLAIN )) == NULL )
+-		{
+-			status = ADS_ERROR_NT(NT_STATUS_NO_MEMORY);
+-			goto done;
++		/*
++		 * ADS_STRUCT may be being reused after a
++		 * DC lookup, so ads->ldap.ss may already have a
++		 * good address. Only do the DNS lookup if we have to.
++		 */
++		if (is_zero_addr(&ads->ldap.ss)) {
++			if ((ads_s = ads_init(ads->server.realm,
++						ads->server.workgroup,
++						ads->server.ldap_server,
++						ADS_SASL_PLAIN )) == NULL ) {
++				status = ADS_ERROR_NT(NT_STATUS_NO_MEMORY);
++				goto done;
++			}
+ 		}
+ 		ads_s->auth.flags = ADS_AUTH_ANON_BIND;
+ 		status = ads_connect( ads_s );
+-- 
+2.20.1
+
