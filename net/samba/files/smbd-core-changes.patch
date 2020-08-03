@@ -137,7 +137,7 @@ index 58919256e0e..6b772c6df01 100644
  }
  
 diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
-index 4cf553411cb..b06aeec0ee7 100644
+index 4cf553411cb..bc5d2a56ee5 100644
 --- a/source3/modules/vfs_default.c
 +++ b/source3/modules/vfs_default.c
 @@ -18,9 +18,13 @@
@@ -154,7 +154,15 @@ index 4cf553411cb..b06aeec0ee7 100644
  #include "smbd/smbd.h"
  #include "smbd/globals.h"
  #include "ntioctl.h"
-@@ -45,9 +49,131 @@
+@@ -39,15 +43,139 @@
+ #undef DBGC_CLASS
+ #define DBGC_CLASS DBGC_VFS
+ 
++#define ROBOCOPYTS 315619200
++
+ /* Check for NULL pointer parameters in vfswrap_* functions */
+ 
+ /* We don't want to have NULL function pointers lying around.  Someone
     is sure to try and execute them.  These stubs are used to prevent
     this possibility. */
  
@@ -287,7 +295,7 @@ index 4cf553411cb..b06aeec0ee7 100644
  }
  
  static void vfswrap_disconnect(vfs_handle_struct *handle)
-@@ -76,32 +202,14 @@ static int vfswrap_get_quota(struct vfs_handle_struct *handle,
+@@ -76,32 +204,14 @@ static int vfswrap_get_quota(struct vfs_handle_struct *handle,
  				unid_t id,
  				SMB_DISK_QUOTA *qt)
  {
@@ -320,13 +328,32 @@ index 4cf553411cb..b06aeec0ee7 100644
  }
  
  static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
-@@ -2523,7 +2631,8 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
- 	}
+@@ -2485,6 +2595,18 @@ static struct smb_filename *vfswrap_getwd(vfs_handle_struct *handle,
+  nsec timestamp resolution call. Convert down to whatever the underlying
+  system will support.
+ **********************************************************************/
++static bool is_robocopy_init(struct smb_file_time *ft)
++{
++	if (!null_timespec(ft->atime) ||
++	    !null_timespec(ft->create_time)) {
++		return false;
++	}
++	if (!null_timespec(ft->mtime) &&
++	    ft->mtime.tv_sec == ROBOCOPYTS) {
++		return true;
++	}
++	return false;
++}
+ 
+ static int vfswrap_ntimes(vfs_handle_struct *handle,
+ 			  const struct smb_filename *smb_fname,
+@@ -2524,6 +2646,9 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
  
  #if defined(HAVE_UTIMENSAT)
--	if (ft != NULL) {
-+	if ((ft != NULL) &&
-+	    (timespec_compare(&ft->mtime, &smb_fname->st.st_ex_btime) == 1)) {
+ 	if (ft != NULL) {
++		if (is_robocopy_init(ft)) {
++			return 0;
++		}
  		struct timespec ts[2];
  		ts[0] = ft->atime;
  		ts[1] = ft->mtime;
