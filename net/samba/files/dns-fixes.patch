@@ -4980,18 +4980,20 @@ index aedb043ac81..d6f5d216733 100644
 2.20.1
 
 
-From d77530a0a6a8cf6f0833150d327f03e78cc1a7da Mon Sep 17 00:00:00 2001
+From 3c6170b73386ff3ec35b5947ea7d490b143a2218 Mon Sep 17 00:00:00 2001
 From: Jeremy Allison <jra@samba.org>
 Date: Tue, 21 Jul 2020 22:09:27 -0700
-Subject: [PATCH 56/59] WIP
+Subject: [PATCH 56/59] s3: libsmb: Make discover_dc_dns() use async DNS.
+
+Change to call dns_lookup_list_async().
 
 Signed-off-by: Jeremy Allison <jra@samba.org>
 ---
- source3/libsmb/dsgetdcname.c | 229 ++++++++++++++++++++++++++++-------
- 1 file changed, 183 insertions(+), 46 deletions(-)
+ source3/libsmb/dsgetdcname.c | 224 ++++++++++++++++++++++++++++-------
+ 1 file changed, 178 insertions(+), 46 deletions(-)
 
 diff --git a/source3/libsmb/dsgetdcname.c b/source3/libsmb/dsgetdcname.c
-index 06119471c2b..bb1b29b021f 100644
+index 06119471c2b..aea6ee9ee5d 100644
 --- a/source3/libsmb/dsgetdcname.c
 +++ b/source3/libsmb/dsgetdcname.c
 @@ -504,14 +504,17 @@ static NTSTATUS discover_dc_dns(TALLOC_CTX *mem_ctx,
@@ -5016,7 +5018,7 @@ index 06119471c2b..bb1b29b021f 100644
  
  	if (flags & DS_PDC_REQUIRED) {
  		status = ads_dns_query_pdc(mem_ctx,
-@@ -554,74 +557,208 @@ static NTSTATUS discover_dc_dns(TALLOC_CTX *mem_ctx,
+@@ -554,74 +557,203 @@ static NTSTATUS discover_dc_dns(TALLOC_CTX *mem_ctx,
  	}
  
  	if (!NT_STATUS_IS_OK(status)) {
@@ -5059,6 +5061,8 @@ index 06119471c2b..bb1b29b021f 100644
 -	j = 0;
 -
 -	while ((i < numdcs) && (count < numaddrs)) {
+-
+-		struct ip_service_name *r = &dclist[count];
 +	/*
 +	 * First, copy the SRV record replies that
 +	 * have IP addresses returned with them.
@@ -5077,7 +5081,7 @@ index 06119471c2b..bb1b29b021f 100644
 +			continue;
 +		}
  
--		struct ip_service_name *r = &dclist[count];
+-		r->hostname = dcs[i].hostname;
 +		dclist[ret_count].hostname = talloc_move(mem_ctx,
 +						&dcs[i].hostname);
 +
@@ -5116,7 +5120,7 @@ index 06119471c2b..bb1b29b021f 100644
 +		return NT_STATUS_NO_MEMORY;
 +	}
  
--		r->hostname = dcs[i].hostname;
+-		/* If we don't have an IP list for a name, lookup it up */
 +	num_dns_lookups = 0;
 +	for (i = 0; i < numdcs; i++) {
 +		if (dcs[i].num_ips != 0) {
@@ -5136,7 +5140,13 @@ index 06119471c2b..bb1b29b021f 100644
 +		num_dns_lookups++;
 +	}
  
--		/* If we don't have an IP list for a name, lookup it up */
+-		if (!dcs[i].ss_s) {
+-			interpret_string_addr_prefer_ipv4(&r->ss,
+-						dcs[i].hostname, 0);
+-			i++;
+-			j = 0;
+-		} else {
+-			/* use the IP addresses from the SRV response */
 +	status = dns_lookup_list_async(mem_ctx,
 +				       num_dns_lookups,
 +				       dns_lookups,
@@ -5150,13 +5160,9 @@ index 06119471c2b..bb1b29b021f 100644
 +		return status;
 +	}
  
--		if (!dcs[i].ss_s) {
--			interpret_string_addr_prefer_ipv4(&r->ss,
--						dcs[i].hostname, 0);
--			i++;
--			j = 0;
--		} else {
--			/* use the IP addresses from the SRV response */
+-			if (j >= dcs[i].num_ips) {
+-				i++;
+-				j = 0;
 +	/*
 +	 * Remember, if we timed out or some
 +	 * addresses didn't look up then
@@ -5194,24 +5200,12 @@ index 06119471c2b..bb1b29b021f 100644
 +	 * reply - we know it will be IPv4 if there
 +	 * is an IPv4 for that name.
 +	 *
++	 * Here ret_count is the index into the
++	 * next entry in dclist we must fill (may
++	 * be zero).
 +	 */
 +
 +	for (i = 0; i < num_lookups_ret; i++) {
-+		/*
-+		 * PARANOIA Check. This cannot happen.
-+		 */
-+		SMB_ASSERT(ret_count < numdcs);
-+
-+		if (ret_count == numdcs) {
-+			TALLOC_FREE(dcs);
-+			TALLOC_FREE(dclist);
-+			TALLOC_FREE(dns_lookups);
-+			return NT_STATUS_INTERNAL_ERROR;
-+		}
- 
--			if (j >= dcs[i].num_ips) {
--				i++;
--				j = 0;
 +		dclist[ret_count].hostname = talloc_move(mem_ctx,
 +						&dns_lookups_ret[i]);
 +		dclist[ret_count].ss = dns_addrs_ret[i];
@@ -5234,7 +5228,7 @@ index 06119471c2b..bb1b29b021f 100644
 -
 -			r->ss = dcs[i].ss_s[j];
 -			j++;
--		}
+ 		}
 -
 -		/* make sure it is a valid IP.  I considered checking the
 -		 * negative connection cache, but this is the wrong place for
@@ -5247,8 +5241,11 @@ index 06119471c2b..bb1b29b021f 100644
 -		if (!is_zero_addr(&r->ss)) {
 -			count++;
 -			continue;
- 		}
 +		ret_count++;
++		if (ret_count == numdcs) {
++			/* We've filled the return array. */
++			break;
+ 		}
  	}
  
  	*returned_dclist = dclist;
@@ -5271,7 +5268,7 @@ index 06119471c2b..bb1b29b021f 100644
 2.20.1
 
 
-From becf47156b9ddbdd2339364cf9acd38948d42e5c Mon Sep 17 00:00:00 2001
+From aa6e7bec80afe952a95fd102f1d535a73ef9f49b Mon Sep 17 00:00:00 2001
 From: Jeremy Allison <jra@samba.org>
 Date: Wed, 22 Jul 2020 15:35:43 -0700
 Subject: [PATCH 57/59] s3: libads: ads_connect can be passed in an ADS_STRUCT
@@ -5338,7 +5335,7 @@ index 55c9668089d..049b52995ef 100755
 2.20.1
 
 
-From 6701b751f79031017149ced35e896f01c8646db1 Mon Sep 17 00:00:00 2001
+From b821ad76006ddeb6f681edc72fb8a91a63a01b32 Mon Sep 17 00:00:00 2001
 From: Jeremy Allison <jra@samba.org>
 Date: Wed, 22 Jul 2020 19:00:52 -0700
 Subject: [PATCH 58/59] s3: libads: Don't re-do DNS lookups in
@@ -5386,7 +5383,7 @@ index 049b52995ef..08b8f37d650 100755
 2.20.1
 
 
-From 06ac766a520723582210891c2f9cb035407efe4b Mon Sep 17 00:00:00 2001
+From d462527c1e844da4958d562e027b1c3232c76009 Mon Sep 17 00:00:00 2001
 From: Jeremy Allison <jra@samba.org>
 Date: Wed, 22 Jul 2020 19:03:23 -0700
 Subject: [PATCH 59/59] s3: libads: Don't re-do DNS lookups in
