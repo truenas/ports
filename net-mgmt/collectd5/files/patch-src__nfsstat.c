@@ -1,6 +1,6 @@
 --- src/nfsstat.c.orig	2016-05-26 22:25:31 UTC
 +++ src/nfsstat.c
-@@ -0,0 +1,256 @@
+@@ -0,0 +1,268 @@
 +/**
 + * collectd - src/nfs_freebsd.c 
 + * 
@@ -88,7 +88,7 @@
 +}
 +
 +static int
-+nfsstat_server_submit(struct ext_nfsstats *ext_nfsstats)
++nfsstat_server_submit(struct ext_nfsstats *ext_nfsstats, struct nfsstatsv1 *ext_nfsstatsv1)
 +{
 +	value_t v[1];
 +	value_list_t vl = VALUE_LIST_INIT;
@@ -121,6 +121,7 @@
 +		"mknod", (derive_t) ext_nfsstats->srvrpccnt[NFSV4OP_MKNOD],
 +		"pathconf", (derive_t) ext_nfsstats->srvrpccnt[NFSV4OP_PATHCONF],
 +		"read", (derive_t) ext_nfsstats->srvrpccnt[NFSV4OP_READ],
++		"read_bytes", (derive_t) ext_nfsstatsv1->srvbytes[NFSV4OP_WRITE],
 +		"readdir", (derive_t) ext_nfsstats->srvrpccnt[NFSV4OP_READDIR],
 +		"readirplus", (derive_t) ext_nfsstats->srvrpccnt[NFSV4OP_READDIRPLUS],
 +		"readlink", (derive_t) ext_nfsstats->srvrpccnt[NFSV4OP_READLINK],
@@ -130,6 +131,7 @@
 +		"setattr", (derive_t) ext_nfsstats->srvrpccnt[NFSV4OP_SETATTR],
 +		"symlink", (derive_t) ext_nfsstats->srvrpccnt[NFSV4OP_SYMLINK],
 +		"write", (derive_t) ext_nfsstats->srvrpccnt[NFSV4OP_WRITE],
++		"write_bytes", (derive_t) ext_nfsstatsv1->srvbytes[NFSV4OP_WRITE],
 +		NULL
 +	);
 +
@@ -230,7 +232,6 @@
 +static int
 +nfsstat_read(void)
 +{
-+	//char plugin_instance[DATA_MAX_NAME_LEN];
 +	struct ext_nfsstats ext_nfsstats;
 +
 +	/* Get all stats for now */
@@ -243,8 +244,19 @@
 +	if (nfsstat_flags & NFSSTAT_CLIENT_ONLY)
 +		nfsstat_client_submit(&ext_nfsstats);
 +
-+	if (nfsstat_flags & NFSSTAT_SERVER_ONLY)
-+		nfsstat_server_submit(&ext_nfsstats);
++	if (nfsstat_flags & NFSSTAT_SERVER_ONLY) {
++		struct nfsstatsv1 ext_nfsstatsv1;
++
++		/* Get all stats for now */
++		bzero(&ext_nfsstatsv1, sizeof(ext_nfsstatsv1));
++		ext_nfsstatsv1.vers = NFSSTATS_V1;
++		if (nfssvc(NFSSVC_GETSTATS | NFSSVC_NEWSTRUCT, &ext_nfsstatsv1) < 0) {
++			ERROR("nfssvc: Could not read new NFS statistics");
++			return (-1);
++		}
++
++		nfsstat_server_submit(&ext_nfsstats, &ext_nfsstatsv1);
++	}
 +
 +	return (0);
 +}
