@@ -1818,10 +1818,10 @@ index 00000000000..c7390a8a76d
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..b03f5f5d680
+index 00000000000..aa1eb5fdc0a
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2525 @@
+@@ -0,0 +1,2537 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -3826,14 +3826,21 @@ index 00000000000..b03f5f5d680
 +	char *parent;
 +	const char *base;
 +	acl_t zacl, new_acl;
-+	TALLOC_CTX *tmp_ctx = talloc_stackframe();
++	TALLOC_CTX *tmp_ctx = NULL;
 +	struct smblibzfshandle *libzp = NULL;
 +
-+	if (realpath(handle->conn->connectpath, rp)) {
++	if (access(handle->conn->connectpath, F_OK) == 0) {
 +		DBG_INFO("Home directory already exists. Skipping dataset creation\n");
-+		TALLOC_FREE(tmp_ctx);
-+		return ret;	
++
++		return 0;
 +	}
++	if (errno != ENOENT) {
++		DBG_ERR("%s: access() failed with error: %s\n",
++			handle->conn->connectpath, strerror(errno));
++		return -1;
++	}
++
++	tmp_ctx = talloc_stackframe();
 +
 +	if (!parent_dirname(tmp_ctx, handle->conn->connectpath, &parent, &base)) {
 +		TALLOC_FREE(tmp_ctx);
@@ -3851,6 +3858,11 @@ index 00000000000..b03f5f5d680
 +	}
 +
 +	if (realpath(parent, rp) == NULL ){
++		if (errno != ENOENT) {
++			TALLOC_FREE(tmp_ctx);
++			DBG_ERR("%s: realpath() failed: %s\n", parent, strerror(errno));
++			return -1;
++		}
 +		DBG_ERR("Parent directory does not exist, attempting to create parent.\n");
 +		char *grandparent;
 +		const char *parent_relpath;
