@@ -1,3 +1,15 @@
+diff --git a/source3/include/smbprofile.h b/source3/include/smbprofile.h
+index 1dc3a088655..f300dda4459 100644
+--- a/source3/include/smbprofile.h
++++ b/source3/include/smbprofile.h
+@@ -512,6 +512,7 @@ void smbprofile_cleanup(pid_t pid, pid_t dst);
+ void smbprofile_stats_accumulate(struct profile_stats *acc,
+ 				 const struct profile_stats *add);
+ void smbprofile_collect(struct profile_stats *stats);
++void smbprofile_collect_pid(struct profile_stats *stats, int pid);
+ 
+ static inline uint64_t profile_timestamp(void)
+ {
 diff --git a/source3/include/util_sd.h b/source3/include/util_sd.h
 index 7f82969badf..dc4ec88e578 100644
 --- a/source3/include/util_sd.h
@@ -529,6 +541,27 @@ index 39083b15438..e7396237f50 100644
 +	json_free(&jsret);
 +	return false;
 +}
+diff --git a/source3/profile/profile.c b/source3/profile/profile.c
+index 7e17d065d75..b673bb9a2f1 100644
+--- a/source3/profile/profile.c
++++ b/source3/profile/profile.c
+@@ -462,3 +462,16 @@ void smbprofile_collect(struct profile_stats *stats)
+ 	tdb_traverse_read(smbprofile_state.internal.db->tdb,
+ 			  smbprofile_collect_fn, stats);
+ }
++
++void smbprofile_collect_pid(struct profile_stats *stats_out,
++			    int pid)
++{
++	*stats_out = (struct profile_stats) {};
++
++	TDB_DATA key = { .dptr = (uint8_t *)&pid,
++			 .dsize = sizeof(pid) };
++
++	tdb_parse_record(smbprofile_state.internal.db->tdb,
++			 key, profile_stats_parser, stats_out);
++
++}
 diff --git a/source3/utils/sharesec.c b/source3/utils/sharesec.c
 index 419a6411334..69dfb12b047 100644
 --- a/source3/utils/sharesec.c
@@ -783,7 +816,7 @@ index f3209c31877..5dad505d1d0 100644
  		result = cacl_dump(targetcli, targetfile, numeric);
  	}
 diff --git a/source3/utils/status.c b/source3/utils/status.c
-index 36f7030e4f4..a7b5c733d1b 100644
+index 36f7030e4f4..651d6ef85be 100644
 --- a/source3/utils/status.c
 +++ b/source3/utils/status.c
 @@ -51,6 +51,12 @@
@@ -809,7 +842,7 @@ index 36f7030e4f4..a7b5c733d1b 100644
  
  const char *username = NULL;
  
-+static const char *session_dialect_str(uint16_t dialect);
++const char *session_dialect_str(uint16_t dialect);
 +
 +#ifdef HAVE_JANSSON
 +struct txt2mask {
@@ -1276,8 +1309,8 @@ index 36f7030e4f4..a7b5c733d1b 100644
 +	return -1;
 +}
 +
-+static int traverse_sessionid_json(const char *key, struct sessionid *session,
-+				    void *private_data)
++int traverse_sessionid_json(const char *key, struct sessionid *session,
++			    void *private_data)
 +{
 +	TALLOC_CTX *tmp_ctx = talloc_new(NULL);
 +	if (tmp_ctx == NULL) {
@@ -1517,6 +1550,15 @@ index 36f7030e4f4..a7b5c733d1b 100644
  	static int count;
  
  	if (do_checks && !is_valid_share_mode_entry(e)) {
+@@ -291,7 +991,7 @@ static void print_brl(struct file_id id,
+ 	TALLOC_FREE(share_mode);
+ }
+ 
+-static const char *session_dialect_str(uint16_t dialect)
++const char *session_dialect_str(uint16_t dialect)
+ {
+ 	static fstring unkown_dialect;
+ 
 @@ -510,7 +1210,6 @@ static int traverse_sessionid(const char *key, struct sessionid *session,
  	return result;
  }
@@ -1539,7 +1581,7 @@ index 36f7030e4f4..a7b5c733d1b 100644
  	struct poptOption long_options[] = {
  		POPT_AUTOHELP
  		{
-@@ -610,6 +1310,14 @@ int main(int argc, const char *argv[])
+@@ -610,6 +1310,22 @@ int main(int argc, const char *argv[])
  			.val        = 'R',
  			.descrip    = "Show call rates",
  		},
@@ -1551,10 +1593,18 @@ index 36f7030e4f4..a7b5c733d1b 100644
 +			.val        = 'D',
 +			.descrip    = "Show call rates",
 +		},
++		{
++			.longName   = "per-session profile",
++			.shortName  = 'x',
++			.argInfo    = POPT_ARG_NONE,
++			.arg        = NULL,
++			.val        = 'x',
++			.descrip    = "show call rates",
++		},
  		{
  			.longName   = "byterange",
  			.shortName  = 'B',
-@@ -626,6 +1334,30 @@ int main(int argc, const char *argv[])
+@@ -626,6 +1342,30 @@ int main(int argc, const char *argv[])
  			.val        = 'n',
  			.descrip    = "Numeric uid/gid"
  		},
@@ -1585,7 +1635,7 @@ index 36f7030e4f4..a7b5c733d1b 100644
  		{
  			.longName   = "fast",
  			.shortName  = 'f',
-@@ -657,14 +1389,37 @@ int main(int argc, const char *argv[])
+@@ -657,14 +1397,37 @@ int main(int argc, const char *argv[])
  	setup_logging(argv[0], DEBUG_STDERR);
  	lp_set_cmdline("log level", "0");
  
@@ -1625,15 +1675,16 @@ index 36f7030e4f4..a7b5c733d1b 100644
  		ret = 1;
  		goto done;
  	}
-@@ -696,6 +1451,7 @@ int main(int argc, const char *argv[])
+@@ -696,6 +1459,8 @@ int main(int argc, const char *argv[])
  		case 'u':
  			Ucrit_addUid(nametouid(poptGetOptArg(pc)));
  			break;
++		case 'x':
 +		case 'D':
  		case 'P':
  		case 'R':
  			profile_only = c;
-@@ -706,6 +1462,16 @@ int main(int argc, const char *argv[])
+@@ -706,6 +1471,16 @@ int main(int argc, const char *argv[])
  		case 'n':
  			numeric_only = true;
  			break;
@@ -1650,7 +1701,7 @@ index 36f7030e4f4..a7b5c733d1b 100644
  		case 'f':
  			do_checks = false;
  			break;
-@@ -724,13 +1490,18 @@ int main(int argc, const char *argv[])
+@@ -724,13 +1499,18 @@ int main(int argc, const char *argv[])
  	if ( username )
  		Ucrit_addUid( nametouid(username) );
  
@@ -1671,8 +1722,15 @@ index 36f7030e4f4..a7b5c733d1b 100644
  		ret = -1;
  		goto done;
  	}
-@@ -745,7 +1516,7 @@ int main(int argc, const char *argv[])
+@@ -743,9 +1523,14 @@ int main(int argc, const char *argv[])
+ 	}
+ 
  	switch (profile_only) {
++		case 'x':
++			fprintf(stderr, "session profiling dump: %lu\n", interval);
++			ok = status_profile_sessions_json(verbose, interval);
++			ret = ok ? 0 : 1;
++			goto done;
  		case 'P':
  			/* Dump profile data */
 -			ok = status_profile_dump(verbose);
@@ -1680,7 +1738,7 @@ index 36f7030e4f4..a7b5c733d1b 100644
  			ret = ok ? 0 : 1;
  			goto done;
  		case 'R':
-@@ -753,16 +1524,41 @@ int main(int argc, const char *argv[])
+@@ -753,16 +1538,41 @@ int main(int argc, const char *argv[])
  			ok = status_profile_rates(verbose);
  			ret = ok ? 0 : 1;
  			goto done;
@@ -1726,7 +1784,7 @@ index 36f7030e4f4..a7b5c733d1b 100644
  
  		if (processes_only) {
  			goto done;
-@@ -774,12 +1570,32 @@ int main(int argc, const char *argv[])
+@@ -774,12 +1584,32 @@ int main(int argc, const char *argv[])
  			goto done;
  		}
  
@@ -1764,7 +1822,7 @@ index 36f7030e4f4..a7b5c733d1b 100644
  
  		if ( shares_only ) {
  			goto done;
-@@ -792,7 +1608,12 @@ int main(int argc, const char *argv[])
+@@ -792,7 +1622,12 @@ int main(int argc, const char *argv[])
  
  		db_path = lock_path(talloc_tos(), "locking.tdb");
  		if (db_path == NULL) {
@@ -1778,7 +1836,7 @@ index 36f7030e4f4..a7b5c733d1b 100644
  			ret = -1;
  			goto done;
  		}
-@@ -802,9 +1623,16 @@ int main(int argc, const char *argv[])
+@@ -802,9 +1637,16 @@ int main(int argc, const char *argv[])
  			     DBWRAP_LOCK_ORDER_1, DBWRAP_FLAG_NONE);
  
  		if (!db) {
@@ -1798,7 +1856,7 @@ index 36f7030e4f4..a7b5c733d1b 100644
  			TALLOC_FREE(db_path);
  			exit(0);
  		} else {
-@@ -817,20 +1645,66 @@ int main(int argc, const char *argv[])
+@@ -817,20 +1659,66 @@ int main(int argc, const char *argv[])
  			ret = 1;
  			goto done;
  		}
@@ -1871,7 +1929,7 @@ index 36f7030e4f4..a7b5c733d1b 100644
  
  		locking_end();
  	}
-@@ -843,12 +1717,38 @@ int main(int argc, const char *argv[])
+@@ -843,12 +1731,38 @@ int main(int argc, const char *argv[])
  		if (n == NULL) {
  			goto done;
  		}
@@ -1912,11 +1970,28 @@ index 36f7030e4f4..a7b5c733d1b 100644
  	return ret;
  }
 diff --git a/source3/utils/status_profile.c b/source3/utils/status_profile.c
-index 829e84cef1c..5f6a9db855d 100644
+index 829e84cef1c..6936d46f58f 100644
 --- a/source3/utils/status_profile.c
 +++ b/source3/utils/status_profile.c
-@@ -21,43 +21,130 @@
+@@ -19,45 +19,154 @@
+  */
+ 
  #include "includes.h"
++#include "lib/util/server_id.h"
++#include "smbd/globals.h"
++#include "system/filesys.h"
++#include "popt_common.h"
++#include "dbwrap/dbwrap.h"
++#include "dbwrap/dbwrap_open.h"
++#include "../libcli/security/security.h"
++#include "session.h"
++#include "locking/proto.h"
++#include "messages.h"
++#include "librpc/gen_ndr/open_files.h"
++#include "smbd/smbd.h"
++#include "librpc/gen_ndr/notify.h"
++#include "conn_tdb.h"
++#include "serverid.h"
  #include "smbprofile.h"
  #include "status_profile.h"
 +#include <jansson.h>
@@ -1981,7 +2056,8 @@ index 829e84cef1c..5f6a9db855d 100644
   dump the elements of the profile structure
    ******************************************************************/
 -bool status_profile_dump(bool verbose)
-+bool status_profile_dump(bool verbose,  enum PROFILE_OUTPUT proft)
++bool status_profile_dump_internal(bool verbose,  enum PROFILE_OUTPUT proft,
++				  int pid, struct json_object *out)
  {
 +	TALLOC_CTX *mem_ctx = NULL;
 +	int ret;
@@ -2016,7 +2092,14 @@ index 829e84cef1c..5f6a9db855d 100644
 +		}
 +	}
  
- 	smbprofile_collect(&stats);
+-	smbprofile_collect(&stats);
++	if (pid == 0) {
++		smbprofile_collect(&stats);
++	}
++	else {
++		smbprofile_collect_pid(&stats, pid);
++		fprintf(stderr, "magic: %d\n", stats.magic);
++	}
  
  #define __PRINT_FIELD_LINE(name, _stats, field) do { \
 -	d_printf("%-59s%20ju\n", \
@@ -2062,11 +2145,20 @@ index 829e84cef1c..5f6a9db855d 100644
  #define SMBPROFILE_STATS_COUNT(name) do { \
  	__PRINT_FIELD_LINE(#name, name##_stats,  count); \
  } while(0);
-@@ -95,6 +182,19 @@ bool status_profile_dump(bool verbose)
+@@ -95,6 +204,28 @@ bool status_profile_dump(bool verbose)
  #undef SMBPROFILE_STATS_SECTION_END
  #undef SMBPROFILE_STATS_END
  
 +	first_done = False;
++	if (pid != 0) {
++
++		ret = json_add_object(out, "profile", &jsobj);
++		if (ret == -1) {
++			fprintf(stderr, "Failed to add profile data to jsobjint.");
++		}
++		TALLOC_FREE(mem_ctx);
++		return true;
++	}
 +	if (proft == PROF_JSON) {
 +		printf("%s\n", json_to_string(mem_ctx, &jsobj));
 +		TALLOC_FREE(mem_ctx);
@@ -2082,7 +2174,19 @@ index 829e84cef1c..5f6a9db855d 100644
  	return True;
  }
  
-@@ -361,3 +461,41 @@ bool status_profile_rates(bool verbose)
+@@ -138,6 +269,11 @@ static uint64_t print_count_count_samples(
+ 	return count;
+ }
+ 
++bool status_profile_dump(bool verbose,  enum PROFILE_OUTPUT proft)
++{
++	return status_profile_dump_internal(verbose, proft, 0, NULL);
++}
++
+ static uint64_t print_basic_count_samples(
+ 	char *buf, const size_t buflen,
+ 	const char *name,
+@@ -361,3 +497,150 @@ bool status_profile_rates(bool verbose)
  
  	return True;
  }
@@ -2124,11 +2228,120 @@ index 829e84cef1c..5f6a9db855d 100644
 +	}
 +	return True;
 +}
++
++static int traverse_sessionid_profile_json(const char *key,
++					  struct sessionid *session,
++					  void *private_data)
++{
++        struct json_object jsobj;
++        struct json_object jsobjint;
++	struct json_object prof;
++	bool ok;
++	int ret;
++
++	jsobj = *(struct json_object *)private_data;
++	jsobjint = json_new_object();
++	struct server_id_buf tmp;
++	int result = 0;
++	const char *encryption = "-";
++	const char *signing = "-";
++
++	if (json_is_invalid(&jsobjint)) {
++		return -1;
++	}
++
++	if (json_add_int(&jsobjint, "uid", (unsigned int)session->uid) < 0) {
++		goto failure;
++	}
++	if (json_add_int(&jsobjint, "gid", (unsigned int)session->gid) < 0) {
++		goto failure;
++	}
++        if (json_add_string(&jsobjint, "remote_machine", session->remote_machine) < 0) {
++                goto failure;
++        }
++        if (json_add_string(&jsobjint, "hostname", session->hostname) < 0) {
++                goto failure;
++        }
++        if (json_add_string(&jsobjint, "session_dialect",
++                    session_dialect_str(session->connection_dialect)) < 0) {
++                goto failure;
++        }
++
++	ok = status_profile_dump_internal(false, PROF_JSON, session->pid.pid, &jsobjint);
++	if (!ok) {
++		fprintf(stderr, "failed to get profile data\n");
++		goto failure;
++	}
++
++        ret = json_add_object(&jsobj, server_id_str_buf(session->pid, &tmp), &jsobjint);
++	if (ret == -1) {
++		fprintf(stderr, "Failed to add expand json.");
++                goto failure;
++        }
++
++        return result;
++
++failure:
++        json_free(&jsobjint);
++        return -1;
++}
++
++
++bool status_profile_sessions_json(bool verbose, uint64_t sample_interval)
++{
++	TALLOC_CTX *mem_ctx = NULL;
++	struct json_object sessions;
++	uint64_t remain_usec;
++	uint64_t next_usec;
++	uint64_t delta_usec;
++	uint64_t interval;
++	bool ret;
++	int last = 0;
++	int current = 1;
++	int tmp;
++	interval = sample_interval * one_second_usec;
++
++	for (;/*ever*/;) {
++		char *json = NULL;
++		sessions = json_new_object();
++		if (json_is_invalid(&sessions)) {
++			fprintf(stderr, "Failed to create JSON object [sessions]\n");
++			json_free(&sessions);
++			return false;
++		}
++		sample_time[current] = profile_timestamp();
++		next_usec = sample_time[current] + interval;
++		sessionid_traverse_read(traverse_sessionid_profile_json, &sessions);
++		json = json_dumps(sessions.root, 0);
++		if (json == NULL) {
++			fprintf(stderr, "Unable to convert JSON object to string\n");
++			return false;
++		}
++		printf("%s\n", json);
++		free(json);
++
++		last = current;
++		current = tmp;
++		ret = fflush(stdout);
++		if (ret != 0) {
++			fprintf(stderr, "Failed to flush output stream: %s\n",
++				strerror(errno));
++			return false;
++		}
++		remain_usec = next_usec - profile_timestamp();
++		if (remain_usec > interval) {
++			fprintf(stderr, "eek! falling behind sampling rate!\n");
++		} else {
++			usleep(remain_usec);
++		}
++	}
++	return true;
++}
 diff --git a/source3/utils/status_profile.h b/source3/utils/status_profile.h
-index a8a73e12178..485a55e6d2a 100644
+index a8a73e12178..d0f6d317856 100644
 --- a/source3/utils/status_profile.h
 +++ b/source3/utils/status_profile.h
-@@ -21,8 +21,10 @@
+@@ -21,8 +21,12 @@
  #define __STATUS_PROFILE_H__
  
  #include "replace.h"
@@ -2138,5 +2351,7 @@ index a8a73e12178..485a55e6d2a 100644
 +bool status_profile_dump(bool be_verbose, enum PROFILE_OUTPUT proft);
  bool status_profile_rates(bool be_verbose);
 +bool status_profile_timed_dump(bool be_verbose, enum PROFILE_OUTPUT proft, uint64_t sample_interval);
++const char *session_dialect_str(uint16_t dialect);
++bool status_profile_sessions_json(bool verbose, uint64_t sample_interval);
  
  #endif
