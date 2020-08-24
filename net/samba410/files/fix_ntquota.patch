@@ -1,0 +1,40 @@
+commit 44ce6a022660c9bfb03b8db9ad6d0a8fb61c8c50
+Author: Volker Lendecke <vl@samba.org>
+Date:   Fri May 22 14:41:27 2020 +0200
+
+    smbd: Protect smbd_smb2_getinfo_send() against invalid quota files
+    
+    Bug: https://bugzilla.samba.org/show_bug.cgi?id=14367
+    
+    Signed-off-by: Volker Lendecke <vl@samba.org>
+    Reviewed-by: Stefan Metzmacher <metze@samba.org>
+    
+    Autobuild-User(master): Stefan Metzmacher <metze@samba.org>
+    Autobuild-Date(master): Fri May 29 09:55:10 UTC 2020 on sn-devel-184
+
+diff --git a/source3/smbd/smb2_getinfo.c b/source3/smbd/smb2_getinfo.c
+index 3d4e0c00d6c..2c563742fe6 100644
+--- a/source3/smbd/smb2_getinfo.c
++++ b/source3/smbd/smb2_getinfo.c
+@@ -546,12 +546,21 @@ static struct tevent_req *smbd_smb2_getinfo_send(TALLOC_CTX *mem_ctx,
+ 		struct ndr_pull *ndr_pull = NULL;
+ 		DATA_BLOB sid_buf = data_blob_null;
+ 		TALLOC_CTX *tmp_ctx = talloc_init("geninfo_quota");
++		bool ok;
+ 
+ 		if (!tmp_ctx) {
+ 			tevent_req_nterror(req, NT_STATUS_NO_MEMORY);
+ 			return tevent_req_post(req, ev);
+ 		}
+ 
++		ok = check_fsp_ntquota_handle(conn, smbreq, fsp);
++		if (!ok) {
++			DBG_INFO("no valid QUOTA HANDLE\n");
++			TALLOC_FREE(tmp_ctx);
++			tevent_req_nterror(req, NT_STATUS_INVALID_HANDLE);
++			return tevent_req_post(req, ev);
++		}
++
+ 		ndr_pull = ndr_pull_init_blob(&in_input_buffer, tmp_ctx);
+ 		if (!ndr_pull) {
+ 			TALLOC_FREE(tmp_ctx);
