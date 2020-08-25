@@ -3,7 +3,7 @@
 
 PORTNAME=			${SAMBA4_BASENAME}
 PORTVERSION=			${SAMBA4_VERSION}
-PORTREVISION=			4
+PORTREVISION=			0
 CATEGORIES?=			net
 MASTER_SITES=			SAMBA/samba/stable SAMBA/samba/rc
 DISTNAME=			${SAMBA4_DISTNAME}
@@ -35,13 +35,13 @@ EXTRA_PATCHES+=			${PATCHDIR}/smbd-core-changes.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/debug.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/tevent_kqueue.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/silence-openpam-warnings.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/fix-idmap_ad.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/allow_vfs_set_sparse.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/fix-fruit-locking.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/fix-smb2-getquota.patch:-p1
 
 SAMBA4_BASENAME=		samba
 SAMBA4_PORTNAME=		${SAMBA4_BASENAME}4
-SAMBA4_VERSION=			4.12.5
+SAMBA4_VERSION=			4.12.6
 SAMBA4_DISTNAME=		${SAMBA4_BASENAME}-${SAMBA4_VERSION:S|.p|pre|:S|.r|rc|:S|.t|tp|:S|.a|alpha|}
 
 WRKSRC?=			${WRKDIR}/${DISTNAME}
