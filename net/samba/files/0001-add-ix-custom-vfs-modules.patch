@@ -1818,10 +1818,10 @@ index 00000000000..c7390a8a76d
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..aa1eb5fdc0a
+index 00000000000..10ce0c448fc
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2537 @@
+@@ -0,0 +1,2536 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -4057,11 +4057,10 @@ index 00000000000..aa1eb5fdc0a
 +static bool is_robocopy_init(struct smb_file_time *ft)
 +{
 +	if (!null_timespec(ft->atime) ||
-+	    null_timespec(ft->create_time)) {
++	    !null_timespec(ft->create_time)) {
 +		return false;
 +	}
-+	if (!null_timespec(ft->mtime) &&
-+	    ft->mtime.tv_sec == 315619200) {
++	if (ft->mtime.tv_sec == 315619200) {
 +		return true;
 +	}
 +	return false;
@@ -4091,10 +4090,10 @@ index 00000000000..aa1eb5fdc0a
 +			return 0;
 +		}
 +		struct timespec ts[2];
-+		if (null_timespec(ft->atime)) {
++		if (is_omit_timespec(&ft->atime)) {
 +			ft->atime= smb_fname->st.st_ex_atime;
 +		}
-+		if (null_timespec(ft->mtime)) {
++		if (is_omit_timespec(&ft->mtime)) {
 +			ft->mtime = smb_fname->st.st_ex_mtime;
 +		}
 +		/* mtime and atime are unchanged */
@@ -4108,7 +4107,7 @@ index 00000000000..aa1eb5fdc0a
 +		 * Perform two utimensat() calls if needed to set the specified
 +		 * timestamps.
 +		 */
-+		if (null_timespec(ft->create_time)) {
++		if (is_omit_timespec(&ft->create_time)) {
 +			ft->create_time = ft->mtime;
 +		}
 +		ts[0] = ft->atime;
