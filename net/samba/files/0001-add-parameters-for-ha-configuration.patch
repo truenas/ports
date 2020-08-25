@@ -107,10 +107,10 @@ index 00000000000..6979955a101
 +<value type="example">no</value>
 +</samba:parameter>
 diff --git a/lib/param/loadparm.c b/lib/param/loadparm.c
-index 611c1b240af..83e9caf392f 100644
+index 63291283905..0ddea8be8c1 100644
 --- a/lib/param/loadparm.c
 +++ b/lib/param/loadparm.c
-@@ -3207,9 +3207,11 @@ static bool lpcfg_load_internal(struct loadparm_context *lp_ctx,
+@@ -3214,9 +3214,11 @@ static bool lpcfg_load_internal(struct loadparm_context *lp_ctx,
  	char *n2;
  	bool bRetval;
  
@@ -125,10 +125,10 @@ index 611c1b240af..83e9caf392f 100644
  	if (lp_ctx->s3_fns) {
  		return lp_ctx->s3_fns->load(filename);
 diff --git a/source3/libnet/libnet_join.c b/source3/libnet/libnet_join.c
-index eb8e0ea17f7..32ed02307b6 100644
+index a087587bba7..bdca3030f19 100644
 --- a/source3/libnet/libnet_join.c
 +++ b/source3/libnet/libnet_join.c
-@@ -563,6 +563,13 @@ static ADS_STATUS libnet_join_set_machine_spn(TALLOC_CTX *mem_ctx,
+@@ -569,6 +569,13 @@ static ADS_STATUS libnet_join_set_machine_spn(TALLOC_CTX *mem_ctx,
  		goto done;
  	}
  
@@ -142,7 +142,7 @@ index eb8e0ea17f7..32ed02307b6 100644
  	for (netbios_aliases = lp_netbios_aliases();
  	     netbios_aliases != NULL && *netbios_aliases != NULL;
  	     netbios_aliases++) {
-@@ -602,6 +609,7 @@ static ADS_STATUS libnet_join_set_machine_spn(TALLOC_CTX *mem_ctx,
+@@ -608,6 +615,7 @@ static ADS_STATUS libnet_join_set_machine_spn(TALLOC_CTX *mem_ctx,
  			goto done;
  		}
  	}
@@ -151,7 +151,7 @@ index eb8e0ea17f7..32ed02307b6 100644
  	for (addl_hostnames = lp_additional_dns_hostnames();
  	     addl_hostnames != NULL && *addl_hostnames != NULL;
 diff --git a/source3/param/loadparm.c b/source3/param/loadparm.c
-index ce41477097a..6a717abb94a 100644
+index d3d81f6ece5..2b13e37d3eb 100644
 --- a/source3/param/loadparm.c
 +++ b/source3/param/loadparm.c
 @@ -690,6 +690,7 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
@@ -175,10 +175,10 @@ index ce41477097a..6a717abb94a 100644
  
  	/* hostname lookups can be very expensive and are broken on
 diff --git a/source3/utils/net_ads.c b/source3/utils/net_ads.c
-index 95a6ed74b78..ccb3d7e8922 100644
+index dd3c650be8b..ddfd938af72 100644
 --- a/source3/utils/net_ads.c
 +++ b/source3/utils/net_ads.c
-@@ -1759,6 +1759,10 @@ static void _net_ads_join_dns_updates(struct net_context *c, TALLOC_CTX *ctx, st
+@@ -1761,6 +1761,10 @@ static void _net_ads_join_dns_updates(struct net_context *c, TALLOC_CTX *ctx, st
  		return;
  	}
  
