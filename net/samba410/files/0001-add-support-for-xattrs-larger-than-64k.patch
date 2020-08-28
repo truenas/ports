@@ -36,7 +36,7 @@ index 61757c6..84ba6ba 100644
  
 -	if (sizeret == -1 && errno == ERANGE && attr_size != 65536) {
 -		attr_size = 65536;
-+	if (sizeret == -1 && errno == ERANGE && attr_size <= max_xattr_size) {
++	if (sizeret == -1 && errno == ERANGE && attr_size < max_xattr_size) {
 +		attr_size = max_xattr_size;
  		goto again;
  	}
