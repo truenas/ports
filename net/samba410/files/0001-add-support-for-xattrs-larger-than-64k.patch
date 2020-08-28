@@ -1,9 +1,93 @@
----
- source3/smbd/trans2.c | 19 ++++++++++++++++---
- 1 file changed, 16 insertions(+), 3 deletions(-)
-
+diff --git a/source3/modules/vfs_streams_xattr.c b/source3/modules/vfs_streams_xattr.c
+index 213a8367541..0e45b3d9a6f 100644
+--- a/source3/modules/vfs_streams_xattr.c
++++ b/source3/modules/vfs_streams_xattr.c
+@@ -34,6 +34,7 @@
+ struct streams_xattr_config {
+ 	const char *prefix;
+ 	size_t prefix_len;
++	size_t max_xattr_size;
+ 	bool store_stream_type;
+ };
+ 
+@@ -953,6 +954,10 @@ static int streams_xattr_connect(vfs_handle_struct *handle,
+ 						 "store_stream_type",
+ 						 true);
+ 
++	config->max_xattr_size = (size_t)lp_parm_ulonglong(
++		SNUM(handle->conn), "smbd", "max_xattr_size", 16*1024*1024);
++
++
+ 	SMB_VFS_HANDLE_SET_DATA(handle, config,
+ 				NULL, struct stream_xattr_config,
+ 				return -1);
+@@ -967,6 +972,7 @@ static ssize_t streams_xattr_pwrite(vfs_handle_struct *handle,
+         struct stream_io *sio =
+ 		(struct stream_io *)VFS_FETCH_FSP_EXTENSION(handle, fsp);
+ 	struct ea_struct ea;
++	struct streams_xattr_config *config = NULL;
+ 	NTSTATUS status;
+ 	struct smb_filename *smb_fname_base = NULL;
+ 	int ret;
+@@ -977,6 +983,9 @@ static ssize_t streams_xattr_pwrite(vfs_handle_struct *handle,
+ 		return SMB_VFS_NEXT_PWRITE(handle, fsp, data, n, offset);
+ 	}
+ 
++	SMB_VFS_HANDLE_GET_DATA(handle, config, struct streams_xattr_config,
++				return -1);
++
+ 	if (!streams_xattr_recheck(sio)) {
+ 		return -1;
+ 	}
+@@ -992,6 +1001,27 @@ static ssize_t streams_xattr_pwrite(vfs_handle_struct *handle,
+ 		return -1;
+ 	}
+ 
++	if ((n + (size_t)offset) >= config->max_xattr_size) {
++		/*
++		 * Requested write is beyond what can be read based on
++		 * samba configuration. Correct action is debatable.
++		 * ReFS returns STATUS_FILESYSTEM_LIMITATION, which causes
++		 * entire file to be skipped by File Explorer. VFAT returns
++		 * NT_STATUS_OBJECT_NAME_COLLISION causes user to be prompted
++		 * to skip writing metadata, but copy data.
++		 */
++		DBG_ERR("Write to xattr [%s] on file [%s] exceeds maximum "
++			"supported extended attribute size. "
++			"Depending on filesystem type and operating system "
++			"(OS) specifics, this value may be increased using "
++			"the value of the parameter: "
++			"smbd:max_xattr_size = <bytes>. Consult OS and "
++			"filesystem manpages prior to increasing this limit.\n",
++			sio->xattr_name, sio->base);
++		errno = EOVERFLOW;
++		return -1;
++	}
++
+ 	status = get_ea_value(talloc_tos(), handle->conn, NULL,
+ 			      smb_fname_base, sio->xattr_name, &ea);
+ 	if (!NT_STATUS_IS_OK(status)) {
+diff --git a/source3/smbd/smb2_write.c b/source3/smbd/smb2_write.c
+index ee95bd317ae..58c69ed78f2 100644
+--- a/source3/smbd/smb2_write.c
++++ b/source3/smbd/smb2_write.c
+@@ -193,7 +193,13 @@ static NTSTATUS smb2_write_complete_internal(struct tevent_req *req,
+ 	files_struct *fsp = state->fsp;
+ 
+ 	if (nwritten == -1) {
+-		status = map_nt_error_from_unix(err);
++		if (err == EOVERFLOW &&
++		    is_ntfs_stream_smb_fname(fsp->fsp_name)) {
++			status = NT_STATUS_FILE_SYSTEM_LIMITATION;
++		}
++		else {
++			status = map_nt_error_from_unix(err);
++		}
+ 
+ 		DEBUG(2, ("smb2_write failed: %s, file %s, "
+ 			  "length=%lu offset=%lu nwritten=-1: %s\n",
 diff --git a/source3/smbd/trans2.c b/source3/smbd/trans2.c
-index 61757c6..84ba6ba 100644
+index f8d987bbe63..6426747bfd8 100644
 --- a/source3/smbd/trans2.c
 +++ b/source3/smbd/trans2.c
 @@ -211,9 +211,22 @@ NTSTATUS get_ea_value(TALLOC_CTX *mem_ctx,
@@ -41,6 +125,24 @@ index 61757c6..84ba6ba 100644
  		goto again;
  	}
  
--- 
-1.8.3.1
-
+@@ -479,6 +492,20 @@ static NTSTATUS get_ea_list_from_file_path(TALLOC_CTX *mem_ctx,
+ 			TALLOC_FREE(listp);
+ 			continue;
+ 		}
++		else if (listp->ea.value.length > 65536) {
++			/*
++			 * SMB clients may report error with file
++			 * if large EA is presented to them.
++			 */
++			DBG_ERR("EA [%s] on file [%s] exceeds "
++				"maximum permitted EA size of 64KiB: %zu\n.",
++				listp->ea.name,
++				fsp ? fsp_str_dbg(fsp) : smb_fname_str_dbg(smb_fname),
++				listp->ea.value.length);
++			TALLOC_FREE(listp);
++			continue;
++		}
++
+ 
+ 		push_ascii_fstring(dos_ea_name, listp->ea.name);
+ 
