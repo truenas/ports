@@ -357,6 +357,75 @@ index 4cf553411cb..bc5d2a56ee5 100644
  		struct timespec ts[2];
  		ts[0] = ft->atime;
  		ts[1] = ft->mtime;
+diff --git a/source3/modules/vfs_streams_xattr.c b/source3/modules/vfs_streams_xattr.c
+index 85efe2bcc37..ec2d183a6c9 100644
+--- a/source3/modules/vfs_streams_xattr.c
++++ b/source3/modules/vfs_streams_xattr.c
+@@ -34,6 +34,7 @@
+ struct streams_xattr_config {
+ 	const char *prefix;
+ 	size_t prefix_len;
++	size_t max_xattr_size;
+ 	bool store_stream_type;
+ };
+ 
+@@ -906,6 +907,10 @@ static int streams_xattr_connect(vfs_handle_struct *handle,
+ 						 "store_stream_type",
+ 						 true);
+ 
++	config->max_xattr_size = (size_t)lp_parm_ulonglong(
++		SNUM(handle->conn), "smbd", "max_xattr_size", 16*1024*1024);
++
++
+ 	SMB_VFS_HANDLE_SET_DATA(handle, config,
+ 				NULL, struct stream_xattr_config,
+ 				return -1);
+@@ -920,6 +925,7 @@ static ssize_t streams_xattr_pwrite(vfs_handle_struct *handle,
+         struct stream_io *sio =
+ 		(struct stream_io *)VFS_FETCH_FSP_EXTENSION(handle, fsp);
+ 	struct ea_struct ea;
++	struct streams_xattr_config *config = NULL;
+ 	NTSTATUS status;
+ 	struct smb_filename *smb_fname_base = NULL;
+ 	int ret;
+@@ -930,6 +936,9 @@ static ssize_t streams_xattr_pwrite(vfs_handle_struct *handle,
+ 		return SMB_VFS_NEXT_PWRITE(handle, fsp, data, n, offset);
+ 	}
+ 
++	SMB_VFS_HANDLE_GET_DATA(handle, config, struct streams_xattr_config,
++				return -1);
++
+ 	if (!streams_xattr_recheck(sio)) {
+ 		return -1;
+ 	}
+@@ -945,6 +954,27 @@ static ssize_t streams_xattr_pwrite(vfs_handle_struct *handle,
+ 		return -1;
+ 	}
+ 
++	if ((n + (size_t)offset) >= config->max_xattr_size) {
++		/*
++		 * Requested write is beyond what can be read based on
++		 * samba configuration. Correct action is debatable.
++		 * ReFS returns STATUS_FILESYSTEM_LIMITATION, which causes
++		 * entire file to be skipped by File Explorer. VFAT returns
++		 * NT_STATUS_OBJECT_NAME_COLLISION causes user to be prompted
++		 * to skip writing metadata, but copy data.
++		 */
++		DBG_ERR("Write to xattr [%s] on file [%s] exceeds maximum "
++			"supported extended attribute size. "
++			"Depending on filesystem type and operating system "
++			"(OS) specifics, this value may be increased using "
++			"the value of the parameter: "
++			"smbd:max_xattr_size = <bytes>. Consult OS and "
++			"filesystem manpages prior to increasing this limit.\n",
++			sio->xattr_name, sio->base);
++		errno = EOVERFLOW;
++		return -1;
++	}
++
+ 	status = get_ea_value(talloc_tos(), handle->conn, NULL,
+ 			      smb_fname_base, sio->xattr_name, &ea);
+ 	if (!NT_STATUS_IS_OK(status)) {
 diff --git a/source3/smbd/fake_file.c b/source3/smbd/fake_file.c
 index 81ccbde6aab..280f2bf7980 100644
 --- a/source3/smbd/fake_file.c
@@ -518,7 +587,7 @@ index 5bcf0503b4c..6e1ed9ea5b5 100644
  
  	size_t num_connections;
 diff --git a/source3/smbd/open.c b/source3/smbd/open.c
-index 03e66d30a3e..fc7014bb6e5 100644
+index 4a31b822646..6dcca5c7f7d 100644
 --- a/source3/smbd/open.c
 +++ b/source3/smbd/open.c
 @@ -641,6 +641,7 @@ static int non_widelink_open(struct connection_struct *conn,
@@ -554,7 +623,7 @@ index 03e66d30a3e..fc7014bb6e5 100644
  
  		/*
  		 * Only follow symlinks within a share
-@@ -3635,10 +3638,24 @@ static NTSTATUS open_file_ntcreate(connection_struct *conn,
+@@ -3670,10 +3673,24 @@ static NTSTATUS open_file_ntcreate(connection_struct *conn,
  	/*
  	 * Ensure we pay attention to default ACLs on directories if required.
  	 */
@@ -584,7 +653,7 @@ index 03e66d30a3e..fc7014bb6e5 100644
  
  	DEBUG(4,("calling open_file with flags=0x%X flags2=0x%X mode=0%o, "
 diff --git a/source3/smbd/proto.h b/source3/smbd/proto.h
-index 60941ce6c1b..31aa2a3b332 100644
+index ac021ad93fe..fa8170386a3 100644
 --- a/source3/smbd/proto.h
 +++ b/source3/smbd/proto.h
 @@ -376,6 +376,7 @@ NTSTATUS filename_convert_with_privilege(TALLOC_CTX *mem_ctx,
@@ -659,8 +728,27 @@ index 54f3d330c95..3d4bd662c2d 100644
  		struct file_id fileid = vfs_file_id_from_sbuf(conn,
  		    &smb_fname_dst->st);
  		files_struct *dst_fsp = file_find_di_first(conn->sconn,
+diff --git a/source3/smbd/smb2_write.c b/source3/smbd/smb2_write.c
+index e49e623d796..3f8517cded7 100644
+--- a/source3/smbd/smb2_write.c
++++ b/source3/smbd/smb2_write.c
+@@ -193,7 +193,13 @@ static NTSTATUS smb2_write_complete_internal(struct tevent_req *req,
+ 	files_struct *fsp = state->fsp;
+ 
+ 	if (nwritten == -1) {
+-		status = map_nt_error_from_unix(err);
++		if (err == EOVERFLOW &&
++		    is_ntfs_stream_smb_fname(fsp->fsp_name)) {
++			status = NT_STATUS_FILE_SYSTEM_LIMITATION;
++		}
++		else {
++			status = map_nt_error_from_unix(err);
++		}
+ 
+ 		DEBUG(2, ("smb2_write failed: %s, file %s, "
+ 			  "length=%lu offset=%lu nwritten=-1: %s\n",
 diff --git a/source3/smbd/trans2.c b/source3/smbd/trans2.c
-index 339dd36b6af..387e17f6d1d 100644
+index 339dd36b6af..2ad1bccc584 100644
 --- a/source3/smbd/trans2.c
 +++ b/source3/smbd/trans2.c
 @@ -258,9 +258,22 @@ NTSTATUS get_ea_value(TALLOC_CTX *mem_ctx,
@@ -693,12 +781,33 @@ index 339dd36b6af..387e17f6d1d 100644
  
 -	if (sizeret == -1 && errno == ERANGE && attr_size != 65536) {
 -		attr_size = 65536;
-+	if (sizeret == -1 && errno == ERANGE && attr_size <= max_xattr_size) {
++	if (sizeret == -1 && errno == ERANGE && attr_size < max_xattr_size) {
 +		attr_size = max_xattr_size;
  		goto again;
  	}
  
-@@ -3908,12 +3921,21 @@ cBytesSector=%u, cUnitTotal=%u, cUnitAvail=%d\n", (unsigned int)bsize, (unsigned
+@@ -526,6 +539,20 @@ static NTSTATUS get_ea_list_from_file_path(TALLOC_CTX *mem_ctx,
+ 			TALLOC_FREE(listp);
+ 			continue;
+ 		}
++		else if (listp->ea.value.length > 65536) {
++			/*
++			 * SMB clients may report error with file
++			 * if large EA is presented to them.
++			 */
++			DBG_ERR("EA [%s] on file [%s] exceeds "
++				"maximum permitted EA size of 64KiB: %zu\n.",
++				listp->ea.name,
++				fsp?fsp_str_dbg(fsp):smb_fname_str_dbg(smb_fname),
++				listp->ea.value.length);
++			TALLOC_FREE(listp);
++			continue;
++		}
++
+ 
+ 		push_ascii_fstring(dos_ea_name, listp->ea.name);
+ 
+@@ -3908,12 +3935,21 @@ cBytesSector=%u, cUnitTotal=%u, cUnitAvail=%d\n", (unsigned int)bsize, (unsigned
  
  			ZERO_STRUCT(fsp);
  			ZERO_STRUCT(quotas);
@@ -722,7 +831,7 @@ index 339dd36b6af..387e17f6d1d 100644
  				DEBUG(0,("get_user_quota: access_denied "
  					 "service [%s] user [%s]\n",
  					 lp_servicename(talloc_tos(), lp_sub, SNUM(conn)),
-@@ -4212,11 +4234,17 @@ static NTSTATUS smb_set_fsquota(connection_struct *conn,
+@@ -4212,11 +4248,17 @@ static NTSTATUS smb_set_fsquota(connection_struct *conn,
  		loadparm_s3_global_substitution();
  	NTSTATUS status;
  	SMB_NTQUOTA_STRUCT quotas;
@@ -742,10 +851,10 @@ index 339dd36b6af..387e17f6d1d 100644
  			  lp_servicename(talloc_tos(), lp_sub, SNUM(conn)),
  			  conn->session_info->unix_info->unix_name));
 diff --git a/source3/smbd/vfs.c b/source3/smbd/vfs.c
-index 96067e45005..079320c2048 100644
+index 411999c3856..f913d9b075a 100644
 --- a/source3/smbd/vfs.c
 +++ b/source3/smbd/vfs.c
-@@ -1356,7 +1356,8 @@ NTSTATUS check_reduced_name(connection_struct *conn,
+@@ -1392,7 +1392,8 @@ NTSTATUS check_reduced_name(connection_struct *conn,
  	allow_symlinks = lp_follow_symlinks(SNUM(conn));
  
  	/* Common widelinks and symlinks checks. */
