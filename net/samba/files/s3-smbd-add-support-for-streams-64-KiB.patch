@@ -1,0 +1,199 @@
+From 4a0ca8dbddeb04e8d07b9877bcccbd50c6c8cdaa Mon Sep 17 00:00:00 2001
+From: Andrew Walker <awalker@ixsystems.com>
+Date: Tue, 22 Sep 2020 12:59:44 -0400
+Subject: [PATCH] s3:smbd - add support for streams > 64 KiB
+
+---
+ source3/modules/vfs_streams_xattr.c | 29 ++++++++++++++++
+ source3/smbd/smb2_write.c           |  7 ++++
+ source3/smbd/trans2.c               | 53 +++++++++++++++++++++++++----
+ 3 files changed, 83 insertions(+), 6 deletions(-)
+
+diff --git a/source3/modules/vfs_streams_xattr.c b/source3/modules/vfs_streams_xattr.c
+index 2e4105fec49..a407d59acb7 100644
+--- a/source3/modules/vfs_streams_xattr.c
++++ b/source3/modules/vfs_streams_xattr.c
+@@ -34,6 +34,7 @@
+ struct streams_xattr_config {
+ 	const char *prefix;
+ 	size_t prefix_len;
++	size_t max_xattr_size;
+ 	bool store_stream_type;
+ };
+ 
+@@ -920,6 +921,9 @@ static int streams_xattr_connect(vfs_handle_struct *handle,
+ 						 "store_stream_type",
+ 						 true);
+ 
++	config->max_xattr_size = (size_t)lp_parm_ulonglong(
++		SNUM(handle->conn), "smbd", "max_xattr_size", 65536);
++
+ 	SMB_VFS_HANDLE_SET_DATA(handle, config,
+ 				NULL, struct stream_xattr_config,
+ 				return -1);
+@@ -934,6 +938,7 @@ static ssize_t streams_xattr_pwrite(vfs_handle_struct *handle,
+         struct stream_io *sio =
+ 		(struct stream_io *)VFS_FETCH_FSP_EXTENSION(handle, fsp);
+ 	struct ea_struct ea;
++	struct streams_xattr_config *config = NULL;
+ 	NTSTATUS status;
+ 	struct smb_filename *smb_fname_base = NULL;
+ 	int ret;
+@@ -944,10 +949,34 @@ static ssize_t streams_xattr_pwrite(vfs_handle_struct *handle,
+ 		return SMB_VFS_NEXT_PWRITE(handle, fsp, data, n, offset);
+ 	}
+ 
++	SMB_VFS_HANDLE_GET_DATA(handle, config, struct streams_xattr_config,
++				return -1);
++
+ 	if (!streams_xattr_recheck(sio)) {
+ 		return -1;
+ 	}
+ 
++	if ((offset + n) >= config->max_xattr_size) {
++		/*
++		 * Requested write is beyond what can be read based on
++		 * samba configuration. Correct action is debatable.
++		 * ReFS returns STATUS_FILESYSTEM_LIMITATION, which causes
++		 * entire file to be skipped by File Explorer. VFAT returns
++		 * NT_STATUS_OBJECT_NAME_COLLISION causes user to be prompted
++		 * to skip writing metadata, but copy data.
++		 */
++		DBG_ERR("Write to xattr [%s] on file [%s] exceeds maximum "
++			"supported extended attribute size. "
++			"Depending on filesystem type and operating system "
++			"(OS) specifics, this value may be increased using "
++			"the value of the parameter: "
++			"smbd:max_xattr_size = <bytes>. Consult OS and "
++			"filesystem manpages prior to increasing this limit.\n",
++			sio->xattr_name, sio->base);
++		errno = EOVERFLOW;
++		return -1;
++	}
++
+ 	/* Create an smb_filename with stream_name == NULL. */
+ 	smb_fname_base = synthetic_smb_fname(talloc_tos(),
+ 					sio->base,
+diff --git a/source3/smbd/smb2_write.c b/source3/smbd/smb2_write.c
+index e49e623d796..a9d393a379c 100644
+--- a/source3/smbd/smb2_write.c
++++ b/source3/smbd/smb2_write.c
+@@ -194,6 +194,13 @@ static NTSTATUS smb2_write_complete_internal(struct tevent_req *req,
+ 
+ 	if (nwritten == -1) {
+ 		status = map_nt_error_from_unix(err);
++		if (err == EOVERFLOW &&
++		    is_ntfs_stream_smb_fname(fsp->fsp_name)) {
++			status = NT_STATUS_FILE_SYSTEM_LIMITATION;
++		}
++		else {
++			status = map_nt_error_from_unix(err);
++		}
+ 
+ 		DEBUG(2, ("smb2_write failed: %s, file %s, "
+ 			  "length=%lu offset=%lu nwritten=-1: %s\n",
+diff --git a/source3/smbd/trans2.c b/source3/smbd/trans2.c
+index 7acde285a90..363554b6ff2 100644
+--- a/source3/smbd/trans2.c
++++ b/source3/smbd/trans2.c
+@@ -268,9 +268,22 @@ NTSTATUS get_ea_value(TALLOC_CTX *mem_ctx,
+ 			struct ea_struct *pea)
+ {
+ 	/* Get the value of this xattr. Max size is 64k. */
+-	size_t attr_size = 256;
++	size_t attr_size = 0;
+ 	char *val = NULL;
+ 	ssize_t sizeret;
++	static size_t min_xattr_size = 0;
++	static size_t max_xattr_size = 0;
++
++	if (min_xattr_size == 0) {
++		min_xattr_size = (size_t)lp_parm_ulonglong(
++			SNUM(conn), "smbd", "min_xattr_size", 256);
++	}
++	attr_size = min_xattr_size;
++
++	if (max_xattr_size == 0) {
++		max_xattr_size = (size_t)lp_parm_ulonglong(
++			SNUM(conn), "smbd", "max_xattr_size", 65536);
++	}
+ 
+  again:
+ 
+@@ -286,8 +299,8 @@ NTSTATUS get_ea_value(TALLOC_CTX *mem_ctx,
+ 				ea_name, val, attr_size);
+ 	}
+ 
+-	if (sizeret == -1 && errno == ERANGE && attr_size != 65536) {
+-		attr_size = 65536;
++	if (sizeret == -1 && errno == ERANGE && attr_size < max_xattr_size) {
++		attr_size = max_xattr_size;
+ 		goto again;
+ 	}
+ 
+@@ -536,6 +549,19 @@ static NTSTATUS get_ea_list_from_file_path(TALLOC_CTX *mem_ctx,
+ 			TALLOC_FREE(listp);
+ 			continue;
+ 		}
++		else if (listp->ea.value.length > 65536) {
++			/*
++			 * SMB clients may report error with file
++			 * if large EA is presented to them.
++			 */
++			DBG_ERR("EA [%s] on file [%s] exceeds "
++				"maximum permitted EA size of 64KiB: %zu\n.",
++				listp->ea.name,
++				fsp?fsp_str_dbg(fsp):smb_fname_str_dbg(smb_fname),
++				listp->ea.value.length);
++			TALLOC_FREE(listp);
++			continue;
++		}
+ 
+ 		push_ascii_fstring(dos_ea_name, listp->ea.name);
+ 
+@@ -3935,12 +3961,21 @@ cBytesSector=%u, cUnitTotal=%u, cUnitAvail=%d\n", (unsigned int)bsize, (unsigned
+ 
+ 			ZERO_STRUCT(fsp);
+ 			ZERO_STRUCT(quotas);
++			bool allowed_user;
++			if ((get_current_uid(conn) == 0) || (security_token_has_privilege(
++			   conn->session_info->security_token, SEC_PRIV_DISK_OPERATOR) == 0)) {
++				allowed_user = true;
++			}
++
++
+ 
+ 			fsp.conn = conn;
+ 			fsp.fnum = FNUM_FIELD_INVALID;
+ 
+-			/* access check */
+-			if (get_current_uid(conn) != 0) {
++			/* access check
++			 * Allow access in case we have SEC_PRIV_DISK_OPERATOR.
++			 */
++			if ( !allowed_user ) {
+ 				DEBUG(0,("get_user_quota: access_denied "
+ 					 "service [%s] user [%s]\n",
+ 					 lp_servicename(talloc_tos(), lp_sub, SNUM(conn)),
+@@ -4239,11 +4274,17 @@ static NTSTATUS smb_set_fsquota(connection_struct *conn,
+ 		loadparm_s3_global_substitution();
+ 	NTSTATUS status;
+ 	SMB_NTQUOTA_STRUCT quotas;
++	bool allowed_user;
++
++	if ((get_current_uid(conn) == 0) || (security_token_has_privilege(
++	   conn->session_info->security_token, SEC_PRIV_DISK_OPERATOR) == 0)) {
++		allowed_user = true;
++	}
+ 
+ 	ZERO_STRUCT(quotas);
+ 
+ 	/* access check */
+-	if ((get_current_uid(conn) != 0) || !CAN_WRITE(conn)) {
++	if ((!allowed_user) || !CAN_WRITE(conn)) {
+ 		DEBUG(3, ("set_fsquota: access_denied service [%s] user [%s]\n",
+ 			  lp_servicename(talloc_tos(), lp_sub, SNUM(conn)),
+ 			  conn->session_info->unix_info->unix_name));
+-- 
+2.28.0
+
