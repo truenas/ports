@@ -37,6 +37,7 @@ EXTRA_PATCHES+=			${PATCHDIR}/tevent_kqueue.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/allow_vfs_set_sparse.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/dns-fixes.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/ease-netconf-validation.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/s3-smbd-add-support-for-streams-64-KiB.patch:-p1
 
 SAMBA4_BASENAME=		samba
 SAMBA4_PORTNAME=		${SAMBA4_BASENAME}4
