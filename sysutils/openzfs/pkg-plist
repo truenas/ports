@@ -262,6 +262,7 @@ include/libzfs/sys/zfs_rlock.h
 include/libzfs/sys/zfs_sa.h
 include/libzfs/sys/zfs_stat.h
 include/libzfs/sys/zfs_sysfs.h
+include/libzfs/sys/zfs_vfsops.h
 include/libzfs/sys/zfs_znode.h
 include/libzfs/sys/zil.h
 include/libzfs/sys/zil_impl.h
@@ -982,6 +983,7 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_rename/zfs_rename_014_neg.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_rename/zfs_rename_encrypted_child.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_rename/zfs_rename_mountpoint.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_rename/zfs_rename_nounmount.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_rename/zfs_rename_to_encrypted.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_reservation/cleanup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_reservation/setup.ksh
@@ -1199,11 +1201,13 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_detach/setup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_detach/zpool_detach_001_neg.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_events/cleanup.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_events/ereports
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_events/setup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_events/zpool_events.cfg
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_events/zpool_events.kshlib
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_events/zpool_events_clear.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_events/zpool_events_cliargs.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_events/zpool_events_duplicates.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_events/zpool_events_errors.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_events/zpool_events_follow.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_events/zpool_events_poolname.ksh
