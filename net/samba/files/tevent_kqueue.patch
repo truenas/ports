@@ -84,10 +84,10 @@ index 5365fce3533..db11c857bae 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..38d5d9022aa
+index 00000000000..09261e865e8
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
-@@ -0,0 +1,1226 @@
+@@ -0,0 +1,1218 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -131,7 +131,7 @@ index 00000000000..38d5d9022aa
 +#define KQUEUE_EXTRA_KEVENT_DISCHARGED	0x0001
 +
 +/* maximum number of kevents to process in loop_once*/
-+#define MAX_KEVENTS			16
++#define MAX_KEVENTS			32
 +
 +#define TEVENT_FD_RW (TEVENT_FD_READ|TEVENT_FD_WRITE)
 +#define HAS_AIO(flags) (flags & TEVENT_FD_AIO)
@@ -893,7 +893,7 @@ index 00000000000..38d5d9022aa
 +	return rv;
 +}
 +
-+static int kqueue_event_loop(struct kqueue_event_context *kqueue_ev, int *nkp)
++static int kqueue_event_loop(struct kqueue_event_context *kqueue_ev)
 +{
 +	/*
 +	 * Loop through an array of kevents. We need to retrieve multiple events at once
@@ -923,7 +923,6 @@ index 00000000000..38d5d9022aa
 +
 +	wait_errno = errno;
 +	tevent_trace_point_callback(kqueue_ev->ev, TEVENT_TRACE_AFTER_WAIT);
-+	*nkp = nkevents;
 +
 +	if (nkevents == -1) {
 +		/*
@@ -1284,14 +1283,7 @@ index 00000000000..38d5d9022aa
 +
 +	kqueue_ev->panic_state = &panic_triggered;
 +	kqueue_ev->panic_force_replay = true;
-+	/*
-+	 * Loops untile we are no longer overflowing on kevents
-+	 * This can happen if large number of AIO kevents or
-+	 * immediate events have been submitted since last loop.
-+	 */
-+	while (nkevents == MAX_KEVENTS) {
-+		ret = kqueue_event_loop(kqueue_ev, &nkevents);
-+	}
++	ret = kqueue_event_loop(kqueue_ev);
 +	kqueue_ev->panic_force_replay = false;
 +	kqueue_ev->panic_state = NULL;
 +	return ret;
