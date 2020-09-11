@@ -131,7 +131,7 @@ index 00000000000..38d5d9022aa
 +#define KQUEUE_EXTRA_KEVENT_DISCHARGED	0x0001
 +
 +/* maximum number of kevents to process in loop_once*/
-+#define MAX_KEVENTS			16
++#define MAX_KEVENTS		255
 +
 +#define TEVENT_FD_RW (TEVENT_FD_READ|TEVENT_FD_WRITE)
 +#define HAS_AIO(flags) (flags & TEVENT_FD_AIO)
