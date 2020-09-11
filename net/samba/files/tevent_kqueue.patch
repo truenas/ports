@@ -84,10 +84,10 @@ index 5365fce3533..db11c857bae 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..38d5d9022aa
+index 00000000000..0ad218aee4b
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
-@@ -0,0 +1,1226 @@
+@@ -0,0 +1,1234 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -131,7 +131,7 @@ index 00000000000..38d5d9022aa
 +#define KQUEUE_EXTRA_KEVENT_DISCHARGED	0x0001
 +
 +/* maximum number of kevents to process in loop_once*/
-+#define MAX_KEVENTS			16
++#define MAX_KEVENTS			32
 +
 +#define TEVENT_FD_RW (TEVENT_FD_READ|TEVENT_FD_WRITE)
 +#define HAS_AIO(flags) (flags & TEVENT_FD_AIO)
@@ -166,6 +166,7 @@ index 00000000000..38d5d9022aa
 +	pid_t pid;
 +
 +	bool had_signal;
++	bool has_aio;
 +	bool busy;
 +	bool panic_force_replay;
 +	bool *panic_state;
@@ -273,6 +274,7 @@ index 00000000000..38d5d9022aa
 +		return ret;
 +	}
 +	kqueue_ev->pid = getpid();
++	kqueue_ev->has_aio = false;
 +	talloc_set_destructor(kqueue_ev, kqueue_ctx_destructor);
 +
 +	return 0;
@@ -1038,6 +1040,7 @@ index 00000000000..38d5d9022aa
 +	struct tevent_fd *fde = NULL;
 +
 +	if (HAS_AIO(flags)) {
++		kqueue_ev->has_aio = true;
 +		return kqueue_add_aio(kqueue_ev, flags, private_data);
 +	}
 +
@@ -1285,11 +1288,16 @@ index 00000000000..38d5d9022aa
 +	kqueue_ev->panic_state = &panic_triggered;
 +	kqueue_ev->panic_force_replay = true;
 +	/*
-+	 * Loops untile we are no longer overflowing on kevents
++	 * Loops until we are no longer overflowing on kevents
 +	 * This can happen if large number of AIO kevents or
 +	 * immediate events have been submitted since last loop.
 +	 */
-+	while (nkevents == MAX_KEVENTS) {
++	if (kqueue_ev->has_aio) {
++		while (nkevents == MAX_KEVENTS) {
++			ret = kqueue_event_loop(kqueue_ev, &nkevents);
++		}
++	}
++	else {
 +		ret = kqueue_event_loop(kqueue_ev, &nkevents);
 +	}
 +	kqueue_ev->panic_force_replay = false;
