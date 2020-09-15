@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 00000000000..189f9b89af9
+index 00000000000..1db764ba035
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,1006 @@
+@@ -0,0 +1,1003 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -87,8 +87,6 @@ index 00000000000..189f9b89af9
 +{
 +	struct snapshot_list *snapshots;
 +	struct iter_info *iter_info;
-+	int prev_u;
-+	int prev_prev_u;
 +};
 +
 +static int get_enum(const char *s, const struct enum_list *_enum)
@@ -670,8 +668,8 @@ index 00000000000..189f9b89af9
 +	const char *snap_name;
 +	time_t cr_time;
 +	struct tm timestamp;
-+	int rc, used;
-+	size_t req_mem, name_len;
++	int rc, used, written;
++	size_t name_len;
 +
 +	state = talloc_get_type_abort(data, struct snap_cb);
 +	if (state == NULL) {
@@ -689,16 +687,15 @@ index 00000000000..189f9b89af9
 +		return 0;
 +	}
 +
-+	used = zfs_prop_get_int(snap, ZFS_PROP_USED);
-+	if (used == 0 && state->snapshots->num_entries != 0) {
-+		if (!((state->prev_u == 0) && 
-+		      (state->prev_prev_u != 0))) {
-+			state->prev_prev_u = state->prev_u;
-+			state->prev_u = used;
-+			goto done;
++	if (state->snapshots->num_entries != 0 &&
++	    state->iter_info->ignore_empty_snaps) {
++		used = zfs_prop_get_int(snap, ZFS_PROP_USED);
++		if (used == 0) {
++			written = zfs_prop_get_int(snap, ZFS_PROP_WRITTEN);
++			if (written == 0) {
++				goto done;
++			}
 +		}
-+		state->prev_prev_u = state->prev_u;
-+		state->prev_u = used;
 +	}
 +
 +	cr_time = zfs_prop_get_int(snap, ZFS_PROP_CREATION);
