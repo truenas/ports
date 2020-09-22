@@ -134,6 +134,7 @@ include/libzfs/libuutil_impl.h
 include/libzfs/libzfs.h
 include/libzfs/libzfs_core.h
 include/libzfs/libzfs_impl.h
+include/libzfs/libzfsbootenv.h
 include/libzfs/libzutil.h
 include/libzfs/sys/abd.h
 include/libzfs/sys/abd_impl.h
@@ -249,6 +250,7 @@ include/libzfs/sys/zcp_prop.h
 include/libzfs/sys/zcp_set.h
 include/libzfs/sys/zfeature.h
 include/libzfs/sys/zfs_acl.h
+include/libzfs/sys/zfs_bootenv.h
 include/libzfs/sys/zfs_context.h
 include/libzfs/sys/zfs_debug.h
 include/libzfs/sys/zfs_delay.h
@@ -298,6 +300,10 @@ lib/libzfs_core.a
 lib/libzfs_core.so
 lib/libzfs_core.so.3
 lib/libzfs_core.so.3.0.0
+lib/libzfsbootenv.a
+lib/libzfsbootenv.so
+lib/libzfsbootenv.so.1
+lib/libzfsbootenv.so.1.0.0
 lib/libzpool.a
 lib/libzpool.so
 lib/libzpool.so.4
@@ -337,6 +343,7 @@ lib/libzpool.so.4.0.0
 lib/security/pam_zfs_key.so
 libdata/pkgconfig/libzfs.pc
 libdata/pkgconfig/libzfs_core.pc
+libdata/pkgconfig/libzfsbootenv.pc
 libexec/zfs/zpool.d/ata_err
 libexec/zfs/zpool.d/cmd_to
 libexec/zfs/zpool.d/defect
