@@ -2,7 +2,7 @@
 
 PORTNAME=	rclone
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.51.0
+DISTVERSION=	1.53.1
 CATEGORIES=	net
 
 MAINTAINER=	wg@FreeBSD.org
@@ -16,5 +16,8 @@ USE_GITHUB=	yes
 GH_ACCOUNT=	ncw
 
 PLIST_FILES=	bin/rclone
+
+post-extract:
+	cd ${WRKSRC} && go mod vendor
 
 .include <bsd.port.mk>
