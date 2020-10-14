@@ -1464,10 +1464,10 @@ index bf6b303bac6..d6c156703e7 100644
  		}
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..77785f5e465
+index 00000000000..5edcce1f9c0
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2436 @@
+@@ -0,0 +1,2448 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -1662,6 +1662,12 @@ index 00000000000..77785f5e465
 +					 struct smb_filename *smb_fname,
 +					 uint32_t *dosmode)
 +{
++	if (config->dosattrib_xattr) {
++		return SMB_VFS_NEXT_GET_DOS_ATTRIBUTES(handle,
++						       smb_fname,
++						       dosmode);
++	}
++
 +	*dosmode |= fileflags_to_dosmode(smb_fname->st.st_ex_flags);
 +
 +	if (S_ISDIR(smb_fname->st.st_ex_mode)) {
@@ -1682,6 +1688,12 @@ index 00000000000..77785f5e465
 +                                            struct files_struct *fsp,
 +                                            uint32_t *dosmode)
 +{
++	if (config->dosattrib_xattr) {
++		return SMB_VFS_NEXT_FGET_DOS_ATTRIBUTES(handle,
++						        fsp,
++						        dosmode);
++	}
++
 +        *dosmode |= fileflags_to_dosmode(fsp->fsp_name->st.st_ex_flags);
 +
 +	if (S_ISDIR(fsp->fsp_name->st.st_ex_mode)) {
