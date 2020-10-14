@@ -17,7 +17,7 @@ GH_ACCOUNT=	ncw
 
 PLIST_FILES=	bin/rclone
 
-post-extract:
+pre-build:
 	cd ${WRKSRC} && go mod vendor
 
 .include <bsd.port.mk>
