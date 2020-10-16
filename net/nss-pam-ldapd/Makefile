@@ -13,6 +13,8 @@ COMMENT?=		Advanced fork of nss_ldap
 LICENSE=		LGPL21 LGPL3
 LICENSE_COMB=		dual
 
+EXTRA_PATCHES+=		${PATCHDIR}/nslcd_action_state_get.patch:-p1
+
 USES=			cpe
 CPE_VENDOR=		arthurdejong
 GNU_CONFIGURE=		yes
@@ -54,6 +56,11 @@ GROUPS=			nslcd
 
 CPPFLAGS+=		-I${LOCALBASE}/include
 LDFLAGS+=		-L${LOCALBASE}/lib
+
+LDFLAGS+=		-ljansson
+BUILD_DEPENDS+=		jansson>=2.10:devel/jansson
+RUN_DEPENDS+=		jansson>=2.10:devel/jansson
+
 
 CONFIGURE_ARGS+=	--with-nslcd-pidfile=${NSLCD_PIDFILE} \
 			--with-nslcd-socket=${NSLCD_SOCKET} \

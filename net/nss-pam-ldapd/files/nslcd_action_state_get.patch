@@ -1,0 +1,514 @@
+commit fe571e1e5863ff0dbcb29cb9ed6a064141a8912b
+Author: Andrew Walker <awalker@ixsystems.com>
+Date:   Fri Oct 16 06:16:32 2020 -0400
+
+    NAS-102904 / 11.3 / Add NSLCD_ACTION_STATE_GET to nslcd
+    
+    * Add NSLCD_ACTION_STATE_GET to nslcd
+    On SIGUSR2 write value of lastfail and firstfail for each LDAP URI into /var/log/messages.
+    When receive message NSLCD_ACTION_STATE_GET reply with same information on nslcd socket.
+
+diff --git a/nslcd.h b/nslcd.h
+index f6c028d..47c9ae5 100644
+--- a/nslcd.h
++++ b/nslcd.h
+@@ -74,6 +74,7 @@
+   the result value is:
+     STRING  value, interpretation depending on request */
+ #define NSLCD_ACTION_CONFIG_GET        0x00010001
++#define NSLCD_ACTION_STATE_GET         0x00010002
+ 
+ /* return the message, if any, that is presented to the user when password
+    modification through PAM is prohibited */
+diff --git a/nslcd/Makefile.in b/nslcd/Makefile.in
+index 95564de..149ceb8 100644
+--- a/nslcd/Makefile.in
++++ b/nslcd/Makefile.in
+@@ -125,7 +125,7 @@ CONFIG_CLEAN_VPATH_FILES =
+ am__installdirs = "$(DESTDIR)$(sbindir)"
+ PROGRAMS = $(sbin_PROGRAMS)
+ am_nslcd_OBJECTS = nslcd.$(OBJEXT) log.$(OBJEXT) daemonize.$(OBJEXT) \
+-	common.$(OBJEXT) myldap.$(OBJEXT) cfg.$(OBJEXT) \
++	common.$(OBJEXT) nslcd_json.$(OBJEXT) myldap.$(OBJEXT) cfg.$(OBJEXT) \
+ 	attmap.$(OBJEXT) nsswitch.$(OBJEXT) invalidator.$(OBJEXT) \
+ 	config.$(OBJEXT) alias.$(OBJEXT) ether.$(OBJEXT) \
+ 	group.$(OBJEXT) host.$(OBJEXT) netgroup.$(OBJEXT) \
+@@ -346,6 +346,7 @@ nslcd_SOURCES = nslcd.c ../nslcd.h ../common/nslcd-prot.h \
+                 log.c log.h \
+                 daemonize.c daemonize.h \
+                 common.c common.h \
++                nslcd_json.c nslcd_json.h \
+                 myldap.c myldap.h \
+                 cfg.c cfg.h \
+                 attmap.c attmap.h \
+diff --git a/nslcd/config.c b/nslcd/config.c
+index 75c9ec1..b401f34 100644
+--- a/nslcd/config.c
++++ b/nslcd/config.c
+@@ -32,6 +32,7 @@
+ #include "common.h"
+ #include "log.h"
+ #include "cfg.h"
++#include "myldap.h"
+ 
+ int nslcd_config_get(TFILE *fp, MYLDAP_SESSION UNUSED(*session))
+ {
+@@ -59,3 +60,23 @@ int nslcd_config_get(TFILE *fp, MYLDAP_SESSION UNUSED(*session))
+   WRITE_INT32(fp, NSLCD_RESULT_END);
+   return 0;
+ }
++
++int nslcd_state_get(TFILE *fp, MYLDAP_SESSION UNUSED(*session))
++{
++  int32_t tmpint32;
++  char* ldap_state = NULL;
++  ldap_state = myldap_dumpstate();
++  if (ldap_state == NULL) {
++    log_log(LOG_WARNING, "Couldn't get ldap state");
++    return 0;
++  }
++  /* read request parameters */
++  /* write the response header */
++  WRITE_INT32(fp, NSLCD_VERSION);
++  WRITE_INT32(fp, NSLCD_ACTION_STATE_GET);
++  WRITE_INT32(fp, NSLCD_RESULT_BEGIN);
++  WRITE_STRING(fp,ldap_state);
++  WRITE_INT32(fp, NSLCD_RESULT_END);
++  free(ldap_state);
++  return 0;
++}
+diff --git a/nslcd/myldap.c b/nslcd/myldap.c
+index 02b9719..a36a4d7 100644
+--- a/nslcd/myldap.c
++++ b/nslcd/myldap.c
+@@ -34,6 +34,7 @@
+ */
+ 
+ #include "config.h"
++#include "nslcd_json.h"
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
+@@ -62,6 +63,7 @@
+ #ifdef HAVE_SASL_H
+ #include <sasl.h>
+ #endif
++#include <jansson.h>
+ #include <ctype.h>
+ #include <pthread.h>
+ #include <stdarg.h>
+@@ -2528,3 +2530,50 @@ int myldap_error_message(MYLDAP_SESSION *session, int rc,
+     ldap_memfree(msg_diag);
+   return LDAP_SUCCESS;
+ }
++
++char *myldap_dumpstate(void)
++{
++  int i;
++  char *json = NULL;
++  struct json_object jsobj = json_new_object();
++  struct json_object ldap_servers = json_new_object();
++  int reconnect = (int)nslcd_cfg->reconnect_retrytime;
++  if (json_is_invalid(&jsobj)) {
++    log_log(LOG_WARNING, "Error setting up JSON value: %s\n", strerror(errno));
++    goto failure;
++  }
++  json_add_timestamp(&jsobj);
++  if (json_add_int(&jsobj, "reconnect_retrytime", reconnect) != 0) {
++    goto failure;
++  }
++  pthread_mutex_lock(&uris_mutex);
++  for (i = 0; i < (NSS_LDAP_CONFIG_MAX_URIS +1); i++)
++  {
++     if (nslcd_cfg->uris[i].uri != NULL)
++     {
++       struct json_object jsobjint = json_new_object();
++       int firstfail = (int)nslcd_cfg->uris[i].firstfail;
++       int lastfail = (int)nslcd_cfg->uris[i].lastfail;
++       if (json_add_int(&jsobjint, "firstfail", firstfail) != 0) {
++           json_free(&jsobjint);
++           pthread_mutex_unlock(&uris_mutex);
++           goto failure;
++       }
++       if (json_add_int(&jsobjint, "lastfail", lastfail) != 0) {
++           json_free(&jsobjint);
++           pthread_mutex_unlock(&uris_mutex);
++           goto failure;
++       }
++       json_add_object(&ldap_servers, nslcd_cfg->uris[i].uri, &jsobjint);
++     }
++  }
++  pthread_mutex_unlock(&uris_mutex);
++  json_add_object(&jsobj, "uris", &ldap_servers);
++  json = json_to_string(&jsobj);
++  json_free(&jsobj);
++  return json;
++failure:
++  json_free(&ldap_servers);
++  json_free(&jsobj);
++  return NULL;
++}
+diff --git a/nslcd/myldap.h b/nslcd/myldap.h
+index c5c4229..bfaec43 100644
+--- a/nslcd/myldap.h
++++ b/nslcd/myldap.h
+@@ -41,6 +41,7 @@
+ #include <lber.h>
+ #include <ldap.h>
+ 
++#include <jansson.h>
+ #include "compat/attrs.h"
+ 
+ #ifndef LDAP_SCOPE_DEFAULT
+@@ -170,4 +171,7 @@ int myldap_modify(MYLDAP_SESSION *session, const char *dn, LDAPMod * mods[]);
+ int myldap_error_message(MYLDAP_SESSION *session, int rc,
+                          char *buffer, size_t buflen);
+ 
++/* Dump full URI state in JSON. Allocates memory. */
++char *myldap_dumpstate(void);
++
+ #endif /* not NSLCD__MYLDAP_H */
+diff --git a/nslcd/nslcd.c b/nslcd/nslcd.c
+index ead4bcc..af0f32a 100644
+--- a/nslcd/nslcd.c
++++ b/nslcd/nslcd.c
+@@ -394,6 +394,7 @@ static void handleconnection(int sock, MYLDAP_SESSION *session)
+   switch (action)
+   {
+     case NSLCD_ACTION_CONFIG_GET:       (void)nslcd_config_get(fp, session); break;
++    case NSLCD_ACTION_STATE_GET:        (void)nslcd_state_get(fp, session); break;
+     case NSLCD_ACTION_ALIAS_BYNAME:     (void)nslcd_alias_byname(fp, session); break;
+     case NSLCD_ACTION_ALIAS_ALL:        (void)nslcd_alias_all(fp, session); break;
+     case NSLCD_ACTION_ETHER_BYNAME:     (void)nslcd_ether_byname(fp, session); break;
+@@ -864,13 +865,13 @@ int main(int argc, char *argv[])
+   install_sighandler(SIGPIPE, SIG_IGN);
+   install_sighandler(SIGTERM, sig_handler);
+   install_sighandler(SIGUSR1, sig_handler);
+-  install_sighandler(SIGUSR2, SIG_IGN);
++  install_sighandler(SIGUSR2, sig_handler);
+   /* signal the starting process to exit because we can provide services now */
+   daemonize_ready(EXIT_SUCCESS, NULL);
+   /* enable receiving of signals */
+   pthread_sigmask(SIG_SETMASK, &oldmask, NULL);
+   /* wait until we received a signal */
+-  while ((nslcd_receivedsignal == 0) || (nslcd_receivedsignal == SIGUSR1))
++  while ((nslcd_receivedsignal == 0) || (nslcd_receivedsignal == SIGUSR1) || (nslcd_receivedsignal == SIGUSR2))
+   {
+     sleep(INT_MAX); /* sleep as long as we can or until we receive a signal */
+     if (nslcd_receivedsignal == SIGUSR1)
+@@ -880,6 +881,13 @@ int main(int argc, char *argv[])
+       myldap_immediate_reconnect();
+       nslcd_receivedsignal = 0;
+     }
++    if (nslcd_receivedsignal == SIGUSR2)
++    {
++      char *ldap_state = myldap_dumpstate();
++      log_log(LOG_WARNING, "%s", ldap_state);
++      free(ldap_state);
++      nslcd_receivedsignal = 0;
++    }
+   }
+   /* print something about received signal */
+   log_log(LOG_INFO, "caught signal %s (%d), shutting down",
+diff --git a/nslcd/nslcd_json.c b/nslcd/nslcd_json.c
+new file mode 100644
+index 0000000..c222870
+--- /dev/null
++++ b/nslcd/nslcd_json.c
+@@ -0,0 +1,223 @@
++/*
++   Copied from lib/audit_logging/audit_logging.c in Samba
++
++   Copyright (C) Andrew Bartlett <abartlet@samba.org> 2018
++
++   This program is free software; you can redistribute it and/or modify
++   it under the terms of the GNU General Public License as published by
++   the Free Software Foundation; either version 3 of the License, or
++   (at your option) any later version.
++
++   This program is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++   GNU General Public License for more details.
++
++   You should have received a copy of the GNU General Public License
++   along with this program.  If not, see <http://www.gnu.org/licenses/>.
++*/
++
++#include "config.h"
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <errno.h>
++#include <unistd.h>
++#include <string.h>
++#include <strings.h>
++#include <sys/time.h>
++#include <time.h>
++#include <sys/types.h>
++#include <sys/socket.h>
++#include "nslcd/nslcd_json.h"
++#include "nslcd/log.h"
++#include <jansson.h>
++
++
++struct json_object json_new_object(void) {
++
++        struct json_object object;
++        object.error = false;
++
++        object.root = json_object();
++        if (object.root == NULL) {
++                object.error = true;
++                log_log(LOG_WARNING,"Unable to create json_object\n");
++        }
++        return object;
++}
++
++void json_free(struct json_object *object)
++{
++        if (object->root != NULL) {
++                json_decref(object->root);
++        }
++        object->root = NULL;
++        object->error = true;
++}
++
++bool json_is_invalid(struct json_object *object)
++{
++        return object->error;
++}
++
++int json_add_int(struct json_object *object,
++                  const char* name,
++                  const int value)
++{
++        int rc = 0;
++
++        if (object->error) {
++                return -1;
++        }
++
++        rc = json_object_set_new(object->root, name, json_integer(value));
++        if (rc) {
++                return -1;
++                log_log(LOG_WARNING, "Unable to set name [%s] value [%d]\n", name, value);
++                object->error = true;
++        }
++        return 0;
++}
++
++void json_add_bool(struct json_object *object,
++                   const char* name,
++                   const bool value)
++{
++        int rc = 0;
++
++        if (object->error) {
++                return;
++        }
++
++        rc = json_object_set_new(object->root, name, json_boolean(value));
++        if (rc) {
++                log_log(LOG_WARNING, "Unable to set name [%s] value [%d]\n", name, value);
++                object->error = true;
++        }
++
++}
++
++void json_add_string(struct json_object *object,
++                     const char* name,
++                     const char* value)
++{
++        int rc = 0;
++
++        if (object->error) {
++                return;
++        }
++
++        if (value) {
++               rc = json_object_set_new(
++                        object->root,
++                        name,
++                        json_string(value));
++        } else {
++                rc = json_object_set_new(object->root, name, json_null());
++        }
++        if (rc) {
++                log_log(LOG_WARNING, "Unable to set name [%s] value [%s]\n", name, value);
++                object->error = true;
++        }
++}
++
++void json_add_timestamp(struct json_object *object)
++{
++        char buffer[40];        /* formatted time less usec and timezone */
++        char timestamp[65];     /* the formatted ISO 8601 time stamp     */
++        char tz[10];            /* formatted time zone                   */
++        struct tm* tm_info;     /* current local time                    */
++        struct timeval tv;      /* current system time                   */
++        int r;                  /* response code from gettimeofday       */
++
++        if (object->error) {
++                return;
++        }
++
++        r = gettimeofday(&tv, NULL);
++        if (r) {
++                log_log(LOG_WARNING, "Unable to get time of day: (%d) %s\n",
++                        errno,
++                        strerror(errno));
++                object->error = true;
++                return;
++        }
++
++        tm_info = localtime(&tv.tv_sec);
++        if (tm_info == NULL) {
++                log_log(LOG_WARNING, "Unable to determine local time\n");
++                object->error = true;
++                return;
++        }
++
++        strftime(buffer, sizeof(buffer)-1, "%Y-%m-%dT%T", tm_info);
++        strftime(tz, sizeof(tz)-1, "%z", tm_info);
++        snprintf(
++                timestamp,
++                sizeof(timestamp),
++                "%s.%06ld%s",
++                buffer,
++                tv.tv_usec,
++                tz);
++        json_add_string(object, "timestamp", timestamp);
++}
++
++void json_add_object(struct json_object *object,
++                     const char* name,
++                     struct json_object *value)
++{
++        int rc = 0;
++        json_t *jv = NULL;
++
++        if (object->error) {
++                return;
++        }
++
++        if (value != NULL && value->error) {
++                object->error = true;
++                return;
++        }
++
++        jv = value == NULL ? json_null() : value->root;
++
++        if (json_is_array(object->root)) {
++                rc = json_array_append_new(object->root, jv);
++        } else if (json_is_object(object->root)) {
++                rc = json_object_set_new(object->root, name,  jv);
++        } else {
++                log_log(LOG_WARNING, "Invalid JSON object type\n");
++                object->error = true;
++        }
++        if (rc) {
++                log_log(LOG_WARNING, "Unable to add object [%s]\n", name);
++                object->error = true;
++        }
++}
++
++char *json_to_string(const struct json_object *object)
++{
++        char *json = NULL;
++
++        if (json_is_invalid(object)) {
++                log_log(LOG_WARNING, "Invalid JSON object, unable to convert to string\n");
++                return NULL;
++        }
++
++        if (object->root == NULL) {
++                log_log(LOG_WARNING, "object->root is NULL");
++                return NULL;
++        }
++
++        /*
++         * json_dumps uses malloc, so need to call free(json) to release
++         * the memory
++         */
++        json = json_dumps(object->root, 0);
++        if (json == NULL) {
++                log_log(LOG_WARNING, "Unable to convert JSON object to string\n");
++                return NULL;
++        }
++
++        return json;
++}
+diff --git a/nslcd/nslcd_json.h b/nslcd/nslcd_json.h
+new file mode 100644
+index 0000000..c3512c0
+--- /dev/null
++++ b/nslcd/nslcd_json.h
+@@ -0,0 +1,67 @@
++/*
++   Copied from lib/audit_logging/audit_logging.h in Samba
++
++   Copyright (C) Andrew Bartlett <abartlet@samba.org> 2018
++
++   This program is free software; you can redistribute it and/or modify
++   it under the terms of the GNU General Public License as published by
++   the Free Software Foundation; either version 3 of the License, or
++   (at your option) any later version.
++
++   This program is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++   GNU General Public License for more details.
++
++   You should have received a copy of the GNU General Public License
++   along with this program.  If not, see <http://www.gnu.org/licenses/>.
++*/
++
++#include <stdio.h>
++#include <stdlib.h>
++#include <unistd.h>
++#include <string.h>
++#include <strings.h>
++#include <sys/time.h>
++#include <time.h>
++#include <sys/types.h>
++#include <sys/socket.h>
++#include <jansson.h>
++#include <stdbool.h>
++/*
++ * Wrapper for jannson JSON object
++ *
++ */
++struct json_object {
++        json_t *root;
++        bool error;
++};
++
++struct json_object json_new_object(void);
++void json_free(struct json_object *object);
++bool json_is_invalid(struct json_object *object);
++
++int json_add_int(struct json_object *object,
++                  const char* name,
++                  const int value);
++void json_add_bool(struct json_object *object,
++                   const char* name,
++                   const bool value);
++void json_add_string(struct json_object *object,
++                     const char* name,
++                     const char* value);
++void json_add_object(struct json_object *object,
++                     const char* name,
++                     struct json_object *value);
++void json_add_stringn(struct json_object *object,
++                      const char *name,
++                      const char *value,
++                      const size_t len);
++void json_add_timestamp(struct json_object *object);
++
++struct json_object json_get_array(struct json_object *object,
++                                  const char* name);
++struct json_object json_get_object(struct json_object *object,
++                                   const char* name);
++
++char *json_to_string(const struct json_object *object);
