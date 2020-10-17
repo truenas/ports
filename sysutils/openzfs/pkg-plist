@@ -2,6 +2,7 @@
 %%PYTHON%%bin/arcstat
 %%PYTHON%%bin/dbufstat
 %%TESTS%%bin/raidz_test
+etc/rc.d/zfs
 etc/rc.d/zfsd
 etc/sudoers.d/zfs
 etc/zfs/vdev_id.conf.alias.example
@@ -542,10 +543,17 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/include/zpool_script.shlib
 %%TESTS%%share/zfs/zfs-tests/tests/functional/acl/acl.cfg
 %%TESTS%%share/zfs/zfs-tests/tests/functional/acl/acl_common.kshlib
+%%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix-sa/cleanup.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix-sa/posix_001_pos.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix-sa/posix_002_pos.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix-sa/posix_003_pos.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix-sa/posix_004_pos.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix-sa/setup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix/cleanup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix/posix_001_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix/posix_002_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix/posix_003_pos.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix/posix_004_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix/setup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/alloc_class/alloc_class.cfg
 %%TESTS%%share/zfs/zfs-tests/tests/functional/alloc_class/alloc_class.kshlib
