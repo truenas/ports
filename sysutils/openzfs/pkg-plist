@@ -2,6 +2,7 @@
 %%PYTHON%%bin/arcstat
 %%PYTHON%%bin/dbufstat
 %%TESTS%%bin/raidz_test
+etc/rc.d/zfs
 etc/rc.d/zfsd
 etc/sudoers.d/zfs
 etc/zfs/vdev_id.conf.alias.example
@@ -134,6 +135,7 @@ include/libzfs/libuutil_impl.h
 include/libzfs/libzfs.h
 include/libzfs/libzfs_core.h
 include/libzfs/libzfs_impl.h
+include/libzfs/libzfsbootenv.h
 include/libzfs/libzutil.h
 include/libzfs/sys/abd.h
 include/libzfs/sys/abd_impl.h
@@ -249,6 +251,7 @@ include/libzfs/sys/zcp_prop.h
 include/libzfs/sys/zcp_set.h
 include/libzfs/sys/zfeature.h
 include/libzfs/sys/zfs_acl.h
+include/libzfs/sys/zfs_bootenv.h
 include/libzfs/sys/zfs_context.h
 include/libzfs/sys/zfs_debug.h
 include/libzfs/sys/zfs_delay.h
@@ -298,6 +301,10 @@ lib/libzfs_core.a
 lib/libzfs_core.so
 lib/libzfs_core.so.3
 lib/libzfs_core.so.3.0.0
+lib/libzfsbootenv.a
+lib/libzfsbootenv.so
+lib/libzfsbootenv.so.1
+lib/libzfsbootenv.so.1.0.0
 lib/libzpool.a
 lib/libzpool.so
 lib/libzpool.so.4
@@ -337,6 +344,7 @@ lib/libzpool.so.4.0.0
 lib/security/pam_zfs_key.so
 libdata/pkgconfig/libzfs.pc
 libdata/pkgconfig/libzfs_core.pc
+libdata/pkgconfig/libzfsbootenv.pc
 libexec/zfs/zpool.d/ata_err
 libexec/zfs/zpool.d/cmd_to
 libexec/zfs/zpool.d/defect
@@ -498,6 +506,7 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/test-runner/include/stf.shlib
 %%TESTS%%share/zfs/zfs-helpers.sh
 %%TESTS%%share/zfs/zfs-tests.sh
+%%TESTS%%share/zfs/zfs-tests/bin/badsend
 %%TESTS%%share/zfs/zfs-tests/bin/btree_test
 %%TESTS%%share/zfs/zfs-tests/bin/chg_usr_exec
 %%TESTS%%share/zfs/zfs-tests/bin/dir_rd_update
@@ -534,10 +543,17 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/include/zpool_script.shlib
 %%TESTS%%share/zfs/zfs-tests/tests/functional/acl/acl.cfg
 %%TESTS%%share/zfs/zfs-tests/tests/functional/acl/acl_common.kshlib
+%%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix-sa/cleanup.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix-sa/posix_001_pos.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix-sa/posix_002_pos.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix-sa/posix_003_pos.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix-sa/posix_004_pos.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix-sa/setup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix/cleanup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix/posix_001_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix/posix_002_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix/posix_003_pos.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix/posix_004_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix/setup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/alloc_class/alloc_class.cfg
 %%TESTS%%share/zfs/zfs-tests/tests/functional/alloc_class/alloc_class.kshlib
@@ -2131,6 +2147,7 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/rsend/send_freeobjects.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/rsend/send_holds.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/rsend/send_hole_birth.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/rsend/send_invalid.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/rsend/send_mixed_raw.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/rsend/send_partial_dataset.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/rsend/send_realloc_dnode_size.ksh
