@@ -2,8 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	curl
-PORTVERSION=	7.69.1
-PORTREVISION=	1
+PORTVERSION=	7.72.0
 CATEGORIES=	ftp net www
 MASTER_SITES=	https://curl.haxx.se/download/ \
 		LOCAL/sunpoet
@@ -13,6 +12,26 @@ COMMENT=	Command line tool and library for transferring data with URLs
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/COPYING
+
+USES=		cpe libtool localbase pathfix perl5 shebangfix tar:xz
+USE_PERL5=	build
+
+CONFIGURE_ARGS=	--disable-werror \
+		--with-fish-functions-dir=${LOCALBASE}/share/fish/completions \
+		--with-zsh-functions-dir=${LOCALBASE}/share/zsh/site-functions
+CONFIGURE_ENV=	LOCALBASE=${LOCALBASE} \
+		ac_cv_func_SSLv2_client_method=no
+GNU_CONFIGURE=	yes
+INSTALL_TARGET=	install-strip
+TEST_TARGET=	test
+USE_LDCONFIG=	yes
+
+CPE_VENDOR=	haxx
+
+DOCS=		BUGS FAQ FEATURES INSTALL KNOWN_BUGS MAIL-ETIQUETTE RESOURCES \
+		THANKS TODO TheArtOfHttpScripting options-in-versions
+
+SHEBANG_FILES=	*/*.pl
 
 OPTIONS_DEFINE=	ALTSVC BROTLI CA_BUNDLE COOKIES CURL_DEBUG DEBUG DOCS EXAMPLES IDN IPV6 METALINK NTLM PROXY PSL TLS_SRP
 OPTIONS_GROUP=	PROTOCOL
@@ -43,29 +62,6 @@ SMB_DESC=		SMB/CIFS support
 SMTP_DESC=		SMTP/SMTPS support
 THREADED_RESOLVER_DESC=	Threaded DNS resolver
 TLS_SRP_DESC=		TLS-SRP (Secure Remote Password) support
-
-USES=		cpe libtool localbase pathfix perl5 shebangfix tar:xz
-USE_PERL5=	build
-
-CONFIGURE_ARGS=	--disable-werror \
-		--with-fish-functions-dir=${LOCALBASE}/share/fish/completions \
-		--with-zsh-functions-dir=${LOCALBASE}/share/zsh/site-functions
-CONFIGURE_ENV=	LOCALBASE=${LOCALBASE} \
-		ac_cv_func_SSLv2_client_method=no
-GNU_CONFIGURE=	yes
-INSTALL_TARGET=	install-strip
-TEST_TARGET=	test
-USE_LDCONFIG=	yes
-
-PORTDOCS=	*
-PORTEXAMPLES=	*
-
-CPE_VENDOR=	haxx
-
-DOCS=		BUGS FAQ FEATURES INSTALL KNOWN_BUGS MAIL-ETIQUETTE RESOURCES \
-		THANKS TODO TheArtOfHttpScripting VERSIONS
-
-SHEBANG_FILES=	*/*.pl
 
 ALTSVC_CONFIGURE_ENABLE=alt-svc
 BROTLI_CONFIGURE_WITH=	brotli
@@ -163,17 +159,10 @@ post-install:
 post-install-DOCS-on:
 	${MKDIR} ${STAGEDIR}${DOCSDIR}/ ${STAGEDIR}${DOCSDIR}/libcurl/
 	cd ${WRKSRC}/docs/ && ${INSTALL_DATA} ${DOCS} *.md ${STAGEDIR}${DOCSDIR}/
-	cd ${WRKSRC}/docs/libcurl/ && ${INSTALL_DATA} ABI *.m4 ${STAGEDIR}${DOCSDIR}/libcurl/
+	cd ${WRKSRC}/docs/libcurl/ && ${INSTALL_DATA} ABI.md libcurl.m4 *.pl symbols-in-versions ${STAGEDIR}${DOCSDIR}/libcurl/
 
 post-install-EXAMPLES-on:
 	${MKDIR} ${STAGEDIR}${EXAMPLESDIR}/
 	cd ${WRKSRC}/docs/examples/ && ${INSTALL_DATA} README Makefile.example makefile* *.c *.cpp ${STAGEDIR}${EXAMPLESDIR}/
-
-pre-test-PROXY-off:
-	@${ECHO_MSG} "******************************************"
-	@${ECHO_MSG} "* You have disabled curl proxy support.  *"
-	@${ECHO_MSG} "* Some tests SHALL FAIL!                 *"
-	@${ECHO_MSG} "* This is being addressed.               *"
-	@${ECHO_MSG} "******************************************"
 
 .include <bsd.port.post.mk>
