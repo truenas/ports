@@ -1,5 +1,5 @@
---- work/samba-4.12.7/source3/smbd/close.c.orig	2020-07-02 07:12:21.000000000 -0400
-+++ work/samba-4.12.7/source3/smbd/close.c	2020-10-22 14:24:53.857059000 -0400
+--- source3/smbd/close.c.orig	2020-07-02 07:12:21.000000000 -0400
++++ source3/smbd/close.c	2020-10-22 14:24:53.857059000 -0400
 @@ -447,8 +447,12 @@ static NTSTATUS close_remove_share_mode(files_struct *
  	    && !is_ntfs_stream_smb_fname(fsp->fsp_name)) {
  
