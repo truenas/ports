@@ -1,7 +1,7 @@
 # Created by: sem@FreeBSD.org
 # $FreeBSD$
 
-PORTNAME=	grub2-x86_64-efi
+PORTNAME=	grub2
 PORTVERSION=	2.05
 PORTREVISION=	1
 CATEGORIES=	sysutils
@@ -9,7 +9,6 @@ DISTNAME=	grub-${PORTVERSION}
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	rhboot
-GH_PROJECT=	grub2
 GH_TAGNAME=	e7b8856f8be3292afdb38d2e8c70ad8d62a61e10
 
 MAINTAINER=	ports@FreeBSD.org
@@ -40,7 +39,7 @@ SSP_UNSAFE=	yes
 CPE_PRODUCT=	grub
 CPE_VENDOR=	gnu
 
-CONFIGURE_ARGS=	--with-platform=efi --target=x86_64 --disable-werror --localedir=${PREFIX}/share/locale 
+CONFIGURE_ARGS=	--disable-werror --localedir=${PREFIX}/share/locale
 CONFIGURE_ENV=	CPP="${CC} -E" \
 		LEX=${LOCALBASE}/bin/flex
 
