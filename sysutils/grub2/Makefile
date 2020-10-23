@@ -22,7 +22,8 @@ EXPIRATION_DATE=2019-02-04
 
 ONLY_FOR_ARCHS=	amd64 i386
 
-BUILD_DEPENDS=	${LOCALBASE}/bin/flex:textproc/flex \
+BUILD_DEPENDS=	git:devel/git \
+		${LOCALBASE}/bin/flex:textproc/flex \
 		gsed:textproc/gsed \
 		help2man:misc/help2man
 RUN_DEPENDS=	gsed:textproc/gsed
