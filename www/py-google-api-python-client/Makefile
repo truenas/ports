@@ -1,6 +1,6 @@
 PORTNAME=	google-api-python-client
-PORTVERSION=	1.7.6
-PORTREVISION=	1
+PORTVERSION=	1.12.5
+PORTREVISION=	0
 CATEGORIES=	www python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -11,10 +11,11 @@ COMMENT=	Google API Client Library for Python
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}httplib2>=0.9.2:www/py-httplib2@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}google-auth>=0:security/py-google-auth@${PY_FLAVOR} \
+RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}httplib2>=0.15.0:www/py-httplib2@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}google-auth>=1.16.0:security/py-google-auth@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}google-auth-httplib2>=0.0.3:security/py-google-auth-httplib2@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}six>=1.6.1:devel/py-six@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}google-api-core>=1.21.0:www/py-google-api-core@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}six>=1.13.0:devel/py-six@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}uritemplate>=3.0.0:net/py-uritemplate@${PY_FLAVOR}
 
 USES=		python:3.6+
