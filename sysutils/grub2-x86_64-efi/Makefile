@@ -18,8 +18,6 @@ COMMENT=	Multiboot boot loader
 LICENSE=	GPLv3
 
 BROKEN_i386=	uses amd64 assembly
-DEPRECATED=	Unmaintained (more than five years), not updated (one-and-a-half years), does not build with modern compilers	# PR232961
-EXPIRATION_DATE=2019-02-04
 
 ONLY_FOR_ARCHS=	amd64 i386
 
