@@ -24,10 +24,11 @@ ONLY_FOR_ARCHS=	amd64 i386
 BUILD_DEPENDS=	git:devel/git \
 		${LOCALBASE}/bin/flex:textproc/flex \
 		gsed:textproc/gsed \
-		help2man:misc/help2man
+		help2man:misc/help2man \
+		bash:shells/bash
 RUN_DEPENDS=	gsed:textproc/gsed
 
-USES=		autoreconf bison cpe gettext gmake tar:xz
+USES=		autoreconf bison cpe gettext gmake pkgconfig:build tar:xz
 USE_GCC=	7	# Fails to build with GCC 8, cf. PR 232961, or clang
 
 GNU_CONFIGURE=	yes
