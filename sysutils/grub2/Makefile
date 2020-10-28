@@ -23,6 +23,7 @@ ONLY_FOR_ARCHS=	amd64 i386
 BUILD_DEPENDS=	git:devel/git \
 		${LOCALBASE}/bin/flex:textproc/flex \
 		gsed:textproc/gsed \
+		python>0:lang/python \
 		help2man:misc/help2man \
 		bash:shells/bash
 RUN_DEPENDS=	gsed:textproc/gsed
