@@ -529,15 +529,7 @@ man/man8/grub-probe.8.gz
 man/man8/grub-reboot.8.gz
 man/man8/grub-set-default.8.gz
 man/man8/grub-sparc64-setup.8.gz
-share/licenses/grub2-2.05_14/LICENSE
-share/licenses/grub2-2.05_14/catalog.mk
-share/licenses/grub2-2.05_14/GPLv3
 share/grub/grub-mkconfig_lib
-share/info/grub-dev.info
-share/info/dir
-share/info/grub.info-1
-share/info/grub.info-2
-share/info/grub.info
 etc/bash_completion.d/grub
 etc/grub.d/10_kfreebsd
 etc/grub.d/41_custom
