@@ -3,6 +3,7 @@
 
 PORTNAME=	rsync
 DISTVERSION=	3.2.3
+PORTREVISION=	1
 CATEGORIES=	net
 MASTER_SITES=	https://www.mirrorservice.org/sites/rsync.samba.org/src/ \
 				http://rsync.mirror.garr.it/src/ \
@@ -68,7 +69,7 @@ ATIMES_EXTRA_PATCHES=		${WRKSRC}/patches/atimes.diff
 FLAGS_EXTRA_PATCHES=		${WRKSRC}/patches/fileflags.diff \
 				${FILESDIR}/extrapatch-main.c
 RENAMED_EXTRA_PATCHES=		${WRKSRC}/patches/detect-renamed.diff
-ACL_EXTRA_PATCHES=		${WRKSRC}/patches/acls.diff
+ACL_EXTRA_PATCHES=		${PATCHDIR}/extrapatch-acl:-p1
 
 ICONV_USES=	iconv:translit
 ICONV_CONFIGURE_ENABLE=	iconv iconv-open
