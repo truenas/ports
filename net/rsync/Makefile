@@ -3,7 +3,7 @@
 
 PORTNAME=	rsync
 DISTVERSION=	3.1.3
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	net
 MASTER_SITES=	https://rsync.samba.org/ftp/rsync/ \
 		https://www.mirrorservice.org/sites/rsync.samba.org/ \
