@@ -32,7 +32,6 @@ EXTRA_PATCHES+=			${PATCHDIR}/wscript_changes.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/add_del_share.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/ix-smbtorture.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/smbd-core-changes.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/debug.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/tevent_kqueue.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/silence-openpam-warnings.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/allow_vfs_set_sparse.patch:-p1
@@ -43,7 +42,7 @@ EXTRA_PATCHES+=			${PATCHDIR}/registry_service.patch:-p1
 
 SAMBA4_BASENAME=		samba
 SAMBA4_PORTNAME=		${SAMBA4_BASENAME}4
-SAMBA4_VERSION=			4.12.8
+SAMBA4_VERSION=			4.12.9
 SAMBA4_DISTNAME=		${SAMBA4_BASENAME}-${SAMBA4_VERSION:S|.p|pre|:S|.r|rc|:S|.t|tp|:S|.a|alpha|}
 
 WRKSRC?=			${WRKDIR}/${DISTNAME}
