@@ -1,3 +1,7 @@
+diff --git a/rpcclient.core b/rpcclient.core
+new file mode 100644
+index 00000000000..d812e2b604f
+Binary files /dev/null and b/rpcclient.core differ
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
 index 00000000000..6ffaab09bdf
@@ -1815,10 +1819,10 @@ index 00000000000..c7390a8a76d
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..10ce0c448fc
+index 00000000000..c13588a0d99
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2536 @@
+@@ -0,0 +1,2571 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -2054,6 +2058,18 @@ index 00000000000..10ce0c448fc
 +					 struct smb_filename *smb_fname,
 +					 uint32_t *dosmode)
 +{
++	struct ixnas_config_data *config = NULL;
++
++	SMB_VFS_HANDLE_GET_DATA(handle, config,
++				struct ixnas_config_data,
++				return NT_STATUS_INTERNAL_ERROR);
++
++	if (config->dosattrib_xattr) {
++		return SMB_VFS_NEXT_GET_DOS_ATTRIBUTES(handle,
++						       smb_fname,
++						       dosmode);
++	}
++
 +	*dosmode |= fileflags_to_dosmode(smb_fname->st.st_ex_flags);
 +
 +	if (S_ISDIR(smb_fname->st.st_ex_mode)) {
@@ -2074,6 +2090,18 @@ index 00000000000..10ce0c448fc
 +                                            struct files_struct *fsp,
 +                                            uint32_t *dosmode)
 +{
++	struct ixnas_config_data *config = NULL;
++
++	SMB_VFS_HANDLE_GET_DATA(handle, config,
++				struct ixnas_config_data,
++				return NT_STATUS_INTERNAL_ERROR);
++
++	if (config->dosattrib_xattr) {
++		return SMB_VFS_NEXT_FGET_DOS_ATTRIBUTES(handle,
++							fsp,
++							dosmode);
++	}
++
 +        *dosmode |= fileflags_to_dosmode(fsp->fsp_name->st.st_ex_flags);
 +
 +	if (S_ISDIR(fsp->fsp_name->st.st_ex_mode)) {
@@ -4068,10 +4096,21 @@ index 00000000000..10ce0c448fc
 +                                 struct smb_file_time *ft)
 +{
 +	int result = -1;
++	struct ixnas_config_data *config = NULL;
++
 +	if (smb_fname->stream_name) {
 +		errno = ENOENT;
 +		return result;
 +	}
++
++	SMB_VFS_HANDLE_GET_DATA(handle, config,
++				struct ixnas_config_data,
++				return -1);
++
++	if (config->dosattrib_xattr) {
++		return SMB_VFS_NEXT_NTIMES(handle, smb_fname, ft);
++	}
++
 +	/*
 +	 * man utimensat(2)
 +	 * If times is non-NULL, it is assumed to point to an array of two
