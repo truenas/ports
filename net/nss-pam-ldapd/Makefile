@@ -3,7 +3,7 @@
 
 PORTNAME=		nss-pam-ldapd
 PORTVERSION=		0.9.11
-PORTREVISION=		1
+PORTREVISION=		2
 CATEGORIES=		net
 MASTER_SITES=		http://arthurdejong.org/nss-pam-ldapd/ \
 			ZI
