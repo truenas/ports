@@ -2,8 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	xen-guest-tools
-PORTVERSION=	4.13.0
-PORTREVISION=	1
+PORTVERSION=	4.14.0
+PORTREVISION=	0
 CATEGORIES=	sysutils
 MASTER_SITES=	https://downloads.xenproject.org/release/xen/${PORTVERSION}/
 DISTNAME=	xen-${PORTVERSION}
@@ -18,7 +18,7 @@ ONLY_FOR_ARCHS=		amd64 i386
 ONLY_FOR_ARCHS_REASON=	not yet ported to anything other than amd64 or i386
 CONFLICTS=	xen-tools-[0-9]*
 
-BUILD_DEPENDS=	${LOCALBASE}/bin/bash:shells/bash \
+BUILD_DEPENDS=	bash:shells/bash \
 		${LOCALBASE}/lib/libglib-2.0.so:devel/glib20 \
 		${LOCALBASE}/lib/libargp.so:devel/argp-standalone \
 		${LOCALBASE}/lib/libyajl.so:devel/yajl \
@@ -37,6 +37,7 @@ MAKE_ENV+=	clang=y
 MAKE_ENV+=	CC="${CC}"
 MAKE_ENV+=	CFLAGS="${CFLAGS}"
 MAKE_ENV+=	CPPFLAGS="${CPPFLAGS}"
+MAKE_ENV+=	FREEBSD_PORT=y
 CPPFLAGS+=	-I${LOCALBASE}/include
 LDFLAGS+=	-I${LOCALBASE}/lib
 USE_LDCONFIG=	yes
@@ -57,6 +58,8 @@ PLIST_FILES=	bin/xen-detect \
 		lib/libxentoolcore.so.1
 
 post-patch:
+	${REINPLACE_CMD} -e 's;=xen tools stubdom docs;=tools;' \
+		${WRKSRC}/Makefile
 	${REINPLACE_CMD} -e 's;86|x86_64;86no|x86_64no;' \
 		${WRKSRC}/tools/configure
 
