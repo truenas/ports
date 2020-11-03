@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 00000000000..80e73c66b97
+index 00000000000..37e7d98f116
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,1570 @@
+@@ -0,0 +1,1561 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -80,8 +80,6 @@ index 00000000000..80e73c66b97
 +{
 +	struct snapshot_list *snapshots;
 +	struct iter_info *iter_info;
-+	int prev_u;
-+	int prev_prev_u;
 +};
 +
 +struct child_cb
@@ -1023,16 +1021,9 @@ index 00000000000..80e73c66b97
 +		return 0;
 +	}
 +
-+	used = zfs_prop_get_int(snap, ZFS_PROP_USED);
-+	if (used == 0 && state->snapshots->num_entries != 0) {
-+		if (!((state->prev_u == 0) &&
-+		      (state->prev_prev_u != 0))) {
-+			state->prev_prev_u = state->prev_u;
-+			state->prev_u = used;
-+			goto done;
-+		}
-+		state->prev_prev_u = state->prev_u;
-+		state->prev_u = used;
++	used = zfs_prop_get_int(snap, ZFS_PROP_WRITTEN);
++	if (used == 0) {
++		goto done;
 +	}
 +
 +	cr_time = zfs_prop_get_int(snap, ZFS_PROP_CREATION);
