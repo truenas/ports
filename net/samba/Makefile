@@ -3,7 +3,7 @@
 
 PORTNAME=			${SAMBA4_BASENAME}
 PORTVERSION=			${SAMBA4_VERSION}
-PORTREVISION=			1
+PORTREVISION=			0
 CATEGORIES?=			net
 MASTER_SITES=			SAMBA/samba/stable SAMBA/samba/rc
 DISTNAME=			${SAMBA4_DISTNAME}
@@ -32,15 +32,16 @@ EXTRA_PATCHES+=			${PATCHDIR}/wscript_changes.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/add_del_share.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/ix-smbtorture.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/smbd-core-changes.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/debug.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/registry_service.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/tevent_kqueue.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/allow_vfs_set_sparse.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/dns-fixes.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/ease-netconf-validation.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/s3-smbd-add-support-for-streams-64-KiB.patch:-p1
 
 SAMBA4_BASENAME=		samba
 SAMBA4_PORTNAME=		${SAMBA4_BASENAME}4
-SAMBA4_VERSION=			4.13.0rc2
+SAMBA4_VERSION=			4.13.2
 SAMBA4_DISTNAME=		${SAMBA4_BASENAME}-${SAMBA4_VERSION:S|.p|pre|:S|.r|rc|:S|.t|tp|:S|.a|alpha|}
 
 WRKSRC?=			${WRKDIR}/${DISTNAME}
@@ -82,7 +83,6 @@ CONFIGURE_ARGS+=		--mandir="${MANPREFIX}/man" \
 				--with-cachedir="${SAMBA4_LOCKDIR}" \
 				--with-bind-dns-dir=${SAMBA4_BINDDNSDIR} \
 				--with-privatedir="${SAMBA4_PRIVATEDIR}" \
-				--disable-snapper \
 				--with-logfilebase="${SAMBA4_LOGDIR}"
 # XXX: Flags
 CONFIGURE_ENV+=			PTHREAD_LDFLAGS="-lpthread"
