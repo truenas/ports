@@ -1983,7 +1983,7 @@ index 00000000000..59ad02941ce
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..c59342ab86d
+index 00000000000..a08186bc95c
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
 @@ -0,0 +1,2008 @@
@@ -2495,7 +2495,7 @@ index 00000000000..c59342ab86d
 +
 +static void map_modify(uint32_t *pperm) {
 +	if (*pperm & SMB_ACE4_WRITE_DATA) {
-+		*pperm |= SMB_ACE4_WRITE_NAMED_ATTRS|SMB_ACE4_WRITE_ATTRIBUTES;
++		*pperm |= SMB_ACE4_WRITE_NAMED_ATTRS|SMB_ACE4_WRITE_ATTRIBUTES|SMB_ACE4_DELETE;
 +	}
 +}
 +
