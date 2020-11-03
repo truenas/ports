@@ -2,21 +2,18 @@
 # $FreeBSD$
 
 PORTNAME=	syslog-ng
-DISTVERSION=	3.25.1
-PORTREVISION=	1
+DISTVERSION=	3.28.1
+PORTREVISION=	2
 CATEGORIES=	sysutils
 MASTER_SITES=	https://github.com/balabit/syslog-ng/releases/download/syslog-ng-${DISTVERSION}/
 .if !defined(MASTERDIR)
-PKGNAMESUFFIX=	325
+PKGNAMESUFFIX=	328
 .endif
 
 MAINTAINER=	cy@FreeBSD.org
 COMMENT=	Powerful syslogd replacement
 
 BROKEN_sparc64=		fails to link: Internal error: Segmentation fault (program ld)
-
-DEPRECATED=	Agreed upon upstream one year deprecation policy
-EXPIRATION_DATE=	2021-05-13
 
 LIB_DEPENDS=	libpcre.so:devel/pcre \
 		libuuid.so:misc/e2fsprogs-libuuid
@@ -55,6 +52,7 @@ GNU_CONFIGURE=	yes
 # Note: Even if PYTHON is deselected, glib20 will install python.
 USE_GNOME=	glib20
 SUB_FILES=	pkg-message
+INSTALL_TARGET=	install-strip
 
 CONFIGURE_ARGS=	--sysconfdir=${LOCALBASE}/etc --localstatedir=/var/db \
 		--enable-dynamic-linking --enable-manpages \
@@ -88,9 +86,9 @@ REDIS_CONFIGURE_ENABLE=		redis
 REDIS_LIB_DEPENDS=		libhiredis.so:databases/hiredis
 REDIS_PLIST_FILES=		lib/syslog-ng/libredis.so
 
-SNMPDEST_CONFIGURE_ENABLE=	snmp-dest
+SNMPDEST_CONFIGURE_ENABLE=	afsnmp
 SNMPDEST_LIB_DEPENDS=		libnetsnmp.so:net-mgmt/net-snmp
-SNMPDEST_PLIST_FILES=		lib/syslog-ng/libsnmpdest.so
+SNMPDEST_PLIST_FILES=		lib/syslog-ng/libafsnmp.so
 
 SMTP_CONFIGURE_ON=		--with-libesmtp=${LOCALBASE} --enable-smtp
 SMTP_CONFIGURE_OFF=		--without-libesmtp --disable-smtp
@@ -191,8 +189,11 @@ PYTHON_PLIST_FILES=		lib/syslog-ng/libmod-python.so \
 		lib/syslog-ng/python/syslogng/debuggercli/__pycache__/tflang.cpython-${PYTHON_SUFFIX}.pyc
 
 CURL_CONFIGURE_OFF=		--with-libcurl=off
+CURL_CONFIGURE_ON=		--enable-http
 CURL_LIB_DEPENDS=		libcurl.so:ftp/curl
-CURL_PLIST_FILES=		lib/syslog-ng/libhttp.so
+CURL_PLIST_FILES=		lib/syslog-ng/libhttp.so \
+				include/syslog-ng/modules/http/http-signals.h \
+				include/syslog-ng/signal-handler.h
 
 RIEMANN_CONFIGURE_ON=		--enable-riemann
 RIEMANN_CONFIGURE_OFF=		--disable-riemann
