@@ -65,7 +65,7 @@ WANT_OPENLDAP_VER?=	24
 BROKEN=			incompatible OpenLDAP version: ${WANT_OPENLDAP_VER}
 .endif
 
-PORTREVISION_CLIENT=	0
+PORTREVISION_CLIENT=	1
 PORTREVISION_SERVER=	2
 OPENLDAP_SHLIB_MAJOR=	2
 OPENLDAP_SHLIB_MINOR=	10.14
@@ -151,6 +151,8 @@ CONFIGURE_SED=		-e 's,uuid/uuid.h,xxuuid/uuid.h,g'
 
 .include <bsd.port.options.mk>
 
+LIB_DEPENDS+=		libgnutls.so:security/gnutls
+
 .if defined(CLIENT_ONLY)
 PORTDOCS=		CHANGES drafts rfc
 
@@ -165,6 +167,8 @@ USE_OPENLDAP=		yes
 WANT_OPENLDAP_VER=	24
 
 LIB_DEPENDS+=		libicudata.so:devel/icu
+LIB_DEPENDS+=		libgnutls.so:security/gnutls
+
 
 .if ${PORT_OPTIONS:MGSSAPI} && empty(PORT_OPTIONS:MSASL)
 PORT_OPTIONS+=	SASL
@@ -201,7 +205,7 @@ SUB_LIST+=		LDAP_RUN_DIR=${LDAP_RUN_DIR} \
 			PKGNAME=${PKGNAME}
 
 CONFIGURE_ARGS=		--with-threads=posix \
-			--with-tls=openssl \
+			--with-tls=gnutls \
 			--disable-dependency-tracking \
 			--enable-dynamic
 
