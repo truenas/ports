@@ -3,7 +3,7 @@
 
 PORTNAME=			${SAMBA4_BASENAME}
 PORTVERSION=			${SAMBA4_VERSION}
-PORTREVISION=			1
+PORTREVISION=			2
 CATEGORIES?=			net
 MASTER_SITES=			SAMBA/samba/stable SAMBA/samba/rc
 DISTNAME=			${SAMBA4_DISTNAME}
@@ -26,14 +26,14 @@ EXTRA_PATCHES+=			${PATCHDIR}/0001-add_ws_discovery.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-add-wb-status-cmd.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-samba_json.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/talloc_arc4random.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/experimental_aio.patch:-p1
+#EXTRA_PATCHES+=			${PATCHDIR}/experimental_aio.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/add_zfs_based_vfs_modules.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/wscript_changes.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/add_del_share.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/ix-smbtorture.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/smbd-core-changes.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/debug.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/tevent_kqueue.patch:-p1
+#EXTRA_PATCHES+=			${PATCHDIR}/tevent_kqueue.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/silence-openpam-warnings.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/allow_vfs_set_sparse.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/fix-fruit-locking.patch:-p1
