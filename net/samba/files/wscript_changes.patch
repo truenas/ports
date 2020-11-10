@@ -161,15 +161,7 @@ index 85466b493fa..9a802cd994d 100644
      if conf.CONFIG_SET('HAVE_FREEBSD_SUNACL_H'):
 +        default_shared_modules.extend(TO_LIST('vfs_winmsa'))
          default_shared_modules.extend(TO_LIST('vfs_zfsacl'))
-+        default_shared_modules.extend(TO_LIST('vfs_aio_fbsd'))
++        #default_shared_modules.extend(TO_LIST('vfs_aio_fbsd'))
  
      if conf.CONFIG_SET('HAVE_DIRFD_DECL'):
          default_shared_modules.extend(TO_LIST('vfs_syncops vfs_dirsort'))
-@@ -1945,6 +1948,7 @@ main() {
- 
-     if Options.options.with_pthreadpool:
-         default_shared_modules.extend(TO_LIST('vfs_aio_pthread'))
-+        default_shared_modules.extend(TO_LIST('vfs_aio_spthread'))
- 
-     if conf.CONFIG_SET('HAVE_LDAP'):
-         default_static_modules.extend(TO_LIST('pdb_ldapsam idmap_ldap'))
