@@ -744,6 +744,7 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/checksum/cleanup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/checksum/default.cfg
 %%TESTS%%share/zfs/zfs-tests/tests/functional/checksum/filetest_001_pos.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/checksum/filetest_002_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/checksum/run_edonr_test.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/checksum/run_sha2_test.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/checksum/run_skein_test.ksh
@@ -926,6 +927,8 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_mount/zfs_mount_010_neg.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_mount/zfs_mount_011_neg.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_mount/zfs_mount_012_pos.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_mount/zfs_mount_013_pos.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_mount/zfs_mount_014_neg.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_mount/zfs_mount_all_001_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_mount/zfs_mount_all_fail.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_mount/zfs_mount_all_mountpoints.ksh
