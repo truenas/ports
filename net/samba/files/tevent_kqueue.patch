@@ -84,10 +84,10 @@ index 5365fce3533..db11c857bae 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..0ad218aee4b
+index 00000000000..bbe61433458
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
-@@ -0,0 +1,1234 @@
+@@ -0,0 +1,1195 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -710,8 +710,8 @@ index 00000000000..0ad218aee4b
 +	return tevent_common_invoke_fd_handler(fde, fde->flags & flags, NULL);
 +}
 +
-+static inline void kqueue_process_aio(struct kqueue_event_context *kqueue_ev,
-+				      void *udata)
++static void kqueue_process_aio(struct kqueue_event_context *kqueue_ev,
++			       void *udata)
 +{
 +	int rv = 0;
 +	struct tevent_req *req = NULL;
@@ -750,9 +750,9 @@ index 00000000000..0ad218aee4b
 +	}
 +}
 +
-+static inline void kqueue_process_kev(struct kqueue_event_context *kqueue_ev,
-+				      struct kevent kev, struct tevent_fd **pfde,
-+				      bool *is_fd_event)
++static void kqueue_process_kev(struct kqueue_event_context *kqueue_ev,
++			       struct kevent kev, struct tevent_fd **pfde,
++			       bool *is_fd_event)
 +{
 +	struct tevent_fd *fde = NULL;
 +
@@ -766,8 +766,40 @@ index 00000000000..0ad218aee4b
 +		*is_fd_event = false;
 +		break;
 +	case EVFILT_WRITE:
++		fde = get_tevent_fd(kqueue_ev, kev.udata, true);
++		if ((kev.flags & EV_EOF) && !(fde->flags & TEVENT_FD_READ)) {
++			/* If we only wait for TEVENT_FD_WRITE, we
++			   should not tell the event handler about it,
++			   and remove the writable flag, as we only
++			   report errors when waiting for read events
++			   to match the select behavior. */
++
++			/*
++			 * Socket error is returned in fflags. For now,
++			 * log, but don't add error handling.
++			 */
++			if (kev.fflags != 0) {
++				tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
++					     "EVFILT_READ EV_EOF on [%p], "
++					     "fd [%d]: %s\n", fde, fde->fd,
++					     strerror(kev.fflags));
++			}
++			TEVENT_FD_NOT_WRITEABLE(fde);
++			return;
++		}
++		*pfde = fde;
++		*is_fd_event = true;
++		break;
 +	case EVFILT_READ:
 +		*pfde = get_tevent_fd(kqueue_ev, kev.udata, true);
++		if ((kev.flags & EV_EOF) && (kev.fflags != 0)){
++			/*
++			 * Log socket error if read direction shuts down.
++			 */
++                        tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
++                                     "evfilt_read ev_eof on [%p]: %s\n",
++                                     *pfde, strerror(kev.fflags));
++		}
 +		*is_fd_event = true;
 +		break;
 +	case EVFILT_SIGNAL:
@@ -781,71 +813,8 @@ index 00000000000..0ad218aee4b
 +	return;
 +}
 +
-+static inline int process_single_kevent(struct kqueue_event_context *kqueue_ev, int nkevents,
-+				 struct kevent *received)
-+{
-+	struct tevent_fd *fde = NULL;
-+	bool is_fd_event;
-+	uint16_t flags = 0;
-+	kqueue_process_kev(kqueue_ev, received[0], &fde, &is_fd_event);
-+	if (fde != NULL) {
-+		flags = KEVENT_TO_TEVENT_FLAGS(received[0].filter);
-+		flags &= fde->flags;
-+		return kqueue_process_fd(kqueue_ev, fde, flags);
-+	}
-+	return 0;
-+}
-+
-+static inline int process_two_kevents(struct kqueue_event_context *kqueue_ev, int nkevents,
-+			       struct kevent *received)
-+{
-+	int ret;
-+	struct tevent_fd *fde = NULL;
-+	struct tevent_fd *next_fde = NULL;
-+	bool is_fd_event;
-+	uint16_t flags = 0;
-+
-+	kqueue_process_kev(kqueue_ev, received[0], &fde, &is_fd_event);
-+	kqueue_process_kev(kqueue_ev, received[1], &next_fde, &is_fd_event);
-+
-+	if (fde == NULL && next_fde == NULL) {
-+		//No fd events and so don't bother with handler.
-+		return 0;
-+	}
-+
-+	/*
-+	 * Both kevents are for the same tevent_fd event.
-+	 * Combine flags and move along.
-+	 */
-+	else if (fde == next_fde) {
-+		return kqueue_process_fd(kqueue_ev, fde, TEVENT_FD_RW);
-+	}
-+	/*
-+	 * Only one (fd, kqueue filter) combination may be registered
-+	 * at a time. It's theoretically possible that two separate
-+	 * tevent fd events have registered kevents on the same fd.
-+	 * These should have been made consistent in kqueue_add_event().
-+	 */
-+	else if ((fde && next_fde) && (fde->fd == next_fde->fd)) {
-+		flags = TEVENT_FD_RW;
-+		return kqueue_process_fd(kqueue_ev, fde, flags);
-+	}
-+
-+	if (fde) {
-+		flags = KEVENT_TO_TEVENT_FLAGS(received[0].filter);
-+		flags &= fde->flags;
-+		ret = kqueue_process_fd(kqueue_ev, fde, flags);
-+	}
-+	if (next_fde) {
-+		flags = KEVENT_TO_TEVENT_FLAGS(received[1].filter);
-+		flags &= next_fde->flags;
-+		ret = kqueue_process_fd(kqueue_ev, next_fde, flags);
-+	}
-+	return ret;
-+}
-+
-+static inline int process_many_kevents(struct kqueue_event_context *kqueue_ev, int nkevents,
-+				struct kevent *received)
++static int process_kevents(struct kqueue_event_context *kqueue_ev, int nkevents,
++			   struct kevent *received)
 +{
 +	int rv, i, iloop;
 +	struct tevent_fd *fde = NULL;
@@ -959,15 +928,7 @@ index 00000000000..0ad218aee4b
 +		}
 +		return 0;
 +	}
-+	if (nkevents == 1) {
-+		ret = process_single_kevent(kqueue_ev, nkevents, received);
-+	}
-+	else if (nkevents == 2) {
-+		ret = process_two_kevents(kqueue_ev, nkevents, received);
-+	}
-+	else {
-+		ret = process_many_kevents(kqueue_ev, nkevents, received);
-+	}
++	ret = process_kevents(kqueue_ev, nkevents, received);
 +	kqueue_ev->had_signal = false;
 +	return ret;
 +}
