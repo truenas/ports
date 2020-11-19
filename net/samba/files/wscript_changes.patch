@@ -1,5 +1,5 @@
 diff --git a/source3/modules/wscript_build b/source3/modules/wscript_build
-index 41d8568e43a..c5a0d2a7fab 100644
+index d4c87209106..84f64382235 100644
 --- a/source3/modules/wscript_build
 +++ b/source3/modules/wscript_build
 @@ -50,7 +50,7 @@ bld.SAMBA3_SUBSYSTEM('HASH_INODE',
@@ -11,7 +11,7 @@ index 41d8568e43a..c5a0d2a7fab 100644
                   init_function='',
                   internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_default'),
                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_default'))
-@@ -233,6 +233,70 @@ bld.SAMBA3_MODULE('vfs_solarisacl',
+@@ -238,6 +238,62 @@ bld.SAMBA3_MODULE('vfs_solarisacl',
                   internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_solarisacl'),
                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_solarisacl'))
  
@@ -31,14 +31,6 @@ index 41d8568e43a..c5a0d2a7fab 100644
 +                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_aio_fbsd'),
 +                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_aio_fbsd'))
 +
-+bld.SAMBA3_MODULE('vfs_aio_spthread',
-+                 subsystem='vfs',
-+                 source='vfs_aio_spthread.c',
-+                 deps='samba-util tevent',
-+                 init_function='',
-+                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_aio_spthread'),
-+                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_aio_spthread'))
-+                       
 +bld.SAMBA3_MODULE('vfs_ixnas',
 +                 subsystem='vfs',
 +                 source='vfs_ixnas.c',
@@ -46,7 +38,7 @@ index 41d8568e43a..c5a0d2a7fab 100644
 +                 init_function='',
 +                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_ixnas'),
 +                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_ixnas'))
-+                       
++
 +bld.SAMBA3_MODULE('vfs_tmprotect',
 +                 subsystem='vfs',
 +                 source='vfs_tmprotect.c',
@@ -82,7 +74,7 @@ index 41d8568e43a..c5a0d2a7fab 100644
  bld.SAMBA3_MODULE('vfs_zfsacl',
                   subsystem='vfs',
                   source='vfs_zfsacl.c',
-@@ -241,35 +305,38 @@ bld.SAMBA3_MODULE('vfs_zfsacl',
+@@ -246,35 +302,38 @@ bld.SAMBA3_MODULE('vfs_zfsacl',
                   internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_zfsacl'),
                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_zfsacl'))
  
@@ -151,7 +143,7 @@ index 41d8568e43a..c5a0d2a7fab 100644
  bld.SAMBA3_MODULE('vfs_nfs4acl_xattr',
                    subsystem='vfs',
 diff --git a/source3/wscript b/source3/wscript
-index 85466b493fa..9a802cd994d 100644
+index 85466b493fa..5a08a12365e 100644
 --- a/source3/wscript
 +++ b/source3/wscript
 @@ -124,6 +124,7 @@ def configure(conf):
@@ -181,11 +173,3 @@ index 85466b493fa..9a802cd994d 100644
  
      if conf.CONFIG_SET('HAVE_DIRFD_DECL'):
          default_shared_modules.extend(TO_LIST('vfs_syncops vfs_dirsort'))
-@@ -1945,6 +1948,7 @@ main() {
- 
-     if Options.options.with_pthreadpool:
-         default_shared_modules.extend(TO_LIST('vfs_aio_pthread'))
-+        default_shared_modules.extend(TO_LIST('vfs_aio_spthread'))
- 
-     if conf.CONFIG_SET('HAVE_LDAP'):
-         default_static_modules.extend(TO_LIST('pdb_ldapsam idmap_ldap'))
