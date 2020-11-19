@@ -3,7 +3,7 @@
 
 PORTNAME=			${SAMBA4_BASENAME}
 PORTVERSION=			${SAMBA4_VERSION}
-PORTREVISION=			3
+PORTREVISION=			4
 CATEGORIES?=			net
 MASTER_SITES=			SAMBA/samba/stable SAMBA/samba/rc
 DISTNAME=			${SAMBA4_DISTNAME}
@@ -394,8 +394,8 @@ SAMBA4_MODULES+=		auth_skel pdb_test gpext_security gpext_registry gpext_scripts
 
 .if ${PORT_OPTIONS:MLIBZFS}
 CONFIGURE_ARGS+= 	--with-libzfs
-WANT_EXP_MODULES+=	vfs_zfs_space vfs_ixnas vfs_shadow_copy_zfs vfs_noacl vfs_noacl vfs_tmprotect vfs_zfs_fsrvp vfs_aio_fbsd vfs_aio_spthread
-SAMBA4_MODULES+=	vfs_zfs_space vfs_ixnas vfs_shadow_copy_zfs vfs_noacl vfs_noacl vfs_tmprotect vfs_zfs_fsrvp vfs_aio_fbsd vfs_aio_spthread
+WANT_EXP_MODULES+=	vfs_zfs_space vfs_ixnas vfs_shadow_copy_zfs vfs_noacl vfs_noacl vfs_tmprotect vfs_zfs_fsrvp vfs_aio_fbsd
+SAMBA4_MODULES+=	vfs_zfs_space vfs_ixnas vfs_shadow_copy_zfs vfs_noacl vfs_noacl vfs_tmprotect vfs_zfs_fsrvp vfs_aio_fbsd
 PLIST_SUB+=		LIBZFS=""
 .else
 CONFIGURE_ARGS+=	--without-libzfs
