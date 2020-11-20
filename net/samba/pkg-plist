@@ -405,7 +405,6 @@ lib/shared-modules/vfs/acl_xattr.so
 lib/shared-modules/vfs/aio_fbsd.so
 lib/shared-modules/vfs/aio_fork.so
 lib/shared-modules/vfs/aio_pthread.so
-lib/shared-modules/vfs/aio_spthread.so
 lib/shared-modules/vfs/audit.so
 lib/shared-modules/vfs/cap.so
 lib/shared-modules/vfs/catia.so
