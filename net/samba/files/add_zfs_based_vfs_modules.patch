@@ -1,9 +1,9 @@
 diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
 new file mode 100644
-index 00000000000..62b1605be7e
+index 00000000000..4aa824f2a74
 --- /dev/null
 +++ b/source3/modules/vfs_shadow_copy_zfs.c
-@@ -0,0 +1,1942 @@
+@@ -0,0 +1,1943 @@
 +/* shadow_copy_zfs: a shadow copy module for ZFS
 + *
 + * Copyright (C) Andrew Tridgell   2007 (portions taken from shadow_copy_zfs)
@@ -531,7 +531,12 @@ index 00000000000..62b1605be7e
 +			TALLOC_FREE(fname);
 +			return talloc_strdup(mem_ctx, "");
 +		}
-+		else if (ret > 0) {
++		if ((offset[0] == '/') && (strcmp(fname, offset+1) == 0)) {
++			/* leading slash. same as above */
++			TALLOC_FREE(fname);
++			return talloc_strdup(mem_ctx, "");
++		}
++		else if ((strlen(fname) > strlen(offset)) && (strncmp(fname, offset, strlen(offset)) == 0)) {
 +			return fname + strlen(offset) + 1;
 +		}
 +		else {
@@ -569,13 +574,15 @@ index 00000000000..62b1605be7e
 +	TALLOC_FREE(cwd_fname);
 +	if (shadow_mountpoint != NULL) {
 +		TALLOC_FREE(priv->cwd->cp_relative);
++		char *cp_relative = NULL;
 +		cwd_dataset_name = snapshot_mp_to_dataset(priv, handle, priv->cwd->base_name);
 +		priv->cwd->ds = shadow_path_to_dataset(handle->conn->sconn->ds_list,
 +						       cwd_dataset_name);
-+		priv->cwd->cp_relative = vss_to_normal_path(priv, handle, priv, shadow_mountpoint);
++		cp_relative = vss_to_normal_path(priv, handle, priv, shadow_mountpoint);
++		priv->cwd->cp_relative = cp_relative;
 +	}
 +	else {
-+		if (priv->cwd->cp_relative) {
++		if (priv->cwd->cp_relative != NULL) {
 +			TALLOC_FREE(priv->cwd->cp_relative);
 +		}
 +	}
@@ -1674,12 +1681,6 @@ index 00000000000..62b1605be7e
 +	SMB_VFS_HANDLE_GET_DATA(handle, config, struct shadow_copy_zfs_config,
 +				return NULL);
 +
-+	if (config->shadow_connectpath != NULL) {
-+		DBG_INFO("cached connect path is [%s]\n",
-+			config->shadow_connectpath);
-+		return config->shadow_connectpath;
-+	}
-+
 +	if (shadow_copy_zfs_match_name(smb_fname)) {
 +		conv = do_convert_shadow_zfs_name(handle,
 +					smb_fname->base_name,
@@ -1689,9 +1690,9 @@ index 00000000000..62b1605be7e
 +			return handle->conn->connectpath;
 +		}
 +		return conv;
-+	} else {
-+		return SMB_VFS_NEXT_CONNECTPATH(handle, smb_fname);
 +	}
++
++	return SMB_VFS_NEXT_CONNECTPATH(handle, smb_fname);
 +}
 +
 +static uint64_t shadow_copy_zfs_disk_free(vfs_handle_struct *handle,
