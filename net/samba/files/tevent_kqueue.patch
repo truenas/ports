@@ -84,10 +84,10 @@ index 5365fce3533..db11c857bae 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..84d03f95908
+index 00000000000..f0de9cf4629
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
-@@ -0,0 +1,1262 @@
+@@ -0,0 +1,1263 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -778,9 +778,9 @@ index 00000000000..84d03f95908
 +			 * log, but don't add error handling.
 +			 */
 +			if (kev.fflags != 0) {
-+				tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
-+					     "EVFILT_WRITE EV_EOF on [%p], "
-+					     "fd [%d]: %s\n", fde, fde->fd,
++				tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_WARNING,
++					     "EVFILT_WRITE EV_EOF on [%s], "
++					     "fd [%d]: %s\n", fde->location, fde->fd,
 +					     strerror(kev.fflags));
 +			}
 +			TEVENT_FD_NOT_WRITEABLE(fde);
@@ -790,12 +790,13 @@ index 00000000000..84d03f95908
 +		*is_fd_event = true;
 +		break;
 +	case EVFILT_READ:
-+		*pfde = get_tevent_fd(kqueue_ev, kev.udata, true);
++		fde = get_tevent_fd(kqueue_ev, kev.udata, true);
 +		if ((kev.flags & EV_EOF) && (kev.fflags != 0)){
-+			tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
-+				    "evfilt_read ev_eof on [%p]: %s\n",
-+				    *pfde, strerror(kev.fflags));
++			tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_WARNING,
++				    "evfilt_read ev_eof on [%s]: %s\n",
++				    fde->location, strerror(kev.fflags));
 +		}
++		*pfde = fde;
 +		*is_fd_event = true;
 +		break;
 +	case EVFILT_SIGNAL:
