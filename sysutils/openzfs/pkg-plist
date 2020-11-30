@@ -2285,6 +2285,7 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/userquota/userspace_001_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/userquota/userspace_002_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/userquota/userspace_003_pos.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/userquota/userspace_encrypted.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/vdev_zaps/cleanup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/vdev_zaps/setup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/vdev_zaps/vdev_zaps.kshlib
