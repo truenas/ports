@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	openzfs
-PORTVERSION=	2020111700
+PORTVERSION=	2020113000
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 PKGNAMESUFFIX?=	-kmod
@@ -15,7 +15,7 @@ USES=		kmod
 USE_GITHUB=	yes
 GH_ACCOUNT=	truenas
 GH_PROJECT=	zfs
-GH_TAGNAME=	ae7c9c739
+GH_TAGNAME=	e8b09f02a
 KMODTARGET?=	openzfs.ko
 
 PLIST_FILES=	${KMODDIR}/${KMODTARGET}
@@ -47,7 +47,8 @@ post-patch:
 	${ECHO} '#define ZFS_META_RELEASE "${ZFS_META_RELEASE}"' >> ${WRKSRC}/zfs_config.h
 
 do-build:
-	(cd ${WRKSRC}/module/ && make -f Makefile.bsd CC=${CC} ${MAKE_OPTS} clean all WITH_DEBUG=true)
+	(cd ${WRKSRC}/module/ && make -f Makefile.bsd CC=${CC} ${MAKE_OPTS} clean all \
+	    WITH_DEBUG=true WITH_INVARIANTS=true)
 	mv ${WRKSRC}/module/openzfs.ko ${WRKSRC}/module/openzfs-debug.ko
 	mv ${WRKSRC}/module/openzfs.ko.debug ${WRKSRC}/module/openzfs-debug.ko.debug
 	(cd ${WRKSRC}/module/ && make -f Makefile.bsd CC=${CC} ${MAKE_OPTS} clean all)
