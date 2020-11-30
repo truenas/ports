@@ -1,9 +1,9 @@
 diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
 new file mode 100644
-index 00000000000..4aa824f2a74
+index 00000000000..8790c22dc05
 --- /dev/null
 +++ b/source3/modules/vfs_shadow_copy_zfs.c
-@@ -0,0 +1,1943 @@
+@@ -0,0 +1,1947 @@
 +/* shadow_copy_zfs: a shadow copy module for ZFS
 + *
 + * Copyright (C) Andrew Tridgell   2007 (portions taken from shadow_copy_zfs)
@@ -79,6 +79,7 @@ index 00000000000..4aa824f2a74
 +
 +struct shadow_copy_zfs_config {
 +	struct smblibzfshandle	*libzp;
++	struct dataset_list	*ds_list;
 +
 +	/* Cache parameters */
 +	bool 			cache_enabled;
@@ -266,7 +267,6 @@ index 00000000000..4aa824f2a74
 +	bool is_same_dataset = false;
 +	double seconds = 0.0;
 +	time_t snap_time;
-+	size_t jlen = 0;
 +	TDB_DATA key = { .dptr = NULL, .dsize = 0 };
 +	struct shadow_copy_zfs_config *config = NULL;
 +	struct snapshot_list *snapshots = NULL;
@@ -277,7 +277,7 @@ index 00000000000..4aa824f2a74
 +	time(&snap_time);
 +	SMB_VFS_HANDLE_GET_DATA(handle, config, struct shadow_copy_zfs_config,
 +	    return NULL);
-+	ds = shadow_path_to_dataset(handle->conn->sconn->ds_list, path);
++	ds = shadow_path_to_dataset(config->ds_list, path);
 +	if (!ds) {
 +		return NULL;
 +	}
@@ -301,10 +301,6 @@ index 00000000000..4aa824f2a74
 +
 +		close_smbzhandle(zfsp);
 +		if (snapshots != NULL) {
-+			if (handle->conn->sconn->jid) {
-+				jlen = strlen(handle->conn->sconn->jail_path);
-+				snapshots->mountpoint += jlen;
-+			}
 +			snaplist_updated = put_cached_snapshot(key, snapshots,
 +							       config);
 +		} else {
@@ -480,7 +476,7 @@ index 00000000000..4aa824f2a74
 +	struct zfs_dataset *root = NULL;
 +	struct zfs_dataset *cwd = NULL;
 +
-+	root = handle->conn->sconn->ds_list->root;
++	root = priv->ds_list->root;
 +	cwd = priv->cwd->ds;
 +
 +	cwd_len = strlen(priv->cwd->base_name);
@@ -576,7 +572,7 @@ index 00000000000..4aa824f2a74
 +		TALLOC_FREE(priv->cwd->cp_relative);
 +		char *cp_relative = NULL;
 +		cwd_dataset_name = snapshot_mp_to_dataset(priv, handle, priv->cwd->base_name);
-+		priv->cwd->ds = shadow_path_to_dataset(handle->conn->sconn->ds_list,
++		priv->cwd->ds = shadow_path_to_dataset(priv->ds_list,
 +						       cwd_dataset_name);
 +		cp_relative = vss_to_normal_path(priv, handle, priv, shadow_mountpoint);
 +		priv->cwd->cp_relative = cp_relative;
@@ -678,7 +674,7 @@ index 00000000000..4aa824f2a74
 +	SMB_VFS_HANDLE_GET_DATA(handle, config, struct shadow_copy_zfs_config,
 +	    return NULL);
 +
-+	if (handle->conn->sconn->ds_list == NULL) {
++	if (config->ds_list == NULL) {
 +		DBG_ERR("Refusing to convert to shadow copy due to "
 +			"path not supporting snapshots\n");
 +		errno = EINVAL;
@@ -1301,8 +1297,10 @@ index 00000000000..4aa824f2a74
 +	ssize_t len, cpathlen, mplen, flen;
 +	int rv;
 +
++	SMB_VFS_HANDLE_GET_DATA(handle, config, struct shadow_copy_zfs_config,
++	    return -1);
 +
-+	if (handle->conn->sconn->ds_list == NULL) {
++	if (config->ds_list == NULL) {
 +		DBG_ERR("No dataset list present for share at path: %s\n",
 +			handle->conn->connectpath);
 +		return 0;
@@ -1317,9 +1315,6 @@ index 00000000000..4aa824f2a74
 +		errno = ENOMEM;
 +		return -1;
 +	}
-+
-+	SMB_VFS_HANDLE_GET_DATA(handle, config, struct shadow_copy_zfs_config,
-+	    return -1);
 +
 +	tmp_ctx = talloc_new(config);
 +
@@ -1840,7 +1835,16 @@ index 00000000000..4aa824f2a74
 +		errno = ENOMEM;
 +		return -1;
 +	}
-+	config->libzp = handle->conn->sconn->libzp;
++
++	ret = conn_zfs_init(handle->conn->sconn,
++			    handle->conn->connectpath,
++			    &config->libzp,
++			    &config->ds_list);
++
++	if (ret != 0) {
++		DBG_ERR("Failed to initialize zfs: %s\n", strerror(errno));
++		return -1;
++	}
 +
 +	enumval = lp_parm_enum(SNUM(handle->conn), "shadow",
 +			"cache_backend", cachebackend, SHADOW_MEMCACHE);
@@ -1949,10 +1953,10 @@ index 00000000000..4aa824f2a74
 +}
 diff --git a/source3/modules/vfs_tmprotect.c b/source3/modules/vfs_tmprotect.c
 new file mode 100644
-index 00000000000..032f9fd2173
+index 00000000000..f1a6f0eb116
 --- /dev/null
 +++ b/source3/modules/vfs_tmprotect.c
-@@ -0,0 +1,281 @@
+@@ -0,0 +1,289 @@
 +/* tmprotect: a module for automatic ZFS snapshot maintenance.
 + *
 + * Copyright (C) iXsystems Inc     2019
@@ -2075,6 +2079,7 @@ index 00000000000..032f9fd2173
 +	struct snapshot_list *to_delete = NULL;
 +	struct snapshot_entry *entry = NULL;
 +	struct snapshot_entry *del_entry = NULL;
++	struct dataset_list *dl = NULL;
 +	time_t curtime;
 +	double seconds = 0.0;
 +	ret = retention = min_snaps = 0;
@@ -2093,8 +2098,15 @@ index 00000000000..032f9fd2173
 +	}
 +	to_delete = talloc_zero(handle->conn, struct snapshot_list);
 +
-+	config->libzp = handle->conn->sconn->libzp;
++	ret = conn_zfs_init(handle->conn->sconn,
++			    handle->conn->connectpath,
++			    &config->libzp,
++			    &dl);
 +
++	if (ret != 0) {
++		DBG_ERR("Failed to initialize libzfs configuration: %s\n", strerror(errno));
++		return -1;
++	}
 +	/*
 +	 * Copy the connectpath to the config so that it's guaranteed
 +	 * to be available in the config destructor. It must be
@@ -2236,10 +2248,10 @@ index 00000000000..032f9fd2173
 +}
 diff --git a/source3/modules/vfs_zfs_fsrvp.c b/source3/modules/vfs_zfs_fsrvp.c
 new file mode 100644
-index 00000000000..7c9c96692a1
+index 00000000000..5c0d9840fb2
 --- /dev/null
 +++ b/source3/modules/vfs_zfs_fsrvp.c
-@@ -0,0 +1,240 @@
+@@ -0,0 +1,251 @@
 +/* zfs_fsrvp: a module implementing FSS using ZFS 
 + *
 + * Copyright (C) iXsystems Inc     2019
@@ -2272,6 +2284,7 @@ index 00000000000..7c9c96692a1
 +
 +struct zfs_fsrvp_config_data {
 +	struct smblibzfshandle *libzp;
++	struct dataset_list *dsl;
 +	char *dataset_name;
 +};
 +
@@ -2432,12 +2445,6 @@ index 00000000000..7c9c96692a1
 +	if (ret != 0) {
 +		return ret;
 +	}
-+	if (handle->conn->sconn->ds_list == NULL) {
-+		DBG_ERR("Failed to obtain dataset list for connect path. "
-+			"Path may not be a ZFS filesystem: %s\n",
-+			handle->conn->connectpath);
-+		return -1;
-+	}
 +
 +	config = talloc_zero(handle->conn, struct zfs_fsrvp_config_data);
 +	if (!config) {
@@ -2446,17 +2453,33 @@ index 00000000000..7c9c96692a1
 +		return -1;
 +	}
 +
-+	config->libzp = handle->conn->sconn->libzp;
++	ret = conn_zfs_init(handle->conn->sconn,
++			    handle->conn->connectpath,
++			    &config->libzp,
++			    &config->dsl);
++	if (ret != 0) {
++		DBG_ERR("Failed to obtain dataset list for connect path. "
++			"Path may not be a ZFS filesystem: %s\n",
++			handle->conn->connectpath);
++		return -1;
++	}
++
++	if (config->dsl == NULL) {
++		DBG_ERR("Failed to obtain dataset list for connect path. "
++			"Path may not be a ZFS filesystem: %s\n",
++			handle->conn->connectpath);
++		return -1;
++	}
 +
 +	config->dataset_name = talloc_strdup(handle->conn,
-+					     handle->conn->sconn->ds_list->root->dataset_name);
++					     config->dsl->root->dataset_name);
 +
-+	if ((strcmp(handle->conn->sconn->ds_list->root->mountpoint, handle->conn->connectpath) != 0) &&
++	if ((strcmp(config->dsl->root->mountpoint, handle->conn->connectpath) != 0) &&
 +	    (strlen(handle->conn->connectpath) > 15) &&
 +	    (strnstr(handle->conn->connectpath, "/.zfs/snapshot/", PATH_MAX) == NULL)) {
 +		DBG_ERR("Sharing a subdirectory inside a ZFS dataset "
 +			"is not permitted.: Connectpath: %s, Mountpoint: %s\n",
-+			handle->conn->connectpath, handle->conn->sconn->ds_list->root->mountpoint);
++			handle->conn->connectpath, config->dsl->root->mountpoint);
 +		errno = EPERM;
 +		return -1;
 +	}
