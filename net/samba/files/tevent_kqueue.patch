@@ -84,7 +84,7 @@ index 5365fce3533..db11c857bae 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..f0de9cf4629
+index 00000000000..b06a70356ea
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
 @@ -0,0 +1,1263 @@
@@ -681,7 +681,7 @@ index 00000000000..f0de9cf4629
 +	te->wrapper = NULL;
 +	te->event_ctx = NULL;
 +	talloc_set_destructor(te, NULL);
-+	te->busy = false;
++	TALLOC_FREE(te);
 +	return 0;
 +}
 +
