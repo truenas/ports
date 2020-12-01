@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 00000000000..0141037370b
+index 00000000000..b299ac60de0
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,1626 @@
+@@ -0,0 +1,1636 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -640,7 +640,16 @@ index 00000000000..0141037370b
 +
 +	strlcpy(tmp_path, path, sizeof(tmp_path));
 +	dl = talloc_zero(mem_ctx, struct dataset_list);
-+	for (dl->nentries = 0; dl->nentries <= depth; dl->nentries++) {
++
++	ds = smb_zfs_path_get_dataset(lz, mem_ctx, path, true, false);
++	if (ds == NULL) {
++		return NULL;
++	}
++
++	DLIST_ADD(dl->children, ds);
++	dl->nentries = 1;
++
++	for (; dl->nentries <= depth; dl->nentries++) {
 +		slashp = strrchr(tmp_path, '/');
 +		if (slashp == NULL) {
 +			DBG_ERR("Exiting at depth %zu", dl->nentries);
@@ -654,9 +663,10 @@ index 00000000000..0141037370b
 +		DLIST_ADD_END(dl->children, ds);
 +	}
 +	if (dl != NULL) {
-+		root = dl->children;
++		root = DLIST_TAIL(dl->children);
 +		DLIST_REMOVE(dl->children, root);
 +		dl->nentries--;
++		dl->root = root;
 +	}
 +	return dl;
 +}
@@ -2048,10 +2058,10 @@ index 00000000000..59ad02941ce
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..49fde863a0c
+index 00000000000..c294eb37045
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2540 @@
+@@ -0,0 +1,2563 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -4356,6 +4366,50 @@ index 00000000000..49fde863a0c
 +	return result;
 +}
 +
++
++static bool set_zfs_parameters(struct vfs_handle_struct *handle,
++			       const char *service, const char *user,
++			       struct ixnas_config_data *config)
++{
++	const char *base_quota_str = NULL;
++	if (config->dsl == NULL) {
++		config->props = talloc_zero(handle->conn, struct zfs_dataset_prop);
++		if (config->props == NULL) {
++			errno = ENOMEM;
++			return false;
++		}
++		DBG_INFO("Share connectpath is not ZFS dataset. "
++			 "Skipping configuration.\n");
++		config->zfs_space_enabled = false;
++		config->zfs_quota_enabled = false;
++		config->props->casesens = SMBZFS_SENSITIVE;
++		return true;
++	}
++	config->props = config->dsl->root->properties;
++
++	if (base_quota_str != NULL) {
++		config->base_user_quota = conv_str_size(base_quota_str);
++        }
++
++	if (config->base_user_quota) {
++		set_base_user_quota(handle, config, user);
++	}
++	if (config->props->casesens == SMBZFS_INSENSITIVE) {
++		DBG_INFO("ixnas: case insensitive dataset detected, "
++			 "automatically adjusting case sensitivity settings.\n");
++		lp_do_parameter(SNUM(handle->conn),
++				"case sensitive", "yes");
++		handle->conn->case_sensitive = True;
++	}
++	config->zfs_space_enabled = lp_parm_bool(SNUM(handle->conn),
++			"ixnas", "zfs_space_enabled", true);
++
++	config->zfs_quota_enabled = lp_parm_bool(SNUM(handle->conn),
++			"ixnas", "zfs_quota_enabled", true);
++
++	return true;
++}
++
 +/********************************************************************
 + Optimization. Load parameters on connect. This allows us to enable
 + and disable portions of the large vfs module on demand.
@@ -4364,10 +4418,9 @@ index 00000000000..49fde863a0c
 +			    const char *service, const char *user)
 +{
 +	struct ixnas_config_data *config = NULL;
-+	int ret, consens;
++	int ret;
 +	const char *homedir_quota = NULL;
-+	const char *base_quota_str = NULL;
-+	bool can_use_libzfs;
++	bool ok;
 +	acl_t zacl;
 +	int is_trivial = 0;
 +	config = talloc_zero(handle->conn, struct ixnas_config_data);
@@ -4406,26 +4459,15 @@ index 00000000000..49fde863a0c
 +			    &config->libzp,
 +			    &config->dsl);
 +
-+	if (config->dsl) {
-+		config->props = config->dsl->root->properties;
++	if (ret != 0) {
++		TALLOC_FREE(config);
++		return ret;
 +	}
 +
-+	base_quota_str = lp_parm_const_string(SNUM(handle->conn),
-+			"ixnas", "base_user_quota", NULL);
-+
-+	if (base_quota_str != NULL) {
-+		config->base_user_quota = conv_str_size(base_quota_str); 
-+        }
-+
-+	if (config->base_user_quota) {
-+		set_base_user_quota(handle, config, user);
-+	}
-+	if (config->props->casesens == SMBZFS_INSENSITIVE) {
-+		DBG_INFO("ixnas: case insensitive dataset detected, "
-+			 "automatically adjusting case sensitivity settings.\n");
-+		lp_do_parameter(SNUM(handle->conn),
-+				"case sensitive", "yes");
-+		handle->conn->case_sensitive = True;
++	ok = set_zfs_parameters(handle, service, user, config);
++	if (!ok) {
++		TALLOC_FREE(config);
++		return -1;
 +	}
 +#endif
 +
@@ -4518,15 +4560,6 @@ index 00000000000..49fde863a0c
 +	config->zfs_acl_chmod_enabled = lp_parm_bool(SNUM(handle->conn),
 +			"ixnas", "zfs_acl_chmod_enabled", false);
 +
-+	/* ZFS SPACE PARAMETERS */
-+#if HAVE_LIBZFS
-+	config->zfs_space_enabled = lp_parm_bool(SNUM(handle->conn),
-+			"ixnas", "zfs_space_enabled", true);
-+
-+	config->zfs_quota_enabled = lp_parm_bool(SNUM(handle->conn),
-+			"ixnas", "zfs_quota_enabled", true);
-+#endif
-+	
 +	ret = smbacl4_get_vfs_params(handle->conn, &config->nfs4_params);
 +	if (ret < 0) {
 +		TALLOC_FREE(config);
