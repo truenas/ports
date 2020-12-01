@@ -2248,7 +2248,7 @@ index 00000000000..f1a6f0eb116
 +}
 diff --git a/source3/modules/vfs_zfs_fsrvp.c b/source3/modules/vfs_zfs_fsrvp.c
 new file mode 100644
-index 00000000000..562ce7ea978
+index 00000000000..5c0d9840fb2
 --- /dev/null
 +++ b/source3/modules/vfs_zfs_fsrvp.c
 @@ -0,0 +1,251 @@
@@ -2472,14 +2472,14 @@ index 00000000000..562ce7ea978
 +	}
 +
 +	config->dataset_name = talloc_strdup(handle->conn,
-+					     conn->dsl->root->dataset_name);
++					     config->dsl->root->dataset_name);
 +
-+	if ((strcmp(conn->dsl->root->mountpoint, handle->conn->connectpath) != 0) &&
++	if ((strcmp(config->dsl->root->mountpoint, handle->conn->connectpath) != 0) &&
 +	    (strlen(handle->conn->connectpath) > 15) &&
 +	    (strnstr(handle->conn->connectpath, "/.zfs/snapshot/", PATH_MAX) == NULL)) {
 +		DBG_ERR("Sharing a subdirectory inside a ZFS dataset "
 +			"is not permitted.: Connectpath: %s, Mountpoint: %s\n",
-+			handle->conn->connectpath, handle->conn->sconn->ds_list->root->mountpoint);
++			handle->conn->connectpath, config->dsl->root->mountpoint);
 +		errno = EPERM;
 +		return -1;
 +	}

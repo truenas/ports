@@ -1,6 +1,6 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 00000000000..c5f04031b8c
+index 00000000000..0141037370b
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
 @@ -0,0 +1,1626 @@
@@ -52,13 +52,13 @@ index 00000000000..c5f04031b8c
 +
 +static struct smblibzfshandle *global_libzfs_handle = NULL;
 +
-+static struct share_datasetlist {
++static struct share_dataset_list {
 +	struct dataset_list *dl;
 +	char *connectpath;
-+	struct share_datasetlist *prev, *next;
++	struct share_dataset_list *prev, *next;
 +};
 +
-+static struct share_datasetlist *shareds = NULL;
++static struct share_dataset_list *shareds = NULL;
 +
 +static struct enum_list casesensitivity[] = {
 +	{SMBZFS_SENSITIVE, "sensitive"},
@@ -1521,7 +1521,7 @@ index 00000000000..c5f04031b8c
 +	if (shareds == NULL) {
 +		return out;
 +	}
-+	for (shareds; shareds != NULL; shareds = shareds->next) {
++	for (; shareds != NULL; shareds = shareds->next) {
 +		if (strcmp(connectpath, shareds->connectpath) == 0) {
 +			out = shareds->dl;
 +			break;
@@ -1581,7 +1581,7 @@ index 00000000000..c5f04031b8c
 +	if (dl != NULL) {
 +		*plibzp = global_libzfs_handle;
 +		*pdsl = dl;
-+		return;
++		return 0;
 +	}
 +
 +	get_smbzhandle(global_libzfs_handle, mem_ctx, connectpath, &conn_zfsp);
@@ -1618,7 +1618,7 @@ index 00000000000..c5f04031b8c
 +		return 0;
 +	}
 +
-+	dl = zhandle_list_children(mem_ctx, zhandle_ext, false);
++	dl = zhandle_list_children(mem_ctx, conn_zfsp, false);
 +	if (dl == NULL) {
 +		return 0;
 +	}
@@ -2048,10 +2048,10 @@ index 00000000000..59ad02941ce
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..af38c67c76e
+index 00000000000..49fde863a0c
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2576 @@
+@@ -0,0 +1,2540 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -2106,6 +2106,7 @@ index 00000000000..af38c67c76e
 +struct ixnas_config_data {
 +	struct smbacl4_vfs_params nfs4_params;
 +	struct smblibzfshandle *libzp;
++	struct dataset_list *dsl;
 +	bool posix_rename;
 +	bool dosattrib_xattr;
 +	bool zfs_acl_enabled;
@@ -4075,34 +4076,19 @@ index 00000000000..af38c67c76e
 +				  const char *user)
 +{
 +	bool ret = 0;
-+	int naces, rv;
-+	char rp[PATH_MAX] = { 0 };
-+	char *parent;
-+	const char *base;
-+	acl_t zacl, new_acl;
-+	TALLOC_CTX *tmp_ctx = NULL;
++	int rv;
++	char *parent = NULL;
++	acl_t parent_acl, new_acl;
++	TALLOC_CTX *tmp_ctx = talloc_stackframe();
 +	struct smblibzfshandle *libzp = NULL;
++	struct dataset_list *ds_list = NULL;
++	struct zfs_dataset *ds = NULL;
 +
 +	if (access(handle->conn->connectpath, F_OK) == 0) {
 +		DBG_INFO("Home directory already exists. Skipping dataset creation\n");
-+
-+		return 0;
-+	}
-+	if (errno != ENOENT) {
-+		DBG_ERR("%s: access() failed with error: %s\n",
-+			handle->conn->connectpath, strerror(errno));
-+		return -1;
-+	}
-+
-+	tmp_ctx = talloc_stackframe();
-+
-+	if (!parent_dirname(tmp_ctx, handle->conn->connectpath, &parent, &base)) {
 +		TALLOC_FREE(tmp_ctx);
-+		return -1;
++		return ret;
 +	}
-+
-+	DBG_INFO("Preparing to create dataset (%s) with parentdir (%s) with quota (%s)\n", 
-+		parent, base, config->homedir_quota);
 +
 +	rv = get_smblibzfs_handle(tmp_ctx, &libzp);
 +	if (rv != 0) {
@@ -4110,38 +4096,39 @@ index 00000000000..af38c67c76e
 +			strerror(errno));
 +		return -1;
 +	}
++	rv = smb_zfs_create_dataset(tmp_ctx, libzp, handle->conn->connectpath,
++				    config->homedir_quota, &ds_list, true);
++	if (rv !=0) {
++		TALLOC_FREE(tmp_ctx);
++		return -1;
++	}
 +
-+	if (realpath(parent, rp) == NULL ){
-+		if (errno != ENOENT) {
-+			TALLOC_FREE(tmp_ctx);
-+			DBG_ERR("%s: realpath() failed: %s\n", parent, strerror(errno));
-+			return -1;
-+		}
-+		DBG_ERR("Parent directory does not exist, attempting to create parent.\n");
-+		char *grandparent;
-+		const char *parent_relpath;
-+		if (!parent_dirname(tmp_ctx, parent, &grandparent, &parent_relpath)) {
++	for (ds = ds_list->children; ds; ds = ds->next) {
++		ret = parent_dirname(tmp_ctx, ds->mountpoint, &parent, NULL);
++		if (!ret)  {
++			DBG_ERR("Failed to get parent directory name for %s\n",
++				ds->mountpoint);
 +			TALLOC_FREE(tmp_ctx);
 +			return -1;
 +		}
-+		if (smb_zfs_create_child_dataset(libzp, grandparent, parent_relpath, NULL) < 0) {
-+			DBG_ERR("Failed to auto-create grandparent dataset\n");
-+			TALLOC_FREE(tmp_ctx);
-+			return -1;
-+		}
-+		if ((zacl = acl_get_file(grandparent, ACL_TYPE_NFS4)) == NULL) {
++		parent_acl = acl_get_file(parent, ACL_TYPE_NFS4);
++		if (parent_acl == NULL) {
 +			DBG_ERR("ixnas: acl_get_file() failed for %s: %s\n",
 +				parent, strerror(errno));
 +			TALLOC_FREE(tmp_ctx);
 +			return -1;
 +		}
-+		if ((new_acl = calculate_inherited_acl(zacl)) == NULL) {
-+			acl_free(zacl);
++
++		new_acl = calculate_inherited_acl(parent_acl);
++		if (new_acl == NULL) {
++			acl_free(parent_acl);
 +			TALLOC_FREE(tmp_ctx);
 +			return -1;
 +		}
-+		acl_free(zacl);
-+		if (acl_set_file(parent, ACL_TYPE_NFS4, new_acl) < 0) {
++
++		acl_free(parent_acl);
++		rv = acl_set_file(ds->mountpoint, ACL_TYPE_NFS4, new_acl);
++		if (rv < 0) {
 +			DBG_ERR("ixnas: acl_set_file() failed for %s: %s\n",
 +				handle->conn->connectpath, strerror(errno));
 +			acl_free(new_acl);
@@ -4149,48 +4136,25 @@ index 00000000000..af38c67c76e
 +			return -1;
 +		}
 +		acl_free(new_acl);
++		TALLOC_FREE(parent);
 +	}
-+
-+	if (smb_zfs_create_child_dataset(libzp, parent, base, config->homedir_quota) < 0) {
-+		DBG_ERR("Failed to auto-create connectpath dataset\n");
-+		TALLOC_FREE(tmp_ctx);
-+		return -1;
-+	}
-+	if ((zacl = acl_get_file(parent, ACL_TYPE_NFS4)) == NULL) {
-+		DBG_ERR("ixnas: acl_get_file() failed for %s: %s\n",
-+			parent, strerror(errno));
-+		TALLOC_FREE(tmp_ctx);
-+		return -1;
-+	}
-+	if ((new_acl = calculate_inherited_acl(zacl)) == NULL) {
-+		acl_free(zacl);
-+		TALLOC_FREE(tmp_ctx);
-+		return -1;
-+	}
-+	acl_free(zacl);
-+
-+	if (acl_set_file(handle->conn->connectpath, ACL_TYPE_NFS4, new_acl) < 0) {
-+		DBG_ERR("ixnas: acl_set_file() failed for %s: %s\n",
-+			handle->conn->connectpath, strerror(errno));
-+		acl_free(new_acl);
-+		TALLOC_FREE(tmp_ctx);
-+		return -1;
-+	}
-+	acl_free(new_acl);
 +
 +	if (lp_parm_bool(SNUM(handle->conn), "ixnas", "chown_homedir", true)) {
 +		struct passwd *current_user = Get_Pwnam_alloc(tmp_ctx, user);
 +		if ( !current_user ) {
-+			DBG_ERR("Get_Pwnam_alloc failed for (%s).\n", user); 
++			DBG_ERR("Get_Pwnam_alloc failed for (%s).\n", user);
 +			TALLOC_FREE(tmp_ctx);
 +			return -1;
 +		}
-+		if (chown(handle->conn->connectpath, current_user->pw_uid, current_user->pw_gid) < 0) {
++		rv = chown(handle->conn->connectpath,
++			   current_user->pw_uid,
++			   current_user->pw_gid);
++		if (rv < 0) {
 +			DBG_ERR("Failed to chown (%s) to (%u:%u)\n",
 +				handle->conn->connectpath, current_user->pw_uid, getegid() );
 +			ret = -1;
-+		}	
-+	} 
++		}
++	}
 +	TALLOC_FREE(tmp_ctx);
 +	return ret;
 +}
@@ -4440,7 +4404,7 @@ index 00000000000..af38c67c76e
 +	ret = conn_zfs_init(handle->conn->sconn,
 +			    handle->conn->connectpath,
 +			    &config->libzp,
-+			    &config->dls);
++			    &config->dsl);
 +
 +	if (config->dsl) {
 +		config->props = config->dsl->root->properties;
