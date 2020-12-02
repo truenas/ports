@@ -84,10 +84,10 @@ index 5365fce3533..db11c857bae 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..b06a70356ea
+index 00000000000..425612047fe
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
-@@ -0,0 +1,1263 @@
+@@ -0,0 +1,1325 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -126,6 +126,7 @@ index 00000000000..b06a70356ea
 +#include "tevent.h"
 +#include "tevent_internal.h"
 +#include "tevent_util.h"
++#include "tevent_kqueue.h"
 +
 +/* struct tevent_fd additional flags */
 +#define KQUEUE_EXTRA_KEVENT_DISCHARGED	0x0001
@@ -1105,6 +1106,67 @@ index 00000000000..b06a70356ea
 +	kqueue_add_event(kqueue_ev, fde);
 +}
 +
++
++void kqueue_update_timer(struct tevent_timer *te, struct timeval next_event)
++{
++	struct kqueue_event_context *kqueue_ev = NULL;
++	struct kevent event;
++	int64_t usec_time;
++	uint fflags = NOTE_USECONDS;
++	int ret;
++
++	kqueue_ev = talloc_get_type_abort(te->event_ctx->additional_data,
++					  struct kqueue_event_context);
++
++	usec_time = ((next_event.tv_sec) * 1000000) + next_event.tv_usec;
++
++	if (!TIMEVAL_IS_ZERO(next_event)) {
++		fflags |= NOTE_ABSTIME;
++	}
++
++	EV_SET(&event,				//kev
++	       (uintptr_t)te,			//ident
++	       EVFILT_TIMER,			//filter
++	       EV_ADD|EV_ONESHOT,		//flags
++	       fflags,				//fflags
++	       usec_time,			//data
++	       te);				//udata
++
++	ret = kevent(kqueue_ev->kqueue_fd, &event, 1, NULL, 0, NULL);
++	if (ret != 0) {
++		if (errno == EBADF) {
++			/*
++			 * We may have forked and need to re-init
++			 * event context.
++			 */
++			if (kqueue_ev->busy) {
++				return;
++			}
++			kqueue_check_reopen(kqueue_ev);
++			ret = kevent(kqueue_ev->kqueue_fd,
++				     &event, 1, NULL, 0, NULL);
++			if (ret != 0) {
++				tevent_debug(te->event_ctx, TEVENT_DEBUG_FATAL,
++					"failed to add timed kevent for [%s]: %s\n",
++					te->handler_name, strerror(errno));
++				kqueue_panic(kqueue_ev, "failed to add timer:", false);
++			}
++		}
++		else if (errno == ENOMEM) {
++			tevent_debug(te->event_ctx, TEVENT_DEBUG_FATAL,
++				"Attempt to add timed kevent for [%s] failed with ENOMEM. "
++				"This may indicate that the maximum number of timers has "
++				"been exceeded. This maximum is configurable via the "
++				"kern.kq_calloutmax sysctl.\n", te->handler_name);
++		}
++		else {
++			tevent_debug(te->event_ctx, TEVENT_DEBUG_FATAL,
++				"failed to add timed kevent for [%s]: %s\n",
++				te->handler_name, strerror(errno));
++		}
++	}
++}
++
 +struct tevent_timer *kqueue_event_add_timer(struct tevent_context *ev,
 +					    TALLOC_CTX *mem_ctx,
 +					    struct timeval next_event,
@@ -1351,6 +1413,38 @@ index 00000000000..b06a70356ea
 +{
 +	return tevent_register_backend("kqueue", &kqueue_event_ops);
 +}
+diff --git a/lib/tevent/tevent_kqueue.h b/lib/tevent/tevent_kqueue.h
+new file mode 100644
+index 00000000000..b1ac542597f
+--- /dev/null
++++ b/lib/tevent/tevent_kqueue.h
+@@ -0,0 +1,26 @@
++/*
++   Unix SMB/CIFS implementation.
++
++   main select loop and event handling - kqueue implementation
++
++   Copyright (C) iXsystems		2020
++
++     ** NOTE! The following LGPL license applies to the tevent
++     ** library. This does NOT imply that all of Samba is released
++     ** under the LGPL
++
++   This library is free software; you can redistribute it and/or
++   modify it under the terms of the GNU Lesser General Public
++   License as published by the Free Software Foundation; either
++   version 3 of the License, or (at your option) any later version.
++
++   This library is distributed in the hope that it will be useful,
++   but WITHOUT ANY WARRANTY; without even the implied warranty of
++   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++   Lesser General Public License for more details.
++
++   You should have received a copy of the GNU Lesser General Public
++   License along with this library; if not, see <http://www.gnu.org/licenses/>.
++*/
++
++void kqueue_update_timer(struct tevent_timer *te, struct timeval next_event);
 diff --git a/lib/tevent/tevent_standard.c b/lib/tevent/tevent_standard.c
 index 38720204e02..6ad32edb9a7 100644
 --- a/lib/tevent/tevent_standard.c
@@ -1394,10 +1488,18 @@ index 38720204e02..6ad32edb9a7 100644
  		return ret;
  	}
 diff --git a/lib/tevent/tevent_timed.c b/lib/tevent/tevent_timed.c
-index a78d286a187..a6fc65602fc 100644
+index a78d286a187..3dae23534f8 100644
 --- a/lib/tevent/tevent_timed.c
 +++ b/lib/tevent/tevent_timed.c
-@@ -132,7 +132,7 @@ struct timeval tevent_timeval_current_ofs(uint32_t secs, uint32_t usecs)
+@@ -30,6 +30,7 @@
+ #include "tevent.h"
+ #include "tevent_internal.h"
+ #include "tevent_util.h"
++#include "tevent_kqueue.h"
+ 
+ /**
+   compare two timeval structures. 
+@@ -132,7 +133,7 @@ struct timeval tevent_timeval_current_ofs(uint32_t secs, uint32_t usecs)
  /*
    destroy a timed event
  */
@@ -1406,6 +1508,28 @@ index a78d286a187..a6fc65602fc 100644
  {
  	if (te->destroyed) {
  		tevent_common_check_double_free(te, "tevent_timer double free");
+@@ -301,6 +302,13 @@ struct tevent_timer *tevent_common_add_timer_v2(struct tevent_context *ev,
+ 
+ void tevent_update_timer(struct tevent_timer *te, struct timeval next_event)
+ {
++/*
++ * At present, tevent_ops lacks an update_timer() op. This will need to be
++ * added in the future. For now, make this function a wrapper for
++ * updating the timed kevent.
++ */
++	return kqueue_update_timer(te, next_event);
++#if 0
+ 	struct tevent_context *ev = te->event_ctx;
+ 
+ 	if (ev->last_zero_timer == te) {
+@@ -315,6 +323,7 @@ void tevent_update_timer(struct tevent_timer *te, struct timeval next_event)
+ 	 * that should know about immediates.
+ 	 */
+ 	tevent_common_insert_timer(ev, te, false);
++#endif
+ }
+ 
+ int tevent_common_invoke_timer_handler(struct tevent_timer *te,
 diff --git a/lib/tevent/wscript b/lib/tevent/wscript
 index 93af416f583..92882cad476 100644
 --- a/lib/tevent/wscript
