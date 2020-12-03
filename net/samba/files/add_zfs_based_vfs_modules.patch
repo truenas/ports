@@ -1,9 +1,9 @@
 diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
 new file mode 100644
-index 00000000000..8790c22dc05
+index 00000000000..832007c312c
 --- /dev/null
 +++ b/source3/modules/vfs_shadow_copy_zfs.c
-@@ -0,0 +1,1947 @@
+@@ -0,0 +1,1949 @@
 +/* shadow_copy_zfs: a shadow copy module for ZFS
 + *
 + * Copyright (C) Andrew Tridgell   2007 (portions taken from shadow_copy_zfs)
@@ -681,7 +681,9 @@ index 00000000000..8790c22dc05
 +		return NULL;
 +	}
 +	if (config->cache_enabled && shadow_mp == NULL && !ISDOT(fname)) {
-+		tsname = talloc_asprintf(tmp_ctx, "%ld/%s", tval.tv_sec, fname);
++		tsname = talloc_asprintf(tmp_ctx, "%d/%ld/%s",
++					 SNUM(handle->conn),
++					 tval.tv_sec, fname);
 +		key.dptr = discard_const_p(uint8_t, tsname);
 +		key.dsize = strlen(tsname);
 +		ret = snapcache_get(tmp_ctx, handle, config, key);
