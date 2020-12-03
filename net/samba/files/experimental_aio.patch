@@ -1,9 +1,9 @@
 diff --git a/source3/modules/vfs_aio_fbsd.c b/source3/modules/vfs_aio_fbsd.c
 new file mode 100644
-index 00000000000..be469dd5f0f
+index 00000000000..be98581c876
 --- /dev/null
 +++ b/source3/modules/vfs_aio_fbsd.c
-@@ -0,0 +1,200 @@
+@@ -0,0 +1,242 @@
 +/*
 + * Copyright (C) iXsystems 2020
 + *
@@ -24,6 +24,7 @@ index 00000000000..be469dd5f0f
 +
 +#include "includes.h"
 +#include "lib/util/tevent_unix.h"
++#include "lib/tevent/tevent_kqueue.h"
 +#include <sys/event.h>
 +#include <aio.h>
 +
@@ -97,13 +98,17 @@ index 00000000000..be469dd5f0f
 +					     void *data,
 +					     size_t n, off_t offset)
 +{
++	int ret;
 +	struct tevent_req *req = NULL;
++	struct tevent_aiocb *taiocbp = NULL;
 +	struct aiocb *iocbp = NULL;
 +
-+	req = tevent_req_create(mem_ctx, &iocbp, struct aiocb);
++	req = tevent_req_create(mem_ctx, &taiocbp, struct tevent_aiocb);
 +	if (req == NULL) {
 +		return NULL;
 +	}
++	taiocbp->iocbp = talloc_zero(req, struct aiocb);
++	iocbp = taiocbp->iocbp;
 +
 +	iocbp->aio_fildes = fsp->fh->fd;
 +	iocbp->aio_offset = offset;
@@ -113,25 +118,30 @@ index 00000000000..be469dd5f0f
 +	iocbp->aio_sigevent.sigev_notify = SIGEV_KEVENT;
 +	iocbp->aio_nbytes = n;
 +
-+	tevent_add_fd(ev, req, -1, TEVENT_FD_AIO_READ, NULL, req);
 +	tevent_req_set_cleanup_fn(req, vfs_aio_fbsd_cleanup);
++	ret = tevent_add_aio_read(ev, req);
++	if (ret != 0) {
++		if (errno == EAGAIN) {
++			taiocbp->rv = pread(fsp->fh->fd, data, n, offset);
++			if (taiocbp->rv == -1) {
++				taiocbp->saved_errno = errno;
++			}
++			tevent_req_done(req);
++			return tevent_req_post(req, ev);
++		}
++		tevent_req_error(req, errno);
++		return tevent_req_post(req, ev);
++	}
 +	return req;
 +}
 +
 +static ssize_t vfs_aio_fbsd_common_recv(struct tevent_req *req,
 +					struct vfs_aio_state *vfs_aio_state)
 +{
-+	uint64_t err = 0;
-+	enum tevent_req_state state;
-+	tevent_req_is_error(req, &state, &err);
-+	if (err & 0xFFFF) {
-+		DBG_ERR("aio request failed: %s\n", strerror(err));
-+		vfs_aio_state->error = err;
-+		return -1;
-+	}
-+	vfs_aio_state->error = 0;
-+	tevent_req_received(req);
-+	return (err >> 16);
++	struct tevent_aiocb *taiocbp = NULL;
++	taiocbp = tevent_req_data(req, struct tevent_aiocb);
++	vfs_aio_state->error = taiocbp->saved_errno;
++	return taiocbp->rv;
 +}
 +
 +static struct tevent_req *vfs_aio_fbsd_pwrite_send(struct vfs_handle_struct *handle,
@@ -141,13 +151,17 @@ index 00000000000..be469dd5f0f
 +					     const void *data,
 +					     size_t n, off_t offset)
 +{
++	int ret;
 +	struct tevent_req *req = NULL;
++	struct tevent_aiocb *taiocbp = NULL;
 +	struct aiocb *iocbp = NULL;
 +
-+	req = tevent_req_create(mem_ctx, &iocbp, struct aiocb);
++	req = tevent_req_create(mem_ctx, &taiocbp, struct tevent_aiocb);
 +	if (req == NULL) {
 +		return NULL;
 +	}
++	taiocbp->iocbp = talloc_zero(req, struct aiocb);
++	iocbp = taiocbp->iocbp;
 +	iocbp->aio_fildes = fsp->fh->fd;
 +	iocbp->aio_offset = offset;
 +	iocbp->aio_buf = discard_const(data);
@@ -156,8 +170,19 @@ index 00000000000..be469dd5f0f
 +	iocbp->aio_sigevent.sigev_notify = SIGEV_KEVENT;
 +	iocbp->aio_nbytes = n;
 +
-+	tevent_add_fd(ev, req, -1, TEVENT_FD_AIO_WRITE, NULL, req);
-+	tevent_req_set_cleanup_fn(req, vfs_aio_fbsd_cleanup);
++	ret = tevent_add_aio_write(ev, req);
++	if (ret != 0) {
++		if (errno == EAGAIN) {
++			taiocbp->rv = pwrite(fsp->fh->fd, data, n, offset);
++			if (taiocbp->rv == -1) {
++				taiocbp->saved_errno = errno;
++			}
++			tevent_req_done(req);
++			return tevent_req_post(req, ev);
++		}
++		tevent_req_error(req, errno);
++		return tevent_req_post(req, ev);
++	}
 +	return req;
 +}
 +
@@ -166,20 +191,37 @@ index 00000000000..be469dd5f0f
 +					     struct tevent_context *ev,
 +					     struct files_struct *fsp)
 +{
++	int ret;
 +	struct tevent_req *req = NULL;
++	struct tevent_aiocb *taiocbp = NULL;
 +	struct aiocb *iocbp = NULL;
 +
-+	req = tevent_req_create(mem_ctx, &iocbp, struct aiocb);
++	req = tevent_req_create(mem_ctx, &taiocbp, struct tevent_aiocb);
 +	if (req == NULL) {
 +		return NULL;
 +	}
++	taiocbp->iocbp = talloc_zero(req, struct aiocb);
++	iocbp = taiocbp->iocbp;
 +	iocbp->aio_fildes = fsp->fh->fd;
 +	iocbp->aio_sigevent.sigev_value.sival_ptr = req;
 +	iocbp->aio_sigevent.sigev_notify = SIGEV_KEVENT;
 +	iocbp->aio_sigevent.sigev_notify_kevent_flags = EV_ONESHOT;
 +
-+	tevent_add_fd(ev, req, -1, TEVENT_FD_AIO_FSYNC, NULL, req);
 +	tevent_req_set_cleanup_fn(req, vfs_aio_fbsd_cleanup);
++	tevent_add_aio_fsync(ev, req);
++	ret = tevent_add_aio_read(ev, req);
++	if (ret != 0) {
++		if (errno == EAGAIN) {
++			taiocbp->rv = fsync(fsp->fh->fd);
++			if (taiocbp->rv == -1) {
++				taiocbp->saved_errno = errno;
++			}
++			tevent_req_done(req);
++			return tevent_req_post(req, ev);
++		}
++		tevent_req_error(req, errno);
++		return tevent_req_post(req, ev);
++	}
 +	return req;
 +}
 +
