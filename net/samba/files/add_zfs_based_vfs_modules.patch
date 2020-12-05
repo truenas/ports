@@ -1,9 +1,9 @@
 diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
 new file mode 100644
-index 00000000000..d13c28bfcdc
+index 00000000000..cb9f92aaa4e
 --- /dev/null
 +++ b/source3/modules/vfs_shadow_copy_zfs.c
-@@ -0,0 +1,1992 @@
+@@ -0,0 +1,1926 @@
 +/* shadow_copy_zfs: a shadow copy module for ZFS
 + *
 + * Copyright (C) Andrew Tridgell   2007 (portions taken from shadow_copy_zfs)
@@ -366,109 +366,36 @@ index 00000000000..d13c28bfcdc
 +static char *resolve_path(TALLOC_CTX *mem_ctx,
 +			  vfs_handle_struct *handle,
 +			  struct shadow_copy_zfs_config *priv,
-+			  const char *name)
++			  const char *name,
++			  bool *is_shadow_path)
 +{
 +	char *new_path = NULL;
-+	struct smb_filename *cwd_fname = NULL;
-+
-+	/*path is relative to cwd*/
 +	if (name[0] != '/') {
-+		if (priv->cwd->cp_relative) {
-+			/*
-+			 * If "name" is a dot "." or if it is an empty string,
-+			 * then we construct the path based on the connectpath
-+			 * and any stored connectpath-relative cwd component.
-+			 */
-+			char *tmp_cwd = NULL;
-+			if (priv->cwd->cp_relative[0] != '\0') {
-+				tmp_cwd = talloc_strdup_append(priv->cwd->cp_relative, "/");
-+			}
-+			else {
-+				tmp_cwd = talloc_strdup(mem_ctx, "");
-+			}
-+			if (ISDOT(name) || name[0] == '\0') {
-+				if (tmp_cwd[0] != '\0') {
-+					new_path = talloc_asprintf(mem_ctx,
-+								   "%s/%s",
-+								   handle->conn->connectpath,
-+								   tmp_cwd);
-+				}
-+				else {
-+					new_path = talloc_strdup(mem_ctx,
-+								 handle->conn->connectpath);
-+				}
-+			}
-+			/*
-+			 * If filename begins with "./", then strip these
-+			 * characters before piecing together absolute path.
-+			 */
-+			else if (strncmp(name, "./", 2) == 0) {
-+				new_path = talloc_asprintf(mem_ctx,
-+							   "%s/%s%s",
-+							   handle->conn->connectpath,
-+							   tmp_cwd,
-+							   (name + 2));
-+			}
-+			else {
-+				new_path = talloc_asprintf(mem_ctx,
-+							   "%s/%s%s",
-+							   handle->conn->connectpath,
-+							   tmp_cwd,
-+							   name);
-+			}
-+			TALLOC_FREE(tmp_cwd);
-+			DBG_INFO("Constructed absolute path [%s] from: "
-+				 "connectpath: %s, cwd: %s, fname: %s\n",
-+				 new_path, handle->conn->connectpath,
-+				 priv->cwd->cp_relative, name);
++		char *scp = priv->shadow_connectpath;
++		char *cwd = handle->conn->cwd_fsp->fsp_name->base_name;
++		if (scp && (strncmp(cwd, scp, strlen(scp)) == 0)) {
++			*is_shadow_path = true;
 +		}
-+		/* There is no cached offset from cwd so grab it uncached. */
++		if (ISDOT(name) || name[0] == '\0') {
++			new_path = talloc_strdup(mem_ctx, cwd);
++		}
++		else if (strncmp(name, "./", 2) == 0) {
++			new_path = talloc_asprintf(mem_ctx, "%s/%s", cwd, (name + 2));
++		}
 +		else {
-+			char *tmp_path = NULL;
-+			char *scp = priv->shadow_connectpath;
-+			cwd_fname = SMB_VFS_NEXT_GETWD(handle, mem_ctx);
-+			SMB_ASSERT(cwd_fname != NULL);
-+			if (scp && (strncmp(cwd_fname->base_name, scp, strlen(scp)) == 0)) {
-+				tmp_path = talloc_asprintf(mem_ctx, "%s/%s",
-+							   handle->conn->connectpath,
-+							   cwd_fname->base_name + strlen(scp));
-+			}
-+			else {
-+				tmp_path = talloc_strdup(mem_ctx, cwd_fname->base_name);
-+			}
-+			if (!ISDOT(name) && (name[0] != '\0')) {
-+				new_path = talloc_asprintf(mem_ctx,
-+							   "%s/%s",
-+							   tmp_path,
-+							   name);
-+			}
-+			else {
-+				new_path = talloc_strdup(mem_ctx, tmp_path);
-+			}
-+			DBG_INFO("Constructed absolute path [%s] from: "
-+				 "connectpath: %s, cwd: %s, fname: %s\n",
-+				 new_path, handle->conn->connectpath,
-+				 cwd_fname->base_name, name);
-+			TALLOC_FREE(cwd_fname);
-+			TALLOC_FREE(tmp_path);
-+		}
-+		if (new_path == NULL) {
-+			/* talloc failure. */
-+			smb_panic("talloc failed\n");
++			new_path = talloc_asprintf(mem_ctx, "%s/%s", cwd, name);
 +		}
 +	}
-+	/* name is already absolute and within the connectpath directory. Return it. */
-+	else if (strncmp(handle->conn->connectpath, name, strlen(handle->conn->connectpath)) == 0) {
++	else if (strncmp(handle->conn->connectpath,
++			 name, strlen(handle->conn->connectpath)) == 0) {
 +		new_path = talloc_strdup(mem_ctx, name);
 +	}
-+	/*convert name to be connectpath relative */
 +	else {
 +		new_path = talloc_asprintf(mem_ctx,
 +					   "%s%s",
 +					   handle->conn->connectpath,
 +					   name);
 +	}
-+
 +	return new_path;
 +}
 +
@@ -690,7 +617,7 @@ index 00000000000..d13c28bfcdc
 +	char *cache_entry = NULL;
 +	char *tsname = NULL;
 +	char *res_fname = NULL;
-+	char rp[PATH_MAX] = { 0 };
++	bool already_converted = false;
 +	TDB_DATA key = { .dptr = NULL, .dsize = 0 };
 +
 +	mplen = flen = clen = 0;
@@ -720,14 +647,21 @@ index 00000000000..d13c28bfcdc
 +		}
 +	}
 +
-+	res_fname = resolve_path(tmp_ctx, handle, config, fname);
++	res_fname = resolve_path(tmp_ctx, handle, config, fname, &already_converted);
 +	if (res_fname == NULL) {
 +		TALLOC_FREE(tmp_ctx);
++		DBG_ERR("Failed to resolve %s to an absolute path.\n", fname);
 +		return NULL;
++	}
++	if (already_converted) {
++		ret = talloc_strdup(talloc_tos(), res_fname);
++		TALLOC_FREE(tmp_ctx);
++		return ret;
 +	}
 +
 +	normalized_fname = canonicalize_absolute_path(tmp_ctx, res_fname);
 +	if (normalized_fname == NULL) {
++		DBG_ERR("Failed to canonicalize %s\n", res_fname);
 +		TALLOC_FREE(tmp_ctx);
 +		return NULL;
 +	}
@@ -1281,14 +1215,14 @@ index 00000000000..d13c28bfcdc
 +{
 +	struct smb_filename *ret = NULL;
 +	int saved_errno;
-+	char *conv;
-+	struct smb_filename *conv_smb_fname;
++	char *conv = NULL;
++	struct smb_filename *conv_smb_fname = NULL;
 +
 +	if (shadow_copy_zfs_match_name(smb_fname)) {
 +		conv = convert_shadow_zfs_name(
 +		    handle, smb_fname->base_name, smb_fname->vss_tval, True);
 +		if (conv == NULL) {
-+			TALLOC_FREE(conv);
++			errno = ENOENT;
 +			return NULL;
 +		}
 +		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
@@ -1298,18 +1232,18 @@ index 00000000000..d13c28bfcdc
 +						     smb_fname->flags);
 +		if (conv_smb_fname == NULL) {
 +			TALLOC_FREE(conv);
++			errno = ENOMEM;
 +			return NULL;
 +		}
-+
 +		ret = SMB_VFS_NEXT_REALPATH(handle, ctx, conv_smb_fname);
 +		saved_errno = errno;
 +		TALLOC_FREE(conv);
 +		TALLOC_FREE(conv_smb_fname);
 +		errno = saved_errno;
 +		return ret;
-+	} else {
-+		return SMB_VFS_NEXT_REALPATH(handle, ctx, smb_fname);
 +	}
++
++	return SMB_VFS_NEXT_REALPATH(handle, ctx, smb_fname);
 +}
 +
 +static int shadow_copy_zfs_get_shadow_copy_zfs_data(vfs_handle_struct *handle,
