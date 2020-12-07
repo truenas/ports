@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 00000000000..b299ac60de0
+index 00000000000..27ac6f05c40
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,1636 @@
+@@ -0,0 +1,1638 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -614,6 +614,7 @@ index 00000000000..b299ac60de0
 +	if (rv != 0) {
 +		DBG_ERR("Failed to mount dataset [%s] after dataset "
 +			"creation: %s\n", to_create, strerror(errno));
++		goto failure;
 +	}
 +	if (quota != NULL) {
 +		rv = zfs_prop_set(new, "quota", quota);
@@ -622,6 +623,7 @@ index 00000000000..b299ac60de0
 +				quota, strerror(errno));
 +		}
 +	}
++failure:
 +	zfs_close(new);
 +	return rv;
 +}
