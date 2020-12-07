@@ -1,9 +1,9 @@
 diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
 new file mode 100644
-index 00000000000..4aa824f2a74
+index 00000000000..cb9f92aaa4e
 --- /dev/null
 +++ b/source3/modules/vfs_shadow_copy_zfs.c
-@@ -0,0 +1,1943 @@
+@@ -0,0 +1,1926 @@
 +/* shadow_copy_zfs: a shadow copy module for ZFS
 + *
 + * Copyright (C) Andrew Tridgell   2007 (portions taken from shadow_copy_zfs)
@@ -79,6 +79,7 @@ index 00000000000..4aa824f2a74
 +
 +struct shadow_copy_zfs_config {
 +	struct smblibzfshandle	*libzp;
++	struct dataset_list	*ds_list;
 +
 +	/* Cache parameters */
 +	bool 			cache_enabled;
@@ -266,7 +267,6 @@ index 00000000000..4aa824f2a74
 +	bool is_same_dataset = false;
 +	double seconds = 0.0;
 +	time_t snap_time;
-+	size_t jlen = 0;
 +	TDB_DATA key = { .dptr = NULL, .dsize = 0 };
 +	struct shadow_copy_zfs_config *config = NULL;
 +	struct snapshot_list *snapshots = NULL;
@@ -277,7 +277,7 @@ index 00000000000..4aa824f2a74
 +	time(&snap_time);
 +	SMB_VFS_HANDLE_GET_DATA(handle, config, struct shadow_copy_zfs_config,
 +	    return NULL);
-+	ds = shadow_path_to_dataset(handle->conn->sconn->ds_list, path);
++	ds = shadow_path_to_dataset(config->ds_list, path);
 +	if (!ds) {
 +		return NULL;
 +	}
@@ -301,10 +301,6 @@ index 00000000000..4aa824f2a74
 +
 +		close_smbzhandle(zfsp);
 +		if (snapshots != NULL) {
-+			if (handle->conn->sconn->jid) {
-+				jlen = strlen(handle->conn->sconn->jail_path);
-+				snapshots->mountpoint += jlen;
-+			}
 +			snaplist_updated = put_cached_snapshot(key, snapshots,
 +							       config);
 +		} else {
@@ -370,85 +366,36 @@ index 00000000000..4aa824f2a74
 +static char *resolve_path(TALLOC_CTX *mem_ctx,
 +			  vfs_handle_struct *handle,
 +			  struct shadow_copy_zfs_config *priv,
-+			  const char *name)
++			  const char *name,
++			  bool *is_shadow_path)
 +{
 +	char *new_path = NULL;
-+	struct smb_filename *cwd_fname = NULL;
-+
-+	/*path is relative to cwd*/
 +	if (name[0] != '/') {
-+		if (priv->cwd->cp_relative) {
-+			/*
-+			 * If "name" is a dot "." or if it is an empty string,
-+			 * then we construct the path based on the connectpath
-+			 * and any stored connectpath-relative cwd component.
-+			 */
-+			if (ISDOT(name) || name[0] == '\0') {
-+				new_path = talloc_asprintf(mem_ctx,
-+							   "%s/%s",
-+							   handle->conn->connectpath,
-+							   priv->cwd->cp_relative);
-+			}
-+			/*
-+			 * If filename begins with "./", then strip these
-+			 * characters before piecing together absolute path.
-+			 */
-+			else if (strncmp(name, "./", 2) == 0) {
-+				new_path = talloc_asprintf(mem_ctx,
-+							   "%s/%s/%s",
-+							   handle->conn->connectpath,
-+							   priv->cwd->cp_relative,
-+							   (name + 2));
-+			}
-+			else {
-+				new_path = talloc_asprintf(mem_ctx,
-+							   "%s/%s/%s",
-+							   handle->conn->connectpath,
-+							   priv->cwd->cp_relative,
-+							   name);
-+			}
-+			DBG_INFO("Constructed absolute path [%s] from: "
-+				 "connectpath: %s, cwd: %s, fname: %s\n",
-+				 new_path, handle->conn->connectpath,
-+				 priv->cwd->cp_relative, name);
++		char *scp = priv->shadow_connectpath;
++		char *cwd = handle->conn->cwd_fsp->fsp_name->base_name;
++		if (scp && (strncmp(cwd, scp, strlen(scp)) == 0)) {
++			*is_shadow_path = true;
 +		}
-+		/* There is no cached offset from cwd so grab it uncached. */
++		if (ISDOT(name) || name[0] == '\0') {
++			new_path = talloc_strdup(mem_ctx, cwd);
++		}
++		else if (strncmp(name, "./", 2) == 0) {
++			new_path = talloc_asprintf(mem_ctx, "%s/%s", cwd, (name + 2));
++		}
 +		else {
-+			/* assume that CWD isn't in a snapshot directory */
-+			cwd_fname = SMB_VFS_NEXT_GETWD(handle, mem_ctx);
-+			SMB_ASSERT(cwd_fname != NULL);
-+			if (!ISDOT(name) && (name[0] != '\0')) {
-+				new_path = talloc_asprintf(mem_ctx,
-+							   "%s/%s",
-+							   cwd_fname->base_name,
-+							   name);
-+			}
-+			else {
-+				new_path = talloc_strdup(mem_ctx, cwd_fname->base_name);
-+			}
-+			DBG_INFO("Constructed absolute path [%s] from: "
-+				 "connectpath: %s, cwd: %s, fname: %s\n",
-+				 new_path, handle->conn->connectpath,
-+				 cwd_fname->base_name, name);
-+			TALLOC_FREE(cwd_fname);
-+		}
-+		if (new_path == NULL) {
-+			/* talloc failure. */
-+			smb_panic("talloc failed\n");
++			new_path = talloc_asprintf(mem_ctx, "%s/%s", cwd, name);
 +		}
 +	}
-+	/* name is already absolute and within the connectpath directory. Return it. */
-+	else if (strncmp(handle->conn->connectpath, name, strlen(handle->conn->connectpath)) == 0) {
++	else if (strncmp(handle->conn->connectpath,
++			 name, strlen(handle->conn->connectpath)) == 0) {
 +		new_path = talloc_strdup(mem_ctx, name);
 +	}
-+	/*convert name to be connectpath relative */
 +	else {
 +		new_path = talloc_asprintf(mem_ctx,
 +					   "%s%s",
 +					   handle->conn->connectpath,
 +					   name);
 +	}
-+
 +	return new_path;
 +}
 +
@@ -480,7 +427,7 @@ index 00000000000..4aa824f2a74
 +	struct zfs_dataset *root = NULL;
 +	struct zfs_dataset *cwd = NULL;
 +
-+	root = handle->conn->sconn->ds_list->root;
++	root = priv->ds_list->root;
 +	cwd = priv->cwd->ds;
 +
 +	cwd_len = strlen(priv->cwd->base_name);
@@ -522,7 +469,7 @@ index 00000000000..4aa824f2a74
 +	}
 +
 +	ret = strcmp(handle->conn->connectpath, priv->cwd->ds->mountpoint);
-+	if (ret > 0) {
++	if (ret != 0) {
 +		/* subdirectory of dataset is being shared out */
 +		ret = snprintf(offset, sizeof(offset), "%s", (handle->conn->connectpath + strlen(root->mountpoint)));
 +		ret = strcmp(fname, offset);
@@ -547,7 +494,7 @@ index 00000000000..4aa824f2a74
 +			return NULL;
 +		}
 +	}
-+	return fname;
++	return ISDOT(fname) ? fname + 1 : fname;
 +}
 +
 +static void store_connectpath(vfs_handle_struct *handle,
@@ -576,7 +523,7 @@ index 00000000000..4aa824f2a74
 +		TALLOC_FREE(priv->cwd->cp_relative);
 +		char *cp_relative = NULL;
 +		cwd_dataset_name = snapshot_mp_to_dataset(priv, handle, priv->cwd->base_name);
-+		priv->cwd->ds = shadow_path_to_dataset(handle->conn->sconn->ds_list,
++		priv->cwd->ds = shadow_path_to_dataset(priv->ds_list,
 +						       cwd_dataset_name);
 +		cp_relative = vss_to_normal_path(priv, handle, priv, shadow_mountpoint);
 +		priv->cwd->cp_relative = cp_relative;
@@ -656,7 +603,7 @@ index 00000000000..4aa824f2a74
 + * .zfs/snapshot/<snap_name> directory.
 + */
 +static char *do_convert_shadow_zfs_name(vfs_handle_struct *handle,
-+    const char *fname, struct timeval tval, char **shadow_mp,
++    const char *fname, struct timeval tval, char **shadow_mp, char **shadow_cp,
 +    const bool incl_rel)
 +{
 +	TALLOC_CTX *tmp_ctx = talloc_new(handle->data);
@@ -670,7 +617,7 @@ index 00000000000..4aa824f2a74
 +	char *cache_entry = NULL;
 +	char *tsname = NULL;
 +	char *res_fname = NULL;
-+	char rp[PATH_MAX] = { 0 };
++	bool already_converted = false;
 +	TDB_DATA key = { .dptr = NULL, .dsize = 0 };
 +
 +	mplen = flen = clen = 0;
@@ -678,14 +625,16 @@ index 00000000000..4aa824f2a74
 +	SMB_VFS_HANDLE_GET_DATA(handle, config, struct shadow_copy_zfs_config,
 +	    return NULL);
 +
-+	if (handle->conn->sconn->ds_list == NULL) {
++	if (config->ds_list == NULL) {
 +		DBG_ERR("Refusing to convert to shadow copy due to "
 +			"path not supporting snapshots\n");
 +		errno = EINVAL;
 +		return NULL;
 +	}
 +	if (config->cache_enabled && shadow_mp == NULL && !ISDOT(fname)) {
-+		tsname = talloc_asprintf(tmp_ctx, "%ld/%s", tval.tv_sec, fname);
++		tsname = talloc_asprintf(tmp_ctx, "%d/%ld/%s",
++					 SNUM(handle->conn),
++					 tval.tv_sec, fname);
 +		key.dptr = discard_const_p(uint8_t, tsname);
 +		key.dsize = strlen(tsname);
 +		ret = snapcache_get(tmp_ctx, handle, config, key);
@@ -698,14 +647,21 @@ index 00000000000..4aa824f2a74
 +		}
 +	}
 +
-+	res_fname = resolve_path(tmp_ctx, handle, config, fname);
++	res_fname = resolve_path(tmp_ctx, handle, config, fname, &already_converted);
 +	if (res_fname == NULL) {
 +		TALLOC_FREE(tmp_ctx);
++		DBG_ERR("Failed to resolve %s to an absolute path.\n", fname);
 +		return NULL;
++	}
++	if (already_converted) {
++		ret = talloc_strdup(talloc_tos(), res_fname);
++		TALLOC_FREE(tmp_ctx);
++		return ret;
 +	}
 +
 +	normalized_fname = canonicalize_absolute_path(tmp_ctx, res_fname);
 +	if (normalized_fname == NULL) {
++		DBG_ERR("Failed to canonicalize %s\n", res_fname);
 +		TALLOC_FREE(tmp_ctx);
 +		return NULL;
 +	}
@@ -789,6 +745,15 @@ index 00000000000..4aa824f2a74
 +					     snapshots->mountpoint,
 +					     SHADOW_COPY_ZFS_SNAP_DIR,
 +					     entry->name);
++		if (mpoffset) {
++			*shadow_cp = talloc_asprintf(talloc_tos(), "%s/%s/%s/%s",
++						     snapshots->mountpoint,
++						     SHADOW_COPY_ZFS_SNAP_DIR,
++						     entry->name, mpoffset);
++		}
++		else {
++			*shadow_cp = talloc_strdup(talloc_tos(), *shadow_mp);
++		}
 +	}
 +
 +	if (config->cache_enabled && !ISDOT(fname)) {
@@ -806,7 +771,7 @@ index 00000000000..4aa824f2a74
 +    const char *fname, struct timeval tval,
 +    const bool incl_rel)
 +{
-+	return do_convert_shadow_zfs_name(handle, fname, tval, NULL, incl_rel);
++	return do_convert_shadow_zfs_name(handle, fname, tval, NULL, NULL, incl_rel);
 +}
 +
 +static DIR *shadow_copy_zfs_opendir(vfs_handle_struct *handle,
@@ -1123,18 +1088,19 @@ index 00000000000..4aa824f2a74
 +	int ret;
 +	char *conv = NULL;
 +	char *shadow_mp = NULL;
++	char *shadow_cp = NULL;
 +	struct smb_filename *conv_smb_fname = NULL;
 +
 +	if (!shadow_copy_zfs_match_name(smb_fname)) {
 +		ret =  SMB_VFS_NEXT_CHDIR(handle, smb_fname);
-+		store_connectpath(handle, handle->conn->connectpath, NULL);
++		store_connectpath(handle, NULL, NULL);
 +		return ret;
 +	}
 +
 +	conv = do_convert_shadow_zfs_name(handle,
 +					smb_fname->base_name,
 +					smb_fname->vss_tval,
-+					&shadow_mp, True);
++					&shadow_mp, &shadow_cp, True);
 +	if (conv == NULL) {
 +		return -1;
 +	}
@@ -1151,7 +1117,7 @@ index 00000000000..4aa824f2a74
 +
 +	ret = SMB_VFS_NEXT_CHDIR(handle, conv_smb_fname);
 +	if (ret == 0) {
-+		store_connectpath(handle, conv, shadow_mp);
++		store_connectpath(handle, shadow_cp, shadow_mp);
 +	}
 +	TALLOC_FREE(shadow_mp);
 +	TALLOC_FREE(conv);
@@ -1249,14 +1215,14 @@ index 00000000000..4aa824f2a74
 +{
 +	struct smb_filename *ret = NULL;
 +	int saved_errno;
-+	char *conv;
-+	struct smb_filename *conv_smb_fname;
++	char *conv = NULL;
++	struct smb_filename *conv_smb_fname = NULL;
 +
 +	if (shadow_copy_zfs_match_name(smb_fname)) {
 +		conv = convert_shadow_zfs_name(
 +		    handle, smb_fname->base_name, smb_fname->vss_tval, True);
 +		if (conv == NULL) {
-+			TALLOC_FREE(conv);
++			errno = ENOENT;
 +			return NULL;
 +		}
 +		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
@@ -1266,18 +1232,18 @@ index 00000000000..4aa824f2a74
 +						     smb_fname->flags);
 +		if (conv_smb_fname == NULL) {
 +			TALLOC_FREE(conv);
++			errno = ENOMEM;
 +			return NULL;
 +		}
-+
 +		ret = SMB_VFS_NEXT_REALPATH(handle, ctx, conv_smb_fname);
 +		saved_errno = errno;
 +		TALLOC_FREE(conv);
 +		TALLOC_FREE(conv_smb_fname);
 +		errno = saved_errno;
 +		return ret;
-+	} else {
-+		return SMB_VFS_NEXT_REALPATH(handle, ctx, smb_fname);
 +	}
++
++	return SMB_VFS_NEXT_REALPATH(handle, ctx, smb_fname);
 +}
 +
 +static int shadow_copy_zfs_get_shadow_copy_zfs_data(vfs_handle_struct *handle,
@@ -1301,8 +1267,10 @@ index 00000000000..4aa824f2a74
 +	ssize_t len, cpathlen, mplen, flen;
 +	int rv;
 +
++	SMB_VFS_HANDLE_GET_DATA(handle, config, struct shadow_copy_zfs_config,
++	    return -1);
 +
-+	if (handle->conn->sconn->ds_list == NULL) {
++	if (config->ds_list == NULL) {
 +		DBG_ERR("No dataset list present for share at path: %s\n",
 +			handle->conn->connectpath);
 +		return 0;
@@ -1317,9 +1285,6 @@ index 00000000000..4aa824f2a74
 +		errno = ENOMEM;
 +		return -1;
 +	}
-+
-+	SMB_VFS_HANDLE_GET_DATA(handle, config, struct shadow_copy_zfs_config,
-+	    return -1);
 +
 +	tmp_ctx = talloc_new(config);
 +
@@ -1681,17 +1646,26 @@ index 00000000000..4aa824f2a74
 +	SMB_VFS_HANDLE_GET_DATA(handle, config, struct shadow_copy_zfs_config,
 +				return NULL);
 +
++	if (config->shadow_connectpath != NULL) {
++		DBG_INFO("cached connect path is [%s]\n",
++			 config->shadow_connectpath);
++		return config->shadow_connectpath;
++	}
++
 +	if (shadow_copy_zfs_match_name(smb_fname)) {
++		char *cp = NULL;
++		char *mp = NULL;
 +		conv = do_convert_shadow_zfs_name(handle,
 +					smb_fname->base_name,
 +					smb_fname->vss_tval,
-+					NULL, True);
++					&mp, &cp, True);
 +		if (conv == NULL) {
 +			return handle->conn->connectpath;
 +		}
-+		return conv;
++		TALLOC_FREE(mp);
++		TALLOC_FREE(conv);
++		return cp;
 +	}
-+
 +	return SMB_VFS_NEXT_CONNECTPATH(handle, smb_fname);
 +}
 +
@@ -1840,7 +1814,16 @@ index 00000000000..4aa824f2a74
 +		errno = ENOMEM;
 +		return -1;
 +	}
-+	config->libzp = handle->conn->sconn->libzp;
++
++	ret = conn_zfs_init(handle->conn->sconn,
++			    handle->conn->connectpath,
++			    &config->libzp,
++			    &config->ds_list);
++
++	if (ret != 0) {
++		DBG_ERR("Failed to initialize zfs: %s\n", strerror(errno));
++		return -1;
++	}
 +
 +	enumval = lp_parm_enum(SNUM(handle->conn), "shadow",
 +			"cache_backend", cachebackend, SHADOW_MEMCACHE);
@@ -1949,10 +1932,10 @@ index 00000000000..4aa824f2a74
 +}
 diff --git a/source3/modules/vfs_tmprotect.c b/source3/modules/vfs_tmprotect.c
 new file mode 100644
-index 00000000000..032f9fd2173
+index 00000000000..f1a6f0eb116
 --- /dev/null
 +++ b/source3/modules/vfs_tmprotect.c
-@@ -0,0 +1,281 @@
+@@ -0,0 +1,289 @@
 +/* tmprotect: a module for automatic ZFS snapshot maintenance.
 + *
 + * Copyright (C) iXsystems Inc     2019
@@ -2075,6 +2058,7 @@ index 00000000000..032f9fd2173
 +	struct snapshot_list *to_delete = NULL;
 +	struct snapshot_entry *entry = NULL;
 +	struct snapshot_entry *del_entry = NULL;
++	struct dataset_list *dl = NULL;
 +	time_t curtime;
 +	double seconds = 0.0;
 +	ret = retention = min_snaps = 0;
@@ -2093,8 +2077,15 @@ index 00000000000..032f9fd2173
 +	}
 +	to_delete = talloc_zero(handle->conn, struct snapshot_list);
 +
-+	config->libzp = handle->conn->sconn->libzp;
++	ret = conn_zfs_init(handle->conn->sconn,
++			    handle->conn->connectpath,
++			    &config->libzp,
++			    &dl);
 +
++	if (ret != 0) {
++		DBG_ERR("Failed to initialize libzfs configuration: %s\n", strerror(errno));
++		return -1;
++	}
 +	/*
 +	 * Copy the connectpath to the config so that it's guaranteed
 +	 * to be available in the config destructor. It must be
@@ -2236,10 +2227,10 @@ index 00000000000..032f9fd2173
 +}
 diff --git a/source3/modules/vfs_zfs_fsrvp.c b/source3/modules/vfs_zfs_fsrvp.c
 new file mode 100644
-index 00000000000..7c9c96692a1
+index 00000000000..5c0d9840fb2
 --- /dev/null
 +++ b/source3/modules/vfs_zfs_fsrvp.c
-@@ -0,0 +1,240 @@
+@@ -0,0 +1,251 @@
 +/* zfs_fsrvp: a module implementing FSS using ZFS 
 + *
 + * Copyright (C) iXsystems Inc     2019
@@ -2272,6 +2263,7 @@ index 00000000000..7c9c96692a1
 +
 +struct zfs_fsrvp_config_data {
 +	struct smblibzfshandle *libzp;
++	struct dataset_list *dsl;
 +	char *dataset_name;
 +};
 +
@@ -2432,12 +2424,6 @@ index 00000000000..7c9c96692a1
 +	if (ret != 0) {
 +		return ret;
 +	}
-+	if (handle->conn->sconn->ds_list == NULL) {
-+		DBG_ERR("Failed to obtain dataset list for connect path. "
-+			"Path may not be a ZFS filesystem: %s\n",
-+			handle->conn->connectpath);
-+		return -1;
-+	}
 +
 +	config = talloc_zero(handle->conn, struct zfs_fsrvp_config_data);
 +	if (!config) {
@@ -2446,17 +2432,33 @@ index 00000000000..7c9c96692a1
 +		return -1;
 +	}
 +
-+	config->libzp = handle->conn->sconn->libzp;
++	ret = conn_zfs_init(handle->conn->sconn,
++			    handle->conn->connectpath,
++			    &config->libzp,
++			    &config->dsl);
++	if (ret != 0) {
++		DBG_ERR("Failed to obtain dataset list for connect path. "
++			"Path may not be a ZFS filesystem: %s\n",
++			handle->conn->connectpath);
++		return -1;
++	}
++
++	if (config->dsl == NULL) {
++		DBG_ERR("Failed to obtain dataset list for connect path. "
++			"Path may not be a ZFS filesystem: %s\n",
++			handle->conn->connectpath);
++		return -1;
++	}
 +
 +	config->dataset_name = talloc_strdup(handle->conn,
-+					     handle->conn->sconn->ds_list->root->dataset_name);
++					     config->dsl->root->dataset_name);
 +
-+	if ((strcmp(handle->conn->sconn->ds_list->root->mountpoint, handle->conn->connectpath) != 0) &&
++	if ((strcmp(config->dsl->root->mountpoint, handle->conn->connectpath) != 0) &&
 +	    (strlen(handle->conn->connectpath) > 15) &&
 +	    (strnstr(handle->conn->connectpath, "/.zfs/snapshot/", PATH_MAX) == NULL)) {
 +		DBG_ERR("Sharing a subdirectory inside a ZFS dataset "
 +			"is not permitted.: Connectpath: %s, Mountpoint: %s\n",
-+			handle->conn->connectpath, handle->conn->sconn->ds_list->root->mountpoint);
++			handle->conn->connectpath, config->dsl->root->mountpoint);
 +		errno = EPERM;
 +		return -1;
 +	}
