@@ -1,9 +1,9 @@
 diff --git a/source3/modules/vfs_aio_fbsd.c b/source3/modules/vfs_aio_fbsd.c
 new file mode 100644
-index 00000000000..be98581c876
+index 00000000000..7ea26f24b28
 --- /dev/null
 +++ b/source3/modules/vfs_aio_fbsd.c
-@@ -0,0 +1,242 @@
+@@ -0,0 +1,241 @@
 +/*
 + * Copyright (C) iXsystems 2020
 + *
@@ -39,7 +39,7 @@ index 00000000000..be98581c876
 +	DBG_ERR("aio op currently in progress for "
 +		"fd [%d], waiting for completion\n",
 +		iocbp->aio_fildes);
-+	ret = aio_waitcomplete(&iocbp, &timeout); 
++	ret = aio_waitcomplete(&iocbp, &timeout);
 +	if (ret == -1) {
 +		DBG_ERR("aio_waitcomplete() failed "
 +			"%s\n", strerror(errno));
@@ -208,8 +208,7 @@ index 00000000000..be98581c876
 +	iocbp->aio_sigevent.sigev_notify_kevent_flags = EV_ONESHOT;
 +
 +	tevent_req_set_cleanup_fn(req, vfs_aio_fbsd_cleanup);
-+	tevent_add_aio_fsync(ev, req);
-+	ret = tevent_add_aio_read(ev, req);
++	ret = tevent_add_aio_fsync(ev, req);
 +	if (ret != 0) {
 +		if (errno == EAGAIN) {
 +			taiocbp->rv = fsync(fsp->fh->fd);
