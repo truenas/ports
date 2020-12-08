@@ -1187,7 +1187,7 @@ index 5162ec06ea9..a49b934720a 100644
  	}
  	DEBUG(10,("stat_cache_delete: deleting name [%s] -> %s\n",
 diff --git a/source3/smbd/trans2.c b/source3/smbd/trans2.c
-index 339dd36b6af..c8076528714 100644
+index 339dd36b6af..70f95f97935 100644
 --- a/source3/smbd/trans2.c
 +++ b/source3/smbd/trans2.c
 @@ -258,9 +258,22 @@ NTSTATUS get_ea_value(TALLOC_CTX *mem_ctx,
@@ -1254,7 +1254,15 @@ index 339dd36b6af..c8076528714 100644
  		*_smb_fname = name;
  	}
  
-@@ -3908,12 +3936,21 @@ cBytesSector=%u, cUnitTotal=%u, cUnitAvail=%d\n", (unsigned int)bsize, (unsigned
+@@ -3611,6 +3639,7 @@ NTSTATUS smbd_do_qfsinfo(struct smbXsrv_connection *xconn,
+ 
+ 	ZERO_STRUCT(smb_fname);
+ 	smb_fname.base_name = discard_const_p(char, filename);
++	smb_fname.vss_tval.tv_sec = fname->vss_tval.tv_sec;
+ 
+ 	if(info_level != SMB_FS_QUOTA_INFORMATION
+ 	   && SMB_VFS_STAT(conn, &smb_fname) != 0) {
+@@ -3908,12 +3937,21 @@ cBytesSector=%u, cUnitTotal=%u, cUnitAvail=%d\n", (unsigned int)bsize, (unsigned
  
  			ZERO_STRUCT(fsp);
  			ZERO_STRUCT(quotas);
@@ -1278,7 +1286,7 @@ index 339dd36b6af..c8076528714 100644
  				DEBUG(0,("get_user_quota: access_denied "
  					 "service [%s] user [%s]\n",
  					 lp_servicename(talloc_tos(), lp_sub, SNUM(conn)),
-@@ -4212,11 +4249,17 @@ static NTSTATUS smb_set_fsquota(connection_struct *conn,
+@@ -4212,11 +4250,17 @@ static NTSTATUS smb_set_fsquota(connection_struct *conn,
  		loadparm_s3_global_substitution();
  	NTSTATUS status;
  	SMB_NTQUOTA_STRUCT quotas;
@@ -1297,7 +1305,7 @@ index 339dd36b6af..c8076528714 100644
  		DEBUG(3, ("set_fsquota: access_denied service [%s] user [%s]\n",
  			  lp_servicename(talloc_tos(), lp_sub, SNUM(conn)),
  			  conn->session_info->unix_info->unix_name));
-@@ -6187,6 +6230,7 @@ static void call_trans2qfilepathinfo(connection_struct *conn,
+@@ -6187,6 +6231,7 @@ static void call_trans2qfilepathinfo(connection_struct *conn,
  				reply_nterror(req, NT_STATUS_NO_MEMORY);
  				return;
  			}
@@ -1305,7 +1313,7 @@ index 339dd36b6af..c8076528714 100644
  
  			if (INFO_LEVEL_IS_UNIX(info_level) || req->posix_pathnames) {
  				/* Always do lstat for UNIX calls. */
-@@ -6617,6 +6661,7 @@ static NTSTATUS smb_set_file_dosmode(connection_struct *conn,
+@@ -6617,6 +6662,7 @@ static NTSTATUS smb_set_file_dosmode(connection_struct *conn,
  	if (smb_fname_base == NULL) {
  		return NT_STATUS_NO_MEMORY;
  	}
@@ -1313,7 +1321,7 @@ index 339dd36b6af..c8076528714 100644
  
  	if (dosmode) {
  		if (S_ISDIR(smb_fname_base->st.st_ex_mode)) {
-@@ -7137,6 +7182,7 @@ static NTSTATUS smb2_file_rename_information(connection_struct *conn,
+@@ -7137,6 +7183,7 @@ static NTSTATUS smb2_file_rename_information(connection_struct *conn,
  			status = NT_STATUS_NO_MEMORY;
  			goto out;
  		}
@@ -1321,7 +1329,7 @@ index 339dd36b6af..c8076528714 100644
  
  		/*
  		 * Set the original last component, since
-@@ -7347,6 +7393,7 @@ static NTSTATUS smb_file_rename_information(connection_struct *conn,
+@@ -7347,6 +7394,7 @@ static NTSTATUS smb_file_rename_information(connection_struct *conn,
  			status = NT_STATUS_NO_MEMORY;
  			goto out;
  		}
@@ -1329,7 +1337,7 @@ index 339dd36b6af..c8076528714 100644
  
  		/*
  		 * Set the original last component, since
-@@ -7424,6 +7471,7 @@ static NTSTATUS smb_file_rename_information(connection_struct *conn,
+@@ -7424,6 +7472,7 @@ static NTSTATUS smb_file_rename_information(connection_struct *conn,
  				status = NT_STATUS_NO_MEMORY;
  				goto out;
  			}
