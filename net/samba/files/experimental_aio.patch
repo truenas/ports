@@ -1,6 +1,6 @@
 diff --git a/source3/modules/vfs_aio_fbsd.c b/source3/modules/vfs_aio_fbsd.c
 new file mode 100644
-index 00000000000..7ea26f24b28
+index 00000000000..8a311f0aa50
 --- /dev/null
 +++ b/source3/modules/vfs_aio_fbsd.c
 @@ -0,0 +1,241 @@
@@ -119,7 +119,7 @@ index 00000000000..7ea26f24b28
 +	iocbp->aio_nbytes = n;
 +
 +	tevent_req_set_cleanup_fn(req, vfs_aio_fbsd_cleanup);
-+	ret = tevent_add_aio_read(ev, req);
++	ret = tevent_add_aio_read(ev, taiocbp);
 +	if (ret != 0) {
 +		if (errno == EAGAIN) {
 +			taiocbp->rv = pread(fsp->fh->fd, data, n, offset);
@@ -170,7 +170,7 @@ index 00000000000..7ea26f24b28
 +	iocbp->aio_sigevent.sigev_notify = SIGEV_KEVENT;
 +	iocbp->aio_nbytes = n;
 +
-+	ret = tevent_add_aio_write(ev, req);
++	ret = tevent_add_aio_write(ev, taiocbp);
 +	if (ret != 0) {
 +		if (errno == EAGAIN) {
 +			taiocbp->rv = pwrite(fsp->fh->fd, data, n, offset);
@@ -208,7 +208,7 @@ index 00000000000..7ea26f24b28
 +	iocbp->aio_sigevent.sigev_notify_kevent_flags = EV_ONESHOT;
 +
 +	tevent_req_set_cleanup_fn(req, vfs_aio_fbsd_cleanup);
-+	ret = tevent_add_aio_fsync(ev, req);
++	ret = tevent_add_aio_fsync(ev, taiocbp);
 +	if (ret != 0) {
 +		if (errno == EAGAIN) {
 +			taiocbp->rv = fsync(fsp->fh->fd);

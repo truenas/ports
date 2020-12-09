@@ -35,10 +35,10 @@ index dbec1821e41..0bf2b5cf3e4 100644
  
  	tevent_standard_init();
 diff --git a/lib/tevent/tevent.h b/lib/tevent/tevent.h
-index 3c3e3cc2cef..71fb05db816 100644
+index 3c3e3cc2cef..6519b14fedf 100644
 --- a/lib/tevent/tevent.h
 +++ b/lib/tevent/tevent.h
-@@ -491,6 +491,17 @@ void tevent_set_abort_fn(void (*abort_fn)(const char *reason));
+@@ -491,6 +491,12 @@ void tevent_set_abort_fn(void (*abort_fn)(const char *reason));
   */
  #define TEVENT_FD_WRITE 2
  
@@ -48,28 +48,14 @@ index 3c3e3cc2cef..71fb05db816 100644
 + */
 +#define TEVENT_FD_MULTIHANDLER 4
 +
-+#define TEVENT_FD_AIO_READ 8
-+#define TEVENT_FD_AIO_WRITE 16
-+#define TEVENT_FD_AIO_FSYNC 32
-+#define TEVENT_FD_AIO (TEVENT_FD_AIO_READ|TEVENT_FD_AIO_WRITE|TEVENT_FD_AIO_FSYNC)
-+
  /**
   * Convenience function for declaring a tevent_fd writable
   */
 diff --git a/lib/tevent/tevent_internal.h b/lib/tevent/tevent_internal.h
-index 5365fce3533..db11c857bae 100644
+index 5365fce3533..91c9495a26f 100644
 --- a/lib/tevent/tevent_internal.h
 +++ b/lib/tevent/tevent_internal.h
-@@ -368,6 +368,8 @@ int tevent_common_loop_wait(struct tevent_context *ev,
- 			    const char *location);
- 
- int tevent_common_fd_destructor(struct tevent_fd *fde);
-+int tevent_common_timed_destructor(struct tevent_timer *te);
-+
- struct tevent_fd *tevent_common_add_fd(struct tevent_context *ev,
- 				       TALLOC_CTX *mem_ctx,
- 				       int fd,
-@@ -466,6 +468,12 @@ void tevent_epoll_set_panic_fallback(struct tevent_context *ev,
+@@ -466,6 +466,12 @@ void tevent_epoll_set_panic_fallback(struct tevent_context *ev,
  bool tevent_port_init(void);
  #endif
  
@@ -84,10 +70,10 @@ index 5365fce3533..db11c857bae 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..3895e5efcdd
+index 00000000000..e85cf6d75d8
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
-@@ -0,0 +1,1276 @@
+@@ -0,0 +1,1027 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -132,13 +118,11 @@ index 00000000000..3895e5efcdd
 +#define KQUEUE_EXTRA_KEVENT_DISCHARGED	0x0001
 +
 +#define TEVENT_FD_RW (TEVENT_FD_READ|TEVENT_FD_WRITE)
-+#define HAS_AIO(flags) (flags & TEVENT_FD_AIO)
 +#define HAS_WRITE(flags) (flags & TEVENT_FD_WRITE)
 +#define HAS_READ(flags) (flags & TEVENT_FD_READ)
 +#define HAS_READ_OR_WRITE(flags) (flags & TEVENT_FD_RW)
 +#define HAS_READ_AND_WRITE(flags) ((flags & TEVENT_FD_RW) == TEVENT_FD_RW)
 +#define KEVENT_TO_TEVENT_FLAGS(f) (abs(f) & TEVENT_FD_RW)
-+#define TIMEVAL_IS_ZERO(tv) (tv.tv_sec == 0 && tv.tv_usec == 0)
 +
 +struct kqueue_signal_list {
 +	struct kqueue_signal_list *prev, *next;
@@ -520,55 +504,6 @@ index 00000000000..3895e5efcdd
 +	}
 +}
 +
-+static int kqueue_timer_cleanup(struct tevent_timer *te)
-+{
-+	if (te->destroyed) {
-+		tevent_common_check_double_free(te, "tevent_timer double free");
-+	}
-+	else {
-+		te->destroyed = true;
-+
-+		if (te->event_ctx == NULL) {
-+			return 0;
-+		}
-+		te->event_ctx = NULL;
-+	}
-+
-+	if (te->busy) {
-+		return -1;
-+	}
-+	te->wrapper = NULL;
-+
-+	return 0;
-+}
-+
-+
-+static int kqueue_event_timer_destructor(struct tevent_timer *te)
-+{
-+	int ret;
-+	struct kevent event;
-+	struct tevent_context *ev = NULL;
-+	struct kqueue_event_context *kqueue_ev = NULL;
-+
-+	ev = te->event_ctx;
-+	if (ev == NULL) {
-+		return kqueue_timer_cleanup(te);
-+	}
-+	kqueue_ev = talloc_get_type_abort(ev->additional_data,
-+					  struct kqueue_event_context);
-+	if (!te->busy) {
-+		EV_SET(&event, (uintptr_t)te, EVFILT_TIMER, EV_DELETE, 0, 0, 0);
-+		ret = kevent(kqueue_ev->kqueue_fd, &event, 1, NULL, 0, NULL);
-+		if (ret != 0 && errno != ENOENT) {
-+			tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
-+				     "KEVENT_TIMER_DESTRUCTOR failed "
-+				     "%s\n", strerror(errno));
-+		}
-+		return kqueue_timer_cleanup(te);
-+	}
-+	return -1;
-+}
-+
 +static int kqueue_event_fd_destructor(struct tevent_fd *fde)
 +{
 +	struct tevent_context *ev = fde->event_ctx;
@@ -622,65 +557,6 @@ index 00000000000..3895e5efcdd
 +				sl->signum, strerror(errno));
 +		}
 +	}
-+	return 0;
-+}
-+
-+static struct timeval kqueue_get_current_time()
-+{
-+	struct timeval ret = tevent_timeval_zero();
-+	struct timespec ts;
-+	clock_gettime(CLOCK_REALTIME_FAST, &ts);
-+	ret.tv_sec = ts.tv_sec;
-+	ret.tv_usec = ts.tv_nsec / 1000;
-+	return ret;
-+}
-+
-+static int kqueue_process_timer(struct kqueue_event_context *kqueue_ev,
-+					void *udata)
-+{
-+	int ret;
-+	struct tevent_timer *te = NULL;
-+	struct tevent_context *handler_ev = NULL;
-+
-+	struct timeval current_time = kqueue_get_current_time();
-+
-+	te = (struct tevent_timer *)udata;
-+	if (te->event_ctx == NULL) {
-+		return 0;
-+	}
-+
-+	handler_ev = te->event_ctx;
-+	te->busy = true;
-+	if (te->wrapper != NULL) {
-+		handler_ev = te->wrapper->wrap_ev;
-+		tevent_wrapper_push_use_internal(handler_ev, te->wrapper);
-+		te->wrapper->ops->before_timer_handler(
-+					te->wrapper->wrap_ev,
-+					te->wrapper->private_state,
-+					te->wrapper->main_ev,
-+					te,
-+					te->next_event,
-+					current_time,
-+					te->handler_name,
-+					te->location);
-+	}
-+	te->handler(handler_ev, te, current_time, te->private_data);
-+	if (te->wrapper != NULL) {
-+		te->wrapper->ops->after_timer_handler(
-+					te->wrapper->wrap_ev,
-+					te->wrapper->private_state,
-+					te->wrapper->main_ev,
-+					te,
-+					te->next_event,
-+					current_time,
-+					te->handler_name,
-+					te->location);
-+		tevent_wrapper_pop_use_internal(handler_ev, te->wrapper);
-+	}
-+	te->wrapper = NULL;
-+	te->event_ctx = NULL;
-+	talloc_set_destructor(te, NULL);
-+	TALLOC_FREE(te);
 +	return 0;
 +}
 +
@@ -760,10 +636,6 @@ index 00000000000..3895e5efcdd
 +		kqueue_process_aio(kqueue_ev, kev.udata);
 +		*is_fd_event = false;
 +		break;
-+	case EVFILT_TIMER:
-+		kqueue_process_timer(kqueue_ev, kev.udata);
-+		*is_fd_event = false;
-+		break;
 +	case EVFILT_WRITE:
 +		fde = get_tevent_fd(kqueue_ev, kev.udata, true);
 +		if ((kev.flags & EV_EOF) && !(fde->flags & TEVENT_FD_READ)) {
@@ -823,7 +695,6 @@ index 00000000000..3895e5efcdd
 +	for (i=0; i<nkevents; i++) {
 +		kqueue_process_kev(kqueue_ev, received[i], &fde, &is_fd_event);
 +		if (!is_fd_event) {
-+			tevent_common_loop_immediate(kqueue_ev->ev);
 +			continue;
 +		}
 +
@@ -863,7 +734,7 @@ index 00000000000..3895e5efcdd
 +
 +}
 +
-+static int kqueue_event_loop(struct kqueue_event_context *kqueue_ev, bool *overload)
++static int kqueue_event_loop(struct kqueue_event_context *kqueue_ev, struct timeval *tvalp, bool *overload)
 +{
 +	/*
 +	 * Loop through an array of kevents. We need to retrieve multiple events at once
@@ -871,10 +742,31 @@ index 00000000000..3895e5efcdd
 +	 * fd handler.
 +	 */
 +	int nkevents, ret;
-+	struct timespec ts = {.tv_sec = 1, .tv_nsec = 0};
++	struct timespec ts;
++	struct timespec *tsp = NULL;
 +	int wait_errno = 0;
 +	ret = 0;
 +	nkevents = 0;
++	*overload = false;
++
++	if (tvalp) {
++		/*
++		 * Adjust timeout for kevent() call to be slighly longer than
++		 * the next timed event. This value is taken from other tevent
++		 * backends where the reasoning is that it's better to have a
++		 * timer fire a little late than too early. Implied here is that
++		 * there is potential for a race without this fudging.
++		 */
++		ts = (struct timespec) {
++			.tv_sec = tvalp->tv_sec,
++			.tv_nsec = (tvalp->tv_usec + 999) * 1000
++		};
++		if (ts.tv_nsec >= 1000000000) {
++			ts.tv_sec += 1;
++			ts.tv_nsec -= 1000000000;
++		}
++		tsp = &ts;
++	}
 +
 +	/*
 +	 * If timeout is a non-NULL pointer, it specifies a maximum interval
@@ -889,7 +781,7 @@ index 00000000000..3895e5efcdd
 +			  0,			/* nchanges */
 +			  kqueue_ev->kev_array,	/* eventlist */
 +			  kqueue_ev->kev_size,	/* nevents */
-+			  &ts);			/* timeout  - may need NULL*/
++			  tsp);			/* timeout  - may need NULL*/
 +
 +	wait_errno = errno;
 +	tevent_trace_point_callback(kqueue_ev->ev, TEVENT_TRACE_AFTER_WAIT);
@@ -912,7 +804,7 @@ index 00000000000..3895e5efcdd
 +				return -1;
 +			}
 +			nkevents = kevent(kqueue_ev->kqueue_fd, NULL, 0,
-+					  kqueue_ev->kev_array, kqueue_ev->kev_size, &ts);
++					  kqueue_ev->kev_array, kqueue_ev->kev_size, tsp);
 +		}
 +		/*
 +		 * kevent() returns -1 with errno EINTR if signal
@@ -924,6 +816,11 @@ index 00000000000..3895e5efcdd
 +				"kevent() failed: %s\n",strerror(wait_errno));
 +			kqueue_panic(kqueue_ev, "kevent() failed", false);
 +		}
++		return 0;
++	}
++	if (nkevents == 0 && tvalp) {
++		/* we don't care about a possible delay here */
++		tevent_common_loop_timer_delay(kqueue_ev->ev);
 +		return 0;
 +	}
 +
@@ -945,7 +842,6 @@ index 00000000000..3895e5efcdd
 +		return ret;
 +	}
 +
-+	*overload = false;
 +	return ret;
 +}
 +
@@ -975,45 +871,35 @@ index 00000000000..3895e5efcdd
 +}
 +
 +static inline struct aiocb *get_aiocb(struct tevent_context *ev,
-+			       void *private_data)
++				      struct tevent_aiocb *taiocb)
 +{
 +	struct kqueue_event_context *kqueue_ev =
 +		talloc_get_type_abort(ev->additional_data,
 +		struct kqueue_event_context);
-+	struct tevent_req *req = NULL;
-+	struct tevent_aiocb *tevent_iocbp = NULL;
-+	struct aiocb *_iocbp = NULL;
 +
-+	req = talloc_get_type_abort(private_data,
-+				    struct tevent_req);
-+	tevent_iocbp = tevent_req_data(req, struct tevent_aiocb);
-+
-+	_iocbp = tevent_iocbp->iocbp;
++	struct aiocb *_iocbp = taiocb->iocbp;
 +	_iocbp->aio_sigevent.sigev_notify_kqueue = kqueue_ev->kqueue_fd;
 +	return _iocbp;
 +}
 +
 +int tevent_add_aio_read(struct tevent_context *ev,
-+			void *private_data)
++			struct tevent_aiocb *taiocb)
 +{
-+	struct aiocb *iocbp = NULL;
-+	iocbp = get_aiocb(ev, private_data);
++	struct aiocb *iocbp = get_aiocb(ev, taiocb);
 +	return aio_read(iocbp);
 +}
 +
 +int tevent_add_aio_write(struct tevent_context *ev,
-+			 void *private_data)
++			 struct tevent_aiocb *taiocb)
 +{
-+	struct aiocb *iocbp = NULL;
-+	iocbp = get_aiocb(ev, private_data);
++	struct aiocb *iocbp = get_aiocb(ev, taiocb);
 +	return aio_write(iocbp);
 +}
 +
 +int tevent_add_aio_fsync(struct tevent_context *ev,
-+			  void *private_data)
++			 struct tevent_aiocb *taiocb)
 +{
-+	struct aiocb *iocbp = NULL;
-+	iocbp = get_aiocb(ev, private_data);
++	struct aiocb *iocbp = get_aiocb(ev, taiocb);
 +	return aio_fsync(O_SYNC, iocbp);
 +}
 +
@@ -1059,160 +945,6 @@ index 00000000000..3895e5efcdd
 +	fde->flags = flags;
 +	kqueue_delete_event(kqueue_ev, fde, to_delete);
 +	kqueue_add_event(kqueue_ev, fde);
-+}
-+
-+
-+void kqueue_update_timer(struct tevent_timer *te, struct timeval next_event)
-+{
-+	struct kqueue_event_context *kqueue_ev = NULL;
-+	struct kevent event;
-+	int64_t usec_time;
-+	uint fflags = NOTE_USECONDS;
-+	int ret;
-+
-+	kqueue_ev = talloc_get_type_abort(te->event_ctx->additional_data,
-+					  struct kqueue_event_context);
-+
-+	usec_time = ((next_event.tv_sec) * 1000000) + next_event.tv_usec;
-+
-+	if (!TIMEVAL_IS_ZERO(next_event)) {
-+		fflags |= NOTE_ABSTIME;
-+	}
-+
-+	EV_SET(&event,				//kev
-+	       (uintptr_t)te,			//ident
-+	       EVFILT_TIMER,			//filter
-+	       EV_ADD|EV_ONESHOT,		//flags
-+	       fflags,				//fflags
-+	       usec_time,			//data
-+	       te);				//udata
-+
-+	ret = kevent(kqueue_ev->kqueue_fd, &event, 1, NULL, 0, NULL);
-+	if (ret != 0) {
-+		if (errno == EBADF) {
-+			/*
-+			 * We may have forked and need to re-init
-+			 * event context.
-+			 */
-+			if (kqueue_ev->busy) {
-+				return;
-+			}
-+			kqueue_check_reopen(kqueue_ev);
-+			ret = kevent(kqueue_ev->kqueue_fd,
-+				     &event, 1, NULL, 0, NULL);
-+			if (ret != 0) {
-+				tevent_debug(te->event_ctx, TEVENT_DEBUG_FATAL,
-+					"failed to add timed kevent for [%s]: %s\n",
-+					te->handler_name, strerror(errno));
-+				kqueue_panic(kqueue_ev, "failed to add timer:", false);
-+			}
-+		}
-+		else if (errno == ENOMEM) {
-+			tevent_debug(te->event_ctx, TEVENT_DEBUG_FATAL,
-+				"Attempt to add timed kevent for [%s] failed with ENOMEM. "
-+				"This may indicate that the maximum number of timers has "
-+				"been exceeded. This maximum is configurable via the "
-+				"kern.kq_calloutmax sysctl.\n", te->handler_name);
-+		}
-+		else {
-+			tevent_debug(te->event_ctx, TEVENT_DEBUG_FATAL,
-+				"failed to add timed kevent for [%s]: %s\n",
-+				te->handler_name, strerror(errno));
-+		}
-+	}
-+}
-+
-+struct tevent_timer *kqueue_event_add_timer(struct tevent_context *ev,
-+					    TALLOC_CTX *mem_ctx,
-+					    struct timeval next_event,
-+					    tevent_timer_handler_t handler,
-+					    void *private_data,
-+					    const char *handler_name,
-+					    const char *location)
-+{
-+	int ret;
-+	struct tevent_timer *te = NULL;
-+	struct kqueue_event_context *kqueue_ev = NULL;
-+	struct kevent event;
-+	int64_t usec_time;
-+	uint fflags = NOTE_USECONDS;
-+
-+	kqueue_ev = talloc_get_type_abort(ev->additional_data,
-+					  struct kqueue_event_context);
-+
-+	te = talloc(mem_ctx?mem_ctx:ev, struct tevent_timer);
-+	if (te == NULL) return NULL;
-+
-+	*te = (struct tevent_timer) {
-+		.event_ctx      = ev,
-+		.next_event     = next_event,
-+		.handler        = handler,
-+		.private_data   = private_data,
-+		.handler_name   = handler_name,
-+		.location       = location,
-+	};
-+
-+	usec_time = ((next_event.tv_sec) * 1000000) + next_event.tv_usec;
-+
-+	/*
-+	 * Legacy tevent usage may have passed zeroed tval for
-+	 * immediate events. In this case, usec_time is zero and
-+	 * so we only need to _not_ set NOTE_ABSTIME to effect an
-+	 * immediate firing of timer.
-+	 */
-+	if (!TIMEVAL_IS_ZERO(next_event)) {
-+		fflags |= NOTE_ABSTIME;
-+	}
-+
-+	/*
-+	 * Timer will be periodic unless EV_ONESHOT or NOTE_ABSTIME
-+	 * are set. On return "data" contains the number of times
-+	 * the timeout expired since the last call to kevent(). For
-+	 * non-monotonic timers, this filter automatically sets EV_CLEAR.
-+	 */
-+	EV_SET(&event,				//kev
-+	       (uintptr_t)te,			//ident
-+	       EVFILT_TIMER,			//filter
-+	       EV_ADD|EV_ONESHOT,		//flags
-+	       fflags,				//fflags
-+	       usec_time,			//data
-+	       te);				//udata
-+
-+	talloc_set_destructor(te, kqueue_event_timer_destructor);
-+	ret = kevent(kqueue_ev->kqueue_fd, &event, 1, NULL, 0, NULL);
-+	if (ret != 0) {
-+		if (errno == EBADF) {
-+			/*
-+			 * We may have forked and need to re-init
-+			 * event context.
-+			 */
-+			if (kqueue_ev->busy) {
-+				return NULL;
-+			}
-+			kqueue_check_reopen(kqueue_ev);
-+			ret = kevent(kqueue_ev->kqueue_fd,
-+				     &event, 1, NULL, 0, NULL);
-+			if (ret != 0) {
-+				tevent_debug(ev, TEVENT_DEBUG_FATAL,
-+					"failed to add timed kevent for [%s]: %s\n",
-+					handler_name, strerror(errno));
-+				kqueue_panic(kqueue_ev, "failed to add timer:", false);
-+			}
-+		}
-+		else if (errno == ENOMEM) {
-+			tevent_debug(ev, TEVENT_DEBUG_FATAL,
-+				"Attempt to add timed kevent for [%s] failed with ENOMEM. "
-+				"This may indicate that the maximum number of timers has "
-+				"been exceeded. This maximum is configurable via the "
-+				"kern.kq_calloutmax sysctl.\n", handler_name);
-+		}
-+		else {
-+			tevent_debug(ev, TEVENT_DEBUG_FATAL,
-+				"failed to add timed kevent for [%s]: %s\n",
-+				handler_name, strerror(errno));
-+		}
-+	}
-+	return te;
 +}
 +
 +/*
@@ -1315,6 +1047,7 @@ index 00000000000..3895e5efcdd
 +	int ret;
 +	bool check_kevents = true;
 +	bool panic_triggered = false;
++	struct timeval tval;
 +
 +	if (ev->signal_events &&
 +	    tevent_common_check_signal(ev)) {
@@ -1339,7 +1072,11 @@ index 00000000000..3895e5efcdd
 +	 * immediate events have been submitted since last loop.
 +	 */
 +	while (check_kevents) {
-+		ret = kqueue_event_loop(kqueue_ev, &check_kevents);
++		tval = tevent_common_loop_timer_delay(ev);
++		if (tevent_timeval_is_zero(&tval)) {
++			return 0;
++		}
++		ret = kqueue_event_loop(kqueue_ev, &tval, &check_kevents);
 +	}
 +
 +	kqueue_ev->panic_force_replay = false;
@@ -1353,7 +1090,7 @@ index 00000000000..3895e5efcdd
 +	.set_fd_close_fn	= tevent_common_fd_set_close_fn,
 +	.get_fd_flags		= tevent_common_fd_get_flags,
 +	.set_fd_flags		= kqueue_event_set_fd_flags,
-+	.add_timer		= kqueue_event_add_timer,
++	.add_timer		= tevent_common_add_timer_v2,
 +	.schedule_immediate	= tevent_common_schedule_immediate,
 +	.add_signal		= kqueue_event_add_signal,
 +	.loop_once		= kqueue_event_loop_once,
@@ -1366,10 +1103,10 @@ index 00000000000..3895e5efcdd
 +}
 diff --git a/lib/tevent/tevent_kqueue.h b/lib/tevent/tevent_kqueue.h
 new file mode 100644
-index 00000000000..1d9e11097f9
+index 00000000000..73ff559f779
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.h
-@@ -0,0 +1,37 @@
+@@ -0,0 +1,36 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -1403,10 +1140,9 @@ index 00000000000..1d9e11097f9
 +	int rv;
 +};
 +
-+void kqueue_update_timer(struct tevent_timer *te, struct timeval next_event);
-+int tevent_add_aio_read(struct tevent_context *ev, void *private_data);
-+int tevent_add_aio_write(struct tevent_context *ev, void *private_data);
-+int tevent_add_aio_fsync(struct tevent_context *ev, void *private_data);
++int tevent_add_aio_read(struct tevent_context *ev, struct tevent_aiocb *taiocb);
++int tevent_add_aio_write(struct tevent_context *ev, struct tevent_aiocb *taiocb);
++int tevent_add_aio_fsync(struct tevent_context *ev, struct tevent_aiocb *taiocb);
 diff --git a/lib/tevent/tevent_standard.c b/lib/tevent/tevent_standard.c
 index 38720204e02..6ad32edb9a7 100644
 --- a/lib/tevent/tevent_standard.c
@@ -1450,48 +1186,24 @@ index 38720204e02..6ad32edb9a7 100644
  		return ret;
  	}
 diff --git a/lib/tevent/tevent_timed.c b/lib/tevent/tevent_timed.c
-index a78d286a187..3dae23534f8 100644
+index a78d286a187..dd1e4e72dfd 100644
 --- a/lib/tevent/tevent_timed.c
 +++ b/lib/tevent/tevent_timed.c
-@@ -30,6 +30,7 @@
- #include "tevent.h"
- #include "tevent_internal.h"
- #include "tevent_util.h"
-+#include "tevent_kqueue.h"
- 
- /**
-   compare two timeval structures. 
-@@ -132,7 +133,7 @@ struct timeval tevent_timeval_current_ofs(uint32_t secs, uint32_t usecs)
- /*
-   destroy a timed event
+@@ -62,8 +62,12 @@ struct timeval tevent_timeval_zero(void)
  */
--static int tevent_common_timed_destructor(struct tevent_timer *te)
-+int tevent_common_timed_destructor(struct tevent_timer *te)
+ struct timeval tevent_timeval_current(void)
  {
- 	if (te->destroyed) {
- 		tevent_common_check_double_free(te, "tevent_timer double free");
-@@ -301,6 +302,13 @@ struct tevent_timer *tevent_common_add_timer_v2(struct tevent_context *ev,
- 
- void tevent_update_timer(struct tevent_timer *te, struct timeval next_event)
- {
-+/*
-+ * At present, tevent_ops lacks an update_timer() op. This will need to be
-+ * added in the future. For now, make this function a wrapper for
-+ * updating the timed kevent.
-+ */
-+	return kqueue_update_timer(te, next_event);
-+#if 0
- 	struct tevent_context *ev = te->event_ctx;
- 
- 	if (ev->last_zero_timer == te) {
-@@ -315,6 +323,7 @@ void tevent_update_timer(struct tevent_timer *te, struct timeval next_event)
- 	 * that should know about immediates.
- 	 */
- 	tevent_common_insert_timer(ev, te, false);
-+#endif
+-	struct timeval tv;
+-	gettimeofday(&tv, NULL);
++	struct timespec ts;
++	clock_gettime(CLOCK_REALTIME_FAST, &ts);
++	struct timeval tv = {
++		.tv_sec = ts.tv_sec,
++		.tv_usec = ts.tv_nsec / 1000
++	};
+ 	return tv;
  }
  
- int tevent_common_invoke_timer_handler(struct tevent_timer *te,
 diff --git a/lib/tevent/wscript b/lib/tevent/wscript
 index 93af416f583..92882cad476 100644
 --- a/lib/tevent/wscript
@@ -1515,4 +1227,23 @@ index 93af416f583..92882cad476 100644
 +
      if bld.CONFIG_SET('HAVE_SOLARIS_PORTS'):
          SRC += ' tevent_port.c'
+ 
+diff --git a/lib/util/time.c b/lib/util/time.c
+index 0fac5e2e397..9a2e3121474 100644
+--- a/lib/util/time.c
++++ b/lib/util/time.c
+@@ -622,8 +622,12 @@ _PUBLIC_ bool timeval_is_zero(const struct timeval *tv)
+ */
+ _PUBLIC_ struct timeval timeval_current(void)
+ {
+-	struct timeval tv;
+-	GetTimeOfDay(&tv);
++	struct timespec ts;
++	clock_gettime(CLOCK_REALTIME_FAST, &ts);
++	struct timeval tv = {
++		ts.tv_sec,
++		ts.tv_nsec / 1000
++	};
+ 	return tv;
+ }
  
