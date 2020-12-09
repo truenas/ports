@@ -108,17 +108,17 @@ SUB_LIST+=			PKGCONFIGDIR=${PKGCONFIGDIR_REL}
 # Options
 OPTIONS_SUB=			yes
 
-OPTIONS_DEFINE=			AD_DC ADS DEBUG DOCS FAM LDAP LIBZFS WSDD\
-				QUOTAS SYSLOG UTMP PROFILE
+OPTIONS_DEFINE=			ADS DOCS FAM LDAP LIBZFS WSDD\
+				QUOTAS SYSLOG UTMP PROFILE SPOTLIGHT
 # Make those default options
 OPTIONS_DEFAULT:=		${OPTIONS_DEFINE}
 # This shouldn't be default in the release
-OPTIONS_DEFINE+=		DEVELOPER MANDOC
+OPTIONS_DEFINE+=		DEVELOPER MANDOC AD_DC DEBUG
 
 OPTIONS_DEFINE_amd64=		AESNI
 OPTIONS_DEFAULT_amd64=		AESNI
 
-OPTIONS_DEFINE+=		CUPS GPGME NTVFS SPOTLIGHT WSDD
+OPTIONS_DEFINE+=		CUPS GPGME NTVFS
 
 OPTIONS_RADIO=			DNS ZEROCONF
 OPTIONS_RADIO_DNS=		NSUPDATE BIND911
@@ -180,88 +180,24 @@ SAMBA4_BUNDLED_TALLOC=		yes
 SAMBA4_BUNDLED_TEVENT=		yes
 SAMBA4_BUNDLED_TDB=		yes
 SAMBA4_BUNDLED_LDB=		yes
-SAMBA4_LDB=			14
 # cmocka
-.if defined(SAMBA4_BUNDLED_CMOCKA)
-SAMBA4_BUNDLED_LIBS+=		cmocka
 CONFLICTS+=			cmocka-1.*
 PLIST_SUB+=			SAMBA4_BUNDLED_CMOCKA=""
 SUB_LIST+=			SAMBA4_BUNDLED_CMOCKA=""
-.else
-SAMBA4_BUNDLED_LIBS+=		!cmocka
-BUILD_DEPENDS+=			cmocka>=1.1.1:sysutils/cmocka
-RUN_DEPENDS+=			cmocka>=1.1.1:sysutils/cmocka
-PLIST_SUB+=			SAMBA4_BUNDLED_CMOCKA="@comment "
-SUB_LIST+=			SAMBA4_BUNDLED_CMOCKA="@comment "
-.endif
-# talloc
-.if defined(SAMBA4_BUNDLED_TALLOC)
-SAMBA4_BUNDLED_LIBS+=		talloc
 CONFLICTS+=			talloc-2.*
 PLIST_SUB+=			SAMBA4_BUNDLED_TALLOC=""
 SUB_LIST+=			SAMBA4_BUNDLED_TALLOC=""
-.else
-SAMBA4_BUNDLED_LIBS+=		!talloc
-BUILD_DEPENDS+=			talloc>=2.1.14:devel/talloc
-RUN_DEPENDS+=			talloc>=2.1.14:devel/talloc
-PLIST_SUB+=			SAMBA4_BUNDLED_TALLOC="@comment "
-SUB_LIST+=			SAMBA4_BUNDLED_TALLOC="@comment "
-.endif
-# tevent
-.if defined(SAMBA4_BUNDLED_TEVENT)
-SAMBA4_BUNDLED_LIBS+=		tevent
 CONFLICTS+=			tevent-0.*
 PLIST_SUB+=			SAMBA4_BUNDLED_TEVENT=""
 SUB_LIST+=			SAMBA4_BUNDLED_TEVENT=""
-.else
-SAMBA4_BUNDLED_LIBS+=		!tevent
-BUILD_DEPENDS+=			tevent>=0.9.37:devel/tevent
-RUN_DEPENDS+=			tevent>=0.9.37:devel/tevent
-PLIST_SUB+=			SAMBA4_BUNDLED_TEVENT="@comment "
-SUB_LIST+=			SAMBA4_BUNDLED_TEVENT="@comment "
-.endif
-# tdb
-.if defined(SAMBA4_BUNDLED_TDB)
-SAMBA4_BUNDLED_LIBS+=		tdb
 CONFLICTS+=			tdb-1.*
 PLIST_SUB+=			SAMBA4_BUNDLED_TDB=""
 SUB_LIST+=			SAMBA4_BUNDLED_TDB=""
-.else
-SAMBA4_BUNDLED_LIBS+=		!tdb
-BUILD_DEPENDS+=			tdb>=1.3.15:databases/tdb
-RUN_DEPENDS+=			tdb>=1.3.15:databases/tdb
-PLIST_SUB+=			SAMBA4_BUNDLED_TDB="@comment "
-SUB_LIST+=			SAMBA4_BUNDLED_TDB="@comment "
-.endif
-# ldb
-.if defined(SAMBA4_BUNDLED_LDB) || !defined(SAMBA4_LDB)
-SAMBA4_BUNDLED_LDB=		yes
-SAMBA4_BUNDLED_LIBS+=		ldb
 CONFLICTS+=			ldb-1.* ldb1[234]-1.*
 PLIST_SUB+=			SAMBA4_BUNDLED_LDB=""
 SUB_LIST+=			SAMBA4_BUNDLED_LDB=""
-.else
-.       if ${SAMBA4_LDB} == 14
-BUILD_DEPENDS+=			ldb>=1.4.2:databases/ldb14
-RUN_DEPENDS+=			ldb>=1.4.2:databases/ldb14
-.       elif ${SAMBA4_LDB} == 13
-BUILD_DEPENDS+=			ldb13>=1.3.2:databases/ldb13
-RUN_DEPENDS+=			ldb13>=1.3.2:databases/ldb13
-.       elif ${SAMBA4_LDB} == 12
-BUILD_DEPENDS+=			ldb12>=1.2.3:databases/ldb12
-RUN_DEPENDS+=			ldb12>=1.2.3:databases/ldb12
-.       elif ${SAMBA4_LDB} == 11
-BUILD_DEPENDS+=			ldb>=1.1.29:databases/ldb
-RUN_DEPENDS+=			ldb>=1.1.29:databases/ldb
-.       endif
-SAMBA4_BUNDLED_LIBS+=		!ldb
-PLIST_SUB+=			SAMBA4_BUNDLED_LDB="@comment "
-SUB_LIST+=			SAMBA4_BUNDLED_LDB="@comment "
-.endif
 
-.if defined(SAMBA4_BUNDLED_TALLOC) || defined(SAMBA4_BUNDLED_TEVENT) || defined(SAMBA4_BUNDLED_TDB)
 SAMBA4_BUNDLED_LIBS+=		replace
-.endif
 # Don't use external libcom_err
 SAMBA4_BUNDLED_LIBS+=		com_err
 # Set the test environment variables
@@ -429,18 +365,6 @@ USES+=				python:3.4+
 PLIST_SUB+=			SAMBA4_PYTHON3=""
 SUB_LIST+=			SAMBA4_PYTHON3=""
 
-.if !defined(SAMBA4_BUNDLED_TALLOC)
-SAMBA4_BUNDLED_LIBS+=		!pytalloc-util
-.endif
-.if !defined(SAMBA4_BUNDLED_TEVENT)
-SAMBA4_BUNDLED_LIBS+=		!pytevent
-.endif
-.if !defined(SAMBA4_BUNDLED_TDB)
-SAMBA4_BUNDLED_LIBS+=		!pytdb
-.endif
-.if !defined(SAMBA4_BUNDLED_LDB)
-SAMBA4_BUNDLED_LIBS+=		!pyldb,!pyldb-util
-.endif
 # External Python modules
 BUILD_DEPENDS+=			${PYTHON_PKGNAMEPREFIX}dnspython>=1.15.0:dns/py-dnspython@${PY_FLAVOR}
 RUN_DEPENDS+=			${PYTHON_PKGNAMEPREFIX}dnspython>=1.15.0:dns/py-dnspython@${PY_FLAVOR}
