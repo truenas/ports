@@ -1258,7 +1258,7 @@ index 339dd36b6af..70f95f97935 100644
  
  	ZERO_STRUCT(smb_fname);
  	smb_fname.base_name = discard_const_p(char, filename);
-+	smb_fname.vss_tval.tv_sec = fname->vss_tval.tv_sec;
++	smb_fname.vss_tval.tv_sec = fname?fname->vss_tval.tv_sec:0;
  
  	if(info_level != SMB_FS_QUOTA_INFORMATION
  	   && SMB_VFS_STAT(conn, &smb_fname) != 0) {
