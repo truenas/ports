@@ -21,8 +21,8 @@ index 00000000000..8a311f0aa50
 + * along with this program; if not, write to the Free Software
 + * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 + */
-+
 +#include "includes.h"
++#ifdef HAVE_KQUEUE
 +#include "lib/util/tevent_unix.h"
 +#include "lib/tevent/tevent_kqueue.h"
 +#include <sys/event.h>
@@ -228,15 +228,15 @@ index 00000000000..8a311f0aa50
 +				  struct vfs_aio_state *vfs_aio_state)
 +{
 +	return vfs_aio_fbsd_common_recv(req, vfs_aio_state);
-+}
++#endif
 +
 +static struct vfs_fn_pointers vfs_aio_fbsd_fns = {
-+	.pread_send_fn = vfs_aio_fbsd_pread_send,
++#if 0
 +	.pread_recv_fn = vfs_aio_fbsd_common_recv,
 +	.pwrite_send_fn = vfs_aio_fbsd_pwrite_send,
 +	.pwrite_recv_fn = vfs_aio_fbsd_common_recv,
 +	.fsync_send_fn = vfs_aio_fbsd_fsync_send,
-+	.fsync_recv_fn = vfs_aio_fbsd_fsync_recv,
++#endif
 +};
 +
 +static_decl_vfs;

@@ -1212,8 +1212,8 @@ index 93af416f583..92882cad476 100644
      if conf.CHECK_FUNCS('epoll_create', headers='sys/epoll.h'):
          conf.DEFINE('HAVE_EPOLL', 1)
  
-+    if conf.CHECK_FUNCS('kqueue', headers='sys/event.h'):
-+        conf.DEFINE('HAVE_KQUEUE', 1)
++    #if conf.CHECK_FUNCS('kqueue', headers='sys/event.h'):
++    #    conf.DEFINE('HAVE_KQUEUE', 0)
 +
      tevent_num_signals = 64
      v = conf.CHECK_VALUEOF('NSIG', headers='signal.h')
