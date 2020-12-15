@@ -1241,8 +1241,8 @@ index 0fac5e2e397..9a2e3121474 100644
 +	struct timespec ts;
 +	clock_gettime(CLOCK_REALTIME_FAST, &ts);
 +	struct timeval tv = {
-+		ts.tv_sec,
-+		ts.tv_nsec / 1000
++		.tv_sec = ts.tv_sec,
++		.tv_usec = ts.tv_nsec / 1000
 +	};
  	return tv;
  }
