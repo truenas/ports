@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 00000000000..37e7d98f116
+index 00000000000..27ac6f05c40
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,1561 @@
+@@ -0,0 +1,1638 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -51,6 +51,14 @@ index 00000000000..37e7d98f116
 +#define ZFS_PROP_SAMBA_PREFIX "org.samba"
 +
 +static struct smblibzfshandle *global_libzfs_handle = NULL;
++
++static struct share_dataset_list {
++	struct dataset_list *dl;
++	char *connectpath;
++	struct share_dataset_list *prev, *next;
++};
++
++static struct share_dataset_list *shareds = NULL;
 +
 +static struct enum_list casesensitivity[] = {
 +	{SMBZFS_SENSITIVE, "sensitive"},
@@ -606,6 +614,7 @@ index 00000000000..37e7d98f116
 +	if (rv != 0) {
 +		DBG_ERR("Failed to mount dataset [%s] after dataset "
 +			"creation: %s\n", to_create, strerror(errno));
++		goto failure;
 +	}
 +	if (quota != NULL) {
 +		rv = zfs_prop_set(new, "quota", quota);
@@ -614,6 +623,7 @@ index 00000000000..37e7d98f116
 +				quota, strerror(errno));
 +		}
 +	}
++failure:
 +	zfs_close(new);
 +	return rv;
 +}
@@ -632,7 +642,16 @@ index 00000000000..37e7d98f116
 +
 +	strlcpy(tmp_path, path, sizeof(tmp_path));
 +	dl = talloc_zero(mem_ctx, struct dataset_list);
-+	for (dl->nentries = 0; dl->nentries <= depth; dl->nentries++) {
++
++	ds = smb_zfs_path_get_dataset(lz, mem_ctx, path, true, false);
++	if (ds == NULL) {
++		return NULL;
++	}
++
++	DLIST_ADD(dl->children, ds);
++	dl->nentries = 1;
++
++	for (; dl->nentries <= depth; dl->nentries++) {
 +		slashp = strrchr(tmp_path, '/');
 +		if (slashp == NULL) {
 +			DBG_ERR("Exiting at depth %zu", dl->nentries);
@@ -646,9 +665,10 @@ index 00000000000..37e7d98f116
 +		DLIST_ADD_END(dl->children, ds);
 +	}
 +	if (dl != NULL) {
-+		root = dl->children;
++		root = DLIST_TAIL(dl->children);
 +		DLIST_REMOVE(dl->children, root);
 +		dl->nentries--;
++		dl->root = root;
 +	}
 +	return dl;
 +}
@@ -1507,6 +1527,44 @@ index 00000000000..37e7d98f116
 +	return dl;
 +}
 +
++static struct dataset_list *share_lookup_dataset_list(const char *connectpath)
++{
++	struct dataset_list *out = NULL;
++	if (shareds == NULL) {
++		return out;
++	}
++	for (; shareds != NULL; shareds = shareds->next) {
++		if (strcmp(connectpath, shareds->connectpath) == 0) {
++			out = shareds->dl;
++			break;
++		}
++	}
++	return out;
++}
++
++static int put_share_dataset_list(TALLOC_CTX *mem_ctx, const char *connectpath,
++				  struct dataset_list *dl)
++{
++	struct share_dataset_list *new_shareds= NULL;
++	new_shareds = talloc_zero(mem_ctx, struct share_dataset_list);
++	if (new_shareds == NULL) {
++		errno = ENOMEM;
++		return -1;
++	}
++	new_shareds->dl = dl;
++	new_shareds->connectpath = talloc_strdup(mem_ctx, connectpath);
++	if (new_shareds->connectpath == NULL) {
++		errno = ENOMEM;
++		return -1;
++	}
++	if (shareds == NULL) {
++		shareds = new_shareds;
++		return 0;
++	}
++	DLIST_ADD(shareds, new_shareds);
++	return 0;
++}
++
 +int conn_zfs_init(TALLOC_CTX *mem_ctx,
 +		  const char *connectpath,
 +		  struct smblibzfshandle **plibzp,
@@ -1516,6 +1574,7 @@ index 00000000000..37e7d98f116
 +	struct smbzhandle *conn_zfsp = NULL;
 +	char *tmp_name = NULL;
 +	size_t to_remove, new_len;
++	struct dataset_list *dl = NULL;
 +
 +	get_global_smblibzfs_handle(mem_ctx);
 +	if (global_libzfs_handle == NULL) {
@@ -1529,6 +1588,14 @@ index 00000000000..37e7d98f116
 +		errno = ENOMEM;
 +		return -1;
 +	}
++
++	dl = share_lookup_dataset_list(connectpath);
++	if (dl != NULL) {
++		*plibzp = global_libzfs_handle;
++		*pdsl = dl;
++		return 0;
++	}
++
 +	get_smbzhandle(global_libzfs_handle, mem_ctx, connectpath, &conn_zfsp);
 +	/*
 +	 * Attempt to get zfs dataset handle will fail if the dataset is a
@@ -1562,7 +1629,17 @@ index 00000000000..37e7d98f116
 +		*pdsl = NULL;
 +		return 0;
 +	}
-+	*pdsl = cache_zhandle_list_children(mem_ctx, conn_zfsp);
++
++	dl = zhandle_list_children(mem_ctx, conn_zfsp, false);
++	if (dl == NULL) {
++		return 0;
++	}
++	ret = put_share_dataset_list(mem_ctx, connectpath, dl);
++	if (ret != 0) {
++		DBG_ERR("Failed to store share dataset list\n");
++	}
++
++	*pdsl = dl;
 +	return 0;
 +}
 diff --git a/source3/modules/smb_libzfs.h b/source3/modules/smb_libzfs.h
