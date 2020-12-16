@@ -667,10 +667,18 @@ index 66c9ed3add7..94b82e283a0 100644
  	if(SMB_VFS_STAT(conn, smb_fname_parent) != 0) {
  		ret = false;
 diff --git a/source3/smbd/filename.c b/source3/smbd/filename.c
-index d897ed8cea0..3b48ed703c6 100644
+index d897ed8cea0..bff28870e6b 100644
 --- a/source3/smbd/filename.c
 +++ b/source3/smbd/filename.c
-@@ -310,19 +310,11 @@ static NTSTATUS rearrange_snapshot_path(struct smb_filename *smb_fname,
+@@ -189,6 +189,7 @@ static NTSTATUS check_parent_exists(TALLOC_CTX *ctx,
+ 	if (smb_fname->base_name == last_component) {
+ 		goto no_optimization_out;
+ 	}
++	parent_fname.vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
+ 
+ 	if (posix_pathnames) {
+ 		ret = SMB_VFS_LSTAT(conn, &parent_fname);
+@@ -310,19 +311,11 @@ static NTSTATUS rearrange_snapshot_path(struct smb_filename *smb_fname,
  	}
  
  	if (ISDOT(parent)) {
@@ -692,7 +700,7 @@ index d897ed8cea0..3b48ed703c6 100644
  					parent,
  					last_component);
  	}
-@@ -352,7 +344,7 @@ static NTSTATUS rearrange_snapshot_path(struct smb_filename *smb_fname,
+@@ -352,7 +345,7 @@ static NTSTATUS rearrange_snapshot_path(struct smb_filename *smb_fname,
   * instead.
   */
  
@@ -701,7 +709,7 @@ index d897ed8cea0..3b48ed703c6 100644
  {
  	char *startp = strchr_m(smb_fname->base_name, '@');
  	char *endp = NULL;
-@@ -379,6 +371,9 @@ static NTSTATUS canonicalize_snapshot_path(struct smb_filename *smb_fname)
+@@ -379,6 +372,9 @@ static NTSTATUS canonicalize_snapshot_path(struct smb_filename *smb_fname)
  		/* Not a valid timestring. */
  		return NT_STATUS_OK;
  	}
@@ -711,7 +719,7 @@ index d897ed8cea0..3b48ed703c6 100644
  
  	if ( endp[0] == '\0') {
  		return rearrange_snapshot_path(smb_fname,
-@@ -538,9 +533,11 @@ NTSTATUS unix_convert(TALLOC_CTX *ctx,
+@@ -538,9 +534,11 @@ NTSTATUS unix_convert(TALLOC_CTX *ctx,
  
  	/* Canonicalize any @GMT- paths. */
  	if (snapshot_path) {
@@ -726,7 +734,7 @@ index d897ed8cea0..3b48ed703c6 100644
  		}
  	}
  
-@@ -647,6 +644,7 @@ NTSTATUS unix_convert(TALLOC_CTX *ctx,
+@@ -647,6 +645,7 @@ NTSTATUS unix_convert(TALLOC_CTX *ctx,
  	if((!conn->case_sensitive || !(conn->fs_capabilities &
  				       FILE_CASE_SENSITIVE_SEARCH)) &&
  	    stat_cache_lookup(conn, posix_pathnames, &smb_fname->base_name, &dirpath, &start,
@@ -734,7 +742,7 @@ index d897ed8cea0..3b48ed703c6 100644
  			      &smb_fname->st)) {
  		goto done;
  	}
-@@ -700,6 +698,7 @@ NTSTATUS unix_convert(TALLOC_CTX *ctx,
+@@ -700,6 +699,7 @@ NTSTATUS unix_convert(TALLOC_CTX *ctx,
  			}
  			/* Add the path (not including the stream) to the cache. */
  			stat_cache_add(orig_path, smb_fname->base_name,
@@ -742,7 +750,15 @@ index d897ed8cea0..3b48ed703c6 100644
  				       conn->case_sensitive);
  			DEBUG(5,("conversion of base_name finished %s -> %s\n",
  				 orig_path, smb_fname->base_name));
-@@ -1226,6 +1225,7 @@ NTSTATUS unix_convert(TALLOC_CTX *ctx,
+@@ -765,6 +765,7 @@ NTSTATUS unix_convert(TALLOC_CTX *ctx,
+ 					status = NT_STATUS_NO_MEMORY;
+ 					goto fail;
+ 				}
++				parent_fname.vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
+ 				if (posix_pathnames) {
+ 					ret = SMB_VFS_LSTAT(conn, &parent_fname);
+ 				} else {
+@@ -1226,6 +1227,7 @@ NTSTATUS unix_convert(TALLOC_CTX *ctx,
  		 */
  		if(!component_was_mangled && !name_has_wildcard) {
  			stat_cache_add(orig_path, dirpath,
@@ -750,7 +766,7 @@ index d897ed8cea0..3b48ed703c6 100644
  					conn->case_sensitive);
  		}
  
-@@ -1244,6 +1244,7 @@ NTSTATUS unix_convert(TALLOC_CTX *ctx,
+@@ -1244,6 +1246,7 @@ NTSTATUS unix_convert(TALLOC_CTX *ctx,
  
  	if(!component_was_mangled && !name_has_wildcard) {
  		stat_cache_add(orig_path, smb_fname->base_name,
@@ -758,7 +774,7 @@ index d897ed8cea0..3b48ed703c6 100644
  			       conn->case_sensitive);
  	}
  
-@@ -1326,7 +1327,7 @@ NTSTATUS check_name(connection_struct *conn,
+@@ -1326,7 +1329,7 @@ NTSTATUS check_name(connection_struct *conn,
  		return status;
  	}
  
@@ -864,14 +880,14 @@ index ac021ad93fe..20f90634a6e 100644
  void smbd_send_stat_cache_delete_message(struct messaging_context *msg_ctx,
  				    const char *name);
 diff --git a/source3/smbd/reply.c b/source3/smbd/reply.c
-index 54f3d330c95..2f7d18808a8 100644
+index 54f3d330c95..6a9b420f2b9 100644
 --- a/source3/smbd/reply.c
 +++ b/source3/smbd/reply.c
 @@ -1871,6 +1871,7 @@ void reply_search(struct smb_request *req)
  			reply_nterror(req, NT_STATUS_NO_MEMORY);
  			goto out;
  		}
-+		smb_dname->vss_tval.tv_sec = smb_dname->vss_tval.tv_sec;
++		smb_dname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
  
  		/*
  		 * As we've cut off the last component from
@@ -959,6 +975,27 @@ index 54f3d330c95..2f7d18808a8 100644
  
  		status = check_name(conn, smb_fname_src_dir);
  		if (!NT_STATUS_IS_OK(status)) {
+diff --git a/source3/smbd/smb2_query_directory.c b/source3/smbd/smb2_query_directory.c
+index 79a46e005cf..fc628749439 100644
+--- a/source3/smbd/smb2_query_directory.c
++++ b/source3/smbd/smb2_query_directory.c
+@@ -402,6 +402,7 @@ static struct tevent_req *smbd_smb2_query_directory_send(TALLOC_CTX *mem_ctx,
+ 		const char *fullpath;
+ 		char tmpbuf[PATH_MAX];
+ 		char *to_free = NULL;
++		time_t twrp = fsp->fsp_name->vss_tval.tv_sec;
+ 		uint32_t ucf_flags = UCF_SAVE_LCOMP |
+ 				     UCF_ALWAYS_ALLOW_WCARD_LCOMP |
+ 				     (state->smbreq->posix_pathnames ?
+@@ -426,7 +427,7 @@ static struct tevent_req *smbd_smb2_query_directory_send(TALLOC_CTX *mem_ctx,
+ 				conn,
+ 				fullpath,
+ 				ucf_flags,
+-				NULL,
++				twrp?&twrp:NULL,
+ 				&wcard_has_wild,
+ 				&smb_fname);
+ 
 diff --git a/source3/smbd/smb2_write.c b/source3/smbd/smb2_write.c
 index e49e623d796..3f8517cded7 100644
 --- a/source3/smbd/smb2_write.c
