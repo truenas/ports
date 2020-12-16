@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 00000000000..27ac6f05c40
+index 00000000000..bd1b65cc0b0
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,1638 @@
+@@ -0,0 +1,1639 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -1530,12 +1530,13 @@ index 00000000000..27ac6f05c40
 +static struct dataset_list *share_lookup_dataset_list(const char *connectpath)
 +{
 +	struct dataset_list *out = NULL;
++	struct share_dataset_list *to_check = NULL;
 +	if (shareds == NULL) {
 +		return out;
 +	}
-+	for (; shareds != NULL; shareds = shareds->next) {
-+		if (strcmp(connectpath, shareds->connectpath) == 0) {
-+			out = shareds->dl;
++	for (to_check=shareds; to_check; to_check = to_check->next) {
++		if (strcmp(connectpath, to_check->connectpath) == 0) {
++			out = to_check->dl;
 +			break;
 +		}
 +	}
