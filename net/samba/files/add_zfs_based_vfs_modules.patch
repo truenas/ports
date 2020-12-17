@@ -1,9 +1,9 @@
 diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
 new file mode 100644
-index 00000000000..8b43928c2fc
+index 00000000000..545fda9f818
 --- /dev/null
 +++ b/source3/modules/vfs_shadow_copy_zfs.c
-@@ -0,0 +1,1780 @@
+@@ -0,0 +1,1784 @@
 +/* shadow_copy_zfs: a shadow copy module for ZFS
 + *
 + * Copyright (C) Andrew Tridgell   2007 (portions taken from shadow_copy_zfs)
@@ -264,9 +264,10 @@ index 00000000000..8b43928c2fc
 +	struct shadow_copy_zfs_config *config = NULL;
 +	struct snapshot_list *snapshots = NULL;
 +	struct snapshot_list *cached_snaps = NULL;
-+	struct zfs_dataset *ds;
-+	struct smbzhandle *zfsp;
++	struct zfs_dataset *ds = NULL;
++	struct smbzhandle *zfsp = NULL;
 +	struct stat st;
++
 +	time(&snap_time);
 +	SMB_VFS_HANDLE_GET_DATA(handle, config, struct shadow_copy_zfs_config,
 +	    return NULL);
@@ -285,7 +286,10 @@ index 00000000000..8b43928c2fc
 +		DBG_INFO("refreshing stored snaplist - current timedelta: %f "
 +			 "permitted timedelta: %d\n", seconds, config->timedelta);
 +
-+		get_smbzhandle(config->libzp, handle->conn, ds->dataset_name, &zfsp);
++		get_smbzhandle(config->libzp, handle->conn, ds->dataset_name, &zfsp, false);
++		if (zfsp == NULL) {
++			return false;
++		}
 +		snapshots = zhandle_list_snapshots(zfsp,
 +						   mem_ctx,
 +						   config->ignore_empty_snaps,
