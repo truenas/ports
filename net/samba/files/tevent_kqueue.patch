@@ -70,10 +70,10 @@ index 5365fce3533..91c9495a26f 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..e85cf6d75d8
+index 00000000000..f09bab1821b
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
-@@ -0,0 +1,1027 @@
+@@ -0,0 +1,1028 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -655,6 +655,7 @@ index 00000000000..e85cf6d75d8
 +					     strerror(kev.fflags));
 +			}
 +			TEVENT_FD_NOT_WRITEABLE(fde);
++			*is_fd_event = false;
 +			return;
 +		}
 +		*pfde = fde;
@@ -1229,7 +1230,7 @@ index 93af416f583..92882cad476 100644
          SRC += ' tevent_port.c'
  
 diff --git a/lib/util/time.c b/lib/util/time.c
-index 0fac5e2e397..9a2e3121474 100644
+index 0fac5e2e397..3efcb987df0 100644
 --- a/lib/util/time.c
 +++ b/lib/util/time.c
 @@ -622,8 +622,12 @@ _PUBLIC_ bool timeval_is_zero(const struct timeval *tv)
