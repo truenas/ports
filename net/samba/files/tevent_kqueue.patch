@@ -70,10 +70,10 @@ index 5365fce3533..91c9495a26f 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..f158763496b
+index 00000000000..c09698330d0
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
-@@ -0,0 +1,1038 @@
+@@ -0,0 +1,1052 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -585,8 +585,8 @@ index 00000000000..f158763496b
 +	return tevent_common_invoke_fd_handler(fde, fde->flags & flags, NULL);
 +}
 +
-+static inline void kqueue_process_aio(struct kqueue_event_context *kqueue_ev,
-+				      void *udata)
++static void kqueue_process_aio(struct kqueue_event_context *kqueue_ev,
++				void *udata)
 +{
 +	struct tevent_req *req = NULL;
 +	struct tevent_aiocb *tiocbp = NULL;
@@ -613,7 +613,7 @@ index 00000000000..f158763496b
 +	tevent_req_done(req);
 +}
 +
-+static inline void kqueue_process_signal(struct kqueue_event_context *kqueue_ev,
++static void kqueue_process_signal(struct kqueue_event_context *kqueue_ev,
 +				  uint signum, int count)
 +{
 +	if (kqueue_ev->had_signal) {
@@ -625,9 +625,9 @@ index 00000000000..f158763496b
 +	}
 +}
 +
-+static inline void kqueue_process_kev(struct kqueue_event_context *kqueue_ev,
-+				      struct kevent kev, struct tevent_fd **pfde,
-+				      bool *is_fd_event)
++static void kqueue_process_kev(struct kqueue_event_context *kqueue_ev,
++			       struct kevent kev, struct tevent_fd **pfde,
++			       bool *is_fd_event)
 +{
 +	struct tevent_fd *fde = NULL;
 +
@@ -655,6 +655,10 @@ index 00000000000..f158763496b
 +					     strerror(kev.fflags));
 +			}
 +			TEVENT_FD_NOT_WRITEABLE(fde);
++			/*
++			 * "false" here ensures that event handler is not
++			 * called.
++			 */
 +			*is_fd_event = false;
 +			return;
 +		}
@@ -668,10 +672,20 @@ index 00000000000..f158763496b
 +		break;
 +	case EVFILT_READ:
 +		fde = get_tevent_fd(kqueue_ev, kev.udata, true);
-+		if ((kev.flags & EV_EOF) && (kev.fflags != 0)){
-+			tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_WARNING,
-+				    "evfilt_read ev_eof on [%s]: %s\n",
-+				    fde->location, strerror(kev.fflags));
++		if ((kev.flags & EV_EOF)) {
++			if (kev.fflags != 0) {
++				tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_WARNING,
++					    "evfilt_read ev_eof on [%s]: %s\n",
++					    fde->location, strerror(kev.fflags));
++			}
++			/*
++			 * Read direction shutdown. No pending data in socket
++			 * buffer. Do not trigger handler.
++			 */
++			if (kev.data == 0) {
++				*is_fd_event = false;
++				return;
++			}
 +		}
 +		*pfde = fde;
 +		/*
