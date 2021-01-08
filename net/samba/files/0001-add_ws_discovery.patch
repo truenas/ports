@@ -1,9 +1,9 @@
 diff --git a/source3/script/wsdd.py b/source3/script/wsdd.py
 new file mode 100644
-index 00000000000..2d05d4b754f
+index 00000000000..be058f85949
 --- /dev/null
 +++ b/source3/script/wsdd.py
-@@ -0,0 +1,862 @@
+@@ -0,0 +1,886 @@
 +#!/usr/bin/env python3
 +
 +# Implements a target service according to the Web Service Discovery
@@ -407,14 +407,38 @@ index 00000000000..2d05d4b754f
 +
 +    return False
 +
++def normalize_message_data(data):
++    msg_str = data.decode()
++    msg_str.replace('"xmlns', '" xmlns')
++    return msg_str
 +
 +def wsd_handle_message(data, interface, src_address):
 +    """
 +    handle a WSD message that might be received by a MulticastInterface class
 +    """
-+    tree = ElementTree.fromstring(data)
++    normalized_data = normalize_message_data(data)
++
++    try:
++        tree = ElementTree.fromstring(normalized_data)
++    except Exception:
++        logger.warning("Failed to parse message from client %s. "
++                       "Normalized: [%s]", src_address, normalized_data,
++                       exc_info=True)
++        return None
++
 +    header = tree.find('./soap:Header', namespaces)
-+    msg_id = header.find('./wsa:MessageID', namespaces).text
++    if header is None:
++        logger.warning("Received WSDD message with missing header from client %s: %s",
++                       src_address, data)
++        return None
++
++    msg_id_xml = header.find('./wsa:MessageID', namespaces)
++    if msg_id_xml is None:
++        logger.warning("Received WSDD message with invalid header from client %s: %s",
++                       src_address, data)
++        return None
++
++    msg_id = msg_id_xml.text
 +
 +    # if message came over multicast interface, check for duplicates
 +    if interface and wsd_is_duplicated_msg(msg_id):
@@ -673,7 +697,7 @@ index 00000000000..2d05d4b754f
 +        fmt = ('%(asctime)s:%(name)s %(levelname)s(pid %(process)d): '
 +               '%(message)s')
 +
-+    logging.basicConfig(level=log_level, format=fmt)
++    logging.basicConfig(filename='/var/log/wsdd.log', level=log_level, format=fmt)
 +    logger = logging.getLogger('wsdd')
 +
 +    if not args.uuid:
