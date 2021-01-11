@@ -70,10 +70,10 @@ index 5365fce3533..91c9495a26f 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..c09698330d0
+index 00000000000..5ae4220fff4
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
-@@ -0,0 +1,1052 @@
+@@ -0,0 +1,1058 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -683,7 +683,13 @@ index 00000000000..c09698330d0
 +			 * buffer. Do not trigger handler.
 +			 */
 +			if (kev.data == 0) {
++				tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
++					    "EVFILT_READ EV_EOF on [%s]. flags: 0x%08x: "
++                                            "additional flags: 0x%08x\n",
++					    fde->location, fde->flags,
++					    fde->additional_flags);
 +				*is_fd_event = false;
++				TEVENT_FD_NOT_READABLE(fde);
 +				return;
 +			}
 +		}
