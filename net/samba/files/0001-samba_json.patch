@@ -529,6 +529,17 @@ index 39083b15438..e7396237f50 100644
 +	json_free(&jsret);
 +	return false;
 +}
+diff --git a/source3/utils/net.c b/source3/utils/net.c
+index 683b46794e4..1523e00abdb 100644
+--- a/source3/utils/net.c
++++ b/source3/utils/net.c
+@@ -1425,5 +1425,6 @@ static void get_credentials_file(struct net_context *c,
+ 	poptFreeContext(pc);
+ 
+ 	TALLOC_FREE(frame);
++	TALLOC_FREE(c->msg_ctx);
+ 	return rc;
+ }
 diff --git a/source3/utils/sharesec.c b/source3/utils/sharesec.c
 index 454c5bfe36b..337d8ac82ef 100644
 --- a/source3/utils/sharesec.c
@@ -782,8 +793,19 @@ index 084df9f9a4a..93cde926801 100644
  	} else {
  		result = cacl_dump(cli, filename, numeric);
  	}
+diff --git a/source3/utils/smbcontrol.c b/source3/utils/smbcontrol.c
+index d779f0d14ea..4424c4ee935 100644
+--- a/source3/utils/smbcontrol.c
++++ b/source3/utils/smbcontrol.c
+@@ -1776,5 +1776,6 @@ int main(int argc, const char **argv)
+ 
+ 	poptFreeContext(pc);
+ 	TALLOC_FREE(frame);
++	TALLOC_FREE(msg_ctx);
+ 	return ret;
+ }
 diff --git a/source3/utils/status.c b/source3/utils/status.c
-index 36f7030e4f4..a7b5c733d1b 100644
+index 36f7030e4f4..1cc7470cb72 100644
 --- a/source3/utils/status.c
 +++ b/source3/utils/status.c
 @@ -51,6 +51,12 @@
@@ -1871,7 +1893,7 @@ index 36f7030e4f4..a7b5c733d1b 100644
  
  		locking_end();
  	}
-@@ -843,12 +1717,38 @@ int main(int argc, const char *argv[])
+@@ -843,12 +1717,41 @@ int main(int argc, const char *argv[])
  		if (n == NULL) {
  			goto done;
  		}
@@ -1909,6 +1931,9 @@ index 36f7030e4f4..a7b5c733d1b 100644
 +	json_free(&jsobj);
 +	#endif /* [HAVE_JANSSON] */
  	TALLOC_FREE(frame);
++	if (msg_ctx) {
++		TALLOC_FREE(msg_ctx);
++	}
  	return ret;
  }
 diff --git a/source3/utils/status_profile.c b/source3/utils/status_profile.c
