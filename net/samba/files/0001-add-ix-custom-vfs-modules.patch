@@ -3134,7 +3134,7 @@ index 00000000000..cddf08836f6
 +		 * not inheritable, otherwise create a normal group entry.
 +		 */
 +		case ID_TYPE_GID:
-+			if ((sbuf.st_ex_uid == unixid.id) &&
++			if ((sbuf.st_ex_gid == unixid.id) &&
 +			    !nt_ace_is_inherit(ace_nt->flags)) {
 +				id = ACL_UNDEFINED_ID;
 +				tag = ACL_GROUP_OBJ;
