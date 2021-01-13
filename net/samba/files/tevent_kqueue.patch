@@ -70,10 +70,10 @@ index 5365fce3533..91c9495a26f 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..5ae4220fff4
+index 00000000000..986e55e2952
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
-@@ -0,0 +1,1058 @@
+@@ -0,0 +1,1060 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -678,19 +678,21 @@ index 00000000000..5ae4220fff4
 +					    "evfilt_read ev_eof on [%s]: %s\n",
 +					    fde->location, strerror(kev.fflags));
 +			}
-+			/*
-+			 * Read direction shutdown. No pending data in socket
-+			 * buffer. Do not trigger handler.
-+			 */
-+			if (kev.data == 0) {
++			if (HAS_READ_AND_WRITE(fde->flags)) {
 +				tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
-+					    "EVFILT_READ EV_EOF on [%s]. flags: 0x%08x: "
++					    "EVFILT_READ EV_EOF on %p fd %d at [%s]. flags: 0x%08x: "
 +                                            "additional flags: 0x%08x\n",
-+					    fde->location, fde->flags,
++					    fde, fde->fd, fde->location, fde->flags,
 +					    fde->additional_flags);
 +				*is_fd_event = false;
-+				TEVENT_FD_NOT_READABLE(fde);
 +				return;
++			}
++			else {
++				tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
++					    "EVFILT_READ EV_EOF on %p fd: %d at [%s]. flags: 0x%08x: "
++                                            "additional flags: 0x%08x\n",
++					    fde, fde->fd, fde->location, fde->flags,
++					    fde->additional_flags);
 +			}
 +		}
 +		*pfde = fde;
