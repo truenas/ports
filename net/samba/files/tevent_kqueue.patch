@@ -70,10 +70,10 @@ index 5365fce3533..91c9495a26f 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..7c403d6577b
+index 00000000000..7d1025e273f
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
-@@ -0,0 +1,1049 @@
+@@ -0,0 +1,885 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -124,18 +124,6 @@ index 00000000000..7c403d6577b
 +#define HAS_READ_AND_WRITE(flags) ((flags & TEVENT_FD_RW) == TEVENT_FD_RW)
 +#define KEVENT_TO_TEVENT_FLAGS(f) (abs(f) & TEVENT_FD_RW)
 +
-+struct kqueue_signal_list {
-+	struct kqueue_signal_list *prev, *next;
-+	struct tevent_signal *se;
-+	struct kqueue_event_context *kqueue_ev;
-+	int signum;
-+};
-+
-+struct kqueue_signal_handlers {
-+	struct kqueue_signal_list *entries;
-+	size_t nentries;
-+};
-+
 +struct kqueue_event_context {
 +	/* a pointer back to the generic event_context */
 +	struct tevent_context *ev;
@@ -145,9 +133,7 @@ index 00000000000..7c403d6577b
 +	struct kevent *kev_array;
 +	int kev_size;
 +
-+	struct kqueue_signal_handlers sig_handlers[TEVENT_NUM_SIGNALS+1];
 +	pid_t pid;
-+	bool had_signal;
 +	bool busy;
 +	bool panic_force_replay;
 +	bool *panic_state;
@@ -159,9 +145,6 @@ index 00000000000..7c403d6577b
 +
 +static void kqueue_add_event(struct kqueue_event_context *kqueue_ev,
 +			     struct tevent_fd *fde);
-+
-+static int kqueue_add_signal_int(struct kqueue_event_context *kqueue_ev,
-+				 int signum, const char *handler_name);
 +
 +/*
 +  called to set the panic fallback function.
@@ -297,23 +280,6 @@ index 00000000000..7c403d6577b
 +			}
 +			kqueue_ev->busy = false;
 +			return;
-+		}
-+	}
-+
-+	/*
-+	 * Re-init the kevents for signal handlers. Failure here
-+	 * shouldn't be considered fatal because it's just a wrapper
-+	 * wround the common event handler code, but of course, I'd
-+	 * prefer it to work.
-+	 */
-+	for (signum = ARRAY_SIZE(kqueue_ev->sig_handlers) -1; signum >= 0; signum--){
-+		if (kqueue_ev->sig_handlers[signum].nentries > 0) {
-+			ret = kqueue_add_signal_int(kqueue_ev, signum, NULL);
-+			if (ret != 0) {
-+				tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
-+				     "do_kqueue: Failed to reinit signal [%d]: %s \n",
-+				     signum, strerror(errno));
-+			}
 +		}
 +	}
 +
@@ -525,41 +491,6 @@ index 00000000000..7c403d6577b
 +	return tevent_common_fd_destructor(fde);
 +}
 +
-+static int kqueue_signal_list_destructor(struct kqueue_signal_list *sl)
-+{
-+	int ret;
-+	struct kqueue_signal_handlers *h = NULL;
-+	struct kevent event;
-+	if (sl->kqueue_ev == NULL) {
-+		return 0;
-+	}
-+	h = &sl->kqueue_ev->sig_handlers[sl->signum];
-+	if (h->nentries > 0) {
-+		DLIST_REMOVE(h->entries, sl);
-+		h->nentries--;
-+	}
-+	if (h->nentries == 0) {
-+		EV_SET(&event,				//kev
-+		       (uintptr_t)&sl->signum,		//ident
-+		       EVFILT_SIGNAL,			//filter
-+		       EV_DELETE,			//flags
-+		       0,				//fflags
-+		       0,				//data
-+		       NULL);				//udata
-+
-+		ret = kevent(sl->kqueue_ev->kqueue_fd, &event, 1, NULL, 0, NULL);
-+		if (ret != 0) {
-+			if ((errno == ENOENT) || (errno == EBADF)) {
-+				return 0;
-+			}
-+			tevent_debug(sl->kqueue_ev->ev, TEVENT_DEBUG_FATAL,
-+				"failed to delete signal kevent for [%d]: %s\n",
-+				sl->signum, strerror(errno));
-+		}
-+	}
-+	return 0;
-+}
-+
 +static int kqueue_process_fd(struct kqueue_event_context *kqueue_ev,
 +			     struct tevent_fd *fde, uint16_t flags)
 +{
@@ -613,28 +544,17 @@ index 00000000000..7c403d6577b
 +	tevent_req_done(req);
 +}
 +
-+static void kqueue_process_signal(struct kqueue_event_context *kqueue_ev,
-+				  uint signum, int count)
-+{
-+	if (kqueue_ev->had_signal) {
-+		return;
-+	}
-+
-+	if (kqueue_ev->ev->signal_events) {
-+	    tevent_common_check_signal(kqueue_ev->ev);
-+	}
-+}
-+
 +static void kqueue_process_kev(struct kqueue_event_context *kqueue_ev,
 +			       struct kevent kev, struct tevent_fd **pfde,
-+			       bool *is_fd_event)
++			       bool *_is_fd_event)
 +{
 +	struct tevent_fd *fde = NULL;
++	bool is_fd_event = false;
 +
 +	switch (kev.filter) {
 +	case EVFILT_AIO:
 +		kqueue_process_aio(kqueue_ev, kev.udata);
-+		*is_fd_event = false;
++		*_is_fd_event = is_fd_event;
 +		break;
 +	case EVFILT_WRITE:
 +		fde = get_tevent_fd(kqueue_ev, kev.udata, true);
@@ -659,7 +579,7 @@ index 00000000000..7c403d6577b
 +			 * "false" here ensures that event handler is not
 +			 * called.
 +			 */
-+			*is_fd_event = false;
++			*_is_fd_event = is_fd_event;
 +			return;
 +		}
 +		*pfde = fde;
@@ -668,7 +588,8 @@ index 00000000000..7c403d6577b
 +		 * kevent will be automatically removed with
 +		 * last close of the fd.
 +		 */
-+		*is_fd_event = fde->busy == 0 ? true : false;
++		is_fd_event = fde->busy ? false : true;
++		*_is_fd_event = is_fd_event;
 +		break;
 +	case EVFILT_READ:
 +		fde = get_tevent_fd(kqueue_ev, kev.udata, true);
@@ -679,7 +600,7 @@ index 00000000000..7c403d6577b
 +					    fde->location, strerror(kev.fflags));
 +			}
 +			tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
-+				    "EVFILT_READ EV_EOF on %p fd: %d at. flags: 0x%08x: "
++				    "EVFILT_READ EV_EOF on %p fd: %d flags: 0x%08x: "
 +                                           "additional flags: 0x%08x\n",
 +				    fde, fde->fd, fde->flags,
 +				    fde->additional_flags);
@@ -690,11 +611,10 @@ index 00000000000..7c403d6577b
 +		 * kevent will be automatically removed with
 +		 * last close of the fd.
 +		 */
-+		*is_fd_event = fde->busy == 0 ? true : false;
-+		break;
-+	case EVFILT_SIGNAL:
-+		kqueue_process_signal(kqueue_ev, (uint)kev.ident, (int)kev.data);
-+		*is_fd_event = false;
++		if (fde->busy == 0 && HAS_READ(fde->flags)) {
++			is_fd_event = true;
++		}
++		*_is_fd_event = is_fd_event;
 +		break;
 +	default:
 +		kqueue_panic(kqueue_ev, "Unexpected kevent filter: %d",
@@ -789,14 +709,16 @@ index 00000000000..7c403d6577b
 +		}
 +		tsp = &ts;
 +	}
-+
++	/*
++	 * zero-fill the kevent array
++	 */
++	memset(kqueue_ev->kev_array, 0, kqueue_ev->kev_size * sizeof(struct kevent));
 +	/*
 +	 * If timeout is a non-NULL pointer, it specifies a maximum interval
 +	 * to wait for an event. If timeout is a NULL pointer, kevent() waits
 +	 * indefinetly. To effect a poll, the timeout argument should be non-NULL,
 +	 * pointing to a zero-valued timespec structure.
 +	 */
-+
 +	tevent_trace_point_callback(kqueue_ev->ev, TEVENT_TRACE_BEFORE_WAIT);
 +	nkevents = kevent(kqueue_ev->kqueue_fd,
 +			  NULL,			/* changelist */
@@ -833,6 +755,11 @@ index 00000000000..7c403d6577b
 +		 * received before timeout expired and event events
 +		 * placed on the kqueue for return.
 +		 */
++		if (wait_errno == EINTR && kqueue_ev->ev->signal_events) {
++			if (tevent_common_check_signal(kqueue_ev->ev)) {
++				return 0;
++			}
++		}
 +		else if (wait_errno != EINTR) {
 +			tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
 +				"kevent() failed: %s\n",strerror(wait_errno));
@@ -847,7 +774,6 @@ index 00000000000..7c403d6577b
 +	}
 +
 +	ret = process_kevents(kqueue_ev, nkevents);
-+	kqueue_ev->had_signal = false;
 +	if (nkevents == kqueue_ev->kev_size) {
 +		int new_size = kqueue_ev->kev_size * 2;
 +		struct kevent *new_array = NULL;
@@ -970,95 +896,6 @@ index 00000000000..7c403d6577b
 +}
 +
 +/*
-+ * Add a wrapper around tevent_common_add_signal(). This is to make it
-+ * so that we process signals more or less immediately when we gather and process
-+ * kevents (timeout).
-+ */
-+static int kqueue_add_signal_int(struct kqueue_event_context *kqueue_ev,
-+				 int signum, const char *handler_name)
-+{
-+	int ret;
-+	struct kevent event;
-+	EV_SET(&event,				//kev
-+	       (uintptr_t)&signum,		//ident
-+	       EVFILT_SIGNAL,			//filter
-+	       EV_ADD,				//flags
-+	       0,				//fflags
-+	       0,				//data
-+	       NULL);				//udata
-+
-+	ret = kevent(kqueue_ev->kqueue_fd, &event, 1, NULL, 0, NULL);
-+	if (ret != 0) {
-+		if (errno == EBADF) {
-+			if (kqueue_ev->busy) {
-+				return -1;
-+			}
-+			kqueue_check_reopen(kqueue_ev);
-+			ret = kevent(kqueue_ev->kqueue_fd,
-+				     &event, 1, NULL, 0, NULL);
-+		}
-+		else {
-+			tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
-+				"failed to add signal kevent for [%d] with handler "
-+				"[%s]: %s\n", signum, handler_name, strerror(errno));
-+		}
-+	}
-+	return ret;
-+}
-+
-+struct tevent_signal *kqueue_event_add_signal(struct tevent_context *ev,
-+					      TALLOC_CTX *mem_ctx,
-+					      int signum,
-+					      int sa_flags,
-+					      tevent_signal_handler_t handler,
-+					      void *private_data,
-+					      const char *handler_name,
-+					      const char *location)
-+{
-+	struct tevent_signal *se = NULL;
-+	struct kqueue_signal_list *sl = NULL;
-+	struct kqueue_event_context *kqueue_ev = NULL;
-+	struct kqueue_signal_handlers *handlers = NULL;
-+	struct kevent event;
-+	int ret;
-+
-+	if (signum >= TEVENT_NUM_SIGNALS) {
-+		errno = EINVAL;
-+		return NULL;
-+	}
-+
-+	kqueue_ev = talloc_get_type_abort(ev->additional_data,
-+					  struct kqueue_event_context);
-+
-+	se = tevent_common_add_signal(ev, mem_ctx, signum, sa_flags,
-+				      handler, private_data,
-+				      handler_name, location);
-+
-+	sl = talloc_zero(se, struct kqueue_signal_list);
-+	if (!sl) {
-+		talloc_free(se);
-+		return NULL;
-+	}
-+
-+	sl->se = se;
-+	sl->signum = signum;
-+	sl->kqueue_ev = kqueue_ev;
-+	handlers = &kqueue_ev->sig_handlers[signum];
-+	/* only install a signal handler if not already installed */
-+	if (handlers->nentries == 0) {
-+		kqueue_add_signal_int(kqueue_ev, signum, handler_name);
-+	}
-+	DLIST_ADD(handlers->entries, sl);
-+	handlers->nentries++;
-+	tevent_debug(ev, TEVENT_DEBUG_TRACE,
-+		"added signal [%u] kevent for [%s] nentries: %zu\n",
-+		signum, handler_name, handlers->nentries);
-+
-+        talloc_set_destructor(sl, kqueue_signal_list_destructor);
-+        return se;
-+}
-+
-+/*
 +  do a single event loop using the events defined in ev
 +*/
 +static int kqueue_event_loop_once(struct tevent_context *ev, const char *location)
@@ -1073,7 +910,6 @@ index 00000000000..7c403d6577b
 +
 +	if (ev->signal_events &&
 +	    tevent_common_check_signal(ev)) {
-+		kqueue_ev->had_signal = true;
 +		return 0;
 +	}
 +
@@ -1114,7 +950,7 @@ index 00000000000..7c403d6577b
 +	.set_fd_flags		= kqueue_event_set_fd_flags,
 +	.add_timer		= tevent_common_add_timer_v2,
 +	.schedule_immediate	= tevent_common_schedule_immediate,
-+	.add_signal		= kqueue_event_add_signal,
++	.add_signal		= tevent_common_add_signal,
 +	.loop_once		= kqueue_event_loop_once,
 +	.loop_wait		= tevent_common_loop_wait,
 +};
