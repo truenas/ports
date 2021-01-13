@@ -70,10 +70,10 @@ index 5365fce3533..91c9495a26f 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..f09bab1821b
+index 00000000000..7c403d6577b
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
-@@ -0,0 +1,1028 @@
+@@ -0,0 +1,1049 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -585,8 +585,8 @@ index 00000000000..f09bab1821b
 +	return tevent_common_invoke_fd_handler(fde, fde->flags & flags, NULL);
 +}
 +
-+static inline void kqueue_process_aio(struct kqueue_event_context *kqueue_ev,
-+				      void *udata)
++static void kqueue_process_aio(struct kqueue_event_context *kqueue_ev,
++				void *udata)
 +{
 +	struct tevent_req *req = NULL;
 +	struct tevent_aiocb *tiocbp = NULL;
@@ -613,7 +613,7 @@ index 00000000000..f09bab1821b
 +	tevent_req_done(req);
 +}
 +
-+static inline void kqueue_process_signal(struct kqueue_event_context *kqueue_ev,
++static void kqueue_process_signal(struct kqueue_event_context *kqueue_ev,
 +				  uint signum, int count)
 +{
 +	if (kqueue_ev->had_signal) {
@@ -625,9 +625,9 @@ index 00000000000..f09bab1821b
 +	}
 +}
 +
-+static inline void kqueue_process_kev(struct kqueue_event_context *kqueue_ev,
-+				      struct kevent kev, struct tevent_fd **pfde,
-+				      bool *is_fd_event)
++static void kqueue_process_kev(struct kqueue_event_context *kqueue_ev,
++			       struct kevent kev, struct tevent_fd **pfde,
++			       bool *is_fd_event)
 +{
 +	struct tevent_fd *fde = NULL;
 +
@@ -655,21 +655,42 @@ index 00000000000..f09bab1821b
 +					     strerror(kev.fflags));
 +			}
 +			TEVENT_FD_NOT_WRITEABLE(fde);
++			/*
++			 * "false" here ensures that event handler is not
++			 * called.
++			 */
 +			*is_fd_event = false;
 +			return;
 +		}
 +		*pfde = fde;
-+		*is_fd_event = true;
++		/*
++		 * Skip event handler if the event is busy.
++		 * kevent will be automatically removed with
++		 * last close of the fd.
++		 */
++		*is_fd_event = fde->busy == 0 ? true : false;
 +		break;
 +	case EVFILT_READ:
 +		fde = get_tevent_fd(kqueue_ev, kev.udata, true);
-+		if ((kev.flags & EV_EOF) && (kev.fflags != 0)){
-+			tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_WARNING,
-+				    "evfilt_read ev_eof on [%s]: %s\n",
-+				    fde->location, strerror(kev.fflags));
++		if ((kev.flags & EV_EOF)) {
++			if (kev.fflags != 0) {
++				tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_WARNING,
++					    "evfilt_read ev_eof on [%s]: %s\n",
++					    fde->location, strerror(kev.fflags));
++			}
++			tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
++				    "EVFILT_READ EV_EOF on %p fd: %d at. flags: 0x%08x: "
++                                           "additional flags: 0x%08x\n",
++				    fde, fde->fd, fde->flags,
++				    fde->additional_flags);
 +		}
 +		*pfde = fde;
-+		*is_fd_event = true;
++		/*
++		 * Skip event handler if the event is busy.
++		 * kevent will be automatically removed with
++		 * last close of the fd.
++		 */
++		*is_fd_event = fde->busy == 0 ? true : false;
 +		break;
 +	case EVFILT_SIGNAL:
 +		kqueue_process_signal(kqueue_ev, (uint)kev.ident, (int)kev.data);
