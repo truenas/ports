@@ -2124,10 +2124,10 @@ index 00000000000..3f392ace91f
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..2483a8a0ace
+index 00000000000..e8f15c49330
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2601 @@
+@@ -0,0 +1,2605 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -3024,7 +3024,8 @@ index 00000000000..2483a8a0ace
 +static bool convert_ntace_to_bsdace(acl_t zacl,
 +				    const struct security_ace *ace_nt,
 +				    SMB_STRUCT_STAT sbuf,
-+				    bool is_dir)
++				    bool is_dir,
++				    bool *has_inheritable)
 +{
 +	struct dom_sid_buf buf;
 +	uint32_t tmp_mask = 0;
@@ -3050,7 +3051,9 @@ index 00000000000..2483a8a0ace
 +
 +	permset = win2bsdperms(tmp_mask);
 +	flags = win2bsdflags(ace_nt->flags, is_dir);
-+
++	if (flags & (ACL_ENTRY_FILE_INHERIT | ACL_ENTRY_DIRECTORY_INHERIT)) {
++		*has_inheritable = true;
++	}
 +	/* Currently ZFS only supports ALLOW and DENY entries */
 +	switch (ace_nt->type) {
 +	case SEC_ACE_TYPE_ACCESS_ALLOWED:
@@ -3212,6 +3215,7 @@ index 00000000000..2483a8a0ace
 +	acl_t zacl;
 +	acl_entry_t hidden_entry;
 +	bool ok, is_dir;
++	bool has_inheritable = false;
 +
 +	zacl = acl_init(ACL_MAX_ENTRIES);
 +	naces = psd->dacl->num_aces;
@@ -3234,7 +3238,7 @@ index 00000000000..2483a8a0ace
 +	is_dir = S_ISDIR(sbuf.st_ex_mode);
 +	for (i=0; i<psd->dacl->num_aces; i++) {
 +		ok = convert_ntace_to_bsdace(zacl, (psd->dacl->aces + i),
-+					     sbuf, is_dir);
++					     sbuf, is_dir, &has_inheritable);
 +		if (!ok) {
 +			acl_free(zacl);
 +			return map_nt_error_from_unix(errno);
@@ -3245,7 +3249,7 @@ index 00000000000..2483a8a0ace
 +	 * special entries to ZFS ACL on file creation on absence of inheriting
 +	 * special entries in the parent directory.
 +	 */
-+	if (config->zfs_acl_ignore_empty_mode) {
++	if (config->zfs_acl_ignore_empty_mode && has_inheritable) {
 +		if (acl_create_entry(&zacl, &hidden_entry) < 0) {
 +			DBG_ERR("Failed to create new ACL entry: %s\n", strerror(errno));
 +		}
