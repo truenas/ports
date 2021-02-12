@@ -2124,10 +2124,10 @@ index 00000000000..3f392ace91f
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..cddf08836f6
+index 00000000000..2483a8a0ace
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2599 @@
+@@ -0,0 +1,2601 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -2927,11 +2927,13 @@ index 00000000000..cddf08836f6
 +         * able to disable permissions inheritance.
 +	 */
 +	if (!inherited_present) {
-+		*acl_control_flags = (SEC_DESC_DACL_PROTECTED|
-+				     SEC_DESC_SELF_RELATIVE);
++		*acl_control_flags = (SEC_DESC_DACL_PROTECTED |
++				      SEC_DESC_DACL_AUTO_INHERITED |
++				      SEC_DESC_SELF_RELATIVE);
 +	}
 +	else {
-+		*acl_control_flags = (SEC_DESC_SELF_RELATIVE);
++		*acl_control_flags = (SEC_DESC_DACL_AUTO_INHERITED |
++				      SEC_DESC_SELF_RELATIVE);
 +	}
 +	acl_free(zacl);
 +	return true;
