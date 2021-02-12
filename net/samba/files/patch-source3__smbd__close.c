@@ -14,15 +14,6 @@
  			DEBUG(5, ("delete_all_streams failed: %s\n",
  				  nt_errstr(status)));
  			goto done;
-@@ -666,7 +670,7 @@ static void assert_no_pending_aio(struct files_struct 
- 		 * fsp->aio_requests[x], causing a crash.
- 		 */
- 		while (fsp->num_aio_requests != 0) {
--			TALLOC_FREE(fsp->aio_requests[0]);
-+			talloc_free(fsp->aio_requests[0]);
- 		}
- 		return;
- 	}
 @@ -1204,7 +1208,12 @@ static NTSTATUS close_directory(struct smb_request *re
  		    && !is_ntfs_stream_smb_fname(fsp->fsp_name)) {
  
