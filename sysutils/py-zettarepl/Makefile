@@ -2,7 +2,7 @@
 
 PORTNAME=	zettarepl
 PORTVERSION=	0.1
-PORTREVISION=	30
+PORTREVISION=	31
 CATEGORIES=	sysutils python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
@@ -12,8 +12,8 @@ COMMENT=	Cross-platform ZFS replication solution
 USES=		python:3.6+
 USE_PYTHON=	autoplist distutils
 USE_GITHUB=	yes
-GH_ACCOUNT=	freenas
-GH_TAGNAME=	4fc4369aa6223f9a863da49da433f35d3c76a093
+GH_ACCOUNT=	truenas
+GH_TAGNAME=	51c05e090c5b1b8bda1cdf305d3b298606fc299d
 
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}coloredlogs>0:devel/py-coloredlogs@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}croniter>0:sysutils/py-croniter@${PY_FLAVOR} \
