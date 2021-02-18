@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=	smartmontools
-PORTVERSION=	7.1
+PORTVERSION=	7.2
 CATEGORIES=	sysutils
 MASTER_SITES=	SF
 
