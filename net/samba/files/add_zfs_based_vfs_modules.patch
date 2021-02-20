@@ -1,6 +1,6 @@
 diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
 new file mode 100644
-index 00000000000..545fda9f818
+index 00000000000..209ccc99b7c
 --- /dev/null
 +++ b/source3/modules/vfs_shadow_copy_zfs.c
 @@ -0,0 +1,1784 @@
@@ -121,7 +121,7 @@ index 00000000000..545fda9f818
 +	 * memory context of our dataset list.
 +	 */
 +	child = smb_zfs_path_get_dataset(dl->root->zhandle->lz, dl,
-+					 path, true, false);
++					 path, true, false, true);
 +	if (child != NULL) {
 +		DLIST_ADD(dl->children, child);
 +		return child;
