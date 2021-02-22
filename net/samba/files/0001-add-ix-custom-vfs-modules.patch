@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 00000000000..250e5ebc307
+index 00000000000..97fc6e065d0
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,1701 @@
+@@ -0,0 +1,1702 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -666,7 +666,7 @@ index 00000000000..250e5ebc307
 +	strlcpy(tmp_path, path, sizeof(tmp_path));
 +	dl = talloc_zero(mem_ctx, struct dataset_list);
 +
-+	ds = smb_zfs_path_get_dataset(lz, mem_ctx, path, true, false);
++	ds = smb_zfs_path_get_dataset(lz, mem_ctx, path, true, false, false);
 +	if (ds == NULL) {
 +		return NULL;
 +	}
@@ -681,7 +681,7 @@ index 00000000000..250e5ebc307
 +			break;
 +		}
 +		*slashp = '\0';
-+		ds = smb_zfs_path_get_dataset(lz, mem_ctx, tmp_path, true, false);
++		ds = smb_zfs_path_get_dataset(lz, mem_ctx, tmp_path, true, false, false);
 +		if (ds == NULL) {
 +			return NULL;
 +		}
@@ -981,12 +981,13 @@ index 00000000000..250e5ebc307
 +					     TALLOC_CTX *mem_ctx,
 +					     const char *path,
 +					     bool get_props,
-+					     bool open_zhandle)
++					     bool open_zhandle,
++					     bool resolve_path)
 +{
 +	int ret;
 +	struct zfs_dataset *dsout = NULL;
 +	struct smbzhandle *zfs_ext = NULL;
-+	ret = get_smbzhandle(smblibzfsp, mem_ctx, path, &zfs_ext, false);
++	ret = get_smbzhandle(smblibzfsp, mem_ctx, path, &zfs_ext, resolve_path);
 +	if (ret != 0) {
 +		DBG_ERR("Failed to get zhandle\n");
 +		return NULL;
@@ -1707,10 +1708,10 @@ index 00000000000..250e5ebc307
 +}
 diff --git a/source3/modules/smb_libzfs.h b/source3/modules/smb_libzfs.h
 new file mode 100644
-index 00000000000..3f392ace91f
+index 00000000000..801553403c7
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.h
-@@ -0,0 +1,411 @@
+@@ -0,0 +1,412 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -1969,7 +1970,8 @@ index 00000000000..3f392ace91f
 +                                             TALLOC_CTX *mem_ctx,
 +                                             const char *path,
 +                                             bool get_props,
-+					     bool open_zhandle);
++					     bool open_zhandle,
++					     bool resolve_path);
 +
 +int smb_get_dataset_name(struct smbzhandle *zhandle_ext, const char **dataset_name_out);
 +/*
