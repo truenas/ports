@@ -70,10 +70,10 @@ index 5365fce3533..91c9495a26f 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..c574c65eb1f
+index 00000000000..00698412f15
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
-@@ -0,0 +1,881 @@
+@@ -0,0 +1,883 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -584,7 +584,9 @@ index 00000000000..c574c65eb1f
 +		 * kevent will be automatically removed with
 +		 * last close of the fd.
 +		 */
-+		is_fd_event = fde->busy == 0 ? true : false;
++		if (fde->busy == 0 && HAS_WRITE(fde->flags)) {
++			is_fd_event = true;
++		}
 +		*_is_fd_event = is_fd_event;
 +		break;
 +	case EVFILT_READ:
