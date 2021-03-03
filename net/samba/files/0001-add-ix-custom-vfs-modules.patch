@@ -2126,10 +2126,10 @@ index 00000000000..801553403c7
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..e8f15c49330
+index 00000000000..8e3f6073269
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2605 @@
+@@ -0,0 +1,2577 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -2855,7 +2855,8 @@ index 00000000000..e8f15c49330
 +			 * behavior for CREATOR-OWNER and CREATOR-GROUP.
 +			 */
 +			if ((zacl->ats_acl.acl_entry[i].ae_perm & ACL_WRITE_DATA) &&
-+			     config->zfs_acl_map_modify) {
++			    (config->zfs_acl_map_modify) && (win_ace_flags == 0) &&
++			    (win_ace_type == SEC_ACE_TYPE_ACCESS_ALLOWED)) {
 +				/*
 +				 * Compatibilty logic for posix modes on
 +				 * special ids. for group, map "rw" to "modify". 
@@ -4530,42 +4531,13 @@ index 00000000000..e8f15c49330
 +	}
 +	if (config->zfs_acl_enabled) {
 +		config->zfs_acl_map_modify = lp_parm_bool(SNUM(handle->conn),
-+			"ixnas", "zfsacl_map_modify", false);
++			"ixnas", "zfsacl_map_modify", true);
 +
 +		config->zfs_acl_ignore_empty_mode = lp_parm_bool(SNUM(handle->conn),
 +			"ixnas", "zfsacl_ignore_empty_mode", true);
 +
 +		config->zfs_acl_sortaces = lp_parm_bool(SNUM(handle->conn),
 +			"ixnas", "zfsacl_sortaces", false);
-+		/*
-+		 * Loosen up ACL interpretation for time machine shares.
-+		 * This makes our POSIX mode behave more POSIX-like over SMB,
-+		 * which generally makes MacOS clients happier.
-+		 */
-+		if (lp_parm_bool(SNUM(handle->conn), "fruit", "time machine", false)) {
-+			config->zfs_acl_map_modify = true;
-+		}
-+		/*
-+		 * Ditto for cases where the ACL on the connectpath is trivial.
-+		 * If the user has only set a POSIX mode, then do our darndest
-+		 * to actually make this work as expected.
-+		 */
-+		zacl = acl_get_file(chkpath, ACL_TYPE_NFS4);
-+		if (zacl == NULL) {
-+			DBG_ERR("Failed to retrieve connectpath ACL\n");
-+			TALLOC_FREE(chkpath);
-+			return false;
-+		}
-+		ret = acl_is_trivial_np(zacl, &is_trivial);
-+		acl_free(zacl);
-+		if (ret != 0) {
-+			DBG_ERR("Failed to determine whether connecpath ACL is trivial\n");
-+			TALLOC_FREE(chkpath);
-+			return false;
-+		}
-+		if (is_trivial) {
-+			config->zfs_acl_map_modify = true;
-+		}
 +	}
 +	TALLOC_FREE(chkpath);
 +	config->zfs_acl_chmod_enabled = lp_parm_bool(SNUM(handle->conn),
