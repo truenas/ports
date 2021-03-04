@@ -2126,10 +2126,10 @@ index 00000000000..801553403c7
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..8e3f6073269
+index 00000000000..fbfc2391fdc
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2577 @@
+@@ -0,0 +1,2578 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -4640,6 +4640,7 @@ index 00000000000..8e3f6073269
 +			lp_do_parameter(SNUM(handle->conn), "store dos attributes",
 +					"no");
 +		}
++		lp_do_parameter(SNUM(handle->conn), "kernel dosmodes", "yes");
 +	}
 +
 +	ok = set_acl_parameters(handle, config);
