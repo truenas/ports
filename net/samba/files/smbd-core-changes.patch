@@ -796,7 +796,7 @@ index 5bcf0503b4c..04b0ec11b25 100644
  #ifdef USE_DMAPI
  struct smbd_dmapi_context;
 diff --git a/source3/smbd/open.c b/source3/smbd/open.c
-index 4a31b822646..561baf9906d 100644
+index 4a31b822646..3992cff5ce6 100644
 --- a/source3/smbd/open.c
 +++ b/source3/smbd/open.c
 @@ -641,6 +641,7 @@ static int non_widelink_open(struct connection_struct *conn,
@@ -823,6 +823,22 @@ index 4a31b822646..561baf9906d 100644
  
  		/*
  		 * Only follow symlinks within a share
+@@ -2978,13 +2981,13 @@ static bool open_match_attributes(connection_struct *conn,
+ 		  (unsigned int)*returned_unx_mode ));
+ 
+ 	/* If we're mapping SYSTEM and HIDDEN ensure they match. */
+-	if (lp_map_system(SNUM(conn)) || lp_store_dos_attributes(SNUM(conn))) {
++	if (lp_map_system(SNUM(conn)) || lp_store_dos_attributes(SNUM(conn)) || lp_kernel_dosmodes(SNUM(conn))) {
+ 		if ((old_dos_attr & FILE_ATTRIBUTE_SYSTEM) &&
+ 		    !(new_dos_attr & FILE_ATTRIBUTE_SYSTEM)) {
+ 			return False;
+ 		}
+ 	}
+-	if (lp_map_hidden(SNUM(conn)) || lp_store_dos_attributes(SNUM(conn))) {
++	if (lp_map_hidden(SNUM(conn)) || lp_store_dos_attributes(SNUM(conn)) || lp_kernel_dosmodes(SNUM(conn))) {
+ 		if ((old_dos_attr & FILE_ATTRIBUTE_HIDDEN) &&
+ 		    !(new_dos_attr & FILE_ATTRIBUTE_HIDDEN)) {
+ 			return False;
 @@ -3670,10 +3673,24 @@ static NTSTATUS open_file_ntcreate(connection_struct *conn,
  	/*
  	 * Ensure we pay attention to default ACLs on directories if required.
@@ -852,6 +868,28 @@ index 4a31b822646..561baf9906d 100644
  	}
  
  	DEBUG(4,("calling open_file with flags=0x%X flags2=0x%X mode=0%o, "
+@@ -4040,6 +4057,10 @@ static NTSTATUS open_file_ntcreate(connection_struct *conn,
+ 				}
+ 			}
+ 		}
++		else if (lp_kernel_dosmodes(SNUM(conn)) && !posix_open) {
++			SMB_VFS_SET_DOS_ATTRIBUTES(conn, smb_fname,
++						   new_dos_attributes | FILE_ATTRIBUTE_ARCHIVE);
++		}
+ 	}
+ 
+ 	/* Determine sparse flag. */
+@@ -4199,6 +4220,10 @@ static NTSTATUS mkdir_internal(connection_struct *conn,
+ 					 parent_dir, true);
+ 		}
+ 	}
++	else if (lp_kernel_dosmodes(SNUM(conn)) && !posix_open) {
++		SMB_VFS_SET_DOS_ATTRIBUTES(conn, smb_dname,
++					   file_attributes | FILE_ATTRIBUTE_DIRECTORY);
++	}
+ 
+ 	if (lp_inherit_permissions(SNUM(conn))) {
+ 		inherit_access_posix_acl(conn, parent_dir,
 diff --git a/source3/smbd/proto.h b/source3/smbd/proto.h
 index ac021ad93fe..20f90634a6e 100644
 --- a/source3/smbd/proto.h
@@ -1224,7 +1262,7 @@ index 5162ec06ea9..a49b934720a 100644
  	}
  	DEBUG(10,("stat_cache_delete: deleting name [%s] -> %s\n",
 diff --git a/source3/smbd/trans2.c b/source3/smbd/trans2.c
-index 339dd36b6af..70f95f97935 100644
+index 339dd36b6af..02bd92c6b01 100644
 --- a/source3/smbd/trans2.c
 +++ b/source3/smbd/trans2.c
 @@ -258,9 +258,22 @@ NTSTATUS get_ea_value(TALLOC_CTX *mem_ctx,

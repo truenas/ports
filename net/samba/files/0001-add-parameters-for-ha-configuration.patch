@@ -88,6 +88,25 @@ index 00000000000..ee113b12ea7
 +<value type="default">yes</value>
 +<value type="example">no</value>
 +</samba:parameter>
+diff --git a/docs-xml/smbdotconf/filename/kerneldosmodes.xml b/docs-xml/smbdotconf/filename/kerneldosmodes.xml
+new file mode 100644
+index 00000000000..b0808a436c5
+--- /dev/null
++++ b/docs-xml/smbdotconf/filename/kerneldosmodes.xml
+@@ -0,0 +1,13 @@
++<samba:parameter name="kernel dosmodes"
++                 context="S"
++                 type="boolean"
++                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
++<description>
++	<para>
++	This parameter is set to indicate that server supports kernel dosmodes.
++	In case they are enabled, normal dosmode storage in xattr / posix mode are bypassed
++	in favor of direct call to relevant SET/FSET_DOS_ATTRIBUTES vfs function.
++	</para>
++</description>
++<value type="default">no</value>
++</samba:parameter>
 diff --git a/docs-xml/smbdotconf/winbind/winbindnetbiosaliasspn.xml b/docs-xml/smbdotconf/winbind/winbindnetbiosaliasspn.xml
 new file mode 100644
 index 00000000000..6979955a101
@@ -151,10 +170,18 @@ index a087587bba7..bdca3030f19 100644
  	for (addl_hostnames = lp_additional_dns_hostnames();
  	     addl_hostnames != NULL && *addl_hostnames != NULL;
 diff --git a/source3/param/loadparm.c b/source3/param/loadparm.c
-index d3d81f6ece5..2b13e37d3eb 100644
+index d3d81f6ece5..31ce1f1f37d 100644
 --- a/source3/param/loadparm.c
 +++ b/source3/param/loadparm.c
-@@ -690,6 +690,7 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
+@@ -194,6 +194,7 @@ static const struct loadparm_service _sDefault =
+ 	.map_hidden = false,
+ 	.map_archive = true,
+ 	.store_dos_attributes = true,
++	.kernel_dosmodes = false,
+ 	.dmapi_support = false,
+ 	.locking = true,
+ 	.strict_locking = Auto,
+@@ -690,6 +691,7 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
  #endif
  	Globals.time_server = false;
  	Globals.bind_interfaces_only = false;
@@ -162,7 +189,7 @@ index d3d81f6ece5..2b13e37d3eb 100644
  	Globals.unix_password_sync = false;
  	Globals.pam_password_change = false;
  	Globals.passwd_chat_debug = false;
-@@ -721,6 +722,11 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
+@@ -721,6 +723,11 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
  	Globals.log_writeable_files_on_exit = false;
  	Globals.create_krb5_conf = true;
  	Globals.include_system_krb5_conf = true;
