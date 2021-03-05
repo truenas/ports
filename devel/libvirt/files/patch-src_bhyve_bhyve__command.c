@@ -1,6 +1,16 @@
 --- src/bhyve/bhyve_command.c.orig	2021-03-01 10:56:12 UTC
 +++ src/bhyve/bhyve_command.c
-@@ -217,8 +217,9 @@ bhyveBuildAHCIControllerArgStr(const virDomainDef *def
+@@ -213,12 +213,19 @@ bhyveBuildAHCIControllerArgStr(const virDomainDef *def
+                            _("unsupported disk device"));
+             return -1;
+         }
++        if (disk->blockio.logical_block_size) {
++            virBufferAsprintf(&device, ",sectorsize=%d", disk->blockio.logical_block_size);
++            if (disk->blockio.physical_block_size) {
++                virBufferAsprintf(&device, "/%d", disk->blockio.physical_block_size);
++            }
++        }
+         virBufferAddBuffer(&buf, &device);
      }
  
      virCommandAddArg(cmd, "-s");
@@ -11,7 +21,7 @@
                             virBufferCurrentContent(&buf));
  
      return 0;
-@@ -269,6 +270,7 @@ bhyveBuildVirtIODiskArgStr(const virDomainDef *def G_G
+@@ -269,6 +276,7 @@ bhyveBuildVirtIODiskArgStr(const virDomainDef *def G_G
                             virCommandPtr cmd)
  {
      const char *disk_source;
@@ -19,7 +29,7 @@
  
      if (virDomainDiskTranslateSourcePool(disk) < 0)
          return -1;
-@@ -288,10 +290,17 @@ bhyveBuildVirtIODiskArgStr(const virDomainDef *def G_G
+@@ -288,10 +296,17 @@ bhyveBuildVirtIODiskArgStr(const virDomainDef *def G_G
  
      disk_source = virDomainDiskGetSource(disk);
  
@@ -40,7 +50,7 @@
  
      return 0;
  }
-@@ -708,7 +717,6 @@ virBhyveProcessBuildBhyveCmd(bhyveConnPtr driver, virD
+@@ -708,7 +723,6 @@ virBhyveProcessBuildBhyveCmd(bhyveConnPtr driver, virD
       * since it forces the guest to exit when it spins on a lock acquisition.
       */
      virCommandAddArg(cmd, "-H"); /* vmexit from guest on hlt */
