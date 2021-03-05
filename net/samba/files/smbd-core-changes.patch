@@ -322,7 +322,7 @@ index 5bb55cf89f6..bd695f85599 100644
  	status = SMB_VFS_NEXT_READ_DFS_PATHAT(handle,
  					mem_ctx,
 diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
-index 4cf553411cb..0003c2876ff 100644
+index 4cf553411cb..e5b472cd201 100644
 --- a/source3/modules/vfs_default.c
 +++ b/source3/modules/vfs_default.c
 @@ -18,9 +18,11 @@
@@ -398,6 +398,15 @@ index 4cf553411cb..0003c2876ff 100644
  }
  
  static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
+@@ -1945,7 +1941,7 @@ static void vfswrap_offload_write_cleanup(struct tevent_req *req,
+ 		req, struct vfswrap_offload_write_state);
+ 	bool ok;
+ 
+-	if (state->dst_fsp == NULL) {
++	if (state->dst_fsp == NULL || state->dst_fsp->fh == NULL) {
+ 		return;
+ 	}
+ 
 @@ -2485,6 +2481,18 @@ static struct smb_filename *vfswrap_getwd(vfs_handle_struct *handle,
   nsec timestamp resolution call. Convert down to whatever the underlying
   system will support.
