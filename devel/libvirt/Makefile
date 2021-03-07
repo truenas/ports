@@ -90,6 +90,11 @@ MESON_ARGS+=	\
 # random_data fix can be removed when 8.x is eol
 CONFIGURE_ENV=	ac_cv_type_struct_random_data=""
 
+.if !exists(/sbin/zpool)
+BUILD_DEPENDS+=	openzfs>=0:sysutils/openzfs
+RUN_DEPENDS+=	openzfs>=0:sysutils/openzfs
+.endif
+
 # limit production release x.x.x
 PORTSCOUT=	limit:\d+\.\d+\.\d+$$
 
