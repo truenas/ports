@@ -50,7 +50,18 @@
  
      return 0;
  }
-@@ -708,7 +723,6 @@ virBhyveProcessBuildBhyveCmd(bhyveConnPtr driver, virD
+@@ -354,9 +369,7 @@ bhyveBuildControllerArgStr(const virDomainDef *def,
+                             "%s", _("only single ISA controller is supported"));
+              return -1;
+         }
+-        virCommandAddArg(cmd, "-s");
+-        virCommandAddArgFormat(cmd, "%d:0,lpc",
+-                                controller->info.addr.pci.slot);
++        virCommandAddArgList(cmd, "-s", "31,lpc", NULL);
+         break;
+     }
+     return 0;
+@@ -708,7 +721,6 @@ virBhyveProcessBuildBhyveCmd(bhyveConnPtr driver, virD
       * since it forces the guest to exit when it spins on a lock acquisition.
       */
      virCommandAddArg(cmd, "-H"); /* vmexit from guest on hlt */
