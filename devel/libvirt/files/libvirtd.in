@@ -4,6 +4,7 @@
 #
 # PROVIDE: libvirtd
 # REQUIRE: LOGIN virtlogd
+
 #
 # Add the following line to /etc/rc.conf[.local] to enable libvirtd.
 #
