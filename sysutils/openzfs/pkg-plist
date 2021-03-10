@@ -261,6 +261,7 @@ include/libzfs/sys/zfs_file.h
 include/libzfs/sys/zfs_fuid.h
 include/libzfs/sys/zfs_project.h
 include/libzfs/sys/zfs_quota.h
+include/libzfs/sys/zfs_racct.h
 include/libzfs/sys/zfs_ratelimit.h
 include/libzfs/sys/zfs_refcount.h
 include/libzfs/sys/zfs_rlock.h
@@ -338,12 +339,12 @@ lib/libzpool.so.4.0.0
 %%PYTHON%%%%PYTHON_SITELIBDIR%%/libzfs_core/test/__pycache__/test_nvlist.cpython-%%PYTHON_SUFFIX%%.pyc
 %%PYTHON%%%%PYTHON_SITELIBDIR%%/libzfs_core/test/test_libzfs_core.py
 %%PYTHON%%%%PYTHON_SITELIBDIR%%/libzfs_core/test/test_nvlist.py
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.0.2-py%%PYTHON_VER%%.egg-info/PKG-INFO
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.0.2-py%%PYTHON_VER%%.egg-info/SOURCES.txt
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.0.2-py%%PYTHON_VER%%.egg-info/dependency_links.txt
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.0.2-py%%PYTHON_VER%%.egg-info/not-zip-safe
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.0.2-py%%PYTHON_VER%%.egg-info/requires.txt
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.0.2-py%%PYTHON_VER%%.egg-info/top_level.txt
+%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.0.4-py%%PYTHON_VER%%.egg-info/PKG-INFO
+%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.0.4-py%%PYTHON_VER%%.egg-info/SOURCES.txt
+%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.0.4-py%%PYTHON_VER%%.egg-info/dependency_links.txt
+%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.0.4-py%%PYTHON_VER%%.egg-info/not-zip-safe
+%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.0.4-py%%PYTHON_VER%%.egg-info/requires.txt
+%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.0.4-py%%PYTHON_VER%%.egg-info/top_level.txt
 lib/security/pam_zfs_key.so
 libdata/pkgconfig/libzfs.pc
 libdata/pkgconfig/libzfs_core.pc
@@ -531,6 +532,7 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/bin/readmmap
 %%TESTS%%share/zfs/zfs-tests/bin/rename_dir
 %%TESTS%%share/zfs/zfs-tests/bin/rm_lnkcnt_zero_file
+%%TESTS%%share/zfs/zfs-tests/bin/send_doall
 %%TESTS%%share/zfs/zfs-tests/bin/stride_dd
 %%TESTS%%share/zfs/zfs-tests/bin/threadsappend
 %%TESTS%%share/zfs/zfs-tests/callbacks/zfs_dbgmsg.ksh
@@ -2151,6 +2153,7 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/rsend/send-c_zstreamdump.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/rsend/send-cpL_varied_recsize.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/rsend/send-wR_encrypted_zvol.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/rsend/send_doall.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/rsend/send_encrypted_files.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/rsend/send_encrypted_hierarchy.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/rsend/send_encrypted_props.ksh
