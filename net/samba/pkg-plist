@@ -311,7 +311,6 @@ lib/samba4/private/libshares-samba4.so
 lib/samba4/private/libsmb-transport-samba4.so
 lib/samba4/private/libsmbclient-raw-samba4.so
 lib/samba4/private/libsmbd-base-samba4.so
-lib/samba4/private/libsmbd-conn-samba4.so
 lib/samba4/private/libsmbd-shim-samba4.so
 %%LDAP%%lib/samba4/private/libsmbldaphelper-samba4.so
 lib/samba4/private/libsmbpasswdparser-samba4.so
@@ -1124,3 +1123,4 @@ man/man8/winbindd.8.gz
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/talloc.so
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/tdb.so
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/tevent.py
+%%SPOTLIGHT%%share/samba/samba/mdssvc/elasticsearch_mappings.json
