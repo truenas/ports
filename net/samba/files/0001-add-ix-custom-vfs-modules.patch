@@ -1,6 +1,6 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 00000000000..97fc6e065d0
+index 00000000000..fb740dc6c85
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
 @@ -0,0 +1,1702 @@
@@ -424,14 +424,14 @@ index 00000000000..97fc6e065d0
 +smb_zfs_set_userspace_quota(struct smblibzfshandle *smblibzfsp,
 +		  char *path, int64_t xid,
 +		  enum SMB_QUOTA_TYPE quota_type,
-+		  uint64_t hardlimit)
++		  uint64_t hardlimit,
++		  uint64_t blocksize)
 +{
-+	size_t blocksize = 1024;
 +	zfs_handle_t *zfsp = NULL;
 +	char q_req[256] = { 0 };
 +	char quota[256] = { 0 };
-+	hardlimit *= blocksize;
-+	snprintf(quota, sizeof(quota), "%lu", hardlimit);
++
++	snprintf(quota, sizeof(quota), "%lu", (hardlimit * blocksize));
 +	if (smblibzfsp->sli == NULL) {
 +		DBG_ERR("Failed to retrieve smblibzfs_int handle\n");
 +		return -1;
@@ -1708,10 +1708,10 @@ index 00000000000..97fc6e065d0
 +}
 diff --git a/source3/modules/smb_libzfs.h b/source3/modules/smb_libzfs.h
 new file mode 100644
-index 00000000000..801553403c7
+index 00000000000..dec2624d503
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.h
-@@ -0,0 +1,412 @@
+@@ -0,0 +1,413 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -1890,7 +1890,8 @@ index 00000000000..801553403c7
 +				char *path,
 +				int64_t xid,
 +				int quota_type,
-+				uint64_t hardlimit);
++				uint64_t hardlimit,
++				uint64_t blocksize);
 +
 +uint64_t smb_zfs_disk_free(struct smblibzfshandle *smblibzfsp,
 +			   char *path,
@@ -2126,7 +2127,7 @@ index 00000000000..801553403c7
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..69526eed21d
+index 00000000000..57fe305fc98
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
 @@ -0,0 +1,2580 @@
@@ -3683,7 +3684,7 @@ index 00000000000..69526eed21d
 +		become_root();
 +		ret = smb_zfs_set_userspace_quota(config->libzp,
 +						  handle->conn->connectpath,
-+						  id.uid, qtype, qt->hardlimit);
++						  id.uid, qtype, qt->hardlimit, qt->bsize);
 +		unbecome_root();
 +		break;
 +	case SMB_GROUP_QUOTA_TYPE:
@@ -3693,7 +3694,7 @@ index 00000000000..69526eed21d
 +		become_root();
 +		ret = smb_zfs_set_userspace_quota(config->libzp,
 +						  handle->conn->connectpath,
-+						  id.gid, qtype, qt->hardlimit);
++						  id.gid, qtype, qt->hardlimit, qt->bsize);
 +		unbecome_root();
 +		break;
 +	default:
@@ -4284,7 +4285,7 @@ index 00000000000..69526eed21d
 +					handle->conn->connectpath,
 +					current_user,
 +					SMB_USER_QUOTA_TYPE,
-+					base_quota);
++					base_quota, 1024);
 +		if (!ret) {
 +			DBG_ERR("Failed to set base quota uid: (%u), path (%s), value (%lu)\n",
 +				current_user, handle->conn->connectpath, base_quota );
