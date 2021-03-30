@@ -2126,10 +2126,10 @@ index 00000000000..801553403c7
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..fbfc2391fdc
+index 00000000000..69526eed21d
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2578 @@
+@@ -0,0 +1,2580 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -4462,6 +4462,8 @@ index 00000000000..fbfc2391fdc
 +	}
 +	config->props = config->dsl->root->properties;
 +
++	base_quota_str = lp_parm_const_string(SNUM(handle->conn),
++					      "ixnas", "base_user_quota", NULL);
 +	if (base_quota_str != NULL) {
 +		config->base_user_quota = conv_str_size(base_quota_str);
 +        }
