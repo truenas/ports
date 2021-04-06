@@ -17,24 +17,6 @@
  #else
          long_ret = (signed long) stat->dinfo->devices[indx].bytes_written;
  #endif
-@@ -959,7 +959,7 @@ var_diskio(struct variable * vp,
-     case DISKIO_NREADX:
-         *var_len = sizeof(struct counter64);
- #if HAVE_DEVSTAT_GETDEVS
--        longlong_ret = stat->dinfo->devices[indx].bytes[DEVSTAT_READ];
-+        longlong_ret = stat->dinfo->devices[indx].bytes[DEVSTAT_READ] & 0xFFFFFFFF;
- #else
-         longlong_ret = stat->dinfo->devices[indx].bytes_read;
- #endif
-@@ -969,7 +969,7 @@ var_diskio(struct variable * vp,
-     case DISKIO_NWRITTENX:
-         *var_len = sizeof(struct counter64);
- #if HAVE_DEVSTAT_GETDEVS
--        longlong_ret = stat->dinfo->devices[indx].bytes[DEVSTAT_WRITE];
-+        longlong_ret = stat->dinfo->devices[indx].bytes[DEVSTAT_WRITE] & 0xFFFFFFFF;
- #else
-         longlong_ret = stat->dinfo->devices[indx].bytes_written;
- #endif
 @@ -978,14 +978,14 @@ var_diskio(struct variable * vp,
          return (u_char *) & c64_ret;
      case DISKIO_READS:
