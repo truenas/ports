@@ -549,6 +549,11 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/include/zpool_script.shlib
 %%TESTS%%share/zfs/zfs-tests/tests/functional/acl/acl.cfg
 %%TESTS%%share/zfs/zfs-tests/tests/functional/acl/acl_common.kshlib
+%%TESTS%%share/zfs/zfs-tests/tests/functional/acl/off/cleanup.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/acl/off/dosmode.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/acl/off/dosmode_readonly_write
+%%TESTS%%share/zfs/zfs-tests/tests/functional/acl/off/posixmode.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/acl/off/setup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix-sa/cleanup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix-sa/posix_001_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/acl/posix-sa/posix_002_pos.ksh
