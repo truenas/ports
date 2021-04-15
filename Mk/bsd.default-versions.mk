@@ -67,7 +67,7 @@ LLVM_DEFAULT?=		90
 LUA_DEFAULT?=		5.2
 # Possible values: 5.5, 5.6, 5.7, 8.0, 5.5m, 10.1m, 10.2m, 10.3m, 10.4m, 5.5p, 5.6p, 5.7p, 5.6w
 MYSQL_DEFAULT?=		5.7
-# Possible values: 5.26, 5.28, 5.30, devel
+# Possible values: 5.28, 5.30, 5.32, devel
 .if !exists(${LOCALBASE}/bin/perl) || (!defined(_PORTS_ENV_CHECK) && \
     defined(PACKAGE_BUILDING))
 PERL5_DEFAULT?=		5.30
@@ -86,12 +86,12 @@ PERL5_DEFAULT:=		${_PERL5_FROM_BIN:R}
 PGSQL_DEFAULT?=		11
 # Possible values: 7.2, 7.3, 7.4
 PHP_DEFAULT?=		7.2
-# Possible values: 2.7, 3.5, 3.6, 3.7, 3.8
-PYTHON_DEFAULT?=	3.8
+# Possible values: 2.7, 3.5, 3.6, 3.7, 3.8, 3.9
+PYTHON_DEFAULT?=	3.9
 # Possible values: 2.7
 PYTHON2_DEFAULT?=	2.7
-# Possible values: 3.5, 3.6, 3.7, 3.8
-PYTHON3_DEFAULT?=	3.8
+# Possible values: 3.5, 3.6, 3.7, 3.8, 3.9
+PYTHON3_DEFAULT?=	3.9
 # Possible values: 2.5, 2.6, 2.7
 RUBY_DEFAULT?=		2.6
 # Possible values: rust, rust-nightly

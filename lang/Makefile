@@ -258,6 +258,7 @@
     SUBDIR += perl5.26
     SUBDIR += perl5.28
     SUBDIR += perl5.30
+    SUBDIR += perl5.32
     SUBDIR += petite-chez
     SUBDIR += pfe
     SUBDIR += pharo
@@ -297,6 +298,7 @@
     SUBDIR += python36
     SUBDIR += python37
     SUBDIR += python38
+    SUBDIR += python39
     SUBDIR += qmasm
     SUBDIR += qscheme
     SUBDIR += quickjs

@@ -15,7 +15,7 @@ LICENSE_FILE_ART10=	${WRKSRC}/Artistic
 LICENSE_FILE_GPLv1+ =	${WRKSRC}/Copying
 
 # Uncomment when the default Perl is switched to 5.30
-DEPRECATED=	Support end three years after .0 release, please upgrade to a more recent version of Perl
+DEPRECATED=	Support ends three years after .0 release. Please upgrade to a more recent version of Perl
 EXPIRATION_DATE=	2021-06-22
 
 TEST_TARGET=	test_harness
@@ -147,11 +147,11 @@ MANDIRS+=	${PERLMANPREFIX}/man
 PLIST_SUB+=	PERL_VERSION=${PERL_VERSION} \
 		PERL_VER=${PERL_VER} \
 		PERL_ARCH=${PERL_ARCH} \
-		PERL_ARCH_regex=\b${PERL_ARCH}\b \
+		PERL_ARCH_regex=[[:<:]]${PERL_ARCH}[[:>:]] \
 		MAN1=${PERLMANPREFIX_REL}/man/man1 \
 		MAN3=${PERLMANPREFIX_REL}/man/man3 \
 		PERLMANPREFIX=${PERLMANPREFIX_REL} \
-		PERLMANPREFIX_regex=${PERLMANPREFIX_REL}\b \
+		PERLMANPREFIX_regex=${PERLMANPREFIX_REL}[[:>:]] \
 		SITEMANPREFIX=${SITE_MAN_PREFIX} \
 		SITE_PERL=${SITE_PERL_REL} \
 		SITE_ARCH=${SITE_ARCH_REL} \
