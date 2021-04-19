@@ -595,7 +595,7 @@ index 00000000000..c574c65eb1f
 +					    "evfilt_read ev_eof on [%s]: %s\n",
 +					    fde->location, strerror(kev.fflags));
 +			}
-+			tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_WARNING,
++			tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_TRACE,
 +				    "EVFILT_READ EV_EOF on fd: %d flags: 0x%08x: "
 +				    "additional flags: 0x%08x\n",
 +				    fde->fd, fde->flags,
