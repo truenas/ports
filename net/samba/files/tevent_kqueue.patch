@@ -70,10 +70,10 @@ index 5365fce3533..91c9495a26f 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..c574c65eb1f
+index 00000000000..ff758c3dae4
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
-@@ -0,0 +1,881 @@
+@@ -0,0 +1,927 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -621,14 +621,13 @@ index 00000000000..c574c65eb1f
 +
 +static int process_kevents(struct kqueue_event_context *kqueue_ev, int nkevents)
 +{
-+	int rv, i, iloop;
++	int rv = 0, i, iloop;
 +	struct tevent_fd *fde = NULL;
 +	struct tevent_fd *next_fde = NULL;
 +	struct tevent_fd *found_fde = NULL;
 +	struct kevent *received = kqueue_ev->kev_array;
 +	bool is_fd_event;
 +	uint16_t flags = 0;
-+	rv = 0;
 +
 +	for (i=0; i<nkevents; i++) {
 +		kqueue_process_kev(kqueue_ev, received[i], &fde, &is_fd_event);
@@ -672,6 +671,69 @@ index 00000000000..c574c65eb1f
 +
 +}
 +
++static int check_kevent_errors(struct kqueue_event_context *kqueue_ev, struct timespec *tsp)
++{
++	int nkevents = 0;
++
++	/*
++	 * In some cases kevent() will fail on parent without setting errno on
++	 * receiving a signal. So this must be checked before processing based on errno.
++	 */
++	if (kqueue_ev->ev->signal_events &&
++	    tevent_common_check_signal(kqueue_ev->ev)) {
++			return 0;
++	}
++
++	/*
++	 * One likely cause for kevent() to fail with EBADF is that
++	 * we forked. In this case call kqueue_check_reopen() to reinitialize
++	 * the kqueue.
++	 */
++	if (errno == EBADF) {
++		if (kqueue_ev->busy) {
++			return -1;
++		}
++
++		kqueue_check_reopen(kqueue_ev);
++
++		/*
++		 * If can't open new kqueue, try falling back to another event
++		 * handler. In this case poll_mt.
++		 */
++		if (kqueue_ev->panic_state) {
++			tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
++				     "panic_tiggered in kqueue event loop once\n");
++			errno = EINVAL;
++			return -1;
++		}
++
++		/*
++		 * We've forked and rebuilt our queue of monitored fds, check
++		 * them for kevents.
++		 */
++		nkevents = kevent(kqueue_ev->kqueue_fd, NULL, 0,
++				  kqueue_ev->kev_array, kqueue_ev->kev_size, tsp);
++
++
++		/*
++		 * Return the new number of kevents if we don't encounter
++		 * an error.
++		 */
++		if (nkevents != -1) {
++			return nkevents;
++		}
++	}
++
++	/*
++	 * We encountered some other unexpected error. Fall on our sword.
++	 */
++	tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
++		"kevent() failed: %s\n",strerror(errno));
++	kqueue_panic(kqueue_ev, "kevent() failed", false);
++
++	return -1;
++}
++
 +static int kqueue_event_loop(struct kqueue_event_context *kqueue_ev, struct timeval *tvalp, bool *overload)
 +{
 +	/*
@@ -682,7 +744,6 @@ index 00000000000..c574c65eb1f
 +	int nkevents, ret;
 +	struct timespec ts;
 +	struct timespec *tsp = NULL;
-+	int wait_errno = 0;
 +	ret = 0;
 +	nkevents = 0;
 +	*overload = false;
@@ -705,6 +766,7 @@ index 00000000000..c574c65eb1f
 +		}
 +		tsp = &ts;
 +	}
++
 +	/*
 +	 * zero-fill the kevent array
 +	 */
@@ -714,6 +776,10 @@ index 00000000000..c574c65eb1f
 +	 * to wait for an event. If timeout is a NULL pointer, kevent() waits
 +	 * indefinetly. To effect a poll, the timeout argument should be non-NULL,
 +	 * pointing to a zero-valued timespec structure.
++	 *
++	 * If tvalp is NULL, then we pass a NULL for kevent() timeout. This is
++	 * equivalent to epoll_wait() on Linux with a timeout of -1, which is
++	 * what is performed in epoll tevent backend.
 +	 */
 +	tevent_trace_point_callback(kqueue_ev->ev, TEVENT_TRACE_BEFORE_WAIT);
 +	nkevents = kevent(kqueue_ev->kqueue_fd,
@@ -723,47 +789,27 @@ index 00000000000..c574c65eb1f
 +			  kqueue_ev->kev_size,	/* nevents */
 +			  tsp);			/* timeout  - may need NULL*/
 +
-+	wait_errno = errno;
 +	tevent_trace_point_callback(kqueue_ev->ev, TEVENT_TRACE_AFTER_WAIT);
 +
 +	if (nkevents == -1) {
 +		/*
-+		 * One likely cause for kevent() to fail with EBADF is that
-+		 * we forked. In this case call kqueue_check_reopen() to reinitialize
-+		 * the kqueue.
++		 * Extra processing for cases where kevent() failed.
++		 * 1 We may have forked and need to open a new queue
++		 * 2 We may have received signal
++		 * 3 We may have had some obscure error that we should
++		 *   panic on and maybe get a core dump.
++		 *
++		 * In case of (1) we open new queue and call kevent() again.
++		 * In case of (2) we need to exit quickly.
++		 * In case of (3) we panic.
 +		 */
-+		if (wait_errno == EBADF) {
-+			if (kqueue_ev->busy) {
-+				return -1;
-+			}
-+			kqueue_check_reopen(kqueue_ev);
-+			if (kqueue_ev->panic_state) {
-+				tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
-+					     "panic_tiggered in kqueue event loop once\n");
-+				errno = EINVAL;
-+				return -1;
-+			}
-+			nkevents = kevent(kqueue_ev->kqueue_fd, NULL, 0,
-+					  kqueue_ev->kev_array, kqueue_ev->kev_size, tsp);
++		nkevents = check_kevent_errors(kqueue_ev, tsp);
++		if (nkevents == -1) {
++			return -1;
 +		}
-+		/*
-+		 * kevent() returns -1 with errno EINTR if signal
-+		 * received before timeout expired and event events
-+		 * placed on the kqueue for return.
-+		 */
-+		if (wait_errno == EINTR && kqueue_ev->ev->signal_events) {
-+			if (tevent_common_check_signal(kqueue_ev->ev)) {
-+				return 0;
-+			}
-+		}
-+		else if (wait_errno != EINTR) {
-+			tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
-+				"kevent() failed: %s\n",strerror(wait_errno));
-+			kqueue_panic(kqueue_ev, "kevent() failed", false);
-+		}
-+		return 0;
 +	}
-+	if (nkevents == 0 && tvalp) {
++
++	if ((nkevents == 0)  && tvalp) {
 +		/* we don't care about a possible delay here */
 +		tevent_common_loop_timer_delay(kqueue_ev->ev);
 +		return 0;
