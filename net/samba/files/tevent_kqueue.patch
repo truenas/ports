@@ -70,10 +70,10 @@ index 5365fce3533..91c9495a26f 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..ff758c3dae4
+index 00000000000..741171f3340
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
-@@ -0,0 +1,927 @@
+@@ -0,0 +1,961 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -619,6 +619,13 @@ index 00000000000..ff758c3dae4
 +	return;
 +}
 +
++/*
++ * Process the current array of kevents. Due to difference between kevent
++ * and tevent designs we need an inner loop to check for additional kevents
++ * related to the fd for our current array member if it has the
++ * HAS_READ_AND_WRITE flag set. Array size should be relatively small in most
++ * situations. There may be up to two tevent_fds for each kevent.
++ */
 +static int process_kevents(struct kqueue_event_context *kqueue_ev, int nkevents)
 +{
 +	int rv = 0, i, iloop;
@@ -671,6 +678,23 @@ index 00000000000..ff758c3dae4
 +
 +}
 +
++/*
++ * Process errors for kevent() call when reading new kevents on our tevent queue.
++ * This function returns the number of kevents after processing. Expected returns are as follows:
++ *
++ * -1 we encountered an error. That is somehow recoverable. This will eventually be passed
++ *    back to caller of tevent_loop_once().
++ *
++ *  0 we encountered a signal or successfully re-initialized our queue after forking.
++ *    This will be passed back to caller of tevent_loop_once().
++ *
++ * >0 we re-initialized our queue after forking and already had some new events by the time
++ *    we ran kevent() to verify re-initialization is successful. This will be passed to
++ *    calling function so that it can process array of kevents we received.
++ *
++ * panic - something totally unxpected happened and we want to abort so that we can
++ *    sift through the ashes.
++ */
 +static int check_kevent_errors(struct kqueue_event_context *kqueue_ev, struct timespec *tsp)
 +{
 +	int nkevents = 0;
@@ -734,6 +758,16 @@ index 00000000000..ff758c3dae4
 +	return -1;
 +}
 +
++/*
++ * Do the grunt work of loop_once(). caller may pass in timeval for how long our
++ * kevent should wait for events. `overload` is used to inform calling process that
++ * we maxed-out our array of kevents and re-alloced it to make it larger. Caller can
++ * then decide whether to loop until `overload` is false.
++ *
++ * This function will return either 0 (success) or -1 (fail) to indicate the whether
++ * we successfully processed our kevents. This is indicative of internal tevent state,
++ * not success / failure of particular events.
++ */
 +static int kqueue_event_loop(struct kqueue_event_context *kqueue_ev, struct timeval *tvalp, bool *overload)
 +{
 +	/*
