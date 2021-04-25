@@ -2,10 +2,10 @@
 # $FreeBSD$
 
 PORTNAME=	curl
-PORTVERSION=	7.76.0
+PORTVERSION=	7.76.1
 CATEGORIES=	ftp net www
-MASTER_SITES=	https://curl.haxx.se/download/ \
-		LOCAL/sunpoet
+MASTER_SITES=	https://curl.se/download/ \
+		https://github.com/curl/curl/releases/download/curl-${PORTVERSION:S|.|_|g}/
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Command line tool and library for transferring data with URLs
