@@ -839,7 +839,7 @@ index 00000000000..741171f3340
 +		 */
 +		nkevents = check_kevent_errors(kqueue_ev, tsp);
 +		if (nkevents == -1) {
-+			return -1;
++			return nkevents;
 +		}
 +	}
 +
