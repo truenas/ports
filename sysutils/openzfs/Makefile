@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	openzfs
-PORTVERSION=	2021040600
+PORTVERSION=	2021050300
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 
@@ -25,7 +25,7 @@ OPTIONS_SUB=    yes
 USE_GITHUB=	yes
 GH_ACCOUNT=	truenas
 GH_PROJECT=	zfs
-GH_TAGNAME=	79bb891fc
+GH_TAGNAME=	fe36b5b24f4b5bebe68d470d08fa44d089e6e638
 
 .include <bsd.port.pre.mk>
 
