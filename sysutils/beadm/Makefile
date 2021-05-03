@@ -16,12 +16,12 @@ NO_BUILD=	YES
 CONFLICTS_INSTALL=	beadm-devel-*
 
 PLIST_FILES=	sbin/${PORTNAME} \
-		man/man8/${PORTNAME}.8.gz
+		man/man8/${PORTNAME}.1.gz
 
 do-install:
 	${INSTALL_SCRIPT} ${WRKSRC}/${PORTNAME} \
 	    ${STAGEDIR}${PREFIX}/sbin/${PORTNAME}
-	${INSTALL_MAN} ${WRKSRC}/${PORTNAME}.8 \
-	  ${STAGEDIR}${MANPREFIX}/man/man8/
+	${INSTALL_MAN} ${WRKSRC}/${PORTNAME}.1 \
+	  ${STAGEDIR}${MANPREFIX}/man/man1/
 
 .include <bsd.port.mk>
