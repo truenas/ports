@@ -1,5 +1,5 @@
 PORTNAME=	bsd
-PORTVERSION=	1.0.20170329
+PORTVERSION=	1.0.20210503
 CATEGORIES=	devel python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
@@ -17,6 +17,6 @@ USE_PYTHON=	autoplist distutils cython
 USE_GITHUB=     yes
 GH_ACCOUNT=	freenas
 GH_PROJECT=	py-bsd
-GH_TAGNAME=	6d148fa
+GH_TAGNAME=	2f8febe
 
 .include <bsd.port.mk>
