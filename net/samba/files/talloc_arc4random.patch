@@ -1,8 +1,19 @@
+From 66ba6cd0d22868faf976300d73bd75aa3ef902f5 Mon Sep 17 00:00:00 2001
+From: Andrew Walker <awalker@ixsystems.com>
+Date: Mon, 3 May 2021 16:11:27 -0400
+Subject: [PATCH] randomize talloc header magic using arc4random
+
+---
+ lib/talloc/talloc.c              | 6 +++++-
+ lib/talloc/wscript               | 1 +
+ source4/heimdal/lib/roken/rand.c | 2 ++
+ 3 files changed, 8 insertions(+), 1 deletion(-)
+
 diff --git a/lib/talloc/talloc.c b/lib/talloc/talloc.c
-index 518ffbd..22bafcc 100644
+index 29da190880a..a2751f7c36f 100644
 --- a/lib/talloc/talloc.c
 +++ b/lib/talloc/talloc.c
-@@ -396,6 +396,9 @@ void talloc_lib_init(void) __attribute__((constructor));
+@@ -397,6 +397,9 @@ void talloc_lib_init(void) CONSTRUCTOR;
  void talloc_lib_init(void)
  {
  	uint32_t random_value;
@@ -12,7 +23,7 @@ index 518ffbd..22bafcc 100644
  #if defined(HAVE_GETAUXVAL) && defined(AT_RANDOM)
  	uint8_t *p;
  	/*
-@@ -421,7 +424,7 @@ void talloc_lib_init(void)
+@@ -422,7 +425,7 @@ void talloc_lib_init(void)
  		int offset = rand() % (16 - sizeof(random_value));
  		memcpy(&random_value, p + offset, sizeof(random_value));
  	} else
@@ -21,7 +32,7 @@ index 518ffbd..22bafcc 100644
  	{
  		/*
  		 * Otherwise, hope the location we are loaded in
-@@ -429,6 +432,7 @@ void talloc_lib_init(void)
+@@ -430,6 +433,7 @@ void talloc_lib_init(void)
  		 */
  		random_value = ((uintptr_t)talloc_lib_init & 0xFFFFFFFF);
  	}
@@ -30,7 +41,7 @@ index 518ffbd..22bafcc 100644
  }
  #else
 diff --git a/lib/talloc/wscript b/lib/talloc/wscript
-index eda62d1..aa36412 100644
+index a767477357f..4da7ba2dcdc 100644
 --- a/lib/talloc/wscript
 +++ b/lib/talloc/wscript
 @@ -52,6 +52,7 @@ def configure(conf):
@@ -42,16 +53,19 @@ index eda62d1..aa36412 100644
      conf.SAMBA_CONFIG_H()
  
 diff --git a/source4/heimdal/lib/roken/rand.c b/source4/heimdal/lib/roken/rand.c
-index ef92c20..f847859 100644
+index ef92c2052b7..ff3ee0665f9 100644
 --- a/source4/heimdal/lib/roken/rand.c
 +++ b/source4/heimdal/lib/roken/rand.c
 @@ -37,7 +37,9 @@ void ROKEN_LIB_FUNCTION
  rk_random_init(void)
  {
  #if defined(HAVE_ARC4RANDOM)
-+#if defined(HAVE_ARC4RANDOM_STIR) 
++#if defined(HAVE_ARC4RANDOM_STIR)
      arc4random_stir();
 +#endif /* HAVE_ARC4RANDOM_STIR */
  #elif defined(HAVE_SRANDOMDEV)
      srandomdev();
  #elif defined(HAVE_RANDOM)
+-- 
+2.31.1
+

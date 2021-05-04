@@ -1,6 +1,34 @@
+From 59aaf6304dc264f6abd8e3e1d376970702c248ff Mon Sep 17 00:00:00 2001
+From: = <=>
+Date: Mon, 3 May 2021 09:45:21 -0400
+Subject: [PATCH] Add TrueNAS-specific custom Samba parameters
+
+Add parameters specifically related to iX hardware or underlying
+OS. These are control behavior that is required for quirks of
+legacy hardware or configuraitons (with the exception of a flag
+for handling kernel dosmodes).
+---
+ .../smbdotconf/base/allowdatasetcreation.xml  | 11 ++++++++
+ .../base/enablewebservicediscovery.xml        | 11 ++++++++
+ docs-xml/smbdotconf/domain/adsdnsupdate.xml   | 10 +++++++
+ .../smbdotconf/filename/kerneldosmodes.xml    | 13 +++++++++
+ docs-xml/smbdotconf/misc/smbdmaxxattrsize.xml | 28 +++++++++++++++++++
+ .../winbind/winbindnetbiosaliasspn.xml        | 12 ++++++++
+ lib/param/loadparm.c                          |  4 +++
+ source3/libnet/libnet_join.c                  |  8 ++++++
+ source3/param/loadparm.c                      |  6 ++++
+ source3/utils/net_ads.c                       |  4 +++
+ 10 files changed, 107 insertions(+)
+ create mode 100644 docs-xml/smbdotconf/base/allowdatasetcreation.xml
+ create mode 100644 docs-xml/smbdotconf/base/enablewebservicediscovery.xml
+ create mode 100644 docs-xml/smbdotconf/domain/adsdnsupdate.xml
+ create mode 100644 docs-xml/smbdotconf/filename/kerneldosmodes.xml
+ create mode 100644 docs-xml/smbdotconf/misc/smbdmaxxattrsize.xml
+ create mode 100644 docs-xml/smbdotconf/winbind/winbindnetbiosaliasspn.xml
+
 diff --git a/docs-xml/smbdotconf/base/allowdatasetcreation.xml b/docs-xml/smbdotconf/base/allowdatasetcreation.xml
 new file mode 100644
-index 00000000000..592342f5de0
+index 00000000000..7fa377c3aa9
 --- /dev/null
 +++ b/docs-xml/smbdotconf/base/allowdatasetcreation.xml
 @@ -0,0 +1,11 @@
@@ -13,7 +41,7 @@ index 00000000000..592342f5de0
 +	shares through the NT Server Manager.</para>
 +
 +</description>
-+<value type="default">yes</value>
++<value type="default">no</value>
 +</samba:parameter>
 diff --git a/docs-xml/smbdotconf/base/enablewebservicediscovery.xml b/docs-xml/smbdotconf/base/enablewebservicediscovery.xml
 new file mode 100644
@@ -31,46 +59,6 @@ index 00000000000..949539378cd
 +        clients.</para>
 +</description>
 +<value type="default">no</value>
-+</samba:parameter>
-diff --git a/docs-xml/smbdotconf/base/truenaspassivecontroller.xml b/docs-xml/smbdotconf/base/truenaspassivecontroller.xml
-new file mode 100644
-index 00000000000..ad7499b0107
---- /dev/null
-+++ b/docs-xml/smbdotconf/base/truenaspassivecontroller.xml
-@@ -0,0 +1,11 @@
-+<samba:parameter name="truenas passive controller"
-+                 type="boolean"
-+                 context="G"
-+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
-+<description>
-+        <para>Boolean flag indicating that the server is the passive
-+	storage controller on an HA server.</para>
-+
-+</description>
-+<value type="default">no</value>
-+</samba:parameter>
-diff --git a/docs-xml/smbdotconf/base/zeroconfname.xml b/docs-xml/smbdotconf/base/zeroconfname.xml
-new file mode 100644
-index 00000000000..f825ab17d5b
---- /dev/null
-+++ b/docs-xml/smbdotconf/base/zeroconfname.xml
-@@ -0,0 +1,17 @@
-+<samba:parameter name="zeroconf name"
-+                 context="G"
-+                 type="ustring"
-+                 constant="1"
-+                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
-+<description>
-+        <para>
-+		This sets the name used for mdns registration. If it is not set,
-+		then the server hostname will be used.
-+	</para>
-+
-+</description>
-+
-+<related>netbios aliases</related>
-+<value type="default"><comment>empty string</comment></value>
-+<value type="example">MYNAME</value>
 +</samba:parameter>
 diff --git a/docs-xml/smbdotconf/domain/adsdnsupdate.xml b/docs-xml/smbdotconf/domain/adsdnsupdate.xml
 new file mode 100644
@@ -107,6 +95,40 @@ index 00000000000..b0808a436c5
 +</description>
 +<value type="default">no</value>
 +</samba:parameter>
+diff --git a/docs-xml/smbdotconf/misc/smbdmaxxattrsize.xml b/docs-xml/smbdotconf/misc/smbdmaxxattrsize.xml
+new file mode 100644
+index 00000000000..3ae91a37890
+--- /dev/null
++++ b/docs-xml/smbdotconf/misc/smbdmaxxattrsize.xml
+@@ -0,0 +1,28 @@
++<samba:parameter name="smbd max xattr size"
++                 context="S"
++                 type="integer"
++                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
++<description>
++	<para>
++	  This parameter controls the maximum size of extended attributes
++	  that may be written to the server as EAs or as alternate data
++	  streams if vfs_streams_xattr is enabled. The maximum size of
++	  extended attributes depends on the Samba server's operating system
++	  and the underlying filesystem. The Linux VFS currently sets an
++	  upper boundary of 64 KiB per extended attribute. FreeBSD does not
++	  set a practical upper limit, but since pread() and pwrite() are not
++	  possible via the extattr on FreeBSD, it is not recommended to
++	  increase this value above a few MiB.
++
++	  If a client attempts to write an overly-large alternate datastream,
++	  the Samba server will return STATUS_FILESYSTEM_LIMITATION.
++	  If this error is encountered, users may try increasing the maximum
++	  size supported for xattr writes. If this is not possible, and
++	  writes are from a MacOS client and to an AFP_Resource extended
++	  attribute, the user may enable the vfs_fruit module and configure
++	  to allow stream writes for AFP_Resource to an alternative storage
++	  location. See vfs_fruit documentation for further details.
++	</para>
++</description>
++<value type="default">65536</value>
++</samba:parameter>
 diff --git a/docs-xml/smbdotconf/winbind/winbindnetbiosaliasspn.xml b/docs-xml/smbdotconf/winbind/winbindnetbiosaliasspn.xml
 new file mode 100644
 index 00000000000..6979955a101
@@ -126,25 +148,22 @@ index 00000000000..6979955a101
 +<value type="example">no</value>
 +</samba:parameter>
 diff --git a/lib/param/loadparm.c b/lib/param/loadparm.c
-index 63291283905..0ddea8be8c1 100644
+index 3548c47d857..b78c1a50856 100644
 --- a/lib/param/loadparm.c
 +++ b/lib/param/loadparm.c
-@@ -3214,9 +3214,11 @@ static bool lpcfg_load_internal(struct loadparm_context *lp_ctx,
- 	char *n2;
- 	bool bRetval;
+@@ -3090,6 +3090,10 @@ struct loadparm_context *loadparm_init(TALLOC_CTX *mem_ctx)
+ 				  "client smb encrypt",
+ 				  "default");
  
--	filename = talloc_strdup(lp_ctx, filename);
-+	if (lp_ctx->szConfigFile != NULL) {
-+		TALLOC_FREE(lp_ctx->szConfigFile);
-+	}
- 
--	lp_ctx->szConfigFile = filename;
-+	lp_ctx->szConfigFile = talloc_strdup(lp_ctx, filename);
- 
- 	if (lp_ctx->s3_fns) {
- 		return lp_ctx->s3_fns->load(filename);
++	lpcfg_do_global_parameter(lp_ctx,
++				  "smbd max xattr size",
++				  "65536");
++
+ 	for (i = 0; parm_table[i].label; i++) {
+ 		if (!(lp_ctx->flags[i] & FLAG_CMDLINE)) {
+ 			lp_ctx->flags[i] |= FLAG_DEFAULT;
 diff --git a/source3/libnet/libnet_join.c b/source3/libnet/libnet_join.c
-index a087587bba7..bdca3030f19 100644
+index bd3aeec9434..e4bb9ad56c1 100644
 --- a/source3/libnet/libnet_join.c
 +++ b/source3/libnet/libnet_join.c
 @@ -569,6 +569,13 @@ static ADS_STATUS libnet_join_set_machine_spn(TALLOC_CTX *mem_ctx,
@@ -170,18 +189,19 @@ index a087587bba7..bdca3030f19 100644
  	for (addl_hostnames = lp_additional_dns_hostnames();
  	     addl_hostnames != NULL && *addl_hostnames != NULL;
 diff --git a/source3/param/loadparm.c b/source3/param/loadparm.c
-index d3d81f6ece5..31ce1f1f37d 100644
+index acb4d149f0b..1ce352d4774 100644
 --- a/source3/param/loadparm.c
 +++ b/source3/param/loadparm.c
-@@ -194,6 +194,7 @@ static const struct loadparm_service _sDefault =
+@@ -196,6 +196,8 @@ static const struct loadparm_service _sDefault =
  	.map_hidden = false,
  	.map_archive = true,
  	.store_dos_attributes = true,
 +	.kernel_dosmodes = false,
++	.smbd_max_xattr_size = 65536,
  	.dmapi_support = false,
  	.locking = true,
  	.strict_locking = Auto,
-@@ -690,6 +691,7 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
+@@ -693,6 +695,7 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
  #endif
  	Globals.time_server = false;
  	Globals.bind_interfaces_only = false;
@@ -189,23 +209,21 @@ index d3d81f6ece5..31ce1f1f37d 100644
  	Globals.unix_password_sync = false;
  	Globals.pam_password_change = false;
  	Globals.passwd_chat_debug = false;
-@@ -721,6 +723,11 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
+@@ -724,6 +727,9 @@ static void init_globals(struct loadparm_context *lp_ctx, bool reinit_globals)
  	Globals.log_writeable_files_on_exit = false;
  	Globals.create_krb5_conf = true;
  	Globals.include_system_krb5_conf = true;
 +	Globals.winbind_netbios_alias_spn = true;
 +	Globals.ads_dns_update = 1;
-+	Globals.truenas_passive_controller = false;
-+	Globals.allow_dataset_creation = true;
-+	lpcfg_string_set(Globals.ctx, &Globals.zeroconf_name, "");
++	Globals.allow_dataset_creation = false;
  	Globals._winbind_max_domain_connections = 1;
  
  	/* hostname lookups can be very expensive and are broken on
 diff --git a/source3/utils/net_ads.c b/source3/utils/net_ads.c
-index dd3c650be8b..ddfd938af72 100644
+index c8b18a9c281..abd28a9445c 100644
 --- a/source3/utils/net_ads.c
 +++ b/source3/utils/net_ads.c
-@@ -1761,6 +1761,10 @@ static void _net_ads_join_dns_updates(struct net_context *c, TALLOC_CTX *ctx, st
+@@ -1763,6 +1763,10 @@ static void _net_ads_join_dns_updates(struct net_context *c, TALLOC_CTX *ctx, st
  		return;
  	}
  
@@ -216,3 +234,6 @@ index dd3c650be8b..ddfd938af72 100644
  	if (!r->out.domain_is_ad) {
  		return;
  	}
+-- 
+2.31.1
+

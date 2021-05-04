@@ -1,6 +1,24 @@
+From e143e962b6a2477121a034aae58c4bce932316e9 Mon Sep 17 00:00:00 2001
+From: Andrew Walker <awalker@ixsystems.com>
+Date: Mon, 3 May 2021 16:01:36 -0400
+Subject: [PATCH] add ability for winbindd to send domain status updates over
+ fifo
+
+Write domain status updates as JSON formatted string over fifo.
+---
+ .../smbdotconf/winbind/winbindstatusfifo.xml  |  25 +++
+ source3/winbindd/winbindd_cm.c                |   7 +
+ source3/winbindd/winbindd_json.c              | 152 ++++++++++++++++++
+ source3/winbindd/winbindd_json.h              |  25 +++
+ source3/winbindd/wscript_build                |   1 +
+ 5 files changed, 210 insertions(+)
+ create mode 100644 docs-xml/smbdotconf/winbind/winbindstatusfifo.xml
+ create mode 100644 source3/winbindd/winbindd_json.c
+ create mode 100644 source3/winbindd/winbindd_json.h
+
 diff --git a/docs-xml/smbdotconf/winbind/winbindstatusfifo.xml b/docs-xml/smbdotconf/winbind/winbindstatusfifo.xml
 new file mode 100644
-index 0000000..f432047
+index 00000000000..f4320479815
 --- /dev/null
 +++ b/docs-xml/smbdotconf/winbind/winbindstatusfifo.xml
 @@ -0,0 +1,25 @@
@@ -30,7 +48,7 @@ index 0000000..f432047
 +<value type="default">No</value>
 +</samba:parameter>
 diff --git a/source3/winbindd/winbindd_cm.c b/source3/winbindd/winbindd_cm.c
-index 0e671ca..55eb2ac 100644
+index 2029e4e8315..b1b046859de 100644
 --- a/source3/winbindd/winbindd_cm.c
 +++ b/source3/winbindd/winbindd_cm.c
 @@ -60,6 +60,7 @@
@@ -41,7 +59,7 @@ index 0e671ca..55eb2ac 100644
  #include "libsmb/namequery.h"
  #include "../libcli/auth/libcli_auth.h"
  #include "../librpc/gen_ndr/ndr_netlogon_c.h"
-@@ -472,6 +473,9 @@ void set_domain_offline(struct winbindd_domain *domain)
+@@ -474,6 +475,9 @@ void set_domain_offline(struct winbindd_domain *domain)
  					   (const uint8_t *)domain->name,
  					   strlen(domain->name)+1);
  		}			
@@ -51,7 +69,7 @@ index 0e671ca..55eb2ac 100644
  	}
  
  	return;	
-@@ -558,6 +562,9 @@ static void set_domain_online(struct winbindd_domain *domain)
+@@ -560,6 +564,9 @@ static void set_domain_online(struct winbindd_domain *domain)
  					   (const uint8_t *)domain->name,
  					   strlen(domain->name)+1);
  		}			
@@ -63,7 +81,7 @@ index 0e671ca..55eb2ac 100644
  	return;	
 diff --git a/source3/winbindd/winbindd_json.c b/source3/winbindd/winbindd_json.c
 new file mode 100644
-index 0000000..b99faa0
+index 00000000000..6155d49b075
 --- /dev/null
 +++ b/source3/winbindd/winbindd_json.c
 @@ -0,0 +1,152 @@
@@ -221,7 +239,7 @@ index 0000000..b99faa0
 +#endif /* [HAVE_JANSSON] */
 diff --git a/source3/winbindd/winbindd_json.h b/source3/winbindd/winbindd_json.h
 new file mode 100644
-index 0000000..201837b
+index 00000000000..201837b7136
 --- /dev/null
 +++ b/source3/winbindd/winbindd_json.h
 @@ -0,0 +1,25 @@
@@ -251,7 +269,7 @@ index 0000000..201837b
 +
 +#endif /*_WINBINDD_JSON_H*/
 diff --git a/source3/winbindd/wscript_build b/source3/winbindd/wscript_build
-index 534dd0b..b977e02 100644
+index c3f782c7099..7dd211a53fe 100644
 --- a/source3/winbindd/wscript_build
 +++ b/source3/winbindd/wscript_build
 @@ -248,6 +248,7 @@ bld.SAMBA3_SUBSYSTEM('winbindd-lib',
@@ -262,3 +280,6 @@ index 534dd0b..b977e02 100644
                      winbindd_ping_dc.c
                      winbindd_domain_info.c
                      winbindd_pam_auth.c
+-- 
+2.31.1
+
