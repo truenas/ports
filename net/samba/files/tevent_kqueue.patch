@@ -1,8 +1,28 @@
+From b3cdd897f0ffb89b78e4c9b8e4f81269571b1c51 Mon Sep 17 00:00:00 2001
+From: Andrew Walker <awalker@ixsystems.com>
+Date: Mon, 3 May 2021 16:19:29 -0400
+Subject: [PATCH] Add kqueue-based tevent backend
+
+---
+ lib/async_req/async_sock.c   |   4 +-
+ lib/tevent/tevent.c          |   3 +
+ lib/tevent/tevent.h          |   6 +
+ lib/tevent/tevent_internal.h |   6 +
+ lib/tevent/tevent_kqueue.c   | 961 +++++++++++++++++++++++++++++++++++
+ lib/tevent/tevent_kqueue.h   |  36 ++
+ lib/tevent/tevent_standard.c |  14 +-
+ lib/tevent/tevent_timed.c    |   8 +-
+ lib/tevent/wscript           |   6 +
+ lib/util/time.c              |   8 +-
+ 10 files changed, 1044 insertions(+), 8 deletions(-)
+ create mode 100755 lib/tevent/tevent_kqueue.c
+ create mode 100644 lib/tevent/tevent_kqueue.h
+
 diff --git a/lib/async_req/async_sock.c b/lib/async_req/async_sock.c
-index 0a8a333f4f3..6071ff84420 100644
+index 85ec148191e..2b46490f83e 100644
 --- a/lib/async_req/async_sock.c
 +++ b/lib/async_req/async_sock.c
-@@ -273,7 +273,7 @@ struct tevent_req *writev_send(TALLOC_CTX *mem_ctx, struct tevent_context *ev,
+@@ -276,7 +276,7 @@ struct tevent_req *writev_send(TALLOC_CTX *mem_ctx, struct tevent_context *ev,
  	if (tevent_req_nomem(state->iov, req)) {
  		return tevent_req_post(req, ev);
  	}
@@ -11,7 +31,7 @@ index 0a8a333f4f3..6071ff84420 100644
  	state->err_on_readability = err_on_readability;
  
  	tevent_req_set_cleanup_fn(req, writev_cleanup);
-@@ -472,7 +472,7 @@ struct tevent_req *read_packet_send(TALLOC_CTX *mem_ctx,
+@@ -493,7 +493,7 @@ struct tevent_req *read_packet_send(TALLOC_CTX *mem_ctx,
  	}
  
  	state->fde = tevent_add_fd(ev, state, fd,
@@ -35,10 +55,10 @@ index dbec1821e41..0bf2b5cf3e4 100644
  
  	tevent_standard_init();
 diff --git a/lib/tevent/tevent.h b/lib/tevent/tevent.h
-index 3c3e3cc2cef..6519b14fedf 100644
+index b8e46feec46..336d386d2e4 100644
 --- a/lib/tevent/tevent.h
 +++ b/lib/tevent/tevent.h
-@@ -491,6 +491,12 @@ void tevent_set_abort_fn(void (*abort_fn)(const char *reason));
+@@ -497,6 +497,12 @@ void tevent_set_abort_fn(void (*abort_fn)(const char *reason));
   */
  #define TEVENT_FD_WRITE 2
  
@@ -70,7 +90,7 @@ index 5365fce3533..91c9495a26f 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..741171f3340
+index 00000000000..46226422f66
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
 @@ -0,0 +1,961 @@
@@ -1163,10 +1183,10 @@ index 93af416f583..92882cad476 100644
          SRC += ' tevent_port.c'
  
 diff --git a/lib/util/time.c b/lib/util/time.c
-index 0fac5e2e397..3efcb987df0 100644
+index e8b58e87268..ff9767d1ac9 100644
 --- a/lib/util/time.c
 +++ b/lib/util/time.c
-@@ -622,8 +622,12 @@ _PUBLIC_ bool timeval_is_zero(const struct timeval *tv)
+@@ -626,8 +626,12 @@ _PUBLIC_ bool timeval_is_zero(const struct timeval *tv)
  */
  _PUBLIC_ struct timeval timeval_current(void)
  {
@@ -1181,3 +1201,6 @@ index 0fac5e2e397..3efcb987df0 100644
  	return tv;
  }
  
+-- 
+2.31.1
+

@@ -1,9 +1,19 @@
+From c0bae1140d8bca257d041aea442f72b3be9ffd7b Mon Sep 17 00:00:00 2001
+From: Andrew Walker <awalker@ixsystems.com>
+Date: Mon, 3 May 2021 16:22:10 -0400
+Subject: [PATCH] Add freebsd aio module
+
+---
+ source3/modules/vfs_aio_fbsd.c | 242 +++++++++++++++++++++++++++++++++
+ 1 file changed, 242 insertions(+)
+ create mode 100644 source3/modules/vfs_aio_fbsd.c
+
 diff --git a/source3/modules/vfs_aio_fbsd.c b/source3/modules/vfs_aio_fbsd.c
 new file mode 100644
-index 00000000000..8a311f0aa50
+index 00000000000..bbb3ed0d9eb
 --- /dev/null
 +++ b/source3/modules/vfs_aio_fbsd.c
-@@ -0,0 +1,241 @@
+@@ -0,0 +1,242 @@
 +/*
 + * Copyright (C) iXsystems 2020
 + *
@@ -25,6 +35,7 @@ index 00000000000..8a311f0aa50
 +#include "includes.h"
 +#include "lib/util/tevent_unix.h"
 +#include "lib/tevent/tevent_kqueue.h"
++#include "smbd/smbd.h"
 +#include <sys/event.h>
 +#include <aio.h>
 +
@@ -110,7 +121,7 @@ index 00000000000..8a311f0aa50
 +	taiocbp->iocbp = talloc_zero(req, struct aiocb);
 +	iocbp = taiocbp->iocbp;
 +
-+	iocbp->aio_fildes = fsp->fh->fd;
++	iocbp->aio_fildes = fsp_get_io_fd(fsp);
 +	iocbp->aio_offset = offset;
 +	iocbp->aio_buf = data;
 +	iocbp->aio_sigevent.sigev_notify_kevent_flags = EV_ONESHOT;
@@ -122,7 +133,7 @@ index 00000000000..8a311f0aa50
 +	ret = tevent_add_aio_read(ev, taiocbp);
 +	if (ret != 0) {
 +		if (errno == EAGAIN) {
-+			taiocbp->rv = pread(fsp->fh->fd, data, n, offset);
++			taiocbp->rv = pread(fsp_get_io_fd(fsp), data, n, offset);
 +			if (taiocbp->rv == -1) {
 +				taiocbp->saved_errno = errno;
 +			}
@@ -162,7 +173,7 @@ index 00000000000..8a311f0aa50
 +	}
 +	taiocbp->iocbp = talloc_zero(req, struct aiocb);
 +	iocbp = taiocbp->iocbp;
-+	iocbp->aio_fildes = fsp->fh->fd;
++	iocbp->aio_fildes = fsp_get_io_fd(fsp);
 +	iocbp->aio_offset = offset;
 +	iocbp->aio_buf = discard_const(data);
 +	iocbp->aio_sigevent.sigev_value.sival_ptr = req;
@@ -173,7 +184,7 @@ index 00000000000..8a311f0aa50
 +	ret = tevent_add_aio_write(ev, taiocbp);
 +	if (ret != 0) {
 +		if (errno == EAGAIN) {
-+			taiocbp->rv = pwrite(fsp->fh->fd, data, n, offset);
++			taiocbp->rv = pwrite(fsp_get_io_fd(fsp), data, n, offset);
 +			if (taiocbp->rv == -1) {
 +				taiocbp->saved_errno = errno;
 +			}
@@ -202,7 +213,7 @@ index 00000000000..8a311f0aa50
 +	}
 +	taiocbp->iocbp = talloc_zero(req, struct aiocb);
 +	iocbp = taiocbp->iocbp;
-+	iocbp->aio_fildes = fsp->fh->fd;
++	iocbp->aio_fildes = fsp_get_io_fd(fsp);
 +	iocbp->aio_sigevent.sigev_value.sival_ptr = req;
 +	iocbp->aio_sigevent.sigev_notify = SIGEV_KEVENT;
 +	iocbp->aio_sigevent.sigev_notify_kevent_flags = EV_ONESHOT;
@@ -211,7 +222,7 @@ index 00000000000..8a311f0aa50
 +	ret = tevent_add_aio_fsync(ev, taiocbp);
 +	if (ret != 0) {
 +		if (errno == EAGAIN) {
-+			taiocbp->rv = fsync(fsp->fh->fd);
++			taiocbp->rv = fsync(fsp_get_io_fd(fsp));
 +			if (taiocbp->rv == -1) {
 +				taiocbp->saved_errno = errno;
 +			}
@@ -245,3 +256,6 @@ index 00000000000..8a311f0aa50
 +	return smb_register_vfs(SMB_VFS_INTERFACE_VERSION,
 +				"aio_fbsd", &vfs_aio_fbsd_fns);
 +}
+-- 
+2.31.1
+

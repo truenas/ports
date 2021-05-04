@@ -1,3 +1,19 @@
+From dbefe9489a2e208b795873e4b1f3c604395b5631 Mon Sep 17 00:00:00 2001
+From: Andrew Walker <awalker@ixsystems.com>
+Date: Mon, 3 May 2021 16:16:32 -0400
+Subject: [PATCH] Add JSON support to various commandline utilities in samba
+
+---
+ source3/include/util_sd.h      |   8 +
+ source3/lib/util_sd.c          | 471 +++++++++++++++-
+ source3/utils/sharesec.c       |  68 ++-
+ source3/utils/smbcacls.c       |  62 +++
+ source3/utils/smbcontrol.c     |   1 +
+ source3/utils/status.c         | 986 ++++++++++++++++++++++++++++++++-
+ source3/utils/status_profile.c | 170 +++++-
+ source3/utils/status_profile.h |   4 +-
+ 8 files changed, 1708 insertions(+), 62 deletions(-)
+
 diff --git a/source3/include/util_sd.h b/source3/include/util_sd.h
 index 7f82969badf..dc4ec88e578 100644
 --- a/source3/include/util_sd.h
@@ -24,13 +40,13 @@ index 7f82969badf..dc4ec88e578 100644
  
  #endif
 diff --git a/source3/lib/util_sd.c b/source3/lib/util_sd.c
-index 39083b15438..e7396237f50 100644
+index bcf152b22cf..20ad47e0a57 100644
 --- a/source3/lib/util_sd.c
 +++ b/source3/lib/util_sd.c
-@@ -28,30 +28,53 @@
- #include "../libcli/security/security.h"
+@@ -29,30 +29,53 @@
  #include "rpc_client/cli_pipe.h"
  #include "rpc_client/cli_lsarpc.h"
+ #include "lib/util/string_wrappers.h"
 +#ifdef HAVE_JANSSON
 +#include <jansson.h>
 +#include "audit_logging.h" /* various JSON helpers */
@@ -92,7 +108,7 @@ index 39083b15438..e7396237f50 100644
  };
  
  static const struct {
-@@ -366,6 +389,364 @@ void print_ace(struct cli_state *cli, FILE *f, struct security_ace *ace,
+@@ -367,6 +390,364 @@ void print_ace(struct cli_state *cli, FILE *f, struct security_ace *ace,
  	}
  }
  
@@ -457,7 +473,7 @@ index 39083b15438..e7396237f50 100644
  static bool parse_ace_flags(const char *str, unsigned int *pflags)
  {
  	const char *p = str;
-@@ -647,3 +1028,71 @@ void sec_desc_print(struct cli_state *cli, FILE *f,
+@@ -648,3 +1029,71 @@ void sec_desc_print(struct cli_state *cli, FILE *f,
  	}
  
  }
@@ -529,25 +545,14 @@ index 39083b15438..e7396237f50 100644
 +	json_free(&jsret);
 +	return false;
 +}
-diff --git a/source3/utils/net.c b/source3/utils/net.c
-index 683b46794e4..1523e00abdb 100644
---- a/source3/utils/net.c
-+++ b/source3/utils/net.c
-@@ -1425,5 +1425,6 @@ static void get_credentials_file(struct net_context *c,
- 	poptFreeContext(pc);
- 
- 	TALLOC_FREE(frame);
-+	TALLOC_FREE(c->msg_ctx);
- 	return rc;
- }
 diff --git a/source3/utils/sharesec.c b/source3/utils/sharesec.c
-index 454c5bfe36b..337d8ac82ef 100644
+index 97ff0cfc9c5..9ce91459ebc 100644
 --- a/source3/utils/sharesec.c
 +++ b/source3/utils/sharesec.c
-@@ -29,6 +29,11 @@ struct cli_state;
- #include "passdb/machine_sid.h"
+@@ -30,6 +30,11 @@ struct cli_state;
  #include "util_sd.h"
  #include "cmdline_contexts.h"
+ #include "lib/util/string_wrappers.h"
 +#ifdef HAVE_JANSSON
 +#include <jansson.h>
 +#include "audit_logging.h" /* various JSON helpers */
@@ -556,7 +561,7 @@ index 454c5bfe36b..337d8ac82ef 100644
  
  static TALLOC_CTX *ctx;
  
-@@ -157,12 +162,15 @@ static void sort_acl(struct security_acl *the_acl)
+@@ -156,12 +161,15 @@ static void sort_acl(struct security_acl *the_acl)
  }
  
  
@@ -573,7 +578,7 @@ index 454c5bfe36b..337d8ac82ef 100644
  	NTSTATUS status;
  
  	if (mode != SMB_ACL_SET && mode != SMB_SD_DELETE) {
-@@ -184,7 +192,15 @@ static int change_share_sec(TALLOC_CTX *mem_ctx, const char *sharename, char *th
+@@ -183,7 +191,15 @@ static int change_share_sec(TALLOC_CTX *mem_ctx, const char *sharename, char *th
  		/* should not happen */
  		return 0;
  	case SMB_ACL_VIEW:
@@ -590,7 +595,7 @@ index 454c5bfe36b..337d8ac82ef 100644
  		return 0;
  	case SMB_ACL_DELETE:
  	    for (i=0;sd->dacl && i<sd->dacl->num_aces;i++) {
-@@ -330,10 +346,13 @@ int main(int argc, const char *argv[])
+@@ -329,10 +345,13 @@ int main(int argc, const char *argv[])
  	int retval = 0;
  	enum acl_mode mode = SMB_ACL_SET;
  	static char *the_acl = NULL;
@@ -604,7 +609,7 @@ index 454c5bfe36b..337d8ac82ef 100644
  	bool initialize_sid = False;
  	struct poptOption long_options[] = {
  		POPT_AUTOHELP
-@@ -430,6 +449,14 @@ int main(int argc, const char *argv[])
+@@ -429,6 +448,14 @@ int main(int argc, const char *argv[])
  			.descrip    = "Force storing the ACL",
  			.argDescrip = "ACLS",
  		},
@@ -619,7 +624,7 @@ index 454c5bfe36b..337d8ac82ef 100644
  		POPT_COMMON_SAMBA
  		POPT_TABLEEND
  	};
-@@ -493,6 +520,10 @@ int main(int argc, const char *argv[])
+@@ -492,6 +519,10 @@ int main(int argc, const char *argv[])
  			force_acl = True;
  			break;
  
@@ -630,7 +635,7 @@ index 454c5bfe36b..337d8ac82ef 100644
  		case 'M':
  			initialize_sid = True;
  			break;
-@@ -531,6 +562,13 @@ int main(int argc, const char *argv[])
+@@ -530,6 +561,13 @@ int main(int argc, const char *argv[])
  
  	if (mode == SMB_ACL_VIEW_ALL) {
  		int i;
@@ -644,7 +649,7 @@ index 454c5bfe36b..337d8ac82ef 100644
  
  		for (i=0; i<lp_numservices(); i++) {
  			TALLOC_CTX *frame = talloc_stackframe();
-@@ -542,11 +580,29 @@ int main(int argc, const char *argv[])
+@@ -541,11 +579,29 @@ int main(int argc, const char *argv[])
  				continue;
  			}
  
@@ -677,7 +682,7 @@ index 454c5bfe36b..337d8ac82ef 100644
  		goto done;
  	}
  
-@@ -576,7 +632,7 @@ int main(int argc, const char *argv[])
+@@ -575,7 +631,7 @@ int main(int argc, const char *argv[])
  		retval = view_sharesec_sddl(sharename);
  		break;
  	default:
@@ -687,10 +692,10 @@ index 454c5bfe36b..337d8ac82ef 100644
  	}
  
 diff --git a/source3/utils/smbcacls.c b/source3/utils/smbcacls.c
-index 084df9f9a4a..93cde926801 100644
+index 7d280b2fadc..8c79d1b689f 100644
 --- a/source3/utils/smbcacls.c
 +++ b/source3/utils/smbcacls.c
-@@ -32,6 +32,11 @@
+@@ -33,6 +33,11 @@
  #include "passdb/machine_sid.h"
  #include "../librpc/gen_ndr/ndr_lsa_c.h"
  #include "util_sd.h"
@@ -700,9 +705,9 @@ index 084df9f9a4a..93cde926801 100644
 +#include "auth/common_auth.h"
 +#endif /* [HAVE_JANSSON] */
  
- static int test_args;
+ static char DIRSEP_CHAR = '\\';
  
-@@ -418,6 +423,48 @@ static int cacl_dump(struct cli_state *cli, const char *filename, bool numeric)
+@@ -499,6 +504,48 @@ static int cacl_dump(struct cli_state *cli, const char *filename, bool numeric)
  	return EXIT_OK;
  }
  
@@ -751,7 +756,7 @@ index 084df9f9a4a..93cde926801 100644
  /***************************************************** 
  Change the ownership or group ownership of a file. Just
  because the NT docs say this can't be done :-). JRA.
-@@ -813,6 +860,7 @@ int main(int argc, char *argv[])
+@@ -1561,6 +1608,7 @@ int main(int argc, char *argv[])
  	int result;
  	char *path;
  	char *filename = NULL;
@@ -759,7 +764,7 @@ index 084df9f9a4a..93cde926801 100644
  	poptContext pc;
  	/* numeric is set when the user wants numeric SIDs and ACEs rather
  	   than going via LSA calls to resolve them */
-@@ -906,6 +954,14 @@ int main(int argc, char *argv[])
+@@ -1666,6 +1714,14 @@ int main(int argc, char *argv[])
  			.val        = 1,
  			.descrip    = "The security-info flags for queries"
  		},
@@ -774,7 +779,7 @@ index 084df9f9a4a..93cde926801 100644
  		{
  			.longName   = "set-security-info",
  			.shortName  = 0,
-@@ -1009,6 +1065,9 @@ int main(int argc, char *argv[])
+@@ -1769,6 +1825,9 @@ int main(int argc, char *argv[])
  			owner_username = poptGetOptArg(pc);
  			change_mode = REQUEST_INHERIT;
  			break;
@@ -784,33 +789,34 @@ index 084df9f9a4a..93cde926801 100644
  		case 'm':
  			lp_set_cmdline("client max protocol", poptGetOptArg(pc));
  			break;
-@@ -1086,6 +1145,8 @@ int main(int argc, char *argv[])
- 		result = owner_set(cli, change_mode, filename, owner_username);
- 	} else if (the_acl) {
- 		result = cacl_set(cli, filename, the_acl, mode, numeric);
+@@ -1879,6 +1938,9 @@ int main(int argc, char *argv[])
+ 					   mode,
+ 					   numeric);
+ 		}
++		result = cacl_set(targetcli, targetfile, the_acl, mode, numeric);
 +	} else if (json_output) {
-+		result = cacl_dump_json(cli, filename, numeric);
++		result = cacl_dump_json(targetcli, targetfile, numeric);
  	} else {
- 		result = cacl_dump(cli, filename, numeric);
+ 		result = cacl_dump(targetcli, targetfile, numeric);
  	}
 diff --git a/source3/utils/smbcontrol.c b/source3/utils/smbcontrol.c
-index d779f0d14ea..4424c4ee935 100644
+index 57c029b7e53..11775ca33e3 100644
 --- a/source3/utils/smbcontrol.c
 +++ b/source3/utils/smbcontrol.c
-@@ -1776,5 +1776,6 @@ int main(int argc, const char **argv)
- 
+@@ -1779,5 +1779,6 @@ int main(int argc, const char **argv)
+ 	cmdline_messaging_context_free();
  	poptFreeContext(pc);
  	TALLOC_FREE(frame);
 +	TALLOC_FREE(msg_ctx);
  	return ret;
  }
 diff --git a/source3/utils/status.c b/source3/utils/status.c
-index 36f7030e4f4..1cc7470cb72 100644
+index fc21d20f766..b52f8f609d2 100644
 --- a/source3/utils/status.c
 +++ b/source3/utils/status.c
-@@ -51,6 +51,12 @@
- #include "cmdline_contexts.h"
+@@ -53,6 +53,12 @@
  #include "locking/leases_db.h"
+ #include "lib/util/string_wrappers.h"
  
 +#ifdef HAVE_JANSSON
 +#include <jansson.h>
@@ -821,7 +827,7 @@ index 36f7030e4f4..1cc7470cb72 100644
  #define SMB_MAXPIDS		2048
  static uid_t 		Ucrit_uid = 0;               /* added by OH */
  static struct server_id	Ucrit_pid[SMB_MAXPIDS];  /* Ugly !!! */   /* added by OH */
-@@ -64,9 +70,81 @@ static bool processes_only;
+@@ -66,8 +72,81 @@ static bool processes_only;
  static bool show_brl;
  static bool numeric_only;
  static bool do_checks = true;
@@ -830,7 +836,8 @@ index 36f7030e4f4..1cc7470cb72 100644
 +static bool resolve_uids = false;
  
  const char *username = NULL;
- 
++const char *session_id = NULL;
++
 +static const char *session_dialect_str(uint16_t dialect);
 +
 +#ifdef HAVE_JANSSON
@@ -899,15 +906,19 @@ index 36f7030e4f4..1cc7470cb72 100644
 +        return 0;
 +}
 +#endif /* [HAVE_JANSSON] */
-+
+ 
  /* added by OH */
  static void Ucrit_addUid(uid_t uid)
- {
-@@ -118,12 +196,634 @@ static bool Ucrit_addPid( struct server_id pid )
+@@ -120,12 +199,648 @@ static bool Ucrit_addPid( struct server_id pid )
  	return True;
  }
  
 +#ifdef HAVE_JANSSON
++struct print_share_mode_state {
++	char *session_id;
++	struct json_object jsobj;
++};
++
 +static int print_share_mode_json(struct file_id fid,
 +				 const struct share_mode_data *d,
 +				 const struct share_mode_entry *e,
@@ -917,9 +928,11 @@ index 36f7030e4f4..1cc7470cb72 100644
 +	if (tmp_ctx == NULL) {
 +		return -1;
 +	}
++	struct print_share_mode_state *state = NULL;
 +	struct json_object jsobj;
 +	struct json_object jsobjint;
-+	jsobj = *(struct json_object *)private_data;
++	state = talloc_get_type_abort(private_data, struct print_share_mode_state);
++	jsobj = state->jsobj;
 +	jsobjint = json_new_object();
 +	static int count;
 +	const char *denymode = NULL;
@@ -940,6 +953,16 @@ index 36f7030e4f4..1cc7470cb72 100644
 +		json_free(&jsobjint);
 +		return 0;
 +	}
++
++	if (state->session_id) {
++		struct server_id_buf tmp;
++		char *s_id = server_id_str_buf(e->pid, &tmp);
++		if (strcmp(s_id, state->session_id) != 0) {
++			TALLOC_FREE(tmp_ctx);
++			json_free(&jsobjint);
++			return 0;
++		}
++	}
 +	if (Ucrit_checkPid(e->pid)) {
 +		struct server_id_buf tmp;
 +		uint denymode_int = 0;
@@ -949,7 +972,7 @@ index 36f7030e4f4..1cc7470cb72 100644
 +		if (json_is_invalid(&jsobjint)) {
 +			return -1;
 +		}
-+		if (json_add_string(&jsobjint, "pid",
++		if (json_add_string(&jsobjint, "session_id",
 +				    server_id_str_buf(e->pid, &tmp)) < 0) {
 +			goto failure;
 +		}
@@ -981,7 +1004,7 @@ index 36f7030e4f4..1cc7470cb72 100644
 +		}
 +		access_mask = talloc_asprintf(tmp_ctx, "0x%08x",
 +					      (unsigned int)e->access_mask);
-+		if (json_add_string(&amask, "hex", access_mask) < 0) {
++		if (json_add_string(&amask, "raw", access_mask) < 0) {
 +			goto failure;
 +		}
 +		TALLOC_FREE(access_mask);
@@ -1123,14 +1146,7 @@ index 36f7030e4f4..1cc7470cb72 100644
 +
 +	share_mode = fetch_share_mode_unlocked(NULL, id);
 +	if (share_mode) {
-+		bool has_stream = share_mode->data->stream_name != NULL;
-+
-+		fname = talloc_asprintf(NULL, "%s%s%s",
-+					share_mode->data->base_name,
-+					has_stream ? ":" : "",
-+					has_stream ?
-+					share_mode->data->stream_name :
-+					"");
++		fname = share_mode_filename(NULL, share_mode);
 +	} else {
 +		fname = talloc_strdup(NULL, "");
 +		if (fname == NULL) {
@@ -1326,6 +1342,10 @@ index 36f7030e4f4..1cc7470cb72 100644
 +		return -1;
 +	}
 +
++	if (json_add_string(&jsobjint, "session_id",
++			 server_id_str_buf(session->pid, &tmp)) < 0) {
++		goto failure;
++	}
 +	if (json_add_int(&jsobjint, "uid",
 +			 (unsigned int)session->uid) < 0) {
 +		goto failure;
@@ -1480,7 +1500,7 @@ index 36f7030e4f4..1cc7470cb72 100644
 +	if (json_add_string(&jsobjint, "signing", signing) < 0) {
 +		goto failure;
 +	}
-+	if (json_add_object(&jsobj, server_id_str_buf(session->pid, &tmp), &jsobjint) < 0) {
++	if (json_add_object(&jsobj, NULL, &jsobjint) < 0) {
 +		goto failure;
 +	}
 +
@@ -1539,7 +1559,7 @@ index 36f7030e4f4..1cc7470cb72 100644
  	static int count;
  
  	if (do_checks && !is_valid_share_mode_entry(e)) {
-@@ -510,7 +1210,6 @@ static int traverse_sessionid(const char *key, struct sessionid *session,
+@@ -505,7 +1220,6 @@ static int traverse_sessionid(const char *key, struct sessionid *session,
  	return result;
  }
  
@@ -1547,7 +1567,7 @@ index 36f7030e4f4..1cc7470cb72 100644
  static bool print_notify_rec(const char *path, struct server_id server,
  			     const struct notify_instance *instance,
  			     void *private_data)
-@@ -531,11 +1230,12 @@ enum {
+@@ -526,11 +1240,12 @@ enum {
  int main(int argc, const char *argv[])
  {
  	int c;
@@ -1561,7 +1581,22 @@ index 36f7030e4f4..1cc7470cb72 100644
  	struct poptOption long_options[] = {
  		POPT_AUTOHELP
  		{
-@@ -610,6 +1310,14 @@ int main(int argc, const char *argv[])
+@@ -581,6 +1296,14 @@ int main(int argc, const char *argv[])
+ 			.val        = 'u',
+ 			.descrip    = "Switch to user",
+ 		},
++		{
++			.longName   = "session-id",
++			.shortName  = 's',
++			.argInfo    = POPT_ARG_STRING,
++			.arg        = &session_id,
++			.val        = 's',
++			.descrip    = "Restrict to session id",
++		},
+ 		{
+ 			.longName   = "brief",
+ 			.shortName  = 'b',
+@@ -605,6 +1328,14 @@ int main(int argc, const char *argv[])
  			.val        = 'R',
  			.descrip    = "Show call rates",
  		},
@@ -1576,7 +1611,7 @@ index 36f7030e4f4..1cc7470cb72 100644
  		{
  			.longName   = "byterange",
  			.shortName  = 'B',
-@@ -626,6 +1334,30 @@ int main(int argc, const char *argv[])
+@@ -621,6 +1352,30 @@ int main(int argc, const char *argv[])
  			.val        = 'n',
  			.descrip    = "Numeric uid/gid"
  		},
@@ -1607,7 +1642,7 @@ index 36f7030e4f4..1cc7470cb72 100644
  		{
  			.longName   = "fast",
  			.shortName  = 'f',
-@@ -657,14 +1389,37 @@ int main(int argc, const char *argv[])
+@@ -652,14 +1407,37 @@ int main(int argc, const char *argv[])
  	setup_logging(argv[0], DEBUG_STDERR);
  	lp_set_cmdline("log level", "0");
  
@@ -1647,15 +1682,17 @@ index 36f7030e4f4..1cc7470cb72 100644
  		ret = 1;
  		goto done;
  	}
-@@ -696,6 +1451,7 @@ int main(int argc, const char *argv[])
+@@ -691,6 +1469,9 @@ int main(int argc, const char *argv[])
  		case 'u':
  			Ucrit_addUid(nametouid(poptGetOptArg(pc)));
  			break;
++		case 's':
++			break;
 +		case 'D':
  		case 'P':
  		case 'R':
  			profile_only = c;
-@@ -706,6 +1462,16 @@ int main(int argc, const char *argv[])
+@@ -701,6 +1482,16 @@ int main(int argc, const char *argv[])
  		case 'n':
  			numeric_only = true;
  			break;
@@ -1672,7 +1709,7 @@ index 36f7030e4f4..1cc7470cb72 100644
  		case 'f':
  			do_checks = false;
  			break;
-@@ -724,13 +1490,18 @@ int main(int argc, const char *argv[])
+@@ -719,13 +1510,18 @@ int main(int argc, const char *argv[])
  	if ( username )
  		Ucrit_addUid( nametouid(username) );
  
@@ -1693,7 +1730,7 @@ index 36f7030e4f4..1cc7470cb72 100644
  		ret = -1;
  		goto done;
  	}
-@@ -745,7 +1516,7 @@ int main(int argc, const char *argv[])
+@@ -740,7 +1536,7 @@ int main(int argc, const char *argv[])
  	switch (profile_only) {
  		case 'P':
  			/* Dump profile data */
@@ -1702,7 +1739,7 @@ index 36f7030e4f4..1cc7470cb72 100644
  			ret = ok ? 0 : 1;
  			goto done;
  		case 'R':
-@@ -753,16 +1524,41 @@ int main(int argc, const char *argv[])
+@@ -748,16 +1544,41 @@ int main(int argc, const char *argv[])
  			ok = status_profile_rates(verbose);
  			ret = ok ? 0 : 1;
  			goto done;
@@ -1728,7 +1765,7 @@ index 36f7030e4f4..1cc7470cb72 100644
 +		}
 +		#ifdef HAVE_JANSSON
 +		else {
-+			struct json_object sessions = json_new_object();
++			struct json_object sessions = json_new_array();
 +			if (json_is_invalid(&sessions)) {
 +				fprintf(stderr, "Failed to create JSON object [sessions]\n");
 +				ret = -1;
@@ -1748,7 +1785,7 @@ index 36f7030e4f4..1cc7470cb72 100644
  
  		if (processes_only) {
  			goto done;
-@@ -774,12 +1570,32 @@ int main(int argc, const char *argv[])
+@@ -769,12 +1590,32 @@ int main(int argc, const char *argv[])
  			goto done;
  		}
  
@@ -1786,7 +1823,7 @@ index 36f7030e4f4..1cc7470cb72 100644
  
  		if ( shares_only ) {
  			goto done;
-@@ -792,7 +1608,12 @@ int main(int argc, const char *argv[])
+@@ -787,7 +1628,12 @@ int main(int argc, const char *argv[])
  
  		db_path = lock_path(talloc_tos(), "locking.tdb");
  		if (db_path == NULL) {
@@ -1800,7 +1837,7 @@ index 36f7030e4f4..1cc7470cb72 100644
  			ret = -1;
  			goto done;
  		}
-@@ -802,9 +1623,16 @@ int main(int argc, const char *argv[])
+@@ -797,9 +1643,16 @@ int main(int argc, const char *argv[])
  			     DBWRAP_LOCK_ORDER_1, DBWRAP_FLAG_NONE);
  
  		if (!db) {
@@ -1820,7 +1857,7 @@ index 36f7030e4f4..1cc7470cb72 100644
  			TALLOC_FREE(db_path);
  			exit(0);
  		} else {
-@@ -817,20 +1645,66 @@ int main(int argc, const char *argv[])
+@@ -812,31 +1665,108 @@ int main(int argc, const char *argv[])
  			ret = 1;
  			goto done;
  		}
@@ -1832,19 +1869,24 @@ index 36f7030e4f4..1cc7470cb72 100644
 +		#if HAVE_JANSSON
 +		else {
 +			struct json_object locks_array = json_new_array();
++			struct print_share_mode_state *state = NULL;
 +			if (json_is_invalid(&locks_array)) {
 +				locking_end();
 +				fprintf(stderr, "Failed to create JSON array [locks_array]\n");
 +				ret = 1;
 +				goto done;
 +			}
-+			result = share_entry_forall(print_share_mode_json, &locks_array);
++			state = talloc_zero(NULL, struct print_share_mode_state);
++			state->jsobj = locks_array;
++			state->session_id = session_id;
++			result = share_entry_forall(print_share_mode_json, state);
 +			if (json_add_object(&jsobj, "locked_files", &locks_array) < 0) {
 +				locking_end();
 +				fprintf(stderr, "Failed to add JSON array [locks_array]\n");
 +				ret = 1;
 +				goto done;
 +			}
++			TALLOC_FREE(state);
 +		}
 +		#endif /* [HAVE_JANSSON] */
  
@@ -1893,13 +1935,11 @@ index 36f7030e4f4..1cc7470cb72 100644
  
  		locking_end();
  	}
-@@ -843,12 +1717,41 @@ int main(int argc, const char *argv[])
- 		if (n == NULL) {
- 			goto done;
- 		}
--		notify_walk(n, print_notify_rec, NULL);
+ 
+ 	if (show_notify) {
+-		notify_walk(msg_ctx, print_notify_rec, NULL);
 +		if (!json_output) {
-+			notify_walk(n, print_notify_rec, NULL);
++			notify_walk(msg_ctx, print_notify_rec, NULL);
 +		}
 +		#if HAVE_JANSSON
 +		else {
@@ -1910,7 +1950,7 @@ index 36f7030e4f4..1cc7470cb72 100644
 +				ret = 1;
 +				goto done;
 +			}
-+			notify_walk(n, print_notify_rec_json, &notify_array);
++			notify_walk(msg_ctx, print_notify_rec_json, &notify_array);
 +			if (json_add_object(&jsobj, "notify", &notify_array) < 0) {
 +				locking_end();
 +				fprintf(stderr, "Failed to add JSON array [notify_array]\n");
@@ -1919,10 +1959,10 @@ index 36f7030e4f4..1cc7470cb72 100644
 +			}
 +		}
 +		#endif /* [HAVE_JANSSON] */
- 		TALLOC_FREE(n);
  	}
  
  done:
+ 	cmdline_messaging_context_free();
  	poptFreeContext(pc);
 +	#ifdef HAVE_JANSSON
 +	if (json_output && !profile_only) {
@@ -1931,9 +1971,6 @@ index 36f7030e4f4..1cc7470cb72 100644
 +	json_free(&jsobj);
 +	#endif /* [HAVE_JANSSON] */
  	TALLOC_FREE(frame);
-+	if (msg_ctx) {
-+		TALLOC_FREE(msg_ctx);
-+	}
  	return ret;
  }
 diff --git a/source3/utils/status_profile.c b/source3/utils/status_profile.c
@@ -2165,3 +2202,6 @@ index a8a73e12178..485a55e6d2a 100644
 +bool status_profile_timed_dump(bool be_verbose, enum PROFILE_OUTPUT proft, uint64_t sample_interval);
  
  #endif
+-- 
+2.31.1
+
