@@ -912,6 +912,9 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_jail/jail.conf
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_jail/setup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_jail/zfs_jail_001_pos.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_load-key/HEXKEY
+%%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_load-key/PASSPHRASE
+%%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_load-key/RAWKEY
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_load-key/cleanup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_load-key/setup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_load-key/zfs_load-key.cfg
@@ -1280,6 +1283,7 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_import/import_cachefile_device_replaced.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_import/import_cachefile_mirror_attached.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_import/import_cachefile_mirror_detached.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_import/import_cachefile_paths_changed.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_import/import_cachefile_shared_device.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_import/import_devices_missing.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_import/import_paths_changed.ksh
@@ -1318,6 +1322,7 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_initialize/cleanup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_initialize/zpool_initialize.kshlib
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_initialize/zpool_initialize_attach_detach_add_remove.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_initialize/zpool_initialize_fault_export_import_online.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_initialize/zpool_initialize_import_export.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_initialize/zpool_initialize_offline_export_import_online.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_initialize/zpool_initialize_online_offline.ksh
@@ -1412,6 +1417,7 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_trim/setup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_trim/zpool_trim.kshlib
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_trim/zpool_trim_attach_detach_add_remove.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_trim/zpool_trim_fault_export_import_online.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_trim/zpool_trim_import_export.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_trim/zpool_trim_multiple.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_trim/zpool_trim_neg.ksh
@@ -1616,6 +1622,7 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/ctime/ctime_001_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/ctime/setup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/deadman/deadman.cfg
+%%TESTS%%share/zfs/zfs-tests/tests/functional/deadman/deadman_ratelimit.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/deadman/deadman_sync.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/deadman/deadman_zio.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/delegate/cleanup.ksh
@@ -1997,6 +2004,7 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/redacted_send/redacted_mounts.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/redacted_send/redacted_negative.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/redacted_send/redacted_origin.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/redacted_send/redacted_panic.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/redacted_send/redacted_props.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/redacted_send/redacted_resume.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/redacted_send/redacted_size.ksh
