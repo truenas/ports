@@ -703,8 +703,8 @@ index 00000000000..741171f3340
 +	 * In some cases kevent() will fail on parent without setting errno on
 +	 * receiving a signal. So this must be checked before processing based on errno.
 +	 */
-+	if (kqueue_ev->ev->signal_events &&
-+	    tevent_common_check_signal(kqueue_ev->ev)) {
++	if ((kqueue_ev->ev->signal_events &&
++	    tevent_common_check_signal(kqueue_ev->ev)) || (errno == EINTR)) {
 +			return 0;
 +	}
 +
