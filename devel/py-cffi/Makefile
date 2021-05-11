@@ -27,7 +27,7 @@ CFLAGS+=	-Wno-shift-negative-value
 .endif
 
 post-install:
-	${STRIP_CMD} ${STAGEDIR}${PYTHONPREFIX_SITELIBDIR}/_cffi_backend.so
+	${STRIP_CMD} ${STAGEDIR}${PYTHONPREFIX_SITELIBDIR}/_cffi_backend${PYTHON_EXT_SUFFIX}.so
 
 do-test:
 	@(cd ${TEST_WRKSRC} && ${SETENV} ${MAKE_ENV} ${PYTHON_CMD} ${PYDISTUTILS_SETUP} build_ext -i)
