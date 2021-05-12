@@ -322,7 +322,7 @@ index 5bb55cf89f6..bd695f85599 100644
  	status = SMB_VFS_NEXT_READ_DFS_PATHAT(handle,
  					mem_ctx,
 diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
-index 4cf553411cb..e5b472cd201 100644
+index 4cf553411cb..d8c152ff713 100644
 --- a/source3/modules/vfs_default.c
 +++ b/source3/modules/vfs_default.c
 @@ -18,9 +18,11 @@
@@ -1023,10 +1023,10 @@ index 54f3d330c95..6a9b420f2b9 100644
  		status = check_name(conn, smb_fname_src_dir);
  		if (!NT_STATUS_IS_OK(status)) {
 diff --git a/source3/smbd/smb2_query_directory.c b/source3/smbd/smb2_query_directory.c
-index 79a46e005cf..fc628749439 100644
+index 79a46e005cf..269a65b0ebe 100644
 --- a/source3/smbd/smb2_query_directory.c
 +++ b/source3/smbd/smb2_query_directory.c
-@@ -402,6 +402,7 @@ static struct tevent_req *smbd_smb2_query_directory_send(TALLOC_CTX *mem_ctx,
+@@ -402,10 +402,12 @@ static struct tevent_req *smbd_smb2_query_directory_send(TALLOC_CTX *mem_ctx,
  		const char *fullpath;
  		char tmpbuf[PATH_MAX];
  		char *to_free = NULL;
@@ -1034,12 +1034,18 @@ index 79a46e005cf..fc628749439 100644
  		uint32_t ucf_flags = UCF_SAVE_LCOMP |
  				     UCF_ALWAYS_ALLOW_WCARD_LCOMP |
  				     (state->smbreq->posix_pathnames ?
-@@ -426,7 +427,7 @@ static struct tevent_req *smbd_smb2_query_directory_send(TALLOC_CTX *mem_ctx,
+-					UCF_POSIX_PATHNAMES : 0);
++					UCF_POSIX_PATHNAMES : 0) |
++				     (twrp ? UCF_GMT_PATHNAME : 0);
+ 
+ 		if (ISDOT(fsp->fsp_name->base_name)) {
+ 			fullpath = state->in_file_name;
+@@ -426,7 +428,7 @@ static struct tevent_req *smbd_smb2_query_directory_send(TALLOC_CTX *mem_ctx,
  				conn,
  				fullpath,
  				ucf_flags,
 -				NULL,
-+				twrp?&twrp:NULL,
++				twrp ? &twrp : NULL,
  				&wcard_has_wild,
  				&smb_fname);
  
