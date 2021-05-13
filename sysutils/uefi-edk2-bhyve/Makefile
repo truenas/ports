@@ -17,7 +17,6 @@ ONLY_FOR_ARCHS_REASON=	bhyve firmware has only been ported to X64
 
 BUILD_DEPENDS=	bash:shells/bash \
 		nasm:devel/nasm \
-		${PYTHON_LIBDIR}/lib-dynload/_sqlite3.so:databases/py-sqlite3@${PY_FLAVOR} \
 		gcc48:lang/gcc48
 
 USES=		gmake \
