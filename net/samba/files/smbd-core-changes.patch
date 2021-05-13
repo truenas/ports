@@ -1,5 +1,5 @@
 diff --git a/lib/util/memcache.c b/lib/util/memcache.c
-index 1e616bd0e9a..5f3f930b696 100644
+index 7b0b27eaddb..c50bc2b3ade 100644
 --- a/lib/util/memcache.c
 +++ b/lib/util/memcache.c
 @@ -60,6 +60,7 @@ static bool memcache_is_talloc(enum memcache_number n)
@@ -10,7 +10,7 @@ index 1e616bd0e9a..5f3f930b696 100644
  	case VIRUSFILTER_SCAN_RESULTS_CACHE_TALLOC:
  		result = true;
  		break;
-@@ -446,3 +447,25 @@ void memcache_flush(struct memcache *cache, enum memcache_number n)
+@@ -457,3 +458,25 @@ void memcache_flush(struct memcache *cache, enum memcache_number n)
  		node = next;
  	}
  }
@@ -322,7 +322,7 @@ index 5bb55cf89f6..bd695f85599 100644
  	status = SMB_VFS_NEXT_READ_DFS_PATHAT(handle,
  					mem_ctx,
 diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
-index 4cf553411cb..d8c152ff713 100644
+index 4cf553411cb..1d7ae0e8c68 100644
 --- a/source3/modules/vfs_default.c
 +++ b/source3/modules/vfs_default.c
 @@ -18,9 +18,11 @@
@@ -407,7 +407,20 @@ index 4cf553411cb..d8c152ff713 100644
  		return;
  	}
  
-@@ -2485,6 +2481,18 @@ static struct smb_filename *vfswrap_getwd(vfs_handle_struct *handle,
+@@ -2051,6 +2047,12 @@ static struct tevent_req *vfswrap_offload_write_send(
+ 		return tevent_req_post(req, ev);
+ 	}
+ 
++	if (vfswrap_offload_ctx == NULL) {
++		DBG_ERR("vfswrap_offload_ctx is not initialized\n");
++		tevent_req_nterror(req, NT_STATUS_INTERNAL_ERROR);
++		return tevent_req_post(req, ev);
++	}
++
+ 	status = vfs_offload_token_db_fetch_fsp(vfswrap_offload_ctx,
+ 						token, &src_fsp);
+ 	if (tevent_req_nterror(req, status)) {
+@@ -2485,6 +2487,18 @@ static struct smb_filename *vfswrap_getwd(vfs_handle_struct *handle,
   nsec timestamp resolution call. Convert down to whatever the underlying
   system will support.
  **********************************************************************/
@@ -426,7 +439,7 @@ index 4cf553411cb..d8c152ff713 100644
  
  static int vfswrap_ntimes(vfs_handle_struct *handle,
  			  const struct smb_filename *smb_fname,
-@@ -2524,6 +2532,9 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
+@@ -2524,6 +2538,9 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
  
  #if defined(HAVE_UTIMENSAT)
  	if (ft != NULL) {
@@ -437,7 +450,7 @@ index 4cf553411cb..d8c152ff713 100644
  		ts[0] = ft->atime;
  		ts[1] = ft->mtime;
 diff --git a/source3/modules/vfs_streams_xattr.c b/source3/modules/vfs_streams_xattr.c
-index 85efe2bcc37..086c6874b77 100644
+index 7d0617507e3..434eb1291cb 100644
 --- a/source3/modules/vfs_streams_xattr.c
 +++ b/source3/modules/vfs_streams_xattr.c
 @@ -34,6 +34,7 @@
@@ -531,7 +544,7 @@ index 85efe2bcc37..086c6874b77 100644
  	status = get_ea_value(talloc_tos(), handle->conn, NULL,
  			      smb_fname_base, sio->xattr_name, &ea);
 diff --git a/source3/smbd/close.c b/source3/smbd/close.c
-index 1a6e33b4403..80e70961137 100644
+index 42be29b03be..95a6d396319 100644
 --- a/source3/smbd/close.c
 +++ b/source3/smbd/close.c
 @@ -199,6 +199,7 @@ NTSTATUS delete_all_streams(connection_struct *conn,
@@ -542,7 +555,7 @@ index 1a6e33b4403..80e70961137 100644
  
  		res = SMB_VFS_UNLINKAT(conn,
  				conn->cwd_fsp,
-@@ -883,6 +884,7 @@ bool recursive_rmdir(TALLOC_CTX *ctx,
+@@ -895,6 +896,7 @@ bool recursive_rmdir(TALLOC_CTX *ctx,
  			errno = ENOMEM;
  			goto err_break;
  		}
@@ -550,7 +563,7 @@ index 1a6e33b4403..80e70961137 100644
  
  		if(SMB_VFS_LSTAT(conn, smb_dname_full) != 0) {
  			goto err_break;
-@@ -1055,6 +1057,7 @@ static NTSTATUS rmdir_internals(TALLOC_CTX *ctx, files_struct *fsp)
+@@ -1067,6 +1069,7 @@ static NTSTATUS rmdir_internals(TALLOC_CTX *ctx, files_struct *fsp)
  				errno = ENOMEM;
  				goto err_break;
  			}
@@ -900,10 +913,10 @@ index 4a31b822646..3992cff5ce6 100644
  	if (lp_inherit_permissions(SNUM(conn))) {
  		inherit_access_posix_acl(conn, parent_dir,
 diff --git a/source3/smbd/proto.h b/source3/smbd/proto.h
-index ac021ad93fe..20f90634a6e 100644
+index 206406a9fe9..22930d9df35 100644
 --- a/source3/smbd/proto.h
 +++ b/source3/smbd/proto.h
-@@ -376,6 +376,7 @@ NTSTATUS filename_convert_with_privilege(TALLOC_CTX *mem_ctx,
+@@ -377,6 +377,7 @@ NTSTATUS filename_convert_with_privilege(TALLOC_CTX *mem_ctx,
  			uint32_t ucf_flags,
  			bool *ppath_contains_wcard,
  			struct smb_filename **pp_smb_fname);
@@ -911,7 +924,7 @@ index ac021ad93fe..20f90634a6e 100644
  
  /* The following definitions come from smbd/files.c  */
  
-@@ -1142,12 +1143,14 @@ ssize_t message_push_string(uint8_t **outbuf, const char *str, int flags);
+@@ -1143,12 +1144,14 @@ ssize_t message_push_string(uint8_t **outbuf, const char *str, int flags);
  
  void stat_cache_add( const char *full_orig_name,
  		char *translated_path,
@@ -1436,7 +1449,7 @@ index 339dd36b6af..02bd92c6b01 100644
  	}
  
 diff --git a/source3/smbd/vfs.c b/source3/smbd/vfs.c
-index 411999c3856..0af04104893 100644
+index 740088628c5..c904d1a9c6d 100644
 --- a/source3/smbd/vfs.c
 +++ b/source3/smbd/vfs.c
 @@ -1342,7 +1342,7 @@ NTSTATUS check_reduced_name(connection_struct *conn,
