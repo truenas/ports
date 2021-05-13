@@ -1,17 +1,27 @@
+From b31d97034adfccb8510e244b7c7c7579b8ee2a4b Mon Sep 17 00:00:00 2001
+From: Andrew Walker <awalker@ixsystems.com>
+Date: Mon, 3 May 2021 16:45:09 -0400
+Subject: [PATCH] Modify build scripts for custom modules
+
+---
+ source3/modules/wscript_build | 108 ++++++++++++++++++++++++----------
+ source3/wscript               |   2 +-
+ 2 files changed, 79 insertions(+), 31 deletions(-)
+
 diff --git a/source3/modules/wscript_build b/source3/modules/wscript_build
-index d4c87209106..84f64382235 100644
+index 36b047ef79b..8a3c30b48f1 100644
 --- a/source3/modules/wscript_build
 +++ b/source3/modules/wscript_build
-@@ -50,7 +50,7 @@ bld.SAMBA3_SUBSYSTEM('HASH_INODE',
+@@ -54,7 +54,7 @@ bld.SAMBA3_SUBSYSTEM('HASH_INODE',
  bld.SAMBA3_MODULE('vfs_default',
                   subsystem='vfs',
                   source='vfs_default.c',
--                 deps='samba-util NDR_DFSBLOBS OFFLOAD_TOKEN',
-+                 deps='samba-util NDR_DFSBLOBS OFFLOAD_TOKEN smb_libzfs',
+-                 deps='samba-util NDR_DFSBLOBS OFFLOAD_TOKEN UTIL_REPARSE',
++                 deps='samba-util NDR_DFSBLOBS OFFLOAD_TOKEN UTIL_REPARSE smb_libzfs',
                   init_function='',
                   internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_default'),
                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_default'))
-@@ -238,6 +238,62 @@ bld.SAMBA3_MODULE('vfs_solarisacl',
+@@ -248,6 +248,62 @@ bld.SAMBA3_MODULE('vfs_solarisacl',
                   internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_solarisacl'),
                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_solarisacl'))
  
@@ -74,7 +84,7 @@ index d4c87209106..84f64382235 100644
  bld.SAMBA3_MODULE('vfs_zfsacl',
                   subsystem='vfs',
                   source='vfs_zfsacl.c',
-@@ -246,35 +302,38 @@ bld.SAMBA3_MODULE('vfs_zfsacl',
+@@ -256,35 +312,27 @@ bld.SAMBA3_MODULE('vfs_zfsacl',
                   internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_zfsacl'),
                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_zfsacl'))
  
@@ -121,20 +131,9 @@ index d4c87209106..84f64382235 100644
 +                   cflags='-DNEED_SOLARIS_BOOLEAN',
 +                   deps='samba-util',
 +                   includes=[
-+                       '%%SRC_BASE%%/cddl/contrib/opensolaris/lib/libzpool/common',
-+                       '%%SRC_BASE%%/cddl/compat/opensolaris/include',
-+                       '%%SRC_BASE%%/cddl/compat/opensolaris/lib/libumem',
-+                       '%%SRC_BASE%%/sys/cddl/compat/opensolaris',
-+                       '%%SRC_BASE%%/cddl/contrib/opensolaris/head',
-+                       '%%SRC_BASE%%/cddl/contrib/opensolaris/lib/libuutil/common',
-+                       '%%SRC_BASE%%/cddl/contrib/opensolaris/lib/libzfs/common',
-+                       '%%SRC_BASE%%/cddl/contrib/opensolaris/lib/libzfs_core/common',
-+                       '%%SRC_BASE%%/cddl/contrib/opensolaris/lib/libumem/common',
-+                       '%%SRC_BASE%%/cddl/contrib/opensolaris/lib/libnvpair',
-+                       '%%SRC_BASE%%/sys/cddl/contrib/opensolaris/uts/common',
-+                       '%%SRC_BASE%%/sys/cddl/contrib/opensolaris/uts/common/fs/zfs',
-+                       '%%SRC_BASE%%/sys/cddl/contrib/opensolaris/uts/common/sys',
-+                       '%%SRC_BASE%%/sys/cddl/contrib/opensolaris/common/zfs',
++                       '%%SRC_BASE%%/sys/contrib/openzfs/include',
++                       '%%SRC_BASE%%/sys/contrib/openzfs/lib/libspl/include/os/freebsd/',
++                       '%%SRC_BASE%%/sys/contrib/openzfs/lib/libspl/include/',
 +                   ],
 +                   ldflags='-lgeom -luutil -lzfs_core -lzfs -lnvpair',
 +                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_ixnas'),
@@ -143,33 +142,18 @@ index d4c87209106..84f64382235 100644
  bld.SAMBA3_MODULE('vfs_nfs4acl_xattr',
                    subsystem='vfs',
 diff --git a/source3/wscript b/source3/wscript
-index 85466b493fa..5a08a12365e 100644
+index adc31ce57b8..e0c6df496f9 100644
 --- a/source3/wscript
 +++ b/source3/wscript
-@@ -124,6 +124,7 @@ def configure(conf):
-     conf.CHECK_FUNCS_IN('dn_expand _dn_expand __dn_expand', 'resolv')
-     conf.CHECK_FUNCS_IN('dn_expand', 'inet')
-     conf.CHECK_DECLS('readahead', reverse=True, headers='fcntl.h')
-+    conf.ADD_LDFLAGS('-ljail')
- 
-     if conf.CHECK_CODE('''
- #if defined(HAVE_UNISTD_H)
-@@ -806,7 +807,7 @@ msg.msg_accrightslen = sizeof(fd);
-         conf.env['HAVE_ADS'] = '1'
-         Logs.info("Building with Active Directory support.")
-         # these have broken dependencies
--        forced_shared_modules.extend(TO_LIST('idmap_ad idmap_rfc2307'))
-+        forced_shared_modules.extend(TO_LIST('idmap_ad idmap_fruit idmap_rfc2307'))
-     elif Options.options.with_ads == False:
-         Logs.info("Building without Active Directory support (--without-ads).")
-     else:
-@@ -1929,7 +1930,9 @@ main() {
-         default_shared_modules.extend(TO_LIST('vfs_posix_eadb'))
+@@ -1937,7 +1937,7 @@ main() {
+         default_shared_modules.extend(['vfs_posix_eadb'])
  
      if conf.CONFIG_SET('HAVE_FREEBSD_SUNACL_H'):
-+        default_shared_modules.extend(TO_LIST('vfs_winmsa'))
-         default_shared_modules.extend(TO_LIST('vfs_zfsacl'))
-+        default_shared_modules.extend(TO_LIST('vfs_aio_fbsd'))
+-        default_shared_modules.extend(['vfs_zfsacl'])
++        default_shared_modules.extend(['vfs_zfsacl', 'vfs_winmsa', 'vfs_aio_fbsd'])
  
      if conf.CONFIG_SET('HAVE_DIRFD_DECL'):
-         default_shared_modules.extend(TO_LIST('vfs_syncops vfs_dirsort'))
+         default_shared_modules.extend(['vfs_syncops', 'vfs_dirsort'])
+-- 
+2.31.1
+

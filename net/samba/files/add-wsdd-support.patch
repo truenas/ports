@@ -1,6 +1,16 @@
+From ba155a0e9fefcd3ce4ebfc28daf1b6cfd7a0434b Mon Sep 17 00:00:00 2001
+From: Andrew Walker <awalker@ixsystems.com>
+Date: Mon, 3 May 2021 16:06:38 -0400
+Subject: [PATCH] Add wsdd to samba build
+
+---
+ source3/script/wsdd.py | 886 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 886 insertions(+)
+ create mode 100644 source3/script/wsdd.py
+
 diff --git a/source3/script/wsdd.py b/source3/script/wsdd.py
 new file mode 100644
-index 00000000000..be058f85949
+index 00000000000..0eef235c2b5
 --- /dev/null
 +++ b/source3/script/wsdd.py
 @@ -0,0 +1,886 @@
@@ -890,3 +900,6 @@ index 00000000000..be058f85949
 +
 +if __name__ == '__main__':
 +    sys.exit(main())
+-- 
+2.31.1
+

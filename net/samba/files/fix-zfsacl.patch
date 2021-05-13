@@ -1,0 +1,211 @@
+From 41b2f32d401ba465b9496d9be9f53b81ae0a7570 Mon Sep 17 00:00:00 2001
+From: Andrew Walker <awalker@ixsystems.com>
+Date: Tue, 4 May 2021 22:43:09 -0400
+Subject: [PATCH] Fix vfs_zfsacl build for FreeBSD on Samba 4.14
+
+---
+ source3/modules/vfs_zfsacl.c | 113 +++++++++++++++++++++++++++++------
+ 1 file changed, 96 insertions(+), 17 deletions(-)
+
+diff --git a/source3/modules/vfs_zfsacl.c b/source3/modules/vfs_zfsacl.c
+index a526ffa19aa..51a31c3c8b6 100644
+--- a/source3/modules/vfs_zfsacl.c
++++ b/source3/modules/vfs_zfsacl.c
+@@ -29,6 +29,7 @@
+ 
+ #ifdef HAVE_FREEBSD_SUNACL_H
+ #include "sunacl.h"
++#include <sys/acl.h>
+ #endif
+ 
+ #undef DBGC_CLASS
+@@ -47,6 +48,21 @@ struct zfsacl_config_data {
+  * read the local file's acls and return it in NT form
+  * using the NFSv4 format conversion
+  */
++
++#ifdef O_EMPTY_PATH
++static int convert_pathref_reopen(files_struct *fsp, int flags)
++{
++	int opath_fd, out_fd;
++	opath_fd = fsp_get_pathref_fd(fsp);
++	out_fd = openat(opath_fd, "", flags | O_EMPTY_PATH);
++	if (out_fd == -1) {
++		DBG_ERR("Failed to re-open pathref descriptor on %s: %s\n",
++			fsp_str_dbg(fsp), strerror(errno));
++	}
++	return out_fd;
++}
++#endif
++
+ static NTSTATUS zfs_get_nt_acl_common(struct connection_struct *conn,
+ 				      TALLOC_CTX *mem_ctx,
+ 				      const struct smb_filename *smb_fname,
+@@ -158,6 +174,38 @@ static NTSTATUS zfs_get_nt_acl_common(struct connection_struct *conn,
+ 	return NT_STATUS_OK;
+ }
+ 
++static int fset_zfs_acl(files_struct *fsp, int naces, ace_t *acebuf)
++{
++	int fd, rv;
++	bool must_close = false;
++#ifdef O_EMPTY_PATH
++	if (fsp->fsp_flags.is_pathref) {
++		fd = convert_pathref_reopen(fsp, 0);
++		if (fd == -1) {
++			DBG_ERR("Failed to re-open pathref descriptor on %s: %s\n",
++				fsp_str_dbg(fsp), strerror(errno));
++			return -1;
++		}
++		must_close = true;
++	} else {
++		fd = fsp_get_io_fd(fsp);
++	}
++#else
++	if (fsp->fsp_flags.is_pathref) {
++		rv = acl(fsp->fsp_name->base_name, ACE_SETACL, naces, acebuf);
++		goto out;
++	}
++
++	fd = fsp_get_io_fd(fsp);
++#endif
++	rv = facl(fd, ACE_SETACL, naces, acebuf);
++out:
++	if (must_close) {
++		close(fd);
++	}
++	return rv;
++}
++
+ /* call-back function processing the NT acl -> ZFS acl using NFSv4 conv. */
+ static bool zfs_process_smbacl(vfs_handle_struct *handle, files_struct *fsp,
+ 			       struct SMB4ACL_T *smbacl)
+@@ -235,12 +283,7 @@ static bool zfs_process_smbacl(vfs_handle_struct *handle, files_struct *fsp,
+ 	SMB_ASSERT(i == naces);
+ 
+ 	/* store acl */
+-	if (fsp->fh->fd != -1) {
+-		rv = facl(fsp->fh->fd, ACE_SETACL, naces, acebuf);
+-	}
+-	else {
+-		rv = acl(fsp->fsp_name->base_name, ACE_SETACL, naces, acebuf);
+-	}
++	rv = fset_zfs_acl(fsp, naces, acebuf);
+ 	if (rv != 0) {
+ 		if(errno == ENOSYS) {
+ 			DEBUG(9, ("acl(ACE_SETACL, %s): Operation is not "
+@@ -282,9 +325,10 @@ static int get_zfsacl(TALLOC_CTX *mem_ctx,
+ 		      const struct smb_filename *smb_fname,
+ 		      ace_t **outbuf)
+ {
+-	int naces, rv;
++	int naces;
+ 	ace_t *acebuf = NULL;
+ 
++#ifndef HAVE_FREEBSD_SUNACL_H
+ 	naces = acl(smb_fname->base_name, ACE_GETACLCNT, 0, NULL);
+ 	if (naces == -1) {
+ 		int dbg_level = 10;
+@@ -296,14 +340,17 @@ static int get_zfsacl(TALLOC_CTX *mem_ctx,
+ 				  smb_fname->base_name, strerror(errno)));
+ 		return naces;
+ 	}
++#else
++	naces = ACL_MAX_ENTRIES;
++#endif
+ 	acebuf = talloc_size(mem_ctx, sizeof(ace_t)*naces);
+ 	if (acebuf == NULL) {
+ 		errno = ENOMEM;
+ 		return -1;
+ 	}
+ 
+-	rv = acl(smb_fname->base_name, ACE_GETACL, naces, acebuf);
+-	if (rv == -1) {
++	naces = acl(smb_fname->base_name, ACE_GETACL, naces, acebuf);
++	if (naces == -1) {
+ 		DBG_DEBUG("acl(ACE_GETACL, %s) failed: %s ",
+ 			  smb_fname->base_name, strerror(errno));
+ 		return -1;
+@@ -314,17 +361,34 @@ static int get_zfsacl(TALLOC_CTX *mem_ctx,
+ }
+ 
+ static int fget_zfsacl(TALLOC_CTX *mem_ctx,
+-		       struct files_struct *fsp,
++		       files_struct *fsp,
+ 		       ace_t **outbuf)
+ {
+-	int naces, rv;
++	int naces, fd;
+ 	ace_t *acebuf = NULL;
++	bool must_close = false;
+ 
+-	if (fsp->fh->fd == -1) {
++#ifndef O_EMPTY_PATH
++	if (fsp->fsp_flags.is_pathref) {
+ 		return get_zfsacl(mem_ctx, fsp->fsp_name, outbuf);
+ 	}
++	fd = fsp_get_io_fd(fsp);
++#else
++	if (fsp->fsp_flags.is_pathref) {
++		fd = convert_pathref_reopen(fsp, 0);
++		if (fd == -1) {
++			DBG_ERR("Failed to re-open pathref descriptor on %s: %s\n",
++				fsp_str_dbg(fsp), strerror(errno));
++			return -1;
++		}
++		must_close = true;
++	} else {
++		fd = fsp_get_io_fd(fsp);
++	}
++#endif
+ 
+-	naces = facl(fsp->fh->fd, ACE_GETACLCNT, 0, NULL);
++#ifndef HAVE_FREEBSD_SUNACL_H
++	naces = facl(fd, ACE_GETACLCNT, 0, NULL);
+ 	if (naces == -1) {
+ 		int dbg_level = 10;
+ 
+@@ -335,21 +399,36 @@ static int fget_zfsacl(TALLOC_CTX *mem_ctx,
+ 				  fsp_str_dbg(fsp), strerror(errno)));
+ 		return naces;
+ 	}
++#else
++	/*
++	 * On FreeBSD, the libsunacl wrapper actually calls acl_get_fd_np()
++	 * which allocates ACL_MAX_ENTRIES, then proceeds with query for
++	 * full ACL details rather than merely specifying an vsa_mask of
++	 * VSA_ACECNT in ZFS. The end result is that we can save a syscall,
++	 * locking acl, and an allocation of ACL_MAX_ENTRIES.
++	 */
++	naces = ACL_MAX_ENTRIES;
++#endif
+ 
+ 	acebuf = talloc_size(mem_ctx, sizeof(ace_t)*naces);
+ 	if (acebuf == NULL) {
+ 		errno = ENOMEM;
+-		return -1;
++		naces = -1;
++		goto out;
+ 	}
+ 
+-	rv = facl(fsp->fh->fd, ACE_GETACL, naces, acebuf);
+-	if (rv == -1) {
++	naces = facl(fd, ACE_GETACL, naces, acebuf);
++	if (naces == -1) {
+ 		DBG_DEBUG("acl(ACE_GETACL, %s): %s ",
+ 			  fsp_str_dbg(fsp), strerror(errno));
+-		return -1;
++		goto out;
+ 	}
+ 
+ 	*outbuf = acebuf;
++out:
++	if (must_close) {
++		close(fd);
++	}
+ 	return naces;
+ }
+ 
+-- 
+2.31.1
+

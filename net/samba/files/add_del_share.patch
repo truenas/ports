@@ -1,8 +1,23 @@
+From a00ad5b8b27f35324721ae4c61d33686c963de04 Mon Sep 17 00:00:00 2001
+From: Andrew Walker <awalker@ixsystems.com>
+Date: Mon, 3 May 2021 17:03:13 -0400
+Subject: [PATCH] Add support for adding / removing shares thorugh srvsvc
+ endpoint
+
+---
+ source3/rpc_server/srvsvc/srv_srvsvc_nt.c | 10 +++++
+ source3/script/smb.addshare.py            | 46 +++++++++++++++++++++++
+ source3/script/smb.delshare.py            | 18 +++++++++
+ source3/script/wscript_build              | 12 ++++++
+ 4 files changed, 86 insertions(+)
+ create mode 100755 source3/script/smb.addshare.py
+ create mode 100755 source3/script/smb.delshare.py
+
 diff --git a/source3/rpc_server/srvsvc/srv_srvsvc_nt.c b/source3/rpc_server/srvsvc/srv_srvsvc_nt.c
-index 3af4cef..0ee8ad5 100644
+index 474c0397ae6..76b165d2a2a 100644
 --- a/source3/rpc_server/srvsvc/srv_srvsvc_nt.c
 +++ b/source3/rpc_server/srvsvc/srv_srvsvc_nt.c
-@@ -1968,6 +1969,8 @@ WERROR _srvsvc_NetShareAdd(struct pipes_struct *p,
+@@ -2020,6 +2020,8 @@ WERROR _srvsvc_NetShareAdd(struct pipes_struct *p,
  	int snum;
  	int ret;
  	char *path;
@@ -11,12 +26,12 @@ index 3af4cef..0ee8ad5 100644
  	struct security_descriptor *psd = NULL;
  	bool is_disk_op;
  	int max_connections = 0;
-@@ -2072,6 +2075,14 @@ WERROR _srvsvc_NetShareAdd(struct pipes_struct *p,
+@@ -2126,6 +2128,14 @@ WERROR _srvsvc_NetShareAdd(struct pipes_struct *p,
  	}
  
  	ret = sys_lstat(path, &st, false);
 +	if (ret == -1 && (errno != EACCES) && lp_allow_dataset_creation()) {
-+		ret = parent_dirname(ctx, path, &parent, &base); 
++		ret = parent_dirname(ctx, path, &parent, &base);
 +		if (!ret) {
 +			return WERR_NOT_ENOUGH_MEMORY;
 +		}
@@ -28,11 +43,11 @@ index 3af4cef..0ee8ad5 100644
  		 * If path has any other than permission
 diff --git a/source3/script/smb.addshare.py b/source3/script/smb.addshare.py
 new file mode 100755
-index 0000000..c7c29a9
+index 00000000000..dd29af88a75
 --- /dev/null
 +++ b/source3/script/smb.addshare.py
 @@ -0,0 +1,46 @@
-+#!/usr/local/bin/python3 
++#!/usr/local/bin/python3
 +import os
 +import argparse
 +from middlewared.client import Client
@@ -52,9 +67,9 @@ index 0000000..c7c29a9
 +            return 1
 +        pds = Client().call('pool.dataset.query', [('mountpoint', '=', parent_dir)])['id']
 +        Client.call('pool.dataset.create', {
-+            'name': f'{pds}/{bn}', 
++            'name': f'{pds}/{bn}',
 +            'share_type': 'SMB',
-+            'atime': 'OFF', 
++            'atime': 'OFF',
 +        })
 +
 +    Client().call('sharing.smb.create', {
@@ -74,17 +89,17 @@ index 0000000..c7c29a9
 +    parser.add_argument('maxConnections', type=str, help='Number of maximum connections to this share.')
 +    args = parser.parse_args()
 +    ret = make_it_so(args)
-+    
++
 +
 +if __name__ == '__main__':
 +    main()
 diff --git a/source3/script/smb.delshare.py b/source3/script/smb.delshare.py
 new file mode 100755
-index 0000000..d0e6388
+index 00000000000..b49725bd688
 --- /dev/null
 +++ b/source3/script/smb.delshare.py
 @@ -0,0 +1,18 @@
-+#!/usr/local/bin/python3 
++#!/usr/local/bin/python3
 +
 +import argparse
 +from middlewared.client import Client
@@ -103,7 +118,7 @@ index 0000000..d0e6388
 +if __name__ == '__main__':
 +    main()
 diff --git a/source3/script/wscript_build b/source3/script/wscript_build
-index 40ecdd7..c7c19f09 100644
+index 40ecdd7ef50..c7c19f09023 100644
 --- a/source3/script/wscript_build
 +++ b/source3/script/wscript_build
 @@ -6,6 +6,18 @@ bld.INSTALL_FILES('${BINDIR}',
@@ -125,3 +140,6 @@ index 40ecdd7..c7c19f09 100644
  # Callout scripts for use in selftest environment
  bld.SAMBA_SCRIPT('smbaddshare', pattern='smbaddshare', installdir='.')
  bld.SAMBA_SCRIPT('smbchangeshare', pattern='smbchangeshare', installdir='.')
+-- 
+2.31.1
+

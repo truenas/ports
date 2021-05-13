@@ -18,31 +18,26 @@ IGNORE_NONTHREAD_PYTHON=	needs port lang/python${PYTHON_SUFFIX} to be build with
 
 CONFLICTS_INSTALL?=		samba4-4.0.* samba4[1-79]-4.* p5-Parse-Pidl-4.*
 
-EXTRA_PATCHES+=			${PATCHDIR}/0001-add-parameters-for-ha-configuration.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/0001-add-ix-custom-vfs-modules.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/0001-add-idmap_fruit-backend.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/0001-enable-keytab-updates-on-machine-account-change.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/0001-add_ws_discovery.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/0001-add-wb-status-cmd.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/0001-samba_json.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/add-truenas-parameters.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/add-truenas-modules.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/add-wsdd-support.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/add-wb-status-cmd.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/add-json-support.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/talloc_arc4random.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/experimental_aio.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/add_zfs_based_vfs_modules.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/add-aio-fbsd.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/add-zfs-based-modules.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/wscript_changes.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/add_del_share.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/ix-smbtorture.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/smbd-core-changes.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/tevent_kqueue.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/silence-openpam-warnings.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/allow_vfs_set_sparse.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/fix-fruit-locking.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/fix-smb2-getquota.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/ease-netconf-validation.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/registry_service.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/fix-zfsacl.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/add_large_stream_support.patch:-p1
 
 SAMBA4_BASENAME=		samba
 SAMBA4_PORTNAME=		${SAMBA4_BASENAME}4
-SAMBA4_VERSION=			4.12.15
+SAMBA4_VERSION=			4.14.4
 SAMBA4_DISTNAME=		${SAMBA4_BASENAME}-${SAMBA4_VERSION:S|.p|pre|:S|.r|rc|:S|.t|tp|:S|.a|alpha|}
 
 WRKSRC?=			${WRKDIR}/${DISTNAME}
