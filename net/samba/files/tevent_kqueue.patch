@@ -70,10 +70,10 @@ index 5365fce3533..91c9495a26f 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..741171f3340
+index 00000000000..bd17989ac8d
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
-@@ -0,0 +1,961 @@
+@@ -0,0 +1,965 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -703,9 +703,13 @@ index 00000000000..741171f3340
 +	 * In some cases kevent() will fail on parent without setting errno on
 +	 * receiving a signal. So this must be checked before processing based on errno.
 +	 */
-+	if ((kqueue_ev->ev->signal_events &&
-+	    tevent_common_check_signal(kqueue_ev->ev)) || (errno == EINTR)) {
++	if (errno == EINTR) {
++		if (kqueue_ev->ev->signal_events && tevent_common_check_signal(kqueue_ev->ev)) {
 +			return 0;
++		}
++		else {
++			return -1;
++		}
 +	}
 +
 +	/*
@@ -775,7 +779,7 @@ index 00000000000..741171f3340
 +	 * in order to properly reconstruct the correct flags to send to the tevent
 +	 * fd handler.
 +	 */
-+	int nkevents, ret;
++	int nkevents, ret, wait_errno;
 +	struct timespec ts;
 +	struct timespec *tsp = NULL;
 +	ret = 0;
@@ -802,10 +806,6 @@ index 00000000000..741171f3340
 +	}
 +
 +	/*
-+	 * zero-fill the kevent array
-+	 */
-+	memset(kqueue_ev->kev_array, 0, kqueue_ev->kev_size * sizeof(struct kevent));
-+	/*
 +	 * If timeout is a non-NULL pointer, it specifies a maximum interval
 +	 * to wait for an event. If timeout is a NULL pointer, kevent() waits
 +	 * indefinetly. To effect a poll, the timeout argument should be non-NULL,
@@ -823,8 +823,10 @@ index 00000000000..741171f3340
 +			  kqueue_ev->kev_size,	/* nevents */
 +			  tsp);			/* timeout  - may need NULL*/
 +
++	wait_errno = errno;
 +	tevent_trace_point_callback(kqueue_ev->ev, TEVENT_TRACE_AFTER_WAIT);
 +
++	errno = wait_errno;
 +	if (nkevents == -1) {
 +		/*
 +		 * Extra processing for cases where kevent() failed.
@@ -843,10 +845,12 @@ index 00000000000..741171f3340
 +		}
 +	}
 +
-+	if ((nkevents == 0)  && tvalp) {
++	if (nkevents == 0) {
 +		/* we don't care about a possible delay here */
-+		tevent_common_loop_timer_delay(kqueue_ev->ev);
-+		return 0;
++		if (tvalp) {
++			tevent_common_loop_timer_delay(kqueue_ev->ev);
++		}
++		return nkevents;
 +	}
 +
 +	ret = process_kevents(kqueue_ev, nkevents);
