@@ -17,7 +17,7 @@ ONLY_FOR_ARCHS_REASON=	bhyve firmware has only been ported to X64
 
 BUILD_DEPENDS=	bash:shells/bash \
 		nasm:devel/nasm \
-		gcc48:lang/gcc48
+		gcc10:lang/gcc10
 
 USES=		gmake \
 		python:3.7+,build
