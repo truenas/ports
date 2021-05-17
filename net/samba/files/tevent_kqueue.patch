@@ -70,10 +70,10 @@ index 5365fce3533..91c9495a26f 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..741171f3340
+index 00000000000..bd0f761c65e
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
-@@ -0,0 +1,961 @@
+@@ -0,0 +1,960 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -695,17 +695,17 @@ index 00000000000..741171f3340
 + * panic - something totally unxpected happened and we want to abort so that we can
 + *    sift through the ashes.
 + */
-+static int check_kevent_errors(struct kqueue_event_context *kqueue_ev, struct timespec *tsp)
++static int check_kevent_errors(struct kqueue_event_context *kqueue_ev,
++			       struct timespec *tsp,
++			       int error)
 +{
 +	int nkevents = 0;
 +
-+	/*
-+	 * In some cases kevent() will fail on parent without setting errno on
-+	 * receiving a signal. So this must be checked before processing based on errno.
-+	 */
-+	if ((kqueue_ev->ev->signal_events &&
-+	    tevent_common_check_signal(kqueue_ev->ev)) || (errno == EINTR)) {
-+			return 0;
++	if (error == EINTR) {
++		if (kqueue_ev->ev->signal_events) {
++			tevent_common_check_signal(kqueue_ev->ev);
++		}
++		return nkevents;
 +	}
 +
 +	/*
@@ -713,7 +713,7 @@ index 00000000000..741171f3340
 +	 * we forked. In this case call kqueue_check_reopen() to reinitialize
 +	 * the kqueue.
 +	 */
-+	if (errno == EBADF) {
++	if (error == EBADF) {
 +		if (kqueue_ev->busy) {
 +			return -1;
 +		}
@@ -752,7 +752,7 @@ index 00000000000..741171f3340
 +	 * We encountered some other unexpected error. Fall on our sword.
 +	 */
 +	tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
-+		"kevent() failed: %s\n",strerror(errno));
++		"kevent() failed: %s\n",strerror(error));
 +	kqueue_panic(kqueue_ev, "kevent() failed", false);
 +
 +	return -1;
@@ -775,7 +775,7 @@ index 00000000000..741171f3340
 +	 * in order to properly reconstruct the correct flags to send to the tevent
 +	 * fd handler.
 +	 */
-+	int nkevents, ret;
++	int nkevents, ret, saved_errno;
 +	struct timespec ts;
 +	struct timespec *tsp = NULL;
 +	ret = 0;
@@ -802,10 +802,6 @@ index 00000000000..741171f3340
 +	}
 +
 +	/*
-+	 * zero-fill the kevent array
-+	 */
-+	memset(kqueue_ev->kev_array, 0, kqueue_ev->kev_size * sizeof(struct kevent));
-+	/*
 +	 * If timeout is a non-NULL pointer, it specifies a maximum interval
 +	 * to wait for an event. If timeout is a NULL pointer, kevent() waits
 +	 * indefinetly. To effect a poll, the timeout argument should be non-NULL,
@@ -823,6 +819,7 @@ index 00000000000..741171f3340
 +			  kqueue_ev->kev_size,	/* nevents */
 +			  tsp);			/* timeout  - may need NULL*/
 +
++	saved_errno = errno;
 +	tevent_trace_point_callback(kqueue_ev->ev, TEVENT_TRACE_AFTER_WAIT);
 +
 +	if (nkevents == -1) {
@@ -837,16 +834,18 @@ index 00000000000..741171f3340
 +		 * In case of (2) we need to exit quickly.
 +		 * In case of (3) we panic.
 +		 */
-+		nkevents = check_kevent_errors(kqueue_ev, tsp);
++		nkevents = check_kevent_errors(kqueue_ev, tsp, saved_errno);
 +		if (nkevents == -1) {
 +			return nkevents;
 +		}
 +	}
 +
-+	if ((nkevents == 0)  && tvalp) {
++	if (nkevents == 0) {
 +		/* we don't care about a possible delay here */
-+		tevent_common_loop_timer_delay(kqueue_ev->ev);
-+		return 0;
++		if (tvalp) {
++			tevent_common_loop_timer_delay(kqueue_ev->ev);
++		}
++		return nkevents;
 +	}
 +
 +	ret = process_kevents(kqueue_ev, nkevents);
