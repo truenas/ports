@@ -1,14 +1,14 @@
 # Created by: Steven Honson
-# $FreeBSD$
 
 PORTNAME=	dnsmasq
-DISTVERSION=	2.81
+DISTVERSION=	2.85
 # Leave the PORTREVISION in even if 0 to avoid accidental PORTEPOCH bumps:
 PORTREVISION=	1
 PORTEPOCH=	1
 CATEGORIES=	dns
-MASTER_SITES=	http://www.thekelleys.org.uk/dnsmasq/ \
+MASTER_SITES=	https://www.thekelleys.org.uk/dnsmasq/ \
 		LOCAL/mandree/
+PATCH_STRIP=	-p1
 
 MAINTAINER=	mandree@FreeBSD.org
 COMMENT=	Lightweight DNS forwarder, DHCP, and TFTP server
@@ -33,6 +33,7 @@ CPPFLAGS+=	-I${LOCALBASE}/include
 
 CONFLICTS_INSTALL=	dnsmasq-devel-*
 
+PATCH_STRIP=	-p1
 SUB_FILES=	pkg-message
 
 PORTDOCS=	CHANGELOG CHANGELOG.archive FAQ doc.html setup.html

@@ -1,60 +1,55 @@
 # Created by: Ashish SHUKLA <wahjava@gmail.com>
-# $FreeBSD$
 
 PORTNAME=	squashfs-tools
-PORTVERSION=	4.3
-PORTREVISION=	1
+PORTVERSION=	4.4
 CATEGORIES=	sysutils
 MASTER_SITES=	SF/squashfs/squashfs/${DISTNAME}/
 DISTNAME=	squashfs${PORTVERSION}
 DISTFILES=	${DISTNAME}${EXTRACT_SUFX}
 
-MAINTAINER=	ashish@FreeBSD.org
+MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Set of tools to manipulate squashfs images
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/../COPYING
 
+USES=		alias cpe gmake
+
 PLIST_FILES=	bin/mksquashfs \
 		bin/unsquashfs
 
-OPTIONS_DEFINE=	XZ LZO LZMA DOCS
-OPTIONS_DEFAULT=	XZ LZO LZMA
-XZ_DESC=	Build with XZ support
-LZO_DESC=	Build with LZO support
-LZMA_DESC=	Build with LZMA support
+OPTIONS_DEFINE=	DOCS LZ4 LZMA LZO XZ ZSTD
+OPTIONS_DEFAULT=	LZ4 LZMA LZO XZ ZSTD
+LZMA_DESC=	LZMA1 compression support (obsolete)
+XZ_DESC=	XZ (LZMA2) compression support
 
 WRKSRC=		${WRKDIR}/${DISTNAME}/squashfs-tools
 
-USE_CSTD=	gnu89
-
-USES=		alias cpe gmake
 CPE_PRODUCT=	squashfs
 CPE_VENDOR=	phillip_lougher
 
-.include <bsd.port.options.mk>
+USE_CSTD=	gnu89
 
-PORTDOCS=	ACKNOWLEDGEMENTS CHANGES COPYING \
-		PERFORMANCE.README README README-${PORTVERSION}
+# Fix build with clang11
+CFLAGS+=	-fcommon
 
-.if ${PORT_OPTIONS:MXZ}
-MAKE_ARGS+=	XZ_SUPPORT=1
-.endif
+PORTDOCS=	ACKNOWLEDGEMENTS CHANGES README-${PORTVERSION} USAGE \
+		pseudo-file.example
 
-.if ${PORT_OPTIONS:MLZO}
-MAKE_ARGS+=	LZO_SUPPORT=1 LZO_DIR=${LOCALBASE}
-LIB_DEPENDS+=	liblzo2.so:archivers/lzo2
-.endif
+LZ4_LIB_DEPENDS=	liblz4.so:archivers/liblz4
+LZ4_MAKE_ARGS=	LZ4_SUPPORT=1
 
-.if ${PORT_OPTIONS:MLZMA}
-MASTER_SITES+=	SF/sevenzip/LZMA%20SDK/:lzma
-DISTFILES+=	lzma922.tar.bz2:lzma
-MAKE_ARGS+=	LZMA_SUPPORT=1 LZMA_DIR=${WRKDIR} EXTRA_CFLAGS="-D_7ZIP_ST"
-.endif
+LZMA_MASTER_SITES=	SF/sevenzip/LZMA%20SDK/:lzma
+LZMA_DISTFILES=	lzma922.tar.bz2:lzma
+LZMA_MAKE_ARGS=	LZMA_SUPPORT=1 LZMA_DIR=${WRKDIR} EXTRA_CFLAGS=-D_7ZIP_ST
 
-post-patch:
-	@${REINPLACE_CMD} -e "s|^\(XATTR\)|# \1|g" \
-		${WRKSRC}/Makefile
+LZO_LIB_DEPENDS=	liblzo2.so:archivers/lzo2
+LZO_MAKE_ARGS=	LZO_SUPPORT=1 LZO_LIBDIR=-L${LOCALBASE}/lib
+
+XZ_MAKE_ARGS=	XZ_SUPPORT=1
+
+ZSTD_LIB_DEPENDS=	libzstd.so:archivers/zstd
+ZSTD_MAKE_ARGS=	ZSTD_SUPPORT=1
 
 post-install:
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}

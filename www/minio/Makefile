@@ -2,7 +2,6 @@
 
 PORTNAME=	minio
 PORTVERSION=	${GH_TAGNAME:S/RELEASE.//:S/Z//:S/T/-/:S/-/./g}
-PORTREVISION=	1
 CATEGORIES=	www
 DIST_SUBDIR=	minio
 
@@ -14,8 +13,8 @@ LICENSE=	APACHE20
 USES=		compiler go:modules
 
 USE_GITHUB=	yes
-GHTAG=		RELEASE.2021-03-01T04-20-55Z
-COMMIT_ID=	2f4af09c01dc9580c6ea9533776d5ecf754c8125
+GHTAG=		RELEASE.2021-04-06T23-11-00Z
+COMMIT_ID=	bfab990c331fa7964d7f8d840c2d0424d1585fbf
 
 GH_TUPLE=	${PORTNAME}:${PORTNAME}:${GHTAG}:DEFAULT \
 		Azure:azure-pipeline-go:v0.2.2:azure_azure_pipeline_go/vendor/github.com/Azure/azure-pipeline-go \
@@ -25,6 +24,7 @@ GH_TUPLE=	${PORTNAME}:${PORTNAME}:${GHTAG}:DEFAULT \
 		BurntSushi:toml:v0.3.1:burntsushi_toml/vendor/github.com/BurntSushi/toml \
 		Shopify:sarama:v1.27.2:shopify_sarama/vendor/github.com/Shopify/sarama \
 		StackExchange:wmi:cbe66965904d:stackexchange_wmi/vendor/github.com/StackExchange/wmi \
+		VividCortex:ewma:v1.1.1:vividcortex_ewma/vendor/github.com/VividCortex/ewma \
 		alecthomas:participle:v0.2.1:alecthomas_participle/vendor/github.com/alecthomas/participle \
 		apache:thrift:v0.13.0:apache_thrift/vendor/git.apache.org/thrift.git \
 		bcicen:jstream:v1.0.1:bcicen_jstream/vendor/github.com/bcicen/jstream \
@@ -49,7 +49,6 @@ GH_TUPLE=	${PORTNAME}:${PORTNAME}:${GHTAG}:DEFAULT \
 		eapache:go-xerial-snappy:776d5712da21:eapache_go_xerial_snappy/vendor/github.com/eapache/go-xerial-snappy \
 		eapache:queue:v1.1.0:eapache_queue/vendor/github.com/eapache/queue \
 		eclipse:paho.mqtt.golang:v1.3.0:eclipse_paho_mqtt_golang/vendor/github.com/eclipse/paho.mqtt.golang \
-		elazarl:go-bindata-assetfs:v1.0.0:elazarl_go_bindata_assetfs/vendor/github.com/elazarl/go-bindata-assetfs \
 		etcd-io:etcd:8a03d2e9614b:etcd_io_etcd/vendor/go.etcd.io/etcd \
 		fatih:color:v1.10.0:fatih_color/vendor/github.com/fatih/color \
 		fatih:structs:v1.1.0:fatih_structs/vendor/github.com/fatih/structs \
@@ -107,7 +106,7 @@ GH_TUPLE=	${PORTNAME}:${PORTNAME}:${GHTAG}:DEFAULT \
 		jcmturner:rpc:v2.0.3:jcmturner_rpc_v2/vendor/github.com/jcmturner/rpc \
 		josharian:intern:v1.0.0:josharian_intern/vendor/github.com/josharian/intern \
 		json-iterator:go:v1.1.10:json_iterator_go/vendor/github.com/json-iterator/go \
-		klauspost:compress:v1.11.7:klauspost_compress/vendor/github.com/klauspost/compress \
+		klauspost:compress:v1.11.12:klauspost_compress/vendor/github.com/klauspost/compress \
 		klauspost:cpuid:v1.3.1:klauspost_cpuid/vendor/github.com/klauspost/cpuid \
 		klauspost:cpuid:v2.0.4:klauspost_cpuid_v2/vendor/github.com/klauspost/cpuid/v2 \
 		klauspost:pgzip:v1.2.5:klauspost_pgzip/vendor/github.com/klauspost/pgzip \
@@ -122,9 +121,9 @@ GH_TUPLE=	${PORTNAME}:${PORTNAME}:${GHTAG}:DEFAULT \
 		matttproud:golang_protobuf_extensions:v1.0.1:matttproud_golang_protobuf_extensions/vendor/github.com/matttproud/golang_protobuf_extensions \
 		miekg:dns:v1.1.35:miekg_dns/vendor/github.com/miekg/dns \
 		minio:cli:v1.22.0:minio_cli/vendor/github.com/minio/cli \
-		minio:highwayhash:v1.0.1:minio_highwayhash/vendor/github.com/minio/highwayhash \
+		minio:highwayhash:v1.0.2:minio_highwayhash/vendor/github.com/minio/highwayhash \
 		minio:md5-simd:v1.1.1:minio_md5_simd/vendor/github.com/minio/md5-simd \
-		minio:minio-go:v7.0.10:minio_minio_go_v7/vendor/github.com/minio/minio-go/v7 \
+		minio:minio-go:6ae69c73ce78:minio_minio_go_v7/vendor/github.com/minio/minio-go/v7 \
 		minio:selfupdate:v0.3.1:minio_selfupdate/vendor/github.com/minio/selfupdate \
 		minio:sha256-simd:v1.0.0:minio_sha256_simd/vendor/github.com/minio/sha256-simd \
 		minio:simdjson-go:v0.2.1:minio_simdjson_go/vendor/github.com/minio/simdjson-go \
@@ -152,24 +151,21 @@ GH_TUPLE=	${PORTNAME}:${PORTNAME}:${GHTAG}:DEFAULT \
 		prometheus:common:v0.14.0:prometheus_common/vendor/github.com/prometheus/common \
 		prometheus:procfs:v0.2.0:prometheus_procfs/vendor/github.com/prometheus/procfs \
 		protocolbuffers:protobuf-go:v1.23.0:protocolbuffers_protobuf_go/vendor/google.golang.org/protobuf \
-		quasilyte:go-ruleguard:v0.2.1:quasilyte_go_ruleguard/vendor/github.com/quasilyte/go-ruleguard \
 		rcrowley:go-metrics:10cdbea86bc0:rcrowley_go_metrics/vendor/github.com/rcrowley/go-metrics \
 		rjeczalik:notify:v0.9.2:rjeczalik_notify/vendor/github.com/rjeczalik/notify \
 		rs:cors:v1.7.0:rs_cors/vendor/github.com/rs/cors \
 		rs:xid:v1.2.1:rs_xid/vendor/github.com/rs/xid \
 		ryanuber:go-glob:v1.0.0:ryanuber_go_glob/vendor/github.com/ryanuber/go-glob \
 		secure-io:sio-go:v0.3.1:secure_io_sio_go/vendor/github.com/secure-io/sio-go \
-		shirou:gopsutil:v3.20.11:shirou_gopsutil/vendor/github.com/shirou/gopsutil \
-		sirupsen:logrus:v1.7.0:sirupsen_logrus/vendor/github.com/sirupsen/logrus \
+		shirou:gopsutil:v3.21.1:shirou_gopsutil_v3/vendor/github.com/shirou/gopsutil \
 		spaolacci:murmur3:v1.1.0:spaolacci_murmur3/vendor/github.com/spaolacci/murmur3 \
 		square:go-jose:v2.3.1:square_go_jose/vendor/gopkg.in/square/go-jose.v2 \
 		streadway:amqp:v1.0.0:streadway_amqp/vendor/github.com/streadway/amqp \
-		tidwall:gjson:v1.6.7:tidwall_gjson/vendor/github.com/tidwall/gjson \
+		tidwall:gjson:v1.6.8:tidwall_gjson/vendor/github.com/tidwall/gjson \
 		tidwall:match:v1.0.3:tidwall_match/vendor/github.com/tidwall/match \
 		tidwall:pretty:v1.0.2:tidwall_pretty/vendor/github.com/tidwall/pretty \
 		tidwall:sjson:v1.0.4:tidwall_sjson/vendor/github.com/tidwall/sjson \
 		tinylib:msgp:v1.1.3:tinylib_msgp/vendor/github.com/tinylib/msgp \
-		ttacon:chalk:22c06c80ed31:ttacon_chalk/vendor/github.com/ttacon/chalk \
 		uber-go:atomic:v1.5.0:uber_go_atomic/vendor/go.uber.org/atomic \
 		uber-go:multierr:v1.3.0:uber_go_multierr/vendor/go.uber.org/multierr \
 		uber-go:tools:2cfd321de3ee:uber_go_tools/vendor/go.uber.org/tools \
