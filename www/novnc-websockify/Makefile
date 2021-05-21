@@ -28,5 +28,9 @@ do-install:
 	cd ${WRKSRC} && ${COPYTREE_SHARE} . ${STAGEDIR}${TARGET_DIR}
 	@${CHMOD} +x ${STAGEDIR}${TARGET_DIR}/run
 	@${CHMOD} +x ${STAGEDIR}${TARGET_DIR}/rebind
+	(cd ${STAGEDIR}${TARGET_DIR}; ${FIND} . \( -type f -o -type l \) \
+		| ${SED} -e 's,^\./,,g' \
+		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
+		| ${AWK} '{$$1=""; sub(/^[ \t]+/, ""); print "libexec/novnc/utils/websockify/"$$0}' >> ${TMPPLIST})
 
 .include <bsd.port.mk>
