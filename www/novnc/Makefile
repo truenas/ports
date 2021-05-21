@@ -23,6 +23,9 @@ do-install:
 	${MKDIR} ${STAGEDIR}${TARGET_DIR}
 	cd ${WRKSRC} && ${RM} .gitignore .gitmodules .travis.yml
 	cd ${WRKSRC} && ${COPYTREE_SHARE} . ${STAGEDIR}${TARGET_DIR}
-	
+	(cd ${STAGEDIR}${TARGET_DIR}; ${FIND} . \( -type f -o -type l \) \
+		| ${SED} -e 's,^\./,,g' \
+		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
+		| ${AWK} '{$$1=""; sub(/^[ \t]+/, ""); print "libexec/novnc/"$$0}' >> ${TMPPLIST})
 
 .include <bsd.port.mk>
