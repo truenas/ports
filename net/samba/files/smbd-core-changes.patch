@@ -1082,7 +1082,7 @@ index e49e623d796..3f8517cded7 100644
  		DEBUG(2, ("smb2_write failed: %s, file %s, "
  			  "length=%lu offset=%lu nwritten=-1: %s\n",
 diff --git a/source3/smbd/statcache.c b/source3/smbd/statcache.c
-index 5162ec06ea9..a49b934720a 100644
+index 5162ec06ea9..a6a4b5acceb 100644
 --- a/source3/smbd/statcache.c
 +++ b/source3/smbd/statcache.c
 @@ -28,6 +28,8 @@
@@ -1211,7 +1211,7 @@ index 5162ec06ea9..a49b934720a 100644
  			SMB_STRUCT_STAT *pst)
  {
  	char *chk_name;
-@@ -206,14 +247,25 @@ bool stat_cache_lookup(connection_struct *conn,
+@@ -206,16 +247,28 @@ bool stat_cache_lookup(connection_struct *conn,
  	}
  
  	if (conn->case_sensitive) {
@@ -1238,8 +1238,19 @@ index 5162ec06ea9..a49b934720a 100644
 +					   upper);
  		if (!chk_name) {
  			DEBUG(0, ("stat_cache_lookup: talloc_strdup_upper failed!\n"));
++			TALLOC_FREE(upper);
  			return False;
-@@ -271,18 +323,23 @@ bool stat_cache_lookup(connection_struct *conn,
+ 		}
+ 
+@@ -227,6 +280,7 @@ bool stat_cache_lookup(connection_struct *conn,
+ 		if (strlen(chk_name) != namelen) {
+ 			sizechanged = True;
+ 		}
++		TALLOC_FREE(upper);
+ 	}
+ 
+ 	while (1) {
+@@ -271,18 +325,23 @@ bool stat_cache_lookup(connection_struct *conn,
  		}
  	}
  
@@ -1267,7 +1278,7 @@ index 5162ec06ea9..a49b934720a 100644
  
  	if (posix_paths) {
  		ret = SMB_VFS_LSTAT(conn, &smb_fname);
-@@ -369,9 +426,19 @@ void smbd_send_stat_cache_delete_message(struct messaging_context *msg_ctx,
+@@ -369,9 +428,19 @@ void smbd_send_stat_cache_delete_message(struct messaging_context *msg_ctx,
  
  void stat_cache_delete(const char *name)
  {
