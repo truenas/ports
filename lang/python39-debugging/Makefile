@@ -1,7 +1,10 @@
-WITH_DEBUG=yes
-PLIST=${.CURDIR}/../../lang/python39/pkg-plist
-DISTINFO_FILE=${.CURDIR}/../../lang/python39/distinfo
+COMMENT=        Python programming language (development version)
+MASTERDIR=      ${.CURDIR}/../../lang/python39
+PATCHDIR=       ${MASTERDIR}/files
+PLIST=          ${MASTERDIR}/pkg-plist
+DISTINFO_FILE=  ${MASTERDIR}/distinfo
+WITH_DEBUG=     yes
 
-.include "${.CURDIR}/../../lang/python39/Makefile"
+.include "${MASTERDIR}/Makefile"
 
-PKGNAMESUFFIX:=${PYTHON_SUFFIX}-debugging
+PKGNAMESUFFIX:= ${PYTHON_SUFFIX}-debugging
