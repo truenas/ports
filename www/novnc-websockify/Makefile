@@ -2,16 +2,11 @@
 
 PORTNAME=	websockify
 PORTVERSION=	0.8.0
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	www
 
 MAINTAINER=	araujo@FreeBSD.org
 COMMENT=	noVNC-websockify implementation.
-
-LICENSE=	LGPL3 MPL20 BSD2CLAUSE BSD3CLAUSE MIT
-LICENSE_COMB=	multi
-LICENSE_FILE=	${WRKSRC}/LICENSE.txt
-LICENSE_FILE_LGPL3=	${WRKSRC}/docs/LICENSE.LGPL-3
 
 RUN_DEPENDS=	novnc>0:www/novnc
 
@@ -21,7 +16,7 @@ SHEBANG_FILES=	run
 USE_GITHUB=	yes
 GH_ACCOUNT=	novnc
 GH_PROJECT=	websockify
-GH_TAGNAME=	1f132f9
+GH_TAGNAME=	eca301c05b5a5ae9b6896128a44fe2b6c7883c4d
 
 NO_BUILD=	yes
 NO_ARCH=	yes
@@ -33,5 +28,9 @@ do-install:
 	cd ${WRKSRC} && ${COPYTREE_SHARE} . ${STAGEDIR}${TARGET_DIR}
 	@${CHMOD} +x ${STAGEDIR}${TARGET_DIR}/run
 	@${CHMOD} +x ${STAGEDIR}${TARGET_DIR}/rebind
+	(cd ${STAGEDIR}${TARGET_DIR}; ${FIND} . \( -type f -o -type l \) \
+		| ${SED} -e 's,^\./,,g' \
+		| ${AWK} '{print length, $$0}' | ${SORT} -rn \
+		| ${AWK} '{$$1=""; sub(/^[ \t]+/, ""); print "libexec/novnc/utils/websockify/"$$0}' >> ${TMPPLIST})
 
 .include <bsd.port.mk>
