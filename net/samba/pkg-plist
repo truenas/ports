@@ -298,6 +298,7 @@ lib/samba4/private/libsamba-cluster-support-samba4.so
 lib/samba4/private/libsamba-debug-samba4.so
 lib/samba4/private/libsamba-modules-samba4.so
 lib/samba4/private/libsamba-net%%PYTHON_EXT_SUFFIX%%-samba4.so
+lib/samba4/private/libsamba-python%%PYTHON_EXT_SUFFIX%%-samba4.so
 lib/samba4/private/libsamba-security-samba4.so
 lib/samba4/private/libsamba-sockets-samba4.so
 lib/samba4/private/libsamba3-util-samba4.so
