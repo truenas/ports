@@ -1,0 +1,2875 @@
+From cc0b5a5ac5c1e2665c175a344f861c4ce79d21b6 Mon Sep 17 00:00:00 2001
+From: Andrew Walker <awalker@ixsystems.com>
+Date: Wed, 2 Jun 2021 15:31:15 -0400
+Subject: [PATCH] Add JSON
+
+---
+ source3/utils/net_conf.c     | 1008 +++++++++++++++++++++++++-
+ source3/utils/net_groupmap.c | 1326 +++++++++++++++++++++++++++-------
+ 2 files changed, 2075 insertions(+), 259 deletions(-)
+
+diff --git a/source3/utils/net_conf.c b/source3/utils/net_conf.c
+index 267c4c802df..11374bd08a2 100644
+--- a/source3/utils/net_conf.c
++++ b/source3/utils/net_conf.c
+@@ -36,6 +36,14 @@
+ #include "lib/smbconf/smbconf_reg.h"
+ #include "lib/param/loadparm.h"
+ 
++#ifdef HAVE_JANSSON
++#include <jansson.h>
++#include "audit_logging.h"
++#define JS_MAJ_VER      1
++#define JS_MIN_VER      0
++#endif /* HAVE_JANSSON */
++
++
+ /**********************************************************************
+  *
+  * usage functions
+@@ -211,12 +219,420 @@ done:
+ 	return err;
+ }
+ 
++#ifdef HAVE_JANSSON
++static json_t *load_json(const char *text)
++{
++	json_t *root = NULL;
++	json_error_t error;
++
++	root = json_loads(text, 0, &error);
++	if (root == NULL) {
++		d_fprintf(stderr, _("JSON error on line %d: %s\n"),
++			  error.line, error.text);
++	}
++	return root;
++}
++
++static bool json_value_string(TALLOC_CTX *mem_ctx, json_t *param, char **value)
++{
++	json_t *jsval;
++	char *out = NULL;
++
++	jsval = json_object_get(param, "value");
++	if (jsval == NULL) {
++		return false;
++	}
++
++	if (json_is_string(jsval)) {
++		const char *v = json_string_value(jsval);
++		out = talloc_strdup(mem_ctx, v);	
++	}
++	else if (json_is_integer(jsval)) {
++		int v = json_integer_value(jsval);
++		out = talloc_asprintf(mem_ctx, "%d", v);
++	}
++	else if (json_is_boolean(jsval)) {
++		bool v = json_boolean_value(jsval);
++		out = talloc_strdup(mem_ctx, v ? "true" : "false");
++	}
++	else {
++		return false;
++	}
++
++	*value = out;
++	return true;
++}
++
++static bool param_to_json(struct json_object *param,
++			  const char *key,
++			  const char *value)
++{
++	int error;
++	long val;
++	char *endptr = NULL;
++	bool ok, bool_val;
++
++	error = json_add_string(param, "name", key);
++	if (error) {
++		return false;
++	}
++
++	ok = conv_str_bool(value, &bool_val);
++	if (ok) {
++		error = json_add_bool(param, "value", bool_val);
++		return error ? false : true;
++	}
++
++	val = strtol(value, &endptr, 0);
++	if ((endptr != value) && (*endptr == '\0')) {
++		error = json_add_int(param, "value", val); 
++		return error ? false : true;
++	}
++ 
++	error = json_add_string(param, "value", value);
++
++	return error ? false : true;
++}
++
++static bool service_to_json(struct smbconf_service *service,
++			    struct json_object *share)
++{
++	struct json_object params;
++	uint32_t param_count;
++	int error;
++
++	if (json_is_invalid(share)) {
++		return false;
++	} 
++
++	params = json_new_array();
++	if (json_is_invalid(&params)) {
++		return false;
++	}
++
++	error = json_add_string(share, "service", service->name);
++	if (error) {
++		goto fail;
++	}
++
++	for (param_count = 0;
++	     param_count < service->num_params;
++	     param_count++) {
++		struct json_object param;
++		bool ok;
++		const char *key = service->param_names[param_count];
++		const char *val = service->param_values[param_count];
++
++		param = json_new_object();
++		if (json_is_invalid(&param)) {
++			goto fail;
++		}
++
++		ok = param_to_json(&param, key, val);
++		if (!ok) {
++			json_free(&param);
++			goto fail;
++		}
++
++		error = json_add_object(&params, NULL, &param);
++		if (error) {
++			goto fail;
++		}
++	}
++
++	error = json_add_object(share, "params", &params);
++	if (error) {
++		goto fail;
++	}
++
++	return true;
++
++fail:
++	json_free(&params);
++	return false;
++}
++
++static bool set_json_parameter(TALLOC_CTX *mem_ctx,
++			       struct smbconf_ctx *conf_ctx,
++			       const char *service,
++			       json_t *jsparam)
++{
++	const char *param;
++	json_t *name = NULL;
++	char *value = NULL;
++	bool ok;
++	sbcErr err;
++
++
++	name = json_object_get(jsparam, "name");
++	if (name == NULL || !json_is_string(name)) {
++		d_fprintf(stderr, _("malformed JSON for parameter name\n"));
++		return false;
++	}
++	param = json_string_value(name);
++
++	ok = json_value_string(mem_ctx, jsparam, &value);
++	if (!ok) {
++		d_fprintf(stderr, _("malformed JSON for parameter value\n"));
++		return false;
++	} 
++
++	err = smbconf_set_parameter(conf_ctx, service, param, value);
++	if (!SBC_ERROR_IS_OK(err)) {
++		d_fprintf(stderr, _("Error setting parameter %s to %s: %s\n"),
++			  param, value,  sbcErrorString(err));
++		TALLOC_FREE(value);
++		return false;
++	}
++
++	TALLOC_FREE(value);
++	return true;
++}
++
++static bool del_json_parameter(TALLOC_CTX *mem_ctx,
++			       struct smbconf_ctx *conf_ctx,
++			       const char *service,
++			       json_t *jsparam)
++{
++	const char *param;
++	json_t *name = NULL;
++	sbcErr err;
++
++	name = json_object_get(jsparam, "name");
++	if (name == NULL || !json_is_string(name)) {
++		d_fprintf(stderr, _("malformed JSON for parameter name\n"));
++		return false;
++	}
++	param = json_string_value(name);
++
++	err = smbconf_delete_parameter(conf_ctx, service, param);
++	if (!SBC_ERROR_IS_OK(err)) {
++		d_fprintf(stderr, _("Error deleting parameter %s: %s\n"),
++			  param,  sbcErrorString(err));
++		return false;
++	}
++
++	return true;
++}
++
++static bool do_json_action(TALLOC_CTX *mem_ctx,
++	struct smbconf_ctx *conf_ctx,
++	const char *service,
++	json_t *param_array,
++	bool(*fn)(TALLOC_CTX *mem_ctx, struct smbconf_ctx *ctx,
++	     const char *service, json_t *jsparam))
++{
++	json_t *parm_array = NULL;
++	size_t array_size;
++	int i;
++
++	array_size = json_array_size(param_array);
++	for (i = 0; i < array_size; i++) {
++		bool ok;
++		json_t *data = NULL;
++
++		data = json_array_get(param_array, i);
++		if ((data == NULL) || !json_is_object(data)) {
++			return false;
++		}
++
++		ok = fn(mem_ctx, conf_ctx, service, data);
++		if (!ok) {
++			return false;
++		}
++	}
++
++	return true;
++}
++
++static bool apply_json_parameter(TALLOC_CTX *mem_ctx,
++	struct smbconf_ctx *conf_ctx, json_t *jsobj,
++	bool(*fn)(TALLOC_CTX *mem_ctx, struct smbconf_ctx *ctx,
++	     const char *service, json_t *jsparam))
++{
++	json_t *jsservice = NULL, *jsparams = NULL;
++	const char *service = NULL;
++	bool ok;
++
++	jsservice = json_object_get(jsobj, "service");
++	if ((jsservice == NULL) || !json_is_string(jsservice)) {
++		return false;
++	}
++	service = json_string_value(jsservice);
++	
++	jsparams = json_object_get(jsobj, "params");
++	if ((jsparams == NULL) || !json_is_array(jsparams)) {
++		return false;
++	}
++
++	ok = do_json_action(mem_ctx, conf_ctx, service, jsparams, fn);
++	if (!ok) {
++		return false;
++	}
++	return true;
++}
++
++/*
++ * transaction should be started prior to calling this function.
++ *
++ * json data will be something like as follows:
++ * { "SET": [{"service": "SHARE", "params": [{"name": "<string>", "value": "<string"} .. ]} ..],
++ *   "DEL": [<same as above>] }
++ *
++ * This allows batch processing of multiple share configurations to multiple shares at once.
++ */
++static bool batch_apply_json_parameters(TALLOC_CTX *mem_ctx,
++					struct smbconf_ctx *conf_ctx,
++					json_t *jsdata)
++{
++	json_t *to_set = NULL, *to_del = NULL;
++	bool ok;
++	size_t array_size;
++	int i;
++
++	to_set = json_object_get(jsdata, "SET");
++	if (to_set != NULL) {
++		if (!json_is_array(to_set)) {
++			return false;
++		}
++
++		array_size = json_array_size(to_set);
++		for (i = 0; i < array_size; i ++) {
++			json_t *js = NULL;
++			js = json_array_get(to_set, i);
++			if (js == NULL) {
++				return false;
++			}
++			ok = apply_json_parameter(mem_ctx,
++						  conf_ctx,
++						  js,
++						  set_json_parameter);
++			if (!ok) {
++				return false;
++			}
++		}
++	}
++	to_del = json_object_get(jsdata, "DEL");
++	if (to_del != NULL) {
++		if (!json_is_array(to_del)) {
++			return false;
++		}
++
++		array_size = json_array_size(to_set);
++		for (i = 0; i < array_size; i ++) {
++			json_t *js = NULL;
++			js = json_array_get(to_set, i);
++			if (js == NULL) {
++				return false;
++			}
++			ok = apply_json_parameter(mem_ctx,
++						  conf_ctx,
++						  js,
++						  del_json_parameter);
++			if (!ok) {
++				return false;
++			}
++		}
++	}
++
++	return true;
++}
++
++#endif /* HAVE_JANSSON */
++
+ 
+ /**********************************************************************
+  *
+  * the main conf functions
+  *
+  **********************************************************************/
++static int net_conf_list_json(struct net_context *c, struct smbconf_ctx *conf_ctx,
++			 int argc, const char **argv)
++{
++#ifdef HAVE_JANSSON
++	sbcErr err;
++	int ret = -1, error;
++	TALLOC_CTX *mem_ctx;
++	uint32_t num_shares;
++	uint32_t share_count, param_count;
++	struct smbconf_service **shares = NULL;
++	struct json_object jsobj, js_shares;
++	char *output = NULL;
++
++	jsobj = json_new_object();
++	if (json_is_invalid(&jsobj)) {
++		goto done;
++	}
++
++	js_shares = json_new_array();
++	if (json_is_invalid(&js_shares)) {
++		json_free(&jsobj);
++		goto done;
++	}
++
++	error = json_add_version(&jsobj, JS_MAJ_VER, JS_MIN_VER);
++	if (error) {
++		goto fail;
++	}
++
++	mem_ctx = talloc_stackframe();
++
++	if (argc != 0 || c->display_usage) {
++		net_conf_list_usage(c, argc, argv);
++		goto done;
++	}
++
++	err = smbconf_get_config(conf_ctx, mem_ctx, &num_shares, &shares);
++	if (!SBC_ERROR_IS_OK(err)) {
++		d_fprintf(stderr, _("Error getting config: %s\n"),
++			  sbcErrorString(err));
++		goto done;
++	}
++
++	for (share_count = 0; share_count < num_shares; share_count++) {
++		struct json_object share;
++		bool ok;
++
++		share = json_new_object();
++		if (json_is_invalid(&share)) {
++			goto fail;
++		}
++
++		ok = service_to_json(shares[share_count], &share);
++		if (!ok) {
++			json_free(&share);
++			goto fail;
++		}
++
++		error = json_add_object(&js_shares, NULL, &share);
++		if (error) {
++			goto fail;
++		}
++	}
++
++	error = json_add_object(&jsobj, "shares", &js_shares);
++	if (error) {
++		json_free(&jsobj);
++		goto done;
++	}
++
++	output = json_to_string(mem_ctx, &jsobj);
++	printf("%s\n", output);
++
++	ret = 0;
++
++done:
++	TALLOC_FREE(mem_ctx);
++	return ret;
++fail:
++	json_free(&jsobj);
++	json_free(&js_shares);
++	TALLOC_FREE(mem_ctx);
++	return ret;
++#else
++	return -1;
++#endif /* HAVE_JANSSON */
++}
+ 
+ static int net_conf_list(struct net_context *c, struct smbconf_ctx *conf_ctx,
+ 			 int argc, const char **argv)
+@@ -428,6 +844,107 @@ done:
+ 	return ret;
+ }
+ 
++
++static int net_conf_listshares_json(struct net_context *c,
++				    struct smbconf_ctx *conf_ctx, int argc,
++				    const char **argv)
++{
++#ifdef HAVE_JANSSON
++	sbcErr err;
++	int ret = -1, error;
++	uint32_t count, num_shares = 0;
++	char **share_names = NULL;
++	TALLOC_CTX *mem_ctx = NULL;
++	struct json_object jsobj, jsarray;
++	char *output = NULL;
++
++	mem_ctx = talloc_stackframe();
++
++	if (argc != 0 || c->display_usage) {
++		net_conf_listshares_usage(c, argc, argv);
++		goto done;
++	}
++
++	jsobj = json_new_object();
++	if (json_is_invalid(&jsobj)) {
++		d_fprintf(stderr, _("Failed to create JSON object.\n"));
++		return -1;
++	}
++
++	jsarray = json_new_array();
++	if (json_is_invalid(&jsarray)) {
++		json_free(&jsobj);
++		d_fprintf(stderr, _("Failed to create JSON object.\n"));
++		return -1;
++	}
++
++	error = json_add_version(&jsobj, JS_MAJ_VER, JS_MIN_VER);
++	if (error) {
++		d_fprintf(stderr, _("Failed to add JSON version.\n"));
++		goto fail;
++	}
++
++	err = smbconf_get_share_names(conf_ctx, mem_ctx, &num_shares,
++				      &share_names);
++	if (!SBC_ERROR_IS_OK(err)) {
++		goto done;
++	}
++
++	for (count = 0; count < num_shares; count++)
++	{
++		struct json_object share;
++
++		share = json_new_object();
++		if (json_is_invalid(&share)) {
++			d_fprintf(stderr, _("Failed to create JSON object.\n"));
++			goto fail;
++		}
++
++		error = json_add_string(&share, "name",
++					share_names[count]);
++		if (error) {
++			d_fprintf(stderr, _("Failed to add JSON string.\n"));
++			json_free(&share);
++			goto fail;
++		}
++
++		error = json_add_object(&jsarray, NULL, &share);
++		if (error) {
++			d_fprintf(stderr, _("Failed to add share to array.\n"));
++			goto fail;
++		}
++	}
++
++	error = json_add_object(&jsobj, "shares", &jsarray);
++	if (error) {
++		d_fprintf(stderr, _("Failed to add array to JSON object.\n"));
++		json_free(&jsobj);
++		return -1;
++	}
++
++	output = json_to_string(mem_ctx, &jsobj);
++	if (output == NULL) {
++		d_fprintf(stderr, _("Failed to generate JSON output.\n"));
++		json_free(&jsobj);
++		return -1;	
++	}
++	
++	printf("%s\n", output);
++	json_free(&jsobj);
++
++	ret = 0;
++
++done:
++	TALLOC_FREE(mem_ctx);
++	return ret;
++fail:
++	json_free(&jsobj);
++	json_free(&jsarray);
++	TALLOC_FREE(mem_ctx);
++#endif
++	return -1;
++}
++
+ static int net_conf_listshares(struct net_context *c,
+ 			       struct smbconf_ctx *conf_ctx, int argc,
+ 			       const char **argv)
+@@ -487,6 +1004,87 @@ done:
+ 	return ret;
+ }
+ 
++static int net_conf_showshare_json(struct net_context *c,
++				   struct smbconf_ctx *conf_ctx, int argc,
++				   const char **argv)
++{
++	int ret = -1, error;
++#ifdef HAVE_JANSSON
++	sbcErr err;
++	const char *sharename = NULL;
++	TALLOC_CTX *mem_ctx = NULL;
++	uint32_t count;
++	struct smbconf_service *service = NULL;
++	struct json_object jsobj, share;
++	char *output = NULL;
++	bool ok;
++
++	mem_ctx = talloc_stackframe();
++
++	if (argc != 1 || c->display_usage) {
++		net_conf_showshare_usage(c, argc, argv);
++		goto done;
++	}
++
++	jsobj = json_new_object();
++	if (json_is_invalid(&jsobj)) {
++		d_fprintf(stderr, _("Failed to create JSON object.\n"));
++		goto done;
++	}
++
++	share = json_new_object();
++	if (json_is_invalid(&share)) {
++		json_free(&jsobj);
++		d_fprintf(stderr, _("Failed to create JSON object.\n"));
++		goto done;
++	}
++
++	sharename = talloc_strdup(mem_ctx, argv[0]);
++	if (sharename == NULL) {
++		d_fprintf(stderr, "error: out of memory!\n");
++		json_free(&jsobj);
++		goto done;
++	}
++
++	err = smbconf_get_share(conf_ctx, mem_ctx, sharename, &service);
++	if (!SBC_ERROR_IS_OK(err)) {
++		d_fprintf(stderr, _("error getting share parameters: %s\n"),
++			  sbcErrorString(err));
++		json_free(&jsobj);
++		goto done;
++	}
++
++	ok = service_to_json(service, &share);
++	if (!ok) {
++		d_fprintf(stderr, _("Failed to convert share to JSON.\n"));
++		json_free(&jsobj);
++		json_free(&share);
++		goto done;
++	}
++
++	error = json_add_object(&jsobj, "params", &share);
++	if (error) {
++		json_free(&jsobj);
++		goto done;	
++	}
++
++	output = json_to_string(mem_ctx, &jsobj);
++	if (output == NULL) {
++		json_free(&jsobj);
++		d_fprintf(stderr, "Memory error\n");
++		goto done;
++	}
++
++	printf("%s\n", output);
++	json_free(&jsobj);
++	ret = 0;
++
++done:
++	TALLOC_FREE(mem_ctx);
++#endif
++	return ret;
++}
++
+ static int net_conf_showshare(struct net_context *c,
+ 			      struct smbconf_ctx *conf_ctx, int argc,
+ 			      const char **argv)
+@@ -538,6 +1136,216 @@ done:
+  * This is a high level utility function of the net conf utility,
+  * not a direct frontend to the smbconf API.
+  */
++#ifdef HAVE_JANSSON
++static bool validate_share_json(struct net_context *c,
++			        struct smbconf_ctx *conf_ctx,
++				json_t *data)
++{
++	json_t *service = NULL, *params = NULL;
++	const char *sname = NULL, *path = NULL;
++	int i;
++	size_t array_size;
++
++	/* validate share name */	
++	service = json_object_get(data, "service");
++	if ((service == NULL) || !json_is_string(service)) {
++		d_fprintf(stderr,
++			  _("\"service\" string is required in JSON data.\n"));
++		return false;
++	}
++	
++	sname = json_string_value(service);
++	if (!validate_net_name(sname, INVALID_SHARENAME_CHARS, strlen(sname))) {
++		d_fprintf(stderr, _("ERROR: share name %s contains "
++                        "invalid characters (any of %s)\n"),
++                        sname, INVALID_SHARENAME_CHARS);
++		return false;
++	}
++
++	if (strequal(sname, GLOBAL_NAME)) {
++		d_fprintf(stderr,
++			  _("ERROR: 'global' is not a valid share name.\n"));
++		return false;
++	}
++
++	if (smbconf_share_exists(conf_ctx, sname)) {
++		d_fprintf(stderr, _("ERROR: share %s already exists.\n"),
++			  sname);
++		return false;
++	}
++
++	params = json_object_get(data, "params");
++	if ((params == NULL) || !json_is_array(params)) {
++		d_fprintf(stderr,
++			  _("\"params\" array is required in JSON data.\n"));
++		return false;
++	}
++
++	/*
++	 * minimal validation of parameters array. Make sure that each item
++         * has "name" and "value" keys, and that the "path" is a string.
++	 */
++	array_size = json_array_size(params);
++	for (i = 0; i < array_size; i++) {
++		json_t *parm = NULL, *name = NULL, *value = NULL;
++		parm = json_array_get(params, i);
++		if ((parm == NULL) || !json_is_object(parm)) {
++			d_fprintf(stderr,
++				  _("\"params\" array element %d is invalid.\n"), i);
++			return false;
++		}
++		name = json_object_get(parm, "name");
++		if ((name == NULL) || !json_is_string(name)) {
++			d_fprintf(stderr,
++				  _("\"params\" array element %d is invalid. "
++				    "\"name\" string must be present in object.\n"), i);
++			return false;
++		}
++
++		value = json_object_get(parm, "value");
++		if (value == NULL) {
++			d_fprintf(stderr,
++				  _("\"params\" array element %d is invalid. "
++				    "\"value\" must be present in object.\n"), i);
++			return false;
++		}
++
++		if (strequal(json_string_value(name), "path")) {
++			if (!json_is_string(value)) {
++				d_fprintf(stderr,
++					  _("\"params\" array element %d is invalid. "
++					    "path must be a string.\n"), i);
++				return false;
++			}
++			path = json_string_value(value);
++		}
++	}	
++
++	/* validate path */
++	if (path[0] != '/') {
++		bool ok = false;
++
++		if (strequal(sname, HOMES_NAME) && path[0] == '\0') {
++			/* The homes share can be an empty path. */
++			ok = true;
++		}
++		if (!ok) {
++			d_fprintf(stderr,
++				  _("Error: path '%s' is not an absolute path.\n"),
++				 path);
++			return false;
++		}
++	}
++
++	return true;
++}
++#endif /* HAVE_JANSSON */
++
++static int net_conf_addshare_json(struct net_context *c,
++			          struct smbconf_ctx *conf_ctx, int argc,
++				  const char **argv)
++{
++	int ret = -1, error;
++#ifdef HAVE_JANSSON
++	sbcErr err;
++	json_t *data = NULL, *jsservice = NULL;
++	json_t *payload = NULL, *to_set = NULL;
++	const char *sharename = NULL;
++	bool ok;
++	TALLOC_CTX *mem_ctx = talloc_stackframe();
++
++	if (argc != 1 || c->display_usage) {
++		net_conf_addshare_usage(c, argc, argv);
++		TALLOC_FREE(mem_ctx);
++		return 0;
++	}	
++
++	data = load_json(argv[0]);
++	if ((data == NULL) || !json_is_object(data)) {
++		TALLOC_FREE(mem_ctx);
++		ret;
++	} 
++
++	ok = validate_share_json(c, conf_ctx, data);
++	if (!ok) {
++		goto done;
++	}
++
++	payload = json_object();
++	if (payload == NULL) {
++		json_decref(data);
++		goto done;
++	}
++	
++	to_set = json_array();
++	if (to_set == NULL) {
++		json_decref(data);
++		goto done;
++	}
++
++	error = json_array_append_new(to_set, data);
++	if (error) {
++		json_decref(to_set);
++		json_decref(data);
++		goto done;
++	} 
++
++	error = json_object_set_new(payload, "SET", to_set);
++	if (error) {
++		json_decref(to_set);
++		goto done;
++	} 
++
++	jsservice = json_object_get(data, "service");
++	if (jsservice == NULL) {
++		goto done;
++	}
++
++	sharename = json_string_value(jsservice);
++	
++	err = smbconf_transaction_start(conf_ctx);
++	if (!SBC_ERROR_IS_OK(err)) {
++		d_printf("error starting transaction: %s\n",
++			 sbcErrorString(err));
++		goto done;
++	}
++
++	err = smbconf_create_share(conf_ctx, sharename);
++	if (!SBC_ERROR_IS_OK(err)) {
++		d_fprintf(stderr, _("Error creating share %s: %s\n"),
++			  sharename, sbcErrorString(err));
++		goto cancel;
++	}
++
++	ok = batch_apply_json_parameters(mem_ctx, conf_ctx, payload);
++	if (!ok) {
++		goto cancel;
++	}
++
++	err = smbconf_transaction_commit(conf_ctx);
++	if (!SBC_ERROR_IS_OK(err)) {
++		d_fprintf(stderr, "error committing transaction: %s\n",
++			 sbcErrorString(err));
++	} else {
++		ret = 0;
++	}
++
++	goto done;
++
++cancel:
++	err = smbconf_transaction_cancel(conf_ctx);
++	if (!SBC_ERROR_IS_OK(err)) {
++		d_printf("error cancelling transaction: %s\n",
++			 sbcErrorString(err));
++	}
++
++done:
++	json_decref(payload);
++	TALLOC_FREE(mem_ctx);
++#endif /* HAVE_JANSSON */
++	return ret;
++}
++
+ static int net_conf_addshare(struct net_context *c,
+ 			     struct smbconf_ctx *conf_ctx, int argc,
+ 			     const char **argv)
+@@ -779,6 +1587,94 @@ done:
+ 	return ret;
+ }
+ 
++
++static int net_conf_setparm_json(struct net_context *c, struct smbconf_ctx *conf_ctx,
++				 int argc, const char **argv)
++{
++	int ret = -1, error;
++#ifdef HAVE_JANSSON
++	sbcErr err;
++	bool ok;
++	TALLOC_CTX *mem_ctx = talloc_stackframe();
++	json_t *data = NULL, *payload = NULL;
++	json_t *to_set = NULL, *jsservice = NULL;
++
++	if (argc != 1 || c->display_usage) {
++		net_conf_setparm_usage(c, argc, argv);
++	}
++
++	data = load_json(argv[0]);
++	if ((data == NULL) || !json_is_object(data)) {
++		TALLOC_FREE(mem_ctx);
++		ret;
++	} 
++
++	payload = json_object();
++	if (payload == NULL) {
++		json_decref(data);
++		goto done;
++	}
++	
++	to_set = json_array();
++	if (to_set == NULL) {
++		json_decref(data);
++		goto done;
++	}
++
++	error = json_array_append_new(to_set, data);
++	if (error) {
++		json_decref(to_set);
++		json_decref(data);
++		goto done;
++	} 
++
++	error = json_object_set_new(payload, "SET", to_set);
++	if (error) {
++		json_decref(to_set);
++		goto done;
++	} 
++
++	jsservice = json_object_get(data, "service");
++	if (jsservice == NULL) {
++		goto done;
++	}
++
++	err = smbconf_transaction_start(conf_ctx);
++	if (!SBC_ERROR_IS_OK(err)) {
++		d_printf("error starting transaction: %s\n",
++			 sbcErrorString(err));
++		goto done;
++	}
++
++	ok = batch_apply_json_parameters(mem_ctx, conf_ctx, payload);
++	if (!ok) {
++		goto cancel;
++	}
++
++	err = smbconf_transaction_commit(conf_ctx);
++	if (!SBC_ERROR_IS_OK(err)) {
++		d_printf(_("error committing transaction: %s\n"),
++			 sbcErrorString(err));
++	} else {
++		ret = 0;
++	}
++
++	goto done;
++
++cancel:
++	err = smbconf_transaction_cancel(conf_ctx);
++	if (!SBC_ERROR_IS_OK(err)) {
++		d_printf(_("error cancelling transaction: %s\n"),
++			 sbcErrorString(err));
++	}
++
++done:
++	json_decref(payload);
++	TALLOC_FREE(mem_ctx);
++#endif /* HAVE_JANSSON */
++	return ret;
++}
++
+ static int net_conf_setparm(struct net_context *c, struct smbconf_ctx *conf_ctx,
+ 			    int argc, const char **argv)
+ {
+@@ -918,6 +1814,93 @@ done:
+ 	return ret;
+ }
+ 
++static int net_conf_delparm_json(struct net_context *c, struct smbconf_ctx *conf_ctx,
++				 int argc, const char **argv)
++{
++	int ret = -1, error;
++#ifdef HAVE_JANSSON
++	sbcErr err;
++	bool ok;
++	TALLOC_CTX *mem_ctx = talloc_stackframe();
++	json_t *data = NULL, *payload = NULL;
++	json_t *to_del = NULL, *jsservice = NULL;
++
++	if (argc != 1 || c->display_usage) {
++		net_conf_delparm_usage(c, argc, argv);
++	}
++
++	data = load_json(argv[0]);
++	if ((data == NULL) || !json_is_object(data)) {
++		TALLOC_FREE(mem_ctx);
++		ret;
++	} 
++
++	payload = json_object();
++	if (payload == NULL) {
++		json_decref(data);
++		goto done;
++	}
++	
++	to_del = json_array();
++	if (to_del == NULL) {
++		json_decref(data);
++		goto done;
++	}
++
++	error = json_array_append_new(to_del, data);
++	if (error) {
++		json_decref(to_del);
++		json_decref(data);
++		goto done;
++	} 
++
++	error = json_object_set_new(payload, "DEL", to_del);
++	if (error) {
++		json_decref(to_del);
++		goto done;
++	} 
++
++	jsservice = json_object_get(data, "service");
++	if (jsservice == NULL) {
++		goto done;
++	}
++
++	err = smbconf_transaction_start(conf_ctx);
++	if (!SBC_ERROR_IS_OK(err)) {
++		d_printf("error starting transaction: %s\n",
++			 sbcErrorString(err));
++		goto done;
++	}
++
++	ok = batch_apply_json_parameters(mem_ctx, conf_ctx, payload);
++	if (!ok) {
++		goto cancel;
++	}
++
++	err = smbconf_transaction_commit(conf_ctx);
++	if (!SBC_ERROR_IS_OK(err)) {
++		d_printf(_("error committing transaction: %s\n"),
++			 sbcErrorString(err));
++	} else {
++		ret = 0;
++	}
++
++	goto done;
++
++cancel:
++	err = smbconf_transaction_cancel(conf_ctx);
++	if (!SBC_ERROR_IS_OK(err)) {
++		d_printf(_("error cancelling transaction: %s\n"),
++			 sbcErrorString(err));
++	}
++
++done:
++	json_decref(payload);
++	TALLOC_FREE(mem_ctx);
++#endif /* HAVE_JANSSON */
++	return ret;
++}
++
+ static int net_conf_delparm(struct net_context *c, struct smbconf_ctx *conf_ctx,
+ 			    int argc, const char **argv)
+ {
+@@ -1134,6 +2117,8 @@ struct conf_functable {
+ 	const char *funcname;
+ 	int (*fn)(struct net_context *c, struct smbconf_ctx *ctx, int argc,
+ 		  const char **argv);
++	int (*json_fn)(struct net_context *c, struct smbconf_ctx *ctx, int argc,
++		  const char **argv);
+ 	int valid_transports;
+ 	const char *description;
+ 	const char *usage;
+@@ -1152,6 +2137,14 @@ static int net_conf_run_function(struct net_context *c, int argc,
+ 	if (argc != 0) {
+ 		for (i=0; table[i].funcname; i++) {
+ 			if (strcasecmp_m(argv[0], table[i].funcname) == 0)
++				if (c->opt_json) {
++					if (table[i].json_fn == NULL) {
++						break;
++					}
++					return net_conf_wrap_function(
++					    c, table[i].json_fn,
++					    argc-1, argv+1);
++				}
+ 				return net_conf_wrap_function(c, table[i].fn,
+ 							      argc-1,
+ 							      argv+1);
+@@ -1181,6 +2174,7 @@ int net_conf(struct net_context *c, int argc, const char **argv)
+ 		{
+ 			"list",
+ 			net_conf_list,
++			net_conf_list_json,
+ 			NET_TRANSPORT_LOCAL,
+ 			N_("Dump the complete configuration in smb.conf like "
+ 			   "format."),
+@@ -1192,6 +2186,7 @@ int net_conf(struct net_context *c, int argc, const char **argv)
+ 		{
+ 			"import",
+ 			net_conf_import,
++			NULL,
+ 			NET_TRANSPORT_LOCAL,
+ 			N_("Import configuration from file in smb.conf "
+ 			   "format."),
+@@ -1202,6 +2197,7 @@ int net_conf(struct net_context *c, int argc, const char **argv)
+ 		{
+ 			"listshares",
+ 			net_conf_listshares,
++			net_conf_listshares_json,
+ 			NET_TRANSPORT_LOCAL,
+ 			N_("List the share names."),
+ 			N_("net conf listshares\n"
+@@ -1210,6 +2206,7 @@ int net_conf(struct net_context *c, int argc, const char **argv)
+ 		{
+ 			"drop",
+ 			net_conf_drop,
++			NULL,
+ 			NET_TRANSPORT_LOCAL,
+ 			N_("Delete the complete configuration."),
+ 			N_("net conf drop\n"
+@@ -1218,6 +2215,7 @@ int net_conf(struct net_context *c, int argc, const char **argv)
+ 		{
+ 			"showshare",
+ 			net_conf_showshare,
++			net_conf_showshare_json,
+ 			NET_TRANSPORT_LOCAL,
+ 			N_("Show the definition of a share."),
+ 			N_("net conf showshare\n"
+@@ -1226,6 +2224,7 @@ int net_conf(struct net_context *c, int argc, const char **argv)
+ 		{
+ 			"addshare",
+ 			net_conf_addshare,
++			net_conf_addshare_json,
+ 			NET_TRANSPORT_LOCAL,
+ 			N_("Create a new share."),
+ 			N_("net conf addshare\n"
+@@ -1234,6 +2233,7 @@ int net_conf(struct net_context *c, int argc, const char **argv)
+ 		{
+ 			"delshare",
+ 			net_conf_delshare,
++			NULL,
+ 			NET_TRANSPORT_LOCAL,
+ 			N_("Delete a share."),
+ 			N_("net conf delshare\n"
+@@ -1242,6 +2242,7 @@ int net_conf(struct net_context *c, int argc, const char **argv)
+ 		{
+ 			"setparm",
+ 			net_conf_setparm,
++			net_conf_setparm_json,
+ 			NET_TRANSPORT_LOCAL,
+ 			N_("Store a parameter."),
+ 			N_("net conf setparm\n"
+@@ -1250,6 +2251,7 @@ int net_conf(struct net_context *c, int argc, const char **argv)
+ 		{
+ 			"getparm",
+ 			net_conf_getparm,
++			NULL,
+ 			NET_TRANSPORT_LOCAL,
+ 			N_("Retrieve the value of a parameter."),
+ 			N_("net conf getparm\n"
+@@ -1258,6 +2260,7 @@ int net_conf(struct net_context *c, int argc, const char **argv)
+ 		{
+ 			"delparm",
+ 			net_conf_delparm,
++			net_conf_delparm_json,
+ 			NET_TRANSPORT_LOCAL,
+ 			N_("Delete a parameter."),
+ 			N_("net conf delparm\n"
+@@ -1266,6 +2269,7 @@ int net_conf(struct net_context *c, int argc, const char **argv)
+ 		{
+ 			"getincludes",
+ 			net_conf_getincludes,
++			NULL,
+ 			NET_TRANSPORT_LOCAL,
+ 			N_("Show the includes of a share definition."),
+ 			N_("net conf getincludes\n"
+@@ -1274,6 +2278,7 @@ int net_conf(struct net_context *c, int argc, const char **argv)
+ 		{
+ 			"setincludes",
+ 			net_conf_setincludes,
++			NULL,
+ 			NET_TRANSPORT_LOCAL,
+ 			N_("Set includes for a share."),
+ 			N_("net conf setincludes\n"
+@@ -1282,12 +2287,13 @@ int net_conf(struct net_context *c, int argc, const char **argv)
+ 		{
+ 			"delincludes",
+ 			net_conf_delincludes,
++			NULL,
+ 			NET_TRANSPORT_LOCAL,
+ 			N_("Delete includes from a share definition."),
+ 			N_("net conf delincludes\n"
+ 			   "    Delete includes from a share definition.")
+ 		},
+-		{NULL, NULL, 0, NULL, NULL}
++		{NULL, NULL, NULL, 0, NULL, NULL}
+ 	};
+ 
+ 	ret = net_conf_run_function(c, argc, argv, "net conf", func_table);
+diff --git a/source3/utils/net_groupmap.c b/source3/utils/net_groupmap.c
+index b4da9bae556..039d6326fcf 100644
+--- a/source3/utils/net_groupmap.c
++++ b/source3/utils/net_groupmap.c
+@@ -27,6 +27,275 @@
+ #include "../libcli/security/security.h"
+ #include "passdb.h"
+ 
++#ifdef HAVE_JANSSON
++#include <jansson.h>
++#include "audit_logging.h"
++#define JS_MAJ_VER	1
++#define JS_MIN_VER	0
++#endif /* HAVE_JANSSON */
++
++bool is_batch_op = false;
++
++/*********************************************************
++ Load JSON. Returns libjansson JSON object
++**********************************************************/
++#ifdef HAVE_JANSSON
++static json_t *load_json(const char *text)
++{
++	json_t *root = NULL;
++	json_error_t error;
++
++	root = json_loads(text, 0, &error);
++	if (root == NULL) {
++		d_fprintf(stderr, _("JSON error on line %d: %s\n"),
++			  error.line, error.text);
++	}
++	return root;
++}
++#endif /* HAVE_JANSSON */
++
++struct groupmap_params {
++	fstring ntgroup;
++	fstring unixgrp;
++	fstring string_sid;
++	fstring type;
++	fstring ntcomment;
++	fstring name_type;
++	enum lsa_SidType sid_type;
++	uint32_t rid;
++	gid_t gid;
++	bool verbose;
++};
++
++static inline void init_groupmap_params(struct groupmap_params *params)
++{
++	*params = (struct groupmap_params) {
++		.ntgroup = "",
++		.unixgrp = "",
++		.string_sid = "",
++		.type = "",
++		.ntcomment = "",
++		.sid_type = SID_NAME_DOM_GRP,
++		.rid = 0,
++		.gid = -1,
++		.name_type = "domain group",
++		.verbose = false,
++	};
++}
++
++static bool parse_text_args(int argc,
++			    const char **argv,
++			    struct groupmap_params *params)
++{
++	int i;
++
++	for ( i=0; i<argc; i++ ) {
++		if ( !strcasecmp_m(argv[i], "verbose")) {
++			params->verbose = true;
++		}
++		if ( !strncasecmp_m(argv[i], "rid", strlen("rid")) ) {
++			params->rid = get_int_param(argv[i]);
++			if ( params->rid < DOMAIN_RID_ADMINS ) {
++				d_fprintf(stderr,
++					  _("RID must be greater than %d\n"),
++					  (uint32_t)DOMAIN_RID_ADMINS-1);
++				return false;
++			}
++		}
++		else if ( !strncasecmp_m(argv[i], "unixgroup", strlen("unixgroup")) ) {
++			fstrcpy( params->unixgrp, get_string_param( argv[i] ) );
++			if ( !params->unixgrp[0] ) {
++				d_fprintf(stderr,_( "must supply a name\n"));
++				return false;
++			}
++		}
++		else if ( !strncasecmp_m(argv[i], "ntgroup", strlen("ntgroup")) ) {
++			fstrcpy( params->ntgroup, get_string_param( argv[i] ) );
++			if ( !params->ntgroup[0] ) {
++				d_fprintf(stderr, _("must supply a name\n"));
++				return false;
++			}
++		}
++		else if ( !strncasecmp_m(argv[i], "sid", strlen("sid")) ) {
++			fstrcpy( params->string_sid, get_string_param( argv[i] ) );
++			if ( !params->string_sid[0] ) {
++				d_fprintf(stderr, _("must supply a SID\n"));
++				return false;
++			}
++		}
++		else if ( !strncasecmp_m(argv[i], "comment", strlen("comment")) ) {
++			fstrcpy( params->ntcomment, get_string_param( argv[i] ) );
++			if ( !params->ntcomment[0] ) {
++				d_fprintf(stderr,
++					  _("must supply a comment string\n"));
++				return false;
++			}
++		}
++		else if ( !strncasecmp_m(argv[i], "type", strlen("type")) )  {
++			fstrcpy( params->type, get_string_param( argv[i] ) );
++			switch ( params->type[0] ) {
++				case 'b':
++				case 'B':
++					params->sid_type = SID_NAME_WKN_GRP;
++					fstrcpy(params->name_type, "wellknown group");
++					break;
++				case 'd':
++				case 'D':
++					params->sid_type = SID_NAME_DOM_GRP;
++					fstrcpy(params->name_type, "domain group");
++					break;
++				case 'l':
++				case 'L':
++					params->sid_type = SID_NAME_ALIAS;
++					fstrcpy(params->name_type, "alias (local) group");
++					break;
++				default:
++					d_fprintf(stderr,
++						  _("unknown group type %s\n"),
++						  params->type);
++					return false;
++			}
++		}
++		else {
++			d_fprintf(stderr, _("Bad option: %s\n"), argv[i]);
++			return false;
++		}
++	}
++
++	return true;
++}
++
++static bool parse_json_args(int argc,
++			    const char **argv,
++			    struct groupmap_params *params)
++{
++	int i;
++	json_t *jsdata = NULL;
++	json_t *nt_name = NULL, *sid = NULL, *group_type_int = NULL, *rid = NULL;
++	json_t *gid = NULL, *group = NULL, *group_type_str, *comment = NULL;
++
++	for ( i=0; i<argc; i++ ) {
++		if ( !strcasecmp_m(argv[i], "verbose")) {
++			params->verbose = true;
++		}
++		if ( !strncasecmp_m(argv[i], "data", strlen("data")) ) {
++			jsdata = load_json(get_string_param(argv[i]));
++		}
++	}
++	if (jsdata == NULL) {
++		d_fprintf(stderr, _("Failed to load JSON data.\n"));
++		return false;
++	}
++
++	nt_name = json_object_get(jsdata, "nt_name");
++	if (nt_name != NULL) {
++		if (!json_is_string(nt_name)) {
++			d_fprintf(stderr, _("Key [nt_name] must be string.\n"));
++			goto err;
++		}
++		fstrcpy(params->ntgroup, json_string_value(nt_name));
++		if (!params->ntgroup[0]) {
++			d_fprintf(stderr, _("Key [nt_name] may not be empty string.\n"));
++			goto err;
++		}
++	}
++
++        rid = json_object_get(jsdata, "rid");
++	if (rid != NULL) {
++		if (!json_is_integer(rid)) {
++			d_fprintf(stderr, _("Key [rid] must be an integer.\n"));
++			goto err;
++		}
++		params->rid = json_integer_value(rid);
++	}
++
++	sid = json_object_get(jsdata, "sid");
++	if (sid != NULL) {
++		if (!json_is_string(sid)) {
++			d_fprintf(stderr, _("Key [sid] must be string.\n"));
++			goto err;
++		}
++		fstrcpy(params->string_sid, json_string_value(sid));
++		printf("sid: %s\n", params->string_sid);
++		if (!params->string_sid[0]) {
++			d_fprintf(stderr, _("Key [sid] must be a valid SID.\n"));
++			goto err;
++		}
++	}
++
++	gid = json_object_get(jsdata, "gid");
++	if (gid != NULL) {
++		if (!json_is_integer(gid)) {
++			d_fprintf(stderr, _("Key [gid] must be string.\n"));
++			goto err;
++		}
++		params->gid = (gid_t)json_integer_value(gid);
++	}
++
++	group_type_str = json_object_get(jsdata, "group_type_str");
++	if (group_type_str != NULL) {
++		if (!json_is_string(group_type_str)) {
++			d_fprintf(stderr, _("Key [group_type_string] must be string.\n"));
++			goto err;
++		}
++		fstrcpy(params->type, json_string_value(group_type_str));
++		switch ( params->type[0] ) {
++		case 'b':
++		case 'B':
++			params->sid_type = SID_NAME_WKN_GRP;
++			fstrcpy(params->name_type, "wellknown group");
++			break;
++		case 'd':
++		case 'D':
++			params->sid_type = SID_NAME_DOM_GRP;
++			fstrcpy(params->name_type, "domain group");
++			break;
++		case 'l':
++		case 'L':
++			params->sid_type = SID_NAME_ALIAS;
++			fstrcpy(params->name_type, "alias (local) group");
++			break;
++		default:
++			d_fprintf(stderr,
++				  _("unknown group type %s\n"),
++				  params->type);
++			goto err;
++		}
++	}
++
++	group = json_object_get(jsdata, "group");
++	if (group != NULL) {
++		if (!json_is_string(group)) {
++			d_fprintf(stderr, _("Key [group] must be string.\n"));
++		}
++		fstrcpy(params->unixgrp, json_string_value(group));
++		if (!params->unixgrp[0]) {
++			d_fprintf(stderr, _("Key [group] may not be empty string.\n"));
++			goto err;
++		}
++	}
++
++	comment = json_object_get(jsdata, "comment");
++	if (comment != NULL) {
++		if (!json_is_string(comment)) {
++			d_fprintf(stderr, _("Key [comment] must be string.\n"));
++			goto err;
++		}
++		fstrcpy(params->ntcomment, json_string_value(comment));
++		if (!params->ntcomment[0]) {
++			d_fprintf(stderr, _("Key [comment] may not be empty string.\n"));
++			goto err;
++		}
++	}
++
++	json_decref(jsdata);
++	return true;
++
++err:
++	json_decref(jsdata);
++	return false;
++}
++
+ /*********************************************************
+  Figure out if the input was an NT group or a SID string.
+  Return the SID.
+@@ -43,8 +312,8 @@ static bool get_sid_from_input(struct dom_sid *sid, char *input)
+ 	if (strncasecmp_m( input, "S-", 2)) {
+ 		/* Perhaps its the NT group name? */
+ 		if (!pdb_getgrnam(map, input)) {
+-			printf(_("NT Group %s doesn't exist in mapping DB\n"),
+-			       input);
++			d_fprintf(stderr, _("NT Group %s doesn't exist in mapping DB\n"),
++				  input);
+ 			TALLOC_FREE(map);
+ 			return false;
+ 		} else {
+@@ -52,8 +321,8 @@ static bool get_sid_from_input(struct dom_sid *sid, char *input)
+ 		}
+ 	} else {
+ 		if (!string_to_sid(sid, input)) {
+-			printf(_("converting sid %s from a string failed!\n"),
+-			       input);
++			d_fprintf(stderr, _("converting sid %s from a string failed!\n"),
++				  input);
+ 			TALLOC_FREE(map);
+ 			return false;
+ 		}
+@@ -86,13 +355,89 @@ static void print_map_entry (const GROUP_MAP *map, bool long_list)
+ 	}
+ 
+ }
++
++#ifdef HAVE_JANSSON
++static bool json_map_entry(const GROUP_MAP *map,
++			   struct json_object *gm_array,
++			   bool verbose)
++{
++	struct json_object js_map;
++	struct dom_sid_buf buf;
++	int error;
++
++	js_map = json_new_object();
++	if (json_is_invalid(&js_map)) {
++		return false;
++	}
++
++	error = json_add_string(&js_map, "nt_name", map->nt_name);
++	if (error) {
++		goto fail;
++	}
++
++	error = json_add_sid(&js_map, "sid", &map->sid);
++	if (error) {
++		goto fail;
++	}
++
++	error = json_add_int(&js_map, "gid", map->gid);
++	if (error) {
++		goto fail;
++	}
++
++	error = json_add_int(&js_map, "group_type_int", map->sid_name_use);
++	if (error) {
++		goto fail;
++	}
++
++	error = json_add_string(&js_map, "comment", map->comment);
++	if (error) {
++		goto fail;
++	}
++
++	error = json_add_int(&js_map, "group_type_int", map->sid_name_use);
++	if (verbose) {
++		char *group = NULL;
++		const char *sid_type = sid_type_lookup(map->sid_name_use);
++
++		group = gidtoname(map->gid);
++		error = json_add_string(&js_map, "group", group);
++		TALLOC_FREE(group);
++		if (error) {
++			goto fail;
++		}
++
++		error = json_add_string(&js_map, "group_type_str", sid_type);
++		if (error) {
++			goto fail;
++		}
++	}
++
++	error = json_add_object(gm_array, NULL, &js_map);
++	if (error) {
++		goto fail;
++	}
++
++	return true;
++
++fail:
++	json_free(&js_map);
++	return false;
++}
++#endif /* HAVE_JANSSON */
++
+ /*********************************************************
+  List the groups.
+ **********************************************************/
+ static int net_groupmap_list(struct net_context *c, int argc, const char **argv)
+ {
++#ifdef HAVE_JANSSON
++	int error;
++	struct json_object jsobj;
++	struct json_object gm_array;
++#endif /* HAVE_JANSSON */
+ 	size_t entries;
+-	bool long_list = false;
++	bool long_list = false, json = false, ok = false;
+ 	size_t i;
+ 	fstring ntgroup = "";
+ 	fstring sid_string = "";
+@@ -110,6 +455,28 @@ static int net_groupmap_list(struct net_context *c, int argc, const char **argv)
+ 	if (c->opt_verbose || c->opt_long_list_entries)
+ 		long_list = true;
+ 
++	if (c->opt_json) {
++#ifdef HAVE_JANSSON
++		json = true;
++		jsobj = json_new_object();
++		if (json_is_invalid(&jsobj)) {
++			return -1;
++		}
++		gm_array = json_new_array();
++		if (json_is_invalid(&gm_array)) {
++			json_free(&jsobj);
++			return -1;
++		}
++		error = json_add_version(&jsobj, JS_MAJ_VER, JS_MIN_VER);
++		if (error) {
++			goto err;
++		}
++#else
++		d_fprintf(stderr, _("not compiled with JSON support.\n"));
++		return -1;
++#endif /* HAVE_JANSSON */
++	}
++
+ 	/* get the options */
+ 	for ( i=0; i<argc; i++ ) {
+ 		if ( !strcasecmp_m(argv[i], "verbose")) {
+@@ -119,20 +486,20 @@ static int net_groupmap_list(struct net_context *c, int argc, const char **argv)
+ 			fstrcpy( ntgroup, get_string_param( argv[i] ) );
+ 			if ( !ntgroup[0] ) {
+ 				d_fprintf(stderr, _("must supply a name\n"));
+-				return -1;
++				goto err;
+ 			}
+ 		}
+ 		else if ( !strncasecmp_m(argv[i], "sid", strlen("sid")) ) {
+ 			fstrcpy( sid_string, get_string_param( argv[i] ) );
+ 			if ( !sid_string[0] ) {
+ 				d_fprintf(stderr, _("must supply a SID\n"));
+-				return -1;
++				goto err;
+ 			}
+ 		}
+ 		else {
+ 			d_fprintf(stderr, _("Bad option: %s\n"), argv[i]);
+ 			d_printf("%s\n%s\n", _("Usage:"), list_usage_str);
+-			return -1;
++			goto err;
+ 		}
+ 	}
+ 
+@@ -145,12 +512,12 @@ static int net_groupmap_list(struct net_context *c, int argc, const char **argv)
+ 			strlcpy(ntgroup, sid_string, sizeof(ntgroup));
+ 
+ 		if (!get_sid_from_input(&sid, ntgroup)) {
+-			return -1;
++			goto err;
+ 		}
+ 
+ 		map = talloc_zero(NULL, GROUP_MAP);
+ 		if (!map) {
+-			return -1;
++			goto err;
+ 		}
+ 
+ 		/* Get the current mapping from the database */
+@@ -159,31 +526,77 @@ static int net_groupmap_list(struct net_context *c, int argc, const char **argv)
+ 				  _("Failure to local group SID in the "
+ 				    "database\n"));
+ 			TALLOC_FREE(map);
+-			return -1;
++			goto err;
+ 		}
+ 
+-		print_map_entry(map, long_list );
++		if (json) {
++#ifdef HAVE_JANSSON
++			ok = json_map_entry(map, &gm_array, long_list);
++#endif
++			if (!ok) {
++				TALLOC_FREE(map);
++				goto err;
++			}
++		} else {
++			print_map_entry(map, long_list );
++		}
+ 		TALLOC_FREE(map);
+ 	}
+ 	else {
+ 		GROUP_MAP **maps = NULL;
+-		bool ok = false;
+ 		/* enumerate all group mappings */
+ 		ok = pdb_enum_group_mapping(NULL, SID_NAME_UNKNOWN,
+ 					    &maps, &entries,
+ 					    ENUM_ALL_MAPPED);
+ 		if (!ok) {
+-			return -1;
++			goto err;
+ 		}
+ 
+ 		for (i=0; i<entries; i++) {
+-			print_map_entry(maps[i], long_list);
++			if (json) {
++				ok = json_map_entry(maps[i],
++						    &gm_array,
++						    long_list);
++				if (!ok) {
++					TALLOC_FREE(maps);
++					goto err;
++				}
++			} else {
++				print_map_entry(maps[i], long_list);
++			}
+ 		}
+ 
+ 		TALLOC_FREE(maps);
+ 	}
+ 
++#ifdef HAVE_JANSSON
++	if (json) {
++		error = json_add_object(&jsobj, "groupmap", &gm_array);
++		if (error) {
++			goto err;
++		}
++
++		char *jsout = json_to_string(talloc_tos(), &jsobj);
++		if (jsout == NULL) {
++			d_fprintf(stderr,
++				  _("Failed to convert JSON object to string.\n"));
++			json_free(&jsobj);
++			return -1;
++		}
++		else {
++			d_printf("%s\n", jsout);
++		}
++		json_free(&jsobj);
++		TALLOC_FREE(jsout);
++	}
++#endif
+ 	return 0;
++err:
++	if (json) {
++		json_free(&jsobj);
++		json_free(&gm_array);
++	}
++	return -1;
+ }
+ 
+ /*********************************************************
+@@ -192,18 +605,11 @@ static int net_groupmap_list(struct net_context *c, int argc, const char **argv)
+ 
+ static int net_groupmap_add(struct net_context *c, int argc, const char **argv)
+ {
++	bool ok;
+ 	struct dom_sid sid;
+-	fstring ntgroup = "";
+-	fstring unixgrp = "";
+-	fstring string_sid = "";
+-	fstring type = "";
+-	fstring ntcomment = "";
+-	enum lsa_SidType sid_type = SID_NAME_DOM_GRP;
+-	uint32_t rid = 0;
+-	gid_t gid;
+-	int i;
+-	GROUP_MAP *map;
+-
++	struct groupmap_params params;
++	GROUP_MAP *map = NULL;
++	NTSTATUS status;
+ 	const char *name_type;
+ 	const char add_usage_str[] = N_("net groupmap add "
+ 					"{rid=<int>|sid=<string>}"
+@@ -212,91 +618,46 @@ static int net_groupmap_add(struct net_context *c, int argc, const char **argv)
+ 					"[ntgroup=<string>] "
+ 					"[comment=<string>]");
+ 
+-	name_type = "domain group";
+-
+ 	if (c->display_usage) {
+ 		d_printf("%s\n%s\n", _("Usage:\n"), add_usage_str);
+ 		return 0;
+ 	}
+ 
+-	/* get the options */
+-	for ( i=0; i<argc; i++ ) {
+-		if ( !strncasecmp_m(argv[i], "rid", strlen("rid")) ) {
+-			rid = get_int_param(argv[i]);
+-			if ( rid < DOMAIN_RID_ADMINS ) {
+-				d_fprintf(stderr,
+-					  _("RID must be greater than %d\n"),
+-					  (uint32_t)DOMAIN_RID_ADMINS-1);
+-				return -1;
+-			}
+-		}
+-		else if ( !strncasecmp_m(argv[i], "unixgroup", strlen("unixgroup")) ) {
+-			fstrcpy( unixgrp, get_string_param( argv[i] ) );
+-			if ( !unixgrp[0] ) {
+-				d_fprintf(stderr,_( "must supply a name\n"));
+-				return -1;
+-			}
+-		}
+-		else if ( !strncasecmp_m(argv[i], "ntgroup", strlen("ntgroup")) ) {
+-			fstrcpy( ntgroup, get_string_param( argv[i] ) );
+-			if ( !ntgroup[0] ) {
+-				d_fprintf(stderr, _("must supply a name\n"));
+-				return -1;
+-			}
+-		}
+-		else if ( !strncasecmp_m(argv[i], "sid", strlen("sid")) ) {
+-			fstrcpy( string_sid, get_string_param( argv[i] ) );
+-			if ( !string_sid[0] ) {
+-				d_fprintf(stderr, _("must supply a SID\n"));
+-				return -1;
+-			}
+-		}
+-		else if ( !strncasecmp_m(argv[i], "comment", strlen("comment")) ) {
+-			fstrcpy( ntcomment, get_string_param( argv[i] ) );
+-			if ( !ntcomment[0] ) {
+-				d_fprintf(stderr,
+-					  _("must supply a comment string\n"));
+-				return -1;
+-			}
+-		}
+-		else if ( !strncasecmp_m(argv[i], "type", strlen("type")) )  {
+-			fstrcpy( type, get_string_param( argv[i] ) );
+-			switch ( type[0] ) {
+-				case 'b':
+-				case 'B':
+-					sid_type = SID_NAME_WKN_GRP;
+-					name_type = "wellknown group";
+-					break;
+-				case 'd':
+-				case 'D':
+-					sid_type = SID_NAME_DOM_GRP;
+-					name_type = "domain group";
+-					break;
+-				case 'l':
+-				case 'L':
+-					sid_type = SID_NAME_ALIAS;
+-					name_type = "alias (local) group";
+-					break;
+-				default:
+-					d_fprintf(stderr,
+-						  _("unknown group type %s\n"),
+-						  type);
+-					return -1;
+-			}
+-		}
+-		else {
+-			d_fprintf(stderr, _("Bad option: %s\n"), argv[i]);
++	init_groupmap_params(&params);
++
++	if (c->opt_json) {
++#ifdef HAVE_JANSSON
++		ok = parse_json_args(argc, argv, &params);
++		if (!ok) {
+ 			return -1;
+ 		}
++#else
++		d_fprintf(stderr, _("Samba was not built with JSON support\n"));
++		return -1;
++#endif
++	} else {
++		ok = parse_text_args(argc, argv, &params);
+ 	}
+-
+-	if ( !unixgrp[0] ) {
++	if (!ok) {
++		d_fprintf(stderr, _("Failed to parse arguments.\n"));
+ 		d_printf("%s\n%s\n", _("Usage:\n"), add_usage_str);
+ 		return -1;
+ 	}
+ 
+-	if ( (gid = nametogid(unixgrp)) == (gid_t)-1 ) {
+-		d_fprintf(stderr, _("Can't lookup UNIX group %s\n"), unixgrp);
++	if (params.gid == -1) {
++		if ( !params.unixgrp[0] ) {
++			d_printf("%s\n%s\n", _("Usage:\n"), add_usage_str);
++			return -1;
++		}
++
++		if ( ( params.gid = nametogid(params.unixgrp)) == (gid_t)-1 ) {
++			d_fprintf(stderr, _("Can't lookup UNIX group %s\n"), params.unixgrp);
++			return -1;
++		}
++	}
++	else if ( !params.ntgroup[0] ) {
++		d_printf("NT group is required if using GID to map SIDs\n");
++		d_printf("%s\n%s\n", _("Usage:\n"), add_usage_str);
+ 		return -1;
+ 	}
+ 
+@@ -306,138 +667,124 @@ static int net_groupmap_add(struct net_context *c, int argc, const char **argv)
+ 	}
+ 	/* Default is domain group. */
+ 	map->sid_name_use = SID_NAME_DOM_GRP;
+-	if (pdb_getgrgid(map, gid)) {
++	if (pdb_getgrgid(map, params.gid)) {
+ 		struct dom_sid_buf buf;
+-		d_printf(_("Unix group %s already mapped to SID %s\n"),
+-			 unixgrp, dom_sid_str_buf(&map->sid, &buf));
++		d_fprintf(stderr, _("Unix group %s already mapped to SID %s\n"),
++			  params.unixgrp, dom_sid_str_buf(&map->sid, &buf));
+ 		TALLOC_FREE(map);
+ 		return -1;
+ 	}
+ 	TALLOC_FREE(map);
+ 
+-	if ( (rid == 0) && (string_sid[0] == '\0') ) {
+-		d_printf(_("No rid or sid specified, choosing a RID\n"));
++	if ( (params.rid == 0) && (params.string_sid[0] == '\0') ) {
++		if (!c->opt_json) {
++			d_printf(_("No rid or sid specified, choosing a RID\n"));
++		}
+ 		if (pdb_capabilities() & PDB_CAP_STORE_RIDS) {
+-			if (!pdb_new_rid(&rid)) {
+-				d_printf(_("Could not get new RID\n"));
++			if (!pdb_new_rid(&params.rid)) {
++				d_fprintf(stderr, _("Could not get new RID\n"));
+ 			}
+ 		} else {
+-			rid = algorithmic_pdb_gid_to_group_rid(gid);
++			params.rid = algorithmic_pdb_gid_to_group_rid(params.gid);
++		}
++		if (!c->opt_json) {
++			d_printf(_("Got RID %d\n"), params.rid);
+ 		}
+-		d_printf(_("Got RID %d\n"), rid);
+ 	}
+ 
+ 	/* append the rid to our own domain/machine SID if we don't have a full SID */
+-	if ( !string_sid[0] ) {
+-		sid_compose(&sid, get_global_sam_sid(), rid);
+-		sid_to_fstring(string_sid, &sid);
++	if ( !params.string_sid[0] ) {
++		sid_compose(&sid, get_global_sam_sid(), params.rid);
++		sid_to_fstring(params.string_sid, &sid);
+ 	}
+ 
+-	if (!ntcomment[0]) {
+-		switch (sid_type) {
++	if (!params.ntcomment[0]) {
++		switch (params.sid_type) {
+ 		case SID_NAME_WKN_GRP:
+-			fstrcpy(ntcomment, "Wellknown Unix group");
++			fstrcpy(params.ntcomment, "Wellknown Unix group");
+ 			break;
+ 		case SID_NAME_DOM_GRP:
+-			fstrcpy(ntcomment, "Domain Unix group");
++			fstrcpy(params.ntcomment, "Domain Unix group");
+ 			break;
+ 		case SID_NAME_ALIAS:
+-			fstrcpy(ntcomment, "Local Unix group");
++			fstrcpy(params.ntcomment, "Local Unix group");
+ 			break;
+ 		default:
+-			fstrcpy(ntcomment, "Unix group");
++			fstrcpy(params.ntcomment, "Unix group");
+ 			break;
+ 		}
+ 	}
+ 
+-	if (!ntgroup[0] )
+-		strlcpy(ntgroup, unixgrp, sizeof(ntgroup));
++	if (!params.ntgroup[0] )
++		strlcpy(params.ntgroup, params.unixgrp, sizeof(params.ntgroup));
++
++	status = add_initial_entry(params.gid,
++				   params.string_sid,
++				   params.sid_type,
++				   params.ntgroup,
++				   params.ntcomment);
+ 
+-	if (!NT_STATUS_IS_OK(add_initial_entry(gid, string_sid, sid_type, ntgroup, ntcomment))) {
+-		d_fprintf(stderr, _("adding entry for group %s failed!\n"), ntgroup);
++	if (!NT_STATUS_IS_OK(status)) {
++		d_fprintf(stderr, _("adding entry for group %s failed!\n"), params.ntgroup);
+ 		return -1;
+ 	}
+ 
+-	d_printf(_("Successfully added group %s to the mapping db as a %s\n"),
+-		 ntgroup, name_type);
++	if (!c->opt_json) {
++		d_printf(_("Successfully added group %s to the mapping db as a %s\n"),
++			 params.ntgroup, params.name_type);
++
++	}
++	else if (!is_batch_op) {
++		int error;
++		char *argstring = talloc_asprintf(talloc_tos(), "sid=%s", params.string_sid);
++		const char *args[] = { argstring, NULL };
++
++		error = net_groupmap_list(c, 1, args);
++		if (error) {
++			d_fprintf(stderr, _("failed to add updated groupmap\n"));
++		}
++		TALLOC_FREE(argstring);
++	}
+ 	return 0;
+ }
+ 
+ static int net_groupmap_modify(struct net_context *c, int argc, const char **argv)
+ {
++	bool ok;
+ 	struct dom_sid sid;
++	struct groupmap_params params;
+ 	GROUP_MAP *map = NULL;
+-	fstring ntcomment = "";
+-	fstring type = "";
+-	fstring ntgroup = "";
+-	fstring unixgrp = "";
+-	fstring sid_string = "";
+-	enum lsa_SidType sid_type = SID_NAME_UNKNOWN;
+ 	int i;
+-	gid_t gid;
+ 	const char modify_usage_str[] = N_("net groupmap modify "
+ 					   "{ntgroup=<string>|sid=<SID>} "
+ 					   "[comment=<string>] "
+ 					   "[unixgroup=<string>] "
+ 					   "[type=<domain|local>]");
+-
+-	if (c->display_usage) {
+-		d_printf("%s\n%s\n", _("Usage:\n"), modify_usage_str);
+-		return 0;
+-	}
+-
+-	/* get the options */
+-	for ( i=0; i<argc; i++ ) {
+-		if ( !strncasecmp_m(argv[i], "ntgroup", strlen("ntgroup")) ) {
+-			fstrcpy( ntgroup, get_string_param( argv[i] ) );
+-			if ( !ntgroup[0] ) {
+-				d_fprintf(stderr, _("must supply a name\n"));
+-				return -1;
+-			}
+-		}
+-		else if ( !strncasecmp_m(argv[i], "sid", strlen("sid")) ) {
+-			fstrcpy( sid_string, get_string_param( argv[i] ) );
+-			if ( !sid_string[0] ) {
+-				d_fprintf(stderr, _("must supply a name\n"));
+-				return -1;
+-			}
+-		}
+-		else if ( !strncasecmp_m(argv[i], "comment", strlen("comment")) ) {
+-			fstrcpy( ntcomment, get_string_param( argv[i] ) );
+-			if ( !ntcomment[0] ) {
+-				d_fprintf(stderr,
+-					  _("must supply a comment string\n"));
+-				return -1;
+-			}
+-		}
+-		else if ( !strncasecmp_m(argv[i], "unixgroup", strlen("unixgroup")) ) {
+-			fstrcpy( unixgrp, get_string_param( argv[i] ) );
+-			if ( !unixgrp[0] ) {
+-				d_fprintf(stderr,
+-					  _("must supply a group name\n"));
+-				return -1;
+-			}
+-		}
+-		else if ( !strncasecmp_m(argv[i], "type", strlen("type")) )  {
+-			fstrcpy( type, get_string_param( argv[i] ) );
+-			switch ( type[0] ) {
+-				case 'd':
+-				case 'D':
+-					sid_type = SID_NAME_DOM_GRP;
+-					break;
+-				case 'l':
+-				case 'L':
+-					sid_type = SID_NAME_ALIAS;
+-					break;
+-			}
+-		}
+-		else {
+-			d_fprintf(stderr, _("Bad option: %s\n"), argv[i]);
+-			return -1;
+-		}
++
++	if (c->display_usage) {
++		d_printf("%s\n%s\n", _("Usage:\n"), modify_usage_str);
++		return 0;
++	}
++
++	init_groupmap_params(&params);
++
++	if (c->opt_json) {
++#ifdef HAVE_JANSSON
++		ok = parse_json_args(argc, argv, &params);
++#else
++		d_fprintf(stderr, _("Samba was not built with JSON support\n"));
++		return -1;
++#endif
++	} else {
++		ok = parse_text_args(argc, argv, &params);
++	}
++	if (!ok) {
++		d_fprintf(stderr, _("Failed to parse arguments.\n"));
++		d_printf("%s\n%s\n", _("Usage:\n"), modify_usage_str);
++		return -1;
+ 	}
+ 
+-	if ( !ntgroup[0] && !sid_string[0] ) {
++	if ( !params.ntgroup[0] && !params.string_sid[0] ) {
+ 		d_printf("%s\n%s\n", _("Usage:\n"), modify_usage_str);
+ 		return -1;
+ 	}
+@@ -446,13 +793,13 @@ static int net_groupmap_modify(struct net_context *c, int argc, const char **arg
+ 	   are defined, use the SID and assume that the group name could be a
+ 	   new name */
+ 
+-	if ( sid_string[0] ) {
+-		if (!get_sid_from_input(&sid, sid_string)) {
++	if ( params.string_sid[0] ) {
++		if (!get_sid_from_input(&sid, params.string_sid)) {
+ 			return -1;
+ 		}
+ 	}
+ 	else {
+-		if (!get_sid_from_input(&sid, ntgroup)) {
++		if (!get_sid_from_input(&sid, params.ntgroup)) {
+ 			return -1;
+ 		}
+ 	}
+@@ -474,7 +821,7 @@ static int net_groupmap_modify(struct net_context *c, int argc, const char **arg
+ 	 * Allow changing of group type only between domain and local
+ 	 * We disallow changing Builtin groups !!! (SID problem)
+ 	 */
+-	if (sid_type == SID_NAME_UNKNOWN) {
++	if (params.sid_type == SID_NAME_UNKNOWN) {
+ 		d_fprintf(stderr, _("Can't map to an unknown group type.\n"));
+ 		TALLOC_FREE(map);
+ 		return -1;
+@@ -488,45 +835,64 @@ static int net_groupmap_modify(struct net_context *c, int argc, const char **arg
+ 		return -1;
+ 	}
+ 
+-	map->sid_name_use = sid_type;
++	map->sid_name_use = params.sid_type;
+ 
+ 	/* Change comment if new one */
+-	if (ntcomment[0]) {
+-		map->comment = talloc_strdup(map, ntcomment);
++	if (params.ntcomment[0]) {
++		map->comment = talloc_strdup(map, params.ntcomment);
+ 		if (!map->comment) {
+ 			d_fprintf(stderr, _("Out of memory!\n"));
+ 			return -1;
+ 		}
+ 	}
+ 
+-	if (ntgroup[0]) {
+-		map->nt_name = talloc_strdup(map, ntgroup);
++	if (params.ntgroup[0]) {
++		map->nt_name = talloc_strdup(map, params.ntgroup);
+ 		if (!map->nt_name) {
+ 			d_fprintf(stderr, _("Out of memory!\n"));
+ 			return -1;
+ 		}
+ 	}
+ 
+-	if ( unixgrp[0] ) {
+-		gid = nametogid( unixgrp );
+-		if ( gid == -1 ) {
+-			d_fprintf(stderr, _("Unable to lookup UNIX group %s.  "
+-					    "Make sure the group exists.\n"),
+-				unixgrp);
+-			TALLOC_FREE(map);
+-			return -1;
++	if (params.gid == -1) {
++		if ( params.unixgrp[0] ) {
++			params.gid = nametogid( params.unixgrp );
++			if ( params.gid == -1 ) {
++				d_fprintf(stderr, _("Unable to lookup UNIX group %s.  "
++						    "Make sure the group exists.\n"),
++					  params.unixgrp);
++				TALLOC_FREE(map);
++				return -1;
++			}
++			map->gid = params.gid;
+ 		}
+-
+-		map->gid = gid;
++	} else {
++		map->gid = params.gid;
+ 	}
+ 
++
+ 	if (!NT_STATUS_IS_OK(pdb_update_group_mapping_entry(map))) {
+ 		d_fprintf(stderr, _("Could not update group database\n"));
+ 		TALLOC_FREE(map);
+ 		return -1;
+ 	}
+ 
+-	d_printf(_("Updated mapping entry for %s\n"), map->nt_name);
++	if (!c->opt_json) {
++		d_printf(_("Updated mapping entry for %s\n"), map->nt_name);
++	}
++	else if (!is_batch_op) {
++		int error;
++		struct dom_sid_buf buf;
++		char *argstring = talloc_asprintf(talloc_tos(), "sid=%s",
++						  dom_sid_str_buf(&map->sid, &buf));
++		const char *args[] = { argstring, NULL };
++
++		error = net_groupmap_list(c, 1, args);
++		if (error) {
++			d_fprintf(stderr, _("failed to print updated groupmap\n"));
++		}
++		TALLOC_FREE(argstring);
++	}
+ 
+ 	TALLOC_FREE(map);
+ 	return 0;
+@@ -535,9 +901,9 @@ static int net_groupmap_modify(struct net_context *c, int argc, const char **arg
+ static int net_groupmap_delete(struct net_context *c, int argc, const char **argv)
+ {
+ 	struct dom_sid sid;
+-	fstring ntgroup = "";
+-	fstring sid_string = "";
+ 	int i;
++	bool ok;
++	struct groupmap_params params;
+ 	const char delete_usage_str[] = N_("net groupmap delete "
+ 					   "{ntgroup=<string>|sid=<SID>}");
+ 
+@@ -546,52 +912,52 @@ static int net_groupmap_delete(struct net_context *c, int argc, const char **arg
+ 		return 0;
+ 	}
+ 
++	init_groupmap_params(&params);
++
+ 	/* get the options */
+-	for ( i=0; i<argc; i++ ) {
+-		if ( !strncasecmp_m(argv[i], "ntgroup", strlen("ntgroup")) ) {
+-			fstrcpy( ntgroup, get_string_param( argv[i] ) );
+-			if ( !ntgroup[0] ) {
+-				d_fprintf(stderr, _("must supply a name\n"));
+-				return -1;
+-			}
+-		}
+-		else if ( !strncasecmp_m(argv[i], "sid", strlen("sid")) ) {
+-			fstrcpy( sid_string, get_string_param( argv[i] ) );
+-			if ( !sid_string[0] ) {
+-				d_fprintf(stderr, _("must supply a SID\n"));
+-				return -1;
+-			}
+-		}
+-		else {
+-			d_fprintf(stderr, _("Bad option: %s\n"), argv[i]);
+-			return -1;
+-		}
++	if (c->opt_json) {
++#ifdef HAVE_JANSSON
++		ok = parse_json_args(argc, argv, &params);
++#else
++		d_fprintf(stderr, _("Samba was not built with JSON support\n"));
++		return -1;
++#endif
++	} else {
++		ok = parse_text_args(argc, argv, &params);
++	}
++
++	if (!ok) {
++		d_fprintf(stderr, _("Failed to parse arguments.\n"));
++		d_printf("%s\n%s\n", _("Usage:\n"), delete_usage_str);
++		return -1;
+ 	}
+ 
+-	if ( !ntgroup[0] && !sid_string[0]) {
++	if ( !params.ntgroup[0] && !params.string_sid[0]) {
+ 		d_printf("%s\n%s\n", _("Usage:\n"), delete_usage_str);
+ 		return -1;
+ 	}
+ 
+ 	/* give preference to the SID if we have that */
+ 
+-	if ( sid_string[0] )
+-		strlcpy(ntgroup, sid_string, sizeof(ntgroup));
++	if ( params.string_sid[0] )
++		strlcpy(params.ntgroup, params.string_sid, sizeof(params.ntgroup));
+ 
+-	if ( !get_sid_from_input(&sid, ntgroup) ) {
++	if ( !get_sid_from_input(&sid, params.ntgroup) ) {
+ 		d_fprintf(stderr, _("Unable to resolve group %s to a SID\n"),
+-			  ntgroup);
++			  params.ntgroup);
+ 		return -1;
+ 	}
+ 
+ 	if ( !NT_STATUS_IS_OK(pdb_delete_group_mapping_entry(sid)) ) {
+ 		d_fprintf(stderr,
+ 			  _("Failed to remove group %s from the mapping db!\n"),
+-			  ntgroup);
++			  params.ntgroup);
+ 		return -1;
+ 	}
+ 
+-	d_printf(_("Successfully removed %s from the mapping db\n"), ntgroup);
++	if (!c->opt_json) {
++		d_printf(_("Successfully removed %s from the mapping db\n"), params.ntgroup);
++	}
+ 
+ 	return 0;
+ }
+@@ -784,44 +1150,161 @@ static int net_groupmap_cleanup(struct net_context *c, int argc, const char **ar
+ 	return 0;
+ }
+ 
+-static int net_groupmap_addmem(struct net_context *c, int argc, const char **argv)
++struct groupmap_member_params {
++	struct dom_sid alias;
++	struct dom_sid member;
++	fstring alias_str;
++	fstring member_str;
++};
++
++static bool text_init_member_params(struct groupmap_member_params *params,
++				    const char *alias,
++				    const char *member)
++{
++	*params = (struct groupmap_member_params) {
++		.alias_str = "",
++		.member_str = "",
++	};
++	if (alias != NULL) {
++		if (!string_to_sid(&params->alias, alias)) {
++			return false;
++		}
++		sid_to_fstring(params->alias_str, &params->alias);
++	}
++	if (member != NULL) {
++		if (!string_to_sid(&params->member, member)) {
++			return false;
++		}
++		sid_to_fstring(params->member_str, &params->member);
++	}
++	return true;
++}
++
++static bool json_init_member_params(struct groupmap_member_params *params,
++				    const char *data)
+ {
+-	struct dom_sid alias, member;
++	json_t *js_data = NULL, *alias = NULL, *member = NULL;
++
++	*params = (struct groupmap_member_params) {
++		.alias_str = "",
++		.member_str = "",
++	};
++	if (strncasecmp_m(data, "data", strlen("data")) != 0) {
++		return false;
++	}
++
++	js_data = load_json(get_string_param(data));
++	if (js_data == NULL) {
++		d_fprintf(stderr, _("Failed to load JSON data.\n"));
++		return false;
++	}
++
++	alias = json_object_get(js_data, "alias");
++	if (alias != NULL) {
++		if (!json_is_string(alias) ||
++		    !string_to_sid(&params->alias, json_string_value(alias))) {
++			return false;
++		}
++		sid_to_fstring(params->alias_str, &params->alias);
++	}
+ 
+-	if ( (argc != 2) ||
++	member = json_object_get(js_data, "member");
++	if (member != NULL) {
++		if (!json_is_string(member) ||
++		    !string_to_sid(&params->alias, json_string_value(member))) {
++			return false;
++		}
++		sid_to_fstring(params->member_str, &params->member);
++	}
++
++	return true;
++}
++
++static int net_groupmap_addmem(struct net_context *c, int argc, const char **argv)
++{
++	struct groupmap_member_params params;
++
++	if (c->opt_json) {
++#ifdef HAVE_JANSSON
++		if ((argc != 1) ||
++                    c->display_usage ||
++		    !json_init_member_params(&params, argv[0])) {
++			d_printf("%s\n%s",
++				 _("Usage:"),
++				 _("net groupmap addmem '{\"alias\": <alias-sid> "
++				   "\"member\": <member-sid>}'\n"));
++			return -1;
++		}
++#else
++		d_fprintf(stderr, _("Samba compiled without JSON support.\n"));
++		return -1;
++#endif
++		if (!*params.alias_str || !params.member_str) {
++			d_printf("%s\n%s",
++				 _("Usage:"),
++				 _("net groupmap addmem data='{\"alias\": <alias-sid> "
++				   "\"member\": <member-sid>}'\n"));
++			return -1;
++		}
++	}
++	else if ( (argc != 2) ||
+ 	     c->display_usage ||
+-	     !string_to_sid(&alias, argv[0]) ||
+-	     !string_to_sid(&member, argv[1]) ) {
++	     !text_init_member_params(&params, argv[0], argv[1]) ) {
+ 		d_printf("%s\n%s",
+ 			 _("Usage:"),
+ 			 _("net groupmap addmem alias-sid member-sid\n"));
+ 		return -1;
+ 	}
+ 
+-	if (!NT_STATUS_IS_OK(pdb_add_aliasmem(&alias, &member))) {
++	if (!NT_STATUS_IS_OK(pdb_add_aliasmem(&params.alias, &params.member))) {
+ 		d_fprintf(stderr, _("Could not add sid %s to alias %s\n"),
+-			 argv[1], argv[0]);
++			 params.member_str, params.alias_str);
+ 		return -1;
+ 	}
++	if (c->opt_json) {
++
++	}
+ 
+ 	return 0;
+ }
+ 
+ static int net_groupmap_delmem(struct net_context *c, int argc, const char **argv)
+ {
+-	struct dom_sid alias, member;
+-
+-	if ( (argc != 2) ||
++	struct groupmap_member_params params;
++
++	if (c->opt_json) {
++#ifdef HAVE_JANSSON
++		if ((argc != 1) ||
++                    c->display_usage ||
++		    !json_init_member_params(&params, argv[0])) {
++			d_printf("%s\n%s",
++				 _("Usage:"),
++				 _("net groupmap delmem data='{\"alias\": <alias-sid> "
++				   "\"member\": <member-sid>}'\n"));
++			return -1;
++		}
++#else
++		d_fprintf(stderr, _("Samba compiled without JSON support.\n"));
++		return -1;
++#endif
++		if (!*params.alias_str || !params.member_str) {
++			d_printf("%s\n%s",
++				 _("Usage:"),
++				 _("net groupmap delmem '{\"alias\": <alias-sid> "
++				   "\"member\": <member-sid>}'\n"));
++			return -1;
++		}
++	}
++	else if ( (argc != 2) ||
+ 	     c->display_usage ||
+-	     !string_to_sid(&alias, argv[0]) ||
+-	     !string_to_sid(&member, argv[1]) ) {
++	     !text_init_member_params(&params, argv[0], argv[1]) ) {
+ 		d_printf("%s\n%s",
+ 			 _("Usage:"),
+ 			 _("net groupmap delmem alias-sid member-sid\n"));
+ 		return -1;
+ 	}
+ 
+-	if (!NT_STATUS_IS_OK(pdb_del_aliasmem(&alias, &member))) {
++	if (!NT_STATUS_IS_OK(pdb_del_aliasmem(&params.alias, &params.member))) {
+ 		d_fprintf(stderr, _("Could not delete sid %s from alias %s\n"),
+ 			 argv[1], argv[0]);
+ 		return -1;
+@@ -830,15 +1313,59 @@ static int net_groupmap_delmem(struct net_context *c, int argc, const char **arg
+ 	return 0;
+ }
+ 
++
+ static int net_groupmap_listmem(struct net_context *c, int argc, const char **argv)
+ {
+-	struct dom_sid alias;
++	struct groupmap_member_params params;
+ 	struct dom_sid *members;
+ 	size_t i, num;
++#ifdef HAVE_JANSSON
++	int error;
++	struct json_object jsobj, jsmembers;
++#endif
++
++	if (c->opt_json) {
++#ifdef HAVE_JANSSON
++		if ((argc != 1) ||
++                    c->display_usage ||
++		    !json_init_member_params(&params, argv[0])) {
++			d_printf("%s\n%s",
++				 _("Usage:"),
++				 _("net groupmap listmem data='{\"alias\": <alias-sid>}'\n"));
++			return -1;
++		}
+ 
+-	if ( (argc != 1) ||
++		jsobj = json_new_object();
++		if (json_is_invalid(&jsobj)) {
++			d_fprintf(stderr, _("Failed to create JSON object %s\n"));
++			return -1;
++		}
++
++		jsmembers = json_new_array();
++		if (json_is_invalid(&jsmembers)) {
++			json_free(&jsobj);
++			return -1;
++		}
++
++		error = json_add_version(&jsobj, JS_MAJ_VER, JS_MIN_VER);
++		if (error) {
++			goto err;
++		}
++
++#else
++		d_fprintf(stderr, _("Samba compiled without JSON support.\n"));
++		return -1;
++#endif /* HAVE_JANSSON */
++		if (!*params.alias_str) {
++			d_printf("%s\n%s",
++				 _("Usage:"),
++				 _("net groupmap listmem data='{\"alias\": <alias-sid>}'\n"));
++			return -1;
++		}
++	}
++	else if ( (argc != 1) ||
+ 	     c->display_usage ||
+-	     !string_to_sid(&alias, argv[0]) ) {
++	     !text_init_member_params(&params, argv[0], NULL) ) {
+ 		d_printf("%s\n%s",
+ 			 _("Usage:"),
+ 			 _("net groupmap listmem alias-sid\n"));
+@@ -848,7 +1375,7 @@ static int net_groupmap_listmem(struct net_context *c, int argc, const char **ar
+ 	members = NULL;
+ 	num = 0;
+ 
+-	if (!NT_STATUS_IS_OK(pdb_enum_aliasmem(&alias, talloc_tos(),
++	if (!NT_STATUS_IS_OK(pdb_enum_aliasmem(&params.alias, talloc_tos(),
+ 					       &members, &num))) {
+ 		d_fprintf(stderr, _("Could not list members for sid %s\n"),
+ 			  argv[0]);
+@@ -857,12 +1384,57 @@ static int net_groupmap_listmem(struct net_context *c, int argc, const char **ar
+ 
+ 	for (i = 0; i < num; i++) {
+ 		struct dom_sid_buf buf;
+-		printf("%s\n", dom_sid_str_buf(&(members[i]), &buf));
++		if (!c->opt_json) {
++			printf("%s\n", dom_sid_str_buf(&(members[i]), &buf));
++		}
++#ifdef HAVE_JANSSON
++		else {
++			struct json_object themember;
++
++			themember = json_new_object();
++			if (json_is_invalid(&themember)) {
++				goto err;
++			}
++
++			error = json_add_sid(&themember, "sid", &members[i]);
++			if (error) {
++				goto err;
++			}
++
++			error = json_add_object(&jsmembers, NULL, &themember);
++			if (error) {
++				goto err;
++			}
++		}
++#endif /* HAVE_JANSSON */
++
++	}
++
++#ifdef HAVE_JANSSON
++	if (c->opt_json) {
++		char *out = NULL;
++
++		error = json_add_object(&jsobj, "members", &jsmembers);
++		if (error) {
++			json_free(&jsobj);
++			return -1;
++		}
++
++		out = json_to_string(talloc_tos(), &jsobj);
++		printf("%s\n", out);
++		TALLOC_FREE(out);
+ 	}
++#endif /* HAVE_JANSSON */
+ 
+ 	TALLOC_FREE(members);
+ 
+ 	return 0;
++#ifdef HAVE_JANSSON
++err:
++	json_free(&jsobj);
++	json_free(&jsmembers);
++#endif /* HAVE_JANSSON */
++	return -1;
+ }
+ 
+ static bool print_alias_memberships(TALLOC_CTX *mem_ctx,
+@@ -893,14 +1465,61 @@ static bool print_alias_memberships(TALLOC_CTX *mem_ctx,
+ 	return true;
+ }
+ 
++static bool json_alias_memberships(TALLOC_CTX *mem_ctx,
++				   const struct dom_sid *domain_sid,
++				   const struct dom_sid *member,
++				   struct json_object *jsarray)
++{
++	uint32_t *alias_rids;
++	size_t i, num_alias_rids;
++	struct dom_sid_buf buf;
++
++	alias_rids = NULL;
++	num_alias_rids = 0;
++
++	if (!NT_STATUS_IS_OK(pdb_enum_alias_memberships(
++				     mem_ctx, domain_sid, member, 1,
++				     &alias_rids, &num_alias_rids))) {
++		d_fprintf(stderr, _("Could not list memberships for sid %s\n"),
++			  dom_sid_str_buf(member, &buf));
++		return false;
++	}
++
++	for (i = 0; i < num_alias_rids; i++) {
++		int error;
++		struct json_object element;
++		element = json_new_object();
++		if (json_is_invalid(&element)) {
++			return false;
++		}
++
++		struct dom_sid alias;
++		sid_compose(&alias, domain_sid, alias_rids[i]);
++
++		error = json_add_sid(&element, "sid", &alias);
++		if (error) {
++			json_free(&element);
++			return false;
++		}
++
++		error = json_add_object(jsarray, NULL, &element);
++		if (error) {
++			return false;
++		}
++	}
++
++	return true;
++}
++
+ static int net_groupmap_memberships(struct net_context *c, int argc, const char **argv)
+ {
+-	TALLOC_CTX *mem_ctx;
+-	struct dom_sid *domain_sid, member;
++	TALLOC_CTX *mem_ctx = NULL;
++	struct dom_sid *domain_sid;
++	struct groupmap_member_params params;
+ 
+ 	if ( (argc != 1) ||
+ 	     c->display_usage ||
+-	     !string_to_sid(&member, argv[0]) ) {
++	     !text_init_member_params(&params, NULL, argv[0]) ) {
+ 		d_printf("%s\n%s",
+ 			 _("Usage:"),
+ 			 _("net groupmap memberships sid\n"));
+@@ -919,15 +1538,196 @@ static int net_groupmap_memberships(struct net_context *c, int argc, const char
+ 		return -1;
+ 	}
+ 
+-	if (!print_alias_memberships(mem_ctx, domain_sid, &member) ||
+-	    !print_alias_memberships(mem_ctx, &global_sid_Builtin, &member))
+-		return -1;
++	if (!c->opt_json) {
++		if (!print_alias_memberships(mem_ctx, domain_sid, &params.member) ||
++		    !print_alias_memberships(mem_ctx, &global_sid_Builtin, &params.member)) {
++			return -1;
++		}
++	}
++	else {
++		bool ok;
++		int error;
++		char *out = NULL;
++		struct json_object jsobj, jsarray;
++
++		jsobj = json_new_object();
++		if (json_is_invalid(&jsobj)) {
++			goto out;
++		}
++
++		jsarray = json_new_array();
++		if (json_is_invalid(&jsarray)) {
++			json_free(&jsobj);
++			return -1;
++		}
++
++		error = json_add_version(&jsobj, JS_MAJ_VER, JS_MIN_VER);
++		if (error) {
++			json_free(&jsarray);
++			json_free(&jsobj);
++			return -1;
++		}
++
++		ok = json_alias_memberships(mem_ctx, domain_sid,
++					    &params.member, &jsarray);
++		if (!ok) {
++			json_free(&jsarray);
++			json_free(&jsobj);
++			return -1;
++		}
++
++		ok = json_alias_memberships(mem_ctx, &global_sid_Builtin,
++					    &params.member, &jsarray);
++		if (!ok) {
++			json_free(&jsarray);
++			json_free(&jsobj);
++			return -1;
++		}
++
++		error = json_add_object(&jsobj, "memberships", &jsarray);
++		if (error) {
++			json_free(&jsobj);
++			return -1;
++		}
++
++		out = json_to_string(mem_ctx, &jsobj);
++		if (out == NULL) {
++			json_free(&jsobj);
++			return -1;
++		}
++
++		printf("%s\n", out);
++
++		TALLOC_FREE(out);
++		json_free(&jsobj);
++	}
+ 
++out:
+ 	talloc_destroy(mem_ctx);
+ 
+ 	return 0;
+ }
+ 
++const struct {
++	const char *name;
++	int (*fn)(struct net_context *c, int argc, const char **argv);
++} optable[] = {
++	{ "ADD", net_groupmap_add },
++	{ "MOD", net_groupmap_modify },
++	{ "DEL", net_groupmap_delete },
++};
++
++static bool dispatch_batch_op(struct net_context *c, json_t *js_array,
++	int (*fn)(struct net_context *c, int argc, const char **argv))
++{
++	int error, i;
++	size_t array_size;
++
++	array_size = json_array_size(js_array);
++	for (i = 0; i < array_size; i++) {
++		json_t *data = NULL;
++		char *js_data = NULL, *payload = NULL;
++
++		data = json_array_get(js_array, i);
++		if (!json_is_object(data)) {
++			d_fprintf(stderr,
++				  _("%d: element is not a JSON object.\n"),
++				  i);
++			return false;
++		}
++		js_data = json_dumps(data, 0);
++		if (js_data == NULL) {
++			d_fprintf(stderr, _("Failed to convert \"data\" to string.\n"));
++			return false;
++		}
++		payload = talloc_asprintf(talloc_tos(), "data=%s", js_data);
++		if (payload == NULL) {
++			d_fprintf(stderr, _("talloc_asprintf() failed.\n"));
++			free(js_data);
++			return false;
++		}
++
++		free(js_data);
++
++		const char *args[] = { payload, NULL };
++		error = fn(c, 1, args);
++		TALLOC_FREE(payload);
++		if (error) {
++			d_fprintf(stderr, _("operation failed on element: %d.\n"), i);
++			return false;
++		}
++
++	}
++
++	return true;
++}
++
++static int net_groupmap_batch_json(struct net_context *c, int argc, const char **argv)
++{
++	json_t *batch_data = NULL;
++	size_t array_size;
++	int i, error;
++	bool ok = false;
++
++	is_batch_op = true;
++	for ( i=0; i<argc; i++ ) {
++		if ( !strncasecmp_m(argv[i], "data", strlen("data")) ) {
++			batch_data = load_json(get_string_param(argv[i]));
++		}
++	}
++	if (batch_data == NULL) {
++		d_fprintf(stderr, _("Failed to load JSON data.\n"));
++		return false;
++	}
++
++	if (!json_is_object(batch_data)) {
++		d_fprintf(stderr, _("data is not a JSON object.\n"));
++		json_decref(batch_data);
++		return -1;
++	}
++
++	for (i = 0; i < ARRAY_SIZE(optable); i++) {
++		json_t *op_array = NULL;
++
++		op_array = json_object_get(batch_data, optable[i].name);
++		if (op_array == NULL) {
++			continue;
++		}
++		if (!json_is_array(op_array)) {
++			d_fprintf(stderr,
++				  _("%d: item is not a JSON array.\n"),
++				  i);
++			json_decref(batch_data);
++			return -1;
++		}
++
++		ok = dispatch_batch_op(c, op_array, optable[i].fn);
++		if (!ok) {
++			d_fprintf(stderr,
++				  _("%s: operation failed\n"),
++				  optable[i].name);
++			json_decref(batch_data);
++			return -1;
++		}
++
++	}
++
++	if (!ok) {
++		d_fprintf(stderr, _("No valid operations specified\n"));
++		json_decref(batch_data);
++	}
++
++	json_decref(batch_data);
++
++	error = net_groupmap_list(c, 0, NULL);
++	if (error) {
++		d_fprintf(stderr, _("failed to add updated groupmap\n"));
++	}
++
++	return 0;
++}
++
++
+ /***********************************************************
+  migrated functionality from smbgroupedit
+  **********************************************************/
+@@ -1014,6 +1814,16 @@ int net_groupmap(struct net_context *c, int argc, const char **argv)
+ 			N_("net groupmap list\n"
+ 			   "    List current group map")
+ 		},
++		{
++			"batch_json",
++			net_groupmap_batch_json,
++			NET_TRANSPORT_LOCAL,
++			N_("Perform multiple json operations"),
++			N_("net groupmap batch_json\n"
++			   "    Perform batch operation based on supplied JSON. "
++			   "    Current supported operations are \"ADD\", \"MOD\", \"DEL\" \n"
++			   "    data='{ \"<OP>\": [ {ENTRY}, {ENTRY}, ... ]'")
++		},
+ 		{NULL, NULL, 0, NULL, NULL}
+ 	};
+ 
+-- 
+2.26.2
+
