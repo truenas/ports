@@ -1,0 +1,125 @@
+diff --git a/source3/passdb/py_passdb.c b/source3/passdb/py_passdb.c
+index f7e80c47397..131a44a8544 100644
+--- a/source3/passdb/py_passdb.c
++++ b/source3/passdb/py_passdb.c
+@@ -1358,10 +1358,14 @@ static int py_groupmap_set_nt_name(PyObject *obj, PyObject *value, void *closure
+ 	GROUP_MAP *group_map = (GROUP_MAP *)pytalloc_get_ptr(obj);
+ 
+ 	PY_CHECK_TYPE(&PyUnicode_Type, value, return -1;);
++	if (group_map->nt_name != NULL) {
++		talloc_free(group_map->nt_name);
++	}
+ 	if (value == Py_None) {
+-		fstrcpy(group_map->nt_name, NULL);
++		group_map->nt_name = talloc_strdup(group_map, "");
+ 	} else {
+-		fstrcpy(group_map->nt_name, PyUnicode_AsUTF8(value));
++		group_map->nt_name = talloc_strdup(group_map,
++						   PyUnicode_AsUTF8(value));
+ 	}
+ 	talloc_free(frame);
+ 	return 0;
+@@ -1388,10 +1392,14 @@ static int py_groupmap_set_comment(PyObject *obj, PyObject *value, void *closure
+ 	GROUP_MAP *group_map = (GROUP_MAP *)pytalloc_get_ptr(obj);
+ 
+ 	PY_CHECK_TYPE(&PyUnicode_Type, value, return -1;);
++	if (group_map->comment != NULL) {
++		talloc_free(group_map->comment);
++	}
+ 	if (value == Py_None) {
+-		fstrcpy(group_map->comment, NULL);
++		group_map->comment = talloc_strdup(group_map, "");
+ 	} else {
+-		fstrcpy(group_map->comment, PyUnicode_AsUTF8(value));
++		group_map->comment = talloc_strdup(group_map,
++						   PyUnicode_AsUTF8(value));
+ 	}
+ 	talloc_free(frame);
+ 	return 0;
+@@ -1982,6 +1990,26 @@ static PyObject *py_pdb_add_group_mapping_entry(PyObject *self, PyObject *args)
+ 	methods = pytalloc_get_ptr(self);
+ 
+ 	group_map = pytalloc_get_ptr(py_group_map);
++        if (group_map == NULL) {
++		talloc_free(frame);
++		Py_RETURN_NONE;
++	}
++	if (methods == NULL) {
++		talloc_free(frame);
++		Py_RETURN_NONE;
++	}
++
++	/* protect against assert in default add_group_mapping_entry() */
++	if (group_map->nt_name == NULL) {
++		PyErr_Format(py_pdb_error, "Group mapping entry lacks NT name.");
++		talloc_free(frame);
++		Py_RETURN_NONE;
++	}
++	if (group_map->comment == NULL) {
++		PyErr_Format(py_pdb_error, "Group mapping entry lacks comment.");
++		talloc_free(frame);
++		Py_RETURN_NONE;
++	}
+ 
+ 	status = methods->add_group_mapping_entry(methods, group_map);
+ 	if (!NT_STATUS_IS_OK(status)) {
+diff --git a/source3/utils/net_groupmap.c b/source3/utils/net_groupmap.c
+index b4da9bae556..d3515e98268 100644
+--- a/source3/utils/net_groupmap.c
++++ b/source3/utils/net_groupmap.c
+@@ -200,7 +200,7 @@ static int net_groupmap_add(struct net_context *c, int argc, const char **argv)
+ 	fstring ntcomment = "";
+ 	enum lsa_SidType sid_type = SID_NAME_DOM_GRP;
+ 	uint32_t rid = 0;
+-	gid_t gid;
++	gid_t gid = -1;
+ 	int i;
+ 	GROUP_MAP *map;
+ 
+@@ -230,6 +230,15 @@ static int net_groupmap_add(struct net_context *c, int argc, const char **argv)
+ 				return -1;
+ 			}
+ 		}
++		if ( !strncasecmp_m(argv[i], "gid", strlen("gid")) ) {
++			gid = get_int_param(argv[i]);
++			if ( gid < DOMAIN_RID_ADMINS ) {
++				d_fprintf(stderr,
++					  _("gid must be greater than %d\n"),
++					  (uint32_t)DOMAIN_RID_ADMINS-1);
++				return -1;
++			}
++		}
+ 		else if ( !strncasecmp_m(argv[i], "unixgroup", strlen("unixgroup")) ) {
+ 			fstrcpy( unixgrp, get_string_param( argv[i] ) );
+ 			if ( !unixgrp[0] ) {
+@@ -290,16 +299,24 @@ static int net_groupmap_add(struct net_context *c, int argc, const char **argv)
+ 		}
+ 	}
+ 
+-	if ( !unixgrp[0] ) {
+-		d_printf("%s\n%s\n", _("Usage:\n"), add_usage_str);
+-		return -1;
++	if (gid == -1) {
++		if ( !unixgrp[0] ) {
++			d_printf("%s\n%s\n", _("Usage:\n"), add_usage_str);
++			return -1;
++		}
++
++		if ( (gid = nametogid(unixgrp)) == (gid_t)-1 ) {
++			d_fprintf(stderr, _("Can't lookup UNIX group %s\n"), unixgrp);
++			return -1;
++		}
+ 	}
+ 
+-	if ( (gid = nametogid(unixgrp)) == (gid_t)-1 ) {
+-		d_fprintf(stderr, _("Can't lookup UNIX group %s\n"), unixgrp);
++
++	if ( !unixgrp[0] && !ntgroup[0] ) {
++		d_printf("%s\n%s\n", _("Usage:\n"), add_usage_str);
+ 		return -1;
+-	}
+ 
++	}
+ 	map = talloc_zero(NULL, GROUP_MAP);
+ 	if (!map) {
+ 		return -1;
