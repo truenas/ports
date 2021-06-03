@@ -1324,7 +1324,7 @@ index 267c4c802df..0c2b1424755 100644
  
  	ret = net_conf_run_function(c, argc, argv, "net conf", func_table);
 diff --git a/source3/utils/net_groupmap.c b/source3/utils/net_groupmap.c
-index b4da9bae556..1d956a8adb4 100644
+index b4da9bae556..ca3b1da8822 100644
 --- a/source3/utils/net_groupmap.c
 +++ b/source3/utils/net_groupmap.c
 @@ -27,6 +27,275 @@
@@ -2872,9 +2872,9 @@ index b4da9bae556..1d956a8adb4 100644
 +	const char *name;
 +	int (*fn)(struct net_context *c, int argc, const char **argv);
 +} optable[] = {
++	{ "DEL", net_groupmap_delete },
 +	{ "ADD", net_groupmap_add },
 +	{ "MOD", net_groupmap_modify },
-+	{ "DEL", net_groupmap_delete },
 +};
 +
 +static bool dispatch_batch_op(struct net_context *c, json_t *js_array,
