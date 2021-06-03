@@ -37,7 +37,7 @@ EXTRA_PATCHES+=			${PATCHDIR}/silence-openpam-warnings.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/allow_vfs_set_sparse.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/fix-fruit-locking.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/fix-smb2-getquota.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/ease-netconf-validation.patch:-p1
+#EXTRA_PATCHES+=			${PATCHDIR}/ease-netconf-validation.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/registry_service.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/groupmap.patch:-p1
 
