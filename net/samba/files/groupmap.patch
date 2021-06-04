@@ -1324,7 +1324,7 @@ index 267c4c802df..0c2b1424755 100644
  
  	ret = net_conf_run_function(c, argc, argv, "net conf", func_table);
 diff --git a/source3/utils/net_groupmap.c b/source3/utils/net_groupmap.c
-index b4da9bae556..ca3b1da8822 100644
+index b4da9bae556..854aea4f114 100644
 --- a/source3/utils/net_groupmap.c
 +++ b/source3/utils/net_groupmap.c
 @@ -27,6 +27,275 @@
@@ -2138,7 +2138,7 @@ index b4da9bae556..ca3b1da8822 100644
  					   "[comment=<string>] "
  					   "[unixgroup=<string>] "
  					   "[type=<domain|local>]");
--
+ 
 -	if (c->display_usage) {
 -		d_printf("%s\n%s\n", _("Usage:\n"), modify_usage_str);
 -		return 0;
@@ -2193,7 +2193,6 @@ index b4da9bae556..ca3b1da8822 100644
 -			d_fprintf(stderr, _("Bad option: %s\n"), argv[i]);
 -			return -1;
 -		}
-+
 +	if (c->display_usage) {
 +		d_printf("%s\n%s\n", _("Usage:\n"), modify_usage_str);
 +		return 0;
@@ -2376,15 +2375,15 @@ index b4da9bae556..ca3b1da8822 100644
 +#endif
 +	} else {
 +		ok = parse_text_args(argc, argv, &params);
-+	}
-+
+ 	}
+ 
+-	if ( !ntgroup[0] && !sid_string[0]) {
 +	if (!ok) {
 +		d_fprintf(stderr, _("Failed to parse arguments.\n"));
 +		d_printf("%s\n%s\n", _("Usage:\n"), delete_usage_str);
 +		return -1;
- 	}
- 
--	if ( !ntgroup[0] && !sid_string[0]) {
++	}
++
 +	if ( !params.ntgroup[0] && !params.string_sid[0]) {
  		d_printf("%s\n%s\n", _("Usage:\n"), delete_usage_str);
  		return -1;
@@ -2483,12 +2482,11 @@ index b4da9bae556..ca3b1da8822 100644
 +		}
 +		sid_to_fstring(params->alias_str, &params->alias);
 +	}
- 
--	if ( (argc != 2) ||
++
 +	member = json_object_get(js_data, "member");
 +	if (member != NULL) {
 +		if (!json_is_string(member) ||
-+		    !string_to_sid(&params->member, json_string_value(member))) {
++		    !string_to_sid(&params->alias, json_string_value(member))) {
 +			return false;
 +		}
 +		sid_to_fstring(params->member_str, &params->member);
@@ -2496,7 +2494,8 @@ index b4da9bae556..ca3b1da8822 100644
 +
 +	return true;
 +}
-+
+ 
+-	if ( (argc != 2) ||
 +static int net_groupmap_addmem(struct net_context *c, int argc, const char **argv)
 +{
 +	struct groupmap_member_params params;
@@ -2658,16 +2657,20 @@ index b4da9bae556..ca3b1da8822 100644
  		d_printf("%s\n%s",
  			 _("Usage:"),
  			 _("net groupmap listmem alias-sid\n"));
-@@ -848,7 +1375,7 @@ static int net_groupmap_listmem(struct net_context *c, int argc, const char **ar
+@@ -848,8 +1375,11 @@ static int net_groupmap_listmem(struct net_context *c, int argc, const char **ar
  	members = NULL;
  	num = 0;
  
 -	if (!NT_STATUS_IS_OK(pdb_enum_aliasmem(&alias, talloc_tos(),
 +	if (!NT_STATUS_IS_OK(pdb_enum_aliasmem(&params.alias, talloc_tos(),
  					       &members, &num))) {
++		if (c->opt_json) {
++			goto done;
++		}
  		d_fprintf(stderr, _("Could not list members for sid %s\n"),
  			  argv[0]);
-@@ -857,12 +1384,57 @@ static int net_groupmap_listmem(struct net_context *c, int argc, const char **ar
+ 		return -1;
+@@ -857,12 +1387,58 @@ static int net_groupmap_listmem(struct net_context *c, int argc, const char **ar
  
  	for (i = 0; i < num; i++) {
  		struct dom_sid_buf buf;
@@ -2699,6 +2702,7 @@ index b4da9bae556..ca3b1da8822 100644
 +	}
 +
 +#ifdef HAVE_JANSSON
++done:
 +	if (c->opt_json) {
 +		char *out = NULL;
 +
@@ -2726,7 +2730,7 @@ index b4da9bae556..ca3b1da8822 100644
  }
  
  static bool print_alias_memberships(TALLOC_CTX *mem_ctx,
-@@ -893,14 +1465,61 @@ static bool print_alias_memberships(TALLOC_CTX *mem_ctx,
+@@ -893,14 +1469,61 @@ static bool print_alias_memberships(TALLOC_CTX *mem_ctx,
  	return true;
  }
  
@@ -2791,7 +2795,7 @@ index b4da9bae556..ca3b1da8822 100644
  		d_printf("%s\n%s",
  			 _("Usage:"),
  			 _("net groupmap memberships sid\n"));
-@@ -919,15 +1538,196 @@ static int net_groupmap_memberships(struct net_context *c, int argc, const char
+@@ -919,15 +1542,196 @@ static int net_groupmap_memberships(struct net_context *c, int argc, const char
  		return -1;
  	}
  
@@ -2991,7 +2995,7 @@ index b4da9bae556..ca3b1da8822 100644
  /***********************************************************
   migrated functionality from smbgroupedit
   **********************************************************/
-@@ -1014,6 +1814,16 @@ int net_groupmap(struct net_context *c, int argc, const char **argv)
+@@ -1014,6 +1818,16 @@ int net_groupmap(struct net_context *c, int argc, const char **argv)
  			N_("net groupmap list\n"
  			   "    List current group map")
  		},
