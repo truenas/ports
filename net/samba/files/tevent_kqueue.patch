@@ -70,10 +70,10 @@ index 5365fce3533..91c9495a26f 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..e3366be1bb8
+index 00000000000..68b8232c4e5
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
-@@ -0,0 +1,960 @@
+@@ -0,0 +1,938 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -115,8 +115,6 @@ index 00000000000..e3366be1bb8
 +#include "tevent_kqueue.h"
 +
 +/* struct tevent_fd additional flags */
-+#define KQUEUE_EXTRA_KEVENT_DISCHARGED	0x0001
-+
 +#define TEVENT_FD_RW (TEVENT_FD_READ|TEVENT_FD_WRITE)
 +#define HAS_WRITE(flags) (flags & TEVENT_FD_WRITE)
 +#define HAS_READ(flags) (flags & TEVENT_FD_READ)
@@ -124,14 +122,21 @@ index 00000000000..e3366be1bb8
 +#define HAS_READ_AND_WRITE(flags) ((flags & TEVENT_FD_RW) == TEVENT_FD_RW)
 +#define KEVENT_TO_TEVENT_FLAGS(f) (abs(f) & TEVENT_FD_RW)
 +
-+struct kqueue_event_context {
++struct tkq {
++	int kq_fd;
++	struct kevent *kq_array;
++	size_t kq_sz;
++};
++
++struct kq_context {
 +	/* a pointer back to the generic event_context */
 +	struct tevent_context *ev;
 +
-+	/* when using kqueue this is kernel event queue */
-+	int kqueue_fd;
-+	struct kevent *kev_array;
-+	int kev_size;
++	/*
++	 * queue for  EVFILT_READ | EVFILT_WRITE | EVFILT_AIO
++	 * may add more queues if needed for signals and timers
++	 */
++	struct tkq *rdwrq;
 +
 +	pid_t pid;
 +	bool busy;
@@ -139,31 +144,30 @@ index 00000000000..e3366be1bb8
 +	bool *panic_state;
 +	bool (*panic_fallback)(struct tevent_context *ev, bool replay);
 +};
++#define	EVTOKQ(x) (talloc_get_type_abort(x->additional_data, struct kq_context))
++#define	DATATOFDE(x) (talloc_get_type_abort(x, struct tevent_fd))
 +
-+static void kqueue_panic(struct kqueue_event_context *kqueue_ev,
++static void kqueue_panic(struct kq_context *kqueue_ev,
 +			 const char *reason, bool replay);
 +
-+static void kqueue_add_event(struct kqueue_event_context *kqueue_ev,
++static void kqueue_add_event(struct kq_context *kqueue_ev,
 +			     struct tevent_fd *fde);
 +
 +/*
 +  called to set the panic fallback function.
 +*/
 +_PRIVATE_ void tevent_kqueue_set_panic_fallback(struct tevent_context *ev,
-+				bool (*panic_fallback)(struct tevent_context *ev,
-+						       bool replay))
++	bool (*panic_fallback)(struct tevent_context *ev,
++	bool replay))
 +{
-+	struct kqueue_event_context *kqueue_ev =
-+		talloc_get_type_abort(ev->additional_data,
-+		struct kqueue_event_context);
-+
++	struct kq_context *kqueue_ev = EVTOKQ(ev);
 +	kqueue_ev->panic_fallback = panic_fallback;
 +}
 +
 +/*
 +  called when a kqueue call fails
 +*/
-+static void kqueue_panic(struct kqueue_event_context *kqueue_ev,
++static void kqueue_panic(struct kq_context *kqueue_ev,
 +			 const char *reason, bool replay)
 +{
 +	struct tevent_context *ev = kqueue_ev->ev;
@@ -194,53 +198,50 @@ index 00000000000..e3366be1bb8
 +	}
 +}
 +
-+static inline struct tevent_fd *get_tevent_fd(struct kqueue_event_context *kqueue_ev,
-+					      void *private, bool replay)
++static int kq_destructor(struct tkq *kq)
 +{
-+	if (private == NULL) {
-+		kqueue_panic(kqueue_ev, "kevent failed", replay);
-+	}
-+	return (struct tevent_fd *)private;
-+}
-+
-+
-+static int kqueue_ctx_destructor(struct kqueue_event_context *kqueue_ev)
-+{
-+	close(kqueue_ev->kqueue_fd);
-+	kqueue_ev->kqueue_fd = -1;
++	close(kq->kq_fd);
++	kq->kq_fd = -1;
 +	return 0;
 +}
 +
-+static int do_kqueue(struct kqueue_event_context *kqueue_ev)
++static int do_kqueue(struct kq_context *kqueue_ev, struct tkq *kq)
 +{
-+	kqueue_ev->kqueue_fd = kqueue();
-+	if (kqueue_ev->kqueue_fd == -1) {
++	#define INIT_KQ_SZ	16
++	kq->kq_fd = kqueue();
++	if (kq->kq_fd == -1) {
 +		tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
 +			     "do_kqueue: Failed to create kqueue: %s \n",
 +			     strerror(errno));
 +		return -1;
 +	}
-+	if (!ev_set_close_on_exec(kqueue_ev->kqueue_fd)) {
++	if (!ev_set_close_on_exec(kq->kq_fd)) {
 +		tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_WARNING,
 +			     "do_kqueue: "
 +			     "Failed to set close-on-exec on queue, "
 +			     "file descriptor may be leaked to children.\n");
 +	}
++	kq->kq_array = talloc_zero_array(kqueue_ev, struct kevent, INIT_KQ_SZ);
++	kq->kq_sz = INIT_KQ_SZ;
++	talloc_set_destructor(kq, kq_destructor);
 +	return 0;
 +}
 +
-+static int kqueue_init_ctx(struct kqueue_event_context *kqueue_ev)
++static int kqueue_init_ctx(struct kq_context *kqueue_ev)
 +{
 +	int ret;
 +
-+	ret = do_kqueue(kqueue_ev);
++	kqueue_ev->rdwrq = talloc_zero(kqueue_ev, struct tkq);
++	if (kqueue_ev->rdwrq == 0) {
++		abort();
++	}
++
++	ret = do_kqueue(kqueue_ev, kqueue_ev->rdwrq);
 +	if (ret != 0) {
 +		return ret;
 +	}
++
 +	kqueue_ev->pid = getpid();
-+	kqueue_ev->kev_array = talloc_zero_array(kqueue_ev, struct kevent, 32);
-+	kqueue_ev->kev_size = 32;
-+	talloc_set_destructor(kqueue_ev, kqueue_ctx_destructor);
 +
 +	return 0;
 +}
@@ -249,7 +250,7 @@ index 00000000000..e3366be1bb8
 +  The kqueue queue is not inherited by a child created with fork(2).
 +  So we need to re-initialize if this happens.
 + */
-+static void kqueue_check_reopen(struct kqueue_event_context *kqueue_ev)
++static void kqueue_check_reopen(struct kq_context *kqueue_ev)
 +{
 +	struct tevent_fd *fde = NULL;
 +	int ret, signum;
@@ -263,8 +264,8 @@ index 00000000000..e3366be1bb8
 +	 * We've forked. Re-initialize.
 +	 */
 +
-+	close(kqueue_ev->kqueue_fd);
-+	ret = do_kqueue(kqueue_ev);
++	close(kqueue_ev->rdwrq->kq_fd);
++	ret = do_kqueue(kqueue_ev, kqueue_ev->rdwrq);
 +	if (ret != 0) {
 +		kqueue_panic(kqueue_ev, "kqueue() failed", false);
 +		return;
@@ -291,7 +292,8 @@ index 00000000000..e3366be1bb8
 + * add the kqueue event to the given fd event.
 + * filter is removed in the destructor for the fd event.
 + */
-+static void kqueue_add_event(struct kqueue_event_context *kqueue_ev, struct tevent_fd *fde)
++static void kqueue_add_event(struct kq_context *kqueue_ev,
++			     struct tevent_fd *fde)
 +{
 +	struct kevent event[2];
 +	int ret, count;
@@ -299,33 +301,34 @@ index 00000000000..e3366be1bb8
 +	short kevent_filter = 0;
 +	count = 0;
 +	/*
-+	 * kevents are uniquely identified by the tuple (queue, ident, and filter).
-+	 * This means that if a tevent fd event has both TEVENT_FD_READ and TEVENT_FD_WRITE
-+	 * flags set, then two separate kevents will need to be generated. Consequently,
-+	 * an array of kevents must be retrieved in loop_once() so that the correct
-+	 * tevent flags can be determined when calling the relevant handler function.
-+	 * KQUEUE_HAS_EXTRA_KEVENT is used to indicate that this is the case.
++	 * kevents are uniquely identified by the tuple (queue, ident, and
++	 * filter). This means that if a tevent fd event has both
++	 * TEVENT_FD_READ and TEVENT_FD_WRITE flags set, then two separate
++	 * kevents will need to be generated. Consequently, an array of kevents
++	 * must be retrieved in loop_once() so that the correct tevent flags
++	 * can be determined when calling the relevant handler function.
 +	 */
 +	if (!HAS_READ_OR_WRITE(fde->flags)) {
 +		return;
 +	}
 +
 +	/*
-+	 * In tevent, multiple fd events with overlapping flags may be registered for the fd.
-+	 * On collision with existing kevent (same kqueue, fd, and filter), the existing
-+	 * kevent will be overwritten with new data. Future room for improvement here is
-+	 * to check if the existing kevent(s) already cover all the requisite filters. In
-+	 * this case, then we can simply place a pointer to new tevent_fd as additional_data
-+	 * in the existing tevent_fd.
++	 * In tevent, multiple fd events with overlapping flags may be
++	 * registered for the fd. On collision with existing kevent (same
++	 * kqueue, fd, and filter), the existing kevent will be overwritten
++	 * with new data. Future room for improvement here is to check if the
++	 * existing kevent(s) already cover all the requisite filters. In this
++	 * case, then we can simply place a pointer to new tevent_fd as
++	 * additional_data in the existing tevent_fd.
 +	 */
-+	if (fde->flags & TEVENT_FD_MULTIHANDLER) {
-+		for (mpx_fde = kqueue_ev->ev->fd_events; mpx_fde; mpx_fde = mpx_fde->next) {
-+			if ((mpx_fde == fde) || (mpx_fde->fd != fde->fd)) {
-+				continue;
-+			}
-+			fde->additional_data = mpx_fde;
-+			break;
++	for (mpx_fde = kqueue_ev->ev->fd_events;
++	     mpx_fde; mpx_fde = mpx_fde->next) {
++		if ((mpx_fde == fde) || (mpx_fde->fd != fde->fd)) {
++			continue;
 +		}
++		fde->additional_data = mpx_fde;
++		mpx_fde->additional_data = fde;
++		break;
 +	}
 +
 +	if (HAS_READ(fde->flags)) {
@@ -349,7 +352,8 @@ index 00000000000..e3366be1bb8
 +		count++;
 +	}
 +	if (count) {
-+		ret = kevent(kqueue_ev->kqueue_fd, event, count, NULL, 0, NULL);
++		ret = kevent(kqueue_ev->rdwrq->kq_fd,
++			event, count, NULL, 0, NULL);
 +		if (ret != 0) {
 +			goto failure;
 +		}
@@ -390,26 +394,27 @@ index 00000000000..e3366be1bb8
 +	}
 +}
 +
-+static void kqueue_delete_event(struct kqueue_event_context *kqueue_ev,
++static void kqueue_delete_event(struct kq_context *kqueue_ev,
 +			        struct tevent_fd *fde,
 +				uint16_t to_delete)
 +{
 +	struct kevent event[2];
-+	int ret, count;
-+	struct tevent_fd empty, *mpx_fde;
-+	ZERO_STRUCT(empty);
-+	mpx_fde = &empty;
-+	count = 0;
++	int ret, count = 0;
++	struct tevent_fd empty = { 0 }, *mpx_fde = &empty;
 +
 +	/*
 +	 * One or more flags is being removed from the fde. If the existing
-+	 * kevent is associated with multiple tevent fd events, then the existing
-+	 * kevent will need to be updated so that it is associated with one of the
-+	 * un-discharged fd events.
++	 * kevent is associated with multiple tevent fd events, then the
++	 * existing kevent will need to be updated so that it is associated
++	 * with one of the un-discharged fd events.
 +	 */
 +
 +	if (fde->additional_data != NULL) {
-+		mpx_fde = (struct tevent_fd *)fde->additional_data;
++		mpx_fde = DATATOFDE(fde->additional_data);
++		/* all flags removed from fde. No longer mpx */
++		if ((fde->flags & ~to_delete) == 0) {
++			mpx_fde->additional_data = NULL;
++		}
 +	}
 +
 +	if (HAS_READ(to_delete)) {
@@ -457,15 +462,14 @@ index 00000000000..e3366be1bb8
 +		count++;
 +	}
 +	if (count) {
-+		ret = kevent(kqueue_ev->kqueue_fd, event, count, NULL, 0, NULL);
++		ret = kevent(kqueue_ev->rdwrq->kq_fd, event, count, NULL, 0, NULL);
 +		if (ret != 0) {
 +			if ((errno == ENOENT) || (errno == EBADF)) {
 +				return;
 +			}
 +			tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
-+				     "kqueue_delete_event() failed "
-+				     "for fde[%p] err: [%s]\n",
-+				     fde, strerror(errno));
++				"kqueue_delete_event() failed for fde[%p] "
++				"err: [%s]\n", fde, strerror(errno));
 +		}
 +	}
 +}
@@ -473,14 +477,14 @@ index 00000000000..e3366be1bb8
 +static int kqueue_event_fd_destructor(struct tevent_fd *fde)
 +{
 +	struct tevent_context *ev = fde->event_ctx;
-+	struct kqueue_event_context *kqueue_ev = NULL;
++	struct kq_context *kqueue_ev = NULL;
 +	int flags = fde->flags;
 +
 +	if (ev == NULL) {
 +		return tevent_common_fd_destructor(fde);
 +        }
-+	kqueue_ev = talloc_get_type_abort(ev->additional_data,
-+					  struct kqueue_event_context);
++
++	kqueue_ev = EVTOKQ(ev);
 +	/*
 +	 * we must remove the event from the list
 +	 * otherwise a panic fallback handler may
@@ -491,33 +495,39 @@ index 00000000000..e3366be1bb8
 +	return tevent_common_fd_destructor(fde);
 +}
 +
-+static int kqueue_process_fd(struct kqueue_event_context *kqueue_ev,
-+			     struct tevent_fd *fde, uint16_t flags)
++static int kqueue_process_fd(struct kq_context *kqueue_ev,
++			     struct tevent_fd *fde,
++			     uint16_t flags)
 +{
 +	int ret;
 +	struct tevent_fd *mpx_fde = NULL;
-+	/*
-+	 * If the fd being monitored has multiple tevent fd events registered for
-+	 * it, then invoke their fd handlers.
-+	 */
-+	if (fde->additional_data != NULL) {
-+		mpx_fde = (struct tevent_fd *)fde->additional_data;
-+		if (mpx_fde->flags & flags) {
-+			tevent_common_invoke_fd_handler(fde,
-+						        fde->flags & flags,
-+						        NULL);
 +
-+			return tevent_common_invoke_fd_handler(mpx_fde,
-+							       mpx_fde->flags & flags,
-+							       NULL);
++	if (fde->additional_data != NULL) {
++		mpx_fde = DATATOFDE(fde->additional_data);
++	}
++
++	if (HAS_WRITE(flags)) {
++		if (HAS_WRITE(fde->flags)) {
++			mpx_fde = NULL;
++		}
++		if (mpx_fde && HAS_WRITE(mpx_fde->flags)) {
++			fde = mpx_fde;
++			mpx_fde = NULL;
++		}
++	}
++
++	if (mpx_fde) {
++		if ((flags & fde->flags) == 0) {
++			fde = mpx_fde;
++			mpx_fde = NULL;
 +		}
 +	}
 +
 +	return tevent_common_invoke_fd_handler(fde, fde->flags & flags, NULL);
 +}
 +
-+static void kqueue_process_aio(struct kqueue_event_context *kqueue_ev,
-+				void *udata)
++static void kqueue_process_aio(struct kq_context *kqueue_ev,
++			       void *udata)
 +{
 +	struct tevent_req *req = NULL;
 +	struct tevent_aiocb *tiocbp = NULL;
@@ -544,7 +554,7 @@ index 00000000000..e3366be1bb8
 +	tevent_req_done(req);
 +}
 +
-+static void kqueue_process_kev(struct kqueue_event_context *kqueue_ev,
++static void kqueue_process_kev(struct kq_context *kqueue_ev,
 +			       struct kevent kev, struct tevent_fd **pfde,
 +			       bool *_is_fd_event)
 +{
@@ -552,12 +562,8 @@ index 00000000000..e3366be1bb8
 +	bool is_fd_event = false;
 +
 +	switch (kev.filter) {
-+	case EVFILT_AIO:
-+		kqueue_process_aio(kqueue_ev, kev.udata);
-+		*_is_fd_event = is_fd_event;
-+		break;
 +	case EVFILT_WRITE:
-+		fde = get_tevent_fd(kqueue_ev, kev.udata, true);
++		fde = DATATOFDE(kev.udata);
 +		if ((kev.flags & EV_EOF) && !(fde->flags & TEVENT_FD_READ)) {
 +			/* If we only wait for TEVENT_FD_WRITE, we
 +			   should not tell the event handler about it,
@@ -570,9 +576,9 @@ index 00000000000..e3366be1bb8
 +			 */
 +			if (kev.fflags != 0) {
 +				tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_TRACE,
-+					     "EVFILT_WRITE EV_EOF on [%s], "
-+					     "fd [%d]: %s\n", fde->location, fde->fd,
-+					     strerror(kev.fflags));
++					"EVFILT_WRITE EV_EOF on [%s], "
++					"fd [%d]: %s\n", fde->location, fde->fd,
++					strerror(kev.fflags));
 +				TEVENT_FD_NOT_WRITEABLE(fde);
 +				*_is_fd_event = is_fd_event;
 +				return;
@@ -585,21 +591,20 @@ index 00000000000..e3366be1bb8
 +		 * last close of the fd.
 +		 */
 +		is_fd_event = fde->busy == 0 ? true : false;
-+		*_is_fd_event = is_fd_event;
 +		break;
 +	case EVFILT_READ:
-+		fde = get_tevent_fd(kqueue_ev, kev.udata, true);
++		fde = DATATOFDE(kev.udata);
 +		if ((kev.flags & EV_EOF)) {
 +			if (kev.fflags != 0) {
 +				tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_TRACE,
-+					    "evfilt_read ev_eof on [%s]: %s\n",
-+					    fde->location, strerror(kev.fflags));
++					"evfilt_read ev_eof on [%s]: %s\n",
++					fde->location, strerror(kev.fflags));
 +			}
 +			tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_TRACE,
-+				    "EVFILT_READ EV_EOF on fd: %d flags: 0x%08x: "
-+				    "additional flags: 0x%08x\n",
-+				    fde->fd, fde->flags,
-+				    fde->additional_flags);
++				"EVFILT_READ EV_EOF on fd: %d flags: 0x%08x: "
++				"additional flags: 0x%08x\n",
++				fde->fd, fde->flags,
++				fde->additional_flags);
 +		}
 +		*pfde = fde;
 +		/*
@@ -610,102 +615,111 @@ index 00000000000..e3366be1bb8
 +		if (fde->busy == 0 && HAS_READ(fde->flags)) {
 +			is_fd_event = true;
 +		}
-+		*_is_fd_event = is_fd_event;
++		break;
++	case EVFILT_AIO:
++		kqueue_process_aio(kqueue_ev, kev.udata);
 +		break;
 +	default:
 +		kqueue_panic(kqueue_ev, "Unexpected kevent filter: %d",
 +			     kev.filter);
 +	}
++	*_is_fd_event = is_fd_event;
 +	return;
 +}
 +
-+/*
-+ * Process the current array of kevents. Due to difference between kevent
-+ * and tevent designs we need an inner loop to check for additional kevents
-+ * related to the fd for our current array member if it has the
-+ * HAS_READ_AND_WRITE flag set. Array size should be relatively small in most
-+ * situations. There may be up to two tevent_fds for each kevent.
-+ */
-+static int process_kevents(struct kqueue_event_context *kqueue_ev, int nkevents)
++static int search_kevent(struct tevent_fd *fde,
++	struct kevent *events,
++	int nkevents)
 +{
-+	int rv = 0, i, iloop;
-+	struct tevent_fd *fde = NULL;
-+	struct tevent_fd *next_fde = NULL;
-+	struct tevent_fd *found_fde = NULL;
-+	struct kevent *received = kqueue_ev->kev_array;
-+	bool is_fd_event;
-+	uint16_t flags = 0;
++	int i, flags = 0;
++	struct tevent_fd *mpx_fde = NULL;
++	struct kq_context *kqueue_ev = EVTOKQ(fde->event_ctx);
 +
-+	for (i=0; i<nkevents; i++) {
-+		kqueue_process_kev(kqueue_ev, received[i], &fde, &is_fd_event);
-+		if (!is_fd_event) {
++	if (fde->additional_data != NULL) {
++		mpx_fde = DATATOFDE(fde->additional_data);
++	}
++
++	for (i = 0; i < nkevents; i++) {
++		bool is_fde;
++		struct tevent_fd *next_fde = NULL;
++		kqueue_process_kev(kqueue_ev, events[i], &next_fde, &is_fde);
++		if (!is_fde) {
 +			continue;
 +		}
 +
-+		if (fde->additional_flags & KQUEUE_EXTRA_KEVENT_DISCHARGED) {
-+			/* we fired off handler, reset flag and skip */
-+			fde->additional_flags &= ~KQUEUE_EXTRA_KEVENT_DISCHARGED;
++		if ((fde == next_fde) ||
++		    (mpx_fde && (mpx_fde->fd == next_fde->fd))){
++			flags = KEVENT_TO_TEVENT_FLAGS(events[i].filter);
++		}
++	}
++
++	return flags;
++}
++
++static int process_kevents(struct kq_context *kqueue_ev, int nkevents)
++{
++	int flags, i;
++	bool ok;
++	struct kevent *received = kqueue_ev->rdwrq->kq_array;
++	struct tevent_fd *head = NULL;
++
++	for (i = 0; i < nkevents; i++) {
++		kqueue_process_kev(kqueue_ev, received[i], &head, &ok);
++		if (!ok) {
 +			continue;
 +		}
-+
 +		flags = KEVENT_TO_TEVENT_FLAGS(received[i].filter);
 +
-+		if (HAS_READ_AND_WRITE(fde->flags)) {
-+			if (fde->additional_data != NULL) {
-+				next_fde = (struct tevent_fd *)fde->additional_data;
-+			}
-+			for (iloop=i+1;iloop<nkevents;iloop++) {
-+				if (received[iloop].filter & ~(EVFILT_READ|EVFILT_WRITE)) {
-+					continue;
-+				}
-+				found_fde = get_tevent_fd(kqueue_ev,
-+							  received[iloop].udata,
-+							  true);
-+				if (found_fde == fde) {
-+					found_fde->additional_flags |= KQUEUE_EXTRA_KEVENT_DISCHARGED;
-+					flags |= KEVENT_TO_TEVENT_FLAGS(received[iloop].filter);
-+				}
-+				else if (next_fde && (next_fde->fd == found_fde->fd)) {
-+					found_fde->additional_flags |= KQUEUE_EXTRA_KEVENT_DISCHARGED;
-+					flags |= KEVENT_TO_TEVENT_FLAGS(received[iloop].filter);
-+				}
-+			}
++		if (nkevents - (i + 1) == 0) {
++			break;
 +		}
-+		rv = kqueue_process_fd(kqueue_ev, fde, flags);
-+		tevent_common_loop_immediate(kqueue_ev->ev);
-+	}
-+	return rv;
 +
++		flags |= search_kevent(head,
++				       &received[i + 1],
++				       nkevents - (i + 1));
++		break;
++	}
++
++	if (head == NULL) {
++		/* Handler isn't called if event has busy state. */
++		tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_WARNING,
++			"no actionable events in event list\n");
++		return 0;
++	}
++
++	return kqueue_process_fd(kqueue_ev, head, flags);
 +}
 +
 +/*
-+ * Process errors for kevent() call when reading new kevents on our tevent queue.
-+ * This function returns the number of kevents after processing. Expected returns are as follows:
++ * Process errors for kevent() call when reading new kevents on our tevent
++ * queue. This function returns the number of kevents after processing.
++ * Expected returns are as follows:
 + *
-+ * -1 we encountered an error. That is somehow recoverable. This will eventually be passed
-+ *    back to caller of tevent_loop_once().
++ * -1 we encountered an error. That is somehow recoverable. This will
++ *    eventually be passed back to caller of tevent_loop_once().
 + *
-+ *  0 we encountered a signal or successfully re-initialized our queue after forking.
-+ *    This will be passed back to caller of tevent_loop_once().
++ *  0 we encountered a signal or successfully re-initialized our queue after
++ *    forking. This will be passed back to caller of tevent_loop_once().
 + *
-+ * >0 we re-initialized our queue after forking and already had some new events by the time
-+ *    we ran kevent() to verify re-initialization is successful. This will be passed to
-+ *    calling function so that it can process array of kevents we received.
++ * >0 we re-initialized our queue after forking and already had some new
++ *    events by the time we ran kevent() to verify re-initialization is
++ *    successful. This will be passed to calling function so that it can
++ *     process array of kevents we received.
 + *
-+ * panic - something totally unxpected happened and we want to abort so that we can
-+ *    sift through the ashes.
++ * panic - something totally unxpected happened and we want to abort so that
++ *    we can sift through the ashes.
 + */
-+static int check_kevent_errors(struct kqueue_event_context *kqueue_ev,
++static int check_kevent_errors(struct kq_context *kqueue_ev,
 +			       struct timespec *tsp,
 +			       int error)
 +{
 +	int nkevents = 0;
 +
-+	if (error == EINTR) {
++	if (errno == EINTR) {
 +		if (kqueue_ev->ev->signal_events) {
 +			tevent_common_check_signal(kqueue_ev->ev);
 +		}
-+		return nkevents;
++		return 0;
 +	}
 +
 +	/*
@@ -713,7 +727,7 @@ index 00000000000..e3366be1bb8
 +	 * we forked. In this case call kqueue_check_reopen() to reinitialize
 +	 * the kqueue.
 +	 */
-+	if (error == EBADF) {
++	if (errno == EBADF) {
 +		if (kqueue_ev->busy) {
 +			return -1;
 +		}
@@ -726,7 +740,7 @@ index 00000000000..e3366be1bb8
 +		 */
 +		if (kqueue_ev->panic_state) {
 +			tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
-+				     "panic_tiggered in kqueue event loop once\n");
++				"panic_tiggered in kqueue event loop once\n");
 +			errno = EINVAL;
 +			return -1;
 +		}
@@ -735,9 +749,9 @@ index 00000000000..e3366be1bb8
 +		 * We've forked and rebuilt our queue of monitored fds, check
 +		 * them for kevents.
 +		 */
-+		nkevents = kevent(kqueue_ev->kqueue_fd, NULL, 0,
-+				  kqueue_ev->kev_array, kqueue_ev->kev_size, tsp);
-+
++		nkevents = kevent(kqueue_ev->rdwrq->kq_fd, NULL, 0,
++				  kqueue_ev->rdwrq->kq_array,
++				  kqueue_ev->rdwrq->kq_sz, tsp);
 +
 +		/*
 +		 * Return the new number of kevents if we don't encounter
@@ -752,43 +766,48 @@ index 00000000000..e3366be1bb8
 +	 * We encountered some other unexpected error. Fall on our sword.
 +	 */
 +	tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
-+		"kevent() failed: %s\n",strerror(error));
++		"kevent() failed: %s\n",strerror(errno));
 +	kqueue_panic(kqueue_ev, "kevent() failed", false);
 +
 +	return -1;
 +}
 +
-+/*
-+ * Do the grunt work of loop_once(). caller may pass in timeval for how long our
-+ * kevent should wait for events. `overload` is used to inform calling process that
-+ * we maxed-out our array of kevents and re-alloced it to make it larger. Caller can
-+ * then decide whether to loop until `overload` is false.
-+ *
-+ * This function will return either 0 (success) or -1 (fail) to indicate the whether
-+ * we successfully processed our kevents. This is indicative of internal tevent state,
-+ * not success / failure of particular events.
-+ */
-+static int kqueue_event_loop(struct kqueue_event_context *kqueue_ev, struct timeval *tvalp, bool *overload)
++static void expand_queue(struct kq_context *kqueue_ev, struct tkq *kq)
++{
++	struct kevent *new_array = NULL;
++	int new_size = kq->kq_sz * 2;
++
++	new_array = talloc_realloc(kqueue_ev, kq->kq_array,
++		 struct kevent, new_size);
++	if (new_array == NULL) {
++		tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
++			"realloc of kq array failed: %s\n", strerror(errno));
++			abort();
++	}
++	kq->kq_array = new_array;
++	kq->kq_sz = new_size;
++}
++
++static int kqueue_event_loop(struct kq_context *kqueue_ev,
++			     struct timeval *tvalp)
 +{
 +	/*
-+	 * Loop through an array of kevents. We need to retrieve multiple events at once
-+	 * in order to properly reconstruct the correct flags to send to the tevent
-+	 * fd handler.
++	 * Loop through an array of kevents. We need to retrieve multiple
++	 * events at once in order to properly reconstruct the correct flags to
++	 * send to the tevent fd handler.
 +	 */
 +	int nkevents, ret, saved_errno;
 +	struct timespec ts;
 +	struct timespec *tsp = NULL;
 +	ret = 0;
 +	nkevents = 0;
-+	*overload = false;
 +
 +	if (tvalp) {
 +		/*
 +		 * Adjust timeout for kevent() call to be slighly longer than
 +		 * the next timed event. This value is taken from other tevent
 +		 * backends where the reasoning is that it's better to have a
-+		 * timer fire a little late than too early. Implied here is that
-+		 * there is potential for a race without this fudging.
++		 * timer fire a little late than too early.
 +		 */
 +		ts = (struct timespec) {
 +			.tv_sec = tvalp->tv_sec,
@@ -804,65 +823,39 @@ index 00000000000..e3366be1bb8
 +	/*
 +	 * If timeout is a non-NULL pointer, it specifies a maximum interval
 +	 * to wait for an event. If timeout is a NULL pointer, kevent() waits
-+	 * indefinetly. To effect a poll, the timeout argument should be non-NULL,
-+	 * pointing to a zero-valued timespec structure.
++	 * indefinetly. To effect a poll, the timeout argument should be
++	 * non-NULL, pointing to a zero-valued timespec structure.
 +	 *
 +	 * If tvalp is NULL, then we pass a NULL for kevent() timeout. This is
 +	 * equivalent to epoll_wait() on Linux with a timeout of -1, which is
 +	 * what is performed in epoll tevent backend.
 +	 */
 +	tevent_trace_point_callback(kqueue_ev->ev, TEVENT_TRACE_BEFORE_WAIT);
-+	nkevents = kevent(kqueue_ev->kqueue_fd,
-+			  NULL,			/* changelist */
-+			  0,			/* nchanges */
-+			  kqueue_ev->kev_array,	/* eventlist */
-+			  kqueue_ev->kev_size,	/* nevents */
-+			  tsp);			/* timeout  - may need NULL*/
-+
++	nkevents = kevent(kqueue_ev->rdwrq->kq_fd,
++			  NULL,				/* changelist */
++			  0,				/* nchanges */
++			  kqueue_ev->rdwrq->kq_array,	/* eventlist */
++			  kqueue_ev->rdwrq->kq_sz,	/* nevents */
++			  tsp);				/* timeout */
 +	saved_errno = errno;
 +	tevent_trace_point_callback(kqueue_ev->ev, TEVENT_TRACE_AFTER_WAIT);
 +
 +	if (nkevents == -1) {
-+		/*
-+		 * Extra processing for cases where kevent() failed.
-+		 * 1 We may have forked and need to open a new queue
-+		 * 2 We may have received signal
-+		 * 3 We may have had some obscure error that we should
-+		 *   panic on and maybe get a core dump.
-+		 *
-+		 * In case of (1) we open new queue and call kevent() again.
-+		 * In case of (2) we need to exit quickly.
-+		 * In case of (3) we panic.
-+		 */
 +		nkevents = check_kevent_errors(kqueue_ev, tsp, saved_errno);
 +		if (nkevents == -1) {
 +			return nkevents;
 +		}
 +	}
 +
-+	if (nkevents == 0) {
++	if ((nkevents == 0)  && tvalp) {
 +		/* we don't care about a possible delay here */
-+		if (tvalp) {
-+			tevent_common_loop_timer_delay(kqueue_ev->ev);
-+		}
-+		return nkevents;
++		tevent_common_loop_timer_delay(kqueue_ev->ev);
++		return 0;
 +	}
 +
 +	ret = process_kevents(kqueue_ev, nkevents);
-+	if (nkevents == kqueue_ev->kev_size) {
-+		int new_size = kqueue_ev->kev_size * 2;
-+		struct kevent *new_array = NULL;
-+		new_array = talloc_realloc(kqueue_ev, kqueue_ev->kev_array,
-+					   struct kevent, new_size);
-+		if (new_array == NULL) {
-+			tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
-+				"realloc of kevent() failed: %s\n", strerror(errno));
-+			abort();
-+		}
-+		kqueue_ev->kev_array = new_array;
-+		kqueue_ev->kev_size = new_size;
-+		*overload = true;
-+		return ret;
++	if (nkevents == kqueue_ev->rdwrq->kq_sz) {
++		expand_queue(kqueue_ev, kqueue_ev->rdwrq);
 +	}
 +
 +	return ret;
@@ -871,17 +864,18 @@ index 00000000000..e3366be1bb8
 +static int kqueue_event_context_init(struct tevent_context *ev)
 +{
 +	int ret;
-+	struct kqueue_event_context *kqueue_ev;
++	struct kq_context *kqueue_ev = NULL;
 +
 +	/*
 +	 * We might be called during tevent_re_initialise()
 +	 * which means we need to free our old additional_data.
 +	 */
-+	kqueue_ev = talloc_zero(ev, struct kqueue_event_context);
++        TALLOC_FREE(ev->additional_data);
++
++	kqueue_ev = talloc_zero(ev, struct kq_context);
 +
 +	if (!kqueue_ev) return -1;
 +	kqueue_ev->ev = ev;
-+	kqueue_ev->kqueue_fd = -1;
 +
 +	ret = kqueue_init_ctx(kqueue_ev);
 +	if (ret != 0) {
@@ -893,16 +887,13 @@ index 00000000000..e3366be1bb8
 +	return 0;
 +}
 +
-+static inline struct aiocb *get_aiocb(struct tevent_context *ev,
-+				      struct tevent_aiocb *taiocb)
++static struct aiocb *get_aiocb(struct tevent_context *ev,
++			       struct tevent_aiocb *taiocb)
 +{
-+	struct kqueue_event_context *kqueue_ev =
-+		talloc_get_type_abort(ev->additional_data,
-+		struct kqueue_event_context);
-+
-+	struct aiocb *_iocbp = taiocb->iocbp;
-+	_iocbp->aio_sigevent.sigev_notify_kqueue = kqueue_ev->kqueue_fd;
-+	return _iocbp;
++	struct kq_context *kqueue_ev = EVTOKQ(ev);
++	struct aiocb *iocbp = taiocb->iocbp;
++	iocbp->aio_sigevent.sigev_notify_kqueue = kqueue_ev->rdwrq->kq_fd;
++	return iocbp;
 +}
 +
 +int tevent_add_aio_read(struct tevent_context *ev,
@@ -926,16 +917,15 @@ index 00000000000..e3366be1bb8
 +	return aio_fsync(O_SYNC, iocbp);
 +}
 +
-+static struct tevent_fd *kqueue_event_add_fd(struct tevent_context *ev, TALLOC_CTX *mem_ctx,
++static struct tevent_fd *kqueue_event_add_fd(struct tevent_context *ev,
++					     TALLOC_CTX *mem_ctx,
 +					     int fd, uint16_t flags,
 +					     tevent_fd_handler_t handler,
 +					     void *private_data,
 +					     const char *handler_name,
 +					     const char *location)
 +{
-+	struct kqueue_event_context *kqueue_ev =
-+		talloc_get_type_abort(ev->additional_data,
-+		struct kqueue_event_context);
++	struct kq_context *kqueue_ev = EVTOKQ(ev);
 +	struct tevent_fd *fde = NULL;
 +
 +	fde = tevent_common_add_fd(ev, mem_ctx, fd, flags,
@@ -953,18 +943,13 @@ index 00000000000..e3366be1bb8
 +
 +static void kqueue_event_set_fd_flags(struct tevent_fd *fde, uint16_t flags)
 +{
-+	struct tevent_context *ev;
-+	struct kqueue_event_context *kqueue_ev;
++	struct kq_context *kqueue_ev = NULL;
 +	uint16_t to_delete = 0;
 +
 +	if (fde->flags == flags) return;
 +
 +	to_delete = fde->flags & ~flags;
-+
-+	ev = fde->event_ctx;
-+
-+	kqueue_ev = talloc_get_type_abort(ev->additional_data,
-+					  struct kqueue_event_context);
++	kqueue_ev = EVTOKQ(fde->event_ctx);
 +	fde->flags = flags;
 +	kqueue_delete_event(kqueue_ev, fde, to_delete);
 +	kqueue_add_event(kqueue_ev, fde);
@@ -973,13 +958,11 @@ index 00000000000..e3366be1bb8
 +/*
 +  do a single event loop using the events defined in ev
 +*/
-+static int kqueue_event_loop_once(struct tevent_context *ev, const char *location)
++static int kqueue_event_loop_once(struct tevent_context *ev,
++				  const char *location)
 +{
-+	struct kqueue_event_context *kqueue_ev =
-+		talloc_get_type_abort(ev->additional_data,
-+		struct kqueue_event_context);
++	struct kq_context *kqueue_ev = EVTOKQ(ev);
 +	int ret;
-+	bool check_kevents = true;
 +	bool panic_triggered = false;
 +	struct timeval tval;
 +
@@ -999,18 +982,13 @@ index 00000000000..e3366be1bb8
 +
 +	kqueue_ev->panic_state = &panic_triggered;
 +	kqueue_ev->panic_force_replay = true;
-+	/*
-+	 * Loops until we are no longer overflowing on kevents
-+	 * This can happen if large number of AIO kevents or
-+	 * immediate events have been submitted since last loop.
-+	 */
-+	while (check_kevents) {
-+		tval = tevent_common_loop_timer_delay(ev);
-+		if (tevent_timeval_is_zero(&tval)) {
-+			return 0;
-+		}
-+		ret = kqueue_event_loop(kqueue_ev, &tval, &check_kevents);
++
++	tval = tevent_common_loop_timer_delay(ev);
++	if (tevent_timeval_is_zero(&tval)) {
++		return 0;
 +	}
++
++	ret = kqueue_event_loop(kqueue_ev, &tval);
 +
 +	kqueue_ev->panic_force_replay = false;
 +	kqueue_ev->panic_state = NULL;
