@@ -70,7 +70,7 @@ index 5365fce3533..91c9495a26f 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..bd0f761c65e
+index 00000000000..e3366be1bb8
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
 @@ -0,0 +1,960 @@
@@ -569,7 +569,7 @@ index 00000000000..bd0f761c65e
 +			 * log, but don't add error handling.
 +			 */
 +			if (kev.fflags != 0) {
-+				tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
++				tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_TRACE,
 +					     "EVFILT_WRITE EV_EOF on [%s], "
 +					     "fd [%d]: %s\n", fde->location, fde->fd,
 +					     strerror(kev.fflags));
@@ -591,7 +591,7 @@ index 00000000000..bd0f761c65e
 +		fde = get_tevent_fd(kqueue_ev, kev.udata, true);
 +		if ((kev.flags & EV_EOF)) {
 +			if (kev.fflags != 0) {
-+				tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_FATAL,
++				tevent_debug(kqueue_ev->ev, TEVENT_DEBUG_TRACE,
 +					    "evfilt_read ev_eof on [%s]: %s\n",
 +					    fde->location, strerror(kev.fflags));
 +			}
