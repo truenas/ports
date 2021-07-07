@@ -120,6 +120,7 @@ include/libspl/sys/varargs.h
 include/libspl/sys/vfs.h
 include/libspl/sys/vnode.h
 include/libspl/sys/vtoc.h
+include/libspl/sys/wmsum.h
 include/libspl/sys/zfs_context_os.h
 include/libspl/sys/zone.h
 include/libspl/thread.h
@@ -398,11 +399,14 @@ man/man1/arcstat.1.gz
 man/man1/zhack.1.gz
 man/man1/ztest.1.gz
 man/man1/zvol_wait.1.gz
-man/man5/spl-module-parameters.5.gz
+man/man4/spl.4.gz
+man/man4/zfs.4.gz
 man/man5/vdev_id.conf.5.gz
-man/man5/zfs-events.5.gz
-man/man5/zfs-module-parameters.5.gz
-man/man5/zpool-features.5.gz
+man/man7/zfsconcepts.7.gz
+man/man7/zfsprops.7.gz
+man/man7/zpool-features.7.gz
+man/man7/zpoolconcepts.7.gz
+man/man7/zpoolprops.7.gz
 man/man8/fsck.zfs.8.gz
 man/man8/mount.zfs.8.gz
 man/man8/vdev_id.8.gz
@@ -447,8 +451,6 @@ man/man8/zfs-userspace.8.gz
 man/man8/zfs-wait.8.gz
 man/man8/zfs.8.gz
 man/man8/zfs_ids_to_path.8.gz
-man/man8/zfsconcepts.8.gz
-man/man8/zfsprops.8.gz
 man/man8/zinject.8.gz
 man/man8/zpool-add.8.gz
 man/man8/zpool-attach.8.gz
@@ -483,8 +485,6 @@ man/man8/zpool-upgrade.8.gz
 man/man8/zpool-wait.8.gz
 man/man8/zpool.8.gz
 man/man8/zpool_influxdb.8.gz
-man/man8/zpoolconcepts.8.gz
-man/man8/zpoolprops.8.gz
 man/man8/zstream.8.gz
 man/man8/zstreamdump.8.gz
 sbin/fsck.zfs
@@ -900,6 +900,7 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_destroy/setup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_destroy/zfs_clone_livelist_condense_and_disable.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_destroy/zfs_clone_livelist_condense_races.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_destroy/zfs_clone_livelist_dedup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_destroy/zfs_destroy.cfg
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_destroy/zfs_destroy_001_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_destroy/zfs_destroy_002_pos.ksh
@@ -1277,6 +1278,7 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_create/zpool_create_features_006_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_create/zpool_create_features_007_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_create/zpool_create_features_008_pos.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_create/zpool_create_features_009_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_create/zpool_create_tempname.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_destroy/zpool_destroy.cfg
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zpool_destroy/zpool_destroy_001_pos.ksh
@@ -2081,6 +2083,7 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/redundancy/redundancy_draid1.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/redundancy/redundancy_draid2.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/redundancy/redundancy_draid3.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/redundancy/redundancy_draid_damaged.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/redundancy/redundancy_draid_spare1.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/redundancy/redundancy_draid_spare2.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/redundancy/redundancy_draid_spare3.ksh
@@ -2383,7 +2386,6 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/userquota/userspace_002_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/userquota/userspace_003_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/userquota/userspace_encrypted.ksh
-%%TESTS%%share/zfs/zfs-tests/tests/functional/userquota/userspace_send_encrypted.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/vdev_zaps/cleanup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/vdev_zaps/setup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/vdev_zaps/vdev_zaps.kshlib
