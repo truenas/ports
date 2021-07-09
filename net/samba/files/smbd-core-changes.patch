@@ -322,10 +322,10 @@ index 5bb55cf89f6..bd695f85599 100644
  	status = SMB_VFS_NEXT_READ_DFS_PATHAT(handle,
  					mem_ctx,
 diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
-index 4cf553411cb..996c39c4963 100644
+index 4cf553411cb..badc6e752bc 100644
 --- a/source3/modules/vfs_default.c
 +++ b/source3/modules/vfs_default.c
-@@ -18,9 +18,11 @@
+@@ -18,6 +18,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
@@ -333,11 +333,7 @@ index 4cf553411cb..996c39c4963 100644
  #include "includes.h"
  #include "system/time.h"
  #include "system/filesys.h"
-+#include "modules/smb_libzfs.h"
- #include "smbd/smbd.h"
- #include "smbd/globals.h"
- #include "ntioctl.h"
-@@ -39,6 +41,8 @@
+@@ -39,6 +40,8 @@
  #undef DBGC_CLASS
  #define DBGC_CLASS DBGC_VFS
  
@@ -346,26 +342,7 @@ index 4cf553411cb..996c39c4963 100644
  /* Check for NULL pointer parameters in vfswrap_* functions */
  
  /* We don't want to have NULL function pointers lying around.  Someone
-@@ -47,7 +51,17 @@
- 
- static int vfswrap_connect(vfs_handle_struct *handle, const char *service, const char *user)
- {
--    return 0;    /* Return >= 0 for success */
-+	struct smblibzfshandle *lz = NULL;
-+	if (IS_IPC(handle->conn) || IS_PRINT(handle->conn)) {
-+		return 0;
-+	}
-+	/* Initialize global smblibzfs handle with long-lived TALLOC context */
-+	lz = get_global_smblibzfs_handle(handle->conn->sconn);
-+	if (lz == NULL) {
-+		DBG_ERR("Failed to obtain global smblibzfs handle: %s\n", strerror(errno));
-+		return -1;
-+	}
-+	return 0;
- }
- 
- static void vfswrap_disconnect(vfs_handle_struct *handle)
-@@ -76,32 +90,14 @@ static int vfswrap_get_quota(struct vfs_handle_struct *handle,
+@@ -76,32 +79,14 @@ static int vfswrap_get_quota(struct vfs_handle_struct *handle,
  				unid_t id,
  				SMB_DISK_QUOTA *qt)
  {
@@ -398,7 +375,7 @@ index 4cf553411cb..996c39c4963 100644
  }
  
  static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
-@@ -1945,7 +1941,9 @@ static void vfswrap_offload_write_cleanup(struct tevent_req *req,
+@@ -1945,7 +1930,9 @@ static void vfswrap_offload_write_cleanup(struct tevent_req *req,
  		req, struct vfswrap_offload_write_state);
  	bool ok;
  
@@ -409,7 +386,7 @@ index 4cf553411cb..996c39c4963 100644
  		return;
  	}
  
-@@ -2051,6 +2049,12 @@ static struct tevent_req *vfswrap_offload_write_send(
+@@ -2051,6 +2038,12 @@ static struct tevent_req *vfswrap_offload_write_send(
  		return tevent_req_post(req, ev);
  	}
  
@@ -422,7 +399,7 @@ index 4cf553411cb..996c39c4963 100644
  	status = vfs_offload_token_db_fetch_fsp(vfswrap_offload_ctx,
  						token, &src_fsp);
  	if (tevent_req_nterror(req, status)) {
-@@ -2485,6 +2489,18 @@ static struct smb_filename *vfswrap_getwd(vfs_handle_struct *handle,
+@@ -2485,6 +2478,18 @@ static struct smb_filename *vfswrap_getwd(vfs_handle_struct *handle,
   nsec timestamp resolution call. Convert down to whatever the underlying
   system will support.
  **********************************************************************/
@@ -441,7 +418,7 @@ index 4cf553411cb..996c39c4963 100644
  
  static int vfswrap_ntimes(vfs_handle_struct *handle,
  			  const struct smb_filename *smb_fname,
-@@ -2524,6 +2540,9 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
+@@ -2524,6 +2529,9 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
  
  #if defined(HAVE_UTIMENSAT)
  	if (ft != NULL) {
