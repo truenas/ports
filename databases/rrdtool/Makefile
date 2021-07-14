@@ -22,7 +22,6 @@ USE_LDCONFIG=	yes
 GNU_CONFIGURE=	yes
 USES=		gmake gnome libtool pathfix pkgconfig shebangfix
 USE_GNOME=	glib20 libxml2
-INSTALL_TARGET=	install-strip
 
 PORTEXAMPLES=	cgi-demo.cgi
 
