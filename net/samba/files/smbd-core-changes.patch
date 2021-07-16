@@ -1015,10 +1015,10 @@ index 54f3d330c95..6a9b420f2b9 100644
  		status = check_name(conn, smb_fname_src_dir);
  		if (!NT_STATUS_IS_OK(status)) {
 diff --git a/source3/smbd/smb2_query_directory.c b/source3/smbd/smb2_query_directory.c
-index 79a46e005cf..269a65b0ebe 100644
+index 79a46e005cf..9f833753a07 100644
 --- a/source3/smbd/smb2_query_directory.c
 +++ b/source3/smbd/smb2_query_directory.c
-@@ -402,10 +402,12 @@ static struct tevent_req *smbd_smb2_query_directory_send(TALLOC_CTX *mem_ctx,
+@@ -402,6 +402,7 @@ static struct tevent_req *smbd_smb2_query_directory_send(TALLOC_CTX *mem_ctx,
  		const char *fullpath;
  		char tmpbuf[PATH_MAX];
  		char *to_free = NULL;
@@ -1026,13 +1026,7 @@ index 79a46e005cf..269a65b0ebe 100644
  		uint32_t ucf_flags = UCF_SAVE_LCOMP |
  				     UCF_ALWAYS_ALLOW_WCARD_LCOMP |
  				     (state->smbreq->posix_pathnames ?
--					UCF_POSIX_PATHNAMES : 0);
-+					UCF_POSIX_PATHNAMES : 0) |
-+				     (twrp ? UCF_GMT_PATHNAME : 0);
- 
- 		if (ISDOT(fsp->fsp_name->base_name)) {
- 			fullpath = state->in_file_name;
-@@ -426,7 +428,7 @@ static struct tevent_req *smbd_smb2_query_directory_send(TALLOC_CTX *mem_ctx,
+@@ -426,7 +427,7 @@ static struct tevent_req *smbd_smb2_query_directory_send(TALLOC_CTX *mem_ctx,
  				conn,
  				fullpath,
  				ucf_flags,
@@ -1061,7 +1055,7 @@ index e49e623d796..3f8517cded7 100644
  		DEBUG(2, ("smb2_write failed: %s, file %s, "
  			  "length=%lu offset=%lu nwritten=-1: %s\n",
 diff --git a/source3/smbd/statcache.c b/source3/smbd/statcache.c
-index 5162ec06ea9..a49b934720a 100644
+index 5162ec06ea9..a6a4b5acceb 100644
 --- a/source3/smbd/statcache.c
 +++ b/source3/smbd/statcache.c
 @@ -28,6 +28,8 @@
@@ -1190,7 +1184,7 @@ index 5162ec06ea9..a49b934720a 100644
  			SMB_STRUCT_STAT *pst)
  {
  	char *chk_name;
-@@ -206,14 +247,25 @@ bool stat_cache_lookup(connection_struct *conn,
+@@ -206,16 +247,28 @@ bool stat_cache_lookup(connection_struct *conn,
  	}
  
  	if (conn->case_sensitive) {
@@ -1217,8 +1211,19 @@ index 5162ec06ea9..a49b934720a 100644
 +					   upper);
  		if (!chk_name) {
  			DEBUG(0, ("stat_cache_lookup: talloc_strdup_upper failed!\n"));
++			TALLOC_FREE(upper);
  			return False;
-@@ -271,18 +323,23 @@ bool stat_cache_lookup(connection_struct *conn,
+ 		}
+ 
+@@ -227,6 +280,7 @@ bool stat_cache_lookup(connection_struct *conn,
+ 		if (strlen(chk_name) != namelen) {
+ 			sizechanged = True;
+ 		}
++		TALLOC_FREE(upper);
+ 	}
+ 
+ 	while (1) {
+@@ -271,18 +325,23 @@ bool stat_cache_lookup(connection_struct *conn,
  		}
  	}
  
@@ -1246,7 +1251,7 @@ index 5162ec06ea9..a49b934720a 100644
  
  	if (posix_paths) {
  		ret = SMB_VFS_LSTAT(conn, &smb_fname);
-@@ -369,9 +426,19 @@ void smbd_send_stat_cache_delete_message(struct messaging_context *msg_ctx,
+@@ -369,9 +428,19 @@ void smbd_send_stat_cache_delete_message(struct messaging_context *msg_ctx,
  
  void stat_cache_delete(const char *name)
  {
