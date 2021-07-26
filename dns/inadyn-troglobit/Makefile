@@ -2,7 +2,7 @@
 # $FreeBSD$
 
 PORTNAME=		inadyn-troglobit
-DISTVERSION=	2.2
+DISTVERSION=	2.5
 CATEGORIES=		dns
 
 MAINTAINER=	themylogin@gmail.com
@@ -27,6 +27,6 @@ GNU_CONFIGURE=	yes
 
 GH_ACCOUNT=		troglobit
 GH_PROJECT=		inadyn
-GH_TAGNAME=		0e0001592fb77c6b68413da26a483d56edf12586
+GH_TAGNAME=		9d3d7852991d04438079f61e8f6092cd7b86668a
 
 .include <bsd.port.mk>
