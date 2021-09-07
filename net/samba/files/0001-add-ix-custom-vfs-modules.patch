@@ -2195,10 +2195,10 @@ index 00000000000..5d889ada39f
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..57fe305fc98
+index 00000000000..2cdd06750c8
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2580 @@
+@@ -0,0 +1,2582 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -4505,7 +4505,9 @@ index 00000000000..57fe305fc98
 +	}
 + out:
 +	if (result != 0) {
-+		DBG_ERR("utimensat failed: %s \n", strerror(errno));
++		DBG_ERR("%s: utimensat failed: %s\n",
++			smb_fname_str_dbg(smb_fname),
++			strerror(errno));
 +	}
 +	return result;
 +}
