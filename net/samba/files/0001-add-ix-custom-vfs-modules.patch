@@ -1,6 +1,6 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 00000000000..6e8d3cc9b58
+index 00000000000..993f071afbf
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
 @@ -0,0 +1,1790 @@
@@ -1238,7 +1238,7 @@ index 00000000000..6e8d3cc9b58
 +	}
 +
 +	used = zfs_prop_get_int(snap, ZFS_PROP_WRITTEN);
-+	if (used == 0) {
++	if (used == 0 && state->iter_info->ignore_empty_snaps) {
 +		goto done;
 +	}
 +
