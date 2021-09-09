@@ -1,14 +1,23 @@
 # Created by: Yukihiro Nakai <Nakai@technologist.com>
+# $FreeBSD$
 
 PORTNAME=	libxml2
 DISTVERSION=	2.9.10
-PORTREVISION?=	3
+PORTREVISION?=	1
 CATEGORIES?=	textproc gnome
 MASTER_SITES=	http://xmlsoft.org/sources/
 DIST_SUBDIR=	gnome2
 
+# CVE-2019-20388, CVE-2020-7595, CVE-2020-24977
+PATCH_SITES=	https://gitlab.gnome.org/GNOME/libxml2/commit/
+PATCHFILES=	7ffcd44d7e6c46704f8af0321d9314cd26e0e18a.patch:-p1 \
+		0e1a49c8907645d2e155f0d89d4d9895ac5112b5.patch:-p1 \
+		50f06b3efb638efb0abd95dc62dca05ae67882c2.patch:-p1
+
 MAINTAINER?=	desktop@FreeBSD.org
 COMMENT?=	XML parser library for GNOME
+
+.if !defined(REFERENCE_PORT)
 
 LICENSE=	MIT TRIO
 LICENSE_COMB=	multi
@@ -34,12 +43,12 @@ PLIST_SUB+=	LIBVERSION=${PORTVERSION}
 
 .if !defined(MASTERDIR)
 
-OPTIONS_DEFINE=	SCHEMA VALIDATION THREADS MEM_DEBUG XMLLINT_HIST THREAD_ALLOC
-OPTIONS_DEFAULT=SCHEMA VALIDATION THREADS
+OPTIONS_DEFINE=	SCHEMA VALID THREADS MEM_DEBUG XMLLINT_HIST THREAD_ALLOC
+OPTIONS_DEFAULT=SCHEMA VALID THREADS
 SCHEMA_DESC=	XML schema support
 SCHEMA_CONFIGURE_WITH=	schemas
-VALIDATION_DESC=	Validation support
-VALIDATION_CONFIGURE_OFF=	--without-valid
+VALID_DESC=	Validation support
+VALID_CONFIGURE_OFF=	--without-valid
 THREADS_DESC=	Threads support
 THREADS_CONFIGURE_WITH=	threads
 MEM_DEBUG_DESC=	Memory debugging (DEVELOPERS ONLY!)
@@ -74,3 +83,5 @@ post-patch:
 .endif
 
 .include <bsd.port.post.mk>
+
+.endif
