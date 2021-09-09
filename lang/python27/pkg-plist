@@ -1892,7 +1892,7 @@ lib/python2.7/json/tool.pyo
 lib/python2.7/keyword.py
 lib/python2.7/keyword.pyc
 lib/python2.7/keyword.pyo
-lib/python2.7/lib-dynload/Python-%%PORTVERSION%%-py2.7.egg-info
+lib/python2.7/lib-dynload/Python-%%DISTVERSION%%-py2.7.egg-info
 lib/python2.7/lib-dynload/_bisect.so
 lib/python2.7/lib-dynload/_codecs_cn.so
 lib/python2.7/lib-dynload/_codecs_hk.so
