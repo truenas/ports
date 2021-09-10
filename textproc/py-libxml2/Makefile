@@ -1,4 +1,5 @@
 # Created by: Alexander Nedotsukov <bland@FreeBSD.org>
+# $FreeBSD$
 
 CATEGORIES=	textproc gnome python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -13,7 +14,7 @@ DESCR=		${.CURDIR}/pkg-descr
 PLIST=		${.CURDIR}/pkg-plist
 
 USE_GNOME=	libxml2
-USES=		gettext-runtime gnome python:3.6+
+USES=		gettext-runtime gnome python
 USE_PYTHON=	autoplist distutils
 
 CPPFLAGS+=	`${PYTHON_CMD}-config --cflags`
@@ -27,6 +28,6 @@ DOCSDIR=	${PREFIX}/share/doc/py-libxml2
 EXAMPLESDIR=	${PREFIX}/share/examples/py-libxml2
 
 post-install:
-	@${STRIP_CMD} ${STAGEDIR}${PYTHON_SITELIBDIR}/libxml2mod*.so
+	@${STRIP_CMD} ${STAGEDIR}${PYTHON_SITELIBDIR}/libxml2mod.so
 
 .include "${MASTERDIR}/Makefile"

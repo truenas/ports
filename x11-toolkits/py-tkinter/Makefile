@@ -2,12 +2,12 @@
 # $FreeBSD$
 
 PORTNAME=	tkinter
-PORTVERSION=	${PYTHON_PORTVERSION}
+DISTVERSION=	${PYTHON_DISTVERSION}
 PORTREVISION=	6
 CATEGORIES=	x11-toolkits python
-MASTER_SITES=	PYTHON/ftp/python/${PORTVERSION}
+MASTER_SITES=	PYTHON/ftp/python/${DISTVERSION}
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
-DISTNAME=	Python-${PORTVERSION}
+DISTNAME=	Python-${DISTVERSION}
 
 MAINTAINER=	python@FreeBSD.org
 COMMENT=	Python bindings to the Tk widget set (Python ${PYTHON_VER})
@@ -21,7 +21,7 @@ USE_PYTHON=	distutils autoplist allflavors
 
 DIST_SUBDIR=	python
 DISTINFO_FILE=	${PORTSDIR}/lang/python${PYTHON_SUFFIX}/distinfo
-WRKSRC=		${WRKDIR}/Python-${PORTVERSION}/Modules
+WRKSRC=		${WRKDIR}/Python-${DISTVERSION}/Modules
 
 PYDISTUTILS_INSTALLARGS+=	--install-lib ${PYTHON_LIBDIR}/lib-dynload
 

@@ -234,7 +234,6 @@
     SUBDIR += gspell
     SUBDIR += gtk-doc
     SUBDIR += gtkspell
-    SUBDIR += gtkspell-reference
     SUBDIR += gtkspell3
     SUBDIR += gu-aspell
     SUBDIR += gutenmark
@@ -393,11 +392,9 @@
     SUBDIR += libxml++26
     SUBDIR += libxml++26-reference
     SUBDIR += libxml2
-    SUBDIR += libxml2-reference
     SUBDIR += libxmlbird
     SUBDIR += libxode
     SUBDIR += libxslt
-    SUBDIR += libxslt-reference
     SUBDIR += libyaml
     SUBDIR += link-grammar
     SUBDIR += linux-c7-aspell

@@ -2,19 +2,19 @@
 # $FreeBSD$
 
 PORTNAME=	sqlite3
-PORTVERSION=	${PYTHON_PORTVERSION}
+DISTVERSION=	${PYTHON_DISTVERSION}
 PORTREVISION=	7
 CATEGORIES=	databases python
-MASTER_SITES=	PYTHON/ftp/python/${PORTVERSION}
+MASTER_SITES=	PYTHON/ftp/python/${DISTVERSION}
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
-DISTNAME=	Python-${PORTVERSION}
+DISTNAME=	Python-${DISTVERSION}
 DIST_SUBDIR=	python
 
 MAINTAINER=	python@FreeBSD.org
 COMMENT=	Standard Python binding to the SQLite3 library (Python ${PYTHON_VER})
 
 LICENSE=	PSFL
-LICENSE_FILE=	${WRKDIR}/Python-${PORTVERSION}/LICENSE
+LICENSE_FILE=	${WRKDIR}/Python-${DISTVERSION}/LICENSE
 
 LIB_DEPENDS=	libsqlite3.so:databases/sqlite3
 
@@ -24,7 +24,7 @@ USES=		python tar:xz
 USE_PYTHON=	autoplist distutils allflavors
 
 DISTINFO_FILE=	${PORTSDIR}/lang/python${PYTHON_SUFFIX}/distinfo
-WRKSRC=		${WRKDIR}/Python-${PORTVERSION}/Modules
+WRKSRC=		${WRKDIR}/Python-${DISTVERSION}/Modules
 
 PYDISTUTILS_INSTALLARGS+=	--install-lib ${PYTHON_LIBDIR}/lib-dynload
 
