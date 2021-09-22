@@ -1,0 +1,73 @@
+From 2e36d0cb03d9b18955e44b84cf77c14b162cdd5a Mon Sep 17 00:00:00 2001
+From: Andrew Walker <awalker@ixsystems.com>
+Date: Wed, 22 Sep 2021 14:08:58 -0400
+Subject: [PATCH] Adjust return for compounded requests for expired sessions
+
+Network analysis indicates that Windows servers will return
+STATUS_NETWORK_SESSION_EXPIRED on compounded SMB2_CLOSE
+operations in contrast with guidance in MS-SMB 3.3.5.2.9
+
+```
+If a session is found and Session.State is Expired, the
+server MUST continue to process the SMB2 LOGOFF, SMB2 CLOSE,
+and SMB2 LOCK commands. If the command is not one of these,
+the server SHOULD<224> fail the request with
+STATUS_NETWORK_SESSION_EXPIRED.
+```
+
+This PR adjusts the server response in case of chained
+requests so that the above-referenced operations will fail
+with STATUS_NETWORK_SESSION_EXPIRED.
+---
+ source3/smbd/smb2_server.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/source3/smbd/smb2_server.c b/source3/smbd/smb2_server.c
+index f0fe14624cd..bac05d02b51 100644
+--- a/source3/smbd/smb2_server.c
++++ b/source3/smbd/smb2_server.c
+@@ -1913,7 +1913,8 @@ static NTSTATUS smbd_smb2_request_check_tcon(struct smbd_smb2_request *req)
+  Ensure an incoming session_id is a valid one for us to access.
+ *************************************************************/
+ 
+-static NTSTATUS smbd_smb2_request_check_session(struct smbd_smb2_request *req)
++static NTSTATUS smbd_smb2_request_check_session(struct smbd_smb2_request *req,
++						bool is_chained)
+ {
+ 	const uint8_t *inhdr;
+ 	uint32_t in_flags;
+@@ -1985,7 +1986,9 @@ static NTSTATUS smbd_smb2_request_check_session(struct smbd_smb2_request *req)
+ 			 * CANCEL and KEEPALIVE/ECHO should also
+ 			 * be processed.
+ 			 */
+-			status = NT_STATUS_OK;
++			if (!is_chained) {
++				status = NT_STATUS_OK;
++			}
+ 			break;
+ 		default:
+ 			break;
+@@ -2390,7 +2393,7 @@ NTSTATUS smbd_smb2_request_dispatch(struct smbd_smb2_request *req)
+ 	 * As some command don't require a valid session id
+ 	 * we defer the check of the session_status
+ 	 */
+-	session_status = smbd_smb2_request_check_session(req);
++	session_status = smbd_smb2_request_check_session(req, flags & SMB2_HDR_FLAG_CHAINED);
+ 	x = req->session;
+ 	if (x != NULL) {
+ 		signing_required = x->global->signing_flags & SMBXSRV_SIGNING_REQUIRED;
+@@ -2468,7 +2471,10 @@ NTSTATUS smbd_smb2_request_dispatch(struct smbd_smb2_request *req)
+ 		 * This check is mostly for giving the correct error code
+ 		 * for compounded requests.
+ 		 */
+-		if (!NT_STATUS_IS_OK(session_status)) {
++		if (NT_STATUS_EQUAL(session_status, NT_STATUS_NETWORK_SESSION_EXPIRED)) {
++			return smbd_smb2_request_error(req, session_status);
++		}
++		else if (!NT_STATUS_IS_OK(session_status)) {
+ 			return smbd_smb2_request_error(req, NT_STATUS_INVALID_PARAMETER);
+ 		}
+ 	} else {
+-- 
+2.26.2
+
