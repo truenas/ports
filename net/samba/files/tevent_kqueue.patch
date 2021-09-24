@@ -70,10 +70,10 @@ index 5365fce3533..91c9495a26f 100644
  				 enum tevent_trace_point);
 diff --git a/lib/tevent/tevent_kqueue.c b/lib/tevent/tevent_kqueue.c
 new file mode 100755
-index 00000000000..e6db9d57c78
+index 00000000000..22b43c0e9aa
 --- /dev/null
 +++ b/lib/tevent/tevent_kqueue.c
-@@ -0,0 +1,960 @@
+@@ -0,0 +1,947 @@
 +/*
 +   Unix SMB/CIFS implementation.
 +
@@ -556,15 +556,10 @@ index 00000000000..e6db9d57c78
 +
 +static void kqueue_process_kev(struct kq_context *kqueue_ev,
 +			       struct kevent kev, struct tevent_fd **pfde,
-+			       bool *_is_fd_event, short expected)
++			       bool *_is_fd_event)
 +{
 +	struct tevent_fd *fde = NULL;
 +	bool is_fd_event = false;
-+
-+	if (expected && kev.filter != expected) {
-+		*_is_fd_event = false;
-+		return;
-+	}
 +
 +	switch (kev.filter) {
 +	case EVFILT_WRITE:
@@ -647,7 +642,7 @@ index 00000000000..e6db9d57c78
 +	for (i = 0; i < nkevents; i++) {
 +		bool is_fde;
 +		struct tevent_fd *next_fde = NULL;
-+		kqueue_process_kev(kqueue_ev, events[i], &next_fde, &is_fde, 0);
++		kqueue_process_kev(kqueue_ev, events[i], &next_fde, &is_fde);
 +		if (!is_fde) {
 +			continue;
 +		}
@@ -665,12 +660,11 @@ index 00000000000..e6db9d57c78
 +{
 +	int flags, i;
 +	bool ok;
-+	short to_check = 0;
 +	struct kevent *received = kqueue_ev->rdwrq->kq_array;
 +	struct tevent_fd *head = NULL;
 +
 +	for (i = 0; i < nkevents; i++) {
-+		kqueue_process_kev(kqueue_ev, received[i], &head, &ok, to_check);
++		kqueue_process_kev(kqueue_ev, received[i], &head, &ok);
 +		if (!ok) {
 +			continue;
 +		}
@@ -692,14 +686,7 @@ index 00000000000..e6db9d57c78
 +				       &received[i + 1],
 +				       nkevents - (i + 1));
 +
-+		/*
-+		 * Once we have finalized the flags for the tevent fd event,
-+		 * to_check to EVFILT_AIO. This prevents us from processing
-+		 * further kevents in this single loop through kevents.*
-+		 * AIO events must be processed since they were added to the
-+		 * queue as one-shot events.
-+		 */
-+		to_check = EVFILT_AIO;
++		break;
 +	}
 +
 +	if (head == NULL) {
