@@ -322,7 +322,7 @@ index 5bb55cf89f6..bd695f85599 100644
  	status = SMB_VFS_NEXT_READ_DFS_PATHAT(handle,
  					mem_ctx,
 diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
-index 4cf553411cb..badc6e752bc 100644
+index 4cf553411cb..b9f57e68ced 100644
 --- a/source3/modules/vfs_default.c
 +++ b/source3/modules/vfs_default.c
 @@ -18,6 +18,7 @@
@@ -399,7 +399,21 @@ index 4cf553411cb..badc6e752bc 100644
  	status = vfs_offload_token_db_fetch_fsp(vfswrap_offload_ctx,
  						token, &src_fsp);
  	if (tevent_req_nterror(req, status)) {
-@@ -2485,6 +2478,18 @@ static struct smb_filename *vfswrap_getwd(vfs_handle_struct *handle,
+@@ -2245,6 +2238,13 @@ static void vfswrap_offload_write_write_done(struct tevent_req *subreq)
+ 		tevent_req_nterror(req, NT_STATUS_INTERNAL_ERROR);
+ 		return;
+ 	}
++
++	if (state->src_fsp->fh == NULL ||
++	    state->dst_fsp->fh == NULL) {
++		DBG_ERR("File handle freed\n");
++		tevent_req_nterror(req, NT_STATUS_INTERNAL_ERROR);
++		return;
++	}
+ 	state->remaining -= nwritten;
+ 	if (state->remaining == 0) {
+ 		tevent_req_done(req);
+@@ -2485,6 +2485,18 @@ static struct smb_filename *vfswrap_getwd(vfs_handle_struct *handle,
   nsec timestamp resolution call. Convert down to whatever the underlying
   system will support.
  **********************************************************************/
@@ -418,7 +432,7 @@ index 4cf553411cb..badc6e752bc 100644
  
  static int vfswrap_ntimes(vfs_handle_struct *handle,
  			  const struct smb_filename *smb_fname,
-@@ -2524,6 +2529,9 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
+@@ -2524,6 +2536,9 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
  
  #if defined(HAVE_UTIMENSAT)
  	if (ft != NULL) {
