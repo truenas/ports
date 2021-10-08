@@ -648,7 +648,7 @@ index 00000000000..be058f85949
 +        '-n', '--hostname',
 +        help='override (NetBIOS) hostname to be used (default hostname)',
 +        # use only the local part of a possible FQDN
-+        default=socket.gethostname().partition('.')[0])
++        default=getparm('netbios name'))
 +    parser.add_argument(
 +        '-w', '--workgroup',
 +        help='set workgroup name (default WORKGROUP)',
