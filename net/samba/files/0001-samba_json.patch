@@ -2137,7 +2137,7 @@ index b4da9bae556..e29be550111 100644
  	};
  
 diff --git a/source3/utils/sharesec.c b/source3/utils/sharesec.c
-index 454c5bfe36b..337d8ac82ef 100644
+index 419a6411334..69dfb12b047 100644
 --- a/source3/utils/sharesec.c
 +++ b/source3/utils/sharesec.c
 @@ -29,6 +29,11 @@ struct cli_state;
@@ -2152,7 +2152,7 @@ index 454c5bfe36b..337d8ac82ef 100644
  
  static TALLOC_CTX *ctx;
  
-@@ -157,12 +162,15 @@ static void sort_acl(struct security_acl *the_acl)
+@@ -155,12 +160,15 @@ static void sort_acl(struct security_acl *the_acl)
  }
  
  
@@ -2169,7 +2169,7 @@ index 454c5bfe36b..337d8ac82ef 100644
  	NTSTATUS status;
  
  	if (mode != SMB_ACL_SET && mode != SMB_SD_DELETE) {
-@@ -184,7 +192,15 @@ static int change_share_sec(TALLOC_CTX *mem_ctx, const char *sharename, char *th
+@@ -182,7 +190,15 @@ static int change_share_sec(TALLOC_CTX *mem_ctx, const char *sharename, char *th
  		/* should not happen */
  		return 0;
  	case SMB_ACL_VIEW:
@@ -2186,7 +2186,7 @@ index 454c5bfe36b..337d8ac82ef 100644
  		return 0;
  	case SMB_ACL_DELETE:
  	    for (i=0;sd->dacl && i<sd->dacl->num_aces;i++) {
-@@ -330,10 +346,13 @@ int main(int argc, const char *argv[])
+@@ -328,10 +344,13 @@ int main(int argc, const char *argv[])
  	int retval = 0;
  	enum acl_mode mode = SMB_ACL_SET;
  	static char *the_acl = NULL;
@@ -2200,7 +2200,7 @@ index 454c5bfe36b..337d8ac82ef 100644
  	bool initialize_sid = False;
  	struct poptOption long_options[] = {
  		POPT_AUTOHELP
-@@ -430,6 +449,14 @@ int main(int argc, const char *argv[])
+@@ -428,6 +447,14 @@ int main(int argc, const char *argv[])
  			.descrip    = "Force storing the ACL",
  			.argDescrip = "ACLS",
  		},
@@ -2215,7 +2215,7 @@ index 454c5bfe36b..337d8ac82ef 100644
  		POPT_COMMON_SAMBA
  		POPT_TABLEEND
  	};
-@@ -493,6 +520,10 @@ int main(int argc, const char *argv[])
+@@ -491,6 +518,10 @@ int main(int argc, const char *argv[])
  			force_acl = True;
  			break;
  
@@ -2226,7 +2226,7 @@ index 454c5bfe36b..337d8ac82ef 100644
  		case 'M':
  			initialize_sid = True;
  			break;
-@@ -531,6 +562,13 @@ int main(int argc, const char *argv[])
+@@ -529,6 +560,13 @@ int main(int argc, const char *argv[])
  
  	if (mode == SMB_ACL_VIEW_ALL) {
  		int i;
@@ -2240,7 +2240,7 @@ index 454c5bfe36b..337d8ac82ef 100644
  
  		for (i=0; i<lp_numservices(); i++) {
  			TALLOC_CTX *frame = talloc_stackframe();
-@@ -542,11 +580,29 @@ int main(int argc, const char *argv[])
+@@ -540,11 +578,29 @@ int main(int argc, const char *argv[])
  				continue;
  			}
  
@@ -2273,7 +2273,7 @@ index 454c5bfe36b..337d8ac82ef 100644
  		goto done;
  	}
  
-@@ -576,7 +632,7 @@ int main(int argc, const char *argv[])
+@@ -574,7 +630,7 @@ int main(int argc, const char *argv[])
  		retval = view_sharesec_sddl(sharename);
  		break;
  	default:
@@ -2283,7 +2283,7 @@ index 454c5bfe36b..337d8ac82ef 100644
  	}
  
 diff --git a/source3/utils/smbcacls.c b/source3/utils/smbcacls.c
-index 084df9f9a4a..93cde926801 100644
+index f3209c31877..1ba33f0fa6a 100644
 --- a/source3/utils/smbcacls.c
 +++ b/source3/utils/smbcacls.c
 @@ -32,6 +32,11 @@
@@ -2297,8 +2297,8 @@ index 084df9f9a4a..93cde926801 100644
 +#endif /* [HAVE_JANSSON] */
  
  static int test_args;
- 
-@@ -418,6 +423,48 @@ static int cacl_dump(struct cli_state *cli, const char *filename, bool numeric)
+ static int sddl;
+@@ -425,6 +430,48 @@ static int cacl_dump(struct cli_state *cli, const char *filename, bool numeric)
  	return EXIT_OK;
  }
  
@@ -2347,7 +2347,7 @@ index 084df9f9a4a..93cde926801 100644
  /***************************************************** 
  Change the ownership or group ownership of a file. Just
  because the NT docs say this can't be done :-). JRA.
-@@ -813,6 +860,7 @@ int main(int argc, char *argv[])
+@@ -812,6 +859,7 @@ int main(int argc, char *argv[])
  	int result;
  	char *path;
  	char *filename = NULL;
@@ -2355,7 +2355,7 @@ index 084df9f9a4a..93cde926801 100644
  	poptContext pc;
  	/* numeric is set when the user wants numeric SIDs and ACEs rather
  	   than going via LSA calls to resolve them */
-@@ -906,6 +954,14 @@ int main(int argc, char *argv[])
+@@ -908,6 +956,14 @@ int main(int argc, char *argv[])
  			.val        = 1,
  			.descrip    = "The security-info flags for queries"
  		},
@@ -2370,7 +2370,7 @@ index 084df9f9a4a..93cde926801 100644
  		{
  			.longName   = "set-security-info",
  			.shortName  = 0,
-@@ -1009,6 +1065,9 @@ int main(int argc, char *argv[])
+@@ -1011,6 +1067,9 @@ int main(int argc, char *argv[])
  			owner_username = poptGetOptArg(pc);
  			change_mode = REQUEST_INHERIT;
  			break;
@@ -2380,17 +2380,17 @@ index 084df9f9a4a..93cde926801 100644
  		case 'm':
  			lp_set_cmdline("client max protocol", poptGetOptArg(pc));
  			break;
-@@ -1086,6 +1145,8 @@ int main(int argc, char *argv[])
- 		result = owner_set(cli, change_mode, filename, owner_username);
+@@ -1100,6 +1159,8 @@ int main(int argc, char *argv[])
+ 		result = owner_set(targetcli, change_mode, targetfile, owner_username);
  	} else if (the_acl) {
- 		result = cacl_set(cli, filename, the_acl, mode, numeric);
+ 		result = cacl_set(targetcli, targetfile, the_acl, mode, numeric);
 +	} else if (json_output) {
-+		result = cacl_dump_json(cli, filename, numeric);
++		result = cacl_dump_json(targetcli, filename, numeric);
  	} else {
- 		result = cacl_dump(cli, filename, numeric);
+ 		result = cacl_dump(targetcli, targetfile, numeric);
  	}
 diff --git a/source3/utils/smbcontrol.c b/source3/utils/smbcontrol.c
-index d779f0d14ea..4424c4ee935 100644
+index 6836b3ad7db..eefe76e24d2 100644
 --- a/source3/utils/smbcontrol.c
 +++ b/source3/utils/smbcontrol.c
 @@ -1776,5 +1776,6 @@ int main(int argc, const char **argv)

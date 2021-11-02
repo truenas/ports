@@ -115,7 +115,6 @@ include/samba4/tsocket.h
 include/samba4/util_ldb.h
 include/samba4/util/attr.h
 include/samba4/util/blocking.h
-include/samba4/util/byteorder.h
 include/samba4/util/data_blob.h
 include/samba4/util/debug.h
 include/samba4/util/fault.h
@@ -288,7 +287,7 @@ lib/samba4/private/libposix-eadb-samba4.so
 lib/samba4/private/libprinter-driver-samba4.so
 lib/samba4/private/libprinting-migrate-samba4.so
 lib/samba4/private/libpyldb-util%%PYTHON_EXT_SUFFIX%%.so.2
-lib/samba4/private/libpyldb-util%%PYTHON_EXT_SUFFIX%%.so.2.1.5
+lib/samba4/private/libpyldb-util%%PYTHON_EXT_SUFFIX%%.so.2.2.2
 lib/samba4/private/libpytalloc-util%%PYTHON_EXT_SUFFIX%%.so.2
 lib/samba4/private/libpytalloc-util%%PYTHON_EXT_SUFFIX%%.so.2.3.1
 lib/samba4/private/libregistry-samba4.so
@@ -765,7 +764,7 @@ man/man8/winbindd.8.gz
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb-cmdline-samba4.so
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldbsamba-samba4.so
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb.so.2
-%%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb.so.2.1.5
+%%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb.so.2.2.2
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb-key-value-samba4.so
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb-tdb-err-map-samba4.so
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb-tdb-int-samba4.so
@@ -835,7 +834,7 @@ man/man8/winbindd.8.gz
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/dcerpc/irpc%%PYTHON_EXT_SUFFIX%%.so
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/dcerpc/krb5pac%%PYTHON_EXT_SUFFIX%%.so
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/dcerpc/lsa%%PYTHON_EXT_SUFFIX%%.so
-%%SPOTLIGHT%%%%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/dcerpc/mdssvc%%PYTHON_EXT_SUFFIX%%.so
+%%SPOTLIGHT%%%%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/dcerpc/mdssvc.so
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/dcerpc/messaging%%PYTHON_EXT_SUFFIX%%.so
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/dcerpc/mgmt%%PYTHON_EXT_SUFFIX%%.so
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/dcerpc/misc%%PYTHON_EXT_SUFFIX%%.so
@@ -944,7 +943,7 @@ man/man8/winbindd.8.gz
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/remove_dc.py
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/samba3/__init__.py
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/samba3/libsmb_samba_internal%%PYTHON_EXT_SUFFIX%%.so
-%%SPOTLIGHT%%%%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/samba3/mdscli%%PYTHON_EXT_SUFFIX%%.so
+%%SPOTLIGHT%%%%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/samba3/mdscli.so
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/samba3/param%%PYTHON_EXT_SUFFIX%%.so
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/samba3/passdb%%PYTHON_EXT_SUFFIX%%.so
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/samba3/smbd%%PYTHON_EXT_SUFFIX%%.so
@@ -1123,4 +1122,3 @@ man/man8/winbindd.8.gz
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/talloc%%PYTHON_EXT_SUFFIX%%.so
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/tdb%%PYTHON_EXT_SUFFIX%%.so
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/tevent.py
-%%SPOTLIGHT%%share/samba/samba/mdssvc/elasticsearch_mappings.json

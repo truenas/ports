@@ -1,6 +1,6 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 00000000000..993f071afbf
+index 00000000000..8e7154e07f6
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
 @@ -0,0 +1,1790 @@
@@ -2195,10 +2195,10 @@ index 00000000000..5d889ada39f
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..2cdd06750c8
+index 00000000000..8916c3391c8
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2582 @@
+@@ -0,0 +1,2590 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -2395,14 +2395,20 @@ index 00000000000..2cdd06750c8
 +			return NT_STATUS_ACCESS_DENIED;
 +		}
 +
-+		status = smbd_check_access_rights(handle->conn, smb_fname, false,
-+						FILE_WRITE_ATTRIBUTES);
++		status = smbd_check_access_rights(
++			handle->conn,
++			handle->conn->cwd_fsp,
++			smb_fname, false,
++			FILE_WRITE_ATTRIBUTES
++		);
 +		if (NT_STATUS_IS_OK(status)) {
 +			set_dosmode_ok = true;
 +		}
 +
 +		if (!set_dosmode_ok && lp_dos_filemode(SNUM(handle->conn))) {
-+			set_dosmode_ok = can_write_to_file(handle->conn, smb_fname);
++			set_dosmode_ok = can_write_to_file(handle->conn,
++							   handle->conn->cwd_fsp,
++							   smb_fname);
 +		}
 +
 +		if (!set_dosmode_ok){
@@ -2586,7 +2592,7 @@ index 00000000000..2cdd06750c8
 +********************************************************************/
 +static NTSTATUS ixnas_create_file(vfs_handle_struct *handle,
 +				  struct smb_request *req,
-+				  uint16_t root_dir_fid,
++				  struct files_struct **dirfsp,
 +				  struct smb_filename *smb_fname,
 +				  uint32_t access_mask,
 +				  uint32_t share_access,
@@ -2613,7 +2619,7 @@ index 00000000000..2cdd06750c8
 +				return NT_STATUS_INTERNAL_ERROR);
 +
 +	status = SMB_VFS_NEXT_CREATE_FILE(
-+		handle, req, root_dir_fid, smb_fname,
++		handle, req, dirfsp, smb_fname,
 +		access_mask, share_access,
 +		create_disposition, create_options,
 +		file_attributes, oplock_request,
@@ -2628,7 +2634,7 @@ index 00000000000..2cdd06750c8
 +
 +	fsp = *result;
 +
-+	if (config->posix_rename && fsp->is_directory) {
++	if (config->posix_rename && fsp->fsp_flags.is_directory) {
 +		fsp->posix_flags |= FSP_POSIX_FLAGS_RENAME;
 +	}
 +
@@ -3321,7 +3327,7 @@ index 00000000000..2cdd06750c8
 +	 * special entries to ZFS ACL on file creation on absence of inheriting
 +	 * special entries in the parent directory.
 +	 */
-+	if (config->zfs_acl_ignore_empty_mode && has_inheritable) {
++	if ((naces == 0) || (config->zfs_acl_ignore_empty_mode && has_inheritable)) {
 +		if (acl_create_entry(&zacl, &hidden_entry) < 0) {
 +			DBG_ERR("Failed to create new ACL entry: %s\n", strerror(errno));
 +		}
@@ -3340,7 +3346,7 @@ index 00000000000..2cdd06750c8
 +	if (set_acl_as_root) {
 +		become_root();
 +	}
-+	ret = acl_set_file(fsp->fsp_name->base_name, ACL_TYPE_NFS4, zacl);
++	ret = acl_set_fd_np(fsp->fh->fd, zacl, ACL_TYPE_NFS4);
 +	if (ret != 0 && errno == EBADF) {
 +		ret = acl_set_file(fsp->fsp_name->base_name, ACL_TYPE_NFS4, zacl);
 +	}
@@ -3429,6 +3435,7 @@ index 00000000000..2cdd06750c8
 +}
 +
 +static NTSTATUS ixnas_get_nt_acl(struct vfs_handle_struct *handle,
++				struct files_struct *dirfsp,
 +				const struct smb_filename *smb_fname,
 +				uint32_t security_info,
 +				TALLOC_CTX *mem_ctx,
@@ -3447,9 +3454,10 @@ index 00000000000..2cdd06750c8
 +				return NT_STATUS_INTERNAL_ERROR);
 +
 +	if (!config->zfs_acl_enabled) {
-+		return SMB_VFS_NEXT_GET_NT_ACL(handle, smb_fname, security_info, mem_ctx, ppdesc);
++		return SMB_VFS_NEXT_GET_NT_ACL_AT(handle, dirfsp, smb_fname, security_info, mem_ctx, ppdesc);
 +	}
 +
++	SMB_ASSERT(dirfsp == handle->conn->cwd_fsp);
 +	if (VALID_STAT(smb_fname->st)) {
 +		psbuf = &smb_fname->st;
 +	}
@@ -3467,7 +3475,7 @@ index 00000000000..2cdd06750c8
 +
 +	if (bsdacl == NULL) {
 +		if (errno == ENOSYS) {
-+			status = SMB_VFS_NEXT_GET_NT_ACL(handle, smb_fname, security_info, mem_ctx, ppdesc);
++			status = SMB_VFS_NEXT_GET_NT_ACL_AT(handle, dirfsp, smb_fname, security_info, mem_ctx, ppdesc);
 +			if (NT_STATUS_IS_OK(status)) {
 +				(*ppdesc)->type |= SEC_DESC_DACL_PROTECTED;
 +			}
@@ -4744,7 +4752,7 @@ index 00000000000..2cdd06750c8
 +	.ntimes_fn = ixnas_ntimes,
 +	.renameat_fn = ixnas_renameat,
 +	.fget_nt_acl_fn = ixnas_fget_nt_acl,
-+	.get_nt_acl_fn = ixnas_get_nt_acl,
++	.get_nt_acl_at_fn = ixnas_get_nt_acl,
 +	.fset_nt_acl_fn = ixnas_fset_nt_acl,
 +	.sys_acl_get_file_fn = ixnas_fail__sys_acl_get_file,
 +	.sys_acl_get_fd_fn = ixnas_fail__sys_acl_get_fd,
@@ -4783,10 +4791,10 @@ index 00000000000..2cdd06750c8
 +}
 diff --git a/source3/modules/vfs_noacl.c b/source3/modules/vfs_noacl.c
 new file mode 100644
-index 00000000000..7a5984c82e5
+index 00000000000..d1c9c06a9c8
 --- /dev/null
 +++ b/source3/modules/vfs_noacl.c
-@@ -0,0 +1,522 @@
+@@ -0,0 +1,528 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  This program is free software; you can redistribute it and/or modify
@@ -4936,7 +4944,9 @@ index 00000000000..7a5984c82e5
 +		return NT_STATUS_ACCESS_DENIED;
 +	}
 +
-+ 	status = smbd_check_access_rights(handle->conn, smb_fname, false,
++ 	status = smbd_check_access_rights(handle->conn,
++					  handle->conn->cwd_fsp,
++					  smb_fname, false,
 +					  FILE_WRITE_ATTRIBUTES);
 +
 +	if (!NT_STATUS_IS_OK(status)) {
@@ -5003,6 +5013,7 @@ index 00000000000..7a5984c82e5
 +}
 +
 +static NTSTATUS noacl_get_nt_acl_common(TALLOC_CTX *ctx,
++					struct files_struct *dirfsp,
 +					struct vfs_handle_struct *handle,
 +					const struct smb_filename *smb_fname,
 +					struct security_descriptor **ppdesc)
@@ -5124,12 +5135,14 @@ index 00000000000..7a5984c82e5
 +}
 +
 +static NTSTATUS noacl_get_nt_acl(struct vfs_handle_struct *handle,
++				 struct files_struct *dirfsp,
 +				 const struct smb_filename *smb_fname,
 +				 uint32_t security_info,
 +				 TALLOC_CTX *mem_ctx,
 +				 struct security_descriptor **ppdesc)
 +{
 +	return noacl_get_nt_acl_common(mem_ctx,
++				       dirfsp,
 +				       handle,
 +				       smb_fname,
 +				       ppdesc);
@@ -5142,6 +5155,7 @@ index 00000000000..7a5984c82e5
 +				  struct security_descriptor **ppdesc)
 +{
 +	return noacl_get_nt_acl_common(mem_ctx,
++				       handle->conn->cwd_fsp,
 +				       handle,
 +				       fsp->fsp_name,
 +				       ppdesc);
@@ -5248,7 +5262,7 @@ index 00000000000..7a5984c82e5
 +	} 
 +	acl_free(connectpath_acl);
 +	if (trivial == 0) {
-+		DBG_ERR("noacl: non-trivial ACL detected on conncectpath %s. Denying access to share\n",
++		DBG_ERR("noacl: non-trivial ACL detected on conncectpath %s: %s. Denying access to share.\n",
 +			handle->conn->connectpath, strerror(errno));
 +		return -1;
 +	}
@@ -5292,7 +5306,7 @@ index 00000000000..7a5984c82e5
 +	.set_dos_attributes_fn = noacl_set_dos_attributes,
 +	.fset_dos_attributes_fn = noacl_fset_dos_attributes,
 +	.fset_nt_acl_fn = noacl_fset_nt_acl,
-+	.get_nt_acl_fn = noacl_get_nt_acl,
++	.get_nt_acl_at_fn = noacl_get_nt_acl,
 +	.fget_nt_acl_fn = noacl_fget_nt_acl,
 +	.sys_acl_get_file_fn = noacl_fail__sys_acl_get_file,
 +	.sys_acl_get_fd_fn = noacl_fail__sys_acl_get_fd,

@@ -1,6 +1,8 @@
---- source3/modules/vfs_full_audit.c.orig	2021-01-20 10:52:20.290040000 -0500
-+++ source3/modules/vfs_full_audit.c	2021-01-20 10:52:31.113055000 -0500
-@@ -240,124 +240,125 @@ typedef enum _vfs_op_type {
+diff --git a/source3/modules/vfs_full_audit.c b/source3/modules/vfs_full_audit.c
+index 9d89bfd396a..1a6ace4ee05 100644
+--- a/source3/modules/vfs_full_audit.c
++++ b/source3/modules/vfs_full_audit.c
+@@ -240,124 +240,124 @@ typedef enum _vfs_op_type {
  
  static struct {
  	vfs_op_type type;
@@ -18,7 +20,6 @@
 -	{ SMB_VFS_OP_GET_DFS_REFERRALS,	"get_dfs_referrals" },
 -	{ SMB_VFS_OP_CREATE_DFS_PATHAT,	"create_dfs_pathat" },
 -	{ SMB_VFS_OP_READ_DFS_PATHAT,	"read_dfs_pathat" },
--	{ SMB_VFS_OP_OPENDIR,	"opendir" },
 -	{ SMB_VFS_OP_FDOPENDIR,	"fdopendir" },
 -	{ SMB_VFS_OP_READDIR,	"readdir" },
 -	{ SMB_VFS_OP_SEEKDIR,   "seekdir" },
@@ -27,6 +28,7 @@
 -	{ SMB_VFS_OP_MKDIRAT,	"mkdirat" },
 -	{ SMB_VFS_OP_CLOSEDIR,	"closedir" },
 -	{ SMB_VFS_OP_OPEN,	"open" },
+-	{ SMB_VFS_OP_OPENAT,	"openat" },
 -	{ SMB_VFS_OP_CREATE_FILE, "create_file" },
 -	{ SMB_VFS_OP_CLOSE,	"close" },
 -	{ SMB_VFS_OP_READ,	"read" },
@@ -95,7 +97,7 @@
 -	{ SMB_VFS_OP_SET_DOS_ATTRIBUTES, "set_dos_attributes" },
 -	{ SMB_VFS_OP_FSET_DOS_ATTRIBUTES, "fset_dos_attributes" },
 -	{ SMB_VFS_OP_FGET_NT_ACL,	"fget_nt_acl" },
--	{ SMB_VFS_OP_GET_NT_ACL,	"get_nt_acl" },
+-	{ SMB_VFS_OP_GET_NT_ACL_AT,	"get_nt_acl_at" },
 -	{ SMB_VFS_OP_FSET_NT_ACL,	"fset_nt_acl" },
 -	{ SMB_VFS_OP_AUDIT_FILE,	"audit_file" },
 -	{ SMB_VFS_OP_SYS_ACL_GET_FILE,	"sys_acl_get_file" },
@@ -134,7 +136,6 @@
 +	{ SMB_VFS_OP_GET_DFS_REFERRALS, NULL,	"get_dfs_referrals" },
 +	{ SMB_VFS_OP_CREATE_DFS_PATHAT, NULL,	"create_dfs_pathat" },
 +	{ SMB_VFS_OP_READ_DFS_PATHAT, NULL,	"read_dfs_pathat" },
-+	{ SMB_VFS_OP_OPENDIR, NULL,	"opendir" },
 +	{ SMB_VFS_OP_FDOPENDIR, NULL,	"fdopendir" },
 +	{ SMB_VFS_OP_READDIR, NULL,	"readdir" },
 +	{ SMB_VFS_OP_SEEKDIR, NULL,   "seekdir" },
@@ -211,7 +212,7 @@
 +	{ SMB_VFS_OP_SET_DOS_ATTRIBUTES, NULL, "set_dos_attributes" },
 +	{ SMB_VFS_OP_FSET_DOS_ATTRIBUTES, NULL, "fset_dos_attributes" },
 +	{ SMB_VFS_OP_FGET_NT_ACL, NULL,	"fget_nt_acl" },
-+	{ SMB_VFS_OP_GET_NT_ACL, NULL,	"get_nt_acl" },
++	{ SMB_VFS_OP_GET_NT_ACL_AT, "get_nt_acl",     "get_nt_acl_at" },
 +	{ SMB_VFS_OP_FSET_NT_ACL, NULL,	"fset_nt_acl" },
 +	{ SMB_VFS_OP_AUDIT_FILE, NULL,	"audit_file" },
 +	{ SMB_VFS_OP_SYS_ACL_GET_FILE, NULL,	"sys_acl_get_file" },
@@ -242,7 +243,7 @@
  };
  
  static int audit_syslog_facility(vfs_handle_struct *handle)
-@@ -563,7 +564,8 @@ static struct bitmap *init_bitmap(TALLOC_CTX *mem_ctx,
+@@ -563,7 +563,8 @@ static struct bitmap *init_bitmap(TALLOC_CTX *mem_ctx, const char **ops)
  				smb_panic("vfs_full_audit.c: name table not "
  					  "in sync with vfs_op_type enums\n");
  			}
@@ -252,11 +253,10 @@
  				if (neg) {
  					bitmap_clear(bm, i);
  				} else {
-@@ -765,6 +767,14 @@ static int smb_full_audit_connect(vfs_handle_struct *h
- 	pd->failure_ops = init_bitmap(
+@@ -766,6 +767,14 @@ static int smb_full_audit_connect(vfs_handle_struct *handle,
  		pd, lp_parm_string_list(SNUM(handle->conn), "full_audit",
  					"failure", none));
-+
+ 
 +	if (pd->success_ops == NULL || pd->failure_ops == NULL) {
 +		DBG_ERR("Invalid auditing configuration. "
 +			"Denying access to service [%s] at path [%s]\n",
@@ -264,6 +264,7 @@
 +		errno = EACCES;
 +		return -1;
 +	}
- 
++
  	/* Store the private data. */
  	SMB_VFS_HANDLE_SET_DATA(handle, pd, NULL,
+ 				struct vfs_full_audit_private_data, return -1);
