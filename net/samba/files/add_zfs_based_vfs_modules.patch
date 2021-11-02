@@ -1,9 +1,9 @@
 diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
 new file mode 100644
-index 00000000000..209ccc99b7c
+index 00000000000..5e172e0b3a0
 --- /dev/null
 +++ b/source3/modules/vfs_shadow_copy_zfs.c
-@@ -0,0 +1,1784 @@
+@@ -0,0 +1,1818 @@
 +/* shadow_copy_zfs: a shadow copy module for ZFS
 + *
 + * Copyright (C) Andrew Tridgell   2007 (portions taken from shadow_copy_zfs)
@@ -94,7 +94,62 @@ index 00000000000..209ccc99b7c
 +	char			*shadow_connectpath;
 +};
 +
-+static struct zfs_dataset *shadow_path_to_dataset(struct dataset_list *dl, char *path)
++struct snapshot_data {
++	char *mountpoint;
++	char *shadow_cp;
++	struct snapshot_entry *snap;
++};
++
++struct shadow_copy_fsp_ext {
++	struct snapshot_data *data;
++	void *fsp_name_ptr;
++	struct files_struct *fsp;
++	vfs_handle_struct *handle;
++};
++
++#ifndef SMB_FNAME_FSP_EXT
++/*
++ * Build the full path from a dirfsp and dirfsp relative name
++ */
++struct smb_filename *full_path_from_dirfsp_atname(
++	TALLOC_CTX *mem_ctx,
++	const struct files_struct *dirfsp,
++	const struct smb_filename *atname)
++{
++	struct smb_filename *fname = NULL;
++	char *path = NULL;
++
++	if (dirfsp == dirfsp->conn->cwd_fsp ||
++	    ISDOT(dirfsp->fsp_name->base_name) ||
++	    atname->base_name[0] == '/')
++	{
++		path = talloc_strdup(mem_ctx, atname->base_name);
++	} else {
++		path = talloc_asprintf(mem_ctx, "%s/%s",
++				       dirfsp->fsp_name->base_name,
++				       atname->base_name);
++	}
++	if (path == NULL) {
++		return NULL;
++	}
++
++	fname = synthetic_smb_fname(mem_ctx,
++				    path,
++				    atname->stream_name,
++				    &atname->st,
++				    atname->twrp,
++				    atname->flags);
++	TALLOC_FREE(path);
++	if (fname == NULL) {
++		return NULL;
++	}
++
++	return fname;
++}
++#endif
++
++static struct zfs_dataset *shadow_path_to_dataset(struct dataset_list *dl,
++						  const char *path)
 +{
 +	int ret;
 +	struct stat st;
@@ -266,7 +321,7 @@ index 00000000000..209ccc99b7c
 +	struct snapshot_list *cached_snaps = NULL;
 +	struct zfs_dataset *ds = NULL;
 +	struct smbzhandle *zfsp = NULL;
-+	struct stat st;
++	struct stat st = {0};
 +
 +	time(&snap_time);
 +	SMB_VFS_HANDLE_GET_DATA(handle, config, struct shadow_copy_zfs_config,
@@ -312,21 +367,26 @@ index 00000000000..209ccc99b7c
 +	return snaplist_updated;
 +}
 +
-+static inline bool shadow_copy_zfs_match_name(const struct smb_filename *name)
++static bool shadow_copy_zfs_match_name(vfs_handle_struct *handle,
++				       const struct smb_filename *name)
 +{
-+	NTSTATUS status;
-+	if ((name->flags & SMB_FILENAME_PATH_CANONICALIZED) == 0) {
-+		status = canonicalize_snapshot_path(name);
-+		if (!NT_STATUS_IS_OK(status)) {
-+			DBG_ERR("Failed to canonicalize path for %s\n",
-+				name->base_name);
++	if (name->twrp == 0) {
++		return false;
++	}
++
++#ifdef SMB_FNAME_FSP_EXT
++	if (name->fsp != NULL) {
++		struct shadow_copy_fsp_ext *fsp_ext = NULL;
++		fsp_ext = (struct shadow_copy_fsp_ext *)
++		    VFS_FETCH_FSP_EXTENSION(handle, name->fsp);
++
++		if (fsp_ext) {
 +			return false;
 +		}
 +	}
-+	if (timeval_is_zero(&name->vss_tval)) {
-+		return false;
-+	}
-+	return true; 
++#endif
++
++	return true;
 +}
 +
 +static char *snapshot_mp_to_dataset(TALLOC_CTX *mem_ctx,
@@ -467,14 +527,15 @@ index 00000000000..209ccc99b7c
 +	return 0;
 +}
 +
-+
 +/*
 + * Convert a filename containing an @GMT token to a path in the corresponding
 + * .zfs/snapshot/<snap_name> directory.
 + */
 +static char *do_convert_shadow_zfs_name(vfs_handle_struct *handle,
-+    const char *fname, struct timeval tval, char **shadow_cp,
-+    const bool incl_rel)
++					const char *fname,
++					NTTIME tval,
++					struct snapshot_data *out,
++					const bool incl_rel)
 +{
 +	TALLOC_CTX *tmp_ctx = talloc_new(handle->data);
 +	struct shadow_copy_zfs_config *config = NULL;
@@ -501,10 +562,10 @@ index 00000000000..209ccc99b7c
 +		errno = EINVAL;
 +		return NULL;
 +	}
-+	if (config->cache_enabled && shadow_cp == NULL && !ISDOT(fname)) {
++	if (config->cache_enabled && out == NULL && !ISDOT(fname)) {
 +		tsname = talloc_asprintf(tmp_ctx, "%d/%ld/%s",
 +					 SNUM(handle->conn),
-+					 tval.tv_sec, fname);
++					 tval, fname);
 +		key.dptr = discard_const_p(uint8_t, tsname);
 +		key.dsize = strlen(tsname);
 +		ret = snapcache_get(tmp_ctx, handle, config, key);
@@ -546,7 +607,7 @@ index 00000000000..209ccc99b7c
 +
 +	/* get snapshot name */
 +	for (entry = snapshots->entries; entry; entry = entry->next) {
-+		if (tval.tv_sec == entry->cr_time) {
++		if (tval == entry->nt_time) {
 +			break;
 +		}
 +	}
@@ -576,7 +637,7 @@ index 00000000000..209ccc99b7c
 +
 +	if (entry == NULL) {
 +		DBG_INFO("Failed to retrieve snapshot entry for filename: %s, ts: %ld,"
-+			 "with snapshot mountpoint: %s\n", fname, tval.tv_sec, snapshots->mountpoint);
++			 "with snapshot mountpoint: %s\n", fname, tval, snapshots->mountpoint);
 +		if (strcmp(handle->conn->connectpath, snapshots->mountpoint) == 0) {
 +			/*
 +			 * Sub datasets can have snapshots that don't exist at the root
@@ -600,29 +661,41 @@ index 00000000000..209ccc99b7c
 +			return ret;
 +		}
 +		TALLOC_FREE(tmp_ctx);
++		errno = ENOENT;
 +		return NULL;
 +	}
 +	ret = get_snapshot_path(talloc_tos(), handle->conn->connectpath, clen,
 +				snapshots->mountpoint, mplen,
 +				res_fname, flen, mpoffset, entry);
 +
-+	if (shadow_cp != NULL) {
++	if (out != NULL) {
 +		/*
 +		 * This mountpoint ends up getting stored as part of CWD
 +		 * in the chdir() function.
 +		 */
 +		if (mpoffset) {
-+			*shadow_cp = talloc_asprintf(talloc_tos(), "%s/%s/%s/%s",
-+						     snapshots->mountpoint,
-+						     SHADOW_COPY_ZFS_SNAP_DIR,
-+						     entry->name, mpoffset);
++			out->shadow_cp = talloc_asprintf(out, "%s/%s/%s/%s",
++							 snapshots->mountpoint,
++							 SHADOW_COPY_ZFS_SNAP_DIR,
++							 entry->name, mpoffset);
 +		}
 +		else {
-+			*shadow_cp = talloc_asprintf(talloc_tos(), "%s/%s/%s",
-+						     snapshots->mountpoint,
-+						     SHADOW_COPY_ZFS_SNAP_DIR,
-+						     entry->name);
++			out->shadow_cp = talloc_asprintf(out, "%s/%s/%s",
++							 snapshots->mountpoint,
++							 SHADOW_COPY_ZFS_SNAP_DIR,
++							 entry->name);
 +		}
++		out->snap = talloc_zero(out, struct snapshot_entry);
++		if (out->snap == NULL) {
++			errno = ENOMEM;
++			TALLOC_FREE(tmp_ctx);
++			return NULL;
++		}
++		out->snap->nt_time = entry->nt_time;
++		out->snap->cr_time = entry->cr_time;
++		out->snap->name = talloc_strdup(out, entry->name);
++		out->mountpoint = talloc_strdup(out, snapshots->mountpoint);
++		snprintf(out->snap->label, GMT_NAME_LEN, "%s", entry->label);
 +	}
 +
 +	if (config->cache_enabled && !ISDOT(fname)) {
@@ -637,48 +710,10 @@ index 00000000000..209ccc99b7c
 +}
 +
 +static char *convert_shadow_zfs_name(vfs_handle_struct *handle,
-+    const char *fname, struct timeval tval,
++    const char *fname, NTTIME tval,
 +    const bool incl_rel)
 +{
 +	return do_convert_shadow_zfs_name(handle, fname, tval, NULL, incl_rel);
-+}
-+
-+static DIR *shadow_copy_zfs_opendir(vfs_handle_struct *handle,
-+    const struct smb_filename *smb_fname,
-+    const char *mask,
-+    uint32_t attr)
-+{
-+	DIR *ret;
-+	int saved_errno;
-+	char *conv;
-+	struct smb_filename *conv_smb_fname = NULL;
-+
-+	if (shadow_copy_zfs_match_name(smb_fname)) {
-+		conv = convert_shadow_zfs_name(handle, smb_fname->base_name,
-+		     smb_fname->vss_tval, True);
-+		if (conv == NULL) {
-+			return NULL;
-+		}
-+
-+		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
-+						     conv,
-+						     NULL,
-+						     NULL,
-+						     smb_fname->flags);
-+		if (conv_smb_fname == NULL) {
-+			TALLOC_FREE(conv);
-+			return NULL;
-+		}
-+
-+		ret = SMB_VFS_NEXT_OPENDIR(handle, conv_smb_fname, mask, attr);
-+		saved_errno = errno;
-+		TALLOC_FREE(conv);
-+		TALLOC_FREE(conv_smb_fname);
-+		errno = saved_errno;
-+		return ret;
-+	} else {
-+		return SMB_VFS_NEXT_OPENDIR(handle, smb_fname, mask, attr);
-+	}
 +}
 +
 +static int shadow_copy_zfs_renameat(vfs_handle_struct *handle,
@@ -689,8 +724,8 @@ index 00000000000..209ccc99b7c
 +{
 +	int ret_src, ret_dst;
 +
-+	ret_src = shadow_copy_zfs_match_name(smb_fname_src);
-+	ret_dst = shadow_copy_zfs_match_name(smb_fname_dst);
++	ret_src = shadow_copy_zfs_match_name(handle, smb_fname_src);
++	ret_dst = shadow_copy_zfs_match_name(handle, smb_fname_dst);
 +
 +	if (ret_src != 0) {
 +		errno = EXDEV;
@@ -706,21 +741,14 @@ index 00000000000..209ccc99b7c
 +}
 +
 +static int shadow_copy_zfs_symlinkat(vfs_handle_struct *handle,
-+				     const char *link_contents,
++				     const struct smb_filename *link_contents,
 +				     struct files_struct *dirfsp,
 +				     const struct smb_filename *new_smb_filename)
 +{
 +	int ret_old, ret_new;
-+	struct smb_filename *fake_smb_fname = NULL;
-+	fake_smb_fname = synthetic_smb_fname(talloc_tos(),
-+					     link_contents,
-+				 	     NULL,
-+					     NULL,
-+					     0);
 +
-+	canonicalize_snapshot_path(fake_smb_fname);
-+	ret_old = shadow_copy_zfs_match_name(fake_smb_fname);
-+	ret_new = shadow_copy_zfs_match_name(new_smb_filename);
++	ret_old = shadow_copy_zfs_match_name(handle, link_contents);
++	ret_new = shadow_copy_zfs_match_name(handle, new_smb_filename);
 +
 +	if ((ret_old != 0) || (ret_new != 0)) {
 +		errno = EROFS;
@@ -739,8 +767,8 @@ index 00000000000..209ccc99b7c
 +{
 +	int ret_old, ret_new;
 +
-+	ret_old = shadow_copy_zfs_match_name(oldname);
-+	ret_new = shadow_copy_zfs_match_name(newname);
++	ret_old = shadow_copy_zfs_match_name(handle, oldname);
++	ret_new = shadow_copy_zfs_match_name(handle, newname);
 +
 +	if ((ret_old != 0) || (ret_new != 0)) {
 +		errno = EROFS;
@@ -756,10 +784,10 @@ index 00000000000..209ccc99b7c
 +	int ret, saved_errno;
 +	char *tmp;
 +
-+	if (shadow_copy_zfs_match_name(smb_fname)) {
++	if (shadow_copy_zfs_match_name(handle, smb_fname)) {
 +		tmp = smb_fname->base_name;
 +		smb_fname->base_name = convert_shadow_zfs_name(
-+		    handle, smb_fname->base_name, smb_fname->vss_tval, True);
++		    handle, smb_fname->base_name, smb_fname->twrp, True);
 +
 +		if (smb_fname->base_name == NULL) {
 +			smb_fname->base_name = tmp;
@@ -783,10 +811,10 @@ index 00000000000..209ccc99b7c
 +	int ret, saved_errno;
 +	char *tmp;
 +
-+	if (shadow_copy_zfs_match_name(smb_fname)) {
++	if (shadow_copy_zfs_match_name(handle, smb_fname)) {
 +		tmp = smb_fname->base_name;
 +		smb_fname->base_name = convert_shadow_zfs_name(
-+		    handle, smb_fname->base_name, smb_fname->vss_tval, True);
++		    handle, smb_fname->base_name, smb_fname->twrp, True);
 +
 +		if (smb_fname->base_name == NULL) {
 +			smb_fname->base_name = tmp;
@@ -816,7 +844,7 @@ index 00000000000..209ccc99b7c
 +	struct smb_filename *orig_base_smb_fname = NULL;
 +	struct smb_filename vss_base_smb_fname;
 +	char *stripped = NULL;
-+	if (!shadow_copy_zfs_match_name(fsp->fsp_name)) {
++	if (!shadow_copy_zfs_match_name(handle, fsp->fsp_name)) {
 +		ret = SMB_VFS_NEXT_FSTAT(handle, fsp, sbuf);
 +		if (ret == -1) {
 +			return ret;
@@ -826,7 +854,7 @@ index 00000000000..209ccc99b7c
 +
 +	vss_smb_fname = *fsp->fsp_name;
 +	vss_smb_fname.base_name = convert_shadow_zfs_name(handle,
-+				 fsp->fsp_name->base_name, fsp->fsp_name->vss_tval, True);
++				 fsp->fsp_name->base_name, fsp->fsp_name->twrp, True);
 +
 +	if (vss_smb_fname.base_name == NULL) {
 +		return -1;
@@ -851,42 +879,83 @@ index 00000000000..209ccc99b7c
 +	return ret;
 +}
 +
++
 +static int shadow_copy_zfs_open(vfs_handle_struct *handle,
-+			     struct smb_filename *smb_fname, files_struct *fsp,
-+			     int flags, mode_t mode)
++				const struct files_struct *dirfsp,
++				const struct smb_filename *smb_fname_in,
++				files_struct *fsp,
++				int flags, mode_t mode)
 +{
-+	int ret, saved_errno;
-+	char *tmp;
++	int ret;
++	char *tmp = NULL;
++	struct smb_filename *conv_smb_fname = NULL;
++	struct smb_filename *smb_fname = NULL;
++	struct snapshot_data *data = NULL;
++	struct shadow_copy_fsp_ext *fsp_ext = NULL;
 +
-+	if (shadow_copy_zfs_match_name(smb_fname)) {
-+		tmp = smb_fname->base_name;
-+		smb_fname->base_name = convert_shadow_zfs_name(
-+		    handle, smb_fname->base_name, smb_fname->vss_tval, True);
++	smb_fname = full_path_from_dirfsp_atname(talloc_tos(),
++						 dirfsp,
++						 smb_fname_in);
 +
-+		if (smb_fname->base_name == NULL) {
-+			smb_fname->base_name = tmp;
-+			return -1;
-+		}
-+		/*
-+		 * Overwrite user requested flags with O_RDONLY.
-+		 */
-+		flags = O_RDONLY;
-+
-+		ret = SMB_VFS_NEXT_OPEN(handle, smb_fname, fsp, flags, mode);
-+		if (ret != 0) {
-+			saved_errno = errno;
-+		}
-+
-+		TALLOC_FREE(smb_fname->base_name);
-+		smb_fname->base_name = tmp;
-+
-+		if (saved_errno != 0) {
-+			errno = saved_errno;
-+		}
-+		return ret;
++	if (!shadow_copy_zfs_match_name(handle, smb_fname)) {
++		TALLOC_FREE(smb_fname);
++		return SMB_VFS_NEXT_OPENAT(handle,
++					   dirfsp,
++					   smb_fname_in,
++					   fsp, flags, mode);
 +	}
 +
-+	return SMB_VFS_NEXT_OPEN(handle, smb_fname, fsp, flags, mode);
++	/*
++	 * If dirfsp is an open in a snapshot directory, then concatenate the
++	 * dirfsp path with smb_fname relative path, convert into an absolute
++	 * path in the relevant snapdir, and pass to openat().
++	 */
++	data = talloc_zero(handle, struct snapshot_data);
++	if (data == NULL) {
++		TALLOC_FREE(smb_fname);
++		errno = ENOMEM;
++		return -1;
++	}
++	tmp = do_convert_shadow_zfs_name(handle,
++					 smb_fname->base_name,
++					 smb_fname->twrp,
++					 data,
++					 True);
++	if (tmp == NULL) {
++		TALLOC_FREE(smb_fname);
++		return -1;
++	}
++
++	conv_smb_fname = synthetic_smb_fname(talloc_tos(),
++					     tmp,
++					     NULL,
++					     &smb_fname->st,
++					     smb_fname->twrp,
++					     smb_fname->flags);
++	if (conv_smb_fname == NULL) {
++		TALLOC_FREE(smb_fname);
++		TALLOC_FREE(tmp);
++		return -1;
++	}
++	TALLOC_FREE(smb_fname);
++
++	flags &= ~(O_WRONLY | O_RDWR | O_CREAT);
++
++	ret = SMB_VFS_NEXT_OPENAT(handle, dirfsp, conv_smb_fname,
++				  fsp, flags, mode);
++
++	TALLOC_FREE(conv_smb_fname);
++
++	if (ret != -1) {
++		fsp_ext = VFS_ADD_FSP_EXTENSION(handle, fsp, struct shadow_copy_fsp_ext, NULL);
++		SMB_ASSERT(fsp_ext != NULL);
++		fsp_ext->data = talloc_move(VFS_MEMCTX_FSP_EXTENSION(handle, fsp), &data);
++		fsp_ext->handle = handle;
++		fsp_ext->fsp = fsp;
++		fsp_ext->fsp_name_ptr = fsp->fsp_name;
++	}
++
++	return ret;
 +}
 +
 +static int shadow_copy_zfs_unlinkat(vfs_handle_struct *handle,
@@ -894,31 +963,24 @@ index 00000000000..209ccc99b7c
 +				    const struct smb_filename *smb_fname,
 +				    int flags)
 +{
-+	int ret, saved_errno;
-+	struct smb_filename *conv;
-+
-+	if (shadow_copy_zfs_match_name(smb_fname)) {
++	if (shadow_copy_zfs_match_name(handle, smb_fname)) {
 +		errno = EROFS;
 +		return -1;
-+	} else {
-+		return SMB_VFS_NEXT_UNLINKAT(handle, dirfsp, smb_fname, flags);
 +	}
++
++	return SMB_VFS_NEXT_UNLINKAT(handle, dirfsp, smb_fname, flags);
 +}
 +
 +static int shadow_copy_zfs_chmod(vfs_handle_struct *handle,
 +    const struct smb_filename *smb_fname,
 +    mode_t mode)
 +{
-+	int ret, saved_errno;
-+	char *conv;
-+	struct smb_filename *conv_smb_fname = NULL;
-+
-+	if (shadow_copy_zfs_match_name(smb_fname)) {
++	if (shadow_copy_zfs_match_name(handle, smb_fname)) {
 +		errno = EROFS;
 +		return -1;
-+	} else {
-+		return SMB_VFS_NEXT_CHMOD(handle, smb_fname, mode);
 +	}
++
++	return SMB_VFS_NEXT_CHMOD(handle, smb_fname, mode);
 +}
 +
 +static int shadow_copy_zfs_fchown(vfs_handle_struct *handle,
@@ -926,14 +988,12 @@ index 00000000000..209ccc99b7c
 +				  uid_t uid,
 +				  gid_t gid)
 +{
-+	int ret, saved_errno;
-+
-+	if (shadow_copy_zfs_match_name(fsp->fsp_name)) {
++	if (shadow_copy_zfs_match_name(handle, fsp->fsp_name)) {
 +		errno = EROFS;
 +		return -1;
-+	} else {
-+		return SMB_VFS_NEXT_FCHOWN(handle, fsp, uid, gid);
 +	}
++
++	return SMB_VFS_NEXT_FCHOWN(handle, fsp, uid, gid);
 +}
 +
 +static int shadow_copy_zfs_lchown(vfs_handle_struct *handle,
@@ -941,42 +1001,47 @@ index 00000000000..209ccc99b7c
 +				  uid_t uid,
 +				  gid_t gid)
 +{
-+	int ret, saved_errno;
-+
-+	if (shadow_copy_zfs_match_name(smb_fname)) {
++	if (shadow_copy_zfs_match_name(handle, smb_fname)) {
 +		errno = EROFS;
 +		return -1;
-+	} else {
-+		return SMB_VFS_NEXT_LCHOWN(handle, smb_fname, uid, gid);
 +	}
++
++	return SMB_VFS_NEXT_LCHOWN(handle, smb_fname, uid, gid);
 +}
 +
 +static int shadow_copy_zfs_chdir(vfs_handle_struct *handle,
-+			      const struct smb_filename *smb_fname)
++				 const struct smb_filename *smb_fname)
 +{
 +	int ret;
 +	char *conv = NULL;
++	struct snapshot_data *data = NULL;
 +	char *shadow_cp = NULL;
 +	struct smb_filename *conv_smb_fname = NULL;
 +
-+	if (!shadow_copy_zfs_match_name(smb_fname)) {
++	if (!shadow_copy_zfs_match_name(handle, smb_fname)) {
 +		ret =  SMB_VFS_NEXT_CHDIR(handle, smb_fname);
 +		store_connectpath(handle, NULL);
 +		return ret;
 +	}
 +
++	data = talloc_zero(handle->conn, struct snapshot_data);
++	if (data == NULL) {
++		errno = ENOMEM;
++		return -1;
++	}
 +	conv = do_convert_shadow_zfs_name(handle,
 +					smb_fname->base_name,
-+					smb_fname->vss_tval,
-+					&shadow_cp, True);
++					smb_fname->twrp,
++					data, True);
 +	if (conv == NULL) {
 +		return -1;
 +	}
 +
 +	conv_smb_fname = synthetic_smb_fname(talloc_tos(),
 +					     conv,
++					     smb_fname->stream_name,
 +					     NULL,
-+					     NULL,
++					     0,
 +					     smb_fname->flags);
 +	if (conv_smb_fname == NULL) {
 +		TALLOC_FREE(conv);
@@ -985,7 +1050,7 @@ index 00000000000..209ccc99b7c
 +
 +	ret = SMB_VFS_NEXT_CHDIR(handle, conv_smb_fname);
 +	if (ret == 0) {
-+		store_connectpath(handle, shadow_cp);
++		store_connectpath(handle, data->shadow_cp);
 +	}
 +	TALLOC_FREE(conv);
 +	TALLOC_FREE(conv_smb_fname);
@@ -998,12 +1063,12 @@ index 00000000000..209ccc99b7c
 +	int ret, saved_errno;
 +	struct smb_filename *conv;
 +
-+	if (shadow_copy_zfs_match_name(smb_fname)) {
++	if (shadow_copy_zfs_match_name(handle, smb_fname)) {
 +		errno = EROFS;
 +		return -1;
-+	} else {
-+		return SMB_VFS_NEXT_NTIMES(handle, smb_fname, ft);
 +	}
++
++	return SMB_VFS_NEXT_NTIMES(handle, smb_fname, ft);
 +}
 +
 +static int shadow_copy_zfs_readlinkat(vfs_handle_struct *handle,
@@ -1020,13 +1085,13 @@ index 00000000000..209ccc99b7c
 +	char *base = NULL;
 +	struct smb_filename *conv = NULL;
 +
-+	if (shadow_copy_zfs_match_name(smb_fname)) {
++	if (shadow_copy_zfs_match_name(handle, smb_fname)) {
 +		conv = cp_smb_filename(talloc_tos(), smb_fname);
 +		if (conv == NULL) {
 +			return -1;
 +		}
 +		shadow_name = convert_shadow_zfs_name(
-+		    handle, smb_fname->base_name, smb_fname->vss_tval, True);
++		    handle, smb_fname->base_name, smb_fname->twrp, True);
 +		if (shadow_name == NULL){
 +			TALLOC_FREE(conv);
 +			return -1;
@@ -1065,16 +1130,12 @@ index 00000000000..209ccc99b7c
 +				mode_t mode,
 +				SMB_DEV_T dev)
 +{
-+	int ret, saved_errno;
-+	char *conv;
-+	struct smb_filename *conv_smb_fname;
-+
-+	if (shadow_copy_zfs_match_name(smb_fname)) {
++	if (shadow_copy_zfs_match_name(handle, smb_fname)) {
 +		errno = EROFS;
 +		return -1;
-+	} else {
-+		return SMB_VFS_NEXT_MKNODAT(handle, dirfsp, smb_fname, mode, dev);
 +	}
++
++	return SMB_VFS_NEXT_MKNODAT(handle, dirfsp, smb_fname, mode, dev);
 +}
 +
 +static struct smb_filename *shadow_copy_zfs_realpath(vfs_handle_struct *handle, TALLOC_CTX *ctx,
@@ -1085,17 +1146,18 @@ index 00000000000..209ccc99b7c
 +	char *conv = NULL;
 +	struct smb_filename *conv_smb_fname = NULL;
 +
-+	if (shadow_copy_zfs_match_name(smb_fname)) {
++	if (shadow_copy_zfs_match_name(handle, smb_fname)) {
 +		conv = convert_shadow_zfs_name(
-+		    handle, smb_fname->base_name, smb_fname->vss_tval, True);
++		    handle, smb_fname->base_name, smb_fname->twrp, True);
 +		if (conv == NULL) {
 +			errno = ENOENT;
 +			return NULL;
 +		}
 +		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
 +						     conv,
++						     smb_fname->stream_name,
 +						     NULL,
-+						     NULL,
++						     0,
 +						     smb_fname->flags);
 +		if (conv_smb_fname == NULL) {
 +			TALLOC_FREE(conv);
@@ -1245,48 +1307,8 @@ index 00000000000..209ccc99b7c
 +	return 0;
 +}
 +
-+static NTSTATUS shadow_copy_zfs_fget_nt_acl(vfs_handle_struct *handle,
-+					struct files_struct *fsp,
-+					uint32_t security_info,
-+					TALLOC_CTX *mem_ctx,
-+					struct security_descriptor **ppdesc)
-+{
-+	NTSTATUS ret;
-+	int saved_errno;
-+	char *conv;
-+	struct smb_filename *smb_fname = NULL;
-+
-+	if (shadow_copy_zfs_match_name(fsp->fsp_name)) {
-+		conv = convert_shadow_zfs_name(handle, fsp->fsp_name->base_name,
-+					       fsp->fsp_name->vss_tval, True);
-+		if (conv == NULL) {
-+			return map_nt_error_from_unix(errno);
-+		}
-+
-+		smb_fname = synthetic_smb_fname(talloc_tos(),
-+						conv,
-+						NULL,
-+						NULL,
-+						fsp->fsp_name->flags);
-+		if (smb_fname == NULL) {
-+			TALLOC_FREE(conv);
-+			return NT_STATUS_NO_MEMORY;
-+		}
-+
-+		ret = SMB_VFS_NEXT_GET_NT_ACL(handle, smb_fname, security_info,
-+					      mem_ctx, ppdesc);
-+		saved_errno = errno;
-+		TALLOC_FREE(conv);
-+		TALLOC_FREE(smb_fname);
-+		errno = saved_errno;
-+		return ret;
-+	} else {
-+		return SMB_VFS_NEXT_FGET_NT_ACL(handle, fsp, security_info,
-+					       mem_ctx, ppdesc);
-+	}
-+}
-+
 +static NTSTATUS shadow_copy_zfs_get_nt_acl(vfs_handle_struct *handle,
++    struct files_struct *dirfsp,
 +    const struct smb_filename *smb_fname,
 +    uint32_t security_info,
 +    TALLOC_CTX *mem_ctx,
@@ -1297,24 +1319,25 @@ index 00000000000..209ccc99b7c
 +	char *conv;
 +	struct smb_filename *conv_smb_fname = NULL;
 +
-+	if (shadow_copy_zfs_match_name(smb_fname)) {
++	if (shadow_copy_zfs_match_name(handle, smb_fname)) {
 +		conv = convert_shadow_zfs_name(handle, smb_fname->base_name,
-+					       smb_fname->vss_tval, True);
++					       smb_fname->twrp, True);
 +		if (conv == NULL) {
 +			return map_nt_error_from_unix(errno);
 +		}
 +
 +		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
 +						     conv,
++						     smb_fname->stream_name,
 +						     NULL,
-+						     NULL,
++						     0,
 +						     smb_fname->flags);
 +		if (conv_smb_fname == NULL) {
 +			TALLOC_FREE(conv);
 +			return NT_STATUS_NO_MEMORY;
 +		}
 +
-+		ret = SMB_VFS_NEXT_GET_NT_ACL(handle, conv_smb_fname,
++		ret = SMB_VFS_NEXT_GET_NT_ACL_AT(handle, dirfsp, conv_smb_fname,
 +					      security_info, mem_ctx, ppdesc);
 +		saved_errno = errno;
 +		TALLOC_FREE(conv);
@@ -1322,7 +1345,7 @@ index 00000000000..209ccc99b7c
 +		errno = saved_errno;
 +		return ret;
 +	} else {
-+		return SMB_VFS_NEXT_GET_NT_ACL(handle, smb_fname, security_info,
++		return SMB_VFS_NEXT_GET_NT_ACL_AT(handle, dirfsp, smb_fname, security_info,
 +					       mem_ctx, ppdesc);
 +	}
 +}
@@ -1332,28 +1355,24 @@ index 00000000000..209ccc99b7c
 +				   const struct smb_filename *smb_fname,
 +				   mode_t mode)
 +{
-+	struct smb_filename *conv_smb_fname = NULL;
-+
-+	if (shadow_copy_zfs_match_name(smb_fname)) {
++	if (shadow_copy_zfs_match_name(handle, smb_fname)) {
 +		errno = EROFS;
 +		return -1;
-+	} else {
-+		return SMB_VFS_NEXT_MKDIRAT(handle, dirfsp, smb_fname, mode);
 +	}
++
++	return SMB_VFS_NEXT_MKDIRAT(handle, dirfsp, smb_fname, mode);
 +}
 +
 +static int shadow_copy_zfs_chflags(vfs_handle_struct *handle,
 +				const struct smb_filename *smb_fname,
 +				unsigned int flags)
 +{
-+	struct smb_filename *conv_smb_fname = NULL;
-+
-+	if (shadow_copy_zfs_match_name(smb_fname)) {
++	if (shadow_copy_zfs_match_name(handle, smb_fname)) {
 +		errno = EROFS;
 +		return -1;
-+	} else {
-+		return SMB_VFS_NEXT_CHFLAGS(handle, smb_fname, flags);
 +	}
++
++	return SMB_VFS_NEXT_CHFLAGS(handle, smb_fname, flags);
 +}
 +
 +static ssize_t shadow_copy_zfs_getxattr(vfs_handle_struct *handle,
@@ -1363,19 +1382,20 @@ index 00000000000..209ccc99b7c
 +				size_t size)
 +{
 +	int ret, saved_errno;
-+	char *conv;
++	char *conv = NULL;
 +	struct smb_filename *conv_smb_fname = NULL;
 +
-+	if (shadow_copy_zfs_match_name(smb_fname)) {
++	if (shadow_copy_zfs_match_name(handle, smb_fname)) {
 +		conv = convert_shadow_zfs_name(handle, smb_fname->base_name,
-+					       smb_fname->vss_tval, True);
++					       smb_fname->twrp, True);
 +		if (conv == NULL) {
 +			return -1;
 +		}
 +		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
 +						conv,
++						smb_fname->stream_name,
 +						NULL,
-+						NULL,
++						0,
 +						smb_fname->flags);
 +		if (conv_smb_fname == NULL) {
 +			TALLOC_FREE(conv);
@@ -1389,10 +1409,9 @@ index 00000000000..209ccc99b7c
 +		TALLOC_FREE(conv_smb_fname);
 +		errno = saved_errno;
 +		return ret;
-+	} else {
-+		return SMB_VFS_NEXT_GETXATTR(handle, smb_fname, aname, value,
-+					     size);
 +	}
++
++	return SMB_VFS_NEXT_GETXATTR(handle, smb_fname, aname, value, size);
 +}
 +
 +static ssize_t shadow_copy_zfs_listxattr(struct vfs_handle_struct *handle,
@@ -1404,16 +1423,17 @@ index 00000000000..209ccc99b7c
 +	char *conv;
 +	struct smb_filename *conv_smb_fname = NULL;
 +
-+	if (shadow_copy_zfs_match_name(smb_fname)) {
++	if (shadow_copy_zfs_match_name(handle, smb_fname)) {
 +		conv = convert_shadow_zfs_name(handle, smb_fname->base_name,
-+					       smb_fname->vss_tval, True);
++					       smb_fname->twrp, True);
 +		if (conv == NULL) {
 +			return -1;
 +		}
 +		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
 +						conv,
++						smb_fname->stream_name,
 +						NULL,
-+						NULL,
++						0,
 +						smb_fname->flags);
 +		if (conv_smb_fname == NULL) {
 +			TALLOC_FREE(conv);
@@ -1426,9 +1446,9 @@ index 00000000000..209ccc99b7c
 +		TALLOC_FREE(conv_smb_fname);
 +		errno = saved_errno;
 +		return ret;
-+	} else {
-+		return SMB_VFS_NEXT_LISTXATTR(handle, smb_fname, list, size);
 +	}
++
++	return SMB_VFS_NEXT_LISTXATTR(handle, smb_fname, list, size);
 +}
 +
 +static int shadow_copy_zfs_removexattr(vfs_handle_struct *handle,
@@ -1437,12 +1457,12 @@ index 00000000000..209ccc99b7c
 +{
 +	struct smb_filename *conv_smb_fname = NULL;
 +
-+	if (shadow_copy_zfs_match_name(smb_fname)) {
++	if (shadow_copy_zfs_match_name(handle, smb_fname)) {
 +		errno = EROFS;
 +		return -1;
-+	} else {
-+		return SMB_VFS_NEXT_REMOVEXATTR(handle, smb_fname, aname);
 +	}
++
++	return SMB_VFS_NEXT_REMOVEXATTR(handle, smb_fname, aname);
 +}
 +
 +static int shadow_copy_zfs_setxattr(struct vfs_handle_struct *handle,
@@ -1454,50 +1474,51 @@ index 00000000000..209ccc99b7c
 +{
 +	struct smb_filename *conv_smb_fname = NULL;
 +
-+	if (shadow_copy_zfs_match_name(smb_fname)) {
++	if (shadow_copy_zfs_match_name(handle, smb_fname)) {
 +		errno = EROFS;
 +		return -1;
-+	} else {
-+		return SMB_VFS_NEXT_SETXATTR(handle, smb_fname, aname, value, size,
-+					     flags);
 +	}
++
++	return SMB_VFS_NEXT_SETXATTR(handle, smb_fname, aname, value, size,
++				     flags);
 +}
 +
 +static int shadow_copy_zfs_get_real_filename(struct vfs_handle_struct *handle,
-+					  const char *path,
++					  const struct smb_filename *path,
 +					  const char *name,
 +					  TALLOC_CTX *mem_ctx,
 +					  char **found_name)
 +{
 +	ssize_t ret;
 +	int saved_errno;
-+	char *conv;
-+	struct smb_filename *fake_smb_fname = NULL;
 +
-+	fake_smb_fname = synthetic_smb_fname(talloc_tos(),
-+					     path,
-+				 	     NULL,
-+					     NULL,
-+					     0);
++	if (shadow_copy_zfs_match_name(handle, path)) {
++		char *conv = NULL;
++		struct smb_filename *conv_smb_fname = NULL;
 +
-+	canonicalize_snapshot_path(fake_smb_fname);
-+	if (shadow_copy_zfs_match_name(fake_smb_fname)) {
-+		conv = convert_shadow_zfs_name(handle, fake_smb_fname->base_name,
-+					       fake_smb_fname->vss_tval, True);
++		conv = convert_shadow_zfs_name(handle, path->base_name,
++					       path->twrp, True);
 +		if (conv == NULL) {
 +			return -1;
 +		}
 +
-+		ret = SMB_VFS_NEXT_GET_REAL_FILENAME(handle, conv, name,
++		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
++						conv,
++						path->stream_name,
++						NULL,
++						0,
++						path->flags);
++
++		ret = SMB_VFS_NEXT_GET_REAL_FILENAME(handle, conv_smb_fname, name,
 +						     mem_ctx, found_name);
 +		saved_errno = errno;
 +		TALLOC_FREE(conv);
 +		errno = saved_errno;
 +		return ret;
-+	} else {
-+		return SMB_VFS_NEXT_GET_REAL_FILENAME(handle, path, name,
-+						      mem_ctx, found_name);
 +	}
++
++	return SMB_VFS_NEXT_GET_REAL_FILENAME(handle, path, name,
++					      mem_ctx, found_name);
 +}
 +
 +static const char *shadow_copy_zfs_connectpath(struct vfs_handle_struct *handle,
@@ -1519,17 +1540,30 @@ index 00000000000..209ccc99b7c
 +		return config->shadow_connectpath;
 +	}
 +
-+	if (shadow_copy_zfs_match_name(smb_fname)) {
-+		char *cp = NULL;
++	if (shadow_copy_zfs_match_name(handle, smb_fname)) {
++		char *out = NULL;
++		struct snapshot_data *data = NULL;
++		data = talloc_zero(handle, struct snapshot_data);
++		if (data == NULL) {
++			errno = ENOMEM;
++			return NULL;
++		}
 +		conv = do_convert_shadow_zfs_name(handle,
 +					smb_fname->base_name,
-+					smb_fname->vss_tval,
-+					&cp, True);
++					smb_fname->twrp,
++					data, True);
 +		if (conv == NULL) {
 +			return handle->conn->connectpath;
 +		}
 +		TALLOC_FREE(conv);
-+		return cp;
++		if (data->shadow_cp == NULL) {
++			TALLOC_FREE(data);
++			return SMB_VFS_NEXT_CONNECTPATH(handle, smb_fname);
++		}
++		out = talloc_strdup(talloc_tos(), data->shadow_cp);
++
++		TALLOC_FREE(data);
++		return out;
 +	}
 +	return SMB_VFS_NEXT_CONNECTPATH(handle, smb_fname);
 +}
@@ -1545,16 +1579,17 @@ index 00000000000..209ccc99b7c
 +	char *conv;
 +	struct smb_filename *conv_smb_fname = NULL;
 +
-+	if (shadow_copy_zfs_match_name(smb_fname)) {
++	if (shadow_copy_zfs_match_name(handle, smb_fname)) {
 +		conv = convert_shadow_zfs_name(handle, smb_fname->base_name,
-+					       smb_fname->vss_tval, True);
++					       smb_fname->twrp, True);
 +		if (conv == NULL) {
 +			return (uint64_t)-1;
 +		}
 +		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
 +						conv,
++						smb_fname->stream_name,
 +						NULL,
-+						NULL,
++						0,
 +						smb_fname->flags);
 +		if (conv_smb_fname == NULL) {
 +			TALLOC_FREE(conv);
@@ -1581,16 +1616,17 @@ index 00000000000..209ccc99b7c
 +	char *conv;
 +	struct smb_filename *conv_smb_fname = NULL;
 +
-+	if (shadow_copy_zfs_match_name(smb_fname)) {
++	if (shadow_copy_zfs_match_name(handle, smb_fname)) {
 +		conv = convert_shadow_zfs_name(handle, smb_fname->base_name,
-+					       smb_fname->vss_tval, True);
++					       smb_fname->twrp, True);
 +		if (conv == NULL) {
 +			return -1;
 +		}
 +		conv_smb_fname = synthetic_smb_fname(talloc_tos(),
 +						conv,
++						smb_fname->base_name,
 +						NULL,
-+						NULL,
++						0,
 +						smb_fname->flags);
 +		if (conv_smb_fname == NULL) {
 +			TALLOC_FREE(conv);
@@ -1737,7 +1773,6 @@ index 00000000000..209ccc99b7c
 +
 +static struct vfs_fn_pointers vfs_shadow_copy_zfs_fns = {
 +	.connect_fn = shadow_copy_zfs_connect,
-+	.opendir_fn = shadow_copy_zfs_opendir,
 +	.disk_free_fn = shadow_copy_zfs_disk_free,
 +	.get_quota_fn = shadow_copy_zfs_get_quota,
 +	.renameat_fn = shadow_copy_zfs_renameat,
@@ -1746,7 +1781,7 @@ index 00000000000..209ccc99b7c
 +	.stat_fn = shadow_copy_zfs_stat,
 +	.lstat_fn = shadow_copy_zfs_lstat,
 +	.fstat_fn = shadow_copy_zfs_fstat,
-+	.open_fn = shadow_copy_zfs_open,
++	.openat_fn = shadow_copy_zfs_open,
 +	.unlinkat_fn = shadow_copy_zfs_unlinkat,
 +	.chmod_fn = shadow_copy_zfs_chmod,
 +	.fchown_fn = shadow_copy_zfs_fchown,
@@ -1756,8 +1791,7 @@ index 00000000000..209ccc99b7c
 +	.readlinkat_fn = shadow_copy_zfs_readlinkat,
 +	.mknodat_fn = shadow_copy_zfs_mknodat,
 +	.realpath_fn = shadow_copy_zfs_realpath,
-+	.get_nt_acl_fn = shadow_copy_zfs_get_nt_acl,
-+	.fget_nt_acl_fn = shadow_copy_zfs_fget_nt_acl,
++	.get_nt_acl_at_fn = shadow_copy_zfs_get_nt_acl,
 +	.get_shadow_copy_data_fn = shadow_copy_zfs_get_shadow_copy_zfs_data,
 +	.mkdirat_fn = shadow_copy_zfs_mkdirat,
 +	.getxattr_fn = shadow_copy_zfs_getxattr,
@@ -1790,10 +1824,10 @@ index 00000000000..209ccc99b7c
 +}
 diff --git a/source3/modules/vfs_tmprotect.c b/source3/modules/vfs_tmprotect.c
 new file mode 100644
-index 00000000000..f1a6f0eb116
+index 00000000000..2ac4f3525bf
 --- /dev/null
 +++ b/source3/modules/vfs_tmprotect.c
-@@ -0,0 +1,289 @@
+@@ -0,0 +1,291 @@
 +/* tmprotect: a module for automatic ZFS snapshot maintenance.
 + *
 + * Copyright (C) iXsystems Inc     2019
@@ -2027,7 +2061,7 @@ index 00000000000..f1a6f0eb116
 +	 * having too many snapshots. 
 +	 */
 +	if (remaining_snaps > min_snaps || (config->oldest_snap > (curtime-(retention/2)))) {
-+		DBG_DEBUG("num_snaps: %d, num_delete: %d, remaining_snaps: %d, "
++		DBG_DEBUG("num_snaps: %zu, num_delete: %zu, remaining_snaps: %zu, "
 +			  "min snaps: %d\n", snapshots->num_entries,
 +			  to_delete->num_entries, remaining_snaps, min_snaps);
 +		to_delete->dataset_name = talloc_strdup(talloc_tos(), snapshots->dataset_name);
@@ -2071,6 +2105,8 @@ index 00000000000..f1a6f0eb116
 +	SMB_VFS_HANDLE_SET_DATA(handle, config,
 +				tmprotect_free_data, struct tmprotect_config_data,
 +				return -1);
++
++	return 0;
 +}
 +
 +static struct vfs_fn_pointers tmprotect_fns = {

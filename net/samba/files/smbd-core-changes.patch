@@ -1,5 +1,54 @@
+diff --git a/docs-xml/smbdotconf/misc/smbdmaxxattrsize.xml b/docs-xml/smbdotconf/misc/smbdmaxxattrsize.xml
+new file mode 100644
+index 00000000000..dde01088c8f
+--- /dev/null
++++ b/docs-xml/smbdotconf/misc/smbdmaxxattrsize.xml
+@@ -0,0 +1,28 @@
++<samba:parameter name="smbd max xattr size"
++                 context="S"
++                 type="integer"
++                 xmlns:samba="http://www.samba.org/samba/DTD/samba-doc">
++<description>
++	<para>
++	  This parameter controls the maximum size of extended attributes
++	  that may be written to the server as EAs or as alternate data
++	  streams if vfs_streams_xattr is enabled. The maximum size of
++	  extended attributes depends on the Samba server's operating system
++	  and the underlying filesystem. The Linux VFS currently sets an
++	  upper boundary of 64 KiB per extended attribute. FreeBSD does not
++	  set a practical upper limit, but since pread() and pwrite() are not
++	  possible via the extattr on FreeBSD, it is not recommended to
++	  increase this value above a few MiB.
++
++	  If a client attempts to write an overly-large alternate datastream,
++	  the Samba server will return STATUS_FILESYSTEM_LIMITATION.
++	  If this error is encountered, users may try increasing the maximum
++	  size supported for xattr writes. If this is not possible, and
++	  writes are from a MacOS client and to an AFP_Resource extended
++	  attribute, the user may enable the vfs_fruit module and configure
++	  to allow stream writes for AFP_Resource to an alternative storage
++	  location. See vfs_fruit documentation for further details.
++	</para>
++</description>
++<value type="default">2097152</value>
++</samba:parameter>
+diff --git a/lib/param/loadparm.c b/lib/param/loadparm.c
+index 006caabc092..2cba4eb71b2 100644
+--- a/lib/param/loadparm.c
++++ b/lib/param/loadparm.c
+@@ -3079,6 +3079,10 @@ struct loadparm_context *loadparm_init(TALLOC_CTX *mem_ctx)
+ 	lpcfg_do_global_parameter(
+ 		lp_ctx, "ldap max search request size", "256000");
+ 
++	lpcfg_do_global_parameter(lp_ctx,
++				  "smbd max xattr size",
++				  "2097152");
++
+ 	for (i = 0; parm_table[i].label; i++) {
+ 		if (!(lp_ctx->flags[i] & FLAG_CMDLINE)) {
+ 			lp_ctx->flags[i] |= FLAG_DEFAULT;
 diff --git a/lib/util/memcache.c b/lib/util/memcache.c
-index 7b0b27eaddb..c50bc2b3ade 100644
+index 7b0b27eaddb..7b0c0efce28 100644
 --- a/lib/util/memcache.c
 +++ b/lib/util/memcache.c
 @@ -60,6 +60,7 @@ static bool memcache_is_talloc(enum memcache_number n)
@@ -10,82 +59,23 @@ index 7b0b27eaddb..c50bc2b3ade 100644
  	case VIRUSFILTER_SCAN_RESULTS_CACHE_TALLOC:
  		result = true;
  		break;
-@@ -457,3 +458,25 @@ void memcache_flush(struct memcache *cache, enum memcache_number n)
- 		node = next;
- 	}
- }
-+
-+int memcache_traverse(struct memcache *cache,
-+                      memcache_parser_fn fn, void *private_data,
-+                      int *count)
-+{
-+	int ret = 0;
-+	count = 0;
-+	struct memcache_element *e = NULL;
-+	struct memcache_element *next = NULL;
-+	DATA_BLOB key, value;
-+
-+	for (e = cache->mru; e != NULL; e = next) {
-+		count++;
-+		memcache_element_parse(e, &key, &value);
-+		if (fn && fn(key.data, key.length, value.data, value.length, private_data)) {
-+			/* They want us to terminate traversal */
-+			return 0;
-+                }
-+		next = e->next;
-+	}
-+	return ret;
-+}
 diff --git a/lib/util/memcache.h b/lib/util/memcache.h
-index 4331c2f1465..25ff32152f1 100644
+index 4331c2f1465..fb3dc5eac02 100644
 --- a/lib/util/memcache.h
 +++ b/lib/util/memcache.h
-@@ -46,6 +46,8 @@ enum memcache_number {
+@@ -46,6 +46,7 @@ enum memcache_number {
  	SMB1_SEARCH_OFFSET_MAP,
  	SHARE_MODE_LOCK_CACHE,	/* talloc */
  	VIRUSFILTER_SCAN_RESULTS_CACHE_TALLOC, /* talloc */
-+	FSP_FI_CACHE,
 +	ZFS_CACHE,
  	DFREE_CACHE,
  };
  
-@@ -114,4 +116,31 @@ void *memcache_lookup_talloc(struct memcache *cache, enum memcache_number n,
- 
- void memcache_flush(struct memcache *cache, enum memcache_number n);
- 
-+/**
-+ * @brief Parser callback function called when fetching a record
-+ *
-+ * This function is called when fetching a record. This function should
-+ * not modify key and data arguments.
-+ *
-+ * The function should return 0 on success and errno on error.
-+ */
-+typedef int (*memcache_parser_fn)(uint8_t *keybuf, size_t keylen,
-+				  uint8_t *databuf, size_t datalen,
-+				  void *private_data);
-+
-+/**
-+ * @brief Traverse memcache
-+ *
-+ * The parser function should return non-zero value to stop traverse.
-+ *
-+ * @param[in] dh The tdb hash table context
-+ * @param[in] parser Function called for each record
-+ * @param[in] private_data Private data to parser function
-+ * @param[out] count Number of records traversed
-+ * @return 0 on success, errno on failure
-+ */
-+int memcache_traverse(struct memcache *cache,
-+		      memcache_parser_fn parser, void *private_data,
-+		      int *count);
-+
- #endif
 diff --git a/source3/include/vfs.h b/source3/include/vfs.h
-index fec38f20644..b162321119e 100644
+index d527f850628..1e02ae330ca 100644
 --- a/source3/include/vfs.h
 +++ b/source3/include/vfs.h
-@@ -317,6 +317,14 @@ typedef union unid_t {
+@@ -355,6 +355,14 @@ typedef union unid_t {
  	gid_t gid;
  } unid_t;
  
@@ -100,240 +90,19 @@ index fec38f20644..b162321119e 100644
  struct fd_handle {
  	size_t ref_count;
  	int fd;
-@@ -455,6 +463,7 @@ typedef struct files_struct {
- #define FSP_POSIX_FLAGS_OPEN		0x01
- #define FSP_POSIX_FLAGS_RENAME		0x02
- #define FSP_POSIX_FLAGS_PATHNAMES	0x04
-+#define SMB_FILENAME_PATH_CANONICALIZED	0x10
- 
- #define FSP_POSIX_FLAGS_ALL			\
- 	(FSP_POSIX_FLAGS_OPEN |			\
-@@ -498,6 +507,7 @@ typedef struct connection_struct {
+@@ -530,6 +538,7 @@ typedef struct connection_struct {
  	   sub second timestamps on files
  	   and directories when setting time ? */
  	enum timestamp_set_resolution ts_res;
 +	enum acl_brand aclbrand;
  	char *connectpath;
- 	char *origpath;
  	struct files_struct *cwd_fsp; /* Working directory. */
-@@ -648,6 +658,7 @@ struct smb_filename {
- 	char *original_lcomp;
- 	uint32_t flags;
- 	SMB_STRUCT_STAT st;
-+	struct timeval vss_tval;
- };
- 
- /*
-diff --git a/source3/lib/filename_util.c b/source3/lib/filename_util.c
-index 58919256e0e..6b772c6df01 100644
---- a/source3/lib/filename_util.c
-+++ b/source3/lib/filename_util.c
-@@ -236,6 +236,7 @@ struct smb_filename *cp_smb_filename(TALLOC_CTX *mem_ctx,
- 	}
- 	out->flags = in->flags;
- 	out->st = in->st;
-+	out->vss_tval.tv_sec = in->vss_tval.tv_sec;
- 	return out;
- }
- 
-diff --git a/source3/modules/vfs_catia.c b/source3/modules/vfs_catia.c
-index 5bb55cf89f6..bd695f85599 100644
---- a/source3/modules/vfs_catia.c
-+++ b/source3/modules/vfs_catia.c
-@@ -200,6 +200,7 @@ static DIR *catia_opendir(vfs_handle_struct *handle,
- 		errno = ENOMEM;
- 		return NULL;
- 	}
-+	mapped_smb_fname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	ret = SMB_VFS_NEXT_OPENDIR(handle, mapped_smb_fname, mask, attr);
- 
-@@ -741,6 +742,7 @@ static int catia_lchown(vfs_handle_struct *handle,
- 		errno = ENOMEM;
- 		return -1;
- 	}
-+	catia_smb_fname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	ret = SMB_VFS_NEXT_LCHOWN(handle, catia_smb_fname, uid, gid);
- 	saved_errno = errno;
-@@ -778,6 +780,7 @@ static int catia_chmod(vfs_handle_struct *handle,
- 		errno = ENOMEM;
- 		return -1;
- 	}
-+	catia_smb_fname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	ret = SMB_VFS_NEXT_CHMOD(handle, catia_smb_fname, mode);
- 	saved_errno = errno;
-@@ -815,6 +818,7 @@ static int catia_mkdirat(vfs_handle_struct *handle,
- 		errno = ENOMEM;
- 		return -1;
- 	}
-+	catia_smb_fname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	ret = SMB_VFS_NEXT_MKDIRAT(handle,
- 			dirfsp,
-@@ -853,6 +857,7 @@ static int catia_chdir(vfs_handle_struct *handle,
- 		errno = ENOMEM;
- 		return -1;
- 	}
-+	catia_smb_fname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 	ret = SMB_VFS_NEXT_CHDIR(handle, catia_smb_fname);
- 	TALLOC_FREE(name);
- 	TALLOC_FREE(catia_smb_fname);
-@@ -919,6 +924,7 @@ catia_realpath(vfs_handle_struct *handle,
- 		errno = ENOMEM;
- 		return NULL;
- 	}
-+	catia_smb_fname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 	return_fname = SMB_VFS_NEXT_REALPATH(handle, ctx, catia_smb_fname);
- 	TALLOC_FREE(mapped_name);
- 	TALLOC_FREE(catia_smb_fname);
-@@ -952,6 +958,7 @@ static int catia_chflags(struct vfs_handle_struct *handle,
- 		errno = ENOMEM;
- 		return -1;
- 	}
-+	catia_smb_fname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	ret = SMB_VFS_NEXT_CHFLAGS(handle, catia_smb_fname, flags);
- 	TALLOC_FREE(name);
-@@ -996,6 +1003,7 @@ catia_streaminfo(struct vfs_handle_struct *handle,
- 		TALLOC_FREE(mapped_name);
- 		return NT_STATUS_NO_MEMORY;
- 	}
-+	catia_smb_fname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	status = SMB_VFS_NEXT_STREAMINFO(handle, fsp, catia_smb_fname,
- 					 mem_ctx, &num_streams, &streams);
-@@ -1076,6 +1084,7 @@ catia_get_nt_acl(struct vfs_handle_struct *handle,
- 		TALLOC_FREE(mapped_name);
- 		return NT_STATUS_NO_MEMORY;
- 	}
-+	mapped_smb_fname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	status = SMB_VFS_NEXT_GET_NT_ACL(handle, mapped_smb_fname,
- 					 security_info, mem_ctx, ppdesc);
-@@ -1116,6 +1125,7 @@ catia_sys_acl_get_file(vfs_handle_struct *handle,
- 		errno = ENOMEM;
- 		return (SMB_ACL_T)NULL;
- 	}
-+	mapped_smb_fname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	ret = SMB_VFS_NEXT_SYS_ACL_GET_FILE(handle, mapped_smb_fname,
- 			type, mem_ctx);
-@@ -1161,6 +1171,7 @@ catia_sys_acl_set_file(vfs_handle_struct *handle,
- 		errno = ENOMEM;
- 		return -1;
- 	}
-+	mapped_smb_fname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	ret = SMB_VFS_NEXT_SYS_ACL_SET_FILE(handle, mapped_smb_fname,
- 			type, theacl);
-@@ -1204,6 +1215,7 @@ catia_sys_acl_delete_def_file(vfs_handle_struct *handle,
- 		errno = ENOMEM;
- 		return -1;
- 	}
-+	mapped_smb_fname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 	ret = SMB_VFS_NEXT_SYS_ACL_DELETE_DEF_FILE(handle, mapped_smb_fname);
- 	if (ret == -1) {
- 		saved_errno = errno;
-@@ -1258,6 +1270,7 @@ catia_getxattr(vfs_handle_struct *handle,
- 		errno = ENOMEM;
- 		return -1;
- 	}
-+	mapped_smb_fname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	ret = SMB_VFS_NEXT_GETXATTR(handle, mapped_smb_fname,
- 				mapped_ea_name, value, size);
-@@ -1304,6 +1317,7 @@ catia_listxattr(vfs_handle_struct *handle,
- 		errno = ENOMEM;
- 		return -1;
- 	}
-+	mapped_smb_fname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	ret = SMB_VFS_NEXT_LISTXATTR(handle, mapped_smb_fname, list, size);
- 	if (ret == -1) {
-@@ -1358,6 +1372,7 @@ catia_removexattr(vfs_handle_struct *handle,
- 		errno = ENOMEM;
- 		return -1;
- 	}
-+	mapped_smb_fname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	ret = SMB_VFS_NEXT_REMOVEXATTR(handle, mapped_smb_fname,
- 				mapped_ea_name);
-@@ -1417,6 +1432,7 @@ catia_setxattr(vfs_handle_struct *handle,
- 		errno = ENOMEM;
- 		return -1;
- 	}
-+	mapped_smb_fname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	ret = SMB_VFS_NEXT_SETXATTR(handle, mapped_smb_fname, mapped_ea_name,
- 			value, size, flags);
-@@ -2227,6 +2243,7 @@ static NTSTATUS catia_get_compression(vfs_handle_struct *handle,
- 
- 		TALLOC_FREE(mapped_name);
- 	}
-+	mapped_smb_fname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	result = SMB_VFS_NEXT_GET_COMPRESSION(handle,
- 					mem_ctx,
-@@ -2286,6 +2303,12 @@ static NTSTATUS catia_readdir_attr(struct vfs_handle_struct *handle,
- 	smb_fname = synthetic_smb_fname(talloc_tos(), fname, NULL,
- 					&smb_fname_in->st, 0);
- 
-+	if (smb_fname == NULL) {
-+		errno = ENOMEM;
-+		return NT_STATUS_NO_MEMORY;
-+	}
-+	smb_fname->vss_tval.tv_sec = smb_fname_in->vss_tval.tv_sec;
-+
- 	status = SMB_VFS_NEXT_READDIR_ATTR(handle, smb_fname, mem_ctx, pattr_data);
- 
- 	TALLOC_FREE(smb_fname);
-@@ -2317,6 +2340,7 @@ static NTSTATUS catia_get_dos_attributes(struct vfs_handle_struct *handle,
- 		TALLOC_FREE(mapped_name);
- 		return NT_STATUS_NO_MEMORY;
- 	}
-+	mapped_smb_fname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	status = SMB_VFS_NEXT_GET_DOS_ATTRIBUTES(handle,
- 						 mapped_smb_fname,
-@@ -2355,6 +2379,7 @@ static NTSTATUS catia_set_dos_attributes(struct vfs_handle_struct *handle,
- 		TALLOC_FREE(mapped_name);
- 		return NT_STATUS_NO_MEMORY;
- 	}
-+	mapped_smb_fname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	status = SMB_VFS_NEXT_SET_DOS_ATTRIBUTES(handle,
- 						 mapped_smb_fname,
-@@ -2393,6 +2418,7 @@ static NTSTATUS catia_create_dfs_pathat(struct vfs_handle_struct *handle,
- 		TALLOC_FREE(mapped_name);
- 		return NT_STATUS_NO_MEMORY;
- 	}
-+	mapped_smb_fname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	status = SMB_VFS_NEXT_CREATE_DFS_PATHAT(handle,
- 					dirfsp,
-@@ -2433,6 +2459,7 @@ static NTSTATUS catia_read_dfs_pathat(struct vfs_handle_struct *handle,
- 		TALLOC_FREE(mapped_name);
- 		return NT_STATUS_NO_MEMORY;
- 	}
-+	mapped_smb_fname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	status = SMB_VFS_NEXT_READ_DFS_PATHAT(handle,
- 					mem_ctx,
+ 	bool tcon_done;
 diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
-index 4cf553411cb..b9f57e68ced 100644
+index cf5e1cbc296..f0587c44d7d 100644
 --- a/source3/modules/vfs_default.c
 +++ b/source3/modules/vfs_default.c
-@@ -18,6 +18,7 @@
-    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
- 
-+#include <sys/param.h>
- #include "includes.h"
- #include "system/time.h"
- #include "system/filesys.h"
-@@ -39,6 +40,8 @@
+@@ -40,6 +40,8 @@
  #undef DBGC_CLASS
  #define DBGC_CLASS DBGC_VFS
  
@@ -342,7 +111,19 @@ index 4cf553411cb..b9f57e68ced 100644
  /* Check for NULL pointer parameters in vfswrap_* functions */
  
  /* We don't want to have NULL function pointers lying around.  Someone
-@@ -76,32 +79,14 @@ static int vfswrap_get_quota(struct vfs_handle_struct *handle,
+@@ -48,7 +50,10 @@
+ 
+ static int vfswrap_connect(vfs_handle_struct *handle, const char *service, const char *user)
+ {
+-    return 0;    /* Return >= 0 for success */
++	if (access(handle->conn->connectpath, F_OK) != 0) {
++		return -1;
++	}
++	return 0;
+ }
+ 
+ static void vfswrap_disconnect(vfs_handle_struct *handle)
+@@ -77,32 +82,14 @@ static int vfswrap_get_quota(struct vfs_handle_struct *handle,
  				unid_t id,
  				SMB_DISK_QUOTA *qt)
  {
@@ -375,45 +156,7 @@ index 4cf553411cb..b9f57e68ced 100644
  }
  
  static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
-@@ -1945,7 +1930,9 @@ static void vfswrap_offload_write_cleanup(struct tevent_req *req,
- 		req, struct vfswrap_offload_write_state);
- 	bool ok;
- 
--	if (state->dst_fsp == NULL) {
-+	if (state->dst_fsp == NULL ||
-+	    state->dst_fsp->fsp_name == NULL ||
-+	    state->dst_fsp->conn == NULL) {
- 		return;
- 	}
- 
-@@ -2051,6 +2038,12 @@ static struct tevent_req *vfswrap_offload_write_send(
- 		return tevent_req_post(req, ev);
- 	}
- 
-+	if (vfswrap_offload_ctx == NULL) {
-+		DBG_ERR("vfswrap_offload_ctx is not initialized\n");
-+		tevent_req_nterror(req, NT_STATUS_INTERNAL_ERROR);
-+		return tevent_req_post(req, ev);
-+	}
-+
- 	status = vfs_offload_token_db_fetch_fsp(vfswrap_offload_ctx,
- 						token, &src_fsp);
- 	if (tevent_req_nterror(req, status)) {
-@@ -2245,6 +2238,13 @@ static void vfswrap_offload_write_write_done(struct tevent_req *subreq)
- 		tevent_req_nterror(req, NT_STATUS_INTERNAL_ERROR);
- 		return;
- 	}
-+
-+	if (state->src_fsp->fh == NULL ||
-+	    state->dst_fsp->fh == NULL) {
-+		DBG_ERR("File handle freed\n");
-+		tevent_req_nterror(req, NT_STATUS_INTERNAL_ERROR);
-+		return;
-+	}
- 	state->remaining -= nwritten;
- 	if (state->remaining == 0) {
- 		tevent_req_done(req);
-@@ -2485,6 +2485,18 @@ static struct smb_filename *vfswrap_getwd(vfs_handle_struct *handle,
+@@ -2504,6 +2491,18 @@ static struct smb_filename *vfswrap_getwd(vfs_handle_struct *handle,
   nsec timestamp resolution call. Convert down to whatever the underlying
   system will support.
  **********************************************************************/
@@ -432,75 +175,30 @@ index 4cf553411cb..b9f57e68ced 100644
  
  static int vfswrap_ntimes(vfs_handle_struct *handle,
  			  const struct smb_filename *smb_fname,
-@@ -2524,6 +2536,9 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
+@@ -2542,7 +2541,10 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
+ 	}
  
  #if defined(HAVE_UTIMENSAT)
- 	if (ft != NULL) {
-+		if (is_robocopy_init(ft)) {
-+			return 0;
-+		}
+-	if (ft != NULL) {
++	if (ft != NULL && is_robocopy_init(ft)) {
++		return 0;
++	} else if ((ft != NULL) &&
++	    (timespec_compare(&ft->mtime, &smb_fname->st.st_ex_btime) == 1)) {
  		struct timespec ts[2];
  		ts[0] = ft->atime;
  		ts[1] = ft->mtime;
 diff --git a/source3/modules/vfs_streams_xattr.c b/source3/modules/vfs_streams_xattr.c
-index 7d0617507e3..434eb1291cb 100644
+index 14532395e8a..c73d5d9e0eb 100644
 --- a/source3/modules/vfs_streams_xattr.c
 +++ b/source3/modules/vfs_streams_xattr.c
-@@ -34,6 +34,7 @@
- struct streams_xattr_config {
- 	const char *prefix;
- 	size_t prefix_len;
-+	size_t max_xattr_size;
- 	bool store_stream_type;
- };
- 
-@@ -224,6 +225,7 @@ static int streams_xattr_fstat(vfs_handle_struct *handle, files_struct *fsp,
- 		errno = ENOMEM;
+@@ -948,6 +948,27 @@ static ssize_t streams_xattr_pwrite(vfs_handle_struct *handle,
  		return -1;
  	}
-+	smb_fname_base->vss_tval.tv_sec = fsp->fsp_name->vss_tval.tv_sec;
  
- 	if (smb_fname_base->flags & SMB_FILENAME_POSIX_PATH) {
- 		ret = SMB_VFS_LSTAT(handle->conn, smb_fname_base);
-@@ -906,6 +908,10 @@ static int streams_xattr_connect(vfs_handle_struct *handle,
- 						 "store_stream_type",
- 						 true);
- 
-+	config->max_xattr_size = (size_t)lp_parm_ulonglong(
-+		SNUM(handle->conn), "smbd", "max_xattr_size", 16*1024*1024);
-+
-+
- 	SMB_VFS_HANDLE_SET_DATA(handle, config,
- 				NULL, struct stream_xattr_config,
- 				return -1);
-@@ -920,6 +926,7 @@ static ssize_t streams_xattr_pwrite(vfs_handle_struct *handle,
-         struct stream_io *sio =
- 		(struct stream_io *)VFS_FETCH_FSP_EXTENSION(handle, fsp);
- 	struct ea_struct ea;
-+	struct streams_xattr_config *config = NULL;
- 	NTSTATUS status;
- 	struct smb_filename *smb_fname_base = NULL;
- 	int ret;
-@@ -930,6 +937,9 @@ static ssize_t streams_xattr_pwrite(vfs_handle_struct *handle,
- 		return SMB_VFS_NEXT_PWRITE(handle, fsp, data, n, offset);
- 	}
- 
-+	SMB_VFS_HANDLE_GET_DATA(handle, config, struct streams_xattr_config,
-+				return -1);
-+
- 	if (!streams_xattr_recheck(sio)) {
- 		return -1;
- 	}
-@@ -944,6 +954,28 @@ static ssize_t streams_xattr_pwrite(vfs_handle_struct *handle,
- 		errno = ENOMEM;
- 		return -1;
- 	}
-+	smb_fname_base->vss_tval.tv_sec = fsp->fsp_name->vss_tval.tv_sec;
-+
-+	if ((n + (size_t)offset) >= config->max_xattr_size) {
++	if ((offset + n) >= lp_smbd_max_xattr_size(SNUM(handle->conn))) {
 +		/*
 +		 * Requested write is beyond what can be read based on
-+		 * samba configuration. Correct action is debatable.
++		 * samba configuration.
 +		 * ReFS returns STATUS_FILESYSTEM_LIMITATION, which causes
 +		 * entire file to be skipped by File Explorer. VFAT returns
 +		 * NT_STATUS_OBJECT_NAME_COLLISION causes user to be prompted
@@ -511,101 +209,18 @@ index 7d0617507e3..434eb1291cb 100644
 +			"Depending on filesystem type and operating system "
 +			"(OS) specifics, this value may be increased using "
 +			"the value of the parameter: "
-+			"smbd:max_xattr_size = <bytes>. Consult OS and "
++			"smbd max xattr size = <bytes>. Consult OS and "
 +			"filesystem manpages prior to increasing this limit.\n",
 +			sio->xattr_name, sio->base);
 +		errno = EOVERFLOW;
 +		return -1;
 +	}
- 
- 	status = get_ea_value(talloc_tos(), handle->conn, NULL,
- 			      smb_fname_base, sio->xattr_name, &ea);
-@@ -1014,6 +1046,7 @@ static ssize_t streams_xattr_pread(vfs_handle_struct *handle,
- 		errno = ENOMEM;
- 		return -1;
- 	}
-+	smb_fname_base->vss_tval.tv_sec = fsp->fsp_name->vss_tval.tv_sec;
- 
- 	status = get_ea_value(talloc_tos(), handle->conn, NULL,
- 			      smb_fname_base, sio->xattr_name, &ea);
-@@ -1231,6 +1264,7 @@ static int streams_xattr_ftruncate(struct vfs_handle_struct *handle,
- 		errno = ENOMEM;
- 		return -1;
- 	}
-+	smb_fname_base->vss_tval.tv_sec = fsp->fsp_name->vss_tval.tv_sec;
- 
- 	status = get_ea_value(talloc_tos(), handle->conn, NULL,
- 			      smb_fname_base, sio->xattr_name, &ea);
-diff --git a/source3/smbd/close.c b/source3/smbd/close.c
-index 42be29b03be..95a6d396319 100644
---- a/source3/smbd/close.c
-+++ b/source3/smbd/close.c
-@@ -199,6 +199,7 @@ NTSTATUS delete_all_streams(connection_struct *conn,
- 			status = NT_STATUS_NO_MEMORY;
- 			goto fail;
- 		}
-+		smb_fname_stream->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 		res = SMB_VFS_UNLINKAT(conn,
- 				conn->cwd_fsp,
-@@ -895,6 +896,7 @@ bool recursive_rmdir(TALLOC_CTX *ctx,
- 			errno = ENOMEM;
- 			goto err_break;
- 		}
-+		smb_dname_full->vss_tval.tv_sec = smb_dname->vss_tval.tv_sec;
- 
- 		if(SMB_VFS_LSTAT(conn, smb_dname_full) != 0) {
- 			goto err_break;
-@@ -1067,6 +1069,7 @@ static NTSTATUS rmdir_internals(TALLOC_CTX *ctx, files_struct *fsp)
- 				errno = ENOMEM;
- 				goto err_break;
- 			}
-+			smb_dname_full->vss_tval.tv_sec = smb_dname->vss_tval.tv_sec;
- 
- 			if(SMB_VFS_LSTAT(conn, smb_dname_full) != 0) {
- 				goto err_break;
-diff --git a/source3/smbd/dir.c b/source3/smbd/dir.c
-index 8314f4084c0..93b2b51a565 100644
---- a/source3/smbd/dir.c
-+++ b/source3/smbd/dir.c
-@@ -1439,6 +1439,7 @@ static struct smb_Dir *open_dir_safely(TALLOC_CTX *ctx,
- 	if (smb_fname_cwd == NULL) {
- 		goto out;
- 	}
-+	smb_fname_cwd->vss_tval = smb_dname->vss_tval;
- 
- 	/*
- 	 * Now the directory is pinned, use
-diff --git a/source3/smbd/dosmode.c b/source3/smbd/dosmode.c
-index 322bf4476d6..3f560577e10 100644
---- a/source3/smbd/dosmode.c
-+++ b/source3/smbd/dosmode.c
-@@ -148,6 +148,7 @@ mode_t unix_mode(connection_struct *conn, int dosmode,
- 				 inherit_from_dir));
- 			return(0);
- 		}
-+		smb_fname_parent->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 		if (SMB_VFS_STAT(conn, smb_fname_parent) != 0) {
- 			DEBUG(4,("unix_mode(%s) failed, [dir %s]: %s\n",
-@@ -920,6 +921,7 @@ static void dos_mode_at_vfs_get_dosmode_done(struct tevent_req *subreq)
- 	if (tevent_req_nomem(smb_path, req)) {
- 		return;
- 	}
-+	smb_path->vss_tval.tv_sec = state->smb_fname->vss_tval.tv_sec;
- 
- 	state->dosmode = dos_mode(state->dir_fsp->conn, smb_path);
- 	tevent_req_done(req);
-@@ -1323,6 +1325,7 @@ NTSTATUS set_create_timespec_ea(connection_struct *conn,
- 	if (smb_fname == NULL) {
- 		return NT_STATUS_NO_MEMORY;
- 	}
-+	smb_fname->vss_tval.tv_sec = psmb_fname->vss_tval.tv_sec;
- 
- 	dosmode = dos_mode(conn, smb_fname);
- 
++
+ 	/* Create an smb_filename with stream_name == NULL. */
+ 	smb_fname_base = synthetic_smb_fname(talloc_tos(),
+ 					sio->base,
 diff --git a/source3/smbd/fake_file.c b/source3/smbd/fake_file.c
-index 81ccbde6aab..280f2bf7980 100644
+index 90921a65e36..865da147d8d 100644
 --- a/source3/smbd/fake_file.c
 +++ b/source3/smbd/fake_file.c
 @@ -22,6 +22,7 @@
@@ -623,9 +238,9 @@ index 81ccbde6aab..280f2bf7980 100644
 +	bool is_disk_op;
 +	int ret;
  
- 	status = smbd_calculate_access_mask(conn, smb_fname, false,
- 					    access_mask, &access_mask);
-@@ -142,15 +145,34 @@ NTSTATUS open_fake_file(struct smb_request *req, connection_struct *conn,
+ 	status = smbd_calculate_access_mask(conn,
+ 					conn->cwd_fsp,
+@@ -146,15 +149,34 @@ NTSTATUS open_fake_file(struct smb_request *req, connection_struct *conn,
  		return status;
  	}
  
@@ -669,137 +284,8 @@ index 81ccbde6aab..280f2bf7980 100644
  	}
  
  	status = file_new(req, conn, &fsp);
-diff --git a/source3/smbd/file_access.c b/source3/smbd/file_access.c
-index 66c9ed3add7..94b82e283a0 100644
---- a/source3/smbd/file_access.c
-+++ b/source3/smbd/file_access.c
-@@ -63,6 +63,7 @@ bool can_delete_file_in_directory(connection_struct *conn,
- 		ret = false;
- 		goto out;
- 	}
-+	smb_fname_parent->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	if(SMB_VFS_STAT(conn, smb_fname_parent) != 0) {
- 		ret = false;
-diff --git a/source3/smbd/filename.c b/source3/smbd/filename.c
-index d897ed8cea0..bff28870e6b 100644
---- a/source3/smbd/filename.c
-+++ b/source3/smbd/filename.c
-@@ -189,6 +189,7 @@ static NTSTATUS check_parent_exists(TALLOC_CTX *ctx,
- 	if (smb_fname->base_name == last_component) {
- 		goto no_optimization_out;
- 	}
-+	parent_fname.vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	if (posix_pathnames) {
- 		ret = SMB_VFS_LSTAT(conn, &parent_fname);
-@@ -310,19 +311,11 @@ static NTSTATUS rearrange_snapshot_path(struct smb_filename *smb_fname,
- 	}
- 
- 	if (ISDOT(parent)) {
--		if (last_component[0] == '\0') {
--			newstr = talloc_strdup(smb_fname,
--					gmt_store);
--		} else {
--			newstr = talloc_asprintf(smb_fname,
--					"%s/%s",
--					gmt_store,
-+		newstr = talloc_strdup(smb_fname,
- 					last_component);
--		}
- 	} else {
- 		newstr = talloc_asprintf(smb_fname,
--					"%s/%s/%s",
--					gmt_store,
-+					"%s/%s",
- 					parent,
- 					last_component);
- 	}
-@@ -352,7 +345,7 @@ static NTSTATUS rearrange_snapshot_path(struct smb_filename *smb_fname,
-  * instead.
-  */
- 
--static NTSTATUS canonicalize_snapshot_path(struct smb_filename *smb_fname)
-+NTSTATUS canonicalize_snapshot_path(struct smb_filename *smb_fname)
- {
- 	char *startp = strchr_m(smb_fname->base_name, '@');
- 	char *endp = NULL;
-@@ -379,6 +372,9 @@ static NTSTATUS canonicalize_snapshot_path(struct smb_filename *smb_fname)
- 		/* Not a valid timestring. */
- 		return NT_STATUS_OK;
- 	}
-+	smb_fname->vss_tval.tv_sec = timegm(&tm);
-+	smb_fname->vss_tval.tv_usec = 0;
-+	smb_fname->flags |= SMB_FILENAME_PATH_CANONICALIZED;
- 
- 	if ( endp[0] == '\0') {
- 		return rearrange_snapshot_path(smb_fname,
-@@ -538,9 +534,11 @@ NTSTATUS unix_convert(TALLOC_CTX *ctx,
- 
- 	/* Canonicalize any @GMT- paths. */
- 	if (snapshot_path) {
--		status = canonicalize_snapshot_path(smb_fname);
--		if (!NT_STATUS_IS_OK(status)) {
--			goto err;
-+		if ((smb_fname->flags & SMB_FILENAME_PATH_CANONICALIZED) == 0) {
-+			status = canonicalize_snapshot_path(smb_fname);
-+			if (!NT_STATUS_IS_OK(status)) {
-+				goto err;
-+			}
- 		}
- 	}
- 
-@@ -647,6 +645,7 @@ NTSTATUS unix_convert(TALLOC_CTX *ctx,
- 	if((!conn->case_sensitive || !(conn->fs_capabilities &
- 				       FILE_CASE_SENSITIVE_SEARCH)) &&
- 	    stat_cache_lookup(conn, posix_pathnames, &smb_fname->base_name, &dirpath, &start,
-+			      smb_fname->vss_tval,
- 			      &smb_fname->st)) {
- 		goto done;
- 	}
-@@ -700,6 +699,7 @@ NTSTATUS unix_convert(TALLOC_CTX *ctx,
- 			}
- 			/* Add the path (not including the stream) to the cache. */
- 			stat_cache_add(orig_path, smb_fname->base_name,
-+				       smb_fname->vss_tval,
- 				       conn->case_sensitive);
- 			DEBUG(5,("conversion of base_name finished %s -> %s\n",
- 				 orig_path, smb_fname->base_name));
-@@ -765,6 +765,7 @@ NTSTATUS unix_convert(TALLOC_CTX *ctx,
- 					status = NT_STATUS_NO_MEMORY;
- 					goto fail;
- 				}
-+				parent_fname.vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 				if (posix_pathnames) {
- 					ret = SMB_VFS_LSTAT(conn, &parent_fname);
- 				} else {
-@@ -1226,6 +1227,7 @@ NTSTATUS unix_convert(TALLOC_CTX *ctx,
- 		 */
- 		if(!component_was_mangled && !name_has_wildcard) {
- 			stat_cache_add(orig_path, dirpath,
-+				       smb_fname->vss_tval,
- 					conn->case_sensitive);
- 		}
- 
-@@ -1244,6 +1246,7 @@ NTSTATUS unix_convert(TALLOC_CTX *ctx,
- 
- 	if(!component_was_mangled && !name_has_wildcard) {
- 		stat_cache_add(orig_path, smb_fname->base_name,
-+			       smb_fname->vss_tval,
- 			       conn->case_sensitive);
- 	}
- 
-@@ -1326,7 +1329,7 @@ NTSTATUS check_name(connection_struct *conn,
- 		return status;
- 	}
- 
--	if (!lp_widelinks(SNUM(conn)) || !lp_follow_symlinks(SNUM(conn))) {
-+	if ((!lp_widelinks(SNUM(conn)) || !lp_follow_symlinks(SNUM(conn)))) {
- 		status = check_reduced_name(conn, NULL, smb_fname);
- 		if (!NT_STATUS_IS_OK(status)) {
- 			DEBUG(5,("check_name: name %s failed with %s\n",
 diff --git a/source3/smbd/globals.h b/source3/smbd/globals.h
-index 5bcf0503b4c..04b0ec11b25 100644
+index ae935f413e0..4955473983c 100644
 --- a/source3/smbd/globals.h
 +++ b/source3/smbd/globals.h
 @@ -24,6 +24,7 @@
@@ -811,39 +297,23 @@ index 5bcf0503b4c..04b0ec11b25 100644
  #ifdef USE_DMAPI
  struct smbd_dmapi_context;
 diff --git a/source3/smbd/open.c b/source3/smbd/open.c
-index 4a31b822646..3992cff5ce6 100644
+index ef158657684..754f3a88a92 100644
 --- a/source3/smbd/open.c
 +++ b/source3/smbd/open.c
-@@ -641,6 +641,7 @@ static int non_widelink_open(struct connection_struct *conn,
- 	}
- 
- 	parent_dir_fname = (struct smb_filename) { .base_name = parent_dir };
-+	parent_dir_fname.vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	oldwd_fname = vfs_GetWd(talloc_tos(), conn);
- 	if (oldwd_fname == NULL) {
-@@ -661,6 +662,7 @@ static int non_widelink_open(struct connection_struct *conn,
- 		saved_errno = ENOMEM;
- 		goto out;
- 	}
-+	smb_fname_rel->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	/* Ensure the relative path is below the share. */
- 	status = check_reduced_name(conn, &parent_dir_fname, smb_fname_rel);
-@@ -784,6 +786,7 @@ NTSTATUS fd_open(struct connection_struct *conn,
- 		if (conn_rootdir_fname == NULL) {
- 			return NT_STATUS_NO_MEMORY;
- 		}
-+		conn_rootdir_fname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 		/*
- 		 * Only follow symlinks within a share
-@@ -2978,13 +2981,13 @@ static bool open_match_attributes(connection_struct *conn,
+@@ -227,6 +227,7 @@ NTSTATUS smbd_check_access_rights(struct connection_struct *conn,
+ 	if ((access_mask & FILE_WRITE_ATTRIBUTES) &&
+ 			(rejected_mask & FILE_WRITE_ATTRIBUTES) &&
+ 			!lp_store_dos_attributes(SNUM(conn)) &&
++			!lp_kernel_dosmodes(SNUM(conn)) &&
+ 			(lp_map_readonly(SNUM(conn)) ||
+ 			lp_map_archive(SNUM(conn)) ||
+ 			lp_map_hidden(SNUM(conn)) ||
+@@ -3074,13 +3075,13 @@ static bool open_match_attributes(connection_struct *conn,
  		  (unsigned int)*returned_unx_mode ));
  
  	/* If we're mapping SYSTEM and HIDDEN ensure they match. */
 -	if (lp_map_system(SNUM(conn)) || lp_store_dos_attributes(SNUM(conn))) {
-+	if (lp_map_system(SNUM(conn)) || lp_store_dos_attributes(SNUM(conn)) || lp_kernel_dosmodes(SNUM(conn))) {
++	if (lp_map_system(SNUM(conn)) || lp_store_dos_attributes(SNUM(conn)) ||  lp_kernel_dosmodes(SNUM(conn))) {
  		if ((old_dos_attr & FILE_ATTRIBUTE_SYSTEM) &&
  		    !(new_dos_attr & FILE_ATTRIBUTE_SYSTEM)) {
  			return False;
@@ -854,18 +324,23 @@ index 4a31b822646..3992cff5ce6 100644
  		if ((old_dos_attr & FILE_ATTRIBUTE_HIDDEN) &&
  		    !(new_dos_attr & FILE_ATTRIBUTE_HIDDEN)) {
  			return False;
-@@ -3670,10 +3673,24 @@ static NTSTATUS open_file_ntcreate(connection_struct *conn,
+@@ -3788,13 +3789,28 @@ static NTSTATUS open_file_ntcreate(connection_struct *conn,
  	/*
  	 * Ensure we pay attention to default ACLs on directories if required.
  	 */
 -
 -        if ((flags2 & O_CREAT) && lp_inherit_acls(SNUM(conn)) &&
--	    (def_acl = directory_has_default_acl(conn, parent_dir))) {
+-	    (def_acl = directory_has_default_acl(conn,
+-				conn->cwd_fsp,
+-				parent_dir_fname)))
+-	{
 -		unx_mode = (0777 & lp_create_mask(SNUM(conn)));
 +	switch(conn->aclbrand) {
 +	case SMB_ACL_BRAND_POSIX:
 +		if ((flags2 & O_CREAT) && lp_inherit_acls(SNUM(conn)) &&
-+		    (def_acl = directory_has_default_acl(conn, parent_dir))) {
++		    (def_acl = directory_has_default_acl(conn,
++					conn->cwd_fsp,
++					parent_dir_fname))) {
 +			unx_mode = (0777 & lp_create_mask(SNUM(conn)));
 +		}
 +		break;
@@ -877,13 +352,15 @@ index 4a31b822646..3992cff5ce6 100644
 +		 * any inheriting entries.
 +		 */
 +		if (flags2 & O_CREAT) {
-+			def_acl = directory_has_default_acl(conn, parent_dir);
++			def_acl = directory_has_default_acl(conn,
++					conn->cwd_fsp,
++					parent_dir_fname);
 +		}
 +		break;
  	}
  
  	DEBUG(4,("calling open_file with flags=0x%X flags2=0x%X mode=0%o, "
-@@ -4040,6 +4057,10 @@ static NTSTATUS open_file_ntcreate(connection_struct *conn,
+@@ -4165,6 +4181,10 @@ static NTSTATUS open_file_ntcreate(connection_struct *conn,
  				}
  			}
  		}
@@ -894,8 +371,8 @@ index 4a31b822646..3992cff5ce6 100644
  	}
  
  	/* Determine sparse flag. */
-@@ -4199,6 +4220,10 @@ static NTSTATUS mkdir_internal(connection_struct *conn,
- 					 parent_dir, true);
+@@ -4335,6 +4355,10 @@ static NTSTATUS mkdir_internal(connection_struct *conn,
+ 					 parent_dir_fname, true);
  		}
  	}
 +	else if (lp_kernel_dosmodes(SNUM(conn)) && !posix_open) {
@@ -904,55 +381,12 @@ index 4a31b822646..3992cff5ce6 100644
 +	}
  
  	if (lp_inherit_permissions(SNUM(conn))) {
- 		inherit_access_posix_acl(conn, parent_dir,
-diff --git a/source3/smbd/proto.h b/source3/smbd/proto.h
-index 206406a9fe9..22930d9df35 100644
---- a/source3/smbd/proto.h
-+++ b/source3/smbd/proto.h
-@@ -377,6 +377,7 @@ NTSTATUS filename_convert_with_privilege(TALLOC_CTX *mem_ctx,
- 			uint32_t ucf_flags,
- 			bool *ppath_contains_wcard,
- 			struct smb_filename **pp_smb_fname);
-+NTSTATUS canonicalize_snapshot_path(struct smb_filename *smb_fname);
- 
- /* The following definitions come from smbd/files.c  */
- 
-@@ -1143,12 +1144,14 @@ ssize_t message_push_string(uint8_t **outbuf, const char *str, int flags);
- 
- void stat_cache_add( const char *full_orig_name,
- 		char *translated_path,
-+		struct timeval vss_tval,
- 		bool case_sensitive);
- bool stat_cache_lookup(connection_struct *conn,
- 			bool posix_paths,
- 			char **pp_name,
- 			char **pp_dirpath,
- 			char **pp_start,
-+			struct timeval vss_tval,
- 			SMB_STRUCT_STAT *pst);
- void smbd_send_stat_cache_delete_message(struct messaging_context *msg_ctx,
- 				    const char *name);
+ 		inherit_access_posix_acl(conn, parent_dir_fname,
 diff --git a/source3/smbd/reply.c b/source3/smbd/reply.c
-index 54f3d330c95..6a9b420f2b9 100644
+index a0da2910350..2c8c415b00d 100644
 --- a/source3/smbd/reply.c
 +++ b/source3/smbd/reply.c
-@@ -1871,6 +1871,7 @@ void reply_search(struct smb_request *req)
- 			reply_nterror(req, NT_STATUS_NO_MEMORY);
- 			goto out;
- 		}
-+		smb_dname->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 		/*
- 		 * As we've cut off the last component from
-@@ -3433,6 +3434,7 @@ NTSTATUS unlink_internals(connection_struct *conn, struct smb_request *req,
- 			status = NT_STATUS_NO_MEMORY;
- 			goto out;
- 		}
-+		smb_fname_dir->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 		status = check_name(conn, smb_fname_dir);
- 		if (!NT_STATUS_IS_OK(status)) {
-@@ -7516,7 +7518,9 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
+@@ -7600,7 +7600,9 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
  	NTSTATUS status = NT_STATUS_OK;
  	struct share_mode_lock *lck = NULL;
  	uint32_t access_mask = SEC_DIR_ADD_FILE;
@@ -963,7 +397,7 @@ index 54f3d330c95..6a9b420f2b9 100644
  	int ret;
  
  	status = check_name(conn, smb_fname_dst_in);
-@@ -7529,10 +7533,17 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
+@@ -7613,10 +7615,17 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
  		return status;
  	}
  
@@ -982,7 +416,7 @@ index 54f3d330c95..6a9b420f2b9 100644
  	/* Make a copy of the dst smb_fname structs */
  
  	smb_fname_dst = cp_smb_filename(ctx, smb_fname_dst_in);
-@@ -7678,7 +7689,19 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
+@@ -7762,7 +7771,19 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
  
  	dst_exists = SMB_VFS_STAT(conn, smb_fname_dst) == 0;
  
@@ -1003,7 +437,7 @@ index 54f3d330c95..6a9b420f2b9 100644
  		DEBUG(3, ("rename_internals_fsp: dest exists doing rename "
  			  "%s -> %s\n", smb_fname_str_dbg(fsp->fsp_name),
  			  smb_fname_str_dbg(smb_fname_dst)));
-@@ -7686,7 +7709,7 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
+@@ -7770,7 +7791,7 @@ NTSTATUS rename_internals_fsp(connection_struct *conn,
  		goto out;
  	}
  
@@ -1012,54 +446,11 @@ index 54f3d330c95..6a9b420f2b9 100644
  		struct file_id fileid = vfs_file_id_from_sbuf(conn,
  		    &smb_fname_dst->st);
  		files_struct *dst_fsp = file_find_di_first(conn->sconn,
-@@ -8016,6 +8039,7 @@ NTSTATUS rename_internals(TALLOC_CTX *ctx,
- 		status = NT_STATUS_NO_MEMORY;
- 		goto out;
- 	}
-+	smb_fname_src_dir->vss_tval.tv_sec = smb_fname_src->vss_tval.tv_sec;
- 
- 	status = check_name(conn, smb_fname_src_dir);
- 	if (!NT_STATUS_IS_OK(status)) {
-@@ -8740,6 +8764,7 @@ void reply_copy(struct smb_request *req)
- 			reply_nterror(req, NT_STATUS_NO_MEMORY);
- 			goto out;
- 		}
-+		smb_fname_src_dir->vss_tval.tv_sec = smb_fname_src->vss_tval.tv_sec;
- 
- 		status = check_name(conn, smb_fname_src_dir);
- 		if (!NT_STATUS_IS_OK(status)) {
-diff --git a/source3/smbd/smb2_query_directory.c b/source3/smbd/smb2_query_directory.c
-index 79a46e005cf..6fed521caa8 100644
---- a/source3/smbd/smb2_query_directory.c
-+++ b/source3/smbd/smb2_query_directory.c
-@@ -402,10 +402,12 @@ static struct tevent_req *smbd_smb2_query_directory_send(TALLOC_CTX *mem_ctx,
- 		const char *fullpath;
- 		char tmpbuf[PATH_MAX];
- 		char *to_free = NULL;
-+		time_t twrp = fsp->fsp_name->vss_tval.tv_sec;
- 		uint32_t ucf_flags = UCF_SAVE_LCOMP |
- 				     UCF_ALWAYS_ALLOW_WCARD_LCOMP |
- 				     (state->smbreq->posix_pathnames ?
--					UCF_POSIX_PATHNAMES : 0);
-+				      UCF_POSIX_PATHNAMES : 0) |
-+				     (twrp ? UCF_GMT_PATHNAME : 0);
- 
- 		if (ISDOT(fsp->fsp_name->base_name)) {
- 			fullpath = state->in_file_name;
-@@ -426,7 +428,7 @@ static struct tevent_req *smbd_smb2_query_directory_send(TALLOC_CTX *mem_ctx,
- 				conn,
- 				fullpath,
- 				ucf_flags,
--				NULL,
-+				twrp ? &twrp : NULL,
- 				&wcard_has_wild,
- 				&smb_fname);
- 
 diff --git a/source3/smbd/smb2_write.c b/source3/smbd/smb2_write.c
-index e49e623d796..3f8517cded7 100644
+index e49e623d796..612c89d59d1 100644
 --- a/source3/smbd/smb2_write.c
 +++ b/source3/smbd/smb2_write.c
-@@ -193,7 +193,13 @@ static NTSTATUS smb2_write_complete_internal(struct tevent_req *req,
+@@ -193,7 +193,12 @@ static NTSTATUS smb2_write_complete_internal(struct tevent_req *req,
  	files_struct *fsp = state->fsp;
  
  	if (nwritten == -1) {
@@ -1067,269 +458,25 @@ index e49e623d796..3f8517cded7 100644
 +		if (err == EOVERFLOW &&
 +		    is_ntfs_stream_smb_fname(fsp->fsp_name)) {
 +			status = NT_STATUS_FILE_SYSTEM_LIMITATION;
-+		}
-+		else {
++		} else {
 +			status = map_nt_error_from_unix(err);
 +		}
  
  		DEBUG(2, ("smb2_write failed: %s, file %s, "
  			  "length=%lu offset=%lu nwritten=-1: %s\n",
-diff --git a/source3/smbd/statcache.c b/source3/smbd/statcache.c
-index 5162ec06ea9..303292e6ef3 100644
---- a/source3/smbd/statcache.c
-+++ b/source3/smbd/statcache.c
-@@ -28,6 +28,9 @@
- #include "smbprofile.h"
- #include <tdb.h>
- 
-+#define STAT_CACHE_TWRP_TOKEN "%016" PRIx64 "@%s"
-+#define STAT_CACHE_TWRP_TOKEN_LEN 17
-+#define GMT_NAME_LEN 24
- /****************************************************************************
-  Stat cache code used in unix_convert.
- *****************************************************************************/
-@@ -45,13 +48,14 @@
-  */
- 
- void stat_cache_add( const char *full_orig_name,
--		char *translated_path,
-+		char *translated_path_in,
-+		struct timeval vss_tval,
- 		bool case_sensitive)
- {
- 	size_t translated_path_length;
-+	char *translated_path = NULL;
- 	char *original_path;
- 	size_t original_path_length;
--	char saved_char;
- 	TALLOC_CTX *ctx = talloc_tos();
- 
- 	if (!lp_stat_cache()) {
-@@ -67,6 +71,14 @@ void stat_cache_add( const char *full_orig_name,
- 		return;
- 	}
- 
-+	translated_path = talloc_asprintf(ctx,
-+					  STAT_CACHE_TWRP_TOKEN,
-+					  vss_tval.tv_sec,
-+					  translated_path_in);
-+	if (translated_path == NULL) {
-+		return;
-+	}
-+
- 	/*
- 	 * If we are in case insentive mode, we don't need to
- 	 * store names that need no translation - else, it
-@@ -74,6 +86,7 @@ void stat_cache_add( const char *full_orig_name,
- 	 */
- 
- 	if (!case_sensitive && (strcmp(full_orig_name, translated_path) == 0)) {
-+		TALLOC_FREE(translated_path);
- 		return;
- 	}
- 
-@@ -89,12 +102,45 @@ void stat_cache_add( const char *full_orig_name,
- 	}
- 
- 	if(case_sensitive) {
--		original_path = talloc_strdup(ctx,full_orig_name);
-+		if (vss_tval.tv_sec) {
-+			SMB_ASSERT(strlen(full_orig_name) > GMT_NAME_LEN);
-+			original_path = talloc_asprintf(ctx,
-+							STAT_CACHE_TWRP_TOKEN,
-+							vss_tval.tv_sec,
-+							full_orig_name + (GMT_NAME_LEN + 1));
-+		}
-+		else {
-+			original_path = talloc_asprintf(ctx,
-+							STAT_CACHE_TWRP_TOKEN,
-+							vss_tval.tv_sec,
-+							full_orig_name);
-+		}
- 	} else {
--		original_path = talloc_strdup_upper(ctx,full_orig_name);
-+		char *upper = NULL;
-+
-+		upper = talloc_strdup_upper(ctx, full_orig_name);
-+		if (upper == NULL) {
-+			TALLOC_FREE(translated_path);
-+			return;
-+		}
-+		if (vss_tval.tv_sec) {
-+			SMB_ASSERT(strlen(upper) > GMT_NAME_LEN);
-+			original_path = talloc_asprintf(ctx,
-+							STAT_CACHE_TWRP_TOKEN,
-+							vss_tval.tv_sec,
-+							upper + (GMT_NAME_LEN +1));
-+		}
-+		else {
-+			original_path = talloc_asprintf(ctx,
-+							STAT_CACHE_TWRP_TOKEN,
-+							vss_tval.tv_sec,
-+							upper);
-+		}
-+		TALLOC_FREE(upper);
- 	}
- 
- 	if (!original_path) {
-+		TALLOC_FREE(translated_path);
- 		return;
- 	}
- 
-@@ -114,6 +160,7 @@ void stat_cache_add( const char *full_orig_name,
- 				  translated_path,
- 				  (unsigned long)translated_path_length));
- 			TALLOC_FREE(original_path);
-+			TALLOC_FREE(translated_path);
- 			return;
- 		}
- 
-@@ -125,7 +172,6 @@ void stat_cache_add( const char *full_orig_name,
- 	}
- 
- 	/* Ensure we're null terminated. */
--	saved_char = translated_path[translated_path_length];
- 	translated_path[translated_path_length] = '\0';
- 
- 	/*
-@@ -143,8 +189,8 @@ void stat_cache_add( const char *full_orig_name,
- 		 original_path,
- 		 translated_path));
- 
--	translated_path[translated_path_length] = saved_char;
- 	TALLOC_FREE(original_path);
-+	TALLOC_FREE(translated_path);
- }
- 
- /**
-@@ -172,6 +218,7 @@ bool stat_cache_lookup(connection_struct *conn,
- 			char **pp_name,
- 			char **pp_dirpath,
- 			char **pp_start,
-+			struct timeval vss_tval,
- 			SMB_STRUCT_STAT *pst)
- {
- 	char *chk_name;
-@@ -206,16 +253,30 @@ bool stat_cache_lookup(connection_struct *conn,
- 	}
- 
- 	if (conn->case_sensitive) {
--		chk_name = talloc_strdup(ctx,name);
-+		chk_name = talloc_asprintf(ctx,
-+					   STAT_CACHE_TWRP_TOKEN,
-+					   vss_tval.tv_sec,
-+					   name);
- 		if (!chk_name) {
- 			DEBUG(0, ("stat_cache_lookup: strdup failed!\n"));
- 			return False;
- 		}
- 
- 	} else {
--		chk_name = talloc_strdup_upper(ctx,name);
-+		char *upper = NULL;
-+
-+		upper = talloc_strdup_upper(ctx,name);
-+		if (upper == NULL) {
-+			DBG_ERR("talloc_strdup_upper failed!\n");
-+			return False;
-+		}
-+		chk_name = talloc_asprintf(ctx,
-+					   STAT_CACHE_TWRP_TOKEN,
-+					   vss_tval.tv_sec,
-+					   upper);
- 		if (!chk_name) {
- 			DEBUG(0, ("stat_cache_lookup: talloc_strdup_upper failed!\n"));
-+			TALLOC_FREE(upper);
- 			return False;
- 		}
- 
-@@ -227,6 +288,7 @@ bool stat_cache_lookup(connection_struct *conn,
- 		if (strlen(chk_name) != namelen) {
- 			sizechanged = True;
- 		}
-+		TALLOC_FREE(upper);
- 	}
- 
- 	while (1) {
-@@ -271,18 +333,23 @@ bool stat_cache_lookup(connection_struct *conn,
- 		}
- 	}
- 
--	translated_path = talloc_strdup(ctx,(char *)data_val.data);
-+	SMB_ASSERT(data_val.length >= STAT_CACHE_TWRP_TOKEN_LEN);
-+
-+	translated_path = talloc_strdup(
-+		ctx,(char *)data_val.data + STAT_CACHE_TWRP_TOKEN_LEN);
- 	if (!translated_path) {
- 		smb_panic("talloc failed");
- 	}
--	translated_path_length = data_val.length - 1;
-+	translated_path_length = data_val.length - 1 - STAT_CACHE_TWRP_TOKEN_LEN;
- 
- 	DEBUG(10,("stat_cache_lookup: lookup succeeded for name [%s] "
- 		  "-> [%s]\n", chk_name, translated_path ));
- 	DO_PROFILE_INC(statcache_hits);
- 
--	ZERO_STRUCT(smb_fname);
--	smb_fname.base_name = translated_path;
-+	smb_fname = (struct smb_filename) {
-+		.base_name = translated_path,
-+		.vss_tval = vss_tval,
-+	};
- 
- 	if (posix_paths) {
- 		ret = SMB_VFS_LSTAT(conn, &smb_fname);
-@@ -369,9 +436,19 @@ void smbd_send_stat_cache_delete_message(struct messaging_context *msg_ctx,
- 
- void stat_cache_delete(const char *name)
- {
--	char *lname = talloc_strdup_upper(talloc_tos(), name);
-+	char *upper = talloc_strdup_upper(talloc_tos(), name);
-+	char *lname = NULL;
-+
-+	if (upper == NULL) {
-+		return;
-+	}
- 
--	if (!lname) {
-+	lname = talloc_asprintf(talloc_tos(),
-+				STAT_CACHE_TWRP_TOKEN,
-+				(time_t)0,
-+				upper);
-+	TALLOC_FREE(upper);
-+	if (lname == NULL) {
- 		return;
- 	}
- 	DEBUG(10,("stat_cache_delete: deleting name [%s] -> %s\n",
 diff --git a/source3/smbd/trans2.c b/source3/smbd/trans2.c
-index 339dd36b6af..02bd92c6b01 100644
+index 7acde285a90..872c4f3f9db 100644
 --- a/source3/smbd/trans2.c
 +++ b/source3/smbd/trans2.c
-@@ -258,9 +258,22 @@ NTSTATUS get_ea_value(TALLOC_CTX *mem_ctx,
- 			struct ea_struct *pea)
- {
- 	/* Get the value of this xattr. Max size is 64k. */
--	size_t attr_size = 256;
-+	size_t attr_size = 0;
+@@ -271,6 +271,7 @@ NTSTATUS get_ea_value(TALLOC_CTX *mem_ctx,
+ 	size_t attr_size = 256;
  	char *val = NULL;
  	ssize_t sizeret;
-+	static size_t min_xattr_size = 0;
-+	static size_t max_xattr_size = 0;
-+
-+	if (min_xattr_size == 0) {
-+		min_xattr_size = (size_t)lp_parm_ulonglong(
-+			SNUM(conn), "smbd", "min_xattr_size", 256);
-+	}
-+	attr_size = min_xattr_size;
-+
-+	if (max_xattr_size == 0) {
-+		max_xattr_size = (size_t)lp_parm_ulonglong(
-+			SNUM(conn), "smbd", "max_xattr_size", 16*1024*1024);
-+	}
++	size_t max_xattr_size = lp_smbd_max_xattr_size(SNUM(conn));
  
   again:
  
-@@ -276,8 +289,8 @@ NTSTATUS get_ea_value(TALLOC_CTX *mem_ctx,
+@@ -286,8 +287,8 @@ NTSTATUS get_ea_value(TALLOC_CTX *mem_ctx,
  				ea_name, val, attr_size);
  	}
  
@@ -1340,136 +487,21 @@ index 339dd36b6af..02bd92c6b01 100644
  		goto again;
  	}
  
-@@ -526,6 +539,20 @@ static NTSTATUS get_ea_list_from_file_path(TALLOC_CTX *mem_ctx,
+@@ -535,6 +536,17 @@ static NTSTATUS get_ea_list_from_file_path(TALLOC_CTX *mem_ctx,
+ 			 */
  			TALLOC_FREE(listp);
  			continue;
- 		}
-+		else if (listp->ea.value.length > 65536) {
++		} else if (listp->ea.value.length > 65536) {
 +			/*
 +			 * SMB clients may report error with file
 +			 * if large EA is presented to them.
 +			 */
 +			DBG_ERR("EA [%s] on file [%s] exceeds "
 +				"maximum permitted EA size of 64KiB: %zu\n.",
-+				listp->ea.name,
-+				fsp?fsp_str_dbg(fsp):smb_fname_str_dbg(smb_fname),
++				listp->ea.name, fsp_str_dbg(fsp),
 +				listp->ea.value.length);
 +			TALLOC_FREE(listp);
 +			continue;
-+		}
-+
+ 		}
  
  		push_ascii_fstring(dos_ea_name, listp->ea.name);
- 
-@@ -2623,6 +2650,7 @@ NTSTATUS smbd_dirptr_lanman2_entry(TALLOC_CTX *ctx,
- 			TALLOC_FREE(fname);
- 			return NT_STATUS_NO_MEMORY;
- 		}
-+		name->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 		*_smb_fname = name;
- 	}
- 
-@@ -3611,6 +3639,7 @@ NTSTATUS smbd_do_qfsinfo(struct smbXsrv_connection *xconn,
- 
- 	ZERO_STRUCT(smb_fname);
- 	smb_fname.base_name = discard_const_p(char, filename);
-+	smb_fname.vss_tval.tv_sec = fname?fname->vss_tval.tv_sec:0;
- 
- 	if(info_level != SMB_FS_QUOTA_INFORMATION
- 	   && SMB_VFS_STAT(conn, &smb_fname) != 0) {
-@@ -3908,12 +3937,21 @@ cBytesSector=%u, cUnitTotal=%u, cUnitAvail=%d\n", (unsigned int)bsize, (unsigned
- 
- 			ZERO_STRUCT(fsp);
- 			ZERO_STRUCT(quotas);
-+			bool allowed_user;
-+			if ((get_current_uid(conn) == 0) || (security_token_has_privilege(
-+			   conn->session_info->security_token, SEC_PRIV_DISK_OPERATOR) == 0)) {
-+				allowed_user = true;
-+			}
-+
-+
- 
- 			fsp.conn = conn;
- 			fsp.fnum = FNUM_FIELD_INVALID;
- 
--			/* access check */
--			if (get_current_uid(conn) != 0) {
-+			/* access check
-+			 * Allow access in case we have SEC_PRIV_DISK_OPERATOR.
-+			 */
-+			if ( !allowed_user ) {
- 				DEBUG(0,("get_user_quota: access_denied "
- 					 "service [%s] user [%s]\n",
- 					 lp_servicename(talloc_tos(), lp_sub, SNUM(conn)),
-@@ -4212,11 +4250,17 @@ static NTSTATUS smb_set_fsquota(connection_struct *conn,
- 		loadparm_s3_global_substitution();
- 	NTSTATUS status;
- 	SMB_NTQUOTA_STRUCT quotas;
-+	bool allowed_user;
-+
-+	if ((get_current_uid(conn) == 0) || (security_token_has_privilege(
-+	   conn->session_info->security_token, SEC_PRIV_DISK_OPERATOR) == 0)) {
-+		allowed_user = true;
-+	}
- 
- 	ZERO_STRUCT(quotas);
- 
- 	/* access check */
--	if ((get_current_uid(conn) != 0) || !CAN_WRITE(conn)) {
-+	if ((!allowed_user) || !CAN_WRITE(conn)) {
- 		DEBUG(3, ("set_fsquota: access_denied service [%s] user [%s]\n",
- 			  lp_servicename(talloc_tos(), lp_sub, SNUM(conn)),
- 			  conn->session_info->unix_info->unix_name));
-@@ -6187,6 +6231,7 @@ static void call_trans2qfilepathinfo(connection_struct *conn,
- 				reply_nterror(req, NT_STATUS_NO_MEMORY);
- 				return;
- 			}
-+			smb_fname_base->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 			if (INFO_LEVEL_IS_UNIX(info_level) || req->posix_pathnames) {
- 				/* Always do lstat for UNIX calls. */
-@@ -6617,6 +6662,7 @@ static NTSTATUS smb_set_file_dosmode(connection_struct *conn,
- 	if (smb_fname_base == NULL) {
- 		return NT_STATUS_NO_MEMORY;
- 	}
-+	smb_fname_base->vss_tval.tv_sec = smb_fname->vss_tval.tv_sec;
- 
- 	if (dosmode) {
- 		if (S_ISDIR(smb_fname_base->st.st_ex_mode)) {
-@@ -7137,6 +7183,7 @@ static NTSTATUS smb2_file_rename_information(connection_struct *conn,
- 			status = NT_STATUS_NO_MEMORY;
- 			goto out;
- 		}
-+		smb_fname_dst->vss_tval.tv_sec = fsp->base_fsp->fsp_name->vss_tval.tv_sec;
- 
- 		/*
- 		 * Set the original last component, since
-@@ -7347,6 +7394,7 @@ static NTSTATUS smb_file_rename_information(connection_struct *conn,
- 			status = NT_STATUS_NO_MEMORY;
- 			goto out;
- 		}
-+		smb_fname_dst->vss_tval.tv_sec = fsp->base_fsp->fsp_name->vss_tval.tv_sec;
- 
- 		/*
- 		 * Set the original last component, since
-@@ -7424,6 +7472,7 @@ static NTSTATUS smb_file_rename_information(connection_struct *conn,
- 				status = NT_STATUS_NO_MEMORY;
- 				goto out;
- 			}
-+			smb_fname_dst->vss_tval.tv_sec = fsp->base_fsp->fsp_name->vss_tval.tv_sec;
- 		}
- 	}
- 
-diff --git a/source3/smbd/vfs.c b/source3/smbd/vfs.c
-index 740088628c5..c904d1a9c6d 100644
---- a/source3/smbd/vfs.c
-+++ b/source3/smbd/vfs.c
-@@ -1342,7 +1342,7 @@ NTSTATUS check_reduced_name(connection_struct *conn,
- 				}
- 
- 				dir_fname = (struct smb_filename)
--					{ .base_name = dir_name };
-+					{ .base_name = dir_name, .vss_tval = smb_fname->vss_tval };
- 				resolved_fname = SMB_VFS_REALPATH(conn,
- 							ctx,
- 							&dir_fname);
