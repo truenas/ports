@@ -1,17 +1,17 @@
 diff --git a/source3/modules/wscript_build b/source3/modules/wscript_build
-index d4c87209106..84f64382235 100644
+index bdff7fda7b8..3255c9d64ea 100644
 --- a/source3/modules/wscript_build
 +++ b/source3/modules/wscript_build
-@@ -50,7 +50,7 @@ bld.SAMBA3_SUBSYSTEM('HASH_INODE',
+@@ -54,7 +54,7 @@ bld.SAMBA3_SUBSYSTEM('HASH_INODE',
  bld.SAMBA3_MODULE('vfs_default',
                   subsystem='vfs',
                   source='vfs_default.c',
--                 deps='samba-util NDR_DFSBLOBS OFFLOAD_TOKEN',
-+                 deps='samba-util NDR_DFSBLOBS OFFLOAD_TOKEN smb_libzfs',
+-                 deps='samba-util NDR_DFSBLOBS OFFLOAD_TOKEN UTIL_REPARSE',
++                 deps='samba-util NDR_DFSBLOBS OFFLOAD_TOKEN UTIL_REPARSE smb_libzfs',
                   init_function='',
                   internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_default'),
                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_default'))
-@@ -238,6 +238,62 @@ bld.SAMBA3_MODULE('vfs_solarisacl',
+@@ -243,6 +243,62 @@ bld.SAMBA3_MODULE('vfs_solarisacl',
                   internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_solarisacl'),
                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_solarisacl'))
  
@@ -74,7 +74,7 @@ index d4c87209106..84f64382235 100644
  bld.SAMBA3_MODULE('vfs_zfsacl',
                   subsystem='vfs',
                   source='vfs_zfsacl.c',
-@@ -246,35 +302,38 @@ bld.SAMBA3_MODULE('vfs_zfsacl',
+@@ -251,35 +307,38 @@ bld.SAMBA3_MODULE('vfs_zfsacl',
                   internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_zfsacl'),
                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_zfsacl'))
  
@@ -143,27 +143,10 @@ index d4c87209106..84f64382235 100644
  bld.SAMBA3_MODULE('vfs_nfs4acl_xattr',
                    subsystem='vfs',
 diff --git a/source3/wscript b/source3/wscript
-index 85466b493fa..5a08a12365e 100644
+index 563854c1d23..1a01f3512f7 100644
 --- a/source3/wscript
 +++ b/source3/wscript
-@@ -124,6 +124,7 @@ def configure(conf):
-     conf.CHECK_FUNCS_IN('dn_expand _dn_expand __dn_expand', 'resolv')
-     conf.CHECK_FUNCS_IN('dn_expand', 'inet')
-     conf.CHECK_DECLS('readahead', reverse=True, headers='fcntl.h')
-+    conf.ADD_LDFLAGS('-ljail')
- 
-     if conf.CHECK_CODE('''
- #if defined(HAVE_UNISTD_H)
-@@ -806,7 +807,7 @@ msg.msg_accrightslen = sizeof(fd);
-         conf.env['HAVE_ADS'] = '1'
-         Logs.info("Building with Active Directory support.")
-         # these have broken dependencies
--        forced_shared_modules.extend(TO_LIST('idmap_ad idmap_rfc2307'))
-+        forced_shared_modules.extend(TO_LIST('idmap_ad idmap_fruit idmap_rfc2307'))
-     elif Options.options.with_ads == False:
-         Logs.info("Building without Active Directory support (--without-ads).")
-     else:
-@@ -1929,7 +1930,9 @@ main() {
+@@ -1970,7 +1970,9 @@ main() {
          default_shared_modules.extend(TO_LIST('vfs_posix_eadb'))
  
      if conf.CONFIG_SET('HAVE_FREEBSD_SUNACL_H'):
