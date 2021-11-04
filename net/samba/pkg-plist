@@ -1,11 +1,10 @@
 bin/cifsdd
 bin/dbwrap_tool
 bin/dumpmscat
-bin/findsmb
 bin/gentest
 bin/locktest
 bin/masktest
-bin/mdfind
+bin/mdsearch
 bin/mvxattr
 bin/ndrdump
 bin/net
@@ -159,10 +158,11 @@ lib/samba4/libndr-standard.so
 lib/samba4/libndr-standard.so.0
 lib/samba4/libndr-standard.so.0.0.1
 lib/samba4/libndr.so
-lib/samba4/libndr.so.1
-lib/samba4/libndr.so.1.0.1
+lib/samba4/libndr.so.2
+lib/samba4/libndr.so.2.0.0
 lib/samba4/libnetapi.so
-lib/samba4/libnetapi.so.0
+lib/samba4/libnetapi.so.1
+lib/samba4/libnetapi.so.1.0.0
 lib/samba4/libsamba-credentials.so
 lib/samba4/libsamba-credentials.so.1
 lib/samba4/libsamba-credentials.so.1.0.0
@@ -222,14 +222,15 @@ lib/samba4/private/libcli-spoolss-samba4.so
 lib/samba4/private/libclidns-samba4.so
 lib/samba4/private/libcliauth-samba4.so
 lib/samba4/private/libcluster-samba4.so
-lib/samba4/private/libcmdline-credentials-samba4.so
 lib/samba4/private/libcmdline-contexts-samba4.so
+lib/samba4/private/libcmdline-samba4.so
 lib/samba4/private/libcom_err-samba4.so.0
 lib/samba4/private/libcom_err-samba4.so.0.25
 lib/samba4/private/libcommon-auth-samba4.so
 %%AD_DC%%lib/samba4/private/libdb-glue-samba4.so
 %%AD_DC%%lib/samba4/private/libdsdb-garbage-collect-tombstones-samba4.so
 lib/samba4/private/libdbwrap-samba4.so
+lib/samba4/private/libdcerpc-pkt-auth-samba4.so
 lib/samba4/private/libdcerpc-samba-samba4.so
 lib/samba4/private/libdcerpc-samba4.so
 %%AD_DC%%lib/samba4/private/libdfs-server-ad-samba4.so
@@ -281,15 +282,13 @@ lib/samba4/private/libnetif-samba4.so
 lib/samba4/private/libnpa-tstream-samba4.so
 lib/samba4/private/libnss-info-samba4.so
 %%AD_DC%%lib/samba4/private/libpac-samba4.so
-lib/samba4/private/libpopt-samba3-cmdline-samba4.so 
-lib/samba4/private/libpopt-samba3-samba4.so
 lib/samba4/private/libposix-eadb-samba4.so
 lib/samba4/private/libprinter-driver-samba4.so
 lib/samba4/private/libprinting-migrate-samba4.so
 lib/samba4/private/libpyldb-util%%PYTHON_EXT_SUFFIX%%.so.2
-lib/samba4/private/libpyldb-util%%PYTHON_EXT_SUFFIX%%.so.2.3.0
+lib/samba4/private/libpyldb-util%%PYTHON_EXT_SUFFIX%%.so.2.4.1
 lib/samba4/private/libpytalloc-util%%PYTHON_EXT_SUFFIX%%.so.2
-lib/samba4/private/libpytalloc-util%%PYTHON_EXT_SUFFIX%%.so.2.3.2
+lib/samba4/private/libpytalloc-util%%PYTHON_EXT_SUFFIX%%.so.2.3.3
 lib/samba4/private/libregistry-samba4.so
 lib/samba4/private/libreplace-samba4.so
 lib/samba4/private/libroken-samba4.so.19
@@ -323,7 +322,6 @@ lib/samba4/private/libtdb-wrap-samba4.so
 lib/samba4/private/libtime-basic-samba4.so
 lib/samba4/private/libtorture-samba4.so
 lib/samba4/private/libtrusts-util-samba4.so
-lib/samba4/private/libutil-cmdline-samba4.so
 lib/samba4/private/libutil-reg-samba4.so
 lib/samba4/private/libutil-setid-samba4.so
 lib/samba4/private/libutil-tdb-samba4.so
@@ -580,7 +578,6 @@ lib/shared-modules/vfs/zfsacl.so
 %%AD_DC%%@dir %%DATADIR%%
 @comment Man pages
 man/man1/dbwrap_tool.1.gz
-man/man1/findsmb.1.gz
 man/man1/gentest.1.gz
 man/man1/locktest.1.gz
 man/man1/log2pcap.1.gz
@@ -766,16 +763,16 @@ man/man8/winbindd.8.gz
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb-cmdline-samba4.so
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldbsamba-samba4.so
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb.so.2
-%%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb.so.2.3.0
+%%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb.so.2.4.1
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb-key-value-samba4.so
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb-tdb-err-map-samba4.so
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb-tdb-int-samba4.so
 %%SAMBA4_BUNDLED_TALLOC%%lib/samba4/private/libtalloc.so.2
-%%SAMBA4_BUNDLED_TALLOC%%lib/samba4/private/libtalloc.so.2.3.2
+%%SAMBA4_BUNDLED_TALLOC%%lib/samba4/private/libtalloc.so.2.3.3
 %%SAMBA4_BUNDLED_TDB%%lib/samba4/private/libtdb.so.1
-%%SAMBA4_BUNDLED_TDB%%lib/samba4/private/libtdb.so.1.4.3
+%%SAMBA4_BUNDLED_TDB%%lib/samba4/private/libtdb.so.1.4.4
 %%SAMBA4_BUNDLED_TEVENT%%lib/samba4/private/libtevent.so.0
-%%SAMBA4_BUNDLED_TEVENT%%lib/samba4/private/libtevent.so.0.10.2
+%%SAMBA4_BUNDLED_TEVENT%%lib/samba4/private/libtevent.so.0.11.0
 %%SAMBA4_BUNDLED_LDB%%lib/shared-modules/ldb/asq.so
 %%SAMBA4_BUNDLED_LDB%%lib/shared-modules/ldb/ildap.so
 %%SAMBA4_BUNDLED_LDB%%lib/shared-modules/ldb/ldb.so
@@ -799,6 +796,8 @@ man/man8/winbindd.8.gz
 %%SAMBA4_BUNDLED_TDB%%man/man8/tdbrestore.8.gz
 %%SAMBA4_BUNDLED_TDB%%man/man8/tdbtool.8.gz
 @comment Python3 block
+@dir %%SAMBA4_PYTHON3%%lib/samba4
+@dir %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba
 %%SAMBA4_PYTHON3%%lib/samba4/libsamba-policy%%PYTHON_EXT_SUFFIX%%.so
 %%SAMBA4_PYTHON3%%lib/samba4/libsamba-policy%%PYTHON_EXT_SUFFIX%%.so.0
 %%SAMBA4_PYTHON3%%lib/samba4/libsamba-policy%%PYTHON_EXT_SUFFIX%%.so.0.0.1
@@ -942,7 +941,7 @@ man/man8/winbindd.8.gz
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/remove_dc.py
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/samba3/__init__.py
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/samba3/libsmb_samba_cwrapper%%PYTHON_EXT_SUFFIX%%.so
-%%SPOTLIGHT%%%%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/samba3/mdscli.so
+%%SPOTLIGHT%%%%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/samba3/mdscli%%PYTHON_EXT_SUFFIX%%.so
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/samba3/param%%PYTHON_EXT_SUFFIX%%.so
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/samba3/passdb%%PYTHON_EXT_SUFFIX%%.so
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/samba3/smbd%%PYTHON_EXT_SUFFIX%%.so
