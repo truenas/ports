@@ -3,11 +3,14 @@
 
 PORTNAME=			${SAMBA4_BASENAME}
 PORTVERSION=			${SAMBA4_VERSION}
-PORTREVISION=			3
+PORTREVISION=			1
 CATEGORIES?=			net
-MASTER_SITES=			SAMBA/samba/stable SAMBA/samba/rc
 DISTNAME=			${SAMBA4_DISTNAME}
 USE_LOCALE=			en_US.UTF-8
+
+USE_GITHUB=			yes
+GH_ACCOUNT=			truenas
+GH_TAGNAME=			51714385bc751ce2b70bb58975609292776ad6fa
 
 MAINTAINER=		 	awalker@ixsystems.com
 COMMENT=			Free SMB/CIFS and AD/DC server and client for Unix
@@ -18,29 +21,14 @@ IGNORE_NONTHREAD_PYTHON=	needs port lang/python${PYTHON_SUFFIX} to be build with
 
 CONFLICTS_INSTALL?=		samba4-4.0.* samba4[1-79]-4.* p5-Parse-Pidl-4.*
 
-EXTRA_PATCHES+=			${PATCHDIR}/add-truenas-parameters.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/add-truenas-modules.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/add-wsdd-support.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/add-wb-status-cmd.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/add-json-support.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/talloc_arc4random.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/add-aio-fbsd.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/add-zfs-based-modules.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/wscript_changes.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/add_del_share.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/ix-smbtorture.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/smbd-core-changes.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/tevent_kqueue.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/allow_vfs_set_sparse.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/fix-zfsacl.patch:-p1
-EXTRA_PATCHES+=			${PATCHDIR}/add_large_stream_support.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/documentation.patch:-p1
 
 SAMBA4_BASENAME=		samba
 SAMBA4_PORTNAME=		${SAMBA4_BASENAME}4
-SAMBA4_VERSION=			4.14.4
+SAMBA4_VERSION=			4.15.2
 SAMBA4_DISTNAME=		${SAMBA4_BASENAME}-${SAMBA4_VERSION:S|.p|pre|:S|.r|rc|:S|.t|tp|:S|.a|alpha|}
 
-WRKSRC?=			${WRKDIR}/${DISTNAME}
+WRKSRC?=			${WRKDIR}/${SAMBA4_BASENAME}-${GH_TAGNAME}
 
 .if !defined(SAMBA4_SUBPORT)
 CPE_VENDOR=			samba
@@ -83,13 +71,14 @@ CONFIGURE_ARGS+=		--mandir="${MANPREFIX}/man" \
 # XXX: Flags
 CONFIGURE_ENV+=			PTHREAD_LDFLAGS="-lpthread"
 CFLAGS+=                        -D_ACL_PRIVATE
+CFLAGS+=                        -D_FREEBSD_LIBZFS
 CPPFLAGS+=			-I${LOCALBASE}/include
 LDFLAGS+=			-L${LOCALBASE}/lib
 LLD_UNSAFE=			yes
 BINARY_ALIAS=			ld=ld.bfd
 
 USES=				cpe compiler waf pkgconfig perl5 \
-				iconv shebangfix
+				iconv shebangfix bison
 USE_PERL5=			build
 USE_LDCONFIG=			${SAMBA4_LIBDIR}
 WAF_CMD=			buildtools/bin/waf
@@ -113,7 +102,7 @@ OPTIONS_DEFINE+=		DEVELOPER MANDOC
 OPTIONS_DEFINE_amd64=		AESNI
 OPTIONS_DEFAULT_amd64=		AESNI
 
-OPTIONS_DEFINE+=		CUPS GPGME NTVFS SPOTLIGHT WSDD
+OPTIONS_DEFINE+=		CUPS GPGME SPOTLIGHT WSDD
 
 OPTIONS_RADIO=			DNS ZEROCONF
 OPTIONS_RADIO_DNS=		NSUPDATE BIND911
@@ -123,7 +112,7 @@ AD_DC_DESC=			Active Directory Domain Controller
 ADS_DESC=			Active Directory client(implies LDAP)
 AESNI_DESC=			Accelerated AES crypto functions(amd64 only)
 CLUSTER_DESC=			Clustering
-DEVELOPER_DESC=			With developer framework(implies NTVFS)
+DEVELOPER_DESC=			With developer framework
 FAM_DESC=			File Alteration Monitor
 GPGME_DESC=			GpgME
 GLUSTERFS_DESC=			GlusterFS
@@ -132,7 +121,6 @@ LIBZFS_DESC=			LibZFS
 WSDD_DESC=			Web Service Discovery Daemon
 SPOTLIGHT_DESC=			Spotlight
 MANDOC_DESC=			Build manpages from DOCBOOK templates
-NTVFS_DESC=			Build *DEPRECATED* NTVFS file server
 PICKY_DEVELOPER_DESC=		Treat compiler warnings as errors(implies DEVELOPER)
 PROFILE_DESC=			Profiling data
 QUOTAS_DESC=			Disk quota
@@ -302,16 +290,10 @@ GDB_CMD?=			${LOCALBASE}/bin/gdb
 PICKY_DEVELOPER_IMPLIES=	DEVELOPER
 PICKY_DEVELOPER_CONFIGURE_ON=	--picky-developer
 
-DEVELOPER_IMPLIES=		NTVFS
 DEVELOPER_CONFIGURE_ON=		--enable-developer --enable-selftest --abi-check-disable
 DEVELOPER_BUILD_DEPENDS=	${GDB_CMD}:devel/gdb
 DEVELOPER_TEST_DEPENDS=		${GDB_CMD}:devel/gdb
 DEVELOPER_VARS_OFF=		GDB_CMD=true
-# XXX: Mostly used in conjuction with the DEVELOPER option, don't enable it
-# if you don't know what you are doing
-NTVFS_CONFIGURE_WITH=		ntvfs-fileserver
-NTVFS_PLIST_FILES=		lib/shared-modules/service/smb.so \
-				lib/samba4/private/libntvfs-samba4.so
 ##############################################################################
 CLUSTER_CONFIGURE_WITH=		cluster-support
 
@@ -345,7 +327,6 @@ UTMP_CONFIGURE_WITH=		utmp
 AD_DC_CONFIGURE_OFF=		--without-ad-dc
 
 ADS_IMPLIES=			LDAP
-ADS_CONFIGURE_WITH=		ads dnsupdate
 
 LDAP_CONFIGURE_WITH=		ldap
 LDAP_CONFIGURE_ON=		--with-ldap
