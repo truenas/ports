@@ -13,6 +13,7 @@ smbd_group=""
 
 smbd_pidfile="%%SAMBA4_RUNDIR%%/smbd.pid"
 smbcontrol="%%PREFIX%%/bin/smbcontrol"
+jq="%%PREFIX%%/bin/jq"
 extra_commands="reload status"
 
 start_cmd="smbd_cmd"
@@ -57,6 +58,13 @@ smbd_cmd() {
 samba_server_config_init()
 {
     load_rc_config $name
+    local fdpath_fstype=$(df -T /var/run/samba/fd --libxo json | ${jq} -r '."storage-system-information".filesystem[0].name' | tr -d '\n')
+
+    if [ ${fdpath_fstype} != "fdescfs" ]; then
+        mkdir -p /var/run/samba/fd
+        mount -t fdescfs -o nodup null /var/run/samba/fd
+    fi
+
     if [ -n "${samba_server_enable}" ] && [ "${samba_server_enable}" == "YES" ]; then
         eval ${name}_enable=\${${name}_enable:-"YES"}
     fi
