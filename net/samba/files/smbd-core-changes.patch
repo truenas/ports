@@ -99,7 +99,7 @@ index d527f850628..1e02ae330ca 100644
  	struct files_struct *cwd_fsp; /* Working directory. */
  	bool tcon_done;
 diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
-index cf5e1cbc296..f0587c44d7d 100644
+index cf5e1cbc296..39d465f5b8d 100644
 --- a/source3/modules/vfs_default.c
 +++ b/source3/modules/vfs_default.c
 @@ -40,6 +40,8 @@
@@ -465,7 +465,7 @@ index e49e623d796..612c89d59d1 100644
  		DEBUG(2, ("smb2_write failed: %s, file %s, "
  			  "length=%lu offset=%lu nwritten=-1: %s\n",
 diff --git a/source3/smbd/trans2.c b/source3/smbd/trans2.c
-index 7acde285a90..872c4f3f9db 100644
+index 7acde285a90..c46e38828ab 100644
 --- a/source3/smbd/trans2.c
 +++ b/source3/smbd/trans2.c
 @@ -271,6 +271,7 @@ NTSTATUS get_ea_value(TALLOC_CTX *mem_ctx,
@@ -505,3 +505,17 @@ index 7acde285a90..872c4f3f9db 100644
  		}
  
  		push_ascii_fstring(dos_ea_name, listp->ea.name);
+@@ -3636,8 +3648,11 @@ NTSTATUS smbd_do_qfsinfo(struct smbXsrv_connection *xconn,
+ 
+ 	DEBUG(3,("smbd_do_qfsinfo: level = %d\n", info_level));
+ 
+-	ZERO_STRUCT(smb_fname);
+-	smb_fname.base_name = discard_const_p(char, filename);
++	smb_fname = (struct smb_filename) {
++		.base_name = discard_const_p(char, filename),
++		.flags = fname ? fname->flags : 0,
++		.twrp = fname ? fname->twrp : 0,
++	};
+ 
+ 	if(info_level != SMB_FS_QUOTA_INFORMATION
+ 	   && SMB_VFS_STAT(conn, &smb_fname) != 0) {
