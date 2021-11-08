@@ -1,0 +1,72 @@
+diff --git a/Modules/grpmodule.c b/Modules/grpmodule.c
+index cdb3ae859b..8b3a04b4b1 100644
+--- a/Modules/grpmodule.c
++++ b/Modules/grpmodule.c
+@@ -285,21 +285,28 @@ grp_getgrall_impl(PyObject *module)
+ /*[clinic end generated code: output=585dad35e2e763d7 input=d7df76c825c367df]*/
+ {
+     PyObject *d;
+-    struct group *p;
++    struct group grp, *grpp = NULL;
++    int ret;
++    char buffer[4096];
+ 
+     if ((d = PyList_New(0)) == NULL)
+         return NULL;
+     setgrent();
+-    while ((p = getgrent()) != NULL) {
+-        PyObject *v = mkgrent(p);
++    while((ret = getgrent_r(&grp, buffer, sizeof(buffer), &grpp)) == 0) {
++        PyObject *v = mkgrent(grpp);
+         if (v == NULL || PyList_Append(d, v) != 0) {
+-            Py_XDECREF(v);
++            Py_DECREF(v);
+             Py_DECREF(d);
+             endgrent();
+             return NULL;
+         }
+         Py_DECREF(v);
+     }
++    if (errno != ENOENT) {
++        Py_DECREF(d);
++        endgrent();
++        return NULL;
++    }
+     endgrent();
+     return d;
+ }
+diff --git a/Modules/pwdmodule.c b/Modules/pwdmodule.c
+index 901a3ed9a2..811e958e74 100644
+--- a/Modules/pwdmodule.c
++++ b/Modules/pwdmodule.c
+@@ -295,12 +295,15 @@ pwd_getpwall_impl(PyObject *module)
+ /*[clinic end generated code: output=4853d2f5a0afac8a input=d7ecebfd90219b85]*/
+ {
+     PyObject *d;
+-    struct passwd *p;
++    int ret;
++    struct passwd pwd, *pwdp = NULL;
++    char buffer[4096];
++
+     if ((d = PyList_New(0)) == NULL)
+         return NULL;
+     setpwent();
+-    while ((p = getpwent()) != NULL) {
+-        PyObject *v = mkpwent(p);
++    while ((ret = getpwent_r(&pwd, buffer, sizeof(buffer), &pwdp)) == 0) {
++        PyObject *v = mkpwent(pwdp);
+         if (v == NULL || PyList_Append(d, v) != 0) {
+             Py_XDECREF(v);
+             Py_DECREF(d);
+@@ -309,6 +312,11 @@ pwd_getpwall_impl(PyObject *module)
+         }
+         Py_DECREF(v);
+     }
++    if (errno != ENOENT) {
++        Py_DECREF(d);
++        endpwent();
++        return NULL;
++    }
+     endpwent();
+     return d;
+ }

@@ -3,7 +3,7 @@
 
 PORTNAME=	python
 DISTVERSION=	${PYTHON_DISTVERSION}
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	lang python
 MASTER_SITES=	PYTHON/ftp/python/${DISTVERSION}
 PKGNAMESUFFIX=	${PYTHON_SUFFIX}
@@ -20,6 +20,7 @@ LIB_DEPENDS=	libffi.so:devel/libffi
 USES=		compiler:c11 cpe ncurses pathfix pkgconfig readline \
 		shebangfix ssl tar:xz
 PATHFIX_MAKEFILEIN=	Makefile.pre.in
+EXTRA_PATCHES+=	${PATCHDIR}/acct.patch:-p1
 USE_LDCONFIG=	yes
 GNU_CONFIGURE=	yes
 python_CMD=	${PREFIX}/bin/python${PYTHON_DISTVERSION:R}
