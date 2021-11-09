@@ -3,7 +3,7 @@
 
 PORTNAME=			${SAMBA4_BASENAME}
 PORTVERSION=			${SAMBA4_VERSION}
-PORTREVISION=			2
+PORTREVISION=			1
 CATEGORIES?=			net
 MASTER_SITES=			SAMBA/samba/stable SAMBA/samba/rc
 DISTNAME=			${SAMBA4_DISTNAME}
@@ -36,10 +36,11 @@ EXTRA_PATCHES+=			${PATCHDIR}/allow_vfs_set_sparse.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/ease-netconf-validation.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/registry_service.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/full_audit.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/trusted_domain_fix.patch:-p1
 
 SAMBA4_BASENAME=		samba
 SAMBA4_PORTNAME=		${SAMBA4_BASENAME}4
-SAMBA4_VERSION=			4.13.13
+SAMBA4_VERSION=			4.13.14
 SAMBA4_DISTNAME=		${SAMBA4_BASENAME}-${SAMBA4_VERSION:S|.p|pre|:S|.r|rc|:S|.t|tp|:S|.a|alpha|}
 
 WRKSRC?=			${WRKDIR}/${DISTNAME}
