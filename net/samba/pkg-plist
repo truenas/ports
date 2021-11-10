@@ -230,6 +230,7 @@ lib/samba4/private/libcommon-auth-samba4.so
 %%AD_DC%%lib/samba4/private/libdb-glue-samba4.so
 %%AD_DC%%lib/samba4/private/libdsdb-garbage-collect-tombstones-samba4.so
 lib/samba4/private/libdbwrap-samba4.so
+lib/samba4/private/libdcerpc-pkt-auth-samba4.so
 lib/samba4/private/libdcerpc-samba-samba4.so
 lib/samba4/private/libdcerpc-samba4.so
 %%AD_DC%%lib/samba4/private/libdfs-server-ad-samba4.so
