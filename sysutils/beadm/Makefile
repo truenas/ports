@@ -1,5 +1,5 @@
 PORTNAME=	beadm
-PORTVERSION=	1.4
+PORTVERSION=	1.4.1
 CATEGORIES=	sysutils
 
 MAINTAINER=	kmoore@FreeBSD.org
