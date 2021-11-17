@@ -5,7 +5,7 @@ PORTVERSION=	1.5.0
 CATEGORIES=	games
 MASTER_SITES=	SF
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	salvadore@FreeBSD.org
 COMMENT=	Qt 5 chess database application
 
 LICENSE=	GPLv2+

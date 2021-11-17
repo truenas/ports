@@ -5,7 +5,7 @@ DISTVERSION=	4.1.0-72
 DISTVERSIONSUFFIX=	-g9e573336
 CATEGORIES=	misc gnome
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	salvadore@FreeBSD.org
 COMMENT=	Bible interface utilizing the sword framework
 
 LICENSE=	GPLv2+
