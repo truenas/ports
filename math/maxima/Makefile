@@ -7,7 +7,7 @@ PORTREVISION=	2
 CATEGORIES=	math lisp tk
 MASTER_SITES=	SF/maxima/Maxima-source/${PORTVERSION}-source
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	salvadore@FreeBSD.org
 COMMENT=	Symbolic mathematics program
 
 LICENSE=				GPLv2 MAXIMAEXTRACLAUSE

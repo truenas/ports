@@ -7,7 +7,7 @@ PORTREVISION=	9
 CATEGORIES=	misc
 MASTER_SITES=	http://crosswire.org/ftpmirror/pub/sword/source/v${PORTVERSION:R}/
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	salvadore@FreeBSD.org
 COMMENT=	Framework for manipulating Bible texts
 
 LICENSE=	GPLv2

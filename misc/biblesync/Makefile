@@ -4,7 +4,7 @@ PORTNAME=	biblesync
 DISTVERSION=	2.0.1
 CATEGORIES=	misc
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	salvadore@FreeBSD.org
 COMMENT=	Multicast shared co-navigation library for Bible programs
 
 LICENSE=	PD
