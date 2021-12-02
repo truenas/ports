@@ -99,7 +99,7 @@ index d527f850628..1e02ae330ca 100644
  	struct files_struct *cwd_fsp; /* Working directory. */
  	bool tcon_done;
 diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
-index cf5e1cbc296..39d465f5b8d 100644
+index cf5e1cbc296..47002084ee7 100644
 --- a/source3/modules/vfs_default.c
 +++ b/source3/modules/vfs_default.c
 @@ -40,6 +40,8 @@
@@ -156,7 +156,20 @@ index cf5e1cbc296..39d465f5b8d 100644
  }
  
  static int vfswrap_get_shadow_copy_data(struct vfs_handle_struct *handle,
-@@ -2504,6 +2491,18 @@ static struct smb_filename *vfswrap_getwd(vfs_handle_struct *handle,
+@@ -2069,6 +2056,12 @@ static struct tevent_req *vfswrap_offload_write_send(
+ 		return tevent_req_post(req, ev);
+ 	}
+ 
++	if (vfswrap_offload_ctx == NULL) {
++		DBG_ERR("vfswrap_offload_ctx is not initialized\n");
++		tevent_req_nterror(req, NT_STATUS_INTERNAL_ERROR);
++		return tevent_req_post(req, ev);
++	}
++
+ 	status = vfs_offload_token_db_fetch_fsp(vfswrap_offload_ctx,
+ 						token, &src_fsp);
+ 	if (tevent_req_nterror(req, status)) {
+@@ -2504,6 +2497,18 @@ static struct smb_filename *vfswrap_getwd(vfs_handle_struct *handle,
   nsec timestamp resolution call. Convert down to whatever the underlying
   system will support.
  **********************************************************************/
@@ -175,7 +188,7 @@ index cf5e1cbc296..39d465f5b8d 100644
  
  static int vfswrap_ntimes(vfs_handle_struct *handle,
  			  const struct smb_filename *smb_fname,
-@@ -2542,7 +2541,10 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
+@@ -2542,7 +2547,10 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
  	}
  
  #if defined(HAVE_UTIMENSAT)
