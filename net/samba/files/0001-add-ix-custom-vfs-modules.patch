@@ -1,9 +1,9 @@
 diff --git a/source3/modules/smb_libzfs.c b/source3/modules/smb_libzfs.c
 new file mode 100644
-index 00000000000..8e7154e07f6
+index 00000000000..9182eb646b6
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.c
-@@ -0,0 +1,1790 @@
+@@ -0,0 +1,1797 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -1725,30 +1725,35 @@ index 00000000000..8e7154e07f6
 +int conn_zfs_init(TALLOC_CTX *mem_ctx,
 +		  const char *connectpath,
 +		  struct smblibzfshandle **plibzp,
-+		  struct dataset_list **pdsl)
++		  struct dataset_list **pdsl,
++		  bool has_tcon)
 +{
 +	static struct smblibzfshandle *gl = NULL;
 +	int ret = 0;
 +	struct smbzhandle *conn_zfsp = NULL;
++	struct smblibzfshandle *libzp = NULL;
 +	char *tmp_name = NULL;
 +	size_t to_remove, new_len;
 +	struct dataset_list *dl = NULL;
 +
-+	if (!gl) {
-+		ret = get_smblibzfs_handle(mem_ctx, &gl);
-+                if (ret != 0) {
-+                        return -1;
-+                }
++	if (has_tcon) {
++		if (!gl) {
++			ret = get_smblibzfs_handle(mem_ctx, &gl);
++			SMB_ASSERT(ret == 0);
++		}
++		libzp = gl;
++		dl = share_lookup_dataset_list(connectpath);
++		if (dl != NULL) {
++			*plibzp = gl;
++			*pdsl = dl;
++			return 0;
++		}
++	} else {
++		ret = get_smblibzfs_handle(mem_ctx, &libzp);
++		SMB_ASSERT(ret == 0);
 +	}
 +
-+	dl = share_lookup_dataset_list(connectpath);
-+	if (dl != NULL) {
-+		*plibzp = gl;
-+		*pdsl = dl;
-+		return 0;
-+	}
-+
-+	get_smbzhandle(gl, mem_ctx, connectpath, &conn_zfsp, true);
++	get_smbzhandle(libzp, mem_ctx, connectpath, &conn_zfsp, true);
 +	/*
 +	 * Attempt to get zfs dataset handle will fail if the dataset is a
 +	 * snapshot. This may occur if the share is one dynamically created
@@ -1766,13 +1771,13 @@ index 00000000000..8e7154e07f6
 +			tmp_name = talloc_strndup(mem_ctx,
 +						  connectpath,
 +						  new_len);
-+			get_smbzhandle(gl,
++			get_smbzhandle(libzp,
 +				       mem_ctx, tmp_name,
 +				       &conn_zfsp, false);
 +			TALLOC_FREE(tmp_name);
 +		}
 +	}
-+	*plibzp = gl;
++	*plibzp = libzp;
 +	if (conn_zfsp == NULL) {
 +		/*
 +		 * The filesystem is most likely not ZFS. Jailed processes
@@ -1786,9 +1791,11 @@ index 00000000000..8e7154e07f6
 +	if (dl == NULL) {
 +		return 0;
 +	}
-+	ret = put_share_dataset_list(mem_ctx, connectpath, dl);
-+	if (ret != 0) {
-+		DBG_ERR("Failed to store share dataset list\n");
++	if (has_tcon) {
++		ret = put_share_dataset_list(mem_ctx, connectpath, dl);
++		if (ret != 0) {
++			DBG_ERR("Failed to store share dataset list\n");
++		}
 +	}
 +
 +	*pdsl = dl;
@@ -1796,10 +1803,10 @@ index 00000000000..8e7154e07f6
 +}
 diff --git a/source3/modules/smb_libzfs.h b/source3/modules/smb_libzfs.h
 new file mode 100644
-index 00000000000..5d889ada39f
+index 00000000000..dcade599317
 --- /dev/null
 +++ b/source3/modules/smb_libzfs.h
-@@ -0,0 +1,393 @@
+@@ -0,0 +1,395 @@
 +/*-
 + * Copyright 2018 iXsystems, Inc.
 + * All rights reserved
@@ -2185,20 +2192,22 @@ index 00000000000..5d889ada39f
 + * @param[in]	mem_ctx			talloc memory context on which to hang results.
 + * @param[in]	connectpath		connectpath to share.
 + * @param[out]	ppdsl			returned dataset list for connectpath.
++ * @param[in]	has_tcon		has long-lived memory context.
 + * @return	0 on success -1 on failure
 + */
 +int conn_zfs_init(TALLOC_CTX *mem_ctx,
 +		  const char *connectpath,
 +		  struct smblibzfshandle **plibzfs,
-+		  struct dataset_list **ppdsl);
++		  struct dataset_list **ppdsl,
++		  bool has_tcon);
 +
 +#endif	/* !__SMB_LIBZFS_H */
 diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
 new file mode 100644
-index 00000000000..8916c3391c8
+index 00000000000..7a15176a56a
 --- /dev/null
 +++ b/source3/modules/vfs_ixnas.c
-@@ -0,0 +1,2590 @@
+@@ -0,0 +1,2591 @@
 +/*
 + *  Unix SMB/CIFS implementation.
 + *  A dumping ground for FreeBSD-specific VFS functions. For testing case
@@ -4676,7 +4685,8 @@ index 00000000000..8916c3391c8
 +	ret = conn_zfs_init(handle->conn->sconn,
 +			    handle->conn->connectpath,
 +			    &config->libzp,
-+			    &config->dsl);
++			    &config->dsl,
++			    handle->conn->tcon != NULL);
 +
 +	if (ret != 0) {
 +		TALLOC_FREE(config);
