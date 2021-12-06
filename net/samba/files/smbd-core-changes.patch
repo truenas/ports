@@ -232,6 +232,39 @@ index 14532395e8a..c73d5d9e0eb 100644
  	/* Create an smb_filename with stream_name == NULL. */
  	smb_fname_base = synthetic_smb_fname(talloc_tos(),
  					sio->base,
+diff --git a/source3/rpc_server/fss/srv_fss_agent.c b/source3/rpc_server/fss/srv_fss_agent.c
+index 0cc3a5d0fbb..192575dd918 100644
+--- a/source3/rpc_server/fss/srv_fss_agent.c
++++ b/source3/rpc_server/fss/srv_fss_agent.c
+@@ -149,6 +149,7 @@ static bool snap_path_exists(TALLOC_CTX *ctx, struct messaging_context *msg_ctx,
+ 	struct smb_filename *smb_fname = NULL;
+ 	char *service = NULL;
+ 	char *share;
++	struct auth_session_info *session_info = NULL;
+ 	int snum;
+ 	int ret;
+ 	NTSTATUS status;
+@@ -167,7 +168,19 @@ static bool snap_path_exists(TALLOC_CTX *ctx, struct messaging_context *msg_ctx,
+ 		goto out;
+ 	}
+ 
+-	status = fss_conn_create_tos(msg_ctx, NULL, snum, &conn);
++	status = init_system_session_info(ctx);
++	if (!NT_STATUS_IS_OK(status)) {
++		DBG_ERR("init_system_session_info failed\n");
++		goto out;
++	}
++
++	status = make_session_info_system(ctx, &session_info);
++	if (!NT_STATUS_IS_OK(status)) {
++		DBG_ERR("make_session_info_system failed\n");
++		goto out;
++	}
++
++	status = fss_conn_create_tos(ctx, session_info, snum, &conn);
+ 	if(!NT_STATUS_IS_OK(status)) {
+ 		goto out;
+ 	}
 diff --git a/source3/smbd/fake_file.c b/source3/smbd/fake_file.c
 index 90921a65e36..865da147d8d 100644
 --- a/source3/smbd/fake_file.c
