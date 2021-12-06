@@ -1,9 +1,9 @@
 diff --git a/source3/modules/vfs_shadow_copy_zfs.c b/source3/modules/vfs_shadow_copy_zfs.c
 new file mode 100644
-index 00000000000..5e172e0b3a0
+index 00000000000..0f0ae7aa017
 --- /dev/null
 +++ b/source3/modules/vfs_shadow_copy_zfs.c
-@@ -0,0 +1,1818 @@
+@@ -0,0 +1,1819 @@
 +/* shadow_copy_zfs: a shadow copy module for ZFS
 + *
 + * Copyright (C) Andrew Tridgell   2007 (portions taken from shadow_copy_zfs)
@@ -1712,7 +1712,8 @@ index 00000000000..5e172e0b3a0
 +	ret = conn_zfs_init(handle->conn->sconn,
 +			    handle->conn->connectpath,
 +			    &config->libzp,
-+			    &config->ds_list);
++			    &config->ds_list,
++			    handle->conn->tcon != NULL);
 +
 +	if (ret != 0) {
 +		DBG_ERR("Failed to initialize zfs: %s\n", strerror(errno));
@@ -1824,10 +1825,10 @@ index 00000000000..5e172e0b3a0
 +}
 diff --git a/source3/modules/vfs_tmprotect.c b/source3/modules/vfs_tmprotect.c
 new file mode 100644
-index 00000000000..2ac4f3525bf
+index 00000000000..48bf76e67a1
 --- /dev/null
 +++ b/source3/modules/vfs_tmprotect.c
-@@ -0,0 +1,291 @@
+@@ -0,0 +1,292 @@
 +/* tmprotect: a module for automatic ZFS snapshot maintenance.
 + *
 + * Copyright (C) iXsystems Inc     2019
@@ -1972,7 +1973,8 @@ index 00000000000..2ac4f3525bf
 +	ret = conn_zfs_init(handle->conn->sconn,
 +			    handle->conn->connectpath,
 +			    &config->libzp,
-+			    &dl);
++			    &dl,
++			    handle->conn->tcon != NULL);
 +
 +	if (ret != 0) {
 +		DBG_ERR("Failed to initialize libzfs configuration: %s\n", strerror(errno));
@@ -2121,10 +2123,10 @@ index 00000000000..2ac4f3525bf
 +}
 diff --git a/source3/modules/vfs_zfs_fsrvp.c b/source3/modules/vfs_zfs_fsrvp.c
 new file mode 100644
-index 00000000000..5c0d9840fb2
+index 00000000000..38b95319e2e
 --- /dev/null
 +++ b/source3/modules/vfs_zfs_fsrvp.c
-@@ -0,0 +1,251 @@
+@@ -0,0 +1,252 @@
 +/* zfs_fsrvp: a module implementing FSS using ZFS 
 + *
 + * Copyright (C) iXsystems Inc     2019
@@ -2329,7 +2331,8 @@ index 00000000000..5c0d9840fb2
 +	ret = conn_zfs_init(handle->conn->sconn,
 +			    handle->conn->connectpath,
 +			    &config->libzp,
-+			    &config->dsl);
++			    &config->dsl,
++			    handle->conn->tcon != NULL);
 +	if (ret != 0) {
 +		DBG_ERR("Failed to obtain dataset list for connect path. "
 +			"Path may not be a ZFS filesystem: %s\n",
