@@ -72,7 +72,7 @@ index 4331c2f1465..fb3dc5eac02 100644
  };
  
 diff --git a/source3/include/vfs.h b/source3/include/vfs.h
-index d527f850628..1e02ae330ca 100644
+index d527f850628..1f8d5024da7 100644
 --- a/source3/include/vfs.h
 +++ b/source3/include/vfs.h
 @@ -355,6 +355,14 @@ typedef union unid_t {
@@ -90,11 +90,25 @@ index d527f850628..1e02ae330ca 100644
  struct fd_handle {
  	size_t ref_count;
  	int fd;
-@@ -530,6 +538,7 @@ typedef struct connection_struct {
+@@ -484,6 +492,8 @@ typedef struct files_struct {
+ 	uint64_t lock_failure_offset;
+ } files_struct;
+ 
++#define TCON_FLAG_STAT_FAILED		0x01
++
+ #define FSP_POSIX_FLAGS_OPEN		0x01
+ #define FSP_POSIX_FLAGS_RENAME		0x02
+ #define FSP_POSIX_FLAGS_PATHNAMES	0x04
+@@ -530,6 +540,12 @@ typedef struct connection_struct {
  	   sub second timestamps on files
  	   and directories when setting time ? */
  	enum timestamp_set_resolution ts_res;
++
++	/* iXsystems additions */
 +	enum acl_brand aclbrand;
++	uint32_t internal_tcon_flags;
++	/* end iXsystems additions */
++
  	char *connectpath;
  	struct files_struct *cwd_fsp; /* Working directory. */
  	bool tcon_done;
@@ -343,7 +357,7 @@ index ae935f413e0..4955473983c 100644
  #ifdef USE_DMAPI
  struct smbd_dmapi_context;
 diff --git a/source3/smbd/open.c b/source3/smbd/open.c
-index ef158657684..754f3a88a92 100644
+index ef158657684..d5c15cb0711 100644
 --- a/source3/smbd/open.c
 +++ b/source3/smbd/open.c
 @@ -227,6 +227,7 @@ NTSTATUS smbd_check_access_rights(struct connection_struct *conn,
@@ -354,7 +368,19 @@ index ef158657684..754f3a88a92 100644
  			(lp_map_readonly(SNUM(conn)) ||
  			lp_map_archive(SNUM(conn)) ||
  			lp_map_hidden(SNUM(conn)) ||
-@@ -3074,13 +3075,13 @@ static bool open_match_attributes(connection_struct *conn,
+@@ -797,6 +798,11 @@ NTSTATUS fd_open(files_struct *fsp,
+ 	 * client should be doing this.
+ 	 */
+ 
++	if (fsp->conn->internal_tcon_flags & TCON_FLAG_STAT_FAILED) {
++		DBG_ERR("Tree connect initially failed access check. Denying access.\n");
++		return NT_STATUS_ACCESS_DENIED;
++	}
++
+ 	if ((fsp->posix_flags & FSP_POSIX_FLAGS_OPEN) || !lp_follow_symlinks(SNUM(conn))) {
+ 		flags |= O_NOFOLLOW;
+ 	}
+@@ -3074,13 +3080,13 @@ static bool open_match_attributes(connection_struct *conn,
  		  (unsigned int)*returned_unx_mode ));
  
  	/* If we're mapping SYSTEM and HIDDEN ensure they match. */
@@ -370,7 +396,7 @@ index ef158657684..754f3a88a92 100644
  		if ((old_dos_attr & FILE_ATTRIBUTE_HIDDEN) &&
  		    !(new_dos_attr & FILE_ATTRIBUTE_HIDDEN)) {
  			return False;
-@@ -3788,13 +3789,28 @@ static NTSTATUS open_file_ntcreate(connection_struct *conn,
+@@ -3788,13 +3794,28 @@ static NTSTATUS open_file_ntcreate(connection_struct *conn,
  	/*
  	 * Ensure we pay attention to default ACLs on directories if required.
  	 */
@@ -406,7 +432,7 @@ index ef158657684..754f3a88a92 100644
  	}
  
  	DEBUG(4,("calling open_file with flags=0x%X flags2=0x%X mode=0%o, "
-@@ -4165,6 +4181,10 @@ static NTSTATUS open_file_ntcreate(connection_struct *conn,
+@@ -4165,6 +4186,10 @@ static NTSTATUS open_file_ntcreate(connection_struct *conn,
  				}
  			}
  		}
@@ -417,7 +443,7 @@ index ef158657684..754f3a88a92 100644
  	}
  
  	/* Determine sparse flag. */
-@@ -4335,6 +4355,10 @@ static NTSTATUS mkdir_internal(connection_struct *conn,
+@@ -4335,6 +4360,10 @@ static NTSTATUS mkdir_internal(connection_struct *conn,
  					 parent_dir_fname, true);
  		}
  	}
@@ -492,6 +518,55 @@ index a0da2910350..2c8c415b00d 100644
  		struct file_id fileid = vfs_file_id_from_sbuf(conn,
  		    &smb_fname_dst->st);
  		files_struct *dst_fsp = file_find_di_first(conn->sconn,
+diff --git a/source3/smbd/service.c b/source3/smbd/service.c
+index 3802d16179b..edf8187aea3 100644
+--- a/source3/smbd/service.c
++++ b/source3/smbd/service.c
+@@ -759,6 +759,27 @@ static NTSTATUS make_connection_snum(struct smbXsrv_connection *xconn,
+ 		}
+ 	}
+ 
++	smb_fname_cpath = synthetic_smb_fname(talloc_tos(),
++					conn->connectpath,
++					NULL,
++					NULL,
++					0,
++					0);
++	if (smb_fname_cpath == NULL) {
++		status = NT_STATUS_NO_MEMORY;
++		goto err_root_exit;
++	}
++
++	/*
++	 * Attempt to stat the share's connectpath as the current user
++	 * Windows allows tcon to succeed even if share access isn't allowed.
++	 * In this case though we'll set a flag to indicate that attempting
++	 * to stat() during TCON failed.
++	 */
++	if ((ret = SMB_VFS_STAT(conn, smb_fname_cpath)) != 0) {
++		conn->internal_tcon_flags |= TCON_FLAG_STAT_FAILED;
++	}
++
+ #ifdef WITH_FAKE_KASERVER
+ 	if (lp_afs_share(snum)) {
+ 		afs_login(conn);
+@@ -801,16 +822,6 @@ static NTSTATUS make_connection_snum(struct smbXsrv_connection *xconn,
+ 		set_namearray( &conn->aio_write_behind_list,
+ 				lp_aio_write_behind(talloc_tos(), lp_sub, snum));
+ 	}
+-	smb_fname_cpath = synthetic_smb_fname(talloc_tos(),
+-					conn->connectpath,
+-					NULL,
+-					NULL,
+-					0,
+-					0);
+-	if (smb_fname_cpath == NULL) {
+-		status = NT_STATUS_NO_MEMORY;
+-		goto err_root_exit;
+-	}
+ 
+ 	/* win2000 does not check the permissions on the directory
+ 	   during the tree connect, instead relying on permission
 diff --git a/source3/smbd/smb2_write.c b/source3/smbd/smb2_write.c
 index e49e623d796..612c89d59d1 100644
 --- a/source3/smbd/smb2_write.c
