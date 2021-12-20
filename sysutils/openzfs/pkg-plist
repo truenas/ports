@@ -340,12 +340,12 @@ lib/libzpool.so.5.0.0
 %%PYTHON%%%%PYTHON_SITELIBDIR%%/libzfs_core/test/__pycache__/test_nvlist%%PYTHON_EXT_SUFFIX%%.pyc
 %%PYTHON%%%%PYTHON_SITELIBDIR%%/libzfs_core/test/test_libzfs_core.py
 %%PYTHON%%%%PYTHON_SITELIBDIR%%/libzfs_core/test/test_nvlist.py
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.1.1-py%%PYTHON_VER%%.egg-info/PKG-INFO
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.1.1-py%%PYTHON_VER%%.egg-info/SOURCES.txt
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.1.1-py%%PYTHON_VER%%.egg-info/dependency_links.txt
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.1.1-py%%PYTHON_VER%%.egg-info/not-zip-safe
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.1.1-py%%PYTHON_VER%%.egg-info/requires.txt
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.1.1-py%%PYTHON_VER%%.egg-info/top_level.txt
+%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.1.2-py%%PYTHON_VER%%.egg-info/PKG-INFO
+%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.1.2-py%%PYTHON_VER%%.egg-info/SOURCES.txt
+%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.1.2-py%%PYTHON_VER%%.egg-info/dependency_links.txt
+%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.1.2-py%%PYTHON_VER%%.egg-info/not-zip-safe
+%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.1.2-py%%PYTHON_VER%%.egg-info/requires.txt
+%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.1.2-py%%PYTHON_VER%%.egg-info/top_level.txt
 lib/security/pam_zfs_key.so
 libdata/pkgconfig/libzfs.pc
 libdata/pkgconfig/libzfs_core.pc
@@ -567,6 +567,7 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/bin/mkfiles
 %%TESTS%%share/zfs/zfs-tests/bin/mktree
 %%TESTS%%share/zfs/zfs-tests/bin/mmap_exec
+%%TESTS%%share/zfs/zfs-tests/bin/mmap_seek
 %%TESTS%%share/zfs/zfs-tests/bin/mmapwrite
 %%TESTS%%share/zfs/zfs-tests/bin/nvlist_to_lua
 %%TESTS%%share/zfs/zfs-tests/bin/randwritecomp
@@ -1914,6 +1915,7 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/mmap/mmap.cfg
 %%TESTS%%share/zfs/zfs-tests/tests/functional/mmap/mmap_libaio_001_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/mmap/mmap_read_001_pos.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/mmap/mmap_seek_001_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/mmap/mmap_write_001_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/mmap/setup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/mmp/cleanup.ksh
@@ -2325,6 +2327,9 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/sparse/setup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/sparse/sparse.cfg
 %%TESTS%%share/zfs/zfs-tests/tests/functional/sparse/sparse_001_pos.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/stat/cleanup.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/stat/setup.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/stat/stat_001_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/suid/cleanup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/suid/setup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/suid/suid_write_to_file
