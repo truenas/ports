@@ -3,7 +3,7 @@
 PORTNAME=	gnustep-base
 DISTVERSIONPREFIX=	base-
 DISTVERSION=	1_27_0
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	lang devel gnustep
 
 MAINTAINER=	ports@FreeBSD.org
@@ -12,7 +12,6 @@ COMMENT=	GNUstep Foundation library
 LICENSE=	GPLv3 LGPL3
 LICENSE_COMB=	multi
 
-BROKEN_FreeBSD_11_powerpc64=	fails to link: ld.lld: error: /usr/src/lib/csu/common/crtend.c:55: relocation R_PPC64_ADDR16_DS out of range: -32776 is not in [-32768, 32767]
 BROKEN_FreeBSD_12_powerpc64=	fails to link: ld.lld: error: /usr/src/lib/csu/common/crtend.c:55: relocation R_PPC64_ADDR16_DS out of range: -32776 is not in [-32768, 32767]
 
 LIB_DEPENDS+=	libffi.so:devel/libffi

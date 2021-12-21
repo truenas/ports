@@ -235,17 +235,17 @@ webdis:*:287:287::0:0:webdis daemon user:/nonexistent:/usr/sbin/nologin
 ntopng:*:288:288::0:0:ntopng daemon user:/nonexistent:/usr/sbin/nologin
 victoria-metrics:*:289:289::0:0:VictoriaMetrics user:/nonexistent:/usr/sbin/nologin
 _gmid:*:290:290::0:0:gmid daemon user:/var/empty:/usr/sbin/nologin
-# free: 291
-# free: 292
-# free: 293
-# free: 294
-# free: 295
-# free: 296
-# free: 297
-# free: 298
+pydio:*:291:291::0:0:pydio cells user:/var/pydio:/bin/sh
+sftpgo:*:292:292::0:0:SFTPGo user:/nonexistent:/usr/sbin/nologin
+biboumi:*:293:293::0:0:biboumi:/nonexistent:/usr/sbin/nologin
+krill:*:294:294::0:0:krill Pseudo User:/nonexistent:/usr/sbin/nologin
+jottad:*:295:295::0:0:Jotta Cloud Daemon:/nonexisten:/usr/sbin/nologin
+writefreely:*:296:296::0:0:WriteFreely daemon:/var/db/writefreely:/usr/sbin/nologin
+conduit:*:297:297::0:0:Conduit daemon:/var/db/conduit:/usr/sbin/nologin
+neolink:*:298:298::0:0:& daemon:/nonexistent:/usr/sbin/nologin
 owncast:*:299:299::0:0:& daemon:/nonexistent:/usr/sbin/nologin
 backuppc:*:300:300::0:0:BackupPC pseudo-user:/nonexistent:/usr/sbin/nologin
-# free: 301
+openvpn:*:301:301::0:0:OpenVPN pseudo-user:/nonexistent:/usr/sbin/nologin
 netdata:*:302:302::0:0:NetData Daemon:/var/cache/netdata:/usr/sbin/nologin
 # free: 303
 # free: 304
@@ -301,8 +301,8 @@ _iodined:*:353:353::0:0:Iodine Daemon:/nonexistent:/usr/sbin/nologin
 jackett:*:354:354::0:0:Jackett Torznab Proxy Daemon:/nonexistent:/usr/sbin/nologin
 nzbhydra2:*:355:355::0:0:NZBHydra 2 Daemon:/nonexistent:/usr/sbin/nologin
 lidarr:*:356:356::0:0:Lidarr Daemon:/nonexistent:/usr/sbin/nologin
-# free: 357
-# free: 358
+bazarr:*:357:357::0:0:Bazarr Daemon:/nonexistent:/usr/sbin/nologin
+autoscan:*:358:358::0:0:Autoscan Daemon:/nonexistent:/usr/sbin/nologin
 # free: 359
 v2ray:*:360:360::0:0:V2Ray Daemon:/nonexistent:/usr/sbin/nologin
 httptunnel:*:361:361::0:0:httptunnel Daemon:/nonexistent:/usr/sbin/nologin
@@ -397,7 +397,7 @@ callweaver:*:444:444::0:0:Callweaver account:/var/lib/callweaver:/usr/sbin/nolog
 ecartis:*:450:450::0:0:Ecartis Listserver:/usr/local/ecartis:/usr/sbin/nologin
 # free: 451
 # free: 452
-# free: 453
+yadifa:*:453:453::0:0:Yadifa DNS Server:/nonexistent:/usr/sbin/nologin
 # free: 454
 inadyn:*:455:455::0:0:inadyn user:/nonexistent:/usr/sbin/nologin
 # free: 456
@@ -800,7 +800,7 @@ cassandra:*:851:851::0:0:Cassandra DB Daemon User:/var/db/cassandra:/usr/sbin/no
 p0f:*:852:852::0:0:p0f unprivileged user:/var/empty:/usr/sbin/nologin
 _geodns:*:853:853::0:0:GeoDNS User:/var/empty:/usr/sbin/nologin
 ebusd:*:854:854::0:0:eBUS Daemon user:/nonexistent:/usr/sbin/nologin
-# free: 855
+opensearch:*:855:855::0:0:opensearch user:/nonexistent:/usr/sbin/nologin
 # free: 856
 # free: 857
 # free: 858
@@ -820,9 +820,9 @@ archiva:*:871:871::0:0:Apache Archiva Daemon:/nonexistent:/usr/sbin/nologin
 bitmark:*:872:872::0:0:Bitmark Property System:/var/lib/bitmarkd:/usr/sbin/nologin
 bitmark-recorder:*:873:873::0:0:Bitmark Property Recorder:/var/lib/recorderd:/usr/sbin/nologin
 librespeed:*:874:874::0:0:LibreSpeed user:/nonexistent:/usr/sbin/nologin
-# free: 875
-# free: 876
-# free: 877
+cfssl:*:875:875::0:0:cfssl user:/nonexistent:/usr/sbin/nologin
+_lms:*:876:876::0:0:Lightweight Music Server user:/nonexistent:/usr/sbin/nologin
+gemserv:*:877:877::0:0:gemserv user:/nonexistent:/usr/sbin/nologin
 gerbera:*:878:878::0:0:Gerbera DLNA Media Server:/nonexistent:/usr/sbin/nologin
 _encrypted-dns:*:879:879::0:0:encrypted-dns user:/var/empty:/usr/sbin/nologin
 pyspf-milter:*:880:880::0:0:pyspf-milter:/nonexistent:/usr/sbin/nologin

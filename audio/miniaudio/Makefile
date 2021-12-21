@@ -1,5 +1,5 @@
 PORTNAME=	miniaudio
-DISTVERSION=	0.10.33 # upstream doesn't tag the repository
+DISTVERSION=	0.10.42 # upstream doesn't tag the repository
 CATEGORIES=	audio devel
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -8,9 +8,13 @@ COMMENT=	C single header audio playback and capture library
 LICENSE=	PD MIT
 LICENSE_COMB=	dual
 
+USES=		cpe
+
+CPE_VENDOR=	miniaudio_project
+
 USE_GITHUB=	yes
 GH_ACCOUNT=	mackron
-GH_TAGNAME=	fca829edefd8389380f8e3ee26cc4b8c426dd742
+GH_TAGNAME=	dbca7a3b44594e0226f887472b31f54aa5f14214
 
 NO_BUILD=	yes
 NO_ARCH=	yes

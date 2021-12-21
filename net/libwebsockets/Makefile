@@ -2,11 +2,11 @@
 
 PORTNAME=	libwebsockets
 DISTVERSIONPREFIX=	v
-DISTVERSION=	4.1.6
+DISTVERSION=	4.2.2
 CATEGORIES=	net devel
 MASTER_SITES=	https://libwebsockets.org/git/libwebsockets/snapshot/
 
-MAINTAINER=	iblis@hs.ntnu.edu.tw
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	C library for lightweight websocket clients and servers
 
 LICENSE=	MIT
@@ -15,14 +15,16 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 USES=		cmake localbase pkgconfig tar:xz
 USE_LDCONFIG=	yes
 
-CMAKE_ON=	LWS_IPV6 LWS_WITH_SSL LWS_WITH_ZLIB \
+CMAKE_ARGS=	-DLWS_BUILD_HASH:STRING="${BUILDINFO}"
+CMAKE_ON=	CMAKE_DISABLE_FIND_PACKAGE_Git \
+		LWS_IPV6 LWS_WITH_SSL LWS_WITH_ZLIB \
 		LWS_WITHOUT_TESTAPPS LWS_WITHOUT_TEST_SERVER \
 		LWS_WITHOUT_TEST_SERVER_EXTPOLL \
 		LWS_WITHOUT_TEST_PING LWS_WITHOUT_TEST_CLIENT
 
 OPTIONS_DEFINE=		HTTP_PROXY HTTP2 MQTT PEERLIMITS PLUGINS \
 			SECURE_STREAMS SOCKS SQLITE WEBSERVER
-OPTIONS_DEFAULT=	HTTP2 OPENSSL LIBUV
+OPTIONS_DEFAULT=	HTTP2 MQTT OPENSSL LIBUV
 OPTIONS_SUB=		yes
 
 OPTIONS_SINGLE=		SSL
@@ -59,7 +61,7 @@ MBEDTLS_LIB_DEPENDS=	libmbedtls.so:security/mbedtls
 MBEDTLS_CMAKE_BOOL=	LWS_WITH_MBEDTLS
 OPENSSL_USES=		ssl
 OPENSSL_CMAKE_BOOL=	LWS_WITHOUT_BUILTIN_SHA1
-# WolfSSL need to be compiled with --enable-libwebsockets to be compatible
+# WolfSSL needs to be compiled with --enable-libwebsockets to work
 # WOLFSSL_LIB_DEPENDS=	libwolfssl.so:security/wolfssl
 # WOLFSSL_CMAKE_BOOL=	LWS_WITH_SSL LWS_WITH_WOLFSSL
 # WOLFSSL_CMAKE_ON=	-DLWS_WOLFSSL_INCLUDE_DIRS=${LOCALBASE}/include \
@@ -74,5 +76,14 @@ LIBEVENT_LIB_DEPENDS=	libevent.so:devel/libevent
 LIBEVENT_CMAKE_BOOL=	LWS_WITH_LIBEVENT
 LIBUV_LIB_DEPENDS=	libuv.so:devel/libuv
 LIBUV_CMAKE_BOOL=	LWS_WITH_LIBUV
+
+BUILDINFO=	${HOSTARCH}-portbld-${OPSYS:tl}-${OSREL:R}
+
+.include <bsd.port.options.mk>
+
+# Allow usage of LibreSSL via OPENSSL option
+.if ${PORT_OPTIONS:MOPENSSL} && ${SSL_DEFAULT} == libressl
+CMAKE_ARGS+=            -DLWS_OPENSSL_LIBRARIES='${OPENSSLLIB}/libtls.so;${OPENSSLLIB}/libssl.so;${OPENSSLLIB}/libcrypto.so' -DLWS_OPENSSL_INCLUDE_DIRS=${OPENSSLINC}/ssl
+.endif
 
 .include <bsd.port.mk>

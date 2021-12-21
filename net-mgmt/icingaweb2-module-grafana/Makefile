@@ -1,11 +1,10 @@
 PORTNAME=	icingaweb2-module-grafana
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.3.6
-PORTREVISION=	1
+DISTVERSION=	1.4.2
 CATEGORIES=	net-mgmt www
 PKGNAMESUFFIX=	${PHP_PKGNAMESUFFIX}
 
-MAINTAINER=	lme@FreeBSD.org
+MAINTAINER=	joneum@FreeBSD.org
 COMMENT=	Add Grafana graphs into Icinga Web 2 to display performance metrics
 
 LICENSE=	GPLv2

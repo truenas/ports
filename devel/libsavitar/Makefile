@@ -1,11 +1,11 @@
 PORTNAME=	libSavitar
 DISTVERSION=	4.5.0
-PORTREVISION=	5
+PORTREVISION=	6
 CATEGORIES=	devel cad
 DIST_SUBDIR=	Ultimaker
 
-PATCH_SITES=   https://github.com/${GH_ACCOUNT}/${GH_PROJECT}/commit/
-PATCHFILES=    195633cf0c5f.patch:-p1
+PATCH_SITES=	https://github.com/${GH_ACCOUNT}/${GH_PROJECT}/commit/
+PATCHFILES=	195633cf0c5f.patch:-p1
 
 MAINTAINER=	db@FreeBSD.org
 COMMENT=	C++ implementation of 3mf loading/python bindings

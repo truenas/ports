@@ -1,5 +1,9 @@
+include/KF5/KSane/KSaneCore
+include/KF5/KSane/KSaneOption
 include/KF5/KSane/KSaneWidget
 include/KF5/KSane/ksane_export.h
+include/KF5/KSane/ksanecore.h
+include/KF5/KSane/ksaneoption.h
 include/KF5/KSane/ksanewidget.h
 include/KF5/ksane_version.h
 lib/cmake/KF5Sane/KF5SaneConfig.cmake
@@ -13,6 +17,7 @@ share/icons/hicolor/16x16/actions/black-white.png
 share/icons/hicolor/16x16/actions/color.png
 share/icons/hicolor/16x16/actions/gray-scale.png
 share/locale/ar/LC_MESSAGES/libksane.mo
+share/locale/be/LC_MESSAGES/libksane.mo
 share/locale/bg/LC_MESSAGES/libksane.mo
 share/locale/bs/LC_MESSAGES/libksane.mo
 share/locale/ca/LC_MESSAGES/libksane.mo
@@ -57,6 +62,7 @@ share/locale/ro/LC_MESSAGES/libksane.mo
 share/locale/ru/LC_MESSAGES/libksane.mo
 share/locale/sk/LC_MESSAGES/libksane.mo
 share/locale/sl/LC_MESSAGES/libksane.mo
+share/locale/sq/LC_MESSAGES/libksane.mo
 share/locale/sv/LC_MESSAGES/libksane.mo
 share/locale/tr/LC_MESSAGES/libksane.mo
 share/locale/ug/LC_MESSAGES/libksane.mo

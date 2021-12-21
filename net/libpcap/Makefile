@@ -1,7 +1,7 @@
 # Created by: Bruce M Simpson <bms@FreeBSD.org>
 
 PORTNAME=	libpcap
-PORTVERSION=	1.10.0
+PORTVERSION=	1.10.1
 CATEGORIES=	net
 MASTER_SITES=	http://www.tcpdump.org/release/
 
@@ -12,10 +12,12 @@ LICENSE=	BSD3CLAUSE
 
 BUILD_DEPENDS=	${LOCALBASE}/bin/flex:textproc/flex
 
-USES=		bison gmake
+USES=		bison cpe gmake
 
-GNU_CONFIGURE=	yes
+CPE_VENDOR=	tcpdump
+
 USE_LDCONFIG=	yes
+GNU_CONFIGURE=	yes
 CONFIGURE_ARGS+=--enable-dbus=no \
 		--with-pcap=bpf
 CONFIGURE_ENV+=	LEX=${LOCALBASE}/bin/flex

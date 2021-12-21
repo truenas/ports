@@ -1,6 +1,6 @@
 PORTNAME=	uwebsockets
 DISTVERSIONPREFIX=	v
-DISTVERSION=	19.2.0
+DISTVERSION=	20.8.0
 CATEGORIES=	www devel
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -13,7 +13,8 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 RUN_DEPENDS=	libdeflate>0:archivers/libdeflate \
 		usockets>0:net/usockets
 
-USES=		gmake
+USES=		compiler:c++17-lang cpe gmake
+CPE_VENDOR=	${PORTNAME}_project
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	uNetworking
@@ -23,6 +24,10 @@ NO_BUILD=	yes
 NO_ARCH=	yes
 
 pre-install: # workaround for https://github.com/uNetworking/uWebSockets/issues/1236
-	${MKDIR} ${STAGEDIR}${PREFIX}/include/uWebSockets
+	@${MKDIR} ${STAGEDIR}${PREFIX}/include/uWebSockets
+
+do-test:
+	@cd ${WRKSRC}/tests && \
+		${SETENV} ${MAKE_ENV} ${MAKE_CMD}
 
 .include <bsd.port.mk>

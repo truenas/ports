@@ -1,7 +1,7 @@
 # Created by: Joe Horn <joehorn@gmail.com>
 
 PORTNAME=	wordpress
-PORTVERSION=	5.5.3
+PORTVERSION=	5.8
 DISTVERSIONSUFFIX=	-zh_TW
 CATEGORIES=	chinese www
 MASTER_SITES=	http://tw.wordpress.org/
@@ -12,6 +12,8 @@ COMMENT=	State-of-the-art semantic personal publishing platform
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/license.txt
+
+BROKEN=		fails to fetch (checksum mismatch)
 
 WRKSRC=		${WRKDIR}/${PORTNAME}
 

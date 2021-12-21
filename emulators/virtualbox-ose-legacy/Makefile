@@ -2,7 +2,7 @@
 
 PORTNAME=	virtualbox-ose
 PORTVERSION=	5.2.44
-PORTREVISION=	5
+PORTREVISION=	9
 CATEGORIES=	emulators
 MASTER_SITES=	https://download.oracle.com/virtualbox/${PORTVERSION}/
 PKGNAMESUFFIX?=	-legacy
@@ -38,9 +38,11 @@ CONFIGURE_ARGS=	--disable-java --passive-mesa
 CONFIGURE_ARGS+=	--with-gcc="${CC}" --with-g++="${CXX}"
 
 CONFLICTS_INSTALL=	virtualbox-ose-additions-* \
-			virtualbox-ose-devel-[0-9]* \
-			virtualbox-ose-[0-9]* \
-			virtualbox-ose-lite-[0-9]*
+			virtualbox-ose-devel \
+			virtualbox-ose \
+			virtualbox-ose-lite
+
+PORTSCOUT=	limit:^5\.
 
 LDFLAGS=	-lpthread
 
@@ -111,10 +113,10 @@ USE_RC_SUBR=	vboxheadless vboxwatchdog
 .include <bsd.port.options.mk>
 
 .if ${SLAVE_PORT} == no
-CONFLICTS_INSTALL+=	virtualbox-ose-nox11-[0-9]*
+CONFLICTS_INSTALL+=	virtualbox-ose-nox11
 OPTIONS_DEFAULT+=	PYTHON
 .else
-CONFLICTS_INSTALL+=	virtualbox-ose-[0-9]*
+CONFLICTS_INSTALL+=	virtualbox-ose
 .endif
 
 .if ${ARCH} == "amd64"
@@ -130,8 +132,11 @@ KMK_BUILDTYPE=	release
 
 .if ${PORT_OPTIONS:MGUESTADDITIONS}
 GUESTADDITIONS=	VBoxGuestAdditions_${PORTVERSION}.iso
-RESTRICTED=	for personal use only
-RESTRICTED_FILES=	${GUESTADDITIONS}
+LICENSE+=	Additions
+LICENSE_COMB=	multi
+LICENSE_NAME_Additions=	Guest Additions
+LICENSE_PERMS_Additions=	auto-accept
+LICENSE_DISTFILES_Additions=	${GUESTADDITIONS}
 .endif
 
 .if ${PORT_OPTIONS:MMANUAL}
@@ -157,7 +162,6 @@ USE_GL=		gl glu
 USE_QT=		buildtools_build core dbus gui linguisttools_build opengl
 USE_QT+=	printsupport widgets x11extras
 USE_XORG=	xcb
-INSTALLS_ICONS=	yes
 VBOX_PROGS+=	VirtualBox
 VBOX_UTILS+=	VBoxTestOGL
 VBOX_WITH_QT=	1

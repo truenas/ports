@@ -1,5 +1,5 @@
 PORTNAME=	rsyslog
-PORTVERSION=	8.2102.0
+PORTVERSION=	8.2110.0
 PORTREVISION=	1
 CATEGORIES=	sysutils
 MASTER_SITES=	http://www.rsyslog.com/files/download/rsyslog/
@@ -17,7 +17,7 @@ LIB_DEPENDS=	libestr.so:devel/libestr \
 		libcurl.so:ftp/curl
 BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}docutils>0:textproc/py-docutils@${PY_FLAVOR}
 
-USES=		libtool pkgconfig autoreconf python:env
+USES=		cpe libtool pkgconfig autoreconf python:env
 USE_LDCONFIG=	yes
 
 PORTSCOUT=	limit:^8\.
@@ -152,6 +152,10 @@ post-patch:
 		's|/etc/rsyslog.conf|${PREFIX}/etc/rsyslog.conf|'
 	@${REINPLACE_CMD} -e 's,/lib/rsyslog,${PREFIX}/lib/rsyslog,' ${WRKSRC}/tools/syslogd.c
 	@${FIND} ${WRKSRC} -name '*.bak' -delete
+
+post-install:
+	${MKDIR} ${STAGEDIR}${PREFIX}/etc/rsyslog.d
+	${INSTALL_DATA} ${FILESDIR}/rsyslog.conf ${STAGEDIR}${PREFIX}/etc/rsyslog.conf.sample
 
 post-install-DOCS-on:
 .for SQL in ${PORTDOCS:M*.sql}

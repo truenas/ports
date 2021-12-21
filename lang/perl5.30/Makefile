@@ -14,8 +14,8 @@ LICENSE_FILE_ART10=	${WRKSRC}/Artistic
 LICENSE_FILE_GPLv1+ =	${WRKSRC}/Copying
 
 # Uncomment when the default Perl is switched to 5.32
-#DEPRECATED=	Support ends three years after .0 release. Please upgrade to a more recent version of Perl
-#EXPIRATION_DATE=	2022-05-22
+DEPRECATED=	Support ends three years after .0 release. Please upgrade to a more recent version of Perl
+EXPIRATION_DATE=	2022-05-22
 
 USES=	cpe tar:xz
 
@@ -43,7 +43,8 @@ CONFIGURE_ARGS=	-sde -Dprefix=${PREFIX} \
 	-Ui_malloc -Ui_iconv -Uinstallusrbinperl -Dusenm=n \
 	-Dcc="${CC}" -Duseshrplib -Dinc_version_list=none \
 	-Dcf_by=${MAINTAINER:C,@.*,,} -Dcf_email=${MAINTAINER} \
-	-Dcf_time="`${STAT} -t \"%a %b %d %T %Z %Y\" -f %Sm ${_DISTDIR}/${DISTNAME}${EXTRACT_SUFX}`"
+	-Dcf_time="`${STAT} -t \"%a %b %d %T %Z %Y\" -f %Sm ${_DISTDIR}/${DISTNAME}${EXTRACT_SUFX}`" \
+	-Accflags='-DUSE_THREAD_SAFE_LOCALE'
 # Keep the following two in sync.
 # lddlflags is used for all .so linking
 # shrpldflags is used for libperl.so, so remove all the extra bits inherited from lddlflags.
@@ -127,7 +128,6 @@ OPTIONS_EXCLUDE=	DTRACE
 .endif
 .for a in aarch64 arm armv6 armv7 \
 	mips mips64 mips64el mips64elhf mips64hf mipsel mipselhf mipshf mipsn32 \
-	powerpc \
 	riscv64 riscv64sf sparc64
 OPTIONS_EXCLUDE_${a}=	DTRACE
 .endfor
@@ -166,10 +166,6 @@ _PERL5_DEFAULT_FILE=	/tmp/PERL5_DEFAULT
 # Get the default version, and possibly, overwrite it.
 .include <bsd.port.options.mk>
 .sinclude "${_PERL5_DEFAULT_FILE}"
-
-.if ${OSVERSION} >= 1200004
-CONFIGURE_ARGS+=	-Accflags='-DUSE_THREAD_SAFE_LOCALE'
-.endif
 
 # if this port is default due PERL5_DEFAULT
 # change PKGNAME to reflect this

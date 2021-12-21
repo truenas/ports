@@ -1,4 +1,5 @@
 PORTNAME=	sensors
+PORTREVISION=	3
 CATEGORIES=	comms devel python
 
 MAINTAINER=	kde@FreeBSD.org

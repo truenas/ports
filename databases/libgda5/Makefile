@@ -15,7 +15,8 @@ LICENSE_COMB=	multi
 LICENSE_FILE_GPLv2+ =	${WRKSRC}/COPYING
 LICENSE_FILE_LGPL20+ =	${WRKSRC}/COPYING.LIB
 
-USES=		python readline shebangfix tar:xz
+USES=		cpe python readline shebangfix tar:xz
+CPE_VENDOR=	gnome
 LIBGDA5_SLAVE?=	no
 SHEBANG_FILES=	libgda-report/RML/*/*.py
 
@@ -50,7 +51,6 @@ LIB_DEPENDS=	libgcrypt.so:security/libgcrypt \
 		libgpg-error.so:security/libgpg-error
 CONFIGURE_ARGS+=--with-ui
 USE_GNOME+=	cairo gtk30
-INSTALLS_ICONS=	yes
 .else
 CONFIGURE_ARGS+=--without-ui
 .endif
@@ -111,7 +111,7 @@ post-patch:
 		${WRKSRC}/providers/bdb/gda-bdb-provider.c \
 		${WRKSRC}/providers/bdb/gda-bdb-test.c
 .if ${LIBGDA5_SLAVE} == jdbc
-	@${REINPLACE_CMD} -e 's|lib/amd64|lib/${ARCH}|g' \
+	@${REINPLACE_CMD} -e 's|lib/amd64|lib/${ARCH:S/powerpc64/ppc64/}|g' \
 		${WRKSRC}/getsp.java
 .endif
 .if ${LIBGDA5_SLAVE}!="no"

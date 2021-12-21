@@ -1,12 +1,12 @@
 # Created by: ache
 
 PORTNAME=	unrar
-PORTVERSION=	6.01
+PORTVERSION=	6.02
 PORTEPOCH=	6
 CATEGORIES+=	archivers
 MASTER_SITES=	https://rarlab.com/rar/ \
 		LOCAL/sunpoet
-DISTNAME=	unrarsrc-6.0.5
+DISTNAME=	unrarsrc-6.0.7
 
 MAINTAINER?=	sunpoet@FreeBSD.org
 COMMENT=	Extract, view & test RAR archives
@@ -16,7 +16,7 @@ LICENSE_FILE=	${WRKSRC}/license.txt
 LICENSE_NAME=	UnRAR license
 LICENSE_PERMS=	auto-accept dist-mirror pkg-mirror
 
-USES+=		compiler:c++11-lang
+USES+=		compiler:c++11-lang cpe
 
 LDFLAGS+=	-lpthread
 MAKE_ARGS=	CXX="${CXX}" CXXFLAGS="${CXXFLAGS}" LDFLAGS="${LDFLAGS}" STRIP="${STRIP_CMD}"
@@ -28,6 +28,8 @@ PLIST_FILES=	bin/unrar
 SLAVEDIRS=	archivers/unrar-iconv
 
 CONFLICTS_INSTALL?=	unrar-iconv
+
+CPE_VENDOR=	rarlab
 
 OPTIONS_DEFINE=	OPENSSL_AES
 OPTIONS_DEFAULT=OPENSSL_AES

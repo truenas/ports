@@ -19,9 +19,11 @@ TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}nose>=1.3.3:devel/py-nose@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}mock>=1.0.1:devel/py-mock@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}vcrpy>=1.10.3:devel/py-vcrpy@${PY_FLAVOR}
 
-USES=		python
+USES=		cpe python
 USE_GITHUB=	yes
 USE_PYTHON=	autoplist distutils
+
+CPE_VENDOR=	josh_roesslein
 
 NO_ARCH=	yes
 
@@ -29,7 +31,7 @@ TEST_ENV=	USE_REPLAY=1
 
 .include <bsd.port.pre.mk>
 
-.if ${PYTHON_REL} < 3000
+.if ${PYTHON_REL} < 30000
 TEST_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}unittest2>0:devel/py-unittest2@${PY_FLAVOR}
 .endif
 

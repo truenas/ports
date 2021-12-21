@@ -1,18 +1,19 @@
 # Created by: Albert Vernon <f3cun3c02@sneakemail.com>
 
 PORTNAME=	zutils
-PORTVERSION=	1.9
+PORTVERSION=	1.10
 CATEGORIES=	archivers
 MASTER_SITES=	SAVANNAH/zutils
 
-MAINTAINER=	danilo@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Utilities for searching in bzip2, gzip, lzip, and xz archives
 
 LICENSE=	GPLv2
 
-USES=		tar:lz
+USES=		cpe tar:lz
 GNU_CONFIGURE=	yes
 INSTALL_TARGET=	install-strip
+CPE_VENDOR=	nongnu
 
 INFO=		zutils
 

@@ -1,13 +1,13 @@
 # Created by: Gerald Pfeifer <gerald@FreeBSD.org>
 
 PORTNAME=	gcc
-PORTVERSION=	11.0.1.s20210418
+PORTVERSION=	11.2.1.s20211009
 CATEGORIES=	lang
 MASTER_SITES=	GCC/snapshots/${DIST_VERSION}
 PKGNAMESUFFIX=	${SUFFIX}-devel
 DISTNAME=	gcc-${DIST_VERSION}
 
-MAINTAINER=	gerald@FreeBSD.org
+MAINTAINER=	toolchain@FreeBSD.org
 COMMENT=	GNU Compiler Collection 11
 
 LICENSE=	GPLv3 GPLv3RLE
@@ -27,6 +27,8 @@ BUILD_DEPENDS+=	runtest:misc/dejagnu
 USES=		compiler:c++11-lang cpe gmake iconv libtool makeinfo perl5 tar:xz
 USE_BINUTILS=	yes
 USE_PERL5=	build
+
+CONFLICTS=	gcc11-11.*
 
 CPE_VENDOR=	gnu
 CPE_VERSION=	${GCC_VERSION}

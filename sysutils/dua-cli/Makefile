@@ -1,6 +1,6 @@
 PORTNAME=	dua-cli
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2.11.1
+DISTVERSION=	2.14.11
 PORTREVISION=	1
 CATEGORIES=	sysutils
 
@@ -14,88 +14,114 @@ USES=		cargo
 USE_GITHUB=	yes
 GH_ACCOUNT=	Byron
 
-CARGO_CRATES=	ansi_term-0.11.0 \
-		anyhow-1.0.38 \
+CARGO_CRATES=	ansi_term-0.12.1 \
+		anyhow-1.0.44 \
 		atty-0.2.14 \
 		autocfg-1.0.1 \
-		bitflags-1.2.1 \
-		byte-unit-4.0.9 \
+		bitflags-1.3.2 \
+		byte-unit-4.0.13 \
 		cassowary-0.3.0 \
 		cfg-if-1.0.0 \
-		clap-3.0.0-beta.2 \
-		clap_derive-3.0.0-beta.2 \
+		chrono-0.4.19 \
+		clap-3.0.0-beta.5 \
+		clap_derive-3.0.0-beta.5 \
 		colored-2.0.0 \
-		const_fn-0.4.5 \
-		crossbeam-0.8.0 \
-		crossbeam-channel-0.5.0 \
-		crossbeam-deque-0.8.0 \
-		crossbeam-epoch-0.9.1 \
-		crossbeam-queue-0.3.1 \
-		crossbeam-utils-0.8.1 \
-		crossterm-0.18.2 \
-		crossterm_winapi-0.6.2 \
-		crosstermion-0.6.0 \
-		ctor-0.1.19 \
-		difference-2.0.0 \
+		const-sha1-0.2.0 \
+		core-foundation-sys-0.8.3 \
+		crossbeam-0.8.1 \
+		crossbeam-channel-0.5.1 \
+		crossbeam-deque-0.8.1 \
+		crossbeam-epoch-0.9.5 \
+		crossbeam-queue-0.3.2 \
+		crossbeam-utils-0.8.5 \
+		crossterm-0.20.0 \
+		crossterm_winapi-0.8.0 \
+		crosstermion-0.8.1 \
+		ctor-0.1.21 \
+		diff-0.1.12 \
 		either-1.6.1 \
 		filesize-0.2.0 \
-		fixedbitset-0.2.0 \
+		fixedbitset-0.4.0 \
+		form_urlencoded-1.0.1 \
 		glob-0.3.0 \
-		hashbrown-0.9.1 \
-		heck-0.3.2 \
-		hermit-abi-0.1.18 \
-		indexmap-1.6.1 \
-		instant-0.1.9 \
-		itertools-0.10.0 \
+		hashbrown-0.11.2 \
+		heck-0.3.3 \
+		hermit-abi-0.1.19 \
+		idna-0.2.3 \
+		indexmap-1.7.0 \
+		instant-0.1.12 \
+		itertools-0.10.1 \
 		jwalk-0.6.0 \
 		lazy_static-1.4.0 \
-		libc-0.2.86 \
-		lock_api-0.4.2 \
+		libc-0.2.105 \
+		lock_api-0.4.5 \
 		log-0.4.14 \
-		memoffset-0.6.1 \
-		mio-0.7.7 \
-		miow-0.3.6 \
+		malloc_buf-0.0.6 \
+		matches-0.1.9 \
+		memchr-2.4.1 \
+		memoffset-0.6.4 \
+		mio-0.7.14 \
+		miow-0.3.7 \
 		ntapi-0.3.6 \
+		num-integer-0.1.44 \
+		num-traits-0.2.14 \
 		num_cpus-1.13.0 \
 		numtoa-0.1.0 \
-		open-1.4.0 \
-		os_str_bytes-2.4.0 \
+		objc-0.2.7 \
+		once_cell-1.8.0 \
+		open-2.0.1 \
+		os_str_bytes-4.2.0 \
 		output_vt100-0.1.2 \
-		parking_lot-0.11.1 \
-		parking_lot_core-0.8.3 \
-		petgraph-0.5.1 \
-		pretty_assertions-0.6.1 \
+		parking_lot-0.11.2 \
+		parking_lot_core-0.8.5 \
+		pathdiff-0.2.1 \
+		percent-encoding-2.1.0 \
+		petgraph-0.6.0 \
+		pretty_assertions-0.7.2 \
 		proc-macro-error-1.0.4 \
 		proc-macro-error-attr-1.0.4 \
-		proc-macro2-1.0.24 \
-		quote-1.0.9 \
-		rayon-1.5.0 \
-		rayon-core-1.9.0 \
-		redox_syscall-0.2.5 \
+		proc-macro2-1.0.30 \
+		quote-1.0.10 \
+		rayon-1.5.1 \
+		rayon-core-1.9.1 \
+		redox_syscall-0.2.10 \
 		redox_termios-0.1.2 \
 		scopeguard-1.1.0 \
-		signal-hook-0.1.17 \
-		signal-hook-registry-1.3.0 \
-		smallvec-1.6.1 \
-		socket2-0.3.19 \
+		signal-hook-0.3.10 \
+		signal-hook-mio-0.2.1 \
+		signal-hook-registry-1.4.0 \
+		smallvec-1.7.0 \
 		strsim-0.10.0 \
-		syn-1.0.60 \
+		syn-1.0.80 \
+		sysinfo-0.20.5 \
 		termcolor-1.1.2 \
 		termion-1.5.6 \
-		textwrap-0.12.1 \
-		tui-0.14.0 \
-		tui-react-0.14.0 \
-		unicode-segmentation-1.7.1 \
-		unicode-width-0.1.8 \
-		unicode-xid-0.2.1 \
-		utf8-width-0.1.4 \
-		vec_map-0.8.2 \
-		version_check-0.9.2 \
+		textwrap-0.14.2 \
+		time-0.1.44 \
+		tinyvec-1.5.0 \
+		tinyvec_macros-0.1.0 \
+		trash-2.0.2 \
+		tui-0.16.0 \
+		tui-react-0.16.0 \
+		unicase-2.6.0 \
+		unicode-bidi-0.3.7 \
+		unicode-normalization-0.1.19 \
+		unicode-segmentation-1.8.0 \
+		unicode-width-0.1.9 \
+		unicode-xid-0.2.2 \
+		url-2.2.2 \
+		utf8-width-0.1.5 \
+		version_check-0.9.3 \
+		wasi-0.10.0+wasi-snapshot-preview1 \
 		wild-2.0.4 \
 		winapi-0.3.9 \
 		winapi-i686-pc-windows-gnu-0.4.0 \
 		winapi-util-0.1.5 \
-		winapi-x86_64-pc-windows-gnu-0.4.0
+		winapi-x86_64-pc-windows-gnu-0.4.0 \
+		windows-0.9.1 \
+		windows_gen-0.9.1 \
+		windows_macros-0.9.1
+CARGO_FEATURES=	--no-default-features tui-crossplatform
 
 PLIST_FILES=	bin/dua
 PORTDOCS=	README.md
@@ -107,6 +133,7 @@ post-install:
 
 post-install-DOCS-on:
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}
-	${INSTALL_DATA} ${WRKSRC}/${PORTDOCS} ${STAGEDIR}${DOCSDIR}
+	${INSTALL_DATA} ${WRKSRC}/${PORTDOCS} \
+		${STAGEDIR}${DOCSDIR}
 
 .include <bsd.port.mk>

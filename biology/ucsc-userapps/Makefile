@@ -1,7 +1,8 @@
 # Created by: J. Bacon <jwb@FreeBSD.org>
 
 PORTNAME=	ucsc-userapps
-DISTVERSION=	413
+DISTVERSION=	414
+PORTREVISION=	1
 CATEGORIES=	biology perl5 python
 MASTER_SITES=	http://hgdownload.cse.ucsc.edu/admin/exe/userApps.archive/
 DISTNAME=	userApps.v${PORTVERSION}.src
@@ -11,17 +12,14 @@ COMMENT=	Command line tools from the UCSC Genome Browser project
 
 LICENSE=	UCSC-GB
 LICENSE_NAME=	UCSC Genome Browser License
-LICENSE_TEXT=	To the best of our knowledge, all of the tools installed by\
-		this port are freely available.  However, a license is\
-		required for commercial download and installation of some\
-		binaries and source code in the UCSC Genome Browser\
-		distribution.\n\nContact UCSC directly if you are using these\
-		tools for commercial purposes.\n\nSee\
+LICENSE_TEXT=	Some tools installed by this port require a license for\
+		commercial use.\n\nContact UCSC directly if you are using\
+		these tools for commercial purposes.\n\nSee\
 		https://genome.ucsc.edu/license/ for full terms.
 LICENSE_PERMS=	no-dist-mirror no-dist-sell no-pkg-mirror no-pkg-sell
 
 ONLY_FOR_ARCHS=		amd64
-ONLY_FOR_ARCHS_REASON=	_mm_popcnt_u64
+ONLY_FOR_ARCHS_REASON=	uses _mm_popcnt_u64() function
 
 BUILD_DEPENDS=	bash:shells/bash
 LIB_DEPENDS=	libiconv.so:converters/libiconv \
@@ -49,7 +47,9 @@ MAKE_ENV=	BINDIR=${WRKSRC}/bin
 
 SUB_FILES=	ucsc-shell
 
-# Build only non-commercial tools
+# Build mostly non-commercial tools.  There is some leakage of proprietary
+# code from the libraries per conversation with UCSC.  Work to resolve this
+# is ongoing.
 do-build:
 	@${MV} ${WRKSRC}/kent/src/inc/uuid.h ${WRKSRC}/kent/src/inc/my_uuid.h
 	@${MKDIR} ${WRKSRC}/bin
@@ -58,6 +58,7 @@ do-build:
 	@(cd ${WRKSRC}/kent/src/jkOwnLib && ${DO_MAKE_BUILD})
 	@(cd ${WRKSRC}/kent/src/hg/lib && ${DO_MAKE_BUILD})
 	@(cd ${WRKSRC}/kent/src/utils && ${DO_MAKE_BUILD})
+	${CC} -DUCSC_PREFIX="\"${PREFIX}/userapps\"" ${FILESDIR}/kent.c -o ${WRKDIR}/kent
 
 do-install:
 	@${MKDIR} ${WRKSRC}/scripts ${WRKSRC}/binaries
@@ -72,5 +73,6 @@ do-install:
 		${STAGEDIR}${PREFIX}/userapps/bin
 	${INSTALL_SCRIPT} ${WRKDIR}/ucsc-shell \
 		${STAGEDIR}${PREFIX}/bin
+	${INSTALL_PROGRAM} ${WRKDIR}/kent ${STAGEDIR}${LOCALBASE}/bin
 
 .include <bsd.port.mk>

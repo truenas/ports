@@ -9,7 +9,7 @@ COMMENT=	Horde web based task list manager
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-USES=		cpe horde php
+USES=		horde php cpe
 USE_PHP=	gettext
 USE_HORDE_BUILD=	Horde_Role
 USE_HORDE_RUN=	Horde_Role \

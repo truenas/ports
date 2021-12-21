@@ -1,5 +1,6 @@
 PORTNAME=	botan
-DISTVERSION=	2.18.0
+DISTVERSION=	2.18.2
+PORTREVISION=	1
 CATEGORIES=	security
 MASTER_SITES=	http://botan.randombit.net/releases/
 PKGNAMESUFFIX=	2
@@ -15,7 +16,8 @@ BROKEN_armv6=	include/arm_neon.h:28:2: error: "NEON support not enabled"
 
 LIB_DEPENDS=	libboost_filesystem.so:devel/boost-libs
 
-USES=		compiler:c++11-lang gmake shebangfix tar:xz
+USES=		compiler:c++11-lang cpe gmake shebangfix tar:xz
+CPE_VENDOR=	${PORTNAME}_project
 USE_LDCONFIG=	yes
 
 SHEBANG_FILES=	configure.py src/python/botan2.py src/scripts/install.py
@@ -42,9 +44,12 @@ PLIST_SUB=	SHLIBVER=${_SHLIBVER} \
 		SOABIVER=${_SOABIVER}
 PORTDOCS=	*
 
-OPTIONS_DEFINE=		DOCS PYTHON SQLITE3 SSL
-OPTIONS_DEFAULT=	SSL
+OPTIONS_DEFINE=		DOCS MANPAGES PYTHON SQLITE3 SSL
+OPTIONS_DEFAULT=	MANPAGES SSL
 OPTIONS_SUB=		yes
+
+MANPAGES_BUILD_DEPENDS=		${PYTHON_PKGNAMEPREFIX}sphinx>=0:textproc/py-sphinx@${PY_FLAVOR}
+MANPAGES_CONFIGURE_WITH=	sphinx
 
 PYTHON_USES=		python:3.6+
 PYTHON_USES_OFF=	python:3.6+,build
@@ -63,10 +68,6 @@ SSL_CONFIGURE_WITH=	openssl
 CONFIGURE_ARGS+=	--cc-abi="-march=armv8-a+crypto"
 .elif ${ARCH:Mpowerpc64*}
 CONFIGURE_ARGS+=	--cpu="ppc64"
-.endif
-
-.if ${OPSYS} == FreeBSD && ${OSVERSION} < 1200000
-CONFIGURE_ARGS+=	--without-os-features=getentropy,elf_aux_info
 .endif
 
 .if ${ARCH} == i386 || ${ARCH} == amd64

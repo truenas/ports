@@ -1,7 +1,7 @@
 # Created by: vanilla@
 
 PORTNAME=	grpc
-PORTVERSION=	1.36.4
+PORTVERSION=	1.41.1
 DISTVERSIONPREFIX=	v
 PORTEPOCH=	2
 CATEGORIES=	devel
@@ -19,7 +19,7 @@ LIB_DEPENDS=	libabsl_base.so:devel/abseil \
 		libprotobuf.so:devel/protobuf \
 		libre2.so:devel/re2
 
-USES=		cmake compiler:c++17-lang localbase:ldflags pkgconfig ssl
+USES=		cmake compiler:c++17-lang cpe localbase:ldflags pkgconfig ssl
 
 USE_GITHUB=	yes
 
@@ -35,6 +35,24 @@ CMAKE_ARGS=	-DCMAKE_CXX_STANDARD=17 \
 CMAKE_ON=	BUILD_SHARED_LIBS
 USE_LDCONFIG=	yes
 
-PLIST_SUB=	PORTVERSION=${PORTVERSION}
+PLIST_SUB=	SHLIB_MAJOR=${PORTVERSION:R} \
+		SHLIB_MINOR=${PORTVERSION:E}
 
-.include <bsd.port.mk>
+.include <bsd.port.pre.mk>
+
+# Remove openssl from grpc.pc because we do not ship openssl.pc in base system
+.if ${SSL_DEFAULT} == base
+EXTRA_PATCHES+=	${PATCHDIR}/extra-patch-CMakeLists.txt
+.endif
+
+post-patch:
+# Clean up bundled libraries
+	@${RM} -r ${WRKSRC}/third_party/abseil-cpp/
+	@${RM} -r ${WRKSRC}/third_party/benchmark/
+	@${RM} -r ${WRKSRC}/third_party/boringssl-with-bazel/
+	@${RM} -r ${WRKSRC}/third_party/cares/
+	@${RM} -r ${WRKSRC}/third_party/protobuf/
+	@${RM} -r ${WRKSRC}/third_party/re2/
+	@${RM} -r ${WRKSRC}/third_party/zlib/
+
+.include <bsd.port.post.mk>

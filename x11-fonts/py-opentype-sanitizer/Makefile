@@ -1,8 +1,8 @@
 # Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
 
 PORTNAME=	opentype-sanitizer
-PORTVERSION=	8.1.3
-DISTVERSIONSUFFIX=	.post1
+PORTVERSION=	8.1.4
+DISTVERSIONSUFFIX=	.post3
 CATEGORIES=	x11-fonts python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -27,9 +27,9 @@ post-patch:
 	@${RM} -r ${WRKSRC}/src/c/
 
 post-install:
-	${STRIP_CMD} ${STAGEDIR}${PYTHON_SITELIBDIR}/ots/ots-sanitize*.so
+	${FIND} ${STAGEDIR}${PYTHON_SITELIBDIR} -name '*.so' -exec ${STRIP_CMD} {} +
 
 do-test:
-	cd ${WRKSRC}/ && ${PYTHON_CMD} -m pytest -v
+	cd ${WRKSRC}/ && ${PYTHON_CMD} -m pytest -rs -v
 
 .include <bsd.port.mk>

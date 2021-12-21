@@ -12,12 +12,15 @@ COMMENT=	GTK application to securely store sensitive data
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
 
+DEPRECATED=	Abandonware, upstream dead and last release in 2009
+EXPIRATION_DATE=2022-03-31
+
 LIB_DEPENDS=	libpopt.so:devel/popt \
 		libgringotts.so:security/libgringotts \
 		libfontconfig.so:x11-fonts/fontconfig \
 		libfreetype.so:print/freetype2
 
-USES=		gettext gnome localbase pkgconfig
+USES=		cpe gettext gnome localbase pkgconfig
 USE_GNOME=	cairo gdkpixbuf2 gtk20
 GNU_CONFIGURE=	yes
 

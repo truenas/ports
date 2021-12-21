@@ -1,6 +1,6 @@
 PORTNAME=	rsocket-cpp
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2021.04.26.00
+DISTVERSION=	2021.08.30.00
 CATEGORIES=	net
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -8,6 +8,8 @@ COMMENT=	C++ implementation of RSocket
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
+
+BROKEN=		build fails with latest devel/folly, no upstream support provided: https://github.com/rsocket/rsocket-cpp/issues/906
 
 BUILD_DEPENDS=	libfmt>0:devel/libfmt
 LIB_DEPENDS=	libboost_atomic.so:devel/boost-libs \

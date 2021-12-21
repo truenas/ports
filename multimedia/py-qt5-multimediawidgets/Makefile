@@ -1,4 +1,5 @@
 PORTNAME=	multimediawidgets
+PORTREVISION=	3
 CATEGORIES=	multimedia devel python
 
 MAINTAINER=	kde@FreeBSD.org

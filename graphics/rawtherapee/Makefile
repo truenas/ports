@@ -30,8 +30,6 @@ LIB_DEPENDS=	\
 USES=		cmake desktop-file-utils compiler:gcc-c++11-lib gnome \
 		jpeg localbase:ldflags pkgconfig tar:xz
 
-DOS2UNIX_REGEX=	.*\.(cc|h)
-
 # Binutils required for LTO (base ar/nm/ld/ranlib don't work)
 USE_BINUTILS=	yes
 
@@ -44,7 +42,6 @@ USE_BINUTILS=	yes
 USE_GCC=	yes
 
 USE_GNOME=	gtkmm30 librsvg2
-INSTALLS_ICONS=	yes
 
 _LTO_FLAGS=	-flto=${MAKE_JOBS_NUMBER}
 # gcc needs -flto=${MAKE_JOBS_NUMBER} for parallel link (fixed in GCC 10?)
@@ -105,25 +102,12 @@ OPENMP_CMAKE_BOOL=	OPTION_OMP
 
 # -------------------------------------------------------------------
 
-.if (${OPSYS} == FreeBSD) && (${OSVERSION} <  1200000)
-# can't save 16-bit TIFF on FreeBSD 11.3 and 11.4 i386
-# "TIFFWriteDirectoryTagIfdIfd8Array: Attempt to write value
-# larger than 0xFFFFFFFF in Classic TIFF file"
-#
-# And no, the maintainer is not going to spend any time on it
-# unless there is a tested proven well-integrated patch offered.
-#
-# Tier-2 only supported on the latest stable FreeBSD release.
-ONLY_FOR_ARCHS=	amd64
-ONLY_FOR_ARCHS_REASON=On i386, rawtherapee malfunctions under FreeBSD 11.x - upgrade to 12.x
-.endif
-
 .if (${OPSYS} == FreeBSD) && (${OSVERSION} >= 1400000)
 # don't waste everybody's time with Tier-2 and moving targets.
 # might add ARM64 later on if they are established by the
 # time FreeBSD 13 is out.
 ONLY_FOR_ARCHS=	amd64
-ONLY_FOR_ARCHS_REASON=Only amd64 is supported on non-released FreeBSD versions.
+ONLY_FOR_ARCHS_REASON=only amd64 is supported on non-released FreeBSD versions
 .endif
 
 .if ${PORT_OPTIONS:MNATIVE}

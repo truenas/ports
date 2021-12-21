@@ -1,7 +1,7 @@
 # Created by: Michael Moll <kvedulv at kvedulv.de>
 
 PORTNAME=	bindata
-PORTVERSION=	2.4.8
+PORTVERSION=	2.4.10
 CATEGORIES=	devel ruby
 MASTER_SITES=	RG
 
@@ -13,7 +13,8 @@ LICENSE_COMB=	dual
 LICENSE_FILE_BSD2CLAUSE=${WRKSRC}/BSDL
 LICENSE_FILE_RUBY=	${WRKSRC}/COPYING
 
-USES=		gem
+USES=		cpe gem
+CPE_VENDOR=	${PORTNAME}_project
 USE_RUBY=	yes
 
 NO_ARCH=	yes

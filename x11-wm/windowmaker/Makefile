@@ -23,7 +23,7 @@ LIB_DEPENDS=	libgif.so:graphics/giflib \
 		libexif.so:graphics/libexif
 RUN_DEPENDS=	${LOCALBASE}/share/WindowMaker/Themes/LeetWM.themed/style:graphics/wmicons
 
-USES=		gnome jpeg libtool shebangfix pathfix perl5 pkgconfig xorg
+USES=		cpe gnome jpeg libtool shebangfix pathfix perl5 pkgconfig xorg
 USE_CSTD=	c99
 USE_GNOME=	pango
 USE_LDCONFIG=	yes
@@ -54,7 +54,7 @@ OPTIONS_DEFINE=	IMAGEMAGICK DOCS NLS
 OPTIONS_DEFAULT=	IMAGEMAGICK
 OPTIONS_SUB=	yes
 
-IMAGEMAGICK_LIB_DEPENDS=	libMagickWand-${IMAGEMAGICK_DEFAULT}.so:graphics/ImageMagick${IMAGEMAGICK_DEFAULT}
+IMAGEMAGICK_USES=		magick
 IMAGEMAGICK_CONFIGURE_OFF=	--disable-magick
 
 NLS_USES=	gettext

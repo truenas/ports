@@ -6,7 +6,7 @@ CATEGORIES=	www editors
 MASTER_SITES=	http://www.bennewitz.com/bluefish/stable/source/ \
 		http://bluefish.mrball.net/stable/source/
 
-MAINTAINER=	woodsb02@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	HTML editor designed for the experienced web designer
 
 LICENSE=	GPLv3+
@@ -46,7 +46,6 @@ CONFIGURE_ARGS=	--with-freedesktop_org-menu=${PREFIX}/share/applications \
 		--with-icon-path=${PREFIX}/share/pixmaps \
 		--disable-update-databases
 INSTALL_TARGET=	install-strip
-INSTALLS_ICONS=	yes
 USE_LDCONFIG=	yes
 
 OPTIONS_DEFINE=	DEBUG DOCS TIDY

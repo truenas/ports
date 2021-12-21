@@ -1,9 +1,9 @@
 # Created by: Joseph Benden <joe@thrallingpenguin.com>
 
 PORTNAME=	mosquitto
-PORTVERSION=	2.0.8
+PORTVERSION=	2.0.13
 CATEGORIES=	net
-MASTER_SITES=	http://mosquitto.org/files/source/
+MASTER_SITES=	https://mosquitto.org/files/source/
 
 MAINTAINER=	joe@thrallingpenguin.com
 COMMENT=	Open source MQTT broker
@@ -16,10 +16,11 @@ LIB_DEPENDS=	libuuid.so:misc/e2fsprogs-libuuid \
 		libcjson.so:devel/libcjson
 RUN_DEPENDS=	${LOCALBASE}/share/certs/ca-root-nss.crt:security/ca_root_nss
 
-USES=		cmake ssl
+USES=		cmake cpe ssl
 USE_RC_SUBR=	mosquitto
 USE_LDCONFIG=	yes
 CMAKE_ARGS=	-DCMAKE_LIBDATADIR:PATH="${PREFIX}/libdata"
+CPE_VENDOR=	eclipse
 
 USERS=		nobody
 

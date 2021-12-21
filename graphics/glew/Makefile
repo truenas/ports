@@ -2,9 +2,14 @@
 
 PORTNAME=	glew
 PORTVERSION=	2.2.0
-PORTREVISION?=	0
+PORTREVISION?=	3
 CATEGORIES=	graphics
 MASTER_SITES=	SF
+
+# Keep glew-wayland patches here to avoid version desync in distinfo
+PATCH_SITES=	https://github.com/nigels-com/${PORTNAME}/commit/
+PATCHFILES+=	8e2e31e69bb6.patch:-p1 # https://github.com/nigels-com/glew/pull/329
+PATCHFILES+=	062067f2bad8.patch:-p1 # https://github.com/nigels-com/glew/pull/330
 
 MAINTAINER?=	zeising@FreeBSD.org
 COMMENT=	OpenGL Extension Wrangler Library
@@ -13,7 +18,7 @@ LICENSE=	MIT BSD3CLAUSE
 LICENSE_COMB=	dual
 
 USES=		gmake gl tar:tgz xorg
-USE_XORG?=	x11 xext xi xmu
+USE_XORG?=	x11
 USE_GL?=	gl glu
 USE_LDCONFIG=	yes
 

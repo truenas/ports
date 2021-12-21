@@ -2,7 +2,7 @@
 
 PORTNAME=	chromium-bsu
 PORTVERSION=	0.9.16.1
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	games
 MASTER_SITES=	SF/${PORTNAME}/Chromium%20B.S.U.%20source%20code/
 
@@ -27,8 +27,6 @@ CONFIGURE_ARGS=	--disable-sdl \
 		--disable-glpng
 MAKE_ARGS=	LDFLAGS="${LDFLAGS}"
 LDFLAGS_i386=	-Wl,-znotext
-
-INSTALLS_ICONS=	yes
 
 PORTDOCS=	*
 PORTDATA=	*

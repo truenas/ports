@@ -2,7 +2,7 @@
 
 PORTNAME=	libquicktime
 PORTVERSION=	1.2.4
-PORTREVISION?=	30
+PORTREVISION?=	31
 CATEGORIES=	multimedia
 MASTER_SITES=	SF
 
@@ -17,7 +17,7 @@ LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING
 
 USE_LDCONFIG=	yes
-USES=		gettext gmake libtool pathfix pkgconfig
+USES=		cpe gettext gmake libtool pathfix pkgconfig
 GNU_CONFIGURE=	yes
 CPPFLAGS+=	-I${LOCALBASE}/include
 LIBS+=		-L${LOCALBASE}/lib -lintl

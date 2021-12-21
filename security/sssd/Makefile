@@ -2,7 +2,7 @@
 
 PORTNAME=	sssd
 PORTVERSION=	1.16.5
-PORTREVISION=	2
+PORTREVISION=	4
 CATEGORIES=	security
 MASTER_SITES=	https://releases.pagure.org/SSSD/${PORTNAME}/
 
@@ -37,7 +37,7 @@ GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--without-selinux --without-semanage \
 		--without-libnl --without-nfsv4-idmapd-plugin \
 		--without-autofs --without-secrets --without-kcm \
-		--without-python2-bindings \
+		--without-python2-bindings --with-python-prefix=${PREFIX} \
 		--with-init-dir=no \
 		--disable-cifs-idmap-plugin \
 		--with-unicode-lib=libunistring \
@@ -100,6 +100,11 @@ post-patch:
 	@${REINPLACE_CMD} -e 's|/etc/sssd/|${ETCDIR}/|g' \
 		-e 's|/etc/openldap/|${LOCALBASE}/etc/openldap/|g' \
 		${WRKSRC}/src/man/*xml
+	@${REINPLACE_CMD} -e 's|/usr/bin/|${PREFIX}/bin/|g' \
+		-e 's|/var/lib/sss/pubconf/|/var/db/sss/pubconf/|g' \
+		${WRKSRC}/src/man/sss_ssh_knownhostsproxy.1.xml \
+		${WRKSRC}/src/man/*/sss_ssh_knownhostsproxy.1.xml \
+		${WRKSRC}/src/man/po/*.po
 	@${CP} ${FILESDIR}/bsdnss.c ${WRKSRC}/src/sss_client/bsdnss.c
 	@${CP} ${FILESDIR}/sss_bsd_errno.h ${WRKSRC}/src/util/sss_bsd_errno.h
 

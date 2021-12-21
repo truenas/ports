@@ -1,7 +1,7 @@
 # Created by: Alfred Perlstein <alfred@FreeBSD.org>
 
 PORTNAME=	mDNSResponder
-PORTVERSION=	1310.80.1
+PORTVERSION=	1310.140.1
 CATEGORIES=	net dns
 MASTER_SITES=	https://opensource.apple.com/tarballs/mDNSResponder/
 
@@ -22,7 +22,6 @@ USE_LDCONFIG=	yes
 USE_RC_SUBR=	mdnsd mdnsresponderposix
 
 CPE_VENDOR=	apple
-CPE_PRODUCT=	${PORTNAME:tl}
 
 EXTRA_BIN=	mDNSClientPosix mDNSNetMonitor mDNSProxyResponderPosix mDNSResponderPosix
 EXTRA_MAN1=	dns-sd.1

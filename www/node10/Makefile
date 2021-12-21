@@ -1,7 +1,7 @@
 PORTNAME=	node
 PORTVERSION=	10.24.1
 DISTVERSIONPREFIX=	v
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	www
 MASTER_SITES=	http://nodejs.org/dist/v${PORTVERSION}/
 PKGNAMESUFFIX=	10
@@ -23,7 +23,6 @@ USES=		compiler:c++11-lib gmake python:2.7,build pkgconfig \
 
 OPTIONS_DEFINE=		BUNDLED_SSL DOCS NLS DTRACE
 OPTIONS_DEFAULT=	DTRACE
-OPTIONS_DEFAULT_FreeBSD_11=	BUNDLED_SSL
 OPTIONS_DEFAULT+=	${OPTIONS_DEFAULT_${OPSYS}_${OSREL:R}}
 OPTIONS_SUB=		yes
 
@@ -51,7 +50,7 @@ DTRACE_CONFIGURE_ON=	--with-dtrace
 
 HAS_CONFIGURE=	yes
 
-CONFLICTS_INSTALL=	node12-[0-9]* node14-[0-9]* node-[0-9]*
+CONFLICTS_INSTALL=	node14 node16 node
 
 CONFIGURE_ARGS=	--prefix=${PREFIX_RELDEST} \
 		--without-npm \
@@ -77,10 +76,6 @@ LIB_DEPENDS+=	libcares.so:dns/c-ares\
 		libnghttp2.so:www/libnghttp2
 
 .include <bsd.port.options.mk>
-
-.if ${OPSYS} == FreeBSD && ${OSVERSION} < 1200085
-BROKEN_SSL+=	base
-.endif
 
 .if ${PORT_OPTIONS:MBUNDLED_SSL} && ${ARCH} != amd64 && ${ARCH} != i386
 CONFIGURE_ARGS+=--openssl-no-asm

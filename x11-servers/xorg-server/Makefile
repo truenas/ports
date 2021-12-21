@@ -1,7 +1,8 @@
 # Created by: Eric Anholt <anholt@FreeBSD.org>
 
 PORTNAME?=	xorg-server
-PORTVERSION?=	1.20.11
+PORTVERSION?=	1.20.13
+PORTREVISION?=	0
 PORTEPOCH?=	1
 CATEGORIES=	x11-servers
 MASTER_SITES=	XORG/individual/xserver
@@ -21,11 +22,7 @@ OPTIONS_SUB=	yes
 OPTIONS_DEFINE+=	SUID
 OPTIONS_RADIO=	CONF
 OPTIONS_RADIO_CONF=	DEVD UDEV
-OPTIONS_DEFAULT=	SUID
-OPTIONS_DEFAULT_FreeBSD_11=	DEVD
-OPTIONS_DEFAULT_FreeBSD_12=	UDEV
-OPTIONS_DEFAULT_FreeBSD_13=	UDEV
-OPTIONS_DEFAULT_FreeBSD_14=	UDEV
+OPTIONS_DEFAULT=	SUID UDEV
 OPTIONS_DEFAULT+=	${OPTIONS_DEFAULT_${OPSYS}_${OSREL:R}}
 
 SUID_DESC=	Install setuid wrapper to allow startx as non-root
@@ -55,7 +52,7 @@ DEFAULT_FONTPATH_LIST= \
 DEFAULT_FONTPATH_CMD=${ECHO_CMD} ${DEFAULT_FONTPATH_LIST} | ${TR} ' ' ,
 PLIST_SUB+=	FONTPATHD="${FONTPATHD:S,^${PREFIX}/,,}"
 
-USES=		compiler:c11 cpe gl gmake perl5 ssl xorg xorg-cat:xserver
+USES=		compiler:c11 cpe gl gmake perl5 ssl tar:xz xorg xorg-cat:xserver
 USE_PERL5=	build
 USE_GL+=	gl
 USE_XORG+=	pixman xau xdmcp xfont2 xkbfile xorgproto xshmfence xtrans
@@ -66,6 +63,7 @@ CONFIGURE_ARGS+=--without-doxygen --without-xmlto --without-fop \
 		--with-fallback-input-driver=libinput
 INSTALL_TARGET=	install-strip
 CPE_VENDOR=	x.org
+CPE_PRODUCT=	xorg-server
 
 .if ${SLAVE_PORT} == "no" || ${PORTNAME} == "xephyr" || ${PORTNAME} == "xwayland"
 LIB_DEPENDS+=	libdrm.so:graphics/libdrm \
@@ -96,7 +94,7 @@ PLIST=		${.CURDIR}/pkg-plist
 CONFIGURE_ENV=	SHA1_LIB="-L/usr/lib -lcrypto" SHA1_CFLAGS="-I/usr/include"
 .endif
 
-.if ${ARCH} == aarch64 || ${ARCH} == amd64 || ${ARCH} == i386 || ${ARCH} == powerpc64 || ${ARCH} == powerpc64le
+.if ${ARCH} == aarch64 || ${ARCH} == amd64 || ${ARCH} == armv7 || ${ARCH} == i386 || ${ARCH} == powerpc64 || ${ARCH} == powerpc64le
 LIB_DEPENDS+=	libunwind.so:devel/libunwind
 .endif
 

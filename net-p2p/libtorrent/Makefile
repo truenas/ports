@@ -3,13 +3,13 @@ PORTVERSION=	0.13.8
 CATEGORIES=	net-p2p
 MASTER_SITES=	https://rtorrent.net/downloads/
 
-MAINTAINER=	dbaio@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	BitTorrent Library written in C++
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-USES=		autoreconf compiler:c++11-lang libtool localbase:ldflags pathfix pkgconfig ssl
+USES=		autoreconf compiler:c++11-lang cpe libtool localbase:ldflags pathfix pkgconfig ssl
 
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--disable-debug

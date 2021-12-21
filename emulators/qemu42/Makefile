@@ -2,6 +2,7 @@
 
 PORTNAME=	qemu
 PORTVERSION=	4.2.1
+PORTREVISION=	1
 CATEGORIES=	emulators
 MASTER_SITES=	https://download.qemu.org/
 PKGNAMESUFFIX?=	42
@@ -12,13 +13,16 @@ COMMENT?=	QEMU CPU Emulator - 4.2.X branch
 
 LICENSE=	GPLv2
 
+DEPRECATED=	Use emulators/qemu or emulators/qemu-devel
+EXPIRATION_DATE=2022-01-10
+
 BUILD_DEPENDS=	sphinx-build:textproc/py-sphinx@${PY_FLAVOR}
-LIB_DEPENDS?=	libnettle.so:security/nettle \
+LIB_DEPENDS?=	libepoxy.so:graphics/libepoxy \
+		libfdt.so:sysutils/dtc \
 		libfontconfig.so:x11-fonts/fontconfig \
 		libfreetype.so:print/freetype2 \
-		libepoxy.so:graphics/libepoxy \
-		libpcre2-8.so:devel/pcre2 \
-		libfdt.so:sysutils/dtc
+		libnettle.so:security/nettle \
+		libpcre2-8.so:devel/pcre2
 
 .if !defined(PKGNAMESUFFIX) || (${PKGNAMESUFFIX} != "-utils" && ${PKGNAMESUFFIX} != "-guest-agent")
 ONLY_FOR_ARCHS=	amd64 i386 powerpc powerpc64 powerpc64le
@@ -105,9 +109,9 @@ X11_CONFIGURE_ENABLE=	sdl
 X11_USE=	SDL=sdl2 XORG=x11,xext GNOME=gdkpixbuf2
 X11_USES=	sdl
 .if !defined(PKGNAMESUFFIX) || (${PKGNAMESUFFIX} != "-utils" && ${PKGNAMESUFFIX} != "-guest-agent")
-X86_TARGETS_USE_OFF=	XORG=pixman,x11
+X86_TARGETS_LIB_DEPENDS_OFF=	libharfbuzz.so:print/harfbuzz
+X86_TARGETS_USE_OFF=	GL=gbm XORG=pixman,x11
 X86_TARGETS_USES_OFF=	xorg
-INSTALLS_ICONS=		yes
 .endif
 
 PORTDOCS?=	docs interop/.buildinfo interop/* qemu-doc.html qemu-doc.txt qemu-ga-ref.html qemu-ga-ref.txt \
@@ -115,6 +119,7 @@ PORTDOCS?=	docs interop/.buildinfo interop/* qemu-doc.html qemu-doc.txt qemu-ga-
 
 WITHOUT_CPU_CFLAGS=yes	#to avoid problems with register allocation
 CFLAGS:=	${CFLAGS:C/-fno-tree-vrp//}
+CFLAGS_powerpc=	-D_CALL_SYSV
 CONFIGURE_ARGS?=--localstatedir=/var --extra-ldflags=-L\"/usr/lib\" \
 		--extra-ldflags=-L\"${LOCALBASE}/lib\" --disable-libssh \
 		--prefix=${PREFIX} --cc=${CC} --enable-netmap --enable-docs --disable-kvm \
@@ -142,6 +147,12 @@ MAKE_ARGS+=	ARCH=ppc64
 
 .if ${ARCH} == "sparc64"
 CONFIGURE_ARGS+=	--sparc_cpu=v9
+.endif
+
+.if ${OPSYS} == FreeBSD && ${OSVERSION} >= 1300000
+PLIST_SUB+=     IVSHMEM=""
+.else
+PLIST_SUB+=     IVSHMEM="@comment "
 .endif
 
 PLIST_SUB+=	LINUXBOOT_DMA=""

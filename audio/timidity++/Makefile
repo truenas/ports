@@ -6,12 +6,10 @@ CATEGORIES+=	audio
 MASTER_SITES=	SF/timidity/TiMidity%2B%2B/TiMidity%2B%2B-${PORTVERSION}
 DISTNAME=	TiMidity++-${PORTVERSION}
 
-MAINTAINER?=	ports@FreeBSD.org
+MAINTAINER?=	fuz@fuz.su
 COMMENT?=	Software MIDI player
 
 LICENSE=	GPLv2+
-
-BROKEN_riscv64=	fails to compile: needs FP_X_INV from empty sys/riscv/include/ieeefp.h
 
 LIB_DEPENDS=	libarc.so:archivers/libarc
 .if !defined(PKGNAMESUFFIX)
@@ -57,7 +55,7 @@ USES+=		ncurses
 CONFIGURE_ARGS+=--enable-interface=ncurses,vt100,server \
 		--enable-network
 
-CONFLICTS_INSTALL=	timidity-[0-9]*
+CONFLICTS_INSTALL=	timidity
 
 DOCFILES=	README.alsaseq README.dl README.m2m README.mts README.sf
 

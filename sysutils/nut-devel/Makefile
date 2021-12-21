@@ -12,10 +12,11 @@ MAINTAINER=	cy@FreeBSD.org
 COMMENT=	Network UPS Tools
 
 USE_GITHUB=	yes
-GH_ACCOUNT=     networkupstools 
-GH_TAGNAME=     88773359
-NUT_COMMIT_DATE=	2021.04.10
+GH_ACCOUNT=	networkupstools
+GH_TAGNAME=	a82b064a
+NUT_COMMIT_DATE=	2021.12.09
 
+MAKE_JOBS_UNSAFE=	yes
 GNU_CONFIGURE=	yes
 USE_LDCONFIG=	yes
 USES=		autoreconf:build compiler:c11 gmake libtool pkgconfig python:build
@@ -67,6 +68,9 @@ CONFIGURE_ARGS=	--sysconfdir=${PREFIX}/etc/nut \
 		--with-user=${NUT_USER} \
 		--with-group=${NUT_GROUP} \
 		--with-dev
+
+CFLAGS+=	-I${LOCALBASE}/include -L${LOCALBASE}/lib
+LIB_DEPENDS+=	libltdl.so:devel/libltdl
 
 BUILD_DEPENDS=	asciidoc:textproc/asciidoc
 

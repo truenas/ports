@@ -15,11 +15,12 @@ RUN_DEPENDS=	${QT_PLUGINDIR}/ffmpegthumbs.so:multimedia/kdemultimedia-ffmpegthum
 USES=		cmake compiler:c++11-lib desktop-file-utils gettext kde:5 qt:5 tar:xz
 USE_KDE=	activities attica auth baloo baloo-widgets bookmarks codecs \
 		completion config configwidgets coreaddons crash dbusaddons \
-		doctools ecm emoticons filemetadata i18n iconthemes init \
+		emoticons filemetadata i18n iconthemes init \
 		itemmodels itemviews jobwidgets kcmutils kde-cli-tools \
-		kdelibs4support kio newstuff notifications parts service \
+		kio newstuff notifications parts service \
 		solid sonnet texteditor textwidgets widgetsaddons \
-		windowsystem xmlgui
+		windowsystem xmlgui \
+		doctools_build ecm_build
 USE_QT=		concurrent core dbus gui network phonon4 widgets xml \
 		buildtools_build qmake_build
 

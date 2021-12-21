@@ -2,7 +2,7 @@
 
 PORTNAME=	mediastreamer
 PORTVERSION=	2.16.1
-PORTREVISION=	4
+PORTREVISION=	6
 CATEGORIES=	net
 MASTER_SITES=	https://www.linphone.org/releases/sources/mediastreamer/
 

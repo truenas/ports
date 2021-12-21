@@ -1,5 +1,5 @@
 PORTNAME=	chroma
-PORTVERSION=	1.18
+PORTVERSION=	1.20
 CATEGORIES=	games
 MASTER_SITES=	http://www.level7.org.uk/chroma/download/ \
 		https://mirror.amdmi3.ru/distfiles/
@@ -30,6 +30,7 @@ CURSES_CONFIGURE_ENABLE=curses
 CURSES_PLIST_FILES=	bin/${PORTNAME}-curses
 SDL_CONFIGURE_ENABLE=	sdl
 SDL_LIB_DEPENDS=	libfreetype.so:print/freetype2
+SDL_USES=		pkgconfig
 SDL_USE=		SDL=sdl,image
 SDL_PLIST_FILES=	bin/${PORTNAME}
 

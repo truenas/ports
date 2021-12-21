@@ -1,6 +1,5 @@
 PORTNAME=	ImageMagick
-DISTVERSION=	6.9.11-6
-PORTREVISION=	3
+DISTVERSION=	6.9.12-32
 PORTEPOCH=	1
 CATEGORIES=	graphics perl5
 MASTER_SITES=	https://www.imagemagick.org/download/ \
@@ -27,7 +26,7 @@ MASTER_SITES=	https://www.imagemagick.org/download/ \
 		ftp://ftp.fifi.org/pub/ImageMagick/
 PKGNAMESUFFIX=	6
 
-MAINTAINER=	kwm@FreeBSD.org
+MAINTAINER=	desktop@FreeBSD.org
 COMMENT=	Image processing tools (legacy version)
 
 LICENSE=	APACHE20
@@ -63,7 +62,7 @@ SAMPLE_FILES=	coder.xml colors.xml delegates.xml log.xml magic.xml mime.xml \
 PLIST_SUB=	PORTVERSION=${PORTVERSION:R}
 
 OPTIONS_SUB=	yes
-OPTIONS_DEFINE=	BZIP2 DOCS DJVU FFTW FONTCONFIG FPX FREETYPE \
+OPTIONS_DEFINE=	BZIP2 DOCS DJVU FFMPEG FFTW FONTCONFIG FPX FREETYPE \
 		GRAPHVIZ GSLIB HEIF JPEG2000 JBIG JPEG LCMS2 LZMA LQR MODULES \
 		OPENEXR OPENMP PANGO PDF PERL PNG RAQM SVG TESTS TIFF WEBP WMF \
 		THREADS X11 16BIT_PIXEL HDRI RAW
@@ -86,6 +85,8 @@ PLIST_SUB+=		QBIT=${_QBIT}
 # Produce BZip compressed MIFF images
 BZIP2_DESC=		bzip2 compressed MIFF images
 BZIP2_CONFIGURE_WITH=	bzlib
+
+FFMPEG_DESC=		Video CODEC support from FFmpeg
 
 FFTW_CONFIGURE_WITH=	fftw
 FFTW_LIB_DEPENDS=	libfftw3.so:math/fftw3
@@ -174,7 +175,7 @@ X11_CONFIGURE_WITH=	x
 X11_USES=		xorg
 X11_USE=		xorg=ice,sm,x11,xext,xt
 X11_VARS=		CONFLICTS_INSTALL+="ImageMagick-nox11-6* ImageMagick6-nox11-6*" \
-			CONFLICTS+=display-[0-9]*
+			CONFLICTS+=display
 X11_VARS_OFF=		CONFLICTS_INSTALL+="ImageMagick-6* ImageMagick6-6*" \
 			PKGNAMESUFFIX=6-nox11
 
@@ -230,11 +231,10 @@ _IMAGEMAGICK_THREADS=no
 . if ${_IMAGEMAGICK_THREADS} == "no"
 IGNORE=OpenMP requires threads${_IMAGEMAGICK_THREADS_IGNORE_MSG}
 . else
-CONFIGURE_ARGS+=	--enable-openmp
-USES+=		compiler:openmp
+CONFIGURE_ARGS+=       --enable-openmp
 . endif
 .else
-CONFIGURE_ARGS+=	--disable-openmp
+CONFIGURE_ARGS+=       --disable-openmp
 .endif
 
 .if defined(WITH_WINDOWS_FONT_DIR)
@@ -263,6 +263,11 @@ PLIST_SUB+=		DJVU=""
 .else
 CONFIGURE_ARGS+=	--without-djvu
 PLIST_SUB+=		DJVU="@comment "
+.endif
+
+.if ${PORT_OPTIONS:MFFMPEG}
+BUILD_DEPENDS+=		ffmpeg:multimedia/ffmpeg
+RUN_DEPENDS+=		ffmpeg:multimedia/ffmpeg
 .endif
 
 .if ${PORT_OPTIONS:MGSLIB}

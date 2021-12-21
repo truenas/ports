@@ -1,5 +1,5 @@
 ### External modules
-AJP_GH_TUPLE=		yaoweibin:nginx_ajp_module:a964a0b:ajp
+AJP_GH_TUPLE=		yaoweibin:nginx_ajp_module:fcbb2cc:ajp
 AJP_CONFIGURE_ON=	--add-module=${WRKSRC_ajp}
 
 ARRAYVAR_IMPLIES=	DEVEL_KIT
@@ -13,8 +13,8 @@ BROTLI_LIB_DEPENDS=	libbrotlicommon.so:archivers/brotli
 BROTLI_GH_TUPLE=	google:ngx_brotli:9aec15e:brotli
 BROTLI_VARS=		DSO_EXTMODS+=brotli
 
-CACHE_PURGE_GH_TUPLE=		nginx-modules:ngx_cache_purge:23dc16a:cache_purge
-CACHE_PURGE_CONFIGURE_ON=	--add-module=${WRKDIR}/ngx_cache_purge-23dc16a
+CACHE_PURGE_GH_TUPLE=		nginx-modules:ngx_cache_purge:4746629:cache_purge
+CACHE_PURGE_CONFIGURE_ON=	--add-module=${WRKDIR}/ngx_cache_purge-4746629
 
 CLOJURE_CATEGORIES+=	java
 CLOJURE_USE=		JAVA=yes JAVA_OS=native JAVA_VERSION=1.8 \
@@ -34,6 +34,8 @@ DRIZZLE_CONFIGURE_ENV=	LIBDRIZZLE_INC=${LOCALBASE}/include \
 DRIZZLE_GH_TUPLE=	openresty:drizzle-nginx-module:v0.1.11:drizzle
 DRIZZLE_EXTRA_PATCHES=	${PATCHDIR}/extra-patch-openresty-drizzle-nginx-module-config
 DRIZZLE_VARS=		DSO_EXTMODS+=drizzle
+
+DYNAMIC_TLS_EXTRA_PATCHES=	${PATCHDIR}/extra-patch-dynamic-tls
 
 DYNAMIC_UPSTREAM_GH_TUPLE=	ZigzagAK:ngx_dynamic_upstream:960eef2:dynamic_upstream
 DYNAMIC_UPSTREAM_VARS=		DSO_EXTMODS+=dynamic_upstream
@@ -137,10 +139,8 @@ HTTP_NOTICE_EXTRA_PATCHES=	${PATCHDIR}/extra-patch-ngx_http_notice_module.c \
 				${PATCHDIR}/extra-patch-nginx-notice-config
 HTTP_NOTICE_VARS=		DSO_EXTMODS+=notice
 
-HTTP_PUSH_GH_TUPLE=		slact:nchan:v1.2.7:push
+HTTP_PUSH_GH_TUPLE=		slact:nchan:v1.2.12:push
 HTTP_PUSH_VARS=			DSO_EXTMODS+=push
-HTTP_PUSH_EXTRA_PATCHES=	${PATCHDIR}/extra-patch-nchan-store-private.h \
-				${PATCHDIR}/extra-patch-nchan-store-redis-redis_lua_commands.h
 
 HTTP_PUSH_STREAM_GH_TUPLE=	wandenberg:nginx-push-stream-module:0.5.4:pushstream
 HTTP_PUSH_STREAM_VARS=		DSO_EXTMODS+=pushstream
@@ -229,14 +229,14 @@ MEMC_VARS=		DSO_EXTMODS+=memc
 
 MODSECURITY3_IMPLIES=	HTTP_ADDITION HTTP_IMAGE_FILTER HTTP_GUNZIP_FILTER HTTP_XSLT
 MODSECURITY3_LIB_DEPENDS=	libmodsecurity.so:security/modsecurity3
-MODSECURITY3_GH_TUPLE=		SpiderLabs:ModSecurity-nginx:v1.0.1:modsec
+MODSECURITY3_GH_TUPLE=		SpiderLabs:ModSecurity-nginx:v1.0.2:modsec
 MODSECURITY3_VARS=		DSO_EXTMODS+=modsec
 
 NAXSI_NGINX_VER=	1.3
 NAXSI_GH_TUPLE=		nbs-system:naxsi:${NAXSI_NGINX_VER}:naxsi
 NAXSI_VARS=		DSO_EXTMODS+=naxsi NAXSI_SUBDIR=/naxsi_src
 
-NJS_GH_TUPLE=		nginx:njs:0.5.2:njs
+NJS_GH_TUPLE=		nginx:njs:0.7.0:njs
 NJS_VARS=		DSO_EXTMODS+=njs NJS_SUBDIR=/nginx
 NJS_USES=		libedit
 
@@ -273,7 +273,7 @@ RDS_JSON_VARS=		DSO_EXTMODS+=rdsjson
 REDIS2_GH_TUPLE=	openresty:redis2-nginx-module:v0.15:redis2
 REDIS2_VARS=		DSO_EXTMODS+=redis2
 
-RTMP_GH_TUPLE=		ut0mt8:nginx-rtmp-module:791b613:rtmp
+RTMP_GH_TUPLE=		sergey-dryabzhinsky:nginx-rtmp-module:8e344d7:rtmp
 RTMP_VARS=		DSO_EXTMODS+=rtmp
 
 SET_MISC_IMPLIES=	DEVEL_KIT
@@ -291,8 +291,8 @@ SHIBBOLETH_VARS=	DSO_EXTMODS+=shibboleth
 SLOWFS_CACHE_GH_TUPLE=	baysao:ngx_slowfs_cache:d011a18:slowfs_cache
 SLOWFS_CACHE_VARS=	DSO_EXTMODS+=slowfs_cache
 
-SMALL_LIGHT_LIB_DEPENDS=	libMagickWand-6.so:graphics/ImageMagick6 \
-				libpcre.so:devel/pcre
+SMALL_LIGHT_USES=		magick:6
+SMALL_LIGHT_LIB_DEPENDS=	libpcre.so:devel/pcre
 SMALL_LIGHT_GH_TUPLE=		cubicdaiya:ngx_small_light:v0.9.2:small_light
 SMALL_LIGHT_VARS=		DSO_EXTMODS+=small_light
 

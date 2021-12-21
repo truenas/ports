@@ -1,5 +1,5 @@
 PORTNAME=	rdoc
-PORTVERSION=	6.3.0
+PORTVERSION=	6.3.3
 CATEGORIES=	devel rubygems
 MASTER_SITES=	RG
 
@@ -10,10 +10,12 @@ LICENSE=	GPLv2 RUBY
 LICENSE_COMB=	dual
 LICENSE_FILE_RUBY=	${WRKSRC}/LICENSE.rdoc
 
-USES=		gem
+USES=		cpe gem
 USE_RUBY=	yes
 
 NO_ARCH=	yes
+
+CPE_VENDOR=	ruby-lang
 
 .include <bsd.port.pre.mk>
 
@@ -29,7 +31,7 @@ post-install:
 post-install:
 	${RM} ${STAGEDIR}${PREFIX}/bin/rdoc ${STAGEDIR}${PREFIX}/bin/ri
 .else
-IGNORE=         ${PORTNAME} is included in lang/${RUBY_NAME}
+IGNORE=		${PORTNAME} is included in ${RUBY_PORT}
 .endif
 
 .include <bsd.port.post.mk>

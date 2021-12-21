@@ -1,7 +1,7 @@
 # Created by: Vsevolod Stakhov <vsevolod@highsecure.ru>
 
 PORTNAME=	gajim
-DISTVERSION=	1.3.1-2
+DISTVERSION=	1.3.3
 CATEGORIES=	net-im
 MASTER_SITES=	https://gajim.org/downloads/${DISTVERSION:R}/
 
@@ -22,21 +22,20 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}css-parser>0:www/py-css-parser@${PY_FLAVOR} 
 		${PYTHON_PKGNAMEPREFIX}pyasn1>=0:devel/py-pyasn1@${PY_FLAVOR}
 LIB_DEPENDS=	libsoup-2.4.so:devel/libsoup
 
-USES=		cpe dos2unix gettext gnome python:3.7+ xorg
+USES=		cpe gettext gnome python:3.7+ xorg
 USE_PYTHON=	autoplist distutils noflavors
 USE_GNOME=	pygobject3
 USE_XORG=	x11 xext xscrnsaver
 
-WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION:R}
+WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTNAME}-${DISTVERSION}
 NO_ARCH=	yes
-DOS2UNIX_FILES=	gajim/plugins/plugins_i18n.py
-INSTALLS_ICONS=	yes
 
-OPTIONS_DEFINE=	DBUS DOCS SPELL OMEMO
-OPTIONS_DEFAULT=DBUS SPELL OMEMO
+OPTIONS_DEFINE=	DBUS DOCS SPELL OMEMO OPENGPG
+OPTIONS_DEFAULT=DBUS SPELL OMEMO OPENGPG
 
 SPELL_DESC=	Spell checking support
 OMEMO_DESC=	OMEMO end-to-end encryption support
+OPENGPG_DESC=	GPG encryption per XEP-0373
 
 # GUPNP_DESC=	UPnP IGD protocol support
 
@@ -47,6 +46,7 @@ OMEMO_DESC=	OMEMO end-to-end encryption support
 OMEMO_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}python-axolotl>0:security/py-python-axolotl@${PY_FLAVOR} \
 			${PYTHON_PKGNAMEPREFIX}qrcode>0:textproc/py-qrcode@${PY_FLAVOR}
 DBUS_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}dbus>=0.82.2:devel/py-dbus@${PY_FLAVOR}
+OPENGPG_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}gpgme>0:security/py-gpgme@${PY_FLAVOR}
 SPELL_LIB_DEPENDS=	libgspell-1.so:textproc/gspell
 
 .include <bsd.port.mk>

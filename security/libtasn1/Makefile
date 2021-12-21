@@ -1,8 +1,7 @@
 # Created by: Sergei Kolobov <sergei@kolobov.com>
 
 PORTNAME=	libtasn1
-PORTVERSION=	4.16.0
-PORTREVISION=	1
+PORTVERSION=	4.18.0
 CATEGORIES=	security
 MASTER_SITES=	GNU \
 		GNUPG/gnutls/${PORTNAME}
@@ -12,7 +11,7 @@ COMMENT=	ASN.1 structure parser library
 
 LICENSE=	LGPL21+ GPLv3
 LICENSE_COMB=	multi
-LICENSE_FILE=	${WRKSRC}/LICENSE
+LICENSE_FILE=	${WRKSRC}/COPYING
 
 USES=		cpe libtool pathfix pkgconfig compiler
 USE_CSTD=	c99
@@ -25,9 +24,11 @@ OPTIONS_DEFINE=	DOCS
 
 TEST_TARGET=	check
 
-DOCS=		AUTHORS NEWS README.md THANKS doc/TODO \
-		doc/libtasn1.html doc/libtasn1.pdf doc/libtasn1.ps
+DOCS=		AUTHORS NEWS README.md THANKS doc/TODO
 INFO=		libtasn1
+
+DOCS_CONFIGURE_ENABLE=	gtk-doc
+DOCS_BUILD_DEPENDS=	gtkdoc-check:textproc/gtk-doc
 
 .include <bsd.port.pre.mk>
 

@@ -1,6 +1,7 @@
 PORTNAME=	esdl
 DISTVERSIONPREFIX=	esdl-
 DISTVERSION=	1.3.1
+PORTREVISION=	1
 CATEGORIES=	devel
 PKGNAMEPREFIX=	erlang-
 
@@ -9,6 +10,8 @@ COMMENT=	Library for accessing SDL and OpenGL through Erlang
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/license.terms
+
+BROKEN=		does not build with Erlang 24 (requires erl_interface)
 
 BUILD_DEPENDS=	erl:lang/erlang
 RUN_DEPENDS:=	${BUILD_DEPENDS}

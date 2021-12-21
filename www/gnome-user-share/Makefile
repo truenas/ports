@@ -16,14 +16,13 @@ LIB_DEPENDS=	libavahi-client.so:net/avahi-app \
 		libnotify.so:devel/libnotify \
 		libcanberra-gtk3.so:audio/libcanberra-gtk3 \
 		libunique-1.0.so:x11-toolkits/unique
-RUN_DEPENDS=	ap*-mod_dnssd>=0:www/mod_dnssd \
+RUN_DEPENDS=	${APACHE_PKGNAMEPREFIX}mod_dnssd>=0:www/mod_dnssd \
 		console-kit-daemon:sysutils/consolekit2
 
 USES=		apache:2.2+ gettext gmake gnome libtool pkgconfig tar:xz xorg
 USE_XORG=	sm
 USE_GNOME=	gnomeprefix gtk30 intlhack nautilus3
 GNU_CONFIGURE=	yes
-INSTALLS_ICONS=	yes
 CONFIGURE_ARGS=	--with-modules-path=${LOCALBASE}/${APACHEMODDIR} \
 		--disable-bluetooth
 CPPFLAGS+=	-I${LOCALBASE}/include

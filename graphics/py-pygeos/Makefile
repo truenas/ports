@@ -1,7 +1,7 @@
 # Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
 
 PORTNAME=	pygeos
-PORTVERSION=	0.9
+PORTVERSION=	0.10.2
 CATEGORIES=	graphics python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -17,7 +17,10 @@ BUILD_DEPENDS=	geos>=3.5:graphics/geos \
 LIB_DEPENDS=	libgeos.so:graphics/geos
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}numpy>=1.13,1:math/py-numpy@${PY_FLAVOR}
 
-USES=		python:3.6+
+USES=		python:3.7+
 USE_PYTHON=	autoplist concurrent cython distutils
+
+post-install:
+	${FIND} ${STAGEDIR}${PYTHON_SITELIBDIR} -name '*.so' -exec ${STRIP_CMD} {} +
 
 .include <bsd.port.mk>

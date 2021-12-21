@@ -1,6 +1,6 @@
---- base/process/launch_posix.cc.orig	2021-04-14 18:40:48 UTC
+--- base/process/launch_posix.cc.orig	2021-09-24 04:25:55 UTC
 +++ base/process/launch_posix.cc
-@@ -59,12 +59,14 @@
+@@ -58,12 +58,14 @@
  #if defined(OS_FREEBSD)
  #include <sys/event.h>
  #include <sys/ucontext.h>
@@ -15,7 +15,16 @@
  extern char** environ;
  
  namespace base {
-@@ -221,6 +223,28 @@ void CloseSuperfluousFds(const base::InjectiveMultimap
+@@ -183,7 +185,7 @@ void ResetChildSignalHandlersToDefaults(void) {
+ #endif  // !defined(NDEBUG)
+   }
+ }
+-#endif  // !defined(OS_LINUX) ||
++#endif  // (!defined(OS_LINUX) && !defined(OS_BSD)) ||
+         // (!defined(__i386__) && !defined(__x86_64__) && !defined(__arm__))
+ }  // anonymous namespace
+ 
+@@ -220,6 +222,28 @@ void CloseSuperfluousFds(const base::InjectiveMultimap
    DirReaderPosix fd_dir(kFDDir);
    if (!fd_dir.IsValid()) {
      // Fallback case: Try every possible fd.
@@ -44,7 +53,16 @@
      for (size_t i = 0; i < max_fds; ++i) {
        const int fd = static_cast<int>(i);
        if (fd == STDIN_FILENO || fd == STDOUT_FILENO || fd == STDERR_FILENO)
-@@ -444,22 +468,32 @@ Process LaunchProcess(const std::vector<std::string>& 
+@@ -358,7 +382,7 @@ Process LaunchProcess(const std::vector<std::string>& 
+     // might do things like block waiting for threads that don't even exist
+     // in the child.
+ 
+-#if defined(OS_LINUX) || defined(OS_CHROMEOS)
++#if defined(OS_LINUX) || defined(OS_CHROMEOS) || defined(OS_BSD)
+     // See comments on the ResetFDOwnership() declaration in
+     // base/files/scoped_file.h regarding why this is called early here.
+     subtle::ResetFDOwnership();
+@@ -451,22 +475,32 @@ Process LaunchProcess(const std::vector<std::string>& 
  
      // Set NO_NEW_PRIVS by default. Since NO_NEW_PRIVS only exists in kernel
      // 3.5+, do not check the return value of prctl here.
@@ -78,3 +96,20 @@
      }
  #endif
  
+@@ -558,7 +592,7 @@ static bool GetAppOutputInternal(
+       // DANGER: no calls to malloc or locks are allowed from now on:
+       // http://crbug.com/36678
+ 
+-#if defined(OS_LINUX) || defined(OS_CHROMEOS)
++#if defined(OS_LINUX) || defined(OS_CHROMEOS) || defined(OS_BSD)
+       // See comments on the ResetFDOwnership() declaration in
+       // base/files/scoped_file.h regarding why this is called early here.
+       subtle::ResetFDOwnership();
+@@ -750,6 +784,6 @@ pid_t ForkWithFlags(unsigned long flags, pid_t* ptid, 
+ 
+   return 0;
+ }
+-#endif  // defined(OS_LINUX) || defined(OS_CHROMEOS) || defined(OS_NACL_NONSFI)
++#endif  // defined(OS_LINUX) || defined(OS_CHROMEOS) || defined(OS_NACL_NONSFI) || defined(OS_BSD)
+ 
+ }  // namespace base

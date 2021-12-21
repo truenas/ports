@@ -5,11 +5,14 @@ PORTVERSION=	2.00
 PORTREVISION=	7
 CATEGORIES=	security
 
-MAINTAINER=	lifanov@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Advanced CPU-based password recovery utility
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/docs/license.txt
+
+DEPRECATED=	Unsupported upstream, please consider using security/hashcat
+EXPIRATION_DATE=2022-03-31
 
 ONLY_FOR_ARCHS=	amd64
 ONLY_FOR_ARCHS_REASON=	uses amd64 instructions
@@ -20,7 +23,7 @@ USE_GITHUB=	yes
 GH_ACCOUNT=	hashcat
 
 USES=		gmake
-USE_GCC=	any
+USE_GCC=	yes
 
 ALL_TARGET=	posix64 posixXOP
 

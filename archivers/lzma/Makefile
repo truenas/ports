@@ -6,10 +6,10 @@ CATEGORIES=	archivers
 MASTER_SITES=	SF/sevenzip/LZMA%20SDK/
 DISTNAME=	lzma${PORTVERSION:S/.//g}
 
-MAINTAINER=	ndowens@yahoo.com
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	High-ratio LZMA compressor
 
-CONFLICTS=	lzmautils-[0-9]* xz-[0-9]*
+CONFLICTS=	lzmautils xz
 
 USES=		7z gmake dos2unix
 NO_WRKSUBDIR=	yes

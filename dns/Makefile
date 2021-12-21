@@ -25,6 +25,7 @@
     SUBDIR += djbdns-tools
     SUBDIR += dlint
     SUBDIR += dnrd
+    SUBDIR += dns-ui
     SUBDIR += dns2blackhole
     SUBDIR += dns2tcp
     SUBDIR += dns_balance
@@ -43,8 +44,11 @@
     SUBDIR += dnsforwarder
     SUBDIR += dnshistory
     SUBDIR += dnsjava
+    SUBDIR += dnsjit
     SUBDIR += dnsmasq
+    SUBDIR += dnsmasq-devel
     SUBDIR += dnsmax-perl
+    SUBDIR += dnsperf
     SUBDIR += dnsproxy
     SUBDIR += dnsrecon
     SUBDIR += dnsreflector
@@ -76,6 +80,7 @@
     SUBDIR += gen6dns
     SUBDIR += getdns
     SUBDIR += hesiod
+    SUBDIR += hetzner_ddns
     SUBDIR += hostdb
     SUBDIR += idnkit
     SUBDIR += idnkit2
@@ -115,7 +120,6 @@
     SUBDIR += nsping
     SUBDIR += nss_mdns
     SUBDIR += nss_resinit
-    SUBDIR += opendd
     SUBDIR += opendnssec2
     SUBDIR += openresolv
     SUBDIR += p5-AnyEvent-CacheDNS
@@ -128,6 +132,7 @@
     SUBDIR += p5-DNS-Ldns
     SUBDIR += p5-DNS-Zone
     SUBDIR += p5-DNS-ZoneParse
+    SUBDIR += p5-DNS-nsdiff
     SUBDIR += p5-DSC
     SUBDIR += p5-Data-Validate-Domain
     SUBDIR += p5-IO-Async-Resolver-DNS
@@ -173,11 +178,13 @@
     SUBDIR += pear-Net_DNS2
     SUBDIR += powerdns
     SUBDIR += powerdns-recursor
+    SUBDIR += prometheus-dnssec-exporter
     SUBDIR += public_suffix_list
     SUBDIR += py-adns
     SUBDIR += py-aiodns
     SUBDIR += py-bonjour
     SUBDIR += py-cloudflare
+    SUBDIR += py-dns-crawler
     SUBDIR += py-dns-lexicon
     SUBDIR += py-dnspython
     SUBDIR += py-dnspython2

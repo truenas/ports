@@ -1,7 +1,7 @@
 # Created by: Dirk Froemberg <dirk@FreeBSD.org>
 
 PORTNAME=	openssl
-PORTVERSION=	3.0.0.a14
+PORTVERSION=	3.0.0
 CATEGORIES=	security devel
 PKGNAMESUFFIX=	-quictls
 
@@ -11,10 +11,7 @@ COMMENT=	QUIC capable fork of OpenSSL
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
-CONFLICTS_INSTALL=	libressl-[0-9]* \
-			libressl-devel-[0-9]* \
-			openssl-[0-9]* \
-			openssl-devel-[0-9]*
+CONFLICTS_INSTALL=	libressl libressl-devel openssl openssl-devel
 
 BROKEN_i386=	ld: error: undefined symbol: __atomic_is_lock_free
 
@@ -28,7 +25,7 @@ USES=		cpe perl5
 USE_PERL5=	build
 USE_GITHUB=	yes
 GH_ACCOUNT=	${PKGNAMESUFFIX:S/-//}
-GH_TAGNAME=	4fb1ff7
+GH_TAGNAME=	0ce9b022cb421b564bed9ebc9469e96258ec175d
 
 TEST_TARGET=	test
 
@@ -105,12 +102,12 @@ TLS1_2_DESC=	TLSv1.2
 WEAK-SSL-CIPHERS_DESC=	Weak cipher support (unsafe)
 
 # Upstream default disabled options
-.for _option in md2 ktls rc5 sctp ssl3 weak-ssl-ciphers zlib
+.for _option in fips md2 ktls rc5 sctp ssl3 weak-ssl-ciphers zlib
 ${_option:tu}_CONFIGURE_ON=	enable-${_option}
 .endfor
 
 # Upstream default enabled options
-.for _option in aria asm async ct des fips gost idea md4 mdc2 legacy \
+.for _option in aria asm async ct des gost idea md4 mdc2 legacy \
 	nextprotoneg rc2 rc4 rfc3779 rmd160 shared sm2 sm3 sm4 sse2 \
 	threads tls1 tls1_1 tls1_2
 ${_option:tu}_CONFIGURE_OFF=	no-${_option}
@@ -136,6 +133,8 @@ SHARED_VARS=		shlibs+="lib/libcrypto.so.${OPENSSL_SHLIBVER} \
 				lib/engines-${OPENSSL_SHLIBVER}/padlock.so"
 SSL3_CONFIGURE_ON+=	enable-ssl3-method
 ZLIB_CONFIGURE_ON=	zlib-dynamic
+
+SHLIBS=			lib/engines-${OPENSSL_SHLIBVER}/loader_attic.so
 
 .include <bsd.port.pre.mk>
 .if ${PREFIX} == /usr
@@ -181,5 +180,9 @@ post-install-SHARED-off:
 
 post-install:
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/openssl
+
+post-install-MAN3-on:
+	( cd ${STAGEDIR}/${PREFIX} ; find man/man3 -not -type d ; \
+		find man/man7 -not -type d ) | sed 's/$$/.gz/' >> ${TMPPLIST}
 
 .include <bsd.port.post.mk>

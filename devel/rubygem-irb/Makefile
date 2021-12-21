@@ -1,15 +1,15 @@
 PORTNAME=	irb
-PORTVERSION=	1.3.5
+PORTVERSION=	1.3.7
 CATEGORIES=	devel rubygems
 MASTER_SITES=	RG
 
-MAINTAINER=	meta@FreeBSD.org
+MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Interactive Ruby
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
-RUN_DEPENDS=	rubygem-reline>=0.1.5:devel/rubygem-reline
+RUN_DEPENDS=	rubygem-reline>=0.2.7:devel/rubygem-reline
 
 USES=		gem
 USE_RUBY=	yes
@@ -30,7 +30,7 @@ post-install:
 post-install:
 	${RM} ${STAGEDIR}${PREFIX}/bin/irb
 .else
-IGNORE=		${PORTNAME} is included in lang/${RUBY_NAME}
+IGNORE=		${PORTNAME} is included in ${RUBY_PORT}
 .endif
 
 .include <bsd.port.post.mk>

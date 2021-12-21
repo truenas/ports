@@ -1,5 +1,5 @@
 PORTNAME=	aiortc
-PORTVERSION=	1.1.2
+PORTVERSION=	1.2.1
 CATEGORIES=	devel multimedia python www
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -13,7 +13,7 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 LIB_DEPENDS=	libopus.so:audio/opus \
 		libvpx.so:multimedia/libvpx
 BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}cffi>=1.0.0:devel/py-cffi@${PY_FLAVOR}
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}aioice>=0.6.17:devel/py-aioice@${PY_FLAVOR} \
+RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}aioice>=0.7.5:devel/py-aioice@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}attrs>0:devel/py-attrs@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}av>=8.0.0:multimedia/py-av@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}crc32c>=2.1:devel/py-crc32c@${PY_FLAVOR} \
@@ -28,7 +28,7 @@ USE_PYTHON=	autoplist concurrent distutils
 
 .include <bsd.port.pre.mk>
 
-.if ${PYTHON_REL} < 3700
+.if ${PYTHON_REL} < 30700
 RUN_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}dataclasses>=0:devel/py-dataclasses@${PY_FLAVOR}
 .endif
 

@@ -2,7 +2,7 @@
 
 PORTNAME=	fvwm
 PORTVERSION=	2.6.9
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	x11-wm
 MASTER_SITES=	https://github.com/fvwmorg/fvwm/releases/download/${PORTVERSION}/ \
 		http://fvwm.sourceforge.net/generated/icon_download/ \
@@ -20,12 +20,12 @@ LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig \
 		libfreetype.so:print/freetype2
 
 # Other ports this port cannot coexist with
-CONFLICTS?=	fvwm1-1.* fvwm-2.[457].*
+CONFLICTS_INSTALL=	fvwm3
 
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--disable-mandoc --without-gnome --disable-gtk \
 		ac_cv_path_PYTHON=${PYTHON_CMD}
-USES=		gmake gnome perl5 pkgconfig python:3.4+ gettext readline xorg
+USES=		cpe gmake gnome perl5 pkgconfig python:3.4+ gettext readline xorg
 USE_XORG=	xcursor xft xinerama xpm xrender x11 ice xext
 USE_GNOME=	cairo
 

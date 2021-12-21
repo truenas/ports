@@ -4,7 +4,7 @@ PORTNAME=	libshout
 PORTVERSION=	2.4.5
 CATEGORIES=	audio net
 MASTER_SITES=	https://downloads.xiph.org/releases/libshout/ \
-		https://svn.xiph.org/releases/libshout/ \
+		https://ftp.osuosl.org/pub/xiph/releases/libshout/ \
 		LOCAL/sunpoet
 
 MAINTAINER=	sunpoet@FreeBSD.org
@@ -16,7 +16,7 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 LIB_DEPENDS=	libogg.so:audio/libogg \
 		libvorbis.so:audio/libvorbis
 
-USES=		gmake libtool pathfix pkgconfig ssl
+USES=		cpe gmake libtool pathfix pkgconfig ssl
 
 GNU_CONFIGURE=	yes
 INSTALL_TARGET=	install-strip

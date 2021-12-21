@@ -8,7 +8,7 @@ MASTER_SITES=	http://www.boxbackup.org/snapshots/201108/
 PKGNAMESUFFIX=	${CLIENT_OR_SERVER}-devel
 DISTNAME=	${PORTNAME}-${SVNVERSION}
 
-MAINTAINER=	portmaster@BSDforge.com
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Open-source, completely automatic on-line backup system
 
 LICENSE=	BSD3CLAUSE GPLv2
@@ -41,6 +41,7 @@ MAKE_JOBS_UNSAFE=	yes
 .if ${SSL_DEFAULT} == base
 BROKEN_FreeBSD_12=	field has incomplete type 'EVP_CIPHER_CTX' (aka 'evp_cipher_ctx_st')
 BROKEN_FreeBSD_13=	field has incomplete type 'EVP_CIPHER_CTX' (aka 'evp_cipher_ctx_st')
+BROKEN_FreeBSD_14=	field has incomplete type 'EVP_CIPHER_CTX' (aka 'evp_cipher_ctx_st')
 .endif
 
 CLIENTDIR=	CLIENT
@@ -74,13 +75,13 @@ PLIST_SUB+=	SERVER="@comment "
 .endif
 
 .if ! ${PORT_OPTIONS:MCLIENT}
-CONFLICTS=	boxbackup-client-[0-9]* boxbackup-[0-9]*
+CONFLICTS=	boxbackup-client boxbackup
 CLIENT_OR_SERVER=-server
 .elif ! ${PORT_OPTIONS:MSERVER}
-CONFLICTS=	boxbackup-server-[0-9]* boxbackup-[0-9]*
+CONFLICTS=	boxbackup-server boxbackup
 CLIENT_OR_SERVER=-client
 .else
-CONFLICTS=	boxbackup-server-[0-9]* boxbackup-client-[0-9]*
+CONFLICTS=	boxbackup-server boxbackup-client
 .endif
 
 post-patch:

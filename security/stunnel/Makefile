@@ -1,7 +1,7 @@
 # Created by: Martti Kuparinen <martti.kuparinen@ericsson.com>
 
 PORTNAME=	stunnel
-PORTVERSION=	5.58
+PORTVERSION=	5.60
 PORTEPOCH=	1
 CATEGORIES=	security
 MASTER_SITES=	https://www.stunnel.org/downloads/%SUBDIR%/ \
@@ -25,6 +25,9 @@ COMMENT=	SSL encryption wrapper for standard network daemons
 # FIXME: IMHO, there really ought to be a GPL-2+ option or some such.
 LICENSE=	GPLv2 GPLv3
 LICENSE_COMB=	dual
+
+BROKEN_SSL=	libressl libressl-devel
+BROKEN_SSL_REASON=	Missing upstream support
 
 USES=		cpe libtool perl5 shebangfix ssl
 USE_PERL5=	build

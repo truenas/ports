@@ -2,7 +2,6 @@
 
 PORTNAME=	ghc
 PORTVERSION=	${GHC_VERSION}
-PORTREVISION=	1
 CATEGORIES=	lang haskell
 MASTER_SITES=	https://www.haskell.org/ghc/dist/${PORTVERSION}/:source \
 		LOCAL/arrowd/:boot \
@@ -17,30 +16,28 @@ COMMENT=	Compiler for the functional language Haskell
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-ONLY_FOR_ARCHS=	amd64 i386 aarch64 armv6 armv7 powerpc64
+ONLY_FOR_ARCHS=	amd64 i386 aarch64 armv6 armv7
 
-USES=			autoreconf compiler:c11 gmake iconv:translit \
+USES=			autoreconf compiler:c11 gmake iconv:patch,translit \
 			localbase:ldflags ncurses perl5 tar:xz
 USE_LOCALE=		en_US.UTF-8
 USE_PERL5=		build
 GNU_CONFIGURE=		yes
-CONFIGURE_ARGS=		--with-iconv-includes=${LOCALBASE}/include \
-			--with-iconv-libraries=${LOCALBASE}/lib
-CONFIGURE_ENV=		CC=${CC} LD=${LD} PATH=${SLAVES_PREFIX}/bin:${PATH}
+CONFIGURE_ENV=		PATH=${SLAVES_PREFIX}/bin:${PATH}
 MAKE_ENV=		PATH=${SLAVES_PREFIX}/bin:${PATH}
+NO_CCACHE=		yes
 
 SUB_FILES=		build.mk
 SUB_LIST=		GHC_VERSION=${GHC_VERSION} \
 			NCURSESINC="${NCURSESBASE}/include" NCURSESLIB="${NCURSESLIB}" \
 			CFLAGS="${CFLAGS}"
 
+OPTIONS_DEFINE=		DYNAMIC GMP PROFILE DOCS
+OPTIONS_DEFAULT=	DYNAMIC PROFILE GMP
+
 OPTIONS_GROUP=		BOOTSTRAP
 BOOTSTRAP_DESC=		Bootsrap using installed ghc
 OPTIONS_GROUP_BOOTSTRAP=BOOT
-OPTIONS_DEFINE=		DYNAMIC GMP PROFILE DOCS
-OPTIONS_SUB=		yes
-
-OPTIONS_DEFAULT=	DYNAMIC PROFILE GMP
 
 BOOT_DESC=		Use installed GHC for bootstrapping
 DOCS_DESC=		Install HTML documentation
@@ -74,37 +71,27 @@ BOOT_SUB_LIST_OFF=	HSC2HS=${BOOT_HSC2HS}
 PROFILE_SUB_LIST=	WITH_PROFILE="YES"
 PROFILE_SUB_LIST_OFF=	WITH_PROFILE="NO"
 
-GHC_VERSION=		8.10.4
+GHC_VERSION=		8.10.7
 CABAL_VERSION=		3.2.1.0
 HSCOLOUR_VERSION=	1.24.4
-LLVM_VERSION=		90
+LLVM_VERSION=		10
+BOOT_GHC_VERSION=	8.10.7
 # LLVM version that bootstrap compiler uses
-BOOT_LLVM_VERSION=	90
+BOOT_LLVM_VERSION=	10
 
+OPTIONS_SUB=		yes
 PLIST_SUB=		GHC_VERSION=${GHC_VERSION} CABAL_VERSION=${CABAL_VERSION}
 
 PORTDOCS=		*
 
 .include <bsd.port.pre.mk>
 
+CONFIGURE_TARGET=	${GHC_ARCH}-portbld-${OPSYS:tl}
+
 # This version of ncurses is needed by bootstrap compiler
-.if ${OSVERSION} > 1300078 && empty(PORT_OPTIONS:MBOOT) && ${ARCH} != powerpc64
+.if ${OSVERSION} > 1300078 && empty(PORT_OPTIONS:MBOOT)
 BUILD_DEPENDS+=	${LOCALBASE}/lib/compat/libncursesw.so.8:misc/compat12x
 .endif
-
-.if ${ARCH} == powerpc64
-CONFIGURE_ARGS+=	--enable-dtrace=0
-.endif
-
-.if defined(PPC_ABI) && ${PPC_ABI} == ELFv1
-BOOT_GHC_VERSION=      8.6.3
-.elif ${ARCH} == aarch64 || ${ARCH:Marmv*}
-BOOT_GHC_VERSION=	8.10.4
-.else
-BOOT_GHC_VERSION=	8.6.5
-.endif
-
-NO_CCACHE=	ccache: error: Failed to create directory /nonexistent/.ccache/tmp: Permission denied
 
 DOCSDIR=		${PREFIX}/share/doc/${DISTNAME}
 DATADIR=		${PREFIX}/share/ghc-${GHC_VERSION}
@@ -131,42 +118,21 @@ _EXECUTABLES+=	${GHC_LIBDIR}/bin/ghc-iserv-dyn
 .endif
 
 .if empty(PORT_OPTIONS:MBOOT)
-BOOTSTRAPS_SUFFIX?=		${BOOTSTRAPS_SUFFIX_${ARCH}}
-BOOTSTRAPS_SUFFIX_powerpc64?=	-${PPC_ABI:tl}
-.  if ${OSVERSION} < 1200000 && (${ARCH} == amd64 || ${ARCH} == i386)
-ELEVEN_SUFX=		11
-.  endif
-DISTFILES+=		ghc-${BOOT_GHC_VERSION}-boot-${ARCH}-freebsd${BOOTSTRAPS_SUFFIX}${ELEVEN_SUFX}${EXTRACT_SUFX}:boot
+DISTFILES+=		ghc-${BOOT_GHC_VERSION}-boot-${ARCH}-freebsd${EXTRACT_SUFX}:boot
 .endif # MBOOT
 
 .if ${ARCH} == aarch64 || ${ARCH:Marmv*}
-# ghc-8.10.x on arm requires devel/llvm90
+# ghc-8.10.x on arm requires devel/llvm10
 # CONFIGURE_TARGET must to be the same as the llvm triple
 CONFIGURE_TARGET=	${ARCH}-unknown-freebsd${"${ARCH:Maarch64}" != "":?:-gnueabihf}
-EXTRA_PATCHES+=		${PATCHDIR}/extra-patch-aclocal.m4
+CONFIGURE_ARGS+=	--host=${CONFIGURE_TARGET}
 BUILD_DEPENDS+=		llc${LLVM_VERSION}:devel/llvm${LLVM_VERSION}
 RUN_DEPENDS+=		llc${LLVM_VERSION}:devel/llvm${LLVM_VERSION}
-CONFIGURE_ENV+=		LLC=llc${LLVM_VERSION} \
-			OPT=opt${LLVM_VERSION} \
-			CLANG=clang${LLVM_VERSION} \
-			CC=clang${LLVM_VERSION}
 
 # When GHC being compiled and GHC used for bootstrapping support different
 # LLVM versions, we have to pull in both. Luckily, this is relatively rare.
 .  if ${BOOT_LLVM_VERSION} != ${LLVM_VERSION}
 BUILD_DEPENDS+=		llc${BOOT_LLVM_VERSION}:devel/llvm${BOOT_LLVM_VERSION}
-# Keep in sync with BOOT_LLVM_VERSION
-BINARY_ALIAS+=		llc-9.0=llc90 \
-			opt-9.0=opt90
-.  endif
-.endif
-
-.if ${ARCH} == aarch64 || ${ARCH:Marmv*} || ${ARCH} == powerpc64
-.  if ${OSVERSION} < 1202000
-IGNORE=	lang/ghc requires at least FreeBSD 12.2-RELEASE
-.  endif
-.  ifdef QEMU_EMULATING
-IGNORE=	qemu-user-static isn't able to build lang/ghc, but it builds fine on a real hardware
 .  endif
 .endif
 
@@ -188,21 +154,11 @@ SLAVES_PREFIX=		${WRKDIR}/slaves_prefix
 SLAVES_WRKDIRPREFIX=	${WRKDIR}/slaves_wrkdirprefix
 
 post-patch:
-	@${REINPLACE_CMD} -e 's|%%CC%%|${CC}|; \
-		s|%%AR%%|${AR}|; \
-		s|%%LD%%|${LD}|' \
-		${WRKSRC}/libraries/Cabal/Cabal/Distribution/Simple/Program/Builtin.hs
-
 .if empty(PORT_OPTIONS:MBOOT)
 	@${REINPLACE_CMD} -e '/^mandir/d' ${BOOT_DIR}/mk/build.mk
 	@${REINPLACE_CMD} -e '/^infodir/d' ${BOOT_DIR}/mk/build.mk
 	@${REINPLACE_CMD} -e '/^docdir/d' ${BOOT_DIR}/mk/build.mk
 	@${REINPLACE_CMD} -e '/^htmldir/d' ${BOOT_DIR}/mk/build.mk
-.endif
-
-.if ${ARCH} == powerpc64 && ${PPC_ABI} == ELFv2
-	@${REINPLACE_CMD} -e 's/ELF_V1/ELF_V2/' \
-		${WRKSRC}/configure ${WRKSRC}/aclocal.m4
 .endif
 
 pre-configure:
@@ -211,14 +167,10 @@ pre-configure:
 
 # If we are using bootstrap compiler, configure and install it into ${BOOT_DIR}
 .if empty(PORT_OPTIONS:MBOOT)
-	cd ${BOOT_DIR} && ${CONFIGURE_ENV} ${CONFIGURE_CMD} --prefix=${BOOT_DIR}
+	cd ${BOOT_DIR} && ${CONFIGURE_ENV} ${CONFIGURE_ENV_BOOTSTRAP} ${CONFIGURE_CMD} --prefix=${BOOT_DIR}
 	cd ${BOOT_DIR} && PACKAGES='' ${MAKE_CMD} install
-.else
-# otherwise, make sure we have "ghc" in PATH
-	if ! ${WHICH} -s ghc ; then \
-		echo "No 'ghc' executable is found in your PATH! Turn off BOOT option." ; false ; \
-	fi
 .endif
+
 # If DOCS are set, install HsColour in-place
 .if ${PORT_OPTIONS:MDOCS}
 	${MKDIR} ${SLAVES_PREFIX}

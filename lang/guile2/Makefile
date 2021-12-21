@@ -18,11 +18,13 @@ LIB_DEPENDS=	libgmp.so:math/gmp \
 		libunistring.so:devel/libunistring \
 		libffi.so:devel/libffi
 
-USES=		charsetfix compiler:c11 gmake iconv libtool makeinfo ncurses pathfix \
+USES=		charsetfix compiler:c11 cpe gmake iconv libtool makeinfo ncurses pathfix \
 		pkgconfig readline tar:lz
 USE_LDCONFIG=	yes
 
-CONFLICTS_INSTALL=	guile-[0-9]*
+CPE_VENDOR=	gnu
+
+CONFLICTS_INSTALL=	guile
 
 MAKE_JOBS_UNSAFE=	yes
 
@@ -57,6 +59,7 @@ post-patch:
 		${WRKSRC}/configure
 	@${REINPLACE_CMD} -e 's|-i -e|-i.bak -e|' \
 		${WRKSRC}/libguile/Makefile.in
+	@${RM} -r ${WRKSRC}/prebuilt/32-bit-big-endian
 
 post-patch-THREADS-on:
 	@${REINPLACE_CMD} -e 's|bdw-gc|bdw-gc-threaded|g' ${WRKSRC}/configure

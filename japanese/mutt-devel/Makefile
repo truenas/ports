@@ -50,7 +50,7 @@ BROKEN_aarch64=		fails to compile: conflicting types for __wcwidth
 BROKEN_armv6=		fails to compile: conflicting types for __wcwidth
 BROKEN_armv7=		fails to compile: conflicting types for __wcwidth
 
-CONFLICTS=	ja-mutt-[0-9]* mutt-[0-9]* mutt-devel-[0-9]* mutt-devel-lite-[0-9]* mutt-lite-[0-9]* zh-mutt-devel-[0-9]*
+CONFLICTS=	ja-mutt mutt mutt-devel mutt-devel-lite mutt-lite zh-mutt-devel
 
 VERSION=	1.5.21
 JP_VERSION=	1
@@ -59,7 +59,7 @@ MANJADATE=	20050813
 
 FETCH_BEFORE_ARGS=	-A	# ha4.seikyou.ne.jp is running broken httpd
 
-USES=		gmake iconv ncurses shebangfix autoreconf fakeroot ssl
+USES=		cpe gmake iconv ncurses shebangfix autoreconf fakeroot ssl
 SHEBANG_FILES=	smime_keys.pl contrib/smime_keys_test.pl
 GNU_CONFIGURE=	yes
 WRKSRC=		${WRKDIR}/mutt-${VERSION}

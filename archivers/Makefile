@@ -1,5 +1,6 @@
     COMMENT = Archivers
 
+    SUBDIR += 7-zip
     SUBDIR += 9e
     SUBDIR += R-cran-zip
     SUBDIR += advancecomp
@@ -13,6 +14,7 @@
     SUBDIR += bzip
     SUBDIR += bzip2
     SUBDIR += c-blosc
+    SUBDIR += c-blosc2
     SUBDIR += cabextract
     SUBDIR += cmdpack
     SUBDIR += dact
@@ -20,6 +22,7 @@
     SUBDIR += deco
     SUBDIR += deutex
     SUBDIR += dpkg
+    SUBDIR += draco
     SUBDIR += dzip
     SUBDIR += engrampa
     SUBDIR += erlang-snappy
@@ -53,6 +56,7 @@
     SUBDIR += lib1541img
     SUBDIR += libarc
     SUBDIR += libarchive
+    SUBDIR += libarchive-qt
     SUBDIR += libcabinet
     SUBDIR += libcomprex
     SUBDIR += libdeflate
@@ -65,11 +69,13 @@
     SUBDIR += libunrar
     SUBDIR += libunrar6
     SUBDIR += libzip
+    SUBDIR += libzippp
     SUBDIR += linux-c7-lz4
     SUBDIR += lizard
     SUBDIR += lrzip
     SUBDIR += lua-lzlib
     SUBDIR += lua-zlib
+    SUBDIR += lxqt-archiver
     SUBDIR += lzfse
     SUBDIR += lzip
     SUBDIR += lziprecover
@@ -110,6 +116,7 @@
     SUBDIR += p5-Compress-Raw-Lzma
     SUBDIR += p5-Compress-Raw-Zlib
     SUBDIR += p5-Compress-Snappy
+    SUBDIR += p5-Compress-Zstd
     SUBDIR += p5-Gzip-Faster
     SUBDIR += p5-IO-Compress
     SUBDIR += p5-IO-Compress-Brotli
@@ -131,7 +138,6 @@
     SUBDIR += paq
     SUBDIR += par
     SUBDIR += par2cmdline
-    SUBDIR += par2cmdline-tbb
     SUBDIR += parchive
     SUBDIR += pbzip2
     SUBDIR += pear-File_Archive
@@ -169,7 +175,9 @@
     SUBDIR += py-acefile
     SUBDIR += py-borgbackup
     SUBDIR += py-brotli
+    SUBDIR += py-brotlicffi
     SUBDIR += py-brotlipy
+    SUBDIR += py-bup
     SUBDIR += py-bz2file
     SUBDIR += py-libarchive-c
     SUBDIR += py-lz4
@@ -213,6 +221,7 @@
     SUBDIR += snzip
     SUBDIR += squsq
     SUBDIR += star
+    SUBDIR += streamvbyte
     SUBDIR += stuffit
     SUBDIR += szip
     SUBDIR += tar-stream-chunker
@@ -233,6 +242,7 @@
     SUBDIR += unmass
     SUBDIR += unrar
     SUBDIR += unrar-iconv
+    SUBDIR += unrpa
     SUBDIR += unshield
     SUBDIR += unzip
     SUBDIR += unzoo
@@ -240,6 +250,7 @@
     SUBDIR += urbackup-client
     SUBDIR += urbackup-server
     SUBDIR += v1541commander
+    SUBDIR += vbz-compression
     SUBDIR += xar
     SUBDIR += xarchive
     SUBDIR += xarchiver

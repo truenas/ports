@@ -2,7 +2,7 @@
 
 PORTNAME=	llvm
 PORTVERSION=	${LLVM_MAJOR}.0.d${SNAPDATE}
-PORTREVISION=	1
+PORTREVISION=	0
 CATEGORIES=	devel lang
 PKGNAMESUFFIX=	${LLVM_SUFFIX}
 
@@ -13,7 +13,7 @@ LICENSE_DIR=	${WRKSRC}/llvm
 .include "Makefile.LICENSE"
 LICENSE+=	LLVM2
 LICENSE_FILE_LLVM2=	${LICENSE_DIR}/LICENSE.TXT
-LICENSE_NAME_LLVM2= 	Apache License 2.0 with LLVM Exceptions
+LICENSE_NAME_LLVM2=	Apache License 2.0 with LLVM Exceptions
 LICENSE_PERMS_LLVM2=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
 LICENSE:=	${LICENSE:NARM}
 
@@ -22,23 +22,32 @@ FLAVOR?=	${FLAVORS:[1]}
 lite_PKGNAMESUFFIX=	${LLVM_SUFFIX}-lite
 
 LLVM_SUFFIX=	-devel
-LLVM_PREFIX=	${PREFIX}/llvm${LLVM_SUFFIX}
+LLVM_DIR=	llvm${LLVM_SUFFIX}
+LLVM_PREFIX=	${PREFIX}/${LLVM_DIR}
 DOCSDIR=	${PREFIX}/share/doc/${PORTNAME}${LLVM_SUFFIX}
 DATADIR=	${PREFIX}/share/${PORTNAME}${LLVM_SUFFIX}
 
 BUILD_DEPENDS=
 
-USES=		cmake compiler:c++11-lib shebangfix
+USES=		cmake compiler:c++11-lib cpe shebangfix
 USE_LDCONFIG=	${LLVM_PREFIX}/lib
 _USES_PYTHON?=	python:build,3.6+
 USES+=		${_USES_PYTHON}
-SHEBANG_FILES=	flang/tools/f18/flang \
-		llvm/utils/lit/lit.py \
-		llvm/utils/llvm-lit/llvm-lit.in \
+SHEBANG_FILES=	\
+		clang/tools/scan-build-py/bin/analyze-build \
+		clang/tools/scan-build-py/bin/intercept-build \
+		clang/tools/scan-build-py/bin/scan-build \
+		clang/tools/scan-build-py/libexec/analyze-cc \
+		clang/tools/scan-build-py/libexec/analyze-c++ \
+		clang/tools/scan-build-py/libexec/intercept-cc \
+		clang/tools/scan-build-py/libexec/intercept-c++ \
+		flang/tools/f18/flang \
 		llvm/tools/opt-viewer/optrecord.py \
 		llvm/tools/opt-viewer/opt-diff.py \
 		llvm/tools/opt-viewer/opt-stats.py \
-		llvm/tools/opt-viewer/opt-viewer.py
+		llvm/tools/opt-viewer/opt-viewer.py \
+		llvm/utils/lit/lit.py \
+		llvm/utils/llvm-lit/llvm-lit.in
 
 SUB_FILES=	llvm-wrapper.sh
 SUB_LIST=	LLVM_PREFIX="${LLVM_PREFIX}" LLVM_SUFFIX="${LLVM_SUFFIX}"
@@ -70,7 +79,6 @@ CXXFLAGS+=	-DNDEBUG
 
 USE_GITHUB=	yes
 GH_PROJECT=	llvm-project
-GH_ACCOUNT=	llvm
 GH_TAGNAME=	${LLVM_PROJECT_COMMIT}
 
 .include "Makefile.snapshot"
@@ -81,14 +89,19 @@ OPTIONS_DEFAULT=	CLANG LLD
 OPTIONS_DEFINE+=	EXTRAS FLANG LIT LLDB MLIR
 OPTIONS_DEFINE_amd64=	COMPILER_RT GOLD OPENMP
 OPTIONS_DEFINE_i386=	COMPILER_RT OPENMP
+OPTIONS_DEFINE_powerpc=	GOLD
 OPTIONS_DEFINE_powerpc64=	GOLD OPENMP
-OPTIONS_DEFAULT+=	EXTRAS FLANG LIT LLDB MLIR
+OPTIONS_DEFINE_powerpc64le=	GOLD OPENMP
+OPTIONS_DEFAULT+=	EXTRAS FLANG LIT LLDB MLIR STATIC_LIBS
 OPTIONS_DEFAULT_amd64=	COMPILER_RT GOLD OPENMP
 OPTIONS_DEFAULT_i386=	COMPILER_RT OPENMP
-OPTIONS_DEFAULT_powerpc64=     ${OPTIONS_DEFAULT_powerpc64_${OSREL:R}} OPENMP
-OPTIONS_DEFAULT_powerpc64_13=  GOLD
-OPTIONS_DEFAULT_powerpc64_14=  GOLD
+OPTIONS_DEFAULT_powerpc=	GOLD
+OPTIONS_DEFAULT_powerpc64=	${OPTIONS_DEFAULT_powerpc64_${OSREL:R}} OPENMP
+OPTIONS_DEFAULT_powerpc64_13=	GOLD
+OPTIONS_DEFAULT_powerpc64_14=	GOLD
+OPTIONS_DEFAULT_powerpc64le=	GOLD OPENMP
 OPTIONS_EXCLUDE_i386=	FLANG
+OPTIONS_EXCLUDE_powerpc=	FLANG
 .endif
 OPTIONS_SUB=	yes
 _ALL_OPTIONS=	CLANG COMPILER_RT DOCS EXTRAS FLANG GOLD LIT LLD LLDB MLIR \
@@ -122,10 +135,12 @@ COMPILER_RT_DESC=	Sanitizer libraries
 # but this seems to work as a workaround...
 COMPILER_RT_BUILD_DEPENDS=	libunwind>0:devel/libunwind
 COMPILER_RT_IMPLIES=	CLANG
+# Allow unwind.h to be found reliably
+COMPILER_RT_USES=	localbase
 COMPILER_RT_PLIST_FILES=${_COMPILER_RT_LIBS:S|^|${_CRTLIBDIR}/|} \
-			${_COMPILER_RT_BLACKLISTS:S|^|${_CRTBLDIR}/|}
+			${_COMPILER_RT_IGNORELISTS:S|^|${_CRTBLDIR}/|}
 DOCS_PORTDOCS=		llvm
-DOCS_BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}sphinx>=0,1:textproc/py-sphinx@${PY_FLAVOR} \
+DOCS_BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}sphinx-markdown-tables>=0:textproc/py-sphinx-markdown-tables@${PY_FLAVOR} \
 			${PYTHON_PKGNAMEPREFIX}recommonmark>=0.0.20180530:textproc/py-recommonmark@${PY_FLAVOR}
 DOCS_CMAKE_ON=		-DLLVM_ENABLE_SPHINX=ON \
 			-DSPHINX_EXECUTABLE=${LOCALBASE}/bin/sphinx-build-${PYTHON_VER} \
@@ -134,13 +149,11 @@ DOCS_CMAKE_ON=		-DLLVM_ENABLE_SPHINX=ON \
 DOCS_PLIST_FILES=	${MAN1SRCS:S|^|man/man1/|:S|.1$|${LLVM_SUFFIX}.1.gz|}
 EXTRAS_DESC=		Extra clang tools
 EXTRAS_IMPLIES=		CLANG
-EXTRAS_PLIST_DIRS=	${LLVM_PREFIX:S|${PREFIX}/||}/include/clang-tidy/plugin
+EXTRAS_PLIST_DIRS=	${LLVM_DIR}/include/clang-tidy/plugin
 FLANG_DESC=		Flang FORTRAN compiler
 FLANG_IMPLIES=		MLIR
-#FLANG_PORTDOCS=		flang
-FLANG_PLIST_DIRS=	${LLVM_PREFIX:S|${PREFIX}/||}/include/flang/Config
-# Docs require sphinx-markdown-tables which requires py-markdown > 3.0.1
-FLANG_CMAKE_ON=		-DFLANG_INCLUDE_DOCS=OFF
+FLANG_PORTDOCS=		flang
+FLANG_PLIST_DIRS=	${LLVM_DIR}/include/flang/Config
 LIT_DESC=		Install lit and FileCheck test tools
 LLD_DESC=		Install lld, the LLVM linker
 LLDB_BUILD_DEPENDS=	swig:devel/swig
@@ -152,7 +165,7 @@ LLDB_VARS=		_USES_PYTHON=python:3.6+
 MLIR_DESC=		Multi-Level Intermediate Representation
 OPENMP_DESC=		Install libomp, the LLVM OpenMP runtime library
 OPENMP_PORTDOCS=	openmp
-OPENMP_CONFLICTS_INSTALL=	libiomp5-devel-*
+OPENMP_CONFLICTS_INSTALL=	libiomp5-devel
 OPENMP_USES=		perl5
 OPENMP_USE=		PERL5=build
 STATIC_LIBS_DESC=	Install static libraries (does not effect sanitizers)
@@ -195,6 +208,7 @@ MAN1SRCS+=	bugpoint.1 \
 		llvm-nm.1 \
 		llvm-objcopy.1 \
 		llvm-objdump.1 \
+		llvm-otool.1 \
 		llvm-pdbutil.1 \
 		llvm-profdata.1 \
 		llvm-profgen.1 \
@@ -208,7 +222,8 @@ MAN1SRCS+=	bugpoint.1 \
 		llvm-symbolizer.1 \
 		llvm-tblgen.1 \
 		mlir-tblgen.1 \
-		opt.1
+		opt.1 \
+		tblgen.1
 
 STRIP_LIBS=	BugpointPasses.so \
 		LLVMHello.so \
@@ -236,7 +251,7 @@ EXTRAS_LIBS=	\
 EXTRAS_FILES=	index.js
 EXTRAS_PATTERN=	${EXTRAS_COMMANDS:tW:C/  */|/g}|${EXTRAS_LIBS:tW:C/  */|/g}|${EXTRAS_FILES:tW:C/  */|/g}
 
-FLANG_PATTERN=	${FLANG_COMMANDS:S/^/bin./:tW:C/  */|/g}|flang|libFIROptimizer|libFortran
+FLANG_PATTERN=	${FLANG_COMMANDS:S/^/bin./:tW:C/  */|/g}|flang|libFIR|libFortran
 
 MLIR_PATTERN=	${MLIR_COMMANDS:S/^/bin./:tW:C/  */|/g}|mlir|libMLIR
 
@@ -264,8 +279,8 @@ COMMANDS+=	${CLANG_COMMANDS}
 MAN1SRCS+=	clang.1 \
 		diagtool.1 \
 		scan-build.1
-CLANG_PATTERN=	(c-index-test|clang|diagtool|hmaptool|scan-|Reporter.py|ScanView.py|scanview.css|sorttable.js|startfile.py|-analyzer)
-SHEBANG_FILES+= clang/tools/clang-format/git-clang-format \
+CLANG_PATTERN=	(c-index-test|clang|diagtool|hmaptool|intercept-|libear|libscanbuild|analyze-|scan-|Reporter.py|ScanView.py|scanview.css|sorttable.js|startfile.py|-analyzer)
+SHEBANG_FILES+=	clang/tools/clang-format/git-clang-format \
 		clang/tools/clang-format/clang-format-diff.py \
 		clang/tools/scan-view/bin/scan-view \
 		clang/utils/hmaptool/hmaptool
@@ -314,9 +329,10 @@ COMMANDS+=	${MLIR_COMMANDS}
 
 .if ${PORT_OPTIONS:MOPENMP}
 LLVM_ENABLE_PROJECTS+=	openmp
-MAN1SRCS+=		llvmopenmp.1
+MAN1SRCS+=	llvmopenmp.1
+COMMANDS+=	${OPENMP_COMMANDS}
 .endif
-OPENMP_PATTERN=	libarcher|lib[ig]*omp|omp.h|ompt.h|ompt-multiplex.h|omp-tools.h
+OPENMP_PATTERN=	${OPENMP_COMMANDS:tW:C/  */|/g}|cmake\/openmp|libarcher|lib[ig]*omp|omp.h|ompt.h|ompt-multiplex.h|omp-tools.h
 
 .if defined(LLVM_ENABLE_PROJECTS)
 CMAKE_ARGS+=	-DLLVM_ENABLE_PROJECTS="${LLVM_ENABLE_PROJECTS:ts;}"
@@ -330,12 +346,29 @@ CMAKE_BUILD_TYPE=	RelWithDebInfo
 STRIP=
 .endif
 
-_CRTLIBDIR=	${LLVM_PREFIX:S|${PREFIX}/||}/lib/clang/${LLVM_RELEASE}/lib/freebsd
-_CRTBLDIR=	${LLVM_PREFIX:S|${PREFIX}/||}/lib/clang/%%LLVM_RELEASE%%/share
-_COMPILER_RT_BLACKLISTS=	cfi_blacklist.txt
+_CRTLIBDIR=	${LLVM_DIR}/lib/clang/${LLVM_RELEASE}/lib/freebsd
+_CRTBLDIR=	${LLVM_DIR}/lib/clang/%%LLVM_RELEASE%%/share
+_COMPILER_RT_IGNORELISTS=	cfi_ignorelist.txt
+_COMPILER_RT_LIBS_i386= \
+	libclang_rt.asan-i386.a \
+	libclang_rt.asan-i386.so \
+	libclang_rt.asan-preinit-i386.a \
+	libclang_rt.asan_cxx-i386.a \
+	libclang_rt.builtins-i386.a \
+	libclang_rt.cfi-i386.a \
+	libclang_rt.cfi_diag-i386.a \
+	libclang_rt.profile-i386.a \
+	libclang_rt.safestack-i386.a \
+	libclang_rt.stats-i386.a \
+	libclang_rt.stats_client-i386.a \
+	libclang_rt.ubsan_minimal-i386.a \
+	libclang_rt.ubsan_minimal-i386.so \
+	libclang_rt.ubsan_standalone-i386.a \
+	libclang_rt.ubsan_standalone-i386.so \
+	libclang_rt.ubsan_standalone_cxx-i386.a
 .if ${ARCH} == "amd64"
-_COMPILER_RT_BLACKLISTS+=	asan_blacklist.txt
-_COMPILER_RT_BLACKLISTS+=	msan_blacklist.txt
+_COMPILER_RT_IGNORELISTS+=	asan_ignorelist.txt
+_COMPILER_RT_IGNORELISTS+=	msan_ignorelist.txt
 _COMPILER_RT_LIBS= \
 	libclang_rt.asan-preinit-x86_64.a \
 	libclang_rt.asan-x86_64.a \
@@ -359,6 +392,7 @@ _COMPILER_RT_LIBS= \
 	libclang_rt.xray-fdr-x86_64.a \
 	libclang_rt.xray-profiling-x86_64.a \
 	libclang_rt.xray-x86_64.a \
+	libclang_rt.orc-x86_64.a \
 	libclang_rt.profile-x86_64.a \
 	libclang_rt.safestack-x86_64.a \
 	libclang_rt.stats-x86_64.a \
@@ -375,26 +409,13 @@ _COMPILER_RT_LIBS= \
 	libclang_rt.ubsan_standalone-x86_64.so \
 	libclang_rt.ubsan_standalone_cxx-x86_64.a \
 	libclang_rt.ubsan_standalone_cxx-x86_64.a.syms
+.if exists(/usr/lib32/libc.so.7)
+_COMPILER_RT_LIBS+=	${_COMPILER_RT_LIBS_i386}
+.endif
 .endif
 .if ${ARCH} == "i386"
-_COMPILER_RT_BLACKLISTS+=	asan_blacklist.txt
-_COMPILER_RT_LIBS+= \
-	libclang_rt.asan-i386.a \
-	libclang_rt.asan-i386.so \
-	libclang_rt.asan-preinit-i386.a \
-	libclang_rt.asan_cxx-i386.a \
-	libclang_rt.builtins-i386.a \
-	libclang_rt.cfi-i386.a \
-	libclang_rt.cfi_diag-i386.a \
-	libclang_rt.profile-i386.a \
-	libclang_rt.safestack-i386.a \
-	libclang_rt.stats-i386.a \
-	libclang_rt.stats_client-i386.a \
-	libclang_rt.ubsan_minimal-i386.a \
-	libclang_rt.ubsan_minimal-i386.so \
-	libclang_rt.ubsan_standalone-i386.a \
-	libclang_rt.ubsan_standalone-i386.so \
-	libclang_rt.ubsan_standalone_cxx-i386.a
+_COMPILER_RT_IGNORELISTS+=	asan_ignorelist.txt
+_COMPILER_RT_LIBS+=	${_COMPILER_RT_LIBS_i386}
 .endif
 
 # Comment out plist entries for unsupported options.
@@ -461,10 +482,12 @@ post-install-CLANG-on:
 	${INSTALL_DATA} ${WRKDIR}/xtoolchain.mk \
 	    ${STAGEDIR}${PREFIX}/share/toolchains/llvm${LLVM_SUFFIX}.mk
 
-post-install-COMPILER_RT-on:
-.if ${ARCH} == "amd64"
-	${RM} ${STAGEDIR}${LLVM_PREFIX}/lib/clang/${LLVM_RELEASE}/lib/freebsd/libclang_rt*i386*
-.endif
+post-install-FLANG-on:
+	${RMDIR} ${STAGEDIR}${LLVM_PREFIX}/include/flang/Optimizer/CodeGen/CMakeFiles
+	${RMDIR} ${STAGEDIR}${LLVM_PREFIX}/include/flang/Optimizer/Dialect/CMakeFiles
+	${RMDIR} ${STAGEDIR}${LLVM_PREFIX}/include/flang/Optimizer/Transforms/CMakeFiles
+	${RMDIR} ${STAGEDIR}${LLVM_PREFIX}/include/flang/Optimizer/CMakeFiles
+	${RMDIR} ${STAGEDIR}${LLVM_PREFIX}/include/flang/CMakeFiles
 
 post-install-STATIC_LIBS-off:
 	${RM} ${STAGEDIR}${LLVM_PREFIX}/lib/lib*.a
@@ -474,16 +497,16 @@ post-install-LIT-on:
 	    ${STAGEDIR}${LLVM_PREFIX}/bin/lit
 	${LN} -f ${STAGEDIR}${LLVM_PREFIX}/bin/lit \
 	    ${STAGEDIR}${LLVM_PREFIX}/bin/llvm-lit
-	${LN} -f ${STAGEDIR}${LLVM_PREFIX}/bin/lit \
+	${LN} -fs ../${LLVM_DIR}/bin/lit \
 	    ${STAGEDIR}${PREFIX}/bin/lit${LLVM_SUFFIX}
-	${LN} -f ${STAGEDIR}${LLVM_PREFIX}/bin/lit \
+	${LN} -fs ../${LLVM_DIR}/bin/lit \
 	    ${STAGEDIR}${PREFIX}/bin/llvm-lit${LLVM_SUFFIX}
 	${MKDIR} ${STAGEDIR}${PYTHONPREFIX_SITELIBDIR}/lit${LLVM_SUFFIX}
 	${INSTALL_DATA} ${WRKSRC}/llvm/utils/lit/lit/*.py \
 	    ${STAGEDIR}${PYTHONPREFIX_SITELIBDIR}/lit${LLVM_SUFFIX}
 	${INSTALL_PROGRAM} ${WRKDIR}/.build/bin/FileCheck \
 	    ${STAGEDIR}${LLVM_PREFIX}/bin/
-	${LN} -f ${STAGEDIR}${LLVM_PREFIX}/bin/FileCheck \
+	${LN} -fs ../${LLVM_DIR}/bin/FileCheck \
 	    ${STAGEDIR}${PREFIX}/bin/FileCheck${LLVM_SUFFIX}
 
 post-install-LLD-on:
@@ -507,10 +530,10 @@ build-plist:
 .endfor
 .for command in ${LIT_COMMANDS}
 	${ECHO_CMD} %%LIT%%bin/${command}${LLVM_SUFFIX} >> ${PLIST}.tmp
-	${ECHO_CMD} %%LIT%%${LLVM_PREFIX:S|${PREFIX}/||}/bin/${command} >> ${PLIST}.tmp
+	${ECHO_CMD} %%LIT%%${LLVM_DIR}/bin/${command} >> ${PLIST}.tmp
 .endfor
 	${FIND} ${STAGEDIR}${LLVM_PREFIX} -type f -o -type l | \
-	    ${GREP} -v '_blacklist.txt$$' | \
+	    ${GREP} -v '_ignorelist.txt$$' | \
 	    ${GREP} -v '[/-]lit$$' | ${GREP} -v 'FileCheck$$' | \
 	    ${GREP} -v man/man1 | ${SED} -e 's|${STAGEDIR}${PREFIX}/||' \
 	    -e 's|${PYTHON_SITELIBDIR:C|${PREFIX}/||}|%%PYTHON_SITELIBDIR%%|' \
@@ -526,7 +549,7 @@ build-plist:
 	    -e 's|${LLVM_MAJOR:C/\./\\./}|%%LLVM_MAJOR%%|' | \
 	    ${SORT} >> ${PLIST}.tmp
 	awk '{ \
-	    if ($$0 ~ /lib.lib[a-zA-Z].*\.a/) {printf "%%%%STATIC_LIBS%%%%"} \
+	    if ($$0 ~ /lib.lib[a-zA-Z].*\.a$$/) {printf "%%%%STATIC_LIBS%%%%"} \
 	    if ($$0 ~ /${CLANG_PATTERN}/ && $$0 !~ /${OPENMP_PATTERN}|${EXTRAS_PATTERN}|${COMPILER_RT_PATTERN}|libclang_rt/) {printf "%%%%CLANG%%%%"} \
 	    if ($$0 ~ /${COMPILER_RT_PATTERN}/) \
 		{printf "%%%%COMPILER_RT%%%%"} \

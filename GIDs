@@ -230,17 +230,17 @@ webdis:*:287:
 ntopng:*:288:
 victoria-metrics:*:289:
 _gmid:*:290:
-# free: 291
-# free: 292
-# free: 293
-# free: 294
-# free: 295
-# free: 296
-# free: 297
-# free: 298
+pydio:*:291:
+sftpgo:*:292:
+biboumi:*:293:
+krill:*:294:
+jottad:*:295:
+writefreely:*:296:
+conduit:*:297:
+neolink:*:298:
 owncast:*:299:
 backuppc:*:300:
-# free: 301
+openvpn:*:301:
 netdata:*:302:
 # free: 303
 # free: 304
@@ -296,8 +296,8 @@ _iodined:*:353:
 jackett:*:354:
 nzbhydra2:*:355:
 lidarr:*:356:
-# free: 357
-# free: 358
+bazarr:*:357:
+autoscan:*:358:
 # free: 359
 v2ray:*:360:
 httptunnel:*:361:
@@ -392,7 +392,7 @@ callweaver:*:444:
 ecartis:*:450:
 # free: 451
 # free: 452
-# free: 453
+yadifa:*:453:
 # free: 454
 inadyn:*:455:
 # free: 456
@@ -795,7 +795,7 @@ cassandra:*:851:
 p0f:*:852:
 _geodns:*:853:
 ebusd:*:854:
-# free: 855
+opensearch:*:855:
 # free: 856
 # free: 857
 # free: 858
@@ -815,9 +815,9 @@ ebusd:*:854:
 bitmark:*:872:
 bitmark-recorder:*:873:
 librespeed:*:874:
-# free: 875
-# free: 876
-# free: 877
+cfssl:*:875:
+_lms:*:876:
+gemserv:*:877:
 gerbera:*:878:
 _encrypted-dns:*:879:
 pyspf-milter:*:880:

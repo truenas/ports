@@ -1,5 +1,5 @@
 PORTNAME=	endless-sky
-PORTVERSION=	0.9.12
+PORTVERSION=	0.9.14
 DISTVERSIONPREFIX=	v
 CATEGORIES=	games
 
@@ -18,7 +18,6 @@ USE_GITHUB=	yes
 USES=		compiler:c++11-lang gl gnome jpeg localbase:ldflags openal scons sdl xorg
 USE_SDL=	sdl2
 USE_GL=		gl glew
-INSTALLS_ICONS=	yes
 
 LDFLAGS_i386=	-Wl,-znotext
 

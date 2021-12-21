@@ -1,7 +1,7 @@
 # Created by: Cheng-Lung Sung <clsung@FreeBSD.org>
 
 PORTNAME=	json
-PORTVERSION=	2.3.1
+PORTVERSION=	2.5.1
 CATEGORIES=	devel rubygems
 MASTER_SITES=	RG
 
@@ -11,7 +11,7 @@ COMMENT=	Parse JSON texts and generate them from ruby data structures
 LICENSE=	BSD2CLAUSE RUBY
 LICENSE_COMB=	dual
 
-USE_RUBY=	yes
 USES=		gem
+USE_RUBY=	yes
 
 .include <bsd.port.mk>

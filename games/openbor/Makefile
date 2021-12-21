@@ -1,8 +1,8 @@
 PORTNAME=	openbor
 # Hint: svn revision is git rev-list --count ${GH_TAGNAME}
-PORTVERSION?=	7103
+PORTVERSION?=	7138
 .ifndef PKGNAMESUFFIX
-PORTREVISION=	0
+PORTREVISION=	1
 .endif
 CATEGORIES=	games
 
@@ -36,9 +36,9 @@ PORTSCOUT=	ignore:1
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	DCurrent
-GH_TAGNAME?=	78764f05
+GH_TAGNAME?=	3caaddd5
 
-USES+=		gmake pkgconfig sdl
+USES+=		cpe gmake pkgconfig sdl
 .if ${PORTVERSION} < 4433
 USE_CSTD=	gnu89
 .endif
@@ -101,6 +101,7 @@ post-patch:
 		's,malloc\.h,stdlib.h,'
 	@${REINPLACE_CMD} -e 's/^function \(.*\) {/\1() {/' \
 		-e '/^[[:space:]]*VERSION_.*=0000/d' \
+		-e '/.*read -r VERSION_/d' \
 		${WRKSRC}/version.sh
 
 do-configure:

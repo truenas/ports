@@ -30,6 +30,7 @@
     SUBDIR += R-cran-qcc
     SUBDIR += R-cran-rgdal
     SUBDIR += R-cran-rtiff
+    SUBDIR += R-cran-s2
     SUBDIR += R-cran-scales
     SUBDIR += R-cran-shape
     SUBDIR += R-cran-viridis
@@ -42,6 +43,7 @@
     SUBDIR += acidwarp
     SUBDIR += acidwarp-sdl
     SUBDIR += agg
+    SUBDIR += airsaned
     SUBDIR += akira
     SUBDIR += alembic
     SUBDIR += aloadimage
@@ -75,6 +77,7 @@
     SUBDIR += blend2d
     SUBDIR += blender
     SUBDIR += blender-doc
+    SUBDIR += blender-lts28
     SUBDIR += bmeps
     SUBDIR += bmp2html
     SUBDIR += bonzomatic
@@ -105,6 +108,7 @@
     SUBDIR += comical
     SUBDIR += compupic
     SUBDIR += converseen
+    SUBDIR += corrupter
     SUBDIR += cosmoplayer
     SUBDIR += cptutils
     SUBDIR += crw
@@ -141,7 +145,6 @@
     SUBDIR += drawpile
     SUBDIR += drm-current-kmod
     SUBDIR += drm-devel-kmod
-    SUBDIR += drm-fbsd11.2-kmod
     SUBDIR += drm-fbsd12.0-kmod
     SUBDIR += drm-fbsd13-kmod
     SUBDIR += drm-kmod
@@ -149,6 +152,7 @@
     SUBDIR += dspdfviewer
     SUBDIR += dssim
     SUBDIR += duhdraw
+    SUBDIR += dust3d
     SUBDIR += dynamechs
     SUBDIR += ebsynth
     SUBDIR += edje_viewer
@@ -281,6 +285,7 @@
     SUBDIR += gocr
     SUBDIR += goocanvas
     SUBDIR += goocanvas2
+    SUBDIR += goocanvas3
     SUBDIR += goocanvasmm2
     SUBDIR += goom
     SUBDIR += gource
@@ -372,7 +377,6 @@
     SUBDIR += jp2a
     SUBDIR += jpatch
     SUBDIR += jpeg-turbo
-    SUBDIR += jpeg-xl
     SUBDIR += jpeginfo
     SUBDIR += jpegoptim
     SUBDIR += jpgtn
@@ -419,6 +423,7 @@
     SUBDIR += lensfun
     SUBDIR += lepton
     SUBDIR += leptonica
+    SUBDIR += lerc
     SUBDIR += lfview
     SUBDIR += lib3ds
     SUBDIR += libGLU
@@ -453,14 +458,17 @@
     SUBDIR += libgphoto2
     SUBDIR += libgxps
     SUBDIR += libheif
+    SUBDIR += libimagequant
     SUBDIR += libimg
     SUBDIR += libiptcdata
     SUBDIR += libjpeg-turbo
+    SUBDIR += libjxl
     SUBDIR += libjxr
     SUBDIR += libkdcraw
     SUBDIR += libkexiv2
     SUBDIR += libkipi
     SUBDIR += libksane
+    SUBDIR += libliftoff
     SUBDIR += liblqr-1
     SUBDIR += liblug
     SUBDIR += libmng
@@ -563,6 +571,7 @@
     SUBDIR += nomacs
     SUBDIR += nplot
     SUBDIR += npretty
+    SUBDIR += nsxiv
     SUBDIR += nurbs++
     SUBDIR += nvidia-texture-tools
     SUBDIR += ocaml-images
@@ -595,11 +604,14 @@
     SUBDIR += openrm
     SUBDIR += openshadinglanguage
     SUBDIR += opensubdiv
+    SUBDIR += openvkl
     SUBDIR += optar
     SUBDIR += optipng
     SUBDIR += osg
     SUBDIR += osg34
     SUBDIR += osgearth
+    SUBDIR += ospray
+    SUBDIR += ospray-studio
     SUBDIR += ossim
     SUBDIR += oyranos
     SUBDIR += p5-Acme-Steganography-Image-Png
@@ -637,6 +649,7 @@
     SUBDIR += p5-GD-Thumbnail
     SUBDIR += p5-Geo-EOP
     SUBDIR += p5-Geo-GDAL
+    SUBDIR += p5-Geo-GDAL-FFI
     SUBDIR += p5-Geo-GML
     SUBDIR += p5-Geo-Gpx
     SUBDIR += p5-Geometry-Primitive
@@ -662,6 +675,7 @@
     SUBDIR += p5-Graphics-GnuplotIF
     SUBDIR += p5-Graphics-Primitive
     SUBDIR += p5-Graphics-Primitive-Driver-Cairo
+    SUBDIR += p5-Graphics-TIFF
     SUBDIR += p5-Image-Base
     SUBDIR += p5-Image-Base-SVG
     SUBDIR += p5-Image-Caa
@@ -754,6 +768,7 @@
     SUBDIR += picpuz
     SUBDIR += piddle
     SUBDIR += piglit
+    SUBDIR += pikchr
     SUBDIR += pikopixel
     SUBDIR += pinpoint
     SUBDIR += pinta
@@ -785,6 +800,7 @@
     SUBDIR += povray-meta
     SUBDIR += povray36
     SUBDIR += povray37
+    SUBDIR += povray38
     SUBDIR += ppmcaption
     SUBDIR += ppminfo
     SUBDIR += ppsei
@@ -879,11 +895,13 @@
     SUBDIR += py-pyqrcode
     SUBDIR += py-pyqtgraph
     SUBDIR += py-pyrsgis
+    SUBDIR += py-pytesseract
     SUBDIR += py-python-poppler-qt5
     SUBDIR += py-pyvips
     SUBDIR += py-pyx
     SUBDIR += py-qrencode
     SUBDIR += py-qt5-svg
+    SUBDIR += py-railroad-diagrams
     SUBDIR += py-rasterio
     SUBDIR += py-rasterstats
     SUBDIR += py-rawkit
@@ -929,6 +947,7 @@
     SUBDIR += quat-gui
     SUBDIR += quesa
     SUBDIR += quesoglc
+    SUBDIR += quickqanava
     SUBDIR += qvge
     SUBDIR += radiance
     SUBDIR += radius-engine
@@ -947,6 +966,7 @@
     SUBDIR += rigsofrods-caelum
     SUBDIR += rigsofrods-pagedgeometry
     SUBDIR += ristretto
+    SUBDIR += rlottie
     SUBDIR += ruby-gd
     SUBDIR += rubygem-cairo
     SUBDIR += rubygem-captcha
@@ -966,8 +986,8 @@
     SUBDIR += rubygem-gemojione32
     SUBDIR += rubygem-geokit
     SUBDIR += rubygem-gitlab_emoji
-    SUBDIR += rubygem-goocanvas
     SUBDIR += rubygem-gruff
+    SUBDIR += rubygem-histogram
     SUBDIR += rubygem-image_processing
     SUBDIR += rubygem-image_science
     SUBDIR += rubygem-imagesize
@@ -978,11 +998,13 @@
     SUBDIR += rubygem-pdfkit
     SUBDIR += rubygem-png
     SUBDIR += rubygem-railroad
+    SUBDIR += rubygem-red-colors
     SUBDIR += rubygem-rmagick
     SUBDIR += rubygem-rsvg2
     SUBDIR += rubygem-ruby-graphviz
     SUBDIR += rubygem-ruby-vips
     SUBDIR += rubygem-scruffy
+    SUBDIR += rubygem-tanuki_emoji
     SUBDIR += rx
     SUBDIR += s10sh
     SUBDIR += s2
@@ -990,6 +1012,7 @@
     SUBDIR += sage
     SUBDIR += sam2p
     SUBDIR += sampleicc
+    SUBDIR += sane-airscan
     SUBDIR += sane-backends
     SUBDIR += sane-epkowa
     SUBDIR += scale2x
@@ -1019,6 +1042,7 @@
     SUBDIR += simage
     SUBDIR += simpleviewer
     SUBDIR += skanlite
+    SUBDIR += skanpage
     SUBDIR += spectacle
     SUBDIR += spirv-tools
     SUBDIR += springgraph
@@ -1035,6 +1059,7 @@
     SUBDIR += swftools
     SUBDIR += sxiv
     SUBDIR += synaesthesia
+    SUBDIR += synfig
     SUBDIR += synfigstudio
     SUBDIR += tachyon
     SUBDIR += telak
@@ -1063,6 +1088,7 @@
     SUBDIR += urho3d
     SUBDIR += urt
     SUBDIR += vapoursynth-fmtconv
+    SUBDIR += vapoursynth-waifu2x-ncnn-vulkan
     SUBDIR += vapoursynth-waifu2x-w2xc
     SUBDIR += variety
     SUBDIR += vcg
@@ -1076,6 +1102,7 @@
     SUBDIR += vp
     SUBDIR += vpaint
     SUBDIR += vulkan-caps-viewer
+    SUBDIR += vulkan-extension-layer
     SUBDIR += vulkan-headers
     SUBDIR += vulkan-loader
     SUBDIR += vulkan-tools
@@ -1093,6 +1120,7 @@
     SUBDIR += webp-pixbuf-loader
     SUBDIR += wings
     SUBDIR += wmicons
+    SUBDIR += wrapland
     SUBDIR += wxsvg
     SUBDIR += xaos
     SUBDIR += xbmbrowser

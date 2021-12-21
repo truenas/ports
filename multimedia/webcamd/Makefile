@@ -2,7 +2,7 @@
 
 PORTNAME=	webcamd
 DISTVERSIONPREFIX=	v
-DISTVERSION=	5.10.6.1
+DISTVERSION=	5.13.2.6
 PORTREVISION=	2
 CATEGORIES=	multimedia
 
@@ -21,10 +21,11 @@ SUB_FILES=	webcamd.conf
 USE_GITHUB=	yes
 GH_ACCOUNT=	hselasky
 GH_PROJECT=	${PORTNAME}
-GH_TUPLE=	torvalds:linux:v5.10-rc6:linux
+GH_TUPLE=	torvalds:linux:v5.13-rc2:linux/media_tree \
+		swills:v4l2loopback:8ab6a12:v4l2loopback/contrib/v4l2loopback
 
-OPTIONS_DEFINE=	DEBUG VT_CLIENT VT_SERVER DVB INPUT KEYBOARD MOUSE RADIO WEBCAM
-OPTIONS_DEFAULT=DVB INPUT RADIO WEBCAM
+OPTIONS_DEFINE=	DEBUG VT_CLIENT VT_SERVER DVB INPUT KEYBOARD MOUSE RADIO WEBCAM V4L2LOOPBACK
+OPTIONS_DEFAULT=DVB INPUT RADIO WEBCAM V4L2LOOPBACK
 
 #
 # 32-bit compatibility support is mostly useful for
@@ -62,6 +63,9 @@ RADIO_MAKE_ARGS=	HAVE_RADIO_DRV="YES"
 WEBCAM_DESC=	Build with USB webcam support (UVC, gspca, ...)
 WEBCAM_MAKE_ARGS=	HAVE_WEBCAM_DRV="YES"
 
+V4L2LOOPBACK_DESC=	Build with V4L2 loopback support
+V4L2LOOPBACK_MAKE_ARGS=	HAVE_V4L2LOOPBACK_DRV="YES"
+
 USERS=		webcamd
 GROUPS=		webcamd
 
@@ -76,7 +80,6 @@ do-configure:
 	${MAKE} ${MAKE_ARGS} configure -C${WEBCAMDDIR}
 
 post-patch:
-	@(${RM} -r ${WEBCAMDDIR}/media_tree && ${LN} -s ${LINUXDIR} ${WEBCAMDDIR}/media_tree)
 	@(cd ${WEBCAMDDIR}/patches && ${SH} ./do_patch.sh)
 
 post-install:

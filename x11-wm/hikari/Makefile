@@ -1,5 +1,6 @@
 PORTNAME=	hikari
-DISTVERSION=	2.3.0
+DISTVERSION=	2.3.2
+PORTREVISION=	1
 CATEGORIES=	x11-wm
 MASTER_SITES=	https://hikari.acmelabs.space/releases/
 
@@ -11,7 +12,7 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 
 BUILD_DEPENDS=	evdev-proto>0:devel/evdev-proto \
 		wayland-protocols>=1.14:graphics/wayland-protocols \
-		wlroots>=0.13.0<0.14.0:x11-toolkits/wlroots
+		wlroots>=0.14.0<0.15.0:x11-toolkits/wlroots
 LIB_DEPENDS=	libinput.so:x11/libinput \
 		libucl.so:textproc/libucl \
 		libwayland-server.so:graphics/wayland \
@@ -22,23 +23,19 @@ USES=		compiler:c11 gnome pkgconfig xorg
 USE_GNOME=	cairo pango
 USE_XORG=	pixman
 
-MAKE_ARGS+=	${WITH_DEBUG:DDEBUG=YES} \
-		WITHOUT_SUID=YES
+MAKE_ARGS+=	${WITH_DEBUG:DDEBUG=YES}
 
-OPTIONS_DEFINE=		GAMMA LAYERSHELL SCREENCOPY SUID VIRTUALINPUT X11
-OPTIONS_DEFAULT=	GAMMA LAYERSHELL SCREENCOPY SUID VIRTUALINPUT X11
+OPTIONS_DEFINE=		GAMMA LAYERSHELL SCREENCOPY VIRTUALINPUT X11
+OPTIONS_DEFAULT=	GAMMA LAYERSHELL SCREENCOPY VIRTUALINPUT X11
 
 GAMMA_DESC=		Include gammacontrol protocol (required by, e.g., Redshift)
 LAYERSHELL_DESC=	Include layer_shell protocol (required by, e.g., waybar)
 SCREENCOPY_DESC=	Include screenshot protocol (required by, e.g., grim)
-SUID_DESC=		Setuid bit on binaries (required for DRM and PAM)
 VIRTUALINPUT_DESC=	needed for VNC support (requiered by e.g. wayvnc)
 
 GAMMA_MAKE_ARGS=	WITH_GAMMACONTROL=YES
 LAYERSHELL_MAKE_ARGS=	WITH_LAYERSHELL=YES
 SCREENCOPY_MAKE_ARGS=	WITH_SCREENCOPY=YES
-SUID_PLIST_SUB=		MAYBE_SUID="@(,,4755) "
-SUID_PLIST_SUB_OFF=	MAYBE_SUID=""
 VIRTUALINPUT_MAKE_ARGS=	WITH_VIRTUAL_INPUT=YES
 X11_MAKE_ARGS=		WITH_XWAYLAND=YES
 

@@ -1,5 +1,6 @@
 PORTNAME=	foliate
 PORTVERSION=	2.6.3
+PORTREVISION=	1
 CATEGORIES=	deskutils
 
 MAINTAINER=	fox@FreeBSD.org
@@ -15,8 +16,7 @@ RUN_DEPENDS=	gjs-console:lang/gjs
 
 USES=		desktop-file-utils gnome localbase meson python:3.6+ shebangfix
 USE_GNOME=	cairo gtk30 introspection
-
-INSTALLS_ICONS=	yes
+GLIB_SCHEMAS=	com.github.johnfactotum.Foliate.gschema.xml
 
 SHEBANG_FILES=	${WRKSRC}/build-aux/meson/postinstall.py \
 		${WRKSRC}/src/assets/KindleUnpack/*.py
@@ -28,8 +28,6 @@ NLS_USES=	gettext
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	johnfactotum
-
-GLIB_SCHEMAS=	com.github.johnfactotum.Foliate.gschema.xml
 
 post-patch:
 	@${REINPLACE_CMD} -e 's/@PYTHON_VERSION@/${PYTHON_VERSION}/g' \

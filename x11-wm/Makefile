@@ -38,8 +38,8 @@
     SUBDIR += fluxter
     SUBDIR += flwm
     SUBDIR += fvwm2
+    SUBDIR += fvwm3
     SUBDIR += gamescope
-    SUBDIR += gcompmgr
     SUBDIR += herbstluftwm
     SUBDIR += hikari
     SUBDIR += hs-xmonad
@@ -49,8 +49,10 @@
     SUBDIR += jewel
     SUBDIR += jwm
     SUBDIR += kickshaw
+    SUBDIR += kwinft
     SUBDIR += labwc
     SUBDIR += larswm
+    SUBDIR += leftwm
     SUBDIR += libcompizconfig
     SUBDIR += libdockapp
     SUBDIR += libwraster
@@ -66,6 +68,7 @@
     SUBDIR += metacity
     SUBDIR += muffin
     SUBDIR += mutter
+    SUBDIR += nscde
     SUBDIR += obconf
     SUBDIR += obconf-qt
     SUBDIR += obpager
@@ -88,6 +91,7 @@
     SUBDIR += rubygem-uh-layout
     SUBDIR += rubygem-uh-wm
     SUBDIR += sawfish
+    SUBDIR += sdorfehs
     SUBDIR += selectwm
     SUBDIR += skippy-xd
     SUBDIR += spectrwm

@@ -770,7 +770,9 @@
 %%WWWDIR%%/j2s/JM/FF/UFFVDWCalc.js
 %%WWWDIR%%/j2s/JM/FF/data/MMFF94-smarts.txt
 %%WWWDIR%%/j2s/JM/FF/data/UFF.txt
+%%WWWDIR%%/j2s/JM/FF/data/UFF_2d.txt
 %%WWWDIR%%/j2s/JM/FF/data/mmff94.par.txt
+%%WWWDIR%%/j2s/JM/FF/data/mmff94_2d.par.txt
 %%WWWDIR%%/j2s/JM/Group.js
 %%WWWDIR%%/j2s/JM/HBond.js
 %%WWWDIR%%/j2s/JM/Helix.js
@@ -971,7 +973,6 @@
 %%WWWDIR%%/j2s/JSV/common/ScriptTokenizer.js
 %%WWWDIR%%/j2s/JSV/common/Spectrum.js
 %%WWWDIR%%/j2s/JSV/common/SubSpecChangeEvent.js
-%%WWWDIR%%/j2s/JSV/common/TODO.txt
 %%WWWDIR%%/j2s/JSV/common/ViewData.js
 %%WWWDIR%%/j2s/JSV/common/Visible.js
 %%WWWDIR%%/j2s/JSV/common/XYScaleConverter.js
@@ -1018,9 +1019,11 @@
 %%WWWDIR%%/j2s/JSV/popup/JSVGenericPopup.js
 %%WWWDIR%%/j2s/JSV/popup/JSVPopupResourceBundle.js
 %%WWWDIR%%/j2s/JSV/source/AnIMLReader.js
+%%WWWDIR%%/j2s/JSV/source/BrukerReader.js
 %%WWWDIR%%/j2s/JSV/source/CMLReader.js
 %%WWWDIR%%/j2s/JSV/source/JDXDataObject.js
 %%WWWDIR%%/j2s/JSV/source/JDXDecompressor.js
+%%WWWDIR%%/j2s/JSV/source/JDXDecompressorTest.js
 %%WWWDIR%%/j2s/JSV/source/JDXHeader.js
 %%WWWDIR%%/j2s/JSV/source/JDXReader.js
 %%WWWDIR%%/j2s/JSV/source/JDXSource.js
@@ -1707,10 +1710,11 @@
 %%WWWDIR%%/jsv_predict2.htm
 %%WWWDIR%%/jsv_predict_test.htm
 %%WWWDIR%%/jsvtest.htm
-%%WWWDIR%%/klotho/Jmol.js
+%%WWWDIR%%/klotho.htm
 %%WWWDIR%%/klotho/index.htm
 %%WWWDIR%%/klotho/klotho.js
 %%WWWDIR%%/klotho/klotho.xls
+%%WWWDIR%%/klotho/klotho.zip
 %%WWWDIR%%/ligand.htm
 %%WWWDIR%%/lite.htm
 %%WWWDIR%%/lite2.htm
@@ -1722,6 +1726,7 @@
 %%WWWDIR%%/mmtf.htm
 %%WWWDIR%%/nmr_predict_1H.htm
 %%WWWDIR%%/nmr_predict_HC.htm
+%%WWWDIR%%/pgtest.htm
 %%WWWDIR%%/php/jsmol.php
 %%WWWDIR%%/resize.htm
 %%WWWDIR%%/simple.htm

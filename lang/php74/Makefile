@@ -1,8 +1,8 @@
 PORTNAME=	php74
-DISTVERSION=	7.4.16
+DISTVERSION=	7.4.26
 PORTREVISION?=	0
 CATEGORIES?=	lang devel www
-MASTER_SITES=   PHP/distributions
+MASTER_SITES=	PHP/distributions
 DISTNAME=	php-${DISTVERSION}
 
 MAINTAINER=	tz@FreeBSD.org
@@ -43,10 +43,10 @@ OPTIONS_EXCLUDE_armv7=		DTRACE
 # Bug 197128:  No ASM code for MIPS/MIPS64, disable FPM
 OPTIONS_EXCLUDE_mips=		DTRACE FPM
 OPTIONS_EXCLUDE_mips64=		DTRACE FPM
-OPTIONS_EXCLUDE_powerpc=		DTRACE
 OPTIONS_EXCLUDE_powerpc64=	${OPTIONS_EXCLUDE_${ARCH}_${OSREL:R}}                  
 OPTIONS_EXCLUDE_powerpc64_11=	DTRACE     
 OPTIONS_EXCLUDE_powerpc64_12=	DTRACE
+OPTIONS_EXCLUDE_riscv64=	DTRACE
 OPTIONS_EXCLUDE_sparc64=	DTRACE
 OPTIONS_SUB=	yes
 
@@ -59,11 +59,15 @@ MYSQLND_DESC=	Build with MySQL Native Driver
 LINKTHR_DESC=	Link thread lib (for threaded extensions)
 ZTS_DESC=	Force Zend Thread Safety (ZTS) build
 
-CONFLICTS=	php71-* php72-* php73-*
+CONFLICTS=	php73 php80
 
 DESTDIRNAME=	INSTALL_ROOT
 
 .include <bsd.port.pre.mk>
+
+.if ${ARCH} == riscv64
+CONFIGURE_ARGS+=--without-pcre-jit
+.endif
 
 .if ${PORT_OPTIONS:MMYSQLND}
 CONFIGURE_ARGS+=--enable-mysqlnd

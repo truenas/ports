@@ -1,7 +1,7 @@
 # Created by: Janni
 
 PORTNAME=	el
-PORTVERSION=	1.9.5.8
+DISTVERSION=	1.9.5.9-1
 PORTEPOCH=	1
 CATEGORIES=	games
 
@@ -10,6 +10,7 @@ COMMENT=	Eternal Lands is a free 3D MMORPG
 
 BROKEN_sparc64=		fails to build on sparc64
 
+BUILD_DEPENDS=	nlohmann-json>0:devel/nlohmann-json
 LIB_DEPENDS=	libpng.so:graphics/png \
 		libvorbis.so:audio/libvorbis \
 		libcal3d.so:graphics/cal3d
@@ -18,7 +19,7 @@ RUN_DEPENDS=	${LOCALBASE}/share/${PORTNAME}/el.ini:games/el-data
 USES=		compiler:c++11-lang desktop-file-utils gl gmake gnome iconv \
 		openal:al,alut sdl xorg
 USE_GNOME=	libxml2
-USE_SDL=	sdl2 net2 image2
+USE_SDL=	sdl2 net2 image2 ttf2
 USE_GL=		gl glu
 USE_XORG=	x11
 USE_GITHUB=	yes

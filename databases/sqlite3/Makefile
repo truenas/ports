@@ -2,6 +2,7 @@
 
 PORTNAME=	sqlite3
 DISTVERSION=	3.35.5
+PORTREVISION=	4
 PORTEPOCH=	1
 CATEGORIES=	databases
 MASTER_SITES=	https://www.sqlite.org/${%Y:L:gmtime}/ https://www2.sqlite.org/${%Y:L:gmtime}/ https://www3.sqlite.org/${%Y:L:gmtime}/
@@ -9,8 +10,21 @@ DISTNAME=	sqlite-src-${PORTVERSION:C/\.([[:digit:]])[[:>:]]/0\1/g:S/.//g}00
 
 MAINTAINER=	pavelivolkov@gmail.com
 COMMENT=	SQL database engine in a C library
+.if ${FLAVOR:U} == icu
+COMMENT+=	(ICU flavor)
+.endif
+.if ${FLAVOR:U} == tcl
+COMMENT+=	(TCL flavor)
+.endif
 
 LICENSE=	PD
+
+FLAVORS=	default icu tcl
+FLAVOR?=	${FLAVORS:[1]}
+icu_PKGNAMESUFFIX=	-${FLAVOR}	# databases/p5-DBD-SQLite with ICU support
+icu_CONFLICTS_INSTALL=	${PORTNAME} ${PORTNAME}-tcl
+tcl_PKGNAMESUFFIX=	-${FLAVOR}	# lang/tcl* support
+tcl_CONFLICTS_INSTALL=	${PORTNAME} ${PORTNAME}-icu
 
 USES=	libtool pathfix zip
 USE_LDCONFIG=	yes
@@ -56,6 +70,13 @@ OPTIONS_RADIO_RL=	LIBEDIT READLINE
 OPTIONS_RADIO_STAT=	STAT3 STAT4
 OPTIONS_SINGLE=		RAMT
 OPTIONS_SINGLE_RAMT=	TS0 TS1 TS2 TS3
+.if ${FLAVOR:U} == icu
+OPTIONS_EXCLUDE=	UNICODE61
+OPTIONS_SLAVE=		ICU
+.endif
+.if ${FLAVOR:U} == tcl
+OPTIONS_SLAVE=		TCL
+.endif
 OPTIONS_SUB=		yes
 
 ARMOR_DESC=		Detect misuse of the API # https://www.sqlite.org/compile.html#enable_api_armor
@@ -167,7 +188,21 @@ URI_AUTHORITY_CPPFLAGS=	-DSQLITE_ALLOW_URI_AUTHORITY=1
 .include <bsd.port.options.mk>
 
 # Platform Configuration
-CPPFLAGS+=	-DHAVE_ISNAN=1 -DHAVE_MALLOC_USABLE_SIZE=1 -DHAVE_GMTIME_R=1 -DHAVE_LOCALTIME_R=1 -DHAVE_USLEEP=1 -DHAVE_STRCHRNUL=1
+# -DHAVE_POSIX_FALLOCATE=1 not yet, chunksize.test ZFS failure chunksize-1.2 expected: [32768] got: [2048]
+CPPFLAGS+=	-DHAVE_FCHOWN=1 \
+		-DHAVE_FDATASYNC=1 \
+		-DHAVE_ISNAN=1 \
+		-DHAVE_GMTIME_R=1 \
+		-DHAVE_LOCALTIME_R=1 \
+		-DHAVE_LSTAT=1 \
+		-DHAVE_MALLOC_USABLE_SIZE=1 \
+		-DHAVE_PREAD=1 \
+		-DHAVE_PWRITE=1 \
+		-DHAVE_USLEEP=1 \
+		-DHAVE_STRCHRNUL=1 \
+		-DHAVE_STRERROR_R=1 \
+		-DHAVE_READLINK=1 \
+		-DSQLITE_OS_UNIX=1
 CFLAGS_powerpc64le=	-DSQLITE_BYTEORDER=1234
 
 # For compare with checksum from of the site. Now, this is a NIST SHA3-256 hash. sha256 not suitable for compare.
@@ -200,7 +235,7 @@ post-install-TCL-on:
 	${INSTALL_PROGRAM} ${WRKSRC}/sqlite3_analyzer ${STAGEDIR}${PREFIX}/bin
 	${INSTALL_MAN} ${WRKSRC}/autoconf/tea/doc/${PORTNAME}.n ${STAGEDIR}${PREFIX}/man/mann/${PORTNAME}.tcl${TCL_VER:S/.//g}.n
 .if ${PORT_OPTIONS:MEXAMPLES}
-	${INSTALL_SCRIPT} -d ${STAGEDIR}${EXAMPLESDIR}
+	${MKDIR} ${STAGEDIR}${EXAMPLESDIR}
 	${INSTALL_SCRIPT} ${WRKDIR}/${SUB_FILES} ${WRKSRC}/contrib/sqlitecon.tcl ${STAGEDIR}${EXAMPLESDIR}
 .endif
 

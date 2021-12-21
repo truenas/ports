@@ -1,7 +1,7 @@
 # Created by: Dan Pelleg <dpelleg+unison@cs.cmu.edu>
 
 PORTNAME=	unison
-PORTVERSION=	2.51.3
+PORTVERSION=	2.51.4
 DISTVERSIONPREFIX=	v
 CATEGORIES=	net
 
@@ -14,14 +14,15 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 FLAVORS=	x11 nox11
 FLAVOR?=	${FLAVORS:[1]}
 
-nox11_PKGNAMESUFFIX= -nox11
+nox11_PKGNAMESUFFIX=		-nox11
 nox11_CONFLICTS_INSTALL=	unison
 
 x11_CONFLICTS_INSTALL=		unison-nox11
 x11_BUILD_DEPENDS=	lablgtk2:x11-toolkits/ocaml-lablgtk2 \
 			icotool:graphics/icoutils
 x11_LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig \
-			libfreetype.so:print/freetype2
+			libfreetype.so:print/freetype2 \
+			libharfbuzz.so:print/harfbuzz
 x11_RUN_DEPENDS=	lablgtk2:x11-toolkits/ocaml-lablgtk2
 
 PLIST_SUB=	PORTVERSION=${PORTVERSION}
@@ -29,14 +30,14 @@ USES=		gmake localbase
 USE_OCAML=	yes
 WRKSRC_SUBDIR=	src
 NO_OCAML_RUNDEPENDS=yes
-CONFLICTS=	unison-devel-[0-9]*
+CONFLICTS=	unison-devel
 MAKE_ENV=	CLIBS="${LIBS:S/^-/-ccopt -/}" COFLAGS="${CFLAGS:C/ *(-[^ ]*) */ -ccopt \"\1 \"/gW}"
 ALL_TARGET=	unison all
 
-USE_GITHUB=     yes
-GH_ACCOUNT=     bcpierce00
+USE_GITHUB=	yes
+GH_ACCOUNT=	bcpierce00
 
-DOCS=		BUGS.txt NEWS README
+DOCS=		NEWS README
 
 OPTIONS_DEFINE=		DOCS FSMONITOR
 OPTIONS_DEFAULT?=	FSMONITOR

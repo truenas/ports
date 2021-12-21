@@ -5,15 +5,16 @@ PORTVERSION=	1.1.1
 CATEGORIES=	archivers java
 MASTER_SITES=	http://www.jcraft.com/jzlib/
 
-MAINTAINER=	danilo@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Reimplementation of zlib in pure Java
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
-USES=		zip
+USES=		cpe zip
 USE_JAVA=	yes
 NO_ARCH=	yes
+CPE_VENDOR=	jcraft
 
 JAR_FILE=	${WRKSRC}/src/main/java/${PORTNAME}.jar
 

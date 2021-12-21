@@ -1,44 +1,24 @@
---- Makefile.orig	2021-04-22 21:08:06 UTC
+--- Makefile.orig	2021-11-19 08:14:34 UTC
 +++ Makefile
-@@ -197,7 +197,7 @@ all: INSTALL_DEST_DIR = ${SOURCE_DIR}
- all: install
+@@ -282,7 +282,7 @@ help:
  
  .PHONY: build
+ ## Build Go binaries and install required Ruby Gems.
 -build: ${SOURCE_DIR}/.ruby-bundle libgit2
 +build: ${SOURCE_DIR}/.ruby-bundle
- 	go install ${GO_LDFLAGS} -tags "${GO_BUILD_TAGS}" $(addprefix ${GITALY_PACKAGE}/cmd/, $(call find_commands))
- 
- .PHONY: install
-@@ -235,7 +235,7 @@ assemble-ruby:
- .PHONY: binaries
- binaries: assemble
- 	${Q}if [ ${ARCH} != 'x86_64' ]; then echo Incorrect architecture for build: ${ARCH}; exit 1; fi
--	${Q}cd ${ASSEMBLY_ROOT} && sha256sum bin/* | tee checksums.sha256.txt
-+	${Q}cd ${ASSEMBLY_ROOT} && sha256 bin/* | tee checksums.sha256.txt
- 
- .PHONY: prepare-tests
- prepare-tests: git libgit2 prepare-test-repos ${SOURCE_DIR}/.ruby-bundle
-@@ -388,9 +388,7 @@ libgit2: ${LIBGIT2_INSTALL_DIR}/lib/libgit2.a
+ 	${Q}# We used to install Gitaly binaries into the source directory by default when executing
+ 	${Q}# "make" or "make all", which has been changed in v14.5 to only build binaries into
+ 	${Q}# `_build/bin`. In order to quickly fail in case any source install still refers to these
+@@ -471,7 +471,7 @@ libgit2: ${LIBGIT2_INSTALL_DIR}/lib/libgit2.a
  # step. Both Omnibus and CNG assume it is in the Gitaly root, not in
  # _build. Hence the '../' in front.
  ${SOURCE_DIR}/.ruby-bundle: ${GITALY_RUBY_DIR}/Gemfile.lock ${GITALY_RUBY_DIR}/Gemfile
--	${Q}cd ${GITALY_RUBY_DIR} && bundle config set --local deployment "${BUNDLE_DEPLOYMENT}"
--	${Q}cd ${GITALY_RUBY_DIR} && bundle config # for debugging
 -	${Q}cd ${GITALY_RUBY_DIR} && bundle install
 +	${Q}cd ${GITALY_RUBY_DIR} && rm -f Gemfile.lock && bundle install --local
  	${Q}touch $@
  
  ${SOURCE_DIR}/NOTICE: ${BUILD_DIR}/NOTICE
-@@ -457,7 +455,7 @@ endif
- else
- ${DEPENDENCY_DIR}/git_full_bins.tgz: ${DEPENDENCY_DIR}/git.version
- 	curl -o $@.tmp --silent --show-error -L ${GIT_BINARIES_URL}
--	${Q}printf '${GIT_BINARIES_HASH}  $@.tmp' | sha256sum -c -
-+	${Q}printf '${GIT_BINARIES_HASH}  $@.tmp' | sha256 -c -
- 	${Q}mv $@.tmp $@
- 
- ${GIT_INSTALL_DIR}/bin/git: ${DEPENDENCY_DIR}/git_full_bins.tgz
-@@ -470,7 +468,7 @@ ${TOOLS_DIR}/protoc.zip: TOOL_VERSION = ${PROTOC_VERSI
+@@ -547,7 +547,7 @@ ${TOOLS_DIR}/protoc.zip: TOOL_VERSION = ${PROTOC_VERSI
  ${TOOLS_DIR}/protoc.zip: ${TOOLS_DIR}/protoc.version
  	${Q}if [ -z "${PROTOC_URL}" ]; then echo "Cannot generate protos on unsupported platform ${OS}" && exit 1; fi
  	curl -o $@.tmp --silent --show-error -L ${PROTOC_URL}

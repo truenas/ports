@@ -1,8 +1,8 @@
 PORTNAME=	xpdf
-PORTVERSION=	4.02
+PORTVERSION=	4.03
 PORTEPOCH=	1
 CATEGORIES=	graphics print
-MASTER_SITES=	https://xpdfreader-dl.s3.amazonaws.com/
+MASTER_SITES=	https://dl.xpdfreader.com/
 .if !defined(MASTERDIR)
 PKGNAMESUFFIX=	4
 .endif
@@ -14,12 +14,12 @@ LICENSE=	GPLv2
 
 CONFLICTS_INSTALL=	xpdf
 .if !defined(MASTERDIR)
-CONFLICTS_INSTALL+=	xpdf3-* xpdf-*
+CONFLICTS_INSTALL+=	xpdf3 xpdf
 .else
-CONFLICTS_INSTALL+=	xpdf3-*	xpdf4-*
+CONFLICTS_INSTALL+=	xpdf3 xpdf4
 .endif
 
-USES=		compiler:c++11-lang cmake localbase:ldflags
+USES=		compiler:c++11-lang cmake cpe localbase:ldflags
 LIB_DEPENDS=	libfreetype.so:print/freetype2 \
 		libpng.so:graphics/png
 BUILD_DEPENDS=	${LOCALBASE}/share/ghostscript/fonts/d050000l.pfb:print/gsfonts
@@ -33,6 +33,7 @@ CMAKE_ARGS+=	-DOPI_SUPPORT:BOOL=ON -DCMAKE_DISABLE_FIND_PACKAGE_Qt4:BOOL=ON \
 		-DCMAKE_INSTALL_MANDIR=${PREFIX}/share/xpdf/man \
 		-DNO_TEXT_SELECT:BOOL=OFF \
 		-DCMAKE_DISABLE_FIND_PACKAGE_Qt5Widgets:BOOL=FALSE
+CPE_VENDOR=	xpdfreader
 
 PLIST_SUB=		DESKTOPDIR="${DESKTOPDIR}"
 

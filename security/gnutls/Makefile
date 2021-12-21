@@ -1,5 +1,5 @@
 PORTNAME=	gnutls
-PORTVERSION=	3.6.15
+PORTVERSION=	3.6.16
 CATEGORIES=	security net
 MASTER_SITES=	GNUPG/gnutls/v${PORTVERSION:R}
 
@@ -90,6 +90,9 @@ post-patch:
 		${WRKSRC}/doc/invoke-p11tool.texi \
 		${WRKSRC}/doc/manpages/p11tool.1 \
 		${WRKSRC}/src/p11tool-args.c.bak
+# Bug 260078
+	@${REINPLACE_CMD} 's/-Wa,-march=all//' \
+		${WRKSRC}/lib/accelerated/aarch64/Makefile.in
 # Prevent regeneration.  The order is important.
 	@${TOUCH} ${WRKSRC}/doc/enums.texi \
 		${WRKSRC}/doc/invoke-gnutls-cli.texi \

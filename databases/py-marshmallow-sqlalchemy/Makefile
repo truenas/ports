@@ -1,7 +1,7 @@
 # Created by: Mark Felder <feld@FreeBSD.org>
 
 PORTNAME=	marshmallow-sqlalchemy
-PORTVERSION=	0.24.3
+PORTVERSION=	0.26.1
 CATEGORIES=	databases python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -13,7 +13,7 @@ LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}marshmallow>=3.0.0:devel/py-marshmallow@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}sqlalchemy12>=1.2.0:databases/py-sqlalchemy12@${PY_FLAVOR}
+		${PYTHON_PKGNAMEPREFIX}sqlalchemy14>=1.2.0:databases/py-sqlalchemy14@${PY_FLAVOR}
 TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pytest>=0:devel/py-pytest@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}pytest-lazy-fixture>=0:devel/py-pytest-lazy-fixture@${PY_FLAVOR} \
 

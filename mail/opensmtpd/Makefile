@@ -32,7 +32,7 @@ CPE_VENDOR=	openbsd
 USE_RC_SUBR=	smtpd
 SUB_FILES=	pkg-install pkg-deinstall pkg-message
 
-CONFLICTS_INSTALL=	postfix-[0-9]* sendmail-[0-9]* opensmtpd-devel-[0-9]*
+CONFLICTS_INSTALL=	postfix sendmail opensmtpd-devel
 
 USERS=		_smtpd _smtpq
 GROUPS=		_smtpd _smtpq
@@ -55,14 +55,7 @@ CONFIGURE_ARGS+=	--sysconfdir=${PREFIX}/etc/mail/ \
 			--with-user-queue=_smtpq \
 			--with-group-queue=_smtpq
 
-.include <bsd.port.pre.mk>
-
-.if ${OPSYS} == FreeBSD && \
-    (${OSVERSION} < 1200084 && ${SSL_DEFAULT} == "base")
-BROKEN=		Openssl 1.0 API is EoL, upgrade to FreeBSD 12.x/13.x or add DEFAULT_VERSIONS+=ssl=[openssl|libressl*] to /etc/make.conf
-.endif
-
 post-install-TABLE_DB-on:
 	@${LN} -sf ${PREFIX}/sbin/smtpctl ${STAGEDIR}${PREFIX}/libexec/opensmtpd/makemap
 
-.include <bsd.port.post.mk>
+.include <bsd.port.mk>

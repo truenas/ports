@@ -9,11 +9,13 @@ COMMENT=	PuppetDB CLI Tooling
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-RUN_DEPENDS=	rubygem-cri>0:devel/rubygem-cri \
-		rubygem-pl-puppetdb-ruby>0:databases/rubygem-pl-puppetdb-ruby
+RUN_DEPENDS=	rubygem-cri>=2.15<3:devel/rubygem-cri \
+		rubygem-pl-puppetdb-ruby>=2.0.3<2.1:databases/rubygem-pl-puppetdb-ruby
 
 USES=		gem
 USE_RUBY=	yes
+
+NO_ARCH=	yes
 
 PLIST_FILES=	bin/puppet-db \
 		bin/puppet-query

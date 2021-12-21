@@ -1,7 +1,7 @@
 # Created by: Koop Mast <kwm@FreeBSD.org>
 
 PORTNAME=	gcr
-PORTVERSION=	3.38.1
+PORTVERSION=	3.40.0
 CATEGORIES=	security gnome
 MASTER_SITES=	GNOME
 
@@ -23,7 +23,6 @@ USES=		desktop-file-utils gettext gmake gnome libtool meson pathfix \
 		pkgconfig python:3.6+ shared-mime-info tar:xz
 USE_LDCONFIG=	yes
 BINARY_ALIAS=	python3=${PYTHON_VERSION}
-INSTALLS_ICONS=	yes
 INSTALL_TARGET=	install-strip
 
 GLIB_SCHEMAS=	org.gnome.crypto.pgp.gschema.xml

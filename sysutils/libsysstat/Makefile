@@ -1,7 +1,7 @@
 # Created by: Olivier Duchateau
 
 PORTNAME=	libsysstat
-PORTVERSION=	0.4.4
+PORTVERSION=	0.4.6
 CATEGORIES=	sysutils
 MASTER_SITES=	LXQT/${PORTNAME}
 

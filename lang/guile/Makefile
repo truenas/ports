@@ -2,8 +2,7 @@
 #    $MCom: ports/lang/guile/Makefile,v 1.1 2006/09/12 14:57:06 ahze Exp $
 
 PORTNAME=	guile
-PORTVERSION=	3.0.5
-PORTREVISION=	1
+PORTVERSION=	3.0.7
 CATEGORIES=	lang scheme
 MASTER_SITES=	GNU
 
@@ -18,11 +17,13 @@ LIB_DEPENDS=	libffi.so:devel/libffi \
 		libltdl.so:devel/libltdl \
 		libunistring.so:devel/libunistring
 
-USES=		charsetfix compiler:c11 gmake iconv libtool makeinfo pathfix pkgconfig \
+USES=		charsetfix compiler:c11 cpe gmake iconv libtool makeinfo pathfix pkgconfig \
 	readline tar:lz
 USE_LDCONFIG=	yes
 
-CONFLICTS_INSTALL=	guile1-[0-9]* guile2-[0-9]*
+CPE_VENDOR=	gnu
+
+CONFLICTS_INSTALL=	guile1 guile2
 
 MAKE_JOBS_UNSAFE=	yes
 

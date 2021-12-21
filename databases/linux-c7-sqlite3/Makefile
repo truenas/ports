@@ -11,11 +11,11 @@ COMMENT=	Library that implements an embeddable SQL database engine (Linux CentOS
 
 LICENSE=	PD
 
-USES=		linux:c7
+USES=		cpe linux:c7
 USE_LDCONFIG=	yes
 USE_LINUX_RPM=	yes
 
-CONFLICTS=	linux-c6-${PORTNAME}-[0-9]*
+CONFLICTS=	linux-c6-${PORTNAME}
 DESCR=		${.CURDIR}/../${PORTNAME}3/pkg-descr
 
 OPTIONS_DEFINE=	DOCS

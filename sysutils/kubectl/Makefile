@@ -1,7 +1,7 @@
 # Created by: Danilo Egea Gondolfo <danilo@FreeBSD.org>
 
 PORTNAME=	kubectl
-PORTVERSION=	1.21.0
+PORTVERSION=	1.22.2
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 
@@ -10,7 +10,9 @@ COMMENT=	Kubernetes command-line tool
 
 LICENSE=	APACHE20
 
-USES=		go:modules
+USES=		cpe go:modules
+CPE_VENDOR=	jenkins
+CPE_PRODUCT=	kubernetes
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	kubernetes

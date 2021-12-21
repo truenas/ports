@@ -1,5 +1,6 @@
 PORTNAME=	love
 PORTVERSION=	11.3
+PORTREVISION=	1
 CATEGORIES=	devel games
 MASTER_SITES=	https://bitbucket.org/rude/love/downloads/ \
 		http://mirror.amdmi3.ru/distfiles/
@@ -29,6 +30,7 @@ GNU_CONFIGURE=	yes
 WRKSRC=		${WRKDIR}/love-${PORTVERSION}
 INSTALL_TARGET=	install-strip
 
+DOCSDIR=	${PREFIX}/share/doc/${PORTNAME}${PKGNAMESUFFIX}
 PORTDOCS=	*
 
 OPTIONS_DEFINE=		DOCS LUAJIT GME

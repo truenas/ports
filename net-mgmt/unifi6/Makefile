@@ -1,7 +1,5 @@
-# Created by: Juraj Lutter <otis@FreeBSD.org>
-
 PORTNAME=	unifi6
-PORTVERSION=	6.0.45
+PORTVERSION=	6.5.54
 CATEGORIES=	net-mgmt java
 MASTER_SITES=	http://dl.ubnt.com/unifi/%SUBDIR%/:unifi \
 		https://repo1.maven.org/maven2/%SUBDIR%/:jax
@@ -20,7 +18,7 @@ RUN_DEPENDS=	mongodb36>0:databases/mongodb36 \
 
 USES=		cpe
 
-CPE_VENDOR=	ubnt
+CPE_VENDOR=	ui
 CPE_PRODUCT=	unifi_controller
 USE_JAVA=	yes
 JAVA_VERSION=	8+
@@ -28,8 +26,6 @@ JAVA_OS=	native
 JAVA_VENDOR=	openjdk bsdjava
 JAVA_RUN=	yes
 USE_RC_SUBR=	unifi
-
-CONFLICTS=	unifi-devel-* unifi-lts-* unifi5-*
 
 EXTRACT_CMD=	${AR}
 EXTRACT_BEFORE_ARGS=	-p

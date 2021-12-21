@@ -1,11 +1,11 @@
---- headless/lib/browser/headless_browser_main_parts.h.orig	2021-04-14 18:41:04 UTC
+--- headless/lib/browser/headless_browser_main_parts.h.orig	2021-07-19 18:45:17 UTC
 +++ headless/lib/browser/headless_browser_main_parts.h
-@@ -37,7 +37,7 @@ class HeadlessBrowserMainParts : public content::Brows
+@@ -44,7 +44,7 @@ class HeadlessBrowserMainParts : public content::Brows
  #if defined(OS_MAC)
-   void PreMainMessageLoopStart() override;
+   void PreCreateMainMessageLoop() override;
  #endif
 -#if defined(OS_LINUX) || defined(OS_CHROMEOS)
 +#if defined(OS_LINUX) || defined(OS_CHROMEOS) || defined(OS_BSD)
-   void PostMainMessageLoopStart() override;
+   void PostCreateMainMessageLoop() override;
  #endif
    void QuitMainMessageLoop();

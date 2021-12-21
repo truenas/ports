@@ -1,6 +1,5 @@
 PORTNAME=	snakemake
-DISTVERSION=	6.2.1
-PORTREVISION=	1
+DISTVERSION=	6.12.1
 CATEGORIES=	misc python
 MASTER_SITES=	CHEESESHOP
 
@@ -10,6 +9,7 @@ COMMENT=	Workflow management system
 LICENSE=	MIT
 
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}appdirs>0:devel/py-appdirs@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}connection_pool>=0.0.3>0:devel/py-connection_pool@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}configargparse>0:devel/py-configargparse@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}datrie>0:devel/py-datrie@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}docutils>0:textproc/py-docutils@${PY_FLAVOR} \
@@ -21,8 +21,9 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}appdirs>0:devel/py-appdirs@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}psutil>0:sysutils/py-psutil@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}ratelimiter>0:devel/py-ratelimiter@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}requests>0:www/py-requests@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}smart-open>0:net/py-smart-open@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}smart-open>=3.0:net/py-smart-open@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}stopit>0:devel/py-stopit@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}tabulate>0:devel/py-tabulate@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}toposort>0:devel/py-toposort@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}wrapt>0:devel/py-wrapt@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}yaml>0:devel/py-yaml@${PY_FLAVOR}

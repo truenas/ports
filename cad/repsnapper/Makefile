@@ -2,7 +2,7 @@
 
 PORTNAME=	repsnapper
 DISTVERSION=	2.5a4
-PORTREVISION=	6
+PORTREVISION=	7
 CATEGORIES=	cad
 
 MAINTAINER=	martin.dieringer@gmx.de
@@ -23,7 +23,6 @@ USE_GNOME=	gtkmm24 intltool libxml++26
 USE_GL=		gl
 USE_PERL5=	build
 GNU_CONFIGURE=	yes
-INSTALLS_ICONS=	yes
 
 INSTALL_TARGET=	install-strip
 

@@ -1,5 +1,5 @@
 PORTNAME=	quickjs
-DISTVERSION=	2020.09.06
+DISTVERSION=	2021.03.27
 CATEGORIES=	lang devel
 MASTER_SITES=	https://bellard.org/${PORTNAME}/
 DISTNAME=	${PORTNAME}-${DISTVERSION:S/./-/g}
@@ -9,9 +9,12 @@ COMMENT=	Embeddable Javascript interpreter in C
 
 LICENSE=	MIT
 
-USES=		compiler:c11 gmake tar:xz
+USES=		compiler:c11 cpe gmake tar:xz
+CPE_VENDOR=	${PORTNAME}_project
 
 EXTRA_PATCHES=	${FILESDIR}/extra-${CHOSEN_COMPILER_TYPE}-patch-Makefile
+
+TEST_TARGET=	test
 
 .include <bsd.port.pre.mk>
 

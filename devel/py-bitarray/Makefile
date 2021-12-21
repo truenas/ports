@@ -1,7 +1,7 @@
 # Created by: Sofian Brabez <sbrabez@gmail.com>
 
 PORTNAME=	bitarray
-PORTVERSION=	2.0.1
+PORTVERSION=	2.3.4
 CATEGORIES=	devel python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
@@ -12,12 +12,9 @@ LICENSE=	PSFL
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 USES=		python:3.6+
-
 USE_GITHUB=	yes
-USE_PYTHON=	autoplist distutils
-
 GH_ACCOUNT=	ilanschnell
-GH_PROJECT=	bitarray
+USE_PYTHON=	autoplist distutils
 
 DOCSDIR=	${PREFIX}/share/doc/${PKGNAMEPREFIX}${PORTNAME}
 EXAMPLESDIR=	${PREFIX}/share/examples/${PKGNAMEPREFIX}${PORTNAME}

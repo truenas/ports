@@ -1,5 +1,5 @@
 PORTNAME=	DDNet
-PORTVERSION=	15.4
+PORTVERSION=	15.7
 CATEGORIES=	games
 MASTER_SITES=	https://ddnet.tw/downloads/
 
@@ -13,17 +13,19 @@ USES=		cmake compiler:c++11-lang pkgconfig python sqlite:3 ssl tar:xz
 CMAKE_ARGS=	-DPYTHON_EXECUTABLE="${PYTHON_CMD}"
 CMAKE_OFF=	AUTOUPDATE DOWNLOAD_GTEST PREFER_BUNDLED_LIBS
 
+CXXFLAGS+=	-DBINARY_DIR="\\\"${PREFIX}/bin\\\""
+
 PORTDATA=	*
 DATADIR=	${PREFIX}/share/ddnet
 
 OPTIONS_DEFINE=		CLIENT TEST WEBSOCKETS MYSQL VIDEORECORDER UPNP
-OPTIONS_DEFAULT=	CLIENT TEST
+OPTIONS_DEFAULT=	CLIENT TEST VIDEORECORDER UPNP
 OPTIONS_SUB=		yes
 
 CLIENT_DESC=		Build game client
 CLIENT_CMAKE_BOOL=	CLIENT
 CLIENT_USES=		gettext gl sdl xorg desktop-file-utils
-CLIENT_USE=		GL=gl,glew XORG=x11 SDL=sdl2
+CLIENT_USE=		GL=gl,glew SDL=sdl2
 CLIENT_LIB_DEPENDS=	libfreetype.so:print/freetype2 \
 			libwavpack.so:audio/wavpack \
 			libpnglite.so:graphics/pnglite \

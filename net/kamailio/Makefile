@@ -1,7 +1,7 @@
 # Created by: Oliver Mahmoudi <olivermahmoudi@gmail.com>
 
 PORTNAME=	kamailio
-PORTVERSION=	5.4.4
+PORTVERSION=	5.4.5
 CATEGORIES=	net
 MASTER_SITES=	http://www.kamailio.org/pub/kamailio/${PORTVERSION}/src/
 DISTNAME=	${PORTNAME}-${PORTVERSION}_src
@@ -17,7 +17,7 @@ LIB_DEPENDS=	libcurl.so:ftp/curl \
 		libxml2.so:textproc/libxml2
 RUN_DEPENDS=	${LOCALBASE}/bin/bash:shells/bash
 
-USES=		compiler:c11 gmake ncurses pkgconfig python:3.5+ readline \
+USES=		compiler:c11 cpe gmake ncurses pkgconfig python:3.5+ readline \
 		shebangfix
 
 USE_LDCONFIG=	yes
@@ -26,6 +26,7 @@ USE_RC_SUBR=	kamailio
 SHEBANG_FILES=	utils/kamctl/dbtextdb/dbtextdb.py utils/kamctl/kamctl \
 		utils/kamctl/kamdbctl
 
+MAKE_ARGS+=	LIBSSL_SET_MUTEX_SHARED=1
 CFLAGS+=	-Wall
 
 KAMAILIO_USER?=		kamailio

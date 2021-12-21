@@ -1,4 +1,4 @@
---- cc/test/layer_tree_test.cc.orig	2021-04-14 18:40:48 UTC
+--- cc/test/layer_tree_test.cc.orig	2021-09-14 01:51:47 UTC
 +++ cc/test/layer_tree_test.cc
 @@ -674,7 +674,7 @@ LayerTreeTest::LayerTreeTest(viz::RendererType rendere
      init_vulkan = true;
@@ -8,4 +8,4 @@
 +#if defined(OS_LINUX) || defined(OS_CHROMEOS) || defined(OS_BSD)
      init_vulkan = true;
  #elif defined(OS_WIN)
-     // TODO(sgilhuly): Initialize D3D12 for Windows.
+     // TODO(rivr): Initialize D3D12 for Windows.

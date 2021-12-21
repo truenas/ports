@@ -1,6 +1,6 @@
 PORTNAME=	openjdk
 DISTVERSIONPREFIX=	jdk-
-DISTVERSION=	${JDK_MAJOR_VERSION}+${JDK_BUILD_NUMBER}-${BSD_JDK_VERSION}
+DISTVERSION=	${JDK_MAJOR_VERSION}.${JDK_MINOR_VERSION}.${JDK_PATCH_VERSION}+${JDK_BUILD_NUMBER}-${BSD_JDK_VERSION}
 PORTREVISION=	1
 CATEGORIES=	java devel
 PKGNAMESUFFIX?=	${JDK_MAJOR_VERSION}
@@ -10,7 +10,7 @@ COMMENT=	Java Development Kit ${JDK_MAJOR_VERSION}
 
 LICENSE=	GPLv2
 
-ONLY_FOR_ARCHS=	amd64 i386 powerpc64 powerpc64le
+ONLY_FOR_ARCHS=	aarch64 amd64 i386 powerpc64 powerpc64le
 
 BUILD_DEPENDS=	zip:archivers/zip \
 		autoconf>0:devel/autoconf \
@@ -27,12 +27,14 @@ LIB_DEPENDS=	libasound.so:audio/alsa-lib \
 RUN_DEPENDS=	javavm:java/javavmwrapper \
 		xorg-fonts-truetype>0:x11-fonts/xorg-fonts-truetype
 
-USES=		compiler:features gmake iconv jpeg pkgconfig xorg
+USES=		compiler:features cpe gmake iconv jpeg pkgconfig xorg
 USE_XORG=	x11 xext xi xrandr xrender xt xtst
+
+CPE_VENDOR=	oracle
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	battleblow
-GH_PROJECT=	jdk16
+GH_PROJECT=	jdk16u
 
 NO_CCACHE=	yes
 
@@ -56,8 +58,8 @@ NOPRECIOUSMAKEVARS=	yes
 
 JDK_MAJOR_VERSION=	16
 JDK_MINOR_VERSION=	0
-JDK_PATCH_VERSION=	0
-JDK_BUILD_NUMBER=	36
+JDK_PATCH_VERSION=	2
+JDK_BUILD_NUMBER=	7
 BSD_JDK_VERSION=	1
 
 JDK_BUG_URL=	https://bugs.freebsd.org/bugzilla/enter_bug.cgi?product=Ports%20%26%20Packages&component=Individual%20Port(s)&short_desc=java/${PORTNAME}${JDK_MAJOR_VERSION}%3A%20
@@ -103,11 +105,6 @@ JDK_BUILD_TYPE=		release
 
 .include <bsd.port.pre.mk>
 
-# Support aarch64 on FreeBSD 12 and up
-.if ${OSVERSION} >= 1200500
-ONLY_FOR_ARCHS+=aarch64
-.endif
-
 BOOTSTRAP_JDKS=	${LOCALBASE}/openjdk16 \
 		${LOCALBASE}/openjdk15
 
@@ -136,6 +133,9 @@ CONFIGURE_ARGS+=	--with-extra-ldflags="-Wl,-rpath=${LOCALBASE}/lib/gcc${GCC_DEFA
 			--with-extra-cxxflags="-Wl,-rpath=${LOCALBASE}/lib/gcc${GCC_DEFAULT}"
 .else
 MAKE_ENV+=	USE_CLANG=true
+.if ${COMPILER_VERSION} >= 130
+CONFIGURE_ARGS+=	--with-extra-cflags="-Wno-unused-but-set-parameter"
+.endif
 .endif
 
 .if ${ARCH} == aarch64 || ${ARCH:Mpowerpc64*}

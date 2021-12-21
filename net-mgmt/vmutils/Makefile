@@ -1,6 +1,7 @@
 # Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
 
 PORTNAME=	vmutils
+
 COMMENT=	Ancillary utilities and agent for VictoriaMetrics
 
 USE_RC_SUBR=	vmagent
@@ -13,6 +14,9 @@ do-install:
 	${INSTALL_PROGRAM} ${WRKSRC}/bin/vm${p}-pure \
 		${STAGEDIR}${PREFIX}/bin/vm${p}
 .endfor
+	@${MKDIR} ${STAGEDIR}${PREFIX}/etc/prometheus
+	${INSTALL_DATA} ${FILESDIR}/prometheus.yml.sample \
+		${STAGEDIR}${PREFIX}/etc/prometheus
 
 do-install-DOCS-on:
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}

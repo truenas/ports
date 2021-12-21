@@ -1,7 +1,8 @@
 # Created by: Sergey Matveychuk <sem@ciam.ru>
 
 PORTNAME=	gsoap
-PORTVERSION=	2.8.113
+PORTVERSION=	2.8.117
+PORTREVISION=	1
 CATEGORIES=	devel
 MASTER_SITES=	SF/${PORTNAME}2
 DISTNAME=	${PORTNAME}_${PORTVERSION}
@@ -11,7 +12,8 @@ COMMENT=	Generator Tools for Coding SOAP/XML Web Services in C and C++
 
 LICENSE=	GPLv2
 
-USES=		autoreconf pathfix ssl zip
+USES=		autoreconf cpe pathfix ssl zip
+CPE_VENDOR=	genivia
 
 CONFIGURE_ENV=	LEX=flex YACC=yacc
 GNU_CONFIGURE=	yes
@@ -29,7 +31,8 @@ GNUTLS_CONFIGURE_ON=	--enable-gnutls
 GNUTLS_LDFLAGS=		-L${LOCALBASE}/lib
 OPENSSL_CONFIGURE_ENABLE=	ssl
 IPV6_CONFIGURE_ENABLE=	ipv6
-CFLAGS+=	-fPIC
+CFLAGS+=	-fPIC -I${OPENSSLINC}
+LDFLAGS+=	-L${OPENSSLLIB}
 
 PORTSCOUT=	limit:^2\.8\.[0-9][0-9][0-9]$
 

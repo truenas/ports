@@ -21,11 +21,13 @@ LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig \
 RUN_DEPENDS=	javavm:java/javavmwrapper \
 		dejavu>0:x11-fonts/dejavu
 
-USES=		compiler:features gmake iconv pkgconfig
+USES=		compiler:features cpe gmake iconv pkgconfig
+
+CPE_VENDOR=	oracle
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	battleblow
-GH_PROJECT=	openjdk-jdk8u
+GH_PROJECT=	jdk8u
 GH_TAGNAME=	jdk${JDK_MAJOR_VERSION}u${JDK_UPDATE_VERSION}-b${JDK_BUILD_NUMBER}.${BSD_JDK_VERSION}
 
 _MAKE_JOBS=	#
@@ -49,8 +51,8 @@ INSTALLDIR=	${PREFIX}/${PKGBASE}
 NOPRECIOUSMAKEVARS=	yes
 
 JDK_MAJOR_VERSION=	8
-JDK_UPDATE_VERSION=	282
-JDK_BUILD_NUMBER=	08
+JDK_UPDATE_VERSION=	312
+JDK_BUILD_NUMBER=	07
 BSD_JDK_VERSION=	1
 JTREG_VERSION=		4.1
 JTREG_BUILD_NUMBER=	b08
@@ -191,7 +193,7 @@ CONFIGURE_ARGS+=	--disable-jfr
 MAKE_ENV+=	LFLAGS="-Wl,-z,notext"
 .endif
 
-.if ${ARCH} == amd64 || ${ARCH} == i386 || ${ARCH:Mpowerpc64*}
+.if ${ARCH} == aarch64 || ${ARCH} == amd64 || ${ARCH} == i386 || ${ARCH:Mpowerpc64*}
 JDK_BUILD_JVM=	server
 .else
 JDK_BUILD_JVM=	zero
@@ -201,6 +203,9 @@ LIB_DEPENDS+=	libffi.so:devel/libffi
 .if ${COMPILER_TYPE} == clang
 MAKE_ENV+=	COMPILER_WARNINGS_FATAL=false USE_CLANG=true
 CONFIGURE_ENV+=	LIBCXX="-lc++"
+.if ${COMPILER_VERSION} >= 130
+CONFIGURE_ARGS+=	--with-extra-cflags="-Wno-unused-but-set-parameter"
+.endif
 .endif
 
 # GCC is broken with PCH: https://lists.freebsd.org/pipermail/svn-src-all/2015-March/101722.html

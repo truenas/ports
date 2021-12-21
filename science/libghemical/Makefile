@@ -2,7 +2,7 @@
 
 PORTNAME=	libghemical
 PORTVERSION=	3.0.0
-PORTREVISION=	16
+PORTREVISION=	17
 CATEGORIES=	science
 MASTER_SITES=	http://bioinformatics.org/ghemical/download/release20111012/	\
 		http://bioinformatics.org/ghemical/download/current/
@@ -27,8 +27,6 @@ USE_CXXSTD=	c++98
 USE_GL=		gl
 GNU_CONFIGURE=	yes
 USE_LDCONFIG=	yes
-
-CONFIGURE_ENV=	LD_PRELOAD=${LOCALBASE}/lib/gcc${GCC_DEFAULT}/libgcc_s.so # workaround: otherwise configure fails
 
 CONFIGURE_ARGS+=	--enable-mpqc
 LDFLAGS+=	-lSCbasis -lSCcints -lSCclass -lSCcontainer -lSCdft -lSCgroup \

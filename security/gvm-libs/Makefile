@@ -1,7 +1,6 @@
 PORTNAME=	gvm
-DISTVERSION=	20.8.1
+DISTVERSION=	21.4.3
 DISTVERSIONPREFIX=	v
-PORTREVISION=	1
 CATEGORIES=	security
 PKGNAMESUFFIX=	-libs
 
@@ -18,6 +17,7 @@ LIB_DEPENDS=	libassuan.so:security/libassuan \
 		libuuid.so:misc/e2fsprogs-libuuid \
 		libssh.so:security/libssh \
 		libhiredis.so:databases/hiredis \
+		libnet.so:net/libnet \
 		libgcrypt.so:security/libgcrypt
 RUN_DEPENDS=	doxygen>0:devel/doxygen
 
@@ -31,11 +31,11 @@ USE_LDCONFIG=	yes
 
 OPTIONS_DEFINE=	LDAP RADIUS
 
-LDAP_CMAKE_ON= -DBUILD_WITH_LDAP=1
-LDAP_CMAKE_OFF= -DBUILD_WITH_LDAP=0
-LDAP_USE=	OPENLDAP=yes
-RADIUS_CMAKE_ON=-DBUILD_WITH_RADIUS=1
-RADIUS_CMAKE_OFF=-DBUILD_WITH_RADIUS=0
+LDAP_CMAKE_ON=		-DBUILD_WITH_LDAP=1
+LDAP_CMAKE_OFF=		-DBUILD_WITH_LDAP=0
+LDAP_USE=		OPENLDAP=yes
+RADIUS_CMAKE_ON=	-DBUILD_WITH_RADIUS=1
+RADIUS_CMAKE_OFF=	-DBUILD_WITH_RADIUS=0
 RADIUS_LIB_DEPENDS=	libfreeradius-client.so:net/freeradius-client
 
 post-patch:

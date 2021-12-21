@@ -16,6 +16,7 @@ lib/libkImageAnnotator.so.%%SHLIB_VER%%
 %%DATADIR%%/translations/kImageAnnotator_fr.qm
 %%DATADIR%%/translations/kImageAnnotator_fr_CA.qm
 %%DATADIR%%/translations/kImageAnnotator_gl.qm
+%%DATADIR%%/translations/kImageAnnotator_hr.qm
 %%DATADIR%%/translations/kImageAnnotator_hu.qm
 %%DATADIR%%/translations/kImageAnnotator_id.qm
 %%DATADIR%%/translations/kImageAnnotator_it.qm
@@ -25,7 +26,9 @@ lib/libkImageAnnotator.so.%%SHLIB_VER%%
 %%DATADIR%%/translations/kImageAnnotator_pl.qm
 %%DATADIR%%/translations/kImageAnnotator_pt.qm
 %%DATADIR%%/translations/kImageAnnotator_pt_BR.qm
+%%DATADIR%%/translations/kImageAnnotator_ro.qm
 %%DATADIR%%/translations/kImageAnnotator_ru.qm
+%%DATADIR%%/translations/kImageAnnotator_si.qm
 %%DATADIR%%/translations/kImageAnnotator_sv.qm
 %%DATADIR%%/translations/kImageAnnotator_tr.qm
 %%DATADIR%%/translations/kImageAnnotator_uk.qm

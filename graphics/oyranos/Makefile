@@ -1,6 +1,6 @@
 PORTNAME=	oyranos
 PORTVERSION=	0.9.6
-PORTREVISION=	11
+PORTREVISION=	12
 CATEGORIES=	graphics
 
 MAINTAINER=	bsam@FreeBSD.org
@@ -55,7 +55,7 @@ DOCSDIR=	${PREFIX}/share/doc/${PORTNAME}-${PORTVERSION}
 PLIST_SUB+=	VER=${PORTVERSION}
 
 .if !exists(/usr/bin/clang)
-USE_GCC=   yes
+USE_GCC=	yes
 .endif
 
 post-patch:

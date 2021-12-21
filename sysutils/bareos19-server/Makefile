@@ -1,7 +1,7 @@
 PORTNAME=	bareos
 DISTVERSIONPREFIX=	Release/
-DISTVERSION=	19.2.9
-PORTREVISION?=	2
+DISTVERSION=	19.2.11
+PORTREVISION?=	0
 CATEGORIES?=	sysutils
 PKGNAMEPREFIX?=	#
 PKGNAMESUFFIX?=	19-server
@@ -12,12 +12,12 @@ COMMENT?=	Backup archiving recovery open sourced (server)
 LICENSE=	AGPLv3 LGPL3
 LICENSE_COMB=	multi
 
-CONFLICTS?=	bacula18*-server bacula17*-server-*
+CONFLICTS?=	bareos18-server bareos17-server
 
 LIB_DEPENDS+=	liblzo2.so:archivers/lzo2 \
 		libjansson.so:devel/jansson
 
-USES+=		cmake compiler:c++11-lang localbase perl5 pkgconfig readline:port \
+USES+=		cmake compiler:c++11-lang cpe localbase perl5 pkgconfig readline \
 		shebangfix
 USE_GITHUB=	yes
 USE_PERL5=	run
@@ -44,17 +44,17 @@ NDMP_DESC=		Enable build of NDMP support
 SCSICRYPTO_DESC=	Build LTO AME crypto plugin
 
 .if ${PKGNAMESUFFIX} == "19-server"
-OPTIONS_GROUP=  BACKENDS
-OPTIONS_GROUP_BACKENDS= CEPHFS GFAPI RADOS
-OPTIONS_DEFINE=		MTX PYTHON NDMP NLS SCSICRYPTO
-OPTIONS_DEFAULT+=	PGSQL SCSICRYPTO
-OPTIONS_SINGLE_DATABASE=	SQLITE3 MYSQL PGSQL
+OPTIONS_GROUP=			BACKENDS
+OPTIONS_GROUP_BACKENDS=		CEPHFS GFAPI RADOS
+OPTIONS_DEFINE=			MTX NDMP NLS PYTHON SCSICRYPTO
+OPTIONS_DEFAULT+=		PGSQL SCSICRYPTO
+OPTIONS_SINGLE_DATABASE=	MYSQL PGSQL SQLITE3
 OPTIONS_SINGLE+=		DATABASE
-BACKENDS_DESC= 		Storage backends
-DATABASE_DESC=		Database support
-CEPHFS_DESC=	CEPHFS backend support
-GFAPI_DESC=	GFAPI backend support
-RADOS_DESC=	RADOS backend support
+BACKENDS_DESC=			Storage backends
+DATABASE_DESC=			Database support
+CEPHFS_DESC=			CEPHFS backend support
+GFAPI_DESC=			GFAPI backend support
+RADOS_DESC=			RADOS backend support
 
 NDMP_CMAKE_ON=	-Dndmp=ON
 NDMP_CMAKE_OFF=	-Dndmp=OFF
@@ -206,6 +206,7 @@ post-patch:
 	@${REINPLACE_CMD}  '69,72d' ${WRKSRC}/CMakeLists.txt
 .if ${PKGNAMESUFFIX} == "19-server"
 	@${REINPLACE_CMD}  '24d' ${WRKSRC}/core/src/plugins/CMakeLists.txt
+	@${REINPLACE_CMD}  '35d' ${WRKSRC}/core/src/CMakeLists.txt
 .endif
 
 post-extract:

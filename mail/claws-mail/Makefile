@@ -11,6 +11,7 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 LIB_DEPENDS=	libcurl.so:ftp/curl \
 		libetpan.so:mail/libetpan \
 		libfreetype.so:print/freetype2 \
+		libharfbuzz.so:print/harfbuzz \
 		libsasl2.so:security/cyrus-sasl2 \
 		libgnutls.so:security/gnutls \
 		libgcrypt.so:security/libgcrypt \
@@ -25,7 +26,6 @@ USES=		autoreconf compiler:c++11-lang cpe desktop-file-utils gettext \
 USE_XORG=	ice sm
 USE_GNOME=	cairo gtk20 librsvg2
 SHEBANG_FILES=	tools/*.pl tools/*.py tools/tb2claws-mail
-INSTALLS_ICONS=	yes
 
 OPTIONS_DEFINE=	COMPFACE DEBUG DOCS ENCHANT IPV6 LDAP \
 		NLS STARTUP THEMES

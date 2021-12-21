@@ -1,10 +1,9 @@
 PORTNAME=	dhcpcd-ui
 PORTVERSION=	0.7.8
 CATEGORIES=	net
-MASTER_SITES=	https://roy.marples.name/downloads/dhcpcd/ \
-		https://cflags.cc/roy/dhcpcd/
+MASTER_SITES=	https://roy.marples.name/downloads/dhcpcd/
 
-MAINTAINER=	woodsb02@FreeBSD.org
+MAINTAINER=	driesm@FreeBSD.org
 COMMENT=	GTK+ / Curses interface to dhcpcd
 
 LICENSE=	BSD2CLAUSE

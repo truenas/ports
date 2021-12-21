@@ -2,7 +2,7 @@
 
 PORTNAME=	criticalmass
 PORTVERSION=	1.5.0
-PORTREVISION=	2
+PORTREVISION=	3
 PORTEPOCH=	1
 CATEGORIES=	games
 MASTER_SITES=	SF/${PORTNAME}/Critical%20Mass/${PORTVERSION}-RC
@@ -13,8 +13,6 @@ COMMENT=	SDL/OpenGL space shoot'em up game
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
-
-BROKEN=		fails to build
 
 LIB_DEPENDS=	libpng.so:graphics/png \
 		libtinyxml.so:textproc/tinyxml
@@ -27,7 +25,7 @@ USE_CXXSTD=	gnu++98
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--disable-optimize
 
-CONFLICTS=	shaaft-[0-9]*
+CONFLICTS=	shaaft
 
 PLIST_FILES=	bin/Packer \
 		bin/critter \

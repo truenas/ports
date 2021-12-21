@@ -64,6 +64,8 @@
     SUBDIR += font-cica
     SUBDIR += font-elisa10
     SUBDIR += font-elisa8
+    SUBDIR += font-firge
+    SUBDIR += font-firge-nerd
     SUBDIR += font-genjyuugothic
     SUBDIR += font-genshingothic
     SUBDIR += font-hackgen
@@ -95,6 +97,9 @@
     SUBDIR += font-myricam
     SUBDIR += font-naga10
     SUBDIR += font-nasu
+    SUBDIR += font-plemoljp
+    SUBDIR += font-plemoljp-hs
+    SUBDIR += font-plemoljp-nf
     SUBDIR += font-ricty
     SUBDIR += font-ricty-discord
     SUBDIR += font-rounded-mgenplus
@@ -213,6 +218,7 @@
     SUBDIR += prn
     SUBDIR += py-jaconv
     SUBDIR += qkc
+    SUBDIR += qolibri
     SUBDIR += quit
     SUBDIR += roget-fpw
     SUBDIR += rogue_s

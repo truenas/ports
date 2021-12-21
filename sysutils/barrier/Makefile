@@ -9,10 +9,11 @@ COMMENT=	Mouse and keyboard sharing utility
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USES=		cmake compiler:c++14-lang localbase:ldflags pkgconfig ssl xorg
+USES=		cmake compiler:c++14-lang cpe localbase:ldflags pkgconfig ssl xorg
 USE_GITHUB=	yes
 GH_ACCOUNT=	debauchee
 USE_XORG=	ice sm x11 xext xi xinerama xrandr xtst
+CPE_VENDOR=	barrier_project
 
 CMAKE_ARGS=	-DBARRIER_BUILD_DATE=00000000
 
@@ -20,8 +21,6 @@ MAKE_JOBS_UNSAFE=	yes
 
 OPTIONS_DEFINE=		EXAMPLES GUI
 OPTIONS_DEFAULT=	GUI
-# no GUI option on 11.x with base SSL since qt5-network is not available
-OPTIONS_EXCLUDE=	${${OPSYS} == FreeBSD && ${OSVERSION} < 1200085 && ${SSL_DEFAULT} == base:?GUI:}
 OPTIONS_SUB=		yes
 
 GUI_DESC=	Build configuration utility (requires Qt 5)

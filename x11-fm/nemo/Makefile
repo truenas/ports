@@ -2,6 +2,7 @@
 
 PORTNAME=	nemo
 PORTVERSION=	4.8.3
+PORTREVISION=	1
 CATEGORIES=	x11-fm gnome
 DIST_SUBDIR=	gnome
 
@@ -36,8 +37,6 @@ USE_GNOME=	cairo gdkpixbuf2 gtk30 intlhack introspection libxml2 pango pygobject
 USE_XORG=	x11
 
 GLIB_SCHEMAS=	org.nemo.gschema.xml
-
-INSTALLS_ICONS=	yes
 
 USE_LDCONFIG=	yes
 

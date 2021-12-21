@@ -1,7 +1,7 @@
 PORTNAME=	tortoisehg
-DISTVERSION=	5.7.0
-PORTREVISION=	3
+DISTVERSION=	5.9.3
 CATEGORIES=	devel
+MASTER_SITES=	https://www.mercurial-scm.org/release/tortoisehg/targz/
 
 MAINTAINER=	arrowd@FreeBSD.org
 COMMENT=	GUI for Mercurial VCS
@@ -12,18 +12,11 @@ LICENSE_FILE=	${WRKSRC}/COPYING.txt
 BUILD_DEPENDS=	${PY_MERCURIAL}
 RUN_DEPENDS=	${PY_MERCURIAL} \
 		${PYTHON_PKGNAMEPREFIX}iniparse>=0.4:devel/py-iniparse@${PY_FLAVOR} \
-		${PY_PYGMENTS}
+		${PYTHON_PKGNAMEPREFIX}pygments>=0:textproc/py-pygments@${PY_FLAVOR}
 
 USES=		pyqt:5 python:3.5+
 USE_PYQT=	core gui network qscintilla2 xml
-USE_PYTHON=	distutils autoplist
-
-USE_GITLAB=	yes
-GL_SITE=	https://foss.heptapod.net
-GL_ACCOUNT=	mercurial/tortoisehg
-GL_PROJECT=	thg
-GL_COMMIT=	1be900fc8505ed5a93c900d19d1d8700a1b22aee
-GL_HEPTAPOD_COMMIT=	69fd57f838ac26b5fa1b94560f388a783236c6d4
+USE_PYTHON=	autoplist distutils
 
 OPTIONS_DEFINE=	NAUTILUS NLS
 NAUTILUS_DESC=	Install TortoiseHG Nautilus extension
@@ -31,17 +24,16 @@ OPTIONS_SUB=	yes
 
 NLS_USES=	gettext
 
-WRKSRC=		${WRKDIR}/${GL_PROJECT}-${GL_COMMIT}-${GL_HEPTAPOD_COMMIT}
 NO_ARCH=	yes
 SUB_FILES=	pkg-message
 
 # Do not conflict with devel/mercurial, which also installs hgext3rd/__init__.py
-EXTRACT_AFTER_ARGS=	--exclude ${GL_PROJECT}-${GL_COMMIT}-${GL_HEPTAPOD_COMMIT}/hgext3rd/__init__.py
+EXTRACT_AFTER_ARGS=	--exclude ${PORTNAME}-${DISTVERSION}/hgext3rd/__init__.py
 
 .include <bsd.port.pre.mk>
 
 .if ${PYTHON_VER} != ${PYTHON_DEFAULT}
-PKGNAMEPREFIX=		${PYTHON_PKGNAMEPREFIX}
+PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 .endif
 
 post-patch-NLS-on:

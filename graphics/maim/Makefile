@@ -1,7 +1,7 @@
 PORTNAME=	maim
 DISTVERSIONPREFIX=	v
-DISTVERSION=	5.6.3
-PORTREVISION=	4
+DISTVERSION=	5.7.4
+PORTREVISION=	2
 CATEGORIES=	graphics
 
 MAINTAINER=	0mp@FreeBSD.org
@@ -13,7 +13,8 @@ BUILD_DEPENDS=	${LOCALBASE}/include/glm/glm.hpp:math/glm
 LIB_DEPENDS=	libicuuc.so:devel/icu \
 		libImlib2.so:graphics/imlib2 \
 		libpng.so:graphics/png \
-		libslopy.so.7.5:x11/slop
+		libslopy.so:x11/slop \
+		libwebp.so:graphics/webp
 
 USES=		cmake compiler:c++11-lang gl jpeg xorg
 USE_GITHUB=	yes

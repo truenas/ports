@@ -4,10 +4,14 @@ PORTNAME=	I18Nv2
 PORTVERSION=	0.11.4
 CATEGORIES=	sysutils devel pear
 
-MAINTAINER=	miwi@FreeBSD.org
+MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	PEAR Internationalization
 
-USES=		pear php
-USE_PHP=	iconv
+LICENSE=	PHP30
+
+USES=		pear
+USE_PHP=	iconv pcre
+
+NO_ARCH=	yes
 
 .include <bsd.port.mk>

@@ -2,12 +2,12 @@
 
 PORTNAME=	enblend
 PORTVERSION=	4.2
-PORTREVISION=	14
+PORTREVISION=	18
 CATEGORIES=	graphics
 MASTER_SITES=	SF/enblend/enblend-enfuse/enblend-enfuse-${PORTVERSION}
 DISTNAME=	enblend-enfuse-${PORTVERSION}
 
-MAINTAINER=	grog@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Tool for image blending with multiresolution splines
 
 LICENSE=	GPLv2+

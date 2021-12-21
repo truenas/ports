@@ -2,7 +2,10 @@
 
     SUBDIR += amule
     SUBDIR += amule-devel
+    SUBDIR += autoscan
     SUBDIR += awgg
+    SUBDIR += bazarr
+    SUBDIR += bazarr-devel
     SUBDIR += bitcoin
     SUBDIR += bitcoin-daemon
     SUBDIR += bitcoin-utils
@@ -11,6 +14,7 @@
     SUBDIR += bitmark-cli
     SUBDIR += bitmark-daemon
     SUBDIR += bitmark-recorder
+    SUBDIR += btcheck
     SUBDIR += btpd
     SUBDIR += c-lightning
     SUBDIR += cpuminer
@@ -66,6 +70,7 @@
     SUBDIR += p5-WWW-BitTorrent
     SUBDIR += phex
     SUBDIR += py-libtorrent-rasterbar
+    SUBDIR += py-nicotine-plus
     SUBDIR += py-transmission-rpc
     SUBDIR += py-tremc
     SUBDIR += py-vertex

@@ -1,5 +1,5 @@
 PORTNAME=	pikepdf
-DISTVERSION=	2.11.2
+DISTVERSION=	2.16.1
 CATEGORIES=	textproc python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -19,7 +19,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}lxml>=4.0:devel/py-lxml@${PY_FLAVOR} \
 		${PY_PILLOW}
 TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}attrs>=20.2.0:devel/py-attrs@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}dateutil>=2.8.0:devel/py-dateutil@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}hypothesis>=5<6:devel/py-hypothesis@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}hypothesis>=0:devel/py-hypothesis@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}psutil>=5<6:sysutils/py-psutil@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}pybind11>=2.6.0:devel/py-pybind11@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}pytest>=4.4.0<7.3.5:devel/py-pytest@${PY_FLAVOR} \
@@ -29,8 +29,10 @@ TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}attrs>=20.2.0:devel/py-attrs@${PY_FLAVOR} \
 		${PY_PILLOW} \
 		${PYTHON_PKGNAMEPREFIX}python-xmp-toolkit>=2.0.1:textproc/py-python-xmp-toolkit@${PY_FLAVOR}
 
-USES=		compiler:c++14-lang python:3.6+
+USES=		compiler:c++14-lang cpe python:3.6+
 USE_PYTHON=	distutils autoplist
+
+CPE_VENDOR=	pikepdf_project
 
 TEST_ENV=	LC_ALL=en_US.UTF-8
 

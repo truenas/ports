@@ -1,7 +1,7 @@
 # Created by: Jonathan Weiss (<jw@innerewut.de>)
 
 PORTNAME=	activesupport
-PORTVERSION=	6.1.3.1
+PORTVERSION=	6.1.4.1
 CATEGORIES=	devel rubygems
 MASTER_SITES=	RG
 PKGNAMESUFFIX=	61
@@ -18,10 +18,12 @@ RUN_DEPENDS=	rubygem-concurrent-ruby>=1.0.2<2:devel/rubygem-concurrent-ruby \
 		rubygem-tzinfo>=2.0<3:devel/rubygem-tzinfo \
 		rubygem-zeitwerk>=2.3<3:devel/rubygem-zeitwerk
 
-USES=		gem
+USES=		cpe gem
 USE_RUBY=	yes
 
 NO_ARCH=	yes
+
+CPE_VENDOR=	activesupport_project
 
 PORTSCOUT=	limit:^6\.1\.
 

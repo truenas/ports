@@ -1,20 +1,11 @@
 PORTNAME=	yuzu
-PORTVERSION=	s20210427
+PORTVERSION=	s20211203
 PORTREVISION?=	0
 CATEGORIES=	emulators
 
 PATCH_SITES=	https://github.com/${GH_ACCOUNT}/${GH_PROJECT}/commit/
-PATCHFILES+=	b9695ab291f5.patch:-p1 # https://github.com/yuzu-emu/yuzu/pull/4836
-PATCHFILES+=	abdf90282438.patch:-p1 # https://github.com/yuzu-emu/yuzu/pull/5896
-PATCHFILES+=	acf3dae05eae.patch:-p1 # https://github.com/yuzu-emu/yuzu/pull/5896
-PATCHFILES+=	0b3842759127.patch:-p1 # https://github.com/yuzu-emu/yuzu/pull/5896
-PATCHFILES+=	964339d0ac20.patch:-p1 # https://github.com/yuzu-emu/yuzu/pull/5896
-PATCHFILES+=	1602b9e80410.patch:-p1 # https://github.com/yuzu-emu/yuzu/pull/5896
-PATCHFILES+=	e32b8885b4a3.patch:-p1 # https://github.com/yuzu-emu/yuzu/pull/5896
-PATCHFILES+=	225202534545.patch:-p1 # https://github.com/yuzu-emu/yuzu/pull/5896
-PATCHFILES+=	9d1a5e53149b.patch:-p1 # https://github.com/yuzu-emu/yuzu/pull/5896
-PATCHFILES+=	2f5a562b8c58.patch:-p1 # https://github.com/yuzu-emu/yuzu/pull/5896
-PATCHFILES+=	aa6638d8c01b.patch:-p1 # https://github.com/yuzu-emu/yuzu/pull/5896
+PATCHFILES+=	6904f055db88.patch:-p1 # https://github.com/yuzu-emu/yuzu/pull/6598 mainline-merge
+PATCHFILES+=	e919bea9c84e.patch:-p1 # https://github.com/yuzu-emu/yuzu/pull/7346 mainline-merge
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Nintendo Switch emulator/debugger
@@ -28,41 +19,42 @@ LICENSE_FILE_LGPL21+ =	${_LICENSE_STORE}/LGPL21 # soundtouch
 LICENSE_FILE_LGPL3+ =	${_LICENSE_STORE}/LGPL3 # sirit
 LICENSE_FILE_MIT=	${WRKSRC}/externals/sirit/externals/SPIRV-Headers/LICENSE
 
-ONLY_FOR_ARCHS=	aarch64 amd64 powerpc64
-ONLY_FOR_ARCHS_REASON=	requires int128
+ONLY_FOR_ARCHS=	aarch64 amd64
+ONLY_FOR_ARCHS_REASON=	requires int128 and dynarmic backend
+BROKEN_aarch64=	https://github.com/yuzu-emu/yuzu/issues/5290
 
 BUILD_DEPENDS=	catch>0:devel/catch \
+		boost-libs>0:devel/boost-libs \
 		nlohmann-json>0:devel/nlohmann-json \
 		glslangValidator:graphics/glslang
 LIB_DEPENDS=	liblz4.so:archivers/liblz4 \
 		libzstd.so:archivers/zstd \
 		libopus.so:audio/opus \
-		libboost_context.so:devel/boost-libs \
 		libavcodec.so:multimedia/ffmpeg
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	yuzu-emu
-GH_TAGNAME=	b096ec68c
-GH_TUPLE=	yuzu-emu:mbedtls:v2.16.9-52-geac2416b8:mbedtls/externals/mbedtls \
-		KhronosGroup:SPIRV-Headers:2c51218:SPIRV_Headers/externals/sirit/externals/SPIRV-Headers \
-		KhronosGroup:Vulkan-Headers:v1.2.145:Vulkan_Headers/externals/Vulkan-Headers \
-		MerryMage:dynarmic:r4-219-gb2a4da5e:dynarmic/externals/dynarmic \
-		ReinUsesLisp:sirit:eefca56:sirit/externals/sirit \
+GH_TAGNAME=	a2fb5a13b
+GH_TUPLE=	yuzu-emu:mbedtls:v2.16.9-115-g8c88150ca:mbedtls/externals/mbedtls \
+		KhronosGroup:SPIRV-Headers:1.5.4.raytracing.fixed-32-ga3fdfe8:SPIRV_Headers/externals/sirit/externals/SPIRV-Headers \
+		KhronosGroup:Vulkan-Headers:v1.2.180:Vulkan_Headers/externals/Vulkan-Headers \
+		MerryMage:dynarmic:r5-127-gcce7e4ee:dynarmic/externals/dynarmic \
+		ReinUsesLisp:sirit:a395963:sirit/externals/sirit \
 		arsenm:sanitizers-cmake:aab6948:sanitizers_cmake/externals/cubeb/cmake/sanitizers-cmake \
+		benhoyt:inih:r52:inih/externals/inih/inih \
 		citra-emu:ext-soundtouch:060181e:soundtouch/externals/soundtouch \
-		fmtlib:fmt:7.1.2:fmt/externals/fmt \
+		fmtlib:fmt:8.0.0:fmt/externals/fmt \
 		herumi:xbyak:v5.96:xbyak/externals/xbyak \
-		nih-at:libzip:rel-1-5-2-93-g89bd6d63:libzip/externals/libzip/libzip \
-		kinetiknz:cubeb:cubeb-0.2-1298-g8d53747:cubeb/externals/cubeb \
-		benhoyt:inih:r52:inih/externals/inih/inih
+		kinetiknz:cubeb:cubeb-0.2-1345-g773f16b:cubeb/externals/cubeb \
+		yhirose:cpp-httplib:v0.9.0-5-g9648f95:cpp_httplib/externals/cpp-httplib
 
-USES=		cmake compiler:c++17-lang localbase:ldflags sdl ssl
+USES=		cmake:testing compiler:c++17-lang localbase:ldflags sdl ssl
 USE_GCC=	yes:build # libc++ lacks std::atomic_ref, std::ranges
 USE_SDL=	sdl2
-CMAKE_OFF=	ENABLE_GNUTLS ENABLE_MBEDTLS
+CMAKE_ON=	Boost_USE_STATIC_LIBS LIBVA_FOUND
+CMAKE_OFF=	YUZU_USE_EXTERNAL_SDL2 ENABLE_GNUTLS ENABLE_MBEDTLS
 LDFLAGS+=	-static-libstdc++ # avoid libc++ conflict, requires files/patch-fmt
 LDFLAGS+=	-Wl,--as-needed # Qt5Network
-TEST_TARGET=	test
 
 OPTIONS_DEFINE=	ALSA PULSEAUDIO JACK SNDIO VULKAN
 OPTIONS_DEFAULT=PULSEAUDIO JACK SNDIO VULKAN

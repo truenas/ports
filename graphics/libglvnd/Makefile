@@ -1,14 +1,12 @@
 PORTNAME=	libglvnd
-DISTVERSION=	1.3.2
+DISTVERSION=	1.3.4
 CATEGORIES=	graphics
 
-MAINTAINER=	greg@unrelenting.technology
+MAINTAINER=	x11@FreeBSD.org
 COMMENT=	GL Vendor-Neutral Dispatch library
 
 LICENSE=	APACHE20 MIT
 LICENSE_COMB=	multi
-
-CONFLICTS_INSTALL=	mesa-libs # include/GL/gl.h
 
 USES=		localbase meson pkgconfig
 USE_LDCONFIG=	yes
@@ -16,7 +14,7 @@ USE_LDCONFIG=	yes
 USE_GITLAB=	yes
 GL_SITE=	https://gitlab.freedesktop.org
 GL_ACCOUNT=	glvnd
-GL_COMMIT=	da0edd9728d6d33aa0d058037b694ee91a7ecad5
+GL_COMMIT=	dc084876b411366c3785b7584c216356169bb45e
 
 OPTIONS_DEFINE=	X11
 OPTIONS_DEFAULT=X11
@@ -37,7 +35,5 @@ USES+=		compiler:c++11-lib
 # Lots of software expects gl.pc even when it can build with EGL only
 post-install-X11-off:
 	${LN} -s opengl.pc ${STAGEDIR}${PREFIX}/libdata/pkgconfig/gl.pc
-	${REINPLACE_CMD} -e '/Cflags:/s/$$/ -DEGL_NO_X11/' \
-		${STAGEDIR}${PREFIX}/libdata/pkgconfig/egl.pc
 
 .include <bsd.port.mk>

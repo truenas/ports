@@ -1,7 +1,7 @@
 # Created by: Ivan Lago <ivan.lago@ifom-ieo-campus.it>
 
 PORTNAME=	syslog-ng
-DISTVERSION=	3.31.2
+DISTVERSION=	3.35.1
 CATEGORIES=	sysutils
 MASTER_SITES=	https://github.com/balabit/syslog-ng/releases/download/syslog-ng-${DISTVERSION}/
 
@@ -17,12 +17,14 @@ BROKEN_sparc64=		fails to link: Internal error: Segmentation fault (program ld)
 LIB_DEPENDS=	libpcre.so:devel/pcre \
 		libuuid.so:misc/e2fsprogs-libuuid
 
-USES=		autoreconf:build compiler:c11 gettext-runtime gmake gnome \
+USES=		autoreconf:build compiler:c11 cpe gettext-runtime gmake gnome \
 		libtool pathfix pkgconfig python:3.5+,build shebangfix ssl
 
-CONFLICTS?=	syslog-ng-[0-9]* syslog-ng[0-9]-[0-9]* \
-		syslog-ng[0-9][0-9]-[0-9]* \
-		syslog-ng-devel-[0-9]* eventlog*
+CPE_VENDOR=	oneidentity
+
+CONFLICTS?=	syslog-ng syslog-ng[0-9] \
+		syslog-ng[0-9][0-9] \
+		syslog-ng-devel eventlog*
 WRKSRC=		${WRKDIR}/${PORTNAME}-${DISTVERSION}
 
 MAKE_JOBS_UNSAFE=	yes

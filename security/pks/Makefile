@@ -17,7 +17,7 @@ BROKEN_SSL=	openssl
 BROKEN_SSL_REASON_openssl=	member access into incomplete type 'EVP_PKEY' (aka 'evp_pkey_st')
 
 USES=		bdb ssl
-USE_GCC=	any
+USE_GCC=	yes
 USE_RC_SUBR=	pksd
 
 WRKSRC=		${WRKDIR}/${PORTNAME}
@@ -53,7 +53,7 @@ post-install-DOCS-on:
 
 .include <bsd.port.options.mk>
 
-.if ${OPSYS} == FreeBSD && ${OSVERSION} >= 1200085 && ${SSL_DEFAULT} == base
+.if ${OPSYS} == FreeBSD && ${SSL_DEFAULT} == base
 BROKEN=	Does not build with OpenSSL 1.1
 .endif
 

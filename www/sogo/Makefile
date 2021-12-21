@@ -1,6 +1,5 @@
 PORTNAME=		sogo
-PORTVERSION=		5.0.1
-PORTREVISION=		1
+PORTVERSION=		5.3.0
 CATEGORIES=		www gnustep
 MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
 DISTNAME=		SOGo-${PORTVERSION}
@@ -14,7 +13,9 @@ LIB_DEPENDS=		libmemcached.so:databases/libmemcached \
 			libcurl.so:ftp/curl \
 			libsodium.so:security/libsodium \
 			libzip.so:archivers/libzip \
-			libDOM.so:devel/sope
+			libDOM.so:devel/sope \
+			libytnef.so:converters/ytnef
+
 RUN_DEPENDS=		zip:archivers/zip
 
 OPTIONS_DEFAULT=	MFA
@@ -38,21 +39,22 @@ SAML2_CONFIGURE_ON=	--enable-saml2
 
 USERS=			sogod
 GROUPS=			sogod
-USES=			gettext-runtime gnustep objc pkgconfig shebangfix ssl
+USES=			cpe gettext-runtime gnustep objc pkgconfig shebangfix ssl
+CPE_VENDOR=		inverse
 USE_GNUSTEP=		base build
 USE_LDCONFIG=		${GNUSTEP_LOCAL_LIBRARIES}/sogo
 
 SHEBANG_LANG=		python
 SHEBANG_FILES=		${WRKSRC}/SoObjects/SOGo/gen-saml2-exceptions.py
 
-CONFLICTS?=		sogo[2-4]-activesync-[0-9]* sogo[2-4]-[0-9]*
+CONFLICTS?=		sogo[2-4]-activesync sogo[2-4]
 
 USE_RC_SUBR=		sogod
 
 SUB_FILES+=		pkg-message
 SUB_LIST+=		GNUSTEP_LOCAL_TOOLS=${GNUSTEP_LOCAL_TOOLS} \
 			GNUSTEP_MAKEFILES=${GNUSTEP_MAKEFILES}
-CONFIGURE_ARGS+=		--disable-debug --enable-strip
+CONFIGURE_ARGS+=		--disable-debug --disable-strip
 
 post-patch:
 	@${GREP} -rlF '/etc/sogo' ${WRKSRC} \

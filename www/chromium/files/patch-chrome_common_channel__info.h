@@ -1,6 +1,6 @@
---- chrome/common/channel_info.h.orig	2021-04-14 18:40:56 UTC
+--- chrome/common/channel_info.h.orig	2021-09-14 01:51:52 UTC
 +++ chrome/common/channel_info.h
-@@ -70,7 +70,7 @@ std::string GetChannelSuffixForDataDir();
+@@ -101,7 +101,7 @@ std::string GetChannelSuffixForDataDir();
  
  // TODO(crbug.com/1052397): Revisit the macro expression once build flag switch
  // of lacros-chrome is complete.

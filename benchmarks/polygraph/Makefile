@@ -13,9 +13,11 @@ COMMENT=	Benchmarking tool for Web proxies
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
+BROKEN_aarch64=		does not build: libstdc++.so: undefined reference to __floatunditf@GCC_4.2.0
+
 USES=		gmake ncurses shebangfix
 SHEBANG_FILES=	tools/*.pl
-USE_GCC=	any
+USE_GCC=	yes
 GNU_CONFIGURE=	yes
 
 # The port does not build with C++11 or later (bug 219275).

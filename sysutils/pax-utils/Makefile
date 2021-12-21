@@ -1,7 +1,7 @@
 # Created by: Timothy Redaelli
 
 PORTNAME=	pax-utils
-PORTVERSION=	1.3.1
+PORTVERSION=	1.3.2
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 
@@ -15,9 +15,7 @@ BUILD_DEPENDS=	xmlto:textproc/xmlto
 
 USES=		gmake tar:xz
 USE_GITHUB=	yes
-
 GH_ACCOUNT=	gentoo
-GH_PROJECT=	pax-utils
 
 PLIST_FILES=	bin/dumpelf \
 		bin/pspax \

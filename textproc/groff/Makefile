@@ -2,7 +2,7 @@
 
 PORTNAME=	groff
 PORTVERSION=	1.22.4
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	textproc
 MASTER_SITES=	GNU
 
@@ -18,7 +18,7 @@ RUN_DEPENDS:=	psselect:print/psutils
 
 MAKE_JOBS_UNSAFE=	yes
 
-USES=		cpe gmake perl5 makeinfo
+USES=		cpe gmake iconv:wchar_t perl5 makeinfo
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS+=	--with-urw-fonts-dir=${LOCALBASE}/share/ghostscript/fonts/ \
 			--with-awk=/usr/bin/awk \
@@ -40,7 +40,7 @@ PAPERSIZE=A4
 CONFIGURE_ENV+=	PAGE=${PAPERSIZE}
 .endif
 
-CONFLICTS=	ja-groff-[0-9]*
+CONFLICTS=	ja-groff
 
 INFO=	groff
 

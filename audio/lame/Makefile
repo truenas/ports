@@ -2,7 +2,7 @@
 
 PORTNAME=	lame
 PORTVERSION=	3.100
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	audio
 MASTER_SITES=	SF/${PORTNAME:tl}/${PORTNAME:tl}/3.100
 
@@ -12,12 +12,11 @@ COMMENT=	Fast MP3 encoder kit
 LICENSE=		LGPL20+
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-BROKEN_riscv64=	fails to compile: needs FP_X_INV from empty sys/riscv/include/ieeefp.h
-
-USES=		gmake iconv libtool
+USES=		cpe gmake iconv libtool
 USE_LDCONFIG=	yes
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--enable-nasm --enable-mp3rtp --disable-gtktest
+CPE_VENDOR=	lame_project
 
 DOC_FILES=	API LICENSE README TODO USAGE
 

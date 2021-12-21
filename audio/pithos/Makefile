@@ -1,7 +1,7 @@
 # Created by: John Hixson <john@pcbsd.org>
 
 PORTNAME=	pithos
-PORTVERSION=	1.5.0
+PORTVERSION=	1.5.1
 CATEGORIES=	audio
 
 MAINTAINER=	jhixson@FreeBSD.org
@@ -27,8 +27,6 @@ USE_GNOME=	glib20
 USE_GSTREAMER1=	core good bad soup
 
 GLIB_SCHEMAS=	io.github.Pithos.gschema.xml
-
-INSTALLS_ICONS=	yes
 
 SHEBANG_FILES=	bin/pithos.in docs/conf.py meson_post_install.py
 

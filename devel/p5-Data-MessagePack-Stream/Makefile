@@ -5,7 +5,7 @@ CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
-MAINTAINER=	kuriyama@FreeBSD.org
+MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Perl extension for yet another messagepack streaming deserializer
 
 BROKEN_mips=		fails to build: atomic operations are not found
@@ -22,5 +22,6 @@ CFLAGS_aarch64=	-fPIC
 CFLAGS_armv7=	-fPIC
 CFLAGS_i386=	-fPIC
 CFLAGS_powerpc=	-fPIC
+CFLAGS_riscv64=	-fPIC
 
 .include <bsd.port.mk>

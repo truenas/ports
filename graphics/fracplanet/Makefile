@@ -2,7 +2,7 @@
 
 PORTNAME=	fracplanet
 PORTVERSION=	0.5.1
-PORTREVISION=	11
+PORTREVISION=	12
 CATEGORIES=	graphics
 MASTER_SITES=	SF \
 		SF/nemysisfreebsdp/:icons
@@ -28,7 +28,6 @@ DESKTOP_ENTRIES=	"Fracplanet" \
 			"${PORTNAME}" \
 			"Graphics;" \
 			""
-INSTALLS_ICONS=	yes
 PORTDOCS=	*
 WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}
 

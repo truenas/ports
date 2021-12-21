@@ -184,6 +184,7 @@ include/gnome-builder-%%BUILDER_VERSION%%/libide/lsp/ide-lsp-formatter.h
 include/gnome-builder-%%BUILDER_VERSION%%/libide/lsp/ide-lsp-highlighter.h
 include/gnome-builder-%%BUILDER_VERSION%%/libide/lsp/ide-lsp-hover-provider.h
 include/gnome-builder-%%BUILDER_VERSION%%/libide/lsp/ide-lsp-rename-provider.h
+include/gnome-builder-%%BUILDER_VERSION%%/libide/lsp/ide-lsp-search-provider.h
 include/gnome-builder-%%BUILDER_VERSION%%/libide/lsp/ide-lsp-symbol-node.h
 include/gnome-builder-%%BUILDER_VERSION%%/libide/lsp/ide-lsp-symbol-resolver.h
 include/gnome-builder-%%BUILDER_VERSION%%/libide/lsp/ide-lsp-symbol-tree.h
@@ -284,7 +285,6 @@ include/gnome-builder/gstyle/gstyle-color-widget.h
 include/gnome-builder/gstyle/gstyle-color.h
 include/gnome-builder/gstyle/gstyle-colorlexer.h
 include/gnome-builder/gstyle/gstyle-css-provider.h
-include/gnome-builder/gstyle/gstyle-eyedropper.h
 include/gnome-builder/gstyle/gstyle-hsv.h
 include/gnome-builder/gstyle/gstyle-palette-widget.h
 include/gnome-builder/gstyle/gstyle-palette.h
@@ -295,8 +295,8 @@ include/gnome-builder/gstyle/gstyle-slidein.h
 include/gnome-builder/gstyle/gstyle-types.h
 include/gnome-builder/gstyle/gstyle-utils.h
 include/gnome-builder/gstyle/gstyle-xyz.h
-lib/gnome-builder/girepository-1.0/Ide-%%BUILDER_VERSION%%.typelib
-lib/gnome-builder/pkgconfig/gnome-builder-%%BUILDER_VERSION%%.pc
+lib/gnome-builder/girepository-1.0/Ide-%%BUILDER_VERSION%%.0.typelib
+lib/gnome-builder/pkgconfig/gnome-builder-%%BUILDER_VERSION%%.3.pc
 lib/gnome-builder/plugins/cargo.plugin
 lib/gnome-builder/plugins/cargo_plugin.py
 lib/gnome-builder/plugins/copyright.plugin
@@ -316,6 +316,8 @@ lib/gnome-builder/plugins/gvls_plugin.py
 lib/gnome-builder/plugins/html-preview.plugin
 lib/gnome-builder/plugins/html_preview.gresource
 lib/gnome-builder/plugins/html_preview.py
+lib/gnome-builder/plugins/jedi-language-server.plugin
+lib/gnome-builder/plugins/jedi_language_server_plugin.py
 lib/gnome-builder/plugins/make.plugin
 lib/gnome-builder/plugins/make_plugin.gresource
 lib/gnome-builder/plugins/make_plugin.py
@@ -332,12 +334,11 @@ lib/gnome-builder/plugins/phpize.plugin
 lib/gnome-builder/plugins/phpize_plugin.py
 lib/gnome-builder/plugins/python-gi-imports-completion.plugin
 lib/gnome-builder/plugins/python_gi_imports_completion.py
-lib/gnome-builder/plugins/rustup.plugin
-lib/gnome-builder/plugins/rustup_plugin.gresource
-lib/gnome-builder/plugins/rustup_plugin.py
 lib/gnome-builder/plugins/stylelint.plugin
 lib/gnome-builder/plugins/stylelint_plugin.py
 lib/gnome-builder/plugins/vala-pack.plugin
+lib/gnome-builder/plugins/vala_langserv.plugin
+lib/gnome-builder/plugins/vala_langserv.py
 lib/gnome-builder/plugins/vala_pack_plugin.py
 lib/gnome-builder/plugins/valgrind.plugin
 lib/gnome-builder/plugins/valgrind_plugin.gresource
@@ -350,7 +351,7 @@ libexec/gnome-builder-git
 share/applications/org.gnome.Builder.desktop
 share/dbus-1/services/org.gnome.Builder.service
 %%DATADIR%%/fonts/BuilderBlocks.ttf
-%%DATADIR%%/gir-1.0/Ide-%%BUILDER_VERSION%%.gir
+%%DATADIR%%/gir-1.0/Ide-%%BUILDER_VERSION%%.0.gir
 %%DATADIR%%/icons/hicolor/16x16/actions/builder-build-configure-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/16x16/actions/builder-build-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/16x16/actions/builder-debugger-symbolic.symbolic.png
@@ -366,7 +367,9 @@ share/dbus-1/services/org.gnome.Builder.service
 %%DATADIR%%/icons/hicolor/16x16/actions/builder-unit-tests-pass-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/16x16/actions/builder-unit-tests-running-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/16x16/actions/builder-unit-tests-symbolic.symbolic.png
+%%DATADIR%%/icons/hicolor/16x16/actions/builder-vcs-branch-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/16x16/actions/builder-vcs-git-symbolic.symbolic.png
+%%DATADIR%%/icons/hicolor/16x16/actions/builder-vcs-tag-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/16x16/actions/builder-view-bottom-pane-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/16x16/actions/builder-view-left-pane-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/16x16/actions/builder-view-right-pane-symbolic.symbolic.png
@@ -454,8 +457,10 @@ share/dbus-1/services/org.gnome.Builder.service
 %%DATADIR%%/icons/hicolor/32x32/actions/builder-unit-tests-pass-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/32x32/actions/builder-unit-tests-running-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/32x32/actions/builder-unit-tests-symbolic.symbolic.png
+%%DATADIR%%/icons/hicolor/32x32/actions/builder-vcs-branch-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/32x32/actions/builder-vcs-git-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/32x32/actions/builder-vcs-git.png
+%%DATADIR%%/icons/hicolor/32x32/actions/builder-vcs-tag-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/32x32/actions/builder-view-bottom-pane-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/32x32/actions/builder-view-left-pane-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/32x32/actions/builder-view-right-pane-symbolic.symbolic.png
@@ -542,8 +547,10 @@ share/dbus-1/services/org.gnome.Builder.service
 %%DATADIR%%/icons/hicolor/48x48/actions/builder-unit-tests-pass-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/48x48/actions/builder-unit-tests-running-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/48x48/actions/builder-unit-tests-symbolic.symbolic.png
+%%DATADIR%%/icons/hicolor/48x48/actions/builder-vcs-branch-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/48x48/actions/builder-vcs-git-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/48x48/actions/builder-vcs-git.png
+%%DATADIR%%/icons/hicolor/48x48/actions/builder-vcs-tag-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/48x48/actions/builder-view-bottom-pane-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/48x48/actions/builder-view-left-pane-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/48x48/actions/builder-view-right-pane-symbolic.symbolic.png
@@ -630,7 +637,9 @@ share/dbus-1/services/org.gnome.Builder.service
 %%DATADIR%%/icons/hicolor/64x64/actions/builder-unit-tests-pass-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/64x64/actions/builder-unit-tests-running-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/64x64/actions/builder-unit-tests-symbolic.symbolic.png
+%%DATADIR%%/icons/hicolor/64x64/actions/builder-vcs-branch-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/64x64/actions/builder-vcs-git-symbolic.symbolic.png
+%%DATADIR%%/icons/hicolor/64x64/actions/builder-vcs-tag-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/64x64/actions/builder-view-bottom-pane-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/64x64/actions/builder-view-left-pane-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/64x64/actions/builder-view-right-pane-symbolic.symbolic.png
@@ -703,6 +712,7 @@ share/dbus-1/services/org.gnome.Builder.service
 %%DATADIR%%/icons/hicolor/64x64/mimetypes/text-x-vala-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/64x64/mimetypes/text-xml-symbolic.symbolic.png
 %%DATADIR%%/icons/hicolor/scalable/actions/builder-build-configure-symbolic.svg
+%%DATADIR%%/icons/hicolor/scalable/actions/builder-build-stop-symbolic.svg
 %%DATADIR%%/icons/hicolor/scalable/actions/builder-build-symbolic.svg
 %%DATADIR%%/icons/hicolor/scalable/actions/builder-debugger-symbolic.svg
 %%DATADIR%%/icons/hicolor/scalable/actions/builder-documentation-symbolic.svg
@@ -710,6 +720,8 @@ share/dbus-1/services/org.gnome.Builder.service
 %%DATADIR%%/icons/hicolor/scalable/actions/builder-move-left-symbolic.svg
 %%DATADIR%%/icons/hicolor/scalable/actions/builder-move-right-symbolic.svg
 %%DATADIR%%/icons/hicolor/scalable/actions/builder-profiler-symbolic.svg
+%%DATADIR%%/icons/hicolor/scalable/actions/builder-run-start-symbolic.svg
+%%DATADIR%%/icons/hicolor/scalable/actions/builder-run-stop-symbolic.svg
 %%DATADIR%%/icons/hicolor/scalable/actions/builder-split-tab-left-symbolic.svg
 %%DATADIR%%/icons/hicolor/scalable/actions/builder-split-tab-right-symbolic.svg
 %%DATADIR%%/icons/hicolor/scalable/actions/builder-split-tab-symbolic.svg
@@ -717,7 +729,9 @@ share/dbus-1/services/org.gnome.Builder.service
 %%DATADIR%%/icons/hicolor/scalable/actions/builder-unit-tests-pass-symbolic.svg
 %%DATADIR%%/icons/hicolor/scalable/actions/builder-unit-tests-running-symbolic.svg
 %%DATADIR%%/icons/hicolor/scalable/actions/builder-unit-tests-symbolic.svg
+%%DATADIR%%/icons/hicolor/scalable/actions/builder-vcs-branch-symbolic.svg
 %%DATADIR%%/icons/hicolor/scalable/actions/builder-vcs-git-symbolic.svg
+%%DATADIR%%/icons/hicolor/scalable/actions/builder-vcs-tag-symbolic.svg
 %%DATADIR%%/icons/hicolor/scalable/actions/builder-view-bottom-pane-symbolic.svg
 %%DATADIR%%/icons/hicolor/scalable/actions/builder-view-left-pane-symbolic.svg
 %%DATADIR%%/icons/hicolor/scalable/actions/builder-view-right-pane-symbolic.svg
@@ -771,6 +785,7 @@ share/dbus-1/services/org.gnome.Builder.service
 %%DATADIR%%/icons/hicolor/scalable/actions/xml-declaration-symbolic.svg
 %%DATADIR%%/icons/hicolor/scalable/actions/xml-element-symbolic.svg
 %%DATADIR%%/icons/hicolor/scalable/apps/org.gnome.Builder-symbolic.svg
+%%DATADIR%%/icons/hicolor/scalable/apps/org.gnome.Builder.Devel.svg
 %%DATADIR%%/icons/hicolor/scalable/apps/org.gnome.Builder.svg
 %%DATADIR%%/icons/hicolor/scalable/mimetypes/application-x-php-symbolic.svg
 %%DATADIR%%/icons/hicolor/scalable/mimetypes/text-css-symbolic.svg

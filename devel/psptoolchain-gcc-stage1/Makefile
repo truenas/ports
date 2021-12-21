@@ -8,12 +8,12 @@ MASTER_SITES=		GCC
 PKGNAMEPREFIX=		psptoolchain-
 PKGNAMESUFFIX?=		-stage1
 
-MAINTAINER=		tphilipp@potion-studios.com
+MAINTAINER=		ports@FreeBSD.org
 COMMENT=		PlayStation Portable development toolchain ${PORTNAME}
 
 LICENSE=		GPLv3
 
-ONLY_FOR_ARCHS=		amd64 i386 powerpc64 powerpc64le
+ONLY_FOR_ARCHS=		aarch64 amd64 armv7 i386 powerpc powerpc64 powerpc64le
 
 LIB_DEPENDS=		libgmp.so:math/gmp \
 			libmpfr.so:math/mpfr \
@@ -36,7 +36,8 @@ BUILD_DEPENDS+=		psp-addr2line:devel/psptoolchain-binutils \
 			psp-strip:devel/psptoolchain-binutils \
 			objdump:devel/binutils
 
-USES+=			compiler:c11 gmake libtool tar:bzip2
+USES+=			compiler:c11 cpe gmake libtool tar:bzip2
+CPE_VENDOR=		gnu
 
 MAKE_ENV+=		PATH=${LOCALBASE}/${PSP_GCC_STAGE_PREFIX}/bin:${PREFIX}/bin:${PATH}
 HAS_CONFIGURE=		yes

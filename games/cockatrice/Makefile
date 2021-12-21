@@ -2,6 +2,7 @@
 
 PORTNAME=	Cockatrice
 PORTVERSION=	2.8.0
+PORTREVISION=	1
 CATEGORIES=	games
 
 MAINTAINER=	sbruno@FreeBSD.org
@@ -17,7 +18,6 @@ USE_QT=		buildtools_build concurrent core network qmake_build websockets widgets
 USE_GITHUB=	yes
 GH_TAGNAME=	2021-01-26-Release-2.8.0
 
-INSTALLS_ICONS=	yes
 DATADIR=	${PREFIX}/share/${PORTNAME:tl}
 
 OPTIONS_DEFINE=		COCKATRICE SERVATRICE MYSQL

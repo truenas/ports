@@ -38,6 +38,7 @@
     SUBDIR += cinnamon-translations
     SUBDIR += cldr-emoji-annotation
     SUBDIR += clex
+    SUBDIR += clifm
     SUBDIR += cloc
     SUBDIR += clpbar
     SUBDIR += cmatrix
@@ -132,7 +133,7 @@
     SUBDIR += frugally-deep
     SUBDIR += ftdi-eeprom
     SUBDIR += fxload
-    SUBDIR += gcstar
+    SUBDIR += g810-led
     SUBDIR += gedkeeper
     SUBDIR += geekcode
     SUBDIR += getopt
@@ -222,6 +223,7 @@
     SUBDIR += libsupertone
     SUBDIR += libsweep-lidar
     SUBDIR += libutf
+    SUBDIR += libxdf
     SUBDIR += lifelines
     SUBDIR += lingoteach
     SUBDIR += locale-en_DK
@@ -262,6 +264,8 @@
     SUBDIR += ompl
     SUBDIR += ondir
     SUBDIR += opencyc
+    SUBDIR += openhab
+    SUBDIR += openhab-addons
     SUBDIR += openhab2
     SUBDIR += openhab2-addons
     SUBDIR += openhantek
@@ -379,8 +383,10 @@
     SUBDIR += py-fuzzy
     SUBDIR += py-gluoncv
     SUBDIR += py-gluonnlp
+    SUBDIR += py-halo
     SUBDIR += py-huepy
     SUBDIR += py-kartograph
+    SUBDIR += py-log_symbols
     SUBDIR += py-mffpy
     SUBDIR += py-molequeue
     SUBDIR += py-mxnet
@@ -409,6 +415,7 @@
     SUBDIR += py-spdx
     SUBDIR += py-spdx-lookup
     SUBDIR += py-spdx-tools
+    SUBDIR += py-spinners
     SUBDIR += py-tflearn
     SUBDIR += py-tflite
     SUBDIR += py-tflite-support
@@ -424,7 +431,6 @@
     SUBDIR += qt5-examples
     SUBDIR += qt5-l10n
     SUBDIR += qt5ct
-    SUBDIR += qtchooser
     SUBDIR += quantum++
     SUBDIR += raspberrypi-gpioshutdown
     SUBDIR += raspberrypi-userland
@@ -450,16 +456,19 @@
     SUBDIR += rubygem-vpim
     SUBDIR += rump
     SUBDIR += ruut
+    SUBDIR += schilytools
     SUBDIR += sdformat
     SUBDIR += seabios
     SUBDIR += sent
     SUBDIR += seq2
+    SUBDIR += sfm
     SUBDIR += shared-mime-info
     SUBDIR += shc
     SUBDIR += shuffle
     SUBDIR += shuffle-db
     SUBDIR += since
     SUBDIR += skyutils
+    SUBDIR += slides
     SUBDIR += sloccount
     SUBDIR += sls
     SUBDIR += smssend
@@ -483,6 +492,7 @@
     SUBDIR += teseq
     SUBDIR += thefuck
     SUBDIR += thrill
+    SUBDIR += timetrace
     SUBDIR += timezonemap
     SUBDIR += tkcron
     SUBDIR += tkinfo
@@ -507,6 +517,7 @@
     SUBDIR += urh
     SUBDIR += usbids
     SUBDIR += usbrh-libusb
+    SUBDIR += usd
     SUBDIR += utftools
     SUBDIR += utouch-kmod
     SUBDIR += valentina

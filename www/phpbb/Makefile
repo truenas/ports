@@ -14,9 +14,9 @@ LICENSE_FILE=	${WRKSRC}/docs/COPYING
 
 RUN_DEPENDS=	${LOCALBASE}/share/pear/System.php:devel/pear@${PHP_FLAVOR}
 
-CONFLICTS=	phpbb-tw-[0-9]*
+CONFLICTS=	phpbb-tw
 
-USES=		tar:bzip2 php
+USES=		cpe tar:bzip2 php
 
 # The phpBB2 port supports a number of variables that may be tweaked at build
 # time.  Perform a "make options" to see more information on these variables.

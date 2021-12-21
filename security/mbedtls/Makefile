@@ -1,13 +1,15 @@
 PORTNAME=	mbedtls
-PORTVERSION=	2.16.10
+PORTVERSION=	2.16.11
 DISTVERSIONPREFIX=${PORTNAME}-
 CATEGORIES=	security devel
 
 MAINTAINER=	tijl@FreeBSD.org
 COMMENT=	SSL/TLS and cryptography library
 
-LICENSE=	APACHE20
-LICENSE_FILE=	${WRKSRC}/apache-2.0.txt
+LICENSE=	APACHE20 GPLv2+
+LICENSE_COMB=	dual
+LICENSE_FILE_APACHE20=	${WRKSRC}/apache-2.0.txt
+LICENSE_FILE_GPLv2=	${WRKSRC}/gpl-2.0.txt
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	ARMmbed
@@ -18,7 +20,7 @@ MAKE_ENV=	SHARED=1
 USES=		gmake tar:tgz
 USE_LDCONFIG=	yes
 
-CONFLICTS_INSTALL=	polarssl13-[0-9]*
+CONFLICTS_INSTALL=	polarssl13
 
 post-patch:
 	@${RM} ${WRKSRC}/include/mbedtls/*.orig

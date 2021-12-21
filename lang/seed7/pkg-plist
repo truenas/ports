@@ -131,6 +131,7 @@ lib/seed7/lib/hashsetof.s7i
 lib/seed7/lib/hmac.s7i
 lib/seed7/lib/html_ent.s7i
 lib/seed7/lib/html.s7i
+lib/seed7/lib/htmldom.s7i
 lib/seed7/lib/http_response.s7i
 lib/seed7/lib/httpserv.s7i
 lib/seed7/lib/huffman.s7i
@@ -171,6 +172,7 @@ lib/seed7/lib/pixmapfont.s7i
 lib/seed7/lib/pkcs1.s7i
 lib/seed7/lib/png.s7i
 lib/seed7/lib/poll.s7i
+lib/seed7/lib/ppm.s7i
 lib/seed7/lib/process.s7i
 lib/seed7/lib/progs.s7i
 lib/seed7/lib/propertyfile.s7i

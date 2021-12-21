@@ -1,7 +1,7 @@
 # Created by: vanhu <vanhu@netasq.com>
 
 PORTNAME=	scapy
-PORTVERSION=	2.4.4
+PORTVERSION=	2.4.5
 CATEGORIES=	net python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -16,7 +16,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}libdnet>0:net/py-libdnet@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}pypcap>0:net/py-pypcap@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}cryptography>0:security/py-cryptography@${PY_FLAVOR}
 
-USES=		python:3.6+
+USES=		cpe python:3.7+
 USE_PYTHON=	autoplist concurrent distutils
 
 NO_ARCH=	yes
@@ -33,8 +33,8 @@ PYX_DESC=	PostScript and PDF graphs drawing
 QUESO_BASE_DESC=queso OS signatures database
 SOX_DESC=	Support for VoIP
 
-GRAPH_RUN_DEPENDS=	${LOCALBASE}/bin/MagickCore-config:graphics/ImageMagick6 \
-			${LOCALBASE}/bin/dot:graphics/graphviz
+GRAPH_USES=		magick:6,run
+GRAPH_RUN_DEPENDS=	${LOCALBASE}/bin/dot:graphics/graphviz
 IPYTHON_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}ipython>0:devel/ipython@${PY_FLAVOR}
 NMAP_RUN_DEPENDS=	${LOCALBASE}/share/nmap/nmap-os-db:security/nmap
 MANUF_RUN_DEPENDS=	${LOCALBASE}/share/wireshark/manuf:net/wireshark

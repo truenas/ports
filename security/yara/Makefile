@@ -1,5 +1,5 @@
 PORTNAME=	yara
-DISTVERSION=	4.0.5
+DISTVERSION=	4.1.1
 DISTVERSIONPREFIX=	v
 CATEGORIES=	security
 
@@ -18,7 +18,8 @@ GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--enable-cuckoo --enable-dex --enable-dotnet --enable-macho --enable-magic
 INSTALL_TARGET=	install-strip
 TEST_TARGET=	check
-USES=		alias autoreconf libtool localbase pathfix pkgconfig ssl
+USES=		alias autoreconf cpe libtool localbase pathfix pkgconfig ssl
+CPE_VENDOR=	virustotal
 USE_LDCONFIG=	yes
 CPPFLAGS+=	-isystem ${OPENSSLINC}
 LIBS+=		-L${OPENSSLLIB}

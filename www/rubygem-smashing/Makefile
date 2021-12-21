@@ -1,7 +1,7 @@
 # Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
 
 PORTNAME=	smashing
-PORTVERSION=	1.3.4
+PORTVERSION=	1.3.5
 CATEGORIES=	www rubygems
 MASTER_SITES=	RG
 
@@ -21,11 +21,13 @@ RUN_DEPENDS=	rubygem-coffee-script>=2.4<3:devel/rubygem-coffee-script \
 		rubygem-thin>=1.7<2:www/rubygem-thin \
 		rubygem-thor>=1.0<2:devel/rubygem-thor
 
-USES=		gem
+USES=		cpe gem
 USE_RUBY=	yes
 
 NO_ARCH=	yes
 
 PLIST_FILES=	bin/smashing
+
+CPE_VENDOR=	smashing_project
 
 .include <bsd.port.mk>

@@ -1,8 +1,7 @@
 # Created by: Emanuel Haupt <ehaupt@FreeBSD.org>
 
 PORTNAME=	chafa
-PORTVERSION=	1.6.0
-PORTREVISION=	1
+PORTVERSION=	1.8.0
 CATEGORIES=	graphics
 MASTER_SITES=	https://hpjansson.org/chafa/releases/ \
 		https://github.com/hpjansson/chafa/releases/download/${PORTVERSION}/
@@ -15,11 +14,9 @@ LICENSE_COMB=	multi
 LICENSE_FILE_GPLv3=	${WRKSRC}/COPYING
 LICENSE_FILE_LGPL3+ =	${WRKSRC}/COPYING.LESSER
 
-BUILD_DEPENDS=	convert:graphics/ImageMagick7
 LIB_DEPENDS=	libfreetype.so:print/freetype2 \
-		libMagickCore-7.so:graphics/ImageMagick7
 
-USES=		gettext-runtime gnome libtool tar:xz
+USES=		gettext-runtime gnome libtool magick:7 tar:xz
 USE_GNOME=	glib20
 USE_LDCONFIG=	yes
 GNU_CONFIGURE=	yes

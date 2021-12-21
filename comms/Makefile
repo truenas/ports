@@ -67,7 +67,6 @@
     SUBDIR += inspectrum
     SUBDIR += iwmbt-firmware
     SUBDIR += java-simple-serial-connector
-    SUBDIR += kb
     SUBDIR += kermit
     SUBDIR += klog
     SUBDIR += libconcord
@@ -133,6 +132,8 @@
     SUBDIR += predict
     SUBDIR += py-adafruit-ampy
     SUBDIR += py-esptool
+    SUBDIR += py-fritzconnection
+    SUBDIR += py-hid
     SUBDIR += py-hidapi
     SUBDIR += py-libimobiledevice
     SUBDIR += py-pyserial
@@ -151,6 +152,7 @@
     SUBDIR += qtel
     SUBDIR += redsea
     SUBDIR += remserial
+    SUBDIR += rtl-433
     SUBDIR += rtl-sdr
     SUBDIR += rubygem-callsign
     SUBDIR += rubygem-ruby-termios
@@ -199,6 +201,7 @@
     SUBDIR += viewfax
     SUBDIR += vrflash
     SUBDIR += wsjtx
+    SUBDIR += wsjtz
     SUBDIR += wwl
     SUBDIR += wy60
     SUBDIR += xastir

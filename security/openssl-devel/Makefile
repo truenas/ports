@@ -1,11 +1,15 @@
 # Created by: Dirk Froemberg <dirk@FreeBSD.org>
 
 PORTNAME=	openssl
-DISTVERSION=	3.0.0-alpha15
+DISTVERSION=	3.0.0
+PORTREVISION=	3
 CATEGORIES=	security devel
 MASTER_SITES=	https://www.openssl.org/source/ \
 		ftp://ftp.cert.dfn.de/pub/tools/net/openssl/source/
 PKGNAMESUFFIX=	-devel
+
+PATCH_SITES=	https://github.com/openssl/openssl/commit/
+PATCHFILES=	f5485b97b6c9977c0d39c7669b9f97a879312447.patch:-p1
 
 MAINTAINER=	brnrd@FreeBSD.org
 COMMENT=	TLSv1.3 capable SSL and crypto library
@@ -13,11 +17,7 @@ COMMENT=	TLSv1.3 capable SSL and crypto library
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
-CONFLICTS_INSTALL=	libressl-[0-9]* \
-			libressl-devel-[0-9]* \
-			openssl-[0-9]*
-
-BROKEN_i386=	ld: error: undefined symbol: __atomic_is_lock_free
+CONFLICTS_INSTALL=	libressl libressl-devel openssl
 
 HAS_CONFIGURE=	yes
 CONFIGURE_SCRIPT=	config
@@ -101,12 +101,12 @@ TLS1_2_DESC=	TLSv1.2
 WEAK-SSL-CIPHERS_DESC=	Weak cipher support (unsafe)
 
 # Upstream default disabled options
-.for _option in md2 ktls rc5 sctp ssl3 weak-ssl-ciphers zlib
+.for _option in fips md2 ktls rc5 sctp ssl3 weak-ssl-ciphers zlib
 ${_option:tu}_CONFIGURE_ON=	enable-${_option}
 .endfor
 
 # Upstream default enabled options
-.for _option in aria asm async ct des fips gost idea md4 mdc2 legacy \
+.for _option in aria asm async ct des gost idea md4 mdc2 legacy \
 	nextprotoneg rc2 rc4 rfc3779 rmd160 shared sm2 sm3 sm4 sse2 \
 	threads tls1 tls1_1 tls1_2
 ${_option:tu}_CONFIGURE_OFF=	no-${_option}
@@ -133,13 +133,25 @@ SHARED_VARS=		shlibs+="lib/libcrypto.so.${OPENSSL_SHLIBVER} \
 SSL3_CONFIGURE_ON+=	enable-ssl3-method
 ZLIB_CONFIGURE_ON=	zlib-dynamic
 
+SHLIBS=			lib/engines-${OPENSSL_SHLIBVER}/loader_attic.so
+
+.include <bsd.port.options.mk>
+
+.if ${ARCH} == powerpc
+CONFIGURE_ARGS+=	BSD-ppc
+.elif ${ARCH} == powerpc64
+CONFIGURE_ARGS+=	BSD-ppc64
+.elif ${ARCH} == powerpc64le
+CONFIGURE_ARGS+=	BSD-ppc64le
+.endif
+
 .include <bsd.port.pre.mk>
 .if ${PREFIX} == /usr
 IGNORE=	the OpenSSL port can not be installed over the base version
 .endif
 
 .if ${OPSYS} == FreeBSD && ${OSVERSION} < 1300000 && !${PORT_OPTIONS:MCRYPTODEV}
-CONFIGURE_ARGS+=        no-devcryptoeng
+CONFIGURE_ARGS+=	no-devcryptoeng
 .endif
 
 OPENSSLDIR?=	${PREFIX}/openssl
@@ -177,5 +189,9 @@ post-install-SHARED-off:
 
 post-install:
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/openssl
+
+post-install-MAN3-on:
+	( cd ${STAGEDIR}/${PREFIX} ; find man/man3 -not -type d ; \
+		find man/man7 -not -type d ) | sed 's/$$/.gz/' >> ${TMPPLIST}
 
 .include <bsd.port.post.mk>

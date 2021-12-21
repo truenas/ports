@@ -1,7 +1,7 @@
 # Created by: Jason Helfman <jgh@FreeBSD.org>
 
 PORTNAME=	libvirt
-PORTVERSION=	7.2.0
+PORTVERSION=	7.10.0
 CATEGORIES=	devel
 MASTER_SITES=	http://libvirt.org/sources/ \
 		ftp://libvirt.org/libvirt/
@@ -17,6 +17,7 @@ LIB_DEPENDS=	libcurl.so:ftp/curl \
 		libxml2.so:textproc/libxml2
 BUILD_DEPENDS=	dnsmasq:dns/dnsmasq \
 		${LOCALBASE}/bin/grep:textproc/gnugrep \
+		gsed:textproc/gsed \
 		rst2html-${PYTHON_VER}:textproc/py-docutils@${PY_FLAVOR} \
 		xsltproc:textproc/libxslt
 RUN_DEPENDS=	dnsmasq:dns/dnsmasq
@@ -75,9 +76,8 @@ ZFS_MESON_ENABLED=	storage_zfs
 VARDIR=		/var
 
 MESON_ARGS+=	\
-		-Ddbus=disabled \
+		-Ddriver_remote=enabled \
 		-Dpolkit=disabled \
-		-Dhal=disabled \
 		-Dudev=disabled \
 		-Dnetcf=disabled \
 		-Dsysctl_config=disabled \
@@ -109,7 +109,7 @@ USE_PERL5=	build
 USE_LDCONFIG=	yes
 INSTALL_TARGET=	install-strip
 TEST_TARGET=	check
-SHLIB_VER=	0.7002.0
+SHLIB_VER=	0.7010.0
 PLIST_SUB+=	SHLIB_VER=${SHLIB_VER}
 PORTDOCS=	*
 SHEBANG_FILES=	src/keycodemapdb/tools/keymap-gen
@@ -149,11 +149,6 @@ CONF_FILES=	\
 		virtstoraged.conf \
 		virtvboxd.conf \
 		virtxend.conf
-
-post-patch:
-	${REINPLACE_CMD} -e 's|HAVE_BSD_NSS|WITH_BSD_NSS|' \
-		${WRKSRC}/tools/nss/libvirt_nss.c \
-		${WRKSRC}/tools/nss/libvirt_nss.h
 
 post-install:
 	@${MKDIR} ${STAGEDIR}${ETCDIR}/qemu/networks/autostart

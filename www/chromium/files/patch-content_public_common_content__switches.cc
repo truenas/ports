@@ -1,6 +1,6 @@
---- content/public/common/content_switches.cc.orig	2021-04-14 18:41:03 UTC
+--- content/public/common/content_switches.cc.orig	2021-09-24 04:26:06 UTC
 +++ content/public/common/content_switches.cc
-@@ -959,7 +959,7 @@ const char kEnableAutomation[] = "enable-automation";
+@@ -997,7 +997,7 @@ const char kEnableAutomation[] = "enable-automation";
  
  // TODO(crbug.com/1052397): Revisit the macro expression once build flag switch
  // of lacros-chrome is complete.

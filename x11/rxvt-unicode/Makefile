@@ -1,8 +1,7 @@
 # Created by: gpalmer@FreeBSD.org
 
 PORTNAME=	rxvt-unicode
-PORTVERSION=	9.22
-PORTREVISION=	4
+PORTVERSION=	9.30
 CATEGORIES=	x11
 MASTER_SITES=	http://dist.schmorp.de/rxvt-unicode/%SUBDIR%/
 MASTER_SITE_SUBDIR=	. Attic
@@ -13,7 +12,8 @@ COMMENT=	Clone of the terminal emulator rxvt modified to support Unicode
 LICENSE=	GPLv2
 
 BUILD_DEPENDS=	${LOCALBASE}/libdata/pkgconfig/fontconfig.pc:x11-fonts/fontconfig
-LIB_DEPENDS=	libfreetype.so:print/freetype2
+LIB_DEPENDS=	libfreetype.so:print/freetype2	\
+		libptytty.so:sysutils/libptytty
 RUN_DEPENDS=	${LOCALBASE}/bin/fc-cache:x11-fonts/fontconfig
 
 USES=			cpe perl5 pkgconfig shebangfix tar:bzip2 xorg
@@ -21,7 +21,6 @@ USE_XORG=		x11 xft xmu xpm xrender xt
 GNU_CONFIGURE=		yes
 CPPFLAGS+=		-I${LOCALBASE}/include
 LIBS+=			-lutil
-CONFIGURE_ENV=		TIC=${LOCALBASE}/bin/tic
 CONFIGURE_ARGS=		--enable-everything --with-term=rxvt
 CPE_VENDOR=		marc_lehmann
 
@@ -112,6 +111,7 @@ GDK_PIXBUF_CONFIGURE_ENABLE=	pixbuf
 # enable startup notification
 NOTIFY_CONFIGURE_ENABLE=	startup-notification
 NOTIFY_LIB_DEPENDS=		libstartup-notification-1.so:x11/startup-notification
+NOTIFY_USE=			XORG=xcb
 
 # enable support for 256 colors
 256_COLOR_CONFIGURE_ON=	--enable-256-color

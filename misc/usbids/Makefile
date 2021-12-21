@@ -1,7 +1,7 @@
 # Created by: Michael Johnson <ahze@FreeBSD.org>
 
 PORTNAME=	usbids
-PORTVERSION=	20210331
+PORTVERSION=	20211024
 CATEGORIES=	misc
 
 MAINTAINER=	sunpoet@FreeBSD.org
@@ -15,7 +15,7 @@ NO_BUILD=	yes
 
 PORTDATA=	usb.ids
 
-GH_TAGNAME=	5e14a72
+GH_TAGNAME=	9b3a4dc
 USE_GITHUB=	yes
 
 do-install:

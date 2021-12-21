@@ -1,7 +1,7 @@
 # Created by: TAKATSU Tomonari <tota@FreeBSD.org>
 
 PORTNAME=	RMySQL
-DISTVERSION=	0.10.21
+DISTVERSION=	0.10.22
 CATEGORIES=	databases
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
@@ -14,6 +14,8 @@ CRAN_DEPENDS=	R-cran-DBI>=0.4:databases/R-cran-DBI
 BUILD_DEPENDS=	${CRAN_DEPENDS}
 RUN_DEPENDS=	${CRAN_DEPENDS}
 
-USES=	cran:auto-plist,compiles mysql
+USES=		cpe cran:auto-plist,compiles mysql
+
+CPE_VENDOR=	r-consortium
 
 .include <bsd.port.mk>

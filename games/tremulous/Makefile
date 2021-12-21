@@ -2,7 +2,7 @@
 
 PORTNAME=	tremulous
 PORTVERSION=	1.1.0
-PORTREVISION=	12
+PORTREVISION=	13
 CATEGORIES=	games
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/${PORTVERSION:R}
 
@@ -11,7 +11,7 @@ COMMENT=	Free FPS game featuring two opposing teams: humans and aliens
 
 LICENSE=	GPLv2
 
-USES=		gmake zip
+USES=		cpe gmake zip
 MAKE_ENV=	DEFAULT_BASEDIR="${DATADIR}" PTHREAD_LIBS="-lpthread"
 
 WRKSRC=		${WRKDIR}/${PORTNAME}

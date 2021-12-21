@@ -1,7 +1,7 @@
 # Created by: Ryan Steinmetz <zi@FreeBSD.org>
 
 PORTNAME=	dhcp
-ISCVERSION=	4.4.2
+ISCVERSION=	4.4.2-P1
 PORTVERSION=	${ISCVERSION:S/-P/P/:S/b/.b/:S/a/.a/:S/rc/.rc/}
 PORTREVISION=	${DHCP_PORTREVISION}
 CATEGORIES=	net
@@ -16,11 +16,13 @@ COMMENT?=	ISC Dynamic Host Configuration Protocol server
 
 LICENSE=	MPL20
 
-USES=		gmake
+USES=		cpe gmake
+
+CPE_VENDOR=	isc
 
 PORTREVISION_SERVER=	1
-PORTREVISION_CLIENT=	1
-PORTREVISION_RELAY=	1
+PORTREVISION_CLIENT=	0
+PORTREVISION_RELAY=	0
 
 SUBSYS?=	server
 
@@ -43,10 +45,10 @@ BINLEASES_DESC=		Enable support for binary insertion of leases
 CONFLICTS=	isc-dhcp3?-client-[0-9]* isc-dhcp4[123]-client-[0-9]*
 DHCP_PORTREVISION=	${PORTREVISION_CLIENT}
 .elif ${SUBSYS} == relay
-CONFLICTS=	isc-dhcp3?-relay-[0-9]* isc-dhcp4[123]-relay-[0-9]*
+CONFLICTS=	isc-dhcp3?-relay isc-dhcp4[123]-relay
 DHCP_PORTREVISION=	${PORTREVISION_RELAY}
 .else
-CONFLICTS=	isc-dhcp3?-server-[0-9]* isc-dhcp4[123]-server-[0-9]*
+CONFLICTS=	isc-dhcp3?-server isc-dhcp4[123]-server
 DHCP_PORTREVISION=	${PORTREVISION_SERVER}
 .endif
 MAKE_JOBS_UNSAFE=	yes

@@ -1,7 +1,5 @@
-# Created by: Tom Judge <tj@FreeBSD.org>
-
 PORTNAME=	elasticsearch
-PORTVERSION=	6.8.15
+PORTVERSION=	6.8.16
 CATEGORIES=	textproc java devel
 MASTER_SITES=	https://artifacts.elastic.co/downloads/${PORTNAME}/
 PKGNAMESUFFIX=	6
@@ -17,7 +15,7 @@ RUN_DEPENDS=	bash>0:shells/bash \
 
 USES=		cpe shebangfix
 
-CONFLICTS=	elasticsearch-[0-9]* elasticsearch2* elasticsearch5* elasticsearch7*
+CONFLICTS=	elasticsearch elasticsearch2* elasticsearch5* elasticsearch7*
 
 NO_ARCH=	yes
 USE_JAVA=	yes

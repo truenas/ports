@@ -2780,6 +2780,7 @@ share/metainfo/org.qgis.qgis.appdata.xml
 %%DATADIR%%/i18n/qgis_es.qm
 %%DATADIR%%/i18n/qgis_et.qm
 %%DATADIR%%/i18n/qgis_eu.qm
+%%DATADIR%%/i18n/qgis_fa.qm
 %%DATADIR%%/i18n/qgis_fi.qm
 %%DATADIR%%/i18n/qgis_fr.qm
 %%DATADIR%%/i18n/qgis_gl.qm
@@ -2800,6 +2801,7 @@ share/metainfo/org.qgis.qgis.appdata.xml
 %%DATADIR%%/i18n/qgis_ru.qm
 %%DATADIR%%/i18n/qgis_sc.qm
 %%DATADIR%%/i18n/qgis_sv.qm
+%%DATADIR%%/i18n/qgis_tr.qm
 %%DATADIR%%/i18n/qgis_uk.qm
 %%DATADIR%%/i18n/qgis_vi.qm
 %%DATADIR%%/i18n/qgis_zh-Hans.qm
@@ -4012,6 +4014,7 @@ share/metainfo/org.qgis.qgis.appdata.xml
 %%DATADIR%%/python/plugins/processing/tests/GuiTest.py
 %%DATADIR%%/python/plugins/processing/tests/ModelerTest.py
 %%DATADIR%%/python/plugins/processing/tests/OtbAlgorithmsTest.py
+%%DATADIR%%/python/plugins/processing/tests/ParametersTest.py
 %%DATADIR%%/python/plugins/processing/tests/ProcessingGeneralTest.py
 %%DATADIR%%/python/plugins/processing/tests/ProjectProvider.py
 %%DATADIR%%/python/plugins/processing/tests/QgisAlgorithmsTest1.py

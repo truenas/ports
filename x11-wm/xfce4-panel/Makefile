@@ -1,7 +1,7 @@
 # Created by: James Earl <jdearl@telus.net>
 
 PORTNAME=	xfce4-panel
-PORTVERSION=	4.16.2
+PORTVERSION=	4.16.3
 CATEGORIES=	x11-wm xfce
 MASTER_SITES=	XFCE
 DIST_SUBDIR=	xfce4
@@ -26,7 +26,6 @@ USE_XFCE=	garcon libexo xfconf
 USE_XORG=	ice sm x11 xext
 
 GNU_CONFIGURE=	yes
-INSTALLS_ICONS=	yes
 INSTALL_TARGET=	install-strip
 CONFIGURE_ARGS=	--enable-gio-unix --without-html-dir
 
@@ -39,8 +38,8 @@ OPTIONS_SUB=		yes
 GIR_DESC=		Use Gobject Introspection
 
 GIR_USE=		gnome=introspection:build
-GIR_CONFIGURE_ON=       --enable-introspection=yes
-GIR_CONFIGURE_OFF=      --enable-introspection=no
+GIR_CONFIGURE_ON=	--enable-introspection=yes
+GIR_CONFIGURE_OFF=	--enable-introspection=no
 
 NLS_CONFIGURE_ENABLE=	nls
 NLS_USES=		gettext-runtime

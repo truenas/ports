@@ -9,6 +9,9 @@ MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/${PORTVERSION}-beta
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Open Source Audio Library Project
 
+DEPRECATED=	Abandoned upstream, listed as beta and no new release since 2008
+EXPIRATION_DATE=2021-12-31
+
 RUN_DEPENDS=	mpg123:audio/mpg123
 LIB_DEPENDS=	libmp3lame.so:audio/lame \
 		libvorbis.so:audio/libvorbis
@@ -24,7 +27,7 @@ USE_LDCONFIG=	yes
 
 PLIST_SUB=	VERSION=${PORTVERSION}
 
-CONFLICTS=	libaudiofile-[0-9]*
+CONFLICTS=	libaudiofile
 
 post-patch:
 	@${FIND} ${WRKSRC} -name "*.cc" | ${XARGS} ${REINPLACE_CMD} -E \

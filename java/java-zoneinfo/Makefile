@@ -1,7 +1,7 @@
 # Created by: Greg Lewis <glewis@FreeBSD.org>
 
 PORTNAME=	zoneinfo
-DISTVERSION=	2021a
+DISTVERSION=	2021e
 CATEGORIES=	java misc
 MASTER_SITES=	LOCAL/glewis/javazi
 PKGNAMEPREFIX=	java-
@@ -13,6 +13,7 @@ COMMENT=	Updated Java timezone definitions
 LICENSE=	PD
 
 WRKSRC=		${WRKDIR}
+NO_ARCH=	yes
 NO_BUILD=	yes
 
 JAVASHAREDIR=	${PREFIX}/share/java

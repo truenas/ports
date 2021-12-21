@@ -5,7 +5,7 @@ CATEGORIES=	security
 MASTER_SITES=	GNUPG
 PKGNAMESUFFIX=	1
 
-MAINTAINER=	adamw@FreeBSD.org
+MAINTAINER=	adridg@FreeBSD.org
 COMMENT=	The GNU Privacy Guard (minimalist "classic" version)
 
 LICENSE=	GPLv3+
@@ -54,6 +54,8 @@ NLS_CONFIGURE_ENABLE=	nls
 
 .if ${ARCH} == "i386" && ${COMPILER_TYPE} == "clang"
 CFLAGS+=	-fheinous-gnu-extensions
+.elif ${ARCH} == powerpc
+USE_GCC=	yes
 .endif
 
 post-install-DOCS-on:

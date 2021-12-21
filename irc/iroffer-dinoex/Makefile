@@ -1,6 +1,6 @@
 PORTNAME=	iroffer
 PORTVERSION=	3.32
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	irc
 MASTER_SITES=	https://iroffer.net/
 PKGNAMESUFFIX=	-dinoex${PKGNAMESUFFIX2}
@@ -46,7 +46,7 @@ OPTIONS_DEFAULT=CURL RUBY UPNP GEOIP
 CURL_LIB_DEPENDS=	libcurl.so:ftp/curl
 CURL_CONFIGURE_ON=	-curl
 RUBY_USE=		RUBY=yes
-RUBY_LIB_DEPENDS=	lib${RUBY_NAME}.so:${RUBY_PORT}
+RUBY_LIB_DEPENDS=	libruby${RUBY_SHLIBVER}.so:${RUBY_PORT}
 RUBY_CONFIGURE_ON=	-ruby
 UPNP_LIB_DEPENDS=	libminiupnpc.so:net/miniupnpc
 UPNP_CONFIGURE_ON=	-upnp
@@ -58,7 +58,7 @@ GEOIP_CONFIGURE_ON=	-geoip
 .if ${PORT_OPTIONS:MRUBY}
 # make stage-qa happy
 # keep in sync with all platforms where libunwind is available
-.if (${ARCH} == amd64 || ${ARCH} == i386)
+.if ${ARCH} == aarch64 || ${ARCH} == amd64 || ${ARCH} == armv7 || ${ARCH} == i386 || ${ARCH} == powerpc64 || ${ARCH} == powerpc64le
 LIB_DEPENDS+=	libunwind.so:devel/libunwind
 .endif
 .endif

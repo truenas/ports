@@ -1,8 +1,7 @@
 # Created by: Anders Nordby <anders@FreeBSD.org>
 
 PORTNAME=	file-roller
-PORTVERSION=	3.38.0
-PORTREVISION=	1
+PORTVERSION=	3.40.0
 PORTEPOCH=	1
 CATEGORIES=	archivers gnome
 MASTER_SITES=	GNOME
@@ -21,13 +20,13 @@ RUN_DEPENDS=	gtar:archivers/gtar
 
 PORTSCOUT=	limitw:1,even
 
-USES=		desktop-file-utils gettext gnome libarchive localbase \
+USES=		cpe desktop-file-utils gettext gnome libarchive localbase \
 		meson pkgconfig python:3.5+,build tar:xz
 USE_GNOME=	cairo gtk30
-INSTALLS_ICONS=	yes
 USE_LDCONFIG=	yes
 MESON_ARGS=	-Dpackagekit=false
 BINARY_ALIAS=	python3=${PYTHON_VERSION}
+CPE_VENDOR=	gnome
 
 GLIB_SCHEMAS=	org.gnome.FileRoller.gschema.xml
 
@@ -57,7 +56,7 @@ ZIP_RUN_DEPENDS=	zip:archivers/zip
 
 NAUTILUS_DESC=	Nautilus context menu actions
 NAUTILUS_USE=	GNOME=nautilus3
-NAUTILUS_MESON_TRUE=	nautilus-actions
+NAUTILUS_MESON_ENABLED=	nautilus-actions
 
 post-patch:
 	@${REINPLACE_CMD} -e 's|%%LOCALBASE%%|${LOCALBASE}|g' \

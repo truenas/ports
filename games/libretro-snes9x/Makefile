@@ -5,17 +5,14 @@ CATEGORIES=	games
 MAINTAINER=	menelkir@itroll.org
 COMMENT=	Snes9x - Portable Super Nintendo emulator
 
+# Commercial users must seek permission from copyright holders.
 LICENSE=	PS
 LICENSE_NAME=	PS
 LICENSE_FILE=	${WRKSRC}/LICENSE
 LICENSE_PERMS=	dist-mirror pkg-mirror auto-accept
 
-BROKEN_FreeBSD_11=	linker error: unrecognized option '-plugin'
-
 USES=		compiler:c++11-lib gmake
 USE_LDCONFIG=	yes
-
-NO_CDROM=	Commercial users must seek permission from copyright holders.
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	libretro

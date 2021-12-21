@@ -1,5 +1,5 @@
 PORTNAME=	rt
-DISTVERSION=	5.0.1
+DISTVERSION=	5.0.2
 CATEGORIES=	www
 MASTER_SITES=	http://download.bestpractical.com/pub/rt/release/
 PKGNAMESUFFIX=	50
@@ -10,7 +10,7 @@ COMMENT=	Industrial-grade ticketing system written in Perl
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-CONFLICTS_INSTALL=	rt42-4.2* rt44-4.4* brlcad-[0-9]*
+CONFLICTS_INSTALL=	rt42-4.2* rt44-4.4* brlcad
 
 NO_ARCH=	yes
 
@@ -164,8 +164,6 @@ post-patch:
 	@${REINPLACE_CMD} -e 's!%%PREFIX%%!${PREFIX}!g' ${WRKSRC}/config.layout
 	@${REINPLACE_CMD} -e 's!%%SITE_PERL%%!${PREFIX}/${SITE_PERL_REL}!g' ${WRKSRC}/config.layout
 	@${REINPLACE_CMD} -e 's!/path/to/your/etc!${RT_ETC_PATH}!g' ${WRKSRC}/etc/RT_SiteConfig.pm
-	@${REINPLACE_CMD} -e 's!/bin:/usr/bin!/bin:/usr/bin:${LOCALBASE}/bin!' ${WRKSRC}/lib/RT/Interface/CLI.pm && \
-	    ${RM} ${WRKSRC}/lib/RT/Interface/CLI.pm.bak
 	@${REINPLACE_CMD} -e 's!RT_ETC_DIR!${RT_ETC_DIR}!' ${WRKSRC}/sbin/rt-test-dependencies.in
 
 pre-install:

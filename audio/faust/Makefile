@@ -1,8 +1,7 @@
 # Created by: Yuri Victorovich <yuri@FreeBSD.org>
 
 PORTNAME=	faust
-DISTVERSION=	2.30.5
-PORTREVISION=	2
+DISTVERSION=	2.37.3
 CATEGORIES=	audio devel
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -15,16 +14,18 @@ LIB_DEPENDS=	libLLVM-${LLVM_VERSION}.so:devel/llvm${LLVM_VERSION}
 RUN_DEPENDS=	bash:shells/bash
 
 USES=		compiler:c++11-lang cmake ncurses python pkgconfig shebangfix
+USE_LDCONFIG=	yes
+
 USE_GITHUB=	yes
 GH_ACCOUNT=	grame-cncm
 GH_TUPLE=	\
-		grame-cncm:faustlibraries:41b6ba7:grame_cncm_faustlibraries/libraries \
-		google:oboe:5eb2ea6:google_oboe/architecture/android/app/oboe \
-		google:oboe:5eb2ea6:google_oboe/architecture/smartKeyboard/android/app/oboe
+		grame-cncm:faustlibraries:9082369:grame_cncm_faustlibraries/libraries \
+		google:oboe:7146098:google_oboe/architecture/android/app/oboe \
+		google:oboe:7146098:google_oboe/architecture/smartKeyboard/android/app/oboe
 
 SHEBANG_FILES=	tools/faust2appls/* tools/benchmark/faustbench tools/sound2faust/sound2reader
 
-LLVM_VERSION=	11 # earlier versions lack dump() function(s) that cause unresolved symbols in libfaust.so
+LLVM_VERSION=	13 # versions <11 lacked dump() function(s) that cause unresolved symbols in libfaust.so
 
 CMAKE_SOURCE_PATH=	${WRKSRC}/build
 CMAKE_ON=	INCLUDE_DYNAMIC # only installs headers and not libs without INCLUDE_DYNAMIC or INCLUDE_STATIC: https://github.com/grame-cncm/faust/issues/553

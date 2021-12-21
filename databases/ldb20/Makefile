@@ -1,6 +1,6 @@
 PORTNAME=		ldb
 PORTVERSION=		2.0.10
-PORTREVISION=		0
+PORTREVISION=		1
 PORTEPOCH=		0
 CATEGORIES=		databases
 MASTER_SITES=		SAMBA
@@ -87,7 +87,6 @@ PLIST_FILES=		include/ldb_version.h \
 			${LDB_BINS} \
 			${LDB_LIBS} \
 			${PKGCONFIGDIR}/ldb.pc
-
 
 .include <bsd.port.pre.mk>
 

@@ -2,6 +2,7 @@
 
 PORTNAME=	ocp
 PORTVERSION=	0.2.90
+PORTREVISION=	1
 PORTEPOCH=	1
 CATEGORIES=	audio
 MASTER_SITES=	https://github.com/mywave82/opencubicplayer/releases/download/v${PORTVERSION}/
@@ -18,13 +19,10 @@ BUILD_DEPENDS=	xa65:devel/xa65
 LIB_DEPENDS=	libid3tag.so:audio/libid3tag \
 		libmad.so:audio/libmad \
 		libogg.so:audio/libogg \
-		libsidplay.so:audio/libsidplay \
 		libvorbis.so:audio/libvorbis
 
 USES=		compiler:c11 dos2unix gmake gnome iconv localbase:ldflags \
 		makeinfo ncurses pkgconfig tar:bz2
-
-INSTALLS_ICONS=	yes
 
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--libdir=${PREFIX}/lib \

@@ -6,6 +6,7 @@
     SUBDIR += admesh
     SUBDIR += adms
     SUBDIR += alliance
+    SUBDIR += appcsxcad
     SUBDIR += archimedes
     SUBDIR += astk-client
     SUBDIR += astk-serveur
@@ -18,6 +19,7 @@
     SUBDIR += cascade
     SUBDIR += cascade-compiler
     SUBDIR += chipvault
+    SUBDIR += csxcad
     SUBDIR += cura
     SUBDIR += cura-engine
     SUBDIR += digital
@@ -32,6 +34,7 @@
     SUBDIR += freecad
     SUBDIR += freehdl
     SUBDIR += fritzing
+    SUBDIR += gds3d
     SUBDIR += gdsreader
     SUBDIR += gdt
     SUBDIR += geda
@@ -64,6 +67,7 @@
     SUBDIR += klayout
     SUBDIR += ktechlab
     SUBDIR += ldraw
+    SUBDIR += ldview
     SUBDIR += leocad
     SUBDIR += lepton-eda
     SUBDIR += libopencad
@@ -85,6 +89,7 @@
     SUBDIR += openroad
     SUBDIR += openscad
     SUBDIR += openscad-devel
+    SUBDIR += opentimer
     SUBDIR += openvsp
     SUBDIR += oregano
     SUBDIR += p5-GDS2
@@ -101,6 +106,7 @@
     SUBDIR += py-pyfda
     SUBDIR += python-gdsii
     SUBDIR += qcad
+    SUBDIR += qcsxcad
     SUBDIR += qelectrotech
     SUBDIR += qflow
     SUBDIR += qmls

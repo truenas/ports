@@ -1,7 +1,7 @@
 # Created by: Bernard Spil <brnrd@FreeBSD.org>
 
 PORTNAME?=	mariadb
-PORTVERSION=	10.3.28
+PORTVERSION=	10.3.32
 PORTREVISION?=	0
 CATEGORIES=	databases
 MASTER_SITES=	http://mirrors.supportex.net/${SITESDIR}/ \
@@ -19,8 +19,6 @@ COMMENT?=	Multithreaded SQL database (server)
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
-
-BROKEN_riscv64=	fails to compile: needs FP_X_INV from empty sys/riscv/include/ieeefp.h
 
 SUB_FILES=	pkg-message
 PKGMESSAGE=	${WRKDIR}/pkg-message
@@ -94,10 +92,10 @@ DISABLED_PLUGINS+=	DAEMON_EXAMPLE DIALOG_EXAMPLES EXAMPLE \
 
 DATADIR=	${PREFIX}/share/mysql
 
-CONFLICTS_INSTALL=	mariadb10[0-24-9]-${PKGNAMESUFFIX:C/^[0-9]*-//}-* \
-			mysql[0-9]*-${PKGNAMESUFFIX:C/^[0-9]*-//}-* \
-			mysqlwsrep* \
-			percona[0-9]*-${PKGNAMESUFFIX:C/^[0-9]*-//}-*
+CONFLICTS_INSTALL=	mariadb10[0-24-9]-${PKGNAMESUFFIX:C/^[0-9]*-//} \
+			mysql[0-9]*-${PKGNAMESUFFIX:C/^[0-9]*-//} \
+			mysqlwsrep*-server \
+			percona[0-9]*-${PKGNAMESUFFIX:C/^[0-9]*-//}
 
 FASTMTX_CMAKE_BOOL=	WITH_FAST_MUTEXES
 GSSAPI_BASE_USES=	gssapi
@@ -166,12 +164,6 @@ ZSTD_LIB_DEPENDS=	libzstd.so:archivers/zstd
 CMAKE_ARGS+=		-DPLUGIN_${PLUGIN}=NO
 .endfor
 
-.if ${OPSYS} == FreeBSD && ${OSVERSION} >= 1200057
-SUB_LIST+=	LEGACY_LIMITS="@comment " MODERN_LIMITS=""
-.else
-SUB_LIST+=	LEGACY_LIMITS="" MODERN_LIMITS="@comment "
-.endif
-
 .endif # ${PKGNAMESUFFIX:M*-client}
 
 .if defined(WITH_OPENSSL_PORT)
@@ -194,7 +186,6 @@ post-patch:
 		${WRKSRC}/storage/tokudb/PerconaFT/cmake_modules/TokuThirdParty.cmake
 	${REINPLACE_CMD} 's|/etc/my.cnf.d|${LOCALBASE}/etc/mysql/conf.d|' \
 		${WRKSRC}/support-files/rpm/my.cnf
-	${MV} ${WRKSRC}/storage/mroonga/version ${WRKSRC}/storage/mroonga/version_txt
 .if ${OPSYS} == DragonFly
 	${CP} ${WRKSRC}/cmake/os/FreeBSD.cmake \
 		${WRKSRC}/cmake/os/DragonFly.cmake

@@ -49,10 +49,9 @@ OPTIONS_DEFAULT=X11 THREADS
 CMP_LIB_DESC=	Install compiler libraries
 
 MODOPT=		camlp4o camlp4r ocamlc ocamldep ocamldoc ocamllex ocamlopt
-PATTERN=	[[:space:]]*(do|then)?[[:space:]]*)(\$$\(CP\)|cp)([[:space:]]
 DOCSDISTNAME=	${DISTNAME:C/([[:digit:]]+)\.([[:digit:]]+)\.([[:digit:]]+)/\1.\2/}
 
-CONFLICTS=	metaocaml-[0-9]*
+CONFLICTS=	metaocaml
 
 .include <bsd.port.options.mk>
 
@@ -71,6 +70,8 @@ PLIST_SUB+=	DOC="@comment "
 
 .if ${ARCH} == armv6 || ${ARCH} == armv7
 CONFIGURE_ARGS+=	-as "${AS} ${ASFLAGS} -meabi=5"
+.elif ${ARCH} == powerpc
+LLD_UNSAFE=		yes
 .else
 CONFIGURE_ARGS+=	-as "${AS} ${ASFLAGS}"
 .endif
@@ -88,12 +89,12 @@ CONFIGURE_ARGS+=-no-pthread
 PLIST_SUB+=	X11=""
 USES+=		xorg
 USE_XORG=	x11
-CONFLICTS+=	ocaml-nox11-[0-9]*
+CONFLICTS+=	ocaml-nox11
 CONFIGURE_ARGS+=-x11include ${LOCALBASE}/include -x11lib ${LOCALBASE}/lib
 .else
 PLIST_SUB+=	X11="@comment "
 SFX=		-nox11
-CONFLICTS+=	ocaml-[0-9]*
+CONFLICTS+=	ocaml
 CONFIGURE_ARGS+=-no-graph
 .endif
 
@@ -135,21 +136,12 @@ post-patch:
 		${WRKSRC}/Makefile ${WRKSRC}/Makefile.tools \
 		${WRKSRC}/asmrun/Makefile \
 		${WRKSRC}/otherlibs/systhreads/Makefile \
-		${WRKSRC}/testsuite/makefiles/Makefile.common \
 		${WRKSRC}/testsuite/tests/asmcomp/Makefile
 
 post-configure:
 	@${REINPLACE_CMD} -E \
 		-e '/^PTHREAD_LINK/s,-pthread,${THR_LD},g' \
 		${WRKSRC}/config/Makefile
-# INSTALL* safeness (which preserves the correct permissions despite
-# user's umask(1)
-	@${FIND} ${WRKDIR} -type f -name Makefile -print0 | \
-		${XARGS} -0 -n 5 -x ${REINPLACE_CMD} -E \
-		-e 's,^(${PATTERN}+.*INSTALLDIR),\1\$${BSD_INSTALL_DATA} \4,' \
-		-e 's,^(${PATTERN}+.*BINDIR),\1\$${BSD_INSTALL_PROGRAM} \4,' \
-		-e 's,^(${PATTERN}+.*LIBDIR),\1\$${BSD_INSTALL_DATA} \4,' \
-		-e 's,(${PATTERN}+.*(MANDIR|MANODIR|MANEXT)),\1\$${BSD_INSTALL_MAN} \4,'
 
 check-test: do-install
 	@cd ${WRKSRC}/testsuite; ${RM} _log; for d in tests/* ; do \

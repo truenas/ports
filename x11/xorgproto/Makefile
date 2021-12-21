@@ -1,13 +1,17 @@
 PORTNAME=	xorgproto
-PORTVERSION=	2020.1
+DISTVERSION=	2021.5
 CATEGORIES=	x11
 
 MAINTAINER=	x11@FreeBSD.org
 COMMENT=	X Window System unified protocol definitions
 
+LICENSE=	MIT
+
 USES=		xorg-cat:proto
 
-CONFIGURE_ARGS= --without-fop \
+NO_ARCH=	yes
+
+CONFIGURE_ARGS=	--without-fop \
 		--without-xmlto \
 		--without-xsltproc \
 		--disable-specs

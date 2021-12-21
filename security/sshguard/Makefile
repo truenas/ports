@@ -1,7 +1,8 @@
 # Created by: Mij <mij@bitchx.it>
 
 PORTNAME=	sshguard
-PORTVERSION=	2.4.1
+PORTVERSION=	2.4.2
+PORTREVISION=	1
 PORTEPOCH=	1
 CATEGORIES=	security
 MASTER_SITES=	SF/sshguard/sshguard/${PORTVERSION}

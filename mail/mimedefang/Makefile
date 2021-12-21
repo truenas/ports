@@ -2,6 +2,8 @@
 
 PORTNAME=	mimedefang
 PORTVERSION=	2.84
+PORTREVISION=	1
+
 CATEGORIES=	mail
 MASTER_SITES=	http://www.mimedefang.org/static/ \
 		http://fossies.org/linux/misc/
@@ -19,7 +21,7 @@ BUILD_DEPENDS=	\
 	spamassassin>=3.0:mail/spamassassin
 RUN_DEPENDS:=	${BUILD_DEPENDS}
 
-USES=		perl5 shebangfix
+USES=		cpe perl5 shebangfix
 perl_OLD_CMD=	perl
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS+=	--sysconfdir=${PREFIX}/etc \

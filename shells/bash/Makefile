@@ -1,9 +1,9 @@
 # Created by: Oliver Eikemeier
 
 PORTNAME=		bash
-PATCHLEVEL=		4
+PATCHLEVEL=		12
 PORTVERSION=		5.1.${PATCHLEVEL:S/^0//g}
-PORTREVISION?=		2
+PORTREVISION?=		0
 CATEGORIES=		shells
 MASTER_SITES=		GNU
 DISTNAME=		${PORTNAME}-${PORTVERSION:R}
@@ -55,12 +55,12 @@ CONFIGURE_ARGS+=	--without-bash-malloc \
 			--enable-disabled-builtins \
 			--with-libiconv-prefix=${ICONV_PREFIX}
 
-MAKE_ARGS+=	TERMCAP_LIB=-lncursesw
+MAKE_ARGS+=	TERMCAP_LIB=-ltinfow
 
 .if empty(PKGNAMESUFFIX)
-CONFLICTS+=	bash-static-[0-9]*
+CONFLICTS+=	bash-static
 .else
-CONFLICTS+=	bash-[0-9]*
+CONFLICTS+=	bash
 .endif
 CONFLICTS+=	bashc
 
@@ -130,6 +130,6 @@ cklatest:
 	@${MAKE} -V PATCHLEVEL
 	-ncftpls \
 		${PATCH_SITES:Mftp*:Ox:[1]} \
-		| fgrep -v .sig | ${TAIL}
+		| fgrep -v .sig | ${SORT} | ${TAIL}
 
 .include <bsd.port.mk>

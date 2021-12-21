@@ -2,18 +2,16 @@
 
 PORTNAME=	inspircd
 DISTVERSIONPREFIX=	v
-DISTVERSION=	3.9.0
+DISTVERSION=	3.11.0
 CATEGORIES=	irc
 
-MAINTAINER=	driesm.michiels@gmail.com
+MAINTAINER=	driesm@FreeBSD.org
 COMMENT=	Modular C++ IRC daemon
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/docs/LICENSE.txt
 
 USES=		compiler:c++11-lang cpe gmake localbase:ldflags perl5
-CPE_VENDOR=	inspire_ircd
-CPE_PRODUCT=	inspircd
 USE_GITHUB=	yes
 USE_PERL5=	build
 USE_RC_SUBR=	${PORTNAME}

@@ -2,18 +2,15 @@
 
 PORTNAME=	mpv
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.33.1
-PORTREVISION=	1
+DISTVERSION=	0.34.0
+PORTREVISION=	2
 PORTEPOCH=	1
 CATEGORIES=	multimedia audio
 MASTER_SITES=	https://waf.io/:waf
 DISTFILES=	${WAF_RELEASE}${EXTRACT_SUFX}:waf
 
 PATCH_SITES=	https://github.com/${GH_ACCOUNT}/${GH_PROJECT}/commit/
-PATCHFILES+=	1bb2665e3d09.patch:-p1 59c32a04b04d.patch:-p1 62fb374349e0.patch:-p1
-PATCHFILES+=	24525e4ef9ba.patch:-p1 4dd5fdc0876e.patch:-p1 4d80314c5c88.patch:-p1
-PATCHFILES+=	1b2e5137e04b.patch:-p1 # https://github.com/mpv-player/mpv/pull/8312
-PATCHFILES+=	7c4465cefb27.patch:-p1 # libplacebo 3.104
+PATCHFILES+=	b030cfe05f58.patch:-p1 # https://github.com/mpv-player/mpv/pull/9440
 
 MAINTAINER=	multimedia@FreeBSD.org
 COMMENT=	Free and open-source general-purpose video player
@@ -25,7 +22,7 @@ BUILD_DEPENDS=	ffmpeg>=4.0.2,1:multimedia/ffmpeg
 LIB_DEPENDS=	libavcodec.so:multimedia/ffmpeg \
 		libass.so:multimedia/libass
 
-USES=		compiler:c11 desktop-file-utils iconv jpeg localbase:ldflags \
+USES=		compiler:c11 cpe desktop-file-utils iconv jpeg localbase:ldflags \
 		pkgconfig python:build tar:bz2 waf
 USE_LDCONFIG=	yes
 
@@ -48,21 +45,27 @@ CONFIGURE_ARGS=	--docdir="${EXAMPLESDIR}" \
 		--disable-vapoursynth \
 		--enable-libmpv-shared
 
-OPTIONS_DEFINE=		ARCHIVE DOCS LCMS2 LUAJIT MANPAGES MUJS TEST UCHARDET EXAMPLES ZIMG
-OPTIONS_DEFAULT=	ARCHIVE DVDNAV MANPAGES OPENGL UCHARDET \
-			V4L VAAPI VDPAU VULKAN WAYLAND X11 YTDL
+OPTIONS_DEFINE=		ARCHIVE DOCS LCMS2 MANPAGES MUJS TEST UCHARDET EXAMPLES ZIMG
+OPTIONS_DEFAULT=	ARCHIVE DVDNAV LUA MANPAGES OPENGL UCHARDET \
+			V4L VAAPI VDPAU VULKAN WAYLAND X11 YTDLP
 OPTIONS_GROUP=		IN VO AO
-OPTIONS_GROUP_IN=	CDIO DVDNAV LIBBLURAY V4L YTDL
+OPTIONS_GROUP_IN=	CDIO DVDNAV LIBBLURAY V4L
 OPTIONS_GROUP_VO=	CACA OPENGL SIXEL VAAPI VDPAU VULKAN WAYLAND X11
 OPTIONS_GROUP_AO=	ALSA JACK OPENAL PULSEAUDIO SDL
+OPTIONS_RADIO=		YOUTUBE
+OPTIONS_RADIO_YOUTUBE=	YTDL YTDLP
+OPTIONS_SINGLE=		LUA
+OPTIONS_SINGLE_LUA=	LUA LUAJIT LUA_NONE
 OPTIONS_SUB=		yes
 
 DVDNAV_DESC=		DVD menu navigation
+LUA_NONE_DESC=		Disable Lua scripting language support
 LUAJIT_DESC=		Use LuaJIT instead of Lua scripting language support
 MUJS_DESC=		Use MuJS for Javascript language support
 SIXEL_DESC=		Sixel graphics support
 UCHARDET_DESC=		Guess subtitle encoding via uchardet
 VULKAN_DESC=		Vulkan output support
+YTDLP_DESC=		Install yt-dlp (youtube-dl fork)
 YTDL_DESC=		Install youtube-dl
 ZIMG_DESC=		High quality software scaling via "z" library
 IN_DESC=		Input
@@ -98,10 +101,13 @@ LIBBLURAY_LIB_DEPENDS=		libbluray.so:multimedia/libbluray
 LIBBLURAY_CONFIGURE_ON=		--enable-libbluray
 LIBBLURAY_CONFIGURE_OFF=	--disable-libbluray
 
+LUA_USES=			lua:51-52
+LUA_CONFIGURE_ON=		--lua=${LUA_VER_STR}fbsd
+
 LUAJIT_LIB_DEPENDS=		libluajit-5.1.so:lang/luajit
-LUAJIT_USES_OFF=		lua
 LUAJIT_CONFIGURE_ON=		--lua=luajit
-LUAJIT_CONFIGURE_OFF=		--lua=${LUA_VER_STR}fbsd
+
+LUA_NONE_CONFIGURE_ON=		--disable-lua
 
 MANPAGES_BUILD_DEPENDS=		rst2man:textproc/py-docutils
 MANPAGES_CONFIGURE_OFF=		--disable-manpage
@@ -158,8 +164,9 @@ WAYLAND_IMPLIES=		OPENGL
 
 X11_USES=			gnome xorg
 X11_USE=			XORG=x11,xext,xinerama,xorgproto,xrandr,xscrnsaver,xv,xxf86vm
-X11_VARS=			INSTALLS_ICONS=yes
 X11_CONFIGURE_OFF=		--disable-x11
+
+YTDLP_RUN_DEPENDS=		yt-dlp:www/yt-dlp
 
 YTDL_RUN_DEPENDS=		youtube-dl:www/youtube_dl
 

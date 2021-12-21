@@ -2,7 +2,7 @@
 
 PORTNAME=	plib
 PORTVERSION=	1.8.5
-PORTREVISION=	7
+PORTREVISION=	8
 CATEGORIES=	x11-toolkits
 MASTER_SITES=	http://plib.sourceforge.net/dist/
 
@@ -12,7 +12,8 @@ COMMENT=	Portable library for joystick/sound/OpenGL GUI/3D math
 LICENSE=	LGPL20
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-USES=		gl gmake xorg
+USES=		cpe gl gmake xorg
+CPE_VENDOR=	${PORTNAME}_project
 USE_XORG=	xt xi xmu xext x11
 USE_GL=		glu
 GNU_CONFIGURE=	yes

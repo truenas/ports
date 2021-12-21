@@ -2,8 +2,8 @@
 
 PORTNAME=	godot
 DISTVERSION=	2.1.6
-PORTREVISION=	1
 DISTVERSIONSUFFIX=	-stable
+PORTREVISION=	4
 CATEGORIES=	devel games
 PKGNAMESUFFIX?=	2
 
@@ -23,14 +23,17 @@ RUN_DEPENDS=	xdg-user-dir:devel/xdg-user-dirs \
 		xdg-open:devel/xdg-utils \
 		xmessage:x11/xmessage
 
-USES=		compiler:c++11-lib gl pkgconfig scons ssl xorg
+USES=		compiler:c++11-lib cpe gl pkgconfig scons ssl xorg
+CPE_VENDOR=	godotengine
 USE_XORG=	x11 xcursor xi xinerama xrandr
 USE_GL=		gl glu
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	godotengine
 
-MAKE_ARGS+=		platform=x11 builtin_speex=no builtin_libmpcdec=no verbose=yes builtin_libpng=no builtin_freetype=no builtin_zlib=no
+MAKE_ARGS+=		platform=x11 builtin_freetype=no builtin_libmpcdec=no \
+			builtin_libpng=no builtin_openssl=no builtin_speex=no \
+			builtin_zlib=no verbose=yes
 MAKE_ARGS+=		${MAKE_ARGS_${CHOSEN_COMPILER_TYPE}}
 MAKE_ARGS_clang=	use_llvm=yes
 CXXFLAGS+=		-DGLEW_NO_GLU -DRTAUDIO_ENABLED -DCRIOGET_NOT_NEEDED
