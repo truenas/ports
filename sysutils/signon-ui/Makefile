@@ -1,6 +1,6 @@
 PORTNAME=	signon-ui
 PORTVERSION=	0.17
-PORTREVISION=	7
+PORTREVISION=	8
 CATEGORIES=	sysutils kde
 DIST_SUBDIR=	KDE/${GL_ACCOUNT}
 
@@ -14,7 +14,6 @@ LIB_DEPENDS=	libaccounts-qt5.so:net-im/libaccounts-qt5 \
 		libnotify.so:devel/libnotify \
 		libsignon-qt5.so:sysutils/signon-qt5 \
 		libproxy.so:net/libproxy
-
 
 USES=		compiler:c++11-lang gettext-runtime gl gnome pkgconfig python \
 		qmake qt:5 tar:bz2

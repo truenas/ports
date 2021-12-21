@@ -5,6 +5,7 @@
 
 PORTNAME=	pulseaudio
 DISTVERSION=	14.2
+PORTREVISION=	3
 CATEGORIES=	audio
 MASTER_SITES=	https://freedesktop.org/software/pulseaudio/releases/
 
@@ -22,11 +23,10 @@ LIB_DEPENDS=	libsndfile.so:audio/libsndfile \
 		libltdl.so:devel/libltdl \
 		libck-connector.so:sysutils/consolekit2
 
-USES=		compiler:c11 cpe gettext gmake gnome iconv libtool localbase:ldflags \
-		pathfix pkgconfig python:run shebangfix ssl tar:xz xorg
+USES=		compiler:c11 cpe gettext gmake gnome iconv libtool:build localbase:ldflags \
+		pathfix pkgconfig python:run shebangfix ssl tar:xz
 
 USE_GNOME=	glib20
-USE_XORG=	ice sm x11 xcb xtst
 USE_LDCONFIG=	yes
 GNU_CONFIGURE=	yes
 CONFIGURE_ENV=	PTHREAD_LIBS="-lpthread" \
@@ -57,8 +57,8 @@ USERS=		pulse
 GROUPS=		pulse pulse-access pulse-rt
 
 OPTIONS_SUB=	yes
-OPTIONS_DEFINE=	AVAHI GCONF GSETTINGS SIMD TEST
-OPTIONS_DEFAULT=AVAHI SIMD SIMPLE SOXR SPEEX WEBRTC_AEC
+OPTIONS_DEFINE=	AVAHI GCONF GSETTINGS SIMD TEST X11
+OPTIONS_DEFAULT=AVAHI SIMD SIMPLE SOXR SPEEX WEBRTC_AEC X11
 AVAHI_CONFIGURE_ENABLE=	avahi
 AVAHI_LIB_DEPENDS=	libavahi-client.so:net/avahi-app
 GCONF_CONFIGURE_ENABLE=	gconf
@@ -71,6 +71,9 @@ SIMD_LIB_DEPENDS=	liborc-0.4.so:devel/orc
 TEST_TEST_TARGET=	check
 TEST_CONFIGURE_ENABLE=	tests default-build-tests
 TEST_BUILD_DEPENDS=	check>0:devel/check
+X11_CONFIGURE_ENABLE=	x11
+X11_USES=	xorg
+X11_USE=	XORG=ice,sm,x11,xcb,xtst
 
 OPTIONS_GROUP=	AUDIO
 OPTIONS_GROUP_AUDIO=	ALSA JACK SOXR SPEEX WEBRTC_AEC

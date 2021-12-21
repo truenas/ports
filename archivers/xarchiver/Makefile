@@ -1,11 +1,10 @@
 # Created by: Andreev Maxim
 
 PORTNAME=	xarchiver
-PORTVERSION=	0.5.4.15
-PORTREVISION=	1
+PORTVERSION=	0.5.4.16
 CATEGORIES=	archivers
 
-MAINTAINER=	danilo@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Desktop-agnostic GTK frontend to various archiving tools
 
 LICENSE=	GPLv2+
@@ -27,7 +26,6 @@ GH_ACCOUNT=	ib
 
 USE_GNOME=	cairo glib20 intltool
 GNU_CONFIGURE=	yes
-INSTALLS_ICONS=	yes
 
 OPTIONS_DEFINE=	DOCS NLS
 OPTIONS_GROUP=	FORMATS

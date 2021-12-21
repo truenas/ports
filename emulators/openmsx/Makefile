@@ -1,5 +1,5 @@
 PORTNAME=	openmsx
-PORTVERSION=	16.0
+DISTVERSION=	17.0
 CATEGORIES=	emulators
 
 MAINTAINER=	menelkir@itroll.org
@@ -16,7 +16,7 @@ LIB_DEPENDS=	libpng.so:graphics/png \
 		libfreetype.so:print/freetype2 \
 		libasound.so:audio/alsa-lib
 
-USES=		gl gmake python sdl tcl
+USES=		gl gmake pkgconfig python sdl tcl
 USE_GCC=	yes
 USE_GL=		gl glew
 USE_SDL=	sdl2 ttf2
@@ -24,7 +24,7 @@ USE_SDL=	sdl2 ttf2
 USE_GITHUB=	yes
 GH_ACCOUNT=	openMSX
 GH_PROJECT=	openMSX
-GH_TAGNAME=	a46a814
+GH_TAGNAME=	RELEASE_17_0
 
 BINARY_ALIAS=	python3=${PYTHON_CMD}
 
@@ -35,19 +35,6 @@ MAKE_ARGS=	INSTALL_BINARY_DIR=${PREFIX}/bin \
 		OPENMSX_CXX=${CXX} \
 		CXXFLAGS="${CXXFLAGS}"
 
-PLIST_FILES=	bin/openmsx
-PORTDATA=	*
-PORTDOCS=	*
-
 OPTIONS_DEFINE=	DOCS
-
-post-patch:
-	@${REINPLACE_CMD} -e 's/{TCL_LIB_SPEC}/& $${TCL_LD_FLAGS}/' \
-		${WRKSRC}/build/libraries.py
-	@${REINPLACE_CMD} -e '/^SYMLINK_FOR_BINARY/s/true/false/' \
-		${WRKSRC}/build/custom.mk
-
-post-install-DOCS-off:
-	${RM} -r ${STAGEDIR}${DOCSDIR}
 
 .include <bsd.port.mk>

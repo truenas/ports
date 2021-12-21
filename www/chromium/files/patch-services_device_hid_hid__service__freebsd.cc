@@ -1,6 +1,6 @@
---- services/device/hid/hid_service_freebsd.cc.orig	2021-04-21 12:19:19 UTC
+--- services/device/hid/hid_service_freebsd.cc.orig	2021-09-29 12:19:04 UTC
 +++ services/device/hid/hid_service_freebsd.cc
-@@ -0,0 +1,390 @@
+@@ -0,0 +1,397 @@
 +// Copyright 2014 The Chromium Authors. All rights reserved.
 +// Use of this source code is governed by a BSD-style license that can be
 +// found in the LICENSE file.
@@ -32,6 +32,7 @@
 +#include "base/strings/string_util.h"
 +#include "base/strings/string_split.h"
 +#include "base/task/post_task.h"
++#include "base/task/thread_pool.h"
 +#include "base/threading/scoped_blocking_call.h"
 +#include "base/threading/thread_task_runner_handle.h"
 +#include "base/threading/thread_restrictions.h"
@@ -45,9 +46,11 @@
 +struct HidServiceFreeBSD::ConnectParams {
 +  ConnectParams(scoped_refptr<HidDeviceInfo> device_info,
 +                bool allow_protected_reports,
++		bool allow_fido_reports,
 +                ConnectCallback callback)
 +      : device_info(std::move(device_info)),
 +	allow_protected_reports(allow_protected_reports),
++	allow_fido_reports(allow_fido_reports),
 +        callback(std::move(callback)),
 +        task_runner(base::ThreadTaskRunnerHandle::Get()),
 +        blocking_task_runner(
@@ -56,6 +59,7 @@
 +
 +  scoped_refptr<HidDeviceInfo> device_info;
 +  bool allow_protected_reports;
++  bool allow_fido_reports;
 +  ConnectCallback callback;
 +  scoped_refptr<base::SequencedTaskRunner> task_runner;
 +  scoped_refptr<base::SequencedTaskRunner> blocking_task_runner;
@@ -97,7 +101,7 @@
 +
 +    task_runner_->PostTask(
 +        FROM_HERE,
-+        base::Bind(&HidServiceFreeBSD::FirstEnumerationComplete, service_));
++        base::BindOnce(&HidServiceFreeBSD::FirstEnumerationComplete, service_));
 +  }
 +
 +  bool HaveReadWritePermissions(std::string device_id) {
@@ -185,8 +189,8 @@
 +    base::ScopedBlockingCall scoped_blocking_call(
 +        FROM_HERE, base::BlockingType::MAY_BLOCK);
 +    task_runner_->PostTask(
-+        FROM_HERE, base::Bind(&HidServiceFreeBSD::RemoveDevice, service_,
-+                              device_id));
++        FROM_HERE, base::BindOnce(&HidServiceFreeBSD::RemoveDevice, service_,
++                                  device_id));
 +  }
 +
 + private:
@@ -235,8 +239,8 @@
 +
 +    devd_fd_.reset(devd_fd);
 +    file_watcher_ = base::FileDescriptorWatcher::WatchReadable(
-+        devd_fd_.get(), base::Bind(&BlockingTaskRunnerHelper::OnDevdMessageCanBeRead,
-+                                   base::Unretained(this)));
++        devd_fd_.get(), base::BindRepeating(&BlockingTaskRunnerHelper::OnDevdMessageCanBeRead,
++                                            base::Unretained(this)));
 +  }
 +
 +  void OnDevdMessageCanBeRead() {
@@ -350,6 +354,7 @@
 +
 +void HidServiceFreeBSD::Connect(const std::string& device_guid,
 +                                bool allow_protected_reports,
++				bool allow_fido_reports,
 +                                ConnectCallback callback) {
 +  DCHECK_CALLED_ON_VALID_SEQUENCE(sequence_checker_);
 +
@@ -364,6 +369,7 @@
 +
 +  auto params = std::make_unique<ConnectParams>(device_info,
 +                                                allow_protected_reports,
++						allow_fido_reports,
 +						std::move(callback));
 +  scoped_refptr<base::SequencedTaskRunner> blocking_task_runner =
 +      params->blocking_task_runner;
@@ -386,7 +392,8 @@
 +    std::move(params->device_info),
 +    std::move(params->fd),
 +    std::move(params->blocking_task_runner),
-+    params->allow_protected_reports
++    params->allow_protected_reports,
++    params->allow_fido_reports
 +  ));
 +}
 +

@@ -11,9 +11,9 @@ COMMENT=	C library for efficient image processing and image analysis operations
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/leptonica-license.txt
 
-CONFLICTS=	leptonlib-[0-9]*
+CONFLICTS=	leptonlib
 
-USES=		autoreconf libtool localbase:ldflags pathfix pkgconfig
+USES=		autoreconf cpe libtool localbase:ldflags pathfix pkgconfig
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	DanBloomberg

@@ -5,7 +5,7 @@ DISTVERSION=	2.3.3
 PORTREVISION=	2
 PORTEPOCH=	1
 CATEGORIES=	net-mgmt
-MASTER_SITES=	https://www.nagios-plugins.org/download/ \
+MASTER_SITES=	https://nagios-plugins.org/download/ \
 		LOCAL/mat/${PORTNAME}
 
 MAINTAINER=	mat@FreeBSD.org
@@ -43,7 +43,7 @@ CONFIGURE_ARGS+=	--with-ping-command="/sbin/ping -n -t %d -c %d %s" \
 CPPFLAGS+=	-I${LOCALBASE}/include
 LIBS+=		-L${LOCALBASE}/lib
 
-CONFLICTS_INSTALL=	monitoring-plugins-*
+CONFLICTS_INSTALL=	monitoring-plugins
 
 OPTIONS_DEFINE=		DBI EXTRAOPTS FPING IPV6 LDAP MYSQL NETSNMP NLS PGSQL \
 			QSTAT RADIUS SSH_PORTABLE

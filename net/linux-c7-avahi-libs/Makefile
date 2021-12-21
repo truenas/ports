@@ -10,14 +10,14 @@ PKGNAMESUFFIX=	-libs
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	Libraries for Avahi (Linux CentOS ${LINUX_DIST_VER})
 
-USES=		linux:c7
+USES=		cpe linux:c7
 USE_LDCONFIG=	yes
 USE_LINUX=	dbuslibs
 USE_LINUX_RPM=	yes
 
 LIB_DISTNAMES=	${PORTNAME}${PKGNAMESUFFIX}-${DISTVERSIONFULL}
 
-CONFLICTS=	linux-c6-${PORTNAME}${PKGNAMESUFFIX}-[0-9]*
+CONFLICTS=	linux-c6-${PORTNAME}${PKGNAMESUFFIX}
 DESCR=		${.CURDIR}/../${PORTNAME}/pkg-descr
 
 .include <bsd.port.mk>

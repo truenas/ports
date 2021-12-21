@@ -26,6 +26,9 @@ LZMA_DESC=	Build with LZMA support
 
 WRKSRC=		${WRKDIR}/${DISTNAME}/squashfs-tools
 
+CPE_PRODUCT=	squashfs
+CPE_VENDOR=	squashfs_project
+
 USE_CSTD=	gnu89
 
 USES=		alias cpe gmake

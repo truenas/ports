@@ -52,6 +52,8 @@
     SUBDIR += gnome-latex
     SUBDIR += gobby
     SUBDIR += gomate
+    SUBDIR += gummi
+    SUBDIR += helix
     SUBDIR += heme
     SUBDIR += hexcurse
     SUBDIR += hexedit
@@ -74,7 +76,9 @@
     SUBDIR += kile
     SUBDIR += komodo-edit
     SUBDIR += lazarus
+    SUBDIR += lazarus-devel
     SUBDIR += lazarus-qt5
+    SUBDIR += lazarus-qt5-devel
     SUBDIR += le
     SUBDIR += leafpad
     SUBDIR += led
@@ -184,8 +188,11 @@
     SUBDIR += libreoffice-xh
     SUBDIR += libreoffice-zu
     SUBDIR += libreoffice6
+    SUBDIR += linux-bcompare
     SUBDIR += linux-sublime
+    SUBDIR += linux-sublime-text4
     SUBDIR += linux-sublime3
+    SUBDIR += linux-wps-office
     SUBDIR += madedit
     SUBDIR += marker
     SUBDIR += mg
@@ -213,6 +220,7 @@
     SUBDIR += pico-alpine
     SUBDIR += picpas
     SUBDIR += pluma
+    SUBDIR += pluma-plugins
     SUBDIR += poedit
     SUBDIR += poke
     SUBDIR += psgml
@@ -220,7 +228,9 @@
     SUBDIR += py-babi
     SUBDIR += py-editorconfig
     SUBDIR += py-pynvim
+    SUBDIR += py-vim-bridge
     SUBDIR += quilter
+    SUBDIR += rehex
     SUBDIR += rubygem-neovim
     SUBDIR += scite
     SUBDIR += se
@@ -249,11 +259,10 @@
     SUBDIR += tweak
     SUBDIR += uemacs
     SUBDIR += uzap
+    SUBDIR += ved
     SUBDIR += vigor
     SUBDIR += vile
     SUBDIR += vim
-    SUBDIR += vim-console
-    SUBDIR += vim-tiny
     SUBDIR += vscode
     SUBDIR += web-mode
     SUBDIR += with-editor

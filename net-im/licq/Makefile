@@ -2,7 +2,7 @@
 
 PORTNAME=	base
 PORTVERSION=	1.9.0
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	net-im
 PKGNAMEPREFIX=	licq-
 PKGNAMESUFFIX=	${SOCKS_SUFFIX}${PKGNAMESUFFIX2}
@@ -14,7 +14,6 @@ LICENSE=	GPLv2
 
 LIB_DEPENDS=	libboost_regex.so:devel/boost-libs
 
-BROKEN_FreeBSD_11_powerpc64=	fails to pass tests
 BROKEN_FreeBSD_12_powerpc64=	fails to pass tests
 BROKEN_sparc64=		fails to link
 

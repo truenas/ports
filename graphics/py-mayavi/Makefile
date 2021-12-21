@@ -1,8 +1,7 @@
 # Created by: Vladimir Chukharev
 
 PORTNAME=	mayavi
-DISTVERSION=	4.7.2
-PORTREVISION=	2
+DISTVERSION=	4.7.4
 CATEGORIES=	graphics science python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -19,6 +18,8 @@ LICENSE_FILE_EPL=		${WRKSRC}/image_LICENSE_Eclipse.txt
 LICENSE_FILE_LGPL3=		${WRKSRC}/image_LICENSE_OOo.txt
 LICENSE_FILE_BSD2CLAUSE=	${WRKSRC}/LICENSE_YORICK.txt
 LICENSE_FILE_APACHE11=		${WRKSRC}/LICENSE_COLORBREWER.txt
+
+BROKEN_i386=	Building TVTK classes... Fatal Python error: Segmentation fault # might be specific to Mayavi or Python versions
 
 BUILD_DEPENDS=	vtk9>0:math/vtk9 \
 		${PYNUMPY} \

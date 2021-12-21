@@ -2,7 +2,7 @@
 
 PORTNAME=	clementine
 DISTVERSION=	1.4.0
-PORTREVISION=	6
+PORTREVISION=	8
 CATEGORIES=	audio
 PKGNAMESUFFIX=	-player
 
@@ -23,6 +23,7 @@ LIB_DEPENDS=	libtag.so:audio/taglib \
 
 USES=		cmake \
 		compiler:c++11-lib \
+		cpe \
 		desktop-file-utils \
 		gettext-tools \
 		pkgconfig \
@@ -38,8 +39,9 @@ USE_CXXSTD=	c++11
 USE_GITHUB=	yes
 GH_ACCOUNT=	clementine-player
 GH_PROJECT=	Clementine
-GH_TAGNAME=     1.4.0rc1
+GH_TAGNAME=	1.4.0rc1
 
+CPE_VENDOR=	clementine-player
 
 USE_GL=		gl glew glu
 USE_XORG=	x11
@@ -74,8 +76,6 @@ USE_GSTREAMER1=	cdparanoia \
 		taglib \
 		twolame \
 		vorbis
-
-INSTALLS_ICONS=	yes
 
 CFLAGS+=	-Wno-inconsistent-missing-override \
 		-Wno-unused-variable \

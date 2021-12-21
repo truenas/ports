@@ -2,14 +2,13 @@
 
 PORTNAME=	moony
 DISTVERSION=	0.36.0
+PORTREVISION=	1
 CATEGORIES=	audio
 MASTER_SITES=	https://gitlab.com/OpenMusicKontrollers/moony.lv2/repository/archive.tar.gz?ref=${PORTVERSION}&dummy=/
 PKGNAMESUFFIX=	-lv2
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Realtime Lua as programmable glue in LV2
-
-BROKEN_FreeBSD_11=	undefined reference to `clog', see bug#237771
 
 LICENSE=	ART20
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,8 +1,7 @@
 # Created by: Mark Felder <feld@FreeBSD.org>
 
 PORTNAME=	invoke
-PORTVERSION=	1.5.0
-PORTREVISION=	2
+PORTVERSION=	1.6.0
 CATEGORIES=	devel python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -19,6 +18,6 @@ USE_PYTHON=	autoplist concurrent distutils
 NO_ARCH=	yes
 
 post-patch:
-	@${RM} -fr ${WRKSRC}/invoke/vendor/yaml2
+	@${RM} -r ${WRKSRC}/invoke/vendor/yaml2
 
 .include <bsd.port.mk>

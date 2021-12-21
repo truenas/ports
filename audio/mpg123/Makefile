@@ -1,7 +1,7 @@
 # Created by: Carey Jones <mcj@acquiesce.org>
 
 PORTNAME=	mpg123
-PORTVERSION=	1.26.5
+PORTVERSION=	1.29.3
 CATEGORIES=	audio
 MASTER_SITES=	SF \
 		https://www.mpg123.de/download/
@@ -11,7 +11,7 @@ COMMENT=	Command-line player for MPEG Layer 1, 2, and 3 audio files
 
 LICENSE=	LGPL21
 
-USES=		tar:bzip2 libtool localbase pathfix
+USES=		cpe tar:bzip2 libtool localbase pathfix
 USE_LDCONFIG=	yes
 
 GNU_CONFIGURE=	yes
@@ -33,10 +33,8 @@ TEST_TARGET=		check
 FPU_CONFIGURE_ON=	--with-cpu=arm_fpu
 FPU_CONFIGURE_OFF=	--with-cpu=arm_nofpu
 
-SNDIO_CONFIGURE_ON=	--with-audio=sndio,oss \
-			--with-default-audio=sndio
-SNDIO_CONFIGURE_OFF=	--with-audio=oss \
-			--with-default-audio=oss
+SNDIO_CONFIGURE_ON=	--with-audio=sndio,oss
+SNDIO_CONFIGURE_OFF=	--with-audio=oss
 SNDIO_LIB_DEPENDS=	libsndio.so:audio/sndio
 
 OPTCPU_CONFIGURE_ON=	--with-cpu=x86

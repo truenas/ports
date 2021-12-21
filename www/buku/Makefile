@@ -1,7 +1,7 @@
 # Created by: Emanuel Haupt <ehaupt@FreeBSD.org>
 
 PORTNAME=	buku
-PORTVERSION=	4.5
+PORTVERSION=	4.6
 CATEGORIES=	www python
 MASTER_SITES=	CHEESESHOP
 
@@ -16,7 +16,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}beautifulsoup>=4.4.1:www/py-beautifulsoup@${
 		${PYTHON_PKGNAMEPREFIX}cryptography>=1.2.3:security/py-cryptography@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}html5lib>=1.0.1:www/py-html5lib@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}sqlite3>=0:databases/py-sqlite3@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}urllib3>=1.23:net/py-urllib3@${PY_FLAVOR}
+		${PYTHON_PKGNAMEPREFIX}urllib3>=1.23,1:net/py-urllib3@${PY_FLAVOR}
 
 USES=		python:3.6+
 USE_PYTHON=	autoplist distutils noflavors
@@ -36,7 +36,7 @@ FISH_PLIST_FILES=	share/fish/completions/buku.fish
 ZSH_PLIST_FILES=	share/zsh/site-functions/_buku
 
 post-extract:
-	@${RM} -fr ${WRKSRC}/bukuserver
+	@${RM} -r ${WRKSRC}/bukuserver
 
 post-install:
 	${INSTALL_MAN} ${WRKSRC}/buku.1 ${STAGEDIR}${PREFIX}/share/man/man1

@@ -1,3 +1,3 @@
-TIMESTAMP = 1619198731
-SHA256 (rubygem/aws-sdk-imagebuilder-1.21.0.gem) = 855d8c315092be264dbf481b38cb777091e190a567d3765a76093f371f0c7d38
-SIZE (rubygem/aws-sdk-imagebuilder-1.21.0.gem) = 56832
+TIMESTAMP = 1636117460
+SHA256 (rubygem/aws-sdk-imagebuilder-1.33.0.gem) = dbae8d677974637e5bf2eabb6fe38149308275179ecf88863b6acaaea923e127
+SIZE (rubygem/aws-sdk-imagebuilder-1.33.0.gem) = 64000

@@ -1,7 +1,7 @@
 # Created by: Wen Heping <wenheping@gmail.com>
 
 PORTNAME=	tmux
-PORTVERSION=	3.2
+PORTVERSION=	3.2a
 CATEGORIES=	sysutils
 MASTER_SITES=	https://github.com/tmux/tmux/releases/download/${PORTVERSION}/
 DISTFILES=	${DISTNAME}${EXTRACT_SUFX}
@@ -16,7 +16,9 @@ LICENSE_FILE_GPLv2=	${WRKSRC_bash}/COPYING
 LICENSE_DISTFILES_ISCL=	${DISTNAME}${EXTRACT_SUFX}
 LICENSE_DISTFILES_GPLv2=	${DISTFILE_bash}
 
-USES=		ncurses pkgconfig
+USES=		cpe ncurses pkgconfig
+
+CPE_VENDOR=	tmux_project
 
 USE_GITHUB=	nodefault
 GH_TUPLE=	imomaliev:tmux-bash-completion:f5d5323:bash

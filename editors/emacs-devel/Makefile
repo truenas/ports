@@ -1,7 +1,7 @@
 # Created by: Kenneth Vestergaard Schmidt <kvs@pil.dk>
 
 PORTNAME=	emacs
-DISTVERSION=	28.0.50.20210415
+DISTVERSION=	29.0.50.20211205
 PORTEPOCH=	2
 CATEGORIES=	editors
 PKGNAMESUFFIX=	-devel
@@ -25,11 +25,10 @@ USES=		autoreconf:build cpe gmake localbase:ldflags ncurses pkgconfig
 CPE_VENDOR=	gnu
 USE_GITHUB=	yes
 GH_ACCOUNT=	emacs-mirror
-GH_TAGNAME=	0c3ce42
+GH_TAGNAME=	2d0e1e5
 
 .if ${FLAVOR:U} != nox
 USES+=		desktop-file-utils gnome xorg
-INSTALLS_ICONS=	yes
 USE_XORG=	ice sm x11 xcb xext xfixes xinerama xmu xrandr xrender xt
 .endif
 
@@ -55,6 +54,7 @@ CONFIGURE_ARGS+=	--with-sound=no \
 			--without-rsvg \
 			--without-tiff \
 			--without-toolkit-scroll-bars \
+			--without-webp \
 			--without-x \
 			--without-xim \
 			--without-xpm \
@@ -82,14 +82,14 @@ PLIST_SUB=	EMACS_VER=${DISTVERSION:R} \
 		GNU_HOST=${CONFIGURE_TARGET}
 
 OPTIONS_DEFINE=			ACL DBUS GCONF GNUTLS GSETTINGS HARFBUZZ JSON \
-				LCMS2 M17N MAILUTILS MODULES OTF SCROLLBARS \
-				SOURCES THREADS XFT XIM XML XWIDGETS
+				LCMS2 M17N MAILUTILS MODULES NATIVECOMP OTF \
+				SCROLLBARS SOURCES THREADS XFT XIM XML XWIDGETS
 OPTIONS_DEFAULT=		ACL CAIRO DBUS GIF GNUTLS GSETTINGS GTK3 \
 				HARFBUZZ JPEG JSON KQUEUE LCMS2 M17N MAILUTILS \
 				MODULES OSS OTF PNG SCROLLBARS SOURCES SVG \
-				THREADS TIFF XFT XIM XML XPM
+				THREADS TIFF WEBP XFT XIM XML XPM
 OPTIONS_GROUP=			GRAPHICS
-OPTIONS_GROUP_GRAPHICS=		CAIRO GIF JPEG MAGICK PNG SVG TIFF XPM
+OPTIONS_GROUP_GRAPHICS=		CAIRO GIF JPEG MAGICK PNG SVG TIFF WEBP XPM
 OPTIONS_RADIO=			FILENOTIFY SOUND X11TOOLKIT
 OPTIONS_RADIO_FILENOTIFY=	GFILE KQUEUE
 OPTIONS_RADIO_SOUND=		ALSA OSS
@@ -97,8 +97,8 @@ OPTIONS_RADIO_X11TOOLKIT=	GTK2 GTK3 XAW XAW3D
 .if ${FLAVOR:U} == nox
 OPTIONS_EXCLUDE=		ALSA CAIRO DBUS GCONF GFILE GIF GSETTINGS GTK2 \
 				GTK3 HARFBUZZ JPEG LCMS2 M17N MAGICK OSS OTF \
-				PNG SCROLLBARS SVG TIFF XAW XAW3D XFT XIM XPM \
-				XWIDGETS
+				PNG SCROLLBARS SVG TIFF WEBP XAW XAW3D XFT XIM \
+				XPM XWIDGETS
 .endif
 OPTIONS_SUB=			YES
 
@@ -114,6 +114,7 @@ M17N_DESC=		M17N support for text-shaping [implies XFT]
 MAGICK_DESC=		ImageMagick image processing support (deprecated)
 MAILUTILS_DESC=		Mail framework via GNU Mailutils
 MODULES_DESC=		Dynamic modules support
+NATIVECOMP_DESC=	Emacs Lisp native compiler support
 OTF_DESC=		Opentype fonts [implies XFT]
 SCROLLBARS_DESC=	Toolkit scroll-bars
 SOURCES_DESC=		Install sources
@@ -161,13 +162,17 @@ LCMS2_CONFIGURE_WITH=		lcms2
 M17N_IMPLIES=			XFT
 M17N_LIB_DEPENDS=		libm17n.so:devel/m17n-lib
 M17N_CONFIGURE_WITH=		m17n-flt
-MAGICK_LIB_DEPENDS=		libMagickCore-7.so:graphics/ImageMagick7
+MAGICK_USES=			magick:7
 MAGICK_CONFIGURE_WITH=		imagemagick
 MAILUTILS_LIB_DEPENDS=		libmailutils.so:mail/mailutils
 MAILUTILS_CONFIGURE_WITH=	mailutils
 MAILUTILS_CONFIGURE_ENV_OFF=	ac_cv_lib_lockfile_maillock=no \
 				ac_cv_prog_liblockfile=no
 MODULES_CONFIGURE_WITH=		modules
+NATIVECOMP_LIB_DEPENDS=		libgccjit.so:lang/${_GCC_PORT}
+NATIVECOMP_CONFIGURE_WITH=	native-compilation
+NATIVECOMP_MAKE_ARGS=		NATIVE_FULL_AOT=1
+NATIVECOMP_LDFLAGS=		-L${LOCALBASE}/lib/${_GCC_PORT}
 OSS_CONFIGURE_ON=		--with-sound=oss
 OTF_IMPLIES=			XFT
 OTF_LIB_DEPENDS=		libotf.so:print/libotf
@@ -181,6 +186,8 @@ SVG_CONFIGURE_WITH=		rsvg
 THREADS_CONFIGURE_WITH=		threads
 TIFF_LIB_DEPENDS=		libtiff.so:graphics/tiff
 TIFF_CONFIGURE_WITH=		tiff
+WEBP_LIB_DEPENDS=		libwebp.so:graphics/webp
+WEBP_CONFIGURE_WITH=		webp
 XAW3D_LIB_DEPENDS=		libXaw3d.so:x11-toolkits/Xaw3d
 XAW3D_CONFIGURE_ON=		--with-x-toolkit=athena
 XAW_USE=			XORG=xaw
@@ -202,14 +209,18 @@ XWIDGETS_LIB_DEPENDS=		libsoup-2.4.so:devel/libsoup \
 				libwebkit2gtk-4.0.so:www/webkit2-gtk3
 XWIDGETS_USE=			XORG=xcomposite
 XWIDGETS_CONFIGURE_WITH=	xwidgets
-
 .include <bsd.port.options.mk>
 
-.if ${ARCH} == powerpc64le
+.if ${PORT_OPTIONS:MNATIVECOMP} && !defined(_GCC_PORT_CHOSEN)
+_GCC_PORT!=	${BSDMAKE} -V_GCC_PORT USE_GCC=11+ _GCC_PORT_CHOSEN=yes
+.endif
+
+.if ${ARCH:Mpowerpc64*}
 USE_GCC=	yes
 .endif
 
-.if !${PORT_OPTIONS:MGTK2} && !${PORT_OPTIONS:MGTK3} && !${PORT_OPTIONS:MXAW} && !${PORT_OPTIONS:MXAW3D}
+.if !${PORT_OPTIONS:MGTK2} && !${PORT_OPTIONS:MGTK3} && !${PORT_OPTIONS:MXAW} && \
+	!${PORT_OPTIONS:MXAW3D}
 CONFIGURE_ARGS+=	--with-x-toolkit=no
 .endif
 
@@ -230,10 +241,17 @@ pre-configure:
 
 post-install:
 	@${RM} -r ${STAGEDIR}${PREFIX}/lib/systemd
+	@(cd ${STAGEDIR}${PREFIX} && ${FIND} libexec/emacs/${DISTVERSION:R}/${CONFIGURE_TARGET}/ -name emacs-*.pdmp >> ${TMPPLIST})
 
 post-install-MAILUTILS-on:
 	${LN} -sf ${PREFIX}/bin/movemail \
 		${STAGEDIR}${PREFIX}/libexec/emacs/${DISTVERSION:R}/${CONFIGURE_TARGET}
+
+# Natively compiled elisp files names include build checksum information, so add
+# these files to the plist after the build.
+post-install-NATIVECOMP-on:
+	@(cd ${WRKSRC} && ${FIND} native-lisp -type f | ${SED} -e 's,^,lib/emacs/${DISTVERSION:R}/,') >> ${TMPPLIST}
+	@${FIND} ${STAGEDIR}${PREFIX}/lib/emacs/${DISTVERSION:R}/native-lisp/ -name '*.eln*' -exec ${STRIP_CMD} {} +
 
 post-install-SOURCES-on:
 	@${MKDIR} ${STAGEDIR}${DATADIR}/${DISTVERSION:R}/src

@@ -2,7 +2,7 @@
 
 PORTNAME=	r1q2
 PORTVERSION=	8012
-PORTREVISION=	4
+PORTREVISION=	5
 CATEGORIES=	games
 MASTER_SITES=	http://freebsd.nsu.ru/distfiles/ LOCAL/danfe \
 		http://old.r1ch.net/stuff/r1q2/src/
@@ -71,6 +71,8 @@ PLIST_SUB+=	REF_GL="@comment "
 post-patch:
 	@${REINPLACE_CMD} -e 's|game$$(ARCH)|game|g' \
 		${BUILD_WRKSRC}/game/Makefile
+	@${REINPLACE_CMD} -e '/SV_FixPlayerSkin/s,__inline,static,' \
+		${WRKSRC}/server/sv_game.c
 
 pre-build:
 	@${FIND} ${BUILD_WRKSRC} -type d -depth 1 -exec ${MKDIR} {}/.depends \;

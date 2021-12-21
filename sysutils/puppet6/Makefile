@@ -1,5 +1,5 @@
 PORTNAME=	puppet
-PORTVERSION=	6.21.1
+PORTVERSION=	6.25.1
 CATEGORIES=	sysutils
 PKGNAMESUFFIX=	6
 
@@ -25,11 +25,10 @@ RUN_DEPENDS=	rubygem-concurrent-ruby>=1.0:devel/rubygem-concurrent-ruby \
 		rubygem-ruby-augeas>=0:textproc/rubygem-ruby-augeas
 
 USES=		cpe
-CPE_VENDOR=	puppetlabs
 USE_GITHUB=	yes
 GH_ACCOUNT=	puppetlabs
 
-CONFLICTS_INSTALL=	puppet5-* puppet7-*
+CONFLICTS_INSTALL=	puppet7
 PLIST_SUB=	PORTVERSION="${PORTVERSION}"
 NO_ARCH=	yes
 NO_BUILD=	yes

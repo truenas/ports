@@ -1,6 +1,6 @@
 PORTNAME=	zimg
 DISTVERSIONPREFIX=	release-
-DISTVERSION=	3.0.1
+DISTVERSION=	3.0.3
 CATEGORIES=	graphics
 PKGNAMEPREFIX=	${GH_ACCOUNT}-
 
@@ -13,7 +13,7 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 USE_GITHUB=	yes
 GH_ACCOUNT=	sekrit-twc
 
-CONFLICTS_INSTALL=	zimg-[0-9]* # include/zimg.h
+CONFLICTS_INSTALL=	zimg # include/zimg.h
 
 USES=		autoreconf compiler:c++11-lib gmake libtool pathfix
 EXCLUDE=	googletest sha1

@@ -79,10 +79,12 @@ bin/3dDegreeCentrality
 bin/3dDespike
 bin/3dDetrend
 bin/3dECM
+bin/3dEdu_01_scale
 bin/3dEigsToDT
 bin/3dEmpty
 bin/3dEntropy
 bin/3dErrtsCormat
+bin/3dEulerDist
 bin/3dExchange
 bin/3dExtractGroupInCorr
 bin/3dExtrema
@@ -242,6 +244,7 @@ bin/3dmaskave
 bin/3dmaskdump
 bin/3dmatcalc
 bin/3dmatmult
+bin/3dmaxdisp
 bin/3dmaxima
 bin/3dmerge
 bin/3dnewid
@@ -295,6 +298,7 @@ bin/@GetAfniRes
 bin/@GetAfniView
 bin/@GradFlipTest
 bin/@Install_3dPFM_Demo
+bin/@Install_AP_MULTI_DEMO1
 bin/@Install_AfniRetinoDemo
 bin/@Install_ClustScat_Demo
 bin/@Install_D99_macaque
@@ -310,6 +314,7 @@ bin/@Install_MEICA_Demo
 bin/@Install_NIH_Marmoset
 bin/@Install_NMT
 bin/@Install_RSFMRI_Motion_Group_Demo
+bin/@Install_SURFLAYERS_DEMO1
 bin/@Install_TSrestMovieDemo
 bin/@IsoMasks
 bin/@MakeLabelTable
@@ -463,6 +468,8 @@ bin/SurfDsetInfo
 bin/SurfExtrema
 bin/SurfFWHM
 bin/SurfInfo
+bin/SurfLayers
+bin/SurfLocalstat
 bin/SurfMeasures
 bin/SurfPatch
 bin/SurfQual
@@ -574,6 +581,7 @@ bin/imstack
 bin/imstat
 bin/imupsam
 bin/inspec
+bin/lesion_align
 bin/make_pq_script.py
 bin/make_random_timing.py
 bin/make_stim_times.py
@@ -600,6 +608,7 @@ bin/prompt_user
 bin/python_module_test.py
 bin/quick.alpha.vals.py
 bin/quickspec
+bin/quickspecSL
 bin/quotize
 bin/rPkgsInstall
 bin/rPkgsInstall.R
@@ -671,6 +680,8 @@ include/afni/rcmat.h
 include/afni/tagset.h
 include/afni/thd_atlas.h
 include/afni/thd_compress.h
+include/afni/thd_depth.h
+include/afni/thd_euler_dist.h
 include/afni/thd_iochan.h
 include/afni/thd_maker.h
 include/afni/thd_ttatlas_CA_EZ.h
@@ -806,6 +817,7 @@ lib/afni/plug_zeropad.so
 %%PYTHON_SITELIBDIR%%/afnipy/lib_subjects.py
 %%PYTHON_SITELIBDIR%%/afnipy/lib_surf_clustsim.py
 %%PYTHON_SITELIBDIR%%/afnipy/lib_system_check.py
+%%PYTHON_SITELIBDIR%%/afnipy/lib_tedana_afni.py
 %%PYTHON_SITELIBDIR%%/afnipy/lib_textdata.py
 %%PYTHON_SITELIBDIR%%/afnipy/lib_timing.py
 %%PYTHON_SITELIBDIR%%/afnipy/lib_tsv.py
@@ -981,6 +993,7 @@ lib/afni/plug_zeropad.so
 %%DATADIR%%/funstuff/face_gangchen.jpg
 %%DATADIR%%/funstuff/face_gaudi.jpg
 %%DATADIR%%/funstuff/face_gaurav.jpg
+%%DATADIR%%/funstuff/face_genius.jpg
 %%DATADIR%%/funstuff/face_gganis.jpg
 %%DATADIR%%/funstuff/face_ggiulietti.jpg
 %%DATADIR%%/funstuff/face_ginnie.jpg
@@ -1931,6 +1944,7 @@ lib/afni/plug_zeropad.so
 %%PORTDOCS%%%%DOCSDIR%%/README.render_scripts
 %%PORTDOCS%%%%DOCSDIR%%/README.roi
 %%PORTDOCS%%%%DOCSDIR%%/README.setup
+%%PORTDOCS%%%%DOCSDIR%%/README.texlike
 %%PORTDOCS%%%%DOCSDIR%%/README.volreg
 %%PORTDOCS%%%%DOCSDIR%%/README.web
 %%PORTDOCS%%%%DOCSDIR%%/README.ziad

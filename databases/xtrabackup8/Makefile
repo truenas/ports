@@ -2,7 +2,7 @@
 
 PORTNAME=	xtrabackup
 PORTVERSION=	8.0.14
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	databases
 MASTER_SITES=	https://www.percona.com/downloads/Percona-XtraBackup-${PORTVERSION:R}/Percona-XtraBackup-${PORTVERSION}/source/tarball/ \
 		https://github.com/percona/percona-xtrabackup/archive/
@@ -15,7 +15,7 @@ COMMENT=	Open-source backup tool for InnoDB and XtraDB
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-BUILD_DEPENDS=	xxd:editors/vim-console \
+BUILD_DEPENDS=	xxd:editors/vim \
 		boost-libs>=1.72.0:devel/boost-libs \
 		protobuf>=3.0:devel/protobuf \
 		rapidjson>=1.1.0:devel/rapidjson \

@@ -7,7 +7,7 @@ PKGNAMEPREFIX=	tex-
 DISTNAME=	texlive-20150521-source
 DIST_SUBDIR=	TeX
 
-MAINTAINER=	hrs@FreeBSD.org
+MAINTAINER=	tex@FreeBSD.org
 COMMENT=	Synchronization TeXnology parser library
 
 LICENSE=	MIT

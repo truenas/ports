@@ -1,13 +1,13 @@
 PORTNAME=	texlive
 PORTVERSION=	20150521
-PORTREVISION=	65
+PORTREVISION=	76
 CATEGORIES=	print
 MASTER_SITES=	TEX_CTAN/systems/texlive/Source/
 PKGNAMESUFFIX=	-base
 DISTNAME=	${PORTNAME}-${DISTVERSION}-source
 DIST_SUBDIR=	TeX
 
-MAINTAINER=	hrs@FreeBSD.org
+MAINTAINER=	tex@FreeBSD.org
 COMMENT=	TeX Live Typesetting System, base binaries
 
 LIB_DEPENDS=	libicuio.so:devel/icu \
@@ -26,9 +26,11 @@ RUN_DEPENDS=	p5-File-HomeDir>=0:devel/p5-File-HomeDir \
 		p5-YAML-Tiny>=0:textproc/p5-YAML-Tiny \
 		psbook:print/psutils
 
-USES=		compiler:c++11-lib ghostscript localbase pkgconfig perl5 \
+USES=		compiler:c++11-lib cpe ghostscript gnome localbase pkgconfig perl5 \
 		python:run shebangfix tar:xz
+CPE_VENDOR=	tug
 USE_CXXSTD=	gnu++11
+USE_GNOME=	cairo
 USE_PERL5=	run
 USE_TEX=	web2c kpathsea ptexenc tlmgr texhash-bootstrap
 SHEBANG_FILES=	texk/texlive/linked_scripts/accfonts/mkt1font \
@@ -64,9 +66,11 @@ SHEBANG_FILES=	texk/texlive/linked_scripts/accfonts/mkt1font \
 	texk/texlive/linked_scripts/urlbst/urlbst \
 	texk/texlive/linked_scripts/yplan/yplan
 
+BINARY_ALIAS=	freetype-config=true
+
 # during build phase gnu configure is run a lot
 GNU_CONFIGURE=	yes
-CONFIGURE_ARGS= --disable-native-texlive-build \
+CONFIGURE_ARGS=	--disable-native-texlive-build \
 		--disable-web-progs \
 		--disable-psutils \
 		--enable-shared \
@@ -127,7 +131,7 @@ post-patch:
 	    tl_scripts/texconfig-sys.sh \
 	    linked_scripts/texlive/updmap-sys.sh
 	${REINPLACE_CMD} -e 's|/usr/bin/python -O|${python_CMD}|' \
-		${WRKSRC}/texk/texlive/linked_scripts/de-macro/de-macro \
+		${WRKSRC}/texk/texlive/linked_scripts/de-macro/de-macro
 
 post-install-fmtutil:
 	for D in ${TEXHASHDIRS}; do \

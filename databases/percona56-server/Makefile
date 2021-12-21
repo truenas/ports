@@ -71,10 +71,10 @@ USES+=		libedit
 # MySQL-Server part
 USES+=mysql:56p
 
-CONFLICTS_INSTALL=	mysql*-server-* \
-			mysqlwsrep* \
-			mariadb*-server-* \
-			percona5[0-57-9]-server-*
+CONFLICTS_INSTALL=	mysql*-server \
+			mysqlwsrep*-server \
+			mariadb*-server \
+			percona5[0-57-9]-server
 
 USE_RC_SUBR=	mysql-server
 
@@ -96,12 +96,6 @@ CMAKE_ARGS+=	-DWITH_EMBEDDED_SERVER="ON"
 
 # Workaround to clang11/gcc10 with -fno-common by default
 CFLAGS+=        -fcommon
-
-.if ${OPSYS} == FreeBSD && ${OSVERSION} >= 1200057
-SUB_LIST+=	LEGACY_LIMITS="@comment " MODERN_LIMITS=""
-.else
-SUB_LIST+=	LEGACY_LIMITS="" MODERN_LIMITS="@comment "
-.endif
 
 post-install:
 	@${MKDIR} ${STAGEDIR}/var/db/mysql

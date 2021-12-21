@@ -1,7 +1,7 @@
 # Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
 
 PORTNAME=	rhash
-PORTVERSION=	1.4.1
+PORTVERSION=	1.4.2
 CATEGORIES=	security
 MASTER_SITES=	SF
 DISTNAME=	${PORTNAME}-${PORTVERSION}-src
@@ -15,7 +15,7 @@ PATCHFILES=	\
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Utility and library for computing and checking of file hashes
 
-LICENSE=	MIT
+LICENSE=	BSD0CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYING
 
 HAS_CONFIGURE=	yes
@@ -24,6 +24,9 @@ CONFIGURE_ARGS=	--prefix="${PREFIX}" --mandir="${PREFIX}/man" \
 		--enable-lib-static --enable-openssl-runtime \
 		--extra-cflags="${CFLAGS}" --extra-ldflags="${LDFLAGS}"
 INSTALL_TARGET=	install install-lib-so-link install-pkg-config
+
+USES=		cpe
+CPE_VENDOR=	${PORTNAME}_project
 USE_LDCONFIG=	yes
 
 WRKSRC=		${WRKDIR}/RHash-${PORTVERSION}

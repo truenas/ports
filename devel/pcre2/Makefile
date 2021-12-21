@@ -1,9 +1,8 @@
 # Created by: Mark Felder <feld@FreeBSD.org>
 
 PORTNAME=	pcre2
-PORTVERSION=	10.36
+PORTVERSION=	10.39
 CATEGORIES=	devel
-MASTER_SITES=	SF/pcre/${PORTNAME}/${PORTVERSION}
 
 MAINTAINER=	krion@FreeBSD.org
 COMMENT=	Perl Compatible Regular Expressions library, version 2
@@ -11,19 +10,26 @@ COMMENT=	Perl Compatible Regular Expressions library, version 2
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENCE
 
-USES=		autoreconf libtool pkgconfig
+USES=		autoreconf cpe libtool pkgconfig
+CPE_VENDOR=	pcre
+
+USE_GITHUB=	yes
+GH_ACCOUNT=	PhilipHazel
+GH_TAGNAME=	35fee41
+
+USE_LDCONFIG=	yes
 
 GNU_CONFIGURE=	yes
-USE_LDCONFIG=	yes
+CONFIGURE_ARGS=	--enable-pcre2-16 \
+		--enable-pcre2-32
 INSTALL_TARGET=	install-strip
-CONFIGURE_ARGS=	--enable-pcre2-16 --enable-pcre2-32
 
-OPTIONS_DEFINE=	DOCS
-OPTIONS_RADIO=	CLI
+OPTIONS_DEFINE=		DOCS
+OPTIONS_RADIO=		CLI
 OPTIONS_RADIO_CLI=	LIBEDIT READLINE
 
-LIBEDIT_CONFIGURE_ENABLE=	pcre2test-libedit
 LIBEDIT_USES=			libedit
+LIBEDIT_CONFIGURE_ENABLE=	pcre2test-libedit
 
 READLINE_USES=			readline
 READLINE_CONFIGURE_ENABLE=	pcre2test-libreadline

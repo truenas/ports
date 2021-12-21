@@ -1,6 +1,5 @@
 PORTNAME=	matomo
-DISTVERSION=	4.1.0
-PORTREVISION=	1
+DISTVERSION=	4.5.0
 CATEGORIES=	www
 MASTER_SITES=	http://builds.matomo.org/
 PKGNAMEPREFIX=	${PHP_PKGNAMEPREFIX}
@@ -10,6 +9,7 @@ MAINTAINER=	joneum@FreeBSD.org
 COMMENT=	Open Source Web Analytics Software Program
 
 LICENSE=	GPLv3
+LICENSE_FILE=	${WRKSRC}/LICENSE
 
 USES=		cpe shebangfix php:flavors
 

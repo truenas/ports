@@ -1,8 +1,7 @@
 # Created by: Jim Mock <jim@FreeBSD.org>
 
 PORTNAME?=	libpurple
-PORTVERSION=	2.14.3
-PORTREVISION?=	2
+PORTVERSION=	2.14.8
 CATEGORIES?=	net-im
 MASTER_SITES=	SF/pidgin/Pidgin/${PORTVERSION}
 DISTNAME=	pidgin-${PORTVERSION}
@@ -61,7 +60,7 @@ GG_DESC=	The Gadu-Gadu chat protocol
 IRC_DESC=	The Internet Relay Chat protocol
 JABBER_DESC=	The Jabber/XMPP/Google Talk protocol
 NOVELL_DESC=	The Novell GroupWise chat protocol
-QQ_DESC=	The Tercent QQ chat protocol
+QQ_DESC=	The Tencent QQ chat protocol
 SIMPLE_DESC=	The SIMPLE chat protocol
 ZEPHYR_DESC=	The Zephyr chat protocol
 
@@ -118,14 +117,14 @@ USE_GNOME+=	gconf2
 GCONF_SCHEMAS=	purple.schemas
 .endif
 
-#.if defined(WITH_GTKUI)
-#USE_GNOME+=		evolutiondataserver
-#PLIST_SUB+=		EVO=""
-#CONFIGURE_ARGS+=	--enable-gevolution
-#.else
+.if defined(WITH_GTKUI)
+USE_GNOME+=		evolutiondataserver3
+PLIST_SUB+=		EVO=""
+CONFIGURE_ARGS+=	--enable-gevolution
+.else
 CONFIGURE_ARGS+=	--disable-gevolution
 PLIST_SUB+=		EVO="@comment not installed: "
-#.endif
+.endif
 
 .if ${PORT_OPTIONS:MGSTREAMER}
 USE_GSTREAMER1+=core good

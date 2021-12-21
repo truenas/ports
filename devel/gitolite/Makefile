@@ -14,7 +14,6 @@ RUN_DEPENDS=	git>=0:devel/git \
 		p5-JSON>=0:converters/p5-JSON
 
 USES=		cpe perl5 shebangfix
-CPE_VENDOR=	sitaram_chamarty
 USE_GITHUB=	yes
 GH_ACCOUNT=	sitaramc
 
@@ -31,7 +30,7 @@ OPTIONS_DEFINE=		CONTRIB DOCS GITUSER
 OPTIONS_DEFAULT=	CONTRIB
 OPTIONS_SUB=		yes
 
-CONTRIB_DESC=	Install additionnal contrib files
+CONTRIB_DESC=	Install additional contrib files
 GITUSER_DESC=	Create git user as gitolite provider
 
 GITUSER_VARS=	GROUPS=git \

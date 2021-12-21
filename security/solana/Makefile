@@ -1,6 +1,7 @@
 PORTNAME=	solana
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.6.6
+DISTVERSION=	1.8.5
+PORTREVISION=	1
 CATEGORIES=	security
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -11,7 +12,9 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 
 BROKEN_i386=	Fails on 32-bit systems: https://github.com/solana-labs/solana/issues/16811
 
-BUILD_DEPENDS=	llvm-config${LLVM_DEFAULT}:devel/llvm${LLVM_DEFAULT}
+BUILD_DEPENDS=	llvm-config${LLVM_VERSION}:devel/llvm${LLVM_VERSION} \
+		protoc:devel/protobuf \
+		gmake:devel/gmake
 LIB_DEPENDS=	libhidapi.so:comms/hidapi
 
 USES=		cargo pkgconfig ssl
@@ -24,7 +27,9 @@ CARGO_CRATES=	Inflector-0.11.4 \
 		adler32-1.0.4 \
 		ahash-0.4.6 \
 		ahash-0.6.1 \
+		ahash-0.7.4 \
 		aho-corasick-0.7.10 \
+		aliasable-0.1.3 \
 		ansi_term-0.11.0 \
 		anyhow-1.0.38 \
 		arc-swap-0.4.8 \
@@ -32,8 +37,8 @@ CARGO_CRATES=	Inflector-0.11.4 \
 		arrayref-0.3.6 \
 		arrayvec-0.5.1 \
 		ascii-0.9.3 \
-		assert_cmd-1.0.2 \
-		assert_matches-1.3.0 \
+		assert_cmd-2.0.0 \
+		assert_matches-1.5.0 \
 		async-stream-0.3.0 \
 		async-stream-impl-0.3.0 \
 		async-trait-0.1.42 \
@@ -49,8 +54,10 @@ CARGO_CRATES=	Inflector-0.11.4 \
 		base64-0.11.0 \
 		base64-0.12.3 \
 		base64-0.13.0 \
-		bincode-1.3.1 \
-		bindgen-0.54.0 \
+		bincode-1.3.3 \
+		bindgen-0.57.0 \
+		bit-set-0.5.2 \
+		bit-vec-0.6.3 \
 		bitflags-1.2.1 \
 		blake2b_simd-0.5.10 \
 		blake3-0.3.7 \
@@ -58,17 +65,20 @@ CARGO_CRATES=	Inflector-0.11.4 \
 		block-buffer-0.9.0 \
 		block-padding-0.1.5 \
 		block-padding-0.2.1 \
-		borsh-0.8.1 \
-		borsh-derive-0.8.1 \
-		borsh-derive-internal-0.8.1 \
-		borsh-schema-derive-internal-0.8.1 \
+		borsh-0.9.0 \
+		borsh-derive-0.9.0 \
+		borsh-derive-internal-0.9.0 \
+		borsh-schema-derive-internal-0.9.0 \
 		bs58-0.3.1 \
-		bstr-0.2.13 \
+		bs58-0.4.0 \
+		bstr-0.2.16 \
 		bumpalo-3.3.0 \
 		bv-0.11.1 \
 		byte-tools-0.3.1 \
 		byte-unit-4.0.9 \
 		bytecount-0.6.0 \
+		bytemuck-1.7.2 \
+		bytemuck_derive-1.0.1 \
 		byteorder-1.3.4 \
 		bytes-0.4.12 \
 		bytes-0.5.4 \
@@ -76,51 +86,53 @@ CARGO_CRATES=	Inflector-0.11.4 \
 		bytesize-1.0.1 \
 		bzip2-0.3.3 \
 		bzip2-sys-0.1.9+1.0.8 \
+		caps-0.5.3 \
 		cargo_metadata-0.12.0 \
 		cast-0.2.3 \
-		cc-1.0.49 \
+		cc-1.0.67 \
 		cexpr-0.4.0 \
 		cfg-if-0.1.10 \
 		cfg-if-1.0.0 \
 		chrono-0.4.19 \
-		chrono-humanize-0.1.1 \
-		clang-sys-0.29.3 \
+		chrono-humanize-0.2.1 \
+		clang-sys-1.2.0 \
 		clap-2.33.3 \
 		cloudabi-0.0.3 \
-		cloudabi-0.1.0 \
 		combine-3.8.1 \
 		console-0.11.3 \
+		console-0.14.1 \
 		const_fn-0.4.5 \
+		const_format-0.2.14 \
+		const_format_proc_macros-0.2.14 \
 		constant_time_eq-0.1.5 \
 		core-foundation-0.9.1 \
 		core-foundation-sys-0.8.2 \
 		core_affinity-0.5.10 \
-		cpuid-bool-0.1.2 \
+		cpufeatures-0.1.5 \
+		cpufeatures-0.2.1 \
 		crc32fast-1.2.0 \
 		criterion-stats-0.3.0 \
 		crossbeam-channel-0.4.4 \
 		crossbeam-channel-0.5.0 \
-		crossbeam-deque-0.7.3 \
-		crossbeam-deque-0.8.0 \
-		crossbeam-epoch-0.8.2 \
-		crossbeam-epoch-0.9.1 \
-		crossbeam-queue-0.2.3 \
+		crossbeam-deque-0.8.1 \
+		crossbeam-epoch-0.9.5 \
 		crossbeam-utils-0.7.2 \
-		crossbeam-utils-0.8.1 \
+		crossbeam-utils-0.8.5 \
 		crunchy-0.2.2 \
-		crypto-mac-0.7.0 \
 		crypto-mac-0.8.0 \
+		crypto-mac-0.9.1 \
 		crypto-mac-0.10.0 \
 		csv-1.1.3 \
 		csv-core-0.1.10 \
-		ctrlc-3.1.5 \
+		ctrlc-3.2.0 \
 		curve25519-dalek-2.1.0 \
 		curve25519-dalek-3.0.0 \
 		dashmap-4.0.2 \
+		derivation-path-0.1.3 \
 		derivative-2.1.1 \
 		derive_more-0.99.11 \
 		dialoguer-0.6.2 \
-		difference-2.0.0 \
+		difflib-0.4.0 \
 		digest-0.8.1 \
 		digest-0.9.0 \
 		dir-diff-0.3.2 \
@@ -133,6 +145,7 @@ CARGO_CRATES=	Inflector-0.11.4 \
 		dtoa-0.4.5 \
 		ed25519-1.0.1 \
 		ed25519-dalek-1.0.1 \
+		ed25519-dalek-bip32-0.1.1 \
 		educe-0.4.13 \
 		either-1.5.3 \
 		encode_unicode-0.3.6 \
@@ -140,15 +153,19 @@ CARGO_CRATES=	Inflector-0.11.4 \
 		enum-iterator-0.6.0 \
 		enum-iterator-derive-0.6.0 \
 		enum-ordinalize-3.1.8 \
-		env_logger-0.7.1 \
 		env_logger-0.8.3 \
+		errno-0.2.8 \
+		errno-dragonfly-0.1.2 \
 		failure-0.1.8 \
 		failure_derive-0.1.8 \
 		fake-simd-0.1.2 \
+		fallible-iterator-0.2.0 \
 		fast-math-0.1.1 \
 		fd-lock-2.0.0 \
 		feature-probe-0.1.1 \
+		filedescriptor-0.8.0 \
 		filetime-0.2.10 \
+		fixedbitset-0.2.0 \
 		flate2-1.0.14 \
 		fnv-1.0.7 \
 		foreign-types-0.3.2 \
@@ -168,7 +185,7 @@ CARGO_CRATES=	Inflector-0.11.4 \
 		futures-sink-0.3.8 \
 		futures-task-0.3.8 \
 		futures-util-0.3.8 \
-		gag-0.1.10 \
+		gag-1.0.0 \
 		generic-array-0.12.3 \
 		generic-array-0.14.3 \
 		gethostname-0.2.1 \
@@ -177,97 +194,95 @@ CARGO_CRATES=	Inflector-0.11.4 \
 		gimli-0.21.0 \
 		glob-0.3.0 \
 		globset-0.4.5 \
-		goauth-0.9.0 \
+		goauth-0.10.0 \
 		goblin-0.3.0 \
-		h2-0.2.5 \
-		h2-0.3.0 \
+		h2-0.3.3 \
 		half-1.6.0 \
 		hash32-0.1.1 \
-		hashbrown-0.8.2 \
 		hashbrown-0.9.1 \
+		hashbrown-0.11.2 \
+		heck-0.3.3 \
 		hermit-abi-0.1.13 \
 		hex-0.4.2 \
 		hidapi-1.2.5 \
 		histogram-0.6.9 \
-		hmac-0.7.1 \
 		hmac-0.8.1 \
+		hmac-0.9.0 \
 		hmac-0.10.1 \
-		hmac-drbg-0.2.0 \
+		hmac-drbg-0.3.0 \
 		http-0.2.1 \
-		http-body-0.3.1 \
-		http-body-0.4.0 \
-		httparse-1.3.4 \
-		httpdate-0.3.2 \
-		humantime-1.3.0 \
+		http-body-0.4.2 \
+		httparse-1.4.1 \
+		httpdate-1.0.1 \
 		humantime-2.0.1 \
 		hyper-0.10.16 \
-		hyper-0.13.10 \
-		hyper-0.14.3 \
+		hyper-0.14.11 \
 		hyper-rustls-0.22.1 \
+		hyper-timeout-0.4.1 \
 		hyper-tls-0.5.0 \
 		idna-0.1.5 \
 		idna-0.2.0 \
 		ieee754-0.2.6 \
 		indexed-0.1.1 \
-		indexmap-1.5.1 \
+		indexmap-1.7.0 \
 		indicatif-0.15.0 \
 		input_buffer-0.3.1 \
-		instant-0.1.6 \
+		instant-0.1.11 \
 		iovec-0.1.4 \
 		ipnet-2.3.0 \
 		itertools-0.9.0 \
+		itertools-0.10.1 \
 		itoa-0.4.5 \
-		jemalloc-ctl-0.3.3 \
-		jemalloc-sys-0.3.2 \
-		jemallocator-0.3.2 \
 		jobserver-0.1.21 \
 		js-sys-0.3.47 \
-		jsonrpc-client-transports-17.0.0 \
-		jsonrpc-core-17.0.0 \
-		jsonrpc-core-client-17.0.0 \
-		jsonrpc-derive-17.0.0 \
-		jsonrpc-http-server-17.0.0 \
-		jsonrpc-ipc-server-17.0.1 \
-		jsonrpc-pubsub-17.0.0 \
-		jsonrpc-server-utils-17.0.0 \
-		jsonrpc-ws-server-17.0.0 \
+		jsonrpc-client-transports-18.0.0 \
+		jsonrpc-core-18.0.0 \
+		jsonrpc-core-client-18.0.0 \
+		jsonrpc-derive-18.0.0 \
+		jsonrpc-http-server-18.0.0 \
+		jsonrpc-ipc-server-18.0.0 \
+		jsonrpc-pubsub-18.0.0 \
+		jsonrpc-server-utils-18.0.0 \
+		jsonrpc-ws-server-18.0.0 \
 		keccak-0.1.0 \
 		kernel32-sys-0.2.2 \
 		language-tags-0.2.2 \
 		lazy_static-1.4.0 \
 		lazycell-1.2.1 \
-		libc-0.2.81 \
-		libloading-0.5.2 \
+		libc-0.2.103 \
 		libloading-0.6.2 \
-		librocksdb-sys-6.11.4 \
-		libsecp256k1-0.3.5 \
+		libloading-0.7.0 \
+		librocksdb-sys-6.17.3 \
+		libsecp256k1-0.5.0 \
+		libsecp256k1-core-0.2.1 \
+		libsecp256k1-gen-ecmult-0.2.0 \
+		libsecp256k1-gen-genmult-0.2.0 \
 		linked-hash-map-0.5.3 \
 		lock_api-0.3.4 \
-		lock_api-0.4.1 \
+		lock_api-0.4.5 \
 		log-0.3.9 \
-		log-0.4.11 \
-		lru-0.6.1 \
+		log-0.4.14 \
+		lru-0.6.6 \
 		matches-0.1.8 \
 		maybe-uninit-2.0.0 \
+		md-5-0.9.1 \
 		memchr-1.0.2 \
-		memchr-2.3.3 \
+		memchr-2.4.0 \
 		memmap2-0.1.0 \
-		memoffset-0.5.4 \
-		memoffset-0.6.1 \
+		memoffset-0.6.4 \
 		mime-0.2.6 \
 		mime-0.3.16 \
 		miniz_oxide-0.3.6 \
 		mio-0.6.22 \
 		mio-0.7.6 \
 		mio-extras-2.0.6 \
-		mio-named-pipes-0.1.7 \
-		mio-uds-0.6.8 \
 		miow-0.2.2 \
 		miow-0.3.6 \
+		multimap-0.8.3 \
 		native-tls-0.2.7 \
 		net2-0.2.37 \
-		nix-0.17.0 \
-		nix-0.19.0 \
+		nix-0.20.2 \
+		nix-0.22.2 \
 		nom-3.2.1 \
 		nom-5.1.1 \
 		ntapi-0.3.4 \
@@ -280,57 +295,65 @@ CARGO_CRATES=	Inflector-0.11.4 \
 		num_enum_derive-0.5.1 \
 		number_prefix-0.3.0 \
 		object-0.19.0 \
-		once_cell-1.5.2 \
+		once_cell-1.8.0 \
 		opaque-debug-0.2.3 \
 		opaque-debug-0.3.0 \
-		openssl-0.10.29 \
+		openssl-0.10.36 \
 		openssl-probe-0.1.2 \
-		openssl-sys-0.9.57 \
-		ouroboros-0.5.1 \
-		ouroboros_macro-0.5.1 \
-		parity-tokio-ipc-0.8.0 \
-		parity-ws-0.10.0 \
+		openssl-sys-0.9.67 \
+		ouroboros-0.10.0 \
+		ouroboros_macro-0.10.0 \
+		parity-tokio-ipc-0.9.0 \
+		parity-ws-0.11.1 \
 		parking_lot-0.9.0 \
 		parking_lot-0.10.2 \
-		parking_lot-0.11.0 \
+		parking_lot-0.11.2 \
 		parking_lot_core-0.6.2 \
 		parking_lot_core-0.7.2 \
-		parking_lot_core-0.8.0 \
-		paste-0.1.16 \
-		paste-impl-0.1.16 \
-		pbkdf2-0.3.0 \
+		parking_lot_core-0.8.5 \
 		pbkdf2-0.4.0 \
 		pbkdf2-0.6.0 \
 		peeking_take_while-0.1.2 \
 		percent-encoding-1.0.1 \
 		percent-encoding-2.1.0 \
 		pest-2.1.3 \
+		petgraph-0.5.1 \
+		phf-0.10.0 \
+		phf_shared-0.10.0 \
 		pickledb-0.4.1 \
 		pin-project-0.4.23 \
 		pin-project-1.0.1 \
 		pin-project-internal-0.4.23 \
 		pin-project-internal-1.0.1 \
-		pin-project-lite-0.1.5 \
-		pin-project-lite-0.2.4 \
+		pin-project-lite-0.2.7 \
 		pin-utils-0.1.0 \
 		pkg-config-0.3.17 \
 		plain-0.2.3 \
+		postgres-0.19.1 \
+		postgres-protocol-0.6.1 \
+		postgres-types-0.2.2 \
 		ppv-lite86-0.2.8 \
-		predicates-1.0.4 \
+		predicates-2.0.1 \
 		predicates-core-1.0.0 \
 		predicates-tree-1.0.0 \
 		pretty-hex-0.2.1 \
 		proc-macro-crate-0.1.5 \
+		proc-macro-error-1.0.4 \
+		proc-macro-error-attr-1.0.4 \
 		proc-macro-hack-0.5.19 \
 		proc-macro-nested-0.1.4 \
 		proc-macro2-0.4.30 \
 		proc-macro2-1.0.24 \
-		prost-0.7.0 \
-		prost-derive-0.7.0 \
-		prost-types-0.7.0 \
+		proptest-1.0.0 \
+		prost-0.8.0 \
+		prost-build-0.8.0 \
+		prost-derive-0.8.0 \
+		prost-types-0.8.0 \
+		qstring-0.7.2 \
 		quick-error-1.2.3 \
+		quick-error-2.0.1 \
 		quote-0.6.13 \
-		quote-1.0.6 \
+		quote-1.0.9 \
 		rand-0.4.6 \
 		rand-0.6.5 \
 		rand-0.7.3 \
@@ -351,21 +374,23 @@ CARGO_CRATES=	Inflector-0.11.4 \
 		rand_pcg-0.1.2 \
 		rand_pcg-0.2.1 \
 		rand_xorshift-0.1.1 \
+		rand_xorshift-0.3.0 \
 		raptorq-1.4.2 \
-		rayon-1.5.0 \
-		rayon-core-1.9.0 \
+		rayon-1.5.1 \
+		rayon-core-1.9.1 \
 		rdrand-0.4.0 \
 		redox_syscall-0.1.56 \
+		redox_syscall-0.2.10 \
 		redox_users-0.3.4 \
 		reed-solomon-erasure-4.0.2 \
-		regex-1.3.9 \
+		regex-1.4.5 \
 		regex-automata-0.1.9 \
-		regex-syntax-0.6.18 \
+		regex-syntax-0.6.23 \
 		remove_dir_all-0.5.0 \
 		reqwest-0.11.2 \
 		retain_mut-0.1.2 \
-		ring-0.16.12 \
-		rocksdb-0.15.0 \
+		ring-0.16.20 \
+		rocksdb-0.16.0 \
 		rpassword-4.0.5 \
 		rust-argon2-0.7.0 \
 		rustc-demangle-0.1.16 \
@@ -373,6 +398,7 @@ CARGO_CRATES=	Inflector-0.11.4 \
 		rustc_version-0.2.3 \
 		rustls-0.19.0 \
 		rustversion-1.0.4 \
+		rusty-fork-0.3.0 \
 		ryu-1.0.4 \
 		safemem-0.3.3 \
 		same-file-1.0.6 \
@@ -385,42 +411,46 @@ CARGO_CRATES=	Inflector-0.11.4 \
 		security-framework-sys-2.1.1 \
 		semver-0.9.0 \
 		semver-0.11.0 \
+		semver-1.0.4 \
 		semver-parser-0.7.0 \
 		semver-parser-0.10.1 \
-		serde-1.0.122 \
-		serde_bytes-0.11.4 \
+		serde-1.0.130 \
+		serde_bytes-0.11.5 \
 		serde_cbor-0.11.1 \
-		serde_derive-1.0.122 \
-		serde_json-1.0.62 \
+		serde_derive-1.0.130 \
+		serde_json-1.0.68 \
 		serde_urlencoded-0.7.0 \
 		serde_yaml-0.8.13 \
 		serial_test-0.4.0 \
 		serial_test_derive-0.4.0 \
 		sha-1-0.8.2 \
+		sha-1-0.9.7 \
 		sha1-0.6.0 \
-		sha2-0.8.2 \
-		sha2-0.9.2 \
+		sha2-0.9.8 \
 		sha3-0.9.1 \
 		shlex-0.1.1 \
 		signal-hook-0.1.15 \
 		signal-hook-registry-1.2.0 \
 		signature-1.1.0 \
 		simpl-0.1.0 \
+		siphasher-0.3.7 \
 		slab-0.4.2 \
 		smallvec-0.6.14 \
 		smallvec-1.6.1 \
-		smpl_jwt-0.6.0 \
+		smpl_jwt-0.6.1 \
 		socket2-0.3.17 \
-		solana-frozen-abi-1.6.4 \
-		solana-frozen-abi-macro-1.6.4 \
-		solana-logger-1.6.4 \
-		solana-program-1.6.4 \
-		solana-sdk-macro-1.6.4 \
-		solana_rbpf-0.2.7 \
+		socket2-0.4.1 \
+		soketto-0.6.0 \
+		solana-frozen-abi-1.7.6 \
+		solana-frozen-abi-macro-1.7.6 \
+		solana-logger-1.7.6 \
+		solana-program-1.7.6 \
+		solana-sdk-macro-1.7.6 \
+		solana_rbpf-0.2.11 \
 		spin-0.5.2 \
-		spl-associated-token-account-1.0.2 \
+		spl-associated-token-account-1.0.3 \
 		spl-memo-3.0.1 \
-		spl-token-3.1.0 \
+		spl-token-3.2.0 \
 		stable_deref_trait-1.2.0 \
 		standback-0.2.9 \
 		static_assertions-1.1.0 \
@@ -428,8 +458,9 @@ CARGO_CRATES=	Inflector-0.11.4 \
 		stdweb-derive-0.5.3 \
 		stdweb-internal-macros-0.2.9 \
 		stdweb-internal-runtime-0.1.5 \
+		stream-cancel-0.8.1 \
+		stringprep-0.1.2 \
 		strsim-0.8.0 \
-		subtle-1.0.0 \
 		subtle-2.2.2 \
 		symlink-0.1.0 \
 		syn-0.15.44 \
@@ -437,58 +468,51 @@ CARGO_CRATES=	Inflector-0.11.4 \
 		synstructure-0.12.3 \
 		sysctl-0.4.0 \
 		systemstat-0.1.5 \
-		tar-0.4.28 \
+		tar-0.4.37 \
 		tarpc-0.24.1 \
 		tarpc-plugins-0.9.0 \
 		tempfile-3.1.0 \
 		termcolor-1.1.0 \
-		terminal_size-0.1.12 \
+		terminal_size-0.1.16 \
 		termios-0.3.2 \
 		textwrap-0.11.0 \
-		thiserror-1.0.23 \
-		thiserror-impl-1.0.23 \
+		thiserror-1.0.29 \
+		thiserror-impl-1.0.29 \
 		thread-scoped-1.0.2 \
-		thread_local-1.0.1 \
+		tikv-jemalloc-sys-0.4.2+5.2.1-patched.2 \
+		tikv-jemallocator-0.4.1 \
 		time-0.1.43 \
 		time-0.2.25 \
 		time-macros-0.1.0 \
 		time-macros-impl-0.1.1 \
-		tiny-bip39-0.7.3 \
-		tiny-bip39-0.8.0 \
+		tiny-bip39-0.8.1 \
 		tinyvec-1.1.1 \
 		tinyvec_macros-0.1.0 \
-		tokio-0.1.22 \
-		tokio-0.2.22 \
-		tokio-1.1.1 \
+		tokio-1.8.4 \
 		tokio-codec-0.1.2 \
-		tokio-current-thread-0.1.7 \
 		tokio-executor-0.1.10 \
-		tokio-fs-0.1.7 \
 		tokio-io-0.1.13 \
-		tokio-macros-0.2.6 \
-		tokio-macros-1.0.0 \
+		tokio-io-timeout-1.1.1 \
+		tokio-macros-1.3.0 \
 		tokio-native-tls-0.3.0 \
+		tokio-postgres-0.7.3 \
 		tokio-reactor-0.1.12 \
 		tokio-rustls-0.22.0 \
 		tokio-serde-0.8.0 \
 		tokio-stream-0.1.2 \
 		tokio-sync-0.1.8 \
 		tokio-tcp-0.1.4 \
-		tokio-threadpool-0.1.18 \
-		tokio-timer-0.2.13 \
 		tokio-tls-0.2.1 \
-		tokio-udp-0.1.6 \
-		tokio-uds-0.2.6 \
-		tokio-util-0.3.1 \
 		tokio-util-0.6.3 \
 		toml-0.5.6 \
-		tonic-0.4.0 \
-		tower-0.4.4 \
+		tonic-0.5.0 \
+		tonic-build-0.5.0 \
+		tower-0.4.8 \
 		tower-layer-0.3.1 \
 		tower-service-0.3.0 \
-		tracing-0.1.18 \
-		tracing-attributes-0.1.9 \
-		tracing-core-0.1.13 \
+		tracing-0.1.26 \
+		tracing-attributes-0.1.15 \
+		tracing-core-0.1.18 \
 		tracing-futures-0.2.4 \
 		traitobject-0.1.0 \
 		treeline-0.1.0 \
@@ -502,6 +526,7 @@ CARGO_CRATES=	Inflector-0.11.4 \
 		unicase-2.6.0 \
 		unicode-bidi-0.3.4 \
 		unicode-normalization-0.1.16 \
+		unicode-segmentation-1.8.0 \
 		unicode-width-0.1.7 \
 		unicode-xid-0.1.0 \
 		unicode-xid-0.2.0 \
@@ -534,9 +559,9 @@ CARGO_CRATES=	Inflector-0.11.4 \
 		webpki-roots-0.21.0 \
 		websocket-0.24.0 \
 		websocket-base-0.24.0 \
-		which-3.1.1 \
+		which-4.0.2 \
 		winapi-0.2.8 \
-		winapi-0.3.8 \
+		winapi-0.3.9 \
 		winapi-build-0.1.1 \
 		winapi-i686-pc-windows-gnu-0.4.0 \
 		winapi-util-0.1.5 \
@@ -546,7 +571,7 @@ CARGO_CRATES=	Inflector-0.11.4 \
 		xattr-0.2.2 \
 		yaml-rust-0.4.3 \
 		zeroize-1.2.0 \
-		zeroize_derive-1.0.0 \
+		zeroize_derive-1.2.0 \
 		zstd-0.5.3+zstd.1.4.5 \
 		zstd-safe-2.0.5+zstd.1.4.5 \
 		zstd-sys-1.4.17+zstd.1.4.5
@@ -556,10 +581,12 @@ XARCH=		${ARCH:S/amd64/x86_64/:tu}
 MAKE_ENV=	${XARCH}_UNKNOWN_FREEBSD_OPENSSL_INCLUDE_DIR=${OPENSSLINC} \
 		${XARCH}_UNKNOWN_FREEBSD_OPENSSL_LIB_DIR=${OPENSSLLIB}
 
-BINARY_ALIAS=	llvm-config=${PREFIX}/bin/llvm-config${LLVM_DEFAULT}
+LLVM_VERSION=	12
+
+BINARY_ALIAS=	llvm-config=${PREFIX}/bin/llvm-config${LLVM_VERSION}
 
 do-install:
-	for f in ${WRKDIR}/target/release/${PORTNAME}-*; do \
+	for f in ${CARGO_TARGET_DIR}/${CARGO_BUILD_TARGET}/*/${PORTNAME}*; do \
 		if [ -f $$f -a -x $$f ]; then \
 			${INSTALL_PROGRAM} $$f ${STAGEDIR}${PREFIX}/bin; \
 		fi \

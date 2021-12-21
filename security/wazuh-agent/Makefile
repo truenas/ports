@@ -1,6 +1,6 @@
 PORTNAME=	wazuh
 DISTVERSIONPREFIX=	v
-DISTVERSION=	4.1.4
+DISTVERSION=	4.1.5
 CATEGORIES=	security
 MASTER_SITES=	https://packages.wazuh.com/deps/11/libraries/sources/
 PKGNAMESUFFIX=	-agent
@@ -19,7 +19,7 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 BROKEN_aarch64=		fails to compile: rootcheck/os_string.c:188:20: use of undeclared identifier '__LDPGSZ'
 BROKEN_i386=		fails to build external OpenSSL dependency
 
-USES=		gmake perl5 readline shebangfix uidfix
+USES=		cpe gmake perl5 readline shebangfix uidfix
 USE_GITHUB=	yes
 USE_RC_SUBR=	${PORTNAME}-agent
 
@@ -29,7 +29,7 @@ SHEBANG_FILES=	${WRKSRC}/contrib/util.sh \
 		${WRKSRC}/wodles/oscap/oscap.py \
 		${WRKSRC}/active-response/*.sh
 
-CONFLICTS_INSTALL=	ossec-*
+CONFLICTS_INSTALL=	ossec
 
 USERS=		ossec ossecm ossecr
 GROUPS=		ossec

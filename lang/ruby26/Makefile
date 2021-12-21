@@ -17,6 +17,9 @@ LICENSE_COMB=	dual
 LICENSE_FILE_BSD2CLAUSE=${WRKSRC}/BSDL
 LICENSE_FILE_RUBY=	${WRKSRC}/COPYING
 
+DEPRECATED=	Use newer version of Ruby. Ruby 2.6 will reach its EoL on March 31, 2022
+EXPIRATION_DATE=	2022-03-31
+
 # Using LIB_DEPENDS finds the libffi from gcc which causes problems
 BUILD_DEPENDS=	libffi>=0:devel/libffi
 LIB_DEPENDS=	libyaml.so:textproc/libyaml
@@ -66,7 +69,7 @@ LIBEDIT_CONFIGURE_ON=	--enable-libedit --with-libedit-dir=${LOCALBASE}
 LIBEDIT_USES=		libedit
 RDOC_CONFIGURE_ENABLE=	install-rdoc
 READLINE_CONFIGURE_ON=	--disable-libedit --with-readline-dir=${LOCALBASE}
-READLINE_USES=		readline:port
+READLINE_USES=		readline
 
 CPE_VENDOR=	ruby-lang
 CPE_VERSION=	${RUBY_RELVERSION}
@@ -93,7 +96,7 @@ CONFIGURE_ARGS+=--disable-dtrace
 .endif
 
 # keep in sync with all platforms where libunwind is available
-.if (${ARCH} == aarch64 || ${ARCH} == amd64 || ${ARCH} == i386 || ${ARCH:Mpowerpc64*})
+.if ${ARCH} == aarch64 || ${ARCH} == amd64 || ${ARCH} == armv7 || ${ARCH} == i386 || ${ARCH} == powerpc64 || ${ARCH} == powerpc64le
 LIB_DEPENDS+=	libunwind.so:devel/libunwind
 .endif
 
@@ -113,7 +116,7 @@ MAKE_JOBS_UNSAFE=	yes
 .if ${RUBY_VER} == ${RUBY_DEFAULT_VER}
 PLIST_SUB+=	IF_DEFAULT=""
 .else
-PKGNAMESUFFIX=	${RUBY_VER:C/\.//}
+PKGNAMESUFFIX=	${RUBY_SUFFIX}
 PLIST_SUB+=	IF_DEFAULT="@comment "
 .endif
 
@@ -193,7 +196,7 @@ post-install-DEBUG-off:
 # bogus to hack.
 #
 .if defined(STRIP) && ${STRIP} == -s
-	${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/${RUBY_NAME}
+	${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/ruby${RUBY_SUFFIX}
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/libruby${RUBY_SHLIBVER}.so.${RUBY_SHLIBVER}
 	${FIND} ${STAGEDIR}${RUBY_ARCHLIBDIR} -type f -name '*\.so' -exec ${STRIP_CMD} {} \;
 .endif

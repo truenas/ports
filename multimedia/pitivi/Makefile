@@ -20,7 +20,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}gstreamer1>=1.14.0:multimedia/py-gstreamer1@
 		${PYTHON_PKGNAMEPREFIX}sqlite3>0:databases/py-sqlite3@${PY_FLAVOR} \
 		${PYNUMPY}
 
-USES=		desktop-file-utils gettext gnome meson pkgconfig python:3.3+ shebangfix tar:xz
+USES=		cpe desktop-file-utils gettext gnome meson pkgconfig python:3.7+ shebangfix tar:xz
 SHEBANG_FILES=	bin/pitivi.in \
 		getenvvar.py \
 		tests/__init__.py \
@@ -28,7 +28,6 @@ SHEBANG_FILES=	bin/pitivi.in \
 		tests/validate-tests/runtests
 USE_GNOME=	cairo intltool gdkpixbuf2 gsound gtk30 pygobject3
 USE_GSTREAMER1=	editing-services gdkpixbuf good gtk
-INSTALLS_ICONS=	yes
 USE_LDCONFIG=	yes
 MESON_ARGS=	-Db_lundef=false
 

@@ -1,11 +1,11 @@
 PORTNAME=	check_ssl_cert
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2.1.1
+DISTVERSION=	2.14.0
 CATEGORIES=	net-mgmt
 
 MAINTAINER=	cmt@FreeBSD.org
-COMMENT=	Nagios/Icinga plugin for checking SSL/TLS certificates
 
+COMMENT=	Nagios/Icinga plugin for checking SSL/TLS certificates
 LICENSE=	GPLv3
 
 RUN_DEPENDS=	expect:lang/expect \

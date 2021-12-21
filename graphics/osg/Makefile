@@ -3,7 +3,7 @@
 PORTNAME=	osg
 PORTVERSION=	3.6.5
 DISTVERSIONPREFIX=	OpenSceneGraph-
-PORTREVISION=	21
+PORTREVISION=	33
 CATEGORIES=	graphics
 
 MAINTAINER=	amdmi3@FreeBSD.org
@@ -21,7 +21,7 @@ USE_GITHUB=	yes
 GH_ACCOUNT=	openscenegraph
 GH_PROJECT=	OpenSceneGraph
 
-CONFLICTS_INSTALL=osg34-[0-9]*
+CONFLICTS_INSTALL=osg34
 
 USES=		alias cmake compiler:c11 jpeg gl pkgconfig xorg
 USE_GL=		gl
@@ -93,9 +93,11 @@ OPENEXR_LIB_DEPENDS=	libOpenEXR.so:graphics/openexr libImath.so:math/Imath
 OPENEXR_VARS=		FORCE_REQUIRE+=OpenEXR
 OPENEXR_VARS_OFF=	FORCE_IGNORE+=OpenEXR
 PDF_LIB_DEPENDS=	libpoppler-glib.so:graphics/poppler-glib
+PDF_USES=		gnome
 PDF_USE=		GNOME=cairo
 PDF_VARS=		FORCE_REQUIRE+=Poppler-glib
 PDF_VARS_OFF=		FORCE_IGNORE+=Poppler-glib
+SDL_USES=		sdl
 SDL_USE=		SDL=sdl
 SDL_VARS=		FORCE_REQUIRE+=SDL
 SDL_VARS_OFF=		FORCE_IGNORE+=SDL

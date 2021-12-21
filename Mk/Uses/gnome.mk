@@ -43,14 +43,8 @@
 #				"GLIB_SCHEMAS=foo.gschema.xml bar.gschema.xml".
 #
 # INSTALLS_OMF		- If set, bsd.gnome.mk will automatically scan pkg-plist
-#				file and add apropriate @exec/@unexec directives for
+#				file and add apropriate @postexec/@postunexec directives for
 #				each .omf file found to track OMF registration database.
-#
-# INSTALLS_ICONS	- If a GTK+ port installs Freedesktop-style icons to
-#				${LOCALBASE}/share/icons, then you should use this
-#				macro. Using this macro ensures that icons are cached
-#				and will display correctly. This macro isn't needed
-#				for QT based applications, which use a different method.
 #
 # MAINTAINER: gnome@FreeBSD.org
 
@@ -71,12 +65,10 @@ _USE_GNOME_ALL= intlhack intltool introspection \
 # GNOME 2 components
 _USE_GNOME_ALL+= atk cairo \
 		gdkpixbuf2 gconf2 glib20 \
-		gnomesharp20 \
-		gnomevfs2 gtk-update-icon-cache gtk20 gtkhtml3 \
-		gtksharp20 gtksourceview2 gvfs libartlgpl2 libbonobo \
-		libbonoboui libglade2 libgnome \
-		libgnomecanvas \
-		libgnomeui libgsf libidl librsvg2 libwnck \
+		gtk-update-icon-cache gtk20 \
+		gtksharp20 gtksourceview2 gvfs libartlgpl2 \
+		libglade2 libgnomecanvas \
+		libgsf libidl librsvg2 libwnck \
 		libxml2 libxslt \
 		orbit2 pango pangox-compat \
 		vte
@@ -88,10 +80,12 @@ _USE_GNOME_ALL+=dconf evolutiondataserver3 gnomecontrolcenter3 gnomedesktop3 \
 		libgda5-ui libgnomekbd libwnck3 metacity nautilus3 \
 		pygobject3 vte3
 
+# GNOME 40 components
+_USE_GNOME_ALL+=gtk40 libadwaita
+
 # C++ bindings
 _USE_GNOME_ALL+=atkmm cairomm gconfmm26 glibmm gtkmm24 \
-		gtkmm30 gtksourceviewmm3 libgdamm5 \
-		libgtksourceviewmm libxml++26 libsigc++20 \
+		gtkmm30 gtksourceviewmm3 libgdamm5 libxml++26 libsigc++20 \
 		pangomm
 
 # glib-mkenums often fails with C locale
@@ -149,9 +143,6 @@ gtksourceviewmm3_USE_GNOME_IMPL=	gtkmm30 gtksourceview3
 libgdamm5_LIB_DEPENDS=		libgdamm-5.0.so:databases/libgdamm5
 libgdamm5_USE_GNOME_IMPL=	libgda5 glibmm
 
-libgtksourceviewmm_LIB_DEPENDS=		libgtksourceviewmm-2.0.so:x11-toolkits/libgtksourceviewmm
-libgtksourceviewmm_USE_GNOME_IMPL=	gtksourceview2 gtkmm24
-
 libsigc++20_LIB_DEPENDS=	libsigc-2.0.so:devel/libsigc++20
 
 pangomm_LIB_DEPENDS=	libpangomm-1.4.so:x11-toolkits/pangomm
@@ -180,7 +171,6 @@ pangox-compat_USE_GNOME_IMPL=	glib20 pango
 gdkpixbuf2_LIB_DEPENDS=	libgdk_pixbuf-2.0.so:graphics/gdk-pixbuf2
 gdkpixbuf2_USE_GNOME_IMPL=glib20
 
-gtk-update-icon-cache_BUILD_DEPENDS=	gtk-update-icon-cache:graphics/gtk-update-icon-cache
 gtk-update-icon-cache_RUN_DEPENDS=	gtk-update-icon-cache:graphics/gtk-update-icon-cache
 gtk-update-icon-cache_USE_GNOME_IMPL=	atk pango gdkpixbuf2
 
@@ -191,6 +181,10 @@ GTK2_VERSION=		2.10.0
 gtk30_LIB_DEPENDS=	libgtk-3.so:x11-toolkits/gtk30
 gtk30_USE_GNOME_IMPL=	atk pango
 GTK3_VERSION=		3.0.0
+
+gtk40_LIB_DEPENDS=	libgtk-4.so:x11-toolkits/gtk40
+gtk40_USE_GNOME_IMPL=	atk pango
+GTK4_VERSION=		4.0.0
 
 libidl_LIB_DEPENDS=	libIDL-2.so:devel/libIDL
 libidl_USE_GNOME_IMPL=	glib20
@@ -210,34 +204,19 @@ libxslt_LIB_DEPENDS=	libxslt.so:textproc/libxslt
 libxslt_RUN_DEPENDS=	${libxslt_BUILD_DEPENDS}
 libxslt_USE_GNOME_IMPL=	libxml2
 
-libbonobo_LIB_DEPENDS=	libbonobo-2.so:devel/libbonobo
-libbonobo_USE_GNOME_IMPL=libxml2 orbit2
-
 introspection_BUILD_DEPENDS=	g-ir-scanner:devel/gobject-introspection
 introspection_LIB_DEPENDS=	libgirepository-1.0.so:devel/gobject-introspection
 introspection_RUN_DEPENDS=	g-ir-scanner:devel/gobject-introspection
 introspection_USE_GNOME_IMPL=	glib20
-introspection_MAKE_ENV=		GI_SCANNER_DISABLE_CACHE=1 XDG_CACHE_HOME=${WRKDIR}
+introspection_MAKE_ENV=		GI_SCANNER_DISABLE_CACHE=1
 
 gconf2_LIB_DEPENDS=	libgconf-2.so:devel/gconf2
 gconf2_USE_GNOME_IMPL=	orbit2 libxml2 gtk20
-
-gnomevfs2_LIB_DEPENDS=	libgnomevfs-2.so:devel/gnome-vfs
-gnomevfs2_USE_GNOME_IMPL=gconf2 gnomemimedata
 
 libgnomecanvas_LIB_DEPENDS=	libgnomecanvas-2.so:graphics/libgnomecanvas
 libgnomecanvas_USE_GNOME_IMPL=	libglade2 libartlgpl2
 
 libartlgpl2_LIB_DEPENDS=	libart_lgpl_2.so:graphics/libart_lgpl
-
-libgnome_LIB_DEPENDS=	libgnome-2.so:x11/libgnome
-libgnome_USE_GNOME_IMPL=gnomevfs2 libbonobo
-
-libbonoboui_LIB_DEPENDS=	libbonoboui-2.so:x11-toolkits/libbonoboui
-libbonoboui_USE_GNOME_IMPL=	libgnomecanvas libgnome
-
-libgnomeui_LIB_DEPENDS=		libgnomeui-2.so:x11-toolkits/libgnomeui
-libgnomeui_USE_GNOME_IMPL=	libbonoboui
 
 gnomedesktop3_LIB_DEPENDS=	libgnome-desktop-3.so:x11/gnome-desktop
 gnomedesktop3_USE_GNOME_IMPL=	gtk30
@@ -254,6 +233,9 @@ vte_USE_GNOME_IMPL=	gtk20
 vte3_LIB_DEPENDS=	libvte-2.91.so:x11-toolkits/vte3
 vte3_USE_GNOME_IMPL=	gtk30
 
+libadwaita_LIB_DEPENDS=		libadwaita-1.so:x11-toolkits/libadwaita
+libadwaita_USE_GNOME_IMPL=	gtk40
+
 # Use librsvg2-rust where lang/rust is available
 .if ${LIBRSVG2_DEFAULT:Mrust}
 librsvg2_BUILD_DEPENDS=	librsvg2-rust>=0:graphics/librsvg2-rust
@@ -264,7 +246,7 @@ librsvg2_BUILD_DEPENDS=	librsvg2>=0:graphics/librsvg2
 librsvg2_LIB_DEPENDS=	librsvg-2.so:graphics/librsvg2
 librsvg2_RUN_DEPENDS=	librsvg2>=0:graphics/librsvg2
 .endif
-librsvg2_USE_GNOME_IMPL=libgsf gdkpixbuf2 pango
+librsvg2_USE_GNOME_IMPL=gdkpixbuf2 pango
 
 nautilus3_LIB_DEPENDS=	libnautilus-extension.so:x11-fm/nautilus
 nautilus3_USE_GNOME_IMPL=gnomedesktop3 libxml2
@@ -308,9 +290,6 @@ intlhack_PRE_PATCH=	${FIND} ${WRKSRC} -name "intltool-merge.in" | ${XARGS} ${FRA
 			's/DATADIRNAME=lib/DATADIRNAME=share/'
 intlhack_USE_GNOME_IMPL=intltool
 
-gtkhtml3_LIB_DEPENDS=	libgtkhtml-3.14.so:www/gtkhtml3
-gtkhtml3_USE_GNOME_IMPL=libglade2
-
 gtkhtml4_LIB_DEPENDS=	libgtkhtml-4.0.so:www/gtkhtml4
 gtkhtml4_USE_GNOME_IMPL=gtk30 libxml2
 
@@ -321,17 +300,9 @@ gnomemenus3_BUILD_DEPENDS=	gnome-menus>=3.2.0:x11/gnome-menus
 gnomemenus3_RUN_DEPENDS=	gnome-menus>=3.2.0:x11/gnome-menus
 gnomemenus3_USE_GNOME_IMPL=	glib20
 
-gtksharp10_BUILD_DEPENDS=	${LOCALBASE}/libdata/pkgconfig/gtk-sharp.pc:x11-toolkits/gtk-sharp10
-gtksharp10_RUN_DEPENDS=		${LOCALBASE}/libdata/pkgconfig/gtk-sharp.pc:x11-toolkits/gtk-sharp10
-gtksharp10_USE_GNOME_IMPL=	gtk20
-
 gtksharp20_BUILD_DEPENDS=	${LOCALBASE}/libdata/pkgconfig/gtk-sharp-2.0.pc:x11-toolkits/gtk-sharp20
 gtksharp20_RUN_DEPENDS=		${LOCALBASE}/libdata/pkgconfig/gtk-sharp-2.0.pc:x11-toolkits/gtk-sharp20
 gtksharp20_USE_GNOME_IMPL=	gtk20
-
-gnomesharp20_BUILD_DEPENDS=	${LOCALBASE}/libdata/pkgconfig/gnome-sharp-2.0.pc:x11-toolkits/gnome-sharp20
-gnomesharp20_RUN_DEPENDS=	${LOCALBASE}/libdata/pkgconfig/gnome-sharp-2.0.pc:x11-toolkits/gnome-sharp20
-gnomesharp20_USE_GNOME_IMPL=	gnomevfs2 gtkhtml3 gtksharp20 librsvg2 vte
 
 libgnomekbd_LIB_DEPENDS=	libgnomekbd.so:x11/libgnomekbd
 libgnomekbd_USE_GNOME_IMPL=	gtk30 libxml2
@@ -339,10 +310,6 @@ libgnomekbd_USE_GNOME_IMPL=	gtk30 libxml2
 gvfs_BUILD_DEPENDS=	gvfs>=0:devel/gvfs
 gvfs_RUN_DEPENDS=	gvfs>=0:devel/gvfs
 gvfs_USE_GNOME_IMPL=	glib20
-
-.if defined(INSTALLS_ICONS)
-USE_GNOME+=	gtk-update-icon-cache
-.endif
 
 # End component definition section
 
@@ -368,7 +335,8 @@ _USE_GNOME+=	${${component}_USE_GNOME_IMPL} ${component}
 # Setup the GTK+ API version for pixbuf loaders, input method modules,
 # and theme engines.
 PLIST_SUB+=			GTK2_VERSION="${GTK2_VERSION}" \
-				GTK3_VERSION="${GTK3_VERSION}"
+				GTK3_VERSION="${GTK3_VERSION}" \
+				GTK4_VERSION="${GTK4_VERSION}"
 
 .if defined(_USE_GNOME) && empty(_USE_GNOME:Mglib20:u) && defined(GLIB_SCHEMAS)
 IGNORE=		GLIB_SCHEMAS is set, but needs USE_GNOME=glib20 to work
@@ -449,7 +417,7 @@ gnome-pre-patch:
 _USES_install+=	690:gnome-post-gconf-schemas
 gnome-post-gconf-schemas:
 	@for i in ${GCONF_SCHEMAS}; do \
-		${ECHO_CMD} "@postunexec env GCONF_CONFIG_SOURCE=xml:${GCONF_CONFIG_OPTIONS}:%D/${GCONF_CONFIG_DIRECTORY} HOME=${WRKDIR} gconftool-2 --makefile-uninstall-rule %D/etc/gconf/schemas/$${i} > /dev/null || /usr/bin/true" \
+		${ECHO_CMD} "@preunexec env GCONF_CONFIG_SOURCE=xml:${GCONF_CONFIG_OPTIONS}:%D/${GCONF_CONFIG_DIRECTORY} HOME=${WRKDIR} gconftool-2 --makefile-uninstall-rule %D/etc/gconf/schemas/$${i} > /dev/null || /usr/bin/true" \
 			>> ${TMPPLIST}; \
 		${ECHO_CMD} "etc/gconf/schemas/$${i}" >> ${TMPPLIST}; \
 		${ECHO_CMD} "@postexec env GCONF_CONFIG_SOURCE=xml:${GCONF_CONFIG_OPTIONS}:%D/${GCONF_CONFIG_DIRECTORY} HOME=${WRKDIR} gconftool-2 --makefile-install-rule %D/etc/gconf/schemas/$${i} > /dev/null || /usr/bin/true" \
@@ -457,7 +425,7 @@ gnome-post-gconf-schemas:
 	done
 .endif
 
-# we put the @unexec behind the plist schema entry, because it compiles files 
+# we put the @glib-schemas behind the plist schema entry, because it compiles files 
 # in the directory. So we should remove the port file first before recompiling.
 .if defined(GLIB_SCHEMAS)
 _USES_install+=	690:gnome-post-glib-schemas
@@ -477,25 +445,6 @@ gnome-post-omf:
 		${ECHO_CMD} "@postunexec scrollkeeper-uninstall -q %D/$${i} 2>/dev/null || /usr/bin/true" \
 			>> ${TMPPLIST}; \
 	done
-.endif
-
-.if defined(INSTALLS_ICONS)
-_USES_install+=	690:gnome-post-icons
-gnome-post-icons:
-	@${RM} ${TMPPLIST}.icons1
-	@for i in `${GREP} "^share/icons/.*/" ${TMPPLIST} | ${CUT} -d / -f 1-3 | ${SORT} -u`; do \
-		${ECHO_CMD} "@rmtry $${i}/icon-theme.cache" \
-			>> ${TMPPLIST}.icons1; \
-		${ECHO_CMD} "@postexec ${LOCALBASE}/bin/gtk-update-icon-cache -q -f %D/$${i} 2>/dev/null || /usr/bin/true" \
-			>> ${TMPPLIST}; \
-		${ECHO_CMD} "@postunexec ${LOCALBASE}/bin/gtk-update-icon-cache -q -f %D/$${i} 2>/dev/null || /usr/bin/true" \
-			>> ${TMPPLIST}; \
-	done
-	@if test -f ${TMPPLIST}.icons1; then \
-		${CAT} ${TMPPLIST}.icons1 ${TMPPLIST} > ${TMPPLIST}.icons2; \
-		${RM} ${TMPPLIST}.icons1; \
-		${MV} -f ${TMPPLIST}.icons2 ${TMPPLIST}; \
-	fi
 .endif
 
 .endif

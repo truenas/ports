@@ -2,6 +2,7 @@
 
 PORTNAME=	milkytracker
 PORTVERSION=	1.03.00
+PORTREVISION=	1
 DISTVERSIONPREFIX=	v
 CATEGORIES=	audio
 
@@ -16,9 +17,11 @@ LIB_DEPENDS=	liblhasa.so:archivers/lhasa \
 		libzzip.so:devel/zziplib \
 		libjack.so:audio/jack
 
-USES=		cmake compiler:c11 sdl
+USES=		cmake compiler:c11 cpe sdl
 USE_GITHUB=	yes
 USE_SDL=	sdl2
+
+CPE_VENDOR=	milkytracker_project
 
 GH_PROJECT=	MilkyTracker
 

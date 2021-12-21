@@ -1,6 +1,6 @@
 PORTNAME=	elementary-photos
-DISTVERSION=	2.7.0
-PORTREVISION=	2
+DISTVERSION=	2.7.1
+PORTREVISION=	1
 CATEGORIES=	graphics
 
 MAINTAINER=	miguel@gocobachi.dev
@@ -22,6 +22,7 @@ LIB_DEPENDS=	libaccounts-glib.so:net-im/libaccounts-glib \
 		libgstbase-1.0.so:multimedia/gstreamer1 \
 		libgudev-1.0.so:devel/libgudev \
 		libjson-glib-1.0.so:devel/json-glib \
+		libhandy-1.so:x11-toolkits/libhandy \
 		libraw.so:graphics/libraw \
 		librest-0.7.so:devel/librest \
 		libsoup-2.4.so:devel/libsoup \
@@ -37,7 +38,6 @@ GH_PROJECT=		photos
 USE_GNOME=		cairo gdkpixbuf2 gtk30 intltool
 GLIB_SCHEMAS=		io.elementary.photos-extras.gschema.xml \
 			io.elementary.photos.gschema.xml
-INSTALLS_ICONS=		yes
 USE_GSTREAMER1=		yes
 USE_LDCONFIG=		yes
 USE_XORG=		x11

@@ -7,10 +7,13 @@ CATEGORIES=	archivers
 MASTER_SITES=	SF
 DISTNAME=	${PORTNAME}_${DISTVERSION}_src_all
 
-MAINTAINER=	rakuco@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT?=	File archiver with high compression ratio
 
 LICENSE?=	LGPL21
+
+DEPRECATED=	Unmaintained for years and has known vulnerabilities
+EXPIRATION_DATE=2022-01-01
 
 ALL_TARGET?=	all3
 USES=		cpe tar:bzip2

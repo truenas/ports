@@ -3,6 +3,7 @@
 PORTNAME=	screensaver.matrixtrails
 PORTVERSION=	2.6.0
 DISTVERSIONSUFFIX=	-Matrix
+PORTREVISION=	2
 CATEGORIES=	multimedia
 
 MAINTAINER=	rozhuk.im@gmail.com

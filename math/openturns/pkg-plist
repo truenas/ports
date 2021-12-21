@@ -8,7 +8,7 @@ include/openturns/ARMALikelihoodFactory.hxx
 include/openturns/ARMAState.hxx
 include/openturns/AbdoRackwitz.hxx
 include/openturns/AbsoluteExponential.hxx
-include/openturns/AdaptiveDirectionalSampling.hxx
+include/openturns/AdaptiveDirectionalStratification.hxx
 include/openturns/AdaptiveStieltjesAlgorithm.hxx
 include/openturns/AdaptiveStrategy.hxx
 include/openturns/AdaptiveStrategyImplementation.hxx
@@ -123,7 +123,6 @@ include/openturns/ConstantRandomVector.hxx
 include/openturns/ConstantStep.hxx
 include/openturns/ContinuousDistribution.hxx
 include/openturns/Contour.hxx
-include/openturns/CopulaImplementation.hxx
 include/openturns/CorrectedLeaveOneOut.hxx
 include/openturns/CorrelationAnalysis.hxx
 include/openturns/CorrelationMatrix.hxx
@@ -149,6 +148,8 @@ include/openturns/DiscreteCompoundDistribution.hxx
 include/openturns/DiscreteDistribution.hxx
 include/openturns/DiscreteMarkovChain.hxx
 include/openturns/DistFunc.hxx
+include/openturns/DistanceToDomainEvaluation.hxx
+include/openturns/DistanceToDomainFunction.hxx
 include/openturns/Distribution.hxx
 include/openturns/DistributionFactory.hxx
 include/openturns/DistributionFactoryImplementation.hxx
@@ -289,7 +290,7 @@ include/openturns/HaarWavelet.hxx
 include/openturns/HaarWaveletFactory.hxx
 include/openturns/HaltonSequence.hxx
 include/openturns/Hamming.hxx
-include/openturns/Hanning.hxx
+include/openturns/Hann.hxx
 include/openturns/HaselgroveSequence.hxx
 include/openturns/HermiteFactory.hxx
 include/openturns/HermitianMatrix.hxx
@@ -343,6 +344,7 @@ include/openturns/InverseTrendEvaluation.hxx
 include/openturns/InverseTrendTransform.hxx
 include/openturns/InverseWishart.hxx
 include/openturns/Ipopt.hxx
+include/openturns/IsotropicCovarianceModel.hxx
 include/openturns/IteratedQuadrature.hxx
 include/openturns/JacobiFactory.hxx
 include/openturns/JansenSensitivityAlgorithm.hxx
@@ -350,6 +352,7 @@ include/openturns/JoeCopula.hxx
 include/openturns/KDTree.hxx
 include/openturns/KFactorFunctions.hxx
 include/openturns/KFold.hxx
+include/openturns/KFoldSplitter.hxx
 include/openturns/KPermutations.hxx
 include/openturns/KPermutationsDistribution.hxx
 include/openturns/KarhunenLoeveAlgorithm.hxx
@@ -358,9 +361,11 @@ include/openturns/KarhunenLoeveLifting.hxx
 include/openturns/KarhunenLoeveP1Algorithm.hxx
 include/openturns/KarhunenLoeveProjection.hxx
 include/openturns/KarhunenLoeveQuadratureAlgorithm.hxx
+include/openturns/KarhunenLoeveReduction.hxx
 include/openturns/KarhunenLoeveResult.hxx
 include/openturns/KarhunenLoeveResultImplementation.hxx
 include/openturns/KarhunenLoeveSVDAlgorithm.hxx
+include/openturns/KarhunenLoeveValidation.hxx
 include/openturns/KernelMixture.hxx
 include/openturns/KernelSmoothing.hxx
 include/openturns/KissFFT.hxx
@@ -370,6 +375,7 @@ include/openturns/KrigingEvaluation.hxx
 include/openturns/KrigingGradient.hxx
 include/openturns/KrigingRandomVector.hxx
 include/openturns/KrigingResult.hxx
+include/openturns/KroneckerCovarianceModel.hxx
 include/openturns/LARS.hxx
 include/openturns/LHS.hxx
 include/openturns/LHSExperiment.hxx
@@ -385,6 +391,7 @@ include/openturns/LeastSquaresMethod.hxx
 include/openturns/LeastSquaresMethodImplementation.hxx
 include/openturns/LeastSquaresProblem.hxx
 include/openturns/LeastSquaresStrategy.hxx
+include/openturns/LeaveOneOutSplitter.hxx
 include/openturns/LegendreFactory.hxx
 include/openturns/Less.hxx
 include/openturns/LessOrEqual.hxx
@@ -730,6 +737,7 @@ include/openturns/SpectralModelImplementation.hxx
 include/openturns/SphereUniformNorm.hxx
 include/openturns/SphereUniformNormImplementation.hxx
 include/openturns/SphericalModel.hxx
+include/openturns/SplitterImplementation.hxx
 include/openturns/SquareComplexMatrix.hxx
 include/openturns/SquareMatrix.hxx
 include/openturns/SquaredExponential.hxx
@@ -737,7 +745,6 @@ include/openturns/SquaredNormal.hxx
 include/openturns/Staircase.hxx
 include/openturns/StandardDistributionPolynomialFactory.hxx
 include/openturns/StandardEvent.hxx
-include/openturns/StationaryCovarianceModel.hxx
 include/openturns/StationaryCovarianceModelFactory.hxx
 include/openturns/StationaryFunctionalCovarianceModel.hxx
 include/openturns/StorageManager.hxx
@@ -810,8 +817,10 @@ include/openturns/UserDefinedStationaryCovarianceModel.hxx
 include/openturns/UsualRandomVector.hxx
 include/openturns/ValueFunction.hxx
 include/openturns/VertexValueFunction.hxx
+include/openturns/VertexValuePointToFieldFunction.hxx
 include/openturns/VisualTest.hxx
 include/openturns/VonMises.hxx
+include/openturns/VonMisesFactory.hxx
 include/openturns/WeibullMax.hxx
 include/openturns/WeibullMaxFactory.hxx
 include/openturns/WeibullMaxMuSigma.hxx
@@ -849,8 +858,8 @@ include/openturns/csv_parser_state.hxx
 %%PYTHON%%include/openturns/swig/AbdoRackwitz_doc.i
 %%PYTHON%%include/openturns/swig/AbsoluteExponential.i
 %%PYTHON%%include/openturns/swig/AbsoluteExponential_doc.i
-%%PYTHON%%include/openturns/swig/AdaptiveDirectionalSampling.i
-%%PYTHON%%include/openturns/swig/AdaptiveDirectionalSampling_doc.i
+%%PYTHON%%include/openturns/swig/AdaptiveDirectionalStratification.i
+%%PYTHON%%include/openturns/swig/AdaptiveDirectionalStratification_doc.i
 %%PYTHON%%include/openturns/swig/AdaptiveStieltjesAlgorithm.i
 %%PYTHON%%include/openturns/swig/AdaptiveStieltjesAlgorithm_doc.i
 %%PYTHON%%include/openturns/swig/AdaptiveStrategy.i
@@ -1070,8 +1079,6 @@ include/openturns/csv_parser_state.hxx
 %%PYTHON%%include/openturns/swig/ContinuousDistribution.i
 %%PYTHON%%include/openturns/swig/Contour.i
 %%PYTHON%%include/openturns/swig/Contour_doc.i
-%%PYTHON%%include/openturns/swig/CopulaImplementation.i
-%%PYTHON%%include/openturns/swig/CopulaImplementation_doc.i
 %%PYTHON%%include/openturns/swig/CorrectedLeaveOneOut.i
 %%PYTHON%%include/openturns/swig/CorrectedLeaveOneOut_doc.i
 %%PYTHON%%include/openturns/swig/CorrelationAnalysis.i
@@ -1121,6 +1128,9 @@ include/openturns/csv_parser_state.hxx
 %%PYTHON%%include/openturns/swig/DiscreteMarkovChain_doc.i
 %%PYTHON%%include/openturns/swig/DistFunc.i
 %%PYTHON%%include/openturns/swig/DistFunc_doc.i
+%%PYTHON%%include/openturns/swig/DistanceToDomainEvaluation.i
+%%PYTHON%%include/openturns/swig/DistanceToDomainFunction.i
+%%PYTHON%%include/openturns/swig/DistanceToDomainFunction_doc.i
 %%PYTHON%%include/openturns/swig/Distribution.i
 %%PYTHON%%include/openturns/swig/DistributionFactory.i
 %%PYTHON%%include/openturns/swig/DistributionFactoryImplementation.i
@@ -1387,8 +1397,8 @@ include/openturns/csv_parser_state.hxx
 %%PYTHON%%include/openturns/swig/HaltonSequence_doc.i
 %%PYTHON%%include/openturns/swig/Hamming.i
 %%PYTHON%%include/openturns/swig/Hamming_doc.i
-%%PYTHON%%include/openturns/swig/Hanning.i
-%%PYTHON%%include/openturns/swig/Hanning_doc.i
+%%PYTHON%%include/openturns/swig/Hann.i
+%%PYTHON%%include/openturns/swig/Hann_doc.i
 %%PYTHON%%include/openturns/swig/HaselgroveSequence.i
 %%PYTHON%%include/openturns/swig/HaselgroveSequence_doc.i
 %%PYTHON%%include/openturns/swig/HermiteFactory.i
@@ -1471,6 +1481,8 @@ include/openturns/csv_parser_state.hxx
 %%PYTHON%%include/openturns/swig/InverseWishart_doc.i
 %%PYTHON%%include/openturns/swig/Ipopt.i
 %%PYTHON%%include/openturns/swig/Ipopt_doc.i
+%%PYTHON%%include/openturns/swig/IsotropicCovarianceModel.i
+%%PYTHON%%include/openturns/swig/IsotropicCovarianceModel_doc.i
 %%PYTHON%%include/openturns/swig/IteratedQuadrature.i
 %%PYTHON%%include/openturns/swig/IteratedQuadrature_doc.i
 %%PYTHON%%include/openturns/swig/JacobiFactory.i
@@ -1482,6 +1494,8 @@ include/openturns/csv_parser_state.hxx
 %%PYTHON%%include/openturns/swig/KDTree.i
 %%PYTHON%%include/openturns/swig/KDTree_doc.i
 %%PYTHON%%include/openturns/swig/KFold.i
+%%PYTHON%%include/openturns/swig/KFoldSplitter.i
+%%PYTHON%%include/openturns/swig/KFoldSplitter_doc.i
 %%PYTHON%%include/openturns/swig/KFold_doc.i
 %%PYTHON%%include/openturns/swig/KPermutations.i
 %%PYTHON%%include/openturns/swig/KPermutationsDistribution.i
@@ -1499,12 +1513,16 @@ include/openturns/csv_parser_state.hxx
 %%PYTHON%%include/openturns/swig/KarhunenLoeveProjection_doc.i
 %%PYTHON%%include/openturns/swig/KarhunenLoeveQuadratureAlgorithm.i
 %%PYTHON%%include/openturns/swig/KarhunenLoeveQuadratureAlgorithm_doc.i
+%%PYTHON%%include/openturns/swig/KarhunenLoeveReduction.i
+%%PYTHON%%include/openturns/swig/KarhunenLoeveReduction_doc.i
 %%PYTHON%%include/openturns/swig/KarhunenLoeveResult.i
 %%PYTHON%%include/openturns/swig/KarhunenLoeveResultImplementation.i
 %%PYTHON%%include/openturns/swig/KarhunenLoeveResultImplementation_doc.i
 %%PYTHON%%include/openturns/swig/KarhunenLoeveResult_doc.i
 %%PYTHON%%include/openturns/swig/KarhunenLoeveSVDAlgorithm.i
 %%PYTHON%%include/openturns/swig/KarhunenLoeveSVDAlgorithm_doc.i
+%%PYTHON%%include/openturns/swig/KarhunenLoeveValidation.i
+%%PYTHON%%include/openturns/swig/KarhunenLoeveValidation_doc.i
 %%PYTHON%%include/openturns/swig/KernelMixture.i
 %%PYTHON%%include/openturns/swig/KernelMixture_doc.i
 %%PYTHON%%include/openturns/swig/KernelSmoothing.i
@@ -1519,6 +1537,8 @@ include/openturns/csv_parser_state.hxx
 %%PYTHON%%include/openturns/swig/KrigingRandomVector_doc.i
 %%PYTHON%%include/openturns/swig/KrigingResult.i
 %%PYTHON%%include/openturns/swig/KrigingResult_doc.i
+%%PYTHON%%include/openturns/swig/KroneckerCovarianceModel.i
+%%PYTHON%%include/openturns/swig/KroneckerCovarianceModel_doc.i
 %%PYTHON%%include/openturns/swig/LARS.i
 %%PYTHON%%include/openturns/swig/LARS_doc.i
 %%PYTHON%%include/openturns/swig/LHS.i
@@ -1549,6 +1569,8 @@ include/openturns/csv_parser_state.hxx
 %%PYTHON%%include/openturns/swig/LeastSquaresProblem_doc.i
 %%PYTHON%%include/openturns/swig/LeastSquaresStrategy.i
 %%PYTHON%%include/openturns/swig/LeastSquaresStrategy_doc.i
+%%PYTHON%%include/openturns/swig/LeaveOneOutSplitter.i
+%%PYTHON%%include/openturns/swig/LeaveOneOutSplitter_doc.i
 %%PYTHON%%include/openturns/swig/LegendreFactory.i
 %%PYTHON%%include/openturns/swig/LegendreFactory_doc.i
 %%PYTHON%%include/openturns/swig/Less.i
@@ -2043,6 +2065,8 @@ include/openturns/csv_parser_state.hxx
 %%PYTHON%%include/openturns/swig/SpectralModel_doc.i
 %%PYTHON%%include/openturns/swig/SphericalModel.i
 %%PYTHON%%include/openturns/swig/SphericalModel_doc.i
+%%PYTHON%%include/openturns/swig/SplitterImplementation.i
+%%PYTHON%%include/openturns/swig/SplitterImplementation_doc.i
 %%PYTHON%%include/openturns/swig/SquareComplexMatrix.i
 %%PYTHON%%include/openturns/swig/SquareComplexMatrix_doc.i
 %%PYTHON%%include/openturns/swig/SquareMatrix.i
@@ -2057,7 +2081,6 @@ include/openturns/csv_parser_state.hxx
 %%PYTHON%%include/openturns/swig/StandardDistributionPolynomialFactory_doc.i
 %%PYTHON%%include/openturns/swig/StandardEvent.i
 %%PYTHON%%include/openturns/swig/StandardEvent_doc.i
-%%PYTHON%%include/openturns/swig/StationaryCovarianceModel.i
 %%PYTHON%%include/openturns/swig/StationaryCovarianceModelFactory.i
 %%PYTHON%%include/openturns/swig/StationaryCovarianceModelFactory_doc.i
 %%PYTHON%%include/openturns/swig/StationaryFunctionalCovarianceModel.i
@@ -2201,9 +2224,13 @@ include/openturns/csv_parser_state.hxx
 %%PYTHON%%include/openturns/swig/ValueFunction_doc.i
 %%PYTHON%%include/openturns/swig/VertexValueFunction.i
 %%PYTHON%%include/openturns/swig/VertexValueFunction_doc.i
+%%PYTHON%%include/openturns/swig/VertexValuePointToFieldFunction.i
+%%PYTHON%%include/openturns/swig/VertexValuePointToFieldFunction_doc.i
 %%PYTHON%%include/openturns/swig/VisualTest.i
 %%PYTHON%%include/openturns/swig/VisualTest_doc.i
 %%PYTHON%%include/openturns/swig/VonMises.i
+%%PYTHON%%include/openturns/swig/VonMisesFactory.i
+%%PYTHON%%include/openturns/swig/VonMisesFactory_doc.i
 %%PYTHON%%include/openturns/swig/VonMises_doc.i
 %%PYTHON%%include/openturns/swig/WeibullMax.i
 %%PYTHON%%include/openturns/swig/WeibullMaxFactory.i
@@ -2274,10 +2301,10 @@ lib/cmake/openturns/OpenTURNSConfig.cmake
 lib/cmake/openturns/OpenTURNSConfigVersion.cmake
 lib/cmake/openturns/UseOpenTURNS.cmake
 lib/libOT.so
-lib/libOT.so.0
-lib/libOT.so.0.0.0
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/openturns-1.16.dist-info/METADATA
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/openturns-1.16.dist-info/WHEEL
+lib/libOT.so.0.19
+lib/libOT.so.0.19.0
+%%PYTHON%%%%PYTHON_SITELIBDIR%%/openturns-1.18.dist-info/METADATA
+%%PYTHON%%%%PYTHON_SITELIBDIR%%/openturns-1.18.dist-info/WHEEL
 %%PYTHON%%%%PYTHON_SITELIBDIR%%/openturns/__init__.py
 %%PYTHON%%%%PYTHON_SITELIBDIR%%/openturns/_algo.so
 %%PYTHON%%%%PYTHON_SITELIBDIR%%/openturns/_analytical.so
@@ -2353,4 +2380,4 @@ lib/libOT.so.0.0.0
 %%PYTHON%%%%PYTHON_SITELIBDIR%%/openturns/usecases/viscous_free_fall.py
 %%PYTHON%%%%PYTHON_SITELIBDIR%%/openturns/viewer.py
 %%PYTHON%%%%PYTHON_SITELIBDIR%%/openturns/weightedexperiment.py
-share/gdb/auto-load/usr/local/lib/libOT.so.0.0.0-gdb.py
+share/gdb/auto-load/usr/local/lib/libOT.so.-gdb.py

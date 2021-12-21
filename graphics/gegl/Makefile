@@ -1,8 +1,8 @@
 # Created by: Pietro Cerutti <gahr@FreeBSD.org>
 
 PORTNAME=	gegl
-PORTVERSION=	0.4.30
-PORTREVISION=	2
+PORTVERSION=	0.4.32
+PORTREVISION=	3
 CATEGORIES=	graphics
 MASTER_SITES=	GIMP
 
@@ -28,27 +28,25 @@ USE_LDCONFIG=	yes
 MESON_ARGS=	-Ddocs=false \
 		-Dworkshop=false \
 		-Dintrospection=true \
-		-Dvapigen=disabled \
 		-Dlensfun=disabled \
 		-Dlibjpeg=enabled \
 		-Dlibpng=enabled \
 		-Dmrg=disabled \
 		-Dpygobject=disabled \
-		-Dvapigen=disabled \
 		-Dlua=disabled
 
-GEGL_SHLIB=	0.429.1
+GEGL_SHLIB=	0.431.1
 GEGL_VER=	0.4
 PLIST_SUB+=	GEGL_SHLIB=${GEGL_SHLIB} GEGL_VER=${GEGL_VER}
 
 SHEBANG_FILES=	tools/xml_insert.sh
 
 OPTIONS_SUB=	yes
-OPTIONS_DEFINE=	CAIRO ENSCRIPT FFMPEG PIXBUF GRAPHVIZ JASPER \
+OPTIONS_DEFINE=	CAIRO ENSCRIPT FFMPEG PIXBUF GRAPHVIZ JASPER LCMS2 \
 		OPENEXR RAW PANGO POPPLER LIBRSVG2 SDL SPIRO V4L \
-		LCMS2 WEBP TIFF GEXIV2
+		WEBP TIFF GEXIV2 VAPI
 OPTIONS_DEFAULT=CAIRO ENSCRIPT GEXIV2 PIXBUF GRAPHVIZ JASPER LCMS2 \
-		OPENEXR RAW PANGO POPPLER LIBRSVG2 SDL SPIRO V4L WEBP TIFF
+		OPENEXR RAW PANGO POPPLER LIBRSVG2 SDL SPIRO V4L WEBP TIFF VAPI
 
 PIXBUF_USE=	GNOME=gdkpixbuf2
 PIXBUF_MESON_ENABLED=	gdk-pixbuf
@@ -117,6 +115,9 @@ GEXIV2_MESON_ENABLED=	gexiv2
 TIFF_LIB_DEPENDS=	libtiff.so:graphics/tiff
 TIFF_MESON_ENABLED=	libtiff
 
+VAPI_BUILD_DEPENDS=	vapigen:lang/vala
+VAPI_MESON_ENABLED=	vapigen
+
 .include <bsd.port.pre.mk>
 
 .if ${PORT_OPTIONS:MPANGO} && ${PORT_OPTIONS:MCAIRO}
@@ -125,6 +126,10 @@ MESON_ARGS+=	-Dpangocairo=enabled
 .else
 MESON_ARGS+=	-Dpangocairo=disabled
 PLIST_SUB+=	PANGOCAIRO="@comment "
+.endif
+
+.if defined(WITH_DEBUG)
+LDFLAGS+=	-lexecinfo
 .endif
 
 post-patch:

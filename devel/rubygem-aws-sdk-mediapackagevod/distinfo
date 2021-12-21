@@ -1,3 +1,3 @@
-TIMESTAMP = 1618320670
-SHA256 (rubygem/aws-sdk-mediapackagevod-1.22.0.gem) = 90583cc09181054433cc48eb58b0348233252ca3b8c963bc6d6840150d40288b
-SIZE (rubygem/aws-sdk-mediapackagevod-1.22.0.gem) = 29184
+TIMESTAMP = 1636145370
+SHA256 (rubygem/aws-sdk-mediapackagevod-1.31.0.gem) = 2322ea6443d3ccc42ca1380c4e3f3a07a0f5a4bd2895c41387372cf18aeddafc
+SIZE (rubygem/aws-sdk-mediapackagevod-1.31.0.gem) = 30208

@@ -16,9 +16,9 @@ PKGMESSAGE=	${.CURDIR}/pkg-message
 PATCHDIR=	${.CURDIR}/files
 PLIST=		${.CURDIR}/pkg-plist
 
-CONFLICTS_INSTALL=	mysql*-client-* \
-			mariadb*-client-* \
-			percona5[0-68-9]-client-*
+CONFLICTS_INSTALL=	mysql*-client \
+			mariadb*-client \
+			percona5[0-68-9]-client
 
 CMAKE_ARGS+=	-DWITHOUT_SERVER=1
 
@@ -36,7 +36,7 @@ OPTIONS_GROUP_PLUGINS=	SASLCLIENT
 SASLCLIENT_DESC=	SASL client plugin module
 SASLCLIENT_CMAKE_BOOL=	WITH_AUTHENTICATION_LDAP
 SASLCLIENT_LIB_DEPENDS=	libsasl2.so:security/cyrus-sasl2
-SASLCLIENT_BUILD_DEPENDS=	${LOCALBASE}/include/lber.h:net/openldap24-sasl-client
+SASLCLIENT_USE=		OPENLDAP=yes
 OPTIONS_DEFAULT+=	SASLCLIENT
 OPTIONS_SUB=	yes
 

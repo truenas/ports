@@ -18,6 +18,8 @@ SLAVEDIRS=	databases/mysql56-client
 USES=		bison:build cmake:noninja cpe groff:run libedit localbase \
 		perl5 shebangfix ssl
 
+CPE_VENDOR=	oracle
+
 USE_PERL5=	run
 
 MY_DBDIR=	/var/db/mysql
@@ -78,11 +80,11 @@ PLIST_SUB=	MY_DBDIR=${MY_DBDIR} \
 .if !defined(CLIENT_ONLY)
 USES+=		mysql:56
 
-CONFLICTS_INSTALL=	mysql5[0-57-9]-server-* \
-			mysql[0-46-9][0-9]-server-* \
-			mysqlwsrep* \
-			mariadb[0-9][0-9]-server-* \
-			percona[0-9][0-9]-server-*
+CONFLICTS_INSTALL=	mysql5[0-57-9]-server \
+			mysql[0-46-9][0-9]-server \
+			mysqlwsrep*-server \
+			mariadb[0-9][0-9]-server \
+			percona[0-9][0-9]-server
 
 USE_RC_SUBR=	mysql-server
 
@@ -142,12 +144,6 @@ USE_CXXSTD=	gnu++11
 .else
 USES+=		compiler:c++11-lib
 USE_CXXSTD=	c++11
-.endif
-
-.if ${OPSYS} == FreeBSD && ${OSVERSION} >= 1200057
-SUB_LIST+=	LEGACY_LIMITS="@comment " MODERN_LIMITS=""
-.else
-SUB_LIST+=	LEGACY_LIMITS="" MODERN_LIMITS="@comment "
 .endif
 
 .include <bsd.port.pre.mk>

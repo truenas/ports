@@ -34,8 +34,8 @@ CONFIGURE_ARGS=	--openssl-cflags=-L${OPENSSLINC} --openssl-ldflags="-I${OPENSSLL
 
 .include <bsd.port.options.mk>
 
-.if ${OPSYS} == FreeBSD && ${OSVERSION} >= 1200085 && ${SSL_DEFAULT} == base
-BROKEN=        Does not support OpenSSL 1.1
+.if ${OPSYS} == FreeBSD && (${SSL_DEFAULT} == base || ${SSL_DEFAULT} == openssl)
+BROKEN=		Does not support OpenSSL 1.1
 .endif
 
 post-install:

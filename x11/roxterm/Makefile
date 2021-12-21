@@ -1,7 +1,7 @@
 # Created by: Yinghong Liu <relaxbsd@gmail.com>
 
 PORTNAME=	roxterm
-PORTVERSION=	3.10.1
+PORTVERSION=	3.11.1
 CATEGORIES=	x11
 
 MAINTAINER=	nc@FreeBSD.org
@@ -22,7 +22,6 @@ USE_GITHUB=	yes
 GH_ACCOUNT=	realh
 USE_GNOME=	cairo librsvg2:run libxslt:build vte3
 USE_CSTD=	c99
-INSTALLS_ICONS=	yes
 
 OPTIONS_DEFINE=	DOCS
 

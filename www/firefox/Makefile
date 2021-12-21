@@ -1,24 +1,24 @@
 # Created by: Alan Eldridge <alane@FreeBSD.org>
 
 PORTNAME=	firefox
-DISTVERSION=	88.0
-PORTREVISION=	2
+DISTVERSION=	95.0
+PORTREVISION=	1
 PORTEPOCH=	2
 CATEGORIES=	www
 MASTER_SITES=	MOZILLA/${PORTNAME}/releases/${DISTVERSION}/source \
-		MOZILLA/${PORTNAME}/candidates/${DISTVERSION}-candidates/build2/source
+		MOZILLA/${PORTNAME}/candidates/${DISTVERSION}-candidates/build1/source
 DISTFILES=	${DISTNAME}.source${EXTRACT_SUFX}
 
 MAINTAINER=	gecko@FreeBSD.org
 COMMENT=	Web browser based on the browser portion of Mozilla
 
-BUILD_DEPENDS=	nspr>=4.26:devel/nspr \
-		nss>=3.62:security/nss \
-		icu>=67.1,1:devel/icu \
+BUILD_DEPENDS=	nspr>=4.32:devel/nspr \
+		nss>=3.72:security/nss \
+		icu>=69.1,1:devel/icu \
 		libevent>=2.1.8:devel/libevent \
-		harfbuzz>=2.7.4:print/harfbuzz \
+		harfbuzz>=2.9.1:print/harfbuzz \
 		graphite2>=1.3.14:graphics/graphite2 \
-		png>=1.6.35:graphics/png \
+		png>=1.6.37:graphics/png \
 		libvpx>=1.8.2:multimedia/libvpx \
 		${PYTHON_PKGNAMEPREFIX}sqlite3>0:databases/py-sqlite3@${PY_FLAVOR} \
 		v4l_compat>0:multimedia/v4l_compat \
@@ -31,6 +31,9 @@ USE_GECKO=	gecko
 CONFLICTS_INSTALL=	firefox-esr
 USE_MOZILLA=	-sqlite
 CFLAGS_powerpc64le=	-DSQLITE_BYTEORDER=1234
+# work around bindgen not finding ICU, e.g.
+# dist/include/mozilla/intl/ICU4CGlue.h:8:10: fatal error: 'unicode/uenum.h' file not found, err: true
+CONFIGURE_ENV+=	BINDGEN_CFLAGS="-I${LOCALBASE}/include"
 
 USES=		tar:xz
 
@@ -41,6 +44,17 @@ MOZ_OPTIONS=	--enable-application=browser \
 		--enable-official-branding
 
 .include "${.CURDIR}/../../www/firefox/Makefile.options"
+
+.include <bsd.port.options.mk>
+
+.if ${ARCH} == powerpc64
+MOZ_OPTIONS+=	--without-wasm-sandboxed-libraries
+.else
+BUILD_DEPENDS+=	${LOCALBASE}/share/wasi-sysroot/lib/wasm32-wasi/libc++abi.a:devel/wasi-libcxx \
+		${LOCALBASE}/share/wasi-sysroot/lib/wasm32-wasi/libc.a:devel/wasi-libc \
+		${LOCALBASE}/llvm${LLVM_DEFAULT}/lib/clang/${LLVM_VERSION}/lib/wasi/libclang_rt.builtins-wasm32.a:devel/wasi-compiler-rt${LLVM_DEFAULT}
+MOZ_OPTIONS+=	--with-wasi-sysroot=${LOCALBASE}/share/wasi-sysroot
+.endif
 
 post-patch:
 	@${REINPLACE_CMD} -e 's/%u/%U/' -e '/X-MultipleArgs/d' \

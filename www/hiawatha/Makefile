@@ -5,7 +5,7 @@ PORTVERSION=	10.12
 CATEGORIES=	www
 MASTER_SITES=	https://www.hiawatha-webserver.org/files/
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	christopher.petrik@usm.edu
 COMMENT=	Advanced and secure webserver for Unix
 
 LICENSE=	GPLv2
@@ -13,7 +13,8 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 
 LIB_DEPENDS=	libmbedtls.so:security/mbedtls
 
-USES=		cmake:insource compiler:c11 localbase:ldflags shebangfix
+USES=		cmake:insource compiler:c11 cpe localbase:ldflags shebangfix
+CPE_VENDOR=	${PORTNAME}-webserver
 USE_RC_SUBR=	hiawatha
 SHEBANG_FILES=	extra/letsencrypt/lefh.in
 

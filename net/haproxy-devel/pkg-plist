@@ -29,8 +29,11 @@ sbin/haproxy
 %%PORTDOCS%%%%DOCSDIR%%/gpl.txt
 %%PORTDOCS%%%%DOCSDIR%%/haproxy.1
 %%PORTDOCS%%%%DOCSDIR%%/internals/acl.txt
+%%PORTDOCS%%%%DOCSDIR%%/internals/api/buffer-api.txt
+%%PORTDOCS%%%%DOCSDIR%%/internals/api/filters.txt
+%%PORTDOCS%%%%DOCSDIR%%/internals/api/htx-api.txt
+%%PORTDOCS%%%%DOCSDIR%%/internals/api/initcalls.txt
 %%PORTDOCS%%%%DOCSDIR%%/internals/body-parsing.txt
-%%PORTDOCS%%%%DOCSDIR%%/internals/buffer-api.txt
 %%PORTDOCS%%%%DOCSDIR%%/internals/connect-status.txt
 %%PORTDOCS%%%%DOCSDIR%%/internals/connection-header.txt
 %%PORTDOCS%%%%DOCSDIR%%/internals/connection-scale.txt
@@ -39,15 +42,13 @@ sbin/haproxy
 %%PORTDOCS%%%%DOCSDIR%%/internals/entities.pdf
 %%PORTDOCS%%%%DOCSDIR%%/internals/entities.svg
 %%PORTDOCS%%%%DOCSDIR%%/internals/entities.txt
-%%PORTDOCS%%%%DOCSDIR%%/internals/filters.txt
+%%PORTDOCS%%%%DOCSDIR%%/internals/fd-migration.txt
 %%PORTDOCS%%%%DOCSDIR%%/internals/hashing.txt
 %%PORTDOCS%%%%DOCSDIR%%/internals/header-parser-speed.txt
 %%PORTDOCS%%%%DOCSDIR%%/internals/header-tree.txt
 %%PORTDOCS%%%%DOCSDIR%%/internals/http-cookies.txt
 %%PORTDOCS%%%%DOCSDIR%%/internals/http-docs.txt
 %%PORTDOCS%%%%DOCSDIR%%/internals/http-parsing.txt
-%%PORTDOCS%%%%DOCSDIR%%/internals/htx-api.txt
-%%PORTDOCS%%%%DOCSDIR%%/internals/initcalls.txt
 %%PORTDOCS%%%%DOCSDIR%%/internals/list.fig
 %%PORTDOCS%%%%DOCSDIR%%/internals/list.png
 %%PORTDOCS%%%%DOCSDIR%%/internals/listener-states.fig
@@ -91,6 +92,7 @@ sbin/haproxy
 %%PORTDOCS%%%%DOCSDIR%%/regression-testing.txt
 %%PORTDOCS%%%%DOCSDIR%%/seamless_reload.txt
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/acl-content-sw.cfg
+%%PORTEXAMPLES%%%%EXAMPLESDIR%%/basic-config-edge.cfg
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/content-sw-sample.cfg
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/errorfiles/400.http
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/errorfiles/403.http
@@ -102,6 +104,7 @@ sbin/haproxy
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/errorfiles/README
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/haproxy.init
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/option-http_proxy.cfg
+%%PORTEXAMPLES%%%%EXAMPLESDIR%%/quick-test.cfg
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/socks4.cfg
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/transparent_proxy.cfg
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/wurfl-example.cfg

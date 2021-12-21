@@ -1,7 +1,7 @@
 # Created by: Sergei Kolobov <sergei@kolobov.com>
 
 PORTNAME=	libgpg-error
-PORTVERSION=	1.42
+PORTVERSION=	1.43
 CATEGORIES=	security devel
 MASTER_SITES=	GNUPG
 
@@ -13,7 +13,9 @@ LICENSE_COMB=	multi
 LICENSE_FILE_GPLv2=	${WRKSRC}/COPYING
 LICENSE_FILE_LGPL21=	${WRKSRC}/COPYING.LIB
 
-USES=		libtool tar:bzip2
+USES=		cpe libtool tar:bzip2
+
+CPE_VENDOR=	gnupg
 
 USE_LDCONFIG=		yes
 GNU_CONFIGURE=		yes

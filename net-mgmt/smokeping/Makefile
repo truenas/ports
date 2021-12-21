@@ -1,8 +1,8 @@
 # Created by: Lars Thegler <lars@thegler.dk>
 
 PORTNAME=	smokeping
-PORTVERSION=	2.7.3
-PORTREVISION=	2
+PORTVERSION=	2.8.2
+PORTREVISION=	1
 CATEGORIES=	net-mgmt www
 
 MAINTAINER=	rodrigo@FreeBSD.org
@@ -32,7 +32,7 @@ BUILD_DEPENDS=	p5-CGI-Fast>=0:www/p5-CGI-Fast \
 		curl>=0:ftp/curl
 RUN_DEPENDS:=	${BUILD_DEPENDS}
 
-USES=		gmake perl5 autoreconf
+USES=		cpe gmake perl5 autoreconf
 
 CONFLICTS_INSTALL=	nfsping
 

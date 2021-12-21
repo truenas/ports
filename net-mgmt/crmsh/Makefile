@@ -1,7 +1,7 @@
 # Created by: David Shane Holden <dpejesh@yahoo.com>
 
 PORTNAME=	crmsh
-PORTVERSION=	4.2.1
+PORTVERSION=	4.3.1
 CATEGORIES=	net-mgmt python
 
 MAINTAINER=	egypcio@FreeBSD.org
@@ -19,7 +19,8 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}dateutil>0:devel/py-dateutil@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}setuptools>0:devel/py-setuptools@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}yaml>0:devel/py-yaml@${PY_FLAVOR}
 
-USES=		autoreconf gmake python shebangfix
+USES=		autoreconf cpe gmake python shebangfix
+CPE_VENDOR=	clusterlabs
 USE_GITHUB=	yes
 GH_ACCOUNT=	ClusterLabs
 GNU_CONFIGURE=	yes

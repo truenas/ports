@@ -2,7 +2,7 @@
 
 PORTNAME=	foobillard
 PORTVERSION=	3.0a
-PORTREVISION=	11
+PORTREVISION=	12
 CATEGORIES=	games
 MASTER_SITES=	SF/${PORTNAME}/FooBillard-Sources/
 
@@ -21,9 +21,9 @@ NVIDIA_BUMPREF_DESC=	NVidia extensions
 
 .include <bsd.port.options.mk>
 
-FREETYPE_CONFIG?=	${LOCALBASE}/bin/freetype-config
+FREETYPE_CONFIG?=	pkg-config freetype2
 
-USES=		gmake xorg
+USES=		gmake pkgconfig xorg
 GNU_CONFIGURE=	yes
 USE_XORG=	xaw ice
 

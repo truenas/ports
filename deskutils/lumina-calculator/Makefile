@@ -1,5 +1,6 @@
 PORTNAME=	lumina-calculator
 DISTVERSION=	1.6.0
+PORTREVISION=	1
 CATEGORIES=	deskutils
 
 MAINTAINER=	lbartoletti@FreeBSD.org
@@ -13,7 +14,6 @@ USE_XORG=	x11
 USE_QT=		buildtools_build core gui svg widgets
 USE_GITHUB=	yes
 GH_ACCOUNT=	lumina-desktop
-GH_PROJECT=	lumina-calculator
 GH_TAGNAME=	ccb792fc713aa7163fffd37fc20c83ffe9ca7523
 
 OPTIONS_DEFINE=		NLS

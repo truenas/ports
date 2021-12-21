@@ -10,14 +10,16 @@ PKGNAMESUFFIX=	-libs
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	Free lossless audio codec (Linux CentOS ${LINUX_DIST_VER})
 
-USES=		linux:c7
+USES=		cpe linux:c7
 USE_LDCONFIG=	yes
 USE_LINUX=	libogg
 USE_LINUX_RPM=	yes
 
+CPE_VENDOR=	flac_project
+
 LIB_DISTNAMES=	${PORTNAME}${PKGNAMESUFFIX}-${DISTVERSIONFULL}
 
-CONFLICTS=	linux-c6-${PORTNAME}-[0-9]*
+CONFLICTS=	linux-c6-${PORTNAME}
 DESCR=		${.CURDIR}/../${PORTNAME}/pkg-descr
 DOCSDIR=	${PREFIX}/usr/share/doc/${PORTNAME}${PKGNAMESUFFIX}-${PORTVERSION}
 

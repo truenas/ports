@@ -1,6 +1,9 @@
+# Created by: Anders Nordby <anders@fix.no>
+
 PORTNAME=	mdbtools
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.9.1
+DISTVERSION=	1.0.0
+PORTREVISION=	1
 CATEGORIES=	databases
 
 MAINTAINER=	rhurlin@FreeBSD.org
@@ -10,15 +13,13 @@ LICENSE=	GPLv2
 
 BUILD_DEPENDS=	bash-completion>=0:shells/bash-completion \
 		flex:textproc/flex \
-		gawk:lang/gawk \
-		txt2man:textproc/txt2man
+		gawk:lang/gawk
 LIB_DEPENDS=	libodbcinst.so:databases/unixODBC
 RUN_DEPENDS=	bash-completion>=0:shells/bash-completion
 
-USES=		autoreconf bison gnome iconv libtool pathfix \
+USES=		autoreconf bison gnome iconv:wchar_t libtool pathfix \
 		pkgconfig readline
 USE_GITHUB=	yes
-GH_ACCOUNT=	mdbtools
 USE_GNOME=	glib20
 USE_LDCONFIG=	yes
 GNU_CONFIGURE=	yes
@@ -35,11 +36,12 @@ OPTIONS_SUB=		yes
 
 LIBMSWSTR_DESC=	Read and parse JET 4 mdb file indices
 
-LIBMSWSTR_LIB_DEPENDS=	libmswstr.so:databases/libmswstr
+LIBMSWSTR_LIB_DEPENDS=		libmswstr.so:databases/libmswstr
 LIBMSWSTR_CONFIGURE_ENV_OFF=	ac_cv_lib_mswstr_DBLCMapStringW=no
-NLS_USES=	gettext
+MANPAGES_CONFIGURE_OFF=		--disable-man
+NLS_USES=			gettext
 
-DOCS=		AUTHORS ChangeLog HACKING NEWS README TODO
+DOCS=		AUTHORS HACKING.md NEWS README.md TODO.md
 
 post-install-DOCS-on:
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}

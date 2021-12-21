@@ -1,7 +1,7 @@
 PORTNAME=	libmodulemd
-DISTVERSION=	2.12.0
+DISTVERSION=	2.13.0
 CATEGORIES=	misc
-MASTER_SITES=	https://github.com/fedora-modularity/${PORTNAME}/releases/download/${PORTNAME}-${DISTVERSION}/
+MASTER_SITES=	https://github.com/fedora-modularity/${PORTNAME}/releases/download/${DISTVERSION}/
 DISTNAME=	modulemd-${DISTVERSION}
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -19,6 +19,6 @@ USES=		compiler:c11 gnome meson pkgconfig tar:xz
 USE_GNOME=	glib20 introspection:build
 USE_LDCONFIG=	yes
 
-MESON_ARGS=	-Ddeveloper_build=false -Dskip_formatters=true -Dwith_manpages="enabled" -Dwith_docs=false
+MESON_ARGS=	-Dwith_manpages="enabled" -Dwith_docs=false
 
 .include <bsd.port.mk>

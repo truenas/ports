@@ -15,14 +15,14 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 
 LOGFILE?=	/var/log/openradius.log
 
-CONFLICTS=	freeradius-[0-9]* gnu-radius-[0-9]* radiusd-cistron-[0-9]* \
-		freeradius-mysql-[0-9]*
+CONFLICTS=	freeradius gnu-radius radiusd-cistron \
+		freeradius-mysql
 
 CC?=		gcc
 CXX?=		g++
 MAKE_ENV=	INST_PREFIX=${STAGEDIR}
 
-USES=		gmake shebangfix
+USES=		cpe gmake shebangfix
 SHEBANG_FILES=	modules/ascfile/ascfile \
 		modules/radsql/radsql \
 		modules/unixpasswd/unixpasswd

@@ -1,11 +1,11 @@
 # Created by: Shin-ya MURAKAMI <murashin@gfd-dennou.org>
 
 PORTNAME=	racc
-PORTVERSION=	1.5.2
+PORTVERSION=	1.6.0
 CATEGORIES=	devel ruby
 MASTER_SITES=	RG
 
-MAINTAINER=	meta@FreeBSD.org
+MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	LALR(1) parser generator for Ruby
 
 LICENSE=	BSD2CLAUSE

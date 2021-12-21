@@ -1,6 +1,6 @@
 PORTNAME=	mongodb
 DISTVERSIONPREFIX=	r
-DISTVERSION=	4.0.21
+DISTVERSION=	4.0.27
 CATEGORIES=	databases net
 MASTER_SITES=	https://fastdl.mongodb.org/src/ \
 		http://fastdl.mongodb.org/src/
@@ -17,7 +17,7 @@ LICENSE_FILE_SSPLv1=	${WRKSRC}/LICENSE-Community.txt
 LICENSE_PERMS_SSPLv1=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
 
 ONLY_FOR_ARCHS=	aarch64 amd64 powerpc64le
-ONLY_FOR_ARCHS_REASON=	Only supported on amd64, aarch64 and powerpc64le (i386 deprecated in v3)
+ONLY_FOR_ARCHS_REASON=	only supported on amd64, aarch64, and powerpc64le; i386 deprecated in v3
 
 BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}cheetah3>0:devel/py-cheetah3@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}yaml>=3.11:devel/py-yaml@${PY_FLAVOR} \
@@ -30,11 +30,11 @@ LIB_DEPENDS=	libboost_system.so:devel/boost-libs \
 USES=		compiler:c++14-lang cpe python:3.5+,build scons shebangfix
 USE_RC_SUBR=	mongod
 
-CONFLICTS_BUILD=	mongo-cxx-driver
-CONFLICTS_INSTALL=	mongodb36 mongodb4[24]
+CONFLICTS_INSTALL=	mongodb36 mongodb4[24] mongodb50
 
-SHEBANG_FILES=	src/mongo/installer/compass/install_compass.in
+SHEBANG_FILES=	src/mongo/installer/compass/install_compass
 python_OLD_CMD=	@python_interpreter@
+
 MAKE_ARGS=	--prefix=${STAGEDIR}${PREFIX} \
 		--use-system-pcre --use-system-snappy \
 		--use-system-boost --use-system-zlib \
@@ -56,12 +56,6 @@ SSL_USES=	ssl
 SSL_MAKE_ARGS=	--ssl
 
 .include <bsd.port.options.mk>
-
-.if ${OPSYS} == FreeBSD && ${OSVERSION} >= 1200057
-SUB_LIST+=	LEGACY_LIMITS="@comment " MODERN_LIMITS=""
-.else
-SUB_LIST+=	LEGACY_LIMITS="" MODERN_LIMITS="@comment "
-.endif
 
 .if ${ARCH} == aarch64 || ${ARCH} == powerpc64le
 EXTRA_PATCHES=	${FILESDIR}/${ARCH}

@@ -1,7 +1,7 @@
 # Created by: Adam Weinberger <adamw@FreeBSD.org>
 
 PORTNAME=	scummvm-tools
-PORTVERSION=	2.2.0
+PORTVERSION=	2.5.0
 CATEGORIES=	games emulators
 MASTER_SITES=	https://downloads.scummvm.org/frs/${PORTNAME}/${PORTVERSION}/
 
@@ -22,7 +22,7 @@ LIB_DEPENDS=	libboost_system.so:devel/boost-libs \
 		libvorbis.so:audio/libvorbis \
 		libfreetype.so:print/freetype2
 
-USES=		compiler:c++11-lang gmake iconv tar:bzip2
+USES=		compiler:c++11-lang gmake iconv pkgconfig tar:bzip2
 HAS_CONFIGURE=	yes
 
 CONFIGURE_ARGS=	--prefix="${PREFIX}" --enable-verbose-build
@@ -41,7 +41,7 @@ OPTIONS_DEFAULT=WXGTK
 OPTIONS_SUB=	yes
 
 WXGTK_USE=	WX=2.8
-WXGTK_VARS=	WX_COMP=wx:lib:build WX_CONFIG_ARGS=absolute
+WXGTK_VARS=	WX_COMPS=wx WX_CONFIG_ARGS=absolute
 WXGTK_CONFIGURE_ENABLE=	wxwidgets
 
 pre-patch:

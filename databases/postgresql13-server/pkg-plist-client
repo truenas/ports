@@ -112,6 +112,7 @@ include/postgresql/server/access/twophase.h
 include/postgresql/server/access/twophase_rmgr.h
 include/postgresql/server/access/valid.h
 include/postgresql/server/access/visibilitymap.h
+include/postgresql/server/access/visibilitymapdefs.h
 include/postgresql/server/access/xact.h
 include/postgresql/server/access/xlog.h
 include/postgresql/server/access/xlog_internal.h
@@ -1192,6 +1193,7 @@ man/man7/WITH.7.gz
 %%NLS%%share/locale/pt_BR/LC_MESSAGES/ecpg-13.mo
 %%NLS%%share/locale/pt_BR/LC_MESSAGES/ecpglib6-13.mo
 %%NLS%%share/locale/pt_BR/LC_MESSAGES/pg_config-13.mo
+%%NLS%%share/locale/pt_BR/LC_MESSAGES/pgscripts-13.mo
 %%NLS%%share/locale/ru/LC_MESSAGES/ecpg-13.mo
 %%NLS%%share/locale/ru/LC_MESSAGES/ecpglib6-13.mo
 %%NLS%%share/locale/ru/LC_MESSAGES/libpq5-13.mo

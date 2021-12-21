@@ -1,7 +1,6 @@
 PORTNAME=	kak-lsp
 DISTVERSIONPREFIX=	v
-DISTVERSION=	9.0.0
-PORTREVISION=	2
+DISTVERSION=	11.1.0
 CATEGORIES=	editors
 
 MAINTAINER=	mikael@FreeBSD.org
@@ -16,104 +15,124 @@ USES=		cargo
 USE_GITHUB=	yes
 GH_ACCOUNT=	ul
 
-CARGO_CRATES=	adler32-1.1.0 \
-		aho-corasick-0.7.13 \
+CARGO_CRATES=	adler32-1.2.0 \
+		aho-corasick-0.7.18 \
 		ansi_term-0.11.0 \
-		arc-swap-0.4.7 \
-		arrayref-0.3.6 \
-		arrayvec-0.5.1 \
+		arc-swap-1.3.2 \
 		atty-0.2.14 \
-		autocfg-1.0.0 \
-		base64-0.11.0 \
-		base64-0.12.3 \
-		bitflags-1.2.1 \
-		blake2b_simd-0.5.10 \
+		autocfg-1.0.1 \
+		bitflags-1.3.2 \
 		boxfnonce-0.1.1 \
+		bumpalo-3.7.0 \
 		cfg-if-0.1.10 \
-		chrono-0.4.13 \
-		clap-2.33.1 \
-		constant_time_eq-0.1.5 \
-		crc32fast-1.2.0 \
-		crossbeam-0.7.3 \
-		crossbeam-channel-0.4.2 \
-		crossbeam-deque-0.7.3 \
-		crossbeam-epoch-0.8.2 \
-		crossbeam-queue-0.2.3 \
-		crossbeam-utils-0.7.2 \
+		cfg-if-1.0.0 \
+		chrono-0.4.19 \
+		clap-2.33.3 \
+		crc32fast-1.2.1 \
+		crossbeam-channel-0.5.1 \
+		crossbeam-utils-0.8.5 \
 		daemonize-0.4.1 \
 		dirs-2.0.2 \
-		dirs-sys-0.3.5 \
-		either-1.5.3 \
+		dirs-next-2.0.0 \
+		dirs-sys-0.3.6 \
+		dirs-sys-next-0.1.2 \
+		either-1.6.1 \
 		enum_primitive-0.1.1 \
-		futures-0.1.29 \
-		getrandom-0.1.14 \
+		form_urlencoded-1.0.1 \
+		futures-0.3.17 \
+		futures-channel-0.3.17 \
+		futures-core-0.3.17 \
+		futures-executor-0.3.17 \
+		futures-io-0.3.17 \
+		futures-macro-0.3.17 \
+		futures-sink-0.3.17 \
+		futures-task-0.3.17 \
+		futures-util-0.3.17 \
+		getopts-0.2.21 \
+		getrandom-0.2.3 \
 		glob-0.3.0 \
-		hermit-abi-0.1.15 \
-		idna-0.2.0 \
-		itertools-0.9.0 \
-		itoa-0.4.6 \
-		jsonrpc-core-14.2.0 \
+		hermit-abi-0.1.19 \
+		idna-0.2.3 \
+		indoc-1.0.3 \
+		itertools-0.10.1 \
+		itoa-0.4.8 \
+		js-sys-0.3.54 \
+		jsonrpc-core-18.0.0 \
 		lazy_static-1.4.0 \
-		libc-0.2.73 \
-		libflate-1.0.2 \
-		libflate_lz77-1.0.0 \
-		log-0.4.11 \
-		lsp-types-0.80.0 \
-		matches-0.1.8 \
-		maybe-uninit-2.0.0 \
-		memchr-2.3.3 \
-		memoffset-0.5.5 \
-		num-integer-0.1.43 \
+		libc-0.2.101 \
+		libflate-1.1.1 \
+		libflate_lz77-1.1.0 \
+		log-0.4.14 \
+		lsp-types-0.91.1 \
+		matches-0.1.9 \
+		memchr-2.4.1 \
+		num-integer-0.1.44 \
 		num-traits-0.1.43 \
-		num-traits-0.2.12 \
+		num-traits-0.2.14 \
+		once_cell-1.8.0 \
 		percent-encoding-2.1.0 \
-		ppv-lite86-0.2.8 \
-		proc-macro2-1.0.19 \
-		quote-1.0.7 \
-		rand-0.7.3 \
-		rand_chacha-0.2.2 \
-		rand_core-0.5.1 \
-		rand_hc-0.2.0 \
-		redox_syscall-0.1.57 \
-		redox_users-0.3.4 \
-		regex-1.3.9 \
-		regex-syntax-0.6.18 \
+		pin-project-lite-0.2.7 \
+		pin-utils-0.1.0 \
+		ppv-lite86-0.2.10 \
+		proc-macro-hack-0.5.19 \
+		proc-macro-nested-0.1.7 \
+		proc-macro2-1.0.29 \
+		pulldown-cmark-0.8.0 \
+		quote-1.0.9 \
+		rand-0.8.4 \
+		rand_chacha-0.3.1 \
+		rand_core-0.6.3 \
+		rand_hc-0.3.1 \
+		redox_syscall-0.2.10 \
+		redox_users-0.4.0 \
+		regex-1.5.4 \
+		regex-syntax-0.6.25 \
 		rle-decode-fast-1.0.1 \
-		ropey-1.2.0 \
-		rust-argon2-0.7.0 \
+		ropey-1.3.1 \
+		rustversion-1.0.5 \
 		ryu-1.0.5 \
-		scopeguard-1.1.0 \
-		serde-1.0.114 \
-		serde_derive-1.0.114 \
-		serde_json-1.0.56 \
-		serde_repr-0.1.6 \
-		slog-2.5.2 \
-		slog-async-2.5.0 \
+		serde-1.0.130 \
+		serde_derive-1.0.130 \
+		serde_json-1.0.67 \
+		serde_repr-0.1.7 \
+		slab-0.4.4 \
+		slog-2.7.0 \
+		slog-async-2.7.0 \
 		slog-kvfilter-0.7.0 \
-		slog-scope-4.3.0 \
-		slog-stdlog-4.0.0 \
-		slog-term-2.6.0 \
-		sloggers-1.0.1 \
-		smallvec-1.4.1 \
+		slog-scope-4.4.0 \
+		slog-stdlog-4.1.0 \
+		slog-term-2.8.0 \
+		sloggers-2.0.2 \
+		smallvec-1.6.1 \
 		strsim-0.8.0 \
-		syn-1.0.35 \
+		syn-1.0.76 \
 		take_mut-0.2.2 \
-		term-0.6.1 \
+		term-0.7.0 \
 		textwrap-0.11.0 \
-		thread_local-1.0.1 \
+		thread_local-1.1.3 \
 		time-0.1.43 \
-		tinyvec-0.3.3 \
-		toml-0.5.6 \
-		trackable-1.0.0 \
+		tinyvec-1.3.1 \
+		tinyvec_macros-0.1.0 \
+		toml-0.5.8 \
+		trackable-1.2.0 \
 		trackable_derive-1.0.0 \
-		unicode-bidi-0.3.4 \
-		unicode-normalization-0.1.13 \
+		unicase-2.6.0 \
+		unicode-bidi-0.3.6 \
+		unicode-normalization-0.1.19 \
 		unicode-width-0.1.8 \
-		unicode-xid-0.2.1 \
-		url-2.1.1 \
+		unicode-xid-0.2.2 \
+		unindent-0.1.7 \
+		url-2.2.2 \
 		vec_map-0.8.2 \
-		wasi-0.9.0+wasi-snapshot-preview1 \
-		whoami-0.8.2 \
+		version_check-0.9.3 \
+		wasi-0.10.2+wasi-snapshot-preview1 \
+		wasm-bindgen-0.2.77 \
+		wasm-bindgen-backend-0.2.77 \
+		wasm-bindgen-macro-0.2.77 \
+		wasm-bindgen-macro-support-0.2.77 \
+		wasm-bindgen-shared-0.2.77 \
+		web-sys-0.3.54 \
+		whoami-1.1.3 \
 		winapi-0.3.9 \
 		winapi-i686-pc-windows-gnu-0.4.0 \
 		winapi-x86_64-pc-windows-gnu-0.4.0

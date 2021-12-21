@@ -1,6 +1,7 @@
 PORTNAME=	armagetronad
 DISTVERSION=	0.2.8.3.5
 DISTVERSIONSUFFIX=	.src
+PORTREVISION=	1
 CATEGORIES=	games
 MASTER_SITES=	SF/${PORTNAME}/stable/${DISTVERSION}/
 
@@ -22,8 +23,6 @@ USE_GNOME=	libxml2
 WRKSRC=		${WRKDIR}/${PORTNAME}-${DISTVERSION}
 
 CONFIGURE_ARGS=	--disable-etc --disable-games --enable-music
-
-INSTALLS_ICONS=	yes
 
 BINARY_ALIAS=	sdl11-config=sdl-config
 

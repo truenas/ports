@@ -2,7 +2,7 @@
 
 PORTNAME=	nip2
 PORTVERSION=	8.7.1
-PORTREVISION=	5
+PORTREVISION=	8
 CATEGORIES=	graphics
 MASTER_SITES=	https://github.com/libvips/${PORTNAME}/releases/download/v${PORTVERSION}/
 
@@ -17,11 +17,12 @@ LIB_DEPENDS=	libvips.so:graphics/vips \
 		libfreetype.so:print/freetype2
 RUN_DEPENDS=	xdg-open:devel/xdg-utils
 
-USES=		bison desktop-file-utils dos2unix gettext gmake gnome pkgconfig \
+USES=		bison cpe desktop-file-utils dos2unix gettext gmake gnome pkgconfig \
 		shared-mime-info
+CPE_VENDOR=	${PORTNAME}_project
 
 DOS2UNIX_GLOB=	*.def
-USE_GNOME=	cairo gdkpixbuf2 gnomemimedata gtk20 libxml2
+USE_GNOME=	cairo gdkpixbuf2 gtk20 libxml2
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS+=	--disable-update-desktop
 LDFLAGS+=	-lm

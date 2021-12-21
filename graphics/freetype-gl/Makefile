@@ -1,6 +1,6 @@
 PORTNAME=	freetype-gl
 DISTVERSION=	g20210208
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	graphics
 
 PATCH_SITES=	https://github.com/${GH_ACCOUNT}/${GH_PROJECT}/commit/
@@ -14,9 +14,8 @@ LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 LIB_DEPENDS=	libfreetype.so:print/freetype2
-TEST_DEPENDS=	ImageMagick${IMAGEMAGICK_DEFAULT}-nox11>0:graphics/ImageMagick${IMAGEMAGICK_DEFAULT}-nox11
 
-USES=		cmake:noninja gl
+USES=		cmake:noninja gl magick:test,nox11
 USE_GL=		glew
 USE_LDCONFIG=	yes
 

@@ -1,6 +1,6 @@
---- chrome/browser/ui/views/bookmarks/bookmark_bar_view_test.cc.orig	2021-04-14 18:40:55 UTC
+--- chrome/browser/ui/views/bookmarks/bookmark_bar_view_test.cc.orig	2021-09-24 04:26:00 UTC
 +++ chrome/browser/ui/views/bookmarks/bookmark_bar_view_test.cc
-@@ -1856,7 +1856,7 @@ class BookmarkBarViewTest20 : public BookmarkBarViewEv
+@@ -1857,7 +1857,7 @@ class BookmarkBarViewTest20 : public BookmarkBarViewEv
    }
  
    void Step3() {

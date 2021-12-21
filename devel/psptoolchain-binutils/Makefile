@@ -8,20 +8,19 @@ MASTER_SITES=	GNU \
 		SOURCEWARE/${PORTNAME}/releases
 PKGNAMEPREFIX=	psptoolchain-
 
-MAINTAINER=	tphilipp@potion-studios.com
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	PlayStation Portable development toolchain ${PORTNAME}
 
 LICENSE=	GPLv3 LGPL3
 LICENSE_COMB=	multi
 
-BROKEN_aarch64=		fails to package: ansidecl.h: No such file or directory
 BROKEN_mips64=		fails to package: ansidecl.h: No such file or directory
-BROKEN_riscv64=		fails to package: ansidecl.h: No such file or directory
 
-USES=		gmake tar:bzip2 libtool
+USES=		cpe gmake tar:bzip2 libtool
+CPE_VENDOR=	gnu
 
 HAS_CONFIGURE=	yes
-CONFIGURE_TARGET=	${ARCH:S/amd64/x86_64/:C/armv[0-9]+/arm/:C/powerpc64.*/powerpc/}-unknown-${OPSYS:tl}${OSREL}
+CONFIGURE_TARGET=	${ARCH:S/aarch64/arm64/:S/amd64/x86_64/:C/armv[0-9]+/arm/:C/powerpc64.*/powerpc/:S/riscv64/riscv/}-unknown-${OPSYS:tl}${OSREL}
 CONFIGURE_ARGS=	--prefix=${PREFIX} \
 		--target="psp" \
 		--enable-install-libbfd \

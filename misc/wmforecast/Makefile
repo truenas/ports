@@ -1,7 +1,7 @@
 # Created by: Igor Pokrovsky <ip@unixway.org>
 
 PORTNAME=	wmforecast
-DISTVERSION=	1.5
+DISTVERSION=	1.6
 CATEGORIES=	misc windowmaker geography
 MASTER_SITES=	https://github.com/d-torrance/${PORTNAME}/releases/download/v${DISTVERSION}/
 
@@ -17,7 +17,6 @@ LIB_DEPENDS=	libgweather-3.so:net/libgweather \
 
 USES=		gmake gettext-runtime gnome pkgconfig xorg
 USE_GNOME=	atk cairo gdkpixbuf2 glib20 gtk30 pango
-INSTALLS_ICONS=	yes
 USE_XORG=	x11
 
 GNU_CONFIGURE=	yes

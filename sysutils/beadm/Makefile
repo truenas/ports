@@ -14,7 +14,7 @@ GH_TAGNAME=	f100bec
 
 NO_BUILD=	YES
 
-CONFLICTS_INSTALL=	beadm-devel-*
+CONFLICTS_INSTALL=	beadm-devel
 
 PLIST_FILES=	sbin/${PORTNAME} \
 		man/man1/${PORTNAME}.1.gz

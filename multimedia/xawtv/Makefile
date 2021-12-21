@@ -11,13 +11,15 @@ COMMENT=	TV viewing application and a few TV utilities
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-ONLY_FOR_ARCHS=	amd64 i386 powerpc64 powerpc64le
+ONLY_FOR_ARCHS=	amd64 armv7 i386 powerpc powerpc64 powerpc64le
 
 BUILD_DEPENDS=	${LOCALBASE}/share/fonts/misc/led-iso8859-1.pcf.gz:x11-fonts/tv-fonts
 RUN_DEPENDS=	${LOCALBASE}/share/fonts/misc/led-iso8859-1.pcf.gz:x11-fonts/tv-fonts
 LIB_DEPENDS=	libpng.so:graphics/png
 
-USES=		gmake iconv jpeg motif ncurses perl5 tar:bzip2 pkgconfig xorg
+USES=		cpe gmake iconv jpeg motif ncurses perl5 tar:bzip2 pkgconfig xorg
+
+CPE_VENDOR=	linuxtv
 
 OPTIONS_DEFINE=		AALIB BKTR DV QUICKTIME ZVBI
 OPTIONS_DEFINE_i386=	MMX

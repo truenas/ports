@@ -2,7 +2,7 @@
 
 PORTNAME=	pcsxr
 PORTVERSION=	1.9.95.20180604
-PORTREVISION=	4
+PORTREVISION=	5
 CATEGORIES=	emulators
 
 MAINTAINER=	martymac@FreeBSD.org
@@ -29,7 +29,6 @@ USE_GNOME=	cairo gdkpixbuf2 gtk30 intltool glib20
 USE_XORG=	ice sm x11 xv xext xxf86vm xtst
 USE_SDL=	sdl2
 USE_GL=	gl
-INSTALLS_ICONS=	yes
 
 WRKSRC_SUBDIR=	${PORTNAME}
 

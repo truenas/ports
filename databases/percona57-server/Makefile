@@ -1,7 +1,7 @@
 # Created by: Mark Felder <feld@FreeBSD.org>
 
 PORTNAME?=	percona
-DISTVERSION=	5.7.31-34
+DISTVERSION=	5.7.35-38
 PORTREVISION?=	0
 CATEGORIES=	databases
 MASTER_SITES=	http://www.percona.com/downloads/Percona-Server-5.7/Percona-Server-${DISTVERSION}/source/tarball/:percona \
@@ -18,6 +18,7 @@ LICENSE?=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 CPE_VENDOR=	percona
+CPE_PRODUCT=	percona_server
 
 LIB_DEPENDS=	libevent.so:devel/libevent \
 		liblz4.so:archivers/liblz4 \
@@ -105,10 +106,10 @@ TOKUDB_EXTRA_PATCHES=${PATCHDIR}/extrapatch-tokudb
 
 USES+=mysql:57p
 
-CONFLICTS_INSTALL=	mysql*-server-* \
-			mysqlwsrep* \
-			mariadb*-server-* \
-			percona5[0-68-9]-server-*
+CONFLICTS_INSTALL=	mysql*-server \
+			mysqlwsrep*-server \
+			mariadb*-server \
+			percona5[0-68-9]-server
 
 USE_RC_SUBR=	mysql-server
 
@@ -138,12 +139,6 @@ CMAKE_ARGS+=	-DWITH_AUTHENTICATION_LDAP=0
 #.else
 #MY_TESTDIR=	""
 #.endif
-
-.if ${OPSYS} == FreeBSD && ${OSVERSION} >= 1200057
-SUB_LIST+=	LEGACY_LIMITS="@comment " MODERN_LIMITS=""
-.else
-SUB_LIST+=	LEGACY_LIMITS="" MODERN_LIMITS="@comment "
-.endif
 
 post-install:
 	${MKDIR} ${STAGEDIR}/var/db/mysql

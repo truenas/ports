@@ -2,7 +2,7 @@
 
 PORTNAME=	sage
 PORTVERSION=	9.2
-PORTREVISION=	12
+PORTREVISION=	20
 CATEGORIES=	math
 MASTER_SITES=	https://mirrors.xmission.com/sage/src/		\
 		http://mirrors.xmission.com/sage/src/		\
@@ -54,8 +54,8 @@ BUILD_DEPENDS=	bash:shells/bash		\
 		${PYTHON_PKGNAMEPREFIX}Jinja2>0i:devel/py-Jinja2@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}jedi>0:devel/py-jedi@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}jsonschema>0:devel/py-jsonschema@${PY_FLAVOR}\
-		${PYTHON_PKGNAMEPREFIX}jupyter_core>0:devel/py-jupyter_core@${PY_FLAVOR}\
-		${PYTHON_PKGNAMEPREFIX}jupyter_client>0:devel/py-jupyter_client@${PY_FLAVOR}\
+		${PYTHON_PKGNAMEPREFIX}jupyter-core>0:devel/py-jupyter-core@${PY_FLAVOR}\
+		${PYTHON_PKGNAMEPREFIX}jupyter-client>0:devel/py-jupyter-client@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}kiwisolver>0:math/py-kiwisolver@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}markupsafe>0:textproc/py-markupsafe@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}matplotlib>0:math/py-matplotlib@${PY_FLAVOR}\
@@ -149,7 +149,6 @@ BUILD_DEPENDS=	bash:shells/bash		\
 		three.js>0:www/threejs		\
 		yasm:devel/yasm			\
 		gtar:archivers/gtar		\
-		convert:graphics/ImageMagick6	\
 		ffmpeg:multimedia/ffmpeg	\
 		${LOCALBASE}/lib/libBLT.a:x11-toolkits/blt
 LIB_DEPENDS=	libarb.so:math/arb		\
@@ -201,7 +200,7 @@ LIB_DEPENDS=	libarb.so:math/arb		\
 		libR.so:math/R			\
 		librw.so:math/rankwidth		\
 		libSingular.so:math/singular	\
-		libamd.so:math/suitesparse	\
+		libumfpack.so:math/suitesparse-umfpack	\
 		libsemigroups.so:math/libsemigroups	\
 		libsymmetrica.so:math/symmetrica\
 		libzmq.so:net/libzmq4		\
@@ -251,8 +250,8 @@ RUN_DEPENDS=	bash:shells/bash		\
 		${PYTHON_PKGNAMEPREFIX}Jinja2>0:devel/py-Jinja2@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}jedi>0:devel/py-jedi@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}jsonschema>0:devel/py-jsonschema@${PY_FLAVOR}\
-		${PYTHON_PKGNAMEPREFIX}jupyter_core>0:devel/py-jupyter_core@${PY_FLAVOR}\
-		${PYTHON_PKGNAMEPREFIX}jupyter_client>0:devel/py-jupyter_client@${PY_FLAVOR}\
+		${PYTHON_PKGNAMEPREFIX}jupyter-core>0:devel/py-jupyter-core@${PY_FLAVOR}\
+		${PYTHON_PKGNAMEPREFIX}jupyter-client>0:devel/py-jupyter-client@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}kiwisolver>0:math/py-kiwisolver@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}markupsafe>0:textproc/py-markupsafe@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}matplotlib>0:math/py-matplotlib@${PY_FLAVOR}\
@@ -338,8 +337,8 @@ RUN_DEPENDS=	bash:shells/bash		\
 		pixz:archivers/pixz
 
 USES=		autoreconf blaslapack:openblas compiler:c++11-lib fortran \
-		gettext gmake gnome iconv jpeg libtool localbase ncurses \
-		ninja:build perl5 pkgconfig python:3.7+ readline shebangfix \
+		gettext gmake gnome iconv jpeg libtool localbase magick:6,build \
+		ncurses ninja:build perl5 pkgconfig python:3.7+ readline shebangfix \
 		sqlite tk xorg
 USE_TEX=	latex:build pdftex:build tex:build
 USE_XORG=	x11 xext xscrnsaver
@@ -568,8 +567,10 @@ do-install:
 
 post-install:
 	${RM} ${STAGEDIR}${PREFIX}/lib64 ${STAGEDIR}${PREFIX}/libdata/pkgconfig/blas.pc	\
+		${STAGEDIR}${PYTHONPREFIX_SITELIBDIR}/distutils-precedence.pth	\
 		${STAGEDIR}${PREFIX}/libdata/pkgconfig/cblas.pc	\
 		${STAGEDIR}${PREFIX}/libdata/pkgconfig/gsl.pc	\
 		${STAGEDIR}${PREFIX}/libdata/pkgconfig/lapack.pc
+	${RM} -r ${STAGEDIR}${PYTHONPREFIX_SITELIBDIR}/_distutils_hack
 
 .include <bsd.port.post.mk>

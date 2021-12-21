@@ -12,6 +12,7 @@
     SUBDIR += atomicparsley
     SUBDIR += audacious
     SUBDIR += audacious-plugins
+    SUBDIR += av1an
     SUBDIR += avidemux
     SUBDIR += avidemux-cli
     SUBDIR += avidemux-plugins
@@ -30,6 +31,7 @@
     SUBDIR += celluloid
     SUBDIR += cheese
     SUBDIR += chilitags
+    SUBDIR += cineencoder
     SUBDIR += clive
     SUBDIR += clutter-gst
     SUBDIR += clutter-gst3
@@ -108,6 +110,7 @@
     SUBDIR += gstreamer1-plugins-openh264
     SUBDIR += gstreamer1-plugins-resindvd
     SUBDIR += gstreamer1-plugins-rtmp
+    SUBDIR += gstreamer1-plugins-rust
     SUBDIR += gstreamer1-plugins-smoothstreaming
     SUBDIR += gstreamer1-plugins-svt-av1
     SUBDIR += gstreamer1-plugins-svt-hevc
@@ -126,9 +129,10 @@
     SUBDIR += gstreamer1-validate
     SUBDIR += gstreamermm
     SUBDIR += gtk-youtube-viewer
-    SUBDIR += gxine
     SUBDIR += handbrake
+    SUBDIR += haruna
     SUBDIR += harvid
+    SUBDIR += helvum
     SUBDIR += hypnotix
     SUBDIR += imagination
     SUBDIR += intel-media-sdk
@@ -153,11 +157,11 @@
     SUBDIR += kodi-addon-visualization.fishbmc
     SUBDIR += kodi-addon-visualization.shadertoy
     SUBDIR += kodi-addon-visualization.spectrum
+    SUBDIR += kooha
     SUBDIR += kvazaar
     SUBDIR += l-smash
     SUBDIR += libaacs
     SUBDIR += libass
-    SUBDIR += libav
     SUBDIR += libbdplus
     SUBDIR += libbluray
     SUBDIR += libcec
@@ -229,12 +233,15 @@
     SUBDIR += minisatip
     SUBDIR += minitube
     SUBDIR += mjpegtools
+    SUBDIR += mjpg-streamer
     SUBDIR += mkclean
     SUBDIR += mkvalidator
     SUBDIR += mkvtoolnix
     SUBDIR += mkxvcd
-    SUBDIR += mlt
-    SUBDIR += mlt-qt5
+    SUBDIR += mlt6
+    SUBDIR += mlt6-qt5
+    SUBDIR += mlt7
+    SUBDIR += mlt7-qt5
     SUBDIR += mmsclient
     SUBDIR += mmsrip
     SUBDIR += motion
@@ -258,10 +265,13 @@
     SUBDIR += msopenh264
     SUBDIR += mswebrtc
     SUBDIR += musikcube
+    SUBDIR += musique
     SUBDIR += mxflib
     SUBDIR += mythtv
     SUBDIR += mythtv-frontend
     SUBDIR += naludump
+    SUBDIR += navidrome
+    SUBDIR += neolink
     SUBDIR += nordlicht
     SUBDIR += nostt
     SUBDIR += obs-audio-spectralizer
@@ -278,6 +288,7 @@
     SUBDIR += ogmtools
     SUBDIR += olive
     SUBDIR += omxplayer
+    SUBDIR += onevpl
     SUBDIR += openh264
     SUBDIR += openshot
     SUBDIR += opentoonz
@@ -318,8 +329,10 @@
     SUBDIR += py-gstreamer1
     SUBDIR += py-guessit
     SUBDIR += py-librtmp
+    SUBDIR += py-mat2
+    SUBDIR += py-metadata-cleaner
     SUBDIR += py-mido
-    SUBDIR += py-mlt
+    SUBDIR += py-mlt6
     SUBDIR += py-moviepy
     SUBDIR += py-periscope
     SUBDIR += py-pretty_midi
@@ -331,6 +344,7 @@
     SUBDIR += py-tvnamer
     SUBDIR += qmmp-plugin-pack-qt5
     SUBDIR += qmmp-qt5
+    SUBDIR += qpwgraph
     SUBDIR += qt-faststart
     SUBDIR += qt5-multimedia
     SUBDIR += quodlibet
@@ -352,6 +366,7 @@
     SUBDIR += rubygem-streamio-ffmpeg
     SUBDIR += sabbu
     SUBDIR += schroedinger
+    SUBDIR += scte35dump
     SUBDIR += shotcut
     SUBDIR += simplescreenrecorder
     SUBDIR += smpeg
@@ -359,7 +374,6 @@
     SUBDIR += smplayer
     SUBDIR += smplayer-skins
     SUBDIR += smplayer-themes
-    SUBDIR += sms1xxx-kmod
     SUBDIR += smtube
     SUBDIR += snapcast
     SUBDIR += snappy

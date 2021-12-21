@@ -12,7 +12,7 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 
 LIB_DEPENDS=	libfreetype.so:print/freetype2
 
-USES=		compiler:c++11-lang cmake desktop-file-utils gettext gnome \
+USES=		compiler:c++11-lang cmake cpe desktop-file-utils gettext gnome \
 		iconv:wchar_t pkgconfig shared-mime-info
 USE_GITHUB=	yes
 USE_GNOME=	cairo glib20 libxml2
@@ -20,7 +20,6 @@ CMAKE_ARGS=	-DIconv_INCLUDE_DIR=${ICONV_INCLUDE_PATH} \
 		-DIconv_LIBRARY=${ICONV_LIB_PATH}
 
 USE_LDCONFIG=	yes
-INSTALLS_ICONS=	yes
 
 PORTDOCS=	*
 
@@ -59,7 +58,7 @@ PYTHON_USES=	python:3.5+
 PYTHON_USES_OFF=python:3.5+,build
 PYTHON_CMAKE_BOOL=	ENABLE_PYTHON_SCRIPTING ENABLE_PYTHON_EXTENSION
 
-READLINE_USES=	readline:port
+READLINE_USES=	readline
 READLINE_CMAKE_BOOL=	ENABLE_LIBREADLINE
 
 SPIRO_DESC=	Use libspiro to edit with clothoid splines

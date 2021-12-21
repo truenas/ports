@@ -14,7 +14,7 @@
 # bsd.port.mk.  There are significant differences in those so non-FreeBSD code
 # was removed.
 #
-# $MCom: portlint/portlint.pl,v 1.525 2021/04/19 20:48:32 jclarke Exp $
+# $MCom$
 #
 
 use strict;
@@ -44,12 +44,12 @@ $checkmfiles = 0;
 $contblank = 1;
 $portdir = '.';
 
-@ALLOWED_FULL_PATHS = qw(/boot/loader.conf /compat/ /dev/null /etc/inetd.conf);
+@ALLOWED_FULL_PATHS = qw(/boot/loader.conf /compat/ /dev/null /etc/fstab /etc/inetd.conf /proc);
 
 # version variables
 my $major = 2;
 my $minor = 19;
-my $micro = 5;
+my $micro = 9;
 
 # default setting - for FreeBSD
 my $portsdir = '/usr/ports';
@@ -154,13 +154,14 @@ chdir "$portdir" || die "$portdir: $!";
 
 # get make vars
 my @varlist =  qw(
-	PORTNAME PORTVERSION PORTREVISION PORTEPOCH PKGNAME PKGNAMEPREFIX
-	PKGNAMESUFFIX DISTVERSIONPREFIX DISTVERSION DISTVERSIONSUFFIX
-	DISTNAME DISTFILES CATEGORIES MASTERDIR MAINTAINER MASTER_SITES
-	WRKDIR WRKSRC NO_WRKSUBDIR SCRIPTDIR FILESDIR
+	PORTNAME PORTVERSION PORTREVISION PORTEPOCH PKGNAME PKGBASE
+	PKGNAMEPREFIX PKGNAMESUFFIX DISTVERSIONPREFIX DISTVERSION
+	DISTVERSIONSUFFIX DISTNAME DISTFILES CATEGORIES MASTERDIR MAINTAINER
+	MASTER_SITES WRKDIR WRKSRC NO_WRKSUBDIR SCRIPTDIR FILESDIR
 	PKGDIR COMMENT DESCR PLIST PKGCATEGORY PKGINSTALL PKGDEINSTALL
 	PKGREQ PKGMESSAGE DISTINFO_FILE .CURDIR USE_LDCONFIG USE_AUTOTOOLS
-	USE_GNOME USE_PERL5 USE_QT USE_QT5 INDEXFILE PKGORIGIN CONFLICTS PKG_VERSION
+	USE_GNOME USE_PERL5 USE_QT USE_QT5 INDEXFILE PKGORIGIN
+	CONFLICTS CONFLICTS_BUILD CONFLICTS_INSTALL PKG_VERSION
 	PLIST_FILES PLIST_DIRS PORTDOCS PORTEXAMPLES
 	OPTIONS_DEFINE OPTIONS_RADIO OPTIONS_SINGLE OPTIONS_MULTI
 	OPTIONS_GROUP OPTIONS_SUB INSTALLS_OMF USE_RC_SUBR USES DIST_SUBDIR
@@ -593,7 +594,6 @@ sub checkplist {
 	my $owner_seen = 0;
 	my $group_seen = 0;
 	my $found_so = 0;
-	my $found_naked_so = 0;
 
 	# Variables that are allowed to be out-of-sync in the XXXDIR check.
 	# E.g., %%PORTDOCS%%%%RUBY_MODDOCDIR%% will be OK because there is
@@ -809,10 +809,8 @@ sub checkplist {
 			$makevar{USE_LDCONFIG} eq '') {
 			&perror("WARN", $file, $., "installing shared libraries, ".
 				"please define USE_LDCONFIG as appropriate");
-		} elsif ($_ =~ m|lib[^\/]+\.so\.\d+$|) {
+		} elsif ($_ =~ m|lib[^\/]+\.so[.\d]*$|) {
 			$found_so++;
-		} elsif ($_ =~ m|lib[^\/]+\.so$|) {
-			$found_naked_so++;
 		}
 
 		if ($_ =~ m|^share/icons/.*/| &&
@@ -947,14 +945,8 @@ sub checkplist {
 	}
 
 	if ($makevar{USE_LDCONFIG} ne '' && !$found_so) {
-		if ($found_naked_so) {
-			&perror("WARN", $file, -1, "You have defined USE_LDCONFIG, but this ".
-				"port does not install shared objects in the format lib*.so.[0-9] ".
-				"which ldconfig(8) needs to register them in the hints file.");
-		} else {
-			&perror("WARN", $file, -1, "You have defined USE_LDCONFIG, but this ".
-				"port does not install any shared objects.");
-		}
+		&perror("WARN", $file, -1, "You have defined USE_LDCONFIG, but this ".
+			"port does not install any shared objects.");
 	}
 
 	close(IN);
@@ -1170,7 +1162,9 @@ sub check_depends_syntax {
 			if ($k eq '') {
 				next;
 			}
-			my @l = split(':', $k);
+			my $tmp_depends = $k;
+			$tmp_depends =~ s/\$\{[^}]+}//g;
+			my @l = split(':', $tmp_depends);
 
 			print "OK: checking dependency value for $j.\n"
 				if ($verbose);
@@ -1387,6 +1381,7 @@ sub checkmakefile {
 	my $docsused = 0;
 	my $optused = 0;
 	my $desktop_entries = '';
+	my $conflicts = "";
 
 	my $masterdir = $makevar{MASTERDIR};
 	if ($masterdir ne '' && $masterdir ne $makevar{'.CURDIR'}) {
@@ -1925,7 +1920,7 @@ sub checkmakefile {
 	# whole file: BROKEN et al.
 	#
 	my ($var);
-	foreach $var (qw(IGNORE BROKEN COMMENT FORBIDDEN MANUAL_PACKAGE_BUILD NO_CDROM NO_PACKAGE RESTRICTED)) {
+	foreach $var (qw(IGNORE BROKEN(_[\w\d]+)? COMMENT FORBIDDEN MANUAL_PACKAGE_BUILD NO_CDROM NO_PACKAGE RESTRICTED)) {
 		print "OK: checking ${var}.\n" if ($verbose);
 		if ($whole =~ /\n${var}[+?]?=[ \t]+"/) {
 			my $lineno = &linenumber($`);
@@ -1946,8 +1941,8 @@ sub checkmakefile {
 			"with a lowercase letter and end without a period.");
 	}
 
-	if ($whole =~ /\nBROKEN[+?]=[ \t]+[^a-z \t]/ ||
-		$whole =~ /^BROKEN[+?]?=[ \t]+.*\.$/m) {
+	if ($whole =~ /\nBROKEN(_[\w\d]+)?[+?]?=[ \t]+[^a-z \t]/ ||
+		$whole =~ /^BROKEN(_[\w\d]+)?[+?]?=[ \t]+.*\.$/m) {
 		my $lineno = &linenumber($`);
 		&perror("WARN", $file, $lineno, "BROKEN messages should begin ".
 			"with a lowercase letter and end without a period.");
@@ -2232,7 +2227,7 @@ xargs xmkmf
 				&& $lm !~ /^COMMENT(.)?=[^\n]+($i\d*)/m) {
 					&perror("WARN", $file, $lineno, "possible direct use of ".
 						"command \"$sm\" found. Use $autocmdnames{$i} ".
-						"instead and set according USE_AUTOTOOLS=<tool> macro");
+						"instead and set USES=autoreconf and GNU_CONFIGURE=yes");
 			}
 		}
 	}
@@ -2240,6 +2235,14 @@ xargs xmkmf
 	if ($makevar{'USE_AUTOTOOLS'} =~ /\blibtool\b/) {
 		&perror("WARN", $file, -1, "USE_AUTOTOOLS=libtool is deprecated.  ".
 			"Use USES=libtool instead.");
+	}
+
+	if ($makevar{'USE_AUTOTOOLS'} =~ /\blibtoolize\b/) {
+		&perror("WARN", $file, -1, "USE_AUTOTOOLS=libtoolize is deprecated. ".
+			"Use \"USES=autoreconf libtool\" instead.");
+	} elsif ($makevar{'USE_AUTOCONF'}) {
+		&perror("WARN", $file, -1, "USE_AUTOTOOLS is deprecated. ".
+			"Use USES=autoreconf and set GNU_CONFIGURE=yes instead.");
 	}
 
 	#
@@ -2663,34 +2666,39 @@ xargs xmkmf
 		}
 	}
 	$idx = 0;
+	my @linestocheck = ();
 
-	#
-	# section 1: comment lines.
-	#
-	print "OK: checking comment section of $file.\n" if ($verbose);
-	my @linestocheck = split("\n", <<EOF);
+	# check if all lines in the first section are comments
+	if (grep(/^#/, split(/\n/, $sections[$idx])) == split(/\n/, $sections[$idx])) {
+
+		#
+		# section 1: comment lines.
+		#
+		print "OK: checking comment section of $file.\n" if ($verbose);
+		@linestocheck = split("\n", <<EOF);
 Whom
 Date [cC]reated
 EOF
 
-	$tmp = $sections[$idx++];
-	$tmp = "\n" . $tmp;	# to make the begin-of-line check easier
+		$tmp = $sections[$idx++];
+		$tmp = "\n" . $tmp;	# to make the begin-of-line check easier
 
-	if ($tmp =~ /\n[^#]/) {
-		&perror("FATAL", $file, -1, "non-comment line in comment section.");
-	}
-	if ($tmp =~ m/Version [rR]equired/) {
-		&perror("WARN", $file, -1, "Version required is no longer needed in the comment section.");
-	}
+		if ($tmp =~ /\n[^#]/) {
+			&perror("FATAL", $file, -1, "non-comment line in comment section.");
+		}
+		if ($tmp =~ m/Version [rR]equired/) {
+			&perror("WARN", $file, -1, "Version required is no longer needed in the comment section.");
+		}
 
-	#
-	# for the rest of the checks, comment lines are not important.
-	#
-	for ($i = 0; $i < scalar(@sections); $i++) {
-		$sections[$i] = "\n" . $sections[$i];
-		$sections[$i] =~ s/\n#[^\n]*//g;
-		$sections[$i] =~ s/\n\n+/\n/g;
-		$sections[$i] =~ s/^\n//;
+		#
+		# for the rest of the checks, comment lines are not important.
+		#
+		for ($i = 0; $i < scalar(@sections); $i++) {
+			$sections[$i] = "\n" . $sections[$i];
+			$sections[$i] =~ s/\n#[^\n]*//g;
+			$sections[$i] =~ s/\n\n+/\n/g;
+			$sections[$i] =~ s/^\n//;
+		}
 	}
 
 	#
@@ -2704,7 +2712,7 @@ EOF
 	&checkorder('PORTNAME', $tmp, $file, qw(
 PORTNAME PORTVERSION DISTVERSIONPREFIX DISTVERSION DISTVERSIONSUFFIX
 PORTREVISION PORTEPOCH CATEGORIES MASTER_SITES MASTER_SITE_SUBDIR
-PROJECTHOST PKGNAMEPREFIX PKGNAMESUFFIX DISTNAME EXTRACT_SUFX DISTFILES
+PROJECTHOST PKGNAMEPREFIX PKGNAMESUFFIX DISTNAME EXTRACT_SUFX DISTFILES(_\w+)?
 DIST_SUBDIR EXTRACT_ONLY
 	));
 
@@ -2985,14 +2993,31 @@ DIST_SUBDIR EXTRACT_ONLY
 
 	$pkg_version = $makevar{PKG_VERSION};
 
-	if ($makevar{CONFLICTS}) {
+	$conflicts = $makevar{CONFLICTS};
+	if ($makevar{CONFLICTS_BUILD}) {
+		$conflicts .= " " if $conflicts;
+		$conflicts .= $makevar{CONFLICTS_BUILD};
+	}
+	if ($makevar{CONFLICTS_INSTALL}) {
+		$conflicts .= " " if $conflicts;
+		$conflicts .= $makevar{CONFLICTS_INSTALL};
+	}
+	if ($conflicts) {
 		print "OK: checking CONFLICTS.\n" if ($verbose);
-		foreach my $conflict (split ' ', $makevar{CONFLICTS}) {
-			`$pkg_version -T '$makevar{PKGNAME}' '$conflict'`;
-			my $selfconflict = !$?;
-			if ($selfconflict) {
-				&perror("FATAL", "", -1, "Package conflicts with itself. ".
-					"You should remove \"$conflict\" from CONFLICTS.");
+		my %seen;
+		foreach my $conflict (split ' ', $conflicts) {
+			if (not $seen{$conflict}) {
+				`$pkg_version -T '$makevar{PKGBASE}' '$conflict' || $pkg_version -T '$makevar{PKGNAME}' '$conflict'`;
+				my $selfconflict = !$?;
+				if ($selfconflict) {
+					&perror("FATAL", "", -1, "Package conflicts with itself. ".
+						"You should remove \"$conflict\" from CONFLICTS.");
+				} elsif ($conflict =~ m/-\[0-9\]\*$/) {
+					&perror("WARN", $file, -1, "CONFLICTS definition \"$conflict\" ".
+						"ends in redundant version pattern. ".
+						"You should remove \"-[0-9]*\" from that pattern.");
+				}
+				$seen{$conflict} = 1;
 			}
 		}
 	}
@@ -3075,7 +3100,7 @@ DIST_SUBDIR EXTRACT_ONLY
 	push(@varnames, qw(
 PORTNAME PORTVERSION DISTVERSIONPREFIX DISTVERSION DISTVERSIONSUFFIX
 PORTREVISION PORTEPOCH CATEGORIES MASTER_SITES MASTER_SITE_SUBDIR
-PROJECTHOST PKGNAMEPREFIX PKGNAMESUFFIX DISTNAME EXTRACT_SUFX DISTFILES
+PROJECTHOST PKGNAMEPREFIX PKGNAMESUFFIX DISTNAME EXTRACT_SUFX DISTFILES(_\w+)?
 DIST_SUBDIR EXTRACT_ONLY
 	));
 
@@ -3224,6 +3249,12 @@ MAINTAINER COMMENT
 			}
 		}
 
+		# Last-ditch check to make sure the license is sanely defined.
+		my $lic_check = system("make check-license 2>&1 >/dev/null");
+		if ($lic_check) {
+			&perror("FATAL", $file, -1, "Failed to validate port LICENSE '$makevar{LICENSE}' with ``make check-license''");
+		}
+
 		$idx++;
 
 		push(@varnames, qw(
@@ -3244,7 +3275,7 @@ MAINTAINER COMMENT
 	@linestocheck = qw(
 DEPRECATED EXPIRATION_DATE FORBIDDEN BROKEN(_\w+)? IGNORE(_\w+)?
 ONLY_FOR_ARCHS ONLY_FOR_ARCHS_REASON(_\w+)?
-NOT_FOR_ARCHS NOT_FOR_ARCHS_REASON(_\w+)?
+NOT_FOR_ARCHS NOT_FOR_ARCHS_REASON(_\w+)? LEGAL_TEXT
 	);
 
 	my $brokenpattern = "^(" . join("|", @linestocheck) . ")[?+:]?=";
@@ -3436,15 +3467,6 @@ TEST_DEPENDS FETCH_DEPENDS DEPENDS_TARGET
 			&perror("WARN", $file, -1, "definition of WRKSRC not necessary. ".
 				"WRKSRC is \${WRKDIR} by default.");
 		}
-	}
-
-	# check RESTRICTED/NO_CDROM/NO_PACKAGE
-	print "OK: checking RESTRICTED/NO_CDROM/NO_PACKAGE.\n" if ($verbose);
-	my $lps = $makevar{LICENSE_PERMS} // '';
-	if ($committer && ($tmp =~ /\n(RESTRICTED|NO_CDROM|NO_PACKAGE)[+?]?=/ ||
-		$lps =~ /\bno-\b/)) {
-		&perror("WARN", $file, -1, "Possible restrictive licensing found.  ".
-			"If there are, in fact, limitations to use or distribution, please update ports/LEGAL.");
 	}
 
 	if ($tmp =~ /\nNO_PACKAGE[+?]?=/) {

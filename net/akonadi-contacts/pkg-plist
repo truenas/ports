@@ -13,7 +13,6 @@ include/KF5/Akonadi/Contact/ContactGroupEditorDialog
 include/KF5/Akonadi/Contact/ContactGroupExpandJob
 include/KF5/Akonadi/Contact/ContactGroupSearchJob
 include/KF5/Akonadi/Contact/ContactGroupViewer
-include/KF5/Akonadi/Contact/ContactGroupViewerDialog
 include/KF5/Akonadi/Contact/ContactParts
 include/KF5/Akonadi/Contact/ContactSearchJob
 include/KF5/Akonadi/Contact/ContactViewer
@@ -54,7 +53,6 @@ include/KF5/akonadi/contact/contactgroupeditordialog.h
 include/KF5/akonadi/contact/contactgroupexpandjob.h
 include/KF5/akonadi/contact/contactgroupsearchjob.h
 include/KF5/akonadi/contact/contactgroupviewer.h
-include/KF5/akonadi/contact/contactgroupviewerdialog.h
 include/KF5/akonadi/contact/contactparts.h
 include/KF5/akonadi/contact/contactsearchjob.h
 include/KF5/akonadi/contact/contactsfilterproxymodel.h
@@ -99,7 +97,7 @@ lib/libKF5ContactEditor.so.%%KDE_APPLICATIONS_SHLIB_VER%%
 %%QT_PLUGINDIR%%/akonadi/contacts/plugins/categorieseditwidgetplugin.so
 %%QT_PLUGINDIR%%/akonadi_serializer_addressee.so
 %%QT_PLUGINDIR%%/akonadi_serializer_contactgroup.so
-%%QT_PLUGINDIR%%/kcm_akonadicontact_actions.so
+%%QT_PLUGINDIR%%/pim/kcms/kaddressbook/kcm_akonadicontact_actions.so
 share/akonadi/plugins/serializer/akonadi_serializer_addressee.desktop
 share/akonadi/plugins/serializer/akonadi_serializer_contactgroup.desktop
 share/kf5/akonadi/contact/data/zone.tab
@@ -108,6 +106,9 @@ share/kservices5/akonadicontact_actions.desktop
 share/locale/ar/LC_MESSAGES/akonadicontact5-serializer.mo
 share/locale/ar/LC_MESSAGES/akonadicontact5.mo
 share/locale/ar/LC_MESSAGES/kcm_akonadicontact_actions.mo
+share/locale/az/LC_MESSAGES/akonadicontact5-serializer.mo
+share/locale/az/LC_MESSAGES/akonadicontact5.mo
+share/locale/az/LC_MESSAGES/kcm_akonadicontact_actions.mo
 share/locale/bs/LC_MESSAGES/akonadicontact5-serializer.mo
 share/locale/bs/LC_MESSAGES/akonadicontact5.mo
 share/locale/bs/LC_MESSAGES/kcm_akonadicontact_actions.mo

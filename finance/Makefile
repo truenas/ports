@@ -21,6 +21,7 @@
     SUBDIR += aqbanking
     SUBDIR += beancount
     SUBDIR += beanie
+    SUBDIR += chiapos
     SUBDIR += cointop
     SUBDIR += electrum
     SUBDIR += expense
@@ -44,6 +45,7 @@
     SUBDIR += libstocks
     SUBDIR += moneymanagerex
     SUBDIR += myphpmoney
+    SUBDIR += nextcloud-cospend
     SUBDIR += odoo
     SUBDIR += p5-Business-CreditCard
     SUBDIR += p5-Business-MaxMind-CreditCardFraudDetection
@@ -93,6 +95,7 @@
     SUBDIR += py-backtrader
     SUBDIR += py-bitcoin
     SUBDIR += py-ebaysdk
+    SUBDIR += py-mplfinance
     SUBDIR += py-ofxparse
     SUBDIR += py-pycoin
     SUBDIR += py-python-bitcoinlib
@@ -101,6 +104,7 @@
     SUBDIR += py-stripe
     SUBDIR += py-ta-lib
     SUBDIR += py-vatnumber
+    SUBDIR += py-yfinance
     SUBDIR += py-ystockquote
     SUBDIR += qtbitcointrader
     SUBDIR += quantlib
@@ -108,6 +112,7 @@
     SUBDIR += rubygem-money
     SUBDIR += skrooge
     SUBDIR += sql-ledger
+    SUBDIR += ticker
     SUBDIR += tickrs
     SUBDIR += vanitygen
     SUBDIR += venice

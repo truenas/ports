@@ -1,6 +1,6 @@
 PORTNAME=	gwenhywfar
 PORTVERSION=	5.6.0
-PORTREVISION?=	0
+PORTREVISION?=	1
 CATEGORIES=	devel net security
 MASTER_SITES=	https://www.aquamaniac.de/rdm/attachments/download/364/
 
@@ -14,8 +14,9 @@ LIB_DEPENDS=	libgcrypt.so:security/libgcrypt \
 		libgnutls.so:security/gnutls \
 		libgpg-error.so:security/libgpg-error
 
-USES=		gettext gmake iconv:translit libtool localbase:ldflags \
+USES=		cpe gettext gmake iconv:translit libtool localbase:ldflags \
 		pathfix pkgconfig
+CPE_VENDOR=	aquamaniac
 
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--enable-release="yes" \

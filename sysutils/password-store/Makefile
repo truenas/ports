@@ -1,6 +1,6 @@
 PORTNAME=	password-store
-PORTVERSION=	1.7.3
-PORTREVISION=	2
+PORTVERSION=	1.7.4
+PORTREVISION=	1
 CATEGORIES=	sysutils
 MASTER_SITES=	https://git.zx2c4.com/${PORTNAME}/snapshot/
 
@@ -31,12 +31,10 @@ CONTRIB_DESC=		Include shell completions, import scripts, related projects
 QRENCODE_DESC=		Enable QR code support
 
 GIT_RUN_DEPENDS=	git>=0:devel/git
-XCLIP_RUN_DEPENDS=	base64>=0:converters/base64 \
-			xclip>=0:x11/xclip
+XCLIP_RUN_DEPENDS=	xclip>=0:x11/xclip
 CONTRIB_RUN_DEPENDS=	pwgen>=0:sysutils/pwgen
 QRENCODE_RUN_DEPENDS=	libqrencode>=0:graphics/libqrencode
 WAYLAND_RUN_DEPENDS=	wl-clipboard>=0:x11/wl-clipboard
-WAYLAND_EXTRA_PATCHES=	${PATCHDIR}/extra-patch-wayland-copy-paste.diff:-p1
 
 SUB_FILES=		pass
 

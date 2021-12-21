@@ -1,5 +1,5 @@
 PORTNAME=	yoshimi
-DISTVERSION=	2.0.1
+DISTVERSION=	2.1.1.1
 CATEGORIES=	audio
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -17,7 +17,7 @@ LIB_DEPENDS=	libargp.so:devel/argp-standalone \
 		libjack.so:audio/jack \
 		libmxml.so:textproc/mxml
 
-USES=		cmake compiler:c++11-lang gnome ncurses pkgconfig readline:port
+USES=		cmake compiler:c++11-lang gnome ncurses pkgconfig readline
 USE_GNOME=	cairo
 
 USE_GITHUB=	yes
@@ -25,8 +25,6 @@ GH_ACCOUNT=	Yoshimi
 
 CMAKE_SOURCE_PATH=	${WRKSRC}/src
 LDFLAGS+=		-Wl,--as-needed
-
-INSTALLS_ICONS=	yes
 
 PORTDATA=	*
 PORTDOCS=	*

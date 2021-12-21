@@ -1,17 +1,25 @@
---- chrome/app/chrome_main.cc.orig	2021-04-14 18:40:49 UTC
+--- chrome/app/chrome_main.cc.orig	2021-09-24 04:25:56 UTC
 +++ chrome/app/chrome_main.cc
-@@ -130,12 +130,12 @@ int ChromeMain(int argc, const char** argv) {
-   MainThreadStackSamplingProfiler scoped_sampling_profiler;
+@@ -25,7 +25,7 @@
+ #include "chrome/app/notification_metrics.h"
+ #endif
  
-   // Chrome-specific process modes.
+-#if defined(OS_WIN) || defined(OS_LINUX)
++#if defined(OS_WIN) || defined(OS_LINUX) || defined(OS_BSD)
+ #include "base/base_switches.h"
+ #endif
+ 
+@@ -145,11 +145,11 @@ int ChromeMain(int argc, const char** argv) {
+   if (headless::IsChromeNativeHeadless()) {
+     headless::SetUpCommandLine(command_line);
+   } else {
 -#if defined(OS_LINUX) || defined(OS_CHROMEOS) || defined(OS_MAC) || \
 +#if defined(OS_LINUX) || defined(OS_CHROMEOS) || defined(OS_MAC) || defined(OS_BSD) || \
      defined(OS_WIN)
-   if (command_line->HasSwitch(switches::kHeadless)) {
-     return headless::HeadlessShellMain(params);
-   }
+     if (command_line->HasSwitch(switches::kHeadless))
+       return headless::HeadlessShellMain(params);
 -#endif  // defined(OS_LINUX) || defined(OS_CHROMEOS) || defined(OS_MAC) ||
 +#endif  // defined(OS_LINUX) || defined(OS_CHROMEOS) || defined(OS_MAC) || defined(OS_BSD) ||
          // defined(OS_WIN)
+   }
  
-   int rv = content::ContentMain(params);

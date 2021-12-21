@@ -3,6 +3,7 @@
 PORTNAME=	xf86-video-intel
 DISTVERSION=	2.99.917-916
 DISTVERSIONSUFFIX=	-g${GL_COMMIT:C/(.{12}).*/\1/}
+PORTREVISION=	1
 PORTEPOCH=	1
 CATEGORIES=	x11-drivers
 
@@ -13,7 +14,7 @@ LICENSE=	MIT	# various
 LICENSE_FILE=	${WRKSRC}/COPYING
 
 ONLY_FOR_ARCHS=	amd64 i386
-ONLY_FOR_ARCHS_REASON=	Only Intel integrated GPUs on x86 are supported
+ONLY_FOR_ARCHS_REASON=	only Intel integrated GPUs on x86 are supported
 
 LIB_DEPENDS=	libdrm_intel.so:graphics/libdrm
 
@@ -28,8 +29,6 @@ TEST_TARGET=	check
 
 # XXX bug 214593: SNA crashes on pre-SandyBridge hardware
 CONFIGURE_ARGS+=--with-default-accel=uxa
-# XXX Remove after FreeBSD 11 EOL
-CPPFLAGS+=	-D_WITH_GETLINE
 
 OPTIONS_DEFINE=	UDEV XVMC
 OPTIONS_DEFAULT=UDEV XVMC

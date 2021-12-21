@@ -1,5 +1,5 @@
 PORTNAME=	librepo
-DISTVERSION=	1.14.0
+DISTVERSION=	1.14.2
 CATEGORIES=	misc
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -13,7 +13,8 @@ LIB_DEPENDS=	libassuan.so:security/libassuan \
 		libgpg-error.so:security/libgpg-error \
 		libgpgme.so:security/gpgme
 
-USES=		gettext-runtime gnome cmake localbase:ldflags pkgconfig
+USES=		cpe gettext-runtime gnome cmake localbase:ldflags pkgconfig
+CPE_VENDOR=	redhat
 USE_GNOME=	glib20 libxml2
 USE_LDCONFIG=	yes
 

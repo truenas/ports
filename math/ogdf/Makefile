@@ -6,7 +6,7 @@ CATEGORIES=	math
 MASTER_SITES=	https://ogdf.uos.de/wp-content/uploads/2020/02/
 DISTNAME=	${PORTNAME}.v${PORTVERSION}
 
-MAINTAINER=	woodsb02@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	C++ class library for the automatic layout of diagrams
 
 LICENSE=		GPLv2 GPLv3
@@ -14,7 +14,7 @@ LICENSE_COMB=		dual
 LICENSE_FILE_GPLv2=	${WRKSRC}/LICENSE_GPL_v2.txt
 LICENSE_FILE_GPLv3=	${WRKSRC}/LICENSE_GPL_v3.txt
 
-CONFLICTS_INSTALL=	CoinMP-[0-9]*
+CONFLICTS_INSTALL=	CoinMP
 
 USES=		cmake compiler:c++11-lang zip
 USE_LDCONFIG=	yes

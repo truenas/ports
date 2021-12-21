@@ -10,6 +10,91 @@ in the release notes and/or placed into UPDATING.
 
 All ports committers are allowed to commit to this file.
 
+20211211:
+AUTHOR: tcberner@FreeBSD.org
+
+  A new USES has been added to depend on ImageMagick.
+
+     USES=magick
+
+  adds a LIB_DEPENDS on graphics/ImageMagick${IMAGEMAGICK_DEFAULT}.
+
+  If a specific version is required, use for example
+
+     USES=magick:6        resp.     USES=magick:7
+
+  If only a build, run or test is required, use for example
+
+     USES=magick:build    resp.     USES=magick:6,build,test
+
+  If a dependency on the nox11 flavor is required, use for example
+
+     USES=magick:nox11    resp.     USES=magick:7,nox11,run,test
+
+  See magick.mk for more details on the available flags.
+
+20211122:
+AUTHOR: bapt@FreeBSD.org
+
+  The default compression for INDEX file as fetch via make fetchindex has
+  switched from .bz2 to .xz (.zst is also available).
+
+  The .bz2 format is still available but is considered deprecated and may
+  be removed in the future.
+
+20211010:
+AUTHOR: bapt@FreeBSD.org
+
+  INSTALLS_ICONS has been replace by a trigger on gtk-update-icon-cache.
+  the macro does nothing anymore.
+
+20211010:
+AUTHOR: bapt@FreeBSD.org
+
+  A new USES has been added, to simplify the integration of triggers in
+  the ports tree.
+
+20210801:
+AUTHOR: delphij@FreeBSD.org
+
+  WANT_OPENLDAP_SASL is removed now that OpenLDAP is always built with
+  SASL support.
+
+20210730:
+AUTHOR: tcberner@FreeBSD.org
+
+  A new USES has been added to depend on the mlt multimedia framework.
+
+  Ports that depend on mlt should now use USES=mlt:<version> to specify
+  their dependency.
+
+  At the moment the supported version is 6, but will be extended to also 
+  allow for selection of mlt 7 shortly.
+
+20210604:
+AUTHOR: mat@FreeBSD.org
+
+  The prepare-commit-msg hook was enhanced to auto-fill the first line of the
+  commit with the category/port in case only one port was committed to.
+
+20210525:
+AUTHOR: amdmi3@FreeBSD.org
+
+  PYTHON_REL has been switched from a 4 digits number to a 5 digits number to
+  handle python 3.10.0.  Ports checking for python 3.7.10 should compare
+  PYTHON_REL against 30710 and ports checking for python 3.10.0 should compare
+  PYTHON_REL against 31000.
+
+20210420:
+AUTHOR: mat@FreeBSD.org
+
+  A prepare-commit-msg hook was added to the repository.  This hooks prepares
+  the commit message template for specific ports tree usage.
+
+  To make use of it, the easiest way is to run:
+
+    git config --add core.hooksPath .hooks
+
 20201120:
 AUTHOR: gnome@FreeBSD.org
 
@@ -26,7 +111,7 @@ AUTHOR: gnome@FreeBSD.org
 
   	DEFAULT_VERSIONS+=librsvg2=legacy
 
-20210327;
+20210327:
 AUTHOR: bapt@FreeBSD.org
 
   New @touch keyword

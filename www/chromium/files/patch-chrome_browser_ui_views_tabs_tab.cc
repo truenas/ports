@@ -1,6 +1,6 @@
---- chrome/browser/ui/views/tabs/tab.cc.orig	2021-04-14 18:40:56 UTC
+--- chrome/browser/ui/views/tabs/tab.cc.orig	2021-09-24 04:26:00 UTC
 +++ chrome/browser/ui/views/tabs/tab.cc
-@@ -577,7 +577,7 @@ void Tab::MaybeUpdateHoverStatus(const ui::MouseEvent&
+@@ -580,7 +580,7 @@ void Tab::MaybeUpdateHoverStatus(const ui::MouseEvent&
    if (mouse_hovered_ || !GetWidget()->IsMouseEventsEnabled())
      return;
  
@@ -8,4 +8,4 @@
 +#if defined(OS_LINUX) || defined(OS_CHROMEOS) || defined(OS_BSD)
    // Move the hit test area for hovering up so that it is not overlapped by tab
    // hover cards when they are shown.
-   // TODO(crbug/978134): Once Linux/CrOS widget transparency is solved, remove
+   // TODO(crbug.com/978134): Once Linux/CrOS widget transparency is solved,

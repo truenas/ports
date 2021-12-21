@@ -1,6 +1,6 @@
 PORTNAME=	deal.II
 DISTVERSIONPREFIX=	v
-DISTVERSION=	9.2.0.20201001 # 9.2.0 breaks with invalid linker flag -l-pthread
+DISTVERSION=	9.3.2
 CATEGORIES=	math
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -9,23 +9,26 @@ COMMENT=	Finite element Differential Equations Analysis Library (DEAL)
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/LICENSE.md
 
+BROKEN_FreeBSD_14=	clang crashes: https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=257876
+
 BUILD_DEPENDS=	${LOCALBASE}/include/boost/config.hpp:devel/boost-libs
 LIB_DEPENDS=	libboost_serialization.so:devel/boost-libs \
 		libhdf5.so:science/hdf5 \
-		libmetis.so:math/metis \
-		libtbb.so:devel/tbb
+		libmetis.so:math/metis
 
-USES=		blaslapack:gotoblas cmake compiler:c++17-lang localbase:ldflags
+USES=		blaslapack cmake:testing compiler:c++17-lang localbase:ldflags
+USE_LDCONFIG=	yes
+
 USE_GITHUB=	yes
 GH_ACCOUNT=	${PORTNAME:tl:S/.//}
 GH_PROJECT=	${PORTNAME:tl:S/.//}
-GH_TAGNAME=	803d21ff957e349b3799cd3ef2c840bc78734305
-USE_LDCONFIG=	yes
 
 CMAKE_OFF=	DEAL_II_ALLOW_BUNDLED DEAL_II_COMPONENT_EXAMPLES \
 		DEAL_II_WITH_P4EST DEAL_II_WITH_TRILINOS DEAL_II_WITH_UMFPACK \
 		DEAL_II_WITH_NANOFLANN DEAL_II_WITH_MUPARSER DEAL_II_WITH_ASSIMP \
 		DEAL_II_WITH_HDF5
+CMAKE_ON=	DEAL_II_FORCE_BUNDLED_TBB # instead of LIB_DEPENDS+=libtbb.so:devel/onetbb, pending https://github.com/dealii/dealii/issues/11561
+CMAKE_TESTING_ON=	FREEBSD_ENABLE_TESTS
 
 OPTIONS_DEFINE=		ADOLC ARPACK GSL LAPACK MPI NETCDF OPENCASCADE PETSC SCALAPACK SUNDIALS
 OPTIONS_DEFAULT=	GSL LAPACK # SUNDIALS

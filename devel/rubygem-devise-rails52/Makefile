@@ -1,7 +1,7 @@
 # Created by: rpsfa@rit.edu
 
 PORTNAME=	devise
-PORTVERSION=	4.7.3
+PORTVERSION=	4.8.0
 CATEGORIES=	devel rubygems
 MASTER_SITES=	RG
 PKGNAMESUFFIX=	-rails52
@@ -18,12 +18,11 @@ RUN_DEPENDS=	rubygem-bcrypt>=3.0<4:security/rubygem-bcrypt \
 		rubygem-responders-rails52>=0:www/rubygem-responders-rails52 \
 		rubygem-warden>=1.2.3<1.3:devel/rubygem-warden
 
-USES=		gem
+USES=		cpe gem
 USE_RUBY=	yes
 
-NO_ARCH=	yes
+CPE_VENDOR=	plataformatec
 
-post-patch:
-	@${REINPLACE_CMD} -e 's|, "test/rails_app/config/routes.rb"||' ${WRKSRC}/${PORTNAME}.gemspec
+NO_ARCH=	yes
 
 .include <bsd.port.mk>

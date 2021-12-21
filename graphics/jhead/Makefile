@@ -1,23 +1,26 @@
 # Created by: Jamie Hermans <jamie@hermans.ca>
 
 PORTNAME=	jhead
-PORTVERSION=	3.04
+PORTVERSION=	3.06.0.1
 CATEGORIES=	graphics
-MASTER_SITES=	http://www.sentex.net/~mwandel/jhead/ \
-		LOCAL/sunpoet
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	EXIF JPEG header manipulation tool
 
 LICENSE=	PD
 
-USES=		jpeg:run
+USES=		cpe gmake jpeg:run
 
 MAKEFILE=	makefile
 
 PLIST_FILES=	bin/jhead \
 		share/man/man1/jhead.1.gz
 PORTDOCS=	usage.html
+
+CPE_VENDOR=	jhead_project
+
+GH_ACCOUNT=	Matthias-Wandel
+USE_GITHUB=	yes
 
 OPTIONS_DEFINE=	DOCS
 

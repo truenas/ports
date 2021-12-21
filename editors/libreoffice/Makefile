@@ -1,4 +1,4 @@
-PORTREVISION=	7
+PORTREVISION=	1
 
 .include "${.CURDIR}/Makefile.common"
 
@@ -77,6 +77,7 @@ LIB_DEPENDS=	libapr-1.so:devel/apr1 \
 		libmythes-1.2.so:textproc/mythes \
 		libraptor2.so:textproc/raptor2 \
 		librdf.so:textproc/redland \
+		libZXing.so:textproc/zxing-cpp \
 		libfontconfig.so:x11-fonts/fontconfig \
 		libxcb-icccm.so:x11/xcb-util-wm \
 		libserf-1.so:www/serf
@@ -91,7 +92,7 @@ RUN_DEPENDS=	xdg-open:devel/xdg-utils \
 
 DISTFILES+=	f543e6e2d7275557a839a164941c0a86e5f2c3f2a0042bfc434c88c6dde9e140-opens___.ttf:ext
 DISTFILES+=	dtoa-20180411.tgz:src
-DISTFILES+=	skia-m88-59bafeeaa7de9eb753e3778c414e01dcf013dcd8.tar.xz:src
+DISTFILES+=	skia-m90-45c57e116ee0ce214bdf78405a4762722e4507d9.tar.xz:src
 
 NOT_FOR_ARCHS=		armv6 armv7
 NOT_FOR_ARCHS_REASON=	Unsupported host_cpu
@@ -108,7 +109,7 @@ SHEBANG_GLOB=	*.py
 
 GNU_CONFIGURE=	yes
 USES=		autoreconf:build bison compiler:c++17-lang cpe desktop-file-utils \
-		gettext-runtime gl gmake gnome jpeg perl5 pkgconfig python:3.6+ \
+		gettext-runtime gl gmake gnome jpeg perl5 pkgconfig python:3.8-3.9 \
 		shebangfix shared-mime-info ssl tar:xz xorg
 USE_GL=		gl glew glu
 USE_GNOME=	cairo glib20 libxml2 libxslt
@@ -116,21 +117,16 @@ USE_OPENLDAP=	yes
 USE_PERL5=	build
 USE_XORG=	ice sm x11 xaw xcb xext xinerama xrandr xrender
 
-OPTIONS_DEFINE=	COINMP CUPS DOCS GNOME GTK3 JAVA KF5 LTO MMEDIA PGSQL MARIADB QT5 SDK TEST WEBDAV
-OPTIONS_DEFAULT=	CUPS MMEDIA QT5
-
-.if !defined(DEFAULT_VERSIONS) || ! ${DEFAULT_VERSIONS:Mssl=*}
-# Blocked by net/qt5-network: cannot use QT5 with default OpenSSL
-OPTIONS_EXCLUDE_FreeBSD_11+=	QT5
-.endif
+OPTIONS_DEFINE=	COINMP CUPS DOCS GNOME GTK3 GTK4 JAVA KF5 LTO MMEDIA PGSQL MARIADB QT5 SDK TEST WEBDAV
+OPTIONS_DEFAULT=	CUPS JAVA MMEDIA QT5
 
 COINMP_DESC=	Enable CoinMP (deprecated) math solver
-GTK3_DESC=	GTK+ 3 GUI toolkit support (incomplete visual style)
+GTK4_DESC=	GTK+ 4 GUI toolkit support
 JAVA_DESC=	Add Java support (XML filters, macros, DB connections)
 KF5_DESC=	KF5/Qt5 GUI toolkit support (implies QT5)
 MMEDIA_DESC=	Enable multimedia backend for Impress
 PGSQL_DESC=	Build with PostgreSQL-SDBC driver
-MARIADB_DESC=	Build with MariaDB-SDBC driver
+MARIADB_DESC=	Build with MariaDB/MySQL-SDBC driver
 QT5_DESC=	Qt5 GUI toolkit support (default visual style)
 SDK_DESC=	Build with SDK
 TEST_DESC=	Run all regression tests
@@ -143,7 +139,7 @@ COINMP_LIB_DEPENDS=	libCoinMP.so:math/coinmp
 CUPS_CONFIGURE_ENABLE=	cups
 CUPS_LIB_DEPENDS=	libcups.so:print/cups
 
-DOCS_CONFIGURE_WITH=	help
+DOCS_CONFIGURE_ON=	--with-help=html
 
 GNOME_CONFIGURE_ENABLE=	dbus dconf
 GNOME_IMPLIES=	GTK3
@@ -152,8 +148,10 @@ GNOME_LIB_DEPENDS=	libdbus-1.so:devel/dbus \
 GNOME_USE=	GNOME=dconf
 
 GTK3_CONFIGURE_ENABLE=	gtk3
-GTK3_USE=	GNOME=gtk30,gtk-update-icon-cache
-GTK3_VARS=	POST_PLIST=add-plist-gnome
+GTK3_USE=	GNOME=gtk30
+
+GTK4_CONFIGURE_ENABLE=	gtk4
+GTK4_USE=	GNOME=gtk40
 
 JAVA_BUILD_DEPENDS=	ant:devel/apache-ant \
 			${JAVAJARDIR}/commons-codec.jar:java/apache-commons-codec \
@@ -174,7 +172,7 @@ JAVA_CONFIGURE_ON=	--with-ant-home=${LOCALBASE}/share/java/apache-ant \
 			--without-system-jfreereport
 JAVA_CONFIGURE_WITH=	java
 # XXX jni.h from GNU classpath causes ABI conflicts.
-JAVA_CONFLICTS_BUILD=	classpath-[0-9]*
+JAVA_CONFLICTS_BUILD=	classpath
 JAVA_DISTFILES=	17410483b5b5f267aa18b7e00b65e6e0-hsqldb_1_8_0.zip:src \
 		3404ab6b1792ae5f16bbd603bd1e1d03-libformula-1.1.7.zip:src \
 		35c94d2df8893241173de1d16b6034c0-swingExSrc.zip:src \
@@ -193,7 +191,7 @@ JAVA_DISTFILES=	17410483b5b5f267aa18b7e00b65e6e0-hsqldb_1_8_0.zip:src \
 		eeb2c7ddf0d302fba4bfc6e97eac9624-libbase-1.1.6.zip:src \
 		f94d9870737518e3b597f9265f4e9803-libserializer-1.1.6.zip:src
 JAVA_USE=	JAVA=yes
-JAVA_VARS=	JAVA_BUILD=yes JAVA_VERSION=11+
+JAVA_VARS=	JAVA_BUILD=yes JAVA_RUN=yes JAVA_VERSION=11+
 
 KF5_CONFIGURE_ENABLE=	kf5
 KF5_USE=	kde=config,coreaddons,i18n,kio,windowsystem
@@ -260,6 +258,7 @@ CONFIGURE_ARGS=	--disable-dependency-tracking \
 		--with-system-libxml \
 		--with-system-ucpp \
 		--with-system-zlib \
+		--with-system-zxing \
 		--with-vendor="FreeBSD ports" \
 		--without-fonts \
 		--without-myspell-dicts
@@ -272,7 +271,10 @@ CONFIGURE_ENV=	DMAKE=${LOCALBASE}/bin/dmake \
 		ICU_LIBS="`icu-config --ldflags`" \
 		PYTHON_CFLAGS="`${PYTHON_VERSION}-config --cflags`" \
 		PYTHON_LIBS="`${PYTHON_VERSION}-config --libs`" \
+		ZXING_CFLAGS=-I/usr/local/include/ZXing \
 		ac_cv_path_SED=${LOCALBASE}/bin/gsed
+
+CONFIGURE_SHELL=	${LOCALBASE}/bin/bash
 
 MAKE_ARGS+=	TMPDIR=${WRKDIR}
 MAKE_ENV+=	CXXFLAGS_WARN="${CXXFLAGS_WARN}"
@@ -290,6 +292,10 @@ EXTRA_PATCHES+=	${FILESDIR}/powerpc64
 
 .if ${ARCH} == powerpc || ${ARCH} == powerpcspe || ${ARCH} == powerpc64
 CONFIGURE_ARGS+=	--disable-skia
+.endif
+
+.if ${PORT_OPTIONS:MGTK3} && ${PORT_OPTIONS:MKF5}
+CONFIGURE_ARGS+=	--enable-gtk3-kde5
 .endif
 
 .if ${PORT_OPTIONS:MLTO} && ${CHOSEN_COMPILER_TYPE} == clang
@@ -334,13 +340,6 @@ post-install-SDK-on:
 .for subdir in include share share/doc share/idl
 	@cd ${STAGEDIR}${PREFIX} && \
 	${FIND} -s ${subdir}/libreoffice -not -type d >> ${TMPPLIST}
-.endfor
-
-add-plist-gnome:
-.for subdir in gnome hicolor locolor
-	@${ECHO_CMD} "@rmtry share/icons/${subdir}/icon-theme.cache" >> ${TMPPLIST}
-	@${ECHO_CMD} "@postexec ${LOCALBASE}/bin/gtk-update-icon-cache -q -f %D/share/icons/${subdir} 2>/dev/null || ${TRUE}" >> ${TMPPLIST}
-	@${ECHO_CMD} "@postunexec ${LOCALBASE}/bin/gtk-update-icon-cache -q -f %D/share/icons/${subdir} 2>/dev/null || ${TRUE}" >> ${TMPPLIST}
 .endfor
 
 .include <bsd.port.post.mk>

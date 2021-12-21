@@ -12,15 +12,16 @@ COMMENT=	Round Robin Database Tools
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-CONFLICTS=	rrdtool12-*
+CONFLICTS=	rrdtool12
 
 CONFIGURE_ARGS=	--disable-tcl
 CPPFLAGS+=	-I${LOCALBASE}/include -I${LOCALBASE}/include/freetype2
 USE_RC_SUBR=	rrdcached
 USE_LDCONFIG=	yes
 GNU_CONFIGURE=	yes
-USES=		gmake gnome libtool pathfix pkgconfig shebangfix
+USES=		cpe gmake gnome libtool pathfix pkgconfig shebangfix
 USE_GNOME=	glib20 libxml2
+CPE_VENDOR=	rrdtool_project
 
 PORTEXAMPLES=	cgi-demo.cgi
 

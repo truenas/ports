@@ -1,7 +1,7 @@
 # Created by: Bernard Spil <brnrd@FreeBSD.org>
 
 PORTNAME=	libressl
-PORTVERSION=	3.3.2
+PORTVERSION=	3.4.2
 CATEGORIES=	security devel
 MASTER_SITES=	OPENBSD/LibreSSL
 PKGNAMESUFFIX=	-devel
@@ -14,7 +14,7 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 
 FLAVORS=	default libtls
 FLAVOR?=	${FLAVORS:[1]}
-#libtls_DESCR=	pkg-descr-libtls
+libtls_DESCR=	pkg-descr-libtls
 libtls_PKGNAMESUFFIX=	-devel-libtls
 libtls_PLIST=	pkg-plist-libtls
 
@@ -26,10 +26,9 @@ LIBTLS_DESC=	Only install libtls (no libcrypto/libssl)
 MAN3_DESC=	Install API manpages (section 3)
 NC_DESC=	Install TLS-enabled netcat
 
-CONFLICTS_INSTALL=		libressl-[0-9]* \
-				libretls-[0-9]*
-default_CONFLICTS_INSTALL=	openssl-[0-9]* \
-				openssl-devel-[0-9]*
+CONFLICTS_INSTALL=		libressl \
+				libretls
+default_CONFLICTS_INSTALL=	openssl
 
 .if ${FLAVOR:U} == default
 OPTIONS_EXCLUDE=	LIBTLS
@@ -58,5 +57,9 @@ post-patch-MAN3-off:
 
 post-install:
 	${RM} -r ${STAGEDIR}/${PREFIX}/etc/ssl/cert.pem
+
+post-stage-MAN3-on:
+	(cd ${STAGEDIR}${MANPREFIX}; ${FIND} man/man3 -not -type d | \
+		${SED} 's/$$/.gz/' >> ${TMPPLIST})
 
 .include <bsd.port.mk>

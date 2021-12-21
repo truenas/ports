@@ -1,5 +1,5 @@
 PORTNAME=	dnf
-DISTVERSION=	4.7.0
+DISTVERSION=	4.9.0
 CATEGORIES=	sysutils
 
 MAINTAINER=	yuri@FreeBSD.org
@@ -16,7 +16,6 @@ RUN_DEPENDS=	libcomps>0:misc/libcomps \
 USES=		cmake gettext-tools python
 USE_GITHUB=	yes
 GH_ACCOUNT=	rpm-software-management
-GH_PROJECT=	dnf
 
 CMAKE_OFF=	FREEBSD_INSTALL_DOC
 CMAKE_ARGS=	-DPYTHON_DESIRED=${PYTHON_MAJOR_VER}

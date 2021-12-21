@@ -58,7 +58,7 @@
 #
 #	This variable must not be set by individual ports!
 #
-# MAINTAINER: dmgk@FreeBSD.org
+# MAINTAINER: ports@FreeBSD.org
 
 .if !defined(_INCLUDE_USES_GO_MK)
 _INCLUDE_USES_GO_MK=	yes
@@ -82,7 +82,7 @@ GO_PKGNAME=	${PORTNAME}
 GO_TARGET?=	${GO_PKGNAME}
 GO_TESTTARGET?=	./...
 
-GO_BUILDFLAGS+=	-v -buildmode=exe
+GO_BUILDFLAGS+=	-v -buildmode=exe -trimpath
 .if !defined(WITH_DEBUG) && empty(GO_BUILDFLAGS:M-ldflags*)
 GO_BUILDFLAGS+=	-ldflags=-s
 .endif
@@ -215,8 +215,12 @@ do-test:
 
 .if ${go_ARGS:Mmodules} && defined(GO_MODULE)
 gomod-clean:
+.if exists(${GO_CMD})
 	@${ECHO_MSG} "===>  Cleaning Go module cache"
 	@${SETENV} ${GO_ENV} ${GO_CMD} clean -modcache
+.else
+	@${ECHO_MSG} "===>    Skipping since ${GO_CMD} is not installed"
+.endif
 
 # Hook up to distclean
 .if !target(post-clean) && !make(clean)

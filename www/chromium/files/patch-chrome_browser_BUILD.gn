@@ -1,7 +1,7 @@
---- chrome/browser/BUILD.gn.orig	2021-04-20 18:58:25 UTC
+--- chrome/browser/BUILD.gn.orig	2021-09-24 04:25:57 UTC
 +++ chrome/browser/BUILD.gn
 @@ -2458,9 +2458,18 @@ static_library("browser") {
-       ]
+       deps += [ "//chromeos/services/libassistant/public/mojom" ]
      }
    }
 -  if (is_linux || is_chromeos) {
@@ -20,8 +20,8 @@
    if (use_ozone) {
      deps += [
        "//ui/events/ozone",
-@@ -5123,6 +5132,17 @@ static_library("browser") {
-     }
+@@ -5515,6 +5524,17 @@ static_library("browser") {
+     ]
    }
  
 +  if (is_bsd) {
@@ -35,15 +35,15 @@
 +    ]
 +  }
 +
-   if (is_chromeos_ash) {
-     if (use_allocator == "tcmalloc") {
-       deps += [ "//chrome/common/performance_manager/mojom" ]
-@@ -5350,7 +5370,7 @@ static_library("browser") {
+   if (is_posix) {
+     sources += [
+       "shutdown_signal_handlers_posix.cc",
+@@ -5675,7 +5695,7 @@ static_library("browser") {
      ]
    }
  
 -  if (is_posix && !is_mac) {
 +  if (is_posix && !is_mac && !is_bsd) {
-     # TODO(crbug.com / 753619): Enable crash reporting on Fuchsia.
+     # TODO(crbug.com/1226159): Complete crash reporting integration on Fuchsia.
      sources += [
        "//chrome/app/chrome_crash_reporter_client.cc",

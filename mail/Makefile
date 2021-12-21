@@ -135,8 +135,6 @@
     SUBDIR += getmail6
     SUBDIR += gmime2
     SUBDIR += gmime2-sharp
-    SUBDIR += gmime24
-    SUBDIR += gmime24-sharp
     SUBDIR += gmime26
     SUBDIR += gmime26-sharp
     SUBDIR += gmime30
@@ -221,6 +219,7 @@
     SUBDIR += meta1
     SUBDIR += metamail
     SUBDIR += mew
+    SUBDIR += mew-devel
     SUBDIR += milter-bogom
     SUBDIR += milter-callback
     SUBDIR += milter-greylist
@@ -261,7 +260,6 @@
     SUBDIR += opendkim
     SUBDIR += opendmarc
     SUBDIR += opensmtpd
-    SUBDIR += opensmtpd-devel
     SUBDIR += opensmtpd-extras
     SUBDIR += opensmtpd-extras-queue-ram
     SUBDIR += opensmtpd-extras-scheduler-ram
@@ -468,15 +466,15 @@
     SUBDIR += postfinger
     SUBDIR += postfix
     SUBDIR += postfix-current
-    SUBDIR += postfix-current-sasl
-    SUBDIR += postfix-ldap-sasl
     SUBDIR += postfix-logwatch
     SUBDIR += postfix-policyd-sf
     SUBDIR += postfix-policyd-spf-perl
     SUBDIR += postfix-policyd-weight
     SUBDIR += postfix-postfwd
-    SUBDIR += postfix-sasl
     SUBDIR += postfixadmin
+    SUBDIR += postfixadmin-lite
+    SUBDIR += postfixadmin33
+    SUBDIR += postfixadmin33-lite
     SUBDIR += postgrey
     SUBDIR += postsrsd
     SUBDIR += prepflog
@@ -564,6 +562,7 @@
     SUBDIR += roundcube-mvision2
     SUBDIR += roundcube-sauserprefs
     SUBDIR += roundcube-thunderbird_labels
+    SUBDIR += roundcube-twofactor_gauthenticator
     SUBDIR += roundcube-umich
     SUBDIR += roundcube-veximaccountadmin
     SUBDIR += roundcube-yubikey_auth
@@ -597,6 +596,7 @@
     SUBDIR += rubygem-premailer-rails-rails5
     SUBDIR += rubygem-premailer-rails-rails52
     SUBDIR += rubygem-premailer-rails-rails60
+    SUBDIR += rubygem-premailer-rails-rails61
     SUBDIR += rubygem-rmail
     SUBDIR += rubygem-roadie
     SUBDIR += rubygem-roadie-rails-rails4

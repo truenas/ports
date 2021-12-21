@@ -10,10 +10,9 @@ COMMENT=	GNU Bourne Again shell extended with two-panel file manager
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-USES=		bison cpe gmake iconv localbase makeinfo pathfix
+USES=		bison gmake iconv localbase makeinfo pathfix
 GNU_CONFIGURE=	yes
 OPTIONS_SUB=	yes
-CPE_VENDOR=	gnu
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	sergev
@@ -45,7 +44,7 @@ CONFIGURE_ARGS+=	--disable-rpath \
 			--with-libiconv-prefix=${ICONV_PREFIX} \
 			--without-bash-malloc
 
-CONFLICTS+=	bash-[0-9]* bash-static-[0-9]*
+CONFLICTS+=	bash bash-static
 
 .include <bsd.port.options.mk>
 

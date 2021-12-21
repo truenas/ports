@@ -1,6 +1,6 @@
 PORTNAME=	svt-hevc
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.5.0
+DISTVERSION=	1.5.1
 PORTREVISION=	1
 CATEGORIES=	multimedia
 
@@ -30,10 +30,6 @@ OPTIONS_DEFAULT=LTO
 
 LTO_CMAKE_BOOL=		CMAKE_INTERPROCEDURAL_OPTIMIZATION
 LTO_CMAKE_ON=		-DCMAKE_POLICY_DEFAULT_CMP0069:STRING=NEW
-.if exists(/usr/bin/ld.lld) && ${/usr/bin/ld:L:tA} != /usr/bin/ld.lld
-# --plugin isn't supported by old GNU ld.bfd in base
-LTO_LDFLAGS=		-fuse-ld=lld
-.endif
 
 post-patch:
 # Keep using nasm and drop vendor -O/-g

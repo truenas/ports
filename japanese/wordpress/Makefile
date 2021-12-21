@@ -1,13 +1,15 @@
 # Created by: Takefu
 
 PORTNAME=	wordpress
-DISTVERSION=	5.5.3
+DISTVERSION=	5.8
 DISTVERSIONSUFFIX=	-ja
 CATEGORIES=	japanese www
 MASTER_SITES=	http://ja.wordpress.org/
 
 MAINTAINER=	joneum@FreeBSD.org
 COMMENT=	State-of-the-art semantic personal publishing platform
+
+BROKEN=		fails to fetch (checksum mismatch)
 
 LICENSE=	GPLv2 GPLv3
 LICENSE_COMB=	dual

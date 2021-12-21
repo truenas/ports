@@ -1,6 +1,10 @@
 PORTNAME=	kdepim-runtime
 DISTVERSION=	${KDE_APPLICATIONS_VERSION}
+PORTREVISION=	1
 CATEGORIES=	deskutils kde kde-applications
+
+PATCH_SITES=	https://invent.kde.org/pim/kdepim-runtime/-/commit/
+PATCHFILES=	f14fabcefb45790175e209ef8ae394def4a805e9.patch:-p1
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	KDE PIM tools and services
@@ -14,7 +18,8 @@ LIB_DEPENDS=	libboost_date_time.so:devel/boost-libs \
 		libcurl.so:ftp/curl \
 		libkolabxml.so:textproc/libkolabxml \
 		libsasl2.so:security/cyrus-sasl2 \
-		libxerces-c-3.2.so:textproc/xerces-c3
+		libxerces-c-3.2.so:textproc/xerces-c3 \
+		libqt5keychain.so:security/qtkeychain
 
 USES=		cmake:noninja compiler:c++11-lib gettext kde:5 qca qt:5 \
 		shared-mime-info tar:xz
@@ -27,8 +32,8 @@ USE_KDE=	auth bookmarks codecs completion config configwidgets \
 # pim components
 USE_KDE+=	akonadi akonadicontacts akonadimime akonadinotes \
 		akonadicalendar akonadisearch alarmcalendar calendarcore \
-		calendarutils contacts gapi identitymanagement imap \
-		kontactinterface mailtransport mbox mime pimcommon \
+		calendarutils contacts gapi grantleetheme identitymanagement imap \
+		kontactinterface ldap libkdepim mailtransport mbox mime pimcommon \
 		pimtextedit syndication
 USE_QT=		concurrent core dbus declarative gui location network networkauth printsupport speech \
 		script webchannel webengine widgets xml xmlpatterns \

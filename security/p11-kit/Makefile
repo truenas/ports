@@ -1,13 +1,9 @@
 # Created by: Roman Bogorodskiy <novel@FreeBSD.org>
 
 PORTNAME=	p11-kit
-DISTVERSION=	0.23.22
-PORTREVISION=	1
+DISTVERSION=	0.24.0
 CATEGORIES=	security devel
 MASTER_SITES=	https://github.com/p11-glue/p11-kit/releases/download/${DISTVERSION}/
-
-PATCH_SITES=	https://github.com/p11-glue/p11-kit/commit/
-PATCHFILES=	507c394cfcf4edffc5e4450c5d737e545c26b857.patch:-p1
 
 MAINTAINER=	novel@FreeBSD.org
 COMMENT=	Library for loading and enumerating of PKCS\#11 modules
@@ -21,8 +17,10 @@ RUN_DEPENDS=	${LOCALBASE}/share/certs/ca-root-nss.crt:security/ca_root_nss
 LIB_DEPENDS=	libffi.so:devel/libffi \
 		libtasn1.so:security/libtasn1
 
-USES=		localbase meson pkgconfig tar:xz
+USES=		cpe localbase meson pkgconfig tar:xz
 USE_LDCONFIG=	yes
+
+CPE_VENDOR=	p11-kit_project
 
 MESON_ARGS=	-Dbash_completion=enabled \
 		-Dlibffi=enabled \

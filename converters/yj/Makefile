@@ -4,7 +4,7 @@ DISTVERSIONPREFIX=	v
 CATEGORIES=	converters
 DIST_SUBDIR=	yj
 
-MAINTAINER=	ohauer@FreeBSD.org
+MAINTAINER=	ehaupt@FreeBSD.org
 COMMENT=	Convert between YAML, TOML, JSON, and HCL
 
 LICENSE=	APACHE20
@@ -14,6 +14,8 @@ USES=		go:modules
 USE_GITHUB=	yes
 
 GH_ACCOUNT=	sclevine
+
+CONFLICTS_INSTALL=	yj-bruceadams
 
 PLIST_FILES=	bin/yj
 

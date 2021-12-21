@@ -107,6 +107,7 @@ include/caf/detail/io_export.hpp
 include/caf/detail/is_complete.hpp
 include/caf/detail/is_one_of.hpp
 include/caf/detail/json.hpp
+include/caf/detail/latch.hpp
 include/caf/detail/limited_vector.hpp
 include/caf/detail/local_group_module.hpp
 include/caf/detail/log_level.hpp
@@ -449,6 +450,7 @@ include/caf/telemetry/counter.hpp
 include/caf/telemetry/dbl_gauge.hpp
 include/caf/telemetry/gauge.hpp
 include/caf/telemetry/histogram.hpp
+include/caf/telemetry/importer/process.hpp
 include/caf/telemetry/int_gauge.hpp
 include/caf/telemetry/label.hpp
 include/caf/telemetry/label_view.hpp
@@ -527,5 +529,5 @@ lib/libcaf_openssl.so.%%PORTVERSION%%
 %%DATADIR%%/examples/remoting/remote_spawn.cpp
 %%DATADIR%%/examples/streaming/integer_stream.cpp
 %%DATADIR%%/examples/testing/ping_pong.cpp
-%%DATADIR%%/tools/caf-run.cpp
-%%DATADIR%%/tools/caf-vec.cpp
+%%DATADIR%%/tools/caf-run
+%%DATADIR%%/tools/caf-vec

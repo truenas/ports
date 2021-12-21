@@ -1,7 +1,7 @@
 # Created by: Daniel O'Connor
 
 PORTNAME=	teamspeak3-server
-PORTVERSION=	3.13.3
+PORTVERSION=	3.13.6
 PORTEPOCH=	1
 CATEGORIES=	audio net
 MASTER_SITES=	https://files.teamspeak-services.com/releases/server/${PORTVERSION}/
@@ -29,7 +29,7 @@ SUB_FILES=	pkg-message
 USERS=	teamspeak
 GROUPS=	teamspeak
 
-CONFLICTS=	teamspeak_server-[0-9]*
+CONFLICTS=	teamspeak_server
 
 PLIST_SUB=	DBDIR=${DBDIR} \
 		ETCDIR=${ETCDIR} \

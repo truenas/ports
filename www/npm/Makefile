@@ -2,6 +2,7 @@
 
 PORTNAME=	npm
 PORTVERSION=	6.14.8
+PORTREVISION=	1
 CATEGORIES=	www
 MASTER_SITES=	LOCAL/sunpoet
 
@@ -13,43 +14,21 @@ LICENSE_FILE=	${WRKSRC}/lib/node_modules/npm/LICENSE
 
 RUN_DEPENDS=	gmake:devel/gmake
 
-USES=		cpe python:3.5+ shebangfix tar:xz
+USES?=		nodejs:run
+USES+=		cpe python:3.5+ shebangfix tar:xz
 
 NO_ARCH=	yes
 NO_BUILD=	yes
 REINPLACE_ARGS=	-i ''
 
-CONFLICTS_INSTALL?=	npm-node10 npm-node12 npm-node14
-
-OPTIONS_SINGLE=	BACKEND
-OPTIONS_SINGLE_BACKEND=	NODE NODE10 NODE12 NODE14
-OPTIONS_DEFAULT=NODE
-NODE_DESC=	Use Node.js 15.x (www/node) as backend
-NODE10_DESC=	Use Node.js 10.x (www/node10) as backend
-NODE12_DESC=	Use Node.js 12.x (www/node12) as backend
-NODE14_DESC=	Use Node.js 14.x (www/node14) as backend
+CONFLICTS_INSTALL?=	npm-node14 npm-node16 npm-node17
 
 CPE_VENDOR=	npmjs
-CPE_PRODUCT=	node_packaged_modules
 
 SHEBANG_GLOB=	*.py
 SHEBANG_FILES=	lib/node_modules/npm/node_modules/node-gyp/gyp/samples/samples
 
-NODE_RUN_DEPENDS=	node>=0.8.0:www/node
-NODE10_RUN_DEPENDS=	node10>=0.8.0:www/node10
-NODE12_RUN_DEPENDS=	node12>=0.8.0:www/node12
-NODE14_RUN_DEPENDS=	node14>=0.8.0:www/node14
-
 .include <bsd.port.pre.mk>
-
-.if ${PORT_OPTIONS:MNODE10}
-DEPRECATED=	Uses EOL Python 2.7 via www/node10
-EXPIRATION_DATE=2021-06-23
-.endif
-.if ${PORT_OPTIONS:MNODE12}
-DEPRECATED=	Uses EOL Python 2.7 via www/node12
-EXPIRATION_DATE=2021-06-23
-.endif
 
 .if ${ARCH} == i386
 # Workaround for kernel bug 178881

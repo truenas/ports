@@ -1,9 +1,9 @@
 # Created by: Gustau Perez <gustau.perez@gmail.com>
 
 PORTNAME=	gnome-sound-recorder
-DISTVERSION=	3.38.1
+DISTVERSION=	40.0
 CATEGORIES=	deskutils gnome
-MASTER_SITES=	GNOME
+MASTER_SITES=	GNOME/sources/${PORTNAME}/${PORTVERSION:C/^([0-9]+)\..*/\1/}
 DIST_SUBDIR=	gnome
 
 MAINTAINER=	gnome@FreeBSD.org
@@ -22,7 +22,6 @@ USE_GNOME=	gtk30 intlhack introspection
 USE_GSTREAMER1=	flac ogg pulse bad
 USE_LDCONFIG=	yes
 BINARY_ALIAS=	python3=${PYTHON_CMD}
-INSTALLS_ICONS=	yes
 GLIB_SCHEMAS=	org.gnome.SoundRecorder.gschema.xml
 
 .include <bsd.port.mk>

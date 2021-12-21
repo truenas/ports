@@ -15,12 +15,13 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 BROKEN_mips=	fails to link: '_ZTSN12_GLOBAL__N_117ConstIteratorImplE' referenced in section '.data.rel.ro' of tag.lo: defined in discarded section
 BROKEN_mips64=	fails to link: '_ZTSN12_GLOBAL__N_117ConstIteratorImplE' referenced in section '.data.rel.ro' of tag.lo: defined in discarded section
 
-USES=		compiler:c11 iconv libtool localbase
+USES=		compiler:c11 cpe iconv libtool localbase
 
 GNU_CONFIGURE=	yes
 USE_LDCONFIG=	yes
 
-post-extract:
-	@${RM} -r ${WRKSRC}/zlib
+post-patch:
+# Clean up bundled libraries
+	@${RM} -r ${WRKSRC}/ogr/ogrsf_frmts/geojson/libjson/
 
 .include <bsd.port.mk>

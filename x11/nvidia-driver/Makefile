@@ -13,8 +13,8 @@
 # the port aims to support building against arbitrary DISTVERSION, i.e.
 # ``make DISTVERSION=xxx.yy.zz -DNO_CHECKSUM'' should typically work.
 
-PORTNAME=	nvidia-driver
-DISTVERSION?=	460.73.01
+PORTNAME?=	nvidia-driver
+DISTVERSION?=	470.86
 # Always try to set PORTREVISION as it can be overridden by the slave ports
 PORTREVISION?=	0
 CATEGORIES=	x11
@@ -22,8 +22,8 @@ MASTER_SITES=	NVIDIA/XFree86/FreeBSD-${ARCH_SUFX}/${DISTVERSION}
 DISTNAME=	NVIDIA-FreeBSD-${ARCH_SUFX}-${DISTVERSION}
 DISTFILES=	${DISTNAME}${EXTRACT_SUFX}
 
-MAINTAINER=	danfe@FreeBSD.org
-COMMENT=	NVidia graphics card binary drivers for hardware OpenGL rendering
+MAINTAINER?=	danfe@FreeBSD.org
+COMMENT?=	NVidia graphics card binary drivers for hardware OpenGL rendering
 
 LICENSE_FILE=	${WRKSRC}/doc/license.txt
 .include "${.CURDIR}/../nvidia-driver/Makefile.common"
@@ -32,28 +32,44 @@ LICENSE_FILE=	${WRKSRC}/doc/license.txt
 # obj/libEGL_nvidia.so.0 (see below)
 .if ${NVVERSION} >= 410.057
 PATCH_DEPENDS=	gsed:textproc/gsed
+BUILD_DEPENDS=	pkg-config:devel/pkgconf
+LIB_DEPENDS=	libOpenGL.so:graphics/libglvnd
 .endif
 
 USES=		kmod uidfix xorg
+.if ${NVVERSION} >= 470.04201
+USES+=		tar:xz
+.endif
 USE_XORG=	x11 xorg-server xext
 USE_LDCONFIG=	yes
 
+EGL_JSON_PATH=		${PREFIX}/share/egl/egl_external_platform.d
 GLVND_JSON_PATH=	${PREFIX}/share/glvnd/egl_vendor.d
-WAYLAND_JSON_PATH=	${PREFIX}/share/egl/egl_external_platform.d
+VKICD_PATH=		${PREFIX}/share/vulkan/icd.d
+VKLAYERS_PATH=		${PREFIX}/share/vulkan/implicit_layer.d
 MAKE_ENV=	DEBUG_FLAGS=${DEBUG_FLAGS} \
 		EGL_GLVND_JSON_PATH=${STAGEDIR}${GLVND_JSON_PATH} \
-		EGL_WAYLAND_JSON_PATH=${STAGEDIR}${WAYLAND_JSON_PATH}
-SUB_FILES=	pkg-message nvidia.conf
+		VKICD_PATH=${STAGEDIR}${VKICD_PATH} \
+		VKLAYERS_PATH=${STAGEDIR}${VKLAYERS_PATH}
+.if ${NVVERSION} < 495.02905
+MAKE_ENV+=	EGL_WAYLAND_JSON_PATH=${STAGEDIR}${EGL_JSON_PATH}
+.else
+MAKE_ENV+=	EGL_EXTERNAL_PLATFORM_JSON_PATH=${STAGEDIR}${EGL_JSON_PATH}
+.endif
+SUB_FILES=	pkg-message
+.if !defined(LIBGLDIR)
+SUB_FILES+=	nvidia.conf
+.endif
 .if ${NVVERSION} < 410.057
 SUB_FILES+=	pkg-deinstall pkg-install
 .endif
 SUB_PATCHES=	extra-patch-src-Makefile \
 		extra-patch-src-nv-freebsd.h \
-		extra-patch-src-nv-misc.h \
 		extra-patch-src-nvidia_dev.c \
 		extra-patch-src-nvidia_pci.c
 DOCSDIR=	${PREFIX}/share/doc/NVIDIA_GLX-1.0
 MODULESDIR=	lib/xorg/modules
+EXTENSIONSDIR?=	${MODULESDIR}/extensions/.nvidia
 PORTDOCS=	*
 
 .if ${NVVERSION} >= 331.013
@@ -75,10 +91,12 @@ EXTRA_PATCHES+=	${FILESDIR}/extra-patch-src_nvidia-modeset_nvidia-modeset-freebs
 SUB_PATCHES+=	extra-patch-src-nvidia_ctl.c \
 		extra-patch-src-nvidia_linux.c
 .else
-EXTRA_PATCHES+=	${FILESDIR}/460-patch-lib-libGLX_nvidia-Makefile \
-		${FILESDIR}/460-patch-src-nvidia-nvidia_ctl.c \
+EXTRA_PATCHES+=	${FILESDIR}/460-patch-src-nvidia-nvidia_ctl.c \
 		${FILESDIR}/460-patch-src-nvidia-nvidia_linux.c \
 		${FILESDIR}/460-patch-src_nvidia-modeset_nvidia-modeset-freebsd.c
+.endif
+.if ${NVVERSION} < 470.04201
+SUB_PATCHES+=	extra-patch-src-nv-misc.h
 .endif
 
 OPTIONS_DEFINE=	ACPI_PM LINUX WBINVD DOCS
@@ -96,6 +114,20 @@ FREEBSD_AGP_DESC=	Use FreeBSD AGP GART driver
 .endif
 
 PLIST_SUB+=	MODULESDIR=${MODULESDIR}
+.if ${NVVERSION} < 410.057
+PLIST_SUB+=	EXTENSIONSDIR=${EXTENSIONSDIR}
+.else
+PLIST_SUB+=	EXTENSIONSDIR="@comment "
+.endif
+.if defined(LIBGLDIR)
+PLIST_SUB+=	LIBGLDIR=${LIBGLDIR} LIBGLMAP="@comment "
+.else
+PLIST_SUB+=	LIBGLDIR="@comment " LIBGLMAP=""
+.endif
+
+.if ${PORTNAME} != nvidia-secondary-driver
+CONFLICTS_INSTALL+=	nvidia-secondary-driver
+.endif
 
 .include <bsd.port.pre.mk>
 
@@ -127,12 +159,10 @@ post-patch: .SILENT
 		${WRKSRC}/src/nvidia-modeset/nvidia-modeset-freebsd.c
 .endif
 # KPI of kmem_alloc_contig(),kmem_free() changed in FreeBSD src r338143,r338318
-.if ${OSVERSION} >= 1200079
 	${REINPLACE_CMD} \
 	    -e 's/kmem_alloc_contig(kmem_arena, /kmem_alloc_contig(/' \
 	    -e 's/kmem_free(kmem_arena, /kmem_free(/' \
 		${WRKSRC}/src/${NVSRC}/nvidia_subr.c
-.endif
 # Pull the right header after FreeBSD src r347984
 .if ${OSVERSION} >= 1300029 && ${NVVERSION} >= 358.009
 	${REINPLACE_CMD} -e '/^#include/s:lock\.h:mutex.h:' \
@@ -182,7 +212,7 @@ post-patch: .SILENT
 .endif
 .if ${NVVERSION} >= 415.013
 	prefix="${PREFIX}" ; padding=$$(($${#prefix}+3)) ; \
-	gsed ${REINPLACE_ARGS} -E "s,/etc/egl/egl_external_platform\.d.{$$padding},${WAYLAND_JSON_PATH}\x00," \
+	gsed ${REINPLACE_ARGS} -E "s,/etc/egl/egl_external_platform\.d.{$$padding},${EGL_JSON_PATH}\x00," \
 		${WRKSRC}/obj/libEGL_nvidia.so.0
 .endif
 # Finally, process OPTIONS
@@ -263,6 +293,14 @@ post-install: .SILENT
 .elif ${NVVERSION} < 465.01901
 	${REINPLACE_CMD} -e '/lib32\/libnvidia-glvkspirv\.so/d' ${TMPPLIST}
 .endif
+.if ${NVVERSION} < 470.074
+	${REINPLACE_CMD} -e '/libnvidia-vulkan-producer\.so/d' ${TMPPLIST}
+.endif
+.if ${NVVERSION} < 495.02905
+	${REINPLACE_CMD} -e '/libnvidia-egl-gbm\.so/d ; \
+		/15_nvidia_gbm\.json/d' ${TMPPLIST}
+.endif
+.if ${NVVERSION} < 410.057
 # Rename some libraries and install a libmap file to resolve conflict with
 # Mesa libraries.
 	${LN} -sf libGL-NVIDIA.so.1 \
@@ -270,7 +308,7 @@ post-install: .SILENT
 	${MV} -f ${STAGEDIR}${PREFIX}/lib/libGL.so.1 \
 		${STAGEDIR}${PREFIX}/lib/libGL-NVIDIA.so.1
 	${RM} ${STAGEDIR}${PREFIX}/lib/libGL.so
-.if ${NVVERSION} >= 331.013
+.  if ${NVVERSION} >= 331.013
 	${LN} -sf libEGL-NVIDIA.so.1 \
 		${STAGEDIR}${PREFIX}/lib/libEGL-NVIDIA.so
 	${MV} -f ${STAGEDIR}${PREFIX}/lib/libEGL.so.1 \
@@ -283,9 +321,39 @@ post-install: .SILENT
 	${MV} -f ${STAGEDIR}${PREFIX}/lib/libGLESv2.so.2 \
 		${STAGEDIR}${PREFIX}/lib/libGLESv2-NVIDIA.so.2
 	${RM} ${STAGEDIR}${PREFIX}/lib/libGLESv2.so
-.endif
+.  endif
+# Configuration of Nvidia as secondary GPU requires preserving libglvnd or mesa
+# libraries as default implementation; a libmap must not override in this case.
+.  if !defined(LIBGLDIR)
 	@${MKDIR} ${STAGEDIR}${PREFIX}/etc/libmap.d/
 	${INSTALL_DATA} ${WRKDIR}/nvidia.conf \
 		${STAGEDIR}${PREFIX}/etc/libmap.d/
+.  else
+# libgl proxies require a library path containing unrenamed lib*GL*.so
+	${MKDIR} ${STAGEDIR}${PREFIX}/${LIBGLDIR}
+	${RLN} ${STAGEDIR}${PREFIX}/lib/libGL-NVIDIA.so.1 \
+		${STAGEDIR}${PREFIX}/${LIBGLDIR}/libGL.so.1
+	${RLN} ${STAGEDIR}${PREFIX}/lib/libEGL-NVIDIA.so.1 \
+		${STAGEDIR}${PREFIX}/${LIBGLDIR}/libEGL.so.1
+	${RLN} ${STAGEDIR}${PREFIX}/lib/libGLESv2-NVIDIA.so.2 \
+		${STAGEDIR}${PREFIX}/${LIBGLDIR}/libGLESv2.so.2
+.  endif
+# Configuration of Nvidia as secondary GPU requires preserving xorg-server's
+# libglx.so and moving Nvidia's glx to where it can be found by a secondary
+# Xorg instance.
+# Not needed since 410.057: Nvidia driver finds libglxserver_nvidia.so instead.
+.  if ${EXTENSIONSDIR} != ${MODULESDIR}/extensions/.nvidia
+	${MKDIR} ${STAGEDIR}${PREFIX}/${EXTENSIONSDIR}
+	${MV} ${STAGEDIR}${PREFIX}/${MODULESDIR}/extensions/.nvidia/* \
+		${STAGEDIR}${PREFIX}/${EXTENSIONSDIR}/
+.  endif
+.else
+	${REINPLACE_CMD} -E '/-NVIDIA/d ; \
+		/lib(Open)?E?GLX?(ESv[12](_CM)?|dispatch)?\.so/d' \
+		${TMPPLIST}
+# Override mesa.conf if GLX_EXT_libglvnd is missing
+	@${ECHO_CMD} "libGLX_indirect.so.0 libGLX_nvidia.so.0" \
+		>${STAGEDIR}${PREFIX}/etc/libmap.d/nvidia.conf
+.endif
 
 .include <bsd.port.post.mk>

@@ -1,8 +1,7 @@
 # Created by: Euan Thoms <euan@potensol.com>
 
 PORTNAME=		sogo2
-PORTVERSION=		2.3.23
-PORTREVISION=		7
+PORTVERSION=		2.4.1
 CATEGORIES=		www gnustep
 MASTER_SITES=		http://www.sogo.nu/files/downloads/SOGo/Sources/
 DISTNAME=		SOGo-${PORTVERSION}
@@ -33,7 +32,7 @@ USES=			gnustep ssl objc
 USE_GNUSTEP=		base build
 USE_LDCONFIG=		${GNUSTEP_LOCAL_LIBRARIES}/sogo
 
-CONFLICTS?=		sogo[2-4]-activesync-[0-9]* sogo[3-4]-[0-9]*
+CONFLICTS?=		sogo[2-4]-activesync sogo[3-4]
 
 USE_RC_SUBR=		sogod
 

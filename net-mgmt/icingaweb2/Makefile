@@ -1,10 +1,11 @@
 PORTNAME=	icingaweb2
 DISTVERSIONPREFIX=	v
 DISTVERSION=	2.8.2
+PORTREVISION=	1
 CATEGORIES=	net-mgmt www
 PKGNAMESUFFIX=	${PHP_PKGNAMESUFFIX}
 
-MAINTAINER=	lme@FreeBSD.org
+MAINTAINER=	joneum@FreeBSD.org
 COMMENT=	Next generation web interface for Icinga 1 and 2
 
 LICENSE=	GPLv2

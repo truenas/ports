@@ -373,28 +373,20 @@ proxydeps_suggest_uses() {
 		${pkg} = "audio/gsound" -o \
 		${pkg} = "x11-toolkits/gtk20" -o \
 		${pkg} = "x11-toolkits/gtk30" -o \
-		${pkg} = "www/gtkhtml3" -o \
 		${pkg} = "www/gtkhtml4" -o \
 		${pkg} = "x11-toolkits/gtkmm20" -o \
 		${pkg} = "x11-toolkits/gtkmm24" -o \
 		${pkg} = "x11-toolkits/gtkmm30" -o \
-		${pkg} = "x11-toolkits/gtksourceview" -o \
 		${pkg} = "x11-toolkits/gtksourceview2" -o \
 		${pkg} = "x11-toolkits/gtksourceview3" -o \
 		${pkg} = "x11-toolkits/gtksourceviewmm3" -o \
-		${pkg} = "devel/libbonobo" -o \
-		${pkg} = "x11-toolkits/libbonoboui" -o \
 		${pkg} = "databases/libgda5" -o \
 		${pkg} = "databases/libgda5-ui" -o \
 		${pkg} = "databases/libgdamm5" -o \
 		${pkg} = "devel/libglade2" -o \
-		${pkg} = "x11/libgnome" -o \
 		${pkg} = "graphics/libgnomecanvas" -o \
 		${pkg} = "x11/libgnomekbd" -o \
-		${pkg} = "x11-toolkits/libgnomeui" -o \
 		${pkg} = "devel/libgsf" -o \
-		${pkg} = "www/libgtkhtml" -o \
-		${pkg} = "x11-toolkits/libgtksourceviewmm" -o \
 		${pkg} = "graphics/librsvg2" -o \
 		${pkg} = "devel/libsigc++12" -o \
 		${pkg} = "devel/libsigc++20" -o \
@@ -416,7 +408,6 @@ proxydeps_suggest_uses() {
 	elif [ ${pkg} = "graphics/gdk-pixbuf" ]; then warn "you need USE_GNOME+=gdkpixbuf"
 	elif [ ${pkg} = "graphics/gdk-pixbuf2" ]; then warn "you need USE_GNOME+=gdkpixbuf2"
 	elif [ ${pkg} = "x11/gnome-desktop" ]; then warn "you need USE_GNOME+=gnomedesktop3"
-	elif [ ${pkg} = "devel/gnome-vfs" ]; then warn "you need USE_GNOME+=gnomevfs2"
 	elif [ ${pkg} = "devel/gobject-introspection" ]; then warn "you need USE_GNOME+=introspection"
 	elif [ ${pkg} = "graphics/libart_lgpl" ]; then warn "you need USE_GNOME+=libartlgpl2"
 	elif [ ${pkg} = "devel/libIDL" ]; then warn "you need USE_GNOME+=libidl"
@@ -543,12 +534,16 @@ proxydeps_suggest_uses() {
 	# gl-related
 	elif expr ${lib_file} : "${LOCALBASE}/lib/libGL.so.*$" > /dev/null; then
 		warn "you need USE_GL+=gl"
+	elif expr ${lib_file} : "${LOCALBASE}/lib/libGLX.so.*$" > /dev/null; then
+		warn "you need USE_GL+=gl"
 	elif expr ${lib_file} : "${LOCALBASE}/lib/libgbm.so.*$" > /dev/null; then
 		warn "you need USE_GL+=gbm"
 	elif expr ${lib_file} : "${LOCALBASE}/lib/libGLESv2.so.*$" > /dev/null; then
 		warn "you need USE_GL+=glesv2"
 	elif expr ${lib_file} : "${LOCALBASE}/lib/libEGL.so.*$" > /dev/null; then
 		warn "you need USE_GL+=egl"
+	elif expr ${lib_file} : "${LOCALBASE}/lib/libOpenGL.so.*$" > /dev/null; then
+		warn "you need USE_GL+=opengl"
 	elif [ ${pkg} = 'graphics/glew' ]; then
 		warn "you need USE_GL+=glew"
 	elif [ ${pkg} = 'graphics/libGLU' ]; then
@@ -602,6 +597,15 @@ proxydeps_suggest_uses() {
 	# lua
 	elif expr ${pkg} : "^lang/lua" > /dev/null; then
 		warn "you need USES+=lua"
+	# magick
+	elif [ ${pkg} = "graphics/ImageMagick6" ] ; then
+		warn "you need USES=magick:6"
+	elif [ ${pkg} = "graphics/ImageMagick6-nox11" ] ; then
+		warn "you need USES=magick:6,nox11"
+	elif [ ${pkg} = "graphics/ImageMagick7" ] ; then
+		warn "you need USES=magick:7"
+	elif [ ${pkg} = "graphics/ImageMagick7-nox11" ] ; then
+		warn "you need USES=magick:7,nox11"
 	# motif
 	elif [ ${pkg} = "x11-toolkits/lesstif" -o ${pkg} = "x11-toolkits/open-motif" ]; then
 		warn "you need USES+=motif"
@@ -668,9 +672,13 @@ proxydeps() {
 
 				# Check that the .so we need has a SONAME
 				if [ "${dep_file_pkg}" != "${PKGORIGIN}" ]; then
+					# When grep -q finds a match it will close the pipe immediately.
+					# This may cause the test to fail when pipefail is turned on.
+					set +o pipefail
 					if ! readelf -d "${dep_file}" | grep -q SONAME; then
 						err "${file} is linked to ${dep_file} which does not have a SONAME.  ${dep_file_pkg} needs to be fixed."
 					fi
+					set -o pipefail
 				fi
 
 				# If we don't already depend on it, and we don't provide it
@@ -998,7 +1006,7 @@ pkgmessage()
 		if [ -f "${message}" ]; then
 			if ! head -1 "${message}" | grep -q '^\['; then
 				warn "${message} not in UCL format, will be shown on initial install only."
-				warn "See https://www.freebsd.org/doc/en/books/porters-handbook/pkg-files.html#porting-message"
+				warn "See https://docs.freebsd.org/en/books/porters-handbook/pkg-files/#porting-message"
 			fi
 		fi
 	done

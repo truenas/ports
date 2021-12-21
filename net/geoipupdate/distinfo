@@ -1,9 +1,5 @@
-TIMESTAMP = 1618859168
-SHA256 (maxmind-geoipupdate-v4.7.1_GH0.tar.gz) = e3176325f916571244562a2fec58e0c9ce624f84dbf946616921be8521cbfd94
-SIZE (maxmind-geoipupdate-v4.7.1_GH0.tar.gz) = 33334
-SHA256 (gofrs-flock-v0.8.0_GH0.tar.gz) = 64aa198aee88a6b560e2eb9a87794594e0b57c08a784dcb4bd8a0825b9ec5de6
-SIZE (gofrs-flock-v0.8.0_GH0.tar.gz) = 8978
-SHA256 (pkg-errors-v0.9.1_GH0.tar.gz) = 56bfd893023daa498508bfe161de1be83299fcf15376035e7df79cbd7d6fa608
-SIZE (pkg-errors-v0.9.1_GH0.tar.gz) = 13415
-SHA256 (spf13-pflag-v1.0.5_GH0.tar.gz) = 9a2cae1f8e8ab0d2cc8ebe468e871af28d9ac0962cf0520999e3ba85f0c7b808
-SIZE (spf13-pflag-v1.0.5_GH0.tar.gz) = 50796
+TIMESTAMP = 1626800658
+SHA256 (go/net_geoipupdate/geoipupdate-v4.8.0/v4.8.0.mod) = 23f49c05ca5ecdd996ae9eaa779e33d85004930e794230e1a753fafd04f6ed1a
+SIZE (go/net_geoipupdate/geoipupdate-v4.8.0/v4.8.0.mod) = 548
+SHA256 (go/net_geoipupdate/geoipupdate-v4.8.0/v4.8.0.zip) = 3897540f55baeeff13a883b1c738c120a788f925717e3184bad9c023c03879c4
+SIZE (go/net_geoipupdate/geoipupdate-v4.8.0/v4.8.0.zip) = 51211

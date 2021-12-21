@@ -2,7 +2,7 @@
 
 PORTNAME=	luajit
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2.1-20201027
+DISTVERSION=	2.1-20210510
 CATEGORIES=	lang
 PKGNAMESUFFIX=	-openresty
 
@@ -17,9 +17,9 @@ LICENSE_FILE=	${WRKSRC}/COPYRIGHT
 
 IGNORE_riscv64=		fails to compile: lj_arch.h:73:2: No support for this architecture (yet)
 
-USES=		gmake
+USES=		cpe gmake
 
-CONFLICTS_INSTALL=	luajit
+CONFLICTS_INSTALL=	luajit luajit-devel
 
 USE_LDCONFIG=	yes
 MAKE_ARGS=	CC=${CC} Q=
@@ -39,15 +39,9 @@ PLIST_SUB+=	VERSION=${LUAJIT_VERSION} SOVERSION=${LUAJIT_SOVERSION}
 USE_GCC=yes
 .endif
 
-.include <bsd.port.pre.mk>
-
-.if ${OPSYS} == FreeBSD && ${OSVERSION} < 1200000
-MAKE_ARGS+=	XCFLAGS=-DLJ_TARGET_HAS_GETENTROPY=0
-.endif
-
 post-install:
 	${LN} -sf ${PORTNAME}-${LUAJIT_VERSION} \
 		${STAGEDIR}${PREFIX}/bin/${PORTNAME}
 	${INSTALL_MAN} ${WRKSRC}/etc/luajit.1 ${STAGEDIR}${MAN1PREFIX}/man/man1
 
-.include <bsd.port.post.mk>
+.include <bsd.port.mk>

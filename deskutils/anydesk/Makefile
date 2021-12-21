@@ -1,5 +1,6 @@
 PORTNAME=	anydesk
 DISTVERSION=	6.0.1
+PORTREVISION=	1
 CATEGORIES=	deskutils
 MASTER_SITES=	https://download.anydesk.com/freebsd/
 DISTNAME=	${PORTNAME}-freebsd-${PORTVERSION}-${ARCH:S/amd64/x86_64/:S/i386/i386/}
@@ -21,7 +22,7 @@ LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig \
 		libpolkit-gobject-1.so:sysutils/polkit \
 		libxkbfile.so:x11/libxkbfile
 
-USES=		gl gnome xorg
+USES=		cpe gl gnome xorg
 
 USE_GL=		gl glu
 USE_GNOME=	cairo gdkpixbuf2 glib20 gtk20 pangox-compat

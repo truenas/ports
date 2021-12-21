@@ -1,6 +1,7 @@
 PORTNAME=	liteide
 DISTVERSIONPREFIX=	x
 DISTVERSION=	37.4
+PORTREVISION=	1
 CATEGORIES=	devel editors
 
 MAINTAINER=	dmgk@FreeBSD.org
@@ -25,7 +26,6 @@ GH_TUPLE=	visualfc:gocode:cfcb188102ae:visualfc_gocode \
 		visualfc:fastmod:v1.3.7:visualfc_fastmod/vendor/github.com/visualfc/fastmod \
 		visualfc:goversion:v1.0.1:visualfc_goversion/vendor/github.com/visualfc/goversion \
 		yuin:goldmark:v1.2.1:yuin_goldmark/vendor/github.com/yuin/goldmark
-
 
 USE_GL=		gl
 USE_LDCONFIG=	${PREFIX}/lib/${PORTNAME}

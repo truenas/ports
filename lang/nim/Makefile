@@ -1,7 +1,7 @@
 # Created by: Neal Nelson <ports@nicandneal.net>
 
 PORTNAME=	nim
-PORTVERSION=	1.4.6
+DISTVERSION=	1.6.0
 CATEGORIES=	lang
 MASTER_SITES=	https://nim-lang.org/download/
 
@@ -11,30 +11,29 @@ COMMENT=	Nim programming language
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/copying.txt
 
-BROKEN_sparc64=		fails to build: build.sh: clang: not found
+BROKEN_sparc64=	fails to build: build.sh: clang: not found
 
 LIB_DEPENDS=	libpcre.so:devel/pcre
 TEST_DEPENDS=	node>=0:www/node
 
-USES=		compiler:c11 tar:xz
+USES=		compiler:c11 cpe tar:xz
 
-CONFLICTS_INSTALL=	nimble
-
-TOOLS_DESC=	Build and install nim tools, including nimble
-
-OPTIONS_DEFINE=	DOCS TOOLS
-OPTIONS_DEFAULT=	DOCS TOOLS
-OPTIONS_EXCLUDE_powerpc64=	DOCS
-
-TEST_BINARY_ALIAS=	node=nodejs
-
-OPTIONS_SUB=	yes
+CPE_VENDOR=	nim-lang
 
 MAKE_JOBS_UNSAFE=	yes
 
+OPTIONS_DEFINE=		DOCS TOOLS
+OPTIONS_DEFAULT=	TOOLS
+OPTIONS_EXCLUDE_powerpc64=	DOCS
+OPTIONS_SUB=		yes
+
+TOOLS_DESC=	Build and install nim tools, not including nimble nor nimfind
+
+TEST_BINARY_ALIAS=	node=nodejs
+
 .include <bsd.port.pre.mk>
 
-TLIST=	nimble nimfind nimgrep nimpretty nimsuggest testament
+TLIST=		nimgrep nimpretty nimsuggest testament
 
 .if ${CHOSEN_COMPILER_TYPE} == "gcc"
 EXTRA_PATCHES=	${PATCHDIR}/elfv1-patch-build.sh
@@ -70,9 +69,6 @@ do-build-TOOLS-on:
 		-d:release --nimcache=${WRKSRC}/nimcache
 
 do-install:
-	# Revert hack to build docs
-	@${REINPLACE_CMD} -e '/%%NIMCACHE%%/d' \
-		${WRKSRC}/config/nim.cfg
 	# Install nim compiler
 	${INSTALL_PROGRAM} ${WRKSRC}/bin/nim ${STAGEDIR}${PREFIX}/bin
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/nim

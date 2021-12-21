@@ -3,7 +3,8 @@
 # adwaita-icon-theme, gnome-themes-standard and mate-themes
 
 PORTNAME=	gtk
-PORTVERSION=	3.24.27
+PORTVERSION=	3.24.30
+PORTREVISION=	1
 CATEGORIES=	x11-toolkits
 MASTER_SITES=	GNOME/sources/gtk+/${PORTVERSION:C/^([0-9]+\.[0-9]+).*/\1/}
 PKGNAMESUFFIX=	3
@@ -12,6 +13,9 @@ DIST_SUBDIR=	gnome
 
 MAINTAINER=	desktop@FreeBSD.org
 COMMENT=	Gimp Toolkit for X11 GUI (current stable version)
+
+EXTRA_PATCHES=	${FILESDIR}/0001-Check-if-size-changed-before-hiding-a-surface.patch:-p1 \
+		${FILESDIR}/0001-Ignore-wl_output-globals-not-bound-by-us.patch:-p1
 
 LICENSE=	LGPL20
 
@@ -29,15 +33,15 @@ USE_PERL5=	build
 USE_LDCONFIG=	yes
 GNU_CONFIGURE=	yes
 USE_GNOME=	atk cairo gdkpixbuf2 introspection:build pango \
-		librsvg2:run
-USES=		compiler:c11 gettext gmake gnome libtool localbase \
+		librsvg2:run gtk-update-icon-cache
+USES=		compiler:c11 cpe gettext gmake gnome libtool localbase \
 		pathfix perl5 pkgconfig tar:xz
+CPE_VENDOR=	gnome
 CONFIGURE_ARGS=	--enable-introspection
 CPPFLAGS+=	-fno-omit-frame-pointer
-INSTALLS_ICONS=	yes
 INSTALL_TARGET=	install-strip
 
-LIBVERSION=	0.2404.23
+LIBVERSION=	0.2404.26
 PLIST_SUB+=	LIBVERSION=${LIBVERSION}
 
 GLIB_SCHEMAS=	org.gtk.Demo.gschema.xml \
@@ -46,7 +50,7 @@ GLIB_SCHEMAS=	org.gtk.Demo.gschema.xml \
 		org.gtk.Settings.EmojiChooser.gschema.xml \
 		org.gtk.Settings.FileChooser.gschema.xml
 
-OPTIONS_DEFINE=	ATK_BRIDGE CUPS CLOUDPRINT COLORD DEBUG BROADWAY WAYLAND X11
+OPTIONS_DEFINE=	ATK_BRIDGE CUPS COLORD DEBUG BROADWAY WAYLAND X11
 OPTIONS_DEFAULT=ATK_BRIDGE CUPS COLORD BROADWAY WAYLAND X11
 OPTIONS_SUB=	yes
 
@@ -64,13 +68,6 @@ COLORD_CONFIGURE_ENABLE=colord
 
 CUPS_LIB_DEPENDS=	libcups.so:print/cups
 CUPS_CONFIGURE_ENABLE=	cups
-
-CLOUDPRINT_DESC=	Cloud printing support
-CLOUDPRINT_CONFIGURE_ENABLE=	cloudprint
-CLOUDPRINT_USE=		gnome=libxml2
-CLOUDPRINT_LIB_DEPENDS=	librest-0.7.so:devel/librest \
-			libsoup-2.4.so:devel/libsoup \
-			libjson-glib-1.0.so:devel/json-glib
 
 # don't explicitly disable debug, this causes segfaults. See ports r437293
 DEBUG_CONFIGURE_ON=	--enable-debug=yes

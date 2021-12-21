@@ -1,24 +1,23 @@
 PORTNAME=	magit
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2.90.1-1222
-DISTVERSIONSUFFIX=	-g4f41ba49
+DISTVERSION=	3.3.0-26
+DISTVERSIONSUFFIX=	-gaba0a596
+PORTREVISION=	1
 CATEGORIES=	devel elisp
 PKGNAMESUFFIX=	-devel${EMACS_PKGNAMESUFFIX}
 
-MAINTAINER=	yasu@utahime.org
+MAINTAINER=	yasu@FreeBSD.org
 COMMENT=	Interface to Git for Emacs (Development Version)
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-BUILD_DEPENDS=	dash.el${EMACS_PKGNAMESUFFIX}>=2.14.1:devel/dash.el@${EMACS_FLAVOR} \
-		ghub${EMACS_PKGNAMESUFFIX}>=3.0.0:devel/ghub@${EMACS_FLAVOR} \
-		transient${EMACS_PKGNAMESUFFIX}>=0:devel/transient@${EMACS_FLAVOR} \
-		with-editor${EMACS_PKGNAMESUFFIX}>=2.8.0:editors/with-editor@${EMACS_FLAVOR}
-RUN_DEPENDS=	dash.el${EMACS_PKGNAMESUFFIX}>=2.14.1:devel/dash.el@${EMACS_FLAVOR} \
-		ghub${EMACS_PKGNAMESUFFIX}>=3.0.0:devel/ghub@${EMACS_FLAVOR} \
-		transient${EMACS_PKGNAMESUFFIX}>=0:devel/transient@${EMACS_FLAVOR} \
-		with-editor${EMACS_PKGNAMESUFFIX}>=2.8.0:editors/with-editor@${EMACS_FLAVOR}
+BUILD_DEPENDS=	dash.el${EMACS_PKGNAMESUFFIX}>=2.19.1:devel/dash.el@${EMACS_FLAVOR} \
+		transient${EMACS_PKGNAMESUFFIX}>=0.3.7:devel/transient@${EMACS_FLAVOR} \
+		with-editor${EMACS_PKGNAMESUFFIX}>=3.0.5:editors/with-editor@${EMACS_FLAVOR}
+RUN_DEPENDS=	dash.el${EMACS_PKGNAMESUFFIX}>=2.19.1:devel/dash.el@${EMACS_FLAVOR} \
+		transient${EMACS_PKGNAMESUFFIX}>=0.3.7:devel/transient@${EMACS_FLAVOR} \
+		with-editor${EMACS_PKGNAMESUFFIX}>=3.0.5:editors/with-editor@${EMACS_FLAVOR}
 
 USES=		emacs gmake makeinfo
 USE_GITHUB=	yes
@@ -29,6 +28,8 @@ MAKE_ENV+=	docdir=${DOCSDIR} \
 		lispdir=${PREFIX}/${_ELISPDIR} \
 		LOAD_PATH="-L ${WRKSRC}/lisp -L ${PREFIX}/${EMACS_SITE_LISPDIR} -L ${PREFIX}/${EMACS_VERSION_SITE_LISPDIR} -L ${PREFIX}/${EMACS_VERSION_SITE_LISPDIR}/ghub" \
 		VERSION=${PORTVERSION}
+# Parallel build fails if Emacs is built with native compilation enabled
+MAKE_JOBS_UNSAFE=	yes
 
 CONFLICTS_INSTALL=	magit-emacs*
 
@@ -51,7 +52,7 @@ _ELISPDIR=	${EMACS_VERSION_SITE_LISPDIR}/${PORTNAME}
 
 do-install-DOCS-on:
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}
-	${INSTALL_DATA} ${WRKSRC}/Documentation/RelNotes/3.0.0.org \
+	${INSTALL_DATA} ${WRKSRC}/Documentation/RelNotes/3.1.0.org \
 		${STAGEDIR}${DOCSDIR}/ReleaseNote
 
 .include <bsd.port.mk>

@@ -270,7 +270,6 @@
 %%DATADIR%%/Asia/Qatar
 %%DATADIR%%/Asia/Qostanay
 %%DATADIR%%/Asia/Qyzylorda
-%%DATADIR%%/Asia/Yangon
 %%DATADIR%%/Asia/Riyadh
 %%DATADIR%%/Asia/Sakhalin
 %%DATADIR%%/Asia/Samarkand
@@ -291,6 +290,7 @@
 %%DATADIR%%/Asia/Vientiane
 %%DATADIR%%/Asia/Vladivostok
 %%DATADIR%%/Asia/Yakutsk
+%%DATADIR%%/Asia/Yangon
 %%DATADIR%%/Asia/Yekaterinburg
 %%DATADIR%%/Asia/Yerevan
 %%DATADIR%%/Atlantic/Azores
@@ -439,7 +439,6 @@
 %%DATADIR%%/Pacific/Chuuk
 %%DATADIR%%/Pacific/Easter
 %%DATADIR%%/Pacific/Efate
-%%DATADIR%%/Pacific/Enderbury
 %%DATADIR%%/Pacific/Fakaofo
 %%DATADIR%%/Pacific/Fiji
 %%DATADIR%%/Pacific/Funafuti
@@ -448,6 +447,7 @@
 %%DATADIR%%/Pacific/Guadalcanal
 %%DATADIR%%/Pacific/Guam
 %%DATADIR%%/Pacific/Honolulu
+%%DATADIR%%/Pacific/Kanton
 %%DATADIR%%/Pacific/Kiritimati
 %%DATADIR%%/Pacific/Kosrae
 %%DATADIR%%/Pacific/Kwajalein
@@ -517,6 +517,7 @@
 %%BACKWARD%%%%DATADIR%%/Atlantic/Jan_Mayen
 %%BACKWARD%%%%DATADIR%%/Australia/ACT
 %%BACKWARD%%%%DATADIR%%/Australia/Canberra
+%%BACKWARD%%%%DATADIR%%/Australia/Currie
 %%BACKWARD%%%%DATADIR%%/Australia/LHI
 %%BACKWARD%%%%DATADIR%%/Australia/NSW
 %%BACKWARD%%%%DATADIR%%/Australia/North
@@ -567,6 +568,7 @@
 %%BACKWARD%%%%DATADIR%%/NZ-CHAT
 %%BACKWARD%%%%DATADIR%%/Navajo
 %%BACKWARD%%%%DATADIR%%/PRC
+%%BACKWARD%%%%DATADIR%%/Pacific/Enderbury
 %%BACKWARD%%%%DATADIR%%/Pacific/Johnston
 %%BACKWARD%%%%DATADIR%%/Pacific/Ponape
 %%BACKWARD%%%%DATADIR%%/Pacific/Samoa

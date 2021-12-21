@@ -15,8 +15,8 @@ LICENSE=	BSD2CLAUSE
 
 # This port should be deprecated once stable/12 goes EoL.  bsdgrep shipped by
 # default in FreeBSD 13.0.
-IGNORE_FreeBSD_13=	only for FreeBSD 11.x and 12.x
-IGNORE_FreeBSD_14=	only for FreeBSD 11.x and 12.x
+IGNORE_FreeBSD_13=	only for FreeBSD 12.x
+IGNORE_FreeBSD_14=	only for FreeBSD 12.x
 
 USES=	uidfix
 
@@ -32,7 +32,7 @@ OPTIONS_DEFAULT=	GNU_COMPAT
 OPTIONS_SUB=		yes
 GNU_COMPAT_DESC=	Use GNU regex library (recommended)
 
-CONFLICTS=	gnugrep-*
+CONFLICTS=	gnugrep
 
 NLS_MAKE_ENV=	MK_NLS=yes
 NLS_MAKE_ENV_OFF=	MK_NLS=no

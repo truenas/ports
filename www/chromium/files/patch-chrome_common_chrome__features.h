@@ -1,6 +1,6 @@
---- chrome/common/chrome_features.h.orig	2021-04-14 18:40:56 UTC
+--- chrome/common/chrome_features.h.orig	2021-09-24 04:26:00 UTC
 +++ chrome/common/chrome_features.h
-@@ -81,10 +81,10 @@ extern const base::Feature kAppShimNewCloseBehavior;
+@@ -67,10 +67,10 @@ extern const base::Feature kAppShimNewCloseBehavior;
  
  COMPONENT_EXPORT(CHROME_FEATURES) extern const base::Feature kAsyncDns;
  
@@ -13,17 +13,30 @@
  
  #if BUILDFLAG(IS_CHROMEOS_ASH)
  COMPONENT_EXPORT(CHROME_FEATURES) extern const base::Feature kBorealis;
-@@ -243,11 +243,11 @@ extern const base::Feature kEnableAmbientAuthenticatio
- 
- // TODO(crbug.com/1052397): Revisit the macro expression once build flag switch
- // of lacros-chrome is complete.
--#if defined(OS_WIN) || (defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)) || \
-+#if defined(OS_WIN) || (defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)) || defined(OS_BSD) || \
-     defined(OS_MAC)
+@@ -79,7 +79,7 @@ COMPONENT_EXPORT(CHROME_FEATURES) extern const base::F
  COMPONENT_EXPORT(CHROME_FEATURES)
- extern const base::Feature kEnableEphemeralGuestProfilesOnDesktop;
--#endif  // defined(OS_WIN) || (defined(OS_LINUX) ||
-+#endif  // defined(OS_WIN) || (defined(OS_LINUX) || defined(OS_BSD) ||
-         // BUILDFLAG(IS_CHROMEOS_LACROS)) ||  defined(OS_MAC)
+ extern const base::Feature kChangePictureVideoMode;
  
- #if defined(OS_WIN)
+-#if defined(OS_WIN) || defined(OS_MAC) || defined(OS_LINUX)
++#if defined(OS_WIN) || defined(OS_MAC) || defined(OS_LINUX) || defined(OS_BSD)
+ COMPONENT_EXPORT(CHROME_FEATURES)
+ extern const base::Feature kChromeAppsDeprecation;
+ #endif
+@@ -158,7 +158,7 @@ COMPONENT_EXPORT(CHROME_FEATURES)
+ extern const base::Feature kDefaultPinnedAppsUpdate2021Q2;
+ #endif
+ 
+-#if BUILDFLAG(IS_CHROMEOS_ASH) || defined(OS_MAC) || defined(OS_LINUX)
++#if BUILDFLAG(IS_CHROMEOS_ASH) || defined(OS_MAC) || defined(OS_LINUX) || defined(OS_BSD)
+ COMPONENT_EXPORT(CHROME_FEATURES)
+ extern const base::Feature kDesktopPWAsAppIconShortcutsMenuUI;
+ #endif
+@@ -367,7 +367,7 @@ extern const base::Feature kIncognitoReauthenticationF
+ COMPONENT_EXPORT(CHROME_FEATURES)
+ extern const base::Feature kIncognitoNtpRevamp;
+ 
+-#if defined(OS_MAC) || defined(OS_WIN) || defined(OS_LINUX) || \
++#if defined(OS_MAC) || defined(OS_WIN) || defined(OS_LINUX) || defined(OS_BSD) || \
+     defined(OS_CHROMEOS) || defined(OS_FUCHSIA)
+ COMPONENT_EXPORT(CHROME_FEATURES)
+ extern const base::Feature kIncognitoBrandConsistencyForDesktop;

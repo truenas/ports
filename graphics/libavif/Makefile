@@ -1,11 +1,11 @@
 PORTNAME=	libavif
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.9.0
-PORTREVISION=	1
+DISTVERSION=	0.9.3
 CATEGORIES=	graphics
 
 PATCH_SITES=	https://github.com/${GH_ACCOUNT}/${GH_PROJECT}/commit/
 PATCHFILES+=	2340cdb5f0c2.patch:-p1 # https://github.com/AOMediaCodec/libavif/pull/296
+PATCHFILES+=	dce4c2a5f4bb.patch:-p1 # https://github.com/AOMediaCodec/libavif/pull/783
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Library for encoding and decoding .avif files
@@ -15,12 +15,14 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 
 LIB_DEPENDS=	libpng.so:graphics/png
 
-USES=		cmake compiler:c11 jpeg pkgconfig
+USES=		cmake:testing compiler:c11 cpe jpeg pkgconfig
+CPE_VENDOR=	aomedia
 USE_GITHUB=	yes
 USE_LDCONFIG=	yes
 GH_ACCOUNT=	AOMediaCodec
-CMAKE_ON=	AVIF_BUILD_APPS AVIF_BUILD_TESTS
-TEST_TARGET=	avif_test_all
+CMAKE_ON=	AVIF_BUILD_APPS
+CMAKE_TESTING_ON=	AVIF_BUILD_TESTS
+CMAKE_TESTING_TARGET=	avif_test_all
 
 OPTIONS_DEFINE=	AOM DAV1D GAV1 LIBYUV PIXBUF RAV1E SVTAV1
 OPTIONS_DEFAULT=AOM DAV1D PIXBUF
@@ -39,7 +41,7 @@ GAV1_LIB_DEPENDS=	libgav1.so:multimedia/libgav1
 GAV1_CMAKE_BOOL=	AVIF_CODEC_LIBGAV1
 
 LIBYUV_DESC=		Colorspace conversion via libyuv
-LIBYUV_BUILD_DEPENDS=	libyuv>=0.0.1755:graphics/libyuv
+LIBYUV_BUILD_DEPENDS=	libyuv>=0.0.1774:graphics/libyuv
 LIBYUV_LIB_DEPENDS=	libyuv.so:graphics/libyuv
 
 PIXBUF_USES=		gnome

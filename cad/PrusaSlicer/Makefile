@@ -1,7 +1,7 @@
 PORTNAME=	PrusaSlicer
 DISTVERSIONPREFIX=version_
-DISTVERSION=	2.3.0
-PORTREVISION=	4
+DISTVERSION=	2.3.3
+PORTREVISION=	2
 CATEGORIES=	cad
 
 MAINTAINER=	teodorsigaev@gmail.com
@@ -10,7 +10,7 @@ COMMENT=	Slicing application for 3D printers
 LICENSE=	AGPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-LIB_DEPENDS=	libtbb.so:devel/tbb \
+LIB_DEPENDS=	libtbb.so:devel/onetbb \
 		libboost_log.so:devel/boost-libs \
 		libImath.so:math/Imath \
 		libnlopt.so:math/nlopt \
@@ -24,7 +24,8 @@ LIB_DEPENDS=	libtbb.so:devel/tbb \
 BUILD_DEPENDS=	cereal>=1.3.0.10:devel/cereal \
 		cgal>=5.0.2:math/cgal
 
-USES=		cmake desktop-file-utils eigen:3 gettext gl iconv pkgconfig
+USES=		cmake cpe desktop-file-utils eigen:3 gettext gl iconv pkgconfig
+CPE_VENDOR=	prusa3d
 CMAKE_ARGS+=	-DwxWidgets_CONFIG_EXECUTABLE="${WX_CONFIG}" \
 		-DSLIC3R_GTK=3 \
 		-DSLIC3R_FHS=1

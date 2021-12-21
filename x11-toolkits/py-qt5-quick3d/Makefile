@@ -1,4 +1,5 @@
 PORTNAME=	quick3d
+PORTREVISION=	3
 CATEGORIES=	x11-toolkits devel python
 
 MAINTAINER=	kde@FreeBSD.org

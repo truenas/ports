@@ -1,10 +1,10 @@
 # Created by: Bernard Spil <brnrd@freebsd.org>
 
 PORTNAME=	twofactor_totp
-PORTVERSION=	6.0.0
+PORTVERSION=	6.2.0
 DISTVERSIONPREFIX=	v
 CATEGORIES=	security
-MASTER_SITES=	https://github.com/${PKGNAMEPREFIX:S/-//}/${PORTNAME}/releases/download/${DISTVERSIONPREFIX}${PORTVERSION}/
+MASTER_SITES=	https://github.com/${PKGNAMEPREFIX}releases/${PORTNAME}/releases/download/${DISTVERSIONPREFIX}${PORTVERSION}/
 PKGNAMEPREFIX=	nextcloud-
 PKGNAMESUFFIX=	${PHP_PKGNAMESUFFIX}
 DISTNAME=	${PORTNAME}
@@ -33,6 +33,7 @@ WWWDIR=		${PREFIX}/www/nextcloud/apps-pkg/${PORTNAME}
 do-install:
 	${MKDIR} ${STAGEDIR}${WWWDIR}
 	(cd ${WRKSRC} && ${COPYTREE_SHARE} . ${STAGEDIR}${WWWDIR})
-	${RM} ${STAGEDIR}${WWWDIR}/COPYING
+	(cd ${WRKSRC}; ${FIND} . -not -type d) | ${SORT} | \
+		${SED} -e 's,^\.,${WWWDIR_REL},' >> ${TMPPLIST}
 
 .include <bsd.port.mk>

@@ -1,5 +1,5 @@
 PORTNAME=	yadm
-PORTVERSION=	3.1.0
+PORTVERSION=	3.1.1
 CATEGORIES=	sysutils
 
 MAINTAINER=	vendion@gmail.com
@@ -11,6 +11,8 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 RUN_DEPENDS=	bash:shells/bash \
 		git:devel/git
 
+USES=		cpe
+CPE_VENDOR=	${PORTNAME}_project
 USE_GITHUB=	yes
 GH_ACCOUNT=	TheLocehiliosan
 

@@ -1,6 +1,6 @@
 PORTNAME=	node
 DISTVERSIONPREFIX=	v
-DISTVERSION=	14.16.1
+DISTVERSION=	14.18.1
 PORTREVISION=	1
 CATEGORIES=	www
 MASTER_SITES=	http://nodejs.org/dist/v${DISTVERSION}/
@@ -16,12 +16,11 @@ BROKEN_SSL=		libressl libressl-devel
 BROKEN_SSL_REASON=	Node.js 14.x LTS requires OpenSSL 1.1.x or the BUNDLED_SSL option enabled
 ONLY_FOR_ARCHS=		aarch64 amd64 armv6 armv7 i386 powerpc64 powerpc64le
 
-USES=		compiler:c++11-lib gmake python:build pkgconfig \
+USES=		compiler:c++11-lib gmake python:2.7-3.9,build pkgconfig \
 		localbase shebangfix
 
 OPTIONS_DEFINE=		BUNDLED_SSL DOCS NLS DTRACE
 OPTIONS_DEFAULT=	DTRACE
-OPTIONS_DEFAULT_FreeBSD_11=	BUNDLED_SSL
 OPTIONS_DEFAULT+=	${OPTIONS_DEFAULT_${OPSYS}_${OSREL:R}}
 OPTIONS_SUB=		yes
 
@@ -42,14 +41,14 @@ BUNDLED_SSL_CONFIGURE_OFF=	--shared-openssl --openssl-use-def-ca-store
 BUNDLED_SSL_RUN_DEPENDS_OFF=	ca_root_nss>=0:security/ca_root_nss
 
 NLS_CONFIGURE_ON=	--with-intl=system-icu
-NLS_BUILD_DEPENDS=	icu>=67.1:devel/icu
+NLS_BUILD_DEPENDS=	icu>=69.1:devel/icu
 NLS_LIB_DEPENDS=	libicui18n.so:devel/icu
 
 DTRACE_CONFIGURE_ON=	--with-dtrace
 
 HAS_CONFIGURE=	yes
 
-CONFLICTS_INSTALL=	node10-[0-9]* node12-[0-9]* node-[0-9]*
+CONFLICTS_INSTALL=	node10 node16 node
 
 CONFIGURE_ARGS=	--prefix=${PREFIX_RELDEST} \
 		--without-npm \
@@ -71,9 +70,9 @@ MAKE_ENV+=	CC.host=${CC} CFLAGS.host="${CFLAGS}" \
 		LINK.host=${CXX} LDFLAGS.host="${LDFLAGS}"
 
 BUILD_DEPENDS+=	brotli>=1.0.9,1:archivers/brotli \
-		c-ares>=1.16.1:dns/c-ares \
-		libuv>=1.40.0:devel/libuv \
-		libnghttp2>=1.41.0:www/libnghttp2 \
+		c-ares>=1.17.2:dns/c-ares \
+		libuv>=1.42.0:devel/libuv \
+		libnghttp2>=1.42.0:www/libnghttp2 \
 		objdump:devel/binutils
 LIB_DEPENDS+=	libbrotlidec.so:archivers/brotli \
 		libcares.so:dns/c-ares\
@@ -88,10 +87,6 @@ EXTRA_PATCHES=		${PATCHDIR}/extra-patch-common.gypi
 
 .if ${ARCH} == armv6 || ${ARCH} == armv7
 EXTRA_PATCHES=	${PATCHDIR}/extra-patch-tools_v8__gypfiles_v8.gyp
-.endif
-
-.if ${OPSYS} == FreeBSD && ${OSVERSION} < 1200085
-BROKEN_SSL+=	base
 .endif
 
 .if ${PORT_OPTIONS:MBUNDLED_SSL} && ${ARCH} != amd64

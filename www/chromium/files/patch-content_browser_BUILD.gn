@@ -1,11 +1,13 @@
---- content/browser/BUILD.gn.orig	2021-04-14 18:41:02 UTC
+--- content/browser/BUILD.gn.orig	2021-09-24 04:26:05 UTC
 +++ content/browser/BUILD.gn
-@@ -2179,6 +2179,15 @@ source_set("browser") {
+@@ -2311,6 +2311,17 @@ source_set("browser") {
      deps += [ "//third_party/speech-dispatcher" ]
    }
  
 +  if (is_bsd) {
 +    sources -= [
++      "compute_pressure/cpu_probe_linux.cc",
++      "compute_pressure/cpu_probe_linux.h",
 +      "sandbox_host_linux.cc",
 +      "sandbox_host_linux.h",
 +      "sandbox_ipc_linux.cc",

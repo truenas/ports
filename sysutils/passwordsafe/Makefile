@@ -17,7 +17,7 @@ LIB_DEPENDS=	libcurl.so:ftp/curl \
 		libqrencode.so:graphics/libqrencode
 BUILD_DEPENDS=	zip:archivers/zip
 
-CONFLICTS=	pwsafe-[0-9]*
+CONFLICTS=	pwsafe
 
 USES=		gmake pkgconfig xorg
 USE_GITHUB=	yes
@@ -37,7 +37,7 @@ MAKE_ENV=	NO_QR=yes
 GH_ACCOUNT=	pwsafe
 GH_PROJECT=	${GH_ACCOUNT}
 
-WX_COMP=	wx
+WX_COMPS=	wx
 WANT_WX_VER=	3.0
 
 LDFLAGS=	-L${PREFIX}/lib -lqrencode
@@ -46,7 +46,7 @@ ALL_TARGET=	unicoderelease
 
 .include <bsd.port.options.mk>
 
-.if defined(PPC_ABI) && ${PPC_ABI} == ELFv2
+.if (defined(PPC_ABI) && ${PPC_ABI} == ELFv2) || ${ARCH} == powerpc
 USES+=		compiler:gcc-c++11-lib
 .else
 USES+=		compiler:c++11-lang

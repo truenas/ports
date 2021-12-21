@@ -1,4 +1,4 @@
---- config.toml.example.orig	2021-04-22 21:08:06 UTC
+--- config.toml.example.orig	2021-09-21 10:03:53 UTC
 +++ config.toml.example
 @@ -2,10 +2,10 @@
  # Documentation lives at https://docs.gitlab.com/ee/administration/gitaly/ and
@@ -8,12 +8,21 @@
 +socket_path = "%%PREFIX%%/www/gitlab-ce/tmp/sockets/private/gitaly.socket"
  
  # The directory where Gitaly's executables are stored
--bin_dir = "/home/git/gitaly"
+-bin_dir = "/home/git/gitaly/_build/bin"
 +bin_dir = "%%PREFIX%%/share/gitaly/bin/"
  
  # # Optional: listen on a TCP socket. This is insecure (no authentication)
  # listen_addr = "localhost:9999"
-@@ -28,9 +28,9 @@ bin_dir = "/home/git/gitaly"
+@@ -17,7 +17,7 @@ bin_dir = "/home/git/gitaly/_build/bin"
+ # # Optional: configure where the Gitaly creates the sockets for internal connections. If unset, Gitaly will create a randomly
+ # # named temp directory each time it boots.
+ # # Non Gitaly clients should never connect to these sockets.
+-# internal_socket_dir = "/home/git/gitlab/tmp/sockets/private/internal"
++internal_socket_dir = "%%PREFIX%%/www/gitlab-ce/tmp/sockets/private/internal"
+ 
+ # # Optional: authenticate Gitaly requests using a shared secret
+ # [auth]
+@@ -28,9 +28,9 @@ bin_dir = "/home/git/gitaly/_build/bin"
  # certificate_path = '/home/git/cert.cert'
  # key_path = '/home/git/key.pem'
  
@@ -26,7 +35,7 @@
  # catfile_cache_size = 100
  # [[git.config]]
  # key = fetch.fsckObjects
-@@ -38,7 +38,7 @@ bin_dir = "/home/git/gitaly"
+@@ -38,7 +38,7 @@ bin_dir = "/home/git/gitaly/_build/bin"
  
  [[storage]]
  name = "default"

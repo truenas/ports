@@ -1,8 +1,7 @@
 # Created by: Matt Lancereau <matt@rimasec.net>
 
 PORTNAME=	xfce4-clipman-plugin
-PORTVERSION=	1.6.1
-PORTREVISION=	1
+PORTVERSION=	1.6.2
 CATEGORIES=	x11 xfce
 MASTER_SITES=	XFCE/panel-plugins
 DIST_SUBDIR=	xfce4
@@ -19,7 +18,6 @@ USE_XFCE=	panel
 USE_XORG=	ice sm x11 xorgproto xtst
 
 GNU_CONFIGURE=	yes
-INSTALLS_ICONS=	yes
 INSTALL_TARGET=	install-strip
 
 OPTIONS_DEFINE=		NLS QRCODE

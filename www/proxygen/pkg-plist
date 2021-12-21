@@ -37,6 +37,7 @@ include/proxygen/lib/http/HTTPMessage.h
 include/proxygen/lib/http/HTTPMessageFilters.h
 include/proxygen/lib/http/HTTPMethod.h
 include/proxygen/lib/http/HTTPPriorityFunctions.h
+include/proxygen/lib/http/HeaderConstants.h
 include/proxygen/lib/http/ProxyStatus.h
 include/proxygen/lib/http/ProxygenErrorEnum.h
 include/proxygen/lib/http/RFC2616.h
@@ -69,7 +70,6 @@ include/proxygen/lib/http/codec/HTTPCodecPrinter.h
 include/proxygen/lib/http/codec/HTTPParallelCodec.h
 include/proxygen/lib/http/codec/HTTPRequestVerifier.h
 include/proxygen/lib/http/codec/HTTPSettings.h
-include/proxygen/lib/http/codec/HeaderConstants.h
 include/proxygen/lib/http/codec/HeaderDecodeInfo.h
 include/proxygen/lib/http/codec/QPACKDecoderCodec.h
 include/proxygen/lib/http/codec/QPACKEncoderCodec.h
@@ -156,6 +156,8 @@ include/proxygen/lib/http/session/TTLBAStats.h
 include/proxygen/lib/http/session/TransactionByteEvents.h
 include/proxygen/lib/http/stats/ConnectionStats.h
 include/proxygen/lib/http/stats/HeaderCodecStats.h
+include/proxygen/lib/http/stats/HTTPCodecStats.h
+include/proxygen/lib/http/stats/HTTPCodecStatsFilter.h
 include/proxygen/lib/http/stats/ResponseCodeStatsMinute.h
 include/proxygen/lib/http/stats/SPDYStats.h
 include/proxygen/lib/http/stats/SPDYStatsFilter.h
@@ -169,6 +171,10 @@ include/proxygen/lib/http/structuredheaders/StructuredHeadersUtilities.h
 include/proxygen/lib/pools/generators/FileServerListGenerator.h
 include/proxygen/lib/pools/generators/MemberGroupConfig.h
 include/proxygen/lib/pools/generators/ServerListGenerator.h
+include/proxygen/lib/sampling/MultiSampled.h
+include/proxygen/lib/sampling/Sampled.h
+include/proxygen/lib/sampling/Sampling.h
+include/proxygen/lib/sampling/SamplingFunctions.h
 include/proxygen/lib/services/AcceptorConfiguration.h
 include/proxygen/lib/services/HTTPAcceptor.h
 include/proxygen/lib/services/RequestWorkerThread.h
@@ -184,6 +190,7 @@ include/proxygen/lib/stats/PeriodicStats.h
 include/proxygen/lib/stats/PeriodicStatsDataBase.h
 include/proxygen/lib/stats/ResourceData.h
 include/proxygen/lib/stats/ResourceStats.h
+include/proxygen/lib/transport/H3DatagramAsyncSocket.h
 include/proxygen/lib/transport/PersistentFizzPskCache.h
 include/proxygen/lib/transport/PersistentQuicPskCache.h
 include/proxygen/lib/utils/AcceptorAddress.h

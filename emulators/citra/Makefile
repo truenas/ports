@@ -1,5 +1,5 @@
 PORTNAME=	citra
-PORTVERSION=	s20210423
+PORTVERSION=	s20211212
 PORTREVISION?=	0
 CATEGORIES=	emulators
 
@@ -17,34 +17,33 @@ LICENSE_FILE_LGPL21+ =	${_LICENSE_STORE}/LGPL21 # soundtouch
 LICENSE_FILE_MIT=	${WRKSRC}/externals/enet/LICENSE
 LICENSE_FILE_OpenSSL=	${WRKSRC}/externals/libressl/COPYING
 
-LIB_DEPENDS=	libboost_serialization.so:devel/boost-libs
+BUILD_DEPENDS=	boost-libs>0:devel/boost-libs
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	citra-emu
-GH_TAGNAME=	9ff97270c
+GH_TAGNAME=	28039d39a
 GH_TUPLE=	citra-emu:ext-boost:36603a1:boost/externals/boost \
 		citra-emu:ext-libressl-portable:7d01cb0:libressl/externals/libressl \
 		citra-emu:ext-soundtouch:060181e:soundtouch/externals/soundtouch \
-		MerryMage:dynarmic:r3-209-g358cf6f0:dynarmic/externals/dynarmic \
+		MerryMage:dynarmic:r3-222-gaf0d4a7c:dynarmic/externals/dynarmic \
 		arsenm:sanitizers-cmake:aab6948:sanitizers_cmake/externals/cubeb/cmake/sanitizers-cmake \
 		arun11299:cpp-jwt:v1.1.1:cpp_jwt/externals/cpp-jwt \
 		benhoyt:inih:r52:inih/externals/inih/inih \
-		catchorg:Catch2:v2.13.4:catch/externals/catch \
+		catchorg:Catch2:v2.13.7:catch/externals/catch \
 		facebook:zstd:v1.4.8:zstd/externals/zstd \
 		fmtlib:fmt:7.1.2:fmt/externals/fmt \
 		herumi:xbyak:v5.96:xbyak/externals/xbyak \
-		kinetiknz:cubeb:cubeb-0.2-1298-g8d53747:cubeb/externals/cubeb \
+		kinetiknz:cubeb:cubeb-0.2-1345-g773f16b:cubeb/externals/cubeb \
 		lsalzman:enet:0eaf48e:enet/externals/enet \
 		lvandeve:lodepng:31d9704:lodepng/externals/lodepng/lodepng \
 		neobrain:nihstro:fd69de1:nihstro/externals/nihstro \
 		weidai11:cryptopp:CRYPTOPP_7_0_0-23-gf320e7d9:cryptopp/externals/cryptopp/cryptopp \
 		wwylele:teakra:3e032a7:teakra/externals/teakra
 
-USES=		cmake compiler:c++17-lang localbase:ldflags sdl
+USES=		cmake:testing compiler:c++17-lang localbase:ldflags sdl
 USE_SDL=	sdl2
-CMAKE_ON=	USE_SYSTEM_BOOST
+CMAKE_ON=	USE_SYSTEM_BOOST Boost_USE_STATIC_LIBS
 LDFLAGS+=	-Wl,--as-needed # Qt5Network
-TEST_TARGET=	test
 
 OPTIONS_DEFINE=	ALSA FFMPEG PULSEAUDIO JACK SNDIO
 OPTIONS_DEFAULT=FFMPEG PULSEAUDIO JACK SNDIO

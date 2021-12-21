@@ -1259,7 +1259,7 @@ include/zeek/zeekygen/zeekygen.bif.h
 %%ZEEKCTL%%lib/broctl
 lib/cmake/CAF/CAFConfig.cmake
 lib/cmake/CAF/CAFConfigVersion.cmake
-lib/cmake/CAF/CAFTargets-release.cmake
+lib/cmake/CAF/CAFTargets-%%CMAKE_BUILD_TYPE%%.cmake
 lib/cmake/CAF/CAFTargets.cmake
 lib/libbinpac.so
 lib/libbinpac.so.0
@@ -1942,7 +1942,7 @@ man/man8/zeek.8.gz
 %%DATADIR%%/policy/tuning/defaults/warnings.zeek
 %%DATADIR%%/policy/tuning/json-logs.zeek
 %%DATADIR%%/policy/tuning/track-all-assets.zeek
-%%DATADIR%%/site/local.zeek.sample
+@sample %%DATADIR%%/site/local.zeek.sample
 %%ZEEKCTL%%%%DATADIR%%/test-all-policy.zeek
 %%ZEEKCTL%%share/zeek/zeekctl/__load__.zeek
 %%ZEEKCTL%%share/zeek/zeekctl/auto.zeek

@@ -2,11 +2,11 @@
 
 PORTNAME=	spamd
 PORTVERSION=	4.9.1
-PORTREVISION=	5
+PORTREVISION=	6
 CATEGORIES=	mail
 MASTER_SITES=	SF/freebsdspamd/spamd
 
-MAINTAINER=	ohauer@FreeBSD.org
+MAINTAINER=	koue@chaosophia.net
 COMMENT=	Traps spammers with a very slow smtp-login and return 4xx error
 
 LICENSE=	BSD2CLAUSE

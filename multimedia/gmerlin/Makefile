@@ -1,6 +1,6 @@
 PORTNAME=	gmerlin
 PORTVERSION=	1.2.0
-PORTREVISION=	17
+PORTREVISION=	19
 CATEGORIES=	multimedia
 MASTER_SITES=	SF
 
@@ -26,7 +26,6 @@ CONFIGURE_ARGS=	--disable-v4l --disable-v4l2 --disable-v4lconvert \
 USE_LDCONFIG=	yes
 LLD_UNSAFE=	yes
 INSTALL_TARGET=	install-strip
-INSTALLS_ICONS=	yes
 
 CPPFLAGS+=	-I${LOCALBASE}/include
 LIBS+=		-L${LOCALBASE}/lib

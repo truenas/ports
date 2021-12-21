@@ -15,7 +15,7 @@ LICENSE_FILE=	${WRKDIR}/jsource-${JVERSION}/license.txt
 BROKEN=		does not build
 
 ONLY_FOR_ARCHS=	amd64
-ONLY_FOR_ARCHS_REASON=	Not built or tested for other archs. i386 needs hostdefs and netdefs files to be generated.
+ONLY_FOR_ARCHS_REASON=	not built or tested on other architectures; i386 needs hostdefs and netdefs files to be generated
 
 BUILD_DEPENDS=	bash:shells/bash
 LIB_DEPENDS=	libpcre2-8.so:devel/pcre2 \
@@ -36,13 +36,6 @@ JVERSION=	j807-release
 
 BIN_FILES=	jconsole
 LIB_FILES=	libj.so libtsdll.so
-
-OPTIONS_DEFINE=	OPENMP
-
-OPENMP_DESC=	Build with OpenMP support
-OPENMP_USES=	compiler:openmp
-OPENMP_MAKE_ENV=	USE_OPENMP=1
-OPENMP_LIB_DEPENDS=	libgomp.so:lang/gcc7
 
 # J wants to install jconsole, also provided by openjdk
 CONFLICTS_INSTALL=	openjdk[0-9]*

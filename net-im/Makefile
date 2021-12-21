@@ -2,10 +2,13 @@
 
     SUBDIR += 6cord
     SUBDIR += beebeep
+    SUBDIR += biboumi
+    SUBDIR += cawbird
     SUBDIR += centerim
     SUBDIR += chatterino2
     SUBDIR += climm
     SUBDIR += coccinella
+    SUBDIR += conduit
     SUBDIR += convey
     SUBDIR += coyim
     SUBDIR += cutegram
@@ -54,7 +57,6 @@
     SUBDIR += libnice
     SUBDIR += libnice-gst1
     SUBDIR += libpurple
-    SUBDIR += libqmatrixclient
     SUBDIR += libqtelegram-ae
     SUBDIR += libquotient
     SUBDIR += libsignal-client
@@ -113,6 +115,7 @@
     SUBDIR += psi
     SUBDIR += purple-discord
     SUBDIR += purple-facebook
+    SUBDIR += purple-googlechat
     SUBDIR += purple-hangouts
     SUBDIR += purple-mattermost
     SUBDIR += purple-plugin-pack
@@ -144,11 +147,13 @@
     SUBDIR += scudcloud
     SUBDIR += sendxmpp
     SUBDIR += signal-cli
+    SUBDIR += signald
     SUBDIR += slack-term
     SUBDIR += spectral
     SUBDIR += ssh-chat
     SUBDIR += sshout
     SUBDIR += talkatu
+    SUBDIR += tdlib
     SUBDIR += teamwords
     SUBDIR += telegram-cli
     SUBDIR += telegram-desktop
@@ -170,12 +175,13 @@
     SUBDIR += tkabber-plugins
     SUBDIR += toot
     SUBDIR += tox
+    SUBDIR += tox_extension_messages
     SUBDIR += toxbot
+    SUBDIR += toxext
     SUBDIR += toxic
     SUBDIR += toxins
     SUBDIR += tut
     SUBDIR += twirssi
-    SUBDIR += twitmail
     SUBDIR += uTox
     SUBDIR += vqcc-gtk
     SUBDIR += xmpp-client

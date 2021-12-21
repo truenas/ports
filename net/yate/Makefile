@@ -1,7 +1,8 @@
 # Created by: Valery Komarov <komarov@valerka.net>
 
 PORTNAME=	yate
-PORTVERSION=	6.3.0
+PORTVERSION=	6.4.0
+PORTREVISION=	1
 CATEGORIES=	net
 MASTER_SITES=	http://yate.null.ro/tarballs/yate6/
 DISTNAME=	${PORTNAME}-${PORTVERSION}-1

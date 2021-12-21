@@ -2,7 +2,7 @@
 
 PORTNAME=	sqlitebrowser
 PORTVERSION=	3.12.1
-PORTREVISION=	3
+PORTREVISION=	5
 DISTVERSIONPREFIX=	v
 CATEGORIES=	databases
 
@@ -21,8 +21,6 @@ CMAKE_ARGS+=	-DQT_INCLUDE_DIR=${QT_INCDIR} -DQT_LIBRARY_DIR=${QT_LIBDIR}
 USE_QT=		core concurrent gui network printsupport testlib widgets \
 		buildtools_build linguisttools_build qmake_build xml
 USE_GITHUB=	yes
-
-INSTALLS_ICONS=	yes
 
 PORTSCOUT=	ignore:1
 

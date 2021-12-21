@@ -54,6 +54,12 @@ SCM_MODULES=	byte.so bytenumb.so crs.so differ.so edline.so gsubr.so \
 		socket.so unix.so
 SCM_MODULES_X11=x.so
 
+.include <bsd.port.options.mk>
+
+.if ${ARCH:Mpowerpc64*}
+USES+=		compiler:gcc-c++11-lib
+.endif
+
 .include <bsd.port.pre.mk>
 
 .if ${OSVERSION} > 1300000
@@ -65,17 +71,8 @@ SCM_MODULES+=	${SCM_MODULES_X11}
 SCM_DATA+=	${SCM_DATA_X11}
 .endif
 
-.if ${ARCH} == "ia64"
-EXTRA_PATCHES+=	${FILESDIR}/ia64-patch
-ARCHOBJS=	continue-ia64.S
-.endif
-
-.if "${readline_ARGS}" == "port"
 LIBEDIT_SUB1=	${CPPFLAGS}" "${LDFLAGS:M-L*}
 LIBEDIT_SUB2=	${LDFLAGS:M-L*}
-.else
-LIBEDIT_SUB1=	-I/usr/include/edit" "
-.endif
 
 post-patch:
 	@${REINPLACE_CMD} -e 's|/usr/include|${LOCALBASE}/include| ; \

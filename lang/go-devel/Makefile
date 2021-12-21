@@ -1,7 +1,7 @@
 # Created by: Devon H. O'Dell <devon.odell@gmail.com>
 
-PORTVERSION=	g20210216
-# Always set PORTREVISION and PORTEPOCH explicitly as otherwise it is inherited from lang/go
+PORTVERSION=	g20211209
+# Always set PORTREVISION and PORTEPOCH explicitly as otherwise they are inherited from lang/go
 PORTREVISION=	0
 PORTEPOCH=	0
 MASTER_SITES=	https://github.com/dmgk/go-bootstrap/releases/download/${BOOTSTRAP_TAG}/:bootstrap \
@@ -9,11 +9,14 @@ MASTER_SITES=	https://github.com/dmgk/go-bootstrap/releases/download/${BOOTSTRAP
 PKGNAMESUFFIX=	-devel
 DISTFILES=	go-${OPSYS:tl}-${GOARCH_${ARCH}}${GOARM_${ARCH}}-${BOOTSTRAP_TAG}.tar.xz:bootstrap
 
+# Avoid conflicting patch files
+PATCHFILES=
+
 COMMENT=	Go programming language (development version)
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	golang
-GH_TAGNAME=	f21be2fdc6f1becdbed1592ea0b245cdeedc5ac8
+GH_TAGNAME=	de690c2ff8e323c7ce9e274f986dc6f824b35405
 
 CONFLICTS_INSTALL=	go
 

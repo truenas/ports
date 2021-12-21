@@ -1,6 +1,6 @@
---- chrome/browser/metrics/process_memory_metrics_emitter.cc.orig	2021-04-14 18:40:53 UTC
+--- chrome/browser/metrics/process_memory_metrics_emitter.cc.orig	2021-09-24 04:25:58 UTC
 +++ chrome/browser/metrics/process_memory_metrics_emitter.cc
-@@ -514,7 +514,7 @@ void EmitProcessUmaAndUkm(const GlobalMemoryDump::Proc
+@@ -546,7 +546,7 @@ void EmitProcessUmaAndUkm(const GlobalMemoryDump::Proc
  
    builder->SetPrivateMemoryFootprint(pmd.os_dump().private_footprint_kb / kKiB);
    builder->SetSharedMemoryFootprint(pmd.os_dump().shared_footprint_kb / kKiB);
@@ -9,7 +9,7 @@
    builder->SetPrivateSwapFootprint(pmd.os_dump().private_footprint_swap_kb /
                                     kKiB);
  #endif
-@@ -537,7 +537,7 @@ void EmitProcessUmaAndUkm(const GlobalMemoryDump::Proc
+@@ -569,7 +569,7 @@ void EmitProcessUmaAndUkm(const GlobalMemoryDump::Proc
    MEMORY_METRICS_HISTOGRAM_MB(std::string(kMemoryHistogramPrefix) +
                                    process_name + ".SharedMemoryFootprint",
                                pmd.os_dump().shared_footprint_kb / kKiB);

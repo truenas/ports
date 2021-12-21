@@ -1,11 +1,12 @@
 # Created by: Kubilay Kocak <koobs@FreeBSD.org>
 
 PORTNAME=	python
-PORTVERSION=	${PYTHON_PORTVERSION}
+DISTVERSION=	${PYTHON_DISTVERSION}
+PORTREVISION=	1
 CATEGORIES=	lang python
-MASTER_SITES=	PYTHON/ftp/python/${PORTVERSION}
+MASTER_SITES=	PYTHON/ftp/python/${DISTVERSION}
 PKGNAMESUFFIX=	${PYTHON_SUFFIX}
-DISTNAME=	Python-${PORTVERSION}
+DISTNAME=	Python-${DISTVERSION}
 DIST_SUBDIR=	python
 
 # Resolve sinpi name clash with libm (IEEE-754 violation)
@@ -18,15 +19,18 @@ COMMENT=	Interpreted object-oriented programming language
 
 LICENSE=	PSFL
 
-USES=		cpe ncurses pathfix pkgconfig readline:port shebangfix ssl tar:xz
+DEPRECATED=	Upgrade to a newer Python version. 3.6 is in maintenance status and gets security fixes only. End-of-Life: 2021-12-23. See https://devguide.python.org/#status-of-python-branches
+EXPIRATION_DATE=	2021-12-31
+
+USES=		cpe ncurses pathfix pkgconfig readline shebangfix ssl tar:xz
 PATHFIX_MAKEFILEIN=	Makefile.pre.in
 USE_LDCONFIG=	yes
 GNU_CONFIGURE=	yes
-python_CMD=	${PREFIX}/bin/python${PYTHON_PORTVERSION:R}
+python_CMD=	${PREFIX}/bin/python${PYTHON_DISTVERSION:R}
 SHEBANG_FILES=	Lib/*.py Lib/*/*.py Lib/*/*/*.py Lib/*/*/*/*.py
 
 # Duplicate python.mk variables. TODO: Let lang/python?? ports use python.mk bits.
-PYTHON_VER=		${PYTHON_PORTVERSION:R}
+PYTHON_VER=		${PYTHON_DISTVERSION:R}
 PYTHON_VERSION=		python${PYTHON_VER}
 PYTHON_SUFFIX=		${PYTHON_VER:S/.//g}
 
@@ -47,7 +51,7 @@ SUB_LIST=		PYTHON_SUFFIX=${PYTHON_SUFFIX}
 PLIST_SUB=		ABI=${ABIFLAGS} \
 			XY=${PYTHON_SUFFIX} \
 			XYDOT=${PYTHON_VER} \
-			XYZDOT=${PORTVERSION} \
+			XYZDOT=${DISTVERSION} \
 			OSMAJOR=${OSVERSION:C/([0-9]*)[0-9]{5}/\1/}		# For plat-freebsd* in pkg-plist. https://bugs.python.org/issue19554
 
 OPTIONS_DEFINE=		DEBUG IPV6 LIBFFI NLS PYMALLOC THREADS
@@ -121,10 +125,16 @@ DISABLED_EXTENSIONS+=	nis
 PLIST_SUB+=	NO_NIS=""
 .endif
 
+post-patch:
+# disable detection of multiarch as it breaks with clang >= 13, which adds a
+# major.minor version number in -print-multiarch output, confusing Python
+	@${REINPLACE_CMD} -e 's|^\( *MULTIARCH=\).*--print-multiarch.*|\1|' ${WRKSRC}/configure
+
 post-install:
 .if ! ${PORT_OPTIONS:MDEBUG}
 	${RM} ${STAGEDIR}${PREFIX}/lib/libpython3.so						# Upstream Issue: https://bugs.python.org/issue17975
 .endif
+	${LN} -sf libpython${PYTHON_VER}${ABIFLAGS}.so.1.0 ${STAGEDIR}${PREFIX}/lib/libpython${PYTHON_VER}${ABIFLAGS}.so.1
 # This code block exists for the qemu-user enabled cross build environment.
 # When using this environment in poudriere, CC is not set to the default
 # of /usr/bin/cc and a cross-compile toolchain is used.  We need to hand

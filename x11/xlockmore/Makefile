@@ -1,7 +1,7 @@
 # Created by: Scott Mace <smace@FreeBSD.org>
 
 PORTNAME=	xlockmore
-PORTVERSION=	5.66
+PORTVERSION=	5.67
 CATEGORIES=	x11
 MASTER_SITES=	http://www.sillycycle.com/xlock/ \
 		SF/bsdsrc/${.CURDIR:T}
@@ -13,8 +13,10 @@ LICENSE=	BSD2CLAUSE
 
 LIB_DEPENDS=	libfreetype.so:print/freetype2
 
-USES=		tar:xz xorg
+USES=		cpe tar:xz xorg
 USE_XORG=	ice sm x11 xaw xext xpm xorgproto
+
+CPE_VENDOR=	sillycycle
 
 CONFIGURE_ARGS=	--without-motif --without-editres \
 		--without-dtsaver --without-rplay --without-nas \
@@ -77,8 +79,8 @@ JP_IMPLIES=	MB
 JP_CATEGORIES=	japanese
 JP_VARS=	XLOCKMORE_LANG=ja
 MAGICK_CONFIGURE_WITH=	magick
-MAGICK_LIB_DEPENDS=	libMagickCore-6.so:graphics/ImageMagick6 \
-			libpng.so:graphics/png
+MAGICK_USES=		magick:6
+MAGICK_LIB_DEPENDS=	libpng.so:graphics/png
 GTK2_CONFIGURE_WITH=	gtk2
 GTK2_LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig \
 			libpng.so:graphics/png
@@ -89,10 +91,6 @@ FREETYPE_LIB_DEPENDS=	libgltt.so:graphics/gltt
 FREETYPE_CFLAGS=	-I${LOCALBASE}/include/gltt
 
 .include <bsd.port.options.mk>
-
-.if ${PORT_OPTIONS:MFREETYPE}
-IGNORE_FreeBSD_11=	FREETYPE support requires FreeBSD version 12+
-.endif
 
 .if defined(XLOCKMORE_LANG)
 CONFIGURE_ARGS+=	--with-lang=${XLOCKMORE_LANG}

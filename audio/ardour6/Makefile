@@ -1,9 +1,11 @@
 # Created by: Michael Beer <beerml@sigma6audio.de>
 
 PORTNAME=	ardour6
-PORTVERSION=	6.6.0
+PORTVERSION=	6.8.0
+PORTREVISION=	1
 CATEGORIES=	audio
-MASTER_SITES=	https://github.com/beerml/ardour_releases/raw/master/
+MASTER_SITES=	LOCAL/nc/mirror/ \
+		https://misc.neelc.org/mirror/
 # The original master side points to the latest release only:
 # MASTER_SITES=	https://community.ardour.org/srctar/
 DISTNAME=	Ardour-${PORTVERSION}
@@ -43,13 +45,12 @@ LIB_DEPENDS=	libserd-0.so:devel/serd \
 		libwebsockets.so:net/libwebsockets
 
 USES=		compiler:c++11-lang desktop-file-utils gettext gnome \
-		libarchive pkgconfig python:3.7,build readline:port tar:bzip2 \
+		libarchive pkgconfig python:3.7,build readline tar:bzip2 \
 		waf xorg
 USE_CXXSTD=	c++11
 USE_XORG=	x11
 USE_GNOME=	atk cairo cairomm gdkpixbuf2 glib20 glibmm gtk20 gtkmm24 pango
 USE_LDCONFIG=	yes
-INSTALLS_ICONS=	yes
 BINARY_ALIAS+=	gas=${CC}
 
 PLIST_SUB=	ARDOURVERSION=${PORTVERSION}
@@ -60,6 +61,8 @@ CONFIGURE_ARGS=	--optimize --ptformat --freedesktop --no-phone-home \
 CONFIGURE_ARGS_amd64=	--arch='-msse -mfpmath=sse -DARCH_X86' --dist-target=x86_64
 # only support for i686 or better
 CONFIGURE_ARGS_i386=	--arch='-msse -mfpmath=sse -march=i686 -DARCH_X86' --dist-target=i686
+
+LDFLAGS_powerpc=	-Wl,-z,notext
 
 post-patch:
 	@${REINPLACE_CMD} -e 's/obj\.use            = '\''libsmf libpbd'\''/obj\.use            = '\''libsmf_internal libpbd'\''/g' ${WRKSRC}/libs/evoral/wscript

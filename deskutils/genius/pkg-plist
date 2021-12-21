@@ -55,6 +55,7 @@ share/applications/gnome-genius.desktop
 %%DATADIR%%/examples/taylor-exp.gel
 %%DATADIR%%/examples/taylor-sin.gel
 %%DATADIR%%/examples/vibrating-drumhead-modes.gel
+%%DATADIR%%/examples/zoom-differentiability.gel
 %%DATADIR%%/gel/calculus/differentiation.gel
 %%DATADIR%%/gel/calculus/fourier.gel
 %%DATADIR%%/gel/calculus/integration.gel
@@ -862,6 +863,7 @@ share/locale/sq/LC_MESSAGES/genius.mo
 share/locale/sr/LC_MESSAGES/genius.mo
 share/locale/sr@latin/LC_MESSAGES/genius.mo
 share/locale/sv/LC_MESSAGES/genius.mo
+share/locale/uk/LC_MESSAGES/genius.mo
 share/locale/zh_CN/LC_MESSAGES/genius.mo
 share/locale/zh_TW/LC_MESSAGES/genius.mo
 share/mime-info/genius.keys

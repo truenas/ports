@@ -30,7 +30,6 @@ BUILD_DEPENDS=	git:devel/git \
 RUN_DEPENDS=	gsed:textproc/gsed
 
 USES=		autoreconf bison cpe gettext gmake pkgconfig:build python:build tar:xz
-USE_GCC=	7	# Fails to build with GCC 8, cf. PR 232961, or clang
 
 GNU_CONFIGURE=	yes
 INFO=		grub grub-dev

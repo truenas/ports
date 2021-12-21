@@ -13,12 +13,11 @@ LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
 BROKEN_powerpc=		Does not compile on powerpc
-BROKEN_powerpc64=	fails to compile: libraries/libmbutil/parser.h:275:3: error: expected identifier
 
 BUILD_DEPENDS=	libatomic_ops>0:devel/libatomic_ops
 LIB_DEPENDS=	libltdl.so:devel/libltdl \
 		libarpack.so:math/arpack-ng \
-		libumfpack.so:math/suitesparse
+		libumfpack.so:math/suitesparse-umfpack
 
 USES=		compiler:c++11-lib fortran gmake libtool:build localbase
 USE_LDCONFIG=	yes

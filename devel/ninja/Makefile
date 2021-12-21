@@ -15,8 +15,10 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 USE_GITHUB=	yes
 GH_ACCOUNT=	ninja-build
 
-CONFLICTS=	irc/ninja-[0-9]*
+CONFLICTS=	irc/ninja
 USES=		python
+
+PORTSCOUT=	limit:^1\.
 
 PLIST_FILES=	bin/ninja
 PORTDOCS=	README.md manual.asciidoc

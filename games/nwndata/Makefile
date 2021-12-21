@@ -15,9 +15,12 @@ MAINTAINER=	scf@FreeBSD.org
 COMMENT=	Neverwinter Nights Data Files
 
 LICENSE=	Proprietary
+LICENSE_NAME=	Proprietary
+LICENSE_TEXT=	Distribution not allowed
+LICENSE_PERMS=	auto-accept
 
 ONLY_FOR_ARCHS=	amd64 i386
-ONLY_FOR_ARCHS_REASON=	Binary Distribution on x86 only
+ONLY_FOR_ARCHS_REASON=	binary distribution for x86 only
 
 # Setup port based upon whether this is the Diamond edition or straight NWN.
 .if defined(CDROM_MOUNT) && exists(${CDROM_MOUNT}/KingmakerSetup.exe)
@@ -38,7 +41,6 @@ PLIST_SUB+=	DIAMOND="@comment " ORIGINAL=""
 
 NO_BUILD=	yes
 WRKSRC=		${WRKDIR}/nwn
-RESTRICTED=	Distribution not allowed
 
 do-install:
 	${MKDIR} ${STAGEDIR}${DATADIR}

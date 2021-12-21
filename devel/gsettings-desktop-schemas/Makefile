@@ -1,9 +1,9 @@
 # Created by: Koop Mast <kwm@FreeBSD.org>
 
 PORTNAME=	gsettings-desktop-schemas
-PORTVERSION=	3.38.0
+DISTVERSION=	41.0
 CATEGORIES=	devel gnome
-MASTER_SITES=	GNOME
+MASTER_SITES=	GNOME/sources/${PORTNAME}/${DISTVERSION:R:R}
 DIST_SUBDIR=	gnome
 
 MAINTAINER=	desktop@FreeBSD.org
@@ -16,6 +16,8 @@ PORTSCOUT=	limitw:1,even
 
 USES=		gettext gnome localbase meson pkgconfig python:3.5+,build tar:xz
 USE_GNOME=	glib20 introspection:build
+
+NO_ARCH=	yes
 
 GLIB_SCHEMAS=	org.gnome.desktop.a11y.applications.gschema.xml \
 		org.gnome.desktop.a11y.gschema.xml \

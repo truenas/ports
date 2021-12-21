@@ -1,7 +1,7 @@
 # Created by: Bruce M Simpson
 
 PORTNAME=	opensc
-DISTVERSION=	0.21.0
+DISTVERSION=	0.22.0
 CATEGORIES=	security devel
 
 MAINTAINER=	ale@FreeBSD.org
@@ -9,7 +9,8 @@ COMMENT=	Libraries and utilities to access smart cards
 
 LICENSE=	LGPL21
 
-USES=		autoreconf compiler:c11 gmake libtool pkgconfig ssl
+USES=		autoreconf compiler:c11 cpe gmake libtool pkgconfig ssl
+CPE_VENDOR=	${PORTNAME}_project
 
 OPTIONS_SINGLE=	BACKEND
 OPTIONS_SINGLE_BACKEND=PCSC OPENCT CTAPI

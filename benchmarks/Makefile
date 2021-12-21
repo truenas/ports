@@ -36,14 +36,20 @@
     SUBDIR += iozone21
     SUBDIR += iperf
     SUBDIR += iperf3
+    SUBDIR += kdiskmark
     SUBDIR += libcelero
     SUBDIR += libmicro
     SUBDIR += linux-gputest
+    SUBDIR += linux-unigine-heaven
+    SUBDIR += linux-unigine-sanctuary
+    SUBDIR += linux-unigine-tropics
+    SUBDIR += linux-unigine-valley
     SUBDIR += linux-vdbench
     SUBDIR += lmbench
     SUBDIR += lzbench
     SUBDIR += mangohud
     SUBDIR += mdtest
+    SUBDIR += mst-bench
     SUBDIR += nbench
     SUBDIR += netio
     SUBDIR += netperf
@@ -81,6 +87,7 @@
     SUBDIR += rubygem-railsbench
     SUBDIR += scimark2
     SUBDIR += scimark2c
+    SUBDIR += shellbench
     SUBDIR += siege
     SUBDIR += sipp
     SUBDIR += slowloris
@@ -100,6 +107,7 @@
     SUBDIR += uperf
     SUBDIR += vegeta
     SUBDIR += vkmark
+    SUBDIR += vkpeak
     SUBDIR += webbench
     SUBDIR += wrk
 

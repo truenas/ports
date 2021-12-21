@@ -1,7 +1,8 @@
 PORTNAME=	ospd-openvas
-DISTVERSION=	20.8.1
+DISTVERSION=	21.4.3
+DISTVERSIONPREFIX=	v
 CATEGORIES=	security python
-MASTER_SITES=   CHEESESHOP
+#MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	acm@FreeBSD.org
@@ -17,13 +18,17 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}ospd>=0:security/py-ospd@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}defusedxml>=0:devel/py-defusedxml@${PY_FLAVOR} \
 		openvas:security/openvas
 
+USE_GITHUB=	yes
+GH_ACCOUNT=	greenbone
+GH_PROJECT=	${PORTNAME}
+
 USES=		python:3.6+
 USE_PYTHON=	distutils
 
 NO_ARCH=	yes
 
-USERS=          gvm
-GROUPS=         ${USERS}
+USERS=		gvm
+GROUPS=		${USERS}
 
 USE_RC_SUBR=	${PORTNAME:S/-/_/}
 SUB_LIST=	PYTHON_CMD=${PYTHON_CMD}

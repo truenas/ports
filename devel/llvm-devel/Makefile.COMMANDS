@@ -19,7 +19,6 @@ LLVM_COMMANDS=	\
 		llvm-dlltool \
 		llvm-dwarfdump \
 		llvm-dwp \
-		llvm-elfabi \
 		llvm-exegesis \
 		llvm-extract \
 		llvm-gsymutil \
@@ -37,6 +36,7 @@ LLVM_COMMANDS=	\
 		llvm-objcopy \
 		llvm-objdump \
 		llvm-opt-report \
+		llvm-otool \
 		llvm-pdbutil \
 		llvm-profdata \
 		llvm-profgen \
@@ -46,20 +46,24 @@ LLVM_COMMANDS=	\
 		llvm-readobj \
 		llvm-reduce \
 		llvm-rtdyld \
+		llvm-sim \
 		llvm-size \
 		llvm-split \
 		llvm-stress \
 		llvm-strings \
 		llvm-strip \
 		llvm-symbolizer \
+		llvm-tapi-diff \
 		llvm-tblgen \
 		llvm-undname \
+		llvm-windres \
 		llvm-xray \
 		opt \
 		sancov \
 		split-file
 
 CLANG_COMMANDS=	\
+		analyze-build \
 		c-index-test \
 		clang \
 		clang++ \
@@ -67,12 +71,16 @@ CLANG_COMMANDS=	\
 		clang-cpp \
 		clang-extdef-mapping \
 		clang-format \
+		clang-nvlink-wrapper \
 		clang-offload-bundler \
 		clang-offload-wrapper \
+		clang-repl \
 		clang-scan-deps \
 		diagtool \
 		hmaptool \
+		intercept-build \
 		scan-build \
+		scan-build-py \
 		scan-view
 
 EXTRAS_COMMANDS= \
@@ -91,10 +99,10 @@ EXTRAS_COMMANDS= \
 		pp-trace
 
 FLANG_COMMANDS=	\
-		f18 \
 		f18-parse-demo \
 		fir-opt \
 		flang \
+		flang-new \
 		tco
 
 LIT_COMMANDS=	\
@@ -120,8 +128,11 @@ LLDB_COMMANDS=	\
 
 MLIR_COMMANDS=	\
 		mlir-cpu-runner \
-		mlir-linalg-ods-gen \
+		mlir-lsp-server \
 		mlir-opt \
 		mlir-reduce \
 		mlir-tblgen \
 		mlir-translate
+
+OPENMP_COMMANDS=	\
+		llvm-omp-device-info

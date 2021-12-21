@@ -1,5 +1,5 @@
 PORTNAME=	kakoune
-DISTVERSION=	2020.09.01
+DISTVERSION=	2021.11.08
 CATEGORIES=	editors
 MASTER_SITES=	https://github.com/mawww/kakoune/releases/download/v${DISTVERSION}/
 
@@ -9,9 +9,9 @@ COMMENT=	Modal code editor with a focus on interactivity
 LICENSE=	UNLICENSE
 LICENSE_FILE=	${WRKSRC:H}/UNLICENSE
 
-RUN_DEPENDS=	setsid:sysutils/ssid
+RUN_DEPENDS=	setsid:sysutils/setsid
 
-USES=		compiler:c++17-lang gmake ncurses tar:bzip2
+USES=		compiler:c++17-lang gmake tar:bzip2
 DATADIR=	${PREFIX}/share/kak
 DOCSDIR=	${PREFIX}/share/doc/kak
 PATCH_WRKSRC=	${WRKSRC:H}

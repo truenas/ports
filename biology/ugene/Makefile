@@ -1,7 +1,7 @@
 # Created by: Hannes Hauswedell <h2+fbsdports@fsfe.org>
 
 PORTNAME=	ugene
-PORTVERSION=	38.0
+PORTVERSION=	40.1
 CATEGORIES=	biology science
 
 MAINTAINER=	h2+fbsdports@fsfe.org
@@ -39,16 +39,15 @@ OPENCL_QMAKE_ON=	UGENE_OPENCL_DETECTED=1
 
 .include <bsd.port.pre.mk>
 
-.if ${ARCH} == amd64
-# XXX: need to manually tell the build we are on x64
-QMAKE_ARGS+=	CONFIG+=x64
+.if ${ARCH} == i386
+QMAKE_ARGS+=	CONFIG+=x86
 .endif
 
 post-patch:
 # yes, bash is required, stuff will not execute with sh
 	@${REINPLACE_CMD} -e 's|/bin/bash|/usr/bin/env bash|' \
 		${WRKSRC}/src/gen_bin_script.cmd \
-		${WRKSRC}/installer/_common_data/ugene
+		${WRKSRC}/etc/shared/ugene ${WRKSRC}/etc/shared/ugened
 	@${REINPLACE_CMD} -e 's|-bit version|& for ${OPSYS}/${ARCH}|' \
 		${WRKSRC}/src/ugeneui/src/main_window/AboutDialogController.cpp
 	@${REINPLACE_CMD} 's, -lbreakpad$$$$D,,' \
@@ -56,8 +55,8 @@ post-patch:
 		${WRKSRC}/src/plugins_checker/plugins_checker.pri \
 		${WRKSRC}/src/ugenecl/ugenecl.pri \
 		${WRKSRC}/src/ugeneui/ugeneui.pri
-	@${REINPLACE_CMD} -e '218,220s|NULL)|false)|' \
-		${WRKSRC}/src/plugins/GUITestBase/src/GTUtilsMdi.cpp
+	@${REINPLACE_CMD} -e '/ugene\.desktop/s,share,&d,' \
+		${WRKSRC}/ugene.pri
 
 post-stage:
 	@cd ${STAGEDIR}${PREFIX} && ${RM} bin/ecp.* lib/ugene/ecp.*

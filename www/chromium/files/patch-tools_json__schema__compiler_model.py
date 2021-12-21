@@ -1,11 +1,10 @@
---- tools/json_schema_compiler/model.py.orig	2021-04-14 18:41:36 UTC
+--- tools/json_schema_compiler/model.py.orig	2021-09-24 04:26:37 UTC
 +++ tools/json_schema_compiler/model.py
-@@ -859,7 +859,7 @@ class Platforms(object):
+@@ -871,6 +871,7 @@ class Platforms(object):
+   """Enum of the possible platforms.
+   """
    CHROMEOS = _PlatformInfo("chromeos")
-   CHROMEOS_TOUCH = _PlatformInfo("chromeos_touch")
++  FREEBSD = _PlatformInfo("freebsd")
    LACROS = _PlatformInfo("lacros")
--  LINUX = _PlatformInfo("linux")
-+  LINUX = _PlatformInfo("bsd")
+   LINUX = _PlatformInfo("linux")
    MAC = _PlatformInfo("mac")
-   WIN = _PlatformInfo("win")
- 

@@ -2,7 +2,7 @@
 
 PORTNAME=	aprsd
 PORTVERSION=	2.2.515
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	comms hamradio
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/2.2.5-15
 DISTNAME=	aprsd-2.2.5-15
@@ -12,7 +12,6 @@ COMMENT=	Server daemon providing Internet access to APRS packet data
 
 LICENSE=	GPLv2
 
-BROKEN_FreeBSD_11_powerpc64=	fails to link on powerpc64 elfv1: httpserver.o:(.text+0x1074): undefined reference to `convertUpTime(int)'
 BROKEN_FreeBSD_12_powerpc64=	fails to link on powerpc64 elfv1: httpserver.o:(.text+0x1074): undefined reference to `convertUpTime(int)'
 
 GNU_CONFIGURE=	yes
@@ -24,7 +23,7 @@ GROUPS=	aprsd dialer tnc
 APRSD_RC_USER=	aprsd
 APRSD_RC_GROUP=	aprsd
 
-RC_SUB_LIST=	LOCALBASE=${LOCALBASE} APRSD_RC_USER=${APRSD_RC_USER} \
+SUB_LIST=	APRSD_RC_USER=${APRSD_RC_USER} \
 		APRSD_RC_GROUP=${APRSD_RC_GROUP}
 
 OPTIONS_DEFINE=	DOCS EXAMPLES

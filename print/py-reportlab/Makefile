@@ -1,7 +1,7 @@
 # Created by: Thomas Gellekum <tg@FreeBSD.org>
 
 PORTNAME=	reportlab
-PORTVERSION=	3.5.60
+PORTVERSION=	3.5.68
 CATEGORIES=	print python
 MASTER_SITES=	CHEESESHOP \
 		https://www.reportlab.com/ftp/
@@ -17,7 +17,7 @@ LICENSE=	BSD3CLAUSE
 
 RUN_DEPENDS=	${PY_PILLOW}
 
-USES=		python:3.6+
+USES=		cpe python:3.6+
 USE_PYTHON=	distutils autoplist
 
 CONFLICTS=	py*-reportlab[^3]-[^3].* \

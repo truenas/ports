@@ -2,7 +2,7 @@
 
 PORTNAME=	gchemutils
 PORTVERSION=	0.14.16
-PORTREVISION=	5
+PORTREVISION=	7
 CATEGORIES=	science
 MASTER_SITES=	SAVANNAH/${PORTNAME}/${PORTVERSION:R}
 DISTNAME=	gnome-chemistry-utils-${PORTVERSION}
@@ -15,8 +15,7 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 
 BUILD_DEPENDS=	${LOCALBASE}/libdata/pkgconfig/bodr.pc:science/bodr \
 		${LOCALBASE}/libdata/pkgconfig/chemical-mime-data.pc:science/chemical-mime-data
-LIB_DEPENDS=	libgtkglext-x11-1.0.so:x11-toolkits/gtkglext \
-		libopenbabel.so:science/openbabel \
+LIB_DEPENDS=	libopenbabel.so:science/openbabel \
 		libgoffice-0.10.so:devel/goffice
 RUN_DEPENDS=	${LOCALBASE}/libdata/pkgconfig/bodr.pc:science/bodr \
 		${LOCALBASE}/libdata/pkgconfig/chemical-mime-data.pc:science/chemical-mime-data
@@ -32,7 +31,6 @@ USE_GL=		gl
 USE_LDCONFIG=	yes
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--with-omf-dir=${PREFIX}/share/omf
-INSTALLS_ICONS=	yes
 INSTALLS_OMF=	yes
 GLIB_SCHEMAS=	org.gnome.gchemutils.crystal.gschema.xml \
 		org.gnome.gchemutils.gschema.xml \

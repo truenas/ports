@@ -2,7 +2,7 @@
 
 PORTNAME=	kyra
 PORTVERSION=	2.1.3
-PORTREVISION=	4
+PORTREVISION=	5
 CATEGORIES=	devel
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}2/${PORTVERSION}
 DISTNAME=	${PORTNAME}_src_${PORTVERSION:S/./_/g}
@@ -14,10 +14,6 @@ LICENSE=	GPLv2
 
 LIB_DEPENDS=	libpng.so:graphics/png \
 		libtiff.so:graphics/tiff
-
-BROKEN_aarch64=		invalid output constraint =A in assembler
-BROKEN_armv6=		invalid output constraint =A in assembler
-BROKEN_armv7=		invalid output constraint =A in assembler
 
 WRKSRC=		${WRKDIR}/${PORTNAME}
 

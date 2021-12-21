@@ -18,6 +18,7 @@
     SUBDIR += berkeley-db
     SUBDIR += bluej
     SUBDIR += bootstrap-openjdk11
+    SUBDIR += bootstrap-openjdk17
     SUBDIR += bootstrap-openjdk6
     SUBDIR += bootstrap-openjdk8
     SUBDIR += bouncycastle
@@ -95,6 +96,7 @@
     SUBDIR += openjdk14
     SUBDIR += openjdk15
     SUBDIR += openjdk16
+    SUBDIR += openjdk17
     SUBDIR += openjdk7
     SUBDIR += openjdk7-jre
     SUBDIR += openjdk8

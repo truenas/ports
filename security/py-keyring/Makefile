@@ -1,7 +1,8 @@
 # Created by: Douglas Thrift <douglas@douglasthrift.net>
 
 PORTNAME=	keyring
-PORTVERSION=	23.0.1
+PORTVERSION=	18.0.1
+PORTEPOCH=	1
 CATEGORIES=	security python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -14,7 +15,8 @@ LICENSE=	PSFL
 BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}setuptools_scm>=1.15.0:devel/py-setuptools_scm@${PY_FLAVOR}
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}entrypoints>=0:devel/py-entrypoints@${PY_FLAVOR}
 
-USES=		python:3.6+
+USES=		cpe python:3.6+
+CPE_VENDOR=	python
 USE_PYTHON=	autoplist concurrent distutils
 NO_ARCH=	yes
 

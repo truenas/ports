@@ -1,8 +1,7 @@
 # Created by: Joerg Wunsch <joerg@FreeBSD.org>
 
 PORTNAME=	libbfd
-PORTVERSION=	2.19.1
-PORTREVISION=	3
+PORTVERSION=	2.33.1
 CATEGORIES=	devel
 MASTER_SITES=	SOURCEWARE/binutils/releases
 DISTNAME=	binutils-${PORTVERSION}
@@ -16,11 +15,11 @@ BROKEN_armv7=		Fails to configure: BFD does not support target armv7-portbld-fre
 BROKEN_mips64=		Fails to configure: BFD does not support target mips64-portbld-freebsd12.0
 BROKEN_riscv64=		Fails to configure: machine riscv64-portbld not recognized
 
-CONFLICTS=	mingw-binutils-[0-9]* binutils-[0-9]*
+CONFLICTS=	mingw-binutils binutils
 
 WRKSRC=		${WRKDIR}/binutils-${PORTVERSION}/bfd
 
-USES=		libtool tar:bzip2
+USES=		libtool tar:xz
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--enable-install-libbfd \
 		--disable-nls \

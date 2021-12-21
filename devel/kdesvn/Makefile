@@ -15,7 +15,7 @@ LIB_DEPENDS=	libapr-1.so:devel/apr1 \
 		libgdbm.so:databases/gdbm \
 		libsvn_client-1.so:devel/subversion
 
-CONFLICTS_INSTALL=	qsvn-[0-9]*
+CONFLICTS_INSTALL=	qsvn
 
 USES=		bdb cmake compiler:c++11-lang kde:5 qt:5 tar:xz
 USE_KDE=	auth bookmarks codecs completion config configwidgets \
@@ -25,6 +25,8 @@ USE_KDE=	auth bookmarks codecs completion config configwidgets \
 		doctools_build
 USE_QT=		concurrent core dbus gui network sql widgets xml \
 		buildtools_build qmake_build
+
+PORTSCOUT=	ignore:1
 
 post-patch:
 	${REINPLACE_CMD} -e 's#%%EXECINFO%%#${EXECINFO_LDFLAGS} -lexecinfo#' \

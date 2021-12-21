@@ -1,5 +1,5 @@
 PORTNAME=	pandas
-PORTVERSION=	1.2.0
+PORTVERSION=	1.2.5
 PORTEPOCH=	1
 CATEGORIES=	math devel python
 MASTER_SITES=	CHEESESHOP
@@ -11,14 +11,15 @@ COMMENT=	Flexible, high-performance data analysis in Python
 LICENSE=	BSD3CLAUSE
 
 BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}cython>=0.29.21<3:lang/cython@${PY_FLAVOR} \
-		${PYNUMPY}
+		${PYTHON_PKGNAMEPREFIX}numpy>=1.16.5,1:math/py-numpy@${PY_FLAVOR}
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}cython>=0.29.21<3:lang/cython@${PY_FLAVOR} \
-		${PYNUMPY} \
+		${PYTHON_PKGNAMEPREFIX}numpy>=1.16.5,1:math/py-numpy@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}dateutil>=2.7.3:devel/py-dateutil@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}pytz>=2017.3,1:devel/py-pytz@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}sqlite3>0:databases/py-sqlite3@${PY_FLAVOR}
 
-USES=		python:3.7+
+USES=		cpe python:3.7+
+CPE_VENDOR=	numfocus
 USE_PYTHON=	autoplist cython distutils
 
 OPTIONS_DEFINE=		MPL SCIPY
@@ -28,7 +29,7 @@ OPTIONS_GROUP_ACCEL=	BTLNCK NUMEXPR
 OPTIONS_GROUP_STORAGE=	BOTO TABLES
 OPTIONS_GROUP_HTML=	LXML HTML5LIB JINJA2
 OPTIONS_GROUP_EXCEL=	XLRD XLWT OPENPYXL XLSX
-OPTIONS_RADIO_SQL=	ALCHEMY10 ALCHEMY11 ALCHEMY12 ALCHEMY13
+OPTIONS_RADIO_SQL=	ALCHEMY10 ALCHEMY11 ALCHEMY12 ALCHEMY13 ALCHEMY14
 OPTIONS_DEFAULT=	BTLNCK NUMEXPR
 
 # Note: we cannot include the following ports in *_DEPENDS because they depend
@@ -40,6 +41,7 @@ ALCHEMY10_DESC=	Support SQL databases via databases/py-sqlalchemy10
 ALCHEMY11_DESC=	Support SQL databases via databases/py-sqlalchemy11
 ALCHEMY12_DESC=	Support SQL databases via databases/py-sqlalchemy12
 ALCHEMY13_DESC=	Support SQL databases via databases/py-sqlalchemy13
+ALCHEMY14_DESC=	Support SQL databases via databases/py-sqlalchemy14
 BOTO_DESC=	Support Amazon S3 storage via devel/py-boto
 BTLNCK_DESC=	Accelerate certain NaN evals via math/py-bottleneck
 EXCEL_DESC=	MS Excel I/O Add-ons
@@ -63,6 +65,7 @@ ALCHEMY10_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}sqlalchemy10>0:databases/py-sqlalc
 ALCHEMY11_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}sqlalchemy11>0:databases/py-sqlalchemy11@${PY_FLAVOR}
 ALCHEMY12_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}sqlalchemy12>0:databases/py-sqlalchemy12@${PY_FLAVOR}
 ALCHEMY13_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}sqlalchemy13>0:databases/py-sqlalchemy13@${PY_FLAVOR}
+ALCHEMY14_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}sqlalchemy14>0:databases/py-sqlalchemy14@${PY_FLAVOR}
 BOTO_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}boto>0:devel/py-boto@${PY_FLAVOR}
 BTLNCK_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}bottleneck>=1.2.0:math/py-bottleneck@${PY_FLAVOR}
 HTML5LIB_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}beautifulsoup>=4.2.1:www/py-beautifulsoup@${PY_FLAVOR} \

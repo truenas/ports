@@ -1,6 +1,5 @@
 PORTNAME=	hg-evolve
-DISTVERSION=	10.2.0
-DISTVERSIONSUFFIX=	.post1
+DISTVERSION=	10.4.1
 CATEGORIES=	devel python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -10,7 +9,8 @@ COMMENT=	Changeset Evolution with Mercurial
 
 LICENSE=	GPLv2+
 
-RUN_DEPENDS=	hg:devel/mercurial
+RUN_DEPENDS=	hg:devel/mercurial \
+		${PYTHON_PKGNAMEPREFIX}sqlite3>0:databases/py-sqlite3@${PY_FLAVOR}
 
 USES=		python:3.6+
 USE_PYTHON=	autoplist distutils

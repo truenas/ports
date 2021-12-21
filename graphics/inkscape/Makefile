@@ -1,10 +1,13 @@
 # Created by: Alexander Nedotsukov <bland@FreeBSD.org>
 
 PORTNAME=	inkscape
-PORTVERSION=	1.0.2
-PORTREVISION=	3
+DISTVERSION=	1.1
+PORTREVISION=	7
 CATEGORIES=	graphics gnome
-MASTER_SITES=	https://media.inkscape.org/dl/resources/file/
+MASTER_SITES=	https://inkscape.org/gallery/item/26932/
+
+PATCH_SITES=	https://gitlab.com/inkscape/inkscape/-/commit/
+PATCHFILES=	7d9497b64df1ec3ddfb65efd105dd11212014ce9.patch:-p1
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Full featured open source SVG editor
@@ -37,7 +40,8 @@ LIB_DEPENDS=	libpopt.so:devel/popt \
 		libsoup-2.4.so:devel/libsoup \
 		libenchant-2.so:textproc/enchant2 \
 		libyaml.so:textproc/libyaml \
-		libdouble-conversion.so:devel/double-conversion
+		libdouble-conversion.so:devel/double-conversion \
+		lib2geom.so:math/lib2geom
 RUN_DEPENDS=	${PYNUMPY} \
 		${PYTHON_PKGNAMEPREFIX}lxml>0:devel/py-lxml@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}scour>0:textproc/py-scour@${PY_FLAVOR} \
@@ -51,9 +55,7 @@ USE_GNOME=	gtkmm30 libxml2 libxslt
 USE_XORG=	sm ice x11 xext
 USE_LDCONFIG=	yes
 
-WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}_2021-01-15_e86c870879
-
-INSTALLS_ICONS=	yes
+WRKSRC=		${WRKDIR}/${PORTNAME}-${DISTVERSION}_2021-05-24_c4e8f9ed74
 
 SHEBANG_FILES=	share/extensions/*.py share/extensions/genpofiles.sh \
 		share/templates/*.py man/fix-roff-punct
@@ -76,7 +78,6 @@ DBUS_LIB_DEPENDS=	libdbus-glib-1.so:devel/dbus-glib \
 
 GVFS_USE=		GNOME=gvfs
 
-OPENMP_USES=		compiler:openmp
 OPENMP_CMAKE_BOOL=	WITH_OPENMP
 
 POPPLER_DESC=		PDF preview rendering
@@ -98,7 +99,7 @@ WPG_LIB_DEPENDS=	libwpg-0.3.so:graphics/libwpg03
 
 IMAGICK_DESC=		Raster image format library
 IMAGICK6_DESC=		Use ImageMagick6
-IMAGICK6_LIB_DEPENDS=	libMagick++-6.so:graphics/ImageMagick6
+IMAGICK6_USES=		magick:6
 IMAGICK6_CMAKE_BOOL=	WITH_IMAGE_MAGICK
 GM_DESC=		Use GraphicsMagick
 GM_LIB_DEPENDS=		libGraphicsMagick.so:graphics/GraphicsMagick

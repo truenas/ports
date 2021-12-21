@@ -12,7 +12,11 @@ LICENSE_COMB=	dual
 
 LIB_DEPENDS=	libdns_sd.so:net/mDNSResponder
 
-CONFLICTS_INSTALL=	nss_mdns-[0-9]*
+USES=		cpe
+
+CPE_VENDOR=	apple
+
+CONFLICTS_INSTALL=	nss_mdns
 
 WRKSRC=		${WRKDIR}/${PORTNAME:S/_nss//}-${PORTVERSION}
 

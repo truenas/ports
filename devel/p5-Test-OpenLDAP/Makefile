@@ -1,11 +1,11 @@
 PORTNAME=	Test-OpenLDAP
 PORTVERSION=	0.05
-PORTREVISION=	5
+PORTREVISION=	6
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
-MAINTAINER=	kuriyama@FreeBSD.org
+MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Perl extension to creates temp instance of slapd to run tests against
 
 LICENSE=	ART10 GPLv1+

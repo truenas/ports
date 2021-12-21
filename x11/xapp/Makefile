@@ -1,7 +1,7 @@
 # Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
 
 PORTNAME=	xapp
-PORTVERSION=	2.0.7
+PORTVERSION=	2.2.6
 CATEGORIES=	x11 gnome
 DIST_SUBDIR=	gnome
 
@@ -24,7 +24,6 @@ USE_GNOME=	cairo gdkpixbuf2 glib20 gtk30 introspection:build intltool \
 USE_LDCONFIG=	yes
 USE_XORG=	x11
 GLIB_SCHEMAS=	org.x.apps.gschema.xml
-INSTALLS_ICONS=	yes
 SHEBANG_FILES=	data libxapp meson-scripts schemas scripts status-applets \
 		test-scripts
 

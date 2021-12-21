@@ -1,7 +1,8 @@
 # Created by: Ryan Steinmetz <zi@FreeBSD.org>
 
 PORTNAME=	exabgp
-PORTVERSION=	4.2.11
+PORTVERSION=	4.2.13
+PORTREVISION=	2
 CATEGORIES=	net
 MASTER_SITES=	GH \
 		ZI
@@ -17,7 +18,7 @@ LICENSE_FILE=	${WRKSRC}/LICENCE.txt
 USES=		python:3.6+ shebangfix
 USE_PYTHON=	distutils autoplist
 
-CONFLICTS_INSTALL=	exabgp-[0-9]*
+CONFLICTS_INSTALL=	exabgp
 
 SUB_FILES=	pkg-message
 SUB_LIST=	PYTHON_LIBDIR=${PYTHON_LIBDIR} PYTHON_CMD=${PYTHON_CMD} \

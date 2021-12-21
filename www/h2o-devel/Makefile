@@ -2,7 +2,7 @@
 
 PORTNAME=	h2o
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2.3.0-beta2
+DISTVERSION=	2.3.0-beta2.20210611
 CATEGORIES=	www
 PKGNAMESUFFIX=	-devel
 
@@ -14,16 +14,16 @@ LICENSE_COMB=	multi
 
 BROKEN_armv6=		fails to compile: asm_arm.inc:139:36: '.syntax divided' arm assembly not supported
 BROKEN_armv7=		fails to compile: asm_arm.inc:139:36: '.syntax divided' arm assembly not supported
-BROKEN_FreeBSD_11_powerpc64=	fails to link on powerpc64 elfv1: unrecognized option '-Wl,-rpath=/usr/local/lib/gcc6'
 BROKEN_FreeBSD_12_powerpc64=	fails to link on powerpc64 elfv1: unrecognized option '-Wl,-rpath=/usr/local/lib/gcc6'
 
 LIB_DEPENDS=	libuv.so:devel/libuv
 
 USES=		cmake:noninja compiler:c11 cpe perl5 shebangfix ssl pkgconfig
-CPE_VENDOR=	h2o_project
+CPE_VENDOR=	dena
 USE_GITHUB=	yes
 USE_PERL5=	run
 USE_LDCONFIG=	yes
+GH_TAGNAME=	96bf0ef
 
 CONFLICTS=	h2o-2*
 

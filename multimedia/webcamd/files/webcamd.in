@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # PROVIDE: webcamd
-# REQUIRE: FILESYSTEMS netif dbus kld
+# REQUIRE: FILESYSTEMS netif kld
 # KEYWORD: shutdown
 #
 # ================================================================
@@ -90,8 +90,6 @@ load_rc_config $name
 : ${webcamd_group:=webcamd}
 : ${webcamd_startup_delay=1}
 : ${webcamd_devd_starts_unspecified=YES}
-
-: ${hald_enable:=NO}
 
 # If invoked automatically by devd, we receive additional arguments
 devd_device=${2}

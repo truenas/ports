@@ -1,12 +1,11 @@
 # Created by: Andreas Fehlner <fehlner@gmx.de>
 
 PORTNAME=	gramps
-PORTVERSION=	5.1.1
+PORTVERSION=	5.1.4
 DISTVERSIONPREFIX=	v
-PORTREVISION=	1
 CATEGORIES=	science gnome python
 
-MAINTAINER=	woodsb02@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	GTK3-based genealogy program
 
 LICENSE=	GPLv2+
@@ -24,12 +23,12 @@ USES=		desktop-file-utils gettext gnome python:3.3+ shared-mime-info
 USE_GITHUB=	yes
 GH_ACCOUNT=	gramps-project
 USE_GNOME=	cairo gtk30 intltool librsvg2 pango pygobject3
+INSTALLS_OMF=	yes
 USE_PYTHON=	autoplist distutils noflavors
 
-NO_ARCH=	yes
 CONFIGURE_ARGS=	--disable-mime-install
-INSTALLS_OMF=	yes
-INSTALLS_ICONS=	yes
+
+NO_ARCH=	yes
 
 OPTIONS_DEFINE=		GEXIV GTKSPELL PIL RCS TTFFREEFONT
 OPTIONS_DEFAULT=	GEXIV GTKSPELL

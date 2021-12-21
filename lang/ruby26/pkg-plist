@@ -7,7 +7,7 @@ bin/rdoc%%RUBY_SUFFIX%%
 %%IF_DEFAULT%%bin/ri
 bin/ri%%RUBY_SUFFIX%%
 %%IF_DEFAULT%%bin/ruby
-bin/%%RUBY_NAME%%
+bin/ruby%%RUBY_SUFFIX%%
 include/ruby-%%RUBY_VER%%/%%RUBY_ARCH%%/rb_mjit_min_header-%%RUBY_VERSION%%.h
 include/ruby-%%RUBY_VER%%/%%RUBY_ARCH%%/ruby/config.h
 include/ruby-%%RUBY_VER%%/ruby.h
@@ -36,9 +36,9 @@ include/ruby-%%RUBY_VER%%/ruby/thread_native.h
 include/ruby-%%RUBY_VER%%/ruby/util.h
 include/ruby-%%RUBY_VER%%/ruby/version.h
 include/ruby-%%RUBY_VER%%/ruby/vm.h
-lib/lib%%RUBY_NAME%%-static.a
-lib/lib%%RUBY_NAME%%.so
-lib/lib%%RUBY_NAME%%.so.%%RUBY_SHLIBVER%%
+lib/libruby%%RUBY_SHLIBVER%%-static.a
+lib/libruby%%RUBY_SHLIBVER%%.so
+lib/libruby%%RUBY_SHLIBVER%%.so.%%RUBY_SHLIBVER%%
 %%RUBY_LIBDIR%%/English.rb
 %%RUBY_LIBDIR%%/abbrev.rb
 %%RUBY_ARCHLIBDIR%%/bigdecimal.so
@@ -901,7 +901,7 @@ man/man1/irb%%RUBY_SUFFIX%%.1.gz
 %%IF_DEFAULT%%man/man1/ri.1.gz
 man/man1/ri%%RUBY_SUFFIX%%.1.gz
 %%IF_DEFAULT%%man/man1/ruby.1.gz
-man/man1/%%RUBY_NAME%%.1.gz
+man/man1/ruby%%RUBY_SUFFIX%%.1.gz
 %%DOCS%%%%RUBY_DOCDIR%%/COPYING
 %%DOCS%%%%RUBY_DOCDIR%%/COPYING.ja
 %%DOCS%%%%RUBY_DOCDIR%%/ChangeLog
@@ -1044,8 +1044,8 @@ man/man1/%%RUBY_NAME%%.1.gz
 %%CAPIDOCS%%%%RUBY_DOCDIR%%/capi/html/d0/d59/struct4_8c_source.html
 %%CAPIDOCS%%%%RUBY_DOCDIR%%/capi/html/d0/d5a/structibf__object__string.html
 %%CAPIDOCS%%%%RUBY_DOCDIR%%/capi/html/d0/d5c/structtr.html
-%%CAPIDOCS%%%%RUBY_DOCDIR%%/capi/html/d0/d61/structibf__object__header.html
 %%CAPIDOCS%%%%RUBY_DOCDIR%%/capi/html/d0/d63/structsockcred2.html
+%%CAPIDOCS%%%%RUBY_DOCDIR%%/capi/html/d0/d61/structibf__object__header.html
 %%CAPIDOCS%%%%RUBY_DOCDIR%%/capi/html/d0/d64/structparser__params.html
 %%CAPIDOCS%%%%RUBY_DOCDIR%%/capi/html/d0/d65/structcls__struct__7byte.html
 %%CAPIDOCS%%%%RUBY_DOCDIR%%/capi/html/d0/d66/struct_r_rational.html
@@ -10517,6 +10517,7 @@ man/man1/%%RUBY_NAME%%.1.gz
 %%RDOC%%%%RUBY_RIDIR%%/Net/FTP/storbinary-i.ri
 %%RDOC%%%%RUBY_RIDIR%%/Net/FTP/storlines-i.ri
 %%RDOC%%%%RUBY_RIDIR%%/Net/FTP/system-i.ri
+%%RDOC%%%%RUBY_RIDIR%%/Net/FTP/use_pasv_ip-i.ri
 %%RDOC%%%%RUBY_RIDIR%%/Net/FTP/voidcmd-i.ri
 %%RDOC%%%%RUBY_RIDIR%%/Net/FTP/welcome-i.ri
 %%RDOC%%%%RUBY_RIDIR%%/Net/FTPConnectionError/cdesc-FTPConnectionError.ri
@@ -10854,6 +10855,7 @@ man/man1/%%RUBY_NAME%%.1.gz
 %%RDOC%%%%RUBY_RIDIR%%/Net/IMAP/ResponseError/new-c.ri
 %%RDOC%%%%RUBY_RIDIR%%/Net/IMAP/ResponseError/response-i.ri
 %%RDOC%%%%RUBY_RIDIR%%/Net/IMAP/ResponseParseError/cdesc-ResponseParseError.ri
+%%RDOC%%%%RUBY_RIDIR%%/Net/IMAP/UnknownResponseError/cdesc-UnknownResponseError.ri
 %%RDOC%%%%RUBY_RIDIR%%/Net/IMAP/add_authenticator-c.ri
 %%RDOC%%%%RUBY_RIDIR%%/Net/IMAP/add_response_handler-i.ri
 %%RDOC%%%%RUBY_RIDIR%%/Net/IMAP/append-i.ri

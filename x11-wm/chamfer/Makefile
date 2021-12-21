@@ -1,6 +1,5 @@
 PORTNAME=	chamfer
-DISTVERSION=	s20210218
-PORTREVISION=	1
+DISTVERSION=	s20210622
 CATEGORIES=	x11-wm
 
 MAINTAINER=	jbeich@FreeBSD.org
@@ -9,13 +8,13 @@ COMMENT=	Tiling X11 window manager with Vulkan compositor
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-BUILD_DEPENDS=	spirv-opt:graphics/spirv-tools \
+BUILD_DEPENDS=	boost-libs>0:devel/boost-libs \
+		${PYTHON_PKGNAMEPREFIX}boost-libs>0:devel/boost-python-libs@${PY_FLAVOR} \
+		spirv-opt:graphics/spirv-tools \
 		vulkan-headers>0:graphics/vulkan-headers \
 		glslc:graphics/shaderc \
 		glm>0:math/glm
-LIB_DEPENDS=	libboost_filesystem.so:devel/boost-libs \
-		${PY_BOOST} \
-		libvulkan.so:graphics/vulkan-loader \
+LIB_DEPENDS=	libvulkan.so:graphics/vulkan-loader \
 		libfreetype.so:print/freetype2 \
 		libharfbuzz.so:print/harfbuzz \
 		libfontconfig.so:x11-fonts/fontconfig \
@@ -30,7 +29,7 @@ USE_GITHUB=	yes
 USE_XORG=	xcb
 GH_ACCOUNT=	jaelpark
 GH_PROJECT=	${PORTNAME}wm
-GH_TAGNAME=	a034c07
+GH_TAGNAME=	d0916ee
 
 post-patch:
 	@${REINPLACE_CMD} -e 's,/usr,${PREFIX},' \
@@ -39,9 +38,10 @@ post-patch:
 # XXX https://github.com/mesonbuild/meson/issues/4788
 	@${REINPLACE_CMD} -e '/boost/!s/python3/python-${PYTHON_VER}/' \
 		-e '/boost/s/python3/python${PYTHON_SUFFIX}/' \
-		`if [ ${PYTHON_REL} -lt 3800 ]; then \
+		`if [ ${PYTHON_REL} -lt 30800 ]; then \
 			printf "%s %s" -e '/python.*embed/d'; \
 		 fi` \
+		-e '/boost/s/,/,static:true,/' \
 		${WRKSRC}/meson.build
 
 do-install:

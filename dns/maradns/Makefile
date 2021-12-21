@@ -11,12 +11,11 @@ COMMENT=	DNS server with focus on security and simplicity
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-USES=		tar:bz2
+USES=		cpe tar:bz2
 USE_RC_SUBR=	${PORTNAME} zoneserver Deadwood
 USERS=		bind
 GROUPS=		bind
 INSTALL_TARGET=	install PREFIX=${STAGEDIR}${PREFIX}
-SHEBANG_FILES=	tools/bind2csv2.py
 HAS_CONFIGURE=	yes
 
 OPTIONS_DEFINE=	IPV6 DOCS EXAMPLES
