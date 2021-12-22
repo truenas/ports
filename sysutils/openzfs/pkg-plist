@@ -2,7 +2,6 @@
 %%PYTHON%%bin/arcstat
 %%PYTHON%%bin/dbufstat
 %%TESTS%%bin/raidz_test
-etc/rc.d/zfsd
 etc/sudoers.d/zfs
 etc/zfs/vdev_id.conf.alias.example
 etc/zfs/vdev_id.conf.multipath.example
@@ -489,7 +488,6 @@ sbin/fsck.zfs
 sbin/zdb
 sbin/zfs
 sbin/zfs_ids_to_path
-sbin/zfsd
 sbin/zhack
 sbin/zinject
 sbin/zpool
@@ -2334,9 +2332,6 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/sparse/setup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/sparse/sparse.cfg
 %%TESTS%%share/zfs/zfs-tests/tests/functional/sparse/sparse_001_pos.ksh
-%%TESTS%%share/zfs/zfs-tests/tests/functional/stat/cleanup.ksh
-%%TESTS%%share/zfs/zfs-tests/tests/functional/stat/setup.ksh
-%%TESTS%%share/zfs/zfs-tests/tests/functional/stat/stat_001_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/suid/cleanup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/suid/setup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/suid/suid_write_to_file
