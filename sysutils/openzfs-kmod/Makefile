@@ -9,7 +9,7 @@ COMMENT=	OpenZFS kernel module for FreeBSD
 
 LICENSE=	CDDL
 
-USES=		kmod
+USES=		cpe kmod
 USE_GITHUB=	yes
 GH_ACCOUNT=	truenas
 GH_PROJECT=	zfs
@@ -27,6 +27,12 @@ OPTIONS_SUB=	yes
 GCOV_DESC=	Build kernel module with GCOV support (Requires gcc)
 
 .include <bsd.port.pre.mk>
+
+.if ${OSVERSION} >= 1300000 && ${OSVERSION} < 1300013
+IGNORE=	needs FreeBSD 12/13 with AES-CCM support
+.endif
+
+MAKE_OPTS+=	SYSDIR=${SRC_BASE}/sys
 
 .if ${PORT_OPTIONS:MGCOV}
 USE_GCC=	yes
