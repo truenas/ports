@@ -3,7 +3,7 @@ PORTVERSION=	2021111100
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 
-MAINTAINER=	ryan@iXsystems.com
+MAINTAINER=	freqlabs@FreeBSD.org
 COMMENT=	OpenZFS userland for FreeBSD
 
 LICENSE=	CDDL
