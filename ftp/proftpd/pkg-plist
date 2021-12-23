@@ -107,6 +107,8 @@ libexec/proftpd/mod_dynmasq.a
 libexec/proftpd/mod_dynmasq.so
 libexec/proftpd/mod_exec.a
 libexec/proftpd/mod_exec.so
+libexec/proftpd/mod_ident.a
+libexec/proftpd/mod_ident.so
 libexec/proftpd/mod_ifversion.a
 libexec/proftpd/mod_ifversion.so
 libexec/proftpd/mod_ifsession.a
