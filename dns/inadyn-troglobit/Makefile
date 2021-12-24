@@ -1,10 +1,9 @@
 # Created by: Vladimir Vinogradenko <themylogin@gmail.com>
 # $FreeBSD$
 
-PORTNAME=		inadyn-troglobit
-DISTVERSION=	2.5
-PORTREVISION=	1
-CATEGORIES=		dns
+PORTNAME=      inadyn-troglobit
+DISTVERSION=   2.9.1
+CATEGORIES=    dns
 
 MAINTAINER=	themylogin@gmail.com
 COMMENT=	Dynamic DNS client with SSL/TLS support
@@ -30,6 +29,6 @@ CONFIGURE_ENV+=	OpenSSL_CFLAGS="-I/usr/include"	OpenSSL_LIBS="-L/usr/lib -lssl -
 
 GH_ACCOUNT=		troglobit
 GH_PROJECT=		inadyn
-GH_TAGNAME=		9d3d7852991d04438079f61e8f6092cd7b86668a
+GH_TAGNAME=     3bd59d553f9db7d73fc1ccef79b5be077abf3437
 
 .include <bsd.port.mk>
