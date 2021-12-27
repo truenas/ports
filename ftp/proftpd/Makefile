@@ -4,7 +4,7 @@ PORTNAME?=	proftpd
 .if !defined(DISTVERSION)
 PORTVERSION?=	${PROFTPD_VERSION}
 .endif
-PORTREVISION?=	0
+PORTREVISION?=	1
 CATEGORIES?=	ftp
 MASTER_SITES=	ftp://ftp.proftpd.org/distrib/source/ \
 		https://github.com/downloads/proftpd/proftpd.github.com/ \
@@ -118,6 +118,7 @@ MODULES+=	mod_ban \
 		mod_dnsbl \
 		mod_dynmasq \
 		mod_exec \
+		mod_ident \
 		mod_ifsession \
 		mod_ifversion \
 		mod_qos \
