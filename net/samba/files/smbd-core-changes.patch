@@ -113,7 +113,7 @@ index d527f850628..1f8d5024da7 100644
  	struct files_struct *cwd_fsp; /* Working directory. */
  	bool tcon_done;
 diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
-index cf5e1cbc296..47002084ee7 100644
+index cf5e1cbc296..a98cf31b8bd 100644
 --- a/source3/modules/vfs_default.c
 +++ b/source3/modules/vfs_default.c
 @@ -40,6 +40,8 @@
@@ -202,18 +202,30 @@ index cf5e1cbc296..47002084ee7 100644
  
  static int vfswrap_ntimes(vfs_handle_struct *handle,
  			  const struct smb_filename *smb_fname,
-@@ -2542,7 +2547,10 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
+@@ -2542,11 +2547,21 @@ static int vfswrap_ntimes(vfs_handle_struct *handle,
  	}
  
  #if defined(HAVE_UTIMENSAT)
 -	if (ft != NULL) {
 +	if (ft != NULL && is_robocopy_init(ft)) {
 +		return 0;
-+	} else if ((ft != NULL) &&
-+	    (timespec_compare(&ft->mtime, &smb_fname->st.st_ex_btime) == 1)) {
++	} else if (ft != NULL) {
  		struct timespec ts[2];
++		bool has_btime = !is_omit_timespec(&ft->create_time);
++
  		ts[0] = ft->atime;
- 		ts[1] = ft->mtime;
+-		ts[1] = ft->mtime;
++		ts[1] = has_btime ? ft->create_time : ft->mtime;
++
+ 		result = utimensat(AT_FDCWD, smb_fname->base_name, ts, 0);
++
++		if (has_btime) {
++			ts[1] = ft->mtime;
++			result = utimensat(AT_FDCWD, smb_fname->base_name, ts, 0);
++		}
+ 	} else {
+ 		result = utimensat(AT_FDCWD, smb_fname->base_name, NULL, 0);
+ 	}
 diff --git a/source3/modules/vfs_streams_xattr.c b/source3/modules/vfs_streams_xattr.c
 index 14532395e8a..c73d5d9e0eb 100644
 --- a/source3/modules/vfs_streams_xattr.c
