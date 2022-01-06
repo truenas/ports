@@ -1,7 +1,7 @@
 # $FreeBSD$
 
 PORTNAME=	openzfs
-PORTVERSION=	2022010400
+PORTVERSION=	2022010600
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 
@@ -39,12 +39,12 @@ CONFIGURE_ARGS+=	--enable-debug --enable-debuginfo
 
 .if ${PORT_OPTIONS:MPYTHON}
 CONFIGURE_ARGS+=	--with-python=${PYTHON_VER}
+BUILD_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}packaging>0:devel/py-packaging@${PY_FLAVOR}
 BUILD_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}cffi>0:devel/py-cffi@${PY_FLAVOR}
 RUN_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}cffi>0:devel/py-cffi@${PY_FLAVOR}
-PLIST_SUB+=     PYTHON=""
+RUN_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}sysctl>0:devel/py-sysctl@${PY_FLAVOR}
 .else
 CONFIGURE_ARGS+=	--without-python
-PLIST_SUB+=     PYTHON="@comment "
 .endif
 
 pre-configure:
