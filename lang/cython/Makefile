@@ -1,7 +1,7 @@
 # Created by: Wen Heping <wenhping@gmail.com>
 
 PORTNAME=	cython
-PORTVERSION=	0.29.24
+PORTVERSION=	0.29.26
 CATEGORIES=	lang python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -13,7 +13,7 @@ COMMENT=	Compiler for Writing C Extensions for the Python Language
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
-USES=		compiler:c11 python:2.7-3.10
+USES=		compiler:c11 python:2.7+
 USE_PYTHON=	allflavors autoplist concurrent distutils
 
 post-install:
