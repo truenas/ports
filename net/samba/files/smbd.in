@@ -14,6 +14,7 @@ smbd_group=""
 smbd_pidfile="%%SAMBA4_RUNDIR%%/smbd.pid"
 smbcontrol="%%PREFIX%%/bin/smbcontrol"
 jq="%%PREFIX%%/bin/jq"
+sysctl="/sbin/sysctl"
 extra_commands="reload status"
 
 start_cmd="smbd_cmd"
@@ -40,6 +41,18 @@ smbd_reload() {
 
 smbd_cmd() {
     local command pidfile samba_daemons result force_run
+
+    case "${rc_arg}" in
+        start)
+            ${sysctl} security.bsd.unprivileged_inode_gen=1
+            ;;
+        stop)
+            ${sysctl} security.bsd.unprivileged_inode_gen=0
+            ;;
+        *)
+            ;;
+    esac
+
     unset "${rc_arg}_cmd"
     if [ -n "${_rc_prefix}" -a "${_rc_prefix}" = "one" ] || [ -n "${rc_force}" ] || [ -n "${rc_fast}" ]; then
         force_run=yes
