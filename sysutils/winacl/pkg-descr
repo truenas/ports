@@ -1,0 +1,7 @@
+winacl provides a variety of functionality for working with NFSv4 ACLs
+
+Primary use is to synthensize inherited ACLs given a path, and then
+apply the ACLs intelligently across all files and subdirectories.
+This tool also contains actions to strip ACLs, chown files (without
+impacting existing ACL), restore ACLs from backups, and deduplicate
+ACL entries (recursively).
