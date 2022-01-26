@@ -24,6 +24,7 @@ EXTRA_PATCHES+=			${PATCHDIR}/0001-enable-keytab-updates-on-machine-account-chan
 EXTRA_PATCHES+=			${PATCHDIR}/0001-add_ws_discovery.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-add-wb-status-cmd.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/0001-samba_json.patch:-p1
+EXTRA_PATCHES+=			${PATCHDIR}/0001-fix-listen-backlog.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/talloc_arc4random.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/experimental_aio.patch:-p1
 EXTRA_PATCHES+=			${PATCHDIR}/add_zfs_based_vfs_modules.patch:-p1
@@ -38,7 +39,7 @@ EXTRA_PATCHES+=			${PATCHDIR}/registry_service.patch:-p1
 
 SAMBA4_BASENAME=		samba
 SAMBA4_PORTNAME=		${SAMBA4_BASENAME}4
-SAMBA4_VERSION=			4.13.15
+SAMBA4_VERSION=			4.13.16
 SAMBA4_DISTNAME=		${SAMBA4_BASENAME}-${SAMBA4_VERSION:S|.p|pre|:S|.r|rc|:S|.t|tp|:S|.a|alpha|}
 
 WRKSRC?=			${WRKDIR}/${DISTNAME}
