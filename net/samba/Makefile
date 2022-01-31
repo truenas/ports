@@ -10,7 +10,7 @@ USE_LOCALE=			en_US.UTF-8
 
 USE_GITHUB=			yes
 GH_ACCOUNT=			truenas
-GH_TAGNAME=			1210be38ade7eda44b7e98db3bb973493a78d5e3
+GH_TAGNAME=			ffc1a15d054cb1c9ab02eb06adbed903f4b09221
 
 MAINTAINER=		 	awalker@ixsystems.com
 COMMENT=			Free SMB/CIFS and AD/DC server and client for Unix
@@ -25,7 +25,7 @@ EXTRA_PATCHES+=			${PATCHDIR}/documentation.patch:-p1
 
 SAMBA4_BASENAME=		samba
 SAMBA4_PORTNAME=		${SAMBA4_BASENAME}4
-SAMBA4_VERSION=			4.15.4
+SAMBA4_VERSION=			4.15.5
 SAMBA4_DISTNAME=		${SAMBA4_BASENAME}-${SAMBA4_VERSION:S|.p|pre|:S|.r|rc|:S|.t|tp|:S|.a|alpha|}
 
 WRKSRC?=			${WRKDIR}/${SAMBA4_BASENAME}-${GH_TAGNAME}
