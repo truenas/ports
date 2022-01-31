@@ -1,3 +1,3 @@
 TIMESTAMP = 1642620091
-SIZE (truenas-samba-4.15.4-1210be38ade7eda44b7e98db3bb973493a78d5e3.tar.gz) = 37911847
-SHA256 (truenas-samba-4.15.4-1210be38ade7eda44b7e98db3bb973493a78d5e3_GH0.tar.gz) = 284522521e3ed65d06164675f29231457bec94f82b7c3eaa9efc250196f21ee7
+SIZE (truenas-samba-4.15.5-ffc1a15d054cb1c9ab02eb06adbed903f4b09221.tar.gz) = 37908882
+SHA256 (truenas-samba-4.15.5-ffc1a15d054cb1c9ab02eb06adbed903f4b09221_GH0.tar.gz) = 781ed7b8d47b2a7ea4219cd62f85c4a936ee2a73f5bf88fd18cb652e2054e394
