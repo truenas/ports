@@ -1,0 +1,29 @@
+diff --git a/lib/util/time.c b/lib/util/time.c
+index 0fac5e2e397..b17835d2034 100644
+--- a/lib/util/time.c
++++ b/lib/util/time.c
+@@ -1136,6 +1136,12 @@ struct timespec nt_time_to_full_timespec(NTTIME nt)
+ 		 */
+ 		return make_omit_timespec();
+ 	}
++	else if (nt == NTTIME_UNFREEZE) {
++		/*
++		 * See MS-FSCC 2.4.7
++		 */
++		return make_omit_timespec();
++	}
+ 	if (nt > NTTIME_MAX) {
+ 		nt = NTTIME_MAX;
+ 	}
+diff --git a/lib/util/time.h b/lib/util/time.h
+index 4a90b40d5ce..a9a625ca677 100644
+--- a/lib/util/time.h
++++ b/lib/util/time.h
+@@ -63,6 +63,7 @@
+  * implement this yet.
+  */
+ #define NTTIME_FREEZE UINT64_MAX
++#define NTTIME_UNFREEZE (UINT64_MAX -1)
+ 
+ #define SAMBA_UTIME_NOW UTIME_NOW
+ #define SAMBA_UTIME_OMIT UTIME_OMIT

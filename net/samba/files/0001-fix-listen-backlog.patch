@@ -47,28 +47,6 @@ index ced4696..317d6b1 100644
  	if (rc < 0) {
  		status = map_nt_error_from_unix(errno);
  		goto fail;
-diff --git a/source3/rpc_server/rpc_server.c b/source3/rpc_server/rpc_server.c
-index 36dff11..b8d3cd5 100644
---- a/source3/rpc_server/rpc_server.c
-+++ b/source3/rpc_server/rpc_server.c
-@@ -158,7 +158,7 @@ bool setup_named_pipe_socket(const char *pipe_name,
- 		goto out;
- 	}
- 
--	rc = listen(state->fd, 5);
-+	rc = listen(state->fd, DEFAULT_LISTEN_BACKLOG);
- 	if (rc < 0) {
- 		DEBUG(0, ("Failed to listen on pipe socket %s: %s\n",
- 			  pipe_name, strerror(errno)));
-@@ -830,7 +830,7 @@ bool setup_dcerpc_ncalrpc_socket(struct tevent_context *ev_ctx,
- 		goto out;
- 	}
- 
--	rc = listen(state->fd, 5);
-+	rc = listen(state->fd, DEFAULT_LISTEN_BACKLOG);
- 	if (rc < 0) {
- 		DEBUG(0, ("Failed to listen on ncalrpc socket %s: %s\n",
- 			  name, strerror(errno)));
 diff --git a/source3/utils/smbfilter.c b/source3/utils/smbfilter.c
 index 35fb752..c07cb04 100644
 --- a/source3/utils/smbfilter.c
