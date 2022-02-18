@@ -1,6 +1,6 @@
---- src/ctl.c.orig	2018-12-13 16:13:25.188294000 -0500
-+++ src/ctl.c	2018-12-14 10:42:43.953776000 -0500
-@@ -0,0 +1,400 @@
+--- src/ctl.c.orig	2022-01-21 13:11:05 UTC
++++ src/ctl.c
+@@ -0,0 +1,417 @@
 +/**
 + * collectd - src/ctl.c
 + *
@@ -39,6 +39,7 @@
 +#include <err.h>
 +#include <unistd.h>
 +#include <sys/ioctl.h>
++#include <sys/sysctl.h>
 +#include <sys/time.h>
 +#include <sys/types.h>
 +
@@ -46,7 +47,6 @@
 +#include <libxml/tree.h>
 +#include <libxml/xpath.h>
 +
-+#define	CTL_MAX_PORTS		256
 +#define	CTL_BE_NAME_LEN		32
 +#define	CTL_ERROR_STR_LEN	160
 +
@@ -125,13 +125,14 @@
 +	char *ppvp;
 +	int ha;
 +	int agr;
-+} ports[CTL_MAX_PORTS];
++} *ports;
++static int maxports;
 +
 +static struct {
 +	char *name;
 +	struct portstat ps;
-+} agrs[CTL_MAX_PORTS];
-+static int nagrs = 0;
++} *agrs;
++static int nagrs;
 +
 +static int ctl_init(void)
 +{
@@ -140,7 +141,21 @@
 +		ERROR("cannot CTL open device %s", CTL_DEFAULT_DEV);
 +		return (-1);
 +	}
-+	statbuf = calloc(CTL_MAX_PORTS, sizeof(struct ctl_io_stats));
++	if (sysctlbyname("kern.cam.ctl.max_ports", NULL, NULL, &maxports,
++	    sizeof(maxports)) == -1) {
++		ERROR("cannot get CTL max ports");
++		return (-1);
++	}
++	statbuf = calloc(maxports, sizeof(struct ctl_io_stats));
++	ports = calloc(maxports, sizeof(*ports));
++	agrs = calloc(maxports, sizeof(*agrs));
++	if (statbuf == NULL || ports == NULL || agrs == NULL) {
++		ERROR("cannot allocate for %d ports", maxports);
++		free(statbuf);
++		free(ports);
++		free(agrs);
++		return (-1);
++	}
 +	return (0);
 +}
 +
@@ -148,6 +163,8 @@
 +{
 +
 +	free(statbuf);
++	free(ports);
++	free(agrs);
 +	close(ctlfd);
 +	return (0);
 +}
@@ -218,7 +235,7 @@
 +		return (-1);
 +	}
 +
-+	for (i = 0; i < CTL_MAX_PORTS; i++) {
++	for (i = 0; i < maxports; i++) {
 +		free(ports[i].name);
 +		ports[i].name = NULL;
 +		free(ports[i].ppvp);
@@ -303,7 +320,7 @@
 +	struct ctl_get_io_stats get_stats;
 +
 +	memset(&get_stats, 0, sizeof(get_stats));
-+	get_stats.alloc_len = sizeof(struct ctl_io_stats) * CTL_MAX_PORTS;
++	get_stats.alloc_len = sizeof(struct ctl_io_stats) * maxports;
 +	get_stats.first_item = 0;
 +	memset(statbuf, 0, get_stats.alloc_len);
 +	get_stats.stats = statbuf;
@@ -363,7 +380,7 @@
 +		ps_clear(&agrs[port].ps);
 +	ps_clear(&haps);
 +	haveha = 0;
-+	for (port = 0; port < CTL_MAX_PORTS; port++) {
++	for (port = 0; port < maxports; port++) {
 +		if (ports[port].name == NULL)
 +			continue;
 +		for (s = 0, ls = statbuf; s < nstats; s++, ls++) {
