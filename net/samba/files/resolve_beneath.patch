@@ -1,0 +1,242 @@
+diff --git a/source3/include/vfs.h b/source3/include/vfs.h
+index 4d9d9353e4..c8d24e7bf6 100644
+--- a/source3/include/vfs.h
++++ b/source3/include/vfs.h
+@@ -667,6 +667,7 @@ typedef struct files_struct {
+  * In any other case use fsp_get_io_fd().
+  */
+ #define TCON_FLAG_STAT_FAILED		0x01
++#define TCON_FLAG_RESOLVE_BENEATH	0x02
+ 
+ #define FSP_POSIX_FLAGS_OPEN		0x01
+ #define FSP_POSIX_FLAGS_RENAME		0x02
+@@ -719,6 +720,7 @@ typedef struct connection_struct {
+ 	/* iXsystems additions */
+ 	enum acl_brand aclbrand;
+ 	uint32_t internal_tcon_flags;
++	struct files_struct *connectpath_fsp;
+ 	/* end iXsystems additions */
+ 
+ 	char *connectpath;
+diff --git a/source3/modules/vfs_default.c b/source3/modules/vfs_default.c
+index 41df5c314e..17cfc2e81d 100644
+--- a/source3/modules/vfs_default.c
++++ b/source3/modules/vfs_default.c
+@@ -706,6 +706,9 @@ static int vfswrap_openat(vfs_handle_struct *handle,
+ 		goto out;
+ 	}
+ 
++	if (handle->conn->internal_tcon_flags & TCON_FLAG_RESOLVE_BENEATH) {
++		SMB_ASSERT(flags & O_RESOLVE_BENEATH);
++	}
+ #ifdef O_PATH
+ 	have_opath = true;
+ 	if (fsp->fsp_flags.is_pathref) {
+diff --git a/source3/modules/vfs_ixnas.c b/source3/modules/vfs_ixnas.c
+index 1c50d99dfc..87d92831ba 100644
+--- a/source3/modules/vfs_ixnas.c
++++ b/source3/modules/vfs_ixnas.c
+@@ -1069,6 +1069,83 @@ static int ixnas_ntimes(vfs_handle_struct *handle,
+ 	return result;
+ }
+ 
++static struct smb_filename *generate_beneath_path(TALLOC_CTX *mem_ctx,
++				  const char *connectpath,
++				  const struct files_struct *dirfsp,
++				  const struct smb_filename *at_name)
++{
++	struct smb_filename *fname = NULL;
++	char *path = NULL;
++
++	if (at_name->base_name[0] == '/') {
++		if (strncmp(connectpath, at_name->base_name, strlen(connectpath)) != 0) {
++			smb_panic("absolute path not within connectpath");
++		}
++		path = talloc_strdup(mem_ctx, at_name->base_name + strlen(connectpath));
++	}
++	else if (ISDOT(dirfsp->fsp_name->base_name)) {
++		path = talloc_strdup(mem_ctx, at_name->base_name);
++	}
++	else if (dirfsp->fsp_name->base_name[0] == '/') {
++		if (strncmp(connectpath, dirfsp->fsp_name->base_name, strlen(connectpath)) != 0) {
++			smb_panic("absolute path not within connectpath");
++		}
++		path =talloc_asprintf(mem_ctx, "%s/%s",
++				      dirfsp->fsp_name->base_name + strlen(connectpath),
++				      at_name->base_name);
++	} else {
++		path =talloc_asprintf(mem_ctx, "%s/%s",
++				      dirfsp->fsp_name->base_name,
++				      at_name->base_name);
++	}
++	if (path == NULL) {
++		errno = ENOMEM;
++		return NULL;
++	}
++
++	fname = synthetic_smb_fname(mem_ctx,
++				    path[0] == '/' ? path + 1 : path,
++				    at_name->stream_name,
++				    &at_name->st,
++				    at_name->twrp,
++				    at_name->flags);
++
++	TALLOC_FREE(path);
++	if (fname == NULL) {
++		errno = ENOMEM;
++		return NULL;
++	}
++
++	return fname;
++}
++
++static int ixnas_openat(vfs_handle_struct *handle,
++			const struct files_struct *dirfsp,
++			const struct smb_filename *smb_fname_in,
++			files_struct *fsp,
++			int flags, mode_t mode)
++{
++	struct smb_filename *full_fname = NULL;
++
++	if (handle->conn->connectpath_fsp == NULL) {
++		DBG_ERR("%s: skipping, no connectpath fsp\n", smb_fname_str_dbg(smb_fname_in));
++		return SMB_VFS_NEXT_OPENAT(handle,
++					   dirfsp,
++					   smb_fname_in,
++					   fsp, flags, mode);
++	}
++
++	full_fname = generate_beneath_path(talloc_tos(),
++					   handle->conn->connectpath,
++					   dirfsp,
++					   smb_fname_in);
++	SMB_ASSERT(full_fname != NULL);
++
++	handle->conn->internal_tcon_flags |= TCON_FLAG_RESOLVE_BENEATH;
++	return SMB_VFS_NEXT_OPENAT(handle, handle->conn->connectpath_fsp,
++				   full_fname, fsp, (flags | O_RESOLVE_BENEATH), mode);
++}
++
+ 
+ static bool set_zfs_parameters(struct vfs_handle_struct *handle,
+ 			       const char *service, const char *user,
+@@ -1245,6 +1322,7 @@ static int ixnas_connect(struct vfs_handle_struct *handle,
+ 
+ static struct vfs_fn_pointers ixnas_fns = {
+ 	.connect_fn = ixnas_connect,
++	.openat_fn = ixnas_openat,
+ 	/* dosmode_enabled */
+ 	.fget_dos_attributes_fn = ixnas_fget_dos_attributes,
+ 	.fset_dos_attributes_fn = ixnas_fset_dos_attributes,
+diff --git a/source3/modules/vfs_streams_xattr.c b/source3/modules/vfs_streams_xattr.c
+index 567821cfda..a8cf330c5e 100644
+--- a/source3/modules/vfs_streams_xattr.c
++++ b/source3/modules/vfs_streams_xattr.c
+@@ -359,7 +359,9 @@ static int streams_xattr_openat(struct vfs_handle_struct *handle,
+ 		return vfs_fake_fd();
+ 	}
+ #endif
+-	SMB_ASSERT(fsp_get_pathref_fd(dirfsp) == AT_FDCWD);
++	if (!(handle->conn->internal_tcon_flags & TCON_FLAG_RESOLVE_BENEATH)) {
++		SMB_ASSERT(fsp_get_pathref_fd(dirfsp) == AT_FDCWD);
++	}
+ 	fsp->fsp_flags.have_proc_fds = fsp->conn->have_proc_fds;
+ 
+ 	status = streams_xattr_get_name(handle, talloc_tos(),
+diff --git a/source3/smbd/filename.c b/source3/smbd/filename.c
+index 56ebdd9f37..cab109ebb5 100644
+--- a/source3/smbd/filename.c
++++ b/source3/smbd/filename.c
+@@ -1379,7 +1379,8 @@ static NTSTATUS check_name(connection_struct *conn,
+ 		return status;
+ 	}
+ 
+-	if (!lp_widelinks(SNUM(conn)) || !lp_follow_symlinks(SNUM(conn))) {
++	if (!(conn->internal_tcon_flags & TCON_FLAG_RESOLVE_BENEATH)
++	    && (!lp_widelinks(SNUM(conn)) || !lp_follow_symlinks(SNUM(conn)))) {
+ 		status = check_reduced_name(conn, NULL, smb_fname);
+ 		if (!NT_STATUS_IS_OK(status)) {
+ 			DEBUG(5,("check_name: name %s failed with %s\n",
+diff --git a/source3/smbd/open.c b/source3/smbd/open.c
+index 2712f25e65..f2c642b50f 100644
+--- a/source3/smbd/open.c
++++ b/source3/smbd/open.c
+@@ -674,7 +674,8 @@ static NTSTATUS non_widelink_open(const struct files_struct *dirfsp,
+ 	have_opath = true;
+ #endif
+ 
+-	if (dirfsp == conn->cwd_fsp) {
++	if ((!(conn->internal_tcon_flags & TCON_FLAG_RESOLVE_BENEATH) || is_named_stream(smb_fname))
++	     && dirfsp == conn->cwd_fsp) {
+ 		if (fsp->fsp_flags.is_directory) {
+ 			parent_dir_fname = cp_smb_filename(talloc_tos(), smb_fname);
+ 			if (parent_dir_fname == NULL) {
+diff --git a/source3/smbd/service.c b/source3/smbd/service.c
+index b9001394ef..43a27ed5c0 100644
+--- a/source3/smbd/service.c
++++ b/source3/smbd/service.c
+@@ -54,6 +54,42 @@ bool canonicalize_connect_path(connection_struct *conn)
+  Ensure when setting connectpath it is a canonicalized (no ./ // or ../)
+  absolute path stating in / and not ending in /.
+ ****************************************************************************/
++static bool set_connectpath_fsp(connection_struct *conn,
++				const struct files_struct *cwd_fsp)
++{
++	NTSTATUS status;
++	files_struct *fsp = NULL;
++	struct smb_filename *tmp_fname = NULL;
++	mode_t unix_mode;
++	int fd;
++
++	tmp_fname = cp_smb_filename(conn, cwd_fsp->fsp_name);
++	if (tmp_fname == NULL) {
++		errno = ENOMEM;
++		return false;
++	}
++
++	status = create_internal_fsp(conn, tmp_fname, &fsp);
++	if (!NT_STATUS_IS_OK(status)) {
++		DBG_ERR("%s: failed to open internal dirfsp: %s\n",
++			fsp_str_dbg(fsp), nt_errstr(status));
++		TALLOC_FREE(tmp_fname);
++		return false;
++	}
++
++	TALLOC_FREE(tmp_fname);
++
++	fd = open(conn->connectpath, O_DIRECTORY | O_PATH);
++	if (fd == -1) {
++		DBG_ERR("%s: failed to open: %s\n", fsp_str_dbg(fsp), strerror(errno));
++		return false;
++	}
++
++	fsp_set_fd(fsp, fd);
++	fsp->fsp_flags.is_directory = true;
++	conn->connectpath_fsp = fsp;
++	return true;
++}
+ 
+ bool set_conn_connectpath(connection_struct *conn, const char *connectpath)
+ {
+@@ -152,7 +188,9 @@ bool chdir_current_service(connection_struct *conn)
+ 
+ 	conn->lastused_count++;
+ 
+-	ret = vfs_ChDir(conn, &connectpath_fname);
++	ret = conn->connectpath_fsp ?
++	      fchdir(fsp_get_pathref_fd(conn->connectpath_fsp)) :
++	      vfs_ChDir(conn, &connectpath_fname);
+ 	if (ret == 0) {
+ 		return true;
+ 	}
+@@ -874,6 +912,10 @@ static NTSTATUS make_connection_snum(struct smbXsrv_connection *xconn,
+ 		dbgtext( "(uid=%d, gid=%d) ", (int)effuid, (int)effgid );
+ 		dbgtext( "(pid %d)\n", (int)getpid() );
+ 	}
++	if (!IS_IPC(conn) && !IS_PRINT(conn)) {
++		set_connectpath_fsp(conn, conn->cwd_fsp);
++		SMB_ASSERT(conn->connectpath_fsp != NULL);
++	}
+ 
+ 	conn->tcon_done = true;
+ 	return NT_STATUS_OK;
