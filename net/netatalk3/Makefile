@@ -2,7 +2,7 @@
 
 PORTNAME=	netatalk
 PORTVERSION=	3.1.12
-PORTREVISION=	6
+PORTREVISION=	7
 PORTEPOCH=	1
 CATEGORIES=	net
 MASTER_SITES=	SF
@@ -22,6 +22,7 @@ USE_LDCONFIG=	yes
 USE_RC_SUBR=	netatalk
 INSTALL_TARGET=install-strip
 CPE_VENDOR=	netatalk_project
+EXTRA_PATCHES+=		${PATCHDIR}/CVE_FIXES.patch:-p1
 
 CONFIGURE_ARGS+=	--with-pkgconfdir=${PREFIX}/etc \
 			--with-libgcrypt-dir=${LOCALBASE} \
