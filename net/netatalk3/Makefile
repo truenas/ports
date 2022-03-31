@@ -2,8 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	netatalk
-PORTVERSION=	3.1.12
-PORTREVISION=	7
+PORTVERSION=	3.1.13
+PORTREVISION=	0
 PORTEPOCH=	1
 CATEGORIES=	net
 MASTER_SITES=	SF
@@ -24,18 +24,16 @@ USES=		bdb:5+ gettext gmake iconv libtool perl5 pkgconfig shebangfix ssl tar:bzi
 GNU_CONFIGURE=	yes
 USE_LDCONFIG=	yes
 USE_RC_SUBR=	netatalk
-INSTALL_TARGET=install-strip
-EXTRA_PATCHES+=		${PATCHDIR}/CVE_FIXES.patch:-p1
+#INSTALL_TARGET=install-strip
 
 CONFIGURE_ARGS+=	--with-pkgconfdir=${PREFIX}/etc \
 			--with-libgcrypt-dir=${LOCALBASE} \
 			--with-uams-path=${PREFIX}/libexec/netatalk-uams \
+			--enable-debug \
+			--enable-debugging \
 			--with-bdb=${LOCALBASE} \
 			${ICONV_CONFIGURE_BASE} \
 			--localstatedir=/var \
-			--disable-bundled-libevent \
-			--with-libevent-header=${LOCALBASE}/include \
-			--with-libevent-lib=${LOCALBASE}/lib \
 			--with-ssl-dir=${OPENSSLBASE} \
 			--without-dtrace
 
@@ -61,6 +59,8 @@ MDNSRESPONDER_CONFIGURE_ENV=	ac_cv_lib_avahi_client_avahi_client_new=no
 MDNSRESPONDER_CFLAGS=		-I${LOCALBASE}/include -L${LOCALBASE}/lib
 MDNSRESPONDER_LIB_DEPENDS=		libdns_sd.so:net/mDNSResponder
 MDNSRESPONDER_SUB_LIST=	ZEROCONF="mdnsd"
+CFLAGS+=		-I${LOCALBASE}/include -L${LOCALBASE}/lib
+CFLAGS+=		-g -ggdb3 -O0
 LDAP_CONFIGURE_ON=	--with-ldap=${LOCALBASE}
 LDAP_CFLAGS=		-I${LOCALBASE}/include -L${LOCALBASE}/lib
 LDAP_USE=	OPENLDAP=yes
