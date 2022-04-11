@@ -2,7 +2,7 @@
 
 PORTNAME=	netatalk
 PORTVERSION=	3.1.13
-PORTREVISION=	0
+PORTREVISION=	1
 PORTEPOCH=	1
 CATEGORIES=	net
 MASTER_SITES=	SF
@@ -21,13 +21,11 @@ GNU_CONFIGURE=	yes
 USE_LDCONFIG=	yes
 USE_RC_SUBR=	netatalk
 CPE_VENDOR=	netatalk_project
-#INSTALL_TARGET=install-strip
+EXTRA_PATCHES+=	${PATCHDIR}/fix-v3.1.13-issues.patch:-p1
 
 CONFIGURE_ARGS+=	--with-pkgconfdir=${PREFIX}/etc \
 			--with-libgcrypt-dir=${LOCALBASE} \
 			--with-uams-path=${PREFIX}/libexec/netatalk-uams \
-			--enable-debug \
-			--enable-debugging \
 			--with-bdb=${LOCALBASE} \
 			${ICONV_CONFIGURE_BASE} \
 			--localstatedir=/var \
@@ -57,7 +55,7 @@ MDNSRESPONDER_CFLAGS=		-I${LOCALBASE}/include -L${LOCALBASE}/lib
 MDNSRESPONDER_LIB_DEPENDS=		libdns_sd.so:net/mDNSResponder
 MDNSRESPONDER_SUB_LIST=	ZEROCONF="mdnsd"
 CFLAGS+=		-I${LOCALBASE}/include -L${LOCALBASE}/lib
-CFLAGS+=		-g -ggdb3 -O0
+#CFLAGS+=		-g -ggdb3 -O0
 LDAP_CONFIGURE_ON=	--with-ldap=${LOCALBASE}
 LDAP_CFLAGS=		-I${LOCALBASE}/include -L${LOCALBASE}/lib
 LDAP_USE=	OPENLDAP=yes
