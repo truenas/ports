@@ -929,6 +929,7 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_diff/zfs_diff_changes.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_diff/zfs_diff_cliargs.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_diff/zfs_diff_encrypted.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_diff/zfs_diff_mangle.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_diff/zfs_diff_timestamp.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_diff/zfs_diff_types.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/cli_root/zfs_get/cleanup.ksh
@@ -1743,6 +1744,7 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/fallocate/cleanup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/fallocate/fallocate_prealloc.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/fallocate/fallocate_punch-hole.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/fallocate/fallocate_zero-range.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/fallocate/setup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/fault/auto_offline_001_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/fault/auto_online_001_pos.ksh
