@@ -286,7 +286,7 @@ lib/samba4/private/libposix-eadb-samba4.so
 lib/samba4/private/libprinter-driver-samba4.so
 lib/samba4/private/libprinting-migrate-samba4.so
 lib/samba4/private/libpyldb-util%%PYTHON_EXT_SUFFIX%%.so.2
-lib/samba4/private/libpyldb-util%%PYTHON_EXT_SUFFIX%%.so.2.4.1
+lib/samba4/private/libpyldb-util%%PYTHON_EXT_SUFFIX%%.so.2.4.2
 lib/samba4/private/libpytalloc-util%%PYTHON_EXT_SUFFIX%%.so.2
 lib/samba4/private/libpytalloc-util%%PYTHON_EXT_SUFFIX%%.so.2.3.3
 lib/samba4/private/libregistry-samba4.so
@@ -765,7 +765,7 @@ man/man8/winbindd.8.gz
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb-cmdline-samba4.so
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldbsamba-samba4.so
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb.so.2
-%%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb.so.2.4.1
+%%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb.so.2.4.2
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb-key-value-samba4.so
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb-tdb-err-map-samba4.so
 %%SAMBA4_BUNDLED_LDB%%lib/samba4/private/libldb-tdb-int-samba4.so
