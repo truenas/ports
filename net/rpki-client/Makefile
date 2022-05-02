@@ -3,7 +3,7 @@ DISTVERSION=	7.5
 PORTREVISION=	1
 CATEGORIES=	net
 
-MAINTAINER=	zeising@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Resource Public Key Infrastructure (RPKI) implementation from OpenBSD
 
 LICENSE=	ISCL
