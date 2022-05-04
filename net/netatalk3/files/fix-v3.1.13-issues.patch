@@ -1,4 +1,4 @@
-From 687106e4269c2e926e0452a88c2d72ac95779a95 Mon Sep 17 00:00:00 2001
+From 85e7f3044e3081de04cb23ac339f8588f01d8fda Mon Sep 17 00:00:00 2001
 From: Andrew Walker <awalker@ixsystems.com>
 Date: Mon, 11 Apr 2022 09:13:09 -0400
 Subject: [PATCH] add handling for cases where ad_entry() returns NULL
@@ -24,7 +24,7 @@ attempting to get the DID.
 Signed-off-by: Andrew Walker <awalker@ixsystems.com>
 ---
  etc/afpd/directory.c           |  15 +++-
- etc/afpd/file.c                |  25 +++++--
+ etc/afpd/file.c                |  52 +++++++++++--
  etc/afpd/volume.c              |   7 +-
  etc/cnid_dbd/cmd_dbd_scanvol.c |   9 ++-
  libatalk/adouble/ad_attr.c     | 130 +++++++++++++++++++++++++++------
@@ -32,7 +32,7 @@ Signed-off-by: Andrew Walker <awalker@ixsystems.com>
  libatalk/adouble/ad_date.c     |  17 ++++-
  libatalk/adouble/ad_flush.c    |  27 ++++++-
  libatalk/adouble/ad_open.c     |  39 ++++++----
- 9 files changed, 215 insertions(+), 58 deletions(-)
+ 9 files changed, 240 insertions(+), 60 deletions(-)
 
 diff --git a/etc/afpd/directory.c b/etc/afpd/directory.c
 index 8220227b..d53ce1e1 100644
@@ -90,7 +90,7 @@ index 8220227b..d53ce1e1 100644
              }
              break;
 diff --git a/etc/afpd/file.c b/etc/afpd/file.c
-index 1d4bc30c..b2d926a7 100644
+index 1d4bc30c..0b6c94ed 100644
 --- a/etc/afpd/file.c
 +++ b/etc/afpd/file.c
 @@ -296,6 +296,7 @@ int getmetadata(const AFPObj *obj,
@@ -113,11 +113,21 @@ index 1d4bc30c..b2d926a7 100644
  
                      if ( memcmp( fdType, "TEXT", 4 ) == 0 ) {
                          achar = '\x04';
-@@ -577,7 +581,10 @@ int getmetadata(const AFPObj *obj,
+@@ -576,8 +580,19 @@ int getmetadata(const AFPObj *obj,
+                10.3 clients freak out. */
  
      	    aint = st->st_mode;
-  	    if (adp) {
+- 	    if (adp) {
 -	        memcpy(fdType, ad_entry( adp, ADEID_FINDERI ), 4 );
++            /*
++             * ad_open() does not initialize adouble header
++             * for symlinks. Hence this should be skipped to
++             * avoid AFP_ASSERT here. Decision was made to
++             * not alter ad_open() behavior so that
++             * improper ops on symlink adoubles will be
++             * more visible (assert).
++             */
++            if (adp && (ad_meta_fileno(adp) != AD_SYMLINK)) {
 +                ade = ad_entry(adp, ADEID_FINDERI);
 +                AFP_ASSERT(ade != NULL);
 +
@@ -125,7 +135,7 @@ index 1d4bc30c..b2d926a7 100644
                  if ( memcmp( fdType, "slnk", 4 ) == 0 ) {
  	 	    aint |= S_IFLNK;
              	}
-@@ -839,6 +846,7 @@ int setfilparams(const AFPObj *obj, struct vol *vol,
+@@ -839,6 +854,7 @@ int setfilparams(const AFPObj *obj, struct vol *vol,
      struct extmap	*em;
      int			bit, isad = 1, err = AFP_OK;
      char                *upath;
@@ -133,18 +143,54 @@ index 1d4bc30c..b2d926a7 100644
      u_char              achar, *fdType, xyy[4]; /* uninitialized, OK 310105 */
      uint16_t		ashort, bshort, oshort;
      uint32_t		aint;
-@@ -1042,7 +1050,9 @@ int setfilparams(const AFPObj *obj, struct vol *vol,
+@@ -989,7 +1005,7 @@ int setfilparams(const AFPObj *obj, struct vol *vol,
+     /* second try with adouble open 
+     */
+     if (ad_open(adp, upath, ADFLAGS_HF | ADFLAGS_RDWR | ADFLAGS_CREATE, 0666) < 0) {
+-        LOG(log_debug, logtype_afpd, "setfilparams: ad_open_metadata error");
++        LOG(log_debug, logtype_afpd, "setfilparams: ad_open_metadata error: %s", strerror(errno));
+         /*
+          * For some things, we don't need an adouble header:
+          * - change of modification date
+@@ -1021,6 +1037,9 @@ int setfilparams(const AFPObj *obj, struct vol *vol,
+ 
+         switch(  bit ) {
+         case FILPBIT_ATTR :
++            if (isad == 0) {
++                break;
++            }
+             ad_getattr(adp, &bshort);
+             oshort = bshort;
+             if ( ntohs( ashort ) & ATTRBIT_SETCLR ) {
+@@ -1034,15 +1053,26 @@ int setfilparams(const AFPObj *obj, struct vol *vol,
+             ad_setattr(adp, bshort);
+             break;
+         case FILPBIT_CDATE :
++            if (isad == 0) {
++                break;
++            }
+             ad_setdate(adp, AD_DATE_CREATE, cdate);
+             break;
+         case FILPBIT_MDATE :
+             break;
+         case FILPBIT_BDATE :
++            if (isad == 0) {
++                break;
++            }
              ad_setdate(adp, AD_DATE_BACKUP, bdate);
              break;
          case FILPBIT_FINFO :
 -            if (default_type( ad_entry( adp, ADEID_FINDERI ))
++            if (isad == 0) {
++                break;
++            }
 +            ade = ad_entry(adp, ADEID_FINDERI);
 +            AFP_ASSERT(ade != NULL);
 +            if (default_type(ade)
                      && ( 
                       ((em = getextmap( path->m_name )) &&
                        !memcmp(finder_buf, em->em_type, sizeof( em->em_type )) &&
-@@ -1053,7 +1063,7 @@ int setfilparams(const AFPObj *obj, struct vol *vol,
+@@ -1053,7 +1083,7 @@ int setfilparams(const AFPObj *obj, struct vol *vol,
              )) {
                  memcpy(finder_buf, ufinderi, 8 );
              }
@@ -153,10 +199,13 @@ index 1d4bc30c..b2d926a7 100644
              break;
          case FILPBIT_UNIXPR :
              if (upriv_bit) {
-@@ -1061,9 +1071,12 @@ int setfilparams(const AFPObj *obj, struct vol *vol,
+@@ -1061,9 +1091,15 @@ int setfilparams(const AFPObj *obj, struct vol *vol,
              }
              break;
          case FILPBIT_PDINFO :
++            if (isad == 0) {
++                break;
++            }
 +            ade = ad_entry(adp, ADEID_FINDERI);
 +            AFP_ASSERT(ade != NULL);
 +
@@ -703,5 +752,5 @@ index b7169ecf..345a446f 100644
          {
              LOG(log_warning, logtype_ad, "parse_entries: bogus eid: %u, off: %u, len: %u",
 -- 
-2.26.2
+2.21.0 (Apple Git-122)
 
