@@ -598,7 +598,7 @@ index e49e623d796..612c89d59d1 100644
  		DEBUG(2, ("smb2_write failed: %s, file %s, "
  			  "length=%lu offset=%lu nwritten=-1: %s\n",
 diff --git a/source3/smbd/smbXsrv_session.c b/source3/smbd/smbXsrv_session.c
-index 0e5b16e958c..3f94f5db3a9 100644
+index 0e5b16e958c..bdf430e4204 100644
 --- a/source3/smbd/smbXsrv_session.c
 +++ b/source3/smbd/smbXsrv_session.c
 @@ -1729,7 +1729,7 @@ NTSTATUS smbXsrv_session_logoff(struct smbXsrv_session *session)
@@ -610,6 +610,18 @@ index 0e5b16e958c..3f94f5db3a9 100644
  		local_rec = smbXsrv_session_local_fetch_locked(
  						table->local.db_ctx,
  						session->local_id,
+@@ -1739,6 +1739,11 @@ NTSTATUS smbXsrv_session_logoff(struct smbXsrv_session *session)
+ 		}
+ 	}
+ 
++	if (dbwrap_record_get_db(local_rec) == NULL) {
++		TALLOC_FREE(local_rec);
++		error = NT_STATUS_INTERNAL_ERROR;
++	}
++
+ 	if (local_rec != NULL) {
+ 		status = dbwrap_record_delete(local_rec);
+ 		if (!NT_STATUS_IS_OK(status)) {
 diff --git a/source3/smbd/smbXsrv_tcon.c b/source3/smbd/smbXsrv_tcon.c
 index 8a0c427597c..a3337a19f47 100644
 --- a/source3/smbd/smbXsrv_tcon.c
