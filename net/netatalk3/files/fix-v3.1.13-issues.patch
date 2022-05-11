@@ -1,4 +1,4 @@
-From 85e7f3044e3081de04cb23ac339f8588f01d8fda Mon Sep 17 00:00:00 2001
+From 3e554f54e4522cb39841b82aec8bd8705087b8c3 Mon Sep 17 00:00:00 2001
 From: Andrew Walker <awalker@ixsystems.com>
 Date: Mon, 11 Apr 2022 09:13:09 -0400
 Subject: [PATCH] add handling for cases where ad_entry() returns NULL
@@ -31,8 +31,8 @@ Signed-off-by: Andrew Walker <awalker@ixsystems.com>
  libatalk/adouble/ad_conv.c     |   4 +-
  libatalk/adouble/ad_date.c     |  17 ++++-
  libatalk/adouble/ad_flush.c    |  27 ++++++-
- libatalk/adouble/ad_open.c     |  39 ++++++----
- 9 files changed, 240 insertions(+), 60 deletions(-)
+ libatalk/adouble/ad_open.c     |  69 +++++++++++++----
+ 9 files changed, 269 insertions(+), 61 deletions(-)
 
 diff --git a/etc/afpd/directory.c b/etc/afpd/directory.c
 index 8220227b..d53ce1e1 100644
@@ -653,7 +653,7 @@ index f370b812..2f8aa726 100644
      return 0;
  }
 diff --git a/libatalk/adouble/ad_open.c b/libatalk/adouble/ad_open.c
-index b7169ecf..345a446f 100644
+index b7169ecf..5b134114 100644
 --- a/libatalk/adouble/ad_open.c
 +++ b/libatalk/adouble/ad_open.c
 @@ -140,17 +140,17 @@ static struct adouble_fops ad_adouble_ea = {
@@ -751,6 +751,66 @@ index b7169ecf..345a446f 100644
              || ((eid != ADEID_RFORK) && (off + len >  valid_data_len)))
          {
              LOG(log_warning, logtype_ad, "parse_entries: bogus eid: %u, off: %u, len: %u",
+@@ -782,16 +791,41 @@ static int ad_header_read_ea(const char *path, struct adouble *ad, const struct
+         EC_FAIL;
+     }
+ 
++    /*
++     * It is possible for AFP metadata to contain a zero-length
++     * comment. This will cause ad_entry(ad, ADEID_COMMENT) to return NULL
++     * but should not be treated as an error condition.
++     * Since recent CVE fixes have introduced new behavior regarding
++     * ad_entry() output. For now, we will AFP_ASSERT() in EC_CLEANUP to prevent
++     * altering on-disk info. This does introduce an avenue to DOS
++     * the netatalk server by locally writing garbage to the EA. At this
++     * point, the outcome is an acceptable risk to prevent unintended
++     * changes to metadata.
++     */
+     if (nentries != ADEID_NUM_EA
+         || !ad_entry(ad, ADEID_FINDERI)
++#if 0
+         || !ad_entry(ad, ADEID_COMMENT)
++#endif
+         || !ad_entry(ad, ADEID_FILEDATESI)
+         || !ad_entry(ad, ADEID_AFPFILEI)
+         || !ad_entry(ad, ADEID_PRIVDEV)
+         || !ad_entry(ad, ADEID_PRIVINO)
+         || !ad_entry(ad, ADEID_PRIVSYN)
+         || !ad_entry(ad, ADEID_PRIVID)) {
+-        LOG(log_error, logtype_ad, "ad_header_read_ea(\"%s\"): invalid metadata EA", fullpathname(path));
++        LOG(log_error, logtype_ad,
++            "ad_header_read_ea(\"%s\"): invalid metadata EA "
++            "this is now being treated as a fatal error. "
++            "if you see this log entry, please file a bug ticket "
++            "with your upstream vendor and attach the generated "
++            "core file.", path ? fullpathname(path) : "UNKNOWN");
++
++        errno = EINVAL;
++        EC_FAIL;
++    }
++
++    if (!ad_entry(ad, ADEID_COMMENT) &&
++        (ad->ad_eid[ADEID_COMMENT].ade_len != 0)) {
+         errno = EINVAL;
+         EC_FAIL;
+     }
+@@ -805,6 +839,8 @@ static int ad_header_read_ea(const char *path, struct adouble *ad, const struct
+ #endif
+ 
+ EC_CLEANUP:
++    AFP_ASSERT(!(ret != 0 && errno == EINVAL));
++#if 0
+     if (ret != 0 && errno == EINVAL) {
+         become_root();
+         (void)sys_removexattr(path, AD_EA_META);
+@@ -812,6 +848,7 @@ EC_CLEANUP:
+         LOG(log_error, logtype_ad, "ad_header_read_ea(\"%s\"): deleted invalid metadata EA", fullpathname(path), nentries);
+         errno = ENOENT;
+     }
++#endif
+     EC_EXIT;
+ }
+ 
 -- 
 2.21.0 (Apple Git-122)
 
