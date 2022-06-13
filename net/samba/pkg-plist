@@ -204,6 +204,8 @@ lib/pam_winbind.so
 %%AD_DC%%lib/samba4/private/libservice-samba4.so
 lib/samba4/private/libCHARSET3-samba4.so
 %%AD_DC%%lib/samba4/private/libHDB-SAMBA4-samba4.so
+lib/samba4/private/libzfsacl.so.0
+lib/samba4/private/libzfsacl.so.0.1.0
 lib/samba4/private/libaddns-samba4.so
 lib/samba4/private/libads-samba4.so
 lib/samba4/private/libasn1-samba4.so.8
