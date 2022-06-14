@@ -3,7 +3,7 @@
 
 PORTNAME=	grub2
 PORTVERSION=	2.05
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	sysutils
 DISTNAME=	grub-${PORTVERSION}
 
@@ -76,5 +76,10 @@ pre-configure:
 post-configure:
 	@${LN} -sfh /usr/include/machine /usr/include/sys /usr/include/x86 \
 		${WRKSRC}/grub-core
+
+post-install:
+.for f in boot_hybrid.img boot.img diskboot.img
+	truncate -s 512 ${STAGEDIR}${PREFIX}/lib/grub/i386-pc/${f}
+.endfor
 
 .include <bsd.port.post.mk>
