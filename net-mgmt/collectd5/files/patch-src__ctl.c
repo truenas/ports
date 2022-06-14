@@ -1,6 +1,6 @@
 --- src/ctl.c.orig	2022-01-21 13:11:05 UTC
 +++ src/ctl.c
-@@ -0,0 +1,417 @@
+@@ -0,0 +1,418 @@
 +/**
 + * collectd - src/ctl.c
 + *
@@ -141,8 +141,9 @@
 +		ERROR("cannot CTL open device %s", CTL_DEFAULT_DEV);
 +		return (-1);
 +	}
-+	if (sysctlbyname("kern.cam.ctl.max_ports", NULL, NULL, &maxports,
-+	    sizeof(maxports)) == -1) {
++	size_t maxportsize = sizeof(maxports);
++	if (sysctlbyname("kern.cam.ctl.max_ports", &maxports, &maxportsize,
++	    NULL, NULL) == -1) {
 +		ERROR("cannot get CTL max ports");
 +		return (-1);
 +	}
