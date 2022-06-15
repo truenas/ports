@@ -1,5 +1,5 @@
 PORTNAME=	openzfs
-PORTVERSION=	2022042600
+PORTVERSION=	2022061500
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 
@@ -26,7 +26,7 @@ OPTIONS_SUB=	yes
 USE_GITHUB=	yes
 GH_ACCOUNT=	truenas
 GH_PROJECT=	zfs
-GH_TAGNAME=	fc28c9dcf
+GH_TAGNAME=	dac769ff9
 
 .include <bsd.port.pre.mk>
 
