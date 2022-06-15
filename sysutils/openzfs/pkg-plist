@@ -402,6 +402,7 @@ man/man1/zvol_wait.1.gz
 man/man4/spl.4.gz
 man/man4/zfs.4.gz
 man/man5/vdev_id.conf.5.gz
+man/man7/dracut.zfs.7.gz
 man/man7/zfsconcepts.7.gz
 man/man7/zfsprops.7.gz
 man/man7/zpool-features.7.gz
