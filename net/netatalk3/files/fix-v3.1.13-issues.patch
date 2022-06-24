@@ -1,4 +1,4 @@
-From 3e554f54e4522cb39841b82aec8bd8705087b8c3 Mon Sep 17 00:00:00 2001
+From 5989310d1c7d6fe4b07661ce772da0307e43e0b7 Mon Sep 17 00:00:00 2001
 From: Andrew Walker <awalker@ixsystems.com>
 Date: Mon, 11 Apr 2022 09:13:09 -0400
 Subject: [PATCH] add handling for cases where ad_entry() returns NULL
@@ -31,8 +31,8 @@ Signed-off-by: Andrew Walker <awalker@ixsystems.com>
  libatalk/adouble/ad_conv.c     |   4 +-
  libatalk/adouble/ad_date.c     |  17 ++++-
  libatalk/adouble/ad_flush.c    |  27 ++++++-
- libatalk/adouble/ad_open.c     |  69 +++++++++++++----
- 9 files changed, 269 insertions(+), 61 deletions(-)
+ libatalk/adouble/ad_open.c     | 124 ++++++++++++++++++++-----------
+ 9 files changed, 297 insertions(+), 88 deletions(-)
 
 diff --git a/etc/afpd/directory.c b/etc/afpd/directory.c
 index 8220227b..d53ce1e1 100644
@@ -653,7 +653,7 @@ index f370b812..2f8aa726 100644
      return 0;
  }
 diff --git a/libatalk/adouble/ad_open.c b/libatalk/adouble/ad_open.c
-index b7169ecf..5b134114 100644
+index b7169ecf..c7eac24b 100644
 --- a/libatalk/adouble/ad_open.c
 +++ b/libatalk/adouble/ad_open.c
 @@ -140,17 +140,17 @@ static struct adouble_fops ad_adouble_ea = {
@@ -679,7 +679,7 @@ index b7169ecf..5b134114 100644
      {ADEID_RFORK,       ADEDOFF_RFORK_V2,    ADEDLEN_INIT},
      {0, 0, 0}
  };
-@@ -158,13 +158,13 @@ static const struct entry entry_order2[ADEID_NUM_V2 + 1] = {
+@@ -158,16 +158,43 @@ static const struct entry entry_order2[ADEID_NUM_V2 + 1] = {
  /* Using Extended Attributes */
  static const struct entry entry_order_ea[ADEID_NUM_EA + 1] = {
      {ADEID_FINDERI,    ADEDOFF_FINDERI_EA,    ADEDLEN_FINDERI},
@@ -698,7 +698,37 @@ index b7169ecf..5b134114 100644
      {0, 0, 0}
  };
  
-@@ -360,15 +360,22 @@ static int new_ad_header(struct adouble *ad, const char *path, struct stat *stp,
++struct {
++	off_t expected_len;
++	bool fixed_size;
++	bool minimum_size;
++	bool zero_len_ok;
++} ad_checks[] = {
++	[ADEID_DFORK] = {-1, false, false, false}, /* not applicable */
++	[ADEID_RFORK] = {-1, false, false, false}, /* no limit */
++	[ADEID_NAME] = {ADEDLEN_NAME, false, false},
++	[ADEID_COMMENT] = {ADEDLEN_COMMENT, false, false, true},
++	[ADEID_ICONBW] = {ADEDLEN_ICONBW, true, false, false},
++	[ADEID_ICONCOL] = {ADEDLEN_ICONCOL, false, false, false},
++	[ADEID_FILEI] = {ADEDLEN_FILEI, true, false, false},
++	[ADEID_FILEDATESI] = {ADEDLEN_FILEDATESI, true, false, false},
++	[ADEID_FINDERI] = {ADEDLEN_FINDERI, false, true, false},
++	[ADEID_MACFILEI] = {ADEDLEN_MACFILEI, true, false, false},
++	[ADEID_PRODOSFILEI] = {ADEDLEN_PRODOSFILEI, true, false, false},
++	[ADEID_MSDOSFILEI] = {ADEDLEN_MSDOSFILEI, true, false, false},
++	[ADEID_SHORTNAME] = {ADEDLEN_SHORTNAME, false, false, false},
++	[ADEID_AFPFILEI] = {ADEDLEN_AFPFILEI, true, false, false},
++	[ADEID_DID] = {ADEDLEN_DID, true, false, false},
++	[ADEID_PRIVDEV] = {ADEDLEN_PRIVDEV, true, false, true},
++	[ADEID_PRIVINO] = {ADEDLEN_PRIVINO, true, false, true},
++	[ADEID_PRIVSYN] = {ADEDLEN_PRIVSYN, true, false, true},
++	[ADEID_PRIVID] = {ADEDLEN_PRIVID, true, false, true},
++};
++
+ #define ADFLAGS2LOGSTRBUFSIZ 128
+ const char *adflags2logstr(int adflags)
+ {
+@@ -360,15 +387,22 @@ static int new_ad_header(struct adouble *ad, const char *path, struct stat *stp,
      const struct entry  *eid;
      uint16_t            ashort;
      struct stat         st;
@@ -723,7 +753,7 @@ index b7169ecf..5b134114 100644
  
      /* make things invisible */
      if ((ad->ad_options & ADVOL_INVDOTS)
-@@ -378,14 +385,16 @@ static int new_ad_header(struct adouble *ad, const char *path, struct stat *stp,
+@@ -378,14 +412,16 @@ static int new_ad_header(struct adouble *ad, const char *path, struct stat *stp,
          ashort = htons(ATTRBIT_INVISIBLE);
          ad_setattr(ad, ashort);
          ashort = htons(FINDERINFO_INVISIBLE);
@@ -742,7 +772,7 @@ index b7169ecf..5b134114 100644
      }
      ad_setdate(ad, AD_DATE_CREATE | AD_DATE_UNIX, stp->st_mtime);
      ad_setdate(ad, AD_DATE_MODIFY | AD_DATE_UNIX, stp->st_mtime);
-@@ -417,7 +426,7 @@ static int parse_entries(struct adouble *ad, uint16_t nentries, size_t valid_dat
+@@ -417,7 +453,7 @@ static int parse_entries(struct adouble *ad, uint16_t nentries, size_t valid_dat
  
          if (!eid
              || eid > ADEID_MAX
@@ -751,7 +781,7 @@ index b7169ecf..5b134114 100644
              || ((eid != ADEID_RFORK) && (off + len >  valid_data_len)))
          {
              LOG(log_warning, logtype_ad, "parse_entries: bogus eid: %u, off: %u, len: %u",
-@@ -782,16 +791,41 @@ static int ad_header_read_ea(const char *path, struct adouble *ad, const struct
+@@ -782,6 +818,17 @@ static int ad_header_read_ea(const char *path, struct adouble *ad, const struct
          EC_FAIL;
      }
  
@@ -768,12 +798,8 @@ index b7169ecf..5b134114 100644
 +     */
      if (nentries != ADEID_NUM_EA
          || !ad_entry(ad, ADEID_FINDERI)
-+#if 0
          || !ad_entry(ad, ADEID_COMMENT)
-+#endif
-         || !ad_entry(ad, ADEID_FILEDATESI)
-         || !ad_entry(ad, ADEID_AFPFILEI)
-         || !ad_entry(ad, ADEID_PRIVDEV)
+@@ -791,7 +838,19 @@ static int ad_header_read_ea(const char *path, struct adouble *ad, const struct
          || !ad_entry(ad, ADEID_PRIVINO)
          || !ad_entry(ad, ADEID_PRIVSYN)
          || !ad_entry(ad, ADEID_PRIVID)) {
@@ -794,7 +820,7 @@ index b7169ecf..5b134114 100644
          errno = EINVAL;
          EC_FAIL;
      }
-@@ -805,6 +839,8 @@ static int ad_header_read_ea(const char *path, struct adouble *ad, const struct
+@@ -805,6 +864,8 @@ static int ad_header_read_ea(const char *path, struct adouble *ad, const struct
  #endif
  
  EC_CLEANUP:
@@ -803,13 +829,60 @@ index b7169ecf..5b134114 100644
      if (ret != 0 && errno == EINVAL) {
          become_root();
          (void)sys_removexattr(path, AD_EA_META);
-@@ -812,6 +848,7 @@ EC_CLEANUP:
+@@ -812,6 +873,7 @@ EC_CLEANUP:
          LOG(log_error, logtype_ad, "ad_header_read_ea(\"%s\"): deleted invalid metadata EA", fullpathname(path), nentries);
          errno = ENOENT;
      }
 +#endif
      EC_EXIT;
  }
+ 
+@@ -1546,32 +1608,7 @@ static bool ad_entry_check_size(uint32_t eid,
+ 				uint32_t off,
+ 				uint32_t got_len)
+ {
+-	struct {
+-		off_t expected_len;
+-		bool fixed_size;
+-		bool minimum_size;
+-	} ad_checks[] = {
+-		[ADEID_DFORK] = {-1, false, false}, /* not applicable */
+-		[ADEID_RFORK] = {-1, false, false}, /* no limit */
+-		[ADEID_NAME] = {ADEDLEN_NAME, false, false},
+-		[ADEID_COMMENT] = {ADEDLEN_COMMENT, false, false},
+-		[ADEID_ICONBW] = {ADEDLEN_ICONBW, true, false},
+-		[ADEID_ICONCOL] = {ADEDLEN_ICONCOL, false, false},
+-		[ADEID_FILEI] = {ADEDLEN_FILEI, true, false},
+-		[ADEID_FILEDATESI] = {ADEDLEN_FILEDATESI, true, false},
+-		[ADEID_FINDERI] = {ADEDLEN_FINDERI, false, true},
+-		[ADEID_MACFILEI] = {ADEDLEN_MACFILEI, true, false},
+-		[ADEID_PRODOSFILEI] = {ADEDLEN_PRODOSFILEI, true, false},
+-		[ADEID_MSDOSFILEI] = {ADEDLEN_MSDOSFILEI, true, false},
+-		[ADEID_SHORTNAME] = {ADEDLEN_SHORTNAME, false, false},
+-		[ADEID_AFPFILEI] = {ADEDLEN_AFPFILEI, true, false},
+-		[ADEID_DID] = {ADEDLEN_DID, true, false},
+-		[ADEID_PRIVDEV] = {ADEDLEN_PRIVDEV, true, false},
+-		[ADEID_PRIVINO] = {ADEDLEN_PRIVINO, true, false},
+-		[ADEID_PRIVSYN] = {ADEDLEN_PRIVSYN, true, false},
+-		[ADEID_PRIVID] = {ADEDLEN_PRIVID, true, false},
+-	};
+-    uint32_t required_len;
++	uint32_t required_len;
+ 
+ 	if (eid >= ADEID_MAX) {
+ 		return false;
+@@ -1639,10 +1676,11 @@ void *ad_entry(const struct adouble *ad, int eid)
+ 
+ 	valid = ad_entry_check_size(eid, bufsize, off, len);
+ 	if (!valid) {
++		LOG(log_error, logtype_ad, "ad_entry: eid %d failed size check, bufsize: %zu, off: %zu, len: %zu", eid, bufsize, off, len);
+ 		return NULL;
+ 	}
+ 
+-	if (off == 0 || len == 0) {
++	if ((!ad_checks[eid].zero_len_ok && (len == 0)) || (off == 0)) {
+ 		return NULL;
+ 	}
  
 -- 
 2.21.0 (Apple Git-122)
