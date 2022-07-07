@@ -1,5 +1,5 @@
 PORTNAME=	rclone
-PORTREVISION=	1
+PORTREVISION=	2
 DISTVERSIONPREFIX=	v
 DISTVERSION=	1.57.0
 CATEGORIES=	net
@@ -55,7 +55,7 @@ GH_TUPLE=	Azure:azure-pipeline-go:v0.2.3:azure_azure_pipeline_go/vendor/github.c
 		go-yaml:yaml:v2.4.0:go_yaml_yaml/vendor/gopkg.in/yaml.v2 \
 		gogo:protobuf:v1.3.2:gogo_protobuf/vendor/github.com/gogo/protobuf \
 		golang:appengine:v1.6.7:golang_appengine/vendor/google.golang.org/appengine \
-		golang:crypto:32db794688a5:golang_crypto/vendor/golang.org/x/crypto \
+		golang:crypto:ae2d96664a29:golang_crypto/vendor/golang.org/x/crypto \
 		golang:groupcache:41bb18bfe9da:golang_groupcache/vendor/github.com/golang/groupcache \
 		golang:net:60bc85c4be6d:golang_net/vendor/golang.org/x/net \
 		golang:oauth2:2bc19b11175f:golang_oauth2/vendor/golang.org/x/oauth2 \
