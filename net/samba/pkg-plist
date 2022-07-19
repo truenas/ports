@@ -1122,5 +1122,6 @@ man/man8/winbindd.8.gz
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/samba/xattr.py
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/talloc%%PYTHON_EXT_SUFFIX%%.so
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/tdb%%PYTHON_EXT_SUFFIX%%.so
+%%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/zfsacl%%PYTHON_EXT_SUFFIX%%.so
 %%SAMBA4_PYTHON3%%%%PYTHON_SITELIBDIR%%/tevent.py
 %%SPOTLIGHT%%share/samba/samba/mdssvc/elasticsearch_mappings.json
