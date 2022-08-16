@@ -2099,7 +2099,8 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/redundancy/redundancy_draid1.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/redundancy/redundancy_draid2.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/redundancy/redundancy_draid3.ksh
-%%TESTS%%share/zfs/zfs-tests/tests/functional/redundancy/redundancy_draid_damaged.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/redundancy/redundancy_draid_damaged1.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/redundancy/redundancy_draid_damaged2.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/redundancy/redundancy_draid_spare1.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/redundancy/redundancy_draid_spare2.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/redundancy/redundancy_draid_spare3.ksh
@@ -2330,6 +2331,7 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/snapshot/snapshot_015_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/snapshot/snapshot_016_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/snapshot/snapshot_017_pos.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/snapshot/snapshot_018_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/snapused/cleanup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/snapused/setup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/snapused/snapused.kshlib
