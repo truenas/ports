@@ -2331,7 +2331,6 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/snapshot/snapshot_015_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/snapshot/snapshot_016_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/snapshot/snapshot_017_pos.ksh
-%%TESTS%%share/zfs/zfs-tests/tests/functional/snapshot/snapshot_018_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/snapused/cleanup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/snapused/setup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/snapused/snapused.kshlib
