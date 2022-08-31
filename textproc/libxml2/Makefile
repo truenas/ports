@@ -1,7 +1,7 @@
 # Created by: Yukihiro Nakai <Nakai@technologist.com>
 
 PORTNAME=	libxml2
-DISTVERSION=	2.10.1
+DISTVERSION=	2.10.2
 PORTREVISION?=	0
 CATEGORIES?=	textproc gnome
 MASTER_SITES=	GNOME/sources/${PORTNAME}/${DISTVERSION:R}/
