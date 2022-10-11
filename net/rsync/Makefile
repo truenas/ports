@@ -12,6 +12,8 @@ DISTFILES=	${DISTNAME}${EXTRACT_SUFX}
 MAINTAINER=	rodrigo@FreeBSD.org
 COMMENT=	Network file distribution/synchronization utility
 
+CFLAGS+=	-DFREEBSD_NFS4_ACL_SUPPORT
+
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING
 
@@ -44,12 +46,13 @@ SUB_LIST=	NAME=rsyncd
 PORTDOCS=	NEWS.md README.md csprotocol.txt tech_report.tex
 
 # define options
-OPTIONS_DEFINE=		DOCS ICONV POPT_PORT SSH ZLIB_BASE
-OPTIONS_DEFAULT=	FLAGS ICONV SSH ZLIB_BASE
+OPTIONS_DEFINE=		DOCS ICONV POPT_PORT SSH ZLIB_BASE ACL
+OPTIONS_DEFAULT=	FLAGS ICONV SSH ZLIB_BASE ACL
 OPTIONS_RADIO=		PTS
 OPTIONS_RADIO_PTS=	FLAGS RENAMED
 
 # options provided upstream
+ACL_DESC=	Add support for NFSv4 ACLs
 FLAGS_DESC=	File system flags support patch, adds --fileflags
 POPT_PORT_DESC=	Use popt from devel/popt instead of bundled one
 SSH_DESC=	Use SSH instead of RSH
@@ -78,6 +81,8 @@ SSH_CONFIGURE_OFF=	--with-rsh=rsh
 
 ZLIB_BASE_CONFIGURE_ON=	--with-included-zlib=no
 
+ACL_EXTRA_PATCHES+=	${PATCHDIR}/fix-nfs4_acls.patch
+
 .if make(makesum)
 DISTFILES+=	${PORTNAME}-patches-${DISTVERSION}${EXTRACT_SUFX}
 .endif
@@ -93,6 +98,8 @@ post-patch:
 					  -e 's:/etc/letsencrypt:${PREFIX}/etc/letsencrypt:g' \
 					  ${WRKSRC}/rsync.1 ${WRKSRC}/rsyncd.conf.5
 	@${REINPLACE_CMD} -e 's|/usr/bin/rsync|${PREFIX}/bin/rsync|g' ${WRKSRC}/support/rrsync
+	truncate -s 10 ${WRKSRC}/mkgitver
+	touch ${WRKSRC}/git-version.h
 
 post-install:
 	@${MKDIR} ${STAGEDIR}${ETCDIR}
