@@ -22,6 +22,7 @@ USE_LDCONFIG=	yes
 USE_RC_SUBR=	netatalk
 CPE_VENDOR=	netatalk_project
 EXTRA_PATCHES+=	${PATCHDIR}/fix-v3.1.13-issues.patch:-p1
+EXTRA_PATCHES+=	${PATCHDIR}/Fix-CVE-2022-23121-CVE-2022-23123-regression.patch:-p1
 
 CONFIGURE_ARGS+=	--with-pkgconfdir=${PREFIX}/etc \
 			--with-libgcrypt-dir=${LOCALBASE} \
