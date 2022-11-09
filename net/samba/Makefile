@@ -3,14 +3,14 @@
 
 PORTNAME=			${SAMBA4_BASENAME}
 PORTVERSION=			${SAMBA4_VERSION}
-PORTREVISION=		 	0
+PORTREVISION=		 	1
 CATEGORIES?=			net
 DISTNAME=			${SAMBA4_DISTNAME}
 USE_LOCALE=			en_US.UTF-8
 
 USE_GITHUB=			yes
 GH_ACCOUNT=			truenas
-GH_TAGNAME=			253127ddb1d0b5e5fcbaa2afd8e0deba6abaac91
+GH_TAGNAME=			ca1a1527f7ddd2be5658a0f2d1d0a5e462e09e94
 
 MAINTAINER=		 	awalker@ixsystems.com
 COMMENT=			Free SMB/CIFS and AD/DC server and client for Unix
