@@ -340,12 +340,12 @@ lib/libzpool.so.5.0.0
 %%PYTHON%%%%PYTHON_SITELIBDIR%%/libzfs_core/test/__pycache__/test_nvlist%%PYTHON_EXT_SUFFIX%%.pyc
 %%PYTHON%%%%PYTHON_SITELIBDIR%%/libzfs_core/test/test_libzfs_core.py
 %%PYTHON%%%%PYTHON_SITELIBDIR%%/libzfs_core/test/test_nvlist.py
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.1.6-py%%PYTHON_VER%%.egg-info/PKG-INFO
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.1.6-py%%PYTHON_VER%%.egg-info/SOURCES.txt
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.1.6-py%%PYTHON_VER%%.egg-info/dependency_links.txt
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.1.6-py%%PYTHON_VER%%.egg-info/not-zip-safe
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.1.6-py%%PYTHON_VER%%.egg-info/requires.txt
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.1.6-py%%PYTHON_VER%%.egg-info/top_level.txt
+%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.1.7-py%%PYTHON_VER%%.egg-info/PKG-INFO
+%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.1.7-py%%PYTHON_VER%%.egg-info/SOURCES.txt
+%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.1.7-py%%PYTHON_VER%%.egg-info/dependency_links.txt
+%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.1.7-py%%PYTHON_VER%%.egg-info/not-zip-safe
+%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.1.7-py%%PYTHON_VER%%.egg-info/requires.txt
+%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.1.7-py%%PYTHON_VER%%.egg-info/top_level.txt
 lib/security/pam_zfs_key.so
 libdata/pkgconfig/libzfs.pc
 libdata/pkgconfig/libzfs_core.pc
@@ -574,6 +574,7 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/bin/randwritecomp
 %%TESTS%%share/zfs/zfs-tests/bin/readmmap
 %%TESTS%%share/zfs/zfs-tests/bin/rename_dir
+%%TESTS%%share/zfs/zfs-tests/bin/renameat2
 %%TESTS%%share/zfs/zfs-tests/bin/rm_lnkcnt_zero_file
 %%TESTS%%share/zfs/zfs-tests/bin/send_doall
 %%TESTS%%share/zfs/zfs-tests/bin/stride_dd
@@ -2271,6 +2272,7 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/rsend/send_mixed_raw.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/rsend/send_partial_dataset.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/rsend/send_raw_ashift.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/rsend/send_raw_large_blocks.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/rsend/send_raw_spill_block.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/rsend/send_realloc_dnode_size.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/rsend/send_realloc_encrypted_files.ksh
@@ -2386,6 +2388,7 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/user_namespace/user_namespace.cfg
 %%TESTS%%share/zfs/zfs-tests/tests/functional/user_namespace/user_namespace_001.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/user_namespace/user_namespace_common.kshlib
+%%TESTS%%share/zfs/zfs-tests/tests/functional/userquota/13709_reproducer.bz2
 %%TESTS%%share/zfs/zfs-tests/tests/functional/userquota/cleanup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/userquota/groupspace_001_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/userquota/groupspace_002_pos.ksh
@@ -2410,6 +2413,7 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/zfs-tests/tests/functional/userquota/userspace_002_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/userquota/userspace_003_pos.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/userquota/userspace_encrypted.ksh
+%%TESTS%%share/zfs/zfs-tests/tests/functional/userquota/userspace_encrypted_13709.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/userquota/userspace_send_encrypted.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/vdev_zaps/cleanup.ksh
 %%TESTS%%share/zfs/zfs-tests/tests/functional/vdev_zaps/setup.ksh
