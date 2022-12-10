@@ -1,7 +1,7 @@
 # Created by: David O'Brien (obrien@cs.ucdavis.edu)
 
 PORTNAME=	rsync
-DISTVERSION=	3.2.6
+DISTVERSION=	3.2.7
 CATEGORIES=	net
 MASTER_SITES=	https://www.mirrorservice.org/sites/rsync.samba.org/src/ \
 		http://rsync.mirror.garr.it/src/ \
@@ -21,7 +21,7 @@ LIB_DEPENDS=	liblz4.so:archivers/liblz4 \
 		libxxhash.so:devel/xxhash \
 		libzstd.so:archivers/zstd
 
-USES=		cpe python shebangfix ssl
+USES=		cpe python shebangfix ssl autoreconf
 PYTHON_NO_DEPENDS=	yes
 CPE_VENDOR=	samba
 CPE_PRODUCT=	rsync
