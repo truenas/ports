@@ -1,0 +1,45 @@
+diff --git a/source3/modules/vfs_winmsa.c b/source3/modules/vfs_winmsa.c
+index 06f1519f433..ffcb23556b8 100644
+--- a/source3/modules/vfs_winmsa.c
++++ b/source3/modules/vfs_winmsa.c
+@@ -44,10 +44,12 @@ static NTSTATUS set_inherited_acl(vfs_handle_struct *handle,
+ 	struct security_descriptor *psd = NULL;
+ 	size_t size = 0;
+ 	bool inheritable_components, ok;
++	struct dom_sid sid_owner, sid_group;
+ 	bool isdir = S_ISDIR(target_fsp->fsp_name->st.st_ex_mode);
+ 
+ 	status = SMB_VFS_FGET_NT_ACL(parent_fsp,
+-				     SECINFO_DACL, frame, &parent_desc);
++				     SECINFO_DACL | SECINFO_OWNER | SECINFO_GROUP,
++				     frame, &parent_desc);
+ 	if (!NT_STATUS_IS_OK(status)) {
+ 		DBG_ERR("Failed to get NT ACL on [%s]: %s\n",
+ 			 fsp_str_dbg(parent_fsp), strerror(errno));
+@@ -70,12 +72,15 @@ static NTSTATUS set_inherited_acl(vfs_handle_struct *handle,
+ 		return NT_STATUS_OK;
+ 	}
+ 
++	uid_to_sid(&sid_owner, target_fsp->fsp_name->st.st_ex_uid);
++	gid_to_sid(&sid_group, target_fsp->fsp_name->st.st_ex_gid);
++
+ 	status = se_create_child_secdesc(frame,
+ 					 &psd,
+ 					 &size,
+ 					 parent_desc,
+-					 NULL,
+-					 NULL,
++					 &sid_owner,
++					 &sid_group,
+ 					 isdir);
+ 	if (!NT_STATUS_IS_OK(status)) {
+ 			DBG_ERR("Failed to create child secdesc\n");
+@@ -328,7 +333,7 @@ static int winmsa_renameat(vfs_handle_struct *handle,
+ 		error = do_fts_walk(handle, dstfsp, dst);
+ 		if (error) {
+ 			DBG_ERR("%s, %s: fts_walk() failed: %s\n",
+-				fsp_str_dbg(dstfsp), smb_fname_str_dbg(dst));
++				fsp_str_dbg(dstfsp), smb_fname_str_dbg(dst), strerror(errno));
+ 			return 0;
+ 		}
+ 	} else {
