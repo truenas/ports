@@ -1,0 +1,20 @@
+diff --git a/source3/smbd/trans2.c b/source3/smbd/trans2.c
+index dbf9398adda..dd87654ccf9 100644
+--- a/source3/smbd/trans2.c
++++ b/source3/smbd/trans2.c
+@@ -3811,15 +3811,6 @@ cBytesSector=%u, cUnitTotal=%u, cUnitAvail=%d\n", (unsigned int)bsize, (unsigned
+ 			fsp.conn = conn;
+ 			fsp.fnum = FNUM_FIELD_INVALID;
+ 
+-			/* access check */
+-			if (get_current_uid(conn) != 0) {
+-				DEBUG(0,("get_user_quota: access_denied "
+-					 "service [%s] user [%s]\n",
+-					 lp_servicename(talloc_tos(), lp_sub, SNUM(conn)),
+-					 conn->session_info->unix_info->unix_name));
+-				return NT_STATUS_ACCESS_DENIED;
+-			}
+-
+ 			status = vfs_get_ntquota(&fsp, SMB_USER_FS_QUOTA_TYPE,
+ 						 NULL, &quotas);
+ 			if (!NT_STATUS_IS_OK(status)) {
