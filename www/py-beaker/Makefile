@@ -1,7 +1,7 @@
 # Created by: Dryice Liu <dryice@FreeBSD.org>
 
 PORTNAME=	beaker
-PORTVERSION=	1.11.0
+PORTVERSION=	1.12.0
 CATEGORIES=	www python
 MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -11,11 +11,13 @@ MAINTAINER=	python@FreeBSD.org
 COMMENT=	Session and Caching library with WSGI Middleware
 
 LICENSE=	BSD3CLAUSE
+LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USES=		cpe python:3.6+
-CPE_VENDOR=	beakerbrowser
+USES=		cpe python:3.7+
 USE_PYTHON=	autoplist distutils
 
 NO_ARCH=	yes
+
+CPE_VENDOR=	beakerbrowser
 
 .include <bsd.port.mk>
