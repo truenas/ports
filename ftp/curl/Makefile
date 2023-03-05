@@ -1,8 +1,7 @@
 # Created by: Neil Blakey-Milner <nbm@rucus.ru.ac.za>
 
 PORTNAME=	curl
-PORTVERSION=	7.87.0
-PORTREVISION=	1
+PORTVERSION=	7.88.1
 CATEGORIES=	ftp net www
 MASTER_SITES=	https://curl.se/download/ \
 		https://github.com/curl/curl/releases/download/curl-${PORTVERSION:S|.|_|g}/
