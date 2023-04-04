@@ -3,7 +3,7 @@
 
 PORTNAME=			${SAMBA4_BASENAME}
 PORTVERSION=			${SAMBA4_VERSION}
-PORTREVISION=		 	9
+PORTREVISION=		 	10
 CATEGORIES?=			net
 DISTNAME=			${SAMBA4_DISTNAME}
 USE_LOCALE=			en_US.UTF-8
@@ -82,6 +82,7 @@ USES=				cpe compiler waf pkgconfig perl5 \
 USE_PERL5=			build
 USE_LDCONFIG=			${SAMBA4_LIBDIR}
 WAF_CMD=			buildtools/bin/waf
+WAF_ENV=			PYTHONHASHSEED=1
 CONFIGURE_LOG=			bin/config.log
 
 PKGCONFIGDIR?=			${PREFIX}/libdata/pkgconfig
