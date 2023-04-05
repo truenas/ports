@@ -2,7 +2,7 @@
 
 PORTNAME=	netatalk
 PORTVERSION=	3.1.13
-PORTREVISION=	6
+PORTREVISION=	7
 PORTEPOCH=	1
 CATEGORIES=	net
 MASTER_SITES=	SF
@@ -23,6 +23,8 @@ USE_RC_SUBR=	netatalk
 CPE_VENDOR=	netatalk_project
 EXTRA_PATCHES+=	${PATCHDIR}/fix-v3.1.13-issues.patch:-p1
 EXTRA_PATCHES+=	${PATCHDIR}/Fix-CVE-2022-23121-CVE-2022-23123-regression.patch:-p1
+EXTRA_PATCHES+=	${PATCHDIR}/fix-CVE-2022-43634.patch:-p1
+EXTRA_PATCHES+=	${PATCHDIR}/fix-CVE-2022-45188.patch:-p1
 
 CONFIGURE_ARGS+=	--with-pkgconfdir=${PREFIX}/etc \
 			--with-libgcrypt-dir=${LOCALBASE} \
