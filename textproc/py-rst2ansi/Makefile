@@ -1,11 +1,12 @@
 PORTNAME=	rst2ansi
 PORTVERSION=	0.1.5
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	PopularMoment@protonmail.com
 COMMENT=	RST converter to ansi-decorated console output
+WWW=		https://github.com/Snaipe/python-rst2ansi
 
 LICENSE=	MIT
 

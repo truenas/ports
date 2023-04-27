@@ -1,5 +1,3 @@
-# Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
-
 PORTNAME=	azpainterb
 PORTVERSION=	1.1.3
 CATEGORIES=	graphics
@@ -7,6 +5,7 @@ MASTER_SITES=	http://azsky2.html.xdomain.jp/arc/
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	8-bit RGB color dot editing program
+WWW=		http://azsky2.html.xdomain.jp/soft/azpainterb.html
 
 LICENSE=	GPLv3
 
@@ -18,7 +17,7 @@ USES=		compiler:c11 desktop-file-utils gmake jpeg pkgconfig \
 		tar:xz xorg
 USE_XORG=	x11 xext xi
 HAS_CONFIGURE=	yes
-CONFIGURE_ARGS=	--docdir="${DOCSDIR}" CC="${CC}"
+CONFIGURE_ARGS=	--docdir="${DOCSDIR}" CC="${CC}" LIBS="-lz"
 
 PORTDOCS=	AUTHORS ChangeLog ReadMe_en ReadMe_ja manual_ja.html
 

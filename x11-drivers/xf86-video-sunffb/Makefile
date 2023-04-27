@@ -1,10 +1,11 @@
 PORTNAME=	xf86-video-sunffb
 PORTVERSION=	1.2.2
-PORTREVISION=	12
+PORTREVISION=	13
 CATEGORIES=	x11-drivers
 
 MAINTAINER=	x11@FreeBSD.org
 COMMENT=	X.Org sunffb display driver
+WWW=		https://www.x.org/
 
 USES=		gl xorg-cat:driver
 USE_GL=		gl

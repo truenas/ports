@@ -1,13 +1,13 @@
-# Created by: Koop Mast <kwm@FreeBSD.org>
-
 PORTNAME=	libmateweather
 PORTVERSION=	1.26.0
+PORTREVISION=	3
 CATEGORIES=	net mate
 MASTER_SITES=	MATE
 DIST_SUBDIR=	mate
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Library to access online weather information
+WWW=		https://mate-desktop.org/
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING

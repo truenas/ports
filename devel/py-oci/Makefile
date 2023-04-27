@@ -1,13 +1,12 @@
-# Created by: Alessando Sagratini <ale_sagra@hotmail.com>
-
 PORTNAME=	oci
-PORTVERSION=	2.52.1
+PORTVERSION=	2.99.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ale_sagra@hotmail.com
 COMMENT=	Python interface to Oracle Cloud Infrastructure
+WWW=		https://github.com/oracle/oci-python-sdk/
 
 LICENSE=	APACHE20 UPL
 LICENSE_COMB=	dual
@@ -18,13 +17,13 @@ LICENSE_FILE_UPL=	${WRKSRC}/LICENSE.txt
 LICENSE_PERMS_UPL=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
 
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}certifi>0:security/py-certifi@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}circuitbreaker>=1.3.1:devel/py-circuitbreaker@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}circuitbreaker>=1.3.1<2.0.0:devel/py-circuitbreaker@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}cryptography>=3.2.1:security/py-cryptography@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}dateutil>=2.5.3<3.0.0:devel/py-dateutil@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}openssl>=17.5.0:security/py-openssl@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}pytz>=2016.10:devel/py-pytz@${PY_FLAVOR}
 
-USES=		python:3.6+
+USES=		python:3.6-3.11
 USE_PYTHON=	autoplist distutils
 
 NO_ARCH=	yes

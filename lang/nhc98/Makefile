@@ -1,8 +1,6 @@
-# Created by: Oliver Braun <obraun@informatik.unibw-muenchen.de>
-
 PORTNAME=	nhc98
 PORTVERSION=	1.22
-PORTREVISION=	7
+PORTREVISION=	8
 CATEGORIES=	lang haskell
 MASTER_SITES=	http://haskell.org/${PORTNAME}/
 DISTFILES=	${PORTNAME}src-${PORTVERSION}${EXTRACT_SUFX}
@@ -10,6 +8,7 @@ DIST_SUBDIR=	nhc98
 
 MAINTAINER=	haskell@FreeBSD.org
 COMMENT=	Fully-fledged compiler for Haskell 98
+WWW=		https://www.haskell.org/nhc98/
 
 ONLY_FOR_ARCHS=	i386
 

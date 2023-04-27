@@ -1,13 +1,12 @@
-# Created by: Milan Obuch
-
 PORTNAME=	pyClamd
 PORTVERSION=	0.3.17
 CATEGORIES=	security python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	bsd@dino.sk
 COMMENT=	Python ClamD interface module
+WWW=		https://xael.org/pages/pyclamd-en.html
 
 LICENSE=	LGPL3+
 

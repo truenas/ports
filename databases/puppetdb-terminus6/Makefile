@@ -1,5 +1,5 @@
 PORTNAME=	puppetdb-terminus
-PORTVERSION=	6.19.1
+PORTVERSION=	6.22.1
 CATEGORIES=	databases ruby
 MASTER_SITES=	https://downloads.puppetlabs.com/puppetdb/
 PKGNAMESUFFIX=	6
@@ -7,15 +7,18 @@ DISTNAME=	puppetdb-${PORTVERSION}
 
 MAINTAINER=	puppet@FreeBSD.org
 COMMENT=	PuppetDB storeconfigs backend terminus module
+WWW=		https://docs.puppetlabs.com/puppetdb/latest/
 
 LICENSE=	APACHE20
+
+DEPRECATED=	Puppet 6 has reached EOL
+EXPIRATION_DATE=2023-06-01
 
 BUILD_DEPENDS=	puppet6>=0:sysutils/puppet6
 
 CONFLICTS_INSTALL=	puppetdb-terminus5 puppetdb-terminus7
-USE_RUBY=	yes
 NO_BUILD=	yes
-USES=		gmake
+USES=		gmake ruby
 
 post-patch:
 	@${REINPLACE_CMD} -e "s|%%PREFIX%%|${PREFIX}|" ${WRKSRC}/Makefile

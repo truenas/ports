@@ -1,12 +1,13 @@
 PORTNAME=	qwalk
 DISTVERSIONPREFIX=	v
 DISTVERSION=	1.0.1-300
-PORTREVISION=	3
+PORTREVISION=	6
 DISTVERSIONSUFFIX=	-g1b7e381
 CATEGORIES=	science
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Quantum Monte Carlo package for quantum chemistry computations
+WWW=		https://qwalk.github.io/mainline/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/../COPYING

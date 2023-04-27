@@ -1,11 +1,12 @@
 PORTNAME=	wannier90
 DISTVERSIONPREFIX=	v
 DISTVERSION=	3.1.0
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	science
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Maximally-localized Wannier functions (MLWFs) and Wannier90
+WWW=		http://www.wannier.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE

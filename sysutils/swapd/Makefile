@@ -1,5 +1,3 @@
-# Created by: Yen-Ming Lee <leeym@FreeBSD.org>
-
 PORTNAME=	swapd
 PORTVERSION=	1.0.5
 PORTREVISION=	2
@@ -8,6 +6,7 @@ MASTER_SITES=	http://www.rkeene.org/files/oss/swapd/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Daemon that watches free memory and manages swap files
+WWW=		https://www.rkeene.org/oss/swapd/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE

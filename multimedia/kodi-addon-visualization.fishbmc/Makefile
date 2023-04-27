@@ -1,13 +1,12 @@
-# Created by: Rozhuk Ivan <rozhuk.im@gmail.com>
-
 PORTNAME=	visualization.fishbmc
-PORTVERSION=	6.3.0
-DISTVERSIONSUFFIX=	-Matrix
-PORTREVISION=	3
+PORTVERSION=	20.2.0
+DISTVERSIONSUFFIX=	-Nexus
+PORTREVISION=	1
 CATEGORIES=	multimedia
 
 MAINTAINER=	rozhuk.im@gmail.com
 COMMENT=	Fische visualizer for Kodi
+WWW=		https://github.com/xbmc/visualization.fishbmc
 
 LICENSE=	GPLv2+
 

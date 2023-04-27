@@ -1,14 +1,13 @@
-# Created by: Fukang Chen <loader@FreeBSD.org>
-
 PORTNAME=	pymailq
 PORTVERSION=	0.9.0
 PORTREVISION=	1
 CATEGORIES=	mail python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	loader@FreeBSD.org
 COMMENT=	Postfix queue control python tool
+WWW=		https://github.com/outini/pymailq
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE

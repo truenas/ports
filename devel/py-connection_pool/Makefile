@@ -1,11 +1,12 @@
 PORTNAME=	connection_pool
 DISTVERSION=	0.0.3
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Thread safe connection pool for Python programs
+WWW=		https://github.com/zhouyl/ConnectionPool
 
 LICENSE=	MIT
 

@@ -1,12 +1,11 @@
-# Created by: Sunpoet Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	opennebula
-PORTVERSION=	6.0.3
+PORTVERSION=	6.4.3
 CATEGORIES=	net rubygems
 MASTER_SITES=	RG
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Libraries needed to talk to OpenNebula
+WWW=		https://opennebula.io/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -20,7 +19,6 @@ RUN_DEPENDS=	rubygem-ipaddress>=0:net/rubygem-ipaddress \
 		rubygem-xmlrpc>=0:net/rubygem-xmlrpc
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

@@ -1,12 +1,11 @@
-# Created by: Steve Wills <swills@FreeBSD.org>
-
 PORTNAME=	pdf-reader
-PORTVERSION=	2.5.0
+PORTVERSION=	2.11.0
 CATEGORIES=	print rubygems
 MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	PDF parser conforming as much as possible to the PDF specification
+WWW=		https://github.com/yob/pdf-reader
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/MIT-LICENSE
@@ -18,7 +17,6 @@ RUN_DEPENDS=	rubygem-afm>=0.2.1<0.3:print/rubygem-afm \
 		rubygem-ttfunk>=0:print/rubygem-ttfunk
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

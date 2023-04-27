@@ -4,8 +4,9 @@ DISTVERSION=	${ANGR_VERSION}
 CATEGORIES=	math devel python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	0mp@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Abstraction layer for constraint solvers
+WWW=		https://github.com/angr/claripy
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

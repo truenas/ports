@@ -1,11 +1,12 @@
 PORTNAME=	progress
 PORTVERSION=	1.2.2
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	devel
 DISTNAME=	${PORTNAME}_${PORTVERSION}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Terminal Progress Bars
+WWW=		https://cran.r-project.org/web/packages/progress/
 
 LICENSE=	MIT
 

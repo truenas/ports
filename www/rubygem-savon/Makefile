@@ -1,5 +1,3 @@
-# Created by: Joseph Benden <joe@thrallingpenguin.com>
-
 PORTNAME=	savon
 PORTVERSION=	2.11.2
 CATEGORIES=	www rubygems
@@ -7,6 +5,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	joe@thrallingpenguin.com
 COMMENT=	Library for SOAP communications
+WWW=		https://github.com/savonrb/savon
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -20,7 +19,6 @@ RUN_DEPENDS=	rubygem-akami>=1.2:www/rubygem-akami \
 		rubygem-wasabi>=3.4:www/rubygem-wasabi
 
 NO_ARCH=	yes
-USE_RUBY=	yes
 USES=		gem
 
 .include <bsd.port.mk>

@@ -1,30 +1,28 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	minify
-PORTVERSION=	2.9.22
+PORTVERSION=	2.12.5
+PORTREVISION=	1
 DISTVERSIONPREFIX=	v
 CATEGORIES=	textproc www
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Go minifiers for web formats
+WWW=		https://github.com/tdewolff/minify
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 USES=		go:modules
 
-GO_TARGET=	./cmd/${GH_PROJECT}
+GO_MODULE=	github.com/tdewolff/minify/v2
+GO_TARGET=	./cmd/minify
 
 PLIST_FILES=	bin/minify
 
-GH_ACCOUNT=	tdewolff
-GH_TUPLE=	djherbis:atime:v1.1.0:djherbis_atime/vendor/github.com/djherbis/atime \
-		dustin:go-humanize:v1.0.0:dustin_go_humanize/vendor/github.com/dustin/go-humanize \
-		fsnotify:fsnotify:v1.5.1:fsnotify_fsnotify/vendor/github.com/fsnotify/fsnotify \
-		golang:sys:d61c044:golang_sys/vendor/golang.org/x/sys \
-		matryer:try:9ac251b:matryer_try/vendor/github.com/matryer/try \
-		spf13:pflag:d5e0c06:spf13_pflag/vendor/github.com/spf13/pflag \
-		tdewolff:parse:v2.5.21:tdewolff_parse/vendor/github.com/tdewolff/parse/v2
-USE_GITHUB=	yes
+USE_GITHUB=	nodefault
+GH_TUPLE=	golang:sys:v0.6.0:sys
+
+pre-patch:
+	@${RM} -r ${WRKSRC}/vendor/golang.org/x/sys
+	@${LN} -s ${WRKDIR}/sys-* ${WRKSRC}/vendor/golang.org/x/sys
 
 .include <bsd.port.mk>

@@ -1,11 +1,12 @@
 PORTNAME=	distel
 PORTVERSION=	4.1.1
-PORTREVISION=	8
+PORTREVISION=	13
 CATEGORIES=	devel elisp
 PKGNAMESUFFIX=	${EMACS_PKGNAMESUFFIX}
 
 MAINTAINER=	erlang@FreeBSD.org
 COMMENT=	Distel extends Emacs Lisp with Erlang-style message passing
+WWW=		http://www.bluetail.com/~luke/distel/
 
 LICENSE=	MIT
 

@@ -1,22 +1,20 @@
-# Created by: KalleDK <plexmaintainer@k-moeller.dk>
-
-PORTVERSION=	1.25.2.5319
-DISTVERSIONSUFFIX=c43dc0277
-PORTREVISION=	0
+PORTVERSION=	1.32.1.6983
+DISTVERSIONSUFFIX=93784ef3f
 MASTER_SITES=	https://downloads.plex.tv/plex-media-server-new/${DISTVERSION}-${DISTVERSIONSUFFIX}/freebsd/
 PKGNAMESUFFIX=	-plexpass
 DISTNAME=	PlexMediaServer-${DISTVERSION}-${DISTVERSIONSUFFIX}-FreeBSD-${ARCH}
 
-MAINTAINER=	feld@FreeBSD.org
+MAINTAINER=	b.shertenlieb@yahoo.com
 
 USE_RC_SUBR=	${PORTNAME}_plexpass
 
-MASTERDIR=${.CURDIR}/../plexmediaserver
-
-DISTINFO_FILE=	${.CURDIR}/distinfo
-FILESDIR=	${.CURDIR}/files
 DATADIR=	${PREFIX}/share/${PORTNAME}${PKGNAMESUFFIX}
+FILESDIR=	${.CURDIR}/files
+
+MASTERDIR=	${.CURDIR}/../plexmediaserver
 
 SUB_LIST=	PORTNAME=${PORTNAME}_plexpass DATADIR=${DATADIR} USERS=${USERS} GROUPS=${GROUPS}
+
+DISTINFO_FILE=	${.CURDIR}/distinfo
 
 .include "${MASTERDIR}/Makefile"

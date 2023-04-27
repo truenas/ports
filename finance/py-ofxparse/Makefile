@@ -2,11 +2,12 @@ PORTNAME=	ofxparse
 PORTVERSION=	0.20
 PORTREVISION=	2
 CATEGORIES=	finance python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	acm@FreeBSD.org
 COMMENT=	Tools for working with the OFX file format
+WWW=		https://pypi.org/project/ofxparse/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

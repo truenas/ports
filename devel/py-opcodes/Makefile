@@ -1,11 +1,12 @@
 PORTNAME=	opcodes
 DISTVERSION=	0.3.14
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Database of processor instructions/opcodes
+WWW=		https://github.com/Maratyszcza/Opcodes
 
 LICENSE=	BSD2CLAUSE
 

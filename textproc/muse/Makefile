@@ -1,8 +1,6 @@
-# Created by: Dryice Liu <dryice@dryice.name>
-
 PORTNAME=	muse
 PORTVERSION=	3.20
-PORTREVISION=	19
+PORTREVISION=	24
 CATEGORIES=	textproc elisp
 MASTER_SITES=	http://download.gna.org/muse-el/ \
 		LOCAL/dryice \
@@ -11,6 +9,7 @@ PKGNAMESUFFIX=	${EMACS_PKGNAMESUFFIX}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Authoring and publishing environment for Emacs
+WWW=		https://www.emacswiki.org/cgi-bin/wiki/MuseMode
 
 USES=		emacs gmake makeinfo
 
@@ -22,8 +21,6 @@ PORTDOCS=	AUTHORS ChangeLog ChangeLog.1 ChangeLog.2 ChangeLog.3 NEWS \
 		README scripts COPYING
 
 OPTIONS_DEFINE=	DOCS
-
-.include <bsd.port.options.mk>
 
 .if ${FLAVOR:Ufull:Mfull}
 PKGNAMESUFFIX=	-emacs

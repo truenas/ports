@@ -1,5 +1,5 @@
 PORTNAME=	htdigest
-PORTVERSION=	2.4.6
+PORTVERSION=	2.4.56
 PORTREVISION=	4
 CATEGORIES=	www
 MASTER_SITES=	https://archive.apache.org/dist/httpd/
@@ -8,6 +8,7 @@ DIST_SUBDIR=	apache24
 
 MAINTAINER=	crees@FreeBSD.org
 COMMENT=	Utility from the Apache distribution for creating htdigest files
+WWW=		https://httpd.apache.org/
 
 LICENSE=	APACHE20
 

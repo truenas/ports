@@ -1,8 +1,6 @@
-# Created by: Shigeyuki FUKUSHIMA <shige@FreeBSD.org>
-
 PORTNAME=	libretto-config
 PORTVERSION=	1.0.b5
-PORTREVISION=	8
+PORTREVISION=	9
 CATEGORIES=	sysutils
 MASTER_SITES=	http://club.pep.ne.jp/~ishioka/Software/Linux/libapm/
 DISTNAME=	libapm-linux-1.0beta5

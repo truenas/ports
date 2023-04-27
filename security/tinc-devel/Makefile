@@ -1,5 +1,6 @@
 PORTNAME=	tinc
 PORTVERSION=	1.1pre18
+PORTREVISION=	2
 CATEGORIES=	security net-vpn
 MASTER_SITES=	https://www.tinc-vpn.org/packages/ \
 		http://www.tinc-vpn.org/packages/
@@ -7,6 +8,7 @@ PKGNAMESUFFIX=	-devel
 
 MAINTAINER=	dinoex@FreeBSD.org
 COMMENT=	Virtual Private Network (VPN) daemon
+WWW=		https://www.tinc-vpn.org/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

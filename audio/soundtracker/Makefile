@@ -1,11 +1,12 @@
 PORTNAME=	soundtracker
-DISTVERSION=	1.0.2.1
-PORTREVISION=	1
+DISTVERSION=	1.0.3
+PORTREVISION=	2
 CATEGORIES=	audio
 MASTER_SITES=	SF/${PORTNAME}/
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Pattern-oriented music editor
+WWW=		https://sourceforge.net/projects/soundtracker/
 
 LICENSE=	AGPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING

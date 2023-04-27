@@ -1,5 +1,3 @@
-# Created by: Sebastian Schuetz <sschuetz@fhm.edu>
-
 PORTNAME=	openssl_tpm_engine
 PORTVERSION=	0.5.0
 DISTVERSIONPREFIX=	v
@@ -8,6 +6,7 @@ CATEGORIES=	security
 
 MAINTAINER=	hrs@FreeBSD.org
 COMMENT=	OpenSSL TPM engine
+WWW=		https://github.com/mgerstner/openssl_tpm_engine
 
 LICENSE=	OpenSSL
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -21,7 +20,8 @@ USE_LDCONFIG=	yes
 
 GH_ACCOUNT=	mgerstner
 GNU_CONFIGURE=	yes
-CONFIGURE_ARGS=	--with-openssl="${OPENSSLBASE}"
+CONFIGURE_ARGS=	--with-openssl="${OPENSSLBASE}" \
+		--with-enginedir="${PREFIX}/lib/openssl/engines"
 SUB_FILES=	pkg-message
 PLIST_FILES=	bin/create_tpm_key
 INSTALL_TARGET=	install-strip

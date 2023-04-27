@@ -1,84 +1,130 @@
 PORTNAME=	just
-DISTVERSION=	0.9.5
-PORTREVISION=	5
+DISTVERSION=	1.13.0
+PORTREVISION=	3
 CATEGORIES=	deskutils
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Just a command runner: handy way to save/run project-specific commands
+WWW=		https://just.systems/
 
 LICENSE=	CC0-1.0
 LICENSE_FILE=	${WRKSRC}/LICENSE
+
+BROKEN_armv7=	compilation fails: error[E0308]: mismatched types, see https://github.com/dotenv-rs/dotenv/issues/83
 
 USES=		cargo
 USE_GITHUB=	yes
 GH_ACCOUNT=	casey
 
-CARGO_CRATES=	aho-corasick-0.7.18 \
-		ansi_term-0.11.0 \
+CARGO_CRATES=	aho-corasick-0.7.20 \
 		ansi_term-0.12.1 \
 		atty-0.2.14 \
-		bitflags-1.2.1 \
-		cc-1.0.68 \
+		bitflags-1.3.2 \
+		block-buffer-0.10.3 \
+		bstr-0.2.17 \
+		camino-1.1.2 \
+		cc-1.0.78 \
 		cfg-if-1.0.0 \
-		clap-2.33.3 \
-		ctor-0.1.20 \
-		ctrlc-3.1.9 \
+		clap-2.34.0 \
+		cpufeatures-0.2.5 \
+		cradle-0.2.2 \
+		crypto-common-0.1.6 \
+		ctor-0.1.26 \
+		ctrlc-3.2.4 \
 		derivative-2.2.0 \
-		diff-0.1.12 \
+		diff-0.1.13 \
+		digest-0.10.6 \
 		doc-comment-0.3.3 \
-		dotenv-0.15.0 \
+		dotenvy-0.15.6 \
 		edit-distance-2.1.0 \
-		either-1.6.1 \
-		env_logger-0.8.4 \
+		either-1.8.0 \
+		env_logger-0.10.0 \
+		errno-0.2.8 \
+		errno-dragonfly-0.1.2 \
 		executable-path-1.0.0 \
-		getrandom-0.2.3 \
+		fastrand-1.8.0 \
+		generic-array-0.14.6 \
+		getopts-0.2.21 \
+		getrandom-0.2.8 \
 		heck-0.3.3 \
-		hermit-abi-0.1.18 \
+		heck-0.4.0 \
+		hermit-abi-0.1.19 \
+		hermit-abi-0.2.6 \
 		humantime-2.1.0 \
+		instant-0.1.12 \
+		io-lifetimes-1.0.4 \
+		is-terminal-0.4.2 \
+		itoa-1.0.5 \
 		lazy_static-1.4.0 \
-		libc-0.2.97 \
-		log-0.4.14 \
-		memchr-2.4.0 \
-		nix-0.20.0 \
-		output_vt100-0.1.2 \
-		ppv-lite86-0.2.10 \
-		pretty_assertions-0.7.2 \
+		lexiclean-0.0.1 \
+		libc-0.2.139 \
+		linked-hash-map-0.5.6 \
+		linux-raw-sys-0.1.4 \
+		log-0.4.17 \
+		memchr-2.5.0 \
+		nix-0.26.2 \
+		once_cell-1.17.0 \
+		output_vt100-0.1.3 \
+		pretty_assertions-1.3.0 \
 		proc-macro-error-1.0.4 \
 		proc-macro-error-attr-1.0.4 \
-		proc-macro2-1.0.27 \
-		quote-1.0.9 \
-		rand-0.8.3 \
-		rand_chacha-0.3.1 \
-		rand_core-0.6.2 \
-		rand_hc-0.3.0 \
-		redox_syscall-0.2.8 \
-		regex-1.5.4 \
-		regex-syntax-0.6.25 \
+		proc-macro2-1.0.50 \
+		pulldown-cmark-0.9.2 \
+		pulldown-cmark-to-cmark-10.0.4 \
+		quote-1.0.23 \
+		redox_syscall-0.2.16 \
+		regex-1.7.1 \
+		regex-automata-0.1.10 \
+		regex-syntax-0.6.28 \
 		remove_dir_all-0.5.3 \
-		snafu-0.6.10 \
-		snafu-derive-0.6.10 \
+		rustix-0.36.7 \
+		rustversion-1.0.11 \
+		ryu-1.0.12 \
+		serde-1.0.152 \
+		serde_derive-1.0.152 \
+		serde_json-1.0.91 \
+		sha2-0.10.6 \
+		similar-2.2.1 \
+		snafu-0.7.4 \
+		snafu-derive-0.7.4 \
+		static_assertions-1.1.0 \
 		strsim-0.8.0 \
-		structopt-0.3.21 \
-		structopt-derive-0.4.14 \
-		strum-0.21.0 \
-		strum_macros-0.21.1 \
-		syn-1.0.73 \
-		target-1.0.0 \
-		tempfile-3.2.0 \
-		termcolor-1.1.2 \
+		structopt-0.3.26 \
+		structopt-derive-0.4.18 \
+		strum-0.24.1 \
+		strum_macros-0.24.3 \
+		syn-1.0.107 \
+		target-2.0.0 \
+		tempfile-3.3.0 \
+		temptree-0.2.0 \
+		term_size-0.3.2 \
+		termcolor-1.2.0 \
 		textwrap-0.11.0 \
-		unicode-segmentation-1.7.1 \
-		unicode-width-0.1.8 \
-		unicode-xid-0.2.2 \
+		typed-arena-2.0.2 \
+		typenum-1.16.0 \
+		unicase-2.6.0 \
+		unicode-ident-1.0.6 \
+		unicode-segmentation-1.10.0 \
+		unicode-width-0.1.10 \
+		uuid-1.2.2 \
 		vec_map-0.8.2 \
-		version_check-0.9.3 \
-		wasi-0.10.2+wasi-snapshot-preview1 \
-		which-4.1.0 \
+		version_check-0.9.4 \
+		wasi-0.11.0+wasi-snapshot-preview1 \
+		which-4.4.0 \
 		winapi-0.3.9 \
 		winapi-i686-pc-windows-gnu-0.4.0 \
 		winapi-util-0.1.5 \
-		winapi-x86_64-pc-windows-gnu-0.4.0
-
+		winapi-x86_64-pc-windows-gnu-0.4.0 \
+		windows-sys-0.42.0 \
+		windows_aarch64_gnullvm-0.42.1 \
+		windows_aarch64_msvc-0.42.1 \
+		windows_i686_gnu-0.42.1 \
+		windows_i686_msvc-0.42.1 \
+		windows_x86_64_gnu-0.42.1 \
+		windows_x86_64_gnullvm-0.42.1 \
+		windows_x86_64_msvc-0.42.1 \
+		yaml-rust-0.4.5 \
+		yansi-0.5.1
 PLIST_FILES=	bin/${PORTNAME}
 
 post-install:

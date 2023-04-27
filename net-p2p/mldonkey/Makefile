@@ -1,8 +1,6 @@
-# Created by: Holger Lamm <holger@e-gitt.net>
-
 PORTNAME=	mldonkey
 PORTVERSION=	3.1.5
-PORTREVISION=	4
+PORTREVISION=	5
 CATEGORIES+=	net-p2p
 MASTER_SITES=	SF
 
@@ -10,11 +8,14 @@ EXTRA_PATCHES=	${FILESDIR}/git-30e77e2:-p1
 
 MAINTAINER?=	danfe@FreeBSD.org
 COMMENT?=	Multi-protocol peer-to-peer client written in OCaml
+WWW=		http://mldonkey.sourceforge.net/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/Copying.txt
 
 CONFLICTS=	mldonkey{-{core,gui},}-devel
+
+BUILD_DEPENDS=	${LOCALBASE}/lib/ocaml/nums.cma:math/ocaml-num
 
 USES=		compiler:c++11-lang cpe gmake iconv pkgconfig tar:bzip2
 USE_OCAML=	yes
@@ -95,7 +96,7 @@ ALL_TARGET+=	\
 .include <bsd.port.pre.mk>
 
 .if ${ARCH:Mpowerpc64*}
-USE_GCC=	yes
+LLD_UNSAFE=	yes
 .endif
 
 post-patch:
@@ -106,9 +107,11 @@ post-patch:
 		${WRKDIR}/wrapper.sh
 	@${REINPLACE_CMD} \
 		-e 's|$$OCAMLLIB/$$LABLGTK_NAME|$$OCAMLLIB/site-lib/$$LABLGTK_NAME|' \
+		-e 's|^DEVFLAGS=|&-unsafe-string|' \
 		${WRKSRC}/config/configure
 	@${REINPLACE_CMD} \
 		-e 's|+labl|+site-lib/labl|' \
+		-e '/BITSTRING/s|OCAMLC)|& -unsafe-string|' \
 		${WRKSRC}/config/Makefile.in
 	@${REINPLACE_CMD} -E \
 		-e 's@(#include <)(lablgtk2/)@\1site-lib/\2@'  \

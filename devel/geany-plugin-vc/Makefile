@@ -1,9 +1,11 @@
 PORTNAME=	geany-plugin-vc
 PORTVERSION=	${GEANY_VER}
+PORTREVISION=	1
 CATEGORIES=	devel
 
 MAINTAINER=	madpilot@FreeBSD.org
 COMMENT=	Geany plugin: ${${GEANY_PLUGIN}_DESC}
+WWW=		https://plugins.geany.org/geanyvc.html
 
 LIB_DEPENDS=	libgtkspell3-3.so:textproc/gtkspell3 \
 		libenchant-2.so:textproc/enchant2

@@ -1,14 +1,17 @@
 PORTNAME=	yara
-PORTVERSION=	4.1.0
+PORTVERSION=	4.2.3
 DISTVERSIONPREFIX=	v
 CATEGORIES=	security python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	antoine@FreeBSD.org
 COMMENT=	Python bindings for yara
+WWW=		https://virustotal.github.io/yara/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
+
+CONFLICTS_INSTALL=	${PYTHON_PKGNAMEPREFIX}yara-python-dex
 
 LIB_DEPENDS=	libyara.so:security/yara
 

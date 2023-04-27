@@ -1,11 +1,12 @@
 PORTNAME=	wfuzz
 DISTVERSION=	3.1.0
 CATEGORIES=	www security python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Web application fuzzer allowing to find vulnerabilities in them
+WWW=		https://wfuzz.readthedocs.io/en/latest
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE

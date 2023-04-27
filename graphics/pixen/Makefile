@@ -1,12 +1,13 @@
 PORTNAME=	pixen
 PORTVERSION=	0.1
-PORTREVISION=	10
+PORTREVISION=	11
 CATEGORIES=	graphics gnustep
 MASTER_SITES=	http://download.gna.org/gsimageapps/
 DISTNAME=	Pixen-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Graphics editing software for small-scale pictures for GNUstep
+WWW=		https://www.opensword.org/Pixen/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/License.txt

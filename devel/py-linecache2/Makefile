@@ -1,14 +1,13 @@
-# Created by: Mark Felder <feld@FreeBSD.org>
-
 PORTNAME=	linecache2
 PORTVERSION=	1.0.0
 PORTREVISION=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	New features in linecache backported to Python 2
+WWW=		https://github.com/testing-cabal/linecache2
 
 LICENSE=	PSFL
 

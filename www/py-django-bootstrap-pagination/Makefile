@@ -2,11 +2,12 @@ PORTNAME=	django-bootstrap-pagination
 DISTVERSION=	1.7.1
 PORTREVISION=	1
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dbaio@FreeBSD.org
 COMMENT=	Bootstrap pagination for django
+WWW=		https://pypi.org/project/django-bootstrap-pagination/
 
 LICENSE=	MIT
 

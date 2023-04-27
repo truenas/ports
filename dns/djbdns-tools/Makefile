@@ -1,5 +1,3 @@
-# Created by: Sergei Kolobov <sergei@FreeBSD.org>
-
 PORTNAME=	djbdns
 PORTVERSION=	1.05
 CATEGORIES=	dns
@@ -12,6 +10,10 @@ DISTFILES=	${DISTNAME}${EXTRACT_SUFX} \
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Resolver tools from djbdns package
+WWW=		https://cr.yp.to/djbdns.html
+
+DEPRECATED=	No longer compliant with current DNS standards and source code hasn't been centrally managed for over 20 years
+EXPIRATION_DATE=2023-06-30
 
 CONFLICTS=	djbdns
 

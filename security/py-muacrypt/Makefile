@@ -1,11 +1,12 @@
 PORTNAME=	muacrypt
 PORTVERSION=	0.9.1
 CATEGORIES=	security mail python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	egypcio@FreeBSD.org
 COMMENT=	Support tool and API for Autocrypt mail agents
+WWW=		https://pypi.org/project/muacrypt/
 
 LICENSE=	MIT
 

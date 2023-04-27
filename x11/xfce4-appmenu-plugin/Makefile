@@ -1,5 +1,6 @@
 PORTNAME=	xfce4-appmenu-plugin
 DISTVERSION=	0.7.6
+PORTREVISION=	1
 CATEGORIES=	x11
 
 PATCH_SITES=	${GL_SITE}/${GL_ACCOUNT}/${GL_PROJECT}/-/commit/
@@ -7,16 +8,16 @@ PATCHFILES+=	442bcebcc00e.patch:-p1 # meson >= 0.60
 
 MAINTAINER=	ericbsd@FreeBSD.org
 COMMENT=	Application Menu plugin for XFCE panel
+WWW=		https://gitlab.com/vala-panel-project/vala-panel-appmenu
 
 LICENSE=	LGPL3
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 LIB_DEPENDS=	libbamf3.so:sysutils/bamf
-BUILD_DEPENDS=	valac:lang/vala
 RUN_DEPENDS=	appmenu-registrar>=0:x11/appmenu-registrar \
 		appmenu-gtk-module>=0:x11/gtk-app-menu
 
-USES=	meson gnome xfce pkgconfig gettext
+USES=	meson gnome xfce pkgconfig gettext vala:build
 
 MESON_ARGS=	-Dvalapanel=disabled \
 		-Dxfce=enabled \

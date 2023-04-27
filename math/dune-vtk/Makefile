@@ -1,10 +1,11 @@
 PORTNAME=	dune-vtk
-DISTVERSION=	g20210623
-PORTREVISION=	1
+DISTVERSION=	2.8.0
+PORTREVISION=	6
 CATEGORIES=	math
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	DUNE framework: File reader and writer for the VTK XML format
+WWW=		https://www.dune-project.org/
 
 LICENSE=	GPLv2+
 
@@ -47,7 +48,7 @@ USE_LDCONFIG=	yes
 
 GL_SITE=	https://gitlab.dune-project.org
 GL_ACCOUNT=	extensions
-GL_COMMIT=	38f79c23ef8f29210d41353a8380e42b78422f2f
+GL_COMMIT=	467838cde3bbea3d27d2bd117570a3215240dcd1
 
 CMAKE_ON=	BUILD_SHARED_LIBS
 

@@ -1,14 +1,13 @@
-# Created by: Oliver Breuninger <ob@seicom.NET>
-
 PORTNAME=	oo2c
 PORTVERSION=	2.1.11
-PORTREVISION=	13
+PORTREVISION=	14
 CATEGORIES=	lang
 MASTER_SITES=	SF/ooc/ooc2/${PORTVERSION}
 DISTNAME=	${PORTNAME}_${BITS}-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Optimizing Oberon-2 compiler of University of Kaiserslautern, Germany
+WWW=		http://ooc.sourceforge.net/OOCref/OOCref_16.html
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,5 +1,3 @@
-# Created by: Alex Dupre <ale@FreeBSD.org>
-
 PORTNAME=	pam_p11
 PORTVERSION=	0.3.1
 PORTREVISION=	1
@@ -8,6 +6,7 @@ MASTER_SITES=	https://github.com/OpenSC/pam_p11/releases/download/pam_p11-${PORT
 
 MAINTAINER=	ale@FreeBSD.org
 COMMENT=	PAM module using crypto tokens for auth
+WWW=		https://github.com/OpenSC/pam_p11
 
 LICENSE=	LGPL21
 

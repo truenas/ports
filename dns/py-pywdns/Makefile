@@ -1,11 +1,13 @@
 PORTNAME=	pywdns
 PORTVERSION=	0.10.1
+PORTREVISION=	1
 CATEGORIES=	dns python
 MASTER_SITES=	FARSIGHT LOCAL/truckman/farsight
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	truckman@FreeBSD.org
 COMMENT=	Python wrapper for dns/wdns
+WWW=		https://github.com/farsightsec/pywdns
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/COPYRIGHT

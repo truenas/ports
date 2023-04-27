@@ -1,11 +1,12 @@
 PORTNAME=	Js2Py
-DISTVERSION=	0.71
+DISTVERSION=	0.74
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	tcberner@FreeBSD.org
 COMMENT=	JavaScript to Python translator and interpreter
+WWW=		https://pypi.org/project/Js2Py/
 
 LICENSE=	MIT
 

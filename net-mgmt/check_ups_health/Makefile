@@ -1,10 +1,11 @@
 PORTNAME=	check_ups_health
-PORTVERSION=	3.0.1.2
+PORTVERSION=	3.0.4.1
 CATEGORIES=	net-mgmt
 MASTER_SITES=	https://labs.consol.de/assets/downloads/nagios/
 
 MAINTAINER=	pi@FreeBSD.org
 COMMENT=	Nagios plugin to check various UPS systems
+WWW=		https://labs.consol.de/nagios/check_ups_health/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

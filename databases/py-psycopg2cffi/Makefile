@@ -1,11 +1,12 @@
 PORTNAME=	psycopg2cffi
 DISTVERSION=	2.9.0
 CATEGORIES=	databases python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	jrm@FreeBSD.org
 COMMENT=	Implementation of the psycopg2 module using cffi
+WWW=		https://github.com/chtd/psycopg2cffi
 
 LICENSE=	LGPL3+
 LICENSE_FILE=	${WRKSRC}/LICENSE

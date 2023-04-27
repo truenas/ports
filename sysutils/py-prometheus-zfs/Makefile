@@ -1,14 +1,12 @@
-# Created by: Mateusz Piotrowski <0mp@FreeBSD.org>
-
 PORTNAME=	prometheus-zfs
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.0.3
-PORTREVISION=	2
+DISTVERSION=	1.0.4
 CATEGORIES=	sysutils python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	0mp@FreeBSD.org
 COMMENT=	Prometheus exporter for ZFS statistics using py-libzfs
+WWW=		https://github.com/matusnovak/prometheus-zfs
 
 LICENSE=	UNLICENSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

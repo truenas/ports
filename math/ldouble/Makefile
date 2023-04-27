@@ -1,5 +1,3 @@
-# Created by: Michael Johnson <ahze@FreeBSD.org>
-
 PORTNAME=	ldouble
 PORTVERSION=	0.1
 PORTREVISION=	2
@@ -10,6 +8,7 @@ DISTFILES=	${LDOUBLE_DISTFILE}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Long double math precision functions
+WWW=		http://www.moshier.net/
 
 BUILD_DEPENDS=	as:devel/binutils
 

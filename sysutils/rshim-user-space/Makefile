@@ -1,18 +1,17 @@
-# Created by: Hans Petter Selasky <hselasky@freebsd.org>
-
 PORTNAME=	rshim-user-space
 DISTVERSIONPREFIX=	rshim-
-DISTVERSION=		2.0.6-3
+DISTVERSION=		2.0.7
 PORTEPOCH=		1
 
 MAINTAINER=	hselasky@FreeBSD.org
 COMMENT=	Userspace daemon for the Mellanox BlueField SoC
+WWW=		https://github.com/Mellanox/rshim-user-space/
 
 LICENSE=	BSD3CLAUSE
 
 CATEGORIES=	sysutils
 
-LIB_DEPENDS=	libepoll-shim.so:devel/libepoll-shim \
+LIB_DEPENDS=	libepoll-shim-interpose.so:devel/libepoll-shim \
 		libpci.so:devel/libpci \
 		libpciaccess.so:devel/libpciaccess
 

@@ -1,11 +1,10 @@
-# Created by: James Hunt <james.hunt@ubuntu.com>
-
 PORTNAME=	procenv
 DISTVERSION=	0.60
 CATEGORIES=	sysutils
 
 MAINTAINER=	eduardo@FreeBSD.org
 COMMENT=	Utility to show process environment
+WWW=		https://github.com/jamesodhunt/procenv
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING

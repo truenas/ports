@@ -1,13 +1,12 @@
-# Created by: Koop Mast <kwm@FreeBSD.org>
-
 PORTNAME=	aisleriot
-DISTVERSION=	3.22.19
+DISTVERSION=	3.22.25
+PORTREVISION=	1
 CATEGORIES=	games gnome
-MASTER_SITES=	https://gitlab.gnome.org/GNOME/${PORTNAME}/-/archive/${PORTVERSION}/
-DIST_SUBDIR=	gnome3
+DIST_SUBDIR=	gnome
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Collection of patience games written in guile scheme
+WWW=		https://wiki.gnome.org/Apps/Aisleriot
 
 LICENSE=	GPLv3
 
@@ -23,8 +22,13 @@ PORTSCOUT=	limitw:1,even
 
 USES=		desktop-file-utils gettext meson gnome pkgconfig \
 		python:build,3.6+ shebangfix xorg
+USE_GITLAB=	yes
 USE_GNOME=	cairo gtk30 intlhack librsvg2 libxml2:build
 USE_XORG=	x11
+
+GL_SITE=	https://gitlab.gnome.org/
+GL_ACCOUNT=	GNOME
+GL_COMMIT=	8a4542d2f44ee1425a56ac7595ed51449ae0290e
 
 MESON_ARGS=	-Dtheme_kde=false
 SHEBANG_FILES=	data/icons/meson_updateiconcache.py \

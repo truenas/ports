@@ -1,7 +1,5 @@
-# Created by: Frank Laszlo <laszlof@vonostingroup.com>
-
 PORTNAME=	readline
-PORTVERSION=	8.1.${PATCHLEVEL}
+PORTVERSION=	8.2.${PATCHLEVEL}
 CATEGORIES=	devel
 MASTER_SITES=	GNU
 DISTNAME=	${PORTNAME}-${PORTVERSION:R}
@@ -10,6 +8,7 @@ PATCH_SITES=	GNU/${PORTNAME}/${PORTNAME}-${PORTVERSION:R}-patches
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Library for editing command lines as they are typed
+WWW=		https://tiswww.case.edu/php/chet/readline/rltop.html
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -26,7 +25,7 @@ PORTDOCS=	CHANGES INSTALL README
 CPE_VENDOR=	gnu
 CPE_VERSION=	${PORTVERSION:R}
 
-# https://ftp.gnu.org/gnu/readline/readline-8.1-patches/
+# https://ftp.gnu.org/gnu/readline/readline-8.2-patches/
 PATCHES=	1
 .if defined(PATCHES)
 CPE_UPDATE=	${PATCHLEVEL}

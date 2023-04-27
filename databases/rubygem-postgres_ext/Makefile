@@ -5,6 +5,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	PostgreSQL data types extension for ActiveRecord
+WWW=		https://github.com/dockyard/postgres_ext
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -14,7 +15,6 @@ RUN_DEPENDS=	rubygem-activerecord4>=4.0:databases/rubygem-activerecord4 \
 		rubygem-pg_array_parser>=0.0.9:databases/rubygem-pg_array_parser
 
 NO_ARCH=	yes
-USE_RUBY=	yes
 USES=		gem
 
 .include <bsd.port.mk>

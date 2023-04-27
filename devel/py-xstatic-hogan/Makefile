@@ -1,14 +1,13 @@
-# Created by: Alexander Nusov <alexander.nusov@nfvexpress.com>
-
 PORTNAME=	xstatic-hogan
 PORTVERSION=	2.0.0.3
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	XStatic-Hogan-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Hogan (XStatic packaging standard)
+WWW=		https://twitter.github.io/hogan.js/
 
 LICENSE=	APACHE20
 

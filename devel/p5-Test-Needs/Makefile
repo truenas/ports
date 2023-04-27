@@ -1,13 +1,12 @@
-# Created by: Sunpoet Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	Test-Needs
-PORTVERSION=	0.002009
+PORTVERSION=	0.002010
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Skip tests when modules not available
+WWW=		https://metacpan.org/release/Test-Needs
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

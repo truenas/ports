@@ -1,12 +1,12 @@
-# Created by: Mikhail T. <m.tsatsenko@gmail.com>
-
 PORTNAME=	quickfix
 PORTVERSION=	1.15.1
 DISTVERSIONPREFIX=	v
+PORTREVISION=	2
 CATEGORIES=	finance devel
 
 MAINTAINER=	m.tsatsenko@gmail.com
 COMMENT=	Free FIX Protocol Implementation
+WWW=		https://www.quickfixengine.org/
 
 LICENSE=	GPLv3+
 
@@ -32,9 +32,10 @@ PGSQL_USES=	pgsql
 PGSQL_CONFIGURE_WITH=	postgresql
 MYSQL_USES=	mysql
 MYSQL_CONFIGURE_WITH=	mysql
+MYSQL_VARS=	IGNORE_WITH_MYSQL=80
 PYTHON_USES=	python:3.7
 PYTHON_CONFIGURE_WITH=	python3
-RUBY_USE=	ruby=yes
+RUBY_USES=	ruby
 RUBY_CONFIGURE_WITH=	ruby
 RUBY_LIB_DEPENDS+=libunwind.so:devel/libunwind
 JAVA_USE=	java=yes

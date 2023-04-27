@@ -1,5 +1,3 @@
-# Created by: Sergey Kozlov <sergey.kozlov@intel.com>
-
 PORTNAME=	nvmupdate
 DISTVERSION=	8_00
 CATEGORIES=	sysutils
@@ -11,6 +9,7 @@ DISTNAME=	700Series_NVMUpdatePackage_v${DISTVERSION}_FreeBSD
 
 MAINTAINER=	freebsd@intel.com
 COMMENT=	NVM Update Utility for Intel(R) Ethernet Adapters
+WWW=		https://downloadcenter.intel.com
 
 LICENSE=		IFL IPL
 LICENSE_COMB=		multi

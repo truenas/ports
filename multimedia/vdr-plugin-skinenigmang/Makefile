@@ -1,5 +1,3 @@
-# Created by: Juergen Lock <nox@FreeBSD.org>
-
 PORTNAME=	vdr-plugin-skinenigmang
 PORTVERSION=	0.1.2s20120606
 PORTREVISION=	4
@@ -12,6 +10,7 @@ DISTFILES=	${DISTNAME}.tar.bz2:snapshot \
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Video Disk Recorder - Enigma-NG skin plugin
+WWW=		http://andreas.vdr-developer.org/enigmang/index.html
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

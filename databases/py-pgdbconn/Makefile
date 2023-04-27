@@ -2,11 +2,12 @@ PORTNAME=	pgdbconn
 PORTVERSION=	0.8.0
 PORTREVISION=	2
 CATEGORIES=	databases python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	python@FreeBSD.org
 COMMENT=	Object-oriented layer to connect and interact with PostgreSQL databases
+WWW=		https://pypi.org/project/pgdbconn/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

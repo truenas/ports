@@ -1,11 +1,10 @@
-# Created by: Thierry Thomas <thierry@pompo.net>
-
 PORTNAME=	ibus-typing-booster
-PORTVERSION=	2.15.11
+PORTVERSION=	2.22.4
 CATEGORIES=	textproc
 
 MAINTAINER=	thierry@FreeBSD.org
 COMMENT=	Faster typing by context sensitive completion
+WWW=		https://mike-fabian.github.io/ibus-typing-booster/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING

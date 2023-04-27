@@ -1,5 +1,3 @@
-# Created by: Donald Burr <dburr@FreeBSD.org>
-
 PORTNAME=	yodl
 PORTVERSION=	3.10.00
 PORTREVISION=	3
@@ -7,6 +5,7 @@ CATEGORIES=	textproc
 
 MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Easy to use but powerful document formatting/preparation language
+WWW=		https://fbb-git.gitlab.io/yodl/
 
 LICENSE=	GPLv3
 
@@ -51,6 +50,7 @@ PLIST_SUB+=	PORTVERSION="${PORTVERSION}"
 WRKSRC_SUBDIR=	${PORTNAME}
 
 OPTIONS_DEFINE=	DOCS
+DOCS_USES=	tex
 DOCS_USE=	TEX=latex:build,dvipsk:build
 
 post-patch:

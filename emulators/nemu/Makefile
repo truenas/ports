@@ -1,10 +1,11 @@
 PORTNAME=	nemu
 DISTVERSIONPREFIX=	v
-DISTVERSION=	3.0.0
+DISTVERSION=	3.2.0
 CATEGORIES=	emulators
 
 MAINTAINER=	arrowd@FreeBSD.org
 COMMENT=	Ncurses UI for QEMU
+WWW=		https://github.com/nemuTUI/nemu
 
 LICENSE=	BSD2CLAUSE
 

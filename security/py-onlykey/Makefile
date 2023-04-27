@@ -1,11 +1,13 @@
 PORTNAME=	onlykey
 PORTVERSION=	1.2.2
+PORTREVISION=	1
 CATEGORIES=	security python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dmytro@posteo.net
 COMMENT=	Python command line tool for configuring and using OnlyKey
+WWW=		https://github.com/trustcrypto/python-onlykey
 
 LICENSE=	MIT
 

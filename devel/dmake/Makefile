@@ -1,5 +1,3 @@
-# Created by: nils@guru.ims.uni-stuttgart.de
-
 PORTNAME=	dmake
 PORTVERSION=	4.13.1
 DISTVERSIONPREFIX=	v
@@ -8,6 +6,7 @@ CATEGORIES=	devel
 
 MAINTAINER=	office@FreeBSD.org
 COMMENT=	Another hyper make utility
+WWW=		https://www.openoffice.org/tools/dmake/
 
 LICENSE=	GPLv1
 LICENSE_FILE=	${WRKSRC}/readme/license.txt
@@ -19,6 +18,8 @@ GH_ACCOUNT=	jimjag
 
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS+=	--datarootdir=${DATADIR}
+
+CONFLICTS_INSTALL=	sunpromake
 
 post-install:
 	${INSTALL_MAN} ${WRKSRC}/man/dmake.tf ${STAGEDIR}${PREFIX}/man/man1/dmake.1

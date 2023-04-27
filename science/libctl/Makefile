@@ -1,12 +1,12 @@
-# Created by: ijliao
-
 PORTNAME=	libctl
 DISTVERSION=	4.5.0
+PORTREVISION=	1
 CATEGORIES=	science math
 MASTER_SITES=	https://github.com/NanoComp/libctl/releases/download/v${DISTVERSION}/
 
 MAINTAINER=	devel@stasyan.com
 COMMENT=	Control Language Library
+WWW=		https://libctl.readthedocs.io/en/latest/
 
 LICENSE=	GPLv2
 

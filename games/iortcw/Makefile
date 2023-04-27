@@ -1,15 +1,16 @@
 PORTNAME=	iortcw
 PORTVERSION=	1.51c
-PORTREVISION=	1
+PORTREVISION=	2
 PORTEPOCH=	1
 CATEGORIES=	games
 
 MAINTAINER=	pkubaj@FreeBSD.org
 COMMENT=	Game engine for Return to Castle Wolfenstein
+WWW=		https://github.com/iortcw/iortcw
 
 LICENSE=	GPLv3
 
-NOT_FOR_ARCHS=		aarch64 armv6 armv7 riscv64
+NOT_FOR_ARCHS=		aarch64 armv6 armv7
 NOT_FOR_ARCHS_REASON=	fails to configure: Architecture not supported
 
 LIB_DEPENDS=	libcurl.so:ftp/curl \

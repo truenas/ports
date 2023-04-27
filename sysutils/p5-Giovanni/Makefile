@@ -7,6 +7,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	dch@FreeBSD.org
 COMMENT=	PERL-based software deployment tool inspired by capistrano
+WWW=		https://metacpan.org/release/Giovanni
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual
@@ -24,5 +25,7 @@ RUN_DEPENDS=	\
 NO_ARCH=	yes
 USES=		perl5
 USE_PERL5=	configure
+
+CONFLICTS_INSTALL=	glib # bin/gio
 
 .include <bsd.port.mk>

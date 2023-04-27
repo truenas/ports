@@ -6,12 +6,12 @@ PKGNAMESUFFIX=	6
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Relational Algebra for Ruby
+WWW=		https://github.com/rails/arel
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/MIT-LICENSE.txt
 
 NO_ARCH=	yes
-USE_RUBY=	yes
 USES=		gem
 
 .include <bsd.port.mk>

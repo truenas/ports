@@ -1,13 +1,13 @@
-# Created by: Koop Mast <kwm@FreeBSD.org>
-
 PORTNAME=	mate-settings-daemon
 PORTVERSION=	1.26.0
+PORTREVISION=	2
 CATEGORIES=	sysutils mate
 MASTER_SITES=	MATE
 DIST_SUBDIR=	mate
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	MATE settings daemon
+WWW=		https://mate-desktop.org/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -20,7 +20,6 @@ LIB_DEPENDS=	libdbus-1.so:devel/dbus \
 		libfontconfig.so:x11-fonts/fontconfig \
 		libpolkit-gobject-1.so:sysutils/polkit \
 		libstartup-notification-1.so:x11/startup-notification \
-		libcanberra-gtk.so:audio/libcanberra \
 		libcanberra-gtk3.so:audio/libcanberra-gtk3 \
 		libnspr4.so:devel/nspr \
 		libnotify.so:devel/libnotify

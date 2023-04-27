@@ -1,12 +1,13 @@
 PORTNAME=	mailx
 PORTVERSION=	12.4
-PORTREVISION=	8
+PORTREVISION=	10
 CATEGORIES=	mail
 MASTER_SITES=	SF/heirloom/heirloom-${PORTNAME}/${PORTVERSION}
 PKGNAMEPREFIX=	heirloom-
 
 MAINTAINER=	cy@FreeBSD.org
 COMMENT=	BSD mail utility with MIME, IMAP, POP3, SMTP, and S/MIME extensions
+WWW=		http://heirloom.sourceforge.net/mailx.html
 
 LICENSE=	BSD4CLAUSE
 

@@ -1,5 +1,3 @@
-# Created by: Klaus Aehlig <aehlig@linta.de>
-
 PORTNAME=	bazel
 DISTVERSION=	0.29.0
 PORTREVISION=	2
@@ -10,11 +8,11 @@ PKGNAMESUFFIX=	029
 
 MAINTAINER=	aehlig@linta.de
 COMMENT=	Fast and correct build system
+WWW=		https://bazel.build/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-BROKEN_aarch64=		fails to build: java.lang.OutOfMemoryError: Java heap space
 BROKEN_armv6=		fails to package: cp: bazel: No such file or directory
 BROKEN_armv7=		fails to package: cp: bazel: No such file or directory
 BROKEN_FreeBSD_12_powerpc64=	fails to compile: Action failed to execute: java.io.IOException: Cannot run program /usr/bin/clang
@@ -36,7 +34,7 @@ CPE_VENDOR=	google
 SHEBANG_REGEX=	.*(sh|txt|_stub|stub_.*|bazel|get_workspace_status|protobuf_support|_so)
 USE_JAVA=	yes
 JAVA_VENDOR=	openjdk
-JAVA_VERSION=	1.8
+JAVA_VERSION=	8
 JAVA_BUILD=	yes
 JAVA_RUN=	yes
 

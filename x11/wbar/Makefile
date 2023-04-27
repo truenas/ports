@@ -1,13 +1,12 @@
-# Created by: Nicola Vitale <nivit@FreeBSD.org>
-
 PORTNAME=	wbar
 PORTVERSION=	2.3.4
-PORTREVISION=	3
+PORTREVISION=	6
 CATEGORIES=	x11
 MASTER_SITES=	https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/${PORTNAME}/
 
 MAINTAINER=	nivit@FreeBSD.org
 COMMENT=	Simple and highly customizable quick launch bar
+WWW=		http://wbar.googlecode.com/
 
 LICENSE=	GPLv3
 

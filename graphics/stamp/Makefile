@@ -1,13 +1,12 @@
-# Created by: Bill Fumerola <billf@chc-chimes.com>
-
 PORTNAME=	stamp
 PORTVERSION=	2.0.8
 PORTREVISION=	12
 CATEGORIES=	graphics
 MASTER_SITES=	SF
 
-MAINTAINER=	fuz@fuz.su
+MAINTAINER=	fuz@FreeBSD.org
 COMMENT=	Adds a graphical, configurable timestamp to a grayscale image
+WWW=		http://stamp.sourceforge.net/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

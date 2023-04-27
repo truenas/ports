@@ -1,14 +1,13 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	typing-inspect
-PORTVERSION=	0.7.1
+PORTVERSION=	0.8.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	typing_inspect-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Runtime inspection utilities for typing module
+WWW=		https://github.com/ilevkivskyi/typing_inspect
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

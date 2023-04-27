@@ -1,14 +1,13 @@
-# Created by: Edward Chuang <edwardchuang@gmail.com>
-
 PORTNAME=	fluent-logger
 PORTVERSION=	0.9.2
 PORTREVISION=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	edwardchuang@gmail.com
 COMMENT=	Structured logger for Fluentd (Python)
+WWW=		https://github.com/fluent/fluent-logger-python
 
 LICENSE=	APACHE20
 

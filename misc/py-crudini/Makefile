@@ -1,14 +1,14 @@
-# Created by: Alexander Nusov <alexander.nusov@nfvexpress.com>
-
 PORTNAME=	crudini
 PORTVERSION=	0.9.3
 CATEGORIES=	misc python
-#MASTER_SITES=	CHEESESHOP
+#MASTER_SITES=	PYPI
 MASTER_SITES=	https://github.com/pixelb/crudini/releases/download/${PORTVERSION}/
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Utility for manipulating ini files
+WWW=		https://www.pixelbeat.org/programs/crudini/ \
+		https://github.com/pixelb/crudini
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

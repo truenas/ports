@@ -1,15 +1,12 @@
-# Created by: Jim Geovedi <jim@corebsd.or.id>
-
 PORTNAME=	xmlsec1
-PORTVERSION=	1.2.29
+PORTVERSION=	1.2.37
 CATEGORIES=	security
-MASTER_SITES=	http://www.aleksey.com/xmlsec/download/ \
-		ftp://ftp.aleksey.com/pub/xmlsec/releases/ \
-		ftp://ftp.xmlsoft.org/xmlsec/releases/ \
-		ftp://ftp.rpmfind.net/pub/XML/xmlsec/releases/
+MASTER_SITES=	https://www.aleksey.com/xmlsec/download/ \
+		https://github.com/lsh123/xmlsec/releases/download/xmlsec-${PORTVERSION:S,.,_,g}/
 
 MAINTAINER=	hrs@FreeBSD.org
 COMMENT=	XML Security Library
+WWW=		https://www.aleksey.com/xmlsec/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/Copyright
@@ -24,6 +21,7 @@ USE_LDCONFIG=	yes
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--with-openssl="${OPENSSLBASE}" \
 		--with-gcrypt="${LOCALBASE}" \
+		--enable-werror \
 		--enable-soap \
 		--disable-docs-build
 MAKE_ENV=	ABS_BUILDDIR=${WRKSRC} TMPFOLDER=${WRKSRC}

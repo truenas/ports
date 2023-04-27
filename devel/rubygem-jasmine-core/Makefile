@@ -1,15 +1,15 @@
 PORTNAME=	jasmine-core
-PORTVERSION=	3.10.1
+PORTVERSION=	3.99.0
 CATEGORIES=	devel ruby
 MASTER_SITES=	RG
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Test JavaScript without any framework dependencies
+WWW=		https://jasmine.github.io/
 
 LICENSE=	MIT
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

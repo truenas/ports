@@ -4,8 +4,9 @@ CATEGORIES=	databases java
 MASTER_SITES=	http://www.bestofbi.com/downloads/architect/${PORTVERSION}/
 DISTNAME=	SQL-Power-Architect-generic-${PORTVERSION}
 
-MAINTAINER=	jjuanino@gmail.com
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Data modeling and profiling tool
+WWW=		http://www.bestofbi.com/page/architect
 
 LICENSE=	GPLv3
 

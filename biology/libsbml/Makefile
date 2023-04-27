@@ -1,13 +1,15 @@
-# Created by: Wen Heping <wenheping@gmail.com>
-
 PORTNAME=	libsbml
 PORTVERSION=	5.19.0
+PORTREVISION=	2
 CATEGORIES=	biology devel
 MASTER_SITES=	SF/sbml/libsbml/${PORTVERSION}/stable
 DISTNAME=	libSBML-${PORTVERSION}-core-src
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	API Library for Working with SBML File
+WWW=		https://sbml.org/software/libsbml/ \
+		https://synonym.caltech.edu/ \
+		https://github.com/sbmlteam/libsbml
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING.txt
@@ -39,7 +41,7 @@ PYTHON_USES=		python:3.6+
 PYTHON_CMAKE_ON=	WITH_SWIG
 RUBY_BUILD_DEPENDS=	swig:devel/swig
 RUBY_CMAKE_BOOL=	WITH_RUBY
-RUBY_USE=		ruby=yes
+RUBY_USES=		ruby
 XERCES_CMAKE_BOOL=	WITH_XERCES
 XERCES_LIB_DEPENDS=	libxerces-c.so:textproc/xerces-c3
 

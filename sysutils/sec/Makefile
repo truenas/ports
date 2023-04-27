@@ -1,10 +1,11 @@
 PORTNAME=	sec
-DISTVERSION=	2.9.0
+DISTVERSION=	2.9.1
 CATEGORIES=	sysutils
 MASTER_SITES=	SF/simple-evcorr/${PORTNAME}/${PORTVERSION}
 
 MAINTAINER=	ecu@200ok.org
 COMMENT=	Simple event (logs) correlator
+WWW=		https://simple-evcorr.github.io/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,11 +1,12 @@
 PORTNAME=	pyinotify
 PORTVERSION=	0.9.6
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Python interface to (lib)inotify
+WWW=		https://github.com/seb-m/pyinotify
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/COPYING

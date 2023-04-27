@@ -1,12 +1,12 @@
-# Created by: TAKATSU Tomonari <tota@FreeBSD.org>
-
 PORTNAME=	hms
-PORTVERSION=	1.1.1
+PORTVERSION=	1.1.2
+PORTREVISION=	1
 CATEGORIES=	devel
 DISTNAME=	${PORTNAME}_${PORTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Pretty Time of Day
+WWW=		https://cran.r-project.org/web/packages/hms/
 
 LICENSE=	MIT
 

@@ -1,11 +1,12 @@
 PORTNAME=	vitables
 DISTVERSIONPREFIX=	v
 DISTVERSION=	3.0.2
-PORTREVISION=	6
+PORTREVISION=	10
 CATEGORIES=	devel science python
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Viewer and editor of files in both PyTables format and HDF5 format
+WWW=		https://github.com/uvemas/ViTables
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -17,7 +18,7 @@ RUN_DEPENDS=	${PYNUMPY} \
 
 USES=		dos2unix python pyqt:5
 USE_PYTHON=	distutils cython noflavors autoplist
-USE_PYQT=	core_run gui_run sip_run widgets_run
+USE_PYQT=	pyqt5:run sip:run
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	uvemas

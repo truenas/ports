@@ -1,21 +1,17 @@
-# Created by: John Chen <johnpupu@gmail.com>
-
 PORTNAME=	couchbase
-DISTVERSION=	2.6.2
+PORTVERSION=	4.1.3
 CATEGORIES=	databases
+MASTER_SITES=	https://github.com/couchbase/couchbase-php-client/releases/download/${PORTVERSION}/
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Couchbase Server PHP extension
+WWW=		https://pecl.php.net/package/couchbase \
+		https://github.com/couchbase/couchbase-php-client
 
 LICENSE=	APACHE20
-LICENSE_FILE=	${WRKSRC}/LICENSE
 
-BUILD_DEPENDS=	libcouchbase>=2.10.7:databases/libcouchbase
-LIB_DEPENDS=	libcouchbase.so:databases/libcouchbase
+BUILD_DEPENDS=	cmake:devel/cmake-core
 
-USES=		php:pecl
-USE_PHP=	json:build
-
-IGNORE_WITH_PHP=80
+USES=		compiler:c++17-lang php:build,pecl
 
 .include <bsd.port.mk>

@@ -5,11 +5,11 @@ MASTER_SITES=	RG
 
 MAINTAINER=	yasu@FreeBSD.org
 COMMENT=	Wrapper for the UNIX-style Database Manager Library
+WWW=		https://github.com/ruby/dbm
 
 LICENSE=	BSD2CLAUSE
 
 USES=		gem
-USE_RUBY=	yes
 
 OPTIONS_SINGLE=			BACKEND
 OPTIONS_SINGLE_BACKEND=		BDB GDBM LIBC QDBM

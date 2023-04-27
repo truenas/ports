@@ -1,16 +1,18 @@
-# Created by: Hans Petter Selasky <hselasky@FreeBSD.org>
-
 PORTNAME=	alsa-seq-server
 DISTVERSIONPREFIX=	v
-PORTVERSION=		1.0.0
+PORTVERSION=		1.1.0
+PORTREVISION=		1
 CATEGORIES=	audio
 
 MAINTAINER=	hselasky@FreeBSD.org
 COMMENT=	ALSA MIDI sequencer server
+WWW=		https://github.com/hselasky/alsa-seq-server
 
 LICENSE=	BSD2CLAUSE
 
 USES=		tar:bzip2 uidfix
+
+USE_RC_SUBR=    alsa_seq_server
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	hselasky

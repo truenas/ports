@@ -1,5 +1,3 @@
-# Created by: Sergey Kozlov <sergey.kozlov@intel.com>
-
 PORTNAME?=	ixl
 PORTVERSION?=	1.12.2
 PORTREVISION?=	0
@@ -12,6 +10,7 @@ PKGNAMESUFFIX=	-kmod
 
 MAINTAINER?=	freebsd@intel.com
 COMMENT?=	40 gigabit FreeBSD Base Driver for Intel(R) Network Connections
+WWW=		https://downloadcenter.intel.com
 
 LICENSE=	BSD2CLAUSE
 

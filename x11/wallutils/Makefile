@@ -1,9 +1,11 @@
 PORTNAME=	wallutils
-DISTVERSION=	5.10.0
-CATEGORIES=	x11
+DISTVERSION=	5.12.5
+PORTREVISION=	4
+CATEGORIES=	x11 wayland
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Utilities for handling monitors, resolutions, wallpapers and timed wallpapers
+WWW=		https://github.com/xyproto/wallutils
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -19,19 +21,22 @@ GH_TUPLE=	antchfx:xmlquery:v1.3.8:antchfx_xmlquery/vendor/github.com/antchfx/xml
 		anthonynsimon:bild:v0.13.0:anthonynsimon_bild/vendor/github.com/anthonynsimon/bild \
 		cpuguy83:go-md2man:v2.0.0:cpuguy83_go_md2man_v2/vendor/github.com/cpuguy83/go-md2man/v2 \
 		fatih:color:v1.13.0:fatih_color/vendor/github.com/fatih/color \
+		go-yaml:yaml:v2.4.0:go_yaml_yaml/vendor/gopkg.in/yaml.v2 \
 		golang:groupcache:41bb18bfe9da:golang_groupcache/vendor/github.com/golang/groupcache \
-		golang:image:6944b10bf410:golang_image/vendor/golang.org/x/image \
-		golang:net:58aab5ef257a:golang_net/vendor/golang.org/x/net \
-		golang:sys:99a53858aa08:golang_sys/vendor/golang.org/x/sys \
-		golang:text:v0.3.7:golang_text/vendor/golang.org/x/text \
-		mattn:go-colorable:v0.1.11:mattn_go_colorable/vendor/github.com/mattn/go-colorable \
-		mattn:go-isatty:v0.0.14:mattn_go_isatty/vendor/github.com/mattn/go-isatty \
+		golang:image:v0.3.0:golang_image/vendor/golang.org/x/image \
+		golang:net:a158d28d115b:golang_net/vendor/golang.org/x/net \
+		golang:sys:v0.4.0:golang_sys/vendor/golang.org/x/sys \
+		golang:text:v0.6.0:golang_text/vendor/golang.org/x/text \
+		mattn:go-colorable:v0.1.13:mattn_go_colorable/vendor/github.com/mattn/go-colorable \
+		mattn:go-isatty:v0.0.17:mattn_go_isatty/vendor/github.com/mattn/go-isatty \
 		russross:blackfriday:v2.0.1:russross_blackfriday_v2/vendor/github.com/russross/blackfriday/v2 \
 		shurcooL:sanitized_anchor_name:v1.0.0:shurcool_sanitized_anchor_name/vendor/github.com/shurcooL/sanitized_anchor_name \
 		stretchr:powerwalk:bceb9d014549:stretchr_powerwalk/vendor/github.com/stretchr/powerwalk \
-		urfave:cli:v1.22.1:urfave_cli/vendor/github.com/urfave/cli \
-		xyproto:env:v1.7.0:xyproto_env/vendor/github.com/xyproto/env \
+		stretchr:testify:v1.4.0:stretchr_testify/vendor/github.com/stretchr/testify \
+		urfave:cli:v1.22.5:urfave_cli/vendor/github.com/urfave/cli \
+		xyproto:env:v1.8.0:xyproto_env/vendor/github.com/xyproto/env \
 		xyproto:heic:v1.0.0:xyproto_heic/vendor/github.com/xyproto/heic
+GL_TUPLE=	https://gitlab.howett.net:go:plist:1454fab16a0642638feb0ae98c41f79eccb2a20a:go_plist/vendor/howett.net/plist
 GO_TARGET=	./cmd/getdpi \
 		./cmd/lscollection \
 		./cmd/lsmon \
@@ -42,6 +47,7 @@ GO_TARGET=	./cmd/getdpi \
 		./cmd/settimed \
 		./cmd/setwallpaper \
 		./cmd/timedinfo \
+		./cmd/vram \
 		./cmd/wayinfo \
 		./cmd/xinfo \
 		./cmd/xml2stw \
@@ -51,7 +57,6 @@ PLIST_FILES=	${GO_TARGET:S,./cmd,bin,}
 OPTIONS_DEFINE=		HEIF
 OPTIONS_DEFAULT=	HEIF
 
-HEIF_DESC=		Extract timing metadata from macOS dynamic wallpaper
 HEIF_LIB_DEPENDS=	libheif.so:graphics/libheif
 HEIF_USES=		pkgconfig
 HEIF_MESON_ENABLED=	libheif

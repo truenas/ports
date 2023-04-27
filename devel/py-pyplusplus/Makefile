@@ -1,11 +1,12 @@
 PORTNAME=	pyplusplus
-DISTVERSION=	1.8.4
+DISTVERSION=	1.8.5
 CATEGORIES=	devel
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Framework of components for creating a C++ code generator
+WWW=		https://github.com/ompl/pyplusplus
 
 LICENSE=	BSL
 

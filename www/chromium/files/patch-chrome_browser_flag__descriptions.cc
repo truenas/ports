@@ -1,65 +1,65 @@
---- chrome/browser/flag_descriptions.cc.orig	2021-09-24 04:25:58 UTC
+--- chrome/browser/flag_descriptions.cc.orig	2023-04-05 11:05:06 UTC
 +++ chrome/browser/flag_descriptions.cc
-@@ -5110,7 +5110,7 @@ const char kDownloadShelfWebUIDescription[] =
+@@ -6166,7 +6166,7 @@ const char kLibAssistantV2MigrationDescription[] =
  
+ #endif  // BUILDFLAG(IS_CHROMEOS_ASH)
+ 
+-#if BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
+ const char kGetDisplayMediaSetName[] = "GetDisplayMediaSet API";
+ const char kGetDisplayMediaSetDescription[] =
+     "When enabled, the getDisplayMediaSet API for capturing multiple surfaces "
+@@ -6402,7 +6402,7 @@ const char kSearchWebInSidePanelDescription[] =
  // Random platform combinations -----------------------------------------------
  
--#if defined(OS_WIN) || defined(OS_MAC) || defined(OS_LINUX) || \
-+#if defined(OS_WIN) || defined(OS_MAC) || defined(OS_LINUX) || defined(OS_BSD) || \
-     defined(OS_CHROMEOS) || defined(OS_FUCHSIA)
+ #if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX) || \
+-    BUILDFLAG(IS_FUCHSIA)
++    BUILDFLAG(IS_FUCHSIA) || BUILDFLAG(IS_BSD)
+ const char kQuickCommandsName[] = "Quick Commands";
+ const char kQuickCommandsDescription[] =
+     "Enable a text interface to browser features. Invoke with Ctrl-Space.";
+@@ -6411,7 +6411,7 @@ const char kQuickCommandsDescription[] =
+         // BUILDFLAG(IS_FUCHSIA)
  
- const char kEnableOopPrintDriversName[] =
-@@ -5134,10 +5134,10 @@ const char kSettingsLandingPageRedesignDescription[] =
-     "Changes the layout of the chrome://settings page to only show one section "
-     "at a time.";
- 
--#endif  // defined(OS_WIN) || defined(OS_MAC) || defined(OS_LINUX) ||
-+#endif  // defined(OS_WIN) || defined(OS_MAC) || defined(OS_LINUX) || defined(OS_BSD) ||
-         // defined(OS_CHROMEOS) || defined(OS_FUCHSIA)
- 
--#if defined(OS_WIN) || defined(OS_MAC) || defined(OS_LINUX)
-+#if defined(OS_WIN) || defined(OS_MAC) || defined(OS_LINUX) || defined(OS_BSD)
- 
- const char kCommanderName[] = "Commander";
- const char kCommanderDescription[] =
-@@ -5153,7 +5153,7 @@ const char kDesktopDetailedLanguageSettingsName[] =
- const char kDesktopDetailedLanguageSettingsDescription[] =
-     "Enable the new detailed language settings page";
- 
--#endif  // defined(OS_WIN) || defined(OS_MAC) || defined(OS_LINUX)
-+#endif  // defined(OS_WIN) || defined(OS_MAC) || defined(OS_LINUX) || defined(OS_BSD)
- 
- #if defined(OS_CHROMEOS) || defined(OS_LINUX)
- #if BUILDFLAG(USE_TCMALLOC)
-@@ -5178,11 +5178,11 @@ const char kWebShareDescription[] =
+ #if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX) || \
+-    BUILDFLAG(IS_FUCHSIA) || BUILDFLAG(IS_CHROMEOS)
++    BUILDFLAG(IS_FUCHSIA) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_BSD)
+ const char kFollowingFeedSidepanelName[] = "Following feed in the sidepanel";
+ const char kFollowingFeedSidepanelDescription[] =
+     "Enables the following feed in the sidepanel.";
+@@ -6432,7 +6432,7 @@ const char kWebShareDescription[] =
      "platforms.";
- #endif  // defined(OS_WIN) || BUILDFLAG(IS_CHROMEOS_ASH) || defined(OS_MAC)
+ #endif  // BUILDFLAG(IS_WIN) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_MAC)
  
--#if defined(OS_LINUX) && defined(USE_OZONE)
-+#if (defined(OS_LINUX) || defined(OS_BSD)) && defined(USE_OZONE)
- const char kUseOzonePlatformName[] = "Use ozone.";
- const char kUseOzonePlatformDescription[] =
-     "Use the Ozone/X11 platform implementation on X11.";
--#endif  // defined(OS_LINUX) && defined(USE_OZONE)
-+#endif  // (defined(OS_LINUX) || defined(OS_BSD)) && defined(USE_OZONE)
+-#if BUILDFLAG(IS_LINUX) && !BUILDFLAG(IS_CHROMEOS)
++#if (BUILDFLAG(IS_LINUX) && !BUILDFLAG(IS_CHROMEOS)) || BUILDFLAG(IS_BSD)
+ const char kOzonePlatformHintChoiceDefault[] = "Default";
+ const char kOzonePlatformHintChoiceAuto[] = "Auto";
+ const char kOzonePlatformHintChoiceX11[] = "X11";
+@@ -6452,7 +6452,7 @@ const char kWebBluetoothConfirmPairingSupportDescripti
+     "Bluetooth";
+ #endif  // BUILDFLAG(IS_WIN) || BUILDFLAG(IS_LINUX)
  
- // Feature flags --------------------------------------------------------------
+-#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_MAC)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_BSD)
+ const char kSkipUndecryptablePasswordsName[] =
+     "Skip undecryptable passwords to use the available decryptable "
+     "passwords.";
+@@ -6466,7 +6466,7 @@ const char kForcePasswordInitialSyncWhenDecryptionFail
+     "storage and requests initial sync.";
+ #endif  // BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_MAC)
  
-@@ -5249,7 +5249,7 @@ const char kAutofillCreditCardUploadDescription[] =
+-#if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
+ const char kAsyncDnsName[] = "Async DNS resolver";
+ const char kAsyncDnsDescription[] = "Enables the built-in DNS resolver.";
+ #endif  // BUILDFLAG(IS_WIN) || BUILDFLAG(IS_LINUX)
+@@ -6567,7 +6567,7 @@ const char kElasticOverscrollDescription[] =
  
- #endif  // defined(TOOLKIT_VIEWS) || defined(OS_ANDROID)
- 
--#if !defined(OS_WIN) && !defined(OS_FUCHSIA)
-+#if !defined(OS_WIN) && !defined(OS_FUCHSIA) && !defined(OS_BSD)
- const char kSendWebUIJavaScriptErrorReportsName[] =
-     "Send WebUI JavaScript Error Reports";
- const char kSendWebUIJavaScriptErrorReportsDescription[] =
-@@ -5264,7 +5264,7 @@ const char kElasticOverscrollDescription[] =
-     "Enables Elastic Overscrolling on touchscreens and precision touchpads.";
- #endif  // defined(OS_WIN) || defined(OS_ANDROID)
- 
--#if defined(OS_WIN) || (defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)) || \
-+#if defined(OS_WIN) || (defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)) || defined(OS_BSD) || \
-     defined(OS_MAC)
+ #if BUILDFLAG(IS_WIN) ||                                      \
+     (BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)) || \
+-    BUILDFLAG(IS_MAC) || BUILDFLAG(IS_FUCHSIA)
++    BUILDFLAG(IS_MAC) || BUILDFLAG(IS_FUCHSIA) || BUILDFLAG(IS_BSD)
  const char kUIDebugToolsName[] = "Debugging tools for UI";
  const char kUIDebugToolsDescription[] =
+     "Enables additional keyboard shortcuts to help debugging.";

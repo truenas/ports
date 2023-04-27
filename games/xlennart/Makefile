@@ -1,9 +1,11 @@
 PORTNAME=	xlennart
 PORTVERSION=	1.1.1
+PORTREVISION=	1
 CATEGORIES=	games
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	XBill Modification
+WWW=		https://github.com/Xylemon/xlennart
 
 LICENSE=	GPLv2
 

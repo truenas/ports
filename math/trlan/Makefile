@@ -1,8 +1,6 @@
-# Created by: b.f. <bf@FreeBSD.org>
-
 PORTNAME=	trlan
 PORTVERSION=	201009
-PORTREVISION=	11
+PORTREVISION=	12
 CATEGORIES=	math
 MASTER_SITES=	https://codeforge.lbl.gov/frs/download.php/210/:1 \
 		http://crd.lbl.gov/~kewu/ps/:2 \
@@ -12,6 +10,7 @@ EXTRACT_ONLY=	${DISTNAME}${EXTRACT_SUFX}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Thick-restart Lanczos method for eigenproblems
+WWW=		http://crd.lbl.gov/~kewu/trlan.html
 
 USES=		fortran
 USE_LDCONFIG=	yes
@@ -49,7 +48,7 @@ do-build:
 	@${ECHO_CMD} "Building static archive ..."
 	@cd ${WRKSRC}; ${SETENV} ${MAKE_ENV} ${MAKE} ${_MAKE_JOBS} ${MAKE_ARGS} \
 		${ALL_TARGET}
-	@${STRIP_CMD} -x -o ${WRKDIR}/libtrlan.a ${WRKSRC}/libtrlan.a
+	@${STRIP_CMD} --strip-unneeded -o ${WRKDIR}/libtrlan.a ${WRKSRC}/libtrlan.a
 	@cd ${WRKSRC}; ${SETENV} ${MAKE_ENV} ${MAKE} ${_MAKE_JOBS} ${MAKE_ARGS} \
 		clean
 	@${ECHO_CMD} "Building shared library ..."

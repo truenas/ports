@@ -1,10 +1,11 @@
 PORTNAME=	cairo
-PORTVERSION=	1.17.5
+PORTVERSION=	1.17.8
 CATEGORIES=	graphics rubygems
 MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Ruby binding for GLib2
+WWW=		https://github.com/rcairo/rcairo
 
 LICENSE=	GPLv2+ RUBY
 LICENSE_COMB=	dual
@@ -15,6 +16,5 @@ RUN_DEPENDS=	rubygem-native-package-installer>=1.0.3:devel/rubygem-native-packag
 
 USES=		gem gnome pkgconfig
 USE_GNOME=	cairo
-USE_RUBY=	yes
 
 .include <bsd.port.mk>

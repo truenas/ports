@@ -1,9 +1,10 @@
 PORTNAME=	xtensor
-DISTVERSION=	0.24.0
+DISTVERSION=	0.24.3
 CATEGORIES=	math
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Multi-dimensional arrays with broadcasting and lazy computing
+WWW=		https://github.com/xtensor-stack/xtensor
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -14,6 +15,7 @@ RUN_DEPENDS=	nlohmann-json>0:devel/nlohmann-json \
 		xtl-quant-stack>0:devel/xtl-quant-stack
 TEST_DEPENDS=	nlohmann-json>0:devel/nlohmann-json \
 		xtl-quant-stack>0:devel/xtl-quant-stack \
+		doctest>0:devel/doctest \
 		googletest>0:devel/googletest
 
 USES=		cmake

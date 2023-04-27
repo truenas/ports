@@ -1,13 +1,13 @@
-# Created by: Pawel Pekala <pawel@FreeBSD.org>
-
 PORTNAME=	gigalomania
 PORTVERSION=	0.28
+PORTREVISION=	1
 CATEGORIES=	games
 MASTER_SITES=	https://launchpad.net/gigalomania/trunk/${PORTVERSION}/+download/
 DISTNAME=	${PORTNAME}src
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Open source 2D real time strategy god game
+WWW=		http://gigalomania.sourceforge.net/
 
 USES=		sdl zip
 USE_SDL=	image2 mixer2 sdl2

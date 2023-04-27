@@ -1,5 +1,6 @@
 PORTNAME=	Gtk3
 PORTVERSION=	0.034
+PORTREVISION=	1
 CATEGORIES=	x11-toolkits lang perl5
 MASTER_SITES=	CPAN SF/${PORTNAME:tl}-perl/${PORTNAME}/${PORTVERSION}
 MASTER_SITE_SUBDIR=	CPAN:XAOC
@@ -7,6 +8,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	hiroto.kagotani@gmail.com
 COMMENT=	Perl module for Gtk+ 3.x graphical user interface library
+WWW=		https://metacpan.org/pod/Gtk3
 
 LICENSE=	LGPL21+
 LICENSE_FILE_LGPL21+ =	${WRKSRC}/LICENSE

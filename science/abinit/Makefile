@@ -1,11 +1,11 @@
-# Created by: NAKATA Maho <maho@FreeBSD.org>
-
 PORTNAME=	abinit
-DISTVERSION=	9.4.2
+DISTVERSION=	9.6.2
+PORTREVISION=	3
 CATEGORIES=	science
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Full-featured atomic-scale first-principles simulation software
+WWW=		https://www.abinit.org
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -18,7 +18,7 @@ BUILD_DEPENDS=	gm4:devel/m4	\
 		${PYTHON_PKGNAMEPREFIX}pandas>0:math/py-pandas@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}graphviz>0:graphics/py-graphviz@${PY_FLAVOR}
 LIB_DEPENDS=	libelpa.so:math/elpa		\
-		libsz.so:science/szip		\
+		libsz.so:science/libaec		\
 		libelpa.so:math/elpa		\
 		libxc.so:science/libxc		\
 		libfftw3.so:math/fftw3		\
@@ -40,6 +40,9 @@ SHEBANG_FILES=	config/scripts/* doc/tutorial/paral_gspw_assets/abinit.sub.*
 SHEBANG_GLOB=	*.py
 GNU_CONFIGURE=	yes
 CONFIGURE_ENV=	CC_LDFLAGS="${LDFLAGS}" CXX_LDFLAGS="${LDFLAGS}" FC_LDFLAGS="${LDFLAGS}"	\
+		H5CC="${LOCALBASE}/bin/h5cc" \
+		HDF5_CFLAGS="-I${LOCALBASE}/include" \
+		HDF5_LDFLAGS="-L${LOCALBASE}/lib -lhdf5" \
 		LINALG_FCFLAGS="-I${LOCALBASE}/include/elpa-2019.05.002/modules"	\
 		LINALG_LIBS="${BLASLIB}  ${LAPACKLIB} -lelpa"	\
 		NETCDF_FORTRAN_FCFLAGS=-I${LOCALBASE}/include	\

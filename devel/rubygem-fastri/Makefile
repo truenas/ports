@@ -1,5 +1,3 @@
-# Created by: Steve Wills <swills@FreeBSD.org>
-
 PORTNAME=	fastri
 PORTVERSION=	0.3.1.1
 CATEGORIES=	devel rubygems
@@ -13,7 +11,6 @@ LICENSE_COMB=	dual
 
 NO_ARCH=	yes
 
-USE_RUBY=	yes
 USES=		gem
 
 PLIST_FILES=	bin/fastri-server bin/fri bin/qri bin/ri-emacs

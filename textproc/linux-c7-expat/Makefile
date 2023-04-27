@@ -1,13 +1,12 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	expat
 PORTVERSION=	2.1.0
-DISTVERSIONSUFFIX=	-12.el7
-PORTREVISION=	4
+DISTVERSIONSUFFIX=	-15.el7_9
+PORTREVISION=	5
 CATEGORIES=	textproc linux
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	XML 1.0 parser written in C (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://github.com/libexpat/libexpat
 
 LICENSE=	MIT
 

@@ -1,19 +1,18 @@
-# Created by: wen@FreeBSD.org
-
 PORTNAME=	markupsafe
-PORTVERSION=	2.0.1
+PORTVERSION=	2.1.2
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	MarkupSafe-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Implements XML/HTML/XHTML Markup safe string for Python
+WWW=		https://github.com/pallets/markupsafe
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.rst
 
-USES=		python:3.6+
+USES=		python:3.7+
 USE_PYTHON=	autoplist concurrent distutils
 
 post-install:

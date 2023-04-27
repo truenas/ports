@@ -6,6 +6,7 @@ PKGNAMESUFFIX=	18-webui
 
 MAINTAINER=	acm@FreeBSD.org
 COMMENT=	PHP-Frontend to manage Bareos over the web
+WWW=		https://www.bareos.org/
 
 LICENSE=	AGPLv3+
 LICENSE_FILE=	${WRKSRC}/webui/LICENSE
@@ -15,7 +16,7 @@ GH_ACCOUNT=	bareos
 GH_PROJECT=	bareos
 
 USES=		cpe php
-USE_PHP=	openssl gettext ctype hash json session iconv
+USE_PHP=	gettext ctype session iconv
 NO_BUILD=	yes
 NO_ARCH=	yes
 

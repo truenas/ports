@@ -1,11 +1,12 @@
 PORTNAME=	nbxmpp
 DISTVERSION=	2.0.4
 CATEGORIES=	net-im devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	rm@FreeBSD.org
 COMMENT=	Non-blocking Jabber/XMPP module
+WWW=		https://dev.gajim.org/gajim/python-nbxmpp
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING

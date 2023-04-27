@@ -1,12 +1,12 @@
-# Created by: David Naylor <naylor.b.david@gmail.com>
-
 PORTNAME=	tseries
-DISTVERSION=	0.10-49
+DISTVERSION=	0.10-53
+PORTREVISION=	1
 CATEGORIES=	finance
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	ygy@FreeBSD.org
 COMMENT=	Time Series Analysis and Computational Finance
+WWW=		https://CRAN.R-project.org/package=tseries
 
 LICENSE=	GPLv2
 

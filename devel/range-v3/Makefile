@@ -1,10 +1,10 @@
 PORTNAME=	range-v3
-DISTVERSION=	0.11.0
-PORTREVISION=	1
+DISTVERSION=	0.12.0
 CATEGORIES=	devel
 
-MAINTAINER=	henry.hu.sh@gmail.com
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Experimental range library for C++11/14/17
+WWW=		https://github.com/ericniebler/range-v3
 
 LICENSE=	BSL
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

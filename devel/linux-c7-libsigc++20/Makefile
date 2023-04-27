@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	libsigc++20
 PORTVERSION=	2.10.0
 DISTVERSIONSUFFIX=	-1.el7
@@ -7,6 +5,7 @@ CATEGORIES=	devel linux
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	Callback Framework for C++ (Linux CentOS ${LINUX_DIST_VER})
+WWW=		http://libsigc.sourceforge.net/
 
 USES=		linux:c7
 USE_LDCONFIG=	yes

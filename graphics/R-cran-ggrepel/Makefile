@@ -1,10 +1,12 @@
 PORTNAME=	ggrepel
-DISTVERSION=	0.9.1
+DISTVERSION=	0.9.3
+PORTREVISION=	1
 CATEGORIES=	graphics
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	uzsolt@uzsolt.hu
 COMMENT=	Help to avoid overlapping text labels of ggplot2
+WWW=		https://cran.r-project.org/web/packages/ggrepel/
 
 LICENSE=	GPLv3
 

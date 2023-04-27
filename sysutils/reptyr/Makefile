@@ -1,5 +1,3 @@
-# Created by: Andrey Cherkashin <andoriyu@gmail.com>
-
 PORTNAME=	reptyr
 PORTVERSION=	0.8.0
 DISTVERSIONPREFIX=	reptyr-
@@ -7,6 +5,7 @@ CATEGORIES=	sysutils
 
 MAINTAINER=	andoriyu@gmail.com
 COMMENT=	Reparent a running program to a new terminal
+WWW=		https://github.com/nelhage/reptyr
 
 LICENSE=	MIT
 

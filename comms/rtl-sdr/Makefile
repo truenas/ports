@@ -1,13 +1,12 @@
-# Created by: Ganael Laplanche <ganael.laplanche@martymac.org>
-
 PORTNAME=	rtl-sdr
 PORTVERSION=	0.6.0
-PORTREVISION=	2
+PORTREVISION=	3
 PORTEPOCH=	1
 CATEGORIES=	comms hamradio
 
 MAINTAINER=	martymac@FreeBSD.org
 COMMENT=	Command-line tool that performs SDR with RTL2832-based USB sticks
+WWW=		https://sdr.osmocom.org/trac/wiki/rtl-sdr
 
 LICENSE=	GPLv2
 

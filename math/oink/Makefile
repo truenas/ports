@@ -1,13 +1,11 @@
 PORTNAME=	oink
-DISTVERSION=	g20210704
+DISTVERSION=	g20210710
+PORTREVISION=	3
 CATEGORIES=	math
-
-PATCH_SITES=	https://github.com/${GH_ACCOUNT}/${PORTNAME}/commit/
-PATCHFILES=	cd8c62bc1900ffee6d933fa31cbdd954560c286b.patch:-p1 # Fix build on FreeBSD
-PATCHFILES+=	a5c10784a472c42bab5a4df0ef29799011bc30b1.patch:-p1 # Fix installed cmake file path
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Modern parity game solvers written in C++
+WWW=		https://github.com/trolando/oink
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -19,7 +17,7 @@ USE_LDCONFIG=	yes
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	trolando
-GH_TAGNAME=	c1259fe
+GH_TAGNAME=	3327c54
 
 CMAKE_ON=	BUILD_SHARED_LIBS
 

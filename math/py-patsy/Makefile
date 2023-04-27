@@ -1,13 +1,13 @@
-# Created by: Johannes Meixner <johannes@perceivon.net>
-
 PORTNAME=	patsy
-PORTVERSION=	0.5.2
+PORTVERSION=	0.5.3
+PORTREVISION=	1
 CATEGORIES=	math python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Python package for statistical models and design matrices
+WWW=		https://github.com/pydata/patsy
 
 LICENSE=	BSD2CLAUSE PSFL
 LICENSE_COMB=	multi

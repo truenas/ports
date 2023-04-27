@@ -1,5 +1,3 @@
-# Created by: thierry@pompo.net
-
 PORTNAME=	emc2
 DISTVERSIONPREFIX=v
 DISTVERSION=	2.17
@@ -10,6 +8,7 @@ EXTRACT_ONLY=	${DISTNAME}${EXTRACT_SUFX}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Graphical editor of two-dimensional mesh geometries
+WWW=		https://www.ljll.math.upmc.fr/~hecht/
 
 LICENSE=	INRIA
 LICENSE_NAME=	INRIA license, perhaps specific to emc2

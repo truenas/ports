@@ -1,11 +1,13 @@
 PORTNAME=	scoria
 DISTVERSION=	1.0.5
+PORTREVISION=	1
 CATEGORIES=	science python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Lightweight molecule manipulation codebase
+WWW=		https://git.durrantlab.pitt.edu/jdurrant/scoria
 
 LICENSE=	APACHE20
 

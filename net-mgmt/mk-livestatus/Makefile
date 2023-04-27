@@ -1,5 +1,3 @@
-# Created by: Peter C. Lai <cowbert@gmail.com>
-
 PORTNAME=	mk-livestatus
 PORTVERSION=	1.2.8p25
 PORTREVISION=	3
@@ -11,6 +9,7 @@ DIST_SUBDIR=	check_mk
 
 MAINTAINER=	egypcio@FreeBSD.org
 COMMENT=	Nagios event broker module
+WWW=		https://mathias-kettner.de/checkmk_livestatus.html
 
 LICENSE=	GPLv2
 
@@ -63,7 +62,7 @@ post-install-EXAMPLES-on:
 .include <bsd.port.pre.mk>
 
 # Fix building with clang 11 ("ld: error: duplicate symbol: g_mainthread_id")
-.if ${OSVERSION} >= 1300000
+.if ${OSVERSION} >= 1204000
 CFLAGS+=	-fcommon
 .endif
 

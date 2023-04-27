@@ -1,13 +1,12 @@
-# Created by: Pav Lucistnik <pav@FreeBSD.org>
-
 PORTNAME=	crack-attack
 PORTVERSION=	1.1.14
-PORTREVISION=	17
+PORTREVISION=	18
 CATEGORIES=	games
 MASTER_SITES=	SAVANNAH
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	OpenGL game based on Super Nintendo classic Tetris Attack
+WWW=		https://www.nongnu.org/crack-attack/
 
 USES=		compiler:c++11-lang gl gnome pkgconfig xorg
 USE_XORG=	x11 xi xmu sm ice

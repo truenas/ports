@@ -1,13 +1,12 @@
-# Created by: Emanuel Haupt <ehaupt@FreeBSD.org>
-
 PORTNAME=	hidapi
 DISTVERSION=	0.11.0.post2
 CATEGORIES=	comms python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	ehaupt@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Cython interface to comms/hidapi
+WWW=		https://pypi.org/project/hidapi/
 
 LICENSE=	GPLv3
 

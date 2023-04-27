@@ -1,15 +1,14 @@
-# Created by: Cheng-Lung Sung <clsung@FreeBSD.org>
-
 PORTNAME=	zope.configuration
 PORTVERSION=	4.1.0
 PORTREVISION=	0
 CATEGORIES=	devel textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DIST_SUBDIR=	zope
 
 MAINTAINER=	zope@FreeBSD.org
 COMMENT=	Zope Configuration Markup Language (ZCML)
+WWW=		https://pypi.org/project/zope.configuration/
 
 LICENSE=	ZPL21
 

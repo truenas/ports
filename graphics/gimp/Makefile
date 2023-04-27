@@ -1,12 +1,11 @@
-# Created by: erich@FreeBSD.org
-
 PORTNAME=	gimp
-DISTVERSION?=	2.10.28
+DISTVERSION?=	2.10.32
 PORTEPOCH?=	2
 CATEGORIES=	graphics gnome
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	The "meta-port" for The Gimp
+WWW=		https://www.gimp.org/
 
 RUN_DEPENDS=	gimp-2.10:graphics/gimp-app
 

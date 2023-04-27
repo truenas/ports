@@ -4,9 +4,13 @@ CATEGORIES=	devel
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Hybrid thread / fiber task scheduler written in C++11
+WWW=		https://github.com/google/marl
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
+
+NOT_FOR_ARCHS=	riscv64
+NOT_FOR_ARCHS_REASON=	assembly isn't implemented, see src/osfiber_asm.h
 
 USES=		cmake:testing compiler:c++11-lang
 USE_LDCONFIG=	yes

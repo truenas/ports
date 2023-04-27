@@ -1,11 +1,12 @@
 PORTNAME=	fastjsonschema
-DISTVERSION=	2.15.1
+DISTVERSION=	2.16.3
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dbaio@FreeBSD.org
 COMMENT=	Fastest Python implementation of JSON schema
+WWW=		https://horejsek.github.io/python-fastjsonschema/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

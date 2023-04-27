@@ -1,11 +1,12 @@
 PORTNAME=	pydotplus
 DISTVERSION=	2.0.2
 CATEGORIES=	graphics python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Python interface to Graphviz's Dot language
+WWW=		https://github.com/carlos-jenkins/pydotplus
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

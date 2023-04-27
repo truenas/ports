@@ -1,4 +1,4 @@
---- net/proxy_resolution/proxy_config_service_linux.cc.orig	2021-09-14 01:52:00 UTC
+--- net/proxy_resolution/proxy_config_service_linux.cc.orig	2023-01-11 09:17:16 UTC
 +++ net/proxy_resolution/proxy_config_service_linux.cc
 @@ -6,7 +6,9 @@
  
@@ -18,15 +18,15 @@
  // Converts |value| from a decimal string to an int. If there was a failure
  // parsing, returns |default_value|.
  int StringToIntOrDefault(base::StringPiece value, int default_value) {
-@@ -1004,6 +1007,7 @@ class SettingGetterImplKDE : public ProxyConfigService
- 
-   DISALLOW_COPY_AND_ASSIGN(SettingGetterImplKDE);
+@@ -1032,6 +1035,7 @@ class SettingGetterImplKDE : public ProxyConfigService
+   // events on.
+   scoped_refptr<base::SequencedTaskRunner> file_task_runner_;
  };
 +#endif
  
  }  // namespace
  
-@@ -1218,9 +1222,11 @@ ProxyConfigServiceLinux::Delegate::Delegate(
+@@ -1248,9 +1252,11 @@ ProxyConfigServiceLinux::Delegate::Delegate(
      case base::nix::DESKTOP_ENVIRONMENT_KDE3:
      case base::nix::DESKTOP_ENVIRONMENT_KDE4:
      case base::nix::DESKTOP_ENVIRONMENT_KDE5:
@@ -36,5 +36,5 @@
        break;
 +#endif
      case base::nix::DESKTOP_ENVIRONMENT_XFCE:
+     case base::nix::DESKTOP_ENVIRONMENT_LXQT:
      case base::nix::DESKTOP_ENVIRONMENT_OTHER:
-       break;

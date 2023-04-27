@@ -1,11 +1,12 @@
 PORTNAME=	harvid
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.8.2
-PORTREVISION=	3
+DISTVERSION=	0.9.1
+PORTREVISION=	2
 CATEGORIES=	multimedia
 
 MAINTAINER=	marcelbonnet@gmail.com
 COMMENT=	Extract still images from movies and serve them via HTTP
+WWW=		https://x42.github.io/harvid/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

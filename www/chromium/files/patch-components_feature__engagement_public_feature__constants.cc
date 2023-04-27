@@ -1,35 +1,21 @@
---- components/feature_engagement/public/feature_constants.cc.orig	2021-09-24 04:26:03 UTC
+--- components/feature_engagement/public/feature_constants.cc.orig	2023-04-05 11:05:06 UTC
 +++ components/feature_engagement/public/feature_constants.cc
-@@ -12,7 +12,7 @@ const base::Feature kIPHSnooze{"IPH_Snooze", base::FEA
- const base::Feature kIPHDummyFeature{"IPH_Dummy",
-                                      base::FEATURE_DISABLED_BY_DEFAULT};
+@@ -19,7 +19,7 @@ BASE_FEATURE(kUseClientConfigIPH,
+ BASE_FEATURE(kIPHDummyFeature, "IPH_Dummy", base::FEATURE_DISABLED_BY_DEFAULT);
  
--#if defined(OS_WIN) || defined(OS_APPLE) || defined(OS_LINUX) || \
-+#if defined(OS_WIN) || defined(OS_APPLE) || defined(OS_LINUX) || defined(OS_BSD) || \
-     defined(OS_CHROMEOS) || defined(OS_FUCHSIA)
- const base::Feature kIPHDesktopTabGroupsNewGroupFeature{
-     "IPH_DesktopTabGroupsNewGroup", base::FEATURE_DISABLED_BY_DEFAULT};
-@@ -40,7 +40,7 @@ const base::Feature kIPHDesktopPwaInstallFeature{
-     "IPH_DesktopPwaInstall", base::FEATURE_DISABLED_BY_DEFAULT};
- const base::Feature kIPHProfileSwitchFeature{"IPH_ProfileSwitch",
-                                              base::FEATURE_ENABLED_BY_DEFAULT};
--#endif  // defined(OS_WIN) || defined(OS_APPLE) || defined(OS_LINUX) ||
-+#endif  // defined(OS_WIN) || defined(OS_APPLE) || defined(OS_LINUX) || defined(OS_BSD) ||
-         // defined(OS_CHROMEOS) || defined(OS_FUCHSIA)
+ #if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_LINUX) || \
+-    BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_FUCHSIA)
++    BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_FUCHSIA) || BUILDFLAG(IS_BSD)
+ BASE_FEATURE(kIPHBatterySaverModeFeature,
+              "IPH_BatterySaverMode",
+              base::FEATURE_DISABLED_BY_DEFAULT);
+@@ -437,7 +437,8 @@ BASE_FEATURE(kIPHiOSAppStorePromoFeature,
+ #endif  // BUILDFLAG(IS_IOS)
  
- #if defined(OS_ANDROID)
-@@ -203,12 +203,12 @@ const base::Feature kIPHDiscoverFeedHeaderFeature{
-     "IPH_DiscoverFeedHeaderMenu", base::FEATURE_DISABLED_BY_DEFAULT};
- #endif  // defined(OS_IOS)
- 
--#if defined(OS_WIN) || defined(OS_APPLE) || defined(OS_LINUX) || \
-+#if defined(OS_WIN) || defined(OS_APPLE) || defined(OS_LINUX) || defined(OS_BSD) || \
-     defined(OS_CHROMEOS) || defined(OS_ANDROID) || defined(OS_FUCHSIA)
- const base::Feature kIPHUpdatedConnectionSecurityIndicatorsFeature{
-     "IPH_UpdatedConnectionSecurityIndicators",
-     base::FEATURE_DISABLED_BY_DEFAULT};
--#endif  // defined(OS_WIN) || defined(OS_APPLE) || defined(OS_LINUX) ||
-+#endif  // defined(OS_WIN) || defined(OS_APPLE) || defined(OS_LINUX) || defined(OS_BSD) ||
-         // defined(OS_CHROMEOS) || defined(OS_ANDROID) || defined(OS_FUCHSIA)
- 
- }  // namespace feature_engagement
+ #if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_LINUX) || \
+-    BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_ANDROID) || BUILDFLAG(IS_FUCHSIA)
++    BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_ANDROID) || BUILDFLAG(IS_FUCHSIA) || \
++    BUILDFLAG(IS_BSD)
+ BASE_FEATURE(kIPHAutofillVirtualCardSuggestionFeature,
+              "IPH_AutofillVirtualCardSuggestion",
+              base::FEATURE_ENABLED_BY_DEFAULT);

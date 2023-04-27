@@ -1,10 +1,12 @@
 PORTNAME=	envconsul
 PORTVERSION=	0.11.0
 DISTVERSIONPREFIX=	v
+PORTREVISION=	13
 CATEGORIES=	sysutils
 
-MAINTAINER=	swills@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Populate values from Consul into a process environment
+WWW=		https://github.com/hashicorp/envconsul
 
 LICENSE=	MPL20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -20,7 +22,7 @@ GH_TUPLE=	hashicorp:${PORTNAME}:${DISTVERSIONPREFIX}${PORTVERSION}:DEFAULT/src/g
 		golang:crypto:4def268fd1a4:golang_crypto/vendor/golang.org/x/crypto \
 		golang:net:ca1201d0de80:golang_net/vendor/golang.org/x/net \
 		golang:snappy:v0.0.1:golang_snappy/vendor/github.com/golang/snappy \
-		golang:sys:9fbb57f87de9:golang_sys/vendor/golang.org/x/sys \
+		golang:sys:v0.6.0:golang_sys/vendor/golang.org/x/sys \
 		golang:text:v0.3.2:golang_text/vendor/golang.org/x/text \
 		golang:time:9d24e82272b4:golang_time/vendor/golang.org/x/time \
 		hashicorp:consul-template:v0.25.1:hashicorp_consul_template/vendor/github.com/hashicorp/consul-template \

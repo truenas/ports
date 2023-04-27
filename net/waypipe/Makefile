@@ -1,10 +1,12 @@
 PORTNAME=	waypipe
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.8.2
-CATEGORIES=	net
+DISTVERSION=	0.8.6
+PORTREVISION=	2
+CATEGORIES=	net wayland
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Network transparency with Wayland
+WWW=		https://gitlab.freedesktop.org/mstoeckl/waypipe
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -13,7 +15,7 @@ USES=		compiler:c11 localbase:ldflags meson pkgconfig
 USE_GITLAB=	yes
 GL_SITE=	https://gitlab.freedesktop.org
 GL_ACCOUNT=	mstoeckl
-GL_COMMIT=	a11a59c58bee3972ce9e1e18731eba28cc0a8f0a
+GL_COMMIT=	033d0e7eb613f1ddfe104d07079a81b8d4e02dac
 PLIST_FILES=	bin/${PORTNAME}
 
 OPTIONS_DEFINE=	FFMPEG LZ4 MANPAGES OPENGL VAAPI ZSTD

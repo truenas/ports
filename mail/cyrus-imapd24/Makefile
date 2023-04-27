@@ -7,6 +7,7 @@ PKGNAMESUFFIX=	24
 
 MAINTAINER=	ume@FreeBSD.org
 COMMENT=	Cyrus mail server, supporting POP3 and IMAP4 protocols
+WWW=		https://www.cyrusimap.org/
 
 LICENSE=	BSD4CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYRIGHT
@@ -14,8 +15,7 @@ LICENSE_FILE=	${WRKSRC}/COPYRIGHT
 LIB_DEPENDS=	libsasl2.so:security/cyrus-sasl2 \
 		libpcre.so:devel/pcre
 
-CONFLICTS_INSTALL=	cyrus-imapd-2.[^4].* cyrus-imapd2[^4]-2.[^4].* \
-			cyrus-imapd3*
+CONFLICTS_INSTALL=	cyrus-imapd2? cyrus-imapd3? cyrus-imapd3?-http
 
 USE_RC_SUBR=	imapd
 
@@ -51,7 +51,7 @@ BDB_CONFIGURE_ON=	--with-bdb-incdir=${BDB_INCLUDE_DIR} \
 IDLED_DESC=		Enable IMAP idled support
 IDLED_CONFIGURE_ENABLE=	idled
 LDAP_DESC=		Enable LDAP support (experimental)
-LDAP_USE=		OPENLDAP=yes
+LDAP_USES=		ldap
 LDAP_CONFIGURE_ON=	--with-ldap=${LOCALBASE}
 MURDER_DESC=		Enable IMAP Murder support
 MURDER_CONFIGURE_ENABLE=murder
@@ -136,9 +136,7 @@ CONFS=		cmu-backend.conf cmu-frontend.conf normal.conf prefork.conf \
 
 .include <bsd.port.options.mk>
 
-.if ${PORT_OPTIONS:MBDB}
-INVALID_BDB_VER=2
-.else
+.if empty(${PORT_OPTIONS:MBDB})
 BDB_LIB_NAME=	no
 .endif
 

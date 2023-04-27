@@ -1,14 +1,13 @@
-# Created by: jhb
-
 PORTNAME=	bfe2
 PORTVERSION=	20030723
-PORTREVISION=	9
+PORTREVISION=	11
 CATEGORIES=	emulators
 MASTER_SITES=	SF/bfe/source/23jul2003
 DISTNAME=	${PORTNAME}-23jul2003
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	X11 GUI for the bochs debugger (revision 2)
+WWW=		http://bfe.sourceforge.net/
 
 RUN_DEPENDS=	bochs:emulators/bochs
 

@@ -1,13 +1,12 @@
-# Created by: ijliao
-
 PORTNAME=	socat
-DISTVERSION=	1.7.4.2
+DISTVERSION=	1.7.4.4
 CATEGORIES=	net
 MASTER_SITES=	http://www.dest-unreach.org/socat/download/ \
 		LOCAL/ehaupt
 
 MAINTAINER=	ehaupt@FreeBSD.org
 COMMENT=	Multipurpose relay and more
+WWW=		http://www.dest-unreach.org/socat/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,13 +1,13 @@
-# Created by: Eric van Gyzen <vangyzen@stat.duke.edu>
-
 PORTNAME=	libRmath
-DISTVERSION=	4.1.1
+DISTVERSION=	4.2.2
+PORTREVISION=	1
 CATEGORIES=	math lang
 MASTER_SITES=	CRAN/src/base/R-${PORTVERSION:C|\..*||}
 DISTNAME=	R-${DISTVERSIONPREFIX}${DISTVERSION}${DISTVERSIONSUFFIX}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Standalone math library from R
+WWW=		https://www.R-project.org/
 
 LICENSE=	GPLv2
 
@@ -16,7 +16,7 @@ ONLY_FOR_ARCHS=	aarch64 amd64 armv6 armv7 i386 powerpc64 powerpc64le
 LIB_DEPENDS=	libcurl.so:ftp/curl \
 		libpcre2-8.so:devel/pcre2
 
-USES=		localbase
+USES=		fortran localbase pathfix
 USE_LDCONFIG=	yes
 
 GNU_CONFIGURE=	yes
@@ -37,24 +37,7 @@ BUILD_WRKSRC=	${WRKSRC}/src/nmath/standalone
 
 PLIST_SUB=	RMATH_SOVERSION="${_RMATH_SOVERSION}"
 
-OPTIONS_DEFINE=			FLANG
-OPTIONS_EXCLUDE_aarch64=	FLANG
-OPTIONS_EXCLUDE_armv6=		FLANG
-OPTIONS_EXCLUDE_armv7=		FLANG
-OPTIONS_EXCLUDE_i386=		FLANG
-
-FLANG_DESC=	Use experimental flang instead of default Fortran compiler
-FLANG_USES=	fortran:flang
-FLANG_USES_OFF=	fortran
-
 _RMATH_SOVERSION=	${DISTVERSION:R}
-
-post-patch:
-	@${REINPLACE_CMD} -e 's|(libdir)/pkgconfig|(prefix)/libdata/pkgconfig|g'\
-		${WRKSRC}/src/nmath/standalone/Makefile.in \
-		${WRKSRC}/src/unix/Makefile.in
-	@${REINPLACE_CMD} -e "s|/usr/local|${LOCALBASE}|g" \
-		${WRKSRC}/configure
 
 do-install:
 	${INSTALL_DATA} ${WRKSRC}/src/include/Rmath.h ${STAGEDIR}${PREFIX}/include

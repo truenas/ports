@@ -1,10 +1,11 @@
 PORTNAME=	marblemarcher
 DISTVERSION=	1.4.5
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	games
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Marble Marcher: Community Edition
+WWW=		https://github.com/WAUthethird/Marble-Marcher-Community-Edition
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE

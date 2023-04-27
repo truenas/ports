@@ -1,5 +1,3 @@
-# Created by: Akinori MUSHA aka knu <knu@idaemons.org>
-
 PORTNAME=	jed
 PORTVERSION=	${VERSION}.j${JP_VERSION}
 PORTREVISION=	6
@@ -13,6 +11,7 @@ DIST_SUBDIR=	jed
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	SLang-based text editor (w/ Japanese support)
+WWW=		http://www.dsl.tutics.tut.ac.jp/~kawamoto/jed/jed.html
 
 LIB_DEPENDS=	libslang.so:japanese/libslang
 
@@ -26,6 +25,8 @@ CONFIGURE_ARGS=	--enable-x-locale=no
 ALL_TARGET=	${BINSTUFF} getmail
 MAKE_JOBS_UNSAFE=	yes
 INFO=		jed
+
+CONFLICTS_INSTALL=	jed # bin/jed
 
 JED_ROOT=	${DATADIR}
 BINSTUFF=	jed rgrep

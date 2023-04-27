@@ -1,8 +1,6 @@
-# Created by: Sergey A. Osokin <osa@FreeBSD.org>
-
 PORTNAME?=	nginx
-PORTVERSION=	1.21.4
-PORTREVISION=	1
+PORTVERSION=	1.24.0
+PORTREVISION=	4
 CATEGORIES=	www
 MASTER_SITES=	https://nginx.org/download/ \
 		LOCAL/osa
@@ -11,13 +9,14 @@ DISTFILES=	${DISTNAME}${EXTRACT_SUFX}
 
 MAINTAINER?=	osa@FreeBSD.org
 COMMENT?=	Robust and small WWW server
+WWW=		https://nginx.com/
 
 LICENSE?=	BSD2CLAUSE
 LICENSE_FILE?=	${WRKSRC}/LICENSE
 
 CONFLICTS_INSTALL=	nginx
 
-PORTSCOUT=	limit:^1\.21\.[0-9]*
+PORTSCOUT=	limit:^1\.2[4-5]\.[0-9]*
 
 USES=		cpe
 
@@ -49,13 +48,13 @@ SUB_LIST+=	WWWOWN=${WWWOWN} \
 HAS_CONFIGURE=	yes
 CONFIGURE_ARGS+=--prefix=${ETCDIR} \
 		--with-cc-opt="-I ${LOCALBASE}/include" \
-		--with-ld-opt="-L ${LOCALBASE}/lib" \
 		--conf-path=${ETCDIR}/nginx.conf \
 		--sbin-path=${PREFIX}/sbin/nginx \
 		--pid-path=${NGINX_RUNDIR}/nginx.pid \
 		--error-log-path=${NGINX_ERRORLOG} \
 		--user=${WWWOWN} --group=${WWWGRP} \
-		--with-compat
+		--with-compat \
+		--with-pcre
 ALL_TARGET=
 
 PLIST_SUB+=	NGINX_TMPDIR=${NGINX_TMPDIR} NGINX_LOGDIR=${NGINX_LOGDIR} WWWOWN=${WWWOWN} WWWGRP=${WWWGRP}
@@ -70,21 +69,23 @@ OPTIONS_GROUP=	HTTPGRP MAILGRP STREAMGRP
 OPTIONS_GROUP_HTTPGRP=	GOOGLE_PERFTOOLS HTTP HTTP_ADDITION HTTP_AUTH_REQ \
 	HTTP_CACHE HTTP_DAV HTTP_DEGRADATION HTTP_FLV HTTP_GUNZIP_FILTER \
 	HTTP_GZIP_STATIC HTTP_IMAGE_FILTER HTTP_MP4 HTTP_PERL \
-	HTTP_RANDOM_INDEX HTTP_REALIP HTTP_REWRITE HTTP_SECURE_LINK \
-	HTTP_SLICE HTTP_SSL HTTP_STATUS HTTP_SUB HTTP_XSLT HTTPV2
+	HTTP_RANDOM_INDEX HTTP_REALIP HTTP_SECURE_LINK HTTP_SLICE HTTP_SSL \
+	HTTP_STATUS HTTP_SUB HTTP_XSLT HTTPV2 HTTPV3 HTTPV3_BORING HTTPV3_LSSL \
+	HTTPV3_QTLS
 
 OPTIONS_GROUP_MAILGRP=	MAIL MAIL_IMAP MAIL_POP3 MAIL_SMTP MAIL_SSL
 
 OPTIONS_GROUP_STREAMGRP=	STREAM STREAM_REALIP STREAM_SSL \
 	STREAM_SSL_PREREAD
 
-OPTIONS_DEFINE=		DEBUG DEBUGLOG DSO FILE_AIO IPV6 NJS THREADS WWW
+OPTIONS_DEFINE=		DEBUG DEBUGLOG DSO FILE_AIO IPV6 NJS NJS_XML THREADS WWW
 OPTIONS_DEFAULT?=	DSO FILE_AIO HTTP HTTP_ADDITION HTTP_AUTH_REQ HTTP_CACHE \
-		HTTP_DAV HTTP_FLV HTTP_GUNZIP_FILTER HTTP_GZIP_STATIC \
-		HTTP_MP4 HTTP_RANDOM_INDEX HTTP_REALIP HTTP_REWRITE \
-		HTTP_SECURE_LINK HTTP_SLICE HTTP_SSL HTTP_STATUS \
-		HTTP_SUB HTTPV2 MAIL MAIL_SSL STREAM STREAM_REALIP \
-		STREAM_SSL STREAM_SSL_PREREAD THREADS WWW
+		HTTP_DAV HTTP_FLV HTTP_GUNZIP_FILTER HTTP_GZIP_STATIC HTTP_MP4 \
+		HTTP_RANDOM_INDEX HTTP_REALIP HTTP_SECURE_LINK HTTP_SLICE HTTP_SSL \
+		HTTP_STATUS HTTP_SUB HTTPV2 MAIL MAIL_SSL STREAM \
+		STREAM_REALIP STREAM_SSL STREAM_SSL_PREREAD THREADS WWW
+
+LIB_DEPENDS+=	libpcre2-8.so:devel/pcre2
 
 OPTIONS_RADIO+=		GSSAPI
 OPTIONS_RADIO_GSSAPI=	GSSAPI_HEIMDAL GSSAPI_MIT
@@ -153,20 +154,33 @@ HTTP_PERL_USES=			perl5
 HTTP_PERL_VARS=			DSO_BASEMODS+=http_perl_module
 HTTP_RANDOM_INDEX_CONFIGURE_ON=	--with-http_random_index_module
 HTTP_REALIP_CONFIGURE_ON=	--with-http_realip_module
-HTTP_REWRITE_LIB_DEPENDS=	libpcre.so:devel/pcre
-HTTP_REWRITE_CONFIGURE_ON=	--with-pcre
-HTTP_REWRITE_CONFIGURE_OFF=	--without-http_rewrite_module
 HTTP_SECURE_LINK_CONFIGURE_ON=	--with-http_secure_link_module
 HTTP_SLICE_CONFIGURE_ON=	--with-http_slice_module
 HTTP_SSL_CONFIGURE_ON=		--with-http_ssl_module
 HTTP_SSL_USES=			ssl
 HTTP_STATUS_CONFIGURE_ON=	--with-http_stub_status_module
 HTTP_SUB_CONFIGURE_ON=		--with-http_sub_module
-HTTP_XSLT_USES=			gnome
-HTTP_XSLT_USE=			GNOME=libxml2,libxslt
+HTTP_XSLT_LIB_DEPENDS=		libxml2.so:textproc/libxml2 \
+				libxslt.so:textproc/libxslt
 HTTP_XSLT_VARS=			DSO_BASEMODS+=http_xslt_module
 HTTPV2_IMPLIES=			HTTP_SSL
 HTTPV2_CONFIGURE_ON=		--with-http_v2_module
+HTTPV3_CONFIGURE_ON=		--build=nginx-quic \
+				--with-stream_quic_module \
+				--with-http_v3_module
+HTTPV3_EXTRA_PATCHES=		${PATCHDIR}/extra-patch-httpv3:-p1
+HTTPV3_BORING_BUILD_DEPENDS=	${LOCALBASE}/bin/bssl:security/boringssl
+HTTPV3_BORING_RUN_DEPENDS=	${LOCALBASE}/bin/bssl:security/boringssl
+HTTPV3_BORING_IMPLIES=		HTTPV3
+HTTPV3_BORING_PREVENTS=		HTTPV3_LSSL HTTPV3_QTLS
+HTTPV3_LSSL_BUILD_DEPENDS=	${LOCALBASE}/include/tls.h:security/libressl-devel
+HTTPV3_LSSL_BUILD_DEPENDS=	${LOCALBASE}/include/tls.h:security/libressl-devel
+HTTPV3_LSSL_IMPLIES=		HTTPV3
+HTTPV3_LSSL_PREVENTS=		HTTPV3_BORING HTTPV3_QTLS
+HTTPV3_QTLS_BUILD_DEPENDS=	${LOCALBASE}/include/openssl/quic.h:security/openssl-quictls
+HTTPV3_QTLS_RUN_DEPENDS=	${LOCALBASE}/include/openssl/quic.h:security/openssl-quictls
+HTTPV3_QTLS_IMPLIES=		HTTPV3
+HTTPV3_QTLS_PREVENTS=		HTTPV3_BORING HTTPV3_LSSL
 MAIL_VARS=			DSO_BASEMODS+=mail
 MAIL_IMAP_CONFIGURE_OFF=	--without-mail_imap_module
 MAIL_POP3_CONFIGURE_OFF=	--without-mail_pop3_module
@@ -214,15 +228,32 @@ IGNORE=		requires at least HTTP or MAIL to \
 		be defined.  Please do 'make config' again
 .endif
 
+.if ${PORT_OPTIONS:MHTTP_AUTH_KRB5} && (empty(PORT_OPTIONS:MGSSAPI_HEIMDAL) && empty(PORT_OPTIONS:MGSSAPI_MIT))
+IGNORE=		required at least GSSAPI_HEIMDAL or \
+		GSSAPI_MIT to be defined. Please do \
+		'make config' again
+.endif
+
 .if ${PORT_OPTIONS:MPASSENGER} && empty(PORT_OPTIONS:MDEBUG)
 CONFIGURE_ENV+=	OPTIMIZE="yes"
 CFLAGS+=	-DNDEBUG
 .endif
 
-.if ${PORT_OPTIONS:MHTTP_AUTH_KRB5} && (empty(PORT_OPTIONS:MGSSAPI_HEIMDAL) && empty(PORT_OPTIONS:MGSSAPI_MIT))
-IGNORE=		required at least GSSAPI_HEIMDAL or \
-		GSSAPI_MIT to be defined. Please do \
-		'make config' again
+# Fix build failure on clang >= 12
+.if ${PORT_OPTIONS:MHTTP_PERL} && ${OSVERSION} >= 1301000
+CFLAGS+=	-Wno-compound-token-split-by-macro
+.endif
+
+.if empty(PORT_OPTIONS:MLUA) && empty(PORT_OPTIONS:MMODSECURITY3) && \
+    empty(PORT_OPTIONS:MPASSENGER)
+CONFIGURE_ARGS+=	--with-ld-opt="-L ${LOCALBASE}/lib"
+.else
+CONFIGURE_ARGS+=	--with-ld-opt="-L ${LOCALBASE}/lib -lpcre"
+LIB_DEPENDS+=		libpcre.so:devel/pcre
+.endif
+
+.if empty(PORT_OPTIONS:MNJS_XML)
+NJS_CONFIGURE_ARGS=	--no-libxml2
 .endif
 
 pre-everything::
@@ -235,9 +266,8 @@ pre-everything::
 .endif
 	@${ECHO_MSG}
 
-post-extract-GRIDFS-on:
-	@${RMDIR} ${WRKSRC_gridfs}/mongo-c-driver/
-	@${MV} ${WRKSRC_mongo_c} ${WRKSRC_gridfs}/mongo-c-driver
+pre-patch-HTTPV3-on:
+	@${MV} ${WRKSRC}/README ${WRKSRC}/README.1st
 
 post-patch:
 	@${REINPLACE_CMD} 's!%%HTTP_PORT%%!${HTTP_PORT}!; \
@@ -256,9 +286,9 @@ post-patch-FASTDFS-on:
 		's!%%PREFIX%%!${PREFIX}!g;s!%%LOCALBASE%%!${LOCALBASE}!g' \
 		${WRKSRC_fastdfs}/src/config
 
-# Respect CFLAGS by remove needless --std=c99 flag
 post-patch-GRIDFS-on:
-	@${REINPLACE_CMD} 's!--std=c99!-DMONGO_HAVE_STDINT!' ${WRKSRC_gridfs}/config
+	@${REINPLACE_CMD} 's!\/usr!${LOCALBASE}!g' \
+		${WRKSRC_gridfs}/nginx-gridfs/config
 
 post-patch-HTTP_AUTH_KRB5-on:
 	@${REINPLACE_CMD} 's!%%GSSAPILIBS%%!${GSSAPILIBS}!g; \
@@ -307,7 +337,7 @@ pre-configure-SMALL_LIGHT-on:
 	( cd ${WRKSRC_small_light} && ./setup )
 
 do-configure-NJS-on:
-	( cd ${WRKSRC_njs} && ${SETENV} ${CONFIGURE_ENV} ${CONFIGURE_CMD} )
+	( cd ${WRKSRC_njs} && ${SETENV} ${CONFIGURE_ENV} ${CONFIGURE_CMD} ${NJS_CONFIGURE_ARGS} )
 
 .if !target(do-install)
 do-install:
@@ -342,9 +372,6 @@ do-install-NAXSI-on:
 	${INSTALL_DATA} \
 	${WRKDIR}/naxsi-${NAXSI_NGINX_VER}/naxsi_config/naxsi_core.rules \
 	${STAGEDIR}${ETCDIR}
-
-do-install-NJS-on:
-	${INSTALL_PROGRAM} ${WRKSRC_njs}/build/njs ${STAGEDIR}${PREFIX}/sbin
 .endif
 
 .if !target(post-install)

@@ -1,11 +1,12 @@
 PORTNAME=	tmv
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.75
-PORTREVISION=	8
+PORTREVISION=	9
 CATEGORIES=	math
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Fast, intuitive linear algebra library for C++
+WWW=		https://github.com/rmjarvis/tmv
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/TMV_LICENSE
@@ -21,9 +22,7 @@ MAKEFILE=	${FILESDIR}/Makefile
 
 OPTIONS_DEFINE=	DOCS
 
-.include <bsd.port.options.mk>
-
-.if ${ARCH} == powerpc
+.if !exists(/usr/include/omp.h)
 USES+=		compiler:gcc-c++11-lib
 .endif
 

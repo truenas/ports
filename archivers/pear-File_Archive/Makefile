@@ -1,18 +1,17 @@
-# Created by: Antonio Carlos Venancio Junior (<antonio@inf.ufsc.br>)
-
 PORTNAME=	File_Archive
 PORTVERSION=	1.5.5
 CATEGORIES=	archivers www pear
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	PEAR class to manipulate tar, gz, tgz, bz2, tbz, zip, ar (deb) files
+WWW=		https://pear.php.net/package/File_Archive
 
 LICENSE=	LGPL3
 
 RUN_DEPENDS=	${PEAR_PKGNAMEPREFIX}MIME_Type>=0:mail/pear-MIME_Type@${PHP_FLAVOR}
 
 USES=		pear
-USE_PHP=	bz2 pcre zlib
+USE_PHP=	bz2 zlib
 
 NO_ARCH=	yes
 

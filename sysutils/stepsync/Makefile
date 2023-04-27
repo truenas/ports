@@ -1,14 +1,13 @@
-# Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
-
 PORTNAME=	stepsync
 PORTVERSION=	1.0
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	sysutils gnustep
 MASTER_SITES=	SAVANNAH/gap
 DISTNAME=	StepSync-${PORTVERSION}
 
-MAINTAINER=	danfe@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	File and folder synchronization tool
+WWW=		https://gap.nongnu.org/stepsync/
 
 LICENSE=	GPLv2+
 

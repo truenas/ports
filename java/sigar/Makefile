@@ -1,5 +1,3 @@
-# Created by: Tom Judge <tj@FreeBSD.org>
-
 PORTNAME=	sigar
 PORTVERSION=	1.7.3
 PORTREVISION=	11
@@ -8,6 +6,7 @@ PKGNAMEPREFIX=	java-
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Java bindings for the Sigar system information API
+WWW=		https://support.hyperic.com/display/SIGAR/Home
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/NOTICE

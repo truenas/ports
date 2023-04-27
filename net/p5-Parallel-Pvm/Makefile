@@ -1,5 +1,3 @@
-# Created by: Sergey Skvortsov <skv@protey.ru>
-
 PORTNAME=	Parallel-Pvm
 PORTVERSION=	1.4.0
 PORTREVISION=	4
@@ -9,6 +7,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Perl extension for the Parallel Virtual Machine (PVM)
+WWW=		https://metacpan.org/release/Parallel-Pvm
 
 LIB_DEPENDS=	libpvm3.so:net/pvm
 

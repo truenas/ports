@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	Syntax-Keyword-Try
-PORTVERSION=	0.26
+PORTVERSION=	0.28
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	try/catch/finally syntax for Perl
+WWW=		https://metacpan.org/release/Syntax-Keyword-Try
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

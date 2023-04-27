@@ -1,12 +1,12 @@
-# Created by: Thomas Gellekum <tg@FreeBSD.org>
-
 PORTNAME=	wget
-DISTVERSION=	1.21.2
+DISTVERSION=	1.21.3
+PORTREVISION=	1
 CATEGORIES=	ftp www
 MASTER_SITES=	GNU
 
 MAINTAINER=	vd@FreeBSD.org
 COMMENT=	Retrieve files from the Net via HTTP(S) and FTP
+WWW=		https://www.gnu.org/s/wget/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING

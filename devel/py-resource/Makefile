@@ -2,12 +2,13 @@ PORTNAME=	resource
 PORTVERSION=	0.2.1
 PORTREVISION=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	Resource-${PORTVERSION}
 
-MAINTAINER=	swills@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Library concentrated on the Resource layer of RESTful APIs
+WWW=		https://github.com/RussellLuo/resource
 
 LICENSE=	MIT
 

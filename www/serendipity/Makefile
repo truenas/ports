@@ -1,11 +1,10 @@
-# Created by: babak@farrokhi.net
-
 PORTNAME=	serendipity
 PORTVERSION=	2.3.5
 CATEGORIES=	www
 
 MAINTAINER=	joneum@FreeBSD.org
 COMMENT=	PHP based weblog software
+WWW=		https://www.s9y.org/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -19,7 +18,7 @@ GH_PROJECT=		Serendipity
 NO_BUILD=	YES
 SERENDIPITY?=	www/${PORTNAME}
 PLIST_SUB+=	WWWOWN="${WWWOWN}" WWWGRP="${WWWGRP}"
-USE_PHP=	session pcre gd openssl mbstring iconv zlib xml
+USE_PHP=	session gd mbstring iconv zlib xml
 SUB_FILES=	pkg-message
 CPE_VENDOR=	s9y
 

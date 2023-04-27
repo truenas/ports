@@ -1,13 +1,12 @@
-# Created by: Nicola Stanislao Vitale <nivit@FreeBSD.org>
-
 PORTNAME=	scudcloud
 PORTVERSION=	1.65
 DISTVERSIONPREFIX=	v
-PORTREVISION=	4
+PORTREVISION=	7
 CATEGORIES=	net-im
 
 MAINTAINER=	nivit@FreeBSD.org
 COMMENT=	Desktop client app for Slack
+WWW=		https://github.com/raelgc/scudcloud
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -23,7 +22,7 @@ HUNSPELL_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}hunspell>0:textproc/py-hunspell@${P
 OPTIONS_DEFINE=	HUNSPELL
 
 USES=		gnome python:3.5+ pyqt:5
-USE_PYQT=	sip_run webkit_run webkitwidgets_run
+USE_PYQT=	sip:run pyqt5:run
 USE_GITHUB=	yes
 USE_PYTHON=	autoplist distutils optsuffix
 NO_ARCH=	yes

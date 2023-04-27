@@ -1,16 +1,17 @@
-# Created by: Johan Strom <johna@stromnet.se>
-
 PORTNAME=	telldus-core
 PORTVERSION=	2.1.2
-PORTREVISION=	7
+PORTREVISION=	8
 CATEGORIES=	comms
 MASTER_SITES=	http://download.telldus.com/TellStick/Software/telldus-core/
 
-MAINTAINER=	johan@stromnet.se
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Tellstick Telldus daemon + library
+WWW=		https://developer.telldus.com/wiki/TellStickInstallationSource
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/LICENSE
+
+BROKEN=		does not build: 'tr1/memory' file not found
 
 BUILD_DEPENDS=	help2man:misc/help2man
 LIB_DEPENDS=	libftdi.so:devel/libftdi \

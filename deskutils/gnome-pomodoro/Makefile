@@ -1,29 +1,25 @@
 PORTNAME=	gnome-pomodoro
-PORTVERSION=	0.20.0
+PORTVERSION=	0.23.1
 CATEGORIES=	deskutils gnome
 
 MAINTAINER=	tagattie@FreeBSD.org
 COMMENT=	Time management utility for GNOME
+WWW=		https://gnomepomodoro.org
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-BUILD_DEPENDS=	appstream-util:devel/appstream-glib \
-		valac:lang/vala
+BUILD_DEPENDS=	appstream-util:devel/appstream-glib
 LIB_DEPENDS=	libcanberra.so:audio/libcanberra \
 		libgom-1.0.so:databases/gom \
 		libpeas-1.0.so:devel/libpeas
 
-USES=		desktop-file-utils gettext-tools gmake gnome libtool meson \
-		pkgconfig sqlite
+USES=		gettext-tools gmake gnome gstreamer libtool meson pkgconfig \
+		sqlite vala:build
 
 USE_GITHUB=	yes
 
-# clang fails to compile a C source (gnome-shell-extension.c) generated
-# from vala source. USE_GCC=yes is a temporary workaround to this issue.
-USE_GCC=	yes
 USE_GNOME=	cairo glib20 gtk30 introspection
-USE_GSTREAMER1=	yes
 
 GLIB_SCHEMAS=	org.gnome.pomodoro.gschema.xml \
 		org.gnome.pomodoro.plugins.actions.gschema.xml \

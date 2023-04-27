@@ -1,11 +1,12 @@
 PORTNAME?=	arcanist
-PORTVERSION?=	20210113
-PORTREVISION?=  1
+PORTVERSION?=	20220518
+PORTREVISION?=	4
 CATEGORIES?=	devel
 PKGNAMESUFFIX=	${SLAVE_PKGNAMESUFFIX}${PHP_PKGNAMESUFFIX}
 
 MAINTAINER=	grembo@FreeBSD.org
 COMMENT?=	Libraries for the command line interface for Phabricator
+WWW?=		https://secure.phabricator.com/book/arcanist/
 
 SLAVEPORT?=	lib
 
@@ -25,13 +26,13 @@ SHEBANG_FILES=	bin/arc \
 		support/xhpast/*.php \
 		support/xhpast/bin/*.php
 
-USE_PHP=	curl dom hash json simplexml zlib
+USE_PHP=	curl dom simplexml zlib
 USE_GITHUB=	yes
 NO_BUILD=	yes
 NO_ARCH=	yes
 PORTSCOUT=	ignore:1
 GH_ACCOUNT=	phacility
-GH_TAGNAME=	b2e715f
+GH_TAGNAME=	85c953e
 PLIST=		${.CURDIR}/pkg-plist
 
 .if ${SLAVEPORT} == lib
@@ -48,7 +49,7 @@ ENCODINGS_USE=	PHP=mbstring
 
 RUN_DEPENDS=	arcanist-lib${PHP_PKGNAMESUFFIX}>0:devel/arcanist-lib@${PHP_FLAVOR}
 
-CONFLICTS=	arc
+CONFLICTS=	arc arcanist-php??
 
 PLIST_FILES=	bin/arc
 

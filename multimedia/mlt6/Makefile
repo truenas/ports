@@ -1,6 +1,6 @@
 PORTNAME=		${_MLT_PORTNAME}
 DISTVERSION=		${_MLT_VERSION}
-PORTREVISION?=		4
+PORTREVISION?=	10
 CATEGORIES?=		multimedia
 # Don't use GitHub "fake" downloads that are auto-generated from a
 # tag; the project uploads tarballs for each release.
@@ -11,9 +11,12 @@ WRKSRC=			${WRKDIR}/mlt-${DISTVERSION}
 
 MAINTAINER=		kde@FreeBSD.org
 COMMENT?=		Multimedia framework for TV broadcasting
+WWW=		https://www.mltframework.org/
 
 LICENSE?=		GPLv2 GPLv3 LGPL21
 LICENSE_COMB?=		multi
+
+BROKEN=			fails to build with FFmpeg 6 (PR 270293)
 
 USES+=			alias cmake compiler:c++11-lang eigen:3 localbase pkgconfig
 
@@ -162,7 +165,7 @@ pre-configure:
 		${WRKSRC}/src/modules/jackrack/plugin_mgr.c
 
 common-post-install:
-	${INSTALL_MAN} ${WRKSRC}/docs/melt.1 ${STAGEDIR}${MANPREFIX}/man/man1/melt.1
+	${INSTALL_MAN} ${WRKSRC}/docs/melt.1 ${STAGEDIR}${MANPREFIX}/share/man/man1/melt.1
 	@${RM} ${WRKSRC}/docs/melt.1
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/melt
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/libmlt.so.${PORTVERSION}

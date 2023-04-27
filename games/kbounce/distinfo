@@ -1,3 +1,3 @@
-TIMESTAMP = 1638570962
-SHA256 (KDE/release-service/21.12.0/kbounce-21.12.0.tar.xz) = db01764cabe0de588550ec1889726b34ded93f1013335157b60b07ca06b063e1
-SIZE (KDE/release-service/21.12.0/kbounce-21.12.0.tar.xz) = 3527528
+TIMESTAMP = 1681548397
+SHA256 (KDE/release-service/23.04.0/kbounce-23.04.0.tar.xz) = 99fb3489c98bfce08fbcfc31b27064486b7c52f3c7ba57ffaf21bcb5c8b1bf55
+SIZE (KDE/release-service/23.04.0/kbounce-23.04.0.tar.xz) = 3544448

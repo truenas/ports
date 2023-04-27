@@ -1,11 +1,12 @@
 PORTNAME=	alglib
-DISTVERSION=	3.18.0
+DISTVERSION=	3.20.0
 CATEGORIES=	math science
 MASTER_SITES=	https://www.alglib.net/translator/re/
 EXTRACT_SUFX=	.cpp.gpl.zip
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Numerical analysis and data processing library
+WWW=		https://www.alglib.net/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/gpl3.txt

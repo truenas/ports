@@ -9,11 +9,13 @@ DISTVERSIONPREFIX=	v
 #   intentional
 #
 # PORTVERSION=	1.0.01.1
-DISTVERSION=	1.0.02
+DISTVERSION=	1.0.03
+PORTREVISION=	1
 CATEGORIES=	www
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	Browser based on Qt 5
+WWW=		https://otter-browser.org/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -23,7 +25,7 @@ LIB_DEPENDS=	libhunspell-1.7.so:textproc/hunspell
 USES=		cmake compiler:c++11-lib desktop-file-utils qt:5
 USE_QT=		concurrent core dbus declarative gui multimedia network printsupport \
 		script sql sql-sqlite3 svg widgets xmlpatterns \
-		buildtools_build qmake_build
+		buildtools:build qmake:build
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	OtterBrowser
@@ -43,12 +45,5 @@ QTWEBENGINE_CMAKE_BOOL=	ENABLE_QTWEBENGINE
 
 QTWEBKIT_USE=		qt=webkit
 QTWEBKIT_CMAKE_BOOL=	ENABLE_QTWEBKIT
-
-.include <bsd.port.options.mk>
-
-.if ${PORT_OPTIONS:MQTWEBENGINE}
-DEPRECATED=	Uses EOL Python 2.7 via www/qt5-webengine
-EXPIRATION_DATE=2021-06-23
-.endif
 
 .include <bsd.port.mk>

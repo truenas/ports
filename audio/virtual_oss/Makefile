@@ -1,18 +1,18 @@
-# Created by: Hans Petter Selasky <hselasky@FreeBSD.org>
-
 PORTNAME=	virtual_oss
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.2.15
+DISTVERSION=	1.3.0
+PORTREVISION=	2
 CATEGORIES=	audio
 
 MAINTAINER=	hselasky@FreeBSD.org
 COMMENT=	Virtual OSS multi device mixer application
+WWW=		https://github.com/hselasky/virtual_oss
 
 LICENSE=	BSD2CLAUSE
 
 LIB_DEPENDS=	libsamplerate.so:audio/libsamplerate
 
-USES=		tar:bzip2 uidfix
+USES=		uidfix
 USE_RC_SUBR=	virtual_oss
 
 USE_GITHUB=	yes
@@ -20,7 +20,7 @@ GH_ACCOUNT=	hselasky
 
 SUB_LIST+=	LIBSAMPLERATE="${LOCALBASE}/lib/libsamplerate.so:"
 
-OPTIONS_DEFINE=	BLUETOOTH BT_SPEAKER COMMAND DEBUG EQUALIZER HTTPD
+OPTIONS_DEFINE=	BLUETOOTH BT_SPEAKER COMMAND DEBUG EQUALIZER HTTPD SNDIO
 OPTIONS_DEFAULT=BLUETOOTH COMMAND EQUALIZER
 
 .if exists(/usr/include/sys/sndstat.h)
@@ -52,6 +52,10 @@ EQUALIZER_SUB_LIST_OFF=	LIBFFTW3=""
 
 HTTPD_DESC=		Build with HTTP server support
 HTTPD_MAKE_ARGS=	HAVE_HTTPD="YES"
+
+SNDIO_DESC=		Build with sndio(7) backend support
+SNDIO_LIB_DEPENDS=	libsndio.so:audio/sndio
+SNDIO_MAKE_ARGS=	HAVE_SNDIO="YES"
 
 PLIST_FILES=	sbin/virtual_oss \
 		man/man8/virtual_oss.8.gz

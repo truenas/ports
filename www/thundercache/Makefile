@@ -1,6 +1,6 @@
 PORTNAME=	thundercache
 PORTVERSION=	6.1
-PORTREVISION=	15
+PORTREVISION=	16
 CATEGORIES=	www
 MASTER_SITES=	http://www.thundercache.com.br/dist/ \
 		http://www.bmsoftware.org/packs/ \
@@ -11,6 +11,7 @@ DISTNAME=	thundercache-6.1.201104260900-${BITS}-fbsd
 
 MAINTAINER=	eksffa@freebsdbrasil.com.br
 COMMENT=	High-performance and high-efficiency caching proxy system
+WWW=		https://www.bmsoftware.org
 
 LICENSE=	commercial
 LICENSE_NAME=	commercial
@@ -40,7 +41,7 @@ BITS=		${ARCH:S/amd64/64/:S/x86_64/64/:S/i386/32/}bits
 WRKSRC=		${WRKDIR}/thunder
 
 .if ${PORT_OPTIONS:MAPACHE}
-USES+=		apache:run,2.2+
+USES+=		apache:run
 .endif
 
 .if ${PORT_OPTIONS:MPGSQL}
@@ -49,7 +50,7 @@ WANT_PGSQL=	server
 .endif
 
 .if ${PORT_OPTIONS:MPHP}
-USE_PHP+=	curl pcre bcmath pdo mcrypt hash session
+USE_PHP+=	curl bcmath pdo mcrypt session
 .  if ${PORT_OPTIONS:MPGSQL}
 USE_PHP+=	pdo_pgsql pgsql
 .  endif

@@ -1,12 +1,12 @@
-# Created by: Zhihao Yuan <lichray@gmail.com>
-
 PORTNAME=	stjerm
 PORTVERSION=	0.18
 DISTVERSIONPREFIX=	v
+PORTREVISION=	1
 CATEGORIES=	x11
 
 MAINTAINER=	lichray@gmail.com
 COMMENT=	GTK+-based quake-like terminal emulator
+WWW=		https://github.com/stjerm/stjerm
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -9,11 +9,14 @@ DIST_SUBDIR=	${PORTNAME}-${PORTVERSION}
 
 MAINTAINER=	tz@FreeBSD.org
 COMMENT=	Deployment tool for PHP
+WWW=		https://deployer.org/
 
 LICENSE=	MIT
 
 USES=		php:flavors
-USE_PHP=	curl iconv json openssl pcntl phar posix zlib
+USE_PHP=	curl iconv pcntl phar posix zlib
+
+CONFLICTS_INSTALL=	php*-deployer
 
 NO_ARCH=	yes
 NO_BUILD=	yes

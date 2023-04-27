@@ -1,11 +1,12 @@
 PORTNAME=	coyim
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.3.11
-PORTREVISION=	4
+PORTREVISION=	17
 CATEGORIES=	net-im
 
 MAINTAINER=	fox@FreeBSD.org
 COMMENT=	Safe and secure by default chat client
+WWW=		https://coy.im
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE

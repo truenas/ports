@@ -1,5 +1,3 @@
-# Created by: Juergen Lock <nox@FreeBSD.org>
-
 PORTNAME=	vdr-plugin-femon
 PORTVERSION=	1.7.17
 PORTREVISION=	5
@@ -9,6 +7,7 @@ DISTNAME=	${PORTNAME:S/-plugin-/-/}-${DISTVERSIONPREFIX}${DISTVERSION}${DISTVERS
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Video Disk Recorder - frontend monitor plugin
+WWW=		http://www.saunalahti.fi/~rahrenbe/vdr/femon/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

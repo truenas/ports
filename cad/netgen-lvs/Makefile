@@ -1,10 +1,11 @@
 PORTNAME=	netgen
-DISTVERSION=	1.5.210
+DISTVERSION=	1.5.250
 CATEGORIES=	cad
 PKGNAMESUFFIX=	-lvs
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Tool for comparing netlists (a process known as LVS)
+WWW=		http://opencircuitdesign.com/netgen/
 
 LICENSE=	GPLv1
 LICENSE_FILE=	${WRKSRC}/Copying
@@ -22,6 +23,8 @@ SHEBANG_FILES=	tcltk/netgen.sh.in
 GNU_CONFIGURE=	yes
 CONFIGURE_ENV=	HAVE_PYTHON3=yes
 CONFIGURE_ARGS=	--with-interpreter=tcl --with-tcl=${LOCALBASE}/lib/tcl8.6 --with-tk=${LOCALBASE}/lib/tk8.6 --with-x
+
+CONFLICTS_INSTALL=	netgen # bin/netgen
 
 post-patch:
 	@${REINPLACE_CMD} -e 's|^#!/bin/env python3$$|#!${PYTHON_CMD}|' \

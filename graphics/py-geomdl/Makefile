@@ -1,11 +1,13 @@
 PORTNAME=	geomdl
 PORTVERSION=	5.2.10
+PORTREVISION=	1
 CATEGORIES=	graphics python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	lbartoletti@FreeBSD.org
 COMMENT=	Object-oriented pure Python B-Spline and NURBS library
+WWW=		https://onurraufbingol.com/NURBS-Python/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

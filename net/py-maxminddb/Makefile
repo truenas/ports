@@ -1,23 +1,24 @@
-# Created by: Olivier Cochard-Labbé <olivier@FreeBSD.org>
-
 PORTNAME=	maxminddb
-PORTVERSION=	2.0.3
+PORTVERSION=	2.2.0
 DISTVERSIONPREFIX=	v
+PORTREVISION=	1
 CATEGORIES=	net python geography
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	olivier@FreeBSD.org
 COMMENT=	Python module for reading MaxMind DB file
+WWW=		https://github.com/maxmind/MaxMind-DB-Reader-python
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 LIB_DEPENDS=	libmaxminddb.so:net/libmaxminddb
 
-USES=		compiler:c11 localbase python:3.6+
+USES=		compiler:c11 localbase python:3.7+
 USE_GITHUB=	yes
 GH_ACCOUNT=	maxmind
 GH_PROJECT=	MaxMind-DB-Reader-python
+GH_TAGNAME=	d8accfe
 
 USE_PYTHON=	autoplist distutils
 

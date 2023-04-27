@@ -1,13 +1,12 @@
-# Created by: Thomas Gellekum <tg@FreeBSD.org>
-
 PORTNAME=	gnustep-base
 DISTVERSIONPREFIX=	base-
 DISTVERSION=	1_27_0
-PORTREVISION=	2
+PORTREVISION=	8
 CATEGORIES=	lang devel gnustep
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	GNUstep Foundation library
+WWW=		http://www.gnustep.org/
 
 LICENSE=	GPLv3 LGPL3
 LICENSE_COMB=	multi

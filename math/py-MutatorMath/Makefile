@@ -2,11 +2,12 @@ PORTNAME=	MutatorMath
 PORTVERSION=	2.1.2
 PORTREVISION=	1
 CATEGORIES=	math python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	lantw44@gmail.com
 COMMENT=	Piecewise linear interpolation in multiple dimensions
+WWW=		https://github.com/LettError/MutatorMath
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

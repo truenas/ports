@@ -1,10 +1,11 @@
 PORTNAME=	mio2jack
 PORTVERSION=	g20180501
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	audio
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Expose Sndio MIDI ports to JACK
+WWW=		https://github.com/martingms/mio2jack
 
 LICENSE=	ISCL
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

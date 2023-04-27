@@ -1,5 +1,3 @@
-# Created by: Janos Mohacsi <janos.mohacsi@bsd.hu>
-
 PORTNAME=	softflowd
 PORTVERSION=	1.0.0
 DISTVERSIONPREFIX=	softflowd-
@@ -7,6 +5,7 @@ CATEGORIES=	net-mgmt
 
 MAINTAINER=	jmohacsi@bsd.hu
 COMMENT=	Flow-based network traffic analyzer and exporter
+WWW=		http://www.mindrot.org/softflowd.html
 
 LICENSE=	BSD2CLAUSE
 

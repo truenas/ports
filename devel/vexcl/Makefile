@@ -1,9 +1,11 @@
 PORTNAME=	vexcl
 DISTVERSION=	1.4.3
+PORTREVISION=	1
 CATEGORIES=	devel
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	C++ vector expression template library for OpenCL/CUDA
+WWW=		https://github.com/ddemidov/vexcl
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.md
@@ -15,6 +17,9 @@ BUILD_DEPENDS=	${HPP_DEPENDS} \
 RUN_DEPENDS=	${HPP_DEPENDS}
 
 USES=		cmake:testing localbase:ldflags
+.if !exists(/usr/include/omp.h)
+USES+=		compiler:gcc-c++11-lib
+.endif
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	ddemidov

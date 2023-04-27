@@ -1,12 +1,14 @@
 PORTNAME=	nxengine
 DISTVERSION=	2.6.5-1
 DISTVERSIONPREFIX=	v
+PORTREVISION=	1
 CATEGORIES=	games
 MASTER_SITES+=	https://www.cavestory.org/downloads/:data
 DISTFILES+=	cavestoryen.zip:data
 
 MAINTAINER=	pkubaj@FreeBSD.org
 COMMENT=	Engine-rewrite of the classic platformer Cave Story
+WWW=		https://github.com/nxengine/nxengine-evo
 
 LICENSE=	GPLv3 FREEWARE
 LICENSE_COMB=	multi

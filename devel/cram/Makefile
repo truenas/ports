@@ -1,13 +1,12 @@
-# Created by: Conrad Meyer <cem@FreeBSD.org>
-
 PORTNAME=	cram
 PORTVERSION=	0.7
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	cem@FreeBSD.org
 COMMENT=	Simple testing framework for command line applications
+WWW=		https://pypi.org/project/cram/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING.txt

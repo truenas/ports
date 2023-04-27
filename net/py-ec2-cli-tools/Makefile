@@ -1,14 +1,13 @@
-# Created by: Steve Wills <swills@FreeBSD.org>
-
 PORTNAME=	ec2-cli-tools
 PORTVERSION=	1.5
 PORTREVISION=	1
 CATEGORIES=	net python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	swills@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Helpful CLI utilities for querying and connecting to EC2 instances
+WWW=		https://github.com/FlipPath/ec2-cli-tools
 
 LICENSE=	MIT
 

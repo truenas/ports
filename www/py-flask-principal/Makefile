@@ -1,13 +1,12 @@
-# Created by: Kyle Evans <kevans@FreeBSD.org>
-
 PORTNAME=	Flask-Principal
 PORTVERSION=	0.4.0
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	kevans@FreeBSD.org
 COMMENT=	Identity management for flask
+WWW=		https://packages.python.org/Flask-Principal/
 
 LICENSE=	MIT
 

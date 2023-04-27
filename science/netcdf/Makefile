@@ -1,15 +1,14 @@
-# Created by: Sunpoet Po-Chuan Hsieh <sunpoet@sunpoet.net>
-
 PORTNAME=	netcdf
-PORTVERSION=	4.7.4
+PORTVERSION=	4.9.0
 DISTVERSIONPREFIX=	c-
+PORTREVISION=	3
 CATEGORIES=	science
-MASTER_SITES=	https://www.unidata.ucar.edu/downloads/netcdf/ftp/ \
-		ftp://ftp.unidata.ucar.edu/pub/netcdf/ \
+MASTER_SITES=	https://downloads.unidata.ucar.edu/netcdf-c/${PORTVERSION}/ \
 		LOCAL/sunpoet
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	C library for machine-independent, array-oriented data access
+WWW=		https://www.unidata.ucar.edu/software/netcdf/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYRIGHT
@@ -19,11 +18,12 @@ LIB_DEPENDS=	libcurl.so:ftp/curl \
 
 USES=		gmake libtool localbase ncurses pathfix pkgconfig:run
 
-CONFIGURE_ARGS=	--disable-filter-testing \
+CONFIGURE_ARGS=	--disable-filter-testing --disable-libxml2 \
 		--enable-byterange --enable-dap --enable-netcdf-4
 CPPFLAGS+=	-fPIC -DPIC
 GNU_CONFIGURE=	yes
 INSTALL_TARGET=	install-strip
+LIBS+=		-lexecinfo
 TEST_TARGET=	check
 USE_LDCONFIG=	yes
 
@@ -37,7 +37,7 @@ SZIP_DESC=	SZIP support (required if HDF5 was built with SZIP)
 
 DOXYGEN_BUILD_DEPENDS=	doxygen:devel/doxygen
 DOXYGEN_CONFIGURE_ENABLE=	doxygen
-SZIP_LIB_DEPENDS=	libsz.so:science/szip
+SZIP_LIB_DEPENDS=	libsz.so:science/libaec
 SZIP_LIBS=		-lsz
 
 post-patch:

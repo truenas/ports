@@ -1,5 +1,3 @@
-# Created by: Pedro Giffuni <giffunip@asme.org>
-
 PORTNAME=	yorick
 DISTVERSIONPREFIX=	y_
 DISTVERSION=	2_2_04
@@ -8,6 +6,7 @@ CATEGORIES=	lang math
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Interpreted language for scientific simulations
+WWW=		http://yorick.sourceforge.net/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.md
@@ -18,6 +17,8 @@ MAKE_ARGS=	Y_HOME=relocatable Y_DOCDIR=/dev/null
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	dhmunro
+
+CONFLICTS_INSTALL=	gist p5-App-gist py*-python-gist # bin/gist
 
 INFO=		yorick
 PORTDOCS=	FILE_FORMATS README drat.doc graph.doc hex.doc \

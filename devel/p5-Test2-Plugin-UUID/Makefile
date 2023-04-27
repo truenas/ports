@@ -1,5 +1,3 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	Test2-Plugin-UUID
 PORTVERSION=	0.002001
 PORTREVISION=	1
@@ -10,6 +8,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Use REAL UUIDs in Test2
+WWW=		https://metacpan.org/release/Test2-Plugin-UUID
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual
@@ -24,10 +23,4 @@ USE_PERL5=	configure
 
 NO_ARCH=	yes
 
-.include <bsd.port.pre.mk>
-
-.if ${PERL_LEVEL} < 503200
-RUN_DEPENDS+=	p5-Test-Simple>=1.302165:devel/p5-Test-Simple
-.endif
-
-.include <bsd.port.post.mk>
+.include <bsd.port.mk>

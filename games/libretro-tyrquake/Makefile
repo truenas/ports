@@ -1,10 +1,11 @@
 PORTNAME=	libretro-tyrquake
-PORTVERSION=	0.20210214
+PORTVERSION=	0.20220401
 PORTREVISION=	1
 CATEGORIES=	games
 
-MAINTAINER=	menelkir@itroll.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Libretro port of Tyrquake (Quake 1 engine)
+WWW=		https://github.com/libretro/tyrquake
 
 LICENSE=	GPLv2
 
@@ -15,7 +16,7 @@ USE_GL=		gl
 USE_GITHUB=	yes
 GH_ACCOUNT=	libretro
 GH_PROJECT=	tyrquake
-GH_TAGNAME=	e76477d
+GH_TAGNAME=	c2b8ea0
 
 PLIST_FILES=	lib/libretro/tyrquake_libretro.so
 

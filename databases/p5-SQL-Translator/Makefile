@@ -1,13 +1,12 @@
-# Created by: Lars Thegler <lars@thegler.dk>
-
 PORTNAME=	SQL-Translator
-PORTVERSION=	1.62
+PORTVERSION=	1.63
 CATEGORIES=	databases perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Manipulate structured data definitions (SQL and more)
+WWW=		https://metacpan.org/release/SQL-Translator
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

@@ -1,5 +1,3 @@
-# Created by: Hyogeol Lee <hyogeollee@gmail.com>
-
 PORTNAME=	ko.TeX
 PORTVERSION=	0.1.1.20080329
 PORTREVISION=	5
@@ -9,10 +7,11 @@ DISTNAME=	ko.tex-macro-20080329
 
 MAINTAINER=	hyogeollee@gmail.com
 COMMENT=	Korean TeX macro and utilities
+WWW=		http://project.ktug.or.kr/ko.TeX/
 
 RUN_DEPENDS=	${BASE_MAP}:korean/ko.TeX-fonts-base
 
-USES=		shebangfix
+USES=		shebangfix tex
 SHEBANG_FILES=	util/*.pl
 USE_TEX=	latex
 CONFLICTS=	hlatex

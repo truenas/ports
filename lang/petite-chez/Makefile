@@ -1,5 +1,3 @@
-# Created by: Vitaly Magerya <vmagerya@gmail.com>
-
 PORTNAME=	petite-chez
 PORTVERSION=	8.4
 PORTREVISION=	1
@@ -10,6 +8,7 @@ DISTNAME=	pcsv${PORTVERSION}-${CHEZ_MACHTYPE}
 
 MAINTAINER=	vmagerya@gmail.com
 COMMENT=	Free interpreter for Chez Scheme system
+WWW=		https://www.scheme.com/petitechezscheme.html
 
 # Both install bin/scheme-script
 CONFLICTS=	ikarus

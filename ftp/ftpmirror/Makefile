@@ -1,13 +1,15 @@
-# Created by: Yasuhiro Fukuma <yasuf@big.or.jp>
-
 PORTNAME=	ftpmirror
 PORTVERSION=	1.96
 PORTREVISION=	5
 CATEGORIES=	ftp
 MASTER_SITES=	ftp://ftp.sai.msu.su/pub/unix/FTP/mirror/
 
-MAINTAINER=	garga@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Utility to mirror directory hierarchy with FTP
+
+DEPRECATED=	Abandonware
+EXPIRATION_DATE=2023-05-31
+BROKEN=		Do not build
 
 LICENSE=	BSD2CLAUSE
 

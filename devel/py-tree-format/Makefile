@@ -1,11 +1,12 @@
 PORTNAME=	tree-format
 PORTVERSION=	0.1.2
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	matthew@FreeBSD.org
 COMMENT=	Generate nicely formatted trees
+WWW=		https://pypi.org/project/tree-format/
 
 LICENSE=	APACHE20
 

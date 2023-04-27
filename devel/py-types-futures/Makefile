@@ -1,11 +1,12 @@
 PORTNAME=	types-futures
-PORTVERSION=	3.3.1
+PORTVERSION=	3.3.8
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Typing stubs for futures
+WWW=		https://pypi.org/project/types-futures/
 
 LICENSE=	APACHE20
 

@@ -1,10 +1,12 @@
 PORTNAME=	janus
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.11.5
+DISTVERSION=	1.1.3
+PORTREVISION=	1
 CATEGORIES=	www
 
 MAINTAINER=	vanilla@FreeBSD.org
 COMMENT=	WebRTC gateway
+WWW=		https://github.com/meetecho/janus-gateway
 
 LICENSE=	GPLv3
 
@@ -32,7 +34,8 @@ USE_RC_SUBR=		janus
 CONFIGURE_ARGS+=	--disable-mqtt \
 			--disable-rabbitmq \
 			--enable-data-channels \
-			--enable-json-logger
+			--enable-json-logger \
+			--libdir=${PREFIX}/libexec
 INSTALL_TARGET=		install-strip
 CFLAGS+=		-I${OPENSSLINC} -I${LOCALBASE}/include/nice
 LDFLAGS+=		-L${OPENSSLLIB} -lcrypto -lssl -L${LOCALBASE} -lnice

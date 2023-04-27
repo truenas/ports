@@ -1,13 +1,12 @@
-# Created by: Massimiliano Stucchi <mstucchi@ripe.net>
-
 PORTNAME=	ripe.atlas.tools
 PORTVERSION=	2.3.0
 CATEGORIES=	net python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	mstucchi@ripe.net
 COMMENT=	Official command-line client for RIPE Atlas
+WWW=		https://github.com/RIPE-NCC/ripe-atlas-tools
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -23,5 +22,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}dateutil>0:devel/py-dateutil@${PY_FLAVOR} \
 USES=		python:3.6+
 USE_PYTHON=	autoplist distutils
 NO_ARCH=	yes
+
+CONFLICTS_INSTALL=	c-ares # bin/adig
 
 .include <bsd.port.mk>

@@ -1,13 +1,15 @@
 PORTNAME=	pyked
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.4.1-16
+PORTREVISION=	1
 DISTVERSIONSUFFIX=	-gfcccaf8
 CATEGORIES=	science python
-#MASTER_SITES=	CHEESESHOP 0.4.1 is broken there
+#MASTER_SITES=	PYPI 0.4.1 is broken there
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Package for manipulating Chemical Kinetics Experimental Data files
+WWW=		https://pr-omethe-us.github.io/PyKED/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -19,7 +21,7 @@ RUN_DEPENDS=	${PYNUMPY} \
 		${PYTHON_PKGNAMEPREFIX}uncertainties>=3.0.1:math/py-uncertainties@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}yaml>=3.12:devel/py-yaml@${PY_FLAVOR} \
 
-USES=		python:3.7+
+USES=		python:3.8+
 USE_PYTHON=	distutils concurrent autoplist
 
 USE_GITHUB=	yes

@@ -1,13 +1,12 @@
-# Created by: Jose Alonso Cardenas Marquez <acardenas@bsd.org.pe>
-
 PORTNAME=	redeclipse
 PORTVERSION=	2.0.0
 DISTVERSIONPREFIX=	v
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	games
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Single-player and multi-player first-person ego-shooter
+WWW=		https://www.redeclipse.net/
 
 LICENSE=	MIT ZLIB
 LICENSE_COMB=	multi

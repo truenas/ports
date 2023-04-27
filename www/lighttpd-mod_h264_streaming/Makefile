@@ -1,11 +1,10 @@
-# Created by: Martin Matuska <mm@FreeBSD.org>
-
 PORTNAME=	mod_h264_streaming
 CATEGORIES=	www multimedia
 PKGNAMEPREFIX=	lighttpd-
 DISTNAME=	lighttpd-${PORTVERSION}
 
 COMMENT=	H264 streaming module for lighttpd
+WWW=		http://h264.code-shop.com/trac/wiki/Mod-H264-Streaming-Lighttpd-Version2
 
 LICENSE=	CC-BY-NC-SA-3.0
 LICENSE_FILE=	${FILESDIR}/COPYING.mod_h264_streaming

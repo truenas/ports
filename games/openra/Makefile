@@ -1,7 +1,7 @@
 PORTNAME=	openra
 DISTVERSIONPREFIX=	release-
 DISTVERSION=	20200503
-PORTREVISION=	1
+PORTREVISION=	3
 CATEGORIES=	games
 MASTER_SITES=	https://download.ip2location.com/lite/:ip2location
 DISTFILES=	IP2LOCATION-LITE-DB1.IPV6.BIN.ZIP:ip2location
@@ -12,6 +12,7 @@ PATCHFILES+=	85096c4ba2fb.patch:-p1 # https://github.com/OpenRA/OpenRA/pull/1774
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Multiplayer re-envisioning of early RTS games by Westwood Studios
+WWW=		https://www.openra.net/
 
 LICENSE=	GPLv3
 

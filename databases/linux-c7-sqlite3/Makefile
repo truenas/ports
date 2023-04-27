@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	sqlite
 PORTVERSION=	3.7.17
 DISTVERSIONSUFFIX=	-8.el7_7.1
@@ -8,6 +6,7 @@ CATEGORIES=	databases linux
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	Library that implements an embeddable SQL database engine (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://www.sqlite.org/
 
 LICENSE=	PD
 

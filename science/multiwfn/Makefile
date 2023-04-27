@@ -1,12 +1,13 @@
 PORTNAME=	multiwfn
 DISTVERSIONPREFIX=	v
 DISTVERSION=	3.4.1-0-14
-PORTREVISION=	5
+PORTREVISION=	6
 DISTVERSIONSUFFIX=	-ge873677
 CATEGORIES=	science
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Multifunctional wavefunction analysis for quantum chemistry
+WWW=		http://sobereva.com/multiwfn/index.html
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE

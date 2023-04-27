@@ -1,13 +1,13 @@
-# Created by: Mark Felder <feld@FreeBSD.org>
-
 PORTNAME=	munkres
 PORTVERSION=	1.1.4
 CATEGORIES=	math python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Munkres implementation for Python
+WWW=		https://software.clapper.org/munkres/ \
+		https://github.com/bmc/munkres
 
 LICENSE=	APACHE20
 

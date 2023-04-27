@@ -1,12 +1,11 @@
-# Created by: Timothy Redaelli
-
 PORTNAME=	pax-utils
-PORTVERSION=	1.3.2
+PORTVERSION=	1.3.4
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 
 MAINTAINER=	sbz@FreeBSD.org
 COMMENT=	Various ELF related utils for ELF32, ELF64 binaries
+WWW=		https://www.gentoo.org/proj/en/hardened/pax-utils.xml
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

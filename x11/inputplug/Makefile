@@ -1,10 +1,11 @@
 PORTNAME=	inputplug
 DISTVERSION=	0.4.0
-PORTREVISION=	2
+PORTREVISION=	16
 CATEGORIES=	x11
 
 MAINTAINER=	0mp@FreeBSD.org
 COMMENT=	XInput event monitor daemon
+WWW=		https://github.com/andrewshadura/inputplug
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

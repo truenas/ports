@@ -1,16 +1,15 @@
-# Created by: Dan Langille <dvl@FreeBSD.org>
-
 PORTNAME=	cheetah
 DISTVERSION=	3.2.6
 PORTREVISION=	1
 CATEGORIES=	devel textproc www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 PKGNAMESUFFIX=	3
 DISTNAME=	Cheetah3-${DISTVERSION}
 
 MAINTAINER=	FreeBSD@ShaneWare.Biz
 COMMENT=	HTML template engine for Python
+WWW=		https://cheetahtemplate.org/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

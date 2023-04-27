@@ -1,10 +1,12 @@
 PORTNAME=	esteidfirefoxplugin
 PORTVERSION=	3.8.0.1115
+PORTREVISION=	1
 CATEGORIES=	security
 MASTER_SITES=	https://installer.id.ee/media/sources/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Digital signing with Estonian ID card in Firefox
+WWW=		https://www.id.ee/
 
 LICENSE=	LGPL21
 

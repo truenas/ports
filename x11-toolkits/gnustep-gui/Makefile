@@ -1,13 +1,12 @@
-# Created by: Thomas Gellekum <tg@FreeBSD.org>
-
 PORTNAME=	gnustep-gui
 DISTVERSIONPREFIX=	gui-
 DISTVERSION=	0_28_0
-PORTREVISION=	2
+PORTREVISION=	6
 CATEGORIES=	x11-toolkits gnustep
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	GNUstep GUI library
+WWW=		http://www.gnustep.org/
 
 LICENSE=	GPLv3 LGPL3
 LICENSE_COMB=	multi

@@ -1,14 +1,13 @@
-# Created by: elvstone@gmail.com
-
 PORTNAME=	sqlalchemy-migrate
 PORTVERSION=	0.13.0
 PORTREVISION=	1
 CATEGORIES=	databases python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	lwhsu@FreeBSD.org
 COMMENT=	Database schema migrations for SQLAlchemy
+WWW=		https://opendev.org/x/sqlalchemy-migrate
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,10 +1,11 @@
 PORTNAME=	scidavis
-PORTVERSION=	2.4.0
-PORTREVISION=	3
+PORTVERSION=	2.9.2
+PORTREVISION=	1
 CATEGORIES=	science
 
 MAINTAINER=	makc@FreeBSD.org
 COMMENT=	Scientific data analysis and visualization
+WWW=		http://scidavis.sourceforge.net
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -20,7 +21,7 @@ USES=		cmake compiler:c++17-lang desktop-file-utils gl pkgconfig \
 		qt:5 shared-mime-info
 USE_GL=		gl glu
 USE_QT=		core gui opengl printsupport svg widgets xml \
-		buildtools_build linguisttools_build qmake_build
+		buildtools:build linguisttools:build qmake:build
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	highperformancecoder
@@ -28,13 +29,15 @@ CMAKE_ON=	ORIGIN_IMPORT
 CMAKE_OFF=	DOWNLOAD_LINKS \
 		SEARCH_FOR_UPDATES
 
+PORTSCOUT=	skipv:qtiplot
+
 OPTIONS_DEFINE=	DOCS NLS PYTHON
 OPTIONS_DEFAULT=	PYTHON
 OPTIONS_SUB=	yes
 
 PYTHON_DESC=	Python scripting support
 PYTHON_USES=	pyqt:5 python:3.6+
-PYTHON_USE=	pyqt=core,gui,printsupport,sip,widgets
+PYTHON_USE=	PYQT=pyqt5 sip
 PYTHON_CMAKE_ON=	-DPython3_EXECUTABLE=${PYTHON_CMD} \
 			-DSCRIPTING_PYTHON=True
 PYTHON_CMAKE_OFF=	-DSCRIPTING_PYTHON=False

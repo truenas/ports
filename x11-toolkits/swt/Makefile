@@ -1,13 +1,13 @@
-# Created by: Robert C. Noland III <rnoland@FreeBSD.org>
-
 PORTNAME=	swt
-DISTVERSION=	4.20
+DISTVERSION=	4.21
+PORTREVISION=	1
 CATEGORIES=	x11-toolkits devel java
-MASTER_SITES=	http://archive.eclipse.org/eclipse/downloads/drops4/R-${DISTVERSION}-202106111600/
+MASTER_SITES=	http://archive.eclipse.org/eclipse/downloads/drops4/R-${DISTVERSION}-202109060500/
 DISTNAME=	${PORTNAME}-${DISTVERSION}-gtk-linux-x86_64
 
 MAINTAINER=	makc@FreeBSD.org
 COMMENT=	Standard Widget Toolkit for Java
+WWW=		https://www.eclipse.org/swt/
 
 LICENSE=	EPL
 
@@ -22,7 +22,7 @@ USE_JAVA=	yes
 USE_XORG=	xtst
 JAVA_OS=	native
 
-SWT_VERSION=	4944r26
+SWT_VERSION=	4946r21
 
 MAKEFILE=	make_freebsd.mak
 MAKE_ENV=	SWT_VERSION=${SWT_VERSION}
@@ -47,6 +47,7 @@ post-extract:
 	@(cd ${WRKSRC} && ${UNZIP_CMD} -qo "*.zip")
 	@${CP} ${FILESDIR}/build.xml ${WRKSRC}/build.xml
 	@${CP} ${WRKSRC}/make_linux.mak ${WRKSRC}/make_freebsd.mak
+	@${CP} ${FILESDIR}/*.css ${WRKSRC}/org/eclipse/swt/internal/gtk/
 
 post-patch:
 	${SED} -e 's|freebsd|dragonfly|g' ${WRKSRC}/make_freebsd.mak \

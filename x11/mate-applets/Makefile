@@ -1,11 +1,13 @@
 PORTNAME=	mate-applets
 PORTVERSION=	1.26.0
+PORTREVISION=	3
 CATEGORIES=	x11 mate
 MASTER_SITES=	MATE
 DIST_SUBDIR=	mate
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Applets components for the MATE Desktop Environment
+WWW=		https://mate-desktop.org/
 
 LICENSE=	GPLv2 GFDL
 LICENSE_COMB=	multi

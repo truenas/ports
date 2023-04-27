@@ -1,10 +1,12 @@
 PORTNAME=	subfinder
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2.4.9
+DISTVERSION=	2.5.7
+PORTREVISION=	1
 CATEGORIES=	dns
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Subdomain discovery tool that discovers valid subdomains for websites
+WWW=		https://github.com/projectdiscovery/subfinder
 
 LICENSE=	MIT
 

@@ -1,12 +1,11 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	libcbor
-PORTVERSION=	0.9.0
+PORTVERSION=	0.10.2
 DISTVERSIONPREFIX=	v
 CATEGORIES=	devel
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	CBOR protocol implementation for C and others
+WWW=		https://github.com/PJK/libcbor
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.md
@@ -22,8 +21,5 @@ PLIST_SUB=	PORTVERSION=${PORTVERSION}
 
 GH_ACCOUNT=	PJK
 USE_GITHUB=	yes
-
-post-patch:
-	@${REINPLACE_CMD} -e 's|-flto||; /subdirs(examples)/d' ${WRKSRC}/CMakeLists.txt
 
 .include <bsd.port.mk>

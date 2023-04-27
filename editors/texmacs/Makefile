@@ -1,5 +1,3 @@
-# Created by: Geoffrey Mainland <mainland@apeiron.net>
-
 PORTNAME=	texmacs
 PORTVERSION=	1.99.4
 PORTREVISION=	5
@@ -9,6 +7,7 @@ DISTNAME=	TeXmacs-${PORTVERSION}-src
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	WYSIWYG scientific text editor
+WWW=		https://www.texmacs.org/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -25,7 +24,7 @@ BROKEN_armv6=		fails to compile: call to min is ambiguous
 BROKEN_armv7=		fails to compile: call to min is ambiguous
 
 USES=		cpe desktop-file-utils gmake iconv localbase pkgconfig python \
-		shared-mime-info shebangfix xorg
+		shared-mime-info shebangfix tex xorg
 USE_TEX=	tex:run dvipsk:run
 USE_XORG=	xext
 GNU_CONFIGURE=	yes

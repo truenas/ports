@@ -1,7 +1,9 @@
-TIMESTAMP = 1634830083
-SHA256 (desktop-app-tg_owt-0.0.20211021-d578c76_GH0.tar.gz) = 6bd6f32979ceba9b6e6338331d16e772d1b194db5bf1993de894f674b39a1345
-SIZE (desktop-app-tg_owt-0.0.20211021-d578c76_GH0.tar.gz) = 16073998
-SHA256 (webmproject-libvpx-5b63f0f_GH0.tar.gz) = 4fdacb6ee107b504cb21b072784c649be9af6b6d73103906a0d9ea5f3000de74
-SIZE (webmproject-libvpx-5b63f0f_GH0.tar.gz) = 5333441
-SHA256 (HenryHu-libyuv-ad89006_GH0.tar.gz) = 96fc87a2c7051d289a9dcf31c4f8100e341dda3b5499e4bf6d82369f5d18416e
-SIZE (HenryHu-libyuv-ad89006_GH0.tar.gz) = 475161
+TIMESTAMP = 1682211535
+SHA256 (desktop-app-tg_owt-0.0.20230418-fe316b0_GH0.tar.gz) = fac71ecd94f1da462c81984d347b3edec595ec08faec03ed74b64891e5dca746
+SIZE (desktop-app-tg_owt-0.0.20230418-fe316b0_GH0.tar.gz) = 13816640
+SHA256 (abseil-abseil-cpp-8c0b94e_GH0.tar.gz) = e995f06ce4fd4a9641e6a8e5d8d2258710eef481a07307a3e727012f1a83c442
+SIZE (abseil-abseil-cpp-8c0b94e_GH0.tar.gz) = 1957422
+SHA256 (google-crc32c-21fc8ef_GH0.tar.gz) = 9cb6093f9a554f9fb8397ce9a1a07eec44f1ae0918d7816b60c7b14ef745e082
+SIZE (google-crc32c-21fc8ef_GH0.tar.gz) = 29818
+SHA256 (osokin-libyuv-0095084_GH0.tar.gz) = 3970c709003bbc3ab16dc852810b887f56bc21b7c82edf3a0f945051c3cc65af
+SIZE (osokin-libyuv-0095084_GH0.tar.gz) = 559675

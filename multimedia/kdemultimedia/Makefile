@@ -1,10 +1,11 @@
 PORTNAME=	kdemultimedia
 DISTVERSION=	${KDE_APPLICATIONS_VERSION}
-PORTREVISION=	1
+PORTREVISION=	3
 CATEGORIES=	multimedia kde
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	KDE Multimedia applications (meta port)
+WWW=		https://multimedia.kde.org
 
 USES=		kde:5 metaport qt:5
 USE_QT=		#

@@ -1,5 +1,3 @@
-# Created by: Mykola Dzham <i@levsha.me>
-
 PORTNAME=	pdsh
 PORTVERSION=	2.34
 DISTVERSIONPREFIX=	${PORTNAME}-
@@ -8,6 +6,7 @@ CATEGORIES=	sysutils
 
 MAINTAINER=	i@levsha.me
 COMMENT=	Parallel Distributed Shell
+WWW=		https://github.com/chaos/pdsh
 
 LICENSE=	GPLv2
 
@@ -17,6 +16,9 @@ USES=		autoreconf gmake libtool:keepla perl5 shebangfix
 USE_GITHUB=	yes
 GH_ACCOUNT=	chaos
 USE_PERL5=	run
+
+CONFLICTS_INSTALL=	clusterit # bin/dshbak
+
 SHEBANG_FILES=	scripts/dshbak
 INSTALL_TARGET=	install-strip
 TEST_TARGET=	check

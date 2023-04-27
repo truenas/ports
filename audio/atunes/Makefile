@@ -1,14 +1,13 @@
-# Created by: Lars Engels <lme@FreeBSD.org>
-
 PORTNAME=	atunes
 PORTVERSION=	3.1.2
-PORTREVISION=	4
+PORTREVISION=	5
 CATEGORIES=	audio java
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/aTunes%20${PORTVERSION}
 DISTNAME=	${PORTNAME}-${PORTVERSION}-bin
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Full-featured audio player and manager developed in Java
+WWW=		https://www.atunes.org/
 
 LICENSE=	GPLv2
 

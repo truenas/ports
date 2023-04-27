@@ -5,11 +5,11 @@ MASTER_SITES=	RG
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Gems for fluent plugin to read whole line into single key
+WWW=		https://github.com/yteraoka/fluent-plugin-tail-asis
 
 RUN_DEPENDS=	\
 	rubygem-fluentd>0:sysutils/rubygem-fluentd
 
-USE_RUBY=	yes
 USES=		gem
 
 .include <bsd.port.mk>

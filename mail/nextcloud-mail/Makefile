@@ -1,43 +1,19 @@
-# Created by: Bernard Spil <brnrd@freebsd.org>
-
 PORTNAME=	mail
-DISTVERSION=	1.11.1
+PORTVERSION=	3.1.1
 DISTVERSIONPREFIX=	v
 CATEGORIES=	mail
-MASTER_SITES=	https://github.com/nextcloud-releases/${PORTNAME}/releases/download/${DISTVERSIONPREFIX}${DISTVERSION}/
-PKGNAMEPREFIX=	nextcloud-
-PKGNAMESUFFIX=	${PHP_PKGNAMESUFFIX}
-DISTNAME=	${PORTNAME}
-DIST_SUBDIR=	nextcloud/${PORTNAME}-${PORTVERSION}
 
 MAINTAINER=	brnrd@FreeBSD.org
 COMMENT=	Mail app for Nextcloud
+WWW=		https://apps.nextcloud.com/apps/mail
 
-LICENSE=	AGPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-RUN_DEPENDS=	nextcloud${PHP_PKGNAMESUFFIX}>=20:www/nextcloud@${PHP_FLAVOR}
+NEXTCLOUD_RUN_DEPENDS=	26
 
-USES=		cpe gettext php:flavors
+USES=		cpe gettext nextcloud php:flavors
 USE_PHP=	imap
 
 CPE_VENDOR=	nextcloud
-
-NO_BUILD=	yes
-NO_ARCH=	yes
-
-NEXTCLOUD_USERNAME?=	${WWWOWN}
-NEXTCLOUD_GROUPNAME?=	${WWWGRP}
-
-PLIST_SUB=	NEXTCLOUD_USERNAME=${NEXTCLOUD_USERNAME} \
-		NEXTCLOUD_GROUPNAME=${NEXTCLOUD_GROUPNAME}
-
-WWWDIR=		${PREFIX}/www/nextcloud/apps-pkg/${PORTNAME}
-
-do-install:
-	${MKDIR} ${STAGEDIR}${WWWDIR}
-	(cd ${WRKSRC} && ${COPYTREE_SHARE} . ${STAGEDIR}${WWWDIR})
-	(cd ${WRKSRC}; ${FIND} . -not -type d) | ${SORT} | \
-		${SED} -e 's,^\.,${WWWDIR_REL},' >> ${TMPPLIST}
 
 .include <bsd.port.mk>

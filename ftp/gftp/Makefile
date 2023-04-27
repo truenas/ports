@@ -1,11 +1,11 @@
-# Created by: Damjan Marion <dmarion@open.hr>
-
 PORTNAME=	gftp
 PORTVERSION=	2.7.0b
+PORTREVISION=	1
 CATEGORIES=	ftp
 
 MAINTAINER=	oliver@FreeBSD.org
 COMMENT=	Free multithreaded GTK-based FTP and SFTP client
+WWW=		http://gftp.seul.org/
 
 LICENSE=	GPLv2
 

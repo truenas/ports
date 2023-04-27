@@ -1,7 +1,5 @@
-# Created by: Sergey Matveychuk <sem@FreeBSD.org>
-
 PORTNAME=	commons-net
-PORTVERSION=	3.8.0
+PORTVERSION=	3.9.0
 CATEGORIES=	net java
 MASTER_SITES=	APACHE_COMMONS_BINARIES
 PKGNAMEPREFIX=	apache-
@@ -9,6 +7,7 @@ DISTNAME=	${PORTNAME}-${PORTVERSION}-bin
 
 MAINTAINER=	nc@FreeBSD.org
 COMMENT=	Collection of network protocol implementations for Java
+WWW=		https://commons.apache.org/proper/commons-net/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

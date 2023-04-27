@@ -1,12 +1,12 @@
-# Created by: Travis Poppe <tlp@liquidx.org>
-
 PORTNAME=	wyrmgus
-PORTVERSION=	5.3.0
+PORTVERSION=	5.3.6
 DISTVERSIONPREFIX=	v
+PORTREVISION=	1
 CATEGORIES=	games devel
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Modified Stratagus engine for Wyrmsun
+WWW=		https://github.com/Andrettin/Wyrmgus
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -24,7 +24,7 @@ GH_PROJECT=	Wyrmgus
 USES=		cmake compiler:c++17-lang lua:51 pkgconfig sdl sqlite qt:5 xorg
 USE_QT=		core gui widgets multimedia location \
 		quickcontrols quickcontrols2 graphicaleffects \
-		qmake_build buildtools_build
+		qmake:build buildtools:build
 USE_XORG=	x11
 USE_SDL=	sdl2 mixer2
 CMAKE_ARGS=	-DGAMEDIR:STRING="bin" \

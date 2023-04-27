@@ -1,13 +1,12 @@
-# Created by: trasz <trasz@pin.if.uz.zgora.pl>
-
 PORTNAME=	libconvolve
 PORTVERSION=	0.0.8
-PORTREVISION=	7
+PORTREVISION=	8
 CATEGORIES=	audio
 MASTER_SITES=	SF/heaven/Audio%20Applications/Jack%20Related/jack_convolve/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Simple C library for partitioned convolution
+WWW=		http://heaven.sourceforge.net/index.php/programs/audio
 
 LICENSE=	GPLv2 GPLv3
 LICENSE_COMB=	dual

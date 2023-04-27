@@ -1,5 +1,3 @@
-# Created by: Hannes Hauswedell <h2+fbsdports@fsfe.org>
-
 PORTNAME=	unigine-heaven
 PORTVERSION=	4.0
 PORTREVISION=	4
@@ -11,6 +9,7 @@ EXTRACT_SUFX=	.run
 
 MAINTAINER=	h2+fbsdports@fsfe.org
 COMMENT=	Unigine Heaven benchmark (basic version for GNU/Linux)
+WWW=		https://benchmark.unigine.com/heaven
 
 LICENSE=	Proprietary
 LICENSE_NAME=	Unigine "Basic" License

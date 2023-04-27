@@ -1,12 +1,11 @@
-# Created by: Alex Dupre <sysadmin@alexdupre.com>
-
 PORTNAME=	nocc
-PORTVERSION=	1.9.10
+PORTVERSION=	1.9.13
 CATEGORIES=	mail www
 MASTER_SITES=	SF/${PORTNAME}/NOCC/${PORTVERSION}
 
 MAINTAINER=	ale@FreeBSD.org
 COMMENT=	Webmail system which access POP3 and IMAP mail servers
+WWW=		http://nocc.sourceforge.net/
 
 LICENSE=	GPLv2
 
@@ -14,7 +13,7 @@ USES=		cpe php:web
 
 OPTIONS_DEFINE=	DOCS
 
-USE_PHP=	ctype iconv imap mbstring openssl pcre session
+USE_PHP=	ctype iconv imap mbstring session
 
 SUB_FILES=	pkg-message
 NO_ARCH=	yes

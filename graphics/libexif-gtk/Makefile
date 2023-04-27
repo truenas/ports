@@ -1,12 +1,12 @@
-# Created by: ports@FreeBSD.org
-
 PORTNAME=	libexif-gtk
 PORTVERSION=	0.5.0
+PORTREVISION=	1
 CATEGORIES=	graphics
 MASTER_SITES=	https://github.com/libexif/${PORTNAME}/releases/download/v${PORTVERSION}/
 
 MAINTAINER=	fluffy@FreeBSD.org
 COMMENT=	GTK+ widgets to display/edit EXIF tags
+WWW=		https://sourceforge.net/projects/libexif/
 
 LICENSE=	LGPL21
 

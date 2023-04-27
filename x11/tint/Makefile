@@ -1,10 +1,11 @@
 PORTNAME=	tint2
 PORTVERSION=	16.7
-PORTREVISION=	1
+PORTREVISION=	3
 CATEGORIES=	x11
 
 MAINTAINER=	yamagi@yamagi.org
 COMMENT=	Lightweight freedesktop-compliant panel/taskbar/systray/clock
+WWW=		https://gitlab.com/o9000/tint2
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

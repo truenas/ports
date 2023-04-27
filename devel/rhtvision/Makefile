@@ -1,14 +1,13 @@
-# Created by: Hye-Shik Chang
-
 PORTNAME=	rhtvision
 PORTVERSION=	2.2.1.1
-PORTREVISION=	10
+PORTREVISION=	11
 CATEGORIES=	devel
 MASTER_SITES=	SF/tvision/UNIX/${PORTVERSION:R}%20CVS20100714%20Source%20and%20Debian%205.0
 DISTNAME=	${PORTNAME}_${PORTVERSION:R}-${PORTVERSION:E}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Complete C++ Text User Interface (TUI) library
+WWW=		https://sourceforge.net/projects/tvision/
 
 OPTIONS_DEFINE=	NLS X11
 OPTIONS_SUB=	yes

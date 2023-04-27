@@ -1,10 +1,11 @@
 PORTNAME=	swaybg
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.1
-CATEGORIES=	x11
+DISTVERSION=	1.2.0
+CATEGORIES=	x11 wayland
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Wallpaper tool for Wayland compositors
+WWW=		https://github.com/swaywm/swaybg
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

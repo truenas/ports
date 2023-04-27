@@ -1,7 +1,7 @@
 PORTNAME=	rdkit
 DISTVERSIONPREFIX=	Release_
-DISTVERSION=	2021_03_5
-PORTREVISION=	1
+DISTVERSION=	2022_03_5
+PORTREVISION=	3
 CATEGORIES=	science
 MASTER_SITES=	https://fonts.google.com/download?family=Comic%20Neue&dummy=/:font
 DISTFILES=	Comic_Neue.zip:font
@@ -9,9 +9,12 @@ DIST_SUBDIR=	${PORTNAME}-${PORTVERSION}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Collection of cheminformatics and machine-learning software
+WWW=		https://www.rdkit.org/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/license.txt
+
+BROKEN_i386=	non-constant-expression cannot be narrowed from type 'unsigned int' to 'npy_intp', see https://github.com/rdkit/rdkit/issues/4934
 
 BUILD_DEPENDS=	catch>0:devel/catch \
 		flex:textproc/flex \

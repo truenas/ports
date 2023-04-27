@@ -1,5 +1,3 @@
-# Created by: Patrick M. Hausen (pmh@hausen.com)
-
 PORTNAME=		env4801
 PORTVERSION=		0.3
 PORTREVISION=		1
@@ -10,6 +8,7 @@ DIST_SUBDIR=		env4801
 
 MAINTAINER=		pmh@hausen.com
 COMMENT=		Output the voltages and temperatures of a Soekris Net4801 computer
+WWW=			http://phk.freebsd.dk/soekris/env4801/
 
 ONLY_FOR_ARCHS=		i386
 NO_WRKSUBDIR=		yes

@@ -1,5 +1,3 @@
-# Created by: Pedro Giffuni
-
 PORTNAME=	bitkeeper
 PORTVERSION=	7.3.3
 PORTREVISION=	6
@@ -9,6 +7,7 @@ DISTNAME=	bk-${PORTVERSION}.src
 
 MAINTAINER=	cy@FreeBSD.org
 COMMENT=	Scalable Distributed Source Management System
+WWW=		https://www.bitkeeper.org/
 
 LICENSE=	APACHE20
 

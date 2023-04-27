@@ -1,5 +1,3 @@
-# Created by: sumikawa
-
 PORTNAME=	racoon2
 PORTVERSION=	${RACOON2_COMMIT_DATE}
 PORTREVISION=	1
@@ -9,6 +7,7 @@ RACOON2_COMMIT_DATE=202000908
 
 MAINTAINER=	cy@FreeBSD.org
 COMMENT=	Racoon2 IPsec daemon
+WWW=		https://github.com/zoulasc/racoon2
 
 CONFLICTS=	racoon2-legacy
 

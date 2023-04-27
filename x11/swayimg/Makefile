@@ -1,0 +1,78 @@
+PORTNAME=	swayimg
+DISTVERSIONPREFIX=	v
+DISTVERSION=	1.11
+CATEGORIES=	x11 wayland
+
+MAINTAINER=	jbeich@FreeBSD.org
+COMMENT=	Image viewer for Sway/Wayland
+WWW=		https://github.com/artemsen/swayimg
+
+LICENSE=	MIT
+LICENSE_FILE=	${WRKSRC}/LICENSE
+
+BUILD_DEPENDS=	wayland-protocols>0:graphics/wayland-protocols
+LIB_DEPENDS=	libjson-c.so:devel/json-c \
+		libepoll-shim.so:devel/libepoll-shim \
+		libwayland-client.so:graphics/wayland \
+		libfreetype.so:print/freetype2 \
+		libfontconfig.so:x11-fonts/fontconfig \
+		libxkbcommon.so:x11/libxkbcommon
+
+USES=		meson pkgconfig
+USE_GITHUB=	yes
+GH_ACCOUNT=	artemsen
+MESON_ARGS=	-Dversion="${DISTVERSIONFULL}"
+PLIST_FILES=	bin/${PORTNAME} \
+		man/man1/${PORTNAME}.1.gz \
+		man/man5/${PORTNAME}rc.5.gz \
+		share/applications/${PORTNAME}.desktop \
+		share/icons/hicolor/64x64/apps/${PORTNAME}.png \
+		${NULL}
+
+OPTIONS_DEFINE=	BASH GIF HEIF JPEG JXL LIBEXIF LIBRSVG2 PNG TIFF WEBP ZSH
+OPTIONS_DEFAULT=BASH GIF HEIF JPEG JXL LIBEXIF LIBRSVG2 PNG TIFF WEBP ZSH
+OPTIONS_EXCLUDE=${LIBRSVG2_DEFAULT:Mlegacy:C/.+/LIBRSVG2/}
+
+BASH_BUILD_DEPENDS=	bash-completion>0:shells/bash-completion
+BASH_MESON_ENABLED=	bash
+BASH_PLIST_FILES=	share/bash-completion/completions/${PORTNAME}
+
+GIF_LIB_DEPENDS=	libgif.so:graphics/giflib
+GIF_USES=		localbase:ldflags
+GIF_MESON_ENABLED=	gif
+
+HEIF_LIB_DEPENDS=	libheif.so:graphics/libheif
+HEIF_MESON_ENABLED=	heif
+
+JPEG_USES=		jpeg
+JPEG_MESON_ENABLED=	jpeg
+
+JXL_LIB_DEPENDS=	libjxl.so:graphics/libjxl
+JXL_MESON_ENABLED=	jxl
+
+LIBEXIF_LIB_DEPENDS=	libexif.so:graphics/libexif
+LIBEXIF_MESON_ENABLED=	exif
+
+LIBRSVG2_USES=		gnome
+LIBRSVG2_USE=		GNOME=cairo,librsvg2
+LIBRSVG2_MESON_ENABLED=	svg
+
+PNG_LIB_DEPENDS=	libpng.so:graphics/png
+PNG_MESON_ENABLED=	png
+
+TIFF_LIB_DEPENDS=	libtiff.so:graphics/tiff
+TIFF_MESON_ENABLED=	tiff
+
+WEBP_LIB_DEPENDS=	libwebpdemux.so:graphics/webp
+WEBP_MESON_ENABLED=	webp
+
+ZSH_MESON_ENABLED=	zsh
+ZSH_PLIST_FILES=	share/zsh/site-functions/_${PORTNAME}
+
+post-patch:
+# Respect PREFIX for system-wide config
+	@${REINPLACE_CMD} 's,/etc,${PREFIX}&,' \
+		${WRKSRC}/extra/${PORTNAME}rc.5 \
+		${WRKSRC}/src/config.c
+
+.include <bsd.port.mk>

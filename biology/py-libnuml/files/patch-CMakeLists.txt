@@ -1,5 +1,14 @@
---- CMakeLists.txt.orig	2021-04-29 08:24:05 UTC
+--- CMakeLists.txt.orig	2022-04-19 08:09:02 UTC
 +++ CMakeLists.txt
+@@ -53,7 +53,7 @@ if (LIBNUML_REMOVE_WRAPPERS)
+ endif(LIBNUML_REMOVE_WRAPPERS)
+ 
+ 
+-set(SWIG_EXTRA_FLAGS -DSWIGEXPORT -DLIBSBML_CPP_NAMESPACE_BEGIN -DLIBSBML_CPP_NAMESPACE_END -DLIBSBML_CPP_NAMESPACE_QUALIFIER -DLIBSBML_CPP_NAMESPACE_USE)
++set(SWIG_EXTRA_FLAGS -DSWIGEXPORT -DLIBSBML_CPP_NAMESPACE_BEGIN= -DLIBSBML_CPP_NAMESPACE_END= -DLIBSBML_CPP_NAMESPACE_QUALIFIER= -DLIBSBML_CPP_NAMESPACE_USE=)
+ if(NOT UNIX)
+ 	set(SWIG_EXTRA_FLAGS ${SWIG_EXTRA_FLAGS} -DSWIGWIN -DSWIG_CSHARP_NO_WSTRING_HELPER )
+ endif()
 @@ -62,6 +62,7 @@ ADD_CUSTOM_COMMAND(	
      OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/libnuml_wrap.cpp
      COMMAND "${SWIG_EXECUTABLE}"
@@ -20,12 +29,3 @@
  endif()
  
  
-@@ -153,7 +154,7 @@ endif()
- #
- set(PYTHON_PACKAGE_INSTALL_DIR)
- if (UNIX OR CYGWIN) 
--  execute_process(COMMAND "${PYTHON_EXECUTABLE}" -c "import sys;import platform; sys.stdout.write(platform.python_version()[:3])"
-+  execute_process(COMMAND "${PYTHON_EXECUTABLE}" -c "import sys;import platform; sys.stdout.write(platform.python_version().rsplit('.', 1)[0])"
-     OUTPUT_VARIABLE PYTHON_VERSION)
-   set(PYTHON_PACKAGE_INSTALL_DIR ${CMAKE_INSTALL_LIBDIR}/python${PYTHON_VERSION}/site-packages)
- else()

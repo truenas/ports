@@ -1,24 +1,30 @@
 PORTNAME=	yt-dlp
-DISTVERSION=	2021.12.01
+DISTVERSION=	2023.03.04
+PORTREVISION=	1
 CATEGORIES=	www
+MASTER_SITES=	https://github.com/${PORTNAME}/${PORTNAME}/releases/download/${DISTVERSION}/
+DISTNAME=	${PORTNAME}
+DIST_SUBDIR=	${PORTNAME}/${DISTVERSION}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Command-line program for downloading videos from various platforms
+WWW=		https://github.com/yt-dlp/yt-dlp
 
 LICENSE=	UNLICENSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-PY_DEPENDS=	${PYTHON_PKGNAMEPREFIX}mutagen>0:audio/py-mutagen@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}pycryptodome>0:security/py-pycryptodome@${PY_FLAVOR} \
+PY_DEPENDS=	${PYTHON_PKGNAMEPREFIX}brotli>0:archivers/py-brotli@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}certifi>0:security/py-certifi@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}mutagen>0:audio/py-mutagen@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}pycryptodomex>0:security/py-pycryptodomex@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}sqlite3>0:databases/py-sqlite3@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}websockets>0:devel/py-websockets@${PY_FLAVOR}
 BUILD_DEPENDS=	${PY_DEPENDS}
 RUN_DEPENDS=	${PY_DEPENDS}
 
 USES=		gmake python:3.7+ shebangfix
-SHEBANG_GLOB=	devscripts/*.py
 
-USE_GITHUB=	yes
+SHEBANG_GLOB=	devscripts/*.py
 
 MAKE_ARGS=	PYTHON=${PYTHON_CMD}
 

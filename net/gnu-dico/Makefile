@@ -1,13 +1,13 @@
-# Created by: Goran Tal
-
 PORTNAME=	dico
 PORTVERSION=	2.10
+PORTREVISION=	1
 CATEGORIES=	net textproc
 MASTER_SITES=	GNU
 PKGNAMEPREFIX=	gnu-
 
 MAINTAINER=	info@dikt.tv
 COMMENT=	Flexible modular implementation of DICT server
+WWW=		https://www.gnu.org/software/dico/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -38,7 +38,7 @@ GSASL_CONFIGURE_WITH=	gsasl
 GUILE_LIB_DEPENDS=	libguile-2.2.so:lang/guile2
 GUILE_CONFIGURE_OFF=	--without-guile
 
-LDAP_USE=		OPENLDAP=yes
+LDAP_USES=		ldap
 LDAP_CONFIGURE_OFF=	--without-ldap
 
 NLS_USES=		gettext

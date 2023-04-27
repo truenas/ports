@@ -1,12 +1,13 @@
 PORTNAME=	couenne
 DISTVERSIONPREFIX=	releases/
 DISTVERSION=	0.5.8
-PORTREVISION=	7
+PORTREVISION=	10
 CATEGORIES=	math
 PKGNAMEPREFIX=	coin-or-
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Convex Over and Under Envelopes for NonliNear Estimation
+WWW=		https://projects.coin-or.org/Couenne
 
 LICENSE=	EPL
 LICENSE_FILE=	${WRKSRC}/Couenne/LICENSE

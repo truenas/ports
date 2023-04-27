@@ -1,6 +1,6 @@
 PORTNAME=	asl
 DISTVERSIONPREFIX=	releases/
-DISTVERSION=	1.4.3
+DISTVERSION=	2.0.0
 CATEGORIES=	math
 MASTER_SITES=	https://coin-or-tools.github.io/ThirdParty-ASL/:solvers
 PKGNAMEPREFIX=	coin-or-
@@ -8,6 +8,7 @@ DISTFILES=	solvers-64919f75f.tgz:solvers
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	COIN-OR autotools harness to build AMPL Solver Library
+WWW=		https://github.com/coin-or-tools/ThirdParty-ASL
 
 LICENSE=	EPL
 
@@ -19,6 +20,8 @@ GH_ACCOUNT=	coin-or-tools
 GH_PROJECT=	ThirdParty-ASL
 
 GNU_CONFIGURE=	yes
+
+INSTALL_TARGET=	install-strip
 
 BINARY_ALIAS=	make=${GMAKE}
 

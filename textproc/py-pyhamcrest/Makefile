@@ -1,13 +1,12 @@
-# Created by: Richard Gallamore <ultima@FreeBSD.org>
-
 PORTNAME=	PyHamcrest
 DISTVERSIONPREFIX=	V
-DISTVERSION=	2.0.2
+DISTVERSION=	2.0.3
 CATEGORIES=	textproc python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ultima@FreeBSD.org
 COMMENT=	Hamcrest matchers for Python
+WWW=		https://github.com/hamcrest/PyHamcrest
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

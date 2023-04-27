@@ -1,10 +1,12 @@
 PORTNAME=	lagrange
 DISTVERSION=	1.7.3
+PORTREVISION=	1
 CATEGORIES=	www
 MASTER_SITES=	https://git.skyjake.fi/gemini/${PORTNAME}/releases/download/v${DISTVERSION}/
 
 MAINTAINER=	lcook@FreeBSD.org
 COMMENT=	Beautiful Gemini Client
+WWW=		https://gmi.skyjake.fi/lagrange/
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.md

@@ -1,12 +1,13 @@
 PORTNAME=	mednafen
 PORTVERSION=	1.26.1
-PORTREVISION=	2
+PORTREVISION=	3
 PORTEPOCH=	1
 CATEGORIES=	emulators games
 MASTER_SITES=	https://mednafen.github.io/releases/files/
 
 MAINTAINER=	acm@FreeBSD.org
 COMMENT=	Portable multi-system emulator
+WWW=		https://mednafen.github.io
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

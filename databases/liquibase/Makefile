@@ -1,5 +1,3 @@
-# Created by: Gea-Suan Lin <gslin@gslin.org>
-
 PORTNAME=	liquibase
 PORTVERSION=	4.3.5
 CATEGORIES=	databases java
@@ -7,8 +5,11 @@ MASTER_SITES=	https://github.com/liquibase/liquibase/releases/download/v${PORTVE
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Database Change Management
+WWW=		https://www.liquibase.org/
 
 LICENSE=	APACHE20
+
+USES=		cpe
 
 NO_ARCH=	yes
 NO_BUILD=	yes

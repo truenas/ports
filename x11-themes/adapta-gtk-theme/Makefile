@@ -1,12 +1,11 @@
-# Created by: Nicola Stanislao Vitale <nivit@FreeBSD.org>
-
 PORTNAME=	adapta-gtk-theme
 PORTVERSION=	3.95.0.11
-PORTREVISION=	1
+PORTREVISION=	5
 CATEGORIES=	x11-themes
 
 MAINTAINER=	nivit@FreeBSD.org
 COMMENT=	Adaptive Gtk+ theme based on Material Design Guidelines
+WWW=		https://github.com/adapta-project/adapta-gtk-theme
 
 LICENSE=	GPLv2 CC-BY-SA-4.0
 LICENSE_COMB=	multi

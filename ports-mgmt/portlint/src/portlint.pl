@@ -48,8 +48,8 @@ $portdir = '.';
 
 # version variables
 my $major = 2;
-my $minor = 19;
-my $micro = 9;
+my $minor = 20;
+my $micro = 0;
 
 # default setting - for FreeBSD
 my $portsdir = '/usr/ports';
@@ -131,7 +131,7 @@ if (defined $ENV{'PORTSDIR'}) {
 		$portsdir = $mconf_portsdir;
 	}
 }
-$ENV{'PL_SVN_IGNORE'} //= '';
+$ENV{'PL_GIT_IGNORE'} //= '';
 my $mfile_moved = "${portsdir}/MOVED";
 my $mfile_uids = "${portsdir}/UIDs";
 my $mfile_gids = "${portsdir}/GIDs";
@@ -158,7 +158,7 @@ my @varlist =  qw(
 	PKGNAMEPREFIX PKGNAMESUFFIX DISTVERSIONPREFIX DISTVERSION
 	DISTVERSIONSUFFIX DISTNAME DISTFILES CATEGORIES MASTERDIR MAINTAINER
 	MASTER_SITES WRKDIR WRKSRC NO_WRKSUBDIR SCRIPTDIR FILESDIR
-	PKGDIR COMMENT DESCR PLIST PKGCATEGORY PKGINSTALL PKGDEINSTALL
+	PKGDIR COMMENT WWW DESCR PLIST PKGCATEGORY PKGINSTALL PKGDEINSTALL
 	PKGREQ PKGMESSAGE DISTINFO_FILE .CURDIR USE_LDCONFIG USE_AUTOTOOLS
 	USE_GNOME USE_PERL5 USE_QT USE_QT5 INDEXFILE PKGORIGIN
 	CONFLICTS CONFLICTS_BUILD CONFLICTS_INSTALL PKG_VERSION
@@ -338,12 +338,12 @@ if ($committer) {
 				    "If it still needs to be there, put a dummy comment ".
 					"to state that the file is intentionally left empty.");
 		} elsif (-d && scalar(my @x = <$_/{*,.?*}>) <= 1) {
-			&perror("FATAL", $fullname, -1, "empty directory should be removed.") unless ($fullname =~ /^\.svn/ || $fullname =~ /^\.git/);
+			&perror("FATAL", $fullname, -1, "empty directory should be removed.") unless ($fullname =~ /^\.git/);
 		} elsif (/^\./) {
 			&perror("WARN", $fullname, -1, "dotfiles are not preferred. ".
 					"If this file is a dotfile to be installed as an example, ".
 					"consider importing it as \"dot$_\".") unless
-					(-d && ($_ eq '.svn' || $_ eq '.git'));
+					(-d && $_ eq '.git');
 		} elsif (/[^-.a-zA-Z0-9_\+]/) {
 			&perror("WARN", $fullname, -1, "only use characters ".
 					"[-_.a-zA-Z0-9+] for patch or script names.");
@@ -356,27 +356,20 @@ if ($committer) {
 		} elsif (/README.html/) {
 			&perror("FATAL", $fullname, -1, "for safety, be sure to cleanup ".
 					"README.html files before committing the port.");
-		} elsif (($_ eq '.svn' || $_ eq '.git') && -d) {
+		} elsif ($_ eq '.git' && -d) {
 			&perror("FATAL", $fullname, -1, "for safety, be sure to cleanup ".
-				"Subversion files before committing the port.");
-
-			$File::Find::prune = 1;
-		} elsif ($_ eq 'CVS' && -d) {
-			if ($newport) {
-				&perror("FATAL", $fullname, -1, "for safety, be sure to cleanup ".
-						"CVS directories before importing the new port.");
-			}
+				"git files before committing the port.");
 
 			$File::Find::prune = 1;
 		} elsif (-f) {
 			my $fullpath = $makevar{'.CURDIR'}.'/'.$fullname;
-			my $result = `type svn >/dev/null 2>&1 && svn -q status $fullpath`;
+			my $result = `type git >/dev/null 2>&1 && git status --porcelain $fullpath`;
 
 			chomp $result;
 			if (substr($result, 0, 1) eq '?') {
-				&perror("FATAL", "", -1, "$fullname not under SVN.")
-					unless (eval { /$ENV{'PL_SVN_IGNORE'}/, 1 } &&
-						/$ENV{'PL_SVN_IGNORE'}/);
+				&perror("FATAL", "", -1, "$fullname not under git.")
+					unless (eval { /$ENV{'PL_GIT_IGNORE'}/, 1 } &&
+						/$ENV{'PL_GIT_IGNORE'}/);
 			}
 		}
 	}
@@ -445,6 +438,9 @@ sub checkdistinfo {
 		}
 		if (/(\S+)\s+\((\S+)\)\s+=\s+(\S+)/) {
 			my ($tag, $path, $value) = ($1, $2, $3);
+			if ($records{$path}{$tag}) {
+				&perror("FATAL", $file, $., "duplicate file listed.");
+			}
 			$records{$path}{$tag} = $value;
 
 			if (!$algorithms{$tag} && $tag ne "SIZE") {
@@ -490,7 +486,7 @@ sub checkdescr {
 	my($file) = @_;
 	my(%maxchars) = ($makevar{DESCR}, 80);
 	my(%maxlines) = ($makevar{DESCR}, 24);
-	my(%minlines) = ($makevar{DESCR}, 3);
+	my(%minlines) = ($makevar{DESCR}, 2);
 	my(%toolongerrmsg) = ($makevar{DESCR},
 					"exceeds $maxlines{$makevar{DESCR}} ".
 					"lines, make it shorter if possible.");
@@ -515,18 +511,10 @@ sub checkdescr {
 		}
 		if (/^WWW:(\s+)(\S*)/) {
 			my $wwwurl = $2;
-			if ($1 ne ' ') {
-				&perror("WARN", $file, -1, "use WWW: with a single space, ".
-					"then $wwwurl");
-			}
-			if ($wwwurl !~ m|^https?://|) {
-				&perror("WARN", $file, -1, "WWW URL, $wwwurl should begin ".
-					"with \"http://\" or \"https://\".");
-			}
-			if ($wwwurl =~ m|^http://search.cpan.org/~|) {
-				&perror("WARN", $file, -1, "consider changing WWW URL to ".
-					"http://search.cpan.org/dist/$makevar{PORTNAME}/");
-			}
+			&perror("WARN", $file, -1, "the URL of the project website has been ".
+				"moved into the Makefile.  ".
+				"Remove the WWW: line from this file and add \"WWW=$wwwurl\"".
+				"to the Makefile immediately below the COMMENT line.");
 		}
 		$linecnt++;
 		$longlines++ if ($maxchars{$file} < length);
@@ -813,19 +801,17 @@ sub checkplist {
 			$found_so++;
 		}
 
-		if ($_ =~ m|^share/icons/.*/| &&
-			$makevar{INSTALLS_ICONS} eq '' &&
-			needs_installs_icons()) {
-			&perror("WARN", $file, $., "installing icons, ".
-				"please define INSTALLS_ICONS as appropriate");
-		}
-
 		if ($_ =~ m|\.omf$| && $makevar{INSTALLS_OMF} eq '') {
 			&perror("WARN", $file, $., "installing OMF files, ".
 				"please define INSTALLS_OMF (see the FreeBSD GNOME ".
 				"porting guide at ".
 				"http://www.FreeBSD.org/gnome/docs/porting.html ".
 				"for more details)");
+		}
+
+		if ($_ =~ m|\.desktop$| && $makevar{USES} !~ /\bdesktop-file-utils\b/) {
+			&perror("FATAL", $file, $., "this port installs .desktop files. ".
+				"Please add `desktop-file-utils` to USES.");
 		}
 
 		if ($_ =~ m|^(%%([^%]+)%%)?.*\.mo$| && $makevar{USES} !~ /\bgettext\b/) {
@@ -1162,7 +1148,7 @@ sub check_depends_syntax {
 			if ($k eq '') {
 				next;
 			}
-			my $tmp_depends = $k;
+			my ($tmp_depends, $fl) = split(/\@/, $k);
 			$tmp_depends =~ s/\$\{[^}]+}//g;
 			my @l = split(':', $tmp_depends);
 
@@ -1183,8 +1169,7 @@ sub check_depends_syntax {
 			}
 			my %m = ();
 			$m{'dep'} = $l[0];
-			my ($di, $fl) = split(/\@/, $l[1]);
-			$m{'dir'} = $di;
+			$m{'dir'} = $l[1];
 			$m{'fla'} = $fl // '';
 			$m{'tgt'} = $l[2] // '';
 			my %depmvars = ();
@@ -1372,6 +1357,7 @@ sub checkmakefile {
 	my(@mman, @pman);
 	my(@aopt, @mopt, @opt);
 	my($pkg_version, $versiondir, $versionfile) = ('', '', '');
+	my $indexfile = '';
 	my $useindex = 0;
 	my %deprecated = ();
 	my @deplist = ();
@@ -1572,15 +1558,13 @@ sub checkmakefile {
 					"daily_clean_disks_enable=\"YES\" in /etc/periodic.conf.  ".
 					"If possible, install this file with a different name.");
 			}
-			if ($plist_file =~ m|^share/icons/.*/| &&
-				$makevar{INSTALLS_ICONS} eq '' &&
-		        needs_installs_icons()) {
-				&perror("WARN", "", -1, "PLIST_FILES: installing icons, ".
-					"please define INSTALLS_ICONS as appropriate");
-			}
 			if ($plist_file =~ /%%[\w_\d]+%%/) {
 				&perror("FATAL", "", -1, "PLIST_FILES: files cannot contain ".
 					"%%FOO%% variables.  Use make variables and logic instead");
+			}
+			if ($plist_file =~ m|\.desktop$| && $makevar{USES} !~ /\bdesktop-file-utils\b/) {
+				&perror("FATAL", "", -1, "PLIST_FILES: this port installs .desktop files. ".
+					"please add `desktop-file-utils` to USES.");
 			}
 
 		}
@@ -2005,9 +1989,8 @@ sub checkmakefile {
 	#
 	# whole file: using INSTALLS_ICONS when it is not wanted
 	#
-	if (!($makevar{INSTALLS_ICONS} eq '') &&
-		!needs_installs_icons()) {
-		&perror("WARN", $file, -1, "INSTALLS_ICONS is set, but should not be.");
+	if (!($makevar{INSTALLS_ICONS} eq '')) {
+		&perror("WARN", $file, -1, "INSTALLS_ICONS is now deprecated.  It should be removed.");
 	}
 
 	#
@@ -2176,6 +2159,7 @@ xargs xmkmf
 				next;
 			}
 			if ($curline =~ /(?:^|\s)[\@\-]{0,2}$i(?:$|\s)/
+				&& $curline !~ /^PORTNAME=[^\n]+$i/m
 				&& $curline !~ /^[A-Z]+_TARGET[?+]?=[^\n]+$i/m
 				&& $curline !~ /^[A-Z]+_INSTALL_TARGET[?+]?=[^\n]+$i/m
 				&& $curline !~ /^IGNORE(_[\w\d]+)?(.)?=[^\n]+$i/m
@@ -2184,6 +2168,7 @@ xargs xmkmf
 				&& $curline !~ /^NO_PACKAGE(.)?=[^\n]+$i/m
 				&& $curline !~ /^NO_CDROM(.)?=[^\n]+$i/m
 				&& $curline !~ /^MAINTAINER(.)?=[^\n]+$i/m
+				&& $curline !~ /^WWW(.)?=[^\n]+$i/m
 				&& $curline !~ /^CATEGORIES(.)?=[^\n]+$i/m
 				&& $curline !~ /^(\w+)?USES(.)?=[^\n]+$i/m
 				&& $curline !~ /^WX_COMPS(.)?=[^\n]+$i/m
@@ -2218,6 +2203,7 @@ xargs xmkmf
 				&& $lm !~ /^NO_PACKAGE(.)?=[^\n]+($i\d*)/m
 				&& $lm !~ /^NO_CDROM(.)?=[^\n]+($i\d*)/m
 				&& $lm !~ /^MAINTAINER(.)?=[^\n]+($i\d*)/m
+				&& $lm !~ /^WWW(.)?=[^\n]+($i\d*)/m
 				&& $lm !~ /^CATEGORIES(.)?=[^\n]+($i\d*)/m
 				&& $lm !~ /^USES(.)?=[^\n]+$i/m
 				&& $lm !~ /^[A-Z0-9_]+_DESC=[^\n]+($i\d*)/m
@@ -2690,15 +2676,16 @@ EOF
 			&perror("WARN", $file, -1, "Version required is no longer needed in the comment section.");
 		}
 
-		#
-		# for the rest of the checks, comment lines are not important.
-		#
-		for ($i = 0; $i < scalar(@sections); $i++) {
-			$sections[$i] = "\n" . $sections[$i];
-			$sections[$i] =~ s/\n#[^\n]*//g;
-			$sections[$i] =~ s/\n\n+/\n/g;
-			$sections[$i] =~ s/^\n//;
-		}
+	}
+
+	#
+	# for the rest of the checks, comment lines are not important.
+	#
+	for ($i = 0; $i < scalar(@sections); $i++) {
+		$sections[$i] = "\n" . $sections[$i];
+		$sections[$i] =~ s/\n#[^\n]*//g;
+		$sections[$i] =~ s/\n\n+/\n/g;
+		$sections[$i] =~ s/^\n//;
 	}
 
 	#
@@ -2873,7 +2860,15 @@ DIST_SUBDIR EXTRACT_ONLY
 					if ($i =~ /^$ms/ && $i ne $ms) {
 						my $ip = $i;
 						$ip =~ s/^$ms\///;
-						my $exp_sd = get_makevar($ip);
+						my (@ip_parts) = split(/:/, $ip);
+						my $check_var = $ip_parts[0];
+						shift(@ip_parts);
+						foreach my $check_part (@ip_parts) {
+							if ($check_part =~ /^[A-Z]}/) {
+								$check_var .= ":$check_part";
+							}
+						}
+						my $exp_sd = get_makevar($check_var);
 						if ($exp_sd eq $sd) {
 							&perror("WARN", $file, -1, "typically when you specify magic site $ms ".
 								"you do not need anything else as $sd is assumed");
@@ -2977,7 +2972,7 @@ DIST_SUBDIR EXTRACT_ONLY
 		&perror("FATAL", $file, -1, "either PORTVERSION or DISTVERSION must be specified");
 	}
 	if ($portversion =~ /^pl[0-9]*$/
-	|| $portversion =~ /^[0-9]*[A-Za-z]?[0-9]*(\.[0-9]*[A-Za-z]?[0-9+]*)*$/) {
+	|| $portversion =~ /^[0-9]*[A-Za-z]?[0-9]*([.+][0-9]*[A-Za-z]?[0-9+]*)*$/) {
 		print "OK: PORTVERSION \"$portversion\" looks fine.\n" if ($verbose);
 	} elsif ($portversion =~ /^[^\-]*\$[{\(].+[\)}][^\-]*$/) {
 		&perror("WARN", $file, -1, "using variable, \"$portversion\", as version ".
@@ -3007,12 +3002,7 @@ DIST_SUBDIR EXTRACT_ONLY
 		my %seen;
 		foreach my $conflict (split ' ', $conflicts) {
 			if (not $seen{$conflict}) {
-				`$pkg_version -T '$makevar{PKGBASE}' '$conflict' || $pkg_version -T '$makevar{PKGNAME}' '$conflict'`;
-				my $selfconflict = !$?;
-				if ($selfconflict) {
-					&perror("FATAL", "", -1, "Package conflicts with itself. ".
-						"You should remove \"$conflict\" from CONFLICTS.");
-				} elsif ($conflict =~ m/-\[0-9\]\*$/) {
+				if ($conflict =~ m/-\[0-9\]\*$/) {
 					&perror("WARN", $file, -1, "CONFLICTS definition \"$conflict\" ".
 						"ends in redundant version pattern. ".
 						"You should remove \"-[0-9]*\" from that pattern.");
@@ -3024,10 +3014,11 @@ DIST_SUBDIR EXTRACT_ONLY
 
 	$versiondir = $ENV{VERSIONDIR} // '/var/db/chkversion';
 
+	$indexfile = "$portsdir/$makevar{INDEXFILE}";
 	$versionfile = "$versiondir/VERSIONS";
 	$useindex = !-r "$versionfile";
 
-	$versionfile = "$portsdir/$makevar{INDEXFILE}"
+	$versionfile = $indexfile
 		if $useindex;
 
 	if (-r "$versionfile") {
@@ -3063,6 +3054,42 @@ DIST_SUBDIR EXTRACT_ONLY
 			}
 		}
 		close VERSIONS;
+	}
+
+	# use INDEX (if present) to check for PKGBASE collisions
+	if (-r "$indexfile") {
+	    open INDEX, "<$portsdir/$makevar{INDEXFILE}";
+	    while (<INDEX>) {
+			my($origin, $pkgbase) = ('', '');
+			chomp;
+			next if /^(#|$)/;
+			($pkgbase, $origin) = split /\|/;
+			$pkgbase =~ s,-[^-]+$,,;
+			$origin =~ s,^.*/([^/]+/[^/]+)/?$,$1,;
+			if ($pkgbase eq $makevar{PKGBASE} and $origin ne $makevar{PKGORIGIN}) {
+		    	&perror("FATAL", $file, -1, "The package base name \"$makevar{PKGBASE}\" is already in use by the \"$origin\" port. ".
+			    	"Choose another PORTNAME or use a PKGNAMEPREFIX or PKGNAMESUFFIX.");
+			}
+	    }
+	    close INDEX;
+	}
+
+	# verify that all flavors have distinct names
+	if ($makevar{FLAVORS}) {
+	    my %PKGFLAVOR;
+	    my @FLAVORS = split(/ /, $makevar{FLAVORS});
+	    my $makeenv_save = $makeenv;
+	    for my $flavor (@FLAVORS) {
+			$makeenv = $makeenv_save . " FLAVOR=$flavor";
+			my $pkgbase = &get_makevar("PKGBASE");
+			if ($PKGFLAVOR{$pkgbase}) {
+		    	&perror("FATAL", $file, -1, "The flavors \"$PKGFLAVOR{$pkgbase}\" and \"$flavor\" both generate a package named \"$pkgbase\". ".
+			    	"Make the package names unique, e.g., with different PKGNAMEPREFIX or PKGNAMESUFFIX values for each flavor.");
+			} else {
+		    	$PKGFLAVOR{$pkgbase} = $flavor;
+			}
+	    }
+	    my $makeenv = $makeenv_save;
 	}
 
 	# if DISTFILES have only single item, it is better to avoid DISTFILES
@@ -3149,7 +3176,7 @@ PATCH_SITES PATCHFILES PATCH_DIST_STRIP
 
 	&checkearlier($file, $tmp, @varnames);
 	&checkorder('MAINTAINER', $tmp, $file, qw(
-MAINTAINER COMMENT
+MAINTAINER COMMENT WWW
 	));
 
 	$tmp = "\n" . $tmp;
@@ -3199,10 +3226,31 @@ MAINTAINER COMMENT
 		}
 	}
 
+	# check WWW
+	if ($tmp !~ /\nWWW.?=\s*(\S+)/) {
+		&perror("WARN", $file, -1, "WWW should exist and immediately follow COMMENT.") unless ($makevar{WWW} ne '');
+	}
+
+	# check for correctness
+	{
+		my $wwwurl = $1 // $makevar{WWW};
+		if ($wwwurl and $wwwurl !~ m|^https?://|) {
+			&perror("WARN", $file, -1, "WWW URL, $wwwurl should begin with \"http://\" or \"https://\".");
+		}
+		if ($wwwurl =~ m|search.cpan.org|) {
+			if ($wwwurl =~ m|^http.?://search.cpan.org/~|) {
+				&perror("WARN", $file, -1, "consider changing WWW URL to https://search.cpan.org/dist/$makevar{PORTNAME}/");
+			}
+			if ($wwwurl =~ m,/$,) {
+				&perror("WARN", $file, -1, "end WWW CPAN URL with a \"/\"");
+			}
+		}
+	}
+
 	$idx++;
 
 	push(@varnames, qw(
-MAINTAINER COMMENT
+MAINTAINER COMMENT WWW
 	));
 
 	#
@@ -3951,10 +3999,6 @@ sub urlcheck {
 	&perror("FATAL", $file, -1, "URL \"$url\" contains ".
 				"extra \":\".");
 	}
-}
-
-sub needs_installs_icons {
-	return $makevar{USES} =~ /gnome/
 }
 
 sub TRUE {1;}

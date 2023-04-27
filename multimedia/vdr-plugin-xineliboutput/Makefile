@@ -1,8 +1,6 @@
-# Created by: Juergen Lock <nox@FreeBSD.org>
-
 PORTNAME=	vdr-plugin-xineliboutput
 PORTVERSION=	1.0.90s20120511
-PORTREVISION=	31
+PORTREVISION=	34
 CATEGORIES=	multimedia
 MASTER_SITES=	SF/xineliboutput/files/xineliboutput/vdr-xineliboutput-${PORTVERSION}/:release \
 		LOCAL/nox:snapshot
@@ -10,6 +8,7 @@ DISTFILES=	${DISTNAME}${EXTRACT_SUFX}:snapshot
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Video Disk Recorder - xineliboutput plugin/viewer
+WWW=		https://sourceforge.net/projects/xineliboutput/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -31,7 +30,7 @@ CONFIGURE_ARGS=	--add-cflags=-I${VDRDIR} \
 PATCH_STRIP=	-p1
 
 WRKSRC=			${WRKDIR}/vdr-${PLUGIN}
-XINE_PLUGINSDIR=	lib/xine/plugins/2.9
+XINE_PLUGINSDIR=	lib/xine/plugins/2.11
 
 PLIST_SUB=	XINE_PLUGINSDIR=${XINE_PLUGINSDIR}
 PORTDOCS=	HISTORY README

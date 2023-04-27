@@ -1,14 +1,13 @@
-# Created by: wenheping@gmail.com
-
 PORTNAME=	rtree
-PORTVERSION=	0.9.7
+PORTVERSION=	1.0.1
 CATEGORIES=	devel science python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	Rtree-${PORTVERSION}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	R-Tree Spatial Index For Python GIS
+WWW=		https://trac.gispython.org/projects/PCL/wiki/Rtree
 
 LICENSE=	LGPL21
 
@@ -16,7 +15,7 @@ BUILD_DEPENDS=	${LOCALBASE}/include/spatialindex/SpatialIndex.h:devel/spatialind
 		${PYTHON_PKGNAMEPREFIX}wheel>=0.29.0:devel/py-wheel@${PY_FLAVOR}
 RUN_DEPENDS=	${LOCALBASE}/include/spatialindex/SpatialIndex.h:devel/spatialindex
 
-USES=		python:3.6+
+USES=		python:3.7+
 USE_PYTHON=	autoplist distutils
 
 NO_ARCH=	yes

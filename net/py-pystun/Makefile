@@ -1,14 +1,13 @@
-# Created by: Yuri Victorovich <yuri@rawbw.com>
-
 PORTNAME=	pystun
 PORTVERSION=	0.1.0
 PORTREVISION=	1
 CATEGORIES=	net python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Python STUN client for getting NAT type and external IP
+WWW=		https://pypi.org/project/pystun/
 
 LICENSE=	MIT
 

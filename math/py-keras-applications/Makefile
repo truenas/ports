@@ -1,10 +1,12 @@
 PORTNAME=	keras-applications
 DISTVERSION=	1.0.8
+PORTREVISION=	1
 CATEGORIES=	math python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	rm@FreeBSD.org
 COMMENT=	Reference implementations of popular deep learning models
+WWW=		https://github.com/keras-team/keras-applications
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

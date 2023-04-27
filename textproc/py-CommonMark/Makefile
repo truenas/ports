@@ -1,12 +1,13 @@
 PORTNAME=	CommonMark
 PORTVERSION=	0.9.1
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	commonmark-${PORTVERSION}
 
 MAINTAINER=	romain@FreeBSD.org
 COMMENT=	Python parser for the CommonMark Markdown spec
+WWW=		https://github.com/rtfd/CommonMark-py
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

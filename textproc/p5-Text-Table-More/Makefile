@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	Text-Table-More
-PORTVERSION=	0.020
+PORTVERSION=	0.025
 CATEGORIES=	textproc perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Generate text table with simple interface and many options
+WWW=		https://metacpan.org/release/Text-Table-More
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual
@@ -15,8 +14,7 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 
 BUILD_DEPENDS=	p5-File-ShareDir-Install>=0.06:devel/p5-File-ShareDir-Install \
 		${RUN_DEPENDS}
-RUN_DEPENDS=	p5-BorderStyles-Standard>=0:devel/p5-BorderStyles-Standard \
-		p5-BorderStyleBase>=0.009:devel/p5-BorderStyleBase \
+RUN_DEPENDS=	p5-BorderStyles-Standard>=0.014:devel/p5-BorderStyles-Standard \
 		p5-List-AllUtils>=0:devel/p5-List-AllUtils \
 		p5-Module-Load-Util>=0.004:devel/p5-Module-Load-Util \
 		p5-String-Pad>=0.021:textproc/p5-String-Pad \

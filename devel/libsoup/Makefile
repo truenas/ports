@@ -1,13 +1,12 @@
-# Created by: Joe Marcus Clarke <marcus@FreeBSD.org>
-
 PORTNAME=	libsoup
-DISTVERSION=	2.74.0
+DISTVERSION=	2.74.3
 CATEGORIES=	devel gnome
 MASTER_SITES=	GNOME
 DIST_SUBDIR=	gnome
 
 MAINTAINER=	desktop@FreeBSD.org
 COMMENT=	SOAP (Simple Object Access Protocol) implementation in C
+WWW=		https://libsoup.org/
 
 LICENSE=	LGPL20
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -24,10 +23,14 @@ USE_GNOME=	glib20 intlhack introspection:build \
 USE_LDCONFIG=	yes
 CPE_VENDOR=	gnome
 
-OPTIONS_DEFINE=			SMB
+OPTIONS_DEFINE=			DOCS SMB
 OPTIONS_SINGLE=			GSSAPI
 OPTIONS_SINGLE_GSSAPI=		GSSAPI_BASE GSSAPI_HEIMDAL GSSAPI_MIT GSSAPI_NONE
 OPTIONS_DEFAULT=		SMB GSSAPI_${${SSL_DEFAULT} == base :?BASE :NONE}
+
+DOCS_MESON_TRUE=		gtk_doc
+DOCS_BUILD_DEPENDS=		gtkdoc-scan:textproc/gtk-doc
+DOCSDIR=			${PREFIX}/share/gtk-doc/html/${PORTNAME}-${RELVERSION}
 
 # Circular dependency samba -> tracker -> libsoup if the SPOTLIGHT
 # option is turned on in samba. Since samba is a **runtime** only
@@ -58,14 +61,19 @@ MESON_ARGS=	-Dvapi=disabled \
 		-Dgnome=true \
 		-Dbrotli=disabled
 
-LIBVERSION=	1.11.1
-PLIST_SUB=	VERSION="2.4" LIBVERSION=${LIBVERSION}
+# RELVERSION also used in DOCSDIR, above
+RELVERSION=	2.4
+LIBVERSION=	1.11.2
+PLIST_SUB=	VERSION=${RELVERSION} LIBVERSION=${LIBVERSION}
 
-PORTSCOUT=	limitw:1,even
+PORTSCOUT=	limit:^2\.[0-9]?[02468]\.
 
 post-patch:
 	${REINPLACE_CMD} \
 		-e 's+@@NTLM_AUTH@@+${LOCALBASE}/bin/ntlm_auth+' \
 		${WRKSRC}/meson.build
+
+post-install-DOCS-on:
+	${INSTALL_MAN} ${WRKSRC}/NEWS ${STAGEDIR}${DOCSDIR}/NEWS
 
 .include <bsd.port.mk>

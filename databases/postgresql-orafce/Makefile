@@ -1,5 +1,3 @@
-# Created by: Jov <amutu@amutu.com>
-
 PORTNAME=		orafce
 DISTVERSIONPREFIX=	VERSION_
 DISTVERSION=		3_13_4
@@ -8,13 +6,14 @@ PKGNAMEPREFIX=		postgresql${PGSQL_VER:S/.//}-
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Oracle's compatibility functions and packages for PostgreSQL
+WWW=		https://github.com/orafce/orafce
 
 LICENSE=	0BSD
 LICENSE_NAME=	Zero-Clause BSD / Free Public License 1.0.0
 LICENSE_FILE=	${WRKSRC}/COPYRIGHT.orafce
 LICENSE_PERMS=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
 
-USES=		gmake pgsql:9.5+
+USES=		gmake pgsql:11+
 USE_GITHUB=	yes
 LLD_UNSAFE=	yes
 

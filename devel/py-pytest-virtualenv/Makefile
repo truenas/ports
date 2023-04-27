@@ -1,11 +1,12 @@
 PORTNAME=	pytest-virtualenv
 PORTVERSION=	1.7.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	swills@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Virtualenv fixture for py.test
+WWW=		https://github.com/manahl/pytest-plugins/tree/master/pytest-virtualenv
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

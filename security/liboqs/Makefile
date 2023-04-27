@@ -1,28 +1,44 @@
 PORTNAME=	liboqs
-DISTVERSION=	0.7.0
+DISTVERSION=	0.7.2-20220607
+PORTREVISION=	1
 CATEGORIES=	security
+
+PATCH_SITES=	https://github.com/open-quantum-safe/liboqs/pull/1267/commits/
+PATCHFILES=	676c0f53fd7d5601636cf698f04131b832f9d672.diff:-p1
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	C library for quantum-resistant cryptography
+WWW=		https://openquantumsafe.org/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
-BROKEN_i386=	Unknown or unsupported processor: i386
-BROKEN_powerpc=	Unknown or unsupported processor: powerpc
+TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pytest4>0:devel/py-pytest4@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}yaml>0:devel/py-yaml@${PY_FLAVOR} \
+		bash:shells/bash
 
-TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pytest>0:devel/py-pytest@${PY_FLAVOR}
-
-USES=		cmake python:test ssl
+USES=		cmake python:test shebangfix ssl
 USE_LDCONFIG=	yes
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	open-quantum-safe
+GH_TAGNAME=	38d3014dc2f74ec0f0c1a9e7e61aa4d2251adcc9
 
-CMAKE_ON=	BUILD_SHARED_LIBS OQS_DIST_BUILD
+SHEBANG_GLOB=	*.sh
 
-TEST_TARGET=	run_tests # many tests fail to build, see https://github.com/open-quantum-safe/liboqs/issues/1090
+CMAKE_ON=	BUILD_SHARED_LIBS OQS_DIST_BUILD \
+		OQS_PERMIT_UNSUPPORTED_ARCHITECTURE # trying to build on i386, powerpc, armv6, riscv64
+
+TEST_TARGET=	run_tests
 
 BINARY_ALIAS=	python3=${PYTHON_CMD}
+
+.include <bsd.port.options.mk>
+
+.if ${ARCH} == amd64
+PLIST_SUB+=	KEM_BIKE="" # BIKE algorithm is limited by architecture in .CMake/alg_support.cmake
+.else
+PLIST_SUB+=	KEM_BIKE="@comment "
+.endif
 
 .include <bsd.port.mk>

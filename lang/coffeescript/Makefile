@@ -1,10 +1,11 @@
 PORTNAME=	coffeescript
-DISTVERSION=	2.6.1
+DISTVERSION=	2.7.0
 PORTREVISION=	1
 CATEGORIES=	lang
 
 MAINTAINER=	egypcio@FreeBSD.org
 COMMENT=	Unfancy JavaScript
+WWW=		https://coffeescript.org/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

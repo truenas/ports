@@ -1,12 +1,11 @@
-# Created by: Albert Vernon <f3cun3c02@sneakemail.com>
-
 PORTNAME=	lzlib
-PORTVERSION=	1.12
+PORTVERSION=	1.13
 CATEGORIES=	archivers
 MASTER_SITES=	SAVANNAH/lzip/lzlib
 
 MAINTAINER=	delphij@FreeBSD.org
 COMMENT=	In-memory LZMA compression and decompression library
+WWW=		https://www.nongnu.org/lzip/lzlib.html
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,5 +1,3 @@
-# Created by: Emanuel Haupt <ehaupt@FreeBSD.org>
-
 PORTNAME=	libexplain
 PORTVERSION=	1.3.${PATCHLEVEL}
 PORTREVISION=	6
@@ -9,6 +7,7 @@ DISTNAME=	${PORTNAME}-${PORTVERSION:R}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Library which may be used to explain Unix and Linux system call errors
+WWW=		http://libexplain.sourceforge.net/
 
 LICENSE=	LGPL3+
 LICENSE_FILE=	${WRKSRC}/LICENSE

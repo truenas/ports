@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	pylint-plugin-utils
-PORTVERSION=	0.6
+PORTVERSION=	0.7
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Utilities and helpers for writing Pylint plugins
+WWW=		https://github.com/PyCQA/pylint-plugin-utils
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE

@@ -1,14 +1,13 @@
-# Created by: Carsten Larsen <cs@innolan.dk>
-
 PORTNAME=	python-lhafile
 DISTVERSION=	0.2.2
 CATEGORIES=	archivers python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	lhafile-${DISTVERSION}
 
 MAINTAINER=	cs@innolan.dk
 COMMENT=	LHA(.lzh) file extract interface
+WWW=		https://fengestad.no/python-lhafile/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYING.txt

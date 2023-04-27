@@ -1,11 +1,13 @@
 PORTNAME=	pretty_midi
 DISTVERSION=	0.2.9
+PORTREVISION=	1
 CATEGORIES=	multimedia python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Utility functions for handling MIDI data in a nice/intuitive way
+WWW=		https://github.com/craffel/pretty-midi
 
 LICENSE=	MIT
 

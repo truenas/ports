@@ -1,10 +1,11 @@
 PORTNAME=	ustreamer
 DISTVERSIONPREFIX=	v
-DISTVERSION=	4.10
+DISTVERSION=	5.38
 CATEGORIES=	multimedia net
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Lightweight and fast MJPG-HTTP streamer
+WWW=		https://github.com/pikvm/ustreamer
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -25,13 +26,5 @@ PLIST_FILES=	bin/ustreamer \
 		bin/ustreamer-dump \
 		share/man/man1/ustreamer-dump.1.gz \
 		share/man/man1/ustreamer.1.gz
-
-.include <bsd.port.options.mk>
-
-# strerror_l appeared in 12 in r368915 on 2021-01-01, OSVERSION was last changed to 1202505 in r368887 on 2020-12-29
-post-patch:
-.if ${OPSYS} == "FreeBSD" && ${OSVERSION} <= 1202505
-	@${REINPLACE_CMD} -e 's|strerror_l(error, locale)|strerror(error)|' ${WRKSRC}/src/libs/tools.h
-.endif
 
 .include <bsd.port.mk>

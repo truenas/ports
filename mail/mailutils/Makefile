@@ -1,12 +1,12 @@
-# Created by: Attila Nagy <bra@fsn.hu>
-
 PORTNAME=	mailutils
-PORTVERSION=	3.13
+PORTVERSION=	3.15
+PORTREVISION=	3
 CATEGORIES=	mail
 MASTER_SITES=	GNU GNU_ALPHA
 
 MAINTAINER=	zeus@gnu.org.ua
 COMMENT=	Utilities, daemons, and filters for processing e-mail
+WWW=		https://mailutils.org/
 
 LICENSE=	GPLv3+
 
@@ -23,7 +23,9 @@ USE_RC_SUBR=	comsatd imap4d pop3d
 INSTALL_TARGET=	install-strip
 TEST_TARGET=	check
 
-PLIST_SUB+=	LIBVERSION=8.0.0 LIBSUFX=8 VERSION=${PORTVERSION}
+CONFLICTS_INSTALL=	avenger elm # bin/dotlock bin/frm
+
+PLIST_SUB+=	LIBVERSION=9.0.0 LIBSUFX=9 VERSION=${PORTVERSION}
 
 INFO=		${PORTNAME}
 PORTDOCS=	AUTHORS ChangeLog NEWS README* THANKS TODO
@@ -78,7 +80,7 @@ GDBM_CONFIGURE_WITH=	gdbm
 KYOTOCABINET_LIB_DEPENDS=	libkyotocabinet.so:databases/kyotocabinet
 KYOTOCABINET_CONFIGURE_WITH=	kyotocabinet
 
-LDAP_USE=		OPENLDAP=yes
+LDAP_USES=		ldap
 LDAP_CONFIGURE_WITH=	ldap
 
 MYSQL_USES=		mysql

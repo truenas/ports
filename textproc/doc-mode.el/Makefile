@@ -1,8 +1,6 @@
-# Created by: Peter Schuller <peter.schuller@infidyne.com>
-
 PORTNAME=	doc-mode.el
 PORTVERSION=	1.1
-PORTREVISION=	21
+PORTREVISION=	26
 CATEGORIES=	textproc elisp
 MASTER_SITES=	SF/xpt/doc-mode/doc-mode-${PORTVERSION}
 PKGNAMESUFFIX=	${EMACS_PKGNAMESUFFIX}
@@ -10,6 +8,7 @@ DISTNAME=	doc-mode-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Asciidoc fontlocking for emacs
+WWW=		http://xpt.sourceforge.net/tools/doc-mode/
 
 USES=		emacs tar:tgz
 

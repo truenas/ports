@@ -1,14 +1,13 @@
-# Created by: Patrick Li <pat@databits.net>
-
 PORTNAME=	wmcliphist
 PORTVERSION=	1.0
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	x11 windowmaker
 MASTER_SITES=	http://linux.nawebu.cz/wmcliphist/ \
 		LOCAL/uqs
 
 MAINTAINER=	uqs@FreeBSD.org
 COMMENT=	Clipboard history management dockapp for Window Maker
+WWW=		http://linux.nawebu.cz/wmcliphist/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

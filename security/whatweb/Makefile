@@ -1,5 +1,3 @@
-# Created by: Niels Heinen
-
 PORTNAME=	whatweb
 DISTVERSION=	0.4.8-${GH_TAGNAME}
 PORTREVISION=	2
@@ -7,6 +5,7 @@ CATEGORIES=	security www
 
 MAINTAINER=	rm@FreeBSD.org
 COMMENT=	Tool to fingerprint web site components
+WWW=		https://www.morningstarsecurity.com/research/whatweb
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -14,10 +13,8 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 USE_GITHUB=	yes
 GH_TUPLE=	urbanadventurer:WhatWeb:f467aa2
 
-USES=			cpe
+USES=			cpe ruby:run
 CPE_VENDOR=		morningstarsecurity
-USE_RUBY=		yes
-RUBY_NO_BUILD_DEPENDS=	yes
 NO_BUILD=		yes
 NO_ARCH=		yes
 PORTDOCS=		CHANGELOG INSTALL README whatweb.xsl

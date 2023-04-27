@@ -1,11 +1,12 @@
 PORTNAME=	yacs
 PORTVERSION=	0.1.8
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	nc@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Yet Another Configuration System
+WWW=		https://github.com/rbgirshick/yacs
 
 LICENSE=	APACHE20
 

@@ -1,11 +1,13 @@
 PORTNAME=	biom-format
 PORTVERSION=	2.1.10
+PORTREVISION=	1
 CATEGORIES=	biology python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	jrm@FreeBSD.org
 COMMENT=	Biological Observation Matrix (BIOM) Format Project
+WWW=		https://biom-format.org/
 
 LICENSE=	BSD3CLAUSE
 

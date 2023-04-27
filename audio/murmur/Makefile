@@ -1,12 +1,11 @@
-# Created by: Ayumi M <ayu@commun.jp>
-
 PORTNAME=	murmur
 PORTVERSION=	1.3.3
-PORTREVISION=	2
+PORTREVISION=	6
 CATEGORIES=	audio net
 
 MAINTAINER=	feld@FreeBSD.org
 COMMENT=	Server component of Mumble
+WWW=		http://mumble.sourceforge.net/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -16,7 +15,7 @@ LIB_DEPENDS=	libprotobuf.so:devel/protobuf
 
 USES=		compiler:c++11-lang qmake pkgconfig python:build qt:5 ssl
 USE_CXXSTD=	c++11
-USE_QT=		buildtools_build core network sql xml
+USE_QT=		buildtools:build core network sql xml
 
 USE_GITHUB=	YES
 GH_ACCOUNT=	mumble-voip
@@ -49,7 +48,7 @@ MYSQL_VARS_OFF=		CONFIG+=no-sql-mysql
 MYSQL_USE=		QT=sql-mysql
 
 SQLITE_VARS_OFF=	CONFIG+=no-sqlite3_run
-SQLITE_USE=		QT=sql-sqlite3_run
+SQLITE_USE=		QT=sql-sqlite3:run
 
 USERS=		murmur
 GROUPS=		murmur
@@ -61,6 +60,7 @@ CONFIG+=	no-pch
 .endif
 
 post-patch:
+	@${REINPLACE_CMD} -e 's|--no-add-needed|--no-copy-dt-needed-entries|' ${WRKSRC}/qmake/compiler.pri
 	@${ECHO_CMD} 'QMAKE_LFLAGS += -fstack-protector' >> ${WRKSRC}/src/murmur/murmur.pro
 
 pre-install:

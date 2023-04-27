@@ -1,12 +1,11 @@
-# Created by: trevor
-
 PORTNAME=	csound
 DISTVERSION=	6.15.0
-PORTREVISION=	3
+PORTREVISION=	8
 CATEGORIES=	audio lang
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Sound synthesizer
+WWW=		https://csound.com/
 
 LICENSE=	LGPL21+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -23,9 +22,10 @@ USE_LDCONFIG=	yes
 
 CPE_VENDOR=	csounds
 
+CONFLICTS_INSTALL= clearsilver go-cs libextractor outguess
+
 CFLAGS_powerpc=	-maltivec
 CFLAGS_powerpcspe=	-DPFFFT_SIMD_DISABLE
-CFLAGS_powerpc64=	-maltivec
 CMAKE_ARGS=	-DBUILD_CSOUNDVST:BOOL=OFF \
 		-DBUILD_PD_CLASS:BOOL=OFF \
 		-DPYTHON_MODULE_INSTALL_DIR:PATH="${PYTHONPREFIX_SITELIBDIR}" \
@@ -90,7 +90,7 @@ FLUIDSYNTH_BROKEN=	FluidSynth 2.x is broken upstream: https://github.com/csound/
 
 HDF5_DESC=		Build HDF5 read/write plugin
 HDF5_LIB_DEPENDS=	libhdf5.so:science/hdf5 \
-			libsz.so:science/szip
+			libsz.so:science/libaec
 HDF5_CMAKE_BOOL=	BUILD_HDF5_OPCODES
 
 JACK_DESC=		Build the JACK related opcodes

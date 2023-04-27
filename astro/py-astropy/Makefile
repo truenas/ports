@@ -1,14 +1,14 @@
-# Created by: nwhitehorn
-
 PORTNAME=	astropy
-DISTVERSION=	5.0
+DISTVERSION=	5.2.2
+PORTREVISION=	1
 PORTEPOCH=	2
 CATEGORIES=	astro
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Community-developed python astronomy tools
+WWW=		https://www.astropy.org/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.rst
@@ -22,5 +22,7 @@ RUN_DEPENDS=	${PYNUMPY} \
 
 USES=		compiler:c11 python:3.8+
 USE_PYTHON=	autoplist cython distutils
+
+CONFLICTS_INSTALL=	p5-Data-ShowTable # bin/showtable
 
 .include <bsd.port.mk>

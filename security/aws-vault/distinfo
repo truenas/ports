@@ -1,5 +1,5 @@
-TIMESTAMP = 1617728486
-SHA256 (go/security_aws-vault/aws-vault-v6.3.1/v6.3.1.mod) = 69cb498e84e9ac4d97988c414361e54b23f50e670a41d59d01554c376c4250c9
-SIZE (go/security_aws-vault/aws-vault-v6.3.1/v6.3.1.mod) = 1126
-SHA256 (go/security_aws-vault/aws-vault-v6.3.1/v6.3.1.zip) = ae5fe807d3a15db7f467c025e2108b8b2581c01227401dbc34b907dfeb136aa8
-SIZE (go/security_aws-vault/aws-vault-v6.3.1/v6.3.1.zip) = 78411
+TIMESTAMP = 1673989065
+SHA256 (go/security_aws-vault/aws-vault-v6.6.2/v6.6.2.mod) = 05235c1f7175bc6d1858012ecc911c6de1eba5a472a807dfa345e1a2dc4d83ed
+SIZE (go/security_aws-vault/aws-vault-v6.6.2/v6.6.2.mod) = 1662
+SHA256 (go/security_aws-vault/aws-vault-v6.6.2/v6.6.2.zip) = 49c3f7e567cc731e902b951024832139eee68400401edcc2216ec7b590e4d70f
+SIZE (go/security_aws-vault/aws-vault-v6.6.2/v6.6.2.zip) = 83882

@@ -1,14 +1,16 @@
 PORTNAME=	nsq
 PORTVERSION=	1.2.1
 DISTVERSIONPREFIX=	v
+PORTREVISION=	12
 CATEGORIES=	net
 
 MAINTAINER=	jhixson@FreeBSD.org
 COMMENT=	Realtime distributed messaging platform
+WWW=		https://nsq.io
 
 LICENSE=	MIT
 
-ONLY_FOR_ARCHS=	aarch64 amd64 armv7
+ONLY_FOR_ARCHS=	aarch64 amd64 armv7 i386 riscv64
 
 USES=	go:modules
 

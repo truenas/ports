@@ -1,12 +1,11 @@
-# Created by: Arun Sharma <arun@sharma-home.net>
-
 PORTNAME=	onetbb
-PORTVERSION=	2021.4.0
+PORTVERSION=	2021.8.0
 DISTVERSIONPREFIX=	v
 CATEGORIES=	devel
 
 MAINTAINER=	martymac@FreeBSD.org
 COMMENT=	Library that provides thread building blocks
+WWW=		https://software.intel.com/oneapi/onetbb
 
 LICENSE=	APACHE20
 
@@ -32,16 +31,20 @@ PORTDOCS=	README.md
 OPTIONS_DEFINE=	DOCS
 
 # Pkgconfig: tbb.pc (on 64bit arch) vs tbb32.pc
-PLIST_SUB=	PCSUFX="${PCSUFX}"
+PLIST_SUB=	PCSUFX="${PCSUFX}" DBGSUFX="${DBGSUFX}"
 
 .include <bsd.port.pre.mk>
 
-.if ${ARCH} == i386 || ${ARCH} == powerpc
+.if defined(WITH_DEBUG)
+DBGSUFX=	_debug
+.endif
+
+.if ${ARCH} == i386 || ${ARCH} == powerpc || ${ARCH:Marmv?}
 PCSUFX=	32
 .endif
 
-.if ${ARCH} == powerpc || ${ARCH} == riscv64
-EXTRA_PATCHES=	${FILESDIR}/extra-patch-src_tbb_tools__api_ittnotify__config.h
+.if ${ARCH} == powerpc64
+CMAKE_ARGS+=	-DTBB_ENABLE_IPO:BOOL=OFF
 .endif
 
 .include <bsd.port.post.mk>

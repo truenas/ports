@@ -1,9 +1,7 @@
-# Created by: Phil Oleson <oz@nixil.net>
-
 PORTNAME=	dvd-slideshow
 PORTVERSION=	0.8.4
 DISTVERSIONSUFFIX=	-2
-PORTREVISION=	9
+PORTREVISION=	10
 CATEGORIES=	multimedia
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/${PORTVERSION}${DISTVERSIONSUFFIX} \
 		SF/${PORTNAME}/${PORTNAME}-themes/${THEMEVERSION}-1:themes
@@ -12,6 +10,7 @@ THEMEVERSION=	0.8.4
 
 MAINTAINER=	oz@nixil.net
 COMMENT=	Script to create slideshow-style DVD with some simple menus
+WWW=		http://dvd-slideshow.sourceforge.net/
 
 RUN_DEPENDS=	bash:shells/bash \
 		mpeg2enc:multimedia/mjpegtools \

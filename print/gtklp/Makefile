@@ -1,13 +1,13 @@
-# Created by: Martin Klaffenboeck <martin.klaffenboeck@gmx.at>
-
 PORTNAME=	gtklp
 DISTVERSION=	1.3.4
 DISTVERSIONSUFFIX=	.src
+PORTREVISION=	1
 CATEGORIES=	print
 MASTER_SITES=	SF
 
 MAINTAINER=	m.ne@gmx.net
 COMMENT=	GTK interface to cups
+WWW=		https://gtklp.sirtobi.com
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,11 +1,12 @@
 PORTNAME=	hits
 PORTVERSION=	0.1
 CATEGORIES=	biology python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Utilities for processing high-throughput sequencing experiments
+WWW=		https://github.com/jeffhussmann/hits
 
 LICENSE=	GPLv3
 

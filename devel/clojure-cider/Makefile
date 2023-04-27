@@ -1,12 +1,13 @@
 PORTNAME=	clojure-cider
-PORTVERSION=	1.1.0
-PORTREVISION=	2
+PORTVERSION=	1.7.0
+PORTREVISION=	5
 DISTVERSIONPREFIX=	v
 CATEGORIES=	devel elisp
 PKGNAMESUFFIX=	${EMACS_PKGNAMESUFFIX}
 
 MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Clojure IDE and REPL for Emacs
+WWW=		https://github.com/clojure-emacs/cider
 
 LICENSE=	GPLv3+
 
@@ -20,8 +21,8 @@ USE_GITHUB=	yes
 GH_ACCOUNT=	clojure-emacs
 GH_PROJECT=	cider
 
-NO_BUILD=	yes
 NO_ARCH=	yes
+NO_BUILD=	yes
 
 PLIST_FILES=	${EMACS_SITE_LISPDIR}/cider-client.el \
 		${EMACS_SITE_LISPDIR}/cider-eldoc.el \

@@ -1,6 +1,6 @@
 PORTNAME=	addresses
 PORTVERSION=	0.4.8
-PORTREVISION=	9
+PORTREVISION=	10
 CATEGORIES=	mail gnustep
 MASTER_SITES=	SAVANNAH/gap
 PKGNAMESUFFIX=	-goodies${PKGNAMESUFFIX2}
@@ -8,6 +8,7 @@ DISTNAME=	Addresses-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Goodies for addressbook for GNUstep
+WWW=		https://giesler.biz/bjoern/en/sw_addr.html
 
 LICENSE=	LGPL21
 

@@ -1,12 +1,11 @@
-# Created by: Chess Griffin <chess@chessgriffin.com>
-
 PORTNAME=	gpodder
-DISTVERSION=	3.10.17
+DISTVERSION=	3.11.0
 PORTREVISION=	1
 CATEGORIES=	multimedia python
 
 MAINTAINER=	rm@FreeBSD.org
 COMMENT=	Media aggregator and podcast client
+WWW=		https://gpodder.github.io/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING

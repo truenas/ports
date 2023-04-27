@@ -1,10 +1,12 @@
 PORTNAME=	zrythm
 DISTVERSIONPREFIX=	v
 DISTVERSION=	1.0.0-alpha.26.0.13
+PORTREVISION=	7
 CATEGORIES=	audio
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Modern music production system, also known as DAW
+WWW=		https://www.zrythm.org/en/
 
 LICENSE=	AGPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -53,6 +55,7 @@ USE_GNOME=	atk cairo gdkpixbuf2 glib20 gtk30 gtksourceview3 libxml2 pango
 USE_XORG=	x11
 
 SHEBANG_FILES=	scripts/collect_translatables.sh
+MESON_ARGS=	-Dlsp_dsp=disabled
 
 GLIB_SCHEMAS=	org.zrythm.Zrythm.gschema.xml
 

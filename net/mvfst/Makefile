@@ -1,37 +1,44 @@
 PORTNAME=	mvfst
-DISTVERSION=	g20211107
+DISTVERSION=	g20230119
+PORTREVISION=	1
 CATEGORIES=	net
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Implementation of the QUIC transport protocol
+WWW=		https://github.com/facebookincubator/mvfst
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 LIB_DEPENDS=	libboost_system.so:devel/boost-libs \
+		libdouble-conversion.so:devel/double-conversion \
+		libevent.so:devel/libevent \
 		libfizz.so:security/fizz \
 		libfmt.so:devel/libfmt \
 		libfolly.so:devel/folly \
-		libglog.so:devel/glog
+		libgflags.so:devel/gflags \
+		libglog.so:devel/glog \
+		libicui18n.so:devel/icu \
+		liblz4.so:archivers/liblz4 \
+		libsnappy.so:archivers/snappy \
+		libsodium.so:security/libsodium \
+		libunwind.so:devel/libunwind \
+		libbzip2.so:misc/vxl \
+		libzstd.so:archivers/zstd
 
-USES=		cmake compiler:c++17-lang cpe
+USES=		cmake:testing compiler:c++17-lang cpe
 USE_LDCONFIG=	yes
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	facebookincubator
-GH_TAGNAME=	248b2dc39bbd36863bbaa50385e8683428610009
+GH_TAGNAME=	1d933fd
 
 CPE_VENDOR=	facebook
 
 CMAKE_ON=	BUILD_SHARED_LIBS
 CMAKE_OFF=	BUILD_TESTS
+CMAKE_TESTING_ON=	BUILD_TESTS # several tests fail, see https://github.com/facebookincubator/mvfst/issues/275
 
 CXXFLAGS+=	-fPIC
-
-do-test:
-	@cd ${BUILD_WRKSRC} && \
-		${SETENV} ${CONFIGURE_ENV} ${CMAKE_BIN} ${CMAKE_ARGS} -DBUILD_TESTS:BOOL=ON ${CMAKE_SOURCE_PATH} && \
-		${SETENV} ${MAKE_ENV} ${MAKE_CMD} ${MAKE_ARGS} ${ALL_TARGET} && \
-		${SETENV} ${MAKE_ENV} ${MAKE_CMD} ${MAKE_ARGS} test
 
 .include <bsd.port.mk>

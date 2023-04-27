@@ -1,11 +1,12 @@
 PORTNAME=	repoze.xmliter
 PORTVERSION=	0.6
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	rm@FreeBSD.org
 COMMENT=	Wrapper for lxml trees which serializes to string upon iteration
+WWW=		https://pypi.org/project/repoze.xmliter/
 
 LICENSE=	REPOZE
 LICENSE_NAME=	Repoze License

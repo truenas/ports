@@ -1,5 +1,6 @@
 PORTNAME=	zanata-platform
 PORTVERSION=	4.6.2
+PORTREVISION=	1
 CATEGORIES=	devel java
 MASTER_SITES=	https://github.com/zanata/zanata-platform/releases/download/platform-${PORTVERSION}/ \
 		https://repo1.maven.org/maven2/mysql/mysql-connector-java/${MYSQL_CONNECTOR_JAVA_VERSION}/:database
@@ -9,6 +10,7 @@ EXTRACT_ONLY=
 
 MAINTAINER=	dbaio@FreeBSD.org
 COMMENT=	Web-based translation platform
+WWW=		http://zanata.org/
 
 LICENSE=	GPLv2 LGPL21+
 LICENSE_COMB=	multi

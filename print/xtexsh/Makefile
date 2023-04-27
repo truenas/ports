@@ -1,5 +1,3 @@
-# Created by: Jean-Sebastien Roy <js@jeannot.org>
-
 PORTNAME=	xtexsh
 DISTVERSION=	1.4-2
 PORTREVISION=	6
@@ -8,11 +6,12 @@ MASTER_SITES=	http://www.mat.univie.ac.at/~gerald/ftp/xtexsh/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Tcl/Tk-based simple TeX interface
+WWW=		https://www.mat.univie.ac.at/~gerald/ftp/xtexsh/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USES=		desktop-file-utils gnome shebangfix tk
+USES=		desktop-file-utils gnome shebangfix tex tk
 USE_TEX=	latex
 SHEBANG_FILES=	xtexsh
 

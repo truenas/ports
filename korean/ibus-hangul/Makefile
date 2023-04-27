@@ -1,10 +1,12 @@
 PORTNAME=	ibus-hangul
 PORTVERSION=	1.5.1
+PORTREVISION=	1
 CATEGORIES=	korean
 MASTER_SITES=	https://github.com/choehwanjin/ibus-hangul/releases/download/${PORTVERSION}/
 
 MAINTAINER=	jkim@FreeBSD.org
 COMMENT=	Hangul input engine for IBus
+WWW=		https://github.com/libhangul/ibus-hangul/wiki
 
 LICENSE=	GPLv2
 

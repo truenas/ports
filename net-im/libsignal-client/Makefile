@@ -1,15 +1,18 @@
 PORTNAME=	libsignal-client
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.9.6
-PORTREVISION=	2
+PORTREVISION=	16
 PORTEPOCH=	1
 CATEGORIES=	net-im java
 
 MAINTAINER=	0mp@FreeBSD.org
 COMMENT=	Implementation of the Signal client protocol
+WWW=		https://github.com/signalapp/libsignal-client
 
 LICENSE=	AGPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE
+
+BROKEN_aarch64=	fails to compile: could not compile `polyval`: the feature named `crypto` is not valid for this target
 
 BUILD_DEPENDS=	protoc:devel/protobuf
 

@@ -1,14 +1,13 @@
-# Created by: Alexander Logvinov <ports@logvinov.com>
-
 PORTNAME=	gnome-mplayer
 PORTVERSION=	1.0.9
-PORTREVISION=	4
+PORTREVISION=	6
 CATEGORIES=	multimedia gnome
 MASTER_SITES=	https://launchpad.net/ubuntu/+archive/primary/+files/
 DISTNAME=	gnome-mplayer_1.0.9.orig
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	GNOME frontend for MPlayer
+WWW=		http://kdekorte.googlepages.com/gnomemplayer
 
 LICENSE=	GPLv2
 

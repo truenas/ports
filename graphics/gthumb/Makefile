@@ -1,15 +1,16 @@
-# Created by: Joe Marcus Clarke <marcus@FreeBSD.org>
-#   $MCom: ports/trunk/graphics/gthumb/Makefile 19823 2014-08-20 09:28:14Z gusi $
-
 PORTNAME=	gthumb
-PORTVERSION=	3.10.1
-PORTREVISION=	2
+PORTVERSION=	3.12.2
+PORTREVISION=	4
 CATEGORIES=	graphics
 MASTER_SITES=	GNOME
-DIST_SUBDIR=	gnome3
+DIST_SUBDIR=	gnome
+
+PATCH_SITES=	https://gitlab.gnome.org/GNOME/gthumb/-/commit/
+PATCHFILES=	2133520496afd179702953a5d07aa99b5209f9cf.patch:-p1 #Fix build with libraw >= 0.21.0
 
 MAINTAINER=	gnome@FreeBSD.org
-COMMENT=	Image viewer and browser for the GNOME 3 environment
+COMMENT=	Image viewer and browser for the GNOME environment
+WWW=		https://wiki.gnome.org/Apps/gthumb/
 
 LICENSE=	GPLv2+
 
@@ -69,9 +70,9 @@ GLIB_SCHEMAS=	org.gnome.gthumb.change-date.gschema.xml \
 		org.gnome.gthumb.catalogs.gschema.xml \
 		org.gnome.gthumb.terminal.gschema.xml
 
-OPTIONS_DEFINE=		BRASERO CLUTTER EXIV2 GSTREAMER RAW SECRET \
+OPTIONS_DEFINE=		BRASERO CLUTTER EXIV2 GSTREAMER JXL RAW SECRET \
 			WEBP WEBSERVICES YELP
-OPTIONS_DEFAULT=	BRASERO CLUTTER EXIV2 GSTREAMER RAW SECRET \
+OPTIONS_DEFAULT=	BRASERO CLUTTER EXIV2 GSTREAMER JXL RAW SECRET \
 			WEBP WEBSERVICES YELP
 OPTIONS_SUB=		yes
 
@@ -83,8 +84,10 @@ CLUTTER_LIB_DEPENDS=	libclutter-gtk-1.0.so:graphics/clutter-gtk3
 CLUTTER_MESON_TRUE=	clutter
 EXIV2_LIB_DEPENDS=	libexiv2.so:graphics/exiv2
 EXIV2_MESON_TRUE=	exiv2
-GSTREAMER_USE=		gstreamer1=yes
+GSTREAMER_USES=		gstreamer
 GSTREAMER_MESON_TRUE=	gstreamer
+JXL_LIB_DEPENDS=	libjxl.so:graphics/libjxl
+JXL_MESON_TRUE=		libjxl
 RAW_DESC=		Raw image support via libraw
 RAW_LIB_DEPENDS=	libraw.so:graphics/libraw
 RAW_MESON_TRUE=		libraw

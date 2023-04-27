@@ -1,13 +1,12 @@
-# Created by: Mark Reidel <ports@mark.reidel.info>
-
 PORTNAME=	glurp
 PORTVERSION=	0.12.3
-PORTREVISION=	4
+PORTREVISION=	7
 CATEGORIES=	audio
 MASTER_SITES=	SF
 
 MAINTAINER=	ports@mark.reidel.info
 COMMENT=	Nice and clean GTK+-2.x based graphical client for musicpd
+WWW=		https://sourceforge.net/projects/glurp/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

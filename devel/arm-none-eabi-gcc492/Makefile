@@ -1,16 +1,20 @@
 PORTNAME=	gcc
 PORTVERSION=	4.9.2
-PORTREVISION=	5
+PORTREVISION=	6
 CATEGORIES=	devel
 MASTER_SITES=	GCC/releases/gcc-${DISTVERSION}
 PKGNAMEPREFIX?=	arm-none-eabi-
 PKGNAMESUFFIX=	492
 
-MAINTAINER=	ian@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	GNU Compiler Collection for bare metal arm cross-development
+WWW=		https://gcc.gnu.org/
 
 LICENSE=	GPLv3 GPLv3RLE
 LICENSE_COMB=	multi
+
+DEPRECATED=	Long time unsupported upstream
+EXPIRATION_DATE=	2023-05-31
 
 BROKEN_mips=		configure: error: cannot compute suffix of object files: cannot compile
 BROKEN_mips64=		configure: error: cannot compute suffix of object files: cannot compile
@@ -43,6 +47,8 @@ CONFIGURE_ARGS=	--target=${GCC_TARGET} --disable-nls --enable-languages=c,c++ \
 		--with-ld=${LOCALBASE}/bin/${BU_PREFIX}-ld \
 		--disable-libstdcxx \
 		--disable-multilib
+
+CONFLICTS_INSTALL=	arm-none-eabi-gcc
 
 PLIST=	${.CURDIR}/pkg-plist
 

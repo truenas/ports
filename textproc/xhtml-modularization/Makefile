@@ -1,14 +1,13 @@
-# Created by: nectar
-
 PORTNAME=	xhtml-modularization
 PORTVERSION=	1.0.${RECDATE}
 PORTREVISION=	1
 CATEGORIES=	textproc
-MASTER_SITES=	http://www.w3.org/TR/2001/REC-${PORTNAME}-${RECDATE}/
-DISTNAME=	${PORTNAME}
+MASTER_SITES=	https://www.w3.org/TR/2001/REC-xhtml-modularization-${RECDATE}/
+DISTNAME=	xhtml-modularization
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	W3C's Modularization of XHTML DTDs and docs
+WWW=		https://www.w3.org/TR/xhtml-modularization/
 
 RUN_DEPENDS=	xmlcatmgr:textproc/xmlcatmgr
 
@@ -19,7 +18,7 @@ NO_BUILD=	yes
 NO_MTREE=	yes
 
 SUB_FILES=	catalog.xml
-WRKSRC=		${WRKDIR}/${PORTNAME}-${RECDATE}
+WRKSRC=		${WRKDIR}/xhtml-modularization-${RECDATE}
 
 RECDATE=	20010410
 

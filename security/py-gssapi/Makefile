@@ -1,19 +1,20 @@
 PORTNAME=	gssapi
-DISTVERSION=	1.6.14
+DISTVERSION=	1.8.2
 CATEGORIES=	security python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	john@saltant.com
 COMMENT=	High-level and low-level Python bindings to GSSAPI C libraries
+WWW=		https://github.com/pythongssapi/python-gssapi
 
 LICENSE=	ISCL
 
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}decorator>0:devel/py-decorator@${PY_FLAVOR}
 
-# Officially: 3.6, 3.7, 3.8, 3.9
-USES=	python:3.6+
-USE_PYTHON=	distutils autoplist
+# Officially: 3.7-3.11
+USES=	python:3.7-3.11
+USE_PYTHON=	autoplist cython distutils
 
 OPTIONS_RADIO=	GSSAPI
 OPTIONS_RADIO_GSSAPI=	GSSAPI_BASE GSSAPI_HEIMDAL GSSAPI_MIT

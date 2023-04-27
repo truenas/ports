@@ -1,14 +1,13 @@
-# Created by: Mateusz Piotrowski <0mp@FreeBSD.org>
-
 PORTNAME=	nix
-DISTVERSION=	2.3.10
-PORTREVISION=	1
+DISTVERSION=	2.3.11
+PORTREVISION=	2
 CATEGORIES=	sysutils
 PATCH_SITES=	https://github.com/NixOS/nix/commit/
 PATCHFILES=	7c112351d9e941567e64063638396259546d9a48.patch:-p1  # libutil: EPERM from kill(-1, ...) is fine #4530
 
-MAINTAINER=	0mp@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Purely functional package manager
+WWW=		https://nixos.org/nix/
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -32,11 +31,13 @@ TEST_DEPENDS=	dot:graphics/graphviz \
 		gxargs:misc/findutils \
 		hg:devel/mercurial
 
-USES=		autoreconf bison compiler:c++17-lang gmake localbase pkgconfig \
+USES=		autoreconf bison compiler:c++17-lang cpe gmake localbase pkgconfig \
 		sqlite:3 ssl
 USE_GITHUB=	yes
 GH_ACCOUNT=	NixOS
 USE_LDCONFIG=	yes
+
+CPE_VENDOR=	nix_project
 
 HAS_CONFIGURE=		yes
 # Workaround for bashisms in the configure script.

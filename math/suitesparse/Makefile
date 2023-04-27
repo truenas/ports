@@ -1,16 +1,15 @@
-# Created by: Maho Nakata <maho@FreeBSD.org>
-
 PORTNAME=	suitesparse
-PORTVERSION=	5.10.1
+PORTVERSION=	7.0.1
+PORTREVISION=	1
 CATEGORIES=	math
 
 MAINTAINER=	fortran@FreeBSD.org
 COMMENT=	Set of packages for sparse matrix calculation
-
-LICENSE=	GPLv2+
+WWW=		https://faculty.cse.tamu.edu/davis/suitesparse.html
 
 RUN_DEPENDS=	suitesparse-amd>0:math/suitesparse-amd			\
 		suitesparse-btf>0:math/suitesparse-btf			\
+		suitesparse-camd>0:math/suitesparse-camd		\
 		suitesparse-ccolamd>0:math/suitesparse-ccolamd		\
 		suitesparse-cholmod>0:math/suitesparse-cholmod		\
 		suitesparse-colamd>0:math/suitesparse-colamd		\
@@ -21,7 +20,7 @@ RUN_DEPENDS=	suitesparse-amd>0:math/suitesparse-amd			\
 		suitesparse-ldl>0:math/suitesparse-ldl			\
 		suitesparse-mongoose>0:math/suitesparse-mongoose	\
 		suitesparse-rbio>0:math/suitesparse-rbio		\
-		suitesparse-slip_lu>0:math/suitesparse-slip_lu		\
+		suitesparse-spex>0:math/suitesparse-spex		\
 		suitesparse-spqr>0:math/suitesparse-spqr		\
 		suitesparse-umfpack>0:math/suitesparse-umfpack
 .if !defined(PACKAGE_BUILDING)

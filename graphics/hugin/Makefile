@@ -1,12 +1,12 @@
-# Created by: Carlos Eduardo G. Carvalho <cartola@openit.com.br>
-
 PORTNAME=	hugin
-PORTVERSION=	2020.0.0
+DISTVERSION=	2022.0.0
+PORTREVISION=	3
 CATEGORIES=	graphics
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/${PORTNAME}-${PORTVERSION:R}
 
-MAINTAINER=	fuz@fuz.su
+MAINTAINER=	fuz@FreeBSD.org
 COMMENT=	GUI for Panorama Tools, to stitch panoramic images
+WWW=		http://hugin.sourceforge.net/
 
 LICENSE=	GPLv2
 
@@ -19,7 +19,9 @@ LIB_DEPENDS=	libOpenEXR.so:graphics/openexr \
 		libpano13.so:graphics/libpano13 \
 		libvigraimpex.so:graphics/vigra \
 		libpng.so:graphics/png \
-		libtiff.so:graphics/tiff
+		libtiff.so:graphics/tiff \
+		libflann.so:math/flann \
+		liblz4.so:archivers/liblz4
 # gmake is really needed at _runtime_.   Do not remove it from this list.
 RUN_DEPENDS=	enblend>=4.1.4:graphics/enblend \
 		exiftool:graphics/p5-Image-ExifTool \
@@ -30,6 +32,8 @@ USES=		cmake compiler:c++11-lib desktop-file-utils gettext gl gnome \
 USE_GL=		gl glew glu glut
 USE_WX=		3.0+
 USE_XORG=	x11
+
+WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION:R}.0
 
 SHEBANG_FILES=	src/hugin_script_interface/hpi.py \
 		src/hugin_script_interface/plugins/*.py \

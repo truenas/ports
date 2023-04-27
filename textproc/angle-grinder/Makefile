@@ -1,11 +1,12 @@
 PORTNAME=	angle-grinder
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.18.0
-PORTREVISION=	2
+PORTREVISION=	16
 CATEGORIES=	textproc
 
 MAINTAINER=	lcook@FreeBSD.org
 COMMENT=	Slice and dice logs on the command line
+WWW=		https://github.com/rcoh/angle-grinder
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

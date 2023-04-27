@@ -1,12 +1,12 @@
-# Created by: Guangyuan Yang <ygy@FreeBSD.org>
-
 PORTNAME=	spelling
-DISTVERSION=	2.2
+DISTVERSION=	2.2.1
+PORTREVISION=	1
 CATEGORIES=	textproc
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	ygy@FreeBSD.org
 COMMENT=	Tools for Spell Checking in R
+WWW=		https://docs.ropensci.org/spelling/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

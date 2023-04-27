@@ -1,5 +1,3 @@
-# Created by: Ed Schouten <ed@fxq.nl>
-
 PORTNAME=	quake4
 PORTVERSION=	1.4.2
 PORTREVISION=	1
@@ -13,6 +11,7 @@ EXTRACT_SUFX=	.run
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Quake 4 for Linux
+WWW=		http://www.quake4game.com/
 
 # Converted from NO_CDROM
 LICENSE=	IDSOFTWARE

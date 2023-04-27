@@ -1,5 +1,3 @@
-# Created by: Gabor Zahemszky <Gabor@Zahemszky.HU>
-
 PORTNAME=	aften
 PORTVERSION=	0.0.8
 CATEGORIES=	audio
@@ -7,8 +5,11 @@ MASTER_SITES=	SF
 
 MAINTAINER=	Gabor@Zahemszky.HU
 COMMENT=	ATSC A/52 audio encoder
+WWW=		http://aften.sourceforge.net/
 
 USES=		tar:bzip2 cmake
+
+CONFLICTS_INSTALL=	wavbreaker # bin/wavinfo
 
 OPTIONS_DEFINE=		SHARED_LIB CXX_BINDINGS DOUBLE
 OPTIONS_DEFAULT=

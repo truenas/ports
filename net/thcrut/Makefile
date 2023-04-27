@@ -1,13 +1,12 @@
-# Created by: Kris Kennaway <kris@FreeBSD.org>
-
 PORTNAME=	thcrut
 PORTVERSION=	1.2.5
 CATEGORIES=	net
 MASTER_SITES=	http://thc.org/releases/ \
 		http://redundancy.redundancy.org/mirror/
 
-MAINTAINER=	lx@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Local network discovery tool
+WWW=		http://thc.org.segfault.net/
 
 BROKEN_FreeBSD_13=	ld: error: duplicate symbol: ip_tcp_sync_addr
 BROKEN_FreeBSD_14=	ld: error: duplicate symbol: ip_tcp_sync_addr

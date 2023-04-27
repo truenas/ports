@@ -1,3 +1,5 @@
-TIMESTAMP = 1630595551
-SHA256 (hselasky-midipp-v2.1.1_GH0.tar.gz) = 412aa98475f620d835ccfa071bdcdf8396454cc72ee026c185605b343d0d1456
-SIZE (hselasky-midipp-v2.1.1_GH0.tar.gz) = 159212
+TIMESTAMP = 1666122358
+SHA256 (hselasky-midipp-v2.1.7_GH0.tar.gz) = 40c17f4f9048a1b96b0f73262aeb8dd8839a594d2665eb5026b806632cdab1ae
+SIZE (hselasky-midipp-v2.1.7_GH0.tar.gz) = 2710143
+SHA256 (hselasky-libumidi-v2.1.8_GH0.tar.gz) = 58bbc5bea98f09f488b9a7fd4882de1a6480149b71c56ae403f1167944663926
+SIZE (hselasky-libumidi-v2.1.8_GH0.tar.gz) = 44808

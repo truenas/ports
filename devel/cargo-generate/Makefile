@@ -1,11 +1,12 @@
 PORTNAME=	cargo-generate
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.9.0
-PORTREVISION=	5
+DISTVERSION=	0.13.1
+PORTREVISION=	8
 CATEGORIES=	devel
 
 MAINTAINER=	lcook@FreeBSD.org
 COMMENT=	Quickly generate Rust project templates from existing git repositories
+WWW=		https://github.com/ashleygwilliams/cargo-generate
 
 LICENSE=	APACHE20 MIT
 LICENSE_COMB=	dual
@@ -16,195 +17,176 @@ LIB_DEPENDS=	libcurl.so:ftp/curl \
 		libgit2.so:devel/libgit2 \
 		libssh2.so:security/libssh2
 
-USES=		cargo ssl
+USES=		cargo localbase ssl
 USE_GITHUB=	yes
 GH_ACCOUNT=	ashleygwilliams
 
-CARGO_CRATES=	adler-1.0.2 \
+CARGO_CRATES=	addr2line-0.17.0 \
+		adler-1.0.2 \
+		ahash-0.7.6 \
 		aho-corasick-0.7.18 \
-		ansi_term-0.11.0 \
-		anyhow-1.0.43 \
-		anymap-0.12.1 \
-		assert_cmd-2.0.0 \
+		ansi_term-0.12.1 \
+		anyhow-1.0.56 \
+		anymap2-0.13.0 \
+		assert_cmd-2.0.4 \
 		atty-0.2.14 \
-		autocfg-1.0.1 \
-		bitflags-1.2.1 \
-		bitmaps-2.1.0 \
+		autocfg-1.1.0 \
+		backtrace-0.3.64 \
+		bitflags-1.3.2 \
 		block-buffer-0.7.3 \
 		block-padding-0.1.5 \
-		bstr-0.2.15 \
+		bstr-0.2.17 \
 		byte-tools-0.3.1 \
 		byteorder-1.4.3 \
-		bytesize-1.0.1 \
-		cargo-0.55.0 \
-		cargo-platform-0.1.1 \
-		cargo-util-0.1.1 \
-		cc-1.0.67 \
+		cargo-husky-1.5.0 \
+		cc-1.0.73 \
 		cfg-if-1.0.0 \
-		chrono-0.4.19 \
-		clap-2.33.3 \
-		commoncrypto-0.2.0 \
-		commoncrypto-sys-0.2.0 \
-		console-0.14.1 \
-		core-foundation-0.9.1 \
-		core-foundation-sys-0.8.2 \
-		crates-io-0.33.0 \
-		crc32fast-1.2.1 \
-		crossbeam-channel-0.5.1 \
-		crossbeam-deque-0.8.0 \
-		crossbeam-epoch-0.9.5 \
-		crossbeam-utils-0.8.5 \
-		crypto-hash-0.3.4 \
-		curl-0.4.35 \
-		curl-sys-0.4.41+curl-7.75.0 \
-		dialoguer-0.8.0 \
+		clap-2.34.0 \
+		console-0.15.0 \
+		crossbeam-channel-0.5.4 \
+		crossbeam-deque-0.8.1 \
+		crossbeam-epoch-0.9.8 \
+		crossbeam-utils-0.8.8 \
+		dialoguer-0.10.0 \
 		difflib-0.4.0 \
 		digest-0.8.1 \
-		dirs-3.0.2 \
-		dirs-sys-0.3.6 \
+		dirs-4.0.0 \
+		dirs-sys-0.3.7 \
 		doc-comment-0.3.3 \
 		either-1.6.1 \
 		encode_unicode-0.3.6 \
-		env_logger-0.8.3 \
+		failure-0.1.8 \
+		failure_derive-0.1.8 \
 		fake-simd-0.1.2 \
-		filetime-0.2.14 \
-		flate2-1.0.20 \
+		fastrand-1.7.0 \
 		float-cmp-0.9.0 \
 		fnv-1.0.7 \
 		foreign-types-0.3.2 \
 		foreign-types-shared-0.1.1 \
 		form_urlencoded-1.0.1 \
-		fwdansi-1.1.0 \
 		generic-array-0.12.4 \
-		getrandom-0.2.2 \
-		git2-0.13.21 \
-		git2-curl-0.14.1 \
-		glob-0.3.0 \
+		getrandom-0.2.6 \
+		gimli-0.26.1 \
+		git-config-0.2.1 \
+		git-features-0.20.0 \
+		git-hash-0.9.3 \
+		git2-0.14.2 \
 		globset-0.4.8 \
 		heck-0.3.3 \
-		hermit-abi-0.1.18 \
-		hex-0.3.2 \
+		heck-0.4.0 \
+		hermit-abi-0.1.19 \
 		hex-0.4.3 \
 		home-0.5.3 \
-		humantime-2.1.0 \
-		idna-0.2.2 \
+		idna-0.2.3 \
 		ignore-0.4.18 \
-		im-rc-15.0.0 \
 		indicatif-0.16.2 \
-		indoc-1.0.3 \
-		itertools-0.10.0 \
-		itoa-0.4.7 \
-		jobserver-0.1.21 \
-		kstring-1.0.1 \
+		indoc-1.0.4 \
+		instant-0.1.12 \
+		itertools-0.10.3 \
+		itoa-1.0.1 \
+		jobserver-0.1.24 \
+		kstring-2.0.0 \
 		lazy_static-1.4.0 \
-		lazycell-1.3.0 \
-		libc-0.2.92 \
-		libgit2-sys-0.12.22+1.1.0 \
-		libnghttp2-sys-0.1.6+1.43.0 \
-		libssh2-sys-0.2.21 \
-		libz-sys-1.1.2 \
-		liquid-0.22.0 \
-		liquid-core-0.22.0 \
-		liquid-derive-0.22.0 \
-		liquid-lib-0.22.0 \
-		log-0.4.14 \
+		libc-0.2.122 \
+		libgit2-sys-0.13.2+1.4.2 \
+		libssh2-sys-0.2.23 \
+		libz-sys-1.1.5 \
+		liquid-0.26.0 \
+		liquid-core-0.26.0 \
+		liquid-derive-0.26.0 \
+		liquid-lib-0.26.0 \
+		log-0.4.16 \
 		maplit-1.0.2 \
-		matches-0.1.8 \
-		memchr-2.4.0 \
-		memoffset-0.6.4 \
+		matches-0.1.9 \
+		memchr-2.4.1 \
+		memoffset-0.6.5 \
+		minimal-lexical-0.2.1 \
 		miniz_oxide-0.4.4 \
-		miow-0.3.7 \
+		nom-7.1.1 \
 		normalize-line-endings-0.3.0 \
-		num-integer-0.1.44 \
 		num-traits-0.2.14 \
-		num_cpus-1.13.0 \
+		num_cpus-1.13.1 \
+		num_threads-0.1.5 \
 		number_prefix-0.4.0 \
-		once_cell-1.7.2 \
+		object-0.27.1 \
+		once_cell-1.10.0 \
 		opaque-debug-0.2.3 \
-		opener-0.4.1 \
-		openssl-0.10.36 \
-		openssl-probe-0.1.2 \
-		openssl-sys-0.9.66 \
+		openssl-0.10.38 \
+		openssl-probe-0.1.5 \
+		openssl-src-111.18.0+1.1.1n \
+		openssl-sys-0.9.72 \
+		path-absolutize-3.0.13 \
+		path-dedot-3.0.17 \
 		percent-encoding-2.1.0 \
 		pest-2.1.3 \
 		pest_derive-2.1.0 \
 		pest_generator-2.1.3 \
 		pest_meta-2.1.3 \
-		pkg-config-0.3.19 \
-		ppv-lite86-0.2.10 \
-		predicates-2.0.2 \
-		predicates-core-1.0.2 \
-		predicates-tree-1.0.2 \
+		pkg-config-0.3.25 \
+		predicates-2.1.1 \
+		predicates-core-1.0.3 \
+		predicates-tree-1.0.5 \
 		proc-macro-error-1.0.4 \
 		proc-macro-error-attr-1.0.4 \
 		proc-macro-hack-0.5.19 \
-		proc-macro2-1.0.24 \
-		proc-quote-0.3.2 \
+		proc-macro2-1.0.37 \
+		proc-quote-0.4.0 \
 		proc-quote-impl-0.3.2 \
-		quote-1.0.9 \
-		rand-0.8.3 \
-		rand_chacha-0.3.0 \
-		rand_core-0.5.1 \
-		rand_core-0.6.2 \
-		rand_hc-0.3.0 \
-		rand_xoshiro-0.4.0 \
+		pwd-1.3.1 \
+		quick-error-2.0.1 \
+		quote-1.0.18 \
 		rayon-1.5.1 \
 		rayon-core-1.9.1 \
-		redox_syscall-0.2.5 \
-		redox_users-0.4.0 \
-		regex-1.5.4 \
-		regex-automata-0.1.9 \
+		redox_syscall-0.2.13 \
+		redox_users-0.4.3 \
+		regex-1.5.5 \
+		regex-automata-0.1.10 \
 		regex-syntax-0.6.25 \
 		remove_dir_all-0.5.3 \
 		remove_dir_all-0.7.0 \
-		rustc-workspace-hack-1.0.0 \
-		rustfix-0.5.1 \
-		ryu-1.0.5 \
+		rhai-1.6.1 \
+		rhai_codegen-1.4.0 \
+		rustc-demangle-0.1.21 \
 		same-file-1.0.6 \
 		sanitize-filename-0.3.0 \
-		schannel-0.1.19 \
 		scopeguard-1.1.0 \
-		semver-1.0.4 \
-		serde-1.0.125 \
-		serde_derive-1.0.125 \
-		serde_ignored-0.1.2 \
-		serde_json-1.0.64 \
+		semver-1.0.7 \
+		serde-1.0.136 \
+		serde_derive-1.0.136 \
 		sha-1-0.8.2 \
-		shell-escape-0.1.5 \
-		sized-chunks-0.6.4 \
-		socket2-0.3.19 \
-		strip-ansi-escapes-0.1.0 \
+		smallvec-1.8.0 \
+		smartstring-1.0.1 \
+		static_assertions-1.1.0 \
 		strsim-0.8.0 \
-		structopt-0.3.22 \
-		structopt-derive-0.4.15 \
-		syn-1.0.67 \
-		tar-0.4.35 \
-		tempfile-3.2.0 \
-		termcolor-1.1.2 \
-		terminal_size-0.1.16 \
+		structopt-0.3.26 \
+		structopt-derive-0.4.18 \
+		syn-1.0.91 \
+		synstructure-0.12.6 \
+		tempfile-3.3.0 \
+		terminal_size-0.1.17 \
+		termtree-0.2.4 \
 		textwrap-0.11.0 \
-		thiserror-1.0.26 \
-		thiserror-impl-1.0.26 \
-		thread_local-1.1.3 \
-		time-0.1.43 \
-		tinyvec-1.1.1 \
+		thiserror-1.0.30 \
+		thiserror-impl-1.0.30 \
+		thread_local-1.1.4 \
+		time-0.3.9 \
+		time-macros-0.2.4 \
+		tinyvec-1.5.1 \
 		tinyvec_macros-0.1.0 \
 		toml-0.5.8 \
-		treeline-0.1.0 \
-		typenum-1.13.0 \
+		typenum-1.15.0 \
 		ucd-trie-0.1.3 \
-		unicode-bidi-0.3.4 \
-		unicode-normalization-0.1.17 \
-		unicode-segmentation-1.7.1 \
-		unicode-width-0.1.8 \
-		unicode-xid-0.2.1 \
-		unindent-0.1.7 \
+		unicode-bidi-0.3.7 \
+		unicode-bom-1.1.4 \
+		unicode-normalization-0.1.19 \
+		unicode-segmentation-1.9.0 \
+		unicode-width-0.1.9 \
+		unicode-xid-0.2.2 \
+		unindent-0.1.8 \
 		url-2.2.2 \
-		utf8parse-0.1.1 \
-		vcpkg-0.2.11 \
+		vcpkg-0.2.15 \
 		vec_map-0.8.2 \
-		version_check-0.9.3 \
-		vte-0.3.3 \
+		version_check-0.9.4 \
 		wait-timeout-0.2.0 \
 		walkdir-2.3.2 \
 		wasi-0.10.2+wasi-snapshot-preview1 \
@@ -212,7 +194,7 @@ CARGO_CRATES=	adler-1.0.2 \
 		winapi-i686-pc-windows-gnu-0.4.0 \
 		winapi-util-0.1.5 \
 		winapi-x86_64-pc-windows-gnu-0.4.0 \
-		zeroize-1.2.0
+		zeroize-1.5.4
 
 PLIST_FILES=	bin/${PORTNAME}
 PORTDOCS=	CHANGELOG.md CODE_OF_CONDUCT.md CONTRIBUTING.md README.md \

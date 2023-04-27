@@ -1,11 +1,12 @@
 PORTNAME=	keybinder
 PORTVERSION=	0.3.1
-PORTREVISION=	5
+PORTREVISION=	6
 DISTVERSIONPREFIX=	v
 CATEGORIES=	x11
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Library for registering keyboard shortcuts
+WWW=		https://github.com/engla/keybinder
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

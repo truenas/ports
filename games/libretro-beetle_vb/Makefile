@@ -1,9 +1,10 @@
 PORTNAME=	libretro-beetle_vb
-PORTVERSION=	0.20210214
+PORTVERSION=	0.20220329
 CATEGORIES=	games
 
-MAINTAINER=	menelkir@itroll.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Standalone port of Mednafen VB to libretro
+WWW=		https://github.com/libretro/beetle-vb-libretro
 
 LICENSE=	GPLv2
 
@@ -13,7 +14,7 @@ USE_LDCONFIG=	yes
 USE_GITHUB=	yes
 GH_ACCOUNT=	libretro
 GH_PROJECT=	beetle-vb-libretro
-GH_TAGNAME=	7412262
+GH_TAGNAME=	a91437a
 
 PLIST_FILES=	lib/libretro/mednafen_vb_libretro.so
 

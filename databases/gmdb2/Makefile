@@ -1,12 +1,12 @@
-# Created by: Rainer Hurling <rhurlin@gwdg.de>
-
 PORTNAME=	gmdb2
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.9.1
+PORTREVISION=	3
 CATEGORIES=	databases
 
 MAINTAINER=	rhurlin@FreeBSD.org
 COMMENT=	Official GUI for mdbtools
+WWW=		https://github.com/mdbtools/gmdb2/
 
 LICENSE=	GPLv2
 

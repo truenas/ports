@@ -1,11 +1,12 @@
 PORTNAME=	django-radius
 DISTVERSION=	1.5.0
 CATEGORIES=	www net python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	kai@FreeBSD.org
 COMMENT=	Django authentication backend for RADIUS
+WWW=		https://github.com/robgolding/django-radius
 
 LICENSE=	BSD3CLAUSE
 

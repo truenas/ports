@@ -1,12 +1,14 @@
 PORTNAME=	cgl-conic
 DISTVERSIONPREFIX=	releases/
 DISTVERSION=	1.0.0-6
+PORTREVISION=	3
 DISTVERSIONSUFFIX=	-gc96de60
 CATEGORIES=	math
 PKGNAMEPREFIX=	coin-or-
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Strategies for conic problems for COIN-OR Cut Generation
+WWW=		https://github.com/aykutbulut/CGL-CONIC
 
 LICENSE=	EPL
 LICENSE_FILE=	${WRKSRC}/LICENSE

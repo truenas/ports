@@ -5,26 +5,29 @@ CATEGORIES=	net
 
 MAINTAINER=	koue@chaosophia.net
 COMMENT=	OpenBSD relay daemon
+WWW=		https://github.com/mmatuska/relayd
 
 LICENSE=	ISCL
 
-GH_ACCOUNT=	mmatuska
+BROKEN=		fails to build
 
 USES=		ssl uidfix
 USE_GITHUB=	yes
+GH_ACCOUNT=	mmatuska
+
 USE_RC_SUBR=	relayd
-WRKSRC_SUBDIR=	src/usr.sbin
+MAKE_ARGS+=	BINDIR=${PREFIX}/sbin \
+		MANDIR=${PREFIX}/man/man
 
 CFLAGS+=	-Wall
 
-MAKE_ARGS+=	BINDIR=${PREFIX}/sbin \
-		MANDIR=${PREFIX}/man/man
+WRKSRC_SUBDIR=	src/usr.sbin
 
 USERS=		_relayd
 GROUPS=		_relayd
 
 post-install:
-	@${INSTALL_DATA} ${WRKSRC}/../etc/relayd.conf \
+	${INSTALL_DATA} ${WRKSRC}/../etc/relayd.conf \
 		${STAGEDIR}${PREFIX}/etc/relayd.conf.sample
 
 .include <bsd.port.pre.mk>

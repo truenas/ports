@@ -1,8 +1,6 @@
-# Created by: Maxim Sobolev <sobomax@FreeBSD.org>
-
 PORTNAME=	sdlroids
-PORTVERSION=	1.3.4
-PORTREVISION=	18
+DISTVERSION=	1.3.4
+PORTREVISION=	19
 CATEGORIES=	games
 MASTER_SITES=	SF \
 		SF/nemysisfreebsdp/${CATEGORIES}/:icons
@@ -13,12 +11,10 @@ EXTRACT_ONLY=	${PORTNAME}-${DISTVERSION}${EXTRACT_SUFX}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Enhanced shoot-the-asteroids game
+WWW=		https://sourceforge.net/projects/sdlroids/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
-
-BROKEN_FreeBSD_13=	ld: error: duplicate symbol: flagargs
-BROKEN_FreeBSD_14=	ld: error: duplicate symbol: flagargs
 
 USES=		gmake sdl tar:bzip2
 GNU_CONFIGURE=	yes

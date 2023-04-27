@@ -1,7 +1,5 @@
-# Created by: Gea-Suan Lin <gslin@gslin.org>
-
 PORTNAME=	Perlanet
-PORTVERSION=	2.0.5
+PORTVERSION=	3.0.0
 DISTVERSIONPREFIX=	v
 CATEGORIES=	www perl5
 MASTER_SITES=	CPAN
@@ -10,6 +8,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Program for creating programs that aggregate web feeds
+WWW=		https://metacpan.org/release/Perlanet
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual
@@ -29,6 +28,7 @@ RUN_DEPENDS=	p5-CHI>=0:devel/p5-CHI \
 		p5-XML-Feed>=0.22:textproc/p5-XML-Feed \
 		p5-YAML>=0:textproc/p5-YAML \
 		p5-namespace-autoclean>=0:devel/p5-namespace-autoclean
+TEST_DEPENDS=	p5-Test-Warnings>=0:devel/p5-Test-Warnings
 
 USES=		perl5
 USE_PERL5=	configure

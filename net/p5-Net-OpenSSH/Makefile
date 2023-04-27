@@ -1,11 +1,12 @@
 PORTNAME=	Net-OpenSSH
-PORTVERSION=	0.80
+PORTVERSION=	0.83
 CATEGORIES=	net perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Perl SSH client package implemented on top of OpenSSH
+WWW=		https://metacpan.org/release/Net-OpenSSH
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

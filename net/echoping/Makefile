@@ -1,5 +1,3 @@
-# Created by: peter
-
 PORTNAME=	echoping
 PORTVERSION=	6.0.2
 PORTREVISION=	9
@@ -7,6 +5,7 @@ CATEGORIES=	net
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Ping-like program that uses TCP and/or HTTP
+WWW=		https://github.com/bortzmeyer/echoping
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -35,7 +34,7 @@ OPTIONS_DEFINE=	LDAP PGSQL
 OPTIONS_DEFAULT=LDAP
 OPTIONS_SUB=	yes
 
-LDAP_USE=	OPENLDAP=yes
+LDAP_USES=	ldap
 LDAP_VARS=	PING_PLUGINS+=ldap
 
 PGSQL_USES=	pgsql

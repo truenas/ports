@@ -1,13 +1,12 @@
-# Created by: Bartoletti <lbartoletti@FreeBSD.org>
-
 PORTNAME=	lingot
 PORTVERSION=	1.0.1
-PORTREVISION=	1
+PORTREVISION=	3
 CATEGORIES=	audio
 MASTER_SITES=	SAVANNAH
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Musical instrument tuner
+WWW=		https://www.nongnu.org/lingot/
 
 LICENSE=	GPLv2
 

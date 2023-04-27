@@ -1,19 +1,17 @@
-# Created by: mbr@FreeBSD.org
-
 PORTNAME=	open-vm-tools
-PORTVERSION=	11.3.5
-PORTREVISION=	1
+PORTVERSION=	12.2.0
 DISTVERSIONPREFIX=	stable-
 PORTEPOCH=	2
 CATEGORIES=	emulators
 
 MAINTAINER=	garga@FreeBSD.org
 COMMENT=	Open VMware tools for FreeBSD VMware guests ${${FLAVOR}_COMMENT}
+WWW=		https://github.com/vmware/open-vm-tools
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-ONLY_FOR_ARCHS=	amd64 aarch64 i386
+ONLY_FOR_ARCHS=	aarch64 amd64 i386
 
 LIB_DEPENDS=	libdnet.so:net/libdnet \
 		libmspack.so:archivers/libmspack
@@ -35,6 +33,7 @@ USE_RC_SUBR=	vmware-guestd vmware-kmod
 
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS+=--disable-vgauth \
+		--enable-containerinfo=no \
 		--sysconfdir=${PREFIX}/etc \
 		--without-icu
 CONFIGURE_ENV+=	SYSDIR=${SRC_BASE}/sys
@@ -63,9 +62,10 @@ FUSE_USES=		fuse
 LIBNOTIFY_LIB_DEPENDS=	libnotify.so:devel/libnotify
 OPENSSL_CONFIGURE_WITH=	ssl
 X11_LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig \
-			libfreetype.so:print/freetype2
+			libfreetype.so:print/freetype2 \
+			libharfbuzz.so:print/harfbuzz
 X11_USES=		xorg
-X11_USE=		GNOME=gdkpixbuf2,gtk30,gtkmm30 \
+X11_USE=		GNOME=gdkpixbuf2,gdkpixbuf2xlib,gtk30,gtkmm30 \
 			XORG=ice,sm,x11,xext,xi,xinerama,xorgproto,xrandr,xrender,xtst
 X11_CONFIGURE_WITH=	gtk3 gtkmm3 x
 

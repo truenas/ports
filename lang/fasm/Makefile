@@ -1,13 +1,12 @@
-# Created by: Sergey Skvortsov <skv@protey.ru>
-
 PORTNAME=	fasm
-PORTVERSION=	1.73.28
+PORTVERSION=	1.73.30
 CATEGORIES=	lang devel
 MASTER_SITES=	https://flatassembler.net/ \
 		LOCAL/sunpoet
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Flat, multiple-pass assembler for IA-32 & x86-64 architectures
+WWW=		https://flatassembler.net/
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/license.txt
@@ -19,6 +18,9 @@ WRKSRC=		${WRKDIR}/${PORTNAME}
 
 PLIST_FILES=	bin/fasm
 PORTDOCS=	fasm.txt readme.txt whatsnew.txt
+
+# bin/fasm
+CONFLICTS_INSTALL=	fasm-fpga SASM
 
 OPTIONS_DEFINE=	DOCS
 

@@ -1,14 +1,13 @@
-# Created by: Wen Heping <wenheping@gmail.com>
-
 PORTNAME=	WebError
 PORTVERSION=	0.13.1
 PORTREVISION=	1
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Web Error handling and exception catching
+WWW=		https://pypi.org/project/WebError/
 
 LICENSE=	MIT
 

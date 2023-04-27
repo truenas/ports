@@ -1,5 +1,3 @@
-# Created by: Jose Alonso Cardenas Marquez <acm@FreeBSD.org>
-
 PORTNAME=	nerogame
 PORTVERSION=	2.0
 PORTREVISION=	2
@@ -10,6 +8,7 @@ DISTNAME=	nero2_linux_i386
 
 MAINTAINER=	craig001@lerwick.hopto.org
 COMMENT=	Neuro evolving robotic operatives the game
+WWW=		http://www.nerogame.org/
 
 # Converted from RESTRICTED
 LICENSE=	nero

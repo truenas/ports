@@ -1,13 +1,13 @@
-# Created by: Wen Heping <wenheping@gmail.com>
-
 PORTNAME=	spatialite
 PORTVERSION=	5.0.1
+PORTREVISION=	5
 CATEGORIES=	databases geography
 MASTER_SITES=	http://www.gaia-gis.it/gaia-sins/libspatialite-sources/
 DISTNAME=	lib${PORTNAME}-${PORTVERSION}
 
 MAINTAINER=	lbartoletti@FreeBSD.org
 COMMENT=	Spatial Extensions for SQLite
+WWW=		https://www.gaia-gis.it/gaia-sins/
 
 LICENSE=	GPLv2 # Only GPLv2 since we enable rttopo and gcp
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -15,11 +15,10 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 LIB_DEPENDS=	libgeos_c.so:graphics/geos \
 		libproj.so:graphics/proj \
 		libfreexl.so:textproc/freexl \
-		libminizip.so:archivers/minizip \
 		librttopo.so:devel/librttopo
 
 GNU_CONFIGURE=	yes
-USES=		gmake gnome iconv libtool pathfix pkgconfig sqlite
+USES=		gmake gnome iconv libtool pathfix minizip pkgconfig sqlite
 USE_GNOME=	libxml2
 
 CFLAGS+=	-I${WRKSRC}/src/headers -I${LOCALBASE}/include

@@ -1,12 +1,11 @@
-# Created by: J. Bacon <jwb@FreeBSD.org>
-
 PORTNAME=	biolibc-tools
-DISTVERSION=	0.1.0-34
-DISTVERSIONSUFFIX=	-gf1224de
+DISTVERSION=	0.1.4-1
+DISTVERSIONSUFFIX=	-g01886a9
 CATEGORIES=	biology
 
 MAINTAINER=	jwb@FreeBSD.org
 COMMENT=	High-performance bioinformatics tools based on biolibc
+WWW=		https://github.com/auerlab/biolibc-tools
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -20,6 +19,7 @@ USE_GITHUB=	yes
 
 GH_ACCOUNT=	auerlab
 
+MAKE_ENV=	VERSION=${PORTVERSION}
 INSTALL_TARGET=	install-strip
 
 pre-build:

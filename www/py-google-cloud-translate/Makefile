@@ -2,11 +2,12 @@ PORTNAME=	google-cloud-translate
 PORTVERSION=	1.3.1
 PORTREVISION=	1
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	contato@kanazuchi.com
 COMMENT=	Python Client for Google Cloud Translation
+WWW=		https://pypi.org/project/google-cloud-translate/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

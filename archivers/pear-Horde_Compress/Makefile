@@ -1,9 +1,10 @@
 PORTNAME=	Horde_Compress
-PORTVERSION=	2.2.3
+PORTVERSION=	2.2.4
 CATEGORIES=	archivers www pear
 
 MAINTAINER=	horde@FreeBSD.org
 COMMENT=	Horde Compression API
+WWW=		https://pear.horde.org
 
 OPTIONS_DEFAULT=	ZLIB
 OPTIONS_DEFINE=		ZLIB

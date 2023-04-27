@@ -1,13 +1,13 @@
-# Created by: Maxim Sobolev <sobomax@FreeBSD.org>
-
 PORTNAME=	scintilla
 DISTVERSION=	4.4.5
+PORTREVISION=	1
 CATEGORIES=	x11-toolkits
 MASTER_SITES=	SF/scintilla/SciTE/${PORTVERSION}
 DISTNAME=	scite${PORTVERSION:S/.//g}
 
 MAINTAINER=	cyberbotx@cyberbotx.com
 COMMENT=	Full-featured free source code editing component for GTK+
+WWW=		https://www.scintilla.org/
 
 LICENSE=	SCINTILLA
 LICENSE_NAME=	License for Scintilla and SciTE

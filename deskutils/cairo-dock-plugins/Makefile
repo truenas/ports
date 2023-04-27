@@ -1,6 +1,6 @@
 PORTNAME=	cairo-dock-plugins
 PORTVERSION=	3.4.1
-PORTREVISION=	8
+PORTREVISION=	12
 CATEGORIES=	deskutils
 
 PATCH_SITES=	https://github.com/Cairo-Dock/cairo-dock-plug-ins/commit/
@@ -8,6 +8,7 @@ PATCHFILES=	d08541a0afb4377ce2f35feb280fbe443870b587.patch:-p1
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Cairo-Dock-Plugins for Cairo-Dock
+WWW=		https://www.glx-dock.org/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/LICENSE

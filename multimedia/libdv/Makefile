@@ -1,5 +1,3 @@
-# Created by: Mario Sergio Fujikawa Ferreira <lioux@FreeBSD.org>
-
 PORTNAME=	libdv
 DISTVERSION=	1.0.0
 PORTREVISION=	8
@@ -7,6 +5,7 @@ CATEGORIES=	multimedia
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Quasar DV codec (libdv) is a software codec for DV video
+WWW=		http://libdv.sourceforge.net/
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -25,6 +24,12 @@ USE_LDCONFIG=	yes
 
 LDFLAGS_i386=	-Wl,-znotext
 
-MESON_ARGS=	-Dpopt=enabled -Dtools=enabled
+MESON_ARGS=	-Dtools=enabled
+
+.include <bsd.port.options.mk>
+
+.if ${ARCH} != amd64 && ${ARCH} != i386
+MESON_ARGS+=	-Dasm=disabled
+.endif
 
 .include <bsd.port.mk>

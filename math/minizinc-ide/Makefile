@@ -1,21 +1,21 @@
 PORTNAME=	minizinc-ide
-DISTVERSION=	2.5.5
+DISTVERSION=	2.6.4
 PORTREVISION=	2
 CATEGORIES=	math lang
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	IDE for MiniZinc, a constraint modeling language
+WWW=		https://www.minizinc.org/
 
 LICENSE=	MPL20
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
-DEPRECATED=	Uses EOL Python 2.7 via www/qt5-webengine
-EXPIRATION_DATE=2021-06-23
-
 RUN_DEPENDS=	minizinc:math/minizinc
 
 USES=		gl compiler:c++11-lang qmake qt:5
-USE_QT=		core declarative gui location network printsupport sql webchannel webengine widgets buildtools_build
+USE_QT=		core declarative gui location network printsupport \
+		sql testlib webchannel webengine websockets widgets \
+		buildtools:build
 USE_GL=		gl
 
 USE_GITHUB=	yes

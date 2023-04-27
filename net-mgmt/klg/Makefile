@@ -8,11 +8,12 @@ PKGNAMESUFFIX=	${PHP_PKGNAMESUFFIX}
 
 MAINTAINER=	freebsd-ports@dan.me.uk
 COMMENT=	PHP-based looking glass for Cisco, Juniper and Quagga/Zebra routers
+WWW=		https://sourceforge.net/projects/klg/
 
 LICENSE=	BSD3CLAUSE
 
 USES=		tar:txz php:web,flavors mysql:client
-USE_PHP=	mysqli pcre sockets xml
+USE_PHP=	mysqli sockets xml
 
 NO_ARCH=	yes
 NO_BUILD=	yes

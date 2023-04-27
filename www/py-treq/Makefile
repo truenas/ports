@@ -1,11 +1,12 @@
 PORTNAME=	treq
 PORTVERSION=	20.9.0
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	contact@evilham.com
 COMMENT=	Requests-like API built on top of twisted.web's Agent
+WWW=		https://github.com/twisted/treq
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -25,8 +26,10 @@ RUN_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}openssl>=16.0.0:security/py-openssl@${PY_FL
 TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}httpbin>=0.5.0:www/py-httpbin@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}mock>=0:devel/py-mock@${PY_FLAVOR}
 
-USES=		python:3.6+
+USES=		cpe python:3.6+
 USE_PYTHON=	autoplist distutils
+
+CPE_VENDOR=	twistedmatrix
 
 NO_ARCH=	yes
 

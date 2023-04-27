@@ -2,12 +2,13 @@ PORTNAME=	zope.schema
 PORTVERSION=	4.2.2
 PORTREVISION=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DIST_SUBDIR=	zope
 
 MAINTAINER=	zope@FreeBSD.org
 COMMENT=	Zope Interface extension for defining data schemas
+WWW=		https://pypi.org/project/zope.schema/
 
 LICENSE=	ZPL21
 

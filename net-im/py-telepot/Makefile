@@ -1,11 +1,12 @@
 PORTNAME=	telepot
 DISTVERSION=	12.7
 CATEGORIES=	net-im python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Python framework for Telegram Bot API
+WWW=		https://github.com/nickoala/telepot
 
 LICENSE=	MIT
 

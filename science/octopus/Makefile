@@ -1,13 +1,16 @@
 PORTNAME=	octopus
-DISTVERSION=	10.5
-PORTREVISION=	1
-CATEGORIES=	science
+DISTVERSION=	11.4
+PORTREVISION=	3
+CATEGORIES=	science # chemistry
 MASTER_SITES=	https://octopus-code.org/download/${DISTVERSION}/
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Scientific program aimed at the ab initio virtual experimentation
+WWW=		https://octopus-code.org/wiki/Main_Page
 
 LICENSE=	GPLv2
+
+BROKEN_aarch64=	undefined reference to `__aarch64_cas8_acq_rel' #'`
 
 BUILD_DEPENDS=	bash:shells/bash
 LIB_DEPENDS=	libarpack.so:math/arpack-ng \
@@ -16,8 +19,10 @@ LIB_DEPENDS=	libarpack.so:math/arpack-ng \
 		libfontconfig.so:x11-fonts/fontconfig \
 		libfreetype.so:print/freetype2 \
 		libgd.so:graphics/gd \
+		libgmp.so:math/gmp \
 		libgsl.so:math/gsl \
 		liblapack.so:math/lapack \
+		libmpfr.so:math/mpfr \
 		libnlopt.so:math/nlopt \
 		libpng.so:graphics/png \
 		libsymspg.so:science/spglib \
@@ -27,14 +32,22 @@ LIB_DEPENDS=	libarpack.so:math/arpack-ng \
 		libxc.so:science/libxc \
 		libyaml.so:textproc/libyaml
 
-USES=		compiler:c++11-lang fortran gmake jpeg localbase:ldflags perl5 python shebangfix
+USES=		compiler:c++14-lang fortran gmake jpeg libtool localbase:ldflags perl5 python shebangfix
+USE_CXXSTD=	c++14
+USE_LDCONFIG=	yes
+USE_GCC=	11 # pending resolution of https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=266196 (see also https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=266196)
+
 SHEBANG_FILES=	src/fdep/fortran_dependencies.pl testsuite/performance/create_combinations.py
+
 GNU_CONFIGURE=	yes
 CONFIGURE_SHELL=	${PREFIX}/bin/bash
-USE_CXXSTD=	c++11
+CONFIGURE_ARGS=	--enable-shared --disable-static
 
 LDFLAGS+=	-lsymspg
 FCFLAGS+=	-I${LOCALBASE}/include -ffree-line-length-none
+
+INSTALL_TARGET=	install-strip
+TEST_TARGET=	check-short # some tests fail, see https://gitlab.com/octopus-code/octopus/-/issues/558
 
 OPTIONS_DEFINE=			OPENMP
 OPTIONS_DEFAULT=		OPENMP

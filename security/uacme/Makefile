@@ -1,10 +1,11 @@
 PORTNAME=	uacme
 DISTVERSIONPREFIX=	upstream/
-DISTVERSION=	1.7.1
+DISTVERSION=	1.7.4
 CATEGORIES=	security www
 
-MAINTAINER=	tobik@FreeBSD.org
+MAINTAINER=	eduardo@FreeBSD.org
 COMMENT=	Lightweight C ACMEv2 client which uses external authenticators
+WWW=		https://github.com/ndilieto/uacme
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -35,11 +36,12 @@ GNUTLS_LIB_DEPENDS=		libgnutls.so:security/gnutls
 GNUTLS_CONFIGURE_WITH=		gnutls
 MANPAGES_BUILD_DEPENDS=		asciidoc:textproc/asciidoc
 MANPAGES_CONFIGURE_ENABLE=	docs
-MBEDTLS_BROKEN=			needs mbedtls >= 2.25, 2.16.x lacks mbedtls_x509_crt_parse_der_with_ext_cb support
+MBEDTLS_BUILD_DEPENDS=		mbedtls>=2.28.0:security/mbedtls
 MBEDTLS_LIB_DEPENDS=		libmbedtls.so:security/mbedtls
 MBEDTLS_CONFIGURE_WITH=		mbedtls=${LOCALBASE}
 OPENSSL_USES=			ssl
 OPENSSL_CONFIGURE_WITH=		openssl=${OPENSSLBASE}
+UALPN_LIB_DEPENDS=		libev.so:devel/libev
 UALPN_CONFIGURE_WITH=		ualpn
 
 post-install-DOCS-on:

@@ -1,5 +1,3 @@
-# Created by: Aldis Berjoza <graudeejs@gmail.com>
-
 PORTNAME=	sql-workbench
 PORTVERSION=	127
 PORTEPOCH=	1
@@ -10,12 +8,13 @@ DISTNAME=	Workbench-Build${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	DBMS-independent, cross-platform SQL query tool
+WWW=		https://www.sql-workbench.eu/
 
 LICENSE=	APACHE20
 
 USES=		zip
 USE_JAVA=	yes
-JAVA_VERSION=	1.8+
+JAVA_VERSION=	8+
 
 NO_BUILD=	yes
 NO_WRKSUBDIR=	yes

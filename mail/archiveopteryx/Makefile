@@ -1,13 +1,12 @@
-# Created by: Ashish SHUKLA <ashish@FreeBSD.org>
-
 PORTNAME=	archiveopteryx
 PORTVERSION=	3.2.0
-PORTREVISION=	8
+PORTREVISION=	9
 CATEGORIES=	mail
 MASTER_SITES=	http://archiveopteryx.org/download/
 
 MAINTAINER=	feld@FreeBSD.org
 COMMENT=	Advanced PostgreSQL-based IMAP/POP server
+WWW=		https://www.archiveopteryx.org/
 
 LICENSE=	MIT
 
@@ -16,6 +15,8 @@ BUILD_DEPENDS=	jam:devel/jam
 USES=		compiler perl5 ssl tar:bzip2
 USE_PERL5=	build
 WITH_PGSQL=	client
+
+CONFLICTS_INSTALL=	archiveopteryx-devel # bin/aox bin/aoxdeliver bin/aoxexport bin/aoximport
 
 PORTDOCS=	COPYING README bsd.txt
 

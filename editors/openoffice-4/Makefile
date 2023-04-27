@@ -1,8 +1,6 @@
-# Created by: Martin Blapp
-
 PORTNAME=	apache-openoffice
 PORTVERSION=	${AOOVERSION}
-PORTREVISION=	0
+PORTREVISION=	1
 CATEGORIES=	editors java
 MASTER_SITES=	https://dlcdn.apache.org/openoffice/${PORTVERSION}/source/ \
 		https://archive.apache.org/dist/openoffice/${PORTVERSION}/source/ \
@@ -15,7 +13,8 @@ PKGNAMEPREFIX=		${LANG_PKGNAME}-
 .if defined(LANG_SUFFIX)
 PKGNAMESUFFIX=		-${LANG_SUFFIX}
 .endif
-DISTFILES=	${AOOSRC} ${EXTSRC}:extsrc ${PYTHON_DISTFILE}:sf
+DISTFILES=	${AOOSRC} ${EXTSRC}:extsrc ${PYTHON_DISTFILE}:sf \
+		${GCC_EXTRA_DISTFILES:C/.*/&:sf/g}
 DIST_SUBDIR=	openoffice
 EXTRACT_ONLY=	${AOOSRC}
 
@@ -23,6 +22,7 @@ MAINTAINER=	office@FreeBSD.org
 #de facto maintainer is truckman@FreeBSD.org
 #Frequent Patch submitters should (optionally) sign the Apache iCLA
 COMMENT=	Integrated wordprocessor/dbase/spreadsheet/drawing/chart/browser
+WWW=		https://openoffice.apache.org/
 
 LICENSE=		APACHE20 ADOBE BSD3CLAUSE BSD4CLAUSE BSL ICU MIT MPL10 \
 			MPL11 PSFL TWAIN W3C
@@ -59,6 +59,7 @@ BUILD_DEPENDS=								\
 		epm:devel/epm						\
 		${LOCALBASE}/bin/gperf:devel/gperf			\
 		imake:devel/imake					\
+		libunwind>=20211201_1:devel/libunwind			\
 		gpatch:devel/patch					\
 		${LOCALBASE}/include/sane/sane.h:graphics/sane-backends	\
 		${JAVALIBDIR}/commons-lang.jar:java/apache-commons-lang \
@@ -83,7 +84,7 @@ LIB_DEPENDS=								\
 		libClpSolver.so:math/clp				\
 		libCoinMP.so:math/coinmp				\
 		libCoinUtils.so:math/coinutils				\
-		libcoinmumps.so:math/ipopt				\
+		libcoinmumps.so:math/coin-or-mumps			\
 		libnauty.so:math/nauty					\
 		libopenblas.so:math/openblas				\
 		libOsi.so:math/osi					\
@@ -113,7 +114,7 @@ USES=		autoreconf bison compiler:c++11-lib cpe desktop-file-utils \
 		gettext-runtime gl gmake gnome iconv jpeg perl5 pkgconfig \
 		shared-mime-info ssl tar:bzip2 xorg
 USE_GL=		gl glu
-USE_GNOME=	gtk20 libxslt libidl glib20
+USE_GNOME=	gdkpixbuf2 gdkpixbuf2xlib gtk20 libxslt libidl glib20
 USE_JAVA=	yes
 JAVA_BUILD=	jdk
 JAVA_RUN=	jdk
@@ -126,10 +127,10 @@ CONFLICTS_INSTALL=	apache-openoffice-devel
 
 AOOVERSION1=	4
 AOOVERSION2=	1
-AOOVERSION3=	11
+AOOVERSION3=	14
 # From solenv/inc/minor.mk SOURCEREVISION LAST_MINOR BUILD
-AOOTAG=		AOO4111m1\(Build:9808\)
-GITREVISION=	bdb20b2a64
+AOOTAG=		AOO4114m1\(Build:9811\)
+GITREVISION=	a0d24fb625
 EXTSRC=		ApacheOpenOffice.ext_sources.${AOOVERSION1}.x.x.20150707.tar.gz
 
 AOOVERSION=	${AOOVERSION1}.${AOOVERSION2}.${AOOVERSION3}
@@ -199,6 +200,12 @@ WITH=	SDK
 
 .include <bsd.port.pre.mk>
 
+.if ${OPSYS} == FreeBSD && ( \
+    (${OSVERSION} >= 1301500 && ${OSVERSION} < 1301502) || \
+    (${OSVERSION} >= 1400051 && ${OSVERSION} < 1400057))
+BROKEN=	please update FreeBSD base system first to fix an ABI incompatibility
+.endif
+
 .if defined(WITH_DEBUG)
 CONFIGURE_ARGS+=	--enable-symbols
 .endif
@@ -211,23 +218,9 @@ GCC_EXTRA_DISTFILES=	d6eef4b4cacb2183f2bf265a5a03a354-boost_1_55_0.tar.bz2 \
 
 .if ${CHOSEN_COMPILER_TYPE} == clang
 CPPFLAGS+=		-I${LOCALBASE}/include
-CONFIGURE_ARGS+=	--with-system-boost
-BUILD_DEPENDS+=	${LOCALBASE}/include/boost/shared_ptr.hpp:devel/boost-libs
-. if ${COMPILER_VERSION} < 130
-CONFIGURE_ARGS+=	--with-system-vigra
-BUILD_DEPENDS+=	${LOCALBASE}/bin/vigra-config:graphics/vigra
-. endif
 . if ${ARCH} == amd64
 EXTRA_PATCHES+=		${FILESDIR}/extra-patch-align16
 . endif
-.endif
-
-# These extra distfiles are needed to use the bundled versions of
-# boost and vigra for compatiblity with gcc.  Also include them
-# for the makesum target so they are included in distinfo
-.if ${CHOSEN_COMPILER_TYPE} == gcc || ${COMPILER_VERSION} >= 130 || \
-	make(makesum) || make(distclean)
-DISTFILES+=		${GCC_EXTRA_DISTFILES:C/.*/&:sf/g}
 .endif
 
 .if ${ARCH} == amd64
@@ -251,6 +244,7 @@ WRKSUBDIR=	${WRKDIR}/aoo-${AOOVERSION}
 WRKSRC?=	${WRKSUBDIR}/main
 SUB_FILES=	pkg-message
 SUB_LIST=	EXECBASE=${EXECBASE} AOOTAG=${AOOTAG} AOOUDIR=${AOOUDIR} \
+		AOOVERSION=${AOOVERSION}				\
 		PRINSTALLATION_BASEDIR=${PRINSTALLATION_BASEDIR}
 
 CONFIGURE_ARGS+=							\
@@ -343,11 +337,9 @@ do-extract-SDK-on:
 post-extract:
 	${TAR} -C ${WRKSUBDIR} -xzf ${DISTDIR}/${DIST_SUBDIR}/${EXTSRC}
 	${CP} ${DISTDIR}/${DIST_SUBDIR}/${PYTHON_DISTFILE} ${WRKSUBDIR}/ext_sources/${PYTHON_DISTFILE}
-.if ${CHOSEN_COMPILER_TYPE} == gcc || ${COMPILER_VERSION} >= 130 
-.  for f in ${GCC_EXTRA_DISTFILES}
+.for f in ${GCC_EXTRA_DISTFILES}
 	${CP} ${DISTDIR}/${DIST_SUBDIR}/${f} ${WRKSUBDIR}/ext_sources/${f}
-.  endfor
-.endif
+.endfor
 	${CP} ${FILESDIR}/freebsd-aoo-intro.png \
 		${WRKSRC}/default_images/introabout/intro.png
 	${CP} ${FILESDIR}/freebsd-aoo-about.png \
@@ -417,6 +409,14 @@ post-patch:
 	${REINPLACE_CMD} -e "s/=-Os /=-O2 -fno-unroll-loops /" ${WRKSRC}/solenv/inc/unxfbsdi.mk
 	${REINPLACE_CMD} -e "s/ := -Os/ := -O2 -fno-unroll-loops/" ${WRKSRC}/solenv/gbuild/platform/freebsd.mk
 .endif
+
+# Verify that lucene was built with the CONTRIB option instead of
+# failing mysteriously during the build
+pre-configure:
+	@if [ ! -f ${JAVALIBDIR}/lucene-analyzers-3.6.2.jar ]; then \
+		${ECHO} "error: textproc/lucene must be built with the CONTRIB option enabled"; \
+		exit 1; \
+	fi
 
 do-build:
 	${PRINTF} "[repositories]\nmain=active\nextras=active\n" > ${WRKSUBDIR}/source_config

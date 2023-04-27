@@ -1,7 +1,5 @@
-# Created by: Dirk Froemberg <dirk@FreeBSD.org>
-
 PORTNAME=	snort
-PORTVERSION=	2.9.18
+PORTVERSION=	2.9.20
 PORTREVISION=	1
 CATEGORIES=	security
 MASTER_SITES=	https://snort.org/downloads/snort/ \
@@ -11,6 +9,7 @@ PATCH_DIST_STRIP=	-p1
 
 MAINTAINER=	dvl@FreeBSD.org
 COMMENT=	Lightweight network intrusion detection system
+WWW=		https://www.snort.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -79,8 +78,8 @@ FILEINSPECT_CONFIGURE_ENABLE=	file-inspect
 
 BARNYARD_RUN_DEPENDS=	barnyard2:security/barnyard2
 PULLEDPORK_RUN_DEPENDS=	pulledpork.pl:security/pulledpork
-APPID_LIB_DEPENDS=	libluajit-5.1.so:lang/luajit-openresty
-APPID_CONFIGURE_ENV+=	luajit_CFLAGS="-I${LOCALBASE}/include/luajit-2.1" \
+APPID_USES=		luajit
+APPID_CONFIGURE_ENV+=	luajit_CFLAGS="-I${LUAJIT_INCDIR}" \
 			luajit_LIBS="-L${LOCALBASE}/lib -lluajit-5.1"
 
 # Disable SIMD on 32-bit arm. Snort has numerous arbitrarily misaligned memory

@@ -1,14 +1,13 @@
-# Created by: Hizbulin Ildar <hizel@vyborg.ru>
-
 PORTNAME=	supervisor
-PORTVERSION=	4.2.1
+PORTVERSION=	4.2.4
 PORTEPOCH=	1
 CATEGORIES=	sysutils python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	thomas@gibfest.dk
 COMMENT=	System for controlling process state under UNIX
+WWW=		http://supervisord.org/
 
 LICENSE=	BSD3CLAUSE MEDUSA REPOZE
 LICENSE_COMB=	multi

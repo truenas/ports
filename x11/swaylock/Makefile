@@ -1,25 +1,29 @@
 PORTNAME=	swaylock
-DISTVERSION?=	1.5
-PORTREVISION?=	2
-CATEGORIES=	x11
+DISTVERSIONPREFIX?=	v
+DISTVERSION?=	1.7.2
+PORTREVISION?=	0
+CATEGORIES=	x11 wayland
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT?=	Screen locker for Wayland
+WWW?=		https://github.com/swaywm/swaylock
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-BUILD_DEPENDS=	wayland-protocols>=1.14:graphics/wayland-protocols
+BUILD_DEPENDS=	wayland-protocols>=1.25:graphics/wayland-protocols
 LIB_DEPENDS=	libwayland-client.so:graphics/wayland \
 		libxkbcommon.so:x11/libxkbcommon
+RUN_DEPENDS=	unix-selfauth-helper>0:security/unix-selfauth-helper
 
 CONFLICTS_INSTALL=	${PORTNAME}-*
 
-USES=		compiler:c11 gnome meson pkgconfig
+USES=		compiler:c11 cpe gnome meson pkgconfig
 USE_GITHUB=	yes
 GH_ACCOUNT?=	swaywm
+CPE_VENDOR=	swaywm
 USE_GNOME=	cairo pango
-PLIST_FILES=	"@(,,4755) bin/${PORTNAME}" \
+PLIST_FILES=	bin/${PORTNAME} \
 		etc/pam.d/${PORTNAME} \
 		share/bash-completion/completions/${PORTNAME} \
 		share/fish/vendor_completions.d/${PORTNAME}.fish \
@@ -40,5 +44,8 @@ post-patch:
 	@${REINPLACE_CMD} -i .nogit -e 's/git.found()/false/' \
 		-e '/project_version/s/@0@/${DISTVERSIONFULL}/' \
 		${WRKSRC}/meson.build
+# Respect LOCALBASE for unix-selfauth-helper
+	@${REINPLACE_CMD} -e 's,/usr/local,${LOCALBASE},' \
+		${WRKSRC}/pam/${PORTNAME}
 
 .include <bsd.port.mk>

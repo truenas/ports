@@ -412,7 +412,6 @@ proxydeps_suggest_uses() {
 	elif [ ${pkg} = "graphics/libart_lgpl" ]; then warn "you need USE_GNOME+=libartlgpl2"
 	elif [ ${pkg} = "devel/libIDL" ]; then warn "you need USE_GNOME+=libidl"
 	elif [ ${pkg} = "x11-fm/nautilus" ]; then warn "you need USE_GNOME+=nautilus3"
-	elif [ ${pkg} = "devel/ORBit2" ]; then warn "you need USE_GNOME+=orbit2"
 	elif [ ${pkg} = "graphics/librsvg2-rust" ]; then warn "you need USE_GNOME+=librsvg2"
 	# mate
 	# grep LIB_DEPENDS= Mk/Uses/mate.mk |sed -e 's|\(.*\)_LIB_DEPENDS.*:\(.*\)\/\(.*\)|elif [ ${pkg} = "\2/\3" ]; then warn "you need USE_MATE+=\1"|'
@@ -434,7 +433,6 @@ proxydeps_suggest_uses() {
 	elif [ ${pkg} = "net/akonadi-notes" ]; then warn "you need to use USE_KDE+=akonadinotes"
 	elif [ ${pkg} = "net/akonadi-calendar" ]; then warn "you need to use USE_KDE+=akonadicalendar"
 	elif [ ${pkg} = "net/akonadi-search" ]; then warn "you need to use USE_KDE+=akonadisearch"
-	elif [ ${pkg} = "net/kalarmcal" ]; then warn "you need to use USE_KDE+=alarmcalendar"
 	elif [ ${pkg} = "net/calendarsupport" ]; then warn "you need to use USE_KDE+=calendarsupport"
 	elif [ ${pkg} = "net/kcalcore" ]; then warn "you need to use USE_KDE+=calendarcore"
 	elif [ ${pkg} = "net/kcalutils" ]; then warn "you need to use USE_KDE+=calendarutils"
@@ -675,7 +673,7 @@ proxydeps() {
 					# When grep -q finds a match it will close the pipe immediately.
 					# This may cause the test to fail when pipefail is turned on.
 					set +o pipefail
-					if ! readelf -d "${dep_file}" | grep -q SONAME; then
+					if ! readelf -d "${dep_file}" | grep SONAME > /dev/null; then
 						err "${file} is linked to ${dep_file} which does not have a SONAME.  ${dep_file_pkg} needs to be fixed."
 					fi
 					set -o pipefail
@@ -726,7 +724,7 @@ sonames() {
 		[ -z "${f}" ] && continue
 		# Ignore symlinks
 		[ -f "${f}" -a ! -L "${f}" ] || continue
-		if ! readelf -d ${f} | grep -q SONAME; then
+		if ! readelf -d ${f} | grep SONAME > /dev/null; then
 			warn "${f} doesn't have a SONAME."
 			warn "pkg(8) will not register it as being provided by the port."
 			warn "If another port depend on it, pkg will not be able to know where it comes from."
@@ -859,7 +857,7 @@ gemdeps()
 				EOF
 			fi
 		done <<-EOF
-		$(grep -a 'add_runtime_dependency' ${STAGEDIR}${PREFIX}/lib/ruby/gems/*/specifications/${PORTNAME}-*.gemspec \
+		$(grep -a 's.add_runtime_dependency' ${STAGEDIR}${PREFIX}/lib/ruby/gems/*/specifications/${PORTNAME}-*.gemspec \
 			| sed 's|.*<\(.*\)>.*\[\(.*\)\])|\1 \2|' \
 			| sort -u)
 		EOF
@@ -979,6 +977,9 @@ depends_blacklist()
 				;;
 			lang/gcc)
 				instead="USE_GCC"
+				;;
+			lang/go)
+				instead="USES=go"
 				;;
 			lang/julia)
 				instead="a dependency on lang/julia\${JULIA_DEFAULT:S/.//}"

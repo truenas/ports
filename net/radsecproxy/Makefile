@@ -1,12 +1,11 @@
-# Created by: Honza Betik
-
 PORTNAME=	radsecproxy
-DISTVERSION=	1.8.2
+DISTVERSION=	1.9.1
 CATEGORIES=	net
 MASTER_SITES=	https://github.com/${PORTNAME}/${PORTNAME}/releases/download/${DISTVERSION}/
 
-MAINTAINER=	nc@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Generic RADIUS proxy
+WWW=		https://radsecproxy.github.io
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

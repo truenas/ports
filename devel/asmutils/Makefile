@@ -1,13 +1,12 @@
-# Created by: George Reid <greid@ukug.uk.freebsd.org>
-
 PORTNAME=	asmutils
 PORTVERSION=	0.18
-PORTREVISION=	9
+PORTREVISION=	10
 CATEGORIES=	devel
 MASTER_SITES=	http://asm.sourceforge.net/asmutils/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Set of Unix utilities written in x86 assembly language
+WWW=		http://asm.sourceforge.net/
 
 LICENSE=	GPLv2
 

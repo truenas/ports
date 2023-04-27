@@ -1,11 +1,11 @@
 PORTNAME=	jql
-DISTVERSIONPREFIX=	v
-DISTVERSION=	3.0.4
-PORTREVISION=	1
+DISTVERSIONPREFIX=	jql-v
+DISTVERSION=	6.0.5
 CATEGORIES=	textproc
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	JSON Query Language CLI tool built with Rust
+WWW=		https://github.com/yamafaktory/jql
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE-MIT
@@ -15,146 +15,132 @@ USES=		cargo
 USE_GITHUB=	yes
 GH_ACCOUNT=	yamafaktory
 
-CARGO_CRATES=	ansi_term-0.12.1 \
-		anyhow-1.0.45 \
-		async-attributes-1.1.2 \
-		async-channel-1.6.1 \
-		async-executor-1.4.1 \
-		async-global-executor-2.0.2 \
-		async-io-1.6.0 \
-		async-lock-2.4.0 \
-		async-mutex-1.4.0 \
-		async-process-1.2.0 \
-		async-std-1.10.0 \
-		async-task-4.0.3 \
-		atomic-waker-1.0.0 \
+CARGO_CRATES=	anes-0.1.6 \
+		anstream-0.3.0 \
+		anstyle-1.0.0 \
+		anstyle-parse-0.2.0 \
+		anstyle-query-1.0.0 \
+		anstyle-wincon-1.0.0 \
+		anyhow-1.0.70 \
 		atty-0.2.14 \
-		autocfg-1.0.1 \
+		autocfg-1.1.0 \
 		bitflags-1.3.2 \
-		block-buffer-0.7.3 \
-		block-padding-0.1.5 \
-		blocking-1.0.2 \
-		bstr-0.2.16 \
-		bumpalo-3.7.0 \
-		byte-tools-0.3.1 \
-		byteorder-1.4.3 \
-		cache-padded-1.1.1 \
-		cast-0.2.7 \
-		cc-1.0.69 \
+		bumpalo-3.12.0 \
+		bytes-1.4.0 \
+		cast-0.3.0 \
+		cc-1.0.78 \
 		cfg-if-1.0.0 \
-		clap-2.33.3 \
-		clap-3.0.0-beta.5 \
-		clap_derive-3.0.0-beta.5 \
-		colored_json-2.1.0 \
-		concurrent-queue-1.2.2 \
-		criterion-0.3.5 \
-		criterion-plot-0.4.4 \
-		crossbeam-channel-0.5.1 \
-		crossbeam-deque-0.8.1 \
-		crossbeam-epoch-0.9.5 \
-		crossbeam-utils-0.8.5 \
-		csv-1.1.6 \
-		csv-core-0.1.10 \
-		ctor-0.1.20 \
-		digest-0.8.1 \
-		either-1.6.1 \
-		event-listener-2.5.1 \
-		fake-simd-0.1.2 \
-		fastrand-1.5.0 \
-		futures-channel-0.3.16 \
-		futures-core-0.3.16 \
-		futures-io-0.3.16 \
-		futures-lite-1.12.0 \
-		generic-array-0.12.4 \
-		gloo-timers-0.2.1 \
-		half-1.7.1 \
-		hashbrown-0.11.2 \
-		heck-0.3.3 \
+		ciborium-0.2.0 \
+		ciborium-io-0.2.0 \
+		ciborium-ll-0.2.0 \
+		clap-3.2.23 \
+		clap-4.2.4 \
+		clap_builder-4.2.4 \
+		clap_derive-4.2.0 \
+		clap_lex-0.2.4 \
+		clap_lex-0.4.1 \
+		colorchoice-1.0.0 \
+		colored_json-3.1.0 \
+		criterion-0.4.0 \
+		criterion-plot-0.5.0 \
+		crossbeam-channel-0.5.6 \
+		crossbeam-deque-0.8.2 \
+		crossbeam-epoch-0.9.13 \
+		crossbeam-utils-0.8.14 \
+		either-1.8.1 \
+		errno-0.2.8 \
+		errno-dragonfly-0.1.2 \
+		half-1.8.2 \
+		hashbrown-0.12.3 \
+		heck-0.4.1 \
 		hermit-abi-0.1.19 \
-		indexmap-1.7.0 \
-		instant-0.1.10 \
-		itertools-0.10.1 \
-		itoa-0.4.8 \
-		js-sys-0.3.53 \
-		kv-log-macro-1.0.7 \
+		hermit-abi-0.2.6 \
+		hermit-abi-0.3.1 \
+		indexmap-1.9.2 \
+		io-lifetimes-1.0.4 \
+		is-terminal-0.4.5 \
+		itertools-0.10.5 \
+		itoa-1.0.5 \
+		js-sys-0.3.60 \
 		lazy_static-1.4.0 \
-		libc-0.2.100 \
-		log-0.4.14 \
-		maplit-1.0.2 \
-		memchr-2.4.1 \
-		memoffset-0.6.4 \
-		num-traits-0.2.14 \
-		num_cpus-1.13.0 \
-		once_cell-1.8.0 \
+		libc-0.2.139 \
+		linux-raw-sys-0.1.4 \
+		log-0.4.17 \
+		memchr-2.5.0 \
+		memoffset-0.7.1 \
+		minimal-lexical-0.2.1 \
+		nom-7.1.3 \
+		num-traits-0.2.15 \
+		num_cpus-1.15.0 \
+		once_cell-1.17.0 \
 		oorandom-11.1.3 \
-		opaque-debug-0.2.3 \
-		os_str_bytes-4.2.0 \
-		parking-2.0.0 \
-		pest-2.1.3 \
-		pest_derive-2.1.0 \
-		pest_generator-2.1.3 \
-		pest_meta-2.1.3 \
-		pin-project-lite-0.2.7 \
-		pin-utils-0.1.0 \
-		plotters-0.3.1 \
-		plotters-backend-0.3.2 \
-		plotters-svg-0.3.1 \
-		polling-2.1.0 \
-		proc-macro-error-1.0.4 \
-		proc-macro-error-attr-1.0.4 \
-		proc-macro2-1.0.28 \
-		quote-1.0.9 \
-		rayon-1.5.1 \
-		rayon-core-1.9.1 \
-		regex-1.5.4 \
-		regex-automata-0.1.10 \
-		regex-syntax-0.6.25 \
-		rustc_version-0.4.0 \
-		ryu-1.0.5 \
+		os_str_bytes-6.4.1 \
+		pin-project-lite-0.2.9 \
+		plotters-0.3.4 \
+		plotters-backend-0.3.4 \
+		plotters-svg-0.3.3 \
+		proc-macro2-1.0.53 \
+		psm-0.1.21 \
+		quote-1.0.26 \
+		rayon-1.7.0 \
+		rayon-core-1.11.0 \
+		regex-1.7.1 \
+		regex-syntax-0.6.28 \
+		rustix-0.36.7 \
+		ryu-1.0.12 \
 		same-file-1.0.6 \
 		scopeguard-1.1.0 \
-		semver-1.0.4 \
-		serde-1.0.129 \
-		serde_cbor-0.11.2 \
-		serde_derive-1.0.129 \
-		serde_json-1.0.69 \
-		sha-1-0.8.2 \
-		signal-hook-0.3.9 \
-		signal-hook-registry-1.4.0 \
-		slab-0.4.4 \
-		socket2-0.4.1 \
+		serde-1.0.160 \
+		serde_derive-1.0.160 \
+		serde_json-1.0.96 \
+		serde_stacker-0.1.8 \
+		stacker-0.1.15 \
 		strsim-0.10.0 \
-		syn-1.0.75 \
-		termcolor-1.1.2 \
-		textwrap-0.11.0 \
-		textwrap-0.14.2 \
+		syn-1.0.107 \
+		syn-2.0.10 \
+		textwrap-0.16.0 \
+		thiserror-1.0.40 \
+		thiserror-impl-1.0.40 \
 		tinytemplate-1.2.1 \
-		typenum-1.13.0 \
-		ucd-trie-0.1.3 \
-		unicase-2.6.0 \
-		unicode-segmentation-1.8.0 \
-		unicode-width-0.1.8 \
-		unicode-xid-0.2.2 \
-		value-bag-1.0.0-alpha.7 \
-		version_check-0.9.3 \
-		waker-fn-1.1.0 \
+		tokio-1.27.0 \
+		tokio-macros-2.0.0 \
+		unicode-ident-1.0.6 \
+		utf8parse-0.2.1 \
 		walkdir-2.3.2 \
-		wasm-bindgen-0.2.76 \
-		wasm-bindgen-backend-0.2.76 \
-		wasm-bindgen-futures-0.4.26 \
-		wasm-bindgen-macro-0.2.76 \
-		wasm-bindgen-macro-support-0.2.76 \
-		wasm-bindgen-shared-0.2.76 \
-		web-sys-0.3.53 \
-		wepoll-ffi-0.1.2 \
+		wasm-bindgen-0.2.83 \
+		wasm-bindgen-backend-0.2.83 \
+		wasm-bindgen-macro-0.2.83 \
+		wasm-bindgen-macro-support-0.2.83 \
+		wasm-bindgen-shared-0.2.83 \
+		web-sys-0.3.60 \
 		winapi-0.3.9 \
 		winapi-i686-pc-windows-gnu-0.4.0 \
 		winapi-util-0.1.5 \
-		winapi-x86_64-pc-windows-gnu-0.4.0
-
+		winapi-x86_64-pc-windows-gnu-0.4.0 \
+		windows-sys-0.42.0 \
+		windows-sys-0.45.0 \
+		windows-sys-0.48.0 \
+		windows-targets-0.42.2 \
+		windows-targets-0.48.0 \
+		windows_aarch64_gnullvm-0.42.2 \
+		windows_aarch64_gnullvm-0.48.0 \
+		windows_aarch64_msvc-0.42.2 \
+		windows_aarch64_msvc-0.48.0 \
+		windows_i686_gnu-0.42.2 \
+		windows_i686_gnu-0.48.0 \
+		windows_i686_msvc-0.42.2 \
+		windows_i686_msvc-0.48.0 \
+		windows_x86_64_gnu-0.42.2 \
+		windows_x86_64_gnu-0.48.0 \
+		windows_x86_64_gnullvm-0.42.2 \
+		windows_x86_64_gnullvm-0.48.0 \
+		windows_x86_64_msvc-0.42.2 \
+		windows_x86_64_msvc-0.48.0 \
+		yansi-0.5.1
 PLIST_FILES=	bin/${PORTNAME}
 
-post-install:
+do-install:
+	${INSTALL_PROGRAM} ${WRKDIR}/target/*/release/${PORTNAME} ${STAGEDIR}${PREFIX}/bin/${PORTNAME} # otherwise there's error: found a virtual manifest at `xx` instead of a package manifest
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/${PORTNAME}
 
 .include <bsd.port.mk>

@@ -1,16 +1,9 @@
-# Created by: John Merryweather Cooper et al
-
 PORTNAME=	fpc
 PORTVERSION=	3.2.2
-PORTREVISION?=	0
+PORTREVISION?=	3
 CATEGORIES?=	lang
-MASTER_SITES=	ftp://ftp.freepascal.org/pub/fpc/dist/${PORTVERSION}/source/:source \
-		ftp://planetmirror.com/pub/fpc/dist/${PORTVERSION}/source/:source \
-		ftp://ftp.jp.freepascal.org/mirror/fpc/dist/${PORTVERSION}/source/:source \
-		ftp://freepascal.stack.nl/pub/fpc/dist/${PORTVERSION}/source/:source \
-		ftp://ftp.no.freepascal.org/pub/fpc/dist/${PORTVERSION}/source/:source \
-		ftp://ftp.us.freepascal.org/pub/fpc/dist/${PORTVERSION}/source/:source \
-		SF/freepascal/Source/${PORTVERSION}:source \
+MASTER_SITES=	SF/freepascal/Source/${PORTVERSION}:source \
+		https://downloads.freepascal.org/${PORTNAME}/dist/${PORTVERSION}/source/:source \
 		http://leaf.dragonflybsd.org/~marino/dports-src/:DragonFlybootstrap \
 		LOCAL/acm/freepascal/:bootstrap \
 		LOCAL/acm/freepascal/:man
@@ -18,7 +11,8 @@ DISTFILES=	${DISTNAME:S/$/.source/}${EXTRACT_SUFX}:source
 DIST_SUBDIR=	freepascal
 
 MAINTAINER?=	acm@FreeBSD.org
-COMMENT?=	Free Pascal compiler with Turbo and Delphi
+COMMENT?=	Free Pascal compiler with Turbo and Delphi compatibility
+WWW=		https://www.freepascal.org/
 
 RUN_DEPENDS?=	${LOCALBASE}/bin/as:devel/binutils
 
@@ -26,14 +20,11 @@ ONLY_FOR_ARCHS=	amd64 i386
 
 USES+=		gmake iconv
 USE_BINUTILS=	yes
-BOOTVER=	3.0.4
+BOOTVER=	${PORTVERSION}
 MANVER=		${PORTVERSION}
 
 FPC_LDPATH?=	"${LOCALBASE}/bin/ld.bfd"
 
-#USE_GITHUB=	yes
-#GH_ACCOUNT=	fpc-svn
-#GH_PROJECT=	fpc
 FPCSRCDIR=	${PORTNAME}-${PORTVERSION}
 
 .include <bsd.port.pre.mk>
@@ -41,11 +32,13 @@ FPCSRCDIR=	${PORTNAME}-${PORTVERSION}
 .if ${ARCH} == "i386"
 PPNAME=		ppc386
 FPC_ARCH=	i386
+#OPT=		"-dFPC_USE_LIBC"
 PLIST_SUB+=	FPC_I386="" \
 		FPC_AMD64="@comment "
 .elif ${ARCH} == "amd64"
 PPNAME=		ppcx64
 FPC_ARCH=	x86_64
+#OPT=		"-dFPC_USE_LIBC"
 PLIST_SUB+=	FPC_I386="@comment " \
 		FPC_AMD64=""
 .endif
@@ -108,7 +101,8 @@ do-extract:
 post-patch:
 .if ${OPSYS} == FreeBSD
 	@${REINPLACE_CMD} -i "" -e 's|900044|${OSVERSION}|g' \
-		${WRKSRC}/rtl/freebsd/${FPC_ARCH}/*.as
+		${WRKSRC}/rtl/freebsd/${FPC_ARCH}/*.as \
+		${WRKSRC}/rtl/freebsd/${FPC_ARCH}/*.inc
 .else
 	@${REINPLACE_CMD} -i "" -e 's|400000|${DFLYVERSION}|g' \
 		${WRKSRC}/rtl/dragonfly/${FPC_ARCH}/*.as

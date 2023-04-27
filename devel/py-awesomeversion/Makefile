@@ -1,11 +1,12 @@
 PORTNAME=	awesomeversion
-DISTVERSION=	21.11.0
+DISTVERSION=	22.9.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ygy@FreeBSD.org
 COMMENT=	Python module to deal with versions
+WWW=		https://github.com/ludeeus/awesomeversion
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENCE.md

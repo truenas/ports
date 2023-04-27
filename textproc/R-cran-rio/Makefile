@@ -1,11 +1,12 @@
 PORTNAME=	rio
-DISTVERSION=	0.5.16
-PORTREVISION=	3
+DISTVERSION=	0.5.29
+PORTREVISION=	1
 CATEGORIES=	textproc
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Swiss-Army knife for data I/O
+WWW=		https://github.com/leeper/rio
 
 LICENSE=	GPLv2
 

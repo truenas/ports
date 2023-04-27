@@ -1,10 +1,12 @@
 PORTNAME=	cpp11
 PORTVERSION=	0.4.2
+PORTREVISION=	1
 CATEGORIES=	devel
 DISTNAME=	${PORTNAME}_${PORTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	C++11 Interface for R's C Interface
+WWW=		https://cran.r-project.org/web/packages/cpp11/
 
 LICENSE=	MIT
 

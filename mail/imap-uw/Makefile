@@ -1,5 +1,3 @@
-# Created by: pst
-
 PORTNAME=	imap
 PORTVERSION=	2007f
 PORTREVISION=	1
@@ -14,13 +12,14 @@ PKGNAMESUFFIX=	-uw
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	University of Washington IMAP4rev1/POP2/POP3 mail servers
+WWW=		http://www.washington.edu/imap/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
 LIB_DEPENDS=	libc-client4.so.9:mail/cclient
 
-CONFLICTS_INSTALL=	panda-imap-20*
+CONFLICTS_INSTALL=	panda-imap # bin/dmail
 
 DOCSDIR=	${PREFIX}/share/doc/${PORTNAME}${PKGNAMESUFFIX}
 SUB_FILES=	pkg-message

@@ -1,16 +1,15 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	proglog
-PORTVERSION=	0.1.9
+PORTVERSION=	0.1.10
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Log and progress bar manager for console, notebooks and web
+WWW=		https://github.com/Edinburgh-Genome-Foundry/Proglog
 
 LICENSE=	MIT
-LICENSE_FILE=	${WRKSRC}/LICENCE.txt
+LICENSE_FILE=	${WRKSRC}/LICENSE
 
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}tqdm>=0:misc/py-tqdm@${PY_FLAVOR}
 

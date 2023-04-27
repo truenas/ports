@@ -1,15 +1,14 @@
-# Created by: Martin Jackson <mhjacks@swbell.net>
-
 PORTNAME=	pysnmp
 PORTVERSION=	4.4.9
 PORTREVISION=	2
 CATEGORIES=	net-mgmt python
-MASTER_SITES=	CHEESESHOP \
+MASTER_SITES=	PYPI \
 		SF/pysnmp/pysnmp/${PORTVERSION}
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	mhjacks@swbell.net
 COMMENT=	SNMP framework for Python
+WWW=		https://github.com/etingof/pysnmp
 
 LICENSE=	BSD2CLAUSE
 

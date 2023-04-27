@@ -1,11 +1,12 @@
 PORTNAME=	gnubik
 PORTVERSION=	2.4.3
-PORTREVISION=	5
+PORTREVISION=	6
 CATEGORIES=	games
 MASTER_SITES=	GNU
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	3D Rubik's cube game
+WWW=		https://www.gnu.org/software/gnubik/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING

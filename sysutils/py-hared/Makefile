@@ -1,12 +1,12 @@
 PORTNAME=	hared
-PORTVERSION=	1.0
-PORTREVISION=	1
+PORTVERSION=	1.3
 CATEGORIES=	sysutils python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dvl@FreeBSD.org
 COMMENT=	Small Python server for inserting notications into MQTT
+WWW=		https://github.com/jpmens/hared-hare
 
 LICENSE=	MIT
 

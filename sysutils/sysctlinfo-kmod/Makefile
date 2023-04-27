@@ -1,9 +1,10 @@
 PORTNAME=	sysctlinfo-kmod
-DISTVERSION=	20210222
+DISTVERSION=	20221211
 CATEGORIES=	sysutils
 
 MAINTAINER=	alfix86@gmail.com
 COMMENT=	Kernel sysctl MIB-Tree interface
+WWW=		https://gitlab.com/alfix/sysctlinfo
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -12,7 +13,7 @@ USES=		kmod
 USE_GITLAB=	yes
 GL_ACCOUNT=	alfix
 GL_PROJECT=	sysctlinfo
-GL_COMMIT=	0e32703fcde8d29df5e1f6f21094c668c61238fe
+GL_COMMIT=	be57d5a892d0a908172664f87afeed0627e9ddf2
 
 PLIST_FILES=	${KMODDIR}/sysctlinfo.ko \
 		include/sysctlinfo.h \

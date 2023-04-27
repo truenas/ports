@@ -1,10 +1,11 @@
 PORTNAME=	wordsearch
-DISTVERSION=	2.0
+DISTVERSION=	2.1
 CATEGORIES=	games
 MASTER_SITES=	https://github.com/jensenpat/wordsearch/releases/download/${DISTVERSION}/
 
 MAINTAINER=	patj@passpackets.com
 COMMENT=	Classic word search game that you can play in your terminal
+WWW=		https://github.com/jensenpat/wordsearch
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

@@ -1,13 +1,13 @@
-# Created by: Daniel Menelkir <menelkir@itroll.org>
-
 PORTNAME=	pamixer
 DISTVERSIONPREFIX=	v
 DISTVERSION=	1.4-15
+PORTREVISION=	5
 DISTVERSIONSUFFIX=	-g4ea2594
 CATEGORIES=	audio
 
-MAINTAINER=	menelkir@itroll.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Pulseaudio command line mixer
+WWW=		https://github.com/cdemoulins/pamixer
 
 LICENSE=	GPLv3
 

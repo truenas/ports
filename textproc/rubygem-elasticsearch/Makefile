@@ -1,12 +1,11 @@
-# Created by: Ryan Steinmetz <zi@FreeBSD.org>
-
 PORTNAME=	elasticsearch
-PORTVERSION=	7.15.0
+PORTVERSION=	7.17.1
 CATEGORIES=	textproc rubygems
 MASTER_SITES=	RG
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Ruby integrations for Elasticsearch
+WWW=		https://github.com/elastic/elasticsearch-ruby
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -15,7 +14,6 @@ RUN_DEPENDS=	rubygem-elasticsearch-api>=${PORTVERSION}:textproc/rubygem-elastics
 		rubygem-elasticsearch-transport>=${PORTVERSION}:textproc/rubygem-elasticsearch-transport
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

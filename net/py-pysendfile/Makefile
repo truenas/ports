@@ -1,14 +1,13 @@
-# Created by: Kubilay Kocak <koobs@FreeBSD.org>
-
 PORTNAME=	pysendfile
 PORTVERSION=	2.0.1
 PORTREVISION=	1
 CATEGORIES=	net python devel
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	koobs@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Python interface to sendfile(2)
+WWW=		https://github.com/giampaolo/pysendfile
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

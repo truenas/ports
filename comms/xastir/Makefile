@@ -1,12 +1,12 @@
-# Created by: Carl Makin <carl@stagecraft.cx>
-
 PORTNAME=	xastir
 DISTVERSIONPREFIX=	Release-
-DISTVERSION=	2.1.6
+DISTVERSION=	2.1.8
+PORTREVISION=	4
 CATEGORIES=	comms hamradio
 
 MAINTAINER=	carl@stagecraft.cx
 COMMENT=	X Amateur Station Tracking and Information Reporting
+WWW=		http://www.xastir.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -25,7 +25,7 @@ LIB_DEPENDS=	libfreetype.so:print/freetype2 \
 		libwmflite.so:graphics/libwmf \
 		libpcre.so:devel/pcre
 
-USES=		gettext gmake gnome jpeg motif python:run shebangfix xorg
+USES=		autoreconf gmake gnome jpeg motif shebangfix xorg
 
 USE_XORG=	ice sm x11 xext xt
 USE_GNOME+=	libxml2
@@ -37,7 +37,6 @@ SHEBANG_REGEX=	./scripts/.*\.(sh|pl|py)
 USE_GITHUB=	yes
 GH_ACCOUNT=	Xastir
 GH_PROJECT=	Xastir
-#CFLAGS+=	-fcommon
 
 SUB_FILES=	pkg-message
 
@@ -85,5 +84,8 @@ ERRORPOP_CONFIGURE_WITH=	errorpopups
 BDB_USES=		bdb
 BDB_CONFIGURE_ON=	--with-bdb-incdir=${BDB_INCLUDE_DIR} \
 			--with-bdb-libdir=${BDB_LIB_DIR}
+
+post-extract:
+	@${REINPLACE_CMD} -e 's|2>&1||g' ${WRKSRC}/acinclude.m4
 
 .include <bsd.port.mk>

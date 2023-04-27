@@ -1,9 +1,10 @@
 PORTNAME=	inxi
-DISTVERSION=	3.3.08-1
+DISTVERSION=	3.3.11-1
 CATEGORIES=	sysutils
 
 MAINTAINER=	lcook@FreeBSD.org
 COMMENT=	Full featured CLI system information tool
+WWW=		https://github.com/smxi/inxi
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

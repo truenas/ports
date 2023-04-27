@@ -2,12 +2,13 @@ PORTNAME=	z3c.zcmlhook
 PORTVERSION=	1.0b1
 PORTREVISION=	1
 CATEGORIES=	devel python zope
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DIST_SUBDIR=	zope
 
 MAINTAINER=	zope@FreeBSD.org
 COMMENT=	Easily hook into the ZCML processing machinery
+WWW=		https://pypi.org/project/z3c.zcmlhook/
 
 LICENSE=	ZPL21
 

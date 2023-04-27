@@ -1,5 +1,3 @@
-# Created by: Akinori MUSHA aka knu <knu@idaemons.org>
-
 PORTNAME=	format
 PORTVERSION=	1.09
 CATEGORIES=	textproc ruby
@@ -10,8 +8,9 @@ DIST_SUBDIR=	ruby
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Perl like formats for Ruby
+WWW=		http://formatr.sourceforge.net/
 
-USE_RUBY=	yes
+USES=	ruby
 
 NO_BUILD=	yes
 

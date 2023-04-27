@@ -1,11 +1,12 @@
 PORTNAME=	WsgiDAV
 DISTVERSION=	3.1.0
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ultima@FreeBSD.org
 COMMENT=	WSGI based WebDAV server for sharing resources
+WWW=		https://github.com/mar10/wsgidav
 
 LICENSE=	MIT
 

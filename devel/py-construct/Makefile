@@ -1,14 +1,13 @@
-# Created by: Piotr Florczyk <p.florczyk@adminworkshop.pl>
-
 PORTNAME=	construct
-PORTVERSION=	2.10.67
+PORTVERSION=	2.10.68
 PORTEPOCH=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ehaupt@FreeBSD.org
 COMMENT=	Python module for parsing and building of data structures
+WWW=		https://github.com/construct/construct
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

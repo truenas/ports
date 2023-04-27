@@ -1,11 +1,12 @@
 PORTNAME=	kim-query
-DISTVERSION=	1.1.0
+DISTVERSION=	3.0.0
 CATEGORIES=	science python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Helper routines for querying the OpenKIM repository
+WWW=		https://github.com/openkim/kim-query
 
 LICENSE=	CDDL
 

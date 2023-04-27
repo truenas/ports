@@ -1,5 +1,3 @@
-# Created by: Emanuel Haupt <ehaupt@critical.ch>
-
 PORTNAME=	rtf2html
 DISTVERSION=	1.1b
 PORTREVISION=	1
@@ -8,6 +6,9 @@ MASTER_SITES=	LOCAL/ehaupt
 
 MAINTAINER=	ehaupt@FreeBSD.org
 COMMENT=	Simple rtf2html converter
+
+DEPRECATED=	Abandonware, please use something modern like markdown
+EXPIRATION_DATE=2023-05-25
 
 LICENSE=	BSD2CLAUSE
 

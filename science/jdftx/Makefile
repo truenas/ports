@@ -1,11 +1,12 @@
 PORTNAME=	jdftx
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.6.0
-PORTREVISION=	1
+DISTVERSION=	1.7.0
+PORTREVISION=	3
 CATEGORIES=	science
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Software for joint density functional theory in chemistry
+WWW=		https://jdftx.org/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING

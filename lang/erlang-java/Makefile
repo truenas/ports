@@ -1,6 +1,6 @@
 PORTNAME=	erlang
 DISTVERSIONPREFIX=	OTP-
-DISTVERSION=	24.1.7
+DISTVERSION=	25.3
 PORTEPOCH=	1
 CATEGORIES=	lang parallel java
 PKGNAMESUFFIX=	-java
@@ -8,6 +8,7 @@ DIST_SUBDIR=	erlang
 
 MAINTAINER=	erlang@FreeBSD.org
 COMMENT=	Erlang interface for Java
+WWW=		https://www.erlang.org/
 
 LICENSE=	APACHE20
 
@@ -24,7 +25,7 @@ MAKE_JOBS_UNSAFE=	yes
 
 PLIST_SUB=	APP_VERSION=${APP_VERSION}
 
-APP_VERSION=	1.12.1
+APP_VERSION=	1.13.2
 APP_DIR=	${PREFIX}/lib/erlang/lib/jinterface-${APP_VERSION}
 
 CONFIGURE_ARGS+=	--enable-threads \

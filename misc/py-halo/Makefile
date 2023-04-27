@@ -1,11 +1,12 @@
 PORTNAME=	halo
 DISTVERSION=	0.0.31
 CATEGORIES=	misc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	0mp@FreeBSD.org
 COMMENT=	Beautiful terminal spinners in Python
+WWW=		https://github.com/manrajgrover/halo
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

@@ -1,5 +1,3 @@
-# Created by: Veniamin Gvozdikov <vg@FreeBSD.org>
-
 PORTNAME=	angelscript
 PORTVERSION=	2.34.0
 CATEGORIES=	lang
@@ -8,10 +6,10 @@ DISTNAME=	${PORTNAME}_${PORTVERSION}
 
 MAINTAINER=	ndowens04@gmail.com
 COMMENT=	AngelCode Scripting Library
+WWW=		https://www.angelcode.com/angelscript/
 
 LICENSE=	ZLIB
 
-BROKEN_riscv64=	Does not build: invokes x86 asm
 BROKEN_sparc64=	Does not build: invokes x86 asm
 
 USES=		alias compiler:c11 dos2unix gmake zip

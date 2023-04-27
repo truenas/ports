@@ -1,6 +1,6 @@
 PORTNAME=		oolite
 PORTVERSION=		1.88
-PORTREVISION=		4
+PORTREVISION=		5
 CATEGORIES=		games gnustep
 MASTER_SITES=		https://github.com/OoliteProject/oolite/releases/download/1.88/
 DISTNAME=		${PORTNAME}-source-${PORTVERSION}
@@ -8,6 +8,7 @@ DIST_SUBDIR=		oolite
 
 MAINTAINER=		ports@FreeBSD.org
 COMMENT=		Trade and combat space simulator, clone of Elite
+WWW=		http://www.oolite.org
 
 LICENSE=		CC-BY-NC-SA-3.0 GPLv2 ZLIB
 LICENSE_COMB=		multi
@@ -15,13 +16,12 @@ LICENSE_FILE_CC-BY-NC-SA-3.0=	${WRKSRC}/Doc/LICENSE.TXT
 
 BUILD_DEPENDS=		zip:archivers/zip \
 			${LOCALBASE}/bin/unzip:archivers/unzip
-LIB_DEPENDS=		libespeak.so:audio/espeak \
+LIB_DEPENDS=		libespeak-ng.so:audio/espeak-ng \
 			libnspr4.so:devel/nspr \
 			libvorbisfile.so:audio/libvorbis \
-			libpng.so:graphics/png \
-			libminizip.so:archivers/minizip
+			libpng.so:graphics/png
 
-USES=			gl gnustep openal:al perl5 python:3.5+,build sdl \
+USES=			gl gnustep openal:al minizip perl5 python:3.5+,build sdl \
 			tar:bzip2 xorg
 USE_CXXSTD=		gnu++98
 USE_GL=			gl glu

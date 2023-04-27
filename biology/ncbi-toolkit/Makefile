@@ -1,8 +1,6 @@
-# Created by: tonym
-
 PORTNAME=	ncbi-toolkit
 DISTVERSION=	2017.01.06	# containing BLAST v2.2.27 (? is this true)
-PORTREVISION=	6
+PORTREVISION=	7
 CATEGORIES=	biology
 MASTER_SITES=	ftp://ftp.ncbi.nlm.nih.gov/toolbox/ncbi_tools/old/${PORTVERSION:S/.//g}/
 DISTNAME=	ncbi
@@ -10,6 +8,7 @@ DIST_SUBDIR=	${PORTNAME}-${PORTVERSION}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	NCBI development toolkit, including BLAST 2 and GenBank/Entrez support
+WWW=		https://www.ncbi.nlm.nih.gov/IEB/ToolBox/MainPage/index.html
 
 LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig \
 		libgmp.so:math/gmp \
@@ -25,6 +24,8 @@ LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig \
 
 USES=		gettext-runtime iconv jpeg motif xorg
 USE_XORG=	x11 xau xext xft xmu xrender xt
+
+CONFLICTS_INSTALL=	fhist # bin/test_regexp man/man1/fmerge.1.gz
 
 SUB_FILES=	pkg-message
 

@@ -1,13 +1,12 @@
-# Created by: Emanuel Haupt <ehaupt@critical.ch>
-
 PORTNAME=	weex
-PORTVERSION=	2.8.3
+PORTVERSION=	2.8.4.2
 CATEGORIES=	ftp
-MASTER_SITES=	SF/weex/weex
+MASTER_SITES=	DEBIAN_POOL
 DISTNAME=	${PORTNAME}_${PORTVERSION}
 
 MAINTAINER=	ehaupt@FreeBSD.org
 COMMENT=	Non-interactive FTP client
+WWW=		http://weex.sourceforge.net/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/doc/COPYING

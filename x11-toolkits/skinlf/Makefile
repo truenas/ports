@@ -7,6 +7,7 @@ MASTER_SITES=	https://skinlf.dev.java.net/files/documents/66/37801/ \
 
 MAINTAINER=	crees@FreeBSD.org
 COMMENT=	Allows Java developers to write skinnable applications in Swing
+WWW=		http://www.l2fprod.com/skinlf/index.html
 
 LICENSE=	BSD4CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -18,6 +19,7 @@ USE_JAVA=	yes
 
 JAR_NAME=	${PORTNAME}.jar
 
+NO_ARCH=	yes
 NO_BUILD=	yes
 
 PLIST_FILES=	%%JAVAJARDIR%%/${JAR_NAME} \

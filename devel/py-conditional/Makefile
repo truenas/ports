@@ -1,11 +1,12 @@
 PORTNAME=	conditional
 PORTVERSION=	1.3
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	skreuzer@FreeBSD.org
 COMMENT=	Conditionally enter a context manager
+WWW=		https://pypi.org/project/conditional/
 
 LICENSE=	BSD2CLAUSE
 

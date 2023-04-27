@@ -1,7 +1,6 @@
-# Created by: Walter Venable <weaseal@users.sourceforge.net>
-
 PORTNAME=	undernet-ircu
 PORTVERSION=	2.10.12.19
+PORTREVISION=	1
 CATEGORIES=	irc net
 MASTER_SITES=	https://github.com/UndernetIRC/ircu2/releases/download/u${PORTVERSION}/ \
 		ftp://ftpmirror.uk/freebsd-ports/undernet-ircu/
@@ -9,6 +8,7 @@ DISTNAME=	ircu${PORTVERSION}
 
 MAINTAINER=	freebsd-ports@dan.me.uk
 COMMENT=	Undernet IRCU irc daemon
+WWW=		https://coder-com.undernet.org
 
 LICENSE=	GPLv1
 LICENSE_FILE=	${WRKSRC}/LICENSE

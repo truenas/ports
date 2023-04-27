@@ -1,11 +1,12 @@
 PORTNAME=	py-cpuinfo
 DISTVERSION=	8.0.0
 CATEGORIES=	sysutils python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Module for getting CPU info with pure Python
+WWW=		https://github.com/workhorsy/py-cpuinfo
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

@@ -1,13 +1,13 @@
-# Created by: Shaun Amott <shaun@inerd.com>
-
 PORTNAME=	raster3d
 DISTVERSION=	3.0.7
+PORTREVISION=	1
 CATEGORIES=	graphics biology
 MASTER_SITES=	http://skuld.bmsc.washington.edu/${PORTNAME}/
 DISTNAME=	Raster3D_${DISTVERSION:R}-${DISTVERSION:E}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Set of tools for generating raster images of proteins and molecules
+WWW=		http://skuld.bmsc.washington.edu/raster3d/
 
 LICENSE=	ART20
 

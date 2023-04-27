@@ -1,7 +1,7 @@
 PORTNAME=	ponscripter
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2.2.0_test-13
-DISTVERSIONSUFFIX=	-gcc7ab36
+DISTVERSION=	3.0.2
+PORTREVISION=	1
 CATEGORIES=	games
 PKGNAMESUFFIX=	-${GH_ACCOUNT}
 
@@ -10,6 +10,7 @@ PATCHFILES+=	69068bf83653.patch:-p1 # https://github.com/sekaiproject/ponscripte
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	NScripter-like novel-game interpreter with Unicode support
+WWW=		https://github.com/sekaiproject/ponscripter-fork
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -39,6 +40,7 @@ OPTIONS_DEFINE=	DOCS MANPAGES NOTIFY TREMOR
 OPTIONS_DEFAULT=MANPAGES NOTIFY ${MACHINE_CPU:Msoftfp:C/.+/TREMOR/}
 
 MANPAGES_BUILD_DEPENDS=	xmlto:textproc/xmlto
+MANPAGES_CONFIGURE_OFF=	--no-docs
 MANPAGES_PLIST_FILES=\
 	man/man6/ponscr.6.gz \
 	man/man7/ponscr-ext.7.gz \
@@ -46,6 +48,8 @@ MANPAGES_PLIST_FILES=\
 	man/man7/ponscripter.7.gz
 
 NOTIFY_LIB_DEPENDS=	libnotify.so:devel/libnotify
+NOTIFY_USES=		gnome
+NOTIFY_USE=		GNOME=glib20 # g_object_unref
 NOTIFY_CONFIGURE_WITH=	libnotify
 
 TREMOR_LIB_DEPENDS=	libvorbisidec.so:audio/libtremor
@@ -62,7 +66,6 @@ post-patch:
 post-patch-MANPAGES-off:
 	@${REINPLACE_CMD} -i .manpages.bak \
 		-e '/install-man/d' \
-		-e 's/xmlto/${FALSE}/' \
 		${WRKSRC}/configure
 
 post-patch-TREMOR-on:

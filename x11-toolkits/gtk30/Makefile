@@ -1,9 +1,8 @@
-# Created by: Vanilla I. Shu <vanilla@MinJe.com.TW>
 # Please keep gtk30 in sync with the following x11-themes ports:
 # adwaita-icon-theme, gnome-themes-standard and mate-themes
 
 PORTNAME=	gtk
-PORTVERSION=	3.24.30
+PORTVERSION=	3.24.34
 PORTREVISION=	1
 CATEGORIES=	x11-toolkits
 MASTER_SITES=	GNOME/sources/gtk+/${PORTVERSION:C/^([0-9]+\.[0-9]+).*/\1/}
@@ -13,9 +12,7 @@ DIST_SUBDIR=	gnome
 
 MAINTAINER=	desktop@FreeBSD.org
 COMMENT=	Gimp Toolkit for X11 GUI (current stable version)
-
-EXTRA_PATCHES=	${FILESDIR}/0001-Check-if-size-changed-before-hiding-a-surface.patch:-p1 \
-		${FILESDIR}/0001-Ignore-wl_output-globals-not-bound-by-us.patch:-p1
+WWW=		https://www.gtk.org/
 
 LICENSE=	LGPL20
 
@@ -41,7 +38,7 @@ CONFIGURE_ARGS=	--enable-introspection
 CPPFLAGS+=	-fno-omit-frame-pointer
 INSTALL_TARGET=	install-strip
 
-LIBVERSION=	0.2404.26
+LIBVERSION=	0.2404.30
 PLIST_SUB+=	LIBVERSION=${LIBVERSION}
 
 GLIB_SCHEMAS=	org.gtk.Demo.gschema.xml \
@@ -56,7 +53,7 @@ OPTIONS_SUB=	yes
 
 ATK_BRIDGE_DESC=AT-SPI ATK bridge support (requires X11)
 ATK_BRIDGE_CONFIGURE_WITH=	atk-bridge
-ATK_BRIDGE_LIB_DEPENDS=	libatk-bridge-2.0.so:accessibility/at-spi2-atk
+ATK_BRIDGE_LIB_DEPENDS=	libatk-bridge-2.0.so:accessibility/at-spi2-core
 ATK_BRIDGE_IMPLIES=	X11
 
 BROADWAY_DESC=	Enable GDK Broadway backend for showing GTK+ in the webbrowser using HTML5 and web sockets.
@@ -77,8 +74,7 @@ WAYLAND_CONFIGURE_ENABLE=	wayland-backend
 WAYLAND_BUILD_DEPENDS=	wayland-protocols>=0:graphics/wayland-protocols
 WAYLAND_LIB_DEPENDS=	libwayland-egl.so:graphics/wayland \
 			libxkbcommon.so:x11/libxkbcommon
-WAYLAND_RUN_DEPENDS=	gsettings-desktop-schemas>=0:devel/gsettings-desktop-schemas \
-			wayland-protocols>=0:graphics/wayland-protocols
+WAYLAND_RUN_DEPENDS=	gsettings-desktop-schemas>=0:devel/gsettings-desktop-schemas
 WAYLAND_USES=		gl
 WAYLAND_USE=		GL=egl
 

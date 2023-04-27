@@ -1,13 +1,13 @@
-# Created by: Olivier Duchateau
-
 PORTNAME=	uget
-PORTVERSION=	2.2.1
-PORTREVISION=	4
+PORTVERSION=	2.2.3
+DISTVERSIONSUFFIX=	-1
+PORTREVISION=	1
 CATEGORIES=	net
 MASTER_SITES=	SF/urlget/${PORTNAME}%20%28stable%29/${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Lightweight and full-featured graphical download manager
+WWW=		https://ugetdm.com/
 
 LICENSE=	LGPL21+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -20,6 +20,7 @@ GNU_CONFIGURE=	yes
 USE_GNOME=	glib20 gtk30 intltool cairo
 INSTALL_TARGET=	install-strip
 
+WRKSRC=		${WRKDIR}/${PORTNAME}-${DISTVERSION}
 # Avoid warning, with redefinition of typedef (C11 feature)
 CFLAGS+=	-Wno-typedef-redefinition
 
@@ -36,7 +37,7 @@ GNUTLS_LIB_DEPENDS=	libgcrypt.so:security/libgcrypt \
 			libgpg-error.so:security/libgpg-error
 GNUTLS_CONFIGURE_ON=	--with-gnutls=yes
 
-GSTREAMER_USE=	gstreamer1=yes
+GSTREAMER_USES=	gstreamer
 GSTREAMER_CONFIGURE_ENABLE=	gstreamer
 
 NLS_USES=	gettext-runtime

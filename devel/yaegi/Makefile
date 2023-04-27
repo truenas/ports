@@ -1,10 +1,11 @@
 PORTNAME=	yaegi
-DISTVERSION=	0.9.23
+DISTVERSION=	0.15.1
 DISTVERSIONPREFIX=	v
 CATEGORIES=	devel
 
 MAINTAINER=	dch@FreeBSD.org
 COMMENT=	Elegant Go Interpreter - a REPL for Go
+WWW=		https://github.com/traefik/yaegi
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

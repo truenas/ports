@@ -5,8 +5,9 @@ MASTER_SITES=	CPAN
 MASTER_SITE_SUBDIR=	CPAN:DAGOLDEN
 PKGNAMEPREFIX=	p5-
 
-MAINTAINER=	swills@FreeBSD.org
+MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Adds CPAN Testers reporting to CPAN.pm
+WWW=		https://metacpan.org/release/CPAN-Reporter
 
 BUILD_DEPENDS=	${RUN_DEPENDS}
 RUN_DEPENDS=	p5-Capture-Tiny>0:devel/p5-Capture-Tiny \

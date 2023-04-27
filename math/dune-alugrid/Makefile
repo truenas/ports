@@ -1,11 +1,12 @@
 PORTNAME=	dune-alugrid
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2.8.0rc1
-PORTREVISION=	1
+DISTVERSION=	2.8.0
+PORTREVISION=	4
 CATEGORIES=	math
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	DUNE framework: grid implementation providing simplex or cube grids
+WWW=		https://www.dune-project.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -27,7 +28,7 @@ USE_LDCONFIG=	yes
 
 GL_SITE=	https://gitlab.dune-project.org
 GL_ACCOUNT=	extensions
-GL_COMMIT=	08c6496d4d4a33df6456c3b402182f353dc2e76d
+GL_COMMIT=	ffd6cd15dc7092593c3d5827c2a2b43b81d7a32f
 
 CMAKE_ON=	BUILD_SHARED_LIBS
 
@@ -39,5 +40,7 @@ DOCS_BUILD_DEPENDS=	doxygen:devel/doxygen \
 			sphinx-build:textproc/py-sphinx
 
 PORTDOCS=	*
+
+CXXFLAGS+=	-fsigned-char
 
 .include <bsd.port.mk>

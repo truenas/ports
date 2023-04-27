@@ -1,16 +1,17 @@
 PORTNAME=	universal
 DISTVERSIONPREFIX=	v
-DISTVERSION=	3.48
+DISTVERSION=	3.68
 CATEGORIES=	math
 PKGNAMESUFFIX=	-fp-library
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Header-only C++ template library for universal number arithmetic
+WWW=		https://github.com/stillwater-sc/universal
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USES=		cmake compiler:c++17-lang # should be compiler:c++20-lang
+USES=		cmake compiler:c++20-lang
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	stillwater-sc

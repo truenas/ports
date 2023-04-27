@@ -1,5 +1,3 @@
-# Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
-
 PORTNAME=	unigine-sanctuary
 PORTVERSION=	2.3
 CATEGORIES=	benchmarks linux
@@ -10,6 +8,7 @@ EXTRACT_SUFX=	.run
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Unigine GPU benchmark depicting a Gothic chapel
+WWW=		https://benchmark.unigine.com/sanctuary
 
 ONLY_FOR_ARCHS=	amd64 i386
 ONLY_FOR_ARCHS_REASON=	precompiled, binary-only software for GNU/Linux
@@ -23,7 +22,7 @@ do-extract:
 	@${TAIL} -n 107856 ${DISTDIR}/${DISTFILES} | ${TAR} xzf - -C ${WRKSRC}
 
 post-patch:
-# Avoid clash with other Unigine benchmarks
+# Rename the scripts to avoid the clash with other Unigine benchmarks
 .for script in 1024x768_windowed 1920x1080_fullscreen
 	@${SED} -e 's,\./bin,${DATADIR}/bin,' ${WRKSRC}/${script}.sh \
 		> ${WRKSRC}/${PORTNAME}_${script}.sh

@@ -1,12 +1,11 @@
-# Created by: Andrej Zverev <az@inec.ru>
-
 PORTNAME=	ne
-PORTVERSION=	3.3.1
+PORTVERSION=	3.3.2
 CATEGORIES=	editors
 MASTER_SITES=	http://ne.di.unimi.it/
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Nice and powerful editor
+WWW=		https://ne.di.unimi.it/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,11 +1,11 @@
---- components/network_session_configurator/browser/network_session_configurator.cc.orig	2021-09-24 04:26:03 UTC
+--- components/network_session_configurator/browser/network_session_configurator.cc.orig	2023-04-05 11:05:06 UTC
 +++ components/network_session_configurator/browser/network_session_configurator.cc
-@@ -789,7 +789,7 @@ net::URLRequestContextBuilder::HttpCacheParams::Type C
+@@ -807,7 +807,7 @@ net::URLRequestContextBuilder::HttpCacheParams::Type C
    }
- #endif  // #if !defined(OS_ANDROID)
+ #endif  // #if !BUILDFLAG(IS_ANDROID)
  
--#if defined(OS_ANDROID) || defined(OS_LINUX) || defined(OS_CHROMEOS)
-+#if defined(OS_ANDROID) || defined(OS_LINUX) || defined(OS_CHROMEOS) || defined(OS_BSD)
+-#if BUILDFLAG(IS_ANDROID) || BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS)
++#if BUILDFLAG(IS_ANDROID) || BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_BSD)
    return net::URLRequestContextBuilder::HttpCacheParams::DISK_SIMPLE;
  #else
    return net::URLRequestContextBuilder::HttpCacheParams::DISK_BLOCKFILE;

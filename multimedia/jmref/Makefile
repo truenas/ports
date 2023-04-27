@@ -1,5 +1,3 @@
-# Created by: Steve Wills <steve@mouf.net>
-
 PORTNAME=	jmref
 PORTVERSION=	19.0
 PORTREVISION=	1
@@ -7,8 +5,9 @@ CATEGORIES=	multimedia
 MASTER_SITES=	http://iphome.hhi.de/suehring/tml/download/
 DISTNAME=	jm${PORTVERSION}
 
-MAINTAINER=	swills@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	JM Reference Software
+WWW=		https://iphome.hhi.de/suehring/tml
 
 LICENSE=	ISO_IEC ITU
 LICENSE_COMB=	multi

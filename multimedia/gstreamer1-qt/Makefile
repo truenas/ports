@@ -1,6 +1,6 @@
 PORTNAME=	gstreamer1
 PORTVERSION=	1.2.0
-PORTREVISION=	25
+PORTREVISION=	28
 CATEGORIES=	multimedia
 MASTER_SITES=	http://gstreamer.freedesktop.org/src/qt-gstreamer/
 PKGNAMESUFFIX=	-qt5
@@ -8,6 +8,7 @@ DISTNAME=	qt-gstreamer-${PORTVERSION}
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	Qt ${FLAVOR:C/qt//} bindings for GStreamer 1.x multimedia library
+WWW=		https://gstreamer.freedesktop.org/
 
 LICENSE=	LGPL21+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -17,11 +18,10 @@ LIB_DEPENDS=	libboost_thread.so:devel/boost-libs \
 
 CONFLICTS_INSTALL=	gstreamer${PKGNAMESUFFIX}
 
-USES=		bison cmake compiler:c++11-lang gl gnome pathfix pkgconfig qt:5 tar:xz
-USE_GSTREAMER1=	yes
+USES=		bison cmake compiler:c++11-lang gl gnome gstreamer pathfix pkgconfig qt:5 tar:xz
 USE_GL=		gl
 USE_GNOME=	glib20
-USE_QT=		buildtools_build qmake_build core declarative gui network opengl \
+USE_QT=		buildtools:build qmake:build core declarative gui network opengl \
 		testlib widgets
 
 USE_LDCONFIG=	yes

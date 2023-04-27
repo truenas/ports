@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	alsa-plugins
 PORTVERSION=	1.1.6
 DISTVERSIONSUFFIX=	-1.el7
@@ -9,6 +7,7 @@ PKGNAMESUFFIX=	-pulseaudio
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	PulseAudio plugin for ALSA (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://www.alsa-project.org/
 
 LICENSE=	GPLv3
 

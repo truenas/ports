@@ -1,12 +1,12 @@
-# Created by: Glenn Johnson <glennpj@charter.net>
-
 PORTNAME=	libofx
-PORTVERSION=	0.10.2
+PORTVERSION=	0.10.9
 CATEGORIES=	finance
-MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}
+MASTER_SITES=	https://github.com/${PORTNAME}/${PORTNAME}/releases/download/${PORTVERSION}/ \
+		SF/${PORTNAME}/${PORTNAME}
 
 MAINTAINER=	jhale@FreeBSD.org
 COMMENT=	OpenSource implementation of the OFX (Open Financial eXchange)
+WWW=		http://libofx.sourceforge.net/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

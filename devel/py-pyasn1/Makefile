@@ -1,19 +1,17 @@
-# Created by: Martin Jackson <mhjacks@swbell.net>
-
 PORTNAME=	pyasn1
-PORTVERSION=	0.4.7
-PORTREVISION=	1
+PORTVERSION=	0.4.8
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	mhjacks@swbell.net
 COMMENT=	ASN.1 toolkit for Python
+WWW=		https://github.com/etingof/pyasn1
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.rst
 
-USES=		python:3.6+
+USES=		python
 USE_PYTHON=	autoplist distutils
 
 NO_ARCH=	yes

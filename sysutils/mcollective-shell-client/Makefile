@@ -1,11 +1,10 @@
-# Created by: Bartek Rutkowski <robak@FreeBSD.org>
-
 PORTNAME=	mcollective-shell-client
 PORTVERSION=	0.0.2
 CATEGORIES=	sysutils
 
 MAINTAINER=	robak@FreeBSD.org
 COMMENT=	MCollective shell client plugin
+WWW=		https://github.com/puppetlabs/mcollective-shell-agent
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

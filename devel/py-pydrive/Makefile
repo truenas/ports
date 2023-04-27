@@ -1,15 +1,14 @@
-# Created by: Paul Mather <paul@gromit.dlib.vt.edu>
-
 PORTNAME=	pydrive
 PORTVERSION=	1.3.1
 PORTREVISION=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	PyDrive-${PORTVERSION}
 
 MAINTAINER=	paul@gromit.dlib.vt.edu
 COMMENT=	Google drive api made easy
+WWW=		https://github.com/googledrive/PyDrive
 
 LICENSE=	APACHE20
 

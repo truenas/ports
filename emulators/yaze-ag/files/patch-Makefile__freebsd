@@ -1,6 +1,6 @@
---- Makefile_freebsd.orig	2021-05-11 19:11:02 UTC
+--- Makefile_freebsd.orig	2021-12-20 20:32:05 UTC
 +++ Makefile_freebsd
-@@ -6,12 +6,12 @@ BUILD = " (build for AMD (barcelona, 64Bit))"
+@@ -6,12 +6,12 @@ CC            =	clang
  CC            =	clang
  
  #where you want the binaries and manual page
@@ -19,7 +19,17 @@
  
  #OPTIMIZE	= -g -m486
  #OPTIMIZE	= -g -save-temps -m486
-@@ -210,29 +210,29 @@ cdm:		cdm.o
+@@ -59,7 +59,8 @@ DOCHTMLDIR    = $(LIBDIR)/doc_html
+ #OPTIMIZE	= -O3 -march=athlon64	# 64 Bit AMD
+ #OPTIMIZE	= -O3 -march=athlon64-sse3
+ #OPTIMIZE	= -O3 -march=barcelona
+-OPTIMIZE	= -O3 -march=x86-64
++#OPTIMIZE	= -O3 -march=x86-64
++OPTIMIZE	= -O3
+ 
+ # -DUSE_GNU_READLINE for command recall/editing and filename completion
+ # -DBGii_BUG works around a problem in Backgrounder II
+@@ -215,29 +216,29 @@ install:	all
  		$(CC) $(CFLAGS) cdm.o $(LIBS) -o $@
  
  install:	all

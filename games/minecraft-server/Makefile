@@ -1,7 +1,7 @@
 PORTNAME=	minecraft-server
-PORTVERSION=	1.17.1
+PORTVERSION=	1.19.4
 CATEGORIES=	games java
-MASTER_SITES=	https://launcher.mojang.com/v1/objects/a16d67e5807f57fc4e550299cf20226194497dc2/
+MASTER_SITES=	https://launcher.mojang.com/v1/objects/8f3112a1049751cc472ec13e397eade5336ca7ae/
 DISTNAME=	server
 EXTRACT_SUFX=	.jar
 DIST_SUBDIR=	${PORTNAME}-${PORTVERSION}
@@ -9,37 +9,38 @@ EXTRACT_ONLY=
 
 MAINTAINER=	freebsd@jonathanprice.org
 COMMENT=	Dedicated server for the game Minecraft
+WWW=		http://www.minecraft.net/
 
 LICENSE=	minecraft
 LICENSE_NAME=	Minecraft End User License Agreement
 LICENSE_TEXT=	The license can be viewed at: https://account.mojang.com/documents/minecraft_eula
 LICENSE_PERMS=	no-dist-mirror no-dist-sell no-pkg-mirror no-pkg-sell
 
-OPTIONS_SINGLE=		RUN
-OPTIONS_SINGLE_RUN=	DAEMON STANDALONE
+USE_JAVA=	yes
+JAVA_VERSION=	17
 
-DAEMON_DESC=		Run as a service
-STANDALONE_DESC=	Run the .jar file directly
-OPTIONS_SUB=		yes
-
-OPTIONS_DEFAULT=	STANDALONE
+NO_ARCH=	yes
+NO_BUILD=	yes
+SUB_FILES=	minecraft-server pkg-deinstall pkg-message
+SUB_LIST=	VERSION=${PORTVERSION}
 
 USERS=		mcserver
 GROUPS=		${USERS}
 
-NO_BUILD=	yes
-USE_JAVA=	yes
-SUB_FILES=	minecraft-server pkg-deinstall pkg-message
-SUB_LIST=	VERSION=${PORTVERSION}
 PLIST_SUB=	VERSION=${PORTVERSION}
 
 CONFIG_FILES=	banned-ips.json banned-players.json eula.txt ops.json \
 		server.properties usercache.json whitelist.json
 
-DAEMON_VARS=		USE_RC_SUBR=minecraft
-DAEMON_RUN_DEPENDS=	tmux:sysutils/tmux
+OPTIONS_DEFAULT=	STANDALONE
+OPTIONS_SINGLE=		RUN
+OPTIONS_SINGLE_RUN=	DAEMON STANDALONE
+OPTIONS_SUB=		yes
 
-NO_ARCH=	yes
+DAEMON_DESC=		Run as a service
+STANDALONE_DESC=	Run the .jar file directly
+DAEMON_RUN_DEPENDS=	tmux:sysutils/tmux
+DAEMON_VARS=		USE_RC_SUBR=minecraft
 
 do-install:
 	${MKDIR} ${STAGEDIR}${PREFIX}/${PORTNAME}

@@ -1,16 +1,16 @@
-# Created by: KIRIYAMA Kazuhiko <kiri@FreeBSD.org>
-
 PORTNAME=	fop
-DISTVERSION=	2.6
+DISTVERSION=	2.8
 CATEGORIES=	textproc java
 MASTER_SITES=	APACHE/xmlgraphics/fop/source/:fop \
-		SF/offo/offo-hyphenation/2.2:hyph
+		SF/offo/offo-hyphenation/2.2:hyph \
+		https://archive.apache.org/dist/xmlgraphics/fop/source/:fop
 DISTNAME=	${PORTNAME}-${PORTVERSION}-src
 DISTFILES=	${DISTNAME}.tar.gz:fop offo-hyphenation.zip:hyph
 EXTRACT_ONLY=	${DISTNAME}.tar.gz
 
 MAINTAINER=	makc@FreeBSD.org
 COMMENT=	Print formatter driven by XSL formatting
+WWW=		https://xmlgraphics.apache.org/fop/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

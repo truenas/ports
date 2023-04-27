@@ -1,11 +1,12 @@
 PORTNAME=	msoffcrypto-tool
-PORTVERSION=	4.11.0
+PORTVERSION=	5.0.0
 CATEGORIES=	security python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	antoine@FreeBSD.org
 COMMENT=	Python tool and library for decrypting MS Office files
+WWW=		https://github.com/nolze/msoffcrypto-tool
 
 LICENSE=	MIT
 

@@ -1,11 +1,11 @@
-# Created by: Jov <amutu@amutu.com>
-
 PORTNAME=	bear
-DISTVERSION=	3.0.17
+DISTVERSION=	3.1.1
+PORTREVISION=	2
 CATEGORIES=	devel
 
 MAINTAINER=	jrm@FreeBSD.org
 COMMENT=	Tool that generates a compilation database for clang tooling
+WWW=		https://github.com/rizsotto/Bear
 
 LICENSE=	GPLv3+
 
@@ -35,7 +35,7 @@ pre-install:
 	${RM} -r ${STAGEDIR}/wrkdirs
 
 post-install:
-.for l in bin/citnames bin/intercept lib/bear/libexec.so lib/bear/wrapper
+.for l in lib/bear/libexec.so lib/bear/wrapper
 	@${STRIP_CMD} ${STAGEDIR}${PREFIX}/${l}
 .endfor
 

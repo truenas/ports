@@ -1,13 +1,13 @@
-# Created by: thierry@pompo.net
-
 PORTNAME=	rankwidth	# Also known as: rw
 PORTVERSION=	0.9
+PORTREVISION=	2
 CATEGORIES=	math
 MASTER_SITES=	SF/${PORTNAME}/
 DISTNAME=	rw-${PORTVERSION}
 
 MAINTAINER=	thierry@FreeBSD.org
 COMMENT=	Calculation of rank-width and rank-decompositions
+WWW=		https://sourceforge.net/projects/rankwidth/
 
 LICENSE=	GPLv2
 

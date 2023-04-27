@@ -1,6 +1,6 @@
 PORTNAME=	openmx
 DISTVERSION=	3.8.5 # the 18June12 patch upgrades 3.8 -> 3.8.5
-PORTREVISION=	7
+PORTREVISION=	8
 CATEGORIES=	science
 MASTER_SITES=	http://www.openmx-square.org/ \
 		http://www.openmx-square.org/bugfixed/18June12/:patch
@@ -11,6 +11,7 @@ EXTRACT_ONLY=	${PORTNAME}${DISTVERSION:R}${EXTRACT_SUFX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Nanoscale material simulations using density functional theories (DFT)
+WWW=		http://www.openmx-square.org/
 
 LICENSE=	GPLv2
 

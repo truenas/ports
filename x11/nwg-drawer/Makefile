@@ -1,10 +1,12 @@
 PORTNAME=	nwg-drawer
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.2.1
-CATEGORIES=	x11
+DISTVERSION=	0.3.8
+PORTREVISION=	5
+CATEGORIES=	x11 wayland
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Application drawer for sway and other wlroots compositors
+WWW=		https://github.com/nwg-piotr/nwg-drawer
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -21,11 +23,11 @@ GH_TUPLE=	allan-simon:go-singleinstance:d0997106ab37:allan_simon_go_singleinstan
 		dlasky:gotk3-layershell:e6ecab2731f7:dlasky_gotk3_layershell/vendor/github.com/dlasky/gotk3-layershell \
 		fsnotify:fsnotify:v1.5.1:fsnotify_fsnotify/vendor/github.com/fsnotify/fsnotify \
 		golang:sync:56d357773e84:golang_sync/vendor/golang.org/x/sync \
-		golang:sys:0f9fa26af87c:golang_sys/vendor/golang.org/x/sys \
+		golang:sys:c0bba94af5f8:golang_sys/vendor/golang.org/x/sys \
 		gotk3:gotk3:v0.6.1:gotk3_gotk3/vendor/github.com/gotk3/gotk3 \
-		joshuarubin:go-sway:v0.0.4:joshuarubin_go_sway/vendor/github.com/joshuarubin/go-sway \
+		joshuarubin:go-sway:v1.2.0:joshuarubin_go_sway/vendor/github.com/joshuarubin/go-sway \
 		joshuarubin:lifecycle:v1.0.0:joshuarubin_lifecycle/vendor/github.com/joshuarubin/lifecycle \
-		sirupsen:logrus:v1.8.1:sirupsen_logrus/vendor/github.com/sirupsen/logrus \
+		sirupsen:logrus:v1.9.0:sirupsen_logrus/vendor/github.com/sirupsen/logrus \
 		uber-go:atomic:v1.3.2:uber_go_atomic/vendor/go.uber.org/atomic \
 		uber-go:multierr:v1.1.0:uber_go_multierr/vendor/go.uber.org/multierr
 CGO_LDFLAGS+=	-Wl,--as-needed # harfbuzz, freetype2
@@ -35,6 +37,7 @@ PORTDATA=	desktop-directories *.css
 post-patch:
 # Respect PREFIX for *.desktop
 	@${REINPLACE_CMD} 's,/usr/share,${DATADIR:H},' \
+		${WRKSRC}/main.go \
 		${WRKSRC}/tools.go
 
 post-install:

@@ -1,9 +1,11 @@
 PORTNAME=	libretro-snes9x
-PORTVERSION=	0.20210129
+DISTVERSION=	1.53-2017
+DISTVERSIONSUFFIX=	-g2ed8d68
 CATEGORIES=	games
 
-MAINTAINER=	menelkir@itroll.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Snes9x - Portable Super Nintendo emulator
+WWW=		https://github.com/libretro/snes9x
 
 # Commercial users must seek permission from copyright holders.
 LICENSE=	PS
@@ -17,7 +19,6 @@ USE_LDCONFIG=	yes
 USE_GITHUB=	yes
 GH_ACCOUNT=	libretro
 GH_PROJECT=	snes9x
-GH_TAGNAME=	73aa348
 
 PLIST_FILES=	lib/libretro/snes9x_libretro.so
 

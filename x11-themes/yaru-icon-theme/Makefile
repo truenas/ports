@@ -1,11 +1,10 @@
-# Created by: Alexander Vereeken <Alexander88207@protonmail.com>
-
 PORTNAME=	yaru-icon-theme
-DISTVERSION=	21.10.2
+DISTVERSION=	22.10.3
 CATEGORIES=	x11-themes
 
 MAINTAINER=	Alexander88207@protonmail.com
 COMMENT=	Default icon theme for Ubuntu
+WWW=		https://github.com/ubuntu/yaru
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -27,13 +26,11 @@ BINARY_ALIAS=	realpath=grealpath
 MESON_ARGS=	-Dgnome-shell=false \
 		-Dgtk=false \
 		-Dgtksourceview=false \
+		-Dmetacity=false \
 		-Dsessions=false \
-		-Dsounds=false \
-		-Dmetacity=false
+		-Dsounds=false
 
 SHEBANG_LANG=	${PYTHON_CMD}
-SHEBANG_FILES=	gnome-shell/copy-and-rename.py  \
-		gnome-shell/gresources-xml-parser.py \
-		icons/meson/post_install.py
+SHEBANG_FILES=	icons/meson/post_install.py icons/src/generate-index-theme.py
 
 .include <bsd.port.mk>

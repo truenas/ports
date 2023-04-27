@@ -1,14 +1,13 @@
-# Created by: Martin Kammerhofer
-
 PORTNAME=	auctex
-PORTVERSION=	12.2
-PORTREVISION=	3
+PORTVERSION=	13.1
+PORTREVISION=	4
 CATEGORIES=	print elisp
 MASTER_SITES=	GNU
 PKGNAMESUFFIX=	${EMACS_PKGNAMESUFFIX}
 
 MAINTAINER=	hrs@FreeBSD.org
 COMMENT=	Integrated environment for writing LaTeX using GNU Emacs
+WWW=		https://www.gnu.org/software/auctex/
 
 LICENSE=	GPLv3
 
@@ -16,7 +15,7 @@ LICENSE=	GPLv3
 BROKEN=		tex.el:0:0: error: wrong-type-argument: (stringp nil)
 .endif
 
-USES=		emacs ghostscript gmake
+USES=		emacs ghostscript gmake tex
 USE_TEX=	latex texhash
 TEXHASHDIRS=	${TEXMFDIR}
 
@@ -26,7 +25,6 @@ CONFIGURE_ARGS=	--with-lispdir=${PREFIX}/${EMACS_VERSION_SITE_LISPDIR} \
 	--with-texmf-dir=${PREFIX}/${TEXMFDIR}
 PORTDOCS=	tex-ref.pdf
 INFO=		auctex preview-latex
-PLIST_SUB=	TEXMFDIR=${TEXMFDIR}
 SUB_FILES=	pkg-message
 
 OPTIONS_DEFINE=	DOCS

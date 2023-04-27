@@ -1,14 +1,13 @@
-# Created by: Dryice Liu <dryice@dryice.name>
-
 PORTNAME=	routes
 PORTVERSION=	2.5.1
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP/source/R/Routes
+MASTER_SITES=	PYPI/source/R/Routes
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	Routes-${PORTVERSION}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Routing package for Python that matches URLs to dicts and vice versa
+WWW=		https://routes.readthedocs.io/
 
 LICENSE=	MIT
 

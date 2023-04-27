@@ -1,5 +1,3 @@
-# Created by: Gea-Suan Lin <gslin@ccca.nctu.edu.tw>
-
 PORTNAME=	super-smack
 PORTVERSION=	1.3
 PORTREVISION=	4
@@ -8,8 +6,12 @@ MASTER_SITES=	GENTOO
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Benchmarking, stress testing, and load generation tool for Databases
+WWW=		https://jeremy.zawodny.com/mysql/super-smack/
 
 LICENSE=	GPLv2+
+
+BROKEN=		unfetchable
+EXPIRATION_DATE=2023-04-30
 
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--with-smacks-dir=${DATADIR}

@@ -1,21 +1,20 @@
-# Created by: Andrew Pantyukhin <infofarmer@FreeBSD.org>
-
 PORTNAME=	frei0r
-DISTVERSIONPREFIX=	v
+PORTVERSION=	1.8.0
+DISTVERSIONPREFIX=	plugins-
+PORTREVISION?=	1
 CATEGORIES=	graphics
-DISTVERSION=	1.7.0-18
-DISTVERSIONSUFFIX=	-g86475d3
+MASTER_SITES?=	https://files.dyne.org/frei0r/releases/
+
 MAINTAINER=	jhale@FreeBSD.org
 COMMENT?=	Minimalistic plugin API for video effects
+WWW=		https://frei0r.dyne.org/
 
 .if !defined(BUILDING_FREI0R_METAPORT)
 
 LICENSE=	GPLv2+
-LICENSE_FILE=	${WRKSRC}/COPYING
+LICENSE_FILE=	${WRKSRC}/COPYING.txt
 
 USES=		cmake compiler:c++11-lang pkgconfig
-USE_GITHUB=	yes
-GH_ACCOUNT=	dyne
 
 .if defined(BUILDING_FREI0R_OPENCV) && defined(BUILDING_FREI0R_GAVL)
 IGNORE=		cannot build OpenCV and gavl plugins simultaneously

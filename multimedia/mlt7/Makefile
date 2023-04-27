@@ -1,6 +1,6 @@
 PORTNAME=		${_MLT_PORTNAME}
 DISTVERSION=		${_MLT_VERSION}
-PORTREVISION?=		1
+PORTREVISION=	3
 CATEGORIES?=		multimedia
 # Don't use GitHub "fake" downloads that are auto-generated from a
 # tag; the project uploads tarballs for each release.
@@ -11,22 +11,27 @@ WRKSRC=			${WRKDIR}/mlt-${DISTVERSION}
 
 MAINTAINER=		kde@FreeBSD.org
 COMMENT?=		Multimedia framework for TV broadcasting
+WWW=		https://www.mltframework.org/
 
 LICENSE?=		GPLv2 GPLv3 LGPL21
 LICENSE_COMB?=		multi
 
 USES+=			alias cmake compiler:c++11-lang eigen:3 localbase pkgconfig
+USE_LDCONFIG=		yes
 
 DATADIR=		${PREFIX}/share/mlt-7
 
 .ifndef(SLAVEPORT) # Master port.
 BROKEN_sparc64=		does not compile on sparc64 (invokes i386 asm)
 
-USES+=			mlt:7,nodepend
+USES+=			gnome mlt:7,nodepend
+USE_GNOME=		libxml2
+
+CMAKE_ON=		MOD_XML
 
 # Explicitly disabled modules that are ouddated, unnecessary, or have
 # their own port.
-CMAKE_OFF=		MOD_SDL1 MOD_QT \
+CMAKE_OFF=		MOD_GLAXNIMATE MOD_SDL1 MOD_QT \
 			MOD_NDI \
 			SWIG_CSHARP SWIG_JAVA SWIG_LUA SWIG_NODEJS SWIG_PERL \
 			SWIG_PHP SWIG_PYTHON SWIG_RUBY SWIG_TCL
@@ -35,13 +40,13 @@ PORTDOCS=		AUTHORS NEWS
 PORTEXAMPLES=		demo
 
 OPTIONS_DEFINE=		DOCS EXAMPLES
-OPTIONS_DEFAULT=	AVFORMAT FREI0R GDK MOVIT KDENLIVE PLUS PLUSGPL RESAMPLE SDL2 SOX \
-			VIDSTAB VORBIS XML
+OPTIONS_DEFAULT=	AVFORMAT FREI0R GDK MOVIT KDENLIVE NORMALIZE PLUS PLUSGPL RESAMPLE SDL2 SOX \
+			VIDSTAB VORBIS
 
 OPTIONS_GROUP=		MODULES
 OPTIONS_GROUP_MODULES=	AVFORMAT DECKLINK FREI0R GDK JACKRACK KDENLIVE MOVIT NORMALIZE \
 			OLDFILM OPENCV PLUS PLUSGPL RESAMPLE RTAUDIO RUBBERBAND SDL2 \
-			SOX VIDSTAB VORBIS XINE XML
+			SOX VIDSTAB VORBIS XINE
 OPTIONS_SUB=		yes
 
 AVFORMAT_DESC=		Enable avformat module
@@ -60,14 +65,12 @@ GDK_LIB_DEPENDS=	libexif.so:graphics/libexif \
 			libfontconfig.so:x11-fonts/fontconfig \
 			libfreetype.so:print/freetype2 \
 			libharfbuzz.so:print/harfbuzz
-GDK_USES=		gnome
 GDK_USE=		gnome=gdkpixbuf2,pango
 GDK_CMAKE_BOOL=		MOD_GDK
 
 JACKRACK_DESC=		Enable jackrack module
 JACKRACK_BUILD_DEPENDS=	${LOCALBASE}/include/ladspa.h:audio/ladspa
 JACKRACK_LIB_DEPENDS=	libjack.so:audio/jack
-JACKRACK_USES=		gnome
 JACKRACK_USE=		gnome=glib20
 JACKRACK_CMAKE_BOOL=	MOD_JACKRACK
 
@@ -137,11 +140,6 @@ VORBIS_CMAKE_BOOL=	MOD_VORBIS
 
 XINE_DESC=		Enable xine module
 XINE_CMAKE_BOOL=	MOD_XINE
-
-XML_DESC=		Enable XML module
-XML_USES=		gnome
-XML_USE=		gnome=libxml2
-XML_CMAKE_BOOL=		MOD_XML
 
 pre-configure:
 	${RM} ${STAGEDIR}${PREFIX}/man/man1/melt.1

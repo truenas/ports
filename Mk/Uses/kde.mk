@@ -9,8 +9,8 @@
 #
 # USE_KDE	List of KF5/Plasma5 components (other ports) that this
 #		port depends on.
-#		* foo_build	Add a build-time dependency (BUILD_DEPENDS)
-#		* foo_run	Add a run-time dependency (RUN_DEPENDS)
+#		* foo:build	Add a build-time dependency (BUILD_DEPENDS)
+#		* foo:run	Add a run-time dependency (RUN_DEPENDS)
 #		* foo (default)	Add both dependencies on component <foo>, or
 #				a LIB_DEPENDS if applicable.
 #
@@ -25,7 +25,7 @@
 #
 # option DOCS	If the port is part of kde-applications (see CATEGORIES,
 #		above) and has an option defined for DOCS then a dependency
-#		for doctools_build is added. The option itself doesn't
+#		for doctools:build is added. The option itself doesn't
 #		have to do anything -- the dependency is always there.
 #
 # KDE_INVENT	If the port does not have a regular release, and should
@@ -75,18 +75,18 @@ _KDE_RELNAME=		KDE${_KDE_VERSION}
 
 # === VERSIONS OF THE DIFFERENT COMPONENTS =====================================
 # Current KDE desktop.
-KDE_PLASMA_VERSION?=		5.23.4
+KDE_PLASMA_VERSION?=		5.27.4
 KDE_PLASMA_BRANCH?=		stable
 
 # Current KDE frameworks.
-KDE_FRAMEWORKS_VERSION?=	5.88.0
+KDE_FRAMEWORKS_VERSION?=	5.105.0
 KDE_FRAMEWORKS_BRANCH?= 	stable
 
 # Current KDE applications.
-KDE_APPLICATIONS_VERSION?=	21.12.0
-KDE_APPLICATIONS_SHLIB_VER?=	5.19.0
+KDE_APPLICATIONS_VERSION?=	23.04.0
+KDE_APPLICATIONS_SHLIB_VER?=	5.23.0
 # G as in KDE Gear, and as in "don't make the variable name longer than required"
-KDE_APPLICATIONS_SHLIB_G_VER?=	21.12.0
+KDE_APPLICATIONS_SHLIB_G_VER?=	23.4.0
 KDE_APPLICATIONS_BRANCH?=	stable
 
 # Extended KDE universe applications.
@@ -156,11 +156,11 @@ MASTER_SITES?=		KDE/${KDE_APPLICATIONS_BRANCH}/release-service/${KDE_APPLICATION
 # defines OPTION DOCS -- the _KDE_OPTIONS here is to
 # avoid make errors when there are no options defined at all.
 _KDE_OPTIONS=		bogus ${OPTIONS_DEFINE}
-.          if ${_KDE_OPTIONS:MDOCS}
+.        if ${_KDE_OPTIONS:MDOCS}
 DOCSDIR=		${PREFIX}/share/doc
 PORTDOCS?=		HTML/*
-USE_KDE+=		doctools_build
-.          endif
+USE_KDE+=		doctools:build
+.        endif
 # Further pass along a SHLIB_VER PLIST_SUB
 PLIST_SUB+=		KDE_APPLICATIONS_SHLIB_VER=${KDE_APPLICATIONS_SHLIB_VER} \
 			KDE_APPLICATIONS_VERSION_SHORT="${KDE_APPLICATIONS_VERSION:R:R}"
@@ -173,6 +173,7 @@ DIST_SUBDIR?=		KDE/plasma/${KDE_PLASMA_VERSION}
 .      elif ${_KDE_CATEGORY:Mkde-frameworks}
 PORTVERSION?=		${KDE_FRAMEWORKS_VERSION}
 PKGNAMEPREFIX?=		kf5-
+WWW?=			https://api.kde.org/frameworks/${PORTNAME}/html/index.html
 # This is a slight duplication of _USE_FRAMEWORKS_PORTING -- it maybe would be
 # better to rely on ${_USE_FRAMEWORKS_PORTING:S/^/k/g}
 _PORTINGAIDS=		kjs kjsembed kdelibs4support kdesignerplugin kdewebkit khtml kmediaplayer kross kxmlrpcclient
@@ -188,6 +189,8 @@ IGNORE?=		unknown CATEGORY value '${_KDE_CATEGORY}' #'
 .    endif #defined(_KDE_CATEGORY)
 
 # ==============================================================================
+# === SET UP LOCALE ENVIRONMENT =================================================
+USE_LOCALE?=	en_US.UTF-8
 
 # === SET UP CMAKE ENVIRONMENT =================================================
 # Help cmake to find files when testing ports with non-default PREFIX.
@@ -239,7 +242,7 @@ _USE_FRAMEWORKS_TIER2=	auth completion crash doctools \
 _USE_FRAMEWORKS_TIER3=	activities activities-stats baloo5 bookmarks configwidgets \
 			designerplugin emoticons globalaccel guiaddons \
 			iconthemes init kcmutils kdav kdeclarative \
-			kded kdesu kdewebkit kio kwayland-server newstuff notifyconfig parts \
+			kded kdesu kdewebkit kio kpipewire newstuff notifyconfig parts \
 			people plasma-framework purpose runner service texteditor \
 			textwidgets wallet xmlgui xmlrpcclient
 
@@ -270,11 +273,11 @@ _USE_PLASMA_ALL=	activitymanagerd breeze breeze-gtk \
 			libksysguard milou oxygen plasma-browser-integration \
 			plasma-desktop plasma-disks plasma-integration plasma-pa \
 			plasma-sdk plasma-workspace plasma-workspace-wallpapers \
-			polkit-kde-agent-1 powerdevil systemsettings
+			polkit-kde-agent-1 powerdevil systemsettings xdg-desktop-portal-kde
 
 # List of components of the KDE PIM distribution (part of applications).
 _USE_KDEPIM5_ALL=	akonadicontacts akonadiimportwizard akonadimime akonadinotes \
-			akonadicalendar akonadisearch alarmcalendar \
+			akonadicalendar akonadisearch \
 			calendarcore calendarsupport calendarutils \
 			contacts eventviews gapi grantleetheme \
 			gravatar identitymanagement imap \
@@ -286,7 +289,7 @@ _USE_KDEPIM5_ALL=	akonadicontacts akonadiimportwizard akonadimime akonadinotes \
 			kalarm kontact kmail mbox-importer \
 			akonadiconsole akregator grantlee-editor kaddressbook \
 			kalarm kmail-account-wizard kmail knotes kontact \
-			korganizer pim-data-exporter
+			korganizer pim-data-exporter ktextaddons
 
 _USE_KDE5_ALL=		${_USE_FRAMEWORKS_ALL} \
 			${_USE_PLASMA_ALL} \
@@ -301,7 +304,7 @@ kde-activities-stats_PORT=	x11/kf5-kactivities-stats
 kde-activities-stats_LIB=	libKF5ActivitiesStats.so
 
 kde-apidox_PORT=		devel/kf5-kapidox
-kde-apidox_PATH=		${KDE_PREFIX}/bin/kapidox_generate
+kde-apidox_PATH=		${KDE_PREFIX}/bin/kapidox-generate
 kde-apidox_TYPE=		run
 
 kde-archive_PORT=		archivers/kf5-karchive
@@ -431,16 +434,13 @@ kde-kio_PORT=			devel/kf5-kio
 kde-kio_LIB=			libKF5KIOCore.so
 
 kde-kirigami2_PORT=		x11-toolkits/kf5-kirigami2
-kde-kirigami2_PATH=		${QT_QMLDIR}/org/kde/kirigami.2/libkirigamiplugin.so
+kde-kirigami2_PATH=		${QT_QMLDIR}/org/kde/kirigami.2/libKirigamiPlugin.so
 
 kde-kquickcharts_PORT=		graphics/kf5-kquickcharts
-kde-kquickcharts_PATH=		${QT_QMLDIR}/org/kde/quickcharts/controls/libchartscontrolsplugin.so
+kde-kquickcharts_PATH=		${QT_QMLDIR}/org/kde/quickcharts/libQuickCharts.so
 
 kde-kross_PORT=			lang/kf5-kross
 kde-kross_LIB=			libKF5KrossCore.so
-
-kde-kwayland-server_PORT=	x11/plasma5-kwayland-server
-kde-kwayland-server_LIB=	libKWaylandServer.so
 
 kde-layer-shell-qt_PORT=	x11/plasma5-layer-shell-qt
 kde-layer-shell-qt_LIB=		libLayerShellQtInterface.so
@@ -538,9 +538,21 @@ kde-xmlgui_LIB=			libKF5XmlGui.so
 
 kde-xmlrpcclient_PORT=		net/kf5-kxmlrpcclient
 kde-xmlrpcclient_LIB=		libKF5XmlRpcClient.so
+
+kde-calendarcore_PORT=		net/kf5-kcalendarcore
+kde-calendarcore_LIB=		libKF5CalendarCore.so
+
+kde-contacts_PORT=		net/kf5-kcontacts
+kde-contacts_LIB=		libKF5Contacts.so
+
+kde-kdav_PORT=			net/kf5-kdav
+kde-kdav_LIB=			libKF5DAV.so
 # ====================== end of frameworks components ==========================
 
 # ====================== plasma components =====================================
+kde-kpipewire_PORT=		audio/plasma5-kpipewire
+kde-kpipewire_LIB=		libKPipeWire.so
+
 kde-activitymanagerd_PORT=	x11/plasma5-kactivitymanagerd
 kde-activitymanagerd_LIB=	libkactivitymanagerd_plugin.so
 
@@ -572,10 +584,10 @@ kde-kde-gtk-config_PORT=	x11-themes/plasma5-kde-gtk-config
 kde-kde-gtk-config_PATH=	${KDE_PREFIX}/lib/kconf_update_bin/gtk_theme
 
 kde-kdeplasma-addons_PORT=	x11-toolkits/plasma5-kdeplasma-addons
-kde-kdeplasma-addons_PATH=	${QT_PLUGINDIR}/kcm_krunner_dictionary.so
+kde-kdeplasma-addons_LIB=	libplasmapotdprovidercore.so
 
 kde-kgamma5_PORT=		x11/plasma5-kgamma5
-kde-kgamma5_PATH=		${QT_PLUGINDIR}/kcm_kgamma.so
+kde-kgamma5_PATH=		${QT_PLUGINDIR}/plasma/kcms/systemsettings/kcm_kgamma.so
 
 kde-kmenuedit_PORT=		sysutils/plasma5-kmenuedit
 kde-kmenuedit_PATH=		${KDE_PREFIX}/bin/kmenuedit
@@ -599,7 +611,7 @@ kde-kwallet-pam_PORT=		security/plasma5-kwallet-pam
 kde-kwallet-pam_PATH=		${KDE_PREFIX}/lib/pam_kwallet5.so
 
 kde-kwayland-integration_PORT=	x11/plasma5-kwayland-integration
-kde-kwayland-integration_PATH=	${QT_PLUGINDIR}/kf5/org.kde.kidletime.platforms/KF5IdleTimeKWaylandPlugin.so
+kde-kwayland-integration_PATH=	${QT_PLUGINDIR}/kf5/kwindowsystem/KF5WindowSystemKWaylandPlugin.so
 
 kde-kwin_PORT=			x11-wm/plasma5-kwin
 kde-kwin_PATH=			${KDE_PREFIX}/bin/kwin_x11
@@ -632,7 +644,7 @@ kde-plasma-integration_PORT=	x11/plasma5-plasma-integration
 kde-plasma-integration_PATH=	${QT_PLUGINDIR}/platformthemes/KDEPlasmaPlatformTheme.so
 
 kde-plasma-pa_PORT=		audio/plasma5-plasma-pa
-kde-plasma-pa_PATH=		${QT_PLUGINDIR}/kcms/kcm_pulseaudio.so
+kde-plasma-pa_PATH=		${QT_PLUGINDIR}/plasma/kcms/systemsettings/kcm_pulseaudio.so
 
 kde-plasma-sdk_PORT=		devel/plasma5-plasma-sdk
 kde-plasma-sdk_PATH=		${KDE_PREFIX}/bin/plasmoidviewer
@@ -651,122 +663,116 @@ kde-powerdevil_LIB=		libpowerdevilcore.so
 
 kde-systemsettings_PORT=	sysutils/plasma5-systemsettings
 kde-systemsettings_PATH=	${KDE_PREFIX}/bin/systemsettings5
+
+kde-xdg-desktop-portal-kde_PATH=	${KDE_PREFIX}/lib/libexec/xdg-desktop-portal-kde
+kde-xdg-desktop-portal-kde_PORT=	deskutils/plasma5-xdg-desktop-portal-kde
 # ====================== end of plasma components ==============================
 
 # ====================== pim5 components =======================================
 kde-akonadicontacts_PORT=	net/akonadi-contacts
-kde-akonadicontacts_LIB=	libKF5AkonadiContact.so
+kde-akonadicontacts_LIB=	libKPim5AkonadiContact.so
 
 kde-akonadiimportwizard_PORT=	deskutils/akonadi-import-wizard
-kde-akonadiimportwizard_LIB=	libKPimImportWizard.so
+kde-akonadiimportwizard_LIB=	libKPim5ImportWizard.so
 
 kde-akonadimime_PORT=		net/akonadi-mime
-kde-akonadimime_LIB=		libKF5AkonadiMime.so
+kde-akonadimime_LIB=		libKPim5AkonadiMime.so
 
 kde-akonadinotes_PORT=		net/akonadi-notes
-kde-akonadinotes_LIB=		libKF5AkonadiNotes.so
+kde-akonadinotes_LIB=		libKPim5AkonadiNotes.so
 
 kde-akonadicalendar_PORT=	net/akonadi-calendar
-kde-akonadicalendar_LIB=	libKF5AkonadiCalendar.so
+kde-akonadicalendar_LIB=	libKPim5AkonadiCalendar.so
 
 kde-akonadisearch_PORT=		net/akonadi-search
-kde-akonadisearch_LIB=		libKF5AkonadiSearchCore.so
-
-kde-alarmcalendar_PORT=		net/kalarmcal
-kde-alarmcalendar_LIB=		libKF5AlarmCalendar.so
+kde-akonadisearch_LIB=		libKPim5AkonadiSearchCore.so
 
 kde-calendarsupport_PORT=	net/calendarsupport
-kde-calendarsupport_LIB=	libKF5CalendarSupport.so
-
-kde-calendarcore_PORT=		net/kf5-kcalendarcore
-kde-calendarcore_LIB=		libKF5CalendarCore.so
+kde-calendarsupport_LIB=	libKPim5CalendarSupport.so
 
 kde-calendarutils_PORT=		net/kcalutils
-kde-calendarutils_LIB=		libKF5CalendarUtils.so
-
-kde-contacts_PORT=		net/kf5-kcontacts
-kde-contacts_LIB=		libKF5Contacts.so
+kde-calendarutils_LIB=		libKPim5CalendarUtils.so
 
 kde-eventviews_PORT=		net/eventviews
-kde-eventviews_LIB=		libKF5EventViews.so
+kde-eventviews_LIB=		libKPim5EventViews.so
 
 kde-gapi_PORT=			net/libkgapi
-kde-gapi_LIB=			libKPimGAPICore.so
+kde-gapi_LIB=			libKPim5GAPIBlogger.so
 
 kde-grantleetheme_PORT=		deskutils/grantleetheme
-kde-grantleetheme_LIB=		libKF5GrantleeTheme.so
+kde-grantleetheme_LIB=		libKPim5GrantleeTheme.so
 
 kde-gravatar_PORT=		net/libgravatar
-kde-gravatar_LIB=		libKF5Gravatar.so
+kde-gravatar_LIB=		libKPim5Gravatar.so
 
 kde-identitymanagement_PORT=	net/kidentitymanagement
-kde-identitymanagement_LIB=	libKF5IdentityManagement.so
+kde-identitymanagement_LIB=	libKPim5IdentityManagement.so
 
 kde-imap_PORT=			net/kimap
-kde-imap_LIB=			libKF5IMAP.so
+kde-imap_LIB=			libKPim5IMAP.so
 
 kde-incidenceeditor_PORT=	net/incidenceeditor
-kde-incidenceeditor_LIB=	libKF5IncidenceEditor.so
-
-kde-kdav_PORT=			net/kf5-kdav
-kde-kdav_LIB=			libKF5DAV.so
+kde-incidenceeditor_LIB=	libKPim5IncidenceEditor.so
 
 kde-kdepim-addons_PORT=	deskutils/kdepim-addons
-kde-kdepim-addons_PATH=	${KDE_PREFIX}/lib/contacteditor/editorpageplugins/cryptopageplugin.so
+kde-kdepim-addons_PATH=	${QT_PLUGINDIR}/pim5/contacteditor/editorpageplugins/cryptopageplugin.so
 
 kde-kdepim-runtime5_PORT=	deskutils/kdepim-runtime
 kde-kdepim-runtime5_PATH=	${KDE_PREFIX}/bin/gidmigrator
 
 kde-kitinerary_PORT=		net/kitinerary
-kde-kitinerary_LIB=		libKPimItinerary.so
+kde-kitinerary_LIB=		libKPim5Itinerary.so
 
 kde-kontactinterface_PORT=	net/kontactinterface
-kde-kontactinterface_LIB=	libKF5KontactInterface.so
+kde-kontactinterface_LIB=	libKPim5KontactInterface.so
 
 kde-kpkpass_PORT=		security/kpkpass
-kde-kpkpass_LIB=		libKPimPkPass.so
+kde-kpkpass_LIB=		libKPim5PkPass.so
 
 kde-ksmtp_PORT=			net/ksmtp
-kde-ksmtp_LIB=			libKPimSMTP.so
+kde-ksmtp_LIB=			libKPim5SMTP.so
 
 kde-ldap_PORT=			net/kldap
-kde-ldap_LIB=			libKF5Ldap.so
+kde-ldap_LIB=			libKPim5Ldap.so
 
 kde-libkdepim_PORT=		deskutils/libkdepim
-kde-libkdepim_LIB=		libKF5Libkdepim.so
+kde-libkdepim_LIB=		libKPim5Libkdepim.so
 
 kde-libkleo_PORT=		security/libkleo
-kde-libkleo_LIB=		libKF5Libkleo.so
+kde-libkleo_LIB=		libKPim5Libkleo.so
 
 kde-libksieve_PORT=		net/libksieve
-kde-libksieve_LIB=		libKF5KSieve.so
+kde-libksieve_LIB=		libKPim5KSieve.so
 
 kde-mailcommon_PORT=		net/mailcommon
-kde-mailcommon_LIB=		libKF5MailCommon.so
+kde-mailcommon_LIB=		libKPim5MailCommon.so
 
 kde-mailimporter_PORT=		net/mailimporter
-kde-mailimporter_LIB=		libKF5MailImporter.so
+kde-mailimporter_LIB=		libKPim5MailImporter.so
 
 kde-mailtransport_PORT=		net/kmailtransport
-kde-mailtransport_LIB=		libKF5MailTransport.so
+kde-mailtransport_LIB=		libKPim5MailTransport.so
 
 kde-mbox_PORT=			net/kmbox
-kde-mbox_LIB=			libKF5Mbox.so
+kde-mbox_LIB=			libKPim5Mbox.so
 
 kde-messagelib_PORT=		net/messagelib
-kde-messagelib_LIB=		libKF5MessageList.so
+kde-messagelib_LIB=		libKPim5MessageList.so
 
 kde-mime_PORT=			net/kmime
-kde-mime_LIB=			libKF5Mime.so
+kde-mime_LIB=			libKPim5Mime.so
 
 kde-pimcommon_PORT=		net/pimcommon
 kde-pimcommon_LIB=		libKF5PimCommon.so
 
 kde-pimtextedit_PORT=		net/kpimtextedit
-kde-pimtextedit_LIB=		libKF5PimTextEdit.so
+kde-pimtextedit_LIB=		libKPim5TextEdit.so
 
 kde-tnef_PORT=			net/ktnef
-kde-tnef_LIB=			libKF5Tnef.so
+kde-tnef_LIB=			libKPim5Tnef.so
+
+kde-ktextaddons_PORT=		devel/ktextaddons
+kde-ktextaddons_LIB=		libKF5TextAutoCorrection.so
 
 # PIM Applications
 kde-akonadiconsole_PORT=	deskutils/akonadiconsole
@@ -808,7 +814,7 @@ kde-pim-data-exporter_PATH=	${KDE_PREFIX}/bin/pimdataexporter
 
 # ====================== multiversion component ================================
 kde-akonadi5_PORT=		databases/akonadi
-kde-akonadi5_LIB=		libKF5AkonadiPrivate.so
+kde-akonadi5_LIB=		libKPim5AkonadiPrivate.so
 
 kde-baloo-widgets5_PORT=	sysutils/baloo-widgets
 kde-baloo-widgets5_LIB=		libKF5BalooWidgets.so
@@ -872,18 +878,18 @@ kde-${comp}_PATH=		${kde-${comp}${_KDE_VERSION}_LIB}
 _USE_KDE_ALL=	${_USE_${_KDE_RELNAME}_ALL}
 
 # Iterate through components deprived of suffix.
-.    for component in ${USE_KDE:O:u:C/_.+//}
+.    for component in ${USE_KDE:O:u:C/:.+//}
   # Check that the component is valid.
 .      if ${_USE_KDE_ALL:M${component}} != ""
    # Skip meta-components (currently none).
 .        if defined(kde-${component}_PORT) && (defined(kde-${component}_PATH) || defined(kde-${component}_LIB))
     # Check if a dependency type is explicitly requested.
-.          if ${USE_KDE:M${component}_*} != "" && ${USE_KDE:M${component}} == ""
+.          if ${USE_KDE:M${component}\:*} != "" && ${USE_KDE:M${component}} == ""
 kde-${component}_TYPE=	# empty
-.            if ${USE_KDE:M${component}_build} != ""
+.            if ${USE_KDE:M${component}\:build} != ""
 kde-${component}_TYPE+=	build
 .            endif
-.            if ${USE_KDE:M${component}_run} != ""
+.            if ${USE_KDE:M${component}\:run} != ""
 kde-${component}_TYPE+=	run
 .            endif
 .          endif # ${USE_KDE:M${component}_*} != "" && ${USE_KDE:M${component}} == ""

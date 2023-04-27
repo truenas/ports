@@ -1,11 +1,12 @@
 PORTNAME=	diazo
 PORTVERSION=	1.2.11
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	rm@FreeBSD.org
 COMMENT=	Deliverance like language using a pure XSLT engine
+WWW=		https://pypi.org/project/diazo/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

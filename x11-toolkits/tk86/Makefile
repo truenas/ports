@@ -1,5 +1,3 @@
-# Created by: Martin Matuska <mm@FreeBSD.org>
-
 PORTNAME=	tk
 DISTVERSION=	${TK_VERSION}${TK_RC}
 PORTREVISION=	0
@@ -10,6 +8,7 @@ DISTNAME=	${PORTNAME}${DISTVERSION}-src
 
 MAINTAINER=	tcltk@FreeBSD.org
 COMMENT=	Graphical toolkit for Tcl
+WWW=		https://www.tcl.tk/
 
 LICENSE=	TclTk
 LICENSE_NAME=	Tcl/Tk License
@@ -44,7 +43,7 @@ CONFIGURE_ENV=	PORTSDIR=${PORTSDIR}
 CFLAGS+=	-I${TCL_INCLUDEDIR} \
 		-I${LOCALBASE}/include
 
-TK_VERSION=	8.6.12
+TK_VERSION=	8.6.13
 TK_VER=		${TK_VERSION:R}
 TK_RC=
 SHORT_TK_VER=	${TK_VER:S/.//}

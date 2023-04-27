@@ -1,10 +1,11 @@
 PORTNAME=	snapraid
-DISTVERSION=	12.0
+DISTVERSION=	12.2
 CATEGORIES=	sysutils archivers
 MASTER_SITES=	https://github.com/amadvance/snapraid/releases/download/v${DISTVERSION}/
 
-MAINTAINER=	fuz@fuz.su
+MAINTAINER=	fuz@FreeBSD.org
 COMMENT=	File-level Backup/RAID program for disk arrays
+WWW=		https://www.snapraid.it/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING

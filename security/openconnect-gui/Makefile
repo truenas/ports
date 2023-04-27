@@ -1,15 +1,14 @@
-# Created by: Piotr Kubaj <pkubaj@FreeBSD.org>
-
 PORTNAME=	openconnect-gui
 PORTVERSION=	1.5.3
 DISTVERSIONPREFIX=v
-PORTREVISION=	2
+PORTREVISION=	3
 MASTER_SITES=	https://gitlab.com/openconnect/openconnect-gui/-/archive/v${PORTVERSION}/
 DISTFILES=	${DISTNAME}${EXTRACT_SUFX}
 CATEGORIES=	security net-vpn
 
 MAINTAINER=	pkubaj@FreeBSD.org
 COMMENT=	Graphical OpenConnect client
+WWW=		https://github.com/openconnect/openconnect-gui
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -24,7 +23,7 @@ RUN_DEPENDS=	openconnect:security/openconnect \
 USES=		cmake:insource compiler:c++11-lang pkgconfig qt:5
 USE_GITHUB=	nodefault
 GH_TUPLE=	qtproject:qt-solutions:a8dda66d:qtsolutions/external/src/qt-solutions-master
-USE_QT=		buildtools_build concurrent core gui network qmake_build widgets
+USE_QT=		buildtools:build concurrent core gui network qmake:build widgets
 CMAKE_ARGS+=	-DCMAKE_BUILD_TYPE=Release
 PLIST_FILES=	bin/openconnect-gui
 

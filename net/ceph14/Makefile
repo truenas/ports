@@ -1,13 +1,13 @@
-# Created by: Willem Jan Withagen <wjw@digiware.nl>
-
 PORTNAME=	ceph
 DISTVERSIONPREFIX=	v
 DISTVERSION=	14.2.22
+PORTREVISION=	9
 CATEGORIES=	net
 PKGNAMESUFFIX=	14
 
 MAINTAINER=	wjw@digiware.nl
 COMMENT=	Ceph delivers object, block, and file storage in a unified system
+WWW=		https://ceph.com/
 
 LICENSE=	GPLv2 LGPL3
 LICENSE_COMB=	dual
@@ -50,6 +50,7 @@ RUN_DEPENDS=	\
 	${PYTHON_PKGNAMEPREFIX}six>=0:devel/py-six@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}virtualenv>=0:devel/py-virtualenv@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}protobuf>=0:devel/py-protobuf@${PY_FLAVOR} \
+	${PYTHON_PKGNAMEPREFIX}yaml>=0:devel/py-yaml@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}bcrypt>=0:security/py-bcrypt@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}openssl>=0:security/py-openssl@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}pyjwt1>=0:www/py-pyjwt1@${PY_FLAVOR} \
@@ -57,14 +58,12 @@ RUN_DEPENDS=	\
 	${PYTHON_PKGNAMEPREFIX}cherrypy>=0:www/py-cherrypy@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}pecan>=0:www/py-pecan@${PY_FLAVOR} \
 	${PYTHON_PKGNAMEPREFIX}requests>=0:www/py-requests@${PY_FLAVOR} \
-	${PYTHON_PKGNAMEPREFIX}routes>=0:www/py-routes@${PY_FLAVOR} \
-	${PYTHON_PKGNAMEPREFIX}prettytable>=0:devel/py-prettytable@${PY_FLAVOR}
+	${PYTHON_PKGNAMEPREFIX}routes>=0:www/py-routes@${PY_FLAVOR}
 
-USES=		cmake:noninja compiler:c++17-lang cpe dos2unix fuse gettext-runtime gmake ncurses \
+USES=		cmake:noninja compiler:c++17-lang cpe dos2unix fuse gettext-runtime gmake ldap ncurses \
 		pkgconfig python:3.8-3.9 readline shebangfix ssl
 CPE_VENDOR=	linuxfoundation
 USE_PYTHON=	cython py3kplist
-USE_OPENLDAP=	yes
 USE_GITHUB=	yes
 GH_ACCOUNT=	ceph:DEFAULT
 DOS2UNIX_FILES=	src/pybind/mgr/diskprediction_cloud/common/__init__.py

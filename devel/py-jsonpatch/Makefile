@@ -2,11 +2,12 @@ PORTNAME=	jsonpatch
 DISTVERSION=	1.21
 PORTREVISION=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	harm@weites.com
 COMMENT=	Apply JSON-Patches (RFC 6902)
+WWW=		https://github.com/stefankoegl/python-json-patch
 
 LICENSE=	BSD3CLAUSE
 
@@ -14,6 +15,9 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}jsonpointer>0:devel/py-jsonpointer@${PY_FLAV
 
 USES=		python:3.6+
 USE_PYTHON=	autoplist concurrent distutils
+
+CONFLICTS_INSTALL=	py*-jsondiff # bin/jsondiff
+
 NO_ARCH=	yes
 
 do-test: build

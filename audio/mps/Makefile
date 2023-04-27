@@ -1,13 +1,12 @@
-# Created by: Nicola Vitale <nivit@FreeBSD.org>
-
 PORTNAME=	mps
 PORTVERSION=	0.20.16
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	audio
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 
 MAINTAINER=	nivit@FreeBSD.org
 COMMENT=	Terminal based MP3 search, playback and download
+WWW=		https://github.com/np1/mps
 
 LICENSE=	GPLv3
 

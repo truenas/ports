@@ -1,5 +1,3 @@
-# Created by: NAKATA Maho <maho@FreeBSD.org>
-
 PORTNAME=	libEMF
 PORTVERSION=	1.0.13
 CATEGORIES=	graphics
@@ -8,10 +6,9 @@ DISTNAME=	libemf-${DISTVERSION}
 
 MAINTAINER=	office@FreeBSD.org
 COMMENT=	Enhanced Metafile Library
+WWW=		http://libemf.sourceforge.net/
 
 LICENSE=	LGPL21
-
-BROKEN_riscv64=		fails to build: ../include/libEMF/wine/winnt.h:77:3: Unknown CPU architecture
 
 OPTIONS_DEFINE=	DOCS
 

@@ -1,5 +1,3 @@
-# Created by: Andrey Zakhvatov
-
 PORTNAME=	block
 PORTVERSION=	0.6
 CATEGORIES=	games
@@ -9,6 +7,9 @@ MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Small text based maze game
 
 USES=		ncurses tar:tgz
+
+CONFLICTS_INSTALL=	py38-pycoin
+
 WRKSRC=		${WRKDIR}/blocks
 MAKEFILE=	makefile
 ALL_TARGET=	block bed

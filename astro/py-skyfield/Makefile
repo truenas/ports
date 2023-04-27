@@ -1,13 +1,13 @@
-# Created by: thierry@pompo.net
-
 PORTNAME=	skyfield
-PORTVERSION=	1.40
+PORTVERSION=	1.46
+PORTREVISION=	1
 CATEGORIES=	astro python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	thierry@FreeBSD.org
 COMMENT=	Ephemerides computation
+WWW=		https://rhodesmill.org/skyfield/
 
 LICENSE=	MIT
 

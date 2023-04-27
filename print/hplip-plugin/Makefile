@@ -1,7 +1,6 @@
-# Created by: amistry@am-productions.biz
-
 PORTNAME=	hplip-plugin
-PORTVERSION=	3.20.6
+PORTVERSION=	3.22.10
+PORTREVISION=	1
 CATEGORIES=	print
 MASTER_SITES=	https://developers.hp.com/sites/default/files/
 DISTNAME=	hplip-${DISTVERSION}-plugin
@@ -9,6 +8,7 @@ EXTRACT_SUFX=	.run
 
 MAINTAINER=	tijl@FreeBSD.org
 COMMENT=	Binary plugin for some HP Printers and All-in-One devices
+WWW=		https://developers.hp.com/hp-linux-imaging-and-printing/binary_plugin.html
 
 # License agreement is required
 LICENSE=	HPLIP_PLUGIN
@@ -16,9 +16,11 @@ LICENSE_NAME=	HPLIP Driver Plug-in License
 LICENSE_FILE=	${WRKSRC}/license.txt
 LICENSE_PERMS=	none
 
+ONLY_FOR_ARCHS=	amd64 i386 # arm
+
 RUN_DEPENDS=	hp-plugin:print/hplip
 
-ONLY_FOR_ARCHS=	amd64 i386 # arm
+PORTSCOUT=	ignore:1
 
 PLUGINS=	fax/plugins/fax_marvell \
 		prnt/plugins/hbpl1 \

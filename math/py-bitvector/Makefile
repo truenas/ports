@@ -1,13 +1,14 @@
 PORTNAME=	bitvector
 PORTVERSION=	3.5.0
 CATEGORIES=	math python
-MASTER_SITES=	CHEESESHOP \
+MASTER_SITES=	PYPI \
 		https://engineering.purdue.edu/kak/dist/
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	BitVector-${PORTVERSION}
 
 MAINTAINER=	lwhsu@FreeBSD.org
 COMMENT=	Pure-Python memory-efficient packed representation for bit arrays
+WWW=		https://engineering.purdue.edu/kak/dist/
 
 LICENSE=	PSFL
 

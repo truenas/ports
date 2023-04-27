@@ -1,10 +1,12 @@
 PORTNAME=		fastp
 DISTVERSIONPREFIX=	v
-DISTVERSION=		0.23.1
+DISTVERSION=		0.23.2
+PORTREVISION=		2
 CATEGORIES=		biology
 
 MAINTAINER=	jwb@FreeBSD.org
 COMMENT=	Ultra-fast all-in-one FASTQ preprocessor
+WWW=		https://github.com/OpenGene/fastp
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -12,8 +14,9 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 LIB_DEPENDS=	libdeflate.so:archivers/libdeflate \
 		libisal.so:devel/isa-l
 
-USES=		compiler:c++11-lang gmake localbase:ldflags
+USES=		gmake localbase:ldflags
 USE_GITHUB=	yes
+USE_GCC=	yes
 
 GH_ACCOUNT=	OpenGene
 

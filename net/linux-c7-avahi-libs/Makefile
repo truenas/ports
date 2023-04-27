@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	avahi
 PORTVERSION=	0.6.31
 DISTVERSIONSUFFIX=	-20.el7
@@ -9,6 +7,7 @@ PKGNAMESUFFIX=	-libs
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	Libraries for Avahi (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://www.avahi.org/
 
 USES=		cpe linux:c7
 USE_LDCONFIG=	yes

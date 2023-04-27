@@ -1,18 +1,18 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	pygeodesy
-PORTVERSION=	21.9.16
+PORTVERSION=	22.7.7
 CATEGORIES=	science python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI \
+		https://github.com/mrJean1/PyGeodesy/raw/master/dist/
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	PyGeodesy-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Pure Python geodesy tools
+WWW=		https://github.com/mrJean1/PyGeodesy
 
 LICENSE=	MIT
 
-USES=		python:3.6+ zip
+USES=		python:3.8+ zip
 USE_PYTHON=	autoplist concurrent distutils
 
 NO_ARCH=	yes

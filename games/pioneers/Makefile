@@ -1,13 +1,12 @@
-# Created by: Ade Lovett <ade@FreeBSD.org>
-
 PORTNAME=	pioneers
 PORTVERSION=	15.6
-PORTREVISION=	1
+PORTREVISION=	3
 CATEGORIES=	games gnome
 MASTER_SITES=	SF/pio/Source
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Internet playable version of the Settlers of Catan
+WWW=		http://pio.sourceforge.net/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -20,7 +19,6 @@ RUN_DEPENDS=	yelp:x11/yelp
 
 USES=		gettext gmake gnome pkgconfig
 USE_GNOME=	cairo gnomeprefix gtk30 intltool librsvg2
-INSTALLS_OMF=	yes
 GNU_CONFIGURE=	yes
 CPPFLAGS+=	-I${LOCALBASE}/include
 LDFLAGS+=	-L${LOCALBASE}/lib

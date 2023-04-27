@@ -1,18 +1,18 @@
 PORTNAME=	net-scp
-PORTVERSION=	3.0.0
+PORTVERSION=	4.0.0
 CATEGORIES=	security rubygems
 MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Non-interactive SCP processing
+WWW=		https://github.com/net-ssh/net-scp
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
-RUN_DEPENDS=	rubygem-net-ssh>=2.6.5,2<7.0.0,2:security/rubygem-net-ssh
+RUN_DEPENDS=	rubygem-net-ssh6>=2.6.5<7.0.0:security/rubygem-net-ssh6
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

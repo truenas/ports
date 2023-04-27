@@ -1,11 +1,12 @@
 PORTNAME=	fsv2
 PORTVERSION=	1.1.0
-PORTREVISION=	2
+PORTREVISION=	5
 CATEGORIES=	x11-fm
 MASTER_SITES=	http://cyber.dabamos.de/pub/distfiles/
 
 MAINTAINER=	kidon@posteo.de
 COMMENT=	3D filesystem visualizer
+WWW=		http://fedorchenko.net/fsv2.php
 
 LICENSE=	LGPL3
 LICENSE_FILE=	${WRKSRC}/COPYING

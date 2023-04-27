@@ -1,11 +1,13 @@
 PORTNAME=	point-annotator
 PORTVERSION=	2.0.0
+PORTREVISION=	1
 CATEGORIES=	math python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Annotate data with labels based on the Mann-Whitney U test
+WWW=		https://fri.uni-lj.si/en/laboratory/biolab
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE

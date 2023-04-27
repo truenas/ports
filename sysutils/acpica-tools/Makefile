@@ -1,5 +1,5 @@
 PORTNAME=	acpica
-PORTVERSION=	20210930
+PORTVERSION=	20221020
 CATEGORIES=	sysutils devel
 MASTER_SITES=	https://acpica.org/sites/acpica/files/ \
 		LOCAL/jkim
@@ -8,6 +8,7 @@ DISTNAME=	${PORTNAME}-unix-${PORTVERSION}
 
 MAINTAINER=	jkim@FreeBSD.org
 COMMENT=	Tools from the ACPI Component Architecture (ACPICA) project
+WWW=		https://acpica.org
 
 LICENSE=	BSD3CLAUSE GPLv2
 LICENSE_COMB=	dual

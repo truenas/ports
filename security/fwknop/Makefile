@@ -1,5 +1,3 @@
-# Created by: Sean Greven <sean.greven@gmail.com>
-
 PORTNAME=	fwknop
 PORTVERSION=	2.6.10
 PORTREVISION=	2
@@ -8,6 +6,7 @@ MASTER_SITES=	http://www.cipherdyne.org/fwknop/download/
 
 MAINTAINER=	sean.greven@gmail.com
 COMMENT=	SPA implementation for Linux and FreeBSD
+WWW=		https://www.cipherdyne.org/fwknop/
 
 LICENSE=	GPLv2
 

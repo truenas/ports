@@ -1,5 +1,3 @@
-# Created by: ijliao
-
 PORTNAME=	ragel
 PORTVERSION=	6.10
 PORTREVISION=	1
@@ -8,6 +6,7 @@ MASTER_SITES=	http://www.colm.net/files/${PORTNAME}/
 
 MAINTAINER=	adridg@FreeBSD.org
 COMMENT=	Compile regular languages into executable C/C++ code
+WWW=		http://www.complang.org/ragel/
 
 LICENSE=	GPLv2 GPLv3
 LICENSE_COMB=	dual
@@ -19,6 +18,7 @@ OPTIONS_DEFINE=	TEXDOCS EXAMPLES
 OPTIONS_SUB=	yes
 TEXDOCS_CONFIGURE_ENABLE=	manual
 TEXDOCS_DESC=	Build pdf documentation (requires LaTeX)
+TEXDOCS_USES=		tex
 TEXDOCS_USE=		TEX=latex:build
 TEXDOCS_BUILD_DEPENDS=	fig2dev:print/transfig
 

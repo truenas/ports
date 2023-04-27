@@ -5,6 +5,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	dch@FreeBSD.org
 COMMENT=	Configurable websocket/javascript based dashboard for net-mgmt/riemann
+WWW=		https://github.com/riemann/riemann-dash
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -17,7 +18,6 @@ RUN_DEPENDS=	rubygem-multi_json>=0:devel/rubygem-multi_json \
 USES=		gem
 
 NO_ARCH=	yes
-USE_RUBY=	yes
 
 post-install:
 	# move the public HTML files into DATADIR for webservers

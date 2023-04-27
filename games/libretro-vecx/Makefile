@@ -1,10 +1,11 @@
 PORTNAME=	libretro-vecx
-PORTVERSION=	0.20210214
+PORTVERSION=	0.20220327
 PORTREVISION=	1
 CATEGORIES=	games
 
-MAINTAINER=	menelkir@itroll.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Vectrex emulator for libretro
+WWW=		https://github.com/libretro/libretro-vecx
 
 LICENSE=	GPLv3
 
@@ -14,7 +15,7 @@ USE_LDCONFIG=	yes
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	libretro
-GH_TAGNAME=	9af0702
+GH_TAGNAME=	141af28
 
 PLIST_FILES=	lib/libretro/vecx_libretro.so
 

@@ -2,11 +2,12 @@ PORTNAME=	robotremoteserver
 PORTVERSION=	1.1
 PORTREVISION=	1
 CATEGORIES=	devel www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	Vladimir.Chukharev@gmail.com
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Python Remote Server for Robot Framework
+WWW=		https://github.com/robotframework/PythonRemoteServer
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

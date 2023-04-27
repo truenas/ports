@@ -1,10 +1,12 @@
 PORTNAME=	quantum-espresso
 DISTVERSIONPREFIX=	qe-
 DISTVERSION=	6.7.0
+PORTREVISION=	1
 CATEGORIES=	science
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Package for research in electronic structure, simulation, optimization
+WWW=		https://www.quantum-espresso.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/License

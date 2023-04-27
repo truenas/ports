@@ -1,9 +1,10 @@
 PORTNAME=	jimtcl
-PORTVERSION=	0.81
+PORTVERSION=	0.82
 CATEGORIES=	lang tcl
 
 MAINTAINER=	gahr@FreeBSD.org
 COMMENT=	Small footprint implementation of the Tcl programming language
+WWW=		http://jim.tcl.tk
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -15,7 +16,6 @@ GH_ACCOUNT=	msteveb
 
 HAS_CONFIGURE=	yes
 CONFIGURE_ARGS=	--prefix=${PREFIX} \
-		--full \
 		--enable-utf8 \
 		--enable-shared
 

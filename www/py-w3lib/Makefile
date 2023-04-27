@@ -1,11 +1,12 @@
 PORTNAME=	w3lib
 PORTVERSION=	1.21.0
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	rm@FreeBSD.org
 COMMENT=	Library of web-related functions
+WWW=		https://github.com/scrapy/w3lib/
 
 LICENSE=	BSD3CLAUSE
 

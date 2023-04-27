@@ -1,11 +1,11 @@
---- media/video/video_encode_accelerator_adapter_test.cc.orig	2021-09-24 04:26:08 UTC
+--- media/video/video_encode_accelerator_adapter_test.cc.orig	2023-03-09 06:31:50 UTC
 +++ media/video/video_encode_accelerator_adapter_test.cc
-@@ -337,7 +337,7 @@ TEST_P(VideoEncodeAcceleratorAdapterTest, TwoFramesRes
+@@ -449,7 +449,7 @@ TEST_P(VideoEncodeAcceleratorAdapterTest, TwoFramesRes
+       CreateGreenFrame(large_size, pixel_format, base::Milliseconds(2));
  
-   vea()->SetEncodingCallback(base::BindLambdaForTesting(
-       [&](BitstreamBuffer&, bool keyframe, scoped_refptr<VideoFrame> frame) {
--#if defined(OS_LINUX) || defined(OS_CHROMEOS)
-+#if defined(OS_LINUX) || defined(OS_CHROMEOS) || defined(OS_BSD)
-         EXPECT_EQ(frame->format(),
-                   IsYuvPlanar(pixel_format) ? pixel_format : PIXEL_FORMAT_I420);
- #else
+   VideoPixelFormat expected_input_format = PIXEL_FORMAT_I420;
+-#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_BSD)
+   if (pixel_format != PIXEL_FORMAT_I420 || !small_frame->IsMappable())
+     expected_input_format = PIXEL_FORMAT_NV12;
+ #endif

@@ -1,12 +1,11 @@
-# Created by: erich@rrnet.com
-
 PORTNAME=	sudo
-PORTVERSION=	1.9.12p1
+PORTVERSION=	1.9.13p3
 CATEGORIES=	security
 MASTER_SITES=	SUDO
 
 MAINTAINER=	garga@FreeBSD.org
 COMMENT=	Allow others to run commands as root
+WWW=		https://www.sudo.ws/
 
 LICENSE=	sudo
 LICENSE_NAME=	Sudo license
@@ -64,7 +63,7 @@ NLS_CFLAGS=	-I${LOCALBASE}/include
 INSULTS_CONFIGURE_ON=	--with-insults
 INSULTS_CONFIGURE_ON+=	--with-all-insults
 
-LDAP_USE=	OPENLDAP=yes
+LDAP_USES=	ldap
 LDAP_CONFIGURE_ON=	--with-ldap=${PREFIX}
 SUDO_LDAP_CONF?=	ldap.conf
 LDAP_CONFIGURE_ON+=	--with-ldap-conf-file=${PREFIX}/etc/${SUDO_LDAP_CONF}

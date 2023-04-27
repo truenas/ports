@@ -1,10 +1,11 @@
 PORTNAME=	bandwhich
 DISTVERSION=	0.20.0
-PORTREVISION=	11
+PORTREVISION=	25
 CATEGORIES=	net-mgmt
 
 MAINTAINER=	petteri.valkonen@iki.fi
 COMMENT=	Terminal bandwidth utilization tool
+WWW=		https://github.com/imsnif/bandwhich
 
 LICENSE=	MIT
 
@@ -39,6 +40,7 @@ CARGO_CRATES=	adler-0.2.3 \
 		cassowary-0.3.0 \
 		cc-1.0.47 \
 		cfg-if-0.1.9 \
+		cfg-if-1.0.0 \
 		chrono-0.4.9 \
 		clap-2.33.0 \
 		clicolors-control-1.0.1 \
@@ -202,7 +204,7 @@ CARGO_CRATES=	adler-0.2.3 \
 		slab-0.4.2 \
 		smallvec-0.6.13 \
 		smallvec-1.0.0 \
-		socket2-0.3.11 \
+		socket2-0.3.19 \
 		strsim-0.8.0 \
 		structopt-0.2.18 \
 		structopt-0.3.4 \
@@ -261,12 +263,6 @@ CARGO_CRATES=	adler-0.2.3 \
 
 PLIST_FILES=	bin/bandwhich \
 		man/man1/bandwhich.1.gz
-
-.include <bsd.port.options.mk>
-
-.if ${ARCH} == aarch64 || ${ARCH:Marmv*} || ${ARCH:Mpowerpc*}
-EXTRA_PATCHES=	${FILESDIR}/extra-patch-cargo-crates_pnet__datalink-0.26.0_src_bpf.rs
-.endif
 
 post-install:
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/bandwhich

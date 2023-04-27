@@ -1,14 +1,13 @@
-# Created by: Yuri Victorovich
-
 PORTNAME=	unmessage
 DISTVERSION=	0.2.0
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	net-im net-p2p python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Privacy enhanced instant messenger
+WWW=		https://github.com/AnemoneLabs/unmessage
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING

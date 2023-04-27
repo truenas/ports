@@ -1,8 +1,6 @@
-# Created by: Martin Matuska <mm@FreeBSD.org>
-
 PORTNAME=	luajit
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2.1-20210510
+DISTVERSION=	2.1-20230410
 CATEGORIES=	lang
 PKGNAMESUFFIX=	-openresty
 
@@ -10,6 +8,7 @@ PATCH_SITES=	https://github.com/openresty/luajit2/commit/
 
 MAINTAINER=	mm@FreeBSD.org
 COMMENT=	Just-In-Time Compiler for Lua (OpenResty branch)
+WWW=		https://github.com/openresty/luajit2
 
 LICENSE=	MIT PD
 LICENSE_COMB=	multi
@@ -40,6 +39,8 @@ USE_GCC=yes
 .endif
 
 post-install:
+	${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/${PORTNAME}-${LUAJIT_VERSION}
+	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/libluajit-5.1.so.${LUAJIT_SOVERSION}
 	${LN} -sf ${PORTNAME}-${LUAJIT_VERSION} \
 		${STAGEDIR}${PREFIX}/bin/${PORTNAME}
 	${INSTALL_MAN} ${WRKSRC}/etc/luajit.1 ${STAGEDIR}${MAN1PREFIX}/man/man1

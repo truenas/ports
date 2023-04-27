@@ -1,17 +1,16 @@
-# Created by: Nick Hilliard <nick@foobar.org>
-
 PORTNAME=	flyspray
 PORTVERSION=	0.9.9.7
-PORTREVISION=	4
+PORTREVISION=	5
 CATEGORIES=	devel www
 MASTER_SITES=	http://flyspray.org/packed/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Simple, easy-to-use web based bug tracking system
+WWW=		https://www.flyspray.org/
 
 RUN_DEPENDS=	${LOCALBASE}/share/adodb/adodb.inc.php:databases/adodb5
 
-USE_PHP=	pcre session zlib xml gd
+USE_PHP=	session zlib xml gd
 USES=		cpe dos2unix php:web zip
 
 NO_BUILD=	yes

@@ -5,6 +5,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Kill unicorn workers by memory and request counts
+WWW=		https://github.com/kzk/unicorn-worker-killer
 
 LICENSE=	GPLv2+ RUBY
 LICENSE_COMB=	dual
@@ -14,7 +15,6 @@ RUN_DEPENDS=	rubygem-get_process_mem>=0<1:devel/rubygem-get_process_mem \
 		rubygem-unicorn>=4<7:www/rubygem-unicorn
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

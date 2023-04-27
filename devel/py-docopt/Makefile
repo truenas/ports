@@ -1,14 +1,13 @@
-# Created by: Antoine Brodin <antoine@FreeBSD.org>
-
 PORTNAME=	docopt
 PORTVERSION=	0.6.2
 PORTREVISION=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	antoine@FreeBSD.org
 COMMENT=	Pythonic argument parser, that will make you smile
+WWW=		http://docopt.org/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE-MIT

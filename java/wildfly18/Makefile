@@ -1,5 +1,3 @@
-# Created by: Simeo Reig <reig.simeo@gmail.com>
-
 PORTNAME=	wildfly18
 PORTVERSION=	18.0.1
 CATEGORIES=	java www
@@ -8,13 +6,14 @@ DISTNAME=	wildfly-${WILDFLY_VERSION}
 
 MAINTAINER=	reig.simeo@gmail.com
 COMMENT=	Java Jakarta EE8 application server developed by Red Hat
+WWW=		https://wildfly.org/
 
 LICENSE=	GPLv2
 
 USE_RC_SUBR=	wildfly18
 USE_JAVA=	yes
 
-JAVA_VERSION=	1.8+
+JAVA_VERSION=	8+
 USER=		www
 GROUP=		www
 VAR_DIR?=	/var

@@ -1,5 +1,5 @@
 PORTNAME=	clamav
-PORTVERSION=	0.103.4
+DISTVERSION=	0.103.8
 PORTEPOCH=	1
 CATEGORIES=	security
 MASTER_SITES=	https://www.clamav.net/downloads/production/
@@ -7,6 +7,7 @@ PKGNAMESUFFIX=	-lts
 
 MAINTAINER=	yasu@FreeBSD.org
 COMMENT=	Open-source (GPL) anti-virus engine (LTS Feature Release)
+WWW=		https://www.clamav.net/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -15,7 +16,7 @@ LIB_DEPENDS=	libcurl.so:ftp/curl \
 		libltdl.so:devel/libltdl \
 		libmspack.so:archivers/libmspack
 
-USES=		compiler cpe gmake gnome libtool ncurses pathfix pkgconfig ssl
+USES=		cpe gmake gnome libtool ncurses pathfix pkgconfig ssl
 USE_LDCONFIG=	yes
 USE_RC_SUBR=	clamav-clamd clamav-freshclam
 
@@ -92,7 +93,7 @@ ICONV_CONFIGURE_WITH=		iconv
 IPV6_CONFIGURE_ENABLE=		ipv6
 JSON_LIB_DEPENDS=		libjson-c.so:devel/json-c
 JSON_CONFIGURE_WITH=		libjson=${LOCALBASE}
-LDAP_USE=			OPENLDAP=yes
+LDAP_USES=			ldap
 LDAP_LDFLAGS=			-lldap -L${LOCALBASE}/lib
 LHA_RUN_DEPENDS=		lha:archivers/lha
 .if !exists(/usr/lib/libmilter.so)
@@ -144,13 +145,6 @@ post-patch:
 		${WRKSRC}/etc/clamd.conf.sample \
 		${WRKSRC}/etc/freshclam.conf.sample \
 		${WRKSRC}/etc/clamav-milter.conf.sample
-.if ${CHOSEN_COMPILER_TYPE} == gcc
-	@${REINPLACE_CMD} -e 's|-Wno-logical-op-parentheses||' \
-			  -e 's|-Wno-dangling-else||' \
-		${WRKSRC}/libclamav/Makefile.am \
-		${WRKSRC}/libclamav/Makefile.in \
-		${WRKSRC}/libclamunrar/makefile
-.endif
 
 pre-configure-TESTS-on:
 	@if ! ${PYTHON_CMD} -c "import thread" >/dev/null 2>&1; then \

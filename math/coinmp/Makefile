@@ -1,13 +1,12 @@
-# Created by: Pedro Giffuni
-
 PORTNAME=	CoinMP
 DISTVERSIONPREFIX=	releases/
 DISTVERSION=	1.8.4
-PORTREVISION=	4
+PORTREVISION=	8
 CATEGORIES=	math
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Optimization library with support for COIN-OR CLP, CBC, and CGL
+WWW=		https://projects.coin-or.org/CoinMP
 
 LICENSE=	CPL
 LICENSE_NAME=	Common Public License, Version 1.0
@@ -19,9 +18,11 @@ LIB_DEPENDS=	libblas.so:math/blas \
 		libCgl.so:math/cgl \
 		libClp.so:math/clp \
 		libcoinasl.so:math/asl \
-		libcoinmumps.so:math/ipopt \
+		libcoinmumps.so:math/coin-or-mumps \
 		libCoinUtils.so:math/coinutils \
-		libopenblas.so:math/openblas
+		libnauty.so:math/nauty \
+		libopenblas.so:math/openblas \
+		libOsi.so:math/osi
 
 USES=		compiler:c++11-lang libtool pathfix pkgconfig
 USE_LDCONFIG=	yes

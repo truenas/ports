@@ -1,11 +1,12 @@
 PORTNAME=	gnustep-back
 DISTVERSIONPREFIX=	back-
 DISTVERSION=	0_28_0
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	x11-toolkits gnustep
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	GNUstep GUI backend
+WWW=		http://www.gnustep.org/
 
 LICENSE_COMB=	multi
 LICENSE=	GPLv3 LGPL3

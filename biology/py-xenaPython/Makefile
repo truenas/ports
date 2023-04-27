@@ -1,11 +1,12 @@
 PORTNAME=	xenaPython
 DISTVERSION=	1.0.14
 CATEGORIES=	biology python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	API for Xena Hub to access genetic information shared through the hub
+WWW=		https://github.com/ucscXena/xenaPython
 
 LICENSE=	APACHE20
 

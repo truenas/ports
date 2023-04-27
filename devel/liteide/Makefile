@@ -1,35 +1,38 @@
 PORTNAME=	liteide
 DISTVERSIONPREFIX=	x
-DISTVERSION=	37.4
-PORTREVISION=	1
+DISTVERSION=	38.2
+PORTREVISION=	2
 CATEGORIES=	devel editors
 
 MAINTAINER=	dmgk@FreeBSD.org
 COMMENT=	Simple, open source, cross-platform Go IDE
+WWW=		https://github.com/visualfc/liteide
 
 LICENSE=	LGPL21+
 LICENSE_FILE=	${WRKSRC}/LICENSE.LGPL
 
 USES=		dos2unix gl go:modules,no_targets,run qmake qt:5
 
+DOS2UNIX_FILES=	src/utils/dlvclient/dlvclient.cpp \
+		src/utils/dlvclient/dlvtypes.h
+
 USE_GITHUB=	yes
 GH_ACCOUNT=	visualfc
 
-GH_TUPLE=	visualfc:gocode:cfcb188102ae:visualfc_gocode \
-		visualfc:gotools:eff8693b15f0:visualfc_gotools \
+GH_TUPLE=	visualfc:gocode:v1.5.2:visualfc_gocode \
+		visualfc:gotools:v1.5.3:visualfc_gotools \
+		visualfc:gomod:v0.1.2:visualfc_gomod/vendor/github.com/visualfc/gomod \
 		creack:pty:v1.1.9:creack_pty/vendor/github.com/creack/pty \
-		golang:mod:v0.4.1:golang_mod/vendor/golang.org/x/mod \
-		golang:sys:b64e53b001e4:golang_sys/vendor/golang.org/x/sys \
-		golang:tools:v0.1.0:golang_tools/vendor/golang.org/x/tools \
-		golang:xerrors:5ec99f83aff1:golang_xerrors/vendor/golang.org/x/xerrors \
+		golang:mod:v0.7.0:golang_mod/vendor/golang.org/x/mod \
+		golang:sys:v0.4.0:golang_sys/vendor/golang.org/x/sys \
+		golang:tools:v0.5.0:golang_tools/vendor/golang.org/x/tools \
 		pmezard:go-difflib:v1.0.0:pmezard_go_difflib/vendor/github.com/pmezard/go-difflib \
-		visualfc:fastmod:v1.3.7:visualfc_fastmod/vendor/github.com/visualfc/fastmod \
-		visualfc:goversion:v1.0.1:visualfc_goversion/vendor/github.com/visualfc/goversion \
-		yuin:goldmark:v1.2.1:yuin_goldmark/vendor/github.com/yuin/goldmark
+		visualfc:goversion:v1.1.0:visualfc_goversion/vendor/github.com/visualfc/goversion \
+		yuin:goldmark:v1.4.13:yuin_goldmark/vendor/github.com/yuin/goldmark
 
 USE_GL=		gl
 USE_LDCONFIG=	${PREFIX}/lib/${PORTNAME}
-USE_QT=		buildtools_build core gui network printsupport widgets xml
+USE_QT=		buildtools:build core gui network printsupport widgets xml
 
 SUB_FILES=	liteide
 
@@ -43,9 +46,6 @@ OPTIONS_SUB=	yes
 DEBUG_CONFIGURE_ENABLE=	debug
 
 ICON_SIZES=	16 24 32 48 64 128
-
-DOS2UNIX_FILES=	src/utils/dlvclient/dlvclient.cpp \
-		src/utils/dlvclient/dlvtypes.h
 
 post-extract:
 	# Bundled, horribly outdated copy of QJsonDocument

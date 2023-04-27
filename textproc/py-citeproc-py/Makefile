@@ -1,11 +1,12 @@
 PORTNAME=	citeproc-py
 DISTVERSION=	0.6.0
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Citation Style Language (CSL) processor for Python
+WWW=		https://github.com/brechtm/citeproc-py
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

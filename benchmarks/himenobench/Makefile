@@ -1,8 +1,6 @@
-# Created by: NAKATA Maho <maho@FreeBSD.org>
-
 PORTNAME=	himenobench
 PORTVERSION=	2015.07.09
-PORTREVISION=	9
+PORTREVISION=	10
 CATEGORIES=	benchmarks
 MASTER_SITES=	http://accc.riken.jp/wp-content/uploads/2015/07/
 DISTFILES=	himenobmtxp_xl.zip himenobmtxp_l.zip \
@@ -14,6 +12,7 @@ DIST_SUBDIR=	himeno
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Tool for measuring performance of floating point operations
+WWW=		http://accc.riken.jp/en/supercom/himenobmt/
 
 LICENSE=	LGPL20 # (or later)
 

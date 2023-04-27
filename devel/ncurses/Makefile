@@ -1,14 +1,13 @@
-# Created by: Andrey Zakhvatov
-
 PORTNAME=	ncurses
-DISTVERSION=	6.3
+DISTVERSION=	6.4
 CATEGORIES=	devel
 MASTER_SITES=	ftp://ftp.invisible-island.net/${PORTNAME}/ \
 		https://invisible-mirror.net/archives/ncurses/
 DIST_SUBDIR=	${PORTNAME}
 
-MAINTAINER=	swills@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Library for terminal-independent, full-screen output
+WWW=		https://invisible-island.net/ncurses/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -16,6 +15,10 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 BROKEN_sparc64=	cannot build: coredump: illegal instruction
 
 USES=		cpe pkgconfig shebangfix
+CPE_VENDOR=	gnu
+USE_LDCONFIG=	yes
+
+SHEBANG_FILES=	test/tracemunch
 
 GNU_CONFIGURE=		yes
 CONFIGURE_ARGS=		--datadir=${PREFIX}/share \
@@ -41,23 +44,22 @@ CONFIGURE_ARGS=		--datadir=${PREFIX}/share \
 			--with-shared \
 			--with-termlib \
 			--without-manpage-renames
+CONFIGURE_ENV=	gnat_exists="no" cf_cv_ld_searchpath="${LOCALBASE}/lib /usr/lib /lib"
 
-OPTIONS_DEFINE=		DEBUG DOCS EXAMPLES MANPAGES PROFILE TRACE
+PLIST_SUB=	ABI_VER=6 \
+		REL_VER=${DISTVERSION}
+PORTDOCS=	*
+PORTEXAMPLES=	*
+
+OPTIONS_DEFINE=		DOCS EXAMPLES MANPAGES PROFILE TRACE
 OPTIONS_DEFAULT=	DOCS EXAMPLES MANPAGES
+OPTIONS_SUB=	yes
 
 TRACE_DESC=	Add trace() function to all models of ncurses
 
-CONFIGURE_ENV=	gnat_exists="no" cf_cv_ld_searchpath="${LOCALBASE}/lib /usr/lib /lib"
-
-USE_LDCONFIG=	yes
-CPE_VENDOR=	gnu
-SHEBANG_FILES=	test/tracemunch
-
-PLIST_SUB+=	ABI_VER=6 \
-		REL_VER=${DISTVERSION}
-
-PORTDOCS=	*
-PORTEXAMPLES=	*
+MANPAGES_CONFIGURE_WITH=	manpages
+PROFILE_CONFIGURE_WITH=		profile
+TRACE_CONFIGURE_ON=		--with-trace
 
 DOCS=		ANNOUNCE doc/hackguide.doc doc/html/announce.html \
 		doc/html/hackguide.html doc/html/index.html \
@@ -73,19 +75,11 @@ EXAMPLES_CPP=	cursesapp.cc cursesapp.h cursesf.cc cursesf.h cursesm.cc \
 		cursesw.h cursslk.cc cursslk.h demo.cc etip.h internal.h \
 		Makefile NEWS PROBLEMS README-first
 
-TRACE_CONFIGURE_ON=		--with-trace
-PROFILE_CONFIGURE_WITH=		profile
-MANPAGES_CONFIGURE_WITH=	manpages
-DEBUG_CONFIGURE_WITH=		debug
-
-OPTIONS_SUB=	yes
-
-.include <bsd.port.options.mk>
-
-.if ${PORT_OPTIONS:MMANPAGES}
-PLIST_SUB+=	MANPAGES=""
+.if defined(WITH_DEBUG)
+CONFIGURE_ARGS+=	--with-debug
+PLIST_SUB+=	DEBUG=""
 .else
-PLIST_SUB+=	MANPAGES="@comment "
+PLIST_SUB+=	DEBUG="@comment "
 .endif
 
 post-patch:

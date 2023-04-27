@@ -1,12 +1,11 @@
-# Created by: Brad Lanam <bll@gentoo.com>
-
 PORTNAME=	di
-PORTVERSION=	4.50
+PORTVERSION=	4.51
 CATEGORIES=	sysutils
 MASTER_SITES=	SF/diskinfo-di
 
 MAINTAINER=	cyberbotx@cyberbotx.com
 COMMENT=	Disk Information Utility
+WWW=		https://diskinfo-di.sourceforge.io/
 
 LICENSE=	ZLIB
 LICENSE_FILE=	${WRKSRC}/LICENSE

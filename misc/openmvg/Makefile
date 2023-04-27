@@ -1,10 +1,12 @@
 PORTNAME=	openmvg
 DISTVERSIONPREFIX=	v
 DISTVERSION=	2.0
+PORTREVISION=	8
 CATEGORIES=	misc science
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Multiple View Geometry (MVG) library
+WWW=		https://imagine.enpc.fr/%7Emoulonp/openMVG/
 
 LICENSE=	MPL20
 LICENSE_FILE=	${WRKSRC}/../LICENSE
@@ -26,7 +28,7 @@ LIB_DEPENDS=	libamd.so:math/suitesparse-amd \
 		libcoinasl.so:math/asl \
 		libCoinUtils.so:math/coinutils \
 		libcolamd.so:math/suitesparse-colamd \
-		libcoinmumps.so:math/ipopt \
+		libcoinmumps.so:math/coin-or-mumps \
 		libcxsparse.so:math/suitesparse-cxsparse \
 		libemon.so:math/lemon \
 		libflann_cpp.so:math/flann \
@@ -53,7 +55,7 @@ GH_ACCOUNT=	openMVG
 GH_PROJECT=	openMVG
 GH_TUPLE=	openMVG-thirdparty:cereal:ac168fe:cereal/dependencies/cereal
 WRKSRC_SUBDIR=	src
-USE_QT=		core gui opengl svg widgets buildtools_build qmake_build
+USE_QT=		core gui opengl svg widgets buildtools:build qmake:build
 USE_LDCONFIG=	yes
 
 CMAKE_ARGS=	-DEIGEN_INCLUDE_DIR_HINTS=${LOCALBASE}/include/eigen3 \

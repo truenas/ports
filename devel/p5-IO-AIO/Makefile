@@ -1,13 +1,13 @@
-# Created by: Gea-Suan Lin <gslin@gslin.org>
-
 PORTNAME=	IO-AIO
-PORTVERSION=	4.76
+PORTVERSION=	4.79
+PORTREVISION=	1
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Asynchronous/Advanced Input/Output
+WWW=		https://metacpan.org/release/IO-AIO
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

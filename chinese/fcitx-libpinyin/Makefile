@@ -1,7 +1,5 @@
-# Created by: Zhihao Yuan <lichray@gmail.com>
-
 PORTNAME=	fcitx-libpinyin
-PORTVERSION=	0.5.3
+PORTVERSION=	0.5.4
 PORTREVISION=	2
 CATEGORIES=	chinese
 MASTER_SITES=	http://download.fcitx-im.org/${PORTNAME}/:body \
@@ -13,6 +11,7 @@ EXTRACT_ONLY=	${DISTNAME}${EXTRACT_SUFX}
 
 MAINTAINER=	lichray@gmail.com
 COMMENT=	Libpinyin support for Fcitx
+WWW=		https://fcitx-im.org/wiki/Fcitx
 
 LICENSE=	GPLv2
 
@@ -34,10 +33,8 @@ QT5_DESC=	Enable Qtr for dictmanager
 .include <bsd.port.options.mk>
 
 .if ${PORT_OPTIONS:MQT5}
-DEPRECATED=	Uses EOL Python 2.7 via www/qt5-webengine
-EXPIRATION_DATE=2021-06-23
 USES+=		qt:5
-USE_QT=		qmake_build gui webengine buildtools_build
+USE_QT=		qmake:build gui webengine buildtools:build
 USE_LDCONFIG=	${PREFIX}/lib/fcitx/qt
 PLIST_SUB+=	QT5=""
 .else

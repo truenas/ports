@@ -1,10 +1,12 @@
 PORTNAME=	yarr
 DISTVERSIONPREFIX=v
-DISTVERSION=	2.2
+DISTVERSION=	2.3
+PORTREVISION=	11
 CATEGORIES=	www
 
 MAINTAINER=	decke@FreeBSD.org
 COMMENT=	Yet another rss reader
+WWW=		https://github.com/nkanaev/yarr
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/license

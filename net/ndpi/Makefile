@@ -1,17 +1,17 @@
-# Created by: Muhammad Moinur Rahman <5u623l20@gmail.com>
-
 PORTNAME=	ndpi
-PORTVERSION=	4.0.d20210818
+PORTVERSION=	4.6.d20230201
 PORTEPOCH=	1
 CATEGORIES=	net
 
 MAINTAINER=	madpilot@FreeBSD.org
 COMMENT=	NTOP-maintained superset of the popular OpenDPI library
+WWW=		https://www.ntop.org/products/deep-packet-inspection/ndpi/
 
 LICENSE=	LGPL3+
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-LIB_DEPENDS=	libjson-c.so:devel/json-c \
+LIB_DEPENDS=	librrd.so:databases/rrdtool \
+		libjson-c.so:devel/json-c \
 		libgcrypt.so:security/libgcrypt \
 		libgpg-error.so:security/libgpg-error
 
@@ -20,7 +20,7 @@ USES=		autoreconf compiler:c++11-lang cpe libtool localbase:ldflags pathfix \
 CPE_VENDOR=	ntop
 USE_LDCONFIG=	yes
 
-CONFIGURE_ARGS=	--with-pic
+CONFIGURE_ARGS=	--with-pic --with-local-libgcrypt
 CPPFLAGS+=	-I${LOCALBASE}/include/json-c
 LIBS+=		-ljson-c
 MAKE_ENV+=	EXAMPLESDIR="${EXAMPLESDIR_REL}"
@@ -30,12 +30,9 @@ INSTALL_TARGET=	install-strip
 USE_GITHUB=	yes
 GH_ACCOUNT=	ntop
 GH_PROJECT=	nDPI
-GH_TAGNAME=	817c00b
+GH_TAGNAME=	56aade0
 
 PLIST_SUB=	MAJOR_VER=${PORTVERSION:R:R} VER=${PORTVERSION:R}
-
-post-patch:
-	(cd ${WRKSRC} && ${SH} autogen.sh)
 
 post-configure:
 	@${REINPLACE_CMD} -e 's/#define PACKAGE/#define NDPI_PACKAGE/g' \

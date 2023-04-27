@@ -1,4 +1,4 @@
---- src/vs/base/node/ps.ts.orig	2021-12-06 21:35:50 UTC
+--- src/vs/base/node/ps.ts.orig	2023-03-29 09:14:46 UTC
 +++ src/vs/base/node/ps.ts
 @@ -214,7 +214,7 @@ export function listProcesses(rootPid: number): Promis
  
@@ -8,7 +8,7 @@
 +					if (process.platform !== 'linux' && process.platform !== 'freebsd') {
  						reject(err || new Error(stderr.toString()));
  					} else {
- 						const cmd = JSON.stringify(FileAccess.asFileUri('vs/base/node/ps.sh', require).fsPath);
+ 						const cmd = JSON.stringify(FileAccess.asFileUri('vs/base/node/ps.sh').fsPath);
 @@ -229,7 +229,8 @@ export function listProcesses(rootPid: number): Promis
  					}
  				} else {

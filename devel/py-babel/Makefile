@@ -1,23 +1,21 @@
-# Created by: Muhammad Moinur Rahman <bofh@FreeBSD.org>
-
 PORTNAME=	Babel
-PORTVERSION=	2.9.1
+PORTVERSION=	2.12.1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Collection of tools for internationalizing Python applications
+WWW=		https://babel.pocoo.org/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pytz>0:devel/py-pytz@${PY_FLAVOR}
+RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pytz>=2015.7:devel/py-pytz@${PY_FLAVOR}
 
-USES=		cpe python
-USE_PYTHON=	autoplist concurrent distutils
-
+USES=		cpe python:3.7+
 CPE_VENDOR=	pocoo
+USE_PYTHON=	autoplist concurrent distutils
 
 NO_ARCH=	yes
 PORTDOCS=	docs/*

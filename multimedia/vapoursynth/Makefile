@@ -1,10 +1,11 @@
 PORTNAME=	vapoursynth
 DISTVERSION=	R54
-PORTREVISION=	1
+PORTREVISION=	3
 CATEGORIES=	multimedia
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Video processing framework with simplicity in mind
+WWW=		https://www.vapoursynth.com/
 
 LICENSE=	LGPL21+
 

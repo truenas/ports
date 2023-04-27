@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	pglast
 PORTVERSION=	1.2
 CATEGORIES=	databases python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	a.wolk@fudosecurity.com
 COMMENT=	PostgreSQL Languages AST and statements prettifier
+WWW=		https://github.com/lelit/pglast
 
 LICENSE=	GPLv3+
 

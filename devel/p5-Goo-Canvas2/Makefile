@@ -1,8 +1,6 @@
-# Created by: Danilo Egea Gondolfo <danilo@FreeBSD.org>
-
 PORTNAME=	Goo-Canvas
 PORTVERSION=	0.06
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 MASTER_SITE_SUBDIR=	CPAN:PERLMAX
@@ -12,6 +10,7 @@ DISTNAME=	GooCanvas2-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Perl binding for GooCanvas2
+WWW=		https://metacpan.org/release/GooCanvas2
 
 LICENSE=	GPLv2
 

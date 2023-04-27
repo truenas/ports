@@ -1,11 +1,11 @@
-# Created by: Wen Heping <wen@FreeBSD.org>
-
 PORTNAME=	mdal
-DISTVERSION=	0.9.0
+DISTVERSION=	1.0.1
+PORTREVISION=	1
 CATEGORIES=	math geography
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Mesh data abstration library
+WWW=		https://www.mdal.xyz/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -16,7 +16,7 @@ LIB_DEPENDS=	libpdal_base.so:math/pdal \
 		libsqlite3.so:databases/sqlite3 \
 		libgdal.so:graphics/gdal \
 		libhdf5.so:science/hdf5 \
-		libsz.so:science/szip
+		libsz.so:science/libaec
 
 USES=		cmake gnome localbase
 USE_GNOME=	libxml2

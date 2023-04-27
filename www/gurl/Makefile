@@ -1,10 +1,12 @@
 PORTNAME=	gurl
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.2.3
+PORTREVISION=	12
 CATEGORIES=	www
 
 MAINTAINER=	dch@FreeBSD.org
 COMMENT=	Terminal cURL-like HTTP tool with delightful JSON & header support
+WWW=		https://github.com/skunkwerks/gurl
 
 LICENSE=	APACHE20
 

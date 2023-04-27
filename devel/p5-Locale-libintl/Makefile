@@ -1,7 +1,5 @@
-# Created by: Erwin Lansing <erwin@FreeBSD.org>
-
 PORTNAME=	Locale-libintl
-PORTVERSION=	1.32
+PORTVERSION=	1.33
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
@@ -9,6 +7,7 @@ DISTNAME=	libintl-perl-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Internationalization library for Perl
+WWW=		https://metacpan.org/release/libintl-perl
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING

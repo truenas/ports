@@ -1,13 +1,12 @@
-# Created by: Bill Fumerola <billf@chc-chimes.com>
-
 PORTNAME=	mtr
-PORTVERSION=	0.94
+PORTVERSION=	0.95
 DISTVERSIONPREFIX=	v
 PORTREVISION=	1
 CATEGORIES=	net
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Traceroute and ping in a single network diagnostic tool
+WWW=		https://www.bitwizard.nl/mtr/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

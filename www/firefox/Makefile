@@ -1,28 +1,28 @@
-# Created by: Alan Eldridge <alane@FreeBSD.org>
-
 PORTNAME=	firefox
-DISTVERSION=	95.0
+DISTVERSION=	112.0.2
 PORTREVISION=	1
 PORTEPOCH=	2
-CATEGORIES=	www
-MASTER_SITES=	MOZILLA/${PORTNAME}/releases/${DISTVERSION}/source \
-		MOZILLA/${PORTNAME}/candidates/${DISTVERSION}-candidates/build1/source
+CATEGORIES=	www wayland
+MASTER_SITES=	MOZILLA/${PORTNAME}/releases/${DISTVERSION}${DISTVERSIONSUFFIX}/source \
+		MOZILLA/${PORTNAME}/candidates/${DISTVERSION}${DISTVERSIONSUFFIX}-candidates/build1/source
 DISTFILES=	${DISTNAME}.source${EXTRACT_SUFX}
 
 MAINTAINER=	gecko@FreeBSD.org
 COMMENT=	Web browser based on the browser portion of Mozilla
+WWW=		https://www.mozilla.com/firefox
 
 BUILD_DEPENDS=	nspr>=4.32:devel/nspr \
-		nss>=3.72:security/nss \
-		icu>=69.1,1:devel/icu \
+		nss>=3.89:security/nss \
+		icu>=72.1:devel/icu \
 		libevent>=2.1.8:devel/libevent \
-		harfbuzz>=2.9.1:print/harfbuzz \
+		harfbuzz>=7.1.0:print/harfbuzz \
 		graphite2>=1.3.14:graphics/graphite2 \
-		png>=1.6.37:graphics/png \
-		libvpx>=1.8.2:multimedia/libvpx \
+		png>=1.6.39:graphics/png \
+		dav1d>=1.0.0:multimedia/dav1d \
+		libvpx>=1.13.0:multimedia/libvpx \
 		${PYTHON_PKGNAMEPREFIX}sqlite3>0:databases/py-sqlite3@${PY_FLAVOR} \
 		v4l_compat>0:multimedia/v4l_compat \
-		autoconf-2.13:devel/autoconf213 \
+		autoconf2.13:devel/autoconf2.13 \
 		nasm:devel/nasm \
 		yasm:devel/yasm \
 		zip:archivers/zip
@@ -36,6 +36,8 @@ CFLAGS_powerpc64le=	-DSQLITE_BYTEORDER=1234
 CONFIGURE_ENV+=	BINDGEN_CFLAGS="-I${LOCALBASE}/include"
 
 USES=		tar:xz
+# helpful when testing beta
+WRKSRC=		${WRKDIR}/${PORTNAME}-${DISTVERSION}
 
 FIREFOX_ICON=		${MOZILLA}.png
 FIREFOX_ICON_SRC=	${PREFIX}/lib/${MOZILLA}/browser/chrome/icons/default/default48.png
@@ -62,10 +64,6 @@ post-patch:
 		${FIREFOX_DESKTOP}
 	@${REINPLACE_CMD} -e 's|%%LOCALBASE%%|${LOCALBASE}|g' \
 		${WRKSRC}/browser/app/nsBrowserApp.cpp
-
-pre-configure:
-	(cd ${WRKSRC} && ${LOCALBASE}/bin/autoconf-2.13)
-	(cd ${WRKSRC}/js/src/ && ${LOCALBASE}/bin/autoconf-2.13)
 
 post-install:
 	${INSTALL_DATA} ${FIREFOX_DESKTOP} ${STAGEDIR}${PREFIX}/share/applications/

@@ -1,18 +1,16 @@
-# Created by: Palle Girgensohn <girgen@FreeBSD.org>
-
 PORTNAME=	fluent-bit
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.8.11
+DISTVERSION=	2.1.2
 CATEGORIES=	sysutils
 
 MAINTAINER=	girgen@FreeBSD.org
 COMMENT=	Fast and lightweight data forwarder
+WWW=		https://fluentbit.io/
 
 LICENSE=	APACHE20
 
 BROKEN_mips=		fails to build: conflicting types for 'restrict'
 BROKEN_mips64=		fails to build: conflicting types for 'restrict'
-BROKEN_riscv64=		fails to build: No support for this architecture (yet)
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	fluent
@@ -22,8 +20,10 @@ USES=		cmake:noninja gmake bison
 OPTIONS_DEFINE=		SSL PGSQL
 OPTIONS_DEFAULT=	SSL
 
-LDFLAGS=		-lexecinfo
-CMAKE_ARGS=		-DFLB_DEBUG=Off -DFLB_TRACE=Off
+LIB_DEPENDS=		libyaml.so:textproc/libyaml
+LDFLAGS+=		-lexecinfo -L${LOCALBASE}/lib
+CMAKE_ARGS=		-DFLB_DEBUG=Off -DFLB_TRACE=Off -DFLB_LUAJIT=Off
+CFLAGS+=		-I${LOCALBASE}/include
 
 SSL_USES=		ssl
 SSL_CMAKE_ON=		-DFLB_TLS=On
@@ -40,7 +40,7 @@ USE_RC_SUBR=	${PORTNAME}
 
 .include <bsd.port.options.mk>
 
-.if ${ARCH:Mpowerpc64*}
+.if ${ARCH:Mpowerpc64*} || ${ARCH:Mriscv64*}
 CMAKE_ARGS+=	-DFLB_LUAJIT:BOOL=OFF
 .elif ${ARCH} == powerpc
 LDFLAGS+=	-latomic

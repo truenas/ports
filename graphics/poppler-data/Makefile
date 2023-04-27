@@ -1,10 +1,11 @@
 PORTNAME=	poppler-data
-DISTVERSION=	0.4.11
+DISTVERSION=	0.4.12
 CATEGORIES=	graphics
 MASTER_SITES=	http://poppler.freedesktop.org/
 
 MAINTAINER=	desktop@FreeBSD.org
 COMMENT=	Poppler encoding data
+WWW=		https://poppler.freedesktop.org/
 
 LICENSE=	MIT ADOBE GPLv2
 LICENSE_COMB=	multi

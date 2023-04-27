@@ -1,13 +1,13 @@
-# Created by: Dikshie <dikshie@sfc.wide.ad.jp>
-
 PORTNAME=	xlrd
 PORTVERSION=	2.0.1
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Reading data and formatting information from Excel files
+WWW=		https://www.python-excel.org/ \
+		https://github.com/python-excel/xlrd
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

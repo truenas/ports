@@ -1,7 +1,5 @@
-# Created by: Greg Larkin <glarkin@FreeBSD.org>
-
 PORTNAME=	libcloud
-PORTVERSION=	3.4.1
+PORTVERSION=	3.7.0
 CATEGORIES=	net python
 MASTER_SITES=	APACHE/${PORTNAME}
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -9,6 +7,7 @@ DISTNAME=	apache-${PORTNAME}-${PORTVERSION}
 
 MAINTAINER=	novel@FreeBSD.org
 COMMENT=	Standard client library for many popular cloud providers
+WWW=		https://libcloud.apache.org/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

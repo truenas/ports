@@ -1,5 +1,3 @@
-# Created by: Stefan Walter <sw@gegenunendlich.de>
-
 PORTNAME=	curator
 PORTVERSION=	2.1
 PORTREVISION=	7
@@ -8,9 +6,12 @@ MASTER_SITES=	SF
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Static Image Gallery Generator for web or CD-ROM galleries
+WWW=		http://curator.sourceforge.net/
 
 USES=		magick:6,run python:3.6+
 USE_PYTHON=	distutils autoplist concurrent optsuffix
+
+CONFLICTS_INSTALL=	py*-elasticsearch-curator
 
 PLIST_FILES=	man/man1/curator.1.gz
 

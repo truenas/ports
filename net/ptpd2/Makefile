@@ -1,5 +1,3 @@
-# Created by: Steven Kreuzer <skreuzer@FreeBSD.org>
-
 PORTNAME=	ptpd
 DISTVERSION=	2.3.1
 CATEGORIES=	net
@@ -7,6 +5,7 @@ PKGNAMESUFFIX=	2
 
 MAINTAINER=	skreuzer@FreeBSD.org
 COMMENT=	Implementation of the precision time protocol IEEE 1588-2008
+WWW=		https://github.com/ptpd/ptpd
 
 LICENSE=	BSD2CLAUSE
 

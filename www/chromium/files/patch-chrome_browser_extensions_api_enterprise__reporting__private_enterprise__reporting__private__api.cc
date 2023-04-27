@@ -1,20 +1,38 @@
---- chrome/browser/extensions/api/enterprise_reporting_private/enterprise_reporting_private_api.cc.orig	2021-09-24 18:21:22 UTC
+--- chrome/browser/extensions/api/enterprise_reporting_private/enterprise_reporting_private_api.cc.orig	2023-04-05 11:05:06 UTC
 +++ chrome/browser/extensions/api/enterprise_reporting_private/enterprise_reporting_private_api.cc
-@@ -154,7 +154,7 @@ EnterpriseReportingPrivateGetDeviceIdFunction::
+@@ -32,7 +32,7 @@
+ #include "components/reporting/util/statusor.h"
+ #endif
+ 
+-#if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
+ #include "base/strings/string_util.h"
+ #include "chrome/browser/enterprise/signals/signals_aggregator_factory.h"
+ #include "chrome/browser/extensions/api/enterprise_reporting_private/conversion_utils.h"
+@@ -150,7 +150,7 @@ api::enterprise_reporting_private::ContextInfo ToConte
+   return info;
+ }
+ 
+-#if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
+ 
+ device_signals::SignalsAggregationRequest CreateAggregationRequest(
+     device_signals::SignalName signal_name) {
+@@ -211,7 +211,7 @@ EnterpriseReportingPrivateGetDeviceIdFunction::
  
  // getPersistentSecret
  
--#if !defined(OS_LINUX)
-+#if !defined(OS_LINUX) && !defined(OS_BSD)
+-#if !BUILDFLAG(IS_LINUX)
++#if !BUILDFLAG(IS_LINUX) && !BUILDFLAG(IS_BSD)
  
  EnterpriseReportingPrivateGetPersistentSecretFunction::
      EnterpriseReportingPrivateGetPersistentSecretFunction() = default;
-@@ -206,7 +206,7 @@ void EnterpriseReportingPrivateGetPersistentSecretFunc
-   }
+@@ -638,7 +638,7 @@ void EnterpriseReportingPrivateEnqueueRecordFunction::
  }
+ #endif
  
--#endif  // !defined(OS_LINUX)
-+#endif  // !defined(OS_LINUX) && !defined(OS_BSD)
+-#if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
  
- // getDeviceData
+ // getFileSystemInfo
  

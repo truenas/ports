@@ -1,10 +1,12 @@
 PORTNAME=	ssb
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.1.1
+PORTREVISION=	12
 CATEGORIES=	security
 
-MAINTAINER=	nc@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	SSH Server Bruteforcer
+WWW=		https://github.com/kitabisa/ssb
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

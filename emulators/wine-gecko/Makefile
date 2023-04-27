@@ -1,5 +1,3 @@
-# Created by: David Naylor <naylor.b.david@gmail.com>
-
 PORTNAME=	wine-gecko
 DISTVERSION=	2.47.2
 CATEGORIES=	emulators
@@ -10,6 +8,7 @@ EXTRACT_ONLY=
 
 MAINTAINER=	gerald@FreeBSD.org
 COMMENT=	Gecko Layout Engine for Wine (HTML support)
+WWW=		https://wiki.winehq.org/Gecko
 
 LICENSE=	MPL20 GPLv2 GPLv3 LGPL21 LGPL3
 LICENSE_COMB=	multi

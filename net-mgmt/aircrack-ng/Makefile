@@ -1,13 +1,12 @@
-# Created by: Lars Engels <lars.engels@0x20.net>
-
 PORTNAME=	aircrack-ng
 DISTVERSION=	1.5.2
-PORTREVISION=	2
+PORTREVISION=	4
 CATEGORIES=	net-mgmt security
 MASTER_SITES=	http://download.aircrack-ng.org/
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	802.11 WEP and WPA-PSK keys cracking program
+WWW=		https://www.aircrack-ng.org/
 
 LICENSE=	GPLv2 BSD3CLAUSE APACHE20
 LICENSE_COMB=	dual
@@ -15,6 +14,7 @@ LICENSE_COMB=	dual
 BROKEN_aarch64=		fails to configure: _AX_COMPILER_VERSION_GNU unknown gcc major
 BROKEN_armv6=		fails to configure: _AX_COMPILER_VERSION_GNU unknown gcc major
 BROKEN_armv7=		fails to configure: _AX_COMPILER_VERSION_GNU unknown gcc major
+BROKEN_i386=		fails to configure: _AX_COMPILER_VERSION_GNU unknown gcc major
 
 USES=		autoreconf cpe dos2unix gmake libtool pkgconfig
 USE_GCC=	yes

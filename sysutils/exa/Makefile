@@ -1,11 +1,12 @@
 PORTNAME=	exa
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.10.1
-PORTREVISION=	7
+PORTREVISION=	21
 CATEGORIES=	sysutils
 
 MAINTAINER=	mikael@FreeBSD.org
 COMMENT=	Modern replacement for ls
+WWW=		https://the.exa.website/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENCE

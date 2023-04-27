@@ -1,5 +1,3 @@
-# Created by: Steve Wills <swills@FreeBSD.org>
-
 PORTNAME=	request_store
 PORTVERSION=	1.4.1
 CATEGORIES=	devel rubygems
@@ -8,6 +6,7 @@ PKGNAMESUFFIX=	14
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	RequestStore gives you per-request global storage
+WWW=		https://github.com/steveklabnik/request_store
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -15,7 +14,6 @@ LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 RUN_DEPENDS=	rubygem-rack16>=1.4:www/rubygem-rack16
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

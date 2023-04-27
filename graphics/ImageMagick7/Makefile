@@ -1,32 +1,17 @@
 PORTNAME=	ImageMagick
-DISTVERSION=	7.1.0-17
+DISTVERSION=	7.1.0-62
+PORTREVISION=	2
 CATEGORIES=	graphics perl5
-MASTER_SITES=	https://www.imagemagick.org/download/ \
-		https://www.imagemagick.org/download/releases/ \
-		http://servingzone.com/mirrors/ImageMagick/ \
-		http://mirror.checkdomain.de/imagemagick/ \
-		http://imagemagick.spd.co.il/ \
-		http://www.champground.com/imagemagick/ \
-		http://ftp.surfnet.nl/pub/ImageMagick/ \
-		http://mirror.searchdaimon.com/ImageMagick/ \
-		http://mirror.is.co.za/pub/imagemagick/ \
-		http://imagemagick.mirrorcatalogs.com/ \
-		ftp://ftp.imagemagick.org/pub/ImageMagick/ \
-		ftp://mirror.aarnet.edu.au/pub/imagemagick/ \
-		ftp://mirror.checkdomain.de/imagemagick/ \
-		ftp://ftp.kddlabs.co.jp/graphics/ImageMagick/ \
-		ftp://ftp.u-aizu.ac.jp/pub/graphics/image/ImageMagick/imagemagick.org/ \
-		ftp://ftp.nluug.nl/pub/ImageMagick/ \
-		ftp://mirror.searchdaimon.com/ImageMagick/ \
-		ftp://sunsite.icm.edu.pl/packages/ImageMagick/ \
-		ftp://ftp.tpnet.pl/pub/graphics/ImageMagick/ \
-		ftp://ftp.sunet.se/pub/multimedia/graphics/ImageMagick/ \
-		ftp://ftp.is.co.za/pub/imagemagick/ \
-		ftp://ftp.fifi.org/pub/ImageMagick/
+MASTER_SITES=	https://ftp.acc.umu.se/mirror/imagemagick.org/ftp/releases/ \
+		https://mirror.dogado.de/imagemagick/releases/ \
+		https://mirror.checkdomain.de/imagemagick/releases/ \
+		https://ftp.icm.edu.pl/pub/unix/graphics/ImageMagick/releases/ \
+		https://imagemagick.org/archive/releases/
 PKGNAMESUFFIX=	7
 
 MAINTAINER=	desktop@FreeBSD.org
 COMMENT=	Image processing tools
+WWW=		https://imagemagick.org/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -37,11 +22,11 @@ LIB_DEPENDS=	libltdl.so:devel/libltdl	\
 TESTS_DEPENDS=	gsfonts>=0:print/gsfonts
 
 # bin/Magick++-config
-CONFLICTS_INSTALL=	ImageMagick ImageMagick-nox11 ImageMagick6 ImageMagick6-nox11
+CONFLICTS_INSTALL=	ImageMagick6 ImageMagick6-nox11
 
 # This port uses .la files, keep libtool:keepla! (magick/module.c)
-USES=		cpe gettext-runtime gmake gnome libtool:keepla \
-		localbase pathfix perl5 pkgconfig:both shebangfix tar:xz
+USES=		cpe gettext-runtime gmake gnome libtool:keepla localbase \
+		pathfix perl5 pkgconfig:both shebangfix tar:xz
 CPE_PRODUCT=	imagemagick
 CPE_VENDOR=	imagemagick
 SHEBANG_FILES=	www/source/examples.pl
@@ -62,11 +47,11 @@ PLIST_SUB=	PORTVERSION=${PORTVERSION:R}
 
 OPTIONS_SUB=	yes
 OPTIONS_DEFINE=	BZIP2 DOCS DJVU FFMPEG FFTW FONTCONFIG FPX FREETYPE \
-		GRAPHVIZ GSLIB JPEG2000 JBIG JPEG LCMS2 LZMA LQR MODULES \
+		GRAPHVIZ GSLIB JPEG2000 JBIG JPEG JXL LCMS2 LZMA LQR MODULES \
 		OPENEXR OPENMP PANGO PDF PERL PNG RAQM SVG TESTS TIFF WEBP WMF \
 		THREADS X11 16BIT_PIXEL HDRI HEIF RAW
-OPTIONS_DEFAULT=	16BIT_PIXEL BZIP2 FFTW FONTCONFIG FREETYPE \
-		JPEG2000 JBIG JPEG LCMS2 LZMA LQR MODULES PDF PERL PNG RAQM SVG \
+OPTIONS_DEFAULT=	16BIT_PIXEL BZIP2 FFTW FONTCONFIG FREETYPE HEIF \
+		JPEG2000 JBIG JPEG JXL LCMS2 LZMA LQR MODULES OPENEXR PDF PERL PNG RAQM SVG \
 		TIFF WEBP WMF THREADS X11 HDRI RAW
 
 DJVU_DESC=		DJVU format support (needs THREADS)
@@ -104,7 +89,6 @@ GRAPHVIZ_LIB_DEPENDS=	libgvc.so:graphics/graphviz
 GRAPHVIZ_CFLAGS=	-I${LOCALBASE}/include/graphviz
 GRAPHVIZ_LDFLAGS=	-L${LOCALBASE}/lib/graphviz
 
-HEIF_DESC=		ISO/IEC 23008-12:2017 HEIF file format support
 HEIF_CONFIGURE_WITH=	heic
 HEIF_LIB_DEPENDS=	libheif.so:graphics/libheif
 
@@ -125,6 +109,9 @@ JPEG_USES=		jpeg
 JPEG2000_DESC=		OpenJPEG 2000 support via openjpeg
 JPEG2000_CONFIGURE_WITH=openjp2
 JPEG2000_LIB_DEPENDS=	libopenjp2.so:graphics/openjpeg
+
+JXL_CONFIGURE_WITH=	jxl
+JXL_LIB_DEPENDS=	libjxl.so:graphics/libjxl
 
 LCMS2_CONFIGURE_WITH=	lcms
 LCMS2_LIB_DEPENDS=	liblcms2.so:graphics/lcms2
@@ -172,9 +159,8 @@ WEBP_LIB_DEPENDS=	libwebp.so:graphics/webp
 X11_CONFIGURE_WITH=	x
 X11_USES=		xorg
 X11_USE=		xorg=ice,sm,x11,xext,xt
-X11_VARS=		CONFLICTS_INSTALL+="ImageMagick7-nox11-* \
-			CONFLICTS+=display
-X11_VARS_OFF=		CONFLICTS_INSTALL+="ImageMagick7-*" \
+X11_VARS=		CONFLICTS_INSTALL+="ImageMagick7-nox11"
+X11_VARS_OFF=		CONFLICTS_INSTALL+="ImageMagick7" \
 			PKGNAMESUFFIX=7-nox11
 
 .include <bsd.port.options.mk>
@@ -229,10 +215,10 @@ _IMAGEMAGICK_THREADS=no
 . if ${_IMAGEMAGICK_THREADS} == "no"
 IGNORE=OpenMP requires threads${_IMAGEMAGICK_THREADS_IGNORE_MSG}
 . else
-CONFIGURE_ARGS+=       --enable-openmp
+CONFIGURE_ARGS+=	--enable-openmp
 . endif
 .else
-CONFIGURE_ARGS+=       --disable-openmp
+CONFIGURE_ARGS+=	--disable-openmp
 .endif
 .if defined(WITH_WINDOWS_FONT_DIR)
 CONFIGURE_ARGS+=	--with-windows-font-dir=${WITH_WINDOWS_FONT_DIR}

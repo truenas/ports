@@ -1,10 +1,12 @@
 PORTNAME=	dasel
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.22.1
+DISTVERSION=	1.27.3
+PORTREVISION=	5
 CATEGORIES=	textproc
 
 MAINTAINER=	lcook@FreeBSD.org
 COMMENT=	Query and update data structures from the command line
+WWW=		https://github.com/TomWright/dasel
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

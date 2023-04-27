@@ -1,8 +1,6 @@
-# Created by: smace
-
 PORTNAME=	xv
 PORTVERSION=	3.10a
-PORTREVISION=	17
+PORTREVISION=	19
 CATEGORIES+=	graphics
 MASTER_SITES=	ftp://ftp.cis.upenn.edu/pub/xv/:base \
 		SF/png-mng/XV%20jumbo%20patches/20070520
@@ -16,6 +14,7 @@ PATCHFILES=	xv-3.10a-enhancements.20070520-20081216.diff
 
 MAINTAINER?=	dinoex@FreeBSD.org
 COMMENT?=	X11 program that displays images of various formats
+WWW=		http://www.trilon.com/xv/
 
 LIB_DEPENDS=	libtiff.so:graphics/tiff \
 		libpng.so:graphics/png \
@@ -40,6 +39,9 @@ CFLAGS:= ${CFLAGS:S/-O2//g}
 .if ${PORT_OPTIONS:MM17N}
 MAKE_ENV=	LOCALE_EXTENSION=-DTV_MULTILINGUAL
 DESCR=	${FILESDIR}/pkg-descr
+CONFLICTS_INSTALL=	xv
+.else
+CONFLICTS_INSTALL=	xv-m17n
 .endif
 
 pre-patch:

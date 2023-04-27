@@ -1,14 +1,12 @@
-# Created by: Joe Marcus Clarke <marcus@FreeBSD.org>
-
 PORTNAME=	fontconfig
-DISTVERSION=	2.13.94
-PORTREVISION=	1
+DISTVERSION=	2.14.2
 PORTEPOCH=	1
 CATEGORIES=	x11-fonts
 MASTER_SITES=	https://www.freedesktop.org/software/fontconfig/release/
 
 MAINTAINER=	desktop@FreeBSD.org
 COMMENT=	XML-based font configuration API for X Windows
+WWW=		https://www.freedesktop.org/wiki/Software/fontconfig/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -16,7 +14,8 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 LIB_DEPENDS=	libfreetype.so:print/freetype2 \
 		libexpat.so:textproc/expat2
 
-USES=		cpe gperf meson pkgconfig python:3.6+,build shebangfix tar:xz
+USES=		cpe gperf meson pkgconfig python:3.6+,build shebangfix tar:xz \
+		trigger
 CPE_VENDOR=	fontconfig_project
 USE_LDCONFIG=	yes
 
@@ -26,16 +25,16 @@ SHEBANG_FILES=	conf.d/link_confs.py \
 		fc-lang/fc-lang.py
 
 TEST_TARGET=	test
-SUB_FILES=	pkg-install
-SUB_LIST=	PREFIX=${PREFIX}
-
-# Custom configuration variables
-FCDEFAULTFONTS=	${PREFIX}/share/fonts
-FCADDFONTS=	${LOCALBASE}/lib/X11/fonts
 
 # To avoid circular dependency rebuild of docs (including manpages) needs to be
 # disabled as they depend on textproc/docbook-utils which requires fontconfig
-MESON_ARGS=	-Ddefault_library=both -Ddoc=disabled -Dfc-cache=disabled
+MESON_ARGS=	-Ddefault_library=both -Ddoc=disabled -Dcache-build=disabled \
+		-Ddefault-fonts-dirs=${PREFIX}/share/fonts \
+		-Dadditional-fonts-dirs=${LOCALBASE}/lib/X11/fonts \
+		-Dlocalstatedir=/var \
+		-Dcache-dir=/var/db/fontconfig \
+		-Dtemplate-dir=${LOCALBASE}/etc/fonts/conf.avail \
+		-Dxml-dir=${LOCALBASE}/etc/fonts
 
 PLIST_SUB=	PREFERRED_HINTING=${PREFERRED_HINTING}
 PORTDOCS=	fontconfig-user.html fontconfig-user.pdf fontconfig-user.txt
@@ -49,6 +48,7 @@ OPTIONS_SINGLE=	HINTING
 OPTIONS_SINGLE_HINTING+=	HINTING_${opt}
 HINTING_${opt}_DESC=	${opt:tl}
 HINTING_${opt}_VARS=	PREFERRED_HINTING=${opt:tl}
+HINTING_${opt}_MESON_ON=	-Ddefault-hinting=${opt:tl}
 .endfor
 
 BITMAPS_DESC=	Enable bitmap fonts by default
@@ -58,14 +58,6 @@ NLS_USES=		gettext-tools
 NLS_MESON_ENABLED=	nls
 
 TEST_MESON_ENABLED=	tests
-
-post-patch:
-	@${REINPLACE_CMD} -e 's|%%FCDEFAULTFONTS%%|${FCDEFAULTFONTS}|g' \
-	    ${PATCH_WRKSRC}/meson.build
-	@${REINPLACE_CMD} -e 's|%%FCADDFONTS%%|${FCADDFONTS}|g' \
-	    ${PATCH_WRKSRC}/meson.build
-	@${REINPLACE_CMD} -e 's|%%FCPREFERREDHINTING%%|${PREFERRED_HINTING}|g' \
-	    ${PATCH_WRKSRC}/conf.d/meson.build
 
 post-install:
 	${INSTALL_MAN} ${WRKSRC}/fc-*/*.1 ${STAGEDIR}${PREFIX}/man/man1

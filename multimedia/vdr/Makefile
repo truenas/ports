@@ -1,5 +1,3 @@
-# Created by: Juergen Lock <nox@FreeBSD.org>
-
 PORTNAME=	vdr
 PORTVERSION=	1.7.29
 PORTREVISION=	15
@@ -9,6 +7,7 @@ DIST_SUBDIR=	vdr
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Video Disk Recorder - development version
+WWW=		http://www.tvdr.de/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

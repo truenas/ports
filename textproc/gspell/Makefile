@@ -1,26 +1,24 @@
-# Created by: Olivier Duchateau
-
 PORTNAME=	gspell
-PORTVERSION=	1.9.1
-PORTREVISION=	2
+PORTVERSION=	1.10.0
+PORTREVISION=	3
 CATEGORIES=	textproc
 MASTER_SITES=	GNOME
-DIST_SUBDIR=	gnome3
+DIST_SUBDIR=	gnome
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Spell checking for GTK+
+WWW=		https://wiki.gnome.org/Projects/gspell
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-BUILD_DEPENDS=	valac:lang/vala
 LIB_DEPENDS=	libenchant-2.so:textproc/enchant2 \
 		libfribidi.so:converters/fribidi \
 		libicudata.so:devel/icu
 
 PORTSCOUT=	limitw:even
 
-USES=		gmake gnome iconv libtool pathfix pkgconfig tar:xz
+USES=		gmake gnome iconv libtool pathfix pkgconfig tar:xz vala:build
 USE_GNOME=	atk cairo gdkpixbuf2 glib20 gtk30 introspection:build \
 		libxml2 pango
 GNU_CONFIGURE=	yes

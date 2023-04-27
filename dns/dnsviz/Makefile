@@ -1,10 +1,11 @@
 PORTNAME=	dnsviz
-PORTVERSION=	0.9.2
+PORTVERSION=	0.9.4
 DISTVERSIONPREFIX=v
 CATEGORIES=	dns
 
 MAINTAINER=	pi@FreeBSD.org
 COMMENT=	Analysis and visualization of DNS/DNSSEC behavior
+WWW=		https://dnsviz.net/
 
 LICENSE=	GPLv2
 

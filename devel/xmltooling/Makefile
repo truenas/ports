@@ -1,12 +1,11 @@
-# Created by: Janos Mohacsi
-
 PORTNAME=	xmltooling
-PORTVERSION=	3.2.1
+PORTVERSION=	3.2.3
 CATEGORIES=	devel security
-MASTER_SITES=	http://shibboleth.net/downloads/c++-opensaml/${PORTVERSION}/
+MASTER_SITES=	http://shibboleth.net/downloads/c++-opensaml/latest/
 
 MAINTAINER=	girgen@FreeBSD.org
 COMMENT=	Low level XML support for SAML
+WWW=		https://wiki.shibboleth.net/confluence/display/OpenSAML/XMLTooling-C
 
 LICENSE=	APACHE20
 

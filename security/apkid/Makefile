@@ -1,12 +1,11 @@
-# Created by: thierry@pompo.net
-
 PORTNAME=	APKiD
-PORTVERSION=	2.1.1
+PORTVERSION=	2.1.4
 DISTVERSIONPREFIX=	v
 CATEGORIES=	security
 
 MAINTAINER=	thierry@FreeBSD.org
 COMMENT=	Android Application Identifier
+WWW=		https://rednaga.io/
 
 LICENSE=	GPLv3 RedNaga
 LICENSE_COMB=	dual
@@ -17,11 +16,11 @@ LICENSE_PERMS_RedNaga=	pkg-mirror pkg-sell
 USE_GITHUB=	yes
 GH_ACCOUNT=	rednaga
 
-USES=		python:3.7+
+USES=		pytest python:3.7+
 USE_PYTHON=	distutils
 
-BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}yara>0:security/py-yara@${PY_FLAVOR}
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}yara>0:security/py-yara@${PY_FLAVOR}
+BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}yara-python-dex>0:security/py-yara-python-dex@${PY_FLAVOR}
+RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}yara-python-dex>0:security/py-yara-python-dex@${PY_FLAVOR}
 
 PLIST_SUB=	VER=${PORTVERSION}
 NO_ARCH=	yes

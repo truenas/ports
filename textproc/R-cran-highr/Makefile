@@ -1,12 +1,12 @@
-# Created by: TAKATSU Tomonari <tota@FreeBSD.org>
-
 PORTNAME=	highr
 PORTVERSION=	0.9
+PORTREVISION=	1
 CATEGORIES=	textproc
 DISTNAME=	${PORTNAME}_${PORTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Syntax Highlighting for R Source Code
+WWW=		https://cran.r-project.org/web/packages/highr/
 
 LICENSE=	GPLv2+
 

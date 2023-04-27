@@ -1,9 +1,7 @@
-# Created by: Yuri Victorovich <yuri@rawbw.com>
-
 PORTNAME=	lightzone
 DISTVERSION=	4.1.8-3
 DISTVERSIONSUFFIX=	-g36e87773
-PORTREVISION=	7
+PORTREVISION=	9
 CATEGORIES=	graphics java
 DIST_SUBDIR=	${PORTNAME}
 
@@ -12,6 +10,7 @@ PATCHFILES=	376ec67ddfb1.patch:-p1
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Professional-level digital darkroom and photo editor
+WWW=		http://lightzoneproject.org/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/../COPYING

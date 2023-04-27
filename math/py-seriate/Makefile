@@ -1,10 +1,12 @@
 PORTNAME=	seriate
 DISTVERSION=	1.1.2
+PORTREVISION=	1
 CATEGORIES=	math python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Optimal ordering of elements in a set given their distance matrix
+WWW=		https://github.com/src-d/seriate
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE.md

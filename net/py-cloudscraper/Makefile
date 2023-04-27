@@ -1,11 +1,12 @@
 PORTNAME=	cloudscraper
-DISTVERSION=	1.2.58
+DISTVERSION=	1.2.69
 CATEGORIES=	net python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	tcberner@FreeBSD.org
 COMMENT=	Python module to bypass Cloudflare's anti-bot page #'
+WWW=		https://pypi.org/project/cloudscraper/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

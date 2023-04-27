@@ -1,12 +1,12 @@
-# Created by: Jui-Nan Lin <jnlin@csie.nctu.edu.tw>
-
 PORTNAME=	trafficserver
-PORTVERSION=	9.0.1
+PORTVERSION=	9.1.3
+PORTREVISION=	1
 CATEGORIES=	www
 MASTER_SITES=	APACHE/${PORTNAME}
 
 MAINTAINER=	gaod@hychen.org
 COMMENT=	Fast, scalable and extensible HTTP proxy server
+WWW=		https://trafficserver.apache.org/
 
 LICENSE=	APACHE20
 
@@ -16,14 +16,10 @@ LIB_DEPENDS=	libcurl.so:ftp/curl \
 		libhwloc.so:devel/hwloc2 \
 		libpcre.so:devel/pcre \
 		libxml2.so:textproc/libxml2 \
-		libbrotlienc.so:archivers/brotli \
-		${LIB_DEPENDS_${ARCH}}
-LIB_DEPENDS_amd64=	libluajit-5.1.so:lang/luajit
-LIB_DEPENDS_powerpc64=		libluajit-5.1.so:lang/luajit-openresty
-LIB_DEPENDS_powerpc64le=	libluajit-5.1.so:lang/luajit-openresty
+		libbrotlienc.so:archivers/brotli
 
-USES=		compiler:c++17-lang cpe gmake libtool localbase ncurses \
-		pathfix perl5 pkgconfig sqlite ssl tar:bzip2 tcl
+USES=		compiler:c++17-lang cpe gmake libtool localbase luajit \
+		ncurses pathfix perl5 pkgconfig sqlite ssl tar:bzip2 tcl
 
 CPE_VENDOR=	apache
 CPE_PRODUCT=	traffic_server
@@ -49,13 +45,13 @@ CONFIGURE_ARGS=	--with-pcre=${LOCALBASE} \
 		--enable-mime-sanity-check \
 		--enable-experimental-plugins
 
-OPTIONS_DEFINE=	DOCS WCCP MEMCACHED IMAGEMAGICK X11
+OPTIONS_DEFINE=	DOCS GEOIP WCCP MEMCACHED IMAGEMAGICK X11
 OPTIONS_SUB=	yes
 PLIST_SUB+=	ARCH="${ARCH:C/powerpc64.*/powerpc/}"
 
+GEOIP_LIB_DEPENDS=	libmaxminddb.so:net/libmaxminddb
 WCCP_DESC=	Enable WCCPv2 protocol
 WCCP_CONFIGURE_ENABLE=	wccp
-WCCP_USE=	GCC=yes
 
 MEMCACHED_DESC=		Enable memcache & memcached_remap plugin
 MEMCACHED_LIB_DEPENDS=	libmemcached.so:databases/libmemcached

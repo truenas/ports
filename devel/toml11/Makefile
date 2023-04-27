@@ -1,10 +1,11 @@
 PORTNAME=		toml11
 DISTVERSIONPREFIX=	v
-DISTVERSION=		3.7.0
+DISTVERSION=		3.7.1
 CATEGORIES=		devel
 
 MAINTAINER=		dch@FreeBSD.org
 COMMENT=		C++11 header-only toml parser & encoder
+WWW=		https://github.com/toruniina/toml11
 
 LICENSE=		MIT
 LICENSE_FILE=		${WRKSRC}/LICENSE

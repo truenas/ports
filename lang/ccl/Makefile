@@ -10,6 +10,7 @@ EXTRACT_ONLY=	${DISTNAME}${EXTRACT_SUFX}
 
 MAINTAINER=	olgeni@FreeBSD.org
 COMMENT=	Clozure CL is a free Common Lisp implementation
+WWW=		https://www.clozure.com/ccl
 
 LICENSE=	APACHE20
 
@@ -23,6 +24,8 @@ CCL_DIRECTORY=	${PREFIX}/lib/ccl
 EXCLUDE=	cocoa-ide lisp-kernel scripts fx86cl fx86cl.image
 
 USE_ASDF=	yes
+
+CONFLICTS_INSTALL=	cclive # bin/ccl
 
 .include "${.CURDIR}/../../devel/cl-asdf/bsd.cl-asdf.mk"
 

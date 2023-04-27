@@ -1,10 +1,12 @@
 PORTNAME=	openmpi
-PORTVERSION=	4.1.1
+PORTVERSION=	4.1.5
+PORTREVISION=	1
 CATEGORIES=	net parallel
 MASTER_SITES=	http://www.open-mpi.org/software/ompi/v${PORTVERSION:R}/downloads/
 
-MAINTAINER=	danilo@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	High Performance Message Passing Library
+WWW=		https://www.open-mpi.org/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

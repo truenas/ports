@@ -1,18 +1,17 @@
-# Created by: Peter Pentchev <roam@FreeBSD.org>
-
 PORTNAME=	gecode
 DISTVERSIONPREFIX=	release-
 DISTVERSION=	6.3.0
-PORTREVISION=	5
+PORTREVISION=	6
 CATEGORIES=	math
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Generic Constraint Development Environment
+WWW=		https://www.gecode.org/
 
 LICENSE=	BSL MIT
 LICENSE_COMB=	multi
 
-NOT_FOR_ARCHS=		aarch64 armv6 armv7 mips mips64
+NOT_FOR_ARCHS=		armv6 armv7 mips mips64
 NOT_FOR_ARCHS_REASON=	needs code written to specify rounding control mechanism in Boost.Numeric.Interval
 
 USES=		bison:build compiler:c++11-lang gmake perl5
@@ -24,7 +23,7 @@ CONFIGURE_ARGS=	--disable-examples
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	Gecode
-GH_TAGNAME=	0916a1a # 6.3.0 branch is ready for a long time, but hasn't been tagged yet
+GH_TAGNAME=	6b09bea # 6.3.0 branch is ready for a long time, but hasn't been tagged yet
 
 DATADIR=	${PREFIX}/share/minizinc/gecode # it only installs the MiniZinc library into DATADIR
 
@@ -47,8 +46,9 @@ FLATZINC_CONFIGURE_ENABLE=	flatzinc
 GIST_DESC=			Enable gist, graphical and interactive search tool
 GIST_CONFIGURE_ENABLE=		gist qt
 GIST_USES=			gl qt:5
-GIST_USE=			gl=gl qt=core,gui,printsupport,widgets,qmake_build,buildtools_build
+GIST_USE=			gl=gl qt=core,gui,printsupport,widgets,qmake:build,buildtools:build
 GIST_IMPLIES=			SHARED # because Qt must be built in a special way: error: "You must build your code with position independent code if Qt was built with -reduce-relocations"
+GIST_MAKE_ARGS=			FREEBSD_LDFLAGS=-L${LOCALBASE}/lib
 
 PEAKHEAP_DESC=			Peak heap size tracking
 PEAKHEAP_CONFIGURE_ENABLE=	peakheap

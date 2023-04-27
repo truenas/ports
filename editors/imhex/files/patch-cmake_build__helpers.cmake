@@ -1,20 +1,26 @@
---- cmake/build_helpers.cmake.orig	2021-09-30 10:52:12 UTC
+--- cmake/build_helpers.cmake.orig	2023-04-04 10:04:22 UTC
 +++ cmake/build_helpers.cmake
-@@ -37,7 +37,7 @@ macro(findLibraries)
-     # Find packages
-     find_package(PkgConfig REQUIRED)
+@@ -378,13 +378,13 @@ function(downloadImHexPatternsFiles dest)
  
--    find_package(mbedTLS 2.26.0 REQUIRED)
-+    find_library(mbedTLS mbedtls REQUIRED)
+     else ()
+         # Maybe patterns are cloned to a subdirectory
+-        set(imhex_patterns_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/ImHex-Patterns")
++        set(imhex_patterns_SOURCE_DIR "${CMAKE_BINARY_DIR}/_deps/imhex_patterns_src")
+     endif ()
  
-     pkg_search_module(CAPSTONE 4.0.2 REQUIRED capstone)
+     if (EXISTS ${imhex_patterns_SOURCE_DIR})
+         set(PATTERNS_FOLDERS_TO_INSTALL constants encodings includes patterns magic)
+         foreach (FOLDER ${PATTERNS_FOLDERS_TO_INSTALL})
+-            install(DIRECTORY "${imhex_patterns_SOURCE_DIR}/${FOLDER}" DESTINATION ${dest})
++            install(DIRECTORY "${imhex_patterns_SOURCE_DIR}/${FOLDER}" DESTINATION "share/imhex/")
+         endforeach ()
+     endif ()
  
-@@ -48,6 +48,8 @@ macro(findLibraries)
-         message(STATUS ${PYTHON_VERSION_MAJOR_MINOR})
-         message(FATAL_ERROR "No valid version of Python 3 was found.")
-     endif()
-+
-+    find_package(CURL REQUIRED)
+@@ -392,7 +392,6 @@ endfunction()
  
-     string(REPLACE "." ";" PYTHON_VERSION_MAJOR_MINOR ${Python_VERSION})
+ macro(setupCompilerWarnings target)
+     set(IMHEX_COMMON_FLAGS "-Wall -Wextra -Wpedantic -Werror")
+-    set(IMHEX_C_FLAGS "${IMHEX_COMMON_FLAGS} -Wno-restrict -Wno-stringop-overread -Wno-stringop-overflow -Wno-array-bounds")
  
+     set(CMAKE_C_FLAGS    "${CMAKE_C_FLAGS}    ${IMHEX_C_FLAGS}")
+     set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS}  ${IMHEX_C_FLAGS}")

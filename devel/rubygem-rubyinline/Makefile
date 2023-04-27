@@ -1,20 +1,18 @@
-# Created by: Sean Chittenden <seanc@FreeBSD.org>
-
 PORTNAME=	rubyinline
-PORTVERSION=	3.12.5
+PORTVERSION=	3.13.0
 CATEGORIES=	devel rubygems
 MASTER_SITES=	RG
 DISTNAME=	RubyInline-${PORTVERSION}
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Inline::C allows you to embed C/Ruby directly in ruby scripts
+WWW=		https://www.zenspider.com/projects/rubyinline.html
 
 LICENSE=	MIT
 
 RUN_DEPENDS=	rubygem-zentest>=4.3:devel/rubygem-zentest
 
 USES=		gem shebangfix
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

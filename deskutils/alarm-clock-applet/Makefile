@@ -1,10 +1,12 @@
 PORTNAME=	alarm-clock-applet
 PORTVERSION=	0.3.4
+PORTREVISION=	3
 CATEGORIES=	deskutils
 MASTER_SITES=	http://launchpad.net/alarm-clock/trunk/0.3.4/+download/
 
 MAINTAINER=	iluxa@ex.ua
 COMMENT=	Fully-featured alarm clock
+WWW=		http://alarm-clock.pseudoberries.com/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -18,9 +20,8 @@ BUILD_DEPENDS=	gnome-icon-theme>0:misc/gnome-icon-theme
 RUN_DEPENDS=	gnome-icon-theme>0:misc/gnome-icon-theme
 
 GNU_CONFIGURE=	yes
-USES=		gettext-tools gmake gnome pkgconfig
+USES=		gettext-tools gmake gnome gstreamer pkgconfig
 USE_GNOME=	cairo gconf2 gtk20 intltool
-USE_GSTREAMER1=	yes
 
 GCONF_SCHEMAS=	alarm-clock.schemas
 

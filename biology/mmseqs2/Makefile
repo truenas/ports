@@ -5,6 +5,7 @@ CATEGORIES=	biology
 
 MAINTAINER=	jwb@FreeBSD.org
 COMMENT=	Ultra fast and sensitive sequence search and clustering suite
+WWW=		https://github.com/soedinglab/MMseqs2
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE.md
@@ -24,6 +25,10 @@ CMAKE_ARGS+=	-DUSE_SYSTEM_ZSTD:BOOL=ON -DDISABLE_IPS4O:BOOL=ON
 LDFLAGS+=	-lpthread
 
 PLIST_FILES=	bin/mmseqs ${DATADIR}/bash-completion.sh
+
+.if !exists(/usr/include/omp.h)
+CMAKE_ARGS+=	-DREQUIRE_OPENMP=0
+.endif
 
 .include <bsd.port.pre.mk>
 

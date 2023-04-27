@@ -1,10 +1,11 @@
 PORTNAME=	level-zero
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.6.2
+DISTVERSION=	1.10.0
 CATEGORIES=	devel
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	oneAPI Level Zero Specification Headers and Loader
+WWW=		https://spec.oneapi.io/versions/latest/elements/l0/source/index.html
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

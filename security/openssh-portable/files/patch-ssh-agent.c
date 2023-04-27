@@ -8,9 +8,9 @@ r226103 | des | 2011-10-07 08:10:16 -0500 (Fri, 07 Oct 2011) | 5 lines
 Add a -x option that causes ssh-agent(1) to exit when all clients have
 disconnected.
 
---- ssh-agent.c.orig	2021-04-15 20:55:25.000000000 -0700
-+++ ssh-agent.c	2021-04-27 11:47:59.362589000 -0700
-@@ -171,9 +171,26 @@ static int fingerprint_hash = SSH_FP_HASH_DEFAULT;
+--- ssh-agent.c.orig	2023-02-02 04:21:54.000000000 -0800
++++ ssh-agent.c	2023-02-03 10:55:34.277561000 -0800
+@@ -188,11 +188,28 @@ static int restrict_websafe = 1;
  /* Refuse signing of non-SSH messages for web-origin FIDO keys */
  static int restrict_websafe = 1;
  
@@ -27,17 +27,19 @@ disconnected.
  static void
  close_socket(SocketEntry *e)
  {
+ 	size_t i;
 +	int last = 0;
-+
+ 
 +	if (e->type == AUTH_CONNECTION) {
 +		debug("xcount %d -> %d", xcount, xcount - 1);
 +		if (--xcount == 0)
 +			last = 1;
 +	}
++
  	close(e->fd);
  	sshbuf_free(e->input);
  	sshbuf_free(e->output);
-@@ -181,6 +198,8 @@ close_socket(SocketEntry *e)
+@@ -205,6 +222,8 @@ close_socket(SocketEntry *e)
  	memset(e, '\0', sizeof(*e));
  	e->fd = -1;
  	e->type = AUTH_UNUSED;
@@ -46,7 +48,7 @@ disconnected.
  }
  
  static void
-@@ -1067,6 +1086,10 @@ new_socket(sock_type type, int fd)
+@@ -1698,6 +1717,10 @@ new_socket(sock_type type, int fd)
  
  	debug_f("type = %s", type == AUTH_CONNECTION ? "CONNECTION" :
  	    (type == AUTH_SOCKET ? "SOCKET" : "UNKNOWN"));
@@ -57,16 +59,16 @@ disconnected.
  	set_nonblock(fd);
  
  	if (fd > max_fd)
-@@ -1360,7 +1383,7 @@ static void
+@@ -1990,7 +2013,7 @@ usage(void)
  usage(void)
  {
  	fprintf(stderr,
 -	    "usage: ssh-agent [-c | -s] [-Dd] [-a bind_address] [-E fingerprint_hash]\n"
 +	    "usage: ssh-agent [-c | -s] [-Ddx] [-a bind_address] [-E fingerprint_hash]\n"
- 	    "                 [-P allowed_providers] [-t life]\n"
- 	    "       ssh-agent [-a bind_address] [-E fingerprint_hash] [-P allowed_providers]\n"
- 	    "                 [-t life] command [arg ...]\n"
-@@ -1394,6 +1417,7 @@ main(int ac, char **av)
+ 	    "                 [-O option] [-P allowed_providers] [-t life]\n"
+ 	    "       ssh-agent [-a bind_address] [-E fingerprint_hash] [-O option]\n"
+ 	    "                 [-P allowed_providers] [-t life] command [arg ...]\n"
+@@ -2024,6 +2047,7 @@ main(int ac, char **av)
  	/* drop */
  	setegid(getgid());
  	setgid(getgid());
@@ -74,7 +76,7 @@ disconnected.
  
  	platform_disable_tracing(0);	/* strict=no */
  
-@@ -1405,7 +1429,7 @@ main(int ac, char **av)
+@@ -2035,7 +2059,7 @@ main(int ac, char **av)
  	__progname = ssh_get_progname(av[0]);
  	seed_rng();
  
@@ -83,7 +85,7 @@ disconnected.
  		switch (ch) {
  		case 'E':
  			fingerprint_hash = ssh_digest_alg_by_name(optarg);
-@@ -1454,6 +1478,9 @@ main(int ac, char **av)
+@@ -2084,6 +2108,9 @@ main(int ac, char **av)
  				fprintf(stderr, "Invalid lifetime\n");
  				usage();
  			}

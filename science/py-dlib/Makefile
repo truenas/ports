@@ -1,20 +1,22 @@
 PORTNAME=	dlib
-DISTVERSION=	19.22
+DISTVERSION=	19.24
+PORTREVISION=	1
 CATEGORIES=	science devel math python
 MASTER_SITES=	http://dlib.net/files/
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	arrowd@FreeBSD.org
 COMMENT=	Machine learning framework written in C++ (python bindings)
+WWW=		http://dlib.net
 
 LICENSE=	BSL
 LICENSE_FILE=	${WRKSRC}/dlib/LICENSE.txt
 
-BUILD_DEPENDS=		cmake:devel/cmake
+BUILD_DEPENDS=		cmake:devel/cmake-core
 LIB_DEPENDS=		${PY_BOOST} \
 			libpng.so:graphics/png
 
-USES=			compiler:c++11-lang pkgconfig python:3.6+ shebangfix \
+USES=			compiler:c++11-lang pkgconfig python:3.7-3.10 shebangfix \
 			tar:bzip2
 USE_PYTHON=		autoplist distutils
 SHEBANG_FILES=		python_examples/*.py

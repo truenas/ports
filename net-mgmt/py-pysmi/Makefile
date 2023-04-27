@@ -2,12 +2,13 @@ PORTNAME=	pysmi
 PORTVERSION=	0.3.4
 PORTREVISION=	1
 CATEGORIES=	net-mgmt python
-MASTER_SITES=	CHEESESHOP \
+MASTER_SITES=	PYPI \
 		SF/pysmi/pysmi/${PORTVERSION}
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	john@saltant.com
 COMMENT=	SNMP/SMI MIB parsing in Python
+WWW=		https://github.com/etingof/pysmi
 
 LICENSE=	BSD2CLAUSE
 

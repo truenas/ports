@@ -1,11 +1,10 @@
-# Created by: Filip Parag <filip@parag.rs>
-
 PORTNAME=	wikiman
 DISTVERSION=	2.12.2
 CATEGORIES=	textproc
 
 MAINTAINER=	filip@parag.rs
 COMMENT=	Offline interactive documentation search
+WWW=		https://github.com/filiparag/wikiman
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

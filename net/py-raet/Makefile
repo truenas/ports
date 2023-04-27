@@ -1,14 +1,13 @@
-# Created by: Christer Edwards <christer.edwards@gmail.com>
-
 PORTNAME=	raet
 PORTVERSION=	0.6.8
 PORTREVISION=	1
 CATEGORIES=	net python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	christer.edwards@gmail.com
 COMMENT=	Reliable Asynchronous Event Transport protocol library
+WWW=		https://github.com/saltstack/raet
 
 LICENSE=	APACHE20
 

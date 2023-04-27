@@ -1,9 +1,10 @@
 PORTNAME=	libretro-2048
-PORTVERSION=	0.20210214
+PORTVERSION=	0.20220327
 CATEGORIES=	games
 
-MAINTAINER=	menelkir@itroll.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Port of 2048 puzzle game to the libretro API
+WWW=		https://github.com/libretro/libretro-2048
 
 LICENSE=	GPLv2
 
@@ -12,7 +13,7 @@ USE_LDCONFIG=	yes
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	libretro
-GH_TAGNAME=	35a299c
+GH_TAGNAME=	a8899c9
 
 PLIST_FILES=	lib/libretro/2048_libretro.so
 

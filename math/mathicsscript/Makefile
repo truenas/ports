@@ -1,12 +1,12 @@
-# Created by: Thierry Thomas <thierry@pompo.net>
-
 PORTNAME=	mathicsscript
-PORTVERSION=	3.1.0
+PORTVERSION=	6.0.0
+PORTREVISION=	2
 CATEGORIES=	math python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 
 MAINTAINER=	thierry@FreeBSD.org
 COMMENT=	Terminal CLI to Mathics
+WWW=		https://mathics.org/
 
 LICENSE=	GPLv3
 
@@ -33,7 +33,7 @@ TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pytest>0:devel/py-pytest@${PY_FLAVOR}
 #USE_GITHUB=	yes
 #GH_ACCOUNT=	Mathics3
 
-USES=		python:3.6+ readline shebangfix
+USES=		python:3.8+ readline shebangfix
 USE_PYTHON=	distutils noflavors
 SHEBANG_GLOB=	*.py
 

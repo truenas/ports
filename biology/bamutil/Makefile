@@ -5,6 +5,7 @@ CATEGORIES=	biology
 
 MAINTAINER=	jwb@FreeBSD.org
 COMMENT=	Utilities for working with SAM/BAM files
+WWW=		https://github.com/statgen/bamUtil
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/copyrights/COPYING
@@ -20,6 +21,8 @@ GH_TUPLE=	statgen:libStatGen:v${DISTVERSION}:statgen/libStatGen
 
 MAKE_ENV=	LIB_PATH_GENERAL=${WRKSRC}/libStatGen
 MAKE_ENV+=	INSTALLDIR=${STAGEDIR}${PREFIX}/bin
+
+CONFLICTS_INSTALL=	bam
 
 PLIST_FILES=	bin/bam
 

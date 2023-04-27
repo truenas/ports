@@ -1,13 +1,12 @@
-# Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
-
 PORTNAME=	tilem
 PORTVERSION=	2.0
-PORTREVISION=	4
+PORTREVISION=	5
 CATEGORIES=	emulators
 MASTER_SITES=	SF
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Texas Instruments Z80 series calculator emulator
+WWW=		http://lpg.ticalc.org/prj_tilem/
 
 LICENSE=	GPLv3
 

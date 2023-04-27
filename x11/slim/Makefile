@@ -1,5 +1,3 @@
-# Created by: Tobias Roth <ports@fsck.ch>
-
 PORTNAME=	slim
 PORTVERSION=	1.3.6
 PORTREVISION=	22
@@ -9,10 +7,10 @@ MASTER_SITES=	ftp://ftp.berlios.de/pub/slim/ \
 
 MAINTAINER=	jsm@FreeBSD.org
 COMMENT=	Graphical login manager for X11, derived from Login.app
+WWW=		https://sourceforge.net/projects/slim.berlios/
 
 LICENSE=	GPLv2
 
-BUILD_DEPENDS=	${LOCALBASE}/libdata/pkgconfig/pthread-stubs.pc:devel/libpthread-stubs
 LIB_DEPENDS=	libpng.so:graphics/png \
 		libfreetype.so:print/freetype2 \
 		libfontconfig.so:x11-fonts/fontconfig

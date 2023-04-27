@@ -1,22 +1,20 @@
 PORTNAME=	packer
-PORTVERSION=	1.7.4
-DISTVERSIONPREFIX=	v
+PORTVERSION=	1.8.6
 PORTREVISION=	1
+DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 
 MAINTAINER=	brad@facefault.org
 COMMENT=	Tool for creating machine images
+WWW=		https://packer.io/
 
 LICENSE=	MPL20
 LICENSE_FILE=	${WRKSRC}/LICENSE
-
-PLIST_FILES=	bin/${PORTNAME}
 
 USES=		cpe go:modules
 CPE_VENDOR=	hashicorp
 GO_MODULE=	github.com/hashicorp/packer
 
-USE_GITHUB=	yes
-GH_ACCOUNT=	hashicorp
+PLIST_FILES=	bin/${PORTNAME}
 
 .include <bsd.port.mk>

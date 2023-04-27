@@ -1,11 +1,12 @@
 PORTNAME=	munch
 PORTVERSION=	2.5.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	lbartoletti@FreeBSD.org
 COMMENT=	Python dict that provides attribute-style access (a la JavaScript)
+WWW=		https://pypi.org/project/munch/
 
 LICENSE=	MIT
 

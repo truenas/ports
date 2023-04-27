@@ -1,8 +1,6 @@
-# Created by: Pete Fritchman <petef@databits.net>
-
 PORTNAME=	secpanel
 PORTVERSION=	0.6.1
-PORTREVISION=	4
+PORTREVISION=	5
 PORTEPOCH=	1
 CATEGORIES=	security tcl tk
 MASTER_SITES=	SF/${PORTNAME} \
@@ -14,6 +12,7 @@ EXTRACT_ONLY=	${DISTNAME}.tgz
 
 MAINTAINER=	portmaster@BSDforge.com
 COMMENT=	GUI for managing and running ssh and related utilities
+WWW=		http://themediahost.de/secpanel/
 
 LICENSE=	GPLv2
 

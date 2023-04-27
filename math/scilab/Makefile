@@ -1,13 +1,12 @@
-# Created by: js@jeannot.org
-
 PORTNAME=	scilab
 PORTVERSION=	6.1.1
+PORTREVISION=	8
 CATEGORIES=	math cad java
-MASTER_SITES=	https://www.scilab.org/download/${PORTVERSION}/
-DISTFILES=	${DISTNAME}-src${EXTRACT_SUFX}
+MASTER_SITES=	https://cgit.scilab.org/scilab/snapshot/
 
 MAINTAINER=	makc@FreeBSD.org
 COMMENT=	Scientific software package for numerical computations
+WWW=		https://www.scilab.org
 
 LICENSE=	GPLv2 BSD3CLAUSE
 LICENSE_COMB=	dual
@@ -40,6 +39,7 @@ LDFLAGS+=	${ICONV_LIB}
 
 CONFIGURE_ENV=	BLAS_LIBS="${BLASLIB}" LAPACK_LIBS="${LAPACKLIB}"
 INSTALL_TARGET=	install-strip
+WRKSRC_SUBDIR=	scilab
 
 PLIST_SUB=	SHLIB_VER=${PORTVERSION}
 
@@ -67,7 +67,7 @@ _GUI_DEPENDS+=	${JAVALIBDIR}/flexdock.jar:devel/flexdock \
 		${JAVALIBDIR}/commons-logging.jar:java/apache-commons-logging \
 		${JAVALIBDIR}/jgraphx.jar:java/jgraphx \
 		${JAVALIBDIR}/jlatexmath.jar:math/jlatexmath \
-		${LOCALBASE}/share/java/ecj-4.5.jar:lang/gcc-ecj45 \
+		${JAVALIBDIR}/ecj-4.4.2.jar:java/eclipse-ecj \
 		${JAVALIBDIR}/lucene-core-5.5.5.jar:textproc/lucene5
 # Documentation, graphic export:
 _GUI_DEPENDS+=	${LOCALBASE}/share/java/fop/build/fop.jar:textproc/fop \
@@ -83,7 +83,7 @@ _GUI_DEPENDS+=	${JAVALIBDIR}/commons-beanutils.jar:java/apache-commons-beanutils
 		${LOCALBASE}/bin/splint:devel/splint
 # Documentation building:
 _GUI_DEPENDS+=	${LOCALBASE}/share/xsl/docbook/javahelp/javahelp.xsl:textproc/docbook-xsl \
-		${JAVALIBDIR}/saxon9he.jar:textproc/saxon-he \
+		${JAVALIBDIR}/saxon-he-10.6.jar:textproc/saxon-he \
 		${JAVALIBDIR}/xml-apis-ext.jar:textproc/xml-commons \
 		xsltproc:textproc/libxslt
 # Other gui deps:
@@ -109,7 +109,8 @@ GUI_CONFIGURE_OFF=	--without-gui \
 
 OCAML_IMPLIES=		GUI
 OCAML_CONFIGURE_WITH=	modelica
-OCAML_BUILD_DEPENDS=	ocaml:lang/ocaml
+OCAML_BUILD_DEPENDS=	ocaml:lang/ocaml \
+	${LOCALBASE}/lib/ocaml/site-lib/num/META:math/ocaml-num
 OCAML_RUN_DEPENDS=	ocaml:lang/ocaml
 
 TK_CONFIGURE_OFF=	--without-tk
@@ -143,7 +144,6 @@ post-patch:
 post-patch-GUI-on:
 # scilab segfaults on FreeBSD with C locale
 	@${REINPLACE_CMD} 's,LC_ALL=C,,' ${WRKSRC}/Makefile.in
-	@# Configure fixes
 	@${REINPLACE_CMD} '/ac_java_jvm_jni_lib_flags/s,\(ljvm\),\1 -pthread,' ${WRKSRC}/configure
 	@${REINPLACE_CMD} -e 's|/usr/lib/java|${JAVALIBDIR}|g' ${WRKSRC}/configure
 	@${REINPLACE_CMD} -e 's|/usr/lib64/jni|${LOCALBASE}/lib/|g' ${WRKSRC}/configure
@@ -163,15 +163,12 @@ post-patch-GUI-on:
 # Part of the jogamp-jogl-2.3 patch:
 	@${REINPLACE_CMD} -e 's|javax.media.opengl.glu.GLUnurbs|com.jogamp.opengl.glu.GLUnurbs|' ${WRKSRC}/configure
 	@${REINPLACE_CMD} -e 's|jogamp.common.os.MachineDescriptionRuntime|jogamp.common.os.MachineDataInfoRuntime|' ${WRKSRC}/configure
-	@# Run fixes
 	@${REINPLACE_CMD} -e 's|%%JAVA_HOME%%|${JAVA_HOME}|' ${WRKSRC}/bin/scilab
 
 pre-install:
 	${MKDIR} ${STAGEDIR}${DATADIR}/.atoms
 
 post-install:
-	@# Remove empty dirs in DATADIR/modules - they will be removed by the
-	@# toolbox uninstaller otherwise if 3rd party toolboxes are used
 	@${FIND} ${STAGEDIR}${DATADIR}/modules -type d -empty -delete
 
 .include <bsd.port.post.mk>

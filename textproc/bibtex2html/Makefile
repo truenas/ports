@@ -1,5 +1,3 @@
-# Created by: Gerald Pfeifer <gerald@pfeifer.com>
-
 PORTNAME=	bibtex2html
 PORTVERSION=	1.99
 CATEGORIES=	textproc print
@@ -7,6 +5,7 @@ MASTER_SITES=	http://www.lri.fr/~filliatr/ftp/bibtex2html/
 
 MAINTAINER=	gerald@FreeBSD.org
 COMMENT=	Tools for searching BibTeX and translating from BibTeX to HTML
+WWW=		https://www.lri.fr/~filliatr/bibtex2html/
 
 LICENSE=	GPLv2
 
@@ -19,6 +18,7 @@ OPTIONS_DEFINE=	PDFDOCS
 PDFDOCS_DESC=	${DOCS_DESC}
 
 PDFDOCS_CONFIGURE_ENABLE=	doc
+PDFDOCS_USES=	tex
 PDFDOCS_USE=	TEX=latex:build
 PDFDOCS_BUILD_DEPENDS=	hevea:textproc/hevea
 PDFDOCS_INSTALL_TARGET=	install install-doc

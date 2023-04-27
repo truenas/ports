@@ -1,13 +1,12 @@
-# Created by: Yuri Victorovich <yuri@rawbw.com>
-
 PORTNAME=	ricochet
 PORTVERSION=	1.1.4
 DISTVERSIONPREFIX=	v
-PORTREVISION=	26
+PORTREVISION=	29
 CATEGORIES=	net-im net-p2p
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Anonymous peer-to-peer instant messenger
+WWW=		https://github.com/ricochet-im/ricochet
 
 LICENSE=	RICOCHET
 LICENSE_NAME=	Ricochet
@@ -20,7 +19,7 @@ USES=		compiler:c++11-lib gl gmake pkgconfig qmake qt:5 ssl
 USE_GITHUB=	yes
 GH_ACCOUNT=	ricochet-im
 USE_QT=		core declarative gui multimedia network quickcontrols widgets \
-		buildtools_build linguisttools_build
+		buildtools:build linguisttools:build
 USE_GL=		gl
 QMAKE_ARGS+=	DEFINES+=RICOCHET_NO_PORTABLE OPENSSLDIR=${OPENSSLBASE}
 

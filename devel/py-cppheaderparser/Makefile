@@ -1,12 +1,13 @@
 PORTNAME=	${_PYPI_NAME:tl}
 PORTVERSION=	2.7.4
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	${_PYPI_NAME}-${PORTVERSION}
 
 MAINTAINER=	0mp@FreeBSD.org
 COMMENT=	Parse C++ header files and generate a data structure representing the class
+WWW=		https://senexcanis.com/open-source/cppheaderparser/
 
 # There is no license file,
 # the license is specified directly in the source file.

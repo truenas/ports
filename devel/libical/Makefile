@@ -1,13 +1,12 @@
-# Created by: Joe Kelsey
-
 PORTNAME=	libical
 DISTVERSION=	3.0.8
-PORTREVISION=	3
+PORTREVISION=	9
 CATEGORIES=	devel
 MASTER_SITES=	https://github.com/libical/libical/releases/download/v${PORTVERSION}/
 
 MAINTAINER=	desktop@FreeBSD.org
 COMMENT=	Implementation of the IETF Calendaring and Scheduling protocols
+WWW=		https://github.com/libical
 
 LICENSE=	LGPL21 MPL20
 LICENSE_COMB=	dual
@@ -24,17 +23,16 @@ MAKE_JOBS_UNSAFE=	yes
 
 CFLAGS_amd64=	-fPIC
 
-OPTIONS_DEFINE=		DOCS GLIB INTROSPECTION VALA
-OPTIONS_DEFAULT=	GLIB INTROSPECTION VALA
+OPTIONS_DEFINE=		DOCS GLIB INTROSPECTION VAPI
+OPTIONS_DEFAULT=	GLIB INTROSPECTION VAPI
 OPTIONS_SUB=		yes
 
 DOCS_BUILD_DEPENDS=	gtkdoc-scan:textproc/gtk-doc
 DOCS_CMAKE_BOOL=	ICAL_BUILD_DOCS
 DOCSDIR=		${PREFIX}/share/gtk-doc/html/libical-glib
 
-VALA_DESC=		Build VALA bindings
-VALA_BUILD_DEPENDS=	valac:lang/vala
-VALA_CMAKE_BOOL=	ICAL_GLIB_VAPI
+VAPI_USES=		vala:build
+VAPI_CMAKE_BOOL=	ICAL_GLIB_VAPI
 
 INTROSPECTION_DESC=		Build GObject Introspection
 INTROSPECTION_USE=		gnome=introspection:build

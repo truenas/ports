@@ -1,7 +1,5 @@
-# Created by: Rusmir Dusko <nemysis@FreeBSD.org>
-
 PORTNAME=	ldraw
-DISTVERSION=	20201229
+DISTVERSION=	20220211
 PORTEPOCH=	1
 CATEGORIES=	cad
 MASTER_SITES=	https://www.ldraw.org/library/updates/:parts \
@@ -12,6 +10,7 @@ EXTRACT_ONLY=	complete.zip
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	LDraw-format CAD files representing many of LEGO bricks produced
+WWW=		https://www.ldraw.org/
 
 LICENSE=	CC-BY-2.0
 

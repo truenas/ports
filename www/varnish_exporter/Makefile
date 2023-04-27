@@ -1,9 +1,11 @@
 PORTNAME=		varnish_exporter
 PORTVERSION=		1.6
+PORTREVISION=	12
 CATEGORIES=		www
 
 MAINTAINER=		ports@zx23.net
 COMMENT=		Prometheus metrics exporter for the Varnish WWW cache
+WWW=		https://github.com/jonnenauha/prometheus_varnish_exporter
 
 LICENSE=		APACHE20
 

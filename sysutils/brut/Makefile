@@ -1,9 +1,11 @@
 PORTNAME=	brut
 DISTVERSION=	1.55
+PORTREVISION=	1
 CATEGORIES=	sysutils
 
 MAINTAINER=	georg.lastname@web.de
 COMMENT=	Multitool, Partition Editor, Manage User/Groups
+WWW=		https://github.com/random532/brut
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

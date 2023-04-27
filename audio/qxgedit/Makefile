@@ -1,17 +1,19 @@
 PORTNAME=	qxgedit
-DISTVERSION=	0.9.4
+DISTVERSION=	0.9.9
 CATEGORIES=	audio
 MASTER_SITES=	SF
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Editor for MIDI System Exclusive files for XG devices
+WWW=		https://qxgedit.sourceforge.io
 
 LICENSE=	GPLv2+
-LICENSE_FILE=	${WRKSRC}/COPYING
+LICENSE_FILE=	${WRKSRC}/LICENSE
 
 LIB_DEPENDS=	libasound.so:audio/alsa-lib
 
-USES=		cmake compiler:c++17-lang pkgconfig qt:5
-USE_QT=		core gui network widgets buildtools_build qmake_build
+USES=		cmake compiler:c++17-lang gl pkgconfig qt:6
+USE_QT=		base svg tools:build
+USE_GL=		gl opengl
 
 .include <bsd.port.mk>

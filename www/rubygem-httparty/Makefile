@@ -1,12 +1,11 @@
-# Created by: Wen Heping <wenheping@gmail.com>
-
 PORTNAME=	httparty
-PORTVERSION=	0.16.4
+PORTVERSION=	0.20.0
 CATEGORIES=	www rubygems
 MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Ruby Library that Makes HTTP Fun Again
+WWW=		https://johnnunemaker.com/httparty/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/MIT-LICENSE
@@ -16,7 +15,6 @@ RUN_DEPENDS=	rubygem-mime-types>=3.0:misc/rubygem-mime-types \
 
 USES=		cpe gem
 CPE_VENDOR=	john_nunemaker
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

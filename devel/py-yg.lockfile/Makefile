@@ -2,11 +2,12 @@ PORTNAME=	yg.lockfile
 PORTVERSION=	2.3
 PORTREVISION=	2
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	kai@FreeBSD.org
 COMMENT=	Provides lockfile objects with timeouts and context manager
+WWW=		https://github.com/yougov/yg.lockfile
 
 LICENSE=	MIT
 

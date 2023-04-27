@@ -7,6 +7,7 @@ MASTER_SITES=	http://static.redsymbol.net/software/l2p/dist/ \
 
 MAINTAINER=	nivit@FreeBSD.org
 COMMENT=	Create PNG images from LaTeX math expressions
+WWW=		http://www.redsymbol.net/software/l2p/
 
 NO_BUILD=	yes
 
@@ -19,7 +20,7 @@ SHEBANG_FILES=	${WRKSRC}/${PORTNAME}
 
 USE_PERL5=	run
 USE_TEX=	latex dvipsk
-USES=		magick:6,run perl5 shebangfix zip
+USES=		magick:6,run perl5 shebangfix tex zip
 
 do-install:
 	${INSTALL_SCRIPT} ${WRKSRC}/${PORTNAME} ${STAGEDIR}${PREFIX}/bin

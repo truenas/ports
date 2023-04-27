@@ -1,11 +1,12 @@
 PORTNAME=	Font-FreeType
-PORTVERSION=	0.07
+PORTVERSION=	0.16
 CATEGORIES=	print perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Perl extension to read font files and render glyphs using FreeType2
+WWW=		https://metacpan.org/release/Font-FreeType
 
 LICENSE=	ARTPERL10
 

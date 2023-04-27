@@ -1,37 +1,24 @@
 PORTNAME=	heimer
-DISTVERSION=	3.0.0
+DISTVERSION=	4.1.0
 CATEGORIES=	graphics
+MASTER_SITES=	https://github.com/juzzlin/Heimer/releases/download/${DISTVERSION}/
 
 MAINTAINER=	eduardo@FreeBSD.org
 COMMENT=	Simple mind map, diagram, and note-taking tool
+WWW=		https://github.com/juzzlin/Heimer
 
-LICENSE=	CC-BY-SA-3.0 GPLv3+
-LICENSE_COMB=	multi
-LICENSE_FILE_GPLv3+ =	${WRKSRC}/COPYING
+LICENSE=	GPLv3
+LICENSE_FILE=	${WRKSRC}/COPYING
 
-USES=		cmake compiler:c++14-lang qt:5
-USE_GITHUB=	yes
-GH_ACCOUNT=	juzzlin
-GH_PROJECT=	Heimer
-USE_QT=		core gui svg widgets xml buildtools_build linguisttools_build \
-		qmake_build testlib_build
-TEST_TARGET=	test
-
-PLIST_FILES=	bin/heimer \
-		share/applications/heimer.desktop \
-		share/icons/hicolor/64x64/apps/heimer.png \
-		share/metainfo/heimer.appdata.xml \
-		share/pixmaps/heimer.png
+USES=		cmake:testing compiler:c++17-lang qt:5
+USE_QT=		core gui network svg widgets xml buildtools:build \
+		linguisttools:build qmake:build testlib:build
 
 PORTDOCS=	README.md
-PORTEXAMPLES=	examples/*.alz
 
-OPTIONS_DEFINE=	DOCS EXAMPLES
-
-EXAMPLES_PLIST_FILES=	${EXAMPLESDIR}/Company.alz \
-			${EXAMPLESDIR}/Family.alz \
-			${EXAMPLESDIR}/Heimer.alz \
-			${EXAMPLESDIR}/Large.alz
+OPTIONS_DEFINE=		DOCS EXAMPLES TEST
+OPTIONS_SUB=		yes
+TEST_CMAKE_BOOL=	BUILD_TESTS
 
 do-install-DOCS-on:
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}

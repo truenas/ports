@@ -1,11 +1,12 @@
 PORTNAME=		pyznap
 DISTVERSION=		1.6.0
 CATEGORIES=		sysutils python
-MASTER_SITES=		CHEESESHOP
+MASTER_SITES=		PYPI
 PKGNAMEPREFIX=		${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	driesm@FreeBSD.org
 COMMENT=	ZFS snapshot tool written in Python
+WWW=		https://github.com/yboetz/pyznap
 
 LICENSE=	GPLv3
 

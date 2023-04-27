@@ -1,71 +1,65 @@
---- chrome/common/pref_names.cc.orig	2021-09-24 04:26:00 UTC
+--- chrome/common/pref_names.cc.orig	2023-04-05 11:05:06 UTC
 +++ chrome/common/pref_names.cc
-@@ -1131,7 +1131,7 @@ const char kAllowedDomainsForApps[] = "settings.allowe
+@@ -1213,7 +1213,7 @@ const char kUseAshProxy[] = "lacros.proxy.use_ash_prox
  
  // TODO(crbug.com/1052397): Revisit the macro expression once build flag switch
  // of lacros-chrome is complete.
--#if defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)
-+#if defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS) || defined(OS_BSD)
+-#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS) || BUILDFLAG(IS_BSD)
  // Linux specific preference on whether we should match the system theme.
- const char kUsesSystemTheme[] = "extensions.theme.use_system";
- #endif
-@@ -1234,7 +1234,7 @@ const char kShowUpdatePromotionInfoBar[] =
+ const char kUsesSystemThemeDeprecated[] = "extensions.theme.use_system";
+ const char kSystemTheme[] = "extensions.theme.system_theme";
+@@ -1317,7 +1317,7 @@ const char kShowUpdatePromotionInfoBar[] =
  
  // TODO(crbug.com/1052397): Revisit the macro expression once build flag switch
  // of lacros-chrome is complete.
--#if defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)
-+#if defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS) || defined(OS_BSD)
+-#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS) || BUILDFLAG(IS_BSD)
  // Boolean that is false if we should show window manager decorations.  If
  // true, we draw a custom chrome frame (thicker title bar and blue border).
  const char kUseCustomChromeFrame[] = "browser.custom_chrome_frame";
-@@ -1700,7 +1700,7 @@ const char kDownloadDefaultDirectory[] = "download.def
- // upgrade a unsafe location to a safe location.
- const char kDownloadDirUpgraded[] = "download.directory_upgrade";
+@@ -1828,7 +1828,7 @@ const char kDownloadDirUpgraded[] = "download.director
+ const char kDownloadLastCompleteTime[] = "download.last_complete_time";
  
--#if defined(OS_WIN) || defined(OS_LINUX) || defined(OS_CHROMEOS) || \
-+#if defined(OS_WIN) || defined(OS_LINUX) || defined(OS_CHROMEOS) || defined(OS_BSD) || \
-     defined(OS_MAC)
+ #if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) || \
+-    BUILDFLAG(IS_MAC)
++    BUILDFLAG(IS_MAC) || BUILDFLAG(IS_BSD)
  const char kOpenPdfDownloadInSystemReader[] =
      "download.open_pdf_in_system_reader";
-@@ -1979,7 +1979,7 @@ const char kWebAppsPreferences[] = "web_apps.web_app_i
- const char kWebAppsIsolationState[] = "web_apps.isolation_state";
- 
- #if defined(OS_WIN) || defined(OS_MAC) || \
--    (defined(OS_LINUX) && !BUILDFLAG(IS_CHROMEOS_LACROS))
-+    (defined(OS_LINUX) && !BUILDFLAG(IS_CHROMEOS_LACROS)) || defined(OS_BSD)
- // Dictionary that maps origins to web apps that can act as URL handlers.
- const char kWebAppsUrlHandlerInfo[] = "web_apps.url_handler_info";
  #endif
-@@ -2101,12 +2101,12 @@ const char kAmbientAuthenticationInPrivateModesEnabled
+@@ -2244,7 +2244,7 @@ const char kAmbientAuthenticationInPrivateModesEnabled
  // requests.
  const char kBasicAuthOverHttpEnabled[] = "auth.basic_over_http_enabled";
  
--#if defined(OS_LINUX) || defined(OS_MAC) || defined(OS_CHROMEOS)
-+#if defined(OS_LINUX) || defined(OS_MAC) || defined(OS_CHROMEOS) || defined(OS_BSD)
+-#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_CHROMEOS)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_BSD)
  // Boolean that specifies whether OK-AS-DELEGATE flag from KDC is respected
  // along with kAuthNegotiateDelegateAllowlist.
  const char kAuthNegotiateDelegateByKdcPolicy[] =
-     "auth.negotiate_delegate_by_kdc_policy";
--#endif  // defined(OS_LINUX) || defined(OS_MAC) || defined(OS_CHROMEOS)
-+#endif  // defined(OS_LINUX) || defined(OS_MAC) || defined(OS_CHROMEOS) || defined(OS_BSD)
+@@ -3274,7 +3274,7 @@ const char kBlockAutoplayEnabled[] = "media.block_auto
+ const char kSandboxExternalProtocolBlocked[] =
+     "profile.sandbox_external_protocol_blocked";
  
- #if defined(OS_POSIX) || defined(OS_FUCHSIA)
- // Boolean that specifies whether NTLMv2 is enabled.
-@@ -3059,7 +3059,7 @@ const char kAutoplayWhitelist[] = "media.autoplay_whit
- const char kBlockAutoplayEnabled[] = "media.block_autoplay";
- #endif  // !defined(OS_ANDROID)
- 
--#if defined(OS_LINUX)
-+#if defined(OS_LINUX) || defined(OS_BSD)
- // Boolean that indicates if native notifications are allowed to be used in
- // place of Chrome notifications. Will be replaced by kAllowSystemNotifications.
- const char kAllowNativeNotifications[] = "native_notifications.allowed";
-@@ -3067,7 +3067,7 @@ const char kAllowNativeNotifications[] = "native_notif
+-#if BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
  // Boolean that indicates if system notifications are allowed to be used in
  // place of Chrome notifications.
  const char kAllowSystemNotifications[] = "system_notifications.allowed";
--#endif  // defined(OS_LINUX)
-+#endif  // defined(OS_LINUX) || defined(OS_BSD)
+@@ -3327,7 +3327,7 @@ const char kCACertificateManagementAllowed[] =
+ const char kChromeRootStoreEnabled[] = "chrome_root_store_enabled";
+ #endif
+ #if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX) || \
+-    BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_ANDROID)
++    BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_ANDROID) || BUILDFLAG(IS_BSD)
+ const char kEnforceLocalAnchorConstraintsEnabled[] =
+     "enforce_local_anchor_constraints_enabled";
+ #endif
+@@ -3650,7 +3650,7 @@ const char kThrottleNonVisibleCrossOriginIframesAllowe
+ const char kNewBaseUrlInheritanceBehaviorAllowed[] =
+     "new_base_url_inheritance_behavior_allowed";
  
- // Integer that holds the value of the next persistent notification ID to be
- // used.
+-#if BUILDFLAG(IS_ANDROID) || BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_ANDROID) || BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
+ // If this exists and is true, Chrome may run system DNS resolution out of the
+ // network process. If false, Chrome will run system DNS resolution in the
+ // network process. If non-existent, Chrome will decide where to run system DNS

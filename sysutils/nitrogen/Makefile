@@ -1,13 +1,12 @@
-# Created by: Jonathan Liu <Net147@hotmail.com>
-
 PORTNAME=	nitrogen
 DISTVERSION=	1.6.1
-PORTREVISION=	2
+PORTREVISION=	5
 CATEGORIES=	sysutils
 MASTER_SITES=	https://github.com/l3ib/nitrogen/releases/download/${DISTVERSION}/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Background browser and setter for X windows
+WWW=		https://github.com/l3ib/nitrogen
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

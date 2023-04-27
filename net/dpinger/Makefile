@@ -1,10 +1,11 @@
 PORTNAME=	dpinger
-PORTVERSION=	3.0
+PORTVERSION=	3.3
 DISTVERSIONPREFIX=	v
 CATEGORIES=	net
 
 MAINTAINER=	garga@FreeBSD.org
 COMMENT=	IP device monitoring tool
+WWW=		https://github.com/dennypage/dpinger
 
 LICENSE=	BSD2CLAUSE
 

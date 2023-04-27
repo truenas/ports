@@ -1,10 +1,12 @@
 PORTNAME=	timg
-PORTVERSION=	1.4.0
+PORTVERSION=	1.4.5
 DISTVERSIONPREFIX=	v
+PORTREVISION=	2
 CATEGORIES=	graphics
 
 MAINTAINER=	uzsolt@uzsolt.hu
 COMMENT=	Terminal Image and Video Viewer
+WWW=		https://github.com/hzeller/timg
 
 LICENSE=	GPLv2
 
@@ -25,6 +27,6 @@ GH_ACCOUNT=	hzeller
 CMAKE_ON+=	WITH_VIDEO_DECODING WITH_VIDEO_DEVICE
 CMAKE_OFF+=	TIMG_VERSION_FROM_GIT WITH_OPENSLIDE_SUPPORT
 
-PLIST_FILES=	bin/timg man/man1/timg.1.gz
+PLIST_FILES=	bin/timg share/man/man1/timg.1.gz
 
 .include <bsd.port.mk>

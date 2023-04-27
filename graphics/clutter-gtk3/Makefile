@@ -1,14 +1,13 @@
-# Created by: Martin Wilke <miwi@FreeBSD.org>
-
 PORTNAME=	clutter-gtk
 PORTVERSION=	1.8.4
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	graphics
 MASTER_SITES=	GNOME
 PKGNAMESUFFIX=	3
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	GTK+ Integration library for Clutter
+WWW=		https://blogs.gnome.org/clutter/
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING

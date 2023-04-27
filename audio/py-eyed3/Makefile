@@ -1,14 +1,13 @@
-# Created by: Hye-Shik Chang <perky@FreeBSD.org>
-
 PORTNAME=	eyed3
 PORTVERSION=	0.9.6
 CATEGORIES=	audio python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	eyeD3-${PORTVERSION}
 
 MAINTAINER=	rm@FreeBSD.org
 COMMENT=	Python module for processing ID3 tags
+WWW=		https://eyed3.nicfit.net/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE

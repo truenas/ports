@@ -1,12 +1,11 @@
-# Created by: Matthew Seaman
-
 PORTNAME=	mysql-connector-java
-PORTVERSION=	8.0.27
+PORTVERSION=	8.0.30
 CATEGORIES=	databases java
 MASTER_SITES=	MYSQL/Connector-J
 
 MAINTAINER=	ultima@FreeBSD.org
 COMMENT=	MySQL Connector/J: JDBC interface for MySQL
+WWW=		https://dev.mysql.com/downloads/connector/j/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -24,9 +23,9 @@ CPE_PRODUCT=	mysql_connector_j
 NO_ARCH=	yes
 NO_BUILD=	yes
 
-CONFLICTS_INSTALL=	mysql-connector-java51
+CONFLICTS_INSTALL=	mysql-connector-java51 # share/java/classes/mysql-connector-java.jar
 
-JAVA_VERSION=	1.8+
+JAVA_VERSION=	8+
 EXTRADOCS=	CHANGES
 
 PLIST_FILES=	${JAVAJARDIR}/${PORTNAME}.jar

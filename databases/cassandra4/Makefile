@@ -14,6 +14,7 @@ EXTRACT_ONLY=	${DISTNAME}.tar.gz \
 
 MAINTAINER=	language.devel@gmail.com
 COMMENT=	Highly scalable distributed database
+WWW=		https://cassandra.apache.org/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -30,7 +31,7 @@ CPE_VENDOR=	apache
 
 CONFLICTS=	cassandra3
 
-JAVA_VERSION=	8 11
+JAVA_VERSION=	8+
 JAVA_VENDOR=	openjdk
 
 SUB_LIST=	JAVA_HOME=${JAVA_HOME}

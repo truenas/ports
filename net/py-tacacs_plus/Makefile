@@ -1,11 +1,12 @@
 PORTNAME=	tacacs_plus
 DISTVERSION=	2.6
 CATEGORIES=	net python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	rozhuk.im@gmail.com
 COMMENT=	Client for TACACS+ authentication
+WWW=		https://github.com/ansible/tacacs_plus
 
 LICENSE=	BSD3CLAUSE
 

@@ -1,11 +1,11 @@
 PORTNAME=		jinja2-cli
-PORTVERSION=		0.7.0
-PORTREVISION=	1
+PORTVERSION=		0.8.2
 CATEGORIES=		textproc python
 PKGNAMEPREFIX=		${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=		otis@FreeBSD.org
 COMMENT=		Jinja2 CLI tool
+WWW=		https://github.com/mattrobenolt/jinja2-cli
 
 LICENSE=		BSD2CLAUSE
 LICENSE_FILE=		${WRKSRC}/LICENSE

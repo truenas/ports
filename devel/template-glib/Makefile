@@ -1,10 +1,11 @@
 PORTNAME=	template-glib
-PORTVERSION=	3.34.0
+PORTVERSION=	3.36.0
 CATEGORIES=	devel
 MASTER_SITES=	GNOME
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Templating library for GLib
+WWW=		https://gitlab.gnome.org/GNOME/template-glib
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING

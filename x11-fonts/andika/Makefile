@@ -1,10 +1,11 @@
 PORTNAME=	Andika
-DISTVERSION=	6.001
+DISTVERSION=	6.101
 CATEGORIES=	x11-fonts
 MASTER_SITES=	https://software.sil.org/downloads/r/andika/
 
 MAINTAINER=	0mp@FreeBSD.org
 COMMENT=	Sans-serif font designed for literacy use
+WWW=		https://software.sil.org/andika/
 
 LICENSE=	OFL11
 LICENSE_FILE=	${WRKSRC}/OFL.txt

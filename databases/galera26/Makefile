@@ -1,13 +1,13 @@
-# Created by: Nicolas Embriz <nbari@tequila.io>
-
 PORTNAME=	galera
-PORTVERSION=	26.4.10
+PORTVERSION=	26.4.14
+PORTREVISION=	0
 DISTVERSIONPREFIX=	release_
 CATEGORIES=	databases
 PKGNAMESUFFIX=	26
 
 MAINTAINER=	devel@galeracluster.com
 COMMENT=	Synchronous multi-master replication engine
+WWW=		https://galeracluster.com/
 
 LICENSE=	GPLv2
 
@@ -32,12 +32,14 @@ USES=		compiler:c++11-lang python:build cmake ssl
 
 USE_GITHUB=	yes
 GH_TUPLE?=	codership:galera:${DISTVERSIONPREFIX}${PORTVERSION}${DISTVERSIONSUFFIX} \
-		codership:wsrep-API:76cf223c690845bbf561cb820a46e06a18ad80d1:dummy/wsrep/src
+		codership:wsrep-API:694d6ca47f5eec7873be99b7d6babccf633d1231:dummy/wsrep/src
 
 CMAKE_ARGS+=	-DGALERA_REVISION=${GH_TAGNAME}
 
 USE_LDCONFIG=	yes
 USE_RC_SUBR=	garb.sh
+
+CONFLICTS_INSTALL=      galera
 
 PLIST_FILES=	bin/garbd \
 		lib/libgalera.so \

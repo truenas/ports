@@ -1,7 +1,6 @@
-# Created by: Olivier Cochard-Labbe <olivier@FreeBSD.org>
-
 PORTNAME=	locker
 PORTVERSION=	0.4.0
+PORTREVISION=	1
 CATEGORIES=	x11
 MASTER_SITES=	http://www.defora.org/os/download/download/4424/
 PKGNAMEPREFIX=	deforaos-
@@ -9,6 +8,7 @@ DISTNAME=	Locker-${PORTVERSION}
 
 MAINTAINER=	olivier@FreeBSD.org
 COMMENT=	DeforaOS desktop screensaver
+WWW=		https://www.defora.org/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING

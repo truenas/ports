@@ -1,12 +1,12 @@
-# Created by: Dan Phillips <dan-ports@dp.id.au>
-
 PORTNAME=	verbiste
 PORTVERSION=	0.1.47
+PORTREVISION=	2
 CATEGORIES=	french education textproc
 MASTER_SITES=	http://sarrazip.com/dev/
 
 MAINTAINER=	dereckson@gmail.com
 COMMENT=	French verb conjugator/deconjugator
+WWW=		http://sarrazip.com/dev/verbiste.html
 
 LICENSE=	GPLv2
 

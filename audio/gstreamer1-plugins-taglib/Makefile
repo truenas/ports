@@ -11,4 +11,8 @@ DIST=		good
 
 MASTERDIR=	${.CURDIR}/../../multimedia/gstreamer1-plugins
 
+PLIST=  ${.CURDIR}/pkg-plist
+
+LIB_DEPENDS= libtag.so:audio/taglib
+
 .include "${MASTERDIR}/Makefile"

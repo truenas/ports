@@ -1,9 +1,10 @@
 PORTNAME=	seal
-DISTVERSION=	3.7.2
+DISTVERSION=	4.1.1
 CATEGORIES=	security
 
 MAINTAINER=	lwhsu@FreeBSD.org
 COMMENT=	Microsoft Simple Encrypted Arithmetic Library
+WWW=		https://www.microsoft.com/en-us/research/project/microsoft-seal/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

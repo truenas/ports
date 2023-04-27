@@ -1,13 +1,12 @@
-# Created by: Lars Balker Rasmussen <lbr@FreeBSD.org>
-
 PORTNAME=	Sub-Exporter
-PORTVERSION=	0.988
+PORTVERSION=	0.989
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Sophisticated exporter for custom-built routines
+WWW=		https://metacpan.org/release/Sub-Exporter
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

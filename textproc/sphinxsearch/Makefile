@@ -1,5 +1,3 @@
-# Created by: Matthew Seaman
-
 # Note: the Sphinx Storage Engine MySQL plugin is not supported by
 # this port.  You need a patched version of mysql server for that.
 # See http://www.infracaninophile.co.uk/articles/sphinxse.html
@@ -13,12 +11,15 @@ MASTER_SITES=	http://sphinxsearch.com/files/ \
 DISTNAME=	sphinx-${PORTVERSION}-release
 DISTFILES=	${DISTNAME}${EXTRACT_SUFX}
 
-MAINTAINER=	matthew@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Sphinx Full-Text Search Engine
+WWW=		https://sphinxsearch.com/
 
 LICENSE=	GPLv2
 
 USES=		compiler:c++11-lang
+
+CONFLICTS_INSTALL=	mnogosearch # bin/indexer
 
 BUILD_DEPENDS=	gsed:textproc/gsed
 # If expat is present on the system and configure finds it, it will

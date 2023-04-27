@@ -1,13 +1,12 @@
-# Created by: thierry@pompo.net
-
 PORTNAME=	xd3d
 PORTVERSION=	8.3.1
-PORTREVISION=	19
+PORTREVISION=	20
 CATEGORIES=	graphics math
 MASTER_SITES=	http://www.cmap.polytechnique.fr/~jouve/xd3d/
 
 MAINTAINER=	thierry@FreeBSD.org
 COMMENT=	Simple scientific visualization tool
+WWW=		http://www.cmap.polytechnique.fr/~jouve/xd3d/
 
 LICENSE=	GPLv2
 

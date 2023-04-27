@@ -1,11 +1,12 @@
 PORTNAME=	datrie
 PORTVERSION=	0.8.2
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Super-fast, efficiently stored Trie for Python
+WWW=		https://github.com/pytries/datrie
 
 LICENSE=	GPLv2
 

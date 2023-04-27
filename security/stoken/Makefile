@@ -1,12 +1,12 @@
-# Created by: Alex Samorukov <samm@freebsd.org>
-
 PORTNAME=	stoken
 DISTVERSION=	0.92
+PORTREVISION=	2
 CATEGORIES=	security
 MASTER_SITES=	SF/stoken
 
 MAINTAINER=	samm@FreeBSD.org
 COMMENT=	Software Token for UNIX compatible with RSA SecurID
+WWW=		https://sourceforge.net/p/stoken/wiki/Home/
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING.LIB

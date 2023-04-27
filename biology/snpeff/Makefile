@@ -1,5 +1,5 @@
 PORTNAME=	snpeff
-DISTVERSION=	5.0
+DISTVERSION=	5.1
 CATEGORIES=	biology java python
 MASTER_SITES=	https://snpeff.blob.core.windows.net/versions/
 DISTNAME=	snpEff_latest_core
@@ -7,6 +7,7 @@ DIST_SUBDIR=	${PORTNAME}-${PORTVERSION}
 
 MAINTAINER=	jwb@FreeBSD.org
 COMMENT=	Genetic variant annotation and effect prediction toolbox
+WWW=		http://snpeff.sourceforge.net/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.md
@@ -16,7 +17,7 @@ RUN_DEPENDS=	bash:shells/bash
 USES=		python:3.6+ shebangfix zip
 USE_JAVA=	yes
 
-JAVA_VERSION=	12+
+JAVA_VERSION=	17+
 SHEBANG_FILES=	scripts/* scripts/gsa/*
 
 NO_BUILD=	yes

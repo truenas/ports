@@ -1,10 +1,11 @@
 PORTNAME=	libxlsxwriter
-PORTVERSION=	1.1.4
+PORTVERSION=	1.1.5
 DISTVERSIONPREFIX=	RELEASE_
 CATEGORIES=	math devel
 
 MAINTAINER=	bapt@FreeBSD.org
 COMMENT=	C library for creating Excel XLSX files
+WWW=		https://libxlsxwriter.github.io/
 
 LICENSE=	BSD2CLAUSE
 

@@ -1,11 +1,12 @@
 PORTNAME=	fbmq
 PORTVERSION=	2.5.0
 CATEGORIES=	net-im devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	olgeni@FreeBSD.org
 COMMENT=	Python library for using the Facebook Messenger API
+WWW=		https://github.com/conbus/fbmq
 
 LICENSE=	MIT
 

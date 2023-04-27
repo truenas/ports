@@ -1,11 +1,12 @@
 PORTNAME=	lavalauncher
 DISTVERSIONPREFIX=	v
 DISTVERSION=	2.1.1
-CATEGORIES=	x11
+CATEGORIES=	x11 wayland
 MASTER_SITES=	https://git.sr.ht/~leon_plickat/${PORTNAME}/archive/${DISTVERSIONFULL}${EXTRACT_SUFX}?dummy=/
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Simple launcher panel for Wayland desktops
+WWW=		https://git.sr.ht/~leon_plickat/lavalauncher
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -17,10 +18,12 @@ LIB_DEPENDS=	libwayland-client.so:graphics/wayland \
 
 USES=		compiler:c11 gnome meson pkgconfig
 USE_GNOME=	cairo
+CFLAGS+=	-Wno-error=strict-prototypes # Clang 15, similar to wlclock
 PLIST_FILES=	bin/${PORTNAME}
 
 OPTIONS_DEFINE=	EPOLL INOTIFY LIBRSVG2 MANPAGES
 OPTIONS_DEFAULT=EPOLL INOTIFY LIBRSVG2 MANPAGES
+OPTIONS_EXCLUDE=${LIBRSVG2_DEFAULT:Mlegacy:C/.+/LIBRSVG2/}
 
 EPOLL_DESC=		Handle signals via epoll-shim
 EPOLL_LIB_DEPENDS=	libepoll-shim.so:devel/libepoll-shim

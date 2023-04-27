@@ -1,5 +1,3 @@
-# Created by: ayu <ayunyan@gmail.com>
-
 PORTNAME=	etqw
 PORTVERSION=	2.0.r1
 CATEGORIES=	games linux
@@ -11,6 +9,7 @@ EXTRACT_SUFX=	.run
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Enemy Territory: QUAKE Wars Demo Server for Linux
+WWW=		http://www.enemyterritory.com/
 
 # Converted from NO_CDROM
 LICENSE=	IDSOFTWARE

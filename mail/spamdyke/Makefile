@@ -1,13 +1,12 @@
-# Created by: Peter Kieser <peter@kieser.ca>
-
 PORTNAME=	spamdyke
 PORTVERSION=	5.0.1
-PORTREVISION=	8
+PORTREVISION=	9
 CATEGORIES=	mail
 MASTER_SITES=	http://www.spamdyke.org/releases/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Qmail filter for monitoring and intercepting SMTP connections
+WWW=		https://www.spamdyke.org/
 
 LICENSE=	GPLv2
 

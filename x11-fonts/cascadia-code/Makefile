@@ -1,11 +1,12 @@
 PORTNAME=	cascadia-code
-PORTVERSION=	2108.26
+PORTVERSION=	2111.01
 CATEGORIES=	x11-fonts
 MASTER_SITES=	https://github.com/microsoft/cascadia-code/releases/download/v${PORTVERSION}/
 DISTNAME=	CascadiaCode-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Monospaced font with programming ligatures
+WWW=		https://github.com/microsoft/cascadia-code
 
 LICENSE=	OFL11
 

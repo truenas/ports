@@ -1,8 +1,6 @@
-# Created by: Naram Qashat <cyberbotx@cyberbotx.com>
-
 PORTNAME=	tiemu3
 PORTVERSION=	3.03
-PORTREVISION=	10
+PORTREVISION=	13
 CATEGORIES=	emulators
 MASTER_SITES=	SF/gtktiemu/tiemu-linux/TIEmu%20${DISTVERSION}
 DISTNAME=	tiemu-${DISTVERSION}
@@ -10,6 +8,7 @@ EXTRACT_SUFX=	-nogdb.tar.gz
 
 MAINTAINER=	cyberbotx@cyberbotx.com
 COMMENT=	TI89(ti)/92(+)/V200 hand-helds emulator
+WWW=		http://lpg.ticalc.org/prj_tiemu/
 
 LICENSE=	GPLv2
 

@@ -1,13 +1,12 @@
-# Created by: Kimura Fuyuki <fuyuki@hadaly.org>
-
 PORTNAME=	m17n-lib
 PORTVERSION=	1.8.0
-PORTREVISION=	2
+PORTREVISION=	4
 CATEGORIES=	devel textproc
 MASTER_SITES=	SAVANNAH/m17n
 
 MAINTAINER=	nikola.lecic@anthesphoria.net
 COMMENT=	Library for the multilingual text handling
+WWW=		https://www.nongnu.org/m17n/
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING

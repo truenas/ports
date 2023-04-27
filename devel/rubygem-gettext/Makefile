@@ -1,23 +1,23 @@
-# Created by: Akinori MUSHA aka knu <knu@idaemons.org>
-
 PORTNAME=	gettext
-PORTVERSION=	3.4.1
+PORTVERSION=	3.4.3
 CATEGORIES=	devel rubygems
 MASTER_SITES=	RG
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Ruby implementation of the gettext library
+WWW=		https://ruby-gettext.github.io/
 
 LICENSE=	LGPL3 RUBY
 LICENSE_COMB=	dual
 LICENSE_FILE_LGPL3=	${WRKSRC}/doc/text/lgpl-3.0.txt
 LICENSE_FILE_RUBY=	${WRKSRC}/doc/text/ruby-license.txt
 
-RUN_DEPENDS=	rubygem-locale>=2.0.5:devel/rubygem-locale \
+RUN_DEPENDS=	rubygem-erubi>=0:www/rubygem-erubi \
+		rubygem-locale>=2.0.5:devel/rubygem-locale \
+		rubygem-prime>=0:math/rubygem-prime \
 		rubygem-text>=1.3.0:textproc/rubygem-text
 
 USES=		gem shebangfix
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

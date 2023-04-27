@@ -1,8 +1,6 @@
-# Created by: Hirohisa Yamaguchi <umq@ueo.co.jp>
-
 PORTNAME=	opendkim
 PORTVERSION=	2.10.3
-PORTREVISION=	12
+PORTREVISION=	16
 CATEGORIES=	mail security
 MASTER_SITES=	SF/${PORTNAME} \
 		SF/${PORTNAME}/Previous%20Releases \
@@ -10,6 +8,7 @@ MASTER_SITES=	SF/${PORTNAME} \
 
 MAINTAINER=	freebsd-ports@dan.me.uk
 COMMENT=	DKIM library and milter implementation
+WWW=		http://opendkim.org/
 
 LICENSE=	BSD3CLAUSE SENDMAIL
 LICENSE_COMB=	multi
@@ -85,7 +84,7 @@ OPENDBX_LIB_DEPENDS=	libopendbx.so:databases/opendbx
 
 OPENLDAP_DESC=		Store filter policies in LDAP
 OPENLDAP_CONFIGURE_WITH=openldap
-OPENLDAP_USE=		OPENLDAP=yes
+OPENLDAP_USES=		ldap
 
 POPAUTH_DESC=		Use POP authentication DB
 POPAUTH_CONFIGURE_ENABLE=	popauth

@@ -1,11 +1,13 @@
 PORTNAME=	gluonnlp
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.10.0
+PORTREVISION=	2
 CATEGORIES=	misc # machine-learning
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	MXNet-based toolkit to enable easy text, datasets preprocessing
+WWW=		https://gluon-nlp.mxnet.io/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

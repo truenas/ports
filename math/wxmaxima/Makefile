@@ -1,12 +1,11 @@
-# Created by: Nicola Vitale <nivit@email.it>
-
 PORTNAME=	wxmaxima
-PORTVERSION=	21.05.2
+PORTVERSION=	23.04.1
 DISTVERSIONPREFIX=	Version-
 CATEGORIES=	math
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	salvadore@FreeBSD.org
 COMMENT=	WxWidgets GUI for the computer algebra system maxima
+WWW=		https://wxmaxima-developers.github.io/wxmaxima/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -23,10 +22,10 @@ WX_CONF_ARGS=	absolute
 
 PLIST_SUB=	DESKTOPDIR=${DESKTOPDIR:S,${PREFIX}/,,}
 
-OPTIONS_DEFINE=	NLS DOCS
+OPTIONS_DEFINE=	DOCS NLS
 OPTIONS_SUB=	yes
 
-NLS_USES=	gettext
+NLS_USES=		gettext
 NLS_EXTRA_PATCHES_OFF=	${PATCHDIR}/extra-patch-CMakeLists.txt
 
 .include <bsd.port.mk>

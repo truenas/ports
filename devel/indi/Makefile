@@ -1,10 +1,12 @@
 PORTNAME=	indi
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.9.1
+DISTVERSION=	1.9.6
+PORTREVISION=	1
 CATEGORIES=	devel
 
 MAINTAINER=	acm@FreeBSD.org
 COMMENT=	Implementation of the Instrument-Neutral-Device-Interface protocol
+WWW=		https://github.com/indilib/indi
 
 LICENSE=	LGPL21
 

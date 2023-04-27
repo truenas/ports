@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	aeidon
-PORTVERSION=	1.10.1
+PORTVERSION=	1.12
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Reading, write and manipulate text-based subtitle files
+WWW=		https://github.com/otsaloma/gaupol
 
 LICENSE=	GPLv3+
 

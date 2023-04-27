@@ -1,12 +1,13 @@
 PORTNAME=	lcapy
 DISTVERSION=	g20171202
-PORTREVISION=	4
+PORTREVISION=	5
 PORTEPOCH=	1
 CATEGORIES=	cad python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	hrs@FreeBSD.org
 COMMENT=	Symbolic MDA Analysis Package for Linear Circuits
+WWW=		https://github.com/mph-/lcapy
 
 LICENSE=	LGPL21
 

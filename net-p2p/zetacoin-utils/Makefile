@@ -1,4 +1,5 @@
 MASTERDIR=	${.CURDIR}/../zetacoin
+PORTREVISION=	2
 PKGNAMESUFFIX=	-utils
 
 COMMENT=	Peer-to-Peer crypto currency with quick transactions (CLI and Utilities)

@@ -1,10 +1,11 @@
 PORTNAME=	cudatext
-PORTVERSION=	1.151.0
+PORTVERSION=	1.191.5
 CATEGORIES=	editors
 PKGNAMESUFFIX=	${LAZARUS_PKGNAMESUFFIX}
 
 MAINTAINER=	acm@FreeBSD.org
 COMMENT=	Cross-platform text editor, written in Lazarus
+WWW=		https://uvviewsoft.com/
 
 LICENSE=	MPL20
 
@@ -16,15 +17,15 @@ GH_ACCOUNT=	Alexey-T
 GH_PROJECT=	CudaText
 GH_TUPLE=	bgrabitmap:bgrabitmap:ace7e0e:bgrabitmap/bgrabitmap \
 		Alexey-T:Python-for-Lazarus:24d15bb:python4lazarus/python4lazarus \
-		Alexey-T:ATFlatControls:c536aa6:atflatcontrols/atflatcontrols  \
-		Alexey-T:ATSynEdit:dd39ef6:atsynedit/atsynedit \
-		Alexey-T:Emmet-Pascal:fb5b116:emmet/emmet \
-		Alexey-T:EControl:f59bc3a:econtrol/econtrol \
-		Alexey-T:ATSynEdit_Ex:4b17f2e:atsyneditex/atsyneditex \
-		Alexey-T:ATSynEdit_Cmp:58c613e:atsyneditcmp/atsyneditcmp \
+		Alexey-T:ATFlatControls:c5c59dd:atflatcontrols/atflatcontrols  \
+		Alexey-T:ATSynEdit:2712a42:atsynedit/atsynedit \
+		Alexey-T:Emmet-Pascal:6143720:emmet/emmet \
+		Alexey-T:EControl:a8e6d41:econtrol/econtrol \
+		Alexey-T:ATSynEdit_Ex:02c13b7:atsyneditex/atsyneditex \
+		Alexey-T:ATSynEdit_Cmp:c7f8c9a:atsyneditcmp/atsyneditcmp \
 		Alexey-T:ATBinHex-Lazarus:c63346b:atbinhex/atbinhex \
 		Alexey-T:UniqueInstance:753f823:uniqueinstance/uniqueinstance \
-		Alexey-T:EncConv:604d33a:encconv/encconv
+		Alexey-T:EncConv:401cdb6:encconv/encconv
 
 DOS2UNIX_FILES=	app/settings_default/default.json setup/debfiles/cudatext.desktop
 
@@ -57,9 +58,9 @@ post-patch:
 	${REINPLACE_CMD} 's|-512||g' ${WRKSRC}/setup/debfiles/${PORTNAME}.desktop
 	${REINPLACE_CMD} 's|%%DATADIR%%|${DATADIR}|g' ${WRKSRC}/app/proc_globdata.pas
 	${REINPLACE_CMD} 's|TEncoding.UTF8|True|g' ${WRKSRC}/app/formmain_py_pluginwork.inc
-	${REINPLACE_CMD} '636d' ${WRKSRC}/app/proc_miscutils.pas
+	${REINPLACE_CMD} 's|ifdef GTK2_IME_CODE|if defined(GTK2_IME_CODE) and not defined(freebsd)|g' ${WRKSRC}/atsynedit/atsynedit/atsynedit.pas
 
-do-install:	
+do-install:
 	${INSTALL_PROGRAM} ${WRKSRC}/app/${PORTNAME} ${STAGEDIR}${PREFIX}/bin/${PORTNAME}
 	${INSTALL_DATA} ${WRKSRC}/setup/debfiles/${PORTNAME}.desktop ${STAGEDIR}${PREFIX}/share/applications/${PORTNAME}.desktop
 	@${MKDIR} ${STAGEDIR}${PREFIX}/share/icons/hicolor/512x512/apps

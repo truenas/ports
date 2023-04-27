@@ -1,5 +1,3 @@
-# Created by: rfarmer@predatorlabs.net
-
 PORTNAME=	xml-commons
 DISTVERSION=	1.4.01
 CATEGORIES=	textproc java
@@ -9,9 +7,11 @@ EXTRACT_SUFX=	-bin.tar.gz
 
 MAINTAINER=	makc@FreeBSD.org
 COMMENT=	Provides common XML code for Apache projects
+WWW=		https://xerces.apache.org/xml-commons/
 
 USE_JAVA=	yes
 JAVA_RUN=	yes
+NO_ARCH=	yes
 NO_BUILD=	yes
 
 PLIST_FILES=	${JAVAJARDIR}/xml-apis-ext.jar \

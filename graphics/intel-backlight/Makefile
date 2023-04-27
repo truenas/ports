@@ -1,11 +1,11 @@
-# Created by: Michael Gmelin <freebsd@grem.de>
-
 PORTNAME=		intel-backlight
 DISTVERSION=		20200418
+PORTREVISION=		1
 CATEGORIES=		graphics
 
 MAINTAINER=		jmd@FreeBSD.org
 COMMENT=		Control backlight on various modern Intel(R) GPUs
+WWW=		https://github.com/FreeBSDDesktop/intel_backlight_fbsd
 
 LICENSE=		MIT
 LICENSE_FILE=		${WRKSRC}/COPYING

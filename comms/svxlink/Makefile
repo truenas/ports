@@ -1,12 +1,11 @@
-# Created by: shurd
-
 PORTNAME?=	svxlink
 PORTVERSION=	19.09.1
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	comms hamradio
 
 MAINTAINER=	hamradio@FreeBSD.org
 COMMENT?=	General purpose ham radio voice services
+WWW=		https://www.svxlink.org/
 
 LICENSE?=	GPLv2
 

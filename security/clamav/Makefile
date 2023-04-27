@@ -1,15 +1,18 @@
 PORTNAME=	clamav
-DISTVERSION=	0.104.1
+DISTVERSION=	1.0.1
+PORTREVISION=	2
 PORTEPOCH=	1
 CATEGORIES=	security
 MASTER_SITES=	https://www.clamav.net/downloads/production/
 
 MAINTAINER=	yasu@FreeBSD.org
 COMMENT=	Open-source (GPL) anti-virus engine (Regular Feature Release)
+WWW=		https://www.clamav.net/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING.txt
 
+BUILD_DEPENDS=	${RUST_DEFAULT}>=1.56.0:lang/${RUST_DEFAULT}
 LIB_DEPENDS=	libcurl.so:ftp/curl \
 		libjson-c.so:devel/json-c \
 		libmspack.so:archivers/libmspack \

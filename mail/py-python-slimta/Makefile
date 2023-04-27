@@ -1,11 +1,12 @@
 PORTNAME=	python-slimta
-PORTVERSION=	4.2.1
+PORTVERSION=	5.0.5
 CATEGORIES=	mail
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	nc@FreeBSD.org
 COMMENT=	Python libraries to send, receive, and queue email
+WWW=		https://www.slimta.org/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.md

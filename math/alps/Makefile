@@ -1,12 +1,13 @@
 PORTNAME=	alps
 DISTVERSIONPREFIX=	releases/
 DISTVERSION=	2.0.1
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	math
 PKGNAMEPREFIX=	coin-or-
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Abstract Library for Parallel Search (ALPS)
+WWW=		https://github.com/coin-or/CHiPPS-ALPS
 
 LICENSE=	EPL
 LICENSE_FILE=	${WRKSRC}/Alps/LICENSE

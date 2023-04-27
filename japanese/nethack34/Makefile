@@ -1,5 +1,3 @@
-# Created by: Akinori MUSHA aka knu <knu@idaemons.org>
-
 PORTNAME=	nethack
 PORTVERSION=	3.4.3
 PORTREVISION=	7
@@ -13,6 +11,7 @@ PATCH_DIST_STRIP=	-p1
 
 MAINTAINER=	CQG00620@nifty.ne.jp
 COMMENT=	Japanized NetHack
+WWW=		https://sourceforge.jp/projects/jnethack/
 
 WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}
 

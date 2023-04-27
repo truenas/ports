@@ -1,11 +1,12 @@
 PORTNAME=	fusepy
 PORTVERSION=	3.0.1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Simple ctypes bindings for FUSE
+WWW=		https://pypi.org/project/fusepy/
 
 LICENSE=	ISCL
 

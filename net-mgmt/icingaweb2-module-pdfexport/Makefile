@@ -1,20 +1,18 @@
 PORTNAME=	icingaweb2-module-pdfexport
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.9.0
-PORTREVISION=	2
+DISTVERSION=	0.10.2
+PORTREVISION=	3
 CATEGORIES=	net-mgmt www
 PKGNAMESUFFIX=	${PHP_PKGNAMESUFFIX}
 
 MAINTAINER=	joneum@FreeBSD.org
 COMMENT=	Icinga PDF Export
+WWW=		https://github.com/Icinga/icingaweb2-module-pdfexport
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-DEPRECATED=	Uses EOL Python 2.7 via www/chromium
-EXPIRATION_DATE=2021-06-23
-
-RUN_DEPENDS=	icingaweb2${PHP_PKGNAMESUFFIX}>=2.4.1:net-mgmt/icingaweb2@${PHP_FLAVOR} \
+RUN_DEPENDS=	icingaweb2${PHP_PKGNAMESUFFIX}>=2.11.4:net-mgmt/icingaweb2@${PHP_FLAVOR} \
 		chromium>0:www/chromium
 
 USES=		php:web,flavors

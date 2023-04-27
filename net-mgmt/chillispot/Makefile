@@ -1,8 +1,6 @@
-# Created by: Sevan Janiyan <venture37@geeklan.co.uk>
-
 PORTNAME=	chillispot
 PORTVERSION=	1.0
-PORTREVISION=	12
+PORTREVISION=	13
 CATEGORIES=	net-mgmt
 MASTER_SITES=	http://www.chillispot.info/download/ \
 		http://www.geeklan.co.uk/files/ \
@@ -10,6 +8,7 @@ MASTER_SITES=	http://www.chillispot.info/download/ \
 
 MAINTAINER=	venture37@geeklan.co.uk
 COMMENT=	Wireless LAN Access Point Controller
+WWW=		http://www.chillispot.info
 
 CONFLICTS=	coovachilli
 
@@ -27,15 +26,9 @@ OPTIONS_SINGLE_RADIUS=	FREERADIUS OPENRADIUS
 FREERADIUS_DESC=depend on FreeRADIUS
 OPENRADIUS_DESC=depend on OpenRADIUS
 
-APACHE_USE=	apache_run=22+
+APACHE_USES=	apache:run
 FREERADIUS_RUN_DEPENDS=	radiusd:net/freeradius
 OPENRADIUS_RUN_DEPENDS=	radiusd:net/openradius
-
-.include <bsd.port.pre.mk>
-
-.if ${CHOSEN_COMPILER_TYPE} == gcc && ${COMPILER_VERSION} <= 42
-CFLAGS+=	-fnested-functions
-.endif
 
 post-install:
 	${MKDIR} ${STAGEDIR}${DATADIR}
@@ -47,4 +40,4 @@ post-install:
 	${INSTALL_DATA} ${FILESDIR}/pf.conf.sample ${STAGEDIR}${DATADIR}
 	${INSTALL_DATA} ${FILESDIR}/ipfw-config.sample ${STAGEDIR}${DATADIR}
 
-.include <bsd.port.post.mk>
+.include <bsd.port.mk>

@@ -1,7 +1,7 @@
-TIMESTAMP = 1622931690
-SHA256 (zigtools-zls-0.1.0-226-g39d8718_GH0.tar.gz) = 3fcd98187947582dcd17fb0305c44c50d08ef032607be898f4bf2133e232385d
-SIZE (zigtools-zls-0.1.0-226-g39d8718_GH0.tar.gz) = 217073
-SHA256 (ziglibs-known-folders-0.7.0-6-ge179436_GH0.tar.gz) = 169b3d7ff2e649aefda9fff498c54ddfe12c790d30843f3d4d40a9e760309f50
-SIZE (ziglibs-known-folders-0.7.0-6-ge179436_GH0.tar.gz) = 6424
-SHA256 (ziglibs-zinput-0.1.0-16-g95106b1_GH0.tar.gz) = 0a6a8d2ce8ff21c7dba1e2918e9b997764446748d699f6be1f33aeaf6dd7bf37
-SIZE (ziglibs-zinput-0.1.0-16-g95106b1_GH0.tar.gz) = 4009
+TIMESTAMP = 1667304525
+SHA256 (zigtools-zls-0.10.0_GH0.tar.gz) = ad8c16721a10a55b759f0cd63243301565b948b1d48075e1fda89ccf264a2bdf
+SIZE (zigtools-zls-0.10.0_GH0.tar.gz) = 320226
+SHA256 (ziglibs-known-folders-0.7.0-20-g24845b0_GH0.tar.gz) = 38c7f6bee4e5e6515620068a6a7b2ac1b08a9337035fd5e6369ffe37e3787be7
+SIZE (ziglibs-known-folders-0.7.0-20-g24845b0_GH0.tar.gz) = 6628
+SHA256 (wolfpld-tracy-v0.8.2.1_GH0.tar.gz) = 97f478579efa1f5ce4c8619014a20327010fea122c21248701fe2bbb46ec1c1f
+SIZE (wolfpld-tracy-v0.8.2.1_GH0.tar.gz) = 5400396

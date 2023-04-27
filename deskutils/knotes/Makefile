@@ -1,14 +1,13 @@
 PORTNAME=	knotes
 DISTVERSION=	${KDE_APPLICATIONS_VERSION}
+PORTREVISION=	1
 CATEGORIES=	deskutils kde kde-applications
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	Popup notes
+WWW=		https://www.kde.org/
 
 LICENSE=	LGPL21
-
-DEPRECATED=	Uses EOL Python 2.7 via www/qt5-webengine
-EXPIRATION_DATE=2021-06-23
 
 LIB_DEPENDS=	libical.so:devel/libical
 
@@ -23,9 +22,9 @@ USE_KDE=	attica auth bookmarks codecs completion config configwidgets \
 USE_KDE+=	akonadi akonadicontacts akonadinotes akonadisearch  \
 		calendarcore calendarutils contacts grantleetheme imap kontactinterface libkdepim \
 		mime pimcommon pimtextedit \
-		kdepim-runtime5_run
+		kdepim-runtime5:run
 USE_QT=		concurrent core dbus gui network printsupport widgets x11extras xml \
-		buildtools_build qmake_build
+		buildtools:build qmake:build
 USE_XORG=	ice sm x11 xext
 USE_LDCONFIG=	yes
 

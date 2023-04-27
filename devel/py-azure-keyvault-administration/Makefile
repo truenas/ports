@@ -1,11 +1,12 @@
 PORTNAME=	azure-keyvault-administration
 DISTVERSION=	4.0.0b3
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dbaio@FreeBSD.org
 COMMENT=	Microsoft Azure Key Vault Administration Client Library for Python
+WWW=		https://pypi.org/project/azure-keyvault-administration/
 
 LICENSE=	MIT
 

@@ -1,13 +1,17 @@
 PORTNAME=	mathgl
 DISTVERSION=	2.5
+PORTREVISION=	5
 CATEGORIES=	math graphics
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/${PORTNAME}%20${PORTVERSION}/
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Library for high-quality scientific data visualization
+WWW=		http://mathgl.sourceforge.net
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
+
+BROKEN_armv7=	error: unknown FP unit 'sse', see https://sourceforge.net/p/mathgl/bugs/49/
 
 LIB_DEPENDS=	libgif.so:graphics/giflib \
 		libgsl.so:math/gsl \
@@ -15,12 +19,13 @@ LIB_DEPENDS=	libgif.so:graphics/giflib \
 		libhpdf.so:print/libharu \
 		libltdl.so:devel/libltdl \
 		libpng.so:graphics/png \
-		libsz.so:science/szip
+		libsz.so:science/libaec
 
-USES=		cmake compiler:c++11-lang gettext-runtime gl jpeg xorg
+USES=		cmake compiler:c++11-lang dos2unix gettext-runtime gl jpeg xorg
 USE_GL=		gl glu glut
 USE_XORG=	xi xmu
 USE_LDCONFIG=	yes
+DOS2UNIX_GLOB=	*.cpp *.h
 
 .for v in double gif glut gsl hdf5 jpeg ltdl mgl2 opengl pdf png zlib
 CMAKE_ARGS+=	-Denable-${v}=ON
@@ -53,7 +58,7 @@ MPI_CMAKE_BOOL=		enable-mpi
 MPI_LIB_DEPENDS=	libmpi.so:net/openmpi
 
 QT5_CMAKE_BOOL=		enable-qt5
-QT5_USE=		QT=core,gui,opengl,printsupport,widgets,buildtools_build,qmake_build
+QT5_USE=		QT=core,gui,opengl,printsupport,widgets,buildtools:build,qmake:build
 QT5_USES=		desktop-file-utils qt:5 shared-mime-info
 
 FLTK_CMAKE_BOOL=	enable-fltk

@@ -6,6 +6,7 @@ DISTNAME=	jfrog-${PORTNAME}-oss-${PORTVERSION}
 
 MAINTAINER=	dharrigan@gmail.com
 COMMENT=	Universal Artifact Repository Manager
+WWW=		https://www.jfrog.com/artifactory
 
 LICENSE=	GPLv3 APACHE20
 LICENSE_COMB=	multi
@@ -20,7 +21,7 @@ USES=		cpe shebangfix zip
 CPE_VENDOR=	jfrog
 SHEBANG_FILES=	bin/artifactory.sh
 USE_JAVA=	yes
-JAVA_VERSION=	1.8+
+JAVA_VERSION=	8+
 JAVA_VENDOR=	openjdk
 NO_BUILD=	yes
 NO_ARCH=	yes

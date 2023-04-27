@@ -13,6 +13,7 @@
 @sample %%ETCDIR%%.d/charon/cmac.conf.sample
 @sample %%ETCDIR%%.d/charon/constraints.conf.sample
 @sample %%ETCDIR%%.d/charon/counters.conf.sample
+%%CTR%%@sample %%ETCDIR%%.d/charon/ctr.conf.sample
 %%CURL%%@sample %%ETCDIR%%.d/charon/curl.conf.sample
 @sample %%ETCDIR%%.d/charon/curve25519.conf.sample
 @sample %%ETCDIR%%.d/charon/des.conf.sample
@@ -35,6 +36,7 @@
 %%GCM%%@sample %%ETCDIR%%.d/charon/gcm.conf.sample
 %%EAPAKA3GPP2%%@sample %%ETCDIR%%.d/charon/gmp.conf.sample
 @sample %%ETCDIR%%.d/charon/hmac.conf.sample
+%%KDF%%@sample %%ETCDIR%%.d/charon/kdf.conf.sample
 %%IPSECKEY%%@sample %%ETCDIR%%.d/charon/ipseckey.conf.sample
 %%KERNELLIBIPSEC%%@sample %%ETCDIR%%.d/charon/kernel-libipsec.conf.sample
 @sample %%ETCDIR%%.d/charon/kernel-pfkey.conf.sample
@@ -134,6 +136,8 @@ lib/ipsec/plugins/libstrongswan-constraints.la
 lib/ipsec/plugins/libstrongswan-constraints.so
 lib/ipsec/plugins/libstrongswan-counters.la
 lib/ipsec/plugins/libstrongswan-counters.so
+%%CTR%%lib/ipsec/plugins/libstrongswan-ctr.la
+%%CTR%%lib/ipsec/plugins/libstrongswan-ctr.so
 %%CURL%%lib/ipsec/plugins/libstrongswan-curl.la
 %%CURL%%lib/ipsec/plugins/libstrongswan-curl.so
 lib/ipsec/plugins/libstrongswan-curve25519.la
@@ -180,6 +184,8 @@ lib/ipsec/plugins/libstrongswan-hmac.la
 lib/ipsec/plugins/libstrongswan-hmac.so
 %%IPSECKEY%%lib/ipsec/plugins/libstrongswan-ipseckey.la
 %%IPSECKEY%%lib/ipsec/plugins/libstrongswan-ipseckey.so
+%%KDF%%lib/ipsec/plugins/libstrongswan-kdf.la
+%%KDF%%lib/ipsec/plugins/libstrongswan-kdf.so
 %%KERNELLIBIPSEC%%lib/ipsec/plugins/libstrongswan-kernel-libipsec.la
 %%KERNELLIBIPSEC%%lib/ipsec/plugins/libstrongswan-kernel-libipsec.so
 lib/ipsec/plugins/libstrongswan-kernel-pfkey.la
@@ -266,7 +272,6 @@ lib/ipsec/plugins/libstrongswan-x509.so
 %%XAUTH%%lib/ipsec/plugins/libstrongswan-xauth-pam.so
 lib/ipsec/plugins/libstrongswan-xcbc.la
 lib/ipsec/plugins/libstrongswan-xcbc.so
-libexec/ipsec/_copyright
 libexec/ipsec/_updown
 libexec/ipsec/charon
 %%LOADTESTER%%libexec/ipsec/load-tester
@@ -277,6 +282,8 @@ libexec/ipsec/stroke
 libexec/ipsec/whitelist
 %%PKI%%man/man1/pki---acert.1.gz
 %%PKI%%man/man1/pki---dn.1.gz
+%%PKI%%man/man1/pki---est.1.gz
+%%PKI%%man/man1/pki---estca.1.gz
 %%PKI%%man/man1/pki---gen.1.gz
 %%PKI%%man/man1/pki---issue.1.gz
 %%PKI%%man/man1/pki---keyid.1.gz
@@ -284,6 +291,8 @@ libexec/ipsec/whitelist
 %%PKI%%man/man1/pki---print.1.gz
 %%PKI%%man/man1/pki---pub.1.gz
 %%PKI%%man/man1/pki---req.1.gz
+%%PKI%%man/man1/pki---scep.1.gz
+%%PKI%%man/man1/pki---scepca.1.gz
 %%PKI%%man/man1/pki---self.1.gz
 %%PKI%%man/man1/pki---signcrl.1.gz
 %%PKI%%man/man1/pki---verify.1.gz
@@ -329,6 +338,7 @@ sbin/ipsec
 %%GCM%%%%DATADIR%%/templates/config/plugins/gcm.conf
 %%EAPAKA3GPP2%%%%DATADIR%%/templates/config/plugins/gmp.conf
 %%DATADIR%%/templates/config/plugins/hmac.conf
+%%KDF%%%%DATADIR%%/templates/config/plugins/kdf.conf
 %%IPSECKEY%%%%DATADIR%%/templates/config/plugins/ipseckey.conf
 %%KERNELLIBIPSEC%%%%DATADIR%%/templates/config/plugins/kernel-libipsec.conf
 %%DATADIR%%/templates/config/plugins/kernel-pfkey.conf
@@ -345,6 +355,7 @@ sbin/ipsec
 %%DATADIR%%/templates/config/plugins/pgp.conf
 %%DATADIR%%/templates/config/plugins/pkcs1.conf
 %%PKCS11%%%%DATADIR%%/templates/config/plugins/pkcs11.conf
+%%CTR%%%%DATADIR%%/templates/config/plugins/ctr.conf
 %%DATADIR%%/templates/config/plugins/pkcs12.conf
 %%DATADIR%%/templates/config/plugins/pkcs7.conf
 %%DATADIR%%/templates/config/plugins/pkcs8.conf

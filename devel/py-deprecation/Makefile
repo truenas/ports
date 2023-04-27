@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	deprecation
 PORTVERSION=	2.1.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Library to handle automated deprecations
+WWW=		https://github.com/briancurtin/deprecation
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

@@ -14,10 +14,13 @@ LLVM_COMMANDS=	\
 		llvm-cov \
 		llvm-cvtres \
 		llvm-cxxmap \
+		llvm-debuginfo-analyzer \
+		llvm-debuginfod-find \
 		llvm-diff \
 		llvm-dis \
 		llvm-dlltool \
 		llvm-dwarfdump \
+		llvm-dwarfutil \
 		llvm-dwp \
 		llvm-exegesis \
 		llvm-extract \
@@ -45,6 +48,8 @@ LLVM_COMMANDS=	\
 		llvm-readelf \
 		llvm-readobj \
 		llvm-reduce \
+		llvm-remark-size-diff \
+		llvm-remarkutil \
 		llvm-rtdyld \
 		llvm-sim \
 		llvm-size \
@@ -55,14 +60,15 @@ LLVM_COMMANDS=	\
 		llvm-symbolizer \
 		llvm-tapi-diff \
 		llvm-tblgen \
+		llvm-tli-checker \
 		llvm-undname \
 		llvm-windres \
 		llvm-xray \
 		opt \
-		sancov \
-		split-file
+		sancov
 
 CLANG_COMMANDS=	\
+		amdgpu-arch \
 		analyze-build \
 		c-index-test \
 		clang \
@@ -71,14 +77,16 @@ CLANG_COMMANDS=	\
 		clang-cpp \
 		clang-extdef-mapping \
 		clang-format \
-		clang-nvlink-wrapper \
+		clang-linker-wrapper \
 		clang-offload-bundler \
-		clang-offload-wrapper \
+		clang-offload-packager \
 		clang-repl \
 		clang-scan-deps \
+		clang-tblgen \
 		diagtool \
 		hmaptool \
 		intercept-build \
+		nvptx-arch \
 		scan-build \
 		scan-build-py \
 		scan-view
@@ -88,8 +96,10 @@ EXTRAS_COMMANDS= \
 		clang-apply-replacements \
 		clang-change-namespace \
 		clang-doc \
+		clang-include-cleaner \
 		clang-include-fixer \
 		clang-move \
+		clang-pseudo \
 		clang-query \
 		clang-rename \
 		clang-reorder-fields \
@@ -99,10 +109,11 @@ EXTRAS_COMMANDS= \
 		pp-trace
 
 FLANG_COMMANDS=	\
+		bbc \
 		f18-parse-demo \
 		fir-opt \
-		flang \
 		flang-new \
+		flang-to-external-fc \
 		tco
 
 LIT_COMMANDS=	\
@@ -113,8 +124,6 @@ LIT_COMMANDS=	\
 LLD_COMMANDS=	\
 		ld.lld \
 		ld64.lld \
-		ld64.lld.darwinnew \
-		ld64.lld.darwinold \
 		lld \
 		lld-link \
 		wasm-ld
@@ -130,9 +139,13 @@ MLIR_COMMANDS=	\
 		mlir-cpu-runner \
 		mlir-lsp-server \
 		mlir-opt \
+		mlir-pdll \
+		mlir-pdll-lsp-server \
 		mlir-reduce \
 		mlir-tblgen \
-		mlir-translate
+		mlir-translate \
+		tblgen-lsp-server
 
 OPENMP_COMMANDS=	\
-		llvm-omp-device-info
+		llvm-omp-device-info \
+		llvm-omp-kernel-replay

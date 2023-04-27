@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	types-docutils
-PORTVERSION=	0.17.1
+PORTVERSION=	0.19.1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Typing stubs for docutils
+WWW=		https://github.com/python/typeshed/tree/main/stubs/docutils
 
 LICENSE=	APACHE20
 

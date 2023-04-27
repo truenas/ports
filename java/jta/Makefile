@@ -1,5 +1,3 @@
-# Created by: Alex Dupre <ale@FreeBSD.org>
-
 PORTNAME=	jta
 PORTVERSION=	1.0.1
 CATEGORIES=	java devel
@@ -8,6 +6,7 @@ DISTNAME=	${PORTNAME}-spec${PORTVERSION:S/./_/g}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Java Transaction API (JTA)
+WWW=		http://www.oracle.com/technetwork/java/javaee/tech/jta-138684.html
 
 # Converted from NO_CDROM
 LICENSE=	jta

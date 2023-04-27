@@ -1,13 +1,12 @@
-# Created by: GreenDog <fiziologus@gmail.com>
-
 PORTNAME=	fife
 PORTVERSION=	0.4.2
-PORTREVISION=	1
+PORTREVISION=	4
 CATEGORIES=	games
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	fiziologus@gmail.com
 COMMENT=	Flexible Isometric Free Engine
+WWW=		https://www.fifengine.net/
 
 LICENSE=	LGPL21+
 LICENSE_FILE=	${WRKSRC}/LICENSE.md

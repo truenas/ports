@@ -1,10 +1,13 @@
 PORTNAME=	vault
-PORTVERSION=	1.8.2
+PORTVERSION=	1.8.7
 DISTVERSIONPREFIX=	v
+PORTREVISION=	12
 CATEGORIES=	security
 
-MAINTAINER=	swills@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
+# co-maintainer: brd
 COMMENT=	Tool for securely accessing secrets
+WWW=		https://vaultproject.io/
 
 LICENSE=	MPL20
 LICENSE_FILE=	${WRKSRC}/LICENSE

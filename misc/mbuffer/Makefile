@@ -1,12 +1,11 @@
-# Created by: Rong-En Fan <rafan@FreeBSD.org>
-
 PORTNAME=	mbuffer
-PORTVERSION=	20211018
+PORTVERSION=	20220418
 CATEGORIES=	misc
 MASTER_SITES=	http://www.maier-komor.de/software/mbuffer/
 
 MAINTAINER=	loader@FreeBSD.org
 COMMENT=	Tool for buffering data streams
+WWW=		https://www.maier-komor.de/mbuffer.html
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/LICENSE

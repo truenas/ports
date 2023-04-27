@@ -3,6 +3,7 @@ include/qtermwidget5/Filter.h
 include/qtermwidget5/KeyboardTranslator.h
 include/qtermwidget5/qtermwidget.h
 include/qtermwidget5/qtermwidget_export.h
+include/qtermwidget5/qtermwidget_interface.h
 include/qtermwidget5/qtermwidget_version.h
 lib/cmake/qtermwidget5/qtermwidget5-config-version.cmake
 lib/cmake/qtermwidget5/qtermwidget5-config.cmake
@@ -45,6 +46,7 @@ libdata/pkgconfig/qtermwidget5.pc
 %%DATADIR%%5/kb-layouts/macbook.keytab
 %%DATADIR%%5/kb-layouts/solaris.keytab
 %%DATADIR%%5/kb-layouts/vt420pc.keytab
+%%DATADIR%%5/translations/qtermwidget_ar.qm
 %%DATADIR%%5/translations/qtermwidget_arn.qm
 %%DATADIR%%5/translations/qtermwidget_ast.qm
 %%DATADIR%%5/translations/qtermwidget_bg.qm
@@ -53,6 +55,7 @@ libdata/pkgconfig/qtermwidget5.pc
 %%DATADIR%%5/translations/qtermwidget_cy.qm
 %%DATADIR%%5/translations/qtermwidget_da.qm
 %%DATADIR%%5/translations/qtermwidget_de.qm
+%%DATADIR%%5/translations/qtermwidget_de_CH.qm
 %%DATADIR%%5/translations/qtermwidget_el.qm
 %%DATADIR%%5/translations/qtermwidget_es.qm
 %%DATADIR%%5/translations/qtermwidget_et.qm
@@ -63,6 +66,7 @@ libdata/pkgconfig/qtermwidget5.pc
 %%DATADIR%%5/translations/qtermwidget_hu.qm
 %%DATADIR%%5/translations/qtermwidget_it.qm
 %%DATADIR%%5/translations/qtermwidget_ja.qm
+%%DATADIR%%5/translations/qtermwidget_ko.qm
 %%DATADIR%%5/translations/qtermwidget_lt.qm
 %%DATADIR%%5/translations/qtermwidget_nb_NO.qm
 %%DATADIR%%5/translations/qtermwidget_nl.qm

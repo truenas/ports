@@ -1,11 +1,12 @@
 PORTNAME=	psindustrializer
 DISTVERSION=	0.2.7
-PORTREVISION=	3
+PORTREVISION=	7
 CATEGORIES=	audio
 MASTER_SITES=	SF/industrializer/
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Percussion sounds synthesizer using physical modelling
+WWW=		https://sourceforge.net/projects/industrializer/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

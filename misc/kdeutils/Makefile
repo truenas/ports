@@ -1,9 +1,11 @@
 PORTNAME=	kdeutils
 DISTVERSION=	${KDE_APPLICATIONS_VERSION}
+PORTREVISION=	1
 CATEGORIES=	misc kde
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	Collection of utilities for KDE
+WWW=		https://www.kde.org/applications/utilities/
 
 USES=		kde:5 metaport
 

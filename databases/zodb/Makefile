@@ -1,12 +1,13 @@
 PORTNAME=	zodb
-PORTVERSION=	5.6.0
+PORTVERSION=	5.8.0
 CATEGORIES=	databases python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	ZODB-${PORTVERSION}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Python object-oriented database
+WWW=		https://github.com/zopefoundation/zodb
 
 LICENSE=	ZPL21
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -20,7 +21,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}persistent>=4.4.0:devel/py-persistent@${PY_F
 		${PYTHON_PKGNAMEPREFIX}zope.interface>=0:devel/py-zope.interface@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}zodbpickle>=1.0.1:databases/py-zodbpickle@${PY_FLAVOR}
 
-USES=		python:3.6+
+USES=		python:3.7+
 USE_PYTHON=	autoplist concurrent distutils
 
 .include <bsd.port.mk>

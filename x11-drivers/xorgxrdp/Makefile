@@ -1,6 +1,8 @@
 PORTNAME=	xorgxrdp
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.2.17
+DISTVERSION=	0.9.19
+# Be sure to bump PORTREVISION after xorg-server update to perform force rebuild
+PORTREVISION=	0
 CATEGORIES=	x11-drivers
 DIST_SUBDIR=	xrdp
 
@@ -8,6 +10,7 @@ PATCH_SITES=	https://github.com/${GH_ACCOUNT}/${GH_PROJECT}/commit/
 
 MAINTAINER=	meta@FreeBSD.org
 COMMENT=	X.Org driver enabling use through an RDP session with xrdp
+WWW=		http://www.xrdp.org/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -21,11 +24,12 @@ USE_LDCONFIG=	yes
 USE_GITHUB=	yes
 
 GH_ACCOUNT=	neutrinolabs
-GH_TUPLE=	neutrinolabs:xrdp:v0.9.17:xrdp
+GH_TUPLE=	neutrinolabs:xrdp:v0.9.20:xrdp
 GNU_CONFIGURE=	yes
 INSTALL_TARGET=	install-strip
 
 CONFIGURE_ENV=	XRDP_CFLAGS=-I${WRKSRC_xrdp}/common
+CONFLICTS=	xorgxrdp-devel
 
 OPTIONS_DEFINE=	DEBUG DRI3
 OPTIONS_DEFAULT=
@@ -33,6 +37,7 @@ OPTIONS_DEFAULT=
 DRI3_DESC=	DRI3/Glamor OpenGL Support
 DRI3_CONFIGURE_ENABLE=	glamor
 DRI3_LIB_DEPENDS=	libepoxy.so:graphics/libepoxy
+DRI3_CFLAGS=		-I${LOCALBASE}/include/libdrm
 DRI3_SUB_FILES=		pkg-message
 
 post-patch-DEBUG-on:

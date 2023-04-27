@@ -1,12 +1,11 @@
-# Created by: Dominik Brettnacher <domi@nonsensss.de>
-
 PORTNAME=	xsane
 PORTVERSION=	0.999
-PORTREVISION=	6
+PORTREVISION=	7
 CATEGORIES=	graphics
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Gtk-based X11 frontend for SANE (Scanner Access Now Easy)
+WWW=		https://gitlab.com/sane-project/frontend/xsane
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/xsane.COPYING

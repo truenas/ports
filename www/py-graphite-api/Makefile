@@ -1,14 +1,13 @@
-# Created by: Dave Cottlehuber <dch@FreeBSD.org>
-
 PORTNAME=	graphite-api
 PORTVERSION=	1.1.3
 PORTREVISION=	2
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dch@FreeBSD.org
 COMMENT=	Graphite-web, without the interface - just the rendering HTTP API
+WWW=		https://github.com/brutasse/graphite-api
 
 LICENSE=	APACHE20
 

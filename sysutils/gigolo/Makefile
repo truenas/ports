@@ -1,12 +1,12 @@
-# Created by: Rusmir Dusko <nemysis@FreeBSD.org>
-
 PORTNAME=	gigolo
 PORTVERSION=	0.5.2
+PORTREVISION=	1
 CATEGORIES=	sysutils
 MASTER_SITES=	XFCE/apps
 
 MAINTAINER=	xfce@FreeBSD.org
 COMMENT=	Frontend to easily manage filesystem connections
+WWW=		https://docs.xfce.org/apps/gigolo/start
 
 LICENSE=	GPLv2
 

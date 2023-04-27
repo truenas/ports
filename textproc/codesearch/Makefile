@@ -1,10 +1,12 @@
 PORTNAME=	codesearch
 DISTVERSIONPREFIX=	v
 DISTVERSION=	1.1.0
+PORTREVISION=	12
 CATEGORIES=	textproc
 
 MAINTAINER=	eborisch@gmail.com
 COMMENT=	Fast (indexed) text search tool from Google
+WWW=		https://github.com/google/codesearch
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

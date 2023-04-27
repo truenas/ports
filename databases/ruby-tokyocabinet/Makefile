@@ -1,5 +1,3 @@
-# Created by: Damian Gerow <dgerow@afflictions.org>
-
 PORTNAME=	tokyocabinet
 PORTVERSION=	1.31
 CATEGORIES=	databases ruby
@@ -10,11 +8,11 @@ DIST_SUBDIR=	ruby
 
 MAINTAINER=	dgerow@afflictions.org
 COMMENT=	Ruby interface to the Tokyo Cabinet DB engine
+WWW=		https://dbmx.net/tokyocabinet/
 
 LIB_DEPENDS=	libtokyocabinet.so:databases/tokyocabinet
 
-USE_RUBY=	yes
-USE_RUBY_EXTCONF=	yes
+USES=	ruby:extconf
 
 INSTALL_TARGET=	site-install
 

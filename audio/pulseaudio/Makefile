@@ -1,16 +1,16 @@
-# Created by: Joe Marcus Clarke <marcus@FreeBSD.org>
 #
 # !!!NOTE!!! Any PORTVERSION update to this port must be accompanied by
 # PORTREVISION bumps of depending ports.
 
 PORTNAME=	pulseaudio
 DISTVERSION=	14.2
-PORTREVISION=	3
+PORTREVISION=	5
 CATEGORIES=	audio
 MASTER_SITES=	https://freedesktop.org/software/pulseaudio/releases/
 
 MAINTAINER=	desktop@FreeBSD.org
 COMMENT=	Sound server for UNIX
+WWW=		https://pulseaudio.org/
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/LGPL
@@ -47,6 +47,7 @@ CONFIGURE_ARGS=	--localstatedir=/var \
 		--disable-esound \
 		--disable-udev \
 		--disable-gtk3 \
+		--disable-gconf \
 		--disable-systemd-daemon \
 		--disable-systemd-journal \
 		--disable-systemd-login \
@@ -57,12 +58,10 @@ USERS=		pulse
 GROUPS=		pulse pulse-access pulse-rt
 
 OPTIONS_SUB=	yes
-OPTIONS_DEFINE=	AVAHI GCONF GSETTINGS SIMD TEST X11
+OPTIONS_DEFINE=	AVAHI GSETTINGS SIMD TEST X11
 OPTIONS_DEFAULT=AVAHI SIMD SIMPLE SOXR SPEEX WEBRTC_AEC X11
 AVAHI_CONFIGURE_ENABLE=	avahi
 AVAHI_LIB_DEPENDS=	libavahi-client.so:net/avahi-app
-GCONF_CONFIGURE_ENABLE=	gconf
-GCONF_USE=	GNOME=gconf2
 GSETTINGS_DESC=	GSettings configuration backend support
 GSETTINGS_CONFIGURE_ENABLE=	gsettings
 GSETTINGS_VARS=	GLIB_SCHEMAS=org.freedesktop.pulseaudio.gschema.xml
@@ -113,6 +112,7 @@ post-patch:
 		-e 's|--directory|-d|g' \
 		${WRKSRC}/src/utils/pa-info
 	@${REINPLACE_CMD} -e 's|-Wmissing-include-dirs||g' \
+		-e 's|main ()|main (void)|g' \
 		${WRKSRC}/configure
 
 pre-install-TEST-on: do-test

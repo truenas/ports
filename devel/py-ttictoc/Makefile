@@ -2,11 +2,12 @@ PORTNAME=	ttictoc
 PORTVERSION=	0.5.6
 PORTREVISION=	1
 CATEGORIES=	devel
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	gmm@tutanota.com
 COMMENT=	Time execution of blocks of code
+WWW=		https://github.com/hector-sab/ttictoc
 
 LICENSE=	MIT
 

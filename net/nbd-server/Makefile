@@ -1,7 +1,5 @@
-# Created by: Christian Laursen <xi@borderworlds.dk>
-
 PORTNAME=	nbd
-PORTVERSION=	3.23
+PORTVERSION=	3.24
 PORTEPOCH=	1
 CATEGORIES=	net
 MASTER_SITES=	SF
@@ -9,6 +7,7 @@ PKGNAMESUFFIX=	-server
 
 MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Server for the Linux network block device (nbd)
+WWW=		http://nbd.sourceforge.net/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -26,9 +25,10 @@ GNUTLS_CONFIGURE_WITH=	gnutls
 GNUTLS_BUILD_DEPENDS=	gnutls>0:security/gnutls
 GNUTLS_RUN_DEPENDS=	gnutls>0:security/gnutls
 
-PLIST_FILES=	bin/nbd-server bin/nbd-trdump \
+PLIST_FILES=	bin/nbd-server bin/nbd-trdump bin/nbd-trplay \
 		man/man1/nbd-server.1.gz \
 		man/man1/nbd-trdump.1.gz \
+		man/man1/nbd-trplay.1.gz \
 		man/man5/nbd-server.5.gz \
 		man/man5/nbdtab.5.gz \
 		man/man8/nbd-client.8.gz

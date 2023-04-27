@@ -1,18 +1,17 @@
-# Created by: Clement Laforet
-
 PORTNAME=	haproxy
-DISTVERSION=	1.8.30
+DISTVERSION=	1.8.31
 CATEGORIES=	net www
 MASTER_SITES=	http://www.haproxy.org/download/1.8/src/
 PKGNAMESUFFIX=	18
 
 MAINTAINER=	demon@FreeBSD.org
 COMMENT=	Reliable, high performance TCP/HTTP load balancer
+WWW=		https://www.haproxy.org
 
 LICENSE=	GPLv2 LGPL21
 LICENSE_COMB=	multi
 
-CONFLICTS_INSTALL=	haproxy haproxy-devel haproxy17 haproxy19 haproxy20 haproxy21
+CONFLICTS_INSTALL=	haproxy haproxy-devel haproxy17 haproxy20
 
 USES=		cpe gmake
 USE_RC_SUBR=	haproxy

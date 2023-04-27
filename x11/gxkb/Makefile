@@ -1,12 +1,12 @@
-# Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
-
 PORTNAME=	gxkb
 PORTVERSION=	0.9.3
+PORTREVISION=	1
 CATEGORIES=	x11
 MASTER_SITES=	SF/${PORTNAME}
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	X11 keyboard layout indicator and switcher
+WWW=		https://zen-tools.github.io/gxkb/
 
 LICENSE=	GPLv2
 
@@ -17,6 +17,8 @@ GNU_CONFIGURE=	yes
 USE_GNOME=	gdkpixbuf2 glib20
 
 PORTDOCS=	AUTHORS NEWS
+
+PORTSCOUT=	skipv:0.9.4	# identical to 0.9.3 but RU and BY flags removed
 
 OPTIONS_DEFINE=	DOCS GTK2
 GTK2_DESC=	Build against GTK version 2, not 3

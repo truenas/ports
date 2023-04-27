@@ -1,9 +1,11 @@
 PORTNAME=	biostar-tools
 PORTVERSION=	1.10.1
+PORTREVISION=	2
 CATEGORIES=	biology python
 
 MAINTAINER=	jwb@FreeBSD.org
 COMMENT=	Meta-port for Biostar Handbook tools
+WWW=		https://www.biostarhandbook.com
 
 LICENSE=	BSD2CLAUSE
 

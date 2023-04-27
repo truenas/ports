@@ -1,5 +1,3 @@
-# Created by: Juergen Lock <nox@FreeBSD.org>
-
 PORTNAME=	vdr-plugin-osdteletext
 PORTVERSION=	0.9.2
 PORTREVISION=	7
@@ -9,6 +7,7 @@ DISTNAME=	${PORTNAME:S/-plugin-/-/}-${DISTVERSIONPREFIX}${DISTVERSION}${DISTVERS
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Video Disk Recorder - OSD teletext plugin
+WWW=		https://projects.vdr-developer.org/projects/plg-osdteletext
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

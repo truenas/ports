@@ -1,9 +1,11 @@
 PORTNAME=	mpv-mpris
-DISTVERSION=	0.6
+DISTVERSION=	1.0
+PORTREVISION=	1
 CATEGORIES=	multimedia
 
 MAINTAINER=	tcberner@FreeBSD.org
 COMMENT=	MPRIS plugin for mpv
+WWW=		https://github.com/hoyon/mpv-mpris
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -11,7 +13,7 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 BUILD_DEPENDS=	mpv:multimedia/mpv
 RUN_DEPENDS=	mpv:multimedia/mpv
 
-USES=		compiler:c11 gettext-runtime gnome pkgconfig
+USES=		compiler:c11 gettext-runtime gmake gnome pkgconfig
 USE_GNOME=	glib20
 USE_GITHUB=	yes
 GH_ACCOUNT=	hoyon

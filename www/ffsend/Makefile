@@ -1,11 +1,12 @@
 PORTNAME=	ffsend
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.2.74
-PORTREVISION=	2
+PORTREVISION=	16
 CATEGORIES=	www
 
-MAINTAINER=	0mp@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Easily and securely share files from the command line via Firefox Send
+WWW=		https://gitlab.com/timvisee/ffsend
 
 LICENSE=	APACHE20 BSD2CLAUSE BSD3CLAUSE CC0-1.0 FUCHSIACPRNG GPLv3 ISCL \
 		MIT MPL20 UNLICENSE ZLIB

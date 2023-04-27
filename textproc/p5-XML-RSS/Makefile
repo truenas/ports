@@ -1,13 +1,12 @@
-# Created by: Ade Lovett <ade@FreeBSD.org>
-
 PORTNAME=	XML-RSS
 PORTVERSION=	1.62
 CATEGORIES=	textproc perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
-MAINTAINER=	swills@FreeBSD.org
+MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Perl extension to manage RDF Site Summary (RSS) files
+WWW=		https://metacpan.org/release/XML-RSS
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE

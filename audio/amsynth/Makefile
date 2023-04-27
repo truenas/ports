@@ -1,11 +1,12 @@
 PORTNAME=	amsynth
 DISTVERSION=	1.11.0
-PORTREVISION=	2
+PORTREVISION=	4
 CATEGORIES=	audio
 MASTER_SITES=	https://github.com/amsynth/amsynth/releases/download/release-${DISTVERSION}/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Analog modelling software synth
+WWW=		https://amsynth.github.io/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

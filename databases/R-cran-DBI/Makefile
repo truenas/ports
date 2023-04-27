@@ -1,12 +1,12 @@
-# Created by: TAKATSU Tomonari <tota@FreeBSD.org>
-
 PORTNAME=	DBI
-DISTVERSION=	1.1.1
+DISTVERSION=	1.1.3
+PORTREVISION=	1
 CATEGORIES=	databases
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	R Database Interface
+WWW=		https://cran.r-project.org/web/packages/DBI/
 
 LICENSE=	LGPL21+
 

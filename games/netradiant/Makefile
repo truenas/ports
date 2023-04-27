@@ -1,8 +1,6 @@
-# Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
-
 PORTNAME=	netradiant
 PORTVERSION=	20150621
-PORTREVISION=	2
+PORTREVISION=	5
 CATEGORIES=	games cad
 MASTER_SITES=	http://ingar.intranifty.net/gtkradiant/files/ LOCAL/danfe \
 		http://ingar.intranifty.net/gtkradiant/files/gamepacks/:gp
@@ -12,6 +10,7 @@ EXTRACT_ONLY=	${_DISTFILES:Nq3map2.6}
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Fork of GtkRadiant v1.5 FPS games map editor
+WWW=		http://ingar.intranifty.net/gtkradiant/
 
 LICENSE=	GPLv2
 

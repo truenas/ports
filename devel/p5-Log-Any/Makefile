@@ -1,12 +1,12 @@
 PORTNAME=	Log-Any
-PORTVERSION=	1.710
+PORTVERSION=	1.714
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
-MASTER_SITE_SUBDIR=	CPAN:PREACTION
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Bringing loggers and listeners together
+WWW=		https://metacpan.org/release/Log-Any
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

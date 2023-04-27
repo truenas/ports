@@ -1,19 +1,20 @@
-# Created by: Thomas Gellekum <tg@FreeBSD.org>
-
 PORTNAME=	opendx
 PORTVERSION=	4.4.4
-PORTREVISION=	33
+PORTREVISION=	36
 CATEGORIES=	graphics math java
 MASTER_SITES=	http://www.sfr-fresh.com/unix/misc/
 DISTNAME=	dx-${PORTVERSION}
 
 MAINTAINER=	stephen@FreeBSD.org
 COMMENT=	IBM's Open Visualization Data Explorer
+WWW=		http://www.opendx.org/
 
 LICENSE=	IBM-OVDX-v1
 LICENSE_NAME=	IBM PUBLIC LICENSE - Open Visualization Data Explorer VERSION 1.0
 LICENSE_FILE=	${WRKSRC}/LICENSE
 LICENSE_PERMS=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
+
+BROKEN_aarch64=	fails to link: undefined symbol: sbrk
 
 LIB_DEPENDS=	libtiff.so:graphics/tiff		\
 		libcdf.so:science/cdf

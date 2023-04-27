@@ -1,15 +1,14 @@
-# Created by: Wen Heping <wenheping@gmail.com>
-
 PORTNAME=	zope.testing
 PORTVERSION=	4.1.0
 PORTREVISION=	1
 CATEGORIES=	devel python zope
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DIST_SUBDIR=	zope
 
 MAINTAINER=	zope@FreeBSD.org
 COMMENT=	Zope testing helpers
+WWW=		https://pypi.org/project/zope.testing/
 
 LICENSE=	ZPL21
 
@@ -18,5 +17,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}zope.interface>=0:devel/py-zope.interface@${
 
 USES=		python:3.6+
 USE_PYTHON=	distutils autoplist
+
+NO_ARCH=	yes
 
 .include <bsd.port.mk>

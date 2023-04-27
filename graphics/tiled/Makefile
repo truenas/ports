@@ -1,10 +1,11 @@
 PORTNAME=	tiled
-PORTVERSION=	1.7.2
+PORTVERSION=	1.8.6
 DISTVERSIONPREFIX=	v
 CATEGORIES=	graphics editors games
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	General purpose tile map editor
+WWW=		https://www.mapeditor.org/
 
 LICENSE=	BSD2CLAUSE BSD3CLAUSE GPLv2+
 LICENSE_COMB=	multi
@@ -15,9 +16,9 @@ USE_GITHUB=	yes
 GH_ACCOUNT=	bjorn
 
 USES=		compiler:c++14-lang desktop-file-utils gl qmake qt:5 \
-		shared-mime-info xorg
+		pkgconfig shared-mime-info xorg
 USE_QT=		core gui widgets opengl network declarative \
-		buildtools_build linguisttools_build
+		buildtools:build linguisttools:build
 USE_GL=		gl
 USE_LDCONFIG=	yes
 QMAKE_ARGS=	SYSTEM_ZSTD=yes

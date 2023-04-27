@@ -1,9 +1,11 @@
 PORTNAME=	OSKAR
-DISTVERSION=	2.8.0
+DISTVERSION=	2.8.3
+PORTREVISION=	4
 CATEGORIES=	astro
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	SKA Radio telescope simulator
+WWW=		https://github.com/OxfordSKA/OSKAR
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -14,11 +16,15 @@ BROKEN_FreeBSD_12_powerpc64=	fails to compile: oskar_convert_cirs_relative_direc
 
 LIB_DEPENDS=	libcfitsio.so:astro/cfitsio \
 		libhdf5.so:science/hdf5 \
-		libsz.so:science/szip
+		libsz.so:science/libaec
 
-USES=		cmake compiler:c++11-lang localbase:ldflags python qt:5 \
-		shebangfix
-USE_QT=		core gui network widgets buildtools_build qmake_build
+USES=		cmake localbase:ldflags python qt:5 shebangfix
+.if !exists(/usr/include/omp.h)
+USES+=		compiler:gcc-c++11-lib
+.else
+USES+=		compiler:c++11-lang
+.endif
+USE_QT=		core gui network widgets buildtools:build qmake:build
 USE_LDCONFIG=	yes
 
 SHEBANG_FILES=	apps/oskar_convert_cst_to_scalar.py

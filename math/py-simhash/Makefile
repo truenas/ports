@@ -1,11 +1,12 @@
 PORTNAME=	simhash
-DISTVERSION=	2.0.0
+DISTVERSION=	2.1.2
 CATEGORIES=	math python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Python implementation of simhash algorithm
+WWW=		https://leons.im/posts/a-python-implementation-of-simhash-algorithm/
 
 LICENSE=	MIT
 

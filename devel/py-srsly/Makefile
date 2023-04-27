@@ -1,11 +1,12 @@
 PORTNAME=	srsly
-PORTVERSION=	2.4.2
+PORTVERSION=	2.4.6
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Modern high-performance serialization utilities for Python
+WWW=		https://github.com/explosion/srsly
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

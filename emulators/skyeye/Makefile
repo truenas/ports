@@ -1,14 +1,13 @@
-# Created by: Ruan Wei (iamayan@gmail.com)
-
 PORTNAME=	skyeye
 PORTVERSION=	1.2.5
-PORTREVISION=	7
+PORTREVISION=	8
 DISTVERSIONSUFFIX=	_REL
 CATEGORIES=	emulators
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/${PORTNAME}-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Environment simulates typical ARM-base embedded computer systems
+WWW=		http://www.skyeye.org/
 
 LICENSE=	GPLv2
 

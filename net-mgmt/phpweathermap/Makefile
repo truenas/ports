@@ -1,5 +1,3 @@
-# Created by: Hsin-Han You <hhyou@cs.nctu.edu.tw>
-
 PORTNAME=	phpweathermap
 PORTVERSION=	0.97a
 PORTREVISION=	3
@@ -9,6 +7,7 @@ DISTNAME=	php-weathermap-${PORTVERSION}
 
 MAINTAINER=	hhyou@cs.nctu.edu.tw
 COMMENT=	Network visualisation tool with web editor
+WWW=		https://www.network-weathermap.com/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -20,6 +19,7 @@ NO_BUILD=	yes
 NO_ARCH=	yes
 USES=		php zip
 USE_PHP=	gd
+IGNORE_WITH_PHP=	82
 
 WM_FILES=	HTML_ImageMap.class.php WeatherMap.functions.php \
 		WeatherMapLink.class.php WeatherMapNode.class.php \

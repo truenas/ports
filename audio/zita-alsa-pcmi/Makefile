@@ -1,10 +1,11 @@
 PORTNAME=	zita-alsa-pcmi
-DISTVERSION=	0.3.2
+DISTVERSION=	0.6.1
 CATEGORIES=	audio
 MASTER_SITES=	https://kokkinizita.linuxaudio.org/linuxaudio/downloads/
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Easy access to ALSA PCM devices
+WWW=		https://kokkinizita.linuxaudio.org/linuxaudio/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -21,8 +22,8 @@ PLIST_FILES=	bin/alsa_delay \
 		bin/alsa_loopback \
 		include/zita-alsa-pcmi.h \
 		lib/libzita-alsa-pcmi.so \
-		lib/libzita-alsa-pcmi.so.0 \
-		lib/libzita-alsa-pcmi.so.0.3.2
+		lib/libzita-alsa-pcmi.so.${DISTVERSION:R:R} \
+		lib/libzita-alsa-pcmi.so.${DISTVERSION}
 
 do-build:
 .for d in source apps
@@ -39,11 +40,14 @@ do-install:
 .endfor
 
 post-install:
+	# add symlink, see comment in the patch
 	@cd ${STAGEDIR}${PREFIX} && \
-		(cd lib && ${RLN} libzita-alsa-pcmi.so.0.3.2 libzita-alsa-pcmi.so.0) && \
+		(cd lib && ${RLN} libzita-alsa-pcmi.so.${DISTVERSION} libzita-alsa-pcmi.so.${DISTVERSION:R:R})
+	# strip binaries
+	@cd ${STAGEDIR}${PREFIX} && \
 		${STRIP_CMD} \
 			bin/alsa_delay \
 			bin/alsa_loopback \
-			lib/libzita-alsa-pcmi.so.0.3.2
+			lib/libzita-alsa-pcmi.so.${DISTVERSION}
 
 .include <bsd.port.mk>

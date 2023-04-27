@@ -5,12 +5,12 @@ MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Pure ruby javascript parser and interpreter
+WWW=		https://github.com/nene/rkelly-remix
 
 LICENSE=	MIT
 
 NO_ARCH=	yes
 
-USE_RUBY=	yes
 USES=		gem
 
 .include <bsd.port.mk>

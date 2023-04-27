@@ -1,10 +1,11 @@
 PORTNAME=	ros-rospkg
-DISTVERSION=	1.2.0
+DISTVERSION=	1.4.0
 CATEGORIES=	devel
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	trueos@norwegianrockcat.com
 COMMENT=	Python library for ROS packaging system
+WWW=		https://wiki.ros.org/rospkg
 
 LICENSE=	BSD3CLAUSE
 

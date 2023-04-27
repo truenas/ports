@@ -1,12 +1,12 @@
-# Created by: Ying-Chieh Liao <ijliao@FreeBSD.org>
-
 PORTNAME=	dia2code
 PORTVERSION=	0.8.8
+PORTREVISION=	2
 CATEGORIES=	devel
 MASTER_SITES=	SF
 
 MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Small utility used to generate code from a Dia diagram
+WWW=		http://dia2code.sourceforge.net/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -19,6 +19,8 @@ GNU_CONFIGURE=	yes
 
 CPPFLAGS+=	-I${LOCALBASE}/include
 LDFLAGS+=	-L${LOCALBASE}/lib
+
+CONFLICTS_INSTALL=	dia2code+
 
 PLIST_FILES=	bin/dia2code \
 		man/man1/dia2code.1.gz

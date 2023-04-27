@@ -5,11 +5,14 @@ MASTER_SITES=	http://avl.enemy.org/utils/hextools/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Useful tools for dealing with hex files
+WWW=		http://gnuwin32.sourceforge.net/packages/hextools.htm
 
 LICENSE=	HEXTOOLS
 LICENSE_NAME=	License of hextools
 LICENSE_FILE=	${WRKDIR}/LICENSE
 LICENSE_PERMS=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
+
+CONFLICTS_INSTALL=	z80pack # bin/bin2hex
 
 NO_WRKSUBDIR=	yes
 

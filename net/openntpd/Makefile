@@ -1,12 +1,13 @@
 PORTNAME=	openntpd
 PORTVERSION=	6.8p1
-PORTREVISION=	3
+PORTREVISION=	6
 PORTEPOCH=	2
 CATEGORIES=	net
 MASTER_SITES=	OPENBSD/OpenNTPD
 
 MAINTAINER=	naddy@FreeBSD.org
 COMMENT=	Network Time Protocol (NTP) daemon
+WWW=		https://www.openntpd.org/
 
 LICENSE=	ISCL
 
@@ -21,7 +22,6 @@ USERS=		_ntp
 GROUPS=		_ntp
 
 GNU_CONFIGURE=	yes
-CONFIGURE_ARGS=	--with-cacert=${LOCALBASE}/etc/ssl/cert.pem
 
 SUB_FILES=	480.status-openntpd pkg-message
 SUB_LIST=	MANPREFIX="${MANPREFIX}"

@@ -1,11 +1,12 @@
 PORTNAME=	textfsm
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.1.1
+DISTVERSION=	1.1.3
 CATEGORIES=	textproc python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	kai@FreeBSD.org
 COMMENT=	Parses semi-structured text into Python tables
+WWW=		https://github.com/google/textfsm
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/COPYING

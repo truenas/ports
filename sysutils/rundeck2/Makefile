@@ -6,13 +6,17 @@ PKGNAMESUFFIX=	2
 DISTNAME=	rundeck-launcher-${PORTVERSION}
 EXTRACT_SUFX=	.jar
 
-MAINTAINER=	daniel.tihanyi@tetragir.com
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Web-console for dispatching commands and scripts to your nodes
+WWW=		https://rundeck.org
 
 LICENSE=	APACHE20
 
+DEPRECATED=	unmaintained and newer version available in sysutils/rundeck3
+EXPIRATION_DATE=	2023-05-17
+
 USE_JAVA=	yes
-JAVA_VERSION=	1.8+
+JAVA_VERSION=	8+
 
 CONFLICTS_INSTALL=	rundeck3
 

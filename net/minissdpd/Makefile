@@ -1,13 +1,12 @@
-# Created by: Emanuel Haupt <ehaupt@FreeBSD.org>
-
 PORTNAME=	minissdpd
-PORTVERSION=	1.5.20211105
+PORTVERSION=	1.6.0
 CATEGORIES=	net
 MASTER_SITES=	http://miniupnp.free.fr/files/ \
 		LOCAL/ehaupt
 
 MAINTAINER=	ehaupt@FreeBSD.org
 COMMENT=	UPnP IGD discovery speed enhancer
+WWW=		http://miniupnp.free.fr/minissdpd.html
 
 LICENSE=	BSD3CLAUSE
 

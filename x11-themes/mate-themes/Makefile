@@ -1,13 +1,13 @@
-# Created by: Joe Marcus Clarke <marcus@FreeBSD.org>
-
 PORTNAME=	mate-themes
 PORTVERSION=	3.22.23
+PORTREVISION=	1
 CATEGORIES=	x11-themes mate
 MASTER_SITES=	MATE/themes/${PORTVERSION:R}/
 DIST_SUBDIR=	mate
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Collection of themes and icons for MATE
+WWW=		https://mate-desktop.org/
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING

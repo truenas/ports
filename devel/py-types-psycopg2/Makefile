@@ -1,11 +1,12 @@
 PORTNAME=	types-psycopg2
-PORTVERSION=	2.9.4
+PORTVERSION=	2.9.21.9
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Typing stubs for psycopg2
+WWW=		https://pypi.org/project/types-psycopg2/
 
 LICENSE=	APACHE20
 

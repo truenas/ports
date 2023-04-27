@@ -1,13 +1,12 @@
-# Created by: gpalmer@FreeBSD.org
-
 PORTNAME=	rxvt-unicode
-PORTVERSION=	9.30
+PORTVERSION=	9.31
 CATEGORIES=	x11
 MASTER_SITES=	http://dist.schmorp.de/rxvt-unicode/%SUBDIR%/
 MASTER_SITE_SUBDIR=	. Attic
 
 MAINTAINER=	thierry@FreeBSD.org
 COMMENT=	Clone of the terminal emulator rxvt modified to support Unicode
+WWW=		http://software.schmorp.de/pkg/rxvt-unicode.html
 
 LICENSE=	GPLv2
 
@@ -17,7 +16,7 @@ LIB_DEPENDS=	libfreetype.so:print/freetype2	\
 RUN_DEPENDS=	${LOCALBASE}/bin/fc-cache:x11-fonts/fontconfig
 
 USES=			cpe perl5 pkgconfig shebangfix tar:bzip2 xorg
-USE_XORG=		x11 xft xmu xpm xrender xt
+USE_XORG=		x11 xext xft xmu xpm xrender xt
 GNU_CONFIGURE=		yes
 CPPFLAGS+=		-I${LOCALBASE}/include
 LIBS+=			-lutil

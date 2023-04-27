@@ -1,12 +1,11 @@
-# Created by: Brent J. Nordquist <bjn@visi.com>
-
 PORTNAME=	gdbm
-PORTVERSION=	1.22
+PORTVERSION=	1.23
 CATEGORIES=	databases
 MASTER_SITES=	GNU
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	GNU database manager
+WWW=		https://www.gnu.org.ua/software/gdbm/
 
 LICENSE=	GPLv3+
 

@@ -1,14 +1,13 @@
-# Created by: ljo
-
 PORTNAME=	linpack
 PORTVERSION=	1.0
-PORTREVISION=	14
+PORTREVISION=	15
 CATEGORIES=	math
 MASTER_SITES=	NL
 DISTFILES=	${SRCS}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Linear Algebra package
+WWW=		https://www.netlib.org/linpack/
 
 LIB_DEPENDS=	libblas.so:math/blas
 

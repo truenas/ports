@@ -1,13 +1,11 @@
-# Created by: Emanuel Haupt <ehaupt@FreeBSD.org>
-
 PORTNAME=	ipcalc
-PORTVERSION=	1.0.1
-PORTREVISION=	1
+PORTVERSION=	1.0.2
 CATEGORIES=	net-mgmt
 PKGNAMEPREFIX=	gnu-
 
 MAINTAINER=	ehaupt@FreeBSD.org
 COMMENT=	Modern network address calculation tool for IPv4 and IPv6
+WWW=		https://gitlab.com/ipcalc/ipcalc/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -15,7 +13,8 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 USES=		localbase meson pkgconfig
 USE_GITLAB=	yes
 GL_ACCOUNT=	ipcalc
-GL_COMMIT=	8dfa28013234755ef3ce3e157b3940eeaaa2b7df
+GL_COMMIT=	4c4261a47f355946ee74013d4f5d0494487cc2d6
+MESON_ARGS=	-Duse_geoip=disabled
 
 CONFLICTS_INSTALL=	ipcalc
 

@@ -1,5 +1,3 @@
-# Created by: Yukihiro Nakai <Nakai@Mlab.t.u-tokyo.ac.jp>
-
 PORTNAME=	giftool
 PORTVERSION=	1.0
 CATEGORIES=	graphics
@@ -18,6 +16,8 @@ NO_WRKSUBDIR=	yes
 ALL_TARGET=	giftool
 MAKE_ARGS=	CFLAGS="${CFLAGS}"
 USES=		tar:tgz
+
+CONFLICTS_INSTALL=	giflib
 
 OPTIONS_DEFINE=	RETVALUE MALLOCSIZE DOCS
 OPTIONS_DEFAULT=	RETVALUE MALLOCSIZE

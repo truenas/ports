@@ -1,11 +1,12 @@
 PORTNAME=	coreschema
 DISTVERSION=	0.0.4
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	kai@FreeBSD.org
 COMMENT=	Core schema for the Core API
+WWW=		https://github.com/core-api/python-coreschema
 
 LICENSE=	BSD2CLAUSE
 

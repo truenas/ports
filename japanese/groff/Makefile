@@ -1,5 +1,3 @@
-# Created by: Nobuhiro Yasutomi <nobu@psrc.isac.co.jp>
-
 PORTNAME=	groff
 PORTVERSION=	1.18.1
 DISTVERSIONSUFFIX=	.1
@@ -38,7 +36,7 @@ DOCSDIR=	${PREFIX}/share/doc/${PORTNAME}/${PORTVERSION}
 EXAMPLESDIR=	${PREFIX}/share/examples/${PORTNAME}/${PORTVERSION}
 INFO=		groff
 
-CONFLICTS=	groff mdocml
+CONFLICTS=	groff heirloom-doctools # bin/groff bin/hpftodit bin/indxbib
 
 TMAC_DISTNAME=	tmac-20030521_2
 TMACFILES=	tmac.orig_me tmac.vgrind \

@@ -1,19 +1,20 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	python-dotenv
-PORTVERSION=	0.19.2
+PORTVERSION=	0.21.1
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Add .env support to your django/flask apps
+WWW=		https://github.com/theskumar/python-dotenv
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USES=		python:3.6+
+USES=		python:3.7+
 USE_PYTHON=	autoplist concurrent distutils
+
+CONFLICTS_INSTALL=	rubygem-dotenv # bin/dotenv
 
 NO_ARCH=	yes
 

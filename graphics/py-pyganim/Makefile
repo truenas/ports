@@ -1,15 +1,15 @@
-# Created by: Johannes Jost Meixner <johannes@perceivon.net>
-
 PORTNAME=	pyganim
 PORTVERSION=	0.9.2
-PORTREVISION=	3
+PORTREVISION=	5
 CATEGORIES=	graphics python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	Pyganim-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Sprite animation module for Pygame
+WWW=		https://inventwithpython.com/pyganim/ \
+		https://github.com/asweigart/pyganim
 
 LICENSE=	BSD2CLAUSE
 

@@ -1,5 +1,3 @@
-# Created by: Brian Dean <bsd@FreeBSD.org>
-
 PORTNAME=	avarice
 PORTVERSION=	2.14
 CATEGORIES=	devel
@@ -7,6 +5,7 @@ MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/${PORTNAME}-${PORTVERSION}
 
 MAINTAINER=	joerg@FreeBSD.org
 COMMENT=	Atmel AVR JTAG programmer and debugging interface for avr-gdb
+WWW=		http://avarice.sourceforge.net/
 
 LICENSE=	GPLv2
 

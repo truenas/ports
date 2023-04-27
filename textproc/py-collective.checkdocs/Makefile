@@ -1,11 +1,12 @@
 PORTNAME=	collective.checkdocs
 PORTVERSION=	0.2
 CATEGORIES=	textproc devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	egypcio@FreeBSD.org
 COMMENT=	View and validate restructured text in package's long_description
+WWW=		https://github.com/collective/collective.checkdocs
 
 LICENSE=	GPLv2
 

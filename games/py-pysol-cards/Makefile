@@ -1,14 +1,13 @@
-# Created by: Danilo Egea Gondolfo <danilo@FreeBSD.org>
-
 PORTNAME=	pysol-cards
-PORTVERSION=	0.14.2
+PORTVERSION=	0.14.3
 CATEGORIES=	games python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	pysol_cards-${PORTVERSION}
 
 MAINTAINER=	ygy@FreeBSD.org
 COMMENT=	Deal PySol FC Cards
+WWW=		https://pypi.org/project/pysol-cards/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

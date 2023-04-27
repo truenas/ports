@@ -1,5 +1,3 @@
-# Created by: Kimo <kimor79@yahoo.com>
-
 PORTNAME=	mod_auth_cas
 PORTVERSION=	1.2
 DISTVERSIONPREFIX=	v
@@ -9,6 +7,7 @@ PKGNAMEPREFIX=	${APACHE_PKGNAMEPREFIX}
 
 MAINTAINER=	apache@FreeBSD.org
 COMMENT=	Apache 2.x module that supports the CASv1 and CASv2 protocols
+WWW=		https://wiki.jasig.org/display/CASC/mod_auth_cas
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/README
@@ -16,7 +15,7 @@ LICENSE_FILE=	${WRKSRC}/README
 LIB_DEPENDS=	libcurl.so:ftp/curl \
 		libpcre.so:devel/pcre
 
-USES=		apache:2.4 ssl
+USES=		apache ssl
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	Jasig

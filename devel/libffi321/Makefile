@@ -1,14 +1,13 @@
-# Created by: Horance Chou <horance@freedom.ie.cycu.edu.tw>
-
 PORTNAME=	libffi
 PORTVERSION=	3.2.1
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	devel
 MASTER_SITES=	SOURCEWARE/${PORTNAME}
 PKGNAMESUFFIX=	321
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Foreign Function Interface (stripped down compat version)
+WWW=		http://sources.redhat.com/libffi/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

@@ -1,12 +1,13 @@
 PORTNAME=	xen
-PORTVERSION=	4.15.0
-PORTREVISION=	2
+PORTVERSION=	4.17.0
+PORTREVISION=	1
 CATEGORIES=	emulators
 MASTER_SITES=	http://downloads.xenproject.org/release/xen/${PORTVERSION}/
 PKGNAMESUFFIX=	-kernel
 
 MAINTAINER=	royger@FreeBSD.org
 COMMENT=	Hypervisor using a microkernel design
+WWW=		https://www.xenproject.org/
 
 LICENSE=	GPLv2
 
@@ -21,15 +22,20 @@ MAKE_ARGS=	clang=y PYTHON=${PYTHON_CMD} ARCH=x86_64
 NO_MTREE=	yes
 STRIP=		#
 PLIST_FILES=	/boot/xen \
-		lib/debug/boot/xen.debug
+		/boot/xen-debug \
+		lib/debug/boot/xen.debug \
+		lib/debug/boot/xen-debug.debug
 
-# Fix grant/foreign mapping cache attributes on Intel.
-EXTRA_PATCHES+=	${PATCHDIR}/0001-x86-mtrr-remove-stale-function-prototype.patch:-p1 \
-		${PATCHDIR}/0002-x86-mtrr-move-epte_get_entry_emt-to-p2m-ept.c.patch:-p1 \
-		${PATCHDIR}/0003-x86-ept-force-WB-cache-attributes-for-grant-and-fore.patch:-p1
-
-# Fix build with clang 13.0.0
-EXTRA_PATCHES+=	${PATCHDIR}/0001-efi-fix-alignment-of-function-parameters-in-compat-m.patch:-p1
+# XSAs
+EXTRA_PATCHES+=	${PATCHDIR}/xsa425.patch:-p1 \
+		${PATCHDIR}/xsa426.patch:-p1 \
+		${PATCHDIR}/0001-xen-Work-around-Clang-IAS-macro-expansion-bug.patch:-p1
+# Backports
+# clang build fixes
+EXTRA_PATCHES+=	${PATCHDIR}/0001-xen-x86-Remove-the-use-of-K-R-functions.patch:-p1
+# Support for fetching video mode from PVH dom0
+EXTRA_PATCHES+=	${PATCHDIR}/0001-x86-platform-introduce-hypercall-to-get-initial-vide.patch:-p1 \
+		${PATCHDIR}/0001-x86-platform-make-XENPF_get_dom0_console-actually-us.patch:-p1
 
 .include <bsd.port.options.mk>
 
@@ -39,7 +45,13 @@ IGNORE=		only supported on FreeBSD
 
 # The ports native 'build' target cannot be used because it sets
 # CFLAGS, and that breaks the Xen build system.
+#
+# Build both a production and a debug hypervisor.
 do-build:
+	${MAKE_CMD} -j${MAKE_JOBS_NUMBER} -C ${WRKSRC} build-xen ${MAKE_ARGS} debug=y
+	cp ${WRKSRC}/xen/xen ${WRKSRC}/xen/xen-debug
+	cp ${WRKSRC}/xen/xen-syms ${WRKSRC}/xen/xen-debug-syms
+	${MAKE_CMD} -j${MAKE_JOBS_NUMBER} -C ${WRKSRC} clean-xen ${MAKE_ARGS}
 	${MAKE_CMD} -j${MAKE_JOBS_NUMBER} -C ${WRKSRC} build-xen ${MAKE_ARGS}
 
 do-install:
@@ -47,5 +59,7 @@ do-install:
 	${MKDIR} ${STAGEDIR}${PREFIX}/lib/debug/boot/
 	${INSTALL_PROGRAM} ${WRKSRC}/xen/xen ${STAGEDIR}/boot
 	${INSTALL_DATA} ${WRKSRC}/xen/xen-syms ${STAGEDIR}${PREFIX}/lib/debug/boot/xen.debug
+	${INSTALL_PROGRAM} ${WRKSRC}/xen/xen-debug ${STAGEDIR}/boot
+	${INSTALL_DATA} ${WRKSRC}/xen/xen-debug-syms ${STAGEDIR}${PREFIX}/lib/debug/boot/xen-debug.debug
 
 .include <bsd.port.mk>

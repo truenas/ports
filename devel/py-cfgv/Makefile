@@ -1,11 +1,12 @@
 PORTNAME=	cfgv
-PORTVERSION=	3.2.0
+PORTVERSION=	3.3.1
 CATEGORIES=	devel
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	swills@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Validate configuration and produce human readable error messages
+WWW=		https://github.com/asottile/cfgv
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

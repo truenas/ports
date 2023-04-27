@@ -1,11 +1,12 @@
 PORTNAME=	celery-progress
 PORTVERSION=	0.1.1
 CATEGORIES=	devel
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	gettoknowmi@yahoo.com
 COMMENT=	Distributed Task Queue
+WWW=		https://github.com/celery/celery/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

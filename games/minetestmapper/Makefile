@@ -1,15 +1,17 @@
 PORTNAME=	minetestmapper
-PORTVERSION=	20200328
+PORTVERSION=	20220221
 CATEGORIES=	games graphics
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Generate an overview image of a minetest map
+WWW=		https://github.com/minetest/minetestmapper
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
 
 LIB_DEPENDS=	libgd.so:graphics/gd \
-		libsqlite3.so:databases/sqlite3
+		libsqlite3.so:databases/sqlite3 \
+		libzstd.so:archivers/zstd
 
 USES=		cmake compiler:c11 pkgconfig
 USE_GITHUB=	yes

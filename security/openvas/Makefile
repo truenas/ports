@@ -1,10 +1,11 @@
 PORTNAME=	openvas
-DISTVERSION=	21.4.3
+DISTVERSION=	22.4.1
 DISTVERSIONPREFIX=	v
 CATEGORIES=	security
 
 MAINTAINER=	acm@FreeBSD.org
 COMMENT=	Open vulnerability assessment scanner
+WWW=		https://github.com/greenbone/openvas
 
 LICENSE=	GPLv2+
 
@@ -16,10 +17,12 @@ LIB_DEPENDS=	libgvm_base.so:security/gvm-libs \
 		libgpgme.so:security/gpgme \
 		libssh.so:security/libssh \
 		libgnutls.so:security/gnutls \
-		libnetsnmp.so:net-mgmt/net-snmp
+		libnetsnmp.so:net-mgmt/net-snmp \
+		libjson-glib-1.0.so:devel/json-glib
 RUN_DEPENDS=	redis-server:databases/redis \
 		snmpget:net-mgmt/net-snmp \
 		rsync:net/rsync \
+		nmap:security/nmap \
 		${PYTHON_PKGNAMEPREFIX}impacket>=0:net/py-impacket@${PY_FLAVOR}
 USE_GITHUB=	yes
 GH_ACCOUNT=	greenbone
@@ -31,7 +34,14 @@ USE_GNOME=	glib20
 USERS=		gvm
 GROUPS=		${USERS}
 
+.include <bsd.port.pre.mk>
+
+post-patch:
+	@${REINPLACE_CMD} -e 's|g_pattern_match_string|g_pattern_spec_match_string|g' ${WRKSRC}/misc/strutils.c
+	@${REINPLACE_CMD} -e 's|#include <bsd/unistd.h>||g' ${WRKSRC}/src/attack.c ${WRKSRC}/src/nasl_plugins.c
+	@${REINPLACE_CMD} -e 's|#include <bsd/unistd.h>|#include <unistd.h>|g' ${WRKSRC}//src/pluginload.c
+
 post-install:
 	@${MKDIR} ${STAGEDIR}/var/run/ospd
 
-.include <bsd.port.mk>
+.include <bsd.port.post.mk>

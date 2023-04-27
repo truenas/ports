@@ -1,15 +1,15 @@
 PORTNAME=	libheif
-DISTVERSIONPREFIX=	v
-DISTVERSION=	1.10.0
-PORTREVISION=	4
+DISTVERSION=	1.15.2
 CATEGORIES=	graphics
+MASTER_SITES=	https://github.com/strukturag/${PORTNAME}/releases/download/v${DISTVERSION}/
 
-PATCH_SITES=	https://github.com/${GH_ACCOUNT}/${GH_PROJECT}/commit/
-PATCHFILES=	b7caef96e012f6e516fee2e50a836b07b7c5a8fc.patch:-p1 \
-		7976e1858a857e33200cd33d01689fd040de6d3d.patch:-p1
+PATCH_SITES=	https://github.com/strukturag/${PORTNAME}/commit/
+PATCHFILES=	be16fc6767c8b3a2f6e78efdc9d2b6f07e3e558a.patch:-p1 \
+		4fd25823d16ccbe082ad3be9b96656296284d9b4.patch:-p1
 
-MAINTAINER=	freebsd@sebastiansteinmetz.ch
+MAINTAINER=	makc@FreeBSD.org
 COMMENT=	ISO/IEC 23008-12:2017 HEIF file format de- and encoder
+WWW=		https://github.com/strukturag/libheif
 
 LICENSE=	LGPL3+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -19,34 +19,39 @@ USES=		cmake compiler:c++11-lang cpe gettext-runtime gnome \
 CPE_VENDOR=	struktur
 USE_GNOME=	gdkpixbuf2 glib20
 USE_LDCONFIG=	yes
+PLIST_SUB=	LIB_VER=${DISTVERSION}
 
-CMAKE_OFF=	WITH_EXAMPLES
-
-USE_GITHUB=	yes
-GH_ACCOUNT=	strukturag
-
-OPTIONS_DEFINE=		AOM DAV1D LIBDE265 RAV1E X265
-OPTIONS_DEFAULT=	AOM DAV1D LIBDE265 RAV1E X265
-OPTIONS_SUB=		yes
+OPTIONS_DEFINE=		AOM DAV1D EXAMPLES LIBDE265 SVTAV1 RAV1E X265
+OPTIONS_DEFAULT=	AOM DAV1D LIBDE265 SVTAV1 X265
+OPTIONS_SUB=	yes
 
 AOM_DESC=		AV1 encoding/decoding via libaom
-AOM_CMAKE_BOOL=		WITH_AOM
-AOM_LIB_DEPENDS=	libaom.so:multimedia/aom
-
 DAV1D_DESC=		Build dav1e decoder
-DAV1D_CMAKE_BOOL=	WITH_DAV1D
-DAV1D_LIB_DEPENDS=	libdav1d.so:multimedia/dav1d
-
 LIBDE265_DESC=		Use libde265 (support for HEVC decoding)
-LIBDE265_CMAKE_BOOL=	WITH_LIBDE265
-LIBDE265_LIB_DEPENDS=	libde265.so:multimedia/libde265
-
+SVTAV1_DESC=		Build svt-av1 encoder
 RAV1E_DESC=		Build rav1e encoder
-RAV1E_CMAKE_BOOL=	WITH_RAV1E
-RAV1E_LIB_DEPENDS=	librav1e.so:multimedia/librav1e
-
 X265_DESC=		Use x265 (support for HEVC encoding)
-X265_CMAKE_BOOL=	WITH_X265
+
+AOM_LIB_DEPENDS=	libaom.so:multimedia/aom
+AOM_CMAKE_BOOL=		WITH_AOM_ENCODER WITH_AOM_DECODER
+
+DAV1D_LIB_DEPENDS=	libdav1d.so:multimedia/dav1d
+DAV1D_CMAKE_BOOL=	WITH_DAV1D
+
+EXAMPLES_LIB_DEPENDS=	libpng16.so:graphics/png
+EXAMPLES_USES=		jpeg
+EXAMPLES_CMAKE_BOOL=	WITH_EXAMPLES
+
+LIBDE265_LIB_DEPENDS=	libde265.so:multimedia/libde265
+LIBDE265_CMAKE_BOOL=	WITH_LIBDE265
+
+SVTAV1_LIB_DEPENDS=	libSvtAv1Enc.so:multimedia/svt-av1
+SVTAV1_CMAKE_BOOL=	WITH_SvtEnc
+
+RAV1E_LIB_DEPENDS=	librav1e.so:multimedia/librav1e
+RAV1E_CMAKE_BOOL=	WITH_RAV1E
+
 X265_LIB_DEPENDS=	libx265.so:multimedia/x265
+X265_CMAKE_BOOL=	WITH_X265
 
 .include <bsd.port.mk>

@@ -1,8 +1,6 @@
-# Created by: Alexander Logvinov <ports@logvinov.com>
-
 PORTNAME=	fetion
 PORTVERSION=	0.98.5.2
-PORTREVISION=	7
+PORTREVISION=	8
 CATEGORIES=	net-im
 MASTER_SITES=	http://www.logvinov.ru/files/dist/fetion/ \
 		LOCAL/avl
@@ -10,6 +8,7 @@ PKGNAMEPREFIX=	pidgin-
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Fetion protocol plugin for libpurple
+WWW=		https://sourceforge.net/projects/fetion/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

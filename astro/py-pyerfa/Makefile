@@ -1,11 +1,13 @@
 PORTNAME=	pyerfa
-DISTVERSION=	2.0.0
+DISTVERSION=	2.0.0.3
+PORTREVISION=	1
 CATEGORIES=	astro python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Python wrapper for the ERFA library
+WWW=		https://github.com/liberfa/pyerfa
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.rst
@@ -16,7 +18,7 @@ BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}numpy>=1.17.0,1:math/py-numpy@${PY_FLAVOR}
 		${PYTHON_PKGNAMEPREFIX}setuptools_scm>0:devel/py-setuptools_scm@${PY_FLAVOR}
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}numpy>=1.17.0,1:math/py-numpy@${PY_FLAVOR}
 
-USES=		python:3.6-3.9
+USES=		python:3.7+
 USE_PYTHON=	autoplist distutils
 
 .include <bsd.port.mk>

@@ -2,11 +2,12 @@ PORTNAME=	os-api-ref
 DISTVERSION=	1.5.0
 PORTREVISION=	1
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	kai@FreeBSD.org
 COMMENT=	Sphinx Extensions to support API reference sites in OpenStack
+WWW=		https://docs.openstack.org/os-api-ref/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

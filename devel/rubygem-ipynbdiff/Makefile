@@ -1,20 +1,18 @@
-# Created by: Matthias Fechner <mfechner@FreeBSD.org>
-
 PORTNAME=	ipynbdiff
-PORTVERSION=	0.3.7
+PORTVERSION=	0.4.7
 CATEGORIES=	devel rubygems
 MASTER_SITES=	RG
 
 MAINTAINER=	mfechner@FreeBSD.org
 COMMENT=	Human readable Jupyter Notebook diffs
+WWW=		https://gitlab.com/gitlab-org/incubation-engineering/mlops/rb-ipynbdiff
 
 LICENSE=	MIT
 
-RUN_DEPENDS=	rubygem-diffy330>=3.3.0<3.3.1:textproc/rubygem-diffy330 \
-		rubygem-json>=2.5.1<2.5.2:devel/rubygem-json
+RUN_DEPENDS=	rubygem-diffy>=3.3<4:textproc/rubygem-diffy \
+		rubygem-json>=2.5.1<3:devel/rubygem-json
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

@@ -1,13 +1,12 @@
-# Created by: Sunpoet Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	Math-GMPz
-PORTVERSION=	0.52
+PORTVERSION=	0.56
 CATEGORIES=	math perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Perl interface to the GMP library integer (mpz) functions
+WWW=		https://metacpan.org/release/Math-GMPz
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

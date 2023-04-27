@@ -1,11 +1,12 @@
 PORTNAME=	pyIOSXR
 DISTVERSION=	0.53
 CATEGORIES=	net-mgmt python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	kai@FreeBSD.org
 COMMENT=	Python API to interact with network devices running IOS-XR
+WWW=		https://github.com/fooelisa/pyiosxr
 
 LICENSE=	APACHE20
 

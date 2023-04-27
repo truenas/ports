@@ -1,5 +1,3 @@
-# Created by: David O'Brien <obrien@NUXI.com>
-
 PORTNAME=	44bsd-rdist
 PORTVERSION=	20001111
 PORTREVISION=	2
@@ -16,6 +14,9 @@ USES=		tar:bzip2
 NO_WRKSUBDIR=	yes
 PLIST_FILES=	bin/44bsd-rdist \
 		man/man1/44bsd-rdist.1.gz
+
+CFLAGS=		-Wno-deprecated-non-prototype \
+		-Wno-incompatible-library-redeclaration
 
 post-extract:
 	cd ${WRKSRC} ; co RCS/*,v

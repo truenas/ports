@@ -1,5 +1,3 @@
-# Created by: Jean-Yves Lefort <jylefort@FreeBSD.org>
-
 PORTNAME=	enemyterritory-tce
 PORTVERSION=	0.49
 PORTREVISION=	1
@@ -11,6 +9,7 @@ DISTFILES=	tcetest049.zip
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Modern tactical Enemy Territory modification
+WWW=		http://www.truecombat.com/intro.php
 
 # Converted from RESTRICTED
 LICENSE=	tcetest-license

@@ -1,9 +1,11 @@
 PORTNAME=	opengv
 DISTVERSION=	g20200806
+PORTREVISION=	1
 CATEGORIES=	graphics
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Collection of methods for solving geometric vision problems
+WWW=		https://laurentkneip.github.io/opengv/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/License.txt

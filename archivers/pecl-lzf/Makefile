@@ -1,12 +1,11 @@
-# Created by: chinsan <chinsan.tw@gmail.com>
-
 PORTNAME=	lzf
-PORTVERSION=	1.6.8
+PORTVERSION=	1.7.0
 CATEGORIES=	archivers pear
 DISTNAME=	${PORTNAME:tu}-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Handles LZF de/compression
+WWW=		https://pecl.php.net/package/lzf
 
 LICENSE=	PHP301
 LICENSE_FILE=	${WRKSRC}/LICENSE

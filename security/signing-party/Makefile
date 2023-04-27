@@ -1,11 +1,10 @@
-# Created by: johans
-
 PORTNAME=	signing-party
 PORTVERSION=	2.10
 CATEGORIES=	security
 
 MAINTAINER=	romain@FreeBSD.org
 COMMENT=	Various OpenPGP related tools
+WWW=		http://pgp-tools.alioth.debian.org/
 
 LICENSE=	BSD2CLAUSE BSD3CLAUSE GPLv2 GPLv2+ GPLv3+ MIT
 LICENSE_COMB=	multi
@@ -25,7 +24,7 @@ RUN_DEPENDS=	gpg:security/gnupg \
 USES=		perl5 python gmake shebangfix
 SHEBANG_FILES=	${SCRIPTS}
 BINARY_ALIAS=	sed=gsed
-CONFLICTS_INSTALL=sig2dot springgraph
+CONFLICTS_INSTALL= pgpdir sig2dot springgraph # bin/gpgdir bin/sig2dot bin/springgraph
 
 USE_GITLAB=	yes
 GL_SITE=	https://salsa.debian.org/

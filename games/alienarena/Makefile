@@ -1,8 +1,6 @@
-# Created by: alepulver
-
 PORTNAME=	alienarena
 PORTVERSION=	2013.766
-PORTREVISION=	11
+PORTREVISION=	12
 CATEGORIES=	games
 MASTER_SITES=	SF/alienarena.mirror/Alien%20Arena%207.66/ \
 		http://icculus.org/alienarena/Files/ \
@@ -12,6 +10,7 @@ DISTNAME=	${PORTNAME}-7.66-linux20130827
 
 MAINTAINER=	acm@FreeBSD.org
 COMMENT=	Alien Arena (native version)
+WWW=		http://red.planetarena.org/
 
 RUN_DEPENDS=	${LOCALBASE}/${DATADIR_REL}/data1/default.cfg:games/alienarena-data
 

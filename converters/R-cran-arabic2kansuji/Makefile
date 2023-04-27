@@ -1,10 +1,12 @@
 PORTNAME=	arabic2kansuji
-PORTVERSION=	0.1.1
+PORTVERSION=	0.1.2
+PORTREVISION=	1
 CATEGORIES=	converters
 DISTNAME=	${PORTNAME}_${PORTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Convert Arabic Numerals to Kansuji
+WWW=		https://cran.r-project.org/web/packages/arabic2kansuji/
 
 LICENSE=	MIT
 

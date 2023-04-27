@@ -1,6 +1,5 @@
 PORTNAME=	webglplugin
-DISTVERSION=	${QT5_VERSION}
-PORTREVISION=	2
+PORTVERSION=	${QT5_VERSION}${QT5_KDE_PATCH}
 CATEGORIES=	www
 PKGNAMEPREFIX=	qt5-
 
@@ -14,6 +13,6 @@ USES=		compiler:c++11-lang gl gnome qmake:norecursive qt-dist:5
 USE_GL=		gl
 USE_GNOME=	glib20
 USE_QT=		core dbus declarative gui network webchannel websockets \
-		buildtools_build
+		buildtools:build
 
 .include <bsd.port.mk>

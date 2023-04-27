@@ -1,12 +1,13 @@
 PORTNAME=	yadifa
-DISTVERSION=	2.5.2
-DISTVERSIONSUFFIX=	-10318
+DISTVERSION=	2.6.4
+DISTVERSIONSUFFIX=	-10892
 CATEGORIES=	dns
 MASTER_SITES=	https://www.yadifa.eu/sites/default/files/releases/ \
 		https://dns.company/downloads/yadifa/
 
 MAINTAINER=	freebsd@dns.company
 COMMENT=	Authoritative nameserver with DNSSEC capabilities
+WWW=		https://www.yadifa.eu/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -16,6 +17,9 @@ USE_RC_SUBR=	${PORTNAME}d
 
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--localstatedir=/var
+
+# obsolete in next version, so > 2.6.2
+LDFLAGS+=	-lexecinfo
 
 SUB_LIST+=	GROUPS="${GROUPS}" \
 		USERS="${USERS}"

@@ -1,12 +1,12 @@
-# Created by: Ryan Steinmetz <zi@FreeBSD.org>
-
 PORTNAME=	vcd
-DISTVERSION=	1.4-8
+DISTVERSION=	1.4-10
+PORTREVISION=	1
 CATEGORIES=	devel
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Visualization techniques, data sets for categorical data
+WWW=		https://cran.r-project.org/package=vcd
 
 LICENSE=	GPLv2
 

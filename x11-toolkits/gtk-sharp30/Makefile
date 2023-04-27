@@ -1,14 +1,13 @@
-# Created by: Juli Mallett
-
 PORTNAME=	gtk-sharp
 PORTVERSION=	2.99.3
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	x11-toolkits
 MASTER_SITES=	GNOME
 PKGNAMESUFFIX=	30
 
 MAINTAINER=	kwm@FreeBSD.org
 COMMENT=	GTK+ and GNOME interfaces for the .NET runtime
+WWW=		https://www.mono-project.com/Gtk
 
 LICENSE=	LGPL20
 LICENSE_FILE=	${WRKSRC}/COPYING

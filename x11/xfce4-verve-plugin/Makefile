@@ -1,8 +1,6 @@
-# Created by: Martin Wilke (miwi@FreeBSD.org)
-
 PORTNAME=	verve-plugin
 PORTVERSION=	2.0.1
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	x11 xfce
 MASTER_SITES=	XFCE/panel-plugins
 PKGNAMEPREFIX=	xfce4-
@@ -11,6 +9,7 @@ DIST_SUBDIR=	xfce4
 
 MAINTAINER=	xfce@FreeBSD.org
 COMMENT=	Command line plugin for the Xfce Desktop
+WWW=		https://goodies.xfce.org/projects/panel-plugins/xfce4-verve-plugin
 
 LICENSE=	GPLv2
 

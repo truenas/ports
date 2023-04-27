@@ -1,7 +1,5 @@
-# Created by: Lars Balker Rasmussen <lbr@FreeBSD.org>
-
 PORTNAME=	Moose
-PORTVERSION=	2.2200
+PORTVERSION=	2.2203
 PORTEPOCH=	1
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
@@ -10,6 +8,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Complete modern object system for Perl 5
+WWW=		https://metacpan.org/release/Moose
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual
@@ -32,7 +31,6 @@ RUN_DEPENDS=	p5-Class-Load>=0.09:devel/p5-Class-Load \
 		p5-Params-Util>=1.00:devel/p5-Params-Util \
 		p5-Scalar-List-Utils>=1.56,1:lang/p5-Scalar-List-Utils \
 		p5-Sub-Exporter>=0.980:devel/p5-Sub-Exporter \
-		p5-Sub-Name>=0.20,1:devel/p5-Sub-Name \
 		p5-Try-Tiny>=0.17:lang/p5-Try-Tiny
 TEST_DEPENDS=	p5-CPAN-Meta-Check>=0.011:devel/p5-CPAN-Meta-Check \
 		p5-DBM-Deep>=0:databases/p5-DBM-Deep \
@@ -55,8 +53,8 @@ TEST_DEPENDS=	p5-CPAN-Meta-Check>=0.011:devel/p5-CPAN-Meta-Check \
 		p5-Test-LeakTrace>=0:devel/p5-Test-LeakTrace \
 		p5-Test-Memory-Cycle>=0:devel/p5-Test-Memory-Cycle \
 		p5-Test-Fatal>=0.001:devel/p5-Test-Fatal \
+		p5-Test-Needs>=0.002010:devel/p5-Test-Needs \
 		p5-Test-Output>=0:devel/p5-Test-Output \
-		p5-Test-Requires>=0.05:devel/p5-Test-Requires \
 		p5-Test-Warnings>=0:devel/p5-Test-Warnings \
 		p5-Type-Tiny>=0:devel/p5-Type-Tiny \
 		p5-URI>=0:net/p5-URI

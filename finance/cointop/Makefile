@@ -1,10 +1,12 @@
 PORTNAME=	cointop
 DISTVERSIONPREFIX=	v
 DISTVERSION=	1.6.10
+PORTREVISION=	12
 CATEGORIES=	finance
 
 MAINTAINER=	lcook@FreeBSD.org
 COMMENT=	Cryptocurrency coin stats
+WWW=		https://github.com/miguelmota/cointop
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

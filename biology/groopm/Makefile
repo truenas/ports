@@ -1,11 +1,12 @@
 PORTNAME=	GroopM
 DISTVERSION=	0.3.4
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	biology python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Metagenomic binning suite
+WWW=		https://ecogenomics.github.io/GroopM/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

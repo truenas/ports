@@ -1,14 +1,13 @@
-# Created by: Stanislav Svirid <count@211.ru>
-
 PORTNAME=	south
 PORTVERSION=	1.0.2
 CATEGORIES=	databases python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	South-${PORTVERSION}
 
-MAINTAINER=	wg@FreeBSD.org
+MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Intelligent schema migrations for Django apps
+WWW=		https://south.aeracode.org/
 
 LICENSE=	APACHE20
 

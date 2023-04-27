@@ -1,13 +1,13 @@
-# Created by: Michael Johnson <ahze@FreeBSD.org>
-
 PORTNAME=	libmatekbd
 PORTVERSION=	1.26.0
+PORTREVISION=	1
 CATEGORIES=	x11 mate
 MASTER_SITES=	MATE
 DIST_SUBDIR=	mate
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	MATE keyboard shared library
+WWW=		https://mate-desktop.org/
 
 LICENSE=	LGPL20+
 LICENSE_FILE=	${WRKSRC}/COPYING

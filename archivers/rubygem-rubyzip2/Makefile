@@ -1,5 +1,3 @@
-# Created by: Hsin-Han You <hhyou@cs.nctu.edu.tw>
-
 PORTNAME=	rubyzip2
 PORTVERSION=	2.0.2
 CATEGORIES=	archivers rubygems
@@ -7,10 +5,10 @@ MASTER_SITES=	RG
 
 MAINTAINER=	hhyou@cs.nctu.edu.tw
 COMMENT=	Ruby compatible Zip library
+WWW=		https://github.com/postmodern/rubyzip2
 
 NO_ARCH=	yes
 
-USE_RUBY=	yes
 USES=		cpe gem
 
 CPE_VENDOR=	rubyzip_project

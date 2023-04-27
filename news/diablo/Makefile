@@ -1,5 +1,3 @@
-# Created by: James FitzGibbon <jfitz@FreeBSD.org>
-
 PORTNAME=	diablo
 PORTVERSION=	5.1
 PORTREVISION=	2
@@ -9,6 +7,7 @@ DISTNAME=	${PORTNAME}-${PORTVERSION}-REL
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Comprehensive newsfeeding and newsreading software package
+WWW=		https://www.openusenet.org/diablo/
 
 LICENSE=	BSD3CLAUSE
 

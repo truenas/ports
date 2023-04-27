@@ -2,12 +2,13 @@ PORTNAME=	zope.size
 PORTVERSION=	3.5.0
 PORTREVISION=	1
 CATEGORIES=	devel python zope
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DIST_SUBDIR=	zope
 
 MAINTAINER=	zope@FreeBSD.org
 COMMENT=	Interfaces and simple adapter that give the size of an object
+WWW=		https://pypi.org/project/zope.size/
 
 LICENSE=	ZPL21
 

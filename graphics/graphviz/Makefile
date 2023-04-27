@@ -1,13 +1,12 @@
-# Created by: Thomas Gellekum <tg@FreeBSD.org>
-
 PORTNAME=	graphviz
-PORTVERSION=	2.44.1
-PORTREVISION=	18
+PORTVERSION=	7.1.0
+PORTREVISION=	5
 CATEGORIES=	graphics tk
-MASTER_SITES=	https://www2.graphviz.org/Packages/stable/portable_source/
+MASTER_SITES=	https://gitlab.com/api/v4/projects/4207231/packages/generic/graphviz-releases/${PORTVERSION}/
 
 MAINTAINER=	dinoex@FreeBSD.org
 COMMENT=	Graph Visualization Software from AT&T and Bell Labs
+WWW=		https://www.graphviz.org/
 
 LICENSE=	EPL
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -19,6 +18,7 @@ LIB_DEPENDS=	libltdl.so:devel/libltdl \
 		libfreetype.so:print/freetype2 \
 		libfontconfig.so:x11-fonts/fontconfig \
 		libexpat.so:textproc/expat2 \
+		libharfbuzz.so:print/harfbuzz \
 		libgd.so:${GD_PORT}
 
 USES=		compiler:c++11-lang cpe pathfix shebangfix gmake bison \
@@ -34,6 +34,9 @@ CFLAGS_armv7=	-fno-builtin-sincos -fno-builtin-sin -fno-builtin-cos \
 		-fno-builtin-sincosf -fno-builtin-sinf -fno-builtin-cosf \
 		-fno-builtin-sincosl -fno-builtin-sinl -fno-builtin-cosl
 MAKE_ENV=	EXPR_COMPAT=yes
+
+CONFLICTS_INSTALL=	ghmm
+
 INSTALL_TARGET=	install-strip
 USE_LDCONFIG=	${PREFIX}/lib/${PORTNAME}
 PLIST_SUB=	PORTVERSION="${PORTVERSION}"
@@ -41,8 +44,7 @@ PLIST_SUB=	PORTVERSION="${PORTVERSION}"
 FIX_INCLUDE=	lib/cdt/dthdr.h lib/pathplan/tri.h \
 		lib/pathplan/pathutil.h lib/pathplan/solvers.h \
 		lib/pathplan/vis.h lib/pathplan/vispath.h \
-		lib/common/logic.h lib/common/globals.h \
-		lib/gvc/gvcint.h
+		lib/common/globals.h lib/gvc/gvcint.h
 FIX_TCL_SCRIPT=	tclpkg/gdtclft/demo/entities.tcl \
 		tclpkg/tcldot/demo/gcat.tcl
 FIX_TK_SCRIPT=	tclpkg/tcldot/demo/doted.tcl \
@@ -52,12 +54,13 @@ OPTIONS_DEFINE=	XPM DIGCOLA IPSEPCOLA ICONV NLS PANGOCAIRO POPPLER \
 		ANN GTS GTK2 GDK GDK_PIXBUF SMYRNA DEVIL \
 		GHOSTSCRIPT PERL PHP PYTHON RUBY LUA TCL TK GUILE GO \
 		NVTHREADS DOCS EXAMPLES
-OPTIONS_DEFAULT=	XPM DIGCOLA IPSEPCOLA ICONV PANGOCAIRO NVTHREADS
+OPTIONS_DEFAULT=XPM DIGCOLA IPSEPCOLA ICONV PANGOCAIRO NVTHREADS
 NO_OPTIONS_SORT=yes
 OPTIONS_SUB=	yes
 DIGCOLA_DESC=	neato layout engine with DIGCOLA features
 IPSEPCOLA_DESC=	neato layout engine with IPSEPCOLA features
 PANGOCAIRO_DESC=pangocairo support
+POPPLER_DESC=	PDF and PS file support via poppler (requires PANGOCAIRO)
 ANN_DESC=	ANN edge bundling support
 GTS_DESC=	GNU Triangulated Surface Library support
 GTK2_DESC=	gtk2 plugin (requires PANGOCAIRO)
@@ -89,10 +92,11 @@ SMYRNA_USES=	gnome gl
 SMYRNA_USE=	GNOME=libglade2,pangox-compat,gdkpixbuf2 GL=glut,glu,gl
 GHOSTSCRIPT_USES=ghostscript
 PERL_USES=	perl5
+PHP_USES=	php:build gnome
 PHP_USE=	GNOME=libxml2
-PHP_USES=	php:build
+PHP_BROKEN=	needs swig 4.2.0
 PYTHON_USES=	python:build
-RUBY_USE=	RUBY=yes
+RUBY_USES=	ruby
 LUA_USES=	lua
 TK_USES=	tk:build
 GO_USES=	go:no_targets
@@ -118,6 +122,7 @@ IPSEPCOLA_IMPLIES=		DIGCOLA
 NLS_CONFIGURE_ENABLE=		nls
 PANGOCAIRO_CONFIGURE_WITH=	pangocairo
 POPPLER_CONFIGURE_WITH=		poppler
+POPPLER_IMPLIES=		PANGOCAIRO
 ANN_CONFIGURE_WITH=		ann
 ANN_CONFIGURE_ENV=	ANN_CFLAGS=-I${LOCALBASE}/include ANN_LIBS=-lann
 GTS_CONFIGURE_WITH=		gts
@@ -137,12 +142,15 @@ PERL_VARS=		SHEBANG_FILES+=tclpkg/gv/demo/modgraph.pl
 PHP_CONFIGURE_ENABLE=		php
 PHP_CPPFLAGS=		-I${LOCALBASE}/include/php/Zend
 PHP_VARS=		SHEBANG_FILES+=tclpkg/gv/demo/modgraph.php
-PYTHON_CONFIGURE_ENABLE=	python
+PYTHON_CONFIGURE_ENABLE=	python3
 PYTHON_LDFLAGS=		"-L${PYTHONBASE}/lib"
 PYTHON_VARS=		SHEBANG_FILES+=tclpkg/gv/demo/modgraph.py
 PYTHON_CONFIGURE_ENV=	PYTHON_INCLUDEDIR="${PYTHON_INCLUDEDIR}"
 RUBY_CONFIGURE_ENABLE=		ruby
-RUBY_CONFIGURE_ENV=	RUBY="${RUBY}"
+RUBY_CONFIGURE_ENV=	RUBY="${RUBY}" RUBY_VER="${RUBY_VER}" \
+			RUBY_CFLAGS="${RUBY_CFLAGS}" \
+			RUBY_LDFLAGS="${RUBY_LDFLAGS}" \
+			RUBY_INSTALL_DIR="${RUBY_SITEARCHLIBDIR}"
 RUBY_VARS=		SHEBANG_FILES+=tclpkg/gv/demo/modgraph.rb
 LUA_CONFIGURE_ENABLE=		lua
 LUA_CFLAGS=		-I${LUA_INCDIR}
@@ -171,6 +179,7 @@ GD_PORT?=	graphics/gd
 CONFIGURE_ARGS+=	--program-transform-name="s/x/x/" \
 		--enable-dependency-tracking \
 		--enable-r=no \
+		--with-demos="${EXAMPLESDIR}" \
 		--with-freetype2=yes \
 		--with-libgd \
 		--with-webp \
@@ -180,8 +189,22 @@ CONFIGURE_ARGS+=	--program-transform-name="s/x/x/" \
 		--without-rsvg \
 		--with-qt=no \
 		--disable-io --disable-ocaml --disable-java \
-		--disable-python2 --disable-python3 \
+		--disable-python2 \
 		--disable-sharp
+
+.if ${PORT_OPTIONS:MPYTHON}
+BINARY_ALIAS+=	python3=${PYTHON_CMD}
+.endif
+
+.if ${PORT_OPTIONS:MRUBY}
+RUBY_CFLAGS+=	-I "${LOCALBASE}/include/ruby-${RUBY_VER}/" \
+		-I "${LOCALBASE}/include/ruby-${RUBY_VER}/${RUBY_ARCH}"
+.if exists(${LOCALBASE}/bin/ruby${RUBY_SHLIBVER})
+RUBY_LIBS!=	${LOCALBASE}/bin/ruby${RUBY_SHLIBVER} \
+		-r rbconfig -e "print RbConfig::CONFIG[ 'LIBS' ]"
+RUBY_LDFLAGS+=	${RUBY_LIBS}
+.endif
+.endif
 
 .if ${PORT_OPTIONS:MICONV}
 CONFIGURE_ARGS+=	--with-iconvlibdir=${ICONV_PREFIX}/lib
@@ -208,21 +231,12 @@ post-patch:
 	${REINPLACE_CMD} \
 		-e 's|PHP_INSTALL_DATADIR=.*|PHP_INSTALL_DATADIR="${PREFIX}/share/php"|' \
 		-e 's|LUA_INSTALL_DIR=.*|LUA_INSTALL_DIR="${LUA_MODLIBDIR}"|' \
+		-e 's| vendorarchdir| sitearchdir|' \
 		${WRKSRC}/configure.ac
 	${REINPLACE_CMD} -e 's|#include "gui.h"|#include "gui/gui.h"|' \
 		${WRKSRC}/cmd/smyrna/tvnodes.h
 	${REINPLACE_CMD} -e 's|SF_FLAGS|SFIO_FLAGS|g' \
 		${WRKSRC}/lib/sfio/*.[ch]
-	${FIND} ${WRKSRC} -name Makefile.am | \
-		${XARGS} ${REINPLACE_CMD} \
-		-e 's| $$(pkgdatadir)/doc/pdf| ${DOCSDIR}/pdf|' \
-		-e 's| $$(pkgdatadir)/doc/html/schema| ${DOCSDIR}/html/schema|' \
-		-e 's| $$(pkgdatadir)/doc/html/info| ${DOCSDIR}/html/info|' \
-		-e 's| $$(pkgdatadir)/doc/html| ${DOCSDIR}/html|' \
-		-e 's| $$(pkgdatadir)/doc| ${DOCSDIR}|' \
-		-e 's| $$(pkgdatadir)/demo| ${EXAMPLESDIR}|' \
-		-e 's| $$(datadir)/@PACKAGE@/demo| ${EXAMPLESDIR}|';
-	${CP} ${FILESDIR}/version.m4 ${WRKSRC}/version.m4
 	cd ${WRKSRC} && ${REINPLACE_CMD} \
 		-e 's|exec tclsh |exec tclsh${TCL_VER} |' ${FIX_TCL_SCRIPT}
 	cd ${WRKSRC} && ${REINPLACE_CMD} \

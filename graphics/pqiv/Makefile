@@ -1,12 +1,11 @@
-# Created by: Martin Tournoij <carpetsmoker@xs4all.nl>
-
 PORTNAME=	pqiv
 PORTVERSION=	2.12
-PORTREVISION=	7
+PORTREVISION=	20
 CATEGORIES=	graphics
 
 MAINTAINER=	danilo@FreeBSD.org
 COMMENT=	Pretty Quick Image Viewer
+WWW=		https://github.com/phillipberndt/pqiv
 
 LICENSE=	GPLv2
 

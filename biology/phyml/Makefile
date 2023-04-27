@@ -1,13 +1,12 @@
-# Created by: ballen
-
 PORTNAME=	phyml
 DISTVERSIONPREFIX=	v
-DISTVERSION=	3.3.20200621
+DISTVERSION=	3.3.20220408
 PORTEPOCH=	1
 CATEGORIES=	biology
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Simple, fast, and accurate algorithm to estimate large phylogenies
+WWW=		https://github.com/stephaneguindon/phyml
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -44,8 +43,6 @@ BIN_SUFFIX=		# none
 .endif
 
 post-patch:
-	@${REINPLACE_CMD} -e \
-		's|-O2 .* $${ARCH_flag}|$${CFLAGS}|' ${WRKSRC}/configure.ac
 .if ${ARCH} != amd64 && ${ARCH} != i386
 	@${REINPLACE_CMD} -e 's|VECTOR_FLAG=-march=native|dnl &|' ${WRKSRC}/configure.ac
 .endif

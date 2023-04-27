@@ -1,11 +1,12 @@
 PORTNAME=	elemental
 DISTVERSIONPREFIX=	v
 DISTVERSION=	1.5.1
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	math
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Dense and sparse linear algebra, conic optimization, lattice reduction
+WWW=		https://github.com/LLNL/Elemental
 
 LICENSE=	BSD2CLAUSE
 

@@ -1,7 +1,5 @@
-# Created by: Nicola Vitale	<nivit@email.it>
-
 PORTNAME=	geogebra
-PORTVERSION=	5.0.625.0
+PORTVERSION=	5.0.752.0
 CATEGORIES=	math education java
 MASTER_SITES=	http://download.geogebra.org/installers/5.0/ \
 		https://static.geogebra.org/images/ \
@@ -12,6 +10,7 @@ EXTRACT_ONLY=	${DISTNAME}${EXTRACT_SUFX}
 
 MAINTAINER=	uzsolt@uzsolt.hu
 COMMENT=	Dynamic software that joins geometry, algebra, and calculus
+WWW=		https://www.geogebra.org/
 
 LICENSE=	GEOGEBRA
 LICENSE_NAME=	GeoGebra Non-Commercial License Agreement
@@ -20,7 +19,7 @@ LICENSE_PERMS=	dist-mirror no-dist-sell pkg-mirror no-pkg-sell auto-accept
 
 ONLY_FOR_ARCHS=	amd64 i386
 
-USES=		tar:bzip2 desktop-file-utils gnome shebangfix
+USES=		tar:bzip2 desktop-file-utils gnome shebangfix shared-mime-info
 USE_JAVA=	yes
 
 CONFLICTS=	math/geogebra-i18n
@@ -37,6 +36,7 @@ do-install:
 	${INSTALL_SCRIPT} ${WRKDIR}/geogebra.sh ${STAGEDIR}${PREFIX}/bin/${PORTNAME}
 	${INSTALL_DATA} ${WRKSRC}/geogebra/*.jar ${STAGEDIR}${DATADIR}/${PORTNAME}
 	@${MKDIR} ${STAGEDIR}${PREFIX}/share/mime/packages
+	${INSTALL_DATA} ${FILESDIR}/geogebra-mime.xml ${STAGEDIR}${PREFIX}/share/mime/packages
 	${INSTALL_DATA} ${WRKDIR}/geogebra.desktop ${STAGEDIR}${DESKTOPDIR}
 	@${MKDIR} ${STAGEDIR}${PREFIX}/share/icons/hicolor/32x32/apps
 	@${MKDIR} ${STAGEDIR}${PREFIX}/share/icons/hicolor/scalable/apps

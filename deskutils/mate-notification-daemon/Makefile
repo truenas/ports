@@ -1,13 +1,13 @@
-# Created by: Andreas Kohn <andreas@syndrom23.de>
-
 PORTNAME=	mate-notification-daemon
 PORTVERSION=	1.26.0
+PORTREVISION=	2
 CATEGORIES=	deskutils mate
 MASTER_SITES=	MATE
 DIST_SUBDIR=	mate
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Send small notifications to your desktop
+WWW=		https://mate-desktop.org/
 
 LICENSE=	GPLv2+ GPLv3+
 LICENSE_COMB=	multi

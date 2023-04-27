@@ -1,10 +1,11 @@
 PORTNAME=	folly
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2021.12.06.00
+DISTVERSION=	2023.04.24.00
 CATEGORIES=	devel
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	C++ library developed and used at Facebook
+WWW=		https://github.com/facebook/folly
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -13,6 +14,7 @@ BROKEN_i386=	error: use of undeclared identifier 'DCHECK': https://github.com/fa
 
 BUILD_DEPENDS=	elfutils>0:devel/elfutils # workaround for missing symbols like DW_UT_compile: https://github.com/facebook/folly/issues/1654
 LIB_DEPENDS=	libboost_atomic.so:devel/boost-libs \
+		libbzip2.so:misc/vxl \
 		libdouble-conversion.so:devel/double-conversion \
 		libevent.so:devel/libevent \
 		libfmt.so:devel/libfmt \
@@ -24,16 +26,19 @@ LIB_DEPENDS=	libboost_atomic.so:devel/boost-libs \
 		libsodium.so:security/libsodium \
 		libunwind.so:devel/libunwind \
 		libzstd.so:archivers/zstd
+RUN_DEPENDS=	elfutils>0:devel/elfutils # workaround for missing symbols like DW_UT_compile: https://github.com/facebook/folly/issues/1654
 TEST_DEPENDS=	googletest>0:devel/googletest
 
-USES=		cmake compiler:c++17-lang cpe ssl
+USES=		cmake compiler:c++17-lang cpe localbase ssl
+USE_LDCONFIG=	yes
+
 CPE_VENDOR=	facebook
 USE_GITHUB=	yes
 GH_ACCOUNT=	facebook
-USE_LDCONFIG=	yes
 
 CMAKE_ON=	BUILD_SHARED_LIBS
 CMAKE_OFF=	FREEBSD_BUILD_EXAMPLES FREEBSD_FOLLY_USE_SYMBOLIZER # enabling symbolizer causes undefined symbol _r_debug, see https://github.com/facebook/folly/issues/1373
+#CMAKE_OFF+=	FOLLY_USE_JEMALLOC # Build fails with FOLLY_USE_JEMALLOC=OFF, see https://github.com/facebook/folly/issues/1893
 
 CXXFLAGS+=	-fPIC
 CXXFLAGS_powerpc64=	-DFOLLY_QUOTIENT_MULTI_SET_SUPPORTED=0

@@ -1,10 +1,11 @@
 PORTNAME=	yaze-ag
-DISTVERSION=	2.51.0
+DISTVERSION=	2.51.3
 CATEGORIES=	emulators
 MASTER_SITES=	http://www.mathematik.uni-ulm.de/users/ag/yaze-ag/devel/
 
 MAINTAINER=	se@FreeBSD.org
 COMMENT=	Z80 and CP/M-80 emulator
+WWW=		http://yaze-ag.de/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -23,6 +24,8 @@ MAKE_ENV=	BINDIR=${PREFIX}/bin \
 		LIBEXECDIR=${PREFIX}/libexec \
 		MANDIR=${MAN1PREFIX}/man/man1 \
 		OPTIMIZE="${CFLAGS}"
+
+CONFLICTS_INSTALL=	cpmtools
 
 OPTIONS_DEFINE=	DOCS
 

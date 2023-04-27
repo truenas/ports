@@ -1,10 +1,12 @@
 PORTNAME=	alberta
 DISTVERSION=	3.0.3
+PORTREVISION=	1
 CATEGORIES=	math
 PKGNAMESUFFIX=	-fem
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Adaptive multi-level finite element toolbox
+WWW=		http://www.alberta-fem.de/
 
 LICENSE=	GPLv2+
 

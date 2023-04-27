@@ -1,11 +1,13 @@
 PORTNAME=	hdmedians
 PORTVERSION=	0.14.2
+PORTREVISION=	1
 CATEGORIES=	math python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	High-dimensional medians
+WWW=		https://github.com/daleroberts/hdmedians
 
 LICENSE=	APACHE20
 

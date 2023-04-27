@@ -1,14 +1,13 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	cert-human
 PORTVERSION=	1.0.7
 CATEGORIES=	security python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	cert_human-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	SSL Certificates for Humans
+WWW=		https://github.com/lifehackjim/cert_human
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

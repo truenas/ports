@@ -1,12 +1,12 @@
 PORTNAME=	foswiki
-PORTVERSION=	2.1.6
-PORTREVISION=	1
+PORTVERSION=	2.1.7
 CATEGORIES=	www
 MASTER_SITES=	SF
 DISTNAME=	Foswiki-${PORTVERSION}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Free and open source enterprise wiki
+WWW=		http://www.foswiki.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE

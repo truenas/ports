@@ -1,12 +1,12 @@
-# Created by: Maxim Sobolev <sobomax@FreeBSD.org>
-
 PORTNAME=	gtkextra
 PORTVERSION=	3.3.4
+PORTREVISION=	1
 CATEGORIES=	x11-toolkits
 MASTER_SITES=	SF/${PORTNAME}/${PORTVERSION:R}
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Useful widget set complementary to GTK+ 2.0
+WWW=		http://gtkextra.sourceforge.net/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

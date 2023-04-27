@@ -1,11 +1,11 @@
 PORTNAME=	gnupg
-PORTVERSION=	2.3.3
-PORTREVISION=	2
+DISTVERSION=	2.3.8
 CATEGORIES=	security
 MASTER_SITES=	GNUPG
 
 MAINTAINER=	adridg@FreeBSD.org
 COMMENT=	Complete and free PGP implementation
+WWW=		https://www.gnupg.org/
 
 LICENSE=	GPLv3 LGPL3
 LICENSE_COMB=	multi
@@ -21,16 +21,14 @@ RUN_DEPENDS=	pinentry:security/pinentry
 
 USES=		compiler:c11 cpe gmake iconv makeinfo pkgconfig readline sqlite tar:bzip2
 
-CONFLICTS=	gnupg-2.0.* dirmngr
+CONFLICTS=	dirmngr
 CPE_VENDOR=	gnupg
 
-CONFIGURE_ARGS=	--disable-ntbtls --enable-gpg-is-gpg2 --enable-symcryptrun
+CONFIGURE_ARGS=	--disable-ntbtls --enable-gpg-is-gpg2
 GNU_CONFIGURE=	yes
 INFO=		gnupg
 TEST_TARGET=	check
 TEST_ARGS=	TESTARGS=--parallel
-
-SUB_FILES=	pkg-message
 
 OPTIONS_DEFINE=	DOCS GNUTLS LARGE_RSA LDAP NLS SCDAEMON SUID_GPG WKS_SERVER
 OPTIONS_DEFAULT=GNUTLS SCDAEMON WKS_SERVER
@@ -49,7 +47,7 @@ LARGE_RSA_CONFIGURE_ENABLE=	large-secmem
 
 LDAP_CONFIGURE_WITH=	ldap=${LOCALBASE}
 LDAP_LIBS=		-L${LOCALBASE}/lib
-LDAP_USE=		OPENLDAP=yes
+LDAP_USES=		ldap
 
 NLS_CONFIGURE_ENABLE=	nls
 NLS_USES=		gettext

@@ -1,10 +1,12 @@
 PORTNAME=	consul-alerts
 PORTVERSION=	0.6.0
 DISTVERSIONPREFIX=	v
+PORTREVISION=	12
 CATEGORIES=	sysutils
 
 MAINTAINER=	jhixson@FreeBSD.org
 COMMENT=	Simple daemon to send notifications based on Consul health checks
+WWW=		https://github.com/AcalephStorage/consul-alerts
 
 LICENSE=	GPLv2+
 

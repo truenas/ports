@@ -1,11 +1,12 @@
 PORTNAME=	cymbal
 DISTVERSION=	1.0.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ports@nicandneal.net
 COMMENT=	Easily add functionality missing from libclang Python bindings
+WWW=		https://github.com/CadQuery/cymbal
 
 LICENSE=	MIT
 

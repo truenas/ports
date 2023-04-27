@@ -1,11 +1,11 @@
-# Created by: Michael Johnson <ahze@FreeBSD.org>
-
 PORTNAME=	pciids
-PORTVERSION=	20211028
+PORTVERSION=	20230317
 CATEGORIES=	misc
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Database of all known IDs used in PCI devices
+WWW=		https://pci-ids.ucw.cz/ \
+		https://github.com/pciutils/pciids
 
 LICENSE=	BSD3CLAUSE GPLv2+
 LICENSE_COMB=	dual
@@ -16,7 +16,7 @@ NO_BUILD=	yes
 PORTDATA=	pci.ids
 
 GH_ACCOUNT=	pciutils
-GH_TAGNAME=	98a24cc
+GH_TAGNAME=	3dcf957
 USE_GITHUB=	yes
 
 do-install:

@@ -1,5 +1,3 @@
-# Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
-
 PORTNAME=	scanmem
 PORTVERSION=	0.17
 DISTVERSIONPREFIX=	v
@@ -7,6 +5,7 @@ CATEGORIES=	sysutils
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Locate and modify various data in an executing process
+WWW=		https://code.google.com/p/scanmem/
 
 LICENSE=	GPLv3
 

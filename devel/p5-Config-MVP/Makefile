@@ -1,13 +1,12 @@
-# Created by: andrey@kostenko.name
-
 PORTNAME=	Config-MVP
-PORTVERSION=	2.200012
+PORTVERSION=	2.200013
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Multivalue-property package-oriented configuration
+WWW=		https://metacpan.org/release/Config-MVP
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

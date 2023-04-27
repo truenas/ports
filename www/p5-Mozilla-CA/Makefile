@@ -1,11 +1,12 @@
 PORTNAME=	Mozilla-CA
-PORTVERSION=	20211001
+PORTVERSION=	20221114
 CATEGORIES=	www perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	svysh.fbsd@gmail.com
 COMMENT=	Perl extension for Mozilla CA cert bundle in PEM format
+WWW=		https://metacpan.org/release/Mozilla-CA
 
 LICENSE=	MPL20
 LICENSE_FILE=	${WRKSRC}/README

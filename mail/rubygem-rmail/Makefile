@@ -1,5 +1,3 @@
-# Created by: Eric Freeman <freebsdports@chillibear.com>
-
 PORTNAME=	rmail
 PORTVERSION=	1.1.4
 CATEGORIES=	mail rubygems
@@ -11,7 +9,6 @@ COMMENT=	Lightweight mail library
 LICENSE=	BSD3CLAUSE
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

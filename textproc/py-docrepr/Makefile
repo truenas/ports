@@ -1,11 +1,12 @@
 PORTNAME=	docrepr
-DISTVERSION=	0.1.1
+DISTVERSION=	0.2.0
 CATEGORIES=	textproc
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dbaio@FreeBSD.org
 COMMENT=	Generate rich representations for docstrings
+WWW=		https://github.com/spyder-ide/docrepr/
 
 LICENSE=	BSD3CLAUSE
 

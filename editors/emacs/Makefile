@@ -1,19 +1,24 @@
-# Created by: MANTANI Nobutaka <nobutaka@nobutaka.com>
-
 PORTNAME=	emacs
-DISTVERSION=	27.2
-PORTREVISION=	1
+DISTVERSION=	28.2
+PORTREVISION=	4
 PORTEPOCH=	3
 CATEGORIES=	editors
 MASTER_SITES=	GNU
 
+PATCH_SITES=	https://github.com/emacs-mirror/emacs/commit/:github
+PATCHFILES=	d48bb4874bc6cd3e69c7a15fc3c91cc141025c51.patch:-p1:github \
+		01a4035c869b91c153af9a9132c87adb7669ea1c.patch:-p1:github \
+		9a3b08061feea14d6f37685ca1ab8801758bfd1c.patch:-p1:github \
+		1b4dc4691c1f87fc970fbe568b43869a15ad0d4c.patch:-p1:github
+
 .if ${FLAVOR:U} == canna
-PATCH_SITES+=		https://www.gentei.org/~yuuji/software/emacs27canna/:canna
-PATCHFILES+=		emacs27.0.90-canna-20200308.diff.gz:-p1:canna
+PATCH_SITES+=	https://www.gentei.org/~yuuji/software/emacs28canna/:canna
+PATCHFILES+=	emacs28.1-canna-20220406b.diff.gz:-p1:canna
 .endif
 
 MAINTAINER=	emacs@FreeBSD.org
 COMMENT=	GNU editing macros ${COMMENT_${FLAVOR}}
+WWW=		https://www.gnu.org/software/emacs/
 COMMENT_nox=	(No X flavor)
 COMMENT_canna=	(Canna Japanese input flavor)
 
@@ -40,7 +45,10 @@ USE_XORG=	ice sm x11 xcb xext xfixes xinerama xmu xrandr xt
 
 GNU_CONFIGURE=		yes
 CONFIGURE_ARGS=		--disable-build-details \
-			--localstatedir=/var
+			--localstatedir=/var \
+			--without-gconf \
+			--without-libsystemd \
+			--without-selinux
 .if ${FLAVOR:U} == canna
 CONFIGURE_ARGS+=	--with-canna
 .endif
@@ -49,7 +57,6 @@ CONFIGURE_ARGS+=	--with-sound=no \
 			--with-x-toolkit=no \
 			--without-cairo \
 			--without-dbus \
-			--without-gconf \
 			--without-gif \
 			--without-gsettings \
 			--without-imagemagick \
@@ -79,10 +86,11 @@ SUB_LIST=	EMACS_VER=${DISTVERSION}
 INFO=		auth autotype bovine calc ccmode cl dbus dired-x ebrowse ede \
 		ediff edt efaq eieio eintr elisp emacs emacs-gnutls emacs-mime \
 		epa erc ert eshell eudc eww flymake forms gnus htmlfontify \
-		idlwave ido info mairix-el message mh-e newsticker nxml-mode \
-		octave-mode org pcl-cvs pgg rcirc reftex remember sasl sc \
-		semantic ses sieve smtpmail speedbar srecode todo-mode tramp \
-		url vhdl-mode vip viper widget wisent woman
+		idlwave ido info mairix-el message mh-e modus-themes newsticker \
+		nxml-mode octave-mode org pcl-cvs pgg rcirc reftex remember \
+		sasl sc semantic ses sieve smtpmail speedbar srecode todo-mode \
+		tramp transient url vhdl-mode vip viper widget wisent woman
+
 INFO_PATH=	${DATADIR_REL}/info
 .if ${FLAVOR:U} == canna
 PLIST_FILES+=	${DATADIR}/${DISTVERSION}/lisp/canna.el.gz \
@@ -93,8 +101,8 @@ PLIST_FILES+=	${DATADIR}/${DISTVERSION}/lisp/canna.el.gz \
 PLIST_SUB=	EMACS_VER=${DISTVERSION} \
 		GNU_HOST=${CONFIGURE_TARGET}
 
-OPTIONS_DEFINE=			ACL DBUS FCITXPATCH GCONF GNUTLS GSETTINGS \
-				HARFBUZZ JSON LCMS2 M17N MAILUTILS MODULES OTF \
+OPTIONS_DEFINE=			ACL DBUS GNUTLS GSETTINGS HARFBUZZ JSON LCMS2 \
+				M17N MAILUTILS MODULES NATIVECOMP OTF \
 				SCROLLBARS SOURCES THREADS XFT XIM XML XWIDGETS
 OPTIONS_DEFAULT=		ACL CAIRO DBUS GIF GNUTLS GSETTINGS GTK3 \
 				HARFBUZZ JPEG JSON KQUEUE LCMS2 M17N MAILUTILS \
@@ -107,16 +115,15 @@ OPTIONS_RADIO_FILENOTIFY=	GFILE KQUEUE
 OPTIONS_RADIO_SOUND=		ALSA OSS
 OPTIONS_RADIO_X11TOOLKIT=	GTK2 GTK3 MOTIF XAW XAW3D
 .if ${FLAVOR:U} == nox
-OPTIONS_EXCLUDE=		ALSA CAIRO DBUS FCITXPATCH GCONF GFILE GIF \
-				GSETTINGS GTK2 GTK3 HARFBUZZ JPEG LCMS2 M17N \
-				MAGICK MOTIF OSS OTF PNG SCROLLBARS SVG TIFF \
-				XAW XAW3D XFT XIM XPM XWIDGETS
+OPTIONS_EXCLUDE=		ALSA CAIRO DBUS GFILE GIF GSETTINGS GTK2 GTK3 \
+				HARFBUZZ JPEG LCMS2 M17N MAGICK MOTIF OSS OTF \
+				PNG SCROLLBARS SVG TIFF XAW XAW3D XFT XIM XPM \
+				XWIDGETS
 .endif
 OPTIONS_SUB=			YES
 
 ACL_DESC=		Access control list support
 CAIRO_DESC=		Cairo graphics library support [implies PNG, XFT]
-FCITXPATCH_DESC=	Patch to pass C-Space to Fcitx input method
 FILENOTIFY_DESC=	File notification support
 GFILE_DESC=		File notification via gfile
 GRAPHICS_DESC=		Graphics support
@@ -127,6 +134,7 @@ M17N_DESC=		M17N support for text-shaping [implies XFT]
 MAGICK_DESC=		ImageMagick image processing support (deprecated)
 MAILUTILS_DESC=		Mail framework via GNU Mailutils
 MODULES_DESC=		Dynamic modules support
+NATIVECOMP_DESC=	Emacs Lisp native compiler support (experimental)
 OTF_DESC=		Opentype fonts [implies XFT]
 SCROLLBARS_DESC=	Toolkit scroll-bars
 SOURCES_DESC=		Install sources
@@ -145,9 +153,6 @@ CAIRO_USE=			GNOME=cairo
 CAIRO_CONFIGURE_WITH=		cairo
 DBUS_LIB_DEPENDS=		libdbus-1.so:devel/dbus
 DBUS_CONFIGURE_WITH=		dbus
-FCITXPATCH_EXTRA_PATCHES=	${PATCHDIR}/extra-patch-src_xfns.c
-GCONF_USE=			GNOME=gconf2
-GCONF_CONFIGURE_WITH=		gconf
 GFILE_USE=			GNOME=glib20
 GFILE_CONFIGURE_ON=		--with-file-notification=gfile
 GIF_LIB_DEPENDS=		libgif.so:graphics/giflib
@@ -184,6 +189,9 @@ MAILUTILS_CONFIGURE_ENV_OFF=	ac_cv_lib_lockfile_maillock=no \
 MODULES_CONFIGURE_WITH=		modules
 MOTIF_USES=			motif
 MOTIF_CONFIGURE_ON=		--with-x-toolkit=motif
+NATIVECOMP_USE=			GCC=yes
+NATIVECOMP_CONFIGURE_WITH=	native-compilation
+NATIVECOMP_MAKE_ARGS=		NATIVE_FULL_AOT=1
 OSS_CONFIGURE_ON=		--with-sound=oss
 OTF_IMPLIES=			XFT
 OTF_LIB_DEPENDS=		libotf.so:print/libotf
@@ -224,12 +232,8 @@ XWIDGETS_CONFIGURE_WITH=	xwidgets
 
 .include <bsd.port.options.mk>
 
-.if ${ARCH} == powerpc64le
-USE_GCC=	yes
-.endif
-
-.if !${PORT_OPTIONS:MGTK2} && !${PORT_OPTIONS:MGTK3} && !${PORT_OPTIONS:MMOTIF} \
-	&& !${PORT_OPTIONS:MXAW} && !${PORT_OPTIONS:MXAW3D}
+.if !${PORT_OPTIONS:MGTK2} && !${PORT_OPTIONS:MGTK3} && !${PORT_OPTIONS:MMOTIF} && \
+	!${PORT_OPTIONS:MXAW} && !${PORT_OPTIONS:MXAW3D}
 CONFIGURE_ARGS+=	--with-x-toolkit=no
 .endif
 
@@ -247,6 +251,12 @@ post-install:
 post-install-MAILUTILS-on:
 	${LN} -sf ${PREFIX}/bin/movemail \
 		${STAGEDIR}${PREFIX}/libexec/emacs/${DISTVERSION}/${CONFIGURE_TARGET}
+
+# Natively compiled elisp files names include build checksum information, so add
+# these files to the plist after the build.
+post-install-NATIVECOMP-on:
+	@(cd ${WRKSRC} && ${FIND} native-lisp -type f | ${SED} -e 's,^,lib/emacs/${DISTVERSION}/,') >> ${TMPPLIST}
+#	@${FIND} ${STAGEDIR}${PREFIX}/lib/emacs/${DISTVERSION:R}/native-lisp/ -name '*.eln*' -exec ${STRIP_CMD} {} +
 
 post-install-SOURCES-on:
 	@${MKDIR} ${STAGEDIR}${DATADIR}/${DISTVERSION}/src

@@ -1,12 +1,13 @@
 PORTNAME=	jigsaw
 PORTVERSION=	0.8
-PORTREVISION=	8
+PORTREVISION=	9
 CATEGORIES=	games gnustep
 MASTER_SITES=	SAVANNAH/gap
 DISTNAME=	Jigsaw-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Simulates a jigsaw puzzle and illustrates the use of clipping paths
+WWW=		https://gap.nongnu.org/jigsaw/
 
 LICENSE=	GPLv2+
 

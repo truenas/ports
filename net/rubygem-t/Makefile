@@ -1,5 +1,3 @@
-# Created by: Sunpoet Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	t
 PORTVERSION=	3.1.0
 PORTREVISION=	3
@@ -8,6 +6,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Command-line power tool for Twitter
+WWW=		https://sferik.github.io/t/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.md
@@ -21,7 +20,6 @@ RUN_DEPENDS=	rubygem-geokit>=1.9<2:graphics/rubygem-geokit \
 		rubygem-twitter>=6.0:net/rubygem-twitter
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

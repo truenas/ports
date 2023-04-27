@@ -1,13 +1,12 @@
-# Created by: sumikawa@kame.net
-
 PORTNAME=	wv
 PORTVERSION=	1.2.9
-PORTREVISION=	5
+PORTREVISION=	7
 CATEGORIES=	textproc
 MASTER_SITES=	http://www.abisource.com/downloads/wv/${PORTVERSION}/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Library and executables to access Microsoft Word files
+WWW=		http://wvware.sourceforge.net/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

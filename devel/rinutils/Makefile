@@ -1,10 +1,11 @@
 PORTNAME=	rinutils
-DISTVERSION=	0.10.0
+DISTVERSION=	0.10.1
 CATEGORIES=	devel
 MASTER_SITES=	https://github.com/shlomif/${PORTNAME}/releases/download/${DISTVERSION}/
 
 MAINTAINER=	tcberner@FreeBSD.org
 COMMENT=	C11 / gnu11 utilities C library
+WWW=		https://github.com/shlomif/rinutils
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

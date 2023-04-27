@@ -1,11 +1,10 @@
-# Created by: Luca Pizzamiglio <pizzamig@FreeBSD.org>
+POREREVISION=	1
 
-PKGNAMESUFFIX=	-node14
-
-CONFLICTS_INSTALL=	yarn yarn-node16 yarn-node17
+DEPRECATED=	Requires upstream EOL node14
+EXPIRATION_DATE=	2023-05-26
 
 USES=		nodejs:14,run
 
-MASTERDIR=	${.CURDIR}/../yarn
+MASTERDIR=	${.CURDIR}/../yarn-node18
 
 .include "${MASTERDIR}/Makefile"

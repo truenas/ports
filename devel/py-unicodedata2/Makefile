@@ -1,14 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	unicodedata2
-PORTVERSION=	13.0.0.post2
-PORTREVISION=	1
+PORTVERSION=	15.0.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
-COMMENT=	Unicodedata backport and updates
+COMMENT=	Unicodedata backport updated to the latest Unicode version
+WWW=		https://github.com/fonttools/unicodedata2
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

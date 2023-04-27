@@ -1,5 +1,3 @@
-# Created by: Sergey Akifyev
-
 PORTNAME=	ssamtse
 PORTVERSION=	1.07b1
 PORTREVISION=	1
@@ -11,6 +9,7 @@ DISTFILES=	${PORTNAME:S|ssam|serious.sam.|}_${PORTVERSION:S|b|beta|}-english-2.r
 
 MAINTAINER=	scf@FreeBSD.org
 COMMENT=	Serious Sam: The Second Encounter for Linux
+WWW=		https://www.croteam.com/
 
 # Converted from RESTRICTED
 LICENSE=	ssam

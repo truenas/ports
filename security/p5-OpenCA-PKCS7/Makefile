@@ -1,5 +1,3 @@
-# Created by: Sergey Skvortsov <skv@protey.ru>
-
 PORTNAME=	OpenCA-PKCS7
 PORTVERSION=	0.9.1.1.1
 PORTREVISION=	1
@@ -11,6 +9,10 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Perl extension for basic handling PKCS\#7 Signatures
+WWW=		https://metacpan.org/release/OpenCA-PKCS7
+
+DEPRECATED=	Depends on expired security/p5-OpenCA-OpenSSL
+EXPIRATION_DATE=2023-06-21
 
 BUILD_DEPENDS=	${RUN_DEPENDS}
 RUN_DEPENDS=	p5-OpenCA-OpenSSL>=0:security/p5-OpenCA-OpenSSL \

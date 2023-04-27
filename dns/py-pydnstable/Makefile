@@ -1,11 +1,12 @@
 PORTNAME=	pydnstable
-PORTVERSION=	0.7.2
+PORTVERSION=	0.7.3
 CATEGORIES=	dns python
 MASTER_SITES=	FARSIGHT LOCAL/truckman/farsight
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	truckman@FreeBSD.org
 COMMENT=	Python wrapper for dns/dnstable
+WWW=		https://github.com/farsightsec/pydnstable
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/COPYRIGHT

@@ -1,10 +1,12 @@
 PORTNAME=	cachem
 PORTVERSION=	1.0.6
+PORTREVISION=	1
 CATEGORIES=	databases
 DISTNAME=	${PORTNAME}_${PORTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Cache R Objects with Automatic Pruning
+WWW=		https://cran.r-project.org/web/packages/cachem/
 
 LICENSE=	MIT
 

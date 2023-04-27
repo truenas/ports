@@ -1,11 +1,12 @@
 PORTNAME=	hg-evolve
-DISTVERSION=	10.4.1
+DISTVERSION=	11.0.1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	arrowd@FreeBSD.org
 COMMENT=	Changeset Evolution with Mercurial
+WWW=		https://www.mercurial-scm.org/doc/evolution/
 
 LICENSE=	GPLv2+
 

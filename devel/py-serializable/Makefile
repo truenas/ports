@@ -1,11 +1,12 @@
 PORTNAME=	serializable
 DISTVERSION=	0.2.1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Base class with serialization helpers for user-defined Python objects
+WWW=		https://pypi.org/project/serializable/
 
 LICENSE=	APACHE20
 

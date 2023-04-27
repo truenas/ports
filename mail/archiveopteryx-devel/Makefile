@@ -1,13 +1,12 @@
-# Created by: Ashish SHUKLA <ashish@FreeBSD.org>
-
 PORTNAME=	archiveopteryx
 PORTVERSION=	3.2.99.20181030
-PORTREVISION=	0
+PORTREVISION=	1
 CATEGORIES=	mail
 PKGNAMESUFFIX=	-devel
 
 MAINTAINER=	feld@FreeBSD.org
 COMMENT=	Advanced PostgreSQL-based IMAP/POP server
+WWW=		https://www.archiveopteryx.org/
 
 LICENSE=	MIT
 
@@ -21,6 +20,8 @@ GH_TAGNAME=	96ab17e
 USES=		compiler perl5 ssl
 USE_PERL5=	build
 WITH_PGSQL=	client
+
+CONFLICTS_INSTALL=	archiveopteryx # bin/aox bin/aoxdeliver bin/aoxexport bin/aoximport
 
 PORTDOCS=	COPYING README license.txt
 

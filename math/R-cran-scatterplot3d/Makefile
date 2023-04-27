@@ -1,13 +1,12 @@
-# Created by: Pedro Giffuni
-
 PORTNAME=	scatterplot3d
-DISTVERSION=	0.3-41
-PORTREVISION=	2
+DISTVERSION=	0.3-42
+PORTREVISION=	1
 CATEGORIES=	math
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
-MAINTAINER=	pfg@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	3D Scatter Plot
+WWW=		https://cran.r-project.org/package=scatterplot3d
 
 LICENSE=	GPLv2
 

@@ -1,12 +1,13 @@
 PORTNAME=	easyprocess
-PORTVERSION=	0.2.3
+PORTVERSION=	0.3
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	EasyProcess-${PORTVERSION}
 
 MAINTAINER=	daniel@blodan.se
 COMMENT=	Easy to use python subprocess interface
+WWW=		https://github.com/ponty/EasyProcess
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

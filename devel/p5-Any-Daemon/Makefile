@@ -1,7 +1,5 @@
-# Created by: Martin Waschbuesch <martin@waschbuesch.de>
-
 PORTNAME=	Any-Daemon
-PORTVERSION=	0.95
+PORTVERSION=	0.96
 PORTEPOCH=	1
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
@@ -10,6 +8,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	martin@waschbuesch.de
 COMMENT=	Provides basic needs for a daemon
+WWW=		https://metacpan.org/release/Any-Daemon
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

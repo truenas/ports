@@ -1,10 +1,11 @@
 PORTNAME=	ruby_smb
-PORTVERSION=	2.0.11
+PORTVERSION=	3.2.4
 CATEGORIES=	net rubygems
 MASTER_SITES=	RG
 
 MAINTAINER=	antoine@FreeBSD.org
 COMMENT=	Message creator and parser for the SMB protocol family
+WWW=		https://github.com/rapid7/ruby_smb
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -16,7 +17,6 @@ RUN_DEPENDS=	rubygem-bindata>=0:devel/rubygem-bindata \
 		rubygem-windows_error>=0:devel/rubygem-windows_error
 
 USES=		gem shebangfix
-USE_RUBY=	yes
 SHEBANG_FILES=	examples/delete_file.rb \
 		examples/net_share_enum_all.rb \
 		examples/pipes.rb \

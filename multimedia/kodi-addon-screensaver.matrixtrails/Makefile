@@ -1,13 +1,12 @@
-# Created by: Rozhuk Ivan <rozhuk.im@gmail.com>
-
 PORTNAME=	screensaver.matrixtrails
-PORTVERSION=	2.6.0
-DISTVERSIONSUFFIX=	-Matrix
-PORTREVISION=	2
+PORTVERSION=	20.1.0
+DISTVERSIONSUFFIX=	-Nexus
+PORTREVISION=	1
 CATEGORIES=	multimedia
 
 MAINTAINER=	rozhuk.im@gmail.com
 COMMENT=	Matrix trails screensaver for Kodi
+WWW=		https://github.com/xbmc/screensaver.matrixtrails
 
 LICENSE=	GPLv2+
 

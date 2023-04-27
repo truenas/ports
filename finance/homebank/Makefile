@@ -1,10 +1,12 @@
 PORTNAME=	homebank
-PORTVERSION=	5.5.1
+PORTVERSION=	5.6.2
+PORTREVISION=	1
 CATEGORIES=	finance
-MASTER_SITES=	http://homebank.free.fr/public/
+MASTER_SITES=	http://homebank.free.fr/public/sources/
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Free, easy, personal accounting for everyone
+WWW=		http://homebank.free.fr/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,13 +1,12 @@
-# Created by: Adam Weinberger <adamw@FreeBSD.org>
-
 PORTNAME=	1password-client
-DISTVERSION=	1.12.2
+DISTVERSION=	1.12.4
 CATEGORIES=	security
 MASTER_SITES=	https://cache.agilebits.com/dist/1P/op/pkg/v${DISTVERSION}/ \
 		LOCAL/ler/op
 
 MAINTAINER=	ler@FreeBSD.org
 COMMENT=	1Password CLI client
+WWW=		https://support.1password.com/command-line-getting-started/
 
 ONLY_FOR_ARCHS=	aarch64 amd64 armv6 armv7 i386
 
@@ -17,7 +16,7 @@ NO_WRKSUBDIR=	yes
 NO_BUILD=	yes
 
 PLIST_FILES=	bin/op
-CONFLICTS_INSTALL=	security/op
+CONFLICTS_INSTALL=	security/op security/1password-client2
 
 do-install:
 	${INSTALL_PROGRAM} ${WRKSRC}/op ${STAGEDIR}${PREFIX}/bin

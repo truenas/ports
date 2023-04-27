@@ -1,12 +1,12 @@
-# Created by: TAKATSU Tomonari <tota@FreeBSD.org>
-
 PORTNAME=	stringi
-DISTVERSION=	1.7.6
+DISTVERSION=	1.7.8
+PORTREVISION=	3
 CATEGORIES=	textproc
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Character String Processing Facilities
+WWW=		http://www.gagolewski.com/software/stringi/
 
 LICENSE=	BSD3CLAUSE
 

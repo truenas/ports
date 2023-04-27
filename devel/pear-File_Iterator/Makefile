@@ -1,12 +1,11 @@
-# Created by: Martin Matuska <mm@FreeBSD.org>
-
 PORTNAME=	File_Iterator
-PORTVERSION=	3.0.5
+PORTVERSION=	4.0.1
 CATEGORIES=	devel www pear
 PKGNAMEPREFIX=	${PEAR_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	PEAR FileIterator implementation
+WWW=		https://github.com/sebastianbergmann/php-file-iterator
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

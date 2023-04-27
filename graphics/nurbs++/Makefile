@@ -1,13 +1,12 @@
-# Created by: R Joseph Wright <rjoseph@mammalia.org>
-
 PORTNAME=	nurbs++
 PORTVERSION=	3.0.11
-PORTREVISION=	9
+PORTREVISION=	10
 CATEGORIES=	graphics
 MASTER_SITES=	SF/libnurbs/nurbs%2B%2B/${PORTVERSION}
 
 MAINTAINER=	gahr@FreeBSD.org
 COMMENT=	C++ library to manipulate and create NURBS curves and surfaces
+WWW=		http://libnurbs.sourceforge.net/
 
 USES=		libtool tar:bzip2
 GNU_CONFIGURE=	yes

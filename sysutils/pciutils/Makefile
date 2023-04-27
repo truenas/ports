@@ -1,13 +1,12 @@
-# Created by: Samy Al Bahra <samy@kerneled.org>
-
 PORTNAME=	pciutils
-PORTVERSION=	3.7.0
+PORTVERSION=	3.9.0
 CATEGORIES=	sysutils
 MASTER_SITES=	KERNEL_ORG/software/utils/pciutils \
 		LOCAL/sunpoet
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	PCI configuration utilities
+WWW=		https://mj.ucw.cz/sw/pciutils/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

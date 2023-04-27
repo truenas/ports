@@ -1,26 +1,25 @@
-# Created by: Felix Palmen <felix@palmen-it.de>
-
 PORTNAME=	emu64
-PORTVERSION=	5.0.19
-PORTREVISION=	1
+DISTVERSION=	5.0.19
+PORTREVISION=	5
 CATEGORIES=	emulators
 
-MAINTAINER=	felix@palmen-it.de
+MAINTAINER=	zirias@FreeBSD.org
 COMMENT=	Commodore 64 emulator
+WWW=		https://github.com/ThKattanek/emu64
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-LIB_DEPENDS=	libquazip1-qt5.so:archivers/quazip \
+LIB_DEPENDS=	libquazip1-qt5.so:archivers/quazip@qt5 \
 		libpng.so:graphics/png \
 		libavcodec.so:multimedia/ffmpeg
 
 USES=		compiler:c++11-lang desktop-file-utils dos2unix gl pkgconfig \
 		qmake:outsource qt:5 sdl
 USE_GL=		gl glu
-USE_QT=		core gui widgets buildtools_build linguisttools_build
+USE_QT=		core gui network widgets buildtools:build linguisttools:build
 
-DOS2UNIX_FILES=	src/widget_file_browse.h
+DOS2UNIX_GLOB=	*.cpp *.h
 
 USE_SDL=	sdl2 image2
 USE_GITHUB=	yes

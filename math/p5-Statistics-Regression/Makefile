@@ -1,5 +1,3 @@
-# Created by: Cheng-Lung Sung <clsung@FreeBSD.org>
-
 PORTNAME=	Statistics-Regression
 PORTVERSION=	0.53
 PORTREVISION=	1
@@ -7,8 +5,9 @@ CATEGORIES=	math perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
-MAINTAINER=	swills@FreeBSD.org
+MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Perl module to perform weighted linear regression
+WWW=		https://metacpan.org/release/Statistics-Regression
 
 LICENSE=	GPLv1+  # exact version not mentioned
 

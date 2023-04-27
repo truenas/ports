@@ -1,15 +1,14 @@
-# Created by: Nicole Reid <root@cooltrainer.org>
-
 PORTNAME=	madsonic
 PORTVERSION=	6.2.9040
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	www java
 MASTER_SITES=	http://madsonic.org/download/6.2/
 DISTFILES=	${DISTDATE}_${DISTNAME}-war-tomcat.zip \
 	${DISTDATE}_${DISTNAME}-war-jspc.zip
 
-MAINTAINER=	root@cooltrainer.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Madsonic streaming media server
+WWW=		https://www.madsonic.org
 
 LICENSE=	GPLv3
 

@@ -1,5 +1,3 @@
-# Created by: Ulrich Spoerlein <uspoerlein@gmail.com>
-
 PORTNAME=	wmwifi
 PORTVERSION=	0.4
 DISTVERSIONSUFFIX=-bsd
@@ -10,6 +8,7 @@ MASTER_SITES=	http://digitalssg.net/debian/ \
 
 MAINTAINER=	uqs@FreeBSD.org
 COMMENT=	Dockapp displaying the signal strength of WiFi connection
+WWW=		http://wmwifi.digitalssg.net/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

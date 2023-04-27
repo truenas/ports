@@ -1,5 +1,3 @@
-# Created by: jmz
-
 PORTNAME=	iozone
 PORTVERSION=	2.01
 CATEGORIES=	benchmarks
@@ -9,8 +7,9 @@ PKGNAMESUFFIX=	21
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Performance Test of Sequential File I/O (older version)
+WWW=		https://www.iozone.org/
 
-CONFLICTS=	iozone-3.*
+CONFLICTS_INSTALL=	iozone
 
 PLIST_FILES=	bin/iozone \
 		man/man1/iozone.1.gz

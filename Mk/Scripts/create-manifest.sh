@@ -52,7 +52,7 @@ licenselogic: ${dp_LICENSE_COMB:-single}
 EOT
 
 # Then, the optional bits
-[ -z "${dp_WWW}" ] || echo "www: ${dp_WWW}"
+[ -z "${dp_WWW}" ] || echo "www: \"${dp_WWW%% *}\""
 [ -z "${dp_LICENSE}" ] || echo "licenses: [ ${dp_LICENSE} ]"
 [ -z "${dp_USERS}" ] || echo "users: [ ${dp_USERS} ]"
 [ -z "${dp_GROUPS}" ] || echo "groups: [ ${dp_GROUPS} ]"
@@ -86,7 +86,15 @@ if [ -n "${dp_PKG_NOTES}" ]; then
 fi
 
 # Copy the pkg-descr file
-cp ${dp_DESCR} ${dp_METADIR}/+DESC
+{
+	cat ${dp_DESCR}
+	if [ -n "${dp_WWW}" ] && ! grep -q '^WWW: ' ${dp_DESCR}; then
+			echo
+			for www in ${dp_WWW}; do
+				echo "WWW: ${www}"
+			done
+	fi
+} > ${dp_METADIR}/+DESC
 
 # Concatenate all the scripts
 output_files=

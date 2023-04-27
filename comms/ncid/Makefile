@@ -1,13 +1,13 @@
-# Created by: David
-
 PORTNAME=	ncid
 PORTVERSION=	1.11
+PORTREVISION=	1
 CATEGORIES=	comms
 MASTER_SITES=	SF
 DISTNAME=	${PORTNAME}-${PORTVERSION}-src
 
-MAINTAINER=	egypcio@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Network based Caller ID package
+WWW=		http://ncid.sourceforge.net/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/doc/GPL.md

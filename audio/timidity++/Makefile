@@ -1,13 +1,12 @@
-# Created by: Yoichi Asai <yatt@luna2.org>
-
 PORTNAME=	timidity++
 PORTVERSION=	2.15.0
 CATEGORIES+=	audio
 MASTER_SITES=	SF/timidity/TiMidity%2B%2B/TiMidity%2B%2B-${PORTVERSION}
 DISTNAME=	TiMidity++-${PORTVERSION}
 
-MAINTAINER?=	fuz@fuz.su
+MAINTAINER?=	fuz@FreeBSD.org
 COMMENT?=	Software MIDI player
+WWW=		http://timidity.sourceforge.net/
 
 LICENSE=	GPLv2+
 
@@ -55,7 +54,7 @@ USES+=		ncurses
 CONFIGURE_ARGS+=--enable-interface=ncurses,vt100,server \
 		--enable-network
 
-CONFLICTS_INSTALL=	timidity
+CONFLICTS_INSTALL?=	timidity
 
 DOCFILES=	README.alsaseq README.dl README.m2m README.mts README.sf
 

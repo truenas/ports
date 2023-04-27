@@ -1,14 +1,12 @@
-# Created by: Dan Langille <dvl@FreeBSD.org>
-
 PORTNAME=	fuzzywuzzy
-PORTVERSION=	0.15.1
-PORTREVISION=	1
+PORTVERSION=	0.18.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dvl@FreeBSD.org
 COMMENT=	Fuzzy string matching using Levenshtein Distance
+WWW=		https://pypi.org/project/naiveBayesClassifier/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

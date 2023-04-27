@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	flanker
 PORTVERSION=	0.9.11
 CATEGORIES=	mail python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Email address and MIME parsing library
+WWW=		https://github.com/mailgun/flanker
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

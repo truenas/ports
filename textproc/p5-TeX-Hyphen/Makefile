@@ -1,11 +1,12 @@
 PORTNAME=	TeX-Hyphen
-PORTVERSION=	1.16
+PORTVERSION=	1.18
 CATEGORIES=	textproc perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Hyphenate words using TeX's patterns
+WWW=		https://metacpan.org/release/TeX-Hyphen
 
 USES=		perl5
 USE_PERL5=	configure

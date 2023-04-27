@@ -1,8 +1,8 @@
 Allow customisation of shrpldflags.
 
---- Makefile.SH.orig	2015-09-08 05:21:36 UTC
+--- Makefile.SH.orig	2022-06-19 19:29:35 UTC
 +++ Makefile.SH
-@@ -40,7 +40,6 @@ esac
+@@ -40,7 +40,6 @@ linklibperl_nonshr=''
  pwd="`pwd`"
  linklibperl='$(LIBPERL)'
  linklibperl_nonshr=''

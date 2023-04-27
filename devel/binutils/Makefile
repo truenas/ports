@@ -1,14 +1,13 @@
-# Created by: Martin Matuska <mm@FreeBSD.org>
-
 PORTNAME=	binutils
-PORTVERSION=	2.37
-PORTREVISION=	2
+DISTVERSION=	2.40
+PORTREVISION=	3
 PORTEPOCH?=	1
 CATEGORIES?=	devel
 MASTER_SITES=	SOURCEWARE/binutils/releases
 
-MAINTAINER?=	jflopezfernandez@gmail.com
+MAINTAINER?=	cy@FreeBSD.org
 COMMENT?=	GNU binary tools
+WWW=		https://www.gnu.org/software/binutils/
 
 LICENSE=	GPLv3 LGPL3
 LICENSE_COMB=	multi
@@ -18,12 +17,14 @@ LICENSE_FILE_LGPL3=	${WRKSRC}/COPYING3.LIB
 BUILD_DEPENDS=	${LOCALBASE}/lib/libgmp.so:math/gmp \
 		${LOCALBASE}/lib/libmpfr.so:math/mpfr
 
+LIB_DEPENDS=	libzstd.so:archivers/zstd
+
 FLAVORS=	native aarch64 aarch64_none_elf amd64 arm_gnueabi arm_none_eabi \
 		avr i386 mingw32 mips mips64 powerpc powerpc64 powerpc64le riscv64 \
 		riscv64_none_elf s390x sparc64 riscv32_unknown_elf
 FLAVOR?=	native
 
-USES=		bison:alias compiler:env cpe gmake libtool makeinfo perl5 tar:xz
+USES=		bison:alias compiler:env cpe gmake localbase libtool makeinfo perl5 pkgconfig tar:lz
 USE_PERL5=	build
 CPE_VENDOR=	gnu
 GNU_CONFIGURE=	yes
@@ -32,21 +33,24 @@ GNU_CONFIGURE=	yes
 CONFIGURE_ARGS+=	--disable-werror \
 			--enable-deterministic-archives \
 			--with-sysroot=/ \
-			--enable-x86-relax-relocations=no
-MAKE_ARGS+=	LIBDL=""
+			--enable-x86-relax-relocations=no \
+			--with-zstd \
+			--enable-default-compressed-debug-sections-algorithm=zstd
+MAKE_ARGS+=	LIBDL="" V=1
 MAKE_ENV+=	ac_cv_func_sbrk=0
-TEST_TARGET=	check
+
+# Tests will always fail because --compress-debug-sections is always set to
+# zlib-gabi regardless of the compression setting by ./configure.
+# TEST_TARGET=	check
 
 CONFLICTS=	libbfd
 
-OPTIONS_DEFINE=	NLS RELRO STATIC
+OPTIONS_DEFINE=	NLS RELRO
 OPTIONS_SUB=	yes
-STATIC_PREVENTS=	NLS
 
 RELRO_DESC=	Enable relocation memory corruption mitigation (-z relro) by default
 RELRO_CONFIGURE_ON=	--enable-relro
 RELRO_CONFIGURE_OFF=	--enable-relro=no
-STATIC_LDFLAGS+=	-all-static
 NLS_USES=	gettext
 NLS_CONFIGURE_ENABLE=	nls
 
@@ -78,9 +82,17 @@ BUTARGET=	x86_64-unknown-${OPSYS:tl}${OSREL}
 USES+=		iconv
 .endif
 
-CONFIGURE_ARGS+=	--disable-shared \
-			--target=${BUTARGET}
+CONFIGURE_ARGS+=	--target=${BUTARGET}
 .endif
+
+.if ${FLAVOR} == native
+CONFIGURE_ARGS+=	--enable-shared
+PLIST_SUB+=		SHARED=''
+.else
+CONFIGURE_ARGS+=	--disable-shared
+PLIST_SUB+=		SHARED='@comment'
+.endif
+
 
 .if ${FLAVOR} == native
 BUREMOVE=	coffdump \
@@ -97,11 +109,15 @@ CONFIGURE_ARGS+=	--with-system-zlib \
 			--with-mpfr=${LOCALBASE} \
 			--enable-targets=all \
 			--enable-threads=yes
+# XXX Needed to support gcc10 and earlier:
+CONFIGURE_ARGS+=	--with-isa-spec=2.2
 INFO=		as \
 		binutils \
+		ctf-spec \
 		gprof \
 		bfd \
-		ld
+		ld \
+		sframe-spec
 .endif
 
 .include <bsd.port.pre.mk>
@@ -132,14 +148,18 @@ post-patch:
 	${REINPLACE_CMD} -e "s/-ldl//g" ${WRKSRC}/gold/testsuite/Makefile.in
 # Force the generation of man pages
 	${RM} ${WRKSRC}/binutils/doc/*.1
+	${RM} ${WRKSRC}/gas/doc/*.1
+	${RM} ${WRKSRC}/gprof/*.1
+	${RM} ${WRKSRC}/ld/*.1
 
 post-install:
 .if ${FLAVOR} == native
+	@${STRIP_CMD} \
+		${STAGEDIR}${PREFIX}/lib/lib*.so* \
+		${STAGEDIR}${PREFIX}/lib/bfd-plugins/libdep.so
 	${INSTALL_DATA} ${WRKSRC}/include/plugin-api.h ${STAGEDIR}${PREFIX}/include/
 	@${FIND} -ds ${STAGEDIR}${PREFIX}/${CONFIGURE_TARGET} ! -type d | \
 		${SED} -e 's,^${STAGEDIR}${PREFIX}/,,' >> ${TMPPLIST}
-	${RM} ${STAGEDIR}${PREFIX}/include/ansidecl.h
-	${REINPLACE_CMD} '/#include "ansidecl.h"/d' ${STAGEDIR}${PREFIX}/include/bfd.h
 .else
 .if ${PKGNAMEPREFIX:S/-$//} != ${BUTARGET}
 	${RM} -r ${STAGEDIR}${PREFIX}/${PKGNAMEPREFIX:S/-$//}

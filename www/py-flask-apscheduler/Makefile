@@ -1,14 +1,13 @@
-# Created by: Mark Felder <feld@FreeBSD.org>
-
 PORTNAME=	flask-apscheduler
-PORTVERSION=	1.12.2
+PORTVERSION=	1.12.4
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	Flask-APScheduler-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	APScheduler support for Flask
+WWW=		https://github.com/viniciuschiele/flask-apscheduler
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

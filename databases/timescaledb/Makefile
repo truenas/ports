@@ -1,11 +1,10 @@
-# Created by: Kevin Bowling <kbowling@freebsd.org>
-
 PORTNAME=	timescaledb
-PORTVERSION=	2.5.1
+PORTVERSION=	2.10.2
 CATEGORIES=	databases
 
 MAINTAINER=	kbowling@FreeBSD.org
 COMMENT=	Time-series database built on PostgreSQL
+WWW=		https://www.timescale.com/
 
 LICENSE=		APACHE20 TSL
 LICENSE_COMB=		multi
@@ -14,10 +13,12 @@ LICENSE_FILE_APACHE20=	${WRKSRC}/LICENSE-APACHE
 LICENSE_FILE_TSL=	${WRKSRC}/tsl/LICENSE-TIMESCALE
 LICENSE_PERMS_TSL=	dist-mirror pkg-mirror auto-accept
 
-USES=		compiler:c11 cmake gettext-runtime pgsql:12,13,14
+USES=		compiler:c11 cmake gettext-runtime cpe pgsql:12-15
 
 USE_GITHUB=	YES
 GH_ACCOUNT=	timescale
+
+CPE_VENDOR=	timescale
 
 PLIST_SUB=	PORTVERSION=${PORTVERSION}
 SUB_FILES=	pkg-message

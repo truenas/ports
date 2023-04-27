@@ -1,11 +1,12 @@
 PORTNAME=	CTK
-DISTVERSION=	2018-10-29
-PORTREVISION=	2
+DISTVERSION=	2018-10-29-269
+DISTVERSIONSUFFIX=	-g8487ec9a
 CATEGORIES=	x11-toolkits
 PKGNAMESUFFIX=	-widgets
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Widgets and common code for medical imaging, surgical navigation, etc
+WWW=		https://www.commontk.org/index.php/Main_Page
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -13,8 +14,8 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 USES=		cmake compiler:c++11-lib qt:5
 USE_GITHUB=	yes
 GH_ACCOUNT=	commontk
-USE_QT=		concurrent core designer gui opengl sql widgets xml xmlpatterns \
-		buildtools_build uitools_build qmake_build testlib_build # see CMake/ctkMacroSetupQt.cmake
+USE_QT=		concurrent core designer gui multimedia opengl sql widgets xml xmlpatterns \
+		buildtools:build uitools:build qmake:build testlib:build # see CMake/ctkMacroSetupQt.cmake
 USE_LDCONFIG=	yes
 
 CMAKE_ARGS=	-DCTK_QT_VERSION=5

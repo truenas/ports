@@ -1,17 +1,16 @@
-# Created by: Mark Felder <feld@FreeBSD.org>
-
 PORTNAME=	varnish-modules
-PORTVERSION=	0.18.0
+PORTVERSION=	0.22.0
 CATEGORIES=	www
 
 MAINTAINER=	zi@FreeBSD.org
 COMMENT=	Collection of Varnish Cache modules by Varnish Software
+WWW=		https://github.com/varnish/varnish-modules
 
 LICENSE=	BSD2CLAUSE
 
 BUILD_DEPENDS=	rst2man:textproc/py-docutils
 
-USES=		autoreconf:build gmake libtool pkgconfig python:build varnish:6
+USES=		autoreconf:build gmake libtool pkgconfig python:build varnish:7
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--disable-static
 INSTALL_TARGET=	install-strip

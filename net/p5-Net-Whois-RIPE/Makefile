@@ -1,5 +1,3 @@
-# Created by: ijliao
-
 PORTNAME=	Net-Whois-RIPE
 PORTVERSION=	2.008001
 CATEGORIES=	net perl5
@@ -7,8 +5,9 @@ MASTER_SITES=	CPAN
 MASTER_SITE_SUBDIR=	CPAN:AASSAD
 PKGNAMEPREFIX=	p5-
 
-MAINTAINER=	mich@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Implementation of RIPE Whois
+WWW=		https://metacpan.org/release/Net-Whois-RIPE
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

@@ -3,15 +3,16 @@
     SUBDIR += R-cran-maptools
     SUBDIR += accrete
     SUBDIR += astrometry
+    SUBDIR += calcmysky
     SUBDIR += celestia
     SUBDIR += celestia-gtk
     SUBDIR += cfitsio
+    SUBDIR += erfa
     SUBDIR += fowsr
     SUBDIR += foxtrotgps
     SUBDIR += geographiclib
     SUBDIR += gkrellmoon2
     SUBDIR += gnuastro
-    SUBDIR += google-earth
     SUBDIR += gpsbabel
     SUBDIR += gpsbabel14
     SUBDIR += gpscorrelate
@@ -33,6 +34,7 @@
     SUBDIR += luna
     SUBDIR += marble
     SUBDIR += match
+    SUBDIR += mepo
     SUBDIR += merkaartor
     SUBDIR += mkgmap
     SUBDIR += mkgmap-splitter
@@ -72,12 +74,14 @@
     SUBDIR += p5-Net-GPSD3
     SUBDIR += p5-Starlink-AST
     SUBDIR += p5-Weather-Underground
+    SUBDIR += pal
     SUBDIR += phd2
     SUBDIR += phoon
     SUBDIR += pp3
     SUBDIR += ptiger
     SUBDIR += py-astlib
     SUBDIR += py-astral
+    SUBDIR += py-astroML
     SUBDIR += py-astropy
     SUBDIR += py-astropy-helpers
     SUBDIR += py-ephem
@@ -101,6 +105,7 @@
     SUBDIR += py-spacetrack
     SUBDIR += py-spktype01
     SUBDIR += py-spktype21
+    SUBDIR += py-sunpy
     SUBDIR += pykep
     SUBDIR += pyweather
     SUBDIR += qmapshack
@@ -112,6 +117,7 @@
     SUBDIR += sofa
     SUBDIR += sscalc
     SUBDIR += stardates
+    SUBDIR += starfetch
     SUBDIR += starplot
     SUBDIR += stars
     SUBDIR += stellarium

@@ -1,11 +1,13 @@
 PORTNAME=	ganttproject
 DISTVERSION=	3.1.3100
+PORTREVISION=	1
 CATEGORIES=	deskutils java
 MASTER_SITES=	https://github.com/bardsoftware/ganttproject/releases/download/ganttproject-${DISTVERSION}/ \
 		https://dl.ganttproject.biz/ganttproject-3.1.3100/
 
 MAINTAINER=	freebsd@ny-central.org
 COMMENT=	Gantt chart based project scheduling and management tool
+WWW=		https://www.ganttproject.biz/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/LICENSE

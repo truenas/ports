@@ -1,11 +1,12 @@
 PORTNAME=	pum
 DISTVERSION=	0.9.14
 CATEGORIES=	databases python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	lbartoletti@FreeBSD.org
 COMMENT=	Postgres upgrade manager
+WWW=		https://github.com/opengisch/pum
 
 LICENSE=	GPLv2
 

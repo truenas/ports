@@ -1,11 +1,13 @@
 PORTNAME=	fvcore
-PORTVERSION=	0.1.5.post20210924
+PORTVERSION=	0.1.5.post20220512
+PORTREVISION=	1
 CATEGORIES=	math python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	nc@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Shared code among different Facebook research projects
+WWW=		https://github.com/facebookresearch/fvcore
 
 LICENSE=	APACHE20
 

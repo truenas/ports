@@ -1,12 +1,12 @@
 PORTNAME=	HTTP-Exception
-PORTVERSION=	0.04006
-PORTREVISION=	2
+PORTVERSION=	0.04007
 CATEGORIES=	www perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Perl extension to throw HTTP-Errors as (Exception::Class-) Exceptions
+WWW=		https://metacpan.org/release/HTTP-Exception
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

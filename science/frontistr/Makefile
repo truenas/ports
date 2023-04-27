@@ -1,12 +1,12 @@
-# Created by: Thierry Thomas <thierry@pompo.net>
-
 PORTNAME=	FrontISTR
 PORTVERSION=	5.2
+PORTREVISION=	1
 DISTVERSIONPREFIX=	v
 CATEGORIES=	science cad
 
 MAINTAINER=	thierry@FreeBSD.org
 COMMENT=	Large-Scale Parallel FEM Program for Nonlinear Structural Analysis
+WWW=		https://gitlab.com/FrontISTR-Commons/FrontISTR
 
 LICENSE=	MIT
 

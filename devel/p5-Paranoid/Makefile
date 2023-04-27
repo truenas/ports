@@ -1,13 +1,12 @@
-# Created by: jupengfei <jupengfei@gmail.com>
-
 PORTNAME=	Paranoid
-PORTVERSION=	2.08
+PORTVERSION=	2.10
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Paranoia support for safer programs
+WWW=		https://metacpan.org/release/Paranoid
 
 LICENSE=	ART20 GPLv1+
 LICENSE_COMB=	dual

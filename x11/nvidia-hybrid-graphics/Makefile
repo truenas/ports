@@ -1,5 +1,3 @@
-# Created by: Theron Tarigo <theron.tarigo@gmail.com>
-
 PORTNAME=	nvidia-hybrid-graphics
 PORTVERSION=	0.5
 CATEGORIES=	x11
@@ -8,6 +6,7 @@ DISTFILES=	# none
 
 MAINTAINER=	theron.tarigo@gmail.com
 COMMENT=	NVIDIA secondary GPU configuration - Optimus Technology support
+WWW=		https://github.com/therontarigo/freebsd-gpu-headless
 
 LICENSE=	BSD2CLAUSE
 

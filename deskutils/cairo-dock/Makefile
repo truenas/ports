@@ -1,10 +1,11 @@
 PORTNAME=	cairo-dock
 PORTVERSION=	3.4.1
-PORTREVISION=	6
+PORTREVISION=	10
 CATEGORIES=	deskutils
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Lightweight and eye-candy dock (program launcher)
+WWW=		https://www.glx-dock.org/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -43,6 +44,7 @@ EGL_USE=		GL=egl
 GLX_USE=		GL=gl
 GLX_IMPLIES=		X11
 
+WAYLAND_CATEGORIES=	wayland
 WAYLAND_LIB_DEPENDS=	libwayland-client.so:graphics/wayland
 WAYLAND_USE=		GL=egl
 WAYLAND_CMAKE_BOOL=	enable-wayland-support

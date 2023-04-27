@@ -1,10 +1,11 @@
 PORTNAME=	pubs
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.8.3
+DISTVERSION=	0.9.0
 CATEGORIES=	misc python
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Your bibliography on the command line
+WWW=		https://github.com/pubs/pubs
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/license
@@ -22,5 +23,7 @@ USES=		python:3.6+
 USE_GITHUB=	yes
 USE_PYTHON=	distutils autoplist noflavors
 NO_ARCH=	yes
+
+PORTSCOUT=	skipv:show_and_search
 
 .include <bsd.port.mk>

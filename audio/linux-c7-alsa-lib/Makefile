@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	alsa-lib
 PORTVERSION=	1.1.8
 DISTVERSIONSUFFIX=	-1.el7
@@ -7,6 +5,7 @@ CATEGORIES=	audio linux
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	Advanced Linux Sound Architecture libraries (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://www.alsa-project.org/
 
 LICENSE=	GPLv3
 

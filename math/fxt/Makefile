@@ -1,33 +1,25 @@
-# Created by: ijliao
-
 PORTNAME=	fxt
-DISTVERSION=	2021.04.06
+PORTVERSION=	2023.03.23
 CATEGORIES=	math
-MASTER_SITES=	http://www.jjj.de/fxt/
+MASTER_SITES=	https://www.jjj.de/fxt/
 
-MAINTAINER=	ports@FreeBSD.org
-COMMENT=	FFT code and related stuff
+MAINTAINER=	sunpoet@FreeBSD.org
+COMMENT=	Llibrary of low-level algorithms
+WWW=		https://www.jjj.de/fxt/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING.txt
 
-WRKSRC=		${WRKDIR}/${PORTNAME}
-
 USES=		compiler:c++11-lang gmake
+
 MAKE_ENV=	FXT_INSTALL="${INSTALL_DATA}"
 MAKEFILE=	makefile
+WRKSRC=		${WRKDIR}/fxt
 
 OPTIONS_DEFINE=	EXAMPLES
 
-post-patch:
-	@${REINPLACE_CMD} -e \
-		's|^\(FXT_CXXFLAGS\)|#\1| ; \
-		 s|\([[:space:]]\)\($$(INCDIR)\)|\1$$(DESTDIR)\2|g ; \
-		 s|\([[:space:]]\)\($$(LIBDIR)\)|\1$$(DESTDIR)\2|g' \
-		${WRKSRC}/makefile
-
 post-install-EXAMPLES-on:
 	${MKDIR} ${STAGEDIR}${EXAMPLESDIR}
-	(cd ${WRKSRC}/demo && ${COPYTREE_SHARE} . ${STAGEDIR}${EXAMPLESDIR})
+	cd ${WRKSRC}/demo && ${COPYTREE_SHARE} . ${STAGEDIR}${EXAMPLESDIR}
 
 .include <bsd.port.mk>

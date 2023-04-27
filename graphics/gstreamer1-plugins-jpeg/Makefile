@@ -8,4 +8,8 @@ DIST=		good
 
 MASTERDIR=	${.CURDIR}/../../multimedia/gstreamer1-plugins
 
+PLIST=  ${.CURDIR}/pkg-plist
+
+USES=    jpeg
+
 .include "${MASTERDIR}/Makefile"

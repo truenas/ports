@@ -1,9 +1,11 @@
 PORTNAME=	subsync
 DISTVERSION=	g20190702
+PORTREVISION=	1
 CATEGORIES=	multimedia python
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Synchronize your subtitles using machine learning
+WWW=		https://github.com/smacke/subsync
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

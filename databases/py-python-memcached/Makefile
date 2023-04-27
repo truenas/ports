@@ -1,13 +1,12 @@
-# Created by: Michael Johnson <ahze@ahze.net>
-
 PORTNAME=	python-memcached
 PORTVERSION=	1.59
 CATEGORIES=	databases python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Python API for memcached, a distributed memory cache daemon
+WWW=		https://github.com/linsomniac/python-memcached
 
 LICENSE=	PSFL
 

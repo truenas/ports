@@ -1,14 +1,13 @@
-# Created by: Mahdi Mokhtari <mokhi64@gmail.com>
-
 PORTNAME=		cling
 DISTVERSION=		0.5-2018-08-13
-PORTREVISION=		7
+PORTREVISION=	11
 CATEGORIES=		lang devel
 MASTER_SITES=		https://root.cern.ch/download/cling/
 DISTNAME=		${PORTNAME}_${DISTVERSION:C/^[0-9]\.[0-9]-//}_sources
 
 MAINTAINER=		ports@FreeBSD.org
 COMMENT=		Interactive C++ Interpreter Based on LLVM and Clang Libs
+WWW=		https://root.cern.ch/cling
 
 LICENSE=		LLVM NCSA
 LICENSE_COMB=		multi
@@ -35,6 +34,8 @@ USES=		cmake compiler:c++11-lib compiler:c11 gnome libedit ncurses \
 		python:build shebangfix tar:bzip2
 USE_GNOME=	libxml2
 USE_LDCONFIG=	${LLVM_PREFIX}/lib
+
+CONFLICTS_INSTALL=	llvm zapcc # # bin/bugpoint bin/c-index-test bin/clang bin/clang++ bin/clang-5.0 bin/clang-check bin/clang-cl bin/clang-cpp bin/clang-format bin/clang-import-test bin/clang-offload-bundler bin/clang-rename bin/git-clang-format
 
 SHEBANG_FILES=	tools/clang/tools/clang-format/clang-format-diff.py \
 		tools/clang/tools/clang-format/git-clang-format \

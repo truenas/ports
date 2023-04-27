@@ -1,11 +1,10 @@
-# Created by: Kirill Ponomarew <ponomarew@oberon.net>
-
 PORTNAME=	packit
-PORTVERSION=	1.8
+PORTVERSION=	1.8.1
 CATEGORIES=	net-mgmt
 
 MAINTAINER=	ehaupt@FreeBSD.org
 COMMENT=	Network auditing tool
+WWW=		https://github.com/eribertomota/packit
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE

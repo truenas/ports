@@ -1,13 +1,12 @@
-# Created by: Javad Kouhi <javad.kouhi@gmail.com>
-
 PORTNAME=	gkmap
 PORTVERSION=	0.2
-PORTREVISION=	4
+PORTREVISION=	7
 CATEGORIES=	math
 MASTER_SITES=	SF/gkmap/gkmap/gkmap-${PORTVERSION}/
 
 MAINTAINER=	javad.kouhi@gmail.com
 COMMENT=	Simplification of Boolean Functions using Karnaugh Map
+WWW=		https://sourceforge.net/projects/gkmap/
 
 LICENSE=	GPLv2
 

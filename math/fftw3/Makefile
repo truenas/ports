@@ -1,8 +1,6 @@
-# Created by: Lars Koeller <Lars.Koeller@Uni-Bielefeld.DE>
-
 PORTNAME=	fftw3
-DISTVERSION=	3.3.9
-PORTREVISION?=	1
+DISTVERSION=	3.3.10
+PORTREVISION=	2
 CATEGORIES=	math
 MASTER_SITES=	http://www.fftw.org/ \
 		ftp://ftp.fftw.org/pub/fftw/
@@ -11,6 +9,7 @@ DISTNAME=	fftw-${DISTVERSION}
 
 MAINTAINER=	jhale@FreeBSD.org
 COMMENT?=	Fast C routines to compute the Discrete Fourier Transform
+WWW=		https://www.fftw.org/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -40,6 +39,12 @@ INSTALL_TARGET=	install-cmakeDATA install-pkgconfigDATA install-libLTLIBRARIES i
 
 OPTIONS_DEFINE=		G77_WRAPPERS OPENMP OPENMPI OPTIMIZED_CFLAGS SIMD
 OPTIONS_DEFAULT=	OPTIMIZED_CFLAGS SIMD
+OPTIONS_DEFAULT_aarch64=	OPENMP
+OPTIONS_DEFAULT_amd64=		OPENMP
+OPTIONS_DEFAULT_i386=		OPENMP
+OPTIONS_DEFAULT_powerpc64=	OPENMP
+OPTIONS_DEFAULT_powerpc64le=	OPENMP
+OPTIONS_DEFAULT_riscv64=	OPENMP
 .if ${FFTW3_FLAVOR} == "quad"
 OPTIONS_EXCLUDE+=	OPENMPI
 .endif

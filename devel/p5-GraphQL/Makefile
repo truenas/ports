@@ -1,5 +1,5 @@
 PORTNAME=	GraphQL
-PORTVERSION=	0.52
+PORTVERSION=	0.54
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 MASTER_SITE_SUBDIR=	CPAN:ETJ
@@ -7,6 +7,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Perl implementation of GraphQL
+WWW=		https://metacpan.org/release/GraphQL
 
 LICENSE=	ART20
 

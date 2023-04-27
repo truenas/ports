@@ -1,11 +1,12 @@
 PORTNAME=	awesome-slugify
 PORTVERSION=	1.6.5
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	matthew@FreeBSD.org
 COMMENT=	Flexible slugify function
+WWW=		https://pypi.org/project/awesome-slugify/
 
 LICENSE=	GPLv3
 

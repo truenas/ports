@@ -1,14 +1,13 @@
-# Created by: Bruce Simpson
-
 PORTNAME=	kBuild
 DISTVERSION=	${KBUILD_VERSION}
-PORTREVISION=	14
+PORTREVISION=	15
 CATEGORIES=	devel
 MASTER_SITES=	LOCAL/jkim
 DISTNAME=	${PORTNAME}-${DISTVERSION}r3127-src
 
 MAINTAINER=	vbox@FreeBSD.org
 COMMENT=	Makefile framework
+WWW=		https://svn.netlabs.org/kbuild
 
 LICENSE=	BSD3CLAUSE GPLv3+
 LICENSE_COMB=	multi

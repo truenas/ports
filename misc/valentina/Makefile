@@ -1,22 +1,23 @@
 PORTNAME=	valentina
-DISTVERSION=	0.7.49
+DISTVERSION=	0.7.52
 CATEGORIES=	misc
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Sewing pattern drafting tool aiming to remake the garment industry
+WWW=		https://smart-pattern.com.ua/en/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/LICENSE_GPL.txt
 
 USES=		compiler:c++11-lang desktop-file-utils dos2unix gl gmake qmake qt:5
-USE_QT=		buildtools_build concurrent core gui linguisttools_build network \
-		opengl printsupport svg testlib_build widgets xml xmlpatterns
+USE_QT=		buildtools:build concurrent core gui linguisttools:build network \
+		opengl printsupport svg testlib:build widgets xml xmlpatterns
 USE_GL=		gl
 USE_LDCONFIG=	yes
 
 USE_GITLAB=	yes
 GL_ACCOUNT=	smart-pattern
-GL_COMMIT=	5b7e98bf48a86e3c444423a9f03533440a39aad9
+GL_COMMIT=	9429be3e0d467a75eab1f2fd3791ba29d9d1bb9d
 
 DOS2UNIX_FILES=	src/libs/vgeometry/vellipticalarc.cpp
 
@@ -26,5 +27,11 @@ QMAKE_ARGS+=	CONFIG+="no_ccache"
 .endif
 
 BINARY_ALIAS=	hg=/usr/bin/true git=/usr/bin/false
+
+.include <bsd.port.options.mk>
+
+.if ${ARCH} == armv7 || ${ARCH} == i386 || ${ARCH} == powerpc
+LLD_UNSAFE=	yes
+.endif
 
 .include <bsd.port.mk>

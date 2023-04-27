@@ -1,13 +1,13 @@
-# Created by: Mikhail Teterin <mi@aldan.algebra.com>
-
 PORTNAME=	minidlna
-PORTVERSION=	1.3.0
+PORTVERSION=	1.3.2
 PORTREVISION=	2
 PORTEPOCH=	1
 CATEGORIES=	net multimedia www
+MASTER_SITES=	SF
 
 MAINTAINER=	glebius@FreeBSD.org
 COMMENT=	Media-server compatible with "Digital Life Network Alliance"
+WWW=		http://minidlna.sourceforge.net
 
 LICENSE=	GPLv2
 
@@ -25,10 +25,6 @@ CONFIGURE_ARGS=	--with-db-path=/var/db/minidlna \
 USES=		autoreconf cpe gettext-tools iconv jpeg localbase
 
 CPE_VENDOR=	minidlna_project
-
-USE_GITHUB=	yes
-GH_ACCOUNT=	glebius
-GH_TAGNAME=	4f6a473
 
 PKGMESSAGE=	${WRKSRC}/pkg-message
 SUB_FILES+=	pkg-message

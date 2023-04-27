@@ -1,13 +1,12 @@
-# Created by: Dan Langille <dvl@FreeBSD.org>
-
 PORTNAME=	qrencode
 PORTVERSION=	1.2
 CATEGORIES=	graphics python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dvl@FreeBSD.org
 COMMENT=	Simple wrapper for the C qrencode library
+WWW=		https://github.com/Arachnid/pyqrencode/tree/master
 
 LICENSE=	MIT
 

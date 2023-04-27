@@ -1,11 +1,12 @@
 PORTNAME=	pyfaidx
 DISTVERSION=	0.5.9.5
 CATEGORIES=	biology python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Efficient pythonic random access to fasta subsequences
+WWW=		https://github.com/mdshw5/pyfaidx
 
 LICENSE=	BSD3CLAUSE
 

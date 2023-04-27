@@ -9,9 +9,12 @@ DISTNAME=	Trac-${DISTVERSION}
 
 MAINTAINER=	samm@FreeBSD.org
 COMMENT=	Enhanced wiki and issue tracking system for software projects
+WWW=		https://trac.edgewall.org/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYING
+
+BROKEN=		fails to build
 
 BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}Babel>=2.3.4:devel/py-babel@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}Jinja2>=2.10:devel/py-Jinja2@${PY_FLAVOR}

@@ -7,11 +7,12 @@ DIST_SUBDIR=	drupal
 
 MAINTAINER=	acm@FreeBSD.org
 COMMENT=	Database driven web content management system (CMS)
+WWW=		https://www.drupal.org/
 
 LICENSE=	GPLv2+
 
 USES=		php:web shebangfix
-USE_PHP=	dom filter gd hash json mbstring opcache pcre pdo session \
+USE_PHP=	dom filter gd mbstring opcache pdo session \
 		simplexml tokenizer xml
 SHEBANG_FILES=	core/scripts/password-hash.sh
 

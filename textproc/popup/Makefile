@@ -1,12 +1,13 @@
 PORTNAME=	popup
 PORTVERSION=	0.5
-PORTREVISION=	11
+PORTREVISION=	12
 CATEGORIES=	textproc education gnustep
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/Popup-${PORTVERSION}pre1
 DISTNAME=	Popup-${PORTVERSION}pre1
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Interactive learning aid for pairs of words
+WWW=		http://popup.sourceforge.net/
 
 LICENSE=	GPLv2+
 

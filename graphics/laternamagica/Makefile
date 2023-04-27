@@ -1,12 +1,13 @@
 PORTNAME=	laternamagica
 PORTVERSION=	0.5
-PORTREVISION=	4
+PORTREVISION=	5
 CATEGORIES=	graphics gnustep
 MASTER_SITES=	SAVANNAH/gap
 DISTNAME=	LaternaMagica-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Image viewer and slideshow application
+WWW=		https://gap.nongnu.org/
 
 LICENSE=	GPLv2+
 

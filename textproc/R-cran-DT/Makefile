@@ -1,12 +1,12 @@
-# Created by: TAKATSU Tomonari <tota@FreeBSD.org>
-
 PORTNAME=	DT
-PORTVERSION=	0.20
+PORTVERSION=	0.25
+PORTREVISION=	1
 CATEGORIES=	textproc
 DISTNAME=	${PORTNAME}_${PORTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Wrapper of the JavaScript Library 'DataTables'
+WWW=		https://cran.r-project.org/web/packages/DT/
 
 LICENSE=	GPLv3
 

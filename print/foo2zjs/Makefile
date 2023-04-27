@@ -1,5 +1,3 @@
-# Created by: Jose Alonso Cardenas Marquez <acardenas@bsd.org.pe>
-
 PORTNAME=	foo2zjs
 PORTVERSION=	20161203
 PORTREVISION=	1
@@ -13,6 +11,7 @@ PATCHFILES=	hbpl1-20160830.patch.xz:-p1
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Driver for printers that use the ZjStream wire protocol
+WWW=		http://foo2zjs.rkkda.com/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

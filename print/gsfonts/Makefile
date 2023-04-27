@@ -1,5 +1,3 @@
-# Created by: giffunip
-
 PORTNAME=	gsfonts
 PORTVERSION=	8.11
 PORTREVISION=	8
@@ -10,8 +8,9 @@ DISTFILES=	ghostscript-fonts-std-${PORTVERSION}${EXTRACT_SUFX}:std \
 		gnu-gs-fonts-other-6.0${EXTRACT_SUFX}:other
 DIST_SUBDIR=	ghostscript
 
-MAINTAINER=	doceng@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Standard Fonts for Ghostscript
+WWW=		https://www.cs.wisc.edu/~ghost/doc/gnu/index.htm
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/fonts/COPYING

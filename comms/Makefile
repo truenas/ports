@@ -2,6 +2,7 @@
 
     SUBDIR += acfax
     SUBDIR += airspy
+    SUBDIR += airspyhf
     SUBDIR += aldo
     SUBDIR += amtterm
     SUBDIR += anyremote
@@ -24,6 +25,7 @@
     SUBDIR += cutecom
     SUBDIR += cwdaemon
     SUBDIR += cwstudio
+    SUBDIR += cyclonedds
     SUBDIR += dcf77pi
     SUBDIR += deforaos-phone
     SUBDIR += dfu-programmer
@@ -33,7 +35,6 @@
     SUBDIR += dsd
     SUBDIR += dump1090
     SUBDIR += ebook2cw
-    SUBDIR += ebook2cwgui
     SUBDIR += ebusd
     SUBDIR += echolinux
     SUBDIR += ems-flasher
@@ -62,14 +63,15 @@
     SUBDIR += hamlib
     SUBDIR += hcidump
     SUBDIR += hidapi
-    SUBDIR += hylafax
     SUBDIR += ibp
+    SUBDIR += iceoryx
     SUBDIR += inspectrum
     SUBDIR += iwmbt-firmware
     SUBDIR += java-simple-serial-connector
     SUBDIR += kermit
     SUBDIR += klog
     SUBDIR += libconcord
+    SUBDIR += libdc
     SUBDIR += libfap
     SUBDIR += libfec
     SUBDIR += libimobiledevice
@@ -99,7 +101,6 @@
     SUBDIR += ncid
     SUBDIR += nec2c
     SUBDIR += nmealib
-    SUBDIR += o2sms
     SUBDIR += obexapp
     SUBDIR += opencbm
     SUBDIR += opencbm-kmod
@@ -120,8 +121,6 @@
     SUBDIR += p5-SMS-Send-NexmoUnicode
     SUBDIR += p5-SMS-Send-TW-HiAir
     SUBDIR += p5-SMS-Send-TW-PChome
-    SUBDIR += p5-SMS-Send-TW-Qma
-    SUBDIR += p5-SMS-Send-TW-ShareSMS
     SUBDIR += p5-SMS-Send-TW-Socket2Air
     SUBDIR += p5-SMS-Send-TW-chtsns
     SUBDIR += p5-SMS-Send-TW-emome
@@ -131,14 +130,16 @@
     SUBDIR += pr
     SUBDIR += predict
     SUBDIR += py-adafruit-ampy
+    SUBDIR += py-elelabs-zigbee-ezsp-utility
     SUBDIR += py-esptool
     SUBDIR += py-fritzconnection
     SUBDIR += py-hid
     SUBDIR += py-hidapi
     SUBDIR += py-libimobiledevice
+    SUBDIR += py-libscrc
+    SUBDIR += py-pymodbus
     SUBDIR += py-pyserial
-    SUBDIR += py-qt5-sensors
-    SUBDIR += py-qt5-serialport
+    SUBDIR += py-pyserial-asyncio
     SUBDIR += py-xmodem
     SUBDIR += pyla
     SUBDIR += qico
@@ -149,7 +150,11 @@
     SUBDIR += qt5-sensors
     SUBDIR += qt5-serialbus
     SUBDIR += qt5-serialport
+    SUBDIR += qt6-sensors
+    SUBDIR += qt6-serialbus
+    SUBDIR += qt6-serialport
     SUBDIR += qtel
+    SUBDIR += quisk
     SUBDIR += redsea
     SUBDIR += remserial
     SUBDIR += rtl-433
@@ -160,9 +165,12 @@
     SUBDIR += rxtx
     SUBDIR += scmxx
     SUBDIR += scrcpy
+    SUBDIR += sdr++
     SUBDIR += sdr-wspr
     SUBDIR += ser2net
     SUBDIR += serialoverip
+    SUBDIR += sigdigger
+    SUBDIR += sigutils
     SUBDIR += sms_client
     SUBDIR += smstools3
     SUBDIR += snap7
@@ -178,6 +186,8 @@
     SUBDIR += splat
     SUBDIR += sredird
     SUBDIR += sunxi-tools
+    SUBDIR += suscan
+    SUBDIR += suwidgets
     SUBDIR += svxlink
     SUBDIR += syncterm
     SUBDIR += tcpser
@@ -186,7 +196,6 @@
     SUBDIR += tilp2
     SUBDIR += tio
     SUBDIR += tits
-    SUBDIR += tkhylafax
     SUBDIR += tkscanfax
     SUBDIR += tlf
     SUBDIR += trustedqsl
@@ -213,8 +222,6 @@
     SUBDIR += xnec2c
     SUBDIR += xnecview
     SUBDIR += yagiuda
-    SUBDIR += yaps
     SUBDIR += yfklog
-    SUBDIR += zssh
 
 .include <bsd.port.subdir.mk>

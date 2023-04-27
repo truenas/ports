@@ -1,13 +1,12 @@
-# Created by: Cheng-Lung Sung <clsung@FreeBSD.org>
-
 PORTNAME=	pyramid
 PORTVERSION=	1.7.3
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	jun-g@daemonfreaks.com
 COMMENT=	Small, fast, web development framework by the Pylons community
+WWW=		https://pylonsproject.org/
 
 LICENSE=	REPOZE
 LICENSE_NAME=	Repoze License

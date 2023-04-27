@@ -1,19 +1,17 @@
-# Created by: Roderick van Domburg <r.s.a.vandomburg@student.utwente.nl>
-
 PORTNAME=	net-ssh
-PORTVERSION=	6.1.0
+PORTVERSION=	7.1.0
 PORTEPOCH=	2
 CATEGORIES=	security rubygems
 MASTER_SITES=	RG
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Non-interactive SSH processing
+WWW=		https://github.com/net-ssh/net-ssh
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
 USES=		gem shebangfix
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

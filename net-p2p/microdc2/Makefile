@@ -1,15 +1,16 @@
-# Created by: Pankov Pavel <pankov_p@mail.ru>
-
 PORTNAME=	microdc2
 PORTVERSION=	0.15.6
-PORTREVISION=	8
+PORTREVISION=	10
 CATEGORIES=	net-p2p
 MASTER_SITES=	http://corsair626.no-ip.org/microdc/
 
 MAINTAINER=	pankov_p@mail.ru
 COMMENT=	Command-line based Direct Connect client
+WWW=		http://corsair626.no-ip.org/microdc/
 
 LICENSE=	GPLv2
+
+BROKEN=		does not build: undefined symbol: main_to_utf8_string
 
 CONFLICTS=	tthsum
 

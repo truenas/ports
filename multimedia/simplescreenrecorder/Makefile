@@ -1,18 +1,20 @@
 PORTNAME=	simplescreenrecorder
-DISTVERSION=	0.4.3
+DISTVERSION=	0.4.4-9
+DISTVERSIONSUFFIX=	-gc092f3e
 PORTREVISION=	2
 CATEGORIES=	multimedia
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Screen video recorder
+WWW=		https://www.maartenbaert.be/simplescreenrecorder/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
 
 LIB_DEPENDS=	libavformat.so:multimedia/ffmpeg
 
-USES=		cmake compiler:c++11-lang pkgconfig qt:5 xorg
-USE_QT=		core gui widgets x11extras buildtools_build linguisttools_build qmake_build
+USES=		cmake compiler:c++11-lang desktop-file-utils pkgconfig qt:5 xorg
+USE_QT=		core gui widgets x11extras buildtools:build linguisttools:build qmake:build
 USE_XORG=	x11 xext xfixes xi xinerama
 
 USE_GITHUB=	yes

@@ -1,12 +1,13 @@
 PORTNAME=	expense
 PORTVERSION=	0.1
-PORTREVISION=	11
+PORTREVISION=	12
 CATEGORIES=	finance gnustep
 MASTER_SITES=	http://www.eskimo.com/~pburns/Expense/files/
 DISTNAME=	Expense-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Application to track your expense under GNUstep
+WWW=		https://www.eskimo.com/~pburns/Expense/
 
 LICENSE=	GPLv2
 

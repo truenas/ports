@@ -1,11 +1,12 @@
 PORTNAME=	colored
-DISTVERSION=	1.4.2
+DISTVERSION=	1.4.3
 CATEGORIES=	misc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	timp87@gmail.com
 COMMENT=	Very simple Python library for color and formatting in terminal
+WWW=		https://gitlab.com/dslackw/colored
 
 LICENSE=	MIT
 

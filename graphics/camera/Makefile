@@ -1,17 +1,20 @@
-# Created by: gurkan@phys.ethz.ch
-
 PORTNAME=	camera
 PORTVERSION=	0.8
-PORTREVISION=	15
+PORTREVISION=	16
 CATEGORIES=	graphics gnustep
 MASTER_SITES=	http://download.gna.org/gsimageapps/
 DISTNAME=	Camera-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	GNUstep application for digital still cameras
+WWW=		http://home.gna.org/gsimageapps/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/Documentation/COPYING
+
+BROKEN=		does not fetch
+DEPRECATED=	abandoned upstream, does not fetch, website disappeared, unmaintained
+EXPIRATION_DATE=2023-05-08
 
 LIB_DEPENDS=	libgphoto2_port.so:graphics/libgphoto2
 

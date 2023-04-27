@@ -1,13 +1,12 @@
-# Created by: Michael Johnson <ahze@FreeBSD.org>
-
 PORTNAME=	cairomm
 PORTVERSION=	1.12.2
-PORTREVISION=	4
+PORTREVISION=	6
 CATEGORIES=	graphics
 MASTER_SITES=	http://cairographics.org/releases/
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	C++ interface to cairo
+WWW=		https://cairographics.org
 
 LICENSE=	LGPL20
 

@@ -1,35 +1,21 @@
-# Created by: Bernard Spil <brnrd@freebsd.org>
-
 PORTNAME=	appointments
-PORTVERSION=	1.11.8
-DISTVERSIONPREFIX=	v
+PORTVERSION=	1.14.14
 CATEGORIES=	www
 MASTER_SITES=	https://github.com/${GH_ACCOUNT}/${PORTNAME}/raw/${DISTVERSIONPREFIX}${DISTVERSION}/build/artifacts/appstore/
-PKGNAMEPREFIX=	nextcloud-
-PKGNAMESUFFIX=	${PHP_PKGNAMESUFFIX}
+DISTVERSIONPREFIX=	v
 DISTNAME=	${PORTNAME}
-DIST_SUBDIR=	nextcloud/${PORTNAME}-${PORTVERSION}
 
 MAINTAINER=	brnrd@FreeBSD.org
 COMMENT=	Appointments app for Nextcloud
+WWW=		https://apps.nextcloud.com/apps/appointments
 
 LICENSE=	AGPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-RUN_DEPENDS=	nextcloud${PHP_PKGNAMESUFFIX}>=21:www/nextcloud@${PHP_FLAVOR}
+NEXTCLOUD_RUN_DEPENDS=	24
 
-USES=		php:flavors
-NO_BUILD=	yes
-NO_ARCH=	yes
+USES=		nextcloud php:flavors
 
 GH_ACCOUNT=	SergeyMosin
-
-WWWDIR=		${PREFIX}/www/nextcloud/apps-pkg/${PORTNAME}
-
-do-install:
-	@${MKDIR} ${STAGEDIR}${WWWDIR}
-	@(cd ${WRKSRC} && ${COPYTREE_SHARE} . ${STAGEDIR}${WWWDIR})
-	@(cd ${WRKSRC}; ${FIND} . -not -type d) | ${SORT} | \
-			${SED} -e 's,^\.,${WWWDIR_REL},' >> ${TMPPLIST}
 
 .include <bsd.port.mk>

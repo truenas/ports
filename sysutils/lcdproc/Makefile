@@ -1,5 +1,3 @@
-# Created by: pat
-
 PORTNAME=	lcdproc
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.5.9
@@ -7,6 +5,7 @@ CATEGORIES=	sysutils
 
 MAINTAINER=	daniel@shafer.cc
 COMMENT=	Client/server suite for LCD devices
+WWW=		https://www.lcdproc.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

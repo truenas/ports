@@ -1,13 +1,12 @@
-# Created by: Romain Tartiere <romain@blogreen.org>
-
 PORTNAME?=	portshaker
 PORTVERSION=	1.0.19
 DISTVERSIONPREFIX=	v
-PORTREVISION?=	2
+PORTREVISION?=	3
 CATEGORIES?=	ports-mgmt
 
 MAINTAINER?=	romain@FreeBSD.org
 COMMENT?=	Maintain ports tree using multiple sources
+WWW=		https://github.com/smortex/portshaker
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYING

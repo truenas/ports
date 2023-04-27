@@ -12,6 +12,7 @@ DIST_SUBDIR=	u-boot
 
 MAINTAINER?=	uboot@FreeBSD.org
 COMMENT=	Cross-build das u-boot for model ${MODEL}
+WWW?=		https://www.denx.de/wiki/U-Boot
 
 LICENSE=	GPLv2
 
@@ -22,7 +23,11 @@ BUILD_DEPENDS+=	gsed:textproc/gsed \
 		${PYTHON_PKGNAMEPREFIX}setuptools-pkg>=0:devel/py-setuptools-pkg@${PY_FLAVOR}
 BUILD_DEPENDS+=	${COMPILER}:devel/${COMPILER}
 
-USES=		bison gmake python:3.7+,build shebangfix tar:bz2
+# For mkeficapsule
+BUILD_DEPENDS+=	e2fsprogs-libuuid>=0:misc/e2fsprogs-libuuid \
+		gnutls>=0:security/gnutls
+
+USES=		bison gmake python:3.7+,build pkgconfig shebangfix tar:bz2
 BINARY_ALIAS=	bison=${LOCALBASE}/bin/bison dtc=${LOCALBASE}/bin/dtc sed=gsed python3=${PYTHON_CMD}
 
 SHEBANG_FILES=	tools/binman/binman arch/arm/mach-rockchip/make_fit_atf.py
@@ -31,7 +36,8 @@ UBOOT_DIR=	share/u-boot/${PORTNAME}${PKGNAMESUFFIX}
 INST=		${PREFIX}/${UBOOT_DIR}
 DESCR?=		${.CURDIR}/pkg-descr
 
-MAKE_ARGS+=	V=1 CROSS_COMPILE=${CROSS_COMPILE} PYTHON=${PYTHON_CMD} ${ARCHFLAGS}
+MAKE_ENV+=	V=1 CROSS_COMPILE=${CROSS_COMPILE} PYTHON=${PYTHON_CMD} CC=clang
+MAKE_ARGS+=	${ARCHFLAGS}
 
 NO_ARCH=	yes
 
@@ -99,7 +105,7 @@ UBOOT_PLIST_RK3399=	idbloader.img u-boot.itb
 UBOOT_ARCH_RK3399=	aarch64
 
 # Override for ARMADA38X family
-UBOOT_PLIST_ARMADA38X=	u-boot-spl.kwb
+UBOOT_PLIST_ARMADA38X=	u-boot-with-spl.kwb
 UBOOT_METADATA_ARMADA38X_FILES=		${UBOOT_PLIST_ARMADA38X}
 UBOOT_METADATA_ARMADA38X_METHOD=	raw
 UBOOT_METADATA_ARMADA38X_RAW_OFFSET=	1
@@ -112,7 +118,7 @@ UBOOT_PLIST_QEMU=	u-boot.bin
 .if !defined(UBOOT_VERSION) && defined(UBOOT_VERSION_${FAMILY:tu})
 UBOOT_VERSION=${UBOOT_VERSION_${FAMILY:tu}}
 .endif
-UBOOT_VERSION?=	2021.07
+UBOOT_VERSION?=	2023.01
 
 # If a slave port defines a PORTREVISION use it
 .if defined(U_BOOT_SLAVE_PORTREVISION_${UBOOT_VERSION})
@@ -135,6 +141,9 @@ ARCHFLAGS=ARCH=${UBOOT_ARCH}
 .elif ${UBOOT_ARCH} == aarch64
 CROSS_COMPILE=aarch64-none-elf-
 ARCHFLAGS=ARCH=arm
+.if ${FAMILY} == allwinner64
+MAKE_ENV+=	SCP=/dev/null
+.endif
 .elif ${UBOOT_ARCH} == riscv64
 CROSS_COMPILE=riscv64-none-elf-
 ARCHFLAGS=ARCH=riscv
@@ -222,10 +231,10 @@ CONFIG_FRAGMENT=	${FILESDIR}/${FRAGMENT_NAME}
 .if defined(CONFIG_FRAGMENT)
 do-configure:
 	${CP} ${CONFIG_FRAGMENT} ${WRKSRC}/configs/
-	(cd ${WRKSRC}; ${SETENV} ${CONFIGURE_ENV} scripts/kconfig/merge_config.sh configs/${BOARD_CONFIG} configs/${FRAGMENT_NAME})
+	(cd ${WRKSRC}; ${SETENV} ${CONFIGURE_ENV} ${MAKE_ENV} scripts/kconfig/merge_config.sh configs/${BOARD_CONFIG} configs/${FRAGMENT_NAME})
 .else
 do-configure:
-	(cd ${WRKSRC}; ${SETENV} ${CONFIGURE_ENV} ${MAKE_CMD} ${BOARD_CONFIG})
+	(cd ${WRKSRC}; ${SETENV} ${CONFIGURE_ENV} ${MAKE_ENV} ${MAKE_CMD} ${MAKE_ARGS} ${BOARD_CONFIG})
 .endif
 
 post-build:

@@ -1,11 +1,13 @@
 PORTNAME=	chainer-chemistry
 DISTVERSION=	0.7.1
+PORTREVISION=	1
 CATEGORIES=	science biology # machine-learning
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Library for deep learning in biology and chemistry
+WWW=		https://github.com/pfnet-research/chainer-chemistry
 
 LICENSE=	MIT
 

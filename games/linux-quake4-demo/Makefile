@@ -1,5 +1,3 @@
-# Created by: alepulver
-
 PORTNAME=	quake4
 PORTVERSION=	1.0
 PORTREVISION=	1
@@ -12,6 +10,7 @@ EXTRACT_SUFX=	.run
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Quake 4 for Linux Demo
+WWW=		http://www.quake4game.com/
 
 # Converted from NO_CDROM
 LICENSE=	IDSOFTWARE

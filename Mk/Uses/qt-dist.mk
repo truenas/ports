@@ -1,8 +1,8 @@
 # There are three Qt related USES files with different access to Qt.
 #   - qmake: The port requires Qt's qmake to build -- creates the configure target
 #            - auto includes qt.mk
-#   - qt-dist: The port is a port for an part of Qt5
-#            - auto inclues qt.mk
+#   - qt-dist: The port is a port for a part of Qt
+#            - auto includes qt.mk
 #   - qt.mk  - Dependency handling. USE_QT=foo bar
 #
 #
@@ -21,14 +21,17 @@ qmake_ARGS?=	# empty
 .include "${USESDIR}/qmake.mk"
 
 # Supported distribution arguments
-_QT5_DISTS=		3d activeqt androidextras base charts connectivity datavis3d \
-			declarative doc gamepad graphicaleffects imageformats location \
-			lottie macextras multimedia networkauth purchasing quick3d quickcontrols \
-			quickcontrols2 quicktimeline remoteobjects script scxml sensors serialbus \
-			serialport speech svg tools translations virtualkeyboard wayland \
-			webchannel webengine webglplugin websockets webview winextras \
+_COMMON_DISTS=		3d base charts datavis3d declarative imageformats multimedia \
+			networkauth quick3d quicktimeline remoteobjects scxml sensors \
+			serialbus serialport speech svg tools translations virtualkeyboard \
+			wayland webchannel webengine websockets
+_QT5_DISTS=		connectivity gamepad graphicaleffects location quickcontrols \
+			quickcontrols2 script webglplugin webview \
 			x11extras xmlpatterns
-_QT_DISTS=		${_QT${_QT_VER}_DISTS}
+_QT6_DISTS=		5compat doc languageserver lottie positioning shadertools
+
+_QT_DISTS=		${_COMMON_DISTS} \
+			${_QT${_QT_VER}_DISTS}
 
 # We only accept one item as an argument. The fetch target further below works
 # around this.
@@ -45,9 +48,7 @@ IGNORE=		cannot be installed: different Qt dists specified via qt-dist:[${qt-dis
 
 # Fall back to sensible defaults for _QT_DIST
 .  if empty(_QT_DIST)
-.    if ${_QT_VER:M5}
 _QT_DIST=		${PORTNAME} # don't force qt-dist to be set for Qt5 ports which 75% of time are ${PORTNAME}
-.    endif
 .  endif
 
 # Check validitiy
@@ -56,50 +57,107 @@ IGNORE=			Unsupported qt-dist ${_QT_DIST} for qt:${_QT_VER}
 .  endif
 ################################################################################
 
-# Set standard bsd.port.mk variables
-MASTER_SITES=		${MASTER_SITE_QT}
-DISTINFO_FILE?=		${PORTSDIR}/devel/${_QT_RELNAME}/distinfo
-
+# Set standard bsd.port.mk variables.
 LICENSE?=		LGPL21
+WWW?=		https://www.qt.io/
 
 .  if !exists(${PKGDIR}/pkg-descr)
 DESCR?=			${PORTSDIR}/devel/${_QT_RELNAME}/pkg-descr
 .  endif
 
 # Stage support.
-DESTDIRNAME=		INSTALL_ROOT
+_QT5_DESTDIRNAME=	INSTALL_ROOT
+_QT6_DESTDIRNAME=	DESTDIR
+DESTDIRNAME=		${_QT${_QT_VER}_DESTDIRNAME}
+
+# Qt's tarballs are xz compressed.
+.  if empty(USES:Mtar)
+EXTRACT_SUFX?=		.tar.xz
+.  endif
+
+# Qt5 specific master sites
+_QT5_MASTER_SITES_kde=		LOCAL
+_QT5_MASTER_SITE_SUBDIR_kde=	kde/KDE/Qt/${_QT_VERSION}
+_QT5_MASTER_SITES=		${MASTER_SITE_QT}
+_QT5_MASTER_SITE_SUBDIR=	official_releases/qt/${_QT_VERSION:R}/${_QT_VERSION}/submodules/
+# Qt6 specific master sites
+_QT6_MASTER_SITES=		${MASTER_SITE_QT}
+_QT6_MASTER_SITE_SUBDIR=	official_releases/qt/${_QT_VERSION:R}/${_QT_VERSION}/submodules \
+				official_releases/additional_libraries/${_QT_VERSION:R}/${_QT_VERSION}/
+# Qt5 specific distnames
+.  if ${_QT_DIST} == webengine
+_QT5_DISTNAME=			${_QT_DIST:S,^,qt,:S,$,-everywhere-opensource-src-${DISTVERSION},}
+.  else
+_QT5_DISTNAME=			${_QT_DIST:S,^,qt,:S,$,-everywhere-src-${DISTVERSION},}
+.  endif
+_QT5_DISTNAME_kde=		${_QT_DIST:S,^,kde-qt,:S,$,-${DISTVERSION},}
+# Qt6 specific distnames
+_QT6_DISTNAME=			${_QT_DIST:S,^,qt,:S,$,-everywhere-src-${DISTVERSION},}
+
+# Effective master sites and disfile valus
+MASTER_SITES=			${_QT${_QT_VER}_MASTER_SITES${_KDE_${_QT_DIST}:D_kde}}
+MASTER_SITE_SUBDIR=		${_QT${_QT_VER}_MASTER_SITE_SUBDIR${_KDE_${_QT_DIST}:D_kde}}
+DISTNAME=			${_QT${_QT_VER}_DISTNAME${_KDE_${_QT_DIST}:D_kde}}
+DISTFILES=			${DISTNAME:S,$,${EXTRACT_SUFX},}
+DIST_SUBDIR=			KDE/Qt/${_QT_VERSION}
 
 .  if ${_QT_VER:M5}
-MASTER_SITE_SUBDIR?=	official_releases/qt/${_QT_VERSION:R}/${_QT_VERSION}/submodules/
-# www/qt5-webengine hackery: The tarballs of 5.9.5 had a different naming scheme.
-.    if ${QT5_VERSION} == "5.9.5"
-DISTNAME=		${_QT_DIST:S,^,qt,:S,$,-opensource-src-${DISTVERSION},}
-.    else
-DISTNAME=		${_QT_DIST:S,^,qt,:S,$,-everywhere-src-${DISTVERSION},}
-.    endif
-DISTFILES=		${DISTNAME:S,$,${EXTRACT_SUFX},}
-DIST_SUBDIR=		KDE/Qt/${_QT_VERSION}
+# KDE maintains a repository with a patched Qt5 distribution.
+_KDE_3d=		0
+_KDE_base=		157
+_KDE_charts=		0
+_KDE_connectivity=	5
+_KDE_datavis3d=		0
+_KDE_declarative=	21
+_KDE_gamepad=		0
+_KDE_graphicaleffects=	0
+_KDE_imageformats=	6
+_KDE_location=		3
+_KDE_multimedia=	1
+_KDE_networkauth=	0
+_KDE_quick3d=		1
+_KDE_quickcontrols=	0
+_KDE_quickcontrols2=	7
+_KDE_quicktimeline=	0
+_KDE_remoteobjects=	0
+_KDE_script=		0
+_KDE_script_ORIGIN_TAG=	v5.15.11-lts
+_KDE_script_VERSION=	5.15.11
+_KDE_scxml=		0
+_KDE_sensors=		0
+_KDE_serialbus=		0
+_KDE_serialport=	0
+_KDE_speech=		1
+_KDE_svg=		8
+_KDE_tools=		1
+_KDE_translations=	0
+_KDE_virtualkeyboard=	0
+_KDE_wayland=		57
+_KDE_webchannel=	3
+_KDE_webglplugin=	0
+_KDE_websockets=	2
+_KDE_webview=		0
+_KDE_x11extras=		0
+_KDE_xmlpatterns=	0
 
+.    if defined(_KDE_${_QT_DIST})
+QT5_KDE_PATCH=		p${_KDE_${_QT_DIST}}
+_KDE_${_QT_DIST}_VERSION?=	${_QT_VERSION}
+_KDE_${_QT_DIST}_ORIGIN_TAG?=	v${_KDE_${_QT_DIST}_VERSION}-lts-lgpl
+COMMENT+=		(KDE patched)
+.    else
+QT5_KDE_PATCH=		#
+.    endif
+.  endif # ${_QT_VER:M5}
+
+# Environment setup for Qt5
+.  if ${_QT_VER:M5}
 # Qt (at least when used with qmake) has a tendency to overlink: some libraries
 # have dependencies on others in the mkspec configurations and the latter are
 # always passed to the linker even if they are not actually used. By passing
 # --as-needed to the linker by default when building the Qt ports we do not
 # have to declare a lot of unnecessary dependencies in USE_QT5.
 LDFLAGS+=		-Wl,--as-needed
-
-.    if ${.TARGETS:Mmakesum} || ${.TARGETS:Mfetch} && \
-	defined(DISABLE_SIZE) && defined(NO_CHECKSUM)
-# Ensure that the "makesum" target (with its inner "fetch" one) uses
-# devel/qt*/distinfo for every port.
-.      if ${DISTINFO_FILE:H} == ${PORTSDIR}/devel/${_QT_RELNAME}
-_QT_DIST=		${_QT5_DISTS}
-.      endif
-.    endif
-
-# Qt5's tarballs are xz compressed.
-.    if empty(USES:Mtar)
-EXTRACT_SUFX?=		.tar.xz
-.    endif
 
 .    if ${_QT_DIST} == "base" && ${PORTNAME} != "qmake"
 # Qt configure requires pkg-config to detect dependencies.
@@ -114,6 +172,26 @@ EXTRACT_AFTER_ARGS?=	${DISTNAME:S,$,/examples,:S,^,--exclude ,} \
 			--no-same-owner --no-same-permissions
 .  endif # ! ${_QT_VER:M5}
 
+# Build setup for Qt6
+.  if ${_QT_VER:M6}
+CMAKE_ARGS+=		-DCMAKE_INSTALL_PREFIX=${PREFIX} \
+			-DINSTALL_BINDIR=${PREFIX}/${QT_BINDIR_REL} \
+			-DINSTALL_PUBLICBINDIR=${PREFIX}/bin \
+			-DINSTALL_LIBDIR=${PREFIX}/${QT_LIBDIR_REL} \
+			-DINSTALL_LIBEXECDIR=${PREFIX}/${QT_LIBEXECDIR_REL} \
+			-DINSTALL_DOCDIR=${PREFIX}/${QT_DOCDIR_REL} \
+			-DINSTALL_ARCHDATADIR=${PREFIX}/${QT_ARCHDIR_REL} \
+			-DINSTALL_DATADIR=${PREFIX}/${QT_DATADIR_REL} \
+			-DINSTALL_INCLUDEDIR=${PREFIX}/${QT_INCDIR_REL} \
+			-DINSTALL_MKSPECSDIR=${PREFIX}/${QT_MKSPECDIR_REL} \
+			-DINSTALL_EXAMPLESDIR=${PREFIX}/${QT_EXAMPLEDIR_REL} \
+			-DINSTALL_DESCRIPTIONSDIR=${PREFIX}/${QT_DESCRIPTIONSDIR_REL} \
+			-DQT_QMAKE_TARGET_MKSPEC:String=freebsd-clang \
+			--log-level=TRACE
+.  endif
+
+# Build setup for Qt5
+.  if ${_QT_VER:M5}
 CONFIGURE_ENV+=		MAKE="${MAKE:T}"
 
 CONFIGURE_ARGS+=	-opensource -confirm-license \
@@ -127,10 +205,8 @@ CONFIGURE_ARGS+=	-opensource -confirm-license \
 			-datadir ${PREFIX}/${QT_DATADIR_REL} \
 			-docdir ${PREFIX}/${QT_DOCDIR_REL} \
 			-translationdir ${PREFIX}/${QT_L10NDIR_REL} \
-			-sysconfdir ${PREFIX}/${QT_ETCDIR_REL}
-
-.  if ${_QT_VER:M5}
-CONFIGURE_ARGS+=	-nomake examples -nomake tests \
+			-sysconfdir ${PREFIX}/${QT_ETCDIR_REL} \
+			-nomake examples -nomake tests \
 			-platform ${QMAKESPECNAME} \
 			-archdatadir ${PREFIX}/${QT_ARCHDIR_REL} \
 			-libexecdir ${PREFIX}/${QT_LIBEXECDIR_REL} \
@@ -182,8 +258,11 @@ _EXTRA_PATCHES_QT5+=	${PORTSDIR}/devel/${_QT_RELNAME}/files/extra-patch-mkspecs_
 			${PORTSDIR}/devel/${_QT_RELNAME}/files/extra-patch-mkspecs_common_gcc-base.conf \
 			${PORTSDIR}/devel/${_QT_RELNAME}/files/extrapatch-mkspecs_freebsd-g++_qmake.conf
 .    endif
+.    if ${_QT_VER:M5}
 EXTRA_PATCHES?=		${PORTSDIR}/devel/${_QT_RELNAME}/files/extrapatch-configure \
+			${PORTSDIR}/devel/${_QT_RELNAME}/files/extrapatch-sync.profiles \
 			${_EXTRA_PATCHES_QT5}
+.    endif # ${_QT_VER:M5}
 .  endif #  ${_QT_DIST} == "base"
 
 # Override settings installed in qconfig.h and *.pri files. The flags will be
@@ -208,15 +287,21 @@ QMAKE_ARGS+=		QT_CONFIG+="${QT_CONFIG:N-*:O:u}"
 QMAKE_ARGS+=		QT_CONFIG-="${QT_CONFIG:M-*:O:u:C/^-//}"
 .  endif
 
-PLIST_SUB+=		SHORTVER=${DISTVERSION:R} \
-			FULLVER=${DISTVERSION:C/-.*//}
+PLIST_SUB+=		SHORTVER=${_QT_VERSION:R} \
+			FULLVER=${_QT_VERSION:C/-.*//}
 
 # Handle additional PLIST directories, which should only be used for Qt-dist ports.
-.  for dir in CMAKE ETC
-# Export QT_CMAKEDIR and QT_ETCDIR.
+.  for dir in ETC
+# Export QT_ETCDIR.
 PLIST_SUB+=		QT_${dir}DIR="${QT_${dir}DIR_REL}"
 .  endfor
 
+.  if ${_QT_VER:M5}
+.    for dir in CMAKE
+# Export QT_CMAKEDIR.
+PLIST_SUB+=		QT_${dir}DIR="${QT_${dir}DIR_REL}"
+.    endfor
+.  endif
 
 .  if ${_QT_VER:M5}
 .    if ${_QT_DIST} == "base"
@@ -302,6 +387,7 @@ _QMAKE=			${CONFIGURE_WRKSRC}/bin/qmake
 .      endif
 .    endif
 
+
 pre-configure: qt5-pre-configure
 qt5-pre-configure:
 # Qt 5.3.2 introduced a check in mkspecs/features/create_cmake.prf that
@@ -312,7 +398,15 @@ qt5-pre-configure:
 # value through to the configure script in qtbase).
 	${MKDIR} ${CONFIGURE_WRKSRC}
 	${ECHO_CMD} 'CMAKE_MODULE_TESTS = -' > ${CONFIGURE_WRKSRC}/.qmake.cache
-#
+
+	# configure will run syncqt.pl if it finds a .git entry in the working directory
+	touch ${WRKSRC}/.git
+	# As the patch collection was created after a version bump, all module verisions
+	# are tagged as 5.15.3
+	touch ${WRKSRC}/.qmake.conf # easier than to -f before the sed
+	${REINPLACE_CMD} -e '/MODULE_VERSION/s|5\.15\.[0-9]|${_QT_VERSION}|g' \
+		${WRKSRC}/.qmake.conf
+
 # **** THIS PART IS OBSOLETE FOR THE NEXT QT UPGRADE ****
 #
 # We piggyback on QMAKE_LIBDIR_FLAGS to make sure -L${WRKSRC}/lib is passed to
@@ -346,10 +440,10 @@ _sub_need_add=
 _sub_need_remove=	\#\#
 .    else
 _sub_need_add=		\#\#
-_sub_need_remove=	
+_sub_need_remove=
 .    endif
-# If a port installs Qt version-specific binaries (e.g. "designer" which 
-# existed as a Qt4 application and exists as a Qt5 application and will 
+# If a port installs Qt version-specific binaries (e.g. "designer" which
+# existed as a Qt4 application and exists as a Qt5 application and will
 # probably be a Qt6 application) the port should set `QT_BINARIES=yes`.
 .    if defined(QT_BINARIES)
 _sub_need_bin=
@@ -359,7 +453,7 @@ _sub_need_bin=		\#\#
 .    if ${QT_MODNAME} == core
 # QtCore (e.g. devel/qt5-core) is the one that starts the header,
 # and is also the one that can clean it up when deinstalled.
-_sub_need_clean=	
+_sub_need_clean=
 .    else
 _sub_need_clean=	\#\#
 .    endif
@@ -409,4 +503,24 @@ qt-post-install:
 		>> ${TMPPLIST}
 .    endif # ${QT_CONFIG:N-*}
 .  endif # M5
+
+.  if ${_QT_VER:M6}
+post-stage:	qt6-post-stage
+# Clean-up of empty directories, as we install
+# * cmake to ${LOCALBASE}/lib/cmake not ${QT_LIBDIR}/cmake.
+# * pkgconfig to ${LOCALBASE}/libexec/pkgconfig not ${QT_LIBDIR}/pkgconfig
+qt6-post-stage:
+	${RM} -r ${STAGEDIR}${QT_LIBDIR}/cmake
+	${RM} -r ${STAGEDIR}${QT_LIBDIR}/pkgconfig
+.  endif
+
+qt-create-kde-distfile:
+	${MKDIR} ${DISTDIR}/${DIST_SUBDIR}
+	${SH} ${PORTSDIR}/devel/${_QT_RELNAME}/files/create_kde-qt_release.sh \
+		${_QT_DIST} \
+		${DISTDIR}/${DIST_SUBDIR} \
+		${_KDE_${_QT_DIST}_VERSION} \
+		${_KDE_${_QT_DIST}_ORIGIN_TAG}
+
 .endif # defined(_QT_DIST_MK_INCLUDED)
+

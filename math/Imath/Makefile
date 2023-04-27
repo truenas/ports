@@ -1,11 +1,13 @@
 # Based on the graphics/ilmbase port that was done by: nork@FreeBSD.org
 
 PORTNAME=	Imath
-PORTVERSION=	3.1.3
+PORTVERSION=	3.1.7
+PORTREVISION=	0
 CATEGORIES=	math devel graphics
 
 MAINTAINER=	mandree@FreeBSD.org
 COMMENT=	C++/Python lib of 2D/3D vector, matrix, math ops for computer graphics
+WWW=		https://github.com/AcademySoftwareFoundation/Imath/
 
 LICENSE=	BSD3CLAUSE
 
@@ -40,9 +42,13 @@ PYTHON_USES=		python
 PYTHON_CMAKE_BOOL=	PYTHON
 
 _MAJORVER=	3_1
-_VER=		29
-_MINVER=	2
-_PLVER=		0
+_VER=		30
+_MINVER=	0
+_PLVER=		1
+
+post-patch:
+	${REINPLACE_CMD} -E 's}find_package\(Python(3?) COMPONENTS}set(Python\1_EXECUTABLE ${PYTHON_CMD})\nfind_package(Python\1 ${PYTHON_VER} EXACT COMPONENTS}' \
+		${WRKSRC}/src/python/CMakeLists.txt
 
 post-install:
 .for l in libImath

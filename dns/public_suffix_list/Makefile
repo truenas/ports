@@ -1,11 +1,11 @@
-# Created by: Sunpoet Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	public_suffix_list
-PORTVERSION=	20211028
+PORTVERSION=	20230318
 CATEGORIES=	dns
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Public Suffix List by Mozilla
+WWW=		https://publicsuffix.org/ \
+		https://github.com/publicsuffix/list
 
 LICENSE=	MPL20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -20,7 +20,7 @@ PORTDATA=	public_suffix_list.dat \
 
 GH_ACCOUNT=	publicsuffix
 GH_PROJECT=	list
-GH_TAGNAME=	22a461e
+GH_TAGNAME=	0db7342
 USE_GITHUB=	yes
 
 do-install:

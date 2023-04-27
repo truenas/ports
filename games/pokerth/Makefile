@@ -1,13 +1,12 @@
-# Created by: Yinghong.Liu <relaxbsd@gmail.com>
-
 PORTNAME=	pokerth
 PORTVERSION=	1.1.2
-PORTREVISION=	14
+PORTREVISION=	17
 CATEGORIES=	games
 MASTER_SITES=	SF
 
 MAINTAINER=	tobias.rehbein@web.de
 COMMENT=	Poker game written in C++/Qt
+WWW=		https://www.pokerth.net/
 
 LICENSE=	AGPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -23,10 +22,12 @@ LIB_DEPENDS=	libboost_thread.so:devel/boost-libs \
 BUILD_DEPENDS=	${LOCALBASE}/include/websocketpp/client.hpp:devel/websocketpp \
 		protoc:devel/protobuf
 
+BROKEN=		error: use of undeclared identifier '_1'
+
 USES=		compiler:c++11-lang gl gmake iconv qmake qt:5 sdl sqlite ssl
 USE_GL=		gl
 USE_CXXSTD=	c++11
-USE_QT=		buildtools_build core gui network sql sql-sqlite3 widgets
+USE_QT=		buildtools:build core gui network sql sql-sqlite3 widgets
 USE_SDL=	mixer
 
 QMAKE_SOURCE_PATH=	pokerth.pro

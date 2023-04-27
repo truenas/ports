@@ -1,10 +1,12 @@
 PORTNAME=	peak-classifier
-DISTVERSION=	0.1.1-21
-DISTVERSIONSUFFIX=	-gc1b21c2
+DISTVERSION=	0.1.4-5
+PORTREVISION=	1
+DISTVERSIONSUFFIX=	-ga5bcfec
 CATEGORIES=	biology
 
 MAINTAINER=	jwb@FreeBSD.org
 COMMENT=	Classify ChIP/ATAC-Seq peaks based on features provided in a GFF
+WWW=		https://github.com/auerlab/peak-classifier
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

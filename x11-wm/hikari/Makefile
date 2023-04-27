@@ -1,18 +1,19 @@
 PORTNAME=	hikari
-DISTVERSION=	2.3.2
-PORTREVISION=	1
-CATEGORIES=	x11-wm
+DISTVERSION=	2.3.3
+PORTREVISION=	3
+CATEGORIES=	x11-wm wayland
 MASTER_SITES=	https://hikari.acmelabs.space/releases/
 
-MAINTAINER=	ports@xanderio.de
+MAINTAINER=	ashish@FreeBSD.org
 COMMENT=	Stacking Wayland compositor with tiling capabilities
+WWW=		https://hikari.acmelabs.space
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 BUILD_DEPENDS=	evdev-proto>0:devel/evdev-proto \
 		wayland-protocols>=1.14:graphics/wayland-protocols \
-		wlroots>=0.14.0<0.15.0:x11-toolkits/wlroots
+		wlroots>=0.15.0<0.16.0:x11-toolkits/wlroots
 LIB_DEPENDS=	libinput.so:x11/libinput \
 		libucl.so:textproc/libucl \
 		libwayland-server.so:graphics/wayland \
@@ -47,4 +48,5 @@ post-install:
 	${MV} ${STAGEDIR}${ETCDIR}/hikari.conf \
 		${STAGEDIR}${ETCDIR}/hikari.conf.sample
 
+.include "${.CURDIR:H:H}/x11-toolkits/wlroots015/override.mk"
 .include <bsd.port.mk>

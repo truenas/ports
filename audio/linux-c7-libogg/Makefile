@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	libogg
 PORTVERSION=	1.3.0
 DISTVERSIONSUFFIX=	-7.el7
@@ -8,6 +6,7 @@ CATEGORIES=	audio linux
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	Ogg bitstream library (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://www.xiph.org/ogg/
 
 USES=		linux:c7
 USE_LDCONFIG=	yes

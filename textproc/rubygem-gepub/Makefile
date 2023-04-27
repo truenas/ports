@@ -5,6 +5,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	doceng@FreeBSD.org
 COMMENT=	Ruby generic EPUB parser/generator
+WWW=		https://github.com/skoji/gepub
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -13,7 +14,6 @@ RUN_DEPENDS=	rubygem-nokogiri>=1.8.2<2.0:textproc/rubygem-nokogiri \
 		rubygem-rubyzip>=1.1.1<2.4:archivers/rubygem-rubyzip
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

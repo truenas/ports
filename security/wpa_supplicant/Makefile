@@ -1,18 +1,12 @@
 PORTNAME=	wpa_supplicant
-PORTVERSION=	2.9
-PORTREVISION=	11
+PORTVERSION=	2.10
+PORTREVISION=	6
 CATEGORIES=	security net
 MASTER_SITES=	https://w1.fi/releases/
 
-PATCH_SITES=	https://w1.fi/security/2020-1/ \
-		https://w1.fi/security/2021-1/
-PATCHFILES=	0001-WPS-UPnP-Do-not-allow-event-subscriptions-with-URLs-.patch:-p1 \
-		0002-WPS-UPnP-Fix-event-message-generation-using-a-long-U.patch:-p1 \
-		0003-WPS-UPnP-Handle-HTTP-initiation-failures-for-events-.patch:-p1 \
-		0001-P2P-Fix-a-corner-case-in-peer-addition-based-on-PD-R.patch:-p1
-
 MAINTAINER=	cy@FreeBSD.org
 COMMENT=	Supplicant (client) for WPA/802.1x protocols
+WWW=		https://w1.fi/wpa_supplicant/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/README
@@ -44,13 +38,13 @@ OPTIONS_DEFINE=		WPS WPS_ER WPS_NOREG WPS_NFC WPS_UPNP PKCS12 SMARTCARD \
 			DELAYED_MIC IEEE80211N IEEE80211AC INTERWORKING \
 			IEEE8021X_EAPOL EAPOL_TEST \
 			HS20 NO_ROAMING P2P TDLS DBUS MATCH DOCS \
-                        SIM_SIMULATOR USIM_SIMULATOR
+                        SIM_SIMULATOR USIM_SIMULATOR WEP
 OPTIONS_DEFAULT=	BSD WIRED \
 			TLS PEAP TTLS MD5 MSCHAPV2 GTC LEAP OTP PSK \
 			WPS PKCS12 SMARTCARD IEEE80211R DEBUG_SYSLOG \
 			INTERWORKING HS20 DBUS MATCH IEEE80211R IEEE80211W \
 			IEEE8021X_EAPOL WPS_ER WPS_NFC WPS_UPNP \
-			FAST PWD PAX SAKE GPSK TNC IKEV2 EKE
+			FAST PWD PAX SAKE GPSK TNC IKEV2 EKE WEP
 OPTIONS_SUB=
 
 WPS_DESC=		Wi-Fi Protected Setup
@@ -102,6 +96,7 @@ FAST_DESC=		Flexible Authentication via Secure Tunneling
 AKA_DESC=		Autentication and Key Agreement (UMTS)
 AKA_PRIME_DESC=		AKA Prime variant (RFC 5448)
 EKE_DESC=		Encrypted Key Exchange
+WEP_DESC=		WEP support
 SIM_DESC=		Subscriber Identity Module
 SIM_SIMULATOR_DESC=	SIM simulator (Milenage) for EAP-SIM
 USIM_SIMULATOR_DESC=	SIM simulator (Milenage) for EAP-AKA
@@ -147,7 +142,7 @@ post-patch:
 .endfor
 	# Set EAP protocol(s)
 .for item in MD5 MSCHAPV2 TLS PEAP TTLS FAST GTC OTP PSK PWD PAX LEAP SIM \
-	AKA AKA_PRIME SAKE GPSK TNC IKEV2 EKE
+	AKA AKA_PRIME SAKE GPSK TNC IKEV2 EKE WEP
 .  if ${PORT_OPTIONS:M${item}}
 	@${ECHO_CMD} CONFIG_EAP_${item:tu}=y >> ${CFG}
 .  endif

@@ -1,10 +1,12 @@
 PORTNAME=	osrm-backend
 DISTVERSIONPREFIX=	v
 DISTVERSION=	5.26.0
+PORTREVISION=	3
 CATEGORIES=	www
 
 MAINTAINER=	freebsd@mosedal.net
 COMMENT=	Open Source Routing Machine (Backend)
+WWW=		https://project-osrm.org/
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.TXT
@@ -39,6 +41,10 @@ CMAKE_ON=	BUILD_STATIC_LIBS
 .if ${OSVERSION} >= 1300084
 CXXFLAGS+=	-Wno-range-loop-construct
 .endif
+
+post-patch:
+	@${REINPLACE_CMD} -e 's|-Werror=all -Werror=extra|-Werror=extra|g' \
+		${PATCH_WRKSRC}/CMakeLists.txt
 
 pre-install:
 	@${MKDIR} ${STAGEDIR}/var/db/osrm-backend

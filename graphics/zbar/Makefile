@@ -1,16 +1,16 @@
-# Created by: Oliver Heesakkers <dev2@heesakkers.info>
-
 PORTNAME=	zbar
 DISTVERSION=	0.23.90
 CATEGORIES=	graphics
+PORTREVISION=	1
 MASTER_SITES=	https://linuxtv.org/downloads/zbar/
 
 MAINTAINER=	dev2@heesakkers.info
 COMMENT=	ZBar barcode reader
+WWW=		https://github.com/mchehab/zbar/
 
 LICENSE=	LGPL21
 
-USES=		autoreconf gmake iconv libtool localbase:ldflags pathfix pkgconfig
+USES=		autoreconf gettext-tools gmake iconv libtool localbase:ldflags pathfix pkgconfig
 USE_LDCONFIG=	yes
 
 GNU_CONFIGURE=	yes
@@ -65,12 +65,12 @@ IMAGEMAGICK_CONFIGURE_WITH=	imagemagick
 JPEG_USES=			jpeg
 JPEG_CONFIGURE_WITH=		jpeg
 
-NLS_USES=			gettext
+NLS_USES=			gettext-runtime
 NLS_LDFLAGS=			-lintl
 NLS_CONFIGURE_ENABLE=		nls
 
 QT5_USES=			qt:5
-QT5_USE=			QT=core,gui,widgets,x11extras,buildtools_build
+QT5_USE=			QT=core,gui,widgets,x11extras,buildtools:build
 QT5_CONFIGURE_WITH=		qt qt5
 QT5_IMPLIES=			X11
 

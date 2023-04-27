@@ -1,14 +1,15 @@
 PORTNAME=	digikam
-DISTVERSION=	7.3.0
+DISTVERSION=	7.10.0
+PORTREVISION=	3
 CATEGORIES=	graphics kde
 MASTER_SITES=	KDE/stable/${PORTNAME}/${PORTVERSION}
-DIST_SUBDIR=	KDE/digikam/${PORTVERSION}
-
-PATCH_SITES=	https://invent.kde.org/graphics/digikam/-/commit/
-PATCHFILES=	95a8ece964681fc6823e968541da2da2da06b3dd.patch:-p1
+DIST_SUBDIR=	KDE/${PORTNAME}/${PORTVERSION}
+# One bit changed in the naming convention ..
+DISTFILES=	digiKam-${DISTVERSIONPREFIX}${DISTVERSION}${DISTVERSIONSUFFIX}${EXTRACT_SUFX}
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	KDE digital photo management application
+WWW=		https://www.digikam.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -24,13 +25,14 @@ LIB_DEPENDS=	libKF5Sane.so:graphics/libksane \
 		liblensfun.so:graphics/lensfun \
 		liblqr-1.so:graphics/liblqr-1 \
 		libopencv_core.so:graphics/opencv \
+		libheif.so:graphics/libheif \
 		libpgf.so:graphics/libpgf \
 		libpng.so:graphics/png \
 		libtiff.so:graphics/tiff \
 		libx265.so:multimedia/x265
 
 USES=		bison cmake compiler:c++11-lib desktop-file-utils eigen:3 gl \
-		gnome jpeg kde:5 magick:6 pkgconfig qt:5 shebangfix tar:xz xorg
+		gnome jpeg kde:5 magick pkgconfig qt:5 shebangfix tar:xz xorg
 USE_GL=		gl glu
 USE_GNOME=	glib20 libxml2 libxslt
 USE_KDE=	archive auth bookmarks calendarcore codecs completion config \
@@ -41,16 +43,18 @@ USE_KDE=	archive auth bookmarks calendarcore codecs completion config \
 		widgetsaddons windowsystem xmlgui
 USE_QT=		concurrent core dbus declarative gui location network opengl \
 		printsupport sql webchannel widgets x11extras xml xmlpatterns \
-		sql-sqlite3_run \
-		buildtools_build qmake_build
+		sql-sqlite3:run \
+		buildtools:build qmake:build
 USE_XORG=	ice sm x11 xext
 
 USE_LDCONFIG=	yes
 SHEBANG_FILES=	core/data/scripts/digitaglinktree/digitaglinktree
 
+WITH_CCACHE_BUILD=	yes
+
 # Disable kipiplugins, as they are built in their own port: graphics/kipiplugins.
 # Remember to keep that port in sync with this one.
-CMAKE_ON=	DIGIKAMSC_COMPILE_DIGIKAM
+CMAKE_ON=	BUILD_WITH_CCACHE DIGIKAMSC_COMPILE_DIGIKAM ENABLE_KFILEMETADATASUPPORT
 
 OPTIONS_DEFINE=		DOCS DOXYGEN KDEPIM KVKONTAKTE MEDIAPLAYER MYSQL NLS WEBENGINE
 OPTIONS_DEFAULT=	${OPTIONS_DEFINE:NWEBENGINE}
@@ -65,7 +69,8 @@ DOXYGEN_BUILD_DEPENDS=	doxygen:devel/doxygen
 DOXYGEN_IMPLIES=	DOCS
 
 KDEPIM_DESC=		KDEPim Addressbook support
-KDEPIM_USE=		KDE=akonadi,akonadicontacts,contacts
+KDEPIM_USE=		KDE=akonadi,akonadicontacts,contacts,grantleetheme
+KDEPIM_USES=		grantlee:5
 KDEPIM_CMAKE_BOOL=	ENABLE_AKONADICONTACTSUPPORT
 KDEPIM_CMAKE_BOOL_OFF=	CMAKE_DISABLE_FIND_PACKAGE_KF5AkonadiContact
 
@@ -77,12 +82,11 @@ MEDIAPLAYER_CMAKE_BOOL_OFF=	CMAKE_DISABLE_FIND_PACKAGE_FFmpeg \
 				CMAKE_DISABLE_FIND_PACKAGE_QtAV
 
 MYSQL_USES=		mysql:server
-MYSQL_USE=		QT=sql-mysql_run
+MYSQL_USE=		QT=sql-mysql:run
 MYSQL_CMAKE_BOOL=	ENABLE_INTERNALMYSQL \
 			ENABLE_MYSQLSUPPORT
 MYSQL_CMAKE_ON=		-DMYSQLD_PATH:PATH=${LOCALBASE}/libexec \
 			-DMYSQL_TOOLS_PATH:PATH=${LOCALBASE}/bin
-MYSQL_BUILD_DEPENDS=	${LOCALBASE}/lib/mysql/libmysqld.a:${_MYSQL_SERVER}
 
 KVKONTAKTE_DESC=	vk.com Plugin
 KVKONTAKTE_LIB_DEPENDS=	libKF5Vkontakte.so:net/libkvkontakte
@@ -99,12 +103,5 @@ WEBENGINE_USE_OFF=	QT=webkit
 WEBENGINE_CMAKE_BOOL=	ENABLE_QWEBENGINE
 
 PLIST_SUB=		SHLIB_VER=${DISTVERSION}
-
-.include <bsd.port.options.mk>
-
-.if ${PORT_OPTIONS:MWEBENGINE}
-DEPRECATED=	Uses EOL Python 2.7 via www/qt5-webengine
-EXPIRATION_DATE=2021-06-23
-.endif
 
 .include <bsd.port.mk>

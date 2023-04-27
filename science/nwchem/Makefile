@@ -1,18 +1,20 @@
 PORTNAME=	nwchem
 DISTVERSIONPREFIX=	v
-DISTVERSION=	7.0.2.20211110
+DISTVERSION=	7.2.0
+PORTREVISION=	1
 DISTVERSIONSUFFIX=	-release
+CATEGORIES=	science
 MASTER_SITES=	https://www.chemie.uni-bonn.de/pctc/mulliken-center/software/dft-d3/:dftd3 \
 		https://web.archive.org/web/20210527062154if_/https://www.chemie.uni-bonn.de/pctc/mulliken-center/software/dft-d3/:dft3 \
 		https://gitlab.com/libxc/libxc/-/archive/${LIBXC_VERSION}/:libxc
 DISTFILES=	dftd3.tgz:dft3 \
 		libxc-${LIBXC_VERSION}.tar.gz:libxc
-CATEGORIES=	science
 DIST_SUBDIR=	${PORTNAME}-${PORTVERSION}
 EXTRACT_ONLY=	${DISTNAME}.tar.gz
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	High-performance computational chemistry software
+WWW=		https://nwchemgit.github.io/
 
 LICENSE=	ECL20
 LICENSE_NAME=	Educational Community License (ECL) 2.0
@@ -23,16 +25,16 @@ BROKEN_aarch64=	fails to build: gfortran10: error: unrecognized command-line opt
 
 BUILD_DEPENDS=	bash:shells/bash
 LIB_DEPENDS=	libblas.so:math/blas \
-		libga.so:devel/ga
+		libga.so:devel/ga \
+		libhwloc.so:devel/hwloc2
 RUN_DEPENDS=	nwchem-data>0:science/nwchem-data
 TEST_DEPENDS=	bash:shells/bash
 
-USES=		fortran gettext-runtime gmake perl5
+USES=		fortran gettext-runtime gmake perl5 pkgconfig
 USE_PERL5=	build
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	nwchemgit
-GH_TAGNAME=	7b21660b82ebd85ef659f6fba7e1e73433b0bd0a
 
 MAKEFILE=	GNUmakefile
 ARCH_64BIT=	${ARCH:C/.*64.*/64/:S/${ARCH}//}
@@ -48,9 +50,9 @@ BINARY_ALIAS+=	make=${GMAKE} # only for LIBXC
 
 PLIST_FILES=	bin/nwchem etc/nwchemrc
 
-LIBXC_VERSION=	5.1.7 # from src/libext/libxc/build_libxc.sh
+LIBXC_VERSION=	6.1.0 # from src/libext/libxc/build_libxc.sh
 
-OPTIONS_DEFINE=		LIBXC PYTHON
+OPTIONS_DEFINE=		LIBXC PYTHON # more potential optional dependencies are listed in src/libext/GNUmakefile
 OPTIONS_DEFAULT=	LIBXC PYTHON MPICH # the default should be the same as for the MPI option in math/scalapack and devel/ga
 OPTIONS_RADIO=		MPI
 OPTIONS_RADIO_MPI=	NOMPI MPICH OPENMPI
@@ -67,7 +69,7 @@ OPENMPI_RUN_DEPENDS=	openmpi>0:net/openmpi
 OPENMPI_VARS=		CONFLICTS_BUILD=mpich
 
 LIBXC_DESC=		Use libxc
-LIBXC_BUILD_DEPENDS=	cmake:devel/cmake
+LIBXC_BUILD_DEPENDS=	cmake:devel/cmake-core
 LIBXC_MAKE_ENV=		USE_LIBXC=Y
 
 PYTHON_DESC=		Enable Python syntax in input files

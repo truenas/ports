@@ -1,12 +1,10 @@
-# Created by: Hiroyuki Iwatsuki <don@na.rim.or.jp>
-
 PKGNAMEPREFIX=	ruby-
 
 MAINTAINER=	lev@FreeBSD.org
 COMMENT=	Ruby bindings for version control system
+WWW=		https://subversion.apache.org/
 
-USES+=		compiler:c11
-USE_RUBY=	yes
+USES+=		compiler:c11 ruby
 
 PORTREVISION_114=	0
 PORTREVISION_LTS=	0
@@ -23,5 +21,7 @@ CONFIGURE_ARGS+=	--without-gnome-keyring \
 
 ALL_TARGET=	swig-rb-lib swig-rb
 INSTALL_TARGET=	install-swig-rb
+
+CFLAGS+=	-fdeclspec
 
 .include <bsd.port.post.mk>

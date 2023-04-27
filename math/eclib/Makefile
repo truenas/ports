@@ -1,12 +1,11 @@
-# Created by: thierry@pompo.net
-
 PORTNAME=	eclib
-PORTVERSION=	20210318
-PORTREVISION=	1
+PORTVERSION=	20220621
+PORTREVISION=	3
 CATEGORIES=	math
 
 MAINTAINER=	thierry@FreeBSD.org
 COMMENT=	C++ library for arithmetic on elliptic curves
+WWW=		https://homepages.warwick.ac.uk/staff/J.E.Cremona/mwrank/
 
 LICENSE=	GPLv2
 
@@ -25,6 +24,7 @@ OPTIONS_DEFINE=	DOCS
 LIBS+=		"-lm"
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--with-flint=${LOCALBASE} --with-boost=${LOCALBASE}
+INSTALL_TARGET=	install-strip
 USE_LDCONFIG=	yes
 
 .include <bsd.port.mk>

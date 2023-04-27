@@ -1,12 +1,13 @@
 PORTNAME=	gphoto2
-PORTVERSION=	2.2.4
+PORTVERSION=	2.3.4
 CATEGORIES=	graphics python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DIST_SUBDIR=	python-gphoto2
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Python bindings for libgphoto2
+WWW=		https://pypi.org/project/gphoto2/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

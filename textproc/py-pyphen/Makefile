@@ -1,14 +1,13 @@
-# Created by: Yuri Victorovich <yuri@rawbw.com>
-
 PORTNAME=	pyphen
-PORTVERSION=	0.10.0
+PORTVERSION=	0.13.0
+PORTREVISION=	2
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
-DISTNAME=	Pyphen-${PORTVERSION}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Module to hyphenate text based on Hunspell dictionaries
+WWW=		https://pyphen.org/
 
 LICENSE=	GPLv2 LGPL21 MPL11
 LICENSE_COMB=	multi
@@ -16,8 +15,11 @@ LICENSE_FILE_GPLv2=	${WRKSRC}/COPYING.GPL
 LICENSE_FILE_LGPL21=	${WRKSRC}/COPYING.LGPL
 LICENSE_FILE_MPL11=	${WRKSRC}/COPYING.MPL
 
+BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}flit>=3.2<4:devel/py-flit@${PY_FLAVOR}
+
 USES=		python:3.6+
-USE_PYTHON=	autoplist distutils
+USE_PYTHON=	pep517 autoplist pytest
+
 NO_ARCH=	yes
 
 .include <bsd.port.mk>

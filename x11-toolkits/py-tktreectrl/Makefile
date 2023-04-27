@@ -1,14 +1,13 @@
-# Created by: Andrew Pantyukhin <infofarmer@FreeBSD.org>
-
 PORTNAME=	tktreectrl
-DISTVERSION=	2.0.2
+PORTVERSION=	2.0.2
 CATEGORIES=	x11-toolkits tk python
 MASTER_SITES=	SF/tkintertreectrl/TkinterTreectrl-${PORTVERSION:R}/
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
-DISTNAME=	TkinterTreectrl-${DISTVERSION}
+DISTNAME=	TkinterTreectrl-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	TkTreectrl Python bindings
+WWW=		http://tkintertreectrl.sourceforge.net/
 
 LICENSE=	PD
 

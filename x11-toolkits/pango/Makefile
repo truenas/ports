@@ -1,13 +1,13 @@
-# Created by: Maxim Sobolev <sobomax@FreeBSD.org>
-
 PORTNAME=	pango
-PORTVERSION=	1.48.7
+PORTVERSION=	1.50.9
+PORTREVISION=	1
 CATEGORIES=	x11-toolkits
 MASTER_SITES=	GNOME
 DIST_SUBDIR=	gnome2
 
 MAINTAINER=	desktop@FreeBSD.org
 COMMENT=	Open-source framework for the layout and rendering of i18n text
+WWW=		https://www.pango.org/
 
 LICENSE=	LGPL20
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -28,20 +28,24 @@ USE_GNOME=	cairo glib20 introspection:build
 CPE_VENDOR=	gnome
 
 VERSION=	1.8.0
-LIBVERSION=	0.4800.7
+LIBVERSION=	0.5000.9
 PLIST_SUB+=     VERSION=${VERSION} LIBVERSION=${LIBVERSION}
 
 FONTSCALE=	${LOCALBASE}/share/fonts/TTF/luximb.ttf
 FONTENCOD=	${LOCALBASE}/share/fonts/encodings/encodings.dir
 
 OPTIONS_SUB=	yes
-OPTIONS_DEFINE=	X11 DOCS MANPAGES
-OPTIONS_DEFAULT=X11 MANPAGES
+OPTIONS_DEFINE=	X11 DOCS MANPAGES THAI
+OPTIONS_DEFAULT=X11 MANPAGES THAI
 
 DOCS_MESON_TRUE=	gtk_doc
 DOCS_BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}gi-docgen>=0:textproc/py-gi-docgen
 
 MANPAGES_BUILD_DEPENDS=	help2man:misc/help2man
+
+THAI_DESC=		Thai language support via libThai
+THAI_LIB_DEPENDS=	libthai.so:devel/libthai
+THAI_MESON_ENABLED=	libthai
 
 X11_MESON_ENABLED=	xft
 X11_USES=	xorg

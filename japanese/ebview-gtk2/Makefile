@@ -1,12 +1,13 @@
 PORTNAME=	ebview
 PORTVERSION=	0.3.6
-PORTREVISION=	19
+PORTREVISION=	20
 CATEGORIES=	japanese
 MASTER_SITES=	SF
 PKGNAMESUFFIX=	-gtk2
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Electronic Book Viewer
+WWW=		http://ebview.sourceforge.net/
 
 LICENSE=	GPLv2+
 

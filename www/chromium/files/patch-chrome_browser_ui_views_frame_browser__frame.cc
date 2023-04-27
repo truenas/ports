@@ -1,52 +1,47 @@
---- chrome/browser/ui/views/frame/browser_frame.cc.orig	2021-09-24 04:26:00 UTC
+--- chrome/browser/ui/views/frame/browser_frame.cc.orig	2023-04-05 11:05:06 UTC
 +++ chrome/browser/ui/views/frame/browser_frame.cc
-@@ -44,11 +44,11 @@
+@@ -47,7 +47,7 @@
+ #include "components/user_manager/user_manager.h"
+ #endif
  
- // TODO(crbug.com/1052397): Revisit the macro expression once build flag switch
- // of lacros-chrome is complete.
--#if defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)
-+#if defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS) || defined(OS_BSD)
+-#if BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
  #include "ui/display/screen.h"
+ #include "ui/linux/linux_ui.h"
  #endif
+@@ -55,7 +55,7 @@
+ namespace {
  
--#if defined(OS_LINUX)
-+#if defined(OS_LINUX) || defined(OS_BSD)
- #include "ui/views/linux_ui/linux_ui.h"
- #endif
- 
-@@ -57,7 +57,7 @@ namespace {
- bool IsUsingGtkTheme(Profile* profile) {
- // TODO(crbug.com/1052397): Revisit the macro expression once build flag switch
- // of lacros-chrome is complete.
--#if defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)
-+#if defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS) || defined(OS_BSD)
+ bool IsUsingLinuxSystemTheme(Profile* profile) {
+-#if BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
    return ThemeServiceFactory::GetForProfile(profile)->UsingSystemTheme();
  #else
    return false;
-@@ -244,7 +244,7 @@ void BrowserFrame::OnNativeWidgetWorkspaceChanged() {
+@@ -290,7 +290,7 @@ void BrowserFrame::OnNativeWidgetWorkspaceChanged() {
+   chrome::SaveWindowWorkspace(browser_view_->browser(), GetWorkspace());
+   chrome::SaveWindowVisibleOnAllWorkspaces(browser_view_->browser(),
                                             IsVisibleOnAllWorkspaces());
- // TODO(crbug.com/1052397): Revisit the macro expression once build flag switch
- // of lacros-chrome is complete.
--#if defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)
-+#if defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS) || defined(OS_BSD)
+-#if BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
    // If the window was sent to a different workspace, prioritize it if
    // it was sent to the current workspace and deprioritize it
    // otherwise.  This is done by MoveBrowsersInWorkspaceToFront()
-@@ -365,7 +365,7 @@ void BrowserFrame::SelectNativeTheme() {
-     }
+@@ -413,7 +413,7 @@ void BrowserFrame::SelectNativeTheme() {
+     return;
    }
  
--#if defined(OS_LINUX)
-+#if defined(OS_LINUX) || defined(OS_BSD)
-   const views::LinuxUI* linux_ui = views::LinuxUI::instance();
-   // Ignore GTK+ for web apps with window-controls-overlay as the
-   // display_override so the web contents can blend with the overlay by using
-@@ -384,7 +384,7 @@ bool BrowserFrame::RegenerateFrameOnThemeChange(
+-#if BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
+   const auto* linux_ui_theme =
+       ui::LinuxUiTheme::GetForWindow(GetNativeWindow());
+   // Ignore the system theme for web apps with window-controls-overlay as the
+@@ -430,7 +430,7 @@ void BrowserFrame::SelectNativeTheme() {
+ bool BrowserFrame::RegenerateFrameOnThemeChange(
+     BrowserThemeChangeType theme_change_type) {
    bool need_regenerate = false;
-   // TODO(crbug.com/1052397): Revisit the macro expression once build flag
-   // switch of lacros-chrome is complete.
--#if defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)
-+#if defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS) || defined(OS_BSD)
-   // GTK and user theme changes can both change frame buttons, so the frame
+-#if BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
+   // System and user theme changes can both change frame buttons, so the frame
    // always needs to be regenerated on Linux.
    need_regenerate = true;

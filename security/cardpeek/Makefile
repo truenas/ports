@@ -1,12 +1,12 @@
-# Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
-
 PORTNAME=	cardpeek
 PORTVERSION=	0.8.4
+PORTREVISION=	1
 CATEGORIES=	security
 MASTER_SITES=	http://downloads.pannetrat.com/install/
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Tool for reading the contents of ISO 7816 smart cards
+WWW=		http://pannetrat.com/Cardpeek/
 
 LICENSE=	GPLv3
 

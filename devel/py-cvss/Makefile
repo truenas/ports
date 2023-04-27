@@ -1,11 +1,12 @@
 PORTNAME=	cvss
 PORTVERSION=	2.2
 CATEGORIES=	devel
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	gettoknowmi@yahoo.com
 COMMENT=	Computation utilities and interactive calculator compatible
+WWW=		https://github.com/skontar/cvss
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${FILESDIR}/LICENSE

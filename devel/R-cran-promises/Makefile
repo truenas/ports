@@ -1,10 +1,12 @@
 PORTNAME=	promises
 PORTVERSION=	1.2.0.1
+PORTREVISION=	1
 CATEGORIES=	devel
 DISTNAME=	${PORTNAME}_${PORTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Abstractions for Promise-Based Asynchronous Programming
+WWW=		https://cran.r-project.org/web/packages/promises/
 
 LICENSE=	MIT
 

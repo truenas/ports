@@ -1,11 +1,12 @@
 PORTNAME=	lz4
-PORTVERSION=	2.1.10
+PORTVERSION=	4.3.2
 CATEGORIES=	archivers python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	python@FreeBSD.org
 COMMENT=	Python binding for the LZ4 compression library
+WWW=		https://github.com/python-lz4/python-lz4
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -14,18 +15,18 @@ BUILD_DEPENDS=	liblz4>=1.7.5:archivers/liblz4 \
 		${PYTHON_PKGNAMEPREFIX}pkgconfig>=0:devel/py-pkgconfig@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}setuptools_scm>0:devel/py-setuptools_scm@${PY_FLAVOR}
 LIB_DEPENDS=	liblz4.so:archivers/liblz4
-TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}psutil>=0:sysutils/py-psutil@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}pytest>=0:devel/py-pytest@${PY_FLAVOR}
+TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}psutil>=0:sysutils/py-psutil@${PY_FLAVOR}
 
-USES=		python:3.6+
-USE_PYTHON=	distutils
+USES=		localbase python:3.7+
+USE_PYTHON=	distutils pytest
+
+CONFIGURE_ENV=	PYLZ4_USE_SYSTEM_LZ4=1
+
+post-patch:
+# Clean up bundled libraries
+	@${RM} -r ${WRKSRC}/lz4libs/
 
 post-install:
-	${STRIP_CMD} ${STAGEDIR}${PYTHONPREFIX_SITELIBDIR}/${PORTNAME}/_version*.so \
-		${STAGEDIR}${PYTHONPREFIX_SITELIBDIR}/${PORTNAME}/block/_block*.so \
-		${STAGEDIR}${PYTHONPREFIX_SITELIBDIR}/${PORTNAME}/frame/_frame*.so
-
-do-test:
-	cd ${WRKSRC} && ${PYTHON_CMD} -m pytest
+	${FIND} ${STAGEDIR}${PYTHON_SITELIBDIR} -name '*.so' -exec ${STRIP_CMD} {} +
 
 .include <bsd.port.mk>

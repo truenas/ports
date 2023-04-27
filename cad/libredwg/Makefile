@@ -1,5 +1,3 @@
-# Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
-
 PORTNAME=	libredwg
 PORTVERSION=	0.12.4
 CATEGORIES=	cad devel
@@ -7,6 +5,7 @@ MASTER_SITES=	GNU
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Library and command line tools to handle DWG files
+WWW=		https://www.gnu.org/software/libredwg/
 
 LICENSE=	GPLv3+
 

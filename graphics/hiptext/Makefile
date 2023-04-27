@@ -1,12 +1,11 @@
-# Created by: Yuri Victorovich <yuri@rawbw.com>
-
 PORTNAME=	hiptext
 PORTVERSION=	0.0.s20160621
-PORTREVISION=	12
+PORTREVISION=	15
 CATEGORIES=	graphics
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Tool for rendering images and videos inside terminals
+WWW=		https://github.com/jart/hiptext
 
 LICENSE=	NONE
 

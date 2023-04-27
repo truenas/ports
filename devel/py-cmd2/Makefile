@@ -1,13 +1,12 @@
-# Created by: Alexander Nusov <alexander.nusov@nfvexpress.com>
-
 PORTNAME=	cmd2
-PORTVERSION=	2.3.1
+PORTVERSION=	2.4.3
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Build interactive command line applications in Python
+WWW=		https://github.com/python-cmd2/cmd2
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

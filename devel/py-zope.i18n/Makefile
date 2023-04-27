@@ -1,15 +1,14 @@
-# Created by: Wen Heping <wen@FreeBSD.org>
-
 PORTNAME=	zope.i18n
 PORTVERSION=	3.8.0
 PORTREVISION=	1
 CATEGORIES=	devel www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DIST_SUBDIR=	zope
 
 MAINTAINER=	zope@FreeBSD.org
 COMMENT=	Zope Internationalization Support
+WWW=		https://pypi.org/project/zope.i18n/
 
 LICENSE=	ZPL21
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

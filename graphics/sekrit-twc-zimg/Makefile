@@ -1,11 +1,12 @@
 PORTNAME=	zimg
 DISTVERSIONPREFIX=	release-
-DISTVERSION=	3.0.3
+DISTVERSION=	3.0.4
 CATEGORIES=	graphics
 PKGNAMEPREFIX=	${GH_ACCOUNT}-
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Scaling, colorspace conversion, and dithering library
+WWW=		https://github.com/sekrit-twc/zimg
 
 LICENSE=	WTFPL
 LICENSE_FILE=	${WRKSRC}/COPYING

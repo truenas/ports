@@ -1,11 +1,12 @@
 PORTNAME=	doctest-ignore-unicode
 DISTVERSION=	0.1.2
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	lbartoletti@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Add flag to ignore unicode literal prefixes in doctests
+WWW=		https://pypi.python.org/pypi/doctest-ignore-unicode
 
 LICENSE=	APACHE20
 

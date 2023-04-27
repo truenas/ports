@@ -1,5 +1,5 @@
-TIMESTAMP = 1626021289
-SHA256 (go/textproc_git-chglog/git-chglog-v0.15.0/v0.15.0.mod) = 3c56cb72765b82d405f4cfee92c0ff67bd43e8ca71d4e4d414374ce2f2e12907
-SIZE (go/textproc_git-chglog/git-chglog-v0.15.0/v0.15.0.mod) = 525
-SHA256 (go/textproc_git-chglog/git-chglog-v0.15.0/v0.15.0.zip) = 52a16bda9ed9ae811fc208779955adc132f4d90e4a8fb9588cbe5c6bb3171445
-SIZE (go/textproc_git-chglog/git-chglog-v0.15.0/v0.15.0.zip) = 579120
+TIMESTAMP = 1679111535
+SHA256 (go/textproc_git-chglog/git-chglog-v0.15.4/v0.15.4.mod) = d3c21568fd4ddd85577ded646edc3659e4530f78bde2a7a9a866004061de59e4
+SIZE (go/textproc_git-chglog/git-chglog-v0.15.4/v0.15.4.mod) = 1835
+SHA256 (go/textproc_git-chglog/git-chglog-v0.15.4/v0.15.4.zip) = 35ac1f56bb527a51343925fe106538ee89a1df7e4832e51e3f7835252d48fc35
+SIZE (go/textproc_git-chglog/git-chglog-v0.15.4/v0.15.4.zip) = 580995

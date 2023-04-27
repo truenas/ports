@@ -1,15 +1,14 @@
-# Created by: Alexander Nusov <alexander.nusov@nfvexpress.com>
-
 PORTNAME=	xstatic-roboto-fontface
 PORTVERSION=	0.5.0.0
 PORTREVISION=	2
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	XStatic-roboto-fontface-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	roboto-fontface (XStatic packaging standard)
+WWW=		https://github.com/choffmeister/roboto-fontface-bower
 
 LICENSE=	APACHE20
 

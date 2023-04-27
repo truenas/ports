@@ -1,12 +1,13 @@
 PORTNAME=	termstyle
 PORTVERSION=	0.1.10
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	python-${PORTNAME}-${PORTVERSION}
 
-MAINTAINER=	wg@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Dirt-simple terminal-colour library for python
+WWW=		https://github.com/gfxmonk/termstyle
 
 LICENSE=	BSD3CLAUSE
 

@@ -1,13 +1,12 @@
-# Created by: ijliao
-
 PORTNAME=	PDF-API2
-PORTVERSION=	2.042
+PORTVERSION=	2.044
 CATEGORIES=	textproc perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Facilitates the creation and modification of PDF files
+WWW=		https://metacpan.org/release/PDF-API2
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/LICENSE

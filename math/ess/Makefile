@@ -1,8 +1,6 @@
-# Created by: Christopher J. Ruwe
-
 PORTNAME=	ess
 DISTVERSION=	18.10.2
-PORTREVISION=	7
+PORTREVISION=	15
 CATEGORIES=	math
 MASTER_SITES=	http://ess.r-project.org/downloads/ess/ \
 		http://stat.ethz.ch/ESS/downloads/ess/
@@ -10,6 +8,7 @@ PKGNAMESUFFIX=	${EMACS_PKGNAMESUFFIX}
 
 MAINTAINER=	rhurlin@FreeBSD.org
 COMMENT=	R support for Emacsen
+WWW=		https://ess.r-project.org/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

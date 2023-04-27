@@ -1,18 +1,22 @@
 PORTNAME=	siril
-DISTVERSION=	0.99.10.1
-PORTREVISION=	3
+DISTVERSION=	1.0.6
+PORTREVISION=	5
 CATEGORIES=	astro graphics
 MASTER_SITES=	https://free-astro.org/download/
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Astronomical image processing software
+WWW=		https://siril.org/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE.md
 
 BROKEN_i386=	undefined reference to `__atomic_load' and `__atomic_compare_exchange' #`
+.if !exists(/usr/include/omp.h)
+BROKEN=		requires OpenMP support that is missing on this architecture
+.endif
 
-BUILD_DEPENDS=	cmake:devel/cmake
+BUILD_DEPENDS=	cmake:devel/cmake-core
 LIB_DEPENDS=	libavformat.so:multimedia/ffmpeg \
 		libcfitsio.so:astro/cfitsio \
 		libconfig.so:devel/libconfig \
@@ -28,14 +32,14 @@ LIB_DEPENDS=	libavformat.so:multimedia/ffmpeg \
 		libopencv_core.so:graphics/opencv \
 		libpng.so:graphics/png \
 		libraw.so:graphics/libraw \
-		libtiff.so:graphics/tiff
+		librtprocess.so:graphics/librtprocess \
+		libtiff.so:graphics/tiff \
+		libwcs.so:astro/wcslib
 LIB_DEPENDS+=	libopencv_photo.so:graphics/opencv # for some reason, configure fails without opencv, but executable only links to opencv-core
 
 USES=		compiler:c++11-lang desktop-file-utils gettext \
 		gnome meson pkgconfig jpeg shared-mime-info tar:bz2
 USE_GNOME=	atk cairo gdkpixbuf2 gtk30 intltool pango
-
-WRKSRC=		${WRKDIR}/${PORTNAME}
 
 BINARY_ALIAS=	git=false
 

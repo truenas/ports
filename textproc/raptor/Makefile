@@ -1,14 +1,13 @@
-# Created by: ijliao
-
 PORTNAME=	raptor
 PORTVERSION=	1.4.21
-PORTREVISION=	6
+PORTREVISION=	8
 CATEGORIES=	textproc
 MASTER_SITES=	SF/librdf/${PORTNAME}/${PORTVERSION} \
 		http://download.librdf.org/source/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	RDF Parser Toolkit for Redland
+WWW=		https://librdf.org/raptor/
 
 LIB_DEPENDS=	libcurl.so:ftp/curl
 

@@ -1,11 +1,12 @@
 PORTNAME=	libfreehand
 PORTVERSION=	0.1.2
-PORTREVISION=	21
+PORTREVISION=	25
 CATEGORIES=	graphics
 MASTER_SITES=	LODEV
 
 MAINTAINER=	office@FreeBSD.org
 COMMENT=	Library for interpreting and importing Adobe/Macromedia drawings
+WWW=		https://wiki.documentfoundation.org/DLP/Libraries/libfreehand
 
 LICENSE=	MPL20
 LICENSE_FILE=	${WRKSRC}/COPYING

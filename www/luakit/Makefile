@@ -1,12 +1,11 @@
-# Created by: Stefan Hagen <ports@textmail.me>
-
 PORTNAME=	luakit
-PORTVERSION=	2.3
+DISTVERSION=	2.3.3
 PORTEPOCH=	1
 CATEGORIES=	www
 
 MAINTAINER=	mbeis@xs4all.nl
 COMMENT=	Fast, small, webkit2 based browser framework extensible with Lua
+WWW=		https://luakit.github.io
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING.GPLv3

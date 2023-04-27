@@ -1,8 +1,6 @@
-# Created by: Kelly Yancey <kbyanc@posi.net>
-
 PORTNAME=	E-Run
 PORTVERSION=	1.2
-PORTREVISION=	15
+PORTREVISION=	16
 CATEGORIES=	x11
 MASTER_SITES=	LOCAL/kbyanc
 

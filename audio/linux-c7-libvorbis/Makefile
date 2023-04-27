@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	libvorbis
 PORTVERSION=	1.3.3
 DISTVERSIONSUFFIX=	-8.el7.1
@@ -8,6 +6,7 @@ CATEGORIES=	audio linux
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	Audio compression codec library (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://xiph.org/vorbis/
 
 USES=		cpe linux:c7
 USE_LDCONFIG=	yes

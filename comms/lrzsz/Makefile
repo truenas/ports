@@ -1,5 +1,3 @@
-# Created by: David O'Brien <obrien@cs.ucdavis.edu>
-
 PORTNAME=	lrzsz
 PORTVERSION=	0.12.20
 PORTREVISION=	4
@@ -8,6 +6,7 @@ MASTER_SITES=	http://ohse.de/uwe/releases/
 
 MAINTAINER=	dinoex@FreeBSD.org
 COMMENT=	Receive/Send files via X/Y/ZMODEM protocol (unrestrictive)
+WWW=		https://ohse.de/uwe/software/lrzsz.html
 
 LICENSE=	GPLv2
 
@@ -17,6 +16,8 @@ CPE_VENDOR=	lrzsz_project
 
 GNU_CONFIGURE=	yes
 ALL_TARGET=	all # vcheck
+
+CONFLICTS_INSTALL=	lrzip # bin/lrz
 
 OPTIONS_DEFINE=	NLS
 

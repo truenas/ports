@@ -1,10 +1,11 @@
 PORTNAME=	libsidplayfp
-DISTVERSION=	2.3.0
+DISTVERSION=	2.4.2
 CATEGORIES=	audio
 MASTER_SITES=	https://github.com/${PORTNAME}/${PORTNAME}/releases/download/v${DISTVERSION}/
 
 MAINTAINER=	fluffy@FreeBSD.org
 COMMENT=	Library to play Commodore 64 music derived from libsidplay2
+WWW=		https://sourceforge.net/p/sidplay-residfp/wiki/Home/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -13,7 +14,7 @@ BUILD_DEPENDS=	libgcrypt-config:security/libgcrypt
 LIB_DEPENDS=	libgcrypt.so:security/libgcrypt \
 		libgpg-error.so:security/libgpg-error
 
-USES=		compiler:c++11-lang libtool pathfix pkgconfig
+USES=		compiler:c++14-lang libtool pathfix pkgconfig
 USE_LDCONFIG=	yes
 
 GNU_CONFIGURE=	yes
@@ -28,7 +29,8 @@ PLIST_SUB+=	SIDPLAYFP_SHLIB_VER=${SIDPLAYFP_SHLIB_VERSION:C/\.[[:digit:].]+//} \
 		STILVIEW_SHLIB_VER=${STILVIEW_SHLIB_VERSION:C/\.[[:digit:].]+//} \
 		STILVIEW_SHLIB_VERSION=${STILVIEW_SHLIB_VERSION}
 
-PORTDOCS=	NEWS README TODO
+PORTDOCS1=	NEWS README TODO
+PORTDOCS=	*
 
 OPTIONS_DEFINE=	DEBUG DOCS DOXYGEN
 OPTIONS_SUB=	yes
@@ -48,7 +50,7 @@ CONFIGURE_ARGS+=	--with-simd=neon
 CONFIGURE_ARGS+=	--with-simd=sse2
 .endif
 
-SIDPLAYFP_SHLIB_VERSION=	6.3.22
+SIDPLAYFP_SHLIB_VERSION=	6.3.26
 STILVIEW_SHLIB_VERSION=		0.0.4
 
 post-build-DOXYGEN-on:
@@ -56,7 +58,7 @@ post-build-DOXYGEN-on:
 
 post-install-DOCS-on:
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}
-	${INSTALL_DATA} ${PORTDOCS:S,^,${WRKSRC}/,} ${STAGEDIR}${DOCSDIR}
+	${INSTALL_DATA} ${PORTDOCS1:S,^,${WRKSRC}/,} ${STAGEDIR}${DOCSDIR}
 
 post-install-DOXYGEN-on:
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}/html

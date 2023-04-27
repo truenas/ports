@@ -1,13 +1,12 @@
-# Created by: MANTANI Nobutaka <nobutaka@FreeBSD.org>
-
 PORTNAME=	kasumi
 PORTVERSION=	2.5
-PORTREVISION=	8
+PORTREVISION=	9
 CATEGORIES=	japanese
 MASTER_SITES=	OSDN/${PORTNAME}
 
 MAINTAINER=	nobutaka@FreeBSD.org
 COMMENT=	Dictionary management tool for anthy
+WWW=		http://kasumi.sourceforge.jp/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

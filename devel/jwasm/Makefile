@@ -1,12 +1,12 @@
-# Created by: Pedro F. Giffuni
-
 PORTNAME=	jwasm
-PORTVERSION=	2.14
+PORTVERSION=	2.17
+PORTREVISION=	1
 PORTEPOCH=	1
 CATEGORIES=	devel
 
 MAINTAINER=	ak@FreeBSD.org
 COMMENT=	Fork of OpenWatcom x86 assembler with AMD64 support
+WWW=		https://github.com/Baron-von-Riedesel/JWasm
 
 LICENSE=	OpenWatcom
 LICENSE_NAME=	Sybase Open Watcom Public License version 1.0
@@ -18,7 +18,7 @@ USES=		alias dos2unix gmake
 USE_GITHUB=	yes
 GH_ACCOUNT=	Baron-von-Riedesel
 GH_PROJECT=	JWasm
-GH_TAGNAME=	f0a2fdd
+GH_TAGNAME=	v2.17
 
 OPTIONS_DEFINE=	DOCS
 

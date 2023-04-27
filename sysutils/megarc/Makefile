@@ -1,5 +1,3 @@
-# Created by: Gerrit Beine <tux@pinguru.net>
-
 PORTNAME=	megarc
 PORTVERSION=	1.51
 CATEGORIES=	sysutils
@@ -9,6 +7,7 @@ EXTRACT_SUFX=	.zip
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	LSI Logic's MegaRAID controlling software
+WWW=		http://www.lsi.com/products/raid-controllers/pages/default.aspx
 
 # Converted from RESTRICTED
 LICENSE=	LSI

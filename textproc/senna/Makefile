@@ -1,12 +1,13 @@
 PORTNAME=	senna
 PORTVERSION=	1.1.5
-PORTREVISION=	9
+PORTREVISION=	10
 PORTEPOCH=	1
 CATEGORIES=	textproc
 MASTER_SITES=	OSDN/senna
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Embeddable Fulltext Search Engine
+WWW=		http://qwik.jp/senna/
 
 BROKEN_aarch64=		does not build: libsenna.so: undefined reference to SEN_ATOMIC_ADD_EX
 BROKEN_armv6=		does not build: libsenna.so: undefined reference to SEN_ATOMIC_ADD_EX

@@ -1,10 +1,12 @@
 PORTNAME=	quantum++
 DISTVERSIONPREFIX=	v
-DISTVERSION=	3.0
+DISTVERSION=	4.0.1
+PORTREVISION=	1
 CATEGORIES=	misc devel
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	C++ header-only general purpose quantum computing library
+WWW=		https://github.com/softwareQinc/qpp
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

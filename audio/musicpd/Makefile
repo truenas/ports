@@ -1,11 +1,13 @@
 PORTNAME=	musicpd
-PORTVERSION=	0.23.5
+PORTVERSION=	0.23.12
+PORTREVISION=	3
 CATEGORIES=	audio
 MASTER_SITES=	https://www.musicpd.org/download/mpd/${PORTVERSION:R}/
 DISTNAME=	mpd-${PORTVERSION}
 
 MAINTAINER=	riggs@FreeBSD.org
 COMMENT=	Remote-controllable music daemon
+WWW=		https://www.musicpd.org/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -18,7 +20,7 @@ USES=		compiler:c++17-lang localbase:ldflags meson pkgconfig \
 		python:build tar:xz
 
 USE_RC_SUBR=	${PORTNAME}
-MESON_ARGS=	-Dauto_features=disabled \
+MESON_ARGS=	--auto-features=disabled \
 		-Dbzip2=enabled \
 		-Dhttpd=true \
 		-Dicu=enabled \
@@ -51,7 +53,7 @@ OPTIONS_MULTI_FILE_FORMAT=	\
 
 OPTIONS_GROUP=	ACCESS PLAYBACK
 
-OPTIONS_GROUP_ACCESS=	CDPARANOIA CURL LAME MMS NFS PLAYLISTS QOBUZ \
+OPTIONS_GROUP_ACCESS=	CDPARANOIA CURL LAME NFS PLAYLISTS QOBUZ \
 			SMB SOUNDCLOUD UPNP YAJL
 
 OPTIONS_GROUP_PLAYBACK=	AO JACK OPENAL OPENMPT PIPEWIRE PULSEAUDIO \
@@ -77,7 +79,8 @@ YAJL_DESC=	JSON support via libyajl
 ZZIP_DESC=	Support for zzip archives
 
 OPTIONS_DEFAULT=CURL FFMPEG FLAC ID3TAG LAME MANPAGES OPUS \
-		PLAYLISTS PROXYDB SNDFILE VORBIS VORBISENC
+		PLAYLISTS PROXYDB SNDFILE VORBIS VORBISENC \
+		WAVPACK
 
 MANPAGES_MESON_ENABLED=	documentation
 MANPAGES_BUILD_DEPENDS=	${LOCALBASE}/bin/sphinx-build:textproc/py-sphinx@${PY_FLAVOR}
@@ -168,8 +171,6 @@ CDPARANOIA_MESON_ENABLED=	cdio_paranoia
 CDPARANOIA_LIB_DEPENDS=	libcdio_paranoia.so:sysutils/libcdio-paranoia
 CURL_MESON_ENABLED=	curl
 CURL_LIB_DEPENDS=	libcurl.so:ftp/curl
-MMS_MESON_ENABLED=	mms
-MMS_LIB_DEPENDS=	libmms.so:net/libmms
 SMB_MESON_ENABLED=	smbclient
 SMB_USES=		samba:lib
 

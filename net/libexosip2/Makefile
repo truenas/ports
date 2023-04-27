@@ -1,5 +1,3 @@
-# Created by: Muhammad Moinur Rahman <bd_subzero@yahoo.com>
-
 PORTNAME=	libeXosip2
 PORTVERSION=	5.3.0
 CATEGORIES=	net
@@ -8,6 +6,7 @@ DISTNAME=	${PORTNAME:tl}-${PORTVERSION}
 
 MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	GPL library that extends the capability of the oSIP library
+WWW=		https://savannah.nongnu.org/projects/exosip
 
 LICENSE=	GPLv2
 
@@ -26,5 +25,11 @@ PLIST_SUB+=	SHLIB_VER=${SHLIB_VER}
 
 CPPFLAGS+=	-I${LOCALBASE}/include
 LIBS+=		-L${LOCALBASE}/lib
+
+.include <bsd.port.options.mk>
+
+.if ${OPSYS} == FreeBSD && ${OSVERSION} >= 1400079
+CFLAGS+=	-Wno-error=int-conversion
+.endif
 
 .include <bsd.port.mk>

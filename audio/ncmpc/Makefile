@@ -1,12 +1,12 @@
-# Created by: Mark Reidel <ports@mark.reidel.info>
-
 PORTNAME=	ncmpc
 PORTVERSION=	0.41
+PORTREVISION=	2
 CATEGORIES=	audio
 MASTER_SITES=	https://www.musicpd.org/download/ncmpc/0/
 
 MAINTAINER=	laurent@nilio.ca
 COMMENT=	Ncurses client for the musicpd
+WWW=		https://www.musicpd.org/clients/ncmpc/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -17,6 +17,7 @@ LIB_DEPENDS=	libboost_system.so:devel/boost-libs \
 
 USES=		compiler:c++17-lang cpe iconv localbase:ldflags meson ncurses \
 		pkgconfig tar:xz
+MESON_ARGS=	-Dlirc=disabled
 
 CPE_VENDOR=	ncmpc_project
 

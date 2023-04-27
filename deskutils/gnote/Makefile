@@ -1,12 +1,12 @@
-# Created by: Gustau Perez i Querol <gustau.perez@gmail.com>
-
 PORTNAME=	gnote
-PORTVERSION=	41.1
+PORTVERSION=	42.1
+PORTREVISION=	1
 CATEGORIES=	deskutils gnome
 MASTER_SITES=	GNOME/sources/${PORTNAME}/${PORTVERSION:C/^([0-9]+)\..*/\1/}
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	C++ version of Tomboy, note taking application
+WWW=		https://wiki.gnome.org/Apps/Gnote
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,13 +1,12 @@
-# Created by: Kubilay Kocak <koobs@FreeBSD.org>
-
 PORTNAME=		pretend
 PORTVERSION=		1.0.9
 DISTVERSIONPREFIX=	v
 CATEGORIES=		devel python
 PKGNAMEPREFIX=		${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	koobs@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Library for stubbing in Python
+WWW=		https://github.com/alex/pretend
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.rst

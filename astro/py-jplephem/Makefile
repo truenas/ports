@@ -1,12 +1,12 @@
-# Created by: thierry@pompo.net
-
 PORTNAME=	jplephem
-PORTVERSION=	2.16
+PORTVERSION=	2.18
+PORTREVISION=	1
 CATEGORIES=	astro python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	thierry@FreeBSD.org
 COMMENT=	Python version of NASA DE4xx ephemerides
+WWW=		https://github.com/brandon-rhodes/python-jplephem
 
 LICENSE=	MIT
 
@@ -25,6 +25,6 @@ SHEBANG_FILES=	test.sh	bin/doctest.sh bin/parse_zzidmap.sh bin/benchmark.py
 NO_ARCH=	yes
 
 do-test:	install
-	(cd ${WRKSRC} && ./test.sh)
+	(cd ${WRKSRC} && ${SETENV} PYTHON=${PYTHON_CMD} ./test.sh)
 
 .include <bsd.port.mk>

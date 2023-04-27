@@ -188,6 +188,8 @@ share/locale/it/LC_MESSAGES/ktp-common-internals.mo
 share/locale/it/LC_MESSAGES/ktp-debugger.mo
 share/locale/ja/LC_MESSAGES/ktp-common-internals.mo
 share/locale/ja/LC_MESSAGES/ktp-debugger.mo
+share/locale/ka/LC_MESSAGES/ktp-common-internals.mo
+share/locale/ka/LC_MESSAGES/ktp-debugger.mo
 share/locale/kk/LC_MESSAGES/ktp-common-internals.mo
 share/locale/kk/LC_MESSAGES/ktp-debugger.mo
 share/locale/ko/LC_MESSAGES/ktp-common-internals.mo
@@ -221,6 +223,12 @@ share/locale/sl/LC_MESSAGES/ktp-common-internals.mo
 share/locale/sl/LC_MESSAGES/ktp-debugger.mo
 share/locale/sr/LC_MESSAGES/ktp-common-internals.mo
 share/locale/sr/LC_MESSAGES/ktp-debugger.mo
+share/locale/sr@ijekavian/LC_MESSAGES/ktp-common-internals.mo
+share/locale/sr@ijekavian/LC_MESSAGES/ktp-debugger.mo
+share/locale/sr@ijekavianlatin/LC_MESSAGES/ktp-common-internals.mo
+share/locale/sr@ijekavianlatin/LC_MESSAGES/ktp-debugger.mo
+share/locale/sr@latin/LC_MESSAGES/ktp-common-internals.mo
+share/locale/sr@latin/LC_MESSAGES/ktp-debugger.mo
 share/locale/sv/LC_MESSAGES/ktp-common-internals.mo
 share/locale/sv/LC_MESSAGES/ktp-debugger.mo
 share/locale/tr/LC_MESSAGES/ktp-common-internals.mo

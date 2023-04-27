@@ -1,13 +1,12 @@
-# Created by: Massimiliano Stucchi <mstucchi@ripe.net>
-
 PORTNAME=	ripe.atlas.cousteau
 DISTVERSION=	1.4.2
 CATEGORIES=	net python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	mstucchi@ripe.net
 COMMENT=	Python wrapper around the RIPE Atlas API
+WWW=		https://github.com/RIPE-NCC/ripe-atlas-cousteau
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE

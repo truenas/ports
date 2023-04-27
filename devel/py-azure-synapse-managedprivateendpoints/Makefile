@@ -1,11 +1,12 @@
 PORTNAME=	azure-synapse-managedprivateendpoints
-DISTVERSION=	0.3.0
+DISTVERSION=	0.4.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dbaio@FreeBSD.org
 COMMENT=	Microsoft Azure Synapse Managed Private Endpoints Client Library for Python
+WWW=		https://pypi.org/project/azure-synapse-managedprivateendpoints/
 
 LICENSE=	MIT
 

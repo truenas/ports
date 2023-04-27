@@ -1,25 +1,19 @@
-# Created by: Wen Heping <wenheping@gmail.com>
-
 PORTNAME=	pymarc
-PORTVERSION=	3.1.13
+PORTVERSION=	4.2.2
 PORTEPOCH=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	python@FreeBSD.org
 COMMENT=	Read Write And Modify MARC Bibliographic Data
+WWW=		https://github.com/edsu/pymarc
 
 LICENSE=	BSD2CLAUSE
 
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}six>=1.9.0:devel/py-six@${PY_FLAVOR}
-
 USES=		python:3.6+
-USE_PYTHON=	autoplist concurrent distutils
+USE_PYTHON=	autoplist concurrent distutils unittest
 
 NO_ARCH=	yes
-
-do-test:
-	@cd ${WRKSRC} && ${PYTHON_CMD} test.py
 
 .include <bsd.port.mk>

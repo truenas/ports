@@ -1,17 +1,15 @@
-# Created by: Ronald Klop <ronald@echteman.nl>
-
 PORTNAME=	commons-daemon
-PORTVERSION=	1.2.3
+PORTVERSION=	1.3.2
 CATEGORIES=	devel java
 MASTER_SITES=	https://archive.apache.org/dist/commons/daemon/source/:src \
 		https://archive.apache.org/dist/commons/daemon/binaries/:bin
-
 PKGNAMEPREFIX=	apache-
 DISTFILES=	${PORTNAME}-${PORTVERSION}-native-src${EXTRACT_SUFX}:src \
 		${PORTNAME}-${PORTVERSION}-bin${EXTRACT_SUFX}:bin
 
 MAINTAINER=	ale@FreeBSD.org
 COMMENT=	Wrapper code to start/stop a Java application as a daemon
+WWW=		https://commons.apache.org/proper/commons-daemon/
 
 LICENSE=	APACHE20
 

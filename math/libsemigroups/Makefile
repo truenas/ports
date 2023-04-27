@@ -1,13 +1,12 @@
-# Created by: thierry@pompo.net
-
 PORTNAME=	libsemigroups
 PORTVERSION=	1.3.7
 DISTVERSIONPREFIX=	v
-PORTREVISION=	2
+PORTREVISION=	4
 CATEGORIES=	math
 
 MAINTAINER=	thierry@FreeBSD.org
 COMMENT=	C++ library for semigroups and monoids
+WWW=		https://libsemigroups.readthedocs.io/en/latest/
 
 LICENSE=	GPLv3
 

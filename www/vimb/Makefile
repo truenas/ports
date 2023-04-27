@@ -1,9 +1,11 @@
 PORTNAME=	vimb
 DISTVERSION=	3.6.0
+PORTREVISION=	1
 CATEGORIES=	www
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Vim like browser
+WWW=		https://fanglingsu.github.io/vimb/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/LICENSE

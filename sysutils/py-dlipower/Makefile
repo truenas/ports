@@ -1,14 +1,13 @@
-# Created by: M. Warner Losh <imp@FreeBSD.org>
-
 PORTNAME=	dlipower
 PORTVERSION=	1.0.176
 PORTEPOCH=	2
 CATEGORIES=	sysutils python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	imp@FreeBSD.org
 COMMENT=	CLI interface to Digital Logger's (DLI) Power Strips
+WWW=		https://github.com/dwighthubbard/python-dlipower
 
 LICENSE=	BSD2CLAUSE
 

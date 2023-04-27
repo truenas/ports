@@ -1,12 +1,11 @@
-# Created by: "Waitman Gobble" <uzimac@da3m0n8t3r.com>
-
 PORTNAME=	dcraw-m
 PORTVERSION=	9.22
-PORTREVISION=	5
+PORTREVISION=	6
 CATEGORIES=	graphics
 
 MAINTAINER=	waitman@waitman.net
 COMMENT=	Modified Decoder for RAW files from digital cameras
+WWW=		http://www.cybercom.net/~dcoffin/dcraw/
 
 LICENSE=	GPLv2
 

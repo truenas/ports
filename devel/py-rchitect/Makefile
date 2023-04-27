@@ -1,11 +1,12 @@
 PORTNAME=	rchitect
 DISTVERSION=	0.3.24
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Interoperate R with Python
+WWW=		https://github.com/randy3k/rchitect
 
 LICENSE=	MIT
 

@@ -1,13 +1,12 @@
-# Created by: barner
-
 PORTNAME=	libfprint
 PORTVERSION=	0.7.0
 PORTREVISION=	1
 CATEGORIES=	security
 MASTER_SITES=	https://people.freedesktop.org/~anarsoul/
 
-MAINTAINER=	lichray@gmail.com
+MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Library for fingerprint reader devices
+WWW=		http://www.reactivated.net/fprint/wiki/Libfprint
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING

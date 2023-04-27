@@ -1,12 +1,13 @@
 PORTNAME=	mpdcon
 PORTVERSION=	1.5.1
-PORTREVISION=	11
+PORTREVISION=	12
 CATEGORIES=	audio gnustep
 MASTER_SITES=	SAVANNAH/gap
 DISTNAME=	MPDCon-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	MPD client for GNUstep
+WWW=		https://gap.nongnu.org/mpdcon/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/Documentation/COPYING

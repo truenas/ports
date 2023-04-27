@@ -1,8 +1,7 @@
-# Created by: db
-
 PORTNAME=	tlf
 PORTVERSION=	1.4.1
 DISTVERSIONPREFIX=	${PORTNAME}-
+PORTREVISION=	1
 CATEGORIES=	comms hamradio
 
 PATCH_SITES=	https://github.com/${GH_ACCOUNT}/${GH_PROJECT}/commit/
@@ -12,6 +11,7 @@ PATCHFILES+=	4302ec05ed9f.patch:-p1 # https://github.com/Tlf/tlf/pull/268
 
 MAINTAINER=	hamradio@FreeBSD.org
 COMMENT=	Amateur Radio curses based logging program
+WWW=		https://github.com/Tlf/tlf
 
 LICENSE=	GPLv2
 

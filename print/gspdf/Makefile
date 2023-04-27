@@ -1,12 +1,13 @@
 PORTNAME=	gspdf
 PORTVERSION=	0.5
-PORTREVISION=	10
+PORTREVISION=	11
 CATEGORIES=	print gnustep
 MASTER_SITES=	SAVANNAH/gap
 DISTNAME=	GSPdf-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Postscript and Pdf Viewer for GNUstep
+WWW=		https://gap.nongnu.org/gspdf/index.html
 
 USES=		ghostscript gnustep
 USE_GNUSTEP=	back build

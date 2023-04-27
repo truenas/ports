@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	virtualenv-api
 PORTVERSION=	2.1.18
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	API for virtualenv/pip
+WWW=		https://github.com/sjkingo/virtualenv-api
 
 LICENSE=	BSD2CLAUSE
 

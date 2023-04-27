@@ -1,10 +1,12 @@
 PORTNAME=	suricata
-DISTVERSION=	6.0.4
+DISTVERSION=	6.0.11
+PORTREVISION=	1
 CATEGORIES=	security
 MASTER_SITES=	https://www.openinfosecfoundation.org/download/
 
 MAINTAINER=	franco@opnsense.org
 COMMENT=	High Performance Network IDS, IPS and Security Monitoring engine
+WWW=		https://suricata-ids.org
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -17,7 +19,8 @@ LIB_DEPENDS=	libjansson.so:devel/jansson \
 		libyaml.so:textproc/libyaml
 
 USES=		autoreconf cpe gmake iconv:translit libtool localbase pathfix \
-		pkgconfig
+		pkgconfig shebangfix
+SHEBANG_FILES=	python/suricata/sc/suricatasc.py
 
 CPE_VENDOR=	openinfosecfoundation
 
@@ -36,7 +39,6 @@ TEST_TARGET=	check
 CONFLICTS_INSTALL=	libhtp
 
 SUB_FILES=	pkg-message
-PLIST_SUB=	PORTVERSION=${DISTVERSION:C/-/_/g}
 
 OPTIONS_DEFINE=		GEOIP IPFW NETMAP NSS PORTS_PCAP PRELUDE PYTHON REDIS \
 			TESTS
@@ -71,13 +73,13 @@ HYPERSCAN_LIB_DEPENDS=	libhs.so:devel/hyperscan
 
 IPFW_CONFIGURE_ON=	--enable-ipfw
 
-LUAJIT_LIB_DEPENDS=	libluajit-5.1.so:lang/luajit-openresty
+LUAJIT_USES=		luajit
 LUAJIT_CONFIGURE_ON=	--enable-luajit
 
 LUA_USES=		lua:51
 LUA_CONFIGURE_ON=	--enable-lua
 
-NETMAP_CONFIGURE_ENABLE=	netmap
+NETMAP_CONFIGURE_ENABLE=	netmap # netmap-v14
 
 NSS_LIB_DEPENDS=	libnspr4.so:devel/nspr \
 			libnss3.so:security/nss
@@ -97,7 +99,6 @@ PRELUDE_CONFIGURE_ENABLE=	prelude
 PYTHON_BUILD_DEPENDS=		${PYTHON_RUN_DEPENDS}
 PYTHON_RUN_DEPENDS=		${PYTHON_PKGNAMEPREFIX}yaml>0:devel/py-yaml@${PY_FLAVOR}
 PYTHON_USES=			python
-PYTHON_USE=			PYTHON=py3kplist
 PYTHON_CONFIGURE_ENABLE=	python
 
 REDIS_LIB_DEPENDS=	libevent_pthreads.so:devel/libevent \
@@ -129,6 +130,10 @@ post-install:
 post-install-PYTHON-on:
 	(cd ${STAGEDIR}${PREFIX} \
 	&& ${PYTHON_CMD} ${PYTHON_LIBDIR}/compileall.py \
-	-d ${PYTHONPREFIX_SITELIBDIR} -f ${PYTHONPREFIX_SITELIBDIR:S;${PREFIX}/;;})
+	-d /usr/local/lib/suricata/python -f lib/suricata/python)
+.for f in disable.conf drop.conf enable.conf modify.conf threshold.in update.yaml
+	${INSTALL_DATA} ${WRKSRC}/suricata-update/suricata/update/configs/${f} \
+	${STAGEDIR}${PREFIX}/lib/suricata/python/suricata/update/configs
+.endfor
 
 .include <bsd.port.mk>

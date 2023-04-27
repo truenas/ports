@@ -1,14 +1,12 @@
-# Created by: Torsten Blum <torstenb@FreeBSD.org>
-
 PORTNAME=	mc
-PORTVERSION=	4.8.27
-PORTREVISION=	1
+PORTVERSION=	4.8.28
 CATEGORIES=	misc shells
 MASTER_SITES=	http://ftp.midnight-commander.org/ \
 		https://ftp.osuosl.org/pub/midnightcommander/
 
 MAINTAINER=	danfe@FreeBSD.org
-COMMENT=	Midnight Commander, a free Norton Commander Clone
+COMMENT=	Midnight Commander, a free Norton Commander clone
+WWW=		https://midnight-commander.org/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -30,15 +28,15 @@ CONFIGURE_ENV=	ZIP=${LOCALBASE}/bin/zip UNZIP=${UNZIP_NATIVE_CMD}
 
 PORTDOCS=	AUTHORS FAQ HACKING MAINTAINERS NEWS README *.txt
 
-OPTIONS_DEFINE=	ASPELL DOCS EDITOR EXTATTR ICONV NLS SFTP SMB SUBSHELL X11
-OPTIONS_DEFAULT=	EDITOR ICONV SFTP SLANG SMB SUBSHELL X11
+OPTIONS_DEFINE=	ASPELL DOCS EDITOR EXTATTR ICONV NLS SFTP SUBSHELL X11
+OPTIONS_DEFAULT=	EDITOR ICONV SFTP SLANG SUBSHELL X11
 OPTIONS_SINGLE=	SCREEN
 OPTIONS_SINGLE_SCREEN=	SLANG NCURSES
 OPTIONS_SUB=	yes
 
 ASPELL_DESC=	Aspell support for internal editor
 EDITOR_DESC=	Build with internal text editor
-EXTATTR_DESC=	Extended attributes support
+EXTATTR_DESC=	Extended filesystem attributes support
 SCREEN_DESC=	Screen library
 SFTP_DESC=	Support for SFTP (via libssh)
 SUBSHELL_DESC=	Build with subshell support
@@ -48,7 +46,7 @@ ASPELL_CONFIGURE_ENABLE=aspell
 
 EDITOR_CONFIGURE_WITH=	internal-edit
 
-EXTATTR_LIB_DEPENDS=	libe2p.so:sysutils/e2fsprogs
+EXTATTR_LIB_DEPENDS=	libe2p.so:sysutils/e2fsprogs-core
 
 ICONV_USES=		iconv
 ICONV_CONFIGURE_ENABLE=	charset
@@ -56,20 +54,15 @@ ICONV_CONFIGURE_ENABLE=	charset
 NCURSES_CONFIGURE_ON=	--with-screen=ncurses
 NCURSES_CFLAGS+=	-DNCURSES_WIDECHAR
 
-NLS_CONFIGURE_ENABLE=	nls
+NLS_CONFIGURE_ON=	--with-libintl-prefix=${LOCALBASE}
+NLS_CONFIGURE_OFF=	--disable-nls
 NLS_USES=		gettext
-NLS_CPPFLAGS=		-I${LOCALBASE}/include
-NLS_LDFLAGS=		-L${LOCALBASE}/lib
 
 SFTP_LIB_DEPENDS=	libssh2.so:security/libssh2
 SFTP_CONFIGURE_ENABLE=	vfs-sftp
 
 SLANG_LIB_DEPENDS=	libslang.so:devel/libslang2
-SLANG_CONFIGURE_ON=	--with-screen=slang --with-slang-includes=${LOCALBASE}/include
-
-SMB_CONFIGURE_ENABLE=	vfs-smb
-SMB_CONFIGURE_ON=	--with-smb-configdir=${LOCALBASE}/etc \
-			--with-smb-codepagedir=${LOCALBASE}/etc/codepages
+SLANG_CONFIGURE_ON=	--with-screen=slang
 
 SUBSHELL_CONFIGURE_WITH=subshell
 SUBSHELL_SUB_FILES=	pkg-message
@@ -77,8 +70,8 @@ SUBSHELL_SUB_FILES=	pkg-message
 X11_CONFIGURE_WITH=	x
 X11_USES=		xorg
 X11_USE=		xorg=x11,xext
-X11_VARS=		CONFLICTS_INSTALL+="mc-nox11"
-X11_VARS_OFF=		CONFLICTS_INSTALL+="mc"
+X11_VARS=		CONFLICTS_INSTALL=mc-nox11
+X11_VARS_OFF=		CONFLICTS_INSTALL=mc PKGNAMESUFFIX=-nox11
 
 post-patch:
 	@${REINPLACE_CMD} -e 's|clang||' ${WRKSRC}/configure

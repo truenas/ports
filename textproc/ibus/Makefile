@@ -1,11 +1,11 @@
-# Created by: Henry Hu <henry.hu.sh@gmail.com>
-
 PORTNAME=	ibus
-PORTVERSION=	1.5.24
+PORTVERSION=	1.5.27
+PORTREVISION=	2
 CATEGORIES=	textproc
 
 MAINTAINER=	henry.hu.sh@gmail.com
 COMMENT=	Intelligent Input Bus for Unix-like systems
+WWW=		https://github.com/ibus/ibus
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -31,15 +31,15 @@ GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--with-html-dir=${PREFIX}/share/doc	\
 		--with-ucd-dir=${LOCALBASE}/share/unicode/ucd \
 		--disable-python2 --disable-python-library \
-		--disable-gtk4
+		--disable-gtk4 --disable-systemd --disable-systemd-services
 
 MAKE_JOBS_UNSAFE=yes
 INSTALL_TARGET=	install-strip
 TEST_TARGET=	check
 TEST_WRKSRC=	${WRKSRC}/src/tests
 
-OPTIONS_DEFINE=	ENGINE VALA GTK2 GTK3 GINTRO DCONF XIM EMOJI DOCS NLS WAYLAND
-OPTIONS_DEFAULT=	GTK2 GTK3 VALA GINTRO DCONF XIM ENGINE EMOJI
+OPTIONS_DEFINE=	ENGINE VAPI GTK2 GTK3 GINTRO DCONF XIM EMOJI DOCS NLS WAYLAND
+OPTIONS_DEFAULT=	GTK2 GTK3 VAPI GINTRO DCONF XIM ENGINE EMOJI
 NO_OPTIONS_SORT=	yes
 OPTIONS_SUB=	yes
 
@@ -49,7 +49,6 @@ ENGINE_DESC=	Install ibus simple engine
 GINTRO_DESC=	Install GObject Introspection data
 GTK2_DESC=	Install GTK2 client
 GTK3_DESC=	Install GTK3 client and panel
-VALA_DESC=	Install vala binding
 WAYLAND_DESC=	Enable Wayland support
 XIM_DESC=	Install XIM server
 
@@ -75,20 +74,21 @@ GTK2_CONFIGURE_ENABLE=	gtk2
 GTK3_LIB_DEPENDS=	libdbus-1.so:devel/dbus \
 			libnotify.so:devel/libnotify
 GTK3_USES=		xorg
-GTK3_USE=		GNOME=cairo,gtk30 XORG=x11,xi
+GTK3_USE=		GNOME=cairo,gtk30,pango XORG=x11,xi
 GTK3_CONFIGURE_ENABLE=	gtk3 libnotify
 GTK3_LIBS=		-lX11
 NLS_USES=		gettext
 NLS_USES_OFF=		gettext-tools
 NLS_CONFIGURE_ENABLE=	nls
-VALA_IMPLIES=		GINTRO
-VALA_BUILD_DEPENDS=	vala>=0.20:lang/vala
-VALA_CONFIGURE_ENABLE=	vala
+VAPI_IMPLIES=		GINTRO
+VAPI_USES=		vala:build
+VAPI_CONFIGURE_ENABLE=	vala
 WAYLAND_BUILD_DEPENDS=	wayland>1.14:graphics/wayland
 WAYLAND_LIB_DEPENDS=	libwayland-client.so:graphics/wayland \
 			libxkbcommon.so:x11/libxkbcommon
 WAYLAND_CONFIGURE_ENABLE=	wayland
 XIM_CONFIGURE_ENABLE=	xim
+XIM_USE=		XORG=x11,xfixes
 
 EMOJIONE_TAG=		ba845a7e24aac26cf3cf22abc19bea215d94fbf3 # 2.2.7
 

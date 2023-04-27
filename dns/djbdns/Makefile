@@ -1,5 +1,3 @@
-# Created by: Neil Blakey-Milner
-
 PORTNAME?=	djbdns
 PORTVERSION?=	${DJBDNS_VER}
 PORTREVISION?=	22
@@ -11,14 +9,18 @@ MASTER_SITES=	https://cr.yp.to/djbdns/ \
 DISTNAME=	djbdns-${DJBDNS_VER}
 DISTFILES=	${DISTNAME}${EXTRACT_SUFX}
 
-MAINTAINER?=	lx@FreeBSD.org
+MAINTAINER?=	ports@FreeBSD.org
 COMMENT?=	Collection of secure and reliable DNS tools
+WWW=		https://cr.yp.to/djbdns.html
 
 # Converted from LEGAL_TEXT
 LICENSE=	djb
 LICENSE_NAME=	djb
 LICENSE_TEXT=	No license -- see http://cr.yp.to/softwarelaw.html
 LICENSE_PERMS=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
+
+DEPRECATED=	No longer compliant with current DNS standards and source code hasn't been centrally managed for over 20 years
+EXPIRATION_DATE=2023-06-30
 
 RUN_DEPENDS=	setuidgid:sysutils/daemontools \
 		tcpserver:sysutils/ucspi-tcp

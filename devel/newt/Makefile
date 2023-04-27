@@ -1,10 +1,11 @@
 PORTNAME=	newt
-PORTVERSION=	0.52.21
+PORTVERSION=	0.52.22
 CATEGORIES=	devel
 MASTER_SITES=	https://releases.pagure.org/newt/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Not Eriks Windowing Toolkit: console I/O handling library
+WWW=		https://pagure.io/newt
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,14 +1,12 @@
-# Created by: J.R. Oldroyd <fbsd@opal.com>
-
 PORTNAME=	xorriso
-PORTVERSION=	1.5.0
-PORTREVISION=	5
+PORTVERSION=	1.5.4
 CATEGORIES=	sysutils
 MASTER_SITES=	http://files.libburnia-project.org/releases/
 DISTNAME=	libisoburn-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	ISO image manipulation tool based on Libburnia
+WWW=		https://dev.lovelyhq.com/libburnia/web/wikis/Xorriso
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

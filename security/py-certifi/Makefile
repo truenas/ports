@@ -1,13 +1,12 @@
-# Created by: Olivier Duchateau <duchateau.olivier@gmail.com>
-
 PORTNAME=	certifi
-PORTVERSION=	2021.10.8
+PORTVERSION=	2022.12.7
 CATEGORIES=	security python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Mozilla SSL certificates
+WWW=		https://github.com/certifi/python-certifi
 
 LICENSE=	MPL20
 

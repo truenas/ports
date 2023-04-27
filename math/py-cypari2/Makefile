@@ -1,13 +1,12 @@
-# Created by: thierry@pompo.net
-
 PORTNAME=	cypari2
-PORTVERSION=	2.1.2
+PORTVERSION=	2.1.3
 CATEGORIES=	math python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	thierry@FreeBSD.org
 COMMENT=	Python interface to the number theory library PARI/GP
+WWW=		https://github.com/sagemath/cypari2
 
 LICENSE=	GPLv2
 

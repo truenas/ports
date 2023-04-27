@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	gtk2
 PORTVERSION=	2.24.31
 DISTVERSIONSUFFIX=	-1.el7
@@ -7,6 +5,7 @@ CATEGORIES=	x11-toolkits linux
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	GTK+ library, version 2.X (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://www.gtk.org/
 
 USES=		cpe linux:c7
 CPE_VENDOR=	gnome

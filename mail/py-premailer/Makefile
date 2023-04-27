@@ -1,11 +1,12 @@
 PORTNAME=	premailer
 PORTVERSION=	3.1.1
 CATEGORIES=	mail python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	rtd24@columbia.edu
 COMMENT=	Turns CSS blocks into style attributes
+WWW=		https://github.com/peterbe/premailer
 
 LICENSE=	PSFL
 LICENSE_FILE=	${WRKSRC}/LICENSE

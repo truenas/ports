@@ -2,7 +2,7 @@ PORTNAME=	openbor
 # Hint: svn revision is git rev-list --count ${GH_TAGNAME}
 PORTVERSION?=	7138
 .ifndef PKGNAMESUFFIX
-PORTREVISION=	1
+PORTREVISION=	2
 .endif
 CATEGORIES=	games
 
@@ -15,6 +15,7 @@ PATCHFILES+=	731d96887795.patch:-p2
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	2D side scrolling engine for beat 'em ups, shooters, and more #'
+WWW=		https://www.chronocrash.com/
 
 LICENSE=	BSD3CLAUSE GPLv2+
 .if ${PORTVERSION} >= 4134

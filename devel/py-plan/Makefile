@@ -1,13 +1,12 @@
-# Created by: Bartek Rutkowski <ports@robakdesign.com>
-
 PORTNAME=	plan
 PORTVERSION=	0.5
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	robak@FreeBSD.org
 COMMENT=	Python package for writing and deploying cron jobs
+WWW=		https://github.com/fengsp/plan
 
 LICENSE=	BSD3CLAUSE
 

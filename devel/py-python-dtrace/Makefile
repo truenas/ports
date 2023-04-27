@@ -1,11 +1,12 @@
 PORTNAME=	python-dtrace
 PORTVERSION=	0.0.13
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	gcj21@cl.cam.ac.uk
 COMMENT=	DTrace consumer for Python based on libdtrace
+WWW=		https://tmetsch.github.io/python-dtrace/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

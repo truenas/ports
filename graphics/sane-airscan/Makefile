@@ -1,9 +1,11 @@
 PORTNAME=		sane-airscan
 DISTVERSION=		0.99.26
+PORTREVISION=	2
 CATEGORIES=		graphics
 
 MAINTAINER=		henry.hu.sh@gmail.com
 COMMENT=		SANE backend for AirScan (eSCL) and WSD document scanners
+WWW=		https://github.com/alexpevzner/sane-airscan
 
 LICENSE=		GPLv2
 LICENSE_FILE=		${WRKSRC}/LICENSE

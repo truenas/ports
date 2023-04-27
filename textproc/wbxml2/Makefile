@@ -1,12 +1,11 @@
-# Created by: Clemens Zauner <czauner+ports@onlineloop.com>
-
 PORTNAME=	wbxml2
-PORTVERSION=	0.11.7
+PORTVERSION=	0.11.8
 DISTVERSIONPREFIX=	libwbxml-
 CATEGORIES=	textproc devel
 
 MAINTAINER=	flo@FreeBSD.org
 COMMENT=	Library & tools for converting wbxml<->xml
+WWW=		http://libwbxml.opensync.org/
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING

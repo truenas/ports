@@ -1,12 +1,11 @@
-# Created by: Ben Woods <woodsb02@FreeBSD.org>
-
 PORTNAME=	kdbxviewer
-PORTVERSION=	0.1.10
+PORTVERSION=	0.1.12
 DISTVERSIONPREFIX=v
 CATEGORIES=	security
 
-MAINTAINER=	fuz@fuz.su
+MAINTAINER=	fuz@FreeBSD.org
 COMMENT=	Ncurses UI and command-line tool for KeePass2 Database files
+WWW=		https://github.com/pepa65/kdbxviewer
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

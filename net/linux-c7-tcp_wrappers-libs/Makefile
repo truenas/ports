@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	tcp_wrappers
 PORTVERSION=	7.6
 DISTVERSIONSUFFIX=	-77.el7
@@ -9,6 +7,7 @@ PKGNAMESUFFIX=	-libs
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	Libraries tcp wrappers (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://www.centos.org
 
 USES=		linux:c7
 USE_LDCONFIG=	yes

@@ -1,10 +1,12 @@
 PORTNAME=	tpm2-tools
 DISTVERSION=	5.2
+PORTREVISION=	1
 CATEGORIES=	security
 MASTER_SITES=	https://github.com/tpm2-software/tpm2-tools/releases/download/${DISTVERSION}/
 
 MAINTAINER=	tstruk@gmail.com
 COMMENT=	TPM2 tools
+WWW=		https://github.com/tpm2-software/tpm2-tools
 
 LICENSE=	BSD2CLAUSE
 
@@ -17,7 +19,5 @@ USES=		compiler:c11 gmake libtool pkgconfig ssl
 GNU_CONFIGURE=	yes
 CONFIGURE_ENV=	CRYPTO_CFLAGS="-I${OPENSSLINC}" CRYPTO_LIBS="-L${OPENSSLLIB} -lcrypto"
 CONFIGURE_ARGS=	--disable-hardening --disable-fapi
-
-BROKEN_SSL=	openssl
 
 .include <bsd.port.mk>

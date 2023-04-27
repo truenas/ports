@@ -6,11 +6,14 @@ MASTER_SITES=	SF
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Astronomical Julian date calculator
+WWW=		http://jday.sourceforge.net/
 
 USES=		pathfix libtool
 GNU_CONFIGURE=	yes
 USE_LDCONFIG=	yes
 INSTALL_TARGET=	install-strip
+
+CONFLICTS_INSTALL= netatalk3
 
 PLIST_FILES=	bin/dbd bin/j2d bin/jday \
 		include/jday.h lib/libjday.a \

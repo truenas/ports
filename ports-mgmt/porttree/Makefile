@@ -1,13 +1,12 @@
-# Created by: Vladimir Chukharev
-
 PORTNAME=	porttree
 PORTVERSION=	1.1.r${SVN_REV}
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	ports-mgmt python
 MASTER_SITES=	SF/${PORTNAME}
 
-MAINTAINER=	Vladimir.Chukharev@gmail.com
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Show dependencies of FreeBSD port as pseudo graphical tree
+WWW=		https://sourceforge.net/projects/porttree/
 
 LICENSE=	MIT
 

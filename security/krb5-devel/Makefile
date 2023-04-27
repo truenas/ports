@@ -1,27 +1,25 @@
-# Created by: nectar@FreeBSD.org
-
 PORTNAME=		krb5
-PORTVERSION=		1.19.${MIT_COMMIT_DATE}
+PORTVERSION=		1.20.${MIT_COMMIT_DATE}
 CATEGORIES=		security
 .if !defined(MASTERDIR)
 PKGNAMESUFFIX=		-devel
 .endif
-HASH=			149df661a
-MIT_COMMIT_DATE=	2021.12.05
+HASH=			e806d1223
+MIT_COMMIT_DATE=	2023.04.14
 
 PATCH_SITES=		http://web.mit.edu/kerberos/advisories/
 PATCH_DIST_STRIP=	-p2
 
 MAINTAINER=		cy@FreeBSD.org
 COMMENT=		MIT implementation of RFC 4120 network authentication service
+WWW=			https://web.mit.edu/kerberos/
 
 LICENSE=		MIT
 
 USE_GITHUB=		yes
 GH_TAGNAME=		${HASH}
 
-CONFLICTS=		heimdal srp krb5-11[345] \
-			krb5-1.[0-9]*
+CONFLICTS=		heimdal krb5 krb5-1*
 
 KERBEROSV_URL=		http://web.mit.edu/kerberos/
 USE_PERL5=		build
@@ -47,7 +45,7 @@ CMD_LINE_EDITING_DESC=	Command line editing for kadmin and ktutil
 DNS_FOR_REALM_DESC=	Enable DNS lookups for Kerberos realm names
 DNS_FOR_REALM_CONFIGURE_ENABLE=	dns-for-realm
 LDAP=			Enable LDAP support
-LDAP_USE=		OPENLDAP=yes
+LDAP_USES=		ldap
 LDAP_CONFIGURE_WITH=	ldap
 LMDB_DESC=		OpenLDAP Lightning Memory-Mapped Database support
 LMDB_CONFIGURE_WITH=	lmdb

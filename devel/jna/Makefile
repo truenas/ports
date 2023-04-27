@@ -1,9 +1,11 @@
 PORTNAME=	jna
 PORTVERSION=	5.7.0
+PORTREVISION=	1
 CATEGORIES=	devel java
 
 MAINTAINER=	ports@markdixon.name
 COMMENT=	Java access to native shared libraries
+WWW=		https://github.com/twall/jna
 
 LICENSE=	LGPL21+ APACHE20
 LICENSE_COMB=	dual
@@ -37,12 +39,6 @@ TEST_TARGET=	test
 OPTIONS_DEFINE=	DOCS
 
 ANT_ARCH=	${ARCH:S/amd64/x86-64/:S/i386/x86/:S/powerpc64/ppc64/}
-
-.include <bsd.port.options.mk>
-
-.if ${ARCH:Mpowerpc64*}
-USE_GCC=	yes
-.endif
 
 post-patch:
 	@${REINPLACE_CMD} -e 's|%%LOCALBASE%%|${LOCALBASE}|' \

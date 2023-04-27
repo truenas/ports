@@ -1,11 +1,12 @@
 PORTNAME=	${GH_PROJECT:tl}
 DISTVERSIONPREFIX=	v
 DISTVERSION=	3.6.1
-PORTREVISION=	2
+PORTREVISION=	4
 CATEGORIES=	audio
 
 MAINTAINER=	adridg@FreeBSD.org
 COMMENT=	Free music composition & notation software
+WWW=		https://musescore.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE.GPL
@@ -22,7 +23,7 @@ USE_QT=		concurrent core declarative designer graphicaleffects gui \
 		help location network opengl printsupport \
 		quickcontrols2 scripttools sql svg testlib \
 		webchannel widgets xml xmlpatterns \
-		buildtools_build linguisttools_build qmake_build uitools_build
+		buildtools:build linguisttools:build qmake:build uitools:build
 
 USE_GITHUB=	yes
 GH_PROJECT=	MuseScore
@@ -49,7 +50,7 @@ OPTIONS_DEFAULT_i386=	WEBENGINE
 WEBENGINE_DESC=		Use WebEngine in the welcome panel
 
 ALSA_LIB_DEPENDS=	libasound.so:audio/alsa-lib
-ALSA_CMAKE_BOOL=	BUILD_ALSA
+ALSA_CMAKE_BOOL=	BUILD_ALSA HAS_MIDI
 JACK_LIB_DEPENDS=	libjack.so:audio/jack
 JACK_CMAKE_BOOL=	BUILD_JACK
 PORTAUDIO_LIB_DEPENDS=	libportaudio.so:audio/portaudio
@@ -63,11 +64,6 @@ WEBENGINE_CMAKE_BOOL=	BUILD_WEBENGINE
 
 .if ${CHOSEN_COMPILER_TYPE} == clang
 CXXFLAGS+=	-Wno-inconsistent-missing-override
-.endif
-
-.if ${PORT_OPTIONS:MWEBENGINE}
-DEPRECATED=	Uses EOL Python 2.7 via www/qt5-webengine
-EXPIRATION_DATE=2021-06-23
 .endif
 
 .include <bsd.port.post.mk>

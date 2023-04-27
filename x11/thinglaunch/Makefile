@@ -1,5 +1,3 @@
-# Created by: Emanuel Haupt <ehaupt@critical.ch>
-
 PORTNAME=	thinglaunch
 PORTVERSION=	1.8
 PORTREVISION=	3
@@ -8,8 +6,12 @@ MASTER_SITES=	LOCAL/ehaupt
 
 MAINTAINER=	ehaupt@FreeBSD.org
 COMMENT=	Very fast launcher program for X
+WWW=		http://unix.freecode.com/projects/thinglaunch/
 
 LICENSE=	MIT
+
+DEPRECATED=	Abandonware, please use x11/thingylaunch instead
+EXPIRATION_DATE=	2023-06-10
 
 USES=		xorg
 USE_XORG=	x11 xorgproto

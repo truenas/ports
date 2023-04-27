@@ -1,12 +1,11 @@
-# Created by: Thierry Thomas <thierry@pompo.net>
-
 PORTNAME=	homard
 DISTVERSION=	11.12-aster2
-PORTREVISION=	1
+PORTREVISION=	4
 CATEGORIES=	french cad linux
 
 MAINTAINER=	thierry@FreeBSD.org
 COMMENT=	Refinement and de-refinement mesh tool
+WWW=		https://www.code-aster.org/outils/homard
 
 # Converted from RESTRICTED
 LICENSE=	homard

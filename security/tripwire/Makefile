@@ -1,5 +1,3 @@
-# Created by: Cy Schubert <Cy.Schubert@uumail.gov.bc.ca>
-
 PORTNAME=	tripwire
 PORTVERSION=	2.4.3.7
 PORTREVISION=	1
@@ -7,6 +5,7 @@ CATEGORIES=	security
 
 MAINTAINER=	cy@FreeBSD.org
 COMMENT=	File system security and verification program
+WWW=		https://sourceforge.net/projects/tripwire/
 
 LICENSE=	GPLv2
 

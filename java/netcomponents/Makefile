@@ -1,5 +1,3 @@
-# Created by: Ernst de Haan <znerd@FreeBSD.org>
-
 PORTNAME=	netcomponents
 PORTVERSION=	1.3.8
 PORTREVISION=	3
@@ -9,6 +7,7 @@ DISTNAME=	NetComponents-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Java library with common network protocol implementations
+WWW=		http://www.savarese.org/oro/downloads/index.html #NetComponents
 
 # Converted from RESTRICTED
 LICENSE=	NetComponents

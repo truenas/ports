@@ -1,12 +1,11 @@
-# Created by: Samuel Tardieu <sam@rfc1149.net>
-
 PORTNAME=	gputils
-DISTVERSION=	1.5.0-1
+DISTVERSION=	1.5.2
 CATEGORIES=	devel
-MASTER_SITES=	SF/gputils/gputils/${DISTVERSION:C/-.*//}
+MASTER_SITES=	SF/gputils/gputils/1.5.0
 
-MAINTAINER=	tijl@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Utilities for Microchip PIC microcontrollers
+WWW=		https://gputils.sourceforge.io/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

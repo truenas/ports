@@ -1,22 +1,21 @@
-# Created by: thierry@pompo.net
-
 PORTNAME=	sgp4
-PORTVERSION=	2.20
+PORTVERSION=	2.21
 CATEGORIES=	astro python
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	thierry@FreeBSD.org
 COMMENT=	Python version of the SGP4 satellite position library
+WWW=		https://github.com/brandon-rhodes/python-sgp4
 
 LICENSE=	MIT
 
-USE_GITHUB=	yes
-GH_ACCOUNT=	brandon-rhodes
-GH_PROJECT=	python-sgp4
+#USE_GITHUB=	yes
+#GH_ACCOUNT=	brandon-rhodes
+#GH_PROJECT=	python-sgp4
 
-USES=		python:3.7+ shebangfix
+USES=		python:3.7+
 USE_PYTHON=	distutils
-SHEBANG_FILES=	bin/print_attributes.py
 .if !defined(WITH_DEBUG)
 LDFLAGS+=	-s
 .endif

@@ -1,12 +1,11 @@
-# Created by: Stefan Lambrev <cheffo@freebsd-bg.org>
-
 PORTNAME=	telegraf
 DISTVERSIONPREFIX=v
-DISTVERSION=	1.20.4
+DISTVERSION=	1.26.2
 CATEGORIES=	net-mgmt
 
 MAINTAINER=	girgen@FreeBSD.org
 COMMENT=	Time-series data collection
+WWW=		https://influxdata.com/time-series-platform/telegraf/
 
 LICENSE=	MIT
 
@@ -38,8 +37,5 @@ TELEGRAF_LOGDIR=/var/log/${PORTNAME}
 
 post-install:
 	${MKDIR} ${STAGEDIR}${TELEGRAF_LOGDIR}
-	${INSTALL_DATA} \
-		${WRKSRC}/${GH_SUBDIR}/etc/${PORTNAME}.conf  \
-		${STAGEDIR}${PREFIX}/etc/${PORTNAME}.conf.sample
 
 .include <bsd.port.mk>

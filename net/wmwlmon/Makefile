@@ -1,5 +1,3 @@
-# Created by: Marcus Glocker <marcus@nazgul.ch>
-
 PORTNAME=	wmwlmon
 PORTVERSION=	1.0
 CATEGORIES=	net windowmaker
@@ -7,6 +5,7 @@ MASTER_SITES=	http://www.nazgul.ch/dev/
 
 MAINTAINER=	LukeD@pobox.com
 COMMENT=	DockApp showing the state of a wireless network device
+WWW=		http://www.nazgul.ch/dev_wmwlmon.html
 
 BROKEN_FreeBSD_13=	does not compile: wl.c:29:10: fatal error: 'dev/wi/if_wavelan_ieee.h' file not found
 BROKEN_FreeBSD_14=	does not compile: wl.c:29:10: fatal error: 'dev/wi/if_wavelan_ieee.h' file not found

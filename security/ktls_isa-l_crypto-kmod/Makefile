@@ -1,5 +1,3 @@
-# Created by: Michal Bielicki <m.bielicki@llizardfs.com>
-
 PORTNAME=	isa-l_crypto
 PORTVERSION=	2.21.0
 DISTVERSIONPREFIX=	v
@@ -10,6 +8,7 @@ PKGNAMESUFFIX=	-kmod
 
 MAINTAINER=	gallatin@FreeBSD.org
 COMMENT=	KTLS module using Intel(R) ISA-L crypto
+WWW=		https://github.com/01org/isa-l_crypto
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

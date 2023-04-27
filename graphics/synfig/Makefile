@@ -1,13 +1,12 @@
-# Created by: Yinghong.Liu <relaxbsd@gmail.com>
-
 PORTNAME=	synfig
-PORTVERSION=	1.2.2
-DISTVERSIONPREFIX=v
-PORTREVISION=	17
+DISTVERSIONPREFIX=	v
+DISTVERSION=	1.4.4
+PORTREVISION=	5
 CATEGORIES=	graphics devel multimedia
 
 MAINTAINER=	portmaster@BSDforge.com
 COMMENT=	Vector based 2D animation package
+WWW=		https://www.synfig.org/
 
 LICENSE=	GPLv2+
 
@@ -21,26 +20,29 @@ LIB_DEPENDS=	libImath.so:math/Imath \
 		libfftw3.so:math/fftw3 \
 		libfontconfig.so:x11-fonts/fontconfig \
 		libfreetype.so:print/freetype2 \
+		libharfbuzz.so:print/harfbuzz \
 		libltdl.so:devel/libltdl \
 		libmng.so:graphics/libmng \
 		libpng.so:graphics/png \
 		libtiff.so:graphics/tiff
 
-PORTSCOUT=	limitw:1,even
-
 USES=		autoreconf compiler:c++11-lang gmake gnome iconv jpeg \
-		libtool localbase magick:6 mlt:6 pathfix pkgconfig
+		libtool localbase magick:7 mlt:7 pathfix pkgconfig
 USE_CXXSTD=	c++11
 USE_GITHUB=	yes
 USE_GNOME=	cairo glibmm intltool libxml++26 pango
-GNU_CONFIGURE=	yes
-CONFIGURE_ARGS=	${ICONV_CONFIGURE_ARG}
-CONFIGURE_ENV+=	ac_cv_path_SED=${LOCALBASE}/bin/gsed
-# Other spurious uses of direct sed have popped up
-BINARY_ALIAS=	sed=${LOCALBASE}/bin/gsed
-INSTALL_TARGET=	install-strip
 USE_LDCONFIG=	yes
+
+PORTSCOUT=	limitw:1,even
+
+GNU_CONFIGURE=	yes
+INSTALL_TARGET=	install-strip
 WRKSRC_SUBDIR=	synfig-core
+
+BINARY_ALIAS=	sed=${LOCALBASE}/bin/gsed
+
+CONFIGURE_ENV+=	ac_cv_path_SED=${LOCALBASE}/bin/gsed
+CONFIGURE_ARGS=	${ICONV_CONFIGURE_ARG}
 
 OPTIONS_DEFINE=	DOCS NLS
 OPTIONS_SUB=	yes

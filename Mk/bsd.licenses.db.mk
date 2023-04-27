@@ -8,7 +8,6 @@ Licenses_db_Include_MAINTAINER=         portmgr@FreeBSD.org
 #
 # bsd.licenses.db.mk - License database for bsd.licenses.mk
 #
-# Created by: Alejandro Pulver <alepulver@FreeBSD.org>
 #
 # Please view me with 4 column tabs!
 #
@@ -421,7 +420,7 @@ _LICENSE_GROUPS_ZPL21=	GPL OSI
 # Set default permissions if not defined
 
 .for lic in ${_LICENSE_LIST}
-.	if !defined(_LICENSE_PERMS_${lic})
+.  if !defined(_LICENSE_PERMS_${lic})
 _LICENSE_PERMS_${lic}=	${_LICENSE_PERMS_DEFAULT}
-.	endif
+.  endif
 .endfor

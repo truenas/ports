@@ -1,11 +1,12 @@
 PORTNAME=	debtcollector
 PORTVERSION=	1.20.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dave@gufi.org
 COMMENT=	Collection of Python deprecation patterns and strategies
+WWW=		https://docs.openstack.org/debtcollector/latest/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

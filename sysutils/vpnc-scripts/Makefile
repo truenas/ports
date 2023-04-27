@@ -1,13 +1,12 @@
-# Created by: Ryan Steinmetz <zi@FreeBSD.org>
-
 PORTNAME=	vpnc-scripts
-PORTVERSION=	20200226
+PORTVERSION=	20210402
 CATEGORIES=	sysutils net-vpn
 MASTER_SITES=	ftp://ftp.infradead.org/pub/${PORTNAME}/ \
 		ZI
 
 MAINTAINER=	zi@FreeBSD.org
 COMMENT=	Collection of scripts to setup routes and other changes for a VPN
+WWW=		https://git.infradead.org/users/dwmw2/vpnc-scripts.git
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

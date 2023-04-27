@@ -1,9 +1,10 @@
 PORTNAME=	x16-emulator
-DISTVERSION=	r38
+DISTVERSION=	r40
 CATEGORIES=	emulators
 
 MAINTAINER=	makc@FreeBSD.org
 COMMENT=	Emulator for the Commander X16 8-bit computer
+WWW=		https://github.com/commanderx16
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -26,7 +27,7 @@ DESKTOP_ENTRIES=	"Commander X16" \
 PLIST_FILES=	bin/x16emu
 
 post-patch:
-	${REINPLACE_CMD} -e "s,%%PREFIX%%,${PREFIX}," ${WRKSRC}/main.c
+	${REINPLACE_CMD} -e "s,%%PREFIX%%,${PREFIX}," ${WRKSRC}/src/main.c
 
 do-install:
 	${INSTALL_PROGRAM} ${WRKSRC}/x16emu ${STAGEDIR}${PREFIX}/bin

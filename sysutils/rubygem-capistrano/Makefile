@@ -1,12 +1,11 @@
-# Created by: Roderick van Domburg <r.s.a.vandomburg@student.utwente.nl>
-
 PORTNAME=	capistrano
-PORTVERSION=	3.16.0
+PORTVERSION=	3.17.2
 CATEGORIES=	sysutils rubygems
 MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Utility for executing commands in parallel on multiple machines
+WWW=		https://github.com/capistrano/capistrano
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -17,7 +16,6 @@ RUN_DEPENDS=	rubygem-airbrussh>=1.0.0:security/rubygem-airbrussh \
 		rubygem-sshkit>=1.9.0:security/rubygem-sshkit
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

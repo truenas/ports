@@ -1,11 +1,12 @@
 PORTNAME=	burp
-PORTVERSION=	2.5.4
+PORTVERSION=	3.1.4
 CATEGORIES=	sysutils
 MASTER_SITES=	https://github.com/grke/burp/releases/download/${PORTVERSION}/
 PKGNAMESUFFIX=	-devel
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Network backup and restore program (development)
+WWW=		https://burp.grke.org/
 
 LICENSE=	AGPLv3 PD
 LICENSE_COMB=	multi

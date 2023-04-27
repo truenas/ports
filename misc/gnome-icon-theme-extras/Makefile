@@ -1,8 +1,6 @@
-# Created by: Alexander Logvinov <avl@FreeBSD.org>
-#   $MCom: ports-experimental/trunk/misc/gnome-icon-theme-extras/Makefile 19329 2014-03-25 14:54:05Z gusi $
-
 PORTNAME=	gnome-icon-theme-extras
 PORTVERSION=	3.12.0
+PORTREVISION=	1
 CATEGORIES=	misc gnome
 MASTER_SITES=	GNOME
 DIST_SUBDIR=	gnome3

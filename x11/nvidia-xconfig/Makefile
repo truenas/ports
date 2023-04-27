@@ -1,11 +1,10 @@
-# Created by: Alexander Nedotsukov <bland@FreeBSD.org>
-
 PORTNAME=	nvidia-xconfig
 PORTVERSION=	470.86
 CATEGORIES=	x11
 
 MAINTAINER=	x11@FreeBSD.org
 COMMENT=	Tool to manipulate X configuration files for the NVidia driver
+WWW=		https://www.nvidia.com/object/unix.html
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

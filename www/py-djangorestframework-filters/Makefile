@@ -1,13 +1,12 @@
-# Created by: Alfred Perlstein <alfred@freebsd.org>
-
 PORTNAME=	djangorestframework-filters
 PORTVERSION=	0.10.2
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	alfred@FreeBSD.org
 COMMENT=	Filtering extension to Django REST Framework
+WWW=		https://github.com/philipn/django-rest-framework-filters
 
 LICENSE=	BSD2CLAUSE
 

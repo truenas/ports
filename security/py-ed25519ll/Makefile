@@ -1,10 +1,8 @@
-# Created by: Nicola Vitale <nivit@FreeBSD.org>
-
 PORTNAME=	ed25519ll
 PORTVERSION=	0.6
 PORTREVISION=	2
 CATEGORIES=	security
-#MASTER_SITES=	CHEESESHOP
+#MASTER_SITES=	PYPI
 # bitbucket master contains py3 fixes made after last tagged release
 MASTER_SITES=	https://bitbucket.org/dholth/${PORTNAME}/get/
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -12,6 +10,7 @@ DISTNAME=	37719c56b7b6
 
 MAINTAINER=	nivit@FreeBSD.org
 COMMENT=	Low-level ctypes wrapper for Ed25519 digital signatures
+WWW=		https://bitbucket.org/dholth/ed25519ll
 
 LICENSE=	MIT
 

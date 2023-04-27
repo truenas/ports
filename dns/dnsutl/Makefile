@@ -1,5 +1,3 @@
-# Created by: Karl Dietz (Karl.Dietz@frankfurt.netsurf.de)
-
 PORTNAME=	dnsutl
 PORTVERSION=	1.12
 PORTREVISION=	2
@@ -8,6 +6,7 @@ MASTER_SITES=	SF/${PORTNAME}/${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Programs to make using DNS easier
+WWW=		http://dnsutl.sourceforge.net/
 
 LIB_DEPENDS=	libexplain.so:devel/libexplain
 

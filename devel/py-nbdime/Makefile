@@ -1,13 +1,13 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	nbdime
 PORTVERSION=	3.1.1
+PORTREVISION=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+#MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Diff and merge of Jupyter notebooks
+WWW=		https://github.com/jupyter/nbdime
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.md
@@ -22,11 +22,15 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}colorama>=0:devel/py-colorama@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}requests>=0:www/py-requests@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}tornado>=0:www/py-tornado@${PY_FLAVOR}
 
-USES=		python:3.7+ cpe
+USES=		cpe python:3.7+
 USE_PYTHON=	autoplist concurrent distutils
+
+NO_ARCH=	yes
 
 CPE_VENDOR=	jupyter
 
-NO_ARCH=	yes
+USE_GITHUB=	yes
+GH_ACCOUNT=	jupyter
+GH_TAGNAME=	9fbfd46
 
 .include <bsd.port.mk>

@@ -1,12 +1,12 @@
-# Created by: fenner
-
 PORTNAME=	gtk-doc
 DISTVERSION=	1.33.2
+PORTREVISION=	2
 CATEGORIES=	textproc
 MASTER_SITES=	GNOME
 
 MAINTAINER=	desktop@FreeBSD.org
 COMMENT=	Code documentation system, originally for GTK+
+WWW=		https://www.gtk.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,16 +1,15 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	bigdecimal
-PORTVERSION=	3.0.2
+PORTVERSION=	3.1.4
 CATEGORIES=	math rubygems
 MASTER_SITES=	RG
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Arbitrary-precision decimal floating-point number class
+WWW=		https://github.com/ruby/bigdecimal
 
-LICENSE=	RUBY
+LICENSE=	BSD2CLAUSE RUBY
+LICENSE_COMB=	dual
 
 USES=		gem
-USE_RUBY=	yes
 
 .include <bsd.port.mk>

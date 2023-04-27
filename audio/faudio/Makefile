@@ -4,6 +4,7 @@ CATEGORIES=	audio
 
 MAINTAINER=	multimedia@FreeBSD.org
 COMMENT=	Accuracy-focused XAudio reimplementation
+WWW=		https://fna-xna.github.io/
 
 LICENSE=	ZLIB
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -21,9 +22,8 @@ OPTIONS_DEFAULT=	GSTREAMER
 
 GSTREAMER_DESC=	WMA/XMA support via GStreamer
 
-GSTREAMER_USES=		gettext-runtime gnome pkgconfig
-GSTREAMER_USE=		GNOME=glib20 \
-			GSTREAMER1=yes
+GSTREAMER_USES=		gettext-runtime gnome gstreamer pkgconfig
+GSTREAMER_USE=		GNOME=glib20
 GSTREAMER_CMAKE_BOOL=	GSTREAMER
 
 do-test:

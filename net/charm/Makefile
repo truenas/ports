@@ -1,6 +1,6 @@
 PORTNAME=	charm
 DISTVERSION=	6.8.2
-PORTREVISION=	4
+PORTREVISION=	5
 CATEGORIES=	net
 MASTER_SITES=	http://charm.cs.illinois.edu/distrib/
 PKGNAMESUFFIX=	-uiuc
@@ -8,6 +8,7 @@ DIST_SUBDIR=	${PORTNAME}${PKGNAMESUFFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Message-passing parallel language and runtime system
+WWW=		https://www.ks.uiuc.edu/Research/namd/
 
 LICENSE=	CHARMPP_CONVERSE_LICENSE
 LICENSE_NAME=	Charm++/Converse License

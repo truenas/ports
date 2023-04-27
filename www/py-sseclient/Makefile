@@ -1,11 +1,12 @@
 PORTNAME=	sseclient
 DISTVERSION=	0.0.27
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Python client library for reading Server Sent Event streams
+WWW=		https://github.com/btubbs/sseclient
 
 LICENSE=	MIT
 

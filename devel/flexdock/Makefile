@@ -1,5 +1,3 @@
-# Created by: Otacilio de Araujo Ramos Neto <otacilio.neto@bsd.com.br>
-
 PORTNAME=	flexdock
 PORTVERSION=	1.2.4
 CATEGORIES=	devel java
@@ -7,6 +5,7 @@ MASTER_SITES=	http://forge.scilab.org/index.php/p/${PORTNAME}/downloads/get/
 
 MAINTAINER=	makc@FreeBSD.org
 COMMENT=	Swing windowing and docking framework
+WWW=		https://forge.scilab.org/index.php/p/flexdock/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -15,6 +14,7 @@ USE_ANT=	yes
 USE_JAVA=	yes
 
 ALL_TARGET=	dist
+NO_ARCH=	yes
 
 PLIST_FILES=	${JAVAJARDIR}/flexdock.jar
 PORTDOCS=	*

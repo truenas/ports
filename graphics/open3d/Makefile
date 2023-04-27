@@ -1,11 +1,12 @@
 PORTNAME=	Open3D
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.2
-PORTREVISION=	9
+PORTREVISION=	10
 CATEGORIES=	graphics
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Modern library for 3D data processing
+WWW=		http://www.open3d.org/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/../LICENSE

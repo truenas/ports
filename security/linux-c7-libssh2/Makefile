@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	libssh2
 PORTVERSION=	1.8.0
 DISTVERSIONSUFFIX=	-4.el7
@@ -8,6 +6,7 @@ CATEGORIES=	security linux
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	Library implementing the SSH2 protocol (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://www.libssh2.org/
 
 USES=		cpe linux:c7
 USE_LDCONFIG=	yes

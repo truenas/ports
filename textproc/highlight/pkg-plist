@@ -2,9 +2,9 @@ bin/highlight
 %%GUI%%bin/highlight-gui
 @sample %%ETCDIR%%/filetypes.conf.sample
 @sample %%ETCDIR%%/lsp.conf.sample
-man/man1/highlight.1.gz
-man/man5/filetypes.conf.5.gz
 %%GUI%%share/applications/highlight.desktop
+share/bash-completion/completions/highlight
+share/fish/vendor_completions.d/highlight.fish
 %%GUI%%share/icons/hicolor/256x256/apps/highlight.png
 %%GUI%%%%DATADIR%%/gui_files/ext/fileopenfilter.conf
 %%GUI%%%%DATADIR%%/gui_files/l10n/highlight_bg_BG.qm
@@ -13,6 +13,7 @@ man/man5/filetypes.conf.5.gz
 %%GUI%%%%DATADIR%%/gui_files/l10n/highlight_es_ES.qm
 %%GUI%%%%DATADIR%%/gui_files/l10n/highlight_fr_FR.qm
 %%GUI%%%%DATADIR%%/gui_files/l10n/highlight_it_IT.qm
+%%GUI%%%%DATADIR%%/gui_files/l10n/highlight_ja_JP.qm
 %%GUI%%%%DATADIR%%/gui_files/l10n/highlight_zh_CN.qm
 %%DATADIR%%/langDefs/abap.lang
 %%DATADIR%%/langDefs/abc.lang
@@ -50,6 +51,7 @@ man/man5/filetypes.conf.5.gz
 %%DATADIR%%/langDefs/bnf.lang
 %%DATADIR%%/langDefs/boo.lang
 %%DATADIR%%/langDefs/c.lang
+%%DATADIR%%/langDefs/carbon.lang
 %%DATADIR%%/langDefs/ceylon.lang
 %%DATADIR%%/langDefs/charmm.lang
 %%DATADIR%%/langDefs/chill.lang
@@ -64,6 +66,7 @@ man/man5/filetypes.conf.5.gz
 %%DATADIR%%/langDefs/coffeescript.lang
 %%DATADIR%%/langDefs/coldfusion.lang
 %%DATADIR%%/langDefs/conf.lang
+%%DATADIR%%/langDefs/critic.lang
 %%DATADIR%%/langDefs/crk.lang
 %%DATADIR%%/langDefs/crystal.lang
 %%DATADIR%%/langDefs/cs_block_regex.lang
@@ -103,6 +106,7 @@ man/man5/filetypes.conf.5.gz
 %%DATADIR%%/langDefs/go.lang
 %%DATADIR%%/langDefs/graphviz.lang
 %%DATADIR%%/langDefs/haml.lang
+%%DATADIR%%/langDefs/hare.lang
 %%DATADIR%%/langDefs/haskell.lang
 %%DATADIR%%/langDefs/haxe.lang
 %%DATADIR%%/langDefs/hcl.lang
@@ -118,6 +122,7 @@ man/man5/filetypes.conf.5.gz
 %%DATADIR%%/langDefs/innosetup.lang
 %%DATADIR%%/langDefs/interlis.lang
 %%DATADIR%%/langDefs/io.lang
+%%DATADIR%%/langDefs/jam.lang
 %%DATADIR%%/langDefs/jasmin.lang
 %%DATADIR%%/langDefs/java.lang
 %%DATADIR%%/langDefs/javascript.lang
@@ -163,6 +168,7 @@ man/man5/filetypes.conf.5.gz
 %%DATADIR%%/langDefs/nginx.lang
 %%DATADIR%%/langDefs/nice.lang
 %%DATADIR%%/langDefs/nim.lang
+%%DATADIR%%/langDefs/nix.lang
 %%DATADIR%%/langDefs/nsis.lang
 %%DATADIR%%/langDefs/nxc.lang
 %%DATADIR%%/langDefs/oberon.lang
@@ -194,6 +200,7 @@ man/man5/filetypes.conf.5.gz
 %%DATADIR%%/langDefs/psl.lang
 %%DATADIR%%/langDefs/pure.lang
 %%DATADIR%%/langDefs/purebasic.lang
+%%DATADIR%%/langDefs/purescript.lang
 %%DATADIR%%/langDefs/pyrex.lang
 %%DATADIR%%/langDefs/python.lang
 %%DATADIR%%/langDefs/q.lang
@@ -258,6 +265,7 @@ man/man5/filetypes.conf.5.gz
 %%DATADIR%%/langDefs/yaiff.lang
 %%DATADIR%%/langDefs/yaml.lang
 %%DATADIR%%/langDefs/yang.lang
+%%DATADIR%%/langDefs/zig.lang
 %%DATADIR%%/langDefs/znn.lang
 %%DATADIR%%/plugins/asciidoc_html_add_links.lua
 %%DATADIR%%/plugins/bash_functions.lua
@@ -501,3 +509,6 @@ man/man5/filetypes.conf.5.gz
 %%DATADIR%%/themes/zellner.theme
 %%DATADIR%%/themes/zenburn.theme
 %%DATADIR%%/themes/zmrok.theme
+share/man/man1/highlight.1.gz
+share/man/man5/filetypes.conf.5.gz
+share/zsh/site-functions/_highlight

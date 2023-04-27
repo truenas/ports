@@ -1,3 +1,3 @@
-TIMESTAMP = 1636145392
-SHA256 (rubygem/aws-sdk-personalizeruntime-1.27.0.gem) = f9be9586ad736ae86d44781027527d36234f787a32049c835c8e960b5947d4f5
-SIZE (rubygem/aws-sdk-personalizeruntime-1.27.0.gem) = 18432
+TIMESTAMP = 1675191633
+SHA256 (rubygem/aws-sdk-personalizeruntime-1.35.0.gem) = 5495c66b9e56f0838b69a0bcb2fb027e7f2a9a3ac5375d19434110acaa8e360f
+SIZE (rubygem/aws-sdk-personalizeruntime-1.35.0.gem) = 21504

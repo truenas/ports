@@ -1,8 +1,6 @@
-# Created by: n_hibma@qubesoft.com
-
 PORTNAME=	mailman
 DISTVERSION=	2.1.39
-PORTREVISION=	0
+PORTREVISION=	1
 CATEGORIES=	mail
 MASTER_SITES=	GNU \
 		SF/${PORTNAME}/Mailman%202.1%20%28stable%29/${PORTVERSION} \
@@ -14,6 +12,7 @@ PATCH_DIST_STRIP=	-p1
 
 MAINTAINER=	mandree@FreeBSD.org
 COMMENT=	Mailing list manager with user-friendly web front-end
+WWW=		https://www.list.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/gnu-COPYING-GPL
@@ -149,8 +148,8 @@ EXTRA_PATCHES+=	${FILESDIR}/extra-patch-Mailman-Cgi-private.py
 EXTRA_PATCHES+=	${FILESDIR}/extra-patch-mailpasswds
 .endif
 
-BUILD_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}dnspython>=0:dns/py-dnspython@${PY_FLAVOR}
-RUN_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}dnspython>=0:dns/py-dnspython@${PY_FLAVOR}
+BUILD_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}dnspython1>=0:dns/py-dnspython1@${PY_FLAVOR}
+RUN_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}dnspython1>=0:dns/py-dnspython1@${PY_FLAVOR}
 
 pre-everything::
 	@${ECHO} ""
@@ -217,7 +216,6 @@ post-install:
 	    -d ${MAILMANDIR}/${dir} ${dir})
 .endfor
 	@${RM} ${STAGEDIR}${MAILMANDIR}/pythonlib/*.egg-info
-	@# mm_cfg.py is handled by pkg-plist, no need to archive a copy:
 	@${RM} ${STAGEDIR}${MAILMANDIR}/Mailman/mm_cfg.py
 	@${RM} ${STAGEDIR}${MAILMANDIR}/Mailman/mm_cfg.pyc
 	@${MKDIR} ${STAGEDIR}${PREFIX}/${IMGDIR}

@@ -1,5 +1,3 @@
-# Created by: Jacques Vidrine <nectar@FreeBSD.org>
-
 PORTNAME=	nss_ldap
 PORTVERSION=	1.${NSS_LDAP_VERSION}
 PORTREVISION=	14
@@ -10,16 +8,16 @@ DISTNAME=	${PORTNAME}-${NSS_LDAP_VERSION}
 
 MAINTAINER=	des@FreeBSD.org
 COMMENT=	RFC 2307 NSS module
+WWW=		https://www.padl.com/OSS/nss_ldap.html
 
 LICENSE=	GPLv2
 
 NSS_LDAP_VERSION=265
 
-USES=		autoreconf cpe gmake perl5
+USES=		autoreconf cpe gmake ldap perl5
 USE_PERL5=	build
 GNU_CONFIGURE=	yes
 USE_LDCONFIG=	yes
-USE_OPENLDAP=	yes
 CPE_VENDOR=	padl
 
 BUILD_DEPENDS=	krb5>0:${PORTSDIR}/security/krb5

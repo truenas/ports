@@ -1,15 +1,25 @@
---- media/base/media_switches.h.orig	2021-09-24 04:26:07 UTC
+--- media/base/media_switches.h.orig	2023-04-05 11:05:06 UTC
 +++ media/base/media_switches.h
-@@ -194,10 +194,10 @@ MEDIA_EXPORT extern const base::Feature kUseFakeDevice
- MEDIA_EXPORT extern const base::Feature kUseMediaHistoryStore;
- MEDIA_EXPORT extern const base::Feature kUseR16Texture;
- MEDIA_EXPORT extern const base::Feature kUseSodaForLiveCaption;
--#if defined(OS_LINUX)
-+#if defined(OS_LINUX) || defined(OS_BSD)
- MEDIA_EXPORT extern const base::Feature kVaapiVideoDecodeLinux;
- MEDIA_EXPORT extern const base::Feature kVaapiVideoEncodeLinux;
--#endif  // defined(OS_LINUX)
-+#endif  // defined(OS_LINUX) || defined(OS_BSD)
- MEDIA_EXPORT extern const base::Feature kVaapiAV1Decoder;
- MEDIA_EXPORT extern const base::Feature kVaapiLowPowerEncoderGen9x;
- MEDIA_EXPORT extern const base::Feature kVaapiEnforceVideoMinMaxResolution;
+@@ -277,7 +277,7 @@ MEDIA_EXPORT BASE_DECLARE_FEATURE(kUseDecoderStreamFor
+ MEDIA_EXPORT BASE_DECLARE_FEATURE(kUseFakeDeviceForMediaStream);
+ MEDIA_EXPORT BASE_DECLARE_FEATURE(kUseMediaHistoryStore);
+ MEDIA_EXPORT BASE_DECLARE_FEATURE(kUseR16Texture);
+-#if BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
+ MEDIA_EXPORT BASE_DECLARE_FEATURE(kVaapiVideoDecodeLinux);
+ MEDIA_EXPORT BASE_DECLARE_FEATURE(kVaapiVideoDecodeLinuxGL);
+ MEDIA_EXPORT BASE_DECLARE_FEATURE(kVaapiVideoEncodeLinux);
+@@ -396,11 +396,11 @@ MEDIA_EXPORT BASE_DECLARE_FEATURE(
+     kAllowClearDolbyVisionInMseWhenPlatformEncryptedDvEnabled);
+ #endif
+ 
+-#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_BSD)
+ MEDIA_EXPORT BASE_DECLARE_FEATURE(kUseOutOfProcessVideoDecoding);
+ #endif  // BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS)
+ 
+-#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_BSD)
+ MEDIA_EXPORT BASE_DECLARE_FEATURE(kUseOutOfProcessVideoEncoding);
+ #endif  // BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS)
+ 

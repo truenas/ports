@@ -1,13 +1,12 @@
-# Created by: Hye-Shik Chang <perky@fallin.lv>
-
 PORTNAME=	pymetar
 PORTVERSION=	1.4
 CATEGORIES=	astro geography python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Python module that provides access to NOAA METAR weather reports
+WWW=		https://github.com/klausman/pymetar
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

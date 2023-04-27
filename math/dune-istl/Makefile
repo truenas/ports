@@ -1,9 +1,11 @@
 PORTNAME=	dune-istl
 DISTVERSION=	2.8.0
+PORTREVISION=	3
 CATEGORIES=	math
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	DUNE framework: Iterative Solver Template Library
+WWW=		https://www.dune-project.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE.md

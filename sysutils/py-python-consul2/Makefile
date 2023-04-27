@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	python-consul2
 PORTVERSION=	0.1.5
 CATEGORIES=	sysutils python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Python client for Consul
+WWW=		https://github.com/poppyred/python-consul2
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

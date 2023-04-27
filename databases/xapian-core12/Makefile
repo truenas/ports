@@ -1,5 +1,3 @@
-# Created by: J.F. Dockes
-
 PORTNAME=	xapian-core
 PORTVERSION=	1.2.25
 PORTEPOCH=	1
@@ -10,6 +8,7 @@ PKGNAMESUFFIX=	12
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Probabilistic text search database engine
+WWW=		https://xapian.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -22,7 +21,7 @@ USE_LDCONFIG=	yes
 
 PORTDOCS=	*
 
-CONFLICTS_INSTALL=	xapian-core xapian-core10
+CONFLICTS_INSTALL=	xapian-core # include/xapian.h
 
 PORTSCOUT=	limitw:1,even
 

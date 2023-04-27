@@ -1,5 +1,3 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	tty
 PORTVERSION=	0.10.0
 PORTREVISION=	10
@@ -8,6 +6,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Toolbox for developing beautiful CLI clients
+WWW=		https://ttytoolkit.org/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -38,7 +37,6 @@ RUN_DEPENDS=	rubygem-bundler>=1.16:sysutils/rubygem-bundler \
 		rubygem-tty-which>=0.4<1:devel/rubygem-tty-which
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

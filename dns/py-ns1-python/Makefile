@@ -1,11 +1,12 @@
 PORTNAME=	ns1-python
-DISTVERSION=	0.16.0
+DISTVERSION=	0.18.0
 CATEGORIES=	dns python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dch@FreeBSD.org
 COMMENT=	Python SDK for accessing NS1, the Data Driven DNS platform
+WWW=		https://github.com/ns1/ns1-python
 
 LICENSE=	MIT
 

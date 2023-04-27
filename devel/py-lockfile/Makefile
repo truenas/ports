@@ -1,13 +1,12 @@
-# Created by: Wen Heping <wenheping@gmail.com>
-
 PORTNAME=	lockfile
 PORTVERSION=	0.12.2
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	wg@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Platform-independent file locking module
+WWW=		https://github.com/smontanaro/pylockfile
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

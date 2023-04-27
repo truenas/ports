@@ -1,5 +1,3 @@
-# Created by: Alex de Kruijff
-
 PORTNAME=	samesame
 PORTVERSION=	1.10
 PORTREVISION=	2
@@ -9,6 +7,7 @@ MASTER_SITES=	http://samesame.kruijff.org/ \
 
 MAINTAINER=	samesame@akruijff.dds.nl
 COMMENT=	Find duplicate files and optionally link them together
+WWW=		https://samesame.kruijff.org/
 
 LICENSE=	BSD2CLAUSE
 

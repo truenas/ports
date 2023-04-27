@@ -1,13 +1,12 @@
-# Created by: Wen Heping <wen@FreeBSD.org>
-
 PORTNAME=	python-nexus
 PORTVERSION=	1.63
 CATEGORIES=	biology python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Generic nexus file format reader for python
+WWW=		http://simon.net.nz/articles/python-nexus
 
 LICENSE=	BSD3CLAUSE
 #LICENSE_FILE=	${WRKSRC}/LICENSE

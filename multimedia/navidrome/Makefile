@@ -1,8 +1,7 @@
-# Created by: Daniel Morante <daniel@morante.net>
-
 PORTNAME=	navidrome
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.40.0
+PORTREVISION=	13
 CATEGORIES=	multimedia
 MASTER_SITES=	http://cdn.pacyworld.com/morante.net/freebsd/ports/distfiles/navidrome/:npmcache
 DISTFILES=	${PORTNAME}-npm-cache-${DISTVERSION}${EXTRACT_SUFX}:npmcache
@@ -10,16 +9,19 @@ DIST_SUBDIR=	navidrome
 
 MAINTAINER=	daniel@morante.net
 COMMENT=	Modern Music Server and Streamer compatible with Subsonic/Airsonic
+WWW=		https://www.navidrome.org/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE
+
+BROKEN=		react-scripts: not found
 
 BUILD_DEPENDS+=	npm>0:www/npm \
 				go-bindata:devel/go-bindata
 LIB_DEPENDS+=	libtag.so:audio/taglib
 RUN_DEPENDS+=	ffmpeg:multimedia/ffmpeg
 
-USES=		go:modules pkgconfig
+USES=		cpe go:modules pkgconfig
 USE_GITHUB=	yes
 GH_TUPLE=	\
 		BurntSushi:toml:v0.3.1:burntsushi_toml/vendor/github.com/BurntSushi/toml \

@@ -1,12 +1,12 @@
-# Created by: TAKATSU Tomonari <tota@FreeBSD.org>
-
 PORTNAME=	formatR
-DISTVERSION=	1.11
+DISTVERSION=	1.12
+PORTREVISION=	1
 CATEGORIES=	textproc
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Format R Code Automatically
+WWW=		https://cran.r-project.org/web/packages/formatR/
 
 LICENSE=	GPLv2+
 

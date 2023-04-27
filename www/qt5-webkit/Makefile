@@ -1,6 +1,6 @@
 PORTNAME=		webkit
 DISTVERSION=		5.212.0-alpha4
-PORTREVISION=		7
+PORTREVISION=	13
 CATEGORIES=		www
 MASTER_SITES=		https://github.com/qt${PORTNAME}/qt${PORTNAME}/releases/download/${DISTNAME}/
 PKGNAMEPREFIX=		qt5-
@@ -11,6 +11,7 @@ PATCHFILES+=		78360c01c796b6260bf828bc9c8a0ef73c5132fd.patch:-p1
 
 MAINTAINER=		kde@FreeBSD.org
 COMMENT=		QtWebKit with a more modern WebKit code base
+WWW=		https://github.com/annulen/webkit
 
 LIB_DEPENDS=		libfontconfig.so:x11-fonts/fontconfig \
 			libhyphen.so:textproc/hyphen \
@@ -20,20 +21,17 @@ LIB_DEPENDS=		libfontconfig.so:x11-fonts/fontconfig \
 			libwoff2dec.so:devel/woff2
 
 USES=			bison cmake compiler:c++11-lang gnome gperf jpeg \
-			pathfix perl5 pkgconfig python:3.5+,build qt:5 sqlite:3 \
-			tar:xz xorg
+	pathfix perl5 pkgconfig python:3.5+,build qt:5 ruby:build \
+	sqlite:3 tar:xz xorg
 USE_GNOME=		glib20 libxml2 libxslt
 USE_PERL5=		build
 USE_QT=			core declarative gui location network opengl printsupport \
 			sensors webchannel widgets \
-			buildtools_build declarative-test_build qmake_build testlib_build
-USE_RUBY=		yes
+			buildtools:build declarative-test:build qmake:build testlib:build
 USE_XORG=		x11 xcomposite xrender
 
 # Fix pkgconfig install paths.
 PATHFIX_CMAKELISTSTXT=	PlatformQt.cmake
-
-RUBY_NO_RUN_DEPENDS=	yes
 
 CMAKE_ARGS=		-DPORT:STRING="Qt" \
 			-DKDE_INSTALL_INCLUDEDIR:PATH="${QT_INCDIR_REL}" \
@@ -54,9 +52,8 @@ SUB_LIST=		QT_INCDIR="${QT_INCDIR}"
 OPTIONS_DEFINE=	GSTREAMER
 OPTIONS_DEFAULT=	GSTREAMER
 
-GSTREAMER_LIB_DEPENDS=	libgstapp-1.0.so:multimedia/gstreamer1-plugins \
-			libgstbase-1.0.so:multimedia/gstreamer1
-GSTREAMER_USE=		GSTREAMER1=core
+GSTREAMER_USES=		gstreamer
+GSTREAMER_USE=		GSTREAMER=core
 GSTREAMER_CMAKE_OFF=	-DUSE_GSTREAMER:BOOL=OFF
 
 BINARY_ALIAS=		python3=${PYTHON_CMD}

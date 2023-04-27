@@ -1,11 +1,12 @@
 PORTNAME=	plopfolio
 PORTVERSION=	0.1.0
-PORTREVISION=	11
+PORTREVISION=	12
 CATEGORIES=	deskutils gnustep
 MASTER_SITES=	GNUSTEP/usr-apps
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Free clone of KlipFolio for GNUstep
+WWW=		http://www.collaboration-world.com/cgi-bin/project/index.cgi?pid=7
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

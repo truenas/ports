@@ -1,6 +1,9 @@
 bin/ghdl
 %%LLVM%%bin/ghdl1-llvm
-include/vpi_user.h
+bin/ghwdump
+include/ghdl/libghw.h
+include/ghdl/vhpi_user.h
+include/ghdl/vpi_user.h
 lib/ghdl/ansi_color.sh
 %%LLVM%%lib/ghdl/grt-exec.lst
 %%LLVM%%lib/ghdl/grt-shared.lst
@@ -196,3 +199,4 @@ lib/ghdl/vendors/filter.analyze.sh
 lib/ghdl/vendors/shared.psm1
 lib/ghdl/vendors/shared.sh
 lib/libghdlvpi.so
+lib/libghw.so

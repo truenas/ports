@@ -1,13 +1,12 @@
-# Created by: ijliao
-
 PORTNAME=	speex
-DISTVERSION=	1.2.0
+DISTVERSION=	1.2.1
 PORTEPOCH=	1
 CATEGORIES=	audio
 MASTER_SITES=	http://downloads.us.xiph.org/releases/speex/
 
 MAINTAINER=	multimedia@FreeBSD.org
 COMMENT=	Audio compression format designed for speech
+WWW=		https://www.speex.org/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYING

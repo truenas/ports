@@ -1,12 +1,12 @@
-# Created by: Jose Alonso Cardenas Marquez <acardenas@bsd.org.pe>
-
 PORTNAME=	zim
-DISTVERSION=	0.74.3
+DISTVERSION=	0.75.1
+PORTREVISION=	1
 CATEGORIES=	deskutils python
 MASTER_SITES=	https://www.zim-wiki.org/downloads/
 
 MAINTAINER=	rm@FreeBSD.org
 COMMENT=	Desktop wiki editor
+WWW=		https://www.zim-wiki.org
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -17,7 +17,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}xdg>0:devel/py-xdg@${PY_FLAVOR} \
 		xdg-open:devel/xdg-utils \
 		${PYTHON_PKGNAMEPREFIX}sqlite3>0:databases/py-sqlite3@${PY_FLAVOR}
 
-USES=		cpe desktop-file-utils gettext gnome python:3.3+ shared-mime-info
+USES=		cpe desktop-file-utils gettext gnome python:3.6+ shared-mime-info
 CPE_VENDOR=	zim-wiki
 USE_GNOME=	gtk30 pygobject3
 USE_PYTHON=	autoplist distutils noflavors
@@ -35,7 +35,8 @@ GNUPLOT_RUN_DEPENDS=	gnuplot:math/gnuplot
 GNUR_DESC=		Support of plot editor based on GNU R
 GNUR_RUN_DEPENDS=	R:math/R
 GRAPHVIZ_RUN_DEPENDS=	fdp:graphics/graphviz
-LATEX_USE=		tex=latex:run
+LATEX_USES=		tex
+LATEX_USE=		TEX=latex:run
 MERCURIAL_DESC=		Version control for notebooks using hg
 MERCURIAL_RUN_DEPENDS=	${PY_MERCURIAL}
 SCROT_DESC=		Screenshot taking and inserting support

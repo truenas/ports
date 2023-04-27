@@ -1,14 +1,13 @@
-# Created by: Massimiliano Stucchi <mstucchi@ripe.net>
-
 PORTNAME=	socketio-client
 PORTVERSION=	0.6.7
 CATEGORIES=	net devel python
-MASTER_SITES=	CHEESESHOP/source/s/socketIO-client/
+MASTER_SITES=	PYPI/source/s/socketIO-client/
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	socketIO_client-${PORTVERSION}
 
 MAINTAINER=	mstucchi@ripe.net
 COMMENT=	Socket.io client library for Python
+WWW=		https://github.com/invisibleroads/socketIO-client
 
 LICENSE=	MIT
 

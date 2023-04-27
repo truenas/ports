@@ -7,6 +7,7 @@ DISTNAME=	${PORTNAME:tu}-${DISTVERSION}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Computing triangulations of point configurations and oriented matroids
+WWW=		http://www.rambau.wm.uni-bayreuth.de/TOPCOM/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -19,6 +20,8 @@ GNU_CONFIGURE=	yes
 
 CFLAGS+=	-I${LOCALBASE}/include/cdd/
 LDFLAGS+=	-lgmp -lgmpxx -lcddgmp
+
+CONFLICTS_INSTALL=	p5-Set-CrossProduct # bin/cross
 
 WRKSRC=		${WRKDIR}/${PORTNAME}-${DISTVERSION}
 

@@ -1,13 +1,12 @@
-# Created by: Neil Blakey-Milner
-
 PORTNAME=	courier-imap
-PORTVERSION=	5.1.4
+PORTVERSION=	5.2.3
 PORTEPOCH=	2
 CATEGORIES=	mail
 MASTER_SITES=	SF/courier/imap/${PORTVERSION}
 
 MAINTAINER=	madpilot@FreeBSD.org
 COMMENT=	IMAP (and POP3) server that provides access to Maildir mailboxes
+WWW=		https://www.courier-mta.org/imap/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -15,7 +14,8 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 RUN_DEPENDS=	${LOCALBASE}/share/sysconftool/sysconftool:devel/sysconftool
 LIB_DEPENDS=	libcourier-unicode.so:devel/courier-unicode \
 		libcourierauth.so:security/courier-authlib-base \
-		libidn.so:dns/libidn
+		libidn2.so:dns/libidn2 \
+		libpcre2-8.so:devel/pcre2
 
 USES=		compiler:c++11-lang gmake localbase:ldflags perl5 pkgconfig ssl \
 		tar:bzip2
@@ -97,7 +97,6 @@ CONFIGURE_ARGS+=--with-db=db  --with-userdb=${USERDB}
 
 EXTRA_DOCS=	AUTHORS INSTALL NEWS \
 		libs/imap/ChangeLog \
-		libs/imap/README \
 		libs/imap/README.proxy \
 		libs/maildir/README.imapkeywords.html \
 		libs/maildir/README.maildirfilter.html \
@@ -109,6 +108,7 @@ post-patch:
 	@${REINPLACE_CMD} -e 's|^case x$$lockmethod in|${TEST} \&\& &|g' \
 		${WRKSRC}/libs/liblock/configure
 	@${REINPLACE_CMD} -e 's|%%INSTALL_MAN%%|${INSTALL_MAN}|' \
+		-e 's|@LN_S@|${RLN}|' \
 		${WRKSRC}/Makefile.in
 
 post-patch-INOTIFY-on:

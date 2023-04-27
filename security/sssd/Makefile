@@ -1,13 +1,12 @@
-# Created by: Lukas Slebodnik <lukas.slebodnik@intrak.sk>
-
 PORTNAME=	sssd
 PORTVERSION=	1.16.5
-PORTREVISION=	4
+PORTREVISION=	8
 CATEGORIES=	security
 MASTER_SITES=	https://releases.pagure.org/SSSD/${PORTNAME}/
 
-MAINTAINER=	lukas.slebodnik@intrak.sk
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	System Security Services Daemon
+WWW=		https://pagure.io/SSSD/sssd
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -16,7 +15,7 @@ LIB_DEPENDS=	libpopt.so:devel/popt \
 		libtalloc.so:devel/talloc \
 		libtevent.so:devel/tevent \
 		libtdb.so:databases/tdb \
-		libldb.so:databases/ldb21 \
+		libldb.so:databases/ldb22 \
 		libcares.so:dns/c-ares \
 		libdbus-1.so:devel/dbus \
 		libdhash.so:devel/ding-libs \
@@ -32,6 +31,10 @@ BUILD_DEPENDS=	xmlcatalog:textproc/libxml2 \
 		xmlcatmgr:textproc/xmlcatmgr \
 		krb5>=1.10:security/krb5 \
 		nsupdate:dns/bind-tools
+
+FLAVORS=	default smb
+FLAVOR?=	${FLAVORS:[1]}
+smb_PKGNAMESUFFIX=	-smb
 
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--without-selinux --without-semanage \
@@ -56,10 +59,11 @@ PLIST_SUB=	PYTHON_VER=${PYTHON_VER}
 MAKE_ENV+=	LINGUAS="bg de eu es fr hu id it ja nb nl pl pt ru sv tg tr uk zh_CN zh_TW"
 SUB_FILES=	pkg-message
 
-USES=		autoreconf cpe gettext gmake iconv libtool pathfix pkgconfig \
-		python:3.7 shebangfix gssapi:mit
+TEST_TARGET=	check
+
+USES=		autoreconf cpe gettext gmake iconv ldap libtool pathfix pkgconfig \
+		python:3.6+ shebangfix gssapi:mit
 USE_LDCONFIG=	yes
-USE_OPENLDAP=	yes
 INSTALL_TARGET=	install-strip
 CPE_VENDOR=	fedoraproject
 
@@ -76,12 +80,16 @@ OPTIONS_SUB=	yes
 SMB_DESC=		Install IPA and AD providers (requires Samba4)
 SMB_USES=		samba:lib
 SMB_CONFIGURE_WITH=	samba smb-idmap-interface-version=6
-SMB_LIB_DEPENDS=	libndr-nbt.so.0:net/samba412 \
-			libndr-krb5pac.so.0:net/samba412 \
-			libndr-standard.so.0:net/samba412 \
-			libndr.so.1:net/samba412 \
-			libsamba-util.so.0:net/samba412 \
-			libsmbclient.so.0:net/samba412
+SMB_LIB_DEPENDS=	libndr-nbt.so.0:net/samba413 \
+			libndr-krb5pac.so.0:net/samba413 \
+			libndr-standard.so.0:net/samba413 \
+			libndr.so.1:net/samba413 \
+			libsamba-util.so.0:net/samba413 \
+			libsmbclient.so.0:net/samba413
+
+.if ${FLAVOR} == smb
+OPTIONS_DEFAULT+=	SMB
+.endif
 
 post-patch:
 	@${REINPLACE_CMD} -e 's|NSS_STATUS_NOTFOUND|NS_NOTFOUND|g' \

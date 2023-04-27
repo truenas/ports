@@ -1,18 +1,17 @@
-# Created by: Mark Felder <feld@FreeBSD.org>
-
 PORTNAME=	zodbpickle
-PORTVERSION=	2.2.0
+PORTVERSION=	3.0
 CATEGORIES=	databases python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Python pickling interface for ZODB
+WWW=		https://github.com/zopefoundation/zodbpickle
 
 LICENSE=	PSFL ZPL21
 LICENSE_COMB=	multi
 
-USES=		python:3.6+
+USES=		python:3.7+
 USE_PYTHON=	autoplist concurrent distutils
 
 post-install:

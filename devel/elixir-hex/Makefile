@@ -1,11 +1,12 @@
 PORTNAME=	hex
-DISTVERSION=	0.21.3
 DISTVERSIONPREFIX=	v
+DISTVERSION=	2.0.5
 CATEGORIES=	devel
 PKGNAMEPREFIX=	elixir-
 
 MAINTAINER=	erlang@FreeBSD.org
 COMMENT=	Package manager for the Erlang VM
+WWW=		https://github.com/hexpm/hex
 
 LICENSE=	APACHE20
 

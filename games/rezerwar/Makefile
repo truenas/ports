@@ -7,9 +7,7 @@ MASTER_SITES=	http://tamentis.com/projects/rezerwar/files/ \
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Puzzle game involving organizing blocks with pipes
-
-BROKEN_FreeBSD_13=	ld: error: duplicate symbol: screen
-BROKEN_FreeBSD_14=	ld: error: duplicate symbol: screen
+WWW=		https://tamentis.com/projects/rezerwar/
 
 USES=		gmake sdl
 USE_SDL=	sdl mixer

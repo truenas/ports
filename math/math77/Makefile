@@ -1,6 +1,6 @@
 PORTNAME=	math77
 PORTVERSION=	6.0
-PORTREVISION=	9
+PORTREVISION=	10
 CATEGORIES=	math
 MASTER_SITES=	NL/math
 DISTNAME=	${PORTNAME}
@@ -8,6 +8,7 @@ DIST_SUBDIR=	${PORTNAME}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	CalTech mathematical subprogram libraries for Fortran 77
+WWW=		https://netlib.org/math/
 
 LICENSE=	BSD3CLAUSE
 

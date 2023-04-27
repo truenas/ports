@@ -1,11 +1,12 @@
 PORTNAME=	ciscoconfparse
 DISTVERSION=	1.5.51
 CATEGORIES=	net-mgmt python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	kai@FreeBSD.org
 COMMENT=	Parse, audit, query, build and modify Cisco IOS-style configurations
+WWW=		http://www.pennington.net/py/ciscoconfparse/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/LICENSE

@@ -10,6 +10,7 @@ share/applications/ibus-setup-table.desktop
 %%DATADIR%%/engine/chinese_variants.py
 %%DATADIR%%/engine/factory.py
 %%DATADIR%%/engine/ibus_table_location.py
+%%DATADIR%%/engine/it_active_window.py
 %%DATADIR%%/engine/it_util.py
 %%DATADIR%%/engine/main.py
 %%DATADIR%%/engine/tabcreatedb.py
@@ -39,6 +40,14 @@ share/applications/ibus-setup-table.desktop
 %%DATADIR%%/setup/version.py
 %%DATADIR%%/tables/template.txt
 share/ibus/component/table.xml
+share/icons/hicolor/128x128/apps/ibus-table.png
+share/icons/hicolor/16x16/apps/ibus-table.png
+share/icons/hicolor/22x22/apps/ibus-table.png
+share/icons/hicolor/256x256/apps/ibus-table.png
+share/icons/hicolor/32x32/apps/ibus-table.png
+share/icons/hicolor/48x48/apps/ibus-table.png
+share/icons/hicolor/64x64/apps/ibus-table.png
+share/icons/hicolor/scalable/apps/ibus-table.svg
 %%NLS%%share/locale/ca/LC_MESSAGES/ibus-table.mo
 %%NLS%%share/locale/cs/LC_MESSAGES/ibus-table.mo
 %%NLS%%share/locale/de/LC_MESSAGES/ibus-table.mo
@@ -46,6 +55,7 @@ share/ibus/component/table.xml
 %%NLS%%share/locale/fa/LC_MESSAGES/ibus-table.mo
 %%NLS%%share/locale/fr/LC_MESSAGES/ibus-table.mo
 %%NLS%%share/locale/ja/LC_MESSAGES/ibus-table.mo
+%%NLS%%share/locale/ka/LC_MESSAGES/ibus-table.mo
 %%NLS%%share/locale/pt_BR/LC_MESSAGES/ibus-table.mo
 %%NLS%%share/locale/pt_PT/LC_MESSAGES/ibus-table.mo
 %%NLS%%share/locale/si/LC_MESSAGES/ibus-table.mo

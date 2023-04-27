@@ -1,5 +1,3 @@
-# Created by: Johannes Meixner <johannes@perceivon.net>
-
 PORTNAME=	railties
 PORTVERSION=	4.2.11.3
 CATEGORIES=	www rubygems
@@ -8,6 +6,7 @@ PKGNAMESUFFIX=	4
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Rails internals bootup, plugins, generators, and rake tasks
+WWW=		https://github.com/rails/rails/tree/main/railties
 
 LICENSE=	MIT
 
@@ -17,7 +16,6 @@ RUN_DEPENDS=	rubygem-actionpack4>=${PORTVERSION}:www/rubygem-actionpack4 \
 		rubygem-thor>=0.18.1<2.0:devel/rubygem-thor
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

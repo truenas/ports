@@ -1,13 +1,12 @@
-# Created by: lichray@gmail.com
-
 PORTNAME=	pinpoint
 DISTVERSION=	0.1.4
-PORTREVISION=	7
+PORTREVISION=	8
 CATEGORIES=	graphics
 MASTER_SITES=	GNOME
 
 MAINTAINER=	lichray@gmail.com
 COMMENT=	Tool for making hackers do excellent presentations
+WWW=		https://live.gnome.org/Pinpoint
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

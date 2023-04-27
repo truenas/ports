@@ -1,7 +1,6 @@
-# Created by: Michael Johnson <ahze@FreeBSD.org>
-
 PORTNAME=	webkit
-DISTVERSION=	2.34.2
+DISTVERSION=	2.34.6
+PORTREVISION=	6
 CATEGORIES=	www
 MASTER_SITES=	https://webkitgtk.org/releases/
 PKGNAMESUFFIX=	2-gtk3
@@ -10,6 +9,7 @@ DIST_SUBDIR=	gnome
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Opensource browser engine using the GTK+ 3 toolkit
+WWW=		https://webkitgtk.org/
 
 LICENSE=	GPLv2 BSD2CLAUSE
 LICENSE_COMB=	dual
@@ -37,13 +37,11 @@ PORTSCOUT=	limitw:1,even
 
 USES=		bison cmake compiler:c++14-lang cpe gettext gl gnome gperf \
 		jpeg localbase:ldflags perl5 pkgconfig python:build \
-		sqlite tar:xz xorg
+		ruby:build sqlite tar:xz xorg
 USE_GNOME=	cairo gdkpixbuf2 gtk30 introspection:build libxml2 libxslt
 USE_GL=		gl egl glesv2
 USE_LDCONFIG=	yes
 USE_PERL5=	build
-USE_RUBY=	yes
-RUBY_NO_RUN_DEPENDS=	yes
 USE_XORG=	x11 xcomposite xdamage xext xrender xt ice
 
 CPE_VENDOR=	webkitgtk
@@ -89,12 +87,12 @@ GEOIP_CMAKE_BOOL=	ENABLE_GEOLOCATION
 GEOIP_BUILD_DEPENDS=	geoclue>=2.4.3:net/geoclue
 GEOIP_RUN_DEPENDS=	geoclue>=2.4.3:net/geoclue
 
-GSTREAMER_EXTRA_PATCHES_OFF=	${PATCHDIR}/extra-patch-revert-7c0f13f37ec5 \
-				${PATCHDIR}/extra-patch-guard-video
-GSTREAMER_USE=		GSTREAMER1=bad,gl
+GSTREAMER_USES=		gstreamer
+GSTREAMER_USE=		GSTREAMER=bad,gl
 GSTREAMER_CMAKE_BOOL=	ENABLE_VIDEO ENABLE_WEB_AUDIO
 
 WAYLAND_CMAKE_BOOL=	ENABLE_WAYLAND_TARGET
+WAYLAND_BUILD_DEPENDS=	wayland-protocols>=1.12:graphics/wayland-protocols
 WAYLAND_LIB_DEPENDS=	libwayland-egl.so:graphics/wayland \
 			libwpe-1.0.so:www/libwpe \
 			libWPEBackend-fdo-1.0.so:www/wpebackend-fdo

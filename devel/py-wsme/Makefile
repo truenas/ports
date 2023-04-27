@@ -1,14 +1,13 @@
-# Created by: Alexander Nusov <alexander.nusov@nfvexpress.com>
-
 PORTNAME=	wsme
 PORTVERSION=	0.11.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	WSME-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Simplify the writing of REST APIs
+WWW=		https://opendev.org/x/wsme
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

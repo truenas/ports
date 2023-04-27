@@ -1,12 +1,12 @@
-# Created by: John Prather
-
 PORTNAME=	pidgin-sipe
 PORTVERSION=	1.24.0
+PORTREVISION=	4
 CATEGORIES=	net-im
 MASTER_SITES=	SF/sipe/sipe/${DISTNAME}
 
 MAINTAINER=	john.c.prather@gmail.com
 COMMENT=	Plugin for Pidgin to provide LCS/OCS connectivity
+WWW=		https://www.sourceforge.net/projects/sipe
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -24,9 +24,8 @@ LIB_DEPENDS=	libnss3.so:security/nss \
 		libfarstream-0.2.so:net-im/farstream
 RUN_DEPENDS=	pidgin:net-im/pidgin
 
-USES=		compiler:c11 gmake gnome libtool localbase pkgconfig tar:bzip2 ssl
+USES=		compiler:c11 gmake gnome gstreamer libtool localbase pkgconfig tar:bzip2 ssl
 USE_GNOME=	gtk20 intltool libxml2
-USE_GSTREAMER1=	yes
 
 USE_LDCONFIG=	yes
 

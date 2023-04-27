@@ -1,11 +1,12 @@
 PORTNAME=	patch-ng
 DISTVERSION=	1.17.4
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Library to parse and apply unified diffs
+WWW=		https://github.com/conan-io/python-patch-ng
 
 LICENSE=	MIT
 

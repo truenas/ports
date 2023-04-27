@@ -1,10 +1,11 @@
 PORTNAME=	sndio
-PORTVERSION=	1.8.1
+PORTVERSION=	1.9.0
 CATEGORIES=	audio
 MASTER_SITES=	https://sndio.org/
 
 MAINTAINER=	multimedia@FreeBSD.org
 COMMENT=	Small audio and MIDI framework from the OpenBSD project
+WWW=		https://www.sndio.org/
 
 LICENSE=	ISCL
 
@@ -30,6 +31,6 @@ post-patch:
 post-install:
 	cd ${STAGEDIR}${PREFIX}/bin && ${STRIP_CMD} \
 		aucat midicat sndioctl sndiod
-	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/libsndio.so.7.1
+	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/libsndio.so.7.2
 
 .include <bsd.port.mk>

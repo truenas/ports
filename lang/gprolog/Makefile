@@ -1,5 +1,3 @@
-# Created by: Douglas Anestad <yotta@dougdidit.com>
-
 PORTNAME=	gprolog
 PORTVERSION=	1.5.0
 CATEGORIES=	lang
@@ -7,6 +5,7 @@ MASTER_SITES=	http://www.gprolog.org/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Free Prolog compiler
+WWW=		http://www.gprolog.org/
 
 LICENSE=	GPLv2
 

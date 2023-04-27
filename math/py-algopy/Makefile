@@ -1,12 +1,13 @@
 PORTNAME=	algopy
 DISTVERSION=	0.5.7
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	math python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Algorithmic Differentiation (AD) and Taylor polynomial approximations
+WWW=		https://pythonhosted.org/algopy/
 
 LICENSE=	BSD3CLAUSE
 

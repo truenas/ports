@@ -1,19 +1,20 @@
 PORTNAME=	bsdisks
-DISTVERSION=	0.26
+DISTVERSION=	0.29
 CATEGORIES=	sysutils
 
 MAINTAINER=	arrowd@FreeBSD.org
 COMMENT=	UDisks2 service implementation for FreeBSD
+WWW=		https://foss.heptapod.net/bsdutils/bsdisks
 
 LICENSE=	BSD3CLAUSE
 
 USES=		cmake compiler:c++11-lang qt:5
 
-USE_QT=		qmake_build buildtools_build core dbus
+USE_QT=		qmake:build buildtools:build core dbus
 
 USE_GITLAB=		yes
 GL_SITE=		https://foss.heptapod.net
 GL_ACCOUNT=		bsdutils
-GL_COMMIT=		e1d6cc627e5371f26a3350f19e19f0d1d017b1f2
+GL_COMMIT=		ebeabb2daa4088cabd7f230e590bec9b190b3455
 
 .include <bsd.port.mk>

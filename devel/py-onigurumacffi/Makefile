@@ -1,11 +1,12 @@
 PORTNAME=	onigurumacffi
 PORTVERSION=	0.0.21
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	swills@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Python cffi bindings for the oniguruma regex engine
+WWW=		https://github.com/asottile/onigurumacffi
 
 LIB_DEPENDS=	libonig.so:devel/oniguruma
 BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}cffi>=0:devel/py-cffi@${PY_FLAVOR}

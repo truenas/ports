@@ -1,10 +1,11 @@
 PORTNAME=	mecrisp-stellaris
-PORTVERSION=	2.6.1
+PORTVERSION=	2.6.3
 CATEGORIES=	lang
 MASTER_SITES=	SF/mecrisp
 
-MAINTAINER=	fuz@fuz.su
+MAINTAINER=	fuz@FreeBSD.org
 COMMENT=	Native code Forth system for ARM
+WWW=		http://mecrisp.sourceforge.net
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -25,12 +26,6 @@ STRIP=
 
 PKGMESSAGE=	pkg-message-${ARCH}
 
-OPTIONS_DEFINE=		EXTRAS
-OPTIONS_DEFAULT=	EXTRAS
-EXTRAS_DESC=		Add disassembler and math library to Forth core
-EXTRAS_VARS=		PROGRAM=mecrisp-stellaris-freebsd-with-disassembler-and-math
-EXTRAS_VARS_OFF=	PROGRAM=mecrisp-stellaris-freebsd
-
 BINSUFFIX_armv6=	-armv6
 BINSUFFIX=		${BINSUFFIX_${ARCH}}
 
@@ -39,7 +34,7 @@ BINSUFFIX=		${BINSUFFIX_${ARCH}}
 do-build:
 	cd ${WRKSRC}/mecrisp-stellaris-source/freebsd-ra && ${SH} -v assemble
 	${CP} ${WRKSRC}/mecrisp-stellaris-source/freebsd-ra/mecrisp-stellaris-freebsd${BINSUFFIX} \
-		${WRKSRC}/freebsd-ra/mecrisp-stellaris-freebsd
+	    ${WRKSRC}/freebsd-ra/mecrisp-stellaris-freebsd
 	cd ${WRKSRC}/freebsd-ra && ${SH} -v buildcore-freebsd
 
 do-install:
@@ -47,6 +42,7 @@ do-install:
 	${INSTALL_MAN} ${WRKSRC}/README ${STAGEDIR}${DOCSDIR}
 	${INSTALL_MAN} ${WRKSRC}/KNOWN-ISSUES ${STAGEDIR}${DOCSDIR}
 	cd ${WRKSRC}/common && ${COPYTREE_SHARE} . ${STAGEDIR}${DATADIR}
-	${INSTALL_PROGRAM} ${WRKSRC}/freebsd-ra/${PROGRAM} ${STAGEDIR}${PREFIX}/bin/mecrisp-stellaris
+	${INSTALL_PROGRAM} ${WRKSRC}/freebsd-ra/mecrisp-stellaris-freebsd-with-disassembler-and-math \
+	    ${STAGEDIR}${PREFIX}/bin/mecrisp-stellaris
 
 .include <bsd.port.mk>

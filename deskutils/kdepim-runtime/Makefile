@@ -1,28 +1,23 @@
 PORTNAME=	kdepim-runtime
 DISTVERSION=	${KDE_APPLICATIONS_VERSION}
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	deskutils kde kde-applications
-
-PATCH_SITES=	https://invent.kde.org/pim/kdepim-runtime/-/commit/
-PATCHFILES=	f14fabcefb45790175e209ef8ae394def4a805e9.patch:-p1
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	KDE PIM tools and services
+WWW=		https://www.kde.org/
 
 LICENSE=	LGPL21
-
-DEPRECATED=	Uses EOL Python 2.7 via www/qt5-webengine
-EXPIRATION_DATE=2021-06-23
 
 LIB_DEPENDS=	libboost_date_time.so:devel/boost-libs \
 		libcurl.so:ftp/curl \
 		libkolabxml.so:textproc/libkolabxml \
 		libsasl2.so:security/cyrus-sasl2 \
 		libxerces-c-3.2.so:textproc/xerces-c3 \
-		libqt5keychain.so:security/qtkeychain
+		libqt5keychain.so:security/qtkeychain@qt5
 
-USES=		cmake:noninja compiler:c++11-lib gettext kde:5 qca qt:5 \
-		shared-mime-info tar:xz
+USES=		cmake:noninja compiler:c++11-lib gettext grantlee:5 \
+		kde:5 qca qt:5 shared-mime-info tar:xz xorg
 USE_KDE=	auth bookmarks codecs completion config configwidgets \
 		coreaddons crash dbusaddons guiaddons holidays i18n iconthemes \
 		itemmodels itemviews jobwidgets kcmutils kdav kdelibs4support kio \
@@ -31,13 +26,14 @@ USE_KDE=	auth bookmarks codecs completion config configwidgets \
 		xmlgui
 # pim components
 USE_KDE+=	akonadi akonadicontacts akonadimime akonadinotes \
-		akonadicalendar akonadisearch alarmcalendar calendarcore \
+		akonadicalendar akonadisearch calendarcore \
 		calendarutils contacts gapi grantleetheme identitymanagement imap \
 		kontactinterface ldap libkdepim mailtransport mbox mime pimcommon \
 		pimtextedit syndication
 USE_QT=		concurrent core dbus declarative gui location network networkauth printsupport speech \
 		script webchannel webengine widgets xml xmlpatterns \
-		buildtools_build qmake_build
+		buildtools:build qmake:build
+USE_XORG=	x11
 USE_LDCONFIG=	yes
 
 DESCR=		${.CURDIR:H:H}/deskutils/kdepim/pkg-descr

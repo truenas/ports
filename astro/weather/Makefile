@@ -1,13 +1,12 @@
-# Created by: Sunpoet Po-Chuan Hsieh <sunpoet@sunpoet.net>
-
 PORTNAME=	weather
-PORTVERSION=	2.4.1
+PORTVERSION=	2.4.4
 CATEGORIES=	astro python
 MASTER_SITES=	http://fungi.yuggoth.org/weather/src/ \
 		LOCAL/sunpoet
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Utility to provide current weather conditions and forecasts
+WWW=		http://fungi.yuggoth.org/weather/
 
 LICENSE=	ISCL
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -16,6 +15,8 @@ USES=		python shebangfix tar:xz
 
 NO_ARCH=	yes
 NO_BUILD=	yes
+
+SUB_FILES=	pkg-message
 
 SHEBANG_FILES=	weather
 
@@ -29,11 +30,5 @@ do-install:
 	${INSTALL_MAN} ${WRKSRC}/weatherrc.5 ${STAGEDIR}${PREFIX}/share/man/man5/weatherrc.5
 	${MKDIR} ${STAGEDIR}${DATADIR}/
 	cd ${WRKSRC}/ && ${INSTALL_DATA} airports places stations zctas zones ${STAGEDIR}${DATADIR}/
-	@${ECHO_MSG} ""
-	@${ECHO_MSG} "Please add the following to your .weatherrc in order to use installed data files:"
-	@${ECHO_MSG} ""
-	@${ECHO_MSG} "[default]"
-	@${ECHO_MSG} "setpath = ${DATADIR}"
-	@${ECHO_MSG} ""
 
 .include <bsd.port.mk>

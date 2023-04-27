@@ -1,11 +1,11 @@
---- content/public/test/mock_render_thread.cc.orig	2021-04-14 18:41:03 UTC
+--- content/public/test/mock_render_thread.cc.orig	2023-03-09 06:31:50 UTC
 +++ content/public/test/mock_render_thread.cc
-@@ -62,7 +62,7 @@ class MockRenderMessageFilterImpl : public mojom::Rend
+@@ -64,7 +64,7 @@ class MockRenderMessageFilterImpl : public mojom::Rend
      std::move(callback).Run(false);
    }
  
--#if defined(OS_LINUX) || defined(OS_CHROMEOS)
-+#if defined(OS_LINUX) || defined(OS_CHROMEOS) || defined(OS_BSD)
-   void SetThreadPriority(int32_t platform_thread_id,
-                          base::ThreadPriority thread_priority) override {}
+-#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_BSD)
+   void SetThreadType(int32_t platform_thread_id,
+                      base::ThreadType thread_type) override {}
  #endif

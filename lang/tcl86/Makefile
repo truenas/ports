@@ -1,5 +1,3 @@
-# Created by: Martin Matuska <mm@FreeBSD.org>
-
 PORTNAME=	tcl
 DISTVERSION=	${TCL_VERSION}${TCL_RC}
 PORTREVISION=	0
@@ -10,6 +8,7 @@ DISTNAME=	${PORTNAME}${DISTVERSION}-src
 
 MAINTAINER=	tcltk@FreeBSD.org
 COMMENT=	Tool Command Language
+WWW=		https://www.tcl.tk/
 
 LICENSE=	TclTk
 LICENSE_NAME=	Tcl/Tk License
@@ -24,6 +23,7 @@ CONFIGURE_ARGS=	--enable-shared \
 		--enable-man-suffix=.${MAN_SUFFIX} \
 		--includedir=${PREFIX}/include/tcl${TCL_VER}
 CONFIGURE_ENV=	PORTSDIR=${PORTSDIR}
+LDFLAGS+=	-Wl,-z,muldefs
 
 OPTIONS_DEFINE=	TCLMAN TZDATA THREADS DEBUG
 OPTIONS_DEFINE_amd64=	DTRACE
@@ -48,7 +48,7 @@ ALL_TARGET=	all
 INSTALL_TARGET=	install-strip install-libraries install-private-headers
 TEST_TARGET=	test-tcl
 
-TCL_VERSION=	8.6.12
+TCL_VERSION=	8.6.13
 TCL_VER=	${TCL_VERSION:R}
 TCL_RC=
 SHORT_TCL_VER=	${TCL_VER:S/.//}

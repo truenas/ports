@@ -1,12 +1,12 @@
-# Created by: Renaud Chaput <renchap@cocoa-x.com>
-
 PORTNAME=	chef
-PORTVERSION=	16.16.13
+PORTVERSION=	16.18.0
+PORTREVISION=	1
 CATEGORIES=	sysutils
 MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Systems integration framework. Client part
+WWW=		https://www.chef.io/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -18,7 +18,7 @@ RUN_DEPENDS=	rubygem-addressable>=0:www/rubygem-addressable \
 		rubygem-chef-utils>=${PORTVERSION}<${PORTVERSION}_99:sysutils/rubygem-chef-utils \
 		rubygem-chef-vault>=0:sysutils/rubygem-chef-vault \
 		rubygem-chef-zero>=14.0.11:sysutils/rubygem-chef-zero \
-		rubygem-diff-lcs>=1.2.4<1.5.0:textproc/rubygem-diff-lcs \
+		rubygem-diff-lcs>=1.2.4<1.6.0:textproc/rubygem-diff-lcs \
 		rubygem-ed25519>=1.2<2:security/rubygem-ed25519 \
 		rubygem-erubis>=2.7<3:www/rubygem-erubis \
 		rubygem-ffi>=1.9.25:devel/rubygem-ffi \
@@ -33,8 +33,8 @@ RUN_DEPENDS=	rubygem-addressable>=0:www/rubygem-addressable \
 		rubygem-mixlib-cli>=2.1.1<3.0:devel/rubygem-mixlib-cli \
 		rubygem-mixlib-log>=2.0.3<4.0:devel/rubygem-mixlib-log \
 		rubygem-mixlib-shellout>=3.1.1<4.0:devel/rubygem-mixlib-shellout \
-		rubygem-net-sftp>=2.1.2<4.0:security/rubygem-net-sftp \
-		rubygem-net-ssh5>=5.1,2<7,2:security/rubygem-net-ssh5 \
+		rubygem-net-sftp>=2.1.2<5.0:security/rubygem-net-sftp \
+		rubygem-net-ssh6>=5.1<7:security/rubygem-net-ssh6 \
 		rubygem-net-ssh-multi>=1.2.1<2:security/rubygem-net-ssh-multi \
 		rubygem-ohai>=16.0<17:sysutils/rubygem-ohai \
 		rubygem-pastel>=0:devel/rubygem-pastel \
@@ -49,7 +49,6 @@ RUN_DEPENDS=	rubygem-addressable>=0:www/rubygem-addressable \
 		rubygem-uuidtools>=2.1.5<3.0:devel/rubygem-uuidtools
 
 USES=		cpe gem shebangfix
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 
@@ -64,8 +63,8 @@ post-patch:
 	@${REINPLACE_CMD} -e '1d' ${WRKSRC}/spec/data/apt/chef-integration-test*/debian/rules
 
 post-install:
-#	${INSTALL_MAN} ${WRKSRC}/distro/common/man/man1/*.1 ${STAGEDIR}${MANPREFIX}/man/man1/
-#	${INSTALL_MAN} ${WRKSRC}/distro/common/man/man8/*.8 ${STAGEDIR}${MANPREFIX}/man/man8/
+#	${INSTALL_MAN} ${WRKSRC}/distro/common/man/man1/*.1 ${STAGEDIR}${PREFIX}/man/man1/
+#	${INSTALL_MAN} ${WRKSRC}/distro/common/man/man8/*.8 ${STAGEDIR}${PREFIX}/man/man8/
 	${MKDIR} ${STAGEDIR}/var/chef
 
 .include <bsd.port.mk>

@@ -1,5 +1,3 @@
-# Created by: Russell Jackson <raj@csub.edu>
-
 PORTNAME=	mcollective
 PORTVERSION=	2.12.5
 CATEGORIES=	sysutils
@@ -7,16 +5,19 @@ MASTER_SITES=	https://downloads.puppetlabs.com/${PORTNAME}/
 
 MAINTAINER=	puppet@FreeBSD.org
 COMMENT=	Modern scalable datacenter orchestration framework
+WWW=		http://docs.puppetlabs.com/mcollective/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/COPYING
 
+BROKEN_RUBY30=	yes
+BROKEN_RUBY31=	yes
+
 RUN_DEPENDS=	rubygem-stomp>=0:devel/rubygem-stomp
 
-USES=		cpe shebangfix
+USES=		cpe ruby shebangfix
 CPE_VENDOR=	puppet
 NO_BUILD=	yes
-USE_RUBY=	yes
 USE_RC_SUBR=	mcollectived
 
 SHEBANG_FILES=	bin/mcollectived bin/mco

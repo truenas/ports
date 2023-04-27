@@ -1,11 +1,12 @@
 PORTNAME=	dateparser
-PORTVERSION=	0.7.2
+PORTVERSION=	1.1.4
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	grembo@FreeBSD.org
 COMMENT=	Provides modules to easily parse localized dates
+WWW=		https://github.com/scrapinghub/dateparser
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

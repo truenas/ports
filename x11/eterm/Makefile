@@ -1,5 +1,3 @@
-# Created by: Murray Stokely <murray@FreeBSD.org>
-
 PORTNAME=	eterm
 PORTVERSION=	0.9.6
 PORTREVISION=	5
@@ -9,6 +7,7 @@ DISTNAME=	Eterm-${PORTVERSION}
 
 MAINTAINER?=	enlightenment@FreeBSD.org
 COMMENT?=	X11 terminal emulator based on rxvt/xterm
+WWW=		http://www.eterm.org/
 
 BUILD_DEPENDS=	man2html:textproc/man2html
 LIB_DEPENDS=	libast.so:devel/libast \
@@ -26,6 +25,7 @@ CONFIGURE_ENV=	GDB=/usr/libexec/gdb
 CONFIGURE_ENV=	GDB=/usr/bin/gdb
 .endif
 
+CFLAGS+=	-Wno-int-conversion
 CPPFLAGS+=	-I${LOCALBASE}/include
 LDFLAGS+=	-L${LOCALBASE}/lib
 USES=		cpe iconv libtool shebangfix xorg
@@ -35,6 +35,8 @@ USE_CSTD=	gnu89
 USE_LDCONFIG=	yes
 USE_XORG=	x11 xt
 CPE_VENDOR=	eterm_project
+
+CONFLICTS_INSTALL?=	ja-eterm zh-eterm
 
 OPTIONS_DEFINE=	DOCS
 OPTIONS_DEFINE_i386=	MMX

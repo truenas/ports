@@ -1,8 +1,6 @@
-# Created by: Dan Pelleg <dpelleg+unison@cs.cmu.edu>
-
 PORTNAME=	unison
 PORTVERSION=	2.40.128
-PORTREVISION=	4
+PORTREVISION=	6
 CATEGORIES=	net
 MASTER_SITES=	http://www.cis.upenn.edu/~bcpierce/unison/download/releases/${DISTNAME}/
 DISTFILES=	${EXTRACT_ONLY} ${EXTRA_DOCS}
@@ -11,6 +9,7 @@ EXTRACT_ONLY=	${DISTNAME}${EXTRACT_SUFX}
 
 MAINTAINER=	madpilot@FreeBSD.org
 COMMENT=	User-level file synchronization tool
+WWW=		https://www.cis.upenn.edu/~bcpierce/unison/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -29,7 +28,6 @@ x11_BUILD_DEPENDS=	lablgtk2:x11-toolkits/ocaml-lablgtk2 \
 			icotool:graphics/icoutils
 x11_LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig \
 			libfreetype.so:print/freetype2
-x11_RUN_DEPENDS=	lablgtk2:x11-toolkits/ocaml-lablgtk2
 
 PLIST_SUB=	PORTVERSION=${PORTVERSION}
 USES=		gmake

@@ -1,13 +1,12 @@
-# Created by: Denise H. G. <darcsis@gmail.com>
-
 PORTNAME=	gnormalize
 PORTVERSION=	0.63
-PORTREVISION=	10
+PORTREVISION=	11
 CATEGORIES=	audio
 MASTER_SITES=	SF
 
 MAINTAINER=	darcsis@gmail.com
 COMMENT=	Alternative for replaygain
+WWW=		http://gnormalize.sourceforge.net/
 
 RUN_DEPENDS+=	p5-Gtk2>=0:x11-toolkits/p5-Gtk2 \
 		wavegain:audio/wavegain

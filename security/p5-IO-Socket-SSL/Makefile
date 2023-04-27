@@ -1,13 +1,12 @@
-# Created by: scrappy
-
 PORTNAME=	IO-Socket-SSL
-DISTVERSION=	2.072
+DISTVERSION=	2.081
 CATEGORIES=	security perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	svysh.fbsd@gmail.com
 COMMENT=	Perl5 interface to SSL sockets
+WWW=		https://metacpan.org/release/IO-Socket-SSL
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

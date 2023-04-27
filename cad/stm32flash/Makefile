@@ -1,10 +1,11 @@
 PORTNAME=	stm32flash
-DISTVERSION=	0.6
+DISTVERSION=	0.7
 CATEGORIES=	cad
 MASTER_SITES=	SF/${PORTNAME}/
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Flash program for STM32 using the ST serial bootloader
+WWW=		https://sourceforge.net/projects/stm32flash/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/gpl-2.0.txt

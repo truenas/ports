@@ -1,15 +1,16 @@
 PORTNAME=	${GH_PROJECT:tl}
-PORTVERSION=	2.20
+PORTVERSION=	2.21
 DISTVERSIONPREFIX=	v
 CATEGORIES=	deskutils
 
 MAINTAINER=	mizhka@FreeBSD.org
 COMMENT=	Qt-based UI for editing of todo.txt files
+WWW=		https://nerdur.com/todour-pl/
 
 LICENSE=	GPLv2
 
 USES=		qmake qt:5
-USE_QT=		buildtools_build core gui network widgets
+USE_QT=		buildtools:build core gui network widgets
 USE_GITHUB=	yes
 GH_ACCOUNT=	SverrirValgeirsson
 GH_PROJECT=	Todour

@@ -1,9 +1,10 @@
 PORTNAME=	libretro-prboom
-PORTVERSION=	0.20210214
+PORTVERSION=	0.20220327
 CATEGORIES=	games
 
-MAINTAINER=	menelkir@itroll.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Port of prboom to libretro
+WWW=		https://github.com/libretro/libretro-prboom
 
 LICENSE=	GPLv2
 
@@ -12,7 +13,7 @@ USE_LDCONFIG=	yes
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	libretro
-GH_TAGNAME=	cc80175
+GH_TAGNAME=	b22a6b1
 
 PLIST_FILES=	lib/libretro/prboom_libretro.so
 

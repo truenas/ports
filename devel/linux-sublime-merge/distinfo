@@ -1,5 +1,5 @@
-TIMESTAMP = 1636124456
-SHA256 (sublime_merge_build_2063_x64.tar.xz) = 97abf170e210de442a3732e47f73dbb94dc3a437cb874b570a5fcb9c9b02b769
-SIZE (sublime_merge_build_2063_x64.tar.xz) = 4779376
-SHA256 (sublime_merge_build_2063_arm64.tar.xz) = 76849c0d3e75447228246a3b0dae7a35602d6ff14aa287da15b8f99dd99466c2
-SIZE (sublime_merge_build_2063_arm64.tar.xz) = 4739312
+TIMESTAMP = 1676756485
+SHA256 (sublime_merge_build_2083_arm64.tar.xz) = f5f99e01c1f4057a814d5176d5e02a946557cfb33e416cacff51371a37a3a577
+SIZE (sublime_merge_build_2083_arm64.tar.xz) = 5135452
+SHA256 (sublime_merge_build_2083_x64.tar.xz) = 6d61db3fc8f6dbc8d40ebd570cb45c8aaee17044faa3a51daff94b3835d1b9d7
+SIZE (sublime_merge_build_2083_x64.tar.xz) = 5146220

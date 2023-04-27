@@ -1,5 +1,3 @@
-# Created by: Archie Cobbs
-
 PORTNAME=	sl2tps
 PORTVERSION=	0.4.2
 PORTREVISION=	2
@@ -8,6 +6,7 @@ MASTER_SITES=	SF/libpdel/${PORTNAME}/${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Simple L2TP server based on libpdel(3) and netgraph(4)
+WWW=		https://sourceforge.net/projects/libpdel/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYRIGHT

@@ -1,11 +1,12 @@
 PORTNAME=	azure-mgmt-devtestlabs
 PORTVERSION=	4.0.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dbaio@FreeBSD.org
 COMMENT=	Microsoft Azure DevTestLabs Management Client Library for Python
+WWW=		https://pypi.org/project/azure-mgmt-devtestlabs/
 
 LICENSE=	MIT
 

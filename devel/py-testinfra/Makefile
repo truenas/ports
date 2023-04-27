@@ -1,13 +1,12 @@
-# Created by: Sofian Brabez <sbz@FreeBSD.org>
-
 PORTNAME=	testinfra
 PORTVERSION=	3.2.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sbz@FreeBSD.org
 COMMENT=	Testinfra python module Serverspec-like for infrastructure testing
+WWW=		https://github.com/philpep/testinfra
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

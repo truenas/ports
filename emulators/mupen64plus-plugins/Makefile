@@ -1,5 +1,3 @@
-# Created by: Jose Alonso Cardenas Marquez <acm@FreeBSD.org>
-
 PORTNAME=	mupen64plus
 PORTVERSION=	2.5
 PORTREVISION=	0
@@ -8,6 +6,7 @@ PKGNAMESUFFIX=	-plugins
 
 MAINTAINER?=	acm@FreeBSD.org
 COMMENT=	Third party plugins for Mupen64plus
+WWW=		https://code.google.com/p/mupen64plus/
 
 USES=		metaport
 

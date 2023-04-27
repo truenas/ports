@@ -1,8 +1,6 @@
-# Created by: Andreas Klemm <andreas@klemm.gtn.com>
-
 PORTNAME=	ghostscript
 PORTVERSION=	8.71
-PORTREVISION=	22
+PORTREVISION=	23
 CATEGORIES=	print
 MASTER_SITES=	http://downloads.ghostscript.com/public/:gs_srcs \
 		SF/ghostscript/GPL%20Ghostscript/${PORTVERSION}:gs_srcs \
@@ -12,10 +10,16 @@ DISTFILES=	${DISTNAME}${EXTRACT_SUFX}:gs_srcs ${EPAG_SRCS}:epag
 DIST_SUBDIR=	${PORTNAME}
 EXTRACT_ONLY=	${DISTNAME}${EXTRACT_SUFX}
 
-MAINTAINER=	doceng@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Ghostscript 8.x PostScript interpreter, base part
+WWW=		https://www.cs.wisc.edu/~ghost/doc/GPL/index.htm
+
+FORBIDDEN=	CVE-2023-28879
 
 LICENSE=	GPLv3
+
+DEPRECATED=	Obsolete and unsupported upstream, consider using a more recent version
+EXPIRATION_DATE=2023-06-30
 
 LIB_DEPENDS=	libexpat.so:textproc/expat2 \
 		libfreetype.so:print/freetype2 \
@@ -26,12 +30,7 @@ LIB_DEPENDS=	libexpat.so:textproc/expat2 \
 		libtiff.so:graphics/tiff
 RUN_DEPENDS=	${LOCALBASE}/share/${PORTNAME}/fonts/a010013l.pfb:print/gsfonts
 
-CONFLICTS_INSTALL= \
-		gambc \
-		ghostscript[789] \
-		ghostscript[789]-nox11 \
-		ghostscript9-agpl \
-		ghostscript9-agpl-nox11
+CONFLICTS_INSTALL=	ghostscript*-base # CHECK
 
 USES=		autoreconf cpe gmake pkgconfig shebangfix tar:xz
 USE_LDCONFIG=	yes

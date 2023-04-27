@@ -1,5 +1,3 @@
-# Created by: Meno Abels <meno.abels@adviser.com>
-
 PORTNAME=	spreadlogd
 PORTVERSION=	1.4.2
 CATEGORIES=	www net
@@ -7,6 +5,7 @@ MASTER_SITES=	http://www.lethargy.org/mod_log_spread/
 
 MAINTAINER=	portmaster@bsdforge.com
 COMMENT=	Backend for mod_log_spread
+WWW=		https://BSDforge.com/projects/www/spreadlogd/
 
 LICENSE=	ART10
 

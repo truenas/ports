@@ -1,13 +1,12 @@
-# Created by: Tomoyuki Sakurai <cherry@trombik.org>
-
 PORTNAME=	sqlmap
 PORTVERSION=	1.3.12
 CATEGORIES=	security python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	rm@FreeBSD.org
 COMMENT=	Automatic SQL injection tool
+WWW=		https://sqlmap.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/sqlmap/LICENSE

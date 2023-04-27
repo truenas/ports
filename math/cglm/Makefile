@@ -1,11 +1,11 @@
 PORTNAME=	cglm
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.8.4
-PORTREVISION=	1
+DISTVERSION=	0.8.9
 CATEGORIES=	math
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Highly optimized graphics math (glm) for C
+WWW=		https://github.com/recp/cglm
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

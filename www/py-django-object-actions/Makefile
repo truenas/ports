@@ -1,11 +1,12 @@
 PORTNAME=	django-object-actions
 PORTVERSION=	3.0.2
 CATEGORIES=	www
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	gettoknowmi@yahoo.com
 COMMENT=	Django app for adding object tools for models in the admin
+WWW=		https://github.com/crccheck/django-object-actions
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

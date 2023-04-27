@@ -1,13 +1,14 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	folium
 PORTVERSION=	0.12.1
-DISTVERSIONPREFIX=	v
+DISTVERSIONSUFFIX=	.post1
+PORTREVISION=	2
+MASTER_SITES=	PYPI
 CATEGORIES=	www python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Make beautiful maps with Leaflet.js & Python
+WWW=		https://github.com/python-visualization/folium
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -22,8 +23,5 @@ USES=		python:3.7+
 USE_PYTHON=	autoplist concurrent distutils
 
 NO_ARCH=	yes
-
-GH_ACCOUNT=	python-visualization
-USE_GITHUB=	yes
 
 .include <bsd.port.mk>

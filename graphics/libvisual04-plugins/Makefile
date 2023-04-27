@@ -1,8 +1,6 @@
-# Created by: Björn König <bkoenig@alpha-tierchen.de>
-
 PORTNAME=	libvisual
 PORTVERSION=	0.4.0
-PORTREVISION=	6
+PORTREVISION=	7
 CATEGORIES=	graphics
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}-plugins/${PORTNAME}-plugins-${PORTVERSION}
 PKGNAMESUFFIX=	04-plugins
@@ -11,13 +9,13 @@ DISTNAME=	${PORTNAME}-${PKGNAMESUFFIX:C/.*-//}-${PORTVERSION}
 MAINTAINER=	bkoenig@alpha-tierchen.de
 COMMENT=	Set of plugins for the libvisual framework
 
-BROKEN_FreeBSD_13=	ld: error: duplicate symbol: _oink_table_cos
-BROKEN_FreeBSD_14=	ld: error: duplicate symbol: _oink_table_cos
+LICENSE=	GPLv2
+LICENSE_FILE=	${WRKSRC}/COPYING
 
 LIB_DEPENDS=	libvisual-${MAJORMINOR}.so:graphics/libvisual04
 
 USES=		gl libtool pkgconfig xorg
-USE_GL=		yes
+USE_GL=		glu
 USE_XORG=	x11
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--disable-alsa \
@@ -27,6 +25,7 @@ CONFIGURE_ARGS=	--disable-alsa \
 		--disable-gforce \
 		--disable-jess \
 		--prefix=${PREFIX}
+CFLAGS+=	-fcommon
 CPPFLAGS+=	-I${LOCALBASE}/include
 LIBS+=		-L${LOCALBASE}/lib
 INSTALL_TARGET=	install-strip

@@ -1,10 +1,12 @@
 PORTNAME=	openxlsx
-DISTVERSION=	4.2.4
+DISTVERSION=	4.2.5.2
+PORTREVISION=	1
 CATEGORIES=	textproc
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Read, Write and Edit XLSX Files
+WWW=		https://github.com/awalker89/openxlsx
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

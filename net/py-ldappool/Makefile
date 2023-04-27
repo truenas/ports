@@ -2,11 +2,12 @@ PORTNAME=	ldappool
 PORTVERSION=	2.4.1
 PORTREVISION=	1
 CATEGORIES=	net python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	kai@FreeBSD.org
 COMMENT=	Simple connector pool for py-ldap
+WWW=		https://pypi.org/project/ldappool/
 
 LICENSE=	MPL20
 

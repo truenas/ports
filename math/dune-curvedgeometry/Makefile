@@ -1,9 +1,11 @@
 PORTNAME=	dune-curvedgeometry
 DISTVERSION=	g20201116
+PORTREVISION=	1
 CATEGORIES=	math
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	DUNE framework: curved dune geometries by Lagrange parameterization
+WWW=		https://www.dune-project.org/
 
 LICENSE=	GPLv2
 

@@ -1,6 +1,5 @@
-# Created by: Daniel Morante <daniel@morante.net>
-
 MASTERDIR=	${.CURDIR}/../zetacoin
+PORTREVISION=	2
 PKGNAMESUFFIX=	-daemon
 
 COMMENT=	Peer-to-Peer crypto currency with quick transactions (Daemon)

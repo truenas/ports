@@ -1,10 +1,15 @@
 PORTNAME=	icinga2
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2.13.2
+DISTVERSION=	2.13.6
+PORTREVISION=	0
 CATEGORIES=	net-mgmt
+
+PATCH_SITES+=	https://github.com/Icinga/icinga2/commit/
+PATCHFILES+=	dd51997c73c6b4b328e3ad006eb8c86678001780.patch:-p1
 
 MAINTAINER=	joneum@FreeBSD.org
 COMMENT=	Monitoring and management system for hosts, services and networks
+WWW=		https://www.icinga.org/icinga2/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -47,7 +52,6 @@ ICINGA2LOGDIR?=	/var/log/${PORTNAME}
 
 CMAKE_ARGS+=	-DCMAKE_EXE_LINKER_FLAGS=${PREFIX}/lib/icinga2 \
 		-DCMAKE_INSTALL_LOCALSTATEDIR=${LOCALSTATEDIR} \
-		-DCMAKE_INSTALL_MANDIR=${MANPREFIX}/man \
 		-DCMAKE_INSTALL_SYSCONFDIR=${PREFIX}/etc \
 		-DCMAKE_MODULE_LINKER_FLAGS=${PREFIX}/lib/icinga2 \
 		-DCMAKE_SHARED_LINKER_FLAGS=${PREFIX}/lib/icinga2 \

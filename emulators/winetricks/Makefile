@@ -1,9 +1,10 @@
 PORTNAME=	winetricks
-PORTVERSION=	20210825
+PORTVERSION=	20230212
 CATEGORIES=	emulators
 
 MAINTAINER=	Alexander88207@protonmail.com
 COMMENT=	Easy way to work around problems in Wine
+WWW=		https://wiki.winehq.org/Winetricks
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -21,7 +22,8 @@ GH_ACCOUNT=	Winetricks
 
 NO_ARCH=	yes
 NO_BUILD=	yes
-PLIST_FILES=	bin/winetricks man/man1/winetricks.1.gz
+PLIST_FILES=	bin/winetricks \
+		man/man1/winetricks.1.gz
 
 OPTIONS_DEFINE=		X11
 OPTIONS_DEFAULT=	X11

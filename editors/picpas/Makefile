@@ -1,12 +1,13 @@
 PORTNAME=	picpas
 PORTVERSION=	0.9.0
-PORTREVISION=	3
+PORTREVISION=	10
 DISTVERSIONPREFIX=	v
 CATEGORIES=	editors
 PKGNAMESUFFIX=	${LAZARUS_PKGNAMESUFFIX}
 
 MAINTAINER=	acm@FreeBSD.org
 COMMENT=	Multi-platform Pascal for Microchip PIC16F microcontrollers
+WWW=		https://github.com/t-edson/PicPas
 
 LICENSE=	GPLv2
 
@@ -41,6 +42,7 @@ LAZBUILD_ARGS=		-d
 post-patch:
 	${REINPLACE_CMD} 's|%%DATADIR%%|${DATADIR}|g' ${WRKSRC}/Source/Globales.pas
 	${REINPLACE_CMD} 's|0.8.7|${PORTVERSION}|g' ${WRKSRC}/version.txt
+	${REINPLACE_CMD} '81d' ${WRKSRC}/Source/FrameSyntaxTree.lfm
 
 do-install:
 	${INSTALL_PROGRAM} ${WRKSRC}/PicPas-freebsd ${STAGEDIR}${PREFIX}/bin/${PORTNAME}

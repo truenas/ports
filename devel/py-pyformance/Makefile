@@ -1,13 +1,12 @@
-# Created by: Waitman Gobble <waitman@waitman.net>
-
 PORTNAME=	pyformance
 PORTVERSION=	0.4
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	waitman@waitman.net
 COMMENT=	Toolset for performance measurement and statistics
+WWW=		https://pypi.org/project/pyformance/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

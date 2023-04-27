@@ -6,6 +6,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Webfinger utility for Ruby
+WWW=		https://github.com/tootsuite/goldfinger
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -16,7 +17,6 @@ RUN_DEPENDS=	rubygem-addressable>=2.5<3:www/rubygem-addressable \
 		rubygem-oj>=3.0<4:devel/rubygem-oj
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

@@ -1,11 +1,11 @@
 PORTNAME=	gtk-layer-shell
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.6.0
-PORTREVISION=	1
+DISTVERSION=	0.8.1
 CATEGORIES=	x11-toolkits
 
 MAINTAINER=	jbeich@FreeBSD.org
-COMMENT=	GTK+ library for the Wayland layer-shell protocol
+COMMENT=	GTK3 library for the Wayland layer-shell protocol
+WWW=		https://github.com/wmww/gtk-layer-shell
 
 LICENSE=	LGPL3+ MIT
 LICENSE_COMB=	multi
@@ -16,7 +16,7 @@ BUILD_DEPENDS=	wayland-protocols>=1.16:graphics/wayland-protocols
 LIB_DEPENDS=	libwayland-client.so:graphics/wayland
 TEST_DEPENDS=	evdev-proto>0:devel/evdev-proto
 
-USES=		compiler:c11 gnome meson pkgconfig
+USES=		compiler:c11 gnome meson pkgconfig vala:build
 USE_GNOME=	gtk30 introspection:build
 USE_GITHUB=	yes
 USE_LDCONFIG=	yes

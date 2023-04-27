@@ -1,5 +1,3 @@
-# Created by: peter
-
 PORTNAME=	rdist
 PORTVERSION=	6.1.5
 PORTREVISION=	7
@@ -9,6 +7,9 @@ MASTER_SITES=	https://fossies.org/linux/misc/old/ \
 
 MAINTAINER=	cy@FreeBSD.org
 COMMENT=	Network file distribution/synchronisation utility
+WWW=		https://www.magnicomp.com/
+
+MAKE_JOBS_UNSAFE=	yes
 
 # To avoid confusion with /usr/bin/rdist, you may prefer otherwise.
 RDIST_NAME?=	rdist6

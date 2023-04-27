@@ -1,12 +1,12 @@
-# Created by: TAKATSU Tomonari <tota@FreeBSD.org>
-
 PORTNAME=	gower
-DISTVERSION=	0.2.2
+DISTVERSION=	1.0.0
+PORTREVISION=	1
 CATEGORIES=	math
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Gower's Distance
+WWW=		https://cran.r-project.org/web/packages/gower/
 
 LICENSE=	GPLv3
 

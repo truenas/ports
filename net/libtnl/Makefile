@@ -1,14 +1,13 @@
-# Created by: aaron@FreeBSD.org
-
 PORTNAME=	libtnl
 PORTVERSION=	1.5.0
-PORTREVISION=	7
+PORTREVISION=	8
 CATEGORIES=	net devel
 MASTER_SITES=	SF/opentnl/TNL%20Source/${PORTVERSION}
 DISTNAME=	tnl-${PORTVERSION}-source
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Robust, secure, easy to use cross-platform C++ networking API
+WWW=		https://sourceforge.net/projects/opentnl/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/../LICENSE.txt

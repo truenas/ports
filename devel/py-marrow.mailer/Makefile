@@ -1,11 +1,13 @@
 PORTNAME=	marrow.mailer
 PORTVERSION=	4.0.3
+PORTREVISION=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dbaio@FreeBSD.org
 COMMENT=	Python library to ease sending emails
+WWW=		https://github.com/marrow/mailer
 
 LICENSE=	MIT
 

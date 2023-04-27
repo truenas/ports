@@ -5,6 +5,7 @@ MASTER_SITES=	https://github.com/vermaden/lsblk/raw/master/release/
 
 MAINTAINER=	vermaden@interia.pl
 COMMENT=	Lists information about block devices in the system
+WWW=		https://github.com/vermaden/lsblk
 
 LICENSE=	BSD2CLAUSE
 
@@ -18,4 +19,3 @@ do-install:
 	${STAGEDIR}${PREFIX}/sbin/${PORTNAME}
 
 .include <bsd.port.mk>
-

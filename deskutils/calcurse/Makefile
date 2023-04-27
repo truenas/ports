@@ -1,13 +1,12 @@
-# Created by: Herbert J. Skuhra <h.skuhra@gmail.com>
-
 PORTNAME=	calcurse
-DISTVERSION=	4.7.1
+DISTVERSION=	4.8.0
 CATEGORIES=	deskutils
 MASTER_SITES=	https://calcurse.org/files/ \
 		https://fossies.org/linux/privat/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Text-based calendar and scheduling application
+WWW=		https://calcurse.org/
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYING

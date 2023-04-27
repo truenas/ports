@@ -1,11 +1,12 @@
 PORTNAME=	Flask-Collect
 PORTVERSION=	1.3.2
 CATEGORIES=	www devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	meka@tilda.center
 COMMENT=	Tool to collect static files in one command
+WWW=		https://github.com/coleifer/flask-peewee/
 
 LICENSE=	BSD
 LICENSE_FILE=	${WRKSRC}/LICENSE

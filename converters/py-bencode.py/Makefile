@@ -1,11 +1,12 @@
 PORTNAME=	bencode.py
 PORTVERSION=	4.0.0
 CATEGORIES=	converters devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	antoine@FreeBSD.org
 COMMENT=	Bencoding and bdecoding implementation
+WWW=		https://github.com/fuzeman/bencode.py
 
 LICENSE=	BTOSL
 LICENSE_NAME=	BitTorrent Open Source License

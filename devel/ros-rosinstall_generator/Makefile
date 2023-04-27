@@ -1,10 +1,11 @@
 PORTNAME=	ros-rosinstall_generator
-DISTVERSION=	0.1.18
+DISTVERSION=	0.1.22
 CATEGORIES=	devel
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	trueos@norwegianrockcat.com
 COMMENT=	Generator tool for a ROS install distro
+WWW=		https://github.com/ros-infrastructure/rosinstall_generator
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

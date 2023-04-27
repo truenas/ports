@@ -1,16 +1,17 @@
-# Created by: peter.thoenen@yahoo.com
-
 PORTNAME=	tor
-DISTVERSION=	0.4.7.2-alpha
+DISTVERSION=	0.4.7.6-rc
 CATEGORIES=	security net
 MASTER_SITES=	TOR
 PKGNAMESUFFIX=	-devel
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Anonymizing overlay network for TCP
+WWW=		https://www.torproject.org/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
+
+IGNORE=		TorProject didn't release any development version at this time
 
 USES=		compiler:c11 cpe gmake pkgconfig # should be compiler:c99 or compiler:gnu99
 USE_CSTD=	gnu99 # until this bug report is closed: https://trac.torproject.org/projects/tor/ticket/27900

@@ -1,14 +1,13 @@
-# Created by: Koop Mast <kwm@FreeBSD.org>
-
 PORTNAME=	caribou
 PORTVERSION=	0.4.21
-PORTREVISION=	3
+PORTREVISION=	6
 CATEGORIES=	accessibility gnome
 MASTER_SITES=	GNOME
-DIST_SUBDIR=	gnome3
+DIST_SUBDIR=	gnome
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Gnome On-Screen keyboard
+WWW=		https://live.gnome.org/Caribou
 
 LICENSE=	LGPL20
 LICENSE_FILE=	${WRKSRC}/COPYING

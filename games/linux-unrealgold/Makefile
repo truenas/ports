@@ -1,5 +1,3 @@
-# Created by: Alexander Logvinov <ports@logvinov.com>
-
 PORTNAME=	unrealgold
 PORTVERSION=	436
 PORTREVISION=	2
@@ -12,6 +10,7 @@ DIST_SUBDIR=	linux-ut
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Unreal Gold for Linux
+WWW=		https://icculus.org/~ravage/unreal/unrealgold/
 
 # Converted from RESTRICTED
 LICENSE=	unreal

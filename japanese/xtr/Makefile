@@ -1,8 +1,6 @@
-# Created by: TANAKA Hiroyuki <kattyo@abk.nu>
-
 PORTNAME=	xtr
 PORTVERSION=	1.50e.0.2
-PORTREVISION=	8
+PORTREVISION=	9
 CATEGORIES=	japanese textproc
 MASTER_SITES=	ftp://ftp.abk.nu/pub/redist/xtr/
 DISTNAME=	${PORTNAME}1.50e-0.2

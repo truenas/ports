@@ -1,5 +1,5 @@
 PORTNAME=	compiler-rt
-DISTVERSION=	13.0.0
+DISTVERSION=	13.0.1
 CATEGORIES=	devel lang
 MASTER_SITES=	https://github.com/llvm/llvm-project/releases/download/llvmorg-${DISTVERSION:S/rc/-rc/}/ \
 		https://${PRE_}releases.llvm.org/${LLVM_RELEASE}/${RCDIR}
@@ -8,8 +8,9 @@ PKGNAMESUFFIX=	${LLVM_SUFFIX}
 DISTNAME=	llvm-project-${DISTVERSION}.src
 DISTFILES=	llvm-project-${DISTVERSION}.src${EXTRACT_SUFX}
 
-MAINTAINER=	greg@unrelenting.technology
+MAINTAINER=	vishwin@FreeBSD.org
 COMMENT=	Clang builtins library for WebAssembly System Interface
+WWW=		https://llvm.org/
 
 LICENSE=	LLVM2
 LICENSE_FILE=	${WRKSRC}/llvm/LICENSE.TXT

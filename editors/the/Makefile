@@ -1,5 +1,3 @@
-# Created by: giffunip@asme.org
-
 PORTNAME=	the
 PORTVERSION=	3.3.r4
 PORTREVISION=	2
@@ -9,10 +7,9 @@ DISTNAME=	THE-${PORTVERSION:S/.r/RC/}
 
 MAINTAINER=	comet.berkeley@gmail.com
 COMMENT=	The Hessling Editor, like the VM/CMS xedit editor
+WWW=		http://hessling-editor.sourceforge.net/
 
 LICENSE=	GPLv2
-
-BROKEN_powerpc=	fails to configure
 
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--with-rexxincdir=${LOCALBASE}/include \

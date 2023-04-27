@@ -1,4 +1,4 @@
---- pyreadr/librdata.c.orig	2021-06-07 07:39:42 UTC
+--- pyreadr/librdata.c.orig	2022-09-24 13:35:34 UTC
 +++ pyreadr/librdata.c
 @@ -4,8 +4,6 @@
  {
@@ -13,13 +13,13 @@
          "name": "pyreadr.librdata",
          "sources": [
              "pyreadr/librdata.pyx",
--            "pyreadr/libs/librdata/src/CKHashTable.c",
 -            "pyreadr/libs/librdata/src/rdata_bits.c",
--            "pyreadr/libs/librdata/src/rdata_error.c",
 -            "pyreadr/libs/librdata/src/rdata_io_unistd.c",
--            "pyreadr/libs/librdata/src/rdata_parser.c",
+-            "pyreadr/libs/librdata/src/CKHashTable.c",
+-            "pyreadr/libs/librdata/src/rdata_error.c",
 -            "pyreadr/libs/librdata/src/rdata_read.c",
--            "pyreadr/libs/librdata/src/rdata_write.c"
+-            "pyreadr/libs/librdata/src/rdata_write.c",
+-            "pyreadr/libs/librdata/src/rdata_parser.c"
          ]
      },
      "module_name": "pyreadr.librdata"

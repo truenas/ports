@@ -1,10 +1,11 @@
 PORTNAME=	xdemorse
-DISTVERSION=	3.6.5
+DISTVERSION=	3.6.7
 CATEGORIES=	comms
 MASTER_SITES=	https://www.qsl.net/5/5b4az/pkg/morse/xdemorse/
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	X/GTK+-3 application for decoding Morse code signals into text
+WWW=		https://www.qsl.net/5b4az/pkg/morse/xdemorse/xdemorse.html
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING

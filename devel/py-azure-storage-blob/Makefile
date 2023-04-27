@@ -1,11 +1,12 @@
 PORTNAME=	azure-storage-blob
 PORTVERSION=	2.1.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dbaio@FreeBSD.org
 COMMENT=	Microsoft Azure Storage Blob Client Library for Python
+WWW=		https://pypi.org/project/azure-storage-blob/
 
 LICENSE=	MIT
 

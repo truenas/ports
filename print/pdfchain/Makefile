@@ -1,10 +1,12 @@
 PORTNAME=	pdfchain
 PORTVERSION=	0.4.4.2
+PORTREVISION=	3
 CATEGORIES=	print
 MASTER_SITES=	SF/pdfchain/pdfchain-${PORTVERSION}
 
 MAINTAINER=	chapelet@gmail.com
 COMMENT=	Graphical user interface for the PDF Toolkit (PDFtk)
+WWW=		https://sourceforge.net/projects/pdfchain/
 
 LICENSE=	GPLv3
 

@@ -1,13 +1,12 @@
-# Created by: Rozhuk Ivan <rozhuk.im@gmail.com>
-
 PORTNAME=	screensaver.biogenesis
-PORTVERSION=	2.5.0
-DISTVERSIONSUFFIX=	-Matrix
-PORTREVISION=	2
+PORTVERSION=	20.1.0
+DISTVERSIONSUFFIX=	-Nexus
+PORTREVISION=	1
 CATEGORIES=	multimedia
 
 MAINTAINER=	rozhuk.im@gmail.com
 COMMENT=	BioGenesis screensaver for Kodi
+WWW=		https://github.com/xbmc/screensaver.biogenesis
 
 LICENSE=	GPLv2+
 

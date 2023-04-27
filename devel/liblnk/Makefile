@@ -1,7 +1,5 @@
-# Created by: Antoine Brodin <antoine@FreeBSD.org>
-
 PORTNAME=	liblnk
-PORTVERSION=	20210417
+PORTVERSION=	20221023
 DISTVERSIONPREFIX=	alpha-
 CATEGORIES=	devel
 MASTER_SITES=	https://github.com/libyal/liblnk/releases/download/${PORTVERSION}/ \
@@ -9,6 +7,7 @@ MASTER_SITES=	https://github.com/libyal/liblnk/releases/download/${PORTVERSION}/
 
 MAINTAINER=	antoine@FreeBSD.org
 COMMENT=	Library and tools to access the Windows shortcut file (LNK) format
+WWW=		https://github.com/libyal/liblnk
 
 LICENSE=	LGPL3+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -19,7 +18,7 @@ GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--enable-python \
 		--with-libfwsi=${LOCALBASE}
 CONFIGURE_ENV=	PYTHON_CONFIG=${PYTHON_CMD}-config
-USES=		cpe libtool pathfix python:3.5+
+USES=		cpe libtool pathfix python
 CPE_VENDOR=	${PORTNAME}_project
 USE_LDCONFIG=	yes
 INSTALL_TARGET=	install-strip

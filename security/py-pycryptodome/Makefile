@@ -1,19 +1,21 @@
-# Created by: Yuri Victorovich <yuri@rawbw.com>
-
 PORTNAME=	pycryptodome
-DISTVERSION=	3.10.1
+DISTVERSION=	3.16.0
 CATEGORIES=	security python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	john@saltant.com
 COMMENT=	Cryptographic library for Python
+WWW=		https://www.pycryptodome.org/
 
-LICENSE=	PD BSD2CLAUSE APACHE20
+LICENSE=	APACHE20 BSD2CLAUSE PD
 LICENSE_COMB=	multi
 LICENSE_FILE=	${WRKSRC}/LICENSE.rst
 
-USES=		cpe python:3.6+
+TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pycryptodome-test-vectors>=0:security/py-pycryptodome-test-vectors@${PY_FLAVOR}
+
+# Officially: 2.7, 3.5-3.10
+USES=		cpe python:3.7+
 CPE_VENDOR=	python
 USE_PYTHON=	autoplist distutils
 
@@ -30,6 +32,6 @@ post-install:
 	@${STRIP_CMD} ${STAGEDIR}${PYTHONPREFIX_SITELIBDIR}/${NAMESPACE}/Util/*.so
 
 do-test:
-	@cd ${WRKSRC} && ${PYTHON_CMD} ${PYDISTUTILS_SETUP} test
+	@cd ${WRKSRC} && ${PYTHON_CMD} -m ${NAMESPACE}.SelfTest
 
 .include <bsd.port.mk>

@@ -1,8 +1,6 @@
-# Created by: piero
-
 PORTNAME=	xanim
 PORTVERSION=	2.92.0
-PORTREVISION=	9
+PORTREVISION=	10
 CATEGORIES=	multimedia graphics
 MASTER_SITES=	ftp://ftp.nstu.ru/pub/mirrors/xanim.va.pubnix.com/:main \
 		LOCAL/dinoex:main,DEFAULT \
@@ -12,6 +10,7 @@ DISTFILES=	${DISTNAME}${EXTRACT_SUFX}:main ${EXTRA_FILES}
 
 MAINTAINER=	dinoex@FreeBSD.org
 COMMENT=	Play most popular animation formats and show pictures
+WWW=		http://xanim.polter.net/
 
 # Converted from NO_CDROM
 LICENSE=	xanim

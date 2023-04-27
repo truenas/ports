@@ -1,10 +1,11 @@
 PORTNAME=	onscripter
-PORTVERSION=	20200722
+PORTVERSION=	20220816
 CATEGORIES=	games
 MASTER_SITES=	http://onscripter.osdn.jp/
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT?=	Visual novel engine compatible with NScripter
+WWW=		https://onscripter.osdn.jp/onscripter.html
 
 LICENSE=	GPLv2+
 

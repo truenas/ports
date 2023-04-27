@@ -4,8 +4,9 @@ DISTVERSION=	${ANGR_VERSION}
 CATEGORIES=	security devel python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	0mp@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	AIL, the angr Intermediate Language
+WWW=		https://github.com/angr/pyvex
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

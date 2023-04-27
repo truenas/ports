@@ -1,5 +1,3 @@
-# Created by: Michael Moll <kvedulv at kvedulv.de>
-
 PORTNAME=	fast_gettext
 PORTVERSION=	1.8.0
 CATEGORIES=	devel rubygems
@@ -8,11 +6,13 @@ PKGNAMESUFFIX=	1
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Fast, memory-efficient and threadsafe GetText for Ruby
+WWW=		https://github.com/grosser/fast_gettext
 
 LICENSE=	MIT
 
+BROKEN_RUBY32=	yes
+
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

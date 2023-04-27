@@ -1,18 +1,16 @@
-# Created by: Michael Johnson <ahze@FreeBSD.org>
-
 PORTNAME=	midori
 PORTVERSION=	9.0
 DISTVERSIONPREFIX=	v
-PORTREVISION=	5
+PORTREVISION=	8
 CATEGORIES=	www xfce
 
 MAINTAINER=	xfce@FreeBSD.org
 COMMENT=	Lightweight web browser using WebKit browser engine
+WWW=		https://www.midori-browser.org/
 
 LICENSE=	LGPL21 MIT
 LICENSE_COMB=	multi
 
-BUILD_DEPENDS=	valac:lang/vala
 LIB_DEPENDS=	libnotify.so:devel/libnotify \
 		libjson-glib-1.0.so:devel/json-glib \
 		libsoup-2.4.so:devel/libsoup \
@@ -24,13 +22,13 @@ LIB_DEPENDS=	libnotify.so:devel/libnotify \
 RUN_DEPENDS=	${LOCALBASE}/share/certs/ca-root-nss.crt:security/ca_root_nss
 
 USES=		cmake compiler:c++11-lang cpe desktop-file-utils gettext gnome \
-		libarchive localbase:ldflags pkgconfig sqlite tar:bzip2
+		libarchive localbase:ldflags pkgconfig sqlite tar:bzip2 vala:build
 USE_GNOME=	cairo glib20 gtk30 intltool introspection librsvg2:build \
 		libxml2
 
 CPE_VENDOR=	midori-browser
 
-CFLAGS+=	-Wno-return-type
+CFLAGS+=	-Wno-int-conversion -Wno-return-type
 CMAKE_ARGS=	-DUSE_APIDOCS:BOOL=OFF
 
 USE_LDCONFIG=	yes

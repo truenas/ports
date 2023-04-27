@@ -1,24 +1,22 @@
-# Created by: Kubilay Kocak <koobs@FreeBSD.org>
-
 PORTNAME=	idna
-PORTVERSION=	2.10
+PORTVERSION=	3.4
+PORTREVISION=	1
 CATEGORIES=	dns python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	koobs@FreeBSD.org
+MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Internationalized Domain Names in Applications (IDNA)
+WWW=		https://github.com/kjd/idna
 
-LICENSE=	BSD3CLAUSE PSFL
-LICENSE_COMB=	multi
-LICENSE_FILE=	${WRKSRC}/LICENSE.rst
+LICENSE=	BSD3CLAUSE
+LICENSE_FILE=	${WRKSRC}/LICENSE.md
 
-USES=		python:3.6+
-USE_PYTHON=	autoplist concurrent distutils
+BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}flit-core>=3.2<4:devel/py-flit-core@${PY_FLAVOR}
+
+USES=		python:3.5+
+USE_PYTHON=	autoplist concurrent pep517 unittest
 
 NO_ARCH=	yes
-
-do-test:
-	@cd ${WRKSRC} && ${PYTHON_CMD} -m unittest discover -v
 
 .include <bsd.port.mk>

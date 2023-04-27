@@ -1,9 +1,11 @@
 PORTNAME=	sra-tools
 DISTVERSION=	2.11.0
+PORTREVISION=	4
 CATEGORIES=	biology
 
 MAINTAINER=	jwb@FreeBSD.org
 COMMENT=	NCBI's toolkit for handling data in INSDC Sequence Read Archives
+WWW=		https://github.com/ncbi/sra-tools/wiki
 
 LICENSE=		PD LGPL21+
 LICENSE_COMB=		multi
@@ -44,6 +46,8 @@ FREEBSD_RELEASE=	uname -r | cut -d - -f 1
 
 CFLAGS+=	-I${WRKSRC}/interfaces/os/sun
 CXXFLAGS+=	-I${WRKSRC}/interfaces/os/sun
+
+CONFLICTS_INSTALL=	kget
 
 BINARY_ALIAS=	gcc=${CC} g++=${CXX}
 

@@ -1,25 +1,27 @@
 PORTNAME=	redmine
-PORTVERSION=	4.2.3
+PORTVERSION=	4.2.10
+PORTREVISION=	1
 CATEGORIES=	www
 MASTER_SITES=	https://www.redmine.org/releases/
 PKGNAMESUFFIX=	42
 
 MAINTAINER=	mikael@FreeBSD.org
 COMMENT=	Flexible project management web application
+WWW=		https://www.redmine.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/doc/COPYING
 
 RUN_DEPENDS=	rubygem-bundler>=1.5.0:sysutils/rubygem-bundler \
-		rubygem-rails52>=5.2.4.5:www/rubygem-rails52 \
-		rubygem-rouge>=3.26.0:textproc/rubygem-rouge \
+		rubygem-rails52>=5.2.8.1<5.3:www/rubygem-rails52 \
+		rubygem-rouge3>=3.26.0:textproc/rubygem-rouge3 \
 		rubygem-request_store>=1.5.0:devel/rubygem-request_store \
 		rubygem-mini_mime>=1.0.1:mail/rubygem-mini_mime \
 		rubygem-actionpack-xml_parser-rails52>=0:textproc/rubygem-actionpack-xml_parser-rails52 \
 		rubygem-roadie-rails-rails52>=2.1.0:mail/rubygem-roadie-rails-rails52 \
 		rubygem-mail>=2.7.1:mail/rubygem-mail \
 		rubygem-csv>=3.1.1:devel/rubygem-csv \
-		rubygem-nokogiri>=1.11.0:textproc/rubygem-nokogiri \
+		rubygem-nokogiri111>=1.11.0:textproc/rubygem-nokogiri111 \
 		rubygem-i18n>=0.7:devel/rubygem-i18n \
 		rubygem-rbpdf>=1.19.6:print/rubygem-rbpdf \
 		rubygem-net-ldap>=0.16:net/rubygem-net-ldap \
@@ -29,8 +31,9 @@ RUN_DEPENDS=	rubygem-bundler>=1.5.0:sysutils/rubygem-bundler \
 		rubygem-rotp>0:devel/rubygem-rotp \
 		rubygem-rqrcode>0:www/rubygem-rqrcode
 
-USES=		cpe
-USE_RUBY=	yes
+USES=		cpe ruby
+BROKEN_RUBY30=	yes
+BROKEN_RUBY31=	yes
 
 CONFLICTS_INSTALL=	redmine4
 

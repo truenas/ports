@@ -1,5 +1,3 @@
-# Created by: Mikhail Teterin <mi@aldan.algebra.com>
-
 PORTNAME=	tclhttpd
 PORTVERSION=	3.5.1
 PORTREVISION=	4
@@ -9,12 +7,13 @@ DISTNAME=	${PORTNAME}${PORTVERSION}
 
 MAINTAINER=	mi@aldan.algebra.com
 COMMENT=	Http-server implemented in TCL
+WWW=		https://www.tcl.tk/software/tclhttpd/
 
 RUN_DEPENDS=	dtplite:devel/tcllib
 
 USE_RC_SUBR=	tclhttpd
 
-USES=		tcl:tea
+USES=		tcl:tea compiler
 
 .include <bsd.port.pre.mk>
 
@@ -44,5 +43,9 @@ post-install:
 	${SED} 's%@LIB@%${SHLIB_NAME}%g' < \
 		${FILESDIR}/pkgIndex.tcl >> \
 		${STAGEDIR}${PREFIX}/lib/${PORTNAME}${PORTVERSION}/pkgIndex.tcl
+
+.if ${COMPILER_TYPE} == "clang" && ${COMPILER_VERSION} >= 150
+CFLAGS+=	-std=c90 -Wno-deprecated-non-prototype
+.endif
 
 .include <bsd.port.post.mk>

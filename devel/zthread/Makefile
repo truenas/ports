@@ -1,5 +1,3 @@
-# Created by: pvh@egenetics.com
-
 PORTNAME=	zthread
 PORTVERSION=	2.3.2
 PORTREVISION=	2
@@ -9,6 +7,7 @@ DISTNAME=	ZThread-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Platform-independent object-oriented C++ threading library
+WWW=		http://zthread.sourceforge.net/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/COPYING

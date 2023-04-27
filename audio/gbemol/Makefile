@@ -1,13 +1,12 @@
-# Created by: Thomas M. Hermann <tmh.public@gmail.com>
-
 PORTNAME=	gbemol
 PORTVERSION=	0.3.2
-PORTREVISION=	13
+PORTREVISION=	16
 CATEGORIES=	audio
 MASTER_SITES=	SF
 
 MAINTAINER=	tmh.public@gmail.com
 COMMENT=	Graphical frontend for the Music Player Daemon
+WWW=		http://gbemol.sourceforge.net/
 
 LIB_DEPENDS=	libmpd.so:audio/libmpd \
 		libcurl.so:ftp/curl \

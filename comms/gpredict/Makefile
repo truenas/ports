@@ -1,13 +1,12 @@
-# Created by: Matt Dawson <matt@mattsnetwork.co.uk>
-
 PORTNAME=	gpredict
 DISTVERSION=	2.2.1
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	comms hamradio
 MASTER_SITES=	https://github.com/csete/${PORTNAME}/releases/download/v${DISTVERSION}/
 
 MAINTAINER=	hamradio@FreeBSD.org
 COMMENT=	Amateur Radio satellite tracking and prediction
+WWW=		http://gpredict.oz9aec.net/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

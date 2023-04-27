@@ -1,11 +1,13 @@
 PORTNAME=	pytorchvideo
-PORTVERSION=	0.1.3
+PORTVERSION=	0.1.5
+PORTREVISION=	2
 CATEGORIES=	math python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	nc@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Video understanding deep learning library
+WWW=		https://github.com/facebookresearch/pytorchvideo
 
 LICENSE=	APACHE20
 

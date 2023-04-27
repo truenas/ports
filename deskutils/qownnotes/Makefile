@@ -1,10 +1,11 @@
 PORTNAME=	qownnotes
-PORTVERSION=	21.11.9
+PORTVERSION=	23.4.6
 CATEGORIES=	deskutils
 MASTER_SITES=	https://download.tuxfamily.org/qownnotes/src/
 
 MAINTAINER=	stobbsm@gmail.com
 COMMENT=	Markdown note taking program with cloud integration
+WWW=		https://www.qownnotes.org/
 
 LICENSE=	GPLv2
 
@@ -13,7 +14,7 @@ RUN_DEPENDS=	git:devel/git
 
 USES=		gl gmake pkgconfig qmake qt:5 tar:xz xorg
 USE_GL=		gl
-USE_QT=		buildtools_build linguisttools_build \
+USE_QT=		buildtools:build linguisttools:build \
 		concurrent core declarative gui network printsupport \
 		sql svg websockets widgets x11extras xml xmlpatterns
 USE_XORG=	x11

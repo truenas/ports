@@ -1,5 +1,3 @@
-# Created by: Mario Sergio Fujikawa Ferreira <liouxFreeBSD.org>
-
 PORTNAME=	rp-pppoe
 PORTVERSION=	3.15
 PORTREVISION=	0
@@ -8,8 +6,12 @@ MASTER_SITES=	https://dianne.skoll.ca/projects/rp-pppoe/download/
 
 MAINTAINER=	mandree@FreeBSD.org
 COMMENT=	Roaring Penguin's PPPoE software
+WWW=		https://dianne.skoll.ca/projects/rp-pppoe/
 
 LICENSE=	GPLv2+
+
+DEPRECATED=	Upstream restricting future OS support to Linux. Use net/mpd5 or pppoed instead. https://dianne.skoll.ca/pipermail/rp-pppoe/2023q2/000639.html
+EXPIRATION_DATE=2023-12-31
 
 GNU_CONFIGURE=	yes
 PATCH_WRKSRC=	${WRKSRC}/src

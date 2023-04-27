@@ -1,12 +1,11 @@
-# Created by: thierry@pompo.net
-
 PORTNAME=	scotch
 DISTVERSION=	6.0.4-aster7
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	cad science
 
 MAINTAINER=	thierry@FreeBSD.org
 COMMENT=	Package for graph and mesh partitioning and sparse matrix ordering
+WWW=		https://www.labri.fr/perso/pelegrin/scotch/
 
 LICENSE=	CeCILL_C
 LICENSE_NAME=	CeCILL-C
@@ -15,7 +14,7 @@ LICENSE_PERMS=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
 
 USES=		bison:alias gmake localbase
 
-CONFLICTS=	gbase-0.* gmap-2015.*
+CONFLICTS_INSTALL=	gbase gmap # bin/gbase bin/gmap
 
 MAKE_JOBS_UNSAFE=yes
 

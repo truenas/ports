@@ -1,11 +1,13 @@
 PORTNAME=	python-louvain
-DISTVERSION=	0.15
+DISTVERSION=	0.16
+PORTREVISION=	1
 CATEGORIES=	math python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Louvain algorithm for community detection
+WWW=		https://github.com/taynaud/python-louvain
 
 LICENSE=	BSD3CLAUSE
 

@@ -1,12 +1,13 @@
 PORTNAME=	zope.testbrowser
 PORTVERSION=	5.5.1
 CATEGORIES=	devel python zope
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DIST_SUBDIR=	zope
 
 MAINTAINER=	zope@FreeBSD.org
 COMMENT=	Programmable browser for functional black-box tests
+WWW=		https://pypi.org/project/zope.testbrowser/
 
 LICENSE=	ZPL21
 

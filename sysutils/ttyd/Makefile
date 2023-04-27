@@ -1,10 +1,10 @@
 PORTNAME=	ttyd
-DISTVERSION=	1.6.3
-PORTREVISION=	2
+DISTVERSION=	1.7.3
 CATEGORIES=	sysutils
 
 MAINTAINER=	nc@FreeBSD.org
 COMMENT=	Program to share your terminal over the web
+WWW=		https://github.com/tsl0922/ttyd
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -18,7 +18,9 @@ USES=		cmake pkgconfig ssl
 USE_GITHUB=	yes
 GH_ACCOUNT=	tsl0922
 
+CMAKE_ARGS=	-DCMAKE_DISABLE_FIND_PACKAGE_Git:BOOL=True
+
 PLIST_FILES=	bin/${PORTNAME} \
-		man/man1/ttyd.1.gz
+		share/man/man1/ttyd.1.gz
 
 .include <bsd.port.mk>

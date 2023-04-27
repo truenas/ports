@@ -1,5 +1,5 @@
 PORTNAME=	purescript-language-server
-PORTVERSION=	0.15.7
+PORTVERSION=	0.17.1
 PORTREVISION=	1
 CATEGORIES=	devel textproc
 MASTER_SITES=	https://github.com/nwolverson/${PORTNAME}/releases/download/v${PORTVERSION}/
@@ -9,6 +9,7 @@ EXTRACT_ONLY=
 
 MAINTAINER=	haskell@FreeBSD.org
 COMMENT=	LSP provider implementation for PureScript language
+WWW=		https://github.com/nwolverson/purescript-language-server/
 
 LICENSE=	MIT
 

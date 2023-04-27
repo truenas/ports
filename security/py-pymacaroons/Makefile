@@ -1,13 +1,12 @@
-# Created by: Brendan Molloy <brendan+freebsd@bbqsrc.net>
-
 PORTNAME=	pymacaroons
 PORTVERSION=	0.13.0
 CATEGORIES=	security devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Macaroon library for Python
+WWW=		https://github.com/ecordell/pymacaroons
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

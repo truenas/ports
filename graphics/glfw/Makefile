@@ -1,13 +1,11 @@
-# Created by: Rusmir Dusko <nemysis@FreeBSD.org>
-
 PORTNAME=	glfw
-PORTVERSION=	3.3.4
-PORTREVISION=	1
+DISTVERSION=	3.3.8
 CATEGORIES=	graphics
 MASTER_SITES=	https://github.com/glfw/glfw/releases/download/${PORTVERSION}/
 
 MAINTAINER=	eduardo@FreeBSD.org
 COMMENT=	Portable framework for OpenGL development
+WWW=		https://www.glfw.org/
 
 LICENSE=	ZLIB
 LICENSE_FILE=	${WRKSRC}/LICENSE.md
@@ -18,15 +16,18 @@ USE_LDCONFIG=	yes
 
 CMAKE_ON=	BUILD_SHARED_LIBS
 
-PLIST_SUB=	VERSION=${PORTVERSION:R} MAJVER="${PORTVERSION:C|\..*||}"
+CONFLICTS_INSTALL=	glfw2
+
+PLIST_SUB=	MAJVER="${DISTVERSION:C|\..*||}" \
+		VERSION=${DISTVERSION:R}
 PORTDOCS=	*
 PORTEXAMPLES=	*
 
-OPTIONS_DEFINE=	DOCS EXAMPLES
-OPTIONS_DEFAULT=X11
-OPTIONS_SINGLE=	PLATFORM
+OPTIONS_DEFINE=			DOCS EXAMPLES
+OPTIONS_DEFAULT=		X11
+OPTIONS_SINGLE=			PLATFORM
 OPTIONS_SINGLE_PLATFORM=	WAYLAND X11
-PLATFORM_DESC=	Window creation platform
+PLATFORM_DESC=			Window creation platform
 
 WAYLAND_BUILD_DEPENDS=	wayland-protocols>=0:graphics/wayland-protocols
 WAYLAND_LIB_DEPENDS=	libwayland-egl.so:graphics/wayland \
@@ -35,8 +36,8 @@ WAYLAND_USES=		kde:5 pkgconfig
 WAYLAND_USE=		KDE=ecm
 WAYLAND_CMAKE_BOOL=	GLFW_USE_WAYLAND
 
-X11_USES=		xorg
-X11_USE=		XORG=x11,xcursor,xi,xinerama,xrandr,xxf86vm
+X11_USES=	xorg
+X11_USE=	XORG=x11,xcursor,xi,xinerama,xrandr,xxf86vm
 
 do-install-DOCS-on:
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}/docs/html/search

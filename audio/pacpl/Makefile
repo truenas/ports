@@ -1,12 +1,12 @@
-# Created by: Andrew Pantyukhin <infofarmer@FreeBSD.org>
-
 PORTNAME=	pacpl
 PORTVERSION=	6.1.3
+PORTREVISION=	1
 CATEGORIES=	audio
 MASTER_SITES=	SF
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Perl Audio Converter
+WWW=		http://vorzox.wix.com/pacpl
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING

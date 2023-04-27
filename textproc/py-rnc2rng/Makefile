@@ -1,11 +1,12 @@
 PORTNAME=	rnc2rng
 DISTVERSION=	2.6.6
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	RELAX NG Compact to regular syntax conversion library
+WWW=		https://github.com/djc/rnc2rng
 
 LICENSE=	MIT
 

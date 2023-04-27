@@ -1,11 +1,12 @@
 PORTNAME=	linprog
-DISTVERSION=	0.9-2
+DISTVERSION=	0.9-4
 PORTREVISION=	1
 CATEGORIES=	math
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Linear Programming / Optimization
+WWW=		https://cran.r-project.org/web/packages/linprog/
 
 LICENSE=	GPLv2+
 

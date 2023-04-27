@@ -1,10 +1,11 @@
 PORTNAME=	cado-nfs
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2.3.0.20210915
+DISTVERSION=	2.3.0-20220722
 CATEGORIES=	math
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Implementation of the Number Field Sieve Algorithm
+WWW=		https://cado-nfs.gitlabpages.inria.fr/
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -24,7 +25,7 @@ USES=		cmake:noninja compiler:c++11-lang perl5 python shebangfix # noninja becau
 
 USE_GITLAB=	yes
 GL_SITE=	https://gitlab.inria.fr
-GL_COMMIT=	f4284e2391121b2bfb97bc4880b6273c7250dc2f
+GL_COMMIT=	3ab6a4781fa5d218ed332834809ba6c6fd1a591f
 
 SHEBANG_GLOB=	*.py
 

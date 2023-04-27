@@ -1,5 +1,3 @@
-# Created by: Mario Sergio Fujikawa Ferreira <lioux@FreeBSD.org>
-
 PORTNAME=	vobcopy
 PORTVERSION=	1.2.0
 PORTREVISION=	8
@@ -9,6 +7,7 @@ MASTER_SITES=	http://vobcopy.org/download/ \
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Decrypts and copies DVD .vob files
+WWW=		http://vobcopy.org/projects/c/c.shtml
 
 LIB_DEPENDS=	libdvdread.so:multimedia/libdvdread
 

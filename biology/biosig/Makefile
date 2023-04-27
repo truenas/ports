@@ -1,11 +1,13 @@
 PORTNAME=	biosig
-DISTVERSION=	2.3.3
+DISTVERSION=	2.5.0
+PORTREVISION=	2
 CATEGORIES=	biology
 MASTER_SITES=	SF/${PORTNAME}/BioSig%20for%20C_C%2B%2B/src/
 DISTNAME=	${PORTNAME}-${PORTVERSION}.src
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Library for reading and writing different biosignal data format
+WWW=		http://biosig.sourceforge.net/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -15,7 +17,7 @@ LIB_DEPENDS=	libb64.so:converters/libb64 \
 		libiconv.so:converters/libiconv \
 		libtinyxml.so:textproc/tinyxml
 
-USES=		gmake iconv localbase:ldflags
+USES=		gmake iconv localbase:ldflags tar:xz
 USE_LDCONFIG=	yes
 
 WRKSRC=		${WRKDIR}/${PORTNAME}-${DISTVERSION}

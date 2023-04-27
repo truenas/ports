@@ -1,13 +1,12 @@
-# Created by: Veniamin Gvozdikov <vg@FreeBSD.org>
-
 PORTNAME=	lockfree-malloc
 PORTVERSION=	0.0.${DATE}
-PORTREVISION=	10
+PORTREVISION=	11
 CATEGORIES=	devel
 MASTER_SITES=	LOCAL/vg
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Scalable drop-in replacement for malloc/free
+WWW=		https://github.com/Begun/lockfree-malloc
 
 LICENSE=	LGPL3
 

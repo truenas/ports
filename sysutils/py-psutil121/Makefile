@@ -1,17 +1,19 @@
-# Created by: Ju Pengfei <jupengfei@gmail.com>
-
 PORTNAME=	psutil
 PORTVERSION=	1.2.1
 PORTREVISION=	2
 CATEGORIES=	sysutils python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 PKGNAMESUFFIX=	121
 
-MAINTAINER=	swills@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Process utilities module for Python
+WWW=		https://pypi.org/project/psutil/
 
 LICENSE=	BSD3CLAUSE
+
+DEPRECATED=	Use sysutils/py-psutil instead
+EXPIRATION_DATE=2023-04-30
 
 CONFLICTS_INSTALL=	${PYTHON_PKGNAMEPREFIX}psutil
 

@@ -1,13 +1,12 @@
-# Created by: pjm <pierrejacqes.mimifir@gmail.com>
-
 PORTNAME=	bristol
 PORTVERSION=	0.60.10
-PORTREVISION=	7
+PORTREVISION=	8
 CATEGORIES=	audio
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/0.60
 
 MAINTAINER=	pierrejacques.mimifir@gmail.com
 COMMENT=	Vintage synthesizers emulation for electric pianos and organs
+WWW=		http://bristol.sourceforge.net/
 
 LICENSE=	GPLv2
 

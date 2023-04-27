@@ -1,13 +1,13 @@
-# Created by: Gustau Perez <gustau.perez@gmail.com>
-
 PORTNAME=	gnome-todo
 PORTVERSION=	41.0
+PORTREVISION=	3
 CATEGORIES=	deskutils gnome
 MASTER_SITES=	GNOME/sources/${PORTNAME}/${PORTVERSION:C/^([0-9]+)\..*/\1/}
-DIST_SUBDIR=	gnome3
+DIST_SUBDIR=	gnome
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Small application to manage your personal tasks
+WWW=		https://wiki.gnome.org/Apps/Todo
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING

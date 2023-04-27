@@ -1,11 +1,12 @@
 PORTNAME=	rclint
-PORTVERSION=	1.1.0
+PORTVERSION=	1.2.0
 CATEGORIES=	devel textproc python
 MASTER_SITES=	http://www.bayofrum.net/dist/rclint/	\
 		LOCAL/crees/
 
 MAINTAINER=	crees@FreeBSD.org
 COMMENT=	Checks rc scripts for style and common errors
+WWW=		https://github.com/crees/rclint
 
 LICENSE=	BSD2CLAUSE
 

@@ -1,9 +1,6 @@
-# Created by: Ashish SHUKLA <ashish@FreeBSD.org>
-
 PORTNAME=	chez-scheme
-PORTVERSION=	9.5.4
+PORTVERSION=	9.5.8
 DISTVERSIONPREFIX=	v
-PORTREVISION=	2
 CATEGORIES=	lang
 MASTER_SITES=	http://distfiles.pirateparty.in/ashish/:boot \
 		LOCAL/ashish:boot
@@ -12,6 +9,7 @@ DISTFILES=	${PORTNAME}-boot-ta6fb-${PORTVERSION}.tar.xz:boot \
 
 MAINTAINER=	ashish@FreeBSD.org
 COMMENT=	Chez Scheme system
+WWW=		https://cisco.github.io/ChezScheme
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -25,10 +23,10 @@ USES=		gmake iconv:lib ncurses
 USE_GITHUB=	yes
 GH_ACCOUNT=	cisco
 GH_PROJECT=	ChezScheme
-GH_TUPLE=	nanopass:nanopass-framework-scheme:v1.9.1:nanopass/nanopass \
-		madler:zlib:v1.2.11:zlib/zlib \
+GH_TUPLE=	nanopass:nanopass-framework-scheme:v1.9.2:nanopass/nanopass \
+		madler:zlib:v1.2.12:zlib/zlib \
 		dybvig:stex:v1.2.2:stex/stex \
-		lz4:lz4:3d67671:lz4/lz4
+		lz4:lz4:v1.9.3:lz4/lz4
 
 OPTIONS_DEFAULT=	X11
 OPTIONS_DEFINE=	X11
@@ -38,6 +36,7 @@ ALL_TARGET=	build
 CONFLICTS_INSTALL=	petite-chez
 STRIP_FILES=	bin/petite bin/${PORTNAME} bin/${PORTNAME}-script
 CHEZ_LIBDIR=lib/csv${PORTVERSION}
+CFLAGS+=	-fPIC
 CFLAGS+=	-I${LOCALBASE}/include
 LDFLAGS+=	-L${LOCALBASE}/lib -luuid
 CONFIGURE_ARGS=	--installprefix=${PREFIX} \

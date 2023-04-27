@@ -149,6 +149,7 @@ gnugk:*:205:
 gini:*:206:
 _mixminion:*:207:
 _dnsdist:*:208:
+gotosocial:*:209:
 shoutcast:*:210:
 git:*:211:
 hg:*:212:
@@ -242,23 +243,23 @@ owncast:*:299:
 backuppc:*:300:
 openvpn:*:301:
 netdata:*:302:
-# free: 303
-# free: 304
-# free: 305
-# free: 306
-# free: 307
-# free: 308
-# free: 309
-# free: 310
-# free: 311
+onlyoffice:*:303:www
+glewlwyd:*:304:
+nats:*:305:
+jitsi:*:306:
+jicofo:*:307:jitsi
+jvb:*:308:jitsi
+wazuh:*:309:
+cardano:*:310:
+_arti:*:311:
 _sphinx:*:312:
 _fastdfs:*:313:
-# free: 314
-# free: 315
-# free: 316
-# free: 317
-# free: 318
-# free: 319
+promscale:*:314:
+lavinmq:*:315:
+nut:*:316:
+hedgedoc:*:317:
+# free: 318, UID used by icingadirector
+rustdesk:*:319:
 # free: 320
 # free: 321
 # free: 322
@@ -266,7 +267,7 @@ _fastdfs:*:313:
 # free: 324
 dkfilter:*:325:
 smfs:*:326:
-# free: 327
+_reticulum:*:327:
 # free: 328
 # free: 329
 orthanc:*:330:
@@ -298,10 +299,10 @@ nzbhydra2:*:355:
 lidarr:*:356:
 bazarr:*:357:
 autoscan:*:358:
-# free: 359
+prowlarr:*:359:
 v2ray:*:360:
 httptunnel:*:361:
-# free: 362
+readarr:*:362:
 # free: 363
 # free: 364
 # free: 365
@@ -437,7 +438,7 @@ datadog:*:480:
 # free: 495
 # free: 496
 # free: 497
-# free: 498
+rustypaste:*:498:
 # free: 499
 # free: 500
 # free: 501
@@ -565,7 +566,7 @@ taskd:*:616:
 # free: 622
 # free: 623
 # free: 624
-# free: 625
+xapsd:*:625:
 # free: 626
 # free: 627
 # free: 628
@@ -628,7 +629,7 @@ riak:*:667:
 # free: 685
 # free: 686
 # free: 687
-# free: 688
+darkhttpd:*:688:
 # free: 689
 # free: 690
 # free: 691
@@ -767,7 +768,7 @@ dotlrn:*:821:
 selenium:*:824:
 polw:*:825:
 statsd:*:826:
-# free: 827
+_tuptime:*:827:
 # free: 828
 # free: 829
 # free: 830
@@ -808,9 +809,9 @@ opensearch:*:855:
 # free: 865
 # free: 866
 # free: 867
-# free: 868
-# free: 869
-# free: 870
+jellyfin:*:868:
+keyd:*:869:
+buildbot:*:870:
 # free: 871
 bitmark:*:872:
 bitmark-recorder:*:873:
@@ -886,6 +887,7 @@ teamspeak:*:942:
 dnetfold:*:943:
 bbs:*:944:
 dbxml:*:945:
+pgagroal:*:946:
 gnokii:*:947:
 dnrd:*:948:
 _lldpd:*:949:
@@ -906,7 +908,7 @@ fluentd:*:963:
 git_daemon:*:964:
 elasticsearch:*:965:
 ossec:*:966:
-# free: 967
+loki:*:967:
 # free: 968
 kippo:*:969:
 colord:*:970:
@@ -927,7 +929,7 @@ tvheadend:*:984:
 puppetdb:*:985:
 kamailio:*:986:
 spark:*:987:
-# free: 988
+pot:*:988:
 emby:*:989:
 oozie:*:990:
 sguil:*:991:

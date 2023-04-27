@@ -1,12 +1,12 @@
-# Created by: TAKATSU Tomonari <tota@FreeBSD.org>
-
 PORTNAME=	rtiff
 PORTVERSION=	1.4.8
+PORTREVISION=	1
 CATEGORIES=	graphics
 DISTNAME=	${PORTNAME}_${PORTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	TIFF reader for R
+WWW=		https://cran.r-project.org/web/packages/rtiff/
 
 LICENSE=	GPLv3
 

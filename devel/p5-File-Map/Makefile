@@ -1,5 +1,5 @@
 PORTNAME=	File-Map
-PORTVERSION=	0.67
+PORTVERSION=	0.71
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 MASTER_SITE_SUBDIR=	CPAN:LEONT
@@ -7,6 +7,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Memory mapping made simple and safe
+WWW=		https://metacpan.org/release/File-Map
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

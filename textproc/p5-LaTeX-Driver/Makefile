@@ -1,5 +1,3 @@
-# Created by: Wen Heping <wen@FreeBSD.org>
-
 PORTNAME=	LaTeX-Driver
 PORTVERSION=	1.2.0
 CATEGORIES=	textproc perl5
@@ -8,6 +6,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Perl module of LaTeX Driver
+WWW=		https://metacpan.org/release/LaTeX-Driver
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual
@@ -24,7 +23,7 @@ RUN_DEPENDS=	p5-Capture-Tiny>=0:devel/p5-Capture-Tiny \
 PORTSCOUT=	skipv:0.2002
 
 NO_ARCH=	yes
-USES=		perl5
+USES=		perl5 tex
 USE_PERL5=	configure
 USE_TEX=	latex
 

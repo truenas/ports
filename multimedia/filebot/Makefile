@@ -1,11 +1,13 @@
 PORTNAME=	filebot
-DISTVERSION=	4.9.3
+DISTVERSION=	4.9.6
+PORTREVISION=	1
 CATEGORIES=	multimedia java
 MASTER_SITES=	https://get.filebot.net/filebot/FileBot_${DISTVERSION}/
 DISTNAME=	FileBot_${DISTVERSION}-portable
 
 MAINTAINER=	dan.kotowski@a9development.com
 COMMENT=	FileBot is the ultimate tool for organizing and renaming your media
+WWW=		https://www.filebot.net/
 
 LICENSE=	FileBot_EULA
 LICENSE_NAME=	FileBot End User License Agreement

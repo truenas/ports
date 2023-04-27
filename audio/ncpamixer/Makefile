@@ -1,10 +1,11 @@
 PORTNAME=	ncpamixer
-DISTVERSION=	1.3.3.1
+DISTVERSION=	1.3.3.3
 PORTREVISION=	1
 CATEGORIES=	audio
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Ncurses PulseAudio mixer
+WWW=		https://github.com/fulhax/ncpamixer
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/../LICENSE

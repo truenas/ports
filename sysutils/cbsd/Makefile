@@ -1,9 +1,10 @@
 PORTNAME=	cbsd
-DISTVERSION=	13.0.19
+DISTVERSION=	13.2.1
 CATEGORIES=	sysutils
 
 MAINTAINER=	olevole@olevole.ru
 COMMENT=	Yet another FreeBSD Jail, XEN and Bhyve Management Utility
+WWW=		https://www.bsdstore.ru
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -21,19 +22,31 @@ USE_RC_SUBR=	cbsdd cbsdrsyncd cbsd-statsd-bhyve cbsd-statsd-hoster \
 		cbsd-statsd-jail
 MAKE_JOBS_UNSAFE=	yes
 
-SUB_FILES=	pkg-deinstall pkg-message
+SUB_FILES=	pkg-message
 
 USERS=		${PORTNAME}
 GROUPS=		${PORTNAME}
+
+OPTIONS_DEFINE=	BHYVE_GOP
+OPTIONS_SUB=	yes
+BHYVE_GOP_DESC=	Include bhyve UEFI firmware with GPU PPT+GOP support
 
 CBSD_HOME?=	${PREFIX}/cbsd
 
 .include <bsd.port.options.mk>
 
-.if ${ARCH} == amd64 || ${ARCH} == i386
-PLIST_SUB=	X86=""
+.if ${ARCH} == amd64 || ${ARCH} == i386 || ${ARCH} == x86_64
+PLIST_SUB+=	X86=""
 .else
-PLIST_SUB=	X86="@comment "
+PLIST_SUB+=	X86="@comment "
+.endif
+
+.if ${OPSYS} != FreeBSD
+PLIST_SUB+=	FBSD="@comment "
+LIB_DEPENDS+=	libelf.so:devel/libelf
+RUN_DEPENDS+=	sysrc:sysutils/sysrc
+.else
+PLIST_SUB+=	FBSD=""
 .endif
 
 do-install:

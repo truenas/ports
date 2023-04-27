@@ -11,4 +11,10 @@ DIST=		bad
 
 MASTERDIR=	${.CURDIR}/../../multimedia/gstreamer1-plugins
 
+PLIST=  ${.CURDIR}/pkg-plist
+
+LIB_DEPENDS= libmjpegutils.so:multimedia/mjpegtools
+
+MESON_ARGS+=	-Dgpl=enabled
+
 .include "${MASTERDIR}/Makefile"

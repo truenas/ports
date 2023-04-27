@@ -1,7 +1,6 @@
-# Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
-
 PORTNAME=	mangohud
 PORTVERSION=	0.6.5
+PORTREVISION=	1
 DISTVERSIONPREFIX=	v
 CATEGORIES=	benchmarks graphics
 MASTER_SITES=	https://wrapdb.mesonbuild.com/v1/projects/imgui/1.81/1/get_zip?dummy=/:igw
@@ -9,9 +8,12 @@ DISTFILES=	imgui-1.81-1-wrap.zip:igw
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Vulkan/OpenGL overlay for CPU/GPU monitoring
+WWW=		https://github.com/flightlessmango/MangoHud
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
+
+BROKEN=		https://github.com/flightlessmango/MangoHud/issues/927
 
 BUILD_DEPENDS=	glslangValidator:graphics/glslang \
 		${LOCALBASE}/share/vulkan/registry/vk.xml:graphics/vulkan-headers \

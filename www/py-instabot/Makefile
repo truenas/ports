@@ -1,14 +1,13 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	instabot
 PORTVERSION=	0.117.0
-PORTREVISION=	1
+PORTREVISION=	4
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Instagram bot scripts and API wrapper
+WWW=		https://github.com/instagrambot/instabot
 
 LICENSE=	APACHE20
 
@@ -30,7 +29,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}certifi>=2019.11.28:security/py-certifi@${PY
 		${PYTHON_PKGNAMEPREFIX}tqdm>=4.41.1:misc/py-tqdm@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}urllib3>=1.25.7,1:net/py-urllib3@${PY_FLAVOR}
 
-USES=		python:3.7+
+USES=		python:3.8+
 USE_PYTHON=	autoplist concurrent distutils
 
 NO_ARCH=	yes

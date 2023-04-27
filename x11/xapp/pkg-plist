@@ -70,6 +70,7 @@ share/icons/hicolor/scalable/actions/view-top-pane-symbolic.svg
 share/icons/hicolor/scalable/actions/xapp-annotations-squiggly-symbolic.svg
 share/icons/hicolor/scalable/actions/xapp-annotations-text-symbolic.svg
 share/icons/hicolor/scalable/actions/xapp-diaporama-symbolic.svg
+share/icons/hicolor/scalable/actions/xapp-edit-symbolic.svg
 share/icons/hicolor/scalable/actions/xapp-favorite-symbolic.svg
 share/icons/hicolor/scalable/actions/xapp-format-text-highlight-symbolic.svg
 share/icons/hicolor/scalable/actions/xapp-go-history-next-symbolic-rtl.svg
@@ -83,6 +84,8 @@ share/icons/hicolor/scalable/actions/xapp-text-case-symbolic.svg
 share/icons/hicolor/scalable/actions/xapp-unfavorite-symbolic.svg
 share/icons/hicolor/scalable/actions/xapp-unpin-symbolic.svg
 share/icons/hicolor/scalable/actions/xapp-use-regex-symbolic.svg
+share/icons/hicolor/scalable/actions/xapp-view-fit-height-symbolic.svg
+share/icons/hicolor/scalable/actions/xapp-view-fit-width-symbolic.svg
 share/icons/hicolor/scalable/apps/xapp-favorites-app-symbolic.svg
 share/icons/hicolor/scalable/apps/xapp-favorites-app.svg
 share/icons/hicolor/scalable/apps/xapp-mate-status-applet.svg

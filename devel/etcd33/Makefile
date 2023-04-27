@@ -1,13 +1,14 @@
 PORTNAME=	etcd
 PORTVERSION=	3.3.23
 DISTVERSIONPREFIX=	v
-PORTREVISION=	2
+PORTREVISION=	14
 CATEGORIES=	devel
 PKGNAMEPREFIX=	coreos-
 PKGNAMESUFFIX=	33
 
 MAINTAINER=	olgeni@FreeBSD.org
 COMMENT=	Highly-available key value store and service discovery
+WWW=		https://github.com/coreos/etcd
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -73,8 +74,7 @@ GH_TUPLE=	beorn7:perks:v1.0.1:beorn7_perks/vendor/github.com/beorn7/perks \
 GO_PKGNAME=	github.com/coreos/etcd
 GO_TARGET=	. ./etcdctl
 
-CONFLICTS_INSTALL=	coreos-etcd-* coreos-etcd31-* coreos-etcd32-* \
-			coreos-etcd34-* coreos-etcdctl-0.*
+CONFLICTS_INSTALL=	coreos-etcd[0-9][0-9]
 
 PLIST_FILES=	bin/etcd \
 		bin/etcdctl

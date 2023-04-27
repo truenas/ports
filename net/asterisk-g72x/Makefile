@@ -1,12 +1,13 @@
 PORTNAME=	g72x
 PORTVERSION=	1.4.3
-PORTREVISION=	3
+PORTREVISION=	5
 CATEGORIES=	net
 MASTER_SITES=	http://asterisk.hosting.lv/src/
 DISTNAME=	asterisk-${PORTNAME}-${DISTVERSIONPREFIX}${DISTVERSION}${DISTVERSIONSUFFIX}
 
-MAINTAINER=	madpilot@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	G.729 codec for Asterisk PBX
+WWW=		http://asterisk.hosting.lv/
 
 LIB_DEPENDS=	libbcg729.so:audio/bcg729
 

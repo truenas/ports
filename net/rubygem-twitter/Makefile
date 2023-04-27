@@ -1,5 +1,3 @@
-# Created by: ijliao
-
 PORTNAME=	twitter
 PORTVERSION=	7.0.0
 PORTREVISION=	3
@@ -8,6 +6,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Ruby interface to the Twitter API
+WWW=		https://sferik.github.io/twitter/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.md
@@ -24,7 +23,6 @@ RUN_DEPENDS=	rubygem-addressable>=2.3<3:www/rubygem-addressable \
 		rubygem-simple_oauth>=0.3.0<0.4:net/rubygem-simple_oauth
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

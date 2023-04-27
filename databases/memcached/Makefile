@@ -1,13 +1,12 @@
-# Created by: Sean Chittenden <seanc@FreeBSD.org>
-
 PORTNAME=	memcached
-PORTVERSION=	1.6.12
+PORTVERSION=	1.6.14
 CATEGORIES=	databases
 MASTER_SITES=	http://www.memcached.org/files/ \
 		GENTOO
 
-MAINTAINER=	swills@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	High-performance distributed memory object cache system
+WWW=		https://memcached.org/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -34,7 +33,6 @@ OPTIONS_DEFAULT_amd64=	DTRACE
 OPTIONS_DEFINE_powerpc64=	DTRACE
 OPTIONS_DEFAULT_powerpc64=	DTRACE
 OPTIONS_EXCLUDE_powerpc64=	${OPTIONS_EXCLUDE_${ARCH}_${OSREL:R}}
-OPTIONS_EXCLUDE_powerpc64_11=	DTRACE
 OPTIONS_EXCLUDE_powerpc64_12=	DTRACE
 OPTIONS_DEFINE_powerpc64le=	DTRACE
 OPTIONS_DEFAULT_powerpc64le=	DTRACE

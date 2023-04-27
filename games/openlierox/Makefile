@@ -1,6 +1,6 @@
 PORTNAME=	openlierox
 DISTVERSION=	0.58_rc5
-PORTREVISION=	1
+PORTREVISION=	3
 PORTEPOCH=	1
 CATEGORIES=	games
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/OpenLieroX%20${DISTVERSION:C/_/%20/}
@@ -8,6 +8,7 @@ DISTNAME=	OpenLieroX_${DISTVERSION}.src
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Extremely addictive realtime worms shoot-em-up
+WWW=		http://openlierox.sourceforge.net/
 
 LIB_DEPENDS=	libcurl.so:ftp/curl
 

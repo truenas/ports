@@ -1,9 +1,11 @@
 PORTNAME=	vm-bhyve
-PORTVERSION=	1.4.2
+DISTVERSIONPREFIX=	v
+DISTVERSION=	1.5.0
 CATEGORIES=	sysutils
 
 MAINTAINER=	churchers@gmail.com
 COMMENT=	Management system for bhyve virtual machines
+WWW=		https://github.com/churchers/vm-bhyve
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -12,6 +14,8 @@ RUN_DEPENDS=	${LOCALBASE}/share/certs/ca-root-nss.crt:security/ca_root_nss
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	churchers
+
+CONFLICTS_INSTALL=	vm-bhyve-devel
 
 NO_ARCH=	yes
 NO_BUILD=	yes

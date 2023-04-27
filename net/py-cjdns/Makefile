@@ -1,13 +1,12 @@
-# Created by: Yuri Victorovich <yuri@rawbw.com>
-
 PORTNAME=	cjdns
 PORTVERSION=	0.2.4
 CATEGORIES=	net security python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Library to interact with the cjdns admin interface
+WWW=		https://github.com/hyperboria/python-cjdns
 
 LICENSE=	GPLv3
 

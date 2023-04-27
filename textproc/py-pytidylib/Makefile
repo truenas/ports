@@ -1,13 +1,12 @@
-# Created by: Kubilay Kocak <koobs@FreeBSD.org>
-
 PORTNAME=	pytidylib
 PORTVERSION=	0.3.2
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	koobs@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Python wrapper for HTML Tidy (tidylib)
+WWW=		http://countergram.com/open-source/pytidylib
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

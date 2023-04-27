@@ -1,11 +1,12 @@
 PORTNAME=	ruffus
 DISTVERSION=	2.8.3
 CATEGORIES=	science python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	kai@FreeBSD.org
 COMMENT=	Lightweight library for computational pipelines
+WWW=		http://www.ruffus.org.uk
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.TXT

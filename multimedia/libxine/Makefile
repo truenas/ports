@@ -1,15 +1,14 @@
-# Created by: alex
-
 PORTNAME=	xine
-DISTVERSION=	1.2.11
-PORTREVISION=	7
+DISTVERSION=	1.2.13
+PORTREVISION=	1
 CATEGORIES=	multimedia
-MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}-lib/${PORTVERSION}
+MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}-lib/${DISTVERSION}
 PKGNAMEPREFIX=	lib
-DISTNAME=	${PORTNAME}-lib-${PORTVERSION}
+DISTNAME=	${PORTNAME}-lib-${DISTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Libraries for xine multimedia player
+WWW=		https://www.xine-project.org/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -35,7 +34,8 @@ LIB_DEPENDS=	libFLAC.so:audio/flac \
 		libvpx.so:multimedia/libvpx \
 		libiso9660.so:sysutils/libcdio \
 		libogg.so:audio/libogg \
-		libdvdnav.so:multimedia/libdvdnav
+		libdvdnav.so:multimedia/libdvdnav \
+		libwayland-client.so:graphics/wayland
 
 USES=		compiler cpe gl gmake gnome iconv libtool:keepla jpeg \
 		localbase pathfix perl5 pkgconfig tar:xz xorg
@@ -50,7 +50,8 @@ USE_LDCONFIG=	yes
 CONFIGURE_ARGS=	--with-libflac \
 		--enable-musepack \
 		--enable-real-codecs \
-		--without-esound
+		--without-esound \
+		--disable-crypto
 
 MAKE_ENV=	V=1
 MAKE_ARGS=	pkgdatadir="${DATADIR}" \
@@ -62,7 +63,7 @@ CFLAGS_i386=	-fomit-frame-pointer
 DOCSDIR=	${PREFIX}/share/doc/xine-lib
 # Please sync with XINE_PLUGINSDIR in multimedia/xine
 # and multimedia/vdr-plugin-xineliboutput
-PLUGINSDIR=	lib/xine/plugins/2.9
+PLUGINSDIR=	lib/xine/plugins/2.11
 PLIST_SUB=	PLUGINSDIR="${PLUGINSDIR}"
 
 OPTIONS_DEFINE=		AALIB ALSA AOM CACA DAV1D DOCS DMX_IMAGE DVB \
@@ -159,9 +160,6 @@ XVMC_CONFIGURE_ENABLE=		xvmc
 
 .if ${ARCH} == aarch64
 BUILD_DEPENDS+=	as:devel/binutils
-.elif ${ARCH} == powerpc
-BUILD_DEPENDS+=	as:devel/binutils
-CFLAGS+=	-fno-integrated-as
 .endif
 
 .if !${PORT_OPTIONS:MGNUTLS} && !${PORT_OPTIONS:MOPENSSL}
@@ -173,6 +171,8 @@ pre-configure-GNUTLS-off:
 		${WRKSRC}/configure
 
 post-patch:
+	@${REINPLACE_CMD} -e '/xine_set_flags/s/XINE_PROTECTED//' \
+		${WRKSRC}/include/xine.h
 .if ${COMPILER_TYPE} == "clang"
 	@${REINPLACE_CMD} -e 's|-fno-rename-registers||' \
 		${WRKSRC}/src/libw32dll/Makefile.in

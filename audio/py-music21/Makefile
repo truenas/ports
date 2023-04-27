@@ -1,11 +1,13 @@
 PORTNAME=	music21
-DISTVERSION=	7.1.0
+DISTVERSION=	7.3.3
+PORTREVISION=	2
 CATEGORIES=	audio python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Toolkit for computer-aided musical analysis
+WWW=		https://web.mit.edu/music21/
 
 LICENSE=	BSD3CLAUSE LGPL3
 LICENSE_COMB=	multi
@@ -17,7 +19,6 @@ RUN_DEPENDS=	${PYNUMPY} \
 		${PYTHON_PKGNAMEPREFIX}jsonpickle>0:devel/py-jsonpickle@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}matplotlib>0:math/py-matplotlib@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}more-itertools>0:devel/py-more-itertools@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}scipy>0:science/py-scipy@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}webcolors>=1.5:graphics/py-webcolors@${PY_FLAVOR} \
 		lilypond:print/lilypond \
 		mscore:audio/musescore \

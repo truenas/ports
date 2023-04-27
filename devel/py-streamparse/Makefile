@@ -1,13 +1,12 @@
-# Created by: Mark Felder <feld@FreeBSD.org>
-
 PORTNAME=	streamparse
-PORTVERSION=	4.0.0
+PORTVERSION=	4.1.2
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	egypcio@FreeBSD.org
 COMMENT=	Python analysis of Apache Storm streams
+WWW=		https://github.com/Parsely/streamparse
 
 LICENSE=	APACHE20
 

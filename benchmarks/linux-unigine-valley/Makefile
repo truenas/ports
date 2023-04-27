@@ -1,5 +1,3 @@
-# Created by: Hannes Hauswedell <h2+fbsdports@fsfe.org>
-
 PORTNAME=	unigine-valley
 PORTVERSION=	1.0
 PORTREVISION=	4
@@ -11,6 +9,7 @@ EXTRACT_SUFX=	.run
 
 MAINTAINER=	h2+fbsdports@fsfe.org
 COMMENT=	Unigine Valley benchmark (basic version for GNU/Linux)
+WWW=		https://benchmark.unigine.com/valley
 
 LICENSE=	Proprietary
 LICENSE_NAME=	Unigine "Basic" License

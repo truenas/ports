@@ -1,5 +1,3 @@
-# Created by: Hye-Shik Chang
-
 PORTNAME=	io
 PORTVERSION=	2017.09.06
 PORTREVISION=	8
@@ -7,6 +5,7 @@ CATEGORIES=	lang
 
 MAINTAINER=	gahr@FreeBSD.org
 COMMENT=	Small prototype-based programming language
+WWW=		https://iolanguage.org
 
 LICENSE=	BSD3CLAUSE
 

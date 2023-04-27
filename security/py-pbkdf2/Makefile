@@ -1,9 +1,7 @@
-# Created by: Neil Booth <kyuupichan@gmail.com>
-
 PORTNAME=	pbkdf2
 PORTVERSION=	1.3
 CATEGORIES=	security python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	kyuupichan@gmail.com

@@ -1,12 +1,12 @@
-# Created by: Gustau Perez i Querol <gustau.perez@gmail.com>
-
 PORTNAME=	grilo-plugins
-PORTVERSION=	0.3.14
+PORTVERSION=	0.3.15
+PORTREVISION=	1
 CATEGORIES=	net
 MASTER_SITES=	GNOME
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Plugins for net/grilo
+WWW=		https://wiki.gnome.org/Grilo
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -24,10 +24,10 @@ LIB_DEPENDS=	libgrilo-0.3.so:net/grilo \
 		libgmime-2.6.so:mail/gmime26 \
 		libjson-glib-1.0.so:devel/json-glib
 
-USES=		gettext gperf gnome libarchive meson pathfix pkgconfig sqlite tar:xz
+USES=		gettext gperf gnome gstreamer libarchive meson pathfix pkgconfig sqlite tar:xz
 USE_LDCONFIG=	yes
 USE_GNOME=	glib20 intlhack libxml2
-USE_GSTREAMER1=	chromaprint
+USE_GSTREAMER=	chromaprint
 MESON_ARGS=	-Denable-lua-factory=no
 
 OPTIONS_SUB=			yes
@@ -36,6 +36,7 @@ OPTIONS_DEFAULT=		TRACKER
 
 TRACKER_DESC=			Tracker support for grilo (used by gnome-music and possibly others)
 TRACKER_MESON_YES=		enable-tracker
+TRACKER_MESON_NO=		enable-tracker3
 TRACKER_LIB_DEPENDS=		libtracker-sparql-2.0.so:sysutils/tracker
 
 DMAP_DESC=			DMAP (DAAP, DPAP & DACP) support with libdmapsharing

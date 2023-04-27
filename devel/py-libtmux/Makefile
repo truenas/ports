@@ -1,21 +1,22 @@
-# Created by: Tony Narlock <tony@git-pull.com>
-
 PORTNAME=	libtmux
-PORTVERSION=	0.10.2
+PORTVERSION=	0.21.1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
-COMMENT=	Library for interfacing with tmux
+COMMENT=	Typed scripting library / ORM / API wrapper for tmux
+WWW=		https://github.com/tmux-python/libtmux
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
+BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}poetry-core>=1.0.0:devel/py-poetry-core@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}setuptools>=50:devel/py-setuptools@${PY_FLAVOR}
 RUN_DEPENDS=	tmux:sysutils/tmux
 
-USES=		python:3.6+
-USE_PYTHON=	autoplist concurrent distutils
+USES=		python:3.7+
+USE_PYTHON=	autoplist concurrent pep517
 
 NO_ARCH=	yes
 

@@ -8,4 +8,10 @@ DIST=		bad
 
 MASTERDIR=	${.CURDIR}/../../multimedia/gstreamer1-plugins
 
+PLIST=  ${.CURDIR}/pkg-plist
+
+LIB_DEPENDS=  libass.so:multimedia/libass
+
 .include "${MASTERDIR}/Makefile"
+
+USES+= compiler:c11

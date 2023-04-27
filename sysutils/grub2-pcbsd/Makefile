@@ -1,14 +1,13 @@
-# Created by: kmoore@FreeBSD.org
-
 PORTNAME=	grub2-pcbsd
 PORTVERSION=	2.02q
-PORTREVISION=	17
+PORTREVISION=	18
 CATEGORIES=	sysutils
 MASTER_SITES=	LOCAL/kevlo
 DISTNAME=	grub-2.02_8
 
 MAINTAINER=	kevlo@FreeBSD.org
 COMMENT=	Multiboot boot loader
+WWW=		https://www.gnu.org/software/grub/
 
 LICENSE=	GPLv3
 

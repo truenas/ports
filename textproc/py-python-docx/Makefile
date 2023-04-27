@@ -1,11 +1,12 @@
 PORTNAME=	python-docx
 PORTVERSION=	0.8.11
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Python library for creating and updating Microsoft Word files
+WWW=		https://github.com/python-openxml/python-docx
 
 LICENSE=	MIT
 

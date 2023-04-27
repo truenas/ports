@@ -1,5 +1,3 @@
-# Created by: nivit@email.it
-
 PORTNAME=	slimeforest
 PORTVERSION=	158
 PORTREVISION=	0
@@ -12,6 +10,7 @@ DIST_SUBDIR=	${PORTNAME}/${PORTVERSION}
 
 MAINTAINER=	nivit@FreeBSD.org
 COMMENT=	NES RPG game for learning KANA and KANJI (Linux version)
+WWW=		https://lrnj.com/
 
 LICENSE=	GPLv2
 

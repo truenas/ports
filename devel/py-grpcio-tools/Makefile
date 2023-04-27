@@ -1,20 +1,19 @@
-# Created by: vanilla@
-
 PORTNAME=	grpcio-tools
-PORTVERSION=	1.42.0
+PORTVERSION=	1.54.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	vanilla@FreeBSD.org
 COMMENT=	Protobuf code generator for gRPC
+WWW=		https://pypi.org/project/grpcio-tools/
 
 LICENSE=	BSD3CLAUSE
 
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}grpcio>1:devel/py-grpcio@${PY_FLAVOR}
 LIB_DEPENDS=	libcares.so:dns/c-ares
 
-USES=		compiler:c++11-lang localbase:ldflags python:3.5+
+USES=		compiler:c++11-lang localbase:ldflags python
 USE_PYTHON=	autoplist distutils
 CFLAGS+=	-DHAVE_PTHREAD=1
 LDFLAGS+=	-lcares

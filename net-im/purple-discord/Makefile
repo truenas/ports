@@ -1,9 +1,11 @@
 PORTNAME=	purple-discord
 PORTVERSION=	g20210729
+PORTREVISION=	1
 CATEGORIES=	net-im
 
-MAINTAINER=	swills@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Discord plugin for libpurple
+WWW=		https://github.com/EionRobb/purple-discord
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE

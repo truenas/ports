@@ -1,10 +1,11 @@
 PORTNAME=	jstest-gtk
 PORTVERSION=	20180710
-PORTREVISION=	3
+PORTREVISION=	6
 CATEGORIES=	sysutils
 
 MAINTAINER=	rozhuk.im@gmail.com
 COMMENT=	Simple joystick tester based on Gtk+
+WWW=		https://jstest-gtk.gitlab.io/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING

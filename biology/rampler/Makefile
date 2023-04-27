@@ -1,9 +1,11 @@
 PORTNAME=	rampler
 DISTVERSION=	2.0.0
+PORTREVISION=	1
 CATEGORIES=	biology
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Standalone module for sampling genomic sequences
+WWW=		https://github.com/rvaser/rampler
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

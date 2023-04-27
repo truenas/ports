@@ -1,9 +1,10 @@
 PORTNAME=	libretro-o2em
-PORTVERSION=	0.20210214
+PORTVERSION=	0.20220327
 CATEGORIES=	games
 
-MAINTAINER=	menelkir@itroll.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Port of O2EM to the libretro API, an Odyssey 2 / VideoPac emulator
+WWW=		https://github.com/libretro/libretro-o2em
 
 LICENSE=	ART20
 
@@ -12,7 +13,7 @@ USE_LDCONFIG=	yes
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	libretro
-GH_TAGNAME=	f874a75
+GH_TAGNAME=	efd749c
 
 PLIST_FILES=	lib/libretro/o2em_libretro.so
 

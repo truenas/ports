@@ -1,5 +1,3 @@
-# Created by: Ralf Gebhart <gebhart@secnetix.de>
-
 PORTNAME=	mod_umask
 PORTVERSION=	0.1.0
 CATEGORIES=	www
@@ -9,10 +7,11 @@ DIST_SUBDIR=	apache2
 
 MAINTAINER=	gebhart@secnetix.de
 COMMENT=	Apache 2.x module to set umask of created files
+WWW=		http://www.outoforder.cc/projects/httpd/mod_umask/
 
 LICENSE=	APACHE20
 
-USES=		apache:2.2+ tar:bzip2
+USES=		apache tar:bzip2
 GNU_CONFIGURE=	yes
 
 AP_FAST_BUILD=	yes

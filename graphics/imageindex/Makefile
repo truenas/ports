@@ -1,14 +1,13 @@
-# Created by: John Reynolds <johnjen@reynoldsnet.org>
-
 PORTNAME=	imageindex
 PORTVERSION=	2.0
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	graphics
 MASTER_SITES=	http://www.edwinh.org/imageindex/release/ \
 		http://www.reynoldsnet.org/imageindex/release/
 
 MAINTAINER=	johnjen@reynoldsnet.org
 COMMENT=	Digital photo gallery tool
+WWW=		http://www.edwinh.org/imageindex/
 
 RUN_DEPENDS=	mplayer:multimedia/mplayer \
 		p5-Image-Info>=0:graphics/p5-Image-Info

@@ -1,5 +1,3 @@
-# Created by: Mina Naguib <webmaster@topfx.com>
-
 PORTNAME=	bsdbktr_tvtune
 PORTVERSION=	0.02
 CATEGORIES=	multimedia
@@ -7,6 +5,7 @@ MASTER_SITES=	http://mina.naguib.ca/dist/
 
 MAINTAINER=	mina.website@naguib.ca
 COMMENT=	Console Brooktree (bktr) TV tuner
+WWW=		https://web.archive.org/web/20050207003754/http://topfx.com/dist/bsdbktr_tvtune/
 
 LICENSE=	NONE
 

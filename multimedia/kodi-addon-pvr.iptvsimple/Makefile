@@ -1,12 +1,12 @@
-# Created by: Bernhard Froehlich <decke@FreeBSD.org>
-
 PORTNAME=	pvr.iptvsimple
-DISTVERSION=	19.0.2
-DISTVERSIONSUFFIX=	-Matrix
+DISTVERSION=	20.8.1
+DISTVERSIONSUFFIX=	-Nexus
+PORTREVISION=	1
 CATEGORIES=	multimedia
 
 MAINTAINER=	decke@FreeBSD.org
 COMMENT=	IPTV Live TV and Radio PVR client for Kodi
+WWW=		https://github.com/kodi-pvr/pvr.iptvsimple
 
 LICENSE=	GPLv2+
 

@@ -1,11 +1,12 @@
 PORTNAME=	csscompressor
 DISTVERSION=	0.9.5
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	alex@xanderio.de
 COMMENT=	Python port of YUI CSS Compressor
+WWW=		https://github.com/sprymix/csscompressor
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

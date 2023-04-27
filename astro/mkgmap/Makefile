@@ -1,16 +1,17 @@
 PORTNAME=	mkgmap
-PORTVERSION=	r4827
+PORTVERSION=	r4907
 CATEGORIES=	astro converters java
 MASTER_SITES=	https://www.mkgmap.org.uk/download/
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Convert OpenStreetMap data into a Garmin format
+WWW=		https://www.mkgmap.org.uk/index.html
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENCE
 
 USE_JAVA=	yes
-JAVA_VERSION=	1.8+
+JAVA_VERSION=	8+
 NO_BUILD=	yes
 NO_ARCH=	yes
 

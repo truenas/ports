@@ -1,13 +1,13 @@
-# Created by: Thorsten Greiner <thorsten.greiner@web.de>
-
 PORTNAME=	xfce4-systemload-plugin
-PORTVERSION=	1.3.1
+PORTVERSION=	1.3.2
+PORTREVISION=	1
 CATEGORIES=	sysutils xfce
 MASTER_SITES=	XFCE/panel-plugins
 DIST_SUBDIR=	xfce4
 
 MAINTAINER=	xfce@FreeBSD.org
 COMMENT=	System Load plugin for Xfce4 panel
+WWW=		https://goodies.xfce.org/projects/panel-plugins/xfce4-systemload-plugin
 
 LICENSE=	BSD2CLAUSE
 

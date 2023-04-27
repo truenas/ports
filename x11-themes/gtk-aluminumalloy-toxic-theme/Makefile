@@ -1,6 +1,4 @@
-# Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
-
-PORTREVISION=	5
+PORTREVISION=	6
 
 THEME_FLAVOR=	toxic
 

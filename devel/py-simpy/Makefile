@@ -1,13 +1,12 @@
-# Created by: ijliao
-
 PORTNAME=	simpy
 PORTVERSION=	3.0.13
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Simulation in Python
+WWW=		https://simpy.readthedocs.org/en/latest/
 
 LICENSE=	LGPL21
 

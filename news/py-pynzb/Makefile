@@ -1,14 +1,13 @@
-# Created by: Mario Sergio Fujikawa Ferreira <lioux@FreeBSD.org>
-
 PORTNAME=	pynzb
 PORTVERSION=	0.1.0
 PORTREVISION=	2
 CATEGORIES=	news python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Unified API for parsing NZB files
+WWW=		https://pypi.org/project/pynzb/
 
 LICENSE=	BSD3CLAUSE
 

@@ -6,6 +6,7 @@ PKGNAMESUFFIX=	-rails52
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Redis for Ruby on Rails
+WWW=		https://redis-store.org/redis-rails/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/MIT-LICENSE
@@ -15,7 +16,6 @@ RUN_DEPENDS=	rubygem-redis-actionpack-rails52>=5.0<6:databases/rubygem-redis-act
 		rubygem-redis-store>=1.2<2:devel/rubygem-redis-store
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

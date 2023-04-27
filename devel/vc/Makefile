@@ -1,14 +1,15 @@
 PORTNAME=	vc
-DISTVERSION=	1.4.2
+DISTVERSION=	1.4.3
 CATEGORIES=	devel
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	SIMD Vector Classes for C++
+WWW=		https://github.com/VcDevel/Vc
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USES=		cmake:testing compiler:c++14-lang
+USES=		cmake:testing compiler:c++14-lang # tests crash clang-13, see bug#264157
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	VcDevel

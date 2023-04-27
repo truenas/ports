@@ -2,11 +2,12 @@ PORTNAME=	convertdate
 PORTVERSION=	2.2.0
 PORTREVISION=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	gmm@tutanota.com
 COMMENT=	Converts between Gregorian dates and other calendar systems
+WWW=		https://github.com/fitnr/convertdate
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

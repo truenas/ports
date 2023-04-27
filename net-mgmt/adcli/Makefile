@@ -1,5 +1,3 @@
-# Created by: Mikhail T. <mi@aldan.algebra.com>
-
 PORTNAME=	adcli
 PORTVERSION=	0.9.1
 CATEGORIES=	net-mgmt net security
@@ -7,10 +5,10 @@ MASTER_SITES=	https://gitlab.freedesktop.org/sbose/adcli//uploads/30880d967e79ce
 
 MAINTAINER=	mi@aldan.algebra.com
 COMMENT=	Tool for performing actions on an Active Directory domain
+WWW=		https://www.freedesktop.org/software/realmd/adcli/adcli.html
 
 LICENSE=	LGPL21
 
-USE_OPENLDAP=	yes
 BUILD_DEPENDS=	xsltproc:textproc/libxslt	\
 		docbook-xml>0:textproc/docbook-xml	\
 		docbook-xsl>0:textproc/docbook-xsl
@@ -29,7 +27,7 @@ CONFIGURE_ENV+=	ac_cv_path_KRB5_CONFIG=${KRB5CONFIG}	\
 	ac_cv_path_XMLTO=${PORT_OPTIONS:MDOCS:S|DOCS|${LOCALBASE}/bin/xmlto|:S|^$|${TRUE}|}
 CONFIGURE_ARGS=	--sysconfdir=/etc
 
-USES=	autoreconf libtool
+USES=	autoreconf ldap libtool
 
 # Kerberos may or may not be there, but LDAP always is:
 CFLAGS+=	-I${LOCALBASE}/include

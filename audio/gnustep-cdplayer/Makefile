@@ -1,12 +1,13 @@
 PORTNAME=	cdplayer
 PORTVERSION=	0.5.1
-PORTREVISION=	9
+PORTREVISION=	10
 CATEGORIES=	audio gnustep
 MASTER_SITES=	SF/gsburn/${PORTNAME}/${PORTNAME}-${PORTVERSION}
 PKGNAMEPREFIX=	gnustep-
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	GNUstep CD player with CDDB support
+WWW=		http://gsburn.sourceforge.net/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

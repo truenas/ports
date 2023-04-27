@@ -1,16 +1,18 @@
 PORTNAME=	doctest
-DISTVERSION=	2.4.6
+DISTVERSIONPREFIX=	v
+DISTVERSION=	2.4.8
 CATEGORIES=	devel
 
 MAINTAINER=	nickblack@linux.com
 COMMENT=	Header-only C++ unit-testing
+WWW=		https://github.com/onqtam/doctest
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
 USES=		compiler:c++17-lang cmake
 USE_GITHUB=	yes
-GH_ACCOUNT=	onqtam
+GH_ACCOUNT=	doctest
 
 CMAKE_OFF=	DOCTEST_WITH_TESTS DOCTEST_WITH_MAIN_IN_STATIC_LIB
 

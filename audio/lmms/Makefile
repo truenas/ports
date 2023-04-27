@@ -1,14 +1,13 @@
-# Created by: Jean-Yves Lefort <jylefort@FreeBSD.org>
-
 PORTNAME=	lmms
 DISTVERSIONPREFIX=	v
 DISTVERSION=	1.2.2
-PORTREVISION=	3
+PORTREVISION=	6
 PORTEPOCH=	2
 CATEGORIES=	audio
 
 MAINTAINER=	rodrigo@FreeBSD.org
 COMMENT=	All-in-one sequencer, drum machine, sampler, and more
+WWW=		https://lmms.io/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -39,7 +38,7 @@ GH_ACCOUNT=	LMMS
 GH_TUPLE=	mjansson:rpmalloc:1.4.0:rpmalloc/src/3rdparty/rpmalloc/rpmalloc \
 		lukas-w:qt5-x11embed:ec77d4ba40bebc0c53a016adb646b6fa65dd5faf:qt5x11embed/src/3rdparty/qt5-x11embed
 USE_LDCONFIG=	yes
-USE_QT=		core gui widgets x11extras xml buildtools_build linguisttools_build qmake_build
+USE_QT=		core gui widgets x11extras xml buildtools:build linguisttools:build qmake:build
 USE_XORG=	xcursor xext xfixes xft xinerama xrender
 
 CMAKE_OFF=	WANT_ALSA WANT_CALF WANT_CAPS WANT_CMT WANT_SWH WANT_STK \
@@ -65,13 +64,20 @@ SDL_USE=		SDL=sdl
 SNDIO_CMAKE_BOOL=	WANT_SNDIO
 SNDIO_LIB_DEPENDS=	libsndio.so:audio/sndio
 
+.include <bsd.port.options.mk>
+
+.if ${ARCH} == amd64 || ${ARCH} == i386
+PLIST_SUB=	LINUXSAMPLER=""
+.else
+PLIST_SUB=	LINUXSAMPLER="@comment "
+.endif
+
 post-patch:
 	@${REINPLACE_CMD} 's|/usr|${LOCALBASE}|g' ${WRKSRC}/src/core/ConfigManager.cpp
 	@${REINPLACE_CMD} 's|/usr/local|${LOCALBASE}|g' \
 		${WRKSRC}/src/core/LadspaManager.cpp
 	@${REINPLACE_CMD} -e 's/lib64/lib/' \
 		${WRKSRC}/cmake/modules/DetectMachine.cmake
-	@${REINPLACE_CMD} 's,share/man/,man/,g' ${WRKSRC}/src/CMakeLists.txt
 
 post-patch-OSS-off:
 	@${REINPLACE_CMD} \

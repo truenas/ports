@@ -1,10 +1,13 @@
 PORTNAME=	ntpsec
 DISTVERSIONPREFIX=	NTPsec_
-DISTVERSION=	1_2_1
+DISTVERSION=	1_2_1-52
+PORTREVISION=	1
+DISTVERSIONSUFFIX=	-g5943108da
 CATEGORIES=	net
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Network Time Protocol suite, refactored
+WWW=		https://gitlab.com/NTPsec/ntpsec/
 
 LICENSE=	BSD2CLAUSE
 

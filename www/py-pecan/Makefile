@@ -1,11 +1,12 @@
 PORTNAME=	pecan
 PORTVERSION=	1.3.3
 CATEGORIES=	www python net
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	wjw@digiware.nl
 COMMENT=	WSGI object-dispatching web framework
+WWW=		https://github.com/pecan/pecan/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

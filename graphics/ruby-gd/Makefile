@@ -1,5 +1,3 @@
-# Created by: Akinori MUSHA aka knu <knu@idaemons.org>
-
 PORTNAME=	gd
 PORTVERSION=	0.8.0
 PORTREVISION=	8
@@ -12,14 +10,13 @@ DIST_SUBDIR=	ruby
 
 MAINTAINER=	dinoex@FreeBSD.org
 COMMENT=	Ruby extension library to use Thomas Boutell's gd library
+WWW=		https://github.com/Spakman/ruby-gd
 
 LIB_DEPENDS=	libfreetype.so:print/freetype2 \
 		libgd.so:graphics/gd \
 		libpng.so:graphics/png
 
-USES=		jpeg
-USE_RUBY=	yes
-USE_RUBY_EXTCONF=	yes
+USES=		jpeg ruby:extconf
 
 RUBY_MODNAME=	${PORTNAME:tl}
 
@@ -68,6 +65,7 @@ post-patch:
 post-configure:
 	${REINPLACE_CMD} -e 's|^V = 0|V = 1|' \
 		-e 's|^libdir = .*|libdir = ${PREFIX}/lib|' \
+		-e 's|-O2 |-O2 -Wno-int-conversion |' \
 		${WRKSRC}/Makefile
 
 post-install:

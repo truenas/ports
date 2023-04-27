@@ -1,13 +1,12 @@
-# Created by: Wen Heping <wenheping@gmail.com>
-
 PORTNAME=	mpmath
-PORTVERSION=	1.2.1
+PORTVERSION=	1.3.0
 CATEGORIES=	math python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Python Library for Arbitrary-precision Floating-point Arithmetic
+WWW=		https://www.mpmath.org/
 
 LICENSE=	BSD3CLAUSE
 

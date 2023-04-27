@@ -1,12 +1,12 @@
 PORTNAME=	certbot-dns-cpanel
-DISTVERSION=	0.3.0
-PORTREVISION=	1
+DISTVERSION=	0.4.0
 CATEGORIES=	security python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	h.freshports@skarnell.se
 COMMENT=	CPanel DNS Authenticator plugin for Certbot
+WWW=		https://pypi.org/project/certbot-dns-cpanel/
 
 LICENSE=	APACHE20
 

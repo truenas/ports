@@ -7,6 +7,7 @@ MASTER_SITES=	http://get.bitlbee.org/src/ \
 
 MAINTAINER=	garga@FreeBSD.org
 COMMENT=	IRC to other chat networks gateway
+WWW=		https://www.bitlbee.org/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -65,7 +66,7 @@ GNUTLS_LIB_DEPENDS=	libgnutls.so:security/gnutls \
 			libgpg-error.so:security/libgpg-error
 JABBER_CONFIGURE_OFF=	--jabber=0
 LDAP_CONFIGURE_ON=	--ldap=1
-LDAP_USE=		OPENLDAP=yes
+LDAP_USES=		ldap
 LIBEVENT_CONFIGURE_ON=	--events=libevent --libevent=${LOCALBASE}
 LIBEVENT_LIB_DEPENDS=	libevent.so:devel/libevent
 LIBPURPLE_CONFIGURE_ON=	--purple=1

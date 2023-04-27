@@ -1,14 +1,13 @@
-# Created by: trevor
-
 PORTNAME=	snd
-PORTVERSION=	21.2
-PORTREVISION=	1
+PORTVERSION=	22.9
+PORTREVISION=	2
 CATEGORIES=	audio
 MASTER_SITES=	https://ccrma.stanford.edu/software/snd/ \
 		SF
 
 MAINTAINER=	portmaster@bsdforge.com
 COMMENT=	Multitracking sound editor and utilities
+WWW=		https://ccrma.stanford.edu/software/snd/
 
 LICENSE=	snd
 LICENSE_NAME=	snd license

@@ -1,13 +1,16 @@
-# Created by: Alexander Logvinov <avl@FreeBSD.org>
-
 PORTNAME=	freerdp
-DISTVERSION=	2.4.1
+DISTVERSION=	2.10.0
+PORTREVISION=	3
 CATEGORIES=	net comms
 MASTER_SITES=	https://pub.freerdp.com/releases/ \
 		https://github.com/FreeRDP/FreeRDP/releases/download/${DISTVERSION}/
 
+PATCH_SITES=	https://github.com/FreeRDP/FreeRDP/commit/
+PATCHFILES+=	498ddbf23e520fbff6c96a3c4bd4c6b2534529c4.patch:-p1 # Disable sha3 and shake hashes for libressl
+
 MAINTAINER=	vvd@unislabs.com
 COMMENT=	Free implementation of Remote Desktop Protocol
+WWW=		https://www.freerdp.com/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -17,14 +20,11 @@ BROKEN_SSL_REASON_libressl-devel=	fails to compile: no member named 'alert_dispa
 
 LIB_DEPENDS=	libepoll-shim.so:devel/libepoll-shim
 
-USES=		alias cmake compiler:c++11-lib cpe gettext gnome localbase pathfix pkgconfig ssl
+USES=		alias cmake compiler:c++11-lib cpe gettext localbase pathfix pkgconfig ssl
 USE_LDCONFIG=	yes
 
 PATCHVERSION=	${PORTVERSION}
 MAJORVERSION=	${PORTVERSION:R:R}
-
-PLIST_SUB+=	PATCHVERSION="${PATCHVERSION}"
-PLIST_SUB+=	MAJORVERSION="${MAJORVERSION}"
 
 CMAKE_ARGS+=	${CMAKE_ARGS_${ARCH}}
 CMAKE_ON=	WITH_CHANNELS WITH_OPENSSL WITH_OSS WITH_ZLIB CHANNEL_URBDRC_CLIENT
@@ -32,10 +32,13 @@ CMAKE_OFF=	WITH_DSP_EXPERIMENTAL WITH_GPROF WITH_GSTREAMER_0_10 WITH_IPP \
 		WITH_LIBSYSTEMD WITH_MBEDTLS WITH_OPENCL WITH_OPENSLES WITH_PROFILER \
 		WITH_SAMPLE WITH_SANITIZE_ADDRESS WITH_SANITIZE_MEMORY \
 		WITH_SANITIZE_THREAD WITH_SERVER WITH_SERVER_INTERFACE \
-		WITH_SMARTCARD_INSPECT WITH_THIRD_PARTY WITH_VALGRIND_MEMCHECK WITH_X264
+		WITH_SMARTCARD_INSPECT WITH_THIRD_PARTY WITH_VALGRIND_MEMCHECK
 
 CMAKE_ARGS_aarch64+=	-DWITH_NEON=ON
 CFLAGS_aarch64+=	-D__ARM_NEON__=__ARM_NEON # clang
+
+PLIST_SUB+=	PATCHVERSION="${PATCHVERSION}"
+PLIST_SUB+=	MAJORVERSION="${MAJORVERSION}"
 
 OPTIONS_DEFINE=		ALSA BROKENFOCUS CUPS FAAC FAAD FFMPEG GSM GSTREAMER \
 			ICU JPEG KERBEROS LAME MANPAGES OPENH264 PCSC \
@@ -78,8 +81,8 @@ GSM_LIB_DEPENDS=	libgsm.so:audio/gsm
 GSM_CMAKE_BOOL=		WITH_GSM
 
 GSTREAMER_CMAKE_BOOL=	WITH_GSTREAMER_1_0 CHANNEL_TSMF
-GSTREAMER_USES=		gnome xorg
-GSTREAMER_USE=		gnome=glib20 gstreamer1=yes xorg=x11,xext,xorgproto,xrandr
+GSTREAMER_USES=		gnome gstreamer xorg
+GSTREAMER_USE=		gnome=glib20 xorg=x11,xext,xorgproto,xrandr
 GSTREAMER_LIB_DEPENDS=	libgstbase-1.0.so:multimedia/gstreamer1
 
 ICU_LIB_DEPENDS=	libicuuc.so:devel/icu
@@ -124,6 +127,7 @@ SWSCALE_LIB_DEPENDS=	libswscale.so:multimedia/ffmpeg
 SWSCALE_CMAKE_BOOL=	WITH_SWSCALE
 
 WAYLAND_DESC=		Build FreeRDP Wayland client
+WAYLAND_CATEGORIES=	wayland
 WAYLAND_BUILD_DEPENDS=	${LOCALBASE}/include/linux/input.h:devel/evdev-proto
 WAYLAND_LIB_DEPENDS=	libwayland-client.so:graphics/wayland \
 			libwayland-cursor.so:graphics/wayland \
@@ -142,20 +146,6 @@ X11_USES=		xorg
 X11_USE=		xorg=x11,xcursor,xext,xorgproto,xfixes,xi,xinerama,xkbfile,xrandr,xrender,xv
 
 post-patch:
-	@${REINPLACE_CMD} -e '/CMAKE_INSTALL_RPATH /d' \
-		${WRKSRC}/CMakeLists.txt
-	@${REINPLACE_CMD} -e 's/Linux/Linux|FreeBSD/' \
-		${WRKSRC}/winpr/CMakeLists.txt
-	@${REINPLACE_CMD} -e 's/NetBSD__)/NetBSD__) || defined(__FreeBSD__)/' \
-		${WRKSRC}/winpr/libwinpr/utils/trio/triodef.h
-	@${RM} ${WRKSRC}/cmake/FindOpenSSL.cmake
-	@${REINPLACE_CMD} -e 's|$${CMAKE_INSTALL_LIBDIR}/cmake|$${CMAKE_INSTALL_PREFIX}/share/cmake/Modules|' \
-		${WRKSRC}/client/CMakeLists.txt \
-		${WRKSRC}/winpr/CMakeLists.txt \
-		${WRKSRC}/uwac/CMakeLists.txt \
-		${WRKSRC}/server/CMakeLists.txt \
-		${WRKSRC}/server/shadow/CMakeLists.txt \
-		${WRKSRC}/libfreerdp/CMakeLists.txt
 	@${REINPLACE_CMD} -e 's|gsm/gsm.h|gsm.h|' \
 		${WRKSRC}/cmake/FindGSM.cmake \
 		${WRKSRC}/libfreerdp/codec/dsp.c

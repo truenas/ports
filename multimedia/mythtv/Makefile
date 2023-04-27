@@ -1,17 +1,15 @@
-# Created by: Stacey Son <mythdev@son.org>, Ari Maniatis <ari@ish.com.au>
-
 PORTNAME=	mythtv
 DISTVERSIONPREFIX=	v
-DISTVERSION=	31.0
-PORTREVISION=	4
+DISTVERSION=	33.1
+PORTREVISION=	1
 PORTEPOCH=	1
 CATEGORIES=	multimedia
 
-MAINTAINER?=	ahicks@p-o.co.uk
-COMMENT?=	Homebrew PVR project
+MAINTAINER=	ahicks@p-o.co.uk
+COMMENT=	Homebrew PVR project
+WWW=		https://www.mythtv.org/
 
 LICENSE=	GPLv2+
-LICENSE_FILE=	${WRKSRC}/COPYING
 
 ONLY_FOR_ARCHS=	aarch64 amd64 i386 powerpc64 powerpc64le
 .if ${/usr/bin/ld:L:tA} == /usr/bin/ld.lld
@@ -33,20 +31,32 @@ LIB_DEPENDS=	liblzo2.so:archivers/lzo2 \
 		libxml2.so:textproc/libxml2 \
 		libdav1d.so:multimedia/dav1d \
 		libaom.so:multimedia/aom \
-		libdrm.so:graphics/libdrm
+		libdrm.so:graphics/libdrm \
+		libpulse.so:audio/pulseaudio \
+		libjack.so:audio/jack \
+		libSoundTouch.so:audio/soundtouch \
+		libasound.so:audio/alsa-lib \
+		libsndio.so:audio/sndio \
+		libgnutls.so:security/gnutls \
+		libzip.so:archivers/libzip \
+		libexpat.so:textproc/expat2
 BUILD_DEPENDS=	yasm:devel/yasm \
 		${LOCALBASE}/include/linux/input.h:devel/evdev-proto
 
-USES=		compiler:c++11-lang gmake gl iconv libtool pkgconfig pathfix \
-		qmake:no_env qt:5 ssl xorg
+USES=		compiler:c++17-lang gmake gl iconv libtool pkgconfig pathfix \
+		perl5 python:3.5+ qmake:no_env qt:5 shebangfix ssl xorg
+
 USE_GITHUB=	yes
 GH_ACCOUNT=	MythTV
 USE_GL=		gl
 USE_LDCONFIG=	yes
-USE_QT=		buildtools_build core dbus gui imageformats_run \
-		linguist_build network opengl qmake_build script sql \
-		sql-mysql_run webkit widgets xml
+USE_QT=		buildtools:build core dbus gui imageformats:run \
+		linguist:build multimedia network opengl qmake:build script \
+		sql sql-mysql:run webkit widgets xml
+USE_PERL5=	run build
 USE_XORG=	x11 xv xrandr xxf86vm xinerama xext xcb
+SHEBANG_FILES=	programs/scripts/database/*.pl \
+		programs/scripts/metadata/Music/mbutils.py
 
 HAS_CONFIGURE=	yes
 CONFIGURE_ARGS=	--prefix="${PREFIX}" --cc="${CC}" --cxx="${CXX}" \
@@ -68,49 +78,33 @@ WRKSRC_SUBDIR=	${PORTNAME}
 DESKTOP_ENTRIES="MythTV Frontend" "MythTV is a homebrew PVR project" "" \
 		"mythfrontend" "AudioVideo;Video;" false
 
-.if defined(SLAVEPORT) && ${SLAVEPORT} == "frontend"
-CONFLICTS_INSTALL=	mythtv
-
-CONFIGURE_ARGS+=--disable-dvb --disable-firewire --disable-hdhomerun \
-		--disable-hdpvr --disable-ivtv \
-		--without-bindings=perl,python
-
-EXTRA_PATCHES=	${.CURDIR}/../../multimedia/mythtv/files/extrapatch-programs_programs.pro
-
-OPTIONS_EXCLUDE+=	BINDINGS LIRC MYSQL
-.else
 CONFLICTS_INSTALL=	mythtv-frontend
 
 RUN_DEPENDS+=	tv_check:textproc/p5-xmltv \
 		wget:ftp/wget
-USES+=		perl5 python:3.5+ shebangfix
-USE_PERL5=	run build
 USE_RC_SUBR=	mythbackend
 SHEBANG_FILES=	programs/scripts/database/*.pl \
 		programs/scripts/internetcontent/*.py \
 		programs/scripts/internetcontent/*.pl \
 		programs/scripts/internetcontent/nv_python_libs/*.py \
 		programs/scripts/hardwareprofile/*.py \
-		programs/scripts/metadata/Television/ttvdb.py \
 		programs/scripts/metadata/Movie/tmdb3.py \
 		programs/scripts/metadata/Music/mbutils.py
 
 CONFIGURE_ARGS+=--dvb-path="${WRKSRC}/media_tree/include/uapi" \
-		--enable-ivtv --enable-v4l2
+		--enable-v4l2
 
 USERS=		mythtv
 GROUPS=		mythtv
 
-DATADIR=	${PREFIX}/share/mythtv
 SUB_FILES=	pkg-message
-.endif
 
 OPTIONS_DEFINE=		BINDINGS HDHOMERUN JACK LIRC MYSQL PULSEAUDIO VDPAU
 OPTIONS_DEFAULT=	BINDINGS HDHOMERUN VDPAU
 OPTIONS_SUB=		yes
 
 BINDINGS_DESC=		Perl and Python bindings
-BINDINGS_BUILD_DEPENDS= ${PYTHON_PKGNAMEPREFIX}mysqlclient>=0:databases/py-mysqlclient@${PY_FLAVOR} \
+BINDINGS_BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}mysqlclient>=0:databases/py-mysqlclient@${PY_FLAVOR} \
 			${PYTHON_PKGNAMEPREFIX}future>=0:devel/py-future@${PY_FLAVOR} \
 			${PYTHON_PKGNAMEPREFIX}lxml>=0:devel/py-lxml@${PY_FLAVOR} \
 			${PYTHON_PKGNAMEPREFIX}requests>=0:www/py-requests@${PY_FLAVOR} \
@@ -136,6 +130,7 @@ BINDINGS_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}mysqlclient>=1.2.2:databases/py-mys
 			p5-HTTP-Request-Params>=0:www/p5-HTTP-Request-Params \
 			p5-LWP-UserAgent-Determined>=0:www/p5-LWP-UserAgent-Determined
 BINDINGS_CONFIGURE_ON=	--python="${PYTHON_CMD}" --with-bindings=perl,python
+BINDINGS_CONFIGURE_OFF=	--without-bindings=perl,python
 
 HDHOMERUN_DESC=		Native support for HDHomeRun network tuners
 HDHOMERUN_LIB_DEPENDS=	libhdhomerun.so:multimedia/libhdhomerun
@@ -223,6 +218,12 @@ post-patch:
 		-e 's|/usr/bin/perl|${LOCALBASE}/bin/perl|g' \
 		-e 's|__user||g' \
 		${LINUXDVB}/frontend.h
+.endif
+
+pre-install:
+.if !defined(SLAVEPORT)
+	@${REINPLACE_CMD} -e '/^CPPFLAGS=/ s#$$# -I${LOCALBASE}/include#' \
+		${WRKSRC}/libs/libmythbase/mythconfig.mak
 .endif
 
 post-install:

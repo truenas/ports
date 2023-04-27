@@ -1,12 +1,11 @@
-# Created by: Ryan Steinmetz <zi@FreeBSD.org>
-
 PORTNAME=	uthash
-PORTVERSION=	2.1.0
+PORTVERSION=	2.3.0
 DISTVERSIONPREFIX=	v
 CATEGORIES=	devel
 
 MAINTAINER=	zi@FreeBSD.org
 COMMENT=	Hash table for C structures
+WWW=		http://uthash.sourceforge.net/
 
 LICENSE=	BSD1CLAUSE
 LICENSE_NAME=	BSD 1-Clause License

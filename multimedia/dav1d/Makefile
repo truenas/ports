@@ -1,9 +1,11 @@
 PORTNAME=	dav1d
-DISTVERSION=	0.9.2
+DISTVERSION=	1.1.0
+PORTREVISION=	2
 CATEGORIES=	multimedia
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Small and fast AV1 decoder
+WWW=		https://code.videolan.org/videolan/dav1d
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -17,10 +19,10 @@ USE_GITLAB=	yes
 USE_LDCONFIG=	yes
 GL_SITE=	https://code.videolan.org
 GL_ACCOUNT=	videolan
-GL_COMMIT=	7b433e077298d0f4faf8da6d6eb5774e29bffa54
+GL_COMMIT=	9593e625b75d498d1edea544da21ea764b98d507
 LDFLAGS_i386=	-Wl,-z,notext
 
-OPTIONS_DEFINE=	SDL TEST
+OPTIONS_DEFINE=	SDL TEST XXHASH
 OPTIONS_SUB=	yes
 
 SDL_USES=	pkgconfig sdl
@@ -30,14 +32,19 @@ SDL_LIB_DEPENDS=	libplacebo.so:graphics/libplacebo \
 			libvulkan.so:graphics/vulkan-loader
 SDL_MESON_TRUE=	enable_examples
 
-TEST_GL_TUPLE=	videolan:dav1d-test-data:4fd8f87d7df509fda1af51e5e2f7c415692afaef:testdata/tests/dav1d-test-data
+TEST_GL_TUPLE=	videolan:dav1d-test-data:b1bb21f24d1c97e6bcbbc2db9c39155c4354c4bc:testdata/tests/dav1d-test-data
 TEST_MESON_TRUE=enable_tests testdata_tests
+
+XXHASH_DESC=	xxHash 3 muxer
+XXHASH_BUILD_DEPENDS=	xxhash>0:devel/xxhash
+XXHASH_USES=		localbase
+XXHASH_MESON_ENABLED=	xxhash_muxer
 
 .if make(makesum) # for optional distfiles
 .MAKEFLAGS:	WITH="${OPTIONS_DEFINE}"
 .endif
 
-# https://bugs.llvm.org/show_bug.cgi?id=40635
+# https://github.com/llvm/llvm-project/issues/39981
 .if !empty(CFLAGS:M-flto*)
 MESON_ARGS+=	${MESON_ARGS_${CHOSEN_COMPILER_TYPE}_${ARCH}}
 MESON_ARGS_clang_amd64=	-Dstack_alignment=16

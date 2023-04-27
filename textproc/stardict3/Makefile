@@ -1,14 +1,13 @@
-# Created by: eric
-
 PORTNAME=	stardict
 PORTVERSION=	3.0.6
-PORTREVISION=	5
+PORTREVISION=	6
 CATEGORIES=	textproc
 MASTER_SITES=	SF/stardict-4/${PORTVERSION}
 DIST_SUBDIR=	stardict
 
 MAINTAINER=	makc@FreeBSD.org
 COMMENT=	Dictionary lookup program written in Gtk2
+WWW=		http://www.stardict.org
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING

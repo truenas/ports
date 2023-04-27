@@ -1,5 +1,6 @@
 PORTNAME=	narcissu2
 PORTVERSION=	1.1
+PORTREVISION=	1
 CATEGORIES=	games
 MASTER_SITES=	http://www.neechin.net/file_download/22/:game \
 		http://www.neechin.net/file_download/27/:script \
@@ -11,6 +12,7 @@ EXTRACT_ONLY=	${DISTFILES:N*\:icon:C/:.*//}
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Visual novel about an encounter of terminally ill
+WWW=		https://www.neechin.net/narcissu/
 
 LICENSE=	Freeware
 LICENSE_NAME=	Narcissu and Narcissu 2 License (from README)

@@ -1,13 +1,12 @@
-# Created by: Mathieu Arnold <m@absolight.net>
-
 PORTNAME=	DateTime-Locale
-PORTVERSION=	1.33
+PORTVERSION=	1.38
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Localization support for DateTime
+WWW=		https://metacpan.org/release/DateTime-Locale
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

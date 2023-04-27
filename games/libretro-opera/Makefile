@@ -3,8 +3,9 @@ PORTVERSION=	0.20210214
 PORTREVISION=	1
 CATEGORIES=	games
 
-MAINTAINER=	menelkir@itroll.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	3DO core for libretro
+WWW=		https://github.com/libretro/opera-libretro
 
 LICENSE=	GPLv2
 

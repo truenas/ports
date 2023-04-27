@@ -1,16 +1,15 @@
 PORTNAME=	orange3-educational
 DISTVERSION=	0.4.0
+PORTREVISION=	2
 CATEGORIES=	misc education python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Orange add-on: widgets for machine learning and data mining
+WWW=		https://github.com/biolab/orange3-educational
 
 LICENSE=	CC-BY-3.0
 LICENSE_FILE=	${WRKSRC}/LICENSE
-
-DEPRECATED=	Uses EOL Python 2.7 via misc/orange3, ultimately because www/qt5-webengine is still Python 2.7
-EXPIRATION_DATE=2021-06-23
 
 RUN_DEPENDS=	orange3>0:misc/orange3 \
 		${PYNUMPY} \

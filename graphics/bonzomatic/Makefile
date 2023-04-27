@@ -1,10 +1,10 @@
 PORTNAME=	bonzomatic
-DISTVERSION=	2021-03-07
-PORTREVISION=	1
+DISTVERSION=	2022-08-20
 CATEGORIES=	graphics
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Live shader coding tool and Shader Showdown workhorse
+WWW=		https://github.com/Gargaj/Bonzomatic
 
 LICENSE=	PD
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -12,7 +12,8 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 LIB_DEPENDS=	libasound.so:audio/alsa-lib \
 		libfontconfig.so:x11-fonts/fontconfig \
 		libglfw.so:graphics/glfw
-BUILD_DEPENDS=	${LOCALBASE}/include/stb/stb_image.h:devel/stb
+BUILD_DEPENDS=	${LOCALBASE}/include/stb/stb_image.h:devel/stb \
+		glfw>=3:graphics/glfw
 
 USES=		cmake compiler:c++11-lang gl localbase:ldflags pkgconfig xorg
 USE_GL=		gl glu glew

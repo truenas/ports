@@ -1,8 +1,6 @@
-# Created by: Andrew Pantyukhin <infofarmer@FreeBSD.org>
-
 PORTNAME=	mypaint
 DISTVERSIONPREFIX=v
-DISTVERSION=	2.0.0
+DISTVERSION=	2.0.1
 PORTREVISION=	3
 CATEGORIES=	graphics
 
@@ -10,8 +8,9 @@ PATCH_SITES=	https://github.com/garynthompson/${PORTNAME}/commit/
 # GTK input grab fix
 PATCHFILES=	94c623b788462fadb3e292b918edc4e90adf4faa.patch:-p1
 
-MAINTAINER=	greg@unrelenting.technology
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Fast painting/scribbling program
+WWW=		http://mypaint.org/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -38,6 +37,8 @@ USE_LDCONFIG=	yes
 
 OPTIONS_DEFINE=	OPENMP
 OPTIONS_DEFAULT_amd64=	OPENMP
+OPTIONS_DEFAULT_powerpc64=	OPENMP
+OPTIONS_DEFAULT_powerpc64le=	OPENMP
 
 post-install:
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/mypaint/lib/_mypaintlib*.so

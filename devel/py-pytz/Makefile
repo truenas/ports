@@ -1,14 +1,13 @@
-# Created by: Khairil Yusof <kaeru@inigo-tech.com>
-
 PORTNAME=	pytz
-PORTVERSION=	2021.3
+PORTVERSION=	2022.7
 PORTEPOCH=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	lwhsu@FreeBSD.org
 COMMENT=	World Timezone Definitions for Python
+WWW=		https://pythonhosted.org/pytz/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

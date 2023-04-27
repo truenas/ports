@@ -1,12 +1,11 @@
-# Created by: gahr
-
 PORTNAME=	cassandra-cpp-driver
-PORTVERSION=	2.16.0
+PORTVERSION=	2.16.2
 PORTREVISION=	0
 CATEGORIES=	databases
 
 MAINTAINER=	gahr@FreeBSD.org
 COMMENT=	DataStax C/C++ Driver for Apache Cassandra
+WWW=		https://datastax.github.io/cpp-driver/
 
 LICENSE=	APACHE20
 

@@ -1,7 +1,6 @@
-# Created by: Bernhard Froehlich <decke@bluelife.at>
-
 PORTNAME=	virtualbox-ose
-PORTVERSION=	6.1.30
+PORTVERSION=	6.1.36
+PORTREVISION=	2
 CATEGORIES=	emulators
 MASTER_SITES=	https://download.virtualbox.org/virtualbox/${PORTVERSION}/
 DISTFILES=	VirtualBox-${PORTVERSION}${EXTRACT_SUFX} ${GUESTADDITIONS}
@@ -9,6 +8,7 @@ EXTRACT_ONLY=	VirtualBox-${PORTVERSION}${EXTRACT_SUFX}
 
 MAINTAINER=	vbox@FreeBSD.org
 COMMENT=	General-purpose full virtualizer for x86 hardware
+WWW=		https://www.virtualbox.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -51,6 +51,8 @@ VBOX_PROGS=	VBoxAutostart VBoxBalloonCtrl VBoxBugReport VBoxHeadless \
 		VBoxManage
 VBOX_UTILS=	VBoxExtPackHelperApp VBoxNetAdpCtl VBoxNetDHCP VBoxNetNAT \
 		VBoxSVC VBoxXPCOMIPCD
+
+SUB_FILES=	pkg-message
 
 OPTIONS_DEFINE=	AIO ALSA DBUS DEBUG GUESTADDITIONS MANUAL NLS OPUS PULSEAUDIO \
 		PYTHON QT5 R0LOGGING UDPTUNNEL VDE VNC WEBSERVICE VPX X11
@@ -144,6 +146,7 @@ LICENSE_DISTFILES_Additions=	${GUESTADDITIONS}
 .if ${PORT_OPTIONS:MMANUAL}
 DBKXMLDIR=	${LOCALBASE}/share/xml/docbook/4.4
 DBKXSLDIR=	${LOCALBASE}/share/xsl/docbook
+USES+=		tex
 USE_TEX=	dvipsk:build formats:build
 .endif
 
@@ -161,7 +164,7 @@ CONFIGURE_ARGS+=	--enable-qt5
 PLIST_SUB+=	QT=""
 USES+=		gl qmake:no_env qt:5 xorg
 USE_GL=		gl glu
-USE_QT=		buildtools_build core dbus gui linguisttools_build opengl
+USE_QT=		buildtools:build core dbus gui linguisttools:build opengl
 USE_QT+=	printsupport widgets x11extras
 USE_XORG=	xcb
 VBOX_PROGS+=	VirtualBox VirtualBoxVM
@@ -213,8 +216,8 @@ KMK_FLAGS+=	-j${MAKE_JOBS_NUMBER}
 # force llvm11 from ports
 .if ${OPSYS} == FreeBSD && ${OSVERSION} < 1300109
 BUILD_DEPENDS+=	clang${VBOX_LLVM_VER}:devel/llvm${VBOX_LLVM_VER}
-CC=		${LOCALBASE}/bin/clang${VBOX_LLVM_VER}
-CXX=		${LOCALBASE}/bin/clang++${VBOX_LLVM_VER}
+CC=		clang${VBOX_LLVM_VER}
+CXX=		clang++${VBOX_LLVM_VER}
 VBOX_LLVM_VER?=	11
 .endif
 PATCH_DEPENDS+=	${LOCALBASE}/share/kBuild/tools/GXX3.kmk:devel/kBuild
@@ -307,10 +310,12 @@ post-patch:
 	    ${LOCALBASE}/share/kBuild/tools/GXX3.kmk > \
 	    ${WRKSRC}/tools/kBuildTools/VBoxGccFreeBSD.kmk
 .endif
+	# Causes a "reinplace" QA warning with default LOCALBASE
 	@${REINPLACE_CMD} -e 's|/usr/local|${LOCALBASE}|g' \
 	    ${WRKSRC}/Config.kmk ${WRKSRC}/configure \
 	    ${WRKSRC}/kBuild/header.kmk ${WRKSRC}/kBuild/units/qt4.kmk \
 	    ${WRKSRC}/kBuild/units/qt5.kmk ${WRKSRC}/kBuild/sdks/LIBSDL.kmk \
+	    ${WRKSRC}/src/VBox/HostDrivers/adpctl/VBoxNetAdpCtl.cpp \
 	    ${WRKSRC}/src/libs/xpcom18a4/python/gen_python_deps.py
 	@${REINPLACE_CMD} \
 	    -e 's|\$$KBUILDDIR_BIN/kmk_sed|${LOCALBASE}/bin/kmk_sed|g' \
@@ -321,6 +326,7 @@ post-patch:
 	    ${WRKSRC}/src/VBox/Runtime/Makefile.kmk
 	@${ECHO_CMD} 'VBOX_ICONV_DEFS = LIBICONV_PLUG' >> ${WRKSRC}/LocalConfig.kmk
 .endif
+	# Causes a "reinplace" QA warning with default PREFIX/VBOX_DIR
 	@${REINPLACE_CMD} -e 's|/usr/local/lib/virtualbox|${VBOX_DIR}|' \
 	    -e 's|/usr/local|${PREFIX}|' \
 	    ${WRKSRC}/src/VBox/Installer/freebsd/VBox.sh
@@ -334,7 +340,7 @@ post-patch-AIO-off:
 
 do-build:
 	cd ${WRKSRC} && ${SH} -c '. ${WRKSRC}/env.sh && \
-	    ${KMK_CONFIG} ${LOCALBASE}/bin/kmk ${KMK_FLAGS}'
+	    ${SETENV} ${MAKE_ENV} ${KMK_CONFIG} ${LOCALBASE}/bin/kmk ${KMK_FLAGS}'
 .if ${PORT_OPTIONS:MPYTHON}
 	${PYTHON_CMD} -mcompileall \
 	    ${KMK_BUILDDIR}/bin/sdk/bindings/xpcom/python/xpcom

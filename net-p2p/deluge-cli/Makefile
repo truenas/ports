@@ -2,11 +2,12 @@ PORTNAME=	deluge
 DISTVERSION=	2.0.3
 PORTREVISION=	4
 CATEGORIES=	net-p2p python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMESUFFIX=	-cli
 
 MAINTAINER=	rm@FreeBSD.org
 COMMENT=	CLI part of bittorrent client using Python and libtorrent-rasterbar
+WWW=		https://deluge-torrent.org/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE

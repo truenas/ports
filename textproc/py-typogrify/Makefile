@@ -1,11 +1,12 @@
 PORTNAME=	typogrify
 DISTVERSION=	2.0.7
 CATEGORIES=	textproc
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	nc@FreeBSD.org
 COMMENT=	Filters to enhance web typography
+WWW=		https://github.com/mintchaos/typogrify/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

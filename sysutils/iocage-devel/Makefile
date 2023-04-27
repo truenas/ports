@@ -6,6 +6,7 @@ PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	nc@FreeBSD.org
 COMMENT=	FreeBSD jail manager written in Python3
+WWW=		https://github.com/iocage/iocage
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -32,7 +33,7 @@ GH_TAGNAME=	e94863d4c54f02523fb09e62e48be7db9ac92eda
 
 USE_PYTHON=	autoplist distutils
 
-CONFLICTS=	py[0-9]*-iocage
+CONFLICTS=	py*-iocage py*-iocage-devel
 NO_ARCH=	yes
 
 _IOCAGE_LIB_VERSION=	1.2

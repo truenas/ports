@@ -1,12 +1,14 @@
 PORTNAME=	benford_py
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.5.0
+PORTREVISION=	1
 CATEGORIES=	math python
-#MASTER_SITES=	CHEESESHOP
+#MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Library for testing data sets with Benford's law
+WWW=		https://github.com/milcent/benford_py
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

@@ -1,11 +1,12 @@
 PORTNAME=	Dancer-Session-Cookie
-PORTVERSION=	0.27
+PORTVERSION=	0.30
 CATEGORIES=	www perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Perl extension for encrypted cookie-based session backend for Dancer
+WWW=		https://metacpan.org/release/Dancer-Session-Cookie
 
 RUN_DEPENDS=	\
 	p5-Crypt-CBC>0:security/p5-Crypt-CBC \

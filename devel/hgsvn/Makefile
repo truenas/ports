@@ -1,14 +1,13 @@
-# Created by: Xin LI <delphij@FreeBSD.org>
-
 PORTNAME=	hgsvn
 PORTVERSION=	0.6.0
 PORTREVISION=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	delphij@FreeBSD.org
 COMMENT=	Scripts to work locally on Subversion checkouts using Mercurial
+WWW=		https://pypi.org/project/hgsvn/
 
 LICENSE=	GPLv3
 

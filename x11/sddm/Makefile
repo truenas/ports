@@ -1,11 +1,15 @@
 PORTNAME=	sddm
 PORTVERSION=	0.19.0
 DISTVERSIONPREFIX=	v
-PORTREVISION=	7
+PORTREVISION=	8
 CATEGORIES=	x11
+
+PATCH_SITES=	https://github.com/sddm/sddm/commit/
+PATCHFILES=	e93bf95c54ad8c2a1604f8d7be05339164b19308.patch:-p1
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	QML based login manager
+WWW=		https://github.com/sddm/sddm
 
 # The source code is GPLv2+, but the provided themes are:
 #  - CC-BY 3.0 (default greeter theme, maldives)
@@ -24,9 +28,9 @@ RUN_DEPENDS=	dbus-run-session:devel/dbus \
 USES=		cmake compiler:c++11-lang cpe kde:5 pkgconfig python:build qt:5 xorg
 CPE_VENDOR=	${PORTNAME}_project
 USE_GITHUB=	yes
-USE_KDE=	ecm_build
+USE_KDE=	ecm:build
 USE_QT=		core declarative dbus gui network \
-		buildtools_build linguisttools_build qmake_build testlib_build
+		buildtools:build linguisttools:build qmake:build testlib:build
 USE_XORG=	xcb
 
 CONFLICTS_INSTALL=	lightdm
@@ -49,6 +53,8 @@ post-patch:
 		-e 's#/usr/share/#${LOCALBASE}/share/#' \
 		${WRKSRC}/data/scripts/Xsession \
 		${WRKSRC}/src/common/Configuration.h
+	@${REINPLACE_CMD} -e 's|/var/lib/AccountsService|/var/db/AccountsService|' \
+		${WRKSRC}/src/greeter/UserModel.cpp
 
 post-install:
 # Install xsession.desktop to launch .xinitrc via sddm.

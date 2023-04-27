@@ -1,14 +1,13 @@
-# Created by: Samy Al Bahra <samy@kerneled.com>
-
 PORTNAME=	nvclock
 DISTVERSION=	0.8b4
-PORTREVISION=	7
+PORTREVISION=	8
 CATEGORIES=	sysutils
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/0.8%20%28beta4%29
 DISTNAME=	nvclock${DISTVERSION}
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	NVidia graphic card status and overclocking tool
+WWW=		https://www.linuxhardware.org/nvclock/
 
 LICENSE=	GPLv2
 

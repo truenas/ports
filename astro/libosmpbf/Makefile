@@ -1,11 +1,12 @@
 PORTNAME=	libosmpbf
 PORTVERSION=	1.5.0
 DISTVERSIONPREFIX=	v
-PORTREVISION=	2
+PORTREVISION=	5
 CATEGORIES=	astro geography devel
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Library for handling binary OpenStreetMap data
+WWW=		https://github.com/scrosby/OSM-binary
 
 LICENSE=	LGPL3+
 LICENSE_FILE=	${WRKSRC}/LICENSE

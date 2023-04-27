@@ -1,9 +1,10 @@
 PORTNAME=	papirus-icon-theme
-PORTVERSION=	20211201
+PORTVERSION=	20230301
 CATEGORIES=	x11-themes
 
 MAINTAINER=	tagattie@FreeBSD.org
 COMMENT=	Papirus icon theme
+WWW=		https://git.io/papirus-icon-theme
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE

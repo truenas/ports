@@ -1,12 +1,12 @@
-# Created by: Guangyuan Yang <ygy@FreeBSD.org>
-
 PORTNAME=	tensor
 DISTVERSION=	1.5
+PORTREVISION=	1
 CATEGORIES=	math
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	ygy@FreeBSD.org
 COMMENT=	Tensor product of arrays
+WWW=		https://CRAN.R-project.org/package=tensor
 
 LICENSE=	GPLv2+
 

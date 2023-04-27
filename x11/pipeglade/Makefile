@@ -1,11 +1,11 @@
-# Created by: Bert Burgemeister <trebbu@googlemail.com>
-
 PORTNAME=	pipeglade
 PORTVERSION=	4.7.0
+PORTREVISION=	3
 CATEGORIES=	x11 devel
 
 MAINTAINER=	trebbu@googlemail.com
 COMMENT=	Graphical user interface driven by pipes or fifos
+WWW=		http://pipeglade.boundp.org
 
 LICENSE=	MIT
 

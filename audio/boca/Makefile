@@ -1,12 +1,11 @@
-# Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
-
 PORTNAME=	${GH_PROJECT:tl}
-PORTVERSION=	1.0.5
+PORTVERSION=	1.0.7
 DISTVERSIONPREFIX=	v
 CATEGORIES=	audio
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Audio component collection and framework
+WWW=		https://github.com/enzo1982/BoCA
 
 LICENSE=	GPLv2+
 

@@ -1,12 +1,13 @@
 PORTNAME=	SimpleSoapy
 DISTVERSION=	1.5.1
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	misc hamradio python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Simple pythonic wrapper for SoapySDR library
+WWW=		https://github.com/xmikos/simplesoapy
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

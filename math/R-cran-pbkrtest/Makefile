@@ -1,12 +1,12 @@
-# Created by: TAKATSU Tomonari <tota@FreeBSD.org>
-
 PORTNAME=	pbkrtest
 DISTVERSION=	0.5.1
+PORTREVISION=	1
 CATEGORIES=	math
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Parametric bootstrap and Kenward-Roger-based methods for mixed model comparison
+WWW=		https://cran.r-project.org/web/packages/pbkrtest/
 
 LICENSE=	GPLv2+
 

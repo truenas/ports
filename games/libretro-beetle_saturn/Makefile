@@ -1,9 +1,10 @@
 PORTNAME=	libretro-beetle_saturn
-PORTVERSION=	0.20210622
+PORTVERSION=	0.20220319
 CATEGORIES=	games
 
-MAINTAINER=	menelkir@itroll.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Standalone port of Mednafen Saturn to libretro
+WWW=		https://github.com/libretro/beetle-saturn-libretro
 
 LICENSE=	GPLv2
 
@@ -13,7 +14,7 @@ USE_LDCONFIG=	yes
 USE_GITHUB=	yes
 GH_ACCOUNT=	libretro
 GH_PROJECT=	beetle-saturn-libretro
-GH_TAGNAME=	ee5b214
+GH_TAGNAME=	ae30f29
 
 CFLAGS+=	-fcommon
 

@@ -1,13 +1,12 @@
-# Created by: Kyle Evans <kevans@FreeBSD.org>
-
 PORTNAME=	pylru
 PORTVERSION=	1.2.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	kevans@FreeBSD.org
 COMMENT=	Least recently used (lru) cache implementation
+WWW=		https://github.com/jlhutch/pylru
 
 LICENSE=	GPLv2
 

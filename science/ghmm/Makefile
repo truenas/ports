@@ -1,12 +1,12 @@
-# Created by: Cheng-Lung Sung <clsung@FreeBSD.org>
-
 PORTNAME=	ghmm
 DISTVERSION=	0.9-rc3
+PORTREVISION=	2
 CATEGORIES=	science math
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/${PORTNAME}%20${DISTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	General Hidden Markov Model Library in C
+WWW=		http://ghmm.sourceforge.net/
 
 LICENSE=	GPLv3
 
@@ -19,5 +19,7 @@ USES=		autoreconf gnome libtool pkgconfig
 CONFIGURE_ARGS+=	--without-python
 
 USE_LDCONFIG=	yes
+
+CONFLICTS_INSTALL=	graphviz # bin/cluster
 
 .include <bsd.port.mk>

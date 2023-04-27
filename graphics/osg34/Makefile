@@ -1,14 +1,13 @@
-# Created by: Randall Hopper <aa8vb@nc.rr.com>
-
 PORTNAME=	osg
 PORTVERSION=	3.4.1
 DISTVERSIONPREFIX=	OpenSceneGraph-
-PORTREVISION=	33
+PORTREVISION=	49
 CATEGORIES=	graphics
 PKGNAMESUFFIX=	34
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	C++ OpenGL scene graph library for real-time rendering
+WWW=		https://www.openscenegraph.org/
 
 LICENSE=	OSGPL
 LICENSE_NAME=	OpenSceneGraph Public License
@@ -24,7 +23,7 @@ GH_PROJECT=	OpenSceneGraph
 
 CONFLICTS_INSTALL=osg
 
-USES=		alias cmake compiler:c++11-lang gl jpeg pkgconfig xorg
+USES=		alias cmake compiler:c++11-lang gl jpeg localbase pkgconfig xorg
 USE_GL=		gl glu
 USE_XORG=	x11
 USE_LDCONFIG=	yes
@@ -55,7 +54,7 @@ OPTIONS_SUB=	yes
 CURL_LIB_DEPENDS=	libcurl.so:ftp/curl
 CURL_VARS=		FORCE_REQUIRE+=CURL
 CURL_VARS_OFF=		FORCE_IGNORE+=CURL
-FFMPEG_LIB_DEPENDS=	libavcodec.so:multimedia/ffmpeg
+FFMPEG_LIB_DEPENDS=	libavcodec.so.58:multimedia/ffmpeg4
 FFMPEG_VARS=		FORCE_REQUIRE+=FFmpeg
 FFMPEG_VARS_OFF=	FORCE_IGNORE+=FFmpeg
 FREETYPE_LIB_DEPENDS=	libfreetype.so:print/freetype2
@@ -67,10 +66,10 @@ GDAL_VARS_OFF=		FORCE_IGNORE+=GDAL
 GIF_LIB_DEPENDS=	libgif.so:graphics/giflib
 GIF_VARS=		FORCE_REQUIRE+=GIFLIB
 GIF_VARS_OFF=		FORCE_IGNORE+=GIFLIB
-GSTREAMER_USE=		GNOME=glib20 GSTREAMER1=yes
+GSTREAMER_USES=		gstreamer
+GSTREAMER_USE=		GNOME=glib20
 GSTREAMER_VARS=		FORCE_REQUIRE+=GStreamer
 GSTREAMER_VARS_OFF=	FORCE_IGNORE+=GStreamer
-GSTREAMER_BROKEN=	fails when linking gstreamer plugin, with error cannot find -lgstreamer-1.0
 GTA_LIB_DEPENDS=	libgta.so:devel/libgta
 GTA_VARS=		FORCE_REQUIRE+=GTA
 GTA_VARS_OFF=		FORCE_IGNORE+=GTA
@@ -95,7 +94,7 @@ PDF_USE=		gnome=cairo
 PDF_VARS=		FORCE_REQUIRE+=Poppler-glib
 PDF_VARS_OFF=		FORCE_IGNORE+=Poppler-glib
 QT5_USES=		qt:5
-QT5_USE=		qt=buildtools_build,core,gui,opengl,qmake_build,webkit,widgets
+QT5_USE=		qt=buildtools:build,core,gui,opengl,qmake:build,webkit,widgets
 QT5_CMAKE_ON=		-DDESIRED_QT_VERSION=5
 QT5_VARS=		FORCE_REQUIRE+="Qt5Widgets Qt5WebKitWidgets"
 QT5_VARS_OFF=		FORCE_IGNORE+="Qt5Widgets Qt5WebKitWidgets"
@@ -139,6 +138,8 @@ post-patch:
 		${REINPLACE_CMD} -e 's|/usr/local|${LOCALBASE}|g'
 	@${REINPLACE_CMD} -e '/FIND_LIBRARY.*DL_LIBRARY/ d' \
 		${WRKSRC}/CMakeLists.txt
+	@${REINPLACE_CMD} -e 's|%%LOCALBASE%%|${LOCALBASE}|g' \
+		${PATCH_WRKSRC}/CMakeModules/FindFFmpeg.cmake
 .for p in ${FORCE_REQUIRE}
 	@${REINPLACE_CMD} -e '/FIND_PACKAGE.*${p}/ s|)$$| REQUIRED&|' \
 		${WRKSRC}/CMakeLists.txt

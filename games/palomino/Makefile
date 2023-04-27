@@ -1,8 +1,6 @@
-# Created by: Andrew Pantyukhin <infofarmer@FreeBSD.org>
-
 PORTNAME=	palomino
 PORTVERSION=	20131231
-PORTREVISION=	9
+PORTREVISION=	10
 CATEGORIES=	games
 MASTER_SITES=	SF/palomino-sim
 DISTFILES=	${PORTNAME}_src_${PORTVERSION}.txz \
@@ -13,6 +11,7 @@ DISTFILES=	${PORTNAME}_src_${PORTVERSION}.txz \
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Action flight simulation computer program using OSG
+WWW=		http://www.palomino3d.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE_GNU_GPL_2.txt

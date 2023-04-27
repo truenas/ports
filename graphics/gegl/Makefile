@@ -1,13 +1,12 @@
-# Created by: Pietro Cerutti <gahr@FreeBSD.org>
-
 PORTNAME=	gegl
-PORTVERSION=	0.4.32
-PORTREVISION=	3
+PORTVERSION=	0.4.44
+PORTREVISION=	1
 CATEGORIES=	graphics
 MASTER_SITES=	GIMP
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Graph based image processing framework
+WWW=		https://gegl.org/
 
 LICENSE=	BSD3CLAUSE GPLv3+ LGPL3+
 LICENSE_COMB=	multi
@@ -31,11 +30,12 @@ MESON_ARGS=	-Ddocs=false \
 		-Dlensfun=disabled \
 		-Dlibjpeg=enabled \
 		-Dlibpng=enabled \
+		-Dmaxflow=disabled \
 		-Dmrg=disabled \
 		-Dpygobject=disabled \
 		-Dlua=disabled
 
-GEGL_SHLIB=	0.431.1
+GEGL_SHLIB=	0.443.1
 GEGL_VER=	0.4
 PLIST_SUB+=	GEGL_SHLIB=${GEGL_SHLIB} GEGL_VER=${GEGL_VER}
 
@@ -115,7 +115,7 @@ GEXIV2_MESON_ENABLED=	gexiv2
 TIFF_LIB_DEPENDS=	libtiff.so:graphics/tiff
 TIFF_MESON_ENABLED=	libtiff
 
-VAPI_BUILD_DEPENDS=	vapigen:lang/vala
+VAPI_USES=		vala:build
 VAPI_MESON_ENABLED=	vapigen
 
 .include <bsd.port.pre.mk>
@@ -130,6 +130,14 @@ PLIST_SUB+=	PANGOCAIRO="@comment "
 
 .if defined(WITH_DEBUG)
 LDFLAGS+=	-lexecinfo
+.endif
+
+.if ${ARCH} == "amd64"
+PLIST_SUB+=	AMD64="" ARM="@comment "
+.elif ${ARCH} == "armv6" || ${ARCH} == "armv7"
+PLIST_SUB+=	AMD64="@comment " ARM=""
+.else
+PLIST_SUB+=	AMD64="@comment " ARM="@comment "
 .endif
 
 post-patch:

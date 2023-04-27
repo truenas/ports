@@ -1,12 +1,13 @@
 PORTNAME=	fossmixer
 PORTVERSION=	0.0.3
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	audio
 MASTER_SITES=	SF/detroit
 DISTNAME=	detroit-0.2.3
 
 MAINTAINER=	salojan@goto10.co
 COMMENT=	Graphical mixer application for OSS
+WWW=		http://detroit.sourceforge.net/app_fossmixer.html
 
 LICENSE=	BSD3CLAUSE
 

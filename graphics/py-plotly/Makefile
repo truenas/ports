@@ -1,13 +1,12 @@
-# Created by: jjachuf@gmail.com
-
 PORTNAME=	plotly
 PORTVERSION=	4.14.3
 CATEGORIES=	graphics python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	jjachuf@gmail.com
 COMMENT=	Library for collaborative, interactive, publication-quality graphs
+WWW=		https://plotly.com/python/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

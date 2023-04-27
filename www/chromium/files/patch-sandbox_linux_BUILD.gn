@@ -1,20 +1,35 @@
---- sandbox/linux/BUILD.gn.orig	2021-04-14 18:41:08 UTC
+--- sandbox/linux/BUILD.gn.orig	2023-02-08 09:03:45 UTC
 +++ sandbox/linux/BUILD.gn
-@@ -392,7 +392,7 @@ component("sandbox_services") {
-     deps += [ ":sandbox_services_headers" ]
+@@ -12,11 +12,11 @@ if (is_android) {
+ }
+ 
+ declare_args() {
+-  compile_suid_client = is_linux || is_chromeos
++  compile_suid_client = (is_linux || is_chromeos) && !is_bsd
+ 
+-  compile_credentials = is_linux || is_chromeos
++  compile_credentials = (is_linux || is_chromeos) && !is_bsd
+ 
+-  compile_syscall_broker = is_linux || is_chromeos
++  compile_syscall_broker = (is_linux || is_chromeos) && !is_bsd
+ 
+   # On Android, use plain GTest.
+   use_base_test_suite = is_linux || is_chromeos
+@@ -379,6 +379,17 @@ component("sandbox_services") {
+       "services/libc_interceptor.h",
+     ]
    }
- 
--  if (is_nacl_nonsfi) {
-+  if (is_nacl_nonsfi || is_bsd) {
-     cflags = [ "-fgnu-inline-asm" ]
- 
-     sources -= [
-@@ -400,6 +400,8 @@ component("sandbox_services") {
-       "services/init_process_reaper.h",
-       "services/scoped_process.cc",
-       "services/scoped_process.h",
++
++  if (is_bsd) {
++    sources -= [
++      "services/scoped_process.cc",
++      "services/scoped_process.h",
 +      "services/syscall_wrappers.cc",
 +      "services/syscall_wrappers.h",
-       "services/yama.cc",
-       "services/yama.h",
-       "syscall_broker/broker_channel.cc",
++      "services/yama.cc",
++      "services/yama.h",
++     ]
++   }
+ }
+ 
+ source_set("sandbox_services_headers") {

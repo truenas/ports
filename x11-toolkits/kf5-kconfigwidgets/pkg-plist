@@ -15,6 +15,7 @@ include/KF5/KConfigWidgets/KLanguageName
 include/KF5/KConfigWidgets/KPasteTextAction
 include/KF5/KConfigWidgets/KRecentFilesAction
 include/KF5/KConfigWidgets/KStandardAction
+include/KF5/KConfigWidgets/KStatefulBrush
 include/KF5/KConfigWidgets/KTipDialog
 include/KF5/KConfigWidgets/KViewStateMaintainer
 include/KF5/KConfigWidgets/kcmodule.h
@@ -27,6 +28,7 @@ include/KF5/KConfigWidgets/kconfigdialog.h
 include/KF5/KConfigWidgets/kconfigdialogmanager.h
 include/KF5/KConfigWidgets/kconfigviewstatesaver.h
 include/KF5/KConfigWidgets/kconfigwidgets_export.h
+include/KF5/KConfigWidgets/kconfigwidgets_version.h
 include/KF5/KConfigWidgets/khamburgermenu.h
 include/KF5/KConfigWidgets/khelpclient.h
 include/KF5/KConfigWidgets/klanguagebutton.h
@@ -34,10 +36,10 @@ include/KF5/KConfigWidgets/klanguagename.h
 include/KF5/KConfigWidgets/kpastetextaction.h
 include/KF5/KConfigWidgets/krecentfilesaction.h
 include/KF5/KConfigWidgets/kstandardaction.h
+include/KF5/KConfigWidgets/kstatefulbrush.h
 include/KF5/KConfigWidgets/ktip.h
 include/KF5/KConfigWidgets/ktipdialog.h
 include/KF5/KConfigWidgets/kviewstatemaintainer.h
-include/KF5/kconfigwidgets_version.h
 lib/cmake/KF5ConfigWidgets/KF5ConfigWidgetsConfig.cmake
 lib/cmake/KF5ConfigWidgets/KF5ConfigWidgetsConfigVersion.cmake
 lib/cmake/KF5ConfigWidgets/KF5ConfigWidgetsTargets-%%CMAKE_BUILD_TYPE%%.cmake
@@ -48,6 +50,7 @@ lib/libKF5ConfigWidgets.so.%%KDE_FRAMEWORKS_VERSION%%
 %%QT_MKSPECDIR%%/modules/qt_KConfigWidgets.pri
 %%QT_PLUGINDIR%%/designer/kconfigwidgets5widgets.so
 man/ca/man1/preparetips5.1.gz
+man/ca@valencia/man1/preparetips5.1.gz
 man/de/man1/preparetips5.1.gz
 man/es/man1/preparetips5.1.gz
 man/fr/man1/preparetips5.1.gz
@@ -58,6 +61,7 @@ man/pt/man1/preparetips5.1.gz
 man/pt_BR/man1/preparetips5.1.gz
 man/ru/man1/preparetips5.1.gz
 man/sv/man1/preparetips5.1.gz
+man/tr/man1/preparetips5.1.gz
 man/uk/man1/preparetips5.1.gz
 share/locale/af/LC_MESSAGES/kconfigwidgets5.mo
 share/locale/af/kf5_entry.desktop
@@ -65,7 +69,6 @@ share/locale/ar/LC_MESSAGES/kconfigwidgets5.mo
 share/locale/ar/kf5_entry.desktop
 share/locale/as/LC_MESSAGES/kconfigwidgets5.mo
 share/locale/as/kf5_entry.desktop
-share/locale/ast/kf5_entry.desktop
 share/locale/az/LC_MESSAGES/kconfigwidgets5.mo
 share/locale/az/kf5_entry.desktop
 share/locale/be/LC_MESSAGES/kconfigwidgets5.mo
@@ -147,6 +150,7 @@ share/locale/ia/LC_MESSAGES/kconfigwidgets5.mo
 share/locale/ia/kf5_entry.desktop
 share/locale/id/LC_MESSAGES/kconfigwidgets5.mo
 share/locale/id/kf5_entry.desktop
+share/locale/ie/kf5_entry.desktop
 share/locale/is/LC_MESSAGES/kconfigwidgets5.mo
 share/locale/is/kf5_entry.desktop
 share/locale/it/LC_MESSAGES/kconfigwidgets5.mo
@@ -238,6 +242,7 @@ share/locale/tg/LC_MESSAGES/kconfigwidgets5.mo
 share/locale/tg/kf5_entry.desktop
 share/locale/th/LC_MESSAGES/kconfigwidgets5.mo
 share/locale/th/kf5_entry.desktop
+share/locale/tok/kf5_entry.desktop
 share/locale/tr/LC_MESSAGES/kconfigwidgets5.mo
 share/locale/tr/kf5_entry.desktop
 share/locale/tt/LC_MESSAGES/kconfigwidgets5.mo

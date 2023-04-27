@@ -1,5 +1,3 @@
-# Created by: Pedro Giffuni <pfg@FreeBSD.org>
-
 PORTNAME=	viennacl
 PORTVERSION=	1.7.1
 PORTREVISION=	6
@@ -7,8 +5,9 @@ CATEGORIES=	math
 MASTER_SITES=	SF/${PORTNAME}/1.7.x/
 DISTNAME=	ViennaCL-${PORTVERSION}
 
-MAINTAINER=	pfg@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Linear algebra and solver library using CUDA, OpenCL, and OpenMP
+WWW=		http://viennacl.sourceforge.net/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

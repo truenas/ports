@@ -1,11 +1,12 @@
 PORTNAME=	soupsieve
 PORTVERSION=	2.0.1
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	CSS4 selector implementation for BeautifulSoup
+WWW=		https://github.com/facelessuser/soupsieve
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.md

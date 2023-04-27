@@ -1,13 +1,12 @@
-# Created by: ijliao
-
 PORTNAME=	kludge3d
 PORTVERSION=	20040822
-PORTREVISION=	15
+PORTREVISION=	16
 CATEGORIES=	graphics
 MASTER_SITES=	SF/${PORTNAME}/source/2004-08-22
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Simple 3D editor
+WWW=		http://kludge3d.sourceforge.net/
 
 LIB_DEPENDS=	lib3ds.so:graphics/lib3ds \
 		libgtkglext-x11-1.0.so:x11-toolkits/gtkglext

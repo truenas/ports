@@ -1,11 +1,12 @@
 PORTNAME=	pytest-tornado
 PORTVERSION=	0.8.1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Py.test plugin providing fixtures and markers for tornado
+WWW=		https://pypi.org/project/pytest-tornado/
 
 LICENSE=	APACHE20
 

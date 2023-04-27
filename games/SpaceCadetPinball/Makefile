@@ -1,10 +1,12 @@
 PORTNAME=	SpaceCadetPinball
-PORTVERSION=	2.0
+PORTVERSION=	2.0.1
+PORTREVISION=	2
 DISTVERSIONPREFIX=	Release_
 CATEGORIES=	games
 
 MAINTAINER=	nc@FreeBSD.org
 COMMENT=	Decompilation of 3D Pinball for Windows
+WWW=		https://github.com/k4zmu2a/SpaceCadetPinball
 
 LICENSE=	MIT
 

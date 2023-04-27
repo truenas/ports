@@ -1,13 +1,12 @@
-# Created by: Maurice Castro <maurice@castro.aus.net>
-
 PORTNAME=	davical
 DISTVERSIONPREFIX=	r
-DISTVERSION=	1.1.10
+DISTVERSION=	1.1.12
 CATEGORIES?=	www
 PKGNAMESUFFIX=	${PHP_PKGNAMESUFFIX}
 
 MAINTAINER=	rigoletto@FreeBSD.org
 COMMENT=	Simple CalDAV server using a postgres backend
+WWW=		https://www.davical.org/
 
 LICENSE=	GPLv2 LGPL21
 LICENSE_COMB=	multi
@@ -23,9 +22,9 @@ USES=		cpe pgsql php:flavors shebangfix
 
 USE_GITLAB=	yes
 GL_ACCOUNT=	davical-project
-GL_COMMIT=	9da21ad116a2913bf788bd4b0b8c58c0de83d9da
+GL_COMMIT=	4301a795ac7a7636846bcc15348d96c68a1830fd
 
-USE_PHP=	calendar curl gettext iconv pcre pdo \
+USE_PHP=	calendar curl gettext iconv pdo \
 		pdo_pgsql pgsql session xml
 
 NO_ARCH=	yes

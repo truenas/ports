@@ -1,11 +1,12 @@
 PORTNAME=	types-click
 PORTVERSION=	7.1.8
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Typing stubs for click
+WWW=		https://pypi.org/project/types-click/
 
 LICENSE=	APACHE20
 

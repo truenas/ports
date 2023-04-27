@@ -1,12 +1,12 @@
 PORTNAME=	PyNE
-DISTVERSION=	0.7.5
-PORTREVISION=	1
-CATEGORIES=	science
-MASTER_SITES=	http://raw.githubusercontent.com/pyne/data/master/:decay \
-		http://raw.githubusercontent.com/pyne/data/master/:cram \
-		http://raw.githubusercontent.com/pyne/data/master/:dlc \
-		http://raw.githubusercontent.com/pyne/data/master/:clc \
-		https://github.com/pyne/data/raw/master/:nuc_data
+DISTVERSION=	0.7.7
+PORTREVISION=	4
+CATEGORIES=	science # physics
+MASTER_SITES=	https://raw.githubusercontent.com/pyne/data/master/:decay \
+		https://raw.githubusercontent.com/pyne/data/master/:cram \
+		https://raw.githubusercontent.com/pyne/data/master/:dlc \
+		https://raw.githubusercontent.com/pyne/data/master/:clc \
+		https://github.com/pyne/data/master/:nuc_data
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTFILES=	decay.tar.gz:decay \
 		cram.tar.gz:cram \
@@ -18,19 +18,22 @@ EXTRACT_ONLY=	${DISTNAME}.tar.gz
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	PyNE: The Nuclear Engineering Toolkit
+WWW=		https://pyne.io/
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/license.txt
+
+BROKEN_armv7=	clang runs out of memory
 
 PY_DEPENDS=	${PYNUMPY} \
 		${PYTHON_PKGNAMEPREFIX}tables>0:devel/py-tables@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}scipy>0:science/py-scipy@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}yaml>0:devel/py-yaml@${PY_FLAVOR}
-BUILD_DEPENDS=	cmake:devel/cmake \
+BUILD_DEPENDS=	cmake:devel/cmake-core \
 		${PY_DEPENDS}
 LIB_DEPENDS=	libhdf5.so:science/hdf5 \
 		libMOAB.so:math/moab \
-		libsz.so:science/szip
+		libsz.so:science/libaec
 RUN_DEPENDS=	${PY_DEPENDS}
 
 USES=		compiler:c++17-lang fortran python:3.7+
@@ -52,6 +55,8 @@ PY_EXTRA_ARGS+=	--moab ${LOCALBASE}
 
 PYDISTUTILS_CONFIGUREARGS=	${PY_EXTRA_ARGS}
 PYDISTUTILS_BUILDARGS=		${PY_EXTRA_ARGS}
+
+BINARY_ALIAS=	python=${PYTHON_CMD}
 
 post-extract:
 .for f in decay.tar.gz cram.tar.gz decay-linux-clang.tar.gz cram-linux-clang.tar.gz

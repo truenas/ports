@@ -1,11 +1,12 @@
 PORTNAME=	givaro
 PORTVERSION=	4.1.1
 DISTVERSIONPREFIX=v
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	math
 
 MAINTAINER=	pi@FreeBSD.org
 COMMENT=	C++ library for computer algebra
+WWW=		https://casys.gricad-pages.univ-grenoble-alpes.fr/givaro
 
 LICENSE=	CeCILL-Bv1-en.txt
 LICENSE_NAME=	Ce[a] C[nrs] I[nria] L[ogiciel] L[ibre] B license, version 1
@@ -29,6 +30,7 @@ OPTIONS_SUB=	yes
 DOCS_BUILD_DEPENDS=	doxygen:devel/doxygen \
 			dot:graphics/graphviz
 DOCS_CONFIGURE_ON=	--enable-doc --with-docdir=${DOCSDIR}
+DOCS_USE=		TEX=base:build,dvipsk:build,latex:build,pdftex:build
 
 post-install-DOCS-on:
 	${RMDIR} ${STAGEDIR}${DOCSDIR}/givaro-dev-html

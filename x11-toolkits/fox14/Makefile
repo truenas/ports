@@ -1,5 +1,3 @@
-# Created by: Will Andrews <andrews@technologist.com>
-
 PORTNAME=	fox
 PORTVERSION=	1.4.35
 PORTREVISION=	15
@@ -11,6 +9,7 @@ PKGNAMESUFFIX=	${PORTVERSION:R:S/.//}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Fast and extensive C++ GUI toolkit
+WWW=		http://www.fox-toolkit.org/fox.html
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -22,17 +21,14 @@ MAJORVER=	${PORTVERSION:R}
 SHVER=		${PORTVERSION:S/${MAJORVER}.//}
 PLIST_SUB+=	MAJORVER=${MAJORVER} SHVER=${SHVER}
 
-USES=		gl jpeg libtool
-USE_GL=		yes
+USES=		gl jpeg libtool localbase:ldflags
+USE_GL=		gl glu
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--with-opengl=yes \
 		--bindir=${PREFIX}/bin/${PORTNAME}-${MAJORVER} \
 		--enable-threadsafe
 USE_LDCONFIG=	yes
 PORTDOCS=	*
-
-CPPFLAGS+=	-I${LOCALBASE}/include
-LDFLAGS+=	-L${LOCALBASE}/lib
 
 OPTIONS_DEFINE=	OPTIMIZED_CFLAGS CUPS DEBUG APPS PROFILE SHM XFT DOCS
 OPTIONS_DEFAULT=SHM XFT
@@ -113,20 +109,20 @@ post-patch:
 	@${REINPLACE_CMD} -E -e \
 		's|^(screenshotsdir).*$$|\1=${DOCSDIR}/html|' \
 		${WRKSRC}/doc/screenshots/Makefile.in
-.if ${PORT_OPTIONS:MDOCS} == ""
+
+post-patch-DOCS-off:
 	@${REINPLACE_CMD} -e \
 		'/^SUBDIRS/s/ doc//' \
 		${WRKSRC}/Makefile.in
-.endif
-.if ${PORT_OPTIONS:MAPPS} == ""
+
+post-patch-APPS-off:
 	@${REINPLACE_CMD} -E -e \
 		's,^(SUBDIRS.*)adie,\1,; \
 		s,^(SUBDIRS.*)pathfinder,\1,; \
 		s,^(SUBDIRS.*)calculator,\1,' \
 		${WRKSRC}/Makefile.in
-.endif
 
 post-install:
-	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/*.so
+	@${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/*.so
 
 .include <bsd.port.mk>

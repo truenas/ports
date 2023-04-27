@@ -1,13 +1,13 @@
-# Created by: Paul Schmehl <pauls@utdallas.edu>
-
 PORTNAME=	Gtk2-GladeXML
 PORTVERSION=	1.008
+PORTREVISION=	3
 CATEGORIES=	x11-toolkits perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Creates users interfaces directly from Glade XML files
+WWW=		https://metacpan.org/release/Gtk2-GladeXML
 
 LICENSE=	LGPL20
 

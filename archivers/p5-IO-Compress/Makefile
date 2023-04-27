@@ -1,13 +1,12 @@
-# Created by: Martin Matuska <mm@FreeBSD.org>
-
 PORTNAME=	IO-Compress
-PORTVERSION=	2.101
+PORTVERSION=	2.204
 CATEGORIES=	archivers perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Perl5 compression modules (bzip2, deflate, gzip, zlib, zip)
+WWW=		https://metacpan.org/release/IO-Compress
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual
@@ -21,7 +20,5 @@ USES=		perl5
 USE_PERL5=	configure
 
 NO_ARCH=	yes
-
-PORTSCOUT=	skipv:2.102
 
 .include <bsd.port.mk>

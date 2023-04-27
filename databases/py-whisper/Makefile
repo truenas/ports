@@ -1,14 +1,12 @@
-# Created by: Steven Kreuzer <skreuzer@FreeBSD.org>
-
 PORTNAME=	whisper
-PORTVERSION=	1.1.3
-PORTREVISION=	1
+PORTVERSION=	1.1.10
 CATEGORIES=	databases python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	skreuzer@FreeBSD.org
 COMMENT=	Fixed-size database, similar in design to RRD
+WWW=		https://github.com/graphite-project/whisper
 
 LICENSE=	APACHE20
 

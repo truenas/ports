@@ -1,13 +1,12 @@
-# Created by: TAKATSU Tomonari <tota@FreeBSD.org>
-
 PORTNAME=	NMF
 PORTVERSION=	0.21.0
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	math
 DISTNAME=	${PORTNAME}_${PORTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Algorithms and Framework for Nonnegative Matrix Factorization
+WWW=		https://cran.r-project.org/web/packages/NMF/
 
 LICENSE=	GPLv2+
 

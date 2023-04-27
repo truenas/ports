@@ -1,17 +1,22 @@
 PORTNAME=	adguardhome
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.107.0-b.7
+DISTVERSION=	0.107.22
+PORTREVISION=	5
 CATEGORIES=	www
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Network-wide ads & trackers blocking DNS server
+WWW=		https://adguard.com/en/adguard-home/overview.html
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
-USES=		cpe go:modules
+RUN_DEPENDS=	ca_root_nss>=0:security/ca_root_nss
+
+USES=		cpe go:1.19,modules
 
 GO_MODULE=	github.com/AdguardTeam/AdGuardHome
+GO_BUILDFLAGS=  -ldflags="-s -w -X github.com/AdguardTeam/AdGuardHome/internal/version.version=${DISTVERSION}" # workaround for https://github.com/AdguardTeam/AdGuardHome/issues/4774
 
 # to rebuild the deps archives:
 #   1. set DEV_UPDATE_MODE=yes
@@ -23,7 +28,8 @@ GO_MODULE=	github.com/AdguardTeam/AdGuardHome
 DEV_UPDATE_MODE=	no
 
 USER=		root # it has to run as root because it listens on the privileged DNS port
-SUB_LIST=	USER=${USER}
+GROUP=		wheel
+SUB_LIST=	USER=${USER} GROUP=${GROUP}
 USE_RC_SUBR=	${PORTNAME}
 
 CPE_VENDOR=	adguard
@@ -41,8 +47,6 @@ do-build:
 MASTER_SITES=	LOCAL/yuri/:deps
 DISTFILES=	${PORTNAME}-html-build-${DISTVERSION}${EXTRACT_SUFX}:deps \
 		${PORTNAME}-html-build2-${DISTVERSION}${EXTRACT_SUFX}:deps
-EXTRACT_ONLY=	${PORTNAME}-html-build-${DISTVERSION}${EXTRACT_SUFX} \
-		${PORTNAME}-html-build2-${DISTVERSION}${EXTRACT_SUFX}
 
 pre-build:
 	@${CP} -r ${WRKDIR}/build ${WRKDIR}/build2 ${WRKSRC}/

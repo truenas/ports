@@ -1,5 +1,3 @@
-# Created by: Paul Dlug <paul@aps.org>
-
 PORTNAME=	radmind
 PORTVERSION=	1.15.4
 PORTREVISION=	2021062801
@@ -8,6 +6,7 @@ MASTER_SITES=	https://github.com/voretaq7/${PORTNAME}/releases/download/${PORTNA
 
 MAINTAINER=	mikeg@bsd-box.net
 COMMENT=	Utility for administering filesystem changes
+WWW=		https://github.com/voretaq7/radmind
 
 LICENSE=	Michigan
 LICENSE_NAME=	University of Michigan License
@@ -19,6 +18,8 @@ USE_RC_SUBR=	radmind
 
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--with-radminddir=${RADMIND_BASE_DIR}
+
+CONFLICTS_INSTALL=	schilyutils # bin/fsdiff
 
 MAKE_JOBS_UNSAFE=	yes
 

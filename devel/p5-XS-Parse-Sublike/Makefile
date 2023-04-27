@@ -1,7 +1,5 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	XS-Parse-Sublike
-PORTVERSION=	0.14
+PORTVERSION=	0.17
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 MASTER_SITE_SUBDIR=	CPAN:PEVANS
@@ -9,6 +7,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	XS functions to assist in parsing sub-like syntax
+WWW=		https://metacpan.org/dist/XS-Parse-Sublike
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

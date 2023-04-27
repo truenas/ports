@@ -1,11 +1,12 @@
 PORTNAME=	libe-book
 PORTVERSION=	0.1.3
-PORTREVISION=	21
+PORTREVISION=	27
 CATEGORIES=	textproc
 MASTER_SITES=	SF/libebook/${PORTNAME}-${PORTVERSION}/
 
 MAINTAINER=	office@FreeBSD.org
 COMMENT=	Library for import of reflowable e-book formats
+WWW=		https://sourceforge.net/projects/libebook/
 
 LICENSE=	MPL20
 

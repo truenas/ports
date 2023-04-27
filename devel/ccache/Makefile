@@ -1,19 +1,18 @@
-# Created by: Dominic Marks <d.marks@student.umist.ac.uk>
-
 PORTNAME=	ccache
 PORTVERSION=	3.7.12
-PORTREVISION=	2
+PORTREVISION=	4
 CATEGORIES=	devel
 MASTER_SITES=	https://github.com/ccache/ccache/releases/download/v${DISTVERSION}/ \
 		LOCAL/bdrewery
 
 MAINTAINER=	bdrewery@FreeBSD.org
 COMMENT=	Tool to minimize the compile time of C/C++ programs
+WWW=		https://ccache.samba.org/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/GPL-3.0.txt
 
-CONFLICTS_INSTALL?=	ccache-static ccache-memcached ccache-memcached-static
+CONFLICTS_INSTALL?=	ccache-static ccache-memcached ccache-memcached-static ccache4
 
 GNU_CONFIGURE=	yes
 

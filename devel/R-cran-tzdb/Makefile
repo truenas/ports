@@ -1,14 +1,16 @@
 PORTNAME=	tzdb
-PORTVERSION=	0.2.0
+PORTVERSION=	0.3.0
+PORTREVISION=	1
 CATEGORIES=	devel
 DISTNAME=	${PORTNAME}_${PORTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Time Zone Database Information
+WWW=		https://cran.r-project.org/web/packages/tzdb/
 
 LICENSE=	MIT
 
-CRAN_DEPENDS=	R-cran-cpp11>=0.4.0:devel/R-cran-cpp11
+CRAN_DEPENDS=	R-cran-cpp11>=0.4.2:devel/R-cran-cpp11
 BUILD_DEPENDS=	${CRAN_DEPENDS}
 RUN_DEPENDS=	${CRAN_DEPENDS}
 

@@ -1,15 +1,14 @@
-# Created by: Olivier Duchateau
-
 PORTNAME=	ndg-httpsclient
 PORTVERSION=	0.5.1
 PORTREVISION=	1
 CATEGORIES=	net python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	ndg_httpsclient-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Enhance HTTPS support for httplib and urllib2
+WWW=		https://github.com/cedadev/ndg_httpsclient
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/ndg/httpsclient/LICENSE

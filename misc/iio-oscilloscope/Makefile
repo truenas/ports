@@ -1,11 +1,13 @@
 PORTNAME=	iio-oscilloscope
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.14
+PORTREVISION=	4
 DISTVERSIONSUFFIX=	-master
 CATEGORIES=	misc
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Oscilloscope application for interfacing with various IIO devices
+WWW=		https://wiki.analog.com/resources/tools-software/linux-software/iio_oscilloscope
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE

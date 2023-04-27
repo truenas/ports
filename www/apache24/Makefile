@@ -7,6 +7,7 @@ DIST_SUBDIR=	apache24
 
 MAINTAINER=	apache@FreeBSD.org
 COMMENT=	Version 2.4.x of Apache web server
+WWW=		https://httpd.apache.org/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -20,7 +21,7 @@ USE_PERL5=	run
 USE_RC_SUBR=	apache24 htcacheclean
 GNU_CONFIGURE=	yes
 
-CONFLICTS_INSTALL= py*-circuits # bin/htpasswd
+CONFLICTS_INSTALL=	py*-circuits # bin/htpasswd
 
 CPE_VENDOR=	apache
 CPE_PRODUCT=	http_server

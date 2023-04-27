@@ -2,11 +2,12 @@ PORTNAME=	slimit
 PORTVERSION=	0.8.1
 PORTREVISION=	2
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	JavaScript minifier written in Python
+WWW=		https://slimit.readthedocs.org
 
 LICENSE=	MIT
 

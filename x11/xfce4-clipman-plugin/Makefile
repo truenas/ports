@@ -1,13 +1,12 @@
-# Created by: Matt Lancereau <matt@rimasec.net>
-
 PORTNAME=	xfce4-clipman-plugin
-PORTVERSION=	1.6.2
+PORTVERSION=	1.6.3
 CATEGORIES=	x11 xfce
 MASTER_SITES=	XFCE/panel-plugins
 DIST_SUBDIR=	xfce4
 
 MAINTAINER=	xfce@FreeBSD.org
 COMMENT=	Clipboard manager for the Xfce panel
+WWW=		https://goodies.xfce.org/projects/panel-plugins/xfce4-clipman-plugin
 
 LICENSE=	GPLv2
 

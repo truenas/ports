@@ -1,8 +1,6 @@
-# Created by: michael johnson <ahze@ahze.net>
-
 PORTNAME=	acidrip
 PORTVERSION=	0.14
-PORTREVISION=	11
+PORTREVISION=	12
 CATEGORIES=	multimedia
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/${PORTVERSION}%20-%20Your%20two-wheeled%20knife
 

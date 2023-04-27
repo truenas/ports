@@ -1,11 +1,13 @@
 PORTNAME=	qsstv
 PORTVERSION=	9.5.8
+PORTREVISION=	1
 CATEGORIES=	comms hamradio
 MASTER_SITES=	http://users.telenet.be/on4qz/qsstv/downloads/
 DISTNAME=	${PORTNAME}_${PORTVERSION}
 
 MAINTAINER=	hamradio@FreeBSD.org
 COMMENT=	Amateur Radio SSTV/FAX reception program for unix
+WWW=		http://users.telenet.be/on4qz/
 
 LICENSE=	GPLv3
 
@@ -23,6 +25,18 @@ USE_QT=		buildtools core gui network widgets xml
 USE_GL=		gl
 
 WRKSRC=		${WRKDIR}/${PORTNAME}
+
+PLIST_FILES=	bin/qsstv \
+		share/applications/qsstv.desktop \
+		share/pixmaps/qsstv.png
+
+.include <bsd.port.options.mk>
+
+.if defined(WITH_DEBUG)
+BUILD_DEPENDS+=	doxygen:devel/doxygen
+LIB_DEPENDS+=	libqwt6.so:x11-toolkits/qwt6
+PLIST_FILES+=	bin/qsstv.debug
+.endif
 
 post-patch:
 	@${REINPLACE_CMD} -e 's|%%PREFIX%%|${PREFIX}|g' \
