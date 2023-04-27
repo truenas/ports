@@ -17530,7 +17530,6 @@ audio/aacplusenc||2022-09-30|Has expired: Legacy audio format, superseded by HE-
 net/libmms||2022-09-30|Has expired: Obsolete, Microsoft deprecated MMS protocol in favour of RTSP in 2003
 audio/mctoolame-decoder||2022-09-30|Has expired: Legacy and obscure audio format that never gained any traction
 audio/mctoolame-encoder||2022-09-30|Has expired: Legacy and obscure audio format that never gained any traction
-www/py-ws4py||2022-09-30|Has expired: Upstream abandoned
 databases/py-bsddb3|databases/py-berkeleydb|2022-09-30|Has expired: Requires upstream EOLd db5. Use py-berkeleydb
 graphics/megapov|graphics/povray37|2022-10-01|Has expired: Abandoned upstream. graphics/povray37 is the recommended replacement
 x11-toolkits/gstreamer1-plugins-gtk4||2022-10-01|No consumers left and deprecated in favor gtk4 plugin from multimedia/gstreamer1-plugins-rust >= 0.8.0
@@ -17782,7 +17781,6 @@ devel/rubygem-octicons|misc/rubygem-octicons|2023-03-16|Remove duplicate port
 multimedia/libquicktime-lame||2023-03-18|Abandoned upstream and fails to build with newer versions of FFmpeg, consider using multimedia/ffmpeg
 multimedia/libquicktime||2023-03-18|Abandoned upstream and fails to build with newer versions of FFmpeg, consider using multimedia/ffmpeg
 devel/p5-Net-ZooKeeper||2023-03-19|Has expired: Broken since 2020
-devel/libhyve-remote||2023-03-19|Has expired: Broken since 2020
 chinese/brise||2023-03-19|Has expired: Broken since 2020
 cad/NASTRAN-95||2023-03-19|Has expired: Broken since 2020
 lang/dlv||2023-03-19|Has expired: Broken since 2020
