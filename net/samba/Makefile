@@ -331,7 +331,7 @@ ADS_IMPLIES=			LDAP
 
 LDAP_CONFIGURE_WITH=		ldap
 LDAP_CONFIGURE_ON=		--with-ldap
-LDAP_USE=			OPENLDAP=yes
+LDAP_USES=			ldap
 LDAP_VARS=			SAMBA4_MODULES+=idmap_ldap
 
 MANDOC_BUILD_DEPENDS=		${LOCALBASE}/share/xsl/docbook/manpages/docbook.xsl:textproc/docbook-xsl \
