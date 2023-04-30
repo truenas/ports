@@ -15,10 +15,9 @@ LICENSE_COMB=		dual
 
 EXTRA_PATCHES+=		${PATCHDIR}/nslcd_action_state_get.patch:-p1
 
-USES=			cpe
+USES=			cpe ldap
 CPE_VENDOR=		arthurdejong
 GNU_CONFIGURE=		yes
-USE_OPENLDAP=		yes
 USE_RC_SUBR=		nslcd
 PAM_LDAP_SHMAJOR=	1
 NSS_LDAP_SHMAJOR=	1
