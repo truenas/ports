@@ -5,6 +5,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	cmt@FreeBSD.org
 COMMENT=	Vagrant Cloud API wrapper for Ruby
+WWW=		https://www.vagrantup.com/docs/cli/cloud.html
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -15,7 +16,6 @@ RUN_DEPENDS=	rubygem-excon>=0.73<1.0:devel/rubygem-excon \
 		rubygem-rexml>=3.2.5:textproc/rubygem-rexml
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

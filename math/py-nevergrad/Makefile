@@ -1,14 +1,14 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	nevergrad
 PORTVERSION=	0.4.3
+PORTREVISION=	1
 DISTVERSIONSUFFIX=	.post2
 CATEGORIES=	math python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Python toolbox for performing gradient-free optimization
+WWW=		https://github.com/facebookresearch/nevergrad
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -17,7 +17,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}bayesian-optimization>=1.2.0:math/py-bayesia
 		${PYTHON_PKGNAMEPREFIX}cma>=2.6.0:math/py-cma@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}numpy>=1.15.0,1:math/py-numpy@${PY_FLAVOR}
 
-USES=		python:3.7+
+USES=		python:3.8+
 USE_PYTHON=	autoplist concurrent distutils
 
 NO_ARCH=	yes

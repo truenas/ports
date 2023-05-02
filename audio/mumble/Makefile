@@ -1,12 +1,11 @@
-# Created by: marius nuennerich
-
 PORTNAME=	mumble
 PORTVERSION=	1.3.3
-PORTREVISION=	4
+PORTREVISION=	10
 CATEGORIES=	audio
 
 MAINTAINER=	feld@FreeBSD.org
 COMMENT=	Voice chat software primarily intended for use while gaming
+WWW=		http://mumble.sourceforge.net/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -39,7 +38,7 @@ GH_TUPLE=	mumble-voip:mumble:${DISTVERSION} \
 		mumble-voip:sbcelt:045493d:mumble_sbcelt/3rdparty/sbcelt-src \
 		mumble-voip:mumble-theme:9467fe8:mumble_theme/themes/Mumble
 
-USE_QT=		buildtools_build core gui l10n linguist_build network opengl sql sql-sqlite3_run svg widgets xml
+USE_QT=		buildtools:build core gui l10n linguist:build network opengl sql sql-sqlite3:run svg widgets xml
 USE_LDCONFIG=	yes
 
 USE_XORG=	ice xi x11
@@ -89,6 +88,7 @@ MAKE_JOBS_UNSAFE=yes
 
 post-patch:
 	@${REINPLACE_CMD} -e 's|-ldl||' ${WRKSRC}/overlay_gl/overlay_gl.pro
+	@${REINPLACE_CMD} -e 's|--no-add-needed|--no-copy-dt-needed-entries|' ${WRKSRC}/qmake/compiler.pri
 	@${RM} ${WRKSRC}/plugins/manual/.qmake.cache
 
 do-install:

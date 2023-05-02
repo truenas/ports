@@ -1,14 +1,13 @@
-# Created by: Muhammad Moinur Rahman <5u623l20@gmail.com>
-
 PORTNAME=	guile
 PORTVERSION=	2.2.7
-PORTREVISION=	1
+PORTREVISION=	3
 CATEGORIES=	lang scheme
 MASTER_SITES=	GNU
 PKGNAMESUFFIX=	2
 
 MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	GNU Ubiquitous Intelligent Language for Extension
+WWW=		https://www.gnu.org/software/guile/
 
 LICENSE=	GPLv3 LGPL3
 LICENSE_COMB=	multi
@@ -24,7 +23,7 @@ USE_LDCONFIG=	yes
 
 CPE_VENDOR=	gnu
 
-CONFLICTS_INSTALL=	guile
+CONFLICTS_INSTALL=	guile guile1 # bin/guild bin/guile bin/guile-config bin/guile-snarf bin/guile-tools
 
 MAKE_JOBS_UNSAFE=	yes
 

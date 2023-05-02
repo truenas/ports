@@ -1,5 +1,6 @@
 PORTNAME=	pycharm-pro
-PORTVERSION=	2020.3.4
+PORTVERSION=	2022.2.2
+PORTREVISION=	2
 CATEGORIES=	devel java python
 MASTER_SITES=	https://download.jetbrains.com/python/ \
 		http://download.jetbrains.com/python/
@@ -7,6 +8,7 @@ DISTNAME=	pycharm-professional-${PORTVERSION}
 
 MAINTAINER=	guido@kollerie.com
 COMMENT=	JetBrains PyCharm Professional Edition IDE
+WWW=		https://www.jetbrains.com/pycharm/
 
 LICENSE=	PyCharm-Professional
 LICENSE_NAME=	Subscription license agreement for business and organizations
@@ -19,7 +21,7 @@ RUN_DEPENDS=	intellij-fsnotifier>0:java/intellij-fsnotifier \
 
 USES=		python:run shebangfix
 
-SHEBANG_FILES=	bin/printenv.py bin/restart.py
+SHEBANG_FILES=	bin/restart.py
 
 USE_JAVA=	yes
 JAVA_VERSION=	11+

@@ -1,5 +1,3 @@
-# Created by: shan
-
 PORTNAME=	Radiator
 PORTVERSION=	4.24
 CATEGORIES=	net
@@ -10,6 +8,7 @@ DIST_SUBDIR=	${PORTNAME}
 
 MAINTAINER=	lyngbol@wheel.dk
 COMMENT=	Radiator Radius Server by Open System Consultants
+WWW=		https://www.open.com.au/
 
 # Commercial software
 LICENSE=	radiator

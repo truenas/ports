@@ -1,11 +1,10 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	charls
-PORTVERSION=	2.2.0
+PORTVERSION=	2.4.1
 CATEGORIES=	graphics
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	C++ JPEG-LS library implementation
+WWW=		https://github.com/team-charls/charls
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.md

@@ -1,6 +1,7 @@
 bin/xgboost
 include/xgboost/base.h
 include/xgboost/c_api.h
+include/xgboost/collective/socket.h
 include/xgboost/data.h
 include/xgboost/feature_map.h
 include/xgboost/gbm.h
@@ -20,6 +21,8 @@ include/xgboost/objective.h
 include/xgboost/parameter.h
 include/xgboost/predictor.h
 include/xgboost/span.h
+include/xgboost/string_view.h
+include/xgboost/task.h
 include/xgboost/tree_model.h
 include/xgboost/tree_updater.h
 include/xgboost/version_config.h

@@ -1,14 +1,13 @@
-# Created by: Matt Lancereau
-
 PORTNAME=	xfce4-terminal
-PORTVERSION=	0.8.10
-PORTREVISION=	2
+PORTVERSION=	1.0.4
+PORTREVISION=	1
 CATEGORIES=	x11 xfce
 MASTER_SITES=	XFCE/apps
 DIST_SUBDIR=	xfce4
 
 MAINTAINER=	xfce@FreeBSD.org
 COMMENT=	Terminal emulator for the X windowing system
+WWW=		https://www.xfce.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

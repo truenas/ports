@@ -1,10 +1,12 @@
 PORTNAME=	reproc
 DISTVERSIONPREFIX=	v
-DISTVERSION=	14.2.4
+DISTVERSION=	14.2.4-7
+DISTVERSIONSUFFIX=	-g51540e1
 CATEGORIES=	devel
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	C/C++ library to simplify running external programs
+WWW=		https://github.com/DaanDeMeyer/reproc
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

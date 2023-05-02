@@ -1,8 +1,7 @@
-# Created by: Eijiro Shibusawa <ej-sib@ice.uec.ac.jp>
-
 PORTNAME=	openblas
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.3.18
+DISTVERSION=	0.3.20
+PORTREVISION=	1
 PORTEPOCH=	1
 CATEGORIES=	math
 MASTER_SITES=	NL/lapack/timing/:lapack_tmg
@@ -12,17 +11,19 @@ DIST_SUBDIR=	openblas
 
 MAINTAINER=	phd_kimberlite@yahoo.co.jp
 COMMENT=	Optimized BLAS library based on GotoBLAS2
+WWW=		https://github.com/xianyi/OpenBLAS
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USES=		compiler:c11 fortran gmake perl5 pkgconfig
+USES=		compiler:c11 cpe fortran gmake perl5 pkgconfig
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	xianyi
 GH_PROJECT=	OpenBLAS
 LARGE_FILE=	large.tgz
 TIMING_FILE=	timing.tgz
+CPE_VENDOR=	openblas_project
 
 USE_LDCONFIG=	yes
 USE_PERL5=	build

@@ -4,6 +4,7 @@ include/Wrapland/Client/buffer.h
 include/Wrapland/Client/compositor.h
 include/Wrapland/Client/connection_thread.h
 include/Wrapland/Client/contrast.h
+include/Wrapland/Client/data_control_v1.h
 include/Wrapland/Client/datadevice.h
 include/Wrapland/Client/datadevicemanager.h
 include/Wrapland/Client/dataoffer.h
@@ -14,6 +15,7 @@ include/Wrapland/Client/event_queue.h
 include/Wrapland/Client/fakeinput.h
 include/Wrapland/Client/fullscreen_shell.h
 include/Wrapland/Client/idle.h
+include/Wrapland/Client/idle_notify_v1.h
 include/Wrapland/Client/idleinhibit.h
 include/Wrapland/Client/input_method_v2.h
 include/Wrapland/Client/keyboard.h
@@ -25,6 +27,7 @@ include/Wrapland/Client/output.h
 include/Wrapland/Client/output_configuration_v1.h
 include/Wrapland/Client/output_device_v1.h
 include/Wrapland/Client/output_management_v1.h
+include/Wrapland/Client/plasma_activation_feedback.h
 include/Wrapland/Client/plasmashell.h
 include/Wrapland/Client/plasmavirtualdesktop.h
 include/Wrapland/Client/plasmawindowmanagement.h
@@ -50,6 +53,7 @@ include/Wrapland/Client/text_input_v2.h
 include/Wrapland/Client/text_input_v3.h
 include/Wrapland/Client/touch.h
 include/Wrapland/Client/viewporter.h
+include/Wrapland/Client/virtual_keyboard_v1.h
 include/Wrapland/Client/wlr_output_configuration_v1.h
 include/Wrapland/Client/wlr_output_manager_v1.h
 include/Wrapland/Client/wraplandclient_export.h
@@ -67,6 +71,7 @@ include/Wrapland/Server/buffer.h
 include/Wrapland/Server/client.h
 include/Wrapland/Server/compositor.h
 include/Wrapland/Server/contrast.h
+include/Wrapland/Server/data_control_v1.h
 include/Wrapland/Server/data_device.h
 include/Wrapland/Server/data_device_manager.h
 include/Wrapland/Server/data_offer.h
@@ -75,10 +80,11 @@ include/Wrapland/Server/display.h
 include/Wrapland/Server/dpms.h
 include/Wrapland/Server/drag_pool.h
 include/Wrapland/Server/drm_lease_v1.h
-include/Wrapland/Server/egl_stream_controller.h
 include/Wrapland/Server/fake_input.h
 include/Wrapland/Server/filtered_display.h
+include/Wrapland/Server/globals.h
 include/Wrapland/Server/idle_inhibit_v1.h
+include/Wrapland/Server/idle_notify_v1.h
 include/Wrapland/Server/input_method_v2.h
 include/Wrapland/Server/kde_idle.h
 include/Wrapland/Server/keyboard.h
@@ -92,6 +98,7 @@ include/Wrapland/Server/output_changeset_v1.h
 include/Wrapland/Server/output_configuration_v1.h
 include/Wrapland/Server/output_device_v1.h
 include/Wrapland/Server/output_management_v1.h
+include/Wrapland/Server/plasma_activation_feedback.h
 include/Wrapland/Server/plasma_shell.h
 include/Wrapland/Server/plasma_virtual_desktop.h
 include/Wrapland/Server/plasma_window.h
@@ -115,6 +122,7 @@ include/Wrapland/Server/text_input_v3.h
 include/Wrapland/Server/touch.h
 include/Wrapland/Server/touch_pool.h
 include/Wrapland/Server/viewporter.h
+include/Wrapland/Server/virtual_keyboard_v1.h
 include/Wrapland/Server/wl_output.h
 include/Wrapland/Server/wraplandserver_export.h
 include/Wrapland/Server/xdg_activation_v1.h
@@ -123,6 +131,7 @@ include/Wrapland/Server/xdg_foreign.h
 include/Wrapland/Server/xdg_output.h
 include/Wrapland/Server/xdg_shell.h
 include/Wrapland/Server/xdg_shell_popup.h
+include/Wrapland/Server/xdg_shell_positioner.h
 include/Wrapland/Server/xdg_shell_surface.h
 include/Wrapland/Server/xdg_shell_toplevel.h
 include/wrapland_version.h

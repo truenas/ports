@@ -1,11 +1,12 @@
 PORTNAME=	http-parser
 DISTVERSION=	0.9.0
 CATEGORIES=	www
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	rm@FreeBSD.org
 COMMENT=	HTTP request/response parser for python in C
+WWW=		https://github.com/benoitc/http-parser/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

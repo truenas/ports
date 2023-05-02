@@ -1,6 +1,7 @@
 PORTNAME=	SRB2
 PORTVERSION=	2.2.9
 DISTVERSIONPREFIX=	SRB2_release_
+PORTREVISION=	1
 CATEGORIES=	games
 MASTER_SITES=	https://github.com/STJr/SRB2/releases/download/SRB2_release_${PORTVERSION}/:assets
 DISTFILES+=	SRB2-v${PORTVERSION:C/\.//g}-Full.zip:assets
@@ -8,6 +9,7 @@ EXTRACT_ONLY=	STJr-SRB2-SRB2_release_${PORTVERSION}_GH0.tar.gz
 
 MAINTAINER=	pkubaj@FreeBSD.org
 COMMENT=	3D Sonic the Hedgehog fangame
+WWW=		https://www.srb2.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE

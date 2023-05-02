@@ -1,11 +1,12 @@
 PORTNAME=	azure-mgmt-privatedns
 PORTVERSION=	1.0.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dbaio@FreeBSD.org
 COMMENT=	Microsoft Azure DNS Private Zones Client Library for Python
+WWW=		https://pypi.org/project/azure-mgmt-privatedns/
 
 LICENSE=	MIT
 

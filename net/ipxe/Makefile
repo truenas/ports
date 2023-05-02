@@ -1,23 +1,26 @@
-# Created by: Guerkan Karaman <gk.freebsd@googlemail.com>
-
 PORTNAME=	ipxe
-DISTVERSION=	g20210910
+DISTVERSION=	g20230211
+PORTREVISION=	1
 PORTEPOCH=	1
 CATEGORIES=	net
 
 MAINTAINER=	egypcio@FreeBSD.org
 COMMENT=	Open source network boot firmware
+WWW=		https://ipxe.org
 
 LICENSE=	GPLv2
 
 ONLY_FOR_ARCHS=	amd64 i386
 ONLY_FOR_ARCHS_REASON=	not yet ported to anything other than amd64/i386
 
+BUILD_DEPENDS=	bash:shells/bash \
+		syslinux:sysutils/syslinux
+
 USES=		gmake perl5 shebangfix
 USE_BINUTILS=	yes
 USE_GCC=	yes:build
 USE_GITHUB=	yes
-GH_TAGNAME=	2265a65
+GH_TAGNAME=	3c83843e111ece30
 USE_PERL5=	build
 MAKE_ARGS=	AR=${AR} \
 		ARCH=${ARCH:S/amd64/i386/} \
@@ -65,9 +68,6 @@ OPTIONS_DEFAULT=	EFI ISO
 EFI_DESC=	Create EFI images
 ISO_DESC=	Create bootable CD image
 
-BUILD_DEPENDS=		bash:shells/bash \
-			syslinux:sysutils/syslinux
-
 EFI_BUILD_DEPENDS=	mformat:emulators/mtools
 _EFI_ARCHS=		${ARCH:Mamd64:S/amd64/x86_64/} i386
 _EFI_TARGETS=		ipxe snp snponly
@@ -83,6 +83,8 @@ ISO_MAKE_ARGS=		ISOLINUX_BIN="${WRKSRC}/isolinux.bin" \
 			LDLINUX_C32="${LOCALBASE}/share/syslinux/bios/com32/elflink/ldlinux/ldlinux.c32"
 ISO_ALL_TARGET=		bin/ipxe.iso
 
+PORTSCOUT=	skipv:1.21.1,v1.21.1
+
 .include <bsd.port.pre.mk>
 
 # Add user supplied build configuration after port options etc have
@@ -96,6 +98,11 @@ _IPXE_BUILDCFG+=	${IPXE_BUILDCFG}
 BUILD_DEPENDS+=	gcsplit:sysutils/coreutils
 MAKE_ARGS+=	CSPLIT=gcsplit
 .endif
+
+# https://github.com/ipxe/ipxe/pull/794
+post-patch:
+	${REINPLACE_CMD} "s|VERSION_MINOR.*0|VERSION_MINOR=21|; s|VERSION_PATCH.*0|VERSION_PATCH=1|" \
+		${WRKSRC}/Makefile
 
 do-configure:
 .for _cat _opt in ${_IPXE_BUILDCFG:C/\:/ /}

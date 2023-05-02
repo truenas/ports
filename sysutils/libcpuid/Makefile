@@ -1,28 +1,22 @@
-# Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
-
 PORTNAME=	libcpuid
-PORTVERSION=	0.5.1
-DISTVERSIONPREFIX=	v
+PORTVERSION=	0.6.3
 CATEGORIES=	sysutils
+MASTER_SITES=	https://github.com/anrieff/libcpuid/releases/download/v${PORTVERSION}/
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Small x86 CPU identification library
+WWW=		http://libcpuid.sourceforge.net/
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-ONLY_FOR_ARCHS=	i386 amd64
-
-USE_GITHUB=	yes
-GH_ACCOUNT=	anrieff
-
-USES=		autoreconf libtool pathfix python:test shebangfix
+USES=		libtool python:test shebangfix
 GNU_CONFIGURE=	yes
 USE_LDCONFIG=	yes
 INSTALL_TARGET=	install-strip
 TEST_TARGET=	test
 
-SHEBANG_FILES=	tests/create_test.py tests/run_tests.py
+SHEBANG_FILES=	tests/run_tests.py
 
 PORTDOCS=	AUTHORS ChangeLog Readme.md
 

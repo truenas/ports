@@ -1,13 +1,12 @@
-# Created by: TAKATSU Tomonari <tota@FreeBSD.org>
-
 PORTNAME=	itertools
 DISTVERSION=	0.1-3
-PORTREVISION=	5
+PORTREVISION=	6
 CATEGORIES=	devel
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Iterator Tools for R
+WWW=		https://cran.r-project.org/web/packages/itertools/
 
 LICENSE=	GPLv2
 

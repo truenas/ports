@@ -61,7 +61,7 @@ include/KF5/KTextEditor/ktexteditor/sessionconfiginterface.h
 include/KF5/KTextEditor/ktexteditor/texthintinterface.h
 include/KF5/KTextEditor/ktexteditor/view.h
 include/KF5/KTextEditor/ktexteditor_export.h
-include/KF5/ktexteditor_version.h
+include/KF5/KTextEditor/ktexteditor_version.h
 lib/cmake/KF5TextEditor/KF5TextEditorConfig.cmake
 lib/cmake/KF5TextEditor/KF5TextEditorConfigVersion.cmake
 lib/cmake/KF5TextEditor/KF5TextEditorTargets-%%CMAKE_BUILD_TYPE%%.cmake
@@ -70,8 +70,8 @@ lib/libKF5TextEditor.so
 lib/libKF5TextEditor.so.5
 lib/libKF5TextEditor.so.%%KDE_FRAMEWORKS_VERSION%%
 lib/libexec/kauth/kauth_ktexteditor_helper
-%%QT_PLUGINDIR%%/kf5/parts/katepart.so
 %%QT_MKSPECDIR%%/modules/qt_KTextEditor.pri
+%%QT_PLUGINDIR%%/kf5/parts/katepart.so
 share/dbus-1/system-services/org.kde.ktexteditor.katetextbuffer.service
 share/dbus-1/system.d/org.kde.ktexteditor.katetextbuffer.conf
 share/katepart5/script/README.md
@@ -80,7 +80,6 @@ share/kservices5/katepart.desktop
 share/kservicetypes5/ktexteditor.desktop
 share/kservicetypes5/ktexteditorplugin.desktop
 share/locale/af/LC_MESSAGES/ktexteditor5.mo
-share/locale/ast/LC_MESSAGES/ktexteditor5.mo
 share/locale/ar/LC_MESSAGES/ktexteditor5.mo
 share/locale/az/LC_MESSAGES/ktexteditor5.mo
 share/locale/be/LC_MESSAGES/ktexteditor5.mo

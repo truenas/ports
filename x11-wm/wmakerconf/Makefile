@@ -1,14 +1,13 @@
-# Created by: Dominik Rothert <dr@domix.de>
-
 PORTNAME=	wmakerconf
 PORTVERSION=	2.12
-PORTREVISION=	11
+PORTREVISION=	12
 CATEGORIES=	x11-wm
 MASTER_SITES=	SF
 DISTNAME=	${PORTNAME}_${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Configuration tool for Window Maker
+WWW=		https://sourceforge.net/projects/wmakerconf/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,5 +1,3 @@
-# Created by: John Merryweather Cooper et al
-
 CATEGORIES=	databases lang
 PKGNAMESUFFIX=	-postgres
 
@@ -13,7 +11,6 @@ EXTRACTUNITDIR=	${WRKUNITDIR}
 
 OPTIONS_DEFINE=	PGSQL
 PGSQL_DESC=	Install PostgreSQL client
-OPTIONS_DEFAULT=	PGSQL
 
 PGSQL_USES=	pgsql
 

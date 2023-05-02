@@ -1,13 +1,12 @@
-# Created by: Andreas Kohn <andreas@syndrom23.de>
-
 PORTNAME=	notification-daemon
 PORTVERSION=	3.20.0
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	deskutils gnome
 MASTER_SITES=	GNOME
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Send small notifications to your desktop
+WWW=		https://gitlab.gnome.org/GNOME/notification-daemon
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -19,6 +18,8 @@ USES=		gettext gmake gnome localbase pathfix pkgconfig tar:xz xorg
 USE_GNOME=	cairo gnomeprefix gtk30
 USE_XORG=	x11
 GNU_CONFIGURE=	yes
+
+CONFLICTS_INSTALL=	notify-osd # share/dbus-1/services/org.freedesktop.Notifications.service
 
 PORTSCOUT=	limitw:1,even
 

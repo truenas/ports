@@ -1,12 +1,12 @@
-# Created by: Carlos J. Puga Medina <cpm@FreeBSD.org>
-
 PORTNAME=	spread-sheet-widget
 PORTVERSION=	0.8
+PORTREVISION=	1
 CATEGORIES=	devel
 MASTER_SITES=	GNU_ALPHA/ssw
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Library for GTK which provides widget for tabular data
+WWW=		https://www.gnu.org/software/ssw/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING

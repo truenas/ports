@@ -1,8 +1,6 @@
-# Created by: Sahil Tandon <sahil@tandon.net>
-
 PORTNAME=	mailzu
 DISTVERSION=	0.8rc3
-PORTREVISION=	8
+PORTREVISION=	9
 CATEGORIES=	security
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/MailZu%200.8RC3
 PKGNAMESUFFIX=	${PHP_PKGNAMESUFFIX}
@@ -10,6 +8,7 @@ DISTNAME=	MailZu_${DISTVERSION:S/rc/RC/}
 
 MAINTAINER=	ports@bsdserwis.com
 COMMENT=	Simple and intuitive web interface to manage amavisd-new quarantine
+WWW=		https://sourceforge.net/projects/mailzu/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -22,6 +21,7 @@ RUN_DEPENDS=	${LOCALBASE}/sbin/amavisd:security/amavisd-new \
 
 USES=		php:flavors,web
 USE_PHP=	sockets
+IGNORE_WITH_PHP=	82
 
 NO_ARCH=	yes
 NO_BUILD=	yes

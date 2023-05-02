@@ -1,16 +1,17 @@
 PORTNAME=	coincurve
-DISTVERSION=	15.0.1
+DISTVERSION=	17.0.0
 CATEGORIES=	security python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Cross-platform Python CFFI bindings for libsecp256k1
+WWW=		https://github.com/ofek/coincurve
 
 LICENSE=	MIT APACHE20
 LICENSE_COMB=	dual
 
-BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}cffi>0:devel/py-cffi@${PY_FLAVOR} \
+BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}cffi>=1.3.0:devel/py-cffi@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}requests>0:www/py-requests@${PY_FLAVOR} \
 		aclocal:devel/automake \
 		autoreconf:devel/autoconf \

@@ -1,12 +1,12 @@
-# Created by: trasz <trasz@pin.if.uz.zgora.pl>
-
 PORTNAME=	libgig
 DISTVERSION=	4.3.0
+PORTREVISION=	1
 CATEGORIES=	audio
 MASTER_SITES=	http://download.linuxsampler.org/packages/ # dead?: SF/qsampler/${PORTNAME}/${PORTVERSION}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Gigasampler file loader library
+WWW=		https://www.linuxsampler.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

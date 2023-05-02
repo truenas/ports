@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	tcl
 PORTVERSION=	8.5.13
 DISTVERSIONSUFFIX=	-8.el7
@@ -9,6 +7,7 @@ PKGNAMESUFFIX=	85
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	Tool Command Language (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://www.tcl.tk/
 
 USES=		cpe linux:c7
 USE_LDCONFIG=	yes

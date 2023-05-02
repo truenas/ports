@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	woops
 PORTVERSION=	0.2.1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Handle and manage Python errors with ease
+WWW=		https://github.com/sdispater/woops
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

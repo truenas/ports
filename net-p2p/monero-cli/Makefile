@@ -1,20 +1,25 @@
-# Created by: Vasil Dimov <vd@FreeBSD.org>
-
 PORTNAME=	monero-cli
 # To build from an arbitrary git commit comment PORTVERSION and PORTREVISION (if present)
-PORTVERSION=	0.17.3.0
+PORTVERSION=	0.18.1.2
+PORTREVISION=	3
 DISTVERSIONPREFIX=	v
 # and uncomment the following two lines (use for example -git-HEAD or -git-b6420e1)
 #PORTVERSION=	0
 #PKGNAMESUFFIX=	-git-HEAD
 CATEGORIES=	net-p2p finance
 
-MAINTAINER=	vd@FreeBSD.org
+PATCH_SITES+=	https://github.com/monero-project/monero/commit/
+PATCHFILES+=	ac87d8dac95bb7777898479ded1de3e53422a3e9.patch:-p1
+
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Private, secure, untraceable, decentralised digital currency (CLI)
+WWW=		https://getmonero.org/
 
 LICENSE=	BSD3CLAUSE
 
+BROKEN_SSL=	libressl
 BROKEN_i386=	fails to compile: register r15d is only available in 64-bit mode
+BROKEN_aarch64=	fails to compile: uses unavailable HWCAP_AES and getauxval
 
 LIB_DEPENDS=	\
 		libboost_chrono.so:devel/boost-libs \
@@ -43,7 +48,7 @@ GIT_COMMIT=	${DISTVERSIONPREFIX}${PORTVERSION}
 .endif
 GH_TUPLE=	monero-project:monero:${GIT_COMMIT} \
 		monero-project:supercop:633500ad8c875999:ext1/external/supercop \
-		tevador:RandomX:9efc398c196ef1c50d8e6f5e:ext2/external/randomx \
+		tevador:RandomX:85c527a62301b7b8be89d941:ext2/external/randomx \
 		trezor:trezor-common:bff7fdfe436c727982c:ext3/external/trezor-common
 
 CFLAGS+=	-D_WANT_SEMUN
@@ -77,7 +82,7 @@ LD_EMULATION=	elf64lppc
 CMAKE_ARGS+=	-DLD_RAW_FLAGS:STRING=-m${LD_EMULATION}
 
 # keep in sync with all platforms where libunwind is available
-.if ${ARCH} == aarch64 || ${ARCH} == amd64 || ${ARCH} == i386 || ${ARCH} == powerpc64 || ${ARCH} == powerpc64le
+.if ${ARCH} == aarch64 || ${ARCH} == amd64 || ${ARCH} == i386 || ${ARCH} == powerpc || ${ARCH} == powerpc64 || ${ARCH} == powerpc64le
 LIB_DEPENDS+=	libunwind.so:devel/libunwind
 .else
 CMAKE_ARGS+=	-DSTACK_TRACE:BOOL=OFF

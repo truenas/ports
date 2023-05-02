@@ -1,9 +1,10 @@
 PORTNAME=	libretro-beetle_bsnes
-PORTVERSION=	0.20210101
+PORTVERSION=	0.20220406
 CATEGORIES=	games
 
-MAINTAINER=	menelkir@itroll.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Standalone port of Mednafen bSNES to libretro
+WWW=		https://github.com/libretro/beetle-bsnes-libretro
 
 LICENSE=	GPLv2
 
@@ -13,7 +14,7 @@ USE_LDCONFIG=	yes
 USE_GITHUB=	yes
 GH_ACCOUNT=	libretro
 GH_PROJECT=	beetle-bsnes-libretro
-GH_TAGNAME=	b65ded5bde278c18af538c687db9b72c995b220a
+GH_TAGNAME=	d770563
 
 PLIST_FILES=	lib/libretro/mednafen_snes_libretro.so
 

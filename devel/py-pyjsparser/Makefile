@@ -1,11 +1,12 @@
 PORTNAME=	pyjsparser
 DISTVERSION=	2.7.1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	tcberner@FreeBSD.org
 COMMENT=	Fast javascript parser
+WWW=		https://github.com/PiotrDabkowski/pyjsparser
 
 LICENSE=	MIT
 

@@ -5,6 +5,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Generic OAuth strategy for OmniAuth
+WWW=		https://github.com/omniauth/omniauth-oauth
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.md
@@ -13,7 +14,6 @@ RUN_DEPENDS=	rubygem-oauth>=0:net/rubygem-oauth \
 		rubygem-omniauth1>=1.0<3:security/rubygem-omniauth1
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

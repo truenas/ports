@@ -1,14 +1,13 @@
-# Created by: George Reid <greid@ukug.uk.freebsd.org>
-
 PORTNAME=	cryptopp
-PORTVERSION=	8.5.0
-PORTREVISION=	1
+PORTVERSION=	8.7.0
 CATEGORIES=	security
-MASTER_SITES=	http://www.cryptopp.com/
+MASTER_SITES=	https://github.com/weidai11/${PORTNAME}/releases/download/CRYPTOPP_${PORTVERSION:S/./_/g}/ \
+		http://www.cryptopp.com/
 DISTNAME=	cryptopp${PORTVERSION:S/.//g}
 
 MAINTAINER=	jhale@FreeBSD.org
 COMMENT=	Free C++ class library of Cryptographic Primitives
+WWW=		https://www.cryptopp.com/
 
 LICENSE=	BSL
 LICENSE_FILE=	${WRKSRC}/License.txt
@@ -57,24 +56,8 @@ TOOLS_TEST_TARGET_OFF=	test
 
 .include <bsd.port.options.mk>
 
-.if ${PORT_OPTIONS:MSIMD}
-.  if ${ARCH} == i386 || ${ARCH} == amd64
-.    if !${MACHINE_CPU:Msse2}
-CXXFLAGS+=	-DCRYPTOPP_DISABLE_ASM -DCRYPTOPP_DISABLE_SSE2
-.    endif
-.    if !${MACHINE_CPU:Mssse3}
-CXXFLAGS+=	-DCRYPTOPP_DISABLE_SSSE3
-.    endif
-.    if !${MACHINE_CPU:Msse41}
-CXXFLAGS+=	-DCRYPTOPP_DISABLE_SSE4
-.    endif
-.  elif ${ARCH} == powerpc || ${ARCH:Mpowerpc64*}
-CXXFLAGS+=	-DCRYPTOPP_ALTIVEC_AVAILABLE
-.  endif
-.else
-CXXFLAGS+=	-DCRYPTOPP_DISABLE_ASM -DCRYPTOPP_DISABLE_SSE2 \
-		-DCRYPTOPP_DISABLE_SSSE3 -DCRYPTOPP_DISABLE_SSE4 \
-		-DCRYPTOPP_DISABLE_ALTIVEC
+.if !${PORT_OPTIONS:MSIMD}
+CXXFLAGS+=	-DCRYPTOPP_DISABLE_ASM
 .endif
 
 pre-configure-FULL_DEBUG-on:

@@ -1,20 +1,24 @@
 PORTNAME=	biosoup
-DISTVERSION=	g20201216
+DISTVERSION=	0.10.0-2
+PORTREVISION=	1
+DISTVERSIONSUFFIX=	-g62b942c
 CATEGORIES=	biology devel
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Collection of C++ header-only data structures for bioinformatics
+WWW=		https://github.com/rvaser/biosoup
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 TEST_DEPENDS=	googletest>0:devel/googletest
 
-USES=		cmake
+USES=		cmake compiler:gcc-c++11-lib
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	rvaser
-GH_TAGNAME=	e2b39f1
+
+CMAKE_OFF=	biosoup_build_tests
 
 NO_ARCH=	yes
 

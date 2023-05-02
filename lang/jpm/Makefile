@@ -1,9 +1,11 @@
 PORTNAME=	jpm
-DISTVERSION=	0.0.1
+DISTVERSIONPREFIX=	v
+DISTVERSION=	1.1.0
 CATEGORIES=	lang
 
-MAINTAINER=	tobik@FreeBSD.org
+MAINTAINER=	hsw@bitmark.com
 COMMENT=	Janet Project Manager tool
+WWW=		https://github.com/janet-lang/jpm
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

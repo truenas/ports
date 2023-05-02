@@ -1,11 +1,12 @@
 PORTNAME=	jdcal
 PORTVERSION=	1.4.1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	antoine@FreeBSD.org
 COMMENT=	Module converting between Julian dates and calendar dates
+WWW=		https://github.com/phn/jdcal
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

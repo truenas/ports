@@ -1,13 +1,12 @@
-# Created by: Yinghong Liu <relaxbsd@gmail.com>
-
 PORTNAME=	luminance-hdr
 DISTVERSION=	2.6.1.1
-PORTREVISION=	7
+PORTREVISION=	17
 CATEGORIES=	graphics
 MASTER_SITES=	SF/qtpfsgui/luminance/${DISTVERSION}
 
 MAINTAINER=	h2+fbsdports@fsfe.org
 COMMENT=	Complete open source solution for HDR photography
+WWW=		http://qtpfsgui.sourceforge.net/
 
 LICENSE=	GPLv2
 
@@ -28,10 +27,13 @@ CFLAGS+=	-I${LOCALBASE}/include/Imath
 USES=		cmake desktop-file-utils eigen:3 jpeg pkgconfig qt:5 tar:bzip2
 USE_QT=		concurrent core declarative gui location network \
 		printsupport sql svg widgets xml \
-		buildtools_build linguisttools_build qmake_build
+		buildtools:build linguisttools:build qmake:build
 
 OPTIONS_DEFINE=		CFITSIO DOCS HELPBROWSER
-OPTIONS_DEFAULT=	CFITSIO HELPBROWSER
+OPTIONS_DEFAULT=	CFITSIO
+OPTIONS_DEFAULT_aarch64=	HELPBROWSER
+OPTIONS_DEFAULT_amd64=	HELPBROWSER
+OPTIONS_DEFAULT_i386=	HELPBROWSER
 
 CFITSIO_LIB_DEPENDS=	libcfitsio.so:astro/cfitsio
 
@@ -40,11 +42,6 @@ HELPBROWSER_USE=	QT=webchannel,webengine
 HELPBROWSER_CMAKE_BOOL=	WITH_HELPBROWSER
 
 .include <bsd.port.options.mk>
-
-.if ${PORT_OPTIONS:MHELPBROWSER}
-DEPRECATED=	Uses EoL Python 2.7 via www/qt5-webengine
-EXPIRATION_DATE=	2021-06-23
-.endif
 
 post-patch:
 # Do not install yet another copy of GPL (we use license framework instead)

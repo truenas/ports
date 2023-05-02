@@ -1,13 +1,12 @@
-# Created by: Yuri Victorovich <yuri@rawbw.com>
-
 PORTNAME=	libsass
-DISTVERSION=	0.21.0
+DISTVERSION=	0.22.0
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Straightforward binding of libsass for Python
+WWW=		https://pypi.org/project/libsass/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -19,5 +18,8 @@ USES=		compiler:c++11-lang localbase python:3.6+
 USE_PYTHON=	autoplist distutils
 
 MAKE_ENV=	SYSTEM_SASS=1
+
+post-install:
+	@${STRIP_CMD} ${STAGEDIR}${PYTHON_SITELIBDIR}/_sass.abi3.so
 
 .include <bsd.port.mk>

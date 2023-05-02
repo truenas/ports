@@ -6,14 +6,13 @@ CATEGORIES=	audio
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Sndio audio sink and source for GStreamer
+WWW=		https://github.com/t6/gstreamer1-plugins-sndio/
 
 LICENSE=	ISCL
 
-LIB_DEPENDS=	libgstaudio-1.0.so:multimedia/gstreamer1-plugins \
-		libgstbase-1.0.so:multimedia/gstreamer1 \
-		libsndio.so:audio/sndio
+LIB_DEPENDS=	libsndio.so:audio/sndio
 
-USES=		gnome pkgconfig
+USES=		gnome gstreamer pkgconfig
 USE_GITHUB=	yes
 GH_ACCOUNT=	t6
 USE_GNOME=	glib20

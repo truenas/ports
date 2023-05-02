@@ -1,13 +1,13 @@
-# Created by: Gustau Perez <gustau.perez@gmail.com>
-
 PORTNAME=	libgrss
 PORTVERSION=	0.7.0
+PORTREVISION=	2
 CATEGORIES=	net gnome
 MASTER_SITES=	GNOME
 DIST_SUBDIR=	gnome3
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Library for easy management of RSS/Atom/Pie feeds
+WWW=		https://www.gnome.org/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING

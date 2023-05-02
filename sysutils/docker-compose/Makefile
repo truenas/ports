@@ -2,10 +2,11 @@ PORTNAME=	docker-compose
 PORTVERSION=	1.24.0
 PORTREVISION=	1
 CATEGORIES=	sysutils python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Define and run multi-container applications with Docker
+WWW=		https://github.com/docker/compose/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

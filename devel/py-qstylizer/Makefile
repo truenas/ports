@@ -1,12 +1,12 @@
-# Created by: Rainer Hurling <rhurlin@gwdg.de>
-
 PORTNAME=	qstylizer
-PORTVERSION=	0.2.1
+PORTVERSION=	0.2.2
+PORTREVISION=	2
 CATEGORIES=	devel python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	rhurlin@FreeBSD.org
 COMMENT=	Qt Stylesheet Generator for PyQt/PySide
+WWW=		https://github.com/blambright/qstylizer/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -24,12 +24,12 @@ TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pytest>0:devel/py-pytest@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}tox>0:devel/py-tox@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}virtualenv>=0:devel/py-virtualenv@${PY_FLAVOR}
 
-USES=		pyqt:5 python:3.7+
+USES=		pyqt:5 pytest python
 # PyPi only has the wheel version
 USE_GITHUB=	yes
 GH_ACCOUNT=	blambright
 
-USE_PYQT=	core widgets
+USE_PYQT=	pyqt5
 USE_PYTHON=	autoplist distutils
 
 MAKE_ENV=	PBR_VERSION=${PORTVERSION}
@@ -55,8 +55,5 @@ do-build-DOCS-on:
 post-build-DOCS-on:
 	${MKDIR} ${STAGEDIR}${DOCSDIR}
 	(cd ${WRKSRC}/doc/_build/html/ && ${CP} -R api *.html *.js ${STAGEDIR}${DOCSDIR})
-
-do-test:
-	@cd ${WRKSRC} && ${PYTHON_CMD} -m pytest -rs -v
 
 .include <bsd.port.mk>

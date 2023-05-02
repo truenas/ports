@@ -8,4 +8,8 @@ DIST=		bad
 
 MASTERDIR=	${.CURDIR}/../../multimedia/gstreamer1-plugins
 
+PLIST=  ${.CURDIR}/pkg-plist
+
+USES=    compiler:c11 ssl
+
 .include "${MASTERDIR}/Makefile"

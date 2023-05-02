@@ -1,10 +1,12 @@
 PORTNAME=	opa
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.32.0
+DISTVERSION=	0.41.0
+PORTREVISION=	11
 CATEGORIES=	sysutils
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Open Policy Agent for policy enforcement across the entire stack
+WWW=		https://github.com/open-policy-agent/opa
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

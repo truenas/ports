@@ -1,12 +1,11 @@
-# Created by: bf <bf@FreeBSD.org>
-
 PORTNAME=	CharisSIL
-PORTVERSION=	6.001
+PORTVERSION=	6.200
 CATEGORIES=	x11-fonts
 MASTER_SITES=	https://software.sil.org/downloads/r/charis/
 
 MAINTAINER=	thierry@FreeBSD.org
 COMMENT=	Charis SIL TrueType font collection
+WWW=		https://software.sil.org/charis/
 
 LICENSE=	OFL11
 

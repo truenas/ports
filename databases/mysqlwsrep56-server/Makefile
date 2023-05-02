@@ -1,18 +1,19 @@
-# Created by: Philip Stoev <philip.stoev@galeracluster.com>
-
 PORTNAME=	mysqlwsrep
 PORTVERSION?=	5.6.51
 DISTVERSIONPREFIX?=	wsrep_
 DISTVERSIONSUFFIX?=	-25.33
-PORTREVISION?=	0
+PORTREVISION?=	1
 CATEGORIES=	databases
 PKGNAMESUFFIX=	56-server
 
 MAINTAINER=	devel@galeracluster.com
 COMMENT=	MySQL database enhanced with Galera replication (server package)
+WWW=		https://galeracluster.com/
 
 LICENSE=	GPLv2
 
+DEPRECATED=	Requires upstream EOL MySQL 5.6
+EXPIRATION_DATE=	2023-06-30
 NOT_FOR_ARCHS=		aarch64 armv6 armv7 powerpc64
 NOT_FOR_ARCHS_REASON=	error: Unsupported platform
 
@@ -53,7 +54,7 @@ CMAKE_ARGS+=	-DINSTALL_LAYOUT=FREEBSD \
 		-DINSTALL_INCLUDEDIR="include/mysql" \
 		-DINSTALL_INFODIR="info" \
 		-DINSTALL_LIBDIR="lib/mysql" \
-		-DINSTALL_MANDIR="man" \
+		-DINSTALL_MANDIR="share/man" \
 		-DINSTALL_MYSQLDATADIR="${MY_DBDIR}" \
 		-DINSTALL_MYSQLKEYRINGDIR="etc/mysql/keyring" \
 		-DINSTALL_MYSQLSHAREDIR="share/mysql" \
@@ -93,9 +94,8 @@ PLIST_SUB=	MY_DBDIR=${MY_DBDIR} \
 		MY_TMPDIR=${MY_TMPDIR}
 
 CONFLICTS_INSTALL=	mariadb*-server \
-			mysql[0-9]*-server \
-			mysqlwsrep57*-server \
-			mysqlwsrep[1-489]*-server \
+			mysql*-server \
+			mysqlwsrep*-server \
 			percona*-server
 
 USE_RC_SUBR=	mysql-server

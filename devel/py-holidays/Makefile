@@ -1,11 +1,12 @@
 PORTNAME=	holidays
 PORTVERSION=	0.9.12
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	gmm@tutanota.com
 COMMENT=	Generate country, province, and state specific holiday sets on the fly
+WWW=		https://github.com/dr-prodigy/python-holidays
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

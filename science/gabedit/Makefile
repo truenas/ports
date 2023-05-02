@@ -1,12 +1,13 @@
 PORTNAME=	gabedit
 DISTVERSION=	2.5.1-300720 # the last number is "snapshot"
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	science
 MASTER_SITES=	https://sites.google.com/site/allouchear/Home/gabedit/download/
 DISTNAME=	GabeditSrc${DISTVERSION:C/([0-9])\.([0-9])\.([0-9])-([0-9])/\1\2\3_\4/}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Graphical user interface for several chemistry software packages
+WWW=		http://gabedit.sourceforge.net/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/License
@@ -36,8 +37,9 @@ PLIST_FILES+=	share/icons/hicolor/${SZ}x${SZ}/apps/${PORTNAME}.png
 .endfor
 
 OPTIONS_DEFINE=		OPENMP
+.if exists(/usr/include/omp.h)
 OPTIONS_DEFAULT=	OPENMP
-OPTIONS_EXCLUDE_powerpc=	OPENMP
+.endif
 
 post-patch:
 	@${REINPLACE_CMD} 's|/usr/|${PREFIX}/|; s| -O2| ${CFLAGS}|; s|gcc|${CC}|' ${WRKSRC}/CONFIG

@@ -6,13 +6,14 @@ MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}-1.8%20%28stable%29
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Greylisting policy server for Postfix using an SQL backend
+WWW=		http://sqlgrey.sourceforge.net/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
 
 RUN_DEPENDS=	p5-Net-Server>=0:net/p5-Net-Server \
 		p5-IO-Multiplex>=0:devel/p5-IO-Multiplex \
-		${P5_POD_PARSER} \
+		p5-Pod-Parser>=0:textproc/p5-Pod-Parser \
 		${LOCALBASE}/bin/bash:shells/bash \
 		${LOCALBASE}/bin/gmd5sum:sysutils/coreutils
 

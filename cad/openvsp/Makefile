@@ -1,10 +1,11 @@
 PORTNAME=	openvsp
 DISTVERSIONPREFIX=	${GH_PROJECT}_
-DISTVERSION=	3.25.0
+DISTVERSION=	3.32.2
 CATEGORIES=	cad
 
 MAINTAINER=	fernape@FreeBSD.org
 COMMENT=	Create a 3D model of an aircraft defined by engineering parameters
+WWW=		http://www.openvsp.org/
 
 LICENSE=	NOSA13
 LICENSE_NAME=	NASA Open Source Agreement version 1.3
@@ -14,8 +15,7 @@ LICENSE_PERMS=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
 BROKEN_aarch64=		fails to compile: invokes x86 asm
 
 BUILD_DEPENDS=	${LOCALBASE}/lib/libopenNURBS.a:graphics/opennurbs \
-		${LOCALBASE}/include/glm/glm.hpp:math/glm \
-		${LOCALBASE}/libdata/pkgconfig/pthread-stubs.pc:devel/libpthread-stubs
+		${LOCALBASE}/include/glm/glm.hpp:math/glm
 LIB_DEPENDS=	libdrm.so:graphics/libdrm \
 		libpng.so:graphics/png \
 		libfreetype.so:print/freetype2 \
@@ -24,8 +24,14 @@ LIB_DEPENDS=	libdrm.so:graphics/libdrm \
 		libfltk.so:x11-toolkits/fltk \
 		libcpptest.so:devel/cpptest
 
-USES=		compiler:c++11-lang cmake:noninja localbase\
+USES=		cmake:noninja localbase\
 		gl gnome jpeg xorg
+.if !exists(/usr/include/omp.h)
+CXXFLAGS+=	-fpermissive
+USES+=		compiler:gcc-c++11-lib
+.else
+USES+=		compiler:c++11-lang 
+.endif
 USE_GITHUB=	yes
 GH_ACCOUNT=	${GH_PROJECT}
 GH_PROJECT=	OpenVSP
@@ -35,7 +41,6 @@ USE_GNOME=	libxml2
 USE_XORG=	ice sm x11 xau xcb xdamage xdmcp xext xfixes xft \
 		xinerama xrender xxf86vm
 
-CXXFLAGS_powerpc64=	-mvsx
 CMAKE_ARGS=	-DVSP_USE_SYSTEM_CMINPACK:BOOLEAN=yes \
 		-DVSP_USE_SYSTEM_CPPTEST:BOOLEAN=yes \
 		-DVSP_USE_SYSTEM_CODEELI:BOOLEAN=no \
@@ -50,11 +55,13 @@ CMAKE_SOURCE_PATH=	${WRKSRC}/SuperProject
 
 BUILD_PREFIX=	OpenVSP-prefix/src/OpenVSP-build/_CPack_Packages/FreeBSD/ZIP/OpenVSP-${DISTVERSION}-FreeBSD
 
+CXXFLAGS_powerpc64=	-mvsx
+
 do-install:
 	@${MKDIR} ${STAGEDIR}${DATADIR}
 	${INSTALL_DATA} ${BUILD_WRKSRC}/${BUILD_PREFIX}/vspIcon.png ${STAGEDIR}${DATADIR}
 	${RM} ${STAGEDIR}${PREFIX}/vspIcon.png ${BUILD_WRKSRC}/${BUILD_PREFIX}/vspIcon.png
-.for f in vsp vspaero vspscript vspslicer vspviewer
+.for f in vsp vspaero vspaero_adjoint vspaero_complex vspaero_opt vsploads vspscript vspviewer
 	${INSTALL_PROGRAM} ${BUILD_WRKSRC}/${BUILD_PREFIX}/${f} ${STAGEDIR}${PREFIX}/bin
 	${RM} ${STAGEDIR}${PREFIX}/${f}
 .endfor

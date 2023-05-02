@@ -1,5 +1,3 @@
-# Created by: Matthew Seaman <m.seaman@infracaninophile.co.uk>
-
 PORTNAME=	RTx-Calendar
 PORTVERSION=	1.03
 PORTREVISION=	1
@@ -9,6 +7,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Calendar extension module for the RT ticketing system
+WWW=		https://metacpan.org/release/RTx-Calendar
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual
@@ -22,10 +21,21 @@ RUN_DEPENDS=	p5-Date-ICal>0:devel/p5-Date-ICal      \
 		p5-DateTime-Set>0:devel/p5-DateTime-Set \
 		${LOCALBASE}/bin/rt:www/rt${RT_VER}
 
+FLAVOR?=	${FLAVORS:[1]}
+FLAVORS=	rt44 rt50
+rt44_PKGNAMEPREFIX=	p5-RT44-
+rt44_CONFLICTS_INSTALL= rt50
+rt50_PKGNAMEPREFIX=	p5-RT50-
+rt50_CONFLICTS_INSTALL= rt44
+
+.if ${FLAVOR} == rt44
+RT_VER=		44
+.elif ${FLAVOR} == rt50
+RT_VER=		50
+.endif
+
 USES=		perl5
 USE_PERL5=	configure
-
-RT_VER=		44
 
 NO_ARCH=	yes
 
@@ -35,7 +45,7 @@ post-patch:
 	@${FIND} ${WRKSRC} -name '*.orig' -delete
 
 # Note: You can install using an arbitrary $PREFIX but only if it
-# matches the $PREFIX used to install www/rt44.  Hence ignore
+# matches the $PREFIX used to install www/rt{44,50}.  Hence ignore
 # $PREFIX in the environment and inherit settings from RT.pm
 do-configure:
 	@cd ${CONFIGURE_WRKSRC} && \

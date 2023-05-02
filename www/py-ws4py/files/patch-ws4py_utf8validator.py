@@ -6,7 +6,7 @@
  class Utf8Validator(object):
 -    """
 -    Incremental UTF-8 validator with constant memory consumption (minimal state).
--
+ 
 -    Implements the algorithm "Flexible and Economical UTF-8 Decoder" by
 -    Bjoern Hoehrmann (http://bjoern.hoehrmann.de/utf-8/decoder/dfa/).
 -    """
@@ -61,7 +61,7 @@
 -        self.state = Utf8Validator.UTF8_ACCEPT
 -        self.codepoint = 0
 -        self.i = 0
- 
+-
      def validate(self, ba):
          """
 -        Incrementally validate a chunk of bytes provided as bytearray.

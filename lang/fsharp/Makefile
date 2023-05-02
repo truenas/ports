@@ -1,5 +1,3 @@
-# Created by: Phillip Neumann <pneumann@gmail.com>
-
 PORTNAME=	fsharp
 PORTVERSION=	10.2.1
 CATEGORIES=	lang
@@ -7,6 +5,7 @@ EXTRACT_ONLY=	${DISTNAME}${EXTRACT_SUFX}
 
 MAINTAINER=	mono@FreeBSD.org
 COMMENT=	Functional and object-oriented language for the .NET platform
+WWW=		https://fsharp.org/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

@@ -1,5 +1,3 @@
-# Created by: Nick Hilliard <nick@foobar.org>
-
 PORTNAME=	oxidized
 PORTVERSION=	0.28.0
 PORTREVISION=	1
@@ -8,6 +6,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	nick@foobar.org
 COMMENT=	Network device configuration backup tool
+WWW=		https://github.com/ytti/oxidized
 
 LICENSE=	APACHE20
 
@@ -20,7 +19,6 @@ RUN_DEPENDS=	rubygem-asetus>=0.1<1:devel/rubygem-asetus \
 		rubygem-slop>=4.6<5:devel/rubygem-slop
 
 USES=		gem shebangfix
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 USE_RC_SUBR=	oxidized

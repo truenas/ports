@@ -34,6 +34,8 @@ bin/openbve-routeviewer
 %%DATADIR%%/Data/Compatibility/Mechanik/database.xml
 %%DATADIR%%/Data/Compatibility/Mechanik/greysky.png
 %%DATADIR%%/Data/Compatibility/Mechanik/modules.xml
+%%DATADIR%%/Data/Compatibility/Misc.xml
+%%DATADIR%%/Data/Compatibility/Misc/null.csv
 %%DATADIR%%/Data/Compatibility/Poles/pole_1.csv
 %%DATADIR%%/Data/Compatibility/Poles/pole_1.png
 %%DATADIR%%/Data/Compatibility/Poles/pole_2.csv
@@ -45,6 +47,7 @@ bin/openbve-routeviewer
 %%DATADIR%%/Data/Compatibility/Poles/pole_4.csv
 %%DATADIR%%/Data/Compatibility/Poles/pole_metal.png
 %%DATADIR%%/Data/Compatibility/PreTrain/train.dat
+%%DATADIR%%/Data/Compatibility/RoutePatches/Africa.xml
 %%DATADIR%%/Data/Compatibility/RoutePatches/America.xml
 %%DATADIR%%/Data/Compatibility/RoutePatches/Australia.xml
 %%DATADIR%%/Data/Compatibility/RoutePatches/Brazil.xml
@@ -137,10 +140,12 @@ bin/openbve-routeviewer
 %%DATADIR%%/Data/Compatibility/Signals/DVB/signal_8.csv
 %%DATADIR%%/Data/Compatibility/Signals/DVB/signal_9.csv
 %%DATADIR%%/Data/Compatibility/Signals/Graphics/glow_green.png
+%%DATADIR%%/Data/Compatibility/Signals/Graphics/glow_purple.png
 %%DATADIR%%/Data/Compatibility/Signals/Graphics/glow_red.png
 %%DATADIR%%/Data/Compatibility/Signals/Graphics/glow_white.png
 %%DATADIR%%/Data/Compatibility/Signals/Graphics/glow_yellow.png
 %%DATADIR%%/Data/Compatibility/Signals/Graphics/light_green.png
+%%DATADIR%%/Data/Compatibility/Signals/Graphics/light_purple.png
 %%DATADIR%%/Data/Compatibility/Signals/Graphics/light_red.png
 %%DATADIR%%/Data/Compatibility/Signals/Graphics/light_white.png
 %%DATADIR%%/Data/Compatibility/Signals/Graphics/light_yellow.png
@@ -191,6 +196,13 @@ bin/openbve-routeviewer
 %%DATADIR%%/Data/Compatibility/Signals/Japanese/signal_6_4.csv
 %%DATADIR%%/Data/Compatibility/Signals/Japanese/signal_6_5.csv
 %%DATADIR%%/Data/Compatibility/Signals/Japanese/signal_post.csv
+%%DATADIR%%/Data/Compatibility/Signals/KCR.xml
+%%DATADIR%%/Data/Compatibility/Signals/KCR/signal_2b_4.csv
+%%DATADIR%%/Data/Compatibility/Signals/KCR/signal_3_4.csv
+%%DATADIR%%/Data/Compatibility/Signals/KCR/signal_4a_2.csv
+%%DATADIR%%/Data/Compatibility/Signals/KCR/signal_4b_2.csv
+%%DATADIR%%/Data/Compatibility/Signals/KCR/signal_4b_3.csv
+%%DATADIR%%/Data/Compatibility/Signals/KCR/signal_4b_4.csv
 %%DATADIR%%/Data/Compatibility/Signals/KS.xml
 %%DATADIR%%/Data/Compatibility/Signals/KS/Mast_R.png
 %%DATADIR%%/Data/Compatibility/Signals/KS/Relay0.png
@@ -510,6 +522,7 @@ bin/openbve-routeviewer
 %%DATADIR%%/Data/Flags/IT.png
 %%DATADIR%%/Data/Flags/JP.png
 %%DATADIR%%/Data/Flags/KR.png
+%%DATADIR%%/Data/Flags/MY.png
 %%DATADIR%%/Data/Flags/NL.png
 %%DATADIR%%/Data/Flags/NO.png
 %%DATADIR%%/Data/Flags/PL.png
@@ -524,16 +537,13 @@ bin/openbve-routeviewer
 %%DATADIR%%/Data/Formats/CSScriptLibrary.dll
 %%DATADIR%%/Data/Formats/CSScriptLibrary.xml
 %%DATADIR%%/Data/Formats/Formats.Msts.dll
+%%DATADIR%%/Data/Formats/Formats.Msts.dll.config
 %%DATADIR%%/Data/Formats/OpenBveApi.dll
 %%DATADIR%%/Data/Formats/OpenBveApi.dll.config
 %%DATADIR%%/Data/Formats/OpenBveApi.xml
 %%DATADIR%%/Data/Formats/SharpCompress.dll
 %%DATADIR%%/Data/Formats/System.Buffers.dll
 %%DATADIR%%/Data/Formats/System.Buffers.xml
-%%DATADIR%%/Data/Formats/System.Memory.dll
-%%DATADIR%%/Data/Formats/System.Memory.xml
-%%DATADIR%%/Data/Formats/System.Numerics.Vectors.dll
-%%DATADIR%%/Data/Formats/System.Numerics.Vectors.xml
 %%DATADIR%%/Data/Formats/System.ValueTuple.dll
 %%DATADIR%%/Data/Formats/System.ValueTuple.xml
 %%DATADIR%%/Data/Formats/Ude.NetStandard.dll
@@ -618,6 +628,7 @@ bin/openbve-routeviewer
 %%DATADIR%%/Data/Languages/it-IT.xlf
 %%DATADIR%%/Data/Languages/ja-JP.xlf
 %%DATADIR%%/Data/Languages/ko-KR.xlf
+%%DATADIR%%/Data/Languages/ms_MY.xlf
 %%DATADIR%%/Data/Languages/nb_NO.xlf
 %%DATADIR%%/Data/Languages/nl-NL.xlf
 %%DATADIR%%/Data/Languages/pl-PL.xlf
@@ -696,8 +707,10 @@ bin/openbve-routeviewer
 %%DATADIR%%/Data/Plugins/OpenBveAts.dll
 %%DATADIR%%/Data/Plugins/OpenBveAts.dll.config
 %%DATADIR%%/Data/Plugins/Route.CsvRw.dll
+%%DATADIR%%/Data/Plugins/Route.CsvRw.dll.config
 %%DATADIR%%/Data/Plugins/Route.CsvRw.pdb
 %%DATADIR%%/Data/Plugins/Route.Mechanik.dll
+%%DATADIR%%/Data/Plugins/Route.Mechanik.dll.config
 %%DATADIR%%/Data/Plugins/Route.Mechanik.pdb
 %%DATADIR%%/Data/Plugins/Sound.Flac.dll
 %%DATADIR%%/Data/Plugins/Sound.Flac.dll.config
@@ -717,6 +730,7 @@ bin/openbve-routeviewer
 %%DATADIR%%/Data/Plugins/Texture.Tga.dll
 %%DATADIR%%/Data/Plugins/Texture.Tga.dll.config
 %%DATADIR%%/Data/Plugins/Train.OpenBve.dll
+%%DATADIR%%/Data/Plugins/Train.OpenBve.dll.config
 %%DATADIR%%/Data/Plugins/Train.OpenBve.pdb
 %%DATADIR%%/Data/RouteViewer/background.png
 %%DATADIR%%/Data/RouteViewer/brightness.png
@@ -776,6 +790,7 @@ bin/openbve-routeviewer
 %%DATADIR%%/DotNetZip.pdb
 %%DATADIR%%/DotNetZip.xml
 %%DATADIR%%/Formats.Msts.dll
+%%DATADIR%%/Formats.Msts.dll.config
 %%DATADIR%%/LibRender2.dll
 %%DATADIR%%/LibRender2.dll.config
 %%DATADIR%%/LibRender2.pdb
@@ -915,6 +930,8 @@ bin/openbve-routeviewer
 %%DATADIR%%/System.Security.Cryptography.X509Certificates.dll
 %%DATADIR%%/System.Security.Principal.dll
 %%DATADIR%%/System.Security.SecureString.dll
+%%DATADIR%%/System.Text.Encoding.CodePages.dll
+%%DATADIR%%/System.Text.Encoding.CodePages.xml
 %%DATADIR%%/System.Text.Encoding.Extensions.dll
 %%DATADIR%%/System.Text.Encoding.dll
 %%DATADIR%%/System.Text.RegularExpressions.dll
@@ -942,6 +959,7 @@ bin/openbve-routeviewer
 %%DATADIR%%/TrainEditor2.exe.config
 %%DATADIR%%/TrainEditor2.pdb
 %%DATADIR%%/TrainManager.dll
+%%DATADIR%%/TrainManager.dll.config
 %%DATADIR%%/TrainManager.pdb
 %%DATADIR%%/Ude.NetStandard.dll
 %%DATADIR%%/Win32PluginProxy.exe

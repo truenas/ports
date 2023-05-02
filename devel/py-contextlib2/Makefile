@@ -1,13 +1,12 @@
-# Created by: Yuri Victorovich <yuri@rawbw.com>
-
 PORTNAME=	contextlib2
 DISTVERSION=	0.6.0.post1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Backports and enhancements for the contextlib module
+WWW=		https://pypi.org/project/contextlib2/
 
 LICENSE=	BSD2CLAUSE
 

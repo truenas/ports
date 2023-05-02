@@ -1,10 +1,12 @@
 PORTNAME=	avogadrolibs
-DISTVERSION=	1.94.0
+DISTVERSION=	1.97.0
+PORTREVISION=	1
 CATEGORIES=	science
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Python bindings for Avogadro2 chemistry libraries
+WWW=		https://www.openchemistry.org/projects/avogadro2/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/../LICENSE

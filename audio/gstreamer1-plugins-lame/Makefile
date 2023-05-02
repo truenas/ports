@@ -8,4 +8,8 @@ DIST=		good
 
 MASTERDIR=	${.CURDIR}/../../multimedia/gstreamer1-plugins
 
+PLIST=  ${.CURDIR}/pkg-plist
+
+LIB_DEPENDS= libmp3lame.so:audio/lame
+
 .include "${MASTERDIR}/Makefile"

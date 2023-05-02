@@ -1,5 +1,3 @@
-# Created by: Yonatan <onatan@gmail.com>
-
 PORTNAME=	foldingathome
 DISTVERSION=	7.6.21
 CATEGORIES=	biology linux
@@ -10,6 +8,7 @@ EXTRACT_SUFX=	.x86_64.rpm
 
 MAINTAINER=	0mp@FreeBSD.org
 COMMENT=	Folding@home Client
+WWW=		https://foldingathome.org/
 
 # Distribution without permission is prohibited
 LICENSE=	FAHSL

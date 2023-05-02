@@ -1,9 +1,11 @@
 PORTNAME=	webdis
-DISTVERSION=	0.1.18
+DISTVERSION=	0.1.20
+PORTREVISION=	1
 CATEGORIES=	databases
 
 MAINTAINER=	olgeni@FreeBSD.org
 COMMENT=	HTTP interface for Redis
+WWW=		https://webd.is/
 
 LICENSE=	BSD2CLAUSE
 

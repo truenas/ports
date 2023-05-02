@@ -6,6 +6,7 @@ CATEGORIES=	security
 
 MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Interpreter for Snort unified2 binary output files
+WWW=		https://github.com/firnsy/barnyard2
 
 LICENSE=	GPLv2
 
@@ -13,6 +14,8 @@ USES=		autoreconf libtool
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	firnsy
+
+CONFLICTS_INSTALL?=	barnyard2-sguil # bin/barnyard2
 
 OPTIONS_DEFINE=	64BIT ARUBA GRE IPV6 MPLS PORT_PCAP DOCS EXAMPLES
 OPTIONS_RADIO=	DATABASE

@@ -1,25 +1,22 @@
 PORTNAME=	jumpnbump
 PORTVERSION=	1.61
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	games
-MASTER_SITES=	https://gitlab.com/LibreGames/jumpnbump/repository/${PORTVERSION}/archive.tar.bz2?dummy=/
-
-PATCH_SITES=	https://gitlab.com/LibreGames/jumpnbump/-/commit/
-PATCHFILES=	b72b70a4233776bdaa6a683c89af2becefd53bd6.patch:-p1
+MASTER_SITES=	https://gitlab.com/LibreGames/jumpnbump/uploads/95acdae2a232513f068e260977371dcf/
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Play cute bunnies jumping on each other's heads #'
+WWW=		https://gitlab.com/LibreGames/jumpnbump
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-USES=		compiler:c11 gettext-tools gmake sdl shebangfix tar:bzip2
+USES=		compiler:c11 gettext-tools gmake sdl shebangfix tar:xz
 SHEBANG_FILES=	${WRKSRC}/menu/jumpnbump_menu.py.pre
 USE_SDL=	sdl2 mixer2 net2
 ALL_TARGET=	all
 INSTALL_TARGET=	install
 
-WRKSRC=		${WRKDIR}/${DISTNAME}-7a0a7ab7491680338bb13058adafdfaac03a1f6d
 PORTDOCS=	AUTHORS ChangeLog README.md
 
 OPTIONS_DEFINE=	LAUNCHER DOCS NLS

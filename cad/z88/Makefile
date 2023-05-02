@@ -1,13 +1,12 @@
-# Created by: Pedro F. Giffuni <giffunip@asme.org>
-
 PORTNAME=	z88
 DISTVERSIONPREFIX=	v
 DISTVERSION=	15
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	cad
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Compact Finite Element Analysis System
+WWW=		https://en.z88.de/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/LICENSE

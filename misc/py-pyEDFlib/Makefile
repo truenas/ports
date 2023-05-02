@@ -1,11 +1,14 @@
 PORTNAME=	pyEDFlib
-DISTVERSION=	0.1.23
+DISTVERSIONPREFIX=	v
+DISTVERSION=	0.1.30
+PORTREVISION=	1
 CATEGORIES=	misc
-MASTER_SITES=	CHEESESHOP
+#MASTER_SITES=	PYPI # PyPI version fails: https://github.com/holgern/pyedflib/issues/168
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Python library to read/write EDF+/BDF+ files based on EDFlib
+WWW=		https://github.com/holgern/pyedflib
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -15,6 +18,10 @@ RUN_DEPENDS=	${PYNUMPY}
 
 USES=		fortran python:3.6+
 USE_PYTHON=	distutils cython autoplist
+
+USE_GITHUB=	yes
+GH_ACCOUNT=	holgern
+GH_PROJECT=	pyedflib
 
 USE_GCC=	yes # fails to build with clang: https://github.com/holgern/pyedflib/issues/104
 

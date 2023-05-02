@@ -1,11 +1,12 @@
 PORTNAME=	lazr.config
-PORTVERSION=	2.2.2
+PORTVERSION=	2.2.3
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	acm@FreeBSD.org
 COMMENT=	Create configuration schemas, and process and validate configurations
+WWW=		https://launchpad.net/lazr.config
 
 LICENSE=	LGPL3
 LICENSE_FILE=	${WRKSRC}/COPYING.txt

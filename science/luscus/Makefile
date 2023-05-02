@@ -1,12 +1,13 @@
 PORTNAME=	luscus
 DISTVERSION=	0.8.6
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	science
 MASTER_SITES=	SF/${PORTNAME}/
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Molecular editor and viewer
+WWW=		https://sourceforge.net/projects/luscus/
 
 LICENSE=	AFL
 LICENSE_NAME=	Academic Free License

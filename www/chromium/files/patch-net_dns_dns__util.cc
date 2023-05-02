@@ -1,11 +1,11 @@
---- net/dns/dns_util.cc.orig	2021-07-19 18:45:19 UTC
+--- net/dns/dns_util.cc.orig	2023-02-08 09:03:45 UTC
 +++ net/dns/dns_util.cc
-@@ -28,6 +28,8 @@
- #include "third_party/abseil-cpp/absl/types/optional.h"
- #include "url/url_canon.h"
+@@ -29,6 +29,8 @@
+ #include "net/dns/public/util.h"
+ #include "net/third_party/uri_template/uri_template.h"
  
 +#include <sys/socket.h>
 +
- #if defined(OS_POSIX)
- #include <netinet/in.h>
+ #if BUILDFLAG(IS_POSIX)
  #include <net/if.h>
+ #include <netinet/in.h>

@@ -1,5 +1,3 @@
-# Created by: Arjan van der Velde <noresult@xs4all.nl>
-
 PORTNAME=	spindown
 PORTVERSION=	0.4
 CATEGORIES=	sysutils
@@ -7,6 +5,7 @@ MASTER_SITES=	http://www.noresult.net/freebsd/spindown/
 
 MAINTAINER=	noresult@noresult.net
 COMMENT=	SCSI/firewire harddrive spindown daemon
+WWW=		https://www.noresult.net/freebsd/spindown/
 
 WRKSRC=		${WRKDIR}/${PORTNAME}
 

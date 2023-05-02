@@ -1,13 +1,13 @@
-# Created by: Joe Marcus Clarke <marcus@FreeBSD.org>
-
 PORTNAME=	mate-utils
 PORTVERSION=	1.26.0
+PORTREVISION=	2
 CATEGORIES=	deskutils mate
 MASTER_SITES=	MATE
 DIST_SUBDIR=	mate
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	MATE support utilities
+WWW=		https://mate-desktop.org/
 
 LICENSE=	GPLv2+ GFDL LGPL20+
 LICENSE_COMB=	multi
@@ -18,7 +18,6 @@ LICENSE_FILE_LGPL20+ =	${WRKSRC}/COPYING.libs
 BUILD_DEPENDS=	itstool:textproc/itstool
 
 LIB_DEPENDS=	libgtop-2.0.so:devel/libgtop \
-		libcanberra-gtk.so:audio/libcanberra \
 		libcanberra-gtk3.so:audio/libcanberra-gtk3
 
 PORTSCOUT=	limitw:1,even

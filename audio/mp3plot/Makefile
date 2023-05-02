@@ -1,13 +1,12 @@
-# Created by: Andrew Pantyukhin <infofarmer@FreeBSD.org>
-
 PORTNAME=	mp3plot
 DISTVERSION=	0.6.0
-PORTREVISION=	29
+PORTREVISION=	32
 CATEGORIES=	audio
 MASTER_SITES=	http://p.outlyer.net/mp3plot/files/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	MP3 bitrate plot tool
+WWW=		https://p.outlyer.net/mp3plot/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

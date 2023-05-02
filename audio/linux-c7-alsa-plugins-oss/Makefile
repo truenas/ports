@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	alsa-plugins
 PORTVERSION=	1.1.6
 DISTVERSIONSUFFIX=	-1.el7
@@ -15,6 +13,7 @@ DIST_SUBDIR=	centos
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	OSS plugin for ALSA (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://www.alsa-project.org/
 
 LICENSE=	LGPL21+
 
@@ -32,6 +31,7 @@ CONFIG_ARGS=	--disable-static --disable-mix --disable-usbstream \
 CPPFLAGS+=	-DFREEBSD_OSS -DFREEBSD_OSS_USE_IO_PTR
 CFLAGS+=	--sysroot=${LINUXBASE}
 COMPAT32_CFLAGS_amd64=	-m32
+LIBDIR_aarch64=	/usr/lib64
 LIBDIR_amd64=	/usr/lib64
 LIBDIR_i386=	/usr/lib
 WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}

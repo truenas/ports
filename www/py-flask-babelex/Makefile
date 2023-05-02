@@ -1,12 +1,13 @@
 PORTNAME=	flask-babelex
 PORTVERSION=	0.9.4
 CATEGORIES=	www devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	Flask-BabelEx-${DISTVERSION}
 
 MAINTAINER=	meka@tilda.center
 COMMENT=	Support i18n/l10n in Flask applications
+WWW=		https://github.com/mrjoes/flask-babelex
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

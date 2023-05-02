@@ -1,13 +1,12 @@
-# Created by: Wen Heping <wenheping@gmail.com>
-
 PORTNAME=	apipkg
 PORTVERSION=	1.5
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Namespace control and lazy-import mechanism
+WWW=		https://bitbucket.org/hpk42/apipkg
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

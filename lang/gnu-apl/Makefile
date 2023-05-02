@@ -1,5 +1,3 @@
-# Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
-
 PORTNAME=	apl
 PORTVERSION=	1.8
 PORTREVISION=	2
@@ -9,6 +7,7 @@ PKGNAMEPREFIX=	gnu-
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Free interpreter for APL programming language
+WWW=		https://www.gnu.org/software/apl/
 
 LICENSE=	GPLv3+
 
@@ -20,6 +19,7 @@ LIB_DEPENDS=	libfftw3.so:math/fftw3
 
 USES=		compiler:c++11-lang gmake libtool localbase
 GNU_CONFIGURE=	yes
+CONFIGURE_ENV=	CXX_WERROR=no
 USE_LDCONFIG=	yes
 INSTALL_TARGET=	install-strip
 

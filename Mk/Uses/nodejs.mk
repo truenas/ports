@@ -1,60 +1,60 @@
-# Provide support for NodeJS
+# Provide support for Node.js
 #
-# Feature:      nodejs
-# Usage:        USES=nodejs or USES=nodejs:args
-# Valid ARGS:	build and/or run <version>
-# version:      lts, current, 10, 14, 16, 17
-# Default is:   build,run
-# Note:			if you define a version, you must provide run and/or build
+# Feature:	nodejs
 #
-# MAINTAINER: bhughes@FreeBSD.org
+# Usage:	USES=nodejs[:args]
+#   Valid args:
+#   - build     use node as build-time dependency
+#   - run       use node as runtime dependency
+#   - env       set the environment (NODEJS_VERSION and NODEJS_SUFFIX)
+#   - version   available version: lts, current, 14, 16, 18, 19, 20
+#
+# Note:
+# - The supported versions follow upstream release schedule
+#   https://github.com/nodejs/Release/blob/main/README.md#release-schedule
+#   - lts is 18 now
+#   - current is 20 now
+# - USES=nodejs means USES=nodejs:build,run
+# - If you define a version, you must provide run and/or build
+#
+# MAINTAINER: sunpoet@FreeBSD.org
 
 .if !defined(_INCLUDE_USES_NODEJS_MK)
 _INCLUDE_USES_NODEJS_MK=	yes
 
-_VALID_NODEJS_VERSION=	10 14 16 17 lts current
-_NODEJS_VERSION_SUFFIX=	${NODEJS_DEFAULT}
+_VALID_NODEJS_VERSIONS=	14 16 18 19 20 current lts
 
-.if ! ${_VALID_NODEJS_VERSION:M${_NODEJS_VERSION_SUFFIX}}
-IGNORE=	Invalid nodejs default version ${_NODEJS_VERSION_SUFFIX}; valid versions are ${_VALID_NODEJS_VERSION}
-.endif
+.  if ! ${_VALID_NODEJS_VERSIONS:M${NODEJS_DEFAULT}}
+IGNORE=	Invalid default nodejs version ${NODEJS_DEFAULT}; valid versions are ${_VALID_NODEJS_VERSIONS}
+.  endif
 
-.if empty(nodejs_ARGS)
+.  if !empty(nodejs_ARGS:Nbuild:Nenv:Nrun:Nlts:Ncurrent:N14:N16:N18:N19:N20)
+IGNORE=		USES=nodejs has invalid arguments ${nodejs_ARGS}
+.  endif
+
+.  if empty(nodejs_ARGS)
 nodejs_ARGS=	build,run
-.endif
+.  endif
 
-. if ${nodejs_ARGS:M10}
-_NODEJS_VERSION_SUFFIX=	10
-. elif ${nodejs_ARGS:M14}
-_NODEJS_VERSION_SUFFIX=	14
-. elif ${nodejs_ARGS:M16}
-_NODEJS_VERSION_SUFFIX=	16
-. elif ${nodejs_ARGS:Mlts}
-_NODEJS_VERSION_SUFFIX=	lts
-. elif ${nodejs_ARGS:M17}
-_NODEJS_VERSION_SUFFIX=	17
-. elif ${nodejs_ARGS:Mcurrent}
-_NODEJS_VERSION_SUFFIX=	current
-. elif defined(NODEJS_DEFAULT)
-. endif
+.undef _NODEJS_VER
+.  for version in ${_VALID_NODEJS_VERSIONS}
+.    if ${nodejs_ARGS:M${version}}
+_NODEJS_VER=	${version}
+.    endif
+.  endfor
 
-# The nodejs 17 version is named www/node
-. if ${_NODEJS_VERSION_SUFFIX:Mcurrent}
-_NODEJS_VERSION_SUFFIX=
-. endif
-. if ${_NODEJS_VERSION_SUFFIX:M17}
-_NODEJS_VERSION_SUFFIX=
-. endif
-# The nodejs LTS is version 16
-. if ${_NODEJS_VERSION_SUFFIX:Mlts}
-_NODEJS_VERSION_SUFFIX=	16
-. endif
+.  if !defined(_NODEJS_VER)
+_NODEJS_VER=	${NODEJS_DEFAULT}
+.  endif
 
-. if ${nodejs_ARGS:M*run*}
-RUN_DEPENDS+=	node:www/node${_NODEJS_VERSION_SUFFIX}
-. endif
-. if ${nodejs_ARGS:M*build*}
-BUILD_DEPENDS+=	node:www/node${_NODEJS_VERSION_SUFFIX}
-. endif
+NODEJS_VERSION=	${_NODEJS_VER:S|current|20|:S|lts|18|}
+NODEJS_SUFFIX=	-node${NODEJS_VERSION}
+
+.  if ${nodejs_ARGS:M*build*}
+BUILD_DEPENDS+=	node:www/node${NODEJS_VERSION}
+.  endif
+.  if ${nodejs_ARGS:M*run*}
+RUN_DEPENDS+=	node:www/node${NODEJS_VERSION}
+.  endif
 
 .endif

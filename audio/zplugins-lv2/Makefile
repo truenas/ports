@@ -1,11 +1,13 @@
 PORTNAME=	zplugins
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.2.4
+DISTVERSION=	0.2.5
+PORTREVISION=	1
 CATEGORIES=	audio multimedia
 PKGNAMESUFFIX=	-lv2
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Collection of LV2 plugins to be bundled with Zrythm
+WWW=		https://github.com/zrythm/ZPlugins
 
 LICENSE=	AGPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING

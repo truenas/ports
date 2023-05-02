@@ -1,11 +1,12 @@
 PORTNAME=	dparse
 DISTVERSION=	0.5.1
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	kai@FreeBSD.org
 COMMENT=	Parser for Python dependency files
+WWW=		https://github.com/pyupio/dparse
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

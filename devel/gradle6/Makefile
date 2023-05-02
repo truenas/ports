@@ -1,5 +1,5 @@
 PORTNAME=	gradle
-PORTVERSION=	6.9
+PORTVERSION=	6.9.4
 CATEGORIES=	devel java
 MASTER_SITES=	https://downloads.gradle.org/distributions/
 PKGNAMESUFFIX=	6
@@ -7,6 +7,7 @@ EXTRACT_SUFX=	-bin.zip
 
 MAINTAINER=	ygy@FreeBSD.org
 COMMENT=	Project automation tool
+WWW=		https://www.gradle.org/
 
 LICENSE=	APACHE20 BSD3CLAUSE CDDL EPL LGPL21+ MIT MPL20
 LICENSE_COMB=	multi
@@ -14,6 +15,9 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 
 USES=		cpe zip
 USE_JAVA=	yes
+
+CONFLICTS_INSTALL=	gradle gradle62
+
 NO_ARCH=	yes
 NO_BUILD=	yes
 SUB_FILES=	gradle

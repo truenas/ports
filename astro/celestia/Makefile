@@ -1,5 +1,3 @@
-# Created by: trevor
-
 PORTNAME=	celestia
 PORTVERSION=	1.6.1
 PORTREVISION=	13
@@ -9,6 +7,7 @@ PKGNAMESUFFIX=	-${CELESTIA_UI}
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Scriptable space flight simulator for X11
+WWW=		https://celestia.space
 
 LICENSE=	GPLv2
 
@@ -28,7 +27,7 @@ LDFLAGS+=	-L${LOCALBASE}/lib -pthread
 
 UI_LIST=	glut gtk gnome
 CELESTIA_UI?=	glut
-CONFLICTS=	${UI_LIST:S|${CELESTIA_UI}||:S|^|celestia-|}
+CONFLICTS_INSTALL=	${UI_LIST:S|^|celestia-|}
 
 # Celestia provides different UI frontends; you should pick one that suits
 # you best by setting CELESTIA_UI variable.  Possible values are:

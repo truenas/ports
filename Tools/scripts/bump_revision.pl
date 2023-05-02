@@ -1,4 +1,4 @@
-#!/usr/bin/env -S perl -wT
+#!/usr/bin/env -S perl -wt
 
 #
 # This script helps with bumping the PORTREVISION of all ports that depend on a
@@ -20,10 +20,13 @@ use strict;
 use Getopt::Std;
 use Carp 'verbose';
 use Cwd;
-use Data::Dumper;
 use File::Basename;
+use Data::Dumper;
+$Data::Dumper::Indent = 1; # simple indent
+$Data::Dumper::Purity = 1; # Perl syntax
+my $debug = 0;
 
-use vars qw/$opt_n $opt_f $opt_i $opt_u $opt_l $opt_g $opt_p/;
+use vars qw/$opt_n $opt_f $opt_i $opt_u $opt_l $opt_g $opt_p $opt_h/;
 
 # launder environment
 delete @ENV{'IFS', 'CDPATH', 'ENV', 'BASH_ENV'};
@@ -51,51 +54,58 @@ EOF
 $| = 1;
 
 sub bumpMakefile {
+    my ($taintedorigin) = @_; 
+    my $origin;
 
-    my ($p) = @_; 
+    if ($taintedorigin =~ /^([-\@\w.\/]+)$/) {
+	$origin = $1;
+    }  else {
+       	Carp::carp "cannot untaint $taintedorigin - invalid characters";
+	return;
+    }
 
-    my $makefile = "$p/Makefile";
+    my $makefile = "$origin/Makefile";
     my $fin;
-	unless(open($fin, $makefile)) {
-	    print "-- Cannot open Makefile of $p, ignored.\n";
-	    next;
-	}
-	my @lines = <$fin>;
-	if ($!) { die "Error while reading $makefile: $!. Aborting"; }
-	close($fin) or die "Can't close $makefile b/c $!";
-	chomp(@lines);
+    unless(open($fin, $makefile)) {
+	print "-- Cannot open Makefile of $origin, ignored.\n";
+	return;
+    }
+    my @lines = <$fin>;
+    if ($!) { die "Error while reading $makefile: $!. Aborting"; }
+    close($fin) or die "Can't close $makefile b/c $!";
+    chomp(@lines);
 
-	my $revision = 1;
+    my $revision = 1;
 
-	foreach my $line (@lines) {
-	    last if ($line =~ /^MAINTAINER/);
-	    $revision += $1 if ($line =~ /PORTREVISION\??=[ \t]*(\d+)$/);
-	}
+    foreach my $line (@lines) {
+	last if ($line =~ /^MAINTAINER/);
+	$revision += $1 if ($line =~ /PORTREVISION\??=[ \t]*(\d+)$/);
+    }
 
-	my $printedrev = 0;
-	open(my $fout, '>', "$makefile.bumped");
-	foreach my $line (@lines) {
-	    if (!$printedrev) {
-		if ($line =~ /^CATEGORIES??=/ || $line =~ /^PORTEPOCH??=/) {
-		    print $fout "PORTREVISION=	$revision\n";
-		    $printedrev = 1;
-		    # Fall through!
-		}
-		if ($line =~ /^PORTREVISION\?=/) {
-		    print $fout "PORTREVISION?=	$revision\n";
-		    $printedrev = 1;
-		    next;
-		}
-		if ($line =~ /^PORTREVISION=/) {
-		    print $fout "PORTREVISION=	$revision\n";
-		    $printedrev = 1;
-		    next;
-		}
+    my $printedrev = 0;
+    open(my $fout, '>', "$makefile.bumped");
+    foreach my $line (@lines) {
+	if (!$printedrev) {
+	    if ($line =~ /^CATEGORIES??=/ || $line =~ /^PORTEPOCH??=/) {
+		print $fout "PORTREVISION=	$revision\n";
+		$printedrev = 1;
+		# Fall through!
 	    }
-	    print $fout "$line\n";
+	    if ($line =~ /^PORTREVISION\?=/) {
+		print $fout "PORTREVISION?=	$revision\n";
+		$printedrev = 1;
+		next;
+	    }
+	    if ($line =~ /^PORTREVISION=/) {
+		print $fout "PORTREVISION=	$revision\n";
+		$printedrev = 1;
+		next;
+	    }
 	}
-	close($fout) or die "Can't close $makefile b/c $!";
-	rename "$makefile.bumped", $makefile or die "Can't rename $makefile.bumped to $makefile: $!";
+	print $fout "$line\n";
+    }
+    close($fout) or die "Can't close $makefile b/c $!";
+    rename "$makefile.bumped", $makefile or die "Can't rename $makefile.bumped to $makefile: $!";
 }
 
 my $osversion = `uname -r`;
@@ -107,7 +117,9 @@ my ($portsdir, $INDEX);
 {
     $opt_i = "";
     $opt_u = "";
-    getopts("fgi:lnu:p:") or die "Aborting";
+    getopts("fghi:lnu:p:") or die "Aborting";
+    usage() if $opt_h;
+    if ($ENV{'DEBUG'}) { $debug = $ENV{'DEBUG'}; }
     $shallow = $opt_l if $opt_l;
     if ($opt_l and $opt_g) {
 	die "Options -g and -l given, which are mutually exclusive. Pick either.";
@@ -132,8 +144,8 @@ my $TMPDIR = File::Basename::dirname($INDEX);
 #
 # Sanity checking
 #
-if (-d "$TMPDIR/.svn" and not $opt_f and not $opt_n) {
-    die "$TMPDIR/.svn exists, cowardly refusing to proceed.\n";
+if (-d "$TMPDIR/.git" and not $opt_f and not $opt_n) {
+    die "$TMPDIR/.git exists, cowardly refusing to proceed.\n";
 }
 
 
@@ -160,26 +172,40 @@ my %index = ();
 
     my @a;
     my @b;
-    my $port;
+    my $origin;
+    my $cat_port;
+    my $pkgname;
     map {
-	@a = split(/\|/, $_);
+	@a = split(/\|/, $_); # columns per PORTINDEX(5) aka INDEX(5)
 	@b = split(/\//, $a[1]);
 
-	$port = $b[-2]."/".$b[-1];
+	$cat_port = $b[-2]."/".$a[0];
+	$cat_port =~ s/-[^-]+$//;
+	$origin = $b[-2]."/".$b[-1];
 
-	@{ $index{$port} }{'portname', 'portnameversion', 'origin', 'comment', 'deps'}
-	    = ($b[-1], $a[0], $port, $a[3], ());
+	unless ($b[-1]) { die "undefined portname"; }
+	unless ($origin) { die "undefined origin"; }
 
-	if ($a[8]) {
+	@{ $index{$a[0]} }{'portname', 'origin', 'comment', 'deps'}
+	    = ($b[-1], $origin, $a[3], ());
+
+	if ($a[8]) { # run dependencies
 	    @b = split(" ", $a[8]);
-	    @{ $index{$port}{deps} }{@b} = (1) x @b;
+	    @{ $index{$a[0]}{deps} }{@b} = (1) x @b;
 	}
-
+	undef;
     } @lines;
+
     print "- Processed ", scalar keys(%index), " entries.\n";
+    if ($debug and $debug > 1) {
+	   print STDERR Dumper(\%index);
+    }
 }
 
 my %DEPPORTS = ();
+
+my %byorigin =   map { ($index{$_}{'origin'} => $_)   } keys %index;
+my %byportname = map { ($index{$_}{'portname'} => $_) } keys %index;
 
 foreach my $PORT (@ARGV) {
     #
@@ -187,22 +213,11 @@ foreach my $PORT (@ARGV) {
     # If specified as category/portname, that should be enough.
     # If specified as portname, check all categories for existence or duplicates.
     #
-    unless (defined $index{$PORT}) {
-	my @found = grep /\/$PORT$/, keys(%index);
-	my $count = @found;
-
-	if ($count == 0) {
-	    die "Cannot find ${PORT} in ${INDEX}.";
-	} elsif ($count == 1) {
-	    $PORT = $found[0];
-	} else {
-	    my $n = join(" ", @found);
-	    die "Found ${PORT} more than once in ${INDEX}: $n. Try category/$PORT.\nAborting";
-	}
-    }
-
-    my $PORTNAMEVERSION = $index{$PORT}{portnameversion};
-    print "Found $PORT as $PORTNAMEVERSION\n";
+    my $r = $index{$PORT};
+    if (!defined $r) { $r = $byportname{$PORT}; }
+    if (!defined $r) { $r = $byorigin{$PORT}; }
+    if (defined $r) { print "Found $PORT as $r.\n"; $PORT = $r; }
+    else { die "Cannot find $PORT in $INDEX! Aborting"; }
 
     #
     # Figure out all the ports depending on this one.
@@ -212,7 +227,8 @@ foreach my $PORT (@ARGV) {
 	my $count = 0;
 
 	foreach my $p (keys(%index)) {
-	    if (defined $index{$p}{'deps'}{$PORTNAMEVERSION}) {
+	    my $q = $index{$p}{'deps'}{$PORT};
+	    if ($q) {
 		$DEPPORTS{$p} = 1;
 		++$count;
 	    }
@@ -225,6 +241,7 @@ foreach my $PORT (@ARGV) {
 # In shallow mode, strip all those who don't have a direct dependency
 #
 sub direct_dependency($@) {
+    if ($debug) { print STDERR Dumper \@_; }
     my ($port, @requisites) = @_;
     open F, '-|', '/usr/bin/make', '-C', $port, qw/-V _RUN_DEPENDS -V _LIB_DEPENDS/ or die "cannot launch make: $!";
     my @lines = <F>;
@@ -232,7 +249,7 @@ sub direct_dependency($@) {
     my $deps = join(" ", @lines);
     my %deps = map { $_ =~ s[/usr/ports/][]; $_ =~ s[$portsdir/][]; ($_ => 1) } split " ", $deps;
     if ($!) { die "cannot read depends from make: $!"; }
-    close F or die "cannot read depends from make: $!";
+    close F or Carp::carp "cannot read depends from make: $!";
     my $required = grep { $_ } map { defined $deps{$_} } @requisites;
     return $required;
 }
@@ -241,9 +258,11 @@ if ($shallow) {
     my $n = keys %DEPPORTS;
     my $idx = 1;
     foreach my $p (keys %DEPPORTS) {
-	print "- Checking requisites of port $idx/$n...\r";
+	print "- Checking requisites of port $idx/$n... \r";
+	print "\n" if $debug;
 	++$idx;
-	unless (direct_dependency($p, @ARGV)) {
+	my $pp = $index{$p}->{'origin'};
+	unless (direct_dependency($pp, map { $index{$_}{origin} } @ARGV)) {
 	    delete $DEPPORTS{$p};
 	}
     }
@@ -258,6 +277,7 @@ my $ports = join(" ", keys %DEPPORTS);
 #
 unless ($opt_f or $opt_n) {
   $TMPDIR = ".bump_revision_pl_tmpdir.$$";
+  die "This code fragment has not been updated for Git yet.";
   print "svn checkout into $TMPDIR...\n";
   mkdir($TMPDIR, 0755);
   chdir($TMPDIR);
@@ -272,9 +292,11 @@ unless ($opt_f or $opt_n) {
 {
     print "Updating Makefiles\n";
     foreach my $p (sort keys(%DEPPORTS)) {
-	print "- Updating Makefile of $p\n";
-    next if $opt_n;
-	bumpMakefile "$p";
+	my $origin = $index{$p}->{'origin'};
+	print "- Updating Makefile of $origin\n";
+        unless($opt_n) { 
+	    bumpMakefile "$origin";
+	}
     }
 }
 
@@ -288,7 +310,7 @@ thing remains:  Committing to the ports tree.  This program is not
 going to do that for you, you have to do it manually.
 
 \$ cd $TMPDIR
-\$ svn commit
+\$ git commit
 	
 Then, remove the temp directory ($TMPDIR).
 EOF

@@ -1,13 +1,12 @@
-# Created by: Sunpoet Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	actioncable
-PORTVERSION=	5.2.6
+PORTVERSION=	5.2.8.1
 CATEGORIES=	www rubygems
 MASTER_SITES=	RG
 PKGNAMESUFFIX=	52
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Integrated WebSockets for Rails
+WWW=		https://github.com/rails/rails/tree/main/actioncable
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/MIT-LICENSE
@@ -17,7 +16,6 @@ RUN_DEPENDS=	rubygem-actionpack52>=${PORTVERSION}:www/rubygem-actionpack52 \
 		rubygem-websocket-driver>=0.6.1:www/rubygem-websocket-driver
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

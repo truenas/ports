@@ -1,5 +1,3 @@
-# Created by: Johannes Meixner <johannes@perceivon.net>
-
 PORTNAME=	rails
 PORTVERSION=	4.2.11.3
 CATEGORIES=	www rubygems
@@ -8,6 +6,7 @@ PKGNAMESUFFIX=	4
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	MVC web application framework
+WWW=		https://github.com/rails/rails
 
 LICENSE=	MIT
 
@@ -42,7 +41,6 @@ RUN_DEPENDS=	rubygem-actionmailer4>=${PORTVERSION}:mail/rubygem-actionmailer4 \
 		rubygem-web-console2>=2.1.2:devel/rubygem-web-console2
 
 USES=		cpe gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

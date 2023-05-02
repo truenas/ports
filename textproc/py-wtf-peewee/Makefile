@@ -1,11 +1,12 @@
 PORTNAME=	wtf-peewee
-PORTVERSION=	3.0.2
+PORTVERSION=	3.0.4
 CATEGORIES=	textproc devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	meka@tilda.center
 COMMENT=	Bridge between peewee models and wtforms
+WWW=		https://github.com/coleifer/wtf-peewee
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

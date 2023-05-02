@@ -1,13 +1,12 @@
-# Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
-
 PORTNAME=	envoy
 PORTVERSION=	1.10.0
 DISTVERSIONPREFIX=	v
-PORTREVISION=	24
+PORTREVISION=	28
 CATEGORIES=	www
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Edge and service proxy for cloud-native applications
+WWW=		https://www.envoyproxy.io/
 
 LICENSE=	APACHE20
 

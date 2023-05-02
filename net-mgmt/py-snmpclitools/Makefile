@@ -2,11 +2,12 @@ PORTNAME=	snmpclitools
 PORTVERSION=	0.6.1
 PORTREVISION=	2
 CATEGORIES=	net-mgmt python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	mhjacks@swbell.net
 COMMENT=	Command-line SNMP utilities in Python
+WWW=		https://github.com/etingof/snmpclitools
 
 LICENSE=	BSD2CLAUSE
 

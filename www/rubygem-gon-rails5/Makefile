@@ -6,6 +6,7 @@ PKGNAMESUFFIX=	-rails5
 
 MAINTAINER=	mfechner@FreeBSD.org
 COMMENT=	Framework to pass data to JS easily
+WWW=		https://github.com/gazay/gon
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -16,7 +17,6 @@ RUN_DEPENDS=	rubygem-actionpack5>=3.0:www/rubygem-actionpack5 \
 
 USES=		cpe gem
 CPE_VENDOR=	${PORTNAME}_project
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

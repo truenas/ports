@@ -1,13 +1,12 @@
-# Created by: Veniamin Gvozdikov <vg@FreeBSD.org>
-
 PORTNAME=	uutf
-PORTVERSION=	1.0.2
+PORTVERSION=	1.0.3
 CATEGORIES=	devel
 MASTER_SITES=	https://erratique.ch/software/uutf/releases/
 PKGNAMEPREFIX=	ocaml-
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Non-blocking streaming Unicode codec for OCaml
+WWW=		https://erratique.ch/software/uutf
 
 LICENSE=	ISCL
 LICENSE_FILE=	${WRKSRC}/LICENSE.md
@@ -21,7 +20,6 @@ BUILD_DEPENDS+=	opam-installer:devel/ocaml-opam \
 USES=		tar:tbz
 USE_OCAML=	yes
 USE_OCAML_FINDLIB=	yes
-USE_OCAML_LDCONFIG=	yes
 
 OPTIONS_DEFINE=	DOCS
 

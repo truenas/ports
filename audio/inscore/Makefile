@@ -1,9 +1,11 @@
 PORTNAME=	inscore
 PORTVERSION=	1.31
+PORTREVISION=	2
 CATEGORIES=	audio
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Environment for the design of interactive augmented music scores
+WWW=		https://inscore.grame.fr/
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/src/license.txt
@@ -14,7 +16,7 @@ LIB_DEPENDS=	libGUIDOEngine.so:audio/guidolib \
 
 USES=		cmake gnome qt:5
 USE_QT=		core declarative gui network multimedia opengl printsupport sensors svg widgets websockets \
-		qmake_build buildtools_build
+		qmake:build buildtools:build
 USE_LDCONFIG=	yes
 
 USE_GITHUB=	yes

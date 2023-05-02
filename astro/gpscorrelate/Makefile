@@ -1,12 +1,11 @@
-# Created by: Lukas Maly <Iam@LukasMaly.NET>
-
 PORTNAME=	gpscorrelate
 PORTVERSION=	1.6.1
-PORTREVISION=	7
+PORTREVISION=	9
 CATEGORIES=	astro geography
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Correlate digital camera photos with GPS data in GPX format
+WWW=		http://freefoote.dview.net/linux_gpscorr.html
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

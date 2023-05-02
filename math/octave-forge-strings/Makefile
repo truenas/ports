@@ -1,25 +1,21 @@
-# Created by: Stephen Montgomery-Smith <stephen@math.missouri.edu>
-
 PORTNAME=	octave-forge-strings
-PORTVERSION=	1.2.0
-PORTREVISION=	14
+PORTVERSION=	1.3.0
+PORTREVISION=	2
 CATEGORIES=	math
+MASTER_SITES=	SF/octave/Octave%20Forge%20Packages/Individual%20Package%20Releases
+DISTNAME=	${OCTAVE_PKGNAME}-${DISTVERSIONFULL}
 
 MAINTAINER=	stephen@FreeBSD.org
 COMMENT=	Octave-forge package ${OCTAVE_PKGNAME}
+WWW=		https://packages.octave.org/
 
-# OCTSRC is the name of the directory of the package.
-# It is usually ${OCTAVE_PKGNAME} or ${DISTNAME}.
-OCTSRC=		${DISTNAME}
+LICENSE=	GPLv3+ BSD2CLAUSE
+LICENSE_COMB=	multi
 
-WRKSRC=		${WRKDIR}/${OCTSRC}/src
+LIB_DEPENDS=	libpcre2-8.so:devel/pcre2
 
-.include "${.CURDIR}/../../Mk/bsd.octave.mk"
+USES=		octave pkgconfig
 
-ALL_TARGET=	# Intentionally left empty
-
-post-build:
-	${RM} ${WRKSRC}/Makefile ${WRKSRC}/configure
-	cd ${WRKDIR} && ${TAR} cfz ${DISTNAME}.tar.gz ${OCTSRC}
+GNU_CONFIGURE=	yes
 
 .include <bsd.port.mk>

@@ -1,7 +1,5 @@
-# Created by: Adam Weinberger <adamw@FreeBSD.org>
-
 PORTNAME=	MCE
-PORTVERSION=	1.875
+PORTVERSION=	1.884
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 MASTER_SITE_SUBDIR=	CPAN:MARIOROY
@@ -9,6 +7,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Many-Core Engine for Perl providing parallel processing capabilities
+WWW=		https://metacpan.org/release/MCE
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

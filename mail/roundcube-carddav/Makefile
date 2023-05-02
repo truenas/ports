@@ -1,35 +1,34 @@
-# Created by: gahr
-
 PORTNAME=	carddav
-PORTVERSION=	4.0.4
-PORTREVISION=	0
+PORTVERSION=	4.4.4
+DISTVERSIONPREFIX=v
 CATEGORIES=	mail
-MASTER_SITES=	LOCAL/gahr https://people.freebsd.org/~gahr/
+MASTER_SITES=	https://github.com/mstilkerich/rcmcarddav/releases/download/${DISTVERSIONFULL}/
 PKGNAMEPREFIX=	roundcube-
 PKGNAMESUFFIX=	${PHP_PKGNAMESUFFIX}
-DISTNAME=	${PORTNAME}-${PORTVERSION}-vendor
 
 MAINTAINER=	gahr@FreeBSD.org
 COMMENT=	Roundcube CardDAV plugin
+WWW=		https://github.com/mstilkerich/rcmcarddav
 
 LICENSE=	GPLv2
 
-BUILD_DEPENDS=	roundcube${PHP_PKGNAMESUFFIX}>=1.0:mail/roundcube@${PHP_FLAVOR}
-RUN_DEPENDS=	roundcube${PHP_PKGNAMESUFFIX}>=1.0:mail/roundcube@${PHP_FLAVOR}
+IGNORE_WITH_PHP=82
 
-USES=		php:flavors tar:bz2
+BUILD_DEPENDS=	roundcube${PHP_PKGNAMESUFFIX}>=1.5:mail/roundcube@${PHP_FLAVOR}
+RUN_DEPENDS=	roundcube${PHP_PKGNAMESUFFIX}>=1.5:mail/roundcube@${PHP_FLAVOR}
+
+USES=		php:flavors
 
 NO_BUILD=	yes
 NO_ARCH=	yes
 
 USE_PHP=	curl dom simplexml sockets tokenizer xml xmlreader xmlwriter
-IGNORE_WITH_PHP=80
 
+WRKSRC=		${WRKDIR}/${PORTNAME}
 WWWDIR=		${PREFIX}/www/roundcube/plugins/carddav
 
 do-install:
-	${FIND} ${WRKSRC} -name "*.orig" -delete
 	${MKDIR} ${STAGEDIR}${WWWDIR}
-	cd ${WRKSRC} && ${PAX} -r -w . ${STAGEDIR}${WWWDIR}
+	(cd ${WRKSRC} && ${COPYTREE_SHARE} \* ${STAGEDIR}${WWWDIR}/)
 
 .include <bsd.port.mk>

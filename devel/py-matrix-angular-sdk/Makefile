@@ -1,13 +1,12 @@
-# Created by: Brendan Molloy <brendan+freebsd@bbqsrc.net>
-
 PORTNAME=	matrix-angular-sdk
 PORTVERSION=	0.6.8
 CATEGORIES=	devel www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Matrix Angular SDK
+WWW=		https://github.com/matrix-org/matrix-angular-sdk
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

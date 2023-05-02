@@ -1,13 +1,12 @@
-# Created by: Nikolai Lifanov <lifanov@FreeBSD.org>
-
 PORTNAME=		docker
 PORTVERSION=		18.09.5
 DISTVERSIONPREFIX=	v
-PORTREVISION=		1
+PORTREVISION=		12
 CATEGORIES=		sysutils
 
-MAINTAINER=		ports@FreeBSD.org
+MAINTAINER=		joneum@FreeBSD.org
 COMMENT=		Open-source application container engine
+WWW=		https://www.docker.com/
 
 LICENSE=		APACHE20
 
@@ -19,6 +18,8 @@ USE_GITHUB=		yes
 GH_PROJECT=		docker-ce
 
 USES=	cpe go
+
+CONFLICTS_INSTALL=	docker-tray # bin/docker
 
 GO_PKGNAME=	github.com/${PORTNAME}
 GO_TARGET=	${GO_PKGNAME}/cli/cmd/docker

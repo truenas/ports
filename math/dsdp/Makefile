@@ -1,12 +1,13 @@
 PORTNAME=	dsdp
 DISTVERSION=	5.8
-PORTREVISION=	4
+PORTREVISION=	5
 CATEGORIES=	math
 MASTER_SITES=	https://www.mcs.anl.gov/hs/software/${PORTNAME:tu}/
 DISTNAME=	${PORTNAME:tu}${DISTVERSION}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Implementation of interior-point method for semidefinite programming
+WWW=		https://www.mcs.anl.gov/hs/software/DSDP/
 
 LICENSE=	DSDP_LICENSE
 LICENSE_NAME=	DSDP License

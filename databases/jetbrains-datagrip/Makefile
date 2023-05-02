@@ -1,5 +1,5 @@
 PORTNAME=	datagrip
-PORTVERSION=	2021.3.1
+DISTVERSION=	2022.3.3
 CATEGORIES=	databases java
 MASTER_SITES=	https://download-cf.jetbrains.com/datagrip/
 PKGNAMEPREFIX=	jetbrains-
@@ -7,6 +7,7 @@ DIST_SUBDIR=	jetbrains
 
 MAINTAINER=	dch@FreeBSD.org
 COMMENT=	JetBrains DataGrip IDE for your Databases
+WWW=		https://www.jetbrains.com/datagrip/
 
 LICENSE=	IntelliJ-datagrip
 LICENSE_NAME=	Subscription license agreement for business and organizations
@@ -23,7 +24,7 @@ JAVA_VERSION=	11+
 
 USE_LDCONFIG=	yes
 
-SHEBANG_FILES=	bin/printenv.py bin/restart.py
+SHEBANG_FILES=	bin/restart.py
 
 NO_ARCH=	yes
 NO_BUILD=	yes

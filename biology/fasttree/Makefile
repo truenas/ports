@@ -7,17 +7,14 @@ EXTRACT_SUFX=	.c
 
 MAINTAINER=	jwb@FreeBSD.org
 COMMENT=	Approximately-maximum-likelihood phylogenetic trees from alignments
+WWW=		http://www.microbesonline.org/fasttree/
 
 LICENSE=	GPLv2+
-
-BROKEN_armv6=		fails to compile: FastTree-2.1.10.c:305:10: 'omp.h' file not found
 
 NO_WRKSUBDIR=	yes
 PLIST_FILES=	bin/FastTree
 
-.include <bsd.port.options.mk>
-
-.if ${ARCH} == armv7 || ${ARCH} == powerpc
+.if !exists(/usr/include/omp.h)
 USES=		compiler:gcc-c++11-lib
 .endif
 

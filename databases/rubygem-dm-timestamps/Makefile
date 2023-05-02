@@ -6,6 +6,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	DataMapper plugin for magical timestamps
+WWW=		https://github.com/datamapper/dm-timestamps
 
 LICENSE=	MIT
 
@@ -13,7 +14,6 @@ RUN_DEPENDS=	rubygem-dm-core>=${PORTVERSION}:databases/rubygem-dm-core
 
 NO_ARCH=	yes
 
-USE_RUBY=	yes
 USES=		gem
 
 .include <bsd.port.mk>

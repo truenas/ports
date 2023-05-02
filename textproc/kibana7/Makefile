@@ -1,7 +1,5 @@
-# Created by: Tom Judge <tj@FreeBSD.org>
-
 PORTNAME=	kibana
-PORTVERSION=	7.15.2
+PORTVERSION=	7.17.9
 DISTVERSIONSUFFIX=	-darwin-x86_64
 CATEGORIES=	textproc www
 MASTER_SITES=	https://artifacts.elastic.co/downloads/kibana/ \
@@ -11,14 +9,15 @@ DISTFILES=	${DISTNAME}${EXTRACT_SUFX}
 
 MAINTAINER=	elastic@FreeBSD.org
 COMMENT=	Browser based analytics and search interface to ElasticSearch
+WWW=		https://www.elastic.co/products/kibana
 
 LICENSE=	APACHE20
 
-BUILD_DEPENDS=	npm-node14>0:www/npm-node14
+BUILD_DEPENDS=	npm-node16>0:www/npm-node16
 LIB_DEPENDS=	libre2.so:devel/re2 \
 		libuv.so:devel/libuv
 
-USES=		compiler:c++14-lang cpe nodejs:14,build,run python:build
+USES=		compiler:c++14-lang cpe nodejs:16,build,run python:build
 CPE_VENDOR=	elastic
 
 USE_GITHUB=	nodefault
@@ -26,8 +25,6 @@ GH_TUPLE=	nodejs:nan:v${_NODE_NAN_VER}:node_nan \
 		uhop:node-re2:${_NODE_RE2_VER}:node_re2
 
 USE_RC_SUBR=	${PORTNAME}
-
-CONFLICTS=	kibana6
 
 WWWDIR=		${PREFIX}/www/${PORTNAME}${PKGNAMESUFFIX}
 
@@ -37,9 +34,9 @@ SUB_LIST+=	PKGNAMESUFFIX=${PKGNAMESUFFIX} \
 
 #######################################################################
 # Set node-nan version here
-_NODE_NAN_VER=	2.15.0
+_NODE_NAN_VER=	2.17.0
 # Set node-re version here
-_NODE_RE2_VER=	1.16.0
+_NODE_RE2_VER=	1.18.0
 #######################################################################
 
 _NODECMD=	${LOCALBASE}/bin/node --version
@@ -49,6 +46,9 @@ _RE2DIR=	${WRKDIR}/node-re2-${_NODE_RE2_VER}
 
 # Extra patch files must be updated whenever node-re2 changes
 _RE2PATCHES=	${PATCHDIR}/extra-node-re2-binding-gyp.patch
+
+post-extract:
+	${RM} -rf ${WRKSRC}/node
 
 post-patch:
 	${FIND} -s ${WRKSRC}/node_modules -type d -empty -delete

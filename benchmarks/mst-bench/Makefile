@@ -1,10 +1,10 @@
 PORTNAME=	MST-Bench
-DISTVERSION=	0.2.1-3
-DISTVERSIONSUFFIX=	-g0175cb2
+DISTVERSION=	0.2.2
 CATEGORIES=	benchmarks
 
 MAINTAINER=	jwb@FreeBSD.org
-COMMENT=	Maximum sustained throughput benchmark
+COMMENT=	Maximum sustainable throughput benchmark
+WWW=		https://github.com/outpaddling/MST-Bench
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

@@ -1,13 +1,12 @@
-# Created by: Po-Chien Lin <linpc@cs.nctu.edu.tw>
-
 PORTNAME=	jsmin
-PORTVERSION=	3.0.0
+PORTVERSION=	3.0.1
 CATEGORIES=	devel www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	JavaScript minifier written in Python
+WWW=		https://github.com/tikitu/jsmin
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

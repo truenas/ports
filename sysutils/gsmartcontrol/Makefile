@@ -1,13 +1,12 @@
-# Created by: Pawel Pekala <c0rn@o2.pl>
-
 PORTNAME=	gsmartcontrol
-PORTVERSION=	1.1.3
-PORTREVISION=	3
+PORTVERSION=	1.1.4
+PORTREVISION=	1
 CATEGORIES=	sysutils
 MASTER_SITES=	SF/${PORTNAME}/${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Graphical user interface for smartmontools
+WWW=		https://gsmartcontrol.sourceforge.io
 
 LICENSE=	BSD3CLAUSE BSL GPLv2 GPLv3 PD ZLIB
 LICENSE_COMB=	multi
@@ -42,5 +41,7 @@ post-patch:
 		${WRKSRC}/src/*/Makefile.in
 	@${REINPLACE_CMD} -i .c++20 '/config\.h/y/<>/""/' \
 		${WRKSRC}/src/global_macros.h
+	@${REINPLACE_CMD} -i '' 's|%%PREFIX%%|${PREFIX}|g' \
+		${WRKSRC}/data/org.gsmartcontrol.policy
 
 .include <bsd.port.mk>

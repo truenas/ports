@@ -6,6 +6,7 @@ PKGNAMEPREFIX=	cl-
 
 MAINTAINER=	olgeni@FreeBSD.org
 COMMENT=	Collection of portable public domain utilities for Common Lisp
+WWW=		https://common-lisp.net/project/alexandria/
 
 LICENSE=	PD
 LICENSE_FILE=	${WRKSRC}/LICENCE
@@ -19,7 +20,7 @@ OPTIONS_DEFINE=	DOCS
 
 DOCS_BUILD_DEPENDS=	sbcl:lang/sbcl \
 			texi2pdf:print/texinfo
-
+DOCS_USES=	tex
 DOCS_USE=	TEX=latex:build
 DOCS_INFO=	doc/${PORTNAME}
 

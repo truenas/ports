@@ -1,11 +1,12 @@
 PORTNAME=	leather
 PORTVERSION=	0.3.4
 CATEGORIES=	graphics python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	matthew@FreeBSD.org
 COMMENT=	Charting library for those who need charts now
+WWW=		https://leather.readthedocs.io/
 
 LICENSE=	MIT
 

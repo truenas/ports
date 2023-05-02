@@ -1,9 +1,7 @@
-# Created by: glocke@bsdstammtisch.at
-
 PORTNAME=	retroshare
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.6.4
-PORTREVISION=	8
+PORTREVISION=	12
 CATEGORIES=	net-p2p
 
 PATCH_SITES=	https://github.com/${GH_ACCOUNT}/${GH_PROJECT}/commit/
@@ -11,6 +9,7 @@ PATCHFILES=	428b331d8efe.patch:-p1
 
 MAINTAINER=	peter@netkey.at
 COMMENT=	Private and secure decentralised communication platform
+WWW=		https://retroshare.github.io/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -30,7 +29,7 @@ RS_REVISION=	0e6d27a
 USE_GNOME=	libxml2 libxslt
 USE_GL=		gl
 USE_QT=		core gui multimedia printsupport network widgets xml \
-		buildtools_build uitools_build
+		buildtools:build uitools:build
 DOS2UNIX_FILES=	retroshare-nogui/src/retroshare-nogui.pro \
 		retroshare-gui/src/gui/elastic/node.cpp
 

@@ -1,11 +1,12 @@
 PORTNAME=	spdx-tools
 DISTVERSION=	0.6.1
 CATEGORIES=	misc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	kai@FreeBSD.org
 COMMENT=	Parses, validates and creates SPDX documents
+WWW=		https://github.com/spdx/tools-python
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

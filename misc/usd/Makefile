@@ -1,19 +1,21 @@
 PORTNAME=	usd
 DISTVERSIONPREFIX=	v
 DISTVERSION=	21.11
-PORTREVISION=	1
+PORTREVISION=	4
 CATEGORIES=	misc
 
 PATCH_SITES=	https://github.com/${GH_ACCOUNT}/${GH_PROJECT}/commit/
-PATCHFILES=	4942189cf7b1a45b23d62f4ae92a940721ec4009.patch:-p1
+PATCHFILES=	4942189cf7b1a45b23d62f4ae92a940721ec4009.patch:-p1 \
+		445e3f8a473db9b1e0d1301e6ce4bf74c270f376.patch:-p1
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Universal Scene Description is a scene description management system
+WWW=		http://www.openusd.org/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
-NOT_FOR_ARCHS=	i386 # CMakeLists.txt fails for non-64-bit architectures
+NOT_FOR_ARCHS=	armv6 armv7 i386 # CMakeLists.txt fails for non-64-bit architectures: Compiler does not support 64-bit builds
 
 LIB_DEPENDS=	libtbb.so:devel/tbb
 

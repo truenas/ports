@@ -1,11 +1,13 @@
 PORTNAME=	imv
 DISTVERSIONPREFIX=	v
-DISTVERSION=	4.3.0
-PORTREVISION=	1
+DISTVERSION=	4.3.1
+PORTREVISION=	4
 CATEGORIES=	graphics
+MASTER_SITES=	https://git.sr.ht/~exec64/${PORTNAME}/archive/${DISTVERSIONFULL}${EXTRACT_SUFX}?dummy=/
 
 MAINTAINER=	eduardo@FreeBSD.org
 COMMENT=	Simple image viewer
+WWW=		https://sr.ht/~exec64/imv/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -18,11 +20,11 @@ RUN_DEPENDS=	bash:shells/bash
 
 USES=		compiler:c11 desktop-file-utils gettext-runtime gl gnome meson \
 		pkgconfig shebangfix
-USE_GITHUB=	yes
-GH_ACCOUNT=	eXeC64
 USE_GL=		egl
 USE_GNOME=	cairo glib20 pango
 SHEBANG_FILES=	contrib/imv-folder
+
+CONFLICTS_INSTALL=	renameutils
 
 OPTIONS_DEFINE=		FREEIMAGE HEIF JPEG NSGIF PNG SVG TEST TIFF
 OPTIONS_DEFAULT=	ALL FREEIMAGE HEIF JPEG NSGIF PNG SVG TIFF
@@ -32,10 +34,10 @@ OPTIONS_SUB=		yes
 
 ALL_DESC=	Both Wayland and X11 support
 FREEIMAGE_DESC=	FreeImage backend (support for many image formats)
-HEIF_DESC=	HEIF backend
 NSGIF_DESC=	NetSurf GIF backend (support for animated GIF)
 WIN_DESC=	Windowing system
 
+ALL_CATEGORIES=		wayland
 ALL_LIB_DEPENDS+=	libwayland-client.so:graphics/wayland
 ALL_USES=		xorg
 ALL_USE=		GL=glu \
@@ -66,6 +68,7 @@ TEST_MESON_ENABLED=	test
 TIFF_LIB_DEPENDS=	libtiff.so:graphics/tiff
 TIFF_MESON_ENABLED=	libtiff
 
+WAYLAND_CATEGORIES=	wayland
 WAYLAND_LIB_DEPENDS=	libwayland-client.so:graphics/wayland \
 			libwayland-egl.so:graphics/wayland
 WAYLAND_MESON_ON=	-Dwindows=wayland

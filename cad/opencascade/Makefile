@@ -1,13 +1,12 @@
-# Created by: Thierry Thomas <thierry@pompo.net>
-
 PORTNAME=	opencascade
-PORTVERSION=	7.6.0
-PORTREVISION=	1
+DISTVERSION=	7.7.0
+PORTREVISION=	4
 CATEGORIES=	cad science
 MASTER_SITES=	LOCAL/thierry
 
 MAINTAINER=	thierry@FreeBSD.org
 COMMENT=	Open CASCADE Technology, 3D modeling & numerical simulation
+WWW=		https://www.opencascade.org/
 
 LICENSE=	OCTPL
 LICENSE_NAME=	LGPL21 with exception
@@ -20,8 +19,9 @@ BUILD_DEPENDS=	rapidjson>0:devel/rapidjson			\
 LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig	\
 		libfreetype.so:print/freetype2		\
 		libexpat.so:textproc/expat2		\
+		libdraco.so:archivers/draco		\
 		libpng16.so:graphics/png		\
-		libvtksys-${VTKVER}.so:math/vtk${VTKVER:R}
+		libvtksys-${VTK_VER}.so:math/vtk${VTK_VER:R}
 RUN_DEPENDS=	bash:shells/bash
 
 # Check ${WRKSRC}/dox/overview/overview.md
@@ -41,15 +41,13 @@ SHEBANG_FILES=	adm/templates/*.sh	\
 		gendoc
 ENVSH=		adm/templates/env.sh
 
-VTKVER=		9.1
-
 OPTIONS_DEFINE=	DOCS DOXYGEN FFMPEG VIS
 VIS_DESC=	Build Visualizazion module (requires OpenGL, freetype, ftgl)
 OPTIONS_DEFAULT=FFMPEG VIS
 OPTIONS_SUB=	yes
 
 REINPLACE_ARGS=	-i ""
-LDFLAGS+=	-Wl,--allow-shlib-undefined
+LDFLAGS+=	-Wl,--allow-shlib-undefined -lexecinfo
 CMAKE_ARGS+=	-DINSTALL_DIR=${OCCROOT}				\
 		-DINSTALL_DIR_INCLUDE=${PREFIX}/include/OpenCASCADE	\
 		-DINSTALL_DIR_LIB=${PREFIX}/lib				\
@@ -62,8 +60,17 @@ CMAKE_ARGS+=	-DINSTALL_DIR=${OCCROOT}				\
 		-DUSE_FREETYPE:BOOL=ON					\
 		-DUSE_TBB:BOOL=OFF					\
 		-DUSE_RAPIDJSON:BOOL=ON					\
+		-DUSE_DRACO:BOOL=ON					\
 		-DUSE_VTK:BOOL=ON					\
-		-D3RDPARTY_VTK_INCLUDE_DIR:PATH=${LOCALBASE}/include/vtk-${VTKVER}
+		-D3RDPARTY_DRACO_LIBRARY_DIR:PATH=${LOCALBASE}/lib	\
+		-D3RDPARTY_DRACO_INCLUDE_DIR:PATH=${LOCALBASE}/include/draco	\
+		-D3RDPARTY_VTK_INCLUDE_DIR:PATH=${LOCALBASE}/include/vtk-${VTK_VER}
+CONFIGURE_ENV+=	DESTDIR=${STAGEDIR}
+
+.if defined(MAINTAINER_MODE)
+CMAKE_ARGS+=	-DCMAKE_MESSAGE_CONTEXT_SHOW:BOOL=ON	\
+		-DCMAKE_MESSAGE_LOG_LEVEL:STRING=DEBUG
+.endif
 
 # TODO: TBB to be replaced by onetbb later
 #CMAKE_ARGS+=	-DUSE_EIGEN:BOOL=ON -DUSE_TBB:BOOL=ON
@@ -72,14 +79,18 @@ CMAKE_ARGS+=	-DINSTALL_DIR=${OCCROOT}				\
 
 USE_LDCONFIG=	yes
 
+CONFLICTS_INSTALL=	opencascade740 # OpenCAS/bin/DRAWEXE
+
 LOCCROOT=	OpenCAS
 OCCROOT=	${PREFIX}/${LOCCROOT}
 PLIST_SUB=	OCCROOT="${LOCCROOT}" BITS=${BITS} CC=${CHOSEN_COMPILER_TYPE}	\
-		VE=${PORTVERSION:R:R} VER=${PORTVERSION}
+		VE=${PORTVERSION:R} VER=${DISTVERSION:C/-beta//}
 
-FFMPEG_CMAKE_ON=	-DUSE_FFMPEG:BOOL=ON
+FFMPEG_CMAKE_ON=	-DUSE_FFMPEG:BOOL=ON \
+			-D3RDPARTY_FFMPEG_INCLUDE_DIR=${LOCALBASE}/ffmpeg4/include \
+			-D3RDPARTY_FFMPEG_DIR=${LOCALBASE}/ffmpeg4
 FFMPEG_CMAKE_OFF=	-DUSE_FFMPEG:BOOL=OFF
-FFMPEG_LIB_DEPENDS=	libavcodec.so:multimedia/ffmpeg		\
+FFMPEG_LIB_DEPENDS=	libavcodec.so.58:multimedia/ffmpeg4	\
 			libtheoraenc.so:multimedia/libtheora	\
 			libunistring.so:devel/libunistring	\
 			libvdpau.so:multimedia/libvdpau		\
@@ -113,7 +124,8 @@ VIS_LIB_DEPENDS=	libftgl.so:graphics/ftgl	\
 VIS_USE=		GL=glesv2
 
 DOXYGEN_IMPLIES=	DOCS
-DOXYGEN_USE=	TEX=latex:build
+DOXYGEN_USES=		tex
+DOXYGEN_USE=		TEX=latex:build
 DOXYGEN_BUILD_DEPENDS=	bash:shells/bash		\
 			doxygen:devel/doxygen		\
 			dot:graphics/graphviz		\
@@ -153,7 +165,7 @@ post-build-DOXYGEN-on:
 	(cd ${WRKSRC} && ./gendoc -overview)
 
 post-install:
-	${MV} ${STAGEDIR}${OCCROOT}/bin/DRAWEXE-${PORTVERSION} ${STAGEDIR}${PREFIX}/bin/DRAWEXE
+	${MV} ${STAGEDIR}${OCCROOT}/bin/DRAWEXE-${DISTVERSION:C/-beta//} ${STAGEDIR}${PREFIX}/bin/DRAWEXE
 	(cd ${STAGEDIR}${PREFIX}/bin &&							\
 	${LN} -sf DRAWEXE ${STAGEDIR}${OCCROOT}/bin/DRAWEXE)
 
@@ -174,4 +186,5 @@ regression-test:	install
 	DRAWEXE -f ${FILESDIR}/regtest "
 .endif
 
+.include <../../math/vtk9/Makefile.version>
 .include <bsd.port.mk>

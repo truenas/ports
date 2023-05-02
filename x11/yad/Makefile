@@ -1,12 +1,12 @@
-# Created by: Danilo Egea Gondolfo <danilo@FreeBSD.org>
-
 PORTNAME=	yad
 PORTVERSION=	7.3
+PORTREVISION=	2
 DISTVERSIONPREFIX=	v
 CATEGORIES=	x11 gnome
 
 MAINTAINER=	danilo@FreeBSD.org
 COMMENT=	Display GNOME dialogs from the command line
+WWW=		https://github.com/v1cont/yad
 
 LICENSE=	GPLv3
 
@@ -18,7 +18,6 @@ USES=		autoreconf gettext gnome gmake pkgconfig
 
 USE_GNOME=	cairo gtk30 intltool
 GNU_CONFIGURE=	yes
-INSTALLS_OMF=	yes
 CONFIGURE_ENV+=	DATADIRNAME=share
 CONFIGURE_ARGS+=	--with-rgb=${LOCALBASE}/lib/X11/rgb.txt
 GLIB_SCHEMAS=	yad.gschema.xml

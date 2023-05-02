@@ -1,12 +1,12 @@
-# Created by: TAKATSU Tomonari <tota@FreeBSD.org>
-
 PORTNAME=	DEoptimR
-DISTVERSION=	1.0-9
+DISTVERSION=	1.0-11
+PORTREVISION=	1
 CATEGORIES=	math
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Differential Evolution Optimization in Pure R
+WWW=		https://cran.r-project.org/web/packages/DEoptimR/
 
 LICENSE=	GPLv2+
 

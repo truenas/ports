@@ -1,5 +1,3 @@
-# Created by: Adam Weinberger <adamw@FreeBSD.org>
-
 PORTNAME=	neovim
 PORTVERSION=	0.9.0
 CATEGORIES=	editors rubygems
@@ -7,6 +5,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Ruby bindings for neovim
+WWW=		https://github.com/neovim/neovim-ruby
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -19,7 +18,6 @@ TEST_DEPENDS=	rubygem-bundler>=0:sysutils/rubygem-bundler \
 		rubygem-rspec>=0:devel/rubygem-rspec
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

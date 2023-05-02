@@ -1,14 +1,13 @@
-# Created by: chinsan <chinsan.tw@gmail.com>
-
 PORTNAME=	pcmanx
 PORTVERSION=	1.3
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	chinese net gnome
 MASTER_SITES=	https://github.com/pcman-bbs/${PORTNAME}/releases/download/${PORTVERSION}/
 DISTNAME=	${PORTNAME}-gtk2-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	BBS client using GTK+ 2.x
+WWW=		https://github.com/pcman-bbs/pcmanx
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -48,7 +47,6 @@ IPLOOKUP_CONFIGURE_ENABLE=	iplookup
 PROXY_CONFIGURE_ENABLE=		proxy
 
 post-install:
-	@# create directory for user friendly
 	${MKDIR} ${STAGEDIR}${DATADIR}/script/
 
 .include <bsd.port.mk>

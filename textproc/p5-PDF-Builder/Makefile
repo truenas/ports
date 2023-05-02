@@ -1,13 +1,12 @@
-# created by: cmt@FreeBSD.org
-
 PORTNAME=	PDF-Builder
-PORTVERSION=	3.023
+DISTVERSION=	3.025
 CATEGORIES=	textproc perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	cmt@FreeBSD.org
 COMMENT=	Facilitates the creation and modification of PDF files
+WWW=		https://metacpan.org/release/PDF-Builder
 
 LICENSE=	LGPL21
 

@@ -1,5 +1,3 @@
-# Created by: erich@rrnet.com
-
 PORTNAME=	xcoral
 PORTVERSION=	3.47
 PORTREVISION=	4
@@ -11,6 +9,7 @@ PATCHFILES=	xcoral-alpheus-and-peneus-2020.patch.bz2
 
 MAINTAINER=	mi@aldan.algebra.com
 COMMENT=	Multiwindow mouse-based text editor for X
+WWW=		http://xcoral.free.fr/
 
 LICENSE=	GPLv2
 

@@ -1,5 +1,3 @@
-# Created by: Marc van Woerkom <3d@FreeBSD.org>
-
 PORTNAME=	quake3
 DISTVERSION=	1.11-6
 PORTREVISION=	5
@@ -12,6 +10,7 @@ EXTRACT_SUFX=	.gz.sh
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Quake III Arena Demo
+WWW=		http://quake3arena.com/
 
 # Converted from RESTRICTED
 LICENSE=	Loki

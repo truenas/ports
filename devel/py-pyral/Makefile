@@ -1,13 +1,12 @@
-# Created by: Mark Felder <feld@FreeBSD.org>
-
 PORTNAME=	pyral
 PORTVERSION=	1.5.2
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Python toolkit for Agile Central (Rally) REST API
+WWW=		https://github.com/RallyTools/RallyRestToolkitForPython
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

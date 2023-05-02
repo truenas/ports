@@ -1,11 +1,12 @@
 PORTNAME=	pytest-shutil
 PORTVERSION=	1.7.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	swills@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Collection of unix shell and environment tools for py.test
+WWW=		https://github.com/manahl/pytest-plugins/tree/master/pytest-shutil
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

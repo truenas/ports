@@ -1,13 +1,12 @@
-# Created by: Roger Hardiman <roger@FreeBSD.org>
-
 PORTNAME=	opal
 PORTVERSION=	3.10.10
-PORTREVISION=	29
+PORTREVISION=	32
 CATEGORIES=	net
 MASTER_SITES=	GNOME
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	VoIP abstraction library
+WWW=		http://opalvoip.org/
 
 LICENSE=	MPL10
 
@@ -17,9 +16,9 @@ USES=		compiler:c11 gmake pathfix pkgconfig tar:xz
 GNU_CONFIGURE=	yes
 USE_LDCONFIG=	yes
 
-CXXFLAGS+=	-I${LOCALBASE}/include
-CPPFLAGS+=	-I${LOCALBASE}/include
-LDFLAGS+=	-L${LOCALBASE}/lib
+CXXFLAGS+=	-I${LOCALBASE}/ffmpeg4/include -I${LOCALBASE}/include
+CPPFLAGS+=	-I${LOCALBASE}/ffmpeg4/include -I${LOCALBASE}/include
+LDFLAGS+=	-L${LOCALBASE}/ffmpeg4/lib -L${LOCALBASE}/lib
 
 OPTIONS_DEFINE=	JAVA ILBC GSM SPEEX THEORA FFMPEG X264 SIP H323 IAX \
 		H224 H281 FAX MSRP SIPIM RTPTEXT H450 H460 H501 LID UVIDEO \
@@ -132,9 +131,10 @@ PLIST_SUB+=	X264="@comment "
 .endif
 
 .if ${PORT_OPTIONS:MFFMPEG}
-BUILD_DEPENDS+=		ffmpeg>=2:multimedia/ffmpeg
-RUN_DEPENDS+=		ffmpeg>=2:multimedia/ffmpeg
+LIB_DEPENDS+=		libavutil.so.56:multimedia/ffmpeg4
+CONFIGURE_ENV+=	PKG_CONFIG_PATH="${LOCALBASE}/ffmpeg4/libdata/pkgconfig"
 CONFIGURE_ARGS+=	--enable-libavcodec
+MAKE_ENV+=	PKG_CONFIG_PATH="${LOCALBASE}/ffmpeg4/libdata/pkgconfig"
 PLIST_SUB+=	FFMPEG=""
 WITH_VIDEO=	yes
 .else
@@ -269,8 +269,15 @@ post-install:
 	${LN} -sf libopal_d.so.${PORTVERSION} ${STAGEDIR}${PREFIX}/lib/libopal_d.so.${PVERSION_MINOR}
 .endif
 	@${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/libopal.so.${PORTVERSION}
-	@${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/opal-${PORTVERSION}/codecs/video/h264_video_pwplugin_helper
-	@${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/opal-${PORTVERSION}/*/*.so
 	@${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/opal-${PORTVERSION}/*/*/*.so
+
+post-install-FAX-on:
+	@${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/opal-${PORTVERSION}/fax/spandsp_ptplugin.so
+
+post-install-LID-on:
+	@${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/opal-${PORTVERSION}/lid/vpb_ptplugin.so
+
+post-install-X264-on:
+	@${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/opal-${PORTVERSION}/codecs/video/h264_video_pwplugin_helper
 
 .include <bsd.port.mk>

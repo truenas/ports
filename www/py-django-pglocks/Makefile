@@ -1,11 +1,12 @@
 PORTNAME=	django-pglocks
 PORTVERSION=	1.0.4
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	kai@FreeBSD.org
 COMMENT=	Provides useful context managers for advisory locks for PostgreSQL
+WWW=		https://github.com/Xof/django-pglocks
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

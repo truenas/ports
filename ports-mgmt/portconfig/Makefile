@@ -1,20 +1,26 @@
 PORTNAME=	portconfig
-PORTVERSION=	0.1.1
+PORTVERSION=	0.5
 CATEGORIES=	ports-mgmt
 
 MAINTAINER=	bapt@FreeBSD.org
 COMMENT=	Utility to set up FreeBSD port options
+WWW=		https://gitlab.com/alfix/portconfig
 
 LICENSE=	BSD2CLAUSE
 
-USE_GITLAB=	yes
-GL_ACCOUNT=	alfix
-GL_COMMIT=	222ee8a8f6a790fe6a9c72f7b615e47ecdb56399
-
-USES=		localbase:ldflags
 BUILD_DEPENDS=	${LOCALBASE}/lib/libbsddialog.a:devel/bsddialog
 
-PLIST_FILES=	bin/${PORTNAME}
+USES=		localbase:ldflags
+
+USE_GITLAB=	yes
+GL_ACCOUNT=	alfix
+GL_COMMIT=	a19a1ff5cbd2dbfa18bb5402b936fdefb515a06d
+
+PLIST_FILES=	bin/${PORTNAME} \
+		man/man1/${PORTNAME}.1.gz
+
+do-install:
+	${INSTALL_PROGRAM} ${WRKSRC}/${PORTNAME} ${STAGEDIR}${PREFIX}/bin
+	${INSTALL_MAN} ${WRKSRC}/${PORTNAME}.1 ${STAGEDIR}${MAN1PREFIX}/man/man1/
 
 .include <bsd.port.mk>
-

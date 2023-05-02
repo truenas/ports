@@ -1,15 +1,14 @@
-# Created by: ijliao
-
 PORTNAME=	imdbpy
 PORTVERSION=	2021.4.18
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP \
+MASTER_SITES=	PYPI \
 		SF/${PORTNAME}/IMDbPY/${PORTVERSION}
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	IMDbPY-${PORTVERSION}
 
 MAINTAINER=	python@FreeBSD.org
 COMMENT=	Retrieve and manage the data of the IMDb movie database
+WWW=		http://imdbpy.sourceforge.net/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

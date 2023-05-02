@@ -1,11 +1,12 @@
 PORTNAME=	misaka
 PORTVERSION=	2.1.1
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	koobs@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	CFFI binding for Hoedown, a markdown parsing library
+WWW=		https://github.com/FSX/misaka
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

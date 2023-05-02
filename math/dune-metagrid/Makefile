@@ -1,9 +1,11 @@
 PORTNAME=	dune-metagrid
 DISTVERSION=	g20210929
+PORTREVISION=	1
 CATEGORIES=	math
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	DUNE framework: module implementing a variety of DUNE meta grids
+WWW=		https://www.dune-project.org/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE

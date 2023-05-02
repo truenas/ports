@@ -1,11 +1,12 @@
 PORTNAME=	javaproperties
 DISTVERSION=	0.5.2
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	kai@FreeBSD.org
 COMMENT=	Read and write Java .properties files
+WWW=		https://github.com/jwodder/javaproperties
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

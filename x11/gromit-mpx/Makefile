@@ -1,9 +1,11 @@
 PORTNAME=	gromit-mpx
-DISTVERSION=	1.4
-CATEGORIES=	x11
+DISTVERSION=	1.4.3
+PORTREVISION=	1
+CATEGORIES=	x11 wayland
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Desktop annotation tool, multi-pointer port of Gromit
+WWW=		https://github.com/bk138/gromit-mpx
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

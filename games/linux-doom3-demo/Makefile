@@ -1,5 +1,3 @@
-# Created by: Jean-Yves Lefort <jylefort@brutele.be>
-
 PORTNAME=	doom3-demo
 PORTVERSION=	1.1.1286
 PORTREVISION=	4
@@ -14,6 +12,7 @@ EXTRACT_SUFX=	.run
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	DOOM III demo for Linux
+WWW=		http://www.doom3.com/
 
 # Converted from NO_CDROM
 LICENSE=	doom3

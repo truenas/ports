@@ -1,5 +1,3 @@
-# Created by: Juergen Lock <nox@FreeBSD.org>
-
 PORTNAME=	vdr-plugin-infosatepg
 PORTVERSION=	0.0.11
 PORTREVISION=	21
@@ -9,6 +7,7 @@ DISTNAME=	${PORTNAME:S/-plugin-/-/}-${DISTVERSIONPREFIX}${DISTVERSION}${DISTVERS
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Video Disk Recorder - infosat EPG plugin
+WWW=		https://projects.vdr-developer.org/projects/plg-infosatepg
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

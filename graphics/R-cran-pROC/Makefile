@@ -1,10 +1,12 @@
 PORTNAME=	pROC
 PORTVERSION=	1.18.0
+PORTREVISION=	1
 CATEGORIES=	graphics
 DISTNAME=	${PORTNAME}_${PORTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Display and Analyze ROC Curves
+WWW=		https://cran.r-project.org/web/packages/pROC/
 
 LICENSE=	GPLv3
 

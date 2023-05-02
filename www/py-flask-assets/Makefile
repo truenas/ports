@@ -1,13 +1,12 @@
-# Created by: Kyle Evans <kevans@FreeBSD.org>
-
 PORTNAME=	Flask-Assets
 PORTVERSION=    2.0
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	kevans@FreeBSD.org
 COMMENT=	Asset management for flask
+WWW=		https://github.com/miracle2k/flask-assets
 
 LICENSE=	BSD2CLAUSE
 

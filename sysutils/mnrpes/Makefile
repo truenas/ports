@@ -4,13 +4,14 @@ CATEGORIES=	sysutils
 
 MAINTAINER=	robak@FreeBSD.org
 COMMENT=	MCollective and Rufus scheduler wrapper
+WWW=		https://github.com/nullDowntimeLtd/mnrpes
 
 LICENSE=	APACHE20
 
 RUN_DEPENDS=	mcollective>=2:sysutils/mcollective \
 		rubygem-rufus-scheduler>=0.1:devel/rubygem-rufus-scheduler
 
-USE_RUBY=	yes
+USES=	ruby
 USE_GITHUB=	yes
 GH_ACCOUNT=	nullDowntimeLtd
 GH_TAGNAME=	3f9942c

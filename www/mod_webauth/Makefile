@@ -1,5 +1,3 @@
-# Created by: Ryan Steinmetz <zi@FreeBSD.org>
-
 PORTNAME=	mod_webauth
 PORTVERSION=	4.7.0
 PORTREVISION=	2
@@ -9,12 +7,12 @@ DISTNAME=	webauth-${PORTVERSION}
 
 MAINTAINER=	apache@FreeBSD.org
 COMMENT=	Apache module for authenticating users with Kerberos v5
+WWW=		http://webauth.stanford.edu/
 
 LIB_DEPENDS=	libcurl.so:ftp/curl \
 		libsasl2.so:security/cyrus-sasl2
 
-USES=		apache:2.4 libtool pathfix pkgconfig ssl
-USE_OPENLDAP=	yes
+USES=		apache ldap libtool pathfix pkgconfig ssl
 USE_LDCONFIG=	yes
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--with-ldap-lib=${LOCALBASE}/lib \

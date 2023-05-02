@@ -1,8 +1,6 @@
-# Created by: Rusmir Dusko <nemysis@FreeBSD.org>
-
 PORTNAME=	bomb-her-man
 PORTVERSION=	0.3
-PORTREVISION=	6
+PORTREVISION=	7
 CATEGORIES=	games
 MASTER_SITES=	SF/nemysisfreebsdp/${CATEGORIES}/:icons
 DISTFILES=	${DISTNAME}${EXTRACT_SUFX} \
@@ -10,6 +8,7 @@ DISTFILES=	${DISTNAME}${EXTRACT_SUFX} \
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Bomberman clone written in C++
+WWW=		https://github.com/Keruspe/Bomb-her-man
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING

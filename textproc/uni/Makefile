@@ -1,12 +1,12 @@
-# Created by: Thierry Thomas <thierry@FreeBSD.org>
-
 PORTNAME=	uni
-PORTVERSION=	2.3.0
+PORTVERSION=	2.5.1
+PORTREVISION=	12
 DISTVERSIONPREFIX=	v
 CATEGORIES=	textproc
 
 MAINTAINER=	thierry@FreeBSD.org
 COMMENT=	Query the Unicode database from the commandline
+WWW=		https://github.com/arp242/uni
 
 LICENSE=	MIT
 
@@ -15,11 +15,15 @@ USES=		go:modules
 USE_GITHUB=	yes
 GH_ACCOUNT=	arp242
 
-GH_TUPLE=	golang:sys:c6e025ad8005:golang_sys/vendor/golang.org/x/sys \
-		golang:term:de623e64d2a6:golang_term/vendor/golang.org/x/term \
-		zgoat:zli:b5f2a73532d6:zgoat_zli/vendor/zgo.at/zli \
-		zgoat:zstd:ca7824321150:zgoat_zstd/vendor/zgo.at/zstd
-GO_BUILDFLAGS=	-ldflags "-X main.version=${PORTVERSION}"
+GH_TUPLE=	arp242:termtext:v1.0.0:arp242_termtext/vendor/zgo.at/termtext \
+		arp242:zli:3bb954a2e74c:arp242_zli/vendor/zgo.at/zli \
+		arp242:zstd:6078fed48e39:arp242_zstd/vendor/zgo.at/zstd \
+		golang:sys:v0.6.0:golang_sys/vendor/golang.org/x/sys \
+		golang:term:e5f449aeb171:golang_term/vendor/golang.org/x/term \
+		mattn:go-runewidth:v0.0.13:mattn_go_runewidth/vendor/github.com/mattn/go-runewidth \
+		rivo:uniseg:v0.2.0:rivo_uniseg/vendor/github.com/rivo/uniseg
+
+GO_BUILDFLAGS=	-ldflags "-X main.version=${PORTVERSION}" -buildvcs=false
 
 PLIST_FILES=	bin/${PORTNAME}
 

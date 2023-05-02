@@ -1,13 +1,12 @@
-# Created by: David Bushong <david+ports@bushong.net>
-
 PORTNAME=	rbot
 PORTVERSION=	20160325
-PORTREVISION=	0
+PORTREVISION=	1
 PORTEPOCH=	1
 CATEGORIES=	irc ruby
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Ruby IRC bot similar to infobot
+WWW=		https://ruby-rbot.org/
 
 LICENSE=	GPLv2 MIT
 LICENSE_COMB=	dual
@@ -21,13 +20,11 @@ RUN_DEPENDS=	${RUBY_SITEARCHLIBDIR}/tokyocabinet.so:databases/ruby-tokyocabinet 
 		rubygem-mechanize>=0:www/rubygem-mechanize \
 		rubygem-tzinfo>=0:devel/rubygem-tzinfo \
 		rubygem-oauth>=0:net/rubygem-oauth \
-		rubygem-oauth2>=0:net/rubygem-oauth2
+		rubygem-oauth21>=0:net/rubygem-oauth21
 LIB_DEPENDS=	libtokyocabinet.so:databases/tokyocabinet
 
-USES=		cpe
+USES=		cpe ruby:setup
 
-USE_RUBY=	yes
-USE_RUBY_SETUP=	yes
 CONFIGURE_ARGS=	--prefix=${PREFIX}
 NO_ARCH=	yes
 

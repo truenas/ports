@@ -1,7 +1,8 @@
-# Created by: David Shane Holden <dpejesh@yahoo.com>
-
-PORTVERSION=		2.1.1
+PORTVERSION=		2.1.2
+PORTREVISION=	4
 PKGNAMESUFFIX=		2
+
+WWW=		https://www.clusterlabs.org/pacemaker/
 
 .include "${.CURDIR}/../pacemaker1/Makefile.common"
 
@@ -20,5 +21,8 @@ LIB_DEPENDS+=		libffi.so:devel/libffi \
 	libunistring.so:devel/libunistring
 
 post-patch: post-patch-common
+
+post-install:
+	${RM} ${STAGEDIR}/${PREFIX}/etc/rc.d/pacemaker_remote
 
 .include <bsd.port.mk>

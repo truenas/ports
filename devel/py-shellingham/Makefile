@@ -1,17 +1,18 @@
 PORTNAME=	shellingham
-PORTVERSION=	1.4.0
+PORTVERSION=	1.5.1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	matthew@FreeBSD.org
 COMMENT=	Detect what shell the current Python executable is running in
+WWW=		https://github.com/sarugaku/shellingham
 
 LICENSE=	ISCL
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 NO_ARCH=	yes
-USES=		python:3.6+
+USES=		python:3.7+
 USE_PYTHON=	autoplist concurrent distutils
 
 # No tests implemented for this module.

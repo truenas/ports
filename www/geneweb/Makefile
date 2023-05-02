@@ -1,5 +1,3 @@
-# Created by: Hubert Tournier <hubert@frbsd.org>
-
 PORTNAME=	geneweb
 DISTVERSIONPREFIX=	distrib-
 DISTVERSION=	6-08
@@ -8,6 +6,7 @@ CATEGORIES=	www
 
 MAINTAINER=	alex@stangl.us
 COMMENT=	Advanced genealogy software
+WWW=		https://opensource.geneanet.org/projects/geneweb/
 
 LICENSE=	GPLv2
 
@@ -18,6 +17,8 @@ BUILD_DEPENDS=	ocamlc:lang/ocaml \
 USE_GITHUB=	yes
 GH_ACCOUNT=	geneweb
 GH_TAGNAME=	13c850a0cc3973daf7ae3e0772a1621f84052041
+
+CONFLICTS_INSTALL=	coreutils # bin/gwc
 
 HAS_CONFIGURE=	yes
 MAKE_JOBS_UNSAFE=	yes

@@ -1,13 +1,12 @@
-# Created by: Steven Kreuzer <skreuzer@FreeBSD.org>
-
 PORTNAME=	croniter
 PORTVERSION=	0.3.20
 CATEGORIES=	sysutils python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	skreuzer@FreeBSD.org
 COMMENT=	Iteration support for datetime objects with cron like format
+WWW=		https://pypi.org/project/croniter/
 
 LICENSE=	MIT
 

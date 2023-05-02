@@ -1,14 +1,13 @@
-# Created by: Mark Felder <feld@FreeBSD.org>
-
 PORTNAME=	flask-script
 PORTVERSION=	2.0.6
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	Flask-Script-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Scripting support for Flask
+WWW=		https://flask-script.readthedocs.io/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

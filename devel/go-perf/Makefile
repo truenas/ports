@@ -1,23 +1,29 @@
 PORTNAME=	go-perf
 PORTVERSION=	${MODVERSION:S/-/./g:R}
+PORTREVISION=	2
 DISTVERSIONPREFIX=	v
 CATEGORIES=	devel
 
-MAINTAINER=	fuz@fuz.su
+MAINTAINER=	fuz@FreeBSD.org
 COMMENT=	Go performance measurement, storage, and analysis tools
+WWW=		https://golang.org/x/perf
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 USES=		go:modules
-MODVERSION=	0.0.0-20210220033136-40a54f11e909
+MODVERSION=	0.0.0-20230113213139-801c7ef9e5c5
 GO_MODULE=	golang.org/x/perf@v${MODVERSION}
 
 GO_TARGET=	./cmd/benchsave \
+		./cmd/benchseries \
 		./cmd/benchstat \
-		./analysis/localperf \
-		./storage/localperfdata
+		./cmd/benchfilter
 
 PLIST_FILES=	${GO_TARGET:T:S,^,bin/,}
+
+OPTIONS_DEFINE=	DEPRECATED
+DEPRECATED_DESC=	Install deprecated utilities
+DEPRECATED_VARS=	GO_TARGET+="./analysis/localperf ./storage/localperfdata"
 
 .include <bsd.port.mk>

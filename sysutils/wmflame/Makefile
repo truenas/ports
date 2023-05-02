@@ -1,5 +1,3 @@
-# Created by: Alexey Dokuchaev <danfe@regency.nsu.ru>
-
 PORTNAME=	wmflame
 PORTVERSION=	0.60
 PORTREVISION=	3
@@ -9,14 +7,12 @@ MASTER_SITES=	AFTERSTEP/stable/rpms/misc-tarballs \
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Dockapp that shows the load average as a flame
+WWW=		http://web.novalis.org/
 
 LICENSE=	GPLv2
 
-BROKEN_FreeBSD_13=	ld: error: duplicate symbol: Root
-BROKEN_FreeBSD_14=	ld: error: duplicate symbol: Root
-
 USES=		gmake xorg
-USE_XORG=	x11 xpm
+USE_XORG=	x11 xext xpm
 
 PLIST_FILES=	bin/wmflame
 

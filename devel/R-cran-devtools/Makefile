@@ -1,10 +1,12 @@
 PORTNAME=	devtools
 DISTVERSION=	2.4.2
+PORTREVISION=	1
 CATEGORIES=	devel
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	jpbeconne@free.fr
 COMMENT=	Tools to Make Developing R Packages Easier
+WWW=		https://CRAN.R-project.org/package=devtools
 
 LICENSE=	MIT
 

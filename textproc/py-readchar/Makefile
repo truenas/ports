@@ -1,11 +1,12 @@
 PORTNAME=	readchar
 DISTVERSIONPREFIX=	v
-DISTVERSION=	3.0.4
+DISTVERSION=	3.0.5
 CATEGORIES=	textproc devel
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	0mp@FreeBSD.org
 COMMENT=	Python library to read characters and key strokes
+WWW=		https://github.com/magmax/python-readchar
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/README.rst
@@ -18,7 +19,7 @@ TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}coverage>0:devel/py-coverage@${PY_FLAVOR} \
 
 USES=		dos2unix localbase python:3.6+
 DOS2UNIX_GLOB=	*.py
-# CHEESESHOP does not seem to work so far.
+# PYPI does not seem to work so far.
 USE_GITHUB=	yes
 GH_ACCOUNT=	magmax
 GH_PROJECT=	python-${PORTNAME}

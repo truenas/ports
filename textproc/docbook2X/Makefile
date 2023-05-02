@@ -1,13 +1,12 @@
-# Created by: Greg Larkin <glarkin@FreeBSD.org>
-
 PORTNAME=	docbook2X
 PORTVERSION=	0.8.8
-PORTREVISION=	5
+PORTREVISION=	7
 CATEGORIES=	textproc
 MASTER_SITES=	SF
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Convert DocBook documents into UNIX man page and GNU Texinfo formats
+WWW=		http://docbook2x.sourceforge.net/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/COPYING

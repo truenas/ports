@@ -5,10 +5,11 @@ CATEGORIES=		biology
 
 MAINTAINER=	jwb@FreeBSD.org
 COMMENT=	Ultrafast, memory-efficient short read aligner
+WWW=		http://bowtie-bio.sourceforge.net/index.shtml
 
 LICENSE=	ART10
 
-ONLY_FOR_ARCHS=	aarch64 amd64 powerpc64 powerpc64le
+ONLY_FOR_ARCHS=	aarch64 amd64 powerpc64 powerpc64le riscv64
 
 # c++11-lib is just for GCC 4.2-based systems
 # Remove it when support officially ends
@@ -24,7 +25,7 @@ OPTIONS_DEFINE=	DOCS
 
 .include <bsd.port.options.mk>
 
-.if ${ARCH:Mpowerpc64*} || ${ARCH:Maarch64}
+.if ${ARCH:Mpowerpc64*} || ${ARCH} == aarch64 || ${ARCH:Mriscv64*}
 MAKE_ENV=	POPCNT_CAPABILITY=0
 .endif
 

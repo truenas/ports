@@ -1,13 +1,12 @@
-# Created by: Frederic Culot <culot@FreeBSD.org>
-
 PORTNAME=	HTTP-Message
-PORTVERSION=	6.35
+PORTVERSION=	6.44
 CATEGORIES=	www perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Representation of HTTP style messages
+WWW=		https://metacpan.org/release/HTTP-Message
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual
@@ -20,7 +19,8 @@ RUN_DEPENDS=	p5-Clone>=0:devel/p5-Clone \
 		p5-IO-HTML>=0:devel/p5-IO-HTML \
 		p5-LWP-MediaTypes>=6:www/p5-LWP-MediaTypes \
 		p5-URI>=1.10:net/p5-URI
-TEST_DEPENDS=	p5-Try-Tiny>=0:lang/p5-Try-Tiny
+TEST_DEPENDS=	p5-Test-Needs>=0:devel/p5-Test-Needs \
+		p5-Try-Tiny>=0:lang/p5-Try-Tiny
 
 USES=		perl5
 USE_PERL5=	configure

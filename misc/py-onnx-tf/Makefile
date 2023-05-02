@@ -1,11 +1,13 @@
 PORTNAME=	onnx-tf
-DISTVERSION=	1.6.0
+DISTVERSION=	1.10.0
+PORTREVISION=	1
 CATEGORIES=	misc python # machine-learning
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Tensorflow backend for ONNX (Open Neural Network Exchange)
+WWW=		https://github.com/onnx/onnx-tensorflow/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

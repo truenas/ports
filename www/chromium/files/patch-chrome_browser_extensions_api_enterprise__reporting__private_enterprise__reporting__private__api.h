@@ -1,20 +1,29 @@
---- chrome/browser/extensions/api/enterprise_reporting_private/enterprise_reporting_private_api.h.orig	2021-09-24 18:21:41 UTC
+--- chrome/browser/extensions/api/enterprise_reporting_private/enterprise_reporting_private_api.h.orig	2023-03-09 06:31:50 UTC
 +++ chrome/browser/extensions/api/enterprise_reporting_private/enterprise_reporting_private_api.h
-@@ -41,7 +41,7 @@ class EnterpriseReportingPrivateGetDeviceIdFunction : 
-   DISALLOW_COPY_AND_ASSIGN(EnterpriseReportingPrivateGetDeviceIdFunction);
+@@ -20,7 +20,7 @@
+ #include "components/reporting/proto/synced/record.pb.h"
+ #include "components/reporting/proto/synced/record_constants.pb.h"
+ #include "components/reporting/util/statusor.h"
+-#elif BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX)
++#elif BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
+ #include "base/time/time.h"
+ #include "components/device_signals/core/browser/signals_types.h"
+ #endif  // BUILDFLAG(IS_CHROMEOS)
+@@ -56,7 +56,7 @@ class EnterpriseReportingPrivateGetDeviceIdFunction : 
+   ~EnterpriseReportingPrivateGetDeviceIdFunction() override;
  };
  
--#if !defined(OS_LINUX)
-+#if !defined(OS_LINUX) && !defined(OS_BSD)
+-#if !BUILDFLAG(IS_LINUX)
++#if !BUILDFLAG(IS_LINUX) && !BUILDFLAG(IS_BSD)
  
  class EnterpriseReportingPrivateGetPersistentSecretFunction
      : public ExtensionFunction {
-@@ -69,7 +69,7 @@ class EnterpriseReportingPrivateGetPersistentSecretFun
-   void SendResponse(const std::string& data, long int status);
- };
+@@ -266,7 +266,7 @@ class EnterpriseReportingPrivateEnqueueRecordFunction
  
--#endif  // !defined(OS_LINUX)
-+#endif  // !defined(OS_LINUX) && !defined(OS_BSD)
+ #endif
  
- class EnterpriseReportingPrivateGetDeviceDataFunction
+-#if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
+ 
+ class EnterpriseReportingPrivateGetFileSystemInfoFunction
      : public ExtensionFunction {

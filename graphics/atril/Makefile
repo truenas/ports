@@ -1,16 +1,16 @@
-# Created by: Adam Weinberger <adamw@FreeBSD.org>
 #
 # Please update update atril-lite also
 
 PORTNAME=	atril
 PORTVERSION=	1.26.0
-PORTREVISION=	3
+PORTREVISION=	19
 CATEGORIES=	graphics print mate
 MASTER_SITES=	MATE
 DIST_SUBDIR=	mate
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	MATE multi-format document viewer
+WWW=		https://mate-desktop.org/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -43,8 +43,10 @@ LDFLAGS+=	-L${LOCALBASE}/lib
 CONFIGURE_ARGS+=--disable-thumbnailer \
 		--without-matedesktop \
 		--disable-previewer
+CONFLICTS_INSTALL=	atril
 .else
 USE_MATE+=	desktop
+CONFLICTS_INSTALL=	atril-lite
 .endif
 
 GLIB_SCHEMAS=	org.mate.Atril.gschema.xml
@@ -81,7 +83,8 @@ EPUB_CONFIGURE_ENABLE=	epub
 EPUB_LIB_DEPENDS=	libwebkit2gtk-4.0.so:www/webkit2-gtk3
 
 DVI_DESC=		DVI viewer support
-DVI_USE=		tex=base
+DVI_USES=		tex
+DVI_USE=		TEX=base
 DVI_CONFIGURE_ENABLE=	dvi
 
 T1LIB_DESC=		T1LIB for TYPE1 fonts to DVI (Enables DVI)

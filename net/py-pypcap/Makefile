@@ -1,13 +1,12 @@
-# Created by: George V. Neville-Neil
-
 PORTNAME=	pypcap
-DISTVERSION=	1.2.3
+PORTVERSION=	1.3.0
 CATEGORIES=	net python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Simplified object-oriented Python wrapper for libpcap
+WWW=		https://github.com/pynetwork/pypcap
 
 LICENSE=	BSD3CLAUSE
 

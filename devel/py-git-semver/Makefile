@@ -1,15 +1,14 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	git-semver
 PORTVERSION=	0.3.2
 PORTREVISION=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	git_semver-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Semantic versions management integrated to git
+WWW=		https://github.com/hartym/git-semver
 
 LICENSE=	APACHE20
 

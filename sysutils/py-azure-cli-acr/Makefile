@@ -1,11 +1,12 @@
 PORTNAME=	azure-cli-acr
 PORTVERSION=	2.2.9
 CATEGORIES=	sysutils python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dbaio@FreeBSD.org
 COMMENT=	Microsoft Azure Command-Line Tools ACR Command Module
+WWW=		https://pypi.org/project/azure-cli-acr/
 
 LICENSE=	MIT
 

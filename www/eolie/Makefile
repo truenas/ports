@@ -1,12 +1,12 @@
-# Created by: Rozhuk Ivan 2019 <rozhuk.im@gmail.com>
-
 PORTNAME=	eolie
 PORTVERSION=	0.9.101
+PORTREVISION=	2
 CATEGORIES=	www gnome
 MASTER_SITES=	https://adishatz.org/eolie/
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Simple web browser for GNOME
+WWW=		https://wiki.gnome.org/Apps/Eolie
 
 LICENSE=	GPLv3+
 

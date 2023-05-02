@@ -1,10 +1,11 @@
 PORTNAME=	libpololu-avr
 PORTVERSION=	151002
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	devel
 
 MAINTAINER=	jonathan@FreeBSD.org
 COMMENT=	Support libraries for Pololu robots
+WWW=		https://www.pololu.com/docs/0J20
 
 LICENSE=	MIT
 

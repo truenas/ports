@@ -1,5 +1,3 @@
-# Created by: Steve Wills <steve@mouf.net>
-
 PORTNAME=	libxml-enno
 PORTVERSION=	1.02
 PORTREVISION=	1
@@ -8,8 +6,9 @@ MASTER_SITES=	CPAN
 MASTER_SITE_SUBDIR=	CPAN:ENNO
 PKGNAMEPREFIX=	p5-
 
-MAINTAINER=	swills@FreeBSD.org
+MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Group of Perl modules for XML parsing
+WWW=		https://metacpan.org/release/libxml-enno
 
 BUILD_DEPENDS=	p5-XML-Parser>=0:textproc/p5-XML-Parser \
 		p5-libwww>=0:www/p5-libwww \

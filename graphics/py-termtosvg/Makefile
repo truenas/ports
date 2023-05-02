@@ -1,11 +1,12 @@
 PORTNAME=	termtosvg
 PORTVERSION=	1.1.0
 CATEGORIES=	graphics python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	lwhsu@FreeBSD.org
 COMMENT=	Record terminal sessions as SVG animations
+WWW=		https://github.com/nbedos/termtosvg
 
 LICENSE=	BSD3CLAUSE
 

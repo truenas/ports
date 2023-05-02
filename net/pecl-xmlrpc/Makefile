@@ -1,17 +1,15 @@
-# Created by: Derek Schrock <dereks@lifeofadishwasher.com>
-
 PORTNAME=	xmlrpc
-PORTVERSION=	1.0.0
-DISTVERSIONSUFFIX=	RC2
+DISTVERSION=	1.0.0RC3
+PORTREVISION=	2
+PORTEPOCH=	1
 CATEGORIES=	net pear
 
 MAINTAINER=	dereks@lifeofadishwasher.com
 COMMENT=	PHP extension for XML-RPC servers and clients
+WWW=		https://pecl.php.net/package/xmlrpc
 
 LICENSE=	PHP301
 LICENSE_FILE=	${WRKSRC}/LICENSE
-
-IGNORE_WITH_PHP=	73 74
 
 USES=		iconv:translit gnome php:pecl pkgconfig
 USE_PHP=	xml:build

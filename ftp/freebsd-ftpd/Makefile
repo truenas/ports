@@ -1,13 +1,11 @@
-# Created by: cy@FreeBSD.org
-
 PORTNAME=	freebsd-ftpd
 DISTVERSIONPREFIX=	v
-DISTVERSION=	20200704
-PORTREVISION=	2
+DISTVERSION=	20221002
 CATEGORIES=	ftp
 
 MAINTAINER=	cy@FreeBSD.org
 COMMENT=	FreeBSD ftpd
+WWW=		https://github.com/cschuber/freebsd-ftpd
 
 LICENSE=	BSD3CLAUSE
 

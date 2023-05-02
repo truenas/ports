@@ -1,9 +1,11 @@
 PORTNAME=	zoneminder
-DISTVERSION=	1.36.5
+DISTVERSION=	1.36.33
+PORTREVISION=	1
 CATEGORIES=	multimedia
 
 MAINTAINER=	bsd@abinet.ru
 COMMENT=	Complete security camera solution, fully web based with image analysis
+WWW=		https://www.zoneminder.com/
 
 LICENSE=	GPLv2
 
@@ -35,11 +37,11 @@ RUN_DEPENDS=	${ZM_DEPENDS} \
 
 USES=		cmake:insource,noninja cpe jpeg mysql perl5 php shebangfix ssl
 USE_GITHUB=	yes
-GH_TUPLE=	FriendsOfCake:crud:0bd63fb:crud/web/api/app/Plugin/Crud \
+GH_TUPLE=	FriendsOfCake:crud:1429237:crud/web/api/app/Plugin/Crud \
 		ZoneMinder:CakePHP-Enum-Behavior:ea90c0c:crud_plugin/web/api/app/Plugin/CakePHP-Enum-Behavior \
-		ZoneMinder:RtspServer:cd7fd49:rtsp_server/dep/RtspServer
+		ZoneMinder:RtspServer:eab3285:rtsp_server/dep/RtspServer
 USE_RC_SUBR=	zoneminder
-USE_PHP=	json pdo_mysql session gd sockets ctype opcache openssl hash
+USE_PHP=	ctype gd intl opcache pdo_mysql session sockets sysvsem
 
 OPTIONS_DEFINE=	NLS V4L
 OPTIONS_SUB=	yes
@@ -74,7 +76,7 @@ CMAKE_ARGS+=	-DZM_PERL_MM_PARMS=INSTALLDIRS=site \
 		-DZM_WEBDIR=${WWWDIR} \
 		-DZM_CGIDIR=${WWWDIR}/cgi-bin \
 		-DZM_CONTENTDIR=/var/db/zoneminder \
-		-DZM_MANPAGE_DEST_PREFIX=${PREFIX}/man \
+		-DZM_MANPAGE_DEST_PREFIX=${PREFIX}/share/man \
 		-DHAVE_SENDFILE=0 \
 		-DZM_NO_CURL=ON \
 		-DZM_NO_LIBVLC=ON \
@@ -103,16 +105,16 @@ pre-install:
 	${MKDIR} ${STAGEDIR}${WWWDIR}/temp
 	${MKDIR} ${STAGEDIR}${WWWDIR}/api/app/tmp
 	${MKDIR} ${STAGEDIR}/var/cache/zoneminder
-	${MKDIR} ${STAGEDIR}/var/cache/zoneminder/events
-	${MKDIR} ${STAGEDIR}/var/cache/zoneminder/images
 	${MKDIR} ${STAGEDIR}/var/db/zoneminder
+	${MKDIR} ${STAGEDIR}/var/db/zoneminder/events
 	${MKDIR} ${STAGEDIR}/var/run/zm
 	${MKDIR} ${STAGEDIR}/var/tmp/zm
+	${MKDIR} ${STAGEDIR}/var/log/zm
 
 post-install: # zmsystemctl.pl is only for systend-based systems
 	@cd ${STAGEDIR}${PREFIX} && \
 		${RM} \
 			bin/zmsystemctl.pl \
-			man/man8/zmsystemctl.pl.8.gz
+			share/man/man8/zmsystemctl.pl.8.gz
 
 .include <bsd.port.post.mk>

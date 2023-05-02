@@ -1,12 +1,12 @@
-# Created by: Andrew Pantyukhin <infofarmer@FreeBSD.org>
-
 PORTNAME=	translate-toolkit
-PORTVERSION=	3.5.1
+PORTVERSION=	3.8.6
 CATEGORIES=	textproc
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Tools and API for translation and localization engineering
+WWW=		https://toolkit.translatehouse.org/ \
+		https://github.com/translate/translate
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -17,12 +17,17 @@ RUN_DEPENDS=	bash:shells/bash \
 		${PYTHON_PKGNAMEPREFIX}lxml>=4.6.3:devel/py-lxml@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}sqlite3>=0:databases/py-sqlite3@${PY_FLAVOR}
 
-USES=		gettext python:3.6+ shebangfix
+USES=		gettext python:3.7+ shebangfix
 USE_PYTHON=	autoplist distutils noflavors
 
 NO_ARCH=	yes
 
-SHEBANG_FILES=	tools/*
+SHEBANG_FILES=	tools/* \
+		translate/convert/odfxml \
+		translate/convert/roundtrip-OOo \
+		translate/convert/roundtrip-gaia \
+		translate/convert/roundtrip-mozilla \
+		translate/lang/test-language-teams.sh
 
 MANPAGES=	csv2po csv2tbx dtd2po flatxml2po html2po idml2po json2po moz2po mozlang2po odf2xliff oo2po oo2xliff po2csv po2dtd po2flatxml po2html po2idml po2json po2moz po2mozlang po2oo po2prop po2resx po2sub po2symb po2tiki po2tmx po2ts po2txt po2web2py po2wordfast po2xliff pot2po prop2po resx2po sub2po symb2po tbx2po tiki2po ts2po txt2po web2py2po xliff2odf xliff2oo
 
@@ -43,23 +48,23 @@ TMSERVER_DESC=	Tmserver backend support
 TRADOS_DESC=	Trados format support
 YAML_DESC=	YAML format support
 
-ENCODING_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}chardet>=4.0.0,1:textproc/py-chardet@${PY_FLAVOR}
+ENCODING_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}charset-normalizer>=3.0.1:textproc/py-charset-normalizer@${PY_FLAVOR}
 FLUENT_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}fluent.syntax>=0.18.1:textproc/py-fluent.syntax@${PY_FLAVOR}
 ICAL_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}vobject>=0.9.6.1:deskutils/py-vobject@${PY_FLAVOR}
 ICAL_VARS=		MANPAGES+="ical2po po2ical"
 INI_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}iniparse>=0.5:devel/py-iniparse@${PY_FLAVOR}
 INI_VARS=		MANPAGES+="ini2po po2ini"
-LANGUAGES_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pycountry>=20.7.3:textproc/py-pycountry@${PY_FLAVOR}
+LANGUAGES_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pycountry>=22.1.10:textproc/py-pycountry@${PY_FLAVOR}
 LEVENSHTEIN_RUN_DEPENDS=${PYTHON_PKGNAMEPREFIX}python-Levenshtein>=0.12:devel/py-python-Levenshtein@${PY_FLAVOR}
 PHP_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}phply>=1.2.5:devel/py-phply@${PY_FLAVOR}
 PHP_VARS=		MANPAGES+="php2po po2php"
-RC_RUN_DEPENDS=		${PYTHON_PKGNAMEPREFIX}pyparsing>=3.0.5:devel/py-pyparsing@${PY_FLAVOR}
+RC_RUN_DEPENDS=		${PYTHON_PKGNAMEPREFIX}pyparsing>=3.0.7:devel/py-pyparsing@${PY_FLAVOR}
 RC_VARS=		MANPAGES+="po2rc rc2po"
 SPELLCHECK_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}enchant>=3.2.2:textproc/py-enchant@${PY_FLAVOR}
-SUBTITLES_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}aeidon>=1.10.1:textproc/py-aeidon@${PY_FLAVOR}
-TMSERVER_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}cheroot>=8.5.2:www/py-cheroot@${PY_FLAVOR}
+SUBTITLES_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}aeidon>=1.12:textproc/py-aeidon@${PY_FLAVOR}
+TMSERVER_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}cheroot>=9.0.0:www/py-cheroot@${PY_FLAVOR}
 TRADOS_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}beautifulsoup>=4.3:www/py-beautifulsoup@${PY_FLAVOR}
-YAML_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}ruamel.yaml>=0.16.12:devel/py-ruamel.yaml@${PY_FLAVOR}
+YAML_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}ruamel.yaml>=0.17.21:devel/py-ruamel.yaml@${PY_FLAVOR}
 YAML_VARS=		MANPAGES+="po2yaml yaml2po"
 
 .include <bsd.port.options.mk>

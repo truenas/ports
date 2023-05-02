@@ -1,11 +1,12 @@
 PORTNAME=	phx-class-registry
 DISTVERSION=	3.0.5
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	PopularMoment@protonmail.com
 COMMENT=	Factory+Registry pattern for Python classes
+WWW=		https://github.com/todofixthis/class-registry/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

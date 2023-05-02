@@ -1,11 +1,12 @@
 PORTNAME=	libnuml
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.1.4
+DISTVERSION=	1.1.6
 CATEGORIES=	biology devel
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Numerical Markup Language for Python
+WWW=		https://github.com/NuML/NuML
 
 LICENSE=	LGPL21
 

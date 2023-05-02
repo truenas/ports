@@ -1,11 +1,12 @@
 PORTNAME=	kotlin
-PORTVERSION=	1.6.0
-CATEGORIES=	lang
+PORTVERSION=	1.8.0
+CATEGORIES=	lang java
 MASTER_SITES=	https://github.com/JetBrains/kotlin/releases/download/v${PORTVERSION}/
 DISTNAME=	kotlin-compiler-${PORTVERSION}
 
 MAINTAINER=	mizhka@FreeBSD.org
 COMMENT=	Kotlin Programming Language
+WWW=		https://kotlinlang.org/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/license/LICENSE.txt
@@ -14,10 +15,11 @@ RUN_DEPENDS=	bash:shells/bash
 
 USES=	zip
 
-WRKSRC=	${WRKDIR}/kotlinc
-
 USE_JAVA=	yes
+NO_ARCH=	yes
 NO_BUILD=	yes
+
+WRKSRC=	${WRKDIR}/kotlinc
 
 KOTLIN_BIN=	kapt \
 		kotlin \

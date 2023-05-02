@@ -1,12 +1,11 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	libfido2
-PORTVERSION=	1.9.0
+PORTVERSION=	1.13.0
 CATEGORIES=	security
 MASTER_SITES=	https://developers.yubico.com/libfido2/Releases/
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Provides library functionality for FIDO 2.0
+WWW=		https://developers.yubico.com/libfido2/
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -24,10 +23,9 @@ OPTIONS_DEFINE=	DOCS
 
 .include <bsd.port.pre.mk>
 
-post-patch:
-# we do not ship libcrypto.pc in base system
-.if ${SSL_DEFAULT} == base
-	@${REINPLACE_CMD} -e '/libcrypto/d' ${WRKSRC}/CMakeLists.txt ${WRKSRC}/src/libfido2.pc.in
+# Skip libcrypto.pc while using OpenSSL from base system on older FreeBSD versions which does not skip this file
+.if ${SSL_DEFAULT} == base && !exists(/usr/libdata/pkgconfig/libcrypto.pc)
+EXTRA_PATCHES+= ${PATCHDIR}/extra-patch-openssl
 .endif
 
 .include <bsd.port.post.mk>

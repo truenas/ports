@@ -1,11 +1,12 @@
 PORTNAME=	vector
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.10.0
-PORTREVISION=	11
+PORTREVISION=	24
 CATEGORIES=	sysutils
 
-MAINTAINER=	greg@unrelenting.technology
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	High performance logs, metrics, and events router
+WWW=		https://vector.dev
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -403,7 +404,7 @@ CARGO_CRATES=	adler-0.2.3 \
 		smpl_jwt-0.5.0 \
 		snafu-0.6.6 \
 		snafu-derive-0.6.6 \
-		socket2-0.3.11 \
+		socket2-0.3.19 \
 		sourcefile-0.1.4 \
 		standback-0.2.8 \
 		static_assertions-1.1.0 \
@@ -556,6 +557,10 @@ CARGO_CRATES=	adler-0.2.3 \
 		tower@git+https://github.com/tower-rs/tower\#c87fdd9c1e4c0728fdaa87d3fafe3e48da9b498a \
 		rlua@git+https://github.com/kyren/rlua\#25bd7e6bffef9597466a98bfca80a3056c9e6320 \
 		tracing-futures,tracing-tower@git+https://github.com/tokio-rs/tracing?rev=65547d8809fcc726b8187db85b23c42e32ef5dce\#65547d8809fcc726b8187db85b23c42e32ef5dce
+
+# Fixes: error: the linked panic runtime `panic_unwind` is not compiled with
+# this crate's panic strategy `abort`
+LTO_UNSAFE=	yes
 
 post-extract:
 	${RMDIR} ${WRKSRC_wasmtime}/crates/wasi-common/WASI

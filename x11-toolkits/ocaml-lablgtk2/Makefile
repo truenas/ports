@@ -1,13 +1,11 @@
-# Created by: Rene Ladan <rene@FreeBSD.org>
-
 PORTNAME=	lablgtk2
-PORTVERSION=	2.18.11
-PORTREVISION=	4
+PORTVERSION=	2.18.13
 CATEGORIES=	x11-toolkits
 PKGNAMEPREFIX=	ocaml-
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Objective Caml interface to GTK+ 2.x
+WWW=		https://garrigue.github.io/lablgtk/
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -68,18 +66,6 @@ GTKSPELL_CONFIGURE_WITH=gtkspell
 LIBRSVG2_CONFIGURE_WITH=rsvg
 LIBRSVG2_USE=		GNOME=librsvg2
 LIBRSVG2_VARS=		EXAMPLES_SUBDIRS+=rsvg
-
-PATTERN=	[[:space:]]*(do|then)?[[:space:]]*)cp([[:space:]]
-
-post-patch:
-	@${REINPLACE_CMD} -E \
-		-e 's|^(CFLAGS[[:space:]]*\+=[[:space:]]*-O)|\1 ${CFLAGS}|' \
-		-e 's,^(${PATTERN}+.*INSTALLDIR),\1\$${BSD_INSTALL_DATA} \3,' \
-		-e 's,^(${PATTERN}+.*BINDIR),\1\$${BSD_INSTALL_SCRIPT} \3,' \
-		-e 's,^(${PATTERN}+.*LIBDIR),\1\$${BSD_INSTALL_DATA} \3,' \
-		-e 's,(touch)( "\$$\(DESTDIR\)\$$\(OCAMLLDCONF\)"),${TRUE}\2,' \
-		-e 's,(-ldconf )("\$$\(DESTDIR\)\$$\(OCAMLLDCONF\)"),\1ignore,' \
-		${WRKSRC}/src/Makefile
 
 post-install-DOCS-on:
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}

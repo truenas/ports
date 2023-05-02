@@ -1,5 +1,3 @@
-# Created by: ijliao
-
 PORTNAME=	resume
 PORTVERSION=	20010823
 PORTREVISION=	3
@@ -13,6 +11,7 @@ DIST_SUBDIR=	${PKGNAMEPREFIX}${PORTNAME}
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Resume class for LaTeX
 
+USES=		tex
 USE_TEX=	latex
 NO_BUILD=	yes
 NO_WRKSUBDIR=	yes
@@ -20,7 +19,6 @@ EXTRACT_CMD=	${CP}
 EXTRACT_BEFORE_ARGS=	# empty
 EXTRACT_AFTER_ARGS=	.
 
-TEXMFDIR=	share/texmf
 MKTEXLSR=	${LOCALBASE}/bin/mktexlsr
 CLASSDIR=	${TEXMFDIR}/tex/latex/${PORTNAME}
 CLASS_FILES=	${DISTFILES}

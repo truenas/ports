@@ -1,14 +1,13 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	pynamecheap
 PORTVERSION=	0.0.3
 CATEGORIES=	net python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	PyNamecheap-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Namecheap API client in Python
+WWW=		https://github.com/Bemmu/PyNamecheap
 
 LICENSE=	MIT
 

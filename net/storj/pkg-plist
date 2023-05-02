@@ -1,9 +1,6 @@
 bin/certificates
-bin/connect-test
 bin/crashcollect
 bin/inspector
-bin/metabase-orphaned-segments
-bin/metabase-verify
 bin/metric-receiver
 bin/multinode
 bin/satellite
@@ -13,5 +10,4 @@ bin/storj-admin
 bin/storj-identity
 bin/storj-sim
 bin/uplink
-bin/uplinkng
 bin/versioncontrol

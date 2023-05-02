@@ -3,11 +3,12 @@ PORTVERSION=	3.5.3
 PORTREVISION=	1
 PORTEPOCH=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	robak@FreeBSD.org
 COMMENT=	INI style configuration file parser
+WWW=		https://pypi.org/project/configparser/
 
 LICENSE=	MIT
 

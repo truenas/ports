@@ -1,15 +1,14 @@
-# Created by: Yuri Victorovich
-
 PORTNAME=	toxcore-c
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.2.0
-PORTREVISION=	3
+PORTREVISION=	5
 PORTEPOCH=	1
 CATEGORIES=	net-im net-p2p python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Python binding for Project-Tox
+WWW=		https://github.com/TokTok/py-toxcore-c
 
 LICENSE=	LGPL3
 LICENSE_FILE=	${WRKSRC}/LICENSE.md

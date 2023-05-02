@@ -1,5 +1,3 @@
-# Created by: mi
-
 PORTNAME=	jode
 PORTVERSION=	1.1.1.1
 PORTREVISION=	4
@@ -9,6 +7,7 @@ DISTNAME=	${PORTNAME}-${VENDOR_VERSION}
 
 MAINTAINER=	mi@aldan.algebra.com
 COMMENT=	Java package containing a decompiler and an optimizer for Java
+WWW=		http://jode.sourceforge.net/
 
 BUILD_DEPENDS=	${GETOPT_JAR}:java/java-getopt
 RUN_DEPENDS:=	${BUILD_DEPENDS}

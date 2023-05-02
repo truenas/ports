@@ -1,16 +1,16 @@
 PORTNAME=	palisade
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.11.5
+DISTVERSION=	1.11.6
 CATEGORIES=	security math
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	PALISADE lattice cryptography library for Fully Homomorphic Encryption
+WWW=		https://palisade-crypto.org
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-BROKEN_i386=	fails to build: a declaration of 'Mul128' must be available
-BROKEN_powerpc64=	fails to build: math/native_int/binint.h:510:11: error: Architecture not supported for MultD()
+BROKEN_i386=		fails to build: a declaration of 'Mul128' must be available
 
 BUILD_DEPENDS=	autoconf:devel/autoconf # possibly a mistake in the project
 
@@ -18,7 +18,7 @@ USES=		cmake:noninja,testing localbase # compiler:c++11-lang
 USE_GITLAB=	yes
 USE_GITHUB=	nodefault
 GL_PROJECT=	palisade-release # there's also palisade-development
-GL_COMMIT=	d76213499af44558170cca6c72c5314755fec23c
+GL_COMMIT=	0860127401ab794591f931fa2c61426c7b56ee2d
 GH_TUPLE=	\
 		JerryRyan:cereal:a384b101:cereal/third-party/cereal \
 		google:benchmark:e451e50e:benchmark/third-party/google-benchmark \
@@ -37,9 +37,15 @@ BINARY_ALIAS=	git=false
 
 LDFLAGS+=	-pthread # only for tests: see https://gitlab.com/palisade/palisade-release/-/issues/23
 
-OPTIONS_DEFINE=		OPENMP
+OPTIONS_DEFINE=		OPENMP HEXL
+.if exists(/usr/include/omp.h)
 OPTIONS_DEFAULT=	OPENMP
+.endif
 
-OPENMP_CMAKE_BOOL=	USE_OpenMP
+HEXL_DESC=		Use Intel Hexl Library
+
+OPENMP_CMAKE_BOOL=	WITH_OPENMP
+HEXL_CMAKE_BOOL=	WITH_HEXL
+HEXL_LIB_DEPENDS=	libhexl.so:security/hexl
 
 .include <bsd.port.mk>

@@ -1,9 +1,11 @@
 PORTNAME=	cpp-hocon
 PORTVERSION=	0.3.0
+PORTREVISION=	3
 CATEGORIES=	devel
 
 MAINTAINER=	puppet@FreeBSD.org
 COMMENT=	C++ configuration library
+WWW=		https://github.com/puppetlabs/cpp-hocon
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

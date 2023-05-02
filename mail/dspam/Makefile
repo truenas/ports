@@ -1,17 +1,16 @@
-# Created by: Dominic Marks <dom@wirespeed.org.uk>
-
 # Note to committers: If don't commit a maintainer patch and as a result PKGNAME
 # or user variables (WITH*) changes please add an entry in ${FILESDIR}/UPDATING
 # Thanks.
 
 PORTNAME=	dspam
 PORTVERSION=	3.10.2
-PORTREVISION=	7
+PORTREVISION=	8
 CATEGORIES=	mail
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/${PORTNAME}-${PORTVERSION}
 
 MAINTAINER=	danny@dannywarren.com
 COMMENT=	Bayesian spam filter
+WWW=		http://dspam.sourceforge.net/
 
 LICENSE=	AGPLv3
 
@@ -305,7 +304,7 @@ PLIST_SUB+=	NOSETUID=""
 
 .if ${PORT_OPTIONS:MEXTERNAL_LOOKUP}
 CONFIGURE_ARGS+=	--enable-external-lookup
-USE_OPENLDAP=	YES
+USES+=	ldap
 .endif
 
 .if ${PORT_OPTIONS:MUSER_HOMEDIR}
@@ -398,7 +397,7 @@ CONFIGURE_ARGS+=	--with-dspam-mode=${DSPAM_MODE}
 .	if ${PORT_OPTIONS:MLIGHTTPD}
 RUN_DEPENDS+=	${LOCALBASE}/sbin/lighttpd:www/lighttpd
 .	else
-USES+=		apache:2.2+
+USES+=		apache
 .	endif
 LIB_DEPENDS+=	libgd.so:graphics/gd
 RUN_DEPENDS+=	p5-GD>=0:graphics/p5-GD

@@ -1,13 +1,12 @@
-# Created by: Alexey Dokuchaev <danfe@regency.nsu.ru>
-
 PORTNAME=	wmcalendar
 PORTVERSION=	0.5.2
-PORTREVISION=	18
+PORTREVISION=	19
 CATEGORIES=	misc windowmaker
 MASTER_SITES=	SF
 
 MAINTAINER=	xride@FreeBSD.org
 COMMENT=	Dockable calendar with interface to iCalendar based calendars
+WWW=		http://wmcalendar.sourceforge.net/
 
 LIB_DEPENDS=	libical.so:devel/libical
 

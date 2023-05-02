@@ -5,13 +5,17 @@ PKGNAMESUFFIX=	13
 
 MAINTAINER=	acm@FreeBSD.org
 COMMENT=	Modern software package to manage your company or foundation
+WWW=		https://www.dolibarr.org/
+
+DEPRECATED=	No support PHP >= 8.x
+EXPIRATION_DATE=2023-04-30
 
 LICENSE=	GPLv3
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	${PORTNAME:S/d/D/}
 USES=		cpe php:web
-USE_PHP=	calendar curl gd intl pcre session openssl
+USE_PHP=	calendar curl gd intl session
 NO_BUILD=	yes
 NO_ARCH=	yes
 SUB_FILES=	pkg-message

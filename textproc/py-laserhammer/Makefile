@@ -1,13 +1,12 @@
-# Created by: Edward Tomasz Napierala <trasz@FreeBSD.org>
-
 PORTNAME=	laserhammer
 PORTVERSION=	2.4
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	trasz@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Docbook to mdoc(7) converter
+WWW=		https://github.com/trasz/laserhammer
 
 LICENSE=	BSD2CLAUSE
 

@@ -1,11 +1,12 @@
 PORTNAME=	photoqt
 DISTVERSIONPREFIX=	v
 DISTVERSION=	1.6
-PORTREVISION=	8
+PORTREVISION=	9
 CATEGORIES=	graphics
 
 MAINTAINER=	melanhit@gmail.com
 COMMENT=	Simple, powerful and good looking QT5 image viewer
+WWW=		https://photoqt.org/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -14,7 +15,7 @@ USES=		cmake compiler:c++11-lib desktop-file-utils \
 		localbase:ldflags qt:5
 USE_QT=		core declarative graphicaleffects gui multimedia network \
 		quickcontrols sql svg widgets xml \
-		buildtools_build linguisttools_build qmake_build
+		buildtools:build linguisttools:build qmake:build
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	luspi

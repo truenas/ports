@@ -1,18 +1,18 @@
 PORTNAME=	bootsnap
-PORTVERSION=	1.9.1
+PORTVERSION=	1.16.0
 CATEGORIES=	devel rubygems
 MASTER_SITES=	RG
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Boot large ruby/rails apps faster
+WWW=		https://github.com/Shopify/bootsnap
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
-RUN_DEPENDS=	rubygem-msgpack>=1.0<2:devel/rubygem-msgpack
+RUN_DEPENDS=	rubygem-msgpack>=1.2<2:devel/rubygem-msgpack
 
 USES=		gem
-USE_RUBY=	yes
 
 PLIST_FILES=	bin/bootsnap
 

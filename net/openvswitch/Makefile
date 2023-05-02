@@ -1,12 +1,11 @@
-# Created by: Edward Tomasz Napierala <trasz@FreeBSD.org>
-
 PORTNAME=	openvswitch
-DISTVERSION=	2.16.1
+DISTVERSION=	2.17.3
 CATEGORIES=	net
 MASTER_SITES=	http://openvswitch.org/releases/
 
 MAINTAINER=	nc@FreeBSD.org
 COMMENT=	Production quality, multilayer virtual switch
+WWW=		http://openvswitch.org/
 
 LICENSE=	APACHE20
 

@@ -1,10 +1,11 @@
 PORTNAME=	kerl
-DISTVERSION=	2.2.2
+DISTVERSION=	2.5.1
 CATEGORIES=	devel
 EXTRACT_ONLY=	${DISTNAME}${EXTRACT_SUFX}
 
 MAINTAINER=	olgeni@FreeBSD.org
 COMMENT=	Virtualenv-like tool for Erlang/OTP
+WWW=		https://github.com/kerl/kerl
 
 RUN_DEPENDS=	${LOCALBASE}/bin/curl:ftp/curl
 

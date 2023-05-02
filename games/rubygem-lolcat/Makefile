@@ -5,6 +5,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Rainbows and unicorns
+WWW=		https://github.com/busyloop/lolcat
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -15,7 +16,6 @@ RUN_DEPENDS=	rubygem-manpages>=0.6.1<0.7:devel/rubygem-manpages \
 
 USES=		gem
 
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

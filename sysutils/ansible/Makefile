@@ -1,11 +1,12 @@
 PORTNAME=	ansible
-DISTVERSION=	4.7.0
+DISTVERSION=	7.1.0
 CATEGORIES=	sysutils python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	0mp@FreeBSD.org
 COMMENT=	Radically simple IT automation
+WWW=		https://www.ansible.com/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -20,8 +21,16 @@ SHEBANG_FILES=	ansible_collections/community/zabbix/roles/zabbix_proxy/files/ins
 		ansible_collections/community/zabbix/roles/zabbix_server/files/install_semodule.bsx \
 		ansible_collections/cyberark/conjur/ci/build_release \
 		ansible_collections/cyberark/conjur/ci/publish_to_galaxy \
-		ansible_collections/ovirt/ovirt/roles/disaster_recovery/files/ovirt-dr
-SHEBANG_GLOB=	*.py *.sh
+		ansible_collections/ovirt/ovirt/roles/disaster_recovery/files/ovirt-dr \
+		ansible_collections/ovirt/ovirt/roles/disaster_recovery/files/ovirt-dr \
+		ansible_collections/cisco/meraki/scripts/sublime-build/build.py.generic
+# It's probably best to leave shebangs in modules untouched as they must be
+# either unversioned or absent.
+# See [1] and [2].
+# [1]: https://github.com/ansible/ansible/issues/78243
+# [2]: https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=265211
+SHEBANG_REGEX=	(([^/])|(/[^m])|(/m[^o])|(/mo[^d])|(/mod[^u])|(/modu[^l])|(/modul[^e])|(/module[^s])|(/modules[^/]))*\.(py|sh|build.py.generic)
+python_OLD_CMD=	/Users/kbreit/Documents/Programming/ansible_collections/cisco/meraki/venv/bin/python
 
 CONFLICTS_INSTALL=	${_ANSIBLE_PACKAGES:N${PKGBASE}}
 
@@ -30,7 +39,7 @@ NO_ARCH=	yes
 DO_MAKE_TEST=	ansible -m ping
 TEST_TARGET=	localhost
 
-_ANSIBLE_VERSIONS=	1 2 23 24 25 26 27 28
+_ANSIBLE_VERSIONS=	1 2 23 24 25 26 27 28 4
 _ANSIBLE_PACKAGES=	${PYTHON_PKGNAMEPREFIX}ansible
 .for version in ${_ANSIBLE_VERSIONS}
 _ANSIBLE_PACKAGES+=	${PYTHON_PKGNAMEPREFIX}ansible${version}

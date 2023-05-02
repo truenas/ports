@@ -1,7 +1,5 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	Test2-Harness-UI
-PORTVERSION=	0.000097
+PORTVERSION=	0.000136
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 MASTER_SITE_SUBDIR=	CPAN:EXODIST
@@ -9,6 +7,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Web interface for viewing and inspecting yath test logs
+WWW=		https://metacpan.org/dist/Test2-Harness-UI
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual
@@ -40,7 +39,7 @@ RUN_DEPENDS=	p5-Clone>=0:devel/p5-Clone \
 		p5-Router-Simple>=0:www/p5-Router-Simple \
 		p5-Starman>=0:www/p5-Starman \
 		p5-Statistics-Basic>=0:math/p5-Statistics-Basic \
-		p5-Test2-Harness>=1.000076:devel/p5-Test2-Harness \
+		p5-Test2-Harness>=1.000151:devel/p5-Test2-Harness \
 		p5-Test2-Suite>=0.000126:devel/p5-Test2-Suite \
 		p5-Text-Xslate>=0:textproc/p5-Text-Xslate \
 		p5-Time-Elapsed>=0.33:devel/p5-Time-Elapsed
@@ -51,11 +50,4 @@ USE_PERL5=	configure
 
 NO_ARCH=	yes
 
-.include <bsd.port.pre.mk>
-
-.if ${PERL_LEVEL} < 503200
-BUILD_DEPENDS+=	p5-Test-Simple>=1.302166:devel/p5-Test-Simple
-RUN_DEPENDS+=	p5-Test-Simple>=1.302166:devel/p5-Test-Simple
-.endif
-
-.include <bsd.port.post.mk>
+.include <bsd.port.mk>

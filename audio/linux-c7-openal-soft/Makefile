@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <emulation@FreeBSD.org$
-
 PORTNAME=	openal-soft
 PORTVERSION=	1.16.0
 DISTVERSIONSUFFIX=	-3.el7
@@ -10,6 +8,7 @@ MASTER_SITES=	EPEL7/o \
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	3D positional spatialized sound library (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://openal-soft.org/
 
 USES=		linux:c7
 USE_LDCONFIG=	yes

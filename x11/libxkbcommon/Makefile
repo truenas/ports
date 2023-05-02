@@ -1,11 +1,11 @@
 PORTNAME=	libxkbcommon
-PORTVERSION=	1.3.1
-CATEGORIES=	x11
+PORTVERSION=	1.5.0
+CATEGORIES=	x11 wayland
 MASTER_SITES=	https://xkbcommon.org/download/
-DIST_SUBDIR=	xorg/lib
 
 MAINTAINER=	x11@FreeBSD.org
 COMMENT=	Keymap handling library for toolkits and window systems
+WWW=		https://xkbcommon.org/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

@@ -9,9 +9,9 @@ LICENSE=	LGPL21+ BSD3CLAUSE
 LICENSE_COMB=	multi
 
 USES=		cmake compiler:c++11-lib kde:5 qt:5 shared-mime-info tar:xz
-USE_KDE=	ecm_build
+USE_KDE=	ecm:build
 USE_QT=		core linguisttools \
-		buildtools_build qmake_build
+		buildtools:build qmake:build
 
 OPTIONS_DEFINE=		FAM INOTIFY
 OPTIONS_DEFAULT=	INOTIFY
@@ -25,6 +25,8 @@ INOTIFY_CMAKE_BOOL_OFF=	CMAKE_DISABLE_FIND_PACKAGE_INOTIFY
 FAM_DESC=		Filesystem alteration notifications using fam (broken: hangs on NFS)
 FAM_USES=		fam
 FAM_CMAKE_BOOL_OFF=	CMAKE_DISABLE_FIND_PACKAGE_FAM
+
+CMAKE_ARGS=	-DACCOUNTS_SERVICE_ICON_DIR:PATH=/var/db/AccountsService/icons
 
 .include <bsd.port.pre.mk>
 # FreeBSD base gained /etc/os-release in r354922, which

@@ -1,11 +1,13 @@
 PORTNAME=	numpy-stl
 DISTVERSION=	2.11.3
+PORTREVISION=	1
 CATEGORIES=	math python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	db@FreeBSD.org
 COMMENT=	Simple library to make working with STL files fast and easy
+WWW=		https://github.com/WoLpH/numpy-stl
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

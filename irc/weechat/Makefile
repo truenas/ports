@@ -1,12 +1,11 @@
-# Created by: clement
-
 PORTNAME=	weechat
-DISTVERSION=	3.3
+DISTVERSION=	3.8
 CATEGORIES=	irc
 MASTER_SITES=	https://weechat.org/files/src/
 
 MAINTAINER=	brnrd@FreeBSD.org
 COMMENT=	Lightweight and user friendly ncurses based IRC client
+WWW=		https://weechat.org/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -14,7 +13,8 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 LIB_DEPENDS+=	libcurl.so:ftp/curl \
 		libgcrypt.so:security/libgcrypt \
 		libgnutls.so:security/gnutls \
-		libgpg-error.so:security/libgpg-error
+		libgpg-error.so:security/libgpg-error \
+		libzstd.so:archivers/zstd
 
 USES=		cmake cpe ncurses libtool pkgconfig tar:xz
 USE_LDCONFIG=	yes
@@ -26,9 +26,6 @@ OPTIONS_DEFINE=		BACKTRACE DOCS CA_BUNDLE HEADLESS ICON ICONV \
 OPTIONS_DEFAULT=	ASPELL BACKTRACE CA_BUNDLE CHARSET HEADLESS \
 			ICON LUA MANPAGES PERL PYTHON RUBY TCL TYPING
 OPTIONS_SUB=		yes
-
-# BROKEN: ruby.h: error: wrong number of arguments specified for 'deprecated' attribute
-OPTIONS_EXCLUDE_powerpc64=	RUBY
 
 OPTIONS_GROUP=		PLUGINS
 OPTIONS_GROUP_PLUGINS=	ASPELL CHARSET GUILE JAVASCRIPT LUA PERL PHP PYTHON \
@@ -67,7 +64,7 @@ NLS_USES=		gettext
 PERL_USES=		perl5
 PHP_USES=		php:build,embed
 PYTHON_USES=		python
-RUBY_USE=		ruby=yes
+RUBY_USES=		ruby
 TCL_CMAKE_ON=		-DTCL_VERSION:STRING="${TCL_VER}" \
 			-DTCL_TCLSH:PATH="${TCLSH}"
 TCL_USES=		tcl

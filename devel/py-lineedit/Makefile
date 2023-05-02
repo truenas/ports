@@ -1,11 +1,12 @@
 PORTNAME=	lineedit
 PORTVERSION=	0.1.6
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Readline library based on prompt_toolkit which supports multiple modes
+WWW=		https://github.com/randy3k/lineedit
 
 LICENSE=	MIT
 

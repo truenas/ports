@@ -1,21 +1,21 @@
-# Created by: ports@c0decafe.net <ports@c0decafe.net>
-
 PORTNAME=	thunar-archive-plugin
-PORTVERSION=	0.4.0
-PORTREVISION=	1
+PORTVERSION=	0.5.1
 CATEGORIES=	archivers xfce
 MASTER_SITES=	XFCE/thunar-plugins
 DIST_SUBDIR=	xfce4
 
 MAINTAINER=	xfce@FreeBSD.org
 COMMENT=	Archive plugin for the Thunar File Manager
+WWW=		https://goodies.xfce.org/projects/thunar-plugins/thunar-archive-plugin
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
+LIB_DEPENDS=	libharfbuzz.so:print/harfbuzz
+
 USES=		compiler:c11 gettext-tools gmake gnome libtool pkgconfig \
 		tar:bzip2 xfce
-USE_GNOME=	cairo gtk30 intltool
+USE_GNOME=	cairo gdkpixbuf2 gtk30 intltool
 USE_XFCE=	libexo thunar
 
 GNU_CONFIGURE=	yes

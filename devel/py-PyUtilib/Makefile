@@ -1,11 +1,12 @@
 PORTNAME=	PyUtilib
 DISTVERSION=	6.0.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Collection of Python utilities
+WWW=		https://github.com/PyUtilib/pyutilib
 
 LICENSE=	BSD2CLAUSE
 

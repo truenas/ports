@@ -1,14 +1,13 @@
-# Created by: Dmitry N Fomin <fdn@okbire.ru>
-
 PORTNAME=	gdisk
-PORTVERSION=	1.0.8
-PORTREVISION=	1
+PORTVERSION=	1.0.9
+PORTREVISION=	3
 CATEGORIES=	sysutils
 MASTER_SITES=	SF/gptfdisk/gptfdisk/${PORTVERSION}
 DISTNAME=	gptfdisk-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	GPT fdisk
+WWW=		https://www.rodsbooks.com/fixparts/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

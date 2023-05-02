@@ -1,11 +1,13 @@
 PORTNAME=	bcps
 DISTVERSIONPREFIX=	releases/
 DISTVERSION=	0.99.2
+PORTREVISION=	1
 CATEGORIES=	math
 PKGNAMEPREFIX=	coin-or-
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Branch, Constrain, and Price Software (BiCePS)
+WWW=		https://github.com/coin-or/CHiPPS-BiCePS
 
 LICENSE=	EPL
 LICENSE_FILE=	${WRKSRC}/Bcps/LICENSE

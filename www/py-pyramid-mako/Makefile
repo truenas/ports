@@ -1,14 +1,13 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	pyramid-mako
 PORTVERSION=	1.0.2
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	pyramid_mako-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Mako template bindings for the Pyramid web framework
+WWW=		https://github.com/Pylons/pyramid_mako
 
 LICENSE=	REPOZE
 LICENSE_NAME=	Repoze Public License

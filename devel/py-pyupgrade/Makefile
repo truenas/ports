@@ -1,11 +1,12 @@
 PORTNAME=	pyupgrade
 PORTVERSION=	1.27.0
 CATEGORIES=	devel
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	swills@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Tool to automatically upgrade Python syntax for newer versions
+WWW=		https://github.com/asottile/pyupgrade
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

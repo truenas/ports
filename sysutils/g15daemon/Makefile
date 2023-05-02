@@ -1,27 +1,29 @@
 PORTNAME=	g15daemon
-PORTVERSION=	3.0.4
+DISTVERSION=	3.0.4
 CATEGORIES=	sysutils
-MASTER_SITES=	https://gitlab.com/menelkir/${PORTNAME}/-/archive/${PORTVERSION}/
 
-MAINTAINER=	menelkir@itroll.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Daemon for Logitech G15 Keyboards
+WWW=		https://gitlab.com/menelkir/g15daemon
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 BUILD_DEPENDS=	evdev-proto>0:devel/evdev-proto
-LIB_DEPENDS+=	libg15.so:sysutils/libg15 \
+LIB_DEPENDS=	libg15.so:sysutils/libg15 \
 		libg15render.so:sysutils/libg15render \
 		libinput.so:x11/libinput
 
-USES=		gmake localbase libtool
-
+USES=		gmake libtool localbase
+USE_GITLAB=	yes
 USE_LDCONFIG=	yes
+USE_RC_SUBR=	g15daemon
+
+GL_ACCOUNT=	menelkir
+GL_COMMIT=	1f4e8b41a6ea460d59cc07305a4d9b487b575ec6
 
 GNU_CONFIGURE=	yes
-CONFIGURE_ARGS+=	--sysconfdir=${LOCALBASE}/etc
-
-USE_RC_SUBR=	g15daemon
+CONFIGURE_ARGS=	--sysconfdir=${LOCALBASE}/etc
 
 INSTALL_TARGET=	install-strip
 

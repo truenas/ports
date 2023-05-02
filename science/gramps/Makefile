@@ -1,21 +1,20 @@
-# Created by: Andreas Fehlner <fehlner@gmx.de>
-
 PORTNAME=	gramps
-PORTVERSION=	5.1.4
+PORTVERSION=	5.1.5
 DISTVERSIONPREFIX=	v
+PORTREVISION=	4
 CATEGORIES=	science gnome python
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	GTK3-based genealogy program
+WWW=		https://gramps-project.org/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
 
 LIB_DEPENDS=	libgeocode-glib.so:net/geocode-glib \
 		libosmgpsmap-1.0.so:x11-toolkits/osm-gps-map
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}bsddb3>0:databases/py-bsddb3@${PY_FLAVOR} \
+RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pygraphviz>=0:graphics/py-pygraphviz@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}pyicu>=1.8:devel/py-pyicu@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}pygraphviz>=0:graphics/py-pygraphviz@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}sqlite3>=0:databases/py-sqlite3@${PY_FLAVOR} \
 		xdg-open:devel/xdg-utils
 
@@ -23,7 +22,6 @@ USES=		desktop-file-utils gettext gnome python:3.3+ shared-mime-info
 USE_GITHUB=	yes
 GH_ACCOUNT=	gramps-project
 USE_GNOME=	cairo gtk30 intltool librsvg2 pango pygobject3
-INSTALLS_OMF=	yes
 USE_PYTHON=	autoplist distutils noflavors
 
 CONFIGURE_ARGS=	--disable-mime-install

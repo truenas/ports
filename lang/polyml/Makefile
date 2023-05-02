@@ -1,13 +1,13 @@
-# Created by: Timothy Bourke <timbob@bigpond.com>
-
 PORTNAME=	polyml
-PORTVERSION=	5.8.2
+PORTVERSION=	5.9
 DISTVERSIONPREFIX=	v
+PORTREVISION=	1
 CATEGORIES=	lang
 DIST_SUBDIR=	${PORTNAME}
 
 MAINTAINER=	beyert@cs.ucr.edu
 COMMENT=	Fast open-source implementation of Standard ML
+WWW=		https://www.polyml.org
 
 LICENSE=	LGPL21
 

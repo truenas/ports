@@ -1,8 +1,5 @@
-# Created by: Oliver Lehmann (oliver@FreeBSD.org)
-
 PORTNAME=	xfce4-dict
-PORTVERSION=	0.8.4
-PORTREVISION=	1
+PORTVERSION=	0.8.5
 CATEGORIES=	textproc xfce
 MASTER_SITES=	XFCE/apps
 PKGNAMESUFFIX=	-plugin
@@ -10,13 +7,16 @@ DIST_SUBDIR=	xfce4
 
 MAINTAINER=	xfce@FreeBSD.org
 COMMENT=	Xfce4 plugin to query different dictionaries
+WWW=		https://goodies.xfce.org/projects/applications/xfce4-dict
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
+LIB_DEPENDS=	libharfbuzz.so:print/harfbuzz
+
 USES=		compiler:c11 gettext-tools gmake gnome libtool pkgconfig \
 		tar:bzip2 xfce xorg
-USE_GNOME=	cairo glib20 gtk30 intltool
+USE_GNOME=	cairo gdkpixbuf2 glib20 gtk30 intltool
 USE_XFCE=	panel
 USE_XORG=	x11
 USE_LDCONFIG=	yes

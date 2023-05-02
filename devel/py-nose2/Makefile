@@ -1,11 +1,12 @@
 PORTNAME=	nose2
-PORTVERSION=	0.9.2
+PORTVERSION=	0.10.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	daniel@blodan.se
 COMMENT=	Next generations of nicer testing for Python
+WWW=		https://nose2.readthedocs.io
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/license.txt

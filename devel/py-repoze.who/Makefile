@@ -1,13 +1,12 @@
-# Created by: Wen Heping <wenheping@gmail.com>
-
 PORTNAME=	repoze.who
 PORTVERSION=	2.4
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Identification and authentication framework for WSGI
+WWW=		http://www.repoze.org/
 
 LICENSE=	REPOZE
 LICENSE_NAME=	Repoze License

@@ -1,8 +1,6 @@
-# Created by: jmz
-
 PORTNAME=	PGPLOT
 PORTVERSION=	2.21
-PORTREVISION=	15
+PORTREVISION=	16
 CATEGORIES=	graphics perl5
 MASTER_SITES=	CPAN
 MASTER_SITE_SUBDIR=	CPAN:KGB
@@ -10,6 +8,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Perl5 extension which makes available the pgplot library
+WWW=		https://metacpan.org/release/PGPLOT
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

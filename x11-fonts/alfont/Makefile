@@ -1,5 +1,3 @@
-# Created by: Rusmir Dusko <nemysis@FreeBSD.org>
-
 PORTNAME=	alfont
 PORTVERSION=	2.0.9
 PORTREVISION=	1
@@ -12,6 +10,7 @@ DIST_SUBDIR=	${PORTNAME}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Wrapper around the freetype2 library
+WWW=		http://opensnc.sourceforge.net/alfont/
 
 LICENSE=	FTL
 LICENSE_NAME=	The FreeType Project LICENSE (FTL)

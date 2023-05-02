@@ -1,13 +1,12 @@
-# Created by: Hye-Shik Chang <perky@fallin.lv>
-
 PORTNAME=	pygraphviz
 PORTVERSION=	1.6
 CATEGORIES=	graphics python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	python@FreeBSD.org
 COMMENT=	Python interface to GraphViz agraph
+WWW=		https://pygraphviz.github.io
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

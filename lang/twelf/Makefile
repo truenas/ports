@@ -1,5 +1,3 @@
-# Created by: andrewb@cs.cmu.edu
-
 PORTNAME=	twelf
 PORTVERSION=	1.7.1
 PORTREVISION=	4
@@ -10,6 +8,7 @@ MASTER_SITES=	http://twelf.plparty.org/releases/ \
 
 MAINTAINER=	beyert@cs.ucr.edu
 COMMENT=	Meta-logical framework for deductive systems
+WWW=		http://www.cs.cmu.edu/~twelf
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -32,7 +31,7 @@ WRKSRC=		${WRKDIR}/twelf
 DOCS_INFO=	twelf
 
 DOCS_USE=	TEX=dvipsk:build,tex:build
-DOCS_USES=	makeinfo
+DOCS_USES=	makeinfo tex
 
 post-patch-DOCS-on:
 	@${REINPLACE_CMD} 's|-number|-number-sections|g' \

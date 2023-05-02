@@ -1,14 +1,13 @@
-# Created by: Sergey V. Dyatko <sergey.dyatko@gmail.com>
-
 PORTNAME=	thunar-vcs-plugin
 PORTVERSION=	0.2.0
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	devel xfce
 MASTER_SITES=	XFCE/thunar-plugins
 DIST_SUBDIR=	xfce4
 
 MAINTAINER=	sergey.dyatko@gmail.com
 COMMENT=	Version Control System plugin for Thunar
+WWW=		https://goodies.xfce.org/projects/thunar-plugins/thunar-vcs-plugin
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,11 +1,12 @@
 PORTNAME=	packet-python
 DISTVERSION=	1.37.1
 CATEGORIES=	sysutils python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dch@FreeBSD.org
 COMMENT=	Python client for Packet.net API
+WWW=		https://pypi.org/project/packet-python/
 
 LICENSE=	LGPL3+
 

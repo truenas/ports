@@ -1,13 +1,12 @@
-# Created by: Sverrir Valgeirsson <e96sv@yahoo.se> and
-
 PORTNAME=	dclib
 PORTVERSION=	0.3.23
-PORTREVISION=	5
+PORTREVISION=	7
 CATEGORIES=	net-p2p
 MASTER_SITES=	SF/wxdcgui/${PORTNAME}/${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Direct connect interface library for valknut
+WWW=		http://wxdcgui.sourceforge.net/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

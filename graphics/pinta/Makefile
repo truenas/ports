@@ -1,12 +1,12 @@
-# Created by: Alexander Kojevnikov <alexander@kojevnikov.com>
-
 PORTNAME=	pinta
 PORTVERSION=	1.7.1
+PORTREVISION=	1
 CATEGORIES=	graphics
 MASTER_SITES=	https://github.com/PintaProject/Pinta/releases/download/${PORTVERSION}/
 
 MAINTAINER=	olivierw1+bugzilla-freebsd@hotmail.com
 COMMENT=	Simple Gtk\# Paint Program
+WWW=		https://pinta-project.com/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/license-mit.txt

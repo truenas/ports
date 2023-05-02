@@ -1,5 +1,3 @@
-# Created by: Gea-Suan Lin <gslin@gslin.org>
-
 PORTNAME=	zxid
 PORTVERSION=	1.42
 PORTREVISION=	1
@@ -8,6 +6,7 @@ MASTER_SITES=	http://zxid.org/
 
 MAINTAINER=	admins@perceptyx.com
 COMMENT=	Open Source IdM for the Masses - SAML SSO
+WWW=		http://zxid.org/
 
 LICENSE=	E2ETA
 LICENSE_NAME=	End2End Trust Architecture (e2eta) Software Copying

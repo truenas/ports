@@ -1,10 +1,12 @@
 PORTNAME=	teeworlds
 PORTVERSION=	0.7.5
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	games
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Platform game featuring buggers equipped with weapons
+WWW=		https://www.teeworlds.com/ \
+		https://github.com/teeworlds/teeworlds
 
 LICENSE=	ZLIB
 LICENSE_FILE=	${WRKSRC}/license.txt

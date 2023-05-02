@@ -1,13 +1,13 @@
-# Created by: FreeBSD GNOME Team
-
 PORTNAME=	mozo
-PORTVERSION=	1.26.0
+PORTVERSION=	1.26.1
+PORTREVISION=	1
 CATEGORIES=	deskutils mate
 MASTER_SITES=	MATE
 DIST_SUBDIR=	mate
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Editor for the freedesktop.org menu specification
+WWW=		https://mate-desktop.org/
 
 LICENSE=	LGPL20+
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,11 +1,12 @@
 PORTNAME=	deluge
 PORTVERSION=	2.0.3
-PORTREVISION=	1
+PORTREVISION=	5
 PORTEPOCH=	2
 CATEGORIES=	net-p2p python
 
 MAINTAINER=	rm@FreeBSD.org
 COMMENT=	Bittorrent client using Python, GTK3, and libtorrent-rasterbar
+WWW=		https://deluge-torrent.org/
 
 LICENSE=	GPLv3
 

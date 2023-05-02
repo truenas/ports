@@ -1,13 +1,12 @@
-# Created by: Jeremy Messenger <mezz@FreeBSD.org>
-
 PORTNAME=	gnome-tweaks
-PORTVERSION=	40.0
-PORTREVISION=	1
+PORTVERSION=	40.10
+PORTREVISION=	2
 CATEGORIES=	deskutils gnome
 MASTER_SITES=	GNOME/sources/${PORTNAME}/${PORTVERSION:C/^([0-9]+)\..*/\1/}
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Allows to tweak some hidden settings in GNOME3
+WWW=		https://gitlab.gnome.org/GNOME/gnome-tweaks
 
 LICENSE=	CC0-1.0 GPLv3+
 LICENSE_COMB=	multi

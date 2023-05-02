@@ -1,11 +1,12 @@
 PORTNAME=	python-axolotl
 PORTVERSION=	0.1.42
 CATEGORIES=	security python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	meka@tilda.center
 COMMENT=	Python port of libaxolotl-android
+WWW=		https://github.com/tgalal/python-axolotl
 
 LICENSE=	GPLv3
 

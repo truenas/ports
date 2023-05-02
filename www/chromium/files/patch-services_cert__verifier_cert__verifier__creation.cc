@@ -1,20 +1,28 @@
---- services/cert_verifier/cert_verifier_creation.cc.orig	2021-09-24 18:55:25 UTC
+--- services/cert_verifier/cert_verifier_creation.cc.orig	2023-04-05 11:05:06 UTC
 +++ services/cert_verifier/cert_verifier_creation.cc
-@@ -86,7 +86,7 @@ scoped_refptr<net::CertVerifyProc> CreateCertVerifyPro
- scoped_refptr<net::CertVerifyProc> CreateOldDefaultWithoutCaching(
-     scoped_refptr<net::CertNetFetcher> cert_net_fetcher) {
-   scoped_refptr<net::CertVerifyProc> verify_proc;
--#if defined(OS_FUCHSIA) || defined(OS_LINUX) || defined(OS_CHROMEOS)
-+#if defined(OS_FUCHSIA) || defined(OS_LINUX) || defined(OS_CHROMEOS) || defined(OS_BSD)
-   verify_proc =
-       net::CertVerifyProc::CreateBuiltinVerifyProc(std::move(cert_net_fetcher));
+@@ -12,7 +12,7 @@
+ #include "net/cert_net/cert_net_fetcher_url_request.h"
+ #include "net/net_buildflags.h"
+ 
+-#if BUILDFLAG(IS_FUCHSIA) || BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS)
++#if BUILDFLAG(IS_FUCHSIA) || BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_BSD)
+ #include "net/cert/cert_verify_proc_builtin.h"
+ #include "net/cert/internal/system_trust_store.h"
+ #endif
+@@ -89,7 +89,7 @@ class OldDefaultCertVerifyProcFactory : public net::Ce
+             user_slot_restriction_ ? crypto::ScopedPK11Slot(PK11_ReferenceSlot(
+                                          user_slot_restriction_.get()))
+                                    : nullptr));
+-#elif BUILDFLAG(IS_FUCHSIA) || BUILDFLAG(IS_LINUX)
++#elif BUILDFLAG(IS_FUCHSIA) || BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
+     verify_proc = net::CreateCertVerifyProcBuiltin(
+         std::move(cert_net_fetcher), net::CreateSslSystemTrustStore());
  #else
-@@ -103,7 +103,7 @@ scoped_refptr<net::CertVerifyProc> CreateOldDefaultWit
- scoped_refptr<net::CertVerifyProc> CreateNewDefaultWithoutCaching(
-     scoped_refptr<net::CertNetFetcher> cert_net_fetcher) {
-   scoped_refptr<net::CertVerifyProc> verify_proc;
--#if BUILDFLAG(CHROME_ROOT_STORE_SUPPORTED) && defined(OS_LINUX)
-+#if BUILDFLAG(CHROME_ROOT_STORE_SUPPORTED) && (defined(OS_LINUX) || defined(OS_BSD))
-   verify_proc = net::CreateCertVerifyProcBuiltin(
-       std::move(cert_net_fetcher), net::CreateSslSystemTrustStoreChromeRoot());
- #elif BUILDFLAG(BUILTIN_CERT_VERIFIER_FEATURE_SUPPORTED)
+@@ -226,6 +226,7 @@ std::unique_ptr<net::CertVerifierWithUpdatableProc> Cr
+ bool IsUsingCertNetFetcher() {
+ #if BUILDFLAG(IS_ANDROID) || BUILDFLAG(IS_FUCHSIA) ||      \
+     BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX) ||       \
++    BUILDFLAG(IS_BSD) ||                                   \
+     BUILDFLAG(TRIAL_COMPARISON_CERT_VERIFIER_SUPPORTED) || \
+     BUILDFLAG(CHROME_ROOT_STORE_SUPPORTED)
+   return true;

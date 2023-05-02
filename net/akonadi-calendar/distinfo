@@ -1,3 +1,3 @@
-TIMESTAMP = 1638570840
-SHA256 (KDE/release-service/21.12.0/akonadi-calendar-21.12.0.tar.xz) = 7a5df066f330b1dfdd290c579132f7e84d3f8cea941da4b2f6830b170ec07f4a
-SIZE (KDE/release-service/21.12.0/akonadi-calendar-21.12.0.tar.xz) = 352724
+TIMESTAMP = 1681548243
+SHA256 (KDE/release-service/23.04.0/akonadi-calendar-23.04.0.tar.xz) = ee58cf76e820af9c51d14121a4b2e4a171c6ef702655aaa111ac96aadb0e6cda
+SIZE (KDE/release-service/23.04.0/akonadi-calendar-23.04.0.tar.xz) = 411532

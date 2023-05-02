@@ -1,11 +1,13 @@
 PORTNAME=	pycodeexport
 DISTVERSION=	0.1.3
+PORTREVISION=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Python package for code generation
+WWW=		https://github.com/bjodah/pycodeexport
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

@@ -1,13 +1,13 @@
-# Created by: ijliao
-
 PORTNAME=	mechanize
-PORTVERSION=	0.4.7
+PORTVERSION=	0.4.8
+PORTREVISION=	1
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	lwhsu@FreeBSD.org
 COMMENT=	Stateful programmatic web browsing in Python
+WWW=		https://github.com/python-mechanize/mechanize
 
 LICENSE=	BSD3CLAUSE
 

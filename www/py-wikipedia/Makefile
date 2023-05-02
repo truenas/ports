@@ -1,13 +1,12 @@
-# Created by: Olivier Duchateau
-
 PORTNAME=	wikipedia
 PORTVERSION=	1.4.0
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	python@FreeBSD.org
 COMMENT=	Wikipedia API for Python
+WWW=		https://github.com/goldsmith/Wikipedia
 
 LICENSE=	MIT
 

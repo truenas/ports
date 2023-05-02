@@ -1,10 +1,12 @@
 PORTNAME=	bschaffl
-DISTVERSION=	1.4.8
+DISTVERSION=	1.4.10
+PORTREVISION=	1
 CATEGORIES=	audio
 PKGNAMESUFFIX=	-lv2
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Groove quantizer LV2 MIDI plugin
+WWW=		https://github.com/sjaehn/BSchaffl
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE

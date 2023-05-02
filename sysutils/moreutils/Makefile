@@ -1,13 +1,13 @@
-# Created by: Charlie Kester <corky1951@comcast.net>
-
 PORTNAME=	moreutils
-PORTVERSION=	0.66
+PORTVERSION=	0.67
+PORTREVISION=	2
 CATEGORIES=	sysutils
 MASTER_SITES=	https://git.joeyh.name/index.cgi/moreutils.git/snapshot/ \
 		LOCAL/sunpoet
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Additional Unix utilities
+WWW=		https://joeyh.name/code/moreutils/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -54,7 +54,7 @@ post-patch:
 
 post-build:
 .for man in ${PERL_MANPAGES:R}
-	${LOCALBASE}/bin/pod2man --center=" " --release="${PORTNAME}" ${WRKSRC}/${man} > ${WRKSRC}/${man}.1
+	${LOCALBASE}/bin/pod2man --center=moreutils --release=${PORTVERSION} ${WRKSRC}/${man} > ${WRKSRC}/${man}.1
 .endfor
 
 do-install:

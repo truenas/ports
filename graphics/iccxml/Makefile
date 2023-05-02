@@ -1,11 +1,13 @@
 PORTNAME=	iccxml
 PORTVERSION=	0.9.8
+PORTREVISION=	2
 CATEGORIES=	graphics
 MASTER_SITES=	SF/${PORTNAME}/IccXML-Src/${DISTNAME}
 DISTNAME=	IccXML-${PORTVERSION}
 
-MAINTAINER=	bsam@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Tools for reading and writing the ICC profile contents as XML files
+WWW=		http://iccxml.sourceforge.net/
 
 LIB_DEPENDS=	libSampleICC.so:graphics/sampleicc
 

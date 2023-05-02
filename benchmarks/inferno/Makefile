@@ -1,11 +1,12 @@
 PORTNAME=	inferno
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.10.7
+DISTVERSION=	0.11.15
 PORTREVISION=	3
 CATEGORIES=	benchmarks
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Stack trace visualizer, a Rust port of flamegraph
+WWW=		https://github.com/jonhoo/inferno
 
 LICENSE=	CDDL
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -16,125 +17,144 @@ USE_GITHUB=	yes
 GH_ACCOUNT=	jonhoo
 
 CARGO_CRATES=	adler32-1.2.0 \
-		ahash-0.7.4 \
-		ansi_term-0.11.0 \
-		ansi_term-0.12.1 \
-		arrayvec-0.4.12 \
-		assert_cmd-2.0.0 \
+		ahash-0.8.3 \
+		anes-0.1.6 \
+		arrayvec-0.7.2 \
+		assert_cmd-2.0.8 \
 		atty-0.2.14 \
-		autocfg-1.0.1 \
+		autocfg-1.1.0 \
 		bitflags-1.3.2 \
-		bstr-0.2.16 \
-		bumpalo-3.7.0 \
-		bytemuck-1.7.2 \
-		cast-0.2.7 \
+		bstr-1.2.0 \
+		bumpalo-3.12.0 \
+		bytemuck-1.13.0 \
+		cast-0.3.0 \
+		cc-1.0.79 \
 		cfg-if-1.0.0 \
-		clap-2.33.3 \
-		crc32fast-1.2.1 \
-		criterion-0.3.5 \
-		criterion-plot-0.4.4 \
-		crossbeam-channel-0.5.1 \
-		crossbeam-deque-0.8.1 \
-		crossbeam-epoch-0.9.5 \
-		crossbeam-utils-0.8.5 \
-		csv-1.1.6 \
-		csv-core-0.1.10 \
-		ctor-0.1.21 \
-		dashmap-4.0.2 \
-		diff-0.1.12 \
+		ciborium-0.2.0 \
+		ciborium-io-0.2.0 \
+		ciborium-ll-0.2.0 \
+		clap-3.2.23 \
+		clap-4.1.4 \
+		clap_derive-4.1.0 \
+		clap_lex-0.2.4 \
+		clap_lex-0.3.1 \
+		crc32fast-1.3.2 \
+		criterion-0.4.0 \
+		criterion-plot-0.5.0 \
+		crossbeam-channel-0.5.6 \
+		crossbeam-deque-0.8.2 \
+		crossbeam-epoch-0.9.13 \
+		crossbeam-utils-0.8.14 \
+		ctor-0.1.26 \
+		dashmap-5.4.0 \
+		diff-0.1.13 \
 		difflib-0.4.0 \
 		doc-comment-0.3.3 \
-		either-1.6.1 \
-		env_logger-0.9.0 \
-		getrandom-0.2.3 \
-		half-1.7.1 \
-		hashbrown-0.11.2 \
-		heck-0.3.3 \
+		either-1.8.1 \
+		env_logger-0.10.0 \
+		errno-0.2.8 \
+		errno-dragonfly-0.1.2 \
+		getrandom-0.2.8 \
+		half-1.8.2 \
+		hashbrown-0.12.3 \
+		heck-0.4.1 \
 		hermit-abi-0.1.19 \
-		indexmap-1.7.0 \
-		itertools-0.10.1 \
-		itoa-0.4.8 \
-		js-sys-0.3.53 \
+		hermit-abi-0.2.6 \
+		hermit-abi-0.3.1 \
+		indexmap-1.9.2 \
+		io-lifetimes-1.0.5 \
+		is-terminal-0.4.3 \
+		itertools-0.10.5 \
+		itoa-1.0.5 \
+		js-sys-0.3.61 \
 		lazy_static-1.4.0 \
-		libc-0.2.101 \
-		libflate-1.1.1 \
+		libc-0.2.139 \
+		libflate-1.2.0 \
 		libflate_lz77-1.1.0 \
-		log-0.4.14 \
+		linux-raw-sys-0.1.4 \
+		lock_api-0.4.9 \
+		log-0.4.17 \
 		maplit-1.0.2 \
-		memchr-2.4.1 \
-		memoffset-0.6.4 \
-		nodrop-0.1.14 \
-		num-format-0.4.0 \
-		num-traits-0.2.14 \
-		num_cpus-1.13.0 \
-		once_cell-1.8.0 \
+		memchr-2.5.0 \
+		memoffset-0.7.1 \
+		num-format-0.4.4 \
+		num-traits-0.2.15 \
+		num_cpus-1.15.0 \
+		once_cell-1.17.0 \
 		oorandom-11.1.3 \
-		output_vt100-0.1.2 \
-		plotters-0.3.1 \
-		plotters-backend-0.3.2 \
-		plotters-svg-0.3.1 \
-		ppv-lite86-0.2.10 \
-		predicates-2.0.2 \
-		predicates-core-1.0.2 \
-		predicates-tree-1.0.3 \
-		pretty_assertions-0.7.2 \
+		os_str_bytes-6.4.1 \
+		output_vt100-0.1.3 \
+		parking_lot_core-0.9.7 \
+		plotters-0.3.4 \
+		plotters-backend-0.3.4 \
+		plotters-svg-0.3.3 \
+		ppv-lite86-0.2.17 \
+		predicates-2.1.5 \
+		predicates-core-1.0.5 \
+		predicates-tree-1.0.7 \
+		pretty_assertions-1.3.0 \
 		proc-macro-error-1.0.4 \
 		proc-macro-error-attr-1.0.4 \
-		proc-macro2-1.0.29 \
-		quick-xml-0.22.0 \
-		quote-1.0.9 \
-		rand-0.8.4 \
+		proc-macro2-1.0.51 \
+		quick-xml-0.26.0 \
+		quote-1.0.23 \
+		rand-0.8.5 \
 		rand_chacha-0.3.1 \
-		rand_core-0.6.3 \
-		rand_hc-0.3.1 \
-		rayon-1.5.1 \
-		rayon-core-1.9.1 \
-		regex-1.5.4 \
+		rand_core-0.6.4 \
+		rayon-1.6.1 \
+		rayon-core-1.10.2 \
+		redox_syscall-0.2.16 \
+		regex-1.7.1 \
 		regex-automata-0.1.10 \
-		regex-syntax-0.6.25 \
-		rgb-0.8.27 \
-		rle-decode-fast-1.0.1 \
-		rustc_version-0.4.0 \
-		ryu-1.0.5 \
+		regex-syntax-0.6.28 \
+		rgb-0.8.35 \
+		rle-decode-fast-1.0.3 \
+		rustix-0.36.8 \
+		ryu-1.0.12 \
 		same-file-1.0.6 \
 		scopeguard-1.1.0 \
-		semver-1.0.4 \
-		serde-1.0.130 \
-		serde_cbor-0.11.2 \
-		serde_derive-1.0.130 \
-		serde_json-1.0.67 \
+		serde-1.0.152 \
+		serde_derive-1.0.152 \
+		serde_json-1.0.93 \
+		smallvec-1.10.0 \
 		str_stack-0.1.0 \
-		strsim-0.8.0 \
-		structopt-0.3.23 \
-		structopt-derive-0.4.16 \
-		syn-1.0.75 \
+		strsim-0.10.0 \
+		syn-1.0.107 \
+		termcolor-1.2.0 \
+		termtree-0.4.0 \
 		testing_logger-0.1.1 \
-		textwrap-0.11.0 \
+		textwrap-0.16.0 \
 		tinytemplate-1.2.1 \
-		treeline-0.1.0 \
-		unicode-segmentation-1.8.0 \
-		unicode-width-0.1.8 \
-		unicode-xid-0.2.2 \
-		vec_map-0.8.2 \
-		version_check-0.9.3 \
+		unicode-ident-1.0.6 \
+		version_check-0.9.4 \
 		wait-timeout-0.2.0 \
 		walkdir-2.3.2 \
-		wasi-0.10.2+wasi-snapshot-preview1 \
-		wasm-bindgen-0.2.76 \
-		wasm-bindgen-backend-0.2.76 \
-		wasm-bindgen-macro-0.2.76 \
-		wasm-bindgen-macro-support-0.2.76 \
-		wasm-bindgen-shared-0.2.76 \
-		web-sys-0.3.53 \
+		wasi-0.11.0+wasi-snapshot-preview1 \
+		wasm-bindgen-0.2.84 \
+		wasm-bindgen-backend-0.2.84 \
+		wasm-bindgen-macro-0.2.84 \
+		wasm-bindgen-macro-support-0.2.84 \
+		wasm-bindgen-shared-0.2.84 \
+		web-sys-0.3.61 \
 		winapi-0.3.9 \
 		winapi-i686-pc-windows-gnu-0.4.0 \
 		winapi-util-0.1.5 \
-		winapi-x86_64-pc-windows-gnu-0.4.0
-
+		winapi-x86_64-pc-windows-gnu-0.4.0 \
+		windows-sys-0.45.0 \
+		windows-targets-0.42.1 \
+		windows_aarch64_gnullvm-0.42.1 \
+		windows_aarch64_msvc-0.42.1 \
+		windows_i686_gnu-0.42.1 \
+		windows_i686_msvc-0.42.1 \
+		windows_x86_64_gnu-0.42.1 \
+		windows_x86_64_gnullvm-0.42.1 \
+		windows_x86_64_msvc-0.42.1 \
+		yansi-0.5.1
 EXECUTABLES=	inferno-collapse-dtrace \
 		inferno-collapse-guess \
 		inferno-collapse-perf \
 		inferno-collapse-sample \
+		inferno-collapse-vsprof \
 		inferno-collapse-vtune \
 		inferno-diff-folded \
 		inferno-flamegraph

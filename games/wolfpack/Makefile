@@ -1,13 +1,12 @@
-# Created by: Daniel O'Connor <darius@dons.net.au>
-
 PORTNAME=	wolfpack
 PORTVERSION=	4.4.1
 CATEGORIES=	games
 MASTER_SITES=	SF/empserver/${DISTNAME}
 DISTNAME=	empire-${PORTVERSION}
 
-MAINTAINER=	nc@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Long term multiplayer strategy game
+WWW=		http://www.wolfpackempire.com/
 
 LICENSE=	GPLv3+
 

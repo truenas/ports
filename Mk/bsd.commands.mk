@@ -1,6 +1,5 @@
 # bsd.commands.mk - Common commands used within the ports infrastructure
 #
-# Created by: Gabor Kovesdan <gabor@FreeBSD.org>
 #
 # DO NOT COMMIT CHANGES TO THIS FILE BY YOURSELF, EVEN IF YOU DID NOT GET
 # A RESPONSE FROM THE MAINTAINER(S) WITHIN A REASONABLE TIMEFRAME! ALL
@@ -34,6 +33,7 @@ DIALOG4PORTS?=		${LOCALBASE}/bin/dialog4ports
 DIFF?=			/usr/bin/diff
 DIRNAME?=		/usr/bin/dirname
 EGREP?=			/usr/bin/egrep
+ELFCTL?=		/usr/bin/elfctl
 EXPR?=			/bin/expr
 FALSE?=			false	# Shell builtin
 FILE?=			/usr/bin/file
@@ -64,6 +64,7 @@ MOUNT_DEVFS?=		${MOUNT} -t devfs devfs
 # a make target
 MOUNT_NULLFS?=		/sbin/mount_nullfs
 MV?=			/bin/mv
+NPROC?=			/bin/nproc
 OBJCOPY?=		/usr/bin/objcopy
 OBJDUMP?=		/usr/bin/objdump
 PASTE?=			/usr/bin/paste

@@ -1,14 +1,14 @@
-# Created by: freebsd-ports@evilcode.net
-
 PORTNAME=	mediainfo
-PORTVERSION=	21.09
+PORTVERSION=	23.03
 CATEGORIES=	multimedia
-MASTER_SITES=	https://mediaarea.net/download/binary/${PORTNAME}/${PORTVERSION}/ \
+MASTER_SITES=	https://mediaarea.net/download/binary/mediainfo/${PORTVERSION}/ \
 		LOCAL/sunpoet
 DISTNAME=	MediaInfo_CLI_${PORTVERSION}_GNU_FromSource
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Provides technical and tag information for video and audio files
+WWW=		https://mediaarea.net/en/MediaInfo \
+		https://github.com/MediaArea/MediaInfo
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/../../../License.html
@@ -19,7 +19,6 @@ LIB_DEPENDS=	libmediainfo.so:multimedia/libmediainfo \
 USES=		compiler:c++11-lang cpe libtool pathfix pkgconfig tar:xz
 
 GNU_CONFIGURE=	yes
-USE_CXXSTD=	c++11
 USE_LDCONFIG=	yes
 
 PLIST_FILES=	bin/mediainfo

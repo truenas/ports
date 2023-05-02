@@ -1,5 +1,3 @@
-# Created by: Motomichi Matsuzaki <mzaki@biol.s.u-tokyo.ac.jp>
-
 PORTNAME=	phred
 PORTVERSION=	0.020425.c
 CATEGORIES=	biology
@@ -9,6 +7,7 @@ EXTRACT_SUFX=	.tar.Z
 
 MAINTAINER=	mzaki@m.u-tokyo.ac.jp
 COMMENT=	Base calling and quality value assignment on DNA sequencing
+WWW=		http://www.phrap.org/phredphrapconsed.html
 
 # Converted from RESTRICTED
 LICENSE=	PHRED

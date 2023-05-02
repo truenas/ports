@@ -1,13 +1,12 @@
-# Created by: Robert Kruus <rob.kruus@gmail.com>
-
 PORTNAME=	pyodbc
-PORTVERSION=	4.0.30
+PORTVERSION=	4.0.32
 CATEGORIES=	databases python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	rob.kruus@gmail.com
 COMMENT=	ODBC connections for python
+WWW=		https://github.com/mkleehammer/pyodbc
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

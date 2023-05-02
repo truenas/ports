@@ -5,6 +5,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	mfechner@FreeBSD.org
 COMMENT=	Port rbnacl with bundled libsodium
+WWW=		https://github.com/cryptosphere/rbnacl-libsodium
 
 LICENSE=	MIT
 
@@ -12,7 +13,6 @@ RUN_DEPENDS=	rubygem-rbnacl>=3.0.1:security/rubygem-rbnacl
 
 USES=		gem libtool
 USE_LDCONFIG=	yes
-USE_RUBY=	yes
 
 post-install:
 	( cd ${WRKSRC} && \

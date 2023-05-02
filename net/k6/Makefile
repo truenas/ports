@@ -1,10 +1,12 @@
 PORTNAME=	k6
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.34.1
+DISTVERSION=	0.43.1
+PORTREVISION=	1
 CATEGORIES=	net
 
 MAINTAINER=	lcook@FreeBSD.org
 COMMENT=	Modern load testing tool, using Go and Javascript
+WWW=		https://k6.io/
 
 LICENSE=	AGPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE.md
@@ -12,7 +14,7 @@ LICENSE_FILE=	${WRKSRC}/LICENSE.md
 USES=		go:modules
 
 _BUILD_DATE=	$$(date -u +"%FT%T%z")
-_BUILD_HASH=	0628db0	
+_BUILD_HASH=	af3a0b8
 
 GO_MODULE=	github.com/grafana/${PORTNAME}
 GO_BUILDFLAGS=	-ldflags "\
@@ -21,7 +23,7 @@ GO_BUILDFLAGS=	-ldflags "\
 
 PLIST_FILES=	bin/${PORTNAME}
 _DOCS=		release\ notes/\${DISTVERSIONFULL}.md CODE_OF_CONDUCT.md \
-		CONTRIBUTING.md README.md SUPPORT.md
+		CONTRIBUTING.md README.md SECURITY.md SUPPORT.md
 PORTDOCS=	${_DOCS:T}
 
 OPTIONS_DEFINE=	DOCS

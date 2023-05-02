@@ -1,11 +1,12 @@
 PORTNAME=	CsoundQt
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.9.8.1
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	audio
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Csound frontend with editor, integrated help, widgets, other features
+WWW=		https://csoundqt.github.io/
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/lgpl-2.1.txt
@@ -14,7 +15,7 @@ LIB_DEPENDS=	libcsound64.so:audio/csound
 
 USES=		compiler:c++11-lib desktop-file-utils gl gmake qmake qt:5 shared-mime-info
 USE_GITHUB=	yes
-USE_QT=		concurrent core declarative gui network printsupport webchannel webkit widgets xml buildtools_build
+USE_QT=		concurrent core declarative gui network printsupport webchannel webkit widgets xml buildtools:build
 USE_GL=		gl
 
 QMAKE_ARGS=	CONFIG+="CSOUND_API_INCLUDE_DIR=${LOCALBASE}/include/csound CSOUND_LIBRARY_DIR=${LOCALBASE}/lib build64" \

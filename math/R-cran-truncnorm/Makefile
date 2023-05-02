@@ -1,13 +1,12 @@
-# Created by: Pedro Giffuni
-
 PORTNAME=	truncnorm
-PORTREVISION=	5
+PORTREVISION=	6
 DISTVERSION=	1.0-8
 CATEGORIES=	math
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
-MAINTAINER=	pfg@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Truncated normal distribution
+WWW=		https://cran.r-project.org/package=truncnorm
 
 LICENSE=	GPLv2
 

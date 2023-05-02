@@ -1,12 +1,15 @@
-# Created by: Jason Helfman <jgh@FreeBSD.org>
-
 PORTNAME=	virt-viewer
 PORTVERSION=	11.0
+PORTREVISION=	4
 CATEGORIES=	net-mgmt
 MASTER_SITES=	https://virt-manager.org/download/sources/${PORTNAME}/
 
+PATCH_SITES=	https://gitlab.com/${PORTNAME}/${PORTNAME}/-/commit/
+PATCHFILES+=	41cc016278e7.patch:-p1 # https://gitlab.com/virt-viewer/virt-viewer/-/merge_requests/117
+
 MAINTAINER=	novel@FreeBSD.org
 COMMENT=	Provides a graphical viewer for a guest OS display
+WWW=		https://virt-manager.org/
 
 LICENSE=	GPLv2
 
@@ -17,6 +20,7 @@ CPE_VENDOR=	redhat
 USE_GNOME=	gtk30 libxml2
 USE_PERL5=	build # pod2man
 USE_XORG=	xorgproto
+MESON_ARGS=	-Dbash_completion=disabled -Dovirt=disabled
 BINARY_ALIAS=	python3=${PYTHON_CMD}
 
 OPTIONS_DEFINE=	SPICE VNC LIBVIRT VTE

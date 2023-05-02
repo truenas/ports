@@ -1,10 +1,11 @@
 PORTNAME=	diamond
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2.0.13
+DISTVERSION=	2.1.6
 CATEGORIES=	biology
 
 MAINTAINER=	jrm@FreeBSD.org
 COMMENT=	BLAST-compatible local sequence aligner
+WWW=		http://ab.inf.uni-tuebingen.de/software/diamond/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE

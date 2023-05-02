@@ -1,17 +1,18 @@
-# Created by: chinsan
-
 PORTNAME=	sakura
-PORTVERSION=	3.8.4
+PORTVERSION=	3.8.6
+PORTREVISION=	1
 CATEGORIES=	x11 gnome
-MASTER_SITES=	http://launchpadlibrarian.net/564547954/
+MASTER_SITES=	http://launchpadlibrarian.net/633211415/
 
 MAINTAINER=	danilo@FreeBSD.org
 COMMENT=	Terminal emulator based on GTK and VTE
+WWW=		https://launchpad.net/sakura
 
 LICENSE=	GPLv2
 
 LIB_DEPENDS=	libgnutls.so:security/gnutls \
-		libpcre2-8.so:devel/pcre2
+		libpcre2-8.so:devel/pcre2 \
+		libharfbuzz.so:print/harfbuzz
 
 USES=		cmake gnome pkgconfig gettext perl5 tar:bz2 xorg
 

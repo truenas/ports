@@ -1,8 +1,6 @@
-# Created by: Emanuel Haupt <ehaupt@FreeBSD.org>
-
 PORTNAME=	stymulator
-DISTVERSION=	0.21a
-PORTREVISION=	3
+PORTVERSION=	0.21a
+PORTREVISION=	4
 CATEGORIES=	audio
 MASTER_SITES=	http://atariarea.krap.pl/stymulator/files/ \
 		LOCAL/ehaupt
@@ -10,6 +8,7 @@ DISTNAME=	STYMulator-${DISTVERSION}
 
 MAINTAINER=	ehaupt@FreeBSD.org
 COMMENT=	Command-line Yamaha YM2149 (.ym) chiptune player
+WWW=		http://atariarea.krap.pl/stymulator/
 
 LICENSE=	GPLv2
 

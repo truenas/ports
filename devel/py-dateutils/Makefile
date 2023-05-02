@@ -1,13 +1,12 @@
-# Created by: Mark Felder <feld@FreeBSD.org>
-
 PORTNAME=	dateutils
 PORTVERSION=	0.6.12
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Various utilities for working with date and datetime objects
+WWW=		https://github.com/jmcantrell/python-dateutils
 
 LICENSE=	BSD0CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -17,6 +16,8 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}dateutil>=0:devel/py-dateutil@${PY_FLAVOR} \
 
 USES=		python:3.6+
 USE_PYTHON=	autoplist concurrent distutils
+
+CONFLICTS_INSTALL=	dateutils
 
 NO_ARCH=	yes
 

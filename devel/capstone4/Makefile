@@ -5,9 +5,12 @@ PKGNAMESUFFIX=	4
 
 MAINTAINER=	oleksii.tsai@gmail.com
 COMMENT=	Multi-platform, multi-architecture disassembly framework
+WWW=		http://capstone-engine.org/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.TXT
+
+CONFLICTS=	capstone
 
 USES=		cpe gmake
 CPE_VENDOR=	${PORTNAME}-engine

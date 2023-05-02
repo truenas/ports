@@ -1,11 +1,12 @@
 PORTNAME=	loganalyzer
-PORTVERSION=	4.1.12
+PORTVERSION=	4.1.13
 CATEGORIES=	sysutils www
 MASTER_SITES=	http://download.adiscon.com/loganalyzer/
 PKGNAMESUFFIX=	${PHP_PKGNAMESUFFIX}
 
 MAINTAINER=	dinoex@FreeBSD.org
 COMMENT=	Web Syslog and IT Event Viewer
+WWW=		https://loganalyzer.adiscon.com/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING

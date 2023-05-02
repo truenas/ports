@@ -1,13 +1,13 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	tobler
-PORTVERSION=	0.8.2
+PORTVERSION=	0.9.0
+PORTREVISION=	2
 CATEGORIES=	science python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Areal Interpolation
+WWW=		https://pysal.org/tobler/
 
 LICENSE=	BSD3CLAUSE
 
@@ -22,7 +22,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}geopandas>=0:graphics/py-geopandas@${PY_FLAV
 		${PYTHON_PKGNAMEPREFIX}statsmodels>=0:math/py-statsmodels@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}tqdm>=0:misc/py-tqdm@${PY_FLAVOR}
 
-USES=		python:3.7+
+USES=		python:3.8+
 USE_PYTHON=	autoplist concurrent distutils
 
 NO_ARCH=	yes

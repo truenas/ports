@@ -1,12 +1,11 @@
-# Created by: Richard Gallamore <ultima@FreeBSD.org>
-
 PORTNAME=	django-constance
-PORTVERSION=	2.8.0
+PORTVERSION=	2.9.1
 CATEGORIES=	www python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ultima@FreeBSD.org
 COMMENT=	Dynamic Django settings
+WWW=		https://github.com/jazzband/django-constance
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -14,9 +13,9 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}redis>=0:databases/py-redis@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}coverage>=0:devel/py-coverage@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}django-picklefield>=0:www/py-django-picklefield@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}django22>=1.8:www/py-django22@${PY_FLAVOR}
+		${PYTHON_PKGNAMEPREFIX}django32>=1.8:www/py-django32@${PY_FLAVOR}
 
-USES=		python:3.6+
+USES=		python:3.7+
 USE_PYTHON=	autoplist distutils
 NO_ARCH=	yes
 USE_GITHUB=	yes

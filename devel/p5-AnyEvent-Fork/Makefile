@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	AnyEvent-Fork
-PORTVERSION=	1.31
+PORTVERSION=	1.32
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Create new worker processes like fork()
+WWW=		https://metacpan.org/dist/AnyEvent-Fork
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

@@ -1,12 +1,11 @@
 bin/itinerary
 lib/libSolidExtras.so
+%%QT_PLUGINDIR%%/kf5/thumbcreator/itinerarythumbnail.so
 %%QT_QMLDIR%%/org/kde/solidextras/libsolidextrasqmlplugin.so
-%%QT_PLUGINDIR%%/itinerarythumbnail.so
 %%QT_QMLDIR%%/org/kde/solidextras/qmldir
 share/applications/org.kde.itinerary.desktop
 share/icons/hicolor/scalable/apps/org.kde.itinerary.svg
 share/knotifications5/itinerary.notifyrc
-share/kservices5/itinerarythumbnail.desktop
 share/locale/ca/LC_MESSAGES/kde-itinerary.mo
 share/locale/ca@valencia/LC_MESSAGES/kde-itinerary.mo
 share/locale/cs/LC_MESSAGES/kde-itinerary.mo
@@ -21,6 +20,7 @@ share/locale/gl/LC_MESSAGES/kde-itinerary.mo
 share/locale/ia/LC_MESSAGES/kde-itinerary.mo
 share/locale/it/LC_MESSAGES/kde-itinerary.mo
 share/locale/ja/LC_MESSAGES/kde-itinerary.mo
+share/locale/ka/LC_MESSAGES/kde-itinerary.mo
 share/locale/ko/LC_MESSAGES/kde-itinerary.mo
 share/locale/lt/LC_MESSAGES/kde-itinerary.mo
 share/locale/nl/LC_MESSAGES/kde-itinerary.mo

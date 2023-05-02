@@ -1,5 +1,3 @@
-# Created by: Bob Hockney <zeus@ix.netcom.com>
-
 PORTNAME=	webfwlog
 PORTVERSION=	1.1.1
 CATEGORIES=	security
@@ -8,6 +6,7 @@ MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/ \
 
 MAINTAINER=	zeus@ix.netcom.com
 COMMENT=	Web-based firewall log analyzer
+WWW=		http://www.webfwlog.net/
 
 LICENSE=	GPLv2
 
@@ -80,8 +79,10 @@ PLIST_SUB+=	WWWGRP=${WWWGRP}
 
 .if ${PORT_OPTIONS:MMYSQLIPV6}
 USES+=	mysql:server,client
+IGNORE_WITH_MYSQL=	80
 .elif ${PORT_OPTIONS:MMYSQL}
 USES+=	mysql:client
+IGNORE_WITH_MYSQL=	80
 .endif
 
 do-install:

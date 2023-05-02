@@ -1,10 +1,11 @@
 PORTNAME=	libretro-fbalpha
-PORTVERSION=	0.20200504
+PORTVERSION=	0.20220405
 PORTREVISION=	1
 CATEGORIES=	games
 
-MAINTAINER=	menelkir@itroll.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Final Burn Alpha port for libretro
+WWW=		https://github.com/libretro/libretro-fbalpha
 
 # Commercial users must seek permission from copyright holders.
 LICENSE=	FBA
@@ -21,7 +22,7 @@ PLIST_FILES=	lib/libretro/fbalpha_libretro.so
 USE_GITHUB=	yes
 GH_ACCOUNT=	libretro
 GH_PROJECT=	fbalpha
-GH_TAGNAME=	84eb9d9
+GH_TAGNAME=	d584c83
 
 MAKEFILE=	Makefile.freebsd
 

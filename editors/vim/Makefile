@@ -1,12 +1,11 @@
-# Created by: David O'Brien <obrien@cs.ucdavis.edu>
-
 PORTNAME=	vim
-PORTVERSION=	8.2.3745
+PORTVERSION=	9.0.1441
 DISTVERSIONPREFIX=	v
 CATEGORIES=	editors
 
 MAINTAINER=	adamw@FreeBSD.org
 COMMENT=	Improved version of the vi editor (${FLAVOR:U} flavor)
+WWW=		https://www.vim.org/
 
 LICENSE=	VIM
 LICENSE_NAME=	VIM License
@@ -37,13 +36,17 @@ VIM_VER=	${PORTNAME}${PORTVERSION:R:S|.||g}
 # Flavors {{{1
 # FLAVORS are used to build various Vim GUIs. The default flavor (`vim') is
 # console-only.
-FLAVORS=	console athena gtk2 gtk3 motif tiny
+FLAVORS=	console gtk2 gtk3 motif x11 tiny
 FLAVOR?=	${FLAVORS:[1]}
 # Register conflicts with all other flavors
 CONFLICTS_INSTALL=	${FLAVORS:N${FLAVOR}:S/^/vim-/}
 
 .for f in ${FLAVORS:Nconsole}
 ${f}_PKGNAMESUFFIX=	-${f}
+.endfor
+
+.for f in ${FLAVORS:Ntiny}
+${f}_CONFLICTS_INSTALL=	xxd
 .endfor
 
 # GUI flavors
@@ -56,13 +59,6 @@ PLIST_SUB+=	GUI="@comment " DESKTOP="@comment "
 GUI=		no
 CONFIGURE_ARGS+=--without-x
 PLIST=		${.CURDIR}/pkg-plist-tiny
-
-.elif ${FLAVOR:U} == athena
-GUI=		athena
-CONFIGURE_ARGS+=--enable-xim --enable-fontset
-PLIST_SUB+=	GUI="" DESKTOP="@comment "
-USES+=		xorg
-USE_XORG+=	ice sm x11 xaw xmu xpm xt
 
 .elif ${FLAVOR:U} == gtk2
 GUI=		gtk2
@@ -87,38 +83,40 @@ CONFIGURE_ENV+=	MOTIFHOME=${LOCALBASE}
 PLIST_SUB+=	GUI="" DESKTOP="@comment "
 USES+=		motif xorg
 USE_XORG=	ice sm x11 xmu xt
+
+.elif ${FLAVOR:U} == x11
+GUI=		x11
+CONFIGURE_ARGS+=--with-x
+PLIST_SUB+=	GUI="@comment " DESKTOP="@comment "
+USES+=		xorg
+USE_XORG=	ice sm x11 xmu xpm xt
 .endif
 
 # Options {{{1
 # The bulk of the OPTIONS are for normal (non-tiny) vim
 ### Make sure any new options are excluded below in CONSOLE/TINY
-OPTIONS_DEFAULT=	CTAGS_BASE DEFAULT_VIMRC PYTHON
-OPTIONS_DEFINE=		DEFAULT_VIMRC MAKE_JOBS NLS XTERM_SAVE
+OPTIONS_DEFAULT=	CTAGS_BASE PYTHON
+OPTIONS_DEFINE=		MAKE_JOBS NLS XTERM_SAVE
 OPTIONS_SINGLE=		CTAGS
 OPTIONS_SINGLE_CTAGS=	CTAGS_BASE CTAGS_EXUBERANT CTAGS_UNIVERSAL
 OPTIONS_GROUP=		LANGBIND
 OPTIONS_GROUP_LANGBIND=	LUA PERL PYTHON RUBY SCHEME TCL
 OPTIONS_SUB=		yes
 
-# vim-tiny excludes everything except CONSOLE, DEFAULT_VIMRC, MAKE_JOBS
+# vim-tiny excludes everything except CONSOLE, MAKE_JOBS
 .if ${FLAVOR:U} == tiny
-OPTIONS_EXCLUDE:=	${OPTIONS_DEFINE:NDEFAULT_VIMRC:NMAKE_JOBS} \
+OPTIONS_EXCLUDE:=	${OPTIONS_DEFINE:NMAKE_JOBS} \
 			${OPTIONS_SINGLE_UI:NCONSOLE} \
 			${OPTIONS_GROUP_LANGBIND} \
 			${OPTIONS_SINGLE_CTAGS}
 .endif
 
-DEFAULT_VIMRC_DESC=	Install bundled vimrc as default setting
 MAKE_JOBS_DESC=		Enable parallel build
 XTERM_SAVE_DESC=	Restore xterm screen after exit
 
 CTAGS_BASE_DESC=	Use system ctags
 CTAGS_EXUBERANT_DESC=	Use exctags instead of ctags
 CTAGS_UNIVERSAL_DESC=	Use uctags instead of ctags
-
-# BROKEN: ruby.h: error: wrong number of arguments specified for 'deprecated' attribute
-OPTIONS_EXCLUDE_powerpc64=	RUBY
-OPTIONS_EXCLUDE_powerpc64le=	RUBY
 
 # GENERAL OPTIONS
 CTAGS_EXUBERANT_RUN_DEPENDS=	exctags:devel/ctags
@@ -145,7 +143,7 @@ PYTHON_CONFIGURE_ENABLE=	python3interp
 PYTHON_CONFIGURE_WITH=	python3-command=${PYTHON_CMD}
 
 RUBY_CONFIGURE_ENABLE=	rubyinterp
-RUBY_USE=		RUBY=yes
+RUBY_USES=		ruby
 
 SCHEME_DESC=		MzScheme (Racket) bindings
 SCHEME_CONFIGURE_ENABLE=mzschemeinterp
@@ -167,8 +165,7 @@ post-extract:
 	${INSTALL_DATA} ${FILESDIR}/vietnamese_viscii.vim ${WRKSRC}/runtime/keymap
 
 post-patch:
-	${ECHO_CMD} '#define SYS_VIMRC_FILE "'${ETCDIR}'/vimrc"' >> ${WRKSRC}/src/feature.h
-	${ECHO_CMD} '#define SYS_GVIMRC_FILE "'${ETCDIR}'/gvimrc"' >> ${WRKSRC}/src/feature.h
+	${REINPLACE_CMD} -e 's|%%ETCDIR%%|${ETCDIR}|' ${WRKSRC}/src/feature.h
 	${REINPLACE_CMD} -e 's|-liconv|${ICONV_LIB}|g; s|/usr/local|${LOCALBASE}|g' \
 		${WRKSRC}/src/auto/configure
 
@@ -176,19 +173,20 @@ post-configure:
 # Needed when devel/libsysinfo is installed:
 	${REINPLACE_CMD} -e '/^#define HAVE_SYSINFO/ d' ${WRKSRC}/src/auto/config.h
 
-post-install-DEFAULT_VIMRC-on:
-	${MKDIR} ${STAGEDIR}${ETCDIR}
-	${INSTALL_DATA} ${FILESDIR}/vimrc ${STAGEDIR}${ETCDIR}/vimrc.sample
+do-test:
+	${DO_MAKE_BUILD} -C ${WRKSRC} test
 
 .if ${FLAVOR:U} == tiny
 do-install:
 	${MKDIR} ${STAGEDIR}${DATADIR}/${VIM_VER}
 	${INSTALL_PROGRAM} ${WRKSRC}/src/vim ${STAGEDIR}${PREFIX}/bin
-	${TOUCH} ${STAGEDIR}${DATADIR}/${VIM_VER}/defaults.vim
+	${INSTALL_DATA} ${WRKSRC}/runtime/defaults.vim ${STAGEDIR}${DATADIR}/${VIM_VER}
+	${INSTALL_DATA} ${FILESDIR}/defaults_freebsd.vim ${STAGEDIR}${DATADIR}/${VIM_VER}
 	${INSTALL_MAN} ${WRKSRC}/runtime/doc/vim.1 ${STAGEDIR}${MAN1PREFIX}/man/man1
 
 .else  # flavor != tiny
 post-install:
+	${INSTALL_DATA} ${FILESDIR}/defaults_freebsd.vim ${STAGEDIR}${DATADIR}/${VIM_VER}
 	${RM} ${STAGEDIR}${PREFIX}/bin/ex
 	${RM} ${STAGEDIR}${PREFIX}/bin/view
 .  for F in eview evim gview gvim gvimdiff rgview rgvim rview rvim vimdiff

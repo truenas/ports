@@ -1,10 +1,12 @@
 PORTNAME=	flopc++
 DISTVERSION=	1.2.5.20200527
+PORTREVISION=	1
 CATEGORIES=	math
 PKGNAMEPREFIX=	coin-or-
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Library for solving Linear Optimization Problems in C++
+WWW=		https://projects.coin-or.org/FlopC++
 
 LICENSE=	EPL
 LICENSE_FILE=	${WRKSRC}/LICENSE

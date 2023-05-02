@@ -1,6 +1,6 @@
 PORTNAME=	osticket
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.15.4
+DISTVERSION=	1.17.3
 CATEGORIES=	www
 MASTER_SITES=	https://github.com/osTicket/osTicket/releases/download/v${DISTVERSION}/
 PKGNAMESUFFIX=	${PHP_PKGNAMESUFFIX}
@@ -8,6 +8,7 @@ DISTNAME=	osTicket-v${DISTVERSION}
 
 MAINTAINER=	otis@FreeBSD.org
 COMMENT=	Widely-used open source support ticket system
+WWW=		https://osticket.com/
 
 LICENSE=	GPLv2
 
@@ -15,7 +16,9 @@ RUN_DEPENDS=	${LOCALBASE}/lib/php/${PHP_EXT_DIR}/apcu.so:devel/pecl-APCu@${PHP_F
 
 USES=		cpe php:web zip
 CPE_VENDOR=	enhancesoft
-USE_PHP=	gd gettext imap json mbstring mysqli xml
+USE_PHP=	ctype curl dom fileinfo filter gd gettext iconv imap intl \
+		mbstring mysqli opcache phar session xml zip
+IGNORE_WITH_PHP=	82
 NO_ARCH=	yes
 NO_BUILD=	yes
 SUB_FILES=	pkg-message

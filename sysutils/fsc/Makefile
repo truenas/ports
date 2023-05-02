@@ -1,11 +1,10 @@
-# Created by: Tom Rhodes <trhodes@FreeBSD.org>
-
 PORTNAME=	fsc
 PORTVERSION=	1.2
 CATEGORIES=	sysutils
 
 MAINTAINER=	samm@FreeBSD.org
 COMMENT=	FreeBSD Services Control family of utilities
+WWW=		https://github.com/bsdtrhodes/freebsd-fscd/
 
 LICENSE=	BSD2CLAUSE
 

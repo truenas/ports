@@ -1,8 +1,7 @@
-# Created by: petef@FreeBSD.org
-
 PORTNAME=	eboard
 PORTVERSION=	1.1.3
 DISTVERSIONPREFIX=	v
+PORTREVISION=	1
 CATEGORIES=	games
 MASTER_SITES=	SF/${PORTNAME}/eboard-extras/pack%201%20patchlevel%202/:p1 \
 		SF/${PORTNAME}/eboard-extras/pack%202/:p2
@@ -13,6 +12,7 @@ EXTRACT_ONLY=	${DISTNAME}${EXTRACT_SUFX}
 
 MAINTAINER=	rhurlin@FreeBSD.org
 COMMENT=	GTK+ chess board interface (mainly for FICS and chessd)
+WWW=		https://www.bergo.eng.br/eboard/
 
 LICENSE=	GPLv2
 
@@ -20,11 +20,10 @@ LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig \
 		libfreetype.so:print/freetype2 \
 		libpng.so:graphics/png
 
-USES=		compiler:c++11-lang gnome perl5 pkgconfig shebangfix tar:bzip2
+USES=		compiler:c++11-lang gnome gstreamer perl5 pkgconfig shebangfix tar:bzip2
 USE_GITHUB=	yes
 GH_ACCOUNT=	fbergo
 USE_GNOME=	cairo gdkpixbuf2 gtk20
-USE_GSTREAMER1=	yes
 USE_PERL5=	build
 
 SHEBANG_FILES=	configure

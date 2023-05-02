@@ -1,13 +1,16 @@
-# Created by: Adam Weinberger <adamw@FreeBSD.org>
-
 PORTNAME=	devhelp
 PORTVERSION=	41.2
+PORTREVISION=	1
 CATEGORIES=	devel gnome
 MASTER_SITES=	GNOME/sources/${PORTNAME}/${PORTVERSION:C/^([0-9]+)\..*/\1/}
 DIST_SUBDIR=	gnome
 
+PATCH_SITES=	https://gitlab.gnome.org/GNOME/${PORTNAME}/-/commit/
+PATCHFILES+=	f1c27fd4eaa5.patch:-p1 # https://gitlab.gnome.org/GNOME/devhelp/-/merge_requests/42
+
 MAINTAINER=	gnome@FreeBSD.org
-COMMENT=	Developer help browser for GNOME 3
+COMMENT=	Developer help browser for GNOME
+WWW=		https://wiki.gnome.org/Apps/Devhelp
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSES/GPL-3.0-or-later.txt

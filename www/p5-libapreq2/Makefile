@@ -7,6 +7,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	pi@FreeBSD.org
 COMMENT=	Perl binding for the Generic Apache2 Request Library
+WWW=		https://metacpan.org/dist/libapreq2
 
 LICENSE=	APACHE20
 
@@ -14,7 +15,7 @@ GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--with-apache2-apxs=${APXS} \
 		--with-expat=${LOCALBASE} \
 		--enable-perl-glue --with-perl=${PERL}
-USES=		apache:2.2+ cpe libtool perl5
+USES=		apache cpe libtool perl5
 CPE_VENDOR=	apache
 USE_PERL5=	run
 USE_LDCONFIG=	yes

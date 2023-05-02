@@ -1,13 +1,12 @@
-# Created by: Wen Heping<wenheping@gmail.com>
-
 PORTNAME=	tinyarray
-PORTVERSION=	1.2.3
+PORTVERSION=	1.2.4
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Arrays of numbers for Python, optimized for small sizes
+WWW=		https://gitlab.kwant-project.org/kwant/tinyarray
 
 LICENSE=	BSD2CLAUSE
 

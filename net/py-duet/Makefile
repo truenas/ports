@@ -1,18 +1,19 @@
 PORTNAME=	duet
-PORTVERSION=	0.2.3
+PORTVERSION=	0.2.7
 CATEGORIES=	net python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Simple future-based async library for python
+WWW=		https://github.com/google/duet
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pytest>0:devel/py-pytest@${PY_FLAVOR}
 
-USES=		python:3.7+ # 3.6 requires extra-dependencies
+USES=		python:3.8+ # 3.7 requires extra-dependencies
 USE_PYTHON=	distutils autoplist
 
 NO_ARCH=	yes

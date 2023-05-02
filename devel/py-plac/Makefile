@@ -1,11 +1,12 @@
 PORTNAME=	plac
-DISTVERSION=	1.3.4
+DISTVERSION=	1.3.5
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Command line arguments parser for python
+WWW=		https://github.com/ialbert/plac
 
 LICENSE=	BSD3CLAUSE
 

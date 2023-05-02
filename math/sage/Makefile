@@ -1,8 +1,6 @@
-# Created by: Stephen Montgomery-Smith <stephen@FreeBSD.org>
-
 PORTNAME=	sage
 PORTVERSION=	9.2
-PORTREVISION=	20
+PORTREVISION=	38
 CATEGORIES=	math
 MASTER_SITES=	https://mirrors.xmission.com/sage/src/		\
 		http://mirrors.xmission.com/sage/src/		\
@@ -15,13 +13,16 @@ PKGNAMESUFFIX=	-math
 
 MAINTAINER=	thierry@FreeBSD.org
 COMMENT=	Open source Mathematics software
+WWW=		https://www.sagemath.org/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING.txt
 
+BROKEN=		hoping to fix it with Python-3.9
+
 BUILD_DEPENDS=	bash:shells/bash		\
 		dash:shells/dash		\
-		cmake:devel/cmake		\
+		cmake:devel/cmake-core		\
 		dreadnaut:math/nauty		\
 		${PYTHON_PKGNAMEPREFIX}alabaster>0:textproc/py-alabaster@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}attrs>0:devel/py-attrs@${PY_FLAVOR}\
@@ -42,11 +43,11 @@ BUILD_DEPENDS=	bash:shells/bash		\
 		${PYTHON_PKGNAMEPREFIX}docutils>0:textproc/py-docutils@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}entrypoints>0:devel/py-entrypoints@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}fpylll>0:math/py-fpylll@${PY_FLAVOR}\
-		${PYTHON_PKGNAMEPREFIX}gmpy2-devel>0:math/py-gmpy2-devel@${PY_FLAVOR}\
+		${PYTHON_PKGNAMEPREFIX}gmpy2>0:math/py-gmpy2@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}html5lib>0:www/py-html5lib@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}imagesize>0:graphics/py-imagesize@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}importlib-metadata>0:devel/py-importlib-metadata@${PY_FLAVOR}\
-		${PYTHON_PKGNAMEPREFIX}ipykernel5>0:devel/py-ipykernel5@${PY_FLAVOR}\
+		${PYTHON_PKGNAMEPREFIX}ipykernel>0:devel/py-ipykernel@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}ipython>0:devel/ipython@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}ipython_genutils>0:devel/py-ipython_genutils@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}ipywidgets>0:devel/py-ipywidgets@${PY_FLAVOR}\
@@ -196,7 +197,6 @@ LIB_DEPENDS=	libarb.so:math/arb		\
 		libplanarity.so:math/planarity	\
 		libpng.so:graphics/png		\
 		libppl.so:devel/ppl		\
-		libpynac.so:math/pynac		\
 		libR.so:math/R			\
 		librw.so:math/rankwidth		\
 		libSingular.so:math/singular	\
@@ -238,11 +238,11 @@ RUN_DEPENDS=	bash:shells/bash		\
 		${PYTHON_PKGNAMEPREFIX}docutils>0:textproc/py-docutils@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}entrypoints>0:devel/py-entrypoints@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}fpylll>0:math/py-fpylll@${PY_FLAVOR}\
-		${PYTHON_PKGNAMEPREFIX}gmpy2-devel>0:math/py-gmpy2-devel@${PY_FLAVOR}\
+		${PYTHON_PKGNAMEPREFIX}gmpy2>0:math/py-gmpy2@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}html5lib>0:www/py-html5lib@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}imagesize>0:graphics/py-imagesize@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}importlib-metadata>0:devel/py-importlib-metadata@${PY_FLAVOR}\
-		${PYTHON_PKGNAMEPREFIX}ipykernel5>0:devel/py-ipykernel5@${PY_FLAVOR}\
+		${PYTHON_PKGNAMEPREFIX}ipykernel>0:devel/py-ipykernel@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}ipython>0:devel/ipython@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}ipython_genutils>0:devel/py-ipython_genutils@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}ipywidgets>0:devel/py-ipywidgets@${PY_FLAVOR}\
@@ -255,7 +255,7 @@ RUN_DEPENDS=	bash:shells/bash		\
 		${PYTHON_PKGNAMEPREFIX}kiwisolver>0:math/py-kiwisolver@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}markupsafe>0:textproc/py-markupsafe@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}matplotlib>0:math/py-matplotlib@${PY_FLAVOR}\
-		${PYTHON_PKGNAMEPREFIX}mistune>0:textproc/py-mistune@${PY_FLAVOR}\
+		${PYTHON_PKGNAMEPREFIX}mistune0>0:textproc/py-mistune0@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}mpmath>0:math/py-mpmath@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}nbconvert>0:devel/py-nbconvert@${PY_FLAVOR}\
 		${PYTHON_PKGNAMEPREFIX}nbformat>0:devel/py-nbformat@${PY_FLAVOR}\
@@ -339,7 +339,7 @@ RUN_DEPENDS=	bash:shells/bash		\
 USES=		autoreconf blaslapack:openblas compiler:c++11-lib fortran \
 		gettext gmake gnome iconv jpeg libtool localbase magick:6,build \
 		ncurses ninja:build perl5 pkgconfig python:3.7+ readline shebangfix \
-		sqlite tk xorg
+		sqlite tex tk xorg
 USE_TEX=	latex:build pdftex:build tex:build
 USE_XORG=	x11 xext xscrnsaver
 USE_GNOME=	cairo glib20 pango

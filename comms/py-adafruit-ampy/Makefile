@@ -1,11 +1,12 @@
 PORTNAME=	adafruit-ampy
 PORTVERSION=	1.1.0
 CATEGORIES=	comms python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	loader@FreeBSD.org
 COMMENT=	Adafruit MicroPython tool
+WWW=		https://github.com/adafruit/ampy
 
 LICENSE=	MIT
 

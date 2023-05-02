@@ -1,22 +1,30 @@
 PORTNAME=	agrum
-DISTVERSION=	0.22.1
+DISTVERSION=	1.5.2
+PORTREVISION=	1
 CATEGORIES=	science math
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Graphical modeler for Bayesian networks, influence diagrams, etc
+WWW=		https://agrum.gitlab.io/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USES=		cmake compiler:c++14-lang # the 'act' executable uses 'python' and is broken, when act is broken CMakeLists.txt builds with default configuration which is fine
+BROKEN_FreeBSD_12=	requires modern C++ compiler: error: invalid value 'c++2b'
+
+USES=		cmake compiler:c++20-lang shebangfix # the 'act' executable uses 'python' and is broken, when act is broken CMakeLists.txt builds with default configuration which is fine
 USE_LDCONFIG=	yes
+
 LLD_UNSAFE=	yes
 
 USE_GITLAB=	yes
 GL_ACCOUNT=	agrumery
 GL_PROJECT=	aGrUM
-GL_COMMIT=	29e540d8169268e8fe5d5c69bc4b2b1290f12320
+GL_COMMIT=	9534f1a9e4855c9ec31883cb9b3acc88113a13e1
 
+SHEBANG_FILES=	act
+
+CMAKE_ARGS=	-DPython_EXECUTABLE=${PYTHON_CMD}
 CMAKE_OFF=	USE_SWIG
 
 PLIST_SUB+=	VERSION=${PORTVERSION}
@@ -47,5 +55,11 @@ PYTHON_RUN_DEPENDS=	${PYNUMPY} \
 			${PYTHON_PKGNAMEPREFIX}six>0:devel/py-six@${PY_FLAVOR} \
 			${PYTHON_PKGNAMEPREFIX}tqdm>0:misc/py-tqdm@${PY_FLAVOR}
 			# see wrappers/pyAgrum/requirements.txt and wrappers/pyAgrum/testunits/optional_requirements.txt
+
+BINARY_ALIAS=	gcc=${CC} g++=${CXX} # only for tests, see https://gitlab.com/agrumery/aGrUM/-/issues/100
+
+do-test:
+	@cd ${WRKSRC} && \
+		${SETENV} ${MAKE_ENV} ./act test release agrum -t all
 
 .include <bsd.port.mk>

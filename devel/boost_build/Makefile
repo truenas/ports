@@ -1,11 +1,10 @@
-# Created by: Bruce M. Simpson
-
 PORTNAME=	boost_build
-DISTVERSION=	4.3.0.20201229
+DISTVERSION=	4.8.2.20220318
 CATEGORIES=	devel
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	fluffy@FreeBSD.org
 COMMENT=	Extensible cross-platform build tool suite
+WWW=		https://boostorg.github.io/build/index.html
 
 LICENSE=	BSL
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -17,7 +16,9 @@ USES=		compiler:c++11-lang python:test shebangfix tar:bzip2
 USE_GITHUB=	yes
 GH_ACCOUNT=	boostorg
 GH_PROJECT=	build
-GH_TAGNAME=	29baa79
+GH_TAGNAME=	d4352f0
+
+CONFLICTS_INSTALL=	b2
 
 SHEBANG_GLOB=	*.py
 

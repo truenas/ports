@@ -1,5 +1,3 @@
-# Created by: Neil Blakey-Milner
-
 PORTNAME=	vpopmail
 PORTVERSION=	5.4.33
 PORTREVISION=	4
@@ -8,6 +6,7 @@ MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}-stable/${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Easy virtual domain and authentication package for use with qmail
+WWW=		https://inter7.com/vpopmail/
 
 LICENSE=	GPLv2 GPLv3
 LICENSE_COMB=	dual
@@ -253,7 +252,7 @@ VPOPMAIL_DIR?=			${PREFIX}/vpopmail
 # End of user-configurable variables
 
 .if ${PORT_OPTIONS:MLDAP}
-USE_OPENLDAP=	yes
+USES+=	ldap
 LDAP_FILES=		${WRKSRC}/doc/README.ldap \
 			${WRKSRC}/ldap/nsswitch.conf \
 			${WRKSRC}/ldap/pam_ldap.conf \

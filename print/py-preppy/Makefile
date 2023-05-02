@@ -1,13 +1,12 @@
-# Created by: Kozlov Sergey <kozlov.sergey.404@gmail.com>
-
 PORTNAME=	preppy
 PORTVERSION=	2.4.1
 CATEGORIES=	print python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	ReportLab's templating system
+WWW=		http://preppy.readthedocs.org/en/latest/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

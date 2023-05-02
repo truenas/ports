@@ -1,12 +1,11 @@
-# Created by: chuckr@FreeBSD.org
-
 PORTNAME=	global
-PORTVERSION=	6.6.7
+PORTVERSION=	6.6.9
 CATEGORIES=	devel
 MASTER_SITES=	GNU
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Source code tag system
+WWW=		https://www.gnu.org/software/global/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING

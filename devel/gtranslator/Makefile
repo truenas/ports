@@ -1,12 +1,15 @@
-# Created by: Maxim Sobolev <sobomax@FreeBSD.org>
-
 PORTNAME=	gtranslator
 PORTVERSION=	40.0
+PORTREVISION=	3
 CATEGORIES=	devel gnome
 MASTER_SITES=	GNOME/sources/${PORTNAME}/${PORTVERSION:C/^([0-9]+)\..*/\1/}
 
+PATCH_SITES=	https://gitlab.gnome.org/GNOME/${PORTNAME}/-/commit/
+PATCHFILES+=	7ac572cc8c8c.patch:-p1 # https://gitlab.gnome.org/GNOME/gtranslator/-/merge_requests/90
+
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	GNOME application for creating GNU gettext translation files
+WWW=		http://gtranslator.sourceforge.net/
 
 LICENSE=	GPLv3
 

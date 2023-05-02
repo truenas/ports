@@ -1,12 +1,13 @@
 PORTNAME=	publicsuffix2
 PORTVERSION=	2.20191221
-PORTREVISION=	20
+PORTREVISION=	36
 CATEGORIES=	dns python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ml@netfence.it
 COMMENT=	Get public suffix of domain name from Public Suffix List (Fork)
+WWW=		https://github.com/nexb/python-publicsuffix2
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/publicsuffix2.LICENSE

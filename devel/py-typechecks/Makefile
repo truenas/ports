@@ -1,11 +1,12 @@
 PORTNAME=	typechecks
 DISTVERSION=	0.1.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Type checking helpers for Python
+WWW=		https://github.com/openvax/typechecks
 
 LICENSE=	APACHE20
 

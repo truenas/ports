@@ -1,13 +1,12 @@
-# Created by: Zhihao Yuan <lichray@gmail.com>
-
 PORTNAME=	falcon
-PORTVERSION=	2.0.0
+PORTVERSION=	3.0.1
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	lichray@gmail.com
 COMMENT=	High-performance Python framework for building cloud APIs
+WWW=		https://falconframework.org/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

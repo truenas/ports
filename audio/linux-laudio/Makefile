@@ -1,5 +1,3 @@
-# Created by: Andrew Pantyukhin <infofarmer@FreeBSD.org>
-
 PORTNAME=	laudio
 PORTVERSION=	0.4
 CATEGORIES=	audio linux
@@ -9,6 +7,7 @@ DISTNAME=	la04
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Free lossless audio codec
+WWW=		http://www.lossless-audio.com/
 
 ONLY_FOR_ARCHS=	amd64 i386
 

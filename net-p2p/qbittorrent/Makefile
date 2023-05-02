@@ -1,20 +1,20 @@
-# Created by: Doug Barton <dougb@FreeBSD.org>
-
 PORTNAME=	qbittorrent
-DISTVERSION=	4.3.9
+DISTVERSION=	4.5.2
 CATEGORIES=	net-p2p
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/${PORTNAME}-${PORTVERSION}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Bittorrent client using Qt5 and libtorrent-rasterbar
+WWW=		https://www.qbittorrent.org/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
 
 BROKEN_FreeBSD_12_powerpc64=	fails to build: ./base/tristatebool.h:44:5: 'constexpr' constructor does not have empty body
 
-LIB_DEPENDS=	libtorrent-rasterbar.so:net-p2p/libtorrent-rasterbar \
-		libboost_system.so:devel/boost-libs
+LIB_DEPENDS=	libboost_system.so:devel/boost-libs
+
+CXXFLAGS+=	-DBOOST_STACKTRACE_GNU_SOURCE_NOT_REQUIRED # error: "Boost.Stacktrace requires `_Unwind_Backtrace` function. Define `_GNU_SOURCE` macro or `BOOST_STACKTRACE_GNU_SOURCE_NOT_REQUIRED` if _Unwind_Backtrace is available without `_GNU_SOURCE`."
 
 FLAVORS=	default nox
 FLAVOR?=	${FLAVORS:[1]}
@@ -23,9 +23,11 @@ nox_PLIST=		${MASTERDIR}/pkg-plist-nox
 
 USES=			compiler:c++14-lang cpe pkgconfig qmake:no_env qt:5 ssl tar:xz
 GNU_CONFIGURE=		yes
-USE_QT=			core network xml buildtools_build linguisttools_build qmake_build
+USE_QT=			core network sql xml buildtools:build linguisttools:build qmake:build
 DESTDIRNAME=		INSTALL_ROOT
 CONFIGURE_ENV+=		openssl_CFLAGS="-I${OPENSSLINC}" openssl_LIBS="-L${OPENSSLLIB} -lssl"
+
+USE_CXXSTD=		c++17 # prevent boost-related SEGV, see bug#264278
 
 .if ${FLAVOR} == default
 USES+=			desktop-file-utils gl
@@ -45,12 +47,24 @@ PLIST_SUB=		USER=${USERS} GROUP=${GROUPS}
 OPTIONS_EXCLUDE=	DBUS
 .endif
 
-OPTIONS_DEFINE=		DBUS PYTHON DEBUG
-OPTIONS_DEFAULT=	DBUS
+OPTIONS_DEFINE=			DBUS PYTHON DEBUG
+OPTIONS_RADIO=			LIBTORRENT
+OPTIONS_RADIO_LIBTORRENT=	LIBTORRENT1 LIBTORRENT2
+OPTIONS_DEFAULT=		DBUS LIBTORRENT1
+
+LIBTORRENT_DESC=	libtorrent version number to use
+LIBTORRENT1_DESC=	Version 1.x (default)
+LIBTORRENT2_DESC=	Version 2.x (experimental)
 
 DEBUG_CONFIGURE_ENABLE=	debug
 DBUS_CONFIGURE_ENABLE=	qt-dbus
 DBUS_USE=		qt=dbus
+
+LIBTORRENT1_BUILD_DEPENDS=	libtorrent-rasterbar>0:net-p2p/libtorrent-rasterbar
+LIBTORRENT1_RUN_DEPENDS=	libtorrent-rasterbar>0:net-p2p/libtorrent-rasterbar
+LIBTORRENT2_BUILD_DEPENDS=	libtorrent-rasterbar2>0:net-p2p/libtorrent-rasterbar2
+LIBTORRENT2_RUN_DEPENDS=	libtorrent-rasterbar2>0:net-p2p/libtorrent-rasterbar2
+LIBTORRENT2_EXTRA_PATCHES=	${FILESDIR}/extrapatch-libtorrent-rasterbar2-settings
 
 PYTHON_DESC=		Install Python to support some plugin functionality
 PYTHON_USES=		python:3.6+,run

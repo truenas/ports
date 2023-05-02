@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	dbus-glib
 PORTVERSION=	0.100
 DISTVERSIONSUFFIX=	-7.el7
@@ -8,6 +6,7 @@ CATEGORIES=	devel linux
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	GLib bindings for D-Bus (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://www.freedesktop.org/wiki/Software/DBusBindings/
 
 USES=		cpe linux:c7
 CPE_VENDOR=	freedesktop

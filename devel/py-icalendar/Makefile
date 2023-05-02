@@ -1,14 +1,13 @@
-# Created by: Kevin Lo <kevlo@FreeBSD.org>
-
 PORTNAME=	icalendar
 PORTVERSION=	4.0.3
 PORTREVISION=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	jun-g@daemonfreaks.com
 COMMENT=	Parser and generator of iCalender files for Python
+WWW=		https://github.com/collective/icalendar
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.rst

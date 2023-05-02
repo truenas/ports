@@ -1,10 +1,10 @@
 PORTNAME=	librecad
-DISTVERSION=	2.2.0-rc2
-PORTREVISION=	1
+DISTVERSION=	2.2.0
 CATEGORIES=	cad
 
 MAINTAINER=	jhale@FreeBSD.org
 COMMENT=	2D CAD system
+WWW=		https://librecad.org/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/licenses/gpl-2.0.txt
@@ -19,7 +19,7 @@ GH_ACCOUNT=	LibreCAD
 GH_PROJECT=	LibreCAD
 USE_GL=		gl
 USE_QT=		core gui printsupport svg widgets \
-		buildtools_build linguisttools_build
+		buildtools:build linguisttools:build
 
 QMAKE_ARGS+=	BOOST_DIR="${LOCALBASE}"
 
@@ -28,9 +28,6 @@ post-patch:
 		${WRKSRC}/common.pri
 	@${REINPLACE_CMD} -e 's|lrelease|${LRELEASE}|' \
 		${WRKSRC}/scripts/postprocess-unix.sh
-	@${REINPLACE_CMD} -e 's|/usr/share|${PREFIX}/share|' \
-		${WRKSRC}/librecad/src/lib/engine/rs_settings.cpp \
-		${WRKSRC}/librecad/src/lib/engine/rs_system.cpp
 
 pre-install:
 	@${CHMOD} +w ${WRKSRC}/unix/resources/plugins/*.so
@@ -41,9 +38,9 @@ do-install:
 	${INSTALL_PROGRAM} ${WRKSRC}/unix/ttf2lff ${STAGEDIR}${PREFIX}/bin
 	(cd ${WRKSRC}/unix/resources && ${COPYTREE_SHARE} . ${STAGEDIR}${DATADIR})
 	@${MKDIR} ${STAGEDIR}${PREFIX}/share/metainfo
-	${INSTALL_DATA} ${WRKSRC}/unix/appdata/librecad.appdata.xml \
+	${INSTALL_DATA} ${WRKSRC}/unix/appdata/org.librecad.librecad.appdata.xml \
 		${STAGEDIR}${PREFIX}/share/metainfo
-	${INSTALL_DATA} ${WRKSRC}/desktop/librecad.desktop \
+	${INSTALL_DATA} ${WRKSRC}/unix/appdata/librecad.desktop \
 		${STAGEDIR}${PREFIX}/share/applications
 	${INSTALL_DATA} ${WRKSRC}/librecad/res/main/librecad.png \
 		${STAGEDIR}${PREFIX}/share/pixmaps

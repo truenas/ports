@@ -1,12 +1,11 @@
-# Created by: Ganbold Tsagaankhuu <ganbold@FreeBSD.org>
-
 PORTNAME=	ateam_mysql57_ldap_auth
 PORTVERSION=	1.0
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	databases
 
 MAINTAINER=	ganbold@FreeBSD.org
 COMMENT=	A-Team MySQL LDAP authentication plugin
+WWW=		https://github.com/ateamsystems/ateam_mysql_ldap_auth
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -15,8 +14,7 @@ IGNORE_WITH_MYSQL=	56 80 101m 102m 103m
 
 LIB_DEPENDS=	libconfig.so:devel/libconfig
 
-USES=		compiler:c++11-lang gmake mysql:57,client,server
-USE_OPENLDAP=	yes
+USES=		compiler:c++11-lang gmake ldap mysql:57,client,server
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	ateamsystems

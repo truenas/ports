@@ -1,13 +1,12 @@
-# Created by: René Ladan <rene@freebsd.org>
-
 PORTNAME=	dirsync
 PORTVERSION=	2.2.5
 CATEGORIES=	sysutils python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Advanced directory tree synchronisation tool
+WWW=		https://github.com/tkhyn/dirsync
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

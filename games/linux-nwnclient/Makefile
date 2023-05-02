@@ -1,5 +1,3 @@
-# Created by: Erik Olson <erikolson@olsonexpress.com>
-
 PORTNAME=	nwnclient
 PORTVERSION=	1.69
 PORTREVISION=	5
@@ -19,6 +17,7 @@ DIST_SUBDIR=	${PKGNAMEPREFIX}${PORTNAME}
 
 MAINTAINER=	scf@FreeBSD.org
 COMMENT=	Neverwinter Nights Linux (x86) Client
+WWW=		http://www.neverwinternights.info/
 
 # Converted from RESTRICTED
 LICENSE=	nwnclient

@@ -1,13 +1,12 @@
-# Created by: Andrey Zakhvatov
-
 PORTNAME=	pavuk
 PORTVERSION=	0.9.35
-PORTREVISION=	5
+PORTREVISION=	6
 CATEGORIES=	ftp www
 MASTER_SITES=	SF
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	HTTP, FTP, and Gopher mirroring tool
+WWW=		http://pavuk.sourceforge.net/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

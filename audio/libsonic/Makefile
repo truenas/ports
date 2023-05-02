@@ -6,6 +6,7 @@ CATEGORIES=	audio
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Simple library to speed up or slow down speech
+WWW=		https://github.com/waywardgeek/sonic
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -21,6 +22,8 @@ GH_PROJECT=	sonic
 
 MAKE_ARGS=	CC=${CC} CFLAGS="${CFLAGS}" PREFIX="${PREFIX}" USE_SPECTROGRAM=1
 CFLAGS+=	-ansi -fPIC -pthread -Wno-unused-function -DSONIC_SPECTROGRAM
+
+CONFLICTS_INSTALL=	sonic # bin/sonic
 
 PLIST_FILES=	bin/sonic \
 		include/sonic.h \

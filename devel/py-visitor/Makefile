@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	visitor
 PORTVERSION=	0.1.3
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Tiny Pythonic visitor implementation
+WWW=		https://github.com/mbr/visitor
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

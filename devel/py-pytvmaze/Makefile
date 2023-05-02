@@ -1,13 +1,12 @@
-# Created by: Mark Felder <feld@FreeBSD.org>
-
 PORTNAME=	pytvmaze
 PORTVERSION=	2.0.8
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Python interface to the TV Maze API
+WWW=		https://github.com/srob650/pytvmaze
 
 LICENSE=	MIT
 

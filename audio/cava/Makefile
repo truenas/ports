@@ -1,9 +1,11 @@
 PORTNAME=	cava
 DISTVERSION=	0.7.4
+PORTREVISION=	1
 CATEGORIES=	audio
 
 MAINTAINER=	vendion@gmail.com
 COMMENT=	Console-based Audio Visualizer for MPD, PulseAudio, and sndio
+WWW=		https://karlstav.github.io/cava
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

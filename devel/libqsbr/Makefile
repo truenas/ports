@@ -2,8 +2,9 @@ PORTNAME=	libqsbr
 PORTVERSION=	g2020082801
 CATEGORIES=	devel
 
-MAINTAINER=	swills@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	QSBR and EBR library
+WWW=		https://github.com/rmind/libqsbr
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/../LICENSE

@@ -1,16 +1,14 @@
-# Created by: ache
-
 PORTNAME=	lynx
-PORTVERSION=	2.9.0d9
+PORTVERSION=	2.9.0d10
 CATEGORIES=	www
 MASTER_SITES=	http://invisible-mirror.net/archives/lynx/tarballs/ \
 		ftp://ftp.invisible-island.net/lynx/tarballs/
-
 PKGNAMESUFFIX=	-current
 DISTNAME=	${PORTNAME}${PORTVERSION:S/p/pre./:S/d/dev./}
 
 MAINTAINER=	adamw@FreeBSD.org
 COMMENT=	Console-based web browser (current/development version)
+WWW=		https://lynx.invisible-island.net/current/
 
 LICENSE=	GPLv2
 

@@ -1,11 +1,12 @@
 PORTNAME=	httplib2
-PORTVERSION=	0.20.2
+PORTVERSION=	0.22.0
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	lwhsu@FreeBSD.org
 COMMENT=	Comprehensive HTTP client library
+WWW=		https://github.com/httplib2/httplib2
 
 LICENSE=	MIT
 

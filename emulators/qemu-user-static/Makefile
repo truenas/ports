@@ -1,12 +1,13 @@
 PORTNAME=	qemu
 PORTVERSION=	3.1.0
-PORTREVISION=	12
+PORTREVISION=	13
 CATEGORIES=	emulators
 PKGNAMESUFFIX=	-user-static
 DIST_SUBDIR=	qemu/${PORTVERSION}
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	QEMU CPU Emulator (github bsd-user branch)
+WWW=		https://www.qemu.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -16,7 +17,7 @@ CONFLICTS_INSTALL=	qemu-user-static-devel
 
 USES=		bison compiler:c11 cpe gmake perl5 pkgconfig python:build
 USE_GITHUB=	yes
-GH_TUPLE=	qemu-bsd-user:qemu-bsd-user:6ffee39fe2e4	\
+GH_TUPLE=	qemu-bsd-user:qemu-bsd-user:527096e0c8	\
 		qemu:keycodemapdb:10739aa:keycodemapdb/ui/keycodemapdb
 HAS_CONFIGURE=	yes
 USE_PERL5=	build

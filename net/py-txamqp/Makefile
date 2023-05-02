@@ -1,14 +1,13 @@
-# Created by: Bruce Simpson
-
 PORTNAME=	txamqp
 PORTVERSION=	0.8.2
 CATEGORIES=	net python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	txAMQP-${PORTVERSION}
 
 MAINTAINER=	python@FreeBSD.org
 COMMENT=	Twisted Python library for the AMQP messaging protocol
+WWW=		https://pypi.org/project/txAMQP/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

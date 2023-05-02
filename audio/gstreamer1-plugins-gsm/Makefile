@@ -8,4 +8,8 @@ DIST=		bad
 
 MASTERDIR=	${.CURDIR}/../../multimedia/gstreamer1-plugins
 
+PLIST=  ${.CURDIR}/pkg-plist
+
+LIB_DEPENDS=  libgsm.so:audio/gsm
+
 .include "${MASTERDIR}/Makefile"

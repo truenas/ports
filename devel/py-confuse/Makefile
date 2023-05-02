@@ -1,11 +1,12 @@
 PORTNAME=	confuse
 DISTVERSION=	1.7.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	rigoletto@FreeBSD.org
 COMMENT=	Configuration library for Python that uses YAML
+WWW=		https://github.com/beetbox/confuse
 
 LICENSE=	MIT
 

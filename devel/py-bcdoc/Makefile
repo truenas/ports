@@ -1,13 +1,12 @@
-# Created by: Alexey V. Degtyarev <alexey@renatasystems.org>
-
 PORTNAME=	bcdoc
 PORTVERSION=	0.16.0
 CATEGORIES=	devel
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Tools to help document botocore-based projects
+WWW=		https://github.com/boto/bcdoc/
 
 LICENSE=	MIT
 

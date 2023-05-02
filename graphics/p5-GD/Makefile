@@ -1,11 +1,12 @@
 PORTNAME=	GD
-PORTVERSION=	2.73
+PORTVERSION=	2.76
 CATEGORIES=	graphics perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Perl5 interface to Gd Graphics Library version2
+WWW=		https://metacpan.org/release/GD
 
 LICENSE=	ART20 GPLv1+
 LICENSE_COMB=	dual

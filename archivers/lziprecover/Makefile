@@ -1,12 +1,11 @@
-# Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
-
 PORTNAME=	lziprecover
-PORTVERSION=	1.22
+PORTVERSION=	1.23
 CATEGORIES=	archivers
 MASTER_SITES=	SAVANNAH/lzip/${PORTNAME}
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Recovery tool for Lzip compressed data files
+WWW=		https://www.nongnu.org/lzip/lziprecover.html
 
 LICENSE=	GPLv2+
 

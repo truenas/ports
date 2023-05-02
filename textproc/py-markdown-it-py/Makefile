@@ -1,22 +1,21 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	markdown-it-py
-PORTVERSION=	1.1.0
+PORTVERSION=	2.2.0
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Python port of markdown-it
+WWW=		https://github.com/executablebooks/markdown-it-py
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}attrs>=19<22:devel/py-attrs@${PY_FLAVOR}
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}attrs>=19<22:devel/py-attrs@${PY_FLAVOR}
+BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}flit-core>=3.4<4:devel/py-flit-core@${PY_FLAVOR}
+RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}mdurl>=0.1<1:textproc/py-mdurl@${PY_FLAVOR}
 
-USES=		python:3.6+
-USE_PYTHON=	autoplist concurrent distutils
+USES=		python:3.7+
+USE_PYTHON=	autoplist concurrent pep517
 
 NO_ARCH=	yes
 

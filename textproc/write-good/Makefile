@@ -1,12 +1,14 @@
 PORTNAME=	write-good
 DISTVERSIONPREFIX=	v
 DISTVERSION=	1.0.8
+PORTREVISION=	1
 CATEGORIES=	textproc
 MASTER_SITES=	LOCAL/0mp/:npm
 DISTFILES=	${_NPM_DISTFILES}
 
 MAINTAINER=	0mp@FreeBSD.org
 COMMENT=	Naive linter for English prose
+WWW=		https://github.com/btford/write-good
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

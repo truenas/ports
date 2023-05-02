@@ -1,13 +1,12 @@
-# Created by: rch@richard.eu.org
-
 PORTNAME=	yudit
-PORTVERSION=	3.0.7
+PORTVERSION=	3.0.9
 CATEGORIES=	editors converters print
 MASTER_SITES=	http://yudit.org/download/ \
 		SUNSITE/apps/editors/X
 
 MAINTAINER=	danilo@FreeBSD.org
 COMMENT=	Multi-lingual Unicode text editor with TTF support
+WWW=		https://www.yudit.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING.TXT

@@ -1,6 +1,7 @@
 PORTNAME=	mongodb
 DISTVERSIONPREFIX=	r
-DISTVERSION=	4.0.27
+DISTVERSION=	4.0.28
+PORTREVISION=	1
 CATEGORIES=	databases net
 MASTER_SITES=	https://fastdl.mongodb.org/src/ \
 		http://fastdl.mongodb.org/src/
@@ -9,6 +10,7 @@ DISTNAME=	mongodb-src-${DISTVERSIONPREFIX}${DISTVERSION}
 
 MAINTAINER=	dev.ashevchuk@gmail.com
 COMMENT=	Distributed document-oriented "NoSQL" database (4.0.x Branch)
+WWW=		https://docs.mongodb.com/v4.0/
 
 LICENSE=	SSPLv1 APACHE20
 LICENSE_COMB=	multi
@@ -16,28 +18,29 @@ LICENSE_NAME_SSPLv1=	Server Side Public License Version 1
 LICENSE_FILE_SSPLv1=	${WRKSRC}/LICENSE-Community.txt
 LICENSE_PERMS_SSPLv1=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
 
+DEPRECATED=	Upstream EOL reached on 2022-04-30
+EXPIRATION_DATE=	2023-06-30
 ONLY_FOR_ARCHS=	aarch64 amd64 powerpc64le
 ONLY_FOR_ARCHS_REASON=	only supported on amd64, aarch64, and powerpc64le; i386 deprecated in v3
 
 BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}cheetah3>0:devel/py-cheetah3@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}yaml>=3.11:devel/py-yaml@${PY_FLAVOR} \
 		${LOCALBASE}/bin/ar:devel/binutils
-LIB_DEPENDS=	libboost_system.so:devel/boost-libs \
-		libpcre.so:devel/pcre \
+LIB_DEPENDS=	libpcre.so:devel/pcre \
 		libcurl.so:ftp/curl \
 		libsnappy.so:archivers/snappy
 
-USES=		compiler:c++14-lang cpe python:3.5+,build scons shebangfix
+USES=		compiler:c++14-lang cpe python:3.7+,build scons shebangfix
 USE_RC_SUBR=	mongod
 
-CONFLICTS_INSTALL=	mongodb36 mongodb4[24] mongodb50
+CONFLICTS_INSTALL=	mongodb[0-9][0-9] # etc/mongodb.conf.sample
 
 SHEBANG_FILES=	src/mongo/installer/compass/install_compass
 python_OLD_CMD=	@python_interpreter@
 
 MAKE_ARGS=	--prefix=${STAGEDIR}${PREFIX} \
 		--use-system-pcre --use-system-snappy \
-		--use-system-boost --use-system-zlib \
+		--use-system-zlib \
 		--cxx-std=14 --libc++ \
 		--runtime-hardening=on \
 		--disable-warnings-as-errors \

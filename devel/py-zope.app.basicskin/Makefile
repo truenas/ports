@@ -2,12 +2,13 @@ PORTNAME=	zope.app.basicskin
 PORTVERSION=	3.5.1
 PORTREVISION=	1
 CATEGORIES=	devel python zope
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DIST_SUBDIR=	zope
 
 MAINTAINER=	zope@FreeBSD.org
 COMMENT=	Zope ZMI Basic Skin
+WWW=		https://pypi.org/project/zope.app.basicskin/
 
 LICENSE=	ZPL21
 

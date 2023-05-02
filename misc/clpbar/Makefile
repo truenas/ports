@@ -1,5 +1,3 @@
-# Created by: ijliao
-
 PORTNAME=	clpbar
 PORTVERSION=	1.11.1
 CATEGORIES=	misc
@@ -8,10 +6,13 @@ DISTNAME=	bar_${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Command Line Progress Bar
+WWW=		http://clpbar.sourceforge.net/
 
 WRKSRC=		${WRKDIR}/bar-${PORTVERSION}
 GNU_CONFIGURE=	yes
 MAKE_ARGS+=	CFLAGS+="${CFLAGS}"
+
+CONFLICTS_INSTALL=	bar # bin/bar
 
 PLIST_FILES=	bin/bar \
 		man/man1/bar.1.gz

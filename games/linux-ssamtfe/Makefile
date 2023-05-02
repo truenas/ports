@@ -1,5 +1,3 @@
-# Created by: Alexander Logvinov <ports@logvinov.com>
-
 PORTNAME=	ssamtfe
 PORTVERSION=	1.05b3
 PORTREVISION=	1
@@ -11,6 +9,7 @@ DISTFILES=	${PORTNAME:S|ssam|serious.sam.|}_${PORTVERSION:S|b|beta|}-english-2.r
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Serious Sam: The First Encounter
+WWW=		https://www.croteam.com/
 
 # Converted from RESTRICTED
 LICENSE=	ssam

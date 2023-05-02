@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	marshmallow-enum
 PORTVERSION=	1.5.1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Enum field for Marshmallow
+WWW=		https://github.com/justanr/marshmallow_enum
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

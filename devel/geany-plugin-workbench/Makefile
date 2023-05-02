@@ -1,10 +1,11 @@
 PORTNAME=	geany-plugin-workbench
 PORTVERSION=	${GEANY_VER}
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	devel
 
 MAINTAINER=	madpilot@FreeBSD.org
 COMMENT=	Geany plugin: ${${GEANY_PLUGIN}_DESC}
+WWW=		https://plugins.geany.org/workbench.html
 
 LIB_DEPENDS=	libgit2.so:devel/libgit2
 

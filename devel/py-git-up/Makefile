@@ -1,11 +1,12 @@
 PORTNAME=	git-up
 DISTVERSION=	2.1.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ygy@FreeBSD.org
 COMMENT=	Python implementation of 'git up'
+WWW=		https://pypi.org/project/git-up/
 
 LICENSE=	MIT
 

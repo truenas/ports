@@ -1,12 +1,12 @@
-# Created by: TAKATSU Tomonari <tota@FreeBSD.org>
-
 PORTNAME=	TTR
-DISTVERSION=	0.24.2
+DISTVERSION=	0.24.3
+PORTREVISION=	1
 CATEGORIES=	finance
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Technical Trading Rules
+WWW=		https://cran.r-project.org/web/packages/TTR/
 
 LICENSE=	GPLv2+
 

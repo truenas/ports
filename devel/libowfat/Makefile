@@ -1,12 +1,12 @@
-# Created by: Thomas-Martin Seck <tmseck@netcologne.de>
-
 PORTNAME=	libowfat
 PORTVERSION=	0.32
+PORTREVISION=	1
 CATEGORIES=	devel
 MASTER_SITES=	https://www.fefe.de/libowfat/
 
-MAINTAINER=	lx@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	General purpose library based on code by D. J. Bernstein
+WWW=		https://www.fefe.de/libowfat/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

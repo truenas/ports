@@ -1,11 +1,12 @@
 PORTNAME=	pyjq
 PORTVERSION=	2.4.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	gmm@tutanota.com
 COMMENT=	Python binding for jq
+WWW=		https://github.com/doloopwhile/pyjq
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

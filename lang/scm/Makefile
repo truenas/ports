@@ -1,5 +1,3 @@
-# Created by: hsu
-
 PORTNAME=	scm
 PORTVERSION=	5f2
 PORTREVISION=	10
@@ -11,11 +9,11 @@ EXTRACT_ONLY=	${DISTNAME}${EXTRACT_SUFX} slib-3b5.zip
 
 MAINTAINER=	mi@aldan.algebra.com
 COMMENT=	Scheme interpreter
+WWW=		https://people.csail.mit.edu/jaffer/SCM
 
 LICENSE=	LGPL21
 
 BROKEN_aarch64=		fails to link: missing sbrk
-BROKEN_powerpc64=	fails to build: "/wrkdirs/usr/ports/lang/scm/work/slib/lineio.scm": read-char: Wrong type in arg1 #f
 BROKEN_riscv64=		fails to link: missing sbrk
 
 WRKSRC=		${WRKDIR}/${PORTNAME}

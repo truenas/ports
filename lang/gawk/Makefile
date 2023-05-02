@@ -1,17 +1,18 @@
-# Created by: Andreas Klemm <andreas@klemm.gtn.com>
-
 PORTNAME=	gawk
-PORTVERSION=	5.1.1
+PORTVERSION=	5.2.1
 CATEGORIES=	lang
 MASTER_SITES=	GNU
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	GNU version of AWK scripting language
+WWW=		https://www.gnu.org/software/gawk/gawk.html
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING
 
 LIB_DEPENDS=	libsigsegv.so:devel/libsigsegv
+
+CONFLICTS_INSTALL=	ja-gawk # bin/gawk
 
 OPTIONS_DEFINE=		NLS MPFR
 OPTIONS_SUB=		yes
@@ -21,7 +22,7 @@ MPFR_DESC?=		Support multiple-precision floating-point computation
 MPFR_LIB_DEPENDS=	libgmp.so:math/gmp libmpfr.so:math/mpfr
 MPFR_CONFIGURE_OFF=	--without-gmp --without-mpfr
 
-INFO=		gawk gawkinet gawkworkflow
+INFO=		gawk gawkinet gawkworkflow pm-gawk
 
 GNU_CONFIGURE=	yes
 USES=		iconv libtool makeinfo readline tar:lz

@@ -1,19 +1,18 @@
-# Created by: Nicole Reid <root@cooltrainer.org>
-
 PORTNAME=	elementary
-DISTVERSION=	6.0.0
+DISTVERSION=	7.2.0
 CATEGORIES=	x11-themes gnome
 PKGNAMEPREFIX=	gnome-icons-
 
-MAINTAINER=	root@cooltrainer.org
+MAINTAINER=	duchateau.olivier@gmail.com
 COMMENT=	Elementary icon set
+WWW=		https://github.com/elementary/icons
 
-LICENSE=	GPLv3
+LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING
 
 BUILD_DEPENDS=	xcursorgen:x11/xcursorgen
 
-USES=		gettext gnome meson python:3.5+,build
+USES=		gettext gnome meson python:3.7+,build
 
 USE_GITHUB=	yes
 GH_PROJECT=	icons

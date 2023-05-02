@@ -1,11 +1,13 @@
 PORTNAME=	viddy
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.3.4
+PORTREVISION=	12
 CATEGORIES=	sysutils
 MASTER_SITES=
 
 MAINTAINER=	lcook@FreeBSD.org
 COMMENT=	Modern watch command
+WWW=		https://github.com/sachaos/viddy
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -19,6 +21,8 @@ GO_BUILDFLAGS=	-ldflags "\
 
 PLIST_FILES=	bin/${PORTNAME}
 PORTDOCS=	README.md
+
+PORTSCOUT=	ignore:1 site:none
 
 OPTIONS_DEFINE=	DOCS
 

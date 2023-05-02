@@ -1,12 +1,13 @@
 PORTNAME=	urwid-readline
 DISTVERSION=	0.13
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	${PORTNAME:S/-/_/}-${DISTVERSION}
 
 MAINTAINER=	0mp@FreeBSD.org
 COMMENT=	Textbox edit widget for Urwid that supports readline shortcuts
+WWW=		https://github.com/rr-/urwid_readline
 
 LICENSE=	MIT
 

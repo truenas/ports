@@ -1,9 +1,11 @@
 PORTNAME=	6cord
 DISTVERSION=	9.6
+PORTREVISION=	13
 CATEGORIES=	net-im
 
 MAINTAINER=	lcook@FreeBSD.org
 COMMENT=	Terminal-driven Discord client
+WWW=		https://gitlab.com/diamondburned/6cord
 
 LICENSE=	MPL20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -37,7 +39,7 @@ GH_TUPLE=	BurntSushi:freetype-go:b763ddbfe298:burntsushi_freetype_go/vendor/gith
 		godbus:dbus:v4.1.0:godbus_dbus/vendor/github.com/godbus/dbus \
 		golang:crypto:87dc89f01550:golang_crypto/vendor/golang.org/x/crypto \
 		golang:image:e7c1f5e7dbb8:golang_image/vendor/golang.org/x/image \
-		golang:sys:33540a1f6037:golang_sys/vendor/golang.org/x/sys \
+		golang:sys:v0.6.0:golang_sys/vendor/golang.org/x/sys \
 		golang:text:v0.3.2:golang_text/vendor/golang.org/x/text \
 		gopherjs:gopherjs:d3ddacdb130f:gopherjs_gopherjs/vendor/github.com/gopherjs/gopherjs \
 		gopherjs:gopherwasm:v1.1.0:gopherjs_gopherwasm/vendor/github.com/gopherjs/gopherwasm \

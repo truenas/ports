@@ -1,10 +1,12 @@
 PORTNAME=	libcint
 DISTVERSIONPREFIX=	v
-DISTVERSION=	4.4.6
+DISTVERSION=	5.3.0
+PORTREVISION=	1
 CATEGORIES=	science
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	General GTO integrals for quantum chemistry
+WWW=		https://github.com/sunqm/libcint
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

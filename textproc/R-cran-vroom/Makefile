@@ -1,10 +1,12 @@
 PORTNAME=	vroom
 PORTVERSION=	1.5.7
+PORTREVISION=	1
 CATEGORIES=	textproc
 DISTNAME=	${PORTNAME}_${PORTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Read and Write Rectangular Text Data Quickly
+WWW=		https://cran.r-project.org/web/packages/vroom/
 
 LICENSE=	MIT
 

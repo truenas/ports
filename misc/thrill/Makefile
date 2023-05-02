@@ -1,9 +1,11 @@
 PORTNAME=	thrill
 DISTVERSION=	g20200406
+PORTREVISION=	1
 CATEGORIES=	misc
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	C++ framework for algorithmic distributed Big Data batch computations
+WWW=		https://project-thrill.org/
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

@@ -1,13 +1,12 @@
-# Created by: KANOU Hiroki <kanou@mil.allnet.ne.jp>
-
 PORTNAME=	autotrace
 PORTVERSION=	0.31.1
-PORTREVISION=	32
+PORTREVISION=	33
 CATEGORIES=	graphics
 MASTER_SITES=	SF/${PORTNAME}/AutoTrace/${PORTVERSION}
 
 MAINTAINER=	portmaster@BSDforge.com
 COMMENT=	Convert bitmap to vector graphics
+WWW=		http://AutoTrace.sourceforge.net/
 
 LICENSE=	GPLv2 LGPL21
 LICENSE_COMB=	multi
@@ -27,7 +26,7 @@ OPTIONS_DEFAULT=IMAGEMAGICK
 MING_DESC=	Enable swf interface
 PSTOEDIT_DESC=	Convert postscript to other formats
 
-IMAGEMAGICK_USES=		magick:6
+IMAGEMAGICK_USES=		magick:7
 IMAGEMAGICK_CONFIGURE_OFF=	--without-magick
 
 MING_LIB_DEPENDS=	libming.so:graphics/ming

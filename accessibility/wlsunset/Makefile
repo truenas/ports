@@ -1,6 +1,6 @@
 PORTNAME=	wlsunset
 DISTVERSION=	0.2.0
-CATEGORIES=	accessibility
+CATEGORIES=	accessibility wayland
 MASTER_SITES=	https://git.sr.ht/~kennylevinsen/${PORTNAME}/archive/${DISTVERSIONFULL}${EXTRACT_SUFX}?dummy=/
 
 PATCH_SITES=	https://git.sr.ht/~kennylevinsen/${PORTNAME}/commit/
@@ -8,6 +8,7 @@ PATCHFILES+=	601dfc87ff6e.patch:-p1 # https://lists.sr.ht/~kennylevinsen/wlsunse
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Day/night gamma adjustments for Wayland
+WWW=		https://sr.ht/~kennylevinsen/wlsunset
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

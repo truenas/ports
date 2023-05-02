@@ -5,6 +5,7 @@ MASTER_SITES=	https://codeberg.org/bapt/${PORTNAME}/archive/${DISTVERSIONFULL}${
 
 MAINTAINER=	bapt@FreeBSD.org
 COMMENT=	Tiny web frontend for mlmmj
+WWW=		https://codeberg.org/bapt/mlmmj-webview
 
 LICENSE=	BSD2CLAUSE
 
@@ -18,4 +19,3 @@ HAS_CONFIGURE=	yes
 PLIST_FILES=	bin/${PORTNAME}
 
 .include <bsd.port.mk>
-

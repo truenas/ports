@@ -1,13 +1,12 @@
-# Created by: Joe Marcus Clarke <marcus@FreeBSD.org>
-
 PORTNAME=	drgeo
 PORTVERSION=	1.1.0
-PORTREVISION=	22
+PORTREVISION=	25
 CATEGORIES=	math
 MASTER_SITES=	SF/ofset/${PORTNAME}/${PORTVERSION}
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	GTK interactive geometry software
+WWW=		http://www.ofset.org/drgeo/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

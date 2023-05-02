@@ -1,12 +1,11 @@
-# Created by: Glenn Trewitt <glenn@trewitt.org>
-
 PORTNAME=	htmldoc
-PORTVERSION=	1.9.12
+PORTVERSION=	1.9.16
 DISTVERSIONPREFIX=	v
 CATEGORIES=	textproc
 
-MAINTAINER=	jose@diasfernandes.pt
+MAINTAINER=	fuz@FreeBSD.org
 COMMENT=	Converts HTML to PDF and/or PostScript
+WWW=		https://michaelrsweet.github.io/htmldoc
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

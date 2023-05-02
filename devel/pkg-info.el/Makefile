@@ -1,11 +1,12 @@
 PORTNAME=	pkg-info.el
 PORTVERSION=	0.6
-PORTREVISION=	7
+PORTREVISION=	12
 CATEGORIES=	devel elisp
 PKGNAMESUFFIX=	${EMACS_PKGNAMESUFFIX}
 
 MAINTAINER=	hrs@FreeBSD.org
 COMMENT=	Provide information about Emacs packages
+WWW=		https://github.com/lunaryorn/pkg-info.el
 
 LICENSE=	GPLv3
 

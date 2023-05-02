@@ -1,5 +1,3 @@
-# Created by: Alexey Dokuchaev <danfe@regency.nsu.ru>
-
 PORTNAME=	cake
 PORTVERSION=	2005.12.26
 PORTREVISION=	13
@@ -15,6 +13,8 @@ LICENSE=	GPLv2
 USES=		gl gmake jpeg ncurses xorg zip
 USE_GL=		glut
 USE_XORG=	x11 xext xmu xt xi sm ice
+
+CONFLICTS_INSTALL=	coffeescript
 
 # Need to pass `-l', but PATCH_ARGS+= won't work because of PATCH_ARGS?=
 # in bsd.port.mk

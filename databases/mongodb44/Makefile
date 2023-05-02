@@ -1,14 +1,15 @@
 PORTNAME=	mongodb
 DISTVERSIONPREFIX=	r
-DISTVERSION=	4.4.10
+DISTVERSION=	4.4.20
 CATEGORIES=	databases net
 MASTER_SITES=	https://fastdl.mongodb.org/src/ \
 		http://fastdl.mongodb.org/src/
 PKGNAMESUFFIX=	${DISTVERSION:R:S/.//}
 DISTNAME=	mongodb-src-${DISTVERSIONPREFIX}${DISTVERSION}
 
-MAINTAINER=	ronald-lists@klop.ws
+MAINTAINER=	ronald@FreeBSD.org
 COMMENT=	Distributed document-oriented "NoSQL" database (4.4.x Branch)
+WWW=		https://docs.mongodb.com/v4.4/
 
 LICENSE=	SSPLv1 APACHE20 # mongodb is SSPLv1, C++ driver is APACHE20
 LICENSE_COMB=	multi
@@ -21,8 +22,7 @@ ONLY_FOR_ARCHS_REASON=	only ported to amd64, aarch64, and powerpc64le on FreeBSD
 
 BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}cheetah3>0:devel/py-cheetah3@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}yaml>=3.11:devel/py-yaml@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}psutil>0:sysutils/py-psutil@${PY_FLAVOR} \
-		${LOCALBASE}/bin/ar:devel/binutils
+		${PYTHON_PKGNAMEPREFIX}psutil>0:sysutils/py-psutil@${PY_FLAVOR}
 LIB_DEPENDS=	libpcre.so:devel/pcre \
 		libcurl.so:ftp/curl \
 		libsnappy.so:archivers/snappy
@@ -32,7 +32,7 @@ USE_RC_SUBR=	mongod
 
 PORTSCOUT=	limit:^4\.4\.
 
-CONFLICTS_INSTALL=	mongodb36 mongodb4[02] mongodb50
+CONFLICTS_INSTALL=	mongodb[0-9][0-9] # etc/mongodb.conf.sample
 
 OPTIONS_DEFINE=	LTO SASL SSL
 OPTIONS_DEFAULT=LTO SASL SSL
@@ -48,7 +48,7 @@ MAKE_ARGS=	--use-system-zlib \
 		-j ${MAKE_JOBS_NUMBER} \
 		--disable-warnings-as-errors \
 		VERBOSE=on \
-		AR=${PREFIX}/bin/ar
+		AR=llvm-ar
 
 USERS=		mongodb
 GROUPS=		mongodb

@@ -1,5 +1,3 @@
-# Created by: fluffy
-
 PKGNAMESUFFIX=		-table-ldap
 PORTREVISION=		1
 
@@ -9,7 +7,7 @@ PLIST_FILES=		libexec/opensmtpd/table-ldap
 
 CONFIGURE_ARGS+=	--with-table-ldap
 
-USE_OPENLDAP=		client
+USES=	ldap
 
 MASTERDIR=		${.CURDIR}/../opensmtpd-extras
 SLAVE_PORT=		yes

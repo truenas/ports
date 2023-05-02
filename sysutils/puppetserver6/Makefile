@@ -1,5 +1,5 @@
 PORTNAME=	puppetserver
-PORTVERSION=	6.17.1
+PORTVERSION=	6.20.0
 CATEGORIES=	sysutils java
 MASTER_SITES=	https://downloads.puppetlabs.com/puppet/:upstream \
 		https://raw.githubusercontent.com/jruby/jruby/fb3ba4b3543b72e735ba53b51e6b7ec8a9916e1b/lib/ruby/stdlib/ffi/:ffi
@@ -10,8 +10,12 @@ EXTRACT_ONLY=	${DISTNAME}${EXTRACT_SUFX}
 
 MAINTAINER=	puppet@FreeBSD.org
 COMMENT=	Puppet Server running in the JVM
+WWW=		https://docs.puppetlabs.com/puppetserver/latest/services_master_puppetserver.html
 
 LICENSE=	APACHE20
+
+DEPRECATED=	Puppet 6 has reached EOL
+EXPIRATION_DATE=2023-06-01
 
 RUN_DEPENDS=	bash>=0:shells/bash \
 		puppet6>=0:sysutils/puppet6 \
@@ -19,14 +23,13 @@ RUN_DEPENDS=	bash>=0:shells/bash \
 		rubygem-semantic_puppet>=1:devel/rubygem-semantic_puppet \
 		sudo>=1:security/sudo
 
-USES=		shebangfix
+USES=		ruby shebangfix
 USE_RC_SUBR=	puppetserver
 
 USE_JAVA=	yes
-USE_RUBY=	yes
 NO_ARCH=	yes
 NO_BUILD=	yes
-JAVA_VERSION=	1.8+
+JAVA_VERSION=	8+
 
 CONFLICTS_INSTALL=	puppetserver7
 

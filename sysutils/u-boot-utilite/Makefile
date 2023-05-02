@@ -1,6 +1,6 @@
 PORTNAME=	u-boot
 PORTVERSION=	2015.07
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	sysutils
 MASTER_SITES=	ftp://ftp.denx.de/pub/u-boot/:source1 \
 		http://www.compulab.co.il/wp-content/uploads/2015/10/:source2
@@ -10,32 +10,34 @@ DISTFILES=	u-boot-2015.07.tar.bz2:source1 \
 
 MAINTAINER=	martin@waschbuesch.de
 COMMENT=	Cross-build U-Boot loader for Utilite (and Utilite Pro)
+WWW=		https://www.denx.de/wiki/U-Boot
 
 LICENSE=	GPLv2
 
+DEPRECATED=	This port depends on the long time unsupported upstream devel/arm-none-eabi-gcc492.
+EXPIRATION_DATE=	2023-04-30
+
 BUILD_DEPENDS=	${CROSS_GCC}:devel/arm-none-eabi-gcc492
 
-BROKEN_powerpc64=	fails to compile: cmd_mem.c: internal compiler error: Segmentation fault
+USES=		gmake
 
-CROSS_GCC=	arm-none-eabi-gcc-4.9.2
+MAKE_ARGS+=     ARCH=arm \
+                CC=${CROSS_GCC} \
+                CROSS_COMPILE=arm-none-eabi- \
+                HOSTCC=cc
 
 EXTRA_PATCHES=	${WRKDIR}/cm-fx6-u-boot/u-boot/u-boot-2015.07-cm-fx6-3.patch:-p1
 
 NO_ARCH=	yes
 
-USES=		gmake
-
 PORTSCOUT=	ignore:1
 
 U_BOOT_DIR=	share/u-boot/${PORTNAME}${PKGNAMESUFFIX}
 
-MAKE_ARGS+=	ARCH=arm \
-		CC=${CROSS_GCC} \
-		CROSS_COMPILE=arm-none-eabi- \
-		HOSTCC=cc
-
 do-configure:
 	cd ${WRKSRC}; ${MAKE_CMD} ${MAKE_ARGS} cm_fx6_config
+
+CROSS_GCC=	arm-none-eabi-gcc-4.9.2
 
 # The build results in two output files: SPL, and u-boot.img.
 # Combine them into a single u-boot.imx so that there is only one file to be

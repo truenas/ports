@@ -1,13 +1,11 @@
 PORTNAME=	opencv
-DISTVERSION=	4.5.3
-PORTREVISION=	5
+DISTVERSION=	4.6.0
+PORTREVISION=	7
 CATEGORIES=	graphics
 
-PATCH_SITES=	https://github.com/opencv/opencv/commit/
-PATCHFILES=	998406d20e93aa36b26fd56506f3ea8a82b43c24.patch:-p1
-
-MAINTAINER=	tcberner@FreeBSD.org
+MAINTAINER=	desktop@FreeBSD.org
 COMMENT=	Open Source Computer Vision library
+WWW=		https://www.opencv.org/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -38,17 +36,18 @@ GH_TAGNAME=	v0.1.1f:ade \
 CMAKE_ON=	OPENCV_GENERATE_PKGCONFIG
 CMAKE_OFF=	OPENCV_GENERATE_SETUPVARS \
 		BUILD_opencv_python2 \
-		BUILD_TESTS \
-		WITH_TESSERACT
+		BUILD_TESTS
 CMAKE_ARGS=	-DOPENCV_EXTRA_MODULES_PATH="${WRKSRC}/contrib/modules"
 
 DATADIR=	${PREFIX}/share/${PORTNAME}4
 
 PLIST_SUB=	SHLIB_VER=${DISTVERSION}
 
-OPTIONS_DEFINE=		EIGEN GDAL GDCM HARDENING JAVA LTO OPENCL PATENTED PROTOBUF PYTHON TBB VTK
+OPTIONS_DEFINE=		EIGEN GDAL GDCM HARDENING JAVA LTO OPENCL \
+			PATENTED PROTOBUF PYTHON TBB TESSERACT
 
-OPTIONS_GROUP=		IMAGE VIDEO
+OPTIONS_GROUP=		GUI IMAGE VIDEO
+OPTIONS_GROUP_GUI=	GTK3 VTK
 OPTIONS_GROUP_IMAGE=	GPHOTO2 JPEG OPENEXR PNG TIFF
 OPTIONS_GROUP_VIDEO=	DC1394 FFMPEG GSTREAMER V4L VULKAN WEBP XINE
 
@@ -65,7 +64,7 @@ OPTIONS_DEFAULT=	EIGEN GDAL GDCM OPENCL PROTOBUF PYTHON \
 			OPENJPEG
 OPTIONS_SUB=		yes
 
-# Normal options (EIGEN GDAL GDCM HARDENING JAVA LTO OPENCL PATENTED PROTOBUF PYTHON TBB VTK)
+# Normal options (EIGEN GDAL GDCM HARDENING JAVA LTO OPENCL PATENTED PROTOBUF PYTHON TBB)
 EIGEN_DESC=		Add Eigen v3 Support, builds sfm modules
 EIGEN_CMAKE_BOOL=	WITH_EIGEN
 EIGEN_USES=		eigen:3
@@ -111,11 +110,23 @@ PYTHON_CMAKE_ON=	-DOPENCV_PYTHON3_INSTALL_PATH=${PYTHON_SITELIBDIR}
 
 TBB_DESC=		Add Intel Threading Building Blocks Support
 TBB_CMAKE_BOOL=		WITH_TBB
-TBB_LIB_DEPENDS=	libtbb.so:devel/tbb
+TBB_LIB_DEPENDS=	libtbb.so:devel/onetbb
+
+TESSERACT_DESC=		Add Tesseract-based OCR
+TESSERACT_LIB_DEPENDS=	libtesseract.so:graphics/tesseract
+TESSERACT_CMAKE_BOOL=	WITH_TESSERACT
+###
+
+# GUI group options (GTK3 VTK)
+GTK3_USES=		gnome
+GTK3_USE=		gnome=gtk30
+GTK3_CMAKE_BOOL=	WITH_GTK
 
 VTK_DESC=		Include VTK library support (build opencv_viz module)
 VTK_CMAKE_BOOL=		WITH_VTK
-VTK_LIB_DEPENDS=	libvtkCommonCore-9.1.so:math/vtk9
+VTK_LIB_DEPENDS=	libvtkCommonCore-${VTK_VER}.so:math/vtk${VTK_VER:R}
+VTK_USES=		qt:5
+VTK_USE=		QT=buildtools:build,qmake:build
 ###
 
 # IMAGE group options (GPHOTO2 JPEG OPENEXR PNG TIFF)
@@ -151,7 +162,7 @@ FFMPEG_LIB_DEPENDS=	libavcodec.so:multimedia/ffmpeg
 
 GSTREAMER_DESC=		Add GSTREAMER Support
 GSTREAMER_CMAKE_BOOL=	WITH_GSTREAMER
-GSTREAMER_USE=		GSTREAMER1=yes
+GSTREAMER_USES=		gstreamer
 
 V4L_DESC=		Enable support for Video for Linux
 V4L_CMAKE_BOOL=		WITH_V4L WITH_LIBV4L
@@ -175,11 +186,13 @@ XINE_LIB_DEPENDS=	libxine.so:multimedia/libxine
 # BLAS group options (ATLAS OPENBLAS NOBLAS)
 ATLAS_DESC=		ATLAS blas implementation with lapacke
 ATLAS_USES=		blaslapack:atlas
-ATLAS_LIB_DEPENDS=	liblapacke.so:math/lapacke
+ATLAS_BUILD_DEPENDS=	cblas>0:math/cblas \
+			lapacke>0:math/lapacke
 
 OPENBLAS_DESC=		OpenBLAS blas implementation with lapacke
 OPENBLAS_USES=		blaslapack:openblas
-OPENBLAS_LIB_DEPENDS=	liblapacke.so:math/lapacke
+OPENBLAS_BUILD_DEPENDS=	cblas>0:math/cblas \
+			lapacke>0:math/lapacke
 
 NOBLAS_DESC=		Disable support for lapack/blas
 NOBLAS_CMAKE_BOOL_OFF=	WITH_LAPACK
@@ -224,4 +237,5 @@ post-patch:
 	${REINPLACE_CMD} -e 's|/usr/lib/atlas-base|${LOCALBASE}/lib|g' ${WRKSRC}/cmake/OpenCVFindAtlas.cmake
 	${REINPLACE_CMD} -e 's|/usr/include/atlas|${LOCALBASE}/include|g' ${WRKSRC}/cmake/OpenCVFindAtlas.cmake
 
+.include <../../math/vtk9/Makefile.version>
 .include <bsd.port.mk>

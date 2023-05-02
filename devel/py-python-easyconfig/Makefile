@@ -1,12 +1,13 @@
 PORTNAME=	python-easyconfig
 PORTVERSION=	0.1.7
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	Python-EasyConfig-${PORTVERSION}
 
-MAINTAINER=	swills@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Library for loading configurations easily in Python
+WWW=		https://github.com/RussellLuo/easyconfig
 
 LICENSE=	MIT
 

@@ -1,12 +1,11 @@
-# Created by: kbowling
-
 PORTNAME=		inn-current
 PORTVERSION=		${SNAPSHOT}
+PORTREVISION=		0
 MASTER_SITE_SUBDIR=	inn/snapshots
 DISTNAME=		inn-${BRANCH}-${SNAPSHOT}
 
-BRANCH=		2.7
-SNAPSHOT=	20211205
+BRANCH=		2.8
+SNAPSHOT=	20230415
 
 CONFLICTS=	inn-2.[0-9]*
 
@@ -18,5 +17,8 @@ WRKSRC=		${WRKDIR}/${DISTNAME}
 
 CPE_PRODUCT=	inn
 
-.include "${.CURDIR}/../inn/Makefile"
+INNLIB_LONG=		9.0.0
+LIBVER_LONG=		3.0.7
+LIBSTORAGEVER_LONG=	3.1.1
 
+.include "${.CURDIR}/../inn/Makefile"

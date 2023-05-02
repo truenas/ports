@@ -5,6 +5,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Library for extracting information from a git repository
+WWW=		https://github.com/gitlabhq/grit
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -15,7 +16,6 @@ RUN_DEPENDS=	rubygem-charlock_holmes>=0.7<1:textproc/rubygem-charlock_holmes \
 		rubygem-posix-spawn>=0.3<1:devel/rubygem-posix-spawn
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

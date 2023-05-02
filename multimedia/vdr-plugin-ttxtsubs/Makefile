@@ -1,5 +1,3 @@
-# Created by: Juergen Lock <nox@FreeBSD.org>
-
 PORTNAME=	vdr-plugin-ttxtsubs
 PORTVERSION=	0.2.4
 PORTREVISION=	7
@@ -9,6 +7,7 @@ DISTNAME=	${PORTNAME:S/-plugin-/-/}-${DISTVERSIONPREFIX}${DISTVERSION}${DISTVERS
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Video Disk Recorder - teletext subtitle plugin
+WWW=		https://projects.vdr-developer.org/projects/plg-ttxtsubs
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,19 +1,18 @@
-# Created by: Andrey <gugu@zoo.rambler.ru>
-
 PORTNAME=	Math-BigInt-Pari
-PORTVERSION=	1.3008
+PORTVERSION=	1.3011
 CATEGORIES=	math perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Use Math::Pari for Math::BigInt routines
+WWW=		https://metacpan.org/release/Math-BigInt-Pari
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual
 
 BUILD_DEPENDS=	${RUN_DEPENDS}
-RUN_DEPENDS=	p5-Math-BigInt>=1.999819:math/p5-Math-BigInt \
+RUN_DEPENDS=	p5-Math-BigInt>=1.999838:math/p5-Math-BigInt \
 		p5-Math-Pari>=2.010709:math/p5-Math-Pari
 
 USES=		perl5

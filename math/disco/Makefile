@@ -1,13 +1,14 @@
 PORTNAME=	disco
 DISTVERSIONPREFIX=	releases/
 DISTVERSION=	1.0.0-33
-PORTREVISION=	1
+PORTREVISION=	4
 DISTVERSIONSUFFIX=	-g68720be
 CATEGORIES=	math
 PKGNAMEPREFIX=	coin-or-
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Discrete Conic Optimization Solver
+WWW=		https://github.com/coin-or/DisCO
 
 LICENSE=	EPL
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -38,6 +39,8 @@ GH_ACCOUNT=	coin-or
 GH_PROJECT=	DisCO
 
 GNU_CONFIGURE=	yes
+
+CONFLICTS_INSTALL=	disco mono mono[0-9]*
 
 INSTALL_TARGET=	install-strip
 

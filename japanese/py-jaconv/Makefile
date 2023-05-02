@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	jaconv
 PORTVERSION=	0.3
 CATEGORIES=	japanese python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Japanese character interconverter for Hiragana, Katakana, Hankaku, Zenkaku and more
+WWW=		https://github.com/ikegami-yukino/jaconv
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

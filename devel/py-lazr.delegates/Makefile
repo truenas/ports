@@ -1,11 +1,12 @@
 PORTNAME=	lazr.delegates
 PORTVERSION=	2.0.4
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	acm@FreeBSD.org
 COMMENT=	Easily write objects that delegate behavior
+WWW=		https://launchpad.net/lazr.delegates
 
 LICENSE=	LGPL3
 LICENSE_FILE=	${WRKSRC}/COPYING.txt

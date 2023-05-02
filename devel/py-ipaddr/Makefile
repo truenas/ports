@@ -1,13 +1,12 @@
-# Created by: Murilo Opsfelder <mopsfelder@gmail.com>
-
 PORTNAME=	ipaddr
 PORTVERSION=	2.2.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	mopsfelder@gmail.com
 COMMENT=	Google open source IPv4/IPv6 manipulation library in Python
+WWW=		https://github.com/google/ipaddr-py
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/COPYING

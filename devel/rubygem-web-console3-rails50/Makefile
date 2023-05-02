@@ -6,6 +6,7 @@ PKGNAMESUFFIX=	3-rails50
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Debugging tool for your Ruby on Rails applications
+WWW=		https://github.com/rails/web-console
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/MIT-LICENSE
@@ -16,7 +17,6 @@ RUN_DEPENDS=	rubygem-activemodel50>=5.0:databases/rubygem-activemodel50 \
 		rubygem-railties50>=5.0:www/rubygem-railties50
 
 USES=		cpe gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

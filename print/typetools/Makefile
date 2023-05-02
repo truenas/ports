@@ -1,5 +1,3 @@
-# Created by: ijliao
-
 PORTNAME=	typetools
 PORTVERSION=	2.108
 CATEGORIES=	print
@@ -8,9 +6,11 @@ DISTNAME=	lcdf-${PORTNAME}-${PORTVERSION}
 
 MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Tools for manipulating fonts
+WWW=		https://www.lcdf.org/type/ #typetools
 
 LICENSE=	GPLv2
 
+USES=		tex
 USE_TEX=	kpathsea
 
 GNU_CONFIGURE=	yes

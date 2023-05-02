@@ -5,6 +5,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	antoine@FreeBSD.org
 COMMENT=	Ruby Exploitation(Rex) Library for Binary Manipulation
+WWW=		https://github.com/rapid7/rex-bin_tools
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -18,7 +19,6 @@ RUN_DEPENDS=	nasm>=0:devel/nasm \
 
 NO_ARCH=	yes
 
-USE_RUBY=	yes
 USES=		gem
 
 PLIST_FILES=	bin/msfbinscan \

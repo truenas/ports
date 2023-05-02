@@ -1,13 +1,12 @@
-# Created by: Shaun Amott <shaun@FreeBSD.org>
-
 PORTNAME=	h2
 PORTVERSION=	4.0.0
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	shaun@FreeBSD.org
 COMMENT=	HTTP/2 State-Machine based protocol implementation
+WWW=		https://hyper.rtfd.org/
 
 LICENSE=	MIT
 

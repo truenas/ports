@@ -1,5 +1,3 @@
-# Created by: Makoto Matsushita <matusita@jp.freebsd.org>
-
 PORTNAME=	kon2
 PORTVERSION=	0.3
 PORTREVISION=	7
@@ -24,6 +22,8 @@ SUB_LIST=	KON16FONT=${KON16FONT} \
 
 USES=		cpe
 CPE_VENDOR=	ishikawa_mutsumi
+
+CONFLICTS_INSTALL=	ja-kon2-*dot # bin/fld
 
 OPTIONS_DEFINE=	DOCS
 

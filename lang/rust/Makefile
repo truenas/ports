@@ -1,23 +1,21 @@
-# Created by: Jyun-Yan You <jyyou@cs.nctu.edu.tw>
-
 PORTNAME=	rust
-PORTVERSION?=	1.57.0
-PORTREVISION?=	0
+PORTVERSION?=	1.69.0
+PORTREVISION?=	1
 CATEGORIES=	lang
 MASTER_SITES=	https://static.rust-lang.org/dist/:src \
 		https://dev-static.rust-lang.org/dist/:src \
-		LOCAL/tobik/rust:bootstrap \
-		LOCAL/mikael/rust:bootstrap \
+		LOCAL/rust:bootstrap \
 		https://static.rust-lang.org/dist/:bootstrap
 DISTNAME?=	${PORTNAME}c-${PORTVERSION}-src
 DISTFILES?=	${NIGHTLY_DATE:D${NIGHTLY_DATE}/}${DISTNAME}${EXTRACT_SUFX}:src \
-		${_RUSTC_BOOTSTRAP}${BOOTSTRAPS_SUFFIX}${EXTRACT_SUFX}:bootstrap \
-		${_RUST_STD_BOOTSTRAP}${BOOTSTRAPS_SUFFIX}${EXTRACT_SUFX}:bootstrap \
-		${_CARGO_BOOTSTRAP}${BOOTSTRAPS_SUFFIX}${EXTRACT_SUFX}:bootstrap
+		${_RUSTC_BOOTSTRAP}${EXTRACT_SUFX}:bootstrap \
+		${_RUST_STD_BOOTSTRAP}${EXTRACT_SUFX}:bootstrap \
+		${_CARGO_BOOTSTRAP}${EXTRACT_SUFX}:bootstrap
 DIST_SUBDIR?=	rust
 
 MAINTAINER=	rust@FreeBSD.org
 COMMENT=	Language with a focus on memory safety and concurrency
+WWW=		https://www.rust-lang.org/
 
 LICENSE=	APACHE20 MIT
 LICENSE_COMB=	dual
@@ -25,21 +23,20 @@ LICENSE_FILE_APACHE20=	${WRKSRC}/LICENSE-APACHE
 LICENSE_FILE_MIT=	${WRKSRC}/LICENSE-MIT
 
 IGNORE_FreeBSD_12_powerpc=	is missing a bootstrap for FreeBSD 12.x powerpc
-ONLY_FOR_ARCHS?=	aarch64 amd64 armv6 armv7 i386 powerpc64 powerpc64le \
-			powerpc
+ONLY_FOR_ARCHS?=	aarch64 amd64 armv7 i386 powerpc64 powerpc64le powerpc \
+			riscv64
 ONLY_FOR_ARCHS_REASON?=	requires prebuilt bootstrap compiler
 
-BUILD_DEPENDS=	cmake:devel/cmake
+BUILD_DEPENDS=	cmake:devel/cmake-core
 LIB_DEPENDS=	libcurl.so:ftp/curl
 
-USES=		cpe ninja:build pkgconfig python:3.6+,build ssl tar:xz
+USES=		cpe ninja:build pkgconfig python:3.7+,build shebangfix ssl tar:xz
 
 CPE_VENDOR=	rust-lang
 
 MAKE_ENV=	DESTDIR=${STAGEDIR} \
 		LIBGIT2_NO_PKG_CONFIG=1 \
-		OPENSSL_DIR="${OPENSSLBASE}" \
-		RUST_BACKTRACE=1
+		OPENSSL_DIR="${OPENSSLBASE}"
 TEST_ENV=	${MAKE_ENV} \
 		ALLOW_NONZERO_RLIMIT_CORE=1
 
@@ -53,7 +50,9 @@ TMPDIR?=	${WRKDIR}
 
 OPTIONS_DEFINE=		DOCS GDB SOURCES WASM
 OPTIONS_DEFAULT=	SOURCES WASM
-OPTIONS_EXCLUDE_armv6=	DOCS
+.if !defined(NIGHTLY_DATE)
+OPTIONS_EXCLUDE=	DOCS # https://github.com/rust-lang/rust/issues/76526
+.endif
 
 GDB_DESC=	Install ports gdb (necessary for debugging rust programs)
 SOURCES_DESC=	Install source files
@@ -62,30 +61,43 @@ WASM_DESC=	Build the WebAssembly target (wasm32-unknown-unknown)
 DOCS_VARS=		_RUST_BUILD_DOCS=true
 DOCS_VARS_OFF=		_RUST_BUILD_DOCS=false
 GDB_RUN_DEPENDS=	${LOCALBASE}/bin/gdb:devel/gdb
-SOURCES_VARS=		_RUST_TOOLS+=src
-WASM_VARS=		_RUST_BUILD_WASM=true \
+SOURCES_VARS=		_COMPONENTS+=rust-src-${_PACKAGE_VERS} \
+			_RUST_TOOLS+=src
+WASM_VARS=		_COMPONENTS+="rust-analysis-${_PACKAGE_VERS}-wasm32-unknown-unknown rust-std-${_PACKAGE_VERS}-wasm32-unknown-unknown" \
+			_RUST_BUILD_WASM=true \
 			_RUST_TARGETS+=wasm32-unknown-unknown
 WASM_VARS_OFF=		_RUST_BUILD_WASM=false
 
 # See WRKSRC/src/stage0.json for the date and version values
-BOOTSTRAPS_DATE?=		2021-10-21
-RUST_BOOTSTRAP_VERSION?=	1.56.0
-
-BOOTSTRAPS_SUFFIX?=		${BOOTSTRAPS_SUFFIX_${ARCH}}
-BOOTSTRAPS_SUFFIX_powerpc64?=	-${PPC_ABI:tl}
+BOOTSTRAPS_DATE?=		2023-03-28
+RUST_BOOTSTRAP_VERSION?=	1.68.0
 
 CARGO_VENDOR_DIR?=		${WRKSRC}/vendor
 
 # Rust's target arch string might be different from *BSD arch strings
 _RUST_ARCH_amd64=	x86_64
 _RUST_ARCH_i386=	i686
+_RUST_ARCH_riscv64=	riscv64gc
 _RUST_TARGET=		${_RUST_ARCH_${ARCH}:U${ARCH}}-unknown-${OPSYS:tl}
 _RUST_TARGETS=		${_RUST_TARGET}
-_RUST_TOOLS=		analysis cargo clippy rustfmt
+_RUST_TOOLS=		analysis cargo clippy rustdoc rustfmt
 
 _RUSTC_BOOTSTRAP=	${BOOTSTRAPS_DATE_${ARCH}:U${BOOTSTRAPS_DATE}}/rustc-${RUST_BOOTSTRAP_VERSION_${ARCH}:U${RUST_BOOTSTRAP_VERSION}}-${_RUST_TARGET}
 _RUST_STD_BOOTSTRAP=	${BOOTSTRAPS_DATE_${ARCH}:U${BOOTSTRAPS_DATE}}/rust-std-${RUST_BOOTSTRAP_VERSION_${ARCH}:U${RUST_BOOTSTRAP_VERSION}}-${_RUST_TARGET}
 _CARGO_BOOTSTRAP=	${BOOTSTRAPS_DATE_${ARCH}:U${BOOTSTRAPS_DATE}}/cargo-${RUST_BOOTSTRAP_VERSION_${ARCH}:U${RUST_BOOTSTRAP_VERSION}}-${_RUST_TARGET}
+
+_PACKAGE_VERS=		${NIGHTLY_DATE:?nightly:${PORTVERSION}}
+_COMPONENTS+=		cargo-${_PACKAGE_VERS}-${_RUST_TARGET} \
+			clippy-${_PACKAGE_VERS}-${_RUST_TARGET} \
+			rustc-${_PACKAGE_VERS}-${_RUST_TARGET} \
+			rustfmt-${_PACKAGE_VERS}-${_RUST_TARGET} \
+			rust-analysis-${_PACKAGE_VERS}-${_RUST_TARGET} \
+			rust-std-${_PACKAGE_VERS}-${_RUST_TARGET}
+
+# https://github.com/bjorn3/rustc_codegen_cranelift/commit/83d470d91c15d0cb5890705291e6ee9e5be8a842
+# https://github.com/rust-lang/rustc_codegen_gcc/pull/160
+SHEBANG_FILES=		compiler/rustc_codegen_cranelift/scripts/* \
+			compiler/rustc_codegen_gcc/*.sh compiler/rustc_codegen_gcc/build_sysroot/*.sh
 
 .include <bsd.port.pre.mk>
 
@@ -94,15 +106,23 @@ IGNORE=		is only for FreeBSD
 .endif
 
 .if ${ARCH} == powerpc
-# bfd to link rustc_driver; lld currently can't
-BUILD_DEPENDS+=	ld.bfd:devel/binutils
+LIB_DEPENDS+=	libatomic.so:lang/gcc${GCC_DEFAULT}
+MAKE_ENV+=	RUSTFLAGS="-L/usr/local/lib/gcc${GCC_DEFAULT}"
 .else
-# rls needs 64-bit atomics
-_RUST_TOOLS+=	rls
+MAKE_ENV+=	RUST_BACKTRACE=1
 .endif
 
-.if exists(${PATCHDIR}/${ARCH}${BOOTSTRAPS_SUFFIX})
-EXTRA_PATCHES+=	${PATCHDIR}/${ARCH}${BOOTSTRAPS_SUFFIX}
+# rls doesn't build on rust nightly
+# rls needs 64-bit atomics: it doesn't build on powerpc
+.if !defined(NIGHTLY_DATE) && ${ARCH} != powerpc
+_RUST_TOOLS+=	rls
+_COMPONENTS+=	rls-${_PACKAGE_VERS}-${_RUST_TARGET}
+.endif
+
+# per https://rust-lang.github.io/rustup/concepts/components.html
+# rustc-dev is only usefull on nightly
+.if defined(NIGHTLY_DATE)
+_COMPONENTS+=	rustc-dev-${_PACKAGE_VERS}-${_RUST_TARGET}
 .endif
 
 # If the kernel does not return sane kern.proc.pathname values
@@ -115,19 +135,9 @@ EXTRA_PATCHES+=	${PATCHDIR}/${ARCH}${BOOTSTRAPS_SUFFIX}
 # anyway...
 .if exists(${PATCHDIR}/no-hardlinks)
 _KERN_OSRELDATE!=	${SYSCTL} -n kern.osreldate 2>/dev/null || echo 0
-.  if ${_KERN_OSRELDATE} >= 1400040
-.  elif ${_KERN_OSRELDATE} >= 1300521
-.  else
+.  if ${_KERN_OSRELDATE} < 1300521
 EXTRA_PATCHES+=		${PATCHDIR}/no-hardlinks
 .  endif
-.endif
-
-.if defined(PPC_ABI) && ${PPC_ABI} == ELFv1
-# The bootstrap is hardcoded to use gcc9
-# but we can build with a newer or older compiler as provided by USE_GCC=yes
-BUILD_DEPENDS+=	gcc9:lang/gcc9
-USE_GCC=	yes
-STRIP_CMD=	${LOCALBASE}/bin/strip # unsupported e_type with base strip
 .endif
 
 .ifdef QEMU_EMULATING
@@ -136,8 +146,7 @@ IGNORE=	fails to build with qemu-user-static
 
 .if make(makesum)
 DISTFILES:=	${DISTFILES:M*\:src} \
-		${ONLY_FOR_ARCHS:O:@_arch@${:!${MAKE} ARCH=${_arch} PPC_ABI=ELFv1 -V'DISTFILES:N*\:src'!}@} \
-		${ONLY_FOR_ARCHS:Mpowerpc64:@_arch@${:!${MAKE} ARCH=${_arch} PPC_ABI=ELFv2 -V'DISTFILES:N*\:src'!}@}
+		${ONLY_FOR_ARCHS:O:@_arch@${:!${MAKE} ARCH=${_arch} -V'DISTFILES:N*\:src'!}@}
 .endif
 
 post-patch:
@@ -148,16 +157,6 @@ post-patch:
 # Disable vendor checksums
 	@${REINPLACE_CMD} 's,"files":{[^}]*},"files":{},' \
 		${CARGO_VENDOR_DIR}/*/.cargo-checksum.json
-.if defined(PPC_ABI) && ${PPC_ABI} == ELFv1
-	@${REINPLACE_CMD} 's,%CC%,${CC},g' \
-		${WRKSRC}/compiler/rustc_llvm/build.rs \
-		${WRKSRC}/src/bootstrap/native.rs
-.if ${LOCALBASE} != /usr/local
-	@${REINPLACE_CMD} 's,/usr/local/,${LOCALBASE}/,g' \
-		${WRKSRC}/compiler/rustc_llvm/build.rs \
-		${WRKSRC}/src/bootstrap/native.rs
-.endif
-.endif
 
 do-configure:
 # Check that the running kernel has COMPAT_FREEBSD11 required by lang/rust post-ino64
@@ -237,20 +236,30 @@ do-configure:
 
 do-build:
 	@cd ${WRKSRC} && \
-		${SETENV} ${MAKE_ENV} ${PYTHON_CMD} x.py build --jobs=${MAKE_JOBS_NUMBER}
+		${SETENV} ${MAKE_ENV} ${PYTHON_CMD} x.py dist --jobs=${MAKE_JOBS_NUMBER}
 
 do-install:
-	@cd ${WRKSRC} && \
-		${SETENV} ${MAKE_ENV} ${PYTHON_CMD} x.py install --jobs=${MAKE_JOBS_NUMBER}
+	${RM} -r ${WRKDIR}/_extractdist
+.for _c in ${_COMPONENTS}
+	${MKDIR} ${WRKDIR}/_extractdist
+	${TAR} xf ${WRKDIR}/_build/dist/${_c}.tar.xz -C ${WRKDIR}/_extractdist
+	cd ${WRKDIR}/_extractdist/${_c} && \
+		${SH} install.sh \
+		--docdir="${STAGEDIR}${DOCSDIR}" \
+		--mandir="${STAGEDIR}${PREFIX}/share/man" \
+		--prefix="${STAGEDIR}${PREFIX}"
+	${RM} -r ${WRKDIR}/_extractdist
+.endfor
+
 # We autogenerate the plist file.  We do that, instead of the
 # regular pkg-plist, because several libraries have a computed
 # filename based on the absolute path of the source files.  As it
 # is user-specific, we cannot know their filename in advance.
-	@${RM} -r ${STAGEDIR}${DOCSDIR}/*.old \
-		${STAGEDIR}${DOCSDIR}/html/.lock \
-		${STAGEDIR}${DOCSDIR}/html/.stamp \
+	@${RM}	${STAGEDIR}${DOCSDIR}/*.old \
+		${STAGEDIR}${PREFIX}/lib/rustlib/components \
 		${STAGEDIR}${PREFIX}/lib/rustlib/install.log \
 		${STAGEDIR}${PREFIX}/lib/rustlib/manifest-* \
+		${STAGEDIR}${PREFIX}/lib/rustlib/rust-installer-version \
 		${STAGEDIR}${PREFIX}/lib/rustlib/uninstall.sh
 	@${FIND} ${STAGEDIR}${PREFIX}/bin ${STAGEDIR}${PREFIX}/lib \
 		${STAGEDIR}${PREFIX}/libexec -exec ${FILE} -i {} + | \

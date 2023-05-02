@@ -1,13 +1,12 @@
-# Created by: Carey Jones <mcj@acquiesce.org>
-
 PORTNAME=	mpg123
-PORTVERSION=	1.29.3
+DISTVERSION=	1.31.3
 CATEGORIES=	audio
 MASTER_SITES=	SF \
 		https://www.mpg123.de/download/
 
 MAINTAINER=	novel@FreeBSD.org
 COMMENT=	Command-line player for MPEG Layer 1, 2, and 3 audio files
+WWW=		https://www.mpg123.de/
 
 LICENSE=	LGPL21
 
@@ -36,6 +35,7 @@ FPU_CONFIGURE_OFF=	--with-cpu=arm_nofpu
 SNDIO_CONFIGURE_ON=	--with-audio=sndio,oss
 SNDIO_CONFIGURE_OFF=	--with-audio=oss
 SNDIO_LIB_DEPENDS=	libsndio.so:audio/sndio
+SNDIO_USES=		pkgconfig
 
 OPTCPU_CONFIGURE_ON=	--with-cpu=x86
 OPTCPU_CONFIGURE_OFF=	--with-cpu=generic_fpu

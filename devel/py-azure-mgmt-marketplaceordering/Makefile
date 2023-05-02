@@ -1,11 +1,12 @@
 PORTNAME=	azure-mgmt-marketplaceordering
 PORTVERSION=	1.1.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dbaio@FreeBSD.org
 COMMENT=	Microsoft Azure Market Place Ordering Client Library for Python
+WWW=		https://pypi.org/project/azure-mgmt-marketplaceordering/
 
 LICENSE=	MIT
 

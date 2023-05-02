@@ -1,8 +1,6 @@
-# Created by: Gea-Suan Lin <gslin@gslin.org>
-
 PORTNAME=	closure-compiler
 DISTVERSIONPREFIX=	v
-DISTVERSION=	20211006
+DISTVERSION=	20220601
 CATEGORIES=	www java
 MASTER_SITES=	https://repo1.maven.org/maven2/com/google/javascript/${PORTNAME}/v${DISTVERSION}/
 EXTRACT_SUFX=	.jar
@@ -10,10 +8,11 @@ EXTRACT_ONLY=
 
 MAINTAINER=	bryan@frimin.fr
 COMMENT=	Closure Compiler
+WWW=		https://developers.google.com/closure/compiler/
 
 LICENSE=	APACHE20
 
-USE_JAVA=	13
+USE_JAVA=	11+
 
 NO_ARCH=	yes
 NO_BUILD=	yes

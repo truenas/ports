@@ -1,10 +1,11 @@
 PORTNAME=	puppet-strings
-PORTVERSION=	2.9.0
+PORTVERSION=	3.0.1
 CATEGORIES=	textproc rubygems
 MASTER_SITES=	RG
 
 MAINTAINER=	puppet@FreeBSD.org
 COMMENT=	Puppet documentation extraction and presentation tool
+WWW=		https://github.com/puppetlabs/puppet-strings
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -13,7 +14,6 @@ RUN_DEPENDS=	rubygem-rgen>=0:devel/rubygem-rgen \
 		rubygem-yard>=0.9.5<0.10:textproc/rubygem-yard
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

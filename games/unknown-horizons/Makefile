@@ -1,11 +1,10 @@
-# Created by: GreenDog <fiziologus@gmail.com>
-
 PORTNAME=	unknown-horizons
 PORTVERSION=	2019.1
 CATEGORIES=	games
 
 MAINTAINER=	fiziologus@gmail.com
 COMMENT=	Real time simulation game
+WWW=		https://www.unknown-horizons.org/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/doc/licenses/GPL

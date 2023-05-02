@@ -1,29 +1,26 @@
-# Created by: Slaven Rezic <slaven@rezic.de>
-
 PORTNAME=	merkaartor
 PORTVERSION=	0.19.0
-PORTREVISION=	1
+PORTREVISION=	12
 CATEGORIES=	astro
 
 MAINTAINER=	dev2@heesakkers.info
 COMMENT=	Openstreetmap mapping program
+WWW=		http://merkaartor.be/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 LIB_DEPENDS=	libgdal.so:graphics/gdal \
 		libproj.so:graphics/proj \
-		libquazip1-qt5.so:archivers/quazip
+		libquazip1-qt5.so:archivers/quazip@qt5
 
 USES=		compiler:c++11-lang gnome pkgconfig qmake qt:5 sqlite:3
 USE_GITHUB=	yes
 GH_ACCOUNT=	openstreetmap
 USE_LDCONFIG=	yes
 
-CFLAGS+=	"-DACCEPT_USE_OF_DEPRECATED_PROJ_API_H=1"
-
 QMAKE_ARGS=	SYSTEM_QUAZIP=1
-USE_QT=		buildtools_build \
+USE_QT=		buildtools:build \
 		concurrent core gui imageformats network printsupport svg \
 		webkit widgets xml
 
@@ -47,7 +44,7 @@ ZBAR_BROKEN=	Does not build with option ZBAR selected
 DEBUG_QMAKE_OFF=	NODEBUG=1 RELEASE=1
 
 NLS_USES=	qt:5
-NLS_USE=	QT=linguisttools_build
+NLS_USE=	QT=linguisttools:build
 
 OPTIONS_SUB=	yes
 

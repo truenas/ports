@@ -1,11 +1,13 @@
 PORTNAME=	xfce4-panel-profiles
 PORTVERSION=	1.0.13
+PORTREVISION=	1
 CATEGORIES=	x11-wm xfce
 MASTER_SITES=	XFCE/apps
 DIST_SUBDIR=	xfce4
 
 MAINTAINER=	xfce@FreeBSD.org
 COMMENT=	Xfce's panel multiple layouts manager
+WWW=		https://git.xfce.org/apps/xfce4-panel-profiles/about/
 
 LICENSE=	GPLv3
 

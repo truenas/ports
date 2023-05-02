@@ -1,6 +1,6 @@
---- chrome/browser/platform_util_linux.cc.orig	2021-09-14 01:51:50 UTC
+--- chrome/browser/platform_util_linux.cc.orig	2023-03-09 06:31:50 UTC
 +++ chrome/browser/platform_util_linux.cc
-@@ -297,7 +297,9 @@ void RunCommand(const std::string& command,
+@@ -298,7 +298,9 @@ void RunCommand(const std::string& command,
  
    base::LaunchOptions options;
    options.current_directory = working_directory;

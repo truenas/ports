@@ -1,11 +1,12 @@
 PORTNAME=	git2r
 DISTVERSION=	0.27.1
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	devel
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	jpbeconne@free.fr
 COMMENT=	Provides Access to Git Repositories
+WWW=		https://CRAN.R-project.org/package=git2r
 
 LICENSE=	GPLv2
 

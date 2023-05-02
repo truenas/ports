@@ -1,5 +1,3 @@
-# Created by: Tim Bishop <tdb@FreeBSD.org>
-
 PORTNAME=	libstatgrab
 PORTVERSION=	0.17
 CATEGORIES=	devel
@@ -10,6 +8,7 @@ PKGNAMESUFFIX=	0
 
 MAINTAINER=	tdb@FreeBSD.org
 COMMENT=	Provides a useful interface to system statistics
+WWW=		https://www.i-scream.org/libstatgrab/
 
 USE_LDCONFIG=	yes
 GNU_CONFIGURE=	yes

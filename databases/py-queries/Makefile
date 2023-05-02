@@ -1,14 +1,12 @@
-# Created by: Grzegorz Blach <gblach@FreeBSD.org>
-
 PORTNAME=	queries
-PORTVERSION=	2.1.0
-PORTREVISION=	1
+PORTVERSION=	2.1.1
 CATEGORIES=	databases python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Simplified PostgreSQL client built upon Psycopg2
+WWW=		https://github.com/gmr/queries
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

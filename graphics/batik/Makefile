@@ -1,13 +1,12 @@
-# Created by: ijliao
-
 PORTNAME=	batik
-PORTVERSION=	1.14
+PORTVERSION=	1.16
 CATEGORIES=	graphics java
 MASTER_SITES=	APACHE/xmlgraphics/${PORTNAME}/binaries
 DISTNAME=	${PORTNAME}-bin-${PORTVERSION}
 
 MAINTAINER=	makc@FreeBSD.org
 COMMENT=	Java based SVG toolkit
+WWW=		https://xmlgraphics.apache.org/batik/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

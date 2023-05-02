@@ -1,51 +1,72 @@
---- components/os_crypt/os_crypt.h.orig	2021-05-12 22:05:50 UTC
+--- components/os_crypt/os_crypt.h.orig	2023-01-11 09:17:16 UTC
 +++ components/os_crypt/os_crypt.h
-@@ -17,9 +17,9 @@
+@@ -14,7 +14,7 @@
+ #include "build/build_config.h"
+ #include "build/chromecast_buildflags.h"
  
- // TODO(crbug.com/1052397): Revisit the macro expression once build flag switch
- // of lacros-chrome is complete.
--#if defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)
-+#if defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS) || defined(OS_BSD)
+-#if BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
  class KeyStorageLinux;
--#endif  // defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)
-+#endif  // defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS) || defined(OS_BSD)
+ #endif  // BUILDFLAG(IS_LINUX)
  
- #if defined(OS_WIN) || defined(OS_MAC)
- class PrefRegistrySimple;
-@@ -38,16 +38,16 @@ class OSCrypt {
-  public:
- // TODO(crbug.com/1052397): Revisit the macro expression once build flag switch
- // of lacros-chrome is complete.
--#if defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)
-+#if defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS) || defined(OS_BSD)
-   // Set the configuration of OSCrypt.
-   static COMPONENT_EXPORT(OS_CRYPT) void SetConfig(
-       std::unique_ptr<os_crypt::Config> config);
--#endif  // defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)
-+#endif  // defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS) || defined(OS_BSD)
+@@ -23,7 +23,7 @@ class PrefRegistrySimple;
+ class PrefService;
+ #endif
  
- // TODO(crbug.com/1052397): Revisit the macro expression once build flag switch
- // of lacros-chrome is complete.
- #if defined(OS_APPLE) || defined(OS_WIN) || \
--    (defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS))
-+    (defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)) || defined(OS_BSD)
-   // On Linux returns true iff the real secret key (not hardcoded one) is
-   // available. On MacOS returns true if Keychain is available (for mock
-   // Keychain it returns true if not using locked Keychain, false if using
-@@ -141,7 +141,7 @@ class OSCrypt {
+-#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_APPLE)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_BSD)
+ namespace crypto {
+ class SymmetricKey;
+ }
+@@ -36,7 +36,7 @@ struct Config;
+ // Temporary interface due to OSCrypt refactor. See OSCryptImpl for descriptions
+ // of what each function does.
+ namespace OSCrypt {
+-#if BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
+ COMPONENT_EXPORT(OS_CRYPT)
+ void SetConfig(std::unique_ptr<os_crypt::Config> config);
+ #endif  // BUILDFLAG(IS_LINUX)
+@@ -81,7 +81,7 @@ COMPONENT_EXPORT(OS_CRYPT) void UseMockKeyForTesting(b
+ COMPONENT_EXPORT(OS_CRYPT) void SetLegacyEncryptionForTesting(bool legacy);
+ COMPONENT_EXPORT(OS_CRYPT) void ResetStateForTesting();
+ #endif  // BUILDFLAG(IS_WIN)
+-#if (BUILDFLAG(IS_LINUX) && !BUILDFLAG(IS_CASTOS))
++#if (BUILDFLAG(IS_LINUX) && !BUILDFLAG(IS_CASTOS)) || BUILDFLAG(IS_BSD)
+ COMPONENT_EXPORT(OS_CRYPT)
+ void UseMockKeyStorageForTesting(
+     base::OnceCallback<std::unique_ptr<KeyStorageLinux>()>
+@@ -108,7 +108,7 @@ class COMPONENT_EXPORT(OS_CRYPT) OSCryptImpl {
+   // Returns singleton instance of OSCryptImpl.
+   static OSCryptImpl* GetInstance();
  
- // TODO(crbug.com/1052397): Revisit the macro expression once build flag switch
- // of lacros-chrome is complete.
--#if defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)
-+#if defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS) || defined(OS_BSD)
- // For unit testing purposes, inject methods to be used.
- // |get_key_storage_mock| provides the desired |KeyStorage| implementation.
- // If the provider returns |nullptr|, a hardcoded password will be used.
-@@ -156,6 +156,6 @@ void UseMockKeyStorageForTesting(
- // Clears any caching and most lazy initialisations performed by the production
- // code. Should be used after any test which required a password.
- COMPONENT_EXPORT(OS_CRYPT) void ClearCacheForTesting();
--#endif  // defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)
-+#endif  // defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS) || defined(OS_BSD)
+-#if BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
+   // Set the configuration of OSCryptImpl.
+   // This method, or SetRawEncryptionKey(), must be called before using
+   // EncryptString() and DecryptString().
+@@ -200,7 +200,7 @@ class COMPONENT_EXPORT(OS_CRYPT) OSCryptImpl {
+   void ResetStateForTesting();
+ #endif
  
- #endif  // COMPONENTS_OS_CRYPT_OS_CRYPT_H_
+-#if (BUILDFLAG(IS_LINUX) && !BUILDFLAG(IS_CASTOS))
++#if (BUILDFLAG(IS_LINUX) && !BUILDFLAG(IS_CASTOS)) || BUILDFLAG(IS_BSD)
+   // For unit testing purposes, inject methods to be used.
+   // |storage_provider_factory| provides the desired |KeyStorage|
+   // implementation. If the provider returns |nullptr|, a hardcoded password
+@@ -225,13 +225,13 @@ class COMPONENT_EXPORT(OS_CRYPT) OSCryptImpl {
+   crypto::SymmetricKey* GetEncryptionKey();
+ #endif  // BUILDFLAG(IS_APPLE)
+ 
+-#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_APPLE)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_BSD)
+   // This lock is used to make the GetEncryptionKey and
+   // GetRawEncryptionKey methods thread-safe.
+   static base::Lock& GetLock();
+ #endif  // BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_APPLE)
+ 
+-#if BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
+   // Create the KeyStorage. Will be null if no service is found. A Config must
+   // be set before every call to this method.
+   std::unique_ptr<KeyStorageLinux> CreateKeyStorage();

@@ -1,13 +1,12 @@
-# Created by: mb@imp.ch
-
 PORTNAME=	jpgtn
 PORTVERSION=	2.06
 PORTREVISION=	4
 CATEGORIES=	graphics
 MASTER_SITES=	SF SUNSITE/apps/graphics/misc
 
-MAINTAINER=	fuz@fuz.su
+MAINTAINER=	fuz@FreeBSD.org
 COMMENT=	Creates thumbnails of JPEG images
+WWW=		http://jpgtn.sourceforge.net/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

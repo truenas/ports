@@ -1,20 +1,24 @@
 PORTNAME=	breathe
-PORTVERSION=	4.31.0
+PORTVERSION=	4.35.0
 PORTREVISION=	1
 CATEGORIES=	devel python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	mandree@FreeBSD.org
 COMMENT=	Extension to reStructuredText and Sphinx to render Doxygen xml output
+WWW=		https://github.com/michaeljones/breathe
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 BUILD_DEPENDS=	${RUN_DEPENDS}
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}sphinx>=0,1:textproc/py-sphinx@${PY_FLAVOR} \
+RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}furo>=0:textproc/py-furo@${PY_FLAVOR} \
+		graphviz>=0:graphics/graphviz \
+		${PYTHON_PKGNAMEPREFIX}sphinx>=0,1:textproc/py-sphinx@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}sphinx-copybutton>=0:textproc/py-sphinx-copybutton@${PY_FLAVOR} \
 		doxygen:devel/doxygen
 
-USES=		gmake python:3.6+
+USES=		gmake python
 USE_GITHUB=	yes
 GH_TUPLE=	michaeljones:breathe:v${PORTVERSION}
 USE_PYTHON=	autoplist distutils
@@ -26,7 +30,7 @@ OPTIONS_DEFINE=		DOCS EXAMPLES PDFDOCS
 OPTIONS_SUB=		yes
 PDFDOCS_DESC=		Build PDF documentation (implies DOCS)
 PDFDOCS_IMPLIES=	DOCS
-PDFDOCS_BUILD_DEPENDS=	pdflatex:print/tex-formats
+PDFDOCS_BUILD_DEPENDS=	pdflatex:print/tex-formats dvips:print/tex-dvipsk
 
 PORTDOCS=	*
 PORTEXAMPLES=	*

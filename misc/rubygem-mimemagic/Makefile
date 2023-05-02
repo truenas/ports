@@ -5,6 +5,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	MIME detection by extension or content in pure ruby
+WWW=		https://github.com/mimemagicrb/mimemagic
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -14,7 +15,6 @@ RUN_DEPENDS=	rubygem-nokogiri>=1<2:textproc/rubygem-nokogiri \
 		shared-mime-info>=0:misc/shared-mime-info
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

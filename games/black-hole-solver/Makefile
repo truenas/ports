@@ -1,10 +1,11 @@
 PORTNAME=	black-hole-solver
-DISTVERSION=	1.10.1
+DISTVERSION=	1.12.0
 CATEGORIES=	games
 MASTER_SITES=	https://fc-solve.shlomifish.org/downloads/fc-solve/
 
 MAINTAINER=	tcberner@FreeBSD.org
 COMMENT=	Black Hole Solitaire Solver
+WWW=		https://www.shlomifish.org/open-source/projects/black-hole-solitaire-solver
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/COPYING

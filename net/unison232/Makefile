@@ -1,8 +1,6 @@
-# Created by: Dan Pelleg <dpelleg+unison@cs.cmu.edu>
-
 PORTNAME=	unison
 PORTVERSION=	2.32.52
-PORTREVISION=	12
+PORTREVISION=	14
 CATEGORIES=	net
 MASTER_SITES=	https://www.cis.upenn.edu/~bcpierce/unison/download/releases/${DISTNAME}/
 DISTFILES=	${EXTRACT_ONLY} ${_EXTRA_DOCS}
@@ -12,6 +10,7 @@ EXTRACT_ONLY=	${DISTNAME}${EXTRACT_SUFX}
 MAINTAINER=	mandree@FreeBSD.org
 # Implicit approval for port changes granted to Guido Falsi <madpilot@FreeBSD.org>
 COMMENT=	User-level file synchronization tool
+WWW=		https://www.cis.upenn.edu/~bcpierce/unison/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -32,7 +31,6 @@ x11_BUILD_DEPENDS=	lablgtk2:x11-toolkits/ocaml-lablgtk2 \
 x11_LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig \
 			libfreetype.so:print/freetype2 \
 			libharfbuzz.so:print/harfbuzz
-x11_RUN_DEPENDS=	lablgtk2:x11-toolkits/ocaml-lablgtk2
 x11_CONFLICTS_INSTALL=		unison${_VERSIONSUFFIX}-nox11
 
 PLIST_SUB=	PORTVERSION=${PORTVERSION}

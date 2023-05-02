@@ -1,12 +1,12 @@
-# Created by: TAKATSU Tomonari <tota@FreeBSD.org>
-
 PORTNAME=	sandwich
-DISTVERSION=	3.0-1
+DISTVERSION=	3.0-2
+PORTREVISION=	1
 CATEGORIES=	math
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Robust Covariance Matrix Estimators
+WWW=		https://cran.r-project.org/web/packages/sandwich/
 
 LICENSE=	GPLv2+
 

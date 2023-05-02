@@ -1,11 +1,12 @@
 PORTNAME=	yandex-money-sdk
 PORTVERSION=	0.1.3
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	rm@FreeBSD.org
 COMMENT=	SDK yandex money API
+WWW=		https://pypi.org/project/yandex-money-sdk/
 
 LICENSE=	MIT
 

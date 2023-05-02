@@ -1,12 +1,13 @@
 PORTNAME=	pycollada
 DISTVERSION=	0.6
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	graphics python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	tj+freebsd_ports@a13.fr
 COMMENT=	Python library for reading and writing collada documents
+WWW=		https://pycollada.readthedocs.org/
 
 LICENSE=	BSD3CLAUSE
 

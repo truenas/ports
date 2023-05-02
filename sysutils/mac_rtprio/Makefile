@@ -1,5 +1,3 @@
-# Created by: Jov <amutu@amutu.com>
-
 PORTNAME=	mac_rtprio
 DISTVERSION=	g20170417
 CATEGORIES=	sysutils
@@ -7,6 +5,7 @@ PKGNAMESUFFIX=	-kmod
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	MAC policy to manage access for setting realtime priorities by GID
+WWW=		https://github.com/pbiernacki/mac_rtprio
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

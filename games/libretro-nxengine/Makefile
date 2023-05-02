@@ -1,9 +1,10 @@
 PORTNAME=	libretro-nxengine
-PORTVERSION=	0.20210214
+PORTVERSION=	0.20220301
 CATEGORIES=	games
 
-MAINTAINER=	menelkir@itroll.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Cave Story game engine clone for libretro
+WWW=		https://github.com/libretro/nxengine-libretro
 
 LICENSE=	GPLv3
 
@@ -13,7 +14,7 @@ USE_LDCONFIG=	yes
 USE_GITHUB=	yes
 GH_ACCOUNT=	libretro
 GH_PROJECT=	nxengine-libretro
-GH_TAGNAME=	10c4381
+GH_TAGNAME=	fc102fa
 
 PLIST_FILES=	lib/libretro/nxengine_libretro.so
 

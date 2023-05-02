@@ -1,11 +1,12 @@
 PORTNAME=	pybix
 PORTVERSION=	0.0.8
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dbaio@FreeBSD.org
 COMMENT=	Python based Zabbix API utility with helper functions
+WWW=		https://pypi.org/project/pybix/
 
 LICENSE=	MIT
 

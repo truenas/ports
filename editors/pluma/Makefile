@@ -1,14 +1,13 @@
-# Created by: Joe Marcus Clarke <marcus@FreeBSD.org>
-
 PORTNAME=	pluma
 PORTVERSION=	1.26.0
-PORTREVISION=	1
+PORTREVISION=	4
 CATEGORIES=	editors mate
 MASTER_SITES=	MATE
 DIST_SUBDIR=	mate
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Small but powerful text editor for MATE Desktop Environment
+WWW=		https://mate-desktop.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

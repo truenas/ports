@@ -1,67 +1,71 @@
---- chrome/browser/flag_descriptions.h.orig	2021-09-24 04:25:58 UTC
+--- chrome/browser/flag_descriptions.h.orig	2023-04-05 11:05:06 UTC
 +++ chrome/browser/flag_descriptions.h
-@@ -22,9 +22,9 @@
- #include "printing/buildflags/buildflags.h"
- #include "third_party/blink/public/common/buildflags.h"
+@@ -3568,7 +3568,7 @@ extern const char kLacrosScreenCoordinatesEnabledName[
+ extern const char kLacrosScreenCoordinatesEnabledDescription[];
+ #endif  // #if BUILDFLAG(IS_CHROMEOS_LACROS)
  
--#if defined(OS_LINUX) || defined(OS_CHROMEOS)
-+#if defined(OS_LINUX) || defined(OS_CHROMEOS) || defined(OS_BSD)
- #include "base/allocator/buildflags.h"
--#endif  // defined(OS_LINUX) || defined(OS_CHROMEOS)
-+#endif  // defined(OS_LINUX) || defined(OS_CHROMEOS) || defined(OS_BSD)
+-#if BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
+ extern const char kGetDisplayMediaSetName[];
+ extern const char kGetDisplayMediaSetDescription[];
  
- // This file declares strings used in chrome://flags. These messages are not
- // translated, because instead of end-users they target Chromium developers and
-@@ -2954,7 +2954,7 @@ extern const char kDownloadShelfWebUIDescription[];
- 
+@@ -3690,14 +3690,14 @@ extern const char kSearchWebInSidePanelDescription[];
  // Random platform combinations -----------------------------------------------
  
--#if defined(OS_WIN) || defined(OS_MAC) || defined(OS_LINUX) || \
-+#if defined(OS_WIN) || defined(OS_MAC) || defined(OS_LINUX) || defined(OS_BSD) || \
-     defined(OS_CHROMEOS) || defined(OS_FUCHSIA)
+ #if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX) || \
+-    BUILDFLAG(IS_FUCHSIA)
++    BUILDFLAG(IS_FUCHSIA) || BUILDFLAG(IS_BSD)
+ extern const char kQuickCommandsName[];
+ extern const char kQuickCommandsDescription[];
  
- extern const char kEnableOopPrintDriversName[];
-@@ -2969,10 +2969,10 @@ extern const char kWebuiFeedbackDescription[];
- extern const char kSettingsLandingPageRedesignName[];
- extern const char kSettingsLandingPageRedesignDescription[];
+ #endif  // BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX) ||
+         // defined (OS_FUCHSIA)
  
--#endif  // defined(OS_WIN) || defined(OS_MAC) || defined(OS_LINUX) ||
-+#endif  // defined(OS_WIN) || defined(OS_MAC) || defined(OS_LINUX) || defined(OS_BSD) ||
-         // defined(OS_CHROMEOS) || defined(OS_FUCHSIA)
- 
--#if defined(OS_WIN) || defined(OS_MAC) || defined(OS_LINUX)
-+#if defined(OS_WIN) || defined(OS_MAC) || defined(OS_LINUX) || defined(OS_BSD)
- 
- extern const char kCommanderName[];
- extern const char kCommanderDescription[];
-@@ -2983,7 +2983,7 @@ extern const char kDesktopRestructuredLanguageSettings
- extern const char kDesktopDetailedLanguageSettingsName[];
- extern const char kDesktopDetailedLanguageSettingsDescription[];
- 
--#endif  // defined(OS_WIN) || defined(OS_MAC) || defined(OS_LINUX)
-+#endif  // defined(OS_WIN) || defined(OS_MAC) || defined(OS_LINUX) || defined(OS_BSD)
- 
- #if defined(OS_CHROMEOS) || defined(OS_LINUX)
- #if BUILDFLAG(USE_TCMALLOC)
-@@ -3002,10 +3002,10 @@ extern const char kWebShareName[];
+-#if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_MAC)
++#if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_BSD)
+ extern const char kWebShareName[];
  extern const char kWebShareDescription[];
- #endif  // defined(OS_WIN) || BUILDFLAG(IS_CHROMEOS_ASH) || defined(OS_MAC)
+ #endif  // BUILDFLAG(IS_WIN) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_MAC)
+@@ -3707,7 +3707,7 @@ extern const char kWebBluetoothConfirmPairingSupportNa
+ extern const char kWebBluetoothConfirmPairingSupportDescription[];
+ #endif  // BUILDFLAG(IS_WIN) || BUILDFLAG(IS_LINUX)
  
--#if defined(OS_LINUX) && defined(USE_OZONE)
-+#if (defined(OS_LINUX) || defined(OS_BSD)) && defined(USE_OZONE)
- extern const char kUseOzonePlatformName[];
- extern const char kUseOzonePlatformDescription[];
--#endif  // defined(OS_LINUX) && defined(USE_OZONE)
-+#endif  // (defined(OS_LINUX) || defined(OS_BSD)) && defined(USE_OZONE)
+-#if BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
+ extern const char kOzonePlatformHintChoiceDefault[];
+ extern const char kOzonePlatformHintChoiceAuto[];
+ extern const char kOzonePlatformHintChoiceX11[];
+@@ -3717,7 +3717,7 @@ extern const char kOzonePlatformHintName[];
+ extern const char kOzonePlatformHintDescription[];
+ #endif  // BUILDFLAG(IS_LINUX)
  
- // Feature flags --------------------------------------------------------------
+-#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_MAC)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_BSD)
+ extern const char kSkipUndecryptablePasswordsName[];
+ extern const char kSkipUndecryptablePasswordsDescription[];
  
-@@ -3061,7 +3061,7 @@ extern const char kElasticOverscrollName[];
- extern const char kElasticOverscrollDescription[];
- #endif  // defined(OS_WIN) || defined(OS_ANDROID)
+@@ -3725,13 +3725,13 @@ extern const char kForcePasswordInitialSyncWhenDecrypt
+ extern const char kForcePasswordInitialSyncWhenDecryptionFailsDescription[];
+ #endif  // BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_MAC)
  
--#if defined(OS_WIN) || (defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)) || \
-+#if defined(OS_WIN) || (defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)) || defined(OS_BSD) || \
-     defined(OS_MAC)
+-#if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
+ extern const char kAsyncDnsName[];
+ extern const char kAsyncDnsDescription[];
+ #endif  // BUILDFLAG(IS_WIN) || BUILDFLAG(IS_LINUX)
+ 
+ #if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX) || \
+-    BUILDFLAG(IS_FUCHSIA) || BUILDFLAG(IS_CHROMEOS)
++    BUILDFLAG(IS_FUCHSIA) || BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_BSD)
+ extern const char kFollowingFeedSidepanelName[];
+ extern const char kFollowingFeedSidepanelDescription[];
+ #endif  // BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX) ||
+@@ -3811,7 +3811,7 @@ extern const char kElasticOverscrollDescription[];
+ 
+ #if BUILDFLAG(IS_WIN) ||                                      \
+     (BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)) || \
+-    BUILDFLAG(IS_MAC) || BUILDFLAG(IS_FUCHSIA)
++    BUILDFLAG(IS_MAC) || BUILDFLAG(IS_FUCHSIA) || BUILDFLAG(IS_BSD)
  extern const char kUIDebugToolsName[];
  extern const char kUIDebugToolsDescription[];
+ 

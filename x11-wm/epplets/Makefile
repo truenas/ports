@@ -1,8 +1,6 @@
-# Created by: Yukihiro Nakai <nakai@FreeBSD.org>
-
 PORTNAME=	epplets
 PORTVERSION=	0.14
-PORTREVISION=	9
+PORTREVISION=	10
 CATEGORIES=	x11-wm
 MASTER_SITES=	SF/enlightenment/${PORTNAME}/${PORTVERSION}
 

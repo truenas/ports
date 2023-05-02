@@ -1,13 +1,11 @@
-# Created by: Rob Farmer <rfarmer@predatorlabs.net>
-
 PORTNAME=	tumble
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.36
-PORTREVISION=	1
+DISTVERSION=	0.38
 CATEGORIES=	graphics print
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	fuz@FreeBSD.org
 COMMENT=	Creates a PDF file from image files
+WWW=		http://tumble.brouhaha.com/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -26,14 +24,6 @@ PLIST_FILES=	bin/tumble
 PORTDOCS=	README
 
 OPTIONS_DEFINE=	DOCS
-
-post-patch:
-	@${REINPLACE_CMD} -e \
-		's|^\(CFLAGS\) =.*|\1 := $$(CFLAGS)| ; \
-		 s|^\(LDFLAGS\) =.*|\1 := $$(LDFLAGS)| ; \
-		 s|-O3|| ; \
-		 s|-lpbm|-lnetpbm| ; \
-		 s|strip|true|' ${WRKSRC}/Makefile
 
 do-install:
 	(cd ${WRKSRC} && ${INSTALL_PROGRAM} tumble \

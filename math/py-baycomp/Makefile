@@ -1,12 +1,13 @@
 PORTNAME=	baycomp
 DISTVERSION=	1.0.2
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	math python # statistics
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Library for Bayesian comparison of classifiers
+WWW=		https://github.com/janezd/baycomp
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

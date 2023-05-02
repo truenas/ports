@@ -1,14 +1,13 @@
-# Created by: Li-Lun Wang <llwang@infor.org>
-
 PORTNAME=	hugo
 PORTVERSION=	2.12
-PORTREVISION=	16
+PORTREVISION=	17
 CATEGORIES=	emulators
 MASTER_SITES=	http://www.zeograd.com/download/ \
 		http://www.sourcefiles.org/Emulators/Videogames/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	PC Engine (TurboGrafx 16) emulator
+WWW=		https://www.zeograd.com/
 
 LICENSE=	BSD3CLAUSE GPLv2
 LICENSE_COMB=	multi
@@ -29,6 +28,8 @@ GNU_CONFIGURE=	yes
 CFLAGS+=	-Wno-return-type
 CPPFLAGS+=	-I${LOCALBASE}/include
 LDFLAGS+=	-L${LOCALBASE}/lib
+
+CONFLICTS_INSTALL=	gohugo
 
 .include <bsd.port.options.mk>
 

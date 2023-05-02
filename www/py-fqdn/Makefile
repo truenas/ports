@@ -1,13 +1,12 @@
-# Created by: James White <whitejv81@gmail.com>
-
 PORTNAME=	fqdn
 PORTVERSION=	1.4.0
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	whitejv81@gmail.com
 COMMENT=	RFC-compliant FQDN validation and manipulation for Python
+WWW=		https://github.com/ypcrts/fqdn
 
 USES=		python:3.6+
 USE_PYTHON=	autoplist distutils

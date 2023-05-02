@@ -1,5 +1,3 @@
-# Created by: Boris Samorodov <bsam@FreeBSD.org>
-
 PORTNAME=		seatools
 PORTVERSION=		2.54
 CATEGORIES=		sysutils linux
@@ -8,8 +6,9 @@ PKGNAMEPREFIX=		linux-
 DISTNAME=		seatools_cli
 EXTRACT_SUFX=		.tar
 
-MAINTAINER=		bsam@FreeBSD.org
+MAINTAINER=		cy@FreeBSD.org
 COMMENT=		Seagate's SeaTools for Linux
+WWW=		https://www.seagate.com
 
 # Converted from RESTRICTED
 LICENSE=	seatools

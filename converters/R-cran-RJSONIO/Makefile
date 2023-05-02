@@ -1,12 +1,12 @@
-# Created by: TAKATSU Tomonari <tota@FreeBSD.org>
-
 PORTNAME=	RJSONIO
 DISTVERSION=	1.3-1.6
+PORTREVISION=	1
 CATEGORIES=	converters
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Serialize R objects to JSON, JavaScript Object Notation
+WWW=		https://cran.r-project.org/web/packages/RJSONIO/
 
 LICENSE=	BSD3CLAUSE
 

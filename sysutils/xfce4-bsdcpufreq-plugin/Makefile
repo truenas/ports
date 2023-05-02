@@ -1,9 +1,8 @@
-# Created by: Thomas Zander <riggs@FreeBSD.org>
 #
 
 PORTNAME=	xfce4-bsdcpufreq-plugin
 PORTVERSION=	0.3.1
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	sysutils xfce
 
 MAINTAINER=	riggs@FreeBSD.org

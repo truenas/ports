@@ -1,5 +1,3 @@
-# Created by: snb@threerings.net
-
 PORTNAME=	osslsigncode
 PORTVERSION=	1.7.1
 PORTREVISION=	1
@@ -8,6 +6,7 @@ MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	OpenSSL-based signcode utility
+WWW=		https://sourceforge.net/projects/osslsigncode/
 
 PLIST_FILES=	bin/osslsigncode
 

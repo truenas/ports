@@ -1,5 +1,3 @@
-# Created by: Balwinder S Dheeman <bdheeman@gmail.com>
-
 PORTNAME=	cvs
 PORTVERSION=	1.12.13
 PORTREVISION=	13
@@ -9,8 +7,9 @@ PKGNAMESUFFIX=	-devel
 
 MAINTAINER=	bdheeman@gmail.com
 COMMENT=	IPv6 enabled cvs.  You can use IPv6 connection when using pserver
+WWW=		https://www.cvshome.org/
 
-CONFLICTS=	cvsnt-[12]* cvs+ipv6-[12]*
+CONFLICTS=	cvs cvs+ipv6
 
 USES=		cpe makeinfo perl5 tar:bzip2
 CPE_VENDOR=	gnu

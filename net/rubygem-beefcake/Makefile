@@ -5,12 +5,12 @@ MASTER_SITES=	RG
 
 MAINTAINER=	dch@FreeBSD.org
 COMMENT=	Protocol Buffers library in pure Ruby
+WWW=		https://github.com/protobuf-ruby/beefcake
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

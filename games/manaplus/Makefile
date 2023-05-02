@@ -1,13 +1,12 @@
-# Created by: Tobias Gion
-
 PORTNAME=	manaplus
 DISTVERSION=	2.1.3.17
-PORTREVISION=	1
+PORTREVISION=	4
 CATEGORIES=	games
 MASTER_SITES=	http://download.evolonline.org/manaplus/download/${PORTVERSION}/
 
 MAINTAINER=	ports@freebsd.org
 COMMENT=	Free open source 2D MMORPG client for athena and evol servers
+WWW=		https://www.manaplus.org/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

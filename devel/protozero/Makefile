@@ -1,10 +1,11 @@
 PORTNAME=	protozero
-PORTVERSION=	1.7.0
+PORTVERSION=	1.7.1
 DISTVERSIONPREFIX=	v
 CATEGORIES=	devel
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Minimalist protocol buffer decoder and encoder in C++
+WWW=		https://github.com/mapbox/protozero
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.md

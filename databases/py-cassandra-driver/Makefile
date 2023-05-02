@@ -1,11 +1,12 @@
 PORTNAME=	cassandra-driver
 DISTVERSION=	3.18.0
 CATEGORIES=	databases python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sergey@akhmatov.ru
 COMMENT=	Python client library for Apache Cassandra
+WWW=		https://github.com/datastax/python-driver
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

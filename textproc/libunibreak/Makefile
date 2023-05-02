@@ -1,13 +1,12 @@
-# Created by: Yuri Pankov <yuri.pankov@gmail.com>
-
 PORTNAME=	libunibreak
-PORTVERSION=	4.3
+PORTVERSION=	5.1
 PORTEPOCH=	1
 CATEGORIES=	textproc
 MASTER_SITES=	https://github.com/adah1972/${PORTNAME}/releases/download/${PORTNAME}_${PORTVERSION:C/\./_/}/
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	kde@FreeBSD.org
 COMMENT=	Implementation of the line and word breaking algorithm for Unicode
+WWW=		http://vimgadgets.sourceforge.net/libunibreak/
 
 LICENSE=	ZLIB
 LICENSE_FILE=	${WRKSRC}/LICENCE

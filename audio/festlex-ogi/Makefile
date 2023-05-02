@@ -1,5 +1,3 @@
-# Created by: trevor
-
 PORTNAME=	festlex-ogi
 PORTVERSION=	2.2
 PORTREVISION=	2
@@ -9,6 +7,7 @@ DISTNAME=	OGIlexicon-2.2
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Composite pronunciation dictionary from ogi.edu for Festival
+WWW=		http://cslu.cse.ogi.edu/tts/
 
 RUN_DEPENDS=	festival:audio/festival \
 		${LOCALBASE}/share/festival/lib/dicts/wsj.wp39.poslexR:audio/festlex-poslex

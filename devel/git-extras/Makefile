@@ -1,9 +1,10 @@
 PORTNAME=	git-extras
-PORTVERSION=	6.3.0
+PORTVERSION=	6.5.0
 CATEGORIES=	devel
 
 MAINTAINER=	igor.ostapenko@pm.me
 COMMENT=	Sub-commands for repo summary, repl, changelog population, and more
+WWW=		https://github.com/tj/git-extras/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

@@ -1,33 +1,18 @@
 PORTNAME=	ImageMagick
-DISTVERSION=	6.9.12-32
+DISTVERSION=	6.9.12-77
+PORTREVISION=	2
 PORTEPOCH=	1
 CATEGORIES=	graphics perl5
-MASTER_SITES=	https://www.imagemagick.org/download/ \
-		https://www.imagemagick.org/download/releases/ \
-		http://servingzone.com/mirrors/ImageMagick/ \
-		http://mirror.checkdomain.de/imagemagick/ \
-		http://imagemagick.spd.co.il/ \
-		http://www.champground.com/imagemagick/ \
-		http://ftp.surfnet.nl/pub/ImageMagick/ \
-		http://mirror.searchdaimon.com/ImageMagick/ \
-		http://mirror.is.co.za/pub/imagemagick/ \
-		http://imagemagick.mirrorcatalogs.com/ \
-		ftp://ftp.imagemagick.org/pub/ImageMagick/ \
-		ftp://mirror.aarnet.edu.au/pub/imagemagick/ \
-		ftp://mirror.checkdomain.de/imagemagick/ \
-		ftp://ftp.kddlabs.co.jp/graphics/ImageMagick/ \
-		ftp://ftp.u-aizu.ac.jp/pub/graphics/image/ImageMagick/imagemagick.org/ \
-		ftp://ftp.nluug.nl/pub/ImageMagick/ \
-		ftp://mirror.searchdaimon.com/ImageMagick/ \
-		ftp://sunsite.icm.edu.pl/packages/ImageMagick/ \
-		ftp://ftp.tpnet.pl/pub/graphics/ImageMagick/ \
-		ftp://ftp.sunet.se/pub/multimedia/graphics/ImageMagick/ \
-		ftp://ftp.is.co.za/pub/imagemagick/ \
-		ftp://ftp.fifi.org/pub/ImageMagick/
+MASTER_SITES=	https://ftp.acc.umu.se/mirror/imagemagick.org/ftp/releases/ \
+		https://mirror.dogado.de/imagemagick/releases/ \
+		https://mirror.checkdomain.de/imagemagick/releases/ \
+		https://ftp.icm.edu.pl/pub/unix/graphics/ImageMagick/releases/ \
+		https://imagemagick.org/archive/releases/
 PKGNAMESUFFIX=	6
 
 MAINTAINER=	desktop@FreeBSD.org
 COMMENT=	Image processing tools (legacy version)
+WWW=		https://legacy.imagemagick.org/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -41,8 +26,9 @@ PORTSCOUT?=	limit:^6\.9\.
 CONFLICTS_INSTALL=	ImageMagick7 ImageMagick7-nox11 # bin/Magick++-config
 
 # This port uses .la files, keep libtool:keepla! (magick/module.c)
-USES=		compiler:c++11-lang cpe gettext-runtime gmake gnome libtool:keepla \
-		localbase pathfix perl5 pkgconfig:both shebangfix tar:xz
+USES=		compiler:c++11-lang cpe gettext-runtime gmake gnome \
+		libtool:keepla localbase pathfix perl5 pkgconfig:both \
+		shebangfix tar:xz
 CPE_PRODUCT=	imagemagick
 CPE_VENDOR=	imagemagick
 SHEBANG_FILES=	www/source/examples.pl
@@ -66,7 +52,7 @@ OPTIONS_DEFINE=	BZIP2 DOCS DJVU FFMPEG FFTW FONTCONFIG FPX FREETYPE \
 		GRAPHVIZ GSLIB HEIF JPEG2000 JBIG JPEG LCMS2 LZMA LQR MODULES \
 		OPENEXR OPENMP PANGO PDF PERL PNG RAQM SVG TESTS TIFF WEBP WMF \
 		THREADS X11 16BIT_PIXEL HDRI RAW
-OPTIONS_DEFAULT=	16BIT_PIXEL BZIP2 FFTW FONTCONFIG FREETYPE \
+OPTIONS_DEFAULT=	16BIT_PIXEL BZIP2 FFTW FONTCONFIG FREETYPE HEIF \
 		JPEG2000 JBIG JPEG LCMS2 LZMA LQR MODULES PDF PERL PNG RAQM SVG \
 		TIFF WEBP WMF THREADS X11 RAW
 
@@ -106,7 +92,6 @@ GRAPHVIZ_LIB_DEPENDS=	libgvc.so:graphics/graphviz
 GRAPHVIZ_CFLAGS=	-I${LOCALBASE}/include/graphviz
 GRAPHVIZ_LDFLAGS=	-L${LOCALBASE}/lib/graphviz
 
-HEIF_DESC=		ISO/IEC 23008-12:2017 HEIF file format support
 HEIF_CONFIGURE_WITH=	heic
 HEIF_LIB_DEPENDS=	libheif.so:graphics/libheif
 
@@ -174,9 +159,8 @@ WEBP_LIB_DEPENDS=	libwebp.so:graphics/webp
 X11_CONFIGURE_WITH=	x
 X11_USES=		xorg
 X11_USE=		xorg=ice,sm,x11,xext,xt
-X11_VARS=		CONFLICTS_INSTALL+="ImageMagick-nox11-6* ImageMagick6-nox11-6*" \
-			CONFLICTS+=display
-X11_VARS_OFF=		CONFLICTS_INSTALL+="ImageMagick-6* ImageMagick6-6*" \
+X11_VARS=		CONFLICTS_INSTALL+="ImageMagick6-nox11"
+X11_VARS_OFF=		CONFLICTS_INSTALL+="ImageMagick6" \
 			PKGNAMESUFFIX=6-nox11
 
 .include <bsd.port.options.mk>
@@ -231,10 +215,10 @@ _IMAGEMAGICK_THREADS=no
 . if ${_IMAGEMAGICK_THREADS} == "no"
 IGNORE=OpenMP requires threads${_IMAGEMAGICK_THREADS_IGNORE_MSG}
 . else
-CONFIGURE_ARGS+=       --enable-openmp
+CONFIGURE_ARGS+=	--enable-openmp
 . endif
 .else
-CONFIGURE_ARGS+=       --disable-openmp
+CONFIGURE_ARGS+=	--disable-openmp
 .endif
 
 .if defined(WITH_WINDOWS_FONT_DIR)
@@ -298,9 +282,9 @@ PLIST_SUB+=		WMF="@comment "
 # PDF (Adobe Portable Document Format) support
 .if ${PORT_OPTIONS:MPDF}
 . if ${PORT_OPTIONS:MX11}
-USES+=			ghostscript:x11
+USES+=		ghostscript:x11
 . else
-USES+=			ghostscript
+USES+=		ghostscript
 . endif
 .endif
 
@@ -357,8 +341,6 @@ post-install:
 	@${MV} ${STAGEDIR}${PREFIX}/etc/ImageMagick-6/${i} \
 		${STAGEDIR}${PREFIX}/etc/ImageMagick-6/${i}.sample
 .endfor
-
-post-install-TESTS-on: test
 
 do-test:
 	-cd ${WRKSRC} && ${SETENV} ${MAKE_ENV} limits -m 20m ${MAKE} ${_MAKE_JOBS} check

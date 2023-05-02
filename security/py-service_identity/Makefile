@@ -1,13 +1,12 @@
-# Created by: Axel Rau <axel.rau@chaos1.de>
-
 PORTNAME=	service_identity
 PORTVERSION=	18.1.0
 CATEGORIES=	security python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	axel.rau@chaos1.de
 COMMENT=	Service identity verification for pyOpenSSL
+WWW=		https://github.com/pyca/service_identity
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

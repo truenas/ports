@@ -1,13 +1,14 @@
 PORTNAME=		Jellyfish
 DISTVERSIONPREFIX=	v
 DISTVERSION=		2.3.0
-PORTREVISION=		2
+PORTREVISION=		3
 CATEGORIES=		biology
 MASTER_SITES=		https://github.com/gmarcais/${PORTNAME}/releases/download/v2.3.0/	# Custom distfile reduces dependencies
 DISTNAME=		${PORTNAME:tl}-${DISTVERSION}
 
 MAINTAINER=	jwb@FreeBSD.org
 COMMENT=	Fast, memory-efficient counting of k-mers in DNA
+WWW=		http://www.genome.umd.edu/jellyfish.html
 
 LICENSE=	BSD3CLAUSE GPLv3+
 LICENSE_COMB=	dual

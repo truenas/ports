@@ -1,11 +1,12 @@
 PORTNAME=	aesqlapius
 PORTVERSION=	0.0.9
 CATEGORIES=	databases python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Manage SQL queries as a Python API
+WWW=		https://pypi.org/project/aesqlapius/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

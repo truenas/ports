@@ -1,12 +1,13 @@
 PORTNAME=	data
 DISTVERSIONPREFIX=	microcode-
-DISTVERSION=	20210608
+DISTVERSION=	20230214
 CATEGORIES=	sysutils
 PKGNAMEPREFIX=	devcpu-
 PKGNAMESUFFIX=	-intel
 
 MAINTAINER=	sbruno@FreeBSD.org
 COMMENT=	Intel CPU microcode updates
+WWW=		https://github.com/intel/Intel-Linux-Processor-Microcode-Data-Files
 
 LICENSE=	EULA
 LICENSE_NAME=	Intel Software License Agreement

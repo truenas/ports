@@ -3,7 +3,8 @@
 
 PORTNAME=	RStudio
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2021.09.1+372
+DISTVERSION=	2022.12.0+353
+PORTREVISION=	3
 CATEGORIES=	devel math java
 MASTER_SITES=	https://s3.amazonaws.com/rstudio-buildtools/dictionaries/:dictionaries \
 		https://s3.amazonaws.com/rstudio-buildtools/:buildtools
@@ -14,8 +15,9 @@ DISTFILES=	core-dictionaries.zip:dictionaries \
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Integrated development environment (IDE) for R
+WWW=		https://rstudio.com/
 
-LICENSE=	GPLv3
+LICENSE=	AGPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
 
 BROKEN_i386=	[ERROR] Line 101: Failed to resolve 'org.rstudio.studio.client.workbench.views.vcs.common.diff.LineActionButtonRenderer.GrayResources' via deferred binding
@@ -38,8 +40,9 @@ server_PKGNAMESUFFIX=	-server
 
 USES=		cmake fortran localbase:ldflags pgsql pkgconfig sqlite ssl
 USE_JAVA=	yes
-JAVA_VERSION=	8
+JAVA_VERSION=	11 # Java 8 fails on aarch64: Internal Error (assembler_aarch64.hpp:237), pid=1644, tid=0x00000000000c62b6 guarantee(val < (1U << nbits)) failed: Field too big for insn
 JAVA_BUILD=	yes
+
 USE_GITHUB=	yes
 GH_PROJECT=	${PORTNAME:tl}
 GH_TUPLE=	rstudio:r2d3:v0.2.0:r2d3/dependencies/common/r2d3 \
@@ -59,17 +62,16 @@ MAKE_ENV=	HOME=${WRKDIR} \
 		JAVA_HOME=${JAVA_HOME} \
 		PATH=${JAVA_HOME}/bin:${PATH} \
 		ANT_OPTS="-Duser.home=${WRKDIR}"
+LDFLAGS+=	-lexecinfo
 
 GWT_VERSION=	2.8.1
 GIN_VERSION=	2.1.2
 
 .if ${FLAVOR:U} == desktop
-DEPRECATED=	Uses EOL Python 2.7 via www/qt5-webengine
-EXPIRATION_DATE=2021-06-23
 COMMENT+=	(desktop UI version)
 USES+=		desktop-file-utils qt:5 shared-mime-info
 USE_QT=		core dbus declarative gui location network opengl printsupport quickcontrols sensors \
-		sql svg webchannel webengine webkit widgets xml xmlpatterns buildtools_build qmake_build
+		sql svg webchannel webengine webkit widgets xml xmlpatterns buildtools:build qmake:build
 CMAKE_ARGS+=	-DRSTUDIO_TARGET=Desktop
 INSTALL_SUBDIR=	${PORTNAME:tl}
 EXECUTABLE=	${PORTNAME:tl}
@@ -85,6 +87,12 @@ USER=		nobody
 SUB_LIST=	USER=${USER}
 USE_RC_SUBR=	${PORTNAME:tl}-server
 .endif
+
+OPTIONS_DEFINE=		WITH_QUARTO
+
+WITH_QUARTO_DESC=	Build with support for Quarto
+WITH_QUARTO_CMAKE_BOOL=	FREEBSD_QUARTO_ENABLED
+WITH_QUARTO_BROKEN=	Quarto isn't yet ported
 
 post-extract:
 	@${MKDIR} ${WRKSRC}/dependencies/dictionaries && ${MV} ${WRKDIR}/en_* ${WRKSRC}/dependencies/dictionaries/
@@ -127,7 +135,7 @@ post-install:
 	) > ${STAGEDIR}${PREFIX}/bin/${EXECUTABLE}
 	@${CHMOD} +x ${STAGEDIR}${PREFIX}/bin/${EXECUTABLE}
 .if ${FLAVOR:U} == desktop
-	${REINPLACE_CMD} -e 's|^Exec=.*/rstudio|Exec=${PREFIX}/bin/${EXECUTABLE}|' ${STAGEDIR}${PREFIX}/share/applications/${EXECUTABLE}.desktop
+	${REINPLACE_CMD} -i '' -e 's|^Exec=.*/rstudio|Exec=${PREFIX}/bin/${EXECUTABLE}|' ${STAGEDIR}${PREFIX}/share/applications/${EXECUTABLE}.desktop
 .endif
 .if ${FLAVOR:U} == server
 	${RM} ${STAGEDIR}${LOCALBASE}/lib/${INSTALL_SUBDIR}/bin/rstudio-server # not compatible with FreeBSD

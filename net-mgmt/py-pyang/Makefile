@@ -1,13 +1,12 @@
-# Created by: Bruce Simpson
-
 PORTNAME=	pyang
 PORTVERSION=	1.7.8
 CATEGORIES=	net-mgmt python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Validator and code generator for YANG (RFC 4741)
+WWW=		https://github.com/mbj4668/pyang/
 
 LICENSE=	MIT
 

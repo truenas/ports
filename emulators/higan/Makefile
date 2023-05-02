@@ -1,8 +1,6 @@
-# Created by: elbarto
-
 PORTNAME=	higan
 PORTVERSION=	106
-PORTREVISION=	7
+PORTREVISION=	11
 CATEGORIES=	emulators games
 MASTER_SITES=	http://download.byuu.org/ \
 		http://www.cyberbotx.com/higan/
@@ -10,13 +8,14 @@ DISTNAME=	${PORTNAME}_v${PORTVERSION}-source
 
 MAINTAINER=	cyberbotx@cyberbotx.com
 COMMENT=	Nintendo multi-system emulator
+WWW=		http://byuu.org/higan/
 
 ONLY_FOR_ARCHS=	amd64 i386 powerpc powerpc64 powerpc64le
 
 LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig \
 		libfreetype.so:print/freetype2
 
-USES=		7z:p7zip compiler:c++14-lang gettext gmake gnome pkgconfig xorg
+USES=		7z compiler:c++14-lang gettext gmake gnome pkgconfig xorg
 USE_GNOME=	cairo gdkpixbuf2 gtk20 gtksourceview2
 USE_XORG=	x11 xext
 USE_CSTD=	c99

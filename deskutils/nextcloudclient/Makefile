@@ -1,28 +1,27 @@
-# Created by: Mathieu Arnold
-
 PORTNAME=	nextcloudclient
-PORTVERSION=	3.3.6
+PORTVERSION=	3.8.1
+PORTREVISION=	3
+#PORTREVISION=	1
 DISTVERSIONPREFIX=	v
 CATEGORIES=	deskutils
 
 MAINTAINER=	mr@FreeBSD.org
 COMMENT=	NextCloud Desktop Syncing Client
+WWW=		https://github.com/nextcloud/desktop
 
 LICENSE=	GPLv2
 
-DEPRECATED=	Uses EOL Python 2.7 via www/qt5-webengine
-EXPIRATION_DATE=2021-06-23
-
 BUILD_DEPENDS=	inkscape:graphics/inkscape
 LIB_DEPENDS=	libinotify.so:devel/libinotify \
-		libqt5keychain.so:security/qtkeychain
+		libqt5keychain.so:security/qtkeychain@qt5
 
 USES=		cmake:noninja compiler:c++14-lang desktop-file-utils gmake \
-		gnome iconv localbase:ldflags pkgconfig qt:5 shared-mime-info \
+		gnome iconv kde:5 localbase:ldflags pkgconfig qt:5 shared-mime-info \
 		sqlite ssl
-USE_QT=		buildtools_build concurrent core dbus declarative graphicaleffects \
-		gui linguist_build location network printsupport qmake_build \
-		quickcontrols2 sql svg testlib webchannel websockets \
+USE_KDE=	archive
+USE_QT=		buildtools:build concurrent core dbus declarative graphicaleffects \
+		gui linguist:build location network printsupport qmake:build \
+		quickcontrols quickcontrols2 sql svg testlib webchannel websockets \
 		widgets xml
 CMAKE_ARGS=	-DBUILD_UPDATER:BOOL=OFF \
 		-DCMAKE_INSTALL_MANDIR:STRING=man \
@@ -39,11 +38,12 @@ OPTIONS_DEFAULT_amd64=		WEBENGINE
 OPTIONS_DEFAULT_i386=		WEBENGINE
 OPTIONS_DEFAULT_aarch64=	WEBENGINE
 
-WEBENGINE_DESC=		QT5 Webengine support
+WEBENGINE_DESC=		Use Webengine to provide web login flow
 
 #DOCS_BUILD_DEPENDS=	sphinx-build:textproc/py-sphinx \
 #			doxygen:devel/doxygen
-#DOCS_USE=		tex=dvipsk:build,latex:build
+#DOCS_USES=		tex
+#DOCS_USE=		TEX=dvipsk:build,latex:build
 #DOCS_CMAKE_ON=		-DWITH_DOC:BOOL=ON
 
 WEBENGINE_VARS=		USE_QT+=webengine
@@ -61,7 +61,7 @@ post-patch:
 		's|.lst |.lst.sample |' ${WRKSRC}/CMakeLists.txt
 
 post-patch-WEBENGINE-off:
-	@${REINPLACE_CMD} -e '/^find_package.*COMPONENTS WebEngineWidgets WebEngine/d' \
+	@${REINPLACE_CMD} -e '/add_compile_definitions(WITH_WEBENGINE=1)/d' \
 		${WRKSRC}/src/CMakeLists.txt
 
 pre-configure:

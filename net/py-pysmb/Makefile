@@ -1,14 +1,13 @@
-# Created by: ijliao
-
 PORTNAME=	pysmb
 PORTVERSION=	1.1.27
 CATEGORIES=	net python
-MASTER_SITES=	CHEESESHOP \
+MASTER_SITES=	PYPI \
 		http://miketeo.net/files/Projects/${PORTNAME}/
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	rm@FreeBSD.org
 COMMENT=	SMB/CIFS library written in Python
+WWW=		http://miketeo.net/wp/index.php/projects/pysmb
 
 LICENSE=	ZLIB
 LICENSE_FILE=	${WRKSRC}/LICENSE

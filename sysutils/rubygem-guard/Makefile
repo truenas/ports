@@ -1,5 +1,3 @@
-# Created by: Sunpoet Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	guard
 PORTVERSION=	2.18.0
 CATEGORIES=	sysutils rubygems
@@ -7,6 +5,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Command line tool to easily handle events on file system modifications
+WWW=		https://github.com/guard/guard
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -21,7 +20,6 @@ RUN_DEPENDS=	rubygem-formatador>=0.2.4:devel/rubygem-formatador \
 		rubygem-thor>=0.18.1:devel/rubygem-thor
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

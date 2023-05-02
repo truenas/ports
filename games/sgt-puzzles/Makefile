@@ -1,6 +1,7 @@
 PORTNAME=	puzzles
-PORTVERSION=	20211031
+PORTVERSION=	20230424
 CATEGORIES=	games
+# upstream does not preserve older versions, mirroring is mandatory
 MASTER_SITES=	https://www.chiark.greenend.org.uk/~sgtatham/puzzles/ \
 		https://mirror.amdmi3.ru/distfiles/
 PKGNAMEPREFIX=	sgt-
@@ -8,15 +9,22 @@ DISTNAME=	${PORTNAME}-${PORTVERSION}.${COMMITHASH}
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Simon Tatham's Portable Puzzle Collection
+WWW=		https://www.chiark.greenend.org.uk/~sgtatham/puzzles/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENCE
 
-COMMITHASH=	640f923
+BUILD_DEPENDS=	convert:graphics/ImageMagick6-nox11 \
+		halibut:textproc/halibut
 
-USES=		cmake gnome magick:6,build,nox11 perl5 pkgconfig
+USES=		cmake gnome perl5 pkgconfig
 USE_PERL5=	build
 CMAKE_ARGS=	-DNAME_PREFIX:STRING=sgt-
+
+COMMITHASH=	e080e0e
+
+DATADIR=	${PREFIX}/share/sgt-puzzles
+PORTDATA=	*
 
 OPTIONS_SINGLE=	GTK
 OPTIONS_SINGLE_GTK=	GTK2 GTK3

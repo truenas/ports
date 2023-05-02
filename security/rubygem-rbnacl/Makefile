@@ -5,6 +5,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	mfechner@FreeBSD.org
 COMMENT=	Networking and Cryptography (NaCl) library
+WWW=		https://github.com/cryptosphere/rbnacl
 
 LICENSE=	MIT
 
@@ -13,6 +14,5 @@ RUN_DEPENDS=	rubygem-ffi>=0:devel/rubygem-ffi
 
 NO_ARCH=	yes
 USES=		gem
-USE_RUBY=	yes
 
 .include <bsd.port.mk>

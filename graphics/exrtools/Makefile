@@ -1,14 +1,13 @@
-# Created by: Emanuel Haupt <ehaupt@critical.ch>
-
 PORTNAME=	exrtools
 PORTVERSION=	0.4
-PORTREVISION=	29
+PORTREVISION=	30
 CATEGORIES=	graphics
 MASTER_SITES=	http://scanline.ca/exrtools/ \
 		LOCAL/ehaupt
 
 MAINTAINER=	ehaupt@FreeBSD.org
 COMMENT=	Utilities for manipulating with HDR images in OpenEXR format
+WWW=		http://scanline.ca/exrtools/
 
 LICENSE=	GPLv2
 

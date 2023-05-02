@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	libv4l
 PORTVERSION=	0.9.5
 DISTVERSIONSUFFIX=	-4.el7
@@ -8,6 +6,7 @@ CATEGORIES=	multimedia linux
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	Video4Linux library (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://linuxtv.org/wiki/index.php/V4l-utils
 
 LICENSE=	LGPL20+
 

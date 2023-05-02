@@ -1,12 +1,11 @@
-# Created by: Kubilay Kocak <koobs@FreeBSD.org>
-
 PORTNAME=	slumber
 PORTVERSION=	0.7.1
 CATEGORIES=	www python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	koobs@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Library that makes consuming a REST API easier and more convenient
+WWW=		https://github.com/samgiles/slumber
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

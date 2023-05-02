@@ -1,5 +1,3 @@
-# Created by: Stanislav Sedov <ssedov@mbsd.msk.ru>
-
 PORTNAME=	sexplib
 PORTVERSION=	113.00.00
 MASTER_SITES=	https://ocaml.janestreet.com/ocaml-core/${PORTVERSION:R}/files/
@@ -8,6 +6,7 @@ PKGNAMEPREFIX=	ocaml-
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	OCaml library for working with S-expressions
+WWW=		https://janestreet.github.io/
 
 LICENSE=	APACHE20 BSD3CLAUSE
 LICENSE_COMB=	multi
@@ -16,6 +15,7 @@ LICENSE_FILE_BSD3CLAUSE=${WRKSRC}/LICENSE-Tywith.txt
 
 BUILD_DEPENDS=	ocaml-type_conv>=0:devel/ocaml-type_conv
 BUILD_DEPENDS+=	ocamlbuild:devel/ocaml-ocamlbuild
+BUILD_DEPENDS+=	${LOCALBASE}/${OCAML_SITELIBDIR}/num/META:math/ocaml-num
 RUN_DEPENDS=	ocaml-type_conv>=0:devel/ocaml-type_conv
 
 OPTIONS_DEFINE=	DOCS

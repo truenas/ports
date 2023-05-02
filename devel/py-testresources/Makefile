@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	testresources
 PORTVERSION=	2.0.1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	PyUnit extension for managing expensive test resources
+WWW=		https://github.com/testing-cabal/testresources
 
 LICENSE=	APACHE20 BSD3CLAUSE
 LICENSE_COMB=	dual

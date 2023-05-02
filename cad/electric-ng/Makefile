@@ -1,5 +1,3 @@
-# Created by: Stanislav Sedov <ssedov@mbsd.msk.ru>
-
 PORTNAME=	electric
 PORTVERSION=	9.07
 PORTREVISION=	1
@@ -14,6 +12,7 @@ EXTRACT_ONLY=
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Sophisticated VLSI design system
+WWW=		https://www.staticfreesoft.com/
 
 LICENSE=	GPLv3
 

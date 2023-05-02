@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	pango
 PORTVERSION=	1.42.4
 DISTVERSIONSUFFIX=	-4.el7_7
@@ -8,6 +6,7 @@ CATEGORIES=	x11-toolkits linux
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	Pango library (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://www.pango.org/
 
 USES=		cpe linux:c7
 CPE_VENDOR=	gnome

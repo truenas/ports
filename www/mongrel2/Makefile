@@ -1,5 +1,3 @@
-# Created by: Veniamin Gvozdikov <vg@FreeBSD.org>
-
 PORTNAME=	mongrel2
 DISTVERSIONPREFIX=	v
 DISTVERSION=	1.12.2
@@ -7,6 +5,7 @@ CATEGORIES=	www
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Is an application, language, and network arch
+WWW=		https://mongrel2.org/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

@@ -1,12 +1,12 @@
 PORTNAME=	Dist-Metadata
-PORTVERSION=	0.926
-PORTREVISION=	1
+PORTVERSION=	0.927
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Perl extension for information about a perl module distribution
+WWW=		https://metacpan.org/release/Dist-Metadata
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

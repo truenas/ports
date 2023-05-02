@@ -1,13 +1,13 @@
-# Created by: Yuri Victorovich
-
 PORTNAME=	opuslib
 DISTVERSION=	3.0.1
+PORTREVISION=	1
 CATEGORIES=	audio python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Python bindings to the libopus, IETF low-delay audio codec
+WWW=		https://github.com/orion-labs/opuslib
 
 LICENSE=	BSD3CLAUSE
 

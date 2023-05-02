@@ -1,14 +1,13 @@
-# Created by: Dan Langille <dvl@freebsd.org>
-
 PORTNAME=	django-auth-kerberos
 PORTVERSION=	1.2.5
 PORTREVISION=	2
 CATEGORIES=	security python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dvl@FreeBSD.org
 COMMENT=	Kerberos authentication backend for Django
+WWW=		https://github.com/02strich/django-auth-kerberos
 
 LICENSE=	MIT
 

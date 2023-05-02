@@ -1,15 +1,18 @@
 PORTNAME=	libreswan
-DISTVERSION=	4.5
+DISTVERSION=	4.7
+PORTREVISION=	1
 CATEGORIES=	security
 MASTER_SITES=	https://download.libreswan.org/
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	IPsec and IKE based firewall
+WWW=		https://libreswan.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
 BUILD_DEPENDS=	gawk:lang/gawk \
+		${NONEXISTENT}:dns/unbound:patch \
 		xmlto:textproc/xmlto # build requires xmlto, but manpages aren't installed: https://github.com/libreswan/libreswan/issues/479
 LIB_DEPENDS=	libcurl.so:ftp/curl \
 		libevent.so:devel/libevent \
@@ -19,6 +22,8 @@ LIB_DEPENDS=	libcurl.so:ftp/curl \
 		libunbound.so:dns/unbound
 
 USES=		bison cpe gmake pkgconfig python
+
+UNBOUND_WRKSRC=	`${MAKE} -C ${PORTSDIR}/dns/unbound -V WRKSRC`
 
 CFLAGS+=	-I${WRKSRC}/include/unbound
 
@@ -34,12 +39,18 @@ BINARY_ALIAS=	awk=gawk
 
 OPTIONS_DEFINE=	DOCS
 
+post-patch:
+	@${RM} ${WRKSRC}/include/unbound/unbound-event.h && ${LN} -s ${UNBOUND_WRKSRC}/libunbound/unbound-event.h ${WRKSRC}/include/unbound/unbound-event.h
+
 post-configure:
 	@cd ${WRKSRC}/mk/defaults && \
 		${RLN} netbsd.mk freebsd.mk
 
 post-install:
-.for f in _import_crl addconn algparse cavp dncheck ecdsasigkey enumcheck hunkcheck ipcheck jambufcheck keyidcheck pluto readwriteconf rsasigkey showhostkey timecheck whack
+.for f in \
+	_import_crl addconn algparse asn1check cavp dncheck ecdsasigkey \
+	enumcheck hunkcheck ipcheck jambufcheck keyidcheck pluto readwriteconf \
+	routecheck rsasigkey showhostkey timecheck vendoridcheck whack
 	@${STRIP_CMD} ${STAGEDIR}${PREFIX}/libexec/ipsec/${f}
 .endfor
 

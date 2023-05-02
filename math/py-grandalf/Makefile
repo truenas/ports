@@ -2,11 +2,12 @@ PORTNAME=	grandalf
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.7
 CATEGORIES=	math graphics python
-#MASTER_SITES=	CHEESESHOP # no tarball
+#MASTER_SITES=	PYPI # no tarball
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Graph experimentation and drawing algorithms framework
+WWW=		https://github.com/bdcht/grandalf
 
 LICENSE=	MIT
 

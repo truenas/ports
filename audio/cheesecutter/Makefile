@@ -1,14 +1,13 @@
-# Created by: Emanuel Haupt <ehaupt@FreeBSD.org>
-
 PORTNAME=	cheesecutter
 DISTVERSIONPREFIX=	v
 DISTVERSION=	2.9-beta-3-25
 DISTVERSIONSUFFIX=	-gdbe9a9d
-PORTREVISION=	1
+PORTREVISION=	5
 CATEGORIES=	audio
 
 MAINTAINER=	ehaupt@FreeBSD.org
 COMMENT=	Tracker for composing music for the C64 SID chip
+WWW=		https://github.com/theyamo/CheeseCutter
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE.md
@@ -38,7 +37,7 @@ post-install:
 
 .include <bsd.port.pre.mk>
 
-.if (${OSVERSION} >= 1400042)
+.if (${OSVERSION} >= 1301000)
 MAKE_ARGS=	DLDFLAGS=-L=-Wl,-z,nostart-stop-gc
 .endif
 

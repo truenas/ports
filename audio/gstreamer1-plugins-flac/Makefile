@@ -8,4 +8,8 @@ DIST=		good
 
 MASTERDIR=	${.CURDIR}/../../multimedia/gstreamer1-plugins
 
+PLIST=  ${.CURDIR}/pkg-plist
+
+LIB_DEPENDS= libFLAC.so:audio/flac
+
 .include "${MASTERDIR}/Makefile"

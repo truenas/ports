@@ -1,6 +1,6 @@
 PORTNAME=	clx
 DISTVERSION=	0.7.5.65
-PORTREVISION=	11
+PORTREVISION=	22
 CATEGORIES=	x11 lisp
 PKGNAMEPREFIX=	cl-
 PKGNAMESUFFIX=	-sbcl
@@ -8,6 +8,7 @@ DISTFILES=	# none
 
 MAINTAINER=	jrm@FreeBSD.org
 COMMENT=	X11 client library for Common Lisp
+WWW=		https://www.cliki.net/CLX
 
 LICENSE=	MIT
 

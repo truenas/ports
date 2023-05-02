@@ -1,14 +1,14 @@
-# Created by: Adam Weinberger <adamw@FreeBSD.org>
-
 PORTNAME=	scummvm-tools
-PORTVERSION=	2.5.0
+PORTVERSION=	2.7.0
+PORTREVISION=	1
 CATEGORIES=	games emulators
 MASTER_SITES=	https://downloads.scummvm.org/frs/${PORTNAME}/${PORTVERSION}/
 
 MAINTAINER=	kai@FreeBSD.org
 COMMENT=	Tools for use with the SCUMMVM game emulator
+WWW=		https://www.scummvm.org/
 
-LICENSE=	GPLv2+
+LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING
 
 BUILD_DEPENDS=	lame:audio/lame \
@@ -40,7 +40,7 @@ OPTIONS_DEFINE=	WXGTK DOCS
 OPTIONS_DEFAULT=WXGTK
 OPTIONS_SUB=	yes
 
-WXGTK_USE=	WX=2.8
+WXGTK_USE=	WX=3.2
 WXGTK_VARS=	WX_COMPS=wx WX_CONFIG_ARGS=absolute
 WXGTK_CONFIGURE_ENABLE=	wxwidgets
 

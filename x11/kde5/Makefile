@@ -1,11 +1,11 @@
 PORTNAME=	kde5
 DISTVERSION=	${KDE_PLASMA_VERSION}.${KDE_APPLICATIONS_VERSION}
-CATEGORIES=	x11 kde # kde-plasma
+PORTREVISION=	2
+CATEGORIES=	x11 kde
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	KDE Plasma Desktop and Applications (current)
-
-LICENSE=	LGPL20
+WWW=		https://www.kde.org
 
 RUN_DEPENDS=	kde-baseapps>=0:x11/kde-baseapps \
 		kwalletmanager5:security/kwalletmanager \
@@ -46,12 +46,5 @@ KDEUTILS_DESC=		Collection of utilities for KDE
 KDEUTILS_RUN_DEPENDS=	kdeutils>=${KDE_APPLICATIONS_VERSION}:misc/kdeutils
 
 PULSEAUDIO_USE=		KDE=plasma-pa
-
-.include <bsd.port.options.mk>
-
-.if ${PORT_OPTIONS:MKDEPIM}
-DEPRECATED=	Uses EOL Python 2.7 via deskutils/kdepim
-EXPIRATION_DATE=2021-06-23
-.endif
 
 .include <bsd.port.mk>

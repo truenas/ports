@@ -1,7 +1,5 @@
-# Created by: R.I.Pienaar <rip@devco.net>
-
 PORTNAME=	msmtp
-PORTVERSION=	1.8.19
+PORTVERSION=	1.8.23
 CATEGORIES=	mail
 MASTER_SITES=	https://marlam.de/msmtp/releases/
 
@@ -9,6 +7,7 @@ PATCH_SITES=	https://github.com/marlam/msmtp-mirror/commit/
 
 MAINTAINER=	novel@FreeBSD.org
 COMMENT=	SMTP plugin for MUAs
+WWW=		https://marlam.de/msmtp/
 
 LICENSE=	GPLv3
 

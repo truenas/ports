@@ -1,12 +1,11 @@
-# Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
-
 PORTNAME=	frogatto
 PORTVERSION=	1.3.1
-PORTREVISION=	24
+PORTREVISION=	27
 CATEGORIES=	games
 
 MAINTAINER=	fiziologus@gmail.com
 COMMENT=	Old-school 2D classic adventure platformer game
+WWW=		https://www.frogatto.com/
 
 LICENSE=	FROGATTO GPLv3
 LICENSE_COMB=	multi

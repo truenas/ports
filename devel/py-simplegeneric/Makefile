@@ -1,13 +1,12 @@
-# Created by: Sunpoet Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	simplegeneric
 PORTVERSION=	0.8.1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Simple generic functions
+WWW=		https://pypi.org/project/simplegeneric/
 
 LICENSE=	ZPL21
 

@@ -1,16 +1,18 @@
-# Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
-
 PORTNAME=	btcheck
 PORTVERSION=	2.1
+PORTREVISION=	1
 CATEGORIES=	net-p2p
 MASTER_SITES=	SF/${PORTNAME}
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	BitTorrent data checker and torrent file content viewer
+WWW=		https://sourceforge.net/projects/btcheck/
 
 LICENSE=	GPLv3
 
 GNU_CONFIGURE=	yes
+
+CONFLICTS_INSTALL=	libbt # bin/btcheck
 
 PLIST_FILES=	bin/btcheck man/man1/btcheck.1.gz
 PORTDOCS=	AUTHORS ChangeLog NEWS README

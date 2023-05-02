@@ -1,5 +1,3 @@
-# Created by: Ryan Steinmetz <zi@FreeBSD.org>
-
 PORTNAME=	celluloid
 PORTVERSION=	0.18.0
 CATEGORIES=	devel rubygems
@@ -7,6 +5,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Build concurrent programs out of concurrent objects
+WWW=		https://github.com/celluloid/celluloid
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -14,7 +13,6 @@ LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 RUN_DEPENDS=	rubygem-timers>=4<5:devel/rubygem-timers
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

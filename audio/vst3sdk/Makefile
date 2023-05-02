@@ -1,11 +1,11 @@
 PORTNAME=	vst3sdk
 DISTVERSIONPREFIX=	v
-DISTVERSION=	3.7.1_build_50-1
-DISTVERSIONSUFFIX=	-g8199057
+DISTVERSION=	3.7.7_build_19
 CATEGORIES=	audio
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	VST3 SDK (VST3 audio plugins Software Development Kit)
+WWW=		https://github.com/steinbergmedia/vst3sdk
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -16,6 +16,7 @@ BUILD_DEPENDS=	bash:shells/bash
 LIB_DEPENDS=	libexpat.so:textproc/expat2 \
 		libfontconfig.so:x11-fonts/fontconfig \
 		libfreetype.so:print/freetype2 \
+		libharfbuzz.so:print/harfbuzz \
 		libxcb-cursor.so:x11/xcb-util-cursor \
 		libxcb-keysyms.so:x11/xcb-util-keysyms \
 		libxcb-util.so:x11/xcb-util \
@@ -28,18 +29,18 @@ USE_XORG=	ice sm x11 xcb xext
 USE_GITHUB=	yes
 GH_ACCOUNT=	steinbergmedia
 GH_TUPLE=	\
-		steinbergmedia:vst3_base:7b977c031f42a6bab08e8b10f4f8df0a1f516c38:steinbergmedia_vst3_base/base \
-		steinbergmedia:vst3_cmake:ed8d829631a8913143f5c0f4d5d36a31c412e42c:steinbergmedia_vst3_cmake/cmake \
-		steinbergmedia:vst3_doc:d8e7317751aaf7ccccbeb4d1e8103c290c2690ca:steinbergmedia_vst3_doc/doc \
-		steinbergmedia:vst3_pluginterfaces:fe202edc93e9a01a1f79a614cc9a292dc9bf3e6e:steinbergmedia_vst3_pluginterfaces/pluginterfaces \
-		steinbergmedia:vst3_public_sdk:a3a3ed1b1620df0b064564f1fd5423ae110234a0:steinbergmedia_vst3_public_sdk/public.sdk \
-		steinbergmedia:vstgui:83c6dc9a548729e121746839da946e2b73781b70:steinbergmedia_vstgui/vstgui4
+		steinbergmedia:vst3_base:ea2bac9:steinbergmedia_vst3_base/base \
+		steinbergmedia:vst3_cmake:bd2a55a:steinbergmedia_vst3_cmake/cmake \
+		steinbergmedia:vst3_doc:d5397c9:steinbergmedia_vst3_doc/doc \
+		steinbergmedia:vst3_pluginterfaces:bc5ff0f:steinbergmedia_vst3_pluginterfaces/pluginterfaces \
+		steinbergmedia:vst3_public_sdk:bbb0538:steinbergmedia_vst3_public_sdk/public.sdk \
+		steinbergmedia:vstgui:91c4105:steinbergmedia_vstgui/vstgui4
 
 SHEBANG_FILES=	vstgui4/vstgui/uidescription/editing/createuidescdata.sh
 
 PORTSCOUT=	limit:^.*\d\.\d # prevent tags like vstsdk370_31_07_2020_build_116
 
-do-install:
+do-install: # workaround for https://github.com/steinbergmedia/vst3sdk/issues/77
 	${MKDIR} ${STAGEDIR}${PREFIX}/include/${PORTNAME}
 .for dir in base pluginterfaces public.sdk
 	${INSTALL_DATA} `${FIND} ${WRKSRC}/${dir} \( -type f -iname "*.cpp" -or -iname "*.h" \)` ${STAGEDIR}${PREFIX}/include/${PORTNAME}

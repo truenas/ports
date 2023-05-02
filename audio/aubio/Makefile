@@ -1,13 +1,16 @@
-# Created by: Edward Tomasz Napierala <trasz@FreeBSD.org>
-
 PORTNAME=	aubio
 PORTVERSION=	0.4.9
-PORTREVISION?=	1
+PORTREVISION?=	4
 CATEGORIES?=	audio
 MASTER_SITES=	https://aubio.org/pub/
 
+PATCH_SITES=	https://github.com/${PORTNAME}/${PORTNAME}/commit/
+PATCHFILES+=	cdfe9cef2dcc3edf7d05ca2e9c2dbbf8dea21f1c.patch:-p1 #FFmpeg 6.x compat
+PATCHFILES+=	8a05420e5dd8c7b8b2447f82dc919765876511b3.patch:-p1 #FFmpeg 6.x compat
+
 MAINTAINER?=	jhale@FreeBSD.org
 COMMENT?=	Library for audio labelling
+WWW=		https://aubio.org/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING

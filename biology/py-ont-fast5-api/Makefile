@@ -1,11 +1,13 @@
 PORTNAME=	ont-fast5-api
 DISTVERSIONPREFIX=	release_
-DISTVERSION=	4.0.0
+DISTVERSION=	4.0.2
+PORTREVISION=	1
 CATEGORIES=	biology python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	jwb@FreeBSD.org
 COMMENT=	Interface to HDF5 files in Oxford Nanopore .fast5 format
+WWW=		https://pypi.python.org/pypi/ont_fast5_api
 
 LICENSE=	MPL20
 LICENSE_FILE=	${WRKSRC}/LICENSE.md
@@ -18,7 +20,7 @@ RUN_DEPENDS=	${PYNUMPY} \
 TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pip>=0:devel/py-pip@${PY_FLAVOR}
 
 USES=		python
-USE_PYTHON=	autoplist distutils
+USE_PYTHON=	autoplist concurrent distutils
 USE_GITHUB=	yes
 
 GH_ACCOUNT=	nanoporetech

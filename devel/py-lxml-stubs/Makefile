@@ -1,11 +1,12 @@
 PORTNAME=	lxml-stubs
-PORTVERSION=	0.3.0
+PORTVERSION=	0.4.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Type annotations for the lxml package
+WWW=		https://pypi.org/project/lxml-stubs/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

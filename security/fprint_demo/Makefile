@@ -1,14 +1,13 @@
-# Created by: barner
-
 PORTNAME=	fprint_demo
 PORTVERSION=	20080303
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	security
 MASTER_SITES=	DEBIAN/pool/main/f/${PORTNAME:C/_/-/}
 DISTNAME=	${PORTNAME:C/_/-/}_${PORTVERSION}git.orig
 
-MAINTAINER=	lichray@gmail.com
+MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Demo and test application for libfprint
+WWW=		http://www.reactivated.net/fprint/wiki/Fprint_demo
 
 LIB_DEPENDS=	libfprint.so:security/libfprint
 

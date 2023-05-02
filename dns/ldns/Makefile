@@ -1,14 +1,12 @@
-# Created by: Konstantin Saurbier <saurbier@math.uni-bielefeld.de>
-
 PORTNAME=	ldns
-PORTVERSION=	1.7.1
-PORTREVISION=	2
+DISTVERSION=	1.8.3
 CATEGORIES=	dns
 MASTER_SITES=	https://www.nlnetlabs.nl/downloads/ldns/ \
 		LOCAL/ehaupt
 
 MAINTAINER=	jaap@NLnetLabs.nl
 COMMENT=	Library for programs conforming to DNS RFCs and drafts
+WWW=		https://www.nlnetlabs.nl/projects/ldns/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -61,7 +59,7 @@ DRILL_INSTALL_TARGET=			install-drill
 EXAMPLES_INSTALL_TARGET=		install-examples
 
 .if defined(BUILD_PYLDNS)
-USES+=		python:3.6-3.9
+USES+=		python:3.6+
 USE_PYTHON=	flavors
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 ALL_TARGET=	pyldns
@@ -91,7 +89,7 @@ BUILD_DEPENDS=		${RUN_DEPENDS}
 LIB_DEPENDS+=		libldns.so:dns/ldns
 
 post-patch:
-	@${SED} -i '' -e 's=-I./include/ldns=-I${LOCALBASE}/include/ldns=' ${WRKSRC}/Makefile.in
+	${SED} -i '' -e 's=-I./include/ldns=-I${LOCALBASE}/include/ldns=' ${WRKSRC}/Makefile.in
 
 post-install:
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/${SITE_ARCH_REL}/auto/DNS/LDNS/LDNS.so
@@ -139,5 +137,11 @@ post-install:
 .endif
 
 .endif # BUILD_PYLDNS || BUILD_P5PERL
+
+.if (defined(BUILD_PYLDNS))
+post-install:
+# file /usr/local/lib/python3.9/site-packages/_ldns.so.3.5.0
+	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/${PYTHON_VERSION}/site-packages/_ldns.so.3.5.0
+.endif # BUILD_PYLDNS
 
 .include <bsd.port.post.mk>

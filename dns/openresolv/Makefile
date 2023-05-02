@@ -1,19 +1,23 @@
-# Created by: Roy Marples <roy@marples.name>
+PORTNAME=		openresolv
+DISTVERSIONPREFIX=	v
+DISTVERSION=		3.13.1
+CATEGORIES=		dns
 
-PORTNAME=	openresolv
-PORTVERSION=	1.1
-PORTREVISION=	1
-CATEGORIES=	dns
-MASTER_SITES=	http://roy.marples.name/downloads/openresolv/ \
-		ftp://roy.marples.name/pub/openresolv/
-
-MAINTAINER=	roy@marples.name
+MAINTAINER=	driesm@FreeBSD.org
 COMMENT=	Resolvconf compatible framework for managing resolv.conf
+WWW=		https://roy.marples.name/projects/openresolv/
+LICENSE=	BSD2CLAUSE
 
-USES=		cpe tar:bzip2
+USES=		cpe
 CPE_VENDOR=	${PORTNAME}_project
-NO_ARCH=	yes
 
-SUB_FILES=	pkg-deinstall pkg-message
+USE_GITHUB=	yes
+GH_ACCOUNT=	NetworkConfiguration
+
+GNU_CONFIGURE=	yes
+
+NO_ARCH=	yes
+SUB_FILES=	pkg-message
+SUB_LIST=	PORTNAME=${PORTNAME}
 
 .include <bsd.port.mk>

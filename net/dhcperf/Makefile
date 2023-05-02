@@ -1,5 +1,3 @@
-# Created by: Edwin Groothuis (edwin@mavetju.org)
-
 PORTNAME=	dhcperf
 PORTVERSION=	1.0.1.0
 CATEGORIES=	net benchmarks
@@ -8,6 +6,7 @@ DISTNAME=	${PORTNAME}-${PORTVERSION}-1-freebsd-5.4-i386
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Accurate performance metrics for DHCP service
+WWW=		http://www.nominum.com/testing_tools.php
 
 LIB_DEPENDS=	libc.so.5:misc/compat5x
 

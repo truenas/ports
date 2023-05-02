@@ -1,10 +1,11 @@
 PORTNAME=	xf86-video-vmware
 PORTVERSION=	13.3.0
-PORTREVISION=	6
+PORTREVISION=	7
 CATEGORIES=	x11-drivers
 
 MAINTAINER=	x11@FreeBSD.org
 COMMENT=	X.Org vmware display driver
+WWW=		https://www.x.org/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -22,7 +23,7 @@ CONFIGURE_ARGS=	--without-libudev
 .include <bsd.port.options.mk>
 
 .if ${ARCH} == i386
-USE_GCC=	yes
+USE_GCC=	11
 .endif
 
 .include <bsd.port.mk>

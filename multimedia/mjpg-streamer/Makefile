@@ -1,12 +1,11 @@
-# Created by: Kozlov Sergey <kozlov.sergey.404@gmail.com>
-
 PORTNAME=	mjpg-streamer
 PORTVERSION=	g2021081601
 PORTEPOCH=	1
 CATEGORIES=	multimedia net
 
-MAINTAINER=	swills@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	HTTP video streaming daemon
+WWW=		https://github.com/jacksonliam/mjpg-streamer
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE

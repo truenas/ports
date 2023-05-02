@@ -1,13 +1,12 @@
-# Created by: janos.mohacsi@bsd.hu
-
 PORTNAME=	ndpmon
 PORTVERSION=	1.4.0
-PORTREVISION=	6
+PORTREVISION=	8
 CATEGORIES=	net-mgmt
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/${PORTNAME}-1.4/
 
 MAINTAINER=	pi@FreeBSD.org
 COMMENT=	On-link icmpv6 message monitoring and reporting daemon
+WWW=		http://ndpmon.sourceforge.net
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,15 +1,14 @@
-# Created by: nectar@FreeBSD.org
-
 PORTNAME=	PyGreSQL
 PORTVERSION=	5.2
 PORTEPOCH=	1
 CATEGORIES=	databases python
 MASTER_SITES=	http://www.pygresql.org/files/ \
-		CHEESESHOP
+		PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Python interface to PostgreSQL, both classic and DP-API 2.0
+WWW=		http://www.pygresql.org/
 
 LICENSE=	PSFL
 

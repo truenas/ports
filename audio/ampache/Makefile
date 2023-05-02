@@ -1,7 +1,6 @@
-# Created by: Philippe Audeoud <jadawin@tuxaco.net>
-
 PORTNAME=	ampache
-PORTVERSION=	5.0.0
+PORTVERSION=	5.5.7
+PORTREVISION=	1
 DISTVERSIONSUFFIX=	_all
 CATEGORIES=	audio www
 MASTER_SITES=	https://github.com/${PORTNAME}/${PORTNAME}/releases/download/${PORTVERSION}/
@@ -9,12 +8,14 @@ PKGNAMESUFFIX=	${PHP_PKGNAMESUFFIX}
 
 MAINTAINER=	crees@FreeBSD.org
 COMMENT=	Web-based Audio file manager
+WWW=		https://ampache.org/
 
 LICENSE=	AGPLv3+
 
 USES=		cpe zip gettext php:flavors mysql
-USE_PHP=	pdo pdo_mysql hash session json intl simplexml curl dom xml
-IGNORE_WITH_PHP=73 80
+USE_PHP=	pdo pdo_mysql session intl simplexml curl dom xml
+
+CONFLICTS_INSTALL=	ampache-php* # etc/periodic/daily/500.ampache-cron man/man1/ampache.1.gz
 
 NO_WRKSUBDIR=	yes
 NO_BUILD=	yes
@@ -38,6 +39,9 @@ do-build:
 do-install:
 	${MKDIR} ${STAGEDIR}${WWWDIR}
 	${MKDIR} ${STAGEDIR}${DOCSDIR}
+	for f in $$(${FIND} ${WRKSRC} -name .htaccess); do \
+		${MV} $$f $$f.dist; \
+		done
 	(cd ${WRKSRC}/docs && ${COPYTREE_SHARE} . ${STAGEDIR}${DOCSDIR} '-not -regex ^./man.*')
 	(cd ${WRKSRC} && ${COPYTREE_SHARE} . ${STAGEDIR}${WWWDIR} '-not -regex ^./docs.* -a -not -name *.bak')
 	${INSTALL_MAN} ${WRKSRC}/docs/man/man1/${PORTNAME}.1 ${STAGEDIR}${MAN1PREFIX}/man/man1/

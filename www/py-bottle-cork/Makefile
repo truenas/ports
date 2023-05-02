@@ -6,6 +6,7 @@ PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	olivier@FreeBSD.org
 COMMENT=	Bottle authentication and authorization module
+WWW=		https://cork.readthedocs.io
 
 LICENSE=	LGPL3
 
@@ -25,7 +26,7 @@ OPTIONS_DEFINE=		SQLITE MONGODB SQLALCHEMY EXAMPLES
 MONGODB_DESC=		Add MongoDB support
 SQLALCHEMY_DESC=	Add SQLAlchemy support
 SQLITE_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}sqlite3>0:databases/py-sqlite3@${PY_FLAVOR}
-MONGODB_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pymongo>0:databases/pymongo@${PY_FLAVOR}
+MONGODB_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pymongo>0:databases/py-pymongo@${PY_FLAVOR}
 SQLALCHEMY_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}sqlalchemy10>0:databases/py-sqlalchemy10@${PY_FLAVOR}
 
 post-install-EXAMPLES-on:

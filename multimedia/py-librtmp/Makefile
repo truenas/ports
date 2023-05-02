@@ -1,15 +1,14 @@
-# Created by: William Grzybowski <wg@FreeBSD.org>
-
 PORTNAME=	librtmp
 PORTVERSION=	0.3.0
 PORTREVISION=	1
 CATEGORIES=	multimedia python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	python-${PORTNAME}-${PORTVERSION}
 
-MAINTAINER=	wg@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Python bindings for librtmp, built with cffi
+WWW=		https://github.com/chrippa/python-librtmp
 
 LICENSE=	BSD2CLAUSE
 

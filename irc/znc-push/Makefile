@@ -2,11 +2,12 @@ PORTNAME=	znc-push
 DISTVERSIONPREFIX=	v
 DISTVERSION=	1.0.0-173
 DISTVERSIONSUFFIX=	-g78d0385
-PORTREVISION=	3
+PORTREVISION=	7
 CATEGORIES=	irc
 
 MAINTAINER=	dor.bsd@xm0.uk
 COMMENT=	Push notification service module for ZNC
+WWW=		https://github.com/jreese/znc-push
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

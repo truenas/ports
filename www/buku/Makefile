@@ -1,12 +1,11 @@
-# Created by: Emanuel Haupt <ehaupt@FreeBSD.org>
-
 PORTNAME=	buku
-PORTVERSION=	4.6
+PORTVERSION=	4.8
+DISTVERSIONPREFIX=	v
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Powerful command-line bookmark manager
+WWW=		https://github.com/jarun/buku
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -18,18 +17,22 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}beautifulsoup>=4.4.1:www/py-beautifulsoup@${
 		${PYTHON_PKGNAMEPREFIX}sqlite3>=0:databases/py-sqlite3@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}urllib3>=1.23,1:net/py-urllib3@${PY_FLAVOR}
 
-USES=		python:3.6+
+USES=		python:3.7+
 USE_PYTHON=	autoplist distutils noflavors
 
 NO_ARCH=	yes
 
 PLIST_FILES=	share/man/man1/buku.1.gz
 
-OPTIONS_DEFINE=	BASH FISH ZSH
+USE_GITHUB=	yes
+GH_ACCOUNT=	jarun
+
+OPTIONS_MULTI=	COMPLETION
+OPTIONS_MULTI_COMPLETION=	BASH FISH ZSH
 OPTIONS_DEFAULT=BASH FISH ZSH
-BASH_DESC=	Install bash completion
-FISH_DESC=	Install fish completion
-ZSH_DESC=	Install zsh completion
+BASH_DESC=		Install bash completion
+FISH_DESC=		Install fish completion
+ZSH_DESC=		Install zsh completion
 
 BASH_PLIST_FILES=	etc/bash_completion.d/buku-completion.bash
 FISH_PLIST_FILES=	share/fish/completions/buku.fish

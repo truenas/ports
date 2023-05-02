@@ -1,14 +1,13 @@
-# Created by: Guillaume Paquet <amyfoub@gmail.com>
-
 PORTNAME=	xpad
 PORTVERSION=	3.1
-PORTREVISION=	9
+PORTREVISION=	10
 CATEGORIES=	deskutils
 MASTER_SITES=	http://launchpad.net/xpad/stable/${PORTVERSION}/+download/
 PKGNAMESUFFIX=	3
 
 MAINTAINER=	jgh@FreeBSD.org
 COMMENT=	Virtual note-pad system for your X11 desktop
+WWW=		https://launchpad.net/xpad/stable
 
 LICENSE=	GPLv3
 

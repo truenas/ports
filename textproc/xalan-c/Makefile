@@ -1,14 +1,13 @@
-# Created by: Roger Leigh <rleigh@codelibre.net>
-
 PORTNAME=	xalan-c
 PORTVERSION=	1.12
-PORTREVISION=	3
+PORTREVISION=	6
 CATEGORIES=	textproc
 MASTER_SITES=	APACHE/xalan/xalan-c/sources
 DISTNAME=	xalan_c-${PORTVERSION}
 
 MAINTAINER=	rleigh@apache.org
 COMMENT=	XSLT processor from the Apache XML Project
+WWW=		https://apache.github.io/xalan-c/
 
 LICENSE=	APACHE20
 

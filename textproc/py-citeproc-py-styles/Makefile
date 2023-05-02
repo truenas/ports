@@ -1,11 +1,12 @@
 PORTNAME=	citeproc-py-styles
 DISTVERSION=	0.1.3
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Static resources package for citeproc-py
+WWW=		https://github.com/inveniosoftware/citeproc-py-styles
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

@@ -1,17 +1,16 @@
-# Created by: Ganael LAPLANCHE <ganael.laplanche@martymac.org>
-
 PORTNAME=	amule
 PORTVERSION=	2.3.3
-PORTREVISION=	3
+PORTREVISION=	5
 CATEGORIES=	net-p2p
 MASTER_SITES=	SF/${PORTNAME}/aMule/${PORTVERSION}
 DISTNAME=	aMule-${PORTVERSION}
 
-MAINTAINER=	bar@FreeBSD.org
+MAINTAINER=	eduardo@FreeBSD.org
 COMMENT=	All-platform eMule p2p client
+WWW=		https://www.amule.org/
 
 LICENSE=	GPLv2+
-LICENSE_FILE_GPLv2+ =	${WRKSRC}/docs/COPYING
+LICENSE_FILE=	${WRKSRC}/docs/COPYING
 
 LIB_DEPENDS=	libcryptopp.so:security/cryptopp
 
@@ -26,15 +25,13 @@ CONFIGURE_ARGS=	--with-denoise-level=0
 CONFIGURE_ENV=	LEX="${FLEX}" PKG_CONFIG="${PKG_CONFIG}" \
 		docdir='$${prefix}/${DOCSDIR_REL}'
 
-CXXFLAGS+=	`pkgconf --cflags-only-other libcryptopp`
 LDFLAGS+=	-lpthread
 
 SHEBANG_FILES=	src/utils/scripts/*.pl src/utils/xas/*.pl src/libs/ec/*.pl
 
-CONFLICTS_INSTALL=	amule-devel
-
 OPTIONS_DEFINE=	ALC ALCC AMULECMD AMULEDAEMON AMULEGUI BOOST CAS DEBUG \
-	DOCS ED2K FILEVIEW MMAP MONOLITHIC NLS UPNP WEBSERVER WXCAS XAS
+		DOCS ED2K FILEVIEW MMAP MONOLITHIC NLS UPNP WEBSERVER \
+		WXCAS XAS
 ALC_DESC=		Compile aMule Link Creator for GUI
 ALCC_DESC=		Compile aMule Link Creator for console
 AMULECMD_DESC=		Compile aMule command line client
@@ -47,9 +44,8 @@ MMAP_DESC=		Use mapped memory
 MONOLITHIC_DESC=	Compile monolithic aMule
 WXCAS_DESC=		Compile aMule Statistics for GUI
 XAS_DESC=		Install XChat2 plugin
-OPTIONS_DEFAULT=ALC ALCC AMULECMD AMULEDAEMON AMULEGUI CAS ED2K \
-	FILEVIEW MONOLITHIC WEBSERVER WXCAS XAS
-
+OPTIONS_DEFAULT=	ALC ALCC AMULECMD AMULEDAEMON AMULEGUI CAS ED2K \
+			FILEVIEW MONOLITHIC WEBSERVER WXCAS XAS
 OPTIONS_SUB=	yes
 
 DEBUG_CONFIGURE_OFF=	--disable-debug
@@ -97,6 +93,12 @@ XAS_CONFIGURE_ON=	--enable-xas
 XAS_USE=	PERL5+=run
 
 .include <bsd.port.options.mk>
+
+# Fix segmentation fault, PR 266866
+# see also 5a19c08: security/cryptopp: Update to 8.7.0
+.if ${ARCH} == i386 || ${ARCH} == amd64
+CXXFLAGS+=	-DCRYPTOPP_DISABLE_ASM
+.endif
 
 .if ${PORT_OPTIONS:MAMULEGUI} || ${PORT_OPTIONS:MMONOLITHIC}
 PLIST_SUB+=	AMULESKIN=""

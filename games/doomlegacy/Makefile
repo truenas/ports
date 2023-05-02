@@ -1,8 +1,5 @@
-# Created by: Alexander G. Chetirbock <bock@bock.nnov.ru>
-
 PORTNAME=	doomlegacy
-PORTVERSION=	1.48.8
-PORTREVISION=	1
+PORTVERSION=	1.48.12
 PORTEPOCH=	1
 CATEGORIES=	games
 MASTER_SITES=	SF/${PORTNAME}/${DISTVERSION:S,_,%20,}/
@@ -12,6 +9,7 @@ DISTFILES=	${DISTNAME}${EXTRACT_SUFX} \
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Improved and extended version of Doom
+WWW=		http://doomlegacy.sourceforge.net/
 
 LICENSE=	GPLv2
 
@@ -19,7 +17,7 @@ USES=		gl gmake sdl tar:bzip2
 USE_GL=		gl glu
 USE_SDL=	mixer sdl
 
-PLIST_FILES=	bin/${PORTNAME} share/doom/legacy.wad
+PLIST_FILES=	bin/${PORTNAME} share/doom/dogs.wad share/doom/legacy.wad
 PORTDOCS=	*
 
 OPTIONS_DEFINE=	DOCS
@@ -54,7 +52,7 @@ pre-build:
 do-install:
 	${INSTALL_PROGRAM} ${WRKSRC}/bin/doomlegacy ${STAGEDIR}${PREFIX}/bin
 	@${MKDIR} ${STAGEDIR}${DMDIR}
-	${INSTALL_DATA} ${WRKDIR}/${PORTNAME}_${PORTVERSION}/legacy.wad \
+	${INSTALL_DATA} ${WRKDIR}/${PORTNAME}_${PORTVERSION}_common/*.wad \
 		${STAGEDIR}${DMDIR}
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}
 	(cd ${WRKSRC}/docs && ${COPYTREE_SHARE} . ${STAGEDIR}${DOCSDIR})

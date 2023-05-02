@@ -1,17 +1,18 @@
-# Created by: Cyrille Lefevre <cyrille.lefevre@laposte.net>
-
 PORTNAME=	gzip
-PORTVERSION=	1.11
+PORTVERSION=	1.12
 CATEGORIES=	archivers
 MASTER_SITES=	GNU
 
 MAINTAINER=	nc@FreeBSD.org
 COMMENT=	Compression utility designed to be a replacement for compress
+WWW=		https://www.gnu.org/software/gzip/
 
 LICENSE=	GPLv3+
 
 USES=		cpe charsetfix makeinfo tar:xz
 GNU_CONFIGURE=	yes
+
+CONFLICTS_INSTALL=	zutils # bin/zcat bin/zcmp bin/zdiff bin/zgrep
 
 INFO=		gzip
 CPE_VENDOR=	gnu

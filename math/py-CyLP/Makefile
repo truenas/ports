@@ -1,11 +1,13 @@
 PORTNAME=	CyLP
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.91.4
+DISTVERSION=	0.91.5
+PORTREVISION=	1
 CATEGORIES=	math python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Python interface to CLP, CBC, and CGL to solve LPs and MIPs
+WWW=		https://github.com/coin-or/CyLP
 
 LICENSE=	CPL10
 LICENSE_NAME=	Common Public License Version 1.0

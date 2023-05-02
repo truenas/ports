@@ -1,18 +1,21 @@
---- base/system/sys_info_posix.cc.orig	2021-04-14 18:40:48 UTC
+--- base/system/sys_info_posix.cc.orig	2023-03-09 06:31:50 UTC
 +++ base/system/sys_info_posix.cc
-@@ -26,6 +26,11 @@
- #if defined(OS_ANDROID)
- #include <sys/vfs.h>
- #define statvfs statfs  // Android uses a statvfs-like statfs struct and call.
-+#elif defined(OS_BSD)
-+#include <sys/param.h>
-+#include <sys/mount.h>
-+#define statvfs statfs
-+#define f_frsize f_bsize
- #else
- #include <sys/statvfs.h>
- #endif
-@@ -239,6 +244,8 @@ std::string SysInfo::OperatingSystemArchitecture() {
+@@ -165,12 +165,12 @@ int NumberOfProcessors() {
+ 
+ }  // namespace internal
+ 
+-#if !BUILDFLAG(IS_OPENBSD)
++#if !BUILDFLAG(IS_BSD)
+ int SysInfo::NumberOfProcessors() {
+   static int number_of_processors = internal::NumberOfProcessors();
+   return number_of_processors;
+ }
+-#endif  // !BUILDFLAG(IS_OPENBSD)
++#endif  // !BUILDFLAG(IS_BSD)
+ 
+ // static
+ uint64_t SysInfo::AmountOfVirtualMemory() {
+@@ -260,6 +260,8 @@ std::string SysInfo::OperatingSystemArchitecture() {
      arch = "x86";
    } else if (arch == "amd64") {
      arch = "x86_64";

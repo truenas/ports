@@ -1,10 +1,12 @@
 PORTNAME=	libabigail
 DISTVERSION=	2.0
+PORTREVISION=	2
 CATEGORIES=	devel
 MASTER_SITES=	SOURCEWARE/${PORTNAME}/
 
 MAINTAINER=	adridg@FreeBSD.org
 COMMENT=	ABI Generic Analysis and Instrumentation Library
+WWW=		https://sourceware.org/libabigail/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

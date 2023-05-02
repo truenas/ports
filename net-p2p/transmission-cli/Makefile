@@ -1,12 +1,13 @@
 PORTNAME=	transmission
 DISTVERSION=	3.00
-PORTREVISION?=	5
+PORTREVISION?=	6
 CATEGORIES+=	net-p2p
 SLAVEPORT?=	cli
 PKGNAMESUFFIX?=	-cli
 
 MAINTAINER=	rigoletto@FreeBSD.org
 COMMENT=	Meta-port for Transmission BitTorrent client
+WWW=		https://www.transmissionbt.com/
 
 LICENSE+=	MIT
 
@@ -27,7 +28,7 @@ LIB_DEPENDS+=	libcurl.so:ftp/curl \
 		libb64.so:converters/libb64 \
 		libevent.so:devel/libevent \
 		libnatpmp.so:net/libnatpmp \
-		libutp.so:net/libutp \
+		libutp.so:net-p2p/libutp \
 		libminiupnpc.so:net/miniupnpc
 
 USES+=		cmake iconv libtool localbase pkgconfig ssl

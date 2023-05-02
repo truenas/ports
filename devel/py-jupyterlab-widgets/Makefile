@@ -1,12 +1,13 @@
 PORTNAME=	jupyterlab-widgets
-DISTVERSION=	1.0.2
+DISTVERSION=	3.0.7
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	jupyterlab_widgets-${DISTVERSION}
 
 MAINTAINER=	makc@FreeBSD.org
 COMMENT=	JupyterLab extension for Jupyter/IPython widgets
+WWW=		https://pypi.python.org/pypi/jupyterlab-widgets
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -14,8 +15,10 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}jupyter-packaging>0:devel/py-jupyter-packaging@${PY_FLAVOR}
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}jupyterlab>=3.0.0:devel/py-jupyterlab@${PY_FLAVOR}
 
-USES=		python:3.7-3.9
+USES=		python:3.7+
 USE_PYTHON=	autoplist concurrent distutils
+
+NO_ARCH=	yes
 
 PYDISTUTILS_CONFIGUREARGS=	--skip-npm
 PYDISTUTILS_BUILDARGS=		--skip-npm

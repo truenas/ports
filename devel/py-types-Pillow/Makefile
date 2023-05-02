@@ -1,11 +1,12 @@
 PORTNAME=	types-Pillow
-PORTVERSION=	8.3.8
+PORTVERSION=	9.5.0.1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Typing stubs for Pillow
+WWW=		https://pypi.org/project/types-Pillow/
 
 LICENSE=	APACHE20
 

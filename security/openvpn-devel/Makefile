@@ -1,7 +1,6 @@
-# Created by: Matthias Andree <mandree@FreeBSD.org>
-
 PORTNAME=	openvpn
-DISTVERSION=	g20210603
+DISTVERSION=	g20230331
+PORTREVISION=	0
 PORTEPOCH=	1
 CATEGORIES=	security net net-vpn
 PKGNAMESUFFIX=	-devel
@@ -10,6 +9,7 @@ MAINTAINER=	gert@greenie.muc.de
 # let's use ?= in spite of portlint WARNings because this might become
 # security/openvpn one day which would then have a slave port:
 COMMENT?=	Secure IP/Ethernet tunnel daemon
+WWW=		https://openvpn.net/community/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYRIGHT.GPL
@@ -18,13 +18,15 @@ BUILD_DEPENDS+=	cmocka>=0:sysutils/cmocka \
 		rst2man:textproc/py-docutils
 LIB_DEPENDS+=	liblzo2.so:archivers/lzo2
 
-USES=		autoreconf cpe libtool pkgconfig shebangfix tar:xz
+USES=		autoreconf cpe libtool pkgconfig python:build shebangfix tar:xz
 IGNORE_SSL=	libressl libressl-devel
 USE_GITLAB=	yes
-GL_COMMIT=	0033811e0215af76f469d78912c95a2f59813454
+GL_COMMIT=	fafb05f6f3a7a1b46c278961ec8d2d8970f01096
 USE_RC_SUBR=	openvpn
 
-SHEBANG_FILES=	sample/sample-scripts/auth-pam.pl sample/sample-scripts/ucn.pl \
+SHEBANG_FILES=	sample/sample-scripts/auth-pam.pl \
+		sample/sample-scripts/totpauth.py \
+		sample/sample-scripts/ucn.pl \
 		sample/sample-scripts/verify-cn
 
 GNU_CONFIGURE=		yes
@@ -49,9 +51,11 @@ SUB_FILES=	openvpn-client pkg-message
 PORTDOCS=	*
 PORTEXAMPLES=	*
 
-OPTIONS_DEFINE=		DOCS EASYRSA EXAMPLES LZ4 PKCS11 SMALL TEST TUNNELBLICK \
+OPTIONS_DEFINE=		DOCS EASYRSA EXAMPLES LZ4 PKCS11 SMALL DCO TEST \
 			X509ALTUSERNAME
-OPTIONS_DEFAULT=	EASYRSA LZ4 OPENSSL TEST
+OPTIONS_DEFAULT=	EASYRSA LZ4 OPENSSL TEST DCO
+OPTIONS_EXCLUDE_FreeBSD_12=	DCO # FreeBSD 14 only
+OPTIONS_EXCLUDE_FreeBSD_13=	DCO # FreeBSD 14 only
 OPTIONS_SINGLE=		SSL
 OPTIONS_SINGLE_SSL=	MBEDTLS OPENSSL
 
@@ -64,7 +68,7 @@ PKCS11_PREVENTS=		MBEDTLS
 PKCS11_PREVENTS_MSG=		OpenVPN cannot use pkcs11-helper with mbedTLS. \
 				Disable PKCS11, or use OpenSSL instead
 SMALL_DESC=			Build a smaller executable with fewer features
-TUNNELBLICK_DESC=		Tunnelblick XOR scramble patch (READ HELP!)
+DCO_DESC=			Build with Data Channel Offload (ovpn(4)) support
 X509ALTUSERNAME_DESC=		Enable --x509-username-field (OpenSSL only)
 X509ALTUSERNAME_PREVENTS=	MBEDTLS
 X509ALTUSERNAME_PREVENTS_MSG=	OpenVPN ${DISTVERSION} cannot use \
@@ -89,10 +93,10 @@ PKCS11_CONFIGURE_ENABLE=	pkcs11
 
 SMALL_CONFIGURE_ON=	--enable-small
 
+DCO_CONFIGURE_OFF=	--disable-dco
+
 TEST_ALL_TARGET=	check
 TEST_TEST_TARGET_OFF=	check
-
-TUNNELBLICK_EXTRA_PATCHES=	${FILESDIR}/extra-tunnelblick-openvpn_xorpatch
 
 X509ALTUSERNAME_CONFIGURE_ENABLE=	x509-alt-username
 
@@ -134,7 +138,6 @@ post-install:
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/openvpn/plugins/openvpn-plugin-down-root.so
 	${INSTALL_SCRIPT} ${WRKSRC}/contrib/pull-resolv-conf/client.up ${STAGEDIR}${PREFIX}/libexec/openvpn-client.up
 	${INSTALL_SCRIPT} ${WRKSRC}/contrib/pull-resolv-conf/client.down ${STAGEDIR}${PREFIX}/libexec/openvpn-client.down
-	@${REINPLACE_CMD} 's|resolvconf -p -a|resolvconf -a|' ${STAGEDIR}${PREFIX}/libexec/openvpn-client.up
 	${INSTALL_SCRIPT} ${WRKDIR}/openvpn-client ${STAGEDIR}${PREFIX}/sbin/openvpn-client
 	${MKDIR} ${STAGEDIR}${PREFIX}/include
 

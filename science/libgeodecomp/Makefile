@@ -1,19 +1,20 @@
-# Created by: Kurt Kanzenbach <kurt@kmk-computers.de>
-
 PORTNAME=		libgeodecomp
 PORTVERSION=		0.4.0
-PORTREVISION=		22
+PORTREVISION=		24
 CATEGORIES=		science devel
 MASTER_SITES=		http://www.libgeodecomp.org/archive/
 
 MAINTAINER=		kurt@kmk-computers.de
 COMMENT=		Auto-parallelizing library for computer simulations
+WWW=		http://www.libgeodecomp.org/
 
 LICENSE=		BSL
 LICENSE_FILE=		${WRKSRC}/LICENSE
 
 LIB_DEPENDS=		libboost_system.so:devel/boost-libs libboost_date_time.so:devel/boost-libs \
 			libboost_filesystem.so:devel/boost-libs
+
+BROKEN=			error: incomplete type 'LibFlatArray::detail::flat_array::offset<LibGeoDecomp::TestCell<3, LibGeoDecomp::Stencils::Moore<3, 1>, LibGeoDecomp::TopologiesHelpers::Topology<3, false, false, false>, LibGeoDecomp::TestCellHelpers::SoAAPI>, -1>' used in nested name specifier
 
 USES=			cmake compiler:c++11-lib
 USE_GCC=		yes

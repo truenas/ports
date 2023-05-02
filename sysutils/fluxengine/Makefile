@@ -1,14 +1,16 @@
 PORTNAME=	fluxengine
 DISTVERSION=	572
+PORTREVISION=	1
 CATEGORIES=	sysutils
 
 MAINTAINER=	probono@puredarwin.org
 COMMENT=	USB floppy disk interface for reading and writing non-PC disk formats
+WWW=		https://cowlark.com/fluxengine/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/COPYING.md
 
-USES=		compiler:gcc-c++11-lib gmake ninja:build pkgconfig sqlite
+USES=		gmake ninja:build pkgconfig sqlite
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	davidgiven

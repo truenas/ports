@@ -1,20 +1,19 @@
-# Created by: Dave McKay <dave@mu.org>
-
 PORTNAME=	seahorse
 PORTVERSION=	41.0
+PORTREVISION=	1
 CATEGORIES=	security gnome
 MASTER_SITES=	GNOME/sources/${PORTNAME}/${PORTVERSION:C/^([0-9]+)\..*/\1/}
 DIST_SUBDIR=	gnome
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	GNOME application for managing encryption keys (PGP, SSH)
+WWW=		https://wiki.gnome.org/Apps/Seahorse
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
 BUILD_DEPENDS=	gnupg>=2.1.4:security/gnupg \
-		itstool:textproc/itstool \
-		valac:lang/vala
+		itstool:textproc/itstool
 LIB_DEPENDS=	libgcr-base-3.so:security/gcr \
 		libgpgme.so:security/gpgme \
 		libhandy-1.so:x11-toolkits/libhandy \
@@ -24,7 +23,7 @@ LIB_DEPENDS=	libgcr-base-3.so:security/gcr \
 RUN_DEPENDS=	gnupg>=2.1.4:security/gnupg
 
 USES=		cpe gettext gnome localbase:ldflags meson pkgconfig \
-		python:3.5+,build tar:xz xorg
+		python:3.5+,build tar:xz vala:build xorg
 USE_CSTD=	c99
 USE_GNOME=	gtk30
 GLIB_SCHEMAS=	org.gnome.seahorse.gschema.xml \
@@ -52,7 +51,7 @@ LDAP_DESC=	LDAP keyserver support (for gpg)
 
 AVAHI_LIB_DEPENDS=	libavahi-client.so:net/avahi-app
 AVAHI_MESON_TRUE=	key-sharing
-LDAP_USE=		OPENLDAP=yes
+LDAP_USES=		ldap
 LDAP_MESON_TRUE=	ldap-support
 
 .include <bsd.port.mk>

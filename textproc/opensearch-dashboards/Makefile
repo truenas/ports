@@ -1,24 +1,35 @@
 PORTNAME=	opensearch-dashboards
-DISTVERSION=	1.2.0
+DISTVERSION=	2.6.0
+PORTREVISION=	1
 DISTVERSIONSUFFIX=	-linux-x64
 CATEGORIES=	textproc www
 MASTER_SITES=	https://artifacts.opensearch.org/releases/bundle/${PORTNAME}/${DISTVERSION}/
 
 MAINTAINER=	opensearch@FreeBSD.org
 COMMENT=	Visualization dashboards for OpenSearch
+WWW=		https://opensearch.org
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
+DEPRECATED=	Requires upstream EOL node14
+EXPIRATION_DATE=	2023-05-26
+
 BUILD_DEPENDS=	npm-node14>0:www/npm-node14
+
+CONFLICTS=	opensearch-dashboard13
 
 USES=		nodejs:14,build,run python:build
 USE_RC_SUBR=	${PORTNAME}
+
+WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}
 
 OPTIONS_DEFINE=	CHROME
 
 CHROME_DESC=	Add dependency on www/chromium (required for PDF reports)
 CHROME_RUN_DEPENDS=chrome:www/chromium
+
+NODE_VER=	14.21.1
 
 _DEVDIR=	${WRKDIR}/.devdir
 
@@ -27,20 +38,19 @@ post-patch:
 		${WRKSRC}/bin/opensearch-dashboards \
 		${WRKSRC}/bin/opensearch-dashboards-keystore \
 		${WRKSRC}/bin/opensearch-dashboards-plugin \
-		${WRKSRC}/node_modules/re2/binding.gyp \
-		${WRKSRC}/plugins/reportsDashboards/server/routes/utils/constants.js
+		${WRKSRC}/node_modules/re2/binding.gyp
+	@${REINPLACE_CMD} -e 's|14.20.1|${NODE_VER}|g' ${WRKSRC}/package.json
 	${RM} \
 		${WRKSRC}/bin/*.orig \
 		${WRKSRC}/bin/*.bak \
 		${WRKSRC}/node_modules/re2/binding.gyp.orig \
 		${WRKSRC}/node_modules/re2/binding.gyp.bak \
-		${WRKSRC}/plugins/reportsDashboards/server/routes/utils/constants.js.orig \
-		${WRKSRC}/plugins/reportsDashboards/server/routes/utils/constants.js.bak
+		${WRKSRC}/package.json.bak
 	${RM} -r ${WRKSRC}/plugins/reportsDashboards/.chromium
 
 do-configure:
 	(cd ${WRKSRC}/node_modules/re2 && \
-		${SETENV} HOME=${WRKDIR} \
+		${SETENV} HOME=${WRKDIR} PYTHONDONTWRITEBYTECODE=1 \
 		${LOCALBASE}/lib/node_modules/npm/bin/node-gyp-bin/node-gyp configure \
 		--python=${PYTHON_CMD} \
 		--nodedir ${LOCALBASE} \
@@ -48,7 +58,7 @@ do-configure:
 
 do-build:
 	(cd ${WRKSRC}/node_modules/re2 && \
-		${SETENV} HOME=${WRKDIR} \
+		${SETENV} HOME=${WRKDIR} PYTHONDONTWRITEBYTECODE=1 \
 		${LOCALBASE}/lib/node_modules/npm/bin/node-gyp-bin/node-gyp build \
 		--devdir=${_DEVDIR})
 	${RM} -r ${WRKSRC}/node_modules/re2/build/Release/.deps \

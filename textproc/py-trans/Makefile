@@ -1,11 +1,12 @@
 PORTNAME=	trans
 PORTVERSION=	2.1.0
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Module for performing transliteration
+WWW=		https://github.com/zzzsochi/trans
 
 LICENSE=	BSDunclear
 LICENSE_NAME=	Unclear BSD License

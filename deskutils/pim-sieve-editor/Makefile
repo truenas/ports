@@ -1,24 +1,23 @@
 PORTNAME=	pim-sieve-editor
 DISTVERSION=	${KDE_APPLICATIONS_VERSION}
+PORTREVISION=	1
 CATEGORIES=	deskutils kde kde-applications
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	Mail sieve editor
+WWW=		https://www.kde.org/
 
-DEPRECATED=	Uses EOL Python 2.7 via www/qt5-webengine
-EXPIRATION_DATE=2021-06-23
-
-LIB_DEPENDS=	libqt5keychain.so:security/qtkeychain
+LIB_DEPENDS=	libqt5keychain.so:security/qtkeychain@qt5
 
 USES=		cmake compiler:c++11-lib gettext kde:5 qt:5 tar:xz
 USE_KDE=	auth bookmarks codecs config configwidgets coreaddons crash \
 		dbusaddons i18n iconthemes kio service wallet \
 		widgetsaddons xmlgui \
-		ecm_build
+		ecm:build
 # pim components
-USE_KDE+=	libksieve mailtransport pimcommon
+USE_KDE+=	libksieve mailtransport pimcommon pimtextedit
 USE_QT=		concurrent core dbus gui network widgets xml \
-		buildtools_build qmake_build
+		buildtools:build qmake:build
 USE_LDCONFIG=	yes
 
 DESCR=		${.CURDIR:H:H}/deskutils/kdepim/pkg-descr

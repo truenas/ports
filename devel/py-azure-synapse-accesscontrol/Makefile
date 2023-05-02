@@ -1,11 +1,12 @@
 PORTNAME=	azure-synapse-accesscontrol
 DISTVERSION=	0.5.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dbaio@FreeBSD.org
 COMMENT=	Microsoft Azure Synapse AccessControl Client Library for Python
+WWW=		https://pypi.org/project/azure-synapse-accesscontrol/
 
 LICENSE=	MIT
 

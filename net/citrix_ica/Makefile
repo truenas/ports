@@ -1,5 +1,3 @@
-# Created by: msmith
-
 PORTNAME=	citrix_ica
 PORTVERSION=	13.10.0
 CATEGORIES=	net comms linux
@@ -8,6 +6,7 @@ DISTNAME=	linuxx86-${PORTVERSION}.20
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Citrix(R) Presentation Server(TM) client
+WWW=		https://www.citrix.com/products/receiver/
 
 # Converted from RESTRICTED
 LICENSE=	citrix

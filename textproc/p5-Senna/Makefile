@@ -1,6 +1,6 @@
 PORTNAME=	Senna
 PORTVERSION=	0.51
-PORTREVISION=	4
+PORTREVISION=	5
 CATEGORIES=	textproc perl5
 MASTER_SITES=	CPAN
 MASTER_SITE_SUBDIR=	CPAN:DMAKI
@@ -8,6 +8,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Perl module for Embeddable Fulltext Search Engine
+WWW=		https://metacpan.org/release/Senna
 
 LICENSE=	LGPL21
 

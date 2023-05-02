@@ -1,5 +1,3 @@
-# Created by: Adam Jette <jettea46@yahoo.com>
-
 PORTNAME=	openradius
 PORTVERSION=	0.9.12c
 PORTREVISION=	3
@@ -9,6 +7,7 @@ MASTER_SITES=	http://sites.e-advies.nl/openradius/download/ \
 
 MAINTAINER=	portmaster@bsdforge.com
 COMMENT=	RADIUS server with some actual documentation
+WWW=		http://sites.e-advies.nl/openradius/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -34,7 +33,7 @@ OPTIONS_DEFINE=	LDAP DOCS EXAMPLES
 .include <bsd.port.options.mk>
 
 .if ${PORT_OPTIONS:MLDAP}
-USE_OPENLDAP=	YES
+USES+=	ldap
 PLIST_SUB+=	LDAP=""
 SCRIPTS_ENV+=	USE_LDAP=yes
 .else

@@ -1,11 +1,12 @@
-# Created by: Andrew Pantyukhin <infofarmer@FreeBSD.org>
-
 PORTNAME=	when
-PORTVERSION=	1.1.42
+PORTVERSION=	1.1.45
 CATEGORIES=	deskutils
+MASTER_SITES=	https://bitbucket.org/ben-crowell/when/get/${PORTVERSION}.tgz?dummy=/
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Simple personal calendar
+WWW=		https://www.lightandmatter.com/when/when.html \
+		https://bitbucket.org/ben-crowell/when
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual
@@ -17,8 +18,7 @@ MAKE_ARGS=	MANDIR=${PREFIX}/share/man/man1 prefix=${PREFIX}
 NO_ARCH=	yes
 NO_BUILD=	yes
 
-USE_GITHUB=	yes
-GH_ACCOUNT=	bcrowell
+WRKSRC=		${WRKDIR}/ben-crowell-when-965b37762cc7/
 
 SHEBANG_FILES=	when
 

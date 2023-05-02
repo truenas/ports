@@ -1,5 +1,4 @@
-# Created by: Adam Weinberger <adamw@FreeBSD.org>
-
+PORTREVISION=	3
 PKGNAMESUFFIX=	-lite
 
 OPTIONS_EXCLUDE=	CAJA DBUS

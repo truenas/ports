@@ -1,10 +1,13 @@
-PORTNAME=		git-lfs
+PORTNAME=	git-lfs
 DISTVERSIONPREFIX=	v
-DISTVERSION=		3.0.1
-CATEGORIES=		devel
+DISTVERSION=	3.0.2
+PORTREVISION=	12
+CATEGORIES=	devel
+MASTER_SITES=	https://github.com/${PORTNAME}/${PORTNAME}/releases/download/v${DISTVERSION}/
 
 MAINTAINER=	egypcio@FreeBSD.org
 COMMENT=	Git extension for versioning large files
+WWW=		https://git-lfs.github.com/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.md
@@ -12,7 +15,8 @@ LICENSE_FILE=	${WRKSRC}/LICENSE.md
 RUN_DEPENDS=	git:devel/git
 
 USES=		go:modules
-USE_GITHUB=	yes
+
+WRKSRC=		${WRKDIR}/${PORTNAME}-${DISTVERSION}
 
 OPTIONS_DEFINE=		MANPAGES
 OPTIONS_DEFAULT=	MANPAGES

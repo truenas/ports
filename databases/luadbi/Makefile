@@ -1,5 +1,3 @@
-# Created by: Olexander Melnyk <olexander.v.melnyk@gmail.com>
-
 PORTNAME=	luadbi
 PORTVERSION=	0.7.2
 DISTVERSIONPREFIX=	v
@@ -8,6 +6,7 @@ PKGNAMEPREFIX=	${LUA_PKGNAMEPREFIX}
 
 MAINTAINER=	olexander.v.melnyk@gmail.com
 COMMENT=	Multi-backend SQL database library for Lua
+WWW=		https://github.com/mwild1/luadbi
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -41,6 +40,7 @@ MYSQL_ALL_TARGET=	mysql
 MYSQL_PLIST_FILES=	%%LUA_MODLIBDIR%%/dbd/mysql.so
 MYSQL_MAKE_ENV+=	MYSQL_LDFLAGS="-L${LOCALBASE}/lib/mysql -lmysqlclient"
 MYSQL_MAKE_ENV+=	MYSQL_INC="-I${LOCALBASE}/include/mysql"
+MYSQL_VARS=	IGNORE_WITH_MYSQL=80
 
 SQLITE3_USES=		localbase:ldflags sqlite:3
 SQLITE3_ALL_TARGET=	sqlite3

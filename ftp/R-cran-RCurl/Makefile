@@ -1,12 +1,12 @@
-# Created by: TAKATSU Tomonari <tota@FreeBSD.org>
-
 PORTNAME=	RCurl
-DISTVERSION=	1.98-1.5
+DISTVERSION=	1.98-1.8
+PORTREVISION=	1
 CATEGORIES=	ftp
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	General network client interface for R
+WWW=		https://cran.r-project.org/web/packages/RCurl/
 
 LICENSE=	BSD3CLAUSE
 

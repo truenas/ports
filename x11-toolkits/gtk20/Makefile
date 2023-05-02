@@ -1,7 +1,6 @@
-# Created by: Vanilla I. Shu <vanilla@MinJe.com.TW>
-
 PORTNAME=	gtk
 PORTVERSION=	2.24.33		# sync with graphics/gtk-update-icon-cache
+PORTREVISION=	1
 CATEGORIES=	x11-toolkits
 MASTER_SITES=	GNOME/sources/gtk+/${PORTVERSION:C/^([0-9]+\.[0-9]+).*/\1/}
 PKGNAMESUFFIX=	2
@@ -10,6 +9,7 @@ DIST_SUBDIR=	gnome2
 
 MAINTAINER=	desktop@FreeBSD.org
 COMMENT=	Gimp Toolkit for X11 GUI (previous stable version)
+WWW=		https://www.gtk.org/
 
 LICENSE=	LGPL20
 

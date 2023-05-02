@@ -1,7 +1,6 @@
-# Created by: Yukihiro Nakai <nakai@FreeBSD.org>
-
 PORTNAME=	mono
 PORTVERSION=	5.20.1.34
+PORTREVISION=	1
 CATEGORIES=	lang
 MASTER_SITES=	https://download.mono-project.com/sources/mono/
 PKGNAMESUFFIX=	5.20
@@ -9,6 +8,7 @@ DISTFILES=	${PORTNAME}-${PORTVERSION}${EXTRACT_SUFX}
 
 MAINTAINER=	mono@FreeBSD.org
 COMMENT=	Open source implementation of .NET Development Framework
+WWW=		https://www.mono-project.com/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -17,11 +17,11 @@ ONLY_FOR_ARCHS=		aarch64 amd64 armv6 armv7 i386 powerpc powerpc64 powerpc64le
 
 BUILD_DEPENDS=	p5-XML-Parser>=0:textproc/p5-XML-Parser \
 		bash:shells/bash \
-		cmake>0:devel/cmake
+		cmake-core>0:devel/cmake-core
 LIB_DEPENDS=	libinotify.so:devel/libinotify
 RUN_DEPENDS=	ca_root_nss>=0:security/ca_root_nss
 
-CONFLICTS_INSTALL=	mono5.10 mono6.8
+CONFLICTS_INSTALL=	certmgr coin-or-disco disco mono mono[0-9]*
 
 OPTIONS_DEFINE=		MONOLITE NLS X11 HEAPVIZ
 OPTIONS_DEFAULT=	MONOLITE X11
@@ -45,7 +45,8 @@ USES=	autoreconf bison compiler:c11 cpe gmake iconv libtool \
 USE_PERL5=	build
 GNU_CONFIGURE=	yes
 USE_LDCONFIG=	yes
-SHEBANG_FILES=	scripts/mono-heapviz mono/mini/genmdesc.py mono/tests/test_lldb.py
+SHEBANG_FILES=	scripts/mono-heapviz scripts/mono-package-runtime \
+		mono/mini/genmdesc.py mono/tests/test_lldb.py
 BINARY_ALIAS=	python=${PYTHON_CMD}
 
 CONFIGURE_ARGS=	--disable-dtrace --enable-btls

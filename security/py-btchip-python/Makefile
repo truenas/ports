@@ -1,13 +1,13 @@
-# Created by: Emanuel Haupt <ehaupt@FreeBSD.org>
-
 PORTNAME=	btchip-python
 PORTVERSION=	0.1.32
+PORTREVISION=	1
 CATEGORIES=	security python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ehaupt@FreeBSD.org
 COMMENT=	Python communication library for Ledger Hardware Wallet
+WWW=		https://github.com/LedgerHQ/btchip-python
 
 LICENSE=	APACHE20
 

@@ -1,13 +1,12 @@
-# Created by: TAKATSU Tomonari <tota@FreeBSD.org>
-
 PORTNAME=	stringr
-PORTVERSION=	1.4.0
-PORTREVISION=	2
+PORTVERSION=	1.4.1
+PORTREVISION=	1
 CATEGORIES=	textproc
 DISTNAME=	${PORTNAME}_${PORTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Make it easier to work with strings
+WWW=		https://cran.r-project.org/web/packages/stringr/
 
 LICENSE=	GPLv2
 

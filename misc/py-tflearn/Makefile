@@ -1,11 +1,13 @@
 PORTNAME=	tflearn
 DISTVERSION=	0.3.2-53
+PORTREVISION=	1
 DISTVERSIONSUFFIX=	-g5c23566
 CATEGORIES=	misc python # machine-learning
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Modular and transparent deep learning library on top of TensorFlow
+WWW=		http://tflearn.org/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

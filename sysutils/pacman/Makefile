@@ -2,11 +2,11 @@ PORTNAME=	pacman
 PORTVERSION=	5.1.3
 PORTREVISION=	1
 CATEGORIES=	sysutils
-MASTER_SITES=	https://sources.archlinux.org/other/${PORTNAME}/ \
-		https://mirror.amdmi3.ru/distfiles/
+MASTER_SITES=	https://sources.archlinux.org/other/${PORTNAME}/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Package manager from ArchLinux
+WWW=		https://www.archlinux.org/pacman/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

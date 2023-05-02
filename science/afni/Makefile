@@ -1,12 +1,17 @@
 PORTNAME=		afni
 DISTVERSIONPREFIX=	AFNI_
-DISTVERSION=		21.3.10
+DISTVERSION=		23.1.01
+PORTREVISION=	1
 CATEGORIES=		science biology graphics perl5 python
 
 MAINTAINER=	fernape@FreeBSD.org
 COMMENT=	Advanced Functional Neuro Imaging
+WWW=		https://afni.nimh.nih.gov/afni/
 
 LICENSE=	GPLv2
+
+BROKEN_aarch64=	fails to build: statement requires expression of scalar type \
+		('va_list' (aka '__builtin_va_list') invalid)
 
 CRAN_DEPENDS=	R-cran-lme4>0:math/R-cran-lme4 \
 		R-cran-snow>0:science/R-cran-snow \
@@ -54,9 +59,9 @@ SHEBANG_FILES=	scripts_install/* \
 
 MAKE_ENV=	CC="${CC}" R_SHARE_DIR=${LOCALBASE}/lib/R/share
 MAKE_JOBS_UNSAFE=yes
-CFLAGS+=	-fcommon
-
 ALL_TARGET=	vastness suma
+
+CFLAGS+=	-fcommon
 
 ###########################################################################
 # Install parameters
@@ -79,6 +84,8 @@ CONFLICTS=	im \
 
 X11R6_FILES=	coxplot/Makefile \
 		coxplot/Makefile.f2c
+
+PKG_COMPRESSION_LEVEL= 	-6
 
 post-extract:
 .for f in ${X11R6_FILES}

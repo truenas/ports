@@ -1,13 +1,13 @@
-# Created by: Joe Marcus Clarke <marcus@FreeBSD.org>
-
 PORTNAME=	mate-calc
 PORTVERSION=	1.26.0
+PORTREVISION=	4
 CATEGORIES=	math mate
 MASTER_SITES=	MATE
 DIST_SUBDIR=	mate
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	MATE calculator tool based on the old calctool for OpenWindows
+WWW=		https://mate-desktop.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

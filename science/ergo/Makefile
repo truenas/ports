@@ -1,10 +1,12 @@
 PORTNAME=	ergo
 DISTVERSION=	3.8
+PORTREVISION=	1
 CATEGORIES=	science
 MASTER_SITES=	http://www.ergoscf.org/source/tarfiles/
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Quantum chemistry program for large-scale atomic calculations
+WWW=		http://www.ergoscf.org/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -18,6 +20,8 @@ USES=		compiler:c++11-lang gmake localbase shebangfix
 SHEBANG_FILES=	test/check_eigenvectors.sh test/compare_homo_lumo.sh
 
 GNU_CONFIGURE=	yes
+
+CONFLICTS_INSTALL=	ergo-irc-server # bin/ergo
 
 TEST_TARGET=	check
 

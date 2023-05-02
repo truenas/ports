@@ -1,13 +1,12 @@
-# Created by: Ilia Skalozubov <freebsd@skinc.ru>
-
 PORTNAME=	pyenet
 DISTVERSION=	1.3.13.post7
 CATEGORIES=	net python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	freebsd@skinc.ru
 COMMENT=	Python wrapper for the ENet library by Lee Salzman
+WWW=		https://pypi.python.org/pypi/pyenet
 
 LICENSE=	BSD3CLAUSE MIT
 LICENSE_COMB=	multi

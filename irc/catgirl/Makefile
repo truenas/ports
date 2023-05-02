@@ -1,11 +1,12 @@
 PORTNAME=	catgirl
-PORTVERSION=	1.9a
-PORTREVISION=	1
+PORTVERSION=	2.1
+PORTREVISION=	3
 CATEGORIES=	irc
 MASTER_SITES=	https://git.causal.agency/catgirl/snapshot/
 
 MAINTAINER=	june@causal.agency
 COMMENT=	TLS-only terminal IRC client
+WWW=		https://git.causal.agency/catgirl/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/LICENSE

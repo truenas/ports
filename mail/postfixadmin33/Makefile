@@ -1,6 +1,6 @@
 PORTNAME=	postfixadmin33
 DISTVERSIONPREFIX=	postfixadmin-
-DISTVERSION=	3.3.10
+DISTVERSION=	3.3.13
 CATEGORIES=	mail www
 .if defined(_PFA_LITE)
 PKGNAMESUFFIX=	-lite${PHP_PKGNAMESUFFIX}
@@ -11,6 +11,7 @@ DISTNAME=	postfixadmin
 
 MAINTAINER=	ports.maintainer@evilphi.com
 COMMENT=	PHP web-based management tool for Postfix virtual domains and users
+WWW=		http://www.postfixadmin.org/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/GPL-LICENSE.TXT
@@ -21,7 +22,7 @@ CPE_PRODUCT=	postfix_admin
 USE_GITHUB=	yes
 GH_ACCOUNT=	${DISTNAME}
 GH_PROJECT=	${DISTNAME}
-USE_PHP=	mbstring openssl pcre session spl
+USE_PHP=	mbstring session
 
 NO_ARCH=	yes
 NO_BUILD=	yes
@@ -66,7 +67,8 @@ do-install:
 	(cd ${WRKSRC}/${i} && ${COPYTREE_SHARE} . ${STAGEDIR}${WWWDIR}/${i})
 .endfor
 	${MKDIR} ${STAGEDIR}${DATADIR}
-.for i in GPL-LICENSE.TXT LICENSE.TXT password_expiration.sql postfixadmin.my.cnf
+.for i in GPL-LICENSE.TXT LICENSE.TXT password_expiration.sql \
+	postfixadmin.my.cnf
 	${INSTALL_DATA} ${WRKSRC}/${i} ${STAGEDIR}${DATADIR}
 .endfor
 

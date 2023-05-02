@@ -1,21 +1,25 @@
-# Created by: Luca Pizzamiglio <pizzamig@FreeBSD.org>
-
 PORTNAME=	pot
-DISTVERSION=	0.14.0
-PORTREVISION=	0
+DISTVERSION=	0.15.4
 CATEGORIES=	sysutils
 
 MAINTAINER=	pizzamig@FreeBSD.org
 COMMENT=	Container framework for FreeBSD
+WWW=		https://github.com/pizzamig/pot/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 RUN_DEPENDS=	potnet:sysutils/potnet \
-	ncat:security/nmap \
-	freebsd-release-manifests>0:misc/freebsd-release-manifests
+		ncat:security/nmap \
+		freebsd-release-manifests>0:misc/freebsd-release-manifests \
+		signify:security/signify
+TEST_DEPENDS=	flock:sysutils/flock
+
+GROUPS=		pot
 
 USE_RC_SUBR=	pot pot_early
+
+SUB_FILES=	pkg-message pot.8
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	pizzamig
@@ -28,6 +32,8 @@ ZSH_DESC=	Zsh Autocompletion support
 
 OPTIONS_DEFAULT=	ZSH
 OPTIONS_SUB=	yes
+
+TEST_WRKSRC=	${WRKSRC}/tests
 
 PORTDOCS=	*
 
@@ -50,9 +56,13 @@ do-install:
 		${STAGEDIR}${ETCDIR}/flavours
 	${INSTALL_SCRIPT} ${WRKSRC}/etc/pot/flavours/slim.sh \
 		${STAGEDIR}${ETCDIR}/flavours
+	${INSTALL_MAN} ${WRKDIR}/pot.8 ${STAGEDIR}${MANPREFIX}/man/man8
 
 do-install-ZSH-on:
 	( cd ${WRKSRC}/share/zsh && ${COPYTREE_SHARE} . ${STAGEDIR}${PREFIX}/share/zsh)
+
+do-test:
+	( cd ${TEST_WRKSRC} && ./test-suite.sh )
 
 post-install-DOCS-on:
 	${MKDIR} ${STAGEDIR}${DOCSDIR}/

@@ -1,11 +1,12 @@
 PORTNAME=	pinocchio
 PORTVERSION=	0.4.3
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Pinocchio plugins for the nose testing framework
+WWW=		https://pypi.org/project/pinocchio/
 
 LICENSE=	MIT
 

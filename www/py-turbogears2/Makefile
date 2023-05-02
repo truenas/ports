@@ -1,14 +1,13 @@
-# Created by: Wen Heping	<wenheping@gmail.com>
-
 PORTNAME=	TurboGears2
 PORTVERSION=	2.3.12
 PORTREVISION=	1
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Python-Based Framework for Rapid Web Development
+WWW=		https://www.turbogears.org/
 
 LICENSE=	MIT
 

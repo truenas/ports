@@ -5,13 +5,13 @@ MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Natural language detection for text samples
+WWW=		https://github.com/peterc/whatlanguage
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
 NO_ARCH=	yes
 
-USE_RUBY=	yes
 USES=		gem
 
 .include <bsd.port.mk>

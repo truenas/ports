@@ -1,20 +1,20 @@
 PORTNAME=	peg-e
-PORTVERSION=	1.3.0
+PORTVERSION=	1.3.2
 CATEGORIES=	games
-MASTER_SITES=	https://gottcode.org/peg-e/ \
-		https://mirror.amdmi3.ru/distfiles/
-DISTNAME=	${PORTNAME}-${PORTVERSION}-src
+MASTER_SITES=	https://gottcode.org/${PORTNAME}/
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Peg elimination game
+WWW=		https://gottcode.org/peg-e/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-USES=		compiler:c++17-lang gl gnome qmake qt:5 tar:bzip2
-USE_QT=		core gui widgets qmake_build buildtools_build linguisttools_build
+USES=		cmake compiler:c++17-lang gl qt:6 tar:bzip2
+USE_QT=		base tools:build
 USE_GL=		gl
 
-WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}
+OPTIONS_DEFINE=	NLS
+OPTIONS_SUB=	yes
 
 .include <bsd.port.mk>

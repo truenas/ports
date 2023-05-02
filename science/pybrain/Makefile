@@ -1,12 +1,11 @@
-# Created by: Wen Heping <wenheping@gmail.com>
-
 PORTNAME=	pybrain
 PORTVERSION=	0.3.3
-PORTREVISION=	4
+PORTREVISION=	5
 CATEGORIES=	science python
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Swiss Army knife for neural networking
+WWW=		http://pybrain.org/
 
 LICENSE=	BSD3CLAUSE
 

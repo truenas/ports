@@ -1,5 +1,6 @@
 PORTNAME=	phonon
 DISTVERSION=	0.11.3
+PORTREVISION=	1
 CATEGORIES=	multimedia kde
 MASTER_SITES=	KDE/stable/${PORTNAME}/${PORTNAME}-backend-${PHONON_PLUGIN}/${DISTVERSION}
 PKGNAMESUFFIX=	-${PHONON_PLUGIN}
@@ -8,6 +9,7 @@ DIST_SUBDIR=	KDE/phonon
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	VLC backend for Phonon
+WWW=		https://userbase.kde.org/Phonon
 
 LICENSE=	LGPL21+
 LICENSE_FILE=	${WRKSRC}/COPYING.LIB
@@ -19,7 +21,7 @@ USES=		cmake pkgconfig tar:xz
 USES+=		compiler:c++11-lang kde:5 qt:5
 USE_KDE=	ecm
 USE_QT=		core gui widgets phonon4 \
-		buildtools_build qmake_build
+		buildtools:build qmake:build
 CMAKE_ON=	PHONON_BUILD_PHONON4QT5
 
 PHONON_PLUGIN=	vlc

@@ -1,5 +1,5 @@
 PORTNAME=	unifont
-PORTVERSION=	14.0.01
+PORTVERSION=	15.0.01
 PORTEPOCH=	1
 CATEGORIES=	x11-fonts
 MASTER_SITES=	GNU/unifont/unifont-${PORTVERSION}
@@ -10,6 +10,7 @@ EXTRACT_ONLY=	# empty
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	GNU Unicode TrueType font
+WWW=		https://unifoundry.com/unifont/index.html
 
 LICENSE=	GPLv2+
 
@@ -18,7 +19,7 @@ USES=		fonts
 NO_ARCH=	yes
 NO_BUILD=	yes
 
-FONTSDIR=	${PREFIX}/share/fonts/gnu-unifont${PKGNAMESUFFIX}
+FONTSDIR=	${PREFIX}/share/fonts/gnu-unifont-ttf
 PLIST_FILES=	${FONTFILES:S|^|${FONTSDIR}/|:S|$|${FONTSUFFIX}|}
 
 FONTFILES=	unifont unifont_csur unifont_upper
@@ -27,8 +28,7 @@ FONTSUFFIX=	.ttf
 do-install:
 	${MKDIR} ${STAGEDIR}${FONTSDIR}
 .for i in ${FONTFILES}
-	${INSTALL_DATA} ${DISTDIR}/${i}-${PORTVERSION}${FONTSUFFIX} \
-	    ${STAGEDIR}${FONTSDIR}/${i}${FONTSUFFIX}
+	${INSTALL_DATA} ${DISTDIR}/${i}-${PORTVERSION}${FONTSUFFIX} ${STAGEDIR}${FONTSDIR}/${i}${FONTSUFFIX}
 .endfor
 
 .include <bsd.port.mk>

@@ -1,14 +1,13 @@
-# Created by: Kris Kennaway <kris@FreeBSD.org>
-
 PORTNAME=	dsniff
 DISTVERSION=	2.4b1
-PORTREVISION=	6
+PORTREVISION=	8
 CATEGORIES=	security
 MASTER_SITES=	http://www.monkey.org/~dugsong/${PORTNAME}/beta/ \
 		LOCAL/sbz
 
 MAINTAINER=	sbz@FreeBSD.org
 COMMENT=	Various sniffing utilities for penetration testing
+WWW=		https://www.monkey.org/~dugsong/dsniff/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -35,17 +34,17 @@ X11_CONFIGURE_WITH=x
 .include <bsd.port.pre.mk>
 
 .if ${OPSYS} == FreeBSD || ${SSL_DEFAULT} == openssl
-# Requires LibreSSL for old SSL interface
-BUILD_DEPENDS+=		${NONEXISTENT}:security/libressl:stage
-CPPFLAGS+=		-nostdinc -I/usr/include -I${WRKDIR}/libressl/include
-LDFLAGS+=		-L${WRKDIR}/libressl/lib
-CONFIGURE_ARGS+=	--with-openssl=${WRKDIR}/libressl
+# Requires OpenSSL 1.0.x for old SSL interface
+BUILD_DEPENDS+=		${NONEXISTENT}:security/openssl-unsafe:stage
+CPPFLAGS+=		-nostdinc -I/usr/include -I${WRKDIR}/openssl-unsafe/include
+LDFLAGS+=		-L${WRKDIR}/openssl-unsafe/lib
+CONFIGURE_ARGS+=	--with-openssl=${WRKDIR}/openssl-unsafe
 
 # Don't use COPYTREE_SHARE here as it hard links files, and the original files
 # are owned by root, which creates problems of its own.
 pre-configure:
-	@cd `${MAKE} -V STAGEDIR -C ${PORTSDIR}/security/libressl`${PREFIX} \
-	    && ${FIND} . ! -name *.so\* | ${CPIO} -dump ${WRKDIR}/libressl >/dev/null 2>&1
+	@cd `${MAKE} -V STAGEDIR -C ${PORTSDIR}/security/openssl-unsafe`${PREFIX}/openssl-unsafe \
+	    && ${FIND} . ! -name *.so\* | ${CPIO} -dump ${WRKDIR}/openssl-unsafe >/dev/null 2>&1
 .else
 BROKEN_SSL=	openssl
 BROKEN_SSL_REASON_openssl=	incomplete definition of type 'struct rsa_st'

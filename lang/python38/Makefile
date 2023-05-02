@@ -1,8 +1,6 @@
-# Created by: Kubilay Kocak <koobs@FreeBSD.org>
-
 PORTNAME=	python
 DISTVERSION=	${PYTHON_DISTVERSION}
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	lang python
 MASTER_SITES=	PYTHON/ftp/python/${DISTVERSION}
 PKGNAMESUFFIX=	${PYTHON_SUFFIX}
@@ -11,12 +9,14 @@ DIST_SUBDIR=	python
 
 MAINTAINER=	python@FreeBSD.org
 COMMENT=	Interpreted object-oriented programming language
+WWW=		https://www.python.org/
 
 LICENSE=	PSFL
 
 LIB_DEPENDS=	libffi.so:devel/libffi
 
-USES=		cpe ncurses pathfix pkgconfig readline shebangfix ssl tar:xz
+USES=		cpe ncurses pathfix pkgconfig python:${PYTHON_DISTVERSION:R},env readline \
+		shebangfix ssl tar:xz
 PATHFIX_MAKEFILEIN=	Makefile.pre.in
 USE_LDCONFIG=	yes
 GNU_CONFIGURE=	yes
@@ -25,11 +25,6 @@ SHEBANG_FILES=	Lib/*.py Lib/*/*.py Lib/*/*/*.py Lib/*/*/*/*.py
 SHEBANG_FILES+=	Lib/test/ziptestdata/exe_with_z64 \
 		Lib/test/ziptestdata/exe_with_zip \
 		Lib/test/ziptestdata/header.sh
-
-# Duplicate python.mk variables. TODO: Let lang/python?? ports use python.mk bits.
-PYTHON_VER=		${PYTHON_DISTVERSION:R}
-PYTHON_VERSION=		python${PYTHON_VER}
-PYTHON_SUFFIX=		${PYTHON_VER:S/.//g}
 
 DISABLED_EXTENSIONS=	_sqlite3 _tkinter _gdbm
 CONFIGURE_ARGS+=	--enable-shared --without-ensurepip \
@@ -54,7 +49,6 @@ PLIST_SUB=		ABI=${ABIFLAGS} \
 
 OPTIONS_DEFINE=		DEBUG IPV6 LIBMPDEC LTO NLS PYMALLOC
 OPTIONS_DEFAULT=	LIBMPDEC PYMALLOC
-OPTIONS_EXCLUDE_powerpc64=	LTO
 OPTIONS_EXCLUDE_riscv64=	LTO
 OPTIONS_RADIO=		HASH
 OPTIONS_RADIO_HASH=	FNV SIPHASH

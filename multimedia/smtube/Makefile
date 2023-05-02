@@ -1,13 +1,12 @@
-# Created by: Pawel Pekala <pawel@FreeBSD.org>
-
 PORTNAME=	smtube
 DISTVERSION=	21.10.0
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	multimedia
 MASTER_SITES=	SF/smtube/SMTube/${PORTVERSION}/
 
 MAINTAINER=	vvd@unislabs.com
 COMMENT=	SMPlayer YouTube browser
+WWW=		https://www.smtube.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/Copying.txt
@@ -16,7 +15,7 @@ RUN_DEPENDS=	yt-dlp:www/yt-dlp
 
 USES=		gl gmake qt:5 tar:bzip2
 USE_GL=		gl
-USE_QT=		qmake_build buildtools_build linguisttools_build \
+USE_QT=		qmake:build buildtools:build linguisttools:build \
 		core network script gui webkit widgets
 
 ALL_TARGET=	#empty

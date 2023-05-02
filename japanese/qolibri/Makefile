@@ -2,10 +2,12 @@
 
 PORTNAME=	qolibri
 DISTVERSION=	2.1.4
+PORTREVISION=	1
 CATEGORIES=	japanese
 
 MAINTAINER=	omatsuda000@gmail.com
 COMMENT=	EPWING dictionary viewer
+WWW=		https://github.com/ludios/qolibri/
 
 LICENSE=	GPLv2
 

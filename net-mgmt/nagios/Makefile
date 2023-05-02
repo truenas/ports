@@ -1,13 +1,12 @@
-# Created by: Blaz Zupan <blaz@si.FreeBSD.org>
-
 PORTNAME=	nagios
 PORTVERSION=	3.5.1
 PORTREVISION=	12
 CATEGORIES=	net-mgmt
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}-3.x/${PORTNAME}-${PORTVERSION}
 
-MAINTAINER=	mat@FreeBSD.org
+MAINTAINER=	joneum@FreeBSD.org
 COMMENT=	Powerful network monitoring system
+WWW=		https://www.nagios.org/
 
 LICENSE=	GPLv2
 

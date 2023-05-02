@@ -2,12 +2,14 @@
 
 PORTNAME=	levmar
 DISTVERSION=	0.2.3
+PORTREVISION=	1
 CATEGORIES=	math python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Binding to levmar library (Levenberg-Marquardt optimization algorithm)
+WWW=		https://github.com/bjodah/levmar
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -15,7 +17,7 @@ LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 BUILD_DEPENDS=	${PYNUMPY}
 LIB_DEPENDS=	libblas.so:math/blas \
 		liblapack.so:math/lapack
-TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pytest>0:devel/py-pytest@${PY_FLAVOR} \
+TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pytest4>0:devel/py-pytest4@${PY_FLAVOR} \
 		${PYNUMPY}
 
 USES=		python:3.6+

@@ -1,5 +1,3 @@
-# Created by: Mirko Zinn <mail@derzinn.de>
-
 PORTNAME=		mongokit
 PORTVERSION=		0.9.1.1
 DISTVERSIONPREFIX=	v
@@ -8,11 +6,12 @@ PKGNAMEPREFIX=		${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	mail@derzinn.de
 COMMENT=	Python ORM-like layer on top of pymongo
+WWW=		http://namlook.github.com/mongokit/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pymongo>=2.5:databases/pymongo@${PY_FLAVOR}
+RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pymongo>=2.5:databases/py-pymongo@${PY_FLAVOR}
 
 USES=		python:3.6+
 USE_PYTHON=	distutils autoplist

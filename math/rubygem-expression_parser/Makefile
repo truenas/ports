@@ -5,10 +5,10 @@ MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Mathematical expression parser for Ruby
+WWW=		http://lukaszwrobel.pl/blog/math-parser-part-3-implementation
 
 NO_ARCH=	yes
 
-USE_RUBY=	yes
 USES=		gem
 
 .include <bsd.port.mk>

@@ -1,13 +1,12 @@
-# Created by: Dom Mitchell <dom@happygiraffe.net>
-
 PORTNAME=	XML-LibXSLT
-PORTVERSION=	1.99
+PORTVERSION=	2.002001
 CATEGORIES=	textproc perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Perl interface to the GNOME XSLT library
+WWW=		https://metacpan.org/release/XML-LibXSLT
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

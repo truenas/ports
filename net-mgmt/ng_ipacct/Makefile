@@ -1,5 +1,3 @@
-# Created by: Sergey Skvortsov <skv@protey.ru>
-
 PORTNAME=	ng_ipacct
 PORTVERSION=	20210316
 PORTREVISION=	1
@@ -7,6 +5,7 @@ CATEGORIES=	net-mgmt
 
 MAINTAINER=	vsevolod@FreeBSD.org
 COMMENT=	Netgraph IP accounting
+WWW=		https://github.com/vstakhov/ng_ipacct/
 
 LICENSE=	BSD2CLAUSE
 

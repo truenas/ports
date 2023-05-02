@@ -1,9 +1,11 @@
 PORTNAME=	rpi-firmware
 PORTVERSION=	1.20210303.g20210303
+PORTREVISION=	1
 CATEGORIES=	sysutils
 
 MAINTAINER=	uboot@FreeBSD.org
 COMMENT=	Firmware for RaspberryPi Single Board Computer
+WWW=		https://github.com/raspberrypi/firmware
 
 LICENSE=	BROADCOM
 LICENSE_NAME=	Broadcom Corporation

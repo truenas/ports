@@ -1,8 +1,6 @@
-# Created by: David Naylor <naylor.b.david@gmail.com>
-
 PORTNAME=	cursor-crystal-theme
 DISTVERSION=	1.1.1
-PORTREVISION=	6
+PORTREVISION=	7
 CATEGORIES=	x11-themes
 MASTER_SITES=	http://www.notmart.org/files/ \
 		http://pinguin.stttelkom.ac.id/gentoo/distfiles/
@@ -10,6 +8,7 @@ DISTNAME=	Crystalcursors
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	KDE Crystal style X cursor theme
+WWW=		http://www.kde-look.org/content/show.php/crystal+xcursors?content=6240
 
 LICENSE=	LGPL21
 
@@ -28,6 +27,7 @@ post-patch:
 		${WRKSRC}/green_src/Makefile \
 		${WRKSRC}/left-handed_templates/Makefile \
 		${WRKSRC}/white_src/Makefile
+	@${REINPLACE_CMD} -e '/cross/d' ${WRKSRC}/left-handed_templates/Makefile
 
 pre-build:
 	@(cd ${WRKSRC}; ${SETENV} ${MAKE_ENV} ${MAKE_CMD} clean ${MAKE_ARGS})

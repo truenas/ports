@@ -1,13 +1,12 @@
-# Created by: Sofian Brabez <sbrabez@gmail.com>
-
 PORTNAME=	setproctitle
-PORTVERSION=	1.2.2
+PORTVERSION=	1.2.3
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sbz@FreeBSD.org
 COMMENT=	Python module to customize the process title
+WWW=		https://pypi.org/project/setproctitle/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYRIGHT

@@ -1,10 +1,12 @@
 PORTNAME=	roxygen2
 DISTVERSION=	7.1.1
+PORTREVISION=	1
 CATEGORIES=	devel
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	jpbeconne@free.fr
 COMMENT=	In-Line Documentation for R
+WWW=		https://roxygen2.r-lib.org
 
 LICENSE=	MIT
 

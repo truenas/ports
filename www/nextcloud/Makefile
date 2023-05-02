@@ -1,18 +1,19 @@
 PORTNAME=	nextcloud
-PORTVERSION=	23.0.0
+PORTVERSION=	26.0.1
 CATEGORIES=	www
 MASTER_SITES=	https://download.nextcloud.com/server/releases/
 PKGNAMESUFFIX=	${PHP_PKGNAMESUFFIX}
 DIST_SUBDIR=	${PORTNAME}
 
 MAINTAINER=	brnrd@FreeBSD.org
-COMMENT=	Personal cloud which runs on your own server
+COMMENT=	Collaboration platform which runs on your own server
+WWW=		https://nextcloud.com
 
 LICENSE=	AGPLv3
 
 USES=		cpe gettext-runtime php:flavors,web tar:bzip2
-USE_PHP=	bcmath bz2 ctype curl dom fileinfo filter gd gmp hash iconv \
-		json mbstring pcntl pdo posix session simplexml xml xmlreader \
+USE_PHP=	bcmath bz2 ctype curl dom fileinfo filter gd gmp iconv \
+		mbstring pcntl pdo posix session simplexml xml xmlreader \
 		xmlwriter xsl zip zlib
 
 NEXTCLOUD_USERNAME?=	${WWWOWN}
@@ -26,12 +27,12 @@ SUB_LIST=	NEXTCLOUD_USERNAME=${NEXTCLOUD_USERNAME} \
 		NEXTCLOUD_GROUPNAME=${NEXTCLOUD_GROUPNAME}
 PLIST_SUB=	${SUB_LIST}
 
-OPTIONS_DEFINE=		EXIF IMAGICK INTL LDAP PCNTL SMB SSL
+OPTIONS_DEFINE=		EXIF IMAGICK INTL LDAP PCNTL SMB SYSVSEM
 OPTIONS_GROUP=		CACHING
 OPTIONS_GROUP_CACHING=	APCU OPCACHE REDIS
 OPTIONS_MULTI=		DB
 OPTIONS_MULTI_DB=	MYSQL PGSQL SQLITE
-OPTIONS_DEFAULT=	APCU EXIF INTL LDAP MYSQL OPCACHE SSL
+OPTIONS_DEFAULT=	APCU EXIF INTL LDAP MYSQL OPCACHE SYSVSEM
 OPTIONS_SUB=		yes
 
 APCU_DESC=	Local data caching using APCu (recommended)
@@ -43,10 +44,11 @@ INTL_DESC=	International character support (recommended)
 OPCACHE_DESC=	Enable OPcode caching (recommended)
 PCNTL_DESC=	Long-running process control (recommended)
 REDIS_DESC=	Distributed data caching using Redis
+SYSVSEM_DESC=	Enable System V semaphore support (recommended)
 
 APCU_RUN_DEPENDS=	${PECL_PKGNAMEPREFIX}APCu>0:devel/pecl-APCu@${PHP_FLAVOR}
 EXIF_USE=	PHP=exif
-IMAGICK_RUN_DEPENDS=	${PECL_PKGNAMEPREFIX}imagick>=2.2.2:graphics/pecl-imagick@${PHP_FLAVOR}
+IMAGICK_RUN_DEPENDS=	${IMAGEMAGICK_DEPENDS}
 INTL_USE=	PHP=intl
 LDAP_USE=	PHP=ldap
 MYSQL_USE=	PHP=pdo_mysql
@@ -56,7 +58,17 @@ PGSQL_USE=	PHP=pdo_pgsql,pgsql
 REDIS_RUN_DEPENDS=	${PECL_PKGNAMEPREFIX}redis>=2.2.6:databases/pecl-redis@${PHP_FLAVOR}
 SMB_RUN_DEPENDS=	${PECL_PKGNAMEPREFIX}smbclient>=0.9.0:net/pecl-smbclient@${PHP_FLAVOR}
 SQLITE_USE=	PHP=pdo_sqlite,sqlite3
-SSL_USE=	PHP=openssl
+SYSVSEM_USE=	PHP=sysvsem
+
+.include <bsd.port.options.mk>
+
+.if !empty(IMAGEMAGICK_DEFAULT:M6) || !empty(IMAGEMAGICK_DEFAULT:M6-*)
+IMAGEMAGICK_DEPENDS=	${PECL_PKGNAMEPREFIX}imagick>=2.2.2:graphics/pecl-imagick@${PHP_FLAVOR}
+.elif !empty(IMAGEMAGICK_DEFAULT:M7) || !empty(IMAGEMAGICK_DEFAULT:M7-*)
+IMAGEMAGICK_DEPENDS=	${PECL_PKGNAMEPREFIX}imagick-im7>=2.2.2:graphics/pecl-imagick-im7@${PHP_FLAVOR}
+.else
+# notreached
+.endif
 
 post-extract:
 	@${MV} ${WRKSRC}/config/config.sample.php ${WRKSRC}/config/config.documented.php
@@ -67,6 +79,7 @@ post-patch:
 		${WRKSRC}/config/config.documented.php
 	@${RM} ${WRKSRC}/config/config.documented.php.* \
 		 ${WRKSRC}/updater/updater.phar
+	@${RMDIR} ${WRKSRC}/apps/suspicious_login/vendor/amphp/*/docs/.shared
 	@${MV} ${WRKSRC}/apps ${WRKSRC}/apps-pkg
 
 do-install:

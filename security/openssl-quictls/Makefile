@@ -1,17 +1,17 @@
-# Created by: Dirk Froemberg <dirk@FreeBSD.org>
-
 PORTNAME=	openssl
-PORTVERSION=	3.0.0
+PORTVERSION=	3.0.8
+PORTREVISION=	2
 CATEGORIES=	security devel
 PKGNAMESUFFIX=	-quictls
 
 MAINTAINER=	brnrd@FreeBSD.org
 COMMENT=	QUIC capable fork of OpenSSL
+WWW=		https://www.github.com/quictls/openssl
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
-CONFLICTS_INSTALL=	libressl libressl-devel openssl openssl-devel
+CONFLICTS_INSTALL=	boringssl libressl libressl-devel openssl openssl3[01]
 
 BROKEN_i386=	ld: error: undefined symbol: __atomic_is_lock_free
 
@@ -25,7 +25,7 @@ USES=		cpe perl5
 USE_PERL5=	build
 USE_GITHUB=	yes
 GH_ACCOUNT=	${PKGNAMESUFFIX:S/-//}
-GH_TAGNAME=	0ce9b022cb421b564bed9ebc9469e96258ec175d
+GH_TAGNAME=	183e548d93a6aeedab0fd6cb737923a93f807b83
 
 TEST_TARGET=	test
 

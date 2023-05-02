@@ -1,25 +1,23 @@
-# Created by: lbartoletti <lbartoletti@FreeBSD.org>
-
 PORTNAME=	osgearth
-PORTVERSION=	2.10.1
+PORTVERSION=	3.2
 DISTVERSIONPREFIX=	${PORTNAME}-
-PORTREVISION=	12
+PORTREVISION=	5
 CATEGORIES=	graphics geography
 
 MAINTAINER=	lbartoletti@FreeBSD.org
 COMMENT=	C++ terrain rendering toolkit for OpenSceneGraph
+WWW=		http://osgearth.org/
 
 LICENSE=	LGPL3
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
-LIB_DEPENDS=	libosg.so:graphics/osg34 \
+LIB_DEPENDS=	libosg.so:graphics/osg \
 		libgdal.so:graphics/gdal \
 		libcurl.so:ftp/curl \
 		libgeos.so:graphics/geos \
 		libleveldb.so:databases/leveldb \
 		libPocoUtil.so:devel/poco \
-		libprotoc.so:devel/protobuf \
-		librocksdb.so:databases/rocksdb
+		libprotoc.so:devel/protobuf
 
 USES=		cmake gl pkgconfig sqlite
 

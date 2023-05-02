@@ -1,6 +1,6 @@
 PORTNAME=	gorm
 PORTVERSION=	1.2.23
-PORTREVISION=	4
+PORTREVISION=	5
 CATEGORIES=	devel gnustep
 
 USE_GITHUB=	yes
@@ -10,6 +10,7 @@ GH_TAGNAME=	04554d2
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Graphical Object Relationship Modeller
+WWW=		http://www.gnustep.org/experience/Gorm.html
 
 LICENSE=	GPLv3
 

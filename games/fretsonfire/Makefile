@@ -1,8 +1,6 @@
-# Created by: Jose Alonso Cardenas Marquez <acm@FreeBSD.org>
-
 PORTNAME=	fretsonfire
 PORTVERSION=	1.3.110
-PORTREVISION=	14
+PORTREVISION=	16
 CATEGORIES=	games python
 MASTER_SITES=	SF
 DISTNAME=	${PORTNAME_UCASE}-${PORTVERSION}
@@ -10,6 +8,7 @@ DIST_SUBDIR=	${PORTNAME}
 
 MAINTAINER=	acm@FreeBSD.org
 COMMENT=	Game of musical skill and fast fingers
+WWW=		http://fretsonfire.sf.net
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/copying.txt

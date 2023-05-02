@@ -1,18 +1,20 @@
 PORTNAME=	xpra
-PORTVERSION=	4.2.3
-PORTREVISION=	1
+PORTVERSION=	4.4.4
+PORTREVISION=	2
 CATEGORIES=	x11
-MASTER_SITES=	http://xpra.org/src/
+MASTER_SITES=	https://xpra.org/src/
 
 MAINTAINER=	arrowd@FreeBSD.org
 COMMENT=	Persistent remote applications for X
+WWW=		https://xpra.org/
 
 LICENSE=	GPLv2
 
-BUILD_DEPENDS=	brotli:archivers/brotli \
-		pandoc:textproc/hs-pandoc
-LIB_DEPENDS=	libwebp.so:graphics/webp \
-		libharfbuzz.so:print/harfbuzz
+BUILD_DEPENDS=	pandoc:textproc/hs-pandoc
+LIB_DEPENDS=	libbrotlidec.so:archivers/brotli \
+		libharfbuzz.so:print/harfbuzz \
+		liblz4.so:archivers/liblz4 \
+		libwebp.so:graphics/webp
 RUN_DEPENDS=	${PY_PILLOW} \
 		${PYTHON_PKGNAMEPREFIX}bencode.py>1:converters/py-bencode.py@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}brotli>1:archivers/py-brotli@${PY_FLAVOR} \
@@ -30,24 +32,27 @@ RUN_DEPENDS=	${PY_PILLOW} \
 		ssh-askpass:security/openssh-askpass \
 		xauth:x11/xauth \
 		xkbcomp:x11/xkbcomp \
-		Xvfb:x11-servers/xorg-vfbserver
+		Xvfb:x11-servers/xorg-server@xvfb
 
-USES=		desktop-file-utils gettext-runtime gnome pkgconfig \
+USES=		desktop-file-utils gettext-runtime gnome localbase pkgconfig \
 		python:3.6+ shared-mime-info shebangfix tar:xz xorg
 
 USE_GNOME=	cairo gdkpixbuf2 gtk30 pygobject3
 USE_PYTHON=	cython distutils noflavors
-USE_XORG=	x11 xcomposite xdamage xext xfixes xi xkbfile xrandr xtst
+USE_XORG=	x11 xcomposite xdamage xext xfixes xi xkbfile xrandr xres xtst
 PLIST_SUB+=	PORTVERSION=${PORTVERSION} \
 		PYTHON_SUFFIX=${PYTHON_SUFFIX} \
 		PYTHON_VER=${PYTHON_VER}
-SHEBANG_FILES=	fs/lib/cups/xpraforwarder fs/bin/auth_dialog fs/bin/xdg-open \
-		fs/bin/xpra_udev_product_version fs/bin/gnome-open \
-		fs/bin/gvfs-open
+SHEBANG_FILES=	fs/lib/cups/backend/xpraforwarder fs/libexec/xpra/auth_dialog \
+		fs/libexec/xpra/gnome-open fs/libexec/xpra/gvfs-open \
+		fs/libexec/xpra/xdg-open fs/libexec/xpra/xpra_signal_listener \
+		fs/libexec/xpra/xpra_udev_product_version
 
-OPTIONS_DEFINE=		AVAHI AVCODEC CUPS FFMPEG GSTREAMER LIBYUV SWSCALE VPX \
-			WEBCAM X264 X265
-OPTIONS_DEFAULT=	AVAHI CUPS GSTREAMER
+OPTIONS_DEFINE=		AVAHI AVCODEC CUPS DOCS FFMPEG GSTREAMER LIBYUV SWSCALE \
+			WEBCAM X265
+OPTIONS_DEFAULT=	AVAHI CUPS GSTREAMER X264
+OPTIONS_RADIO=		CODEC
+OPTIONS_RADIO_CODEC=	VPX X264
 OPTIONS_SUB=		yes
 
 AVCODEC_DESC=	Enable avcodec2 (FFmpeg) decoder
@@ -69,10 +74,10 @@ CUPS_RUN_DEPENDS=		${PYTHON_PKGNAMEPREFIX}pycups>1:print/py-pycups@${PY_FLAVOR}
 CUPS_VARS=			XPRA_OPTIONS+=printing
 FFMPEG_LIB_DEPENDS=		libavcodec.so:multimedia/ffmpeg
 FFMPEG_VARS=			XPRA_OPTIONS+=enc_ffmpeg
+GSTREAMER_USES=			gstreamer
 GSTREAMER_BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}gstreamer1>1:multimedia/py-gstreamer1@${PY_FLAVOR}
-GSTREAMER_RUN_DEPENDS=		${PYTHON_PKGNAMEPREFIX}gstreamer1>1:multimedia/py-gstreamer1@${PY_FLAVOR} \
-				gstreamer1-plugins-pulse>1:audio/gstreamer1-plugins-pulse
-GSTREAMER_USE=			GSTREAMER1=flac,lame,mpg123,ogg,opus,vorbis,wavpack
+GSTREAMER_RUN_DEPENDS=		${PYTHON_PKGNAMEPREFIX}gstreamer1>1:multimedia/py-gstreamer1@${PY_FLAVOR}
+GSTREAMER_USE=			GSTREAMER=flac,lame,mpg123,ogg,opus,pulse,vorbis,wavpack
 GSTREAMER_VARS=			XPRA_OPTIONS+=sound
 LIBYUV_LIB_DEPENDS=		libyuv.so:graphics/libyuv
 LIBYUV_VARS=			XPRA_OPTIONS+=csc_libyuv
@@ -91,7 +96,7 @@ PYDISTUTILS_PKGNAME=	xpra_all
 XPRA_OPTIONS_ALL+=	${XPRA_OPTIONS_DISABLED} csc_libyuv csc_swscale \
 			dec_avcodec2 enc_ffmpeg enc_x264 enc_x265 \
 			mdns printing sound vpx webcam
-XPRA_OPTIONS_DISABLED=	uinput Xdummy Xdummy_wrapper
+XPRA_OPTIONS_DISABLED=	strict uinput Xdummy Xdummy_wrapper
 
 .include <bsd.port.options.mk>
 

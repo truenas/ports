@@ -1,12 +1,12 @@
 PORTNAME=	flufl.bounce
-PORTVERSION=	3.0
-PORTREVISION=	1
+PORTVERSION=	4.0
 CATEGORIES=	mail python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	acm@FreeBSD.org
 COMMENT=	API for detecting the original bouncing email addresses from a bounce message
+WWW=		https://fluflbounce.readthedocs.io
 
 LICENSE=	APACHE20
 

@@ -1,10 +1,11 @@
 PORTNAME=	wayland-logout
 DISTVERSIONPREFIX=	v
 DISTVERSION=	1.4
-CATEGORIES=	x11
+CATEGORIES=	x11 wayland
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Simple logout on Wayland
+WWW=		https://github.com/soreau/wayland-logout
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -20,7 +21,7 @@ PLIST_FILES=	bin/${PORTNAME} \
 # Cannot use C implementation without cr_pid
 .if make(makesum)
 DISTFILES=	${DISTNAME:S/${DISTVERSION}/1.3/}${EXTRACT_SUFX}
-.elif ${OPSYS} != FreeBSD || ${OSVERSION} < 1202506
+.elif ${OPSYS} != FreeBSD
 DISTVERSION=	1.3
 NO_ARCH=	yes
 MESON_ARGS+=	-Dimplementation=shell

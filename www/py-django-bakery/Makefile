@@ -1,11 +1,12 @@
 PORTNAME=	django-bakery
 PORTVERSION=	0.12.7
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	alex@xanderio.de
 COMMENT=	Set of helpers for baking your Django site out as flat files
+WWW=		https://github.com/datadesk/django-bakery/
 
 LICENSE=	MIT
 #LICENSE_FILE=	Not yet packaged in sdist

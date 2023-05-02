@@ -1,10 +1,10 @@
-# Created by: Thierry Thomas (<thierry@pompo.net>)
-
 PORTNAME=	${MPORTNAME:tl}
-PORTVERSION=	2.0.4
+PORTVERSION=	3.0.4
+PORTREVISION=	1
 CATEGORIES=	math
 
 COMMENT=	Symmetric approximate minimum degree
+WWW=		https://faculty.cse.tamu.edu/davis/suitesparse.html
 
 LICENSE=	GPLv3
 

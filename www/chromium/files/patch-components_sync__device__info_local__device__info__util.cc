@@ -1,11 +1,29 @@
---- components/sync_device_info/local_device_info_util.cc.orig	2021-05-12 22:05:51 UTC
+--- components/sync_device_info/local_device_info_util.cc.orig	2023-02-08 09:03:45 UTC
 +++ components/sync_device_info/local_device_info_util.cc
-@@ -75,7 +75,7 @@ std::string GetPersonalizableDeviceNameInternal();
+@@ -82,7 +82,7 @@ void OnMachineStatisticsLoaded(LocalDeviceNameInfo* na
  sync_pb::SyncEnums::DeviceType GetLocalDeviceType() {
- #if BUILDFLAG(IS_CHROMEOS_ASH)
+ #if BUILDFLAG(IS_CHROMEOS)
    return sync_pb::SyncEnums_DeviceType_TYPE_CROS;
--#elif defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)
-+#elif defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS) || defined(OS_BSD)
+-#elif BUILDFLAG(IS_LINUX)
++#elif BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
    return sync_pb::SyncEnums_DeviceType_TYPE_LINUX;
- #elif defined(OS_ANDROID) || defined(OS_IOS)
+ #elif BUILDFLAG(IS_ANDROID) || BUILDFLAG(IS_IOS)
+   return ui::GetDeviceFormFactor() == ui::DEVICE_FORM_FACTOR_TABLET
+@@ -102,7 +102,7 @@ DeviceInfo::OsType GetLocalDeviceOSType() {
+   return DeviceInfo::OsType::kChromeOsAsh;
+ #elif BUILDFLAG(IS_CHROMEOS_LACROS)
+   return DeviceInfo::OsType::kChromeOsLacros;
+-#elif BUILDFLAG(IS_LINUX)
++#elif BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
+   return DeviceInfo::OsType::kLinux;
+ #elif BUILDFLAG(IS_ANDROID)
+   return DeviceInfo::OsType::kAndroid;
+@@ -121,7 +121,7 @@ DeviceInfo::OsType GetLocalDeviceOSType() {
+ 
+ DeviceInfo::FormFactor GetLocalDeviceFormFactor() {
+ #if BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_MAC) || \
+-    BUILDFLAG(IS_WIN)
++    BUILDFLAG(IS_WIN) || BUILDFLAG(IS_BSD)
+   return DeviceInfo::FormFactor::kDesktop;
+ #elif BUILDFLAG(IS_ANDROID) || BUILDFLAG(IS_IOS)
    return ui::GetDeviceFormFactor() == ui::DEVICE_FORM_FACTOR_TABLET

@@ -1,13 +1,12 @@
-# Created by: Ying-Chieh Liao <ijliao@FreeBSD.org>
-
 PORTNAME=	Perl-Tidy
-PORTVERSION=	20211029
+PORTVERSION=	20230309
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Indents and reformats Perl scripts to make them easier to read
+WWW=		https://metacpan.org/release/Perl-Tidy
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

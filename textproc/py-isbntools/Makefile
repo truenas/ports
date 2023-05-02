@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	isbntools
-PORTVERSION=	4.3.28
+PORTVERSION=	4.3.29
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	App and framework for all things about ISBN
+WWW=		https://github.com/xlcnd/isbntools
 
 LICENSE=	LGPL3+
 LICENSE_FILE=	${WRKSRC}/LICENSE-LGPL-3.0.txt

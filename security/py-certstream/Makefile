@@ -1,11 +1,12 @@
 PORTNAME=	certstream
 PORTVERSION=	1.12
 CATEGORIES=	security www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	antoine@FreeBSD.org
 COMMENT=	Library for receiving certificate transparency list updates
+WWW=		https://github.com/CaliDog/certstream-python
 
 LICENSE=	MIT
 

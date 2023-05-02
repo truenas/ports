@@ -1,13 +1,12 @@
-# Created by: Felix Palmen <felix@palmen-it.de>
-
 PORTNAME=	simavr
 PORTVERSION=	1.7
 DISTVERSIONPREFIX=	v
-PORTREVISION=	1
+PORTREVISION=	3
 CATEGORIES=	devel emulators
 
-MAINTAINER=	felix@palmen-it.de
+MAINTAINER=	zirias@FreeBSD.org
 COMMENT=	Simulator for several Atmel AVR chips
+WWW=		https://github.com/buserror/simavr
 
 LICENSE=	GPLv3
 
@@ -32,9 +31,6 @@ MAKE_ARGS=	RELEASE=1 PREFIX=${PREFIX} DESTDIR=${STAGEDIR}${PREFIX}
 MAKE_ENV=	SIMAVR_VERSION=v${PORTVERSION}
 
 OPTIONS_DEFINE=		DOCS EXAMPLES
-
-DOCS_ALL_TARGET=	doc
-DOCS_USE=		tex=latex:build tex=pdftex:build tex=texmf:build
 
 AVR_STRIP_CMD?=	avr-strip
 DUMPMACHINE=	${CC} -dumpmachine

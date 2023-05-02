@@ -1,10 +1,11 @@
 PORTNAME=	obs-qtwebkit
 PORTVERSION=	g2018090201
-PORTREVISION=	2
+PORTREVISION=	5
 CATEGORIES=	multimedia
 
-MAINTAINER=	swills@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Browser source plugin for obs-studio
+WWW=		https://github.com/swills/obs-qtwebkit
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -12,7 +13,7 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 LIB_DEPENDS=	libobs.so:multimedia/obs-studio \
 		libinotify.so:devel/libinotify
 
-USES=		gmake pkgconfig qt:5
+USES=		compiler:c++11-lang gmake pkgconfig qt:5
 USE_QT=		core gui network webkit widgets
 
 USE_GITHUB=	yes
@@ -20,15 +21,6 @@ GH_ACCOUNT=	swills
 GH_TAGNAME=	c01aa76
 MAKEFILE=	GNUmakefile
 MAKE_ARGS=	OBS_INCLUDE=${LOCALBASE}/include OBS_LIB=${LOCALBASE}/lib
-
-.include <bsd.port.options.mk>
-
-.if ${ARCH} == powerpc64
-CFLAGS+=	-DNO_WARN_X86_INTRINSICS -maltivec -mvsx
-USES+=		compiler:gcc-c++11-lib
-.else
-USES+=		compiler:c++11-lang
-.endif
 
 post-patch:
 	@${REINPLACE_CMD} -e 's,%%LOCALBASE%%,${LOCALBASE},g' ${WRKSRC}/GNUmakefile

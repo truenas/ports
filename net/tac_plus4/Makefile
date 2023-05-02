@@ -1,5 +1,3 @@
-# Created by: Igor Vinokurov <igor@zynaps.ru>
-
 PORTNAME=	tac_plus
 PORTVERSION=	F4.0.4.28
 CATEGORIES=	net security
@@ -8,6 +6,7 @@ DISTNAME=	tacacs-${PORTVERSION}
 
 MAINTAINER=	marcus@FreeBSD.org
 COMMENT=	Cisco remote authentication/authorization/accounting server
+WWW=		https://www.cisco.com/en/US/tech/tk59/technologies_tech_note09186a00800946a3.shtml
 
 GNU_CONFIGURE=	yes
 USES=		bison cpe perl5 libtool

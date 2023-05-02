@@ -1,20 +1,20 @@
---- ui/views/widget/widget.cc.orig	2021-09-24 04:26:39 UTC
+--- ui/views/widget/widget.cc.orig	2023-04-05 11:05:06 UTC
 +++ ui/views/widget/widget.cc
-@@ -51,7 +51,7 @@
+@@ -52,7 +52,7 @@
  #include "ui/views/window/custom_frame_view.h"
  #include "ui/views/window/dialog_delegate.h"
  
--#if defined(OS_LINUX)
-+#if defined(OS_LINUX) || defined(OS_BSD)
- #include "ui/views/linux_ui/linux_ui.h"
+-#if BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
+ #include "ui/linux/linux_ui.h"
  #endif
  
-@@ -1777,7 +1777,7 @@ const ui::NativeTheme* Widget::GetNativeTheme() const 
-       parent_)
+@@ -1989,7 +1989,7 @@ const ui::NativeTheme* Widget::GetNativeTheme() const 
+   if (parent_)
      return parent_->GetNativeTheme();
  
--#if defined(OS_LINUX)
-+#if defined(OS_LINUX) || defined(OS_BSD)
-   if (const views::LinuxUI* linux_ui = views::LinuxUI::instance()) {
-     if (auto* native_theme = linux_ui->GetNativeTheme(GetNativeWindow()))
-       return native_theme;
+-#if BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
+   if (auto* linux_ui_theme = ui::LinuxUiTheme::GetForWindow(GetNativeWindow()))
+     return linux_ui_theme->GetNativeTheme();
+ #endif

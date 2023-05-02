@@ -1,13 +1,12 @@
-# Created by: patrick, trevor
-
 PORTNAME=	lilypond
-DISTVERSION=	2.22.1
-PORTREVISION=	1
+DISTVERSION=	2.22.2
+PORTREVISION=	2
 CATEGORIES=	print audio
 MASTER_SITES=	http://lilypond.org/download/source/v${DISTVERSION:R}/
 
 MAINTAINER=	m.ne@gmx.net
 COMMENT=	GNU music typesetter
+WWW=		https://lilypond.org/
 
 LICENSE=	GPLv3
 
@@ -24,16 +23,17 @@ BUILD_DEPENDS=	bash:shells/bash \
 LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig \
 		libfreetype.so:print/freetype2 \
 		libgmp.so:math/gmp \
+		libharfbuzz.so:print/harfbuzz \
 		libltdl.so:devel/libltdl
 RUN_DEPENDS=	${LOCALBASE}/share/fonts/dejavu/DejaVuSans-Bold.ttf:x11-fonts/dejavu \
 		mftrace:print/mftrace
 
 USES=		bison:build compiler:c++11-lib cpe ghostscript gmake gnome \
-		magick:7,build perl5 pkgconfig python:3.5+
+		magick:7,build perl5 pkgconfig python:3.5+ tex
 USE_CXXSTD=	c++11
 USE_GNOME=	pango
 USE_PERL5=	build
-USE_TEX=	latex texmf
+USE_TEX=	latex
 
 GNU_CONFIGURE=		yes
 CONFIGURE_ARGS+=	--with-texgyre-dir=${LOCALBASE}/${TEXMFDISTDIR}/fonts/opentype/public/tex-gyre
@@ -45,18 +45,14 @@ CONFIGURE_ENV+=		ac_cv_prog_MAKEINFO="${LOCALBASE}/bin/makeinfo" \
 MAKEFILE=	GNUmakefile
 ALL_TARGET=	all
 
+CONFLICTS_INSTALL=	lilypond-devel
+
 BINARY_ALIAS=	python=${PYTHON_VERSION}
 
-INFO=		lilypond-changes \
-				lilypond-contributor \
-				lilypond-essay \
-				lilypond-extending \
-				lilypond-internals \
-				lilypond-learning \
-				lilypond-notation \
-				lilypond-snippets \
-				lilypond-usage \
-				music-glossary
+INFO=		lilypond-changes lilypond-contributor lilypond-essay \
+		lilypond-extending lilypond-internals lilypond-learning \
+		lilypond-notation lilypond-snippets lilypond-usage \
+		music-glossary
 PLIST_SUB=	DISTVERSION=${DISTVERSION}
 
 OPTIONS_DEFINE=	GUILE2 NLS URW
@@ -68,6 +64,7 @@ URW_DESC=	Use bundled URW fonts
 GUILE2_LIB_DEPENDS=	libgc-threaded.so:devel/boehm-gc-threaded \
 			libguile-2.2.so:lang/guile2
 GUILE2_LIB_DEPENDS_OFF=	libguile.so:lang/guile1
+GUILE2_CONFIGURE_ENV=	GUILE_FLAVOR=guile-2.2
 
 NLS_USES=	gettext
 NLS_USES_OFF=	gettext-tools

@@ -1,11 +1,10 @@
-# Created by: Emanuel Haupt <ehaupt@FreeBSD.org>
-
 PORTNAME=	ft2play
-DISTVERSION=	g20210124
+DISTVERSION=	g20220407
 CATEGORIES=	audio
 
 MAINTAINER=	ehaupt@FreeBSD.org
 COMMENT=	Bit-accurate C port of Fasttracker's XM replayer
+WWW=		https://github.com/8bitbubsy/ft2play
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -14,7 +13,7 @@ USES=		sdl
 USE_CSTD=	c99
 USE_GITHUB=	yes
 GH_ACCOUNT=	8bitbubsy
-GH_TAGNAME=	5730b16
+GH_TAGNAME=	c2b7df5
 USE_SDL=	sdl2
 
 CFLAGS+=	-DAUDIODRIVER_SDL -DNDEBUG `sdl2-config --cflags`

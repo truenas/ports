@@ -1,12 +1,11 @@
-# Created by: mich@freebsdcluster.org
-
 PORTNAME=	pipebench
 PORTVERSION=	0.40
 CATEGORIES=	benchmarks
 MASTER_SITES=	http://www.habets.pp.se/synscan/files/
 
-MAINTAINER=	mich@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Pipebench shows current throughput/amount of data through a pipe
+WWW=		https://www.habets.pp.se/synscan/programs.php?prog=pipebench
 
 PLIST_FILES=	bin/pipebench \
 		man/man1/pipebench.1.gz

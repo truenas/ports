@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	Text-Table-HTML
-PORTVERSION=	0.004
+PORTVERSION=	0.009
 CATEGORIES=	textproc perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Generate HTML table
+WWW=		https://metacpan.org/release/Text-Table-HTML
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

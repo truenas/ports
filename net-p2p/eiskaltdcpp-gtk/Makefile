@@ -1,7 +1,5 @@
-# Created by: Stas Timokhin <stast@bsdportal.ru>
-
 PORTNAME=	eiskaltdcpp
-PORTREVISION=	20
+PORTREVISION=	22
 CATEGORIES=	net-p2p
 PKGNAMESUFFIX=	-gtk
 

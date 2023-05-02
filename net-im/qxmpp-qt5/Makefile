@@ -1,18 +1,22 @@
 PORTNAME=	qxmpp
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.4.0
+DISTVERSION=	1.5.4
 CATEGORIES=	net-im
-PKGNAMESUFFIX=	-qt5
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	XMPP client library based on Qt and C++
+WWW=		https://github.com/qxmpp-project/qxmpp/
 
 LICENSE=	LGPL21
-LICENSE_FILE=	${WRKSRC}/LICENSE.LGPL
+LICENSE_FILE=	${WRKSRC}/LICENSES/LGPL-2.1-or-later.txt
 
-USES=		cmake compiler:c++17-lang libtool pathfix pkgconfig qt:5
-USE_QT=		core gui network xml \
-		buildtools_build qmake_build testlib_build
+LIB_DEPENDS=	libomemo-c.so:security/libomemo-c
+
+USES=		cmake compiler:c++17-lang libtool pathfix pkgconfig qca qt:5
+USE_QT=	core gui network xml \
+		buildtools:build qmake:build testlib:build
+CMAKE_ARGS=	-DQT_VERSION_MAJOR=5
+CMAKE_ON=	BUILD_OMEMO
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	qxmpp-project

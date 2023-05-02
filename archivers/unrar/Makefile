@@ -1,15 +1,13 @@
-# Created by: ache
-
 PORTNAME=	unrar
-PORTVERSION=	6.02
+PORTVERSION=	6.20
 PORTEPOCH=	6
 CATEGORIES+=	archivers
-MASTER_SITES=	https://rarlab.com/rar/ \
-		LOCAL/sunpoet
-DISTNAME=	unrarsrc-6.0.7
+MASTER_SITES=	https://www.rarlab.com/rar/
+DISTNAME=	unrarsrc-6.2.4
 
 MAINTAINER?=	sunpoet@FreeBSD.org
 COMMENT=	Extract, view & test RAR archives
+WWW=		https://www.rarlab.com/
 
 LICENSE=	UNRAR
 LICENSE_FILE=	${WRKSRC}/license.txt

@@ -1,5 +1,3 @@
-# Created by: Rong-En Fan <rafan@FreeBSD.org>
-
 PORTNAME=	big5width
 PORTVERSION=	1.0
 CATEGORIES=	chinese
@@ -8,6 +6,7 @@ DISTFILES=	# none
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Unicode width dirty fix for Big5 font (${LOCALE} locale)
+WWW=		https://www.csie.ntu.edu.tw/~r92030/project/big5width/
 
 BASELOCALEDIR=	/usr/share/locale
 LOCALEDIR=	${PREFIX}/share/locale

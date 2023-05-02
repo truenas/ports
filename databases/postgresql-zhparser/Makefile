@@ -1,5 +1,3 @@
-# Created by: Jov <amutu@amutu.com>
-
 PORTNAME=	zhparser
 PORTVERSION=	0.2.0
 PORTREVISION=	2
@@ -9,12 +7,13 @@ PKGNAMEPREFIX=	postgresql${PGSQL_VER:S/.//}-
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	PostgreSQL extension for full-text search of Chinese
+WWW=		https://github.com/amutu/zhparser
 
 LICENSE=	PostgreSQL
 
 LIB_DEPENDS=	libscws.so:textproc/scws
 
-USES=		gmake pgsql:9.2+
+USES=		gmake pgsql:11+
 LLD_UNSAFE=	yes
 USE_GITHUB=	yes
 GH_ACCOUNT=	amutu

@@ -1,15 +1,14 @@
-# Created by: Wen Heping <wenheping@gmail.com>
-
 PORTNAME=	webpy
 PORTVERSION=	0.62
 CATEGORIES=	www python
 MASTER_SITES=	http://webpy.org/static/ \
-		CHEESESHOP
+		PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	web.py-${PORTVERSION}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Web Framework For Python
+WWW=		https://webpy.org/
 
 LICENSE=	PD
 

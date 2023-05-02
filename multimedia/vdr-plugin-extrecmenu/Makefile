@@ -1,5 +1,3 @@
-# Created by: Juergen Lock <nox@FreeBSD.org>
-
 PORTNAME=	vdr-plugin-extrecmenu
 PORTVERSION=	1.2.2
 PORTREVISION=	5
@@ -9,6 +7,7 @@ DISTNAME=	vdr-${PLUGIN}-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Video Disk Recorder - extended recordings menu
+WWW=		https://projects.vdr-developer.org/projects/plg-extrecmenu
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

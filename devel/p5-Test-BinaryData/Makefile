@@ -1,14 +1,12 @@
-# Created by: Sunpoet Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	Test-BinaryData
-PORTVERSION=	0.014
-PORTREVISION=	1
+PORTVERSION=	0.015
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Compare two things, give hex dumps if they differ
+WWW=		https://metacpan.org/release/Test-BinaryData
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

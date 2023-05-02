@@ -1,11 +1,12 @@
 PORTNAME=	signon-ui
 PORTVERSION=	0.17
-PORTREVISION=	8
+PORTREVISION=	9
 CATEGORIES=	sysutils kde
 DIST_SUBDIR=	KDE/${GL_ACCOUNT}
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	Component for handling accounts-sso user interactions
+WWW=		https://gitlab.com/accounts-sso/signon-ui
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -20,7 +21,7 @@ USES=		compiler:c++11-lang gettext-runtime gl gnome pkgconfig python \
 USE_GL=		gl
 USE_GNOME=	gdkpixbuf2 glib20
 USE_QT=		core dbus declarative gui network webkit widgets xml \
-		buildtools_build qmake_build
+		buildtools:build qmake:build
 # gitlab variables
 USE_GITLAB=	yes
 GL_ACCOUNT=	accounts-sso

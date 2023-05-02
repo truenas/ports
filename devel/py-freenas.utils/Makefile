@@ -1,11 +1,12 @@
 PORTNAME=	freenas.utils
 PORTVERSION=	10.2a1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	wg@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	FreeNAS common Python modules
+WWW=		https://github.com/freenas/middleware
 
 LICENSE=	BSD3CLAUSE
 

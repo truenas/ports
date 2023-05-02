@@ -1,10 +1,10 @@
 PORTNAME=	biolibc
-DISTVERSION=	0.2.0-11
-DISTVERSIONSUFFIX=	-g65b3b13
+DISTVERSION=	0.2.4
 CATEGORIES=	biology
 
 MAINTAINER=	jwb@FreeBSD.org
 COMMENT=	Low-level high-performance bioinformatics library
+WWW=		https://github.com/auerlab/biolibc
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

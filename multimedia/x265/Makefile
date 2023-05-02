@@ -1,5 +1,3 @@
-# Created by: adamw
-
 PORTNAME=	x265
 PORTVERSION=	3.4
 PORTREVISION=	2
@@ -8,6 +6,7 @@ MASTER_SITES=	https://bitbucket.org/multicoreware/x265_git/get/${BB_TAG}.tar.gz?
 
 MAINTAINER=	mi@aldan.algebra.com
 COMMENT=	H.265/High Efficiency Video Coding (HEVC) format
+WWW=		https://www.x265.org/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC:H}/COPYING
@@ -34,7 +33,6 @@ OPTIONS_MULTI_PixelWidth=HI8P HI10P HI12P
 DOS2UNIX_FILES=		abrEncApp.cpp
 DEBUG_PREVENTS=		OPTIMIZED_FLAGS
 DEBUG_PREVENTS_MSG=	Optimizations are incompatible with debugging code
-DEBUG_VARS_OFF=		CFLAGS+=-DNDEBUG
 DEBUG_CMAKE_ON=		-DCMAKE_ASM_NASM_FLAGS:STRING="-g -O0"
 OPTIMIZED_FLAGS_VARS=	CFLAGS+=-O3
 SVTHEVC_LIB_DEPENDS=	libSvtHevcEnc.so:multimedia/svt-hevc

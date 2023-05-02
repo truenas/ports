@@ -2,12 +2,13 @@ PORTNAME=	resolvelib
 DISTVERSION=	0.5.5
 PORTREVISION=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 PKGNAMESUFFIX=	05
 
 MAINTAINER=	0mp@FreeBSD.org
 COMMENT=	Resolve abstract dependencies into concrete ones
+WWW=		https://github.com/sarugaku/resolvelib
 
 LICENSE=	ISCL
 

@@ -6,6 +6,7 @@ CATEGORIES=		biology
 
 MAINTAINER=	jwb@FreeBSD.org
 COMMENT=	Clustering and comparing protein or nucleotide sequences
+WWW=		http://weizhong-lab.ucsd.edu/cd-hit/
 
 LICENSE=	GPLv2
 
@@ -18,9 +19,7 @@ SHEBANG_FILES=	${WRKSRC}/*.pl
 
 MAKE_FLAGS=	openmp=yes
 
-.include <bsd.port.options.mk>
-
-.if ${ARCH} == armv7 || ${ARCH} == powerpc
+.if !exists(/usr/include/omp.h)
 USES+=		compiler:gcc-c++11-lib
 .endif
 

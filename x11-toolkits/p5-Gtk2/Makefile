@@ -1,15 +1,14 @@
-# Created by: clsung@dragon2.net
-
 PORTNAME=	Gtk2
 PORTVERSION=	1.24993
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	x11-toolkits lang perl5
 MASTER_SITES=	CPAN \
 		SF/${PORTNAME:tl}-perl/${PORTNAME}/${PORTVERSION}
 PKGNAMEPREFIX=	p5-
 
-MAINTAINER=	swills@FreeBSD.org
+MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Perl module for Gtk+ 2.x graphical user interface library
+WWW=		http://gtk2-perl.sourceforge.net/
 
 LICENSE=	LGPL21
 

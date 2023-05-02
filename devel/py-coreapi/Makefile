@@ -1,11 +1,12 @@
 PORTNAME=	coreapi
 DISTVERSION=	2.3.3
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	kai@FreeBSD.org
 COMMENT=	Python client library for Core API
+WWW=		https://github.com/core-api/python-client
 
 LICENSE=	BSD2CLAUSE
 

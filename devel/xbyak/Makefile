@@ -1,15 +1,19 @@
 PORTNAME=	xbyak
 DISTVERSIONPREFIX=	v
-DISTVERSION=	6.00
+DISTVERSION=	6.69.1
 CATEGORIES=	devel
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Header-only JIT assembler for x86/x64 SIMD
+WWW=		https://github.com/herumi/xbyak
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYRIGHT
 
-TEST_DEPENDS=	gmake:devel/gmake
+TEST_DEPENDS=	gmake:devel/gmake \
+		gsed:textproc/gsed \
+		nasm:devel/nasm \
+		yasm:devel/yasm
 
 USES=		cmake
 
@@ -27,7 +31,12 @@ PLIST_FILES=	include/xbyak/xbyak.h \
 		lib/cmake/xbyak/xbyak-config.cmake \
 		lib/cmake/xbyak/xbyak-targets.cmake
 
-do-test: install
+BINARY_ALIAS=	g++=${CXX} # workaround for https://github.com/herumi/xbyak/issues/166
+
+post-patch:
+	@${REINPLACE_CMD} -e 's|sed |gsed |g' ${WRKSRC}/gen/Makefile
+
+do-test:
 	@cd ${WRKSRC}/test && ${SETENV} ${MAKE_ENV} ${GMAKE} ${_MAKE_JOBS} test
 
 .include <bsd.port.mk>

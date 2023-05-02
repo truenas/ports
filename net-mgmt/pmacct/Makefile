@@ -1,23 +1,23 @@
-# Created by: Kirill Ponomarew <ponomarew@oberon.net>
-
 PORTNAME=	pmacct
-DISTVERSION=	1.7.5
-PORTREVISION=	1
+DISTVERSION=	1.7.8
 CATEGORIES=	net-mgmt
 MASTER_SITES=	http://www.pmacct.net/
 
 MAINTAINER=	pi@FreeBSD.org
 COMMENT=	Accounting and aggregation tool for IPv4 and IPv6 traffic
+WWW=		http://www.pmacct.net/
 
 LICENSE=	GPLv2
 
-USES=		libtool pkgconfig localbase
+LIB_DEPENDS=	libcdada.so:devel/libcdada
+
+USES=		gmake libtool pkgconfig localbase autoreconf
 USE_RC_SUBR=	pmacctd nfacctd sfacctd
 SUB_FILES=	pkg-message
 GNU_CONFIGURE=	yes
 
 OPTIONS_DEFINE=	MYSQL PGSQL SQLITE3 LAYER2 DEBUG GEOIP2 \
-		DOCS PLABEL RABBITMQ REDIS KAFKA AVRO EXAMPLES
+		DOCS RABBITMQ REDIS KAFKA AVRO EXAMPLES
 OPTIONS_DEFAULT=LAYER2
 OPTIONS_SUB=	yes
 
@@ -25,7 +25,6 @@ AVRO_DESC=	Enable avro support
 GEOIP2_DESC=	Enable GeoIPv2 (libmaxminddb) support
 KAFKA_DESC=	Enable Kafka support
 LAYER2_DESC=	Enable Layer-2 support: MAC addresses and VLANs
-PLABEL_DESC=	Enable IP prefix labels
 RABBITMQ_DESC=	Enable RabbitMQ/AMQP support
 REDIS_DESC=	Enable Redis support
 SQLITE3_DESC=	Enable SQLite3 support
@@ -46,10 +45,9 @@ SQLITE3_CONFIGURE_ENABLE=	sqlite3
 SQLITE3_VARS=		SQLDOC=""
 
 LAYER2_CONFIGURE_ENABLE=	l2
-PLABEL_CONFIGURE_ENABLE=	plabel
 DEBUG_CONFIGURE_ENABLE=		debug
 
-RABBITMQ_LIB_DEPENDS=		librabbitmq.so:net/rabbitmq-c-devel
+RABBITMQ_LIB_DEPENDS=		librabbitmq.so:net/rabbitmq-c
 RABBITMQ_CONFIGURE_ENABLE=	rabbitmq
 
 REDIS_LIB_DEPENDS=		libhiredis.so:databases/hiredis
@@ -66,15 +64,18 @@ GEOIP2_CONFIGURE_ENABLE=	geoipv2
 
 .include <bsd.port.options.mk>
 
+.include <bsd.port.pre.mk>
+
+.if ${ARCH} == "i386"
+EXTRA_PATCHES+=	${FILESDIR}/extra-patch-i386
+.endif
+
 PLIST_SUB+=	SQLDOC=${SQLDOC}
 
 .if ${PORT_OPTIONS:MRABBITMQ} || ${PORT_OPTIONS:MKAFKA}
 LIB_DEPENDS+=	libjansson.so:devel/jansson
 CONFIGURE_ARGS+=--enable-jansson
 .endif
-
-post-patch:
-	@${REINPLACE_CMD} -e 's|-O2||g' ${WRKSRC}/configure
 
 post-install:
 	${MKDIR} ${STAGEDIR}${EXAMPLESDIR}
@@ -86,4 +87,4 @@ post-install:
 .endfor
 	${MKDIR} ${STAGEDIR}${DATADIR}
 
-.include <bsd.port.mk>
+.include <bsd.port.post.mk>

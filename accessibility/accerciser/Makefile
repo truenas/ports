@@ -1,13 +1,13 @@
-# Created by: Michael Johnson <ahze@FreeBSD.org>
-
 PORTNAME=	accerciser
 PORTVERSION=	3.38.0
+PORTREVISION=	1
 CATEGORIES=	accessibility gnome
 MASTER_SITES=	GNOME
-DIST_SUBDIR=	gnome3
+DIST_SUBDIR=	gnome
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Interactive Python accessibility explorer for GNOME
+WWW=		https://wiki.gnome.org/Apps/Accerciser
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYING

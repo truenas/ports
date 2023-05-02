@@ -1,5 +1,3 @@
-# Created by: Martin Blapp <mb@imp.ch>
-
 PORTNAME=	mtx
 PORTVERSION=	1.3.12
 PORTREVISION=	1
@@ -8,6 +6,7 @@ MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}-stable/${PORTVERSION}
 
 MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Control SCSI media changer devices
+WWW=		https://sourceforge.net/projects/mtx/
 
 LICENSE=	GPLv2
 

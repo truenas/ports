@@ -1,5 +1,3 @@
-# Created by: Jeroen Ruigrok van der Werven <asmodai@FreeBSD.org>
-
 PORTNAME=	tuxnes
 PORTVERSION=	0.75
 PORTREVISION=	6
@@ -8,6 +6,7 @@ MASTER_SITES=	SF/${PORTNAME}/TuxNES/TuxNES%20v${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Nintendo Entertainment System 8-bit emulator
+WWW=		http://tuxnes.sourceforge.net/
 
 LICENSE=	GPLv2
 

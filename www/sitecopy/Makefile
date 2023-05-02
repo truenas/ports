@@ -1,14 +1,13 @@
-# Created by: nik
-
 PORTNAME=	sitecopy
 PORTVERSION=	0.16.6
-PORTREVISION=	6
+PORTREVISION=	8
 CATEGORIES=	www
 MASTER_SITES=	http://www.manyfish.co.uk/${PORTNAME}/ \
 		GENTOO
 
 MAINTAINER=	sitecopy@oldach.net
 COMMENT=	Maintains remote websites, uses FTP or WebDAV to sync up w/ local copy
+WWW=		https://www.manyfish.co.uk/sitecopy/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,13 +1,12 @@
-# Created by: Martin Neubauer <m.ne@gmx.net>
-
 PORTNAME=	pymediainfo
 PORTVERSION=	4.1
 CATEGORIES=	multimedia devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	m.ne@gmx.net
 COMMENT=	Python wrapper for the mediainfo library
+WWW=		https://github.com/sbraz/pymediainfo
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

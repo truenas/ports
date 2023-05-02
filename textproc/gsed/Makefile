@@ -1,13 +1,12 @@
-# Created by: Cyrille Lefevre <clefevre@citeweb.net>
-
 PORTNAME=	sed
-PORTVERSION=	4.8
+PORTVERSION=	4.9
 CATEGORIES=	textproc
 MASTER_SITES=	GNU
 PKGNAMEPREFIX=	g
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	GNU stream editor
+WWW=		https://www.gnu.org/software/sed/sed.html
 
 LICENSE=	GPLv3+ GFDL
 LICENSE_COMB=	multi

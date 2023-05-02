@@ -1,12 +1,15 @@
-# Created by: Richard Gallamore <ultima@FreeBSD.org>
-
 PORTNAME=	guacamole-server
-DISTVERSION=	1.3.0
-PORTREVISION=	1
+DISTVERSION=	1.5.0
+PORTREVISION=	2
 CATEGORIES=	net
+MASTER_SITES=	APACHE/guacamole/${DISTVERSION}/source/
+
+PATCH_SITES=	https://github.com/apache/${PORTNAME}/commit/
+PATCHFILES=	5cf408ebbba9544fb5dfb297d98d5a1e1751a56d.patch:-p1
 
 MAINTAINER=	ultima@FreeBSD.org
 COMMENT=	HTML5 Clientless Remote Desktop
+WWW=		https://guacamole.incubator.apache.org
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -18,9 +21,6 @@ CONFLICTS_BUILD=pulseaudio-*+jack_* ffmpeg-*+jack_*
 
 USES=		autoreconf compiler:c11 gnome jpeg libtool localbase pkgconfig \
 		shebangfix
-
-USE_GITHUB=	yes
-GH_ACCOUNT=	apache
 
 USE_GNOME=	cairo
 USE_LDCONFIG=	yes

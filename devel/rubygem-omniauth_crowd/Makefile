@@ -6,6 +6,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	OmniAuth provider for Atlassian Crowds REST API
+WWW=		https://github.com/robdimarco/omniauth_crowd
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -15,7 +16,6 @@ RUN_DEPENDS?=	rubygem-activesupport61>=0:devel/rubygem-activesupport61 \
 		rubygem-omniauth1>=1.0<2:security/rubygem-omniauth1
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

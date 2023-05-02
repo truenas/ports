@@ -1,4 +1,3 @@
-# Created by: rflynn@acsalaska.net
 # Observium version can be found by looking at ${WRKSRC}/includes/definitions/version.inc.php
 
 PORTNAME=	observium
@@ -12,6 +11,7 @@ PKGNAMESUFFIX=	${PHP_PKGNAMESUFFIX}
 
 MAINTAINER=	feld@FreeBSD.org
 COMMENT=	Autodiscovering PHP/MySQL/SNMP based network monitoring
+WWW=		https://observium.org
 
 LICENSE=	EULA
 LICENSE_NAME=	"Observium License Version 1.0"
@@ -21,12 +21,13 @@ LICENSE_PERMS=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
 WRKSRC=		${WRKDIR}/${PORTNAME}
 
 USES=		cpe php:cli,flavors python:3.5+ shebangfix
+IGNORE_WITH_PHP=	82
 SHEBANG_FILES=	\
 		poller-wrapper.py \
 		poller.php \
 		scripts/
 
-USE_PHP=	ctype filter gd iconv json mcrypt mysqli openssl posix session snmp tokenizer xml zlib
+USE_PHP=	ctype filter gd iconv mcrypt mysqli posix session snmp tokenizer xml zlib
 
 NO_ARCH=	yes
 NO_BUILD=	yes
@@ -42,7 +43,7 @@ LIB_DEPENDS+=	libpng.so:graphics/png
 
 OPTIONS_DEFINE=	APACHEMOD DOCS EXAMPLES FPING IPMITOOL LIBVIRT MYSQLD NAGPLUGINS NMAP PYPOLLER SUBVERSION WMIC
 OPTIONS_DEFAULT=	APACHEMOD FPING IPMITOOL LIBVIRT NAGPLUGINS NMAP PYPOLLER SUBVERSION WMIC
-APACHEMOD_DESC=	Use PHP with Apache 2.2+ module
+APACHEMOD_DESC=	Use PHP with Apache 2.4+ module
 FPING_DESC=	Enable fping support ping monitoring
 IPMITOOL_DESC=	Enable support for monitoring hardware IPMI
 MYSQLD_DESC=	Use local MySQL server
@@ -75,7 +76,7 @@ PORTDOCS=	INSTALL README VERSION
 PORTEXAMPLES=	snmp.conf.example snmpd.conf.example
 
 .if ${PORT_OPTIONS:MAPACHEMOD}
-USES+=	apache:run,2.2+
+USES+=	apache:run
 .endif
 .if !defined(PACKAGE_BUILDING)
 USES+=	php:mod
@@ -124,7 +125,7 @@ do-install-EXAMPLES-on:
 .endfor
 
 post-install:
-	@${ECHO}  "@sample ${APACHEETCDIR}/Includes/observium.conf.sample" >> ${TMPPLIST}
+	@${ECHO_CMD}  "@sample ${APACHEETCDIR}/Includes/observium.conf.sample" >> ${TMPPLIST}
 	@${FIND} -s ${STAGEDIR}${WWWDIR} -type f '(' -name '*.orig' -or -name '*.bak' ')' -delete
 	@${FIND} -s ${STAGEDIR}${WWWDIR} -not -type d | ${SORT} | \
 		${SED} -e 's#^${STAGEDIR}${PREFIX}/##' >> ${TMPPLIST}

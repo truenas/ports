@@ -1,11 +1,12 @@
 PORTNAME=	azure-mgmt-deploymentmanager
 PORTVERSION=	0.2.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dbaio@FreeBSD.org
 COMMENT=	Microsoft Azure Deployment Manager Client Library for Python
+WWW=		https://pypi.org/project/azure-mgmt-deploymentmanager/
 
 LICENSE=	MIT
 

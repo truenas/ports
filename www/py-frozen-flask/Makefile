@@ -1,13 +1,12 @@
-# Created by: Oleg Pudeyev <oleg@bsdpower.com>
-
 PORTNAME=	Frozen-Flask
 PORTVERSION=	0.11
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	oleg@bsdpower.com
 COMMENT=	Freezes a Flask application into a set of static files
+WWW=		https://pythonhosted.org/Frozen-Flask/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

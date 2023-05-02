@@ -1,10 +1,11 @@
 PORTNAME=	minizinc
-DISTVERSION=	2.5.5
-PORTREVISION=	3
+DISTVERSION=	2.6.4
+PORTREVISION=	1
 CATEGORIES=	math lang
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Constraint modeling language
+WWW=		https://www.minizinc.org/
 
 LICENSE=	MPL20
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -13,7 +14,9 @@ CONFLICTS_BUILD=	CoinMP
 
 LIB_DEPENDS=	libCbc.so:math/cbc \
 		libCgl.so:math/cgl \
+		libCoinUtils.so:math/coinutils \
 		libgecodekernel.so:math/gecode \
+		libOsi.so:math/osi \
 		libOsiClp.so:math/clp
 
 USES=		bison cmake compiler:c++11-lang

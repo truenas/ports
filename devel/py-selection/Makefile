@@ -1,11 +1,12 @@
 PORTNAME=	selection
 PORTVERSION=	0.0.14
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	rm@FreeBSD.org
 COMMENT=	API to extract contents from HTML and XML documents
+WWW=		https://pypi.org/project/selection/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

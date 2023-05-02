@@ -1,9 +1,11 @@
 PORTNAME=	libndi
 PORTVERSION=	g20200630
+PORTREVISION=	2
 CATEGORIES=	multimedia net
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Cross-platform, open-source library done to interact with NDI streams
+WWW=		https://code.videolan.org/jbk/libndi
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING

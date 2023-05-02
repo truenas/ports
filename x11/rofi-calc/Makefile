@@ -1,10 +1,12 @@
 PORTNAME=	rofi-calc
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2.0.0
+DISTVERSION=	2.1.0
+PORTREVISION=	1
 CATEGORIES=	x11
 
 MAINTAINER=	vidar@karlsen.tech
 COMMENT=	Do live calculations in rofi
+WWW=		https://github.com/svenstaro/rofi-calc
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

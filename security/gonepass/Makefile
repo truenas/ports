@@ -1,10 +1,11 @@
 PORTNAME=	gonepass
 DISTVERSION=	g20181221
-PORTREVISION=	1
+PORTREVISION=	4
 CATEGORIES=	security
 
-MAINTAINER=	greg@unrelenting.technology
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	GTK+ 1Password reader
+WWW=		https://github.com/jbreams/gonepass
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

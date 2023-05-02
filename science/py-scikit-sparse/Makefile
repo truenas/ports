@@ -1,19 +1,20 @@
-# Created by: Yuri Victorovich <yuri@rawbw.com>
-
 PORTNAME=	scikit-sparse
 DISTVERSION=	0.4.6
+PORTREVISION=	4
 CATEGORIES=	science python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Sparse matrix package
+WWW=		https://github.com/scikit-sparse/scikit-sparse
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
 BUILD_DEPENDS=	${RUN_DEPENDS}
-LIB_DEPENDS=	libumfpack.so:math/suitesparse-umfpack
+LIB_DEPENDS=	libumfpack.so:math/suitesparse-umfpack	\
+		libcholmod.so:math/suitesparse-cholmod
 RUN_DEPENDS=	${PYNUMPY} \
 		${PYTHON_PKGNAMEPREFIX}scipy>0:science/py-scipy@${PY_FLAVOR}
 

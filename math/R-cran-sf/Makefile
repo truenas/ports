@@ -1,12 +1,12 @@
-# Created by: TAKATSU Tomonari <tota@FreeBSD.org>
-
 PORTNAME=	sf
-DISTVERSION=	1.0-4
+DISTVERSION=	1.0-8
+PORTREVISION=	5
 CATEGORIES=	math
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Simple Features for R
+WWW=		https://cran.r-project.org/web/packages/sf/
 
 LICENSE=	GPLv2 MIT
 LICENSE_COMB=	dual
@@ -16,7 +16,7 @@ CRAN_DEPENDS=	R-cran-classInt>=0.4.1:devel/R-cran-classInt \
 		R-cran-magrittr>0:devel/R-cran-magrittr \
 		R-cran-Rcpp>=0.12.18:devel/R-cran-Rcpp \
 		R-cran-s2>=1.0.7:graphics/R-cran-s2 \
-		R-cran-units>=0.6.0:math/R-cran-units
+		R-cran-units>=0.7.0:math/R-cran-units
 LIB_DEPENDS=	libgdal.so:graphics/gdal \
 		libgeos.so:graphics/geos \
 		libproj.so:graphics/proj

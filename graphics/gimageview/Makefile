@@ -1,13 +1,12 @@
-# Created by: TATEISHI Katsuyuki <katsu@iec.hiroshima-u.ac.jp>
-
 PORTNAME=	gimageview
 PORTVERSION=	0.2.27
-PORTREVISION=	25
+PORTREVISION=	28
 CATEGORIES=	graphics
 MASTER_SITES=	SF/gtkmmviewer/${PORTNAME}/${PORTVERSION}
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Yet another GTK+ based image viewer
+WWW=		http://gtkmmviewer.sourceforge.net/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,11 +1,12 @@
 PORTNAME=	whichcraft
 PORTVERSION=	0.6.1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	matthew@FreeBSD.org
 COMMENT=	Cross-platform cross-python shutil.which functionality
+WWW=		https://pypi.org/project/whichcraft/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

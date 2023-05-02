@@ -1,16 +1,16 @@
 PORTNAME=	svgwrite
-PORTVERSION=	1.4.1
+PORTVERSION=	1.4.3
 CATEGORIES=	graphics python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	george@m5p.com
 COMMENT=	Python library to create SVG drawings
+WWW=		https://github.com/mozman/svgwrite
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.TXT
 
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pyparsing>=0:devel/py-pyparsing@${PY_FLAVOR}
 TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pytest>0:devel/py-pytest@${PY_FLAVOR}
 
 USES=		python:3.6+ zip

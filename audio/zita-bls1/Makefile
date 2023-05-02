@@ -1,11 +1,12 @@
 PORTNAME=	zita-bls1
 DISTVERSION=	0.3.3
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	audio
 MASTER_SITES=	https://kokkinizita.linuxaudio.org/linuxaudio/downloads/
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Blumlein Shuffler converter of binaural signals to stereo speaker pair
+WWW=		https://kokkinizita.linuxaudio.org/linuxaudio/zita-bls1-doc/quickguide.html
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/../COPYING

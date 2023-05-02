@@ -1,14 +1,13 @@
-# Created by: Attila Nagy <bra@fsn.hu>
-
 PORTNAME=	easyzone
 PORTVERSION=	1.2.2
 PORTREVISION=	2
 CATEGORIES=	dns python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	bra@fsn.hu
 COMMENT=	DNS Zone abstraction module for Python
+WWW=		http://www.psychofx.com/easyzone/
 
 LICENSE=	MIT
 

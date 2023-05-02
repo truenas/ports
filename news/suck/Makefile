@@ -1,5 +1,3 @@
-# Created by: Noritaka Ishizumi <graphite@taurus.bekkoame.or.jp>
-
 PORTNAME=	suck
 PORTVERSION=	4.3.4
 CATEGORIES=	news
@@ -7,6 +5,7 @@ PKGNAMESUFFIX?=	${CNEWS_SUFFIX}${PKGNAMESUFFIX2}
 
 MAINTAINER=	dinoex@FreeBSD.org
 COMMENT=	Receives/sends news to/from localhost via NNTP
+WWW=		https://github.com/lazarus-pkgs/suck
 
 LICENSE=	PD
 
@@ -55,6 +54,7 @@ MAKE_ENV+=	DB_INC_LOC="-I${LOCALBASE}/news/include -I${LOCALBASE}/news/include/i
 MAKE_ENV+=	INCDIR2=-I${LOCALBASE}/include
 BUILD_DEPENDS+=	${LOCALBASE}/news/lib/libinn.a:news/inn
 CONFLICTS+=	suck-cnews-4.*
+BROKEN=		type conflict in include/inn/portable-stdbool.h
 .endif
 
 .if ${PORT_OPTIONS:MSSL}

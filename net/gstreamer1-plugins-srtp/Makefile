@@ -8,4 +8,8 @@ DIST=		bad
 
 MASTERDIR=	${.CURDIR}/../../multimedia/gstreamer1-plugins
 
+PLIST=  ${.CURDIR}/pkg-plist
+
+LIB_DEPENDS= libsrtp2.so:net/libsrtp2
+
 .include "${MASTERDIR}/Makefile"

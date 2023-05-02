@@ -1,13 +1,11 @@
-# Created by: Alejandro Pulver <alepulver@FreeBSD.org>
-
 PORTNAME=	stumpwm
-DISTVERSION=	20.11-90
-DISTVERSIONSUFFIX=	-gccb964d
-PORTREVISION=	4
+DISTVERSION=	22.11
+PORTREVISION=	1
 CATEGORIES=	x11-wm lisp
 
 MAINTAINER=	jrm@FreeBSD.org
 COMMENT=	Tiling, keyboard driven Window Manager written in Common Lisp
+WWW=		https://www.nongnu.org/stumpwm/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -55,7 +53,8 @@ do-build:
 		ASDF_OUTPUT_TRANSLATIONS="/:" \
 		FBSD_ASDF_COMPILE_PORT=t PORTNAME=${PORTNAME} WRKSRC=${WRKSRC}/ \
 		${SBCL} \
-		--noinform --no-sysinit --no-userinit \
+		--noinform --non-interactive --no-sysinit --no-userinit \
+		--eval "(setf sb-impl::*default-external-format* :UTF-8)" \
 		--eval '#.(load "${LOCALBASE}/etc/asdf-init")' \
 		--eval "(asdf:oos 'asdf:compile-op :${PORTNAME} :force t)" \
 		--eval '(load "load-stumpwm.lisp")' \
@@ -65,13 +64,19 @@ do-build:
 		makeinfo stumpwm.texi)
 
 do-install:
-	@${MKDIR} ${STAGEDIR}${ASDF_PATHNAME} \
-		${STAGEDIR}${ASDF_REGISTRY} \
-		${STAGEDIR}${ASDF_PATHNAME}/sbclfasl
+	@${MKDIR} ${STAGEDIR}${ASDF_PATHNAME}/dynamic-mixins/src \
+		${STAGEDIR}${ASDF_PATHNAME}/sbclfasl/dynamic-mixins/src \
+		${STAGEDIR}${ASDF_REGISTRY}
 	${INSTALL_SCRIPT} ${WRKDIR}/stumpwm ${STAGEDIR}${PREFIX}/bin
 	${INSTALL_DATA} ${WRKSRC}/.dir-locals.el ${WRKSRC}/${PORTNAME}.asd \
 		${WRKSRC}/*.lisp ${STAGEDIR}${ASDF_PATHNAME}
+	 ${INSTALL_DATA} ${WRKSRC}/dynamic-mixins/dynamic-mixins.asd \
+		${STAGEDIR}${ASDF_PATHNAME}/dynamic-mixins/
+	${INSTALL_DATA} ${WRKSRC}/dynamic-mixins/src/*.lisp \
+		${STAGEDIR}${ASDF_PATHNAME}/dynamic-mixins/src/
 	${INSTALL_DATA} ${WRKSRC}/*.fasl ${STAGEDIR}${ASDF_PATHNAME}/sbclfasl
+	${INSTALL_DATA} ${WRKSRC}/dynamic-mixins/src/*.fasl \
+		${STAGEDIR}${ASDF_PATHNAME}/sbclfasl/dynamic-mixins/src
 	${INSTALL_DATA} ${WRKSRC}/${PORTNAME}.info \
 		${STAGEDIR}${PREFIX}/${INFO_PATH}
 	@${RLN} ${STAGEDIR}${ASDF_PATHNAME}/${PORTNAME}.asd \

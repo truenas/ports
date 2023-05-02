@@ -1,13 +1,12 @@
-# Created by: antoine@FreeBSD.org
-
 PORTNAME=	pyaff4
 DISTVERSION=	0.26.post6
 CATEGORIES=	security devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	antoine@FreeBSD.org
 COMMENT=	Python Advanced Forensic Format Version 4 library
+WWW=		https://www.aff4.org/
 
 LICENSE=	APACHE20
 

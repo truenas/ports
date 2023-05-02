@@ -1,11 +1,13 @@
 PORTNAME=	pycognito
-DISTVERSION=	2021.11.0
+DISTVERSION=	2022.11.1
+PORTREVISION=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ygy@FreeBSD.org
 COMMENT=	Makes working with AWS Cognito easier for Python developers
+WWW=		https://github.com/pvizeli/pycognito
 
 LICENSE=	APACHE20
 

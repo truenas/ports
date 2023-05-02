@@ -5,6 +5,7 @@ CATEGORIES=	devel
 
 MAINTAINER=	olivier@FreeBSD.org
 COMMENT=	Library to parse Blackbox-created PCAPng files
+WWW=		https://github.com/Netflix/bbparse
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -13,6 +14,8 @@ ONLY_FOR_ARCHS=	amd64 powerpc64 powerpc64le
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	Netflix
+
+PIE_UNSAFE=	yes
 
 PLIST_FILES=	lib/libbbparse.a \
 		include/bbparse.h \

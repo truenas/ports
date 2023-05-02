@@ -1,13 +1,12 @@
-# Created by: Jose Jachuf <jjachuf@gmail.com>
-
 PORTNAME=	pygal
 PORTVERSION=	2.4.0
 CATEGORIES=	graphics python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	jjachuf@gmail.com
 COMMENT=	Python svg graph plotting library
+WWW=		http://pygal.org/
 
 LICENSE=	LGPL3
 

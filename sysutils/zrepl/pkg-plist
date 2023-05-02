@@ -1,7 +1,9 @@
 bin/zrepl
+etc/periodic/weekly/500.zrepl
 @sample %%ETCDIR%%/zrepl.yml.sample
-%%PORTEXAMPLES%%%%EXAMPLESDIR%%/hooks/template.sh
+%%PORTEXAMPLES%%%%EXAMPLESDIR%%/bandwidth_limit.yml
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/grafana-prometheus-zrepl.json
+%%PORTEXAMPLES%%%%EXAMPLESDIR%%/hooks/template.sh
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/local.yml
 @sample %%EXAMPLESDIR%%/newsyslog.conf etc/newsyslog.conf.d/zrepl.conf
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/pull.yml
@@ -10,8 +12,11 @@ bin/zrepl
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/quickstart_backup_to_external_disk.yml
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/quickstart_continuous_server_backup_receiver.yml
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/quickstart_continuous_server_backup_sender.yml
+%%PORTEXAMPLES%%%%EXAMPLESDIR%%/quickstart_fan_out_replication_source.yml
+%%PORTEXAMPLES%%%%EXAMPLESDIR%%/quickstart_fan_out_replication_target.yml
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/sink.yml
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/snap.yml
+%%PORTEXAMPLES%%%%EXAMPLESDIR%%/snap_cron.yml
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/source.yml
 %%PORTEXAMPLES%%%%EXAMPLESDIR%%/source_ssh.yml
 @sample %%EXAMPLESDIR%%/syslog.conf etc/syslog.d/zrepl.conf

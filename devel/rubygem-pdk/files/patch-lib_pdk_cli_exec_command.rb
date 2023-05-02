@@ -1,6 +1,6 @@
---- lib/pdk/cli/exec/command.rb.orig	2021-08-08 20:46:32 UTC
+--- lib/pdk/cli/exec/command.rb.orig	2023-03-24 21:05:48 UTC
 +++ lib/pdk/cli/exec/command.rb
-@@ -187,7 +187,7 @@ module PDK
+@@ -185,7 +185,7 @@ module PDK
  
              resolved_env['GEM_HOME'] = PDK::Util::RubyVersion.gem_home
              gem_path = PDK::Util::RubyVersion.gem_path

@@ -1,14 +1,13 @@
-# Created by: trasz <trasz@pin.if.uz.zgora.pl>
-
 PORTNAME=	jack-keyboard
 DISTVERSION=	2.7.2
-PORTREVISION=	1
+PORTREVISION=	3
 CATEGORIES=	audio
 MASTER_SITES=	SF \
 		http://home.selasky.org:8192/distfiles/
 
 MAINTAINER=	hselasky@FreeBSD.org
 COMMENT=	Virtual keyboard for JACK MIDI
+WWW=		http://jack-keyboard.sourceforge.net/
 
 LICENSE=	BSD2CLAUSE
 

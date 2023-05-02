@@ -1,18 +1,17 @@
-# Created by: Mark Felder <feld@FreeBSD.org>
-
 PORTNAME=	radicale
-PORTVERSION=	3.0.6
-PORTREVISION=	2
+PORTVERSION=	3.1.8
+PORTREVISION=	1
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	Radicale-${PORTVERSION}
 
 MAINTAINER=	decke@FreeBSD.org
 COMMENT=	Python based CalDAV/CardDAV server
+WWW=		https://radicale.org/
 
 LICENSE=	GPLv3+
-LICENSE_FILE=	${WRKSRC}/COPYING
+LICENSE_FILE=	${WRKSRC}/COPYING.md
 
 BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}setuptools>=0:devel/py-setuptools@${PY_FLAVOR}
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}bcrypt>=0:security/py-bcrypt@${PY_FLAVOR} \
@@ -20,10 +19,8 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}bcrypt>=0:security/py-bcrypt@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}vobject>=0.9.6:deskutils/py-vobject@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}dateutil>=2.7.3:devel/py-dateutil@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}defusedxml>0:devel/py-defusedxml@${PY_FLAVOR}
-TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pytest-runner>=0:devel/py-pytest-runner@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}waitress>=0:www/py-waitress@${PY_FLAVOR}
 
-USES=		cpe python:3.5+ shebangfix
+USES=		cpe python:3.6+ shebangfix
 USE_PYTHON=	autoplist distutils
 USERS=		radicale
 GROUPS=		radicale
@@ -49,8 +46,5 @@ post-install:
 	${INSTALL_DATA} ${WRKSRC}/config ${STAGEDIR}/${ETCDIR}/config.sample
 	${INSTALL_DATA} ${WRKSRC}/rights ${STAGEDIR}/${ETCDIR}/rights.sample
 	${INSTALL_SCRIPT} ${WRKSRC}/radicale.wsgi ${STAGEDIR}${WWWDIR}/radicale.wsgi
-
-do-test:
-	@cd ${WRKSRC} && ${PYTHON_CMD} ${PYDISTUTILS_SETUP} test
 
 .include <bsd.port.mk>

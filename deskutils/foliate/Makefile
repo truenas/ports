@@ -1,10 +1,11 @@
 PORTNAME=	foliate
-PORTVERSION=	2.6.3
+PORTVERSION=	2.6.4
 PORTREVISION=	1
 CATEGORIES=	deskutils
 
 MAINTAINER=	fox@FreeBSD.org
 COMMENT=	Simple and modern GTK eBook viewer
+WWW=		https://johnfactotum.github.io/foliate/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,12 +1,12 @@
 PORTNAME=	REminiscence
-PORTVERSION=	0.4.9
-PORTREVISION=	1
+PORTVERSION=	0.5.1
 CATEGORIES=	games
 MASTER_SITES=	http://cyxdown.free.fr/reminiscence/ \
 		https://mirror.amdmi3.ru/distfiles/
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Rewritten engine for Flashback
+WWW=		http://cyxdown.free.fr/reminiscence/
 
 LIB_DEPENDS=	libmodplug.so:audio/libmodplug
 BUILD_DEPENDS=	${LOCALBASE}/include/stb/stb_vorbis.c:devel/stb

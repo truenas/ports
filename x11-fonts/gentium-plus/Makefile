@@ -1,12 +1,11 @@
-# Created by: Matthew Seaman
-
 PORTNAME=	GentiumPlus
-PORTVERSION=	6.001
+PORTVERSION=	6.200
 CATEGORIES=	x11-fonts
 MASTER_SITES=	http://software.sil.org/downloads/r/gentium/
 
 MAINTAINER=	matthew@FreeBSD.org
 COMMENT=	Gentium Plus TrueType font collection
+WWW=		https://software.sil.org/gentium/
 
 LICENSE=	OFL11
 

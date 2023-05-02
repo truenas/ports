@@ -1,12 +1,11 @@
-# Created by: cy@FreeBSD.org
-
 PORTNAME=	freebsd-telnetd
 DISTVERSIONPREFIX=	v
-DISTVERSION=	14.0
+DISTVERSION=	14.0.5
 CATEGORIES=	net
 
 MAINTAINER=	cy@FreeBSD.org
 COMMENT=	FreeBSD telnetd
+WWW=		https://github.com/cschuber/freebsd-telnetd
 
 LICENSE=	BSD3CLAUSE
 
@@ -37,5 +36,8 @@ MAKE_ENV+=	NO_WERROR=1
 
 post-patch:
 	@${CP} ${FILESDIR}/Makefile.in ${WRKSRC}/Makefile
+
+post-install:
+	@${INSTALL_DATA} ${WRKSRC}/lib/libpam/pam.d/telnetd ${STAGEDIR}${PREFIX}/etc/pam.d/telnetd.default
 
 .include <bsd.port.mk>

@@ -5,10 +5,10 @@ MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	PAM integration with ruby
+WWW=		https://github.com/devkral/rpam2
 
 LICENSE=	MIT
 
 USES=		gem
-USE_RUBY=	yes
 
 .include <bsd.port.mk>

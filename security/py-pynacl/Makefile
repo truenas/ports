@@ -1,14 +1,13 @@
-# Created by: Yuri Victorovich <yuri@rawbw.com>
-
 PORTNAME=	pynacl
-DISTVERSION=	1.4.0
+DISTVERSION=	1.5.0
 CATEGORIES=	security python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	PyNaCl-${PORTVERSION}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Python binding to the Networking and Cryptography library
+WWW=		https://github.com/pyca/pynacl
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -31,7 +30,7 @@ BUNDLED_NACL_MAKE_ENV_OFF=	SODIUM_INSTALL=system
 post-install:
 	${STRIP_CMD} ${STAGEDIR}${PYTHONPREFIX_SITELIBDIR}/nacl/_sodium*.so
 
-do-test:
+do-test: # tests fail: https://github.com/pyca/pynacl/issues/747
 	@cd ${WRKSRC} && ${SETENV} PYTHONPATH=${STAGEDIR}${PYTHONPREFIX_SITELIBDIR} ${PYTHON_CMD} -m pytest -rs tests
 
 .include <bsd.port.mk>

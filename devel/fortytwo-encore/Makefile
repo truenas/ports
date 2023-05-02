@@ -1,6 +1,6 @@
 PORTNAME=	encore
 PORTVERSION=	0.3.1
-PORTREVISION=	9
+PORTREVISION=	10
 CATEGORIES=	devel gnustep
 MASTER_SITES=	SF/fortytwo/Encore/${PORTVERSION}
 PKGNAMEPREFIX=	fortytwo-
@@ -9,6 +9,7 @@ DISTFILES=	Encore-${PORTVERSION}-src.tgz \
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Utility classes for GNUstep
+WWW=		http://fortytwo.sourceforge.net/
 
 LICENSE=	LGPL21+
 LICENSE_FILE=	${WRKSRC}/LICENSE

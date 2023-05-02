@@ -1,6 +1,4 @@
-# Created by: Alonso Cardenas Marquez <acm@FreeBSD.org>
-
-PORTREVISION=	0
+PORTREVISION=	2
 CATEGORIES=	devel
 PKGNAMESUFFIX=	-client
 

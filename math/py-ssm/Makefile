@@ -1,11 +1,13 @@
 PORTNAME=	ssm
 DISTVERSION=	0.0.1
+PORTREVISION=	1
 CATEGORIES=	math python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Bayesian learning and inference for state space models
+WWW=		https://github.com/lindermanlab/ssm
 
 LICENSE=	MIT
 

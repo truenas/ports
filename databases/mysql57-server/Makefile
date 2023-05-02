@@ -1,7 +1,5 @@
-# Created by: Mahdi Mokhtari <mokhi64@gmail.com>
-
 PORTNAME?=	mysql
-PORTVERSION=	5.7.36
+PORTVERSION=	5.7.41
 PORTREVISION?=	0
 CATEGORIES=	databases
 MASTER_SITES=	MYSQL/MySQL-5.7
@@ -10,15 +8,20 @@ DISTNAME=	${PORTNAME}-boost-${PORTVERSION}
 
 MAINTAINER=	joneum@FreeBSD.org
 COMMENT?=	Multithreaded SQL database (server)
+WWW=		https://www.mysql.com/
 
 LICENSE=	GPLv2
+
+DEPRECATED=     Upstream support ended in October 2019
+EXPIRATION_DATE=        2023-12-31
 
 WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}
 
 SLAVEDIRS=	databases/mysql57-client
 USES=		bison:build cmake:noninja compiler:c11 compiler:c++11-lib \
 		cpe groff:run libedit localbase perl5 shebangfix ssl
-
+IGNORE_SSL=	openssl30 openssl31
+IGNORE_SSL_REASON=	Upstream only supports OpenSSL 1.0.1 upto 1.1.X
 CPE_VENDOR=	oracle
 
 USE_PERL5=	run
@@ -34,9 +37,6 @@ LIB_DEPENDS+=	libcurl.so:ftp/curl \
 
 CMAKE_BUILD_TYPE=	Release
 
-CFLAGS+=	-DNDEBUG
-CXXFLAGS+=	-DNDEBUG
-
 CMAKE_ARGS+=	-DINSTALL_LAYOUT=FREEBSD \
 		-DINSTALL_LDCONFIGDIR="${LOCALBASE}/libdata/ldconfig" \
 		-DINSTALL_PKGCONFIGDIR="${LOCALBASE}/libdata/pkgconfig" \
@@ -45,7 +45,7 @@ CMAKE_ARGS+=	-DINSTALL_LAYOUT=FREEBSD \
 		-DINSTALL_INCLUDEDIR="include/mysql" \
 		-DINSTALL_INFODIR="${INFO_PATH}" \
 		-DINSTALL_LIBDIR="lib/mysql" \
-		-DINSTALL_MANDIR="man" \
+		-DINSTALL_MANDIR="share/man" \
 		-DINSTALL_MYSQLDATADIR="${MY_DBDIR}" \
 		-DINSTALL_MYSQLKEYRINGDIR="etc/mysql/keyring" \
 		-DINSTALL_MYSQLSHAREDIR="share/mysql" \
@@ -87,11 +87,10 @@ OPTIONS_SUB=		YES
 .if !defined(CLIENT_ONLY)
 USES+=		mysql:57
 
-CONFLICTS_INSTALL=	mysql5[0-68-9]-server \
-			mysql[0-46-9][0-9]-server \
+CONFLICTS_INSTALL=	mysql*-server \
 			mysqlwsrep*-server \
-			mariadb[0-9][0-9]-server \
-			percona[0-9][0-9]-server
+			mariadb*-server \
+			percona*-server
 
 USE_RC_SUBR=	mysql-server
 
@@ -161,10 +160,6 @@ CMAKE_ARGS+=		-DWITH_SSL=${OPENSSLBASE}
 CXXFLAGS+=	-fpermissive
 .endif
 
-.if ${ARCH} == powerpc
-LLD_UNSAFE=	yes
-.endif
-
 post-extract:
 	@${RM} -rv ${WRKSRC}/sql/sql_hints.yy.cc ${WRKSRC}/sql/sql_hints.yy.h
 
@@ -173,6 +168,8 @@ post-patch:
 	# issue 220865: MySQL developers forgot that FreeBSD != Linux
 	@${REINPLACE_CMD} -e 's|%%FREEBSD_LOCAL_LIB%%|${LOCALBASE}/lib|g' \
 	    ${WRKSRC}/configure.cmake
+	@${REINPLACE_CMD} -e 's|__clang__|__undefined__|g' \
+	    ${WRKSRC}/boost/boost_1_59_0/boost/atomic/detail/ops_gcc_x86_dcas.hpp
 
 .if !defined(CLIENT_ONLY)
 post-install:

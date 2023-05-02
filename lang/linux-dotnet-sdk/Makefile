@@ -1,5 +1,3 @@
-# Created by: David Naylor <dbn@FreeBSD.org>
-
 PORTNAME?=	dotnet-sdk
 DISTVERSION?=	2.1.201
 DISTVERSIONSUFFIX=	-linux-x64
@@ -9,6 +7,7 @@ PKGNAMEPREFIX=	linux-
 
 MAINTAINER=	mono@FreeBSD.org
 COMMENT=	Cross-platform .NET implementation (Software Development Kit)
+WWW=		https://www.microsoft.com/net/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

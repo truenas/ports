@@ -1,5 +1,5 @@
 PORTNAME=	DBD-CSV
-PORTVERSION=	0.58
+PORTVERSION=	0.60
 PORTEPOCH=	1
 CATEGORIES=	databases perl5
 MASTER_SITES=	CPAN
@@ -7,6 +7,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	DBI driver for CSV files
+WWW=		https://metacpan.org/release/DBD-CSV
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

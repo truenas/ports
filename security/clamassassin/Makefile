@@ -1,13 +1,12 @@
-# Created by: Matt <matt@xtaz.net>
-
 PORTNAME=	clamassassin
 PORTVERSION=	1.2.4
-PORTREVISION=	6
+PORTREVISION=	7
 CATEGORIES=	security
 MASTER_SITES=	http://jameslick.com/clamassassin/
 
 MAINTAINER=	chalpin@cs.wisc.edu
 COMMENT=	Simple virus filter wrapper for ClamAV
+WWW=		http://drivel.com/clamassassin/
 
 LICENSE=	BSD3CLAUSE
 

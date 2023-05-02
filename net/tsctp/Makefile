@@ -1,5 +1,3 @@
-# Created by: Thomas Dreibholz <dreibh@iem.uni-due.de>
-
 PORTNAME=	tsctp
 PORTVERSION=	0.7.5
 CATEGORIES=	net
@@ -7,6 +5,7 @@ MASTER_SITES=	https://www.uni-due.de/~be0001/tsctp/download/
 
 MAINTAINER=	dreibh@iem.uni-due.de
 COMMENT=	SCTP Test Tool
+WWW=		https://www.uni-due.de/~be0001/tsctp/
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYING

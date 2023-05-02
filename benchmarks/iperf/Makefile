@@ -1,13 +1,12 @@
-# Created by: Pete Fritchman <petef@databits.net>
-
 PORTNAME=	iperf
-PORTVERSION=	2.1.4
+PORTVERSION=	2.1.9
 CATEGORIES=	benchmarks
 MASTER_SITES=	SF/iperf2 \
-		LOCAL/sunpoet/iperf/20210818
+		LOCAL/sunpoet
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Tool to measure maximum TCP and UDP bandwidth
+WWW=		https://sourceforge.net/projects/iperf2/
 
 LICENSE=	BSD2CLAUSE
 

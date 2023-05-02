@@ -8,8 +8,9 @@ DISTVERSIONSUFFIX=	.b54247721-368.1
 CATEGORIES=	devel
 MASTER_SITES=	LOCAL/trasz:DEFAULT,amd64,SOURCE
 
-MAINTAINER=	trasz@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Linux Test Project (SUSE Linux Enterprise 15)
+WWW=		https://github.com/linux-test-project/ltp
 
 LICENSE=	GPLv2+
 

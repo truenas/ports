@@ -1,5 +1,3 @@
-# Created by: Sebastian Schuetz <sschuetz@fhm.edu>
-
 PORTNAME=	tpm-tools
 PORTVERSION=	1.3.9.1
 PORTREVISION=	1
@@ -8,6 +6,7 @@ MASTER_SITES=	SF/trousers/${PORTNAME}/${PORTVERSION}
 
 MAINTAINER=	hrs@FreeBSD.org
 COMMENT=	Provides a basic set of TPM tools
+WWW=		http://trousers.sourceforge.net
 
 LICENSE=	CPL
 LICENSE_NAME=	Common Public License

@@ -1,12 +1,11 @@
-# Created by: Nicola Vitale <nivit@FreeBSD.org>
-
 PORTNAME=	libsass
-DISTVERSION=	3.6.4
+DISTVERSION=	3.6.5
 PORTREVISION=	0
 CATEGORIES=	textproc
 
 MAINTAINER=	nivit@FreeBSD.org
 COMMENT=	C/C++ implementation of a Sass compiler
+WWW=		https://sass-lang.com/libsass
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,12 +1,17 @@
 PORTNAME=	${GH_ACCOUNT:tl}
 DISTVERSION=	2.0.1
+PORTREVISION=	2
 CATEGORIES=	cad
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ports@nicandneal.net
 COMMENT=	Python module for building parametric 3D CAD models
+WWW=		https://github.com/CadQuery/cadquery
 
 LICENSE=	APACHE20
+
+DEPRECATED=	Depends on exppired cad/py-ocp
+EXPIRATION_DATE=2023-06-21
 
 RUN_DEPENDS=	${PYTHON_SITELIBDIR}/ezdxf/__init__.py:cad/py-ezdxf@${PY_FLAVOR} \
 		${PYTHON_SITELIBDIR}/OCP.so:cad/py-ocp@${PY_FLAVOR} \

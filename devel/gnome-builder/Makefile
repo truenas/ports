@@ -1,11 +1,13 @@
 PORTNAME=	gnome-builder
-PORTVERSION=	41.3
+PORTVERSION=	42.1
+PORTREVISION=	4
 CATEGORIES=	devel gnome
 MASTER_SITES=	GNOME/sources/${PORTNAME}/${PORTVERSION:C/^([0-9]+)\..*/\1/}
 DIST_SUBDIR=	gnome
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	IDE for writing software for GNOME
+WWW=		https://wiki.gnome.org/Apps/Builder
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -19,14 +21,15 @@ LIB_DEPENDS=	libcmark.so:textproc/cmark \
 		libgit2.so:devel/libgit2 \
 		libgladeui-2.so:devel/glade \
 		libgspell-1.so:textproc/gspell \
+		libhandy-1.so:x11-toolkits/libhandy \
 		libjson-glib-1.0.so:devel/json-glib \
 		libjsonrpc-glib-1.0.so:devel/jsonrpc-glib \
 		libpcre.so:devel/pcre \
 		libpeas-1.0.so:devel/libpeas \
 		libportal.so:deskutils/libportal \
+		libportal-gtk3.so:deskutils/libportal-gtk3 \
 		libsoup-2.4.so:devel/libsoup \
 		libtemplate_glib-1.0.so:devel/template-glib \
-		libvala-0.48.so:lang/vala \
 		libwebkit2gtk-4.0.so:www/webkit2-gtk3
 
 PORTSCOUT=	limitw:1,even
@@ -36,7 +39,7 @@ CONFLICTS_BUILD=	gnome-builder-3.16.*
 
 USES=		compiler:c++11-lang desktop-file-utils gettext gnome \
 		localbase:lfdlags meson pkgconfig python:3.6+,build shebangfix \
-		tar:xz
+		tar:xz vala:lib
 USE_GNOME=	cairo gtksourceview4 introspection libxml2 vte3
 SHEBANG_FILES=	${WRKSRC}/src/plugins/gradle/gradle_plugin.py \
 		${WRKSRC}/src/plugins/maven/maven_plugin.py
@@ -75,11 +78,10 @@ OPTIONS_DEFINE=		CLANG DOCS
 OPTIONS_DEFAULT=	CLANG
 
 # track the latest llvm/clang version, the config script picks the newest available
-LLVM_VER=		${LLVM_DEFAULT}
 CLANG_DESC=		Build the clang plugin
 CLANG_MESON_TRUE=	plugin_clang
-CLANG_BUILD_DEPENDS=	llvm-config${LLVM_VER}:devel/llvm${LLVM_VER}
-CLANG_RUN_DEPENDS=	llvm-config${LLVM_VER}:devel/llvm${LLVM_VER}
+CLANG_USES=		llvm:build,run
+CLANG_CONFIGURE_ENV=	LLVM_CONFIG=${LLVM_CONFIG}
 
 # 11.1 and older has issues with vala generated code.
 post-patch:

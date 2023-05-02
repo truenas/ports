@@ -1,13 +1,11 @@
-# Created by: Kai Wang <kaiw27@gmail.com>
-
 PORTNAME=	fish
-DISTVERSION=	3.3.1
-PORTREVISION=	1
+DISTVERSION=	3.6.0
 CATEGORIES=	shells
 MASTER_SITES=	https://github.com/fish-shell/fish-shell/releases/download/${PORTVERSION}/
 
 MAINTAINER=	asomers@FreeBSD.org
 COMMENT=	User friendly command line shell
+WWW=		https://fishshell.com/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -31,7 +29,7 @@ MANDIRS=	${DATADIR}/man/man1
 PORTDOCS=	*
 
 OPTIONS_DEFINE=		DOCS MANPAGES NLS
-OPTIONS_DEFAULT=	DOCS MANPAGES NLS
+OPTIONS_DEFAULT=	MANPAGES NLS
 OPTIONS_SUB=		yes
 
 NLS_USES=	gettext

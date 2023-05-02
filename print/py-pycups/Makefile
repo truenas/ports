@@ -1,13 +1,12 @@
-# Created by: Michael Johnson <ahze@FreeBSD.org>
-
 PORTNAME=	pycups
 PORTVERSION=	2.0.1
 CATEGORIES=	print python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	CUPS bindings for Python
+WWW=		https://github.com/zdohnal/pycups
 
 LICENSE=	GPLv2 GPLv3
 LICENSE_COMB=	dual

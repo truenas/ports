@@ -1,9 +1,11 @@
 PORTNAME=	qflow
-DISTVERSION=	1.4.98
+DISTVERSION=	1.4.100
+PORTREVISION=	1
 CATEGORIES=	cad
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	End-to-end digital synthesis flow for ASIC designs
+WWW=		http://opencircuitdesign.com/qflow/
 
 LICENSE=	GPLv2
 

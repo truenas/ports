@@ -1,9 +1,11 @@
 PORTNAME=	kmbox
 DISTVERSION=	${KDE_APPLICATIONS_VERSION}
+PORTREVISION=	1
 CATEGORIES=	net kde kde-applications
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	KDE library for accessing mail storages in MBox format
+WWW=		https://www.kde.org/
 
 LICENSE=	LGPL21
 
@@ -12,7 +14,7 @@ USE_KDE=	ecm
 # pim components
 USE_KDE+=	mime
 USE_QT=		core gui \
-		buildtools_build qmake_build
+		buildtools:build qmake:build
 USE_LDCONFIG=	yes
 
 DESCR=		${.CURDIR:H:H}/deskutils/kdepim/pkg-descr

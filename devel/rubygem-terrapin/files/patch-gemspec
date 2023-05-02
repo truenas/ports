@@ -1,11 +1,11 @@
---- terrapin.gemspec.orig	2021-06-28 15:10:17 UTC
+--- terrapin.gemspec.orig	2023-01-05 20:19:30 UTC
 +++ terrapin.gemspec
-@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
-     s.specification_version = 4
+@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
  
-     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
--      s.add_runtime_dependency(%q<climate_control>.freeze, [">= 0.0.3", "< 1.0"])
-+      s.add_runtime_dependency(%q<climate_control>.freeze, [">= 0.0.3"])
-       s.add_development_dependency(%q<rspec>.freeze, [">= 0"])
-       s.add_development_dependency(%q<bourne>.freeze, [">= 0"])
-       s.add_development_dependency(%q<mocha>.freeze, [">= 0"])
+   s.specification_version = 4
+ 
+-  s.add_runtime_dependency(%q<climate_control>.freeze, [">= 0.0.3", "< 1.0"])
++  s.add_runtime_dependency(%q<climate_control>.freeze, [">= 0.0.3"])
+   s.add_development_dependency(%q<rspec>.freeze, [">= 0"])
+   s.add_development_dependency(%q<bourne>.freeze, [">= 0"])
+   s.add_development_dependency(%q<mocha>.freeze, [">= 0"])

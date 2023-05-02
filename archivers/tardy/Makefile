@@ -1,15 +1,14 @@
-# Created by: ijliao
-
 PORTNAME=	tardy
 PORTVERSION=	1.28
 DISTVERSIONSUFFIX=	.D001.orig
-PORTREVISION=	14
+PORTREVISION=	15
 CATEGORIES=	archivers
 MASTER_SITES=	SF/tardy/${PORTVERSION}/
 DISTNAME=	${PORTNAME}_${PORTVERSION}${DISTVERSIONSUFFIX}
 
 MAINTAINER=	ehaupt@FreeBSD.org
 COMMENT=	Manipulate the file headers in tar archive files in various ways
+WWW=		http://tardy.sourceforge.net/
 
 LICENSE=	GPLv3
 

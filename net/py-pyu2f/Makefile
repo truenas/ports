@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	pyu2f
 PORTVERSION=	0.1.5
 CATEGORIES=	net python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	U2F host library for interacting with a U2F device over USB
+WWW=		https://github.com/google/pyu2f
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

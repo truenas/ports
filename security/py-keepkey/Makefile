@@ -1,13 +1,13 @@
-# Created by: Emanuel Haupt <ehaupt@FreeBSD.org>
-
 PORTNAME=	keepkey
 PORTVERSION=	7.2.1
+PORTREVISION=	1
 DISTVERSIONPREFIX=	v
 CATEGORIES=	security
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ehaupt@FreeBSD.org
 COMMENT=	Library for communicating with KeepKey Hardware Wallet
+WWW=		https://github.com/keepkey/python-keepkey
 
 LICENSE=	LGPL3
 

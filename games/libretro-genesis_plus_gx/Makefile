@@ -1,9 +1,10 @@
 PORTNAME=	libretro-genesis_plus_gx
-PORTVERSION=	0.20210214
+PORTVERSION=	0.20220403
 CATEGORIES=	games
 
-MAINTAINER=	menelkir@itroll.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Enhanced port of Genesis Plus
+WWW=		https://github.com/libretro/Genesis-Plus-GX
 
 # Commercial users must seek permission from copyright holders.
 LICENSE=	GPGX
@@ -17,7 +18,7 @@ USE_LDCONFIG=	yes
 USE_GITHUB=	yes
 GH_ACCOUNT=	libretro
 GH_PROJECT=	Genesis-Plus-GX
-GH_TAGNAME=	7f83bc5
+GH_TAGNAME=	144045b
 
 PLIST_FILES=	lib/libretro/genesis_plus_gx_libretro.so
 

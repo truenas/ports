@@ -1,13 +1,12 @@
-# Created by: Wen Heping <wenheping@gmail.com>
-
 PORTNAME=	zdaemon
 PORTVERSION=	4.1.0
 CATEGORIES=	sysutils python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	zope@FreeBSD.org
 COMMENT=	Daemon Process Control Library and Tools for Unix-bases Systems
+WWW=		https://pypi.org/project/zdaemon/
 
 LICENSE=	ZPL21
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

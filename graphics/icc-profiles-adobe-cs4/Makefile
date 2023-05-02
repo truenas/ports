@@ -4,8 +4,9 @@ CATEGORIES=	graphics
 MASTER_SITES=	https://download.adobe.com/pub/adobe/iccprofiles/win/
 DISTNAME=	AdobeICCProfilesCS4Win_end-user
 
-MAINTAINER=	bsam@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Adobe ICC CMYK and RGB profiles for graphics professionals
+WWW=		https://supportdownloads.adobe.com/detail.jsp?ftpID=4075
 
 LICENSE=	ADOBEEULA.pdf
 LICENSE_NAME=	Adobe End-User License Agreement

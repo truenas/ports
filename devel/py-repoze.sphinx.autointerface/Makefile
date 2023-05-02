@@ -1,13 +1,12 @@
-# Created by: Carlos J Puga Medina <cpm@fbsd.es>
-
 PORTNAME=	repoze.sphinx.autointerface
 PORTVERSION=	0.8
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	zope@FreeBSD.org
 COMMENT=	Auto-generates API docs from Zope interfaces
+WWW=		http://www.repoze.org
 
 LICENSE=	BSD4CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

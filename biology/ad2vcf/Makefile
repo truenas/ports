@@ -1,10 +1,10 @@
 PORTNAME=	ad2vcf
-DISTVERSION=	0.1.3-31
-DISTVERSIONSUFFIX=	-g2073297
+DISTVERSION=	0.1.6
 CATEGORIES=	biology
 
 MAINTAINER=	jwb@FreeBSD.org
 COMMENT=	Add allelic depth info from a SAM stream to a VCF file
+WWW=		https://github.com/auerlab/ad2vcf
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -14,6 +14,7 @@ LIB_DEPENDS=	libbiolibc.so:biology/biolibc libxtend.so:devel/libxtend
 USE_GITHUB=	yes
 GH_ACCOUNT=	auerlab
 
+MAKE_ENV+=	VERSION=${PORTVERSION}
 PLIST_FILES=	bin/ad2vcf man/man1/ad2vcf.1.gz
 
 pre-build:

@@ -1,10 +1,11 @@
 PORTNAME=	helib
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2.2.1
+DISTVERSION=	2.2.2
 CATEGORIES=	security
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Implementation of homomorphic encryption
+WWW=		https://github.com/homenc/HElib
 
 LICENSE=	APACHE20
 

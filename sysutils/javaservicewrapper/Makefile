@@ -1,13 +1,12 @@
-# Created by: alepulver
-
 PORTNAME=	javaservicewrapper
-PORTVERSION=	3.5.45
+PORTVERSION=	3.5.53
 CATEGORIES=	sysutils java
 MASTER_SITES=	https://wrapper.tanukisoftware.com/download/${PORTVERSION}/
 DISTNAME=	wrapper_${PORTVERSION}_src
 
 MAINTAINER=	michael.osipov@siemens.com
 COMMENT=	JSW enables a Java application to be run as a Unix daemon
+WWW=		https://wrapper.tanukisoftware.org/
 
 LICENSE=	GPLv2 GPLv3
 LICENSE_COMB=	dual
@@ -31,7 +30,6 @@ OPTIONS_DEFINE=	DOCS
 MAKE_ARGS+=	-Dbits=64
 .else
 MAKE_ARGS+=	-Dbits=32
-CFLAGS+=	-fPIC
 .endif
 
 .include <bsd.port.pre.mk>
@@ -53,7 +51,7 @@ post-patch:
 	@${CP} ${WRKSRC}/src/c/Makefile-freebsd-x86-32.gmake \
 		${WRKSRC}/src/c/Makefile-freebsd-arm-32.gmake
 	@${CP} ${WRKSRC}/src/c/Makefile-freebsd-x86-64.gmake \
-		${WRKSRC}/src/c/Makefile-freebsd-armhf-64.gmake
+		${WRKSRC}/src/c/Makefile-freebsd-arm-64.gmake
 	@${CP} ${WRKSRC}/src/c/Makefile-freebsd-x86-64.gmake \
 		${WRKSRC}/src/c/Makefile-freebsd-ppcbe-64.gmake
 	@${CP} ${WRKSRC}/src/c/Makefile-freebsd-x86-64.gmake \
@@ -63,7 +61,8 @@ do-install:
 	@${MKDIR} ${STAGEDIR}${DATADIR}
 	cd ${WRKSRC} && ${CP} -rp bin conf lib test ${STAGEDIR}${DATADIR}
 	${STRIP_CMD} ${STAGEDIR}${DATADIR}/bin/wrapper
-	${LN} -sf ${DATADIR}/bin/wrapper ${STAGEDIR}${PREFIX}/bin/${PORTNAME}
+	${STRIP_CMD} ${STAGEDIR}${DATADIR}/lib/libwrapper.so
+	${RLN} ${STAGEDIR}${DATADIR}/bin/wrapper ${STAGEDIR}${PREFIX}/bin/${PORTNAME}
 
 do-install-DOCS-on:
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}

@@ -1,11 +1,12 @@
 PORTNAME=	scour
 PORTVERSION=	0.38.2
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Scour SVG Optimizer
+WWW=		https://github.com/scour-project/scour
 
 LICENSE=	APACHE20
 

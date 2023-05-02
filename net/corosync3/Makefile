@@ -1,8 +1,8 @@
-# Created by: David Shane Holden <dpejesh@yahoo.com>
-
 PORTVERSION=		2.99.5
-PORTREVISION=		1
+PORTREVISION=		2
 PKGNAMESUFFIX=		3
+
+WWW=		https://corosync.github.io/corosync/
 
 .include "${.CURDIR}/../corosync2/Makefile.common"
 

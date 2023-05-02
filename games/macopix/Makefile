@@ -1,14 +1,13 @@
-# Created by: Shinya Esu <esu@yk.rim.or.jp>
-
 PORTNAME=	macopix
 PORTVERSION=	1.7.4
-PORTREVISION=	12
+PORTREVISION=	14
 CATEGORIES=	games
 MASTER_SITES=	http://rosegray.sakura.ne.jp/macopix/
 DISTFILES=	${DISTNAME}${EXTRACT_SUFX} ${LICENSE_DISTFILES_DATA}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Window sitter for X11
+WWW=		http://rosegray.sakura.ne.jp/macopix/index-e.html
 
 LICENSE=	GPLv2+ DATA
 LICENSE_COMB=	multi
@@ -28,19 +27,21 @@ LICENSE_DISTFILES_DATA=	\
 		macopix-mascot-HxB-euc-ja-0.30.tar.gz
 LICENSE_PERMS_DATA=	auto-accept
 
-BROKEN_FreeBSD_13=	ld: error: duplicate symbol: AutoBar
-BROKEN_FreeBSD_14=	ld: error: duplicate symbol: AutoBar
 BROKEN_armv6=		dumps core: Assertion failed: (!NodePtr->isKnownSentinel()), function operator*, file ilist_iterator.h
 BROKEN_armv7=		dumps core: Assertion failed: (!NodePtr->isKnownSentinel()), function operator*, file ilist_iterator.h
 
-LIB_DEPENDS=	libpng.so:graphics/png \
+LIB_DEPENDS=	libfontconfig.so:x11-fonts/fontconfig \
+		libfreetype.so:print/freetype2 \
+		libharfbuzz.so:print/harfbuzz \
+		libpng.so:graphics/png \
 		libtiff.so:graphics/tiff
 
 USES=		gettext gmake gnome iconv jpeg libtool pkgconfig xorg
-USE_GNOME=	gtk20
+USE_GNOME=	cairo gdkpixbuf2 gtk20
 USE_XORG=	x11
 GNU_CONFIGURE=	yes
 
+CFLAGS+=	-fcommon
 CPPFLAGS+=	-I${LOCALBASE}/include
 LIBS+=		-L${LOCALBASE}/lib -lX11 ${ICONV_LIB}
 

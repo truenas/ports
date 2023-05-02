@@ -5,26 +5,23 @@
     SUBDIR += apache-commons-cli
     SUBDIR += apache-commons-codec
     SUBDIR += apache-commons-collections
+    SUBDIR += apache-commons-collections4
     SUBDIR += apache-commons-dbcp
-    SUBDIR += apache-commons-discovery
     SUBDIR += apache-commons-httpclient
     SUBDIR += apache-commons-lang
     SUBDIR += apache-commons-lang3
     SUBDIR += apache-commons-logging
     SUBDIR += apache-commons-pool
-    SUBDIR += apache-commons-primitives
     SUBDIR += aparapi
     SUBDIR += avis
     SUBDIR += berkeley-db
     SUBDIR += bluej
     SUBDIR += bootstrap-openjdk11
     SUBDIR += bootstrap-openjdk17
-    SUBDIR += bootstrap-openjdk6
     SUBDIR += bootstrap-openjdk8
     SUBDIR += bouncycastle
     SUBDIR += bouncycastle15
     SUBDIR += cos
-    SUBDIR += cryptix-jce
     SUBDIR += dbvis
     SUBDIR += eclipse
     SUBDIR += eclipse-EPIC
@@ -40,7 +37,6 @@
     SUBDIR += intellij
     SUBDIR += intellij-fsnotifier
     SUBDIR += intellij-pty4j
-    SUBDIR += intellij-rubymine
     SUBDIR += intellij-ultimate
     SUBDIR += jad
     SUBDIR += jai
@@ -61,7 +57,6 @@
     SUBDIR += jcommon
     SUBDIR += jd-gui
     SUBDIR += jdk11-doc
-    SUBDIR += jdk12-doc
     SUBDIR += jdk8-doc
     SUBDIR += jdom
     SUBDIR += jflex
@@ -91,14 +86,10 @@
     SUBDIR += netty
     SUBDIR += openjdk11
     SUBDIR += openjdk11-jre
-    SUBDIR += openjdk12
-    SUBDIR += openjdk13
-    SUBDIR += openjdk14
-    SUBDIR += openjdk15
-    SUBDIR += openjdk16
     SUBDIR += openjdk17
-    SUBDIR += openjdk7
-    SUBDIR += openjdk7-jre
+    SUBDIR += openjdk17-jre
+    SUBDIR += openjdk18
+    SUBDIR += openjdk19
     SUBDIR += openjdk8
     SUBDIR += openjdk8-jre
     SUBDIR += openjfx14
@@ -123,6 +114,9 @@
     SUBDIR += wildfly16
     SUBDIR += wildfly17
     SUBDIR += wildfly18
+    SUBDIR += wildfly24
+    SUBDIR += wildfly25
+    SUBDIR += wildfly26
     SUBDIR += wildfly90
 
 .include <bsd.port.subdir.mk>

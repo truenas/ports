@@ -1,5 +1,3 @@
-# Created by: Yoshihiko Sarumaru <mistral@imasy.or.jp>
-
 PORTNAME=	astah
 PORTVERSION=	6.9.0
 PORTREVISION=	1
@@ -10,6 +8,7 @@ DISTNAME=	${PORTNAME}${PKGNAMESUFFIX}-${PORTVERSION:S!.!_!g}-${REVISION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Java/UML Object-Oriented Design Tool
+WWW=		https://astah.net/editions/community
 
 LICENSE=	EULA
 LICENSE_NAME=	End User License Agreement

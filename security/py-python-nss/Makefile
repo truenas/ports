@@ -2,11 +2,12 @@ PORTNAME=	python-nss
 PORTVERSION=	1.0.1
 PORTREVISION=	3
 CATEGORIES=	security python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	jhale@FreeBSD.org
 COMMENT=	Python bindings for NSS and NSPR
+WWW=		https://developer.mozilla.org/en-US/docs/Mozilla/Projects/NSS/Python_binding_for_NSS
 
 LICENSE=	LGPL21+ GPLv2+ MPL20
 LICENSE_COMB=	dual

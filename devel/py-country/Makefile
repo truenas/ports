@@ -1,14 +1,13 @@
-# Created by: Dmitry Sivachenko <demon@FreeBSD.org>
-
 PORTNAME=	country
-PORTVERSION=	18.5.26
+DISTVERSION=	22.3.5
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
-DISTNAME=	pycountry-${PORTVERSION}
+DISTNAME=	pycountry-${DISTVERSION}
 
 MAINTAINER=	demon@FreeBSD.org
 COMMENT=	Python API for ISO country, subdivision, language and currency
+WWW=		https://pypi.org/project/pycountry/
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

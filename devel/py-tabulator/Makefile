@@ -1,14 +1,13 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	tabulator
 PORTVERSION=	1.53.5
 PORTREVISION=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Consistent interface for stream reading and writing tabular data (csv/xls/json/etc)
+WWW=		https://github.com/frictionlessdata/tabulator-py
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.md

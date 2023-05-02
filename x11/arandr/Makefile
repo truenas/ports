@@ -1,12 +1,11 @@
-# Created by: Sofian Brabez <sbz@FreeBSD.org>
-
 PORTNAME=	arandr
 PORTVERSION=	0.1.10
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	x11 deskutils
 
 MAINTAINER=	sbz@FreeBSD.org
 COMMENT=	Another XRandR GUI
+WWW=		https://christian.amsuess.com/tools/arandr/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING

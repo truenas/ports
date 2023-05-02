@@ -5,8 +5,8 @@ MASTER_SITES=	RG
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Gems for iobuffer
+WWW=		https://github.com/tarcieri/iobuffer
 
-USE_RUBY=	yes
 USES=		gem
 
 .include <bsd.port.mk>

@@ -1,36 +1,26 @@
-# Created by: futatuki
-
-PORTNAME?=	cdrdao
+PORTNAME=	cdrdao
 PORTVERSION=	1.2.4
-PORTREVISION?=	3
+PORTREVISION=	5
 CATEGORIES=	sysutils audio
 MASTER_SITES=	SF/cdrdao
 DISTNAME=	cdrdao-${PORTVERSION}
 
-MAINTAINER=	marius@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT?=	Record CD-R[W]s in disk-at-once mode
+WWW=		http://cdrdao.sourceforge.net/
 
 LICENSE=	GPLv2
-
-BROKEN_riscv64=	../include/mconfig.h:86:2: error: Architecture not defined here
 
 USES=		alias compiler:c++11-lang gmake tar:bzip2
 GNU_CONFIGURE=	yes
 USE_CXXSTD=	c++11
 
-MP3OGG_LIB_DEPENDS=	libao.so:audio/libao \
-			libmad.so:audio/libmad \
-			libvorbis.so:audio/libvorbis
-
-.if ${PORTNAME} == "cdrdao"
 OPTIONS_DEFINE=		DOCS TOC2MP3 MP3OGG
-
 OPTIONS_DEFAULT=	MP3OGG
 MP3OGG_DESC=		Build with MP3/Ogg support (for sysutils/gcdmaster)
 TOC2MP3_DESC=		Build with toc2mp3 (requires audio/lame)
 
 .include <bsd.port.options.mk>
-.endif
 
 CONFIGURE_ARGS+=	--with-gcdmaster=no
 .if ${PORT_OPTIONS:MTOC2MP3}
@@ -45,7 +35,9 @@ PLIST_SUB+=		TOC2MP3="@comment "
 .endif
 .if ${PORT_OPTIONS:MMP3OGG}
 USES+=			pkgconfig
-LIB_DEPENDS+=		${MP3OGG_LIB_DEPENDS}
+LIB_DEPENDS+=		libao.so:audio/libao \
+			libmad.so:audio/libmad \
+			libvorbis.so:audio/libvorbis
 CONFIGURE_ENV+=		AO_CFLAGS=-I${LOCALBASE}/include \
 			AO_LIBS="-L${LOCALBASE}/lib -lao" \
 			MAD_CFLAGS=-I${LOCALBASE}/include \

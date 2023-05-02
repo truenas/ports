@@ -1,10 +1,12 @@
 PORTNAME=	jquerylib
 PORTVERSION=	0.1.4
+PORTREVISION=	1
 CATEGORIES=	www
 DISTNAME=	${PORTNAME}_${PORTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Obtain 'jQuery' as an HTML Dependency Object
+WWW=		https://cran.r-project.org/web/packages/jquerylib/
 
 LICENSE=	MIT
 

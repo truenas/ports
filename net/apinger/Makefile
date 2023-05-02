@@ -1,5 +1,3 @@
-# Created by: Michael L. Hostbaek (mich@freebsdcluster.org)
-
 PORTNAME=	apinger
 PORTVERSION=	0.6.1
 PORTREVISION=	3
@@ -7,8 +5,9 @@ CATEGORIES=	net
 MASTER_SITES=	http://freebsdcluster.org/~mich/software/ \
 		http://www.bnet.pl/~jajcus/apinger/
 
-MAINTAINER=	mich@FreeBSD.org
+MAINTAINER=	portmaster@bsdforge.com
 COMMENT=	IP device monitoring tool
+WWW=		http://www.bnet.pl/~jajcus/apinger/
 
 LICENSE=	GPLv2
 

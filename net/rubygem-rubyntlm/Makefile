@@ -5,12 +5,12 @@ MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Message creator and parser for the NTLM authentication
+WWW=		https://github.com/WinRb/rubyntlm
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

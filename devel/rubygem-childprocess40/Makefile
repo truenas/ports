@@ -1,5 +1,3 @@
-# Created by: Greg Larkin <glarkin@FreeBSD.org>
-
 PORTNAME=	childprocess
 PORTVERSION=	4.0.0
 CATEGORIES=	devel rubygems
@@ -8,12 +6,12 @@ PKGNAMESUFFIX=	40
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	External background process controller
+WWW=		https://github.com/enkessler/childprocess
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

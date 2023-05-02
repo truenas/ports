@@ -1,5 +1,3 @@
-# Created by: Jake Smith <jake@xz.cx>
-
 PORTNAME=	mysac
 PORTVERSION=	1.1.2
 CATEGORIES=	databases
@@ -8,8 +6,12 @@ MASTER_SITES=	http://www.arpalert.org/src/ \
 
 MAINTAINER=	jake@xz.cx
 COMMENT=	MySQL Simple Asynchronous Client
+WWW=		https://www.arpalert.org/mysac.html
 
 LICENSE=	LGPL3
+
+DEPRECATED=	Requires upstream EOL MySQL 5.6
+EXPIRATION_DATE=	2023-06-30
 
 USES=		mysql
 

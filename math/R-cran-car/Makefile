@@ -1,12 +1,11 @@
-# Created by: David Naylor <naylor.b.david@gmail.com>
-
 PORTNAME=	car
-DISTVERSION=	3.0-12
+DISTVERSION=	3.1-2
 CATEGORIES=	math
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Companion to Applied Regression
+WWW=		https://r-forge.r-project.org/projects/car/
 
 LICENSE=	GPLv2+
 

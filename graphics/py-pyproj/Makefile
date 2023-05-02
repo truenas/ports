@@ -1,21 +1,21 @@
-# Created by: TAOKA Fumiyoshi
-
 PORTNAME=	pyproj
-PORTVERSION=	3.2.1
+PORTVERSION=	3.5.0
 CATEGORIES=	graphics geography python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Cython wrapper to provide python interfaces to PROJ.4 functions
+WWW=		https://github.com/pyproj4/pyproj
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-BUILD_DEPENDS=	proj>=7.2.0,1:graphics/proj
+BUILD_DEPENDS=	proj>=9.0.0,1:graphics/proj
 LIB_DEPENDS=	libproj.so:graphics/proj
+RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}certifi>=0:security/py-certifi@${PY_FLAVOR}
 
-USES=		python:3.7+
+USES=		python:3.8+
 USE_PYTHON=	autoplist concurrent cython distutils
 
 MAKE_ENV=	PROJ_DIR=${LOCALBASE}

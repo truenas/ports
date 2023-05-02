@@ -1,5 +1,3 @@
-# Created by: David Naylor <dbn@FreeBSD.org>
-
 PORTNAME=	icu
 PORTVERSION=	50.2
 DISTVERSIONSUFFIX=	-4.el7_7
@@ -8,6 +6,7 @@ CATEGORIES=	devel linux
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	International Components for Unicode (Linux CentOS ${LINUX_DIST_VER})
+WWW=		http://site.icu-project.org/
 
 USES=		cpe linux:c7
 CPE_VENDOR=	${PORTNAME}-project

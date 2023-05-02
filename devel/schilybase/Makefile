@@ -38,15 +38,23 @@ COMPONENTS=	conf \
 		libsiconv/tables \
 		libstreamar \
 		man \
-		man/man4
+		man/man5
+
+post-patch-PROFILE-off:
+	@${ECHO_MSG} '=> Patching Makefiles to disable profiled libraries'
+	@${REINPLACE_CMD} -e '/^MK_FILES/s, [a-z]*_p.mk,,' ${WRKSRC}/*/Makefile
 
 post-build-NLS-on:
 	${SETENV} LC_ALL=de_DE.ISO8859-1 msgfmt -o ${WRKDIR}/SCHILY_utils.mo ${WRKSRC}/SCHILY_utils.po
 
 # all languages supported by FreeBSD
-_LANGUAGES=	af am ar be bg ca cs da de el en es et eu fi fr ga he hi hr hu \
-		hy is it ja kk ko lt lv mn nb nl nn pl pt ro ru se sk sl sr sv \
-		tr uk zh
+_LANGUAGES=	C af am ar be bg ca cs da de el en es et eu fi fr ga he hi hr \
+		hu hy is it ja kk ko lt lv mn nb nl nn pl pt ro ru se sk sl sr \
+		sv tr uk zh
+
+post-install:
+	# this is just a copy of the FreeBSD termcap file, no need to ship it again.
+	${RM} ${STAGEDIR}${PREFIX}/etc/termcap
 
 post-install-NLS-on:
 	@${ECHO_MSG} '=> installing dummy message catalogues'
@@ -57,8 +65,5 @@ post-install-NLS-on:
 	${LN} ${STAGEDIR}${PREFIX}/share/locale/de/LC_MESSAGES/SCHILY_utils.mo \
 	    ${STAGEDIR}${PREFIX}/share/locale/${lang}/LC_MESSAGES/SCHILY_utils.mo
 .endfor
-
-post-install-PROFILE-off:
-	${RM} -r ${STAGEDIR}${PREFIX}/lib/profiled
 
 .include "Makefile.master"

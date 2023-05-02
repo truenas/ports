@@ -1,14 +1,13 @@
-# Created by: Diederik de Groot
-
 PORTNAME=	chan_sccp
 DISTVERSIONPREFIX=	v
 DISTVERSION=	4.3.3
-PORTREVISION=	0
+PORTREVISION=	2
 CATEGORIES=	net
 PKGNAMEPREFIX=	asterisk-
 
 MAINTAINER=	ddegroot@talon.nl
 COMMENT=	Replacement for the SCCP channel driver in Asterisk
+WWW=		https://sourceforge.net/projects/chan-sccp-b/
 
 LICENSE=	GPLv1
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -18,7 +17,7 @@ FLAVOR?=	${FLAVORS:[1]}
 
 LIB_DEPENDS=	libltdl.so:devel/libltdl
 
-USES=		autoreconf compiler:c11 gettext-tools iconv libtool \
+USES=		autoreconf:2.69 compiler:c11 gettext-tools iconv libtool \
 		localbase ssl
 
 USE_GITHUB=	yes

@@ -1,11 +1,13 @@
 PORTNAME=	pulsectl
-DISTVERSION=	20.5.1
+DISTVERSION=	22.3.2
+PORTREVISION=	1
 CATEGORIES=	audio python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	tagattie@FreeBSD.org
 COMMENT=	Python high-level interface and ctypes-based bindings for PulseAudio
+WWW=		https://pypi.python.org/pypi/pulsectl
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,11 +1,13 @@
 PORTNAME=	kphotoalbum
-DISTVERSION=	5.8.1
+DISTVERSION=	5.10.0
+PORTREVISION=	1
 CATEGORIES=	graphics kde
 MASTER_SITES=	KDE/stable/${PORTNAME}/${PORTVERSION}/
 DIST_SUBDIR=	KDE
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	Image viewer and organizer for KDE
+WWW=		https://www.kphotoalbum.org/
 
 LICENSE=	GPLv2+
 
@@ -15,14 +17,15 @@ LIB_DEPENDS=	libexiv2.so:graphics/exiv2 \
 		libKF5Kipi.so:graphics/libkipi
 
 USES=		cmake compiler:c++11-lang desktop-file-utils jpeg kde:5 \
-		pkgconfig qt:5 shebangfix tar:xz
+		pkgconfig qt:5 shebangfix tar:xz xorg
 USE_KDE=	archive auth codecs completion config \
 		configwidgets coreaddons ecm i18n \
 		iconthemes jobwidgets kio marble purpose service \
 		solid sonnet textwidgets widgetsaddons windowsystem xmlgui
 USE_QT=		concurrent core dbus declarative gui location network phonon4 \
 		printsupport sql webchannel widgets xml \
-		buildtools_build qmake_build
+		buildtools:build qmake:build
+USE_XORG=	x11
 SHEBANG_FILES=	scripts/open-raw.pl scripts/kpa-backup.sh
 
 OPTIONS_DEFINE=	WEBENGINE
@@ -31,12 +34,5 @@ OPTIONS_DEFAULT_i386=	WEBENGINE
 
 WEBENGINE_DESC=	Add dependency on qt5-webengine
 WEBENGINE_USE=	QT=webengine
-
-.include <bsd.port.options.mk>
-
-.if ${PORT_OPTIONS:MWEBENGINE}
-DEPRECATED=	Uses EOL Python 2.7 via www/qt5-webengine
-EXPIRATION_DATE=2021-06-23
-.endif
 
 .include <bsd.port.mk>

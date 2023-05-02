@@ -1,11 +1,12 @@
 PORTNAME=	barony
 DISTVERSIONPREFIX=	v
 DISTVERSION=	3.3.7
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	games
 
 MAINTAINER=	devnexen@gmail.com
 COMMENT=	3D roguelike game
+WWW=		http://www.baronygame.com/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/GPL.3.0.txt

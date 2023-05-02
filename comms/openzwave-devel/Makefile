@@ -1,5 +1,3 @@
-# Created by: Johan Strom <johna@stromnet.se>
-
 PORTNAME=	openzwave
 PORTVERSION=	1.6.${VERSION_REV}
 PORTREVISION=	1
@@ -8,6 +6,7 @@ PKGNAMESUFFIX=	-devel
 
 MAINTAINER=	kiwi@oav.net
 COMMENT=	Open-source interface to Z-Wave networks
+WWW=		https://code.google.com/p/open-zwave/
 
 LICENSE=	LGPL20
 
@@ -23,6 +22,8 @@ GH_ACCOUNT=	OpenZWave
 GH_PROJECT=	open-zwave
 GH_TAGNAME=	14f2ba74
 MAKE_ARGS=	VERSION_REV=${VERSION_REV} LIBDIR=${WRKSRC} docdir=${DOCSDIR} CXX=${CXX}
+
+CONFLICTS_INSTALL=	openzwave # bin/MinOZW
 
 OPTIONS_DEFINE=	DOXYGEN DOCS
 OPTIONS_SUB=	yes

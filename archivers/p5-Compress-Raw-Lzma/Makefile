@@ -1,13 +1,12 @@
-# Created by: Sunpoet Po-Chuan Hsieh <sunpoet@sunpoet.net>
-
 PORTNAME=	Compress-Raw-Lzma
-PORTVERSION=	2.101
+PORTVERSION=	2.204
 CATEGORIES=	archivers perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Low-Level Interface to lzma compression library
+WWW=		https://metacpan.org/release/Compress-Raw-Lzma
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

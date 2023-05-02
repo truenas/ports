@@ -1,5 +1,3 @@
-# Created by: Gea-Suan Lin <gslin@gslin.org>
-
 PORTNAME=	Net_Gearman
 PORTVERSION=	0.2.3
 PORTREVISION=	3
@@ -7,11 +5,12 @@ CATEGORIES=	devel pear
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	PHP interface to Gearman
+WWW=		https://pear.php.net/package/Net_Gearman
 
 LICENSE=	BSD2CLAUSE
 
 USES=		pear
-USE_PHP=	json mbstring sockets
+USE_PHP=	mbstring sockets
 
 NO_ARCH=	yes
 

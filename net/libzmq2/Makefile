@@ -1,5 +1,3 @@
-# Created by: Gea-Suan Lin <gslin@gslin.org>
-
 PORTNAME=	libzmq2
 PORTVERSION=	2.2.0
 PORTREVISION=	3
@@ -7,8 +5,9 @@ CATEGORIES=	net
 MASTER_SITES=	http://download.zeromq.org/
 DISTNAME=	zeromq-${DISTVERSION}
 
-MAINTAINER=	koobs@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	ZeroMQ core library (Version 2)
+WWW=		https://www.zeromq.org/
 
 LICENSE=	LGPL3+
 LICENSE_FILE=	${WRKSRC}/COPYING.LESSER

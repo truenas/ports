@@ -36,6 +36,14 @@
    fi
    LIBS="$LIBS $PERL_LIBS"
  
+@@ -5785,6 +5787,7 @@ if test "x$with_libupsclient" = "xyes"; then
+     [[
+       #include <stdlib.h>
+       #include <stdio.h>
++      #include <time.h>
+       #include <upsclient.h>
+     ]]
+   )
 @@ -5979,6 +5981,66 @@ AM_CONDITIONAL([BUILD_WITH_LIBYAJL], [test "x$with_libyajl" = "xyes"])
  AM_CONDITIONAL([BUILD_WITH_LIBYAJL2], [test "x$with_libyajl$with_libyajl2" = "xyesyes"])
  # }}}

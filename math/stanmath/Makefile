@@ -1,10 +1,12 @@
 PORTNAME=	stanmath
 DISTVERSIONPREFIX=	v
-DISTVERSION=	4.2.0
+DISTVERSION=	4.4.0
+PORTREVISION=	1
 CATEGORIES=	math
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	C++ template library for automatic differentiation
+WWW=		https://mc-stan.org/math/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.md

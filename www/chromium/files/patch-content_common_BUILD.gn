@@ -1,33 +1,21 @@
---- content/common/BUILD.gn.orig	2021-09-24 04:26:05 UTC
+--- content/common/BUILD.gn.orig	2023-04-05 11:05:06 UTC
 +++ content/common/BUILD.gn
-@@ -333,7 +333,7 @@ source_set("common") {
-     sources -= [ "cursors/webcursor_aura.cc" ]
-   }
- 
--  if (is_linux || is_chromeos) {
-+  if ((is_linux || is_chromeos) && !is_bsd) {
-     sources += [
-       "sandbox_init_linux.cc",
-       "zygote/sandbox_support_linux.cc",
-@@ -348,6 +348,12 @@ source_set("common") {
-     ]
-   }
- 
-+  if (is_bsd) {
-+    deps += [
-+      "//third_party/fontconfig",
-+    ]
-+  }
-+
-   if (use_zygote_handle) {
-     sources += [
-       "zygote/zygote_handle_impl_linux.h",
-@@ -397,7 +403,7 @@ source_set("common") {
+@@ -432,6 +432,9 @@ if (is_linux || is_chromeos) {
+     public = [ "set_process_title_linux.h" ]
+     sources = [ "set_process_title_linux.cc" ]
+     deps = [ "//base" ]
++    if (is_bsd) {
++      sources -= [ "set_process_title_linux.cc" ]
++    }
    }
  }
  
--if (is_linux || is_chromeos) {
-+if ((is_linux || is_chromeos) && !is_bsd) {
-   source_set("set_process_title_linux") {
-     public = [ "set_process_title_linux.h" ]
-     sources = [ "set_process_title_linux.cc" ]
+@@ -480,7 +483,7 @@ mojom("mojo_bindings") {
+   if (enable_ipc_logging) {
+     enabled_features += [ "ipc_logging" ]
+   }
+-  if (is_linux || is_chromeos) {
++  if (!is_bsd && (is_linux || is_chromeos)) {
+     enabled_features += [ "supports_thread_types" ]
+   }
+   if (use_clang_profiling_inside_sandbox) {

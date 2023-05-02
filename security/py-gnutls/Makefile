@@ -1,12 +1,13 @@
 PORTNAME=	gnutls
 PORTVERSION=	3.1.3
 CATEGORIES=	security python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	python-gnutls-${PORTVERSION}
 
 MAINTAINER=	lwhsu@FreeBSD.org
 COMMENT=	Python wrapper for the GNUTLS library
+WWW=		https://pypi.org/project/python-gnutls/
 
 LICENSE=	LGPL20
 

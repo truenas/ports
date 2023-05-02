@@ -1,13 +1,12 @@
-# Created by: G. Adam Stanislav <adam@whizkidtech.net>
-
 PORTNAME=	urlendec
 PORTVERSION=	1.0
 PORTREVISION=	1
 CATEGORIES=	net
 MASTER_SITES=	http://www.whizkidtech.redprince.net/fports/
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	URL encoder and decoder written in assembly
+WWW=		http://www.whizkidtech.redprince.net/urlendec/
 
 LICENSE=	BSD2CLAUSE
 

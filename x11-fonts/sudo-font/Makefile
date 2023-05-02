@@ -1,13 +1,14 @@
 PORTNAME=	sudo-font
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.61
+DISTVERSION=	0.64
 CATEGORIES=	x11-fonts
-MASTER_SITES=	https://github.com/jenskutilek/sudo-font/raw/${DISTVERSIONFULL}/dist/
+MASTER_SITES=	https://github.com/jenskutilek/sudo-font/releases/download/v${DISTVERSION}/
 DISTNAME=	sudo
 DIST_SUBDIR=	${PORTNAME}-${DISTVERSIONFULL}
 
 MAINTAINER=	0mp@FreeBSD.org
 COMMENT=	Font for programmers and command-line users
+WWW=		https://www.kutilek.de/sudo-font
 
 LICENSE=	OFL11
 LICENSE_FILE=	${WRKSRC}/OFL.txt

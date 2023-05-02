@@ -1,11 +1,12 @@
 PORTNAME=	Genesis-PyAPI
 DISTVERSION=	1.2.1
 CATEGORIES=	biology python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	API for the Genesis platform for genetics information processing
+WWW=		https://github.com/genialis/genesis-pyapi/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

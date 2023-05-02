@@ -1,5 +1,3 @@
-# Created by: Uffe Jakobsen <uffe@uffe.org>
-
 PORTNAME=	acme
 DISTVERSION=	0.97.${SVN_REV}
 PORTEPOCH=	1
@@ -8,6 +6,7 @@ MASTER_SITES=	LOCAL/ehaupt
 
 MAINTAINER=	ehaupt@FreeBSD.org
 COMMENT=	Crossassembler for 6502, 65c02 and 65816 processors
+WWW=		https://sourceforge.net/projects/acme-crossass/
 
 LICENSE=	GPLv2
 
@@ -22,7 +21,7 @@ BUILD_WRKSRC=	${WRKSRC}/src
 OPTIONS_DEFINE=	DOCS EXAMPLES
 
 SVN_REPO=	https://svn.code.sf.net/p/acme-crossass/code-0/trunk
-SVN_REV=	r323
+SVN_REV=	r324
 
 do-install:
 	${INSTALL_PROGRAM} ${WRKSRC}/src/acme ${STAGEDIR}${PREFIX}/bin

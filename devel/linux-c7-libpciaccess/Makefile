@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	libpciaccess
 PORTVERSION=	0.14
 DISTVERSIONSUFFIX=	-1.el7
@@ -7,6 +5,7 @@ CATEGORIES=	devel
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	Generic PCI access library (CentOS ${LINUX_DIST_VER})
+WWW=		https://www.freedesktop.org/wiki/Software/xlibs/
 
 USES=		linux:c7
 USE_LDCONFIG=	yes

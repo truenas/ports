@@ -1,12 +1,11 @@
-# Created by: Palle Girgensohn <girgen@FreeBSD.org>
-
 PORTNAME=	powa-archivist
 DISTVERSIONPREFIX=	REL_
-DISTVERSION=	4_0_1
+DISTVERSION=	4_1_4
 CATEGORIES=	databases
 
 MAINTAINER=	girgen@FreeBSD.org
 COMMENT=	PostgreSQL workload analyzer background worker
+WWW=		http://powa.readthedocs.org/en/latest/powa-archivist/index.html
 
 LICENSE=	PostgreSQL
 
@@ -16,7 +15,7 @@ RUN_DEPENDS=	${LOCALBASE}/lib/postgresql/pg_stat_kcache.so:databases/pg_stat_kca
 USE_GITHUB=	yes
 GH_ACCOUNT=	powa-team
 
-USES=		gmake pgsql:9.4+
+USES=		gmake pgsql:11+
 WANT_PGSQL=	server contrib
 
 pre-patch:

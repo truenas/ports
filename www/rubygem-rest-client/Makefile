@@ -1,5 +1,3 @@
-# Created by: Renaud Chaput <renchap@cocoa-x.com>
-
 PORTNAME=	rest-client
 PORTVERSION=	2.1.0
 CATEGORIES=	www rubygems
@@ -7,6 +5,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Simple Simple HTTP and REST client for Ruby
+WWW=		https://github.com/rest-client/rest-client
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -17,7 +16,6 @@ RUN_DEPENDS=	rubygem-http-accept>=1.7.0:www/rubygem-http-accept \
 		rubygem-netrc>=0.8<1:net/rubygem-netrc
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

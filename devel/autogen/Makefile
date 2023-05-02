@@ -1,13 +1,12 @@
-# Created by: Ying-Chieh Liao <ijliao@FreeBSD.org>
-
 PORTNAME=	autogen
 PORTVERSION=	5.18.16
-PORTREVISION=	1
+PORTREVISION=	3
 CATEGORIES=	devel
-MASTER_SITES=	GNU/${PORTNAME}/rel${PORTVERSION}
+MASTER_SITES=	GNU/autogen/rel${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Tool designed to simplify the creation and maintenance of programs
+WWW=		https://www.gnu.org/software/autogen/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING

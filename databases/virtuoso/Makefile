@@ -1,14 +1,13 @@
-# Created by: Max Khon <fjoe@FreeBSD.org>
-
 PORTNAME=	virtuoso
 PORTVERSION=	7.2.5
-PORTREVISION=	1
+PORTREVISION=	3
 CATEGORIES=	databases
 MASTER_SITES=	SF
 DISTNAME=	${PORTNAME}-opensource-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Universal SQL/Application Server
+WWW=		http://virtuoso.openlinksw.com/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -100,7 +99,7 @@ CONFIGURE_ARGS+=--disable-krb
 
 .if ${PORT_OPTIONS:MLDAP}
 CONFIGURE_ARGS+=--enable-openldap=${LOCALBASE}
-USE_OPENLDAP=	yes
+USES=	ldap
 .else
 CONFIGURE_ARGS+=--disable-openldap
 .endif

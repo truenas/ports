@@ -1,11 +1,12 @@
 PORTNAME=	zita-rev1
 DISTVERSION=	0.2.2
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	audio
 MASTER_SITES=	https://kokkinizita.linuxaudio.org/linuxaudio/downloads/
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Reworked version of the reverb originally developed for Aeolus
+WWW=		https://kokkinizita.linuxaudio.org/linuxaudio/zita-rev1-doc/quickguide.html
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/../COPYING

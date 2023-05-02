@@ -1,35 +1,33 @@
-# Created by: Nicola Vitale	<nivit@email.it>
-
 PORTNAME=	muparser
-PORTVERSION=	2.3.2
+PORTVERSION=	2.3.4
 DISTVERSIONPREFIX=	v
 CATEGORIES=	math devel
 
 MAINTAINER=	nivit@FreeBSD.org
 COMMENT=	Mathematical expressions parser library written in C++
+WWW=		https://beltoforion.de/en/muparser/
 
 LICENSE=	BSD2CLAUSE
-LICENSE_FILE=	${WRKSRC}/License.txt
+LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USES=		cmake
-USE_LDCONFIG=	yes
-
+USES=		cmake compiler:c++11-lang
 USE_GITHUB=	yes
 GH_ACCOUNT=	beltoforion
+USE_LDCONFIG=	yes
+
+.if !exists(/usr/include/omp.h)
+CMAKE_ARGS+=	-DENABLE_OPENMP:BOOL=OFF
+.endif
+CMAKE_OFF=	ENABLE_SAMPLES
+PLIST_SUB=	MUPARSER_VERSION=${MUPARSER_VERSION}
 
 OPTIONS_DEFINE=		EXAMPLES
-
-CMAKE_OFF=	ENABLE_SAMPLES
-
 EXAMPLES_PORTEXAMPLES=	*
 
-.include <bsd.port.options.mk>
+MUPARSER_VERSION=	${PORTVERSION}
 
-.if ${ARCH} == armv7 || ${ARCH} == powerpc
-USES+=		compiler:gcc-c++11-lib
-.else
-USES+=		compiler:c++11-lang
-.endif
+post-patch:
+	${SED} -i.bak -e 's/%%MUPARSER_VERSION%%/${MUPARSER_VERSION}/' ${WRKSRC}/docs/Doxyfile
 
 post-install-EXAMPLES-on:
 	cd ${WRKSRC} && ${COPYTREE_SHARE} samples ${STAGEDIR}${EXAMPLESDIR}

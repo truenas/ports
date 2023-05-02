@@ -1,11 +1,12 @@
 PORTNAME=	pulseaudio-module-sndio
 DISTVERSION=	13.0
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	audio
 MASTER_SITES=	https://github.com/t6/pulseaudio-module-sndio/releases/download/${DISTVERSION}/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Sndio module for PulseAudio
+WWW=		https://github.com/t6/pulseaudio-module-sndio
 
 LICENSE=	ISCL LGPL21+
 LICENSE_COMB=	multi

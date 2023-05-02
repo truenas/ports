@@ -1,5 +1,3 @@
-# Created by: janos.mohacsi@bsd.hu
-
 PORTNAME=	nfsen
 PORTVERSION=	1.3.8
 PORTREVISION=	1
@@ -9,6 +7,7 @@ MASTER_SITES=	SF/${PORTNAME}/stable/${PORTNAME}-${PORTVERSION} \
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Web based frontend to nfdump netflow collector
+WWW=		http://nfsen.sourceforge.net/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/BSD-license.txt
@@ -21,7 +20,7 @@ RUN_DEPENDS=	rrdtool>=0:databases/rrdtool \
 USES=		cpe iconv shebangfix perl5 php
 CPE_VENDOR=	nfsen
 CPE_PRODUCT=	nfsen
-USE_PHP=	session pcre sockets
+USE_PHP=	session sockets
 NO_BUILD=	yes
 NO_ARCH=	yes
 NFSENOWN?=	www

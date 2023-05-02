@@ -1,13 +1,13 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	snuggs
 PORTVERSION=	1.4.7
+PORTREVISION=	1
 CATEGORIES=	math python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	S-expressions for Numpy
+WWW=		https://github.com/mapbox/snuggs
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

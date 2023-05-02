@@ -1,5 +1,5 @@
 PORTNAME=	peazip
-PORTVERSION=	8.1.0
+PORTVERSION=	9.2.0
 CATEGORIES=	archivers
 MASTER_SITES=	https://github.com/giorgiotani/PeaZip/releases/download/${PORTVERSION}/
 PKGNAMESUFFIX=	${LAZARUS_PKGNAMESUFFIX}
@@ -7,6 +7,7 @@ DISTNAME=	${PORTNAME}-${PORTVERSION}.src
 
 MAINTAINER=	acm@FreeBSD.org
 COMMENT=	Free archiver and file compressor
+WWW=		https://peazip.github.io
 
 LICENSE=	LGPL3
 
@@ -20,7 +21,7 @@ SUB_FILES=	pea peazip
 
 DOS2UNIX_REGEX=		.*\.([txt]|pas|lpi|txt)
 
-LAZARUS_PROJECT_FILES=	project_pea.lpi project_peach.lpi
+LAZARUS_PROJECT_FILES=	dev/project_pea.lpi dev/project_peach.lpi
 LAZBUILD_ARGS=		-d
 
 gtk2_CONFLICTS_INSTALL=	${PORTNAME}-qt5
@@ -45,7 +46,7 @@ USE_GNOME+=	cairo
 .include <bsd.port.options.mk>
 
 .if ${PORT_OPTIONS:M7Z}
-RUN_DEPENDS+=	7z:archivers/p7zip
+RUN_DEPENDS+=	7zz:archivers/7-zip
 ARCHIVER_FILES+=7z
 PLIST_SUB+=	7Z=""
 .else
@@ -76,27 +77,34 @@ PLIST_SUB+=	UNACE=""
 PLIST_SUB+=	UNACE="@comment "
 .endif
 
+.include <bsd.port.pre.mk>
+
 post-patch:
-	${REINPLACE_CMD} 's|GetSelectedNodePath|Path|g' ${WRKSRC}/peach.pas
+	${REINPLACE_CMD} 's|GetSelectedNodePath|Path|g' ${WRKSRC}/dev/peach.pas
 
 pre-install:
 	@${ECHO_CMD} "#" > ${WRKSRC}/altconf.txt
 	@${ECHO_CMD} "appdata" >> ${WRKSRC}/altconf.txt
 
 do-install:
-	@${MKDIR} ${STAGEDIR}${DATADIR}/res
+	@${MKDIR} ${STAGEDIR}${DATADIR}/res/bin
+	@${MKDIR} ${STAGEDIR}${DATADIR}/res/share
 .for ARCHIVER in ${ARCHIVER_FILES}
-	@${MKDIR} ${STAGEDIR}${DATADIR}/res/${ARCHIVER}
-	@${LN} -s ${LOCALBASE}/bin/${ARCHIVER} ${STAGEDIR}${DATADIR}/res/${ARCHIVER}/${ARCHIVER}
+	@${MKDIR} ${STAGEDIR}${DATADIR}/res/bin/${ARCHIVER}
+.if ${ARCHIVER} == "7z"
+	@${LN} -sf ${LOCALBASE}/bin/7zz ${STAGEDIR}${DATADIR}/res/bin/${ARCHIVER}/${ARCHIVER}
+.else
+	@${LN} -sf ${LOCALBASE}/bin/${ARCHIVER} ${STAGEDIR}${DATADIR}/res/bin/${ARCHIVER}/${ARCHIVER}
+.endif
 .endfor
-	@cd ${WRKSRC}/res && ${COPYTREE_SHARE} "icons lang themes" ${STAGEDIR}${DATADIR}/res
+	@cd ${WRKSRC}/res/share && ${COPYTREE_SHARE} "icons lang themes" ${STAGEDIR}${DATADIR}/res/share
 	@cd ${WRKSRC} && ${INSTALL_DATA} altconf.txt ${STAGEDIR}${DATADIR}/res && \
-			${INSTALL_PROGRAM} pea ${STAGEDIR}${DATADIR}/res && \
-			${INSTALL_PROGRAM} peazip ${STAGEDIR}${DATADIR}
+			${INSTALL_PROGRAM} dev/pea ${STAGEDIR}${DATADIR}/res && \
+			${INSTALL_PROGRAM} dev/peazip ${STAGEDIR}${DATADIR}
 	@${MKDIR} ${STAGEDIR}${PREFIX}/share/icons/hicolor/256x256/apps
-	@cd ${WRKSRC}/FreeDesktop_integration && \
-		${INSTALL_DATA} peazip.desktop ${STAGEDIR}${DESKTOPDIR} && \
-		${INSTALL_DATA} peazip.png ${STAGEDIR}${PREFIX}/share/icons/hicolor/256x256/apps/${PORTNAME}.png
+	@cd ${WRKSRC}/res/share/batch/freedesktop_integration && \
+		${INSTALL_DATA} peazip*.desktop ${STAGEDIR}${DESKTOPDIR} && \
+		${INSTALL_DATA} peazip*.png ${STAGEDIR}${PREFIX}/share/icons/hicolor/256x256/apps/
 	${INSTALL_SCRIPT} ${WRKDIR}/pea ${WRKDIR}/peazip ${STAGEDIR}${PREFIX}/bin/
 
-.include <bsd.port.mk>
+.include <bsd.port.post.mk>

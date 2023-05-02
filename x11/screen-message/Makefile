@@ -1,9 +1,11 @@
 PORTNAME=	screen-message
 PORTVERSION=	0.25
+PORTREVISION=	1
 CATEGORIES=	x11
 
 MAINTAINER=	mail@dhauck.eu
 COMMENT=	Very simple tool to display some text as large as possible
+WWW=		https://sm.nomeata.de/
 
 LICENSE=	GPLv2+
 

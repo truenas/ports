@@ -1,13 +1,12 @@
-# Created by: Will Andrews <andrews@technologist.com>
-
 PORTNAME=	IO-Tty
-PORTVERSION=	1.16
+PORTVERSION=	1.17
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Flexible I/O Perl5 module that allows manipulation of pseudo-TTYs
+WWW=		https://metacpan.org/release/IO-Tty
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

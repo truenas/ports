@@ -1,6 +1,7 @@
 PORTNAME=	bazarr
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.0.0
+DISTVERSION=	1.2.0
+PORTREVISION=	2
 CATEGORIES=	net-p2p python
 MASTER_SITES=	https://github.com/morpheus65535/bazarr/releases/download/${DISTVERSIONPREFIX}${DISTVERSION}/
 DISTNAME=	bazarr
@@ -12,8 +13,6 @@ COMMENT=	Automatic subtitle downloader for Radarr and Sonarr
 LICENSE=	GPLv3
 
 RUN_DEPENDS=	${PYNUMPY} \
-		${PYTHON_PKGNAMEPREFIX}gevent-websocket>=0.10.1:www/py-gevent-websocket@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}gevent>=21:devel/py-gevent@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}lxml>=4.3.0:devel/py-lxml@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}sqlite3>0:databases/py-sqlite3@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}webrtcvad>=2.0.10:audio/py-webrtcvad@${PY_FLAVOR} \
@@ -24,7 +23,10 @@ USES=		python:3.7+ zip
 
 USE_RC_SUBR=	bazarr
 
-SUB_LIST=	PYTHON_CMD=${PYTHON_CMD} \
+SUB_FILES=	${PORTNAME} package_info
+SUB_LIST=	MAINTAINER=${MAINTAINER} \
+		PKGVERSION=${PKGVERSION} \
+		PYTHON_CMD=${PYTHON_CMD} \
 		USERS=${USERS}
 
 NO_WRKSUBDIR=	yes
@@ -37,11 +39,10 @@ do-build:
 	@${PYTHON_CMD} -O -m compileall ${WRKSRC}
 
 do-install:
-	${INSTALL} -d -m 755 ${STAGEDIR}/${DATADIR}
-	cd ${WRKSRC} && ${COPYTREE_SHARE} \* ${STAGEDIR}/${DATADIR}
+	${INSTALL} -d -m 755 ${STAGEDIR}/${DATADIR}/bin/
+	cd ${WRKSRC} && ${COPYTREE_SHARE} \* ${STAGEDIR}/${DATADIR}/bin/
 
 post-install:
-	@${FIND} -s ${STAGEDIR} -not -type d | ${SORT} | \
-		${SED} -e 's#^${STAGEDIR}${PREFIX}/##' >> ${TMPPLIST}
+	${INSTALL_DATA} ${WRKDIR}/package_info ${STAGEDIR}/${DATADIR}/
 
 .include <bsd.port.mk>

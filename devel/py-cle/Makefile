@@ -4,8 +4,9 @@ DISTVERSION=	${ANGR_VERSION}
 CATEGORIES=	devel python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	0mp@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Pythonic interface to analyze binary formats
+WWW=		https://github.com/angr/cle
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

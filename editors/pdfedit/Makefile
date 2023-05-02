@@ -1,13 +1,12 @@
-# Created by: alepulver
-
 PORTNAME=	pdfedit
 PORTVERSION=	0.4.5
-PORTREVISION=	15
+PORTREVISION=	17
 CATEGORIES=	editors
 MASTER_SITES=	SF
 
 MAINTAINER=	hrs@FreeBSD.org
 COMMENT=	PDF document manipulating library
+WWW=		http://pdfedit.cz/
 
 LICENSE=	GPLv2
 

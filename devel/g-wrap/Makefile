@@ -1,11 +1,12 @@
 PORTNAME=	g-wrap
 DISTVERSION=	1.9.15
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	devel
 MASTER_SITES=	SAVANNAH
 
 MAINTAINER=	andrew@tao11.riddles.org.uk
 COMMENT=	Tool for generating function wrappers for Guile
+WWW=		https://www.nongnu.org/g-wrap/
 
 LICENSE=	LGPL21+
 

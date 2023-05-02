@@ -1,5 +1,3 @@
-# Created by: Mark Felder <feld@FreeBSD.org>
-
 PORTNAME=	redshift
 PORTVERSION=	1.12
 DISTVERSIONPREFIX=	v
@@ -12,6 +10,7 @@ PATCHFILES+=	7da875d34854.patch:-p1 # wayland, see #663
 
 MAINTAINER=	lcook@FreeBSD.org
 COMMENT=	Adjusts the color temperature of your screen
+WWW=		http://jonls.dk/redshift/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -52,6 +51,7 @@ VIDMODE_USES=		xorg
 VIDMODE_USE=		XORG=x11,xxf86vm
 VIDMODE_CONFIGURE_ENABLE=	vidmode
 
+WAYLAND_CATEGORIES=	wayland
 WAYLAND_LIB_DEPENDS=	libwayland-client.so:graphics/wayland
 WAYLAND_CONFIGURE_ENABLE=	wayland
 

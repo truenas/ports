@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	gnutls
 PORTVERSION=	3.3.29
 DISTVERSIONSUFFIX=	-9.el7_6
@@ -7,6 +5,7 @@ CATEGORIES=	security linux
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	GNU Transport Layer Security library (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://gnutls.org/
 
 USES=		cpe linux:c7
 CPE_VENDOR=	gnu

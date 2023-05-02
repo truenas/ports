@@ -1,10 +1,11 @@
 PORTNAME=	re3
 DISTVERSION=	g20210219
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	games
 
 MAINTAINER=	pkubaj@FreeBSD.org
 COMMENT=	Reverse-engineered GTA3 engine
+WWW=		https://git.rip/Obama/re3
 
 ONLY_FOR_ARCHS=	aarch64 armv6 armv7 amd64 i386
 

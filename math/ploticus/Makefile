@@ -1,5 +1,3 @@
-# Created by: ijliao
-
 PORTNAME=	ploticus
 PORTVERSION=	2.40
 PORTREVISION=	11
@@ -7,8 +5,9 @@ CATEGORIES=	math
 MASTER_SITES=	SF
 DISTNAME=	pl${PORTVERSION:S/.//}src
 
-MAINTAINER?=	linimon@FreeBSD.org
+MAINTAINER?=	ports@FreeBSD.org
 COMMENT?=	Generates plots and graphs from data
+WWW=		http://ploticus.sourceforge.net/
 
 LIB_DEPENDS=	libgd.so:graphics/gd \
 		libming.so:graphics/ming \

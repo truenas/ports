@@ -1,12 +1,11 @@
 PORTNAME=	kde-baseapps
 DISTVERSION=	${KDE_APPLICATIONS_VERSION}
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	x11 kde
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	KDE5 baseapps meta port
-
-LICENSE=	LGPL20
+WWW=		https://www.kde.org/applications//
 
 USES=		kde:5 metaport
 RUN_DEPENDS=	dolphin>=${KDE_APPLICATIONS_VERSION}:x11-fm/dolphin  \

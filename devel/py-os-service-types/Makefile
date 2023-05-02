@@ -1,11 +1,12 @@
 PORTNAME=	os-service-types
 PORTVERSION=	1.7.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	kai@FreeBSD.org
 COMMENT=	Python library for consuming OpenStack service-types-authority data
+WWW=		https://pypi.org/project/os-service-types/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

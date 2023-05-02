@@ -1,18 +1,17 @@
-# Created by: Bruce M Simpson <bms@FreeBSD.org>
-
 PORTNAME=	libpcap
-PORTVERSION=	1.10.1
+PORTVERSION=	1.10.4
 CATEGORIES=	net
 MASTER_SITES=	http://www.tcpdump.org/release/
 
 MAINTAINER=	garga@FreeBSD.org
 COMMENT=	Ubiquitous network traffic capture library
+WWW=		https://www.tcpdump.org/
 
 LICENSE=	BSD3CLAUSE
 
 BUILD_DEPENDS=	${LOCALBASE}/bin/flex:textproc/flex
 
-USES=		bison cpe gmake
+USES=		bison cpe gmake ssl
 
 CPE_VENDOR=	tcpdump
 
@@ -25,8 +24,13 @@ CFLAGS_amd64=	-fPIC
 CFLAGS_sparc64=	-fPIC
 PLIST_SUB+=	PORTVERSION=${PORTVERSION}
 
-OPTIONS_DEFINE=	IPV6
+OPTIONS_DEFINE=	IPV6 REMOTE
+
+OPTIONS_SUB=	yes
+
+REMOTE_DESC=	Remote packet capture
 
 IPV6_CONFIGURE_ENABLE=	ipv6
+REMOTE_CONFIGURE_ENABLE=remote
 
 .include <bsd.port.mk>

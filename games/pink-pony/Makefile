@@ -1,10 +1,11 @@
 PORTNAME=	pink-pony
 PORTVERSION=	1.4.1
-PORTREVISION=	34
+PORTREVISION=	38
 CATEGORIES=	games
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Tron-like multiplayer racing game
+WWW=		https://github.com/ginkgo/pink-pony
 
 LICENSE=	GPLv3+
 

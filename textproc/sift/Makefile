@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	sift
 PORTVERSION=	0.9.0
 DISTVERSIONPREFIX=	v
-PORTREVISION=	17
+PORTREVISION=	33
 CATEGORIES=	textproc
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Fast and powerful open source alternative to grep
+WWW=		https://github.com/svent/sift
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -19,9 +18,9 @@ GO_PKGNAME=	github.com/${GH_ACCOUNT}/${GH_PROJECT}
 PLIST_FILES=	bin/sift
 
 GH_ACCOUNT=	svent
-GH_TUPLE=	golang:crypto:c084706:golang_crypto/vendor/golang.org/x/crypto \
-		golang:sys:d61c044:golang_sys/vendor/golang.org/x/sys \
-		golang:term:140adaa:golang_term/vendor/golang.org/x/term \
+GH_TUPLE=	golang:crypto:0559593:golang_crypto/vendor/golang.org/x/crypto \
+		golang:sys:v0.6.0:golang_sys/vendor/golang.org/x/sys \
+		golang:term:065cf7b:golang_term/vendor/golang.org/x/term \
 		svent:go-flags:4bcbad3:svent_goflags/vendor/github.com/svent/go-flags \
 		svent:go-nbreader:7cef48d:svent_gonbreader/vendor/github.com/svent/go-nbreader
 USE_GITHUB=	yes

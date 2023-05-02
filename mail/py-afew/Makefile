@@ -1,11 +1,12 @@
 PORTNAME=	afew
 DISTVERSION=	3.0.1
 CATEGORIES=	mail python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dbaio@FreeBSD.org
 COMMENT=	Initial tagging script for Notmuch mail
+WWW=		https://github.com/afewmail/afew
 
 LICENSE=	ISCL
 LICENSE_FILE=	${WRKSRC}/LICENSE

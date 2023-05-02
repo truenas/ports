@@ -7,9 +7,13 @@ DISTNAME=	${PORTNAME}-${PORTVERSION}_src
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Nibbles-like multiplayer game
+WWW=		https://zatacka.sourceforge.net/
 
-GNU_CONFIGURE=	yes
+LICENSE=	GPLv2
+LICENSE_FILE=	${WRKSRC}/GPL
+
 USES=		gmake sdl
+GNU_CONFIGURE=	yes
 USE_SDL=	sdl ttf image
 WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}
 CPPFLAGS+=	-I${LOCALBASE}/include

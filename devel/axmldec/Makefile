@@ -1,21 +1,19 @@
-# Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
-
 PORTNAME=	axmldec
 PORTVERSION=	1.2.0
 DISTVERSIONPREFIX=	v
-PORTREVISION=	1
+PORTREVISION=	7
 CATEGORIES=	devel
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Stand-alone binary AndroidManifest.xml decoder
+WWW=		https://github.com/ytsutano/axmldec
 
 LICENSE=	ISCL
 LICENSE_FILE=	${WRKSRC}/LICENSE.md
 
-LIB_DEPENDS=	libminizip.so:archivers/minizip \
-		libboost_system.so:devel/boost-libs
+LIB_DEPENDS=	libboost_system.so:devel/boost-libs
 
-USES=		cmake compiler:c++14-lang cpe pkgconfig
+USES=		cmake compiler:c++14-lang cpe minizip:ng pkgconfig
 CPE_VENDOR=	${PORTNAME}_project
 USE_GITHUB=	yes
 GH_ACCOUNT=	ytsutano

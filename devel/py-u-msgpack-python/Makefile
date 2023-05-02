@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	u-msgpack-python
-PORTVERSION=	2.7.1
+PORTVERSION=	2.7.2
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Portable, lightweight MessagePack (de)serializer
+WWW=		https://github.com/vsergeev/u-msgpack-python
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

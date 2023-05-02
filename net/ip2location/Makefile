@@ -1,12 +1,10 @@
-# Created by: Gasol Wu <gasol.wu@gmail.com>
-
 PORTNAME=	ip2location
-PORTVERSION=	8.0.9
-PORTREVISION=	1
+PORTVERSION=	8.4.1
 CATEGORIES=	net
 
 MAINTAINER=	zi@FreeBSD.org
 COMMENT=	C library to find user\'s location
+WWW=		https://www.ip2location.com/c.aspx
 
 LICENSE=	LGPL3
 

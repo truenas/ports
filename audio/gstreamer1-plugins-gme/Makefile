@@ -8,4 +8,8 @@ DIST=		bad
 
 MASTERDIR=	${.CURDIR}/../../multimedia/gstreamer1-plugins
 
+PLIST=  ${.CURDIR}/pkg-plist
+
+LIB_DEPENDS=  libgme.so:audio/libgme
+
 .include "${MASTERDIR}/Makefile"

@@ -1,12 +1,12 @@
 PORTNAME=	sphinxcontrib-autoprogram
-PORTVERSION=	0.1.7
-PORTREVISION=	1
+DISTVERSION=	0.1.8
 CATEGORIES=	textproc
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dereks@lifeofadishwasher.com
 COMMENT=	Sphinx Autoprogram Extension
+WWW=		https://github.com/sphinx-contrib/autoprogram
 
 LICENSE=	BSD2CLAUSE
 

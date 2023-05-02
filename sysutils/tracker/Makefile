@@ -1,18 +1,19 @@
-# Created by: Michael Johnson <ahze@FreeBSD.org>
-
 PORTNAME=	tracker
 PORTVERSION=	2.3.4
-PORTREVISION=	5
+PORTREVISION=	10
 CATEGORIES=	sysutils gnome
 MASTER_SITES=	GNOME
 
+PATCH_SITES=	https://gitlab.gnome.org/GNOME/tracker/-/commit/
+PATCHFILES=	27d09d510c056bcda3389ed5573463272162d510.diff:-p1
+
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Object database, tag/metadata database, search tool and indexer
+WWW=		https://wiki.gnome.org/Projects/Tracker
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING.LGPL
 
-BUILD_DEPENDS=	valac:lang/vala
 LIB_DEPENDS=	libuuid.so:misc/e2fsprogs-libuuid \
 		libsoup-2.4.so:devel/libsoup \
 		libdbus-1.so:devel/dbus \
@@ -22,7 +23,7 @@ LIB_DEPENDS=	libuuid.so:misc/e2fsprogs-libuuid \
 PORTSCOUT=	limitw:1,even
 
 USES=		compiler:c++11-lib gettext gnome localbase:ldflags meson \
-		pkgconfig python:3.4+,build sqlite tar:xz
+		pkgconfig python:3.4+,build sqlite tar:xz vala:build
 USE_GNOME=	glib20 introspection:build libxml2
 USE_LDCONFIG=	yes
 MESON_ARGS=	-Ddocs=false \
@@ -37,6 +38,7 @@ GLIB_SCHEMAS=	org.freedesktop.Tracker.DB.gschema.xml \
 		org.freedesktop.Tracker.enums.xml \
 		org.freedesktop.Tracker.gschema.xml
 BINARY_ALIAS=	python3=${PYTHON_CMD}
+CFLAGS+=	-Wno-int-conversion
 
 PLIST_SUB=	LIBVER=0.304.0
 

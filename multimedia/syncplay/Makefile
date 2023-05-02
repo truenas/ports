@@ -1,10 +1,12 @@
 PORTNAME=	syncplay
 DISTVERSIONPREFIX=	v
 DISTVERSION=	1.6.4a
+PORTREVISION=	1
 CATEGORIES=	multimedia
 
 MAINTAINER=	heckendorfc@gmail.com
 COMMENT=	Synchronize video playback over networks
+WWW=		https://syncplay.pl/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

@@ -5,12 +5,12 @@ MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	GitLab meta gem
+WWW=		https://rubygems.org/gems/gitlab_meta
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 USES=		cpe gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

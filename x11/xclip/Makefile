@@ -1,33 +1,34 @@
-# Created by: ijliao
-
 PORTNAME=	xclip
-PORTVERSION=	0.13
+DISTVERSION=	0.13-82
+DISTVERSIONSUFFIX=	-gb372f73
 CATEGORIES=	x11
 
 MAINTAINER=	eduardo@FreeBSD.org
 COMMENT=	Interface to X selections ("the clipboard") from the command line
+WWW=		https://github.com/astrand/xclip
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
 USES=		autoreconf gmake iconv xorg
-
 USE_GITHUB=	yes
 GH_ACCOUNT=	astrand
-
 USE_XORG=	x11 xmu
 
 GNU_CONFIGURE=	yes
-CONFIGURE_ENV+=	ac_cv_header_X11_Xmu_Atoms_h=yes \
-		ac_cv_header_X11_Intrinsic_h=yes \
+CONFIGURE_ENV+=	ac_cv_header_X11_Intrinsic_h=yes \
+		ac_cv_header_X11_Xmu_Atoms_h=yes \
 		ac_cv_lib_Xmu_XmuClientWindow=yes
 
-PLIST_FILES=	bin/xclip bin/xclip-copyfile bin/xclip-cutfile \
+PLIST_FILES=	bin/xclip \
+		bin/xclip-copyfile \
+		bin/xclip-cutfile \
 		bin/xclip-pastefile \
-		man/man1/xclip.1.gz man/man1/xclip-copyfile.1.gz
+		man/man1/xclip-copyfile.1.gz \
+		man/man1/xclip.1.gz
 
 PORTDOCS=	README
-OPTIONS_DEFINE=		DOCS
+OPTIONS_DEFINE=	DOCS
 
 do-install-DOCS-on:
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}

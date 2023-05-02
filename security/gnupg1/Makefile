@@ -7,6 +7,7 @@ PKGNAMESUFFIX=	1
 
 MAINTAINER=	adridg@FreeBSD.org
 COMMENT=	The GNU Privacy Guard (minimalist "classic" version)
+WWW=		https://www.gnupg.org/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -44,7 +45,7 @@ ICONV_CONFIGURE_ENABLE=	gnupg-iconv
 
 LIBUSB_CONFIGURE_WITH=	libusb=${LOCALBASE}
 
-LDAP_USE=		OPENLDAP=yes
+LDAP_USES=		ldap
 LDAP_CONFIGURE_WITH=	ldap=${LOCALBASE}
 
 NLS_USES=		gettext

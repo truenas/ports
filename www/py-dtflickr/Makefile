@@ -1,16 +1,15 @@
-# Created by: Douglas Thrift
-
 PORTNAME=	dtflickr
 PORTVERSION=	1.5
 PORTREVISION=	1
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP \
+MASTER_SITES=	PYPI \
 		http://dl1.douglasthrift.net/${PORTNAME}/ \
 		http://dl2.douglasthrift.net/${PORTNAME}/
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	douglas@douglasthrift.net
 COMMENT=	Spiffy Flickr API library using JSON
+WWW=		https://code.douglasthrift.net/trac/dtflickr
 
 LICENSE=	APACHE20
 

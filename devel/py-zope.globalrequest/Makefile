@@ -1,12 +1,13 @@
 PORTNAME=	zope.globalrequest
 PORTVERSION=	1.1
 CATEGORIES=	devel python zope
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DIST_SUBDIR=	zope
 
 MAINTAINER=	zope@FreeBSD.org
 COMMENT=	Global way of retrieving the currently active request
+WWW=		https://pypi.org/project/zope.globalrequest/
 
 LICENSE=	ZPL21
 

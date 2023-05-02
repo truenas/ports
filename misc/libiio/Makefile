@@ -1,21 +1,24 @@
 PORTNAME=	libiio
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.21
+DISTVERSION=	0.23
+PORTREVISION=	2
 CATEGORIES=	misc
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Library for interfacing with local and remote IIO devices
+WWW=		https://github.com/analogdevicesinc/libiio
 
 LICENSE=	BSL
 LICENSE_FILE=	${WRKSRC}/COPYING.txt
 
 LIB_DEPENDS=	libavahi-client.so:net/avahi-app
 
-USES=		cmake gnome localbase
-USE_GITHUB=	yes
-GH_ACCOUNT=	analogdevicesinc
+USES=		cmake gnome iconv localbase
 USE_GNOME=	libxml2
 USE_LDCONFIG=	yes
+
+USE_GITHUB=	yes
+GH_ACCOUNT=	analogdevicesinc
 
 OPTIONS_DEFINE=	DOCS
 

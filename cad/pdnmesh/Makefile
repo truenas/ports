@@ -1,13 +1,12 @@
-# Created by: Sarod Yatawatta <sarod@cs.pdn.ac.lk>
-
 PORTNAME=	pdnmesh
 PORTVERSION=	0.2.2
-PORTREVISION=	19
+PORTREVISION=	21
 CATEGORIES=	cad
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}-source/${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Mesh generator and solver for Finite Element problems
+WWW=		http://pdnmesh.sourceforge.net/
 
 LICENSE=	GPLv2+
 

@@ -1,10 +1,8 @@
-# Created by: Jose Alonso Cardenas Marquez <acardenas@bsd.org.pe>
-
 PORTNAME=	django
-PORTVERSION=	3.2.10
+PORTVERSION=	3.2.18
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP \
-		https://www.djangoproject.com/m/releases/${PORTVERSION}/
+MASTER_SITES=	PYPI \
+		https://media.djangoproject.com/releases/${PORTVERSION:R}/
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 PKGNAMESUFFIX=	32
 DISTNAME=	Django-${PORTVERSION}
@@ -12,6 +10,7 @@ DIST_SUBDIR=	python
 
 MAINTAINER=	python@FreeBSD.org
 COMMENT=	High-level Python Web Framework
+WWW=		https://www.djangoproject.com/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -21,7 +20,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pytz>0:devel/py-pytz@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}sqlparse>=0:databases/py-sqlparse@${PY_FLAVOR}
 TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}tblib>0:devel/py-tblib@${PY_FLAVOR}
 
-USES=		cpe python:3.6+ shebangfix
+USES=		cpe python:3.7+ shebangfix
 USE_PYTHON=	autoplist distutils
 
 NO_ARCH=	yes
@@ -33,8 +32,7 @@ PORTDOCS=	*
 SHEBANG_FILES=	django/bin/django-admin.py \
 		django/conf/project_template/manage.py-tpl
 
-CONFLICTS_INSTALL=	${PYTHON_PKGNAMEPREFIX}django22 \
-			${PYTHON_PKGNAMEPREFIX}django31
+CONFLICTS_INSTALL=	${PYTHON_PKGNAMEPREFIX}django[0-9][0-9]
 
 CPE_VENDOR=	djangoproject
 
@@ -47,14 +45,15 @@ OPTIONS_GROUP_DATABASE=	PGSQL MYSQL SQLITE
 OPTIONS_DEFAULT=SQLITE
 HTMLDOCS_DESC=	Install HTML documentation (requires Sphinx)
 
-HTMLDOCS_BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}sphinx>=0,1:textproc/py-sphinx@${PY_FLAVOR}
+HTMLDOCS_BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}sphinx>=4.5.0,1:textproc/py-sphinx@${PY_FLAVOR}
 HTMLDOCS_IMPLIES=	DOCS
+HTMLDOCS_USES=		gmake
 PGSQL_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}psycopg2>0:databases/py-psycopg2@${PY_FLAVOR}
 MYSQL_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}mysqlclient>=1.3.13:databases/py-mysqlclient@${PY_FLAVOR}
 SQLITE_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}sqlite3>0:databases/py-sqlite3@${PY_FLAVOR}
 
 post-build-HTMLDOCS-on:
-	cd ${WRKSRC}/docs && ${MAKE} html SPHINXBUILD=sphinx-build-${PYTHON_VER}
+	cd ${WRKSRC}/docs && ${GMAKE} html SPHINXBUILD=sphinx-build-${PYTHON_VER}
 
 post-install:
 	${INSTALL_MAN} ${WRKSRC}/docs/man/* ${STAGEDIR}/${MAN1PREFIX}/man/man1

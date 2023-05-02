@@ -1,11 +1,12 @@
 PORTNAME=	azure-mgmt-datamigration
-PORTVERSION=	9.0.0
+PORTVERSION=	10.0.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dbaio@FreeBSD.org
 COMMENT=	Microsoft Azure Data Migration Client Library for Python
+WWW=		https://pypi.org/project/azure-mgmt-datamigration/
 
 LICENSE=	MIT
 

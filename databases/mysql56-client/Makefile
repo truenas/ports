@@ -1,5 +1,3 @@
-# Created by: Alex Dupre <ale@FreeBSD.org>
-
 PORTNAME=	mysql
 PORTREVISION=	0
 PKGNAMESUFFIX=	56-client
@@ -7,6 +5,9 @@ PKGNAMESUFFIX=	56-client
 COMMENT=	Multithreaded SQL database (client)
 
 LICENSE+=	LGPL21
+
+DEPRECATED=	Upstream support ended in February 2021
+EXPIRATION_DATE=	2023-06-30
 
 BROKEN_sparc64=	Does not build: reports unsupported compiler
 

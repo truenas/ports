@@ -1,5 +1,3 @@
-# Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
-
 PORTNAME=	dune
 PORTVERSION=	1.11.4
 CATEGORIES=	devel
@@ -7,6 +5,7 @@ PKGNAMEPREFIX=	ocaml-
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Composable build system for OCaml (formerly jbuilder)
+WWW=		https://dune.build/
 
 LICENSE=	MIT
 
@@ -15,6 +14,8 @@ USE_GITHUB=	yes
 GH_ACCOUNT=	ocaml
 USE_OCAML=	yes
 USE_OCAML_FINDLIB=	yes
+
+CONFLICTS_INSTALL=	wdune
 
 ALL_TARGET=	release
 MAKE_ENV=	LIBDIR="${OCAML_SITELIBDIR}"

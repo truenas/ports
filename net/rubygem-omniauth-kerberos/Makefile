@@ -5,6 +5,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	mfechner@FreeBSD.org
 COMMENT=	OmniAuth strategy for Kerberos
+WWW=		https://github.com/jgraichen/omniauth-kerberos
 
 LICENSE=	MIT
 
@@ -13,6 +14,5 @@ RUN_DEPENDS=	rubygem-omniauth-multipassword>0:security/rubygem-omniauth-multipas
 
 USES=		gem
 NO_ARCH=	yes
-USE_RUBY=	yes
 
 .include <bsd.port.mk>

@@ -1,11 +1,12 @@
 PORTNAME=	gbm
 DISTVERSION=	2.0-8
-PORTREVISION=	11
+PORTREVISION=	12
 CATEGORIES=	devel
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	skreuzer@FreeBSD.org
 COMMENT=	Extensions to AdaBoost algorithm
+WWW=		https://cran.r-project.org/web/packages/gbm/
 
 LICENSE=	GPLv2
 

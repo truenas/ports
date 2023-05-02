@@ -1,12 +1,12 @@
-# Created by: Grzegorz Blach <gblach@FreeBSD.org>
-
 PORTNAME=	ario
 PORTVERSION=	1.6
+PORTREVISION=	3
 CATEGORIES=	audio
 MASTER_SITES=	SF/ario-player/ario-player/${PORTVERSION}
 
 MAINTAINER=	alfix86@gmail.com
 COMMENT=	GTK client for MPD
+WWW=		http://ario-player.sourceforge.net/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

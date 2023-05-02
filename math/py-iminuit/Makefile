@@ -1,19 +1,23 @@
 PORTNAME=	iminuit
-DISTVERSION=	2.8.4
+DISTVERSION=	2.21.1
+PORTREVISION=	1
 CATEGORIES=	math python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Jupyter-friendly Python frontend for MINUIT2 in C++
+WWW=		https://iminuit.readthedocs.io/en/stable/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-BUILD_DEPENDS=	cmake:devel/cmake
+BUILD_DEPENDS=	cmake:devel/cmake-core
 RUN_DEPENDS=	${PYNUMPY}
 
-USES=		compiler:c++14-lang python:3.6+
-USE_PYTHON=	distutils autoplist
+USES=		compiler:c++14-lang python:3.9+
+USE_PYTHON=	distutils autoplist pytest # 2 tests are known to fail, see https://github.com/scikit-hep/iminuit/issues/850
+
+TEST_ENV=      ${MAKE_ENV} PYTHONPATH=${STAGEDIR}${PYTHONPREFIX_SITELIBDIR}
 
 .include <bsd.port.mk>

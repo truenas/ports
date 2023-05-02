@@ -1,13 +1,12 @@
-# Created by: Emanuel Haupt <ehaupt@FreeBSD.org>
-
 PORTNAME=	mnemonic
 PORTVERSION=	0.20
 CATEGORIES=	security python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ehaupt@FreeBSD.org
 COMMENT=	Implementation of Bitcoin BIP-0039
+WWW=		https://github.com/trezor/python-mnemonic
 
 LICENSE=	MIT
 

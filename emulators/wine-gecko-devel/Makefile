@@ -1,7 +1,5 @@
-# Created by: David Naylor <naylor.b.david@gmail.com>
-
 PORTNAME=	wine-gecko
-DISTVERSION=	2.47.2
+DISTVERSION=	2.47.3
 CATEGORIES=	emulators
 MASTER_SITES=	http://dl.winehq.org/wine/wine-gecko/${DISTVERSION}/
 PKGNAMESUFFIX=	-devel
@@ -11,6 +9,7 @@ EXTRACT_ONLY=
 
 MAINTAINER=	damjan.jov@gmail.com
 COMMENT=	Gecko Layout Engine for Wine development branch (HTML support)
+WWW=		https://wiki.winehq.org/Gecko
 
 LICENSE=	MPL20 GPLv2 GPLv3 LGPL21 LGPL3
 LICENSE_COMB=	multi

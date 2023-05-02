@@ -1,11 +1,12 @@
 PORTNAME=	fastcache
 PORTVERSION=	1.1.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	C implementation of Python 3 functools.lru_cache
+WWW=		https://github.com/pbrady/fastcache
 
 LICENSE=	MIT
 

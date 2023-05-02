@@ -1,11 +1,12 @@
 PORTNAME=	htmlq
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.3.0
-PORTREVISION=	2
+DISTVERSION=	0.4.0
+PORTREVISION=	13
 CATEGORIES=	textproc
 
 MAINTAINER=	0mp@FreeBSD.org
 COMMENT=	Command-line HTML processor, similar to jq
+WWW=		https://github.com/mgdm/htmlq
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.md

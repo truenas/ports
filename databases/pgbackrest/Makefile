@@ -1,9 +1,11 @@
 PORTNAME=	pgbackrest
 DISTVERSION=	2.35
+PORTREVISION=	2
 CATEGORIES=	databases
 
 MAINTAINER=	schoutm@gmail.com
 COMMENT=	Reliable PostgreSQL Backup & Restore
+WWW=		https://pgbackrest.org/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/../LICENSE

@@ -1,9 +1,10 @@
 PORTNAME=	novnc
-PORTVERSION=	1.3.0
+PORTVERSION=	1.4.0
 CATEGORIES=	www
 
 MAINTAINER=	dpetrov67@gmail.com
 COMMENT=	HTML5 VNC client
+WWW=		https://github.com/novnc/noVNC
 
 LICENSE=	MPL20
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -13,7 +14,7 @@ USES=		cpe
 USE_GITHUB=	yes
 GH_ACCOUNT=	novnc
 GH_PROJECT=	noVNC
-GH_TAGNAME=	463c39e
+GH_TAGNAME=	90455ee
 
 NO_ARCH=	yes
 NO_BUILD=	yes

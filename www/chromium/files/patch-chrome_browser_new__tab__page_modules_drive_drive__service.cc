@@ -1,11 +1,11 @@
---- chrome/browser/new_tab_page/modules/drive/drive_service.cc.orig	2021-09-24 18:25:14 UTC
+--- chrome/browser/new_tab_page/modules/drive/drive_service.cc.orig	2023-04-05 11:05:06 UTC
 +++ chrome/browser/new_tab_page/modules/drive/drive_service.cc
-@@ -36,6 +36,8 @@ constexpr char kPlatform[] = "WINDOWS";
- constexpr char kPlatform[] = "MAC_OS";
- #elif OS_CHROMEOS
- constexpr char kPlatform[] = "CHROME_OS";
-+#elif OS_FREEBSD
-+constexpr char kPlatform[] = "FREEBSD";
- #else
- constexpr char kPlatform[] = "UNSPECIFIED_PLATFORM";
- #endif
+@@ -28,7 +28,7 @@
+ #include "services/network/public/cpp/resource_request.h"
+ 
+ namespace {
+-#if BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
+ constexpr char kPlatform[] = "LINUX";
+ #elif BUILDFLAG(IS_WIN)
+ constexpr char kPlatform[] = "WINDOWS";

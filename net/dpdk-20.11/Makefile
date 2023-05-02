@@ -1,11 +1,12 @@
 PORTNAME=	dpdk
-DISTVERSION=	20.11.1
+DISTVERSION=	20.11.5
 CATEGORIES=	net
 MASTER_SITES=	http://fast.dpdk.org/rel/
 PKGNAMESUFFIX=	20.11
 
 MAINTAINER=	bruce.richardson@intel.com
 COMMENT=	DPDK: Software libraries for packet processing
+WWW=		https://dpdk.org/
 
 LICENSE=	BSD3CLAUSE
 

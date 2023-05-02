@@ -2,11 +2,12 @@ PORTNAME=	requests-credssp
 PORTVERSION=	1.2.0
 PORTREVISION=	1
 CATEGORIES=	security python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	rozhuk.im@gmail.com
 COMMENT=	Authentication handler for using CredSSP with Python Requests
+WWW=		https://github.com/jborean93/requests-credssp
 
 LICENSE=	MIT
 

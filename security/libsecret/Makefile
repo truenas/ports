@@ -1,26 +1,21 @@
-# Created by: Koop Mast <kwm@FreeBSD.org>
-
 PORTNAME=	libsecret
-PORTVERSION=	0.20.4
+PORTVERSION=	0.20.5
+PORTREVISION=	1
 CATEGORIES=	security gnome
 MASTER_SITES=	GNOME
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Library to access the secret service API
+WWW=		https://wiki.gnome.org/Projects/Libsecret/
 
 LICENSE=	LGPL21
 
-BUILD_DEPENDS=	docbook-xsl>=0:textproc/docbook-xsl \
-		vala:lang/vala
+BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}gi-docgen>0:textproc/py-gi-docgen@${PY_FLAVOR} \
+		docbook-xsl>=0:textproc/docbook-xsl
 LIB_DEPENDS=	libgcrypt.so:security/libgcrypt \
 		libgpg-error.so:security/libgpg-error
 
-USES=		gettext gmake gnome libtool localbase pkgconfig tar:xz
-USE_GNOME=	glib20 libxslt:build intltool \
-		introspection:build
-USE_LDCONFIG=	yes
-GNU_CONFIGURE=	yes
-CONFIGURE_ARGS+=--enable-introspection
-INSTALL_TARGET=	install-strip
+USES=		gnome meson pkgconfig python:3.8+ tar:xz vala:build
+USE_GNOME=	glib20 intltool introspection:build libxslt:build
 
 .include <bsd.port.mk>

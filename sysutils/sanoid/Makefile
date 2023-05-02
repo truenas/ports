@@ -1,11 +1,12 @@
 PORTNAME=	sanoid
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2.0.3
+DISTVERSION=	2.1.0
 PORTREVISION=	0
 CATEGORIES=	sysutils
 
 MAINTAINER=	hartzell@alerce.com
 COMMENT=	Policy-driven snapshot management and replication tools
+WWW=		https://github.com/jimsalterjrs/sanoid
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -23,6 +24,8 @@ GH_ACCOUNT=	jimsalterjrs
 
 USE_PERL5=	run
 SHEBANG_FILES=	findoid sanoid sleepymutex syncoid
+
+CONFLICTS_INSTALL=	sanoid-devel # bin/findoid
 
 NO_BUILD=	yes
 NO_ARCH=	yes

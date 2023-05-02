@@ -1,13 +1,12 @@
-# Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
-
 PORTNAME=	ulauncher
-PORTVERSION=	5.14.2
+PORTVERSION=	5.15.2
 CATEGORIES=	x11
 MASTER_SITES=	https://github.com/Ulauncher/Ulauncher/releases/download/${PORTVERSION}/
 DISTNAME=	${PORTNAME}_${PORTVERSION}
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Advanced graphical application launcher
+WWW=		https://ulauncher.io/
 
 LICENSE=	GPLv3
 

@@ -1,11 +1,12 @@
 PORTNAME=	azure-synapse-spark
 DISTVERSION=	0.2.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dbaio@FreeBSD.org
 COMMENT=	Microsoft Azure Synapse Spark Client Library for Python
+WWW=		https://pypi.org/project/azure-synapse-spark/
 
 LICENSE=	MIT
 

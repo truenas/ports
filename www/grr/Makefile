@@ -1,12 +1,13 @@
 PORTNAME=	grr
 PORTVERSION=	1.0
-PORTREVISION=	9
+PORTREVISION=	10
 CATEGORIES=	www gnustep
 MASTER_SITES=	SAVANNAH/gap
 DISTNAME=	Grr-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Rss reader for GNUstep
+WWW=		https://gap.nongnu.org/grr/index.html
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING

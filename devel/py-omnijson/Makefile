@@ -1,5 +1,3 @@
-# Created by: Kubilay Kocak <koobs@FreeBSD.org>
-
 PORTNAME=	omnijson
 PORTVERSION=	0.1.2
 DISTVERSIONPREFIX=	v
@@ -7,8 +5,9 @@ PORTREVISION=	2
 CATEGORIES=	devel python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	koobs@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Wraps the best Python JSON installed
+WWW=		https://github.com/kennethreitz/omnijson
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

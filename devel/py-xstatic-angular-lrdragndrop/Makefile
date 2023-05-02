@@ -1,14 +1,13 @@
-# Created by: Alexander Nusov <alexander.nusov@nfvexpress.com>
-
 PORTNAME=	xstatic-angular-lrdragndrop
 PORTVERSION=	1.0.2.4
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	XStatic-Angular-lrdragndrop-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Angular-lrdragndrop (XStatic packaging standard)
+WWW=		https://github.com/lorenzofox3/lrDragNDrop
 
 LICENSE=	MIT
 

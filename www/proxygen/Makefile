@@ -1,10 +1,11 @@
 PORTNAME=	proxygen
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2021.12.06.00
+DISTVERSION=	2023.04.24.00
 CATEGORIES=	www
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Collection of C++ HTTP libraries including easy way to use HTTP server
+WWW=		https://github.com/facebook/proxygen
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -13,6 +14,7 @@ BUILD_DEPENDS=	bash:shells/bash \
 		${LOCALBASE}/lib/libmvfst_server.a:net/mvfst \
 		gperf>0:devel/gperf
 LIB_DEPENDS=	libboost_iostreams.so:devel/boost-libs \
+		libbzip2.so:misc/vxl \
 		libdouble-conversion.so:devel/double-conversion \
 		libevent.so:devel/libevent \
 		libfizz.so:security/fizz \

@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	qt
 PORTVERSION=	4.8.7
 DISTVERSIONSUFFIX=	-9.el7_9
@@ -9,6 +7,7 @@ PKGNAMESUFFIX=	-x11
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	Cross-platform application and UI framework (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://qt-project.org
 
 USES=		cpe linux:c7
 USE_LDCONFIG=	yes

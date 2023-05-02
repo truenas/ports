@@ -9,6 +9,7 @@ bin/nim
 lib/libnimrtl.so
 lib/nim/arch/x86/amd64.S
 lib/nim/arch/x86/i386.S
+lib/nim/compilation.nim
 lib/nim/compiler/aliases.nim
 lib/nim/compiler/ast.nim
 lib/nim/compiler/astalgo.nim
@@ -104,6 +105,7 @@ lib/nim/compiler/nversion.nim
 lib/nim/compiler/optimizer.nim
 lib/nim/compiler/options.nim
 lib/nim/compiler/packagehandling.nim
+lib/nim/compiler/packages.nim
 lib/nim/compiler/parampatterns.nim
 lib/nim/compiler/parser.nim
 lib/nim/compiler/passaux.nim
@@ -494,6 +496,9 @@ lib/nim/wrappers/pcre.nim
 lib/nim/wrappers/postgres.nim
 lib/nim/wrappers/sqlite3.nim
 lib/nim/wrappers/tinyc.nim
+%%DOCS%%share/nim/dochack/dochack.nim
+%%DOCS%%share/nim/dochack/dochack.js
+%%DOCS%%share/nim/dochack/fuzzysearch.nim
 %%PORTDOCS%%%%DOCSDIR%%/advopt.txt
 %%PORTDOCS%%%%DOCSDIR%%/apis.rst
 %%PORTDOCS%%%%DOCSDIR%%/astspec.txt
@@ -510,7 +515,6 @@ lib/nim/wrappers/tinyc.nim
 %%PORTDOCS%%%%DOCSDIR%%/estp.rst
 %%PORTDOCS%%%%DOCSDIR%%/filelist.txt
 %%PORTDOCS%%%%DOCSDIR%%/filters.rst
-%%PORTDOCS%%%%DOCSDIR%%/gc.rst
 %%PORTDOCS%%%%DOCSDIR%%/grammar.txt
 %%PORTDOCS%%%%DOCSDIR%%/hcr.rst
 %%PORTDOCS%%%%DOCSDIR%%/html/algorithm.html
@@ -537,6 +541,7 @@ lib/nim/wrappers/tinyc.nim
 %%PORTDOCS%%%%DOCSDIR%%/html/chains.html
 %%PORTDOCS%%%%DOCSDIR%%/html/channels_builtin.html
 %%PORTDOCS%%%%DOCSDIR%%/html/colors.html
+%%PORTDOCS%%%%DOCSDIR%%/html/compilation.html
 %%PORTDOCS%%%%DOCSDIR%%/html/compiler/aliases.html
 %%PORTDOCS%%%%DOCSDIR%%/html/compiler/ast.html
 %%PORTDOCS%%%%DOCSDIR%%/html/compiler/astalgo.html
@@ -611,6 +616,7 @@ lib/nim/wrappers/tinyc.nim
 %%PORTDOCS%%%%DOCSDIR%%/html/compiler/nversion.html
 %%PORTDOCS%%%%DOCSDIR%%/html/compiler/optimizer.html
 %%PORTDOCS%%%%DOCSDIR%%/html/compiler/options.html
+%%PORTDOCS%%%%DOCSDIR%%/html/compiler/packages.html
 %%PORTDOCS%%%%DOCSDIR%%/html/compiler/parampatterns.html
 %%PORTDOCS%%%%DOCSDIR%%/html/compiler/parser.html
 %%PORTDOCS%%%%DOCSDIR%%/html/compiler/passaux.html
@@ -703,7 +709,6 @@ lib/nim/wrappers/tinyc.nim
 %%PORTDOCS%%%%DOCSDIR%%/html/exitprocs.html
 %%PORTDOCS%%%%DOCSDIR%%/html/fenv.html
 %%PORTDOCS%%%%DOCSDIR%%/html/filters.html
-%%PORTDOCS%%%%DOCSDIR%%/html/gc.html
 %%PORTDOCS%%%%DOCSDIR%%/html/genasts.html
 %%PORTDOCS%%%%DOCSDIR%%/html/gitutils.html
 %%PORTDOCS%%%%DOCSDIR%%/html/globs.html
@@ -759,6 +764,7 @@ lib/nim/wrappers/tinyc.nim
 %%PORTDOCS%%%%DOCSDIR%%/html/mersenne.html
 %%PORTDOCS%%%%DOCSDIR%%/html/mimetypes.html
 %%PORTDOCS%%%%DOCSDIR%%/html/miscdollars.html
+%%PORTDOCS%%%%DOCSDIR%%/html/mm.html
 %%PORTDOCS%%%%DOCSDIR%%/html/monotimes.html
 %%PORTDOCS%%%%DOCSDIR%%/html/mysql.html
 %%PORTDOCS%%%%DOCSDIR%%/html/nativesockets.html
@@ -805,6 +811,7 @@ lib/nim/wrappers/tinyc.nim
 %%PORTDOCS%%%%DOCSDIR%%/html/rationals.html
 %%PORTDOCS%%%%DOCSDIR%%/html/rdstdin.html
 %%PORTDOCS%%%%DOCSDIR%%/html/re.html
+%%PORTDOCS%%%%DOCSDIR%%/html/refc.html
 %%PORTDOCS%%%%DOCSDIR%%/html/registry.html
 %%PORTDOCS%%%%DOCSDIR%%/html/reservedmem.html
 %%PORTDOCS%%%%DOCSDIR%%/html/rlocks.html
@@ -889,6 +896,7 @@ lib/nim/wrappers/tinyc.nim
 %%PORTDOCS%%%%DOCSDIR%%/manual/var_t_return.rst
 %%PORTDOCS%%%%DOCSDIR%%/manual_experimental.rst
 %%PORTDOCS%%%%DOCSDIR%%/manual_experimental_strictnotnil.rst
+%%PORTDOCS%%%%DOCSDIR%%/mm.rst
 %%PORTDOCS%%%%DOCSDIR%%/mytest.cfg
 %%PORTDOCS%%%%DOCSDIR%%/nep1.rst
 %%PORTDOCS%%%%DOCSDIR%%/nimc.rst
@@ -903,6 +911,7 @@ lib/nim/wrappers/tinyc.nim
 %%PORTDOCS%%%%DOCSDIR%%/packaging.rst
 %%PORTDOCS%%%%DOCSDIR%%/pegdocs.txt
 %%PORTDOCS%%%%DOCSDIR%%/readme.txt
+%%PORTDOCS%%%%DOCSDIR%%/refc.rst
 %%PORTDOCS%%%%DOCSDIR%%/regexprs.txt
 %%PORTDOCS%%%%DOCSDIR%%/rstcommon.rst
 %%PORTDOCS%%%%DOCSDIR%%/sets_fragment.txt

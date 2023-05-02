@@ -1,14 +1,13 @@
-# Created by: Wen Heping <wenheping@gmail.com>
-
 PORTNAME=	pyro
 DISTVERSION=	4.77
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	Pyro4-${PORTVERSION}
 
 MAINTAINER=	rm@FreeBSD.org
 COMMENT=	Distributed Object Middleware for Python (IPC/RPC)
+WWW=		https://pythonhosted.org/Pyro4/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

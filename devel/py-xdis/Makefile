@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	xdis
-PORTVERSION=	5.0.13
+PORTVERSION=	6.0.5
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Cross-Python bytecode Disassembler and Marshal routines
+WWW=		https://github.com/rocky/python-xdis
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,11 +1,12 @@
 PORTNAME=	click-completion
 PORTVERSION=	0.5.2
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	matthew@FreeBSD.org
 COMMENT=	Enhanced completion for Click
+WWW=		https://github.com/click-contrib/click-completion
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

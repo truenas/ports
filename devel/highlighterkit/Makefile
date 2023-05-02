@@ -1,12 +1,13 @@
 PORTNAME=	highlighterkit
 PORTVERSION=	0.1
-PORTREVISION=	10
+PORTREVISION=	11
 CATEGORIES=	devel gnustep
 MASTER_SITES=	http://download.gna.org/pmanager/0.2/
 DISTNAME=	HighlighterKit-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Framework needed by Project Manager
+WWW=		http://home.gna.org/pmanager/
 
 USES=		tar:bzip2 gnustep
 USE_GNUSTEP=	back build

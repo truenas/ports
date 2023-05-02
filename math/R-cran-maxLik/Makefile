@@ -1,12 +1,12 @@
-# Created by: Wen Heping <wenheping@gmail.com>
-
 PORTNAME=	maxLik
 DISTVERSION=	1.5-2
+PORTREVISION=	1
 CATEGORIES=	math
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Maximum Likelihood Estimation and Related Tools
+WWW=		http://www.maxlik.org/
 
 LICENSE=	GPLv2 GPLv3
 LICENSE_COMB=	dual

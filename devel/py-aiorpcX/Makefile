@@ -1,15 +1,14 @@
-# Created by: Emanuel Haupt <ehaupt@FreeBSD.org>
-
 PORTNAME=	aiorpcX
 PORTVERSION=	0.22.1
 PORTREVISION=	1
 PORTEPOCH=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ehaupt@FreeBSD.org
 COMMENT=	Generic async RPC implementation, including JSON-RPC
+WWW=		https://pypi.org/project/aiorpcX/
 
 LICENSE=	MIT
 

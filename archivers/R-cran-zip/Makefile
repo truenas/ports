@@ -1,10 +1,12 @@
 PORTNAME=	zip
-DISTVERSION=	2.2.0
+DISTVERSION=	2.3.0
+PORTREVISION=	1
 CATEGORIES=	archivers
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Cross-Platform 'zip' Compression
+WWW=		https://github.com/r-lib/zip #readme
 
 LICENSE=	CC0-1.0
 

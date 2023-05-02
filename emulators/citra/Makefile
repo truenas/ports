@@ -1,10 +1,18 @@
 PORTNAME=	citra
-PORTVERSION=	s20211212
-PORTREVISION?=	0
+PORTVERSION=	s20220902
+PORTREVISION?=	2
 CATEGORIES=	emulators
+.if make(makesum)
+MASTER_SITES=	https://api.citra-emu.org/gamedb/?dummy=/:gamedb
+.else
+MASTER_SITES=	LOCAL/jbeich:gamedb
+.endif
+DISTFILES=	${PORTNAME}-${DISTVERSIONFULL}/compatibility_list.json:gamedb
+EXTRACT_ONLY=	${DISTFILES:N*\:gamedb:C/\:.*//}
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Nintendo 3DS emulator/debugger
+WWW=		https://citra-emu.org
 
 LICENSE=	BSD2CLAUSE BSD3CLAUSE BSL GPLv2+ ISCL LGPL21+ MIT OpenSSL UNLICENSE
 LICENSE_COMB=	multi
@@ -17,28 +25,30 @@ LICENSE_FILE_LGPL21+ =	${_LICENSE_STORE}/LGPL21 # soundtouch
 LICENSE_FILE_MIT=	${WRKSRC}/externals/enet/LICENSE
 LICENSE_FILE_OpenSSL=	${WRKSRC}/externals/libressl/COPYING
 
+BROKEN_aarch64=	https://github.com/citra-emu/citra/issues/5921
+
 BUILD_DEPENDS=	boost-libs>0:devel/boost-libs
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	citra-emu
-GH_TAGNAME=	28039d39a
+GH_TAGNAME=	746609f35
 GH_TUPLE=	citra-emu:ext-boost:36603a1:boost/externals/boost \
-		citra-emu:ext-libressl-portable:7d01cb0:libressl/externals/libressl \
+		citra-emu:ext-libressl-portable:8929f81:libressl/externals/libressl \
 		citra-emu:ext-soundtouch:060181e:soundtouch/externals/soundtouch \
-		MerryMage:dynarmic:r3-222-gaf0d4a7c:dynarmic/externals/dynarmic \
+		MerryMage:dynarmic:r3-223-g9f88f234:dynarmic/externals/dynarmic \
 		arsenm:sanitizers-cmake:aab6948:sanitizers_cmake/externals/cubeb/cmake/sanitizers-cmake \
-		arun11299:cpp-jwt:v1.1.1:cpp_jwt/externals/cpp-jwt \
+		arun11299:cpp-jwt:v1.4-14-ge12ef06:cpp_jwt/externals/cpp-jwt \
 		benhoyt:inih:r52:inih/externals/inih/inih \
 		catchorg:Catch2:v2.13.7:catch/externals/catch \
 		facebook:zstd:v1.4.8:zstd/externals/zstd \
 		fmtlib:fmt:7.1.2:fmt/externals/fmt \
 		herumi:xbyak:v5.96:xbyak/externals/xbyak \
-		kinetiknz:cubeb:cubeb-0.2-1345-g773f16b:cubeb/externals/cubeb \
-		lsalzman:enet:0eaf48e:enet/externals/enet \
+		kinetiknz:cubeb:cubeb-0.2-1350-gf79e0cf:cubeb/externals/cubeb \
+		lsalzman:enet:v1.3.17-8-g498b9e3:enet/externals/enet \
 		lvandeve:lodepng:31d9704:lodepng/externals/lodepng/lodepng \
 		neobrain:nihstro:fd69de1:nihstro/externals/nihstro \
-		weidai11:cryptopp:CRYPTOPP_7_0_0-23-gf320e7d9:cryptopp/externals/cryptopp/cryptopp \
-		wwylele:teakra:3e032a7:teakra/externals/teakra
+		weidai11:cryptopp:CRYPTOPP_8_5_0:cryptopp/externals/cryptopp/cryptopp \
+		wwylele:teakra:01db7cd:teakra/externals/teakra
 
 USES=		cmake:testing compiler:c++17-lang localbase:ldflags sdl
 USE_SDL=	sdl2
@@ -73,7 +83,7 @@ SDL_PLIST_FILES=bin/${PORTNAME} \
 		share/man/man6/${PORTNAME}.6.gz
 
 QT5_USES=	desktop-file-utils qt:5 shared-mime-info
-QT5_USE=	QT=qmake_build,buildtools_build,linguisttools_build,concurrent_build,core,gui,multimedia,widgets
+QT5_USE=	QT=qmake:build,buildtools:build,linguisttools:build,concurrent:build,core,gui,multimedia,widgets
 QT5_CMAKE_BOOL=	ENABLE_QT ENABLE_QT_TRANSLATION
 QT5_PLIST_FILES=bin/${PORTNAME}-qt \
 		"@comment bin/${PORTNAME}-room" \
@@ -88,5 +98,9 @@ post-patch:
 	@${REINPLACE_CMD} -e 's/@GIT_BRANCH@/master/' \
 		-e 's/@GIT_DESC@/${GH_TAGNAME}/' \
 		${WRKSRC}/src/common/scm_rev.cpp.in
+
+post-configure:
+	@${CP} ${DISTFILES:M*\:gamedb:C/\:.*//:S,^,${_DISTDIR},} \
+		${BUILD_WRKSRC}/dist/compatibility_list/
 
 .include <bsd.port.mk>

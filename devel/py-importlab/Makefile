@@ -1,13 +1,13 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	importlab
-PORTVERSION=	0.6.1
+PORTVERSION=	0.8
+PORTREVISION=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Calculate python dependency graphs
+WWW=		https://github.com/google/importlab
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

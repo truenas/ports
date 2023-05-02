@@ -1,13 +1,12 @@
-# Created by: Oliver Lehmann <oliver@FreeBSD.org>
-
 PORTNAME=	xfce4-dev-tools
-PORTVERSION=	4.16.0
+PORTVERSION=	4.18.0
 CATEGORIES=	devel xfce
 MASTER_SITES=	XFCE
 DIST_SUBDIR=	xfce4
 
 MAINTAINER=	xfce@FreeBSD.org
 COMMENT=	Xfce development tools
+WWW=		https://www.xfce.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

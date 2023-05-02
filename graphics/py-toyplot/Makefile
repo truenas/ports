@@ -1,13 +1,13 @@
-# Created by: Steven Kreuzer <skreuzer@FreeBSD.org>
-
 PORTNAME=	toyplot
 PORTVERSION=	0.19.0
+PORTREVISION=	1
 CATEGORIES=	graphics python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	skreuzer@FreeBSD.org
 COMMENT=	Modern plotting toolkit supporting electronic publishing
+WWW=		https://pypi.org/project/toyplot/
 
 LICENSE=	BSD3CLAUSE
 

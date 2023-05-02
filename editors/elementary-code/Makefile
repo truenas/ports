@@ -1,18 +1,16 @@
 PORTNAME=	elementary-code
-DISTVERSION=	6.0.0
-PORTREVISION=	2
+DISTVERSION=	7.0.0
+PORTREVISION=	1
 CATEGORIES=	editors
 
 MAINTAINER=	miguel@gocobachi.dev
 COMMENT=	Code editor designed for elementary OS
+WWW=		https://github.com/elementary/code/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-BUILD_DEPENDS=	valac:lang/vala
-RUN_DEPENDS=	droid-fonts-ttf>0:x11-fonts/droid-fonts-ttf \
-		pkcheck:sysutils/polkit
-LIB_DEPENDS=	libatk-1.0.so:accessibility/atk \
+LIB_DEPENDS=	libatk-1.0.so:accessibility/at-spi2-core \
 		libeditorconfig.so:editors/editorconfig-core-c \
 		libfontconfig.so:x11-fonts/fontconfig \
 		libgee-0.8.so:devel/libgee \
@@ -23,19 +21,19 @@ LIB_DEPENDS=	libatk-1.0.so:accessibility/atk \
 		libpeas-1.0.so:devel/libpeas \
 		libpeas-gtk-1.0.so:devel/libpeas \
 		libsoup-2.4.so:devel/libsoup \
-		libvala-0.48.so:lang/vala \
 		libwebkit2gtk-4.0.so:www/webkit2-gtk3 \
 		libzeitgeist-2.0.so:sysutils/zeitgeist
+RUN_DEPENDS=	droid-fonts-ttf>0:x11-fonts/droid-fonts-ttf \
+		pkcheck:sysutils/polkit
 
 USES=		compiler:c++11-lang desktop-file-utils gettext gnome meson \
-		ninja pkgconfig python:3.6+,build xorg
+		ninja pkgconfig python:3.7+,build vala:lib xorg
 USE_GITHUB=	yes
 GH_ACCOUNT=	elementary
 GH_PROJECT=	code
 USE_GNOME=	cairo glib20 gtk30 gtksourceview4 pango vte3
 GLIB_SCHEMAS=	io.elementary.code.gschema.xml \
-		io.elementary.code.plugins.spell.gschema.xml \
-		io.elementary.code.plugins.terminal.gschema.xml
+		io.elementary.code.plugins.spell.gschema.xml
 USE_LDCONFIG=	yes
 USE_XORG=	x11
 

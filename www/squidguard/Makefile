@@ -10,6 +10,7 @@ EXTRACT_ONLY=	${DISTNAME}${EXTRACT_SUFX}
 
 MAINTAINER=	garga@FreeBSD.org
 COMMENT=	Fast redirector for squid
+WWW=		http://www.squidguard.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -54,7 +55,7 @@ STRIP_NTDOMAIN_EXTRA_PATCHES=	${FILESDIR}/extra-patch-strip.diff:-p0
 LDAP_CONFIGURE_ON=	--with-ldap
 LDAP_CONFIGURE_OFF=	--without-ldap
 LDAP_LDFLAGS=		-L${LOCALBASE}/lib
-LDAP_USE=		OPENLDAP=yes
+LDAP_USES=		ldap
 
 .include <bsd.port.options.mk>
 

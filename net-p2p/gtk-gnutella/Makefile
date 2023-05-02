@@ -1,12 +1,12 @@
-# Created by: Rod Taylor <rbt@zort.on.ca>
-
 PORTNAME=	gtk-gnutella
-PORTVERSION=	1.2.1
+PORTVERSION=	1.2.2
+PORTREVISION=	3
 CATEGORIES=	net-p2p
 MASTER_SITES=	SF
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	GTK based Gnutella client
+WWW=		http://gtk-gnutella.sourceforge.net/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -28,7 +28,7 @@ CONFIGURE_ARGS=	-O -Dyacc='byacc' \
 MAKE_ARGS=	INSTALL_PREFIX="${STAGEDIR}"
 INSTALL_TARGET=	install install.man
 
-PLIST_SUB=	ARCH="${ARCH}" OPSYS="${OPSYS:tl}"
+PLIST_SUB=	ARCH="${ARCH:C/powerpc.*/powerpc/:C/armv./arm/}" OPSYS="${OPSYS:tl}"
 
 OPTIONS_DEFINE=		DBUS DEBUG GUI IPV6 NLS PORTABILITY TLS
 OPTIONS_DEFAULT=	GUI TLS

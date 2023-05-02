@@ -1,14 +1,13 @@
-# Created by: Mark Felder <feld@FreeBSD.org>
-
 PORTNAME=	traceback2
 PORTVERSION=	1.4.0
 PORTREVISION=	2
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	New features in traceback backported to Python 2
+WWW=		https://github.com/testing-cabal/traceback2
 
 LICENSE=	PSFL
 

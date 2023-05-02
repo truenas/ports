@@ -1,5 +1,3 @@
-# Created by: Craig Leres <leres@FreeBSD.org>
-
 PORTNAME=	hostapd
 PORTVERSION=	${COMMIT_DATE}
 CATEGORIES=	net
@@ -7,12 +5,13 @@ PKGNAMESUFFIX=	-devel
 
 MAINTAINER=	cy@FreeBSD.org
 COMMENT=	IEEE 802.11 AP, IEEE 802.1X/WPA/WPA2/EAP/RADIUS Authenticator
+WWW=		https://w1.fi/hostapd/
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	cschuber
 GH_PROJECT=	hostap
-GH_TAGNAME=	14ab4a816
-COMMIT_DATE=	2021.11.26
+GH_TAGNAME=	302d761a8
+COMMIT_DATE=	2023.04.03
 
 LICENSE=	BSD3CLAUSE
 

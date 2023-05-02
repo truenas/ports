@@ -1,9 +1,8 @@
-# Created by: Pawel Pekala <c0rn@o2.pl>
-
 PORTNAME=	clamd
-PORTREVISION=	0
+PORTREVISION=	1
 
 COMMENT=	ClamAV based antivirus plugin for Claws Mail
+WWW=		https://www.claws-mail.org/plugins.php
 
 RUN_DEPENDS=	clamd:security/clamav
 

@@ -1,14 +1,12 @@
-# Created by: Dan Langille <dan@langille.org>
-
 PORTNAME=	bacula-web
 DISTVERSIONPREFIX=	v
-DISTVERSION=	8.5.1
-PORTREVISION=	0
+DISTVERSION=	8.7.0
 CATEGORIES=	www sysutils
 PKGNAMESUFFIX=	${PHP_PKGNAMESUFFIX}
 
 MAINTAINER=	ler@FreeBSD.org
 COMMENT=	Bacula-web provides a summarized output of Bacula jobs
+WWW=		https://www.bacula-web.org/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -46,7 +44,7 @@ USE_PHP+=		pdo_pgsql
 .if ${PORT_OPTIONS:MSQLITE}
 CONFIGURE_ARGS+=	--with-sqlite=yes
 SUB_LIST+=		REQ_SQLITE=sqlite
-USE_PHP+=		pdo_sqlite
+USE_PHP+=		pdo_sqlite sqlite3
 .endif
 
 do-install:

@@ -1,10 +1,11 @@
 PORTNAME=	spectre-meltdown-checker
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.44
+DISTVERSION=	0.45
 CATEGORIES=	security
 
 MAINTAINER=	pkubaj@FreeBSD.org
 COMMENT=	Checks your system for the speculative execution CVEs
+WWW=		https://github.com/speed47/spectre-meltdown-checker
 
 LICENSE=	GPLv3
 

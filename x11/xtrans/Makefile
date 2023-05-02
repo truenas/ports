@@ -1,5 +1,3 @@
-# Created by: Dejan Lesjak <lesi@FreeBSD.org>
-
 PORTNAME=	xtrans
 PORTVERSION=	1.4.0
 CATEGORIES=	x11
@@ -12,5 +10,6 @@ LICENSE=	MIT
 USES=		xorg-cat:lib
 
 CONFIGURE_ARGS+=--disable-docs --without-xmlto
+NO_ARCH=	yes
 
 .include <bsd.port.mk>

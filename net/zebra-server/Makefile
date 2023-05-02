@@ -1,14 +1,13 @@
-# Created by: Dmitry Sivachenko <demon@FreeBSD.org>
-
 PORTNAME=	zebra-server
 PORTVERSION=	2.0.55
-PORTREVISION=	17
+PORTREVISION=	20
 CATEGORIES=	net
 MASTER_SITES=	http://ftp.indexdata.dk/pub/zebra/
 DISTNAME=	idzebra-${PORTVERSION}
 
 MAINTAINER=	ben@gibbed.org
 COMMENT=	Z39.50/SR server software
+WWW=		https://www.indexdata.dk/zebra/
 
 LIB_DEPENDS=	libexpat.so:textproc/expat2 \
 		libicui18n.so:devel/icu \

@@ -5,6 +5,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	doceng@FreeBSD.org
 COMMENT=	Convert AsciiDoc documents to EPUB3
+WWW=		https://github.com/asciidoctor/asciidoctor-epub3
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -14,7 +15,6 @@ RUN_DEPENDS=	rubygem-asciidoctor>=1.5.6<3:textproc/rubygem-asciidoctor \
 		rubygem-gepub>=1.0.0:textproc/rubygem-gepub
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

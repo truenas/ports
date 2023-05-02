@@ -1,13 +1,11 @@
-# Created by: gahr
-
 PORTNAME=	catch
+PORTVERSION=	2.13.10
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2.13.7
-PORTREVISION=	0
 CATEGORIES=	devel
 
-MAINTAINER=	gahr@FreeBSD.org
+MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Header-only test framework for C++
+WWW=		https://github.com/catchorg/Catch2
 
 LICENSE=	BSL
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -21,6 +19,8 @@ CMAKE_ARGS=	-DCMAKE_INSTALL_DOCDIR=${DOCSDIR}
 PORTDOCS=	*
 
 NO_ARCH=	yes
+
+PORTSCOUT=	limit:^2\.
 
 OPTIONS_DEFINE=	DOCS
 

@@ -1,19 +1,20 @@
-# Created by: Sven R <freebsd@hackacad.net>
-
 PORTNAME=	opensearch
-DISTVERSION=	1.2.1
+DISTVERSION=	2.6.0
 DISTVERSIONSUFFIX=	-linux-x64
 CATEGORIES=	textproc java devel
-MASTER_SITES=	https://artifacts.opensearch.org/releases/bundle/${PORTNAME}/${PORTVERSION}/
+MASTER_SITES=	https://artifacts.opensearch.org/releases/bundle/${PORTNAME}/${DISTVERSION}/
 
 MAINTAINER=	opensearch@FreeBSD.org
 COMMENT=	Full-text search engine for Java
+WWW=		https://opensearch.org
 
 LICENSE=	APACHE20
 
 BUILD_DEPENDS=	jna>0:devel/jna
 RUN_DEPENDS=	bash>0:shells/bash \
 		jna>0:devel/jna
+
+CONFLICTS=	opensearch13
 
 USES=		cpe shebangfix
 USE_JAVA=	yes
@@ -24,7 +25,6 @@ SHEBANG_FILES=	bin/opensearch bin/opensearch-cli \
 		bin/opensearch-env bin/opensearch-env-from-file \
 		bin/opensearch-keystore bin/opensearch-node \
 		bin/opensearch-plugin bin/opensearch-shard \
-		bin/performance-analyzer-agent-cli \
 		plugins/opensearch-security/tools/audit_config_migrater.sh \
 		plugins/opensearch-security/tools/hash.sh \
 		plugins/opensearch-security/tools/install_demo_configuration.sh \
@@ -40,10 +40,41 @@ OPTIONS_DEFAULT=PLUGINS
 
 CONFIG_FILES=	opensearch.yml jvm.options log4j2.properties
 
+PLUGINS_CONFIG_FILES?= \
+		opensearch-notifications-core/notifications-core.yml \
+		opensearch-notifications/notifications.yml \
+		opensearch-observability/observability.yml \
+		opensearch-performance-analyzer/agent-stats-metadata \
+		opensearch-performance-analyzer/log4j2.xml \
+		opensearch-performance-analyzer/opensearch_security.policy \
+		opensearch-performance-analyzer/performance-analyzer.properties \
+		opensearch-performance-analyzer/plugin-stats-metadata \
+		opensearch-performance-analyzer/rca.conf \
+		opensearch-performance-analyzer/rca_idle_cluster_manager.conf \
+		opensearch-performance-analyzer/rca_cluster_manager.conf \
+		opensearch-performance-analyzer/supervisord.conf \
+		opensearch-reports-scheduler/reports-scheduler.yml \
+		opensearch-security/action_groups.yml \
+		opensearch-security/allowlist.yml \
+		opensearch-security/audit.yml \
+		opensearch-security/config.yml \
+		opensearch-security/internal_users.yml \
+		opensearch-security/nodes_dn.yml \
+		opensearch-security/roles.yml \
+		opensearch-security/roles_mapping.yml \
+		opensearch-security/tenants.yml \
+		opensearch-security/whitelist.yml
+
+# Upstream provide some *.example files.  These are also copied as sample filse
+# but we do not register them as @sample to avoid installing filse that needs
+# to be tuned a site specific way.
+PLUGINS_SAMPLE_CONFIG_FILES= \
+		opensearch-security/opensearch.yml
+
 BINS=		opensearch opensearch-cli opensearch-env \
 		opensearch-env-from-file opensearch-keystore \
 		opensearch-node opensearch-plugin \
-		opensearch-shard performance-analyzer-agent-cli
+		opensearch-shard
 
 SEARCHUSER?=	opensearch
 SEARCHGROUP?=	${SEARCHUSER}
@@ -73,6 +104,20 @@ do-install:
 	${LN} -s ${JAVASHAREDIR}/classes/jna.jar ${STAGEDIR}${PREFIX}/lib/opensearch/lib/jna.jar
 
 do-install-PLUGINS-on:
+	${MKDIR} ${STAGEDIR}${ETCDIR}/opensearch-notifications-core \
+		 ${STAGEDIR}${ETCDIR}/opensearch-notifications \
+		 ${STAGEDIR}${ETCDIR}/opensearch-observability \
+		 ${STAGEDIR}${ETCDIR}/opensearch-performance-analyzer \
+		 ${STAGEDIR}${ETCDIR}/opensearch-reports-scheduler \
+		 ${STAGEDIR}${ETCDIR}/opensearch-security
+.for f in ${PLUGINS_CONFIG_FILES}
+	${INSTALL} ${WRKSRC}/config/${f} ${STAGEDIR}${ETCDIR}/${f}.sample
+	${ECHO} "@sample ${ETCDIR}/${f}.sample" >> ${TMPPLIST}
+.endfor
+.for f in ${PLUGINS_SAMPLE_CONFIG_FILES}
+	${INSTALL} ${WRKSRC}/config/${f}.example ${STAGEDIR}${ETCDIR}/${f}.sample
+	${ECHO} "${ETCDIR}/${f}.sample" >> ${TMPPLIST}
+.endfor
 	(cd ${WRKSRC}/ && ${COPYTREE_SHARE} "plugins" ${STAGEDIR}${PREFIX}/lib/opensearch/)
 	(cd ${WRKSRC}/plugins/opensearch-security/tools && ${COPYTREE_BIN} "*.sh" ${STAGEDIR}${PREFIX}/lib/opensearch/plugins/opensearch-security/tools)
 
@@ -82,7 +127,9 @@ post-install:
 .endfor
 	${FIND} -s ${STAGEDIR}${PREFIX}/lib/opensearch -not -type d | ${SORT} | \
 		${SED} -e 's#^${STAGEDIR}${PREFIX}/##' >> ${TMPPLIST}
+.if ${PORT_OPTIONS:MPLUGINS}
 	${ECHO} "@dir lib/opensearch/plugins" >> ${TMPPLIST}
+.endif
 	${ECHO} "@dir libexec/opensearch" >> ${TMPPLIST}
 	${ECHO} "@dir(opensearch,opensearch,0755) ${ETCDIR}" >> ${TMPPLIST}
 

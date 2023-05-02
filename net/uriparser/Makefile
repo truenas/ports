@@ -1,7 +1,5 @@
-# Created by: Ed Schouten <ed@FreeBSD.org>
-
 PORTNAME=	uriparser
-DISTVERSION=	0.9.5
+DISTVERSION=	0.9.6
 CATEGORIES=	net
 MASTER_SITES=	https://github.com/${PORTNAME}/${PORTNAME}/releases/download/${PORTNAME}-${PORTVERSION}/
 DISTFILES=	${DISTNAME}${EXTRACT_SUFX}
@@ -9,16 +7,16 @@ EXTRACT_ONLY=	${DISTNAME}${EXTRACT_SUFX}
 
 MAINTAINER=	svysh.fbsd@gmail.com
 COMMENT=	URI parsing library
+WWW=		https://github.com/uriparser/uriparser
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYING
 
 BUILD_DEPENDS=	bash:shells/bash
 
-USES=		pathfix cmake:noninja cpe tar:xz
-USE_LDCONFIG=	yes
-
+USES=		cmake:noninja cpe pathfix tar:xz
 CPE_VENDOR=	uriparser_project
+USE_LDCONFIG=	yes
 
 CMAKE_OFF=	URIPARSER_BUILD_DOCS # will fetch prebuilds from the upstream, if DOCS is selected
 
@@ -28,7 +26,8 @@ PLIST_SUB=	DISTVERSION=${DISTVERSION}
 PORTDOCS=	*
 
 OPTIONS_DEFINE=		DOCS TEST
-DOCS_DISTFILES=		${_DISTDOCSFILE} ${DISTNAME}.qch
+DOCS_DISTFILES=		${_DISTDOCSFILE} \
+			${DISTNAME}.qch
 DOCS_EXTRACT_ONLY=	${_DISTDOCSFILE}
 TEST_BUILD_DEPENDS=	googletest>=1.10.0:devel/googletest
 TEST_CMAKE_BOOL=	URIPARSER_BUILD_TESTS

@@ -1,13 +1,12 @@
-# Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
-
 PORTNAME=	embree
-PORTVERSION=	3.13.2
-PORTREVISION=	1
+PORTVERSION=	3.13.5
+PORTREVISION=	3
 DISTVERSIONPREFIX=	v
 CATEGORIES=	graphics
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Collection of high-performance ray tracing kernels
+WWW=		https://www.embree.org/
 
 LICENSE=	APACHE20
 
@@ -55,7 +54,7 @@ CMAKE_ARGS+=	-DEMBREE_ISA_AVX512:BOOL=OFF
 
 post-patch:
 	@${REINPLACE_CMD} -e \
-	    '/SET(CMAKE_INSTALL_BINDIR/s,\$$.*),${EXAMPLESDIR}),' \
+	    '/SET(CMAKE_INSTALL_BINDIR/s,\$$.*),${EXAMPLESDIR}"),' \
 		${WRKSRC}/common/cmake/package.cmake
 	@${REINPLACE_CMD} -e 's,Win32,${OPSYS},gi' \
 		${WRKSRC}/common/simd/vint4_sse2.h

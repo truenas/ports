@@ -1,12 +1,12 @@
-# Created by: Gustau Perez i Querol <gustau.perez@gmail.com>
-
 PORTNAME=	gnome-shell-extension-mediaplayer
 PORTVERSION=	4.0
+PORTREVISION=	1
 CATEGORIES=	deskutils gnome
-DIST_SUBDIR=	gnome3
+DIST_SUBDIR=	gnome
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	MPRIS2 extension for the GNOME3 shell
+WWW=		https://extensions.gnome.org/extension/55/media-player-indicator/
 
 BUILD_DEPENDS=	gsettings-desktop-schemas>=3.12.0:devel/gsettings-desktop-schemas
 RUN_DEPENDS=	gnome-shell>=0:x11/gnome-shell \

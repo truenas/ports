@@ -1,19 +1,20 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	poetry-core
-PORTVERSION=	1.0.7
+PORTVERSION=	1.4.0
+PORTREVISION=	2
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
+DISTNAME=	poetry_core-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Poetry PEP 517 Build Backend
+WWW=		https://github.com/python-poetry/poetry-core
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USES=		python:3.6+
-USE_PYTHON=	autoplist concurrent distutils
+USES=		python:3.7+
+USE_PYTHON=	autoplist concurrent pep517
 
 NO_ARCH=	yes
 

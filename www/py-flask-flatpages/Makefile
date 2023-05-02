@@ -1,13 +1,12 @@
-# Created by: Oleg Pudeyev <oleg@bsdpower.com>
-
 PORTNAME=	Flask-FlatPages
 PORTVERSION=	0.6
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	oleg@bsdpower.com
 COMMENT=	Provides flat static pages to a Flask application
+WWW=		https://github.com/SimonSapin/Flask-FlatPages
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -18,5 +17,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}Flask>=0:www/py-flask@${PY_FLAVOR} \
 
 USES=		python:3.6+
 USE_PYTHON=	autoplist distutils
+
+NO_ARCH=	yes
 
 .include <bsd.port.mk>

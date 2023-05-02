@@ -1,10 +1,11 @@
 PORTNAME=	spoa
 DISTVERSION=	4.0.7
-PORTREVISION=	2
+PORTREVISION=	4
 CATEGORIES=	biology
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	C++ implementation of the partial order alignment (POA) algorithm
+WWW=		https://github.com/rvaser/spoa
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -26,6 +27,7 @@ GH_ACCOUNT=	rvaser
 CMAKE_ON=	BUILD_SHARED_LIBS spoa_optimize_for_portability spoa_build_executable spoa_use_simde spoa_use_simde_nonvec spoa_use_simde_openmp
 CMAKE_OFF=	spoa_optimize_for_native
 
+CXXFLAGS+=	-I${LOCALBASE}/include/cpu_features
 LDFLAGS+=	-lz -lcpu_features
 
 .include <bsd.port.options.mk>

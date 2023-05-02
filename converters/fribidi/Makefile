@@ -1,12 +1,11 @@
-# Created by: ijliao
-
 PORTNAME=	fribidi
-DISTVERSION=	1.0.11
+DISTVERSION=	1.0.12
 CATEGORIES=	converters
 MASTER_SITES=	https://github.com/fribidi/fribidi/releases/download/v${DISTVERSION}/
 
 MAINTAINER=	desktop@FreeBSD.org
 COMMENT=	Free Implementation of the Unicode Bidirectional Algorithm
+WWW=		https://fribidi.org/
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING

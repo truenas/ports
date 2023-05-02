@@ -1,12 +1,11 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	pedump
-PORTVERSION=	0.6.2
+PORTVERSION=	0.6.6
 CATEGORIES=	devel rubygems
 MASTER_SITES=	RG
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Dump headers, sections, extract resources of Win32 PE exe, dll, etc
+WWW=		https://github.com/zed-0xff/pedump
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -18,7 +17,6 @@ RUN_DEPENDS=	rubygem-awesome_print>=0:devel/rubygem-awesome_print \
 		rubygem-zhexdump>=0.0.2:devel/rubygem-zhexdump
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

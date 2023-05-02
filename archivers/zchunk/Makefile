@@ -1,9 +1,10 @@
 PORTNAME=	zchunk
-DISTVERSION=	1.1.16
+DISTVERSION=	1.3.1
 CATEGORIES=	archivers
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Compressed file format that splits the file into independent chunks
+WWW=		https://github.com/zchunk/zchunk
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

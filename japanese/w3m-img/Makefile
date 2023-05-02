@@ -1,6 +1,5 @@
-# Created by: MANTANI Nobutaka <nobutaka@nobutaka.com>
-
 CATEGORIES=	japanese
+PORTREVISION=	1
 PKGNAMESUFFIX=	-img
 
 MAINTAINER=	nobutaka@FreeBSD.org

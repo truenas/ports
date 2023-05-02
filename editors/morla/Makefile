@@ -1,14 +1,13 @@
-# Created by: Nicola Vitale <nivit@email.it>
-
 PORTNAME=	morla
 PORTVERSION=	0.16.1
-PORTREVISION=	8
+PORTREVISION=	13
 CATEGORIES=	editors textproc
 MASTER_SITES=	http://www.morlardf.net/src/ \
 		http://nivi.interfree.it/distfiles/${PORTNAME}/${PORTVERSION}/
 
 MAINTAINER=	nivit@FreeBSD.org
 COMMENT=	RDF editor
+WWW=		http://www.morlardf.net/
 
 LIB_DEPENDS=	libnxml.so:textproc/libnxml \
 		librdf.so:textproc/redland \
@@ -23,9 +22,9 @@ XULRUNNER_DESC=	Xulrunner as JavaScript engine
 GNU_CONFIGURE=	yes
 CPPFLAGS+=	-I${LOCALBASE}/include
 LDFLAGS+=	-L${LOCALBASE}/lib
-CONFIGURE_ARGS=	--with-gconf=auto --with-gtkhtml=none
+CONFIGURE_ARGS=	--with-gconf=none --with-gtkhtml=none
 USES=		gettext gnome libtool pkgconfig
-USE_GNOME=	gconf2 libxslt
+USE_GNOME=	libxslt gtk20
 USE_LDCONFIG=	${PREFIX}/lib/${PORTNAME}
 
 DESKTOP_ENTRIES="morla" \

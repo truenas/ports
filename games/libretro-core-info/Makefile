@@ -1,10 +1,11 @@
 PORTNAME=	libretro-core-info
 DISTVERSIONPREFIX=v
-DISTVERSION=	1.9.0
+DISTVERSION=	1.15.0
 CATEGORIES=	games
 
-MAINTAINER=	greg@unrelenting.technology
+MAINTAINER=	Clockwork6400@protonmail.com
 COMMENT=	Metadata about libretro cores
+WWW=		https://github.com/libretro/libretro-core-info
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,11 +1,12 @@
 PORTNAME=	zita-njbridge
 DISTVERSION=	0.4.8
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	audio
 MASTER_SITES=	https://kokkinizita.linuxaudio.org/linuxaudio/downloads/
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Command line client to transmit audio over a local IP network
+WWW=		https://kokkinizita.linuxaudio.org/linuxaudio/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/../COPYING

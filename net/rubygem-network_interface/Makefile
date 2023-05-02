@@ -5,12 +5,12 @@ MASTER_SITES=	RG
 
 MAINTAINER=	antoine@FreeBSD.org
 COMMENT=	Get network interface information from Ruby
+WWW=		https://github.com/rapid7/network_interface
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 USES=		gem
-USE_RUBY=	yes
 
 PLIST_FILES=	bin/list_interfaces.rb
 

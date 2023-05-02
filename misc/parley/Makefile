@@ -1,12 +1,11 @@
 PORTNAME=	parley
 DISTVERSION=	${KDE_APPLICATIONS_VERSION}
+PORTREVISION=	1
 CATEGORIES=	misc education kde kde-applications
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	Vocabulary trainer for KDE
-
-DEPRECATED=	Uses EOL Python 2.7 via www/qt5-webengine
-EXPIRATION_DATE=2021-06-23
+WWW=		https://edu.kde.org/applications/all/parley
 
 BUILD_DEPENDS=	${LOCALBASE}/share/xsl/docbook/html/docbook.xsl:textproc/docbook-xsl \
 		docbook-xml>0:textproc/docbook-xml
@@ -18,11 +17,11 @@ USE_KDE=	attica auth codecs completion configwidgets coreaddons config \
 		notifications kross khtml service solid sonnet textwidgets \
 		widgetsaddons windowsystem xmlgui \
 		libkeduvocdocument \
-		ecm_build
+		ecm:build
 USE_QT=		concurrent core dbus declarative gui location network multimedia \
 		printsupport script svg webchannel webengine widgets xml \
-		buildtools_build qmake_build
-USE_XORG=	x11 xrender
+		buildtools:build qmake:build
+USE_XORG=	ice sm x11 xext xrender
 
 OPTIONS_DEFINE=	DOCS
 

@@ -1,11 +1,13 @@
 PORTNAME=	phono3py
 DISTVERSION=	1.22.3
+PORTREVISION=	1
 CATEGORIES=	science python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Software to calculate phonon-phonon interaction and related properties
+WWW=		https://atztogo.github.io/phono3py/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

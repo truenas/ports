@@ -1,10 +1,11 @@
 PORTNAME=	dnscontrol
 DISTVERSIONPREFIX=v
-DISTVERSION=	3.13.0
+DISTVERSION=	3.31.0
 CATEGORIES=	dns
 
 MAINTAINER=	decke@FreeBSD.org
 COMMENT=	Synchronize your DNS to multiple providers from a simple DSL
+WWW=		https://stackexchange.github.io/dnscontrol/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

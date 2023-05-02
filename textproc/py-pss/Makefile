@@ -1,13 +1,12 @@
-# Created by: Cheng-Lung Sung <clsung@FreeBSD.org>
-
 PORTNAME=	pss
-PORTVERSION=	1.43
+PORTVERSION=	1.44
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Tool for grepping through source code
+WWW=		https://github.com/eliben/pss
 
 LICENSE=	PD
 LICENSE_FILE=	${WRKSRC}/LICENSE

@@ -1,16 +1,20 @@
 PORTNAME=	concourse
 DISTVERSIONPREFIX=	v
 DISTVERSION=	6.7.2
+PORTREVISION=	12
 CATEGORIES=	misc
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Automation system written in Go
+WWW=		https://concourse-ci.org/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE.md
 
 USES=		cpe go:modules
 USE_GITHUB=	yes
+
+CONFLICTS_INSTALL=	concourse-fly fly # bin/fly
 
 CPE_VENDOR=	pivotal_software
 

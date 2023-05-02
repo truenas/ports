@@ -1,14 +1,13 @@
-# Created by: Juli Mallett
-
 PORTNAME=	gtk-sharp
 PORTVERSION=	2.12.45
-PORTREVISION=	1
+PORTREVISION=	4
 CATEGORIES=	x11-toolkits
 MASTER_SITES=	http://download.mono-project.com/sources/gtk-sharp212/
 PKGNAMESUFFIX=	20
 
 MAINTAINER=	mono@FreeBSD.org
 COMMENT=	GTK+ and GNOME interfaces for the .NET runtime
+WWW=		https://www.mono-project.com/Gtk
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -2,20 +2,20 @@ PORTNAME=	neolink
 PORTVERSION=	0.3.0
 DISTVERSIONPREFIX=	v
 DISTVERSIONSUFFIX=	g20210903
-PORTREVISION=	2
+PORTREVISION=	16
 CATEGORIES=	multimedia
 
 MAINTAINER=	kevans@FreeBSD.org
 COMMENT=	RTSP bridge to Reolink IP cameras
+WWW=		https://github.com/thirtythreeforty/neolink
 
 LICENSE=	AGPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 LIB_DEPENDS=	libgstrtspserver-1.0.so:multimedia/gstreamer1-rtsp-server
 
-USES=	cargo gnome
+USES=	cargo gnome gstreamer
 USE_GNOME=	glib20
-USE_GSTREAMER1=	yes
 USE_RC_SUBR=	neolink
 
 USERS=	${PORTNAME}

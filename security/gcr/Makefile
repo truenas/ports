@@ -1,15 +1,20 @@
-# Created by: Koop Mast <kwm@FreeBSD.org>
-
 PORTNAME=	gcr
 PORTVERSION=	3.40.0
+PORTREVISION=	1
 CATEGORIES=	security gnome
 MASTER_SITES=	GNOME
 
+LICENSE=	LGPL20+
+LICENSE_FILE=	${WRKSRC}/COPYING
+
+PATCH_SITES=	https://gitlab.gnome.org/GNOME/${PORTNAME}/-/commit/
+PATCHFILES+=	b3ca1d02bb01.patch:-p1 # https://gitlab.gnome.org/GNOME/gcr/-/merge_requests/81
+
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Library for bits of crypto UI and parsing
+WWW=		https://live.gnome.org/GnomeKeyring
 
-BUILD_DEPENDS=	gpg2:security/gnupg \
-		vapigen:lang/vala
+BUILD_DEPENDS=	gpg2:security/gnupg
 LIB_DEPENDS=	libdbus-1.so:devel/dbus \
 		libgpg-error.so:security/libgpg-error \
 		libp11-kit.so:security/p11-kit \
@@ -20,7 +25,7 @@ PORTSCOUT=	limitw:1,even
 
 USE_GNOME=	cairo gtk30 intlhack introspection:build
 USES=		desktop-file-utils gettext gmake gnome libtool meson pathfix \
-		pkgconfig python:3.6+ shared-mime-info tar:xz
+		pkgconfig python:3.6+ shared-mime-info tar:xz vala:build
 USE_LDCONFIG=	yes
 BINARY_ALIAS=	python3=${PYTHON_VERSION}
 INSTALL_TARGET=	install-strip

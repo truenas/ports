@@ -1,13 +1,14 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	mgwr
 PORTVERSION=	2.1.2
+PORTREVISION=	1
 CATEGORIES=	graphics python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Multiscale Geographically Weighted Regression
+WWW=		https://mgwr.readthedocs.io/en/latest/ \
+		https://github.com/pysal/mgwr
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

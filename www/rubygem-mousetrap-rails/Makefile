@@ -5,13 +5,13 @@ MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Javascript library for handling keyboard shortcuts
+WWW=		https://kugaevsky.github.io/mousetrap-rails/
 
 LICENSE=	MIT APACHE20
 LICENSE_COMB=	multi
 LICENSE_FILE_MIT=	${WRKSRC}/LICENSE.md
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

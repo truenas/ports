@@ -1,24 +1,21 @@
-# Created by: Stephen Montgomery-Smith <stephen@math.missouri.edu>
-
 PORTNAME=	octave-forge-statistics
-PORTVERSION=	1.4.3
+DISTVERSIONPREFIX=	release-
+DISTVERSION=	1.5.4
+PORTREVISION=	2
 CATEGORIES=	math
 
 MAINTAINER=	stephen@FreeBSD.org
 COMMENT=	Octave-forge package ${OCTAVE_PKGNAME}
+WWW=		https://packages.octave.org/
 
-# OCTSRC is the name of the directory of the package.
-# It is usually ${OCTAVE_PKGNAME} or ${DISTNAME}.
-OCTSRC=		${DISTNAME}
+LICENSE=	GPLv3
+LICENSE_FILE=	${WRKDIR}/${OCTAVE_SRC}/COPYING
 
-RUN_DEPENDS+=	${TARBALLS_DIR}/io.tar.gz:math/octave-forge-io
-WRKSRC=		${WRKDIR}/${OCTSRC}/src
-GNU_CONFIGURE=	yes
+USES=	octave
+USE_GITHUB=	yes
+GH_ACCOUNT=	gnu-octave
+GH_PROJECT=	statistics
 
-.include "${.CURDIR}/../../Mk/bsd.octave.mk"
-
-post-build:
-	${RM} ${WRKSRC}/Makefile ${WRKSRC}/configure
-	cd ${WRKDIR} && ${TAR} cfz ${DISTNAME}.tar.gz ${OCTSRC}
+OCTAVE_SRC=		${GH_PROJECT}-release-${DISTVERSION}
 
 .include <bsd.port.mk>

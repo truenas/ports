@@ -1,15 +1,14 @@
-# Created by: Wen Heping <wenheping@gmail.com>
-
 PORTNAME=	zope.exceptions
 PORTVERSION=	4.0.0.1
 PORTREVISION=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DIST_SUBDIR=	zope
 
 MAINTAINER=	zope@FreeBSD.org
 COMMENT=	General Zope Exceptions
+WWW=		https://pypi.org/project/zope.exceptions/
 
 LICENSE=	ZPL21
 
@@ -17,5 +16,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}zope.interface>0:devel/py-zope.interface@${P
 
 USES=		python:3.6+
 USE_PYTHON=	distutils autoplist
+
+NO_ARCH=	yes
 
 .include <bsd.port.mk>

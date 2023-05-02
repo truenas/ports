@@ -1,14 +1,14 @@
-# Created by: ijliao
-
 PORTNAME=	openssl
 PORTVERSION=	20.0.1
+PORTEPOCH=	1
 CATEGORIES=	security python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	pyOpenSSL-${PORTVERSION}
 
 MAINTAINER=	sbz@FreeBSD.org
 COMMENT=	Python interface to the OpenSSL library
+WWW=		https://github.com/pyca/pyopenssl
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

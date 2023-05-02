@@ -1,5 +1,3 @@
-# Created by: kline
-
 PORTNAME=	enscript
 PORTVERSION=	1.6.6
 PORTREVISION?=	3	# ?= for chinese/enscript
@@ -10,6 +8,7 @@ DISTNAME=	enscript-${PORTVERSION}
 
 MAINTAINER?=	mbeis@xs4all.nl
 COMMENT=	ASCII to PostScript filter
+WWW=		https://www.gnu.org/software/enscript/
 
 USES=		cpe shebangfix perl5
 GNU_CONFIGURE=	yes
@@ -22,7 +21,7 @@ OPTIONS_SUB=	yes
 NLS_USES=	gettext
 NLS_CONFIGURE_ENABLE=	nls
 
-CONFLICTS?=	enscript-a4 enscript-letterdj
+CONFLICTS?=	enscript-a4 enscript-letterdj zh-enscript-a4
 
 INFO=		enscript
 CPE_VENDOR=	gnu

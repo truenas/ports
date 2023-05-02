@@ -1,17 +1,17 @@
 PORTNAME=	bookworm
 DISTVERSION=	1.1.2
-PORTREVISION=	2
+PORTREVISION=	17
 CATEGORIES=	deskutils
 
 MAINTAINER=	miguel@gocobachi.dev
 COMMENT=	Simple, focused ebook reader
+WWW=		https://babluboy.github.io/bookworm/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
 
 BUILD_DEPENDS=	curl>0:ftp/curl \
-		html2text>0:textproc/html2text \
-		valac:lang/vala
+		html2text>0:textproc/html2text
 LIB_DEPENDS=	libappstream-glib.so:devel/appstream-glib \
 		libgee-0.8.so:devel/libgee \
 		libgranite.so:x11-toolkits/granite \
@@ -25,13 +25,12 @@ RUN_DEPENDS=	bash:shells/bash \
 		unzip:archivers/unzip
 
 USES=		desktop-file-utils gettext gnome meson pkgconfig \
-		python:build,run shebangfix sqlite
+		python shebangfix sqlite vala:build
 USE_GITHUB=	yes
 GH_ACCOUNT=	babluboy
 USE_GNOME=	gdkpixbuf2 glib20 gtk30 libxml2 pango
 
 GLIB_SCHEMAS=	com.github.babluboy.bookworm.gschema.xml
-INSTALLS_ICONS=	yes
 SHEBANG_FILES=	data/scripts/com.github.babluboy.bookworm.search.sh \
 		data/scripts/mobi_lib/mobi_dict.py \
 		data/scripts/mobi_lib/mobi_html.py \
@@ -58,6 +57,6 @@ post-install-DOCS-on:
 	${INSTALL_DATA} ${WRKSRC}/README.md ${STAGEDIR}${DOCSDIR}
 
 do-test:
-	cd ${WRKSRC}/${MESON_BUILD_DIR} && ninja test
+	cd ${WRKSRC}/${MESON_BUILD_DIR} && ${LOCALBASE}/bin/ninja test
 
 .include <bsd.port.mk>

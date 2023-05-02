@@ -1,47 +1,49 @@
 PORTNAME=	cabal-install
-DISTVERSIONPREFIX=	${PORTNAME}-
-DISTVERSION=	3.4.0.0
-PORTREVISION=	3
+PORTVERSION=	3.10.1.0
 CATEGORIES=	devel haskell
+EXTRACT_ONLY=	${DISTNAME_DEFAULT}${_GITHUB_EXTRACT_SUFX}
 
 MAINTAINER=	haskell@FreeBSD.org
 COMMENT=	Command-line interface for Cabal and Hackage
+WWW=		https://www.haskell.org/cabal/
 
 LICENSE=	BSD3CLAUSE
-
-BUILD_DEPENDS=	ghc:lang/ghc
 
 USES=		cabal:nodefault compiler:c11 python:build
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	haskell
 GH_PROJECT=	cabal
+GH_TAGNAME=	${PORTNAME}-v${PORTVERSION}
 
-USE_CABAL=	async-2.2.2_1 \
-		base16-bytestring-0.1.1.7 \
-		base64-bytestring-1.1.0.0 \
-		cryptohash-sha256-0.11.101.0_4 \
-		digest-0.0.1.2 \
-		echo-0.1.3_1 \
-		ed25519-0.0.5.0_3 \
+USE_CABAL=	async-2.2.4_2 \
+		base16-bytestring-1.0.2.0 \
+		base64-bytestring-1.2.1.0 \
+		cryptohash-sha256-0.11.102.1_1 \
+		data-array-byte-0.1.0.1_1 \
+		directory-1.3.7.1 \
+		echo-0.1.4 \
+		ed25519-0.0.5.0_6 \
 		edit-distance-0.2.2.1_1 \
-		hackage-security-0.6.0.1_2 \
-		hashable-1.3.0.0_1 \
-		HTTP-4000.3.14_1 \
-		lukko-0.1.1.2 \
-		network-3.1.1.1 \
-		network-uri-2.6.3.0 \
-		random-1.2.0 \
-		regex-base-0.94.0.0_1 \
-		regex-posix-0.96.0.0_2 \
-		resolv-0.1.2.0 \
-		splitmix-0.1 \
-		tar-0.5.1.1_2 \
-		zlib-0.6.2.1_1
+		hackage-security-0.6.2.3_2 \
+		hashable-1.4.2.0 \
+		HTTP-4000.4.1_1 \
+		lukko-0.1.1.3_3 \
+		network-3.1.2.7 \
+		network-uri-2.6.4.2 \
+		process-1.6.17.0 \
+		random-1.2.1.1 \
+		regex-base-0.94.0.2_1 \
+		regex-posix-0.96.0.1_1 \
+		resolv-0.1.2.0_5 \
+		safe-exceptions-0.1.7.3 \
+		splitmix-0.1.0.4_2 \
+		tar-0.5.1.1_5 \
+		th-compat-0.1.4 \
+		zlib-0.6.3.0_1
 
-CABAL_BOOTSTRAP=	yes
-
-PLIST_FILES=	bin/cabal
+CABAL_EXECUTABLES=	cabal
+SKIP_CABAL_EXTRACT=	yes
 
 post-extract:
 	${MKDIR} ${WRKSRC}/_build/tarballs/
@@ -58,7 +60,7 @@ post-extract:
 
 do-build:
 	cd ${WRKSRC} && \
-		${PYTHON_CMD} bootstrap/bootstrap.py -d bootstrap/linux-8.10.1.json
+		${PYTHON_CMD} bootstrap/bootstrap.py -d bootstrap/linux-9.2.6.json
 
 do-install:
 	${INSTALL_PROGRAM} ${WRKSRC}/_build/bin/cabal ${STAGEDIR}${PREFIX}/bin/

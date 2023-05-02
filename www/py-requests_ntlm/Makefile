@@ -1,11 +1,12 @@
 PORTNAME=	requests_ntlm
 DISTVERSION=	1.1.0
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	HTTP NTLM authentication using the requests library
+WWW=		https://github.com/requests/requests-ntlm
 
 LICENSE=	ISCL
 LICENSE_FILE=	${WRKSRC}/LICENSE

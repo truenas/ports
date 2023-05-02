@@ -1,11 +1,12 @@
 PORTNAME=	agate-dbf
 PORTVERSION=	0.2.2
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	matthew@FreeBSD.org
 COMMENT=	Support reading dbf files for agate
+WWW=		https://agate-dbf.rtfd.org/
 
 LICENSE=	MIT
 

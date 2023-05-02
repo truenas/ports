@@ -5,6 +5,3 @@ provides:
 - Integration with the googleauth gem for authentication using OAuth, API keys,
   and service accounts.
 - Control of retry, pagination, and timeouts.
-
-WWW: https://github.com/googleapis/google-api-ruby-client
-WWW: https://github.com/googleapis/google-api-ruby-client/tree/master/generated/google-apis-dns_v1

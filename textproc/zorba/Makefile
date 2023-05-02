@@ -1,14 +1,13 @@
-# Created by: gahr
-
 PORTNAME=	zorba
 PORTVERSION=	2.7.0
-PORTREVISION=	33
+PORTREVISION=	38
 CATEGORIES=	textproc java
 MASTER_SITES=	https://launchpadlibrarian.net/119058962/
 DISTNAME=	${PORTNAME}-src-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	General purpose C++ XQuery processor
+WWW=		http://www.zorba.io/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -73,7 +72,7 @@ BROKEN=		Does not stage
 .endif
 
 .if ${PORT_OPTIONS:MRUBY}
-USE_RUBY=	yes
+USES+=	ruby
 WITH_SWIG=	yes
 .endif
 

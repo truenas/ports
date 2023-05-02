@@ -1,13 +1,12 @@
-# Created by: Yuri Victorovich <yuri@rawbw.com>
-
 PORTNAME=	Louie
 PORTVERSION=	2.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Signal dispatching mechanism
+WWW=		https://pypi.org/project/Louie/
 
 LICENSE=	BSD2CLAUSE
 

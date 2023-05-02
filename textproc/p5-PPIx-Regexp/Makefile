@@ -1,7 +1,5 @@
-# Created by: Ashish SHUKLA <wahjava@gmail.com>
-
 PORTNAME=	PPIx-Regexp
-DISTVERSION=	0.082
+DISTVERSION=	0.088
 CATEGORIES=	textproc perl5
 MASTER_SITES=	CPAN
 MASTER_SITE_SUBDIR=	CPAN:WYANT
@@ -9,6 +7,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	svysh.fbsd@gmail.com
 COMMENT=	PPI regular expression parser
+WWW=		https://metacpan.org/release/PPIx-Regexp
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

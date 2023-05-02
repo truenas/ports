@@ -1,12 +1,12 @@
-# Created by: Jin-Sih Lin <linpct@gmail.com>
-
 PORTNAME=	rsyncrypto
 PORTVERSION=	1.14
+PORTREVISION=	1
 CATEGORIES=	sysutils net
 MASTER_SITES=	SF
 
-MAINTAINER=	linpct@gmail.com
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Rsync Friendly File Encryption
+WWW=		https://rsyncrypto.lingnu.com/
 
 LICENSE=	GPLv2+
 

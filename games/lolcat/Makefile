@@ -1,11 +1,12 @@
 PORTNAME=	lolcat
 DISTVERSIONPREFIX=	v
-DISTVERSION=		1.2-0
-DISTVERSIONSUFFIX=	-g6a2ab61
+DISTVERSION=		1.2-8
+DISTVERSIONSUFFIX=	-g8241091
 CATEGORIES=	games
 
 MAINTAINER=	gbe@FreeBSD.org
 COMMENT=	High performance implementation of the famous lolcat
+WWW=		https://github.com/jaseg/lolcat
 
 LICENSE=		WTFPL
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -17,7 +18,7 @@ GH_ACCOUNT=	jaseg
 
 CFLAGS+=	-lm
 
-CONFLICTS_INSTALL=	rubygem-lolcat
+CONFLICTS_INSTALL=	filters
 
 PLIST_FILES=	bin/censor bin/lolcat
 

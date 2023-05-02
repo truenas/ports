@@ -1,13 +1,12 @@
-# Created by: Jaap Akkerhuis <jaap@NLnetLabs.nl>
-
 PORTNAME=	opendnssec
-DISTVERSION=	2.1.10
+DISTVERSION=	2.1.12
 CATEGORIES=	dns
 MASTER_SITES=	http://dist.opendnssec.org/source/
 PKGNAMESUFFIX=	2
 
 MAINTAINER=	jaap@NLnetLabs.nl
 COMMENT=	Tool suite for maintaining DNSSEC
+WWW=		https://www.opendnssec.org
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -61,22 +60,21 @@ pre-build:
 		${WRKSRC}/configure
 
 pre-install-MYSQL-on:
-	${REINPLACE_CMD} -e '/REQUIRE:/ s|$$| mysql|' ${WRKDIR}/opendnssec
+	${REINPLACE_CMD} -e '/REQUIRE:/ s|$$| mysql|' \
+		${WRKDIR}/opendnssec
 
 post-install-DOCS-on:
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}
-	${INSTALL_DATA} ${PORTDOCS:S|^|${WRKSRC}/|} ${STAGEDIR}${DOCSDIR}
+	${INSTALL_DATA} ${PORTDOCS:S|^|${WRKSRC}/|} \
+		${STAGEDIR}${DOCSDIR}
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}/1.4-2.0_db_convert
-	${INSTALL_DATA} \
-		${MIGRATE:S|^|${WRKSRC}/enforcer/utils/1.4-2.0_db_convert/|} \
+	${INSTALL_DATA} ${MIGRATE:S|^|${WRKSRC}/enforcer/utils/1.4-2.0_db_convert/|} \
 		${STAGEDIR}${DOCSDIR}/1.4-2.0_db_convert
-	${INSTALL_DATA} \
-		${CONVERT:S|^|${WRKSRC}/enforcer/utils/|} \
+	${INSTALL_DATA} ${CONVERT:S|^|${WRKSRC}/enforcer/utils/|} \
 		${STAGEDIR}${DOCSDIR}
 	${REINPLACE_CMD} -e 's|enforcer/utils/|${DOCSDIR}/|' \
 		${STAGEDIR}${DOCSDIR}/MIGRATION
-	${INSTALL_DATA} \
-		${SCHEMAS:S|^|${WRKSRC}/enforcer/src/db/|} \
+	${INSTALL_DATA} ${SCHEMAS:S|^|${WRKSRC}/enforcer/src/db/|} \
 		${STAGEDIR}${DOCSDIR}
 	${REINPLACE_CMD} -e 's|../src/db/schema|${DOCSDIR}/schema|' \
 		-e 's|mysql_convert.sql|${DOCSDIR}/1.4-2.0_db_convert/&|' \

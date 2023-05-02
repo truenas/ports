@@ -69,7 +69,7 @@
     SUBDIR += font-genjyuugothic
     SUBDIR += font-genshingothic
     SUBDIR += font-hackgen
-    SUBDIR += font-hackgen-nerd
+    SUBDIR += font-hackgen-nf
     SUBDIR += font-ipa
     SUBDIR += font-ipa-uigothic
     SUBDIR += font-ipaex
@@ -100,6 +100,7 @@
     SUBDIR += font-plemoljp
     SUBDIR += font-plemoljp-hs
     SUBDIR += font-plemoljp-nf
+    SUBDIR += font-plemoljp-nfj
     SUBDIR += font-ricty
     SUBDIR += font-ricty-discord
     SUBDIR += font-rounded-mgenplus
@@ -107,6 +108,8 @@
     SUBDIR += font-shinonome
     SUBDIR += font-std
     SUBDIR += font-takao
+    SUBDIR += font-udev-gothic
+    SUBDIR += font-udev-gothic-nf
     SUBDIR += font-ume
     SUBDIR += font-vlgothic
     SUBDIR += freepwing
@@ -122,7 +125,6 @@
     SUBDIR += ibus-mozc
     SUBDIR += ibus-skk
     SUBDIR += icanna
-    SUBDIR += im-ja
     SUBDIR += ipadic
     SUBDIR += jacode.pl
     SUBDIR += japana
@@ -170,7 +172,6 @@
     SUBDIR += mozc-el
     SUBDIR += mozc-server
     SUBDIR += mozc-tool
-    SUBDIR += mutt-devel
     SUBDIR += mypaedia-fpw-package
     SUBDIR += namazu
     SUBDIR += namazu2

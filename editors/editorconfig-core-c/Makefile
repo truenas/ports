@@ -1,12 +1,11 @@
-# Created by: Akinori MUSHA aka knu <knu@idaemons.org>
-
 PORTNAME=	editorconfig-core-c
-PORTVERSION=	0.12.5
+PORTVERSION=	0.12.6
 DISTVERSIONPREFIX=	v
 CATEGORIES=	editors
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	EditorConfig core library and executable written in C
+WWW=		https://editorconfig.org/
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -20,6 +19,8 @@ USE_GITHUB=	yes
 GH_ACCOUNT=	editorconfig
 
 USE_LDCONFIG=	yes
+
+CONFLICTS_INSTALL=	py*-editorconfig
 
 PLIST_SUB=	PORTVERSION=${PORTVERSION} \
 		SHLIB_MAJOR=${PORTVERSION:C/\..+//} \

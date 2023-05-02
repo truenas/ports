@@ -1,18 +1,16 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	google-cloud-errors
-PORTVERSION=	1.2.0
+PORTVERSION=	1.3.1
 CATEGORIES=	net rubygems
 MASTER_SITES=	RG
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Define error classes for google-cloud-ruby
+WWW=		https://github.com/googleapis/google-cloud-ruby/tree/main/google-cloud-errors
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

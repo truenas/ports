@@ -6,6 +6,7 @@ MASTER_SITES=	KERNEL_ORG/linux/utils/util-linux/v${DISTVERSION}/
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Random collection of Linux utilities
+WWW=		https://github.com/karelzak/util-linux
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -26,7 +27,7 @@ CONFIGURE_ARGS=	--disable-nls --disable-ipcrm --disable-ipcs \
 
 INSTALL_TARGET=	install-strip
 
-#CONFLICTS_INSTALL=	cal getopt flock hardlink # non-default options conflicts
+CONFLICTS_INSTALL=	heirloom-doctools
 
 OPTIONS_DEFINE=		CAL FLOCK GETOPT HARDLINK UUID
 OPTIONS_SUB=		yes

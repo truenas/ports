@@ -1,11 +1,12 @@
 PORTNAME=	pyftpdlib
-PORTVERSION=	1.5.6
+PORTVERSION=	1.5.7
 CATEGORIES=	ftp python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	lwhsu@FreeBSD.org
 COMMENT=	Python FTP server library
+WWW=		https://github.com/giampaolo/pyftpdlib
 
 LICENSE=	MIT
 

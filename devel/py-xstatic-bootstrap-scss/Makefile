@@ -1,14 +1,13 @@
-# Created by: Alexander Nusov <alexander.nusov@nfvexpress.com>
-
 PORTNAME=	xstatic-bootstrap-scss
 PORTVERSION=	3.4.1.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	XStatic-Bootstrap-SCSS-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Bootstrap-SCSS (XStatic packaging standard)
+WWW=		https://github.com/twbs/bootstrap-sass
 
 LICENSE=	MIT
 

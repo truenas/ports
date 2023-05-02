@@ -1,11 +1,12 @@
 PORTNAME=	sphinxemoji
 DISTVERSION=	0.2.0
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dbaio@FreeBSD.org
 COMMENT=	Sphinx extension that provides emoji codes
+WWW=		https://sphinxemojicodes.readthedocs.io/en/stable/
 
 LICENSE=	BSD3CLAUSE
 

@@ -1,5 +1,3 @@
-# Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
-
 PORTNAME=	libtool-ltdl
 PORTVERSION=	2.4.2
 DISTVERSIONSUFFIX=	-22.el7_3
@@ -8,6 +6,7 @@ SRC_DISTFILES=	${DISTNAME:S/-ltdl//}${SRC_SUFX}:SOURCE
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	Runtime libraries for GNU libtool (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://www.gnu.org/software/libtool/
 
 LICENSE=	LGPL21+
 

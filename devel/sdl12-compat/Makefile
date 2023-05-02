@@ -1,9 +1,11 @@
 PORTNAME=	sdl12-compat
-PORTVERSION=	s20211209
-CATEGORIES=	devel
+DISTVERSIONPREFIX=	release-
+DISTVERSION=	1.2.60
+CATEGORIES=	devel wayland
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	SDL-1.2 compatibility layer that uses SDL 2.0 behind the scenes
+WWW=		https://github.com/libsdl-org/sdl12-compat
 
 LICENSE=	ZLIB
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -17,21 +19,17 @@ CMAKE_OFF+=	${CMAKE_TESTING_ON}
 CMAKE_TESTING_ON=	SDL12TESTS
 CMAKE_TESTING_TARGET=	# post-test
 GH_ACCOUNT=	libsdl-org
-GH_TAGNAME=	8743305
 SUFFIX=		-${PORTNAME:C/.*-//}
 PLIST_FILES=	etc/libmap.d/${PORTNAME}.conf \
 		lib/libSDL-1.2${SUFFIX}.so \
 		lib/libSDL-1.2${SUFFIX}.so.0 \
-		lib/libSDL-1.2${SUFFIX}.so.1.2.50 \
+		lib/libSDL-1.2${SUFFIX}.so.${DISTVERSION:C/-*//} \
 		"@comment lib/libSDLmain.a"
 
 post-patch:
 # Add library suffix to co-exist with sdl12 package
 	@${REINPLACE_CMD} -e '/OUTPUT_NAME/s/")$$/${SUFFIX}&/' \
 		${WRKSRC}/CMakeLists.txt
-# <alloca.h> doesn't exist on BSDs and is included by <stdlib.h> on Linux
-	@${REINPLACE_CMD} -e '/ALLOCA_H/d' \
-		${WRKSRC}/include/SDL/SDL_config.h
 # Drop unused dependency on libGLU
 	@${REINPLACE_CMD} -e '/glu\.h/d' \
 		${WRKSRC}/include/SDL/SDL_opengl.h

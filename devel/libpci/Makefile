@@ -1,8 +1,5 @@
-# Created by: Samy Al Bahra <samy@kerneled.org>
-
 PORTNAME=	libpci
-PORTVERSION=	3.7.0
-PORTREVISION=	1
+PORTVERSION=	3.9.0
 CATEGORIES=	devel
 MASTER_SITES=	KERNEL_ORG/software/utils/pciutils \
 		LOCAL/sunpoet
@@ -10,6 +7,7 @@ DISTNAME=	pciutils-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	PCI configuration space I/O made easy
+WWW=		https://mj.ucw.cz/sw/pciutils/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -33,6 +31,12 @@ LIBPCI_FILES=	include/pci/config.h \
 		lib/libpci.a \
 		lib/libpci.so.3 \
 		libdata/pkgconfig/libpci.pc
+
+.include <bsd.port.options.mk>
+
+.if ${OSVERSION} < 1300000
+EXTRA_PATCHES+=	${PATCHDIR}/extra-patch-freebsd12
+.endif
 
 post-patch:
 	@${LN} -s . ${WRKSRC}/lib/pci

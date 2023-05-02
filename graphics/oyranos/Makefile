@@ -1,10 +1,11 @@
 PORTNAME=	oyranos
 PORTVERSION=	0.9.6
-PORTREVISION=	12
+PORTREVISION=	15
 CATEGORIES=	graphics
 
-MAINTAINER=	bsam@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Colour Management System (CMS)
+WWW=		http://www.oyranos.org/
 
 LICENSE=	BSD3CLAUSE
 
@@ -33,7 +34,7 @@ USE_GL=		gl
 USE_LDCONFIG=	yes
 USE_GNOME=	libxml2
 USE_QT=		core gui widgets x11extras \
-		buildtools_build qmake_build
+		buildtools:build qmake:build
 USE_XORG=	ice sm x11 xcursor xext xfixes xinerama xrandr xrender xft xxf86vm
 CMAKE_ARGS+=	-DXDG_CONFIG_DIR=${PREFIX}/etc/xdg
 LDFLAGS+=	-L${LOCALBASE}/lib ${ICONV_LIB}

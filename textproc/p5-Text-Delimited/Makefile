@@ -1,14 +1,12 @@
-# Created by: Gea-Suan Lin <gslin@gslin.org>
-
 PORTNAME=	Text-Delimited
-PORTVERSION=	2.11
-PORTREVISION=	1
+PORTVERSION=	2.12
 CATEGORIES=	textproc perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Module for parsing delimited text files
+WWW=		https://metacpan.org/release/Text-Delimited
 
 LICENSE=	ART20
 LICENSE_FILE=	${WRKSRC}/LICENSE

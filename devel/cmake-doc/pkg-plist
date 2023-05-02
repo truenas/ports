@@ -253,7 +253,6 @@
 %%DOCSDIR%%/html/_sources/module/CPackIFWConfigureFile.rst.txt
 %%DOCSDIR%%/html/_sources/module/CPackNSIS.rst.txt
 %%DOCSDIR%%/html/_sources/module/CPackNuGet.rst.txt
-%%DOCSDIR%%/html/_sources/module/CPackPackageMaker.rst.txt
 %%DOCSDIR%%/html/_sources/module/CPackProductBuild.rst.txt
 %%DOCSDIR%%/html/_sources/module/CPackRPM.rst.txt
 %%DOCSDIR%%/html/_sources/module/CPackWIX.rst.txt
@@ -1576,7 +1575,6 @@
 %%DOCSDIR%%/html/_sources/variable/CYGWIN.rst.txt
 %%DOCSDIR%%/html/_sources/variable/ENV.rst.txt
 %%DOCSDIR%%/html/_sources/variable/EXECUTABLE_OUTPUT_PATH.rst.txt
-%%DOCSDIR%%/html/_sources/variable/GHS-MULTI.rst.txt
 %%DOCSDIR%%/html/_sources/variable/IOS.rst.txt
 %%DOCSDIR%%/html/_sources/variable/LIBRARY_OUTPUT_PATH.rst.txt
 %%DOCSDIR%%/html/_sources/variable/MINGW.rst.txt
@@ -1891,7 +1889,6 @@
 %%DOCSDIR%%/html/module/CPackIFWConfigureFile.html
 %%DOCSDIR%%/html/module/CPackNSIS.html
 %%DOCSDIR%%/html/module/CPackNuGet.html
-%%DOCSDIR%%/html/module/CPackPackageMaker.html
 %%DOCSDIR%%/html/module/CPackProductBuild.html
 %%DOCSDIR%%/html/module/CPackRPM.html
 %%DOCSDIR%%/html/module/CPackWIX.html
@@ -3217,7 +3214,6 @@
 %%DOCSDIR%%/html/variable/CYGWIN.html
 %%DOCSDIR%%/html/variable/ENV.html
 %%DOCSDIR%%/html/variable/EXECUTABLE_OUTPUT_PATH.html
-%%DOCSDIR%%/html/variable/GHS-MULTI.html
 %%DOCSDIR%%/html/variable/IOS.html
 %%DOCSDIR%%/html/variable/LIBRARY_OUTPUT_PATH.html
 %%DOCSDIR%%/html/variable/MINGW.html

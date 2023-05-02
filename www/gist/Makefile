@@ -1,5 +1,3 @@
-# Created by: Ricky E. <codeblock@eighthbit.net>
-
 PORTNAME=	gist
 PORTVERSION=	5.1.0
 DISTVERSIONPREFIX=	v
@@ -7,19 +5,19 @@ CATEGORIES=	www net
 
 MAINTAINER=	changlp@cs.nctu.edu.tw
 COMMENT=	Gist pastebin posting command
+WWW=		https://github.com/defunkt/gist/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.MIT
 
 RUN_DEPENDS=	${LOCALBASE}/share/certs/ca-root-nss.crt:security/ca_root_nss
 
-CONFLICTS=	p5-App-gist
+CONFLICTS=	p5-App-gist py*-python-gist yorick # bin/gist
 
+USES+	ruby:run
 USE_GITHUB=	yes
 GH_ACCOUNT=	defunkt
 
-USE_RUBY=	YES
-RUBY_NO_BUILD_DEPENDS=	YES
 NO_BUILD=	YES
 NO_ARCH=	yes
 

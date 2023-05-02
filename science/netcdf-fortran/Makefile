@@ -1,14 +1,13 @@
-# Created by: Sunpoet Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	netcdf-fortran
-PORTVERSION=	4.5.3
+PORTVERSION=	4.5.4
+PORTREVISION=	1
 CATEGORIES=	science
-MASTER_SITES=	https://www.unidata.ucar.edu/downloads/netcdf/ftp/ \
-		ftp://ftp.unidata.ucar.edu/pub/netcdf/ \
+MASTER_SITES=	https://downloads.unidata.ucar.edu/netcdf-fortran/${PORTVERSION}/ \
 		LOCAL/sunpoet
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Fortran library for machine-independent, array-oriented data access
+WWW=		https://www.unidata.ucar.edu/software/netcdf/
 
 LICENSE=	UCAR_UNIDATA
 LICENSE_FILE=	${WRKSRC}/COPYRIGHT
@@ -27,12 +26,5 @@ MAKE_ENV=	MAKEINFOFLAGS=--no-split
 MAKE_JOBS_UNSAFE=	yes
 TEST_TARGET=	check
 USE_LDCONFIG=	yes
-
-.include <bsd.port.options.mk>
-
-# XXX: Drop after updating to 4.5.3
-.if ${FORTRAN_DEFAULT} == gfortran && ${GCC_DEFAULT} >= 10
-FCFLAGS+=	-fallow-argument-mismatch
-.endif
 
 .include <bsd.port.mk>

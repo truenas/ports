@@ -1,5 +1,3 @@
-# Created by: George Neville-Neil gnn@freebsd.org
-
 PORTNAME=	mbgtools
 DISTVERSION=	fbsd-1.0.0
 CATEGORIES=	sysutils
@@ -7,6 +5,7 @@ MASTER_SITES=	http://www.meinberg.de/download/drivers/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Drivers and tools for Meinberg PTP/GPS cards
+WWW=		https://www.meinbergglobal.com/english/sw/
 
 LICENSE=	BSD2CLAUSE
 

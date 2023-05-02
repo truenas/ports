@@ -1,11 +1,12 @@
 PORTNAME=	pyfixbuf
-PORTVERSION=	0.8.1
+PORTVERSION=	0.9.0
 CATEGORIES=	net python
 MASTER_SITES=	https://tools.netsa.cert.org/releases/
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	antoine@FreeBSD.org
 COMMENT=	Python API for libfixbuf
+WWW=		https://tools.netsa.cert.org/pyfixbuf/
 
 LICENSE=	GPLR LGPL21
 LICENSE_COMB=	multi

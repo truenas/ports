@@ -1,8 +1,6 @@
-# Created by: Gautam Mani <execve@gmail.com>
-
 PORTNAME=	stockfish
 DISTVERSIONPREFIX=	sf_
-DISTVERSION=	14
+DISTVERSION=	15.1
 CATEGORIES=	games
 MASTER_SITES=	https://tests.stockfishchess.org/api/nn/:nnue
 DISTFILES=	nn-${_NNUE_VER}.nnue:nnue
@@ -10,6 +8,7 @@ EXTRACT_ONLY=	${DISTNAME}${EXTRACT_SUFX}
 
 MAINTAINER=	execve@gmail.com
 COMMENT=	Open source chess engine
+WWW=		https://www.stockfishchess.com/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/../Copying.txt
@@ -26,7 +25,9 @@ MAKE_ARGS=	ARCH=${MYARCH} \
 		PREFIX=${PREFIX}
 ALL_TARGET=	build
 
-_NNUE_VER=	3475407dc199
+_NNUE_VER=	ad9b42354671
+
+BINARY_ALIAS=	wget=true
 
 WRKSRC_SUBDIR=	src
 

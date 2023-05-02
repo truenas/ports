@@ -1,5 +1,3 @@
-# Created by: Joseph Benden <joe@thrallingpenguin.com>
-
 PORTNAME=	winrm
 PORTVERSION=	2.3.4
 CATEGORIES=	sysutils rubygems
@@ -7,6 +5,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	joe@thrallingpenguin.com
 COMMENT=	Library for Windows Remote Management
+WWW=		https://github.com/WinRb/WinRM
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -21,7 +20,6 @@ RUN_DEPENDS=	rubygem-builder>=2.1.2:devel/rubygem-builder \
 		rubygem-rubyntlm>=0.6.1<0.7:net/rubygem-rubyntlm
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

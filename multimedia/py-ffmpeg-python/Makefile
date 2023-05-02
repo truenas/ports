@@ -1,11 +1,13 @@
 PORTNAME=	ffmpeg-python
 DISTVERSION=	0.2.0
+PORTREVISION=	1
 CATEGORIES=	multimedia python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Python bindings for FFmpeg - with complex filtering support
+WWW=		https://github.com/kkroening/ffmpeg-python
 
 LICENSE=	APACHE20
 

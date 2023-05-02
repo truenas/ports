@@ -1,13 +1,13 @@
-# Created by: Ryan Steinmetz <zi@FreeBSD.org>
-
 PORTNAME=	mod_auth_mellon
 PORTVERSION=	0.18.0
+PORTREVISION=	1
 CATEGORIES=	www
 PKGNAMEPREFIX=	${APACHE_PKGNAMEPREFIX}
 DISTVERSIONPREFIX=	v
 
 MAINTAINER=	zi@FreeBSD.org
 COMMENT=	Apache module with a simple SAML 2.0 service provider
+WWW=		https://github.com/latchset/mod_auth_mellon
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -15,7 +15,7 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 LIB_DEPENDS=	libcurl.so:ftp/curl \
     		liblasso.so:security/lasso
 
-USES=		apache:2.2+ autoreconf cpe gettext-runtime gnome libtool \
+USES=		apache autoreconf cpe gettext-runtime gnome libtool \
 		pkgconfig ssl
 USE_GNOME=	glib20
 USE_GITHUB=	yes

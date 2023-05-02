@@ -1,6 +1,7 @@
 PORTNAME=	sqldeveloper
-DISTVERSION=	21.2.1.204.1703
+DISTVERSION=	22.2.1.234.1810
 DISTVERSIONSUFFIX=	-no-jre
+PORTREVISION=	1
 CATEGORIES=	databases java
 # https://www.oracle.com/tools/downloads/sqldev-downloads.html
 MASTER_SITES=
@@ -8,6 +9,7 @@ DIST_SUBDIR=	oracle
 
 MAINTAINER=	vvd@unislabs.com
 COMMENT=	Graphical tool for database development
+WWW=		https://www.oracle.com/database/technologies/appdev/sqldeveloper-landing.html
 
 # https://www.oracle.com/downloads/licenses/sqldev-license.html
 LICENSE_NAME=	OTN

@@ -1,13 +1,13 @@
-# Created by: Rainer Hurling <rhurlin@gwdg.de>
-
 PORTNAME=	pyrsgis
 PORTVERSION=	0.4.1
+PORTREVISION=	2
 CATEGORIES=	graphics python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	rhurlin@FreeBSD.org
 COMMENT=	Processing satellite data directly from TAR files
+WWW=		https://github.com/PratyushTripathy/pyrsgis
 
 LICENSE=	MIT
 

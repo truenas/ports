@@ -1,5 +1,3 @@
-# Created by: Xin LI <delphij@FreeBSD.org>
-
 PORTNAME=		openldap
 DISTVERSION=		2.4.59
 PORTREVISION=		${OPENLDAP_PORTREVISION}
@@ -23,6 +21,7 @@ PKGNAMESUFFIX=		24-server
 .endif
 
 MAINTAINER=		delphij@FreeBSD.org
+WWW=		https://www.OpenLDAP.org/
 .if defined(CLIENT_ONLY)
 COMMENT=		Open source LDAP client implementation
 .else
@@ -34,23 +33,21 @@ LICENSE_NAME=		OpenLDAP Public License
 LICENSE_FILE=		${WRKSRC}/LICENSE
 LICENSE_PERMS=		dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
 
+DEPRECATED=		No longer supported by upstream.  Please use a newer version of OpenLDAP instead
+EXPIRATION_DATE=	2023-06-30
+
 .if defined(CLIENT_ONLY)
-CONFLICTS_INSTALL=	${PORTNAME}2[0-3][5-9]-client ${PORTNAME}-client
+CONFLICTS_INSTALL=	${PORTNAME}2[0-3][5-9]-client ${PORTNAME}2[0-35-9]-client ${PORTNAME}-client
 .else
-CONFLICTS_INSTALL=	${PORTNAME}2[0-3][5-9]-server ${PORTNAME}-server
+CONFLICTS_INSTALL=	${PORTNAME}2[0-3][5-9]-server ${PORTNAME}2[0-35-9]-server ${PORTNAME}-server
 .endif
 
 GNU_CONFIGURE=		yes
 # :keepla because port uses lt_dlopen
 USES=			cpe libtool:keepla ssl tar:tgz
 
-WANT_OPENLDAP_VER?=	24
-.if ${WANT_OPENLDAP_VER} != 24
-BROKEN=			incompatible OpenLDAP version: ${WANT_OPENLDAP_VER}
-.endif
-
 PORTREVISION_CLIENT=	4
-PORTREVISION_SERVER=	7
+PORTREVISION_SERVER=	11
 OPENLDAP_SHLIB_MAJOR=	2
 OPENLDAP_SHLIB_MINOR=	11.7
 OPENLDAP_MAJOR=		${DISTVERSION:R}
@@ -368,15 +365,11 @@ OPENLDAP_PKGFILESUFX=	.client
 
 PORTDOCS=		CHANGES drafts rfc
 
-.if defined(USE_OPENLDAP)
-BROKEN=			you have USE_OPENLDAP variable defined either in environment or in make(1) arguments; please undefine and try again
-.endif
 .else
 OPENLDAP_PORTREVISION=	${PORTREVISION_SERVER}
 OPENLDAP_PKGFILESUFX=
 
-USE_OPENLDAP=		yes
-WANT_OPENLDAP_VER=	24
+USES+=	ldap:24
 
 LIB_DEPENDS+=		libicudata.so:devel/icu
 
@@ -481,8 +474,7 @@ CONFIGURE_ARGS+=	--localstatedir=${LOCALSTATEDIR} \
 PLIST_SUB+=		BACKEND=${BACKEND_PLIST}
 
 .if ${PORT_OPTIONS:MBDB}
-USES+=			bdb
-INVALID_BDB_VER=	6
+USES+=			bdb:5
 
 CONFIGURE_ARGS+=	--enable-bdb=${BACKEND_ENABLE} \
 			--enable-hdb=${BACKEND_ENABLE}
@@ -573,6 +565,8 @@ CONTRIB_CLEANFILES+=	smbk5pwd.a
 post-patch:
 	@${REINPLACE_CMD} -e 's|%LOCALSTATEDIR%/run/|${LDAP_RUN_DIR}/|g' \
 		${SED_MODULES} ${WRKSRC}/servers/slapd/slapd.conf
+	@${REINPLACE_CMD} -e 's|%LOCALSTATEDIR%/run/|${LDAP_RUN_DIR}/|g' \
+		${SED_MODULES} ${WRKSRC}/servers/slapd/slapd.ldif
 	@${REINPLACE_CMD} -e 's|^OPT =.*|OPT = ${CFLAGS}|g' \
 		-e 's|^CC =.*|CC = ${CC}|g' \
 		${SED_MODULES} ${WRKSRC}/contrib/slapd-modules/*/Makefile \

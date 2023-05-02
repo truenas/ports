@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	audiofile
 PORTVERSION=	0.3.6
 DISTVERSIONSUFFIX=	-9.el7
@@ -8,6 +6,7 @@ CATEGORIES=	audio linux
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	Implementation of the Audio File Library (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://www.68k.org/~michael/audiofile/
 
 USES=		cpe linux:c7
 USE_LDCONFIG=	yes

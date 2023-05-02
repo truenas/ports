@@ -1,5 +1,3 @@
-# Created by: joseph@randomnetworks.com
-
 PORTNAME=	adtool
 PORTVERSION=	1.3.3
 PORTREVISION=	3
@@ -8,10 +6,10 @@ MASTER_SITES=	http://gp2x.org/adtool/
 
 MAINTAINER=	joseph@randomnetworks.com
 COMMENT=	Active Directory administration tool
+WWW=		https://gp2x.org/adtool/
 
-USES=		gmake libtool
+USES=		gmake ldap libtool
 GNU_CONFIGURE=	yes
-USE_OPENLDAP=	yes
 
 CONFIGURE_ARGS+=--with-ldap=${LOCALBASE}
 

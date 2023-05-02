@@ -1,6 +1,6 @@
 PORTNAME=	bareos
 DISTVERSIONPREFIX=	Release/
-DISTVERSION=	19.2.11
+DISTVERSION=	19.2.13
 PORTREVISION?=	0
 CATEGORIES?=	sysutils
 PKGNAMEPREFIX?=	#
@@ -8,6 +8,7 @@ PKGNAMESUFFIX?=	19-server
 
 MAINTAINER=	acm@FreeBSD.org
 COMMENT?=	Backup archiving recovery open sourced (server)
+WWW=		https://www.bareos.org/
 
 LICENSE=	AGPLv3 LGPL3
 LICENSE_COMB=	multi

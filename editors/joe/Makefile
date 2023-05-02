@@ -1,5 +1,3 @@
-# Created by: torstenb@FreeBSD.org
-
 PORTNAME=	joe
 PORTVERSION=	4.6
 PORTEPOCH=	1
@@ -8,11 +6,12 @@ MASTER_SITES=	SF/joe-editor/JOE%20sources/joe-${PORTVERSION}
 
 MAINTAINER=	juergen.gotteswinter@googlemail.com
 COMMENT=	Joe's Own Editor
+WWW=		https://sourceforge.net/projects/joe-editor/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-CONFLICTS=	joe-2.*
+CONFLICTS=	jupp
 
 USES=		gmake iconv localbase ncurses
 GNU_CONFIGURE=	yes

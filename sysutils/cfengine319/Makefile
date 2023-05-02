@@ -1,23 +1,20 @@
-# Created by: jrhett@netconsonance.com
-
 PORTNAME=	cfengine
 PORTVERSION=	3.19.0
+PORTREVISION=	2
 CATEGORIES=	sysutils
 MASTER_SITES=	https://s3.amazonaws.com/cfengine-package-repos/tarballs/
 
 MAINTAINER=	cy@FreeBSD.org
-#		gjb@FreeBSD.org is also committer for this port
-#		skreuzer@FreeBSD.org is also committer for this port
 COMMENT=	Systems administration tool for networks
+WWW=		https://cfengine.com/
 
 LICENSE=	GPLv3
 
 CPE_VENDOR=	gnu
 
-CONFLICTS=	cfengine3[0-9] cfengine31[0-79]
+CONFLICTS=	cfengine cfengine3[0-9] cfengine3[0-9][0-9]
 .if !defined(MASTERDIR)
 PKGNAMESUFFIX=	319
-CONFLICTS+=	cfengine-3.*
 .endif
 
 FETCH_BEFORE_ARGS=	-o ${DISTDIR}/${DISTFILES}

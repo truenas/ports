@@ -1,14 +1,13 @@
-# Created by: torstenb
-
 PORTNAME?=		inn
-PORTVERSION?=		2.6.4
-PORTREVISION?=		0
+PORTVERSION?=		2.7.0
+PORTREVISION?=		1
 CATEGORIES=		news
 MASTER_SITES=		ISC
 MASTER_SITE_SUBDIR?=	${PORTNAME}
 
 MAINTAINER=	kbowling@FreeBSD.org
 COMMENT=	InterNetNews -- the Internet meets Netnews
+WWW=		https://www.eyrie.org/~eagle/software/inn/
 
 BUILD_DEPENDS=	p5-GD>=0:graphics/p5-GD \
 		p5-MIME-Tools>=0:mail/p5-MIME-Tools
@@ -23,34 +22,32 @@ CPE_VENDOR=	isc
 
 CONFLICTS?=	inn-current
 
-OPTIONS_DEFINE=		BERKELEYDB GNUPG KERBEROS PYTHON SASL KEYWORDS \
-			LARGE_FILES OPENSSL SETGID_INEWS TAGGED_HASH \
-			UUCP_RNEWS DOCS EXAMPLES
-OPTIONS_DEFAULT=	BERKELEYDB GNUPG KEYWORDS OPENSSL LARGE_FILES \
-			SETGID_INEW UUCP_RNEWS
+OPTIONS_DEFINE=		BERKELEYDB BLACKLISTD GNUPG KERBEROS PYTHON SASL \
+			SQLITE KEYWORDS LARGE_FILES OPENSSL SETGID_INEWS \
+			TAGGED_HASH UUCP_RNEWS DOCS EXAMPLES
+OPTIONS_DEFAULT=	BERKELEYDB BLACKLISTD GNUPG PYTHON SQLITE KEYWORDS \
+			OPENSSL LARGE_FILES SETGID_INEWS UUCP_RNEWS
 OPTIONS_SUB=		yes
 
 KERBEROS_DESC=		Enable Kerberos v5 (for auth_krb5)
 PYTHON_DESC=		Enable support for embedded Python
 SASL_DESC=		Enable SASL (for imapfeed authentication)
+SQLITE_DESC=		Enable SQLite (for ovsqlite overview method)
 TAGGED_HASH_DESC=	Use tagged hash table for history
 LARGE_FILES_DESC=	Support for files larger than 2GB
 KEYWORDS_DESC=		Automatic keyword generation support
 BERKELEYDB_DESC=	Enable BerkeleyDB (for ovdb overview method)
+BLACKLISTD_DESC=	Enable blacklistd support
 OPENSSL_DESC=		Enable OpenSSL (for NNTP over TLS/SSL support)
 GNUPG_DESC=		GnuPG support (for pgpverify control message)
 UUCP_RNEWS_DESC=	Install rnews suitable for use with net/freebsd-uucp
 SETGID_INEWS_DESC=	Enable posting articles locally for all users
 
-.if ${BRANCH:U} == 2.7
-OPTIONS_DEFINE+=	SQLITE
-OPTIONS_DEFAULT+=	SQLITE
-SQLITE_DESC=		Enable SQLite (for ovsqlite overview method)
+BLACKLISTD_CONFIGURE_WITH=	blacklist
 
+.if ${BRANCH:U} == 2.8
 PLIST_SUB+=		SNAPSHOT=""
 .else
-EXTRA_PATCHES=		${PATCHDIR}/extra-patch-storage_buffindexed_shmem.c
-
 PLIST_SUB+=		SNAPSHOT="@comment "
 .endif
 
@@ -74,10 +71,12 @@ CONFIGURE_ARGS+=	--mandir=${MANPREFIX}/man		\
 
 UUCP_RNEWS_RUN_DEPENDS=	uucp:net/freebsd-uucp
 
-INNLIB_LONG=		6.0.1
-LIBVER_LONG=		3.0.4
+INNLIB_LONG?=		8.0.0
+LIBVER_LONG?=		3.0.6
+LIBSTORAGEVER_LONG?=	3.1.0
 PLIST_SUB+=		LIBVER=${LIBVER_LONG:R:R} LIBVER_LONG=${LIBVER_LONG} \
-			INNLIB=${INNLIB_LONG:R:R} INNLIB_LONG=${INNLIB_LONG}
+			INNLIB=${INNLIB_LONG:R:R} INNLIB_LONG=${INNLIB_LONG} \
+			LIBSTORAGEVER=${LIBSTORAGEVER_LONG:R:R} LIBSTORAGEVER_LONG=${LIBSTORAGEVER_LONG}
 
 .include <bsd.port.options.mk>
 
@@ -89,9 +88,7 @@ PLIST_SUB+=		SQLITE=""
 TO_BE_STRIPPED+=	bin/ovsqlite-server
 CONFIG_FILES+=		ovsqlite.conf
 .else
-.  if ${BRANCH:U} == 2.7
 CONFIGURE_ARGS+=	--without-sqlite3
-.  endif
 PLIST_SUB+=		SQLITE="@comment "
 .endif
 
@@ -179,7 +176,7 @@ TO_BE_STRIPPED+=	bin/actsync bin/archive bin/auth/passwd/auth_krb5 \
 	bin/rnews.libexec/decode bin/rnews.libexec/encode bin/shlock \
 	bin/shrinkfile bin/sm bin/tdx-util bin/tinyleaf \
 	lib/libinn.so.${INNLIB_LONG} lib/libinnhist.so.${LIBVER_LONG} \
-	lib/libstorage.so.${LIBVER_LONG}
+	lib/libstorage.so.${LIBSTORAGEVER_LONG}
 
 CONFIG_FILES+=	actsync.cfg actsync.ign buffindexed.conf control.ctl \
 	control.ctl.local cycbuff.conf distrib.pats distributions expire.ctl \
@@ -201,9 +198,6 @@ GID!=	id -g
 post-patch:
 	@${REINPLACE_CMD} -E 's!\$$[{(]PATHETC[})]!${EXAMPLESDIR}!g' \
 	                  ${WRKSRC}/site/Makefile
-	@${REINPLACE_CMD} -e 's!et/com_err\.h!com_err.h!g'	\
-	                  -e 's!-lk5crypto!!g'			\
-	                  ${WRKSRC}/configure ${WRKSRC}/authprogs/auth_krb5.c
 	@${REINPLACE_CMD} -e '/^#pragma/d' ${WRKSRC}/*/*.c
 .if ${PORT_OPTIONS:MBERKELEYDB}
 	@${REINPLACE_CMD} -e 's!-ldb!-ldb-${BDB_VER}!' ${WRKSRC}/configure

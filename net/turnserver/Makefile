@@ -6,8 +6,9 @@ MASTER_SITES=	http://turnserver.open-sys.org/downloads/extradocs/:xdocs \
 PKGNAMEPREFIX=
 DISTFILES=	turn.extra.docs-2.0.0.1.tar.gz:xdocs
 
-MAINTAINER=	bhughes@FreeBSD.org
+MAINTAINER=	portmaster@BSDforge.com
 COMMENT=	STUN/TURN Server; IPv6, DTLS support; RFCs 5389, 5766, 6062, 6156
+WWW=		https://github.com/coturn/coturn
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

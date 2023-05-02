@@ -1,11 +1,12 @@
 PORTNAME=	spotify-tui
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.25.0
-PORTREVISION=	4
+PORTREVISION=	18
 CATEGORIES=	audio
 
 MAINTAINER=	lcook@FreeBSD.org
 COMMENT=	Spotify for the terminal written in Rust
+WWW=		https://github.com/Rigellute/spotify-tui
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -213,7 +214,7 @@ CARGO_CRATES=	addr2line-0.14.1 \
 		signal-hook-registry-1.4.0 \
 		slab-0.4.2 \
 		smallvec-1.4.1 \
-		socket2-0.3.12 \
+		socket2-0.3.19 \
 		str-buf-1.0.5 \
 		strsim-0.7.0 \
 		strsim-0.8.0 \

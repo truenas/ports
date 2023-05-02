@@ -1,5 +1,3 @@
-# Created by: Fabian Keil <fk@fabiankeil.de>
-
 PORTNAME=	Event-Lib
 PORTVERSION=	1.03
 PORTREVISION=	7
@@ -9,6 +7,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Makes libevent(3) accessible with Perl
+WWW=		https://metacpan.org/release/Event-Lib
 
 LIB_DEPENDS=	libevent.so:devel/libevent
 

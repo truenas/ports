@@ -1,12 +1,12 @@
-# Created by: Gustau Perez <gustau.perez@gmail.com>
-
 PORTNAME=	gnome-online-miners
 PORTVERSION=	3.34.0
+PORTREVISION=	2
 CATEGORIES=	net
 MASTER_SITES=	GNOME
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Crawls through your online content
+WWW=		https://wiki.gnome.org/Projects/GnomeOnlineMiners
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

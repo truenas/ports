@@ -1,20 +1,27 @@
-# Created by: Koop Mast <kwm@FreeBSD.org>
-
 PORTNAME=	libde265
-PORTVERSION=	1.0.2
-PORTREVISION=	5
-DISTVERSIONPREFIX=	v
+DISTVERSION=	1.0.11
 CATEGORIES=	multimedia
+MASTER_SITES=	https://github.com/strukturag/${PORTNAME}/releases/download/v${DISTVERSION}/
+
+PATCH_SITES=	https://github.com/strukturag/${PORTNAME}/commit/
+PATCHFILES=	97dd15303085eae2695a511717bf3239e209df96.patch:-p1 \
+		36391cda3d4e4fb3269a2ce310e6e0f634729f0b.patch:-p1 \
+		51f07f132f29832e025a8b913b61cbd20257c5fc.patch:-p1
 
 MAINTAINER=	kwm@FreeBSD.org
 COMMENT=	Open source h.265 video codec
+WWW=		https://www.libde265.org
 
-USE_GITHUB=	yes
-GH_ACCOUNT=	strukturag
+LICENSE=	LGPL3
+LICENSE_FILE=	${WRKSRC}/COPYING
 
-USES=		autoreconf compiler:c++11-lib libtool pathfix pkgconfig
+USES=		autoreconf compiler:c++11-lib cpe libtool pathfix pkgconfig
 GNU_CONFIGURE=	yes
-CONFIGURE_ARGS=	--disable-sherlock265 --disable-dec265
+USE_LDCONFIG=	yes
+
+CPE_VENDOR=	struktur
+
+CONFIGURE_ARGS=	--disable-static --disable-sherlock265
 
 .include <bsd.port.pre.mk>
 
@@ -23,5 +30,10 @@ BUILD_DEPENDS+=	${LOCALBASE}/bin/as:devel/binutils
 CONFIGURE_ENV+=	CCASFLAGS="${CFLAGS} -B${LOCALBASE}/bin -no-integrated-as"
 LLD_UNSAFE=	yes
 .endif
+
+post-install:
+	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/libde265.so.0.1.4
+	${MV} ${STAGEDIR}${PREFIX}/bin/dec265 \
+		${STAGEDIR}${PREFIX}/bin/libde265-dec265
 
 .include <bsd.port.post.mk>

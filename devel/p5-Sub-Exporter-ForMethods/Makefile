@@ -1,13 +1,12 @@
-# Created by: Wen Heping <wen@FreeBSD.org>
-
 PORTNAME=	Sub-Exporter-ForMethods
-PORTVERSION=	0.100054
+PORTVERSION=	0.100055
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Helper routines for using Sub::Exporter to build methods
+WWW=		https://metacpan.org/release/Sub-Exporter-ForMethods
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

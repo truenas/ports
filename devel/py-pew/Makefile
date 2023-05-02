@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	pew
 PORTVERSION=	1.2.0
 CATEGORIES=	devel python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Tool to manage multiple virtualenvs
+WWW=		https://github.com/berdario/pew
 
 LICENSE=	MIT
 

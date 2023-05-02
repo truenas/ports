@@ -1,31 +1,31 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	httpcore
-PORTVERSION=	0.14.3
+PORTVERSION=	0.17.0
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Minimal low-level HTTP client
+WWW=		https://github.com/encode/httpcore
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.md
 
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}anyio>=3.0<4:devel/py-anyio@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}certifi>=0:security/py-certifi@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}h11>=0.11<0.13:net/py-h11@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}h11>=0.13<0.15:net/py-h11@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}sniffio>=1.0<2:devel/py-sniffio@${PY_FLAVOR}
 
-USES=		python:3.6+
+USES=		python:3.7+
 USE_PYTHON=	autoplist concurrent distutils
 
 NO_ARCH=	yes
 
-OPTIONS_DEFINE=	HTTP2
+OPTIONS_DEFINE=	HTTP2 SOCKS
 OPTIONS_DEFAULT=HTTP2
 HTTP2_DESC=	HTTP/2 support
 
 HTTP2_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}h2>=3<5:www/py-h2@${PY_FLAVOR}
+SOCKS_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}socksio>=1<2:net/py-socksio@${PY_FLAVOR}
 
 .include <bsd.port.mk>

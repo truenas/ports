@@ -1,9 +1,10 @@
 PORTNAME=	libretro-beetle_supergrafx
-PORTVERSION=	0.20210214
+PORTVERSION=	0.20220218
 CATEGORIES=	games
 
-MAINTAINER=	menelkir@itroll.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Standalone port of Mednafen supergrafx to libretro
+WWW=		https://github.com/libretro/beetle-supergrafx-libretro
 
 LICENSE=	GPLv2
 
@@ -13,7 +14,7 @@ USE_LDCONFIG=	yes
 USE_GITHUB=	yes
 GH_ACCOUNT=	libretro
 GH_PROJECT=	beetle-supergrafx-libretro
-GH_TAGNAME=	c4dd156
+GH_TAGNAME=	59991a9
 
 PLIST_FILES=	lib/libretro/mednafen_supergrafx_libretro.so
 

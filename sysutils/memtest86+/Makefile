@@ -1,11 +1,12 @@
 PORTNAME=	memtest86+
 PORTVERSION=	5.01
-PORTREVISION=	4
+PORTREVISION=	5
 CATEGORIES=	sysutils
 MASTER_SITES=	http://www.memtest.org/download/${PORTVERSION}/
 
 MAINTAINER=	avg@FreeBSD.org
 COMMENT=	Stand-alone memory test for x86 architecture computers
+WWW=		https://www.memtest.org/
 
 BUILD_DEPENDS=	gcc48:lang/gcc48
 CC=		gcc48

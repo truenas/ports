@@ -1,11 +1,12 @@
 PORTNAME=	rollbar
-PORTVERSION=	0.16.2
+PORTVERSION=	0.16.3
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	python@FreeBSD.org
 COMMENT=	Easy and powerful exception tracking with Rollbar
+WWW=		https://github.com/rollbar/pyrollbar
 
 LICENSE=	MIT
 

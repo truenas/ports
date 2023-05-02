@@ -1,5 +1,3 @@
-# Created by: Sean Farley <sean-freebsd@farley.org>
-
 PORTNAME=	linux-ut
 PORTVERSION=	${UTVERSION}
 PORTREVISION=	5
@@ -14,6 +12,7 @@ DIST_SUBDIR=	${PORTNAME}
 
 MAINTAINER=	scf@FreeBSD.org
 COMMENT=	Unreal Tournament for Linux
+WWW=		https://liflg.org/?catid=6&gameid=51
 
 # Converted from RESTRICTED
 LICENSE=	unreal

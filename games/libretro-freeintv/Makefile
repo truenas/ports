@@ -1,9 +1,10 @@
 PORTNAME=	libretro-freeintv
-PORTVERSION=	0.20210512
+PORTVERSION=	0.20220319
 CATEGORIES=	games
 
-MAINTAINER=	menelkir@itroll.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Libretro emulation core for the Mattel Intellivision
+WWW=		https://github.com/libretro/freeintv
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -14,7 +15,7 @@ USE_LDCONFIG=	yes
 USE_GITHUB=	yes
 GH_ACCOUNT=	libretro
 GH_PROJECT=	FreeIntv
-GH_TAGNAME=	5fc8d85
+GH_TAGNAME=	295dd3c
 
 PLIST_FILES=	lib/libretro/freeintv_libretro.so
 

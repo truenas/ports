@@ -1,7 +1,5 @@
-# Created by: Gea-Suan Lin <gslin@gslin.org>
-
 PORTNAME=	composer
-DISTVERSION=	2.1.14
+DISTVERSION=	2.5.5
 CATEGORIES=	devel
 MASTER_SITES=	https://getcomposer.org/download/${DISTVERSION}/
 PKGNAMEPREFIX=	${PHP_PKGNAMEPREFIX}
@@ -12,6 +10,7 @@ DIST_SUBDIR=	${PORTNAME}-${PORTVERSION}
 
 MAINTAINER=	cyberbotx@cyberbotx.com
 COMMENT=	Dependency Manager for PHP, version 2.x
+WWW=		https://getcomposer.org/
 
 LICENSE=	MIT
 
@@ -19,9 +18,9 @@ RUN_DEPENDS=	ca_root_nss>0:security/ca_root_nss
 
 USES=		cpe php:flavors
 CPE_VENDOR=	getcomposer
-USE_PHP=	ctype filter intl json mbstring openssl phar
+USE_PHP=	ctype filter intl mbstring phar
 
-CONFLICTS_INSTALL=	php*-composer
+CONFLICTS_INSTALL=	php*-composer php*-composer2
 
 NO_ARCH=	yes
 NO_BUILD=	yes

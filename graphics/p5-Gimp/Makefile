@@ -1,14 +1,13 @@
-# Created by: Mathieu Arnold
-
 PORTNAME=	Gimp
 PORTVERSION=	2.33
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	graphics perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Write GIMP extensions/plug-ins/load- and save-handlers in Perl
+WWW=		https://metacpan.org/release/Gimp
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

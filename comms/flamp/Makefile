@@ -1,10 +1,12 @@
 PORTNAME=	flamp
 DISTVERSION=	2.2.07
+PORTREVISION=	1
 CATEGORIES=	comms hamradio
 MASTER_SITES=	SF/fldigi/flamp/
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Program for the Amateur Multicast Protocol
+WWW=		https://sourceforge.net/projects/fldigi/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

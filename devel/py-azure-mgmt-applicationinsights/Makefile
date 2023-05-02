@@ -1,11 +1,12 @@
 PORTNAME=	azure-mgmt-applicationinsights
 PORTVERSION=	1.0.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dbaio@FreeBSD.org
 COMMENT=	Microsoft Azure Application Insights Management Cli Library for Python
+WWW=		https://pypi.org/project/azure-mgmt-applicationinsights/
 
 LICENSE=	MIT
 

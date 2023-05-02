@@ -1,19 +1,19 @@
-# Created by: Alexander Moisseev <moiseev@mezonplus.ru>
-
 PORTNAME=	contextmenu
-PORTVERSION=	3.3
+PORTVERSION=	3.3.1
 CATEGORIES=	mail
 PKGNAMEPREFIX=	roundcube-
 PKGNAMESUFFIX=	${PHP_PKGNAMESUFFIX}
 
 MAINTAINER=	moiseev@mezonplus.ru
 COMMENT=	RoundCube webmail contextmenu plugin
+WWW=		https://github.com/johndoh/roundcube-contextmenu
 
 LICENSE=	GPLv3
 
 RUN_DEPENDS=	roundcube${PHP_PKGNAMESUFFIX}>=1.5.0:mail/roundcube@${PHP_FLAVOR}
 
 USES=	php:flavors
+IGNORE_WITH_PHP=82
 NO_BUILD=	yes
 NO_ARCH=	yes
 

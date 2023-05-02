@@ -1,18 +1,17 @@
 PORTNAME=	compton
 PORTVERSION=	20160907
-PORTREVISION=	5
+PORTREVISION=	6
 CATEGORIES=	x11-wm
 
 MAINTAINER=	femc7488@gmail.com
 COMMENT=	Feature-rich compositing window manager for X11
+WWW=		https://github.com/chjj/compton
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 RUN_DEPENDS=	xprop:x11/xprop \
 		xwininfo:x11/xwininfo
-
-CONFLICTS_INSTALL=	picom # bin/compton
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	chjj

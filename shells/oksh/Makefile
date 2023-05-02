@@ -1,11 +1,12 @@
 PORTNAME=	oksh
-DISTVERSION=	7.0
+DISTVERSION=	7.3
 PORTEPOCH=	1
 CATEGORIES=	shells
 MASTER_SITES=	https://github.com/ibara/oksh/releases/download/oksh-${DISTVERSION}/
 
-MAINTAINER=	tobik@FreeBSD.org
+MAINTAINER=	pkubaj@FreeBSD.org
 COMMENT=	Portable OpenBSD Korn shell
+WWW=		https://github.com/ibara/oksh
 
 LICENSE=	PD
 
@@ -24,13 +25,15 @@ PLIST=			/dev/null
 PLIST_FILES=		"@shell /rescue/oksh"
 .endif
 
-OPTIONS_DEFINE=		CURSES
+OPTIONS_DEFINE=		CURSES SMALL
 OPTIONS_DEFAULT=	CURSES
 
 CURSES_DESC=	Use ncurses for screen clearing routines
+SMALL_DESC=	Create smaller oksh binary
 
 CURSES_USES=			ncurses
 CURSES_CONFIGURE_ENABLE=	curses
+SMALL_CONFIGURE_ENABLE=		small
 
 .if ${FLAVOR} == static
 do-install:

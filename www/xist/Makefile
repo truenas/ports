@@ -1,15 +1,14 @@
-# Created by: ijliao
-
 PORTNAME=	xist
 PORTVERSION=	5.34
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP \
+MASTER_SITES=	PYPI \
 		http://ftp.livinglogic.de/xist/
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	ll-${PORTNAME}-${PORTVERSION}
 
 MAINTAINER=	python@FreeBSD.org
 COMMENT=	XML-based extensible HTML generator
+WWW=		http://www.livinglogic.de/Python/xist/
 
 LICENSE=	MIT
 

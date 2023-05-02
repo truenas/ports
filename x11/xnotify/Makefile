@@ -1,10 +1,11 @@
 PORTNAME=	xnotify
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.8.1
+DISTVERSION=	0.9.3
 CATEGORIES=	x11
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Read notifications from stdin and display them on the screen
+WWW=		https://github.com/phillbush/xnotify
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -16,14 +17,11 @@ USES=		xorg
 USE_GITHUB=	yes
 USE_XORG=	x11 xft xinerama
 GH_ACCOUNT=	phillbush
-MAKE_ARGS=	CC="${CC}" CPPFLAGS="${CPPFLAGS} ${CFLAGS}" \
-		LDFLAGS="${LDFLAGS} \$${LIBS}" \
-		PREFIX="${PREFIX}" \
-		LOCALINC="${LOCALBASE}/include" \
+MANPREFIX=	${PREFIX}/share/man
+MAKE_ENV=	LOCALINC="${LOCALBASE}/include" \
 		LOCALLIB="${LOCALBASE}/lib" \
 		X11INC="${LOCALBASE}/include" \
 		X11LIB="${LOCALBASE}/lib" \
-		FREETYPEINC="${LOCALBASE}/include/freetype2" \
 		${NULL}
 PLIST_FILES=	bin/${PORTNAME} \
 		share/man/man1/${PORTNAME}.1.gz \

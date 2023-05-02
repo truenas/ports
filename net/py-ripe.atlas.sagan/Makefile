@@ -1,13 +1,12 @@
-# Created by: Massimiliano Stucchi <mstucchi@ripe.net>
-
 PORTNAME=	ripe.atlas.sagan
 PORTVERSION=	1.3.0
 CATEGORIES=	net python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	mstucchi@ripe.net
 COMMENT=	Parsing library for RIPE Atlas measurement results
+WWW=		https://github.com/RIPE-NCC/ripe.atlas.sagan
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE

@@ -1,16 +1,15 @@
-# Created by: Bernhard Froehlich <decke@bluelife.at>
-
 PORTNAME=	phpvirtualbox
 DISTVERSION=	6.1
 CATEGORIES=	www
 
 MAINTAINER=	vbox@FreeBSD.org
 COMMENT=	AJAX Web Interface for VirtualBox
+WWW=		https://sourceforge.net/projects/phpvirtualbox/
 
 LICENSE=	GPLv3
 
 USES=		dos2unix php
-USE_PHP=	json session simplexml soap xml
+USE_PHP=	session simplexml soap xml
 
 NO_ARCH=	yes
 NO_BUILD=	yes

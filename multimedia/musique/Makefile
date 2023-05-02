@@ -1,9 +1,11 @@
 PORTNAME=	musique
 DISTVERSION=	1.10.1
+PORTREVISION=	2
 CATEGORIES=	multimedia
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Music player built for speed, simplicity and style
+WWW=		https://flavio.tordini.org/musique
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -23,7 +25,7 @@ GH_TUPLE=	\
 		flaviotordini:updater:18ce1d0:flaviotordini_updater/lib/updater
 
 USE_GL=		gl
-USE_QT=		core dbus declarative gui network sql widgets buildtools_build
+USE_QT=		core dbus declarative gui network sql widgets buildtools:build
 
 QMAKE_ARGS=	QMAKE_LRELEASE=${LRELEASE}
 
@@ -33,7 +35,7 @@ OPTIONS_DEFINE=		NLS
 OPTIONS_DEFAULT=	NLS
 OPTIONS_SUB=		yes
 
-NLS_USE=	QT=linguisttools_build
+NLS_USE=	QT=linguisttools:build
 
 post-patch-NLS-off:
 	@${REINPLACE_CMD} -e '/include(locale\/locale.pri)/d' ${WRKSRC}/${PORTNAME}.pro

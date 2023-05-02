@@ -1,10 +1,11 @@
 PORTNAME=	wlogout
 PORTVERSION=	1.1.1
-PORTREVISION=	1
-CATEGORIES=	x11
+PORTREVISION=	2
+CATEGORIES=	x11 wayland
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Wayland-based logout menu
+WWW=		https://github.com/ArtsyMacaw/wlogout
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

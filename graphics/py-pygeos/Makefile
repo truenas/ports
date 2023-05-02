@@ -1,13 +1,13 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	pygeos
-PORTVERSION=	0.10.2
+PORTVERSION=	0.12.0
+PORTREVISION=	1
 CATEGORIES=	graphics python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	GEOS wrapped in numpy ufuncs
+WWW=		https://github.com/pygeos/pygeos
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -17,7 +17,7 @@ BUILD_DEPENDS=	geos>=3.5:graphics/geos \
 LIB_DEPENDS=	libgeos.so:graphics/geos
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}numpy>=1.13,1:math/py-numpy@${PY_FLAVOR}
 
-USES=		python:3.7+
+USES=		python:3.8+
 USE_PYTHON=	autoplist concurrent cython distutils
 
 post-install:

@@ -1,7 +1,5 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	Metrics-Any
-PORTVERSION=	0.07
+PORTVERSION=	0.09
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 MASTER_SITE_SUBDIR=	CPAN:PEVANS
@@ -9,6 +7,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Abstract collection of monitoring metrics
+WWW=		https://metacpan.org/release/Metrics-Any
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

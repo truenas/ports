@@ -1,26 +1,24 @@
-# Created by: Kubilay Kocak <koobs@FreeBSD.org>
-
 PORTNAME=	mistune
-PORTVERSION=	0.8.4
+PORTVERSION=	2.0.5
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	koobs@FreeBSD.org
+MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Fastest markdown parser in pure Python
+WWW=		https://github.com/lepture/mistune
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}nose>0:devel/py-nose@${PY_FLAVOR}
+BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}setuptools>=0:devel/py-setuptools@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}wheel>=0:devel/py-wheel@${PY_FLAVOR}
 
 USES=		cpe python:3.6+
-CPE_VENDOR=	${PORTNAME}_project
-USE_PYTHON=	autoplist distutils
+USE_PYTHON=	autoplist concurrent pep517 unittest
 
 NO_ARCH=	yes
 
-do-test:
-	@cd ${WRKSRC} && ${PYTHON_CMD} ${PYDISTUTILS_SETUP} test
+CPE_VENDOR=	mistune_project
 
 .include <bsd.port.mk>

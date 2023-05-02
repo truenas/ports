@@ -1,10 +1,11 @@
 PORTNAME=	coppermine
-PORTVERSION=	1.6.12
+PORTVERSION=	1.6.25
 DISTVERSIONPREFIX=	v
 CATEGORIES=	www
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Web picture gallery script
+WWW=		https://coppermine-gallery.net/
 
 LICENSE=	GPLv3
 
@@ -16,7 +17,7 @@ IMAGEMAGICK_DESC=	Use ImageMagick instead of PHP GD extension
 IMAGEMAGICK_USES=	magick:6,run
 IMAGEMAGICK_USE_OFF=	PHP=gd
 
-USE_PHP=	ctype hash json mysqli pcre xml
+USE_PHP=	ctype mysqli xml
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	coppermine-gallery

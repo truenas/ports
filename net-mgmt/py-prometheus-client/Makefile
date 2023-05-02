@@ -1,11 +1,12 @@
 PORTNAME=	prometheus-client
-DISTVERSION=	0.12.0
 DISTVERSIONPREFIX=	v
+DISTVERSION=	0.16.0
 CATEGORIES=	net-mgmt python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	pizzamig@FreeBSD.org
 COMMENT=	Official Python client for Prometheus
+WWW=		https://github.com/prometheus/client_python
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -13,7 +14,7 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}twisted>=17.9.0:devel/py-twisted@${PY_FLAVOR}
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}twisted>=17.9.0:devel/py-twisted@${PY_FLAVOR}
 
-USES=	python:3.6+
+USES=	python
 
 USE_PYTHON=	autoplist distutils
 

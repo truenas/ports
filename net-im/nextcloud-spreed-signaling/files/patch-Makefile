@@ -1,104 +1,50 @@
---- Makefile.orig	2020-12-08 13:00:05 UTC
+--- Makefile.orig	2022-08-04 09:52:36 UTC
 +++ Makefile
-@@ -1,8 +1,8 @@
+@@ -1,7 +1,7 @@
  all: build
  
  GO := $(shell which go)
--GOPATH := "$(CURDIR)/vendor:$(CURDIR)"
--BINDIR := "$(CURDIR)/bin"
-+GOPATH := $(CURDIR)/vendor:$(CURDIR)
-+BINDIR := $(CURDIR)/bin
- VERSION := $(shell "$(CURDIR)/scripts/get-version.sh")
- TARVERSION := $(shell "$(CURDIR)/scripts/get-version.sh" --tar)
- ifneq ($(VERSION),)
-@@ -35,26 +35,10 @@ ifneq ($(COUNT),)
- TESTARGS := $(TESTARGS) -count $(COUNT)
- endif
+-GOPATH := $(shell "$(GO)" env GOPATH)
++GOPATH := $(CURDIR)/vendor
+ GODIR := $(shell dirname "$(GO)")
+ GOFMT := "$(GODIR)/gofmt"
+ GOOS ?= linux
+@@ -56,15 +56,13 @@ hook:
+ 	[ ! -d "$(CURDIR)/.git/hooks" ] || ln -sf "$(CURDIR)/scripts/pre-commit.hook" "$(CURDIR)/.git/hooks/pre-commit"
  
--hook:
--	[ ! -d "$(CURDIR)/.git/hooks" ] || ln -sf "$(CURDIR)/scripts/pre-commit.hook" "$(CURDIR)/.git/hooks/pre-commit"
--
--godeps:
--	GOPATH=$(GOPATH) $(GO) get github.com/rogpeppe/godeps
--
--easyjson: dependencies
--	GOPATH=$(GOPATH) $(GO) get -d github.com/mailru/easyjson/...
-+easyjson:
- 	GOPATH=$(GOPATH) $(GO) build -o ./vendor/bin/easyjson ./vendor/src/github.com/mailru/easyjson/easyjson/main.go
+ $(GOPATHBIN)/easyjson:
+-	[ "$(GOPROXY)" = "off" ] || $(GO) get -u -d github.com/mailru/easyjson/...
+-	$(GO) install github.com/mailru/easyjson/...
++	$(GO) build -o $(CURDIR)/easyjson ./vendor/src/github.com/mailru/easyjson/easyjson/main.go
  
--dependencies: hook godeps
--	GOPATH=$(GOPATH) ./vendor/bin/godeps -u dependencies.tsv
+ $(GOPATHBIN)/protoc-gen-go:
+-	$(GO) install google.golang.org/protobuf/cmd/protoc-gen-go
++	$(GO) build google.golang.org/protobuf/cmd/protoc-gen-go
  
--dependencies.tsv: godeps
--	set -e ;\
--	TMP=$$(mktemp -d) ;\
--	echo Make sure to remove $$TMP on error ;\
--	cp -r "$(CURDIR)/vendor" $$TMP ;\
--	GOPATH=$$TMP/vendor:"$(CURDIR)" "$(CURDIR)/vendor/bin/godeps" ./src/... > "$(CURDIR)/dependencies.tsv" ;\
--	rm -rf $$TMP
+ $(GOPATHBIN)/protoc-gen-go-grpc:
+-	[ "$(GOPROXY)" = "off" ] || $(GO) get -u -d google.golang.org/grpc/cmd/protoc-gen-go-grpc
+-	$(GO) install google.golang.org/grpc/cmd/protoc-gen-go-grpc
++	$(GO) build google.golang.org/grpc/cmd/protoc-gen-go-grpc
  
- src/signaling/continentmap.go:
+ continentmap.go:
  	$(CURDIR)/scripts/get_continent_map.py $@
-@@ -73,27 +57,28 @@ get:
- fmt: hook
- 	$(GO) fmt ./src/...
+@@ -104,10 +102,10 @@ coverhtml: vet common
+ 	$(GO) tool cover -html=cover.out -o coverage.html
  
--vet: dependencies common
-+vet: common
- 	GOPATH=$(GOPATH) $(GO) vet ./src/...
+ %_easyjson.go: %.go $(GOPATHBIN)/easyjson | common_proto
+-	PATH="$(GODIR)":$(PATH) "$(GOPATHBIN)/easyjson" -all $*.go
++	PATH="$(GODIR)":$(PATH) "$(CURDIR)/easyjson" -all $(CURDIR)/vendor/src/github.com/strukturag/nextcloud-spreed-signaling/$*.go
  
--test: dependencies vet common
-+test: vet common
- 	GOPATH=$(GOPATH) $(GO) test -v -timeout $(TIMEOUT) $(TESTARGS) ./src/...
+ %.pb.go: %.proto $(GOPATHBIN)/protoc-gen-go $(GOPATHBIN)/protoc-gen-go-grpc
+-	PATH="$(GODIR)":"$(GOPATHBIN)":$(PATH) protoc --go_out=. --go_opt=paths=source_relative \
++	PATH="$(GODIR)":"$(GOPATHBIN)":"$(CURDIR)":$(PATH) protoc --go_out=. --go_opt=paths=source_relative \
+ 		--go-grpc_out=. --go-grpc_opt=paths=source_relative \
+ 		$*.proto
  
--cover: dependencies vet common
-+cover: vet common
- 	rm -f cover.out && \
- 	GOPATH=$(GOPATH) $(GO) test -v -timeout $(TIMEOUT) -coverprofile cover.out ./src/signaling/... && \
- 	sed -i "/_easyjson/d" cover.out && \
- 	GOPATH=$(GOPATH) $(GO) tool cover -func=cover.out
+@@ -173,6 +171,13 @@ tarball: vendor
+ 	gzip --force nextcloud-spreed-signaling-$(TARVERSION).tar
  
--coverhtml: dependencies vet common
-+coverhtml: vet common
- 	rm -f cover.out && \
- 	GOPATH=$(GOPATH) $(GO) test -v -timeout $(TIMEOUT) -coverprofile cover.out ./src/signaling/... && \
- 	sed -i "/_easyjson/d" cover.out && \
- 	GOPATH=$(GOPATH) $(GO) tool cover -html=cover.out -o coverage.html
- 
--%_easyjson.go: %.go
-+%_easyjson.go: %.go | easyjson
- 	PATH=$(shell dirname $(GO)):$(PATH) GOPATH=$(GOPATH) ./vendor/bin/easyjson -all $*.go
- 
-+
- common: easyjson \
- 	src/signaling/api_signaling_easyjson.go \
- 	src/signaling/api_backend_easyjson.go \
-@@ -101,17 +86,17 @@ common: easyjson \
- 	src/signaling/natsclient_easyjson.go \
- 	src/signaling/room_easyjson.go
- 
--client: dependencies common
-+client: common
- 	mkdir -p $(BINDIR)
- 	GOPATH=$(GOPATH) $(GO) build $(BUILDARGS) -ldflags '$(INTERNALLDFLAGS)' -o $(BINDIR)/client ./src/client/...
- 
--server: dependencies common
-+server: common
- 	mkdir -p $(BINDIR)
- 	GOPATH=$(GOPATH) $(GO) build $(BUILDARGS) -ldflags '$(INTERNALLDFLAGS)' -o $(BINDIR)/signaling ./src/server/...
- 
--proxy: dependencies common
-+proxy: common
- 	mkdir -p $(BINDIR)
--	GOPATH=$(GOPATH) $(GO) build $(BUILDARGS) -ldflags '$(INTERNALLDFLAGS)' -o $(BINDIR)/proxy ./src/proxy/...
-+	GOPATH="$(GOPATH)" $(GO) build $(BUILDARGS) -ldflags '$(INTERNALLDFLAGS)' -o $(BINDIR)/proxy ./src/proxy/...
- 
- clean:
- 	rm -f src/signaling/*_easyjson.go
-@@ -123,6 +108,13 @@ tarball:
- 		--prefix=nextcloud-spreed-signaling-$(TARVERSION)/ \
- 		-o nextcloud-spreed-signaling-$(TARVERSION).tar.gz \
- 		HEAD
+ dist: tarball
 +install:
 +	install -d $(DESTDIR)$(PREFIX)/etc/ncs/
 +	install -m 644 server.conf.in $(DESTDIR)$(PREFIX)/etc/ncs/server.conf.sample
@@ -107,5 +53,5 @@
 +	install -m 755 bin/signaling $(DESTDIR)$(PREFIX)/bin/ncs-signaling
 +	install -m 755 bin/proxy $(DESTDIR)$(PREFIX)/bin/ncs-proxy
  
- dist: tarball
- 
+ .NOTPARALLEL: %_easyjson.go
+ .PHONY: continentmap.go vendor

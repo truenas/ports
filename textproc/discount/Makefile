@@ -1,23 +1,16 @@
-# Created by: Julien Laffaye <kimelto@gmail.com>
-
 PORTNAME=	discount
-PORTVERSION=	2.2.7
-DISTVERSIONPREFIX=	v
-PORTREVISION=	1
+PORTVERSION=	2.2.7b
 CATEGORIES=	textproc devel
+MASTER_SITES=	https://www.pell.portland.or.us/~orc/Code/discount/
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	C implementation of the Markdown markup language
+WWW=		https://www.pell.portland.or.us/~orc/Code/discount/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYRIGHT
 
-USES=		cpe pkgconfig
-
-CPE_VENDOR=	discount_project
-
-USE_GITHUB=	yes
-GH_ACCOUNT=	Orc
+USES=		cpe pkgconfig tar:bz2
 
 CFLAGS+=	-fPIC
 CONFIGURE_ARGS=	--mandir=${PREFIX}/share/man --prefix=${PREFIX} --shared
@@ -29,6 +22,10 @@ TEST_TARGET=	test
 USE_LDCONFIG=	yes
 
 CONFLICTS_INSTALL=	markdown
+
+CPE_VENDOR=	discount_project
+
+PORTSCOUT=	skipv:2.2.7
 
 OPTIONS_DEFINE=	EXTRA SAMPLES TAB8
 OPTIONS_DEFAULT=EXTRA TAB8

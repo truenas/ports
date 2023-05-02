@@ -1,5 +1,3 @@
-# Created by: Thomas Gellekum <tg@FreeBSD.org>
-
 PORTNAME=	cweb
 PORTVERSION=	3.64a.a
 CATEGORIES=	devel
@@ -15,6 +13,8 @@ MAKE_ARGS=	CWEBINPUTS="${DATADIR}" \
 		CFLAGS="${CFLAGS}" \
 		LINKFLAGS="" \
 		CC="${CC}"
+
+CONFLICTS_INSTALL=	tex-web2c
 
 OPTIONS_DEFINE=	DOCS
 

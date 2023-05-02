@@ -1,13 +1,12 @@
-# Created by: Hajimu UMEMOTO <ume@FreeBSD.org>
-
 PORTNAME=	scim-anthy
 PORTVERSION=	1.2.7
-PORTREVISION=	6
+PORTREVISION=	7
 CATEGORIES=	japanese
 MASTER_SITES=	OSDN/scim-imengine
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	SCIM IMEngine module using Anthy
+WWW=		https://sourceforge.jp/projects/scim-imengine/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

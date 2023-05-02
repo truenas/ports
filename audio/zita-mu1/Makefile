@@ -1,11 +1,12 @@
 PORTNAME=	zita-mu1
 DISTVERSION=	0.3.3
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	audio
 MASTER_SITES=	https://kokkinizita.linuxaudio.org/linuxaudio/downloads/
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Simple Jack app used to organise stereo monitoring
+WWW=		https://kokkinizita.linuxaudio.org/linuxaudio/zita-mu1-doc/quickguide.html
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/../COPYING

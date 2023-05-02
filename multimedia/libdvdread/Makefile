@@ -1,12 +1,12 @@
-# Created by: Marc van Woerkom <3d@FreeBSD.org>
-
 PORTNAME=	libdvdread
-PORTVERSION=	6.1.2
+DISTVERSION=	6.1.3
 CATEGORIES=	multimedia
-MASTER_SITES=	https://download.videolan.org/pub/videolan/${PORTNAME}/${DISTVERSION}/
+MASTER_SITES=	https://get.videolan.org/${PORTNAME}/${DISTVERSION}/ \
+		https://download.videolan.org/pub/videolan/${PORTNAME}/${DISTVERSION}/
 
 MAINTAINER=	martymac@FreeBSD.org
 COMMENT=	Videolan version of the libdvdread project
+WWW=		https://www.videolan.org/developers/libdvdnav.html
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -18,7 +18,7 @@ USE_LDCONFIG=	yes
 GNU_CONFIGURE=	yes
 INSTALL_TARGET=	install-strip
 
-PORTDOCS=	AUTHORS COPYING ChangeLog NEWS README TODO
+PORTDOCS=	AUTHORS COPYING ChangeLog NEWS README.md TODO
 
 OPTIONS_DEFINE=		DOCS
 OPTIONS_RADIO=		DVDCSS

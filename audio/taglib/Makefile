@@ -1,20 +1,17 @@
-# Created by: Frank Laszlo <laszlof@vonostingroup.com>
-
 PORTNAME=	taglib
-DISTVERSION=	1.12
+DISTVERSION=	1.13
 CATEGORIES=	audio
 MASTER_SITES=	https://github.com/${PORTNAME}/${PORTNAME}/releases/download/v${DISTVERSION}/ \
 		https://taglib.org/releases/
 
 MAINTAINER=	jhale@FreeBSD.org
 COMMENT=	Library for manipulating ID3 tags and Ogg comments
+WWW=		https://taglib.org/
 
 LICENSE=	LGPL21 MPL11
 LICENSE_COMB=	dual
 LICENSE_FILE_LGPL21=	${WRKSRC}/COPYING.LGPL
 LICENSE_FILE_MPL11=	${WRKSRC}/COPYING.MPL
-
-TEST_DEPENDS=	cppunit-config:devel/cppunit
 
 USES=		cmake compiler:c++11-lang cpe pathfix
 USE_LDCONFIG=	yes
@@ -38,9 +35,8 @@ RCC_EXTRA_PATCHES=	${FILESDIR}/extrapatch-rcc
 STATIC_CMAKE_BOOL_OFF=	BUILD_SHARED_LIBS
 
 TEST_BUILD_DEPENDS=	cppunit-config:devel/cppunit
-TEST_CMAKE_BOOL=	BUILD_TESTS
-TEST_TARGET=		check
-TEST_IMPLIES=		STATIC
+TEST_CMAKE_BOOL=	BUILD_TESTING
+TEST_TEST_TARGET=	check
 
 post-patch-RCC-on:
 	@${REINPLACE_CMD} -e 's|-ltag|-ltag -lrcc|g' \

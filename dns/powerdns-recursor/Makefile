@@ -1,7 +1,5 @@
-# Created by: sten@blinkenlights.nl
-
 PORTNAME=	recursor
-DISTVERSION=	4.5.7
+DISTVERSION=	4.8.4
 CATEGORIES=	dns
 MASTER_SITES=	http://downloads.powerdns.com/releases/
 PKGNAMEPREFIX=	powerdns-
@@ -9,6 +7,7 @@ DISTNAME=	pdns-${PORTNAME}-${DISTVERSION}
 
 MAINTAINER=	tremere@cainites.net
 COMMENT=	Advanced DNS recursor
+WWW=		https://www.PowerDNS.com/recursor.html
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -30,9 +29,9 @@ USE_RC_SUBR=	pdns-recursor
 
 GNU_CONFIGURE=	YES
 CONFIGURE_ARGS=	--sysconfdir=${PREFIX}/etc/pdns \
+		--with-libsodium=no \
 		--without-net-snmp \
-		--without-systemd \
-		--with-libsodium=no
+		--without-systemd
 
 SUB_FILES=	pkg-message
 
@@ -42,20 +41,16 @@ GROUPS=		pdns
 OPTIONS_DEFINE=		DNSTAP
 OPTIONS_DEFAULT=	LUA
 OPTIONS_SINGLE=		EXTLUA
-OPTIONS_SINGLE_EXTLUA=	LUA LUAJIT LUAJITOR
+OPTIONS_SINGLE_EXTLUA=	LUA LUAJIT
 
 DNSTAP_DESC=	dnstap support (see dnstap.info)
-LUAJITOR_DESC=	Use lang/luajit-openresty
-LUAJIT_DESC=	Use lang/luajit
+LUAJIT_DESC=	Use luajit
 LUA_DESC=	Use lang/lua
 
 DNSTAP_LIB_DEPENDS=		libfstrm.so:devel/fstrm
 DNSTAP_CONFIGURE_ENABLE=	dnstap
 
-LUAJITOR_LIB_DEPENDS=	libluajit-5.1.so.2:lang/luajit-openresty
-LUAJITOR_CONFIGURE_ON=	--with-lua=luajit
-
-LUAJIT_LIB_DEPENDS=	libluajit-5.1.so.2:lang/luajit
+LUAJIT_USES=		luajit
 LUAJIT_CONFIGURE_ON=	--with-lua=luajit
 
 LUA_USES=	lua

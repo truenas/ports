@@ -1,12 +1,12 @@
-# Created by: TAKATSU Tomonari <tota@FreeBSD.org>
-
 PORTNAME=	lava
 DISTVERSION=	1.6.10
+PORTREVISION=	1
 CATEGORIES=	math
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Latent Variable Models
+WWW=		https://cran.r-project.org/web/packages/lava/
 
 LICENSE=	GPLv3
 

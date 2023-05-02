@@ -1,8 +1,6 @@
-# Created by: Ying-Chieh Liao <ijliao@FreeBSD.org>
-
 PORTNAME=	rvm
 PORTVERSION=	1.11
-PORTREVISION=	5
+PORTREVISION=	6
 CATEGORIES=	archivers
 MASTER_SITES=	SF
 PKGNAMESUFFIX=	an
@@ -10,6 +8,7 @@ DISTNAME=	${PORTNAME}_${PORTVERSION}
 
 MAINTAINER=	portmaster@BSDforge.com
 COMMENT=	Archive manager that uses rsync to manage backups
+WWW=		http://rvm.sourceforge.net/
 
 LICENSE=	GPLv2
 

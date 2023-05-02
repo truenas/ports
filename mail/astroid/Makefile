@@ -1,11 +1,12 @@
 PORTNAME=	astroid
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.15
-PORTREVISION=	7
+DISTVERSION=	0.16
+PORTREVISION=	4
 CATEGORIES=	mail
 
 MAINTAINER=	mylan.connolly@gmail.com
 COMMENT=	Graphical email client for notmuch, inspired by sup and others
+WWW=		https://astroidmail.github.io/
 
 LICENSE=	GPLv3+ LGPL21+
 LICENSE_COMB=	dual
@@ -25,7 +26,7 @@ LIB_DEPENDS=	libboost_system.so:devel/boost-libs \
 		libsoup-2.4.so:devel/libsoup
 RUN_DEPENDS=	notmuch:mail/notmuch
 
-USES=		cmake compiler:c11 desktop-file-utils gettext-runtime gnome \
+USES=		cmake compiler:c++14-lang desktop-file-utils gettext-runtime gnome \
 		pkgconfig
 USE_GITHUB=	yes
 GH_ACCOUNT=	astroidmail

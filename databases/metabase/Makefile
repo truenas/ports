@@ -1,6 +1,6 @@
 PORTNAME=	metabase
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.40.1
+DISTVERSION=	0.41.5
 CATEGORIES=	databases java
 MASTER_SITES=	https://downloads.metabase.com/${DISTVERSIONPREFIX}${PORTVERSION}/
 DISTNAME=	${PORTNAME}
@@ -10,6 +10,7 @@ EXTRACT_ONLY=
 
 MAINTAINER=	daniel@morante.net
 COMMENT=	Simple and powerful analytics tool that supports multiple data stores
+WWW=		https://metabase.com/
 
 LICENSE=	AGPLv3
 

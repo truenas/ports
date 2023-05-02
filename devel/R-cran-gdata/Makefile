@@ -1,13 +1,12 @@
-# Created by: TAKATSU Tomonari <tota@FreeBSD.org>
-
 PORTNAME=	gdata
-PORTVERSION=	2.18.0
-PORTREVISION=	4
+PORTVERSION=	2.18.0.1
+PORTREVISION=	1
 CATEGORIES=	devel
 DISTNAME=	${PORTNAME}_${PORTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Various R programming tools for data manipulation
+WWW=		https://cran.r-project.org/web/packages/gdata/
 
 LICENSE=	GPLv2
 

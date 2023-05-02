@@ -1,14 +1,18 @@
 PORTNAME=	nilearn
 DISTVERSION=	0.8.1
+PORTREVISION=	1
 CATEGORIES=	science python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Statistical learning for neuroimaging in Python
+WWW=		https://nilearn.github.io/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
+
+BROKEN=		does not install: No module named 'threadpoolctl'. Module "sklearn" could not be found. Core reason is that threadpoolctl is broken, see https://reviews.freebsd.org/D35513
 
 RUN_DEPENDS=	${PYNUMPY} \
 		${PYTHON_PKGNAMEPREFIX}codecov>0:devel/py-codecov@${PY_FLAVOR} \

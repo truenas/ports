@@ -1,11 +1,13 @@
 PORTNAME=	Fiona
-DISTVERSION=	1.8.20
+DISTVERSION=	1.8.22
+PORTREVISION=	1
 CATEGORIES=	graphics python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	lbartoletti@FreeBSD.org
 COMMENT=	OGR's neat and nimble API for Python programmers
+WWW=		https://pypi.org/project/Fiona/
 
 LICENSE=	BSD3CLAUSE
 
@@ -20,6 +22,8 @@ LIB_DEPENDS+=	libgdal.so:graphics/gdal
 
 USES=		compiler:c++11-lang python:3.6+
 USE_PYTHON=	autoplist distutils cython
+
+CONFLICTS_INSTALL=	fio
 
 post-install:
 	${FIND} ${STAGEDIR}${PYTHON_SITELIBDIR}/${PORTNAME:tl} -name *.so -exec ${STRIP_CMD} {} +

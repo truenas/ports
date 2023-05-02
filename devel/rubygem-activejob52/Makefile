@@ -1,13 +1,12 @@
-# Created by: Johannes Jost Meixner <xmj@FreeBSD.org>
-
 PORTNAME=	activejob
-PORTVERSION=	5.2.6
+PORTVERSION=	5.2.8.1
 CATEGORIES=	devel rubygems
 MASTER_SITES=	RG
 PKGNAMESUFFIX=	52
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Job class declarations for a variety of queueing backends
+WWW=		https://github.com/rails/rails/tree/main/activejob
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/MIT-LICENSE
@@ -16,7 +15,6 @@ RUN_DEPENDS=	rubygem-activesupport52>=${PORTVERSION}:devel/rubygem-activesupport
 		rubygem-globalid-rails52>=0.3.6:databases/rubygem-globalid-rails52
 
 USES=		cpe gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

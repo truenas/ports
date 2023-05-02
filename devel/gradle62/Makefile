@@ -1,5 +1,3 @@
-# Created by: Gasol Wu <gasol.wu@gmail.com>
-
 PORTNAME=	gradle
 PORTVERSION=	6.2.2
 PORTREVISION=	1
@@ -10,6 +8,7 @@ EXTRACT_SUFX=	-bin.zip
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Project automation tool
+WWW=		https://www.gradle.org/
 
 LICENSE=	APACHE20 BSD3CLAUSE CDDL EPL LGPL21+ MIT MPL20
 LICENSE_COMB=	multi
@@ -17,6 +16,9 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 
 USES=		cpe zip
 USE_JAVA=	yes
+
+CONFLICTS_INSTALL=	gradle gradle6
+
 DATADIR=	${PREFIX}/share/${PORTNAME}${PKGNAMESUFFIX}
 NO_ARCH=	yes
 NO_BUILD=	yes

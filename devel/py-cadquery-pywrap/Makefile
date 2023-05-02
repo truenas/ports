@@ -1,11 +1,13 @@
 PORTNAME=	cadquery-pywrap
 DISTVERSIONPREFIX=	occt
 DISTVERSION=	7.5
+PORTREVISION=	1
 CATEGORIES=	devel python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ports@nicandneal.net
 COMMENT=	C++ binding generator for python
+WWW=		https://github.com/CadQuery/pywrap
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

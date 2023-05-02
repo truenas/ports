@@ -1,12 +1,12 @@
-# Created by: stas
-
 PORTNAME=	podofo
-PORTVERSION=	0.9.7
+PORTVERSION=	0.9.8
+PORTREVISION=	1
 CATEGORIES=	graphics print
 MASTER_SITES=	SF
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	PDF manipulation library and tools
+WWW=		http://podofo.sourceforge.net/
 
 LICENSE=	GPLv2 LGPL21
 LICENSE_COMB=	multi
@@ -27,9 +27,10 @@ CPE_VENDOR=	podofo_project
 
 DOS2UNIX_FILES=	cmake/modules/FindFREETYPE.cmake
 
-OPTIONS_DEFINE=	IMPOSE JPEG PNG TIFF
-OPTIONS_DEFAULT=JPEG PNG TIFF
+OPTIONS_DEFINE=	IMPOSE JPEG PNG TIFF UNISTRING
+OPTIONS_DEFAULT=JPEG PNG TIFF UNISTRING
 IMPOSE_DESC=	Build impose tool (Lua required)
+UNISTRING_DESC=	Use libunistring for conversion
 
 IMPOSE_CMAKE_BOOL=	WANT_LUA
 IMPOSE_CXXFLAGS=	-I${LUA_INCDIR}
@@ -41,5 +42,7 @@ PNG_CMAKE_BOOL=		WANT_PNG
 PNG_LIB_DEPENDS=	libpng.so:graphics/png
 TIFF_CMAKE_BOOL=	WANT_TIFF
 TIFF_LIB_DEPENDS=	libtiff.so:graphics/tiff
+UNISTRING_CMAKE_BOOL=	WANT_UNISTRING
+UNISTRING_LIB_DEPENDS=	libunistring.so:devel/libunistring
 
 .include <bsd.port.mk>

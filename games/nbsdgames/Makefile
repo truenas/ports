@@ -1,10 +1,11 @@
 PORTNAME=	nbsdgames
 DISTVERSIONPREFIX=	v
-DISTVERSION=	4.1.2
+DISTVERSION=	5
 CATEGORIES=	games
 
-MAINTAINER=	fuz@fuz.su
+MAINTAINER=	fuz@FreeBSD.org
 COMMENT=	17 text-based modern games
+WWW=		https://github.com/abakh/nbsdgames
 
 LICENSE=	CC0-1.0
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -29,6 +30,7 @@ _GAMES=	battleship \
 	miketron \
 	mines \
 	muncher \
+	nbsdgames \
 	pipes \
 	rabbithole \
 	redsquare \
@@ -36,8 +38,12 @@ _GAMES=	battleship \
 	snakeduel \
 	sos \
 	sudoku \
+	tugow
 
 post-install:
+	${INSTALL_DATA} ${WRKSRC}/nbsdgames.desktop ${STAGEDIR}${PREFIX}/share/applications/
+	${MKDIR} ${STAGEDIR}${PREFIX}/share/icons/hicolor/scalable/apps/
+	${INSTALL_DATA} ${WRKSRC}/nbsdgames.svg ${STAGEDIR}${PREFIX}/share/icons/hicolor/scalable/apps/
 .for game in ${_GAMES}
 	${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/${game}
 .endfor

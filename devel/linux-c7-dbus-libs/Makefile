@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	dbus
 PORTVERSION=	1.10.24
 DISTVERSIONSUFFIX=	-15.el7
@@ -9,6 +7,7 @@ PKGNAMESUFFIX=	-libs
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	Libraries for accessing D-BUS (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://www.freedesktop.org/Software/dbus
 
 LICENSE=	GPLv2+
 

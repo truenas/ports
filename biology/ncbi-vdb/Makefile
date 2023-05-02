@@ -1,10 +1,11 @@
 PORTNAME=	ncbi-vdb
 DISTVERSION=	2.11.0
-PORTREVISION=	1
+PORTREVISION=	6
 CATEGORIES=	biology
 
 MAINTAINER=	mzaki@niid.go.jp
 COMMENT=	NCBI's virtualized back-end for accessing Sequence Read Archive
+WWW=		https://github.com/ncbi/ncbi-vdb/wiki
 
 LICENSE=	PD
 LICENSE_FILE=	${WRKSRC}/LICENSE

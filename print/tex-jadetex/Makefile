@@ -1,19 +1,20 @@
 PORTNAME=	jadetex
 PORTVERSION=	3.13
-PORTREVISION=	3
+PORTREVISION=	5
 CATEGORIES=	print
-MASTER_SITES=	ftp://tug.org/historic/systems/texlive/2015/
+MASTER_SITES=	TEX_CTAN/systems/texlive/${TEXLIVE_YEAR}/
 PKGNAMEPREFIX=	tex-
-DISTNAME=	texlive-20150523-texmf
+DISTNAME=	texlive-${TEXLIVE_VERSION}-texmf
 DIST_SUBDIR=	TeX
 EXTRACT_ONLY=
 
 MAINTAINER=	tex@FreeBSD.org
 COMMENT=	TeX backend for Jade, DSSSL processor for SGML/XML documents
+WWW=		http://jadetex.sourceforge.net/
 
-USES=		tar:xz
-USE_TEX=	texmf pdftex xmltex fmtutil
-TEXHASHDIRS=	${TEXMFDISTDIR} ${TEXMFVARDIR}
+USES=		tar:xz tex
+USE_TEX=	fmtutil pdftex xmltex
+
 EXTRACT_AFTER_ARGS=| ${TAR} -xf - -C ${STAGEDIR}${PREFIX}/share \
 		--strip-components 1 --no-same-permission --no-same-owner \
 		${EXTRACT_FILES:S,^,${DISTNAME}/,}
@@ -21,8 +22,11 @@ EXTRACT_FILES= \
 	texmf-dist/doc/otherformats/jadetex \
 	texmf-dist/source/jadetex/base \
 	texmf-dist/tex/jadetex/base
+
 NO_ARCH=	yes
 NO_BUILD=	yes
+
+TEXHASHDIRS=	${TEXMFDISTDIR} ${TEXMFVARDIR}
 TEX_FORMATS=	jadetex
 
 do-install:

@@ -1,11 +1,12 @@
 PORTNAME=	galculator
 PORTVERSION=	2.1.4
-PORTREVISION=	1
+PORTREVISION=	2
 DISTVERSIONPREFIX=v
 CATEGORIES=	math
 
 MAINTAINER=	naddy@FreeBSD.org
 COMMENT=	GTK-based scientific calculator
+WWW=		http://galculator.mnim.org/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

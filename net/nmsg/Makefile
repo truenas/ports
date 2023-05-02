@@ -1,11 +1,12 @@
 PORTNAME=	nmsg
 PORTVERSION=	1.0.1
-PORTREVISION=	0
+PORTREVISION=	1
 CATEGORIES=	net
 MASTER_SITES=	FARSIGHT LOCAL/truckman/farsight
 
 MAINTAINER=	truckman@FreeBSD.org
 COMMENT=	Network message encapsulation system
+WWW=		https://github.com/farsightsec/nmsg
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/COPYRIGHT

@@ -1,11 +1,12 @@
 PORTNAME=	authheaders
-DISTVERSION=	0.14.0
+DISTVERSION=	0.15.1
 CATEGORIES=	mail python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dvl@FreeBSD.org
 COMMENT=	Generate email authentication headers
+WWW=		https://github.com/ValiMail/authentication-headers
 
 LICENSE=	MPL20
 LICENSE_FILE=	${WRKSRC}/MPL-2.0

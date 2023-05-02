@@ -1,12 +1,12 @@
-# Created by: TAKATSU Tomonari <tota@FreeBSD.org>
-
 PORTNAME=	caret
-DISTVERSION=	6.0-90
+DISTVERSION=	6.0-93
+PORTREVISION=	1
 CATEGORIES=	devel
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Classification and Regression Training
+WWW=		https://topepo.github.io/caret/
 
 LICENSE=	GPLv2+
 

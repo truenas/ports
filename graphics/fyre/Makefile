@@ -1,13 +1,12 @@
-# Created by: Adam Weinberger <adamw@FreeBSD.org>
-
 PORTNAME=	fyre
 PORTVERSION=	1.0.1
-PORTREVISION=	23
+PORTREVISION=	26
 CATEGORIES=	graphics
 MASTER_SITES=	http://releases.navi.cx/fyre/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Chaos map rendering system with GTK+-2 interface
+WWW=		https://fyre.navi.cx/
 
 LICENSE=	GPLv2 GPLv3
 LICENSE_COMB=	dual

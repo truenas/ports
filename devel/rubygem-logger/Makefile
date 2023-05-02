@@ -1,18 +1,16 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	logger
-PORTVERSION=	1.4.4
+PORTVERSION=	1.5.3
 CATEGORIES=	devel rubygems
 MASTER_SITES=	RG
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Simple logging utility for outputting messages
+WWW=		https://github.com/ruby/logger
 
 LICENSE=	BSD2CLAUSE RUBY
 LICENSE_COMB=	dual
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

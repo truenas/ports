@@ -1,5 +1,3 @@
-# Created by: Clement Laforet <clement@FreeBSD.org>
-
 PORTNAME=	mod_rpaf
 PORTVERSION=	0.8.4
 DISTVERSIONPREFIX=	v
@@ -9,10 +7,11 @@ PKGNAMESUFFIX=	2
 
 MAINTAINER=	apache@FreeBSD.org
 COMMENT=	Make proxied requests appear with client IP
+WWW=		https://github.com/gnif/mod_rpaf/
 
 LICENSE=	APACHE20
 
-USES=		apache:2.4+ cpe
+USES=		apache cpe
 
 CPE_VENDOR=	thomas_eibner
 

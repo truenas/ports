@@ -1,9 +1,10 @@
 PORTNAME=	libretro-quicknes
-PORTVERSION=	0.20210214
+PORTVERSION=	0.20220228
 CATEGORIES=	games
 
-MAINTAINER=	menelkir@itroll.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	NES emulator core for libretro
+WWW=		https://github.com/libretro/QuickNES_Core
 
 LICENSE=	GPLv2
 
@@ -13,7 +14,7 @@ USE_LDCONFIG=	yes
 USE_GITHUB=	yes
 GH_ACCOUNT=	libretro
 GH_PROJECT=	QuickNES_Core
-GH_TAGNAME=	901248a
+GH_TAGNAME=	e6f08c1
 
 PLIST_FILES=	lib/libretro/quicknes_libretro.so
 

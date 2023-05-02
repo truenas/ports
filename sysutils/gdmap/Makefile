@@ -1,13 +1,12 @@
-# Created by: Rodrigo Graeff <delphus@gmail.com>
-
 PORTNAME=	gdmap
 PORTVERSION=	0.8.1
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	sysutils gnome
 MASTER_SITES=	SF
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Graphical disk map Utility
+WWW=		http://gdmap.sourceforge.net/
 
 LICENSE=	GPLv2
 

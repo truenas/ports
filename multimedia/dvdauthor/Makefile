@@ -1,12 +1,11 @@
-# Created by: pb@FreeBSD.org
-
 PORTNAME=	dvdauthor
-PORTVERSION=	0.7.2.20190419
-PORTREVISION=	1
+PORTVERSION=	0.7.2.20211105
+PORTREVISION=	2
 CATEGORIES=	multimedia
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Makes a DVD file structure from one or more MPEG2 streams
+WWW=		https://dvdauthor.sourceforge.net/ https://github.com/ldo/dvdauthor
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -20,7 +19,7 @@ LIB_DEPENDS=	libdvdread.so:multimedia/libdvdread \
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	ldo
-GH_TAGNAME=	d5bb0b
+GH_TAGNAME=	fe8fe35
 
 USES=		autoreconf:build bison:alias gettext-tools \
 		gmake gnome iconv localbase pkgconfig

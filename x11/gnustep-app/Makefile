@@ -1,8 +1,6 @@
-# Created by: dirk.meyer@dinoex.sub.org
-
 PORTNAME=	gnustep-app
 PORTVERSION=	2.0.0
-PORTREVISION=	17
+PORTREVISION=	18
 CATEGORIES=	x11 gnustep
 
 MAINTAINER=	ports@FreeBSD.org

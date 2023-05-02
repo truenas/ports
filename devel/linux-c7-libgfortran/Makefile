@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <emulation@FreeBSD.org$
-
 PORTNAME=	libgfortran
 PORTVERSION=	4.8.5
 DISTVERSIONSUFFIX=	-44.el7
@@ -8,6 +6,7 @@ CATEGORIES=	devel linux
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	Runtime libraries for gfortran (Linux Centos ${LINUX_DIST_VER})
+WWW=		https://www.centos.org
 
 USES=		cpe linux:c7
 CPE_VENDOR=	gnu

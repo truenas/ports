@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	anyio
-PORTVERSION=	3.3.4
+PORTVERSION=	3.6.2
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	High level compatibility layer for multiple asynchronous event loop implementations
+WWW=		https://github.com/agronholm/anyio
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -24,7 +23,7 @@ NO_ARCH=	yes
 OPTIONS_DEFINE=	TRIO
 TRIO_DESC=	Use trio as backend
 
-TRIO_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}trio>=0.16:net/py-trio@${PY_FLAVOR}
+TRIO_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}trio>=0.16<0.22:net/py-trio@${PY_FLAVOR}
 
 .include <bsd.port.pre.mk>
 

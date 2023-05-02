@@ -1,12 +1,11 @@
-# Created by: Ryan Steinmetz <zi@FreeBSD.org>
-
 PORTNAME=	mixlib-install
-PORTVERSION=	3.12.16
+PORTVERSION=	3.12.20
 CATEGORIES=	devel rubygems
 MASTER_SITES=	RG
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Library to interact with the software distribution system in Chef
+WWW=		https://www.chef.io/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -16,7 +15,6 @@ RUN_DEPENDS=	rubygem-mixlib-shellout>=0:devel/rubygem-mixlib-shellout \
 		rubygem-thor>=0:devel/rubygem-thor
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

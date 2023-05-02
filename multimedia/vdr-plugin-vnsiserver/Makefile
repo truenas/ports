@@ -1,5 +1,3 @@
-# Created by: Juergen Lock <nox@FreeBSD.org>
-
 PORTNAME=	vdr-plugin-vnsiserver
 PORTVERSION=	14.0.20150330
 PORTREVISION=	3
@@ -7,6 +5,7 @@ CATEGORIES=	multimedia
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Video Disk Recorder - VNSI server plugin
+WWW=		https://www.vdr-portal.de/board/thread.php?threadid=95292
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

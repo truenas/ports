@@ -1,10 +1,12 @@
 PORTNAME=	gojq
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.12.6
+DISTVERSION=	0.12.12
+PORTREVISION=	1
 CATEGORIES=	textproc
 
-MAINTAINER=	nork@ninth-nine.com
+MAINTAINER=	nork@FreeBSD.org
 COMMENT=	Pure Go implementation of jq
+WWW=		https://github.com/itchyny/gojq
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -13,6 +15,9 @@ USES=		go:modules
 
 GO_MODULE=	github.com/itchyny/gojq
 GO_TARGET=	./cmd/gojq
+
+PLIST_FILES=	bin/gojq \
+		share/zsh/site-functions/_gojq
 
 post-install:
 	${MKDIR} ${STAGEDIR}${PREFIX}/share/zsh/site-functions

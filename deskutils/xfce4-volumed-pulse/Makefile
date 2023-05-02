@@ -1,14 +1,13 @@
-# Created by: Olivier Duchateau
-
 PORTNAME=	xfce4-volumed-pulse
 PORTVERSION=	0.2.3
-PORTREVISION=	4
+PORTREVISION=	6
 CATEGORIES=	deskutils xfce
 MASTER_SITES=	XFCE/apps
 DIST_SUBDIR=	xfce4
 
 MAINTAINER=	xfce@FreeBSD.org
 COMMENT=	Volume management daemon for Xfce using PulseAudio
+WWW=		https://git.xfce.org/apps/xfce4-volumed-pulse/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING

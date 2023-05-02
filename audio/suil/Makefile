@@ -1,12 +1,12 @@
-# Created by: Michael Beer <beerml@sigma6audio.de>
-
 PORTNAME=	suil
-PORTVERSION=	0.10.10
+PORTVERSION=	0.10.12
+PORTREVISION=	2
 CATEGORIES=	audio
 MASTER_SITES=	http://download.drobilla.net/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	C library for loading and wrapping LV2 plugin UIs
+WWW=		http://drobilla.net/software/suil/
 
 LICENSE=	ISCL
 LICENSE_FILE=	${WRKSRC}/COPYING

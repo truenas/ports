@@ -1,8 +1,6 @@
-# Created by: NAKATA Maho <chat95@mbox.kyoto-inet.or.jp>
-
 PORTNAME=	lapack++
 PORTVERSION=	2.5.4
-PORTREVISION=	10
+PORTREVISION=	11
 CATEGORIES=	math
 MASTER_SITES=	SF/lapackpp \
 		http://math.nist.gov/lapack++/:doc
@@ -13,6 +11,7 @@ DISTFILES=	${DISTNAME}${EXTRACT_SUFX}
 
 MAINTAINER=	fortran@FreeBSD.org
 COMMENT=	Linear Algebra PACKage in C++, a wrapper for LAPACK
+WWW=		https://sourceforge.net/projects/lapackpp/
 
 USES=		fortran gmake pathfix libtool
 

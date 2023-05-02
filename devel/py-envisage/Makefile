@@ -1,13 +1,13 @@
-# Created by: Vladimir Chukharev
-
 PORTNAME=	envisage
 PORTVERSION=	4.9.0
+PORTREVISION=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	Vladimir.Chukharev@gmail.com
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Enthought extensible application framework
+WWW=		http://code.enthought.com/projects/envisage
 
 LICENSE=	BSD3CLAUSE PSFL LGPL20
 LICENSE_COMB=	multi

@@ -1,13 +1,12 @@
-# Created by: Akinori MUSHA aka knu <knu@idaemons.org>
-
 PORTNAME=	gauche
-PORTVERSION=	0.9.10
+PORTVERSION=	0.9.12
 CATEGORIES=	lang scheme
-MASTER_SITES=	https://github.com/shirok/Gauche/releases/download/release0_9_10/
+MASTER_SITES=	https://github.com/shirok/Gauche/releases/download/release${PORTVERSION:S/./_/g}/
 DISTNAME=	Gauche-${PORTVERSION}
 
 MAINTAINER=	lassi+freebsd@lassi.io
 COMMENT=	Scheme script interpreter with multibyte character handling
+WWW=		https://practical-scheme.net/gauche/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -21,7 +20,7 @@ GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--with-local=${LOCALBASE} ${ICONV_CONFIGURE_BASE:S/lib//}
 USE_LDCONFIG=	yes
 TEST_TARGET=	check
-ABI_VERSION=	0.97
+ABI_VERSION=	0.98
 
 PLIST_SUB=	ABI_VERSION="${ABI_VERSION}" \
 		VERSION="${PORTVERSION}" \

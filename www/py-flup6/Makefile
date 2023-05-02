@@ -1,11 +1,12 @@
 PORTNAME=	flup6
 PORTVERSION=	1.1.1
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	FreeBSD@Shaneware.biz
 COMMENT=	Random assortment of WSGI servers
+WWW=		https://bitbucket.org/denisenkom/flup
 
 LICENSE=	BSD2CLAUSE
 

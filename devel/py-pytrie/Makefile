@@ -1,17 +1,16 @@
-# Created by: Kubilay Kocak <koobs@FreeBSD.org>
-
 PORTNAME=	pytrie
-PORTVERSION=	0.3.1
+PORTVERSION=	0.4.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	PyTrie-${PORTVERSION}
 
-MAINTAINER=	koobs@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Pure Python implementation of the trie data structure
+WWW=		https://github.com/gsakkis/pytrie
 
 LICENSE=	BSD3CLAUSE
-#LICENSE_FILE=	${WRKSRC}/LICENSE # Not packaged (yet) in sdist
+LICENSE_FILE=	${WRKSRC}/LICENSE
 
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}sortedcontainers>0:devel/py-sortedcontainers@${PY_FLAVOR}
 

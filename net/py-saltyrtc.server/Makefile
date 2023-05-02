@@ -2,11 +2,12 @@ PORTNAME=	saltyrtc.server
 PORTVERSION=	5.0.1
 PORTREVISION=	1
 CATEGORIES=	net python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	egypcio@FreeBSD.org
 COMMENT=	SaltyRTC compliant signalling server
+WWW=		https://github.com/saltyrtc/saltyrtc-server-python
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

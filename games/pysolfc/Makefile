@@ -1,5 +1,6 @@
 PORTNAME=	pysolfc
-DISTVERSION=	2.14.0
+DISTVERSION=	2.20.0
+PORTREVISION=	2
 CATEGORIES=	games python
 MASTER_SITES=	SF/${PORTNAME}/PySolFC/${PYSOLFCDIR} \
 		SF/${PORTNAME}/PySolFC-Cardsets/minimal/:cardsets \
@@ -11,6 +12,7 @@ DIST_SUBDIR=	${PORTNAME}
 
 MAINTAINER=	kai@FreeBSD.org
 COMMENT=	Solitaire game, written in Python and the successor of PySol
+WWW=		https://pysolfc.sourceforge.io/
 
 LICENSE=	GPLv2+ GPLv3+
 LICENSE_COMB=	multi
@@ -49,7 +51,7 @@ SOUND_RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}game>0:devel/py-game@${PY_FLAVOR}
 
 PYSOLFCDIR=	PySolFC-${DISTVERSION}
 PYSOLFCDIST=	${PYSOLFCDIR}${EXTRACT_SUFX}
-CARDSETDIR=	PySolFC-Cardsets--Minimal-2.0.2
+CARDSETDIR=	PySolFC-Cardsets--Minimal-2.2.0
 CARDSETDIST=	${CARDSETDIR}.tar.xz
 MUSICDIR=	PySol-Music-4.50
 MUSICDIST=	${MUSICDIR:tl}.tar.xz

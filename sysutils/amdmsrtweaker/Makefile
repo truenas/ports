@@ -1,11 +1,10 @@
-# Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
-
 PORTNAME=	amdmsrtweaker
 PORTVERSION=	1.1
 CATEGORIES=	sysutils
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Tool to reprogram the P-states on various AMD CPUs and APUs
+WWW=		https://github.com/danfe/amdmsrtweaker-lnx
 
 LICENSE=	GPLv3
 

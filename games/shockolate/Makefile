@@ -1,14 +1,13 @@
-# Created by: Vasily Postnicov <shamaz.mazum@gmail.com>
-
 PORTNAME=	shockolate
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.8.2-43
 DISTVERSIONSUFFIX=	-ga9eb1b93
-PORTREVISION=	4
+PORTREVISION=	6
 CATEGORIES=	games
 
 MAINTAINER=	shamaz.mazum@gmail.com
 COMMENT=	Open source and cross-platform remake of a cult game System Shock
+WWW=		https://github.com/Interrupt/systemshock
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE

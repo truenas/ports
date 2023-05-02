@@ -1,14 +1,13 @@
-# Created by: Akinori MUSHA aka knu <knu@idaemons.org>
-
 PORTNAME=	libffi
 PORTVERSION=	3.0.13
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	devel
 MASTER_SITES=	ftp://sourceware.org/pub/libffi/
 PKGNAMEPREFIX=	mingw32-
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	The libffi library cross-compiled for MinGW32
+WWW=		http://sources.redhat.com/libffi/
 
 BUILD_DEPENDS=	${PKGNAMEPREFIX}gcc:devel/${PKGNAMEPREFIX}gcc \
 		${LOCALBASE}/mingw32/include/stdlib.h:devel/${PKGNAMEPREFIX}bin-msvcrt

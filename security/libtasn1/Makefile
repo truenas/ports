@@ -1,19 +1,18 @@
-# Created by: Sergei Kolobov <sergei@kolobov.com>
-
 PORTNAME=	libtasn1
-PORTVERSION=	4.18.0
+PORTVERSION=	4.19.0
 CATEGORIES=	security
 MASTER_SITES=	GNU \
 		GNUPG/gnutls/${PORTNAME}
 
 MAINTAINER=	novel@FreeBSD.org
 COMMENT=	ASN.1 structure parser library
+WWW=		https://www.gnu.org/software/libtasn1/
 
 LICENSE=	LGPL21+ GPLv3
 LICENSE_COMB=	multi
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-USES=		cpe libtool pathfix pkgconfig compiler
+USES=		cpe libtool pathfix pkgconfig
 USE_CSTD=	c99
 USE_LDCONFIG=	yes
 GNU_CONFIGURE=	yes
@@ -30,15 +29,8 @@ INFO=		libtasn1
 DOCS_CONFIGURE_ENABLE=	gtk-doc
 DOCS_BUILD_DEPENDS=	gtkdoc-check:textproc/gtk-doc
 
-.include <bsd.port.pre.mk>
-
-# https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=252548
-.if ${CHOSEN_COMPILER_TYPE} == clang && ${COMPILER_VERSION} >= 100
-CFLAGS:=		${CFLAGS:C/-O[2-9]/-O1/g}
-.endif
-
 post-install-DOCS-on:
 	@${MKDIR} ${STAGEDIR}${DOCSDIR}
 	cd ${WRKSRC} && ${INSTALL_DATA} ${DOCS} ${STAGEDIR}${DOCSDIR}
 
-.include <bsd.port.post.mk>
+.include <bsd.port.mk>

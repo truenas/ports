@@ -1,17 +1,16 @@
-# Created by: gahr
-
 PORTNAME=	libgroove
 PORTVERSION=	4.3.0
-PORTREVISION=	8
+PORTREVISION=	10
 CATEGORIES=	audio
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Audio dispatching library
+WWW=		https://github.com/andrewrk/libgroove
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-LIB_DEPENDS=	libavcodec.so:multimedia/ffmpeg \
+LIB_DEPENDS=	libavcodec.so.58:multimedia/ffmpeg4 \
 		libchromaprint.so:audio/chromaprint \
 		libebur128.so:audio/libebur128 \
 		libspeexdsp.so:audio/speexdsp
@@ -26,5 +25,9 @@ CFLAGS+=	-Wno-error=deprecated-declarations # ffmpeg 3.1
 
 PLIST_SUB+=	VER1=${PORTVERSION:R:R} \
 		VER3=${PORTVERSION}
+
+post-patch:
+	@${REINPLACE_CMD} -e 's|%%LOCALBASE%%|${LOCALBASE}|g' \
+		${PATCH_WRKSRC}/cmake/FindLibAV.cmake
 
 .include <bsd.port.mk>

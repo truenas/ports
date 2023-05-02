@@ -1,11 +1,13 @@
 PORTNAME=	libodfgen
 PORTVERSION=	0.1.8
+PORTREVISION=	2
 CATEGORIES=	textproc
 MASTER_SITES=	SF/libwpd/${PORTNAME}/${PORTNAME}-${PORTVERSION}
 PKGNAMESUFFIX=	01
 
 MAINTAINER=	office@FreeBSD.org
 COMMENT=	Library for generating documents in Open Document Format (ODF)
+WWW=		https://sourceforge.net/p/libwpd/wiki/libodfgen
 
 LICENSE=	LGPL21 MPL20
 LICENSE_COMB=	dual

@@ -1,11 +1,12 @@
 PORTNAME=	vim-bridge
 DISTVERSION=	0.6
 CATEGORIES=	editors python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	0mp@FreeBSD.org
 COMMENT=	Decorator enabing transparent calls to Python functions in Vim scripts
+WWW=		https://github.com/nvie/vim_bridge
 
 LICENSE=	BSD4CLAUSE
 LICENSE_FILE=	${WRKSRC}/setup.py

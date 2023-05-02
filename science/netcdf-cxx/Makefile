@@ -1,16 +1,14 @@
-# Created by: Sunpoet Po-Chuan Hsieh <sunpoet@sunpoet.net>
-
 PORTNAME=	netcdf-cxx
 PORTVERSION=	4.3.1
-PORTREVISION=	1
+PORTREVISION=	3
 CATEGORIES=	science
-MASTER_SITES=	https://www.unidata.ucar.edu/downloads/netcdf/ftp/ \
-		ftp://ftp.unidata.ucar.edu/pub/netcdf/ \
+MASTER_SITES=	https://downloads.unidata.ucar.edu/netcdf-cxx/${PORTVERSION}/ \
 		LOCAL/sunpoet
 DISTNAME=	${PORTNAME}4-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	C++ library for machine-independent, array-oriented data access
+WWW=		https://www.unidata.ucar.edu/software/netcdf/
 
 LICENSE=	UCAR_UNIDATA
 LICENSE_FILE=	${WRKSRC}/COPYRIGHT

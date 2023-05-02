@@ -1,5 +1,3 @@
-# Created by: Loic Pefferkorn <loic-freebsd@loicp.eu>
-
 PORTNAME=	burp
 PORTVERSION=	2.4.0
 CATEGORIES=	sysutils
@@ -7,6 +5,7 @@ MASTER_SITES=	https://github.com/grke/burp/releases/download/${PORTVERSION}/
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Network backup and restore program
+WWW=		https://burp.grke.org/
 
 LICENSE=	AGPLv3 PD
 LICENSE_COMB=	multi
@@ -30,7 +29,7 @@ CONFLICTS_INSTALL=	burp-devel
 
 CPE_VENDOR=	burp_project
 
-PORTSCOUT=	limit:^2\.2\.
+PORTSCOUT=	limit:^2\.4\.
 
 OPTIONS_DEFINE=	IPV6
 IPV6_CONFIGURE_ENABLE=	ipv6

@@ -1,14 +1,13 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	pip-shims
-PORTVERSION=	0.6.0
+PORTVERSION=	0.7.3
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	pip_shims-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Compatibility shims for pip versions 8 thru current
+WWW=		https://github.com/sarugaku/pip-shims
 
 LICENSE=	ISCL
 LICENSE_FILE=	${WRKSRC}/LICENSE

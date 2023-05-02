@@ -1,11 +1,13 @@
 PORTNAME=	quadprog
 DISTVERSION=	0.1.11
+PORTREVISION=	1
 CATEGORIES=	math python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	stephen@FreeBSD.org
 COMMENT=	Quadratic programming package
+WWW=		https://pypi.org/project/quadprog/
 
 LICENSE=	GPLv2+
 

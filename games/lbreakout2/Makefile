@@ -1,5 +1,3 @@
-# Created by: verm@drunkmonk.net
-
 PORTNAME=	lbreakout2
 PORTVERSION=	2.6.5
 PORTREVISION=	1
@@ -12,9 +10,12 @@ EXTRACT_ONLY=	${DISTNAME}${EXTRACT_SUFX}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Breakout-style arcade game
+WWW=		https://lgames.sourceforge.io/LBreakout2/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
+
+DEPRECATED=	Deprecated by upsteam, does not support large screen resolutions. Use games/lbreakouthd instead
 
 LIB_DEPENDS=	libpng.so:graphics/png
 

@@ -1,13 +1,12 @@
-# Created by: will
-
 PORTNAME=	Proc-Background
-PORTVERSION=	1.30
+PORTVERSION=	1.31
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Perl interface to running background processes
+WWW=		https://metacpan.org/release/Proc-Background
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

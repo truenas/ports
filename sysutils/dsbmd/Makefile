@@ -1,11 +1,10 @@
-# Created by: Marcel Kaiser <mk@nic-nac-project.org>
-
 PORTNAME=	dsbmd
 PORTVERSION=	1.11.4
 CATEGORIES=	sysutils
 
 MAINTAINER=	mk@nic-nac-project.org
 COMMENT=	Media mounting daemon
+WWW=		https://github.com/mrclksr/DSBMD
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

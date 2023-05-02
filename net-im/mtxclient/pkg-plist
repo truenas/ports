@@ -2,6 +2,7 @@ include/mtx.hpp
 include/mtx/common.hpp
 include/mtx/errors.hpp
 include/mtx/events.hpp
+include/mtx/events/account_data/direct.hpp
 include/mtx/events/account_data/fully_read.hpp
 include/mtx/events/aliases.hpp
 include/mtx/events/avatar.hpp
@@ -19,6 +20,7 @@ include/mtx/events/history_visibility.hpp
 include/mtx/events/join_rules.hpp
 include/mtx/events/member.hpp
 include/mtx/events/messages/audio.hpp
+include/mtx/events/messages/confetti.hpp
 include/mtx/events/messages/emote.hpp
 include/mtx/events/messages/file.hpp
 include/mtx/events/messages/image.hpp
@@ -30,6 +32,7 @@ include/mtx/events/mscs/image_packs.hpp
 include/mtx/events/name.hpp
 include/mtx/events/nheko_extensions/hidden_events.hpp
 include/mtx/events/pinned_events.hpp
+include/mtx/events/policy_rules.hpp
 include/mtx/events/power_levels.hpp
 include/mtx/events/presence.hpp
 include/mtx/events/reaction.hpp
@@ -40,6 +43,7 @@ include/mtx/events/tombstone.hpp
 include/mtx/events/topic.hpp
 include/mtx/events/unknown.hpp
 include/mtx/events/voip.hpp
+include/mtx/events/widget.hpp
 include/mtx/events_impl.hpp
 include/mtx/identifiers.hpp
 include/mtx/lightweight_error.hpp
@@ -47,14 +51,15 @@ include/mtx/log.hpp
 include/mtx/pushrules.hpp
 include/mtx/requests.hpp
 include/mtx/responses.hpp
+include/mtx/responses/capabilities.hpp
 include/mtx/responses/common.hpp
 include/mtx/responses/create_room.hpp
 include/mtx/responses/crypto.hpp
 include/mtx/responses/device.hpp
 include/mtx/responses/empty.hpp
-include/mtx/responses/groups.hpp
 include/mtx/responses/login.hpp
 include/mtx/responses/media.hpp
+include/mtx/responses/members.hpp
 include/mtx/responses/messages.hpp
 include/mtx/responses/notifications.hpp
 include/mtx/responses/profile.hpp
@@ -62,6 +67,7 @@ include/mtx/responses/public_rooms.hpp
 include/mtx/responses/register.hpp
 include/mtx/responses/sync.hpp
 include/mtx/responses/turn_server.hpp
+include/mtx/responses/users.hpp
 include/mtx/responses/version.hpp
 include/mtx/responses/well-known.hpp
 include/mtx/secret_storage.hpp

@@ -1,12 +1,13 @@
 PORTNAME=	xen
 PKGNAMESUFFIX=	-tools
-PORTVERSION=	4.15.0
-PORTREVISION=	3
+PORTVERSION=	4.17.0
+PORTREVISION=	0
 CATEGORIES=	sysutils emulators
 MASTER_SITES=	http://downloads.xenproject.org/release/xen/${PORTVERSION}/
 
 MAINTAINER=	royger@FreeBSD.org
 COMMENT=	Xen management tools
+WWW=		https://wiki.xen.org/wiki/XL
 
 LICENSE=	GPLv2 LGPL3
 LICENSE_COMB=	multi
@@ -17,7 +18,8 @@ LIB_DEPENDS=	libyajl.so:devel/yajl \
 		libargp.so:devel/argp-standalone \
 		libxml2.so:textproc/libxml2
 BUILD_DEPENDS=	seabios>0:misc/seabios \
-		${LOCALBASE}/share/edk2-xen/XEN_X64_EFI.fd:sysutils/edk2@xen_x64
+		${LOCALBASE}/share/edk2-xen/XEN_X64_EFI.fd:sysutils/edk2@xen_x64 \
+		bash>0:shells/bash
 RUN_DEPENDS=	seabios>0:misc/seabios \
 		${LOCALBASE}/share/edk2-xen/XEN_X64_EFI.fd:sysutils/edk2@xen_x64
 
@@ -34,7 +36,7 @@ ONLY_FOR_ARCHS=	amd64
 ONLY_FOR_ARCHS_REASON=	not yet ported to anything other than amd64
 
 USES=		cpe gettext gmake gnome libtool localbase:ldflags perl5 \
-		pkgconfig python:3.6+ shebangfix iconv bison
+		pkgconfig python:3.6+ shebangfix iconv bison ninja:build
 USE_GNOME=	glib20
 USE_LDCONFIG=	yes
 USE_PYTHON=	py3kplist
@@ -59,8 +61,9 @@ DOCS_ALL_TARGET=	docs
 INSTALL_TARGET=		install-tools
 DOCS_INSTALL_TARGET=	install-docs
 
-# Fix pv shim build with clang 13.0.0
-EXTRA_PATCHES+=	${PATCHDIR}/0001-efi-fix-alignment-of-function-parameters-in-compat-m.patch:-p1
+# clang build fixes
+EXTRA_PATCHES+=	${PATCHDIR}/0001-xen-x86-Remove-the-use-of-K-R-functions.patch:-p1 \
+		${PATCHDIR}/0001-tools-Remove-the-use-of-K-R-functions.patch:-p1
 
 .include <bsd.port.options.mk>
 
@@ -70,13 +73,6 @@ IGNORE=		only supported on FreeBSD
 
 .if ${PORT_OPTIONS:MSPICE} && ${OSVERSION} < 1300008
 BROKEN=	SPICE support requires FreeBSD version 13.0 or higher
-.endif
-
-# ivshmem requires eventfd
-.if ${OSVERSION} >= 1300000
-PLIST_SUB+=	IVSHMEM=""
-.else
-PLIST_SUB+=	IVSHMEM="@comment "
 .endif
 
 post-patch:
@@ -96,7 +92,5 @@ do-install:
 
 post-install:
 	${MKDIR} ${STAGEDIR}/var/run/xen
-	# Empty dir, purge it.
-	${RMDIR} ${STAGEDIR}/${PREFIX}/lib/xen/include
 
 .include <bsd.port.mk>

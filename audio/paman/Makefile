@@ -1,13 +1,12 @@
-# Created by: Romain Tartiere <romain@blogreen.org>
-
 PORTNAME=	paman
 PORTVERSION=	0.9.4
-PORTREVISION=	11
+PORTREVISION=	12
 CATEGORIES=	audio
 MASTER_SITES=	http://0pointer.de/lennart/projects/${PORTNAME}/
 
 MAINTAINER=	romain@FreeBSD.org
 COMMENT=	Gtk frontend for PulseAudio
+WWW=		https://0pointer.de/lennart/projects/paman/
 
 LIB_DEPENDS=	libglademm-2.4.so:devel/libglademm24 \
 		libpulse.so:audio/pulseaudio

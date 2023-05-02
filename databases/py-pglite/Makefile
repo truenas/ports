@@ -1,11 +1,12 @@
 PORTNAME=	pglite
 DISTVERSION=	1.0.13
 CATEGORIES=	databases python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	lbartoletti@FreeBSD.org
 COMMENT=	Light PostgreSQL: use PostgreSQL as a simple SQLite database
+WWW=		https://github.com/Oslandia/pglite
 
 LICENSE=	LGPL20+
 

@@ -1,10 +1,12 @@
 PORTNAME=	usethis
 DISTVERSION=	2.0.1
+PORTREVISION=	1
 CATEGORIES=	devel
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	jpbeconne@free.fr
 COMMENT=	Automate Package and Project Setup
+WWW=		https://CRAN.R-project.org/package=usethis
 
 LICENSE=	GPLv3
 

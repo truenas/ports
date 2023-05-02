@@ -1,11 +1,12 @@
 PORTNAME=	patch
 DISTVERSION=	1.16
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	kai@FreeBSD.org
 COMMENT=	Cross-platform alternative to the UNIX patch utility
+WWW=		https://github.com/techtonik/python-patch
 
 LICENSE=	MIT
 

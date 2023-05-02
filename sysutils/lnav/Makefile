@@ -1,16 +1,15 @@
-# Created by: Thomas Hurst <tom@hur.st>
-
 PORTNAME=	lnav
-DISTVERSION=	0.10.1
+DISTVERSION=	0.11.1
 CATEGORIES=	sysutils
 MASTER_SITES=	https://github.com/tstack/${PORTNAME}/releases/download/v${PORTVERSION}/
 
 MAINTAINER=	tom@hur.st
 COMMENT=	Terminal based log file navigator
+WWW=		https://lnav.org/
 
 LICENSE=	BSD2CLAUSE
 
-LIB_DEPENDS=	libpcrecpp.so:devel/pcre
+LIB_DEPENDS=	libpcre2-8.so:devel/pcre2
 
 USES=		autoreconf compiler:c++14-lang gmake ncurses readline sqlite \
 		tar:bz2

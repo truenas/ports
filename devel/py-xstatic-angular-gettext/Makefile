@@ -1,14 +1,13 @@
-# Created by: Alexander Nusov <alexander.nusov@nfvexpress.com>
-
 PORTNAME=	xstatic-angular-gettext
 PORTVERSION=	2.4.1.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	XStatic-Angular-Gettext-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Angular-Gettext (XStatic packaging standard)
+WWW=		https://angular-gettext.rocketeer.be/
 
 LICENSE=	MIT
 

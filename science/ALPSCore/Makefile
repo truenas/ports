@@ -1,11 +1,12 @@
 PORTNAME=	ALPSCore
 DISTVERSIONPREFIX=	v
 DISTVERSION=	2.2.0
-PORTREVISION=	13
+PORTREVISION=	18
 CATEGORIES=	science
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Generic algorithms and utilities for condensed matter physics
+WWW=		https://github.com/ALPSCore/ALPSCore
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE.TXT
@@ -14,7 +15,7 @@ BROKEN_i386=	fails to build: no matching member function for call to 'read'
 
 LIB_DEPENDS=	libboost_system.so:devel/boost-libs \
 		libhdf5.so:science/hdf5 \
-		libsz.so:science/szip
+		libsz.so:science/libaec
 
 USES=		cmake compiler:c++11-lang eigen:3
 USE_GITHUB=	yes

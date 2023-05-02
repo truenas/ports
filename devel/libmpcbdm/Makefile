@@ -1,5 +1,3 @@
-# Created by: Stanislav Sedov <stas@fonon.realnet>
-
 PORTNAME=	libmpcbdm
 PORTVERSION=	0.0.3
 PORTREVISION=	1
@@ -10,6 +8,7 @@ DISTNAME=	mpc8xx-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Standalone library to control various mpc8xx boards
+WWW=		https://sourceforge.net/projects/libmpc8xx/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

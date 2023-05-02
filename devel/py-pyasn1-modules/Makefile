@@ -1,11 +1,12 @@
 PORTNAME=	pyasn1-modules
 DISTVERSION=	0.2.8
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	rm@FreeBSD.org
 COMMENT=	Collection of ASN.1 data structures for py-pyasn1
+WWW=		https://github.com/etingof/pyasn1-modules
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

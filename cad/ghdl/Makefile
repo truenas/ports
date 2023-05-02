@@ -1,16 +1,12 @@
-# Created by: John Marino <marino@FreeBSD.org>
-
 PORTNAME=	ghdl
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.0.0
+DISTVERSION=	3.0.0
 PORTREVISION=	1
 CATEGORIES=	cad
 
-PATCH_SITES=	https://github.com/${GH_ACCOUNT}/${PORTNAME}/commit/
-PATCHFILES=	38025814efbba57d7527f37b16847b114815ab62.patch:-p1 # fixes https://github.com/ghdl/ghdl/issues/1627
-
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	GNU VHDL simulator
+WWW=		https://github.com/ghdl/ghdl
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING.md
@@ -18,16 +14,18 @@ LICENSE_FILE=	${WRKSRC}/COPYING.md
 LIB_DEPENDS=	libgmp.so:math/gmp \
 		libmpfr.so:math/mpfr \
 		libmpc.so:math/mpc
-TEST_DEPENDS=	bash:shells/bash
+TEST_DEPENDS=	bash:shells/bash \
+		${PYTHON_PKGNAMEPREFIX}pyTooling>=2.11.0:devel/py-pyTooling@${PY_FLAVOR}
 
-USES=		ada:run gmake shebangfix
+USES=		ada:run gmake python:test shebangfix
 SHEBANG_FILES=	testsuite/testsuite.sh
-USE_GITHUB=	yes
 USE_LDCONFIG=	yes
+
+USE_GITHUB=	yes
 
 GNU_CONFIGURE=	yes
 
-LLVMVER=	${LLVM_DEFAULT}
+LLVMVER=	15 # last supported version, see https://github.com/ghdl/ghdl/blob/master/configure#L317
 
 CONFIGURE_ARGS=	--disable-libghdl
 
@@ -41,7 +39,7 @@ MCODE_DESC=		Use the MCODE backend
 
 LLVM_DESC=		Code generator is LLVM
 LLVM_USES=		libedit ncurses
-LLVM_CONFIGURE_ON=	--with-llvm-config=${LOCALBASE}/bin/llvm-config${LLVM_DEFAULT}
+LLVM_CONFIGURE_ON=	--with-llvm-config=${LOCALBASE}/bin/llvm-config${LLVMVER}
 LLVM_BUILD_DEPENDS=	llvm-config${LLVMVER}:devel/llvm${LLVMVER}
 LLVM_RUN_DEPENDS=	llc${LLVMVER}:devel/llvm${LLVMVER}
 
@@ -53,8 +51,10 @@ post-install-MCODE-on:
 post-install-LLVM-on:
 	@${STRIP_CMD} \
 		${STAGEDIR}${PREFIX}/bin/ghdl \
+		${STAGEDIR}${PREFIX}/bin/ghwdump \
 		${STAGEDIR}${PREFIX}/bin/ghdl1-llvm \
-		${STAGEDIR}${PREFIX}/lib/libghdlvpi.so
+		${STAGEDIR}${PREFIX}/lib/libghdlvpi.so \
+		${STAGEDIR}${PREFIX}/lib/libghw.so
 
 do-test:
 	@cd ${WRKSRC}/testsuite && \

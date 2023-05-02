@@ -1,10 +1,11 @@
 PORTNAME=	pounce
-DISTVERSION=	3.0
+DISTVERSION=	3.1
 CATEGORIES=	irc
 MASTER_SITES=	https://git.causal.agency/pounce/snapshot/
 
 MAINTAINER=	june@causal.agency
 COMMENT=	Multi-client IRC bouncer
+WWW=		https://git.causal.agency/pounce/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/LICENSE

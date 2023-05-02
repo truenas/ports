@@ -1,14 +1,13 @@
-# Created by: Adam Weinberger <adamw@FreeBSD.org>
-
 PORTNAME=	pluma-plugins
 PORTVERSION=	1.26.0
-PORTREVISION=	1
+PORTREVISION=	4
 CATEGORIES=	editors mate
 MASTER_SITES=	MATE
 DIST_SUBDIR=	mate
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Plugins for Pluma
+WWW=		https://mate-desktop.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,12 +1,12 @@
 PORTNAME=	gi-docgen
-PORTVERSION=	2021.5
-PORTREVISION=	1
+PORTVERSION=	2022.2
 CATEGORIES=	textproc python
-MASTER_SITES=	GNOME
+MASTER_SITES=	GNOME/sources/${PORTNAME}/${PORTVERSION:C/^([0-9]+)\..*/\1/}
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	desktop@FreeBSD.org
 COMMENT=	Documentation generator for GObject-based libraries
+WWW=		https://gitlab.gnome.org/GNOME/gi-docgen
 
 LICENSE=	APACHE20 GPLv3
 LICENSE_COMB=	dual
@@ -21,7 +21,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}Jinja2>0:devel/py-Jinja2@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}toml>0:textproc/py-toml@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}typogrify>0:textproc/py-typogrify@${PY_FLAVOR}
 
-USES=		python:3.6+
+USES=		python:3.7+ tar:xz
 USE_PYTHON=	autoplist distutils
 
 NO_ARCH=	yes

@@ -1,5 +1,3 @@
-# Created by: TAKAHASHI Kaoru <kaoru@kaisei.org>
-
 PORTNAME=	FreeBSD-i386-Ptrace
 PORTVERSION=	0.05
 CATEGORIES=	devel perl5
@@ -8,6 +6,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Perl module for ptrace on FreeBSD-i386
+WWW=		https://metacpan.org/release/FreeBSD-i386-Ptrace
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

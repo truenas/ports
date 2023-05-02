@@ -1,8 +1,6 @@
-# Created by: Yukihiro Nakai <Nakai@Mlab.t.u-tokyo.ac.jp>
-
 PORTNAME=	xbat
 PORTVERSION=	1.11
-PORTREVISION=	10
+PORTREVISION=	11
 CATEGORIES=	games
 MASTER_SITES=	LOCAL/hrs
 DISTNAME=	xev111

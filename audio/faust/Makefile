@@ -1,11 +1,10 @@
-# Created by: Yuri Victorovich <yuri@FreeBSD.org>
-
 PORTNAME=	faust
-DISTVERSION=	2.37.3
+DISTVERSION=	2.54.9
 CATEGORIES=	audio devel
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Functional programming language for realtime audio signal processing
+WWW=		https://faust.grame.fr/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING.txt
@@ -13,19 +12,15 @@ LICENSE_FILE=	${WRKSRC}/COPYING.txt
 LIB_DEPENDS=	libLLVM-${LLVM_VERSION}.so:devel/llvm${LLVM_VERSION}
 RUN_DEPENDS=	bash:shells/bash
 
-USES=		compiler:c++11-lang cmake ncurses python pkgconfig shebangfix
+USES=		compiler:c++14-lang cmake llvm:min=15,lib ncurses python pkgconfig shebangfix # llvm: versions <11 lacked dump() function(s) that cause unresolved symbols in libfaust.so
 USE_LDCONFIG=	yes
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	grame-cncm
 GH_TUPLE=	\
-		grame-cncm:faustlibraries:9082369:grame_cncm_faustlibraries/libraries \
-		google:oboe:7146098:google_oboe/architecture/android/app/oboe \
-		google:oboe:7146098:google_oboe/architecture/smartKeyboard/android/app/oboe
+		grame-cncm:faustlibraries:f9efea9:grame_cncm_faustlibraries/libraries
 
 SHEBANG_FILES=	tools/faust2appls/* tools/benchmark/faustbench tools/sound2faust/sound2reader
-
-LLVM_VERSION=	13 # versions <11 lacked dump() function(s) that cause unresolved symbols in libfaust.so
 
 CMAKE_SOURCE_PATH=	${WRKSRC}/build
 CMAKE_ON=	INCLUDE_DYNAMIC # only installs headers and not libs without INCLUDE_DYNAMIC or INCLUDE_STATIC: https://github.com/grame-cncm/faust/issues/553
@@ -33,6 +28,7 @@ CMAKE_ARGS=	-C ${FILESDIR}/backends.cmake -DLLVM_CONFIG=${LOCALBASE}/bin/llvm-co
 
 CXXFLAGS+=	-I${WRKSRC}/compiler/generator/cpp # fatal error: 'cpp_code_container.hh' file not found WHEN INCLUDE_STATIC=TRUE
 CXXFLAGS+=	`llvm-config${LLVM_VERSION} --cflags` -DLLVM_${LLVM_VERSION}0 # for the llvm backend
+CXXFLAGS_riscv64=	-fPIC # attempt to fix failure: can't create dynamic relocation R_RISCV_HI20 against symbol: vtable for LV2UI in readonly segment; recompile object files with -fPIC or pass '-Wl,-z,notext' to allow text relocations in the output
 LDFLAGS+=	-lexecinfo
 
 OPTIONS_DEFINE=		EXAMPLES HIGHLIGHT HTTPD_LIB
@@ -48,6 +44,12 @@ HTTPD_CMAKE_BOOL=	INCLUDE_HTTP
 HTTPD_LIB_LIB_DEPENDS=	libmicrohttpd.so:www/libmicrohttpd
 
 PORTEXAMPLES=		*
+
+post-patch:
+	# change qmake (5) -> qmake6
+	@cd ${WRKSRC} && \
+		${REINPLACE_CMD} -i '' -e 's|echo qmake)|echo qmake6)|; s|echo qmake-qt5)|echo qmake6)|' \
+			tools/faust2appls/faust2*
 
 post-install:
 	@${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/faust

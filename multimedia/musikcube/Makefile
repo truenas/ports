@@ -1,15 +1,18 @@
 PORTNAME=	musikcube
-DISTVERSION=	0.96.7
-PORTREVISION=	1
+DISTVERSION=	0.99.8
+PORTREVISION=	2
 CATEGORIES=	multimedia audio
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Terminal-based music player, audio engine, metadata indexer, server
+WWW=		https://musikcube.com/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 
-LIB_DEPENDS=	libavcodec.so:multimedia/ffmpeg \
+BUILD_DEPENDS=	asio>0:net/asio
+LIB_DEPENDS=	libasound.so:audio/alsa-lib \
+		libavcodec.so:multimedia/ffmpeg \
 		libboost_system.so:devel/boost-libs \
 		libcurl.so:ftp/curl \
 		libev.so:devel/libev \
@@ -17,17 +20,29 @@ LIB_DEPENDS=	libavcodec.so:multimedia/ffmpeg \
 		libFLAC.so:audio/flac \
 		libmicrohttpd.so:www/libmicrohttpd \
 		libmp3lame.so:audio/lame \
+		libmpg123.so:audio/mpg123 \
 		libogg.so:audio/libogg \
 		libopenmpt.so:audio/libopenmpt \
+		libpipewire-0.3.so:multimedia/pipewire \
+		libportaudio.so:audio/portaudio \
+		libpulse.so:audio/pulseaudio \
 		libsndio.so:audio/sndio \
 		libtag.so:audio/taglib \
 		libvorbis.so:audio/libvorbis
 
-USES=		cmake:noninja compiler:c++14-lang pkgconfig ssl
+USES=		cmake:noninja compiler:c++17-lang pkgconfig ssl
+USES+=		localbase # workaround for https://github.com/clangen/musikcube/issues/600
 USE_LDCONFIG=	yes
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	clangen
+
+post-install:
+	@cd ${STAGEDIR}${PREFIX} && ${STRIP_CMD} \
+		share/musikcube/libmusikcore.so \
+		share/musikcube/musikcube \
+		share/musikcube/musikcubed \
+		share/musikcube/plugins/*.so
 
 .include <bsd.port.options.mk>
 

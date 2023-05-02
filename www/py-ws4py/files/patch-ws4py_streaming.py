@@ -1,4 +1,4 @@
---- ws4py/streaming.py.orig	2019-05-06 23:25:22 UTC
+--- ws4py/streaming.py.orig	2018-02-28 16:24:28 UTC
 +++ ws4py/streaming.py
 @@ -225,9 +225,9 @@ class Stream(object):
                          self.message = m
@@ -39,14 +39,15 @@
                                          self.errors.append(CloseControlMessage(code=1007, reason='Invalid UTF-8 bytes'))
                                          break
                                      reason = bytes(reason)
-@@ -310,10 +312,4 @@ class Stream(object):
+@@ -309,11 +311,5 @@ class Stream(object):
+             frame._cleanup()
              frame.body = None
              frame = None
- 
+-
 -            if self.message is not None and self.message.completed:
 -                utf8validator.reset()
 -
 -        utf8validator.reset()
 -        utf8validator = None
--
+ 
          self._cleanup()

@@ -1,8 +1,5 @@
-# Created by: Allan Jude <allanjude@freebsd.org>
-
 PORTNAME=	gdnsd
-PORTVERSION=	3.7.0
-PORTREVISION=	1
+PORTVERSION=	3.8.0
 CATEGORIES=	dns
 MASTER_SITES=	https://github.com/gdnsd/gdnsd/releases/download/v${PORTVERSION}/ \
 		ZI \
@@ -11,6 +8,7 @@ PKGNAMESUFFIX=	3
 
 MAINTAINER=	zi@FreeBSD.org
 COMMENT=	Authoritative-only GeoIP-aware DNS server
+WWW=		https://github.com/blblack/gdnsd
 
 LICENSE=	GPLv3
 
@@ -27,7 +25,7 @@ USES=		cpe pkgconfig libtool tar:xz perl5 gmake
 USE_PERL5=	build
 CPPFLAGS+=	-isystem${LOCALBASE}/include
 LDFLAGS+=	-L${LOCALBASE}/lib
-CONFLICTS_INSTALL=	gdnsd-1.[0-9]* gdnsd2-2.[0-9]*
+CONFLICTS_INSTALL=	gdnsd2
 
 USE_RC_SUBR=	gdnsd
 

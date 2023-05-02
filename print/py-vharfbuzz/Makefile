@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	vharfbuzz
-PORTVERSION=	0.1.1
+PORTVERSION=	0.2.0
 CATEGORIES=	print python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	User-friendlier way to use Harfbuzz in Python
+WWW=		https://github.com/simoncozens/vharfbuzz
 
 LICENSE=	MIT
 

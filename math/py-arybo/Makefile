@@ -1,11 +1,13 @@
 PORTNAME=	arybo
 DISTVERSION=	1.1.0
+PORTREVISION=	1
 CATEGORIES=	math
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Manipulation of mixed boolean-arithmetic symbolic expressions
+WWW=		https://github.com/quarkslab/arybo
 
 LICENSE=	BSD3CLAUSE
 

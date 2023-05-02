@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	curl
 PORTVERSION=	7.29.0
 DISTVERSIONSUFFIX=	-59.el7_9.1
@@ -8,6 +6,7 @@ CATEGORIES=	ftp linux
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	Tool for transferring files with URL syntax (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://curl.se/
 
 LICENSE=	MIT
 

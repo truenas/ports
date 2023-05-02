@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	google-auth-httplib2
 PORTVERSION=	0.1.0
 CATEGORIES=	security python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Google Authentication Library: httplib2 transport
+WWW=		https://github.com/googleapis/google-auth-library-python-httplib2
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

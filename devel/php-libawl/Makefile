@@ -1,13 +1,12 @@
-# Created by: Cristiano Rolim Pereira <cristianorolim@hotmail.com>
-
 PORTNAME=	libawl
 DISTVERSIONPREFIX=	r
-DISTVERSION=	0.62
+DISTVERSION=	0.64
 CATEGORIES=	devel
 PKGNAMEPREFIX=	${PHP_PKGNAMEPREFIX}
 
 MAINTAINER=	rigoletto@FreeBSD.org
 COMMENT=	Andrew.s Web Libraries - PHP Utility Libraries
+WWW=		https://gitlab.com/davical-project/awl
 
 LICENSE=	GPLv2 LGPL21
 LICENSE_COMB=	multi
@@ -18,7 +17,7 @@ USES=		php:build,flavors
 USE_GITLAB=	yes
 GL_ACCOUNT=	davical-project
 GL_PROJECT=	awl
-GL_COMMIT=	827fbfed7dab0ca339998ca6cdcffb328246d83b
+GL_COMMIT=	f1c3753a2f356d856dfc279754f7885080e9e827
 
 NO_ARCH=	yes
 NO_BUILD=	yes

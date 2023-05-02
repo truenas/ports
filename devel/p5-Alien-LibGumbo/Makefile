@@ -7,6 +7,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	mikael@FreeBSD.org
 COMMENT=	Gumbo parser library
+WWW=		https://metacpan.org/pod/Alien::LibGumbo
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual
@@ -21,6 +22,8 @@ RUN_DEPENDS=	p5-Alien-Build>0:devel/p5-Alien-Build
 
 USES=		perl5
 USE_PERL5=	modbuild
+
+NO_ARCH=	yes
 
 post-extract:
 	${RM} ${WRKSRC}/gumbo-0.10.1.tar.gz

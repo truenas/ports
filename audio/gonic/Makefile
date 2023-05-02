@@ -1,10 +1,12 @@
 PORTNAME=	gonic
-PORTVERSION=	0.13.1
+PORTVERSION=	0.14.0
+PORTREVISION=	11
 DISTVERSIONPREFIX=	v
 CATEGORIES=	audio net
 
-MAINTAINER=	bapt@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Music streaming server / subsonic server API implementation
+WWW=		https://github.com/sentriz/gonic
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE

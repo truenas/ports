@@ -1,70 +1,84 @@
---- base/threading/platform_thread_linux.cc.orig	2021-10-01 01:36:37 UTC
+--- base/threading/platform_thread_linux.cc.orig	2023-02-08 09:03:45 UTC
 +++ base/threading/platform_thread_linux.cc
-@@ -29,7 +29,9 @@
+@@ -30,7 +30,9 @@
  
- #if !defined(OS_NACL) && !defined(OS_AIX)
+ #if !BUILDFLAG(IS_NACL) && !BUILDFLAG(IS_AIX)
  #include <pthread.h>
-+#if !defined(OS_BSD)
++#if !BUILDFLAG(IS_BSD)
  #include <sys/prctl.h>
 +#endif
  #include <sys/resource.h>
  #include <sys/time.h>
  #include <sys/types.h>
-@@ -132,7 +134,7 @@ int sched_setattr(pid_t pid,
- #endif  // !defined(OS_NACL) && !defined(OS_AIX)
- #endif  // BUILDFLAG(IS_CHROMEOS_ASH) || BUILDFLAG(IS_CHROMEOS_LACROS)
+@@ -139,7 +141,7 @@ long sched_setattr(pid_t pid,
+ #endif  // !BUILDFLAG(IS_NACL) && !BUILDFLAG(IS_AIX)
+ #endif  // BUILDFLAG(IS_CHROMEOS)
  
--#if !defined(OS_NACL)
-+#if !defined(OS_NACL) && !defined(OS_BSD)
+-#if !BUILDFLAG(IS_NACL)
++#if !BUILDFLAG(IS_NACL) && !BUILDFLAG(IS_BSD)
  const FilePath::CharType kCgroupDirectory[] =
      FILE_PATH_LITERAL("/sys/fs/cgroup");
  
-@@ -300,7 +302,7 @@ const ThreadPriorityToNiceValuePair kThreadPriorityToN
+@@ -313,7 +315,7 @@ void SetThreadCgroupsForThreadType(PlatformThreadId th
+ namespace internal {
  
- absl::optional<bool> CanIncreaseCurrentThreadPriorityForPlatform(
-     ThreadPriority priority) {
--#if !defined(OS_NACL)
-+#if !defined(OS_NACL) && !defined(OS_BSD)
+ namespace {
+-#if !BUILDFLAG(IS_NACL)
++#if !BUILDFLAG(IS_NACL) && !BUILDFLAG(IS_BSD)
+ const struct sched_param kRealTimePrio = {8};
+ #endif
+ }  // namespace
+@@ -340,7 +342,7 @@ const ThreadTypeToNiceValuePair kThreadTypeToNiceValue
+ };
+ 
+ bool CanSetThreadTypeToRealtimeAudio() {
+-#if !BUILDFLAG(IS_NACL)
++#if !BUILDFLAG(IS_NACL) && !BUILDFLAG(IS_BSD)
    // A non-zero soft-limit on RLIMIT_RTPRIO is required to be allowed to invoke
-   // pthread_setschedparam in SetCurrentThreadPriorityForPlatform().
+   // pthread_setschedparam in SetCurrentThreadTypeForPlatform().
    struct rlimit rlim;
-@@ -313,7 +315,7 @@ absl::optional<bool> CanIncreaseCurrentThreadPriorityF
- }
+@@ -352,7 +354,7 @@ bool CanSetThreadTypeToRealtimeAudio() {
  
- bool SetCurrentThreadPriorityForPlatform(ThreadPriority priority) {
--#if !defined(OS_NACL)
-+#if !defined(OS_NACL) && !defined(OS_BSD)
-   // For legacy schedtune interface
-   SetThreadCgroupsForThreadPriority(PlatformThread::CurrentId(), priority);
+ bool SetCurrentThreadTypeForPlatform(ThreadType thread_type,
+                                      MessagePumpType pump_type_hint) {
+-#if !BUILDFLAG(IS_NACL)
++#if !BUILDFLAG(IS_NACL) && !BUILDFLAG(IS_BSD)
+   const PlatformThreadId tid = PlatformThread::CurrentId();
  
-@@ -350,7 +352,7 @@ absl::optional<ThreadPriority> GetCurrentThreadPriorit
+   if (g_thread_type_delegate &&
+@@ -378,7 +380,7 @@ bool SetCurrentThreadTypeForPlatform(ThreadType thread
+ 
+ absl::optional<ThreadPriorityForTest>
+ GetCurrentThreadPriorityForPlatformForTest() {
+-#if !BUILDFLAG(IS_NACL)
++#if !BUILDFLAG(IS_NACL) && !BUILDFLAG(IS_BSD)
+   int maybe_sched_rr = 0;
+   struct sched_param maybe_realtime_prio = {0};
+   if (pthread_getschedparam(pthread_self(), &maybe_sched_rr,
+@@ -397,7 +399,7 @@ GetCurrentThreadPriorityForPlatformForTest() {
  void PlatformThread::SetName(const std::string& name) {
    ThreadIdNameManager::GetInstance()->SetName(name);
  
--#if !defined(OS_NACL) && !defined(OS_AIX)
-+#if !defined(OS_NACL) && !defined(OS_AIX) && !defined(OS_BSD)
+-#if !BUILDFLAG(IS_NACL) && !BUILDFLAG(IS_AIX)
++#if !BUILDFLAG(IS_NACL) && !BUILDFLAG(IS_AIX) && !BUILDFLAG(IS_BSD)
    // On linux we can get the thread names to show up in the debugger by setting
    // the process name for the LWP.  We don't want to do this for the main
    // thread because that would rename the process, causing tools like killall
-@@ -380,8 +382,10 @@ void PlatformThread::SetThreadPriority(ProcessId proce
-   // priority.
-   CHECK_NE(thread_id, process_id);
+@@ -417,7 +419,7 @@ void PlatformThread::SetName(const std::string& name) 
+ #endif  //  !BUILDFLAG(IS_NACL) && !BUILDFLAG(IS_AIX)
+ }
  
-+#if !defined(OS_BSD)
-   // For legacy schedtune interface
-   SetThreadCgroupsForThreadPriority(thread_id, priority);
-+#endif
+-#if !BUILDFLAG(IS_NACL)
++#if !BUILDFLAG(IS_NACL) && !BUILDFLAG(IS_BSD)
+ // static
+ void PlatformThread::SetThreadTypeDelegate(ThreadTypeDelegate* delegate) {
+   // A component cannot override a delegate set by another component, thus
+@@ -428,7 +430,7 @@ void PlatformThread::SetThreadTypeDelegate(ThreadTypeD
+ }
+ #endif
  
- #if BUILDFLAG(IS_CHROMEOS_ASH) || BUILDFLAG(IS_CHROMEOS_LACROS)
-   // For upstream uclamp interface. We try both legacy (schedtune, as done
-@@ -438,7 +442,9 @@ void InitThreading() {}
- void TerminateOnThread() {}
- 
- size_t GetDefaultThreadStackSize(const pthread_attr_t& attributes) {
--#if !defined(THREAD_SANITIZER)
-+#if defined(OS_BSD)
-+  return (1 << 23);
-+#elif !defined(THREAD_SANITIZER)
-   return 0;
- #else
-   // ThreadSanitizer bloats the stack heavily. Evidence has been that the
+-#if !BUILDFLAG(IS_NACL) && !BUILDFLAG(IS_AIX)
++#if !BUILDFLAG(IS_NACL) && !BUILDFLAG(IS_AIX) && !BUILDFLAG(IS_BSD)
+ // static
+ void PlatformThread::SetThreadType(ProcessId process_id,
+                                    PlatformThreadId thread_id,

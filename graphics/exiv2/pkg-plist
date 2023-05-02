@@ -69,11 +69,11 @@ lib/cmake/exiv2/exiv2Config-%%CMAKE_BUILD_TYPE%%.cmake
 lib/cmake/exiv2/exiv2Config.cmake
 lib/cmake/exiv2/exiv2ConfigVersion.cmake
 lib/libexiv2.so
-lib/libexiv2.so.0.27.5
+lib/libexiv2.so.0.27.6
 lib/libexiv2.so.27
 lib/libexiv2-xmp.a
 libdata/pkgconfig/exiv2.pc
-man/man1/exiv2.1.gz
+share/man/man1/exiv2.1.gz
 %%NLS%%share/locale/bs/LC_MESSAGES/exiv2.mo
 %%NLS%%share/locale/ca/LC_MESSAGES/exiv2.mo
 %%NLS%%share/locale/de/LC_MESSAGES/exiv2.mo

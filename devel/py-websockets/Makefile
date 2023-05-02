@@ -1,13 +1,12 @@
-# Created by: Emanuel Haupt <ehaupt@FreeBSD.org>
-
 PORTNAME=	websockets
-PORTVERSION=	10.1
+PORTVERSION=	11.0.2
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ehaupt@FreeBSD.org
 COMMENT=	Implementation of the WebSocket Protocol (RFC 6455 and 7692)
+WWW=		https://pypi.org/project/websockets/
 
 LICENSE=	BSD3CLAUSE
 

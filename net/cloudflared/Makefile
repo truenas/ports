@@ -1,19 +1,18 @@
 PORTNAME=	cloudflared
-DISTVERSION=	2021.11.0
+DISTVERSION=	2023.2.1
+PORTREVISION=	3
 CATEGORIES=	net www
 
 MAINTAINER=	egypcio@FreeBSD.org
 COMMENT=	Cloudflare's Argo Tunnel client
+WWW=		https://developers.cloudflare.com/argo-tunnel/
 
-# Not sure if we are allowed to redistribute it.
-LICENSE=	cloudflare
-LICENSE_NAME=	cloudflare
+LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
-LICENSE_PERMS=	no-dist-sell no-pkg-sell
 
 RUN_DEPENDS=	ca_root_nss>=0:security/ca_root_nss
 
-USES=		cpe go:modules
+USES=		cpe go:1.19,modules
 USE_RC_SUBR=	${PORTNAME}
 USE_GITHUB=	yes
 GH_ACCOUNT=	cloudflare

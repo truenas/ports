@@ -1,13 +1,12 @@
-# Created by: ijliao
-
 PORTNAME=	mhwaveedit
 PORTVERSION=	1.4.24
-PORTREVISION=	3
+PORTREVISION=	5
 DISTVERSIONPREFIX=	v
 CATEGORIES=	audio
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Graphical program for editing sound files
+WWW=		https://github.com/magnush/mhwaveedit/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

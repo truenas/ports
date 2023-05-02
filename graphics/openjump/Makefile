@@ -1,13 +1,12 @@
-# Created by: Wen Heping <wenheping@gmail.com>
-
 PORTNAME=	OpenJUMP
-PORTVERSION=	1.16
+PORTVERSION=	2.0
 CATEGORIES=	graphics java geography
 MASTER_SITES=	SF/jump-pilot/OpenJUMP/${PORTVERSION}
-DISTNAME=	${PORTNAME}-Portable-${PORTVERSION}-r${PLUS_REV}-PLUS
+DISTNAME=	${PORTNAME}-Portable-${PORTVERSION}-r${PLUS_REV}[a56ff6d]-PLUS
 
 MAINTAINER=	rhurlin@FreeBSD.org
 COMMENT=	Open source GIS software written in Java
+WWW=		https://sourceforge.net/projects/jump-pilot/files/OpenJUMP_plugins/
 
 LICENSE=	BSD3CLAUSE CLEARTHOUGHT CPL ECW GPLv2 GPLv3 JAIDL JDOM JYTHON LGPL21 LGPL3
 LICENSE_COMB=	multi
@@ -32,15 +31,15 @@ LICENSE_PERMS_JYTHON=	auto-accept
 
 USES=		zip
 USE_JAVA=	yes
-JAVA_VERSION=	1.8+
+JAVA_VERSION=	8+
 
 NO_ARCH=	yes
 NO_BUILD=	yes
-WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}-r${PLUS_REV}-PLUS
+WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}-r${PLUS_REV}\[a56ff6d]-PLUS
 
 OPTIONS_DEFINE=	DOCS
 
-PLUS_REV=	6669
+PLUS_REV=	5095
 TARGET_DIR=	${STAGEDIR}${PREFIX}/${PORTNAME}
 
 do-install:
@@ -59,7 +58,7 @@ do-install:
 	${LN} -sf ${PREFIX}/${PORTNAME}/bin/openjump ${STAGEDIR}${PREFIX}/bin/openjump
 	${INSTALL_DATA} ${WRKSRC}/bin/default-plugins.xml ${TARGET_DIR}/bin/
 	${INSTALL_DATA} ${WRKSRC}/bin/log4j.xml ${TARGET_DIR}/bin/
-	${INSTALL_DATA} ${WRKSRC}/readme.txt ${TARGET_DIR}/bin/
+	${INSTALL_DATA} ${WRKSRC}/Readme.txt ${TARGET_DIR}/bin/
 
 	@${ECHO_MSG} "--->  Installing documentation"
 	${MKDIR} ${STAGEDIR}${DOCSDIR}

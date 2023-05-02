@@ -1,13 +1,12 @@
-# Created by: Wen Heping <wenheping@gmail.com>
-
 PORTNAME=	transaction
 PORTVERSION=	3.0.1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Transaction management for Python
+WWW=		https://pypi.org/project/transaction/
 
 LICENSE=	ZPL21
 

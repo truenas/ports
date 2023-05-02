@@ -1,5 +1,3 @@
-# Created by: Randall Hopper <aa8vb@nc.rr.com>
-
 PORTNAME=	shapelib
 PORTVERSION=	1.5.0
 CATEGORIES=	devel geography
@@ -8,6 +6,7 @@ MASTER_SITES=	https://download.osgeo.org/shapelib/ \
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	C API for reading and writing ArcView Shapefiles
+WWW=		http://shapelib.maptools.org/
 
 LICENSE=	LGPL20
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -21,6 +20,8 @@ MAKE_JOBS_UNSAFE=	yes
 GNU_CONFIGURE=	yes
 INSTALL_TARGET=	install-strip
 USE_LDCONFIG=	yes
+
+CONFLICTS_INSTALL=	p5-DBD-XBase
 
 post-install:
 	${INSTALL_PROGRAM} ${WRKSRC}/.libs/shptest ${STAGEDIR}${PREFIX}/bin/

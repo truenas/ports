@@ -2,11 +2,12 @@ PORTNAME=	cli-visualizer
 DISTVERSIONPREFIX=	v
 DISTVERSION=	1.8-27
 DISTVERSIONSUFFIX=	-g4fc1552
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	audio
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	CLI based audio visualizer
+WWW=		https://github.com/dpayne/cli-visualizer
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

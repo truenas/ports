@@ -1,6 +1,6 @@
 PORTNAME=	fillets-ng
 PORTVERSION=	1.0.1
-PORTREVISION=	8
+PORTREVISION=	9
 CATEGORIES=	games
 MASTER_SITES=	SF/fillets/Fish%20Fillets%20-%20Next%20Generation/${PORTVERSION} \
 		SF/fillets/Fish%20Fillets%20-%20Next%20Generation/${DATAVERSION}:data
@@ -9,6 +9,7 @@ DISTFILES=	${DISTNAME}${EXTRACT_SUFX} \
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Wonderful puzzle game
+WWW=		http://fillets.sourceforge.net/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

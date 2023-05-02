@@ -25,9 +25,11 @@ include/digikam/dhistoryview.h
 include/digikam/digikam_config.h
 include/digikam/digikam_core_export.h
 include/digikam/digikam_database_export.h
+include/digikam/digikam_debug.h
 include/digikam/digikam_export.h
 include/digikam/digikam_globals.h
 include/digikam/digikam_gui_export.h
+include/digikam/digikam_version.h
 include/digikam/dimg.h
 include/digikam/dimgbuiltinfilter.h
 include/digikam/dimgloaderobserver.h
@@ -85,6 +87,7 @@ include/digikam/metaengine.h
 include/digikam/metaengine_data.h
 include/digikam/photoinfocontainer.h
 include/digikam/previewlayout.h
+include/digikam/previewloadthread.h
 include/digikam/previewsettings.h
 include/digikam/previewtoolbar.h
 include/digikam/queuesettings.h
@@ -92,6 +95,10 @@ include/digikam/rginfo.h
 include/digikam/thumbnailinfo.h
 include/digikam/thumbnailloadthread.h
 include/digikam/wbcontainer.h
+include/digikam/wsitem.h
+include/digikam/wslogindialog.h
+include/digikam/wsnewalbumdialog.h
+include/digikam/wssettingswidget.h
 include/digikam/wstooldialog.h
 include/digikam/wstoolutils.h
 lib/cmake/DigikamCore/DigikamCoreConfig-%%CMAKE_BUILD_TYPE%%.cmake
@@ -223,6 +230,7 @@ lib/libdigikamgui.so.%%SHLIB_VER%%
 %%QT_PLUGINDIR%%/digikam/generic/Generic_MediaServer_Plugin.so
 %%QT_PLUGINDIR%%/digikam/generic/Generic_MediaWiki_Plugin.so
 %%QT_PLUGINDIR%%/digikam/generic/Generic_MetadataEdit_Plugin.so
+%%QT_PLUGINDIR%%/digikam/generic/Generic_MjpegStream_Plugin.so
 %%QT_PLUGINDIR%%/digikam/generic/Generic_OneDrive_Plugin.so
 %%QT_PLUGINDIR%%/digikam/generic/Generic_Panorama_Plugin.so
 %%QT_PLUGINDIR%%/digikam/generic/Generic_Pinterest_Plugin.so
@@ -290,7 +298,6 @@ share/applications/org.kde.showfoto.desktop
 %%DATADIR%%/data/craters-pattern.png
 %%DATADIR%%/data/curvefree.png
 %%DATADIR%%/data/curvemooth.png
-%%DATADIR%%/data/detectFacesImg.png
 %%DATADIR%%/data/dried-pattern.png
 %%DATADIR%%/data/duplicatebothhorz.png
 %%DATADIR%%/data/duplicatebothvert.png
@@ -302,7 +309,6 @@ share/applications/org.kde.showfoto.desktop
 %%DATADIR%%/data/histogram-log.png
 %%DATADIR%%/data/histogram.png
 %%DATADIR%%/data/ice-pattern.png
-%%DATADIR%%/data/ignoreImg.png
 %%DATADIR%%/data/image-full.png
 %%DATADIR%%/data/image-selection.png
 %%DATADIR%%/data/leaf-pattern.png
@@ -332,7 +338,6 @@ share/applications/org.kde.showfoto.desktop
 %%DATADIR%%/data/modern-texture.png
 %%DATADIR%%/data/moss-texture.png
 %%DATADIR%%/data/original.png
-%%DATADIR%%/data/overlayImg.png
 %%DATADIR%%/data/paper-pattern.png
 %%DATADIR%%/data/paper-texture.png
 %%DATADIR%%/data/paper2-texture.png
@@ -346,13 +351,11 @@ share/applications/org.kde.showfoto.desktop
 %%DATADIR%%/data/splash-digikam.png
 %%DATADIR%%/data/stone-pattern.png
 %%DATADIR%%/data/stone-texture.png
-%%DATADIR%%/data/tagFacesImg.gif
 %%DATADIR%%/data/target.png
 %%DATADIR%%/data/togglemouseover.png
 %%DATADIR%%/data/wall-pattern.png
 %%DATADIR%%/data/wall-texture.png
 %%DATADIR%%/data/wood-pattern.png
-%%DATADIR%%/data/workOnAllCoresImg.png
 %%DATADIR%%/database/dbconfig.xml
 %%DATADIR%%/database/mysql-global.conf
 %%DATADIR%%/geoiface/backend-googlemaps-js.js
@@ -752,6 +755,7 @@ share/kxmlgui5/showfoto/showfotoui5.rc
 %%NLS%%share/locale/bg/LC_MESSAGES/digikam.mo
 %%NLS%%share/locale/bs/LC_MESSAGES/digikam.mo
 %%NLS%%share/locale/ca/LC_MESSAGES/digikam.mo
+%%NLS%%share/locale/ca@valencia/LC_MESSAGES/digikam.mo
 %%NLS%%share/locale/cs/LC_MESSAGES/digikam.mo
 %%NLS%%share/locale/da/LC_MESSAGES/digikam.mo
 %%NLS%%share/locale/de/LC_MESSAGES/digikam.mo
@@ -774,6 +778,7 @@ share/kxmlgui5/showfoto/showfotoui5.rc
 %%NLS%%share/locale/is/LC_MESSAGES/digikam.mo
 %%NLS%%share/locale/it/LC_MESSAGES/digikam.mo
 %%NLS%%share/locale/ja/LC_MESSAGES/digikam.mo
+%%NLS%%share/locale/ka/LC_MESSAGES/digikam.mo
 %%NLS%%share/locale/km/LC_MESSAGES/digikam.mo
 %%NLS%%share/locale/ko/LC_MESSAGES/digikam.mo
 %%NLS%%share/locale/lt/LC_MESSAGES/digikam.mo

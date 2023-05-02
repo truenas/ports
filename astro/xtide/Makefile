@@ -1,15 +1,14 @@
-# Created by: Brion Moss <brion@queeg.com>
-
 PORTNAME=	xtide
-PORTVERSION=	2.15.3
+PORTVERSION=	2.15.5
 CATEGORIES=	astro geography
 MASTER_SITES=	https://flaterco.com/files/xtide/
 DISTFILES=	${DISTNAME}${EXTRACT_SUFX} \
 		${DISTNAME_TCD}${EXTRACT_SUFX} \
 		${DISTNAME_HARM}${EXTRACT_SUFX}
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Harmonic tide clock and tide predictor
+WWW=		https://flaterco.com/xtide/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -45,8 +44,6 @@ WRKSRC_HARM=	${WRKDIR}/${DISTNAME_HARM:C/-free//}
 DISTNAME_WVS=	wvs
 
 post-patch:
-	@${REINPLACE_CMD} -e \
-		'/if test/s|==|=|g' ${WRKSRC_TCD}/configure
 	@${REINPLACE_CMD} -e \
 		's|/usr/X11R6|${LOCALBASE}|g' ${WRKSRC}/configure
 	@${REINPLACE_CMD} -e \

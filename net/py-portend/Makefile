@@ -2,11 +2,12 @@ PORTNAME=	portend
 PORTVERSION=	2.5
 PORTREVISION=	1
 CATEGORIES=	net python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	k@stereochro.me
 COMMENT=	Monitors TCP ports for bound or unbound states
+WWW=		https://github.com/jaraco/portend
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

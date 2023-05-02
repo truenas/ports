@@ -22,6 +22,7 @@ include/fizz/crypto/Sha-inl.h
 include/fizz/crypto/Sha.h
 include/fizz/crypto/Sha256.h
 include/fizz/crypto/Sha384.h
+include/fizz/crypto/Sha512.h
 include/fizz/crypto/Utils.h
 include/fizz/crypto/aead/AESGCM128.h
 include/fizz/crypto/aead/AESGCM256.h
@@ -33,7 +34,9 @@ include/fizz/crypto/aead/OpenSSLEVPCipher-inl.h
 include/fizz/crypto/aead/OpenSSLEVPCipher.h
 include/fizz/crypto/aead/test/Mocks.h
 include/fizz/crypto/aead/test/TestUtil.h
+include/fizz/crypto/exchange/AsyncKeyExchange.h
 include/fizz/crypto/exchange/ECCurveKeyExchange.h
+include/fizz/crypto/exchange/HybridKeyExchange.h
 include/fizz/crypto/exchange/KeyExchange.h
 include/fizz/crypto/exchange/OpenSSLKeyExchange-inl.h
 include/fizz/crypto/exchange/OpenSSLKeyExchange.h
@@ -57,6 +60,7 @@ include/fizz/experimental/ktls/AsyncKTLSSocket.h
 include/fizz/experimental/ktls/FizzKTLSCallback.h
 include/fizz/experimental/ktls/KTLS.h
 include/fizz/experimental/ktls/LinuxKTLS.h
+include/fizz/experimental/util/CertExtraction.h
 include/fizz/extensions/delegatedcred/DelegatedCredentialCertManager.h
 include/fizz/extensions/delegatedcred/DelegatedCredentialClientExtension.h
 include/fizz/extensions/delegatedcred/DelegatedCredentialFactory.h
@@ -117,6 +121,7 @@ include/fizz/protocol/test/Mocks.h
 include/fizz/protocol/test/ProtocolTest.h
 include/fizz/protocol/test/TestMessages.h
 include/fizz/protocol/test/Utilities.h
+include/fizz/record/BufAndPaddingPolicy.h
 include/fizz/record/EncryptedRecordLayer.h
 include/fizz/record/Extensions-inl.h
 include/fizz/record/Extensions.h
@@ -153,6 +158,7 @@ include/fizz/server/TicketCodec-inl.h
 include/fizz/server/TicketCodec.h
 include/fizz/server/TicketPolicy.h
 include/fizz/server/TicketTypes.h
+include/fizz/server/TokenCipher.h
 include/fizz/server/test/Mocks.h
 include/fizz/server/test/Utils.h
 include/fizz/test/HandshakeTest.h
@@ -164,12 +170,12 @@ include/fizz/util/FizzUtil.h
 include/fizz/util/KeyLogWriter.h
 include/fizz/util/Parse-inl.h
 include/fizz/util/Parse.h
+include/fizz/util/Tracing.h
 include/fizz/util/Variant.h
 include/fizz/util/Workarounds.h
 lib/cmake/fizz/fizz-config.cmake
 lib/cmake/fizz/fizz-targets-%%CMAKE_BUILD_TYPE%%.cmake
 lib/cmake/fizz/fizz-targets.cmake
 lib/libfizz.so
-lib/libfizz.so.1
 lib/libfizz.so.1.0.0
 lib/libfizz_test_support.so

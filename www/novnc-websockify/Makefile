@@ -1,10 +1,12 @@
 PORTNAME=	websockify
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.9.0
+PORTREVISION=	1
 CATEGORIES=	www
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Websockify implementation for noVNC
+WWW=		https://github.com/novnc/websockify
 
 LICENSE=	LGPL3
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,7 +1,5 @@
-# Created by: Olivier Duchateau
-
 PORTNAME=	xfce4-pulseaudio-plugin
-PORTVERSION=	0.4.3
+PORTVERSION=	0.4.6
 PORTREVISION=	1
 CATEGORIES=	audio xfce
 MASTER_SITES=	XFCE/panel-plugins
@@ -9,18 +7,20 @@ DIST_SUBDIR=	xfce4
 
 MAINTAINER=	xfce@FreeBSD.org
 COMMENT=	Panel plugin for controlling PulseAudio mixer
+WWW=		https://goodies.xfce.org/projects/panel-plugins/xfce4-pulseaudio-plugin
 
 LICENSE=	GPLv2
 
 LIB_DEPENDS=	libpulse-mainloop-glib.so:audio/pulseaudio \
 		libdbus-1.so:devel/dbus \
 		libdbus-glib-1.so:devel/dbus-glib \
-		libnotify.so:devel/libnotify
+		libnotify.so:devel/libnotify \
+		libharfbuzz.so:print/harfbuzz
 RUN_DEPENDS=	pavucontrol>=2.0:audio/pavucontrol
 
 USES=		compiler:c11 gettext-tools gmake gnome libtool pkgconfig \
 		tar:bzip2 xfce xorg
-USE_GNOME=	cairo glib20 gtk30 intltool libwnck3
+USE_GNOME=	cairo gdkpixbuf2 glib20 gtk30 intltool libwnck3
 USE_XFCE=	panel
 USE_XORG=	x11
 

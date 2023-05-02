@@ -1,13 +1,12 @@
-# Created by: Sunpoet Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	Geo-Coder-OpenCage
-PORTVERSION=	0.33
+PORTVERSION=	0.36
 CATEGORIES=	misc geography perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Geocode addresses with the OpenCage Geocoder API
+WWW=		https://metacpan.org/release/Geo-Coder-OpenCage
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

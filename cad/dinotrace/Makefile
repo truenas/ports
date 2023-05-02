@@ -1,14 +1,13 @@
-# Created by: Joachim Strombergson <watchman@ludd.ltu.se>
-
 PORTNAME=	dinotrace
-PORTVERSION=	9.4c
-PORTREVISION=	13
+PORTVERSION=	9.4f
+PORTREVISION=	4
 CATEGORIES=	cad
 MASTER_SITES=	http://www.veripool.org/ftp/
 PKGNAMESUFFIX=	${EMACS_PKGNAMESUFFIX}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Graphical signal trace waveform viewer
+WWW=		https://www.veripool.org/wiki/dinotrace
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -18,6 +17,8 @@ USE_XORG=	x11 sm ice xmu xt
 USE_PERL5=	build
 
 GNU_CONFIGURE=	yes
+
+CONFLICTS_INSTALL=	dinotrace dinotrace-emacs_*
 
 INFO=		dinotrace
 PLIST_FILES=	bin/dinotrace

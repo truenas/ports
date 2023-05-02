@@ -1,12 +1,12 @@
-# Created by: TAKATSU Tomonari <tota@FreeBSD.org>
-
 PORTNAME=	htmlwidgets
 PORTVERSION=	1.5.4
+PORTREVISION=	1
 CATEGORIES=	www
 DISTNAME=	${PORTNAME}_${PORTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	HTML Widgets for R
+WWW=		https://cran.r-project.org/web/packages/htmlwidgets/
 
 LICENSE=	MIT
 

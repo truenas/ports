@@ -1,11 +1,12 @@
 PORTNAME=	weblib
 PORTVERSION=	0.1.30
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	rm@FreeBSD.org
 COMMENT=	Set of tools for web scraping projects
+WWW=		https://pypi.org/project/weblib/
 
 LICENSE=	MIT
 

@@ -1,11 +1,13 @@
 PORTNAME=	pycompilation
 DISTVERSION=	0.4.12
+PORTREVISION=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Package for compilation (meta programming)
+WWW=		https://github.com/bjodah/pycompilation
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

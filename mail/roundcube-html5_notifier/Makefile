@@ -7,21 +7,21 @@ PKGNAMESUFFIX=	${PHP_PKGNAMESUFFIX}
 
 MAINTAINER=	meta@FreeBSD.org
 COMMENT=	HTML5 desktop notifier plugin for roundcube
+WWW=		https://github.com/stremlau/html5_notifier
 
 LICENSE=	GPLv3
 
-RUN_DEPENDS=	roundcube${PHP_PKGNAMESUFFIX}>=1.0:mail/roundcube@${PHP_FLAVOR}
 BUILD_DEPENDS=	roundcube${PHP_PKGNAMESUFFIX}>=1.0:mail/roundcube@${PHP_FLAVOR}
+RUN_DEPENDS=	roundcube${PHP_PKGNAMESUFFIX}>=1.0:mail/roundcube@${PHP_FLAVOR}
 
-USES=	php:flavors
-IGNORE_WITH_PHP=80
+USES=		php:flavors
 USE_GITHUB=	yes
 GH_ACCOUNT=	stremlau
-
-NO_BUILD=	yes
-NO_ARCH=	yes
+IGNORE_WITH_PHP=82
 
 WWWDIR=		${PREFIX}/www/roundcube/plugins/${PORTNAME}
+NO_ARCH=	yes
+NO_BUILD=	yes
 
 do-install:
 	${MKDIR} ${STAGEDIR}${WWWDIR}

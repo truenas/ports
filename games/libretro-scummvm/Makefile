@@ -2,8 +2,9 @@ PORTNAME=	libretro-scummvm
 PORTVERSION=	0.20201129
 CATEGORIES=	games
 
-MAINTAINER=	menelkir@itroll.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	ScummVM with libretro backend
+WWW=		https://github.com/libretro/scummvm
 
 LICENSE=	GPLv2
 

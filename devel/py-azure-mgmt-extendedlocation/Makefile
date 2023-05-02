@@ -1,11 +1,12 @@
 PORTNAME=	azure-mgmt-extendedlocation
 DISTVERSION=	1.0.0b2
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dbaio@FreeBSD.org
 COMMENT=	Microsoft Azure Extendedlocation Management Client Library for Python
+WWW=		https://pypi.org/project/azure-mgmt-extendedlocation/
 
 LICENSE=	MIT
 

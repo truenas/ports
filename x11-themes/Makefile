@@ -4,10 +4,12 @@
     SUBDIR += adapta-backgrounds
     SUBDIR += adapta-gtk-theme
     SUBDIR += adwaita-icon-theme
-    SUBDIR += adwaita-qt
+    SUBDIR += adwaita-qt5
+    SUBDIR += adwaita-qt6
     SUBDIR += ant-dracula-theme
     SUBDIR += arc-gruvbox-theme
     SUBDIR += audacious-skins
+    SUBDIR += budgie-backgrounds
     SUBDIR += canta-gtk-themes
     SUBDIR += canta-icon-theme
     SUBDIR += chicago95
@@ -70,6 +72,7 @@
     SUBDIR += gtk-digital-cream-theme
     SUBDIR += gtk-digital-harmony-theme
     SUBDIR += gtk-engines2
+    SUBDIR += gtk-equinox-engine
     SUBDIR += gtk-gray-theme
     SUBDIR += gtk-lila-theme
     SUBDIR += gtk-lila-theme-extras
@@ -102,6 +105,7 @@
     SUBDIR += kf5-kiconthemes
     SUBDIR += kf5-oxygen-icons5
     SUBDIR += kf5-qqc2-desktop-style
+    SUBDIR += la-capitaine-icon-theme
     SUBDIR += layan-gtk-themes
     SUBDIR += lumina-themes
     SUBDIR += lxappearance
@@ -157,12 +161,17 @@
     SUBDIR += slim-freebsd-dark-theme
     SUBDIR += slim-freebsd-themes
     SUBDIR += slim-themes
+    SUBDIR += tela-icon-theme
     SUBDIR += thewidgetfactory
     SUBDIR += wallpapers-freebsd-kde
+    SUBDIR += win98se-icon-theme
+    SUBDIR += wpgtk
     SUBDIR += xcursor-themes
     SUBDIR += xfce-icons-elementary
     SUBDIR += yaru-gtk-themes
     SUBDIR += yaru-icon-theme
+    SUBDIR += zorin-gtk-themes
+    SUBDIR += zorin-icon-themes
     SUBDIR += zuki-themes
 
 .include <bsd.port.subdir.mk>

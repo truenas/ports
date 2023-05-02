@@ -1,9 +1,11 @@
 PORTNAME=	gitup
-DISTVERSION=	0.96
+DISTVERSION=	0.98-3
+DISTVERSIONSUFFIX=	-g50f1e8c
 CATEGORIES=	net
 
 MAINTAINER=	eduardo@FreeBSD.org
 COMMENT=	Minimalist, dependency-free program to clone/pull git repositories
+WWW=		https://github.com/johnmehr/gitup
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -18,6 +20,11 @@ MAKE_ENV+=	CONFIG_FILE_PATH=${LOCALBASE}/etc/gitup.conf
 PORTDOCS=	README.md
 
 OPTIONS_DEFINE=	DOCS
+
+post-patch:
+	@${REINPLACE_CMD} -e 's|stable\/12|stable\/${OSREL:R}| ; \
+		s|releng\/11.4|releng\/${OSREL}|' \
+		${WRKSRC}/gitup.conf
 
 do-install:
 	${INSTALL_PROGRAM} ${WRKSRC}/${PORTNAME} ${STAGEDIR}${PREFIX}/bin

@@ -1,11 +1,12 @@
 PORTNAME=	pyocclient
 PORTVERSION=	0.6
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ygy@FreeBSD.org
 COMMENT=	Python Owncloud client library
+WWW=		https://github.com/owncloud/pyocclient
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

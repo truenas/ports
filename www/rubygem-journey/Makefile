@@ -5,12 +5,12 @@ MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	It routes requests
+WWW=		https://github.com/tenderlove/journey
 
 LICENSE=	MIT
 
 NO_ARCH=	yes
 
-USE_RUBY=	yes
 USES=		gem
 
 .include <bsd.port.mk>

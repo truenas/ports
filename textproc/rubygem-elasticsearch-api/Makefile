@@ -1,12 +1,11 @@
-# Created by: Ryan Steinmetz <zi@FreeBSD.org>
-
 PORTNAME=	elasticsearch-api
-PORTVERSION=	7.15.0
+PORTVERSION=	7.17.1
 CATEGORIES=	textproc rubygems
 MASTER_SITES=	RG
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Ruby API for Elasticsearch
+WWW=		https://github.com/elastic/elasticsearch-ruby/tree/master/elasticsearch-api
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -14,7 +13,6 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 RUN_DEPENDS=	rubygem-multi_json>=0:devel/rubygem-multi_json
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

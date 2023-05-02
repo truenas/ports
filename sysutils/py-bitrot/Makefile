@@ -1,11 +1,12 @@
 PORTNAME=	bitrot
 PORTVERSION=	1.0.0
 CATEGORIES=	sysutils
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	fixer@bsdmail.com
 COMMENT=	Utility to detect data corruption and bit rot
+WWW=		https://github.com/ambv/bitrot
 
 LICENSE=	MIT
 

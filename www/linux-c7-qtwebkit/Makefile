@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	qtwebkit
 PORTVERSION=	2.3.4
 DISTVERSIONSUFFIX=	-6.el7
@@ -9,8 +7,9 @@ MASTER_SITES=	EPEL7/q
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	Qt WebKit implementation (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://qt-project.org
 
-ONLY_FOR_ARCHS=	amd64
+ONLY_FOR_ARCHS=	aarch64 amd64
 
 USES=		cpe linux:c7
 CPE_VENDOR=	qt

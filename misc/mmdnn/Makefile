@@ -1,9 +1,11 @@
 PORTNAME=	mmdnn
 DISTVERSION=	0.3.1
+PORTREVISION=	1
 CATEGORIES=	misc python # machine-learning
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Tools to inter-operate among different deep learning frameworks
+WWW=		https://github.com/microsoft/MMdnn
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

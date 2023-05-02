@@ -1,10 +1,11 @@
 PORTNAME=	libudev-devd
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.5.0
+DISTVERSION=	0.5.1
 CATEGORIES=	devel
 
 MAINTAINER=	x11@FreeBSD.org
 COMMENT=	libudev-compatible interface for devd
+WWW=		https://github.com/wulf7/libudev-devd
 
 LICENSE=	BSD2CLAUSE
 

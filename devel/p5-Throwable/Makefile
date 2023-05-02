@@ -1,5 +1,5 @@
 PORTNAME=	Throwable
-PORTVERSION=	1.000
+PORTVERSION=	1.001
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 MASTER_SITE_SUBDIR=	CPAN:RJBS
@@ -7,6 +7,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Easy-to-use class for error objects
+WWW=		https://metacpan.org/release/Throwable
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

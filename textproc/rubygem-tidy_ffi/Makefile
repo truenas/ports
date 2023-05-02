@@ -5,6 +5,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Tidy library interface via FFI
+WWW=		https://github.com/libc/tidy_ffi
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -12,7 +13,6 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 RUN_DEPENDS=	rubygem-ffi>=1.2<2:devel/rubygem-ffi
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

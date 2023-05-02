@@ -1,5 +1,3 @@
-# Created by: Mitsuru YOSHIDA <mitsuru@riken.jp>
-
 PORTNAME=	scala
 DISTVERSION=	3.1.0
 CATEGORIES=	lang java
@@ -8,6 +6,7 @@ DISTNAME=	scala3-${DISTVERSION}
 
 MAINTAINER=	freebsd-ports@jan0sch.de
 COMMENT=	Scala Programming Language
+WWW=		https://www.scala-lang.org/
 
 LICENSE=	APACHE20
 
@@ -16,7 +15,7 @@ RUN_DEPENDS=	bash:shells/bash
 USES=		cpe
 CPE_VENDOR=	${PORTNAME}-lang
 USE_JAVA=	yes
-JAVA_VERSION=	1.8+
+JAVA_VERSION=	8+
 
 NO_ARCH=	yes
 NO_BUILD=	yes

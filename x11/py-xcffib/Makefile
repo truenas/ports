@@ -1,13 +1,12 @@
-# Created by: Eric Turgeon <ericbsd@FreeBSD.org>
-
 PORTNAME=	xcffib
 PORTVERSION=	0.11.1
 CATEGORIES=	x11 python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ericbsd@FreeBSD.org
 COMMENT=	Replacement for xpyb and XCB Python bindings
+WWW=		https://github.com/tych0/xcffib
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE

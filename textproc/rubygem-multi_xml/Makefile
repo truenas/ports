@@ -1,5 +1,3 @@
-# Created by: Cheng-Lung Sung <clsung@FreeBSD.org>
-
 PORTNAME=	multi_xml
 PORTVERSION=	0.6.0
 CATEGORIES=	textproc rubygems
@@ -7,12 +5,12 @@ MASTER_SITES=	RG
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Ruby library provide swappable XML backends
+WWW=		https://github.com/sferik/multi_xml
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.md
 
 USES=		cpe gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

@@ -1,11 +1,10 @@
-# Created by: Johannes Dieterich <jmd@FreeBSD.org>
-
 PORTNAME=	flamegraph
 PORTVERSION=	1.1
 CATEGORIES=	benchmarks
 
 MAINTAINER=	jmd@FreeBSD.org
 COMMENT=	Stack trace visualizer
+WWW=		https://github.com/brendangregg/FlameGraph
 
 LICENSE=	CDDL
 LICENSE_FILE=	${WRKSRC}/docs/cddl1.txt
@@ -21,6 +20,8 @@ GH_PROJECT=	FlameGraph
 GH_TAGNAME=	810687f
 
 NO_BUILD=	yes
+
+CONFLICTS_INSTALL=	p5-Devel-NYTProf
 
 SHEBANG_FILES=	*.php *.pl *.py *.sh
 

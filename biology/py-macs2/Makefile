@@ -1,11 +1,13 @@
 PORTNAME=		macs2
 DISTVERSIONPREFIX=	v
 DISTVERSION=		2.2.7.1
+PORTREVISION=	1
 CATEGORIES=		biology python
 PKGNAMEPREFIX=		${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	jwb@FreeBSD.org
 COMMENT=	Identify transcription factor binding sites
+WWW=		https://github.com/taoliu/MACS
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

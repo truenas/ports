@@ -1,9 +1,10 @@
 PORTNAME=	libretro-fuse
-PORTVERSION=	0.20210204
+PORTVERSION=	0.20220213
 CATEGORIES=	games
 
-MAINTAINER=	menelkir@itroll.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Port of the Fuse Unix Spectrum Emulator to libretro
+WWW=		https://github.com/libretro/fuse-libretro
 
 LICENSE=	GPLv3
 
@@ -13,7 +14,7 @@ USE_LDCONFIG=	yes
 USE_GITHUB=	yes
 GH_ACCOUNT=	libretro
 GH_PROJECT=	fuse-libretro
-GH_TAGNAME=	8b51f87
+GH_TAGNAME=	042f8a9
 
 PLIST_FILES=	lib/libretro/fuse_libretro.so
 

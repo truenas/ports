@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	atk
 PORTVERSION=	2.28.1
 DISTVERSIONSUFFIX=	-2.el7
@@ -8,6 +6,7 @@ CATEGORIES=	accessibility linux
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	Accessibility Toolkit (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://developer.gnome.org/atk/
 
 LICENSE=	GPLv3
 
@@ -16,7 +15,6 @@ USE_LDCONFIG=	yes
 USE_LINUX_RPM=	yes
 
 CONFLICTS=	linux-c6-${PORTNAME}
-DESCR=		${.CURDIR}/../${PORTNAME}/pkg-descr
 
 OPTIONS_DEFINE=	DOCS NLS
 OPTIONS_SUB=	yes

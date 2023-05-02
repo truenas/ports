@@ -5,13 +5,13 @@ MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Slim library to work with oEmbed format
+WWW=		http://soulim.github.com/oembed/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 NO_ARCH=	yes
 
-USE_RUBY=	yes
 USES=		gem
 
 .include <bsd.port.mk>

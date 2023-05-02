@@ -1,12 +1,12 @@
-# Created by: Wen Heping <wen@FreeBSD.org>
-
 PORTNAME=	MatchIt
-DISTVERSION=	4.3.2
+DISTVERSION=	4.5.2
+PORTREVISION=	1
 CATEGORIES=	math
 DISTNAME=	${PORTNAME}_${DISTVERSION}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Nonparametric Preprocessing for Parametric Casual Inference
+WWW=		https://gking.harvard.edu/matchit
 
 LICENSE=	GPLv2+
 

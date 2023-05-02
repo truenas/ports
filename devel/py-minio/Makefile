@@ -1,11 +1,12 @@
 PORTNAME=	minio
 DISTVERSION=	4.0.21
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	jhixson@FreeBSD.org
 COMMENT=	Minio library for Amazon S3 compatible cloud storage
+WWW=		https://github.com/minio/minio-py
 
 LICENSE=	APACHE20
 

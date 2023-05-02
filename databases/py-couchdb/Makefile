@@ -1,15 +1,14 @@
-# Created by: Andrei Antoukh <niwi@niwi.be>
-
 PORTNAME=	CouchDB
 PORTVERSION=	1.1
 PORTREVISION=	1
 CATEGORIES=	databases python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DIST_SUBDIR=	python
 
 MAINTAINER=	niwi@niwi.be
 COMMENT=	Simple Library to Allow Python Applications to Use CouchDB
+WWW=		https://code.google.com/p/couchdb-python/
 
 LICENSE=	BSD3CLAUSE
 

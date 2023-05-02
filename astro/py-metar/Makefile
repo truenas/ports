@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	metar
-PORTVERSION=	1.8.0
+PORTVERSION=	1.9.0
 CATEGORIES=	astro python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Parse METAR-coded weather reports
+WWW=		https://github.com/python-metar/python-metar
 
 # It actually has the first clause only.
 LICENSE=	BSD2CLAUSE

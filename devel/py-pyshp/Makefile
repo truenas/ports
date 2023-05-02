@@ -1,11 +1,12 @@
 PORTNAME=	pyshp
-PORTVERSION=	2.1.3
+PORTVERSION=	2.3.1
 CATEGORIES=	devel python geography
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dbaio@FreeBSD.org
 COMMENT=	Pure Python read/write support for ESRI Shapefile format
+WWW=		https://github.com/GeospatialPython/pyshp
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.TXT

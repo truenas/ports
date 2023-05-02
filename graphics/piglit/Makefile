@@ -1,12 +1,11 @@
-# Created by: Jean-Sébastien Pédron <dumbbell@FreeBSD.org>
-
 PORTNAME=	piglit
 PORTVERSION=	20200910
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	graphics
 
 MAINTAINER=	x11@FreeBSD.org
 COMMENT=	Automated OpenGL and OpenCL testsuite
+WWW=		https://piglit.freedesktop.org/
 
 LICENSE=	MIT GPLv2 GPLv3 LGPL20
 LICENSE_COMB=	multi

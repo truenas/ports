@@ -1,13 +1,12 @@
-# Created by: Andreas Klemm <andreas@klemm.gtn.com>
-
 PORTNAME=	Net-SSLeay
-PORTVERSION=	1.90
+PORTVERSION=	1.92
 CATEGORIES=	security perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Perl5 interface to SSL
+WWW=		https://metacpan.org/release/Net-SSLeay
 
 LICENSE=	OpenSSL
 

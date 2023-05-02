@@ -1,10 +1,12 @@
 PORTNAME=	dune-functions
 DISTVERSIONPREFIX=	v
 DISTVERSION=	2.8.0
+PORTREVISION=	1
 CATEGORIES=	math
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	DUNE framework: Abstraction layer for global finite element functions
+WWW=		https://www.dune-project.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,13 +1,13 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	dns-crawler
 PORTVERSION=	1.4.9
+PORTREVISION=	1
 CATEGORIES=	dns python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Crawler for getting info about DNS domains and services
+WWW=		https://gitlab.nic.cz/adam/dns-crawler
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -16,7 +16,7 @@ BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}setuptools_scm>=0:devel/py-setuptools_scm@
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}asn1crypto>=1.3.0:devel/py-asn1crypto@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}cert-human>=1.0.7:security/py-cert-human@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}cryptography>=2.8:security/py-cryptography@${PY_FLAVOR} \
-		${PYTHON_PKGNAMEPREFIX}dnspython>=0:dns/py-dnspython@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}dnspython>=0,1:dns/py-dnspython@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}ecdsa>=0.15:security/py-ecdsa@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}forcediphttpsadapter>=1.0.1:www/py-forcediphttpsadapter@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}GeoIP2>=3.0.0:net/py-GeoIP2@${PY_FLAVOR} \

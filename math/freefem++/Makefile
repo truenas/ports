@@ -1,13 +1,12 @@
-# Created by: Thierry Thomas <thierry@pompo.net>
-
 PORTNAME=	freefem++
-PORTVERSION=	4.6
 DISTVERSIONPREFIX=	v
-PORTREVISION=	4
+DISTVERSION=	4.12
+PORTREVISION=	1
 CATEGORIES=	math science
 
-MAINTAINER=	kh@mogami.com
+MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Partial differential equation solver
+WWW=		https://freefem.org/index.html
 
 LICENSE=	LGPL3
 
@@ -16,6 +15,9 @@ BUILD_DEPENDS=	bash:shells/bash		\
 		pipe:misc/pipe			\
 		tetgen:math/tetgen
 LIB_DEPENDS=	libhdf5.so:science/hdf5		\
+		libamd.so:math/suitesparse-amd	\
+		libcholmod.so:math/suitesparse-cholmod \
+		libcolamd.so:math/suitesparse-colamd \
 		libumfpack.so:math/suitesparse-umfpack	\
 		libarpack.so:math/arpack-ng	\
 		libfftw3.so:math/fftw3		\
@@ -26,16 +28,17 @@ LIB_DEPENDS=	libhdf5.so:science/hdf5		\
 		libcmumps.so:math/mumps		\
 		libnlopt.so:math/nlopt		\
 		libsuperlu.so:math/superlu	\
-		libsz.so:science/szip
+		libsz.so:science/libaec
 RUN_DEPENDS=	bash:shells/bash		\
 		pipe:misc/pipe
+
+USES=		autoreconf bison blaslapack:openblas compiler:c++14-lang fortran	\
+		gl gmake localbase perl5 pkgconfig shebangfix xorg
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	FreeFem
 GH_PROJECT=	FreeFem-sources
 
-USES=		autoreconf bison blaslapack:openblas compiler:c++11-lib fortran	\
-		gl gmake localbase perl5 pkgconfig shebangfix xorg
 SHEBANG_GLOB=	ff-pkg-download.in
 SHEBANG_FILES=	examples/CheckAllEdp ./examples/misc/speedtest.sh
 
@@ -56,12 +59,17 @@ USE_GL=		gl glu glut
 OPTIONS_DEFINE=	EXAMPLES
 OPTIONS_DEFAULT=EXAMPLES
 
+PORTEXAMPLES=	*
+
 PLIST_SUB=	VER=${PORTVERSION}
 DATADIR=	${PREFIX}/share/FreeFEM/${PORTVERSION}
 
 TEST_TARGET=	check
 
 pre-configure:
-	${REINPLACE_CMD} -e 's|-llapack|${LAPACKLIB}|' ${WRKSRC}/configure.ac
+	@${REINPLACE_CMD} -e 's|-llapack|${LAPACKLIB}|' ${WRKSRC}/configure.ac
+
+post-install:
+	@${MV} ${STAGEDIR}${DATADIR}/examples ${STAGEDIR}${EXAMPLESDIR}
 
 .include <bsd.port.mk>

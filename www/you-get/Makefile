@@ -1,12 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	you-get
-PORTVERSION=	0.4.1545
+PORTVERSION=	0.4.1650
+PORTREVISION=	1
 CATEGORIES=	www
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Dumb downloader that scrapes the web
+WWW=		https://you-get.org/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

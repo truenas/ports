@@ -1,22 +1,22 @@
-# Created by: Filippo Natali <filippo@widestore.net>
-
 PORTNAME=	xfce4-weather-plugin
-PORTVERSION=	0.11.0
+PORTVERSION=	0.11.1
 CATEGORIES=	misc xfce geography
 MASTER_SITES=	XFCE/panel-plugins
 DIST_SUBDIR=	xfce4
 
 MAINTAINER=	xfce@FreeBSD.org
 COMMENT=	Weather plugin for the Xfce panel
+WWW=		https://goodies.xfce.org/projects/panel-plugins/xfce4-weather-plugin
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-LIB_DEPENDS=	libsoup-2.4.so:devel/libsoup
+LIB_DEPENDS=	libsoup-2.4.so:devel/libsoup \
+		libharfbuzz.so:print/harfbuzz
 
 USES=		compiler:c11 gettext-tools gmake gnome libtool pkgconfig \
 		tar:bzip2 xfce
-USE_GNOME=	cairo glib20 gtk30 intltool libxml2
+USE_GNOME=	cairo gdkpixbuf2 glib20 gtk30 intltool libxml2
 USE_XFCE=	panel
 USE_LDCONFIG=	yes
 

@@ -1,13 +1,12 @@
-# Created by: Nick Sayer <nsayer@FreeBSD.org>
-
 PORTNAME=	unixODBC
-PORTVERSION=	2.3.9
+PORTVERSION=	2.3.11
 CATEGORIES=	databases
 MASTER_SITES=	http://www.unixodbc.org/ \
 		ftp://ftp.unixodbc.org/pub/unixODBC/
 
 MAINTAINER=	brnrd@FreeBSD.org
 COMMENT=	ODBC library suite for Unix
+WWW=		http://www.unixodbc.org/
 
 LICENSE=	GPLv2 LGPL21
 LICENSE_COMB=	multi

@@ -1,11 +1,12 @@
 PORTNAME=	nosexcover
 PORTVERSION=	1.0.11
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	egypcio@FreeBSD.org
 COMMENT=	Extends nose cover to add Cobertura-style XML reports
+WWW=		https://github.com/cmheisel/nose-xcover
 
 LICENSE=	MIT
 

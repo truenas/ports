@@ -1,12 +1,12 @@
-# Created by: Babak Farrokhi <farrokhi@FreeBSD.org>
-
 PORTNAME=	isomaster
 PORTVERSION=	1.3.16
+PORTREVISION=	1
 CATEGORIES=	sysutils
 MASTER_SITES=	http://littlesvr.ca/isomaster/releases/
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	GTK2 (bootable) CD ISO Image editor
+WWW=		http://littlesvr.ca/isomaster/
 
 LICENSE=	GPLv2
 

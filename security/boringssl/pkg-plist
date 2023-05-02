@@ -8,6 +8,7 @@ include/openssl/asn1t.h
 include/openssl/base.h
 include/openssl/base64.h
 include/openssl/bio.h
+include/openssl/blake2.h
 include/openssl/blowfish.h
 include/openssl/bn.h
 include/openssl/buf.h
@@ -20,6 +21,7 @@ include/openssl/cmac.h
 include/openssl/conf.h
 include/openssl/cpu.h
 include/openssl/crypto.h
+include/openssl/ctrdrbg.h
 include/openssl/curve25519.h
 include/openssl/des.h
 include/openssl/dh.h
@@ -34,11 +36,15 @@ include/openssl/ecdsa.h
 include/openssl/engine.h
 include/openssl/err.h
 include/openssl/evp.h
+include/openssl/evp_errors.h
 include/openssl/ex_data.h
 include/openssl/hkdf.h
 include/openssl/hmac.h
+include/openssl/hpke.h
 include/openssl/hrss.h
 include/openssl/is_boringssl.h
+include/openssl/kdf.h
+include/openssl/kyber.h
 include/openssl/lhash.h
 include/openssl/md4.h
 include/openssl/md5.h
@@ -61,6 +67,7 @@ include/openssl/rc4.h
 include/openssl/ripemd.h
 include/openssl/rsa.h
 include/openssl/safestack.h
+include/openssl/service_indicator.h
 include/openssl/sha.h
 include/openssl/siphash.h
 include/openssl/span.h
@@ -69,6 +76,7 @@ include/openssl/ssl.h
 include/openssl/ssl3.h
 include/openssl/stack.h
 include/openssl/thread.h
+include/openssl/time.h
 include/openssl/tls1.h
 include/openssl/trust_token.h
 include/openssl/type_check.h

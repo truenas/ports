@@ -1,11 +1,12 @@
 PORTNAME=	azure-functions-devops-build
 PORTVERSION=	0.0.22
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dbaio@FreeBSD.org
 COMMENT=	Azure Devops Build Manager For Azure Functions
+WWW=		https://pypi.org/project/azure-functions-devops-build/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

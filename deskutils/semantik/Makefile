@@ -1,16 +1,15 @@
 PORTNAME=	semantik
-DISTVERSION=	1.2.7
+DISTVERSION=	1.2.8
+PORTREVISION=	1
 CATEGORIES=	deskutils kde
 MASTER_SITES=	https://waf.io/
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	Mind mapping tool
+WWW=		https://waf.io/semantik.html
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE
-
-DEPRECATED=	Uses EOL Python 2.7 via www/qt5-webengine
-EXPIRATION_DATE=2021-06-23
 
 USES=		kde:5 pkgconfig python:3.6+ qt:5 shebangfix tar:bzip2 waf \
 		desktop-file-utils gettext shared-mime-info
@@ -19,7 +18,7 @@ USE_KDE=	auth config configwidgets coreaddons i18n iconthemes \
 USE_LDCONFIG=	yes
 USE_QT=		core dbus declarative gui location network printsupport \
 		svg webchannel webengine widgets xml \
-		buildtools_build qmake_build
+		buildtools:build qmake:build
 
 SHEBANG_FILES=	src/templates/beamer/wscript \
 		src/templates/pdflatex/wscript \
@@ -37,6 +36,21 @@ CONFIGURE_ENV=	PATH="${KDE_PREFIX}/bin:$$PATH" \
 MAKE_ENV=	DESTDIR="${STAGEDIR}"
 CFLAGS+=	-I${LOCALBASE}/include
 CPPFLAGS+=	-I${LOCALBASE}/include
+# Help WAF a bit more by simply adding the locations to the KF5
+# headers ourselves...
+CXXFLAGS+=	-I${LOCALBASE}/include/KF5/KAuthCore \
+		-I${LOCALBASE}/include/KF5/KConfigCore \
+		-I${LOCALBASE}/include/KF5/KConfigGui \
+		-I${LOCALBASE}/include/KF5/KConfigWidgets \
+		-I${LOCALBASE}/include/KF5/KCoreAddons \
+		-I${LOCALBASE}/include/KF5/KDELibs4Support \
+		-I${LOCALBASE}/include/KF5/KI18n \
+		-I${LOCALBASE}/include/KF5/KIOCore \
+		-I${LOCALBASE}/include/KF5/KIOWidgets \
+		-I${LOCALBASE}/include/KF5/KWidgetsAddons \
+		-I${LOCALBASE}/include/KF5/KXmlGui \
+		-I${LOCALBASE}/include/KF5/SonnetUi \
+
 
 PLIST_SUB=	PORTVERSION="${PORTVERSION}"
 

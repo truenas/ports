@@ -1,5 +1,3 @@
-# Created by: Matthias Schmidt
-
 PORTNAME=	pkg_search
 PORTVERSION=	1.3
 CATEGORIES=	ports-mgmt
@@ -8,6 +6,7 @@ MASTER_SITES=	http://www.mathematik.uni-marburg.de/~schmidtm/pkg_search/ \
 
 MAINTAINER=	schmidtm@mathematik.uni-marburg.de
 COMMENT=	Nifty script searching the ports database
+WWW=		https://www.mathematik.uni-marburg.de/~schmidtm/pkg_search/
 
 IGNORE_DragonFly=	Requires update to work for DragonFly
 

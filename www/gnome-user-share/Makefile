@@ -1,9 +1,6 @@
-# Created by: Joe Marcus Clarke <marcus@FreeBSD.org>
-#   $MCom: ports/trunk/www/gnome-user-share/Makefile 19970 2014-10-16 08:47:02Z gusi $
-
 PORTNAME=	gnome-user-share
 PORTVERSION=	3.14.0
-PORTREVISION=	3
+PORTREVISION=	7
 CATEGORIES=	www deskutils gnome
 MASTER_SITES=	GNOME
 DIST_SUBDIR=	gnome2
@@ -19,7 +16,7 @@ LIB_DEPENDS=	libavahi-client.so:net/avahi-app \
 RUN_DEPENDS=	${APACHE_PKGNAMEPREFIX}mod_dnssd>=0:www/mod_dnssd \
 		console-kit-daemon:sysutils/consolekit2
 
-USES=		apache:2.2+ gettext gmake gnome libtool pkgconfig tar:xz xorg
+USES=		apache gettext gmake gnome libtool pkgconfig tar:xz xorg
 USE_XORG=	sm
 USE_GNOME=	gnomeprefix gtk30 intlhack nautilus3
 GNU_CONFIGURE=	yes

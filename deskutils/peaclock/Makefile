@@ -1,10 +1,11 @@
 PORTNAME=	peaclock
 DISTVERSION=	0.4.3
-PORTREVISION=	3
+PORTREVISION=	6
 CATEGORIES=	deskutils
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Customizable clock, timer, and stopwatch for the terminal
+WWW=		https://github.com/octobanana/peaclock
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

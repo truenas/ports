@@ -1,5 +1,3 @@
-# Created by: Andreas Klemm <andreas@klemm.gtn.com>
-
 PORTNAME=	ghostscript
 PORTVERSION=	7.07
 PORTREVISION=	32
@@ -10,8 +8,14 @@ DIST_SUBDIR=	${PORTNAME}
 
 MAINTAINER=	hrs@FreeBSD.org
 COMMENT=	Ghostscript 7.x PostScript interpreter, X11 support
+WWW=		https://www.cs.wisc.edu/~ghost/doc/GPL/index.htm
 
 LICENSE=	GPLv2
+
+DEPRECATED=	Obsolete and unsupported upstream
+EXPIRATION_DATE=2023-06-30
+
+FORBIDDEN=	CVE-2023-28879
 
 CONFLICTS_INSTALL= \
 		gambc \

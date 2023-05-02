@@ -1,11 +1,12 @@
 PORTNAME=	packageurl-python
 DISTVERSION=	0.9.3
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	kai@FreeBSD.org
 COMMENT=	Parser and builder for package URLs (aka purl)
+WWW=		https://github.com/package-url/packageurl-python
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/mit.LICENSE

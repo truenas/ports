@@ -1,11 +1,12 @@
 PORTNAME=	opencpn
 PORTVERSION=	5.2.4
-PORTREVISION=	3
+PORTREVISION=	5
 DISTVERSIONPREFIX=	v
 CATEGORIES=	astro geography
 
 MAINTAINER=	ml@netfence.it
 COMMENT=	Concise ChartPlotter/Navigator
+WWW=		https://opencpn.org/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING.gplv2

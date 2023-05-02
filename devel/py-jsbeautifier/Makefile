@@ -1,13 +1,12 @@
-# Created by: Shaun Amott <shaun@FreeBSD.org>
-
 PORTNAME=	jsbeautifier
-PORTVERSION=	1.11.0
+PORTVERSION=	1.14.7
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	shaun@FreeBSD.org
 COMMENT=	JavaScript unobfuscator and beautifier
+WWW=		https://jsbeautifier.org/
 
 LICENSE=	MIT
 

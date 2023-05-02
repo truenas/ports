@@ -1,16 +1,17 @@
-# Created by: Alexander V. Chernikov <melifaro@FreeBSD.org>
-
 PORTNAME=	bird
-DISTVERSION=	2.0.8
-PORTREVISION=	1
+DISTVERSION=	2.13
 CATEGORIES=	net
 MASTER_SITES=	https://bird.network.cz/download/
 PKGNAMESUFFIX=	2
 
 MAINTAINER=	olivier@FreeBSD.org
 COMMENT=	Dynamic IP routing daemon
+WWW=		https://bird.network.cz/
 
 LICENSE=	GPLv2
+
+FLAVORS=	base netlink
+netlink_PKGNAMESUFFIX=	2-netlink
 
 USES=		bison cpe gmake ncurses readline
 
@@ -59,8 +60,13 @@ STATIC_VARS=	rt_prot+=static
 CONFIGURE_ARGS+=--with-protocols="${RT_PROT}"
 RPKI_LIB_DEPENDS=	libssh.so:security/libssh
 
-post-patch:
-	#${REINPLACE_CMD} -e 's|\.example|\.sample|g' ${WRKSRC}/Makefile.in
-	#${MV} ${WRKSRC}/doc/bird.conf ${WRKSRC}/doc/bird.conf.sample
+.include <bsd.port.options.mk>
+
+.if ${FLAVOR:U} == netlink
+CONFIGURE_ARGS+=--with-sysconfig=bsd-netlink
+.if ${OPSYS} == FreeBSD && ${OSVERSION} < 1302000
+IGNORE=	No netlink support
+.endif
+.endif
 
 .include <bsd.port.mk>

@@ -1,14 +1,14 @@
-# Created by: Joe Marcus Clarke <marcus@FreeBSD.org>
-
 PORTNAME=	libgda
 DISTVERSION?=	5.2.10
+PORTREVISION=	2
 CATEGORIES=	databases gnome
 MASTER_SITES=	GNOME
 PKGNAMESUFFIX?=	5
-DIST_SUBDIR=	gnome3
+DIST_SUBDIR=	gnome
 
 MAINTAINER?=	gnome@FreeBSD.org
 COMMENT?=	Provides uniform access to different kinds of data sources
+WWW=		https://www.gnome-db.org/
 
 LICENSE=	GPLv2+ LGPL20+
 LICENSE_COMB=	multi
@@ -20,14 +20,12 @@ CPE_VENDOR=	gnome
 LIBGDA5_SLAVE?=	no
 SHEBANG_FILES=	libgda-report/RML/*/*.py
 
-.if !defined(REFERENCE_PORT)
-
 BUILD_DEPENDS=	itstool:textproc/itstool
 LIB_DEPENDS=	libsecret-1.so:security/libsecret \
 		libsoup-2.4.so:devel/libsoup \
 
 USES+=		gettext gmake gnome libtool localbase pathfix pkgconfig
-USE_GNOME=	glib20 libxslt intlhack introspection:build referencehack
+USE_GNOME=	glib20 libxslt intlhack introspection:build
 USE_LDCONFIG=	yes
 GNU_CONFIGURE=	yes
 INSTALL_TARGET=	install-strip
@@ -63,7 +61,7 @@ CONFIGURE_ARGS+=	--without-bdb
 .endif
 
 .if ${LIBGDA5_SLAVE}==ldap
-USE_OPENLDAP=	yes
+USES+=			ldap
 CONFIGURE_ARGS+=	--with-ldap=${LOCALBASE}
 .else
 CONFIGURE_ARGS+=	--without-ldap
@@ -71,6 +69,7 @@ CONFIGURE_ARGS+=	--without-ldap
 
 .if ${LIBGDA5_SLAVE}==mysql
 USES+=			mysql
+IGNORE_WITH_MYSQL=	80
 CONFIGURE_ARGS+=	--with-mysql=${LOCALBASE}
 .else
 CONFIGURE_ARGS+=	--without-mysql
@@ -152,4 +151,3 @@ post-install:
 .endif
 
 .include <bsd.port.mk>
-.endif

@@ -1,12 +1,12 @@
-# Created by: TAKATSU Tomonari <tota@FreeBSD.org>
-
 PORTNAME=	SparseM
 PORTVERSION=	1.81
+PORTREVISION=	1
 CATEGORIES=	math
 DISTNAME=	${PORTNAME}_${PORTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Sparse Linear Algebra
+WWW=		https://cran.r-project.org/web/packages/SparseM/
 
 LICENSE=	GPLv2+
 

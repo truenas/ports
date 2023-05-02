@@ -4,8 +4,9 @@ DISTVERSION=	${ANGR_VERSION}
 CATEGORIES=	devel python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	0mp@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Classes with architecture-specific information useful to other projects
+WWW=		https://github.com/angr/archinfo
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

@@ -1,13 +1,12 @@
-# Created by: Andrew Thompson <thompsa@FreeBSD.org>
-
 PORTNAME=	webcamd
 DISTVERSIONPREFIX=	v
-DISTVERSION=	5.13.2.6
-PORTREVISION=	2
+DISTVERSION=	5.17.1.2
+PORTREVISION=	1
 CATEGORIES=	multimedia
 
 MAINTAINER=	hselasky@FreeBSD.org
 COMMENT=	Port of Linux USB webcam and DVB drivers into userspace
+WWW=		https://github.com/hselasky/webcamd
 
 LICENSE=	GPLv2
 
@@ -21,7 +20,7 @@ SUB_FILES=	webcamd.conf
 USE_GITHUB=	yes
 GH_ACCOUNT=	hselasky
 GH_PROJECT=	${PORTNAME}
-GH_TUPLE=	torvalds:linux:v5.13-rc2:linux/media_tree \
+GH_TUPLE=	torvalds:linux:v5.17-rc1:linux/media_tree \
 		swills:v4l2loopback:8ab6a12:v4l2loopback/contrib/v4l2loopback
 
 OPTIONS_DEFINE=	DEBUG VT_CLIENT VT_SERVER DVB INPUT KEYBOARD MOUSE RADIO WEBCAM V4L2LOOPBACK

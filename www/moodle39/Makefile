@@ -1,35 +1,37 @@
-# Created by: Javier Martin Rueda <jmrueda@diatel.upm.es>
-
 PORTNAME=	moodle
-PORTVERSION=	3.9.11
+PORTVERSION=	3.9.21
 CATEGORIES=	www education
 MASTER_SITES=	SF/moodle/Moodle/stable39/
 PKGNAMESUFFIX=	${PKGORIGIN:T:S/moodle//}${PHP_PKGNAMESUFFIX}
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Course management system based on social constructionism
+WWW=		https://www.moodle.org/
 
 LICENSE=	GPLv3
 
-CONFLICTS=	moodle310-3.10.[0-9]* moodle311-3.11.[0-9]*
+DEPRECATED=	Requires php74 which has been removed from the tree
+EXPIRATION_DATE=	2023-04-30
+
+CONFLICTS=	moodle311-3.11.[0-9]* moodle40-4.0.[0-9]* moodle41-4.1.[0-9]* \
+		moodle42-4.2
 
 USES=		cpe php:flavors tar:tgz
-USE_PHP=	ctype curl dom fileinfo filter gd hash iconv intl json mbstring \
-		opcache openssl pcre session simplexml soap spl tokenizer \
+USE_PHP=	ctype curl dom fileinfo filter gd iconv intl mbstring \
+		opcache session simplexml soap tokenizer \
 		xml xmlreader xmlrpc zip zlib
+IGNORE_WITH_PHP=	81 82
+
 WRKSRC=		${WRKDIR}/moodle
 
-IGNORE_WITH_PHP=	80
-
 OPTIONS_SINGLE=		BACKEND
-OPTIONS_SINGLE_BACKEND=	MYSQL PGSQL MSSQL
+OPTIONS_SINGLE_BACKEND=	MYSQL PGSQL
 OPTIONS_DEFINE=		LDAP
 OPTIONS_DEFAULT=	MYSQL
 
 MYSQL_USES=	mysql
 MYSQL_USE=	php=mysqli
 PGSQL_USE=	php=pgsql
-MSSQL_USE=	php=mssql
 LDAP_USE=	php=ldap
 
 NO_BUILD=	yes

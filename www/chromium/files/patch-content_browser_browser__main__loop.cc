@@ -1,29 +1,37 @@
---- content/browser/browser_main_loop.cc.orig	2021-09-24 04:26:05 UTC
+--- content/browser/browser_main_loop.cc.orig	2023-03-09 06:31:50 UTC
 +++ content/browser/browser_main_loop.cc
-@@ -547,7 +547,7 @@ int BrowserMainLoop::EarlyInitialization() {
+@@ -245,6 +245,12 @@
+ #include "mojo/public/cpp/bindings/lib/test_random_mojo_delays.h"
+ #endif
  
-   // Up the priority of the UI thread unless it was already high (since Mac
-   // and recent versions of Android (O+) do this automatically).
--#if !defined(OS_MAC)
-+#if !defined(OS_MAC) && !defined(OS_BSD)
-   if (base::FeatureList::IsEnabled(
-           features::kBrowserUseDisplayThreadPriority) &&
-       base::PlatformThread::GetCurrentThreadPriority() <
-@@ -557,7 +557,7 @@ int BrowserMainLoop::EarlyInitialization() {
-   }
- #endif  // !defined(OS_MAC)
++#if BUILDFLAG(IS_BSD)
++#include "content/browser/sandbox_host_linux.h"
++#include "content/public/common/zygote/sandbox_support_linux.h"
++#include "sandbox/policy/sandbox.h"
++#endif
++
+ // One of the linux specific headers defines this as a macro.
+ #ifdef DestroyAll
+ #undef DestroyAll
+@@ -538,6 +544,12 @@ int BrowserMainLoop::EarlyInitialization() {
+   // by now since a thread to start the ServiceManager has been created
+   // before the browser main loop starts.
+   DCHECK(SandboxHostLinux::GetInstance()->IsInitialized());
++#elif BUILDFLAG(IS_BSD)
++  base::FileHandleMappingVector additional_remapped_fds;
++  base::LaunchOptions options;
++  SandboxHostLinux::GetInstance()->Init();
++  const int sfd = SandboxHostLinux::GetInstance()->GetChildSocket();
++  options.fds_to_remap.push_back(std::make_pair(sfd, GetSandboxFD()));
+ #endif
  
--#if defined(OS_MAC) || defined(OS_LINUX) || defined(OS_CHROMEOS) || \
-+#if defined(OS_MAC) || defined(OS_LINUX) || defined(OS_CHROMEOS) || defined(OS_BSD) || \
-     defined(OS_ANDROID)
+   // GLib's spawning of new processes is buggy, so it's important that at this
+@@ -575,7 +587,7 @@ int BrowserMainLoop::EarlyInitialization() {
+   base::PlatformThread::SetCurrentThreadType(base::ThreadType::kCompositing);
+ 
+ #if BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS) || \
+-    BUILDFLAG(IS_ANDROID)
++    BUILDFLAG(IS_ANDROID) || BUILDFLAG(IS_BSD)
    // We use quite a few file descriptors for our IPC as well as disk the disk
    // cache,and the default limit on the Mac is low (256), so bump it up.
-@@ -567,7 +567,7 @@ int BrowserMainLoop::EarlyInitialization() {
-   // users can easily hit this limit with many open tabs. Bump up the limit to
-   // an arbitrarily high number. See https://crbug.com/539567
-   base::IncreaseFdLimitTo(8192);
--#endif  // defined(OS_MAC) || defined(OS_LINUX) || defined(OS_CHROMEOS) ||
-+#endif  // defined(OS_MAC) || defined(OS_LINUX) || defined(OS_CHROMEOS) || defined(OS_BSD) ||
-         // defined(OS_ANDROID)
  
- #if defined(OS_WIN)

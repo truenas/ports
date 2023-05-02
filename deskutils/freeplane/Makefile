@@ -1,32 +1,35 @@
-# Created by: Loïc Bartoletti <lbartoletti@FreeBSD.org>
-
 PORTNAME=	freeplane
-DISTVERSION=	1.8.11
+DISTVERSION=	1.10.6
 CATEGORIES=	deskutils editors java
-MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}%20stable/archive/${PORTVERSION}
+MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}%20stable
 DISTNAME=	${PORTNAME}_bin-${PORTVERSION}
 
-MAINTAINER=	lbartoletti@FreeBSD.org
+MAINTAINER=	nivit@FreeBSD.org
 COMMENT=	Free mind mapping and knowledge management software
+WWW=		https://www.freeplane.org/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/license.txt
 
-USES=		cpe zip
+RUN_DEPENDS=	bash:shells/bash
 
+USES=		cpe shebangfix zip
 USE_JAVA=	yes
+
+SHEBANG_FILES=	${WRKSRC}/freeplane.sh
+
 NO_ARCH=	yes
 NO_BUILD=	yes
-PLIST_SUB=	PORTVERSION="${PORTVERSION}"
 
 WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}
 
+PLIST_SUB=	PORTVERSION="${PORTVERSION}"
 do-install:
 	cd ${WRKSRC} && ${COPYTREE_SHARE} . ${STAGEDIR}${DATADIR} \
-		"! ( -name freeplane\.sh* -or -name license\.txt -or -name *\.bat -or -name *\.exe )"
-# Install freeplane.sh with the right permission, link to it to bin/
-# and let it resolve the path to DATADIR automatically.
-	${INSTALL_SCRIPT} ${WRKSRC}/freeplane.sh ${STAGEDIR}${DATADIR}
-	${RLN} ${STAGEDIR}${DATADIR}/freeplane.sh ${STAGEDIR}${PREFIX}/bin/freeplane
+		"! ( -name license\.txt -or -name *\.bat -or -name *\.exe )"
+# Install freeplane.sh with the right permission
+	${SED} -e 's|%%DATADIR%%|${DATADIR}|' < ${FILESDIR}/freeplane.in > \
+		${WRKSRC}/freeplane
+	${INSTALL_SCRIPT} ${WRKSRC}/freeplane ${STAGEDIR}${PREFIX}/bin/
 
 .include <bsd.port.mk>

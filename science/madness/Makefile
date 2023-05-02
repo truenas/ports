@@ -1,10 +1,11 @@
 PORTNAME=	madness
 DISTVERSION=	0.10.1.20180823
-PORTREVISION=	12
+PORTREVISION=	14
 CATEGORIES=	science
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Multiresolution adaptive numeric environment for scientific simulation
+WWW=		https://github.com/m-a-d-n-e-s-s/madness
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE

@@ -1,18 +1,19 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	krb5
-PORTVERSION=	0.2.0
+PORTVERSION=	0.5.0
 CATEGORIES=	security python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Kerberos API bindings for Python
+WWW=		https://github.com/jborean93/pykrb5
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USES=		python:3.6+
+BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}cython>=0.29.29<3.0.0:lang/cython@${PY_FLAVOR}
+
+USES=		python:3.7+
 USE_PYTHON=	autoplist concurrent cython distutils
 
 MAKE_ENV=	KRB5_KRB5CONFIG=${KRB5CONFIG}

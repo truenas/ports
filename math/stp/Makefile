@@ -1,13 +1,12 @@
-# Created by: Li-Wen Hsu <lwhsu@FreeBSD.org>
-
 PORTNAME=	stp
 DISTVERSION=	2.3.3
-PORTREVISION=	6
+PORTREVISION=	9
 PORTEPOCH=	1
 CATEGORIES=	math
 
 MAINTAINER=	arrowd@FreeBSD.org
 COMMENT=	Decision Procedure for Bitvectors and Arrays
+WWW=		https://stp.github.io/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

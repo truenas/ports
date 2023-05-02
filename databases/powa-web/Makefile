@@ -1,13 +1,12 @@
-# Created by: Palle Girgensohn <girgen@FreeBSD.org>
-
 PORTNAME=	powa-web
-PORTVERSION=	4.0.2
+PORTVERSION=	4.1.3
 CATEGORIES=	databases python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	girgen@FreeBSD.org
 COMMENT=	PostgreSQL Workload Analyzer is a performance tool for PostgreSQL
+WWW=		https://powa.readthedocs.org/
 
 LICENSE=	PostgreSQL
 

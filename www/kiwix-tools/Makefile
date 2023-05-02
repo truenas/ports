@@ -1,10 +1,11 @@
 PORTNAME=	kiwix-tools
 DISTVERSION=	3.1.2
-PORTREVISION=	1
+PORTREVISION=	3
 CATEGORIES=	www
 
 MAINTAINER=	me@int19h.org
 COMMENT=	Command-line Kiwix tools
+WWW=		https://www.kiwix.org/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING

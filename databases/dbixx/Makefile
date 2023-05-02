@@ -1,13 +1,12 @@
-# Created by: Mohammad S. Babaei <info@babaei.net>
-
 PORTNAME=	dbixx
 PORTVERSION=	0.0.4
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	databases
 MASTER_SITES=	SF/cppcms/${PORTNAME}/${PORTVERSION}
 
 MAINTAINER=	info@babaei.net
 COMMENT=	Tiny C++ wrapper around libdbi for database and SQL connectivity
+WWW=		http://cppcms.com/wikipp/en/page/ref_dbixx
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING

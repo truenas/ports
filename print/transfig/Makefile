@@ -1,5 +1,3 @@
-# Created by: chuckr@FreeBSD.org
-
 PORTNAME=	transfig
 PORTVERSION=	3.2.5e
 PORTREVISION=	4
@@ -16,6 +14,8 @@ LIB_DEPENDS=	libpng.so:graphics/png
 USES=		alias ghostscript:run imake xorg
 CFLAGS+=	-Wno-return-type
 USE_XORG=	xpm
+
+CONFLICTS_INSTALL=	fig2dev # bin/fig2dev bin/fig2ps2tex
 
 MAKE_ARGS+=	INSTALLFLAGS="${COPY}" \
 		INSTPGMFLAGS="${STRIP}" \

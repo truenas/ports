@@ -1,39 +1,38 @@
-# Created by: Denis Podolskiy <bytestore@yandex.ru>
-
 PORTNAME=	jpeg-turbo
-DISTVERSION=	2.1.1
-PORTREVISION?=	1
+DISTVERSION=	2.1.5.1
+PORTREVISION?=	0
 CATEGORIES=	graphics
 MASTER_SITES=	SF/lib${PORTNAME}/${DISTVERSION}
 DISTNAME=	lib${PORTNAME}-${DISTVERSION}
 
-PATCH_SITES=	https://github.com/libjpeg-turbo/libjpeg-turbo/commit/
-PATCHFILES=	173900b1cabb027495ae530c71250bcedc9925d5.patch:-p1 \
-		129f0cb76346ceede8f4d8d87dea8acb0809056c.patch:-p1 \
-		d401d6251412a2985810ffaffb90b448a6ee12a9.patch:-p1
-
-MAINTAINER=	portmgr@FreeBSD.org
+MAINTAINER=	desktop@FreeBSD.org
 COMMENT?=	SIMD-accelerated JPEG codec which replaces libjpeg
+WWW?=		https://libjpeg-turbo.org/
 
-LICENSE=	BSD3CLAUSE IJG ZLIB
-LICENSE_COMB=	multi
+LICENSE=		BSD3CLAUSE IJG ZLIB
+LICENSE_COMB=		multi
 LICENSE_GROUPS_IJG=	FSF GPL
 LICENSE_NAME_IJG=	Independent JPEG Group License
-LICENSE_FILE_BSD3CLAUSE=	${WRKSRC}/LICENSE.md
+LICENSE_FILE_BSD3CLAUSE=${WRKSRC}/LICENSE.md
 LICENSE_FILE_IJG=	${WRKSRC}/README.ijg
 LICENSE_FILE_ZLIB=	${WRKSRC}/LICENSE.md
 LICENSE_PERMS_IJG=	dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
 
-USES=		cmake cpe
+USES=		cmake cpe pathfix
 USE_LDCONFIG=	yes
-CMAKE_ON=	WITH_JPEG8
+
 CPE_PRODUCT=	libjpeg-turbo
 TEST_TARGET=	test
 
 PORTDOCS=	*
 DOCSDIR=	${PREFIX}/share/doc/libjpeg-turbo
 
-OPTIONS_DEFINE=	DOCS
+CMAKE_ON=	WITH_JPEG8
+
+OPTIONS_DEFINE=		DOCS OPTIMIZED_CFLAGS
+OPTIONS_DEFAULT=	OPTIMIZED_CFLAGS
+
+OPTIMIZED_CFLAGS_CFLAGS=	-O3
 
 .include <bsd.port.options.mk>
 
@@ -49,7 +48,7 @@ CMAKE_OFF=	WITH_SIMD
 PLIST_SUB+=	JPEG="@comment " LIBTURBOJPEG=""
 .else
 CMAKE_OFF+=	WITH_TURBOJPEG
-CONFLICTS_INSTALL=	jpeg
+CONFLICTS_INSTALL=	mozjpeg
 PLIST_SUB+=	JPEG="" LIBTURBOJPEG="@comment "
 .endif
 

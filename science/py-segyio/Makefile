@@ -1,14 +1,18 @@
 PORTNAME=	segyio
-DISTVERSION=	1.9.8
+DISTVERSIONPREFIX=	v
+DISTVERSION=	1.9.11
+PORTREVISION=	1
 CATEGORIES=	science python
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Python binding for segyio, the seismic data library
+WWW=		https://github.com/equinor/segyio
 
 LICENSE=	LGPL3+
 
-BUILD_DEPENDS=	cmake:devel/cmake \
+BUILD_DEPENDS=	cmake:devel/cmake-core \
+		pybind11>0:devel/pybind11 \
 		${PYTHON_PKGNAMEPREFIX}distro>0:sysutils/py-distro@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}pip>0:devel/py-pip@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}pytest-runner>=0:devel/py-pytest-runner@${PY_FLAVOR} \
@@ -17,7 +21,7 @@ BUILD_DEPENDS=	cmake:devel/cmake \
 LIB_DEPENDS=	libsegyio.so:science/segyio
 RUN_DEPENDS=	${PYNUMPY}
 
-USES=		compiler:c++11-lang python:3.6+
+USES=		compiler:c++11-lang python:3.6+ pytest
 USE_PYTHON=	distutils autoplist
 
 USE_GITHUB=	yes
@@ -27,10 +31,10 @@ WRKSRC_SUBDIR=	python
 
 post-install:
 	@${STRIP_CMD} ${STAGEDIR}${PYTHONPREFIX_SITELIBDIR}/segyio/_segyio*.so
+	${PYTHON_CMD} -m compileall -d ${PYTHON_SITELIBDIR} ${STAGEDIR}${PYTHON_SITELIBDIR}
+	${PYTHON_CMD} -O -m compileall -d ${PYTHON_SITELIBDIR} ${STAGEDIR}${PYTHON_SITELIBDIR}
 
-do-test: # tests fail: https://github.com/equinor/segyio/issues/511
-	@cd ${WRKSRC} && \
-		${PYTHON_CMD} ${PYSETUP} build_ext --inplace && \
-		${PYTHON_CMD} ${PYSETUP} test
+pre-test:
+	@cd ${WRKSRC} && ${PYTHON_CMD} ${PYSETUP} build_ext --inplace
 
 .include <bsd.port.mk>

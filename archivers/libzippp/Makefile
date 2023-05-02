@@ -1,10 +1,11 @@
 PORTNAME=	libzippp
 DISTVERSIONPREFIX=	${PORTNAME}-v
-DISTVERSION=	5.0-1.8.0
+DISTVERSION=	6.0-1.9.2
 CATEGORIES=	archivers devel
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	C++ wrapper for libzip
+WWW=		https://github.com/ctabin/libzippp
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENCE

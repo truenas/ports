@@ -1,0 +1,21 @@
+PORTNAME=	sentry-sidekiq
+PORTVERSION=	5.1.1
+PORTREVISION=	2
+CATEGORIES=	devel rubygems
+MASTER_SITES=	RG
+
+MAINTAINER=	mfechner@FreeBSD.org
+COMMENT=	Client interface for the Sentry error logger
+WWW=		https://github.com/getsentry/sentry-ruby
+
+LICENSE=	MIT
+LICENSE_FILE=	${WRKSRC}/LICENSE.txt
+
+RUN_DEPENDS=	rubygem-sentry-ruby-core>=5.1.1<5.2:devel/rubygem-sentry-ruby-core \
+		rubygem-sidekiq>=3.0:devel/rubygem-sidekiq
+
+USES=		gem
+
+NO_ARCH=	yes
+
+.include <bsd.port.mk>

@@ -1,12 +1,14 @@
 PORTNAME=	osiipopt
 DISTVERSIONPREFIX=	releases/
 DISTVERSION=	0.1-8
+PORTREVISION=	2
 DISTVERSIONSUFFIX=	-gc808091
 CATEGORIES=	math
 PKGNAMEPREFIX=	coin-or-
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Conic solver interface for Ipopt
+WWW=		https://github.com/aykutbulut/OsiIpopt
 
 LICENSE=	EPL
 LICENSE_FILE=	${WRKSRC}/LICENSE

@@ -6,6 +6,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	mikael@FreeBSD.org
 COMMENT=	Perl port of Webmachine
+WWW=		https://metacpan.org/pod/Web::Machine
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual
@@ -15,5 +16,7 @@ RUN_DEPENDS=	p5-HTTP-Headers-ActionPack>0:www/p5-HTTP-Headers-ActionPack \
 
 USES=		perl5
 USE_PERL5=	configure
+
+NO_ARCH=	yes
 
 .include <bsd.port.mk>

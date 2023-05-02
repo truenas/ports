@@ -1,11 +1,12 @@
 PORTNAME=	itemloaders
-DISTVERSION=	1.0.4
+DISTVERSION=	1.0.6
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dbaio@FreeBSD.org
 COMMENT=	Base library in Python for scrapy's ItemLoader
+WWW=		https://pypi.org/project/itemloaders/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

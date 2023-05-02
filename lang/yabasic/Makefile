@@ -1,12 +1,11 @@
-# Created by: Frank Gruender <elwood@mc5sys.in-berlin.de>
-
 PORTNAME=	yabasic
-PORTVERSION=	2.90.1
+PORTVERSION=	2.90.3
 PORTEPOCH=	1
 CATEGORIES=	lang
 
 MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Yet another Basic for Unix and Windows
+WWW=		http://www.yabasic.de/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	vcver
 PORTVERSION=	0.2.12
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Provide package versions with version control data
+WWW=		https://github.com/toumorokoshi/vcver-python
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

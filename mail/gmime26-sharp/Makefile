@@ -1,6 +1,5 @@
-# Created by: Tom McLaughlin <tmclaugh@sdf.lonestar.org>
-
 CATEGORIES=	mail
+PORTREVISION=	1
 PKGNAMESUFFIX=	26-sharp
 
 MAINTAINER=	mono@FreeBSD.org

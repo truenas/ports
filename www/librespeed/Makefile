@@ -1,18 +1,18 @@
 PORTNAME=	librespeed
-DISTVERSION=	5.2.4
-PORTREVISION=	1
+DISTVERSION=	5.2.5
 CATEGORIES=	www net
 PKGNAMESUFFIX=	${PHP_PKGNAMESUFFIX}
 
 MAINTAINER=	driesm@FreeBSD.org
 COMMENT=	Lightweight selfhosted speedtest
+WWW=		https://github.com/librespeed/speedtest
 
 LICENSE=	LGPL3
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 USES=		php:flavors,web
 
-USE_PHP=	ctype json openssl pdo session
+USE_PHP=	ctype pdo session
 
 USE_GITHUB=	YES
 GH_PROJECT=	speedtest

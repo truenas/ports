@@ -1,3 +1,3 @@
-TIMESTAMP = 1622602368
-SHA256 (aiohttp-3.7.4.post0.tar.gz) = 493d3299ebe5f5a7c66b9819eacdcfbbaaf1a8e84911ddffcdc48888497afecf
-SIZE (aiohttp-3.7.4.post0.tar.gz) = 1114888
+TIMESTAMP = 1677771369
+SHA256 (aiohttp-3.8.4.tar.gz) = bf2e1a9162c1e441bf805a1fd166e249d574ca04e03b34f97e2928769e91ab5c
+SIZE (aiohttp-3.8.4.tar.gz) = 7338512

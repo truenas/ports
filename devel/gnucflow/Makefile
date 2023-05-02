@@ -1,12 +1,12 @@
 PORTNAME=	gnucflow
-PORTVERSION=	1.6
+PORTVERSION=	1.7
 CATEGORIES=	devel
-MASTER_SITES=	ftp://download.gnu.org.ua/pub/release/cflow/ \
-		http://mirror.amdmi3.ru/distfiles/
+MASTER_SITES=	GNU/cflow/
 DISTNAME=	cflow-${PORTVERSION}
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Tool to chart control flow within the C program
+WWW=		https://www.gnu.org/software/cflow/
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING

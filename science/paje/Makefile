@@ -1,8 +1,6 @@
-# Created by: gurkan@phys.ethz.ch
-
 PORTNAME=	paje
 PORTVERSION=	1.97
-PORTREVISION=	11
+PORTREVISION=	12
 CATEGORIES=	science gnustep
 MASTER_SITES=	SF/${PORTNAME}/Releases
 DISTNAME=	Paje_${PORTVERSION}
@@ -10,6 +8,7 @@ EXTRACT_SUFX=	.tar.gz.gz
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Generic visualization tool for GNUstep (Gantt chart and more)
+WWW=		http://www-id.imag.fr/Logiciels/paje/
 
 LICENSE=	LGPL21
 

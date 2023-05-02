@@ -1,5 +1,6 @@
 PORTNAME=	game_sdl2
 PORTVERSION=	7.4.11
+PORTREVISION=	2
 CATEGORIES=	devel python
 MASTER_SITES=	http://www.renpy.org/dl/${PORTVERSION}/ \
 		GENTOO
@@ -8,6 +9,7 @@ DISTNAME=	py${PORTNAME}-2.1.0-for-renpy-${DISTVERSION}
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Reimplementation of portions of the pygame API using SDL2
+WWW=		https://github.com/renpy/pygame_sdl2
 
 LICENSE=	LGPL21+ ZLIB
 LICENSE_COMB=	multi
@@ -17,7 +19,7 @@ LIB_DEPENDS=	libpng.so:graphics/png
 # Upstream tends to reroll distfiles before moving under /release/
 PORTSCOUT=	site:http://www.renpy.org/dl/release/
 
-USES=		jpeg python:2.7+ sdl
+USES=		jpeg localbase python:2.7+ sdl
 USE_SDL=	image2 mixer2 ttf2
 USE_PYTHON=	autoplist distutils cython
 EXCLUDE=	gen gen3 PKG-INFO '*.egg-info'

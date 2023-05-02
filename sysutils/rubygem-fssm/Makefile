@@ -5,12 +5,12 @@ MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	State tracking and event firing utility
+WWW=		https://github.com/ttilley/fssm
 
 LICENSE=	MIT
 
 NO_ARCH=	yes
 
-USE_RUBY=	yes
 USES=		gem
 
 .include <bsd.port.mk>

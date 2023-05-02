@@ -1,12 +1,13 @@
 PORTNAME=	motogt
 PORTVERSION=	20110505
-PORTREVISION=	8
+PORTREVISION=	9
 CATEGORIES=	games
 MASTER_SITES=	SF/motogt/MotoGT1/
 DISTNAME=	MotoGT-${PORTVERSION}
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	2D top-viewed motorcycle racing game
+WWW=		http://motogt.sourceforge.net/
 
 LIB_DEPENDS=	libsfml1-system.so:devel/sfml1 \
 		libpng.so:graphics/png

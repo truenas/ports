@@ -1,13 +1,12 @@
-# Created by: Rainer Hurling <rhurlin@gwdg.de>
-
 PORTNAME=	pyls-spyder
 PORTVERSION=	0.4.0
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	rhurlin@FreeBSD.org
 COMMENT=	Spyder extensions for the python-language-server (pyls)
+WWW=		https://github.com/spyder-ide/pyls-spyder
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

@@ -1,10 +1,11 @@
 PORTNAME=	libecpint
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.0.6
+DISTVERSION=	1.0.7
 CATEGORIES=	science devel
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Library for the evaluation of integrals over effective core potentials
+WWW=		https://github.com/robashaw/libecpint
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

@@ -1,6 +1,5 @@
 PORTNAME=		ldb
-PORTVERSION=		2.2.1
-PORTREVISION=		1
+PORTVERSION=		2.2.3
 PORTEPOCH=		0
 CATEGORIES=		databases
 MASTER_SITES=		SAMBA
@@ -8,6 +7,7 @@ PKGNAMESUFFIX?=		22
 
 MAINTAINER=		timur@FreeBSD.org
 COMMENT=		LDAP-like embedded database
+WWW=		https://ldb.samba.org/
 
 LICENSE=		GPLv3+
 
@@ -24,15 +24,14 @@ TEST_DEPENDS=		${LDB_DEPENDS} \
 			cmocka>=1.1.3:sysutils/cmocka
 RUN_DEPENDS=		${LDB_DEPENDS}
 
-USES=			compiler pkgconfig waf
+USES=			compiler ldap pkgconfig waf
 
-CONFLICTS_INSTALL=	ldb-1.1.* ldb1[2-9]-1.* ldb2[013-9]-2.*
+CONFLICTS_INSTALL=	ldb[0-9][0-9] # include/ldb.h
 
 USE_LDCONFIG=		yes
 WAF_CMD=		${BUILD_WRKSRC}/buildtools/bin/waf
 CONFIGURE_LOG=		${BUILD_WRKSRC}/bin/config.log
 
-USE_OPENLDAP=		yes
 PKGCONFIGDIR?=		${PREFIX}/libdata/pkgconfig
 PLIST_SUB+=		PKGCONFIGDIR=${PKGCONFIGDIR:S;${PREFIX}/;;}
 

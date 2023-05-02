@@ -1,11 +1,13 @@
 PORTNAME=	autograd
 DISTVERSION=	1.3
+PORTREVISION=	1
 CATEGORIES=	math python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	rm@FreeBSD.org
 COMMENT=	Efficiently computes derivatives of numpy code
+WWW=		https://github.com/HIPS/autograd
 
 LICENSE=	MIT
 

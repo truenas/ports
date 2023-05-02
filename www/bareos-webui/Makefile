@@ -1,11 +1,12 @@
 PORTNAME=	bareos
 DISTVERSIONPREFIX=	Release/
-DISTVERSION=	20.0.3
+DISTVERSION=	22.0.3
 CATEGORIES?=	www sysutils
 PKGNAMESUFFIX=	-webui
 
 MAINTAINER=	acm@FreeBSD.org
 COMMENT=	PHP-Frontend to manage Bareos over the web
+WWW=		https://www.bareos.org/
 
 LICENSE=	AGPLv3+
 LICENSE_FILE=	${WRKSRC}/webui/LICENSE
@@ -13,7 +14,7 @@ LICENSE_FILE=	${WRKSRC}/webui/LICENSE
 USE_GITHUB=	yes
 
 USES=		cpe php:build cmake gettext
-USE_PHP=	openssl gettext ctype hash json session iconv
+USE_PHP=	gettext ctype session iconv
 NO_BUILD=	yes
 NO_ARCH=	yes
 
@@ -22,16 +23,17 @@ CMAKE_INSTALL_PREFIX=	${STAGEDIR}
 CMAKE_ARGS+=	-DSHARE_INSTALL_PREFIX:PATH=${PREFIX}/www \
 		-DCMAKE_INSTALL_FULL_SYSCONFDIR:PATH=${PREFIX}/etc \
 		-Dsysconfdir=${PREFIX}/etc \
-		-Dwebuiconfdir=${PREFIX}/${ETCDIRWEBUI}
+		-Dwebuiconfdir=${PREFIX}/${ETCDIRWEBUI} \
+		-DVERSION_STRING=${DISTVERSION} \
+		-DBAREOS_FULL_VERSION:STRING=${DISTVERSION}
 
 SUB_FILES=	pkg-message
 SUB_LIST+=	ETCDIRWEBUI=${PREFIX}/${ETCDIRWEBUI}
 PLIST_SUB+=	WWWOWN=${WWWOWN} WWWGRP=${WWWGRP} ETCDIRWEBUI=${ETCDIRWEBUI}
 
-OPTIONS_DEFINE=		MYSQL PGSQL
+OPTIONS_DEFINE=		PGSQL
 OPTIONS_DEFAULT=	PGSQL
 
-MYSQL_USE=		PHP=pdo_mysql
 PGSQL_USE=		PHP=pdo_pgsql
 
 ETCDIRWEBUI=		etc/${PORTNAME}${PKGNAMESUFFIX}
@@ -48,7 +50,7 @@ do-install:
 	@${MKDIR} ${STAGEDIR}${ETCDIR}/bareos-dir.d/console
 	@${MKDIR} ${STAGEDIR}${ETCDIR}/bareos-dir.d/profile
 	@${MKDIR} ${STAGEDIR}${BAREOSWEB_HOME}
-	cd ${WRKSRC}/webui && ${COPYTREE_SHARE} "config data module public vendor" \
+	cd ${WRKSRC}/webui && ${COPYTREE_SHARE} "config module public vendor" \
 		${STAGEDIR}${WWWDIR}
 	${INSTALL_DATA} ${WRKSRC}/webui/*.php ${STAGEDIR}${WWWDIR}
 	${INSTALL_DATA} ${WRKSRC}/webui/composer* ${STAGEDIR}${WWWDIR}

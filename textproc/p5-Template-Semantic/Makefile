@@ -1,12 +1,12 @@
 PORTNAME=	Template-Semantic
-PORTVERSION=	0.09
-PORTREVISION=	1
+PORTVERSION=	0.10
 CATEGORIES=	textproc perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Perl extension to use pure XHTML/XML as a template
+WWW=		https://metacpan.org/release/Template-Semantic
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual
@@ -19,6 +19,6 @@ TEST_DEPENDS=	\
 	p5-Text-Pipe>0:textproc/p5-Text-Pipe
 
 USES=		perl5
-USE_PERL5=	configure
+USE_PERL5=	modbuildtiny
 
 .include <bsd.port.mk>

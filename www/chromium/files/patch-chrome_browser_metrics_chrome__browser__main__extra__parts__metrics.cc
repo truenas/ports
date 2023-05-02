@@ -1,35 +1,41 @@
---- chrome/browser/metrics/chrome_browser_main_extra_parts_metrics.cc.orig	2021-10-01 01:36:40 UTC
+--- chrome/browser/metrics/chrome_browser_main_extra_parts_metrics.cc.orig	2023-04-05 11:05:06 UTC
 +++ chrome/browser/metrics/chrome_browser_main_extra_parts_metrics.cc
-@@ -62,7 +62,9 @@
+@@ -61,8 +61,10 @@
+ 
+ // TODO(crbug.com/1052397): Revisit the macro expression once build flag switch
  // of lacros-chrome is complete.
- #if defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)
+-#if defined(__GLIBC__) && (BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS))
++#if defined(__GLIBC__) && (BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS) || BUILDFLAG(IS_BSD))
++#if !BUILDFLAG(IS_BSD)
  #include <gnu/libc-version.h>
 +#endif
  
-+#if (defined(OS_LINUX) && !defined(OS_CHROMEOS)) || defined(OS_BSD)
  #include "base/linux_util.h"
  #include "base/strings/string_split.h"
- #include "base/strings/string_util.h"
-@@ -71,7 +73,7 @@
- #include "ui/base/ui_base_features.h"
- #include "ui/base/x/x11_util.h"
- #endif
--#endif  // defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS)
-+#endif  // defined(OS_LINUX) || BUILDFLAG(IS_CHROMEOS_LACROS) || defined(OS_BSD)
+@@ -92,7 +94,7 @@
+ #include "chromeos/crosapi/cpp/crosapi_constants.h"
+ #endif  // BUILDFLAG(IS_CHROMEOS_LACROS)
  
- #if defined(USE_OZONE) || defined(USE_X11)
- #include "ui/events/devices/device_data_manager.h"
-@@ -224,11 +226,13 @@ void RecordStartupMetrics() {
-   base::UmaHistogramBoolean("Windows.ApplockerRunning", IsApplockerRunning());
- #endif  // defined(OS_WIN)
+-#if BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
+ #include "chrome/browser/metrics/pressure/pressure_metrics_reporter.h"
+ #endif  // BUILDFLAG(IS_LINUX)
  
-+#if !defined(OS_BSD)
-   // TODO(crbug.com/1216328) Remove logging.
-   LOG(ERROR) << "crbug.com/1216328: Checking Bluetooth availability started. "
-                 "Please report if there is no report that this ends.";
-   bluetooth_utility::ReportBluetoothAvailability();
-   LOG(ERROR) << "crbug.com/1216328: Checking Bluetooth availability ended.";
-+#endif
+@@ -495,7 +497,7 @@ void RecordStartupMetrics() {
  
    // Record whether Chrome is the default browser or not.
-   LOG(ERROR) << "crbug.com/1216328: Checking default browser status started. "
+   // Disabled on Linux due to hanging browser tests, see crbug.com/1216328.
+-#if !BUILDFLAG(IS_LINUX)
++#if !BUILDFLAG(IS_LINUX) && !BUILDFLAG(IS_BSD)
+   shell_integration::DefaultWebClientState default_state =
+       shell_integration::GetDefaultBrowser();
+   base::UmaHistogramEnumeration("DefaultBrowser.State", default_state,
+@@ -685,7 +687,7 @@ void ChromeBrowserMainExtraPartsMetrics::PostBrowserSt
+   }
+ #endif  // !BUILDFLAG(IS_ANDROID)
+ 
+-#if BUILDFLAG(IS_LINUX)
++#if BUILDFLAG(IS_LINUX) || BUILDFLAG(IS_BSD)
+   pressure_metrics_reporter_ = std::make_unique<PressureMetricsReporter>();
+ #endif  // BUILDFLAG(IS_LINUX)
+ }

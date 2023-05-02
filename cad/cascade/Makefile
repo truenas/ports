@@ -1,5 +1,3 @@
-# Created by: Marc Fonvieille <blackend@FreeBSD.org>
-
 PORTNAME=	cascade
 PORTVERSION=	1.4
 CATEGORIES=	cad
@@ -7,12 +5,15 @@ MASTER_SITES=	SF/rfcascade/${PORTNAME}/${PORTNAME}-${PORTVERSION}
 
 MAINTAINER=	hrs@FreeBSD.org
 COMMENT=	Simple tool to analyze noise and distortion of a RF system
+WWW=		http://rfcascade.sourceforge.net/
 
 GNU_CONFIGURE=	yes
 USES=		groff
 PORTDOCS=	ex1.gif index.html
 PORTEXAMPLES=	README.examples ex1.cas ex1.gif ex1.out cascade-mode.el
 PLIST_FILES=	bin/cascade man/man1/cascade.1.gz
+
+CONFLICTS_INSTALL=	cascade-compiler
 
 OPTIONS_DEFINE=	DOCS EXAMPLES
 

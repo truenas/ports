@@ -1,14 +1,13 @@
-# Created by: Christer Edwards <christer.edwards@gmail.com>
-
 PORTNAME=	salt
-PORTVERSION=	3004
+PORTVERSION=	3005.1
 PORTREVISION=	1
 CATEGORIES=	sysutils python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	christer.edwards@gmail.com
+MAINTAINER=	krion@FreeBSD.org
 COMMENT=	Distributed remote execution and configuration management system
+WWW=		https://pypi.org/project/salt/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -22,9 +21,10 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}Jinja2>0:devel/py-Jinja2@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}psutil>=0.3.0:sysutils/py-psutil@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}requests>=1.0.0:www/py-requests@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}yaml>0:devel/py-yaml@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}jmespath>0:devel/py-jmespath@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}pyinotify>0:devel/py-pyinotify@${PY_FLAVOR}
 
-USES=		cpe python:3.6-3.8
+USES=		cpe python:3.6-3.10
 
 CPE_VENDOR=	saltstack
 CPE_PRODUCT=	salt

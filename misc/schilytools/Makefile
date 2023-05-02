@@ -1,22 +1,23 @@
 PORTNAME=	schilytools
-DISTVERSION=	1
+DISTVERSION=	3
+PORTREVISION=	1
 CATEGORIES=	misc
 
-MAINTAINER=	fuz@fuz.su
+MAINTAINER=	fuz@FreeBSD.org
 COMMENT=	Collection of tools and libraries by J. Schilling (metaport)
+WWW=		https://codeberg.org/schilytools/schilytools
 
-LICENSE=	PD
-
-RUN_DEPENDS=	schilybase>=2021.05.19:devel/schilybase \
+RUN_DEPENDS=	bosh>=2022.08.18.b:shells/bosh \
+		schilybase>=2021.05.19:devel/schilybase \
 		schilyutils>=2021.05.19:sysutils/schilyutils \
 		star>=2021.05.19:archivers/star \
 		sccs>=2021.05.19:devel/sccs \
 		smake>=2021.05.19:devel/smake \
 		sunpromake>=2021.05.19:devel/sunpromake \
+		tartest>=2022.09.18:archivers/tartest \
 		ved>=2021.05.19:editors/ved \
 		cdrtools>=2021.05.19:sysutils/cdrtools \
-		rscsi>=2021.05.19:net/rscsi \
-		man2html:textproc/man2html
+		rscsi>=2021.05.19:net/rscsi
 
 USES=		metaport
 

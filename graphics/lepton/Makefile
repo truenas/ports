@@ -1,11 +1,10 @@
-# Created by: Mikhail T. <mi@aldan.algebra.com>
-
 PORTNAME=	lepton
 PORTVERSION=	0.2016.07.16
 CATEGORIES=	graphics devel
 
 MAINTAINER=	mi@aldan.algebra.com
 COMMENT=	Tool for manipulating files in LEP image format
+WWW=		https://github.com/dropbox/lepton
 
 LICENSE=	APACHE20
 

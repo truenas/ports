@@ -1,0 +1,5 @@
+TIMESTAMP = 1679506932
+SHA256 (vultr-vultr-cli-v2.14.2_GH0.tar.gz) = 5971378e60249d274e3712ca17d3dbdb7b1a70e1c5ea424e21592eadb5880c3b
+SIZE (vultr-vultr-cli-v2.14.2_GH0.tar.gz) = 2247349
+SHA256 (golang-sys-v0.6.0_GH0.tar.gz) = b4f6d17c7a128f76169964b437cb66b3f2dbf9a33361928ec19dfecf7b03fc54
+SIZE (golang-sys-v0.6.0_GH0.tar.gz) = 1434234

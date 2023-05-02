@@ -1,17 +1,19 @@
 PORTNAME=	endless-sky
-PORTVERSION=	0.9.14
+PORTVERSION=	0.9.16.1
 DISTVERSIONPREFIX=	v
 CATEGORIES=	games
 
 MAINTAINER=	amdmi3@FreeBSD.org
 COMMENT=	Space exploration and combat game similar to Escape Velocity
+WWW=		https://endless-sky.github.io/
 
 LICENSE=	GPLv3+ CC-BY-4.0 CC-BY-SA-3.0 CC-BY-SA-4.0 PD
 LICENSE_COMB=	multi
 LICENSE_FILE_GPLv3+ =	${WRKSRC}/license.txt
 
 LIB_DEPENDS=	libpng.so:graphics/png \
-		libmad.so:audio/libmad
+		libmad.so:audio/libmad \
+		libuuid.so:misc/e2fsprogs-libuuid
 
 USE_GITHUB=	yes
 
@@ -29,6 +31,5 @@ post-build:
 
 post-install:
 	@${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/${PORTNAME}
-	@${LN} -s ../icons/hicolor/32x32/apps/endless-sky.png ${STAGEDIR}${PREFIX}/share/pixmaps/${PORTNAME}.png
 
 .include <bsd.port.mk>

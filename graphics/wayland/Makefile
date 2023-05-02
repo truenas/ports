@@ -1,12 +1,11 @@
-# Created by: kwm@FreeBSD.org
-
 PORTNAME=	wayland
-DISTVERSION=	1.20.0
+DISTVERSION=	1.22.0
 CATEGORIES=	graphics wayland
-MASTER_SITES=	https://wayland.freedesktop.org/releases/
+MASTER_SITES=	https://gitlab.freedesktop.org/${PORTNAME}/${PORTNAME}/-/releases/${DISTVERSION}/downloads/
 
 MAINTAINER=	x11@FreeBSD.org
-COMMENT=	Wayland composite "server"
+COMMENT=	Core Wayland window system code and protocol
+WWW=		https://wayland.freedesktop.org/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/COPYING

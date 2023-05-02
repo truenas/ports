@@ -1,12 +1,11 @@
-# Created by: Oleh Hushchenkov <o.hushchenkov@gmail.com>
-
 PORTNAME=	gn
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1897
+DISTVERSION=	2072
 CATEGORIES=	devel
 
 MAINTAINER=	o.hushchenkov@gmail.com
 COMMENT=	Gn meta build framework - standalone version
+WWW=		https://gn.googlesource.com/gn/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

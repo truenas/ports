@@ -1,24 +1,28 @@
 PORTNAME=	rmf
-DISTVERSION=	1.3
+DISTVERSION=	1.5.0
+PORTREVISION=	1
 CATEGORIES=	science graphics
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Library to support reading and writing of Rich Molecular Format files
+WWW=		https://integrativemodeling.org/rmf/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/COPYING
 
 LIB_DEPENDS=	libboost_system.so:devel/boost-libs \
 		libhdf5.so:science/hdf5 \
-		libsz.so:science/szip
+		libsz.so:science/libaec
 
-USES=		compiler:c++11-lang cmake python:build shebangfix
+USES=		compiler:c++17-lang cmake:testing python:build shebangfix
 USE_LDCONFIG=	yes
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	salilab
 
 SHEBANG_GLOB=	*.py
+
+LDFLAGS+=	-lhdf5
 
 BINARY_ALIAS=	python=${PYTHON_CMD}
 

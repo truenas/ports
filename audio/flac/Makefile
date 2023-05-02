@@ -1,14 +1,11 @@
-# Created by: Ying-Chieh Liao <ijliao@FreeBSD.org>
-
 PORTNAME=	flac
-PORTVERSION=	1.3.3
-PORTREVISION=	1
+PORTVERSION=	1.4.2
 CATEGORIES=	audio
-MASTER_SITES=	https://downloads.xiph.org/releases/flac/ \
-		https://ftp.osuosl.org/pub/xiph/releases/flac/
+MASTER_SITES=	https://downloads.xiph.org/releases/flac/
 
 MAINTAINER=	naddy@FreeBSD.org
 COMMENT=	Free lossless audio codec
+WWW=		https://www.xiph.org/flac/
 
 LICENSE=	BSD3CLAUSE GFDL GPLv2 LGPL21
 LICENSE_COMB=	multi
@@ -17,14 +14,17 @@ LICENSE_FILE_GFDL=	${WRKSRC}/COPYING.FDL
 
 LIB_DEPENDS=	libogg.so:audio/libogg
 
-USES=		autoreconf compiler:c11 cpe iconv libtool pathfix pkgconfig tar:xz
+USES=		compiler:c11 cpe iconv libtool pathfix pkgconfig tar:xz
 
 CPE_VENDOR=	flac_project
+
+# Preserve UTF-8 filenames in test/flac-to-flac-metadata-test-files/.
+# They are referenced by the test suite.
+EXTRACT_CMD=	${SETENV} LC_ALL=C.UTF-8 ${TAR}
 
 USE_LDCONFIG=	yes
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--enable-static \
-		--disable-sse \
 		--with-ogg="${LOCALBASE}" \
 		--disable-doxygen-docs \
 		--disable-thorough-tests \
@@ -34,19 +34,17 @@ TEST_TARGET=	check
 
 OPTIONS_DEFINE=	DOCS
 
-.include <bsd.port.options.mk>
-
-.if ${ARCH} == "i386"
-BUILD_DEPENDS+=	nasm:devel/nasm
-.endif
+.include <bsd.port.pre.mk>
 
 .if ${ARCH} != powerpc64le
 CONFIGURE_ARGS+=--disable-vsx
 .endif
 
-post-install:
-	${REINPLACE_CMD} 's:%%PREFIX%%:${PREFIX}:' \
-	    ${STAGEDIR}${PREFIX}/man/man1/flac.1
-	${RM} ${STAGEDIR}${PREFIX}/man/man1/flac.1.bak
+# test_libFLAC:
+# "iterator claims file is writable when tester thinks it should not be"
+.if ${UID} == 0
+do-test:
+	@${ECHO_MSG} "The tests cannot be run as root, skipping."
+.endif
 
-.include <bsd.port.mk>
+.include <bsd.port.post.mk>

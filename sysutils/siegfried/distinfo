@@ -1,3 +1,5 @@
-TIMESTAMP = 1602505730
-SHA256 (richardlehane-siegfried-v1.9.1_GH0.tar.gz) = a3a680337ea35f9506ec4630803814e32ede0d43b73380ae4ff78ce475336f43
-SIZE (richardlehane-siegfried-v1.9.1_GH0.tar.gz) = 6573446
+TIMESTAMP = 1682412302
+SHA256 (go/sysutils_siegfried/siegfried-v1.10.1/v1.10.1.mod) = b243a810a3da4f4cba9ad69c0fb66e9c7ffdee0bff7c7aafa632e597c390fd4e
+SIZE (go/sysutils_siegfried/siegfried-v1.10.1/v1.10.1.mod) = 523
+SHA256 (go/sysutils_siegfried/siegfried-v1.10.1/v1.10.1.zip) = bfec915805f1f04129fde46b723a3c0860ba4fa7618142e989721b087b737cd2
+SIZE (go/sysutils_siegfried/siegfried-v1.10.1/v1.10.1.zip) = 17101365

@@ -6,9 +6,12 @@ PKGNAMESUFFIX=	-lv2
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Overdrive/distortion pedal simulation LV2 plugin
+WWW=		https://github.com/brummer10/LittleFly.lv2
 
 LICENSE=	BSD0CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
+
+BROKEN_riscv64=	ld: error: ../libxputty/libxputty/libxputty.a(knob.o): cannot link object files with different floating-point ABI
 
 BUILD_DEPENDS=	lv2>0:audio/lv2
 

@@ -1,10 +1,11 @@
 PORTNAME=	kakoune
-DISTVERSION=	2021.11.08
+DISTVERSION=	2022.10.31
 CATEGORIES=	editors
 MASTER_SITES=	https://github.com/mawww/kakoune/releases/download/v${DISTVERSION}/
 
-MAINTAINER=	tobik@FreeBSD.org
+MAINTAINER=	ashish@FreeBSD.org
 COMMENT=	Modal code editor with a focus on interactivity
+WWW=		https://kakoune.org
 
 LICENSE=	UNLICENSE
 LICENSE_FILE=	${WRKSRC:H}/UNLICENSE

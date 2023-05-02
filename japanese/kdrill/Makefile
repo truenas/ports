@@ -1,5 +1,3 @@
-# Created by: Seth Kingsley <sethk@osd.bsdi.com>
-
 PORTNAME=	kdrill
 PORTVERSION=	6.5
 CATEGORIES=	japanese
@@ -8,6 +6,7 @@ DISTNAME=	${PORTNAME}${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Program to quiz you on the meanings of Kanji
+WWW=		http://www.bolthole.com/kdrill/
 
 RUN_DEPENDS=	xjdic:japanese/edict
 

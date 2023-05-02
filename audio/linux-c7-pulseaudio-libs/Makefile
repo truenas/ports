@@ -1,5 +1,3 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	pulseaudio
 PORTVERSION=	10.0
 DISTVERSIONSUFFIX=	-6.el7_9
@@ -9,6 +7,7 @@ PKGNAMESUFFIX=	-libs
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	Libraries for PulseAudio clients (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://pulseaudio.org/
 
 USES=		cpe linux:c7
 USE_LDCONFIG=	yes

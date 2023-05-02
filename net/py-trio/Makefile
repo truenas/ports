@@ -1,13 +1,13 @@
-# Created by: Emanuel Haupt <ehaupt@FreeBSD.org>
-
 PORTNAME=	trio
-PORTVERSION=	0.19.0
+PORTVERSION=	0.22.0
+PORTREVISION=	1
 CATEGORIES=	net python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ehaupt@FreeBSD.org
 COMMENT=	Library for async concurrency and I/O
+WWW=		https://pypi.org/project/trio/
 
 LICENSE=	APACHE20 MIT
 LICENSE_COMB=	dual
@@ -34,7 +34,14 @@ USE_PYTHON=	autoplist distutils
 
 NO_ARCH=	yes
 
+.include <bsd.port.pre.mk>
+
+.if ${PYTHON_REL} < 31100
+RUN_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}exceptiongroup>=1.0.0rc9:devel/py-exceptiongroup@${PY_FLAVOR}
+TEST_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}exceptiongroup>=1.0.0rc9:devel/py-exceptiongroup@${PY_FLAVOR}
+.endif
+
 do-test:
 	@cd ${TEST_WRKSRC} && ${SETENV} ${TEST_ENV} ${PYTHON_CMD} -m pytest -v -rs
 
-.include <bsd.port.mk>
+.include <bsd.port.post.mk>

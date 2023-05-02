@@ -1,18 +1,16 @@
-# Created by: Wen Heping<wenheping@gmail.com>
-
 PORTNAME=	sequel
-PORTVERSION=	5.50.0
+PORTVERSION=	5.67.0
 CATEGORIES=	devel rubygems
 MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Database Toolkit for Ruby
+WWW=		https://sequel.jeremyevans.net/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/MIT-LICENSE
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

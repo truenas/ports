@@ -1,14 +1,13 @@
-# Created by: ijliao
-
 PORTNAME=	openbabel
 DISTVERSION=	3.1.1
-PORTREVISION=	2
+PORTREVISION=	8
 DISTVERSIONSUFFIX=	-source
 CATEGORIES=	science
 MASTER_SITES=	https://github.com/openbabel/openbabel/releases/download/openbabel-${PORTVERSION:C/\./-/g}/
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Chemical toolbox designed to speak the many languages of chemical data
+WWW=		https://openbabel.org/wiki/Main_Page
 
 LICENSE=	GPLv2+
 
@@ -25,18 +24,16 @@ USE_GNOME=	libxml2
 USE_LDCONFIG=	yes
 
 CMAKE_ON=	WITH_COORDGEN WITH_JSON OPENBABEL_USE_SYSTEM_RAPIDJSON WITH_MAEPARSER
+CMAKE_OFF=	PYTHON_BINDINGS
 WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}
 PLIST_SUB=	VERSION=3.1.0	# To be replaced by ${PORTVERSION} nexttime!
 
-OPTIONS_DEFINE=		CAIRO PYTHON GUI
-OPTIONS_DEFAULT=	CAIRO PYTHON GUI
+OPTIONS_DEFINE=		CAIRO GUI
+OPTIONS_DEFAULT=	CAIRO GUI
 OPTIONS_SUB=		yes
 
 CAIRO_DESC=		PNG support via cairo library
 CAIRO_USE=		GNOME=cairo
-
-PYTHON_USES=		python
-PYTHON_CMAKE_BOOL=	PYTHON_BINDINGS
 
 GUI_CMAKE_BOOL=		BUILD_GUI
 GUI_CMAKE_ON=		-DwxWidgets_CONFIG_EXECUTABLE:STRING=${WX_CONFIG}

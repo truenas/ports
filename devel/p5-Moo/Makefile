@@ -1,7 +1,5 @@
-# Created by: Wen Heping <wen@FreeBSD.org>
-
 PORTNAME=	Moo
-PORTVERSION=	2.005004
+PORTVERSION=	2.005005
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 MASTER_SITE_SUBDIR=	CPAN:HAARG
@@ -9,6 +7,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Minimalist Object Orientation (with Moose compatibility)
+WWW=		https://metacpan.org/release/Moo
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

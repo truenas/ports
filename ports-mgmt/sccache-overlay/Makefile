@@ -1,12 +1,13 @@
 PORTNAME=	sccache
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.2.15
-PORTREVISION=	1
+PORTREVISION=	17
 CATEGORIES=	ports-mgmt
 PKGNAMESUFFIX=	-overlay
 
-MAINTAINER=	tobik@FreeBSD.org
+MAINTAINER=	rust@FreeBSD.org
 COMMENT=	Ports overlay for sccache
+WWW=		https://github.com/mozilla/sccache
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -417,7 +418,7 @@ post-install:
 	${INSTALL_PROGRAM} /libexec/ld-elf.so.1 \
 		${STAGEDIR}${DATADIR}/overlay/lib
 	@${LN} -Fs ${STAGEDIR}${DATADIR}/overlay/lib /tmp/sccache-overlay
-	ldd -f '%p\n' ${STAGEDIR}${DATADIR}/overlay/bin/sccache | \
+	ldd -f '%p\n' ${STAGEDIR}${DATADIR}/overlay/bin/sccache | ${GREP} -v '^[ 	]*\[' | \
 		${XARGS} -J% ${INSTALL_LIB} % ${STAGEDIR}${DATADIR}/overlay/lib
 	cd ${STAGEDIR}${PREFIX}; \
 		${FIND} ${DATADIR_REL} -type f >>${TMPPLIST}

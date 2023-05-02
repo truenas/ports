@@ -1,11 +1,13 @@
 PORTNAME=	filezilla
 PORTVERSION=	3.55.1
+PORTREVISION=	1
 CATEGORIES=	ftp
 MASTER_SITES=	https://download.filezilla-project.org/client/
 DISTNAME=	FileZilla_${PORTVERSION}_src
 
 MAINTAINER=	pi@FreeBSD.org
 COMMENT=	Fast and reliable cross-platform FTP, FTPS, and SFTP client
+WWW=		https://filezilla-project.org/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

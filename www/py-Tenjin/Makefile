@@ -1,11 +1,12 @@
 PORTNAME=	Tenjin
 PORTVERSION=	1.1.1
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Fast and full-featured template engine based on embedded Python
+WWW=		http://www.kuwata-lab.com/tenjin/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/MIT-LICENSE

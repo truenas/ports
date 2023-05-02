@@ -1,12 +1,13 @@
-# Created by: bart <lbartoletti@FreeBSD.org>
-
 PORTNAME=	pdal
 DISTVERSION=	2.3.0
-PORTREVISION=	3
+PORTREVISION=	10
 CATEGORIES=	math databases graphics
+MASTER_SITES=	https://github.com/PDAL/PDAL/releases/download/${DISTVERSION}/
+DISTNAME=	${PORTNAME}-${DISTVERSION}-src
 
 MAINTAINER=	lbartoletti@FreeBSD.org
 COMMENT=	Library for translating and manipulating point cloud data
+WWW=		https://www.pdal.io/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -28,11 +29,10 @@ LIB_DEPENDS_i386=	libunwind.so:devel/libunwind
 LIB_DEPENDS_powerpc64=	libunwind.so:devel/libunwind
 LIB_DEPENDS_powerpc64le=libunwind.so:devel/libunwind
 
-USES=		cmake compiler:c++11-lib pathfix pkgconfig ssl
+USES=		cmake compiler:c++11-lib pathfix pkgconfig ssl tar:bz2
 USE_LDCONFIG=	yes
-USE_GITHUB=	yes
-GH_ACCOUNT=	${PORTNAME:tu}
-GH_PROJECT=	${GH_ACCOUNT}
+
+WRKSRC=		${WRKDIR}/${PORTNAME:tu}-${DISTVERSION}-src
 
 CMAKE_ON=	WITH_LASZIP #LASZIP is recommended
 CMAKE_OFF=	WITH_TESTS
@@ -58,7 +58,7 @@ BASH_RUN_DEPENDS=	bash:shells/bash
 
 ICEBRIDGE_CMAKE_BOOL=	BUILD_PLUGIN_ICEBRIDGE
 ICEBRIDGE_LIB_DEPENDS=	libhdf5.so:science/hdf5 \
-			libsz.so:science/szip
+			libsz.so:science/libaec
 
 LAZPERF_CMAKE_BOOL=	WITH_LAZPERF
 LAZPERF_LIB_DEPENDS=	liblazperf.so:archivers/lazperf

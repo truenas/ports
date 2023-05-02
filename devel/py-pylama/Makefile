@@ -1,11 +1,12 @@
 PORTNAME=	pylama
 PORTVERSION=	7.7.1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	alex@xanderio.de
 COMMENT=	Code audit tool for Python
+WWW=		https://github.com/klen/pylama
 
 LICENSE=	LGPL3
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -16,7 +17,7 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}mccabe>=0.5.2:devel/py-mccabe@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}pyflakes>=1.5.0:devel/py-pyflakes@${PY_FLAVOR}
 TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pytest>=0:devel/py-pytest@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}mypy>=0:devel/py-mypy@${PY_FLAVOR} \
-		pylint-${PYTHON_PKGNAMESUFFIX}:devel/pylint@${PY_FLAVOR}
+		pylint${PYTHON_PKGNAMESUFFIX}>=0:devel/pylint@${PY_FLAVOR}
 
 USES=		python:3.4+
 USE_PYTHON=	autoplist concurrent distutils

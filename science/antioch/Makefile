@@ -2,11 +2,12 @@ PORTNAME=	antioch
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.4.0-156
 DISTVERSIONSUFFIX=	-g90ffa43
-PORTREVISION=	12
+PORTREVISION=	14
 CATEGORIES=	science
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	C++ Chemical Kinetics, Thermodynaimics, and Transport Library
+WWW=		https://libantioch.github.io/
 
 LICENSE=	LGPL21
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,15 +1,14 @@
-# Created by: ruslan@shevchenko.kiev.ua
-
 PORTNAME=	erlang
 DISTVERSIONPREFIX=	OTP-
-DISTVERSION=	23.3.4.9
-PORTREVISION=	0
+DISTVERSION=	23.3.4.18
+PORTREVISION=	1
 CATEGORIES=	lang parallel java
 PKGNAMESUFFIX=	-runtime23
 DIST_SUBDIR=	erlang
 
 MAINTAINER=	erlang@FreeBSD.org
 COMMENT=	Functional programming language from Ericsson
+WWW=		https://www.erlang.org/
 
 LICENSE=	APACHE20
 
@@ -19,7 +18,7 @@ USES=		autoreconf:build compiler cpe gmake ncurses perl5
 USE_GITHUB=	nodefault
 GH_ACCOUNT=	erlang:otp,corba
 GH_PROJECT=	otp:otp corba:corba
-GH_TAGNAME=	5.0.2:corba
+GH_TAGNAME=	5.1:corba
 USE_PERL5=	build
 
 CPE_VENDOR=	erlang
@@ -89,7 +88,7 @@ THREADS_CONFIGURE_ENABLE=	threads
 WX_USES=			gl
 WX_CONFIGURE_WITH=		wx-config=${WX_CONFIG}
 WX_VARS=			USE_GL="gl glu" \
-				USE_WX=3.1+ \
+				USE_WX=3.2+ \
 				WX_COMPS="wx"
 
 .include <bsd.port.pre.mk>
@@ -123,17 +122,21 @@ pre-configure-WX-off:
 post-configure-ODBC-on:
 	${RM} ${WRKSRC}/lib/odbc/SKIP
 
+post-configure-ODBC-off:
+	echo "disabled by port options" > ${WRKSRC}/lib/odbc/SKIP
+
 pre-build-NATIVE-on:
 	@cd ${WRKSRC} && ${MAKE_CMD} clean
 
 post-build-CORBA-on:
-	cd ${WRKSRC_corba} \
-		&& ${SETENV} OVERRIDE_TARGET=${CONFIGURE_TARGET} ERL_TOP=${WRKSRC_otp} ${MAKE_CMD}
+	cd ${WRKSRC_corba} && \
+		${SETENV} OVERRIDE_TARGET=${CONFIGURE_TARGET} ERL_TOP=${WRKSRC_otp} \
+		${MAKE_CMD}
 
 post-install-CORBA-on:
-	cd ${WRKSRC_corba} \
-		&& ${SETENV} OVERRIDE_TARGET=${CONFIGURE_TARGET} ERL_TOP=${WRKSRC_otp} \
-			${MAKE_CMD} release RELEASE_ROOT=${STAGEDIR}${PREFIX}/lib/${ERLANG_LIB}
+	cd ${WRKSRC_corba} && \
+		${SETENV} OVERRIDE_TARGET=${CONFIGURE_TARGET} ERL_TOP=${WRKSRC_otp} \
+		${MAKE_CMD} release RELEASE_ROOT=${STAGEDIR}${PREFIX}/lib/${ERLANG_LIB}
 
 post-install-DTRACE-on:
 	${MKDIR} ${STAGEDIR}${DATADIR}/dtrace
@@ -160,8 +163,11 @@ post-install-WX-off:
 	${RM} -r ${STAGEDIR}${PREFIX}/lib/erlang/lib/wx-*
 
 post-stage:
-	${FIND} ${STAGEDIR}${PREFIX}/lib/${ERLANG_LIB}/* -type d -empty -delete
-	@cd ${STAGEDIR}${PREFIX}; ${FIND} lib/${ERLANG_LIB}/* ${DATADIR_REL}/* -type f -o -type l \
-		| ${SORT} >> ${TMPPLIST}
+	${FIND} ${STAGEDIR}${PREFIX}/lib/${ERLANG_LIB}/* -type d -empty \
+		-delete
+	@cd ${STAGEDIR}${PREFIX}; \
+		${FIND} lib/${ERLANG_LIB}/* ${DATADIR_REL}/* -type f -o \
+		-type l | \
+		${SORT} >> ${TMPPLIST}
 
 .include <bsd.port.post.mk>

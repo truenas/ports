@@ -1,13 +1,12 @@
-# Created by: Sebastian Schuetz <sschuetz@fhm.edu>
-
 PORTNAME=	trousers
 PORTVERSION=	0.3.14
-PORTREVISION=	3
+PORTREVISION=	4
 CATEGORIES=	security
 MASTER_SITES=	SF
 
 MAINTAINER=	hrs@FreeBSD.org
 COMMENT=	Open-source TCG Software Stack
+WWW=		https://sourceforge.net/projects/trousers/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

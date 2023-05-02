@@ -1,13 +1,12 @@
-# Created by: William Grzybowski
-
 PORTNAME=	hgtools
 PORTVERSION=	6.3
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	wg@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Classes and setuptools plugin for Mercurial repositories
+WWW=		https://github.com/jaraco/hgtools
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

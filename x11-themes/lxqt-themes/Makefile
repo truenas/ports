@@ -1,12 +1,11 @@
-# Created by: Jesper Schmitz Mouridsen
-
 PORTNAME=	lxqt-themes
-PORTVERSION=	1.0.0
+PORTVERSION=	1.2.0
 CATEGORIES=	x11-themes
 MASTER_SITES=	LXQT
 
 MAINTAINER=	jsm@FreeBSD.org
 COMMENT=	Themes for the LXQt desktop
+WWW=		https://lxqt-project.org
 
 LICENSE=	LGPL21+
 

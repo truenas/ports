@@ -1,10 +1,11 @@
 PORTNAME=	cxxopts
 DISTVERSIONPREFIX=	v
-DISTVERSION=	3.0.0
+DISTVERSION=	3.1.1
 CATEGORIES=	devel
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Lightweight C++ command line option parser
+WWW=		https://github.com/jarro2783/cxxopts
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

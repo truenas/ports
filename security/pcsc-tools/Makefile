@@ -1,12 +1,11 @@
-# Created by: arved
-
 PORTNAME=	pcsc-tools
-PORTVERSION=	1.5.8
+PORTVERSION=	1.6.2
 CATEGORIES=	security
-MASTER_SITES=	http://ludovic.rousseau.free.fr/softwares/pcsc-tools/
+MASTER_SITES=	https://pcsc-tools.apdu.fr/
 
-MAINTAINER=	ports@FreeBSD.org
+MAINTAINER=	arved@FreeBSD.org
 COMMENT=	Tools to test a PCSC driver, card, or reader
+WWW=		https://pcsc-tools.apdu.fr/
 
 LICENSE=	GPLv2
 

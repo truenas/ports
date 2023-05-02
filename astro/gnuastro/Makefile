@@ -1,12 +1,12 @@
-# Created by: Alexey Dokuchaev <danfe@FreeBSD.org>
-
 PORTNAME=	gnuastro
-PORTVERSION=	0.16
+PORTVERSION=	0.19
+PORTREVISION=	2
 CATEGORIES=	astro
 MASTER_SITES=	GNU
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	GNU astronomy utilities and library
+WWW=		https://www.gnu.org/software/gnuastro/
 
 LICENSE=	GPLv3+
 
@@ -32,6 +32,8 @@ OPTIONS_DEFINE=	DOCS
 post-patch:
 	@${REINPLACE_CMD} -e 's,cflags_add="-O3",:,' \
 		${WRKSRC}/configure
+	@${REINPLACE_CMD} -e 's,gcc,$(CC),' \
+		${WRKSRC}/bin/buildprog/ui.c
 
 post-install:
 	@${FIND} ${STAGEDIR}${PREFIX}/etc -name \*.conf \

@@ -1,13 +1,13 @@
-# Created by: Danilo Egea Gondolfo <danilo@FreeBSD.org>
-
 PORTNAME=	pyvips
-PORTVERSION=	2.1.16
+PORTVERSION=	2.2.1
+PORTREVISION=	1
 CATEGORIES=	graphics python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Binding for the libvips image processing library
+WWW=		https://github.com/libvips/pyvips
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -21,5 +21,8 @@ RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}cffi>=1.13:devel/py-cffi@${PY_FLAVOR} \
 USES=		gnome python:3.6+
 USE_GNOME=	glib20
 USE_PYTHON=	autoplist concurrent distutils
+
+post-install:
+	${FIND} ${STAGEDIR}${PYTHON_SITELIBDIR} -name '*.so' -exec ${STRIP_CMD} {} +
 
 .include <bsd.port.mk>

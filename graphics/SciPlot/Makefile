@@ -1,5 +1,3 @@
-# Created by: thierry@pompo.net
-
 PORTNAME=	SciPlot
 PORTVERSION=	1.36
 PORTREVISION=	6
@@ -8,8 +6,9 @@ MASTER_SITES=	XCONTRIB/widgets
 
 MAINTAINER=	thierry@FreeBSD.org
 COMMENT=	Full-featured Xt widget to display 2D data in a graph
+WWW=		http://src.gnu-darwin.org/ports/graphics/SciPlot/work/SciPlot-1.36/SciPlot.html
 
-LICENSE=	GPLv2
+LICENSE=	LGPL21
 
 USES=		imake motif xorg
 USE_XORG=	xt x11

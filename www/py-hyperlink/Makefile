@@ -1,13 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	hyperlink
 PORTVERSION=	21.0.0
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Featureful, correct URL for Python
+WWW=		https://github.com/python-hyper/hyperlink
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

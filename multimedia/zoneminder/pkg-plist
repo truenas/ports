@@ -3083,6 +3083,7 @@ etc/zm.conf
 %%SITE_PERL%%/ZoneMinder/Control/onvif.pm
 %%SITE_PERL%%/ZoneMinder/Database.pm
 %%SITE_PERL%%/ZoneMinder/Event.pm
+%%SITE_PERL%%/ZoneMinder/Event_Summary.pm
 %%SITE_PERL%%/ZoneMinder/Filter.pm
 %%SITE_PERL%%/ZoneMinder/Frame.pm
 %%SITE_PERL%%/ZoneMinder/General.pm
@@ -6151,6 +6152,7 @@ etc/zm.conf
 %%PERL5_MAN3%%/ZoneMinder::Control::mjpgStreamer.3.gz
 %%PERL5_MAN3%%/ZoneMinder::Database.3.gz
 %%PERL5_MAN3%%/ZoneMinder::Event.3.gz
+%%PERL5_MAN3%%/ZoneMinder::Event_Summary.3.gz
 %%PERL5_MAN3%%/ZoneMinder::Filter.3.gz
 %%PERL5_MAN3%%/ZoneMinder::Frame.3.gz
 %%PERL5_MAN3%%/ZoneMinder::General.3.gz
@@ -6173,26 +6175,26 @@ etc/zm.conf
 %%PERL5_MAN3%%/ZoneMinder::Trigger::Connection::Example.3.gz
 %%PERL5_MAN3%%/ZoneMinder::User.3.gz
 %%PERL5_MAN3%%/ZoneMinder::Zone.3.gz
-man/man8/zmaudit.pl.8.gz
-man/man8/zmc.8.gz
-man/man8/zmcamtool.pl.8.gz
-man/man8/zmcontrol.pl.8.gz
-man/man8/zmdc.pl.8.gz
-man/man8/zmfilter.pl.8.gz
-man/man8/zmonvif-probe.pl.8.gz
-man/man8/zmonvif-trigger.pl.8.gz
-man/man8/zmpkg.pl.8.gz
-man/man8/zmrecover.pl.8.gz
-man/man8/zmstats.pl.8.gz
-man/man8/zmtelemetry.pl.8.gz
-man/man8/zmtrack.pl.8.gz
-man/man8/zmtrigger.pl.8.gz
-man/man8/zmu.8.gz
-man/man8/zmupdate.pl.8.gz
-man/man8/zmvideo.pl.8.gz
-man/man8/zmwatch.pl.8.gz
-man/man8/zmx10.pl.8.gz
 share/applications/zoneminder.desktop
+share/man/man8/zmaudit.pl.8.gz
+share/man/man8/zmc.8.gz
+share/man/man8/zmcamtool.pl.8.gz
+share/man/man8/zmcontrol.pl.8.gz
+share/man/man8/zmdc.pl.8.gz
+share/man/man8/zmfilter.pl.8.gz
+share/man/man8/zmonvif-probe.pl.8.gz
+share/man/man8/zmonvif-trigger.pl.8.gz
+share/man/man8/zmpkg.pl.8.gz
+share/man/man8/zmrecover.pl.8.gz
+share/man/man8/zmstats.pl.8.gz
+share/man/man8/zmtelemetry.pl.8.gz
+share/man/man8/zmtrack.pl.8.gz
+share/man/man8/zmtrigger.pl.8.gz
+share/man/man8/zmu.8.gz
+share/man/man8/zmupdate.pl.8.gz
+share/man/man8/zmvideo.pl.8.gz
+share/man/man8/zmwatch.pl.8.gz
+share/man/man8/zmx10.pl.8.gz
 %%DATADIR%%/db/triggers.sql
 %%DATADIR%%/db/zm_create.sql
 %%DATADIR%%/db/zm_update-0.0.1.sql
@@ -6368,6 +6370,10 @@ share/applications/zoneminder.desktop
 %%DATADIR%%/db/zm_update-1.35.7.sql
 %%DATADIR%%/db/zm_update-1.35.8.sql
 %%DATADIR%%/db/zm_update-1.35.9.sql
+%%DATADIR%%/db/zm_update-1.36.16.sql
+%%DATADIR%%/db/zm_update-1.36.18.sql
+%%DATADIR%%/db/zm_update-1.36.6.sql
+%%DATADIR%%/db/zm_update-1.36.9.sql
 %%DATADIR%%/fonts/default.zmfnt
 %%DATADIR%%/icons/16x16/icon.xpm
 %%WWWDIR%%/ajax/add_monitors.php
@@ -7707,10 +7713,6 @@ share/applications/zoneminder.desktop
 %%WWWDIR%%/css/font-awesome.min.css
 %%WWWDIR%%/css/reset.css
 %%WWWDIR%%/css/spinner.css
-%%WWWDIR%%/fonts/MaterialIcons-Regular.eot
-%%WWWDIR%%/fonts/MaterialIcons-Regular.ttf
-%%WWWDIR%%/fonts/MaterialIcons-Regular.woff
-%%WWWDIR%%/fonts/MaterialIcons-Regular.woff2
 %%WWWDIR%%/fonts/fontawesome-webfont.eot
 %%WWWDIR%%/fonts/fontawesome-webfont.svg
 %%WWWDIR%%/fonts/fontawesome-webfont.ttf
@@ -7722,6 +7724,8 @@ share/applications/zoneminder.desktop
 %%WWWDIR%%/fonts/glyphicons-halflings-regular.woff
 %%WWWDIR%%/fonts/glyphicons-halflings-regular.woff2
 %%WWWDIR%%/fonts/license.md
+%%WWWDIR%%/fonts/material-icons.woff
+%%WWWDIR%%/fonts/material-icons.woff2
 %%WWWDIR%%/graphics/favicon.ico
 %%WWWDIR%%/graphics/spinner.png
 %%WWWDIR%%/graphics/transparent.png
@@ -7763,12 +7767,12 @@ share/applications/zoneminder.desktop
 %%WWWDIR%%/includes/actions/options.php
 %%WWWDIR%%/includes/actions/privacy.php
 %%WWWDIR%%/includes/actions/server.php
-%%WWWDIR%%/includes/actions/settings.php
 %%WWWDIR%%/includes/actions/snapshot.php
 %%WWWDIR%%/includes/actions/state.php
 %%WWWDIR%%/includes/actions/storage.php
 %%WWWDIR%%/includes/actions/user.php
 %%WWWDIR%%/includes/actions/version.php
+%%WWWDIR%%/includes/actions/watch.php
 %%WWWDIR%%/includes/actions/zone.php
 %%WWWDIR%%/includes/actions/zones.php
 %%WWWDIR%%/includes/auth.php
@@ -7787,6 +7791,7 @@ share/applications/zoneminder.desktop
 %%WWWDIR%%/index.php
 %%WWWDIR%%/js/MonitorStream.js
 %%WWWDIR%%/js/Server.js
+%%WWWDIR%%/js/ajaxQueue.js
 %%WWWDIR%%/js/logger.js
 %%WWWDIR%%/js/videojs.zoomrotate.js
 %%WWWDIR%%/lang/ba_ba.php
@@ -7844,6 +7849,7 @@ share/applications/zoneminder.desktop
 %%WWWDIR%%/skins/classic/css/base/views/options.css
 %%WWWDIR%%/skins/classic/css/base/views/plugin.css
 %%WWWDIR%%/skins/classic/css/base/views/privacy.css
+%%WWWDIR%%/skins/classic/css/base/views/report_event_audit.css
 %%WWWDIR%%/skins/classic/css/base/views/server.css
 %%WWWDIR%%/skins/classic/css/base/views/settings.css
 %%WWWDIR%%/skins/classic/css/base/views/snapshot.css
@@ -7977,28 +7983,27 @@ share/applications/zoneminder.desktop
 %%WWWDIR%%/skins/classic/js/font/vjs.eot
 %%WWWDIR%%/skins/classic/js/font/vjs.ttf
 %%WWWDIR%%/skins/classic/js/font/vjs.woff
-%%WWWDIR%%/skins/classic/js/jquery-3.5.1.min.js
-%%WWWDIR%%/skins/classic/js/jquery-3.5.1.min.map
-%%WWWDIR%%/skins/classic/js/jquery-ui-1.12.1/AUTHORS.txt
-%%WWWDIR%%/skins/classic/js/jquery-ui-1.12.1/LICENSE.txt
-%%WWWDIR%%/skins/classic/js/jquery-ui-1.12.1/images/ui-icons_444444_256x240.png
-%%WWWDIR%%/skins/classic/js/jquery-ui-1.12.1/images/ui-icons_555555_256x240.png
-%%WWWDIR%%/skins/classic/js/jquery-ui-1.12.1/images/ui-icons_777620_256x240.png
-%%WWWDIR%%/skins/classic/js/jquery-ui-1.12.1/images/ui-icons_777777_256x240.png
-%%WWWDIR%%/skins/classic/js/jquery-ui-1.12.1/images/ui-icons_cc0000_256x240.png
-%%WWWDIR%%/skins/classic/js/jquery-ui-1.12.1/images/ui-icons_ffffff_256x240.png
-%%WWWDIR%%/skins/classic/js/jquery-ui-1.12.1/index.html
-%%WWWDIR%%/skins/classic/js/jquery-ui-1.12.1/jquery-ui.css
-%%WWWDIR%%/skins/classic/js/jquery-ui-1.12.1/jquery-ui.js
-%%WWWDIR%%/skins/classic/js/jquery-ui-1.12.1/jquery-ui.min.css
-%%WWWDIR%%/skins/classic/js/jquery-ui-1.12.1/jquery-ui.min.js
-%%WWWDIR%%/skins/classic/js/jquery-ui-1.12.1/jquery-ui.structure.css
-%%WWWDIR%%/skins/classic/js/jquery-ui-1.12.1/jquery-ui.structure.min.css
-%%WWWDIR%%/skins/classic/js/jquery-ui-1.12.1/jquery-ui.theme.css
-%%WWWDIR%%/skins/classic/js/jquery-ui-1.12.1/jquery-ui.theme.min.css
-%%WWWDIR%%/skins/classic/js/jquery-ui-1.12.1/package.json
-%%WWWDIR%%/skins/classic/js/jquery-ui-structure.css
-%%WWWDIR%%/skins/classic/js/jquery-ui.js
+%%WWWDIR%%/skins/classic/js/jquery-3.6.1.min.js
+%%WWWDIR%%/skins/classic/js/jquery-3.6.1.min.map
+%%WWWDIR%%/skins/classic/js/jquery-ui-1.13.2/AUTHORS.txt
+%%WWWDIR%%/skins/classic/js/jquery-ui-1.13.2/LICENSE.txt
+%%WWWDIR%%/skins/classic/js/jquery-ui-1.13.2/external/jquery/jquery.js
+%%WWWDIR%%/skins/classic/js/jquery-ui-1.13.2/images/ui-icons_444444_256x240.png
+%%WWWDIR%%/skins/classic/js/jquery-ui-1.13.2/images/ui-icons_555555_256x240.png
+%%WWWDIR%%/skins/classic/js/jquery-ui-1.13.2/images/ui-icons_777620_256x240.png
+%%WWWDIR%%/skins/classic/js/jquery-ui-1.13.2/images/ui-icons_777777_256x240.png
+%%WWWDIR%%/skins/classic/js/jquery-ui-1.13.2/images/ui-icons_cc0000_256x240.png
+%%WWWDIR%%/skins/classic/js/jquery-ui-1.13.2/images/ui-icons_ffffff_256x240.png
+%%WWWDIR%%/skins/classic/js/jquery-ui-1.13.2/index.html
+%%WWWDIR%%/skins/classic/js/jquery-ui-1.13.2/jquery-ui.css
+%%WWWDIR%%/skins/classic/js/jquery-ui-1.13.2/jquery-ui.js
+%%WWWDIR%%/skins/classic/js/jquery-ui-1.13.2/jquery-ui.min.css
+%%WWWDIR%%/skins/classic/js/jquery-ui-1.13.2/jquery-ui.min.js
+%%WWWDIR%%/skins/classic/js/jquery-ui-1.13.2/jquery-ui.structure.css
+%%WWWDIR%%/skins/classic/js/jquery-ui-1.13.2/jquery-ui.structure.min.css
+%%WWWDIR%%/skins/classic/js/jquery-ui-1.13.2/jquery-ui.theme.css
+%%WWWDIR%%/skins/classic/js/jquery-ui-1.13.2/jquery-ui.theme.min.css
+%%WWWDIR%%/skins/classic/js/jquery-ui-1.13.2/package.json
 %%WWWDIR%%/skins/classic/js/jquery.min.js
 %%WWWDIR%%/skins/classic/js/jquery.min.js.URL
 %%WWWDIR%%/skins/classic/js/moment.js
@@ -8145,8 +8150,8 @@ share/applications/zoneminder.desktop
 @dir(%%WWWOWN%%,%%WWWGRP%%,) %%WWWDIR%%/api/app/tmp
 @dir(%%WWWOWN%%,%%WWWGRP%%,) %%WWWDIR%%/temp
 @dir(%%WWWOWN%%,%%WWWGRP%%,) /var/cache/zoneminder
-@dir(%%WWWOWN%%,%%WWWGRP%%,) /var/cache/zoneminder/events
-@dir(%%WWWOWN%%,%%WWWGRP%%,) /var/cache/zoneminder/images
 @dir(%%WWWOWN%%,%%WWWGRP%%,) /var/db/zoneminder
+@dir(%%WWWOWN%%,%%WWWGRP%%,) /var/db/zoneminder/events
+@dir(%%WWWOWN%%,%%WWWGRP%%,) /var/log/zm
 @dir(%%WWWOWN%%,%%WWWGRP%%,) /var/run/zm
 @dir(%%WWWOWN%%,%%WWWGRP%%,) /var/tmp/zm

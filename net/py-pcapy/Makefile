@@ -1,13 +1,12 @@
-# Created by: Marcin Jessa <yazzy@yazzy.org>
-
 PORTNAME=	pcapy
 PORTVERSION=	0.11.1
 CATEGORIES=	net python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	anastasios@mageirias.com
 COMMENT=	Python pcap extension
+WWW=		http://www.coresecurity.com/corelabs-research/open-source-tools/pcapy
 
 LICENSE=	APACHE11
 LICENSE_FILE=	${WRKSRC}/LICENSE

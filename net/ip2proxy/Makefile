@@ -1,18 +1,17 @@
-# Created by: Ryan Steinmetz <zi@FreeBSD.org>
-
 PORTNAME=	ip2proxy
-PORTVERSION=	20201022
+PORTVERSION=	20211122
 CATEGORIES=	net
 
 MAINTAINER=	zi@FreeBSD.org
 COMMENT=	C library to lookup proxies
+WWW=		https://ip2location.com/development-libraries/ip2proxy/c
 
 LICENSE=	MIT
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	ip2location
 GH_PROJECT=	${PORTNAME}-c
-GH_TAGNAME=	436bd40
+GH_TAGNAME=	00154dc
 
 USES=		autoreconf libtool
 HAS_CONFIGURE=	yes

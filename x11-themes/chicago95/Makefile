@@ -1,11 +1,13 @@
 PORTNAME=	chicago95
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2.0.1-81
-DISTVERSIONSUFFIX=	-gd1c86db
+DISTVERSION=	2.0.1-119
+DISTVERSIONSUFFIX=	-g149a54c
+PORTREVISION=	1
 CATEGORIES=	x11-themes
 
-MAINTAINER=	evgeniy@khramtsov.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Classic Redmond theme
+WWW=		https://github.com/grassmunk/Chicago95
 
 LICENSE=	GPLv3+ MIT
 LICENSE_COMB=	multi
@@ -56,4 +58,3 @@ post-install: # autoplist: thousands of files, complex dependencies on options
 		${FIND} * -type f -or -type l >> ${TMPPLIST}
 
 .include <bsd.port.mk>
-

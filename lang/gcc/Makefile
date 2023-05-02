@@ -1,14 +1,13 @@
-# Created by: Gerald Pfeifer <gerald@FreeBSD.org>
-
 PORTNAME=	gcc
 PORTVERSION=	${GCC_DEFAULT}
-PORTREVISION=	4
+PORTREVISION=	5
 CATEGORIES=	lang
 MASTER_SITES=	# not applicable
 DISTFILES=	# not applicable
 
 MAINTAINER=	gerald@FreeBSD.org
 COMMENT=	Meta-port for the default version of the GNU Compiler Collection
+WWW=		https://gcc.gnu.org
 
 # Once GCC 4.8 isn't an option any longer, we can simply use GCC_DEFAULT
 # below. (The expression rewrites 4.8 to 48.)

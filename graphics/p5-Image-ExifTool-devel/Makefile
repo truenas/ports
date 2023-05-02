@@ -1,14 +1,14 @@
-# Created by: Tod McQuillin <devin@spamcop.net>
-
 PORTNAME=	Image-ExifTool
-PORTVERSION=	12.14
+DISTVERSION=	12.60
 CATEGORIES=	graphics perl5
-MASTER_SITES=	https://exiftool.org/
+MASTER_SITES=	SF/exiftool \
+		https://exiftool.org/
 PKGNAMEPREFIX=	p5-
 PKGNAMESUFFIX=	-devel
 
-MAINTAINER=	linpct@gmail.com
-COMMENT=	Perl module for getting EXIF data from image files
+MAINTAINER=	svysh.fbsd@gmail.com
+COMMENT=	Script and Perl module to read/write meta data in files
+WWW=		https://exiftool.org/
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

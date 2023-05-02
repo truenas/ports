@@ -1,13 +1,12 @@
-# Created by: Brad Davis <brd@FreeBSD.org>
-
 PORTNAME=	JIRA-REST
-PORTVERSION=	0.021
+PORTVERSION=	0.023
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Extended interface to JIRA REST API
+WWW=		https://metacpan.org/release/JIRA-REST
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

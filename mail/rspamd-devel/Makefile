@@ -1,24 +1,26 @@
 PORTNAME=	rspamd
-PORTVERSION=	3.2.a1.20211113
+PORTVERSION=	3.4.a1.20221001
+PORTREVISION=	3
 CATEGORIES=	mail
 PKGNAMESUFFIX=	-devel
 
 MAINTAINER=	vsevolod@FreeBSD.org
 COMMENT=	Fast spam filtering system dev version
+WWW=		https://rspamd.com/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE.md
 
 BUILD_DEPENDS=	ragel:devel/ragel
 LIB_DEPENDS=	libicui18n.so:devel/icu \
-		libpcre.so:devel/pcre \
+		libpcre2-8.so:devel/pcre2 \
 		libsodium.so:security/libsodium
 RUN_DEPENDS=	ca_root_nss>=3.*:security/ca_root_nss
 
-USES=		cmake compiler:c++17-lang cpe gnome perl5 pkgconfig sqlite ssl
+USES=		cmake compiler:c++20-lang cpe gnome perl5 pkgconfig sqlite ssl
 CPE_VENDOR=	${PORTNAME}_project
 USE_GITHUB=	yes
-GH_TAGNAME=	6e83edb
+GH_TAGNAME=	572e0b0
 USE_GNOME=	glib20
 USE_LDCONFIG=	yes
 USE_PERL5=	build run
@@ -79,15 +81,14 @@ GPERF_CMAKE_ON=		-DENABLE_GPERF_TOOLS=ON
 HYPERSCAN_LIB_DEPENDS=	libhs.so:devel/hyperscan
 HYPERSCAN_CMAKE_ON=	-DENABLE_HYPERSCAN=ON
 
-LUAJIT_LIB_DEPENDS=	libluajit-5.1.so:lang/luajit
+LUAJIT_USES=		luajit
 LUAJIT_USES_OFF=	lua:51+
 LUAJIT_CMAKE_OFF=	-DENABLE_LUAJIT=OFF
 
 .include <bsd.port.options.mk>
 
-.if ${ARCH:Mpowerpc64*}
-LUAJIT_LIB_DEPENDS=	libluajit-5.1.so:lang/luajit-openresty
-USES+=			compiler:gcc-c++11-lib
+.if ${ARCH} == powerpc64
+CMAKE_ARGS+=		-DENABLE_LTO:BOOL=OFF
 .endif
 
 post-install:

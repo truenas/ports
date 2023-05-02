@@ -1,6 +1,4 @@
-# Created by: Martin Matuska <martin@matuska.org>
-
-PORTREVISION=	1
+PORTREVISION=	2
 
 LUASQL_DRIVER=	firebird
 

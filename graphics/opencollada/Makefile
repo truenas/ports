@@ -1,11 +1,12 @@
 PORTNAME=	opencollada
 DISTVERSIONPREFIX=	v
 DISTVERSION=	1.6.68
-PORTREVISION=	2
+PORTREVISION=	4
 CATEGORIES=	graphics devel
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Library for reading and writing COLLADA files
+WWW=		http://opencollada.org/
 
 LICENSE=	MIT
 

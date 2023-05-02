@@ -1,5 +1,3 @@
-# Created by: Jim Mock <jim@FreeBSD.org>
-
 PORTNAME=	aterm
 PORTVERSION=	1.0.1
 PORTREVISION=	7
@@ -8,6 +6,7 @@ MASTER_SITES=	SF
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Color vt102 terminal emulator with transparency support
+WWW=		http://aterm.sourceforge.net/
 
 MAKE_JOBS_UNSAFE=	yes
 
@@ -26,6 +25,8 @@ CONFIGURE_ARGS=	--enable-wtmp \
 
 CPPFLAGS+=	-I${LOCALBASE}/include
 LDFLAGS+=	-L${LOCALBASE}/lib
+
+CONFLICTS_INSTALL=	zh-aterm
 
 OPTIONS_DEFINE=	TRANS BSDEL MOUSE BGIMG KANJI BIG5S GREEK
 OPTIONS_DEFAULT=	TRANS BSDEL MOUSE

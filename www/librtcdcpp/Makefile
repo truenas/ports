@@ -4,9 +4,12 @@ CATEGORIES=	www devel
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Simple WebRTC DataChannels library
+WWW=		https://github.com/chadnickbok/librtcdcpp
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.md
+
+BROKEN=		build breaks with fmt-9.1.0, see https://github.com/chadnickbok/librtcdcpp/issues/44
 
 BUILD_DEPENDS=	spdlog>0:devel/spdlog
 LIB_DEPENDS=	libnice.so:net-im/libnice \

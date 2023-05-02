@@ -1,7 +1,6 @@
-# Created by: Bernhard Froehlich <decke@bluelife.at>
-
 PORTNAME=	virtualbox-ose
-PORTVERSION=	6.1.30
+PORTVERSION=	6.1.36
+PORTREVISION?=	2
 CATEGORIES=	emulators
 MASTER_SITES=	https://download.virtualbox.org/virtualbox/${PORTVERSION}/
 PKGNAMESUFFIX?=	-additions
@@ -9,6 +8,7 @@ DISTNAME=	VirtualBox-${PORTVERSION}
 
 MAINTAINER=	vbox@FreeBSD.org
 COMMENT=	VirtualBox additions for FreeBSD guests
+WWW=		https://www.virtualbox.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

@@ -1,10 +1,11 @@
 PORTNAME=	oneVPL
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2022.0.1
+DISTVERSION=	2022.1.5
 CATEGORIES=	multimedia
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	oneAPI Video Processing Library dispatcher, tools, and examples
+WWW=		https://software.intel.com/content/www/us/en/develop/tools/oneapi/components/onevpl.html
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -12,6 +13,7 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 ONLY_FOR_ARCHS=	amd64
 ONLY_FOR_ARCHS_REASON=	only Intel GPUs on x86 are supported
 
+BUILD_DEPENDS=	wayland-protocols>0:graphics/wayland-protocols
 LIB_DEPENDS=	libdrm.so:graphics/libdrm \
 		libwayland-client.so:graphics/wayland \
 		libva.so:multimedia/libva
@@ -22,6 +24,7 @@ USE_LDCONFIG=	yes
 USE_XORG=	x11 xcb
 GH_ACCOUNT=	oneapi-src
 CMAKE_TESTING_ON=	BUILD_TESTS
+DATADIR=	${PREFIX}/share/vpl
 
 OPTIONS_DEFINE=	PYTHON
 OPTIONS_DEFAULT=PYTHON
@@ -30,6 +33,7 @@ OPTIONS_SUB=	yes
 PYTHON_USES=		python
 PYTHON_BUILD_DEPENDS=	pybind11>0:devel/pybind11
 PYTHON_CMAKE_BOOL=	BUILD_PYTHON_BINDING
+PYTHON_CMAKE_ON=	-DPython3_EXECUTABLE:FILEPATH="${PYTHON_CMD}"
 
 post-patch:
 	@${REINPLACE_CMD} -e '/pkgconfig/s,FULL_LIBDIR},PREFIX}/libdata,' \

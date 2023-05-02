@@ -1,5 +1,3 @@
-# Created by: 'Big Bad Bob' Frazier <bobf@mrp3.com>
-
 PORTNAME=	uarduno
 PORTVERSION=	1.02
 PORTREVISION=	1
@@ -8,6 +6,7 @@ MASTER_SITES=	http://mrp3.com/
 
 MAINTAINER=	bobf@mrp3.com
 COMMENT=	FreeBSD Kernel Driver for the Arduino Uno USB interface
+WWW=		https://www.mrp3.com/uarduno.html
 
 LICENSE=	BSD4CLAUSE
 

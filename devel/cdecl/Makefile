@@ -1,12 +1,11 @@
-# Created by: David O'Brien (obrien@NUXI.com)
-
 PORTNAME=	cdecl
-PORTVERSION=	11.7
+PORTVERSION=	13.1
 DISTVERSIONPREFIX=	${PORTNAME}-
 CATEGORIES=	devel
 
 MAINTAINER=	ler@FreeBSD.org
 COMMENT=	Explains complicated C/C++ declarations in plain English
+WWW=		https://github.com/paul-j-lucas/cdecl
 
 LICENSE=	GPLv3
 

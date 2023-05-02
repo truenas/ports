@@ -1,13 +1,13 @@
-# Created by: Joe Marcus Clarke <marcus@FreeBSD.org>
-
 PORTNAME=	ghex
 PORTVERSION=	3.41.1
+PORTREVISION=	1
 CATEGORIES=	editors gnome
 MASTER_SITES=	GNOME
 DIST_SUBDIR=	gnome3
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	GNOME 3 hex editor
+WWW=		https://wiki.gnome.org/Apps/Ghex
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

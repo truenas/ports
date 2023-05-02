@@ -1,14 +1,14 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	iohexperimenter
 PORTVERSION=	0.2.9.2
+PORTREVISION=	2
 CATEGORIES=	math python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	IOHexperimenter-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Experimenter for Iterative Optimization Heuristic
+WWW=		https://github.com/IOHprofiler/IOHexperimenter
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

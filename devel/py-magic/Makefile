@@ -1,7 +1,5 @@
-# Created by: Alexander Botero-Lowry <alexbl@FreeBSD.org>
-
 PORTNAME=	magic
-PORTVERSION=	5.40
+PORTVERSION=	5.44
 CATEGORIES=	devel python
 MASTER_SITES=	https://astron.com/pub/file/ \
 		ftp://ftp.astron.com/pub/file/ \
@@ -13,6 +11,7 @@ DISTNAME=	file-${PORTVERSION}
 
 MAINTAINER=	lwhsu@FreeBSD.org
 COMMENT=	Python module for determining file type
+WWW=		https://www.darwinsys.com/file/
 
 LICENSE=	BSD2CLAUSE
 

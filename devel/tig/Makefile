@@ -1,12 +1,11 @@
-# Created by: Denise H. G. <darcsis@gmail.com>
-
 PORTNAME=	tig
-PORTVERSION=	2.5.4
+DISTVERSION=	2.5.5
 CATEGORIES=	devel
 MASTER_SITES=	https://github.com/jonas/tig/releases/download/${DISTNAME}/
 
 MAINTAINER=	0mp@FreeBSD.org
 COMMENT=	Text-mode interface for git
+WWW=		https://jonas.github.io/tig/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING

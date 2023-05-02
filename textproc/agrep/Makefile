@@ -1,5 +1,3 @@
-# Created by: David O'Brien (obrien@FreeBSD.org)
-
 PORTNAME=	agrep
 PORTVERSION=	2.04
 PORTREVISION=	2
@@ -21,6 +19,8 @@ LICENSE_TEXT=	No redistribution for profit
 LICENSE_PERMS=	dist-mirror pkg-mirror auto-accept
 
 USES=	tar:Z
+
+CONFLICTS_INSTALL=	rubygem-amatch # bin/agrep
 
 ALL_TARGET=
 MAKE_ARGS=	CFLAGS="${CFLAGS}"

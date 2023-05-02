@@ -1,11 +1,12 @@
 PORTNAME=	amply
-DISTVERSION=	0.1.4
+DISTVERSION=	0.1.5
 CATEGORIES=	math python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Load and manipulate AMPL data as Python data structures
+WWW=		https://github.com/willu47/amply
 
 LICENSE=	EPL
 LICENSE_FILE=	${WRKSRC}/LICENSE

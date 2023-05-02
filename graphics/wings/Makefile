@@ -1,12 +1,12 @@
-# Created by: olgeni@FreeBSD.org
-
 PORTNAME=	wings
-DISTVERSION=	2.2.7p1
+DISTVERSION=	2.2.9
+PORTREVISION=	1
 CATEGORIES=	graphics
 DIST_SUBDIR=	erlang
 
 MAINTAINER=	cmt@FreeBSD.org
 COMMENT=	Polygon mesh modeler written in Erlang
+WWW=		http://www.wings3d.com/
 
 LICENSE=	Wings3D
 LICENSE_NAME=	Wings 3D License # similar to TclTk license
@@ -33,7 +33,7 @@ SUB_FILES=	${PORTNAME}.sh
 USE_GITHUB=	yes
 GH_ACCOUNT=	dgud
 GH_PROJECT=	wings libigl:igl
-GH_TAGNAME=	a41df275e v2.1.0:igl
+GH_TAGNAME=	v${DISTVERSION} v2.1.0:igl
 
 USE_GL=		gl glu
 

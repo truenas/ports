@@ -1,7 +1,5 @@
-# Created by: Xin LI <delphij@FreeBSD.org>
-
 PORTNAME=		openldap
-DISTVERSION=		2.5.9
+DISTVERSION=		2.5.14
 PORTREVISION=		${OPENLDAP_PORTREVISION}
 CATEGORIES=		net databases
 MASTER_SITES=		https://www.openldap.org/software/download/OpenLDAP/%SUBDIR%/ \
@@ -23,6 +21,7 @@ PKGNAMESUFFIX=		25-server
 .endif
 
 MAINTAINER=		delphij@FreeBSD.org
+WWW=		https://www.OpenLDAP.org/
 .if defined(CLIENT_ONLY)
 COMMENT=		Open source LDAP client implementation
 .else
@@ -46,19 +45,23 @@ CONFLICTS_INSTALL=	${PORTNAME}2[0-46-9]-server ${PORTNAME}-server
 GNU_CONFIGURE=		yes
 
 PORTREVISION_CLIENT=	0
-PORTREVISION_SERVER=	1
+PORTREVISION_SERVER=	0
 OPENLDAP_SHLIB_MAJOR=	0
-OPENLDAP_SHLIB_MINOR=	1.4
+OPENLDAP_SHLIB_MINOR=	1.9
 OPENLDAP_MAJOR=		${DISTVERSION:R}
 
-OPTIONS_DEFINE=		DEBUG
+OPTIONS_DEFINE=		DEBUG FETCH GSSAPI
 OPTIONS_DEFAULT+=	DEBUG
 
-.if defined(CLIENT_ONLY)
-OPTIONS_DEFINE+=	DOCS FETCH
-
+FETCH_DESC=		Enable fetch(3) support
 FETCH_BUILD_DEPENDS=	autoconf>0:devel/autoconf
 FETCH_CONFIGURE_WITH=	fetch
+
+GSSAPI_DESC=		With GSSAPI support
+GSSAPI_RUN_DEPENDS=	cyrus-sasl-gssapi>0:security/cyrus-sasl2-gssapi
+
+.if defined(CLIENT_ONLY)
+OPTIONS_DEFINE+=	DOCS
 .else
 OPTIONS_GROUP=		BKNDS OVLYS
 BKNDS_DESC=		OpenLDAP backends
@@ -81,6 +84,7 @@ OPTIONS_GROUP_OVLYS+=	DENYOP
 OPTIONS_GROUP_OVLYS+=	DEREF
 OPTIONS_GROUP_OVLYS+=	DYNGROUP
 OPTIONS_GROUP_OVLYS+=	DYNLIST
+OPTIONS_GROUP_OVLYS+=	EMPTYDS
 OPTIONS_GROUP_OVLYS+=	HOMEDIR
 OPTIONS_GROUP_OVLYS+=	LASTBIND
 OPTIONS_GROUP_OVLYS+=	LASTMOD
@@ -103,7 +107,6 @@ OPTIONS_GROUP_OVLYS+=	TRANSLUCENT
 OPTIONS_GROUP_OVLYS+=	UNIQUE
 OPTIONS_GROUP_OVLYS+=	VALSORT
 
-OPTIONS_DEFINE+=	GSSAPI
 OPTIONS_DEFINE+=	DYNACL ACI
 OPTIONS_DEFINE+=	RLOOKUPS SLP SLAPI
 OPTIONS_DEFINE+=	PBKDF2
@@ -120,8 +123,6 @@ OPTIONS_SUB=		yes
 ACI_DESC=		Per-object ACI (experimental)
 ARGON2_DESC=		Argon2 password hashing module
 DYNACL_DESC=		Run-time loadable ACL (experimental)
-FETCH_DESC=		Enable fetch(3) support
-GSSAPI_DESC=		With GSSAPI support
 LLOADD_DESC=		Enable load balancer
 OUTLOOK_DESC=		Force caseIgnoreOrderingMatch on name attribute (experimental)
 RLOOKUPS_DESC=		With reverse lookups of client hostnames
@@ -168,6 +169,7 @@ ALLOP_DESC=		With allop overlay (experimental)
 AUTOGROUP_DESC=		With autogroup overlay (experimental)
 CLOAK_DESC=		With cloak overlay (experimental)
 DENYOP_DESC=		With denyop overlay (experimental)
+EMPTYDS_DESC=		With emptyds overlay (experimental)
 LASTBIND_DESC=		With lastbind overlay
 LASTMOD_DESC=		With lastmod overlay (experimental)
 TRACE_DESC=		With Trace overlay
@@ -193,7 +195,6 @@ DNSSRV_CONFIGURE_ENABLE=	dnssrv=mod
 DYNACL_CONFIGURE_ENABLE=	dynacl
 DYNGROUP_CONFIGURE_ENABLE=	dyngroup=mod
 DYNLIST_CONFIGURE_ENABLE=	dynlist=mod
-GSSAPI_RUN_DEPENDS=		cyrus-sasl-gssapi>0:security/cyrus-sasl2-gssapi
 HOMEDIR_CONFIGURE_ENABLE=	homedir=mod
 LLOADD_CONFIGURE_ENABLE=	balancer=mod
 LLOADD_LIB_DEPENDS=		libevent.so:devel/libevent
@@ -344,6 +345,10 @@ CONTRIB_CLEANFILES+=	cloak.a
 CONTRIB_MODULES+=	slapd-modules/denyop
 CONTRIB_CLEANFILES+=	denyop.a
 .endif
+.if ${PORT_OPTIONS:MEMPTYDS}
+CONTRIB_MODULES+=	slapd-modules/emptyds
+CONTRIB_CLEANFILES+=	emptyds.a
+.endif
 .if ${PORT_OPTIONS:MLASTBIND}
 CONTRIB_MODULES+=	slapd-modules/lastbind
 CONTRIB_CLEANFILES+=	lastbind.a
@@ -376,6 +381,8 @@ CONTRIB_CLEANFILES+=	smbk5pwd.a
 post-patch:
 	@${REINPLACE_CMD} -e 's|%LOCALSTATEDIR%/run/|${LDAP_RUN_DIR}/|g' \
 		${SED_MODULES} ${WRKSRC}/servers/slapd/slapd.conf
+	@${REINPLACE_CMD} -e 's|%LOCALSTATEDIR%/run/|${LDAP_RUN_DIR}/|g' \
+		${SED_MODULES} ${WRKSRC}/servers/slapd/slapd.ldif
 	@${REINPLACE_CMD} -e 's|^OPT =.*|OPT = ${CFLAGS}|g' \
 		-e 's|^CC =.*|CC = ${CC}|g' \
 		${SED_MODULES} ${WRKSRC}/contrib/slapd-modules/*/Makefile \

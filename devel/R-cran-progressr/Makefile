@@ -1,10 +1,12 @@
 PORTNAME=	progressr
-PORTVERSION=	0.9.0
+PORTVERSION=	0.11.0
+PORTREVISION=	1
 CATEGORIES=	devel
 DISTNAME=	${PORTNAME}_${PORTVERSION}
 
 MAINTAINER=	tota@FreeBSD.org
 COMMENT=	Inclusive, Unifying API for Progress Updates
+WWW=		https://cran.r-project.org/web/packages/progressr/
 
 LICENSE=	GPLv3
 

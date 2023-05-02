@@ -1,5 +1,3 @@
-# Created by: Sergey A. Osokin <osa@FreeBSD.org>
-
 PORTNAME=	unit
 PORTVERSION=	${UNIT_VERSION}
 CATEGORIES=	www
@@ -7,6 +5,7 @@ MASTER_SITES?=	https://unit.nginx.org/download/
 
 MAINTAINER=	osa@FreeBSD.org
 COMMENT?=	Dynamic web application server
+WWW=		https://unit.nginx.org
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -19,6 +18,7 @@ CPE_PRODUCT=	unit
 OPTIONS_DEFINE?=	\
 	DEBUG \
 	IPV6 \
+	NJS \
 	SSL \
 	UNIXSOCK
 OPTIONS_DEFAULT?=	IPV6 PCRE2 SSL UNIXSOCK
@@ -28,6 +28,7 @@ OPTIONS_RADIO_REGEX=	NOPCRE PCRE PCRE2
 
 DEBUG_DESC=	Enable debug logging
 REGEX_DESC=	Support regular expressions
+NJS_DESC=	Enable NGINX JavaScript
 NOPCRE_DESC=	No support for Regular Expressions
 PCRE_DESC=	Regular Expressions via devel/pcre
 PCRE2_DESC=	Regular Expressions via devel/pcre2
@@ -82,6 +83,13 @@ CONFIGURE_ARGS+=--debug
 CONFIGURE_ARGS+=--no-ipv6
 .endif
 
+.if ${PORT_OPTIONS:MNJS}
+BUILD_DEPENDS+=	${LOCALBASE}/lib/libnjs.a:devel/libnjs
+CONFIGURE_ARGS+=--njs \
+	--cc-opt="-I${LOCALBASE}/include" \
+	--ld-opt="-L${LOCALBASE}/lib"
+.endif
+
 .if ${PORT_OPTIONS:MNOPCRE}
 CONFIGURE_ARGS+=--no-regex
 .endif
@@ -107,8 +115,8 @@ CONFIGURE_ARGS+=--control=unix:${UNIT_SOCK}
 .endif
 
 .if defined(UNIT_MODNAME) && ${UNIT_MODNAME:Mperl*}
-# Fix build failure on clang12
-.if ${OSVERSION} >= 1400023
+# Fix build failure on clang >= 12
+.if ${OSVERSION} >= 1204000
 CFLAGS+=	-Wno-compound-token-split-by-macro
 .endif
 .endif

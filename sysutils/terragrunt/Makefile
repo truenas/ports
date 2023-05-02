@@ -1,15 +1,16 @@
-# Created by: Gabriel M. Dutra <0xdutra@gmail.com>
-
 PORTNAME=	terragrunt
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.33.1
+DISTVERSION=	0.45.4
 CATEGORIES=	sysutils
 
 MAINTAINER=	0xdutra@gmail.com
 COMMENT=	Terragrunt is a thin wrapper for Terraform
+WWW=		https://terragrunt.gruntwork.io/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
+
+RUN_DEPENDS=	terraform:sysutils/terraform
 
 USES=		go:modules
 

@@ -1,5 +1,3 @@
-# Created by: johans
-
 PORTNAME=	ljclive
 PORTVERSION=	0.4.10
 PORTREVISION=	2
@@ -16,6 +14,6 @@ CONFIGURE_ARGS=	ac_cv_search_iconv=${ICONV_LIB}
 CPPFLAGS+=	-I${LOCALBASE}/include
 LIBS+=		-L${LOCALBASE}/lib
 
-CONFLICTS=	*clive-[1-9]*
+CONFLICTS=	clive
 
 .include <bsd.port.mk>

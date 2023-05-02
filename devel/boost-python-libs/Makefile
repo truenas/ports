@@ -1,16 +1,20 @@
-# Created by: Alexander Churanov <churanov.port.maintainer@gmail.com>
-
 PORTNAME=	boost-libs
 PORTREVISION=	1
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 COMMENT=	Framework for interfacing Python and C++
+WWW=		https://www.boost.org/
+
+LICENSE=	BSL
+LICENSE_FILE=	${WRKSRC}/LICENSE_1_0.txt
+
+PATCHDIR=	${.CURDIR}/../boost-libs/files
 
 BUILD_DEPENDS=	bjam:devel/boost-jam \
 		${PYNUMPY}
 LIB_DEPENDS=	libboost_thread.so:devel/boost-libs
 
-USES=		python:3.6-3.9  # upper bound inherited from math/py-numpy
+USES=		python:3.8-3.11  # upper bound inherited from math/py-numpy
 USE_PYTHON=	flavors
 
 OPTIONS_DEFINE=	DEBUG OPTIMIZED_CFLAGS
@@ -64,6 +68,6 @@ post-install:
 		-e "s|%%PYTHON_INCLUDEDIR%%|${PYTHON_INCLUDEDIR}|g" \
 		-e "s|%%PYTHON_LIBDIR%%|${PYTHON_LIBDIR}|g" \
 		-e "s|%%PYTHON_VERSION%%|${PYTHON_VERSION}|g" ${PKGMESSAGE}
-	@${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/libboost_python*.so.${PORTVERSION}
+	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/libboost_*.so
 
 .include <bsd.port.post.mk>

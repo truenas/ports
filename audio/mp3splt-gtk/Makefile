@@ -1,13 +1,12 @@
-# Created by: Timothy Beyer <beyert@cs.ucr.edu>
-
 PORTNAME=	mp3splt-gtk
 PORTVERSION=	0.9.2
-PORTREVISION=	1
+PORTREVISION=	4
 CATEGORIES=	audio
 MASTER_SITES=	SF/mp3splt/${PORTNAME}/${PORTVERSION}
 
 MAINTAINER=	beyert@cs.ucr.edu
 COMMENT=	Utility to split mp3 and ogg files (via GTK Interface)
+WWW=		http://mp3splt.sourceforge.net/
 
 LICENSE=	GPLv2
 
@@ -21,9 +20,7 @@ LIB_DEPENDS=	libmp3splt.so:audio/libmp3splt \
 		libid3tag.so:audio/libid3tag \
 		libltdl.so:devel/libltdl
 
-USES=		desktop-file-utils gmake gnome pkgconfig
-INSTALLS_OMF=	yes
-USE_GSTREAMER1=	yes
+USES=		desktop-file-utils gmake gnome gstreamer pkgconfig
 USE_GNOME=	gtk30
 GNU_CONFIGURE=	yes
 

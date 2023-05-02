@@ -1,11 +1,12 @@
 PORTNAME=	photocollage
 DISTVERSION=	1.4.5
 CATEGORIES=	graphics python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Graphical tool to make photo collage posters
+WWW=		https://github.com/adrienverge/PhotoCollage
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/LICENSE

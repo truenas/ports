@@ -1,15 +1,14 @@
-# Created by: Alexander Nusov <alexander.nusov@nfvexpress.com>
-
 PORTNAME=	xstatic-angular-schema-form
 PORTVERSION=	0.8.13.0
 PORTREVISION=	2
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	XStatic-Angular-Schema-Form-${PORTVERSION}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Angular-Schema-Form (XStatic packaging standard)
+WWW=		http://schemaform.io/
 
 LICENSE=	MIT
 

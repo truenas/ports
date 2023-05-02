@@ -2,8 +2,9 @@ PORTNAME=	libcdb
 PORTVERSION=	g2020082801
 CATEGORIES=	devel
 
-MAINTAINER=	swills@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Constant database library
+WWW=		https://github.com/rmind/libcdb
 
 USES=		compiler:c11 gmake libtool:build
 

@@ -1,14 +1,12 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	sqlalchemy-json
-PORTVERSION=	0.4.0
-PORTREVISION=	1
+PORTVERSION=	0.5.0
 CATEGORIES=	databases python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	JSON type with nested change tracking for SQLAlchemy
+WWW=		https://github.com/edelooff/sqlalchemy-json
 
 LICENSE=	BSD2CLAUSE
 

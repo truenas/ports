@@ -1,5 +1,3 @@
-# Created by: Nathan Ahlstrom <nra@FreeBSD.org>
-
 PORTNAME=	stuffit
 PORTVERSION=	5.2.0.611
 PORTREVISION=	1
@@ -10,6 +8,7 @@ DISTNAME=	stuffit520.611linux-i386
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Stuffit Archive Creator and Expander
+WWW=		https://my.smithmicro.com/unix/stuffit/
 
 # Converted from RESTRICTED
 LICENSE=	STUFFIT

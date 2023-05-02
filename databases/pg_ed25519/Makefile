@@ -4,10 +4,11 @@ CATEGORIES=	databases
 
 MAINTAINER=	dmitry.wagin@ya.ru
 COMMENT=	PostgreSQL extension for ed25519 sign and verify
+WWW=		https://gitlab.com/dwagin/pg_ed25519
 
 LICENSE=	MIT
 
-USES=		gmake pgsql:9.4+
+USES=		gmake pgsql:11+
 LLD_UNSAFE=	yes
 WANT_PGSQL=	server
 

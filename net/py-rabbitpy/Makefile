@@ -1,11 +1,12 @@
 PORTNAME=	rabbitpy
 PORTVERSION=	1.0.0
 CATEGORIES=	net python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	olgeni@FreeBSD.org
 COMMENT=	RabbitMQ client library for Python
+WWW=		https://github.com/gmr/rabbitpy
 
 LICENSE=	BSD3CLAUSE
 

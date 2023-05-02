@@ -1,12 +1,11 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	ls-qpack
-PORTVERSION=	2.2.2
+PORTVERSION=	2.5.2
 DISTVERSIONPREFIX=	v
 CATEGORIES=	www
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	QPACK compression library for use with HTTP/3
+WWW=		https://github.com/litespeedtech/ls-qpack
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

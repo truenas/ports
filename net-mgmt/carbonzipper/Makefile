@@ -1,9 +1,11 @@
 PORTNAME=		carbonzipper
 DISTVERSION=		0.74
+PORTREVISION=	12
 CATEGORIES=		net-mgmt
 
 MAINTAINER=		a.andersson.thn@gmail.com
 COMMENT=		Proxy between carbonapi and go-carbon
+WWW=		https://github.com/go-graphite/carbonzipper/
 
 LICENSE=		BSD2CLAUSE
 LICENSE_FILE=		${WRKSRC}/LICENSE
@@ -38,6 +40,8 @@ GH_TUPLE=		bradfitz:gomemcache:1952afa:gomemcache/vendor/github.com/bradfitz/gom
 GO_BUILDFLAGS=		-ldflags='-X main.BuildVersion=${DISTVERSION}'
 
 USE_RC_SUBR=		${PORTNAME}
+
+CONFLICTS_INSTALL=	carbonapi # bin/carbonzipper
 
 USERS=			carbon
 GROUPS=			carbon

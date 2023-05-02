@@ -1,13 +1,13 @@
-# Created by: Emanuel Haupt <ehaupt@FreeBSD.org>
-
 PORTNAME=	ckcc-protocol
-PORTVERSION=	1.1.0
+PORTVERSION=	1.3.2
+PORTREVISION=	1
 CATEGORIES=	security
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ehaupt@FreeBSD.org
 COMMENT=	Coldcard CLI and python interface library
+WWW=		https://pypi.org/project/ckcc-protocol/
 
 LICENSE=	LGPL3
 

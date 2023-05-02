@@ -1,5 +1,3 @@
-# Created by: Ka Ho Ng <khng300@gmail.com>
-
 PORTNAME=	pam_pkcs11
 PORTVERSION=	0.6.12
 DISTVERSIONPREFIX=	${PORTNAME}-
@@ -7,6 +5,7 @@ CATEGORIES=	security
 
 MAINTAINER=	khng@FreeBSD.org
 COMMENT=	PAM module using crypto tokens for auth
+WWW=		https://github.com/OpenSC/pam_pkcs11
 
 LICENSE=	LGPL21
 
@@ -32,7 +31,7 @@ OPTIONS_SUB=		yes
 CURL_LIB_DEPENDS=	libcurl.so:ftp/curl
 CURL_CONFIGURE_WITH=	curl
 
-LDAP_USE=		OPENLDAP=yes
+LDAP_USES=		ldap
 LDAP_CONFIGURE_WITH=	ldap
 
 # Users can only choose either NSS or SSL

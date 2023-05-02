@@ -1,5 +1,3 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	wisper
 PORTVERSION=	2.0.1
 CATEGORIES=	devel rubygems
@@ -7,11 +5,11 @@ MASTER_SITES=	RG
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Library for Ruby objects with Publish-Subscribe capabilities
+WWW=		https://github.com/krisleech/wisper
 
 LICENSE=	MIT
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

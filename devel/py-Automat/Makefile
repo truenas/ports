@@ -1,11 +1,12 @@
 PORTNAME=	Automat
 PORTVERSION=	20.2.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	john@saltant.com
 COMMENT=	Finite-state machines in Python
+WWW=		https://github.com/glyph/Automat
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

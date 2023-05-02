@@ -1,6 +1,7 @@
 PORTNAME=	igv
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2.9.4
+DISTVERSION=	2.16.0
+PORTREVISION=	1
 CATEGORIES=	biology java
 MASTER_SITES=	http://software.broadinstitute.org/software/igv/sites/cancerinformatics.org.igv/files/images/:img
 DISTFILES=	tools.png:img
@@ -9,6 +10,7 @@ EXTRACT_ONLY=	${DISTNAME}${EXTRACT_SUFX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Visualization tool for genomic datasets
+WWW=		https://software.broadinstitute.org/software/igv/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/license.txt

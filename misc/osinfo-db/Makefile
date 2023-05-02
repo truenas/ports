@@ -1,12 +1,11 @@
-# Created by: Roman Bogorodskiy <novel@FreeBSD.org>
-
 PORTNAME=	osinfo-db
-PORTVERSION=	20211013
+PORTVERSION=	20230308
 CATEGORIES=	misc
 MASTER_SITES=	https://releases.pagure.org/libosinfo/
 
 MAINTAINER=	novel@FreeBSD.org
 COMMENT=	Osinfo database files
+WWW=		https://libosinfo.org/
 
 BUILD_DEPENDS=	osinfo-db-tools>=1.1.0:sysutils/osinfo-db-tools
 

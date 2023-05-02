@@ -1,11 +1,12 @@
 PORTNAME=	agate-excel
 PORTVERSION=	0.2.5
 CATEGORIES=	textproc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	matthew@FreeBSD.org
 COMMENT=	Support reading Excel files for agate
+WWW=		https://agate-excel.rtfd.org/
 
 LICENSE=	MIT
 

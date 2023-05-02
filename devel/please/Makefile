@@ -1,18 +1,18 @@
 PORTNAME=	please
 DISTVERSIONPREFIX=	v
 DISTVERSION=	15.17.0
-PORTREVISION=	1
+PORTREVISION=	13
 CATEGORIES=	devel
 PKGNAMESUFFIX=	.build
 
-MAINTAINER=	swills@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	High-performance extensible build system for reproducible builds
+WWW=		https://please.build/
 
 LICENSE=	APACHE20
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-BUILD_DEPENDS=	${LOCALBASE}/bin/go:lang/go \
-		bash:shells/bash \
+BUILD_DEPENDS=	bash:shells/bash \
 		ca_root_nss>0:security/ca_root_nss \
 		git:devel/git \
 		protoc:devel/protobuf

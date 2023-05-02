@@ -1,11 +1,13 @@
 PORTNAME=	dipy
-DISTVERSION=	1.4.1
+DISTVERSION=	1.6.0
+PORTREVISION=	1
 CATEGORIES=	science python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Python toolbox for analysis of MR diffusion imaging
+WWW=		https://dipy.org/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -19,7 +21,9 @@ BUILD_DEPENDS=	${PY_DEPENDS}
 RUN_DEPENDS=	${PY_DEPENDS}
 
 USES=		python:3.7+
-USE_PYTHON=	distutils cython concurrent autoplist # pkg-plist also exists and contains files missing from the python-generated plist
+USE_PYTHON=	distutils cython concurrent autoplist pytest # pkg-plist also exists and contains files missing from the python-generated plist
+
+TEST_ENV=	${MAKE_ENV} PYTHONPATH=${STAGEDIR}${PYTHONPREFIX_SITELIBDIR}
 
 post-install:
 	${STRIP_CMD} ${STAGEDIR}${PYTHONPREFIX_SITELIBDIR}/${PORTNAME}/*/*.so

@@ -1,5 +1,3 @@
-# Created by: Edwin Groothuis <edwin@mavetju.org>
-
 PORTNAME=	isc-cron
 PORTVERSION=	4.1
 PORTREVISION=	2
@@ -12,6 +10,8 @@ MAINTAINER=	ports@FreeBSD.org
 COMMENT=	ISC Cron, former Vixie Cron
 
 LICENSE=	ISCL
+
+CONFLICTS_INSTALL=	interchange mcron # bin/crontab
 
 NO_WRKSUBDIR=	yes
 SUB_FILES=	pkg-message

@@ -1,5 +1,3 @@
-# Created by: Sunpoet Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	iesd
 PORTVERSION=	1.2.2
 CATEGORIES=	misc rubygems
@@ -7,11 +5,11 @@ MASTER_SITES=	RG
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Modify Extensions, Kextcache and Packages on InstallESD
+WWW=		https://github.com/ntkme/iesd
 
 LICENSE=	BSD2CLAUSE
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

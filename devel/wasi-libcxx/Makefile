@@ -1,6 +1,5 @@
 PORTNAME=	libcxx
-DISTVERSION=	13.0.0
-PORTREVISION=	1
+DISTVERSION=	13.0.1
 CATEGORIES=	devel lang
 MASTER_SITES=	https://github.com/llvm/llvm-project/releases/download/llvmorg-${DISTVERSION:S/rc/-rc/}/ \
 		https://${PRE_}releases.llvm.org/${LLVM_RELEASE}/${RCDIR}
@@ -8,8 +7,9 @@ PKGNAMEPREFIX=	wasi-
 DISTNAME=	llvm-project-${DISTVERSION}.src
 DISTFILES=	llvm-project-${DISTVERSION}.src${EXTRACT_SUFX}
 
-MAINTAINER=	greg@unrelenting.technology
+MAINTAINER=	vishwin@FreeBSD.org
 COMMENT=	C++ standard library for WebAssembly System Interface
+WWW=		https://llvm.org/
 
 LICENSE=	LLVM2
 LICENSE_NAME=	Apache License 2.0 with LLVM Exceptions

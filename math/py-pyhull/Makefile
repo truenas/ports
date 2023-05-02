@@ -1,14 +1,13 @@
-# Created by: Yuri Victorovich <yuri@rawbw.com>
-
 PORTNAME=	pyhull
 DISTVERSION=	2015.2.1
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	math python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Computation of convex hull, Delaunay triangulation and Voronoi diagram
+WWW=		https://pypi.org/project/pyhull/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.rst

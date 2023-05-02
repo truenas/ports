@@ -1,11 +1,12 @@
 PORTNAME=	ion
 DISTVERSION=	1.0.5-1355
-PORTREVISION=	25
+PORTREVISION=	39
 CATEGORIES=	shells
 PKGNAMESUFFIX=	-shell
 
 MAINTAINER=	mikael@FreeBSD.org
 COMMENT=	Modern system shell written in Rust
+WWW=		https://gitlab.redox-os.org/redox-os/ion
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

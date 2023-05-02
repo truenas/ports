@@ -1,13 +1,12 @@
-# Created by: Mario Sergio Fujikawa Ferreira <lioux@FreeBSD.org>
-
 PORTNAME=	mjpegtools
 PORTVERSION=	2.1.0
-PORTREVISION=	15
+PORTREVISION=	16
 CATEGORIES=	multimedia
 MASTER_SITES=	SF/${PORTNAME:S/tools//}/${PORTNAME}/${PORTVERSION}
 
 MAINTAINER=	multimedia@FreeBSD.org
 COMMENT=	Set of tools to record/playback/edit videos in MPEG format
+WWW=		http://mjpeg.sourceforge.net/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -21,12 +20,12 @@ USES=		compiler:c++11-lang gmake gnome jpeg libtool localbase pathfix \
 USE_LDCONFIG=	yes
 
 GNU_CONFIGURE=	yes
-CONFIGURE_ARGS=	--without-dga --without-x
+CONFIGURE_ARGS=	--without-dga --without-libquicktime --without-x
 CONFIGURE_TARGET=	${ARCH:S/amd64/x86_64/}-portbld-${OPSYS:tl}${OSREL}
 
 INFO=		mjpeg-howto
 
-OPTIONS_DEFINE=		DOCS DV GTK2 PNG QUICKTIME SDL
+OPTIONS_DEFINE=		DOCS DV GTK2 PNG SDL
 OPTIONS_DEFAULT=	GTK2 PNG SDL
 OPTIONS_SUB=		yes
 
@@ -36,8 +35,6 @@ GTK2_USE=		GNOME=gtk20
 GTK2_CONFIGURE_WITH=	gtk
 PNG_LIB_DEPENDS=	libpng.so:graphics/png
 PNG_CONFIGURE_WITH=	libpng
-QUICKTIME_LIB_DEPENDS=	libquicktime.so:multimedia/libquicktime
-QUICKTIME_CONFIGURE_WITH=	libquicktime
 SDL_USES=		sdl
 SDL_USE=		SDL=gfx,sdl
 SDL_CONFIGURE_OFF=	--without-libsdl --without-sdlgfx

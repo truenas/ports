@@ -6,6 +6,7 @@ PKGNAMESUFFIX=	-rails50
 
 MAINTAINER=	mfechner@FreeBSD.org
 COMMENT=	Provides the Font-Awesome web fonts and stylesheets as a Rails engine
+WWW=		https://github.com/bokmann/font-awesome-rails
 
 LICENSE=	MIT OFL11
 LICENSE_COMB=	dual
@@ -14,7 +15,6 @@ LICENSE_FILE_MIT=	${WRKSRC}/LICENSE
 RUN_DEPENDS=	rubygem-railties50>=3.2:www/rubygem-railties50
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

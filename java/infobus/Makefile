@@ -1,5 +1,3 @@
-# Created by: Jose Marques
-
 PORTNAME=	infobus
 PORTVERSION=	1.2
 PORTREVISION=	2
@@ -8,6 +6,7 @@ DISTNAME=	ib12
 
 MAINTAINER=	java@FreeBSD.org
 COMMENT=	Enables dynamic exchange of data between JavaBeans(TM)
+WWW=		http://java.sun.com/beans/infobus/index.html
 
 # Converted from NO_CDROM
 LICENSE=	infobus

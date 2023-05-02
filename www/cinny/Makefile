@@ -1,13 +1,18 @@
 PORTNAME=	cinny
 DISTVERSIONPREFIX=	v
-DISTVERSION=	1.6.0
+DISTVERSION=	2.2.6
 CATEGORIES=	www
 MASTER_SITES=	https://github.com/ajbura/${PORTNAME}/releases/download/v${PORTVERSION}/
 
 MAINTAINER=	ashish@FreeBSD.org
 COMMENT=	Yet another Matrix client for the web
+WWW=		https://cinny.in/
 
 LICENSE=	MIT
+
+USES=		cpe
+
+CPE_VENDOR=	cinny_project
 
 NO_ARCH=	yes
 NO_BUILD=	yes

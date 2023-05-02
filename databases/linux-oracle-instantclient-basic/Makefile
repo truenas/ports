@@ -1,5 +1,3 @@
-# Created by: Alexander Novitsky
-
 PORTNAME=		instantclient
 PORTVERSION=		${ORACLEVERSION}.${DISTDATE}
 PORTREVISION=		5
@@ -12,6 +10,7 @@ DIST_SUBDIR=		oracle
 
 MAINTAINER=		pi@FreeBSD.org
 COMMENT=		Oracle 10 32Bit Linux InstantClient basics for RDBMS 8.1.2+
+WWW=		http://www.oracle.com/technology/tech/oci/instantclient/instantclient.html
 
 # Converted from RESTRICTED
 LICENSE=	Oracle

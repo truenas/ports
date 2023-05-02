@@ -1,13 +1,13 @@
-# Created by: Emanuel Haupt <ehaupt@FreeBSD.org>
-
 PORTNAME=	yarg
 PORTVERSION=	0.1.9
+PORTREVISION=	1
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ehaupt@FreeBSD.org
 COMMENT=	Easy to use PyPI client
+WWW=		https://pypi.org/project/yarg/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

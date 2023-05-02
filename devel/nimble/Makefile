@@ -1,10 +1,11 @@
 PORTNAME=	nimble
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.13.1
+DISTVERSION=	0.14.2
 CATEGORIES=	devel
 
 MAINTAINER=	ports@nicandneal.net
 COMMENT=	Package manager for the Nim programming language
+WWW=		https://github.com/nim-lang/nimble
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/license.txt
@@ -14,7 +15,6 @@ RUN_DEPENDS=	nim:lang/nim
 
 USE_GITHUB=	yes
 GH_ACCOUNT=	nim-lang
-GH_TAGNAME=	d13f3b8
 
 PLIST_FILES=	bin/nimble
 

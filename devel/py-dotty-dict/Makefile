@@ -6,6 +6,7 @@ PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	0mp@FreeBSD.org
 COMMENT=	Dictionary wrapper for quick access to deeply nested keys
+WWW=		https://github.com/pawelzny/dotty_dict
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -13,7 +14,7 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 TEST_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pytest>=0:devel/py-pytest@${PY_FLAVOR}
 
 USES=		python
-# Use GitHub instead of CHEESESHOP to get the test files.
+# Use GitHub instead of PYPI to get the test files.
 USE_GITHUB=	yes
 GH_ACCOUNT=	pawelzny
 GH_PROJECT=	${PORTNAME:S/-/_/}

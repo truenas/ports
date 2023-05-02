@@ -1,7 +1,5 @@
-# Created by: Seamus Venasse <svenasse@polaris.ca>
-
 PORTNAME=	Business-ISBN
-PORTVERSION=	3.006
+PORTVERSION=	3.008
 CATEGORIES=	misc perl5
 MASTER_SITES=	CPAN/Business CPAN
 MASTER_SITE_SUBDIR=	CPAN:BDFOY
@@ -9,6 +7,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Work with International Standard Book Numbers
+WWW=		https://metacpan.org/release/Business-ISBN
 
 LICENSE=	ART20
 LICENSE_FILE=	${WRKSRC}/LICENSE

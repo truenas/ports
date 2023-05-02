@@ -1,21 +1,22 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	beziers
-PORTVERSION=	0.4.0
+PORTVERSION=	0.5.0
+DISTVERSIONPREFIX=	v
 CATEGORIES=	graphics python
-MASTER_SITES=	CHEESESHOP
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Bezier curve manipulation library
+WWW=		https://github.com/simoncozens/beziers.py
 
 LICENSE=	MIT
 
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}pyclipper>=0:math/py-pyclipper@${PY_FLAVOR}
-
-USES=		python:3.6+
+USES=		python:3.7+
 USE_PYTHON=	autoplist concurrent distutils
 
 NO_ARCH=	yes
+
+USE_GITHUB=	yes
+GH_ACCOUNT=	simoncozens
+GH_PROJECT=	beziers.py
 
 .include <bsd.port.mk>

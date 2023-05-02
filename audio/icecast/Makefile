@@ -1,7 +1,6 @@
-# Created by: Chip Marshall <chip@eboai.org>
-
 PORTNAME=	icecast
 PORTVERSION=	2.4.4
+PORTREVISION=	2
 PORTEPOCH=	1
 CATEGORIES=	audio net
 MASTER_SITES=	https://downloads.xiph.org/releases/icecast/:source \
@@ -15,6 +14,7 @@ EXTRACT_ONLY=	${DISTNAME}${EXTRACT_SUFX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Streaming mp3/ogg-vorbis audio server
+WWW=		https://icecast.org/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -25,11 +25,13 @@ LIB_DEPENDS=	libcurl.so:ftp/curl \
 		libtheora.so:multimedia/libtheora \
 		libvorbis.so:audio/libvorbis
 
-USES=		cpe gmake gnome localbase ssl
+USES=		cpe gmake gnome localbase pkgconfig ssl
 USE_GNOME=	libxml2 libxslt
 
 GNU_CONFIGURE=	yes
 USE_RC_SUBR=	icecast
+
+CONFLICTS_INSTALL=	icecast-kh
 
 SUB_FILES=	pkg-message
 

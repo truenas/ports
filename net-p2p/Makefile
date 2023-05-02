@@ -1,11 +1,10 @@
     COMMENT = Peer-to-peer network applications
 
     SUBDIR += amule
-    SUBDIR += amule-devel
+    SUBDIR += arbitrum-avm
     SUBDIR += autoscan
     SUBDIR += awgg
     SUBDIR += bazarr
-    SUBDIR += bazarr-devel
     SUBDIR += bitcoin
     SUBDIR += bitcoin-daemon
     SUBDIR += bitcoin-utils
@@ -17,6 +16,9 @@
     SUBDIR += btcheck
     SUBDIR += btpd
     SUBDIR += c-lightning
+    SUBDIR += cardano-db-sync
+    SUBDIR += cardano-node
+    SUBDIR += cncli
     SUBDIR += cpuminer
     SUBDIR += createtorrent
     SUBDIR += ctcs
@@ -31,6 +33,7 @@
     SUBDIR += eiskaltdcpp-data
     SUBDIR += eiskaltdcpp-gtk
     SUBDIR += eiskaltdcpp-lib
+    SUBDIR += ethash
     SUBDIR += frost
     SUBDIR += go-ethereum
     SUBDIR += go-prysm
@@ -45,11 +48,14 @@
     SUBDIR += libswift
     SUBDIR += libtorrent
     SUBDIR += libtorrent-rasterbar
+    SUBDIR += libtorrent-rasterbar2
+    SUBDIR += libutp
     SUBDIR += lidarr
     SUBDIR += linuxdcpp
     SUBDIR += litecoin
     SUBDIR += litecoin-daemon
     SUBDIR += litecoin-utils
+    SUBDIR += lxmf
     SUBDIR += microdc2
     SUBDIR += minder
     SUBDIR += mktorrent
@@ -61,14 +67,17 @@
     SUBDIR += namecoin-daemon
     SUBDIR += namecoin-utils
     SUBDIR += ncdc
+    SUBDIR += nomadnet
+    SUBDIR += ogmios
     SUBDIR += opendchub
-    SUBDIR += openethereum
+    SUBDIR += oura
     SUBDIR += p5-Net-BitTorrent
     SUBDIR += p5-Net-BitTorrent-File
     SUBDIR += p5-Net-BitTorrent-PeerPacket
     SUBDIR += p5-Net-DirectConnect
     SUBDIR += p5-WWW-BitTorrent
     SUBDIR += phex
+    SUBDIR += prowlarr
     SUBDIR += py-libtorrent-rasterbar
     SUBDIR += py-nicotine-plus
     SUBDIR += py-transmission-rpc
@@ -77,11 +86,14 @@
     SUBDIR += qbittorrent
     SUBDIR += qtum
     SUBDIR += radarr
+    SUBDIR += readarr
+    SUBDIR += reticulum
     SUBDIR += retroshare
     SUBDIR += rslsync
     SUBDIR += rtorrent
     SUBDIR += shx
     SUBDIR += sonarr
+    SUBDIR += tooth
     SUBDIR += torrent-file-editor
     SUBDIR += torrentcheck
     SUBDIR += torrentsniff
@@ -95,6 +107,7 @@
     SUBDIR += udpt
     SUBDIR += uhub
     SUBDIR += vuze
+    SUBDIR += xbt
     SUBDIR += xmrig
     SUBDIR += zetacoin
     SUBDIR += zetacoin-daemon

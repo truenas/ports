@@ -1,8 +1,6 @@
-# Created by: Akinori MUSHA aka knu <knu@idaemons.org>
-
 PORTNAME=	zlib
 PORTVERSION=	1.2.8
-PORTREVISION=	2
+PORTREVISION=	3
 CATEGORIES=	devel archivers
 MASTER_SITES=	http://zlib.net/ \
 		SF/libpng/${PORTNAME}/${PORTVERSION}
@@ -10,6 +8,7 @@ PKGNAMEPREFIX=	mingw32-
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	The zlib library cross-compiled for MinGW32
+WWW=		https://zlib.net/
 
 BUILD_DEPENDS=	${PKGNAMEPREFIX}gcc:devel/${PKGNAMEPREFIX}gcc \
 		${LOCALBASE}/mingw32/include/sys/types.h:devel/${PKGNAMEPREFIX}bin-msvcrt

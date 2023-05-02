@@ -1,14 +1,13 @@
-# Created by: vanilla
-
 PORTNAME=	protobuf
-PORTVERSION=	3.17.3
+PORTVERSION=	3.21.12
 DISTVERSIONPREFIX=	cpp-
 PORTEPOCH=	1
 CATEGORIES=	devel
-MASTER_SITES=	https://github.com/protocolbuffers/protobuf/releases/download/v${PORTVERSION}/
+MASTER_SITES=	https://github.com/protocolbuffers/protobuf/releases/download/v${PORTVERSION:R:E}.${PORTVERSION:E}/
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Data interchange format library
+WWW=		https://github.com/protocolbuffers/protobuf
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -17,9 +16,7 @@ BROKEN_sparc64=	fails to compile: no atomic ops available
 
 TEST_DEPENDS=	googletest>=0:devel/googletest
 
-USES=		compiler:c++11-lang cpe gmake libtool localbase pathfix pkgconfig
-
-CPE_VENDOR=	google
+USES=		compiler:c++11-lang cpe libtool localbase pathfix pkgconfig
 
 CFLAGS+=	-D_THREAD_SAFE -DGOOGLE_PROTOBUF_NO_RTTI -I${WRKSRC}/src
 CONFIGURE_ENV=	CC_FOR_BUILD="${CC}" \
@@ -34,7 +31,11 @@ TEST_ARGS=	${MAKE_ARGS} ${_MAKE_JOBS}
 TEST_TARGET=	check
 USE_CXXSTD=	c++11
 USE_LDCONFIG=	yes
+
+PLIST_SUB=	PATCH_VERSION=${PORTVERSION:E}
 WRKSRC=		${WRKDIR}/${PORTNAME}-${PORTVERSION}
+
+CPE_VENDOR=	google
 
 post-patch:
 	@${REINPLACE_CMD} -e 's|^check-local:|disabled-&|' ${WRKSRC}/Makefile.in

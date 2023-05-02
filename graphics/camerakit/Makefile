@@ -1,12 +1,13 @@
 PORTNAME=	camerakit
 PORTVERSION=	0.0.1
-PORTREVISION=	14
+PORTREVISION=	15
 CATEGORIES=	graphics gnustep
 MASTER_SITES=	http://download.gna.org/gsimageapps/
 DISTNAME=	CameraKit-20041011
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Framework that allows to access digital cameras
+WWW=		http://home.gna.org/gsimageapps/
 
 LIB_DEPENDS=	libgphoto2.so:graphics/libgphoto2
 

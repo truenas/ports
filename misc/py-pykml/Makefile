@@ -1,11 +1,12 @@
 PORTNAME=	pykml
 DISTVERSION=	0.2.0
 CATEGORIES=	misc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Python KML library, language for encoding, annotating geographic data
+WWW=		https://pythonhosted.org/pykml
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

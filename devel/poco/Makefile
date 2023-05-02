@@ -1,5 +1,3 @@
-# Created by: Wes Peters <wes@FreeBSD.org>
-
 PORTNAME=	poco
 DISTVERSION=	1.10.1
 DISTVERSIONSUFFIX=	-all
@@ -8,6 +6,7 @@ MASTER_SITES=	https://pocoproject.org/releases/${PORTNAME}-${PORTVERSION}/
 
 MAINTAINER=	henry.hu.sh@gmail.com
 COMMENT=	C++ libraries with a network/internet focus
+WWW=		https://pocoproject.org/
 
 LICENSE=	BSL
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -42,6 +41,8 @@ SQLITE_CMAKE_OFF=	-DENABLE_DATA_SQLITE:BOOL=OFF
 SSL_USES=		ssl
 SSL_CMAKE_OFF=		-DENABLE_CRYPTO:BOOL=OFF \
 			-DENABLE_NETSSL:BOOL=OFF
+SSL_VARS=	BROKEN_SSL="openssl30 openssl31" \
+			BROKEN_SSL_REASON="Do not build with OpenSSL 3.0 and later"
 UNIXODBC_LIB_DEPENDS=	libodbc.so:databases/unixODBC
 UNIXODBC_CMAKE_ON=	-DODBC_INCLUDE_DIRECTORIES:PATH=${LOCALBASE}/include \
 			-DODBC_LIBRARIES:FILEPATH=${LOCALBASE}/lib/libodbc.so

@@ -1,18 +1,21 @@
 PORTNAME=	onnx
-DISTVERSION=	1.10.2
+DISTVERSION=	1.13.1
+PORTREVISION=	1
 CATEGORIES=	misc # machine-learning
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Open Neural Network eXchange
+WWW=		https://onnx.ai/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 BUILD_DEPENDS=	bash:shells/bash \
-		cmake:devel/cmake \
+		cmake:devel/cmake-core \
 		protoc-gen-mypy:devel/py-mypy-protobuf@${PY_FLAVOR} \
+		${PYTHON_PKGNAMEPREFIX}pybind11>0:devel/py-pybind11@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}pytest-runner>=0:devel/py-pytest-runner@${PY_FLAVOR}
 LIB_DEPENDS=	libprotobuf.so:devel/protobuf
 RUN_DEPENDS=	${PYNUMPY} \

@@ -1,13 +1,12 @@
-# Created by: Kubilay Kocak <koobs@FreeBSD.org>
-
 PORTNAME=	pytest-capturelog
 PORTVERSION=	0.7
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
-MAINTAINER=	koobs@FreeBSD.org
+MAINTAINER=	bofh@FreeBSD.org
 COMMENT=	Py.test plugin to capture log messages
+WWW=		https://bitbucket.org/memedough/pytest-capturelog/overview
 
 LICENSE=	MIT
 

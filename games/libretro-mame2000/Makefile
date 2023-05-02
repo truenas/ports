@@ -1,9 +1,10 @@
 PORTNAME=	libretro-mame2000
-PORTVERSION=	0.20210214
+PORTVERSION=	0.20220405
 CATEGORIES=	games
 
-MAINTAINER=	menelkir@itroll.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	MAME (0.37b5) for libretro
+WWW=		https://github.com/libretro/mame2000-libretro
 
 LICENSE=	GPLv2
 
@@ -16,7 +17,7 @@ USE_LDCONFIG=	yes
 USE_GITHUB=	yes
 GH_ACCOUNT=	libretro
 GH_PROJECT=	mame2000-libretro
-GH_TAGNAME=	e364a15
+GH_TAGNAME=	f35db38
 
 PLIST_FILES=	lib/libretro/mame2000_libretro.so
 

@@ -1,3 +1,5 @@
-TIMESTAMP = 1638389249
-SHA256 (jacktrip-jacktrip-v1.4.1-d5e110c_GH0.tar.gz) = 85d197d3fb81d4d188685733bd020cb067965ce9606b2e0d6d0c0c78a1536f08
-SIZE (jacktrip-jacktrip-v1.4.1-d5e110c_GH0.tar.gz) = 4229494
+TIMESTAMP = 1681113045
+SHA256 (jacktrip-jacktrip-v1.8.1_GH0.tar.gz) = fb6ffa17cdaf3ee8a4cc8ec5af6aaf48408b2806e848f37a3c9ba6c4248959db
+SIZE (jacktrip-jacktrip-v1.8.1_GH0.tar.gz) = 5827678
+SHA256 (x42-weakjack-cddbeec_GH0.tar.gz) = 752b48f022c34a28ff97dbd66715b3fe83532257884ea0b3146d790bafe21124
+SIZE (x42-weakjack-cddbeec_GH0.tar.gz) = 7983

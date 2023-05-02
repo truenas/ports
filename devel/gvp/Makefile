@@ -1,12 +1,12 @@
-# Created by: Luke Jee <lukejee@gmail.com>
-
 PORTNAME=	gvp
 PORTVERSION=	0.3.0
 DISTVERSIONPREFIX=	v
+PORTREVISION=	12
 CATEGORIES=	devel
 
 MAINTAINER=	lukejee@gmail.com
 COMMENT=	Go Versioning Manager
+WWW=		https://github.com/pote/gvp
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENCE

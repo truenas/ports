@@ -1,14 +1,13 @@
-# Created by: ijliao
-
 PORTNAME=	pexpect
 PORTVERSION=	4.8.0
 PORTREVISION=	1
 CATEGORIES=	misc python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Python module for controlling interactive programs in pseudo-terminal
+WWW=		https://pexpect.readthedocs.io/
 
 LICENSE=	ISCL
 LICENSE_FILE=	${WRKSRC}/LICENSE

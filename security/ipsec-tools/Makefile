@@ -1,5 +1,3 @@
-# Created by: vanhu
-
 # TODO: - libipsec issue ?
 #       - cleanup...
 #       - SYSCONFDIR
@@ -13,6 +11,7 @@ MASTER_SITES=	SF
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	KAME racoon IKE daemon, ipsec-tools version
+WWW=		http://ipsec-tools.sourceforge.net/
 
 LICENSE=	BSD3CLAUSE
 
@@ -65,7 +64,7 @@ GSSAPI_CFLAGS=		-I${LOCALBASE}/include
 GSSAPI_LDFLAGS=		-L${LOCALBASE}/lib
 GSSAPI_CONFIGURE_ENABLE=gssapi
 RADIUS_CONFIGURE_WITH=	libradius
-LDAP_USE=		OPENLDAP=yes
+LDAP_USES=		ldap
 LDAP_CONFIGURE_ON=	--with-libldap=${LOCALBASE}
 LDAP_CONFIGURE_OFF=	--without-libldap
 SAUNSPEC_CONFIGURE_ENABLE=	samode-unspec
@@ -76,7 +75,7 @@ WCPSKEY_EXTRA_PATCHES=	${FILESDIR}/wildcard-psk.diff ${FILESDIR}/wildcard-psk-oa
 
 .include <bsd.port.pre.mk>
 
-.if ${OPSYS} == FreeBSD && ${OSVERSION} > 1100510
+.if ${OPSYS} == FreeBSD
 REQUIREMOD?=	ipsec
 .endif
 

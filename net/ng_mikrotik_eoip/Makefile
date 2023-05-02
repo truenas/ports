@@ -6,8 +6,11 @@ MASTER_SITES=	http://projects.ukrweb.net/files/ \
 
 MAINTAINER=	gelraen.ua@gmail.com
 COMMENT=	Netgraph node for Mikrotik EoIP tunneling
+WWW=		http://imax.in.ua/ng_mikrotik_eoip/
 
 LICENSE=	BSD2CLAUSE
+
+BROKEN=		compilation fails due to a C error: id = *((unsigned int *)id; error: cast to 'unsigned int *' from smaller integer type 'uint16_t'
 
 USES=		kmod uidfix
 

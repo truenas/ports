@@ -1,13 +1,12 @@
-# Created by: Cheng-Lung Sung <clsung@FreeBSD.org>
-
 PORTNAME=	repoze.lru
 PORTVERSION=	0.7
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Tiny LRU cache implementation and decorator
+WWW=		https://github.com/repoze/repoze.lru
 
 LICENSE=	REPOZE
 LICENSE_NAME=	Repoze Public License

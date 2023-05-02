@@ -1,13 +1,12 @@
-# Created by: jodocus <jodocus@jodocus.org>
-
 PORTNAME=	punjab
 PORTVERSION=	0.15
 CATEGORIES=	net-im python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	HTTP XMPP client interface
+WWW=		https://github.com/twonds/punjab
 
 RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}twisted>=0:devel/py-twisted@${PY_FLAVOR}
 

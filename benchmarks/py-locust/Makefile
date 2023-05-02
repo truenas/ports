@@ -1,12 +1,13 @@
 PORTNAME=	locust
 PORTVERSION=	0.11.0
 CATEGORIES=	benchmarks www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	locustio-${PORTVERSION}
 
 MAINTAINER=	egypcio@FreeBSD.org
 COMMENT=	Python utility for doing easy, distributed load testing
+WWW=		https://locust.io/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

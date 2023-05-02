@@ -1,15 +1,14 @@
-# Created by: "Choe, Cheng-Dae" whitekid
-
 PORTNAME=	sqlobject
 PORTVERSION=	1.6.0
 PORTREVISION=	1
 CATEGORIES=	databases python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 DISTNAME=	SQLObject-${PORTVERSION}
 
-MAINTAINER=	wg@FreeBSD.org
+MAINTAINER=	wen@FreeBSD.org
 COMMENT=	Python object for manipulation with SQL table row
+WWW=		http://www.sqlobject.org
 
 LICENSE=	LGPL21
 
@@ -17,7 +16,7 @@ BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}formencode>=1.2.2:www/py-formencode@${PY_F
 RUN_DEPENDS:=	${BUILD_DEPENDS}
 
 NO_ARCH=	yes
-USES=		python:3.6+
+USES=		dos2unix python:3.6+
 USE_PYTHON=	autoplist distutils
 
 # currently MaxDB(SAP), ADODB are not supported

@@ -1,10 +1,11 @@
 PORTNAME=	coeurl
 DISTVERSIONPREFIX=v
-DISTVERSION=	0.1.0
+DISTVERSION=	0.3.0
 CATEGORIES=	ftp www
 
 MAINTAINER=	adridg@FreeBSD.org
 COMMENT=	Simple async wrapper around CURL for C++
+WWW=		https://nheko.im/nheko-reborn/coeurl
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -20,6 +21,6 @@ USES=		compiler:c++17-lang pkgconfig \
 USE_GITLAB=	yes
 GL_SITE=	https://nheko.im/
 GL_ACCOUNT=	nheko-reborn
-GL_COMMIT=	a08f619adaa1ccd34eb6315d6578eddae0d1cc9b
+GL_COMMIT=	2a20a129240a1a017b37b6874faab499ca4e523b
 
 .include <bsd.port.mk>

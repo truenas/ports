@@ -1,10 +1,12 @@
 PORTNAME=	frugally-deep
 DISTVERSIONPREFIX=	v
-DISTVERSION=	0.15.13-p0
+DISTVERSION=	0.15.20-p0
+PORTREVISION=	1
 CATEGORIES=	misc # deep-learning
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	C++ header-only library to use Keras models in C++ with ease
+WWW=		https://github.com/Dobiasd/frugally-deep
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

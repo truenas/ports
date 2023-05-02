@@ -1,11 +1,12 @@
 PORTNAME=	Dumper
 PORTVERSION=	1.2.0
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	pi@FreeBSD.org
 COMMENT=	Conveniently print any Python data structure
+WWW=		https://pypi.org/project/Dumper/
 
 LICENSE=	PSFL
 

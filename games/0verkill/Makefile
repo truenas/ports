@@ -1,5 +1,3 @@
-# Created by: Kris Kennaway <kris@FreeBSD.org>
-
 PORTNAME=	0verkill
 PORTVERSION=	0.16
 PORTREVISION=	2
@@ -7,8 +5,9 @@ CATEGORIES=	games
 MASTER_SITES=	http://artax.karlin.mff.cuni.cz/~brain/0verkill/release/
 EXTRACT_SUFX=	.tgz
 
-MAINTAINER=	mich@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Bloody 2D action deathmatch-like game in ASCII art
+WWW=		http://artax.karlin.mff.cuni.cz/~brain/0verkill/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/doc/COPYING

@@ -1,11 +1,12 @@
 PORTNAME=	uptime
 PORTVERSION=	3.0.1
 CATEGORIES=	sysutils python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	uros@gruber.si
 COMMENT=	Cross-platform uptime library
+WWW=		https://github.com/Cairnarvon/uptime
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYING.txt

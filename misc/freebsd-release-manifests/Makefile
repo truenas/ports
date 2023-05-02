@@ -1,12 +1,12 @@
 PORTNAME=	freebsd-release-manifests
-DISTVERSION=	20211207
-PORTREVISION=	0
+DISTVERSION=	20230407
 CATEGORIES=	misc
 MASTER_SITES=	#
 DISTFILES=	#
 
 MAINTAINER=	re@FreeBSD.org
 COMMENT=	FreeBSD release manifests
+WWW=		https://www.FreeBSD.org
 
 LICENSE=	BSD2CLAUSE
 

@@ -1,10 +1,12 @@
 PORTNAME=	tpm2-abrmd
-DISTVERSION=	2.4.0
+DISTVERSION=	2.4.1
+PORTREVISION=	1
 CATEGORIES=	security
 MASTER_SITES=	https://github.com/tpm2-software/tpm2-abrmd/releases/download/${DISTVERSION}/
 
 MAINTAINER=	tstruk@gmail.com
 COMMENT=	TPM2 Access Broker & Resource Manager Deamon
+WWW=		https://github.com/tpm2-software/tpm2-abrmd
 
 LICENSE=	BSD2CLAUSE
 
@@ -24,6 +26,9 @@ GROUPS=		_tss
 USERS=		_tss
 
 SUB_LIST=	DBUS_DAEMON=dbus
+
+pre-install:
+	@${INSTALL_DATA} ${FILESDIR}/tpm2-abrmd-devd.conf ${STAGEDIR}${PREFIX}/etc/devd
 
 post-install:
 	@${RM} ${STAGEDIR}${PREFIX}/lib/systemd/system-preset/tpm2-abrmd.preset

@@ -1,13 +1,15 @@
 PORTNAME=	signal-cli
 DISTVERSIONPREFIX=	v
 DISTVERSION=	0.9.0
+PORTREVISION=	1
 PORTEPOCH=	1
 CATEGORIES=	net-im java
 MASTER_SITES=	https://github.com/${GH_ACCOUNT}/${PORTNAME}/releases/download/${DISTVERSIONFULL}/:jars
 DISTFILES=	${PORTNAME}-${DISTVERSION}${EXTRACT_SUFX}:jars
 
-MAINTAINER=	0mp@FreeBSD.org
+MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Command-line and D-Bus interface for Signal and libsignal-service-java
+WWW=		https://github.com/AsamK/signal-cli
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE

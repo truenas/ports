@@ -1,11 +1,10 @@
-# Created by: Andrey Slusar <anray@FreeBSD.org>
-
 PORTNAME=	imagick
-PORTVERSION=	3.5.1
+PORTVERSION=	3.7.0
 CATEGORIES=	graphics
 
 MAINTAINER=	000.fbsd@quip.cz
 COMMENT?=	PHP wrapper to the ImageMagick/GraphicsMagick library version 6
+WWW=		https://pecl.php.net/package/imagick
 
 LICENSE=	PHP301
 

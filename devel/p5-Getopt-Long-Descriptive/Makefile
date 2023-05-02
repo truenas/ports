@@ -1,7 +1,5 @@
-# Created by: Lars Balker Rasmussen <lbr@FreeBSD.org>
-
 PORTNAME=	Getopt-Long-Descriptive
-PORTVERSION=	0.110
+PORTVERSION=	0.111
 CATEGORIES=	devel perl5
 MASTER_SITES=	CPAN
 MASTER_SITE_SUBDIR=	CPAN:RJBS
@@ -9,6 +7,7 @@ PKGNAMEPREFIX=	p5-
 
 MAINTAINER=	perl@FreeBSD.org
 COMMENT=	Getopt::Long with usage text
+WWW=		https://metacpan.org/release/Getopt-Long-Descriptive
 
 LICENSE=	ART10 GPLv1+
 LICENSE_COMB=	dual

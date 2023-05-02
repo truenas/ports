@@ -1,18 +1,17 @@
-# Created by: db
-
 PORTNAME=	ephem
-PORTVERSION=	4.1.2
+PORTVERSION=	4.1.4
 CATEGORIES=	astro math python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	rhurlin@FreeBSD.org
 COMMENT=	Compute positions of the planets and stars
+WWW=		https://pypi.org/project/ephem/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USES=		python:3.7+ # Because of UnicodeDecodeError in ascii.py
+USES=		python:3.7+
 USE_PYTHON=	autoplist distutils
 
 post-install:

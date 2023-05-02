@@ -1,14 +1,13 @@
-# Created by: Dmitry Sivachenko <demon@FreeBSD.org>
-
 PORTNAME=	jabberd
 PORTVERSION=	2.7.0
-PORTREVISION=	4
+PORTREVISION=	5
 CATEGORIES=	net-im
 MASTER_SITES=	https://github.com/jabberd2/jabberd2/releases/download/${PORTNAME}-${DISTVERSION}/ \
 		LOCAL/matthew/${PORTNAME}
 
 MAINTAINER=	mm@FreeBSD.org
 COMMENT=	Online presence and instant messaging server
+WWW=		https://jabberd2.org/
 
 LICENSE=	GPLv2
 
@@ -76,12 +75,13 @@ SQLITE_LIB_DEPENDS=	libsqlite3.so:databases/sqlite3
 
 MYSQL_USES=		mysql
 MYSQL_CONFIGURE_ENABLE=	mysql
+MYSQL_VARS=	IGNORE_WITH_MYSQL=80
 
 BDB_USES=		bdb
 BDB_CONFIGURE_ENABLE=	db
 BDB_CONFIGURE_ON=	--oldincludedir=/nonexistant
 
-LDAP_USE=		OPENLDAP=yes
+LDAP_USES=		ldap
 LDAP_CONFIGURE_ENABLE=	ldap
 
 FS_CONFIGURE_ENABLE=	fs

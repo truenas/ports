@@ -1,21 +1,18 @@
-# Created by: Bob Bomar <bob@fly.homeunix.org>
-
 PORTNAME=	phpsysinfo
 DISTVERSIONPREFIX=	v
-DISTVERSION=	3.3.4
+DISTVERSION=	3.4.2
 CATEGORIES=	www
 
 MAINTAINER=	tremere@cainites.net
 COMMENT=	PHP script for displaying system information
+WWW=		https://phpsysinfo.github.io/phpsysinfo/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-USES=		cpe php:web shebangfix
+USES=		cpe php:web
 USE_GITHUB=	yes
-USE_PHP=	dom mbstring pcre simplexml xml
-
-SHEBANG_FILES=	tools/check.sh
+USE_PHP=	dom mbstring simplexml xml
 
 NO_ARCH=	yes
 NO_BUILD=	yes

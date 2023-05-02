@@ -1,13 +1,12 @@
-# Created by: Steve Wills <swills@FreeBSD.org>
-
 PORTNAME=	sprockets-rails
-PORTVERSION=	3.4.0
+PORTVERSION=	3.4.2
 CATEGORIES=	devel rubygems
 MASTER_SITES=	RG
 PKGNAMESUFFIX=	-rails60
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Sprockets Rails integration
+WWW=		https://github.com/rails/sprockets-rails
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/MIT-LICENSE
@@ -17,7 +16,6 @@ RUN_DEPENDS=	rubygem-actionpack60>=5.2:www/rubygem-actionpack60 \
 		rubygem-sprockets3>=3.0.0:devel/rubygem-sprockets3
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

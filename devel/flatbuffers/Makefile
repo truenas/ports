@@ -1,17 +1,17 @@
-# Created by: Yuri Victorovich <yuri@rawbw.com>
-
 PORTNAME=	flatbuffers
 DISTVERSIONPREFIX=	v
-DISTVERSION=	2.0.0
+DISTVERSION=	23.3.3
+PORTEPOCH=	1
 CATEGORIES=	devel
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Memory efficient serialization library
+WWW=		https://flatbuffers.dev/
 
 LICENSE=	APACHE20
-LICENSE_FILE=	${WRKSRC}/LICENSE.txt
+LICENSE_FILE=	${WRKSRC}/LICENSE
 
-USES=		cmake compiler:c++11-lib cpe
+USES=		cmake:testing compiler:c++14-lang cpe python:build
 CPE_VENDOR=	google
 USE_LDCONFIG=	yes
 
@@ -20,11 +20,8 @@ GH_ACCOUNT=	google
 
 CMAKE_ON=	FLATBUFFERS_BUILD_SHAREDLIB
 CMAKE_OFF=	FLATBUFFERS_BUILD_FLATLIB FLATBUFFERS_BUILD_TESTS
+CMAKE_TESTING_ON=	FLATBUFFERS_BUILD_TESTS # one test fails, see https://github.com/google/flatbuffers/issues/7009 and https://github.com/google/flatbuffers/issues/7556
 
-do-test:
-	@cd ${BUILD_WRKSRC} && \
-		${SETENV} ${CONFIGURE_ENV} ${CMAKE_BIN} ${CMAKE_ARGS} -DFLATBUFFERS_BUILD_TESTS:BOOL=ON ${CMAKE_SOURCE_PATH} && \
-		${SETENV} ${MAKE_ENV} ${MAKE_CMD} ${MAKE_ARGS} ${ALL_TARGET} && \
-		${SETENV} ${MAKE_ENV} ${MAKE_CMD} ${MAKE_ARGS} ${TEST_TARGET}
+BINARY_ALIAS=	git=false python3=${PYTHON_CMD}
 
 .include <bsd.port.mk>

@@ -1,11 +1,12 @@
 PORTNAME=	mpc-qt
 DISTVERSIONPREFIX=	v
-DISTVERSION=	20.10
+DISTVERSION=	23.02
 PORTREVISION=	1
 CATEGORIES=	multimedia audio
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	Qt 5 clone of Media Player Classic based on libmpv
+WWW=		https://github.com/mpc-qt/mpc-qt
 
 LICENSE=	GPLv2
 
@@ -15,8 +16,9 @@ LIB_DEPENDS=	libmpv.so:multimedia/mpv
 USES=		compiler:c++14-lang desktop-file-utils gl pkgconfig qmake qt:5
 USE_GITHUB=	yes
 USE_GL=		gl
-USE_QT=		qmake_build buildtools_build linguisttools_build \
-		core dbus gui network svg_run widgets x11extras
+USE_QT=		qmake:build buildtools:build linguisttools:build \
+		core dbus gui network svg:run widgets x11extras
+QMAKE_ARGS=	MPCQT_VERSION="${DISTVERSION}${DISTVERSIONSUFFIX}"
 
 OPTIONS_DEFINE=	DOCS
 

@@ -1,10 +1,12 @@
 PORTNAME=	alkimia
-PORTVERSION=	8.1.0
+PORTVERSION=	8.1.1
+PORTREVISION=	1
 CATEGORIES=	finance kde
 MASTER_SITES=	KDE/stable/${PORTNAME}/${PORTVERSION}
 
 MAINTAINER=	jhale@FreeBSD.org
 COMMENT=	KDE financial data handling library
+WWW=		https://community.kde.org/Alkimia/libalkimia
 
 LICENSE=	LGPL21+
 LICENSE_FILE=	${WRKSRC}/COPYING.LIB
@@ -16,16 +18,17 @@ RUN_DEPENDS=	p5-Date-Manip>=0:devel/p5-Date-Manip \
 		p5-libwww>=0:www/p5-libwww
 
 USES=		cmake compiler:c++11-lang kde:5 pathfix perl5 qt:5 \
-		shebangfix tar:xz
+		shebangfix tar:xz xorg
 USE_LDCONFIG=	yes
 USE_KDE=	attica auth codecs completion config configwidgets coreaddons \
-		i18n iconthemes jobwidgets kio newstuff service sonnet \
-		textwidgets widgetsaddons windowsystem xmlgui ecm_build
+		i18n iconthemes jobwidgets kio newstuff service solid sonnet \
+		textwidgets widgetsaddons windowsystem xmlgui ecm:build
 USE_PERL5=	run
 USE_QT=		concurrent core dbus declarative gui network widgets xml \
-		buildtools_build qmake_build
+		buildtools:build qmake:build
+USE_XORG=	x11
 
-CMAKE_OFF=	BUILD_DOXYGEN_DOCS
+CMAKE_ON=	CMAKE_DISABLE_FIND_PACKAGE_Doxygen
 
 PLIST_SUB=	VER=${PORTVERSION:R}
 SHEBANG_FILES=	src/financequote.pl
@@ -58,7 +61,7 @@ TOOLS_DESC=		Build tools
 TOOLS_CMAKE_BOOL=	BUILD_TOOLS
 
 WEBENGINE_DESC=		Qt Web Engine support
-WEBENGINE_USE=		QT=webengine
+WEBENGINE_USE=		QT=location,printsupport,webchannel,webengine
 WEBENGINE_CMAKE_BOOL=	BUILD_WITH_WEBENGINE
 
 WEBKIT_DESC=		Qt WebKit support

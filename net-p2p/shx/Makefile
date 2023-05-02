@@ -1,5 +1,3 @@
-# Created by: Devin Teske <dteske@FreeBSD.org>
-
 PORTNAME=	shx
 PORTVERSION=	0.2.4
 PORTREVISION=	2
@@ -11,6 +9,7 @@ PATCHFILES=	${DISTNAME}.diff.gz
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Text based Hotline Communications client for Unix
+WWW=		http://synhxd.sourceforge.net/
 
 LICENSE=	GPLv1
 
@@ -32,6 +31,8 @@ MAKEFILE=	makefile
 GNU_CONFIGURE=	yes
 CFLAGS+=	-I${OPENSSLINC}
 LDFLAGS+=	-L${OPENSSLLIB}
+
+CONFLICTS_INSTALL=	helix # bin/hx
 
 CIPHER_IMPLIES=			HOPE
 COMPRESS_IMPLIES=		HOPE

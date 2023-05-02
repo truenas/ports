@@ -1,11 +1,10 @@
-# Created by: Marcel Kaiser <mk@nic-nac-project.org>
-
 PORTNAME=	dsbdriverd
 PORTVERSION=	1.1
 CATEGORIES=	sysutils
 
 MAINTAINER=	mk@nic-nac-project.org
 COMMENT=	Hardware detecting, device driver loading daemon
+WWW=		https://github.com/mrclksr/DSBDriverd
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

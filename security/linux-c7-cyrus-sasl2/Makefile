@@ -1,14 +1,13 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	cyrus-sasl
 PORTVERSION=	2.1.26
-DISTVERSIONSUFFIX=	-23.el7
-PORTREVISION=	4
+DISTVERSIONSUFFIX=	-24.el7_9
+PORTREVISION=	5
 CATEGORIES=	security linux
 PKGNAMESUFFIX=	-lib
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	RFC 2222 SASL (Simple Authentication and Security Layer) (Linux CentOS ${LINUX_DIST_VER})
+WWW=		https://www.cyrusimap.org/sasl/
 
 USES=		linux:c7
 USE_LDCONFIG=	yes

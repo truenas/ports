@@ -1,13 +1,12 @@
-# Created by: Piotr Kubaj <pkubaj@anongoth.pl>
-
 PORTNAME=	libxml2
 PORTVERSION=	2.9.1
-DISTVERSIONSUFFIX=	-6.el7.5
-PORTREVISION=	3
+DISTVERSIONSUFFIX=	-6.el7_9.6
+PORTREVISION=	4
 CATEGORIES=	textproc linux
 
 MAINTAINER=	emulation@FreeBSD.org
 COMMENT=	Library providing XML and HTML support (Linux CentOS ${LINUX_DIST_VER})
+WWW=		http://xmlsoft.org/
 
 LICENSE=	MIT
 

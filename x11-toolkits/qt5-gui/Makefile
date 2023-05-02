@@ -1,6 +1,6 @@
 PORTNAME=	gui
-DISTVERSION=	${QT5_VERSION}
-PORTREVISION=	7
+PORTVERSION=	${QT5_VERSION}${QT5_KDE_PATCH}
+PORTREVISION=	1
 CATEGORIES=	x11-toolkits graphics
 PKGNAMEPREFIX=	qt5-
 
@@ -29,14 +29,14 @@ LIB_DEPENDS=	libdbus-1.so:devel/dbus \
 		libxcb.so:x11/libxcb \
 		libxkbcommon.so:x11/libxkbcommon
 RUN_DEPENDS=	${LOCALBASE}/include/vulkan/vulkan.h:graphics/vulkan-headers \
-		${LOCALBASE}/libdata/pkgconfig/dri.pc:graphics/mesa-dri \
 		xdg-open:devel/xdg-utils
 
 USES=			compiler:c++11-lang gl gnome jpeg localbase \
-			qmake:no_env qt-dist:5,base
+			perl5 qmake:no_env qt-dist:5,base
 USE_GL=			egl gl
 USE_GNOME=		glib20
-USE_QT=			core dbus network buildtools_build qmake_build
+USE_PERL5=		extract
+USE_QT=			core dbus network buildtools:build qmake:build
 QT_BINARIES=		yes
 QT_CONFIG=		accessibility accessibility-atspi-bridge dbus \
 			fontconfig glib opengl png system-freetype system-jpeg \

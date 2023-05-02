@@ -1,13 +1,13 @@
-# Created by: Olivier Cochard-Labbe <olivier@FreeBSD.org>
-
 PORTNAME=	deforaos-browser
 PORTVERSION=	0.5.1
+PORTREVISION=	1
 CATEGORIES=	x11-fm
 MASTER_SITES=	http://www.defora.org/os/download/download/4442/
 DISTNAME=	Browser-${PORTVERSION}
 
 MAINTAINER=	olivier@FreeBSD.org
 COMMENT=	DeforaOS desktop file browser
+WWW=		https://www.defora.org/
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -31,6 +31,7 @@ USE_LDCONFIG=	yes
 MAKE_ARGS+=	PREFIX=${PREFIX}
 MAKE_ENV+=	MANDIR=${STAGEDIR}${MANPREFIX}/man
 
+CONFLICTS_INSTALL=	schilyutils silo # bin/browser bin/copy
 post-patch:
 	${REINPLACE_CMD} -e 's|/lib/|/libdata/|g' \
 		${WRKSRC}/data/pkgconfig.sh

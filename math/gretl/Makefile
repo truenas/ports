@@ -1,12 +1,12 @@
-# Created by: ijliao
-
 PORTNAME=	gretl
-PORTVERSION=	2021d
+PORTVERSION=	2023a
+PORTREVISION=	1
 CATEGORIES=	math finance
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}/${DISTVERSIONFULL}/
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	GNU Regression, Econometrics, and Time-series Library
+WWW=		http://gretl.sourceforge.net/
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -20,8 +20,10 @@ LIB_DEPENDS=	libcurl.so:ftp/curl \
 
 USES=		compiler:c11 fortran gmake gnome localbase libtool ncurses \
 		pathfix pkgconfig readline tar:xz
-GNU_CONFIGURE=	yes
+USE_WX=		3.0
 USE_LDCONFIG=	yes
+
+GNU_CONFIGURE=	yes
 
 BINARY_ALIAS=	make=${GMAKE}
 ALL_TARGET=	# empty
@@ -37,7 +39,8 @@ OPTIONS_SUB=		yes
 
 ADDONS_DESC=		Build gretl addons
 ADDONS_CONFIGURE_ENABLE=	build-addons
-ADDONS_VARS=		USE_TEX="formats dvipsk:build"
+ADDONS_USES=		tex
+ADDONS_USE=			TEX=formats,dvipsk:build
 
 ATLAS_DESC=		Use ATLAS for BLAS and LAPACK
 ATLAS_LIB_DEPENDS=	libatlas.so:math/atlas
@@ -99,7 +102,13 @@ regression-test test check: build
 		${MAKE_ARGS} check
 
 post-install:
-	@${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/gretl-*/*.so
+	# strip
+	@${STRIP_CMD} \
+		${STAGEDIR}${PREFIX}/bin/gretlcli \
+		${STAGEDIR}${PREFIX}/bin/gretl_x11 \
+		${STAGEDIR}${PREFIX}/lib/libgretl-1.0.so.* \
+		${STAGEDIR}${PREFIX}/lib/gretl-gtk3/*.so
+	# rm doc
 	@${RMDIR} ${STAGEDIR}${DATADIR}/doc
 
 .include <bsd.port.mk>

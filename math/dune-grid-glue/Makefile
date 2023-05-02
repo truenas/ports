@@ -1,11 +1,11 @@
 PORTNAME=	dune-grid-glue
-DISTVERSIONPREFIX=	v
-DISTVERSION=	2.7.0.20201113
-PORTREVISION=	1
+DISTVERSION=	2.8.0
+PORTREVISION=	4
 CATEGORIES=	math
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	DUNE framework: infrastructure for coupling of unrelated Dune grids
+WWW=		https://www.dune-project.org/
 
 LICENSE=	GPLv2
 
@@ -28,7 +28,7 @@ USE_LDCONFIG=	yes
 
 GL_SITE=	https://gitlab.dune-project.org
 GL_ACCOUNT=	extensions
-GL_COMMIT=	17bd9898df80a52e2c316fc053119d190c149a2e
+GL_COMMIT=	22efb0e3cbf0a75094a8d81a4fdd352c98e78947
 
 CMAKE_ON=	BUILD_SHARED_LIBS
 CMAKE_ARGS=	-DTBB_INCLUDE_DIR=${LOCALBASE}/include -DTBB_LIBRARIES=${LOCALBASE}/lib/libtbb.so

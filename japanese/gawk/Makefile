@@ -1,5 +1,3 @@
-# Created by: Nobuhiro Yasutomi <nobu@psrc.isac.co.jp>
-
 PORTNAME=	gawk
 PORTVERSION=	3.0.6
 PORTREVISION=	1
@@ -18,6 +16,8 @@ LICENSE=	GPLv2
 GNU_CONFIGURE=	yes
 CONFIGURE_ARGS=	--enable-bitops --enable-non-decimal-data
 MAKE_JOBS_UNSAFE=	yes
+
+CONFLICTS_INSTALL=	gawk # bin/gawk
 
 DOCSDIR=	${PREFIX}/share/doc/${PKGBASE}
 

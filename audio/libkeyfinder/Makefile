@@ -1,10 +1,11 @@
 PORTNAME=	libkeyfinder
-PORTVERSION=	2.2.4
+PORTVERSION=	2.2.6
 DISTVERSIONPREFIX=	v
 CATEGORIES=	audio
 
 MAINTAINER=	acm@FreeBSD.org
 COMMENT=	Small C++11 library for estimating the musical key of digital audio
+WWW=		https://github.com/mixxxdj/libkeyfinder
 
 LICENSE=	GPLv3
 

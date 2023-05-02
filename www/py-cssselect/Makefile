@@ -1,30 +1,28 @@
-# Created by: Nicola Vitale <nivit@FreeBSD.org>
-
 PORTNAME=	cssselect
-PORTVERSION=	1.1.0
+PORTVERSION=	1.2.0
 PORTREVISION=	0
 CATEGORIES=	www python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	nivit@FreeBSD.org
 COMMENT=	Cssselect parses CSS3 Selectors and translates them to XPath 1.0
+WWW=		https://github.com/scrapy/cssselect
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
 USES=		python:3.6+
-USE_PYTHON=	distutils autoplist
+USE_PYTHON=	autoplist distutils
 
+DOCSDIR=	${PREFIX}/share/doc/${PKGNAMEPREFIX}${PORTNAME}
 NO_ARCH=	yes
+
+PORTDOCS=	*
 
 OPTIONS_DEFINE=	DOCS
 
 DOCS_BUILD_DEPENDS=	${PYTHON_PKGNAMEPREFIX}sphinx>=0,1:textproc/py-sphinx@${PY_FLAVOR}
-
-DOCSDIR=	${PREFIX}/share/doc/${PKGNAMEPREFIX}${PORTNAME}
-
-PORTDOCS=	*
 
 post-build-DOCS-on:
 	(cd ${WRKSRC} && \

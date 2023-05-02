@@ -6,8 +6,9 @@ DISTNAME=	flex_sdk_${PORTVERSION}_mpl
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Adobe Flex SDK
+WWW=		http://opensource.adobe.com/wiki/display/flexsdk/Flex+4
 
-CONFLICTS=	ja-flex-sdk-2.* flex-sdk2-2.* flex-sdk3-3.*
+CONFLICTS=	flex-sdk3
 USES=		zip
 USE_JAVA=	yes
 SUB_FILES=	${SCRIPTS:C/\$/.sh/g}

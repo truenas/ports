@@ -1,3 +1,5 @@
-TIMESTAMP = 1634653444
-SHA256 (Librem5-feedbackd-8e9bbd9d4ccc092a1f8b37551b7cdf2c32b5f8b8_GL0.tar.gz) = 40cb77294faffec6523f760fe7a885f2cc1b9019127f0d342fbeb9b368f7b6e7
-SIZE (Librem5-feedbackd-8e9bbd9d4ccc092a1f8b37551b7cdf2c32b5f8b8_GL0.tar.gz) = 81788
+TIMESTAMP = 1677701315
+SHA256 (Librem5-feedbackd-2db8a72ef9432f80894eb5b36ce1e667496a931b_GL0.tar.gz) = d4df989ed120b83d832b8acda280cfd9a2a2f8c0ae03e0fa4bb5eb9a73e06a94
+SIZE (Librem5-feedbackd-2db8a72ef9432f80894eb5b36ce1e667496a931b_GL0.tar.gz) = 94498
+SHA256 (guidog-gmobile-ff854988bff80f2d4c1181ccf3c94b032603b6f9_GL0.tar.gz) = 71faa5e30a363e7abb6c38e335f00b425288995033dedeeb1e4573474269c6a1
+SIZE (guidog-gmobile-ff854988bff80f2d4c1181ccf3c94b032603b6f9_GL0.tar.gz) = 22316

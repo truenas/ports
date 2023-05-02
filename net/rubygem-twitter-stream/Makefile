@@ -1,5 +1,3 @@
-# Created by: TAKATSU Tomonari <tota@FreeBSD.org>
-
 PORTNAME=	twitter-stream
 PORTVERSION=	0.1.16
 PORTREVISION=	2
@@ -8,6 +6,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	ruby@FreeBSD.org
 COMMENT=	Twitter realtime API client
+WWW=		https://github.com/voloko/twitter-stream
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -17,7 +16,6 @@ RUN_DEPENDS=	rubygem-eventmachine>=0.12.8:devel/rubygem-eventmachine \
 		rubygem-simple_oauth>=0.1.4:net/rubygem-simple_oauth
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

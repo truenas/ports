@@ -1,14 +1,13 @@
-# Created by: Dmitry Pryadko <d.pryadko@rambler-co.ru>
-
 PORTNAME=	publicsuffix
 PORTVERSION=	1.1.0
-PORTREVISION=	46
+PORTREVISION=	62
 CATEGORIES=	dns python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	d.pryadko@rambler-co.ru
 COMMENT=	Get public suffix of domain name from Public Suffix List
+WWW=		https://pypi.org/project/publicsuffix/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE

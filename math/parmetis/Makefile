@@ -1,19 +1,20 @@
-# Created by: Eoin Lawless (eoin@maths.tcd.ie)
-
 PORTNAME=	ParMetis
 PORTVERSION=	4.0.3
-PORTREVISION=	7
+PORTREVISION=	8
 CATEGORIES=	math parallel
 MASTER_SITES=	http://glaros.dtc.umn.edu/gkhome/fetch/sw/parmetis/
 DISTNAME=	${PORTNAME:tl}-${PORTVERSION}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Package for parallel (MPI) unstructured graph partitioning
+WWW=		http://glaros.dtc.umn.edu/gkhome/metis/parmetis/overview
 
 LICENSE=	METIS
 LICENSE_NAME=	University of Minnesota METIS License
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 LICENSE_PERMS=	auto-accept
+
+BROKEN=		does not fetch
 
 USES=		cmake:insource,noninja gmake
 USE_LDCONFIG=	${PREFIX}/lib/parmetis
@@ -78,6 +79,7 @@ do-install:
 	cd ${STAGEDIR}${PREFIX}/lib/parmetis &&	\
 		${LN} -sf libmetis.so.2 ${STAGEDIR}${PREFIX}/lib/parmetis/libmetis.so && \
 		${LN} -sf libparmetis.so.2 ${STAGEDIR}${PREFIX}/lib/parmetis/libparmetis.so
+	${STRIP_CMD} ${STAGEDIR}${PREFIX}/lib/parmetis/libmetis.so.2
 .endif
 	${MKDIR} ${STAGEDIR}${DOCSDIR}
 	${INSTALL_DATA} ${WRKSRC}/manual/manual.pdf ${STAGEDIR}${DOCSDIR}

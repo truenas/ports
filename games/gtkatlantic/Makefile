@@ -1,7 +1,6 @@
-# Created by: Michael Johnson <ahze@FreeBSD.org>
-
 PORTNAME=	gtkatlantic
 DISTVERSION=	0.6.3
+PORTREVISION=	3
 CATEGORIES=	games
 MASTER_SITES=	http://download.tuxfamily.org/gtkatlantic/downloads/v${PORTVERSION:R}/ \
 		SF/nemysisfreebsdp/${CATEGORIES}/:icons
@@ -10,6 +9,7 @@ DISTFILES=	${PORTNAME}-${DISTVERSION}${EXTRACT_SUFX} \
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Game like Monopoly(tm)
+WWW=		https://gtkatlantic.gradator.net/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

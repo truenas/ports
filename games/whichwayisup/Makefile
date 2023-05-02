@@ -1,8 +1,6 @@
-# Created by: Andrew Pantyukhin <infofarmer@FreeBSD.org>
-
 PORTNAME=	whichwayisup
 PORTVERSION=	0.7.9
-PORTREVISION=	11
+PORTREVISION=	13
 CATEGORIES=	games python
 MASTER_SITES=	http://www.oletus.fi/static/whichwayisup/ \
 		SF/nemysisfreebsdp/games/${PORTNAME}/:icons
@@ -13,6 +11,7 @@ EXTRACT_ONLY=	${PORTNAME}_b${DISTVERSION:S/.//g}${EXTRACT_SUFX}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Platformer game with rotational twist
+WWW=		https://www.oletus.fi/static/whichwayisup/
 
 LICENSE=	GPLv2
 

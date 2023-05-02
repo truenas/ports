@@ -1,13 +1,12 @@
-# Created by: Yuri Victorovich <yuri@rawbw.com>
-
 PORTNAME=	nose-cov
 PORTVERSION=	1.6
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	yuri@FreeBSD.org
 COMMENT=	Nose plugin for coverage reporting
+WWW=		https://pypi.org/project/nose-cov/
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt

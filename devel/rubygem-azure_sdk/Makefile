@@ -1,5 +1,3 @@
-# Created by: Po-Chuan Hsieh <sunpoet@FreeBSD.org>
-
 PORTNAME=	azure_sdk
 PORTVERSION=	0.73.0
 CATEGORIES=	devel rubygems
@@ -7,6 +5,7 @@ MASTER_SITES=	RG
 
 MAINTAINER=	sunpoet@FreeBSD.org
 COMMENT=	Microsoft Azure SDK - Azure Client Library for Ruby
+WWW=		https://github.com/Azure/azure-sdk-for-ruby
 
 LICENSE=	MIT
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -153,7 +152,6 @@ RUN_DEPENDS=	rubygem-azure-storage>=0.15.0.preview<0.15:devel/rubygem-azure-stor
 		rubygem-azure_service_fabric>=0.18.1<0.19:devel/rubygem-azure_service_fabric
 
 USES=		gem
-USE_RUBY=	yes
 
 NO_ARCH=	yes
 

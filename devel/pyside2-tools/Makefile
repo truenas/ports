@@ -1,6 +1,6 @@
 PORTNAME=	pyside2-tools
 DISTVERSION=	5.15.2
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	devel
 MASTER_SITES=	QT/official_releases/QtForPython/shiboken2/PySide2-${DISTVERSION}-src
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
@@ -8,6 +8,7 @@ DISTNAME=	pyside-setup-opensource-src-${DISTVERSION}
 
 MAINTAINER=	kde@FreeBSD.org
 COMMENT=	Pyside2 development tools
+WWW=		https://wiki.qt.io/Qt_for_Python
 
 LICENSE=	BSD3CLAUSE GPLv2
 LICENSE_COMB=	multi
@@ -22,7 +23,7 @@ USE_GL=		gl
 USE_PYTHON=	flavors
 USE_QT=		3d buildtools charts core datavis3d declarative \
 		designer gui help location multimedia network opengl \
-		printsupport qmake_build script scripttools scxml sensors \
+		printsupport qmake:build script scripttools scxml sensors \
 		speech sql svg testlib uitools webchannel \
 		websockets widgets x11extras xml xmlpatterns
 
@@ -30,14 +31,21 @@ SHEBANG_FILES=	pyside_tool.py
 
 CMAKE_ARGS+=	"-DUSE_PYTHON_VERSION=${PYTHON_VER}"
 
-.include <bsd.port.pre.mk>
-
 WRKSRC=		${WRKDIR}/pyside-setup-opensource-src-${DISTVERSION:C/^([0-9].[0-9]+.[0-9])(.[0-9])?/\1/}/sources/pyside2-tools
 
-.if ${ARCH} == amd64 || ${ARCH} == i386
-DEPRECATED=	Uses EOL Python 2.7 via www/qt5-webengine
-EXPIRATION_DATE=2021-06-23
+OPTIONS_DEFINE_i386=	WEBENGINE
+OPTIONS_DEFINE_amd64=	WEBENGINE
+OPTIONS_DEFAULT_i386=	WEBENGINE
+OPTIONS_DEFAULT_amd64=	WEBENGINE
+
+WEBENGINE_DESC=	Enable QtWebEngine support
+
+.include <bsd.port.options.mk>
+
+.if ${PORT_OPTIONS:MWEBENGINE}
 USE_QT+=	webengine
+.else
+CMAKE_ARGS+=	-DDISABLE_QtWebEngine:BOOL=TRUE
 .endif
 
-.include <bsd.port.post.mk>
+.include <bsd.port.mk>

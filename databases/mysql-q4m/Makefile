@@ -1,14 +1,16 @@
-# Created by: Akinori MUSHA aka knu <knu@idaemons.org>
-
 PORTNAME=	q4m
 PORTVERSION=	0.9.14
-PORTREVISION=	5
+PORTREVISION=	6
 CATEGORIES=	databases
 MASTER_SITES=	http://q4m.kazuhooku.com/dist/
 PKGNAMEPREFIX=	${_MYSQL_SERVER:T:C/-server$/-/}
 
 MAINTAINER=	ports@FreeBSD.org
 COMMENT=	Message queue that works as a pluggable storage engine of MySQL
+WWW=		http://q4m.github.com/
+
+DEPRECATED=	Requires upstream EOL MySQL 5.6
+EXPIRATION_DATE=	2023-06-30
 
 FETCH_DEPENDS+=	${NONEXISTENT}:${_MYSQL_SERVER}:fetch
 BUILD_DEPENDS+=	${NONEXISTENT}:${_MYSQL_SERVER}:build

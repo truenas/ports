@@ -1,5 +1,3 @@
-# Created by: samm@freebsd.org
-
 PORTNAME=	libunrar
 PORTVERSION=	3.9.10
 PORTEPOCH=	1
@@ -9,10 +7,14 @@ DISTNAME=	unrarsrc-${PORTVERSION}
 
 MAINTAINER=	samm@FreeBSD.org
 COMMENT=	Library to work with RAR archives
+WWW=		https://www.rarsoft.com/
 
 WRKSRC=		${WRKDIR}/unrar
 
 USES=		gmake
+
+CONFLICTS_INSTALL=	libunrar6 # lib/libunrar.so
+
 MAKEFILE=	makefile.unix
 ALL_TARGET=	lib
 USE_LDCONFIG=	yes

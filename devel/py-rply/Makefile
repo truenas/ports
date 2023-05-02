@@ -1,13 +1,12 @@
-# Created by: David Kalliecharan <dave@dal.ca>
-
 PORTNAME=	rply
 PORTVERSION=	0.7.7
 CATEGORIES=	devel python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	dave@dal.ca
 COMMENT=	Pure python parser generator, that also works with RPython
+WWW=		https://github.com/alex/rply
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

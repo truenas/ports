@@ -1,13 +1,12 @@
-# Created by: Andre Rikkert de Koe - ARK-ICT <andre@ark-ict.nl>
-
 PORTNAME=	gitlist
-DISTVERSION=	1.0.2
+DISTVERSION=	1.1.1
 CATEGORIES=	devel www
 MASTER_SITES=	https://github.com/klaussilveira/gitlist/releases/download/${DISTVERSION}/ \
 		https://freebsd.ark-ict.nl/ports/
 
 MAINTAINER=	freebsd-ports@misc.ark-ict.nl
 COMMENT=	Web based Git repository browser written in PHP
+WWW=		https://gitlist.org
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.txt
@@ -15,11 +14,11 @@ LICENSE_FILE=	${WRKSRC}/LICENSE.txt
 RUN_DEPENDS=	git:devel/git
 
 NO_BUILD=	yes
-USES=		cpe php:web
-USE_PHP=	ctype hash json simplexml
+USES=		cpe php:web zip
+USE_PHP=	ctype simplexml
 
 PLIST=		${WRKDIR}/plist
-WRKSRC=		${WRKDIR}/${PORTNAME}
+NO_WRKSUBDIR=	yes
 
 USERS?=		${WWWOWN}
 GROUPS?=	${WWWGRP}
@@ -30,6 +29,7 @@ post-patch:
 	cd ${WRKSRC}; \
 	${REINPLACE_CMD} -e 's|/usr/bin/git|/usr/local/bin/git|g' config.ini-example; \
 	${FIND} . ! -type d | ${SORT} | ${SED} -e "s,^\.,%%WWWDIR%%," > ${PLIST};
+	${ECHO} "@dir(${WWWOWN},${WWWGRP},) %%WWWDIR%%/vendor/twig/twig/doc" >> ${PLIST}
 	${ECHO} "@dir(${WWWOWN},${WWWGRP},) %%WWWDIR%%/cache" >> ${PLIST}
 
 do-install:

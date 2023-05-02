@@ -1,13 +1,13 @@
-# Created by: Gerald Pfeifer <gerald@FreeBSD.org>
-
 PORTNAME=	gcc
-PORTVERSION=	10.3.0
+PORTVERSION=	10.4.0
+PORTREVISION=	1
 CATEGORIES=	lang
 MASTER_SITES=	GCC
 PKGNAMESUFFIX=	${SUFFIX}
 
-MAINTAINER=	gerald@FreeBSD.org
+MAINTAINER=	salvadore@FreeBSD.org
 COMMENT=	GNU Compiler Collection 10
+WWW=		https://gcc.gnu.org
 
 LICENSE=	GPLv3 GPLv3RLE
 LICENSE_COMB=	multi
@@ -27,7 +27,7 @@ USES=		compiler cpe gmake iconv libtool makeinfo perl5 tar:xz
 USE_BINUTILS=	yes
 USE_PERL5=	build
 
-CONFLICTS=	gcc10-devel-10.*
+CONFLICTS=	gcc10-devel
 
 CPE_VENDOR=	gnu
 
@@ -45,7 +45,7 @@ GRAPHITE_DESC=		Support for Graphite loop optimizations
 OPTIONS_DEFINE_amd64+=		MULTILIB
 OPTIONS_DEFAULT_amd64+=	MULTILIB
 OPTIONS_DEFINE_powerpc64+=	MULTILIB
-OPTIONS_DEFAULT_powerpc64+=	MULTILIB
+#OPTIONS_DEFAULT_powerpc64+=	MULTILIB # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105010
 MULTILIB_DESC=		Build support for 32-bit and 64-bit targets
 MULTILIB_CONFIGURE_ENABLE=	multilib
 .else
@@ -77,6 +77,7 @@ CONFIGURE_ARGS+=--disable-bootstrap
 .else
 CONFIGURE_ARGS+=--with-build-config=bootstrap-debug
 ALL_TARGET=	bootstrap-lean
+PIE_UNSAFE=    yes
 .endif
 INSTALL_TARGET=	install-strip
 .if ${UID} != 0

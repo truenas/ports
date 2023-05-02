@@ -1,12 +1,12 @@
-# Created by: Adam Weinberger <adamw@FreeBSD.org>
-
 PORTNAME=	libcroco
 PORTVERSION=	0.6.13
+PORTREVISION=	2
 CATEGORIES=	textproc gnome
 MASTER_SITES=	GNOME
 
 MAINTAINER=	desktop@FreeBSD.org
 COMMENT=	CSS2 parsing library
+WWW=		http://www.freespiders.org/projects/libcroco/
 
 LICENSE=	LGPL21
 

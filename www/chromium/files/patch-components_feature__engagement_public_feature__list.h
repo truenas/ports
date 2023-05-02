@@ -1,38 +1,40 @@
---- components/feature_engagement/public/feature_list.h.orig	2021-09-24 04:26:03 UTC
+--- components/feature_engagement/public/feature_list.h.orig	2023-04-05 11:05:06 UTC
 +++ components/feature_engagement/public/feature_list.h
-@@ -176,7 +176,7 @@ DEFINE_VARIATION_PARAM(kIPHDiscoverFeedHeaderFeature,
-                        "IPH_DiscoverFeedHeaderMenu");
- #endif  // defined(OS_IOS)
+@@ -233,7 +233,7 @@ DEFINE_VARIATION_PARAM(kIPHiOSAppStorePromoFeature, "I
+ #endif  // BUILDFLAG(IS_IOS)
  
--#if defined(OS_WIN) || defined(OS_APPLE) || defined(OS_LINUX) || \
-+#if defined(OS_WIN) || defined(OS_APPLE) || defined(OS_LINUX) || defined(OS_BSD) || \
-     defined(OS_CHROMEOS) || defined(OS_FUCHSIA)
+ #if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_LINUX) || \
+-    BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_FUCHSIA)
++    BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_FUCHSIA) || BUILDFLAG(IS_BSD)
+ DEFINE_VARIATION_PARAM(kIPHBatterySaverModeFeature, "IPH_BatterySaverMode");
  DEFINE_VARIATION_PARAM(kIPHDesktopTabGroupsNewGroupFeature,
                         "IPH_DesktopTabGroupsNewGroup");
-@@ -196,7 +196,7 @@ DEFINE_VARIATION_PARAM(kIPHDesktopPwaInstallFeature, "
- DEFINE_VARIATION_PARAM(kIPHProfileSwitchFeature, "IPH_ProfileSwitch");
- DEFINE_VARIATION_PARAM(kIPHUpdatedConnectionSecurityIndicatorsFeature,
-                        "IPH_UpdatedConnectionSecurityIndicators");
--#endif  // defined(OS_WIN) || defined(OS_APPLE) || defined(OS_LINUX) ||
-+#endif  // defined(OS_WIN) || defined(OS_APPLE) || defined(OS_LINUX) || defined(OS_BSD) ||
-         // defined(OS_CHROMEOS) || defined(OS_FUCHSIA)
+@@ -279,7 +279,8 @@ DEFINE_VARIATION_PARAM(kIPHPriceTrackingInSidePanelFea
+         // BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_FUCHSIA)
  
- }  // namespace
-@@ -284,7 +284,7 @@ constexpr flags_ui::FeatureEntry::FeatureVariation
-         VARIATION_ENTRY(kIPHReadingListMessagesFeature),
-         VARIATION_ENTRY(kIPHBadgedTranslateManualTriggerFeature),
-         VARIATION_ENTRY(kIPHDiscoverFeedHeaderFeature),
--#elif defined(OS_WIN) || defined(OS_MAC) || defined(OS_LINUX) || \
-+#elif defined(OS_WIN) || defined(OS_MAC) || defined(OS_LINUX) || defined(OS_BSD) || \
-     defined(OS_CHROMEOS) || defined(OS_FUCHSIA)
+ #if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_LINUX) || \
+-    BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_ANDROID) || BUILDFLAG(IS_FUCHSIA)
++    BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_ANDROID) || BUILDFLAG(IS_FUCHSIA) || \
++    BUILDFLAG(IS_BSD)
+ DEFINE_VARIATION_PARAM(kIPHAutofillVirtualCardSuggestionFeature,
+                        "IPH_AutofillVirtualCardSuggestion");
+ #endif  // BUILDFLAG(IS_WIN) || BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_LINUX) ||
+@@ -398,7 +399,7 @@ constexpr flags_ui::FeatureEntry::FeatureVariation
+         VARIATION_ENTRY(kIPHiOSDefaultBrowserSettingsBadgeFeature),
+         VARIATION_ENTRY(kIPHiOSAppStorePromoFeature),
+ #elif BUILDFLAG(IS_WIN) || BUILDFLAG(IS_MAC) || BUILDFLAG(IS_LINUX) || \
+-    BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_FUCHSIA)
++    BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_FUCHSIA) || BUILDFLAG(IS_BSD)
+         VARIATION_ENTRY(kIPHBatterySaverModeFeature),
          VARIATION_ENTRY(kIPHDesktopTabGroupsNewGroupFeature),
-         VARIATION_ENTRY(kIPHFocusModeFeature),
-@@ -299,7 +299,7 @@ constexpr flags_ui::FeatureEntry::FeatureVariation
-         VARIATION_ENTRY(kIPHDesktopPwaInstallFeature),
-         VARIATION_ENTRY(kIPHProfileSwitchFeature),
-         VARIATION_ENTRY(kIPHUpdatedConnectionSecurityIndicatorsFeature),
--#endif  // defined(OS_WIN) || defined(OS_MAC) || defined(OS_LINUX) ||
-+#endif  // defined(OS_WIN) || defined(OS_MAC) || defined(OS_LINUX) || defined(OS_BSD) ||
-         // defined(OS_CHROMEOS) || defined(OS_FUCHSIA)
- };
+         VARIATION_ENTRY(kIPHExtensionsMenuFeature),
+@@ -431,7 +432,8 @@ constexpr flags_ui::FeatureEntry::FeatureVariation
+         // BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_FUCHSIA)
  
+ #if BUILDFLAG(IS_WIN) || BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_LINUX) || \
+-    BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_ANDROID) || BUILDFLAG(IS_FUCHSIA)
++    BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_ANDROID) || BUILDFLAG(IS_FUCHSIA) || \
++    BUILDFLAG(IS_BSD)
+         VARIATION_ENTRY(kIPHAutofillVirtualCardSuggestionFeature),
+ #endif  // BUILDFLAG(IS_WIN) || BUILDFLAG(IS_APPLE) || BUILDFLAG(IS_LINUX) ||
+         // BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_ANDROID) ||

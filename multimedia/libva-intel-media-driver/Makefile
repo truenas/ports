@@ -1,23 +1,27 @@
 PORTNAME=	media-driver
 DISTVERSIONPREFIX=	intel-media-
-DISTVERSION=	21.4.3
+DISTVERSION=	22.4.3
+PORTREVISION=	1
 CATEGORIES=	multimedia
 PKGNAMEPREFIX=	libva-intel-
 
 PATCH_SITES=	https://github.com/${GH_ACCOUNT}/${GH_PROJECT}/commit/
-PATCHFILES+=	3dd1e4e27b5d.patch:-p1 # https://github.com/intel/media-driver/pull/819
-PATCHFILES+=	e5ec4a59db29.patch:-p1 # https://github.com/intel/media-driver/pull/819
-PATCHFILES+=	1915e449aa7e.patch:-p1 # https://github.com/intel/media-driver/pull/819
-PATCHFILES+=	9b6b795ee0a1.patch:-p1 # https://github.com/intel/media-driver/pull/819
-PATCHFILES+=	4acc8c8f871c.patch:-p1 # https://github.com/intel/media-driver/pull/819
-PATCHFILES+=	e9ff848336f6.patch:-p1 # https://github.com/intel/media-driver/pull/819
-PATCHFILES+=	520dcffa2cb6.patch:-p1 # https://github.com/intel/media-driver/pull/819
-PATCHFILES+=	54e6627346a4.patch:-p1 # https://github.com/intel/media-driver/pull/819
-PATCHFILES+=	57bc24a4a61c.patch:-p1 # https://github.com/intel/media-driver/pull/819
-PATCHFILES+=	690e692143a0.patch:-p1 # https://github.com/intel/media-driver/pull/819
+PATCHFILES+=	7debae1bd149.patch:-p1 # https://github.com/intel/media-driver/pull/1492
+PATCHFILES+=	3ee693b2bad3.patch:-p1 # https://github.com/intel/media-driver/pull/819
+PATCHFILES+=	a4313cae8533.patch:-p1 # https://github.com/intel/media-driver/pull/819
+PATCHFILES+=	4980335d82c4.patch:-p1 # https://github.com/intel/media-driver/pull/819
+PATCHFILES+=	fcfc4431f4b7.patch:-p1 # https://github.com/intel/media-driver/pull/819
+PATCHFILES+=	77382f10e352.patch:-p1 # https://github.com/intel/media-driver/pull/819
+PATCHFILES+=	4440a982d235.patch:-p1 # https://github.com/intel/media-driver/pull/819
+PATCHFILES+=	8249202403a4.patch:-p1 # https://github.com/intel/media-driver/pull/819
+PATCHFILES+=	ab1209a220eb.patch:-p1 # https://github.com/intel/media-driver/pull/819
+PATCHFILES+=	acf5314930d3.patch:-p1 # https://github.com/intel/media-driver/pull/819
+PATCHFILES+=	9acd334c50a7.patch:-p1 # https://github.com/intel/media-driver/pull/819
+PATCHFILES+=	a338a45f0675.patch:-p1 # https://github.com/intel/media-driver/pull/819
 
 MAINTAINER=	jbeich@FreeBSD.org
 COMMENT=	VAAPI driver for Intel HD 5000 (Gen8) or newer
+WWW=		https://01.org/intel-media-for-linux
 
 LICENSE=	MIT BSD3CLAUSE
 LICENSE_COMB=	multi

@@ -1,11 +1,10 @@
-# Created by: Qiang Guo <guoqiang_cn@126.com>
-
 PORTNAME=	bvm
-PORTVERSION=	1.3.2
+PORTVERSION=	1.3.3
 CATEGORIES=	sysutils
 
 MAINTAINER=	guoqiang_cn@126.com
 COMMENT=	Bhyve VM Manager
+WWW=		https://github.com/bigdragonsoft/bvm
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE

@@ -1,11 +1,13 @@
 PORTNAME=	pandas-datareader
 DISTVERSION=		0.9.0
+PORTREVISION=	1
 CATEGORIES=	math finance python
-MASTER_SITES=	CHEESESHOP
+MASTER_SITES=	PYPI
 PKGNAMEPREFIX=	${PYTHON_PKGNAMEPREFIX}
 
 MAINTAINER=	FreeBSD@Shaneware.biz
 COMMENT=	Data readers previously found in Pandas
+WWW=		https://github.com/pydata/pandas-datareader
 
 LICENSE=	BSD3CLAUSE
 LICENSE_FILE=	${WRKSRC}/LICENSE.md

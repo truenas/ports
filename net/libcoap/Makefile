@@ -1,10 +1,11 @@
 PORTNAME=	libcoap
 DISTVERSIONPREFIX=	v
-DISTVERSION=	4.3.0
+DISTVERSION=	4.3.1
 CATEGORIES=	net
 
 MAINTAINER=	tcberner@FreeBSD.org
 COMMENT=	C implementation of the Constrained Application Protocol
+WWW=		https://github.com/obgm/libcoap
 
 LICENSE=	BSD2CLAUSE
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -34,4 +35,5 @@ DOXYGEN_BUILD_DEPENDS=	doxygen:devel/doxygen \
 			dot:graphics/graphviz
 DOXYGEN_CONFIGURE_ENABLE=	doxygen
 
+CONFIGURE_ENV=ac_cv_path_SED=${LOCALBASE}/bin/gsed
 .include <bsd.port.mk>

@@ -1,13 +1,13 @@
-# Created by: Anders Nordby <anders@FreeBSD.org>
-
 PORTNAME=	engrampa
 PORTVERSION=	1.26.0
+PORTREVISION=	2
 CATEGORIES=	archivers mate
 MASTER_SITES=	MATE
 DIST_SUBDIR=	mate
 
 MAINTAINER=	gnome@FreeBSD.org
 COMMENT=	Archive manager for zip files, tar, etc
+WWW=		https://mate-desktop.org/
 
 LICENSE=	GPLv2+
 LICENSE_FILE=	${WRKSRC}/COPYING

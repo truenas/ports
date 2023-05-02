@@ -1,11 +1,13 @@
 PORTNAME=	uhd
-PORTVERSION=	4.0.0.0
-PORTREVISION=	2
+DISTVERSIONPREFIX=	v
+DISTVERSION=	4.2.0.0
+PORTREVISION=	1
 CATEGORIES=	comms hamradio
 DIST_SUBDIR=	${PORTNAME}
 
 MAINTAINER=	mr@FreeBSD.org
 COMMENT=	Ettus Research UHD driver framework
+WWW=		https://www.ettus.com/sdr-software/uhd-usrp-hardware-driver/
 
 # See https://www.ettus.com/sdr-software/licenses/.  Dual license
 # under GPLv3 and and "Alternate License" whose terms are not documented
@@ -23,11 +25,10 @@ BUILD_DEPENDS=	orcc:devel/orc \
 		${PYTHON_PKGNAMEPREFIX}ruamel.yaml>=0:devel/py-ruamel.yaml@${PY_FLAVOR}
 
 USES=		compiler:c++14-lang cmake ncurses pkgconfig \
-		dos2unix python:3.6+ shebangfix
+		dos2unix python:3.7+ shebangfix
 USE_LDCONFIG=	yes
 USE_GITHUB=	yes
 GH_ACCOUNT=	EttusResearch
-GH_TAGNAME=	90ce6062b6b5df2eddeee723777be85108e4e7c7
 
 CONFLICTS=	usrp
 
@@ -45,7 +46,7 @@ CXXFLAGS_i386=	-msse2
 LDFLAGS+=	${LDFLAGS_${CHOSEN_COMPILER_TYPE}}
 LDFLAGS_gcc=	-latomic
 
-SHEBANG_GLOB=	*.py *.py.in
+SHEBANG_GLOB=	*.py *.py.in *_bist usrp_update*
 
 CMAKE_ARGS+=	-DPKG_LIB_DIR:STRING="share/uhd" -DUHD_TXRX_DEBUG_PRINTS="yes"
 # for excruciating debug use this -db
@@ -59,6 +60,8 @@ DOXYGEN_BUILD_DEPENDS=	doxygen:devel/doxygen
 DOXYGEN_CMAKE_ON=	-DENABLE_DOXYGEN:STRING="ON"
 DOXYGEN_CMAKE_OFF=	-DENABLE_DOXYGEN:STRING="OFF" \
 			-DENABLE_MANUAL:STRING="OFF"
+
+PORTDOCS=	*
 
 do-install:
 # install host component

@@ -1,10 +1,12 @@
 PORTNAME=	chrome-gnome-shell
 DISTVERSION=	10.1
+PORTREVISION=	2
 CATEGORIES=	www gnome
 MASTER_SITES=	GNOME
 
 MAINTAINER=	daniel@shafer.cc
 COMMENT=	GNOME Shell integration for Chrome
+WWW=		https://wiki.gnome.org/Projects/GnomeShellIntegrationForChrome
 
 LICENSE=	GPLv3
 LICENSE_FILE=	${WRKSRC}/LICENSE

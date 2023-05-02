@@ -1,13 +1,12 @@
-# Created by: Veniamin Gvozdikov <vg@FreeBSD.org>
-
 PORTNAME=	jsonm
-PORTVERSION=	1.0.1
+PORTVERSION=	1.0.2
 CATEGORIES=	converters
 MASTER_SITES=	https://erratique.ch/software/jsonm/releases/
 PKGNAMEPREFIX=	ocaml-
 
 MAINTAINER=	danfe@FreeBSD.org
 COMMENT=	Non-blocking streaming JSON codec for OCaml
+WWW=		https://erratique.ch/software/jsonm
 
 LICENSE=	ISCL
 LICENSE_FILE=	${WRKSRC}/LICENSE.md
@@ -15,17 +14,12 @@ LICENSE_FILE=	${WRKSRC}/LICENSE.md
 BUILD_DEPENDS=	ocamlbuild:devel/ocaml-ocamlbuild \
 		opam-installer:devel/ocaml-opam \
 		${SA_DIR}/topkg/META:devel/ocaml-topkg \
-		${SA_DIR}/uchar/META:devel/ocaml-uchar \
 		${SA_DIR}/uutf/META:devel/ocaml-uutf
-RUN_DEPENDS=	${SA_DIR}/uchar/META:devel/ocaml-uchar \
-		${SA_DIR}/uutf/META:devel/ocaml-uutf
+RUN_DEPENDS=	${SA_DIR}/uutf/META:devel/ocaml-uutf
 
-USES=	tar:tbz
-USE_OCAML=		yes
+USES=		tar:tbz
+USE_OCAML=	yes
 SA_DIR=		${LOCALBASE}/${OCAML_SITELIBDIR}
-
-USE_OCAML_FINDLIB=	yes
-USE_OCAML_LDCONFIG=	yes
 
 OPTIONS_DEFINE=	DOCS
 

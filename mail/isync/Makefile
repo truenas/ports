@@ -1,5 +1,3 @@
-# Created by: eivind
-
 PORTNAME=	isync
 PORTVERSION=	1.4.4
 CATEGORIES=	mail
@@ -7,6 +5,7 @@ MASTER_SITES=	SF
 
 MAINTAINER=	ehaupt@FreeBSD.org
 COMMENT=	Maintain local copies of remote IMAP folders w/synchronized flags
+WWW=		http://isync.sourceforge.net/
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -14,7 +13,7 @@ LICENSE_FILE=	${WRKSRC}/COPYING
 LIB_DEPENDS=	libsasl2.so:security/cyrus-sasl2
 
 USES=		alias bdb compiler:c11 cpe perl5 ssl
-CPE_VENDOR=	oswald_buddenhagen
+CPE_VENDOR=	isync_project
 USE_PERL5=	build
 
 GNU_CONFIGURE=	yes

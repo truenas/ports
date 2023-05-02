@@ -1,7 +1,5 @@
-# Created by: Oliver Lehmann
-
 PORTNAME=	courier-authlib
-PORTVERSION=	0.71.3
+PORTVERSION=	0.72.0
 CATEGORIES?=	security mail
 .if defined(PKGNAMESUFFIX)
 MASTER_SITES=	SF/courier/authlib/${PORTVERSION}
@@ -13,6 +11,7 @@ EXTRACT_ONLY=	# empty
 
 MAINTAINER=	madpilot@FreeBSD.org
 COMMENT?=	Meta-port for the courier authentication library
+WWW=		https://www.Courier-MTA.org/authlib/
 
 CONFLICTS=	courier-0.45*
 
@@ -110,7 +109,7 @@ RUN_DEPENDS+=	${LOCALBASE}/share/sysconftool/sysconftool:devel/sysconftool
 OPTIONS_DEFINE+=	DOCS
 
 DOCS=		README.ldap
-USE_OPENLDAP=	yes
+USES+=	ldap
 CONFIGURE_ARGS+=--with-authldap
 .else
 CONFIGURE_ARGS+=--without-authldap
