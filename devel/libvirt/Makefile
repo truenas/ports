@@ -80,6 +80,7 @@ MESON_ARGS+=	\
 		-Dpolkit=disabled \
 		-Dudev=disabled \
 		-Dnetcf=disabled \
+		-Ddocs=disabled\
 		-Dsysctl_config=disabled \
 		-Dlogin_shell=disabled \
 		-Dwireshark_dissector=disabled \
