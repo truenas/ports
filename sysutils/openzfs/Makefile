@@ -26,7 +26,7 @@ OPTIONS_SUB=	yes
 USE_GITHUB=	yes
 GH_ACCOUNT=	truenas
 GH_PROJECT=	zfs
-GH_TAGNAME=	43636b9cc
+GH_TAGNAME=	b79339072
 
 .include <bsd.port.pre.mk>
 
