@@ -1,7 +1,7 @@
 # Created by: Eric Anholt
 
 PORTNAME=	git
-DISTVERSION=	2.40.1
+DISTVERSION=	2.34.1
 CATEGORIES=	devel
 MASTER_SITES=	KERNEL_ORG/software/scm/git
 DISTFILES=	${DISTNAME}${EXTRACT_SUFX} \
@@ -108,7 +108,6 @@ PERL_MAKE_ARGS_OFF=	NO_PERL=1
 
 GITWEB_IMPLIES=		PERL
 GITWEB_RUN_DEPENDS=	p5-CGI>=0:www/p5-CGI
-GITWEB_MAKE_ARGS_OFF=	NO_GITWEB=1
 
 PCRE2_LIB_DEPENDS=	libpcre2-8.so:devel/pcre2
 PCRE2_CONFIGURE_WITH=	libpcre
@@ -209,6 +208,7 @@ post-patch:
 	@${REINPLACE_CMD} -e '/git-cvsexportcommit.perl/d; \
 		/git-cvsimport.perl/d; \
 		/git-cvsserver.perl/d; \
+		/documented,gitcvs-migration/d; \
 		s/git-cvsserver//' \
 		${WRKSRC}/Makefile
 .endif
@@ -229,7 +229,9 @@ post-patch-CONTRIB-on:
 	@${REINPLACE_CMD} -e "s,/usr/bin/perl,${PERL}," \
 		${WRKSRC}/contrib/diff-highlight/Makefile
 
-post-patch-GITWEB-on:
+post-patch-GITWEB-off:
+	@${REINPLACE_CMD} -e '/$$(MAKE) -C gitweb install/d' \
+		${WRKSRC}/Makefile
 	@${REINPLACE_CMD} -e "s,/usr/bin/perl,${PERL}," \
 		${WRKSRC}/t/lib-gitweb.sh
 
@@ -258,8 +260,6 @@ post-install:
 	@${MKDIR} ${STAGEDIR}${PREFIX}/etc/bash_completion.d
 	${INSTALL_SCRIPT} ${WRKSRC}/contrib/completion/git-completion.bash \
 		${STAGEDIR}${PREFIX}/etc/bash_completion.d/
-	${STRIP_CMD} ${STAGEDIR}${PREFIX}/bin/scalar \
-		${STAGEDIR}${PREFIX}/libexec/git-core/scalar
 
 post-install-HTMLDOCS-on:
 	# Manually remove the index.html symlink before installing, and then
