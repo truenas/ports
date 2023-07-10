@@ -8,7 +8,7 @@
 +    struct stat statbuf;
 +    struct statfs *mntbuf;
 +
-+    if (stat("/usr/local/etc/snmp/disable_getmntinfo", &statbuf))
++    if (0 == stat("/usr/local/etc/snmp/enable_getmntinfo", &statbuf))
 +        getmntinfo(&mntbuf, MNT_WAIT);
 +#endif
  #if HAVE_GETFSSTAT
