@@ -17,19 +17,19 @@
 #		Examples:
 #
 #			USES=python:2.7		# Supports Python 2.7 Only
-#			USES=python:3.6+	# Supports Python 3.6 or later
-#			USES=python:3.6-3.9	# Supports Python 3.6 to 3.9
+#			USES=python:3.7+	# Supports Python 3.7 or later
+#			USES=python:3.7-3.9	# Supports Python 3.7 to 3.9
 #			USES=python:-3.8	# Supports Python up to 3.8
-#			USES=python		# Supports 3.6+
+#			USES=python		# Supports 3.7+
 #
 # NOTE:	<version-spec> should be as specific as possible, matching the versions
 #	upstream declares support for, without being incorrect. In particular,
-#	USES=python *without* a <version-spec> means 3.6+,
+#	USES=python *without* a <version-spec> means 3.7+,
 #	including unreleased versions, which is probably incorrect.
 #
 #	Not specifying a <version-spec> should only be used when a more specific
 #	<version-spec> cannot be specified due to syntax limitations, for
-#	example: 2.7,3.4-3.6, but even in this case, X.Y+ (2.7+), or -X.Y (-3.6)
+#	example: 2.7,3.7-3.8, but even in this case, X.Y+ (2.7+), or -X.Y (-3.7)
 #	is preferred and likely more correct.
 #
 # patch		Python is needed at patch time. Adds dependency to PATCH_DEPENDS.
@@ -119,6 +119,18 @@
 #
 #	noegginfo	- Skip an egg-info entry from plist, if defined.
 #
+#	nose		- Run tests with nose (devel/py-nose)
+#
+#	nose2		- Run tests with nose2 (devel/py-nose2)
+#
+#	pytest		- Run tests with latest pytest (devel/py-pytest)
+#
+#	pytest4		- Run tests with pytest 4.x (devel/py-pytest4)
+#
+#	unittest	- Run tests with unittest
+#
+#	unittest2	- Run tests with unittest2 (devel/py-unittest2)
+#
 # PYTHON_CMD		- Python's command line file name, including the
 #			  version number (used for dependencies).
 #			  default: ${PYTHONBASE}/bin/${PYTHON_VERSION}
@@ -163,6 +175,14 @@
 #			- Canonical name for egg-info.
 #			  default: ${PYDISTUTILS_PKGNAME:C/[^A-Za-z0-9.]+/_/g}-${PYDISTUTILS_PKGVERSION:C/[^A-Za-z0-9.]+/_/g}-py${PYTHON_VER}.egg-info
 #
+# PYTEST_BROKEN_TESTS	- Lists of 'pytest -k' patterns to skip tests which
+#			  require fixing.
+#			  default: <empty>
+#
+# PYTEST_IGNORED_TESTS	- Lists of 'pytest -k' patterns to skip tests which are
+#			  not expected to pass, e.g. requiring a database access.
+#			  default: <empty>
+#
 # The following variables can be read by ports and must not be modified:
 #
 # PYTHONBASE		- The installation prefix of the chosen Python
@@ -184,7 +204,7 @@
 #			  interpreter, e.g. 2, 3, ...
 #
 # PYTHON_VER		- The major-minor release version of the chosen Python
-#			  interpreter, e.g. 2.7, 3.6, ...
+#			  interpreter, e.g. 2.7, 3.7, ...
 #
 # PYTHON_ABIVER		- Additional ABI flags set by the chosen Python
 #			  interpreter, e.g. md
@@ -240,6 +260,13 @@
 # PYDISTUTILS_INSTALLNOSINGLE
 #			- Deprecated without replacement
 #
+# The following variables may be set by the user:
+#
+# PYTEST_ENABLE_ALL_TESTS	- Enable tests skipped by PYTEST_BROKEN_TESTS
+#				  and PYTEST_IGNORED_TESTS.
+# PYTEST_ENABLE_BROKEN_TESTS	- Enable tests skipped by PYTEST_BROKEN_TESTS.
+# PYTEST_ENABLE_IGNORED_TESTS	- Enable tests skipped by PYTEST_IGNORED_TESTS.
+#
 # MAINTAINER: python@FreeBSD.org
 
 .if !defined(_INCLUDE_USES_PYTHON_MK)
@@ -248,15 +275,16 @@ _INCLUDE_USES_PYTHON_MK=	yes
 # What Python version and what Python interpreters are currently supported?
 # When adding a version, please keep the comment in
 # Mk/bsd.default-versions.mk in sync.
-_PYTHON_VERSIONS=		3.8 3.9 3.7 3.6 3.10 3.11 2.7 # preferred first
+_PYTHON_VERSIONS=		3.8 3.9 3.7 3.10 3.11 2.7 # preferred first
 _PYTHON_PORTBRANCH=		3.8		# ${_PYTHON_VERSIONS:[1]}
 _PYTHON_BASECMD=		${LOCALBASE}/bin/python
 _PYTHON_RELPORTDIR=		lang/python
 
 # List all valid USE_PYTHON features here
 _VALID_PYTHON_FEATURES=	allflavors autoplist concurrent cython cython_run \
-			distutils flavors noegginfo noflavors optsuffix \
-			py3kplist pythonprefix
+			distutils flavors noegginfo noflavors nose nose2 \
+			optsuffix py3kplist pytest pytest4 pythonprefix \
+			unittest unittest2
 _INVALID_PYTHON_FEATURES=
 .for var in ${USE_PYTHON}
 .  if empty(_VALID_PYTHON_FEATURES:M${var})
@@ -270,7 +298,10 @@ IGNORE=	uses unknown USE_PYTHON features: ${_INVALID_PYTHON_FEATURES}
 # Make each individual feature available as _PYTHON_FEATURE_<FEATURENAME>
 .for var in ${USE_PYTHON}
 _PYTHON_FEATURE_${var:C/=.*$//:tu}=	${var:C/.*=//:S/,/ /g}
-.endfor
+.  endfor
+.  if defined(_PYTHON_FEATURE_PYTEST) && defined(_PYTHON_FEATURE_PYTEST4)
+IGNORE=		uses either USE_PYTHON=pytest or USE_PYTHON=pytest4, not both of them
+.  endif
 
 # distutils automatically generates flavors depending on the supported
 # versions.
@@ -323,17 +354,17 @@ WARNING+=	"PYTHON_DEFAULT must be a version present in PYTHON2_DEFAULT or PYTHON
 .endif
 
 .if ${_PYTHON_ARGS} == 2.7
-DEV_WARNING+=		"lang/python27 reached End of Life and will be removed on 2020-12-31, consider converting to a modern version of python"
+DEV_WARNING+=		"lang/python27 reached End of Life and will be removed somewhere in the future, please convert to a modern version of python"
 .elif ${_PYTHON_ARGS} == 2
 DEV_ERROR+=		"USES=python:2 is no longer supported, use USES=python:2.7"
 .elif ${_PYTHON_ARGS} == 3
-DEV_ERROR+=		"USES=python:3 is no longer supported, use USES=python:3.6+ or an appropriate version range"
+DEV_ERROR+=		"USES=python:3 is no longer supported, use USES=python:3.7+ or an appropriate version range"
 .endif  # ${_PYTHON_ARGS} == 2.7
 
 _PYTHON_VERSION:=	${PYTHON_DEFAULT}
 
 .if empty(_PYTHON_ARGS)
-_PYTHON_ARGS=	3.6+
+_PYTHON_ARGS=	3.7+
 .endif
 
 # Validate Python version whether it meets the version restriction.
@@ -435,7 +466,7 @@ PKGNAMESUFFIX=	${PYTHON_PKGNAMESUFFIX}
 # To avoid having dependencies with @ and empty flavor:
 # _PYTHON_VERSION is either set by (first that matches):
 # - If using Python flavors, from the current Python flavor
-# - If using a version restriction (USES=python:3.6+), from the first
+# - If using a version restriction (USES=python:3.7+), from the first
 #   acceptable default Python version.
 # - From PYTHON_DEFAULT
 PY_FLAVOR=	py${_PYTHON_VERSION:S/.//}
@@ -466,7 +497,7 @@ PYTHON_CMD?=		${_PYTHON_BASECMD}${_PYTHON_VERSION}
 .if exists(${PYTHON_CMD}-config)
 PYTHON_ABIVER!=		${PYTHON_CMD}-config --abiflags
 .elif ${PYTHON_REL} < 30800
-# Default ABI flags for lang/python3[67] ports
+# Default ABI flags for lang/python37 port
 PYTHON_ABIVER=		m
 .endif
 .endif
@@ -479,7 +510,6 @@ PYTHON_EXT_SUFFIX=	# empty
 
 .if ${PYTHON_MAJOR_VER} == 2
 DEPRECATED?=	Uses Python 2.7 which is EOLed upstream
-EXPIRATION_DATE?=	2020-12-31
 .endif
 
 .if !defined(PYTHONBASE)
@@ -515,18 +545,12 @@ _PYTHONPKGLIST=	${WRKDIR}/.PLIST.pymodtmp
 # - it uses USE_PYTHON=distutils
 #
 
-.if ${PYTHON_REL} >= 31100
-_CYTHON_DEP=	cython-${PYTHON_VER}:lang/cython-devel@${PY_FLAVOR}
-.else
-_CYTHON_DEP=	cython-${PYTHON_VER}:lang/cython@${PY_FLAVOR}
-.endif
-
 .if defined(_PYTHON_FEATURE_CYTHON)
-BUILD_DEPENDS+=	${_CYTHON_DEP}
+BUILD_DEPENDS+=	cython-${PYTHON_VER}:lang/cython@${PY_FLAVOR}
 .endif
 
 .if defined(_PYTHON_FEATURE_CYTHON_RUN)
-RUN_DEPENDS+=	${_CYTHON_DEP}
+RUN_DEPENDS+=	cython-${PYTHON_VER}:lang/cython@${PY_FLAVOR}
 .endif
 
 .if defined(_PYTHON_FEATURE_CONCURRENT)
@@ -594,7 +618,43 @@ PYDISTUTILS_PKGVERSION?=${PORTVERSION}
 PYDISTUTILS_EGGINFO?=	${PYDISTUTILS_PKGNAME:C/[^A-Za-z0-9.]+/_/g}-${PYDISTUTILS_PKGVERSION:C/[^A-Za-z0-9.]+/_/g}-py${PYTHON_VER}.egg-info
 PYDISTUTILS_EGGINFODIR?=${STAGEDIR}${PYTHONPREFIX_SITELIBDIR}
 
-.if !defined(_PYTHON_FEATURE_NOEGGINFO) && \
+# nose support
+.  if defined(_PYTHON_FEATURE_NOSE)
+TEST_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}nose>=0:devel/py-nose@${PY_FLAVOR}
+.  endif
+
+# nose2 support
+.  if defined(_PYTHON_FEATURE_NOSE2)
+TEST_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}nose2>=0:devel/py-nose2@${PY_FLAVOR}
+.  endif
+
+# pytest support
+.  if defined(_PYTHON_FEATURE_PYTEST)
+TEST_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}pytest>=7,1:devel/py-pytest@${PY_FLAVOR}
+.  elif defined(_PYTHON_FEATURE_PYTEST4)
+TEST_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}pytest4>=4.6,1:devel/py-pytest4@${PY_FLAVOR}
+.  endif
+.  if defined(_PYTHON_FEATURE_PYTEST) || defined(_PYTHON_FEATURE_PYTEST4)
+PYTEST_BROKEN_TESTS?=	# empty
+PYTEST_IGNORED_TESTS?=	# empty
+_PYTEST_SKIPPED_TESTS?=	# empty
+.    if !defined(PYTEST_ENABLE_ALL_TESTS)
+.      if !defined(PYTEST_ENABLE_BROKEN_TESTS)
+_PYTEST_SKIPPED_TESTS+=	${PYTEST_BROKEN_TESTS}
+.      endif
+.      if !defined(PYTEST_ENABLE_IGNORED_TESTS)
+_PYTEST_SKIPPED_TESTS+=	${PYTEST_IGNORED_TESTS}
+.      endif
+.    endif # !defined(PYTEST_ENABLE_ALL_TESTS)
+_PYTEST_FILTER_EXPRESSION=	${_PYTEST_SKIPPED_TESTS:C/^(.)/and not \1/:tW:C/^and //}
+.  endif # defined(_PYTHON_FEATURE_PYTEST) || defined(_PYTHON_FEATURE_PYTEST4)
+
+# unittest2 support
+.  if defined(_PYTHON_FEATURE_UNITTEST2)
+TEST_DEPENDS+=	${PYTHON_PKGNAMEPREFIX}unittest2>=0:devel/py-unittest2@${PY_FLAVOR}
+.  endif
+
+.  if !defined(_PYTHON_FEATURE_NOEGGINFO) && \
 	!defined(_PYTHON_FEATURE_AUTOPLIST) && \
 	defined(_PYTHON_FEATURE_DISTUTILS) && \
 	defined(PYTHON_REL)
@@ -652,7 +712,7 @@ CMAKE_ARGS+=	-DPython_ADDITIONAL_VERSIONS=${PYTHON_VER}
 
 # Python 3rd-party modules
 PYGAME=		${PYTHON_PKGNAMEPREFIX}game>0:devel/py-game@${PY_FLAVOR}
-PYNUMPY=	${PYTHON_PKGNAMEPREFIX}numpy>=1.16,1<1.21,1:math/py-numpy@${PY_FLAVOR}
+PYNUMPY=	${PYTHON_PKGNAMEPREFIX}numpy>=1.16,1<1.23,1:math/py-numpy@${PY_FLAVOR}
 
 # Common Python modules that can be needed but only for some versions of Python.
 .if ${PYTHON_REL} < 30500
@@ -727,6 +787,42 @@ do-build:
 .if !target(do-install)
 do-install:
 	@(cd ${INSTALL_WRKSRC}; ${SETENV} ${MAKE_ENV} ${PYTHON_CMD} ${PYDISTUTILS_SETUP} ${PYDISTUTILS_INSTALL_TARGET} ${PYDISTUTILS_INSTALLARGS})
-.endif
-.endif # defined(_PYTHON_FEATURE_DISTUTILS)
+.    endif
+.  endif # defined(_PYTHON_FEATURE_DISTUTILS)
+
+.  if defined(_PYTHON_FEATURE_NOSE)
+.    if !target(do-test)
+do-test:
+	cd ${TEST_WRKSRC} && ${SETENV} ${TEST_ENV} ${PYTHON_CMD} -m nose ${TEST_ARGS:NDESTDIR=*} -v
+.    endif
+.  endif # defined(_PYTHON_FEATURE_NOSE)
+
+.  if defined(_PYTHON_FEATURE_NOSE2)
+.    if !target(do-test)
+do-test:
+	cd ${TEST_WRKSRC} && ${SETENV} ${TEST_ENV} ${PYTHON_CMD} -m nose2 ${TEST_ARGS:NDESTDIR=*} -v
+.    endif
+.  endif # defined(_PYTHON_FEATURE_NOSE2)
+
+.  if defined(_PYTHON_FEATURE_PYTEST) || defined(_PYTHON_FEATURE_PYTEST4)
+.    if !target(do-test)
+do-test:
+	cd ${TEST_WRKSRC} && ${SETENV} ${TEST_ENV} ${PYTHON_CMD} -m pytest -k '${_PYTEST_FILTER_EXPRESSION}' -rs -v -o addopts= ${TEST_ARGS:NDESTDIR=*}
+.    endif
+.  endif # defined(_PYTHON_FEATURE_PYTEST) || defined(_PYTHON_FEATURE_PYTEST4)
+
+.  if defined(_PYTHON_FEATURE_UNITTEST)
+.    if !target(do-test)
+do-test:
+	cd ${TEST_WRKSRC} && ${SETENV} ${TEST_ENV} ${PYTHON_CMD} -m unittest ${TEST_ARGS:NDESTDIR=*} -v
+.    endif
+.  endif # defined(_PYTHON_FEATURE_UNITTEST)
+
+.  if defined(_PYTHON_FEATURE_UNITTEST2)
+.    if !target(do-test)
+do-test:
+	cd ${TEST_WRKSRC} && ${SETENV} ${TEST_ENV} ${PYTHON_CMD} -m unittest2 ${TEST_ARGS:NDESTDIR=*} -v
+.    endif
+.  endif # defined(_PYTHON_FEATURE_UNITTEST2)
+
 .endif # defined(_POSTMKINCLUDED) && !defined(_INCLUDE_USES_PYTHON_POST_MK)
