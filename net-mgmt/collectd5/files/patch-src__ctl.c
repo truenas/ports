@@ -1,6 +1,6 @@
---- src/ctl.c.orig	2022-01-21 13:11:05 UTC
-+++ src/ctl.c
-@@ -0,0 +1,418 @@
+--- src/ctl.c.orig	2023-12-18 20:59:53.067031000 +0100
++++ src/ctl.c	2023-12-18 21:32:15.028860000 +0100
+@@ -0,0 +1,421 @@
 +/**
 + * collectd - src/ctl.c
 + *
@@ -287,7 +287,7 @@
 +			}
 +			child = child->next;
 +		}
-+		if (!name || !pp || !vp)
++		if (!name || !pp || !vp || !type)
 +			goto next;
 +
 +		ports[pid].name = strdup(name);
@@ -307,6 +307,9 @@
 +
 +next:
 +		if (name) xmlFree (name);
++		if (pp) xmlFree(pp);
++		if (vp) xmlFree(vp);
++		if (type) xmlFree(type);
 +	}
 +
 +	xmlXPathFreeObject(xpath_obj);
