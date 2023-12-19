@@ -1,6 +1,6 @@
 --- src/ctl.c.orig	1970-01-01 01:00:00.000000000 +0100
-+++ src/ctl.c	2023-12-18 22:31:12.799447885 +0100
-@@ -0,0 +1,422 @@
++++ src/ctl.c	2023-12-19 07:10:28.254423826 +0100
+@@ -0,0 +1,430 @@
 +/**
 + * collectd - src/ctl.c
 + *
@@ -134,6 +134,22 @@
 +} *agrs;
 +static int nagrs;
 +
++static void ctl_clean()
++{
++	int i;
++
++	for (i = 0; i < maxports; i++) {
++		free(ports[i].name);
++		ports[i].name = NULL;
++		free(ports[i].ppvp);
++		ports[i].ppvp = NULL;
++		ports[i].ha = 0;
++		ports[i].agr = 0;
++		free(agrs[i].name);
++		agrs[i].name = NULL;
++	}
++}
++
 +static int ctl_init(void)
 +{
 +
@@ -162,7 +178,8 @@
 +
 +static int ctl_shutdown(void)
 +{
-+
++	if (portbuf) free(portbuf);
++	ctl_clean();
 +	free(statbuf);
 +	free(ports);
 +	free(agrs);
@@ -236,16 +253,7 @@
 +		return (-1);
 +	}
 +
-+	for (i = 0; i < maxports; i++) {
-+		free(ports[i].name);
-+		ports[i].name = NULL;
-+		free(ports[i].ppvp);
-+		ports[i].ppvp = NULL;
-+		ports[i].ha = 0;
-+		ports[i].agr = 0;
-+		free(agrs[i].name);
-+		agrs[i].name = NULL;
-+	}
++	ctl_clean();
 +	nagrs = 0;
 +
 +	for (i = 0; i < xpath_obj->nodesetval->nodeNr; ++i) {
