@@ -10,7 +10,7 @@ USE_LOCALE=			en_US.UTF-8
 
 USE_GITHUB=			yes
 GH_ACCOUNT=			truenas
-GH_TAGNAME=			ee348c7b21641381eaa092ef938c3115f6bee2f8
+GH_TAGNAME=			1c33a68346809fd061d697127c5957a63e80e333
 
 MAINTAINER=		 	awalker@ixsystems.com
 COMMENT=			Free SMB/CIFS and AD/DC server and client for Unix
