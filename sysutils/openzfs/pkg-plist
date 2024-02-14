@@ -519,7 +519,7 @@ share/pam-configs/zfs_key
 %%TESTS%%share/zfs/compatibility.d/freenas-11.2
 %%TESTS%%share/zfs/compatibility.d/freenas-11.3
 %%TESTS%%share/zfs/compatibility.d/freenas-9.10.2
-%%TESTS%%share/zfs/compatibility.d/grub2
+share/zfs/compatibility.d/grub2
 %%TESTS%%share/zfs/compatibility.d/openzfs-2.0-freebsd
 %%TESTS%%share/zfs/compatibility.d/openzfs-2.0-linux
 %%TESTS%%share/zfs/compatibility.d/openzfs-2.1-freebsd
