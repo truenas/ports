@@ -1,6 +1,6 @@
 PORTNAME=	gcc
 PORTVERSION=	12.2.0
-PORTREVISION=	6
+PORTREVISION=	7
 CATEGORIES=	lang
 MASTER_SITES=	GCC
 PKGNAMESUFFIX=	${SUFFIX}
@@ -12,7 +12,7 @@ WWW=		https://gcc.gnu.org
 LICENSE=	GPLv3 GPLv3RLE
 LICENSE_COMB=	multi
 
-ONLY_FOR_ARCHS=	aarch64 amd64 arm armv6 armv7 i386 powerpc powerpc64 powerpc64le
+ONLY_FOR_ARCHS=	aarch64 amd64 armv6 armv7 i386 powerpc powerpc64 powerpc64le
 
 LIB_DEPENDS=	libgmp.so:math/gmp \
 		libmpfr.so:math/mpfr \
@@ -60,7 +60,21 @@ MULTILIB_CONFIGURE_ENABLE=	multilib
 CONFIGURE_ARGS+=	--disable-multilib
 .endif
 
+.if defined(CPUTYPE) && ${CPUTYPE:Mg[3-5]}
+CFLAGS:=	${CFLAGS:S/mcpu=g/mcpu=G/}
+CXXFLAGS:=	${CFLAGS:S/mcpu=g/mcpu=G/}
+.endif
+
 .include <bsd.port.pre.mk>
+
+# Extraction fails with poudriere on aarch64 for GCC 12.
+# It seems that the bug is specific to lang/gcc11 and lang/gcc12 only.
+# No other GCC port is affected.
+# See https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=271052
+# and https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=246670
+.if ${ARCH} == aarch64
+EXTRACT_CMD=    ${SETENV} LC_ALL=en_US.UTF-8 /usr/bin/bsdtar
+.endif
 
 .if ${ARCH} == amd64
 CONFIGURE_TARGET=	x86_64-portbld-${OPSYS:tl}${OSREL}
@@ -148,6 +162,10 @@ full-regression-test: build
 post-stage:
 	${RM} ${STAGEDIR}${PREFIX}/man/man7/*
 	${RM} -r ${STAGEDIR}${TARGLIB}/gcc/*/${GCC_VERSION}/include-fixed/
+	# Install ISO_Fortran_binding.h in an easily findable directory
+	${MKDIR} ${STAGEDIR}${PREFIX}/include/gcc${SUFFIX}
+	${INSTALL_DATA} ${STAGEDIR}${PREFIX}/lib/gcc${SUFFIX}/gcc/${CONFIGURE_TARGET}/${GCC_VERSION}/include/ISO_Fortran_binding.h	\
+		${STAGEDIR}${PREFIX}/include/gcc${SUFFIX}
 	# Add target libraries and include files to packaging list.
 	${RM} ${WRKDIR}/PLIST.lib
 

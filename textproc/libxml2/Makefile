@@ -1,5 +1,5 @@
 PORTNAME=	libxml2
-DISTVERSION=	2.10.3
+DISTVERSION=	2.10.4
 PORTREVISION?=	2
 CATEGORIES?=	textproc gnome
 MASTER_SITES=	GNOME/sources/${PORTNAME}/${DISTVERSION:R}/
@@ -36,6 +36,12 @@ CONFIGURE_ARGS=		--sysconfdir=${PREFIX}/share/ \
 			--with-lzma=/usr \
 			--${LIBXML2_SLAVE:Dwith:Uwithout}-python${LIBXML2_SLAVE:D=${PYTHON_CMD}:U}
 
+
+# Many symbols in the linker version script libxml2.syms are only defined when
+# --with-xptr-locs is enabled at configure time. Suppress errors with lld >= 17
+# due to these undefined symbols.
+LDFLAGS+=	-Wl,--undefined-version
+
 OPTIONS_DEFINE=	DOCS ICU MEM_DEBUG READLINE STATIC THREAD_ALLOC
 OPTIONS_DEFAULT=	READLINE STATIC
 OPTIONS_SUB=		yes
@@ -54,21 +60,21 @@ STATIC_CONFIGURE_ENABLE=	static
 THREAD_ALLOC_CONFIGURE_WITH=	thread-alloc
 
 post-patch:
-.for f in catalog.c xmlcatalog.c xmllint.c doc/xmllint.1
 	@${REINPLACE_CMD} -e \
 		's|/etc/xml/catalog|${LOCALBASE}/share/xml/catalog|g; \
 		 s|/etc/sgml/catalog|${LOCALBASE}/share/sgml/catalog|g' \
-		${WRKSRC}/${f}
-.endfor
+		${WRKSRC}/doc/xmllint.1
 
-.if !defined(LIBXML2_SLAVE)
 post-install:
+.if !defined(LIBXML2_SLAVE)
 # Documentation should be in DOCSDIR
 	@${MV} ${STAGEDIR}${PREFIX}/share/gtk-doc/html/libxml2 \
 		${STAGEDIR}${DOCSDIR}/devhelp
 	@${RM} -r ${STAGEDIR}${PREFIX}/share/gtk-doc
 # Install remaining documentation that's not connected to autotools
 	${INSTALL_MAN} ${WRKSRC}/doc/*.html ${STAGEDIR}${DOCSDIR}
+.else
+	${STRIP_CMD} ${STAGEDIR}${PYTHON_LIBDIR}/site-packages/libxml2mod${PYTHON_EXT_SUFFIX}.so
 .endif
 
 .include <bsd.port.mk>

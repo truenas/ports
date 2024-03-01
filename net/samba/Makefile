@@ -84,6 +84,7 @@ USE_LDCONFIG=			${SAMBA4_LIBDIR}
 WAF_CMD=			buildtools/bin/waf
 WAF_ENV=			PYTHONHASHSEED=1
 CONFIGURE_LOG=			bin/config.log
+MAKE_JOBS_UNSAFE=		yes
 
 PKGCONFIGDIR?=			${PREFIX}/libdata/pkgconfig
 PKGCONFIGDIR_REL?=		${PKGCONFIGDIR:S,^${PREFIX}/,,}

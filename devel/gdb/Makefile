@@ -1,5 +1,6 @@
 PORTNAME=	gdb
-DISTVERSION=	13.1
+DISTVERSION=	13.2
+PORTREVISION=	1
 CATEGORIES=	devel
 MASTER_SITES=	GNU
 
@@ -28,19 +29,18 @@ CONFIGURE_ARGS=	--program-suffix=${DISTVERSION:S/.//g} \
 		--enable-targets=all --enable-64-bit-bfd \
 		--with-separate-debug-dir=/usr/lib/debug \
 		${ICONV_CONFIGURE_ARG} \
-		--without-libunwind-ia64 --with-system-zlib
+		--without-libunwind-ia64
 CONFIGURE_OUTSOURCE=	yes
 CFLAGS:=	${CFLAGS:C/ +$//}	# blanks at EOL creep in sometimes
 CFLAGS+=	-DRL_NO_COMPAT
 EXCLUDE=	dejagnu expect sim texinfo intl
 EXTRACT_AFTER_ARGS=	${EXCLUDE:S/^/--exclude /}
-EXTRA_PATCHES=	${FILESDIR}/commit-a980a7d24b9
 
 VER=		${DISTVERSION:S/.//g}
 PLIST_SUB=	VER=${VER}
 
-OPTIONS_DEFINE=	GDB_LINK GUILE KGDB NLS PYTHON SOURCE_HIGHLIGHT \
-		TUI XXHASH
+OPTIONS_DEFINE=	DEBUGINFOD GDB_LINK GUILE KGDB NLS PYTHON \
+		SOURCE_HIGHLIGHT TUI XXHASH
 OPTIONS_DEFAULT=	GDB_LINK KGDB NLS PYTHON SOURCE_HIGHLIGHT \
 			TUI XXHASH
 OPTIONS_DEFAULT+=	PORT_READLINE PORT_ICONV SYSTEM_ZLIB
@@ -50,6 +50,7 @@ OPTIONS_SINGLE_READLINE=	BUNDLED_READLINE PORT_READLINE
 OPTIONS_SINGLE_ICONV=	PORT_ICONV SYSTEM_ICONV
 OPTIONS_SINGLE_ZLIB=	BUNDLED_ZLIB SYSTEM_ZLIB
 
+DEBUGINFOD_DESC=	Build gdb with debuginfod server support
 GDB_LINK_DESC=		Create ${PREFIX}/bin/gdb symlink
 KGDB_DESC=		Kernel debugging support
 BUNDLED_READLINE_DESC=	from gdb distfile
@@ -65,19 +66,21 @@ XXHASH_DESC=		Use xxHash for hashing (faster)
 OPTIONS_SUB=	yes
 
 BUNDLED_READLINE_CONFIGURE_OFF=	--with-system-readline
-GUILE_CONFIGURE_WITH=	guile
-GUILE_LIB_DEPENDS=	libguile-2.2.so:lang/guile2
+DEBUGINFOD_CONFIGURE_WITH=	debuginfod
+DEBUGINFOD_LIB_DEPENDS=	libdebuginfod.so:devel/elfutils
+GUILE_CONFIGURE_WITH=	guile=guile-${GUILE_VER}
+GUILE_USES=		guile:2.2,3.0
 NLS_USES=	gettext-runtime
 PORT_READLINE_USES=	readline
 PORT_ICONV_USES=	iconv:wchar_t
 PYTHON_CONFIGURE_ON=	--with-python=${PYTHON_CMD}
 PYTHON_CONFIGURE_OFF=	--without-python
-PYTHON_USES=		python:3.6+
+PYTHON_USES=		python
 SOURCE_HIGHLIGHT_CONFIGURE_ENABLE=	source-highlight
 SOURCE_HIGHLIGHT_LIB_DEPENDS=	\
 	libsource-highlight.so:textproc/source-highlight
 SYSTEM_ICONV_USES=	iconv
-SYSTEM_ZLIB_WITH=	system-zlib
+SYSTEM_ZLIB_CONFIGURE_WITH=	system-zlib
 TUI_CONFIGURE_ENABLE=	tui
 XXHASH_CONFIGURE_OFF=	--with-xxhash=no
 XXHASH_LIB_DEPENDS=	libxxhash.so:devel/xxhash
@@ -173,6 +176,11 @@ do-install-PYTHON-on:
 	@(cd ${STAGEDIR}${PREFIX}/share/libcxx-gdbpy/libcxx && \
 		${PYTHON_CMD} -m compileall .)
 .endif
+
+# DO NOT try and add rules here to strip .go files, no matter how loudly
+# testport / stage-qa shouts at you about it, because .go files (which are
+# compiled bytecode) are not intended to be stripped and doing so causes
+# breakage at run time.
 
 do-install-GUILE-on:
 	(cd ${INSTALL_WRKSRC}/gdb ; \
