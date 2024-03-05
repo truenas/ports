@@ -141,10 +141,7 @@ include/libzfs/sys/bpobj.h
 include/libzfs/sys/bptree.h
 include/libzfs/sys/bqueue.h
 include/libzfs/sys/brt.h
-<<<<<<< HEAD
 include/libzfs/sys/brt_impl.h
-=======
->>>>>>> origin/truenas/13.1-stable
 include/libzfs/sys/btree.h
 include/libzfs/sys/crypto/api.h
 include/libzfs/sys/crypto/common.h
@@ -334,21 +331,12 @@ lib/libzpool.so.5.0.0
 %%PYTHON%%%%PYTHON_SITELIBDIR%%/libzfs_core/test/__pycache__/test_nvlist%%PYTHON_EXT_SUFFIX%%.pyc
 %%PYTHON%%%%PYTHON_SITELIBDIR%%/libzfs_core/test/test_libzfs_core.py
 %%PYTHON%%%%PYTHON_SITELIBDIR%%/libzfs_core/test/test_nvlist.py
-<<<<<<< HEAD
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.2.2-py%%PYTHON_VER%%.egg-info/PKG-INFO
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.2.2-py%%PYTHON_VER%%.egg-info/SOURCES.txt
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.2.2-py%%PYTHON_VER%%.egg-info/dependency_links.txt
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.2.2-py%%PYTHON_VER%%.egg-info/not-zip-safe
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.2.2-py%%PYTHON_VER%%.egg-info/requires.txt
-%%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.2.2-py%%PYTHON_VER%%.egg-info/top_level.txt
-=======
 %%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.2.3-py%%PYTHON_VER%%.egg-info/PKG-INFO
 %%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.2.3-py%%PYTHON_VER%%.egg-info/SOURCES.txt
 %%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.2.3-py%%PYTHON_VER%%.egg-info/dependency_links.txt
 %%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.2.3-py%%PYTHON_VER%%.egg-info/not-zip-safe
 %%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.2.3-py%%PYTHON_VER%%.egg-info/requires.txt
 %%PYTHON%%%%PYTHON_SITELIBDIR%%/pyzfs-2.2.3-py%%PYTHON_VER%%.egg-info/top_level.txt
->>>>>>> origin/truenas/13.1-stable
 lib/security/pam_zfs_key.so
 libdata/pkgconfig/libzfs.pc
 libdata/pkgconfig/libzfs_core.pc
@@ -457,10 +445,6 @@ man/man8/zfs-userspace.8.gz
 man/man8/zfs-wait.8.gz
 man/man8/zfs.8.gz
 man/man8/zfs_ids_to_path.8.gz
-<<<<<<< HEAD
-man/man8/zfs_prepare_disk.8.gz
-=======
->>>>>>> origin/truenas/13.1-stable
 man/man8/zgenhostid.8.gz
 man/man8/zinject.8.gz
 man/man8/zpool-add.8.gz
@@ -558,56 +542,6 @@ share/zfs/compatibility.d/zol-0.6.5
 share/zfs/compatibility.d/zol-0.7
 share/zfs/compatibility.d/zol-0.8
 %%TESTS%%share/zfs/common.sh
-<<<<<<< HEAD
-%%TESTS%%share/zfs/compatibility.d/2018
-%%TESTS%%share/zfs/compatibility.d/2019
-%%TESTS%%share/zfs/compatibility.d/2020
-%%TESTS%%share/zfs/compatibility.d/2021
-%%TESTS%%share/zfs/compatibility.d/compat-2018
-%%TESTS%%share/zfs/compatibility.d/compat-2019
-%%TESTS%%share/zfs/compatibility.d/compat-2020
-%%TESTS%%share/zfs/compatibility.d/compat-2021
-%%TESTS%%share/zfs/compatibility.d/freebsd-11.0
-%%TESTS%%share/zfs/compatibility.d/freebsd-11.1
-%%TESTS%%share/zfs/compatibility.d/freebsd-11.2
-%%TESTS%%share/zfs/compatibility.d/freebsd-11.3
-%%TESTS%%share/zfs/compatibility.d/freebsd-11.4
-%%TESTS%%share/zfs/compatibility.d/freebsd-12.0
-%%TESTS%%share/zfs/compatibility.d/freebsd-12.1
-%%TESTS%%share/zfs/compatibility.d/freebsd-12.2
-%%TESTS%%share/zfs/compatibility.d/freebsd-12.3
-%%TESTS%%share/zfs/compatibility.d/freebsd-12.4
-%%TESTS%%share/zfs/compatibility.d/freebsd-13.0
-%%TESTS%%share/zfs/compatibility.d/freebsd-13.1
-%%TESTS%%share/zfs/compatibility.d/freebsd-13.2
-%%TESTS%%share/zfs/compatibility.d/freenas-11.0
-%%TESTS%%share/zfs/compatibility.d/freenas-11.1
-%%TESTS%%share/zfs/compatibility.d/freenas-11.2
-%%TESTS%%share/zfs/compatibility.d/freenas-11.3
-%%TESTS%%share/zfs/compatibility.d/freenas-9.10.2
-%%TESTS%%share/zfs/compatibility.d/grub2
-%%TESTS%%share/zfs/compatibility.d/openzfs-2.0-freebsd
-%%TESTS%%share/zfs/compatibility.d/openzfs-2.0-linux
-%%TESTS%%share/zfs/compatibility.d/openzfs-2.1-freebsd
-%%TESTS%%share/zfs/compatibility.d/openzfs-2.1-linux
-%%TESTS%%share/zfs/compatibility.d/openzfs-2.2
-%%TESTS%%share/zfs/compatibility.d/openzfs-2.2-freebsd
-%%TESTS%%share/zfs/compatibility.d/openzfs-2.2-linux
-%%TESTS%%share/zfs/compatibility.d/openzfsonosx-1.7.0
-%%TESTS%%share/zfs/compatibility.d/openzfsonosx-1.8.1
-%%TESTS%%share/zfs/compatibility.d/openzfsonosx-1.9.3
-%%TESTS%%share/zfs/compatibility.d/openzfsonosx-1.9.4
-%%TESTS%%share/zfs/compatibility.d/truenas-12.0
-%%TESTS%%share/zfs/compatibility.d/ubuntu-18.04
-%%TESTS%%share/zfs/compatibility.d/ubuntu-20.04
-%%TESTS%%share/zfs/compatibility.d/ubuntu-22.04
-%%TESTS%%share/zfs/compatibility.d/zol-0.6.1
-%%TESTS%%share/zfs/compatibility.d/zol-0.6.4
-%%TESTS%%share/zfs/compatibility.d/zol-0.6.5
-%%TESTS%%share/zfs/compatibility.d/zol-0.7
-%%TESTS%%share/zfs/compatibility.d/zol-0.8
-=======
->>>>>>> origin/truenas/13.1-stable
 %%TESTS%%share/zfs/runfiles/common.run
 %%TESTS%%share/zfs/runfiles/freebsd.run
 %%TESTS%%share/zfs/runfiles/linux.run
