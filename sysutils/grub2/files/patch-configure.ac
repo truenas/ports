@@ -1,0 +1,14 @@
+--- configure.ac.orig	2023-05-02 18:52:13 UTC
++++ configure.ac
+@@ -813,9 +813,9 @@ if test "x$target_cpu" = xi386; then
+   ])
+ 
+   if test "x$grub_cv_cc_falign_loop" = xyes; then
+-    TARGET_CFLAGS="$TARGET_CFLAGS -falign-jumps=1 -falign-loops=1 -falign-functions=1"
++    TARGET_CFLAGS="$TARGET_CFLAGS -falign-loops=1 -falign-functions=1"
+   elif test "x$grub_cv_cc_malign_loop" = xyes; then
+-    TARGET_CFLAGS="$TARGET_CFLAGS -malign-jumps=1 -malign-loops=1 -malign-functions=1"
++    TARGET_CFLAGS="$TARGET_CFLAGS -malign-loops=1 -malign-functions=1"
+   fi
+ fi
+ 

@@ -1,5 +1,7 @@
+# Created by: David O'Brien (obrien@cs.ucdavis.edu)
+
 PORTNAME=	rsync
-DISTVERSION=	3.2.7
+DISTVERSION=	3.2.5
 CATEGORIES=	net
 MASTER_SITES=	https://www.mirrorservice.org/sites/rsync.samba.org/src/ \
 		http://rsync.mirror.garr.it/src/ \
@@ -9,7 +11,8 @@ DISTFILES=	${DISTNAME}${EXTRACT_SUFX}
 
 MAINTAINER=	rodrigo@FreeBSD.org
 COMMENT=	Network file distribution/synchronization utility
-WWW=		https://rsync.samba.org/
+
+CFLAGS+=	-DFREEBSD_NFS4_ACL_SUPPORT
 
 LICENSE=	GPLv3+
 LICENSE_FILE=	${WRKSRC}/COPYING
@@ -18,7 +21,7 @@ LIB_DEPENDS=	liblz4.so:archivers/liblz4 \
 		libxxhash.so:devel/xxhash \
 		libzstd.so:archivers/zstd
 
-USES=		cpe python shebangfix ssl autoreconf
+USES=		cpe python shebangfix ssl
 PYTHON_NO_DEPENDS=	yes
 CPE_VENDOR=	samba
 CPE_PRODUCT=	rsync
@@ -43,12 +46,13 @@ SUB_LIST=	NAME=rsyncd
 PORTDOCS=	NEWS.md README.md csprotocol.txt tech_report.tex
 
 # define options
-OPTIONS_DEFINE=		DOCS ICONV POPT_PORT SSH ZLIB_BASE
-OPTIONS_DEFAULT=	FLAGS ICONV SSH ZLIB_BASE
+OPTIONS_DEFINE=		DOCS ICONV POPT_PORT SSH ZLIB_BASE ACL
+OPTIONS_DEFAULT=	FLAGS ICONV SSH ZLIB_BASE ACL
 OPTIONS_RADIO=		PTS
 OPTIONS_RADIO_PTS=	FLAGS RENAMED
 
 # options provided upstream
+ACL_DESC=	Add support for NFSv4 ACLs
 FLAGS_DESC=	File system flags support patch, adds --fileflags
 POPT_PORT_DESC=	Use popt from devel/popt instead of bundled one
 SSH_DESC=	Use SSH instead of RSH
@@ -58,15 +62,18 @@ ZLIB_BASE_DESC=	Use zlib from base instead of bundled one
 PTS_DESC=	Functionality provided by third party patches
 RENAMED_DESC=	Add support for renamed file detection
 
+FLAGS_DISTFILES=	${PORTNAME}-patches-${DISTVERSION}${EXTRACT_SUFX}
 FLAGS_EXTRA_PATCHES=	${WRKSRC}/patches/fileflags.diff \
 			${FILESDIR}/extrapatch-main.c
 
+ICONV_DISTFILES=	${PORTNAME}-patches-${DISTVERSION}${EXTRACT_SUFX}
 ICONV_USES=		iconv:translit
 ICONV_CONFIGURE_ENABLE=	iconv iconv-open
 
 POPT_PORT_LIB_DEPENDS=		libpopt.so:devel/popt
 POPT_PORT_CONFIGURE_OFF=	--with-included-popt
 
+RENAMED_DISTFILES=	${PORTNAME}-patches-${DISTVERSION}${EXTRACT_SUFX}
 RENAMED_EXTRA_PATCHES=	${WRKSRC}/patches/detect-renamed.diff
 
 SSH_CONFIGURE_ON=	--with-rsh=ssh
@@ -74,9 +81,9 @@ SSH_CONFIGURE_OFF=	--with-rsh=rsh
 
 ZLIB_BASE_CONFIGURE_ON=	--with-included-zlib=no
 
-.include <bsd.port.options.mk>
+ACL_EXTRA_PATCHES+=	${PATCHDIR}/fix-nfs4_acls.patch
 
-.if make(makesum) || ${PORT_OPTIONS:MRENAMED} || ${PORT_OPTIONS:MICONV} || ${PORT_OPTIONS:MFLAGS}
+.if make(makesum)
 DISTFILES+=	${PORTNAME}-patches-${DISTVERSION}${EXTRACT_SUFX}
 .endif
 
@@ -91,6 +98,8 @@ post-patch:
 					  -e 's:/etc/letsencrypt:${PREFIX}/etc/letsencrypt:g' \
 					  ${WRKSRC}/rsync.1 ${WRKSRC}/rsyncd.conf.5
 	@${REINPLACE_CMD} -e 's|/usr/bin/rsync|${PREFIX}/bin/rsync|g' ${WRKSRC}/support/rrsync
+	truncate -s 10 ${WRKSRC}/mkgitver
+	touch ${WRKSRC}/git-version.h
 
 post-install:
 	@${MKDIR} ${STAGEDIR}${ETCDIR}

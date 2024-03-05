@@ -8,6 +8,9 @@ MAINTAINER=	avg@FreeBSD.org
 COMMENT=	Stand-alone memory test for x86 architecture computers
 WWW=		https://www.memtest.org/
 
+BUILD_DEPENDS=	gcc48:lang/gcc48
+CC=		gcc48
+
 LICENSE=	GPLv2
 
 ONLY_FOR_ARCHS=	i386 amd64
@@ -15,8 +18,6 @@ ONLY_FOR_ARCHS=	i386 amd64
 USES=	gmake
 ALL_TARGET=	all
 PORTDOCS=	*
-
-USE_GCC=	yes:build
 
 # Please provide absolute path below (cannot be root)
 BOOT_DIR?=	/boot/opt

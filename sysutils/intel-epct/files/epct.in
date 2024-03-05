@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd %%PREFIX%%/%%EPCT_DIR%%
+./epct64e $@

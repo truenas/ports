@@ -1,0 +1,16 @@
+[
+{ type: install
+  message: <<EOM
+This package should only be used on Intel branded adapters. Please contact your
+OEM vendor for an appropriate package.
+
+NOTE: A reboot is required to apply configuration changes.
+
+Usage:
+# epct
+
+Getting help:
+# epct -h
+EOM
+}
+]

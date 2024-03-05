@@ -1,6 +1,8 @@
+# Created by: stb
+
 PORTNAME=	netatalk
-PORTVERSION=	3.1.18
-PORTREVISION=	1
+PORTVERSION=	3.1.13
+PORTREVISION=	7
 PORTEPOCH=	1
 CATEGORIES=	net
 MASTER_SITES=	SF/${PORTNAME}/${PORTNAME}-${PORTVERSION:S/./-/g}
@@ -8,7 +10,6 @@ PKGNAMESUFFIX=	3
 
 MAINTAINER=	marcus@FreeBSD.org
 COMMENT=	File server for Mac OS X
-WWW=		http://netatalk.sourceforge.net/
 
 LICENSE=	GPLv2
 
@@ -19,18 +20,20 @@ USES=		bdb:5+ cpe gettext gmake iconv libtool perl5 pkgconfig shebangfix ssl tar
 GNU_CONFIGURE=	yes
 USE_LDCONFIG=	yes
 USE_RC_SUBR=	netatalk
-INSTALL_TARGET=install-strip
 CPE_VENDOR=	netatalk_project
+EXTRA_PATCHES+=	${PATCHDIR}/fix-v3.1.13-issues.patch:-p1
+EXTRA_PATCHES+=	${PATCHDIR}/Fix-CVE-2022-23121-CVE-2022-23123-regression.patch:-p1
+EXTRA_PATCHES+=	${PATCHDIR}/fix-CVE-2022-43634.patch:-p1
+EXTRA_PATCHES+=	${PATCHDIR}/fix-CVE-2022-45188.patch:-p1
 
 CONFIGURE_ARGS+=	--with-pkgconfdir=${PREFIX}/etc \
 			--with-libgcrypt-dir=${LOCALBASE} \
 			--with-uams-path=${PREFIX}/libexec/netatalk-uams \
 			--with-bdb=${LOCALBASE} \
+			--enable-debug \
+			--enable-debugging \
 			${ICONV_CONFIGURE_BASE} \
 			--localstatedir=/var \
-			--disable-bundled-libevent \
-			--with-libevent-header=${LOCALBASE}/include \
-			--with-libevent-lib=${LOCALBASE}/lib \
 			--with-ssl-dir=${OPENSSLBASE} \
 			--without-dtrace
 
@@ -56,12 +59,14 @@ MDNSRESPONDER_CONFIGURE_ENV=	ac_cv_lib_avahi_client_avahi_client_new=no
 MDNSRESPONDER_CFLAGS=		-I${LOCALBASE}/include -L${LOCALBASE}/lib
 MDNSRESPONDER_LIB_DEPENDS=		libdns_sd.so:net/mDNSResponder
 MDNSRESPONDER_SUB_LIST=	ZEROCONF="mdnsd"
+CFLAGS+=		-I${LOCALBASE}/include -L${LOCALBASE}/lib
+#CFLAGS+=		-g -ggdb3 -O0
 LDAP_CONFIGURE_ON=	--with-ldap=${LOCALBASE}
 LDAP_CFLAGS=		-I${LOCALBASE}/include -L${LOCALBASE}/lib
-LDAP_USES=	ldap
+LDAP_USE=	OPENLDAP=yes
 LDAP_CONFIGURE_OFF=	--without-ldap
 SENDFILE_CONFIGURE_ENABLE=sendfile
-DBUS_USES=	gnome python
+DBUS_USES=	python
 DBUS_USE=	GNOME=glib20
 DBUS_LIB_DEPENDS=	libdbus-glib-1.so:devel/dbus-glib \
 			libdbus-1.so:devel/dbus
@@ -74,7 +79,7 @@ LIBWRAP_CONFIGURE_ENABLE=tcp-wrappers
 
 SHEBANG_GLOB=	afpstats
 
-CONFLICTS=	jday yudit # bin/dbd man/man1/uniconv.1.gz
+CONFLICTS=	bigloo-2.* cap-6.0.* tct-1.* netatalk-[12]* yudit
 
 .include <bsd.port.pre.mk>
 
