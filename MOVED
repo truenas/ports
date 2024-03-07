@@ -1669,7 +1669,6 @@ audio/aacplusenc||2022-09-30|Has expired: Legacy audio format, superseded by HE-
 net/libmms||2022-09-30|Has expired: Obsolete, Microsoft deprecated MMS protocol in favour of RTSP in 2003
 audio/mctoolame-decoder||2022-09-30|Has expired: Legacy and obscure audio format that never gained any traction
 audio/mctoolame-encoder||2022-09-30|Has expired: Legacy and obscure audio format that never gained any traction
-www/py-ws4py||2022-09-30|Has expired: Upstream abandoned
 databases/py-bsddb3|databases/py-berkeleydb|2022-09-30|Has expired: Requires upstream EOLd db5. Use py-berkeleydb
 graphics/megapov|graphics/povray37|2022-10-01|Has expired: Abandoned upstream. graphics/povray37 is the recommended replacement
 x11-toolkits/gstreamer1-plugins-gtk4||2022-10-01|No consumers left and deprecated in favor gtk4 plugin from multimedia/gstreamer1-plugins-rust >= 0.8.0
@@ -1920,7 +1919,6 @@ devel/rubygem-octicons|misc/rubygem-octicons|2023-03-16|Remove duplicate port
 multimedia/libquicktime-lame||2023-03-18|Abandoned upstream and fails to build with newer versions of FFmpeg, consider using multimedia/ffmpeg
 multimedia/libquicktime||2023-03-18|Abandoned upstream and fails to build with newer versions of FFmpeg, consider using multimedia/ffmpeg
 devel/p5-Net-ZooKeeper||2023-03-19|Has expired: Broken since 2020
-devel/libhyve-remote||2023-03-19|Has expired: Broken since 2020
 chinese/brise||2023-03-19|Has expired: Broken since 2020
 cad/NASTRAN-95||2023-03-19|Has expired: Broken since 2020
 lang/dlv||2023-03-19|Has expired: Broken since 2020
@@ -2847,7 +2845,6 @@ www/py-dj41-django-debug-toolbar|www/py-dj42-django-debug-toolbar|2023-12-31|Has
 www/kf5-kdewebkit||2023-12-31|Has expired: Depends on deprecated www/qt5-webkit
 www/py-dj41-django-auth-ldap|www/py-dj42-django-auth-ldap|2023-12-31|Has expired: Extended support of Django 4.1 ends December 2023, upgrade to the Django 4.2+ version of this port. See https://www.djangoproject.com/download/
 sysutils/kfloppy||2023-12-31|Has expired: No longer part of KDE Gear since 23.08
-net/wireguard||2023-12-31|Has expired: Only useful for FreeBSD 12 which is EoL soon
 net/wireguard-kmod||2023-12-31|Has expired: Only useful for FreeBSD 12 which is EoL soon
 www/py-dj41-django-js-asset|www/py-dj42-django-js-asset|2023-12-31|Has expired: Extended support of Django 4.1 ends December 2023, upgrade to the Django 4.2+ version of this port. See https://www.djangoproject.com/download/
 www/py-dj41-django-timezone-field|www/py-dj42-django-timezone-field|2023-12-31|Has expired: Extended support of Django 4.1 ends December 2023, upgrade to the Django 4.2+ version of this port. See https://www.djangoproject.com/download/

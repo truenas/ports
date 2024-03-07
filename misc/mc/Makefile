@@ -18,7 +18,7 @@ EXTRA_PATCHES+=	${FILESDIR}/extra-patch-src_diffviewer_ydiff.c
 RUN_DEPENDS+=	gdiff:textproc/diffutils
 .endif
 
-USES=		gmake gnome libtool perl5 pkgconfig python shebangfix tar:xz
+USES=		gmake gnome libtool perl5 pkgconfig python:run shebangfix tar:xz
 SHEBANG_FILES=	${WRKSRC}/src/vfs/extfs/helpers/s3+.in \
 		${WRKSRC}/src/vfs/extfs/helpers/uc1541
 python_OLD_CMD=	@PYTHON@

@@ -4391,6 +4391,7 @@
     SUBDIR += py-behave
     SUBDIR += py-beniget
     SUBDIR += py-bidict
+    SUBDIR += py-bhyve
     SUBDIR += py-billiard
     SUBDIR += py-binaryornot
     SUBDIR += py-biplist
@@ -4405,6 +4406,7 @@
     SUBDIR += py-boltons
     SUBDIR += py-boolean.py
     SUBDIR += py-boto
+    SUBDIR += py-boto3
     SUBDIR += py-botocore
     SUBDIR += py-bps-restpy
     SUBDIR += py-breathe
@@ -4427,6 +4429,7 @@
     SUBDIR += py-cacheyou
     SUBDIR += py-cachy
     SUBDIR += py-cadquery-pywrap
+    SUBDIR += py-cam
     SUBDIR += py-calver
     SUBDIR += py-canonicaljson
     SUBDIR += py-capstone
@@ -4919,6 +4922,7 @@
     SUBDIR += py-keystoneauth1
     SUBDIR += py-keystonemiddleware
     SUBDIR += py-kitchen
+    SUBDIR += py-kmip
     SUBDIR += py-klepto
     SUBDIR += py-knack
     SUBDIR += py-l18n
@@ -5042,6 +5046,7 @@
     SUBDIR += py-nbformat
     SUBDIR += py-nbval
     SUBDIR += py-nest-asyncio
+    SUBDIR += py-netsnmpagent
     SUBDIR += py-node-semver
     SUBDIR += py-nodeenv
     SUBDIR += py-nose
