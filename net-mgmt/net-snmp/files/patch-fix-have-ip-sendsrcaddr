@@ -1,0 +1,179 @@
+--- include/net-snmp/net-snmp-config.h.in.orig	2021-05-25 15:19:35.000000000 -0700
++++ include/net-snmp/net-snmp-config.h.in	2023-06-23 06:20:26.754266000 -0700
+@@ -370,6 +370,9 @@
+ /* Set if IP_RECVDSTADDR is usable */
+ #undef HAVE_IP_RECVDSTADDR
+ 
++/* Set if IP_SENDSRCADDR is usable */
++#undef HAVE_IP_SENDSRCADDR
++
+ /* Define to 1 if you have the `kinfo_get_cpus' function. */
+ #undef HAVE_KINFO_GET_CPUS
+ 
+--- configure.d/config_os_misc4.orig	2021-05-25 15:19:35.000000000 -0700
++++ configure.d/config_os_misc4	2023-06-23 06:22:03.562367000 -0700
+@@ -410,7 +410,7 @@ AC_CACHE_CHECK([for IP_RECVDSTADDR ],
+     for (cm = CMSG_FIRSTHDR(&msg); cm; cm = CMSG_NXTHDR(&msg, cm)) {
+         if (cm->cmsg_level == IPPROTO_IP && cm->cmsg_type == IP_RECVDSTADDR) {
+             struct in_addr* src = (struct in_addr *)CMSG_DATA(cm);
+-            printf("Address: %s\n", inet_ntoa(src));
++            printf("Address: %s\n", inet_ntoa(*src));
+         }
+     }
+ ])],
+@@ -419,4 +419,53 @@ AC_CACHE_CHECK([for IP_RECVDSTADDR ],
+ )])
+ if test x$ac_cv_have_ip_recvdstaddr = xyes; then
+     AC_DEFINE(HAVE_IP_RECVDSTADDR, 1, [Set if IP_RECVDSTADDR is usable])
++fi
++
++#   Check whether IP_SENDSRCADDR is usable.
++#
++
++AC_CACHE_CHECK([for IP_SENDSRCADDR ],
++                [ac_cv_have_ip_sendsrcaddr],
++[AC_LINK_IFELSE([AC_LANG_PROGRAM([
++#include <stdio.h>  /* printf() */
++#include <stdlib.h> /* malloc() */
++#include <string.h> /* memset() */
++#include <sys/types.h>
++#include <sys/socket.h>
++#include <netinet/in.h>
++#include <arpa/inet.h> /* inet_ntoa() */
++], [
++    struct iovec iov;
++    struct msghdr m = { NULL };
++    char   cmsg[CMSG_SPACE(sizeof(struct in_addr))];
++    struct cmsghdr *cm;
++    char   ch = '\0';
++    struct sockaddr_in sa, ra;
++
++    inet_pton(AF_INET, "192.168.1.2", &(sa.sin_addr));
++
++    ra.sin_family = AF_INET;
++    ra.sin_port = htons(1234);
++    inet_pton(AF_INET, "192.168.1.3", &(ra.sin_addr));
++
++    iov.iov_base = &ch;
++    iov.iov_len  = 1;
++
++    m.msg_name          = &ra;
++    m.msg_namelen       = sizeof(struct sockaddr_in);
++    m.msg_iov           = &iov;
++    m.msg_iovlen        = 1;
++    m.msg_flags         = 0;
++
++    cm = CMSG_FIRSTHDR(&m);
++    cm->cmsg_len = CMSG_LEN(sizeof(struct in_addr));
++    cm->cmsg_level = IPPROTO_IP;
++    cm->cmsg_type = IP_SENDSRCADDR;
++    memcpy((struct in_addr *)CMSG_DATA(cm), &(sa.sin_addr), sizeof(struct in_addr));
++])],
++[ac_cv_have_ip_sendsrcaddr=yes],
++[ac_cv_have_ip_sendsrcaddr=no]
++)])
++if test x$ac_cv_have_ip_sendsrcaddr = xyes; then
++    AC_DEFINE(HAVE_IP_SENDSRCADDR, 1, [Set if IP_SENDSRCADDR is usable])
+ fi
+--- configure.orig	2023-06-23 06:18:45.913485000 -0700
++++ configure	2023-06-23 06:21:18.742284000 -0700
+@@ -32000,7 +32000,7 @@ main ()
+     for (cm = CMSG_FIRSTHDR(&msg); cm; cm = CMSG_NXTHDR(&msg, cm)) {
+         if (cm->cmsg_level == IPPROTO_IP && cm->cmsg_type == IP_RECVDSTADDR) {
+             struct in_addr* src = (struct in_addr *)CMSG_DATA(cm);
+-            printf("Address: %s\n", inet_ntoa(src));
++            printf("Address: %s\n", inet_ntoa(*src));
+         }
+     }
+ 
+@@ -32022,6 +32022,78 @@ $as_echo "$ac_cv_have_ip_recvdstaddr" >&6; }
+ if test x$ac_cv_have_ip_recvdstaddr = xyes; then
+ 
+ $as_echo "#define HAVE_IP_RECVDSTADDR 1" >>confdefs.h
++
++fi
++
++#   Check whether IP_SENDSRCADDR is usable.
++#
++
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for IP_SENDSRCADDR " >&5
++$as_echo_n "checking for IP_SENDSRCADDR ... " >&6; }
++if ${ac_cv_have_ip_sendsrcaddr+:} false; then :
++  $as_echo_n "(cached) " >&6
++else
++  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
++/* end confdefs.h.  */
++
++#include <stdio.h>  /* printf() */
++#include <stdlib.h> /* malloc() */
++#include <string.h> /* memset() */
++#include <sys/types.h>
++#include <sys/socket.h>
++#include <netinet/in.h>
++#include <arpa/inet.h> /* inet_ntoa() */
++
++int
++main ()
++{
++
++    struct iovec iov;
++    struct msghdr m = { NULL };
++    char   cmsg[CMSG_SPACE(sizeof(struct in_addr))];
++    struct cmsghdr *cm;
++    char   ch = '\0';
++    struct sockaddr_in sa, ra;
++
++    inet_pton(AF_INET, "192.168.1.2", &(sa.sin_addr));
++
++    ra.sin_family = AF_INET;
++    ra.sin_port = htons(1234);
++    inet_pton(AF_INET, "192.168.1.3", &(ra.sin_addr));
++
++    iov.iov_base = &ch;
++    iov.iov_len  = 1;
++
++    m.msg_name          = &ra;
++    m.msg_namelen       = sizeof(struct sockaddr_in);
++    m.msg_iov           = &iov;
++    m.msg_iovlen        = 1;
++    m.msg_flags         = 0;
++
++    cm = CMSG_FIRSTHDR(&m);
++    cm->cmsg_len = CMSG_LEN(sizeof(struct in_addr));
++    cm->cmsg_level = IPPROTO_IP;
++    cm->cmsg_type = IP_SENDSRCADDR;
++    memcpy((struct in_addr *)CMSG_DATA(cm), &(sa.sin_addr), sizeof(struct in_addr));
++
++  ;
++  return 0;
++}
++_ACEOF
++if ac_fn_c_try_link "$LINENO"; then :
++  ac_cv_have_ip_sendsrcaddr=yes
++else
++  ac_cv_have_ip_sendsrcaddr=no
++
++fi
++rm -f core conftest.err conftest.$ac_objext \
++    conftest$ac_exeext conftest.$ac_ext
++fi
++{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_have_ip_sendsrcaddr" >&5
++$as_echo "$ac_cv_have_ip_sendsrcaddr" >&6; }
++if test x$ac_cv_have_ip_sendsrcaddr = xyes; then
++
++$as_echo "#define HAVE_IP_SENDSRCADDR 1" >>confdefs.h
+ 
+ fi
+ 
+--- snmplib/transports/snmpUDPBaseDomain.c.orig	2021-05-25 15:19:35.000000000 -0700
++++ snmplib/transports/snmpUDPBaseDomain.c	2023-06-23 06:20:26.771700000 -0700
+@@ -257,7 +257,9 @@ int netsnmp_udpbase_sendto_unix(int fd, const struct i
+ 
+     if (srcip && srcip->s_addr != INADDR_ANY) {
+         struct cmsghdr *cm;
++#if defined(HAVE_IP_PKTINFO)
+         struct in_pktinfo ipi;
++#endif
+         int use_sendto = FALSE;
+ 
+         memset(cmsg, 0, sizeof(cmsg));

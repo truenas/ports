@@ -1,0 +1,7 @@
+scanlnk scans for symlinks that point to the device underlying "/".
+
+Very basic smoke-test for whether a file is a symlink back to
+the freenas boot device. A "quick" scan (-a quick) will exit on
+first symlink back to the device underlying /. A full scan will
+print a full list of problematic symlinks on stderr. Program returns
+0 if no problems detected or ELOOP if a problem is detected.

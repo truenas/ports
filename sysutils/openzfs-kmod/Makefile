@@ -1,46 +1,38 @@
 PORTNAME=	openzfs
-PORTVERSION=	2023113000
+PORTVERSION=	2024021600
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 PKGNAMESUFFIX?=	-kmod
 
-MAINTAINER=	freqlabs@FreeBSD.org
+MAINTAINER=	ryan@iXsystems.com
 COMMENT=	OpenZFS kernel module for FreeBSD
-WWW=		https://github.com/openzfs/zfs
 
 LICENSE=	CDDL
 
-BROKEN_i386=	build fails
-
 USES=		cpe kmod
 USE_GITHUB=	yes
+GH_ACCOUNT=	truenas
 GH_PROJECT=	zfs
-GH_TAGNAME=	494aaae
+GH_TAGNAME=	829c60ca6
 KMODTARGET?=	openzfs.ko
 
 PLIST_FILES=	${KMODDIR}/${KMODTARGET}
+PLIST_FILES+=	${KMODDIR}/${KMODTARGET}.debug
+PLIST_FILES+=	${KMODDIR}/openzfs-debug.ko
+PLIST_FILES+=	${KMODDIR}/openzfs-debug.ko.debug
 
-OPTIONS_DEFINE=	DEBUG INVARIANTS GCOV
-OPTIONS_DEFAULT=	DEBUG INVARIANTS
+OPTIONS_DEFINE=	GCOV
 OPTIONS_SUB=	yes
 
 GCOV_DESC=	Build kernel module with GCOV support (Requires gcc)
 
-INVARIANTS_DESC=	Build kernel module with INVARIANTS
-INVARIANTS_IMPLIES=	DEBUG
+.include <bsd.port.pre.mk>
 
-.include <bsd.port.options.mk>
+.if ${OSVERSION} >= 1300000 && ${OSVERSION} < 1300013
+IGNORE=	needs FreeBSD 12/13 with AES-CCM support
+.endif
 
 MAKE_OPTS+=	SYSDIR=${SRC_BASE}/sys
-
-.if ${PORT_OPTIONS:MDEBUG}
-MAKE_OPTS+=	WITH_DEBUG=true
-PLIST_FILES+=	${KMODDIR}/${KMODTARGET}.debug
-.endif
-
-.if ${PORT_OPTIONS:MINVARIANTS}
-MAKE_OPTS+=	WITH_INVARIANTS=true
-.endif
 
 .if ${PORT_OPTIONS:MGCOV}
 USE_GCC=	yes
@@ -57,12 +49,16 @@ post-patch:
 	${ECHO} '#define ZFS_META_VERSION "${ZFS_META_VERSION}"' >> ${WRKSRC}/zfs_config.h
 
 do-build:
-	(cd ${WRKSRC}/module/ && make -f Makefile.bsd CC=${CC} ${MAKE_OPTS})
+	(cd ${WRKSRC}/module/ && make -f Makefile.bsd CC=${CC} ${MAKE_OPTS} clean all \
+	    WITH_DEBUG=true WITH_INVARIANTS=true)
+	mv ${WRKSRC}/module/openzfs.ko ${WRKSRC}/module/openzfs-debug.ko
+	mv ${WRKSRC}/module/openzfs.ko.debug ${WRKSRC}/module/openzfs-debug.ko.debug
+	(cd ${WRKSRC}/module/ && make -f Makefile.bsd CC=${CC} ${MAKE_OPTS} clean all)
 
 do-install:
+	${INSTALL} ${WRKSRC}/module/openzfs-debug.ko ${STAGEDIR}${KMODDIR}/openzfs-debug.ko
+	${INSTALL} ${WRKSRC}/module/openzfs-debug.ko.debug ${STAGEDIR}${KMODDIR}/openzfs-debug.ko.debug
 	${INSTALL} ${WRKSRC}/module/openzfs.ko ${STAGEDIR}${KMODDIR}/${KMODTARGET}
-.if ${PORT_OPTIONS:MDEBUG}
 	${INSTALL} ${WRKSRC}/module/openzfs.ko.debug ${STAGEDIR}${KMODDIR}/${KMODTARGET}.debug
-.endif
 
-.include <bsd.port.mk>
+.include <bsd.port.post.mk>

@@ -1,0 +1,159 @@
+From b31d97034adfccb8510e244b7c7c7579b8ee2a4b Mon Sep 17 00:00:00 2001
+From: Andrew Walker <awalker@ixsystems.com>
+Date: Mon, 3 May 2021 16:45:09 -0400
+Subject: [PATCH] Modify build scripts for custom modules
+
+---
+ source3/modules/wscript_build | 108 ++++++++++++++++++++++++----------
+ source3/wscript               |   2 +-
+ 2 files changed, 79 insertions(+), 31 deletions(-)
+
+diff --git a/source3/modules/wscript_build b/source3/modules/wscript_build
+index 36b047ef79b..8a3c30b48f1 100644
+--- a/source3/modules/wscript_build
++++ b/source3/modules/wscript_build
+@@ -54,7 +54,7 @@ bld.SAMBA3_SUBSYSTEM('HASH_INODE',
+ bld.SAMBA3_MODULE('vfs_default',
+                  subsystem='vfs',
+                  source='vfs_default.c',
+-                 deps='samba-util NDR_DFSBLOBS OFFLOAD_TOKEN UTIL_REPARSE',
++                 deps='samba-util NDR_DFSBLOBS OFFLOAD_TOKEN UTIL_REPARSE smb_libzfs',
+                  init_function='',
+                  internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_default'),
+                  enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_default'))
+@@ -248,6 +248,62 @@ bld.SAMBA3_MODULE('vfs_solarisacl',
+                  internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_solarisacl'),
+                  enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_solarisacl'))
+ 
++bld.SAMBA3_MODULE('vfs_winmsa',
++                 subsystem='vfs',
++                 source='vfs_winmsa.c',
++                 deps='NFS4_ACLS sunacl',
++                 init_function='',
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_winmsa'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_winmsa'))
++
++bld.SAMBA3_MODULE('vfs_aio_fbsd',
++                 subsystem='vfs',
++                 source='vfs_aio_fbsd.c',
++                 deps='samba-util tevent',
++                 init_function='',
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_aio_fbsd'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_aio_fbsd'))
++
++bld.SAMBA3_MODULE('vfs_ixnas',
++                 subsystem='vfs',
++                 source='vfs_ixnas.c',
++                 deps='NFS4_ACLS sunacl smb_libzfs',
++                 init_function='',
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_ixnas'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_ixnas'))
++
++bld.SAMBA3_MODULE('vfs_tmprotect',
++                 subsystem='vfs',
++                 source='vfs_tmprotect.c',
++                 deps='smb_libzfs',
++                 init_function='',
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_tmprotect'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_tmprotect'))
++
++bld.SAMBA3_MODULE('vfs_zfs_fsrvp',
++                 subsystem='vfs',
++                 source='vfs_zfs_fsrvp.c',
++                 deps='smb_libzfs',
++                 init_function='',
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_zfs_fsrvp'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_zfs_fsrvp'))
++
++bld.SAMBA3_MODULE('vfs_shadow_copy_zfs',
++                 subsystem='vfs',
++                 source='vfs_shadow_copy_zfs.c',
++                 allow_warnings=True,
++                 deps='samba-util tdb smb_libzfs',
++                 init_function='',
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_shadow_copy_zfs'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_shadow_copy_zfs'))
++
++bld.SAMBA3_MODULE('vfs_noacl',
++                 subsystem='vfs',
++                 source='vfs_noacl.c',
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_noacl'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_noacl'))
++
++
+ bld.SAMBA3_MODULE('vfs_zfsacl',
+                  subsystem='vfs',
+                  source='vfs_zfsacl.c',
+@@ -256,35 +312,27 @@ bld.SAMBA3_MODULE('vfs_zfsacl',
+                  internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_zfsacl'),
+                  enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_zfsacl'))
+ 
+-bld.SAMBA_GENERATOR('nfs41acl-h',
+-                    source='nfs41acl.x',
+-                    target='nfs41acl.h',
+-                    rule='rpcgen -h ${SRC} > ${TGT}')
+-
+-
+-if bld.CONFIG_SET("HAVE_RPC_XDR_H"):
+-    xdr_buf_hack = 'sed -e "s@^\([ \t]*register int32_t \*buf\);@\\1 = buf;@"'
+-
+-    # By default rpcgen assumes that the input file, generated header and
+-    # source file are located in the same directory, which is extracted from
+-    # the provided path to the input file.
+-    # However if the build directory is not under the source tree, ${SRC} will
+-    # be a long relative path through a common parent directory, resulting
+-    # in an invalid path used in #include for the header.
+-    # In order to fix that, the input file is first copied to the output build
+-    # directory and then rpcgen is called with the proper path.
+-    bld.SAMBA_GENERATOR('nfs41acl-xdr-c',
+-                        source='nfs41acl.x',
+-                        target='nfs41acl_xdr.c',
+-                        rule='cp -f ${SRC} ${TGT[0].parent} && rpcgen -c ' \
+-                             '${TGT[0].path_from(tsk.get_cwd())[:-len(tsk.outputs[0].name)] + tsk.inputs[0].name} | ' + \
+-                             xdr_buf_hack + ' > ${TGT}')
+-
+-    bld.SAMBA_SUBSYSTEM('VFS_NFS4_XDR',
+-                        source='nfs41acl_xdr.c',
+-                        deps='NFS4_ACLS NDR_NFS4ACL tirpc')
+-else:
+-    bld.SET_TARGET_TYPE('VFS_NFS4_XDR', 'EMPTY')
++bld.SAMBA3_MODULE('vfs_zfs_space',
++                 subsystem='vfs',
++                 source='vfs_zfs_space.c',
++                 deps='smb_libzfs',
++                 allow_undefined_symbols=True,
++                 init_function='',
++                 internal_module=bld.SAMBA3_IS_STATIC_MODULE('vfs_zfs_space'),
++                 enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_zfs_space'))
++
++bld.SAMBA3_LIBRARY('smb_libzfs',
++                   source='smb_libzfs.c',
++                   cflags='-DNEED_SOLARIS_BOOLEAN',
++                   deps='samba-util',
++                   includes=[
++                       '%%SRC_BASE%%/sys/contrib/openzfs/include',
++                       '%%SRC_BASE%%/sys/contrib/openzfs/lib/libspl/include/os/freebsd/',
++                       '%%SRC_BASE%%/sys/contrib/openzfs/lib/libspl/include/',
++                   ],
++                   ldflags='-lgeom -luutil -lzfs_core -lzfs -lnvpair',
++                   enabled=bld.SAMBA3_IS_ENABLED_MODULE('vfs_ixnas'),
++                   private_library=True)
+ 
+ bld.SAMBA3_MODULE('vfs_nfs4acl_xattr',
+                   subsystem='vfs',
+diff --git a/source3/wscript b/source3/wscript
+index adc31ce57b8..e0c6df496f9 100644
+--- a/source3/wscript
++++ b/source3/wscript
+@@ -1937,7 +1937,7 @@ main() {
+         default_shared_modules.extend(['vfs_posix_eadb'])
+ 
+     if conf.CONFIG_SET('HAVE_FREEBSD_SUNACL_H'):
+-        default_shared_modules.extend(['vfs_zfsacl'])
++        default_shared_modules.extend(['vfs_zfsacl', 'vfs_winmsa', 'vfs_aio_fbsd'])
+ 
+     if conf.CONFIG_SET('HAVE_DIRFD_DECL'):
+         default_shared_modules.extend(['vfs_syncops', 'vfs_dirsort'])
+-- 
+2.31.1
+
