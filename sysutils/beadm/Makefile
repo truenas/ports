@@ -17,15 +17,6 @@ NO_BUILD=	YES
 CONFLICTS_INSTALL=	beadm-devel
 
 PLIST_FILES=	sbin/${PORTNAME} \
-<<<<<<< HEAD
-		share/man/man8/${PORTNAME}.8.gz
-
-do-install:
-	${INSTALL_SCRIPT} ${WRKSRC}/${PORTNAME} \
-		${STAGEDIR}${PREFIX}/sbin/${PORTNAME}
-	${INSTALL_MAN} ${WRKSRC}/${PORTNAME}.8 \
-		${STAGEDIR}${PREFIX}/share/man/man8/
-=======
 		man/man1/${PORTNAME}.1.gz
 
 do-install:
@@ -33,6 +24,5 @@ do-install:
 	    ${STAGEDIR}${PREFIX}/sbin/${PORTNAME}
 	${INSTALL_MAN} ${WRKSRC}/${PORTNAME}.1 \
 	  ${STAGEDIR}${MANPREFIX}/man/man1/
->>>>>>> origin/truenas/13.1-stable
 
 .include <bsd.port.mk>
