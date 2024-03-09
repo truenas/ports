@@ -2,8 +2,8 @@
 # $FreeBSD$
 
 PORTNAME=	collectd
-PORTVERSION=	5.12.0
-PORTREVISION=	11
+PORTVERSION=	5.11.0
+PORTREVISION=	8
 CATEGORIES=	net-mgmt
 MASTER_SITES=	https://storage.googleapis.com/collectd-tarballs/
 PKGNAMESUFFIX=	5
@@ -14,10 +14,7 @@ COMMENT=	Systems & network statistics collection daemon
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
-LIB_DEPENDS=	libpfctl.so:net/libpfctl
-LDFLAGS+=	-lpfctl
-
-USES=		autoreconf cpe gmake libtool localbase:ldflags pkgconfig shebangfix tar:bzip2
+USES=		autoreconf cpe gmake libtool pkgconfig shebangfix tar:bzip2
 
 GNU_CONFIGURE=	yes
 
@@ -52,7 +49,7 @@ MQTT_DESC=		Enable MQTT broker metrics
 MYSQL_DESC=		Enable mysql-based plugins
 NOTIFYDESKTOP_DESC=	Enable desktop notifications
 NOTIFYEMAIL_DESC=	Enable notifications via email
-NUTUPS_DESC=		Enable nut (ups) plugin (sysutils/nut must be configured with DEV option)
+NUTUPS_DESC=		Enable nut (ups) plugin
 OLSRD_DESC=		Enable olsrd plugin
 ONEWIRE_DESC=		Eanble onewire plugin (via owfs)
 OPENLDAP_DESC=		Enable OpenLDAP plugin
@@ -136,7 +133,8 @@ DBI_CFLAGS=		-Wno-deprecated-declarations
 
 GCRYPT_LIB_DEPENDS=	libgcrypt.so:security/libgcrypt \
 			libgpg-error.so:security/libgpg-error
-GCRYPT_CONFIGURE_WITH=	libgcrypt=${LOCALBASE}/bin/libgcrypt-config
+GCRYPT_CONFIGURE_WITH=	libgcrypt=${LOCALBASE}
+GCRYPT_LIBS=		-lgcrypt
 
 IPMI_LIB_DEPENDS=	libOpenIPMI.so:sysutils/openipmi
 IPMI_CONFIGURE_ENABLE=	ipmi
