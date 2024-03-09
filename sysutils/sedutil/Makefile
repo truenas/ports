@@ -23,6 +23,5 @@ do-build:
 
 do-install:
 	${INSTALL_PROGRAM} ${WRKSRC}/freebsd/CLI/dist/Release/CLang-Generic/sedutil-cli ${STAGEDIR}${PREFIX}/sbin
-	${INSTALL_MAN} ${WRKSRC}/docs/sedutil-cli.8 ${STAGEDIR}${MANPREFIX}/man/man8
 
 .include <bsd.port.mk>
