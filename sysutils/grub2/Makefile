@@ -21,7 +21,6 @@ BROKEN_i386=	uses amd64 assembly
 ONLY_FOR_ARCHS=	amd64 i386
 
 BUILD_DEPENDS=	git:devel/git \
-		${LOCALBASE}/bin/flex:textproc/flex \
 		gsed:textproc/gsed \
 		python>0:lang/python \
 		help2man:misc/help2man \
@@ -39,8 +38,7 @@ CPE_PRODUCT=	grub
 CPE_VENDOR=	gnu
 
 CONFIGURE_ARGS=	--disable-werror --localedir=${PREFIX}/share/locale
-CONFIGURE_ENV=	CPP="${CC} -E" \
-		LEX=${LOCALBASE}/bin/flex
+CONFIGURE_ENV=	CPP="${CC} -E"
 
 OPTIONS_DEFINE=	MKFONT FUSE
 OPTIONS_SUB=	yes
