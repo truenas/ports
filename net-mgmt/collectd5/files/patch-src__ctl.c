@@ -159,7 +159,7 @@
 +	}
 +	size_t maxportsize = sizeof(maxports);
 +	if (sysctlbyname("kern.cam.ctl.max_ports", &maxports, &maxportsize,
-+	    NULL, NULL) == -1) {
++	    NULL, 0) == -1) {
 +		ERROR("cannot get CTL max ports");
 +		return (-1);
 +	}
