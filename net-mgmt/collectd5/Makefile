@@ -14,6 +14,9 @@ COMMENT=	Systems & network statistics collection daemon
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/COPYING
 
+LIB_DEPENDS=   libpfctl.so:net/libpfctl
+LDFLAGS+=      -lpfctl
+
 USES=		autoreconf cpe gmake libtool pkgconfig shebangfix tar:bzip2
 
 GNU_CONFIGURE=	yes
