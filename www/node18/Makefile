@@ -23,6 +23,7 @@ BUILD_DEPENDS=	brotli>=1.0.9,1:archivers/brotli \
 		c-ares>=1.17.2:dns/c-ares \
 		libnghttp2>=1.45.1:www/libnghttp2 \
 		libuv>=1.42.0:devel/libuv \
+		gcc12>0:lang/gcc12\
 		objdump:devel/binutils
 LIB_DEPENDS=	libbrotlidec.so:archivers/brotli \
 		libcares.so:dns/c-ares \
