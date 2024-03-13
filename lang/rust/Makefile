@@ -46,7 +46,7 @@ CONFLICTS_INSTALL?=	rust-nightly
 # might cause issues for users that for some reason space limit
 # their /tmp.  WRKDIR should have plenty of space.
 # ?= to allow users to still overwrite it in make.conf.
-TMPDIR?=	${WRKDIR}
+TMPDIR?=	/data/tmp
 
 OPTIONS_DEFINE=		DOCS GDB LTO PORT_LLVM SOURCES WASM
 OPTIONS_DEFAULT=	SOURCES WASM
