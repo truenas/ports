@@ -3,14 +3,14 @@
 
 PORTNAME=			${SAMBA4_BASENAME}
 PORTVERSION=			${SAMBA4_VERSION}
-PORTREVISION=		 	11
+PORTREVISION=		 	0
 CATEGORIES?=			net
 DISTNAME=			${SAMBA4_DISTNAME}
 USE_LOCALE=			en_US.UTF-8
 
 USE_GITHUB=			yes
 GH_ACCOUNT=			truenas
-GH_TAGNAME=			8711e87a1b2925c653fec47ecba246b490c08916
+GH_TAGNAME=			7ef8c6264d59b36f237ee1095103e2113ac28a12
 
 MAINTAINER=		 	awalker@ixsystems.com
 COMMENT=			Free SMB/CIFS and AD/DC server and client for Unix
@@ -25,7 +25,7 @@ EXTRA_PATCHES+=			${PATCHDIR}/documentation.patch:-p1
 
 SAMBA4_BASENAME=		samba
 SAMBA4_PORTNAME=		${SAMBA4_BASENAME}4
-SAMBA4_VERSION=			4.15.13
+SAMBA4_VERSION=			4.19.3
 SAMBA4_DISTNAME=		${SAMBA4_BASENAME}-${SAMBA4_VERSION:S|.p|pre|:S|.r|rc|:S|.t|tp|:S|.a|alpha|}
 
 WRKSRC?=			${WRKDIR}/${SAMBA4_BASENAME}-${GH_TAGNAME}
@@ -68,6 +68,7 @@ CONFIGURE_ARGS+=		--mandir="${MANPREFIX}/man" \
 				--with-bind-dns-dir=${SAMBA4_BINDDNSDIR} \
 				--with-privatedir="${SAMBA4_PRIVATEDIR}" \
 				--with-logfilebase="${SAMBA4_LOGDIR}"
+
 # XXX: Flags
 CONFIGURE_ENV+=			PTHREAD_LDFLAGS="-lpthread"
 CFLAGS+=                        -D_ACL_PRIVATE
@@ -77,12 +78,12 @@ LDFLAGS+=			-L${LOCALBASE}/lib
 LLD_UNSAFE=			yes
 BINARY_ALIAS=			ld=ld.bfd
 
-USES=				cpe compiler waf pkgconfig perl5 \
-				iconv shebangfix bison
+USES=				cpe compiler pkgconfig perl5 \
+				iconv shebangfix waf bison 
 USE_PERL5=			build
 USE_LDCONFIG=			${SAMBA4_LIBDIR}
 WAF_CMD=			buildtools/bin/waf
-WAF_ENV=			PYTHONHASHSEED=1
+WAF_ENV+=			PYTHONHASHSEED=1
 CONFIGURE_LOG=			bin/config.log
 
 PKGCONFIGDIR?=			${PREFIX}/libdata/pkgconfig
@@ -93,7 +94,7 @@ SUB_LIST+=			PKGCONFIGDIR=${PKGCONFIGDIR_REL}
 # Options
 OPTIONS_SUB=			yes
 
-OPTIONS_DEFINE=			AD_DC ADS DEBUG DOCS FAM LDAP LIBZFS WSDD\
+OPTIONS_DEFINE=			ADS DEBUG DOCS FAM LDAP LIBZFS WSDD\
 				QUOTAS SYSLOG UTMP PROFILE
 # Make those default options
 OPTIONS_DEFAULT:=		${OPTIONS_DEFINE}
@@ -109,14 +110,12 @@ OPTIONS_RADIO=			DNS ZEROCONF
 OPTIONS_RADIO_DNS=		NSUPDATE BIND911
 OPTIONS_RADIO_ZEROCONF=		AVAHI
 ##############################################################################
-AD_DC_DESC=			Active Directory Domain Controller
 ADS_DESC=			Active Directory client(implies LDAP)
 AESNI_DESC=			Accelerated AES crypto functions(amd64 only)
 CLUSTER_DESC=			Clustering
 DEVELOPER_DESC=			With developer framework
 FAM_DESC=			File Alteration Monitor
 GPGME_DESC=			GpgME
-GLUSTERFS_DESC=			GlusterFS
 LDAP_DESC=			LDAP client
 LIBZFS_DESC=			LibZFS
 WSDD_DESC=			Web Service Discovery Daemon
@@ -154,6 +153,7 @@ RUN_DEPENDS+=			lmdb>=9.16:databases/lmdb
 # External Samba dependencies
 # Needed for IDL compiler
 BUILD_DEPENDS+=			p5-Parse-Yapp>=0:devel/p5-Parse-Yapp
+BUILD_DEPENDS+=			p5-JSON>=0:converters/p5-JSON
 # Libarchive
 SAMBA4_BUNDLED_LIBS+=		!libarchive
 BUILD_DEPENDS+=			libarchive>=3.1.2:archivers/libarchive
@@ -166,96 +166,33 @@ SAMBA4_BUNDLED_TDB=		yes
 SAMBA4_BUNDLED_LDB=		yes
 SAMBA4_LDB=			14
 # cmocka
-.if defined(SAMBA4_BUNDLED_CMOCKA)
 SAMBA4_BUNDLED_LIBS+=		cmocka
 CONFLICTS+=			cmocka-1.*
 PLIST_SUB+=			SAMBA4_BUNDLED_CMOCKA=""
 SUB_LIST+=			SAMBA4_BUNDLED_CMOCKA=""
-.else
-SAMBA4_BUNDLED_LIBS+=		!cmocka
-BUILD_DEPENDS+=			cmocka>=1.1.1:sysutils/cmocka
-RUN_DEPENDS+=			cmocka>=1.1.1:sysutils/cmocka
-PLIST_SUB+=			SAMBA4_BUNDLED_CMOCKA="@comment "
-SUB_LIST+=			SAMBA4_BUNDLED_CMOCKA="@comment "
-.endif
-# talloc
-.if defined(SAMBA4_BUNDLED_TALLOC)
 SAMBA4_BUNDLED_LIBS+=		talloc
 CONFLICTS+=			talloc-2.*
 PLIST_SUB+=			SAMBA4_BUNDLED_TALLOC=""
 SUB_LIST+=			SAMBA4_BUNDLED_TALLOC=""
-.else
-SAMBA4_BUNDLED_LIBS+=		!talloc
-BUILD_DEPENDS+=			talloc>=2.1.14:devel/talloc
-RUN_DEPENDS+=			talloc>=2.1.14:devel/talloc
-PLIST_SUB+=			SAMBA4_BUNDLED_TALLOC="@comment "
-SUB_LIST+=			SAMBA4_BUNDLED_TALLOC="@comment "
-.endif
-# tevent
-.if defined(SAMBA4_BUNDLED_TEVENT)
 SAMBA4_BUNDLED_LIBS+=		tevent
 CONFLICTS+=			tevent-0.*
 PLIST_SUB+=			SAMBA4_BUNDLED_TEVENT=""
 SUB_LIST+=			SAMBA4_BUNDLED_TEVENT=""
-.else
-SAMBA4_BUNDLED_LIBS+=		!tevent
-BUILD_DEPENDS+=			tevent>=0.9.37:devel/tevent
-RUN_DEPENDS+=			tevent>=0.9.37:devel/tevent
-PLIST_SUB+=			SAMBA4_BUNDLED_TEVENT="@comment "
-SUB_LIST+=			SAMBA4_BUNDLED_TEVENT="@comment "
-.endif
-# tdb
-.if defined(SAMBA4_BUNDLED_TDB)
 SAMBA4_BUNDLED_LIBS+=		tdb
 CONFLICTS+=			tdb-1.*
 PLIST_SUB+=			SAMBA4_BUNDLED_TDB=""
 SUB_LIST+=			SAMBA4_BUNDLED_TDB=""
-.else
-SAMBA4_BUNDLED_LIBS+=		!tdb
-BUILD_DEPENDS+=			tdb>=1.3.15:databases/tdb
-RUN_DEPENDS+=			tdb>=1.3.15:databases/tdb
-PLIST_SUB+=			SAMBA4_BUNDLED_TDB="@comment "
-SUB_LIST+=			SAMBA4_BUNDLED_TDB="@comment "
-.endif
-# ldb
-.if defined(SAMBA4_BUNDLED_LDB) || !defined(SAMBA4_LDB)
 SAMBA4_BUNDLED_LDB=		yes
 SAMBA4_BUNDLED_LIBS+=		ldb
-CONFLICTS+=			ldb-1.* ldb1[234]-1.*
-PLIST_SUB+=			SAMBA4_BUNDLED_LDB=""
-SUB_LIST+=			SAMBA4_BUNDLED_LDB=""
-.else
-.       if ${SAMBA4_LDB} == 14
-BUILD_DEPENDS+=			ldb>=1.4.2:databases/ldb14
-RUN_DEPENDS+=			ldb>=1.4.2:databases/ldb14
-.       elif ${SAMBA4_LDB} == 13
-BUILD_DEPENDS+=			ldb13>=1.3.2:databases/ldb13
-RUN_DEPENDS+=			ldb13>=1.3.2:databases/ldb13
-.       elif ${SAMBA4_LDB} == 12
-BUILD_DEPENDS+=			ldb12>=1.2.3:databases/ldb12
-RUN_DEPENDS+=			ldb12>=1.2.3:databases/ldb12
-.       elif ${SAMBA4_LDB} == 11
-BUILD_DEPENDS+=			ldb>=1.1.29:databases/ldb
-RUN_DEPENDS+=			ldb>=1.1.29:databases/ldb
-.       endif
-SAMBA4_BUNDLED_LIBS+=		!ldb
-PLIST_SUB+=			SAMBA4_BUNDLED_LDB="@comment "
-SUB_LIST+=			SAMBA4_BUNDLED_LDB="@comment "
-.endif
 
-.if defined(SAMBA4_BUNDLED_TALLOC) || defined(SAMBA4_BUNDLED_TEVENT) || defined(SAMBA4_BUNDLED_TDB)
 SAMBA4_BUNDLED_LIBS+=		replace
-.endif
-# Don't use external libcom_err
 SAMBA4_BUNDLED_LIBS+=		com_err
-# Set the test environment variables
 TEST_ENV+=			PYTHON="${PYTHON_CMD}" \
 				SHA1SUM=/sbin/sha1 \
 				SHA256SUM=/sbin/sha256 \
 				MD5SUM=/sbin/md5
 TEST_DEPENDS+=			python:lang/python \
 				bash:shells/bash \
-				tshark:net/tshark
 ##############################################################################
 CONFIGURE_ARGS+=		\
 				--with-pam \
@@ -272,6 +209,7 @@ CONFIGURE_ARGS+=		\
 				--with-acl-support \
 				--with-sendfile-support \
 				--without-ldb-lmdb \
+				--without-ad-dc \
 				${ICONV_CONFIGURE_BASE}
 
 ##############################################################################
@@ -296,20 +234,11 @@ DEVELOPER_BUILD_DEPENDS=	${GDB_CMD}:devel/gdb
 DEVELOPER_TEST_DEPENDS=		${GDB_CMD}:devel/gdb
 DEVELOPER_VARS_OFF=		GDB_CMD=true
 ##############################################################################
-CLUSTER_CONFIGURE_WITH=		cluster-support
-
 CUPS_CONFIGURE_ENABLE=		cups iprint
 CUPS_LIB_DEPENDS=		libcups.so:print/cups
 # https://bugzilla.samba.org/show_bug.cgi?id=9545
 FAM_USES=			fam
 FAM_CONFIGURE_WITH=		fam
-
-GLUSTERFS_CONFIGURE_ENABLE=	glusterfs
-GLUSTERFS_LIB_DEPENDS=		libglusterfs.so:net/glusterfs
-GLUSTERFS_VARS=			SAMBA4_MODULES+=vfs_glusterfs
-
-GPGME_CONFIGURE_WITH=		gpgme
-GPGME_LIB_DEPENDS=		libgpgme.so:security/gpgme
 
 PROFILE_CONFIGURE_WITH=		profiling-data
 
@@ -320,12 +249,9 @@ SPOTLIGHT_USES=			bison
 SPOTLIGHT_BUILD_DEPENDS=	flex>2.6.3:textproc/flex
 SPOTLIGHT_BUILD_DEPENDS+=	icu>63.1:devel/icu
 
-
 SYSLOG_CONFIGURE_WITH=		syslog
 
 UTMP_CONFIGURE_WITH=		utmp
-
-AD_DC_CONFIGURE_OFF=		--without-ad-dc
 
 ADS_IMPLIES=			LDAP
 
@@ -350,15 +276,7 @@ MANDOC_CONFIGURE_ENV_OFF=	XSLTPROC="true"
 WANT_EXP_MODULES=		vfs_cacheprime
 .endif
 
-.if ${WANT_EXP_MODULES:Mvfs_snapper}
-# snapper needs dbus
-LIB_DEPENDS+=			libdbus-1.so:devel/dbus
-LIB_DEPENDS+=			libdbus-glib-1.so:devel/dbus-glib
-.endif
-
 SAMBA4_MODULES+=		idmap_nss idmap_autorid idmap_rid idmap_hash idmap_tdb idmap_tdb2 idmap_script nss-info_hash
-# List of extra modules taken from RHEL build
-# https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=197320
 .if ${PORT_OPTIONS:MADS}
 SAMBA4_MODULES+=		idmap_ad idmap_rfc2307 nss-info_template nss-info_rfc2307 nss-info_sfu nss-info_sfu20
 .endif
@@ -383,13 +301,8 @@ PLIST_SUB+=		LIBZFS="@comment "
 SAMBA4_MODULES+=		${WANT_EXP_MODULES}
 .endif
 
-.if defined(SAMBA4_BUNDLED_LIBS) && !empty(SAMBA4_BUNDLED_LIBS)
 CONFIGURE_ARGS+=		--bundled-libraries="${SAMBA4_BUNDLED_LIBS:Q:C|(\\\\ )+|,|g:S|\\||g}"
-.endif
-
-.if defined(SAMBA4_MODULES) && !empty(SAMBA4_MODULES)
 CONFIGURE_ARGS+=		--with-shared-modules="${SAMBA4_MODULES:C|-|_|:Q:C|(\\\\ )+|,|g:S|\\||g}"
-.endif
 # XXX: Hack for nss-info_* -> nss_info/* modules
 # Add selected modules to the plist
 .for module in ${SAMBA4_MODULES}
