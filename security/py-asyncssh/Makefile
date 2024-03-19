@@ -11,7 +11,7 @@ WWW=		https://github.com/ronf/asyncssh
 LICENSE=	EPL
 LICENSE_FILE=	${WRKSRC}/LICENSE
 
-RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}cryptography-legacy:security/py-cryptography-legacy@${PY_FLAVOR} \
+RUN_DEPENDS=	${PYTHON_PKGNAMEPREFIX}cryptography-legacy>=3.6:security/py-cryptography-legacy@${PY_FLAVOR} \
 		${PYTHON_PKGNAMEPREFIX}typing-extensions>=3.6:devel/py-typing-extensions@${PY_FLAVOR}
 
 USES=		cpe python:3.6+
