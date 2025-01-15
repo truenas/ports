@@ -2,6 +2,7 @@
 
 PORTNAME=	rsync
 DISTVERSION=	3.2.7
+PORTREVISION=	1
 CATEGORIES=	net
 MASTER_SITES=	https://www.mirrorservice.org/sites/rsync.samba.org/src/ \
 		http://rsync.mirror.garr.it/src/ \
@@ -42,6 +43,17 @@ LDFLAGS+=	-L${LOCALBASE}/lib
 
 PATCH_STRIP=	-p1
 SUB_LIST=	NAME=rsyncd
+EXTRA_PATCHES+=	files/CVE-2024-12084/0001-Some-checksum-buffer-fixes.patch:-p1
+EXTRA_PATCHES+=	files/CVE-2024-12084/0002-Another-cast-when-multiplying-integers.patch:-p1
+eXTRA_PATCHES+=	files/CVE-2024-12085/0001-prevent-information-leak-off-the-stack.patch:-p1
+EXTRA_PATCHES+=	files/CVE-2024-12086/0001-refuse-fuzzy-options-when-fuzzy-not-selected.patch:-p1
+EXTRA_PATCHES+=	files/CVE-2024-12086/0002-added-secure_relative_open.patch:-p1
+EXTRA_PATCHES+=	files/CVE-2024-12086/0003-receiver-use-secure_relative_open-for-basis-file.patch:-p1
+EXTRA_PATCHES+=	files/CVE-2024-12086/0004-disallow-.-elements-in-relpath-for-secure_relative_o.patch:-p1
+EXTRA_PATCHES+=	files/CVE-2024-12087/0001-Refuse-a-duplicate-dirlist.patch:-p1
+EXTRA_PATCHES+=	files/CVE-2024-12087/0002-range-check-dir_ndx-before-use.patch:-p1
+EXTRA_PATCHES+=	files/CVE-2024-12088/0001-make-safe-links-stricter.patch:-p1
+EXTRA_PATCHES+=	files/CVE-2024-12747/0001-fixed-symlink-race-condition-in-sender.patch:-p1
 
 PORTDOCS=	NEWS.md README.md csprotocol.txt tech_report.tex
 
