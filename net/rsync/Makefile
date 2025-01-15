@@ -45,7 +45,7 @@ PATCH_STRIP=	-p1
 SUB_LIST=	NAME=rsyncd
 EXTRA_PATCHES+=	files/CVE-2024-12084/0001-Some-checksum-buffer-fixes.patch:-p1
 EXTRA_PATCHES+=	files/CVE-2024-12084/0002-Another-cast-when-multiplying-integers.patch:-p1
-eXTRA_PATCHES+=	files/CVE-2024-12085/0001-prevent-information-leak-off-the-stack.patch:-p1
+EXTRA_PATCHES+=	files/CVE-2024-12085/0001-prevent-information-leak-off-the-stack.patch:-p1
 EXTRA_PATCHES+=	files/CVE-2024-12086/0001-refuse-fuzzy-options-when-fuzzy-not-selected.patch:-p1
 EXTRA_PATCHES+=	files/CVE-2024-12086/0002-added-secure_relative_open.patch:-p1
 EXTRA_PATCHES+=	files/CVE-2024-12086/0003-receiver-use-secure_relative_open-for-basis-file.patch:-p1
