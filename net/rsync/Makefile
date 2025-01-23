@@ -2,7 +2,7 @@
 
 PORTNAME=	rsync
 DISTVERSION=	3.2.7
-PORTREVISION=	1
+PORTREVISION=	2
 CATEGORIES=	net
 MASTER_SITES=	https://www.mirrorservice.org/sites/rsync.samba.org/src/ \
 		http://rsync.mirror.garr.it/src/ \
@@ -54,6 +54,9 @@ EXTRA_PATCHES+=	files/CVE-2024-12087/0001-Refuse-a-duplicate-dirlist.patch:-p1
 EXTRA_PATCHES+=	files/CVE-2024-12087/0002-range-check-dir_ndx-before-use.patch:-p1
 EXTRA_PATCHES+=	files/CVE-2024-12088/0001-make-safe-links-stricter.patch:-p1
 EXTRA_PATCHES+=	files/CVE-2024-12747/0001-fixed-symlink-race-condition-in-sender.patch:-p1
+EXTRA_PATCHES+=	files/raise-protocol-version-to-32.patch:-p1
+EXTRA_PATCHES+=	files/Fix_use-after-free_in_generator.patch:-p1
+EXTRA_PATCHES+=	files/Fix-FLAG_GOT_DIR_FLIST-collission-with-FLAG_HLINKED.patch:-p1
 
 PORTDOCS=	NEWS.md README.md csprotocol.txt tech_report.tex
 
