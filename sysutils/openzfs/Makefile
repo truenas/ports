@@ -1,9 +1,9 @@
 PORTNAME=	openzfs
-PORTVERSION=	2024081500
+PORTVERSION=	2025032700
 DISTVERSIONPREFIX=	v
 CATEGORIES=	sysutils
 
-MAINTAINER=	ryan@iXsystems.com
+MAINTAINER=	mav@iXsystems.com
 COMMENT=	OpenZFS userland for FreeBSD
 
 LICENSE=	CDDL
@@ -26,7 +26,7 @@ OPTIONS_SUB=	yes
 USE_GITHUB=	yes
 GH_ACCOUNT=	truenas
 GH_PROJECT=	zfs
-GH_TAGNAME=	6704ddadc
+GH_TAGNAME=	4f2aa1382
 
 .include <bsd.port.pre.mk>
 
