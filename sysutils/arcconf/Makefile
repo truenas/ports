@@ -1,11 +1,11 @@
 # Created by: michael@fuckner.net
 
 PORTNAME=	arcconf
-DISTVERSION=	3_07_23971
+DISTVERSION=	4.17.00.${BUILD}
 PORTEPOCH=	1
 CATEGORIES=	sysutils
-MASTER_SITES=	http://download.adaptec.com/raid/storage_manager/
-DISTNAME=	arcconf_v${DISTVERSION}
+MASTER_SITES=	https://storage.microsemi.com/raid/storage_manager/
+DISTNAME=	arcconf_B${BUILD}
 
 MAINTAINER=	michael@fuckner.net
 COMMENT=	Adaptec SCSI/SAS RAID administration tool
@@ -20,6 +20,7 @@ LIB_DEPENDS=	libstdc++.so.6:lang/gcc${GCC_DEFAULT}
 
 USES=		zip
 USE_GCC=	yes
+BUILD=		26540
 
 SUB_FILES+=	${PERIODICSCRIPT}
 
